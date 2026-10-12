@@ -38,6 +38,7 @@ let purchases = new Map(); // lemonsqueezy_order_id → row
 let logs = []; // webhook_logs rows, as the handler writes them
 let failPurchaseLookup = false;
 let failLogLookup = false;
+let failLogInsert = false;
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -72,6 +73,7 @@ globalThis.fetch = async (url, init = {}) => {
   }
   if (u.pathname === '/rest/v1/webhook_logs') {
     if (method === 'POST') {
+      if (failLogInsert) return json({ message: 'stub insert failure', code: 'XX000' }, 500);
       logs.push(JSON.parse(init.body));
       return new Response(null, { status: 201 });
     }
@@ -96,6 +98,7 @@ beforeEach(() => {
   logs = [];
   failPurchaseLookup = false;
   failLogLookup = false;
+  failLogInsert = false;
 });
 
 function signed(payload) {
@@ -184,6 +187,24 @@ test('refund first: a refund that arrives before the order was delivered blocks 
   assert.equal(res.statusCode, 200);
   assert.deepEqual(grantWrites(), [], 'a refunded order was delivered by a retry');
   assert.equal(purchases.size, 0);
+});
+
+test('a refund that cannot be recorded is not acknowledged, and the order still ends refunded', async () => {
+  // The log row is the refund's only record when no purchase exists yet, so a
+  // refund whose log insert fails must answer 500 (Lemon Squeezy retries it)…
+  failLogInsert = true;
+  const first = await handler(signed(orderEvent('order_refunded', { status: 'refunded', refunded: true })));
+  assert.equal(first.statusCode, 500, 'a refund with no durable record was acknowledged');
+  failLogInsert = false;
+  // …meanwhile the original paid order_created may still be delivered…
+  assert.equal((await handler(signed(orderEvent('order_created')))).statusCode, 200);
+  // …and the retried refund then revokes it, so the order ends refunded.
+  assert.equal((await handler(signed(orderEvent('order_refunded', { status: 'refunded', refunded: true })))).statusCode, 200);
+  assert.equal(purchases.get(ORDER).status, 'refunded');
+  // From here no delivery grants it again.
+  calls = [];
+  await handler(signed(orderEvent('order_created')));
+  assert.deepEqual(grantWrites(), []);
 });
 
 test('a failed refund-log lookup fails the event and grants nothing', async () => {

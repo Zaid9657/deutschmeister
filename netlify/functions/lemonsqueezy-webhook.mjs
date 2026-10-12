@@ -28,19 +28,27 @@ function verifySignature(payload, signature, secret) {
   }
 }
 
-// Helper: log to webhook_logs with error details.
-// NOTE: If the webhook_logs table doesn't exist in Supabase, all logging fails silently.
+// Helper: log to webhook_logs with error details. Returns whether the row was
+// written. Callers may ignore that — except for order_refunded, whose log row
+// is the only record of a refund that arrived before its order was delivered
+// (see the handler and handleCourseOrder).
 async function logWebhookEvent(eventType, payload, processed, errorMsg) {
-  if (!supabase) return;
+  if (!supabase) return false;
   try {
-    await supabase.from('webhook_logs').insert({
+    const { error } = await supabase.from('webhook_logs').insert({
       event_type: eventType || 'unknown',
       payload: payload,
       processed: processed,
       error: errorMsg || null,
     });
+    if (error) {
+      console.error('Failed to write webhook_logs:', error.message);
+      return false;
+    }
+    return true;
   } catch (e) {
     console.error('Failed to write webhook_logs:', e.message, e.stack);
+    return false;
   }
 }
 
@@ -187,10 +195,18 @@ export const handler = async (event) => {
     }
 
     // Log result
-    await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
+    const logged = await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
 
     if (handlerError) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: handlerError.message }) };
+    }
+    // A refund is acknowledged only once it is on record. For an order that was
+    // never delivered this log row is the ONLY trace of the refund, and it is
+    // what stops a later retry of that order's order_created from granting it
+    // (handleCourseOrder). A 500 makes Lemon Squeezy retry; revoking is
+    // idempotent (Codex review of the telc pilot PR A).
+    if (eventType === 'order_refunded' && !logged) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'refund processed but not recorded in webhook_logs; retry' }) };
     }
 
     return { statusCode: 200, headers, body: 'OK' };

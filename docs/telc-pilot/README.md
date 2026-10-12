@@ -113,7 +113,17 @@ It revokes on **any** refund, partial ones included. That is why partial refunds
 2. the purchase row;
 3. the logged `order_refunded` event. This covers a refund that arrived **before** the order was ever delivered, so there was no row to mark. An example is a paid order with no matching account (owner alert „Paid course order has no account").
 
-**One case is left open on purpose:** a retry of `order_created` and the refund processed in the same instant. Closing it needs a database transaction (a migration), which is not worth it at ten orders. The check after every refund (the purchase query above) catches it. If the row does not read `refunded`, the agent revokes by hand with the same three updates `handleOrderRefunded` makes.
+A refund is acknowledged to Lemon Squeezy only once its event is logged. If the log write fails, the webhook answers 500 and Lemon Squeezy retries the refund.
+
+**One case is left open on purpose:** a retry of `order_created` and the refund processed in the same instant. A delivery already in flight can leave the purchase `refunded` but put the Pro window and the profile flags back. Closing it needs a database transaction (a migration), which is not worth it at ten orders.
+
+**So after every refund, wait a minute, run the purchase query, and compare all four fields**, not only the purchase status:
+- `status = refunded`;
+- `sub_status = expired` (or the buyer's own paid plan, untouched);
+- `is_subscribed = false`, unless that paid plan is live;
+- `access_until` ≈ the refund time.
+
+If any field is off, the agent revokes by hand with the same three updates `handleOrderRefunded` makes.
 
 ## The practice extension (guarantee step 2)
 
