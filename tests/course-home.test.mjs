@@ -32,7 +32,7 @@ const RESULTS = 'src/components/LevelTest/LevelTestResults.jsx';
 
 test('CurriculumHomePage imports A11_META, CourseWelcome and FirstRunTour', () => {
   const src = read(HOME);
-  assert.match(src, /import \{ A11_META \} from '\.\.\/data\/curricula\/a11\.meta\.js'/, 'the page must read the meta module');
+  assert.match(src, /import \{ A11_META(, [A-Za-z]+)* \} from '\.\.\/data\/curricula\/a11\.meta\.js'/, 'the page must read the meta module');
   assert.match(src, /import CourseWelcome from '\.\.\/components\/course\/CourseWelcome\.jsx'/);
   assert.match(src, /import FirstRunTour from '\.\.\/components\/course\/FirstRunTour\.jsx'/);
   assert.match(src, /<CourseWelcome curriculum=\{curriculum\} meta=\{meta\}/, 'CourseWelcome must be rendered with the curriculum and its meta');
@@ -120,7 +120,7 @@ test('IntroStage exists, the player imports it, and it is player state that prev
   assert.match(intro, /data-avatar-slot=\{c\.name\}/, 'initial circles carry the avatar slot for Wave 2 art');
   assert.match(intro, /intro\.canDoEn/, 'the "by the end you can" list comes from lektionIntro.canDoEn');
   assert.match(intro, /intro\.situationEn/, 'the situation line comes from lektionIntro.situationEn');
-  assert.match(intro, /lektion\.minutes/, 'minutes are read off the Lektion, never typed');
+  assert.match(intro, /lektionMinutesEstimate\(lektion\)/, 'the time is derived from the Lektion (an estimate), never typed');
   assert.match(intro, /useLessonLang\(\)/, 'the intro follows the chrome-language toggle');
 
   const player = read(PLAYER);
@@ -133,12 +133,13 @@ test('IntroStage exists, the player imports it, and it is player state that prev
 
 test('Start fires lesson_started and the recap write fires lesson_completed', () => {
   const player = read(PLAYER);
-  assert.match(player, /import \{ trackLessonCompleted, trackLessonStarted \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
-  assert.match(player, /onStart=\{\(\) => \{ trackLessonStarted\(curriculum\.level, lektion\.id\); setIntroDone\(true\); \}\}/);
-  assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id\);/, 'completed is tracked exactly where the lesson is persisted');
+  assert.match(player, /import \{ trackLessonCompleted, [^}]*trackLessonStarted[^}]* \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
+  // One run id (runState.js) joins start and completion, so time-to-complete is measurable.
+  assert.match(player, /onStart=\{\(\) => \{ trackLessonStarted\(curriculum\.level, lektion\.id, runId\); setIntroDone\(true\); \}\}/);
+  assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id, runId\);/, 'completed is tracked exactly where the lesson is persisted');
   const funnel = read('src/lib/funnelTracking.js');
-  assert.match(funnel, /export const trackLessonStarted = \(level, topic\) => track\('lesson_started'/);
-  assert.match(funnel, /export const trackLessonCompleted = \(level, topic\) => track\('lesson_completed'/);
+  assert.match(funnel, /export const trackLessonStarted = \(level, topic, runId\) => track\('lesson_started', \{ level, topic, run_id: runId \}\)/);
+  assert.match(funnel, /export const trackLessonCompleted = \(level, topic, runId\) => track\('lesson_completed', \{ level, topic, run_id: runId \}\)/);
 });
 
 test('the intro string table is complete in both languages and the German is Sie', () => {

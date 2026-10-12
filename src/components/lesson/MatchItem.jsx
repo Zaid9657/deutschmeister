@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
-import { RESULT } from '../../lib/lesson/check.js';
+import { matchOutcome } from '../../lib/lesson/check.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
@@ -24,24 +24,34 @@ function shuffledColumn(values) {
 /**
  * One `derived` exercise (buildLesson.js `derivedItems`): match the Lektion's
  * own Wortfeld pairs, German ↔ English. Standard §4 shape (one screen, primary
- * "Check", then FeedbackSheet, then "Continue") is kept even though matching
- * itself gives instant per-tap feedback: a wrong tap never COMMITS a pairing
- * (it just flashes and resets), so "Check" only ever becomes available once
- * every pair is correctly matched — `onResult` still fires exactly once, the
- * way every other item in the lesson does.
+ * "Check", then FeedbackSheet, then "Continue"). A wrong tap never COMMITS a
+ * pairing (it flashes and resets), so "Check" only becomes available once every
+ * pair is matched — and `onResult` fires exactly once, the way every other item
+ * does.
  *
- * State is never colour-only: a matched tile carries a check icon, a
- * mismatched tap flashes an X icon on both tiles, not just a colour change.
+ * What it records (check.js `matchOutcome`): any wrong pair makes the exercise
+ * complete but NOT first-try correct (`corrected`, Wortschatz, with the pairs
+ * that were confused) — never "just a typo", which is what it used to say.
+ *
+ * Accessibility: a tile's name IS its visible word (an earlier "German word 3" /
+ * "English translation 3" label hid the vocabulary from screen readers and gave
+ * the pairing away, since both columns were numbered by pair). State is said in
+ * words, never by colour alone: an sr-only "selected" / "matched with …", a
+ * check or X icon, and one polite live region that stays mounted and announces
+ * each selection, pair and miss. A matched tile stays focusable
+ * (aria-disabled), and focus moves on to the next unmatched German word.
  */
-export default function MatchItem({ item, index, total, onResult, onNext }) {
+export default function MatchItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
   const [lang] = useLessonLang();
   const [deCol, setDeCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.de)));
   const [enCol, setEnCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.en)));
   const [selectedDe, setSelectedDe] = useState(null);
   const [matched, setMatched] = useState(() => new Set());
   const [flash, setFlash] = useState(null); // { de, en } pairIndexes of a wrong tap, or null
-  const [misses, setMisses] = useState(0);
+  const [confused, setConfused] = useState(() => new Set()); // pairIndexes of German words that met a wrong pair
+  const [announce, setAnnounce] = useState('');
   const [state, setState] = useState(null);
+  const deRefs = useRef(new Map());
 
   useEffect(() => {
     setDeCol(shuffledColumn(item.pairs.map((p) => p.de)));
@@ -49,44 +59,56 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
     setSelectedDe(null);
     setMatched(new Set());
     setFlash(null);
-    setMisses(0);
+    setConfused(new Set());
+    setAnnounce('');
     setState(null);
   }, [item.id, item.pairs]);
 
-  const total4 = item.pairs.length;
-  const allMatched = matched.size === total4;
+  const pairCount = item.pairs.length;
+  const allMatched = matched.size === pairCount;
 
   const pickDe = (pairIndex) => {
     if (state || matched.has(pairIndex)) return;
     setFlash(null);
     setSelectedDe(pairIndex);
+    setAnnounce(t('match.announce.select', lang, { de: item.pairs[pairIndex].de }));
   };
 
   const pickEn = (pairIndex) => {
     if (state || matched.has(pairIndex) || selectedDe == null) return;
+    const de = item.pairs[selectedDe].de;
     if (selectedDe === pairIndex) {
-      setMatched((prev) => new Set(prev).add(pairIndex));
+      const next = new Set(matched).add(pairIndex);
+      setMatched(next);
       setSelectedDe(null);
+      setAnnounce(t('match.announce.pair', lang, { de, en: item.pairs[pairIndex].en }));
+      // Keep the keyboard on the task: the next German word still to match.
+      const nextDe = deCol.find((d) => !next.has(d.pairIndex));
+      if (nextDe) deRefs.current.get(nextDe.pairIndex)?.focus();
     } else {
       const wrongDe = selectedDe;
-      setMisses((m) => m + 1);
+      setConfused((prev) => new Set(prev).add(wrongDe));
       setFlash({ de: wrongDe, en: pairIndex });
       setSelectedDe(null);
+      setAnnounce(t('match.announce.miss', lang, { de, en: item.pairs[pairIndex].en }));
+      deRefs.current.get(wrongDe)?.focus();
       window.setTimeout(() => setFlash((f) => (f && f.de === wrongDe && f.en === pairIndex ? null : f)), 500);
     }
   };
 
+  const confusedPairs = [...confused].map((i) => item.pairs[i]);
+
   const submit = () => {
     if (!allMatched || state) return;
-    const result = misses > 0 ? RESULT.TYPO : RESULT.CORRECT;
-    setState({ result });
-    onResult(item, { result, correct: true, errorTag: misses > 0 ? 'Wortschatz' : null });
+    const outcome = matchOutcome(confusedPairs);
+    setState({ result: outcome.result });
+    onResult(item, outcome);
   };
 
   const tileClass = (on, wrong, done) =>
-    `flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
+    `flex min-h-11 w-full min-w-0 items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold [overflow-wrap:anywhere] [touch-action:manipulation] transition-[transform,box-shadow] duration-100 ease-snap motion-reduce:transition-none ${
       done
-        ? 'border-siegel bg-siegel-wash text-siegel-deep'
+        ? 'cursor-default border-siegel bg-siegel-wash text-siegel-deep'
         : wrong
           ? 'border-accent-himbeer bg-accent-himbeer-wash text-accent-himbeer-ink'
           : on
@@ -94,15 +116,19 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
             : 'border-rule bg-white text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none'
     }`;
 
+  const reviewHint = state && confusedPairs.length
+    ? t('match.reviewPairs', lang, { pairs: confusedPairs.map((p) => `${p.de} = ${p.en}`).join(' · ') })
+    : null;
+
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
-      <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-        {t('stage.derived.eyebrow', lang, { n: index + 1, total })}
-      </p>
+      <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
+        {t(eyebrowKey, lang, { n: index + 1, total })}
+      </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('match.instructions', lang)}</p>
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-2">
+          <div role="group" aria-label={t('match.germanGroup', lang)} className="flex min-w-0 flex-col gap-2">
             {deCol.map(({ value, pairIndex }) => {
               const done = matched.has(pairIndex);
               const on = selectedDe === pairIndex;
@@ -110,22 +136,22 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
               return (
                 <button
                   key={pairIndex}
+                  ref={(el) => { if (el) deRefs.current.set(pairIndex, el); else deRefs.current.delete(pairIndex); }}
                   type="button"
-                  disabled={!!state || done}
+                  aria-disabled={!!state || done}
                   aria-pressed={on}
-                  aria-label={t('match.germanLabel', lang, { n: pairIndex + 1 })}
                   onClick={() => pickDe(pairIndex)}
                   className={tileClass(on, wrong, done)}
-                  lang="de"
                 >
-                  <span>{value}</span>
+                  <span lang="de">{value}</span>
+                  {done && <span className="sr-only">, {t('match.matchedWith', lang, { other: item.pairs[pairIndex].en })}</span>}
                   {done && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
                   {wrong && <X className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
               );
             })}
           </div>
-          <div className="flex flex-col gap-2">
+          <div role="group" aria-label={t('match.englishGroup', lang)} className="flex min-w-0 flex-col gap-2">
             {enCol.map(({ value, pairIndex }) => {
               const done = matched.has(pairIndex);
               const wrong = flash && flash.en === pairIndex;
@@ -133,12 +159,12 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
                 <button
                   key={pairIndex}
                   type="button"
-                  disabled={!!state || done}
-                  aria-label={t('match.englishLabel', lang, { n: pairIndex + 1 })}
+                  aria-disabled={!!state || done}
                   onClick={() => pickEn(pairIndex)}
                   className={tileClass(false, wrong, done)}
                 >
-                  <span>{value}</span>
+                  <span lang="en">{value}</span>
+                  {done && <span className="sr-only">, {t('match.matchedWith', lang, { other: item.pairs[pairIndex].de })}</span>}
                   {done && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
                   {wrong && <X className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
@@ -146,6 +172,7 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
             })}
           </div>
         </div>
+        <p className="sr-only" aria-live="polite" aria-atomic="true">{announce}</p>
       </Card>
 
       {!state && (
@@ -154,7 +181,7 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
         </div>
       )}
 
-      <FeedbackSheet result={state && state.result} onContinue={onNext} />
+      <FeedbackSheet result={state && state.result} hint={reviewHint} onContinue={onNext} />
     </div>
   );
 }

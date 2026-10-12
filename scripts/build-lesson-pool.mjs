@@ -129,7 +129,7 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -280,6 +280,24 @@ function repairFrontedOrder(item) {
 }
 
 raw.forEach(repairFrontedOrder);
+
+// ── Codex review 2026-10-07: name the opening when an object or a modal adverb competes ──
+//
+// „Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]" took only „Die Firma braucht ein
+// Büro." and marked „Ein Büro braucht die Firma." wrong (and „Zusammen tanzen wir." likewise) —
+// the same V2 sentence, in a graded checkpoint, and the task never said which part opens. Objects
+// and modal adverbs stay out of the answer-key rule above (REVIEW #12/#13 pin both), so the PROMPT
+// names the opening: the determiner cue's promise —
+// `answer`/`accepted` are never touched.
+const openingCued = [];
+function repairOpeningCue(item) {
+  const opening = missingOpeningCue(item);
+  if (!opening) return;
+  item.questionDe = String(item.questionDe).replace(/:\s*(?=\[)/, ` (Beginnen Sie mit „${opening}“): `);
+  openingCued.push({ id: item.id, questionDe: item.questionDe });
+}
+
+raw.forEach(repairOpeningCue);
 
 // ── REVIEW #14 MAJOR 2: name the element an article repair changes ──────────
 //
@@ -454,7 +472,7 @@ function alphabetItems(curriculum) {
       accepted,
       explanationDe: `Der Buchstabe ${letter} heißt ${name}.`,
       explanationEn: `In German the letter ${letter} is called ${name}.`,
-      hint: 'Der Name des Buchstaben, nicht der Laut.',
+      hint: 'Der Name, nicht der Laut.',
     });
   }
 
@@ -486,7 +504,11 @@ function alphabetItems(curriculum) {
       accepted: [word],
       explanationDe: `${word} — ${spellOut(word)}.`,
       explanationEn: `${word} is spelled ${spellOut(word)}.`,
-      hint: 'Achte auf Doppelbuchstaben, Umlaute und ß.',
+      // Sie, like every course instruction, and naming only what THIS word has (2026-10 review:
+      // „Achte auf Doppelbuchstaben, Umlaute und ß“ stood on „Danke“).
+      hint: /(.)\1/i.test(word) ? 'Achten Sie auf Doppelbuchstaben.'
+        : /[äöüß]/i.test(word) ? 'Achten Sie auf Umlaute und ß.'
+          : 'Achten Sie auf die Reihenfolge der Buchstaben.',
     });
   }
 
@@ -676,6 +698,8 @@ if (existsSync(extraUrl)) {
   // REVIEW #12 BLOCKER 1, same order and for the same reason: the hand items
   // are the ones the learner actually draws, so they face the same repair.
   extra.forEach(repairFrontedOrder);
+  // Codex review 2026-10-07: the hand items are where both measured items live.
+  extra.forEach(repairOpeningCue);
   // REVIEW #14 MAJOR 2: and the same convention — the eight items the review
   // measured are hand-written, so they carry their cue in the JSON; this call is
   // the gate that keeps the next hand-written correction from shipping without
@@ -939,6 +963,37 @@ const items = [...keptTaught, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
 
+// THE CORRECTIONS LAYER (2026-10-05) — src/data/lessonPools/<level>.corrections.json.
+// The sidecar used to lose to ANY bank text, so 117 hand-corrected English
+// explanations of bank items were silently ignored — among them the fixed L8
+// „hour + Uhr + minutes“ while the pool kept shipping „Uhr + hour + minutes“.
+// Now the sidecar (the hand-edited layer) wins wherever it differs from the bank,
+// except for the ids reviewed and kept in `keepBankExplanationEn`; and
+// `items` holds field-level corrections of bank rows, applied LAST. A correction
+// that no longer changes anything (the next cache dump carries the database fix)
+// is reported as stale so it can be removed.
+const correctionsUrl = new URL(`../src/data/lessonPools/${level.replace('.', '')}.corrections.json`, import.meta.url);
+const reviewedLevel = existsSync(correctionsUrl);
+const corrections = reviewedLevel ? JSON.parse(readFileSync(correctionsUrl, 'utf8')) : {};
+const keepBankEn = corrections.keepBankExplanationEn || {};
+const fieldFixes = corrections.items || {};
+
+// Applied BEFORE minLektion is stamped below: a correction can change the words an item uses,
+// and the stamp has to measure what ships.
+const corrected = [];
+const staleCorrections = [];
+for (const [id, fix] of Object.entries(fieldFixes)) {
+  const item = items.find((it) => it.id === id);
+  if (!item) { staleCorrections.push(`${id} (no such item)`); continue; }
+  let changed = false;
+  for (const [field, value] of Object.entries(fix)) {
+    if (field === 'reason') continue;
+    if (JSON.stringify(item[field]) !== JSON.stringify(value)) changed = true;
+    item[field] = value;
+  }
+  if (changed) corrected.push(id); else staleCorrections.push(`${id} (already in the bank)`);
+}
+
 // ── minLektion: the earliest Lektion an item may be SERVED in (round 10) ─────
 //
 // The gate above asks „does the course teach these words AT ALL?“. This asks the
@@ -998,19 +1053,28 @@ if (existsSync(sidecarUrl)) {
   sidecar = parsed;
 }
 const enText = (v) => (typeof v === 'string' ? v.trim() : '');
-const enSource = { bank: 0, sidecar: 0, template: 0, missing: [] };
+const enSource = { bank: 0, sidecar: 0, template: 0, missing: [], keptBank: 0 };
 for (const item of items) {
   const own = enText(item.explanationEn);          // bank row, or the template's own text
   const fromSidecar = enText(sidecar[item.id]);
-  // bank → sidecar → template: a generated item's own text is the floor, a bank
-  // item's own text is the ceiling.
-  const chosen = item.generated ? fromSidecar || own : own || fromSidecar;
+  // sidecar → bank → template. A bank text survives a differing sidecar only when
+  // a reviewer kept it on purpose (keepBankExplanationEn).
+  // Only a level whose divergences were reviewed (it has a corrections file) takes the sidecar
+  // over the bank; the others keep the old bank-first order until someone reviews theirs.
+  const keepBank = !item.generated && own && fromSidecar && own !== fromSidecar && (!reviewedLevel || keepBankEn[item.id]);
+  if (keepBank && reviewedLevel) enSource.keptBank += 1;
+  // A field correction of the English wins over both (it was applied to the item above).
+  const fixedEn = fieldFixes[item.id] && fieldFixes[item.id].explanationEn;
+  const chosen = fixedEn || (keepBank ? own : fromSidecar || own);
   item.explanationEn = chosen;
   if (!chosen) enSource.missing.push(item.id);
   else if (chosen === fromSidecar) enSource.sidecar += 1;
   else if (item.generated) enSource.template += 1;
   else enSource.bank += 1;
 }
+console.log(`corrections: ${corrected.length} item(s) corrected, ${enSource.keptBank} bank English text(s) kept over the sidecar` +
+  `${staleCorrections.length ? `; STALE (remove from corrections.json): ${staleCorrections.join(', ')}` : ''}`);
+
 const unusedSidecar = Object.keys(sidecar).filter((id) => !items.some((it) => it.id === id));
 console.log(
   `explanationEn: ${enSource.bank} from the bank, ${enSource.sidecar} from the sidecar, ${enSource.template} from the templates, ` +
@@ -1064,6 +1128,8 @@ for (const r of determinerCued.slice(0, 5)) {
   console.log(`       ${String(r.id).slice(0, 8)} ${r.topic} · ${r.kind} · ${r.after.replace(/\s+/g, ' ')}`);
 }
 if (determinerCued.length > 5) console.log(`       … and ${determinerCued.length - 5} more`);
+console.log(`opening cues injected (object / modal adverb could open · Codex review 2026-10-07): ${openingCued.length}`);
+for (const r of openingCued) console.log(`       ${String(r.id).slice(0, 16)} ${r.questionDe}`);
 console.log(`fronted word orders accepted (REVIEW #12 BLOCKER 1 · #13 BLOCKER 1): ${frontingRepaired.length}`);
 for (const r of frontingRepaired) console.log(`       ${String(r.id).slice(0, 16)} ${r.topic} · ${r.answer} + ${r.added.filter((x) => /[.!]$/.test(x)).join(' · ')}`);
 console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +

@@ -57,7 +57,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Do I get speaking practice or only exercises?',
-        a: 'You can have level-appropriate conversations with an AI partner and receive feedback on grammar, vocabulary, and pronunciation, rather than only repeating fixed sentences.',
+        a: 'You can have level-appropriate conversations with an AI partner and receive feedback on grammar, vocabulary and clarity, rather than only repeating fixed sentences.',
       },
       {
         q: 'How does AI speaking feedback work?',

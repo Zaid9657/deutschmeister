@@ -31,7 +31,7 @@ import {
   openingCut,
 } from '../src/lib/lesson/writing.js';
 import { COUNTRY_STEMS, COUNTRY_NAMES, LANGUAGE_NAMES } from '../src/lib/lesson/countries.js';
-import { formSpeakInModelTexts, formularSampleValues, LEVELS } from '../scripts/validate-curriculum.mjs';
+import { formSpeakInModelTexts, formularSampleValues, LEVELS, taughtUpTo, levelSpec, untaughtTokens } from '../scripts/validate-curriculum.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LEKTIONEN = CURRICULUM_A11.lektionen;
@@ -77,9 +77,10 @@ test('register and Leitpunkte match the kind of task the Lektion sets', () => {
 });
 
 test('the six Mitteilungen carry the register their addressee implies', () => {
-  // Sie/Herr/Chefin → formell; a Freundin, Lena or a Kollegin on first-name
-  // terms → informell. The grader marks Anrede and Gruß against this.
-  const expected = { 2: 'formell', 4: 'informell', 6: 'formell', 8: 'informell', 10: 'informell', 12: 'informell' };
+  // Sie/Herr/Chefin → formell; a Freundin or Lena → informell. The grader marks Anrede and
+  // Gruß against this. L10's colleague Frau Kaya is gesiezt (owner decision, 2026-10-07): the
+  // task, the model text and the bank now agree — before, the bank said informell under a Sie text.
+  const expected = { 2: 'formell', 4: 'informell', 6: 'formell', 8: 'informell', 10: 'formell', 12: 'informell' };
   for (const [nr, register] of Object.entries(expected)) {
     const l = LEKTIONEN.find((x) => x.nr === Number(nr));
     assert.equal(l.schreiben.kind, 'mitteilung');
@@ -124,6 +125,8 @@ test('the grader bills course tasks against the free course allowance', () => {
 
 test('courseTaskKeyPrefix derives the per-course scope from the task_key itself', () => {
   assert.equal(courseTaskKeyPrefix('a11-l03'), 'a11-');
+  assert.equal(courseTaskKeyPrefix('a11-cp2'), 'a11-', 'a checkpoint task is a course task: free, and counted');
+  assert.equal(courseAllowanceFor('a11-cp2'), 16);
   assert.equal(courseTaskKeyPrefix('a12-l07'), 'a12-');
   assert.equal(courseTaskKeyPrefix('formular-hotel-anmeldung'), null, 'a non-course task_key must not get a course prefix');
   assert.equal(courseTaskKeyPrefix('mitteilung-termin-absagen'), null);
@@ -1721,4 +1724,31 @@ test('Minor 38 (round 23): the checklist stands live under the text before submi
   assert.match(src, /mode === 'fallback' \? AI_ROW_LABEL\.fallback/);
   // The FernUSG line stands under the live list too: a form check is not a correction.
   assert.match(src, /Formcheck: nur die Form/);
+});
+
+test('the four checkpoint tasks: their own facts, taught words, and a sample the Formcheck passes', () => {
+  // Codex review, 2026-10-07: a checkpoint that replays the lesson task measures recall, not transfer.
+  const spec = levelSpec('a1.1');
+  const taught = taughtUpTo(spec.curriculum, spec);
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const task = writingTaskByKey('goethe_a1', cp.writingTaskKey);
+    assert.ok(task, `${cp.id}: ${cp.writingTaskKey} is in the bank`);
+    assert.equal(task.course, 'a1.1');
+    assert.equal(task.checkpoint, cp.nr);
+    assert.ok(!COURSE.some((t) => t.task === task.task), `${cp.id}: not a Lektion's prompt`);
+    const known = taught.get(cp.afterLektion);
+    if (task.register === 'formular') {
+      const sample = formularSampleValues(task.sample, task.leitpunkte);
+      const res = scoreWriting({ kind: 'formular', fields: task.leitpunkte }, sample);
+      assert.equal(res.ok, true, `${cp.id}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
+      assert.deepEqual(untaughtTokens({ questionDe: Object.values(sample).join(' / ') }, known, spec), [], `${cp.id} sample values`);
+    } else {
+      const res = scoreWriting({ kind: 'mitteilung', minWords: task.minWords, maxWords: task.maxWords, leitpunkte: task.leitpunkte }, task.sample);
+      assert.deepEqual(res.checks.filter((c) => !c.ok).map((c) => c.key), [], `${cp.id}: the Formcheck calls the sample incomplete`);
+      assert.deepEqual(untaughtTokens({ questionDe: task.sample }, known, spec), [], `${cp.id} sample`);
+    }
+  }
+  // Still one task per Lektion in the course bank, and the exam bank never lists them.
+  assert.equal(COURSE.length, 12);
+  assert.ok(writingTasksForExam('goethe_a1').every((t) => !t.checkpoint));
 });

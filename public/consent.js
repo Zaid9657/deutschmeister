@@ -58,9 +58,16 @@
     setAnalyticsPermission(false);
   }
 
+  // The banner's height as a CSS variable, so a bottom-fixed control of the page (the lesson's
+  // feedback sheet with its Continue key) can sit ABOVE it instead of under it.
+  function setBannerHeight(px) {
+    document.documentElement.style.setProperty('--dm-consent-h', px + 'px');
+  }
+
   function removeBanner() {
     var el = document.getElementById('dm-cookie-banner');
     if (el && el.parentNode) el.parentNode.removeChild(el);
+    setBannerHeight(0);
   }
 
   function showBanner() {
@@ -115,6 +122,8 @@
     wrap.appendChild(btns);
     bar.appendChild(wrap);
     (document.body || document.documentElement).appendChild(bar);
+    setBannerHeight(bar.offsetHeight || 0);
+    if (window.ResizeObserver) new ResizeObserver(function () { if (bar.parentNode) setBannerHeight(bar.offsetHeight || 0); }).observe(bar);
   }
 
   function init() {

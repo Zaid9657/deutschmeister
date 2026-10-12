@@ -1,0 +1,58 @@
+[
+ {
+  "route": "/course/a1.1",
+  "width": 360,
+  "docWidth": 360,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-hub-360.png"
+ },
+ {
+  "route": "/course/a1.1",
+  "width": 390,
+  "docWidth": 390,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-hub-390.png"
+ },
+ {
+  "route": "/course/a1.1",
+  "width": 768,
+  "docWidth": 768,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-hub-768.png"
+ },
+ {
+  "route": "/course/a1.1",
+  "width": 1440,
+  "docWidth": 1440,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-hub-1440.png"
+ },
+ {
+  "route": "/course/a1.1/l/1",
+  "width": 360,
+  "docWidth": 360,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-l1-intro-360.png"
+ },
+ {
+  "route": "/course/a1.1/l/1",
+  "width": 390,
+  "docWidth": 390,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-l1-intro-390.png"
+ },
+ {
+  "route": "/course/a1.1/l/1",
+  "width": 768,
+  "docWidth": 768,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-l1-intro-768.png"
+ },
+ {
+  "route": "/course/a1.1/l/1",
+  "width": 1440,
+  "docWidth": 1440,
+  "overflow": false,
+  "file": "docs\\evaluation\\screenshots\\a11-w3-after-l1-intro-1440.png"
+ }
+]

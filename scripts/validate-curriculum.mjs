@@ -3303,7 +3303,9 @@ export function validateCurriculum(c, extraItems, poolItems) {
   return errors;
 }
 
-const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop());
+// basename on either separator: on Windows argv[1] is `scripts\validate-curriculum.mjs`, and a
+// split on '/' alone made the check false, so the script exited 0 without validating anything.
+const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split(/[\\/]/).pop());
 if (isMain) {
   // `node scripts/validate-curriculum.mjs [level]` — the level argument defaults to a1.1, so the
   // command in CLAUDE.md and in CI keeps measuring exactly what it measured before A1.2 existed.

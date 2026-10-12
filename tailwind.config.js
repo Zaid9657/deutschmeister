@@ -6,6 +6,8 @@ import {
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  // `hover:` only on devices that can hover — a tap on a phone left hover styles stuck on.
+  future: { hoverOnlyWhenSupported: true },
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",

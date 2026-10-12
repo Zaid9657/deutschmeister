@@ -6,6 +6,7 @@ import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { saveCourseContext } from '../../lib/courseFlow.js';
+import { speakingSummary } from '../../lib/lesson/skillStatus.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
@@ -21,7 +22,10 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  *    course context is saved first so the coach shows the return bar back
  *    into this lesson.
  *
- * The prop contract with LessonPlayerPage is unchanged: onBack / onDone.
+ * The prop contract with LessonPlayerPage: onBack / onDone, plus `onReport`,
+ * which receives what this run measured (skillStatus.speakingSummary) when the
+ * learner moves on — skipped, self-confirmed or recognised — so the recap can
+ * say it instead of letting one Gold imply it.
  *
  * THE WAY OUT. The primary stays disabled until every read-aloud line is
  * confirmed or scored — but a learner without a microphone, or without the
@@ -32,7 +36,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * practice responses only (LessonPlayerPage.recordResult), and a skipped line
  * is simply absent from it. Skipped ≠ correct, and skipped ≠ wrong.
  */
-export default function SpeakingStage({ stage, level, code, lektion, onBack, onDone }) {
+export default function SpeakingStage({ stage, level, code, lektion, onBack, onDone, onReport }) {
   const [results, setResults] = useState(() => ({}));
   const [lang] = useLessonLang();
   const lines = stage.readAloud || [];
@@ -42,6 +46,11 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
   const recordResult = useCallback((index, result) => {
     setResults((prev) => ({ ...prev, [index]: result }));
   }, []);
+
+  const finish = () => {
+    if (typeof onReport === 'function') onReport(speakingSummary(lines.length, results));
+    onDone();
+  };
 
   const speakingHref = open
     ? `/speaking?level=${encodeURIComponent(level)}${open.missionOrder ? `&mission=${open.missionOrder}` : ''}`
@@ -72,13 +81,13 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
       title={t('stage.speaking.title', lang)}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
-      onPrimary={onDone}
+      onPrimary={finish}
       primaryDisabled={lines.length > 0 && !allDone}
       secondary={
         lines.length > 0 && !allDone ? (
           <button
             type="button"
-            onClick={onDone}
+            onClick={finish}
             className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
           >
             <SkipForward className="h-4 w-4" aria-hidden="true" /> {t('speaking.skip', lang)}

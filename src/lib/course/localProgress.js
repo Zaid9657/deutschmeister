@@ -26,6 +26,7 @@
 //      (DaF review #10 MAJOR 4).
 import { safeGetJSON, safeSetJSON, safeRemove } from '../../utils/safeStorage.js';
 import { completeLesson, logAttempts, runMarkerAttempt } from '../../services/lessonService.js';
+import { betterRun } from '../lesson/mastery.js';
 
 export const LOCAL_KEY = 'dm_course_local';
 
@@ -127,9 +128,11 @@ export function recordLocalLesson({ level, lektionId, status = 'complete', accur
   // batches' created_at, so the finished-at moments stay the learner's own.
   const priorStamps = Array.isArray(previous && previous.runStamps) ? previous.runStamps.filter((x) => typeof x === 'string') : [];
   const runStamps = [...priorStamps, completedAt].slice(-runs);
+  // The better run is kept, as on the server (mastery.betterRun): a weaker repeat never takes a Gold away.
+  const kept = betterRun(previous && previous.status ? { status: previous.status, accuracy: Number(previous.accuracy) || 0 } : null, { status, accuracy });
   store.lektionen = {
     ...store.lektionen,
-    [lektionId]: { status, accuracy, runs, runStamps, completedAt },
+    [lektionId]: { status: kept.status, accuracy: kept.accuracy, runs, runStamps, completedAt },
   };
   store.attempts = trimAttempts([
     ...store.attempts,
@@ -219,8 +222,15 @@ export function planLocalMerge(store) {
 
 /**
  * Merge whatever a signed-out visitor did into the account that just signed
- * in. Idempotent by construction: the store is cleared at the end, and the
- * writes underneath are upserts keyed on (user_id, lektion_id).
+ * in. Idempotent by construction: the writes underneath are upserts keyed on
+ * (user_id, lektion_id) and stamped attempt batches logAttempts skips when the
+ * database already holds them — so a merge that is run again after a partial
+ * failure writes only what is missing.
+ *
+ * The store is cleared ONLY when every write reported success. The services
+ * fail soft (they return false, they do not throw), and the merge used to clear
+ * the store after a run of `false`s — the learner's guest progress was gone and
+ * nothing was in the account (2026-10 review, P2).
  *
  * The batches are written SEQUENTIALLY and awaited: one INSERT per completed
  * run is the whole point, and separate statements also keep their `created_at`
@@ -228,7 +238,7 @@ export function planLocalMerge(store) {
  *
  * `deps` is a seam for tests only.
  *
- * @returns {Promise<number>} Lektionen merged (0 when there was nothing).
+ * @returns {Promise<number>} Lektionen merged (0 when there was nothing or a write failed).
  */
 export async function mergeLocalProgress(userId, deps = {}) {
   if (!userId || merging) return 0;
@@ -240,17 +250,21 @@ export async function mergeLocalProgress(userId, deps = {}) {
 
   merging = true;
   try {
+    let allOk = true;
     for (const plan of plans) {
-      await complete(userId, {
+      const done = await complete(userId, {
         level: plan.level,
         lektionId: plan.lektionId,
         accuracy: plan.accuracy,
         status: plan.status,
       });
+      allOk = allOk && done === true;
       for (const batch of plan.batches) {
-        await log(userId, { level: plan.level, lektionId: plan.lektionId, createdAt: batch.createdAt }, batch.attempts);
+        const logged = await log(userId, { level: plan.level, lektionId: plan.lektionId, createdAt: batch.createdAt }, batch.attempts);
+        allOk = allOk && logged === true;
       }
     }
+    if (!allOk) return 0;
     clearLocalProgress();
     return plans.length;
   } catch (err) {

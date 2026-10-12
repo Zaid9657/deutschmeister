@@ -42,9 +42,10 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
       {/* ── what this course is ─────────────────────────────────────────── */}
       <Reveal>
         <Chip tone="label">{curriculum.code} · Free course</Chip>
-        <h1 id="dm-course-welcome" className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[2.5rem]">
+        {/* h2: the course home's own header carries the page's one <h1> („German A1.1“). */}
+        <h2 id="dm-course-welcome" className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[2.5rem]">
           German {curriculum.code}, from the first „Hallo“
-        </h1>
+        </h2>
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">{meta.aboutEn}</p>
       </Reveal>
 
@@ -64,21 +65,23 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
       <Reveal delay={100} as="section" aria-labelledby="dm-how-it-works" className="mt-10">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <h2 id="dm-how-it-works" className="font-display text-xl font-semibold leading-tight text-ink">How a Lektion works</h2>
-          <p className="font-data text-[0.75rem] text-graphite">about {how.minutesPerLektion} min each</p>
+          <p className="font-data text-[0.75rem] text-graphite">about {how.minutesEstimate.lo}–{how.minutesEstimate.hi} min each (estimate)</p>
         </div>
-        <ol className="mt-4 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]">
+        {/* A wrapping grid, not a sideways strip: the ten steps are an ordinary list, and at 320 px a
+            horizontal scroller inside a vertical page failed reflow (WCAG 1.4.10; Codex review). */}
+        <ol className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {how.steps.map((step, i) => (
-            <li key={step.key} className="flex w-36 shrink-0 snap-start flex-col rounded-clay border border-rule bg-white p-3">
+            <li key={step.key} className="flex min-w-0 flex-col rounded-clay border border-rule bg-white p-3">
               <span className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span className="mt-1 font-bold text-ink">{step.label}</span>
+              <span className="mt-1 font-bold text-ink [overflow-wrap:anywhere]">{step.label}</span>
               <span className="mt-1 text-[0.8125rem] leading-snug text-graphite">{step.descriptionEn}</span>
             </li>
           ))}
         </ol>
         <p className="mt-2 font-data text-[0.6875rem] text-graphite">
-          Swipe for the rest. The warm-up appears once you have review cards due.
+          The warm-up appears once you have review cards due.
         </p>
       </Reveal>
 
@@ -90,7 +93,7 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
           </span>
           <div className="min-w-0">
             <p className="font-bold text-ink">
-              About {how.minutesPerLektion} minutes per Lektion · about {time.hoursPerWeek} hours a week
+              About {how.minutesEstimate.lo}–{how.minutesEstimate.hi} minutes per Lektion — an estimate, not yet measured with learners
             </p>
             <p className="mt-0.5 text-[0.875rem] leading-relaxed text-graphite">
               At {time.unitsPerWeek} units a week — a pace you can hold next to a job — the {time.units} units

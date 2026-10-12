@@ -24,5 +24,5 @@ export const COURSES = {
 /** The course for a level (lowercase or uppercase), or null when the level has no guided course yet. */
 export const courseFor = (level) => COURSES[String(level || '').toLowerCase()] || null;
 
-/** Levels that have a guided course, in ladder order. */
-export const COURSE_LEVELS = Object.keys(COURSES);
+/** Levels that have a guided course, in ladder order (./levels.js, so the chrome can read it cheaply). */
+export { COURSE_LEVELS } from './levels.js';

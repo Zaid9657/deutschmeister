@@ -153,7 +153,7 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'sein ist unregelmäßig:',
       'ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.',
-      'Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.',
+      'Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.',
       'Der Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.',
       // ROUND 14 (DaF review #13, MAJOR 2): „Ich komme aus Marokko.“ was a line of NOTHING once the
       // L2 Beispieltext stopped saying it — the course teaches `kommen` in Lektion 3 — and a card
@@ -171,21 +171,16 @@ const RULE_CARD_OVERRIDES = {
       // (Ana, feminine) and its comment claimed this card said „Er ist Marokkaner.“ — it did not,
       // and neither did the notice. The masculine is now on both, in the same sentence, and the
       // commonMistakes entry below corrects the swapped gender for the learner who is not Ana.
-      'Im Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
+      'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
       'Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
-      'In der Frage steht sein vorn: Ist das Formular für die Adresse?',
+      'In der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Ich bin ein Lehrer.',
-        correct: 'Ich bin Lehrer.',
-        explanationDe: 'Nach sein steht der Beruf ohne Artikel. Richtig: Ich bin Lehrer.',
-      },
-      {
         wrong: 'Ana bin Studentin.',
         correct: 'Ana ist Studentin.',
-        explanationDe: 'bin gehört zu ich. Für eine Person steht ist: Ana ist Studentin.',
+        explanationDe: 'bin gehört zu ich. Ana = sie, und bei sie steht ist: Ana ist Studentin.',
       },
       {
         wrong: 'Wie sind Sie von Beruf?',
@@ -195,7 +190,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich bin marokkanisch.',
         correct: 'Ich bin Marokkanerin.',
-        explanationDe: 'Im Satz steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
+        explanationDe: 'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       },
       {
         wrong: 'Ali ist Marokkanerin.',
@@ -215,7 +210,7 @@ const RULE_CARD_OVERRIDES = {
       'Beispiele: Wie alt ist er? Er ist zwanzig.',
       'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
       'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
-      'English: the pronoun follows the article of the noun — das Kind is always es.',
+      'English: the pronoun follows the article of the noun: das Kind → es.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -257,12 +252,12 @@ const RULE_CARD_OVERRIDES = {
         explanationDe: 'Nomen auf -ung sind die-Wörter.',
       },
       {
-        wrong: 'die Mädchen ist jung.',
+        wrong: 'Die Mädchen ist jung.',
         correct: 'Das Mädchen ist jung.',
-        explanationDe: 'Nomen auf -chen sind das-Wörter, auch bei Personen.',
+        explanationDe: 'Bei Mädchen steht das, auch bei Personen: das Mädchen.',
       },
       {
-        wrong: 'die Lehrer kauft den Stuhl.',
+        wrong: 'Die Lehrer kauft den Stuhl.',
         correct: 'Der Lehrer kauft den Stuhl.',
         explanationDe:
           'Männliche Berufsnamen auf -er sind der-Wörter. Die Frau ist die Lehrerin. In der Familie gilt das nicht: die Mutter, die Schwester.',
@@ -275,10 +270,10 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'der, die, das – der bestimmte Artikel',
     content: [
       'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist.',
-      'Die Formen sind der (maskulin), die (feminin), das (neutral), im Plural immer die: die Hefte.',
-      'Antworten beginnen zuerst mit hier oder da.',
+      'Die Formen sind der (maskulin), die (feminin), das (neutral), im Plural für alle drei die: die Hefte.',
+      'Zuerst antworten Sie mit hier oder da.',
       'Beispiele: Das Wörterbuch ist hier. Der Stift ist da. Die Schere ist hier.',
-      'Der Artikel steht immer vor dem Nomen: Der Stift ist blau, der Bleistift ist gelb.',
+      'Der Artikel steht vor dem Nomen: Der Stift ist blau, der Bleistift ist gelb.',
       'Nein, das Heft ist grün.',
       'English: der/die/das points at a thing both speakers already have in mind.',
     ].join('\n'),
@@ -309,16 +304,11 @@ const RULE_CARD_OVERRIDES = {
       'Nach Verben wie brauchen, haben, kaufen wird maskulin ein → einen: Ich brauche einen Computer.',
       'Die Regel dahinter (Akkusativ) kommt in A1.2.',
       'Verneinung mit kein: Wir haben kein Handy.',
-      'Der Beruf steht ohne Artikel: Ihr Kollege ist Ingenieur.',
+      'Nach er ist steht der Beruf meist ohne Artikel: Ihr Kollege ist Ingenieur.',
       'Die Uhrzeit um eins folgt in Lektion 8.',
-      'English: German uses no article before a job — Ich bin Ingenieurin, never eine Ingenieurin.',
+      'English: after ich bin or er ist a job usually stands without an article — Ich bin Ingenieurin.',
     ].join('\n'),
     commonMistakes: [
-      {
-        wrong: 'Ich bin eine Verkäuferin.',
-        correct: 'Ich bin Verkäuferin.',
-        explanationDe: 'Nach sein steht der Beruf ohne Artikel. Richtig: Ich bin Verkäuferin.',
-      },
       {
         wrong: 'Ich brauche ein Computer.',
         correct: 'Ich brauche einen Computer.',
@@ -368,6 +358,7 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'um, am – die Uhrzeit sagen',
     content: [
       'Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.',
+      'Aber: Es ist acht Uhr (ohne um).',
       'Umgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).',
       'Die Uhrzeit halb neun ist 8.30 und nicht 9.30.',
       'Offiziell lautet die Uhrzeit acht Uhr dreißig.',
@@ -375,7 +366,7 @@ const RULE_CARD_OVERRIDES = {
       'Feste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.',
       'im steht vor Monaten: im Mai.',
       'Die Ordnungszahl für das Datum lernt man erst in A1.2.',
-      'English: um for clock times, am for days and parts of the day, im for months.',
+      'English: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -423,7 +414,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich habe einen Hunger.',
         correct: 'Ich habe Hunger.',
-        explanationDe: 'Nach haben stehen Hunger, Durst und Zeit ohne Artikel.',
+        explanationDe: 'In Hunger haben, Durst haben und Zeit haben steht meist kein Artikel: Ich habe Hunger.',
       },
     ],
   },
@@ -433,11 +424,11 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'Ja/Nein-Fragen: das Verb steht vorn',
     content: [
       'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
-      'Das Subjekt steht direkt nach dem Verb.',
+      'Das Subjekt steht meist direkt nach dem Verb.',
       'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
       'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
       'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
-      'Ist der Bahnhof weit? Hat der Zug Verspätung?',
+      'Ist das Gleis weit? Hat der Zug Verspätung?',
       'English: in a written yes/no question the verb comes first and the subject second.',
     ].join('\n'),
     commonMistakes: [
@@ -449,12 +440,12 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Kommen aus Österreich Sie?',
         correct: 'Kommen Sie aus Österreich?',
-        explanationDe: 'Das Subjekt steht direkt nach dem Verb, nicht am Satzende.',
+        explanationDe: 'Das Subjekt steht meist direkt nach dem Verb, nicht am Satzende.',
       },
       {
         wrong: 'Sind Sie Frau Meier? — Ja, ich bin.',
         correct: 'Ja, ich bin Frau Meier.',
-        explanationDe: 'Die Kurzantwort wiederholt die Aussage, nicht nur Ja und das Verb.',
+        explanationDe: 'Ja, ich bin. ist zu kurz. Man sagt: Ja. Oder: Ja, ich bin Frau Meier.',
       },
     ],
   },
@@ -464,12 +455,12 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'Trennbare Verben: die Satzklammer',
     content: [
       'Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.',
-      'Das Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.',
+      'Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.',
       'Beispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.',
       'Ich rufe dich an ist eine feste Wendung. Rufst du mich an?',
       'schlafen wechselt den Vokal: er schläft.',
       'Gemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.',
-      'English: a separable verb splits — the finite part comes second, the prefix goes last.',
+      'English: a separable verb splits — the finite part comes second (first in a yes/no question), the prefix goes last.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -494,7 +485,7 @@ const RULE_CARD_OVERRIDES = {
   'possessive-articles': {
     titleDe: 'mein, dein, sein, ihr – Possessivartikel',
     content: [
-      'Der Possessivartikel zeigt, wem etwas gehört: mein Geschenk, dein Bruder, sein Handy (er), ihr Buch (sie), Ihr Büro (Sie, höflich — immer groß!).',
+      'Der Possessivartikel zeigt, wem etwas gehört: mein Geschenk, dein Bruder, sein Handy (er), ihr Buch (sie: eine Frau oder mehrere), Ihr Büro (Sie, immer groß!).',
       'Vor femininen Nomen und im Plural kommt -e dazu: meine Mama.',
       'Für Gruppen: unser Fest (wir), euer Fest (ihr) → vor die-Wörtern unsere, eure.',
       'Die höfliche Form ist Ihr und steht immer mit großem I.',

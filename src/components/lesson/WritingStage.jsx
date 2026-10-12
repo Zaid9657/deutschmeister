@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import StageShell from './StageShell.jsx';
 import GradedWriting from './GradedWriting.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { writingSummary } from '../../lib/lesson/skillStatus.js';
 
 /**
  * Stage 6 — Schreiben. A Formular (fields) or a Mitteilung (short message),
@@ -26,7 +27,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 /** Below this share of the maximum the Lektion counts the writing as a miss. */
 const PASS_PCT = 0.6;
 
-export default function WritingStage({ stage, onBack, onDone, onResult }) {
+export default function WritingStage({ stage, onBack, onDone, onResult, onReport }) {
   const schreiben = stage.schreiben || {};
   const [graded, setGraded] = useState(false);
   const [lang] = useLessonLang();
@@ -34,6 +35,8 @@ export default function WritingStage({ stage, onBack, onDone, onResult }) {
   const handleResult = useCallback(
     (r) => {
       setGraded(true);
+      // assessed vs. self-checked, for the recap's writing line (skillStatus.js)
+      if (typeof onReport === 'function') onReport(writingSummary(r));
       if (typeof onResult !== 'function') return;
       // An ungraded submission (checklist fallback) has no pct and must not be
       // logged as a wrong answer — silence is honest, a 0 would not be.
@@ -44,7 +47,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult }) {
         { correct, errorTag: correct ? null : 'Schreiben', result: r },
       );
     },
-    [onResult, schreiben.taskKey, stage.key],
+    [onResult, onReport, schreiben.taskKey, stage.key],
   );
 
   return (

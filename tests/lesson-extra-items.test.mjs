@@ -841,7 +841,14 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // re-stamps every origin item and reseats checkpoint 1's Schreiben section: the frontable
     // sentence „Ich bin Lehrer von Beruf.“ (`extra-a11-l02-07`) now sits at seat 1 instead of
     // seat 2. Count stays 1. RE-MEASURED, not relaxed.
+    // 2026-10-05 (transfer): the checkpoints now prefer pool items the learner has NOT answered in
+    // a lesson (buildCheckpoint lessonSeenIds), which reseats Bausteine and Schreiben: three more
+    // frontable sentences are drawn. Every one is asserted above to accept both orders — the set
+    // grew, nothing stopped accepting anything. RE-MEASURED.
     'a1.1-cp1-schreiben-1',
+    'a1.1-cp2-bausteine-6',
+    'a1.1-cp3-schreiben-2',
+    'a1.1-cp4-schreiben-2',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 
@@ -989,7 +996,11 @@ test('an opening the pretest accepts is accepted by the Lektion\'s own Wortsalat
   assert.deepEqual(bridged.sort(), [
     'L11 extra-a11-l11-10 ← Gestern habe ich',
     'L2 extra-a11-l02-07 ← Von Beruf bin ich',
-  ], 'the pretest↔Wortsalat bridge no longer reaches the two measured Lektionen');
+    // 2026-10-05: L8's pretest now also accepts „Um wie viel Uhr …“, and both L8 items that
+    // build that question accept the fronted order (asserted above, not just listed).
+    'L8 96b41b81-d57b-5bfe-91c8-93ef7d8982ca ← Um wie viel Uhr',
+    'L8 extra-a11-l08-08 ← Um wie viel Uhr',
+  ], 'the pretest↔Wortsalat bridge no longer reaches the measured Lektionen');
 });
 
 /**
@@ -1121,7 +1132,8 @@ test('every determiner correction of the pool and of a checkpoint names its elem
 
 test('the two review items say which element to fix, and the key still grades its own answer — REVIEW #14 MAJOR 2', () => {
   const cases = [
-    { id: 'extra-a11-l12-16', canonical: 'Ihr Papa kommt auch.', nounSwap: 'Ihre Mama kommt auch.' },
+    // 2026-10: the vocative makes the capital the POLITE Ihr; at the sentence start alone it proved nothing.
+    { id: 'extra-a11-l12-16', canonical: 'Ihr Papa kommt auch, Frau Kaya.', nounSwap: 'Ihre Mama kommt auch, Frau Kaya.' },
     { id: 'extra-a11-l12-15', canonical: 'Das ist meine Party.', nounSwap: 'Das ist mein Fest.' },
   ];
   for (const { id, canonical, nounSwap } of cases) {

@@ -3,7 +3,8 @@ import { Check, Play } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { AudioSourceBadge } from './DialogStage.jsx';
-import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
+import { audioFor, playChecked, speechAvailable } from '../../lib/lesson/speech.js';
+import { AudioFailureNotice } from './PlayButton.jsx';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -28,6 +29,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
   const id = lektionId || stage.lektionId || null;
   const recorded = !!audioFor(id, 'pretest');
   const [value, setValue] = useState('');
+  const [audioFail, setAudioFail] = useState(null);
   const [revealed, setRevealed] = useState(false);
   const [lang] = useLessonLang();
 
@@ -70,7 +72,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => playLine(id, 'pretest', pretest.model)}
+              onClick={() => { setAudioFail(null); playChecked(id, 'pretest', pretest.model).then((r) => setAudioFail(r.ok ? null : r.reason)); }}
               disabled={!pretest.model || (!recorded && !speechAvailable())}
               className="inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2 text-sm font-bold text-ink hover:border-siegel active:translate-y-0.5 disabled:opacity-40"
             >
@@ -85,6 +87,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
           )}
         </Card>
       )}
+      <AudioFailureNotice reason={audioFail} />
     </StageShell>
   );
 }

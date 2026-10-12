@@ -44,7 +44,7 @@ export default function StageShell({
     <section className={`flex min-h-[60vh] flex-col ${wash ? `-mx-4 rounded-clay px-4 pt-4 sm:-mx-6 sm:px-6 ${wash}` : ''}`}>
       <header className="mb-5">
         {eyebrow && (
-          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{eyebrow}</p>
+          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{eyebrow}</p>
         )}
         {title && (
           <h1 className="mt-2 font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[1.75rem]">

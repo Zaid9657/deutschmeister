@@ -5,16 +5,18 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * bar", not a score). It counts screens, not correctness — nothing here ever
  * tells a learner they are behind.
  */
-export default function LessonProgressBar({ step, total, label }) {
+export default function LessonProgressBar({ step, total, label, stepLabel }) {
   const pct = total > 0 ? Math.round((step / total) * 100) : 0;
   const [lang] = useLessonLang();
   return (
-    <div className="flex items-center gap-3">
+    // flex-1 + min-w-0: inside the player's header row the bar used to collapse to 0 px wide.
+    <div className="flex min-w-0 flex-1 items-center gap-3">
       <div
         className="h-1.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash"
         role="progressbar"
         aria-label={t('player.progress', lang)}
         aria-valuenow={pct}
+        aria-valuetext={stepLabel || undefined}
         aria-valuemin={0}
         aria-valuemax={100}
       >

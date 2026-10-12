@@ -49,7 +49,8 @@ export default function CourseCertificatePage() {
   if (loaded && !complete) return <Navigate to={courseComplete(level)} replace />;
 
   const name = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || '';
-  const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  // A rebuilt course speaks German with Sie everywhere, its certificate included.
+  const date = new Date().toLocaleDateString(curriculum ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   const code = curriculum ? curriculum.code : course.code;
   const testFormat = curriculum ? curriculum.examName : course.testFormat;
@@ -62,8 +63,8 @@ export default function CourseCertificatePage() {
     <div className="min-h-screen bg-paper font-body text-ink">
       <div className="mx-auto max-w-3xl px-4 py-10">
         <div className="mb-6 flex items-center justify-between print:hidden">
-          <Link to={courseComplete(level)} className="text-sm font-bold text-siegel hover:text-siegel-deep">← Back</Link>
-          <Button onClick={() => window.print()} variant="primary" size="md">Print / save as PDF</Button>
+          <Link to={courseComplete(level)} className="text-sm font-bold text-siegel hover:text-siegel-deep">← {curriculum ? 'Zurück' : 'Back'}</Link>
+          <Button onClick={() => window.print()} variant="primary" size="md">{curriculum ? 'Drucken / als PDF speichern' : 'Print / save as PDF'}</Button>
         </div>
         <div className="rounded-clay border-4 border-siegel bg-white p-10 text-center shadow-raise-lg print:shadow-none sm:p-14">
           <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-siegel">DeutschMeister</p>
@@ -75,14 +76,28 @@ export default function CourseCertificatePage() {
           ) : (
             <h1 className="mt-4 font-display text-[2rem] font-semibold tracking-[-0.02em] sm:text-[2.5rem]">Certificate of Completion</h1>
           )}
-          <p className="mt-8 text-[0.9375rem] text-graphite">This certifies that</p>
-          <p className="mt-2 font-display text-[1.75rem] font-semibold text-ink sm:text-[2.125rem]">{loaded ? name : '…'}</p>
-          <p className="mt-6 text-[0.9375rem] text-graphite">has completed every lesson of the</p>
-          <p className="mt-2 font-display text-[1.5rem] font-semibold text-ink">German {code} Course</p>
           {curriculum ? (
-            <p className="mt-1 text-[0.875rem] text-graphite">{lektionenDone}/{lektionenTotal} Lektionen · {checkpointsDone}/{checkpointsTotal} checkpoints · {testFormat} level</p>
+            // What was completed, and nothing more: the Lektionen and checkpoints
+            // done and a passed course test in the exam's format. It is not a
+            // Goethe/telc result and it does not certify a CEFR level.
+            <>
+              <p className="mt-8 text-[0.9375rem] text-graphite">Hiermit wird bestätigt, dass</p>
+              <p className="mt-2 font-display text-[1.75rem] font-semibold text-ink sm:text-[2.125rem]">{loaded ? name : '…'}</p>
+              <p className="mt-6 text-[0.9375rem] text-graphite">den DeutschMeister-Kurs</p>
+              <p className="mt-2 font-display text-[1.5rem] font-semibold text-ink">Deutsch {code}</p>
+              <p className="mt-2 text-[0.9375rem] text-graphite">abgeschlossen hat.</p>
+              <p className="mt-3 text-[0.875rem] text-graphite">
+                {lektionenDone}/{lektionenTotal} Lektionen · {checkpointsDone}/{checkpointsTotal} Checkpoints · Abschlusstest bestanden (Übungstest im Format {testFormat})
+              </p>
+            </>
           ) : (
-            <p className="mt-1 text-[0.875rem] text-graphite">{items.length} lessons · grammar, reading, listening, vocabulary and speaking · {testFormat} level</p>
+            <>
+              <p className="mt-8 text-[0.9375rem] text-graphite">This certifies that</p>
+              <p className="mt-2 font-display text-[1.75rem] font-semibold text-ink sm:text-[2.125rem]">{loaded ? name : '…'}</p>
+              <p className="mt-6 text-[0.9375rem] text-graphite">has completed every lesson of the</p>
+              <p className="mt-2 font-display text-[1.5rem] font-semibold text-ink">German {code} Course</p>
+              <p className="mt-1 text-[0.875rem] text-graphite">{items.length} lessons · grammar, reading, listening, vocabulary and speaking · {testFormat} level</p>
+            </>
           )}
           <p className="mt-10 font-data text-[0.75rem] text-graphite">{date} · deutsch-meister.de</p>
         </div>

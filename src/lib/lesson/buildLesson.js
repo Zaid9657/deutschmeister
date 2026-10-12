@@ -317,6 +317,7 @@ export const leaksAnswer = (solved, prints) => {
 
 /** Quotation marks the pool uses around the sentence an item works on. */
 const QUOTED = /[„“”"»]([^„“”"»«]+)[“”"«]/;
+const OPENING_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“\)/g;
 /**
  * The prompt without the exercise bank's task formula: the quoted sentence when
  * the prompt quotes one, else what follows the instruction's colon. Two items
@@ -326,7 +327,10 @@ const QUOTED = /[„“”"»]([^„“”"»«]+)[“”"«]/;
  * the wrapper, or it compares formulas instead of tasks.
  */
 export const bare = (text) => {
-  const s = String(text || '').trim();
+  // The build's opening cue („(Beginnen Sie mit „Die Firma“)", quality.js `missingOpeningCue`) is an
+  // instruction, not the exercise — read as the quoted sentence it changed the item's task shape and
+  // so the lesson draw (Codex review, 2026-10-08).
+  const s = String(text || '').replace(OPENING_CUE_RE, '').trim();
   const quoted = s.match(QUOTED);
   if (quoted && quoted[1].trim()) return quoted[1];
   const formula = s.match(
@@ -1119,7 +1123,11 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     stages.push({ nr: 2, key: 'dialog', kind: 'dialog', title: lektion.dialog.title || 'Dialog', dialog: lektion.dialog });
   }
   if (lektion.wortfeld && lektion.wortfeld.length) {
-    stages.push({ nr: 2, key: 'wortfeld', kind: 'wortfeld', title: 'Wortfeld', words: lektion.wortfeld });
+    stages.push({
+      nr: 2, key: 'wortfeld', kind: 'wortfeld', title: 'Wortfeld', words: lektion.wortfeld,
+      // The dialogue lines give each word card the sentence it was met in (WortfeldStage lineFor).
+      lines: ((lektion.dialog && lektion.dialog.lines) || []).map((l) => l.de).filter(Boolean),
+    });
   }
   if (lektion.notice) {
     stages.push({ nr: 3, key: 'notice', kind: 'notice', title: lektion.notice.title || 'Grammatik', notice: lektion.notice });

@@ -20,7 +20,22 @@
 // tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
-export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong' };
+// CORRECTED: the exercise was finished, but only after a wrong try that the
+// learner fixed on the spot (matching, where a wrong pair never commits). It is
+// not a typo — a wrong pair is a vocabulary miss — and not a first-try success.
+export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong', CORRECTED: 'corrected' };
+
+/**
+ * The ONE result a matching exercise records, whatever number of taps it took.
+ * `confused` = the pairs the learner got wrong at least once, as the correct
+ * `{ de, en }` (one entry per German word). Any confusion makes the exercise
+ * complete-but-not-first-try, tagged Wortschatz; none makes it correct.
+ */
+export function matchOutcome(confused = []) {
+  return confused.length
+    ? { result: RESULT.CORRECTED, correct: false, errorTag: 'Wortschatz', confused }
+    : { result: RESULT.CORRECT, correct: true, errorTag: null, confused: [] };
+}
 
 export function levenshtein(a, b) {
   if (a === b) return 0;
@@ -49,8 +64,39 @@ const stripPunct = (s) =>
  * inside a run of digits are removed, and the run is compared as one number.
  * Typographic quotes are folded by stripPunct above, for every check.
  */
+// German number words → digits, for dictation only (2026-10-07, Codex review): „042 3381" is how
+// anyone writes a phone number they heard as „null vier zwei – drei drei acht eins", and „20" is
+// „zwanzig". Applied to the expected line AND the answer, so both meet as digits. „ein/eine" (the
+// article) is never touched — only „eins", the counting form.
+const DICTATION_NUMBERS = {
+  null: 0, eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9,
+  zehn: 10, elf: 11, zwölf: 12, dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17,
+  achtzehn: 18, neunzehn: 19, zwanzig: 20, dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60,
+  siebzig: 70, achtzig: 80, neunzig: 90, hundert: 100,
+};
+const COMPOUND_UNITS = { ein: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const TENS = ['zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+// The umlaut-free keyboard spellings (zwoelf, fuenfzehn, dreissig) are the same numbers — the
+// fold normalizeAnswer applies later, applied here first so both spellings meet (Codex review).
+const asciiFold = (w) => w.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const withAscii = (words) => [...new Set(words.flatMap((w) => [w, asciiFold(w)]))];
+const NUMBER_VALUE = new Map(Object.entries(DICTATION_NUMBERS).map(([w, v]) => [asciiFold(w), v]));
+const UNIT_VALUE = new Map(Object.entries(COMPOUND_UNITS).map(([w, v]) => [asciiFold(w), v]));
+const NUMBER_RE = new RegExp(
+  `(?<!\\p{L})(?:(${withAscii(Object.keys(COMPOUND_UNITS)).join('|')})und(${withAscii(TENS).join('|')})|(${withAscii(Object.keys(DICTATION_NUMBERS)).join('|')}))(?!\\p{L})`,
+  'giu',
+);
+export const numberWordsToDigits = (text) => String(text ?? '').replace(NUMBER_RE, (m, unit, ten, word) => (
+  word
+    ? String(NUMBER_VALUE.get(asciiFold(word)))
+    : String(UNIT_VALUE.get(asciiFold(unit)) + NUMBER_VALUE.get(asciiFold(ten)))
+));
+
 export function normalizeDictation(text) {
-  return String(text ?? '')
+  return numberWordsToDigits(text)
+    // A decimal comma is a value, not punctuation: „2,0 Euro" must not become „20 Euro" when the
+    // later punctuation strip removes the comma (Codex review). The marker survives stripPunct.
+    .replace(/(\d),(?=\d)/g, '$1§')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
     .replace(/(\d)[\s./]+(?=\d)/g, '$1')
     .replace(/\s+/g, ' ')
@@ -79,8 +125,28 @@ export const SPELLED_OUT_RE = /^\p{L}([-\s]\p{L})+$/u;
 /** True when any accepted answer is a spelled-out letter sequence. */
 export function spellingApplies(expected) {
   const list = Array.isArray(expected) ? expected : [expected];
-  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').trim()));
+  // A dictated line ends like a sentence: „C-H-A-K-I-R-I." is still a spelled word (Codex review).
+  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').trim().replace(/[.!?]+$/, '')));
 }
+
+const numbersIn = (s) => (String(s).match(/\d+/g) || []).join(',');
+
+/** Negation, at any length: „keine" → „eine" is one edit and the opposite meaning. */
+const NEGATION_RE = /^(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)$/;
+
+/** The one word two prepared answers differ in, when both have the same number of words; else null. */
+function changedWord(given, expected) {
+  const g = given.split(' ');
+  const e = expected.split(' ');
+  if (g.length !== e.length) return null;
+  const at = e.findIndex((w, i) => w !== g[i]);
+  return at < 0 ? null : { expected: e[at], given: g[at] };
+}
+
+/** `given` is `expected` with exactly one extra character somewhere („bistt" for „bist"). */
+const oneKeyAdded = (given, expected) =>
+  given.length === expected.length + 1
+  && [...given].some((_, i) => given.slice(0, i) + given.slice(i + 1) === expected);
 
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
@@ -152,7 +218,7 @@ export function checkAnswer(userInput, expected, {
   const fold = (s) => {
     let t = String(s ?? '');
     if (dictation) t = normalizeDictation(t);
-    if (spellingMode) t = normalizeSpelling(t);
+    if (spellingMode) t = normalizeSpelling(t.trim().replace(/[.!?]+$/, ''));
     return t;
   };
   // Raw = trimmed, whitespace-collapsed, punctuation-folded — but case and
@@ -178,6 +244,15 @@ export function checkAnswer(userInput, expected, {
     const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
     if (shortFunctionWord) continue;
+    // A different number is a different answer, never a typo: „90" for „20" is one character off.
+    if (numbersIn(user) !== numbersIn(norm)) continue;
+    // So is a changed SHORT word inside a sentence: „ein" for „bin" or „kein", „dem" for „den" are
+    // grammar and meaning, and so is any change to a negation (Codex score review, 2026-10-08 — a
+    // graded checkpoint accepted „Ich ein von Beruf Lehrer."). The guard above only covers one-word
+    // answers. A short word typed whole plus one stray key („bistt") is still a slip.
+    const changed = changedWord(user, norm);
+    if (changed && (NEGATION_RE.test(changed.expected) || NEGATION_RE.test(changed.given)
+      || (changed.expected.length <= 4 && !oneKeyAdded(changed.given, changed.expected)))) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
       return { result: RESULT.TYPO, expected: a };
     }

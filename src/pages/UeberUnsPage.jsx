@@ -21,7 +21,7 @@ const DIFFERENTIATORS = [
   {
     icon: Mic,
     title: 'Real speaking, not just clicking',
-    body: 'Practice complete responses and receive AI feedback on pronunciation, grammar, and vocabulary—not only multiple-choice drills.',
+    body: 'Practice complete responses and receive AI feedback on grammar, vocabulary and clarity—not only multiple-choice drills.',
   },
   {
     icon: ScanSearch,

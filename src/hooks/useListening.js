@@ -111,6 +111,26 @@ export function useLevelExercises(level) {
   return { exercises, loading, error, retry };
 }
 
+/** The questions of one listening exercise, outside React — for scoring a part that is not on screen. */
+export async function fetchExerciseQuestions(level, exerciseNumber) {
+  const { data: exerciseData, error: exError } = await withTimeout(
+    supabase
+      .from('listening_exercises')
+      .select('id')
+      .ilike('level', level)
+      .eq('exercise_number', parseInt(exerciseNumber))
+      .single()
+  );
+  if (exError) throw exError;
+  // Both requests are bounded: a stalled one must end in the runner's retry message, never in a
+  // submit button that stays disabled (Codex review).
+  const { data, error } = await withTimeout(
+    supabase.from('listening_questions').select('*').eq('exercise_id', exerciseData.id).order('question_number')
+  );
+  if (error) throw error;
+  return data || [];
+}
+
 export function useExerciseDetails(level, exerciseNumber) {
   const [exercise, setExercise] = useState(null);
   const [dialogues, setDialogues] = useState([]);

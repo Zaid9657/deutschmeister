@@ -12,7 +12,7 @@
 //      metadata as acquisition_last_source.
 //   3. THE PLACE: the click remembers the Lektion (or the course home) and
 //      postAuthPath returns to it after a pending checkout; mid-Lektion, the
-//      run is handed to the tab the confirmation e-mail opens.
+//      run (localStorage) resumes in the tab the confirmation e-mail opens.
 //   4. THE WIRING: the player decides through saveAskDue with `!user`, records
 //      the first answer from the attempts its onResult path writes, and no
 //      course-chrome file opens /signup except through the door helper.
@@ -73,7 +73,7 @@ function inWindow(win, fn) {
 const ask = await import('../src/lib/course/saveProgressAsk.js');
 const { setReturnPath, peekReturnPath, clearReturnPath, isCourseReturnPath } = await import('../src/lib/returnPath.js');
 const { postAuthPath, setBuyIntent, clearBuyIntent } = await import('../src/lib/buyIntent.js');
-const { packRun, saveRun, readRun, clearRun, runKey, HANDOFF_KEY } = await import('../src/lib/lesson/runState.js');
+const { packRun, saveRun, readRun, clearRun, runKey, RUN_MAX_AGE_MS } = await import('../src/lib/lesson/runState.js');
 const { signupAttributionMetadata } = await import('../src/lib/attribution.js');
 
 const NOW = Date.UTC(2026, 9, 6, 17, 0, 0);
@@ -185,7 +185,10 @@ test('the return path is forgotten after three days', () => {
   });
 });
 
-test('mid-Lektion, the run crosses into the tab the confirmation e-mail opens, once', () => {
+test('mid-Lektion, the run crosses into the tab the confirmation e-mail opens — signed out or signed in', () => {
+  // Merged with the 2026-10 remediation, which moved the run snapshot to localStorage (7 days,
+  // per owner): the run is already where every tab of the browser reads, so it needs no hand-off
+  // copy — and signing in in the new tab still finds it (a signed-in read falls back to the guest run).
   const b = browser();
   const tabA = b.tab();
   const run = packRun({ stageKey: 'practice', stageIndex: 5, itemIndex: 1, attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] }, NOW);
@@ -193,30 +196,24 @@ test('mid-Lektion, the run crosses into the tab the confirmation e-mail opens, o
     saveRun('a1.1', 'a1.1-l01', run);
     ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }, NOW);
   });
-  assert.ok(b.localStorage.map.has(HANDOFF_KEY), 'the click hands the run off');
+  assert.ok(b.localStorage.map.has(runKey('a1.1', 'a1.1-l01')), 'the run is in the storage every tab shares');
 
-  // The e-mail's tab: no sessionStorage of its own. Another Lektion does not take it.
-  const tabB = b.tab();
-  inWindow(tabB, () => {
+  // The e-mail's tab: no sessionStorage of its own. Another Lektion does not take the run.
+  inWindow(b.tab(), () => {
     assert.equal(readRun('a1.1', 'a1.1-l02', NOW + 1000), null, 'another Lektion starts fresh');
-    assert.ok(b.localStorage.map.has(HANDOFF_KEY), 'and leaves the hand-off where it is');
     const resumed = readRun('a1.1', 'a1.1-l01', NOW + 1000);
     assert.equal(resumed.stageKey, 'practice');
     assert.equal(resumed.itemIndex, 1);
     assert.deepEqual(resumed.attempts, run.attempts, 'the signed-out answer travels with the run');
+    assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 1000, 'user-1').itemIndex, 1, 'and signing in there keeps it');
   });
-  assert.ok(!b.localStorage.map.has(HANDOFF_KEY), 'taken once');
-  assert.ok(tabB.sessionStorage.map.has(runKey('a1.1', 'a1.1-l01')), 'and now it is that tab\'s run');
-
-  // The original tab keeps its own run (it may have moved on since).
+  // The original tab keeps its run, and a run older than RUN_MAX_AGE_MS starts fresh, like any run.
   inWindow(tabA, () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 1000).itemIndex, 1));
-  // A hand-off older than a sitting starts fresh, like any run.
-  inWindow(tabA, () => ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }, NOW));
-  inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 13 * 3600_000), null));
+  inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + RUN_MAX_AGE_MS + 60_000), null));
 });
 
-test('a run finished in the saving tab takes its hand-off with it: a later tab cannot resume it (review of 6278791d)', () => {
-  // Save → Back → finish Lektion 1 in the same tab → open Lektion 1 in a new tab within 12 h.
+test('a run finished in one tab cannot be resumed by a later tab (review of 6278791d)', () => {
+  // Save → Back → finish Lektion 1 in the same tab → open Lektion 1 in a new tab.
   const b = browser();
   const tabA = b.tab();
   const run = packRun({ stageKey: 'practice', stageIndex: 5, itemIndex: 1, attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] }, NOW);
@@ -225,12 +222,14 @@ test('a run finished in the saving tab takes its hand-off with it: a later tab c
     ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }, NOW);
     clearRun('a1.1', 'a1.1-l02');
   });
-  assert.ok(b.localStorage.map.has(HANDOFF_KEY), 'ending ANOTHER Lektion leaves this hand-off alone');
+  inWindow(b.tab(), () => assert.ok(readRun('a1.1', 'a1.1-l01', NOW + 1000), 'ending ANOTHER Lektion leaves this run alone'));
   inWindow(tabA, () => clearRun('a1.1', 'a1.1-l01')); // the recap of Lektion 1, in the saving tab
-  assert.ok(!b.localStorage.map.has(HANDOFF_KEY), 'the recap drops the hand-off of the run it ends');
   inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 3600_000), null, 'a new tab starts Lektion 1 fresh, no old answer re-logged'));
-  // The player's recap is what calls clearRun, for this Lektion's key.
-  assert.match(code(read('src/pages/lesson/LessonPlayerPage.jsx')), /if \(saved \|\| stage\.kind === 'recap'\) \{ clearRun\(curriculum\.level, lektion\.id\); return; \}/);
+  // Signed in, the recap ends the owner's run AND the guest run it resumed from.
+  inWindow(tabA, () => { saveRun('a1.1', 'a1.1-l01', run); clearRun('a1.1', 'a1.1-l01', 'user-1'); });
+  inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 1000, 'user-1'), null));
+  // The player's recap is what calls clearRun, for this Lektion's key and this learner.
+  assert.match(code(read('src/pages/lesson/LessonPlayerPage.jsx')), /if \(saved \|\| stage\.kind === 'recap'\) \{ clearRun\(curriculum\.level, lektion\.id, owner\); return; \}/);
 });
 
 // --- 4. THE WIRING ----------------------------------------------------------------------------
@@ -241,7 +240,10 @@ test('the player shows the ask through saveAskDue for a signed-out learner, from
   assert.match(src, /body = <SaveProgressAsk level=\{curriculum\.level\} lektion=\{lektion\} onContinue=\{\(\) => setAskSettled\(true\)\} \/>/);
   assert.match(src, /if \(firstAnswerAt \|\| !attempts\.length\) return;\s*setFirstAnswerAt\(\{ stageIndex, itemIndex \}\);/,
     'the first answer is the first attempt recordResult stores, wherever it was given');
-  assert.match(src, /setAttempts\(\(prev\) => \[\.\.\.prev, \{ itemId: item\.id/, 'recordResult is the onResult every checked item calls');
+  // Merged with the 2026-10 remediation: recordResult keeps ONE attempt per (item, stage), so a double
+  // submit is not a second answer — it still appends the attempt the first-answer rule reads.
+  assert.match(src, /setAttempts\(\(prev\) => \(prev\.some\(\(a\) => a\.itemId === item\.id && a\.stage === stageKind\)\s*\? prev\s*: \[\.\.\.prev, \{\s*itemId: item\.id/,
+    'recordResult is the onResult every checked item calls');
   assert.match(src, /useState\(\(\) => preview \|\| isAskSettled\(curriculum\.level, lektion\.id\)\)/);
   assert.match(src, /if \(user && !preview\) clearReturnPath\(\);/, 'signed in, the remembered place is cleared');
   // The ask decides nothing about the answer itself: every item still checks through check.js.

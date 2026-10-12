@@ -6,6 +6,11 @@
 //   CHROME_PATH=/path/to/chromium node scripts/lighthouse-batch.mjs
 //
 // Output: docs/evaluation/lighthouse.json
+//
+// Comparable before/after runs on chosen routes (e.g. the course):
+//   node scripts/lighthouse-batch.mjs --pages=/course/a1.1,/course/a1.1/l/1 --runs=3 --out=docs/evaluation/x.json
+// (Measured 2026-10-05: system Chrome 154 closes the CDP session under Lighthouse 13
+//  — "Session closed" on Page.enable. CHROME_PATH=<puppeteer chrome 143> works.)
 import { createServer } from 'node:http';
 import { gzipSync } from 'node:zlib';
 import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -17,7 +22,11 @@ const DIST = join(process.cwd(), 'dist');
 const OUT = join(process.cwd(), 'docs', 'evaluation');
 mkdirSync(OUT, { recursive: true });
 
-const PAGES = [
+const flag = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split('=')[1];
+const RUNS = Number(flag('runs') || 1);
+const OUT_FILE = flag('out') || join(OUT, 'lighthouse.json');
+
+const DEFAULT_PAGES = [
   { path: '/', name: 'home (Astro)' },
   { path: '/pricing/', name: 'pricing (Astro)' },
   { path: '/grammar/', name: 'grammar hub (Astro)' },
@@ -25,6 +34,7 @@ const PAGES = [
   { path: '/leitfaden/telc-b1/', name: 'telc-B1 guide (Astro)' },
   { path: '/level-test', name: 'level test (SPA shell)' },
 ];
+const PAGES = flag('pages') ? flag('pages').split(',').map((path) => ({ path, name: path })) : DEFAULT_PAGES;
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json' };
 const server = createServer((req, res) => {
@@ -52,7 +62,8 @@ const server = createServer((req, res) => {
     }
   }
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end(readFileSync(join(DIST, 'app.html')));
+  // A merged deploy build names the SPA shell app.html; a plain `vite build` leaves index.html.
+  res.end(readFileSync(join(DIST, existsSync(join(DIST, 'app.html')) ? 'app.html' : 'index.html')));
 });
 await new Promise((r) => server.listen(4181, r));
 
@@ -60,7 +71,7 @@ const chrome = await launch({ chromeFlags: ['--headless=new', '--disable-gpu'] }
 const results = [];
 
 for (const page of PAGES) {
-  for (const preset of ['mobile', 'desktop']) {
+  for (let run = 1; run <= RUNS; run += 1) for (const preset of ['mobile', 'desktop']) {
     const config = preset === 'desktop'
       ? { extends: 'lighthouse:default', settings: { formFactor: 'desktop', screenEmulation: { disabled: true }, throttling: { rttMs: 40, throughputKbps: 10240, cpuSlowdownMultiplier: 1 } } }
       : undefined;
@@ -80,8 +91,8 @@ for (const page of PAGES) {
       cls: lhr.audits['cumulative-layout-shift']?.displayValue,
       transfer: lhr.audits['total-byte-weight']?.displayValue,
     };
-    results.push({ page: page.name, path: page.path, preset, scores, metrics, flagged });
-    console.log(`${page.path} [${preset}] perf:${scores.performance} a11y:${scores.accessibility} bp:${scores['best-practices']} seo:${scores.seo}`);
+    results.push({ page: page.name, path: page.path, preset, run, scores, metrics, flagged });
+    console.log(`${page.path} [${preset} #${run}] lcp:${metrics.lcp} tbt:${metrics.tbt} cls:${metrics.cls} perf:${scores.performance} a11y:${scores.accessibility} bp:${scores['best-practices']} seo:${scores.seo}`);
   }
 }
 
@@ -92,5 +103,5 @@ try {
   // temporary profile. Preserve the completed measurements in that case.
 }
 server.close();
-writeFileSync(join(OUT, 'lighthouse.json'), JSON.stringify(results, null, 1));
-console.log(`\n→ docs/evaluation/lighthouse.json`);
+writeFileSync(OUT_FILE, JSON.stringify(results, null, 1));
+console.log(`\n→ ${OUT_FILE}`);

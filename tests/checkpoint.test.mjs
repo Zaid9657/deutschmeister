@@ -69,6 +69,7 @@ import {
   SPRECHEN_PASS_PCT,
   WRITING_PASS_PCT,
   chapterWritingTask,
+  checkpointWritingTask,
   isNextLevelPreview,
   windowReports,
   reportSpecFor,
@@ -87,7 +88,7 @@ import {
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
 import { knownUpTo, untaughtTokens, namesOf } from '../src/lib/checkpoint/lexis.js';
-import { courseWritingTasks } from '../src/data/writingTasks.js';
+import { courseWritingTasks, writingTaskByKey } from '../src/data/writingTasks.js';
 import { nextDue, LADDER_DAYS, MAX_STEP, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../src/lib/review/ladder.js';
 import { CURRICULUM_FIXTURE, CURRICULUM_FIXTURE_6 } from './fixtures/curriculum-fixture.js';
 
@@ -943,20 +944,24 @@ test('Schreiben drills come from different Lektionen of the chapter, never one t
   }
 });
 
-test('every checkpoint carries the chapter\'s real writing task, AI-graded and optional', () => {
-  const bankKeys = new Set(courseWritingTasks(CURRICULUM_A11.level).map((t) => t.taskKey));
+test('every checkpoint carries its own writing task — the chapter\'s Textsorte with new facts, AI-graded and optional', () => {
+  // Until 2026-10-07 the checkpoint replayed its last Lektion's task, so it measured recall of a
+  // known Auftrag (Codex review). Now each checkpoint names its own `a11-cpN` task.
+  const lessonPrompts = new Set(courseWritingTasks(CURRICULUM_A11.level).map((t) => t.task));
   for (const cp of CURRICULUM_A11.checkpoints) {
     const chapter = chapterLektionen(CURRICULUM_A11, cp);
-    const expected = [...chapter].reverse().find((l) => l?.schreiben?.taskKey).schreiben.taskKey;
+    const last = chapterWritingTask(chapter, CURRICULUM_A11.level);
     const item = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
       .find((i) => i.kind === 'gradedWriting');
     assert.ok(item, `${cp.id} must mount a real writing task`);
     assert.equal(item.section, 'schreiben');
-    assert.equal(item.task.taskKey, expected, 'the task is the chapter\'s LAST Lektion');
-    assert.ok(bankKeys.has(item.task.taskKey), 'and evaluate-writing must know the key');
+    assert.equal(item.task.taskKey, cp.writingTaskKey, 'the checkpoint\'s own task');
+    assert.ok(writingTaskByKey('goethe_a1', item.task.taskKey), 'and evaluate-writing must know the key');
+    assert.ok(!lessonPrompts.has(item.promptDe), `${cp.id}: the prompt is not a Lektion's prompt again`);
+    assert.equal(item.task.kind, last.schreiben.kind, `${cp.id}: the same Textsorte as the chapter's task`);
     assert.equal(item.task.examKey, 'goethe_a1');
     assert.ok(item.promptDe && item.promptDe.length > 20, 'the prompt is the bank prompt');
-    assert.equal(item.register, chapterWritingTask(chapter, CURRICULUM_A11.level).schreiben.kind, 'a REAL register');
+    assert.equal(item.register, checkpointWritingTask(cp, chapter).schreiben.kind, 'a REAL register');
     assert.equal(item.scored, false);
     assert.equal(item.scorable, true);
     assert.equal(item.optional, true, 'no grader verdict = not attempted, never a failed section');
@@ -1922,4 +1927,26 @@ test('LandeskundeCard is a flat Card (no raised/interactive) and reads its langu
   assert.match(src, /note\.titleDe|note\.titleEn/, 'must render the note title');
   assert.match(src, /note\.bodyDe|note\.bodyEn/, 'must render the note body');
   assert.match(src, /note\.source/, 'must render the source line');
+});
+
+// TRANSFER (2026-10 review). A checkpoint item the learner already answered in
+// a lesson tests memory of that item. The draw prefers unseen same-topic items;
+// measured 2026-10-05 after the change: 1 / 1 / 2 / 0 of the 8 pool items per
+// checkpoint are still lesson items (the leak cap and taught-lexis rule come
+// first on thin topics) — was 5 / 3 / 5 / 5. A ratchet: it only goes down.
+const MAX_LESSON_SEEN_PER_CHECKPOINT = [1, 1, 2, 0];
+test('checkpoints draw prompts the learner has not answered in a lesson (transfer ratchet)', async () => {
+  const { default: buildLesson } = await import('../src/lib/lesson/buildLesson.js');
+  ALL_CHECKPOINTS.forEach(({ cp: checkpoint, items }, i) => {
+    const seen = new Set();
+    for (const lektion of CURRICULUM_A11.lektionen.filter((l) => l.nr <= checkpoint.afterLektion)) {
+      for (const attempt of [1, 2]) {
+        for (const stage of buildLesson({ curriculum: CURRICULUM_A11, lektion, pool: POOL, attempt }).stages) {
+          for (const it of stage.items || []) seen.add(it.id);
+        }
+      }
+    }
+    const hits = items.filter((it) => it.poolItemId && seen.has(it.poolItemId)).length;
+    assert.ok(hits <= MAX_LESSON_SEEN_PER_CHECKPOINT[i], `${checkpoint.id}: ${hits} pool items already answered in a lesson (ratchet ${MAX_LESSON_SEEN_PER_CHECKPOINT[i]})`);
+  });
 });

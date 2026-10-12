@@ -7,7 +7,7 @@
 // UPPERCASE in the DB — normalised here) names a level that has a course home
 // AND that they may open goes there instead; anyone else lands on the free
 // course, never on a level lock.
-import { courseFor } from '../data/courses/index.js';
+import { COURSE_LEVELS } from '../data/courses/levels.js';
 import { FREE_LEVELS } from '../config/freeTier.js';
 
 export const FREE_COURSE_LEVEL = FREE_LEVELS[0];
@@ -20,6 +20,6 @@ export const FREE_COURSE_HOME = `/course/${FREE_COURSE_LEVEL}`;
  */
 export const courseHomeFor = ({ level, hasLevelAccess } = {}) => {
   const l = String(level || '').toLowerCase();
-  if (l && courseFor(l) && (typeof hasLevelAccess !== 'function' || hasLevelAccess(l))) return `/course/${l}`;
+  if (l && COURSE_LEVELS.includes(l) && (typeof hasLevelAccess !== 'function' || hasLevelAccess(l))) return `/course/${l}`;
   return FREE_COURSE_HOME;
 };

@@ -1,4 +1,4 @@
-// The in-progress run of one Lektion, kept in sessionStorage.
+// The in-progress run of one Lektion, kept in localStorage.
 //
 // WHY. The player held the whole run (stage, item, every answer) in React state
 // and wrote nothing until the recap. Any full page load in between threw the
@@ -13,11 +13,15 @@
 // had ever been finished (6 starts, 0 completions).
 //
 // THE RULE. The player saves its run here on every stage or item change and
-// restores it on mount, and the recap clears it. So every full page load in
-// the same tab resumes where the learner was, whichever screen caused it.
-// sessionStorage, not localStorage: the snapshot belongs to this tab's run.
-// A new tab or a new day starts a new run, as before — except the one hand-off
-// at the end of this file, for the sign-up round trip.
+// restores it on mount, and the recap clears it. So every full page load
+// resumes where the learner was, whichever screen caused it.
+// localStorage since 2026-10 (it was sessionStorage): a learner who stops on
+// the bus and opens the Lektion at home that evening resumes it too, and the
+// course home offers "Continue Lektion N" (latestRun). A snapshot older than
+// RUN_MAX_AGE_MS starts fresh. It holds item ids, correctness and the skill
+// summaries — never text the learner typed.
+// ponytail: two tabs on the same Lektion overwrite each other's snapshot (last
+// write wins); scope it per tab if that ever shows up in support.
 //
 // WHAT A RESUMED RUN NEEDS TO BE THE SAME RUN. buildLesson is deterministic in
 // (curriculum, lektion, pool, dueCards, attempt). The snapshot therefore keeps
@@ -31,9 +35,14 @@ import { safeGetJSON, safeRemove, safeSetJSON } from '../../utils/safeStorage.js
 export const RUN_KEY_PREFIX = 'dm_lesson_run:';
 export const RUN_VERSION = 1;
 /** Older than this, a snapshot is a different sitting: start the Lektion fresh. */
-export const RUN_MAX_AGE_MS = 12 * 60 * 60 * 1000;
+export const RUN_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
-export const runKey = (level, lektionId) => `${RUN_KEY_PREFIX}${String(level || '').toLowerCase()}:${lektionId}`;
+// One key per OWNER (2026-10-07, Codex review): a signed-in learner's run lives under their user id,
+// so on a shared browser the next account never resumes — and submits — someone else's answers. A
+// guest's run keeps the plain key; a learner who signs in mid-Lektion continues it (readRun falls back
+// to the guest key for a signed-in owner), and the guest copy is cleared with the owner's.
+export const runKey = (level, lektionId, owner = null) =>
+  `${RUN_KEY_PREFIX}${String(level || '').toLowerCase()}:${lektionId}${owner ? `:${owner}` : ''}`;
 
 const asIndex = (n) => {
   const v = Math.floor(Number(n));
@@ -42,10 +51,12 @@ const asIndex = (n) => {
 const asList = (v) => (Array.isArray(v) ? v : []);
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [] } = {}, now = Date.now()) {
+export function packRun({ runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {} } = {}, now = Date.now()) {
   return {
     v: RUN_VERSION,
     savedAt: now,
+    // Joins lesson_started → lesson_stage_viewed → lesson_completed of one run in analytics.
+    runId: typeof runId === 'string' ? runId.slice(0, 40) : '',
     stageKey: String(stageKey || ''),
     stageIndex: asIndex(stageIndex),
     itemIndex: asIndex(itemIndex),
@@ -55,6 +66,9 @@ export function packRun({ stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, 
     requeued: asList(requeued),
     combo: asIndex(combo),
     dueCards: asList(dueCards),
+    // What speaking and writing reported (skillStatus.js). Absent from older
+    // snapshots, which resume with nothing reported.
+    skills: skills && typeof skills === 'object' && !Array.isArray(skills) ? skills : {},
   };
 }
 
@@ -82,48 +96,21 @@ export function resumeStageIndex(stages, run) {
   return found > 0 ? found : 0;
 }
 
-export const saveRun = (level, lektionId, run) => safeSetJSON(runKey(level, lektionId), run, { session: true });
+export const saveRun = (level, lektionId, run, owner = null) => safeSetJSON(runKey(level, lektionId, owner), run);
+export const readRun = (level, lektionId, now = Date.now(), owner = null) =>
+  unpackRun(safeGetJSON(runKey(level, lektionId, owner), null), now)
+  || (owner ? unpackRun(safeGetJSON(runKey(level, lektionId), null), now) : null);
+export const clearRun = (level, lektionId, owner = null) => {
+  if (owner) safeRemove(runKey(level, lektionId, owner));
+  return safeRemove(runKey(level, lektionId));
+};
 
-/**
- * End this Lektion's run: this tab's snapshot AND a hand-off of the same
- * Lektion (below). The recap calls it, so a run finished in this tab can never
- * be resumed — answers and all — by a tab opened later from the hand-off.
- */
-export function clearRun(level, lektionId) {
-  safeRemove(runKey(level, lektionId), { session: true });
-  const handoff = safeGetJSON(HANDOFF_KEY, null);
-  if (handoff && typeof handoff === 'object' && handoff.key === runKey(level, lektionId)) safeRemove(HANDOFF_KEY);
+/** The most recently saved unfinished run among `lektionIds` — what the course home offers to continue. */
+export function latestRun(level, lektionIds = [], now = Date.now(), owner = null) {
+  let best = null;
+  for (const lektionId of lektionIds) {
+    const run = readRun(level, lektionId, now, owner);
+    if (run && (!best || run.savedAt > best.savedAt)) best = { lektionId, ...run };
+  }
+  return best;
 }
-
-// THE ONE EXCEPTION TO "THIS TAB'S RUN": THE ACCOUNT ROUND TRIP (2026-10-06).
-// The save-progress ask (src/lib/course/saveProgressAsk.js) sends a signed-out
-// learner to /signup in the middle of a Lektion, and the confirmation e-mail
-// opens /login in a NEW tab, whose sessionStorage is empty: the learner would
-// land on the intro of the Lektion they were in the middle of. So the click
-// copies this tab's run into localStorage (handOffRun), and the next tab that
-// opens the same Lektion WITHOUT a run of its own takes it over, once
-// (takeHandedOffRun, called by readRun). A tab that has its own run keeps it.
-// The hand-off ages out like any run (RUN_MAX_AGE_MS), and clearRun (the
-// recap) drops it with the run it copied.
-export const HANDOFF_KEY = 'dm_lesson_run_handoff';
-
-/** Copy this tab's run of one Lektion to localStorage for the sign-up round trip. False when there is none. */
-export function handOffRun(level, lektionId, now = Date.now()) {
-  const run = unpackRun(safeGetJSON(runKey(level, lektionId), null, { session: true }), now);
-  if (!run) return false;
-  return safeSetJSON(HANDOFF_KEY, { key: runKey(level, lektionId), run });
-}
-
-/** The run handed off to this Lektion, taken once: it moves into this tab's sessionStorage. */
-export function takeHandedOffRun(level, lektionId, now = Date.now()) {
-  const handoff = safeGetJSON(HANDOFF_KEY, null);
-  if (!handoff || typeof handoff !== 'object' || handoff.key !== runKey(level, lektionId)) return null;
-  safeRemove(HANDOFF_KEY);
-  const run = unpackRun(handoff.run, now);
-  if (run) saveRun(level, lektionId, run);
-  return run;
-}
-
-/** This tab's run, else a run the sign-up round trip handed off to this Lektion, else null. */
-export const readRun = (level, lektionId, now = Date.now()) =>
-  unpackRun(safeGetJSON(runKey(level, lektionId), null, { session: true }), now) || takeHandedOffRun(level, lektionId, now);

@@ -59,7 +59,7 @@ import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
-import { leaksAnswer } from '../lesson/buildLesson.js';
+import { leaksAnswer, planPractice } from '../lesson/buildLesson.js';
 import { deferredConstructionHits } from '../../data/curricula/constructions.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
@@ -482,7 +482,7 @@ function drawPool(
   n,
   rng,
   usedIds,
-  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {} } = {},
+  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {}, seen = new Set() } = {},
 ) {
   if (n <= 0 || !topics.length) return [];
   const buckets = topics.map((topic) => {
@@ -490,7 +490,12 @@ function drawPool(
     const pick = (dirty) => {
       const some = all.filter((i) => untaught(i) === dirty);
       const typed = some.filter(isTyped);
-      return typedOnly ? typed : [...typed, ...some.filter((i) => !isTyped(i))];
+      const ordered = typedOnly ? typed : [...typed, ...some.filter((i) => !isTyped(i))];
+      // TRANSFER (2026-10 review): an item the learner already answered in the
+      // chapter's lessons tests memory of that item, not the rule — 3–5 of the
+      // 8 drawn items per checkpoint were exactly that. Unseen items of the
+      // same topic go first; a seen one is only the fallback of a thin topic.
+      return [...ordered.filter((i) => !seen.has(i.id)), ...ordered.filter((i) => seen.has(i.id))];
     };
     return [...pick(false), ...pick(true)];
   });
@@ -1821,14 +1826,14 @@ function buildBausteine(ctx) {
   // (DaF review #14, MAJOR 3 — `a1.1-cp3-bausteine-3` „Nach Montag kommt ___.“
   // → `Dienstag`, beside a read-aloud line that names that very weekday).
   const guard = ctx.poolGuard('bausteine');
-  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, ...guard });
+  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, seen: ctx.lessonSeen, ...guard });
   const drawnChapter = drawPool(
     pool,
     chapterTopics,
     SECTION_COUNTS.bausteine - drawnEarlier.length,
     rng,
     usedPoolIds,
-    { untaught, afterLektion, ...guard },
+    { untaught, afterLektion, seen: ctx.lessonSeen, ...guard },
   );
   return [...drawnChapter, ...drawnEarlier].map((p, i) =>
     fromPoolItem(p, {
@@ -1843,8 +1848,10 @@ function buildBausteine(ctx) {
 // `buildSchreiben`) that means ONE REAL WRITING TASK plus two sentence-building
 // drills, not three drills with an invented Textsorte label.
 //
-//   - THE REAL TASK is the chapter's last Lektion's `schreiben.taskKey`
-//     (`a11-l03`, `a11-l06`, …), looked up in src/data/writingTasks.js — the
+//   - THE REAL TASK is the checkpoint's own `writingTaskKey` (`a11-cp1` …, the
+//     chapter's Textsorte with new facts — checkpointWritingTask), else the
+//     chapter's last Lektion's `schreiben.taskKey` (`a11-l03`, `a11-l06`, …),
+//     looked up in src/data/writingTasks.js — the
 //     same bank netlify/functions/evaluate-writing.mjs grades against, so the
 //     prompt the learner reads and the prompt the grader scores are one string.
 //     CheckpointPage mounts GradedWriting on it, exactly as the lesson does.
@@ -1890,7 +1897,9 @@ function buildSchreiben(ctx) {
     // chapter's other topics, and only when those are exhausted too does the
     // last rung of `drawPool` seat a leaking item and record it.
     const clean = candidates.filter(guard.accept);
-    const pick = clean.find((i) => !untaught(i)) || clean[0];
+    // …and among those, one the learner has not answered in a lesson (transfer).
+    const fresh = clean.filter((i) => !ctx.lessonSeen.has(i.id));
+    const pick = fresh.find((i) => !untaught(i)) || clean.find((i) => !untaught(i)) || fresh[0] || clean[0];
     if (!pick) continue;
     usedPoolIds.add(pick.id);
     guard.onSeat(pick);
@@ -1904,15 +1913,15 @@ function buildSchreiben(ctx) {
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const otherSlugs = slugs.filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
   }
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const rest = topicsOf(chapter).filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
   }
   if (chosen.length < drillCount) {
-    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
   }
 
   const drills = chosen.map((p, i) =>
@@ -1942,9 +1951,22 @@ export function chapterWritingTask(chapter, level) {
   return bank ? { lektion, schreiben: lektion.schreiben, bank } : null;
 }
 
+/**
+ * The checkpoint's OWN task (`checkpoint.writingTaskKey`, e.g. `a11-cp1`): the chapter's Textsorte
+ * with new people and facts, so the checkpoint measures transfer instead of replaying the lesson's
+ * task (Codex review, 2026-10-07). Same shape as chapterWritingTask; null without a key.
+ */
+export function checkpointWritingTask(checkpoint, chapter) {
+  const bank = checkpoint?.writingTaskKey ? writingTaskByKey('goethe_a1', checkpoint.writingTaskKey) : null;
+  if (!bank) return null;
+  const lektion = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey) || (chapter || []).at(-1);
+  const kind = bank.register === 'formular' ? 'formular' : 'mitteilung';
+  return { lektion, bank, schreiben: { kind, taskDe: bank.task, fields: kind === 'formular' ? bank.leitpunkte : null, sample: bank.sample || null } };
+}
+
 /** That task as a checkpoint item — rendered by GradedWriting on CheckpointPage. */
 function gradedWritingItem(checkpoint, chapter, level) {
-  const found = chapterWritingTask(chapter, level);
+  const found = checkpointWritingTask(checkpoint, chapter) || chapterWritingTask(chapter, level);
   if (!found) return null;
   const { lektion, schreiben: s, bank } = found;
   return {
@@ -2110,6 +2132,32 @@ function poolIdsBefore(curriculum, checkpoint, pool) {
 }
 
 /**
+ * The pool items the lesson player hands out in the Lektionen up to this
+ * checkpoint — the first run and the repeat (attempts 1 and 2). drawPool puts
+ * them last, so the checkpoint asks the same rules through prompts the learner
+ * has not answered yet.
+ */
+// Memoised per (curriculum object, pool object): a checkpoint also rebuilds every earlier
+// checkpoint (poolIdsBefore), and the validator's mutation tests rebuild all four per clone —
+// recomputing the draw each time multiplied the test suite's run time. One planPractice per
+// attempt covers every Lektion; a curriculum a test clones and mutates is a new object.
+const practicePlanMemo = new WeakMap();
+function lessonSeenIds(curriculum, checkpoint, pool) {
+  if (!pool) return new Set();
+  let byPool = practicePlanMemo.get(curriculum);
+  if (!byPool) { byPool = new WeakMap(); practicePlanMemo.set(curriculum, byPool); }
+  let plans = byPool.get(pool);
+  if (!plans) { plans = [1, 2].map((attempt) => planPractice(curriculum, pool, attempt)); byPool.set(pool, plans); }
+  const seen = new Set();
+  for (const plan of plans) {
+    for (const [nr, items] of plan) {
+      if (nr <= checkpoint.afterLektion) for (const item of items || []) seen.add(item.id);
+    }
+  }
+  return seen;
+}
+
+/**
  * buildCheckpoint({ curriculum, checkpoint, pool, seed }) → 20 items,
  * in section order, deterministic in `seed` (default: the checkpoint id).
  */
@@ -2126,6 +2174,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     chapter,
     earlier: earlierLektionen(curriculum, checkpoint),
     usedPoolIds: poolIdsBefore(curriculum, checkpoint, pool),
+    lessonSeen: lessonSeenIds(curriculum, checkpoint, pool),
     // Every dialogue line this paper has already spent, on ANY of its three
     // skill sections (DaF review #8, MAJOR 2). Hören fills it, Lesen honours
     // and extends it with every line of the windows it prints, Sprechen reads
@@ -2255,6 +2304,20 @@ export function isItemCorrect(item, answer) {
  * evaluate-writing it is one scored Schreiben item, without one it leaves the
  * section (total 3 → 2) instead of counting as a miss.
  */
+/**
+ * The most a section's closed-choice items give to ONE answer repeated everywhere (the best
+ * constant strategy). Open, typed items add nothing to it — a constant cannot answer them.
+ */
+export function guessCeiling(items) {
+  const counts = new Map();
+  for (const i of items) {
+    if (!Array.isArray(i.options) || !i.options.length) continue;
+    const key = String(i.answer);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return counts.size ? Math.max(...counts.values()) : 0;
+}
+
 export function scoreCheckpoint(items, answers = {}) {
   const sections = {};
   const errorTags = {};
@@ -2287,7 +2350,12 @@ export function scoreCheckpoint(items, answers = {}) {
     const total = inSection.length;
     // Sprechen is scored only when EVERY item of it came back from the mic.
     const scored = inSection.every((i) => itemIsScored(i, answers[i.id]));
-    sections[section] = { correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored };
+    // The graded text, when a grader scored it (unscored ones were dropped above): null = not attempted.
+    const graded = inSection.find((i) => i.kind === 'gradedWriting');
+    sections[section] = {
+      correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored, guessCeiling: guessCeiling(inSection),
+      realTask: graded ? isItemCorrect(graded, answers[graded.id]) : null,
+    };
     if (scored) {
       scoredCorrect += correct;
       scoredTotal += total;
@@ -2296,11 +2364,37 @@ export function scoreCheckpoint(items, answers = {}) {
 
   const overall = scoredTotal ? Math.round((scoredCorrect / scoredTotal) * 100) : 0;
   const weakest = Object.values(sections).filter((s) => s.scored);
-  const passed =
-    scoredTotal > 0 && overall >= PASS_OVERALL_PCT && weakest.every((s) => s.pct >= PASS_SECTION_PCT);
+  const passed = scoredTotal > 0 && overall >= PASS_OVERALL_PCT && weakest.every(sectionPasses);
 
   return { overall, correct: scoredCorrect, total: scoredTotal, sections, passed, errorTags };
 }
+
+/**
+ * What a result can claim: the parts it assessed this time and the parts it did not. A pass on
+ * Hören, Lesen and Bausteine with an ungraded text and a self-confirmed read-aloud is narrower than
+ * „all five skills", and the result card says so (Codex score review, 2026-10-08). `writing` is
+ * 'graded' (the text had a grader verdict), 'drills' (only the two sentence exercises counted) or
+ * null (Schreiben not assessed at all).
+ */
+export function assessedParts(items, result) {
+  const present = SECTION_ORDER.filter((s) => items.some((i) => i.section === s));
+  const assessed = present.filter((s) => result?.sections?.[s]?.scored);
+  const w = result?.sections?.schreiben;
+  const writing = !w?.scored ? null : w.realTask == null ? 'drills' : 'graded';
+  return { assessed, notAssessed: present.filter((s) => !assessed.includes(s)), writing };
+}
+
+/**
+ * Does one scored section pass? The ONE rule scoreCheckpoint and the result row both read.
+ *  - at least PASS_SECTION_PCT;
+ *  - more than answering the same option everywhere: reading is two „richtig" and two „falsch", so
+ *    always-„Richtig" scored 50 % and cleared the floor without reading a word (Codex review,
+ *    2026-10-07). With 2/2 that means 3 of 4;
+ *  - Schreiben: a graded text must pass by itself. Two sentence drills right and the real text at
+ *    0 % was 2 of 3 = 67 % — a pass on a part whose real task failed (same review).
+ */
+export const sectionPasses = (s) =>
+  s.pct >= PASS_SECTION_PCT && (!s.guessCeiling || s.correct > s.guessCeiling) && s.realTask !== false;
 
 /**
  * remediationSet(items, answers, pool) → 10 fresh items aimed at what actually

@@ -46,6 +46,28 @@ export function scoreObjectiveSections(mock, answers) {
 }
 
 /**
+ * Score the listening parts of a mock against the answer keys loaded for them.
+ * `keysByPart` = { [part.key]: [{ id, correct }] }. Every listening part of the mock must
+ * have its keys: a part without them is `complete: false` and named in `missing` — the
+ * runner must load them before scoring. (Before 2026-10-07 the keys existed only for parts
+ * that had been ON SCREEN, so an attempt resumed after the Hören section scored listening
+ * as 0 of 0 and a reading-only result could pass — Codex review.)
+ */
+export function scoreListeningAnswers(mock, keysByPart = {}, answers = {}) {
+  const parts = (mock.sections || []).flatMap((s) => s.parts || []).filter((p) => p.type === 'listening');
+  const missing = parts.filter((p) => !Array.isArray(keysByPart[p.key]) || !keysByPart[p.key].length).map((p) => p.key);
+  let score = 0;
+  let max = 0;
+  for (const p of parts) {
+    for (const item of keysByPart[p.key] || []) {
+      max += 1;
+      if (answers[`listening:${p.key}:${item.id}`] === item.correct) score += 1;
+    }
+  }
+  return { complete: missing.length === 0, missing, score, max };
+}
+
+/**
  * Merge runtime listening results ({ score, max }) into an objective result.
  * Kept separate so the pure part stays testable without DB fixtures.
  */

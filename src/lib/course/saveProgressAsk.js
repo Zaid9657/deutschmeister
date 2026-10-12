@@ -24,11 +24,11 @@
 // load (the X-Ray and level-test doors do the same). The learner's place
 // survives the confirmation e-mail, which opens /login in a new tab, in two
 // halves: the PATH through src/lib/returnPath.js (postAuthPath returns to it),
-// the RUN through runState's hand-off. Finished Lektionen were already safe:
+// the RUN through runState itself: the snapshot is in localStorage, so the new tab reads it,
+// and a signed-in read falls back to the guest run (runState.readRun). Finished Lektionen were already safe:
 // src/lib/course/localProgress.js merges them on the first signed-in render.
 import { safeGet, safeSet } from '../../utils/safeStorage.js';
 import { setReturnPath } from '../returnPath.js';
-import { handOffRun } from '../lesson/runState.js';
 
 /** The two doors, as they appear in acquisition_last_source. */
 export const SAVE_PROGRESS_DOORS = Object.freeze({
@@ -74,16 +74,14 @@ export function saveProgressSignupHref({ door, level, lektionNr = null }) {
 }
 
 /**
- * Before the ask's signup door navigates: remember where to come back to and,
- * mid-Lektion, hand the run to the tab the confirmation e-mail opens.
- * `now` is a seam for tests, like the rest of the chain (setReturnPath,
- * handOffRun): a test that packs a run at a fixed time must hand it off at
- * that time too, or the run ages out once the wall clock is 12 h past it.
+ * Before the ask's signup door navigates: remember where to come back to — the
+ * Lektion mid-run, else the course home. The run itself needs no hand-off: it is
+ * in localStorage, which the tab the confirmation e-mail opens shares.
+ * `now` is a seam for tests, like the rest of the chain (setReturnPath).
  */
 export function rememberPlace({ level, lektionId = null, lektionNr = null }, now = Date.now()) {
   if (lektionId && lektionNr) {
     setReturnPath(lektionPath(level, lektionNr), now);
-    handOffRun(level, lektionId, now);
   } else {
     setReturnPath(coursePath(level), now);
   }

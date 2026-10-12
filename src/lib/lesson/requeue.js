@@ -9,10 +9,39 @@
 // `kein` with no negation cue — src/data/lessonPools/quality.js) must not
 // reach a learner through the back door of a retry, and an item another
 // Lektion has already used is avoided while an unused one exists.
+//
+// That rule is for POOL items. The exercises built from the Lektion itself
+// (match, word order, listen & select — buildLesson.js derivedItems — and the
+// dictation) come back as the SAME kind of exercise, because the pool has no
+// variant of them: a vocabulary mismatch used to be "requeued" as a grammar
+// item of the Lektion's primary topic, and a missed dictation as a practice
+// card with no question on it. A writing task is never requeued — its feedback
+// is the retry.
 import { poolItems } from './buildLesson.js';
 import { isUsableItem } from '../../data/lessonPools/quality.js';
 
 export const REQUEUE_CAP = 4;
+
+const REPLAYED_TYPES = new Set(['match', 'word_order', 'listen_select', 'dictation']);
+const MIN_RETRY_PAIRS = 3;
+
+/**
+ * The retry of an exercise the pool has no variant of: the same exercise under
+ * a retry id. A match comes back as the pairs the learner confused, topped up
+ * with other pairs of the same set so a choice is still a choice.
+ */
+function replayOf(missed) {
+  const id = `${missed.id}~retry`;
+  if (missed.type !== 'match') return { ...missed, id };
+  const confused = (missed.confused || []).map((p) => p.de);
+  const pairs = [
+    ...missed.pairs.filter((p) => confused.includes(p.de)),
+    ...missed.pairs.filter((p) => !confused.includes(p.de)),
+  ].slice(0, Math.max(MIN_RETRY_PAIRS, confused.length));
+  return { ...missed, id, pairs };
+}
+
+const isWriting = (it) => it.stage === 'writing' || String(it.id).startsWith('schreiben-');
 
 /**
  * requeueFor(missedItems, pool, usedIds, { avoidIds }) → up to 4 items to replay.
@@ -29,7 +58,12 @@ export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds
 
   for (const missed of missedItems) {
     if (out.length >= REQUEUE_CAP) break;
-    if (!missed) continue;
+    if (!missed || isWriting(missed)) continue;
+    if (REPLAYED_TYPES.has(missed.type)) {
+      const replay = replayOf(missed);
+      if (!out.some((o) => o.id === replay.id)) out.push(replay);
+      continue;
+    }
     const sameTopic = items.filter(
       (it) => it.topic === missed.topic && it.id !== missed.id && !used.has(it.id),
     );

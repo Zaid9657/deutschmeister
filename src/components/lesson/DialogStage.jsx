@@ -3,7 +3,8 @@ import { Play, Languages, Mic, Cpu, ListEnd } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
-import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
+import { audioFor, playChecked, speechAvailable } from '../../lib/lesson/speech.js';
+import { AudioFailureNotice } from './PlayButton.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';
 
@@ -134,9 +135,11 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
     };
   }, [openGloss]);
 
+  const [audioFail, setAudioFail] = useState(null);
   const play = (i, text) => {
     setPlayed((prev) => new Set(prev).add(i));
-    playLine(id, `line-${i}`, text);
+    setAudioFail(null);
+    playChecked(id, `line-${i}`, text).then((r) => setAudioFail(r.ok ? null : r.reason));
   };
 
   return (
@@ -217,6 +220,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
           </button>
         </div>
       )}
+      <AudioFailureNotice reason={audioFail} />
     </StageShell>
   );
 }

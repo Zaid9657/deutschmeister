@@ -18,8 +18,11 @@ export const trackOnboardingSlideViewed = (slideNumber) => track('onboarding_sli
 export const trackOnboardingCompleted = (exitPath) => track('onboarding_completed', { exit_path: exitPath });
 export const trackOnboardingSkipped = () => track('onboarding_skipped');
 
-export const trackLessonStarted = (level, topic) => track('lesson_started', { level, topic });
-export const trackLessonCompleted = (level, topic) => track('lesson_completed', { level, topic });
+export const trackLessonStarted = (level, topic, runId) => track('lesson_started', { level, topic, run_id: runId });
+export const trackLessonCompleted = (level, topic, runId) => track('lesson_completed', { level, topic, run_id: runId });
+export const trackLessonResumed = (level, topic, runId) => track('lesson_resumed', { level, topic, run_id: runId });
+export const trackLessonStageViewed = (level, topic, runId, step) => track('lesson_stage_viewed', { level, topic, run_id: runId, step });
+export const trackLessonSyncFailed = (level, topic, step) => track('lesson_sync_failed', { level, topic, step });
 
 export const trackSpeakingSessionStarted = () => track('speaking_session_started');
 export const trackSpeakingSessionCompleted = (score) => track('speaking_session_completed', { score });
