@@ -86,8 +86,11 @@ test('the walk finds the gates and the level lock, so the rule cannot pass on an
     LOCK_SCREENS.includes(`${COMPONENTS}/LockedContentOverlay.jsx`),
     `LevelSubscriptionGuard renders LockedContentOverlay, but the walk found only ${LOCK_SCREENS.join(', ') || 'nothing'}`,
   );
+  // 4 since 2026-10-11: ExamSubscriptionGuard no longer redirects an anonymous
+  // visitor to /login itself; it renders LockedContentOverlay, whose one door
+  // is already counted (business review 2026-10-11).
   const doors = ALL.flatMap((f) => loginDoors(code(read(f))));
-  assert.ok(doors.length >= 5, `expected at least 5 doors to /login across the gates, found ${doors.length}`);
+  assert.ok(doors.length >= 4, `expected at least 4 doors to /login across the gates, found ${doors.length}`);
 });
 
 test('every door to /login on a gate or a lock screen hands over the page it locked (state.from)', () => {

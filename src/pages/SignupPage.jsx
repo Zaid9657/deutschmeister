@@ -80,7 +80,6 @@ const SignupPage = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -137,11 +136,6 @@ const SignupPage = () => {
     setError('');
     setKnownAddress('');
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
       return;
@@ -162,14 +156,12 @@ const SignupPage = () => {
         // No mail went out, so no inbox panel: say where the account is.
         setKnownAddress(email.trim());
         setPassword('');
-        setConfirmPassword('');
       } else {
         // The event /verify-email fired on mount for this step, kept so the
         // signup funnel reads the same before and after.
         trackVerificationPageViewed();
         setSentTo(email.trim());
         setPassword('');
-        setConfirmPassword('');
         setResendState('idle');
         setCooldown(RESEND_COOLDOWN_SECONDS);
       }
@@ -440,27 +432,10 @@ const SignupPage = () => {
               </div>
             </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="signup-field-3" className="block text-sm font-bold text-ink mb-2">
-                {t('auth.confirmPassword')}
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
-                <input
-                  id="signup-field-3"
-                  name="confirmPassword"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className={FIELD}
-                  placeholder="Confirm your password"
-                />
-              </div>
-            </div>
-
+            {/* No confirm-password field (removed 2026-10-11): the show-password
+                toggle above catches typos, and every extra field on the one
+                screen between a visitor and an account costs signups. A
+                mistyped password is recovered through /reset-password. */}
             {/* Submit — the one primary action on the screen */}
             <Button type="submit" shimmer disabled={loading} size="lg" className="w-full">
               {loading ? (

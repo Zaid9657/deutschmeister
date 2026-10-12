@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useTranslation } from 'react-i18next';
 import { trackPaywallShown } from '../lib/funnelTracking';
+import { canEnterAccount } from '../lib/accountAccess';
 
 // Signup grants a 7-day trial, but the profile row (and its trial dates) is
 // written by a DB trigger + client-side backfill chain that can land AFTER the
@@ -13,7 +14,8 @@ const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 
 const SubscriptionGuard = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
-  const { hasAccess, loading: subLoading, refreshSubscription } = useSubscription();
+  const { hasAccess: liveAccess, purchases, loading: subLoading, refreshSubscription } = useSubscription();
+  const hasAccess = canEnterAccount({ hasAccess: liveAccess, purchases });
   const location = useLocation();
   const { t } = useTranslation();
   const [retrying, setRetrying] = useState(false);

@@ -5,6 +5,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { useTranslation } from 'react-i18next';
 import { trackPaywallShown } from '../lib/funnelTracking';
 import { resolveModelltest } from '../data/modelltest';
+import LockedContentOverlay from './LockedContentOverlay';
 
 // Same brand-new-user race as SubscriptionGuard (see there for the full note).
 const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
@@ -22,8 +23,11 @@ const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 // For a COURSE test, gateLevel is the course's own level. a1.1 is a free
 // level, so hasLevelAccess('a1.1') is always true — the Abschlusstest A1.1
 // opens to every signed-in user. That is the recorded decision (Course
-// Factory Wave 2 PR D), not a gap: this guard still requires `user` below
-// like every other guarded route, so an anonymous visitor still hits /login.
+// Factory Wave 2 PR D), not a gap: this guard still requires `user` below.
+// An anonymous visitor gets the level lock's signup screen (free account,
+// trial, log-in door with `from`), not a bare "Welcome Back" login form:
+// exam pages are where the exam-bound visitors arrive, and a login form is a
+// dead end for someone with no account yet (business review 2026-10-11).
 // The Abschlusstest A1.2 (Wave 3 PR D) gates on 'a1.2' — NOT free — so it
 // opens only via Pro/trial or the A1 course, exactly like /level/a1.2.
 const ExamSubscriptionGuard = ({ children }) => {
@@ -67,7 +71,7 @@ const ExamSubscriptionGuard = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <LockedContentOverlay level={resolved?.gateLevel} />;
   }
 
   if (!examAccess) {
