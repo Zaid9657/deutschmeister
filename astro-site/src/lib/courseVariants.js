@@ -17,3 +17,13 @@ const VARIANTS = {
 /** The catalogue with its checkout id attached ('' when not buyable). */
 export const levelCoursesWithVariants = () =>
   Object.values(LEVEL_COURSES).map((c) => ({ ...c, variantId: c.comingSoon ? '' : (VARIANTS[c.key] || '') }));
+
+/**
+ * The telc B1 pilot's checkout id, '' while it is not on sale. Two conditions,
+ * the same two as the SPA's src/config/lemonsqueezy.js: the owner has switched
+ * the sale on (PUBLIC_TELC_B1_ON_SALE=true, builds scope) AND the product has a
+ * checkout id. The switch exists so a Lemon Squeezy reprice and a test purchase
+ * happen BEFORE the first Buy button renders (docs/telc-pilot/README.md).
+ */
+export const telcPilotVariant = () =>
+  import.meta.env.PUBLIC_TELC_B1_ON_SALE === 'true' ? (import.meta.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '') : '';

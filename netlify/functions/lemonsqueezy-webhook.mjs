@@ -356,7 +356,7 @@ async function handleOrderCreated(data, meta) {
   const orderVariantId = String(attributes.first_order_item?.variant_id || '');
   const course = courseForVariant(orderVariantId);
   if (course) {
-    await handleCourseOrder({ course, orderId, customData, attributes });
+    await handleCourseOrder({ course, orderId, customData, attributes, meta });
     return;
   }
 
@@ -400,15 +400,55 @@ async function handleOrderCreated(data, meta) {
   }
 }
 
+// Order statuses that never grant a course. Lemon Squeezy's order status is
+// one of pending, failed, paid, refunded, partial_refund, fraudulent, and its
+// `refunded` flag is true only for a FULL refund — a partial one is status
+// partial_refund, and handleOrderRefunded revokes on either. `pending` still
+// grants, as before: no later event would deliver it.
+const NO_GRANT_ORDER_STATUSES = new Set(['failed', 'refunded', 'partial_refund', 'fraudulent']);
+
 // Course purchase: record the entitlement, then grant the included Pro window
 // unless a real subscription already covers the user. Idempotent on the LS
 // order id, so webhook retries can never double-grant.
-async function handleCourseOrder({ course, orderId, customData, attributes }) {
+async function handleCourseOrder({ course, orderId, customData, attributes, meta }) {
+  // A refunded order is never granted again. order_created is replayed by
+  // Lemon Squeezy retries and by the owner's "resend" in the dashboard, and the
+  // upsert below writes status 'active' — so a replay after a refund used to
+  // hand the access straight back (found 2026-10-12, telc pilot plan). The
+  // payload says so when the refund is already known to Lemon Squeezy; the
+  // purchases row says so when our refund handler has run. (An order refunded
+  // BEFORE it was ever delivered has no row to say so — docs/telc-pilot/README.md
+  // tells the owner never to resend one.)
+  if (attributes?.refunded === true || NO_GRANT_ORDER_STATUSES.has(attributes?.status)) {
+    console.log(`course order ${orderId}: status ${attributes?.status}, refunded ${attributes?.refunded === true} — not granting`);
+    return;
+  }
+  const { data: priorPurchase, error: priorError } = await supabase
+    .from('purchases')
+    .select('status')
+    .eq('lemonsqueezy_order_id', orderId)
+    .maybeSingle();
+  if (priorError) {
+    console.error('course order: prior purchase lookup error:', JSON.stringify(priorError));
+    throw new Error(`course order prior purchase lookup failed: ${priorError.message}`);
+  }
+  if (priorPurchase?.status === 'refunded') {
+    console.log(`course order ${orderId}: already refunded — not granting again`);
+    return;
+  }
+
   const userId = await resolveUserId(customData, attributes, null);
   if (!userId) {
     // A paying customer we cannot attach is a loud failure, not a warning:
     // throwing 500s the webhook so Lemon Squeezy retries (the buyer may be
-    // mid-signup) and the failure lands in webhook_logs for follow-up.
+    // mid-signup) and the failure lands in webhook_logs for follow-up. The
+    // owner hears about it at once — a retry only helps if the buyer creates
+    // an account with the same e-mail, and nobody tells them to.
+    const testTag = meta?.test_mode === true ? '[TEST] ' : '';
+    await sendOwnerAlert(
+      `${testTag}Paid course order has no account — order ${orderId}`,
+      `A customer paid for ${course.productKey}, but no DeutschMeister account matches the order, so nothing was granted yet.\n\nOrder: ${orderId}\nCustomer e-mail: ${attributes?.user_email || 'unknown'}\nTotal: ${attributes?.total_formatted || attributes?.total}\n\nLemon Squeezy retries the event only for a few minutes. Either ask the buyer to sign up at https://deutsch-meister.de/signup with that address and then resend this order_created event (Lemon Squeezy → Settings → Webhooks), or refund in the Lemon Squeezy dashboard. Never resend it after a refund: an order refunded before delivery has no purchase row to block a re-grant (docs/telc-pilot/README.md).`,
+    );
     throw new Error(
       `course order ${orderId} (${course.productKey}) has no resolvable user — email: ${attributes?.user_email || 'none'}`
     );

@@ -38,13 +38,21 @@ export const LEMONSQUEEZY_CONFIG = {
   // One-time products. Unlike the plans there is NO hardcoded fallback id:
   // an unset variant means the product does not exist in the store yet, and
   // every purchase surface must hide rather than open a dead checkout.
+  //
+  // The telc product is the B1 pilot (docs/telc-pilot/README.md) and has a
+  // second condition: it is on sale only while the owner has set
+  // PUBLIC_TELC_B1_ON_SALE=true (builds scope, shared with the Astro page via
+  // envPrefix in vite.config.js). Until then its id stays '' even when the
+  // variant env var is set — the /subscription card, handleBuyCourse and the
+  // ?buy= resume all read this one field, so none of them can open a checkout
+  // at a price the store has not been switched to yet.
   courses: {
     telc_b1_komplett: {
       name: COURSES.telc_b1_komplett.name,
       price: COURSES.telc_b1_komplett.price,
       currency: CURRENCY,
       proMonths: COURSES.telc_b1_komplett.proMonths,
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '',
+      variantId: import.meta.env.PUBLIC_TELC_B1_ON_SALE === 'true' ? (import.meta.env.VITE_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '') : '',
     },
   },
 

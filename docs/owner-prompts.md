@@ -68,6 +68,51 @@ Trade-off, stated once: the net per sale drops by the VAT share (a German €9.9
 new setting. Once it is on, the agent adds "inkl. MwSt." to the price renders; until then it
 must not, because it would be untrue.
 
+### telc pilot (2026-10-12, `docs/telc-pilot/README.md`)
+
+Run these in order. Run the first only once PR A (the sale switch) is live; until the switch is on, no
+Buy button shows the price.
+
+**1. Rename, reprice, redirect, report** (product 1329566, variant 2077984):
+```
+In Lemon Squeezy store 309512 open product 1329566. Rename it to "telc-B1-Prüfungsprobe" and set
+variant 2077984 to a one-time price of €149.00 EUR. Set its "Redirect after purchase" URL to
+https://deutsch-meister.de/subscription/success. Do not change any other product, variant or setting.
+Then report: the product name, the variant price, the tax category (do not change it), every
+discount code that applies to this product (do not change them), and the checkout share-link UUID
+of variant 2077984. Finally open Settings → Notifications and make sure "New order" e-mails to the
+store owner are ON; report whether you had to change it.
+```
+Paste the report to the agent. It checks the UUID against `VITE_`/`PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID`
+and the numeric id against `LEMONSQUEEZY_TELC_B1_VARIANT_ID`. It flags any discount that would undercut
+the pilot price.
+
+**2. A 99 %-off test code.** Not 100 %: a €0 order cannot be refunded, and the refund path is part of the test.
+```
+Create a discount in store 309512: name "telc pilot test", code TELCTEST99, 99 %, restricted to
+product 1329566, usage limit 2, expires <date three days from now> 23:00 UTC. Confirm it shows Active.
+```
+
+**3. The test purchase.** The agent gives you the exact checkout link for the test account (its e-mail and
+user id are in the link, because the Buy buttons stay hidden until the sale opens):
+```
+Open <the link the agent gives you>, apply TELCTEST99, confirm the total is €1.49 (or €1.49 plus VAT
+if the store is still tax-exclusive), complete the checkout. Report the Lemon Squeezy order number.
+```
+
+**4. Full refund** (after the agent has confirmed the purchase row):
+```
+In store 309512 open order <order number> and refund the FULL amount. Report the order's status.
+```
+
+**5. Resend the original event** (after the agent has confirmed the refund revoked access):
+```
+In store 309512 open Settings → Webhooks → the deutsch-meister.de webhook. Find the order_created
+delivery for order <order number> and resend it. Report the response code shown.
+```
+Expected: 200. The agent then confirms the purchase is still `refunded`. Deactivate the code afterwards
+(`Deactivate discount TELCTEST99 in store 309512.`).
+
 ---
 
 ## Run the A1.1 course audio
