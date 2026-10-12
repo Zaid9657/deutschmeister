@@ -17,6 +17,11 @@ const VENDOR_CHUNKS = [
 
 export default defineConfig({
   plugins: [react()],
+  // The telc pilot's sale switch is ONE builds-scope variable read by both
+  // front ends (docs/telc-pilot/README.md). Astro exposes PUBLIC_* by itself;
+  // the SPA gets exactly this one name next to its VITE_* vars, so a single
+  // flip opens or closes the sale on every surface at once.
+  envPrefix: ['VITE_', 'PUBLIC_TELC_B1_ON_SALE'],
   server: {
     port: 5173,
     host: true

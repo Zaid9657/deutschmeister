@@ -25,7 +25,10 @@ import { FREE_LEVEL_LABEL } from '../data/marketing.js';
 export const ONSITE_MEDIUM = 'onsite';
 
 // The surfaces this module may name. `xray` lives in the SPA (src/lib/xray.js).
-export const ONSITE_SOURCES = Object.freeze(['grammar', 'leitfaden']);
+// `telc-pilot` is the telc B1 sales page's free-account door while the pilot
+// is off sale (docs/telc-pilot/README.md): the people who wanted the exam
+// package and got an account instead are the pilot's first invite list.
+export const ONSITE_SOURCES = Object.freeze(['grammar', 'leitfaden', 'telc-pilot']);
 
 // Destinations, spelled per the three trailing-slash cases in CLAUDE.md:
 // /signup and /course/<level> are rewrite-served SPA routes (no slash),
@@ -42,7 +45,7 @@ export const DOORS = Object.freeze({
 /**
  * An attributed on-site link.
  * @param {keyof DOORS} door
- * @param {'grammar'|'leitfaden'} source
+ * @param {'grammar'|'leitfaden'|'telc-pilot'} source
  * @param {string} [content]  the lesson/guide slug, or a placement label
  */
 export function onsiteHref(door, source, content) {

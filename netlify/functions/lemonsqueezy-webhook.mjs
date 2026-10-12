@@ -28,19 +28,27 @@ function verifySignature(payload, signature, secret) {
   }
 }
 
-// Helper: log to webhook_logs with error details.
-// NOTE: If the webhook_logs table doesn't exist in Supabase, all logging fails silently.
+// Helper: log to webhook_logs with error details. Returns whether the row was
+// written. Callers may ignore that — except for order_refunded, whose log row
+// is the only record of a refund that arrived before its order was delivered
+// (see the handler and handleCourseOrder).
 async function logWebhookEvent(eventType, payload, processed, errorMsg) {
-  if (!supabase) return;
+  if (!supabase) return false;
   try {
-    await supabase.from('webhook_logs').insert({
+    const { error } = await supabase.from('webhook_logs').insert({
       event_type: eventType || 'unknown',
       payload: payload,
       processed: processed,
       error: errorMsg || null,
     });
+    if (error) {
+      console.error('Failed to write webhook_logs:', error.message);
+      return false;
+    }
+    return true;
   } catch (e) {
     console.error('Failed to write webhook_logs:', e.message, e.stack);
+    return false;
   }
 }
 
@@ -187,10 +195,18 @@ export const handler = async (event) => {
     }
 
     // Log result
-    await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
+    const logged = await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
 
     if (handlerError) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: handlerError.message }) };
+    }
+    // A refund is acknowledged only once it is on record. For an order that was
+    // never delivered this log row is the ONLY trace of the refund, and it is
+    // what stops a later retry of that order's order_created from granting it
+    // (handleCourseOrder). A 500 makes Lemon Squeezy retry; revoking is
+    // idempotent (Codex review of the telc pilot PR A).
+    if (eventType === 'order_refunded' && !logged) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'refund processed but not recorded in webhook_logs; retry' }) };
     }
 
     return { statusCode: 200, headers, body: 'OK' };
@@ -356,7 +372,7 @@ async function handleOrderCreated(data, meta) {
   const orderVariantId = String(attributes.first_order_item?.variant_id || '');
   const course = courseForVariant(orderVariantId);
   if (course) {
-    await handleCourseOrder({ course, orderId, customData, attributes });
+    await handleCourseOrder({ course, orderId, customData, attributes, meta });
     return;
   }
 
@@ -400,15 +416,74 @@ async function handleOrderCreated(data, meta) {
   }
 }
 
+// Order statuses that never grant a course. Lemon Squeezy's order status is
+// one of pending, failed, paid, refunded, partial_refund, fraudulent, and its
+// `refunded` flag is true only for a FULL refund — a partial one is status
+// partial_refund, and handleOrderRefunded revokes on either. `pending` still
+// grants, as before: no later event would deliver it.
+const NO_GRANT_ORDER_STATUSES = new Set(['failed', 'refunded', 'partial_refund', 'fraudulent']);
+
 // Course purchase: record the entitlement, then grant the included Pro window
 // unless a real subscription already covers the user. Idempotent on the LS
 // order id, so webhook retries can never double-grant.
-async function handleCourseOrder({ course, orderId, customData, attributes }) {
+async function handleCourseOrder({ course, orderId, customData, attributes, meta }) {
+  // A refunded order is never granted again. order_created is replayed by
+  // Lemon Squeezy retries and by the owner's "resend" in the dashboard, and the
+  // upsert below writes status 'active' — so a replay after a refund used to
+  // hand the access straight back (found 2026-10-12, telc pilot plan). Three
+  // records can say so, checked in this order: the payload (the refund was
+  // known to Lemon Squeezy when it sent the event), the purchases row (our
+  // refund handler ran), and the logged order_refunded event (the refund
+  // arrived BEFORE the order was ever delivered, so there was no row to mark).
+  if (attributes?.refunded === true || NO_GRANT_ORDER_STATUSES.has(attributes?.status)) {
+    console.log(`course order ${orderId}: status ${attributes?.status}, refunded ${attributes?.refunded === true} — not granting`);
+    return;
+  }
+  const { data: priorPurchase, error: priorError } = await supabase
+    .from('purchases')
+    .select('status')
+    .eq('lemonsqueezy_order_id', orderId)
+    .maybeSingle();
+  if (priorError) {
+    console.error('course order: prior purchase lookup error:', JSON.stringify(priorError));
+    throw new Error(`course order prior purchase lookup failed: ${priorError.message}`);
+  }
+  if (priorPurchase?.status === 'refunded') {
+    console.log(`course order ${orderId}: already refunded — not granting again`);
+    return;
+  }
+  // Refund-first: order_refunded found no purchases row and returned, so only
+  // webhook_logs (every event, with its payload, never pruned) remembers it.
+  // Without this an automatic retry of the original paid order_created — e.g.
+  // a no-account order the owner refunded, once the buyer has signed up —
+  // granted a refunded order (Codex review of the telc pilot PR A).
+  const { data: loggedRefunds, error: refundLogError } = await supabase
+    .from('webhook_logs')
+    .select('id')
+    .eq('event_type', 'order_refunded')
+    .eq('payload->data->>id', orderId)
+    .limit(1);
+  if (refundLogError) {
+    console.error('course order: refund log lookup error:', JSON.stringify(refundLogError));
+    throw new Error(`course order refund log lookup failed: ${refundLogError.message}`);
+  }
+  if (loggedRefunds?.length) {
+    console.log(`course order ${orderId}: a refund for it is on record — not granting`);
+    return;
+  }
+
   const userId = await resolveUserId(customData, attributes, null);
   if (!userId) {
     // A paying customer we cannot attach is a loud failure, not a warning:
     // throwing 500s the webhook so Lemon Squeezy retries (the buyer may be
-    // mid-signup) and the failure lands in webhook_logs for follow-up.
+    // mid-signup) and the failure lands in webhook_logs for follow-up. The
+    // owner hears about it at once — a retry only helps if the buyer creates
+    // an account with the same e-mail, and nobody tells them to.
+    const testTag = meta?.test_mode === true ? '[TEST] ' : '';
+    await sendOwnerAlert(
+      `${testTag}Paid course order has no account — order ${orderId}`,
+      `A customer paid for ${course.productKey}, but no DeutschMeister account matches the order, so nothing was granted yet.\n\nOrder: ${orderId}\nCustomer e-mail: ${attributes?.user_email || 'unknown'}\nTotal: ${attributes?.total_formatted || attributes?.total}\n\nEither ask the buyer to sign up at https://deutsch-meister.de/signup with that address and then resend this order_created event (Lemon Squeezy → Settings → Webhooks), or refund in the Lemon Squeezy dashboard. A refunded order is never delivered afterwards, even by a retry (docs/telc-pilot/README.md).`,
+    );
     throw new Error(
       `course order ${orderId} (${course.productKey}) has no resolvable user — email: ${attributes?.user_email || 'none'}`
     );
@@ -518,7 +593,10 @@ async function handleOrderRefunded(data, _meta) {
     throw findError;
   }
   if (!purchase) {
-    console.log('order_refunded: no purchases row for order', orderId, '— not a course order, ignoring');
+    // Not a course order, or a course order refunded before it was delivered.
+    // Nothing to revoke either way; this event's webhook_logs row is what stops
+    // a later retry of that order's order_created from granting it.
+    console.log('order_refunded: no purchases row for order', orderId, '— nothing to revoke');
     return;
   }
 

@@ -19,17 +19,26 @@
 //     search). Never name a vendor price here — §6-UWG territory and the
 //     vendor domains are unverifiable from agent sessions.
 //
-// CHECKOUT: the CTA opens the Lemon Squeezy hosted checkout (merchant of
-// record) only when PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID is set at build
-// time. Until the owner creates the product, the CTA degrades to the free
-// funnel instead of a dead checkout. Guest checkout is supported — the webhook
-// resolves the buyer by e-mail — hence the "gleiche E-Mail" note by the button.
+// CHECKOUT (2026-10-12, telc pilot — docs/telc-pilot/README.md): the Buy
+// buttons render only while telcPilotVariant() returns an id, i.e. the owner
+// has set PUBLIC_TELC_B1_ON_SALE=true AND the product has a checkout id. Both
+// go through components/CourseCheckout.astro like every other course button:
+// a signed-in visitor opens the overlay with the account's e-mail and user id,
+// a signed-out visitor signs up first (dm_buy_intent → /subscription?buy=), so
+// every order carries a user id. The hosted guest link this page used to
+// render is gone: a guest who paid with another e-mail than their account's
+// landed unmatched. Off sale the page sells nothing — no Buy button, no
+// Product/Offer in the JSON-LD — and the CTA is the attributed free-account
+// door (ref=telc-pilot), whose signups are the pilot's first invite list.
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import LanguageNotice from '../components/LanguageNotice.astro';
+import CourseCheckout from '../components/CourseCheckout.astro';
 import '../styles/global.css';
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import { getTopicsForLevel } from '../lib/grammar.js';
+import { telcPilotVariant } from '../lib/courseVariants.js';
+import { onsiteHref } from '../lib/onsiteLinks.js';
 import { COURSES, CURRENCY, num, deEur } from '../data/pricing.js';
 import { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 
@@ -42,10 +51,9 @@ const [b11Topics, b12Topics] = await Promise.all([getTopicsForLevel('b1.1'), get
 const B1_TOPIC_COUNT = b11Topics.length + b12Topics.length;
 const PLAN_DAYS = 20; // 4 weeks × 5 study days — mirrors src/data/programs/telcB1Komplett.js
 
-const variantId = import.meta.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '';
-const checkoutUrl = variantId
-  ? `https://deutsch-meister.lemonsqueezy.com/checkout/buy/${variantId}`
-  : '';
+// '' while the pilot is off sale — then nothing on this page can be bought.
+const variantId = telcPilotVariant();
+const signupHref = onsiteHref('signup', 'telc-pilot', 'telc-b1');
 
 const title = `telc B1 Komplettvorbereitung: 4-Wochen-Plan | DeutschMeister`;
 const description = `Ein fester ${PLAN_DAYS}-Tage-Plan bis zur telc B1-Prüfung: jeden Tag eine Aufgabe aus Grammatik, Hören, Lesen und KI-Sprechtraining — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`;
@@ -95,7 +103,9 @@ const faqSchema = {
   '@type': 'FAQPage',
   mainEntity: FAQS.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
-const jsonLd = [productSchema, faqSchema];
+// The Offer is published only while it can be bought: an InStock offer with
+// no Buy button behind it is a rich result that lies.
+const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
 
 // The four weeks as numbered steps — accent badges rotate (energy, never
 // meaning: tokens rule 2).
@@ -132,25 +142,24 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
         </p>
 
         <div class="hero-line mt-8 flex flex-wrap items-center gap-4" style="--d:320ms">
-          {checkoutUrl ? (
-            <a href={checkoutUrl} class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`} data-checkout="telc-b1-komplett">
+          {variantId ? (
+            <button type="button" class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`} data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page">
               <span class="relative z-10">Ja, ich will den Plan — {deEur(course.price)} einmalig</span>
-            </a>
+            </button>
           ) : (
-            <a href="/signup" class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`}>
-              <span class="relative z-10">Der Kurs startet in Kürze — Gratis-Konto sichern</span>
+            <a href={signupHref} class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`}>
+              <span class="relative z-10">Kostenloses Konto anlegen</span>
             </a>
           )}
           <a href="/leitfaden/telc-b1/" class={BTN_SECONDARY}>
             Erst den kostenlosen Leitfaden lesen
           </a>
         </div>
-        {checkoutUrl && (
-          <p class="hero-line mt-4 font-data text-[0.75rem] text-graphite" style="--d:420ms">
-            Einmalzahlung · kein Abo · {course.proMonths} Monate Pro-Zugang inklusive · beim Kauf die E-Mail deines
-            DeutschMeister-Kontos verwenden (oder danach eins mit derselben E-Mail anlegen)
-          </p>
-        )}
+        <p class="hero-line mt-4 font-data text-[0.75rem] text-graphite" style="--d:420ms">
+          {variantId
+            ? `Einmalzahlung · kein Abo · ${course.proMonths} Monate Pro-Zugang inklusive`
+            : `Der Kurs startet in Kürze. Bis dahin bringt dir ein kostenloses Konto ${TRIAL_DAYS} Tage Pro zum Üben.`}
+        </p>
       </div>
     </section>
 
@@ -206,10 +215,10 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
                   <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Der telc B1 Übungstest mit Zeitlimit und Auswertung — und das KI-Schreibtraining nach den Prüfungskriterien (im Pro-Zugang enthalten)</span></li>
                   <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Prüfungswoche mit Format, Bewertung und Selbsttest</span></li>
                 </ul>
-                {checkoutUrl && (
-                  <a href={checkoutUrl} class={`${BTN_PRIMARY} mt-7`} data-checkout="telc-b1-komplett" data-atropos-offset="6">
+                {variantId && (
+                  <button type="button" class={`${BTN_PRIMARY} mt-7`} data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page_card" data-atropos-offset="6">
                     Ja, ich will den Plan — {deEur(course.price)}
-                  </a>
+                  </button>
                 )}
               </div>
             </div></div></div>
@@ -240,42 +249,5 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
 
     </div>
   </div>
+  <CourseCheckout />
 </Layout>
-
-<script>
-  // Tie the purchase to the account when one is signed in (2026-10-04). The
-  // links above are plain hosted-checkout URLs — they work without JS, and a
-  // guest buyer is matched by e-mail in the webhook. But a signed-in buyer who
-  // pays with a different address used to land unmatched (the webhook answers
-  // 500 until Lemon Squeezy gives up): now the click carries the account's
-  // e-mail and user id, the same two fields every other checkout sends.
-  import { track } from '../lib/track.js';
-
-  function currentUser() {
-    try {
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && /^sb-.*-auth-token$/.test(k)) {
-          const v = JSON.parse(localStorage.getItem(k) || 'null');
-          const u = (v && (v.user || (v.currentSession && v.currentSession.user))) || null;
-          if (u && u.id) return { email: u.email || '', id: u.id };
-        }
-      }
-    } catch (e) { /* private mode — guest checkout */ }
-    return null;
-  }
-
-  document.querySelectorAll('a[data-checkout="telc-b1-komplett"]').forEach((a) => {
-    a.addEventListener('click', () => {
-      const u = currentUser();
-      track('checkout_intent', { product: 'telc_b1_komplett', surface: 'telc_page', signed_in: Boolean(u) });
-      if (!u) return; // guest checkout, matched by e-mail
-      const url = new URL(a.href);
-      url.searchParams.set('checkout[email]', u.email);
-      url.searchParams.set('checkout[custom][user_id]', u.id);
-      a.href = url.toString();
-      try { sessionStorage.setItem('dm_checkout_pending', JSON.stringify({ plan: 'telc_b1_komplett', amount: null })); } catch (e) { /* private mode */ }
-      track('checkout_opened', { product: 'telc_b1_komplett', surface: 'telc_page' });
-    });
-  });
-</script>

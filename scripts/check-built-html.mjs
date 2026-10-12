@@ -87,6 +87,7 @@ const REQUIRED = [
   'pruefung/telc-b2/index.html',
   'pruefung/start-deutsch-1/index.html',
   'pruefung/goethe-a2/index.html',
+  'telc-b1-komplettvorbereitung/index.html',
   ...SPA_ROUTES.map((r) => `${r}/index.html`),
 ];
 
@@ -272,6 +273,33 @@ for (const entry of MANIFEST) {
     // forbidding it. A claim is a claim whatever its capitalisation.
     if (html.toLowerCase().includes(literal.toLowerCase())) note(fail, page, `contains banned literal "${literal}"`);
   }
+}
+
+// --- the telc pilot's sale gate ----------------------------------------------
+// The telc B1 product is sold only while the owner has switched the sale on:
+// PUBLIC_TELC_B1_ON_SALE=true AND a checkout id (docs/telc-pilot/README.md).
+// Read this build's env the way astro-site/src/lib/courseVariants.js does and
+// hold the BUILT page to it. Off sale: no Buy button, no hosted-checkout link,
+// no Offer in the JSON-LD. On sale: both Buy buttons and the Offer. Either way,
+// never a hosted-checkout href — every telc order goes through CourseCheckout,
+// which attaches the account's user id.
+const TELC_PAGE = 'telc-b1-komplettvorbereitung/index.html';
+if (found.has(TELC_PAGE) && existsSync(join(DIST, TELC_PAGE))) {
+  const html = readFileSync(join(DIST, TELC_PAGE), 'utf8');
+  const onSale = process.env.PUBLIC_TELC_B1_ON_SALE === 'true' && Boolean(process.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID);
+  const buttons = (html.match(/data-course-variant=/g) || []).length;
+  const offer = /"@type":"Offer"/.test(html) || /schema\.org\/InStock/.test(html);
+  if (/href="[^"]*\/checkout\/buy\//.test(html)) {
+    note(fail, TELC_PAGE, 'links to a hosted checkout — telc orders must go through CourseCheckout (user id attached)');
+  }
+  if (onSale) {
+    if (buttons !== 2) note(fail, TELC_PAGE, `on sale, but ${buttons} Buy button(s) rendered (expected 2)`);
+    if (!offer) note(fail, TELC_PAGE, 'on sale, but the JSON-LD publishes no Offer');
+  } else {
+    if (buttons) note(fail, TELC_PAGE, `off sale, but ${buttons} Buy button(s) rendered`);
+    if (offer) note(fail, TELC_PAGE, 'off sale, but the JSON-LD still publishes an Offer');
+  }
+  console.log(`telc sale gate: ${onSale ? 'ON sale' : 'off sale'} — ${buttons} Buy button(s), Offer ${offer ? 'present' : 'absent'}`);
 }
 
 // --- sitemap integrity ------------------------------------------------------
