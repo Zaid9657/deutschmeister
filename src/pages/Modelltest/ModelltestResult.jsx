@@ -48,11 +48,14 @@ const VERDICT_COPY = {
   },
 };
 
-const SECTION_HINTS = {
-  lesen: { label: 'Leseverstehen', href: '/reading/b1.1', linkLabel: 'Lesetraining öffnen' },
-  sprachbausteine: { label: 'Sprachbausteine', href: '/grammar/b1.1/', linkLabel: 'B1-Grammatik öffnen', fullLoad: true },
-  hoeren: { label: 'Hörverstehen', href: '/listening/b1.1', linkLabel: 'Hörtraining öffnen' },
-};
+// Practice for the weakest section, at the TEST's own level (resolved.gateLevel: the course's level,
+// or an exam track's last sub-level). These links were a fixed B1.1, so an A1.1 or A1.2 learner
+// was sent to B1 material — and, past their purchase, to a locked level (Codex review, 2026-10-14).
+const sectionHints = (level = 'b1.1') => ({
+  lesen: { label: 'Leseverstehen', href: `/reading/${level}`, linkLabel: 'Lesetraining öffnen' },
+  sprachbausteine: { label: 'Sprachbausteine', href: `/grammar/${level}/`, linkLabel: `${level.toUpperCase()}-Grammatik öffnen`, fullLoad: true },
+  hoeren: { label: 'Hörverstehen', href: `/listening/${level}`, linkLabel: 'Hörtraining öffnen' },
+});
 
 // "Sie sind bereit" — a trend, not a verdict: readiness reads the last two
 // COMPLETED attempts for this key (see src/services/readiness.js), never
@@ -185,6 +188,7 @@ const ModelltestResult = () => {
   const weakest = Object.entries(sections)
     .map(([key, s]) => ({ key, pct: s.max ? s.score / s.max : 1 }))
     .sort((a, b) => a.pct - b.pct)[0];
+  const SECTION_HINTS = sectionHints(resolved.gateLevel || undefined);
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">

@@ -154,7 +154,7 @@ const SubscriptionSuccessPage = () => {
                   {telcBought && (
                     <li>
                       <strong>Your 4-week telc B1 plan</strong>
-                      <span className="block text-graphite">One task a day, in the order that leads to the exam. The course area stays yours.</span>
+                      <span className="block text-graphite">A few short activities a day, in the order that leads to the exam. The course area stays yours.</span>
                     </li>
                   )}
                   {(courseBought || telcBought) && (
@@ -187,7 +187,7 @@ const SubscriptionSuccessPage = () => {
                 {courseBought ? `Start ${firstLevel.toUpperCase()} — day 1` : telcBought ? 'Open the plan' : 'Start learning'}
                 <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Button>
-              <p className="text-[0.875rem] text-nacht-muted">Your place is saved after every answer, on any device you sign in on.</p>
+              <p className="text-[0.875rem] text-nacht-muted">Your place is saved after every finished step, on any device you sign in on.</p>
               {/* On nacht the link takes the line's colour (siegel teal is ~3:1 here). */}
               <span className="[&_a]:!text-siegel-deep [&_a:hover]:!text-siegel">
                 <ReportProblemLink topic="payment" />
