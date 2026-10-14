@@ -62,6 +62,14 @@
 // Herr Weber, Herr Schmidt, Paul). No outcome promises and no exam fees anywhere in this file.
 
 /**
+ * The learners' roles. A scored read-aloud line is always one of theirs: the learner speaks their own
+ * part and hears and types the staff's (dictation). L1, L2, L4, L9 and L10 used to score the
+ * receptionist's, clerk's, seller's, waiter's and station staff's lines (Codex review, 2026-10-09).
+ * tests/course-value.test.mjs holds every Lektion to it.
+ */
+export const LEARNER_CAST = ['Ana', 'Tim', 'Lena'];
+
+/**
  * The closed list of words a dialogue line may use WITHOUT the word being in this or an earlier
  * Lektion's Wortfeld: articles and determiners, pronouns, the forms of sein/haben, ja/nein/
  * bitte/danke, question words, the numbers 0–100, prepositions and their contractions, the
@@ -220,6 +228,10 @@ export const CURRICULUM_A11 = {
         promptEn: 'Say your name in one sentence.',
         model: 'Ich heiße Ana.',
         accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist', 'Hallo', 'Guten Tag'],
+        // The very first encounter: an A0 beginner has nothing to retrieve yet, so L1 shows and plays
+        // the model first, the learner writes it with their own name, then once more unaided (Codex
+        // learner-value review, 2026-10-09). Every later Lektion keeps the retrieval-first pretest.
+        modelFirst: { openings: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
@@ -231,9 +243,9 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Wortakzent auf der ersten Silbe', items: ['HAL-lo', 'DAN-ke', 'A-na'] },
       // Not line 1: from the audio alone nobody can tell Ana from Anna or Chakiri from
       // Tschakiri — a dictation tests the ear, not the spelling of a name (2026-10 review).
-      hoeren: { kind: 'dictation', lines: [9, 7] },
+      hoeren: { kind: 'dictation', lines: [0, 6] },
       sprechen: {
-        readAloud: [0, 6],
+        readAloud: [7, 9],
         open: {
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vor: Name und Vorname. Buchstabieren Sie Ihren Namen.',
@@ -450,14 +462,14 @@ export const CURRICULUM_A11 = {
       // the i of bin and sind is short [ɪ]. „bin – bist – sind“ were three short vowels (2026-10 review).
       phonetik: { focus: 'Langes und kurzes i: Sie, wie [iː] – bin, sind [ɪ]', items: ['wie – Sie', 'bin – sind', 'Sie sind'] },
       // Not line 4: an enumeration with three commas is a punctuation test, not a listening test.
-      hoeren: { kind: 'dictation', lines: [7, 3] },
+      hoeren: { kind: 'dictation', lines: [3, 6] },
       sprechen: {
         // Zeile 2 („Bitte füllen Sie das Formular aus.“) ist RAUS (DaF review #13, MAJOR 3): der
         // Satz trägt die Satzklammer aus Lektion 11 und einen Sie-Imperativ, den A1.1 nirgends
         // erklärt. Im DIALOG darf er stehen (CONTRACT §2 — eine Beamtin sagt diesen Satz), zum
         // Vorlesen und als Diktat in Checkpoint 1 nicht. Zeile 4 ist frei und trägt das eigene
         // Thema der Lektion; RULE 18 bleibt erfüllt (Diktat liegt auf 7 und 3).
-        readAloud: [4, 6],
+        readAloud: [1, 7],
         open: {
           teil: 'Sprechen Teil 1',
           // ROUND 18 (DaF review #17, MAJOR 3): *Start Deutsch 1* Sprechen Teil 1 asks Name, Alter,
@@ -721,7 +733,7 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Der Diphthong eu in Euro und teuer', items: ['EU-ro', 'TEU-er', 'NEUN'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
-        readAloud: [0, 5],
+        readAloud: [0, 2],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Fragen Sie am Stand nach einem Preis und reagieren Sie auf die Antwort.',
@@ -1309,9 +1321,9 @@ export const CURRICULUM_A11 = {
         ruleSlug: 'verb-haben',
       },
       phonetik: { focus: 'Der Vokal ö in möchten und hören', items: ['MÖCH-te', 'HÖ-ren', 'SCHÖN'] },
-      hoeren: { kind: 'dictation', lines: [4, 3] },
+      hoeren: { kind: 'dictation', lines: [0, 4] },
       sprechen: {
-        readAloud: [0, 1],
+        readAloud: [1, 3],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie im Café um ein Glas Wasser und reagieren Sie auf die Antwort.',
@@ -1415,7 +1427,7 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Steigende Satzmelodie in der Ja/Nein-Frage', items: ['Fährt der ZUG?↗', 'Hast du ZEIT?↗', 'Kommst du MIT?↗'] },
       hoeren: { kind: 'dictation', lines: [1, 9] },
       sprechen: {
-        readAloud: [0, 3],
+        readAloud: [0, 2],
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Reisen: Zug? Fahrkarte? Wohin?',

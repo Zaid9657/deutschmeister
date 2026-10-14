@@ -117,6 +117,12 @@ export const STRINGS = {
     'pretest.note': "Haven't learned this yet? That's the point. The attempt counts, not the score.",
     'pretest.model': 'Model answer',
     'pretest.goodStart': 'Your sentence already starts off right.',
+    'pretest.first.eyebrow': 'Step 1 · Your first sentence',
+    'pretest.first.listen': 'Listen and read',
+    'pretest.first.yourTurn': 'Now you — with your own name',
+    'pretest.first.again': 'Once more, without looking',
+    'pretest.first.done': 'That is your first sentence in German.',
+    'pretest.first.hint': 'Start with „{start}“ and then your name.',
 
     // ── dialogue ─────────────────────────────────────────────────────────────
     'dialog.glossOn': 'Show English',
@@ -479,6 +485,12 @@ export const STRINGS = {
     'pretest.note': 'Noch nichts gelernt? Genau darum geht es. Der Versuch zählt, nicht die Note.',
     'pretest.model': 'Modellantwort',
     'pretest.goodStart': 'Ihr Satz fängt schon richtig an.',
+    'pretest.first.eyebrow': 'Schritt 1 · Ihr erster Satz',
+    'pretest.first.listen': 'Hören und lesen',
+    'pretest.first.yourTurn': 'Jetzt Sie – mit Ihrem eigenen Namen',
+    'pretest.first.again': 'Noch einmal, ohne hinzusehen',
+    'pretest.first.done': 'Das ist Ihr erster Satz auf Deutsch.',
+    'pretest.first.hint': 'Beginnen Sie mit „{start}“ und dann Ihrem Namen.',
 
     // ── dialogue ─────────────────────────────────────────────────────────────
     'dialog.glossOn': 'Englisch an',

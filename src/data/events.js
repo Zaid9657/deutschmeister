@@ -46,6 +46,7 @@ export const EVENTS = {
   onboarding_completed: { when: 'The onboarding slides are finished or left.', once: true },
   lesson_started: { when: 'A course Lektion is opened in the lesson player.', once: false },
   lesson_completed: { when: 'A course Lektion reaches its recap.', once: false },
+  lesson_first_sentence: { when: 'In the model-first pretest of Lektion 1, the learner writes their own introduction with the model hidden (hit = it was an introduction).', once: false },
   lesson_resumed: { when: 'The lesson player reopens a saved, unfinished run of a Lektion (same run_id as its lesson_started).', once: false },
   lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key).', once: false },
   lesson_sync_failed: {

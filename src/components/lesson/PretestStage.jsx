@@ -7,6 +7,8 @@ import { audioFor, playChecked, speechAvailable } from '../../lib/lesson/speech.
 import { AudioFailureNotice } from './PlayButton.jsx';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { introductionHit } from '../../lib/lesson/pretest.js';
+import { trackFirstSentence } from '../../lib/funnelTracking.js';
 
 /**
  * Stage 1 — one production attempt BEFORE anything is taught, then the model
@@ -24,9 +26,93 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * `promptEn` as the lead — in both chrome languages, because the German line
  * is the task and the English line is what makes it readable on day one.
  */
+/**
+ * The first encounter (L1, `pretest.modelFirst`): an A0 beginner has nothing to retrieve yet, so the
+ * order is reversed — see and hear the model, write it with your own name while it is in view,
+ * then once more with it hidden. Never blocking: a miss shows how to start and lets them go on.
+ */
+function ModelFirstPretest({ pretest, id, onBack, onDone }) {
+  const recorded = !!audioFor(id, 'pretest');
+  const [step, setStep] = useState('supported'); // supported → recall
+  const [values, setValues] = useState({ supported: '', recall: '' });
+  const [checked, setChecked] = useState(null); // null | { hit } for the current step
+  const [audioFail, setAudioFail] = useState(null);
+  const [lang] = useLessonLang();
+  const openings = pretest.modelFirst?.openings || [];
+  const value = values[step];
+
+  const onPrimary = () => {
+    if (!checked) {
+      const hit = introductionHit(value, openings);
+      setChecked({ hit });
+      if (step === 'recall') trackFirstSentence(id, hit);
+      return;
+    }
+    if (step === 'supported') { setStep('recall'); setChecked(null); return; }
+    onDone();
+  };
+
+  return (
+    <StageShell
+      eyebrow={t('pretest.first.eyebrow', lang)}
+      title={pretest.promptDe}
+      lead={pretest.promptEn}
+      onBack={onBack}
+      primaryLabel={checked ? t('action.next', lang) : t('action.check', lang)}
+      primaryDisabled={!checked && !value.trim()}
+      onPrimary={onPrimary}
+    >
+      {step === 'supported' && (
+        <Card tone="wash" className="p-5">
+          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{t('pretest.first.listen', lang)}</p>
+          <p className="mt-2 text-[1.125rem] font-semibold text-ink" lang="de">{pretest.model}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => { setAudioFail(null); playChecked(id, 'pretest', pretest.model).then((r) => setAudioFail(r.ok ? null : r.reason)); }}
+              disabled={!pretest.model || (!recorded && !speechAvailable())}
+              className="inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2 text-sm font-bold text-ink hover:border-siegel active:translate-y-0.5 disabled:opacity-40"
+            >
+              <Play className="h-4 w-4" aria-hidden="true" /> {t('action.listen', lang)}
+            </button>
+            <AudioSourceBadge recorded={recorded} />
+          </div>
+        </Card>
+      )}
+      <Card className="mt-4 p-5">
+        <label htmlFor={`pretest-${step}`} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+          {t(step === 'supported' ? 'pretest.first.yourTurn' : 'pretest.first.again', lang)}
+        </label>
+        <textarea
+          key={step}
+          id={`pretest-${step}`}
+          rows={2}
+          lang="de"
+          value={value}
+          onChange={(e) => setValues((v) => ({ ...v, [step]: e.target.value }))}
+          disabled={Boolean(checked)}
+          className="mt-2 w-full resize-none rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
+        />
+        <p role="status" className="mt-2 text-[0.875rem] font-bold text-siegel-deep">
+          {checked && (checked.hit
+            ? <span className="flex items-center gap-2"><Check className="h-4 w-4" aria-hidden="true" /> {t('pretest.first.done', lang)}</span>
+            : <span className="text-graphite">{t('pretest.first.hint', lang, { start: openings[0] || '' })}</span>)}
+        </p>
+      </Card>
+      <AudioFailureNotice reason={audioFail} />
+    </StageShell>
+  );
+}
+
 export default function PretestStage({ stage, lektionId, onBack, onDone }) {
   const pretest = stage.pretest || {};
   const id = lektionId || stage.lektionId || null;
+  if (pretest.modelFirst) return <ModelFirstPretest pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
+  return <RetrievalPretest pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
+}
+
+/** Every later Lektion: one attempt before anything is taught, then the model (the file header). */
+function RetrievalPretest({ pretest, id, onBack, onDone }) {
   const recorded = !!audioFor(id, 'pretest');
   const [value, setValue] = useState('');
   const [audioFail, setAudioFail] = useState(null);
