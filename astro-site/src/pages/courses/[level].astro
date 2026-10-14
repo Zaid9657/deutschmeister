@@ -274,8 +274,8 @@ const jsonLd = {
       <section class="reveal mt-4" aria-labelledby="grammar-h">
         <h2 id="grammar-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">{topics.length} grammar topics, in order</h2>
         <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-          Every topic: rules in plain language, worked examples with audio, and exercises where you type
-          the answer — not multiple choice. The rules are free to read at every level; the practice is part of the course.
+          Every topic: rules in plain language, worked examples with audio, and exercises you answer by
+          typing or choosing, each checked on the spot. The rules are free to read at every level; the practice is part of the course.
         </p>
         <ol class="mt-5 grid gap-2 sm:grid-cols-2">
           {topics.map((t, i) => (
@@ -323,11 +323,11 @@ const jsonLd = {
           <>
             <div class="rounded-clay border border-rule bg-white p-5">
               <h3 class="font-bold text-ink">Final test in the {content.finalTest.format} format</h3>
-              <p class="mt-1 text-[0.875rem] text-graphite">Timed, half exam length, scored against the real pass threshold — so you know you are done.</p>
+              <p class="mt-1 text-[0.875rem] text-graphite">Timed, half exam length: listening and reading are scored against the exam's pass line, writing is a self-check.</p>
             </div>
             <div class="rounded-clay border border-rule bg-white p-5">
               <h3 class="font-bold text-ink">28-day plan</h3>
-              <p class="mt-1 text-[0.875rem] text-graphite">One task a day through the whole level, ending in the final test.</p>
+              <p class="mt-1 text-[0.875rem] text-graphite">A few short activities a day through the whole level, ending in the final test.</p>
             </div>
           </>
         ) : (

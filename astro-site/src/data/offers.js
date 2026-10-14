@@ -115,7 +115,7 @@ export const ticketLines = (level) => {
     {
       key: 'progress',
       title: 'Your progress, saved',
-      body: 'Every answer is saved to your account, so you continue where you stopped, on any device.',
+      body: 'Every finished exercise, activity and test is saved to your account, so you continue where you stopped, on any device.',
       removes: 'starting over on a new device.',
     },
   ];
@@ -230,7 +230,7 @@ export const OFFER_FAQ = [
   },
   {
     q: 'I only have a little time each day.',
-    a: `A plan day is about ${minutesPerDay(GUIDED_PLANS['a1.2'])} minutes, split into short steps, and your place is saved after every answer. Fewer minutes a day simply means more days.`,
+    a: `A plan day is about ${minutesPerDay(GUIDED_PLANS['a1.2'])} minutes, split into short steps, and your place in the plan is saved after every finished step. Fewer minutes a day simply means more days.`,
   },
   {
     q: 'Who do I contact if something goes wrong?',

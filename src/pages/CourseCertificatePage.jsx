@@ -94,9 +94,13 @@ export default function CourseCertificatePage() {
             <>
               <p className="mt-8 text-[0.9375rem] text-graphite">This certifies that</p>
               <p className="mt-2 font-display text-[1.75rem] font-semibold text-ink sm:text-[2.125rem]">{loaded ? name : '…'}</p>
-              <p className="mt-6 text-[0.9375rem] text-graphite">has completed every lesson of the</p>
+              {/* Participation, like the rebuilt branch above: the plan's activities are ticked off by
+                  the learner, so this states what was worked through — never a level (Codex review,
+                  2026-10-14: it used to end by naming the exam's level). */}
+              <p className="mt-6 text-[0.9375rem] text-graphite">has worked through all {items.length} activities of the</p>
               <p className="mt-2 font-display text-[1.5rem] font-semibold text-ink">German {code} Course</p>
-              <p className="mt-1 text-[0.875rem] text-graphite">{items.length} lessons · grammar, reading, listening, vocabulary and speaking · {testFormat} level</p>
+              <p className="mt-1 text-[0.875rem] text-graphite">grammar, reading, listening, vocabulary and speaking · practice test in the {testFormat} format</p>
+              <p className="mt-3 text-[0.8125rem] text-graphite">A DeutschMeister course certificate: not an official exam result and not a CEFR certificate.</p>
             </>
           )}
           <p className="mt-10 font-data text-[0.75rem] text-graphite">{date} · deutsch-meister.de</p>
