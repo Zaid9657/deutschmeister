@@ -215,6 +215,26 @@ export function freeRevisionsSince(rows, since = null) {
   return free;
 }
 
+/**
+ * The tier budget is ONE ledger of submissions for course and exam tasks alike (lifetime on the
+ * trial, per calendar month on a plan), so EVERY course's free revisions leave it, whichever task is
+ * being submitted now — an exam text at 19 chargeable + 1 free revision is 19/20, not 20/20 (Codex
+ * re-review, 2026-10-15). `ledger` = all of the learner's rows, oldest first. Returns the chargeable
+ * count in the window, how often `taskKey` was submitted before, and whether this text is a task's
+ * free improved version (never an exam task's: those have no course prefix).
+ */
+export function tierUsage(ledger, taskKey, since = null) {
+  const from = since ? Date.parse(since) : -Infinity;
+  const courseRows = ledger.filter((r) => courseTaskKeyPrefix(r.task_key));
+  const before = courseTaskKeyPrefix(taskKey) ? courseRows.filter((r) => r.task_key === taskKey).length : 0;
+  const inWindow = ledger.filter((r) => Date.parse(r.created_at) >= from).length;
+  return {
+    used: Math.max(0, inWindow - freeRevisionsSince(courseRows, since)),
+    before,
+    revision: before >= 1 && before <= REVISIONS_PER_TASK,
+  };
+}
+
 // The feedback language a learner may ask for (the lesson chrome's language). Anything else is German.
 export const FEEDBACK_LANGS = new Set(['de', 'en']);
 
@@ -347,33 +367,31 @@ export const handler = async (event) => {
     if (!courseAllowance && (tier === 'free_expired' || limit === 0)) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'subscription_required', tier }) };
     }
-    // A course submission reads this course's own rows: lifetime, oldest first, and only THIS
-    // course's — the prefix is derived from the submitted task_key itself, never a fixed literal.
-    // The free course allowance counts TASKS from them (courseSubmissionAllowed); on every tier they
-    // say whether this text is a task's one free improved version.
-    const courseRows = isCourse
-      ? (await supabase
+    let course = null;
+    let usage;
+    if (courseAllowance) {
+      // The free course allowance counts TASKS of this course, lifetime: its own rows only — the
+      // prefix is derived from the submitted task_key itself, never a fixed literal.
+      const { data: rows } = await supabase
+        .from('writing_submissions')
+        .select('task_key')
+        .eq('user_id', user_id)
+        .like('task_key', `${courseTaskKeyPrefix(task_key)}%`);
+      const keys = (rows || []).map((r) => r.task_key);
+      course = courseSubmissionAllowed(keys, task_key, limit);
+      usage = { used: course.used, before: keys.filter((k) => k === task_key).length, revision: course.revision };
+    } else {
+      const now = new Date();
+      const since = tier === 'free_trial' ? null : new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      // ponytail: the learner's whole ledger, two short columns; a filtered count if anyone ever has thousands.
+      const { data: rows } = await supabase
         .from('writing_submissions')
         .select('task_key, created_at')
         .eq('user_id', user_id)
-        .like('task_key', `${courseTaskKeyPrefix(task_key)}%`)
-        .order('created_at', { ascending: true })).data || []
-      : [];
-    const course = courseAllowance ? courseSubmissionAllowed(courseRows.map((r) => r.task_key), task_key, limit) : null;
-    let used = course ? course.used : 0;
-    let revision = course ? course.revision : false;
-    if (!course) {
-      // The tier limit counts submissions: lifetime on the trial, per calendar month on a plan —
-      // minus the free revisions in that window, so a revision never costs a later task.
-      const now = new Date();
-      const since = tier === 'free_trial' ? null : new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      let countQuery = supabase.from('writing_submissions').select('id', { count: 'exact', head: true }).eq('user_id', user_id);
-      if (since) countQuery = countQuery.gte('created_at', since);
-      const { count } = await countQuery;
-      const before = courseRows.filter((r) => r.task_key === task_key).length;
-      revision = before >= 1 && before <= REVISIONS_PER_TASK;
-      used = Math.max(0, (count ?? 0) - freeRevisionsSince(courseRows, since));
+        .order('created_at', { ascending: true });
+      usage = tierUsage(rows || [], task_key, since);
     }
+    const { used, before, revision } = usage;
     if (course ? !course.allowed : !revision && used >= limit) {
       return {
         statusCode: 429,
@@ -464,6 +482,9 @@ export const handler = async (event) => {
         submission_id: saved?.id || null,
         saved: !saveError,
         used: used + (revision ? 0 : 1),
+        // Whether the NEXT text of this task is still its free improved version: the screen offers
+        // "Improve this version" only then, so a re-run of a Lektion never offers a second one.
+        can_revise: isCourse && before < REVISIONS_PER_TASK,
         limit,
         tier,
         scope: isCourse ? 'course' : 'exam',

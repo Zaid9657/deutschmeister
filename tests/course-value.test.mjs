@@ -192,15 +192,34 @@ test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Nex
   const { readFileSync } = await import('node:fs');
   const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
   const grader = read('netlify/functions/evaluate-writing.mjs');
-  assert.match(grader, /revision = before >= 1 && before <= REVISIONS_PER_TASK;/, 'on a plan, the first improved version is a revision');
-  assert.match(grader, /used = Math\.max\(0, \(count \?\? 0\) - freeRevisionsSince\(courseRows, since\)\);/, 'and earlier revisions leave the count');
+  // The re-review (same day): the tier budget is one ledger for course AND exam texts, so every
+  // course's free revisions leave it whichever task is submitted — an exam text at 19 chargeable + 1
+  // free revision is 19/20, not a 429.
+  const { tierUsage } = await import('../netlify/functions/evaluate-writing.mjs');
+  const exam = (i) => ({ task_key: 'formular-hotel-anmeldung', created_at: `2026-10-03T10:${String(i).padStart(2, '0')}:00+00:00` });
+  const ledger = [
+    { task_key: 'a11-l01', created_at: '2026-09-28T10:00:00+00:00' }, // last month: outside the window
+    { task_key: 'a11-l01', created_at: '2026-10-02T10:00:00+00:00' }, // its free improved version
+    ...Array.from({ length: 19 }, (_, i) => exam(i)),
+  ];
+  assert.deepEqual(tierUsage(ledger, 'mitteilung-termin-absagen', month), { used: 19, before: 0, revision: false }, 'an exam text sees 19, not 20');
+  assert.deepEqual(tierUsage(ledger, 'a11-l01', month), { used: 19, before: 2, revision: false }, 'a third text of a task is chargeable');
+  assert.deepEqual(tierUsage(ledger.slice(0, 1), 'a11-l01', month), { used: 0, before: 1, revision: true }, 'the second text of a task is its free revision');
+  assert.deepEqual(tierUsage(ledger, 'a11-l02', null).used, 20, 'the trial window is lifetime: 21 rows, one free');
+  assert.match(grader, /usage = tierUsage\(rows \|\| \[\], task_key, since\);/);
+  assert.match(grader, /\.select\('task_key, created_at'\)\s*\.eq\('user_id', user_id\)\s*\.order\('created_at', \{ ascending: true \}\)/, 'the whole ledger, not one course or one task');
   assert.match(grader, /course \? !course\.allowed : !revision && used >= limit/, 'a revision passes at the cap');
+  // …and the offer to improve is the server's word: a re-run of a Lektion may already have used it.
+  assert.match(grader, /can_revise: isCourse && before < REVISIONS_PER_TASK,/);
   assert.match(grader, /used: used \+ \(revision \? 0 : 1\)/);
   assert.doesNotMatch(grader, /\.select\([^)'"`]*\?/, 'no conditional select: the column scanner reads every query (db-columns.test.mjs)');
   const stage = read('src/components/lesson/WritingStage.jsx');
   assert.match(stage, /primaryDisabled=\{!graded \|\| pending\}/);
   assert.match(stage, /onPending=\{setPending\}/);
   const gw = read('src/components/lesson/GradedWriting.jsx');
+  assert.match(gw, /canRevise: data\.can_revise === true,/);
+  assert.match(gw, /allowRevision && outcome\.canRevise && outcome\.corrections\[0\]/);
+  assert.doesNotMatch(gw, /setRevised|\brevised\b/, 'no local memory decides the offer');
   assert.match(gw, /setBusy\(true\);\s*onPending\?\.\(true\);/);
   assert.match(gw, /setBusy\(false\);\s*onPending\?\.\(false\);/);
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
