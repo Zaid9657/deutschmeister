@@ -75,3 +75,25 @@ test('a Lektion runs in three short parts — meet it, use it, say and write it 
   assert.match(player, /sessionCompleted\(stage, stages\[landing\]\)/, 'advance() pauses at a part boundary');
   assert.match(player, /<SessionBreak /);
 });
+
+test('help an A0 learner can read: L1 translations start open, every sound focus has English, writing feedback can be explained in English', async () => {
+  // Codex review: L1 dialogue translations started hidden; the phonetics focus was German only; the
+  // grader always answered in German, even to a learner using the English interface.
+  const { buildLesson } = await import('../src/lib/lesson/buildLesson.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const dialogOf = (nr) => buildLesson({ curriculum: CURRICULUM_A11, lektion: CURRICULUM_A11.lektionen[nr - 1], pool }).stages.find((s) => s.kind === 'dialog');
+  assert.equal(dialogOf(1).glossOpen, true, 'L1 opens with translations shown');
+  assert.equal(dialogOf(2).glossOpen, false, 'later Lektionen start with German only; the toggle stays');
+  const stage = readFileSync(new URL('../src/components/lesson/DialogStage.jsx', import.meta.url), 'utf8');
+  assert.match(stage, /useState\(\(\) => stage\.glossOpen === true\)/);
+  for (const l of CURRICULUM_A11.lektionen) assert.ok(l.phonetik.focusEn && l.phonetik.focusEn.length > 8, `L${l.nr} has an English sound focus`);
+  const { buildWritingPrompt } = await import('../netlify/functions/evaluate-writing.mjs');
+  const { writingTaskByKey } = await import('../src/data/writingTasks.js');
+  const task = writingTaskByKey('goethe_a1', 'a11-l02');
+  assert.match(buildWritingPrompt(task, 'Text', 'en'), /in short, simple English/);
+  assert.match(buildWritingPrompt(task, 'Text'), /in kurzem, einfachem Deutsch/, 'German stays the default');
+  assert.match(buildWritingPrompt(task, 'Text', 'fr'), /in kurzem, einfachem Deutsch/, 'only allow-listed languages');
+  const gw = readFileSync(new URL('../src/components/lesson/GradedWriting.jsx', import.meta.url), 'utf8');
+  assert.match(gw, /feedback_lang: lang/);
+});

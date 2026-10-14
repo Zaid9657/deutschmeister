@@ -109,7 +109,8 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
   const lines = (stage.dialog && stage.dialog.lines) || [];
   const id = lektionId || stage.lektionId || null;
   const [shown, setShown] = useState(1);
-  const [gloss, setGloss] = useState(false);
+  // L1 opens with the English shown (buildLesson glossOpen): a first encounter needs the meaning.
+  const [gloss, setGloss] = useState(() => stage.glossOpen === true);
   const [played, setPlayed] = useState(() => new Set());
   const [openGloss, setOpenGloss] = useState(null);
   const [lang] = useLessonLang();

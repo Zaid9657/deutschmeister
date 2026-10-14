@@ -1120,7 +1120,8 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     stages.push({ nr: 1, key: 'pretest', kind: 'pretest', title: 'Vorher probieren', pretest: lektion.pretest });
   }
   if (lektion.dialog) {
-    stages.push({ nr: 2, key: 'dialog', kind: 'dialog', title: lektion.dialog.title || 'Dialog', dialog: lektion.dialog });
+    // The first Lektion of a level opens with the English shown; later ones start German-only (toggle kept).
+    stages.push({ nr: 2, key: 'dialog', kind: 'dialog', title: lektion.dialog.title || 'Dialog', dialog: lektion.dialog, glossOpen: lektion.nr === 1 });
   }
   if (lektion.wortfeld && lektion.wortfeld.length) {
     stages.push({

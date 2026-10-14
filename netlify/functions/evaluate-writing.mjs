@@ -180,7 +180,10 @@ try {
   console.error('Failed to initialize Supabase client:', e.message);
 }
 
-function buildWritingPrompt(task, submission) {
+// The feedback language a learner may ask for (the lesson chrome's language). Anything else is German.
+export const FEEDBACK_LANGS = new Set(['de', 'en']);
+
+export function buildWritingPrompt(task, submission, feedbackLang = 'de') {
   const leitpunkte = task.leitpunkte.map((p, i) => `${i + 1}. ${p}`).join('\n');
   // N booleans, not a fixed 3 — src/pages/SchreibenPage.jsx indexes
   // leitpunkt_check by the task's own leitpunkte position, so this must match
@@ -197,8 +200,12 @@ function buildWritingPrompt(task, submission) {
       : `2. **Kommunikative Gestaltung** (structure) – Textsorte, Anrede/Schluss, Register (${task.register}), Aufbau, Verknüpfungen.`;
   // A1 learners cannot read B1 feedback about their A1 text. Same criteria,
   // same output shape — only the feedback wording is constrained.
-  const levelLine =
-    task.examKey === 'goethe_a1'
+  // An A0 learner using the English interface could not read German feedback about their own text
+  // (Codex learner-value review): they may ask for English. German examples and corrections stay German.
+  const english = feedbackLang === 'en' && FEEDBACK_LANGS.has(feedbackLang);
+  const levelLine = english && task.examKey === 'goethe_a1'
+    ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1 und liest die Oberfläche auf Englisch. Schreib "feedback", "strengths", "improvements" und jede "note" in short, simple English (höchstens 60 Wörter, kurze Sätze, kein Fachjargon); "original" und "corrected" bleiben Deutsch. Die Bewertungskriterien bleiben unverändert.'
+    : task.examKey === 'goethe_a1'
       ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1. Schreib das Feedback in kurzem, einfachem Deutsch (höchstens 60 Wörter, kurze Sätze, kein Fachjargon). Die Bewertungskriterien bleiben unverändert.'
       : '';
   return `Du bist ein erfahrener Prüfer für Deutsch als Fremdsprache und bewertest den schriftlichen Ausdruck nach den öffentlich dokumentierten Kriterien der Prüfung (${task.examKey.replace('_', ' ').toUpperCase()}-Stil). Dies ist eine ÜBUNGSBEWERTUNG (Richtwert), keine offizielle Bewertung.
@@ -268,7 +275,7 @@ export const handler = async (event) => {
     const user_id = await getAuthenticatedUserId(event);
     if (!user_id) return unauthorizedResponse(headers);
 
-    const { exam_key, task_key, text, exam_attempt_id } = JSON.parse(event.body || '{}');
+    const { exam_key, task_key, text, exam_attempt_id, feedback_lang } = JSON.parse(event.body || '{}');
 
     const task = writingTaskByKey(exam_key, task_key);
     if (!task) {
@@ -357,7 +364,7 @@ export const handler = async (event) => {
       return null;
     }
 
-    const prompt = buildWritingPrompt(task, text);
+    const prompt = buildWritingPrompt(task, text, FEEDBACK_LANGS.has(feedback_lang) ? feedback_lang : 'de');
     let evaluation = tryParse(await callClaude(prompt));
     if (!validEvaluation(task, evaluation)) {
       console.warn('evaluate-writing: first result unusable, retrying');

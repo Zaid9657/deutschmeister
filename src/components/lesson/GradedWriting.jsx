@@ -201,7 +201,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       const res = await fetch('/.netlify/functions/evaluate-writing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ exam_key: task.examKey, task_key: task.taskKey, text: submission }),
+        body: JSON.stringify({ exam_key: task.examKey, task_key: task.taskKey, text: submission, feedback_lang: lang }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.evaluation_failed) {
