@@ -366,17 +366,11 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     return () => window.removeEventListener('online', flush);
   }, [sync, flush]);
 
-  // THE SAVE-PROGRESS ASK (owner decision 2026-10-06; the rule is in
-  // src/lib/course/saveProgressAsk.js). Signed out, the screen after this
-  // run's first checked answer is the ask, once per Lektion; the recap keeps
-  // its card. `firstAnswerAt` is where that answer was given, so the ask waits
-  // until the learner has read its feedback and moved on.
-  const [firstAnswerAt, setFirstAnswerAt] = useState(null);
+  // THE SAVE-PROGRESS ASK (owner decision 2026-10-09, replacing „after the first checked answer"
+  // of 2026-10-06; the rule is in src/lib/course/saveProgressAsk.js). Signed out, it comes at the
+  // end of the first finished PART of the Lektion — after something worth saving, in L1 the
+  // learner's own introduction — once per Lektion; its continue leads on to the pause screen.
   const [askSettled, setAskSettled] = useState(() => preview || isAskSettled(curriculum.level, lektion.id));
-  useEffect(() => {
-    if (firstAnswerAt || !attempts.length) return;
-    setFirstAnswerAt({ stageIndex, itemIndex });
-  }, [attempts.length, firstAnswerAt, stageIndex, itemIndex]);
   // Signed in, the learner is back where the ask's round trip was meant to
   // bring them: the remembered place has done its job.
   useEffect(() => {
@@ -514,11 +508,11 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // Signed out means the session has LOADED and there is none: getSession can
   // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
   // level while it loads, so `!user` alone would flash the ask at a member.
-  if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: { stageIndex, itemIndex }, stageKind: stage.kind })) {
-    body = <SaveProgressAsk level={curriculum.level} lektion={lektion} onContinue={() => setAskSettled(true)} />;
-  }
   if (pause) {
     body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
+  }
+  if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, partDone: pause?.done, stageKind: stage.kind })) {
+    body = <SaveProgressAsk level={curriculum.level} lektion={lektion} done={pause.done} total={SESSION_COUNT} onContinue={() => { setAskSettled(true); setPause(null); }} />;
   }
 
   const step = stageIndex + (ITEM_STAGES.has(stage.kind) ? itemIndex / Math.max(items.length, 1) : 0) + 1;

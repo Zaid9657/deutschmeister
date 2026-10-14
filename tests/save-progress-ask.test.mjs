@@ -4,7 +4,8 @@
 // twelve stages of a Lektion, and no account had ever finished an A1.1 Lektion.
 //
 // What this suite pins, as rules rather than as a list of screens:
-//   1. WHEN: signed out, once the first answer's feedback has been read, once
+//   1. WHEN (owner decision 2026-10-09, replacing „after the first answer"): signed out, at the end
+//      of the first finished part of a Lektion (src/lib/lesson/sessions.js), once
 //      per Lektion, never on the recap (it has its own card), never signed in,
 //      never in the preview; either button settles it.
 //   2. WHERE TO: both doors are on-site attributed hrefs, and the tag survives
@@ -77,21 +78,21 @@ const { packRun, saveRun, readRun, clearRun, runKey, RUN_MAX_AGE_MS } = await im
 const { signupAttributionMetadata } = await import('../src/lib/attribution.js');
 
 const NOW = Date.UTC(2026, 9, 6, 17, 0, 0);
-const FEEDBACK = { stageIndex: 5, itemIndex: 0 }; // practice item 1, its feedback showing
-const NEXT = { stageIndex: 5, itemIndex: 1 };
 
 // --- 1. WHEN ----------------------------------------------------------------------------------
 
-test('signed out: the ask waits for the first answer, then takes the next screen', () => {
+test('signed out: the ask waits for the first finished part of the Lektion — never a single answer', () => {
+  // Owner decision 2026-10-09 (Codex learner-value review): the ask used to replace the next screen
+  // after ONE checked answer, right or wrong. It now comes once something is worth saving.
   const base = { signedOut: true, preview: false, settled: false, stageKind: 'practice' };
-  assert.equal(ask.saveAskDue({ ...base, firstAnswerAt: null, at: FEEDBACK }), false, 'no answer yet, no ask');
-  assert.equal(ask.saveAskDue({ ...base, firstAnswerAt: FEEDBACK, at: FEEDBACK }), false, 'never over the feedback of the answer itself');
-  assert.equal(ask.saveAskDue({ ...base, firstAnswerAt: FEEDBACK, at: NEXT }), true, 'the next item');
-  assert.equal(ask.saveAskDue({ ...base, firstAnswerAt: { stageIndex: 5, itemIndex: 6 }, at: { stageIndex: 6, itemIndex: 0 }, stageKind: 'derived' }), true, 'or the next stage');
+  assert.equal(ask.saveAskDue({ ...base, partDone: null }), false, 'answers alone, no ask');
+  assert.equal(ask.saveAskDue({ ...base, partDone: 0 }), false);
+  assert.equal(ask.saveAskDue({ ...base, partDone: 1 }), true, 'the end of part 1 (in L1: the learner\'s own introduction)');
+  assert.equal(ask.saveAskDue({ ...base, partDone: 2, stageKind: 'speaking' }), true, 'or a later part, if it was not answered yet');
 });
 
 test('signed in, settled, in the preview or on the recap: never', () => {
-  const due = { signedOut: true, preview: false, settled: false, firstAnswerAt: FEEDBACK, at: NEXT, stageKind: 'practice' };
+  const due = { signedOut: true, preview: false, settled: false, partDone: 1, stageKind: 'practice' };
   assert.equal(ask.saveAskDue(due), true);
   assert.equal(ask.saveAskDue({ ...due, signedOut: false }), false, 'a signed-in learner never sees it');
   assert.equal(ask.saveAskDue({ ...due, settled: true }), false, 'once answered, not again in this Lektion');
@@ -234,14 +235,14 @@ test('a run finished in one tab cannot be resumed by a later tab (review of 6278
 
 // --- 4. THE WIRING ----------------------------------------------------------------------------
 
-test('the player shows the ask through saveAskDue for a signed-out learner, from the attempts onResult writes', () => {
+test('the player shows the ask through saveAskDue for a signed-out learner, in place of the first part pause', () => {
   const src = code(read('src/pages/lesson/LessonPlayerPage.jsx'));
-  assert.match(src, /saveAskDue\(\{ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: \{ stageIndex, itemIndex \}, stageKind: stage\.kind \}\)/);
-  assert.match(src, /body = <SaveProgressAsk level=\{curriculum\.level\} lektion=\{lektion\} onContinue=\{\(\) => setAskSettled\(true\)\} \/>/);
-  assert.match(src, /if \(firstAnswerAt \|\| !attempts\.length\) return;\s*setFirstAnswerAt\(\{ stageIndex, itemIndex \}\);/,
-    'the first answer is the first attempt recordResult stores, wherever it was given');
+  assert.match(src, /saveAskDue\(\{ signedOut: !authLoading && !user, preview, settled: askSettled, partDone: pause\?\.done, stageKind: stage\.kind \}\)/);
+  assert.match(src, /body = <SaveProgressAsk level=\{curriculum\.level\} lektion=\{lektion\} done=\{pause\.done\} total=\{SESSION_COUNT\} onContinue=\{\(\) => \{ setAskSettled\(true\); setPause\(null\); \}\} \/>/,
+    'for a guest the ask IS the pause screen: one screen, and its continue starts the next part');
+  assert.doesNotMatch(src, /firstAnswerAt/, 'the first-answer trigger is gone (owner decision 2026-10-09)');
   // Merged with the 2026-10 remediation: recordResult keeps ONE attempt per (item, stage), so a double
-  // submit is not a second answer — it still appends the attempt the first-answer rule reads.
+  // submit is not a second answer.
   assert.match(src, /setAttempts\(\(prev\) => \(prev\.some\(\(a\) => a\.itemId === item\.id && a\.stage === stageKind\)\s*\? prev\s*: \[\.\.\.prev, \{\s*itemId: item\.id/,
     'recordResult is the onResult every checked item calls');
   assert.match(src, /useState\(\(\) => preview \|\| isAskSettled\(curriculum\.level, lektion\.id\)\)/);
@@ -266,7 +267,7 @@ test('"signed out" means the session has loaded and there is none, so a member n
   assert.match(src, /const \{ user, loading: authLoading \} = useAuth\(\);/);
   assert.match(src, /signedOut: !authLoading && !user/);
   assert.doesNotMatch(src, /signedOut: !user\b/);
-  const due = { preview: false, settled: false, firstAnswerAt: FEEDBACK, at: NEXT, stageKind: 'practice' };
+  const due = { preview: false, settled: false, partDone: 1, stageKind: 'practice' };
   for (const [authLoading, user, expected] of [[true, null, false], [false, null, true], [false, { id: 'u' }, false], [true, { id: 'u' }, false]]) {
     assert.equal(ask.saveAskDue({ ...due, signedOut: !authLoading && !user }), expected, JSON.stringify({ authLoading, user }));
   }
@@ -296,13 +297,13 @@ test('the ask: an attributed signup href that remembers the place, a way on with
 
 test('the copy: both tables carry the ask, the CTA says what it does, and the German speaks Sie', async () => {
   const { STRINGS } = await import('../src/lib/lesson/strings.js');
-  for (const key of ['saveAsk.eyebrow', 'saveAsk.title', 'saveAsk.body', 'saveAsk.cta', 'saveAsk.skip']) {
+  for (const key of ['session.eyebrow', 'saveAsk.title', 'saveAsk.body', 'saveAsk.cta', 'saveAsk.skip']) {
     assert.ok(STRINGS.en[key] && STRINGS.de[key], key);
   }
   assert.equal(STRINGS.en['saveAsk.cta'], 'Save my progress — create a free account');
   assert.equal(STRINGS.en['saveAsk.skip'], 'Continue without saving');
   assert.match(STRINGS.de['saveAsk.body'], /\bSie\b/);
-  for (const key of ['saveAsk.eyebrow', 'saveAsk.title', 'saveAsk.body', 'saveAsk.cta', 'saveAsk.skip']) {
+  for (const key of ['session.eyebrow', 'saveAsk.title', 'saveAsk.body', 'saveAsk.cta', 'saveAsk.skip']) {
     assert.doesNotMatch(STRINGS.de[key], /\b(du|dich|dir|dein\w*|kannst|hast|bist)\b/i, key);
   }
 });
