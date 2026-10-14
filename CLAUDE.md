@@ -202,7 +202,9 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   GitHub connectors instead; the Claude in Chrome MCP exists only in local sessions. PR
   conventions (squash, gates, the lockfile trap) are in `.claude/skills/steward/SKILL.md`.
 - **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
-  Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`). Values are `${VAR}`
+  Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`), and REA (`rea-agents`,
+  pinned, keyless), which reverse engineers apps, sites and binaries without their source; its skill
+  is vendored in `.claude/skills/reverse-engineer-anything` (see its SOURCE.md). Values are `${VAR}`
   references Claude Code expands from the environment; the literals belong in the environment's
   variables, never in the file. `.claude/hooks/session-start.sh` materialises
   `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency
