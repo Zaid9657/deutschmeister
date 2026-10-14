@@ -123,9 +123,9 @@ function Shell() {
                 </a>
                 {!focused && <Navbar />}
                 {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}
-                {/* Course home (chrome === 'course') also hides this: it overlaps
-                    FirstRunTour's first-run tooltip in the same bottom-left corner
-                    (docs/evaluation/screenshots/a11-w1-home.jpg). */}
+                {/* Course home (chrome === 'course') also hides this: the course
+                    home is a focused screen (it first went for overlapping the
+                    removed FirstRunTour, docs/evaluation/screenshots/a11-w1-home.jpg). */}
                 {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
                 <SessionTimeoutWrapper />
                 {/* min-h-screen reserves the page's height across route swaps. A

@@ -17,7 +17,6 @@ import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestRe
 import { clearReturnPath } from '../lib/returnPath.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
-import FirstRunTour from '../components/course/FirstRunTour.jsx';
 import LessonRing from '../components/course/LessonRing.jsx';
 import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -54,8 +53,9 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 //   * CourseWelcome (what this is, how a Lektion works, who you meet, what you
 //     will be able to do) renders above the path while nothing is finished,
 //     and afterwards behind a "How this course works" toggle in the header;
-//   * FirstRunTour points at the path, the Continue card and the exam-date
-//     plan once per browser — the three `data-tour` anchors below;
+//   * no tour opens by itself (Wave 1, 2026-10-14): the three-step FirstRunTour
+//     sat on top of the welcome that already says the same, so it is gone and
+//     the welcome is the one orientation, one tap away once something is done;
 //   * ENDOWED progress: a learner whose placement test (profiles.current_level,
 //     UPPERCASE in the DB) suggests a level above this one, or who arrives from
 //     the results page with `?from=placement`, has every node open. Nothing is
@@ -255,7 +255,7 @@ export default function CurriculumHomePage({ curriculum }) {
               {complete ? (
                 <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
               ) : current ? (
-                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between" data-tour="continue">
+                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3">
                     {(() => { const I = KIND_ICON[current.kind]; return <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel"><I className="h-5 w-5" /></span>; })()}
                     <div className="min-w-0">
@@ -276,7 +276,7 @@ export default function CurriculumHomePage({ curriculum }) {
                   </Link>
                 </p>
               )}
-              <div data-tour="plan"><ExamDatePlan curriculum={curriculum} path={path} doneIds={done} /></div>
+              <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
             </Reveal>
           </div>
         </header>
@@ -288,7 +288,7 @@ export default function CurriculumHomePage({ curriculum }) {
           </div>
         )}
 
-        <div data-tour="path">
+        <div>
         {chapters.map((nodes, ci) => {
           const lektionen = nodes.filter((n) => n.kind === 'lektion').map((n) => curriculum.lektionen.find((l) => l.id === n.id)).filter(Boolean);
           const chapterDone = nodes.filter((n) => done.has(n.id)).length;
@@ -367,8 +367,6 @@ export default function CurriculumHomePage({ curriculum }) {
           );
         })}
         </div>
-
-        {loaded && meta && <FirstRunTour curriculum={curriculum} meta={meta} />}
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           {endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.'}
