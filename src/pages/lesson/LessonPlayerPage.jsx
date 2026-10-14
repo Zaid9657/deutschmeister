@@ -320,12 +320,14 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, curriculum.level, lektion.id, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
+  // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
+  // for today never saw the next stage (Codex review, 2026-10-15).
   const viewedStages = useRef(new Set());
   useEffect(() => {
-    if (preview || !introDone || !stage || viewedStages.current.has(stage.key)) return;
+    if (preview || !introDone || pause || !stage || viewedStages.current.has(stage.key)) return;
     viewedStages.current.add(stage.key);
     trackLessonStageViewed(curriculum.level, lektion.id, runId, stage.key);
-  }, [preview, introDone, stage, curriculum.level, lektion.id, runId]);
+  }, [preview, introDone, pause, stage, curriculum.level, lektion.id, runId]);
 
   // Persist once, when the recap comes into view. Signed out, the same write
   // goes to localStorage instead of Supabase — never nowhere. Signed in, the run

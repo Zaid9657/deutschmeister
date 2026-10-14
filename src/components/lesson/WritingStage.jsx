@@ -30,6 +30,9 @@ const PASS_PCT = 0.6;
 export default function WritingStage({ stage, onBack, onDone, onResult, onReport }) {
   const schreiben = stage.schreiben || {};
   const [graded, setGraded] = useState(false);
+  // A text is being graded — the first one or the improved version. Leaving now would unmount its
+  // feedback while the request still spends the learner's revision (Codex review, 2026-10-15).
+  const [pending, setPending] = useState(false);
   const [lang] = useLessonLang();
 
   const handleResult = useCallback(
@@ -58,7 +61,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
-      primaryDisabled={!graded}
+      primaryDisabled={!graded || pending}
     >
       <GradedWriting
         task={{
@@ -74,6 +77,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
           starters: schreiben.starters,
         }}
         allowRevision
+        onPending={setPending}
         lektionId={stage.lektionId || null}
         onResult={handleResult}
       />

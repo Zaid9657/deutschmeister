@@ -109,7 +109,7 @@ const readDraft = (key) => {
   return d && typeof d === 'object' && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
 };
 
-export default function GradedWriting({ task, lektionId = null, onResult, allowRevision = false }) {
+export default function GradedWriting({ task, lektionId = null, onResult, onPending, allowRevision = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const isFormular = task?.kind === 'formular';
@@ -200,6 +200,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, allowR
       return;
     }
     setBusy(true);
+    onPending?.(true);
     try {
       const res = await fetch('/.netlify/functions/evaluate-writing', {
         method: 'POST',
@@ -239,6 +240,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, allowR
       finish(mechanicalResult(), t('writing.offline', lang));
     } finally {
       setBusy(false);
+      onPending?.(false);
     }
   };
 

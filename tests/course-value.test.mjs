@@ -169,3 +169,41 @@ test('progress shows ability, not activity: the home leads with the can-dos, the
   for (const key of ['recap.canDo.title', 'recap.canDo.next', 'recap.details']) assert.ok(STRINGS.en[key] && STRINGS.de[key], key);
   assert.doesNotMatch(STRINGS.de['recap.canDo.next'], /\b(du|dich|dir|dein\w*)\b/i, 'Sie');
 });
+
+test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Next waits for grading, a pause is not a stage view', async () => {
+  // P2 1: a Pro revision used to count against the month, so "does not use up another task" was false
+  // for the learners who pay. P2 2: Next stayed enabled while the improved version was being graded.
+  // P2 3: the next stage was reported as viewed while its part's pause screen covered it.
+  const { freeRevisionsSince, REVISIONS_PER_TASK } = await import('../netlify/functions/evaluate-writing.mjs');
+  assert.equal(REVISIONS_PER_TASK, 1);
+  const month = '2026-10-01T00:00:00.000Z';
+  const rows = [
+    { task_key: 'a11-l01', created_at: '2026-09-20T10:00:00+00:00' },
+    { task_key: 'a11-l01', created_at: '2026-10-02T10:00:00+00:00' }, // its improved version, this month: free
+    { task_key: 'a11-l02', created_at: '2026-10-03T10:00:00+00:00' },
+    { task_key: 'a11-l02', created_at: '2026-10-04T10:00:00+00:00' }, // its improved version: free
+    { task_key: 'a11-l02', created_at: '2026-10-05T10:00:00+00:00' }, // a third text of the same task: counts
+  ];
+  assert.equal(freeRevisionsSince(rows, month), 2);
+  assert.equal(freeRevisionsSince(rows, null), 2, 'lifetime (the trial window): the same two');
+  assert.equal(freeRevisionsSince(rows.slice(0, 2), month), 1, 'first text last month, its revision this month: still free');
+  assert.equal(freeRevisionsSince(rows.slice(0, 1), month), 0);
+
+  const { readFileSync } = await import('node:fs');
+  const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
+  const grader = read('netlify/functions/evaluate-writing.mjs');
+  assert.match(grader, /revision = before >= 1 && before <= REVISIONS_PER_TASK;/, 'on a plan, the first improved version is a revision');
+  assert.match(grader, /used = Math\.max\(0, \(count \?\? 0\) - freeRevisionsSince\(courseRows, since\)\);/, 'and earlier revisions leave the count');
+  assert.match(grader, /course \? !course\.allowed : !revision && used >= limit/, 'a revision passes at the cap');
+  assert.match(grader, /used: used \+ \(revision \? 0 : 1\)/);
+  assert.doesNotMatch(grader, /\.select\([^)'"`]*\?/, 'no conditional select: the column scanner reads every query (db-columns.test.mjs)');
+  const stage = read('src/components/lesson/WritingStage.jsx');
+  assert.match(stage, /primaryDisabled=\{!graded \|\| pending\}/);
+  assert.match(stage, /onPending=\{setPending\}/);
+  const gw = read('src/components/lesson/GradedWriting.jsx');
+  assert.match(gw, /setBusy\(true\);\s*onPending\?\.\(true\);/);
+  assert.match(gw, /setBusy\(false\);\s*onPending\?\.\(false\);/);
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.match(player, /if \(preview \|\| !introDone \|\| pause \|\| !stage \|\| viewedStages\.current\.has\(stage\.key\)\) return;/);
+  assert.match(player, /\}, \[preview, introDone, pause, stage, curriculum\.level, lektion\.id, runId\]\);/);
+});
