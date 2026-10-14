@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown, Compass } from 'lucide-react';
+import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
@@ -17,6 +17,8 @@ import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestRe
 import { clearReturnPath } from '../lib/returnPath.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
+import KannIch from '../components/course/KannIch.jsx';
+import { canDoList } from '../lib/course/canDo.js';
 import LessonRing from '../components/course/LessonRing.jsx';
 import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -37,9 +39,11 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 // P4 ("completion levers") adds three things and no gates:
 //   * the exam-date plan (ExamDatePlan) under the continue card — a weekly
 //     target when profiles.exam_date is set, a one-tap ask when it is not;
-//   * the Flame reads the FORGIVING streak (one missed day per rolling seven
+//   * the streak is the FORGIVING one (one missed day per rolling seven
 //     is forgiven — src/services/dashboardStats.js), because a strict streak
-//     punishes a normal week and is the thing learners quit over;
+//     punishes a normal week and is the thing learners quit over. Since Wave 1
+//     (2026-10-14) it is one line of the "Kann ich" block, which leads the home
+//     with the can-dos of the finished Lektionen instead of XP (canDo.js);
 //   * a SIGNED-OUT visitor's locally finished Lektionen render as done
 //     (src/lib/course/localProgress.js), and the first load with a user
 //     present merges them into the account.
@@ -185,7 +189,6 @@ export default function CurriculumHomePage({ curriculum }) {
   const fresh = loaded && doneCount === 0;
   const welcomeOpen = fresh || showWelcome;
   const pct = Math.round((doneCount / path.length) * 100);
-  const xp = path.filter((n) => done.has(n.id)).reduce((s, n) => s + (n.minutes || 10), 0);
   const wordsTotal = curriculum.lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0);
 
   // Chapters: each checkpoint closes the Lektionen since the previous one.
@@ -225,11 +228,16 @@ export default function CurriculumHomePage({ curriculum }) {
               {curriculum.lektionen.length} Lektionen · {curriculum.checkpoints.length} checkpoints · {wordsTotal} words · ends with a shortened practice test in the {curriculum.examName} format
             </Reveal>
 
-            <Reveal delay={140} className="mt-5 grid grid-cols-3 gap-3">
-              <Stat icon={Zap} label="XP" value={xp} tone="siegel" />
-              <Stat icon={Flame} label="Day streak" value={streak} tone="aprikose" />
-              <Stat icon={Trophy} label="Done" value={`${doneCount}/${path.length}`} tone="gold" />
-            </Reveal>
+            {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
+              <Reveal delay={140} className="mt-5">
+                <KannIch
+                  items={canDoList(curriculum, done)}
+                  checkpointsPassed={curriculum.checkpoints.filter((cp) => done.has(cp.id)).length}
+                  checkpointsTotal={curriculum.checkpoints.length}
+                  streak={streak}
+                />
+              </Reveal>
+            )}
 
             {loaded && <MilestoneCard streak={streak} />}
 
@@ -384,22 +392,6 @@ export default function CurriculumHomePage({ curriculum }) {
   );
 }
 
-function Stat({ icon: Icon, label, value, tone }) {
-  const tones = {
-    siegel: 'bg-siegel-wash text-siegel-deep',
-    aprikose: 'bg-accent-aprikose-wash text-accent-aprikose-ink',
-    gold: 'bg-paper-sunk text-ink',
-  };
-  return (
-    <div className={`flex items-center gap-2 rounded-clay px-3 py-2 ${tones[tone] || tones.siegel}`}>
-      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-      <div className="min-w-0">
-        <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em]">{label}</p>
-        <p className="truncate font-display text-[1.125rem] font-semibold leading-none">{value}</p>
-      </div>
-    </div>
-  );
-}
 
 function Node({ to, state, Icon, label, big }) {
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';

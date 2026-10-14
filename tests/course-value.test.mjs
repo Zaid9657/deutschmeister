@@ -129,3 +129,43 @@ test('writing is a learning loop: taught starters for the first messages, and on
   assert.match(gw, /task\?\.starters/);
   assert.match(read('netlify/functions/evaluate-writing.mjs'), /courseSubmissionAllowed\(/);
 });
+
+test('progress shows ability, not activity: the home leads with the can-dos, the recap with what the learner can do now', async () => {
+  // Codex review: the home led with XP (minutes of finished nodes) and the recap with a score sheet;
+  // neither said what the learner can now DO. Both now read the course's own can-do lines.
+  const { canDoList, canDoId, checkpointFor, canDoLines } = await import('../src/lib/course/canDo.js');
+  const { A11_META } = await import('../src/data/curricula/a11.meta.js');
+  const all = canDoList(CURRICULUM_A11, new Set());
+  assert.equal(all.length, CURRICULUM_A11.lektionen.reduce((s, l) => s + l.canDo.length, 0), 'every can-do of the level, once');
+  assert.equal(new Set(all.map((c) => c.id)).size, all.length, 'ids are unique');
+  assert.equal(all[0].id, canDoId('a1.1-l01', 0));
+  assert.equal(all[0].id, 'a1.1-l01#1');
+  assert.ok(all.every((c) => c.state === 'open' && c.en && c.de.startsWith('Ich kann')), 'English for every A1.1 line, nothing shown yet');
+  // Shown = the Lektion is finished; again = its chapter checkpoint is passed too.
+  const done = new Set(['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-cp1', 'a1.1-l04']);
+  const states = canDoList(CURRICULUM_A11, done);
+  const stateOf = (nr) => [...new Set(states.filter((c) => c.nr === nr).map((c) => c.state))];
+  assert.deepEqual([1, 2, 3, 4, 5].map(stateOf), [['again'], ['again'], ['again'], ['shown'], ['open']]);
+  assert.deepEqual([1, 3, 4, 12].map((nr) => checkpointFor(CURRICULUM_A11, nr)?.id), ['a1.1-cp1', 'a1.1-cp1', 'a1.1-cp2', 'a1.1-cp4']);
+  const l1 = CURRICULUM_A11.lektionen[0];
+  assert.deepEqual(canDoLines(l1, 'en'), A11_META.lektionIntro['a1.1-l01'].canDoEn);
+  assert.deepEqual(canDoLines(l1, 'de'), l1.canDo, 'Deutsch-Modus shows the German lines');
+
+  const { readFileSync } = await import('node:fs');
+  const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
+  const home = read('src/pages/CurriculumHomePage.jsx');
+  assert.doesNotMatch(home, /label="XP"|\bconst xp\b/, 'no XP on the course home');
+  assert.match(home, /<KannIch\s+items=\{canDoList\(curriculum, done\)\}/);
+  assert.match(home, /loaded && curriculum\.lektionen\.some\(\(l\) => done\.has\(l\.id\)\) && \(/, 'only once a Lektion is finished: a newcomer sees Start, not a row of zeros');
+  const recap = read('src/components/lesson/RecapStage.jsx');
+  const canDoAt = recap.indexOf("t('recap.canDo.title', lang)");
+  const detailsAt = recap.indexOf('<details className');
+  assert.ok(canDoAt > 0 && canDoAt < detailsAt, 'the can-dos come first');
+  for (const measured of ["t('recap.skills.title', lang)", "t('recap.firstTry', lang, { pct })", '<WordsLearnedCards']) {
+    assert.ok(recap.indexOf(measured) > detailsAt, `${measured} sits in the closed details`);
+  }
+  assert.doesNotMatch(recap, /enqueueWords|vocabBridge/, 'one review destination: the course review, not a second deck');
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  for (const key of ['recap.canDo.title', 'recap.canDo.next', 'recap.details']) assert.ok(STRINGS.en[key] && STRINGS.de[key], key);
+  assert.doesNotMatch(STRINGS.de['recap.canDo.next'], /\b(du|dich|dir|dein\w*)\b/i, 'Sie');
+});

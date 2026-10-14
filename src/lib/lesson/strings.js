@@ -249,10 +249,11 @@ export const STRINGS = {
 
     // ── recap ────────────────────────────────────────────────────────────────
     'recap.firstTry': '{pct} % on the first try',
+    'recap.canDo.title': 'What you can do now',
+    'recap.canDo.next': 'It comes back for review on {date}. The checkpoint at the end of this chapter then checks the chapter again, with new tasks.',
+    'recap.details': 'Details: score, skills and words',
     'recap.words': 'Words',
     'recap.grammar': 'Grammar',
-    'recap.review': 'Review',
-    'recap.reviewOn': 'on {date}',
     'recap.mastery.started': 'Started',
     'recap.mastery.complete': 'Done',
     'recap.mastery.gold': 'Practice gold',
@@ -282,10 +283,6 @@ export const STRINGS = {
     'recap.goDeeper.listening': 'Listening exercise for this Lektion',
     'recap.goDeeper.reading': 'Reading text for this Lektion',
     'recap.goDeeper.speaking': 'Speaking mission for this Lektion',
-    'recap.vocabBridge.add': 'Add these words to my vocab deck',
-    'recap.vocabBridge.adding': 'Adding …',
-    'recap.vocabBridge.added': 'Added to your vocab deck.',
-    'recap.vocabBridge.signInHint': 'Sign in to save these words to your vocab deck.',
     'recap.follow.title': 'German in your feed',
     'recap.follow.body': 'One post a day: the sentence of the day, a common mistake, an exam fact.',
 
@@ -630,10 +627,11 @@ export const STRINGS = {
 
     // ── recap ────────────────────────────────────────────────────────────────
     'recap.firstTry': '{pct} % im ersten Versuch',
+    'recap.canDo.title': 'Das können Sie jetzt',
+    'recap.canDo.next': 'Es kommt am {date} zur Wiederholung zurück. Der Checkpoint am Ende des Kapitels prüft das Kapitel dann noch einmal, mit neuen Aufgaben.',
+    'recap.details': 'Details: Ergebnis, Fertigkeiten und Wörter',
     'recap.words': 'Wörter',
     'recap.grammar': 'Grammatik',
-    'recap.review': 'Wiederholung',
-    'recap.reviewOn': 'am {date}',
     'recap.mastery.started': 'Begonnen',
     'recap.mastery.complete': 'Geschafft',
     'recap.mastery.gold': 'Übungs-Gold',
@@ -663,10 +661,6 @@ export const STRINGS = {
     'recap.goDeeper.listening': 'Hörverstehen zu dieser Lektion',
     'recap.goDeeper.reading': 'Lesetext zu dieser Lektion',
     'recap.goDeeper.speaking': 'Sprechauftrag zu dieser Lektion',
-    'recap.vocabBridge.add': 'Diese Wörter zu meinem Wortschatz hinzufügen',
-    'recap.vocabBridge.adding': 'Wird hinzugefügt …',
-    'recap.vocabBridge.added': 'Zu Ihrem Wortschatz hinzugefügt.',
-    'recap.vocabBridge.signInHint': 'Melden Sie sich an, um diese Wörter in Ihrem Wortschatz zu speichern.',
     'recap.follow.title': 'Deutsch im Feed',
     'recap.follow.body': 'Jeden Tag ein Post: der Satz des Tages, ein typischer Fehler, ein Prüfungsfakt.',
 
