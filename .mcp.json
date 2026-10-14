@@ -28,6 +28,13 @@
         "-y",
         "@executeautomation/playwright-mcp-server@1.0.12"
       ]
+    },
+    "rea": {
+      "command": "node",
+      "args": [
+        "-e",
+        "const w = process.platform === 'win32', a = ['npx', '-y', 'rea-agents@6.4.0', 'mcp']; require('child_process').spawn(w ? 'cmd.exe' : a[0], w ? ['/d', '/c', ...a] : a.slice(1), {stdio: 'inherit'}).on('exit', c => process.exit(c ?? 1))"
+      ]
     }
   }
 }
