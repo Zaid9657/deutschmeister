@@ -177,7 +177,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const stages = lesson.stages;
   const stage = stages[stageIndex] || null;
   const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
-  const warmupMode = warmupCard ? modeForCard(warmupCard.kind, itemIndex) : null;
+  const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
   const playWarmupCard = useCallback((content) => {
     speakGerman((content && (content.speak || content.front)) || '');
   }, []);

@@ -14,7 +14,10 @@ import { t } from '../../lib/lesson/strings.js';
 /** Which of a card kind's modes to use for its Nth review — rotates so the same word isn't always met the same way. */
 export const MODES_BY_KIND = {
   word: ['flashcard', 'listening', 'typed'],
-  pattern: ['flashcard', 'typed'],
+  // Not typed: the typed face showed the German rule paragraph and accepted only the notice's
+  // example sentences, so correct German („Ich bin Lehrer." on the `sein` card) was marked wrong
+  // (Codex review, 2026-10-09). Typed comes back with authored prompt/answer pairs per pattern.
+  pattern: ['flashcard'],
   sentence: ['listening', 'say', 'flashcard'],
 };
 

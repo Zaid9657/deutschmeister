@@ -35,3 +35,22 @@ test('L1 starts model-first: the learner sees and hears „Ich heiße Ana.", wri
   assert.match(stage, /if \(pretest\.modelFirst\) return <ModelFirstPretest/);
   assert.match(stage, /trackFirstSentence\(/, 'the unaided attempt is the signal');
 });
+
+test('review never asks to type a sentence from a rule paragraph, picks the mode from the card\'s own history, and never ends a batch on „done" with cards still due', async () => {
+  // Codex review: a pattern card's typed face showed the German rule text and accepted only the
+  // notice's example sentences, so „Ich bin Lehrer." was wrong on the `sein` card; the mode came
+  // from the card's position in today's batch; and 25 seeded cards ended at 12 with „Done for today".
+  const { readFileSync } = await import('node:fs');
+  const cardSrc = readFileSync(new URL('../src/components/lesson/ReviewCard.jsx', import.meta.url), 'utf8');
+  const patternModes = cardSrc.match(/^\s*pattern: \[([^\]]*)\]/m)[1];
+  assert.doesNotMatch(patternModes, /typed/, 'a pattern card is never typed until it has an authored prompt');
+  assert.match(cardSrc, /^\s*word: \['flashcard', 'listening', 'typed'\]/m, 'word cards keep their three faces');
+  const page = readFileSync(new URL('../src/pages/lesson/ReviewPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /modeForCard\(card\.kind, card\.step \?\? index\)/, 'the mode follows the card, not the batch');
+  assert.match(page, /t\('review\.moreDue', lang, \{ n: stillDue \}\)/, 'the batch end says how many are still due');
+  const player = readFileSync(new URL('../src/pages/lesson/LessonPlayerPage.jsx', import.meta.url), 'utf8');
+  assert.match(player, /modeForCard\(warmupCard\.kind, warmupCard\.step \?\? itemIndex\)/);
+  const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
+  assert.match(home, /fetchReviewCounts\(user\.id, level\)/, 'the home knows what is due');
+  assert.match(home, /reviewDue > 0 &&/, 'and leads with it');
+});

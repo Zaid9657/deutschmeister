@@ -108,6 +108,8 @@ export default function CurriculumHomePage({ curriculum }) {
   const [done, setDone] = useState(() => (user ? new Set() : localDoneIds(curriculum.level)));
   const [loaded, setLoaded] = useState(() => !user);
   const [streak, setStreak] = useState(0);
+  // Cards due today. Review leads the home, ahead of the next session (Wave 1, Codex review).
+  const [reviewDue, setReviewDue] = useState(0);
   const [openChapter, setOpenChapter] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
 
@@ -150,6 +152,11 @@ export default function CurriculumHomePage({ curriculum }) {
         .then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
       loadDashboardStats(user.id)
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
+        .catch(() => {});
+      // On demand: reviewService pulls the pool rules, which the home chunk otherwise never needs.
+      import('../services/reviewService.js')
+        .then(({ fetchReviewCounts }) => fetchReviewCounts(user.id, level))
+        .then((c) => { if (!cancelled) setReviewDue(c.due || 0); })
         .catch(() => {});
     };
     // Merge first when there is something local to merge, and send any finished
@@ -235,6 +242,15 @@ export default function CurriculumHomePage({ curriculum }) {
                   <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   Your test suggests a level above {curriculum.code} — everything here is open; start where you like.
                 </p>
+              )}
+              {reviewDue > 0 && !complete && (
+                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-[0.9375rem] text-ink">
+                    <span className="font-bold">{reviewDue} {reviewDue === 1 ? 'card' : 'cards'} to review first</span>
+                    <span className="text-graphite"> — about {Math.max(1, Math.round(reviewDue / 6))} min, then your next step.</span>
+                  </p>
+                  <Button to={`/course/${level}/review`} variant="secondary" className="shrink-0">Review →</Button>
+                </div>
               )}
               {complete ? (
                 <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
