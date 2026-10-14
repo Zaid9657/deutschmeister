@@ -40,6 +40,8 @@ import { trackLessonCompleted, trackLessonResumed, trackLessonStageViewed, track
 import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
+import SessionBreak from '../../components/lesson/SessionBreak.jsx';
+import { SESSION_COUNT, sessionCompleted } from '../../lib/lesson/sessions.js';
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -97,6 +99,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // because the combo spans stage boundaries within one run, not one item.
   const [combo, setCombo] = useState(() => (resumed ? resumed.combo : 0));
   const [requeued, setRequeued] = useState(() => (resumed ? resumed.requeued : []));
+  // A finished part (sessions.js): { done } shows the pause screen before the next part starts.
+  const [pause, setPause] = useState(null);
   // What the speaking and writing stages reported (skillStatus.js) — the recap
   // states each skill on its own line instead of letting Gold imply it.
   const [skills, setSkills] = useState(() => (resumed ? resumed.skills || {} : {}));
@@ -272,7 +276,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     if (!heading) return;
     if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
     heading.focus(); // scrolls it into view: after a long item the next one starts on screen
-  }, [stageIndex, itemIndex, introDone]);
+  }, [stageIndex, itemIndex, introDone, pause]);
 
   const goStage = useCallback((next) => {
     setStageIndex(next);
@@ -283,15 +287,20 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const advance = useCallback(() => {
     const target = stageIndex + 1;
     const nextStage = stages[target];
+    let landing = target;
     // The requeue stage is skipped when nothing was missed.
     if (nextStage && nextStage.kind === 'requeue') {
       const used = attempts.map((a) => a.itemId);
       const items = requeueFor(misses, pool, used);
       setRequeued(items);
-      if (!items.length) { goStage(target + 1); return; }
+      if (!items.length) landing = target + 1;
     }
-    goStage(target);
-  }, [stageIndex, stages, attempts, misses, pool, goStage]);
+    // A part ends here: show a saved place to stop instead of running straight on. The run is saved
+    // at `landing`, so coming back later starts the next part.
+    const done = stages[landing] ? sessionCompleted(stage, stages[landing]) : null;
+    if (done) setPause({ done });
+    goStage(landing);
+  }, [stageIndex, stages, stage, attempts, misses, pool, goStage]);
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);
@@ -507,6 +516,9 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // level while it loads, so `!user` alone would flash the ask at a member.
   if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: { stageIndex, itemIndex }, stageKind: stage.kind })) {
     body = <SaveProgressAsk level={curriculum.level} lektion={lektion} onContinue={() => setAskSettled(true)} />;
+  }
+  if (pause) {
+    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
   }
 
   const step = stageIndex + (ITEM_STAGES.has(stage.kind) ? itemIndex / Math.max(items.length, 1) : 0) + 1;

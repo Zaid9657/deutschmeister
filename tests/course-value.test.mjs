@@ -54,3 +54,24 @@ test('review never asks to type a sentence from a rule paragraph, picks the mode
   assert.match(home, /fetchReviewCounts\(user\.id, level\)/, 'the home knows what is due');
   assert.match(home, /reviewDue > 0 &&/, 'and leads with it');
 });
+
+test('a Lektion runs in three short parts — meet it, use it, say and write it — with a saved place to stop between them', async () => {
+  // Codex review: one Lektion was a single 20–40-minute sitting whose own output came last. Learners
+  // return more often for short sessions (frequency beats minutes — research in the plan file).
+  const { sessionOf, sessionCompleted, SESSION_COUNT } = await import('../src/lib/lesson/sessions.js');
+  const { buildLesson } = await import('../src/lib/lesson/buildLesson.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  assert.equal(SESSION_COUNT, 3);
+  for (const lektion of CURRICULUM_A11.lektionen) {
+    const { stages } = buildLesson({ curriculum: CURRICULUM_A11, lektion, pool });
+    const parts = stages.map(sessionOf);
+    assert.ok(parts.every((p) => p >= 1 && p <= 3), `L${lektion.nr}: every stage belongs to a part (${stages.map((s) => s.kind)})`);
+    assert.deepEqual([...new Set(parts)], [1, 2, 3], `L${lektion.nr}: three parts, in order`);
+    const breaks = stages.slice(1).map((s, i) => sessionCompleted(stages[i], s)).filter(Boolean);
+    assert.deepEqual(breaks, [1, 2], `L${lektion.nr}: one pause after part 1 and one after part 2`);
+  }
+  const player = readFileSync(new URL('../src/pages/lesson/LessonPlayerPage.jsx', import.meta.url), 'utf8');
+  assert.match(player, /sessionCompleted\(stage, stages\[landing\]\)/, 'advance() pauses at a part boundary');
+  assert.match(player, /<SessionBreak /);
+});
