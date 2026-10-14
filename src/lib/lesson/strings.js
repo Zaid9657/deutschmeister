@@ -238,6 +238,10 @@ export const STRINGS = {
     'writing.criteria.vocabulary': 'Vocabulary',
 
     'writing.covered': 'Covered',
+    'writing.starters': 'Sentence starters (optional) — tap to add',
+    'writing.firstFix': 'One thing to fix first',
+    'writing.improve': 'Improve this version',
+    'writing.improveNote': 'You can hand in one improved version. It does not use up another task.',
     'writing.notCovered': 'Not covered',
     'writing.corrections': 'Corrections',
     'writing.sample': 'Sample text',
@@ -616,6 +620,10 @@ export const STRINGS = {
     'writing.criteria.vocabulary': 'Wortschatz',
 
     'writing.covered': 'Behandelt',
+    'writing.starters': 'Satzanfänge (freiwillig) – antippen zum Einfügen',
+    'writing.firstFix': 'Das zuerst verbessern',
+    'writing.improve': 'Diese Version verbessern',
+    'writing.improveNote': 'Sie können eine verbesserte Version abgeben. Das kostet keine andere Aufgabe.',
     'writing.notCovered': 'Nicht behandelt',
     'writing.corrections': 'Korrekturen',
     'writing.sample': 'Beispieltext',

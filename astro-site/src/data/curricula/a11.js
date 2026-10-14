@@ -529,6 +529,9 @@ export const CURRICULUM_A11 = {
         // three Leitpunkte, and the origin half of the Lektion's own can-do line finally has a
         // surface. `kommen aus` moved into this Lektion's Wortfeld for it (`Marokko` is a persona fact
         // and a DIALOG_NAME, not a Wortfeld row).
+        // Optional, tappable sentence starters for the first free-text messages (Wave 1). Each is cut
+        // from this Lektion's own model text, so RULE 20 already holds it to taught words (test).
+        starters: ['Sehr geehrte Damen und Herren,', 'ich heiße …', 'Ich bin am … geboren.', 'Ich komme aus …', 'Ich bin ledig.', 'Viele Grüße,'],
         sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
@@ -760,6 +763,7 @@ export const CURRICULUM_A11 = {
         // Mustertext BEANTWORTET ihn wieder — „Wir kommen morgen.“ Runde 14 hatte „Wann treffen wir
         // Ana?“ geschrieben: eine Frage ohne Zeitangabe, also keine Antwort. `morgen` lehrt L1 als
         // „Bis morgen“, `kommen` L3; `treffen`, `uns` und `um` lehrt A1.1 bis hierher nicht.
+        starters: ['Hallo Lena!', 'Wir kaufen …', 'Der Stuhl kostet … Euro.', 'Das ist nicht teuer.', 'Tschüss,'],
         sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wir kommen morgen. Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },

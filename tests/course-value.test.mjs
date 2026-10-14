@@ -97,3 +97,35 @@ test('help an A0 learner can read: L1 translations start open, every sound focus
   const gw = readFileSync(new URL('../src/components/lesson/GradedWriting.jsx', import.meta.url), 'utf8');
   assert.match(gw, /feedback_lang: lang/);
 });
+
+test('writing is a learning loop: taught starters for the first messages, and one improved version after feedback that costs no other task its assessment', async () => {
+  // Codex review: L2 dropped a 25–45-word formal message on a blank editor, and feedback was a dead
+  // end — submitting locked the text. Starters come from the Lektion's own model text (held to
+  // taught words by RULE 20); a revision is lesson practice, never offered in a checkpoint.
+  const withStarters = CURRICULUM_A11.lektionen.filter((l) => l.schreiben.starters);
+  assert.deepEqual(withStarters.map((l) => l.nr), [2, 4], 'the first two free-text messages');
+  for (const l of withStarters) {
+    assert.equal(l.schreiben.kind, 'mitteilung');
+    for (const starter of l.schreiben.starters) {
+      for (const part of starter.split('…').map((p) => p.trim()).filter(Boolean)) {
+        assert.ok(l.schreiben.sample.includes(part), `L${l.nr} starter „${starter}": „${part}" is in the model text`);
+      }
+    }
+  }
+  const { courseSubmissionAllowed } = await import('../netlify/functions/evaluate-writing.mjs');
+  assert.deepEqual(courseSubmissionAllowed([], 'a11-l02', 16), { allowed: true, used: 0, revision: false });
+  assert.deepEqual(courseSubmissionAllowed(['a11-l02'], 'a11-l02', 16), { allowed: true, used: 1, revision: true }, 'one improved version');
+  assert.equal(courseSubmissionAllowed(['a11-l02', 'a11-l02'], 'a11-l02', 16).allowed, false, 'not a third');
+  const full = Array.from({ length: 16 }, (_, i) => `a11-l${String(i + 1).padStart(2, '0')}`);
+  assert.equal(courseSubmissionAllowed(full, 'a11-cp1', 16).allowed, false, 'a new task past the allowance');
+  assert.equal(courseSubmissionAllowed(full, 'a11-l05', 16).allowed, true, 'but its revision is still free');
+  const { readFileSync } = await import('node:fs');
+  const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
+  assert.match(read('src/components/lesson/WritingStage.jsx'), /allowRevision\s*\n?\s*starters=\{schreiben\.starters\}|starters: schreiben\.starters/);
+  assert.match(read('src/components/lesson/WritingStage.jsx'), /allowRevision/);
+  assert.doesNotMatch(read('src/pages/lesson/CheckpointPage.jsx'), /allowRevision/, 'an assessment is one attempt');
+  const gw = read('src/components/lesson/GradedWriting.jsx');
+  assert.match(gw, /t\('writing\.improve', lang\)/);
+  assert.match(gw, /task\?\.starters/);
+  assert.match(read('netlify/functions/evaluate-writing.mjs'), /courseSubmissionAllowed\(/);
+});

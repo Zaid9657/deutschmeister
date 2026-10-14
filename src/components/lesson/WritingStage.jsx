@@ -71,7 +71,9 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
           minWords: schreiben.minWords,
           maxWords: schreiben.maxWords,
           sample: schreiben.sample,
+          starters: schreiben.starters,
         }}
+        allowRevision
         lektionId={stage.lektionId || null}
         onResult={handleResult}
       />

@@ -180,6 +180,21 @@ try {
   console.error('Failed to initialize Supabase client:', e.message);
 }
 
+/**
+ * The course writing allowance counts TASKS, not submissions (Wave 1 writing loop, 2026-10-14): a
+ * task may be handed in twice — the first text and ONE improved version after feedback — and only
+ * a new task uses up one of the course's free assessments. `keys` are the task_keys this learner has
+ * already submitted in this course. Returns { allowed, used (distinct tasks), revision }.
+ */
+export const REVISIONS_PER_TASK = 1;
+export function courseSubmissionAllowed(keys, taskKey, limit) {
+  const used = new Set(keys).size;
+  const before = keys.filter((k) => k === taskKey).length;
+  const revision = before > 0;
+  const allowed = revision ? before <= REVISIONS_PER_TASK : used < limit;
+  return { allowed, used, revision };
+}
+
 // The feedback language a learner may ask for (the lesson chrome's language). Anything else is German.
 export const FEEDBACK_LANGS = new Set(['de', 'en']);
 
@@ -314,7 +329,7 @@ export const handler = async (event) => {
     }
     let usedQuery = supabase
       .from('writing_submissions')
-      .select('id', { count: 'exact', head: true })
+      .select(courseAllowance ? 'task_key' : 'id', courseAllowance ? undefined : { count: 'exact', head: true })
       .eq('user_id', user_id);
     if (courseAllowance) {
       // Lifetime, and only THIS course's own rows — the prefix is derived
@@ -325,8 +340,11 @@ export const handler = async (event) => {
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
       usedQuery = usedQuery.gte('created_at', monthStart);
     }
-    const { count: used } = await usedQuery;
-    if ((used ?? 0) >= limit) {
+    const { count, data: priorRows } = await usedQuery;
+    // A course counts TASKS: one improved version per task is part of learning (courseSubmissionAllowed).
+    const course = courseAllowance ? courseSubmissionAllowed((priorRows || []).map((r) => r.task_key), task_key, limit) : null;
+    const used = course ? course.used : count;
+    if (course ? !course.allowed : (used ?? 0) >= limit) {
       return {
         statusCode: 429,
         headers,
@@ -415,7 +433,7 @@ export const handler = async (event) => {
         word_count: wordCount,
         submission_id: saved?.id || null,
         saved: !saveError,
-        used: (used ?? 0) + 1,
+        used: (used ?? 0) + (course?.revision ? 0 : 1),
         limit,
         tier,
         scope: isCourse ? 'course' : 'exam',
