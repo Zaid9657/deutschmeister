@@ -845,10 +845,18 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // a lesson (buildCheckpoint lessonSeenIds), which reseats Bausteine and Schreiben: three more
     // frontable sentences are drawn. Every one is asserted above to accept both orders — the set
     // grew, nothing stopped accepting anything. RE-MEASURED.
+    // 2026-10-15 (A1.2 DaF review #3): two builder changes reseat these papers. MAJOR 2 gave the
+    // Lesen reports a Vorfeld engine, and it reaches A1.1 too („Am Wochenende arbeitet Lena
+    // nicht.", „Heute lernt Tim Deutsch." — four new reports, all governed by the Lesen rules of
+    // tests/checkpoint.test.mjs), so the paper-wide leak cap moves checkpoint 3's frontable item
+    // from seat 2 to seat 1 and checkpoint 4 draws „Kommst du am Samstag mit?" (no Angabe).
+    // MAJOR 3 then made each checkpoint leave out every paper an earlier one can serve; the
+    // larger exclusion reshuffles checkpoint 2's Bausteine, and seat 6 now asks for `du`.
+    // The count falls from 4 to 2 because fewer frontable sentences are DRAWN; every one that is
+    // drawn is asserted above, and the pool-wide loop still demands both orders of all of them.
+    // RE-MEASURED, not relaxed.
     'a1.1-cp1-schreiben-1',
-    'a1.1-cp2-bausteine-6',
-    'a1.1-cp3-schreiben-2',
-    'a1.1-cp4-schreiben-2',
+    'a1.1-cp3-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 
