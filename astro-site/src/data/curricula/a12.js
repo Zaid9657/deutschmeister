@@ -845,7 +845,7 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Imperativ: bitten und auffordern',
-        bodyDe: 'Der Imperativ steht auf Position 1. Bei **du** fällt das Pronomen weg und die Endung -st fällt mit: **Komm!**, **Warte!**, **Hilf!** Trennbare Verben schicken die Vorsilbe ans Ende: **Mach** den Fernseher **aus**! Bei Sie bleibt das Pronomen stehen: Helfen Sie bitte! Das Wort **bitte** macht jede Aufforderung höflich.',
+        bodyDe: 'Der Imperativ steht vorn. Bei **du** fallen Pronomen und Endung -st weg: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Die Vorsilbe steht am Ende: **Mach** den Fernseher **aus**! Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
         examples: ['Tim, die Waschmaschine ist da. Hilf mir bitte!', 'Mach den Fernseher aus und hilf mir bitte!'],
         ruleSlug: 'imperative',
       },

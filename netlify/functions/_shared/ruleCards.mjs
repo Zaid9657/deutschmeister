@@ -85,9 +85,9 @@ export const RULE_CARDS = {
         "explanationDe": "seit verlangt den Dativ: seit einer Woche."
       },
       {
-        "wrong": "Zu dem Bahnhof gehe ich nicht.",
-        "correct": "Zum Bahnhof gehe ich nicht.",
-        "explanationDe": "zu dem wird zum, zu der wird zur: zum Bahnhof, zur Brücke."
+        "wrong": "Ich gehe zu der Bahnhof.",
+        "correct": "Ich gehe zum Bahnhof.",
+        "explanationDe": "Bahnhof ist maskulin: zu dem Bahnhof, kurz zum Bahnhof."
       }
     ]
   },
@@ -114,7 +114,7 @@ export const RULE_CARDS = {
   },
   "imperative": {
     "titleDe": "Der Imperativ: bitten und auffordern",
-    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich warte, du wartest → Warte!\nich helfe, du hilfst → Hilf! Das Pronomen fällt weg, die Endung -st fällt mit.\nTrennbare Verben schicken die Vorsilbe ans Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte, ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
+    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte, ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
     "commonMistakes": [
       {
         "wrong": "Sie helfen bitte!",
@@ -185,9 +185,9 @@ export const RULE_CARDS = {
         "explanationDe": "Ein Verb verneint man immer mit nicht."
       },
       {
-        "wrong": "Haben Sie nicht einen Rabatt?",
+        "wrong": "Haben Sie kein Rabatt?",
         "correct": "Haben Sie keinen Rabatt?",
-        "explanationDe": "Im Akkusativ heißt es keinen Rabatt: maskulin bekommt die Endung -en."
+        "explanationDe": "Rabatt ist maskulin: Im Akkusativ heißt es keinen Rabatt."
       }
     ]
   },
@@ -369,9 +369,9 @@ export const RULE_CARDS = {
         "explanationDe": "Nach dem Fragewort steht sofort das Verb, danach das Subjekt."
       },
       {
-        "wrong": "Wo fahren wir im Urlaub?",
-        "correct": "Wohin fahren wir im Urlaub?",
-        "explanationDe": "wo fragt nach dem Ort, wohin nach der Richtung."
+        "wrong": "Wo fahren wir im Urlaub? – Nach Köln.",
+        "correct": "Wohin fahren wir im Urlaub? – Nach Köln.",
+        "explanationDe": "Nach Köln ist eine Richtung: Dann fragt man mit wohin. wo fragt nach dem Ort."
       },
       {
         "wrong": "Was fährt der Bus?",

@@ -288,6 +288,57 @@ test('DaF review #3 MAJOR 4: a Lektion\'s share is measured on what the learner 
   }
 });
 
+test('DaF review #3 MAJOR 5: the L8 imperative rule produces every du-imperative the course checks', async () => {
+  // The notice taught „drop -st" and the course then checked Fahr! (checkpoint 3) and Iss! (the
+  // draw), which that rule cannot produce: fährst → fähr, isst → is. The rule now has its two
+  // clauses, and it is held against every surface that grades an imperative.
+  const notice = CURRICULUM_A12.lektionen.find((l) => l.nr === 8).notice.bodyDe;
+  assert.match(notice, /Aus ä wird a/);
+  assert.match(notice, /Endet der Stamm auf s, fällt nur -t weg/);
+  // The notice's rule as a function of the infinitive and the du-form.
+  const imperativeOf = (inf, du) => (/[sß]en$/.test(inf) ? du.replace(/t$/, '') : du.replace(/st$/, '')).replace(/ä/g, 'a');
+  // The course's imperative verbs, with their du-form (facts of German, not item ids).
+  const VERBS = {
+    kommen: 'kommst', helfen: 'hilfst', warten: 'wartest', machen: 'machst', holen: 'holst', gehen: 'gehst',
+    nehmen: 'nimmst', geben: 'gibst', kaufen: 'kaufst', fragen: 'fragst', lesen: 'liest', stehen: 'stehst',
+    ziehen: 'ziehst', sehen: 'siehst', essen: 'isst', bezahlen: 'bezahlst', tragen: 'trägst', laufen: 'läufst',
+    fliegen: 'fliegst', trinken: 'trinkst', kochen: 'kochst', fahren: 'fährst', schlafen: 'schläfst',
+  };
+  const produced = new Map(Object.entries(VERBS).map(([inf, du]) => [imperativeOf(inf, du), inf]));
+  for (const [form, inf] of [['fahr', 'fahren'], ['iss', 'essen'], ['lies', 'lesen'], ['hilf', 'helfen'], ['warte', 'warten'], ['nimm', 'nehmen']]) {
+    assert.equal(produced.get(form), inf, `the rule gives ${form}! for ${inf}`);
+  }
+  // Every imperative a pool item or a checkpoint answer opens with: the rule's form, or that form
+  // with the optional -e (Hole!, Mache!) the checker accepts.
+  const IMPERATIVE_HEAD = /^(komm|warte|hilf|mach|hol|geh|nimm|sei|gib|kauf|frag|lies|steh|zieh|sieh|iss|bezahl|trag|lauf|flieg|trink|koch|feier|fahr|schlaf)e?$/i;
+  const { buildCheckpoint, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const answers = POOL_A12.items.flatMap((it) => [it.answer, ...(it.accepted || [])].map((a) => [it.id, a]));
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 3; round += 1) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: paperSeed(checkpoint, round) })) {
+        for (const a of [it.answer, ...(it.accepted || [])]) answers.push([it.id, a]);
+      }
+    }
+  }
+  const unexplained = new Set();
+  let seen = 0;
+  for (const [id, a] of answers) {
+    const head = String(a || '').trim().split(/[\s!.,?]+/)[0];
+    if (!IMPERATIVE_HEAD.test(head) || /^Sie$/i.test(String(a).trim().split(/\s+/)[1] || '')) continue;
+    seen += 1;
+    const low = head.toLowerCase();
+    if (!produced.has(low) && !produced.has(low.replace(/e$/, ''))) unexplained.add(`${id}: ${head}`);
+  }
+  assert.ok(seen >= 10, `the harvest is not vacuous (${seen})`);
+  assert.deepEqual([...unexplained], [], 'imperatives the L8 notice cannot produce');
+  // The three „mistakes" the review confirmed as correct German stay off every card. No predicate
+  // decides that a sentence is correct German; a DaF review does, and its verdicts stay pinned.
+  const cards = read('netlify/functions/_shared/ruleCards.mjs');
+  for (const correct of ['Haben Sie nicht einen Rabatt?', 'Wo fahren wir im Urlaub?', 'Zu dem Bahnhof gehe ich nicht.']) {
+    assert.ok(!cards.includes(`"wrong": "${correct}"`), `„${correct}" is German, not a mistake`);
+  }
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.
