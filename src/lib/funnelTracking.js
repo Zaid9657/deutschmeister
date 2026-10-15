@@ -19,7 +19,7 @@ export const trackOnboardingCompleted = (exitPath) => track('onboarding_complete
 export const trackOnboardingSkipped = () => track('onboarding_skipped');
 
 export const trackLessonStarted = (level, topic, runId) => track('lesson_started', { level, topic, run_id: runId });
-export const trackLessonCompleted = (level, topic, runId) => track('lesson_completed', { level, topic, run_id: runId });
+export const trackLessonCompleted = (level, topic, runId, skills = {}) => track('lesson_completed', { level, topic, run_id: runId, ...skills });
 export const trackFirstSentence = (topic, hit) => track('lesson_first_sentence', { topic, hit });
 export const trackLessonResumed = (level, topic, runId) => track('lesson_resumed', { level, topic, run_id: runId });
 export const trackLessonStageViewed = (level, topic, runId, step) => track('lesson_stage_viewed', { level, topic, run_id: runId, step });

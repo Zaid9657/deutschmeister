@@ -134,10 +134,10 @@ test('Start fires lesson_started and the recap write fires lesson_completed', ()
   assert.match(player, /import \{ trackLessonCompleted, [^}]*trackLessonStarted[^}]* \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
   // One run id (runState.js) joins start and completion, so time-to-complete is measurable.
   assert.match(player, /onStart=\{\(\) => \{ trackLessonStarted\(curriculum\.level, lektion\.id, runId\); setIntroDone\(true\); \}\}/);
-  assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id, runId\);/, 'completed is tracked exactly where the lesson is persisted');
+  assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id, runId, skillProps\(skillLines\(\{ score, attempts, skills \}\)\)\);/, 'completed is tracked exactly where the lesson is persisted, with what the run measured');
   const funnel = read('src/lib/funnelTracking.js');
   assert.match(funnel, /export const trackLessonStarted = \(level, topic, runId\) => track\('lesson_started', \{ level, topic, run_id: runId \}\)/);
-  assert.match(funnel, /export const trackLessonCompleted = \(level, topic, runId\) => track\('lesson_completed', \{ level, topic, run_id: runId \}\)/);
+  assert.match(funnel, /export const trackLessonCompleted = \(level, topic, runId, skills = \{\}\) => track\('lesson_completed', \{ level, topic, run_id: runId, \.\.\.skills \}\)/);
 });
 
 test('the intro string table is complete in both languages and the German is Sie', () => {

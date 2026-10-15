@@ -173,3 +173,19 @@ test('C: the recap lists practice, listening, speaking and writing on their own 
     assert.match(read(`src/components/lesson/${stage}.jsx`), /onReport\(/, `${stage} reports what it measured`);
   }
 });
+
+test('lesson_completed says what the run measured, as the recap states it (Codex rescore, 2026-10-15)', async () => {
+  const { skillProps } = await import('../src/lib/lesson/skillStatus.js');
+  const lines = skillLines({
+    score: { correct: 6, total: 8 },
+    attempts: [{ stage: 'dictation', listened: false }],
+    skills: { speaking: { state: 'recognised', pct: 0.8 }, writing: { state: 'self-checked' } },
+  });
+  assert.deepEqual(skillProps(lines), { practice_pct: 75, listening: 'partly-read', speaking: 'recognised', writing: 'self-checked' });
+  assert.deepEqual(skillProps(skillLines({ score: { correct: 0, total: 0 } })), { practice_pct: 0, listening: 'none', speaking: 'skipped', writing: 'skipped' });
+  const { ALLOWED_PROPS, sanitizeProps } = await import('../src/data/events.js');
+  for (const key of ['practice_pct', 'listening', 'speaking', 'writing']) assert.ok(ALLOWED_PROPS.includes(key), key);
+  assert.deepEqual(sanitizeProps(skillProps(lines)), skillProps(lines), 'GA keeps every one of them');
+  assert.match(read('src/lib/funnelTracking.js'), /trackLessonCompleted = \(level, topic, runId, skills = \{\}\) => track\('lesson_completed', \{ level, topic, run_id: runId, \.\.\.skills \}\)/);
+  assert.match(read('src/pages/lesson/LessonPlayerPage.jsx'), /trackLessonCompleted\(curriculum\.level, lektion\.id, runId, skillProps\(skillLines\(\{ score, attempts, skills \}\)\)\)/);
+});

@@ -6,7 +6,7 @@ import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
 import buildLesson, { attemptFromCompletions } from '../../lib/lesson/buildLesson.js';
 import { prevStageIndex, requeueFor } from '../../lib/lesson/requeue.js';
 import { practiceScore, masteryStatus } from '../../lib/lesson/mastery.js';
-import { skillLines } from '../../lib/lesson/skillStatus.js';
+import { skillLines, skillProps } from '../../lib/lesson/skillStatus.js';
 import { countCompletedRuns, fetchWordsByIds, getLessonProgress, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
@@ -350,7 +350,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   useEffect(() => {
     if (preview || saved || !stage || stage.kind !== 'recap') return;
     setSaved(true);
-    trackLessonCompleted(curriculum.level, lektion.id, runId);
+    trackLessonCompleted(curriculum.level, lektion.id, runId, skillProps(skillLines({ score, attempts, skills })));
     if (!user) {
       recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
       setSync('local');
@@ -359,7 +359,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     const entry = enqueueRun({ userId: user.id, level: curriculum.level, lektionId: lektion.id, createdAt: new Date().toISOString(), attempts, accuracy, status });
     runEntryKey.current = entry ? entry.key : null;
     flush();
-  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush]);
+  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush, score, skills]);
 
   // Back online after a failed save: send it again without asking.
   useEffect(() => {
