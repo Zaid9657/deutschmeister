@@ -92,11 +92,20 @@ export function levenshtein(a, b) {
 /** Hesitation sounds a recogniser writes down; they are not words of the answer. */
 const FILLER_RE = /^(?:ah|aeh|aehm|eh|ehm|hm|hmm|mhm|oeh|oehm|uh|um|uhm)$/;
 
-/** Equal, or one edit apart on a word long enough for that to be a slip. */
+/**
+ * Negations decide the meaning: „keine" heard as „eine", or „nicht" as „nichts", says something
+ * else, one edit or not — the same rule as the typed checker's NEGATION_RE (src/lib/lesson/check.js),
+ * written out here because this file takes no imports. Such a pair must match exactly (Codex
+ * rescore, 2026-10-15: „keine" → „eine" scored 100 %).
+ */
+const NEGATION_RE = /^(?:kein|keine|keinen|keinem|keiner|keines|nicht|nichts|nie|niemals|niemand|nein)$/;
+
+/** Equal, or one edit apart on a word long enough for that to be a slip — never across a negation. */
 export function tokensMatch(expected, heard) {
   if (!expected || !heard) return false;
   if (expected === heard) return true;
   if (expected.length < 5) return false;
+  if (NEGATION_RE.test(expected) || NEGATION_RE.test(heard)) return false;
   return levenshtein(expected, heard) <= 1;
 }
 

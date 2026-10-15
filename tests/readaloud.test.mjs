@@ -182,3 +182,17 @@ test('oversized input is rejected before it reaches the provider', () => {
 test('a miss is logged with the Aussprache tag', () => {
   assert.match(FN, /error_tag: correct \? null : 'Aussprache'/);
 });
+
+test('a negation is never a one-edit slip: „keine" heard as „eine" is a miss (Codex rescore, 2026-10-15)', () => {
+  // Both words are long enough for the one-edit tolerance, and each pair says the opposite.
+  assert.equal(tokensMatch('keine', 'eine'), false);
+  assert.equal(tokensMatch('nicht', 'nichts'), false);
+  assert.equal(tokensMatch('keinen', 'einen'), false);
+  assert.equal(tokensMatch('niemand', 'jemand'), false);
+  const r = alignTranscript('Ich habe keine Zeit.', 'Ich habe eine Zeit.');
+  assert.deepEqual(r.words.map((w) => w.hit), [true, true, false, true]);
+  assert.ok(r.pct < READALOUD_PASS_PCT, `meaning reversed, ${r.pct} must not pass`);
+  // The tolerance stays for ordinary slips of long words.
+  assert.equal(tokensMatch('heisse', 'heise'), true);
+  assert.equal(tokensMatch('keine', 'keine'), true);
+});
