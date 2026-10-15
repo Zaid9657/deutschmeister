@@ -13,6 +13,31 @@
       "explanationDe": "Bei sein sagt man meistens war: Ich war gestern krank.",
       "explanationEn": "With sein, German mostly uses **war** (was): Ich war gestern krank.",
       "reason": "DaF review #4 (A1.2) MAJOR 5: „Für sein benutzt man war, nicht das Perfekt.“ is false as a rule of German (ist gewesen exists); the course practises the common form."
+    },
+    "2750daba-c009-532c-8b99-be42586588ac": {
+      "questionDe": "Fragen Sie eine Freundin: Was hast du gestern ___? (machen, Perfekt)",
+      "questionEn": "Ask a friend, with the Partizip II: What did you do yesterday? (machen, Perfekt)",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "4f4d40d0-305d-4028-bc32-e8c944f25c1d": {
+      "questionDe": "Fragen Sie eine Freundin: ___ heißt du?",
+      "questionEn": "Ask a friend her name: ___ heißt du?",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "3558a177-5f22-4700-9512-ff7dc3ac7d9d": {
+      "questionDe": "Fragen Sie eine Freundin: ___ wohnst du? (= Where?)",
+      "questionEn": "Ask a friend where she lives: ___ wohnst du?",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "cb094e7e-51c8-49e1-ac2e-60d1413cc7c5": {
+      "questionDe": "Fragen Sie eine Freundin: ___ lernst du Deutsch? (= Why?)",
+      "questionEn": "Ask a friend why she is learning German: ___ lernst du Deutsch?",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "475c7b01-7771-4219-8170-e9646e4dcff3": {
+      "questionDe": "Fragen Sie eine Freundin: ___ kommst du? (= When?)",
+      "questionEn": "Ask a friend when she is coming: ___ kommst du?",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
     }
   }
 }

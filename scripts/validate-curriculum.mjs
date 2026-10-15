@@ -1277,6 +1277,10 @@ const ITEM_FORMULA_RE = new RegExp([
   'Welche Schreibweise ist richtig',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
+  // The register frame of a du-prompt (DaF review #4, A1.2 minor): the course speaks Sie, so a bare
+  // „___ wohnst du?" is framed as partner speech. Without the formula here `Fragen` counted as item
+  // lexis and the build stamped all six framed items minLektion null — never served.
+  'Fragen Sie eine Freundin',
 ].join('|'), 'g');
 
 /**

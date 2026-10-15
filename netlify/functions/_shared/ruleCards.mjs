@@ -256,7 +256,7 @@ export const RULE_CARDS = {
   },
   "perfekt-intro": {
     "titleDe": "Das Perfekt: haben und Partizip II",
-    "content": "Über Vergangenes spricht man im Perfekt:\nhaben steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nUnregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.\nDiese Formen lernt man Wort für Wort.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nNein, ich habe Milch getrunken. Der Käse war lecker.\nDie Wurst und das Fleisch haben wir gekauft. Tim hat ihn gekocht.\nwar ist die einzige einfache Vergangenheitsform in diesem Kurs.\nEnglish: haben in second position, and the participle at the very end of the sentence.",
+    "content": "Über Vergangenes spricht man im Perfekt:\nhaben steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nUnregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.\nDiese Formen lernt man Wort für Wort.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nNein, ich habe Milch getrunken. Der Käse war lecker.\nDie Wurst und das Fleisch haben wir gekauft. Und den Fisch? Tim hat ihn gekocht.\nwar ist die einzige einfache Vergangenheitsform in diesem Kurs.\nEnglish: haben in second position, and the participle at the very end of the sentence.",
     "commonMistakes": [
       {
         "wrong": "Ich habe gegessen Kuchen.",

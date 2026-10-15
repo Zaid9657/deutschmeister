@@ -42,8 +42,11 @@
 //                                 Kleidungskauf ist „für meinen Bruder, ohne den Schal".
 //  11 dative-prepositions-intro — das Wetter trägt die temporalen und lokalen Dativpräpositionen:
 //                                 im Sommer, am Abend, seit einer Woche, nach dem Regen.
-//  12 perfekt-intro             — das Fest erzählt Vergangenes. Perfekt steht am Ende, weil es
-//                                 das Partizip II jedes bis hier gelernten Verbs wiederholt.
+//  12 perfekt-intro             — das Fest erzählt Vergangenes. Perfekt steht am Ende: haben auf
+//                                 Position 2, das Partizip II mit ge-…-t oder ge-…-en, an Verben, die
+//                                 der Kurs schon kennt (gefeiert, gekauft, gekocht, gemacht, geholt,
+//                                 gegessen, getrunken, gesprochen). Partizipien ohne ge- (bezahlt,
+//                                 besucht) lehrt er NICHT — offen, CONTRACT §0 (DaF-Review #4, M7).
 //
 // DIE ENTSCHEIDUNG, DIE DER AUFTRAG OFFEN LIESS: WEGBESCHREIBUNG → WELCHE PRÄPOSITIONEN?
 // Weder `prepositions-accusative` noch `dative-prepositions-intro`. Beide setzen einen Kasus
@@ -1231,10 +1234,10 @@ export const CURRICULUM_A12 = {
           { speaker: 'Ana', de: 'Ja! Ich habe Kuchen und Schokolade gegessen.', en: 'Yes! I ate cake and chocolate.' },
           { speaker: 'Lena', de: 'Und das Getränk? Hast du den Saft getrunken?', en: 'And the drink? Did you drink the juice?' },
           { speaker: 'Ana', de: 'Nein, ich habe Milch getrunken. Der Käse war lecker.', en: 'No, I drank milk. The cheese was delicious.' },
-          { speaker: 'Lena', de: 'Die Wurst und das Fleisch haben wir gekauft.', en: 'We bought the sausage and the meat.' },
-          { speaker: 'Ana', de: 'Und den Fisch? Tim hat ihn gekocht.', en: 'And the fish? Tim cooked it.' },
-          { speaker: 'Lena', de: 'Das Ei und das Gemüse hat meine Oma gemacht.', en: 'My grandma made the egg and the vegetables.' },
-          { speaker: 'Ana', de: 'Das Obst und die Kartoffeln habe ich gekauft.', en: 'I bought the fruit and the potatoes.' },
+          { speaker: 'Lena', de: 'Die Wurst und das Fleisch haben wir gekauft. Und den Fisch?', en: 'We bought the sausage and the meat. And the fish?' },
+          { speaker: 'Ana', de: 'Tim hat ihn gekocht. Der Fisch war lecker!', en: 'Tim cooked it. The fish was delicious!' },
+          { speaker: 'Lena', de: 'Das Ei und das Gemüse hat meine Oma gemacht. Gut, oder?', en: 'My grandma made the egg and the vegetables. Good, isn\'t it?' },
+          { speaker: 'Ana', de: 'Ja! Das Obst und die Kartoffeln habe ich gekauft.', en: 'Yes! I bought the fruit and the potatoes.' },
           { speaker: 'Lena', de: 'Die Nudeln und den Reis hat Tim gekocht.', en: 'Tim cooked the noodles and the rice.' },
           { speaker: 'Ana', de: 'Im Kuchen war zu viel Zucker. Aber es war schön!', en: 'There was too much sugar in the cake. But it was lovely!' },
         ],

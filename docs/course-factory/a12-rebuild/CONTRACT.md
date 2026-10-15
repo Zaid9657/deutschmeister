@@ -17,7 +17,7 @@ table, the table is the measurement (DaF review #3, Minor: "CONTRACT aktualisier
 | §5: rule-card overrides still to write | All twelve A1.2 slugs carry an override (`scripts/rule-card-overrides.mjs`). |
 | §6.1: `COURSE_TASK_KEY_PREFIX` is `'a11-'` | `evaluate-writing.mjs` counts every course key (`a__-%`); A1.2 has its own allowance of 16 — twelve Lektion tasks and four checkpoint tasks `a12-cp1…4`. |
 | §6.4: three missionless Lektionen | One: L11 (RULE 13 = 1). |
-| §6.5: no DaF review yet | Three: #1 and #2 (2026-09-13), #3 (2026-10-15: 2 BLOCKER, 7 MAJOR). Both BLOCKERs and MAJORs 1–6 are closed with a rule and a test each in `tests/a12-rebuild.test.mjs`. |
+| §6.5: no DaF review yet | Four: #1 and #2 (2026-09-13), #3 and #4 (2026-10-15). #3 measured 2 BLOCKER and 7 MAJOR; this table then claimed both BLOCKERs and MAJORs 1–6 closed, and #4 measured that claim false (2 BLOCKER, 4 MAJOR: B1, B2, M5 and M6 still open, M8 new; M1, M3 and M4 closed). Round 5 answers B1, B2, M5, M6 and M8 with a rule and a test each in `tests/a12-rebuild.test.mjs`. Whether they are closed is review #5's measurement, not this table's. M7 waits on the owner (below). |
 | §4: the ratchets | `levelSpec('a1.2').ratchets` in `scripts/validate-curriculum.mjs`; every one equals its measurement (`tests/a12-rebuild.test.mjs`). Non-zero today: RULE 11 (26), RULE 13 (1), RULE 23 (7), RULE 23b (1). |
 
 **Open — owner decision (DaF review #3, MAJOR 7).** The standard's A1.2 grammar ceiling

@@ -1050,8 +1050,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 7,
-      "questionDe": "___ du den Arzt in der Praxis? (sehen)",
-      "questionEn": "Do you see the doctor at the practice?",
+      "questionDe": "Fragen Sie eine Freundin: ___ du den Arzt in der Praxis? (sehen)",
+      "questionEn": "Ask a friend: do you see the doctor at the practice?",
       "options": null,
       "answer": "Siehst",
       "accepted": [

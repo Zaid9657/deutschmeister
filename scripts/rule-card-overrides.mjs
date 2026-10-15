@@ -934,7 +934,7 @@ const RULE_CARD_OVERRIDES = {
       'Diese Formen lernt man Wort für Wort.',
       'Beim Fest: Ana, wir haben gestern schön gefeiert!',
       'Nein, ich habe Milch getrunken. Der Käse war lecker.',
-      'Die Wurst und das Fleisch haben wir gekauft. Tim hat ihn gekocht.',
+      'Die Wurst und das Fleisch haben wir gekauft. Und den Fisch? Tim hat ihn gekocht.',
       'war ist die einzige einfache Vergangenheitsform in diesem Kurs.',
       'English: haben in second position, and the participle at the very end of the sentence.',
     ].join('\n'),

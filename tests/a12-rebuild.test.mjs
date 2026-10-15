@@ -544,6 +544,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
       ['Und das Getränk?', null, null, 'thema'],
       ['Hast du den Saft getrunken?', 3, 'Nein, ich habe Milch getrunken.', 'ja'],
       ['Und den Fisch?', 5, 'Tim hat ihn gekocht.', 'person', 'Wer hat den Fisch gekocht?'],
+      ['Gut, oder?', 7, 'Ja!', 'ja'],
     ],
   };
   const sentences = (de) => String(de).split(/(?<=[.!?])\s+/).filter(Boolean);
@@ -650,6 +651,29 @@ test('DaF review #3 Minor: the can-do lines say what they are — written for th
   // a quotation nobody had checked line by line.
   assert.match(CURRICULUM_A12.provenance.canDo, /^Eigene Kann-Beschreibungen nach /);
   assert.match(CURRICULUM_A12.provenance.canDo, /keine wörtlichen Zitate/);
+});
+
+test('DaF review #4 minor (register): a du in an A1.2 prompt is framed — partner speech, a person cue or a Sie instruction', () => {
+  // The course speaks Sie; only its dialogues duzen. „___ wohnst du?" printed bare reads as the course
+  // addressing the learner with du (six prompts, measured 2026-10-15). A du-form in a prompt is framed
+  // when the prompt says who is spoken to: a person cue („(sprechen, du)", „du-Imperativ"), a Sie
+  // instruction it stands under („Fragen Sie eine Freundin: …", „Korrigieren Sie: …"), a named
+  // addressee („Tim, ___ …"), or a question-and-answer frame („Antwort: … Frage: …", „…? — Der Weg ist weit.").
+  const DU = /\b(du|dein\w*|dir|dich)\b/i;
+  const FRAMED = [
+    /\((?:[^)]*,\s*)?du\)|\bdu-(?:Imperativ|Form)\b/,
+    /^[A-ZÄÖÜ][a-zäöüß]+en Sie\b[^:]*:/,
+    /^(?:Ana|Lena|Tim|Paul|Herr \w+|Frau \w+),\s/,
+    /\bAntwort:.*\bFrage:/,
+    /\?\s+—\s+\S/,
+  ];
+  const bare = POOL_A12.items.filter((it) => DU.test(it.questionDe || '') && !FRAMED.some((re) => re.test(it.questionDe)));
+  assert.deepEqual(bare.map((it) => `${it.id}: ${it.questionDe}`), []);
+  const duItems = POOL_A12.items.filter((it) => DU.test(it.questionDe || ''));
+  assert.ok(duItems.length >= 25, 'the rule still reads the du-prompts it was written for');
+  // The frame is a task formula, not item lexis: before it was listed, the build stamped all six
+  // framed items minLektion null, and an unservable item is a fix that removed the item.
+  assert.deepEqual(duItems.filter((it) => it.minLektion == null).map((it) => it.id), [], 'a frame never costs an item its Lektion');
 });
 
 test('DaF review #4 minor: every checkpoint writing task reaches the page with its English twin, on both levels', async () => {
