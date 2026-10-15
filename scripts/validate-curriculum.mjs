@@ -1045,13 +1045,17 @@ export const LEVELS = {
       // 2026-09-13 (round 17) after the model answer stopped counting as input: **7**, the seventh
       // being L4 `die Toilette`. Paused; re-measured only, and no A1.2 content was touched to get
       // there (the level is frozen by owner decision, 2026-09-13). Seven of 201 against A1.1's 63 of
-      // 263 is not a better draft — A1.2's Wortfelder are simply shorter.
-      wortfeldWithoutInput: 7,
+      // 263 is not a better draft — A1.2's Wortfelder are simply shorter. RE-MEASURED 2026-10-15
+      // (DaF review #4 minor „Inputdeckung“): **4** — L4 `die Toilette` and L11 `die Sonne`, `warm`
+      // now stand in a dialogue line; L3 `das Kaufhaus`, `das Geschäft`, `die Bibliothek` and L7
+      // `der Körper` remain, each a line rewrite that would cost another word its input.
+      wortfeldWithoutInput: 4,
       // RULE 23b, measured on the paused A1.2 draft 2026-09-13 (round 18): **1** — L4 `die Toilette`,
       // a word the L4 task asks for („Ihre Frage“ … the field of the Formular) that reaches no
       // input surface of L4. Paused; re-measured only, and no A1.2 content was touched to get
-      // there. At A1.1 the same rule is hard 0 with no entry.
-      gradedTaskWordsWithoutInput: 1,
+      // there. At A1.1 the same rule is hard 0 with no entry. RE-MEASURED 2026-10-15: **0** — L4's
+      // Frau Kaya now says „Die Toilette ist neu.“, so the word the task asks for is input.
+      gradedTaskWordsWithoutInput: 0,
       // RULE 22, measured on the paused A1.2 draft 2026-09-13 (round 16): **1** — L10 „Die Größe
       // ist 38.“, the same form-speak shape A1.1 carried five times. Paused; re-measured, and no
       // A1.2 content was touched to get there; whoever resumes the level writes „Ich brauche
