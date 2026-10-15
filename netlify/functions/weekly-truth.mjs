@@ -55,6 +55,26 @@ export function renderCourseLine(course) {
     + ` · L3 beendet ${n(course.l03_finished)} · L12 beendet ${n(course.l12_finished)} · CP1 bestanden ${n(course.checkpoint1_passed)} · aktiv (7d) ${n(course.active_learners_7d)}`;
 }
 
+/**
+ * Where the Lektion 1 learners of the course line stopped
+ * (migrations/2026-10-12-lesson-furthest-stage.sql): the furthest stage each
+ * reached, in stage order, summing to "L1 gestartet". Signed-in learners only.
+ * "nur geöffnet" = the page was opened but no stage was recorded. Null when
+ * the course block itself is missing — the course line already says why.
+ */
+export function renderStopLine(course) {
+  if (!course || typeof course !== 'object') return null;
+  const level = String(course.level || 'a1.1').toUpperCase();
+  const stops = course.l01_stopped_at;
+  if (!Array.isArray(stops)) {
+    return `Kurs ${level}, L1 weitester Schritt: nicht gemessen — migrations/2026-10-12-lesson-furthest-stage.sql noch nicht angewendet`;
+  }
+  const parts = stops
+    .filter((s) => s && typeof s.stage === 'string')
+    .map((s) => `${s.stage === 'intro' ? 'nur geöffnet' : s.stage} ${Number(s.n) || 0}`);
+  return `Kurs ${level}, L1 weitester Schritt (${course.window_days ?? 14}d): ${parts.length ? parts.join(' · ') : 'niemand'}`;
+}
+
 /** The email body. Pure so tests and dry runs can render it. */
 export function renderSummary(m, prev) {
   const p = prev || {};
@@ -71,6 +91,8 @@ export function renderSummary(m, prev) {
   lines.push(`Users: ${delta(m.users?.total, p.users?.total)} total, ${m.users?.signups_7d} new this week, ${m.users?.confirmed} confirmed (${pct(m.users?.confirmed, m.users?.total)})`);
   lines.push(`Learning: ${m.grammar?.active_users_7d} users did grammar this week; new cohort (14d) ${m.grammar?.new_cohort_14d}, one-and-done ${m.grammar?.one_and_done_14d} (${pct(m.grammar?.one_and_done_14d, m.grammar?.new_cohort_14d)})`);
   lines.push(renderCourseLine(m.course));
+  const stopLine = renderStopLine(m.course);
+  if (stopLine) lines.push(stopLine);
   lines.push(`AI this week: speaking ${m.ai_7d?.speaking_7d}, writing ${m.ai_7d?.writing_7d}, exams ${m.ai_7d?.exams_7d}, X-Ray ${m.ai_7d?.xray_7d}`);
   lines.push(`Lifecycle emails sent: ${JSON.stringify(m.lifecycle_emails_7d || {})}`);
   lines.push(`Webhooks: ${m.webhooks_7d?.total_7d} events, ${m.webhooks_7d?.failed_7d} failed`);
