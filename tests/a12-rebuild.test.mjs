@@ -676,6 +676,48 @@ test('DaF review #4 minor (register): a du in an A1.2 prompt is framed — partn
   assert.deepEqual(duItems.filter((it) => it.minLektion == null).map((it) => it.id), [], 'a frame never costs an item its Lektion');
 });
 
+test('DaF review #5 MAJOR 5: an explanation that calls what follows sein a nominative has a noun there', () => {
+  // „Meine Tante ___ glücklich. (sein)" was explained with „Nach sein steht das Subjekt im Nominativ."
+  // and „sein links two things in the nominative" — glücklich is a predicative adjective, not a second
+  // nominative, and the subject is not nominative because it stands after sein. The nominative rule
+  // after sein (and bleiben) is for a NOUN predicate: „Das ist meine Tante.", „Er ist ein guter Lehrer."
+  const CLAIM = /(?:nach|after)\s+(?:ist\s*\()?sein\b|sein links|wie sein|like sein/i;
+  const NOMINATIVE = /Nominativ|nominative/i;
+  const DETERMINER = /^(?:der|die|das|ein|eine|kein|keine|mein|meine|dein|deine|sein|seine|ihr|ihre|unser|unsere|euer|eure)$/i;
+  const offenders = [];
+  let claims = 0;
+  for (const it of POOL_A12.items) {
+    const text = `${it.explanationDe || ''} ${it.explanationEn || ''}`;
+    if (!CLAIM.test(text) || !NOMINATIVE.test(text)) continue;
+    claims += 1;
+    const sentence = String(it.questionDe).replace(/\([^)]*\)/g, '').replace('___', it.answer).split(/[—:]/).pop().trim();
+    const after = sentence.match(/\b(?:ist|sind|bin|bist|seid|bleibt|bleiben)\s+(\S+)/i);
+    if (!after || !DETERMINER.test(after[1])) offenders.push(`${it.id}: „${sentence}" — ${text.trim()}`);
+  }
+  assert.deepEqual(offenders, []);
+  assert.ok(claims >= 3, 'the rule still reads the noun-predicate explanations it was written for');
+  // The item the review measured now names the form it tests.
+  const tante = POOL_A12.items.find((it) => it.id === 'extra-a12-l07-05');
+  assert.match(tante.explanationDe, /steht für sie, deshalb die Form ist/);
+  assert.doesNotMatch(`${tante.explanationDe} ${tante.explanationEn}`, NOMINATIVE);
+});
+
+test('DaF review #5 minor: every form a notice teaches in bold stands in its English twin, and a can-do quotes only taught forms', () => {
+  // The L8 notice explained „Kommt!" in German while its English twin still explained the separable
+  // prefix, and L10 promised „billiger oder teurer" where the Lektion teaches „billiger als".
+  for (const l of CURRICULUM_A12.lektionen) {
+    const forms = [...l.notice.bodyDe.matchAll(/\*\*([^*]+)\*\*/g)].map((m) => m[1]).filter((f) => f.replace(/[^A-Za-zÄÖÜäöüß]/g, '').length >= 3);
+    const en = l.notice.bodyEn.replace(/\*\*/g, '');
+    assert.deepEqual(forms.filter((f) => !en.includes(f)), [], `L${l.nr}: the English twin leaves out a taught form`);
+    const input = [...l.dialog.lines.map((x) => x.de), l.notice.bodyDe, ...(l.notice.examples || [])].join(' ').replace(/\*\*/g, '').toLowerCase();
+    for (const canDo of l.canDo) {
+      const example = canDo.includes(':') ? canDo.split(':').pop() : '';
+      const words = example.toLowerCase().match(/[a-zäöüß]+/g) || [];
+      assert.deepEqual(words.filter((w) => !new RegExp(`\\b${w}\\b`).test(input)), [], `L${l.nr}: „${canDo}" quotes a form the Lektion does not teach`);
+    }
+  }
+});
+
 test('DaF review #4 minor: every checkpoint writing task reaches the page with its English twin, on both levels', async () => {
   // The checkpoint's graded task carried promptEn: null, and the page reads task.taskEn, which no
   // item set — the twin RULE 25 asks of every Lektion task never reached a checkpoint, on either level.

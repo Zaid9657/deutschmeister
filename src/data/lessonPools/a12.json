@@ -1551,7 +1551,7 @@
    "difficulty": 1,
    "order": 6,
    "questionDe": "___ Sie bitte in der Küche! (warten)",
-   "questionEn": "Please wait in front of the fridge.",
+   "questionEn": "Please wait in the kitchen.",
    "options": null,
    "answer": "Warten",
    "accepted": [
@@ -2624,10 +2624,10 @@
    "accepted": [
     "ist"
    ],
-   "explanationDe": "Nach sein steht das Subjekt im Nominativ.",
+   "explanationDe": "Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "**sein** links two things in the nominative: Meine Tante **ist** glücklich."
+   "explanationEn": "**Meine Tante** stands for **sie**, so the verb is **ist**: Meine Tante **ist** glücklich. glücklich describes her and takes no ending."
   },
   {
    "id": "6466fa36-59de-4a0b-9081-378d0fbd217b",

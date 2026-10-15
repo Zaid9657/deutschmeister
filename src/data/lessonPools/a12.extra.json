@@ -1200,7 +1200,7 @@
       "accepted": [
         "ist"
       ],
-      "explanationDe": "Nach sein steht das Subjekt im Nominativ.",
+      "explanationDe": "Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
       "hint": null
     },
     {
@@ -1373,7 +1373,7 @@
       "difficulty": 1,
       "order": 6,
       "questionDe": "___ Sie bitte in der Küche! (warten)",
-      "questionEn": "Please wait in front of the fridge.",
+      "questionEn": "Please wait in the kitchen.",
       "options": null,
       "answer": "Warten",
       "accepted": [
