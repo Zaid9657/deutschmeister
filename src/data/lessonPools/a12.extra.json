@@ -553,6 +553,58 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l03-12",
+      "topic": "accusative-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Ich gehe ___ in das Museum als in das Restaurant. (gern)",
+      "questionEn": "I would rather go to the museum than to the restaurant.",
+      "options": null,
+      "answer": "lieber",
+      "accepted": [
+        "lieber"
+      ],
+      "explanationDe": "gern wird beim Vergleich zu lieber: lieber als.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l03-13",
+      "topic": "accusative-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Das Restaurant ist am Abend ___ als am Morgen. (gut)",
+      "questionEn": "The restaurant is better in the evening than in the morning.",
+      "options": null,
+      "answer": "besser",
+      "accepted": [
+        "besser"
+      ],
+      "explanationDe": "gut wird beim Vergleich zu besser: besser als.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l03-14",
+      "topic": "accusative-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Korrigieren Sie: „Ich gehe gerner in das Museum.“",
+      "questionEn": "Correct the sentence: I would rather go to the museum.",
+      "options": null,
+      "answer": "Ich gehe lieber in das Museum.",
+      "accepted": [
+        "Ich gehe lieber in das Museum.",
+        "Ich gehe lieber in das Museum"
+      ],
+      "explanationDe": "Der Vergleich von gern heißt lieber, nicht gerner.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l04-01",
       "topic": "negation",
       "type": "fill_blank",
@@ -939,6 +991,59 @@
         "Wann ist der Film im Kino"
       ],
       "explanationDe": "Hinter dem Fragewort steht das Verb.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l05-10",
+      "topic": "question-words",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Ich würde gern ins Konzert ___. (gehen)",
+      "questionEn": "I would like to go to the concert.",
+      "options": null,
+      "answer": "gehen",
+      "accepted": [
+        "gehen"
+      ],
+      "explanationDe": "Nach ich würde gern steht der Infinitiv am Ende.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l05-11",
+      "topic": "question-words",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Korrigieren Sie: „Ich würde gern einen Ausflug mache.“",
+      "questionEn": "Correct the sentence: I would like to go on a trip.",
+      "options": null,
+      "answer": "Ich würde gern einen Ausflug machen.",
+      "accepted": [
+        "Ich würde gern einen Ausflug machen.",
+        "Ich würde gern einen Ausflug machen"
+      ],
+      "explanationDe": "Nach würde gern steht der Infinitiv: machen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l05-12",
+      "topic": "question-words",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Kommst du mit ins Konzert? — Ja, ich ___ gern mitkommen. (höflich)",
+      "questionEn": "Are you coming to the concert? Yes, I would like to come along.",
+      "options": null,
+      "answer": "würde",
+      "accepted": [
+        "würde",
+        "möchte"
+      ],
+      "explanationDe": "Ein höflicher Wunsch: Ich würde gern mitkommen.",
       "hint": null
     },
     {
@@ -1715,6 +1820,58 @@
       "explanationDe": "Höflich zu Herrn Berg: Sie mit großem S.",
       "hint": null,
       "caseSensitive": true
+    },
+    {
+      "id": "extra-a12-l09-10",
+      "topic": "modal-verbs-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Das Taxi fährt von sieben ___ zehn Uhr. (Ende)",
+      "questionEn": "The taxi runs from seven to ten o'clock.",
+      "options": null,
+      "answer": "bis",
+      "accepted": [
+        "bis"
+      ],
+      "explanationDe": "bis nennt das Ende: von sieben bis zehn Uhr.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l09-11",
+      "topic": "modal-verbs-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Das Flugzeug fliegt ___ Montag wieder. (ab, um oder bis?)",
+      "questionEn": "The plane flies again from Monday.",
+      "options": null,
+      "answer": "ab",
+      "accepted": [
+        "ab"
+      ],
+      "explanationDe": "ab nennt den Beginn: ab Montag.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l09-12",
+      "topic": "modal-verbs-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Korrigieren Sie: „Das Taxi fährt von sieben zu zehn Uhr.“",
+      "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock.",
+      "options": null,
+      "answer": "Das Taxi fährt von sieben bis zehn Uhr.",
+      "accepted": [
+        "Das Taxi fährt von sieben bis zehn Uhr.",
+        "Das Taxi fährt von sieben bis zehn Uhr"
+      ],
+      "explanationDe": "Anfang und Ende: von … bis.",
+      "hint": null
     },
     {
       "id": "extra-a12-l10-01",

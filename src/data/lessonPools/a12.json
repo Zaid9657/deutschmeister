@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 280,
+ "count": 289,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -249,6 +249,64 @@
    "explanationEn": "brauchen takes accusative. Computer is masculine. ein → einen.",
    "hint": null,
    "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-12",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Ich gehe ___ in das Museum als in das Restaurant. (gern)",
+   "questionEn": "I would rather go to the museum than to the restaurant.",
+   "options": null,
+   "answer": "lieber",
+   "accepted": [
+    "lieber"
+   ],
+   "explanationDe": "gern wird beim Vergleich zu lieber: lieber als.",
+   "hint": null,
+   "minLektion": 3,
+   "explanationEn": "When comparing, **gern** becomes **lieber**: lieber als."
+  },
+  {
+   "id": "extra-a12-l03-13",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Das Restaurant ist am Abend ___ als am Morgen. (gut)",
+   "questionEn": "The restaurant is better in the evening than in the morning.",
+   "options": null,
+   "answer": "besser",
+   "accepted": [
+    "besser"
+   ],
+   "explanationDe": "gut wird beim Vergleich zu besser: besser als.",
+   "hint": null,
+   "minLektion": 3,
+   "explanationEn": "When comparing, **gut** becomes **besser**: besser als."
+  },
+  {
+   "id": "extra-a12-l03-14",
+   "topic": "accusative-intro",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Korrigieren Sie: „Ich gehe gerner in das Museum.“ (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct the sentence: I would rather go to the museum.",
+   "options": null,
+   "answer": "Ich gehe lieber in das Museum.",
+   "accepted": [
+    "Ich gehe lieber in das Museum.",
+    "Ich gehe lieber in das Museum"
+   ],
+   "explanationDe": "Der Vergleich von gern heißt lieber, nicht gerner.",
+   "hint": null,
+   "minLektion": 3,
+   "explanationEn": "The comparative of **gern** is **lieber**, not gerner."
   },
   {
    "id": "extra-a12-l03-08",
@@ -2131,6 +2189,64 @@
    "caseSensitive": true,
    "minLektion": 9,
    "explanationEn": "You address Herr Berg politely, so you use **Sie**, written with a capital S."
+  },
+  {
+   "id": "extra-a12-l09-10",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Das Taxi fährt von sieben ___ zehn Uhr. (Ende)",
+   "questionEn": "The taxi runs from seven to ten o'clock.",
+   "options": null,
+   "answer": "bis",
+   "accepted": [
+    "bis"
+   ],
+   "explanationDe": "bis nennt das Ende: von sieben bis zehn Uhr.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "**bis** names the end: von sieben **bis** zehn Uhr."
+  },
+  {
+   "id": "extra-a12-l09-11",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Das Flugzeug fliegt ___ Montag wieder. (ab, um oder bis?)",
+   "questionEn": "The plane flies again from Monday.",
+   "options": null,
+   "answer": "ab",
+   "accepted": [
+    "ab"
+   ],
+   "explanationDe": "ab nennt den Beginn: ab Montag.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "**ab** names the start: **ab** Montag."
+  },
+  {
+   "id": "extra-a12-l09-12",
+   "topic": "modal-verbs-intro",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Korrigieren Sie: „Das Taxi fährt von sieben zu zehn Uhr.“",
+   "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock.",
+   "options": null,
+   "answer": "Das Taxi fährt von sieben bis zehn Uhr.",
+   "accepted": [
+    "Das Taxi fährt von sieben bis zehn Uhr.",
+    "Das Taxi fährt von sieben bis zehn Uhr"
+   ],
+   "explanationDe": "Anfang und Ende: von … bis.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "Start and end: **von … bis**."
   },
   {
    "id": "extra-a12-l09-06",
@@ -4835,6 +4951,65 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a12-l05-10",
+   "topic": "question-words",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Ich würde gern ins Konzert ___. (gehen)",
+   "questionEn": "I would like to go to the concert.",
+   "options": null,
+   "answer": "gehen",
+   "accepted": [
+    "gehen"
+   ],
+   "explanationDe": "Nach ich würde gern steht der Infinitiv am Ende.",
+   "hint": null,
+   "minLektion": 5,
+   "explanationEn": "After **ich würde gern** the infinitive goes to the end."
+  },
+  {
+   "id": "extra-a12-l05-11",
+   "topic": "question-words",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Korrigieren Sie: „Ich würde gern einen Ausflug mache.“ (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct the sentence: I would like to go on a trip.",
+   "options": null,
+   "answer": "Ich würde gern einen Ausflug machen.",
+   "accepted": [
+    "Ich würde gern einen Ausflug machen.",
+    "Ich würde gern einen Ausflug machen"
+   ],
+   "explanationDe": "Nach würde gern steht der Infinitiv: machen.",
+   "hint": null,
+   "minLektion": 5,
+   "explanationEn": "After **würde gern** the infinitive follows: **machen**."
+  },
+  {
+   "id": "extra-a12-l05-12",
+   "topic": "question-words",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Kommst du mit ins Konzert? — Ja, ich ___ gern mitkommen. (höflich)",
+   "questionEn": "Are you coming to the concert? Yes, I would like to come along.",
+   "options": null,
+   "answer": "würde",
+   "accepted": [
+    "würde",
+    "möchte"
+   ],
+   "explanationDe": "Ein höflicher Wunsch: Ich würde gern mitkommen.",
+   "hint": null,
+   "minLektion": 5,
+   "explanationEn": "A polite wish: **Ich würde gern** mitkommen."
+  },
+  {
    "id": "extra-a12-l05-07",
    "topic": "question-words",
    "type": "sentence_building",
@@ -5688,7 +5863,7 @@
   "a1.2-l03#4": 0,
   "a1.2-l03#5": 3,
   "a1.2-l03#6": 3,
-  "a1.2-l03#7": 0,
+  "a1.2-l03#7": 3,
   "a1.2-l03#8": 0,
   "a1.2-l03#9": 0,
   "a1.2-l04#0": 0,
@@ -5705,7 +5880,7 @@
   "a1.2-l05#1": 3,
   "a1.2-l05#2": 0,
   "a1.2-l05#3": 0,
-  "a1.2-l05#4": 0,
+  "a1.2-l05#4": 5,
   "a1.2-l05#5": 0,
   "a1.2-l05#6": 0,
   "a1.2-l05#7": 0,
@@ -5745,7 +5920,7 @@
   "a1.2-l09#1": 9,
   "a1.2-l09#2": 9,
   "a1.2-l09#3": 11,
-  "a1.2-l09#4": 11,
+  "a1.2-l09#4": 0,
   "a1.2-l09#5": 9,
   "a1.2-l09#6": 9,
   "a1.2-l09#7": 9,

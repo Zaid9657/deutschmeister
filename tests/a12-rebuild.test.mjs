@@ -483,7 +483,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
       ['Und die Kasse?', null, null, 'thema'],
       ['Bezahlst du ein Kilo Brot?', 5, 'Ja.', 'ja'],
       ['Und danach?', null, null, 'thema'],
-      ['Gehst du in das Museum oder das Restaurant?', 7, 'Zuerst das Museum, dann das Restaurant.', 'auswahl'],
+      ['Gehst du lieber in das Museum oder das Restaurant?', 7, 'Lieber das Museum.', 'auswahl'],
       ['Und die Quittung?', 9, 'Die Quittung ist hier.', 'ort', 'Wo ist die Quittung?'],
     ],
     4: [
@@ -500,7 +500,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
       ['Hast du Zeit?', 1, 'Ja.', 'ja'],
       ['Wann fährt der Zug?', 3, 'Um acht Uhr.', 'zeit'],
       ['Um wie viel Uhr?', 3, 'Um acht Uhr.', 'zeit'],
-      ['Wer kommt mit?', 4, 'Ich komme mit.', 'person'],
+      ['Wer kommt mit?', 4, 'Ich würde gern mitkommen.', 'person'],
       ['Warum so früh?', 5, 'Der Weg ist weit.', 'grund'],
       ['Wie oft fährt der Bus?', 6, 'Jede Stunde.', 'frequenz'],
       ['Aber wo ist die Haltestelle?', 7, 'Am Bahnhof.', 'ort'],
@@ -718,6 +718,37 @@ test('DaF review #5 minor: every form a notice teaches in bold stands in its Eng
       assert.deepEqual(words.filter((w) => !new RegExp(`\\b${w}\\b`).test(input)), [], `L${l.nr}: „${canDo}" quotes a form the Lektion does not teach`);
     }
   }
+});
+
+test('M7, decided 2026-10-16: every A1 grammar point A1.2 owns has its notice, its input and its practice', () => {
+  // The Goethe-Zertifikat A1 inventory (Prüfungsziele/Testbeschreibung, 2022, pp. 100–106) lists
+  // these points for Start Deutsch 1, and the decision placed each in the Lektion whose situation
+  // carries it. Each row: the Lektion, the forms its notice puts in bold, a dialogue line that uses
+  // them, and at least two servable items of that Lektion whose answer practises them. The matrix
+  // is written here, not read off the course, so a point that disappears from the course fails.
+  const MATRIX = [
+    { point: 'lieber, besser', nr: 3, bold: ['lieber', 'besser'], input: /\b(?:lieber|besser)\b/i, answer: /\b(?:lieber|besser)\b/ },
+    { point: 'Ich würde gern (chunk)', nr: 5, bold: ['Ich würde gern'], input: /Ich würde gern/, answer: /\bwürde\b|^gehen$/ },
+    { point: 'denn', nr: 6, bold: ['denn'], input: /\bdenn\b/, answer: /\bdenn\b/ },
+    { point: 'war, hatte', nr: 7, bold: ['war', 'hatte'], input: /\bwar\b.*\bhatte\b/, answer: /\b(?:war|hatte)\b/ },
+    { point: 'von … bis, ab', nr: 9, bold: ['von sieben bis zehn Uhr'], input: /von sieben bis zehn Uhr/, answer: /\b(?:bis|ab)\b/ },
+    { point: 'Dativ: gefallen, passen, gehören', nr: 10, bold: ['gefällt mir', 'passt dir'], input: /gefällt mir|passt dir/, answer: /\b(?:mir|dir|Ihnen)\b/ },
+    { point: 'vor + Zeit', nr: 11, bold: ['vor einer'], input: /\bVor einer Woche\b/, answer: /^[Vv]or$/ },
+    { point: 'Perfekt mit sein', nr: 12, bold: ['ist', 'gegangen'], input: /\bist\b.*\bgegangen\b/, answer: /^(?:ist|sind)$|\bist\b.*\bgegangen\b/ },
+    { point: 'Partizip ohne ge-', nr: 12, bold: ['bezahlt'], input: /\bbezahlt\b/, answer: /\b(?:bezahlt|verstanden|telefoniert)\b/ },
+  ];
+  for (const row of MATRIX) {
+    const l = CURRICULUM_A12.lektionen.find((x) => x.nr === row.nr);
+    const bold = [...l.notice.bodyDe.matchAll(/\*\*([^*]+)\*\*/g)].map((m) => m[1]);
+    for (const form of row.bold) assert.ok(bold.includes(form), `${row.point}: L${row.nr}'s notice puts „${form}" in bold`);
+    assert.ok(l.dialog.lines.some((x) => row.input.test(x.de)), `${row.point}: a dialogue line of L${row.nr} uses it`);
+    const own = `extra-a12-l${String(row.nr).padStart(2, '0')}-`;
+    const practice = POOL_A12.items.filter((it) => it.id.startsWith(own) && it.minLektion != null && it.minLektion <= row.nr && row.answer.test(String(it.answer)));
+    assert.ok(practice.length >= 2, `${row.point}: ${practice.length} servable L${row.nr} items practise it`);
+  }
+  // What moved to A2.1 is not promised: no can-do or notice of A1.2 teaches teurer/größer or a würde paradigm.
+  const shown = CURRICULUM_A12.lektionen.flatMap((l) => [...l.canDo, l.notice.bodyDe]).join(' ');
+  assert.doesNotMatch(shown, /\b(?:teurer|größer|am größten|würdest|würden)\b/);
 });
 
 test('DaF review #4 minor: every checkpoint writing task reaches the page with its English twin, on both levels', async () => {

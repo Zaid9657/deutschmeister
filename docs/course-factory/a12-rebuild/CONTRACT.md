@@ -20,14 +20,14 @@ table, the table is the measurement (DaF review #3, Minor: "CONTRACT aktualisier
 | §6.5: no DaF review yet | Four: #1 and #2 (2026-09-13), #3 and #4 (2026-10-15). #3 measured 2 BLOCKER and 7 MAJOR; this table then claimed both BLOCKERs and MAJORs 1–6 closed, and #4 measured that claim false (2 BLOCKER, 4 MAJOR: B1, B2, M5 and M6 still open, M8 new; M1, M3 and M4 closed). Round 5 answers B1, B2, M5, M6 and M8 with a rule and a test each in `tests/a12-rebuild.test.mjs`. Whether they are closed is review #5's measurement, not this table's. M7 waits on the owner (below). |
 | §4: the ratchets | `levelSpec('a1.2').ratchets` in `scripts/validate-curriculum.mjs`; every one equals its measurement (`tests/a12-rebuild.test.mjs`). Non-zero today: RULE 11 (26), RULE 13 (1), RULE 23 (4: L3 Kaufhaus, Geschäft, Bibliothek; L7 Körper). RULE 23b is 0. |
 
-**Open — owner decision (DaF review #3, MAJOR 7).** The standard's A1.2 grammar ceiling
-(`docs/course-standard-2026-09-12.md` §2.2) lists Dativ (Präpositionen, Verben, Pronomen), temporale
-Präpositionen, wollen/sollen/dürfen/müssen, Imperativ, war/hatte, Perfekt untrennbar, Komparation,
-denn, würde and Ordinalzahlen. The built course teaches the Dativ prepositions, the modal verbs,
-the imperative, the ordinals and the haben-Perfekt, and spends Lektionen on A1.1-ceiling points the
-built A1.1 did not cover (Akkusativ, Verneinung, W-Fragen, Vokalwechsel). Either the missing points
-are taught here or the ceiling is corrected with the later plan that teaches them; until then the
-course must not claim them.
+**Decided 2026-10-16 — MAJOR 7, the grammar ceiling (owner: "research … and take the right and most
+correct choices").** Against the Goethe-Zertifikat A1 inventory (Prüfungsziele/Testbeschreibung, 2022,
+pp. 100–106) and a Codex research memo, A1.2 now teaches: war/hatte (L7), denn (L6), the dative of
+gefallen/passen/gehören with mir/dir/Ihnen (L10), vor + Zeit beside seit (L11), von … bis and ab (L9),
+the sein-Perfekt and participles without ge- (L12), „Ich würde gern …“ as a chunk (L5) and lieber/besser
+as words (L3) — each with a notice line, dialogue input, a card line and practice items, pinned by the
+M7 matrix test. The general Komparation and würde as a paradigm move to A2.1 (standard §2.2 records
+it). The sein-Perfekt left NEVER_FORMS: it is L12's now.
 
 The promotion rule of §6.0 still holds unchanged.
 

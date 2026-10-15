@@ -637,6 +637,7 @@ const RULE_CARD_OVERRIDES = {
       'Beispiele: Ich brauche einen Supermarkt und einen Markt.',
       'Ich bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.',
       'Die Form keinen kommt in Lektion 4.',
+      'Vorlieben: gern → lieber, gut → besser. Das Restaurant ist am Abend besser.',
       'English: only masculine words change in the accusative — der becomes den, ein becomes einen.',
     ].join('\n'),
     commonMistakes: [
@@ -695,10 +696,11 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'W-Fragen: das Fragewort steht vorn',
     content: [
       'In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter:',
-      'Wann fährt der Zug? Wohin fahren wir? Wie oft kommt der Bus?',
+      'Wann fährt der Zug? Wie oft kommt der Bus?',
       'Wer fragt nach der Person, was nach der Sache, wo nach dem Ort,',
       'wohin nach der Richtung, warum nach dem Grund, wie viel nach der Menge',
       'und wie lange nach der Dauer.',
+      'Höflich: Ich würde gern mitkommen.',
       'Aus dem Dialog: Wann fährt der Zug? Um wie viel Uhr?',
       'Warum so früh? Wer kommt mit? Wohin fahren wir im Urlaub?',
       'English: the question word comes first and the verb second — Wann fährt der Zug?',
@@ -834,6 +836,7 @@ const RULE_CARD_OVERRIDES = {
       'dürfen heißt Erlaubnis, müssen Notwendigkeit, wollen Absicht,',
       'sollen Auftrag, können Fähigkeit.',
       'In der ich-Form und in der er-Form fehlt die Endung: ich will, ich muss, sie darf.',
+      'Zeiten: von sieben bis zehn Uhr, ab acht Uhr. Der Bus fährt von sieben bis zehn Uhr.',
       'Unterwegs: Hier dürfen Sie nicht mit dem Fahrrad fahren.',
       'Den Müll müssen Sie nach Hause nehmen. Wo soll ich einsteigen?',
       'Wo darf ich langsam fahren? Und wo muss ich aussteigen?',

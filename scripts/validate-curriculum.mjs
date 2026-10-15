@@ -693,7 +693,9 @@ const OFF_LIMITS_FORMS_A11 = {
 
 const OFF_LIMITS_FORMS_A12 = {
   // Taught L3. The masculine accusative markers — the forms the level's own Notice card bolds.
-  'accusative-intro': /\b(?:den|einen)\b/gi,
+  // … and since the M7 decision the comparatives the Goethe A1 word list carries (lieber, besser).
+  // Lower case only: „Lieber Tim," is a salutation, not a comparative.
+  'accusative-intro': /\b(?:[Dd]en|[Ee]inen|lieber|besser)\b/g,
   // Taught L4. `keinen`: the L3 notice says „Die Form keinen kommt in Lektion 4 dazu", and the L3
   // draw served it anyway while this table filed it under L3 (DaF review #3 for A1.2, BLOCKER 2).
   'negation': /\bkeinen\b/gi,
@@ -714,6 +716,8 @@ const OFF_LIMITS_FORMS_A12 = {
   // Taught L6 since the M7 decision: the conjunction denn (Goethe A1 inventory, p. 105: „Ich gehe
   // heute nicht spazieren, denn es ist zu kalt.").
   'stem-changing-verbs': /\bdenn\b/gi,
+  // Taught L5 since the M7 decision: „Ich würde gern …" as a fixed polite wish.
+  'question-words': /\bwürde\b/gi,
   // Taught L12. Partizip II with ge-. `{2,}` keeps `gehen`, `gegen`, `geben` out: their stem is one
   // letter, a participle's is at least two (ge-feier-t, ge-gess-en). Since the M7 decision
   // (2026-10-16, Goethe-Zertifikat A1 Prüfungsziele 2022 p. 102: Perfekt of fahren, bleiben,

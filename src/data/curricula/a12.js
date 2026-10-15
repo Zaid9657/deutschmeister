@@ -365,6 +365,9 @@ export const CURRICULUM_A12 = {
         { de: 'das Geld', word: 'Geld', article: 'das', plural: '—', en: 'money', wordId: 'a2a37658-f0f4-4778-8ea0-68344661d168' },
         { de: 'das Kilo', word: 'Kilo', article: 'das', plural: 'Kilo', en: 'kilo(gram)', wordId: '6969abbd-5859-4552-83c2-140cf5ebb7a5' },
         { de: 'das Stück', word: 'Stück', article: 'das', plural: 'Stück', en: 'piece', wordId: '0cc9de6f-ba21-49b0-948e-1ce70e45ae02' },
+        // M7 (2026-10-16): the comparatives the Goethe A1 word list carries as words of their own.
+        { de: 'lieber', word: 'lieber', article: null, plural: null, en: 'rather (gern → lieber)' },
+        { de: 'besser', word: 'besser', article: null, plural: null, en: 'better (gut → besser)' },
       ],
       dialog: {
         title: 'Erledigungen am Nachmittag',
@@ -376,8 +379,8 @@ export const CURRICULUM_A12 = {
           { speaker: 'Ana', de: 'Ja. Danach brauche ich Geld für das Museum.', en: 'Yes. After that I need money for the museum.' },
           { speaker: 'Lena', de: 'Und die Kasse? Bezahlst du ein Kilo Brot?', en: 'And the till? Are you paying for a kilo of bread?' },
           { speaker: 'Ana', de: 'Ja. Ich bezahle das Brot und den Kuchen.', en: 'Yes. I pay for the bread and the cake.' },
-          { speaker: 'Lena', de: 'Und danach? Gehst du in das Museum oder das Restaurant?', en: 'And after that? Are you going to the museum or the restaurant?' },
-          { speaker: 'Ana', de: 'Zuerst das Museum, dann das Restaurant.', en: 'First the museum, then the restaurant.' },
+          { speaker: 'Lena', de: 'Und danach? Gehst du lieber in das Museum oder das Restaurant?', en: 'And then? Would you rather go to the museum or the restaurant?' },
+          { speaker: 'Ana', de: 'Lieber das Museum. Das Restaurant ist am Abend besser.', en: 'The museum. The restaurant is better in the evening.' },
           { speaker: 'Lena', de: 'Meine Schule ist hier, das Krankenhaus auch. Und die Quittung?', en: 'My school is here, the hospital too. And the receipt?' },
           { speaker: 'Ana', de: 'Die Quittung ist hier. Ich hole ein Stück Kuchen für dich!', en: 'The receipt is here. I will get a piece of cake for you!' },
         ],
@@ -390,8 +393,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Akkusativ: den und einen',
-        bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur das Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu.',
-        bodyEn: 'Many verbs take an object in the accusative: brauchen (need), kaufen (buy), bezahlen (pay for). Only masculine nouns change: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminine, neuter and plural stay the same: die Quittung, das Geld, das Museum. The form keinen follows in Lektion 4.',
+        bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur das Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu. Vorlieben: gern → **lieber**, gut → **besser**.',
+        bodyEn: 'Many verbs take an object in the accusative: brauchen (need), kaufen (buy), bezahlen (pay for). Only masculine nouns change: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminine, neuter and plural stay the same: die Quittung, das Geld, das Museum. The form keinen follows in Lektion 4. Preferences: gern → **lieber** (rather), gut → **besser** (better).',
         examples: ['Ich brauche einen Supermarkt und einen Markt.', 'Ja. Ich bezahle das Brot und den Kuchen.'],
         ruleSlug: 'accusative-intro',
       },
@@ -537,6 +540,9 @@ export const CURRICULUM_A12 = {
       minutes: 15,
       wortfeld: [
         { de: 'jetzt', word: 'jetzt', article: null, plural: null, en: 'now', wordId: 'f83cc466-8786-4551-9503-76694340a72c' },
+        // M7 (2026-10-16): the polite wish as a fixed chunk — the Goethe A1 inventory lists the
+        // Konjunktiv II of werden („Ich würde gerne ins Kino gehen.") to be learnt as a lexical unit.
+        { de: 'ich würde gern', word: 'würde', article: null, plural: null, en: 'I would like to (polite wish)' },
         { de: 'bald', word: 'bald', article: null, plural: null, en: 'soon', wordId: 'c4e66eae-5ae1-4e92-94fe-7dba0a1c6269' },
         { de: 'oft', word: 'oft', article: null, plural: null, en: 'often', wordId: '4416d7a3-6e8f-47c2-b5f0-28a377bd507f' },
         { de: 'manchmal', word: 'manchmal', article: null, plural: null, en: 'sometimes', wordId: 'f53ef92d-3fb0-4776-ad6e-f5596eb510a0' },
@@ -561,7 +567,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Tim', de: 'Ja. Der Ausflug geht nach Köln. Ich habe den Fahrplan.', en: 'Yes. The trip goes to Cologne. I have the timetable.' },
           { speaker: 'Lena', de: 'Wann fährt der Zug? Um wie viel Uhr?', en: 'When does the train leave? At what time?' },
           { speaker: 'Tim', de: 'Um acht Uhr. Wer kommt mit? Das Konzert ist am Abend.', en: 'At eight o\'clock. Who is coming along? The concert is in the evening.' },
-          { speaker: 'Lena', de: 'Ich komme mit. Warum so früh? Ich stehe nie früh auf.', en: 'I am coming. Why so early? I never get up early.' },
+          { speaker: 'Lena', de: 'Ich würde gern mitkommen. Warum so früh? Ich stehe nie früh auf.', en: 'I would like to come along. Why so early? I never get up early.' },
           { speaker: 'Tim', de: 'Der Weg ist weit. Wie oft fährt der Bus?', en: 'The way is long. How often does the bus run?' },
           { speaker: 'Lena', de: 'Jede Stunde. Aber wo ist die Haltestelle?', en: 'Every hour. But where is the stop?' },
           { speaker: 'Tim', de: 'Am Bahnhof. Ich bin manchmal zehn Minuten zu spät.', en: 'At the station. I am sometimes ten minutes late.' },
@@ -577,8 +583,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'W-Fragen: das Fragewort steht vorn',
-        bodyDe: 'In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter: **Wann** fährt der Zug? **Wohin** fahren wir? **Wie oft** kommt der Bus? **Wer** fragt nach der Person, **was** nach der Sache, **wo** nach dem Ort, **wohin** nach der Richtung, **warum** nach dem Grund, **wie viel** nach der Menge und wie lange nach der Dauer.',
-        bodyEn: 'The question word comes first and the verb right after it: **Wann** fährt der Zug? **Wohin** fahren wir? **Wie oft** kommt der Bus? **Wer** asks for a person, **was** for a thing, **wo** for a place, **wohin** for a direction, **warum** for a reason, **wie viel** for an amount and wie lange for a duration.',
+        bodyDe: 'In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter: **Wann** fährt der Zug? **Wie oft** kommt der Bus? **Wer** fragt nach der Person, **was** nach der Sache, **wo** nach dem Ort, **wohin** nach der Richtung, **warum** nach dem Grund, **wie viel** nach der Menge und wie lange nach der Dauer. Höflich: **Ich würde gern** mitkommen.',
+        bodyEn: 'The question word comes first and the verb right after it: **Wann** fährt der Zug? **Wie oft** kommt der Bus? **Wer** asks for a person, **was** for a thing, **wo** for a place, **wohin** for a direction, **warum** for a reason, **wie viel** for an amount and wie lange for a duration. Politely: **Ich würde gern** mitkommen (I would like to come along).',
         examples: ['Wann fährt der Zug? Um wie viel Uhr?', 'Der Weg ist weit. Wie oft fährt der Bus?'],
         ruleSlug: 'question-words',
       },
@@ -947,7 +953,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Ana', de: 'Entschuldigung. Wo darf ich langsam fahren?', en: 'Sorry. Where may I ride slowly?' },
           { speaker: 'Herr Schmidt', de: 'Am Platz. Den Müll müssen Sie nach Hause nehmen.', en: 'At the square. You must take the rubbish home.' },
           { speaker: 'Ana', de: 'Gut. Ich will zum Flughafen. Der Koffer ist da.', en: 'Fine. I want to go to the airport. The suitcase is here.' },
-          { speaker: 'Herr Schmidt', de: 'Mit dem Taxi schnell, mit dem Bus langsam.', en: 'Quick by taxi, slow by bus.' },
+          { speaker: 'Herr Schmidt', de: 'Der Bus fährt von sieben bis zehn Uhr. Das Taxi ist schnell.', en: 'The bus runs from seven to ten o\'clock. The taxi is fast.' },
           { speaker: 'Ana', de: 'Ich möchte ein Ticket. Wo soll ich einsteigen?', en: 'I would like a ticket. Where should I get on?' },
           { speaker: 'Herr Schmidt', de: 'Hier. Sie dürfen langsam laufen, aber nicht schnell.', en: 'Here. You may walk slowly, but not fast.' },
           { speaker: 'Ana', de: 'Und wo muss ich aussteigen? Wann fährt der Bus ab?', en: 'And where do I have to get off? When does the bus leave?' },
@@ -963,8 +969,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Modalverben: können, müssen, dürfen, wollen, sollen',
-        bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**.',
-        bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**.',
+        bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**. Zeiten: **von sieben bis zehn Uhr**, ab acht Uhr.',
+        bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**. Times: **von sieben bis zehn Uhr** (from seven to ten), ab acht Uhr (from eight on).',
         examples: ['Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', 'Am Platz. Den Müll müssen Sie nach Hause nehmen.'],
         ruleSlug: 'modal-verbs-intro',
       },

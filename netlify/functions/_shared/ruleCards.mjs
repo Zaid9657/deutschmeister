@@ -9,7 +9,7 @@
 export const RULE_CARDS = {
   "accusative-intro": {
     "titleDe": "Der Akkusativ: den und einen",
-    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur das Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
+    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur das Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nVorlieben: gern → lieber, gut → besser. Das Restaurant ist am Abend besser.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
     "commonMistakes": [
       {
         "wrong": "Ich brauche ein Supermarkt.",
@@ -151,7 +151,7 @@ export const RULE_CARDS = {
   },
   "modal-verbs-intro": {
     "titleDe": "Modalverben: können, müssen, dürfen, wollen, sollen",
-    "content": "Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende:\nHier dürfen Sie nicht fahren.\ndürfen heißt Erlaubnis, müssen Notwendigkeit, wollen Absicht,\nsollen Auftrag, können Fähigkeit.\nIn der ich-Form und in der er-Form fehlt die Endung: ich will, ich muss, sie darf.\nUnterwegs: Hier dürfen Sie nicht mit dem Fahrrad fahren.\nDen Müll müssen Sie nach Hause nehmen. Wo soll ich einsteigen?\nWo darf ich langsam fahren? Und wo muss ich aussteigen?\nEnglish: the modal verb is second and the plain infinitive goes to the very end.",
+    "content": "Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende:\nHier dürfen Sie nicht fahren.\ndürfen heißt Erlaubnis, müssen Notwendigkeit, wollen Absicht,\nsollen Auftrag, können Fähigkeit.\nIn der ich-Form und in der er-Form fehlt die Endung: ich will, ich muss, sie darf.\nZeiten: von sieben bis zehn Uhr, ab acht Uhr. Der Bus fährt von sieben bis zehn Uhr.\nUnterwegs: Hier dürfen Sie nicht mit dem Fahrrad fahren.\nDen Müll müssen Sie nach Hause nehmen. Wo soll ich einsteigen?\nWo darf ich langsam fahren? Und wo muss ich aussteigen?\nEnglish: the modal verb is second and the plain infinitive goes to the very end.",
     "commonMistakes": [
       {
         "wrong": "Sie müssen nehmen den Müll nach Hause.",
@@ -371,7 +371,7 @@ export const RULE_CARDS = {
   },
   "question-words": {
     "titleDe": "W-Fragen: das Fragewort steht vorn",
-    "content": "In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter:\nWann fährt der Zug? Wohin fahren wir? Wie oft kommt der Bus?\nWer fragt nach der Person, was nach der Sache, wo nach dem Ort,\nwohin nach der Richtung, warum nach dem Grund, wie viel nach der Menge\nund wie lange nach der Dauer.\nAus dem Dialog: Wann fährt der Zug? Um wie viel Uhr?\nWarum so früh? Wer kommt mit? Wohin fahren wir im Urlaub?\nEnglish: the question word comes first and the verb second — Wann fährt der Zug?",
+    "content": "In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter:\nWann fährt der Zug? Wie oft kommt der Bus?\nWer fragt nach der Person, was nach der Sache, wo nach dem Ort,\nwohin nach der Richtung, warum nach dem Grund, wie viel nach der Menge\nund wie lange nach der Dauer.\nHöflich: Ich würde gern mitkommen.\nAus dem Dialog: Wann fährt der Zug? Um wie viel Uhr?\nWarum so früh? Wer kommt mit? Wohin fahren wir im Urlaub?\nEnglish: the question word comes first and the verb second — Wann fährt der Zug?",
     "commonMistakes": [
       {
         "wrong": "Wann der Zug fährt?",
