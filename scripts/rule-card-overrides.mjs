@@ -949,7 +949,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich bin Kuchen gegessen.',
         correct: 'Ich habe Kuchen gegessen.',
-        explanationDe: 'Das Perfekt steht in diesem Kurs immer mit haben.',
+        explanationDe: 'Mit essen steht haben: Ich habe Kuchen gegessen. Bei gehen und fahren steht sein, nicht haben.',
       },
     ],
   },

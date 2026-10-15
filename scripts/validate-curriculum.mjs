@@ -57,7 +57,7 @@ import {
   FUNCTION_WORDS as FUNCTION_WORDS_A12,
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
-import { deferredConstructionHits } from '../src/data/curricula/constructions.js';
+import { constructionHits, deferredConstructionHits } from '../src/data/curricula/constructions.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 // RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
 // `scoreWriting` is what `GradedWriting.jsx` calls, and the word window it measures against comes
@@ -689,7 +689,10 @@ const OFF_LIMITS_FORMS_A11 = {
 
 const OFF_LIMITS_FORMS_A12 = {
   // Taught L3. The masculine accusative markers — the forms the level's own Notice card bolds.
-  'accusative-intro': /\b(?:den|einen|keinen)\b/gi,
+  'accusative-intro': /\b(?:den|einen)\b/gi,
+  // Taught L4. `keinen`: the L3 notice says „Die Form keinen kommt in Lektion 4 dazu", and the L3
+  // draw served it anyway while this table filed it under L3 (DaF review #3 for A1.2, BLOCKER 2).
+  'negation': /\bkeinen\b/gi,
   // Taught L8. The Sie-Imperativ, i.e. a sentence that OPENS with „<Verb> Sie“. „Dann gehen Sie
   // links“ is inversion, not an imperative, so the match is anchored to the start of a sentence.
   'imperative': /(?:^|[.!?]\s+)(?:Helfen|Kommen|Warten|Machen|Holen|Gehen|Nehmen|Geben|Kaufen|Fragen|Schreiben|Lesen|Ziehen|Sprechen|Hören|Bitten|Zeigen|Wechseln|Bezahlen|Sagen|Wiederholen)\s+Sie\b/g,
@@ -715,6 +718,17 @@ const OFF_LIMITS_FORMS_A12 = {
  * chunk, taught there as a fixed form.
  */
 const LICENSED_CHUNKS_A11 = ['Füllen Sie'];
+
+/**
+ * Constructions a level teaches in NO Lektion, beside constructions.js's `never` patterns
+ * (Adjektivdeklination). A1.2 L12 teaches the Perfekt with haben; the sein-Perfekt („ist …
+ * gefahren", „bin … aufgestanden") is not taught at A1.2 — its own L12 card said „immer mit haben"
+ * while the L12 draw graded „ist … gefahren" (DaF review #3, BLOCKER 2). Teaching it is the open
+ * curriculum decision of review #3 MAJOR 7; until then it is never served.
+ */
+const NEVER_FORMS_A12 = [
+  /\b(?:bin|bist|ist|sind|seid)\b[^.!?]*?\b[a-zäöüß]*ge(?:fahren|gangen|kommen|flogen|laufen|blieben|wesen|worden|standen|reist|stiegen|schwommen|sprungen|zogen)\b/i,
+];
 const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
 
 const lowerSet = (list) => new Set(list.map((w) => String(w).toLowerCase()));
@@ -898,6 +912,15 @@ export const LEVELS = {
     // ledig. No level may ship without a persona table; `tests/curricula.test.mjs` pins that.
     personaSource: 'a1.2',
     offLimitsForms: OFF_LIMITS_FORMS_A12,
+    // DaF review #3 BLOCKER 2: the pool build folds `constructionHorizonIndex` into minLektion, so no
+    // drawn or checkpoint item uses a construction before the Lektion that teaches it.
+    constructionHorizon: true,
+    neverForms: NEVER_FORMS_A12,
+    // Ordinalzahlen are A1.2 grammar (standard §2.2; L2 „das dritte Stockwerk", „die erste
+    // Wohnung"), so an ordinal before a noun is not the Adjektivdeklination the level never teaches.
+    // Without this, RULE 15b counted L2's dictation and the horizon retired L2's own ordinal item
+    // (DaF review #3, Minor).
+    licensedAdjectives: /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft)(?:e|en|er|es|em)\b/i,
     licensedChunks: LICENSED_CHUNKS_A12,
     // RULE 16. `speaking_missions` at level A1.2, read 2026-09-13: mission_order 9 is
     // „Sprechen Teil 1: Sich komplett vorstellen“, the only Teil-1 mission of the level.
@@ -918,7 +941,9 @@ export const LEVELS = {
       // bound to the Lektion that first says them instead of being free from the first line. The
       // material did not change and may not: A1.2 is PAUSED by owner decision and its pool is a
       // DRAFT nobody may rebuild. The number is a work order for whoever resumes the level.
-      untaughtItemTokens: 36,
+      // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
+      // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
+      untaughtItemTokens: 26,
       // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 3
       // („fliegen“/„fliege“ in L2, taught in L7; „Onkel“ in L3) — re-measured after the round-8
       // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
@@ -942,7 +967,9 @@ export const LEVELS = {
       // draw moved under the paused pool — `Kannst` (L9) and the L6 `Gibt` item are no longer
       // drawn, `langsam` (L8, a `c8ba…`-class pool item taught later) is — net one fewer. The
       // thirteen are printed by `node scripts/validate-curriculum.mjs a1.2`.
-      untaughtDrawnTokens: 13,
+      // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
+      // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
+      untaughtDrawnTokens: 0,
       // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
@@ -964,7 +991,9 @@ export const LEVELS = {
       // 3 → **2**, paused; re-measured 2026-09-13 (round 18). No A1.2 content was touched: the
       // checkpoint hit „dem kurzen Haar“ (`a1.2-cp3-hoeren-1`) is no longer in the built
       // checkpoint's draw; the L2 dictation line and the L6 Beispieltext remain.
-      deferredConstructions: 2,
+      // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
+      // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
+      deferredConstructions: 1,
       unbackedExamTeile: 0,
       // RULE 17, measured on the paused A1.2 draft 2026-09-13 (round 13): **17** failed form checks
       // across seven of the twelve Beispieltexte — three below the 25-word floor (L4 24, L8 21,
@@ -983,7 +1012,9 @@ export const LEVELS = {
       // alternatives (DaF review #14, MAJOR 1), and the L12 draft answers neither half of „Was Sie
       // gegessen und getrunken haben“ (it says `gegessen`, not `getrunken`) nor „Wen Sie eingeladen
       // haben“. Both are real gaps in the draft that the lenient rule was hiding.
-      modelChecklistBreaks: 10,
+      // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
+      // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
+      modelChecklistBreaks: 9,
       // RULE 18, measured on the paused A1.2 draft 2026-09-13 (round 13): **0** — no A1.2 Lektion
       // dictates and reads aloud the same line. Hard from the start at this level.
       sharedProductionLines: 0,
@@ -1027,7 +1058,9 @@ export const LEVELS = {
       // get there. Whoever resumes the level writes the 36 strings, rebuilds the pool (the bank
       // half of the 263 fills itself) and writes `a12.explanationsEn.json` for the extras; then
       // this goes to 0 and hard, exactly as at A1.1.
-      missingEnglishTwins: 299,
+      // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
+      // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
+      missingEnglishTwins: 152,
     },
   },
 };
@@ -1390,6 +1423,64 @@ export function untaughtTokens(item, knownSet, spec = null) {
  *
  * Returns a function rather than a table so the O(12) snapshots are built once per level.
  */
+/**
+ * DaF review #3 (A1.2) BLOCKER 2 — the construction horizon of a pool item: the earliest Lektion by
+ * which every construction its sentence uses is taught, or null when the level teaches one of them in
+ * NO Lektion. Same yardstick as RULE 15 (the level's `offLimitsForms`, keyed by the Lektion whose
+ * primarySlug teaches them, minus its licensed chunks) plus what the level never teaches
+ * (`neverForms`, constructions.js's `never` patterns). The prompt is read like RULE 11 reads it: the
+ * cue, the brick list and the closed Sie-Aufgabenformel are not the item's language.
+ * The pool build folds it into `minLektion`, so the practice draw, the requeue and every checkpoint —
+ * which all filter on minLektion — serve an item only once its grammar is taught. Measured on A1.2
+ * before: L3 drew „keinen", L7 „mit dem kurzen Haar", checkpoint 3 „aus der Garage" (dative, L11),
+ * L12 „ist … gefahren". A level opts in with `constructionHorizon: true` (A1.1 keeps quality.js's
+ * `untaughtForm`); for any other level the horizon is 0, i.e. no constraint.
+ */
+export function constructionHorizonIndex(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec || !spec.constructionHorizon) return () => 0;
+  const taughtIn = new Map();
+  for (const l of spec.curriculum.lektionen || []) if (!taughtIn.has(l.primarySlug)) taughtIn.set(l.primarySlug, l.nr);
+  return (item) => {
+    const answer = String(item?.answer || '');
+    let text = `${String(item?.questionDe || '').replace(/___/g, answer)} ${answer}`
+      .replace(ITEM_CUE_RE, ' ')
+      .replace(new RegExp(ITEM_FORMULA_RE.source, 'g'), ' ');
+    for (const chunk of spec.licensedChunks || []) text = text.split(chunk).join(' ');
+    if ((spec.neverForms || []).some((re) => new RegExp(re.source, re.flags).test(text))) return null;
+    if (constructionHits(text).some((h) => h.never && !licensedAdjective(spec, h))) return null;
+    let horizon = 0;
+    for (const [slug, re] of Object.entries(spec.offLimitsForms || {})) {
+      const taught = taughtIn.get(slug);
+      if (taught && new RegExp(re.source, re.flags).test(text)) horizon = Math.max(horizon, taught);
+    }
+    return horizon;
+  };
+}
+
+/** A `never` hit the level teaches after all, as a fixed class of forms (A1.2's ordinals). */
+const licensedAdjective = (spec, h) => Boolean(spec?.licensedAdjectives && spec.licensedAdjectives.test(h.hit));
+
+/**
+ * The construction horizon of every dialogue line, keyed like buildCheckpoint's `lineKeyOf`
+ * (`<lektionId>#<index>`): a checkpoint dictates and reads aloud dialogue lines of its whole chapter,
+ * and the line it picks must not make the learner type or say what the course teaches later
+ * (DaF review #3, BLOCKER 2: checkpoint 1 dictated „Die Anzeige ist von Ihnen?", a dative taught in
+ * L11). The pool build writes this map into the pool; null for a level without the horizon.
+ */
+export function lineHorizons(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec || !spec.constructionHorizon) return null;
+  const horizonOf = constructionHorizonIndex(level);
+  const out = {};
+  for (const l of spec.curriculum.lektionen || []) {
+    (l.dialog?.lines || []).forEach((line, idx) => {
+      out[`${l.id}#${idx}`] = horizonOf({ questionDe: '', answer: typeof line === 'string' ? line : line.de });
+    });
+  }
+  return out;
+}
+
 export function minLektionIndex(level = 'a1.1') {
   const spec = levelSpec(level);
   if (!spec) return () => null;
@@ -1721,10 +1812,12 @@ function producedTexts(l) {
  * `primarySlug`“ rule — see `src/data/curricula/constructions.js` and DaF review #11, MAJOR 3.
  */
 export function constructionsBeforeTaught(c, pool = null) {
+  const spec = levelSpec(c?.level);
+  const deferred = (nr, text) => deferredConstructionHits(c, nr, text).filter((h) => !(h.never && licensedAdjective(spec, h)));
   const offenders = [];
   for (const l of c.lektionen || []) {
     for (const { where, text } of producedTexts(l)) {
-      for (const h of deferredConstructionHits(c, l.nr, text)) {
+      for (const h of deferred(l.nr, text)) {
         offenders.push({ nr: l.nr, where, kind: h.slug, taught: h.taught, hit: h.hit, de: text });
       }
     }
@@ -1738,7 +1831,7 @@ export function constructionsBeforeTaught(c, pool = null) {
     for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool: pool || [] })) {
       if (item.type !== 'dictation' && item.type !== 'read_aloud') continue;
       const text = item.audioText || item.answer || item.text;
-      for (const h of deferredConstructionHits(c, cp.afterLektion, text)) {
+      for (const h of deferred(cp.afterLektion, text)) {
         offenders.push({ nr: cp.afterLektion, where: `${item.id} (${item.type})`, kind: h.slug, taught: h.taught, hit: h.hit, de: text });
       }
     }

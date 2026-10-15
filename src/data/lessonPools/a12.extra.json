@@ -118,7 +118,7 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie den Satz: [am Platz / sein / die Haltestelle]",
+      "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle]",
       "questionEn": "Build the sentence about the square.",
       "options": null,
       "answer": "Am Platz ist die Haltestelle.",
@@ -573,8 +573,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 4,
-      "questionDe": "Das Hotel hat kein Angebot. Und eine Toilette im Flur? — Das Hotel hat ___ Toilette im Flur.",
-      "questionEn": "The hotel has no offer. And a toilet?",
+      "questionDe": "Hat das Hotel eine Toilette im Flur? — Nein, das Hotel hat ___ Toilette im Flur.",
+      "questionEn": "Does the hotel have a toilet in the hallway? — No, the hotel has no toilet in the hallway.",
       "options": null,
       "answer": "keine",
       "accepted": [
@@ -590,8 +590,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "Die Steckdose funktioniert nicht. Und das Kissen? — Im Hotel ist ___ Kissen.",
-      "questionEn": "The socket does not work. And the pillow?",
+      "questionDe": "Ist im Hotel ein Kissen? — Nein, im Hotel ist ___ Kissen.",
+      "questionEn": "Is there a pillow in the hotel? — No, there is no pillow in the hotel.",
       "options": null,
       "answer": "kein",
       "accepted": [
@@ -624,8 +624,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 7,
-      "questionDe": "Im Flur ist keine Lampe. Und der Boden? — Der Boden ist ___ schön.",
-      "questionEn": "There is no lamp. And the floor?",
+      "questionDe": "Ist der Boden schön? — Nein, der Boden ist ___ schön.",
+      "questionEn": "Is the floor nice? — No, the floor is not nice.",
       "options": null,
       "answer": "nicht",
       "accepted": [
@@ -753,7 +753,9 @@
       "answer": "Wann",
       "accepted": [
         "Wann",
-        "wann"
+        "wann",
+        "Um wie viel Uhr",
+        "um wie viel Uhr"
       ],
       "explanationDe": "Nach der Uhrzeit fragt wann.",
       "hint": null
@@ -1636,7 +1638,9 @@
       "answer": "Ich kaufe die Jacke für meine Oma.",
       "accepted": [
         "Ich kaufe die Jacke für meine Oma.",
-        "Ich kaufe die Jacke für meine Oma"
+        "Ich kaufe die Jacke für meine Oma",
+        "Für meine Oma kaufe ich die Jacke.",
+        "Für meine Oma kaufe ich die Jacke"
       ],
       "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
       "hint": null

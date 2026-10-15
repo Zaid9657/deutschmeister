@@ -134,7 +134,7 @@ import {
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
-import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from './validate-curriculum.mjs';
+import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -298,6 +298,46 @@ function repairOpeningCue(item) {
 }
 
 raw.forEach(repairOpeningCue);
+
+// ── DaF review #3 for A1.2, BLOCKER 1: the key may not restrict what the German prompt leaves open ──
+// Three classes, each repaired in the PROMPT or the accepted list so the item asks exactly what its
+// key wants (never by id; A1.1's pool has none of these shapes, measured 2026-10-15):
+//   a. „Sie ___ den Bus. (nehmen, sie)" with a singular key: `sie` is she or they, and a
+//      sentence-initial „Sie" also the formal you — the cue names the person;
+//   b. „___ Abend … (an + dem)" with the contraction as key: the cue spells out the two words, so it
+//      must ask for the short form, or „An dem" — what the cue says — is marked wrong;
+//   c. a du-imperative of a regular verb: „Mach" and „Mache" are both correct German, so `accepted`
+//      takes both. Not for e→i(e) verbs (Iss, Nimm …) and not where the -e is required (Warte …).
+const SIE_CUE_RE = /\(([a-zäöüß]+en), sie\)/;
+const PAIR_CUE_RE = /\(((?:an|in|zu|von|bei) \+ (?:dem|der|das))\)/;
+const CONTRACTED_RE = /^(?:am|im|zum|zur|vom|beim|ins|ans)$/i;
+const STEM_CHANGE_IMPERATIVE_RE = /^(?:iss|nimm|gib|lies|sieh|hilf|sprich|triff|vergiss|wirf|brich|tritt|miss|lass)$/i;
+const E_REQUIRED_RE = /(?:t|d|chn|ffn|tm|gn|dm)e$/i;
+const determinacyRepaired = [];
+function repairDeterminacy(item) {
+  const q = String(item.questionDe || '');
+  const key = String(item.answer || '').trim();
+  if (/^Sie ___/.test(q) && SIE_CUE_RE.test(q) && /t$/.test(key)) {
+    item.questionDe = q.replace(SIE_CUE_RE, '($1, sie = eine Frau)');
+    determinacyRepaired.push(`${item.id}:sie`);
+  }
+  if (PAIR_CUE_RE.test(item.questionDe) && CONTRACTED_RE.test(key)) {
+    item.questionDe = item.questionDe.replace(PAIR_CUE_RE, '($1 → Kurzform)');
+    determinacyRepaired.push(`${item.id}:Kurzform`);
+  }
+  const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
+  if (imp && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
+    const first = imp[1];
+    const other = /e$/.test(first) ? (E_REQUIRED_RE.test(first) ? null : first.slice(0, -1)) : `${first}e`;
+    if (other) {
+      const alt = `${other}${imp[2]}!`;
+      const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
+      item.accepted = [...new Set([...accepted, alt, alt.replace(/!$/, '')])];
+      determinacyRepaired.push(`${item.id}:${first}/${other}`);
+    }
+  }
+}
+raw.forEach(repairDeterminacy);
 
 // ── REVIEW #14 MAJOR 2: name the element an article repair changes ──────────
 //
@@ -700,6 +740,7 @@ if (existsSync(extraUrl)) {
   extra.forEach(repairFrontedOrder);
   // Codex review 2026-10-07: the hand items are where both measured items live.
   extra.forEach(repairOpeningCue);
+  extra.forEach(repairDeterminacy);
   // REVIEW #14 MAJOR 2: and the same convention — the eight items the review
   // measured are hand-written, so they carry their cue in the JSON; this call is
   // the gate that keeps the next hand-written correction from shipping without
@@ -1012,9 +1053,15 @@ for (const [id, fix] of Object.entries(fieldFixes)) {
 // It is stamped on EVERY item — legacy, generated and hand-written alike —
 // because the draw filters all three.
 const minLektionOf = minLektionIndex(level);
+// DaF review #3 (A1.2) BLOCKER 2: the words AND the grammar. The word stamp alone let L3 draw
+// „keinen" a Lektion before the course teaches it; the later of the two stamps is the Lektion the
+// item may first be served in, and a construction the level never teaches means never.
+const horizonOf = constructionHorizonIndex(level);
 const minLektionHist = new Map();
 for (const item of items) {
-  item.minLektion = minLektionOf(item);
+  const byWords = minLektionOf(item);
+  const byGrammar = horizonOf(item);
+  item.minLektion = byWords === null || byGrammar === null ? null : Math.max(byWords, byGrammar);
   const key = item.minLektion === null ? 'null' : item.minLektion;
   minLektionHist.set(key, (minLektionHist.get(key) || 0) + 1);
 }
@@ -1083,6 +1130,10 @@ console.log(
 );
 
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
+// DaF review #3 (A1.2) BLOCKER 2: the checkpoint's dictation and read-aloud pickers read this map, so
+// no checkpoint makes the learner type or say a dialogue line built on grammar taught later.
+const lineHorizon = lineHorizons(level);
+if (lineHorizon) out.lineHorizon = lineHorizon;
 const target = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url);
 writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
 

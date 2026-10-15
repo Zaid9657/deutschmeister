@@ -220,6 +220,20 @@ export function dialogLines(lektionen) {
 export const lineKeyOf = (lektionIdOrNr, idx) => `${lektionIdOrNr}#${idx}`;
 
 /**
+ * May the checkpoint make the learner TYPE or SAY this dialogue line? Only when the course has taught
+ * its grammar by `afterLektion` — the line horizon the pool build stamps (`lineHorizon`, DaF review #3
+ * for A1.2, BLOCKER 2: checkpoint 1 dictated „Die Anzeige ist von Ihnen?", a dative taught in L11).
+ * null = a construction the level never teaches. A pool without the map (A1.1, a test pool) is not
+ * filtered, so its papers are unchanged.
+ */
+export const lineServable = (ctx, line) => {
+  const map = ctx.pool && !Array.isArray(ctx.pool) ? ctx.pool.lineHorizon : null;
+  if (!map) return true;
+  const h = map[lineKeyOf(line.lektionId || line.lektionNr, line.idx)];
+  return h === undefined || (h !== null && h <= ctx.checkpoint.afterLektion);
+};
+
+/**
  * IS CAPITALISATION THE TASK IN THIS LINE? — the same predicate the pool build
  * stamps its items with and `reviewService.buildCardIndex` flags its cards
  * with (`politeCaseItem`, src/data/lessonPools/quality.js), asked here of a
@@ -596,7 +610,7 @@ function buildHoerenDictation(ctx) {
   // …and, outermost, the lines the chapter itself would dictate: no longer than the longest
   // line of its Lektionen's own dictation windows (`dictationCeiling`, DaF review #18, Minor 10).
   const lines = dictableFirst(unreportableFirst(clampFreeFirst(
-    freeLinesFirst(shuffle(dialogLines(chapter), rng), usedLineKeys),
+    freeLinesFirst(shuffle(dialogLines(chapter).filter((l) => lineServable(ctx, l)), rng), usedLineKeys),
     ctx.curriculum,
     checkpoint.afterLektion,
   )), dictationCeiling(chapter));
@@ -2036,8 +2050,8 @@ function buildSprechen(ctx) {
   // items whatever the chapter looks like.
   const key = (l) => lineKeyOf(l.lektionId || l.lektionNr, l.idx);
   const free = (l) => !usedLineKeys.has(key(l));
-  const pref = shuffle(preferred, rng);
-  const all = shuffle(dialogLines(chapter), rng);
+  const pref = shuffle(preferred.filter((l) => lineServable(ctx, l)), rng);
+  const all = shuffle(dialogLines(chapter).filter((l) => lineServable(ctx, l)), rng);
   const ordered = [];
   const seen = new Set();
   const clamp = (ls) => clampFreeFirst(ls, ctx.curriculum, checkpoint.afterLektion);

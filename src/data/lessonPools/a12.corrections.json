@@ -1,0 +1,13 @@
+{
+  "_doc": "Field-level corrections of A1.2 bank rows, applied last by scripts/build-lesson-pool.mjs (see a11.corrections.json). Each entry says why.",
+  "keepBankExplanationEn": {},
+  "items": {
+    "720fd50e-311c-49b2-8474-691d328d3cc4": {
+      "questionDe": "Ich ___ nach Hause gehen. (müssen)",
+      "questionEn": "I have to go home. (müssen)",
+      "explanationDe": "müssen = Notwendigkeit. Mit ich: ich muss.",
+      "explanationEn": "müssen = necessity. With ich the form is **muss**.",
+      "reason": "DaF review #3 (A1.2) BLOCKER 1: kann, soll, darf and muss all fit „Ich ___ nach Hause.\" and the prompt carried English („implied: gehen\"); the cue now names the verb."
+    }
+  }
+}

@@ -186,7 +186,7 @@
    "explanationDe": "trinken braucht Akkusativ. Tee ist maskulin. der → den.",
    "explanationEn": "trinken takes accusative. Tee is masculine. der → den.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 3
   },
   {
    "id": "extra-a12-l03-06",
@@ -248,7 +248,7 @@
    "explanationDe": "brauchen braucht Akkusativ. Computer ist maskulin. ein → einen.",
    "explanationEn": "brauchen takes accusative. Computer is masculine. ein → einen.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 3
   },
   {
    "id": "extra-a12-l03-08",
@@ -257,7 +257,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie den Satz: [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel)",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel)",
    "questionEn": "Build the sentence about needing a supermarket.",
    "options": null,
    "answer": "Ich brauche einen Supermarkt.",
@@ -371,7 +371,7 @@
    "explanationDe": "Kaffee ist maskulin und direktes Objekt, deshalb wird der zu den.",
    "explanationEn": "Kaffee is masculine and the direct object, so der becomes den.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 3
   },
   {
    "id": "a84d1592-fb36-5d2c-b7ee-8588ac47b98d",
@@ -390,7 +390,7 @@
    "explanationDe": "Schlüssel ist maskulin und verneint, deshalb wird kein zu keinen.",
    "explanationEn": "Schlüssel is masculine and negated, so kein becomes keinen.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 4
   },
   {
    "id": "f582088a-97c2-5619-b502-417884287612",
@@ -437,7 +437,7 @@
    "stage": 5,
    "difficulty": 1,
    "order": 22,
-   "questionDe": "Schreiben Sie den Satz: [ich / einen / Onkel / haben]",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / einen / Onkel / haben]",
    "questionEn": "Write the sentence: I have an uncle. (accusative direct object, indefinite article)",
    "options": null,
    "answer": "Ich habe einen Onkel.",
@@ -755,7 +755,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie den Satz: [am Platz / sein / die Haltestelle]",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle]",
    "questionEn": "Build the sentence about the square.",
    "options": null,
    "answer": "Am Platz ist die Haltestelle.",
@@ -785,7 +785,7 @@
    ],
    "explanationDe": "Das Verb fährt steht direkt hinter dem Subjekt.",
    "hint": null,
-   "minLektion": 1,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -943,7 +943,7 @@
    "explanationDe": "mit + Dativ: der Bus → dem Bus.",
    "explanationEn": "mit + Dativ: der Bus → dem Bus.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-01",
@@ -952,7 +952,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 1,
-   "questionDe": "___ Sommer ist es sonnig und warm. (in + dem)",
+   "questionDe": "___ Sommer ist es sonnig und warm. (in + dem → Kurzform)",
    "questionEn": "In summer it is sunny and warm.",
    "options": null,
    "answer": "Im",
@@ -982,7 +982,7 @@
    "explanationDe": "mit + Dativ: die U-Bahn → der U-Bahn.",
    "explanationEn": "mit + Dativ: die U-Bahn → der U-Bahn.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-02",
@@ -991,7 +991,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 2,
-   "questionDe": "___ Abend kommt ein Gewitter. (an + dem)",
+   "questionDe": "___ Abend kommt ein Gewitter. (an + dem → Kurzform)",
    "questionEn": "In the evening a thunderstorm comes.",
    "options": null,
    "answer": "Am",
@@ -1011,7 +1011,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 3,
-   "questionDe": "Im Winter fährt Ana ___ Bahnhof. (zu + dem)",
+   "questionDe": "Im Winter fährt Ana ___ Bahnhof. (zu + dem → Kurzform)",
    "questionEn": "In winter Ana goes to the station.",
    "options": null,
    "answer": "zum",
@@ -1040,7 +1040,7 @@
    "explanationDe": "zu + dem wird zu zum.",
    "explanationEn": "zu + dem contracts to zum.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-04",
@@ -1049,7 +1049,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 4,
-   "questionDe": "Bei Wind geht Tim ___ Kirche. (zu + der)",
+   "questionDe": "Bei Wind geht Tim ___ Kirche. (zu + der → Kurzform)",
    "questionEn": "In the wind Tim goes to church.",
    "options": null,
    "answer": "zur",
@@ -1078,7 +1078,7 @@
    "explanationDe": "zu + der wird zu zur.",
    "explanationEn": "zu + der contracts to zur.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-05",
@@ -1116,7 +1116,7 @@
    "explanationDe": "bei + dem wird zu beim.",
    "explanationEn": "bei + dem contracts to beim.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-06",
@@ -1157,7 +1157,7 @@
    "explanationDe": "von + dem wird zu vom. So sagt man das meistens.",
    "explanationEn": "von + dem contracts to vom, the normal spoken form.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-07",
@@ -1258,7 +1258,7 @@
    "explanationDe": "von zeigt den Startort, nicht die Heimat.",
    "explanationEn": "von marks a starting point like work, not a country of origin.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "ee2c444a-6f1f-5166-85e7-a801dbcd5590",
@@ -1277,7 +1277,7 @@
    "explanationDe": "bei + Dativ Plural: meine Eltern → meinen Eltern.",
    "explanationEn": "bei + Dativ Plural: meine Eltern → meinen Eltern.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 11
   },
   {
    "id": "8b2e5c13-dce3-5540-a8dc-6e37a389d300",
@@ -1296,7 +1296,7 @@
    "explanationDe": "bei + Dativ nennt einen Arbeitgeber: die Bank → der Bank.",
    "explanationEn": "bei + Dativ names an employer: die Bank → der Bank.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "b484df20-10dc-5a1d-ab9e-68374c0fce16",
@@ -1315,7 +1315,7 @@
    "explanationDe": "von + Dativ: meine Mutter → meiner Mutter.",
    "explanationEn": "von + Dativ: meine Mutter → meiner Mutter (feminine).",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "f7aa6e9b-0c37-5874-b2b0-2e311896881a",
@@ -1334,7 +1334,7 @@
    "explanationDe": "bei + Dativ (meiner Freundin). Nur dem/der bilden eine Kurzform.",
    "explanationEn": "bei + Dativ (meiner Freundin) — a possessive can't contract with bei, only dem/der do.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l11-08",
@@ -1418,7 +1418,7 @@
    "explanationDe": "zu benutzt man für die Richtung zu einer Person.",
    "explanationEn": "zu is used for direction toward a person or place, not a country.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 11
   },
   {
    "id": "1dceab10-a1e3-5ded-ae25-38c040ebf2d3",
@@ -1517,7 +1517,7 @@
    ],
    "explanationDe": "Bei Sie steht die Form auf -en vor dem Pronomen.",
    "hint": null,
-   "minLektion": 8,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -1662,7 +1662,7 @@
    ],
    "explanationDe": "Die du-Form ohne Endung und ohne Pronomen: Hilf!",
    "hint": null,
-   "minLektion": 8,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -1678,7 +1678,9 @@
    "answer": "Mach die Tür auf!",
    "accepted": [
     "Mach die Tür auf",
-    "Mach die Tür auf."
+    "Mach die Tür auf.",
+    "Mache die Tür auf!",
+    "Mache die Tür auf"
    ],
    "explanationDe": "du-Imperativ von aufmachen: Mach ... auf, Präfix am Ende.",
    "explanationEn": "du-imperative of aufmachen: Mach ... auf, prefix at the end.",
@@ -1742,7 +1744,7 @@
    ],
    "explanationDe": "Bei Sie bleibt das Pronomen hinter dem Verb.",
    "hint": null,
-   "minLektion": 8,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -1801,7 +1803,9 @@
    "answer": "Mach den Fernseher aus!",
    "accepted": [
     "Mach den Fernseher aus!",
-    "Mach den Fernseher aus"
+    "Mach den Fernseher aus",
+    "Mache den Fernseher aus!",
+    "Mache den Fernseher aus"
    ],
    "explanationDe": "Die Vorsilbe aus steht am Ende: Mach … aus!",
    "hint": null,
@@ -1825,7 +1829,7 @@
    ],
    "explanationDe": "Bei der Bitte steht das Verb auf Position 1.",
    "hint": null,
-   "minLektion": 8,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -1911,7 +1915,7 @@
    ],
    "explanationDe": "dürfen heißt Erlaubnis; der Infinitiv steht am Ende.",
    "hint": null,
-   "minLektion": 9,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -2125,8 +2129,8 @@
    "stage": 5,
    "difficulty": 1,
    "order": 12,
-   "questionDe": "Ich ___ nach Hause. (implied: gehen)",
-   "questionEn": "I have to [go] home.",
+   "questionDe": "Ich ___ nach Hause gehen. (müssen)",
+   "questionEn": "I have to go home. (müssen)",
    "options": [
     "kann",
     "soll",
@@ -2135,8 +2139,8 @@
    ],
    "answer": "muss",
    "accepted": [],
-   "explanationDe": "müssen = Notwendigkeit. Das Verb \"gehen\" ist impliziert.",
-   "explanationEn": "müssen = necessity. The verb \"gehen\" is implied.",
+   "explanationDe": "müssen = Notwendigkeit. Mit ich: ich muss.",
+   "explanationEn": "müssen = necessity. With ich the form is **muss**.",
    "hint": null,
    "minLektion": 9
   },
@@ -2245,8 +2249,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 4,
-   "questionDe": "Das Hotel hat kein Angebot. Und eine Toilette im Flur? — Das Hotel hat ___ Toilette im Flur.",
-   "questionEn": "The hotel has no offer. And a toilet?",
+   "questionDe": "Hat das Hotel eine Toilette im Flur? — Nein, das Hotel hat ___ Toilette im Flur.",
+   "questionEn": "Does the hotel have a toilet in the hallway? — No, the hotel has no toilet in the hallway.",
    "options": null,
    "answer": "keine",
    "accepted": [
@@ -2264,8 +2268,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 5,
-   "questionDe": "Die Steckdose funktioniert nicht. Und das Kissen? — Im Hotel ist ___ Kissen.",
-   "questionEn": "The socket does not work. And the pillow?",
+   "questionDe": "Ist im Hotel ein Kissen? — Nein, im Hotel ist ___ Kissen.",
+   "questionEn": "Is there a pillow in the hotel? — No, there is no pillow in the hotel.",
    "options": null,
    "answer": "kein",
    "accepted": [
@@ -2302,8 +2306,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 7,
-   "questionDe": "Im Flur ist keine Lampe. Und der Boden? — Der Boden ist ___ schön.",
-   "questionEn": "There is no lamp. And the floor?",
+   "questionDe": "Ist der Boden schön? — Nein, der Boden ist ___ schön.",
+   "questionEn": "Is the floor nice? — No, the floor is not nice.",
    "options": null,
    "answer": "nicht",
    "accepted": [
@@ -2369,7 +2373,7 @@
    "explanationDe": "Bruder ist maskulin, deshalb wird kein zu keinen im Akkusativ.",
    "explanationEn": "Bruder is masculine, so kein becomes keinen in the accusative.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 4
   },
   {
    "id": "extra-a12-l04-10",
@@ -2438,7 +2442,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 13,
-   "questionDe": "Bilden Sie den Satz: [das Hotel / haben / kein / Steckdose]",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Hotel“): [das Hotel / haben / kein / Steckdose]",
    "questionEn": "Build the sentence about the hotel.",
    "options": null,
    "answer": "Das Hotel hat keine Steckdose.",
@@ -2458,7 +2462,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 17,
-   "questionDe": "Schreiben Sie den Satz: [ich / kein / Computer / haben]",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kein / Computer / haben]",
    "questionEn": "Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen)",
    "options": null,
    "answer": "Ich habe keinen Computer.",
@@ -2469,7 +2473,7 @@
    "explanationDe": "Computer ist maskulin, deshalb muss das gegebene kein im Akkusativ zu keinen werden.",
    "explanationEn": "Computer is masculine, so the given kein must be inflected to keinen in the accusative.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 4
   },
   {
    "id": "e2bd9783-ab59-5017-87b9-74872bf836c4",
@@ -2478,7 +2482,7 @@
    "stage": 5,
    "difficulty": 1,
    "order": 18,
-   "questionDe": "Schreiben Sie den Satz: [wir / keine / Zeit / haben]",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / keine / Zeit / haben]",
    "questionEn": "Write the sentence: We have no time. (kein + feminine noun, wir-form of haben)",
    "options": null,
    "answer": "Wir haben keine Zeit.",
@@ -2633,7 +2637,7 @@
    "explanationDe": "Nach ist (sein) = Nominativ. Maskulin Nominativ = ein.",
    "explanationEn": "After ist (sein) = nominative. Masculine nominative = ein.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": null
   },
   {
    "id": "3c9f8059-e54e-4d78-9ce3-17790a7431de",
@@ -2676,7 +2680,7 @@
    ],
    "explanationDe": "wer fragt nach der Person im Nominativ.",
    "hint": null,
-   "minLektion": 7,
+   "minLektion": null,
    "explanationEn": ""
   },
   {
@@ -2759,7 +2763,7 @@
    "explanationDe": "\"Wer?\" oder \"Was?\" + Verb findet das Nominativ-Subjekt.",
    "explanationEn": "\"Wer?\" (who) or \"Was?\" (what) + verb finds the nominative subject.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 11
   },
   {
    "id": "2c8d8ee0-d7af-4841-9f98-eb9692e74f16",
@@ -2781,7 +2785,7 @@
    "explanationDe": "Ein Beruf mit Adjektiv (gute Ingenieurin) braucht den Artikel, auch nach werden: eine gute Ingenieurin.",
    "explanationEn": "A profession described with an adjective (gute Ingenieurin) needs the article, even after werden: eine gute Ingenieurin.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": null
   },
   {
    "id": "aa5ff641-2750-582d-8ca4-7f89947b69ee",
@@ -3204,7 +3208,7 @@
    ],
    "explanationDe": "Die Ordnungszahl zu eins heißt erste.",
    "hint": null,
-   "minLektion": 2,
+   "minLektion": 3,
    "explanationEn": ""
   },
   {
@@ -3263,7 +3267,7 @@
    "explanationDe": "kaufen ist regelmäßig → gekauft.",
    "explanationEn": "kaufen is regular → ge- + kauf + t = gekauft.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-01",
@@ -3301,7 +3305,7 @@
    "explanationDe": "trinken ist unregelmäßig → getrunken.",
    "explanationEn": "trinken is irregular → getrunken.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-02",
@@ -3358,7 +3362,7 @@
    "explanationDe": "sprechen ist unregelmäßig → gesprochen.",
    "explanationEn": "sprechen is irregular → gesprochen.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-04",
@@ -3396,7 +3400,7 @@
    "explanationDe": "fahren ist Bewegung → sein. er → ist.",
    "explanationEn": "fahren is a movement verb → sein; er → ist.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": null
   },
   {
    "id": "extra-a12-l12-05",
@@ -3494,7 +3498,7 @@
    "explanationDe": "kommen ist Bewegung → sein. er → ist.",
    "explanationEn": "kommen is a movement verb → sein; er → ist.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": null
   },
   {
    "id": "4681b233-26bd-599d-910a-c76ad0222f80",
@@ -3535,7 +3539,7 @@
    "explanationDe": "aufstehen ist trennbar und Bewegung → sein, ge- in der Mitte.",
    "explanationEn": "aufstehen is a separable movement verb → sein, ge- in the middle: aufgestanden.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": null
   },
   {
    "id": "2750daba-c009-532c-8b99-be42586588ac",
@@ -3554,7 +3558,7 @@
    "explanationDe": "machen ist regelmäßig → gemacht.",
    "explanationEn": "machen is regular → gemacht.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-08",
@@ -3593,7 +3597,7 @@
    "explanationDe": "arbeiten benutzt haben. sie (Einzahl) → hat.",
    "explanationEn": "arbeiten uses haben; sie (she) → hat.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-09",
@@ -3635,7 +3639,7 @@
    "explanationDe": "kochen ist regelmäßig → gekocht.",
    "explanationEn": "kochen is regular → ge- + koch + t = gekocht.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-10",
@@ -3677,7 +3681,7 @@
    "explanationDe": "essen benutzt haben. ihr → habt, an erster Stelle in der Frage.",
    "explanationEn": "essen uses haben; ihr → habt, moved to position 1 for the question.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-11",
@@ -3719,7 +3723,7 @@
    "explanationDe": "für verlangt immer Akkusativ: der → den.",
    "explanationEn": "für always takes accusative: der → den.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 3
   },
   {
    "id": "extra-a12-l10-01",
@@ -3878,7 +3882,9 @@
    "answer": "Ich kaufe die Jacke für meine Oma.",
    "accepted": [
     "Ich kaufe die Jacke für meine Oma.",
-    "Ich kaufe die Jacke für meine Oma"
+    "Ich kaufe die Jacke für meine Oma",
+    "Für meine Oma kaufe ich die Jacke.",
+    "Für meine Oma kaufe ich die Jacke"
    ],
    "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
    "hint": null,
@@ -4028,7 +4034,7 @@
    "explanationDe": "für verlangt immer Akkusativ; Lehrer ist maskulin, deshalb wird ein zu einen.",
    "explanationEn": "für always triggers accusative; Lehrer is masculine, so ein becomes einen.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 3
   },
   {
    "id": "d7cdfd44-16db-5115-a3e4-cf630d20760e",
@@ -4165,11 +4171,13 @@
    "answer": "Wann",
    "accepted": [
     "Wann",
-    "wann"
+    "wann",
+    "Um wie viel Uhr",
+    "um wie viel Uhr"
    ],
    "explanationDe": "Nach der Uhrzeit fragt wann.",
    "hint": null,
-   "minLektion": 5,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -4385,7 +4393,7 @@
    ],
    "explanationDe": "Das Fragewort steht vorn, das Verb dahinter.",
    "hint": null,
-   "minLektion": 5,
+   "minLektion": 11,
    "explanationEn": ""
   },
   {
@@ -4704,7 +4712,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 4,
-   "questionDe": "Sie ___ den Bus. (nehmen, sie)",
+   "questionDe": "Sie ___ den Bus. (nehmen, sie = eine Frau)",
    "questionEn": "She takes the bus. (verb: nehmen, subject: sie = she)",
    "options": null,
    "answer": "nimmt",
@@ -4840,7 +4848,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Sie ___ das Kind im Park. (sehen, sie)",
+   "questionDe": "Sie ___ das Kind im Park. (sehen, sie = eine Frau)",
    "questionEn": "She sees the child in the park. (verb: sehen, subject: sie = she)",
    "options": null,
    "answer": "sieht",
@@ -4889,7 +4897,7 @@
    "explanationDe": "fahren wechselt a→ä bei du: fährst.",
    "explanationEn": "fahren changes a→ä for du: fährst.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "extra-a12-l06-10",
@@ -4981,7 +4989,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Sie ___ eine Jacke. (tragen, sie)",
+   "questionDe": "Sie ___ eine Jacke. (tragen, sie = eine Frau)",
    "questionEn": "She is wearing a jacket. (verb: tragen, subject: sie = she)",
    "options": null,
    "answer": "trägt",
@@ -5019,7 +5027,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 5,
-   "questionDe": "Schreiben Sie den Satz: [du / gern / Bücher / lesen]",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Du“): [du / gern / Bücher / lesen]",
    "questionEn": "Write the sentence: You like reading books. (subject: du)",
    "options": null,
    "answer": "Du liest gern Bücher.",
@@ -5051,7 +5059,7 @@
    "explanationDe": "fahren wechselt a→ä bei er: fährt.",
    "explanationEn": "fahren changes a→ä for er: fährt.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 11
   },
   {
    "id": "ef8fe41f-51e0-5c6a-88c8-1e5fd291452a",
@@ -5134,5 +5142,127 @@
    "minLektion": 6,
    "explanationEn": ""
   }
- ]
+ ],
+ "lineHorizon": {
+  "a1.2-l01#0": 0,
+  "a1.2-l01#1": 0,
+  "a1.2-l01#2": 0,
+  "a1.2-l01#3": 0,
+  "a1.2-l01#4": 0,
+  "a1.2-l01#5": 0,
+  "a1.2-l01#6": 0,
+  "a1.2-l01#7": 0,
+  "a1.2-l01#8": 0,
+  "a1.2-l01#9": 0,
+  "a1.2-l02#0": 11,
+  "a1.2-l02#1": 3,
+  "a1.2-l02#2": 0,
+  "a1.2-l02#3": 0,
+  "a1.2-l02#4": 0,
+  "a1.2-l02#5": 0,
+  "a1.2-l02#6": 3,
+  "a1.2-l02#7": 0,
+  "a1.2-l02#8": 0,
+  "a1.2-l02#9": 0,
+  "a1.2-l03#0": 0,
+  "a1.2-l03#1": 3,
+  "a1.2-l03#2": 0,
+  "a1.2-l03#3": 0,
+  "a1.2-l03#4": 0,
+  "a1.2-l03#5": 3,
+  "a1.2-l03#6": 0,
+  "a1.2-l03#7": 0,
+  "a1.2-l03#8": 0,
+  "a1.2-l03#9": 0,
+  "a1.2-l04#0": 0,
+  "a1.2-l04#1": 0,
+  "a1.2-l04#2": 0,
+  "a1.2-l04#3": 0,
+  "a1.2-l04#4": 0,
+  "a1.2-l04#5": 0,
+  "a1.2-l04#6": 0,
+  "a1.2-l04#7": 0,
+  "a1.2-l04#8": 4,
+  "a1.2-l04#9": 0,
+  "a1.2-l05#0": 0,
+  "a1.2-l05#1": 3,
+  "a1.2-l05#2": 0,
+  "a1.2-l05#3": 0,
+  "a1.2-l05#4": 0,
+  "a1.2-l05#5": 0,
+  "a1.2-l05#6": 0,
+  "a1.2-l05#7": 0,
+  "a1.2-l05#8": 0,
+  "a1.2-l05#9": 0,
+  "a1.2-l06#0": 0,
+  "a1.2-l06#1": 0,
+  "a1.2-l06#2": 0,
+  "a1.2-l06#3": 0,
+  "a1.2-l06#4": 0,
+  "a1.2-l06#5": 0,
+  "a1.2-l06#6": 0,
+  "a1.2-l06#7": 0,
+  "a1.2-l06#8": 0,
+  "a1.2-l06#9": 0,
+  "a1.2-l07#0": 0,
+  "a1.2-l07#1": 0,
+  "a1.2-l07#2": 0,
+  "a1.2-l07#3": 0,
+  "a1.2-l07#4": 0,
+  "a1.2-l07#5": 0,
+  "a1.2-l07#6": 0,
+  "a1.2-l07#7": 0,
+  "a1.2-l07#8": null,
+  "a1.2-l07#9": 0,
+  "a1.2-l08#0": 0,
+  "a1.2-l08#1": 0,
+  "a1.2-l08#2": 0,
+  "a1.2-l08#3": 0,
+  "a1.2-l08#4": 0,
+  "a1.2-l08#5": 0,
+  "a1.2-l08#6": 0,
+  "a1.2-l08#7": 0,
+  "a1.2-l08#8": 3,
+  "a1.2-l08#9": 0,
+  "a1.2-l09#0": 11,
+  "a1.2-l09#1": 9,
+  "a1.2-l09#2": 9,
+  "a1.2-l09#3": 11,
+  "a1.2-l09#4": 11,
+  "a1.2-l09#5": 9,
+  "a1.2-l09#6": 9,
+  "a1.2-l09#7": 9,
+  "a1.2-l09#8": 0,
+  "a1.2-l09#9": 0,
+  "a1.2-l10#0": 0,
+  "a1.2-l10#1": 0,
+  "a1.2-l10#2": 3,
+  "a1.2-l10#3": 0,
+  "a1.2-l10#4": 11,
+  "a1.2-l10#5": 3,
+  "a1.2-l10#6": 0,
+  "a1.2-l10#7": 0,
+  "a1.2-l10#8": 0,
+  "a1.2-l10#9": 0,
+  "a1.2-l11#0": 11,
+  "a1.2-l11#1": 0,
+  "a1.2-l11#2": 11,
+  "a1.2-l11#3": 11,
+  "a1.2-l11#4": 11,
+  "a1.2-l11#5": 0,
+  "a1.2-l11#6": 0,
+  "a1.2-l11#7": 11,
+  "a1.2-l11#8": 11,
+  "a1.2-l11#9": 11,
+  "a1.2-l12#0": 12,
+  "a1.2-l12#1": 12,
+  "a1.2-l12#2": 12,
+  "a1.2-l12#3": 12,
+  "a1.2-l12#4": 12,
+  "a1.2-l12#5": 12,
+  "a1.2-l12#6": 12,
+  "a1.2-l12#7": 12,
+  "a1.2-l12#8": 12,
+  "a1.2-l12#9": 0
+ }
 }
