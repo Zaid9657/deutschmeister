@@ -523,3 +523,23 @@ test('the checkpoint result names a partly assessed part, in both languages (Cod
   assert.ok(STRINGS.en['checkpoint.partlyAssessed'] && STRINGS.de['checkpoint.partlyAssessed']);
   assert.doesNotMatch(STRINGS.de['checkpoint.partlyAssessed'], /\b(du|dich|dir|dein\w*)\b/i);
 });
+
+test('the final test changes section in one write, only when it landed, and never under a stale autosave (Codex rescore, 2026-10-15)', async () => {
+  // Reproduced by Codex: after a section change, the pending 1.5 s autosave fired with the OLD index
+  // and the saved attempt went back a section; with both writes failing, the screen advanced anyway.
+  const { readFileSync } = await import('node:fs');
+  const run = readFileSync(new URL('../src/pages/Modelltest/ModelltestRun.jsx', import.meta.url), 'utf8');
+  const svc = readFileSync(new URL('../src/services/examService.js', import.meta.url), 'utf8');
+  assert.match(svc, /export async function advanceSection\(attemptId, answers, minutes\)[\s\S]{0,400}\.update\(\{ answers, section_deadline: deadline \}\)/, 'index and timer in ONE update');
+  assert.doesNotMatch(svc + run, /advanceSectionDeadline/);
+  const next = run.slice(run.indexOf('const nextSection = useCallback'), run.indexOf('// Time up'));
+  assert.match(next, /cancelPendingSave\(\);[\s\S]*advanceSection\(attempt\.id, nextAnswers/, 'the stale autosave is cancelled first');
+  assert.match(next, /if \(!newDeadline\) \{\s*setSectionError\(/, 'a failed write stays on the section');
+  assert.ok(next.indexOf('setSectionIndex(nextIdx)') > next.indexOf('if (!newDeadline)'), 'and moves on only after it landed');
+  const fin = run.slice(run.indexOf('const finish = useCallback'), run.indexOf('const nextSection = useCallback'));
+  assert.match(fin, /cancelPendingSave\(\);/);
+  // A play counts once the audio started, and lives in the saved answers so a reload cannot reset it.
+  assert.match(run, /const plays = answers\._plays\?\.\[part\.key\] \?\? 0;/);
+  assert.match(run, /await audioRef\.current\.play\(\);\s*\} catch \{\s*setPlayFailed\(true\);\s*return;\s*\}/);
+  assert.ok(run.indexOf("onAnswer('_plays'") > run.indexOf('await audioRef.current.play()'), 'counted after playback started');
+});
