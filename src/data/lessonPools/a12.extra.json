@@ -1116,6 +1116,59 @@
       "caseSensitive": true
     },
     {
+      "id": "extra-a12-l06-11",
+      "topic": "stem-changing-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Ich arbeite heute nicht, ___ ich habe Fieber. (Grund)",
+      "questionEn": "I am not working today because I have a fever.",
+      "options": null,
+      "answer": "denn",
+      "accepted": [
+        "denn"
+      ],
+      "explanationDe": "denn nennt den Grund; danach steht das Verb auf Position 2.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l06-12",
+      "topic": "stem-changing-verbs",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Korrigieren Sie: „Ich schlafe nicht gut, denn mein Hals weh tut.“",
+      "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts.",
+      "options": null,
+      "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
+      "accepted": [
+        "Ich schlafe nicht gut, denn mein Hals tut weh.",
+        "Ich schlafe nicht gut, denn mein Hals tut weh"
+      ],
+      "explanationDe": "Nach denn bleibt das Verb auf Position 2: denn mein Hals tut weh.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l06-13",
+      "topic": "stem-changing-verbs",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun]",
+      "questionEn": "Build the sentence: I am taking a tablet because my head hurts.",
+      "options": null,
+      "answer": "Ich nehme eine Tablette, denn mein Kopf tut weh.",
+      "accepted": [
+        "Ich nehme eine Tablette, denn mein Kopf tut weh.",
+        "Ich nehme eine Tablette, denn mein Kopf tut weh"
+      ],
+      "explanationDe": "denn verbindet zwei Sätze; das Verb steht beide Male auf Position 2.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l07-01",
       "topic": "nominative-case",
       "type": "fill_blank",
@@ -1803,6 +1856,92 @@
         "Ana geht ohne den Schal ins Kaufhaus"
       ],
       "explanationDe": "Nach ohne steht den Schal im Akkusativ.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-09",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 9,
+      "questionDe": "Die Jacke gefällt ___. (ich)",
+      "questionEn": "I like the jacket.",
+      "options": null,
+      "answer": "mir",
+      "accepted": [
+        "mir"
+      ],
+      "explanationDe": "gefallen verlangt den Dativ: ich → mir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-10",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Passt ___ der Mantel? (du)",
+      "questionEn": "Does the coat fit you?",
+      "options": null,
+      "answer": "dir",
+      "accepted": [
+        "dir"
+      ],
+      "explanationDe": "passen verlangt den Dativ: du → dir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-11",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Der Schal gehört ___. (ich)",
+      "questionEn": "The scarf belongs to me.",
+      "options": null,
+      "answer": "mir",
+      "accepted": [
+        "mir"
+      ],
+      "explanationDe": "gehören verlangt den Dativ: ich → mir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-12",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Gefällt ___ das Kleid? (Sie)",
+      "questionEn": "Do you like the dress?",
+      "options": null,
+      "answer": "Ihnen",
+      "accepted": [
+        "Ihnen"
+      ],
+      "explanationDe": "gefallen verlangt den Dativ: Sie → Ihnen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-13",
+      "topic": "prepositions-accusative",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Korrigieren Sie: „Die Hose gefällt mich.“",
+      "questionEn": "Correct the sentence: I like the trousers.",
+      "options": null,
+      "answer": "Die Hose gefällt mir.",
+      "accepted": [
+        "Die Hose gefällt mir.",
+        "Die Hose gefällt mir"
+      ],
+      "explanationDe": "gefallen verlangt den Dativ: mir, nicht mich.",
       "hint": null
     },
     {

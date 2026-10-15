@@ -186,6 +186,8 @@ const IRREGULAR_FORMS_A12 = {
   dritte: ['dritte', 'dritten', 'dritter', 'drittes', 'drittem'],
   // Einschub-e: regnen → es regnet (verbForms() bildet nur regne/regnst/regnt).
   regnen: ['regne', 'regnest', 'regnet', 'regnen', 'geregnet'],
+  // L10's Dativverben since the M7 decision (gefallen changes its vowel: es gefällt mir).
+  gefallen: ['gefalle', 'gefällst', 'gefällt', 'gefallen', 'gefallt'],
   // The sein-Perfekt L12 teaches since the M7 decision (Tim ist früh gegangen).
   gehen: ['gehe', 'gehst', 'geht', 'gehen', 'geh', 'gegangen'],
 };
@@ -709,12 +711,17 @@ const OFF_LIMITS_FORMS_A12 = {
   // Taught L7 since the M7 decision (2026-10-16): the Präteritum of sein and haben, the forms the
   // Goethe A1 inventory names (Prüfungsziele 2022, p. 102: „Sie/ich hatte keine Zeit. Ich/er war nicht da.").
   'nominative-case': /\b(?:war|warst|waren|wart|hatte|hattest|hatten|hattet)\b/gi,
+  // Taught L6 since the M7 decision: the conjunction denn (Goethe A1 inventory, p. 105: „Ich gehe
+  // heute nicht spazieren, denn es ist zu kalt.").
+  'stem-changing-verbs': /\bdenn\b/gi,
   // Taught L12. Partizip II with ge-. `{2,}` keeps `gehen`, `gegen`, `geben` out: their stem is one
   // letter, a participle's is at least two (ge-feier-t, ge-gess-en). Since the M7 decision
   // (2026-10-16, Goethe-Zertifikat A1 Prüfungsziele 2022 p. 102: Perfekt of fahren, bleiben,
   // passieren, verstehen) L12 also teaches the sein-Perfekt and the participles without ge- — the
   // latter only after a haben form, because „Tim bezahlt" is L3's present tense.
-  'perfekt-intro': /\bge[a-zäöüß]{2,}(?:t|en)\b|\b(?:[Bb]in|[Bb]ist|[Ii]st|[Ss]ind|[Ss]eid)\b[^.!?]*?\b[a-zäöüß]*ge(?:fahren|gangen|kommen|flogen|laufen|blieben|wesen|worden|standen|reist|stiegen|schwommen|sprungen|zogen)\b|\bpassiert\b|\b(?:[Hh]abe|[Hh]ast|[Hh]at|[Hh]aben|[Hh]abt)\b[^.!?]*?\b(?:bezahlt|besucht|verkauft|erzählt|verstanden|vergessen|telefoniert|repariert)\b/g,
+  // gehören and gefallen begin with ge- themselves („Der Schal gehört mir.", L10): their participles
+  // count only after a haben form, like the participles without ge-.
+  'perfekt-intro': /\bge(?!hör|fäll|fall)[a-zäöüß]{2,}(?:t|en)\b|\b(?:[Bb]in|[Bb]ist|[Ii]st|[Ss]ind|[Ss]eid)\b[^.!?]*?\b[a-zäöüß]*ge(?:fahren|gangen|kommen|flogen|laufen|blieben|wesen|worden|standen|reist|stiegen|schwommen|sprungen|zogen)\b|\bpassiert\b|\b(?:[Hh]abe|[Hh]ast|[Hh]at|[Hh]aben|[Hh]abt)\b[^.!?]*?\b(?:bezahlt|besucht|verkauft|erzählt|verstanden|vergessen|telefoniert|repariert|gehört|gefallen)\b/g,
 };
 
 /**

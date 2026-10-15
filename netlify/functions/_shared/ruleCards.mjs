@@ -329,7 +329,7 @@ export const RULE_CARDS = {
   },
   "prepositions-accusative": {
     "titleDe": "Präpositionen mit Akkusativ",
-    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
+    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nDativ bei gefallen, passen, gehören:\nich → mir, du → dir: Der Pullover passt dir gut. Er gefällt mir.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
     "commonMistakes": [
       {
         "wrong": "Der Mantel ist für mein Bruder.",
@@ -413,7 +413,7 @@ export const RULE_CARDS = {
   },
   "stem-changing-verbs": {
     "titleDe": "Verben mit Vokalwechsel",
-    "content": "Einige Verben ändern im Präsens den Stammvokal,\naber nur in den Formen mit -st und -t:\nnehmen → man nimmt, helfen → sie hilft, essen → man isst, schlafen → wer schläft.\nBei ich, wir, ihr und Sie bleibt der Vokal: ich schlafe, Sie nehmen.\nIn der Praxis: Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.\nIsst man zuerst? Und wie oft nimmt man die Tablette?\nIhr Auge ist gesund. Die Hand und der Fuß sehen gut aus.\nEnglish: the vowel changes in exactly two forms of the present tense, nowhere else.",
+    "content": "Einige Verben ändern im Präsens den Stammvokal,\naber nur in den Formen mit -st und -t:\nnehmen → man nimmt, helfen → sie hilft, essen → man isst, schlafen → wer schläft.\nBei ich, wir, ihr und Sie bleibt der Vokal: ich schlafe, Sie nehmen.\nDen Grund nennt denn, das Verb bleibt auf Position 2: Ich schlafe nicht gut, denn mein Hals tut weh.\nIn der Praxis: Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.\nIsst man zuerst? Und wie oft nimmt man die Tablette?\nIhr Auge ist gesund. Die Hand und der Fuß sehen gut aus.\nEnglish: the vowel changes in exactly two forms of the present tense, nowhere else.",
     "commonMistakes": [
       {
         "wrong": "Er nehmt eine Tablette.",

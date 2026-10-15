@@ -509,7 +509,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
     ],
     6: [
       ['Was tut Ihnen weh?', 1, 'Mein Hals tut weh, der Kopf und der Bauch auch.', 'sache'],
-      ['Haben Sie Fieber oder eine Erkältung?', 3, 'Nein, ich habe kein Fieber.', 'ja'],
+      ['Haben Sie Fieber oder eine Erkältung?', 3, 'Nein.', 'ja'],
       ['Isst man zuerst?', 6, 'Ja.', 'ja'],
       ['Und wie oft nimmt man die Tablette?', 6, 'Jeden Morgen und jeden Abend.', 'frequenz'],
       ['Und mein Auge?', 8, 'Ihr Auge ist gesund.', 'art', 'Wie ist mein Auge?'],

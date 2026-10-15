@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 272,
+ "count": 280,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -4231,6 +4231,103 @@
    "minLektion": 10
   },
   {
+   "id": "extra-a12-l10-09",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Die Jacke gefällt ___. (ich)",
+   "questionEn": "I like the jacket.",
+   "options": null,
+   "answer": "mir",
+   "accepted": [
+    "mir"
+   ],
+   "explanationDe": "gefallen verlangt den Dativ: ich → mir.",
+   "hint": null,
+   "minLektion": 10,
+   "explanationEn": "**gefallen** takes the dative: ich → **mir**."
+  },
+  {
+   "id": "extra-a12-l10-10",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Passt ___ der Mantel? (du)",
+   "questionEn": "Does the coat fit you?",
+   "options": null,
+   "answer": "dir",
+   "accepted": [
+    "dir"
+   ],
+   "explanationDe": "passen verlangt den Dativ: du → dir.",
+   "hint": null,
+   "minLektion": 10,
+   "explanationEn": "**passen** takes the dative: du → **dir**."
+  },
+  {
+   "id": "extra-a12-l10-11",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Der Schal gehört ___. (ich)",
+   "questionEn": "The scarf belongs to me.",
+   "options": null,
+   "answer": "mir",
+   "accepted": [
+    "mir"
+   ],
+   "explanationDe": "gehören verlangt den Dativ: ich → mir.",
+   "hint": null,
+   "minLektion": 10,
+   "explanationEn": "**gehören** takes the dative: ich → **mir**."
+  },
+  {
+   "id": "extra-a12-l10-12",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Gefällt ___ das Kleid? (Sie)",
+   "questionEn": "Do you like the dress?",
+   "options": null,
+   "answer": "Ihnen",
+   "accepted": [
+    "Ihnen"
+   ],
+   "explanationDe": "gefallen verlangt den Dativ: Sie → Ihnen.",
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 10,
+   "explanationEn": "**gefallen** takes the dative: Sie → **Ihnen**."
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "topic": "prepositions-accusative",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Korrigieren Sie: „Die Hose gefällt mich.“",
+   "questionEn": "Correct the sentence: I like the trousers.",
+   "options": null,
+   "answer": "Die Hose gefällt mir.",
+   "accepted": [
+    "Die Hose gefällt mir.",
+    "Die Hose gefällt mir"
+   ],
+   "explanationDe": "gefallen verlangt den Dativ: mir, nicht mich.",
+   "hint": null,
+   "minLektion": 10,
+   "explanationEn": "**gefallen** takes the dative: **mir**, not mich."
+  },
+  {
    "id": "extra-a12-l10-05",
    "topic": "prepositions-accusative",
    "type": "sentence_building",
@@ -5300,6 +5397,25 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a12-l06-11",
+   "topic": "stem-changing-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Ich arbeite heute nicht, ___ ich habe Fieber. (Grund)",
+   "questionEn": "I am not working today because I have a fever.",
+   "options": null,
+   "answer": "denn",
+   "accepted": [
+    "denn"
+   ],
+   "explanationDe": "denn nennt den Grund; danach steht das Verb auf Position 2.",
+   "hint": null,
+   "minLektion": 6,
+   "explanationEn": "**denn** (because) gives the reason; the verb after it stays in position 2."
+  },
+  {
    "id": "0cc83e06-3be5-50a6-af81-9a15d0f3ac6c",
    "topic": "stem-changing-verbs",
    "type": "multiple_choice",
@@ -5322,6 +5438,26 @@
    "minLektion": 9
   },
   {
+   "id": "extra-a12-l06-12",
+   "topic": "stem-changing-verbs",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Korrigieren Sie: „Ich schlafe nicht gut, denn mein Hals weh tut.“",
+   "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts.",
+   "options": null,
+   "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
+   "accepted": [
+    "Ich schlafe nicht gut, denn mein Hals tut weh.",
+    "Ich schlafe nicht gut, denn mein Hals tut weh"
+   ],
+   "explanationDe": "Nach denn bleibt das Verb auf Position 2: denn mein Hals tut weh.",
+   "hint": null,
+   "minLektion": 6,
+   "explanationEn": "After **denn** the verb stays in position 2: denn mein Hals **tut** weh."
+  },
+  {
    "id": "fe82234e-04e0-57c0-b2ee-2fb3f6b3b1e6",
    "topic": "stem-changing-verbs",
    "type": "multiple_choice",
@@ -5342,6 +5478,26 @@
    "explanationEn": "ihr never changes the vowel: tragt stays regular.",
    "hint": null,
    "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l06-13",
+   "topic": "stem-changing-verbs",
+   "type": "sentence_building",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun]",
+   "questionEn": "Build the sentence: I am taking a tablet because my head hurts.",
+   "options": null,
+   "answer": "Ich nehme eine Tablette, denn mein Kopf tut weh.",
+   "accepted": [
+    "Ich nehme eine Tablette, denn mein Kopf tut weh.",
+    "Ich nehme eine Tablette, denn mein Kopf tut weh"
+   ],
+   "explanationDe": "denn verbindet zwei Sätze; das Verb steht beide Male auf Position 2.",
+   "hint": null,
+   "minLektion": 6,
+   "explanationEn": "**denn** joins two sentences; in both the verb is in position 2."
   },
   {
    "id": "294e446d-7b8d-57d0-babe-c3e2bb5790a7",
@@ -5558,7 +5714,7 @@
   "a1.2-l06#0": 0,
   "a1.2-l06#1": 0,
   "a1.2-l06#2": 0,
-  "a1.2-l06#3": 0,
+  "a1.2-l06#3": 6,
   "a1.2-l06#4": 0,
   "a1.2-l06#5": 0,
   "a1.2-l06#6": 0,
@@ -5599,7 +5755,7 @@
   "a1.2-l10#1": 0,
   "a1.2-l10#2": 3,
   "a1.2-l10#3": 0,
-  "a1.2-l10#4": 11,
+  "a1.2-l10#4": 0,
   "a1.2-l10#5": 3,
   "a1.2-l10#6": 0,
   "a1.2-l10#7": 0,
