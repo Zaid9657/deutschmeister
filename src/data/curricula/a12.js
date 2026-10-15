@@ -1246,9 +1246,11 @@ export const CURRICULUM_A12 = {
     },
   ],
   checkpoints: [
-    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, title: 'Checkpoint 1: Lektion 1–3' },
-    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, title: 'Checkpoint 2: Lektion 4–6' },
-    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, title: 'Checkpoint 3: Lektion 7–9' },
-    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, title: 'Checkpoint 4: Lektion 10–12' },
+    // Each checkpoint writes its own task (`a12-cpN`, src/data/writingTasks.js), not the chapter's
+    // last Lektion's again (DaF review #3, MAJOR 3).
+    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, writingTaskKey: 'a12-cp1', title: 'Checkpoint 1: Lektion 1–3' },
+    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, writingTaskKey: 'a12-cp2', title: 'Checkpoint 2: Lektion 4–6' },
+    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, writingTaskKey: 'a12-cp3', title: 'Checkpoint 3: Lektion 7–9' },
+    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, writingTaskKey: 'a12-cp4', title: 'Checkpoint 4: Lektion 10–12' },
   ],
 };

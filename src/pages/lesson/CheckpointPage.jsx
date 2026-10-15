@@ -15,6 +15,7 @@ import {
   sectionPasses,
   assessedParts,
   WRITING_PASS_PCT,
+  paperSeed,
 } from '../../lib/checkpoint/buildCheckpoint.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
@@ -338,7 +339,7 @@ export default function CheckpointPage() {
     // used to reshuffle the same 20 items right after the result had shown them, which measured
     // memory of the answers. `round` is the paper number — this window's attempt count at Start,
     // +1 per retake — so a reload after a failed attempt does not serve that paper again either.
-    return buildCheckpoint({ curriculum, checkpoint, pool, seed: round ? `${checkpoint.id}-round-${round}` : undefined });
+    return buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) });
   }, [curriculum, checkpoint, pool, round]);
 
   const scoredItems = useMemo(() => items.filter((i) => !notHeard.has(i.id)), [items, notHeard]);

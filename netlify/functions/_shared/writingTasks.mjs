@@ -643,8 +643,9 @@ export const WRITING_TASKS = [
   //   2. Die Wortgrenzen sind die, die der Grader annehmen kann: Formular
   //      5–40 Wörter, Mitteilung 25–45 (netlify/functions/evaluate-writing.mjs
   //      leitet seine Zeichen-Untergrenze aus `register` ab).
-  // ACHTUNG INTEGRATION: `COURSE_TASK_KEY_PREFIX` in evaluate-writing.mjs ist
-  // 'a11-' und trifft diese Schlüssel NICHT. Siehe CONTRACT.md §Offene Fragen.
+  // evaluate-writing.mjs zählt sie über COURSE_TASK_KEY_LIKE ('a__-%') als
+  // Kursaufgaben, mit eigener Freigrenze je Kurs (zwölf Lektionen + vier
+  // Checkpoints).
   {
     examKey: 'goethe_a1',
     course: 'a1.2',
@@ -860,6 +861,68 @@ export const WRITING_TASKS = [
       'Was Sie gegessen und getrunken haben',
       'Wen Sie eingeladen haben',
     ],
+  },
+
+  // ---- A1.2-Checkpoint-Aufgaben (DaF-Review #3, MAJOR 3, 2026-10-15) ------
+  // Wie die A1.1-Aufgaben oben: die Textsorte der letzten Lektion des Kapitels
+  // mit neuen Personen und Fakten, nur aus Wörtern, die bis zum Checkpoint
+  // gelehrt sind. Bis hierher schrieb jeder A1.2-Checkpoint noch einmal
+  // a12-l03/06/09/12 – samt dem Feedback, das der Lernende dazu schon hatte.
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 1,
+    taskKey: 'a12-cp1',
+    title: 'Checkpoint 1: Ins Museum',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Paul Fischer wohnt in Köln. Am Mittwoch möchte er ins Museum gehen. Er fährt mit der Straßenbahn bis zur Haltestelle Markt. Füllen Sie die Anmeldung für das Museum aus.',
+    leitpunkte: ['Familienname', 'Vorname', 'Stadt', 'Haltestelle', 'Tag'],
+    sample: 'Familienname: Fischer / Vorname: Paul / Stadt: Köln / Haltestelle: Markt / Tag: Mittwoch',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 2,
+    taskKey: 'a12-cp2',
+    title: 'Checkpoint 2: Eine Nachricht an das Hotel',
+    register: 'formell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie haben im Hotel ein Zimmer für Freitag und Samstag. Sie sind krank und kommen am Samstag, nicht am Freitag. Schreiben Sie dem Hotel eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Ihre Frage zum Frühstück'],
+    sample: 'Guten Tag, ich habe ein Zimmer für Freitag und Samstag. Ich bin krank, mein Kopf tut weh. Ich komme am Samstag, nicht am Freitag. Haben Sie am Samstag auch Frühstück? Viele Grüße, Ana Chakiri',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 3,
+    taskKey: 'a12-cp3',
+    title: 'Checkpoint 3: Eine Reise nach Spanien',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Tim Berger wohnt in Berlin. Er fliegt am 2. Mai nach Spanien. Füllen Sie die Anmeldung für die Reise aus.',
+    leitpunkte: ['Familienname', 'Vorname', 'Stadt', 'Datum', 'Land'],
+    sample: 'Familienname: Berger / Vorname: Tim / Stadt: Berlin / Datum: 2. Mai / Land: Spanien',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 4,
+    taskKey: 'a12-cp4',
+    title: 'Checkpoint 4: Eine Nachricht an Tim',
+    register: 'informell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie haben am Sonntag mit Lena eine Jacke gekauft. Schreiben Sie Ihrem Freund Tim eine kurze Nachricht über den Sonntag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: ['Was Sie gekauft haben', 'Welche Farbe die Jacke hat', 'Was Sie danach gegessen haben'],
+    sample: 'Hallo Tim, am Sonntag habe ich mit Lena eine Jacke gekauft. Die Jacke ist blau und warm. Danach haben wir Kuchen gegessen und Kaffee getrunken. Liebe Grüße, Ana',
   },
 
   // ---- Goethe-Zertifikat A2 ---------------------------------------------

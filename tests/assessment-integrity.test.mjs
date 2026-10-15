@@ -172,7 +172,7 @@ test('checkpoint Schreiben: a graded text that failed fails the section — two 
 
 test('checkpoint retake: a new paper under the same rules, never the same 20 items reshuffled', async () => {
   // Codex review, 2026-10-07: „Nochmal" reshuffled the paper whose answers the result had just shown.
-  const { buildCheckpoint, scoreCheckpoint, SECTION_ORDER } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { buildCheckpoint, scoreCheckpoint, SECTION_ORDER, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   const { readFileSync } = await import('node:fs');
   const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
@@ -189,7 +189,11 @@ test('checkpoint retake: a new paper under the same rules, never the same 20 ite
     }
   }
   const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
-  assert.match(page, /buildCheckpoint\(\{ curriculum, checkpoint, pool, seed: round \?/);
+  assert.match(page, /buildCheckpoint\(\{ curriculum, checkpoint, pool, seed: paperSeed\(checkpoint, round\) \}\)/);
+  // …and paperSeed is the seed this test draws the rounds with: round 0 the default paper.
+  const cp1 = CURRICULUM_A11.checkpoints[0];
+  assert.equal(paperSeed(cp1, 0), undefined);
+  assert.equal(paperSeed(cp1, 2), `${cp1.id}-round-2`);
   assert.match(page, /setRound\(attempts\?\.used \|\| 0\)/, 'a reload starts at this window\'s next paper');
   assert.doesNotMatch(page, /shuffle\(built/, 'no reshuffle of the old paper');
 });

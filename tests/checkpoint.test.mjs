@@ -1468,20 +1468,22 @@ test('THE minLektion BOUND — no checkpoint draws an item its chapter has not t
 });
 
 test('the bound BITES — an item stamped past the chapter leaves the draw, and the paper stays 20', () => {
-  // A mutation rather than a claim: `extra-a11-l05-22` is drawn by checkpoint 2
+  // A mutation rather than a claim: `extra-a11-l05-05` is drawn by checkpoint 2
   // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — past
   // the chapter this paper closes — and it must disappear from the paper while
   // every section keeps its size. (The victim was `extra-a11-l05-08` until the
   // paper-wide leak cap of round 15 moved the draw, then `extra-a11-l05-03` until
   // round 18 added two L2 items and `Marokko`/`Ali` to DIALOG_NAMES — which
-  // re-stamps every origin item's `minLektion` and reseats the pool; the id is a
+  // re-stamps every origin item's `minLektion` and reseats the pool — then
+  // `extra-a11-l05-22` until checkpoint 2 left out every paper checkpoint 1 can
+  // serve, not only its default one (A1.2 DaF review #3, MAJOR 3); the id is a
   // measurement of the current build, not a fact about the pool.)
   const cp2 = CURRICULUM_A11.checkpoints[1];
   const drawn = (pool) => new Set(
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),
   );
-  const VICTIM = 'extra-a11-l05-22';
+  const VICTIM = 'extra-a11-l05-05';
   assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
 
   const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };

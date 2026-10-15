@@ -2185,17 +2185,48 @@ function buildSprechen(ctx) {
  * the recursion is cheap; a custom `seed` reshuffles this paper only, exactly
  * as "Nochmal" should.
  */
+// …and not only from their default paper (DaF review #3 for A1.2, MAJOR 3): a learner who retook
+// checkpoint 1 sat a round-1 paper, and with only the default rebuilt, checkpoint 3 could serve its
+// items again. A window allows PAPERS_PER_WINDOW papers of a checkpoint, so every paper an earlier
+// checkpoint can serve is rebuilt — a finite set, no history needed.
+// ponytail: a learner whose attempts cannot be counted (signed out, storage blocked) can draw
+// round 3+; those papers are not rebuilt.
 function poolIdsBefore(curriculum, checkpoint, pool) {
   const used = new Set();
   const cps = curriculum?.checkpoints || [];
   const idx = cps.findIndex((c) => c.nr === checkpoint.nr);
   if (idx <= 0) return used;
   for (const earlier of cps.slice(0, idx)) {
-    for (const item of buildCheckpoint({ curriculum, checkpoint: earlier, pool })) {
-      if (item.poolItemId) used.add(item.poolItemId);
+    for (let round = 0; round < PAPERS_PER_WINDOW; round += 1) {
+      for (const item of earlierPaper(curriculum, earlier, pool, round)) {
+        if (item.poolItemId) used.add(item.poolItemId);
+      }
     }
   }
   return used;
+}
+
+/**
+ * Papers a learner can sit of one checkpoint inside an attempt window: checkpointService's
+ * ATTEMPT_LIMIT (a test pins the two together). Round 0 is the default paper.
+ */
+export const PAPERS_PER_WINDOW = 3;
+
+/** The seed of paper `round` of a checkpoint — CheckpointPage draws every attempt with it. */
+export const paperSeed = (checkpoint, round) => (round ? `${checkpoint.id}-round-${round}` : undefined);
+
+// Memoised per (curriculum object, pool object), like the practice plans below: every later
+// checkpoint rebuilds the same earlier papers.
+const paperMemo = new WeakMap();
+const NO_POOL = {};
+function earlierPaper(curriculum, checkpoint, pool, round) {
+  let byPool = paperMemo.get(curriculum);
+  if (!byPool) { byPool = new WeakMap(); paperMemo.set(curriculum, byPool); }
+  let papers = byPool.get(pool || NO_POOL);
+  if (!papers) { papers = new Map(); byPool.set(pool || NO_POOL, papers); }
+  const key = `${checkpoint.id}#${round}`;
+  if (!papers.has(key)) papers.set(key, buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) }));
+  return papers.get(key);
 }
 
 /**

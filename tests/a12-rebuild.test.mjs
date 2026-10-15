@@ -192,6 +192,74 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   assert.deepEqual(problems, []);
 });
 
+test('DaF review #3 MAJOR 3: each A1.2 checkpoint writes its own task — new facts, taught words, a sample the Formcheck passes', async () => {
+  // All four checkpoints wrote a12-l03/06/09/12 again: the task the learner had just written, with
+  // its feedback, and a key whose draft and revision the allowance had already spent.
+  const { writingTaskByKey, courseWritingTasks } = await import('../src/data/writingTasks.js');
+  const { buildCheckpoint, chapterLektionen, chapterWritingTask } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { scoreWriting } = await import('../src/lib/lesson/writing.js');
+  const { courseSubmissionAllowed } = await import('../netlify/functions/evaluate-writing.mjs');
+  const v = await import('../scripts/validate-curriculum.mjs');
+  const spec = v.levelSpec('a1.2');
+  const taught = v.taughtUpTo(spec.curriculum, spec);
+  const lessonTasks = courseWritingTasks('a1.2');
+  const pool = JSON.parse(read('src/data/lessonPools/a12.json'));
+  for (const cp of CURRICULUM_A12.checkpoints) {
+    const task = writingTaskByKey('goethe_a1', cp.writingTaskKey);
+    assert.ok(task, `${cp.id}: ${cp.writingTaskKey} is in the bank`);
+    assert.equal(task.course, 'a1.2');
+    assert.equal(task.checkpoint, cp.nr);
+    assert.ok(!lessonTasks.some((t) => t.taskKey === task.taskKey || t.task === task.task), `${cp.id}: not a Lektion's task`);
+    const known = taught.get(cp.afterLektion);
+    if (task.register === 'formular') {
+      const values = v.formularSampleValues(task.sample, task.leitpunkte);
+      const res = scoreWriting({ kind: 'formular', fields: task.leitpunkte }, values);
+      assert.equal(res.ok, true, `${cp.id}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
+      assert.deepEqual(v.untaughtTokens({ questionDe: Object.values(values).join(' / ') }, known, spec), [], `${cp.id} sample values`);
+    } else {
+      const res = scoreWriting({ kind: 'mitteilung', minWords: task.minWords, maxWords: task.maxWords, leitpunkte: task.leitpunkte }, task.sample);
+      assert.deepEqual(res.checks.filter((c) => !c.ok).map((c) => c.key), [], `${cp.id}: the Formcheck calls the sample incomplete`);
+      assert.deepEqual(v.untaughtTokens({ questionDe: task.sample }, known, spec), [], `${cp.id} sample`);
+    }
+    // The paper mounts it, in the chapter's Textsorte.
+    const chapter = chapterLektionen(CURRICULUM_A12, cp);
+    const item = buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint: cp, pool }).find((i) => i.kind === 'gradedWriting');
+    assert.equal(item?.task?.taskKey, cp.writingTaskKey, `${cp.id}: the checkpoint's own task`);
+    assert.equal(item.task.kind, chapterWritingTask(chapter, 'a1.2').schreiben.kind, `${cp.id}: the chapter's Textsorte`);
+    // Draft and revision of the lesson task do not spend the checkpoint's submission.
+    const lessonKey = chapterWritingTask(chapter, 'a1.2').bank.taskKey;
+    assert.equal(courseSubmissionAllowed([lessonKey, lessonKey], lessonKey, 16).allowed, false, 'the lesson task is spent');
+    assert.equal(courseSubmissionAllowed([lessonKey, lessonKey], cp.writingTaskKey, 16).allowed, true, `${cp.id}: its own first draft`);
+    assert.equal(courseSubmissionAllowed([lessonKey, lessonKey, cp.writingTaskKey], cp.writingTaskKey, 16).allowed, true, `${cp.id}: and its revision`);
+  }
+});
+
+test('DaF review #3 MAJOR 3: no pool item in two checkpoints, whichever papers the learner sat', async () => {
+  // poolIdsBefore rebuilt only each earlier checkpoint's DEFAULT paper, so a retake (a round-1 paper)
+  // could hand a later checkpoint the same items: measured 3 shared items on A1.2 and 7 on A1.1 over
+  // the three papers a window allows. Every paper an earlier checkpoint can serve is excluded now.
+  const { buildCheckpoint, paperSeed, PAPERS_PER_WINDOW } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  assert.match(read('src/services/checkpointService.js'), new RegExp(`ATTEMPT_LIMIT = ${PAPERS_PER_WINDOW};`), 'the papers a window allows');
+  assert.match(read('src/pages/lesson/CheckpointPage.jsx'), /seed: paperSeed\(checkpoint, round\)/, 'the page draws with the same seeds');
+  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    const seenIn = new Map();
+    for (const checkpoint of curriculum.checkpoints) {
+      for (let round = 0; round < PAPERS_PER_WINDOW; round += 1) {
+        const items = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) });
+        assert.equal(items.length, 20, `${checkpoint.id} round ${round}: a full paper`);
+        for (const it of items) {
+          if (!it.poolItemId) continue;
+          const other = seenIn.get(it.poolItemId);
+          assert.ok(!other || other === checkpoint.id, `${it.poolItemId} in ${other} and ${checkpoint.id} (round ${round})`);
+          seenIn.set(it.poolItemId, checkpoint.id);
+        }
+      }
+    }
+  }
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.
