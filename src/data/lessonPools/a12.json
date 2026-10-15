@@ -42,7 +42,7 @@
    "explanationDe": "Nach brauchen steht der Akkusativ: der Markt wird den Markt.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "After **brauchen** (need) the object is in the accusative. Markt is masculine, so **der** becomes **den**: Ana braucht **den Markt**."
   },
   {
    "id": "f543962a-53a7-462a-ae98-16b3b18ea210",
@@ -83,7 +83,7 @@
    "explanationDe": "Maskulin im Akkusativ: ein wird einen.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Supermarkt is masculine. In the accusative, **ein** becomes **einen**: Tim braucht **einen Supermarkt**."
   },
   {
    "id": "96fc536b-d5c6-4106-9e49-ffbd7ee63d8d",
@@ -124,7 +124,7 @@
    "explanationDe": "bezahlen verlangt den Akkusativ: den Kuchen.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "What you pay for is the object of **bezahlen**, so it is accusative. Kuchen is masculine: **der** becomes **den Kuchen**."
   },
   {
    "id": "extra-a12-l03-04",
@@ -143,7 +143,7 @@
    "explanationDe": "kaufen verlangt den Akkusativ: einen Rucksack.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "What you buy is the object of **kaufen**, so it is accusative. Rucksack is masculine: **ein** becomes **einen Rucksack**."
   },
   {
    "id": "extra-a12-l03-05",
@@ -162,7 +162,7 @@
    "explanationDe": "Maskulin im Akkusativ: ein wird einen.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Bleistift is masculine. In the accusative, **ein** becomes **einen**: **einen Bleistift**."
   },
   {
    "id": "104bd5c9-3b26-4d6b-b888-87cf2ff9bea9",
@@ -205,7 +205,7 @@
    "explanationDe": "Neutrum bleibt im Akkusativ gleich: das Kilo Brot.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Only masculine nouns change in the accusative. Kilo is neuter, so **das** stays **das**: **das Kilo Brot**."
   },
   {
    "id": "extra-a12-l03-07",
@@ -224,7 +224,7 @@
    "explanationDe": "Feminin bleibt im Akkusativ gleich: die Quittung.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Only masculine nouns change in the accusative. Quittung is feminine, so **die** stays **die**: **die Quittung**."
   },
   {
    "id": "79296759-bb63-4841-86fc-e8f6fff572f9",
@@ -268,7 +268,7 @@
    "explanationDe": "Das Objekt steht im Akkusativ: einen Supermarkt.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Subject first, verb second, then the object in the accusative. Supermarkt is masculine: **Ich brauche einen Supermarkt.**"
   },
   {
    "id": "c5971132-1f0f-4f77-864c-da02a732da80",
@@ -312,7 +312,7 @@
    "explanationDe": "kaufen verlangt den Akkusativ: den Kuchen.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Kuchen is the object of **kaufen** and masculine, so **der** becomes **den**: **Ana kauft den Kuchen im Geschäft.**"
   },
   {
    "id": "extra-a12-l03-10",
@@ -332,7 +332,7 @@
    "explanationDe": "Nach brauchen heißt es einen Markt.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Markt is masculine and the object of **brauchen**, so **ein** becomes **einen**: **Ich brauche einen Markt im Zentrum.**"
   },
   {
    "id": "extra-a12-l03-11",
@@ -352,7 +352,7 @@
    "explanationDe": "Das Objekt von bezahlen steht im Akkusativ.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Kuchen is the object of **bezahlen** and masculine, so **der** becomes **den**: **Tim bezahlt den Kuchen an der Kasse.**"
   },
   {
    "id": "1a4533bd-b414-575d-a652-ff6fbe7adfd3",
@@ -626,7 +626,7 @@
    "explanationDe": "Das Verb ist steht auf Position 2, hinter der Angabe.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "The verb always takes position 2. When a place phrase opens the sentence, the verb follows it: Neben der Apotheke **ist** die Bank."
   },
   {
    "id": "extra-a12-l01-01",
@@ -646,7 +646,7 @@
    "explanationDe": "Steht zuerst vorn, kommt das Verb auf Position 2.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "When **zuerst** (first) opens the sentence, the verb comes second and the subject after it: **Zuerst gehen Sie geradeaus.**"
   },
   {
    "id": "extra-a12-l01-02",
@@ -666,7 +666,7 @@
    "explanationDe": "Nach dann steht das Verb, danach das Subjekt Sie.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "When **dann** (then) opens the sentence, the verb follows straight away and the subject Sie after it: **Dann gehen Sie an der Ecke links.**"
   },
   {
    "id": "extra-a12-l01-03",
@@ -686,7 +686,7 @@
    "explanationDe": "Das Verb kommt gehört auf Position 2.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "The verb belongs in position 2: after **danach** comes **kommt**, then the subject: **Danach kommt die Brücke.**"
   },
   {
    "id": "extra-a12-l01-04",
@@ -706,7 +706,7 @@
    "explanationDe": "Nach zuerst steht das Verb vor dem Subjekt.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "After **zuerst** the verb comes before the subject: **Zuerst gehen Sie bis zur Kirche.**"
   },
   {
    "id": "extra-a12-l01-05",
@@ -726,7 +726,7 @@
    "explanationDe": "In der W-Frage steht das Verb auf Position 2.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "In a question with a question word, the verb comes second: **Wie komme ich zum Rathaus?**"
   },
   {
    "id": "extra-a12-l01-06",
@@ -746,7 +746,7 @@
    "explanationDe": "Nach wo folgt das Verb ist, dann das Subjekt.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "The question word comes first, then the verb, then the subject: **Wo ist die Haltestelle?**"
   },
   {
    "id": "extra-a12-l01-07",
@@ -766,7 +766,7 @@
    "explanationDe": "Die Angabe am Platz steht vorn, das Verb auf Position 2.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "The place phrase opens the sentence, so the verb comes second and the subject after it: **Am Platz ist die Haltestelle.**"
   },
   {
    "id": "extra-a12-l01-08",
@@ -786,7 +786,7 @@
    "explanationDe": "Das Verb fährt steht direkt hinter dem Subjekt.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "In a statement the verb comes second, straight after the subject: **Die Straßenbahn fährt zum Zentrum.**"
   },
   {
    "id": "6d0a5335-94cd-5d2d-b844-0343b6171c63",
@@ -963,7 +963,7 @@
    "explanationDe": "in dem wird zu im: im Sommer.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**in** + **dem** contract to **im**: **im** Sommer (in summer)."
   },
   {
    "id": "3b9c3151-8adb-5f9c-8c69-75242836943c",
@@ -1002,7 +1002,7 @@
    "explanationDe": "an dem wird zu am: am Abend.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**an** + **dem** contract to **am**: **am** Abend (in the evening)."
   },
   {
    "id": "extra-a12-l11-03",
@@ -1021,7 +1021,7 @@
    "explanationDe": "zu dem wird zu zum: zum Bahnhof.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**zu** takes the dative, and **zu** + **dem** contract to **zum**: **zum** Bahnhof (to the station)."
   },
   {
    "id": "96034fda-42dc-5e3d-8c8d-3c7c82591baf",
@@ -1059,7 +1059,7 @@
    "explanationDe": "zu der wird zu zur: zur Kirche.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**zu** takes the dative. Kirche is feminine, and **zu** + **der** contract to **zur**: **zur** Kirche."
   },
   {
    "id": "49d0d7b5-dbe0-560a-bce0-266b040e5851",
@@ -1097,7 +1097,7 @@
    "explanationDe": "nach verlangt den Dativ: nach dem Regen.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**nach** (after) takes the dative. Regen is masculine: **nach dem Regen**."
   },
   {
    "id": "12fbaa17-f441-5422-a3d9-180578be0fdf",
@@ -1135,7 +1135,7 @@
    "explanationDe": "mit verlangt den Dativ: mit dem Bus.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**mit** (with, by) takes the dative. Bus is masculine: **mit dem Bus**."
   },
   {
    "id": "ed269168-30a9-5096-855e-ee4a45232dd8",
@@ -1176,7 +1176,7 @@
    "explanationDe": "aus verlangt den Dativ: aus der Kirche.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**aus** (out of) takes the dative. Kirche is feminine: **aus der Kirche**."
   },
   {
    "id": "aa5d74f8-d18d-5156-bf81-2e0dceb66b8e",
@@ -1357,7 +1357,7 @@
    "explanationDe": "Nach mit steht der Dativ: mit dem Bus.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**mit** takes the dative, so Bus (masculine) gets **dem**: **Wir fahren bei Regen mit dem Bus.**"
   },
   {
    "id": "eec3bcc5-32be-5e44-915e-c9c810980456",
@@ -1396,7 +1396,7 @@
    "explanationDe": "Feminin im Dativ: mit der Straßenbahn.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**mit** takes the dative. Straßenbahn is feminine, so **die** becomes **der**: **mit der Straßenbahn**."
   },
   {
    "id": "7227417e-2b9e-549e-bfcb-6932043bf3d2",
@@ -1478,7 +1478,7 @@
    "explanationDe": "Die du-Form des Imperativs heißt komm.",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": ""
+   "explanationEn": "The imperative for du drops the pronoun and the ending -st: du kommst → **komm**!"
   },
   {
    "id": "1eb27177-1bde-5a01-ab06-7e07502789e5",
@@ -1518,7 +1518,7 @@
    "explanationDe": "Bei Sie steht die Form auf -en vor dem Pronomen.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "The polite imperative: the verb in its -en form, then **Sie**: **Helfen** Sie mir bitte!"
   },
   {
    "id": "9194344b-73c8-5b83-aec9-4d275b788251",
@@ -1558,7 +1558,7 @@
    "explanationDe": "Höfliche Bitte: Verb auf -en, dann Sie.",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": ""
+   "explanationEn": "A polite request: the verb in its -en form first, then **Sie**: **Warten** Sie kurz!"
   },
   {
    "id": "d12bc530-e164-55ab-a6be-8a5e51cb4a39",
@@ -1598,7 +1598,7 @@
    "explanationDe": "Die du-Form von holen heißt hol.",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": ""
+   "explanationEn": "The imperative for du drops the pronoun and -st: du holst → **hol**! (Hole is also correct.)"
   },
   {
    "id": "f2f96b63-3d06-5030-a163-bb44d3995252",
@@ -1663,7 +1663,7 @@
    "explanationDe": "Die du-Form ohne Endung und ohne Pronomen: Hilf!",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "For du, drop the pronoun and the ending: du hilfst → **Hilf!** The verb opens the sentence: **Hilf mir bitte mit der Waschmaschine!**"
   },
   {
    "id": "52c72096-8586-55cd-923f-2d62c2d6eeb0",
@@ -1705,7 +1705,7 @@
    "explanationDe": "Bei du fällt das Pronomen weg: Warte!",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": ""
+   "explanationEn": "For du, the pronoun drops and the verb opens the sentence: du wartest → **Warte!** **Warte kurz vor der Garage!**"
   },
   {
    "id": "f957e0b7-85cd-56c6-b645-14be566d80f7",
@@ -1745,7 +1745,7 @@
    "explanationDe": "Bei Sie bleibt das Pronomen hinter dem Verb.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "For Sie, the pronoun stays, right after the verb: **Holen Sie das Sofa aus der Garage!**"
   },
   {
    "id": "c96abb70-b2ad-58b9-bff2-29c141cfb222",
@@ -1810,7 +1810,7 @@
    "explanationDe": "Die Vorsilbe aus steht am Ende: Mach … aus!",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": ""
+   "explanationEn": "An imperative drops the pronoun du, and a separable prefix goes to the end: **Mach den Fernseher aus!**"
   },
   {
    "id": "extra-a12-l08-09",
@@ -1830,7 +1830,7 @@
    "explanationDe": "Bei der Bitte steht das Verb auf Position 1.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "A polite request starts with the verb, then Sie: **Helfen Sie mir bitte mit dem Schrank!**"
   },
   {
    "id": "11f8fb69-081c-5780-baff-9a90e3c4f4e2",
@@ -1916,7 +1916,7 @@
    "explanationDe": "dürfen heißt Erlaubnis; der Infinitiv steht am Ende.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "**dürfen** means permission; with **nicht** it means something is not allowed. The infinitive goes to the end: Hier **dürfen** Sie nicht mit dem Fahrrad fahren."
   },
   {
    "id": "0a32776c-cd24-4c98-a3ac-7856bf165a1e",
@@ -1957,7 +1957,7 @@
    "explanationDe": "Das Modalverb steht auf Position 2.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "The modal verb takes position 2 and the infinitive goes to the end: Ich **möchte** ein Ticket kaufen."
   },
   {
    "id": "extra-a12-l09-03",
@@ -1976,7 +1976,7 @@
    "explanationDe": "In der ich-Form fehlt die Endung: ich muss.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "The ich-form of **müssen** has no ending: ich **muss**. The infinitive einsteigen goes to the end."
   },
   {
    "id": "extra-a12-l09-04",
@@ -1995,7 +1995,7 @@
    "explanationDe": "Die man-Form heißt kann; fahren steht am Ende.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "The man-form is like the er-form: man **kann**. The infinitive fahren goes to the end."
   },
   {
    "id": "extra-a12-l09-05",
@@ -2014,7 +2014,7 @@
    "explanationDe": "sollen heißt Auftrag; der Infinitiv steht am Ende.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "**sollen** expresses an instruction or a plan. The modal comes second and abfahren goes to the end: Wann **soll** der Bus abfahren?"
   },
   {
    "id": "1c3cdcf7-993c-481b-8b21-7c219c322b05",
@@ -2058,7 +2058,7 @@
    "hint": null,
    "caseSensitive": true,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "You address Herr Berg politely, so you use **Sie**, written with a capital S."
   },
   {
    "id": "extra-a12-l09-06",
@@ -2080,7 +2080,7 @@
    "explanationDe": "Das Modalverb auf Position 2, nehmen ganz am Ende.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "The modal verb takes position 2 and the infinitive nehmen goes to the very end: **Ich muss den Müll nach Hause nehmen.**"
   },
   {
    "id": "extra-a12-l09-07",
@@ -2100,7 +2100,7 @@
    "explanationDe": "Nach dem Fragewort steht darf, am Ende fahren.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "After the question word comes the modal **darf**, and fahren goes to the end: **Wo darf ich langsam fahren?**"
   },
   {
    "id": "extra-a12-l09-08",
@@ -2120,7 +2120,7 @@
    "explanationDe": "Der Infinitiv fliegen steht ganz am Ende.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "With a modal verb, the infinitive goes to the very end: **Ich kann um neun Uhr fliegen.**"
   },
   {
    "id": "720fd50e-311c-49b2-8474-691d328d3cc4",
@@ -2202,7 +2202,7 @@
    "explanationDe": "Vor eine Bettdecke steht keine.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**kein** replaces **ein**: eine Bettdecke → **keine Bettdecke**."
   },
   {
    "id": "extra-a12-l04-02",
@@ -2221,7 +2221,7 @@
    "explanationDe": "Maskulin im Nominativ: kein Spiegel.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**kein** replaces **ein**. Spiegel is masculine and the subject here: **kein Spiegel**."
   },
   {
    "id": "extra-a12-l04-03",
@@ -2240,7 +2240,7 @@
    "explanationDe": "Maskulin im Akkusativ: keinen Rabatt.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "**es gibt** takes the accusative. Rabatt is masculine, so **einen** becomes **keinen**: Es gibt **keinen Rabatt**."
   },
   {
    "id": "extra-a12-l04-04",
@@ -2259,7 +2259,7 @@
    "explanationDe": "Feminin im Akkusativ: keine Toilette.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**kein** replaces **ein**. Toilette is feminine: eine Toilette → **keine Toilette**."
   },
   {
    "id": "extra-a12-l04-05",
@@ -2278,7 +2278,7 @@
    "explanationDe": "Neutrum ohne Artikel verneint kein.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**kein** replaces **ein**. Kissen is neuter: ein Kissen → **kein Kissen**."
   },
   {
    "id": "extra-a12-l04-06",
@@ -2297,7 +2297,7 @@
    "explanationDe": "Ein Verb verneint man mit nicht am Satzende.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "To negate a verb, use **nicht**, here at the end of the sentence: Die Steckdose funktioniert **nicht**."
   },
   {
    "id": "extra-a12-l04-07",
@@ -2316,7 +2316,7 @@
    "explanationDe": "Vor einem Adjektiv steht nicht.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "To negate an adjective, put **nicht** in front of it: Der Boden ist **nicht schön**."
   },
   {
    "id": "extra-a12-l04-08",
@@ -2335,7 +2335,7 @@
    "explanationDe": "Ein Nomen mit das verneint man mit nicht.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": ""
+   "explanationEn": "To say no to the whole sentence, **nicht** goes at the end: Wir wechseln das Zimmer heute **nicht**."
   },
   {
    "id": "extra-a12-l04-09",
@@ -2354,7 +2354,7 @@
    "explanationDe": "Vor dem Adjektiv gut steht nicht.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "**nicht** goes in front of the adjective it negates: Das Angebot ist **nicht gut**."
   },
   {
    "id": "d58b99cd-91ae-543c-9b59-ccf080542e9f",
@@ -2393,7 +2393,7 @@
    "explanationDe": "Ein Nomen ohne Artikel verneint kein.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "A noun with **ein** (or no article) is negated with **kein**, not nicht: **Im Zimmer ist kein Kissen.**"
   },
   {
    "id": "extra-a12-l04-11",
@@ -2413,7 +2413,7 @@
    "explanationDe": "Hier verneint man die Angabe: nicht am Fenster.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "Here you negate the place phrase, so use **nicht**: **Der Vorhang ist nicht am Fenster.**"
   },
   {
    "id": "extra-a12-l04-12",
@@ -2433,7 +2433,7 @@
    "explanationDe": "nicht steht vor dem Adjektiv schön.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**nicht** stands in front of the adjective it negates: **Der Eingang ist nicht schön.**"
   },
   {
    "id": "extra-a12-l04-13",
@@ -2453,7 +2453,7 @@
    "explanationDe": "Feminin im Akkusativ: keine Steckdose.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "Steckdose is feminine, and **haben** takes the accusative: eine → **keine**: **Das Hotel hat keine Steckdose.**"
   },
   {
    "id": "0aae594f-f849-5da0-a289-2aafc08052ba",
@@ -2535,7 +2535,7 @@
    "explanationDe": "Nach der Person im Nominativ fragt wer.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "To ask who someone is, use **wer**: **Wer** ist die Frau da?"
   },
   {
    "id": "extra-a12-l07-02",
@@ -2555,7 +2555,7 @@
    "explanationDe": "Die Frage nach dem Subjekt heißt wer.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "**wer** asks for a person, the subject of the sentence: **Wer** ist das?"
   },
   {
    "id": "extra-a12-l07-03",
@@ -2575,7 +2575,7 @@
    "explanationDe": "Maskulin im Nominativ: der Onkel.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "Onkel is masculine and the subject, so the article is **der**: **Der** Onkel ist groß."
   },
   {
    "id": "extra-a12-l07-04",
@@ -2594,7 +2594,7 @@
    "explanationDe": "Feminin im Nominativ: die Oma.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "Oma is feminine, so the article is **die**: Das ist **die** Oma."
   },
   {
    "id": "extra-a12-l07-05",
@@ -2613,7 +2613,7 @@
    "explanationDe": "Nach sein steht das Subjekt im Nominativ.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "**sein** links two things in the nominative: Meine Tante **ist** glücklich."
   },
   {
    "id": "6466fa36-59de-4a0b-9081-378d0fbd217b",
@@ -2681,7 +2681,7 @@
    "explanationDe": "wer fragt nach der Person im Nominativ.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "**wer** asks for a person; the person after **ist** stays in the nominative: **Wer ist die Frau mit dem kurzen Haar?**"
   },
   {
    "id": "extra-a12-l07-07",
@@ -2701,7 +2701,7 @@
    "explanationDe": "Das Subjekt mein Opa steht im Nominativ.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "The subject **mein Opa** is in the nominative, then the verb: **Mein Opa ist alt.**"
   },
   {
    "id": "extra-a12-l07-08",
@@ -2721,7 +2721,7 @@
    "explanationDe": "Maskulin im Nominativ: mein Onkel.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "Onkel is masculine, so the possessive takes no ending: **mein Onkel**: **Das ist mein Onkel.**"
   },
   {
    "id": "extra-a12-l07-09",
@@ -2741,7 +2741,7 @@
    "explanationDe": "Neutrum im Nominativ: das Kind.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "Kind is neuter, so the article is **das**: **Das Kind ist klein.**"
   },
   {
    "id": "7d67faf4-d881-4f2e-aac9-f32cf6285d6c",
@@ -2963,7 +2963,7 @@
    "explanationDe": "Der Hunderter steht vorn: vierhundertachtzig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "Hundreds come first: 480 is **vierhundertachtzig** (four hundred eighty)."
   },
   {
    "id": "432f86d5-0c06-4e22-a14f-e23b99bc66da",
@@ -3005,7 +3005,7 @@
    "explanationDe": "Die 20 heißt zwanzig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "20 is **zwanzig**."
   },
   {
    "id": "7a32d869-b9b6-41eb-a918-bbcbca5ee949",
@@ -3047,7 +3047,7 @@
    "explanationDe": "Erst die Eins, dann und, dann zwanzig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "German says the ones first: 21 is **einundzwanzig** (one-and-twenty)."
   },
   {
    "id": "extra-a12-l02-04",
@@ -3067,7 +3067,7 @@
    "explanationDe": "Man liest von hinten nach vorn: achtundvierzig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "Read numbers over 20 from the back: 48 is **achtundvierzig** (eight-and-forty)."
   },
   {
    "id": "9e49a70d-4e55-4e18-9c1a-3d8467c29c00",
@@ -3109,7 +3109,7 @@
    "explanationDe": "Die 50 heißt fünfzig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "50 is **fünfzig**."
   },
   {
    "id": "extra-a12-l02-06",
@@ -3129,7 +3129,7 @@
    "explanationDe": "Die 90 heißt neunzig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "90 is **neunzig**."
   },
   {
    "id": "extra-a12-l02-07",
@@ -3149,7 +3149,7 @@
    "explanationDe": "Die 30 heißt dreißig.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "30 is **dreißig**, with ß."
   },
   {
    "id": "88bbeef2-e9a2-46d8-9cc2-b9728f7d76d8",
@@ -3190,7 +3190,7 @@
    "explanationDe": "Die Ordnungszahl bekommt die Endung: im dritten Stockwerk.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "An ordinal number takes an ending like an adjective: im **dritten** Stockwerk (on the third floor)."
   },
   {
    "id": "extra-a12-l02-09",
@@ -3209,7 +3209,7 @@
    "explanationDe": "Die Ordnungszahl zu eins heißt erste.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "The ordinal for one is **erste** (first): die **erste** Wohnung."
   },
   {
    "id": "extra-a12-l02-11",
@@ -3325,7 +3325,7 @@
    "explanationDe": "essen ist unregelmäßig: gegessen.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "**essen** has an irregular participle: **gegessen**."
   },
   {
    "id": "ede73dca-697a-5fdc-846e-9ec82bf99aa7",
@@ -3363,7 +3363,7 @@
    "explanationDe": "trinken ist unregelmäßig: getrunken.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "**trinken** has an irregular participle: **getrunken**."
   },
   {
    "id": "extra-a12-l12-03",
@@ -3382,7 +3382,7 @@
    "explanationDe": "Regelmäßig mit ge- und -t: gekauft.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "A regular verb forms the participle with ge- and -t: kaufen → **gekauft**."
   },
   {
    "id": "a9466950-a2d2-5ef1-bb27-2a43751f27ed",
@@ -3420,7 +3420,7 @@
    "explanationDe": "Regelmäßig mit ge- und -t: gekocht.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "A regular verb forms the participle with ge- and -t: kochen → **gekocht**."
   },
   {
    "id": "5d49ef45-4884-5491-9423-fa519fb9340a",
@@ -3458,7 +3458,7 @@
    "explanationDe": "Regelmäßig mit ge- und -t: gemacht.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "A regular verb forms the participle with ge- and -t: machen → **gemacht**."
   },
   {
    "id": "extra-a12-l12-06",
@@ -3477,7 +3477,7 @@
    "explanationDe": "Regelmäßig mit ge- und -t: gefeiert.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "A regular verb forms the participle with ge- and -t: feiern → **gefeiert**."
   },
   {
    "id": "extra-a12-l12-07",
@@ -3496,7 +3496,7 @@
    "explanationDe": "Regelmäßig mit ge- und -t: geholt.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "A regular verb forms the participle with ge- and -t: holen → **geholt**."
   },
   {
    "id": "2ad09e18-9732-5d7a-9af3-e3abf270533f",
@@ -3617,7 +3617,7 @@
    "explanationDe": "haben auf Position 2, das Partizip am Ende.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "**haben** takes position 2 and the participle goes to the end: **Ich habe die Kartoffel gekauft.**"
   },
   {
    "id": "b2912ee9-51c3-551b-8c92-de9d5e10451d",
@@ -3656,7 +3656,7 @@
    "explanationDe": "Das Partizip gekocht steht ganz am Ende.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "The participle **gekocht** goes to the very end: **Tim hat den Reis gekocht.**"
   },
   {
    "id": "279d7e13-7875-58ef-b396-ce7bca7f21f9",
@@ -3698,7 +3698,7 @@
    "explanationDe": "trinken bildet getrunken, nicht getrinkt.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "**trinken** is irregular: the participle is **getrunken**, not getrinkt."
   },
   {
    "id": "8a5bcfc5-35b5-54ff-9f8d-ed44d8ce770e",
@@ -3740,7 +3740,7 @@
    "explanationDe": "Nach haben steht das Partizip gekauft.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "The Perfekt needs the participle, not the infinitive: kaufen → **gekauft**: **Wir haben das Fleisch gekauft.**"
   },
   {
    "id": "b055a395-e5f2-46be-887c-aa62a81fc1ee",
@@ -3781,7 +3781,7 @@
    "explanationDe": "für verlangt den Akkusativ: für ihre Oma.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "**für** (for) takes the accusative: **für** ihre Oma."
   },
   {
    "id": "07cd3c6a-a411-4ce9-b531-9e9cee109f24",
@@ -3822,7 +3822,7 @@
    "explanationDe": "ohne verlangt den Akkusativ: ohne den Schal.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "**ohne** (without) takes the accusative: **ohne** den Schal."
   },
   {
    "id": "d2c19153-90c4-49e7-bdfe-1cd9a4776565",
@@ -3863,7 +3863,7 @@
    "explanationDe": "durch verlangt den Akkusativ: durch das Kaufhaus.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "**durch** (through) takes the accusative: **durch** das Kaufhaus."
   },
   {
    "id": "extra-a12-l10-04",
@@ -3882,7 +3882,7 @@
    "explanationDe": "Nach für steht meinen Bruder im Akkusativ.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "**für** takes the accusative, so mein becomes **meinen**: **für** meinen Bruder."
   },
   {
    "id": "feec8cf9-65b8-4018-8f0f-eb07078c8fa9",
@@ -3928,7 +3928,7 @@
    "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "After **für** comes the accusative: **Ich kaufe die Jacke für meine Oma.**"
   },
   {
    "id": "extra-a12-l10-06",
@@ -3948,7 +3948,7 @@
    "explanationDe": "ohne verlangt den Akkusativ: ohne den Mantel.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "**ohne** takes the accusative. Mantel is masculine: **ohne den Mantel**: **Tim geht ohne den Mantel.**"
   },
   {
    "id": "extra-a12-l10-07",
@@ -3968,7 +3968,7 @@
    "explanationDe": "Nach für heißt es meinen Bruder.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "After **für** comes the accusative. Bruder is masculine, so mein becomes **meinen**: **für meinen Bruder**."
   },
   {
    "id": "extra-a12-l10-08",
@@ -3988,7 +3988,7 @@
    "explanationDe": "Nach ohne steht den Schal im Akkusativ.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": ""
+   "explanationEn": "**ohne** takes the accusative. Schal is masculine: **ohne den Schal**."
   },
   {
    "id": "5aea9165-0c9b-4ed2-b119-aae4799a0fa9",
@@ -4217,7 +4217,7 @@
    "explanationDe": "Nach der Uhrzeit fragt wann.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "To ask for a time, use **wann** (when): **Wann** fährt der Zug? — Um acht Uhr."
   },
   {
    "id": "3558a177-5f22-4700-9512-ff7dc3ac7d9d",
@@ -4261,7 +4261,7 @@
    "explanationDe": "Nach der Richtung fragt wohin.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "To ask for a direction, use **wohin** (where to): **Wohin** fahren wir? — Nach Italien."
   },
   {
    "id": "extra-a12-l05-03",
@@ -4281,7 +4281,7 @@
    "explanationDe": "Nach der Zahl der Fahrten fragt wie oft.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "To ask how often, use **wie oft**: **Wie oft** fährt der Bus? — Jede Stunde."
   },
   {
    "id": "extra-a12-l05-04",
@@ -4301,7 +4301,7 @@
    "explanationDe": "Nach dem Grund fragt warum.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "To ask for a reason, use **warum** (why): **Warum** stehst du so früh auf?"
   },
   {
    "id": "cb094e7e-51c8-49e1-ac2e-60d1413cc7c5",
@@ -4345,7 +4345,7 @@
    "explanationDe": "Nach der Dauer fragt wie lange.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "To ask how long something takes, use **wie lange**: **Wie lange** fährt der Zug nach Köln? — Zwei Stunden."
   },
   {
    "id": "ba9eb248-a125-483e-a452-1883fe389de3",
@@ -4389,7 +4389,7 @@
    "explanationDe": "Nach der Person fragt wer.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "To ask for a person, use **wer** (who): **Wer** hat den Fahrplan? — Tim."
   },
   {
    "id": "475c7b01-7771-4219-8170-e9646e4dcff3",
@@ -4433,7 +4433,7 @@
    "explanationDe": "Das Fragewort steht vorn, das Verb dahinter.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": ""
+   "explanationEn": "The question word comes first, then the verb: **Wann kommt der Bus zum Konzert?**"
   },
   {
    "id": "extra-a12-l05-08",
@@ -4453,7 +4453,7 @@
    "explanationDe": "Nach wohin folgt sofort das Verb fahren.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "After **wohin** the verb follows straight away: **Wohin fahren wir im Urlaub?**"
   },
   {
    "id": "758bcf05-88c8-5d4a-a97a-6e9e5ca1a5ef",
@@ -4492,7 +4492,7 @@
    "explanationDe": "Hinter dem Fragewort steht das Verb.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "In a question with a question word, the verb comes second: **Wann ist der Film im Kino?**"
   },
   {
    "id": "ae1873de-5a3e-5e6a-b1f3-26622fe99392",
@@ -4704,7 +4704,7 @@
    "explanationDe": "nehmen wechselt den Vokal: sie nimmt.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**nehmen** changes its vowel in the du- and er/sie-forms: sie **nimmt**."
   },
   {
    "id": "extra-a12-l06-02",
@@ -4723,7 +4723,7 @@
    "explanationDe": "helfen wechselt den Vokal: sie hilft.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**helfen** changes e to i: sie **hilft**."
   },
   {
    "id": "extra-a12-l06-03",
@@ -4742,7 +4742,7 @@
    "explanationDe": "sehen wechselt den Vokal: er sieht.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**sehen** changes e to ie: er **sieht**."
   },
   {
    "id": "6a094ae6-7783-52d9-b946-86ab05018364",
@@ -4780,7 +4780,7 @@
    "explanationDe": "schlafen wechselt den Vokal: sie schläft.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**schlafen** changes a to ä: sie **schläft**."
   },
   {
    "id": "7e299b81-ed13-5094-8027-426571eeed01",
@@ -4809,8 +4809,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 5,
-   "questionDe": "Tim ___ am Morgen nichts, sein Bauch ist krank. (essen)",
-   "questionEn": "Tim eats nothing in the morning.",
+   "questionDe": "Tim ___ am Morgen nichts, sein Bauch tut weh. (essen)",
+   "questionEn": "Tim eats nothing in the morning; his stomach hurts.",
    "options": null,
    "answer": "isst",
    "accepted": [
@@ -4819,7 +4819,7 @@
    "explanationDe": "essen wechselt den Vokal: er isst.",
    "hint": null,
    "minLektion": null,
-   "explanationEn": ""
+   "explanationEn": "**essen** changes e to i: er **isst**."
   },
   {
    "id": "extra-a12-l06-06",
@@ -4838,7 +4838,7 @@
    "explanationDe": "Die man-Form ist wie die er-Form: nimmt.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "The man-form is the same as the er-form: man **nimmt**."
   },
   {
    "id": "ad02aa51-5ef8-5df9-9de2-7923b402110c",
@@ -4878,7 +4878,7 @@
    "explanationDe": "Die du-Form wechselt den Vokal: siehst.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "The vowel change happens in the du-form too: du **siehst**."
   },
   {
    "id": "3afb03cf-5321-543d-bc23-e28c699b776a",
@@ -4956,7 +4956,7 @@
    "hint": null,
    "caseSensitive": true,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "You address Frau Chakiri politely, so the dative pronoun is **Ihnen**, with a capital I."
   },
   {
    "id": "b93aaea0-09a0-55f7-9beb-b0363634f05f",
@@ -5128,18 +5128,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Korrigieren Sie: „Mein Mann schlaft nicht gut, sein Rücken ist krank.“",
+   "questionDe": "Korrigieren Sie: „Mein Mann schlaft nicht gut, sein Rücken tut weh.“",
    "questionEn": "Fix the verb form.",
    "options": null,
-   "answer": "Mein Mann schläft nicht gut, sein Rücken ist krank.",
+   "answer": "Mein Mann schläft nicht gut, sein Rücken tut weh.",
    "accepted": [
-    "Mein Mann schläft nicht gut, sein Rücken ist krank.",
-    "Mein Mann schläft nicht gut, sein Rücken ist krank"
+    "Mein Mann schläft nicht gut, sein Rücken tut weh.",
+    "Mein Mann schläft nicht gut, sein Rücken tut weh"
    ],
    "explanationDe": "Die er-Form von schlafen heißt schläft.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**schlafen** changes a to ä in the er-form: er **schläft**: **Mein Mann schläft nicht gut, sein Rücken tut weh.**"
   },
   {
    "id": "c8d92aa6-dd5a-517f-b2d4-0e94ed4d1fdf",
@@ -5179,7 +5179,7 @@
    "explanationDe": "Die sie-Form von helfen heißt hilft.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**helfen** changes e to i in the sie-form: **Die Tablette hilft gegen Fieber.**"
   }
  ],
  "lineHorizon": {

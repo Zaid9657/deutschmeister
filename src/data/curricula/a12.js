@@ -199,6 +199,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Der Satz: das Verb steht auf Position 2',
         bodyDe: 'Im Aussagesatz steht das Verb an zweiter Stelle: Sie **gehen** geradeaus. Steht eine Angabe vorn, rutscht das Subjekt hinter das Verb: Dann **gehen** Sie links. Auch in der W-Frage steht das Verb auf Position 2: Wie **komme** ich zum Rathaus? Feste Wendungen für den Weg: **zum** Rathaus, **zur** Kirche, **an der** Ecke — die Regel kommt in Lektion 11.',
+        bodyEn: 'In a statement the verb comes second: Sie **gehen** geradeaus. If another phrase opens the sentence, the subject moves behind the verb: Dann **gehen** Sie links. In a question with a question word the verb is second too: Wie **komme** ich zum Rathaus? Learn the route phrases as fixed chunks for now: **zum** Rathaus, **zur** Kirche, **an der** Ecke — the rule comes in Lektion 11.',
         examples: ['Zuerst gehen Sie geradeaus bis zur Kirche.', 'Nein. Dann gehen Sie an der Ecke links.'],
         ruleSlug: 'basic-sentence-structure',
       },
@@ -209,6 +210,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie eine fremde Person höflich um den Weg zur Apotheke.',
+          promptEn: 'Politely ask a stranger the way to the pharmacy.',
           hintWords: ['der Weg', 'geradeaus', 'die Apotheke'],
           // Sie — mission 5 lässt eine fremde Passantin fragen; die Wegfrage ist eine Fremdansprache.
           anrede: 'Sie',
@@ -219,6 +221,7 @@ export const CURRICULUM_A12 = {
         kind: 'formular',
         taskKey: 'a12-l01',
         taskDe: 'Ana Chakiri wohnt in Bremen am Platz 4. Sie fährt mit der Straßenbahn zum Kurs. Ihre Haltestelle heißt Rathaus. Füllen Sie die Anmeldung für die Stadtbibliothek aus.',
+        taskEn: 'Ana Chakiri lives in Bremen, am Platz 4. She takes the tram to her course; her stop is called Rathaus. Fill in the registration form for the city library.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Haltestelle', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -290,6 +293,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Zahlen ab 20 und die Ordnungszahlen',
         bodyDe: 'Zahlen über 20 liest man von hinten nach vorn: 21 ist **einundzwanzig**, 48 ist achtundvierzig. Der Hunderter steht vorn: 480 ist **vierhundertachtzig**. Die Ordnungszahl bekommt bis 19 die Endung -te: das **dritte** Stockwerk, die **erste** Wohnung. Ab 20 heißt die Endung -ste: der zwanzigste Mai.',
+        bodyEn: 'German reads numbers over 20 from the back: 21 is **einundzwanzig** (one-and-twenty), 48 is achtundvierzig. Hundreds come first: 480 is **vierhundertachtzig**. Ordinal numbers up to 19 take -te: das **dritte** Stockwerk (the third floor), die **erste** Wohnung (the first flat). From 20 on the ending is -ste: der zwanzigste Mai.',
         examples: ['Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', 'Ja, der Balkon ist da. Das dritte Stockwerk ist frei.'],
         ruleSlug: 'numbers-counting',
       },
@@ -300,6 +304,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Wohnen: Zimmer? Stockwerk? Miete?',
+          promptEn: 'Ask and answer questions about housing: rooms? floor? rent?',
           hintWords: ['das Stockwerk', 'die Miete', 'die Küche'],
           // Sie — der Gegenüber ist der Vermieter bzw. der Schalterbeamte aus Mission 4.
           anrede: 'Sie',
@@ -312,6 +317,7 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l02',
         taskDe: 'Sie möchten die Wohnung aus der Anzeige besichtigen. Schreiben Sie dem Vermieter eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You would like to view the flat from the advert. Write the landlord a short message. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you would like to come; your question about the rent.',
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen möchten', 'Ihre Frage zur Miete'],
         minWords: 25,
         maxWords: 45,
@@ -380,6 +386,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Der Akkusativ: den und einen',
         bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur der Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu.',
+        bodyEn: 'Many verbs take an object in the accusative: brauchen (need), kaufen (buy), bezahlen (pay for). Only masculine nouns change: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminine, neuter and plural stay the same: die Quittung, das Geld, das Museum. The form keinen follows in Lektion 4.',
         examples: ['Ich brauche einen Supermarkt und einen Markt.', 'Ja. Ich bezahle das Brot und den Kuchen.'],
         ruleSlug: 'accusative-intro',
       },
@@ -390,6 +397,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Sagen Sie im Kaufhaus, was Sie brauchen, und fragen Sie nach dem Geschäft.',
+          promptEn: 'In the department store, say what you need and ask for the shop.',
           hintWords: ['das Kaufhaus', 'das Geschäft', 'brauchen'],
           // Sie — der Gegenüber ist Verkaufspersonal (Mission 3, „helpful supermarket employee“).
           anrede: 'Sie',
@@ -400,6 +408,7 @@ export const CURRICULUM_A12 = {
         kind: 'formular',
         taskKey: 'a12-l03',
         taskDe: 'Ana Chakiri wohnt in Bremen und hat am Donnerstag Kurs. Sie möchte Bücher lesen und geht in die Bibliothek. Füllen Sie die Anmeldung für die Bibliothek aus.',
+        taskEn: 'Ana Chakiri lives in Bremen and has her course on Thursday. She wants to read books and goes to the library. Fill in the library registration form.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Tag', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -471,6 +480,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'nicht oder kein?',
         bodyDe: '**kein** verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel: eine Lampe → **keine** Lampe, ein Spiegel → **kein** Spiegel, im Akkusativ **keinen** Rabatt. **nicht** verneint alles andere: ein Verb (funktioniert **nicht**), ein Adjektiv (**nicht** schön) oder ein Nomen mit bestimmtem Artikel. **nicht** steht am Satzende oder direkt vor dem Wort.',
+        bodyEn: '**kein** negates a noun with ein or with no article: eine Lampe → **keine** Lampe, ein Spiegel → **kein** Spiegel, in the accusative **keinen** Rabatt. **nicht** negates everything else: a verb (funktioniert **nicht**), an adjective (**nicht** schön) or a noun with der, die or das. **nicht** stands at the end of the sentence or right before the word it negates.',
         examples: ['Nein. Hier ist keine Lampe und kein Spiegel.', 'Das Kissen ist da, aber die Steckdose funktioniert nicht.'],
         ruleSlug: 'negation',
       },
@@ -481,6 +491,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Reklamieren Sie höflich an der Rezeption: Im Zimmer fehlt etwas.',
+          promptEn: 'Make a polite complaint at reception: something is missing from your room.',
           hintWords: ['nicht', 'kein', 'die Rechnung'],
           // Sie — der Gegenüber ist die Rezeption; die höfliche Absage in Mission 6 siezt ebenso.
           anrede: 'Sie',
@@ -493,6 +504,7 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l04',
         taskDe: 'Sie wohnen im Hotel. Im Zimmer funktioniert etwas nicht. Schreiben Sie dem Hotel eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are staying in a hotel and something in your room does not work. Write the hotel a short message. Open with a greeting and close with a sign-off. Cover three points: your room number and the day; what in the room does not work; your question about the toilet in the corridor.',
         leitpunkte: ['Ihre Zimmernummer und der Tag', 'Was im Zimmer nicht funktioniert', 'Ihre Frage zur Toilette im Flur'],
         minWords: 25,
         maxWords: 45,
@@ -561,6 +573,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'W-Fragen: das Fragewort steht vorn',
         bodyDe: 'In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter: **Wann** fährt der Zug? **Wohin** fahren wir? **Wie oft** kommt der Bus? **Wer** fragt nach der Person, **was** nach der Sache, **wo** nach dem Ort, **wohin** nach der Richtung, **warum** nach dem Grund, **wie viel** nach der Menge und wie lange nach der Dauer.',
+        bodyEn: 'The question word comes first and the verb right after it: **Wann** fährt der Zug? **Wohin** fahren wir? **Wie oft** kommt der Bus? **Wer** asks for a person, **was** for a thing, **wo** for a place, **wohin** for a direction, **warum** for a reason, **wie viel** for an amount and wie lange for a duration.',
         examples: ['Wann fährt der Zug? Um wie viel Uhr?', 'Der Weg ist weit. Wie oft fährt der Bus?'],
         ruleSlug: 'question-words',
       },
@@ -573,6 +586,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen Sie am Schalter nach dem Zug: Wann? Wohin? Wie lange?',
+          promptEn: 'Ask at the ticket desk about the train: when? where to? how long?',
           hintWords: ['wann', 'wohin', 'der Fahrplan'],
           // Sie — Teil 2 spielt mit einem Prüfungspartner, die Prüfungsanrede bleibt Sie.
           anrede: 'Sie',
@@ -587,6 +601,7 @@ export const CURRICULUM_A12 = {
         // KEIN erfundenes „Formular für den Ausflug“ (es stand zweimal im Kurs): Schreiben Teil 1
         // von SD1 ist eine Anmeldung mit echten Formularfeldern und Unterschrift.
         taskDe: 'Tim Berger fährt am Samstag zum Konzert nach Köln. Der Zug fährt um 8 Uhr. Er bleibt zwei Tage. Füllen Sie die Anmeldung für die Fahrt zum Konzert aus.',
+        taskEn: 'Tim Berger is going to a concert in Cologne on Saturday. The train leaves at 8 and he is staying two days. Fill in the registration form for the trip to the concert.',
         fields: ['Familienname', 'Vorname', 'Tag', 'Uhrzeit', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -658,6 +673,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Verben mit Vokalwechsel',
         bodyDe: 'Einige Verben ändern im Präsens den Stammvokal, aber nur in den Formen mit -st und -t: nehmen → man **nimmt**, helfen → sie **hilft**, essen → man **isst**, schlafen → wer **schläft**. Bei ich, wir, ihr und Sie bleibt der Vokal: ich **schlafe**, Sie **nehmen**.',
+        bodyEn: 'Some verbs change their stem vowel in the present tense, but only in the forms ending in -st and -t: nehmen → man **nimmt**, helfen → sie **hilft**, essen → man **isst**, schlafen → wer **schläft**. With ich, wir, ihr and Sie the vowel stays: ich **schlafe**, Sie **nehmen**.',
         examples: ['Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.', 'Ihr Auge ist gesund. Die Hand und der Fuß sehen gut aus.'],
         ruleSlug: 'stem-changing-verbs',
       },
@@ -670,6 +686,7 @@ export const CURRICULUM_A12 = {
           // jetzt in L7, mit mission_order 9). Sich anmelden und um einen Termin bitten ist Teil 3.
           teil: 'Sprechen Teil 3',
           promptDe: 'Melden Sie sich in der Praxis an und bitten Sie um einen Termin.',
+          promptEn: 'Register at the doctor\'s practice and ask for an appointment.',
           hintWords: ['die Praxis', 'wehtun', 'die Versichertenkarte'],
           // Sie — der Gegenüber ist das Praxispersonal (Mission 1, „calm medical receptionist“).
           anrede: 'Sie',
@@ -680,6 +697,7 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l06',
         taskDe: 'Sie sind krank. Sie kommen heute nicht in die Praxis. Schreiben Sie der Praxis eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are ill and cannot come to the practice today. Write the practice a short message. Open with a greeting and close with a sign-off. Cover three points: why you are writing; what hurts; your question about a new appointment.',
         leitpunkte: ['Warum Sie schreiben', 'Was Ihnen wehtut', 'Ihre Frage nach einem neuen Termin'],
         minWords: 25,
         maxWords: 45,
@@ -751,6 +769,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Der Nominativ: wer oder was?',
         bodyDe: 'Lektion 3 hat das Objekt gezeigt: den Onkel. Das Subjekt dagegen steht im Nominativ, und danach fragt man mit **wer**: **Wer** ist das? — **Mein Onkel** ist groß. Nach sein steht das zweite Nomen ebenfalls im Nominativ: **Das ist** mein Bruder. Die Artikel im Nominativ: **der** Opa, **die** Oma.',
+        bodyEn: 'Lektion 3 showed the object: den Onkel. The subject is in the nominative, and you ask for it with **wer** (who): **Wer** ist das? — **Mein Onkel** ist groß. After sein the second noun is nominative too: **Das ist** mein Bruder. The nominative articles: **der** Opa, **die** Oma.',
         examples: ['Wer ist die Frau da? Sie hat lange Haare.', 'Das ist mein Bruder. Sein Bein und sein Arm sind lang.'],
         ruleSlug: 'nominative-case',
       },
@@ -766,6 +785,7 @@ export const CURRICULUM_A12 = {
           // verlinkte die Mission, die ihn trainiert.
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vollständig vor: Name, Alter, Land, Wohnort, Sprachen, Beruf und Familie.',
+          promptEn: 'Introduce yourself fully: name, age, country, home town, languages, job and family.',
           hintWords: ['der Name', 'das Land', 'die Familie'],
           // Sie — die Gegenüber ist die Prüferin (Mission 9).
           anrede: 'Sie',
@@ -778,6 +798,7 @@ export const CURRICULUM_A12 = {
         // KEIN „Steckbrief“ mit dem Feld „Aussehen“: Schreiben Teil 1 von SD1 ist immer eine
         // ANMELDUNG (Kurs, Bibliothek, Verein, Kasse) mit echten Formularfeldern und Unterschrift.
         taskDe: 'Lena Berg ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. Füllen Sie die Anmeldung für den Sportverein aus.',
+        taskEn: 'Lena Berg is 24 and lives at Kölner Straße 12 in Cologne. She was born on 3 March 2002. Fill in the registration form for the sports club.',
         fields: ['Familienname', 'Vorname', 'Geburtsdatum', 'Straße', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -846,6 +867,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Der Imperativ: bitten und auffordern',
         bodyDe: 'Der Imperativ steht vorn. Bei **du** fallen Pronomen und Endung -st weg: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Die Vorsilbe steht am Ende: **Mach** den Fernseher **aus**! Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
+        bodyEn: 'The imperative opens the sentence. For **du**, drop the pronoun and the ending -st: du kommst → **Komm!**, du hilfst → **Hilf!** An ä goes back to a: du fährst → **Fahr!** If the stem ends in s, drop only -t: du isst → **Iss!** A separable prefix goes to the end: **Mach** den Fernseher **aus**! With Sie the pronoun stays: Helfen Sie **bitte**!',
         examples: ['Tim, die Waschmaschine ist da. Hilf mir bitte!', 'Mach den Fernseher aus und hilf mir bitte!'],
         ruleSlug: 'imperative',
       },
@@ -856,6 +878,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Formulieren Sie drei höfliche Bitten in der Sie-Form und reagieren Sie auf eine Bitte.',
+          promptEn: 'Make three polite requests in the Sie-form and respond to a request.',
           hintWords: ['bitte', 'helfen', 'die Waschmaschine'],
           // Sie — die Gegenüber ist die Prüferin (Mission 12, Sprechen Teil 3); die Sie-Bitte ist
           // die Prüfungsform, die du-Bitte übt der Dialog.
@@ -867,6 +890,7 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l08',
         taskDe: 'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit zwei Bitten für den Haushalt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are not at home today. Write Tim a short message with two requests about the housework. Open with a greeting and close with a sign-off. Cover three points: what needs doing in the kitchen; where the rug should go; when you will be home.',
         leitpunkte: ['Was in der Küche zu tun ist', 'Wohin der Teppich soll', 'Wann Sie nach Hause kommen'],
         minWords: 25,
         maxWords: 45,
@@ -935,6 +959,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Modalverben: können, müssen, dürfen, wollen, sollen',
         bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**.',
+        bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**.',
         examples: ['Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', 'Am Platz. Den Müll müssen Sie nach Hause nehmen.'],
         ruleSlug: 'modal-verbs-intro',
       },
@@ -947,6 +972,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen Sie nach den Regeln im Haus: Was ist erlaubt, was nicht?',
+          promptEn: 'Ask about the house rules: what is allowed and what is not?',
           hintWords: ['dürfen', 'müssen', 'der Müll'],
           // Sie — der Gegenüber ist der Hausmeister (Mission 7, „strict but kind caretaker“).
           anrede: 'Sie',
@@ -957,6 +983,7 @@ export const CURRICULUM_A12 = {
         kind: 'formular',
         taskKey: 'a12-l09',
         taskDe: 'Ana Chakiri fliegt am 14. Juli nach Marokko. Sie wohnt in Bremen und fährt mit dem Taxi zum Flughafen. Füllen Sie die Anmeldung für die Reise aus.',
+        taskEn: 'Ana Chakiri is flying to Morocco on 14 July. She lives in Bremen and takes a taxi to the airport. Fill in the registration form for the trip.',
         fields: ['Familienname', 'Vorname', 'Datum', 'Land', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -1025,6 +1052,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Präpositionen mit Akkusativ',
         bodyDe: 'Nach **für**, **ohne** und **durch** steht immer der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur der Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Beim Vergleich hilft **als**: Die Mütze ist **billiger als** der Schal.',
+        bodyEn: 'After **für** (for), **ohne** (without) and **durch** (through) always comes the accusative: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Only masculine nouns change; feminine, neuter and plural stay the same: für **die** Oma, für **das** Kind. To compare, use **als** (than): Die Mütze ist **billiger als** der Schal.',
         examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma.'],
         ruleSlug: 'prepositions-accusative',
       },
@@ -1035,6 +1063,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie im Geschäft: Für wen? Welche Größe? Ohne was?',
+          promptEn: 'Ask and answer in the shop: for whom? which size? without what?',
           hintWords: ['die Jacke', 'die Größe', 'passen'],
           // Sie — der Gegenüber ist Verkaufspersonal (Mission 8, „quick café barista“).
           anrede: 'Sie',
@@ -1047,6 +1076,7 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l10',
         taskDe: 'Sie kaufen Kleidung für eine Freundin. Schreiben Sie ihr eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are buying clothes for a friend. Write her a short message. Open with a greeting and close with a sign-off. Cover three points: what you are buying; what size the jacket is; when you will bring the things.',
         leitpunkte: ['Was Sie kaufen', 'Welche Größe die Jacke hat', 'Wann Sie die Sachen bringen'],
         minWords: 25,
         maxWords: 45,
@@ -1120,6 +1150,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Präpositionen mit Dativ',
         bodyDe: 'Nach mit, nach, bei, seit, von, zu und aus steht der Dativ: **nach dem** Regen, **bei** zehn Grad, **seit einer** Woche. Oft verschmelzen Präposition und Artikel: in dem wird **im** Sommer, an dem wird **am** Abend, zu der wird **zur** Brücke, zu dem wird **zum** Bahnhof — die drei Wendungen aus Lektion 1 bekommen hier ihre Regel.',
+        bodyEn: 'After mit, nach, bei, seit, von, zu and aus comes the dative: **nach dem** Regen, **bei** zehn Grad, **seit einer** Woche. Preposition and article often merge: in dem → **im** Sommer, an dem → **am** Abend, zu der → **zur** Brücke, zu dem → **zum** Bahnhof — the three phrases from Lektion 1 get their rule here.',
         examples: ['Seit einer Woche regnet es. Es ist wolkig.', 'Der Sommer. Nach dem Regen gehe ich zur Brücke.'],
         ruleSlug: 'dative-prepositions-intro',
       },
@@ -1131,6 +1162,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Wetter: Sommer? Winter? Temperatur?',
+          promptEn: 'Ask and answer questions about the weather: summer? winter? temperature?',
           hintWords: ['das Wetter', 'sonnig', 'die Temperatur'],
           // Sie — Teil 2 spielt mit einem Prüfungspartner.
           anrede: 'Sie',
@@ -1145,6 +1177,7 @@ export const CURRICULUM_A12 = {
         // KEIN Formular fragt „Wetter“ und „Temperatur“ ab — die beiden Felder standen dort, weil
         // das Wortfeld sie liefert. Das Wetter gehört in sprechen.open, wo es schon steht.
         taskDe: 'Lena Berg meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. Füllen Sie die Anmeldung für den Ausflug aus.',
+        taskEn: 'Lena Berg signs up for the outing on Sunday. She lives in Cologne and travels by bus. Fill in the registration form for the outing.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Verkehrsmittel', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -1213,6 +1246,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Das Perfekt: haben und Partizip II',
         bodyDe: 'Über Vergangenes spricht man im Perfekt: **haben** steht auf Position 2, das Partizip II ganz am Ende. Regelmäßig entsteht es mit **ge- …-t**: feiern → **gefeiert**, kaufen → **gekauft**, kochen → **gekocht**. Unregelmäßig endet es auf **-en**: essen → **gegessen**, trinken → **getrunken**. **war** ist die einzige einfache Vergangenheitsform in diesem Kurs.',
+        bodyEn: 'To talk about the past, use the Perfekt: **haben** takes position 2 and the participle goes to the very end. Regular verbs form it with **ge- …-t**: feiern → **gefeiert**, kaufen → **gekauft**, kochen → **gekocht**. Irregular verbs end in **-en**: essen → **gegessen**, trinken → **getrunken**. **war** (was) is the only simple past form in this course.',
         examples: ['Ana, wir haben gestern schön gefeiert!', 'Nein, ich habe Milch getrunken. Der Käse war lecker.'],
         ruleSlug: 'perfekt-intro',
       },
@@ -1226,6 +1260,7 @@ export const CURRICULUM_A12 = {
           // Thema dieser Lektion — und Mission 6 (Verneinung) ist jetzt bei L4.
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie mit einer Wortkarte zum Thema Essen und Trinken.',
+          promptEn: 'Ask and answer with a word card about food and drink.',
           hintWords: ['das Fest', 'lecker', 'gefeiert'],
           // Sie — Teil 2 spielt mit einem Prüfungspartner.
           anrede: 'Sie',
@@ -1236,6 +1271,7 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l12',
         taskDe: 'Sie haben ein Fest gefeiert. Schreiben Sie einer Freundin eine kurze Nachricht über das Fest. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You have had a party. Write a friend a short message about it. Open with a greeting and close with a sign-off. Cover three points: when you celebrated; what you ate and drank; who you celebrated with.',
         leitpunkte: ['Wann Sie gefeiert haben', 'Was Sie gegessen und getrunken haben', 'Mit wem Sie gefeiert haben'],
         minWords: 25,
         maxWords: 45,

@@ -1065,7 +1065,9 @@ export const LEVELS = {
       // this goes to 0 and hard, exactly as at A1.1.
       // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
       // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
-      missingEnglishTwins: 152,
+      // 2026-10-15 (DaF review #3, Minor): every notice, task and open prompt has its English twin, and
+      // the 116 hand-written items theirs in a12.explanationsEn.json — re-measured.
+      missingEnglishTwins: 0,
     },
   },
 };

@@ -1016,8 +1016,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "Tim ___ am Morgen nichts, sein Bauch ist krank. (essen)",
-      "questionEn": "Tim eats nothing in the morning.",
+      "questionDe": "Tim ___ am Morgen nichts, sein Bauch tut weh. (essen)",
+      "questionEn": "Tim eats nothing in the morning; his stomach hurts.",
       "options": null,
       "answer": "isst",
       "accepted": [
@@ -1068,13 +1068,13 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Korrigieren Sie: „Mein Mann schlaft nicht gut, sein Rücken ist krank.“",
+      "questionDe": "Korrigieren Sie: „Mein Mann schlaft nicht gut, sein Rücken tut weh.“",
       "questionEn": "Fix the verb form.",
       "options": null,
-      "answer": "Mein Mann schläft nicht gut, sein Rücken ist krank.",
+      "answer": "Mein Mann schläft nicht gut, sein Rücken tut weh.",
       "accepted": [
-        "Mein Mann schläft nicht gut, sein Rücken ist krank.",
-        "Mein Mann schläft nicht gut, sein Rücken ist krank"
+        "Mein Mann schläft nicht gut, sein Rücken tut weh.",
+        "Mein Mann schläft nicht gut, sein Rücken tut weh"
       ],
       "explanationDe": "Die er-Form von schlafen heißt schläft.",
       "hint": null
