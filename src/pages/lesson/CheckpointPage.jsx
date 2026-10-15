@@ -406,7 +406,7 @@ export default function CheckpointPage() {
           </Link>
           {phase === 'run' && (
             <>
-              <div className="h-2.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+              <div className="h-2.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label={t('checkpoint.progress', lang)} aria-valuetext={t('checkpoint.progressValue', lang, { n: index + 1, total: items.length })} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full bg-siegel" style={{ width: `${pct}%` }} />
               </div>
               <span className="font-data text-xs text-graphite">{index + 1}/{items.length}</span>

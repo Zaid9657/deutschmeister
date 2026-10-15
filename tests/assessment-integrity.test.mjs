@@ -504,3 +504,13 @@ test('the grader returns real booleans, and the read-aloud extra-word count reac
   const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
   assert.match(line, /setResult\(\{ words, pct, extra \}\)/);
 });
+
+test('the checkpoint progress bar has a name and says which task it is on (Codex rescore, 2026-10-15)', async () => {
+  // It was an unnamed role="progressbar": a screen reader announced a bare number.
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /role="progressbar" aria-label=\{t\('checkpoint\.progress', lang\)\} aria-valuetext=\{t\('checkpoint\.progressValue', lang, \{ n: index \+ 1, total: items\.length \}\)\}/);
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  for (const key of ['checkpoint.progress', 'checkpoint.progressValue']) assert.ok(STRINGS.en[key] && STRINGS.de[key], key);
+  assert.equal(STRINGS.de['checkpoint.progressValue'].replace('{n}', 3).replace('{total}', 20), 'Aufgabe 3 von 20');
+});

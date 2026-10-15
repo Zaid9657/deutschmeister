@@ -343,6 +343,8 @@ export const STRINGS = {
 
     // ── checkpoint ───────────────────────────────────────────────────────────
     'checkpoint.label': 'Checkpoint {nr}',
+    'checkpoint.progress': 'Progress in this checkpoint',
+    'checkpoint.progressValue': 'Task {n} of {total}',
     'checkpoint.formular': 'Formular',
     'checkpoint.mitteilung': 'Mitteilung',
     'checkpoint.readAloudScored': 'Scored — intelligibility counts towards your Sprechen result.',
@@ -720,6 +722,8 @@ export const STRINGS = {
 
     // ── checkpoint ───────────────────────────────────────────────────────────
     'checkpoint.label': 'Checkpoint {nr}',
+    'checkpoint.progress': 'Fortschritt in diesem Checkpoint',
+    'checkpoint.progressValue': 'Aufgabe {n} von {total}',
     'checkpoint.formular': 'Formular',
     'checkpoint.mitteilung': 'Mitteilung',
     'checkpoint.readAloudScored': 'Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis.',
