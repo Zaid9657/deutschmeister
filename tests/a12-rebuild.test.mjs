@@ -391,6 +391,46 @@ test('DaF review #3 MAJOR 6: an answer answers its question — the type a W-wor
   assert.ok(!POOL_A12.items.some((it) => /Wie lange ist der Ausflug/.test(String(it.questionDe).replace('___', it.answer))), '„Wie lange ist der Ausflug?" is not the idiom');
 });
 
+test('DaF review #3 MAJOR 1: every model text meets its own task — each Leitpunkt answered, inside the word limits', async () => {
+  // Measured before: L4 named no day, L8 asked for three requests and showed one, L12 named neither
+  // drink nor guest, and four models ran 21–24 words against a floor of 25. The Formcheck (RULE 17)
+  // reads form; which sentence answers which Leitpunkt is a reviewer's reading, so it is written
+  // down here and every entry must stand verbatim in the model. A changed Leitpunkt fails until its
+  // answer is confirmed again.
+  const { writingTaskByKey } = await import('../src/data/writingTasks.js');
+  const { countWords } = await import('../src/lib/lesson/writing.js');
+  const ANSWERED_BY = {
+    2: { 'Warum Sie schreiben': 'ich möchte die Wohnung besichtigen', 'Wann Sie kommen möchten': 'Geht es am Montag um 17 Uhr?', 'Ihre Frage zur Miete': 'Und wie ist die Miete?' },
+    4: { 'Ihre Zimmernummer und der Tag': 'ich bin bis Freitag in Zimmer 12', 'Was im Zimmer nicht funktioniert': 'Die Steckdose funktioniert nicht.', 'Ihre Frage zur Toilette im Flur': 'Ist die Toilette im Flur frei?' },
+    6: { 'Warum Sie schreiben': 'ich bin krank', 'Was Ihnen wehtut': 'Mein Hals tut weh', 'Ihre Frage nach einem neuen Termin': 'Wann ist ein Termin frei?' },
+    8: { 'Was in der Küche zu tun ist': 'Mach bitte in der Küche den Herd aus.', 'Wohin der Teppich soll': 'Bring bitte den Teppich auf die Terrasse.', 'Wann Sie nach Hause kommen': 'Ich komme um sechs Uhr nach Hause.' },
+    10: { 'Was Sie kaufen': 'ich kaufe eine Jacke und einen Pullover für dich', 'Welche Größe die Jacke hat': 'Die Jacke hat Größe 38.', 'Wann Sie die Sachen bringen': 'Ich bringe alles am Montag.' },
+    12: { 'Wann Sie gefeiert haben': 'ich habe am Samstag mit Tim und Paul gefeiert', 'Was Sie gegessen und getrunken haben': 'Wir haben Fisch und Kartoffeln gegessen und Saft getrunken.', 'Mit wem Sie gefeiert haben': 'mit Tim und Paul gefeiert' },
+  };
+  const mitteilungen = CURRICULUM_A12.lektionen.filter((l) => l.schreiben?.kind === 'mitteilung');
+  assert.deepEqual(mitteilungen.map((l) => l.nr), Object.keys(ANSWERED_BY).map(Number), 'every Mitteilung has its confirmed answers');
+  for (const l of mitteilungen) {
+    const bank = writingTaskByKey('goethe_a1', l.schreiben.taskKey);
+    const sample = l.schreiben.sample;
+    const words = countWords(sample);
+    assert.ok(words >= bank.minWords && words <= bank.maxWords, `L${l.nr}: ${words} words, the task asks ${bank.minWords}–${bank.maxWords}`);
+    assert.deepEqual(Object.keys(ANSWERED_BY[l.nr]), bank.leitpunkte, `L${l.nr}: the confirmed answers name the task's Leitpunkte`);
+    for (const [lp, answer] of Object.entries(ANSWERED_BY[l.nr])) assert.ok(sample.includes(answer), `L${l.nr} „${lp}“: „${answer}“ is not in the model`);
+  }
+  // A task that counts its requests gets that many: L8 asks for two Bitten.
+  const l8 = CURRICULUM_A12.lektionen.find((l) => l.nr === 8).schreiben;
+  assert.match(l8.taskDe, /mit zwei Bitten/);
+  assert.equal((l8.sample.match(/\bbitte\b/gi) || []).length, 2, 'two requests in the model');
+  // The Formcheck reads these answers as answers (the review's Minor on RULE 17/21): a separated
+  // wehtun, a room number, and the modal infinitive as an Auftrag the KI decides.
+  const { leitpunktSatisfied } = await import('../src/lib/lesson/writing.js');
+  assert.equal(leitpunktSatisfied('Was Ihnen wehtut', 'Mein Hals tut weh.'), true);
+  assert.equal(leitpunktSatisfied('Was Ihnen wehtut', 'Ich bin müde.'), false);
+  assert.equal(leitpunktSatisfied('Ihre Zimmernummer und der Tag', 'Ich bin bis Freitag in Zimmer 12.'), true);
+  assert.equal(leitpunktSatisfied('Ihre Zimmernummer und der Tag', 'Ich bin bis Freitag hier.'), false);
+  assert.equal(leitpunktSatisfied('Was in der Küche zu tun ist', 'Mach bitte den Herd aus.'), null);
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.

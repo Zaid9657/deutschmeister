@@ -993,7 +993,8 @@ export const LEVELS = {
       // checkpoint's draw; the L2 dictation line and the L6 Beispieltext remain.
       // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
       // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
-      deferredConstructions: 1,
+      // DaF review #3 MAJOR 1 (L6 „ein neuer Termin“ → „ein Termin“) (2026-10-15): the model texts now meet their own tasks — re-measured.
+      deferredConstructions: 0,
       unbackedExamTeile: 0,
       // RULE 17, measured on the paused A1.2 draft 2026-09-13 (round 13): **17** failed form checks
       // across seven of the twelve Beispieltexte — three below the 25-word floor (L4 24, L8 21,
@@ -1014,7 +1015,8 @@ export const LEVELS = {
       // haben“. Both are real gaps in the draft that the lenient rule was hiding.
       // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
       // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
-      modelChecklistBreaks: 9,
+      // DaF review #3 MAJOR 1 (2026-10-15): the model texts now meet their own tasks — re-measured.
+      modelChecklistBreaks: 0,
       // RULE 18, measured on the paused A1.2 draft 2026-09-13 (round 13): **0** — no A1.2 Lektion
       // dictates and reads aloud the same line. Hard from the start at this level.
       sharedProductionLines: 0,
@@ -1022,7 +1024,8 @@ export const LEVELS = {
       // Lektion does not teach yet — `hoch` (L2 sample), `neuer` (L6 sample) and `leer` (L8
       // sample). Paused; re-measured, and no A1.2 content was touched to get there: whoever
       // resumes the level rewrites those three samples the way round 14 rewrote A1.1's five.
-      untaughtInModelTexts: 3,
+      // DaF review #3 MAJOR 1 (2026-10-15): the model texts now meet their own tasks — re-measured.
+      untaughtInModelTexts: 0,
       // RULE 21, measured on the paused A1.2 draft 2026-09-13 (round 15): **9** Leitpunkte the
       // draft asks for and does not teach the words for — L2 „… sehen möchten“ (`sehen` in no
       // Wortfeld up to L2), L4 „Ihre Zimmernummer und der Tag“, L6 „Was Ihnen wehtut“, L7
@@ -1031,7 +1034,8 @@ export const LEVELS = {
       // haben“. Paused; re-measured, and no A1.2 content was touched to get there — the level is
       // frozen by owner decision (2026-09-13) and whoever resumes it pays this down the way
       // round 15 paid A1.1's two (a Wortfeld line, or a Leitpunkt in taught words).
-      unanswerableLeitpunkte: 9,
+      // DaF review #3 MAJOR 1 (2026-10-15): the model texts now meet their own tasks — re-measured; a form value the task gives is copied, not recalled.
+      unanswerableLeitpunkte: 0,
       // RULE 23, measured on the paused A1.2 draft 2026-09-13 (round 16): **6** Wortfeld entries
       // the draft lists and puts on no input surface of their own Lektion — L3 `das Kaufhaus`,
       // `das Geschäft`, `die Bibliothek`, L7 `der Körper`, L11 `die Sonne`, `warm`. RE-MEASURED
@@ -1049,7 +1053,8 @@ export const LEVELS = {
       // ist 38.“, the same form-speak shape A1.1 carried five times. Paused; re-measured, and no
       // A1.2 content was touched to get there; whoever resumes the level writes „Ich brauche
       // Größe 38.“ and the ratchet goes to 0.
-      formSpeakSentences: 1,
+      // DaF review #3 MAJOR 1 (2026-10-15): the model texts now meet their own tasks — re-measured.
+      formSpeakSentences: 0,
       // RULE 25, measured on the paused A1.2 draft 2026-09-19: **299** — every one of the
       // twelve Lektionen lacks `notice.bodyEn`, `schreiben.taskEn` and `sprechen.open.promptEn`
       // (36; `pretest.promptEn` is present on all twelve), and none of the 263 items of the draft
@@ -2064,10 +2069,14 @@ export function writingTasksAreAnswerable(c, spec = null) {
     // needs `Wörterbuch`, not the word `Material`).
     if (w.kind === 'formular') {
       const values = formularSampleValues(w.sample, bank.leitpunkte || []);
+      // A value the task's own source text gives is COPIED, not recalled: SD1 Teil 1 hands the learner
+      // a text and a form (A1.2 DaF review #3, Minor — „3. März 2002“ and „Kölner Straße 12“ stand in
+      // the task). Only what the learner must bring himself is measured.
+      const given = new Set(tokenise(bank.task || '').map((t) => t.toLowerCase()));
       for (const field of bank.leitpunkte || []) {
         const value = String(values[field] || '').trim();
         if (!value) continue;                                // RULE 17 reports an empty field
-        const missing = untaughtTokens({ questionDe: '', answer: value }, known, s);
+        const missing = untaughtTokens({ questionDe: '', answer: value }, known, s).filter((t) => !given.has(t.toLowerCase()));
         if (missing.length) {
           offenders.push({ nr: l.nr, leitpunkt: field, why: 'unanswerable', token: missing[0], de: value });
         }

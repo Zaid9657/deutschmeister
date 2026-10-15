@@ -678,7 +678,7 @@ export const WRITING_TASKS = [
       'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Warum Sie schreiben',
-      'Wann Sie die Wohnung sehen möchten',
+      'Wann Sie kommen möchten',
       'Ihre Frage zur Miete',
     ],
   },
@@ -782,7 +782,7 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit drei Bitten für den Haushalt. ' +
+      'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit zwei Bitten für den Haushalt. ' +
       'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Was in der Küche zu tun ist',
@@ -859,7 +859,7 @@ export const WRITING_TASKS = [
     leitpunkte: [
       'Wann Sie gefeiert haben',
       'Was Sie gegessen und getrunken haben',
-      'Wen Sie eingeladen haben',
+      'Mit wem Sie gefeiert haben',
     ],
   },
 
