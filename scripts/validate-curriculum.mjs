@@ -186,6 +186,8 @@ const IRREGULAR_FORMS_A12 = {
   dritte: ['dritte', 'dritten', 'dritter', 'drittes', 'drittem'],
   // Einschub-e: regnen → es regnet (verbForms() bildet nur regne/regnst/regnt).
   regnen: ['regne', 'regnest', 'regnet', 'regnen', 'geregnet'],
+  // The sein-Perfekt L12 teaches since the M7 decision (Tim ist früh gegangen).
+  gehen: ['gehe', 'gehst', 'geht', 'gehen', 'geh', 'gegangen'],
 };
 
 const SEPARABLE_PREFIXES = ['auf', 'an', 'ein', 'mit', 'aus', 'vor', 'nach', 'ab', 'zu'];
@@ -705,8 +707,11 @@ const OFF_LIMITS_FORMS_A12 = {
   // („am Freitag“, „im Januar“), so an A1.2 learner has met them for a year.
   'dative-prepositions-intro': /\b(?:zum|zur|beim|vom)\b|\b(?:mit|nach|bei|seit|von|zu|aus)\s+(?:dem|der|den|einem|einer|mir|dir|ihm|ihr|uns|Ihnen|meinem|meiner|meinen)\b/gi,
   // Taught L12. Partizip II with ge-. `{2,}` keeps `gehen`, `gegen`, `geben` out: their stem is one
-  // letter, a participle's is at least two (ge-feier-t, ge-gess-en).
-  'perfekt-intro': /\bge[a-zäöüß]{2,}(?:t|en)\b/g,
+  // letter, a participle's is at least two (ge-feier-t, ge-gess-en). Since the M7 decision
+  // (2026-10-16, Goethe-Zertifikat A1 Prüfungsziele 2022 p. 102: Perfekt of fahren, bleiben,
+  // passieren, verstehen) L12 also teaches the sein-Perfekt and the participles without ge- — the
+  // latter only after a haben form, because „Tim bezahlt" is L3's present tense.
+  'perfekt-intro': /\bge[a-zäöüß]{2,}(?:t|en)\b|\b(?:[Bb]in|[Bb]ist|[Ii]st|[Ss]ind|[Ss]eid)\b[^.!?]*?\b[a-zäöüß]*ge(?:fahren|gangen|kommen|flogen|laufen|blieben|wesen|worden|standen|reist|stiegen|schwommen|sprungen|zogen)\b|\bpassiert\b|\b(?:[Hh]abe|[Hh]ast|[Hh]at|[Hh]aben|[Hh]abt)\b[^.!?]*?\b(?:bezahlt|besucht|verkauft|erzählt|verstanden|vergessen|telefoniert|repariert)\b/g,
 };
 
 /**
@@ -721,13 +726,20 @@ const LICENSED_CHUNKS_A11 = ['Füllen Sie'];
 
 /**
  * Constructions a level teaches in NO Lektion, beside constructions.js's `never` patterns
- * (Adjektivdeklination). A1.2 L12 teaches the Perfekt with haben; the sein-Perfekt („ist …
- * gefahren", „bin … aufgestanden") is not taught at A1.2 — its own L12 card said „immer mit haben"
- * while the L12 draw graded „ist … gefahren" (DaF review #3, BLOCKER 2). Teaching it is the open
- * curriculum decision of review #3 MAJOR 7; until then it is never served.
+ * (Adjektivdeklination). The sein-Perfekt was here until the M7 decision of 2026-10-16: the Goethe
+ * A1 inventory lists the Perfekt of fahren, bleiben and passieren, so L12 now teaches it and
+ * `offLimitsForms['perfekt-intro']` gates it to L12 instead.
  */
 const NEVER_FORMS_A12 = [
-  /\b(?:bin|bist|ist|sind|seid)\b[^.!?]*?\b[a-zäöüß]*ge(?:fahren|gangen|kommen|flogen|laufen|blieben|wesen|worden|standen|reist|stiegen|schwommen|sprungen|zogen)\b/i,
+  // The Partizip II of a separable verb puts ge- between prefix and stem (ein-ge-kauft). L12 teaches
+  // the ge- participle of simple verbs; the A1 inventory lists selected participles, none of them
+  // separable (Goethe-Zertifikat A1, Prüfungsziele 2022, p. 102). DaF review #5, B2: L12 drew
+  // „Wir haben heute eingekauft.", which the perfekt pattern (\bge…) could not see.
+  /\b(?:ab|an|auf|aus|ein|mit|nach|vor|zu|zurück|weg|fern|her|hin|los|fest|um)ge[a-zäöüß]{2,}(?:t|en)\b/,
+  // An ordinal with any ending but L2's -e („im dritten Stockwerk", „am zwanzigsten Mai") is the
+  // dative or accusative Adjektivdeklination, taught nowhere. constructions.js reads an adjective
+  // only after an article, not after im/am/zum, so L2 drew „im ___ Stockwerk" → dritten (DaF review #5, B2).
+  /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+igst)(?:en|er|es|em)\b/i,
 ];
 const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
 
@@ -922,8 +934,9 @@ export const LEVELS = {
     // Ordinalzahlen are A1.2 grammar (standard §2.2; L2 „das dritte Stockwerk", „die erste
     // Wohnung"), so an ordinal before a noun is not the Adjektivdeklination the level never teaches.
     // Without this, RULE 15b counted L2's dictation and the horizon retired L2's own ordinal item
-    // (DaF review #3, Minor).
-    licensedAdjectives: /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+igst)(?:e|en|er|es|em)\b/i,
+    // (DaF review #3, Minor). Only the -e ending L2 teaches after der/die/das: „im dritten Stockwerk"
+    // and „am zwanzigsten Mai" are the dative ending, which no notice teaches (DaF review #5, B2).
+    licensedAdjectives: /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+igst)e\b/i,
     licensedChunks: LICENSED_CHUNKS_A12,
     // RULE 16. `speaking_missions` at level A1.2, read 2026-09-13: mission_order 9 is
     // „Sprechen Teil 1: Sich komplett vorstellen“, the only Teil-1 mission of the level.
@@ -1499,11 +1512,24 @@ export function constructionHorizonIndex(level = 'a1.1') {
  *     (every lower-case Wortfeld entry that is not a verb, and every word a dialogue uses after
  *     ist/sind), minus the greeting formulas every A1 course teaches as wholes.
  */
-const WECHSEL_RE = /\b(?:(?:in|an|auf|vor|hinter|neben|über|unter|zwischen)\s+(?:dem|der|den|das|die|einem|einer|einen|ein|eine)|im|am|ins|ans|aufs)\b(?=\s+(?:[a-zäöüß]+\s+)?[A-ZÄÖÜ])/gi;
+// DaF review #5, B2: a possessive is a determiner of its own („vor meiner Garage" is not taught by
+// „vor der Tür"), so it is a combination of its own.
+const WECHSEL_RE = /\b(?:(?:in|an|auf|vor|hinter|neben|über|unter|zwischen)\s+(?:dem|der|den|das|die|einem|einer|einen|ein|eine|(?:mein|dein|sein|ihr|unser|euer)(?:em|er|en|e)?)|im|am|ins|ans|aufs)\b(?=\s+(?:[a-zäöüß]+\s+)?[A-ZÄÖÜ])/gi;
 export const wechselCombinations = (text) =>
   [...String(text || '').matchAll(new RegExp(WECHSEL_RE.source, 'gi'))].map((m) => m[0].toLowerCase().replace(/\s+/g, ' '));
 const inputTexts = (l) => [
   ...(l.dialog?.lines || []).map((x) => (typeof x === 'string' ? x : x.de)), l.notice?.bodyDe, ...(l.notice?.examples || []),
+].filter(Boolean);
+
+/**
+ * What teaches a location phrase: the dialogue, the notice's examples, and of the notice body only
+ * what it marks as a form — each bold span with the words that complete it. The rest of a notice
+ * body is metalanguage: L4's „nicht steht … direkt vor dem Wort" was the only „vor dem" the
+ * inventory had, and it licensed „Warte vor dem Kühlschrank!" (DaF review #5, B2).
+ */
+const boldFragments = (body) => [...String(body || '').matchAll(/\*\*([^*]+)\*\*((?:\s+[^\s*]+){0,3})/g)].map((m) => `${m[1]}${m[2]}`);
+const inventoryTexts = (l) => [
+  ...(l.dialog?.lines || []).map((x) => (typeof x === 'string' ? x : x.de)), ...boldFragments(l.notice?.bodyDe), ...(l.notice?.examples || []),
 ].filter(Boolean);
 
 /** Combination → the Lektion whose input first shows it (0 = the level before). */
@@ -1511,8 +1537,8 @@ export function wechselInventory(level) {
   const spec = levelSpec(level);
   const out = new Map();
   const prior = spec?.seedFrom ? levelSpec(spec.seedFrom)?.curriculum : null;
-  for (const l of prior?.lektionen || []) for (const t of inputTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, 0);
-  for (const l of spec?.curriculum?.lektionen || []) for (const t of inputTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, l.nr);
+  for (const l of prior?.lektionen || []) for (const t of inventoryTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, 0);
+  for (const l of spec?.curriculum?.lektionen || []) for (const t of inventoryTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, l.nr);
   return out;
 }
 
@@ -1540,6 +1566,9 @@ export function adjectiveLexicon(level) {
     }
   }
   for (const w of [...out]) if (NOT_ADJECTIVES.has(w) || NUMBER_TOKEN_RE.test(w)) out.delete(w);
+  // An -el/-er adjective drops its e before an ending (teuer → teure, dunkel → dunkle), so its
+  // inflected stem is a second spelling: „Wir kaufen teure Milch." passed (DaF review #5, B2).
+  for (const w of [...out]) if (w.length > 4 && /(?:el|er)$/.test(w)) out.add(w.slice(0, -2) + w.slice(-1));
   return out;
 }
 const LICENSED_FORMULAS_RE = /\b(?:Guten (?:Tag|Morgen|Abend)|Gute (?:Nacht|Reise|Besserung)|Viele Grüße|Liebe Grüße|Liebe[rn]? [A-ZÄÖÜ][a-zäöüß]+|Schönen Tag|Schönes Wochenende|Herzlichen Glückwunsch|Sehr geehrte[rn]?)\b/g;

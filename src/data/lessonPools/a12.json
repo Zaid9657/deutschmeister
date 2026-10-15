@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 256,
+ "count": 265,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -3194,17 +3194,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 8,
-   "questionDe": "Die Wohnung ist im 3. Stockwerk. Ergänzen Sie: Die Küche ist auch im ___ Stockwerk.",
-   "questionEn": "The flat is on the third floor.",
+   "questionDe": "Die Wohnung ist im 3. Stockwerk. Ergänzen Sie: Das ___ Stockwerk ist frei.",
+   "questionEn": "The flat is on the 3rd floor. The third floor is free.",
    "options": null,
-   "answer": "dritten",
+   "answer": "dritte",
    "accepted": [
-    "dritten"
+    "dritte"
    ],
-   "explanationDe": "Die Ordnungszahl bekommt die Endung: im dritten Stockwerk.",
+   "explanationDe": "Die 3. heißt dritte: das dritte Stockwerk.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": "An ordinal number takes an ending like an adjective: im **dritten** Stockwerk (on the third floor)."
+   "explanationEn": "3rd is **dritte** after das: **das dritte** Stockwerk (the third floor)."
   },
   {
    "id": "extra-a12-l02-09",
@@ -3453,7 +3453,7 @@
    "explanationDe": "fahren ist Bewegung → sein. er → ist.",
    "explanationEn": "fahren is a movement verb → sein; er → ist.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-05",
@@ -3473,6 +3473,25 @@
    "hint": null,
    "minLektion": 12,
    "explanationEn": "A regular verb forms the participle with ge- and -t: machen → **gemacht**."
+  },
+  {
+   "id": "35ba0d3e-e83a-5a72-92bc-3e77f769ad95",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Ich bin nach Hause ___. (gehen, Perfekt)",
+   "questionEn": "Fill in the Partizip II: I went home. (gehen, Perfekt)",
+   "options": null,
+   "answer": "gegangen",
+   "accepted": [
+    "gegangen"
+   ],
+   "explanationDe": "gehen ist unregelmäßig → gegangen.",
+   "explanationEn": "gehen is irregular → gegangen.",
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a12-l12-06",
@@ -3513,6 +3532,25 @@
    "explanationEn": "A regular verb forms the participle with ge- and -t: holen → **geholt**."
   },
   {
+   "id": "d234c239-46d8-51b0-9c3b-88fab0bdc306",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Er hat lange ___. (telefonieren, Perfekt)",
+   "questionEn": "Fill in the Partizip II: He talked on the phone for a long time. (telefonieren, Perfekt)",
+   "options": null,
+   "answer": "telefoniert",
+   "accepted": [
+    "telefoniert"
+   ],
+   "explanationDe": "telefonieren endet auf -ieren → kein ge-: telefoniert.",
+   "explanationEn": "telefonieren ends in -ieren → no ge-: telefoniert.",
+   "hint": null,
+   "minLektion": 12
+  },
+  {
    "id": "2ad09e18-9732-5d7a-9af3-e3abf270533f",
    "topic": "perfekt-intro",
    "type": "fill_blank",
@@ -3530,6 +3568,25 @@
    "explanationEn": "With sein, German mostly uses **war** (was): Ich war gestern krank.",
    "hint": null,
    "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-12",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Der Fisch war lecker, aber Tim ___ früh gegangen. (haben oder sein?)",
+   "questionEn": "The fish was delicious, but Tim left early.",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "**gehen** forms the Perfekt with **sein**: Tim **ist** gegangen."
   },
   {
    "id": "6868b16e-5eff-546f-8364-c13368d5b694",
@@ -3551,7 +3608,123 @@
    "explanationDe": "kommen ist Bewegung → sein. er → ist.",
    "explanationEn": "kommen is a movement verb → sein; er → ist.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-13",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Tim ___ zum Markt gefahren und hat Obst gekauft. (haben oder sein?)",
+   "questionEn": "Tim drove to the market and bought fruit.",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "fahren bildet das Perfekt mit sein: Tim ist gefahren.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "**fahren** forms the Perfekt with **sein**: Tim **ist** gefahren."
+  },
+  {
+   "id": "extra-a12-l12-14",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Ich habe die Getränke ___. (bezahlen)",
+   "questionEn": "I paid for the drinks.",
+   "options": null,
+   "answer": "bezahlt",
+   "accepted": [
+    "bezahlt"
+   ],
+   "explanationDe": "Verben mit be- haben im Partizip kein ge-: bezahlt.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "Verbs with **be-** take no ge- in the participle: **bezahlt**."
+  },
+  {
+   "id": "extra-a12-l12-15",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "„Das ist Reis.“ – „Danke, ich habe ___.“ (verstehen)",
+   "questionEn": "\"This is rice.\" – \"Thanks, I understood.\"",
+   "options": null,
+   "answer": "verstanden",
+   "accepted": [
+    "verstanden"
+   ],
+   "explanationDe": "Verben mit ver- haben im Partizip kein ge-: verstanden.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "Verbs with **ver-** take no ge- in the participle: **verstanden**."
+  },
+  {
+   "id": "extra-a12-l12-16",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "Tim hat ___: „Der Saft ist da.“ (telefonieren)",
+   "questionEn": "Tim phoned: \"The juice is here.\"",
+   "options": null,
+   "answer": "telefoniert",
+   "accepted": [
+    "telefoniert"
+   ],
+   "explanationDe": "Verben auf -ieren haben im Partizip kein ge-: telefoniert.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "Verbs in **-ieren** take no ge- in the participle: **telefoniert**."
+  },
+  {
+   "id": "extra-a12-l12-17",
+   "topic": "perfekt-intro",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 17,
+   "questionDe": "Korrigieren Sie: „Der Fisch war lecker, aber Tim hat früh gegangen.“",
+   "questionEn": "Correct the sentence: The fish was delicious, but Tim left early.",
+   "options": null,
+   "answer": "Der Fisch war lecker, aber Tim ist früh gegangen.",
+   "accepted": [
+    "Der Fisch war lecker, aber Tim ist früh gegangen.",
+    "Der Fisch war lecker, aber Tim ist früh gegangen"
+   ],
+   "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "**gehen** forms the Perfekt with **sein**: Tim **ist** gegangen."
+  },
+  {
+   "id": "extra-a12-l12-18",
+   "topic": "perfekt-intro",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 18,
+   "questionDe": "Korrigieren Sie: „Ich habe die Getränke gebezahlt.“ (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct the sentence: I paid for the drinks.",
+   "options": null,
+   "answer": "Ich habe die Getränke bezahlt.",
+   "accepted": [
+    "Ich habe die Getränke bezahlt.",
+    "Ich habe die Getränke bezahlt"
+   ],
+   "explanationDe": "bezahlen hat im Partizip kein ge-: bezahlt.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "**bezahlen** takes no ge- in the participle: **bezahlt**."
   },
   {
    "id": "4681b233-26bd-599d-910a-c76ad0222f80",
@@ -3573,7 +3746,7 @@
    "explanationDe": "einkaufen ist trennbar → eingekauft, mit haben.",
    "explanationEn": "einkaufen is separable → eingekauft, with haben.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": null
   },
   {
    "id": "142167e5-246c-5ab9-bcd4-f916be43d05d",
@@ -5203,7 +5376,7 @@
   "a1.2-l01#3": 0,
   "a1.2-l01#4": 0,
   "a1.2-l01#5": 0,
-  "a1.2-l01#6": 0,
+  "a1.2-l01#6": 1,
   "a1.2-l01#7": 0,
   "a1.2-l01#8": 0,
   "a1.2-l01#9": 0,
@@ -5217,7 +5390,7 @@
   "a1.2-l02#7": 0,
   "a1.2-l02#8": 0,
   "a1.2-l02#9": 0,
-  "a1.2-l03#0": 0,
+  "a1.2-l03#0": 1,
   "a1.2-l03#1": 3,
   "a1.2-l03#2": 0,
   "a1.2-l03#3": 0,
@@ -5271,7 +5444,7 @@
   "a1.2-l08#1": 0,
   "a1.2-l08#2": 0,
   "a1.2-l08#3": 0,
-  "a1.2-l08#4": 0,
+  "a1.2-l08#4": 1,
   "a1.2-l08#5": 0,
   "a1.2-l08#6": 8,
   "a1.2-l08#7": 0,
@@ -5316,6 +5489,6 @@
   "a1.2-l12#6": 12,
   "a1.2-l12#7": 12,
   "a1.2-l12#8": 12,
-  "a1.2-l12#9": 0
+  "a1.2-l12#9": 12
  }
 }

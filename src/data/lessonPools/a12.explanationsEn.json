@@ -75,7 +75,7 @@
   "extra-a12-l02-05": "50 is **fünfzig**.",
   "extra-a12-l02-06": "90 is **neunzig**.",
   "extra-a12-l02-07": "30 is **dreißig**, with ß.",
-  "extra-a12-l02-08": "An ordinal number takes an ending like an adjective: im **dritten** Stockwerk (on the third floor).",
+  "extra-a12-l02-08": "3rd is **dritte** after das: **das dritte** Stockwerk (the third floor).",
   "extra-a12-l02-09": "The ordinal for one is **erste** (first): die **erste** Wohnung.",
   "extra-a12-l12-01": "**essen** has an irregular participle: **gegessen**.",
   "extra-a12-l12-02": "**trinken** has an irregular participle: **getrunken**.",
@@ -114,5 +114,12 @@
   "extra-a12-l06-07": "The vowel change happens in the du-form too: du **siehst**.",
   "extra-a12-l06-10": "You address Frau Chakiri politely, so the dative pronoun is **Ihnen**, with a capital I.",
   "extra-a12-l06-08": "**schlafen** changes a to ä in the er-form: er **schläft**: **Mein Mann schläft nicht gut, sein Rücken tut weh.**",
-  "extra-a12-l06-09": "**helfen** changes e to i in the sie-form: **Die Tablette hilft gegen Fieber.**"
+  "extra-a12-l06-09": "**helfen** changes e to i in the sie-form: **Die Tablette hilft gegen Fieber.**",
+  "extra-a12-l12-12": "**gehen** forms the Perfekt with **sein**: Tim **ist** gegangen.",
+  "extra-a12-l12-13": "**fahren** forms the Perfekt with **sein**: Tim **ist** gefahren.",
+  "extra-a12-l12-14": "Verbs with **be-** take no ge- in the participle: **bezahlt**.",
+  "extra-a12-l12-15": "Verbs with **ver-** take no ge- in the participle: **verstanden**.",
+  "extra-a12-l12-16": "Verbs in **-ieren** take no ge- in the participle: **telefoniert**.",
+  "extra-a12-l12-17": "**gehen** forms the Perfekt with **sein**: Tim **ist** gegangen.",
+  "extra-a12-l12-18": "**bezahlen** takes no ge- in the participle: **bezahlt**."
 }

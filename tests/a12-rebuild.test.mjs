@@ -136,7 +136,9 @@ test('DaF review #3 BLOCKER 2: no item is served before the Lektion that teaches
   assert.equal(at('Ich sehe den Mann.'), 3, 'the accusative den: L3');
   assert.equal(at('Holen Sie das Sofa aus der Garage!'), 11, 'a dative preposition: L11');
   assert.equal(at('Wer ist die Frau mit dem kurzen Haar?'), null, 'Adjektivdeklination: never at A1.2');
-  assert.equal(at('Er ist nach Berlin gefahren.'), null, 'the sein-Perfekt: not taught at A1.2');
+  assert.equal(at('Er ist nach Berlin gefahren.'), 12, 'the sein-Perfekt: L12 since the M7 decision (Goethe A1 lists fahren, bleiben, passieren)');
+  assert.equal(at('Ich habe die Getränke bezahlt.'), 12, 'a participle without ge-: L12');
+  assert.equal(at('Tim bezahlt den Kuchen.'), 3, 'the same form in the present tense is not a participle (den: L3)');
   assert.equal(at('Wir haben gestern gefeiert.'), 12, 'the haben-Perfekt: L12');
   assert.ok(at('Die erste Wohnung ist frei.') <= 2, 'an ordinal is A1.2 grammar, not the untaught declension');
   assert.equal(at('Ich wohne in Bremen.', 'Schreiben Sie den Satz: [ich / wohnen / in Bremen]'), 0, 'the task formula is not the item (else den → L3, „Schreiben Sie" → L8)');
@@ -808,16 +810,31 @@ test('DaF review #4 BLOCKER 2: an article-less adjective and a Wechselpräpositi
   // Several location prepositions: produced only once the input has shown the combination.
   assert.equal(at('Warte kurz vor der Garage!'), null, '„vor der" stands in no input');
   assert.equal(at('Bring den Teppich auf die Terrasse.'), null, 'nor „auf die"');
-  assert.equal(at('Das Sofa ist in der Garage.'), 0, '„in der": A1.1 input');
+  assert.equal(at('Das Sofa ist in der Garage.'), 1, '„in der": first in L1\'s dialogue — A1.1 had it only in a notice\'s prose („in der Ja/Nein-Frage")');
   assert.equal(at('Der Teppich ist auf der Terrasse.'), 8, '„auf der": L8 input');
   // The inventory is the input, written down here independently of the matcher that reads it.
   const inventory = v.wechselInventory('a1.2');
-  for (const [combination, lektion] of [['im', 0], ['am', 0], ['ins', 0], ['in der', 0], ['an der', 1], ['vor dem', 4], ['auf der', 8]]) {
+  for (const [combination, lektion] of [['im', 0], ['am', 0], ['ins', 0], ['in der', 1], ['an der', 1], ['auf der', 8]]) {
     assert.equal(inventory.get(combination), lektion, `„${combination}" first shown in input at ${lektion}`);
   }
-  for (const combination of ['vor der', 'auf die', 'neben dem', 'unter der']) assert.equal(inventory.has(combination), false, `„${combination}" is in no input`);
+  // „vor dem" stood only in L4's metalanguage („nicht steht … direkt vor dem Wort", DaF review #5, B2).
+  for (const combination of ['vor der', 'vor dem', 'vor meiner', 'auf die', 'neben dem', 'unter der']) assert.equal(inventory.has(combination), false, `„${combination}" is in no input`);
   // RULE 15b reads the same two classes on every production text, the checkpoints included.
   assert.deepEqual(v.constructionsBeforeTaught(CURRICULUM_A12, POOL_A12).map((o) => `L${o.nr} ${o.where}: ${o.hit}`), []);
+
+  // DaF review #5, B2: each taught form against its untaught neighbour. The introductions are fixed
+  // here, not read off the matcher: L12 teaches the ge- participle of a simple verb, no Lektion the
+  // separable one; L2 teaches „das dritte", no Lektion „im dritten"; a possessive and a determiner the
+  // input never shows with a Wechselpräposition are not taught by its article; -el/-er adjectives
+  // drop their e and are still adjectives.
+  assert.equal(at('Wir haben heute gekauft.'), 12, 'gekauft: L12');
+  assert.equal(at('Wir haben heute eingekauft.'), null, 'eingekauft: no Lektion');
+  assert.ok(at('Das dritte Stockwerk ist frei.') <= 2, 'das dritte: L2');
+  assert.equal(at('Die Küche ist im dritten Stockwerk.'), null, 'im dritten: no Lektion');
+  assert.equal(at('Warte vor meiner Garage!'), null, 'vor meiner: in no input');
+  assert.equal(at('Warte vor dem Kühlschrank!'), null, 'vor dem: only in metalanguage');
+  assert.equal(at('Wir kaufen billige Milch.'), null, 'billige: Adjektivdeklination');
+  assert.equal(at('Wir kaufen teure Milch.'), null, 'teure: the e of teuer drops, the adjective stays');
 });
 
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {

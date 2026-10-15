@@ -925,18 +925,18 @@ const RULE_CARD_OVERRIDES = {
 
   // ── Lektion 12 · Das Fest war schön (Feste und Essen)
   'perfekt-intro': {
-    titleDe: 'Das Perfekt: haben und Partizip II',
+    titleDe: 'Das Perfekt: haben oder sein und Partizip II',
     content: [
       'Über Vergangenes spricht man im Perfekt:',
-      'haben steht auf Position 2, das Partizip II ganz am Ende.',
+      'haben oder sein steht auf Position 2, das Partizip II ganz am Ende.',
       'Regelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.',
       'Unregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.',
-      'Diese Formen lernt man Wort für Wort.',
+      'Ohne ge- bei be-, ver- und -ieren: bezahlen → bezahlt, verstehen → verstanden, telefonieren → telefoniert.',
+      'sein steht bei gehen, fahren, kommen, bleiben und passieren.',
       'Beim Fest: Ana, wir haben gestern schön gefeiert!',
-      'Nein, ich habe Milch getrunken. Der Käse war lecker.',
-      'Die Wurst und das Fleisch haben wir gekauft. Und den Fisch? Tim hat ihn gekocht.',
-      'war ist die einzige einfache Vergangenheitsform in diesem Kurs.',
-      'English: haben in second position, and the participle at the very end of the sentence.',
+      'Tim hat ihn gekocht. Ich habe die Getränke bezahlt.',
+      'Im Kuchen war zu viel Zucker. Tim ist früh gegangen.',
+      'English: haben or sein in second position, and the participle at the very end of the sentence.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -953,6 +953,16 @@ const RULE_CARD_OVERRIDES = {
         wrong: 'Ich bin Kuchen gegessen.',
         correct: 'Ich habe Kuchen gegessen.',
         explanationDe: 'Mit essen steht haben: Ich habe Kuchen gegessen. Bei gehen und fahren steht sein, nicht haben.',
+      },
+      {
+        wrong: 'Tim hat früh gegangen.',
+        correct: 'Tim ist früh gegangen.',
+        explanationDe: 'gehen bildet das Perfekt mit sein: Tim ist gegangen.',
+      },
+      {
+        wrong: 'Ich habe die Getränke gebezahlt.',
+        correct: 'Ich habe die Getränke bezahlt.',
+        explanationDe: 'Verben mit be- haben im Partizip kein ge-: bezahlt.',
       },
     ],
   },

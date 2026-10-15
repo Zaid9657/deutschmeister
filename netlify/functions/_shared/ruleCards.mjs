@@ -255,8 +255,8 @@ export const RULE_CARDS = {
     ]
   },
   "perfekt-intro": {
-    "titleDe": "Das Perfekt: haben und Partizip II",
-    "content": "Über Vergangenes spricht man im Perfekt:\nhaben steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nUnregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.\nDiese Formen lernt man Wort für Wort.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nNein, ich habe Milch getrunken. Der Käse war lecker.\nDie Wurst und das Fleisch haben wir gekauft. Und den Fisch? Tim hat ihn gekocht.\nwar ist die einzige einfache Vergangenheitsform in diesem Kurs.\nEnglish: haben in second position, and the participle at the very end of the sentence.",
+    "titleDe": "Das Perfekt: haben oder sein und Partizip II",
+    "content": "Über Vergangenes spricht man im Perfekt:\nhaben oder sein steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nUnregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.\nOhne ge- bei be-, ver- und -ieren: bezahlen → bezahlt, verstehen → verstanden, telefonieren → telefoniert.\nsein steht bei gehen, fahren, kommen, bleiben und passieren.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nTim hat ihn gekocht. Ich habe die Getränke bezahlt.\nIm Kuchen war zu viel Zucker. Tim ist früh gegangen.\nEnglish: haben or sein in second position, and the participle at the very end of the sentence.",
     "commonMistakes": [
       {
         "wrong": "Ich habe gegessen Kuchen.",
@@ -272,6 +272,16 @@ export const RULE_CARDS = {
         "wrong": "Ich bin Kuchen gegessen.",
         "correct": "Ich habe Kuchen gegessen.",
         "explanationDe": "Mit essen steht haben: Ich habe Kuchen gegessen. Bei gehen und fahren steht sein, nicht haben."
+      },
+      {
+        "wrong": "Tim hat früh gegangen.",
+        "correct": "Tim ist früh gegangen.",
+        "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen."
+      },
+      {
+        "wrong": "Ich habe die Getränke gebezahlt.",
+        "correct": "Ich habe die Getränke bezahlt.",
+        "explanationDe": "Verben mit be- haben im Partizip kein ge-: bezahlt."
       }
     ]
   },

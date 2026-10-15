@@ -297,14 +297,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 8,
-      "questionDe": "Die Wohnung ist im 3. Stockwerk. Ergänzen Sie: Die Küche ist auch im ___ Stockwerk.",
-      "questionEn": "The flat is on the third floor.",
+      "questionDe": "Die Wohnung ist im 3. Stockwerk. Ergänzen Sie: Das ___ Stockwerk ist frei.",
+      "questionEn": "The flat is on the 3rd floor. The third floor is free.",
       "options": null,
-      "answer": "dritten",
+      "answer": "dritte",
       "accepted": [
-        "dritten"
+        "dritte"
       ],
-      "explanationDe": "Die Ordnungszahl bekommt die Endung: im dritten Stockwerk.",
+      "explanationDe": "Die 3. heißt dritte: das dritte Stockwerk.",
       "hint": null
     },
     {
@@ -2083,6 +2083,127 @@
         "Wir haben das Fleisch gekauft"
       ],
       "explanationDe": "Nach haben steht das Partizip gekauft.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-12",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Der Fisch war lecker, aber Tim ___ früh gegangen. (haben oder sein?)",
+      "questionEn": "The fish was delicious, but Tim left early.",
+      "options": null,
+      "answer": "ist",
+      "accepted": [
+        "ist"
+      ],
+      "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-13",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Tim ___ zum Markt gefahren und hat Obst gekauft. (haben oder sein?)",
+      "questionEn": "Tim drove to the market and bought fruit.",
+      "options": null,
+      "answer": "ist",
+      "accepted": [
+        "ist"
+      ],
+      "explanationDe": "fahren bildet das Perfekt mit sein: Tim ist gefahren.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-14",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Ich habe die Getränke ___. (bezahlen)",
+      "questionEn": "I paid for the drinks.",
+      "options": null,
+      "answer": "bezahlt",
+      "accepted": [
+        "bezahlt"
+      ],
+      "explanationDe": "Verben mit be- haben im Partizip kein ge-: bezahlt.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-15",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 15,
+      "questionDe": "„Das ist Reis.“ – „Danke, ich habe ___.“ (verstehen)",
+      "questionEn": "\"This is rice.\" – \"Thanks, I understood.\"",
+      "options": null,
+      "answer": "verstanden",
+      "accepted": [
+        "verstanden"
+      ],
+      "explanationDe": "Verben mit ver- haben im Partizip kein ge-: verstanden.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-16",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 16,
+      "questionDe": "Tim hat ___: „Der Saft ist da.“ (telefonieren)",
+      "questionEn": "Tim phoned: \"The juice is here.\"",
+      "options": null,
+      "answer": "telefoniert",
+      "accepted": [
+        "telefoniert"
+      ],
+      "explanationDe": "Verben auf -ieren haben im Partizip kein ge-: telefoniert.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-17",
+      "topic": "perfekt-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 17,
+      "questionDe": "Korrigieren Sie: „Der Fisch war lecker, aber Tim hat früh gegangen.“",
+      "questionEn": "Correct the sentence: The fish was delicious, but Tim left early.",
+      "options": null,
+      "answer": "Der Fisch war lecker, aber Tim ist früh gegangen.",
+      "accepted": [
+        "Der Fisch war lecker, aber Tim ist früh gegangen.",
+        "Der Fisch war lecker, aber Tim ist früh gegangen"
+      ],
+      "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-18",
+      "topic": "perfekt-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 18,
+      "questionDe": "Korrigieren Sie: „Ich habe die Getränke gebezahlt.“",
+      "questionEn": "Correct the sentence: I paid for the drinks.",
+      "options": null,
+      "answer": "Ich habe die Getränke bezahlt.",
+      "accepted": [
+        "Ich habe die Getränke bezahlt.",
+        "Ich habe die Getränke bezahlt"
+      ],
+      "explanationDe": "bezahlen hat im Partizip kein ge-: bezahlt.",
       "hint": null
     }
   ]
