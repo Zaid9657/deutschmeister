@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Plus } from 'lucide-react';
+import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
-import Button from '../ui/Button.jsx';
 import StageShell from './StageShell.jsx';
 import WordsLearnedCards from './WordsLearnedCards.jsx';
 import { accuracyPercent, nextReviewDate } from '../../lib/lesson/mastery.js';
@@ -11,17 +10,22 @@ import { useAuth } from '../../contexts/AuthContext';
 import SaveProgressCard from '../course/SaveProgressCard.jsx';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { enqueueWords } from '../../services/srsService.js';
+import { canDoLines } from '../../lib/course/canDo.js';
 import { supabase } from '../../utils/supabase.js';
 import { SOCIAL_LINKS } from '../../data/navigation.js';
 import { SOCIAL_ICONS } from '../socialIcons.js';
 import { trackSocialClicked } from '../../lib/funnelTracking.js';
 
 /**
- * Stage 8 — Recap. Words learned, the grammar point, the first-attempt
- * accuracy and its mastery label, the date the material comes back, and ONE
- * call to action: the next thing on the path. No XP, no hearts, no league
- * (standard §4, "Skip").
+ * Stage 8 — Recap. OUTCOME FIRST (Wave 1, 2026-10-14): what the learner can do
+ * now — the Lektion's own can-do lines — and when it comes back; then ONE call
+ * to action, the next thing on the path. Everything that measures the run (the
+ * mastery label, first-try accuracy, the four skill lines, the words and the
+ * grammar point) and the extras sit in one closed <details>, so the screen
+ * reads as an ability, not a score sheet. No XP, no hearts, no league
+ * (standard §4, "Skip"). The words come back in the course review — the one
+ * review destination; the "add to my vocab deck" button that sent them to a
+ * second, separate deck is gone.
  *
  * One exception to "one call to action": a SIGNED-OUT learner also gets the
  * save-progress card (P4, "first lesson before sign-up"). It is not a wall —
@@ -97,19 +101,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
 
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
-  // Vocab bridge: the Lektion's own words, keyed by the live `words` table
-  // (a11.js header — some entries carry `wordId: null` where the table has no
-  // row yet, so those are skipped rather than sent to enqueueWords). The
-  // service upserts with `ignoreDuplicates`, so a repeat click is a no-op for
-  // any card that already exists — no separate membership check needed.
-  const wordIds = useMemo(() => (stage.wortfeld || []).map((w) => w.wordId).filter(Boolean), [stage.wortfeld]);
-  const [bridgeStatus, setBridgeStatus] = useState('idle'); // idle | adding | added
-  const addToDeck = async () => {
-    if (!user || !wordIds.length || bridgeStatus !== 'idle') return;
-    setBridgeStatus('adding');
-    await enqueueWords(user.id, wordIds);
-    setBridgeStatus('added');
-  };
+  const canDo = lektion ? canDoLines(lektion, lang) : [];
 
   return (
     <StageShell
@@ -120,61 +112,20 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <Chip tone={status === 'gold' ? 'himbeer' : 'label'}>
-            <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> {t(`recap.mastery.${status === 'gold' || status === 'complete' ? status : 'started'}`, lang)}
-          </Chip>
-          <span className="font-data text-[0.8125rem] text-graphite">{t('recap.firstTry', lang, { pct })}</span>
-        </div>
-
-        {skills.length > 0 && (
-          <div className="mt-5">
-            <h3 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('recap.skills.title', lang)}</h3>
-            <dl className="mt-2 divide-y divide-rule border-y border-rule">
-              {skills.map((line) => (
-                <div key={line.skill} className="grid grid-cols-1 gap-0.5 py-2 sm:grid-cols-[8rem_1fr] sm:gap-3">
-                  <dt className="text-[0.875rem] font-bold text-ink">{t(`recap.skill.${line.skill}`, lang)}</dt>
-                  <dd className="text-[0.875rem] leading-snug text-graphite">{skillText(line, lang)}</dd>
-                </div>
+        {canDo.length > 0 && (
+          <>
+            <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
+            <ul className="mt-3 space-y-2">
+              {canDo.map((line) => (
+                <li key={line} className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> {line}
+                </li>
               ))}
-            </dl>
-          </div>
+            </ul>
+          </>
         )}
-
-        <dl className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div>
-            <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.words', lang)}
-            </dt>
-            <dd className="mt-1 font-display text-[1.5rem] font-semibold text-ink">{stage.wordCount || 0}</dd>
-          </div>
-          <div>
-            <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <Target className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.grammar', lang)}
-            </dt>
-            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{stage.grammar || '—'}</dd>
-          </div>
-          <div>
-            <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.review', lang)}
-            </dt>
-            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{t('recap.reviewOn', lang, { date: date.format(review) })}</dd>
-          </div>
-        </dl>
-
-        {stage.wortfeld && stage.wortfeld.length > 0 && (
-          <div className="mt-5 border-t border-rule pt-4">
-            <WordsLearnedCards words={stage.wortfeld} />
-          </div>
-        )}
-
-        {/* "Read the rule again": omitted on purpose. The player has no route
-            back to a single stage — stages are a linear index, not addressable
-            URLs — so there is nowhere for this link to go without a player
-            change, and RecapStage does not own the player. */}
-
-        <p className="mt-5 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-graphite">
-          {t(status === 'gold' ? 'recap.gold' : 'recap.done', lang)}
+        <p className={`${canDo.length ? 'mt-4 border-t border-rule pt-4 ' : ''}flex items-start gap-2 text-[0.875rem] leading-relaxed text-graphite`}>
+          <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t('recap.canDo.next', lang, { date: date.format(review) })}
         </p>
 
         {/* Where this run is saved (syncOutbox.js) — said in words, and never a reason to stop: Continue works either way. */}
@@ -188,97 +139,128 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
         </p>
       </Card>
 
-      {hasGoDeeper && (
-        <Card className="mt-5 p-5 sm:p-6">
-          <h3 className="font-display text-lg text-ink">{t('recap.goDeeper.title', lang)}</h3>
-          <ul className="mt-3 space-y-2.5">
-            {listeningHref && (
-              <li>
-                <Link to={listeningHref} className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep">
-                  <Headphones className="h-4 w-4" aria-hidden="true" /> {t('recap.goDeeper.listening', lang)}
-                </Link>
-              </li>
-            )}
-            {readingHref && (
-              <li>
-                <Link to={readingHref} className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep">
-                  <BookOpen className="h-4 w-4" aria-hidden="true" /> {t('recap.goDeeper.reading', lang)}
-                </Link>
-              </li>
-            )}
-            {speakingHref && (
-              <li>
-                <Link to={speakingHref} className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep">
-                  <Mic className="h-4 w-4" aria-hidden="true" /> {t('recap.goDeeper.speaking', lang)}
-                </Link>
-              </li>
-            )}
-          </ul>
-        </Card>
-      )}
-
-      {/* Coverage said plainly (2026-10 review): a Lektion without a linked listening exercise or
-          reading text says so instead of silently showing fewer links. */}
-      {lektion && (lektion.links?.listeningExercise == null || lektion.links?.readingOrder == null) && (
-        <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
-          {[
-            lektion.links?.listeningExercise == null && t('recap.coverage.noListening', lang),
-            lektion.links?.readingOrder == null && t('recap.coverage.noReading', lang),
-          ].filter(Boolean).join(' ')}
-        </p>
-      )}
-
-      {wordIds.length > 0 && (
-        <Card className="mt-5 p-5 sm:p-6">
-          {user ? (
-            <Button variant="secondary" onClick={addToDeck} disabled={bridgeStatus !== 'idle'}>
-              {bridgeStatus === 'added' ? (
-                <Trophy className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Plus className="h-4 w-4" aria-hidden="true" />
-              )}
-              {bridgeStatus === 'added'
-                ? t('recap.vocabBridge.added', lang)
-                : bridgeStatus === 'adding'
-                  ? t('recap.vocabBridge.adding', lang)
-                  : t('recap.vocabBridge.add', lang)}
-            </Button>
-          ) : (
-            <p className="text-sm text-graphite">{t('recap.vocabBridge.signInHint', lang)}</p>
-          )}
-        </Card>
-      )}
-
       {!user && level ? <SaveProgressCard level={level} /> : null}
 
-      {/* Follow the channels: signed-in learners only, and last on the screen.
-          A signed-out learner's one extra ask is the save-progress card above;
-          sending them off-site before they have an account loses the signup. */}
-      {user && (
-        <Card className="mt-5 p-5 sm:p-6">
-          <h3 className="font-display text-lg text-ink">{t('recap.follow.title', lang)}</h3>
-          <p className="mt-1 text-sm text-graphite">{t('recap.follow.body', lang)}</p>
-          <ul className="mt-3 flex flex-wrap gap-x-5">
-            {SOCIAL_LINKS.map((item) => {
-              const Icon = SOCIAL_ICONS[item.key];
-              return (
-                <li key={item.key}>
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => trackSocialClicked(item.key, 'lesson_recap')}
-                    className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep"
-                  >
-                    <Icon className="h-4 w-4" aria-hidden="true" /> {lang === 'de' ? item.labelDe : item.labelEn}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </Card>
-      )}
+      <details className="mt-5 rounded-clay border border-rule bg-white">
+        <summary className="flex min-h-11 cursor-pointer items-center px-5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep hover:text-ink">
+          {t('recap.details', lang)}
+        </summary>
+        <div className="border-t border-rule p-5 sm:p-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <Chip tone={status === 'gold' ? 'himbeer' : 'label'}>
+              <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> {t(`recap.mastery.${status === 'gold' || status === 'complete' ? status : 'started'}`, lang)}
+            </Chip>
+            <span className="font-data text-[0.8125rem] text-graphite">{t('recap.firstTry', lang, { pct })}</span>
+          </div>
 
+          {skills.length > 0 && (
+            <div className="mt-5">
+              <h3 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('recap.skills.title', lang)}</h3>
+              <dl className="mt-2 divide-y divide-rule border-y border-rule">
+                {skills.map((line) => (
+                  <div key={line.skill} className="grid grid-cols-1 gap-0.5 py-2 sm:grid-cols-[8rem_1fr] sm:gap-3">
+                    <dt className="text-[0.875rem] font-bold text-ink">{t(`recap.skill.${line.skill}`, lang)}</dt>
+                    <dd className="text-[0.875rem] leading-snug text-graphite">{skillText(line, lang)}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )}
+
+          <dl className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+                <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.words', lang)}
+              </dt>
+              <dd className="mt-1 font-display text-[1.5rem] font-semibold text-ink">{stage.wordCount || 0}</dd>
+            </div>
+            <div>
+              <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+                <Target className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.grammar', lang)}
+              </dt>
+              <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{stage.grammar || '—'}</dd>
+            </div>
+          </dl>
+
+          {stage.wortfeld && stage.wortfeld.length > 0 && (
+            <div className="mt-5 border-t border-rule pt-4">
+              <WordsLearnedCards words={stage.wortfeld} />
+            </div>
+          )}
+
+          <p className="mt-5 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-graphite">
+            {t(status === 'gold' ? 'recap.gold' : 'recap.done', lang)}
+          </p>
+
+          {hasGoDeeper && (
+            <div className="mt-5 border-t border-rule pt-4">
+              <h3 className="font-display text-lg text-ink">{t('recap.goDeeper.title', lang)}</h3>
+              <ul className="mt-3 space-y-2.5">
+                {listeningHref && (
+                  <li>
+                    <Link to={listeningHref} className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep">
+                      <Headphones className="h-4 w-4" aria-hidden="true" /> {t('recap.goDeeper.listening', lang)}
+                    </Link>
+                  </li>
+                )}
+                {readingHref && (
+                  <li>
+                    <Link to={readingHref} className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep">
+                      <BookOpen className="h-4 w-4" aria-hidden="true" /> {t('recap.goDeeper.reading', lang)}
+                    </Link>
+                  </li>
+                )}
+                {speakingHref && (
+                  <li>
+                    <Link to={speakingHref} className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep">
+                      <Mic className="h-4 w-4" aria-hidden="true" /> {t('recap.goDeeper.speaking', lang)}
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
+
+          {/* Coverage said plainly (2026-10 review): a Lektion without a linked listening exercise or
+              reading text says so instead of silently showing fewer links. */}
+          {lektion && (lektion.links?.listeningExercise == null || lektion.links?.readingOrder == null) && (
+            <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
+              {[
+                lektion.links?.listeningExercise == null && t('recap.coverage.noListening', lang),
+                lektion.links?.readingOrder == null && t('recap.coverage.noReading', lang),
+              ].filter(Boolean).join(' ')}
+            </p>
+          )}
+
+          {/* Follow the channels: signed-in learners only. A signed-out learner's one extra ask is
+              the save-progress card above; sending them off-site before they have an account
+              loses the signup. */}
+          {user && (
+            <div className="mt-5 border-t border-rule pt-4">
+              <h3 className="font-display text-lg text-ink">{t('recap.follow.title', lang)}</h3>
+              <p className="mt-1 text-sm text-graphite">{t('recap.follow.body', lang)}</p>
+              <ul className="mt-3 flex flex-wrap gap-x-5">
+                {SOCIAL_LINKS.map((item) => {
+                  const Icon = SOCIAL_ICONS[item.key];
+                  return (
+                    <li key={item.key}>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackSocialClicked(item.key, 'lesson_recap')}
+                        className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep"
+                      >
+                        <Icon className="h-4 w-4" aria-hidden="true" /> {lang === 'de' ? item.labelDe : item.labelEn}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
+      </details>
     </StageShell>
   );
 }

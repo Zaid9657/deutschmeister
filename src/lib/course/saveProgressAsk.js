@@ -9,12 +9,11 @@
 // 0 for 30 hours. The first checked answer is practice item 1, after the
 // intro, pretest, dialogue, Wortfeld, notice and Aussprache screens.
 //
-// THE RULE. A signed-out learner sees the ask once per Lektion, on the screen
-// right after their first checked answer (the first item `check.js` decided,
-// i.e. the first `onResult` the player records), and again on the recap (the
-// existing card). It never blocks the lesson: "Continue without saving" goes on
-// to the screen the learner was heading to, and either answer settles the ask
-// for that Lektion on this browser. A signed-in learner never sees it.
+// THE RULE (since 2026-10-09, see saveAskDue). A signed-out learner sees the ask
+// once per Lektion, in place of the pause screen after the first finished part,
+// and again on the recap (the existing card). It never blocks the lesson:
+// "Continue without saving" goes on to the next part, and either answer settles
+// the ask for that Lektion on this browser. A signed-in learner never sees it.
 //
 // WHERE IT LEADS. /signup with an on-site door tag (docs/tracking-links.md,
 // "On-site doors"): `ref` names the door, so it lands in
@@ -48,15 +47,16 @@ export const settleAsk = (level, lektionId, now = Date.now()) => safeSet(saveAsk
 /**
  * Whether the player shows the ask in place of the current screen.
  *
- * `firstAnswerAt` is the position ({ stageIndex, itemIndex }) where the first
- * answer of this run was checked; `at` is the position on screen now. The ask
- * waits while the feedback for that answer is still showing (same position)
- * and appears on the next screen. Never on the recap, which has its own card.
+ * Owner decision 2026-10-09 (after the Codex learner-value review), replacing „after the first
+ * checked answer" of 2026-10-06, which interrupted after a single answer, right or wrong: the ask
+ * comes once something is worth saving — at the end of the first finished PART of the Lektion
+ * (`partDone`, src/lib/lesson/sessions.js; in L1 that part ends with the learner's own
+ * introduction). Never on the recap, which has its own card.
  */
-export function saveAskDue({ signedOut, preview = false, settled, firstAnswerAt, at, stageKind }) {
-  if (!signedOut || preview || settled || !firstAnswerAt || !at) return false;
+export function saveAskDue({ signedOut, preview = false, settled, partDone, stageKind }) {
+  if (!signedOut || preview || settled) return false;
   if (stageKind === 'recap') return false;
-  return firstAnswerAt.stageIndex !== at.stageIndex || firstAnswerAt.itemIndex !== at.itemIndex;
+  return Number(partDone) >= 1;
 }
 
 /** The Lektion URL the lesson player resumes on (CLAUDE.md case 3: no trailing slash). */

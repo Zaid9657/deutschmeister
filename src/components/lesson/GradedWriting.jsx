@@ -109,7 +109,7 @@ const readDraft = (key) => {
   return d && typeof d === 'object' && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
 };
 
-export default function GradedWriting({ task, lektionId = null, onResult }) {
+export default function GradedWriting({ task, lektionId = null, onResult, onPending, allowRevision = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const isFormular = task?.kind === 'formular';
@@ -121,6 +121,8 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState(null); // the r object, once submitted
   const [note, setNote] = useState(null); // honest one-liner about the fallback
+  // One improved version after feedback, in a lesson only (Wave 1 writing loop): the server counts
+  // it against no other task (evaluate-writing courseSubmissionAllowed). A checkpoint never offers it.
 
   // The account resolves after the first render: then take that learner's draft, if nothing is typed.
   const loadedKey = useRef(key);
@@ -197,11 +199,12 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       return;
     }
     setBusy(true);
+    onPending?.(true);
     try {
       const res = await fetch('/.netlify/functions/evaluate-writing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ exam_key: task.examKey, task_key: task.taskKey, text: submission }),
+        body: JSON.stringify({ exam_key: task.examKey, task_key: task.taskKey, text: submission, feedback_lang: lang }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.evaluation_failed) {
@@ -227,6 +230,9 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
         corrections: Array.isArray(data.corrections) ? data.corrections : [],
         usedFallback: false,
         limitReached: false,
+        // The server says whether another text of this task is still free (a re-run of the Lektion
+        // may already have used the improved version) — never this component's own memory.
+        canRevise: data.can_revise === true,
         scores: data.scores || null,
         lektionId,
         remaining: typeof data.limit === 'number' ? Math.max(0, data.limit - (data.used ?? 0)) : null,
@@ -236,6 +242,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       finish(mechanicalResult(), t('writing.offline', lang));
     } finally {
       setBusy(false);
+      onPending?.(false);
     }
   };
 
@@ -272,6 +279,24 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
               </ul>
             )}
             <label htmlFor="writing-text" className={FIELD_LABEL}>{t('writing.yourText', lang)}</label>
+            {!done && task?.starters?.length > 0 && (
+              <div className="mt-2">
+                <p className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('writing.starters', lang)}</p>
+                <div className="mt-1.5 flex flex-wrap gap-2">
+                  {task.starters.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      lang="de"
+                      onClick={() => setText((v) => `${v}${v && !/\s$/.test(v) ? ' ' : ''}${s.replace(/…\s*$/, '').trimEnd()} `)}
+                      className="min-h-11 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.875rem] text-ink hover:border-siegel"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <textarea
               id="writing-text"
               rows={6}
@@ -308,6 +333,37 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           </div>
         )}
       </Card>
+
+      {done && outcome.scored && allowRevision && outcome.canRevise && (() => {
+        // The one thing to fix first: a Leitpunkt the text leaves out (coverage caps the score), else
+        // the first correction. The offer itself needs neither — correct German that misses a point
+        // has no correction, and it is exactly the text that most needs a second version.
+        const missing = points.find((_, i) => !outcome.leitpunktCheck[i]);
+        const fix = outcome.corrections[0];
+        return (
+          <Card tone="wash" className="mt-4 p-5">
+            {(missing || fix) && <p className={FIELD_LABEL}>{t('writing.firstFix', lang)}</p>}
+            {missing ? (
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                {t('writing.notCovered', lang)}: <span lang="de">{missing}</span>
+              </p>
+            ) : fix && (
+              <>
+                <p className="mt-2 text-[0.9375rem] leading-relaxed" lang="de">
+                  <span className="text-accent-himbeer-ink line-through">{fix.original}</span>
+                  {' → '}
+                  <span className="font-bold text-accent-limette-ink">{fix.corrected}</span>
+                </p>
+                {fix.note && <p className="mt-1 text-[0.8125rem] text-graphite">{fix.note}</p>}
+              </>
+            )}
+            <Button className="mt-4" variant="secondary" onClick={() => { setOutcome(null); setNote(null); }}>
+              {t('writing.improve', lang)}
+            </Button>
+            <p className="mt-2 text-[0.8125rem] text-graphite">{t('writing.improveNote', lang)}</p>
+          </Card>
+        );
+      })()}
 
       {done && outcome.scored && (
         <>

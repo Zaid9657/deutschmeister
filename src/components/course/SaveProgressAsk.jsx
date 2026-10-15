@@ -6,12 +6,11 @@ import Button from '../ui/Button.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { lektionPath, rememberPlace, saveProgressSignupHref, settleAsk } from '../../lib/course/saveProgressAsk.js';
 
-// The save-progress ask after a signed-out learner's first checked answer
-// (owner decision 2026-10-06; the rule and its reasons are in
-// src/lib/course/saveProgressAsk.js). It takes the place of the next screen
-// for one stop and is never a wall: "Continue without saving" goes straight on
-// to the screen the learner was heading to. Either button settles the ask for
-// this Lektion, so it does not come back after the next answer.
+// The save-progress ask at the end of a signed-out learner's first finished part
+// of a Lektion (owner decision 2026-10-09; the rule and its reasons are in
+// src/lib/course/saveProgressAsk.js). It is that part's pause screen for a guest
+// and never a wall: "Continue without saving" goes straight on to the next part.
+// Either button settles the ask for this Lektion, so it does not come back.
 //
 // The signup door is a plain href (the door tag is read on a page load). The
 // login link is a router <Link> carrying the Lektion as `state.from`, which
@@ -20,7 +19,7 @@ import { lektionPath, rememberPlace, saveProgressSignupHref, settleAsk } from '.
 // into /login → /signup, or into a confirmation e-mail opened in a new tab,
 // where only the stored return path and the run hand-off survive.
 
-export default function SaveProgressAsk({ level, lektion, onContinue }) {
+export default function SaveProgressAsk({ level, lektion, done, total, onContinue }) {
   const [lang] = useLessonLang();
   const heading = useRef(null);
   const here = lektionPath(level, lektion.nr);
@@ -37,7 +36,7 @@ export default function SaveProgressAsk({ level, lektion, onContinue }) {
   return (
     <section aria-labelledby="save-ask-title" className="flex min-h-[60vh] flex-col" data-save-ask="first">
       <header className="mb-5">
-        <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{t('saveAsk.eyebrow', lang)}</p>
+        <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{t('session.eyebrow', lang, { done, total })}</p>
         <h1
           id="save-ask-title"
           ref={heading}

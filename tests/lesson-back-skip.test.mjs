@@ -72,6 +72,6 @@ test('the player wires Back through the same skip rule advance() applies on the 
   const src = read('src/pages/lesson/LessonPlayerPage.jsx');
   assert.doesNotMatch(src, /goStage\(stageIndex - 1\)/, 'Back must not go to stageIndex - 1 unconditionally');
   assert.match(src, /prevStageIndex\(stages, stageIndex, requeued\.length\)/, 'Back must read prevStageIndex with the requeued count');
-  assert.match(src, /if \(!items\.length\) \{ goStage\(target \+ 1\); return; \}/,
+  assert.match(src, /if \(!items\.length\) landing = target \+ 1;[\s\S]{0,400}goStage\(landing\);/,
     'advance() still skips an empty requeue stage: the rule Back mirrors');
 });

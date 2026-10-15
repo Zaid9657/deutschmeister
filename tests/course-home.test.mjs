@@ -10,7 +10,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -30,13 +30,11 @@ const RESULTS = 'src/components/LevelTest/LevelTestResults.jsx';
 // 1. The course home reads the meta module and mounts the orientation pieces
 // ---------------------------------------------------------------------------
 
-test('CurriculumHomePage imports A11_META, CourseWelcome and FirstRunTour', () => {
+test('CurriculumHomePage imports A11_META and CourseWelcome', () => {
   const src = read(HOME);
   assert.match(src, /import \{ A11_META(, [A-Za-z]+)* \} from '\.\.\/data\/curricula\/a11\.meta\.js'/, 'the page must read the meta module');
   assert.match(src, /import CourseWelcome from '\.\.\/components\/course\/CourseWelcome\.jsx'/);
-  assert.match(src, /import FirstRunTour from '\.\.\/components\/course\/FirstRunTour\.jsx'/);
   assert.match(src, /<CourseWelcome curriculum=\{curriculum\} meta=\{meta\}/, 'CourseWelcome must be rendered with the curriculum and its meta');
-  assert.match(src, /<FirstRunTour curriculum=\{curriculum\} meta=\{meta\}/, 'FirstRunTour must be rendered with the curriculum and its meta');
 });
 
 test('the welcome shows while nothing is finished, and otherwise behind an aria-expanded toggle', () => {
@@ -57,14 +55,14 @@ test('chapter banners render the chapter titleEn, the German title as a small li
   assert.match(src, /\?\? `Lektion \$\{lektionen\[0\]\?\.nr\}–/, 'the "Lektion 1–3" label survives only as the fallback');
 });
 
-test('the three tour anchors are on the path, the continue card and the plan', () => {
+test('no tour opens by itself: the welcome is the one orientation (Wave 1, 2026-10-14)', () => {
+  // The three-step FirstRunTour opened over the welcome that already says the same — a dialog
+  // between a first-time learner and the Start button. The welcome shows while nothing is done
+  // (test above) and is one tap away after, behind "How this course works".
   const src = read(HOME);
-  for (const target of ['path', 'continue', 'plan']) {
-    assert.ok(src.includes(`data-tour="${target}"`), `missing data-tour="${target}"`);
-  }
-  // And the tour's default steps point at exactly those three.
-  const tour = read('src/components/course/FirstRunTour.jsx');
-  for (const target of ['path', 'continue', 'plan']) assert.ok(tour.includes(`target: '${target}'`), `FirstRunTour has no step for ${target}`);
+  assert.doesNotMatch(src, /import FirstRunTour|<FirstRunTour|data-tour=/);
+  assert.ok(!existsSync(join(ROOT, 'src/components/course/FirstRunTour.jsx')), 'the tour component is gone, not just unmounted');
+  assert.match(src, /meta && !fresh && \(\s*<button[\s\S]{0,200}onClick=\{\(\) => setShowWelcome\(\(v\) => !v\)\}/, 'one tap re-opens the welcome');
 });
 
 // ---------------------------------------------------------------------------

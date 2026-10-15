@@ -171,6 +171,17 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   progress row, review cards) are retried until they land; the recap says where the run is saved. The
   in-progress run snapshot is localStorage for 7 days (`runState.js`), and a guest merge clears the
   guest store only when every write succeeded. `countCompletedRuns` ignores explain/read-aloud rows.
+- **Wave 1 (2026-10-14, plan approved 2026-10-09): every sitting ends with something the learner can
+  do.** A Lektion runs in three parts with a pause screen between them (`src/lib/lesson/sessions.js`);
+  a signed-out learner's save ask takes the place of the FIRST pause (`saveAskDue`, owner decision
+  2026-10-09 — never after a single answer). The recap leads with the Lektion's can-dos and keeps every
+  score inside one closed `<details>`; the course home leads with „Kann ich" (`src/lib/course/canDo.js`:
+  shown = Lektion done, again = its chapter checkpoint passed) — no XP, and no tour opens by itself.
+  The course review is the one review destination. Writing: starters for L2/L4 cut from the model
+  text, and one improved version per task that costs no other task on ANY tier
+  (`courseSubmissionAllowed`, `freeRevisionsSince`). Deliberately not done: FSRS and per-run
+  help evidence wait for an owner-applied migration; the L2 notice is NOT shortened (every clause
+  closes a DaF finding and is an input surface RULE 6b/6c/11/23 measure).
 - **On Windows, run `node scripts/validate-curriculum.mjs` from the repo root** — before 2026-10-05 its
   main guard compared a POSIX path and the script silently did nothing on Windows.
 

@@ -118,11 +118,18 @@ test('every wordId-null entry is in migrations/2026-09-13-a1-1-course-words.sql'
   assert.ok(!/'null'/.test(inserts), "plural must be SQL NULL, never the string 'null'");
 });
 
+// The de-DE neural voices Microsoft lists (learn.microsoft.com, Speech language support, checked
+// 2026-10-15; Gisela is a child's voice and the Multilingual ones are left out). A name outside
+// this list would fail the owner's Azure run on its first clip.
+const FEMALE_VOICES = ['Katja', 'Amala', 'Elke', 'Klarissa', 'Louisa', 'Maja', 'Tanja'].map((n) => `de-DE-${n}Neural`);
+const MALE_VOICES = ['Conrad', 'Bernd', 'Christoph', 'Kasper', 'Killian', 'Klaus', 'Ralf'].map((n) => `de-DE-${n}Neural`);
+const VERIFIED_VOICES = new Set([...FEMALE_VOICES, ...MALE_VOICES]);
+
 test('every planned clip has a text, a voice, a unique path and a storage path under course/<level>/', () => {
   const paths = new Set();
   for (const e of plan) {
     assert.ok(e.text && e.text.trim(), `empty text for ${e.path}`);
-    assert.ok([VOICE_FEMALE, VOICE_MALE].includes(e.voice), `unknown voice ${e.voice}`);
+    assert.ok(VERIFIED_VOICES.has(e.voice), `unknown voice ${e.voice}`);
     assert.match(e.path, /^course\/a1\.1\/[^/]+\/[a-z0-9-]+\.mp3$/);
     assert.ok(!paths.has(e.path), `duplicate path ${e.path}`);
     paths.add(e.path);
@@ -131,19 +138,25 @@ test('every planned clip has a text, a voice, a unique path and a storage path u
 
 // ── voices ──────────────────────────────────────────────────────────────────
 
-test('both voices are used and every speaker in the curriculum is mapped', () => {
+test('every speaker in the curriculum is mapped, and no dialogue is one voice talking to itself', () => {
   const speakers = new Set(CURRICULUM_A11.lektionen.flatMap((l) => l.dialog.lines.map((x) => x.speaker)));
   for (const s of speakers) {
     assert.ok(SPEAKER_VOICES[s], `speaker "${s}" is not in SPEAKER_VOICES — it would fall back to ${VOICE_DEFAULT}`);
   }
-  const used = new Set(byKind('line').map((e) => e.voice));
-  assert.equal(used.size, 2, 'a dialogue must not be one voice talking to itself');
+  // The class, per dialogue (2026-10-15): with one voice per gender, L1, L3, L8 and L12 — two women
+  // each — were one voice talking to itself, and a course-wide "two voices are used" never saw it.
+  for (const l of CURRICULUM_A11.lektionen) {
+    const cast = [...new Set(l.dialog.lines.map((x) => x.speaker))];
+    const voices = new Set(cast.map(voiceForSpeaker));
+    assert.equal(voices.size, cast.length, `L${l.nr}: ${cast.join(' + ')} share a voice`);
+  }
+  assert.equal(new Set(Object.values(SPEAKER_VOICES)).size, Object.keys(SPEAKER_VOICES).length, 'one voice per character');
 });
 
-test('voiceForSpeaker splits female/male and defaults rather than throwing', () => {
-  assert.equal(voiceForSpeaker('Ana'), VOICE_FEMALE);
-  assert.equal(voiceForSpeaker('Frau Kaya'), VOICE_FEMALE);
-  assert.equal(voiceForSpeaker('Herr Weber'), VOICE_MALE);
+test('voiceForSpeaker gives each character their own verified voice of the right gender, and defaults rather than throwing', () => {
+  for (const name of ['Ana', 'Lena', 'Frau Kaya', 'Frau Wolf']) assert.ok(FEMALE_VOICES.includes(voiceForSpeaker(name)), name);
+  for (const name of ['Tim', 'Paul', 'Herr Weber', 'Herr Schmidt']) assert.ok(MALE_VOICES.includes(voiceForSpeaker(name)), name);
+  assert.equal(voiceForSpeaker('Ana'), VOICE_FEMALE, 'Ana keeps Katja, the narration voice');
   assert.equal(voiceForSpeaker('Tim'), VOICE_MALE);
   assert.equal(voiceForSpeaker('Niemand'), VOICE_DEFAULT);
   assert.equal(voiceForSpeaker(undefined), VOICE_DEFAULT);
@@ -219,7 +232,7 @@ test('every manifest entry that exists is {url, sha1, voice} on a real curriculu
       assert.deepEqual(Object.keys(value).sort(), ['sha1', 'url', 'voice']);
       assert.match(value.url, /^https?:\/\//);
       assert.match(value.sha1, /^[0-9a-f]{40}$/);
-      assert.ok([VOICE_FEMALE, VOICE_MALE].includes(value.voice));
+      assert.ok(VERIFIED_VOICES.has(value.voice), `unknown voice ${value.voice}`);
     }
   }
 });

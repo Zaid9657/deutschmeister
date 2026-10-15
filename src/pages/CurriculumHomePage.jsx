@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown, Compass } from 'lucide-react';
+import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
@@ -17,7 +17,8 @@ import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestRe
 import { clearReturnPath } from '../lib/returnPath.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
-import FirstRunTour from '../components/course/FirstRunTour.jsx';
+import KannIch from '../components/course/KannIch.jsx';
+import { canDoList } from '../lib/course/canDo.js';
 import LessonRing from '../components/course/LessonRing.jsx';
 import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -38,9 +39,11 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 // P4 ("completion levers") adds three things and no gates:
 //   * the exam-date plan (ExamDatePlan) under the continue card — a weekly
 //     target when profiles.exam_date is set, a one-tap ask when it is not;
-//   * the Flame reads the FORGIVING streak (one missed day per rolling seven
+//   * the streak is the FORGIVING one (one missed day per rolling seven
 //     is forgiven — src/services/dashboardStats.js), because a strict streak
-//     punishes a normal week and is the thing learners quit over;
+//     punishes a normal week and is the thing learners quit over. Since Wave 1
+//     (2026-10-14) it is one line of the "Kann ich" block, which leads the home
+//     with the can-dos of the finished Lektionen instead of XP (canDo.js);
 //   * a SIGNED-OUT visitor's locally finished Lektionen render as done
 //     (src/lib/course/localProgress.js), and the first load with a user
 //     present merges them into the account.
@@ -54,8 +57,9 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 //   * CourseWelcome (what this is, how a Lektion works, who you meet, what you
 //     will be able to do) renders above the path while nothing is finished,
 //     and afterwards behind a "How this course works" toggle in the header;
-//   * FirstRunTour points at the path, the Continue card and the exam-date
-//     plan once per browser — the three `data-tour` anchors below;
+//   * no tour opens by itself (Wave 1, 2026-10-14): the three-step FirstRunTour
+//     sat on top of the welcome that already says the same, so it is gone and
+//     the welcome is the one orientation, one tap away once something is done;
 //   * ENDOWED progress: a learner whose placement test (profiles.current_level,
 //     UPPERCASE in the DB) suggests a level above this one, or who arrives from
 //     the results page with `?from=placement`, has every node open. Nothing is
@@ -108,6 +112,8 @@ export default function CurriculumHomePage({ curriculum }) {
   const [done, setDone] = useState(() => (user ? new Set() : localDoneIds(curriculum.level)));
   const [loaded, setLoaded] = useState(() => !user);
   const [streak, setStreak] = useState(0);
+  // Cards due today. Review leads the home, ahead of the next session (Wave 1, Codex review).
+  const [reviewDue, setReviewDue] = useState(0);
   const [openChapter, setOpenChapter] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
 
@@ -151,6 +157,11 @@ export default function CurriculumHomePage({ curriculum }) {
       loadDashboardStats(user.id)
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
         .catch(() => {});
+      // On demand: reviewService pulls the pool rules, which the home chunk otherwise never needs.
+      import('../services/reviewService.js')
+        .then(({ fetchReviewCounts }) => fetchReviewCounts(user.id, level))
+        .then((c) => { if (!cancelled) setReviewDue(c.due || 0); })
+        .catch(() => {});
     };
     // Merge first when there is something local to merge, and send any finished
     // run still waiting in the sync outbox (syncOutbox.js), so the very first
@@ -178,7 +189,6 @@ export default function CurriculumHomePage({ curriculum }) {
   const fresh = loaded && doneCount === 0;
   const welcomeOpen = fresh || showWelcome;
   const pct = Math.round((doneCount / path.length) * 100);
-  const xp = path.filter((n) => done.has(n.id)).reduce((s, n) => s + (n.minutes || 10), 0);
   const wordsTotal = curriculum.lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0);
 
   // Chapters: each checkpoint closes the Lektionen since the previous one.
@@ -218,11 +228,16 @@ export default function CurriculumHomePage({ curriculum }) {
               {curriculum.lektionen.length} Lektionen · {curriculum.checkpoints.length} checkpoints · {wordsTotal} words · ends with a shortened practice test in the {curriculum.examName} format
             </Reveal>
 
-            <Reveal delay={140} className="mt-5 grid grid-cols-3 gap-3">
-              <Stat icon={Zap} label="XP" value={xp} tone="siegel" />
-              <Stat icon={Flame} label="Day streak" value={streak} tone="aprikose" />
-              <Stat icon={Trophy} label="Done" value={`${doneCount}/${path.length}`} tone="gold" />
-            </Reveal>
+            {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
+              <Reveal delay={140} className="mt-5">
+                <KannIch
+                  items={canDoList(curriculum, done)}
+                  checkpointsPassed={curriculum.checkpoints.filter((cp) => done.has(cp.id)).length}
+                  checkpointsTotal={curriculum.checkpoints.length}
+                  streak={streak}
+                />
+              </Reveal>
+            )}
 
             {loaded && <MilestoneCard streak={streak} />}
 
@@ -236,10 +251,19 @@ export default function CurriculumHomePage({ curriculum }) {
                   Your test suggests a level above {curriculum.code} — everything here is open; start where you like.
                 </p>
               )}
+              {reviewDue > 0 && !complete && (
+                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-[0.9375rem] text-ink">
+                    <span className="font-bold">{reviewDue} {reviewDue === 1 ? 'card' : 'cards'} to review first</span>
+                    <span className="text-graphite"> — about {Math.max(1, Math.round(reviewDue / 6))} min, then your next step.</span>
+                  </p>
+                  <Button to={`/course/${level}/review`} variant="secondary" className="shrink-0">Review →</Button>
+                </div>
+              )}
               {complete ? (
                 <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
               ) : current ? (
-                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between" data-tour="continue">
+                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3">
                     {(() => { const I = KIND_ICON[current.kind]; return <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel"><I className="h-5 w-5" /></span>; })()}
                     <div className="min-w-0">
@@ -260,7 +284,7 @@ export default function CurriculumHomePage({ curriculum }) {
                   </Link>
                 </p>
               )}
-              <div data-tour="plan"><ExamDatePlan curriculum={curriculum} path={path} doneIds={done} /></div>
+              <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
             </Reveal>
           </div>
         </header>
@@ -272,7 +296,7 @@ export default function CurriculumHomePage({ curriculum }) {
           </div>
         )}
 
-        <div data-tour="path">
+        <div>
         {chapters.map((nodes, ci) => {
           const lektionen = nodes.filter((n) => n.kind === 'lektion').map((n) => curriculum.lektionen.find((l) => l.id === n.id)).filter(Boolean);
           const chapterDone = nodes.filter((n) => done.has(n.id)).length;
@@ -352,8 +376,6 @@ export default function CurriculumHomePage({ curriculum }) {
         })}
         </div>
 
-        {loaded && meta && <FirstRunTour curriculum={curriculum} meta={meta} />}
-
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           {endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.'}
           {user ? ' On any device.' : ' Your progress saves on this device until you sign in.'}{' '}
@@ -370,22 +392,6 @@ export default function CurriculumHomePage({ curriculum }) {
   );
 }
 
-function Stat({ icon: Icon, label, value, tone }) {
-  const tones = {
-    siegel: 'bg-siegel-wash text-siegel-deep',
-    aprikose: 'bg-accent-aprikose-wash text-accent-aprikose-ink',
-    gold: 'bg-paper-sunk text-ink',
-  };
-  return (
-    <div className={`flex items-center gap-2 rounded-clay px-3 py-2 ${tones[tone] || tones.siegel}`}>
-      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-      <div className="min-w-0">
-        <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em]">{label}</p>
-        <p className="truncate font-display text-[1.125rem] font-semibold leading-none">{value}</p>
-      </div>
-    </div>
-  );
-}
 
 function Node({ to, state, Icon, label, big }) {
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';

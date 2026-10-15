@@ -62,6 +62,14 @@
 // Herr Weber, Herr Schmidt, Paul). No outcome promises and no exam fees anywhere in this file.
 
 /**
+ * The learners' roles. A scored read-aloud line is always one of theirs: the learner speaks their own
+ * part and hears and types the staff's (dictation). L1, L2, L4, L9 and L10 used to score the
+ * receptionist's, clerk's, seller's, waiter's and station staff's lines (Codex review, 2026-10-09).
+ * tests/course-value.test.mjs holds every Lektion to it.
+ */
+export const LEARNER_CAST = ['Ana', 'Tim', 'Lena'];
+
+/**
  * The closed list of words a dialogue line may use WITHOUT the word being in this or an earlier
  * Lektion's Wortfeld: articles and determiners, pronouns, the forms of sein/haben, ja/nein/
  * bitte/danke, question words, the numbers 0–100, prepositions and their contractions, the
@@ -220,6 +228,10 @@ export const CURRICULUM_A11 = {
         promptEn: 'Say your name in one sentence.',
         model: 'Ich heiße Ana.',
         accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist', 'Hallo', 'Guten Tag'],
+        // The very first encounter: an A0 beginner has nothing to retrieve yet, so L1 shows and plays
+        // the model first, the learner writes it with their own name, then once more unaided (Codex
+        // learner-value review, 2026-10-09). Every later Lektion keeps the retrieval-first pretest.
+        modelFirst: { openings: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
@@ -228,12 +240,12 @@ export const CURRICULUM_A11 = {
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
-      phonetik: { focus: 'Wortakzent auf der ersten Silbe', items: ['HAL-lo', 'DAN-ke', 'A-na'] },
+      phonetik: { focus: 'Wortakzent auf der ersten Silbe', focusEn: 'Word stress on the first syllable', items: ['HAL-lo', 'DAN-ke', 'A-na'] },
       // Not line 1: from the audio alone nobody can tell Ana from Anna or Chakiri from
       // Tschakiri — a dictation tests the ear, not the spelling of a name (2026-10 review).
-      hoeren: { kind: 'dictation', lines: [9, 7] },
+      hoeren: { kind: 'dictation', lines: [0, 6] },
       sprechen: {
-        readAloud: [0, 6],
+        readAloud: [7, 9],
         open: {
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vor: Name und Vorname. Buchstabieren Sie Ihren Namen.',
@@ -448,16 +460,16 @@ export const CURRICULUM_A11 = {
       },
       // A real long/short contrast from this Lektion's own words: the i of Sie and wie is long [iː],
       // the i of bin and sind is short [ɪ]. „bin – bist – sind“ were three short vowels (2026-10 review).
-      phonetik: { focus: 'Langes und kurzes i: Sie, wie [iː] – bin, sind [ɪ]', items: ['wie – Sie', 'bin – sind', 'Sie sind'] },
+      phonetik: { focus: 'Langes und kurzes i: Sie, wie [iː] – bin, sind [ɪ]', focusEn: 'Long and short i: Sie, wie [iː] – bin, sind [ɪ]', items: ['wie – Sie', 'bin – sind', 'Sie sind'] },
       // Not line 4: an enumeration with three commas is a punctuation test, not a listening test.
-      hoeren: { kind: 'dictation', lines: [7, 3] },
+      hoeren: { kind: 'dictation', lines: [3, 6] },
       sprechen: {
         // Zeile 2 („Bitte füllen Sie das Formular aus.“) ist RAUS (DaF review #13, MAJOR 3): der
         // Satz trägt die Satzklammer aus Lektion 11 und einen Sie-Imperativ, den A1.1 nirgends
         // erklärt. Im DIALOG darf er stehen (CONTRACT §2 — eine Beamtin sagt diesen Satz), zum
         // Vorlesen und als Diktat in Checkpoint 1 nicht. Zeile 4 ist frei und trägt das eigene
         // Thema der Lektion; RULE 18 bleibt erfüllt (Diktat liegt auf 7 und 3).
-        readAloud: [4, 6],
+        readAloud: [1, 7],
         open: {
           teil: 'Sprechen Teil 1',
           // ROUND 18 (DaF review #17, MAJOR 3): *Start Deutsch 1* Sprechen Teil 1 asks Name, Alter,
@@ -517,6 +529,9 @@ export const CURRICULUM_A11 = {
         // three Leitpunkte, and the origin half of the Lektion's own can-do line finally has a
         // surface. `kommen aus` moved into this Lektion's Wortfeld for it (`Marokko` is a persona fact
         // and a DIALOG_NAME, not a Wortfeld row).
+        // Optional, tappable sentence starters for the first free-text messages (Wave 1). Each is cut
+        // from this Lektion's own model text, so RULE 20 already holds it to taught words (test).
+        starters: ['Sehr geehrte Damen und Herren,', 'ich heiße …', 'Ich bin am … geboren.', 'Ich komme aus …', 'Ich bin ledig.', 'Viele Grüße,'],
         sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
@@ -613,7 +628,7 @@ export const CURRICULUM_A11 = {
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
       },
-      phonetik: { focus: 'u und ü: Bruder [uː] – Brüder [yː] (lang), Mütter [ʏ] (kurz)', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
+      phonetik: { focus: 'u und ü: Bruder [uː] – Brüder [yː] (lang), Mütter [ʏ] (kurz)', focusEn: 'u and ü: Bruder [uː] – Brüder [yː] (long), Mütter [ʏ] (short)', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
       hoeren: { kind: 'dictation', lines: [5, 7] },
       sprechen: {
         readAloud: [2, 3],
@@ -718,10 +733,10 @@ export const CURRICULUM_A11 = {
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
-      phonetik: { focus: 'Der Diphthong eu in Euro und teuer', items: ['EU-ro', 'TEU-er', 'NEUN'] },
+      phonetik: { focus: 'Der Diphthong eu in Euro und teuer', focusEn: 'The diphthong eu in Euro and teuer', items: ['EU-ro', 'TEU-er', 'NEUN'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
-        readAloud: [0, 5],
+        readAloud: [0, 2],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Fragen Sie am Stand nach einem Preis und reagieren Sie auf die Antwort.',
@@ -748,6 +763,7 @@ export const CURRICULUM_A11 = {
         // Mustertext BEANTWORTET ihn wieder — „Wir kommen morgen.“ Runde 14 hatte „Wann treffen wir
         // Ana?“ geschrieben: eine Frage ohne Zeitangabe, also keine Antwort. `morgen` lehrt L1 als
         // „Bis morgen“, `kommen` L3; `treffen`, `uns` und `um` lehrt A1.1 bis hierher nicht.
+        starters: ['Hallo Lena!', 'Wir kaufen …', 'Der Stuhl kostet … Euro.', 'Das ist nicht teuer.', 'Tschüss,'],
         sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wir kommen morgen. Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
@@ -844,7 +860,7 @@ export const CURRICULUM_A11 = {
         examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
-      phonetik: { focus: 'sch – s – z: Schere, sechs, zehn', items: ['SCHE-re', 'SECHS', 'ZEHN'] },
+      phonetik: { focus: 'sch – s – z: Schere, sechs, zehn', focusEn: 'sch – s – z: Schere, sechs, zehn', items: ['SCHE-re', 'SECHS', 'ZEHN'] },
       hoeren: { kind: 'dictation', lines: [1, 5] },
       sprechen: {
         readAloud: [4, 7],
@@ -946,7 +962,7 @@ export const CURRICULUM_A11 = {
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
-      phonetik: { focus: 'Lange Vokale: vier, Telefon, Büro', items: ['VIER', 'Te-le-FON', 'Bü-RO'] },
+      phonetik: { focus: 'Lange Vokale: vier, Telefon, Büro', focusEn: 'Long vowels: vier, Telefon, Büro', items: ['VIER', 'Te-le-FON', 'Bü-RO'] },
       // NOT line 7: the split telephone number carries an en dash, so „042 3381“ and „Null vier
       // zwei - drei …“ would both be marked wrong. Line 9 has no punctuation trap (DaF review #2, L6).
       hoeren: { kind: 'dictation', lines: [2, 9] },
@@ -1072,7 +1088,7 @@ export const CURRICULUM_A11 = {
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
-      phonetik: { focus: 'Endungen am Wortende: -e, -en, -st', items: ['ich HÖ-re', 'wir HÖ-ren', 'du SPIELST'] },
+      phonetik: { focus: 'Endungen am Wortende: -e, -en, -st', focusEn: 'Word endings: -e, -en, -st', items: ['ich HÖ-re', 'wir HÖ-ren', 'du SPIELST'] },
       hoeren: { kind: 'dictation', lines: [3, 6] },
       sprechen: {
         readAloud: [1, 4],
@@ -1189,7 +1205,7 @@ export const CURRICULUM_A11 = {
         examples: ['Ich stehe um sechs Uhr auf.', 'Der Termin ist am Montag um Viertel vor acht.'],
         ruleSlug: 'time-and-dates',
       },
-      phonetik: { focus: 'Satzmelodie in der W-Frage: fallend', items: ['Wie SPÄT ist es?', 'WANN kommst du?', 'Wie viel UHR ist es?'] },
+      phonetik: { focus: 'Satzmelodie in der W-Frage: fallend', focusEn: 'Sentence melody in a W-question: it falls', items: ['Wie SPÄT ist es?', 'WANN kommst du?', 'Wie viel UHR ist es?'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
         // RULE 18: Zeile 3 ist Diktatzeile. Zeile 6 und Zeile 8 sind beide Wochentagszeilen und
@@ -1308,10 +1324,10 @@ export const CURRICULUM_A11 = {
         examples: ['Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.'],
         ruleSlug: 'verb-haben',
       },
-      phonetik: { focus: 'Der Vokal ö in möchten und hören', items: ['MÖCH-te', 'HÖ-ren', 'SCHÖN'] },
-      hoeren: { kind: 'dictation', lines: [4, 3] },
+      phonetik: { focus: 'Der Vokal ö in möchten und hören', focusEn: 'The vowel ö in möchten and hören', items: ['MÖCH-te', 'HÖ-ren', 'SCHÖN'] },
+      hoeren: { kind: 'dictation', lines: [0, 4] },
       sprechen: {
-        readAloud: [0, 1],
+        readAloud: [1, 3],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie im Café um ein Glas Wasser und reagieren Sie auf die Antwort.',
@@ -1412,10 +1428,10 @@ export const CURRICULUM_A11 = {
         examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte zwanzig Euro?'],
         ruleSlug: 'yes-no-questions',
       },
-      phonetik: { focus: 'Steigende Satzmelodie in der Ja/Nein-Frage', items: ['Fährt der ZUG?↗', 'Hast du ZEIT?↗', 'Kommst du MIT?↗'] },
+      phonetik: { focus: 'Steigende Satzmelodie in der Ja/Nein-Frage', focusEn: 'In a yes/no question the melody rises', items: ['Fährt der ZUG?↗', 'Hast du ZEIT?↗', 'Kommst du MIT?↗'] },
       hoeren: { kind: 'dictation', lines: [1, 9] },
       sprechen: {
-        readAloud: [0, 3],
+        readAloud: [0, 2],
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Reisen: Zug? Fahrkarte? Wohin?',
@@ -1530,7 +1546,7 @@ export const CURRICULUM_A11 = {
         examples: ['Ich stehe um sechs auf. Ich bin müde.', 'Ja, ich kaufe am Freitag ein. Kommst du mit?'],
         ruleSlug: 'separable-verbs-intro',
       },
-      phonetik: { focus: 'Betonung auf der trennbaren Vorsilbe', items: ['AUF-stehen', 'EIN-kaufen', 'AN-rufen'] },
+      phonetik: { focus: 'Betonung auf der trennbaren Vorsilbe', focusEn: 'Stress on the separable prefix', items: ['AUF-stehen', 'EIN-kaufen', 'AN-rufen'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
         readAloud: [5, 6],
@@ -1653,7 +1669,7 @@ export const CURRICULUM_A11 = {
         examples: ['Ana, wann ist dein Geburtstag?', 'Und dein Bruder? Kommt seine Frau auch?'],
         ruleSlug: 'possessive-articles',
       },
-      phonetik: { focus: 'Der Diphthong ei in mein und dein', items: ['MEIN', 'DEIN', 'ZWEI'] },
+      phonetik: { focus: 'Der Diphthong ei in mein und dein', focusEn: 'The diphthong ei in mein and dein', items: ['MEIN', 'DEIN', 'ZWEI'] },
       hoeren: { kind: 'dictation', lines: [1, 3] },
       sprechen: {
         // Line 9, not 5: „Ja! Mach's gut, Lena. Bis bald!“ is the ONLY place in the Lektion where

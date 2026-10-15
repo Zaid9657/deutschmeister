@@ -70,6 +70,7 @@ export default function PhonetikStage({ stage, lektionId, onBack, onDone }) {
       {phonetik.focus && (
         <div className="mb-5">
           <p className="font-display text-xl text-ink" lang="de">{phonetik.focus}</p>
+          {lang !== 'de' && phonetik.focusEn && <p className="mt-1 text-[0.9375rem] font-bold text-ink">{phonetik.focusEn}</p>}
           <p className="mt-1 text-sm text-graphite">{t('phonetik.listenFor', lang)}</p>
         </div>
       )}

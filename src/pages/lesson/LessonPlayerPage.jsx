@@ -40,6 +40,8 @@ import { trackLessonCompleted, trackLessonResumed, trackLessonStageViewed, track
 import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
+import SessionBreak from '../../components/lesson/SessionBreak.jsx';
+import { SESSION_COUNT, sessionCompleted } from '../../lib/lesson/sessions.js';
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -97,6 +99,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // because the combo spans stage boundaries within one run, not one item.
   const [combo, setCombo] = useState(() => (resumed ? resumed.combo : 0));
   const [requeued, setRequeued] = useState(() => (resumed ? resumed.requeued : []));
+  // A finished part (sessions.js): { done } shows the pause screen before the next part starts.
+  const [pause, setPause] = useState(null);
   // What the speaking and writing stages reported (skillStatus.js) — the recap
   // states each skill on its own line instead of letting Gold imply it.
   const [skills, setSkills] = useState(() => (resumed ? resumed.skills || {} : {}));
@@ -177,7 +181,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const stages = lesson.stages;
   const stage = stages[stageIndex] || null;
   const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
-  const warmupMode = warmupCard ? modeForCard(warmupCard.kind, itemIndex) : null;
+  const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
   const playWarmupCard = useCallback((content) => {
     speakGerman((content && (content.speak || content.front)) || '');
   }, []);
@@ -272,7 +276,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     if (!heading) return;
     if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
     heading.focus(); // scrolls it into view: after a long item the next one starts on screen
-  }, [stageIndex, itemIndex, introDone]);
+  }, [stageIndex, itemIndex, introDone, pause]);
 
   const goStage = useCallback((next) => {
     setStageIndex(next);
@@ -283,15 +287,20 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const advance = useCallback(() => {
     const target = stageIndex + 1;
     const nextStage = stages[target];
+    let landing = target;
     // The requeue stage is skipped when nothing was missed.
     if (nextStage && nextStage.kind === 'requeue') {
       const used = attempts.map((a) => a.itemId);
       const items = requeueFor(misses, pool, used);
       setRequeued(items);
-      if (!items.length) { goStage(target + 1); return; }
+      if (!items.length) landing = target + 1;
     }
-    goStage(target);
-  }, [stageIndex, stages, attempts, misses, pool, goStage]);
+    // A part ends here: show a saved place to stop instead of running straight on. The run is saved
+    // at `landing`, so coming back later starts the next part.
+    const done = stages[landing] ? sessionCompleted(stage, stages[landing]) : null;
+    if (done) setPause({ done });
+    goStage(landing);
+  }, [stageIndex, stages, stage, attempts, misses, pool, goStage]);
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);
@@ -311,12 +320,14 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, curriculum.level, lektion.id, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
+  // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
+  // for today never saw the next stage (Codex review, 2026-10-15).
   const viewedStages = useRef(new Set());
   useEffect(() => {
-    if (preview || !introDone || !stage || viewedStages.current.has(stage.key)) return;
+    if (preview || !introDone || pause || !stage || viewedStages.current.has(stage.key)) return;
     viewedStages.current.add(stage.key);
     trackLessonStageViewed(curriculum.level, lektion.id, runId, stage.key);
-  }, [preview, introDone, stage, curriculum.level, lektion.id, runId]);
+  }, [preview, introDone, pause, stage, curriculum.level, lektion.id, runId]);
 
   // Persist once, when the recap comes into view. Signed out, the same write
   // goes to localStorage instead of Supabase — never nowhere. Signed in, the run
@@ -357,17 +368,11 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     return () => window.removeEventListener('online', flush);
   }, [sync, flush]);
 
-  // THE SAVE-PROGRESS ASK (owner decision 2026-10-06; the rule is in
-  // src/lib/course/saveProgressAsk.js). Signed out, the screen after this
-  // run's first checked answer is the ask, once per Lektion; the recap keeps
-  // its card. `firstAnswerAt` is where that answer was given, so the ask waits
-  // until the learner has read its feedback and moved on.
-  const [firstAnswerAt, setFirstAnswerAt] = useState(null);
+  // THE SAVE-PROGRESS ASK (owner decision 2026-10-09, replacing „after the first checked answer"
+  // of 2026-10-06; the rule is in src/lib/course/saveProgressAsk.js). Signed out, it comes at the
+  // end of the first finished PART of the Lektion — after something worth saving, in L1 the
+  // learner's own introduction — once per Lektion; its continue leads on to the pause screen.
   const [askSettled, setAskSettled] = useState(() => preview || isAskSettled(curriculum.level, lektion.id));
-  useEffect(() => {
-    if (firstAnswerAt || !attempts.length) return;
-    setFirstAnswerAt({ stageIndex, itemIndex });
-  }, [attempts.length, firstAnswerAt, stageIndex, itemIndex]);
   // Signed in, the learner is back where the ask's round trip was meant to
   // bring them: the remembered place has done its job.
   useEffect(() => {
@@ -505,8 +510,11 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // Signed out means the session has LOADED and there is none: getSession can
   // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
   // level while it loads, so `!user` alone would flash the ask at a member.
-  if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: { stageIndex, itemIndex }, stageKind: stage.kind })) {
-    body = <SaveProgressAsk level={curriculum.level} lektion={lektion} onContinue={() => setAskSettled(true)} />;
+  if (pause) {
+    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
+  }
+  if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, partDone: pause?.done, stageKind: stage.kind })) {
+    body = <SaveProgressAsk level={curriculum.level} lektion={lektion} done={pause.done} total={SESSION_COUNT} onContinue={() => { setAskSettled(true); setPause(null); }} />;
   }
 
   const step = stageIndex + (ITEM_STAGES.has(stage.kind) ? itemIndex / Math.max(items.length, 1) : 0) + 1;

@@ -82,6 +82,8 @@ const LEVEL_OF_PREFIX = {
 // A checkpoint's own task (`a11-cp1` … `a11-cp4`, 2026-10-07) is a course task too: it posts
 // under the same prefix and is one of the CHECKPOINTS_PER_COURSE submissions the allowance grants.
 const COURSE_TASK_KEY_RE = /^(a\d\d)-(?:l\d\d|cp\d)$/;
+// The same keys as a PostgREST LIKE pattern, to read only course rows (a test keeps the two in step).
+export const COURSE_TASK_KEY_LIKE = 'a__-%';
 
 // Returns the `<course>-` prefix (e.g. 'a11-') to scope the lifetime
 // allowance COUNT to, or null when task_key doesn't match the course task
@@ -180,7 +182,64 @@ try {
   console.error('Failed to initialize Supabase client:', e.message);
 }
 
-function buildWritingPrompt(task, submission) {
+/**
+ * The course writing allowance counts TASKS, not submissions (Wave 1 writing loop, 2026-10-14): a
+ * task may be handed in twice — the first text and ONE improved version after feedback — and only
+ * a new task uses up one of the course's free assessments. `keys` are the task_keys this learner has
+ * already submitted in this course. Returns { allowed, used (distinct tasks), revision }.
+ */
+export const REVISIONS_PER_TASK = 1;
+export function courseSubmissionAllowed(keys, taskKey, limit) {
+  const used = new Set(keys).size;
+  const before = keys.filter((k) => k === taskKey).length;
+  const revision = before > 0;
+  const allowed = revision ? before <= REVISIONS_PER_TASK : used < limit;
+  return { allowed, used, revision };
+}
+
+/**
+ * The paid tiers count SUBMISSIONS (per month; the trial, lifetime), and the course's promise holds
+ * there too: a course task's first improved version costs nothing (Codex review of Wave 1,
+ * 2026-10-15 — a paid revision used to count, so the screen's "does not use up another task" was
+ * false for the learners who pay). `rows` are the learner's rows of this course, oldest first; a row
+ * is a free revision when it is the 2nd … (REVISIONS_PER_TASK + 1)th of its task. Returns how many
+ * of those were submitted since `since` (an ISO time; null = ever), so the count can leave them out.
+ */
+export function freeRevisionsSince(rows, since = null) {
+  const from = since ? Date.parse(since) : -Infinity;
+  const seen = new Map();
+  let free = 0;
+  for (const { task_key: key, created_at: at } of rows) {
+    const n = seen.get(key) || 0;
+    seen.set(key, n + 1);
+    if (n >= 1 && n <= REVISIONS_PER_TASK && Date.parse(at) >= from) free += 1;
+  }
+  return free;
+}
+
+/**
+ * The tier budget is ONE ledger of submissions for course and exam tasks alike (lifetime on the
+ * trial, per calendar month on a plan), so EVERY course's free revisions leave it, whichever task is
+ * being submitted now — an exam text at 19 chargeable + 1 free revision is 19/20, not 20/20 (Codex
+ * re-review, 2026-10-15). `windowCount` is the database's exact count of the window's rows (no row
+ * cap); `courseRows` are the learner's course rows, oldest first. Returns the chargeable count, how
+ * often `taskKey` was submitted before, and whether this text is a task's free improved version
+ * (never an exam task's: those have no course prefix).
+ */
+export function tierUsage(windowCount, courseRows, taskKey, since = null) {
+  const own = courseRows.filter((r) => courseTaskKeyPrefix(r.task_key));
+  const before = courseTaskKeyPrefix(taskKey) ? own.filter((r) => r.task_key === taskKey).length : 0;
+  return {
+    used: Math.max(0, windowCount - freeRevisionsSince(own, since)),
+    before,
+    revision: before >= 1 && before <= REVISIONS_PER_TASK,
+  };
+}
+
+// The feedback language a learner may ask for (the lesson chrome's language). Anything else is German.
+export const FEEDBACK_LANGS = new Set(['de', 'en']);
+
+export function buildWritingPrompt(task, submission, feedbackLang = 'de') {
   const leitpunkte = task.leitpunkte.map((p, i) => `${i + 1}. ${p}`).join('\n');
   // N booleans, not a fixed 3 — src/pages/SchreibenPage.jsx indexes
   // leitpunkt_check by the task's own leitpunkte position, so this must match
@@ -197,8 +256,12 @@ function buildWritingPrompt(task, submission) {
       : `2. **Kommunikative Gestaltung** (structure) – Textsorte, Anrede/Schluss, Register (${task.register}), Aufbau, Verknüpfungen.`;
   // A1 learners cannot read B1 feedback about their A1 text. Same criteria,
   // same output shape — only the feedback wording is constrained.
-  const levelLine =
-    task.examKey === 'goethe_a1'
+  // An A0 learner using the English interface could not read German feedback about their own text
+  // (Codex learner-value review): they may ask for English. German examples and corrections stay German.
+  const english = feedbackLang === 'en' && FEEDBACK_LANGS.has(feedbackLang);
+  const levelLine = english && task.examKey === 'goethe_a1'
+    ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1 und liest die Oberfläche auf Englisch. Schreib "feedback", "strengths", "improvements" und jede "note" in short, simple English (höchstens 60 Wörter, kurze Sätze, kein Fachjargon); "original" und "corrected" bleiben Deutsch. Die Bewertungskriterien bleiben unverändert.'
+    : task.examKey === 'goethe_a1'
       ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1. Schreib das Feedback in kurzem, einfachem Deutsch (höchstens 60 Wörter, kurze Sätze, kein Fachjargon). Die Bewertungskriterien bleiben unverändert.'
       : '';
   return `Du bist ein erfahrener Prüfer für Deutsch als Fremdsprache und bewertest den schriftlichen Ausdruck nach den öffentlich dokumentierten Kriterien der Prüfung (${task.examKey.replace('_', ' ').toUpperCase()}-Stil). Dies ist eine ÜBUNGSBEWERTUNG (Richtwert), keine offizielle Bewertung.
@@ -268,7 +331,7 @@ export const handler = async (event) => {
     const user_id = await getAuthenticatedUserId(event);
     if (!user_id) return unauthorizedResponse(headers);
 
-    const { exam_key, task_key, text, exam_attempt_id } = JSON.parse(event.body || '{}');
+    const { exam_key, task_key, text, exam_attempt_id, feedback_lang } = JSON.parse(event.body || '{}');
 
     const task = writingTaskByKey(exam_key, task_key);
     if (!task) {
@@ -305,25 +368,42 @@ export const handler = async (event) => {
     if (!courseAllowance && (tier === 'free_expired' || limit === 0)) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'subscription_required', tier }) };
     }
-    let usedQuery = supabase
-      .from('writing_submissions')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user_id);
+    let course = null;
+    let usage;
     if (courseAllowance) {
-      // Lifetime, and only THIS course's own rows — the prefix is derived
-      // from the submitted task_key itself, never a fixed literal.
-      usedQuery = usedQuery.like('task_key', `${courseTaskKeyPrefix(task_key)}%`);
-    } else if (tier !== 'free_trial') {
+      // The free course allowance counts TASKS of this course, lifetime: its own rows only — the
+      // prefix is derived from the submitted task_key itself, never a fixed literal.
+      const { data: rows } = await supabase
+        .from('writing_submissions')
+        .select('task_key')
+        .eq('user_id', user_id)
+        .like('task_key', `${courseTaskKeyPrefix(task_key)}%`);
+      const keys = (rows || []).map((r) => r.task_key);
+      course = courseSubmissionAllowed(keys, task_key, limit);
+      usage = { used: course.used, before: keys.filter((k) => k === task_key).length, revision: course.revision };
+    } else {
       const now = new Date();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      usedQuery = usedQuery.gte('created_at', monthStart);
+      const since = tier === 'free_trial' ? null : new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      // The window's submissions, counted exactly by the database (no row cap) …
+      let countQuery = supabase.from('writing_submissions').select('id', { count: 'exact', head: true }).eq('user_id', user_id);
+      if (since) countQuery = countQuery.gte('created_at', since);
+      const { count } = await countQuery;
+      // … less the free revisions among them, read from the course rows alone (a few per task).
+      // ponytail: oldest first under PostgREST's 1,000-row cap; page it if a learner ever has that many course texts.
+      const { data: rows } = await supabase
+        .from('writing_submissions')
+        .select('task_key, created_at')
+        .eq('user_id', user_id)
+        .like('task_key', COURSE_TASK_KEY_LIKE)
+        .order('created_at', { ascending: true });
+      usage = tierUsage(count ?? 0, rows || [], task_key, since);
     }
-    const { count: used } = await usedQuery;
-    if ((used ?? 0) >= limit) {
+    const { used, before, revision } = usage;
+    if (course ? !course.allowed : !revision && used >= limit) {
       return {
         statusCode: 429,
         headers,
-        body: JSON.stringify({ error: 'limit_reached', used: used ?? 0, limit, tier, scope: isCourse ? 'course' : 'exam' }),
+        body: JSON.stringify({ error: 'limit_reached', used, limit, tier, scope: isCourse ? 'course' : 'exam' }),
       };
     }
 
@@ -357,7 +437,7 @@ export const handler = async (event) => {
       return null;
     }
 
-    const prompt = buildWritingPrompt(task, text);
+    const prompt = buildWritingPrompt(task, text, FEEDBACK_LANGS.has(feedback_lang) ? feedback_lang : 'de');
     let evaluation = tryParse(await callClaude(prompt));
     if (!validEvaluation(task, evaluation)) {
       console.warn('evaluate-writing: first result unusable, retrying');
@@ -408,7 +488,10 @@ export const handler = async (event) => {
         word_count: wordCount,
         submission_id: saved?.id || null,
         saved: !saveError,
-        used: (used ?? 0) + 1,
+        used: used + (revision ? 0 : 1),
+        // Whether the NEXT text of this task is still its free improved version: the screen offers
+        // "Improve this version" only then, so a re-run of a Lektion never offers a second one.
+        can_revise: isCourse && before < REVISIONS_PER_TASK,
         limit,
         tier,
         scope: isCourse ? 'course' : 'exam',

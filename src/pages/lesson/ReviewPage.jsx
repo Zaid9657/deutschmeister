@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { fetchDueCards, gradeCard, fetchNextDueAt, buildCardIndex, parseCardKey } from '../../services/reviewService.js';
+import { fetchDueCards, gradeCard, fetchNextDueAt, fetchReviewCounts, buildCardIndex, parseCardKey } from '../../services/reviewService.js';
 import { fetchWordsByIds } from '../../services/lessonService.js';
 import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
 import { LADDER_DAYS } from '../../lib/review/ladder.js';
@@ -56,6 +56,8 @@ export default function ReviewPage() {
   const [typed, setTyped] = useState('');
   const [verdict, setVerdict] = useState(null);
   const [nextDueAt, setNextDueAt] = useState(null);
+  const [stillDue, setStillDue] = useState(0);
+  const [batch, setBatch] = useState(0);
 
   const [wordAudio, setWordAudio] = useState(() => new Map());
 
@@ -72,6 +74,7 @@ export default function ReviewPage() {
       if (cancelled) return;
       const due = rows.filter((row) => cardIndex.has(row.card_key));
       setCards(due);
+      setIndex(0);
       // Word cards reference a words row by id — fetch the real recordings once.
       const ids = due
         .map((row) => parseCardKey(row.card_key))
@@ -85,7 +88,7 @@ export default function ReviewPage() {
       }
     });
     return () => { cancelled = true; };
-  }, [user, curriculum, cardIndex]);
+  }, [user, curriculum, cardIndex, batch]);
 
   const card = cards?.[index] || null;
   const content = card ? cardIndex.get(card.card_key) : null;
@@ -107,7 +110,8 @@ export default function ReviewPage() {
     const parsed = parseCardKey(card.card_key);
     return !!(parsed && parsed.kind === 'word' && wordAudio.get(parsed.ref));
   })();
-  const mode = card ? modeForCard(card.kind, index) : null;
+  // The mode follows the card's own history (its ladder step), not its seat in today's batch.
+  const mode = card ? modeForCard(card.kind, card.step ?? index) : null;
 
   useEffect(() => {
     setRevealed(false);
@@ -119,6 +123,8 @@ export default function ReviewPage() {
   const finish = useCallback(() => {
     if (!user || !curriculum) return;
     fetchNextDueAt(user.id, curriculum.level).then(setNextDueAt);
+    // A batch is 12; a learner with 25 due used to read „Done for today" after the first 12.
+    fetchReviewCounts(user.id, curriculum.level).then((c) => setStillDue(c.due || 0));
   }, [user, curriculum]);
 
   const grade = async (correct) => {
@@ -193,8 +199,16 @@ export default function ReviewPage() {
         {done && (
           <Card raised edge="limette" className="mt-6 p-6">
             <p className="flex items-center gap-2 font-display text-xl text-ink">
-              <Check className="h-5 w-5 text-accent-limette-ink" aria-hidden="true" /> {t('review.doneToday', lang)}
+              <Check className="h-5 w-5 text-accent-limette-ink" aria-hidden="true" /> {t(stillDue > 0 ? 'review.roundDone' : 'review.doneToday', lang)}
             </p>
+            {stillDue > 0 && (
+              <>
+                <p className="mt-2 text-sm text-graphite">{t('review.moreDue', lang, { n: stillDue })}</p>
+                <Button className="mt-4" onClick={() => { setStillDue(0); setBatch((b) => b + 1); }}>
+                  {t('review.nextRound', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </>
+            )}
             <p className="mt-2 text-sm text-graphite">
               {/* Deutsch-Modus: „Neue Karten kommen, sobald Sie eine Lektion abschließen." (same test). */}
               {formatDue(nextDueAt, lang) ? t('review.nextOn', lang, { date: formatDue(nextDueAt, lang) }) : t('review.newCards', lang)}
