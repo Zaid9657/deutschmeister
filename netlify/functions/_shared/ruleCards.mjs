@@ -235,7 +235,7 @@ export const RULE_CARDS = {
   },
   "numbers-counting": {
     "titleDe": "Zahlen ab 20 und die Ordnungszahlen",
-    "content": "Zahlen über 20 liest man von hinten nach vorn:\n21 ist einundzwanzig, 48 ist achtundvierzig.\nDie zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.\nDer Hunderter steht vorn: 480 ist vierhundertachtzig.\nDie Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.\nAb 20 heißt die Endung -ste: der zwanzigste Mai.\nIn der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.\nDas dritte Stockwerk ist frei. Die erste Wohnung ist frei.\nEnglish: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.",
+    "content": "Zahlen über 20 liest man von hinten nach vorn:\n21 ist einundzwanzig, 48 ist achtundvierzig.\nDie zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.\nDer Hunderter steht vorn: 480 ist vierhundertachtzig.\nDie Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.\nAb 20 heißt die Endung -ste: der zwanzigste Mai.\nIn der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.\nDas dritte Stockwerk ist frei. Die Nachbarin hat die erste Wohnung.\nEnglish: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.",
     "commonMistakes": [
       {
         "wrong": "Die Miete ist achtvierzig Euro.",

@@ -604,7 +604,7 @@ const RULE_CARD_OVERRIDES = {
       'Die Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.',
       'Ab 20 heißt die Endung -ste: der zwanzigste Mai.',
       'In der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.',
-      'Das dritte Stockwerk ist frei. Die erste Wohnung ist frei.',
+      'Das dritte Stockwerk ist frei. Die Nachbarin hat die erste Wohnung.',
       'English: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.',
     ].join('\n'),
     commonMistakes: [
