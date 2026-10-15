@@ -172,7 +172,7 @@ export const RULE_CARDS = {
   },
   "negation": {
     "titleDe": "nicht oder kein?",
-    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nDas Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
+    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nJa, das Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
     "commonMistakes": [
       {
         "wrong": "Im Flur ist nicht Lampe.",
@@ -403,7 +403,7 @@ export const RULE_CARDS = {
   },
   "stem-changing-verbs": {
     "titleDe": "Verben mit Vokalwechsel",
-    "content": "Einige Verben ändern im Präsens den Stammvokal,\naber nur in den Formen mit -st und -t:\nnehmen → man nimmt, helfen → sie hilft, essen → man isst, schlafen → wer schläft.\nBei ich, wir, ihr und Sie bleibt der Vokal: ich schlafe, Sie nehmen.\nIn der Praxis: Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.\nWie oft nimmt man die Tablette? Und wann isst man?\nIhr Auge ist gesund. Die Hand und der Fuß sehen gut aus.\nEnglish: the vowel changes in exactly two forms of the present tense, nowhere else.",
+    "content": "Einige Verben ändern im Präsens den Stammvokal,\naber nur in den Formen mit -st und -t:\nnehmen → man nimmt, helfen → sie hilft, essen → man isst, schlafen → wer schläft.\nBei ich, wir, ihr und Sie bleibt der Vokal: ich schlafe, Sie nehmen.\nIn der Praxis: Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.\nIsst man zuerst? Und wie oft nimmt man die Tablette?\nIhr Auge ist gesund. Die Hand und der Fuß sehen gut aus.\nEnglish: the vowel changes in exactly two forms of the present tense, nowhere else.",
     "commonMistakes": [
       {
         "wrong": "Er nehmt eine Tablette.",

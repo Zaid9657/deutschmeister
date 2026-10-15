@@ -199,7 +199,7 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
       for (const m of String(line.de).matchAll(/(?:^|[\s,.!?])[Ii]ch\s+([a-zäöüß]+e)(?=[\s,.!?]|$)/g)) firstPerson.add(m[1]);
     }
   }
-  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage') && firstPerson.has('fliege'), 'the harvest is not vacuous');
+  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage') && firstPerson.has('hole'), 'the harvest is not vacuous');
   const problems = [];
   let items = 0;
   for (const checkpoint of CURRICULUM_A12.checkpoints) {
@@ -390,20 +390,23 @@ test('DaF review #3 MAJOR 5: the L8 imperative rule produces every du-imperative
   assert.ok(!POOL_A12.items.some((it) => /nicht das Perfekt/.test(it.explanationDe || '')), 'ist gewesen exists');
 });
 
+// What a W-question asks for, and the form its answer takes (DaF reviews #3 and #4, MAJOR 6).
+const W_ANSWER_FORMS = [
+  ['wie oft', 'frequenz', /\b(jede[nrs]?|immer|oft|manchmal|nie|selten|[a-zäöü]*mal|täglich)\b/i],
+  ['wie lange', 'dauer', /\b(\d+|ein|eine|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|zwanzig|dreißig|halbe?)\s+(minuten?|stunden?|tage?|wochen?|monate?|jahre?)\b|\bbis\b/i],
+  ['wie viele', 'menge', /\b(\d+|eins|ein|eine|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|[a-zäöüß]+zig|hundert|kein\w*)\b/i],
+  ['um wie viel uhr', 'zeit', /\b(uhr|um)\b/i],
+  ['wohin', 'richtung', /\b(nach|zu|zum|zur|ins|in|auf|an)\b/i],
+  ['wo', 'ort', /\b(hier|da|dort|am|im|in|an|auf|bei|beim|neben|hinter|vor|unter|über|zwischen)\b/i],
+  ['wann', 'zeit', /\b(um|am|im|heute|morgen|jetzt|bald|früh|spät|abends|morgens|uhr|später|danach|dann|nach)\b/i],
+];
+
 test('DaF review #3 MAJOR 6: an answer answers its question — the type a W-word asks for, Doch or Nein after a negative one', async () => {
   // Measured before: L9 „Und wo muss ich aussteigen?" → „Ja. Das Flugzeug fliegt um 9 Uhr."; L5
   // „Um wie viel Uhr?" → „Früh."; L4 „Haben Sie keinen Rabatt?" → „Ja."; „Wo und wohin fahren wir?"
   // answered with another question. The rule reads what a W-word asks for, not shared keywords.
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
-  const TYPES = [
-    ['wie oft', /\b(jede[nrs]?|immer|oft|manchmal|nie|selten|[a-zäöü]*mal|täglich)\b/i],
-    ['wie lange', /\b(\d+|ein|eine|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|zwanzig|dreißig|halbe?)\s+(minuten?|stunden?|tage?|wochen?|monate?|jahre?)\b|\bbis\b/i],
-    ['wie viele', /\b(\d+|eins|ein|eine|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|[a-zäöüß]+zig|hundert|kein\w*)\b/i],
-    ['um wie viel uhr', /\b(uhr|um)\b/i],
-    ['wohin', /\b(nach|zu|zum|zur|ins|in|auf|an)\b/i],
-    ['wo', /\b(hier|da|dort|am|im|in|an|auf|bei|beim|neben|hinter|vor|unter|über|zwischen)\b/i],
-    ['wann', /\b(um|am|im|heute|morgen|jetzt|bald|früh|spät|abends|morgens|uhr|später|danach|dann|nach)\b/i],
-  ];
+  const TYPES = W_ANSWER_FORMS.map(([w, , form]) => [w, form]);
   const typeOf = (question) => {
     const q = question.replace(/^(?:und|aber|entschuldigung,?)\s+/i, '');
     return TYPES.find(([w]) => new RegExp(`^${w}\\b`, 'i').test(q)) || null;
@@ -440,6 +443,166 @@ test('DaF review #3 MAJOR 6: an answer answers its question — the type a W-wor
   const l7 = CURRICULUM_A12.lektionen.find((l) => l.nr === 7).dialog.lines;
   assert.match(l7[5].de, /^Das ist meine Schwester\./, 'asked about the child, the answer names the child');
   assert.ok(!POOL_A12.items.some((it) => /Wie lange ist der Ausflug/.test(String(it.questionDe).replace('___', it.answer))), '„Wie lange ist der Ausflug?" is not the idiom');
+});
+
+test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence that answers it, in the form the question asks for', () => {
+  // Measured before: L2 „Ist die Treppe da?" → „Die erste Wohnung ist frei."; L3 „Und die Quittung?" →
+  // „Gut. Ich hole ein Stück Kuchen für dich!"; L5 „Wer kommt mit?" named nobody; L6 „Und wann isst man?"
+  // and L9's closing „Wann kommt er an?" had no answer at all. The rule: every question gets an answer
+  // or a recognisable deferral. Each question is annotated [question, answering line, answering
+  // sentence, function, reading]. The function is derived from the question's own form, so an
+  // annotation cannot claim an answer the question does not ask for, and the answering sentence must
+  // have that function's form — a shared word never passes on its own. A verbless question („Und die
+  // Quittung?") carries the question it stands for, or opens a topic that the next question in its
+  // own turn asks about („Und die Wohnung? Wie viele Zimmer hat sie?"). A question without an
+  // annotation fails, and so does an annotation whose question is gone.
+  const ANSWERS = {
+    1: [
+      ['Entschuldigung, wie komme ich zum Rathaus?', 1, 'Zuerst gehen Sie geradeaus bis zur Kirche.', 'art'],
+      ['Und dann?', 3, 'Dann gehen Sie an der Ecke links.', 'art', 'Wie gehe ich dann?'],
+      ['Ist der Weg weit?', 3, 'Nein.', 'ja'],
+      ['Ist die Apotheke auch da?', 5, 'Ja.', 'ja'],
+      ['Wo ist die Haltestelle für die Straßenbahn in der Stadt?', 7, 'Am Platz.', 'ort'],
+      ['Und die U-Bahn?', null, null, 'thema'],
+      ['Fährt sie ins Zentrum?', 9, 'Ja.', 'ja'],
+    ],
+    2: [
+      ['Die Anzeige ist von Ihnen?', 1, 'Ja.', 'ja'],
+      ['Was kostet die Wohnung?', 3, 'Die Miete ist vierhundertachtzig Euro.', 'menge'],
+      ['Wie ist die Miete?', 3, 'Die Miete ist vierhundertachtzig Euro.', 'art'],
+      ['Und die Wohnung?', null, null, 'thema'],
+      ['Wie viele Zimmer hat sie?', 5, 'Vier: Küche, Badezimmer, Wohnzimmer und Schlafzimmer.', 'menge'],
+      ['Hat die Wohnung auch einen Balkon?', 7, 'Ja, der Balkon ist da.', 'ja'],
+      ['Ist die Treppe da?', 9, 'Ja, die Treppe ist da.', 'ja'],
+    ],
+    3: [
+      ['Ana, was machst du heute in der Stadt?', 1, 'Ich brauche einen Supermarkt und einen Markt.', 'sache'],
+      ['Gehst du?', 3, 'Ja.', 'ja'],
+      ['Und die Kasse?', null, null, 'thema'],
+      ['Bezahlst du ein Kilo Brot?', 5, 'Ja.', 'ja'],
+      ['Und danach?', null, null, 'thema'],
+      ['Gehst du in das Museum oder das Restaurant?', 7, 'Zuerst das Museum, dann das Restaurant.', 'auswahl'],
+      ['Und die Quittung?', 9, 'Die Quittung ist hier.', 'ort', 'Wo ist die Quittung?'],
+    ],
+    4: [
+      ['Und das Kissen?', null, null, 'thema'],
+      ['Ist es da?', 2, 'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.', 'ja'],
+      ['Der Flur hat keine Lampe?', 4, 'Nein.', 'ja'],
+      ['Und der Vorhang?', null, null, 'thema'],
+      ['Ist der Vorhang am Fenster?', 6, 'Nein.', 'ja'],
+      ['Und die Rechnung?', null, null, 'thema'],
+      ['Haben Sie keinen Rabatt?', 9, 'Doch.', 'ja'],
+    ],
+    5: [
+      ['Tim, was machst du am Wochenende?', 1, 'Der Ausflug geht nach Köln.', 'sache'],
+      ['Hast du Zeit?', 1, 'Ja.', 'ja'],
+      ['Wann fährt der Zug?', 3, 'Um acht Uhr.', 'zeit'],
+      ['Um wie viel Uhr?', 3, 'Um acht Uhr.', 'zeit'],
+      ['Wer kommt mit?', 4, 'Ich komme mit.', 'person'],
+      ['Warum so früh?', 5, 'Der Weg ist weit.', 'grund'],
+      ['Wie oft fährt der Bus?', 6, 'Jede Stunde.', 'frequenz'],
+      ['Aber wo ist die Haltestelle?', 7, 'Am Bahnhof.', 'ort'],
+      ['Und die Ferien?', null, null, 'thema'],
+      ['Wohin fahren wir im Urlaub?', 9, 'Bald nach Italien.', 'richtung'],
+    ],
+    6: [
+      ['Was tut Ihnen weh?', 1, 'Mein Hals tut weh, der Kopf und der Bauch auch.', 'sache'],
+      ['Haben Sie Fieber oder eine Erkältung?', 3, 'Nein, ich habe kein Fieber.', 'ja'],
+      ['Isst man zuerst?', 6, 'Ja.', 'ja'],
+      ['Und wie oft nimmt man die Tablette?', 6, 'Jeden Morgen und jeden Abend.', 'frequenz'],
+      ['Und mein Auge?', 8, 'Ihr Auge ist gesund.', 'art', 'Wie ist mein Auge?'],
+    ],
+    7: [
+      ['Wer ist die Frau da?', 1, 'Das ist meine Tante.', 'person'],
+      ['Und der Mann?', null, null, 'thema'],
+      ['Wer ist das?', 3, 'Mein Onkel ist groß und immer glücklich.', 'person'],
+      ['Dein Onkel?', 3, 'Ja.', 'ja', 'Ist das dein Onkel?'],
+      ['Und das Kind da?', 5, 'Das ist meine Schwester.', 'person', 'Wer ist das Kind da?'],
+      ['Deine Oma ist traurig?', 7, 'Nein, meine Oma ist nicht traurig.', 'ja'],
+      ['Und der Mann da?', 9, 'Das ist mein Bruder.', 'person', 'Wer ist der Mann da?'],
+    ],
+    8: [
+      ['Wo hast du die Möbel für das Kinderzimmer?', 4, 'Das Sofa und der Schrank sind in der Garage.', 'ort'],
+      ['Und das Bett?', 5, 'Ich frage die Nachbarin.', 'aufschub', 'Wo ist das Bett?'],
+      ['Und der Herd?', 7, 'Der Herd ist neu, das Dach ist alt.', 'art', 'Wie ist der Herd?'],
+    ],
+    9: [
+      ['Wo darf ich langsam fahren?', 2, 'Am Platz.', 'ort'],
+      ['Wo soll ich einsteigen?', 6, 'Hier.', 'ort'],
+      ['Und wo muss ich aussteigen?', 8, 'Am Flughafen.', 'ort'],
+      ['Wann fährt der Bus ab?', 8, 'Der Bus fährt jetzt ab.', 'zeit'],
+    ],
+    10: [
+      ['Welche Größe hat der Mantel für meinen Bruder?', 2, 'Größe 50.', 'auswahl'],
+    ],
+    11: [
+      ['Wie ist das Wetter im Sommer bei dir?', 1, 'Im Sommer ist es sonnig, bei dreißig Grad.', 'art'],
+      ['Und im Winter?', 3, 'Bei uns kommt der Schnee nie.', 'art', 'Wie ist das Wetter im Winter?'],
+      ['Welche Jahreszeit ist bei dir schön?', 9, 'Der Sommer.', 'auswahl'],
+    ],
+    12: [
+      ['Und das Getränk?', null, null, 'thema'],
+      ['Hast du den Saft getrunken?', 3, 'Nein, ich habe Milch getrunken.', 'ja'],
+      ['Und den Fisch?', 5, 'Tim hat ihn gekocht.', 'person', 'Wer hat den Fisch gekocht?'],
+    ],
+  };
+  const sentences = (de) => String(de).split(/(?<=[.!?])\s+/).filter(Boolean);
+  const core = (q) => q.replace(/^(?:(?:und|aber)\s+|entschuldigung,\s*|(?:ana|lena|tim),\s*)+/i, '');
+  const VERBLESS = /^(?:(?:der|die|das|den|dem|mein\w*|dein\w*|ihr\w*|sein\w*|im|am)\s+)?[\wäöüßÄÖÜ-]+(?:\s+da)?\?$/i;
+  const W_FUNCTION = [
+    [/^wie oft\b/i, 'frequenz'], [/^wie lange\b/i, 'dauer'], [/^(?:wie viele?|was kostet)\b/i, 'menge'],
+    [/^(?:um wie viel uhr|wann)\b/i, 'zeit'], [/^wohin\b/i, 'richtung'], [/^woher\b/i, 'herkunft'], [/^wo\b/i, 'ort'],
+    [/^wer\b/i, 'person'], [/^warum\b/i, 'grund'], [/^was\b/i, 'sache'], [/^welche\w*\b/i, 'auswahl'], [/^wie\b/i, 'art'],
+  ];
+  // What a question asks for, read off its form: the W-word, no verb at all, or a decision (an
+  // „oder" question may also ask to choose).
+  const asks = (q) => {
+    const c = core(q);
+    const w = W_FUNCTION.find(([re]) => re.test(c));
+    if (w) return [w[1]];
+    if (VERBLESS.test(c)) return ['verbless'];
+    return / oder /.test(c) ? ['ja', 'auswahl'] : ['ja'];
+  };
+  const STATEMENT = (s) => /[.!]$/.test(s);
+  const FORM = {
+    ...Object.fromEntries(W_ANSWER_FORMS.map(([, fn, form]) => [fn, (s) => form.test(s)])),
+    ja: (s, q) => (/\b(nicht|kein\w*)\b/i.test(q) ? /^(Doch|Nein)\b/ : /^(Ja|Nein|Doch)\b/).test(s),
+    person: (s) => /^(?:Ich|Wir|Er|Das ist|(?:Mein|Dein|Ihr|Sein)e?\s|Ana\b|Lena\b|Tim\b)/.test(s),
+    grund: STATEMENT, sache: STATEMENT, art: STATEMENT, auswahl: STATEMENT,
+    aufschub: (s) => /\b(?:Warte|Moment|frage)\b/.test(s),
+  };
+  const problems = [];
+  for (const l of CURRICULUM_A12.lektionen) {
+    const lines = l.dialog.lines;
+    const found = [];
+    lines.forEach((line, i) => sentences(line.de).forEach((q, k) => { if (q.endsWith('?')) found.push({ q, i, k }); }));
+    const rows = ANSWERS[l.nr] || [];
+    for (const { q, i, k } of found) {
+      const where = `L${l.nr}[${i}] „${q}"`;
+      const row = rows.find(([text]) => text === q);
+      if (!row) { problems.push(`${where} has no annotation`); continue; }
+      const [, at, answer, fn, reading] = row;
+      const asked = asks(q);
+      if (fn === 'thema') {
+        const opens = asked[0] === 'verbless' && sentences(lines[i].de).slice(k + 1).some((x) => x.endsWith('?'));
+        if (!opens) problems.push(`${where} opens no topic that a question in its turn asks about`);
+        continue;
+      }
+      let wants = asked;
+      if (asked[0] === 'verbless') {
+        if (!reading || !reading.toLowerCase().includes(core(q).slice(0, -1).toLowerCase())) { problems.push(`${where} needs the question it stands for`); continue; }
+        wants = asks(reading);
+      }
+      if (fn !== 'aufschub' && !wants.includes(fn)) problems.push(`${where} asks for ${wants.join('/')}, annotated ${fn}`);
+      // The answer is a later sentence of the asker's own turn, or a sentence of the partner's next turn.
+      const own = at === i && sentences(lines[i].de).indexOf(answer) > k;
+      const partner = at === i + 1 && lines[at]?.speaker !== lines[i].speaker && sentences(lines[at].de).includes(answer);
+      if (!own && !partner) problems.push(`${where}: „${answer}" is not a later sentence of its turn or of the partner's next turn`);
+      else if (!FORM[fn](answer, reading || q)) problems.push(`${where} → „${answer}" does not have the form of ${fn}`);
+    }
+    for (const [text] of rows) if (!found.some(({ q }) => q === text)) problems.push(`L${l.nr}: the annotated question „${text}" is gone`);
+  }
+  assert.deepEqual(problems, []);
 });
 
 test('DaF review #3 MAJOR 1: every model text meets its own task — each Leitpunkt answered, inside the word limits', async () => {
