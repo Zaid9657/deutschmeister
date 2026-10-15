@@ -1547,7 +1547,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 6,
-   "questionDe": "___ Sie kurz vor dem Kühlschrank! (warten)",
+   "questionDe": "___ Sie bitte in der Küche! (warten)",
    "questionEn": "Please wait in front of the fridge.",
    "options": null,
    "answer": "Warten",
@@ -1558,7 +1558,7 @@
    "explanationDe": "Höfliche Bitte: Verb auf -en, dann Sie.",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": "A polite request: the verb in its -en form first, then **Sie**: **Warten** Sie kurz!"
+   "explanationEn": "A polite request: the verb in its -en form first, then **Sie**: **Warten** Sie bitte in der Küche!"
   },
   {
    "id": "d12bc530-e164-55ab-a6be-8a5e51cb4a39",
@@ -1694,18 +1694,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Bilden Sie den Satz: [warten / du / kurz / vor der Garage]",
+   "questionDe": "Bilden Sie den Satz: [warten / du / in der Garage]",
    "questionEn": "Build the request to wait.",
    "options": null,
-   "answer": "Warte kurz vor der Garage!",
+   "answer": "Warte in der Garage!",
    "accepted": [
-    "Warte kurz vor der Garage!",
-    "Warte kurz vor der Garage"
+    "Warte in der Garage!",
+    "Warte in der Garage"
    ],
    "explanationDe": "Bei du fällt das Pronomen weg: Warte!",
    "hint": null,
    "minLektion": 8,
-   "explanationEn": "For du, the pronoun drops and the verb opens the sentence: du wartest → **Warte!** **Warte kurz vor der Garage!**"
+   "explanationEn": "For du, the pronoun drops and the verb opens the sentence: du wartest → **Warte!** **Warte in der Garage!**"
   },
   {
    "id": "f957e0b7-85cd-56c6-b645-14be566d80f7",
@@ -4250,7 +4250,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 2,
-   "questionDe": "___ fahren wir in den Ferien? — Nach Italien.",
+   "questionDe": "___ fahren wir im Urlaub? — Nach Italien.",
    "questionEn": "Ask about the direction.",
    "options": null,
    "answer": "Wohin",
@@ -5209,7 +5209,7 @@
   "a1.2-l03#3": 0,
   "a1.2-l03#4": 0,
   "a1.2-l03#5": 3,
-  "a1.2-l03#6": 0,
+  "a1.2-l03#6": 3,
   "a1.2-l03#7": 0,
   "a1.2-l03#8": 0,
   "a1.2-l03#9": 0,
@@ -5259,7 +5259,7 @@
   "a1.2-l08#3": 0,
   "a1.2-l08#4": 0,
   "a1.2-l08#5": 0,
-  "a1.2-l08#6": 0,
+  "a1.2-l08#6": 8,
   "a1.2-l08#7": 0,
   "a1.2-l08#8": 3,
   "a1.2-l08#9": 0,

@@ -896,7 +896,7 @@ export const CURRICULUM_A12 = {
         leitpunkte: ['Was in der Küche zu tun ist', 'Wohin der Teppich soll', 'Wann Sie nach Hause kommen'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Tim, ich bin heute nicht zu Hause. Mach bitte in der Küche den Herd aus. Bring bitte den Teppich auf die Terrasse. Ich komme um sechs Uhr nach Hause. Bis später, Lena',
+        sample: 'Hallo Tim, ich bin heute nicht zu Hause. Mach bitte in der Küche den Herd aus. Bring bitte den Teppich ins Kinderzimmer. Ich komme um sechs Uhr nach Hause. Bis später, Lena',
       },
       links: { listeningExercise: null, readingOrder: 4 },
       practiceRule: { topics: ['imperative'], typedMin: 4 },

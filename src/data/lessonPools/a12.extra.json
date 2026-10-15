@@ -804,7 +804,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 2,
-      "questionDe": "___ fahren wir in den Ferien? — Nach Italien.",
+      "questionDe": "___ fahren wir im Urlaub? — Nach Italien.",
       "questionEn": "Ask about the direction.",
       "options": null,
       "answer": "Wohin",
@@ -1300,13 +1300,13 @@
       "stage": 5,
       "difficulty": 2,
       "order": 2,
-      "questionDe": "Bilden Sie den Satz: [warten / du / kurz / vor der Garage]",
+      "questionDe": "Bilden Sie den Satz: [warten / du / in der Garage]",
       "questionEn": "Build the request to wait.",
       "options": null,
-      "answer": "Warte kurz vor der Garage!",
+      "answer": "Warte in der Garage!",
       "accepted": [
-        "Warte kurz vor der Garage!",
-        "Warte kurz vor der Garage"
+        "Warte in der Garage!",
+        "Warte in der Garage"
       ],
       "explanationDe": "Bei du fällt das Pronomen weg: Warte!",
       "hint": null
@@ -1372,7 +1372,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 6,
-      "questionDe": "___ Sie kurz vor dem Kühlschrank! (warten)",
+      "questionDe": "___ Sie bitte in der Küche! (warten)",
       "questionEn": "Please wait in front of the fridge.",
       "options": null,
       "answer": "Warten",

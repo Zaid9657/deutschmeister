@@ -403,7 +403,7 @@ test('DaF review #3 MAJOR 1: every model text meets its own task — each Leitpu
     2: { 'Warum Sie schreiben': 'ich möchte die Wohnung besichtigen', 'Wann Sie kommen möchten': 'Geht es am Montag um 17 Uhr?', 'Ihre Frage zur Miete': 'Und wie ist die Miete?' },
     4: { 'Ihre Zimmernummer und der Tag': 'ich bin bis Freitag in Zimmer 12', 'Was im Zimmer nicht funktioniert': 'Die Steckdose funktioniert nicht.', 'Ihre Frage zur Toilette im Flur': 'Ist die Toilette im Flur frei?' },
     6: { 'Warum Sie schreiben': 'ich bin krank', 'Was Ihnen wehtut': 'Mein Hals tut weh', 'Ihre Frage nach einem neuen Termin': 'Wann ist ein Termin frei?' },
-    8: { 'Was in der Küche zu tun ist': 'Mach bitte in der Küche den Herd aus.', 'Wohin der Teppich soll': 'Bring bitte den Teppich auf die Terrasse.', 'Wann Sie nach Hause kommen': 'Ich komme um sechs Uhr nach Hause.' },
+    8: { 'Was in der Küche zu tun ist': 'Mach bitte in der Küche den Herd aus.', 'Wohin der Teppich soll': 'Bring bitte den Teppich ins Kinderzimmer.', 'Wann Sie nach Hause kommen': 'Ich komme um sechs Uhr nach Hause.' },
     10: { 'Was Sie kaufen': 'ich kaufe eine Jacke und einen Pullover für dich', 'Welche Größe die Jacke hat': 'Die Jacke hat Größe 38.', 'Wann Sie die Sachen bringen': 'Ich bringe alles am Montag.' },
     12: { 'Wann Sie gefeiert haben': 'ich habe am Samstag mit Tim und Paul gefeiert', 'Was Sie gegessen und getrunken haben': 'Wir haben Fisch und Kartoffeln gegessen und Saft getrunken.', 'Mit wem Sie gefeiert haben': 'mit Tim und Paul gefeiert' },
   };
@@ -496,6 +496,33 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
   }
   assert.equal(checked, 96, 'four Lesen reports on each of the twelve papers of both levels');
   assert.deepEqual(problems, []);
+});
+
+test('DaF review #4 BLOCKER 2: an article-less adjective and a Wechselpräposition the input has not shown are outside the horizon', async () => {
+  // Review #4: „Sie hat lange Haare." got horizon 0 because the declension pattern wants an article,
+  // and „Warte kurz vor der Garage!" because the Dativ table holds only the seven Dativ prepositions.
+  const v = await import('../scripts/validate-curriculum.mjs');
+  const horizon = v.constructionHorizonIndex('a1.2');
+  const at = (answer) => horizon({ answer });
+  // Contrast pairs: with and without article, singular and plural, attributive and predicative.
+  assert.equal(at('Sie hat lange Haare.'), null);
+  assert.equal(at('Sie hat einen langen Arm.'), null);
+  assert.equal(at('Mein großer Bruder ist da.'), null);
+  assert.ok(at('Ihr Haar ist lang.') !== null, 'predicative: taught');
+  assert.ok(at('Guten Tag, Frau Kaya.') !== null && at('Gute Reise!') !== null, 'the greeting formulas are wholes');
+  // Several location prepositions: produced only once the input has shown the combination.
+  assert.equal(at('Warte kurz vor der Garage!'), null, '„vor der" stands in no input');
+  assert.equal(at('Bring den Teppich auf die Terrasse.'), null, 'nor „auf die"');
+  assert.equal(at('Das Sofa ist in der Garage.'), 0, '„in der": A1.1 input');
+  assert.equal(at('Der Teppich ist auf der Terrasse.'), 8, '„auf der": L8 input');
+  // The inventory is the input, written down here independently of the matcher that reads it.
+  const inventory = v.wechselInventory('a1.2');
+  for (const [combination, lektion] of [['im', 0], ['am', 0], ['ins', 0], ['in der', 0], ['an der', 1], ['vor dem', 4], ['auf der', 8]]) {
+    assert.equal(inventory.get(combination), lektion, `„${combination}" first shown in input at ${lektion}`);
+  }
+  for (const combination of ['vor der', 'auf die', 'neben dem', 'unter der']) assert.equal(inventory.has(combination), false, `„${combination}" is in no input`);
+  // RULE 15b reads the same two classes on every production text, the checkpoints included.
+  assert.deepEqual(v.constructionsBeforeTaught(CURRICULUM_A12, POOL_A12).map((o) => `L${o.nr} ${o.where}: ${o.hit}`), []);
 });
 
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {

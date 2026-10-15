@@ -1448,6 +1448,8 @@ export function constructionHorizonIndex(level = 'a1.1') {
   if (!spec || !spec.constructionHorizon) return () => 0;
   const taughtIn = new Map();
   for (const l of spec.curriculum.lektionen || []) if (!taughtIn.has(l.primarySlug)) taughtIn.set(l.primarySlug, l.nr);
+  const wechsel = wechselInventory(level);
+  const adjectives = adjectiveLexicon(level);
   return (item) => {
     const answer = String(item?.answer || '');
     let text = `${String(item?.questionDe || '').replace(/___/g, answer)} ${answer}`
@@ -1456,7 +1458,13 @@ export function constructionHorizonIndex(level = 'a1.1') {
     for (const chunk of spec.licensedChunks || []) text = text.split(chunk).join(' ');
     if ((spec.neverForms || []).some((re) => new RegExp(re.source, re.flags).test(text))) return null;
     if (constructionHits(text).some((h) => h.never && !licensedAdjective(spec, h))) return null;
+    if (attributiveAdjectives(text, adjectives).length) return null;
     let horizon = 0;
+    for (const combination of wechselCombinations(text)) {
+      const at = wechsel.get(combination);
+      if (at === undefined) return null;
+      horizon = Math.max(horizon, at);
+    }
     for (const [slug, re] of Object.entries(spec.offLimitsForms || {})) {
       const taught = taughtIn.get(slug);
       if (taught && new RegExp(re.source, re.flags).test(text)) horizon = Math.max(horizon, taught);
@@ -1464,6 +1472,70 @@ export function constructionHorizonIndex(level = 'a1.1') {
     return horizon;
   };
 }
+
+/**
+ * THE CONSTRUCTION INVENTORY OF A HORIZON LEVEL (DaF review #4, A1.2 BLOCKER 2). The construction
+ * patterns of constructions.js read an adjective only after an article, and the Dativ table only the
+ * seven Dativ prepositions — so „Sie hat lange Haare.“ and „Warte kurz vor der Garage!“ passed. Two
+ * more classes, both measured on what the course itself contains rather than on a list of items:
+ *
+ *   • A WECHSELPRÄPOSITION WITH ITS ARTICLE („vor der“, „auf die“, „im“, „ins“): produced only once
+ *     the learner has met that combination in INPUT — any dialogue line or notice of the level before,
+ *     then this level's, Lektion by Lektion. The inventory is the input; the matcher only finds the
+ *     combinations a production text uses. Never in the input means never in production.
+ *   • AN ATTRIBUTIVE ADJECTIVE WITHOUT AN ARTICLE („lange Haare“, „mein großer Bruder“): the
+ *     Adjektivdeklination the level teaches in no Lektion, read through the course's own adjectives
+ *     (every lower-case Wortfeld entry that is not a verb, and every word a dialogue uses after
+ *     ist/sind), minus the greeting formulas every A1 course teaches as wholes.
+ */
+const WECHSEL_RE = /\b(?:(?:in|an|auf|vor|hinter|neben|über|unter|zwischen)\s+(?:dem|der|den|das|die|einem|einer|einen|ein|eine)|im|am|ins|ans|aufs)\b(?=\s+(?:[a-zäöüß]+\s+)?[A-ZÄÖÜ])/gi;
+export const wechselCombinations = (text) =>
+  [...String(text || '').matchAll(new RegExp(WECHSEL_RE.source, 'gi'))].map((m) => m[0].toLowerCase().replace(/\s+/g, ' '));
+const inputTexts = (l) => [
+  ...(l.dialog?.lines || []).map((x) => (typeof x === 'string' ? x : x.de)), l.notice?.bodyDe, ...(l.notice?.examples || []),
+].filter(Boolean);
+
+/** Combination → the Lektion whose input first shows it (0 = the level before). */
+export function wechselInventory(level) {
+  const spec = levelSpec(level);
+  const out = new Map();
+  const prior = spec?.seedFrom ? levelSpec(spec.seedFrom)?.curriculum : null;
+  for (const l of prior?.lektionen || []) for (const t of inputTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, 0);
+  for (const l of spec?.curriculum?.lektionen || []) for (const t of inputTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, l.nr);
+  return out;
+}
+
+const NOT_ADJECTIVES = new Set(['die', 'der', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'kein', 'keine',
+  'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'euer', 'sie', 'er', 'es', 'wir', 'für', 'von',
+  'mit', 'bei', 'nach', 'aus', 'zu', 'in', 'an', 'auf', 'hier', 'da', 'dort', 'noch', 'schon', 'immer', 'auch', 'nicht',
+  'sehr', 'so', 'vielleicht', 'bestimmt', 'jetzt', 'bald', 'oft', 'manchmal', 'nie', 'wieder', 'heute', 'sofort', 'leider',
+  'morgens', 'nachmittags', 'abends', 'geradeaus', 'links', 'rechts', 'halb', 'gern', 'gerne', 'erste', 'dritte']);
+const NUMBER_TOKEN_RE = /^(?:null|eins|ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|[a-zäöüß]*(?:zehn|zig|ßig|hundert))$/;
+
+/** The course's adjectives, from its own Wortfeld and its own predicative uses (both levels). */
+export function adjectiveLexicon(level) {
+  const spec = levelSpec(level);
+  const prior = spec?.seedFrom ? levelSpec(spec.seedFrom)?.curriculum : null;
+  const out = new Set();
+  for (const c of [prior, spec?.curriculum].filter(Boolean)) {
+    for (const l of c.lektionen || []) {
+      for (const w of l.wortfeld || []) {
+        const word = String(w.word || '').trim();
+        if (/^[a-zäöüß]+$/.test(word) && !/(?:en|ern|eln)$/.test(word)) out.add(word);
+      }
+      for (const t of inputTexts(l)) {
+        for (const m of t.matchAll(/\b(?:ist|sind|bin|bist|seid)\s+(?:nicht\s+|sehr\s+|so\s+|auch\s+|immer\s+)?([a-zäöüß]{3,})\b/g)) out.add(m[1]);
+      }
+    }
+  }
+  for (const w of [...out]) if (NOT_ADJECTIVES.has(w) || NUMBER_TOKEN_RE.test(w)) out.delete(w);
+  return out;
+}
+const LICENSED_FORMULAS_RE = /\b(?:Guten (?:Tag|Morgen|Abend)|Gute (?:Nacht|Reise|Besserung)|Viele Grüße|Liebe Grüße|Liebe[rn]? [A-ZÄÖÜ][a-zäöüß]+|Schönen Tag|Schönes Wochenende|Herzlichen Glückwunsch|Sehr geehrte[rn]?)\b/g;
+export const attributiveAdjectives = (text, lexicon) =>
+  [...String(text || '').replace(LICENSED_FORMULAS_RE, ' ').matchAll(/\b([A-Za-zÄÖÜäöüß][a-zäöüß]*?)(e|en|er|es|em)\s+([A-ZÄÖÜ][a-zäöüß]+)/g)]
+    .filter((m) => lexicon.has(m[1].toLowerCase()))
+    .map((m) => m[0]);
 
 /** A `never` hit the level teaches after all, as a fixed class of forms (A1.2's ordinals). */
 const licensedAdjective = (spec, h) => Boolean(spec?.licensedAdjectives && spec.licensedAdjectives.test(h.hit));
@@ -1820,7 +1892,15 @@ function producedTexts(l) {
  */
 export function constructionsBeforeTaught(c, pool = null) {
   const spec = levelSpec(c?.level);
-  const deferred = (nr, text) => deferredConstructionHits(c, nr, text).filter((h) => !(h.never && licensedAdjective(spec, h)));
+  const wechsel = spec?.constructionHorizon ? wechselInventory(c.level) : null;
+  const adjectives = spec?.constructionHorizon ? adjectiveLexicon(c.level) : null;
+  const deferred = (nr, text) => [
+    ...deferredConstructionHits(c, nr, text).filter((h) => !(h.never && licensedAdjective(spec, h))),
+    ...(adjectives ? attributiveAdjectives(text, adjectives).map((hit) => ({ slug: 'adjective-declension', taught: null, hit })) : []),
+    ...(wechsel ? wechselCombinations(text)
+      .filter((comb) => !wechsel.has(comb) || wechsel.get(comb) > nr)
+      .map((hit) => ({ slug: 'wechselpraeposition', taught: wechsel.get(hit) ?? null, hit })) : []),
+  ];
   const offenders = [];
   for (const l of c.lektionen || []) {
     for (const { where, text } of producedTexts(l)) {
