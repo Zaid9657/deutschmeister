@@ -72,7 +72,7 @@ export const RULE_CARDS = {
   },
   "dative-prepositions-intro": {
     "titleDe": "Präpositionen mit Dativ",
-    "content": "Nach mit, nach, bei, seit, von, zu und aus steht der Dativ:\nnach dem Regen, bei zehn Grad, seit einer Woche.\nOft verschmelzen Präposition und Artikel:\nin dem wird im Sommer, an dem wird am Abend,\nzu der wird zur Brücke, zu dem wird zum Bahnhof.\nDie drei Wendungen aus Lektion 1 bekommen hier ihre Regel.\nBeim Wetter: Seit einer Woche regnet es. Es ist wolkig.\nIm Sommer ist es sonnig, bei dreißig Grad.\nNach dem Regen gehe ich zur Brücke. Zum Bahnhof gehe ich nicht.\nEnglish: these seven prepositions always take the dative, and several of them merge with the article.",
+    "content": "Nach mit, nach, bei, seit, von, zu und aus steht der Dativ:\nnach dem Regen, bei zehn Grad, seit einer Woche.\nOft verschmelzen Präposition und Artikel:\nin dem wird im Sommer, an dem wird am Abend,\nzu der wird zur Brücke, zu dem wird zum Bahnhof.\nDie drei Wendungen aus Lektion 1 bekommen hier ihre Regel.\nAuch vor + Zeit: vor einer Woche. Vor einer Woche war es warm.\nBeim Wetter: Seit einer Woche regnet es. Es ist wolkig.\nIm Sommer ist es sonnig, bei dreißig Grad.\nNach dem Regen gehe ich zur Brücke. Zum Bahnhof gehe ich nicht.\nEnglish: these seven prepositions always take the dative, and several of them merge with the article.",
     "commonMistakes": [
       {
         "wrong": "Nach der Regen gehe ich zur Brücke.",
@@ -193,7 +193,7 @@ export const RULE_CARDS = {
   },
   "nominative-case": {
     "titleDe": "Der Nominativ: wer oder was?",
-    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nBeispiele: Wer ist die Frau da? Ihr Haar ist lang.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
+    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nFrüher: ich/sie war, ich/sie hatte. Nein, sie war nur müde. Sie hatte keine Zeit.\nBeispiele: Wer ist die Frau da? Ihr Haar ist lang.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
     "commonMistakes": [
       {
         "wrong": "Das ist meinen Bruder.",

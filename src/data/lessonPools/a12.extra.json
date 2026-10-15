@@ -1276,6 +1276,75 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l07-10",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Gestern ___ mein Opa müde. (sein)",
+      "questionEn": "Yesterday my grandpa was tired.",
+      "options": null,
+      "answer": "war",
+      "accepted": [
+        "war"
+      ],
+      "explanationDe": "Für gestern sagt man war: Gestern war mein Opa müde.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-11",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Gestern ___ meine Tante keine Zeit. (haben)",
+      "questionEn": "Yesterday my aunt had no time.",
+      "options": null,
+      "answer": "hatte",
+      "accepted": [
+        "hatte"
+      ],
+      "explanationDe": "haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-12",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Früher ___ ich klein. (sein)",
+      "questionEn": "I used to be small.",
+      "options": null,
+      "answer": "war",
+      "accepted": [
+        "war"
+      ],
+      "explanationDe": "Mit ich heißt die Vergangenheit von sein auch war.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-13",
+      "topic": "nominative-case",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Korrigieren Sie: „Gestern ist mein Onkel glücklich.“",
+      "questionEn": "Correct the sentence: Yesterday my uncle was happy.",
+      "options": null,
+      "answer": "Gestern war mein Onkel glücklich.",
+      "accepted": [
+        "Gestern war mein Onkel glücklich.",
+        "Gestern war mein Onkel glücklich"
+      ],
+      "explanationDe": "Für gestern steht war, nicht ist.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l08-01",
       "topic": "imperative",
       "type": "sentence_building",
@@ -1892,6 +1961,58 @@
         "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof"
       ],
       "explanationDe": "Feminin im Dativ: mit der Straßenbahn.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l11-10",
+      "topic": "dative-prepositions-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "___ einer Woche war es warm. (vor oder seit?)",
+      "questionEn": "A week ago it was warm.",
+      "options": null,
+      "answer": "Vor",
+      "accepted": [
+        "Vor",
+        "vor"
+      ],
+      "explanationDe": "vor + Zeit: eine Woche früher. Vor einer Woche war es warm.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l11-11",
+      "topic": "dative-prepositions-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Der Regen ist ___ einer Woche da. (vor oder seit?)",
+      "questionEn": "The rain has been here for a week.",
+      "options": null,
+      "answer": "seit",
+      "accepted": [
+        "seit"
+      ],
+      "explanationDe": "seit: von damals bis jetzt. Der Regen ist seit einer Woche da.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l11-12",
+      "topic": "dative-prepositions-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Das Gewitter war ___ einer Woche. (vor oder seit?)",
+      "questionEn": "The thunderstorm was a week ago.",
+      "options": null,
+      "answer": "vor",
+      "accepted": [
+        "vor"
+      ],
+      "explanationDe": "Das Gewitter ist vorbei: vor einer Woche.",
       "hint": null
     },
     {

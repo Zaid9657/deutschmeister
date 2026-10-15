@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 265,
+ "count": 272,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -1201,6 +1201,26 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a12-l11-10",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "___ einer Woche war es warm. (vor oder seit?)",
+   "questionEn": "A week ago it was warm.",
+   "options": null,
+   "answer": "Vor",
+   "accepted": [
+    "Vor",
+    "vor"
+   ],
+   "explanationDe": "vor + Zeit: eine Woche früher. Vor einer Woche war es warm.",
+   "hint": null,
+   "minLektion": 11,
+   "explanationEn": "**vor** + time means earlier: **Vor einer Woche** war es warm."
+  },
+  {
    "id": "a7a85f73-b356-5856-b5db-f2b9a744a501",
    "topic": "dative-prepositions-intro",
    "type": "multiple_choice",
@@ -1223,6 +1243,25 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a12-l11-11",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Der Regen ist ___ einer Woche da. (vor oder seit?)",
+   "questionEn": "The rain has been here for a week.",
+   "options": null,
+   "answer": "seit",
+   "accepted": [
+    "seit"
+   ],
+   "explanationDe": "seit: von damals bis jetzt. Der Regen ist seit einer Woche da.",
+   "hint": null,
+   "minLektion": 11,
+   "explanationEn": "**seit** means from then until now: Der Regen ist **seit einer Woche** da."
+  },
+  {
    "id": "8058bf54-3a86-5ed4-8a24-55630a3efbce",
    "topic": "dative-prepositions-intro",
    "type": "fill_blank",
@@ -1240,6 +1279,25 @@
    "explanationEn": "aus is used for the country/city you originally come from.",
    "hint": null,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l11-12",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Das Gewitter war ___ einer Woche. (vor oder seit?)",
+   "questionEn": "The thunderstorm was a week ago.",
+   "options": null,
+   "answer": "vor",
+   "accepted": [
+    "vor"
+   ],
+   "explanationDe": "Das Gewitter ist vorbei: vor einer Woche.",
+   "hint": null,
+   "minLektion": 11,
+   "explanationEn": "The storm is over: it was **vor einer Woche** (a week ago)."
   },
   {
    "id": "fe97d1bc-1569-5fa8-a988-5ab810e33a1c",
@@ -2678,6 +2736,83 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a12-l07-10",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Gestern ___ mein Opa müde. (sein)",
+   "questionEn": "Yesterday my grandpa was tired.",
+   "options": null,
+   "answer": "war",
+   "accepted": [
+    "war"
+   ],
+   "explanationDe": "Für gestern sagt man war: Gestern war mein Opa müde.",
+   "hint": null,
+   "minLektion": 7,
+   "explanationEn": "For yesterday you say **war**: Gestern **war** mein Opa müde."
+  },
+  {
+   "id": "extra-a12-l07-11",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Gestern ___ meine Tante keine Zeit. (haben)",
+   "questionEn": "Yesterday my aunt had no time.",
+   "options": null,
+   "answer": "hatte",
+   "accepted": [
+    "hatte"
+   ],
+   "explanationDe": "haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
+   "hint": null,
+   "minLektion": 7,
+   "explanationEn": "**haben** in the past is **hatte**: Gestern **hatte** meine Tante keine Zeit."
+  },
+  {
+   "id": "extra-a12-l07-12",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Früher ___ ich klein. (sein)",
+   "questionEn": "I used to be small.",
+   "options": null,
+   "answer": "war",
+   "accepted": [
+    "war"
+   ],
+   "explanationDe": "Mit ich heißt die Vergangenheit von sein auch war.",
+   "hint": null,
+   "minLektion": 7,
+   "explanationEn": "With ich the past of **sein** is also **war**."
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "topic": "nominative-case",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Korrigieren Sie: „Gestern ist mein Onkel glücklich.“ (Beginnen Sie mit „Gestern“)",
+   "questionEn": "Correct the sentence: Yesterday my uncle was happy.",
+   "options": null,
+   "answer": "Gestern war mein Onkel glücklich.",
+   "accepted": [
+    "Gestern war mein Onkel glücklich.",
+    "Gestern war mein Onkel glücklich"
+   ],
+   "explanationDe": "Für gestern steht war, nicht ist.",
+   "hint": null,
+   "minLektion": 7,
+   "explanationEn": "For yesterday use **war**, not ist."
+  },
+  {
    "id": "extra-a12-l07-06",
    "topic": "nominative-case",
    "type": "sentence_building",
@@ -3567,7 +3702,7 @@
    "explanationDe": "Bei sein sagt man meistens war: Ich war gestern krank.",
    "explanationEn": "With sein, German mostly uses **war** (was): Ich war gestern krank.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 7
   },
   {
    "id": "extra-a12-l12-12",
@@ -5437,7 +5572,7 @@
   "a1.2-l07#4": 0,
   "a1.2-l07#5": 0,
   "a1.2-l07#6": 0,
-  "a1.2-l07#7": 0,
+  "a1.2-l07#7": 7,
   "a1.2-l07#8": 0,
   "a1.2-l07#9": 0,
   "a1.2-l08#0": 0,

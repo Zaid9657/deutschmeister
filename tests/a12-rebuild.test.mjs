@@ -520,7 +520,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
       ['Wer ist das?', 3, 'Mein Onkel ist groß und immer glücklich.', 'person'],
       ['Dein Onkel?', 3, 'Ja.', 'ja', 'Ist das dein Onkel?'],
       ['Und das Kind da?', 5, 'Das ist meine Schwester.', 'person', 'Wer ist das Kind da?'],
-      ['Deine Oma ist traurig?', 7, 'Nein, meine Oma ist nicht traurig.', 'ja'],
+      ['Deine Oma ist traurig?', 7, 'Nein, sie war nur müde.', 'ja'],
       ['Und der Mann da?', 9, 'Das ist mein Bruder.', 'person', 'Wer ist der Mann da?'],
     ],
     8: [

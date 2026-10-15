@@ -705,7 +705,10 @@ const OFF_LIMITS_FORMS_A12 = {
   // Taught L11. The seven dative prepositions with a dative determiner, plus the contractions the
   // card itself teaches. `im`/`am` are NOT here: A1.1 L8 teaches them as fixed time expressions
   // („am Freitag“, „im Januar“), so an A1.2 learner has met them for a year.
-  'dative-prepositions-intro': /\b(?:zum|zur|beim|vom)\b|\b(?:mit|nach|bei|seit|von|zu|aus)\s+(?:dem|der|den|einem|einer|mir|dir|ihm|ihr|uns|Ihnen|meinem|meiner|meinen)\b/gi,
+  'dative-prepositions-intro': /\b(?:zum|zur|beim|vom)\b|\b(?:mit|nach|bei|seit|von|zu|aus|vor)\s+(?:dem|der|den|einem|einer|mir|dir|ihm|ihr|uns|Ihnen|meinem|meiner|meinen)\b/gi,
+  // Taught L7 since the M7 decision (2026-10-16): the Präteritum of sein and haben, the forms the
+  // Goethe A1 inventory names (Prüfungsziele 2022, p. 102: „Sie/ich hatte keine Zeit. Ich/er war nicht da.").
+  'nominative-case': /\b(?:war|warst|waren|wart|hatte|hattest|hatten|hattet)\b/gi,
   // Taught L12. Partizip II with ge-. `{2,}` keeps `gehen`, `gegen`, `geben` out: their stem is one
   // letter, a participle's is at least two (ge-feier-t, ge-gess-en). Since the M7 decision
   // (2026-10-16, Goethe-Zertifikat A1 Prüfungsziele 2022 p. 102: Perfekt of fahren, bleiben,
