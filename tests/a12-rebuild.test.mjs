@@ -140,6 +140,58 @@ test('DaF review #3 BLOCKER 2: no item is served before the Lektion that teaches
   assert.match(cards, /Bei gehen und fahren steht sein, nicht haben\./);
 });
 
+test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every finite verb with its subject', async () => {
+  // CP4 printed „Lena geht durch das Kaufhaus und bezahle.": the person change reached the first verb
+  // and a verb missing from the conjugation table passed through unchanged. And where no line reported,
+  // the papers fell back to quoting the text — 8 of the 64 Lesen items over four seeds (12 once the
+  // half-changed reports were refused), the rung A1.1's papers are pinned away from.
+  const { buildCheckpoint, windowReports, reportSpecFor, normaliseStatement } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const cp4 = CURRICULUM_A12.checkpoints[CURRICULUM_A12.checkpoints.length - 1];
+  const spec = { ...reportSpecFor(CURRICULUM_A12, cp4), known: null };
+  const report = (de) => windowReports([{ speaker: 'Lena', de }], spec).map((r) => r.statement);
+  assert.deepEqual(report('Gut. Ich gehe durch das Kaufhaus und bezahle.'), ['Lena geht durch das Kaufhaus und bezahlt.'], 'the measured case');
+  assert.deepEqual(report('Ich gehe durch das Kaufhaus und frage.'), [], 'a first-person verb the table lacks: no report, never half a one');
+  assert.deepEqual(report('Ich lese, frage und schlafe.'), [], 'a verb after a comma counts too');
+  assert.deepEqual(report('Ich dusche und frühstücke jeden Tag.'), ['Lena duscht und frühstückt jeden Tag.']);
+  assert.deepEqual(report('Ich koche nicht und esse im Restaurant.'), ['Lena kocht nicht und isst im Restaurant.'], 'negation');
+  assert.deepEqual(report('Ich habe Brot gekauft und hole jetzt Milch.'), ['Lena hat Brot gekauft und holt jetzt Milch.'], 'Satzklammer');
+  assert.deepEqual(report('Ich möchte einen Kaffee und eine Cola.'), ['Lena möchte einen Kaffee und eine Cola.'], 'an article after „und" is not a verb');
+  // The verb before „ich": the opening stays, verb and subject change in place.
+  assert.deepEqual(report('Danach brauche ich Geld für das Museum.'), ['Danach braucht Lena Geld für das Museum.']);
+  assert.deepEqual(report('Das Obst und die Kartoffeln habe ich gekauft.'), ['Das Obst und die Kartoffeln hat Lena gekauft.']);
+  assert.deepEqual(report('Mit meiner Mutter gehe ich ins Kino.'), [], 'the speaker\'s own world in the opening');
+  assert.deepEqual(report('Wo darf ich parken?'), [], 'a question reports nothing');
+
+  // Every Lesen item the four A1.2 papers print, over four seeds.
+  const pool = JSON.parse(read('src/data/lessonPools/a12.json'));
+  const firstPerson = new Set();
+  for (const l of CURRICULUM_A12.lektionen) {
+    for (const line of l.dialog?.lines || []) {
+      for (const m of String(line.de).matchAll(/(?:^|[\s,.!?])[Ii]ch\s+([a-zäöüß]+e)(?=[\s,.!?]|$)/g)) firstPerson.add(m[1]);
+    }
+  }
+  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage'), 'the harvest is not vacuous');
+  const problems = [];
+  let items = 0;
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (const seed of [undefined, 1, 2, 3]) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool, seed })) {
+        if (it.section !== 'lesen') continue;
+        items += 1;
+        const at = `${checkpoint.id}/${seed} „${it.statement}"`;
+        if (!it.transform) problems.push(`${at}: quotes its text (the verbatim rung)`);
+        if (normaliseStatement(it.text).includes(normaliseStatement(it.statement))) problems.push(`${at}: stands in its own text`);
+        for (const s of [it.statement, it.trueStatement]) {
+          const left = s.split(/\s+/).map((w) => w.replace(/[.,!?]/g, '')).filter((w) => firstPerson.has(w) && w !== 'möchte');
+          if (left.length) problems.push(`${at}: keeps the first person ${left.join(', ')}`);
+        }
+      }
+    }
+  }
+  assert.equal(items, 64, 'four Lesen items on each of the four papers, four seeds');
+  assert.deepEqual(problems, []);
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.

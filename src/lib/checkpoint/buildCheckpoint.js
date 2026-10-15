@@ -1405,6 +1405,13 @@ export const VERB_3SG = new Map(Object.entries({
   sehe: 'sieht',
   spreche: 'spricht',
   trinke: 'trinkt',
+  // A1.2's „ich" verbs (DaF review #3, MAJOR 2): without them its papers fell back to quoting
+  // the text verbatim, and „… und bezahle" reached a report unchanged.
+  bezahle: 'bezahlt',
+  hole: 'holt',
+  trage: 'trägt',
+  will: 'will',
+  ziehe: 'zieht',
 }));
 
 /**
@@ -1486,6 +1493,27 @@ function articleIndex(curriculum, lastNr) {
   return out;
 }
 
+/**
+ * The course's first-person verb forms: the <stem>e of every Wortfeld infinitive
+ * plus every „ich <verb>e" a dialogue says (holen and fragen are in no A1.2
+ * Wortfeld). `reportRest` refuses a sentence that keeps one of them — an
+ * article after „und" („… und eine Cola") is not a verb, so a rule that guessed
+ * from position alone would throw good reports away.
+ */
+function firstPersonForms(curriculum) {
+  const out = new Set();
+  for (const l of curriculum?.lektionen || []) {
+    for (const w of l.wortfeld || []) {
+      const word = String(w.word || w.de || '').trim();
+      if (/^[a-zäöüß]+(?:en|ern|eln)$/.test(word)) out.add(word.endsWith('en') ? word.slice(0, -1) : `${word.slice(0, -1)}e`);
+    }
+    for (const line of l.dialog?.lines || []) {
+      for (const m of String(line?.de || line || '').matchAll(/\b[Ii]ch\s+([a-zäöüß]+e)\b/g)) out.add(m[1]);
+    }
+  }
+  return out;
+}
+
 /** Everything the three engines need, built once per checkpoint. */
 function reportSpec(ctx) {
   const { curriculum, checkpoint, level } = ctx;
@@ -1493,6 +1521,7 @@ function reportSpec(ctx) {
     articles: articleIndex(curriculum, checkpoint?.afterLektion ?? 0),
     known: knownUpTo(curriculum, checkpoint?.afterLektion ?? 0),
     names: namesOf(level),
+    firstPerson: firstPersonForms(curriculum),
   };
 }
 
@@ -1508,14 +1537,22 @@ const restIsReportable = (words, subject) => {
 /**
  * Turn the remaining words of a reported sentence into third person too, so
  * „Ich dusche und frühstücke jeden Tag." does not report as „… dusche und
- * frühstücke". Returns null when one of them has no taught third-person form.
+ * frühstücke". Returns null when one of them has no taught third-person form —
+ * or none in the table at all: DaF review #3 (A1.2) MAJOR 2 found „Ich gehe
+ * durch das Kaufhaus und bezahle." reported as „Lena geht durch das Kaufhaus
+ * und bezahle.", because a verb missing from the table passed through
+ * unchanged. Every finite verb changes with the subject, or there is no report.
  */
-function reportRest(words, known, forms) {
+function reportRest(words, { known, firstPerson }, forms) {
   const out = [];
   for (const w of words) {
     const bare = bareWord(w);
     const third = VERB_3SG.get(bare.toLowerCase());
-    if (!third || bare[0] !== bare[0].toLowerCase()) { out.push(w); continue; }
+    if (!third || bare[0] !== bare[0].toLowerCase()) {
+      if (firstPerson?.has(bare)) return null;
+      out.push(w);
+      continue;
+    }
     if (known && !known.has(third)) return null;
     forms.push(third);
     out.push(third + w.slice(bare.length));
@@ -1546,7 +1583,7 @@ function reportSentence(sentence, { speaker, before, spec }) {
     const third = VERB_3SG.get(bareWord(words[1]).toLowerCase());
     if (!third || (known && !known.has(third))) return null;
     if (!restIsReportable(words.slice(2), subject)) return null;
-    const rest = reportRest(words.slice(2), known, forms);
+    const rest = reportRest(words.slice(2), spec, forms);
     if (!rest) return null;
     forms.unshift(third);
     built = [subject, third + words[1].slice(bareWord(words[1]).length), ...rest].join(' ');
@@ -1556,7 +1593,7 @@ function reportSentence(sentence, { speaker, before, spec }) {
     const article = articles.get(noun);
     if (!article || !REPORT_ARTICLE[article]) return null;
     if (!restIsReportable(words.slice(2), subject)) return null;
-    const rest = reportRest(words.slice(2), known, forms);
+    const rest = reportRest(words.slice(2), spec, forms);
     if (!rest) return null;
     built = [REPORT_ARTICLE[article], words[1], 'von', subject, ...rest].join(' ');
     engine = 'possessiv';
@@ -1572,10 +1609,26 @@ function reportSentence(sentence, { speaker, before, spec }) {
     }
     if (!antecedent) return null;
     if (!restIsReportable(words.slice(1), subject)) return null;
-    const rest = reportRest(words.slice(1), known, forms);
+    const rest = reportRest(words.slice(1), spec, forms);
     if (!rest) return null;
     built = [REPORT_ARTICLE[wanted], antecedent, ...rest].join(' ');
     engine = 'pronomen';
+  } else {
+    // „Danach brauche ich Geld für das Museum." — the verb stands before „ich" because something
+    // else opens the sentence; the report keeps that opening and swaps verb and subject in place:
+    // „Danach braucht Ana Geld für das Museum." (DaF review #3, A1.2: without it, a third of the
+    // A1.2 papers' Lesen items quoted their own text).
+    const k = words.findIndex((w, i) => i >= 2 && bareWord(w) === 'ich');
+    const verb = k > 0 ? bareWord(words[k - 1]) : '';
+    const third = VERB_3SG.get(verb);
+    if (!third || verb !== verb.toLowerCase() || (known && !known.has(third))) return null;
+    const front = words.slice(0, k - 1);
+    if (!restIsReportable([...front, ...words.slice(k + 1)], subject)) return null;
+    const rest = reportRest(words.slice(k + 1), spec, forms);
+    if (!rest) return null;
+    forms.unshift(third);
+    built = [...front, third, subject, ...rest].join(' ');
+    engine = 'vorfeld';
   }
 
   if (!built) return null;
