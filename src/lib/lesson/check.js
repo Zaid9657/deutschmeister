@@ -148,10 +148,21 @@ const oneKeyAdded = (given, expected) =>
   given.length === expected.length + 1
   && [...given].some((_, i) => given.slice(0, i) + given.slice(i + 1) === expected);
 
+/**
+ * Inflectional endings, longest first. Standard §3: an ending is never a typo. The last-letter test
+ * below let through every ending change that keeps the final letter — „lernt" for „lernst",
+ * „arbeitst" for „arbeitest", „heißst" for „heißt" (DaF review #5, A1.2 MAJOR 9, measured on both
+ * pools). Two words are another ending of the same stem when both split into that stem plus two
+ * different non-empty endings; a noun that merely ends like one („Kaffe" for „Kaffee") does not.
+ */
+const ENDINGS = ['est', 'st', 'et', 'en', 'em', 'er', 'es', 'e', 't', 'n', 's'];
+const stemSplits = (w) => ENDINGS.filter((x) => w.length >= x.length + 3 && w.endsWith(x)).map((x) => [w.slice(0, -x.length), x]);
+const otherEnding = (a, b) => stemSplits(a).some(([s, x]) => stemSplits(b).some(([t, y]) => s === t && x !== y));
+
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
   if (u.length !== e.length) return true;
-  return u.some((w, i) => w !== e[i] && w.slice(-1) !== e[i].slice(-1));
+  return u.some((w, i) => w !== e[i] && (w.slice(-1) !== e[i].slice(-1) || otherEnding(w, e[i])));
 }
 
 /**
@@ -203,6 +214,10 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * of a spelled-out word (see normalizeSpelling) and is turned on automatically
  * when an accepted answer looks like one (REVIEW #4 BLOCKER 1).
  *
+ * choice = true says the answer was PICKED from printed options (isChoiceItem): it is right or wrong
+ * as printed — no typo allowance and no spelling fold, because picking a printed „sechszehn" or
+ * „dreisig" is a choice, not a slip of the keyboard (DaF review #5, A1.2 MAJOR 9).
+ *
  * caseSensitive = true makes capitalisation part of the answer (REVIEW #4
  * BLOCKER 3: the polite `Ihr`, whose whole point is the capital I) — a case-only
  * miss is then RESULT.WRONG and tagError calls it 'Rechtschreibung'. With
@@ -211,7 +226,7 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -228,6 +243,16 @@ export function checkAnswer(userInput, expected, {
   const user = prepare(userInput);
   const rawUser = raw(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
+
+  if (choice) {
+    for (const a of accepted) {
+      if (raw(a) === rawUser) return { result: RESULT.CORRECT, expected: a };
+      if (raw(a).toLowerCase() === rawUser.toLowerCase()) {
+        return caseSensitive ? { result: RESULT.WRONG, expected: a, reason: 'case' } : { result: RESULT.CORRECT, expected: a };
+      }
+    }
+    return { result: RESULT.WRONG, expected: accepted[0] || '' };
+  }
 
   for (const a of accepted) {
     if (raw(a) === rawUser) return { result: RESULT.CORRECT, expected: a };
@@ -313,7 +338,19 @@ export function checkOptionsFor(item) {
     caseSensitive: isCaseTask(item),
     dictation: isDictationTask(item),
     spelling: spellingApplies(accepted),
+    choice: isChoiceItem(item),
   };
+}
+
+/**
+ * True when the learner PICKS one of the item's printed options instead of typing: the checkpoint's
+ * `mode: 'options'`, or a pool item with options that is not typed production (the rule of
+ * buildLesson's isTypedItem, restated because this module imports nothing from the engine). A
+ * review card is built without options, so it stays typed.
+ */
+export function isChoiceItem(item) {
+  if (item?.mode) return item.mode === 'options';
+  return Boolean(item?.options?.length) && item?.type !== 'sentence_building' && item?.type !== 'error_correction';
 }
 
 // Error tags (standard §3): what a miss is about, for remediation and review.

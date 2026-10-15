@@ -38,6 +38,15 @@
       "questionDe": "Fragen Sie eine Freundin: ___ kommst du? (= When?)",
       "questionEn": "Ask a friend when she is coming: ___ kommst du?",
       "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "9e49a70d-4e55-4e18-9c1a-3d8467c29c00": {
+      "options": [
+        "dreisig",
+        "dreizig",
+        "dreißig",
+        "dreizehn"
+      ],
+      "reason": "DaF review #5 (A1.2) MAJOR 9: „dreissig“ is the Swiss spelling of the key, not a wrong answer; a distractor the typed checker would accept as the key is replaced by a wrong number (13)."
     }
   }
 }
