@@ -355,9 +355,12 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   The ratchets in `scripts/validate-curriculum.mjs` (RULE 10/11/13/6b/15/23 = 14/59/4/23/3/57, the
   rest hard 0) only go down and must equal their measurement (test).
   After ANY content edit re-run both, in order: `node scripts/build-lesson-pool.mjs a1.1` then
-  `node scripts/validate-curriculum.mjs`. `src/data/curricula/a11.audio.js` is still the empty
-  manifest stub, so every audio surface honestly says „Computerstimme" until the owner's Azure run
-  (`docs/owner-prompts.md`). The course-reminder mailer is **live**: `COURSE_REMINDER_ENABLED=true`
+  `node scripts/validate-curriculum.mjs`. `src/data/curricula/a11.audio.js` is FILLED since the
+  owner's Azure run of 2026-10-15: 168 clips (120 dialogue lines, 12 pretest models, 36 Phonetik
+  items) in Supabase storage `audio/course/a1.1/…`, so those surfaces play a recording; anything the
+  manifest lacks still says „Computerstimme". A changed line text changes its sha1 and needs a re-run
+  of `node scripts/generate-course-audio.mjs a1.1` (it skips unchanged clips and waits out Azure's
+  free-tier throttle). The course-reminder mailer is **live**: `COURSE_REMINDER_ENABLED=true`
   was set in the Netlify functions scope on 2026-09-12 and `migrations/2026-09-13-course-reminder.sql`
   is applied; it runs daily 18:00 UTC and claims into `lifecycle_emails` (kind `course_reminder_*`).
 - **A1.2 is PAUSED by owner decision (2026-09-13: "only create A1.1").** Its draft (`src/data/curricula/a12.js`,
