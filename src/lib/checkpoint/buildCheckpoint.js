@@ -2053,7 +2053,7 @@ export function checkpointWritingTask(checkpoint, chapter) {
   if (!bank) return null;
   const lektion = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey) || (chapter || []).at(-1);
   const kind = bank.register === 'formular' ? 'formular' : 'mitteilung';
-  return { lektion, bank, schreiben: { kind, taskDe: bank.task, fields: kind === 'formular' ? bank.leitpunkte : null, sample: bank.sample || null } };
+  return { lektion, bank, schreiben: { kind, taskDe: bank.task, taskEn: bank.taskEn || null, fields: kind === 'formular' ? bank.leitpunkte : null, sample: bank.sample || null } };
 }
 
 /** That task as a checkpoint item — rendered by GradedWriting on CheckpointPage. */
@@ -2061,6 +2061,8 @@ function gradedWritingItem(checkpoint, chapter, level) {
   const found = checkpointWritingTask(checkpoint, chapter) || chapterWritingTask(chapter, level);
   if (!found) return null;
   const { lektion, schreiben: s, bank } = found;
+  // The English twin the page prints under the task (CheckpointPage reads task.taskEn).
+  const taskEn = s.taskEn || bank.taskEn || null;
   return {
     id: `${checkpoint.id}-schreiben-graded`,
     section: 'schreiben',
@@ -2076,7 +2078,7 @@ function gradedWritingItem(checkpoint, chapter, level) {
     scorable: true,
     optional: true,
     promptDe: bank.task || s.taskDe,
-    promptEn: null,
+    promptEn: taskEn,
     audioText: null,
     text: null,
     options: null,
@@ -2091,6 +2093,7 @@ function gradedWritingItem(checkpoint, chapter, level) {
       taskKey: bank.taskKey,
       kind: s.kind || bank.register,
       taskDe: bank.task || s.taskDe,
+      taskEn,
       fields: s.fields || (s.kind === 'formular' ? bank.leitpunkte : null) || null,
       leitpunkte: bank.leitpunkte || s.leitpunkte || null,
       minWords: bank.minWords ?? s.minWords ?? 0,

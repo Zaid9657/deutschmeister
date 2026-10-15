@@ -587,6 +587,8 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Tim Berger ist verheiratet. Er kommt aus Österreich und spricht Englisch und Deutsch. Füllen Sie das Formular für Tim aus.',
+    taskEn:
+      'Tim Berger is married. He comes from Austria and speaks English and German. Fill in the form for Tim (first name, surname, marital status, languages, country).',
     leitpunkte: ['Vorname', 'Familienname', 'Familienstand', 'Sprachen', 'Land'],
     sample: 'Vorname: Tim / Familienname: Berger / Familienstand: verheiratet / Sprachen: Englisch, Deutsch / Land: Österreich',
   },
@@ -601,6 +603,8 @@ export const WRITING_TASKS = [
     maxWords: 45,
     task:
       'Schreiben Sie Ihrer Chefin, Frau Berg, eine kurze Nachricht: Sie brauchen eine Lampe und einen Stuhl. Ihre Telefonnummer ist 0176 22 44 88. Sie sind um zehn Uhr im Büro. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'Write your boss, Frau Berg, a short message: you need a lamp and a chair. Your phone number is 0176 22 44 88. You are in the office at ten o\'clock. Open with a greeting and close with a sign-off. Cover three points: what you need; your phone number; when you are in the office.',
     leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
     sample: 'Guten Tag, Frau Berg! Ich brauche eine Lampe und einen Stuhl. Meine Telefonnummer ist 0176 22 44 88. Ich bin um zehn Uhr im Büro. Viele Grüße, Ana',
   },
@@ -615,6 +619,8 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Tim Berger ist im Café. Er möchte am Donnerstag um 18 Uhr einen Tisch für vier Personen. Die Telefonnummer ist 030 66 33 99. Füllen Sie das Formular aus.',
+    taskEn:
+      'Tim Berger is at the café. He would like a table for four people on Thursday at 6 pm. The phone number is 030 66 33 99. Fill in the form (name, day, time, people, phone number).',
     leitpunkte: ['Name', 'Tag', 'Uhrzeit', 'Personen', 'Telefonnummer'],
     sample: 'Name: Berger / Tag: Donnerstag / Uhrzeit: 18 Uhr / Personen: 4 / Telefonnummer: 030 66 33 99',
   },
@@ -629,6 +635,8 @@ export const WRITING_TASKS = [
     maxWords: 45,
     task:
       'Schreiben Sie Lena eine Karte: Sie kochen am Sonntag um 16 Uhr zu Hause und laden Lena ein. Lena soll Brot und Orangensaft mitbringen. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'Write Lena a card: you are cooking at home on Sunday at 4 pm and invite Lena. Lena should bring bread and orange juice. Open with a greeting and close with a sign-off. Cover three points: why you are writing; the day and the time; what Lena should bring.',
     leitpunkte: ['Warum Sie schreiben', 'Tag und Uhrzeit', 'Was Lena mitbringen soll'],
     sample: 'Hallo Lena! Ich koche am Sonntag und lade dich ein. Wir essen um 16 Uhr bei mir zu Hause. Bringst du bitte Brot und Orangensaft mit? Bis bald, Ana',
   },
@@ -879,6 +887,8 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Paul Fischer wohnt in Köln. Am Mittwoch möchte er ins Museum gehen. Er fährt mit der Straßenbahn bis zur Haltestelle Markt. Füllen Sie die Anmeldung für das Museum aus.',
+    taskEn:
+      'Paul Fischer lives in Cologne. On Wednesday he would like to go to the museum. He takes the tram to the Markt stop. Fill in the museum registration form (surname, first name, city, stop, day).',
     leitpunkte: ['Familienname', 'Vorname', 'Stadt', 'Haltestelle', 'Tag'],
     sample: 'Familienname: Fischer / Vorname: Paul / Stadt: Köln / Haltestelle: Markt / Tag: Mittwoch',
   },
@@ -893,6 +903,8 @@ export const WRITING_TASKS = [
     maxWords: 45,
     task:
       'Sie haben im Hotel ein Zimmer für Freitag und Samstag. Sie sind krank und kommen am Samstag, nicht am Freitag. Schreiben Sie dem Hotel eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'You have a hotel room for Friday and Saturday. You are ill and are coming on Saturday, not on Friday. Write the hotel a short message. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you are coming; your question about breakfast.',
     leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Ihre Frage zum Frühstück'],
     sample: 'Guten Tag, ich habe ein Zimmer für Freitag und Samstag. Ich bin krank, mein Kopf tut weh. Ich komme am Samstag, nicht am Freitag. Haben Sie am Samstag auch Frühstück? Viele Grüße, Ana Chakiri',
   },
@@ -907,6 +919,8 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Tim Berger wohnt in Berlin. Er fliegt am 2. Mai nach Spanien. Füllen Sie die Anmeldung für die Reise aus.',
+    taskEn:
+      'Tim Berger lives in Berlin. He is flying to Spain on 2 May. Fill in the registration form for the trip (surname, first name, city, date, country).',
     leitpunkte: ['Familienname', 'Vorname', 'Stadt', 'Datum', 'Land'],
     sample: 'Familienname: Berger / Vorname: Tim / Stadt: Berlin / Datum: 2. Mai / Land: Spanien',
   },
@@ -921,6 +935,8 @@ export const WRITING_TASKS = [
     maxWords: 45,
     task:
       'Sie haben am Sonntag mit Lena eine Jacke gekauft. Schreiben Sie Ihrem Freund Tim eine kurze Nachricht über den Sonntag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'On Sunday you bought a jacket with Lena. Write your friend Tim a short message about Sunday. Open with a greeting and close with a sign-off. Cover three points: what you bought; what colour the jacket is; what you ate afterwards.',
     leitpunkte: ['Was Sie gekauft haben', 'Welche Farbe die Jacke hat', 'Was Sie danach gegessen haben'],
     sample: 'Hallo Tim, am Sonntag habe ich mit Lena eine Jacke gekauft. Die Jacke ist blau und warm. Danach haben wir Kuchen gegessen und Kaffee getrunken. Liebe Grüße, Ana',
   },

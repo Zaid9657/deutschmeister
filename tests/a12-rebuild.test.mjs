@@ -652,6 +652,21 @@ test('DaF review #3 Minor: the can-do lines say what they are — written for th
   assert.match(CURRICULUM_A12.provenance.canDo, /keine wörtlichen Zitate/);
 });
 
+test('DaF review #4 minor: every checkpoint writing task reaches the page with its English twin, on both levels', async () => {
+  // The checkpoint's graded task carried promptEn: null, and the page reads task.taskEn, which no
+  // item set — the twin RULE 25 asks of every Lektion task never reached a checkpoint, on either level.
+  const { buildCheckpoint } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    for (const checkpoint of curriculum.checkpoints) {
+      const graded = buildCheckpoint({ curriculum, checkpoint, pool }).find((it) => it.kind === 'gradedWriting');
+      assert.ok(graded, `${checkpoint.id}: a graded writing task`);
+      assert.ok(graded.promptEn && graded.task.taskEn === graded.promptEn, `${checkpoint.id}: the English twin reaches the page`);
+    }
+  }
+});
+
 test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts it — on every paper of both levels', async () => {
   // CP3 printed „Die Oma ist müde." keyed Falsch (the engine had resolved „Sie ist müde." to the last
   // feminine noun, die Nase) and CP2 keyed „Der Kopf von Ana tut weh und der Kopf auch." Falsch, which
