@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import {
-  planRenders, sha1, slugify, voiceForSpeaker, phonetikSpeechText, wordSpeechText,
+  planRenders, sha1, slugify, voiceForSpeaker, ttsRequest, phonetikSpeechText, wordSpeechText,
   estimateCents, renderManifest, SPEAKER_VOICES, VOICE_FEMALE, VOICE_MALE, VOICE_DEFAULT,
   RATE, BUCKET, ssml,
 } from '../scripts/generate-course-audio.mjs';
@@ -151,6 +151,22 @@ test('every speaker in the curriculum is mapped, and no dialogue is one voice ta
     assert.equal(voices.size, cast.length, `L${l.nr}: ${cast.join(' + ')} share a voice`);
   }
   assert.equal(new Set(Object.values(SPEAKER_VOICES)).size, Object.keys(SPEAKER_VOICES).length, 'one voice per character');
+});
+
+test('a throttled TTS request (429) waits as Azure asks and retries; any other error throws at once', async () => {
+  // The first owner run (2026-10-15) stopped after 35 of 168 clips: the free tier allows 20 requests
+  // per minute and every 429 counted as a failure.
+  const response = (status, headers = {}) => ({
+    status, ok: status < 400, headers: { get: (k) => headers[k.toLowerCase()] ?? null },
+    text: async () => 'throttled', arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer,
+  });
+  const queue = [response(429, { 'retry-after': '7' }), response(429), response(200)];
+  const waits = [];
+  const mp3 = await ttsRequest('u', {}, { fetchImpl: async () => queue.shift(), sleep: async (ms) => { waits.push(ms); } });
+  assert.deepEqual(waits, [7000, 5000], 'Retry-After when Azure sends it, else 5 s');
+  assert.equal(mp3.length, 3);
+  await assert.rejects(ttsRequest('u', {}, { fetchImpl: async () => response(401), sleep: async () => {} }), /TTS 401/);
+  await assert.rejects(ttsRequest('u', {}, { fetchImpl: async () => response(429), sleep: async () => {}, maxRetries: 2 }), /TTS 429/, 'gives up after maxRetries');
 });
 
 test('voiceForSpeaker gives each character their own verified voice of the right gender, and defaults rather than throwing', () => {

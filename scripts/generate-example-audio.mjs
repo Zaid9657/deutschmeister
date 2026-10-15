@@ -53,6 +53,8 @@ const VOICE = 'de-DE-KatjaNeural'; // clear Hochdeutsch, neutral register
 const RATE = '-10%'; // a touch slower than default for A1/A2 ears
 const OUTPUT_FORMAT = 'audio-24khz-96kbitrate-mono-mp3';
 const TTS_URL = `https://${azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`;
+// The throttle-aware request (429 → wait as Azure asks, retry) lives in generate-course-audio.mjs.
+const { ttsRequest } = await import('./generate-course-audio.mjs');
 
 const supabase = createClient(supabaseUrl, serviceKey);
 
@@ -63,8 +65,8 @@ const ssml = (text) =>
   `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="de-DE">` +
   `<voice name="${VOICE}"><prosody rate="${RATE}">${escapeXml(text)}</prosody></voice></speak>`;
 
-async function synthesize(text) {
-  const res = await fetch(TTS_URL, {
+function synthesize(text) {
+  return ttsRequest(TTS_URL, {
     method: 'POST',
     headers: {
       'Ocp-Apim-Subscription-Key': azureKey,
@@ -74,8 +76,6 @@ async function synthesize(text) {
     },
     body: ssml(text),
   });
-  if (!res.ok) throw new Error(`TTS ${res.status}: ${(await res.text()).slice(0, 200)}`);
-  return Buffer.from(await res.arrayBuffer());
 }
 
 // What to say for a words row: nouns get their article so the learner hears
@@ -148,7 +148,7 @@ async function run(jobName) {
 
       done++;
       if (done % 25 === 0) console.log(`${job.table}: ${done} done…`);
-      await new Promise((r) => setTimeout(r, 150)); // free tier allows 20 req/s; stay far below
+      await new Promise((r) => setTimeout(r, 150)); // the free tier's 20-per-minute limit is waited out in ttsRequest()
     } catch (err) {
       failed++;
       console.error(`FAILED ${job.table} ${row.id}: ${err.message}`);
