@@ -2670,18 +2670,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie die Frage: [wer / sein / die Frau / mit dem kurzen Haar]",
+   "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante]",
    "questionEn": "Build the question about the woman.",
    "options": null,
-   "answer": "Wer ist die Frau mit dem kurzen Haar?",
+   "answer": "Wer ist die Tante?",
    "accepted": [
-    "Wer ist die Frau mit dem kurzen Haar?",
-    "Wer ist die Frau mit dem kurzen Haar"
+    "Wer ist die Tante?",
+    "Wer ist die Tante"
    ],
    "explanationDe": "wer fragt nach der Person im Nominativ.",
    "hint": null,
-   "minLektion": null,
-   "explanationEn": "**wer** asks for a person; the person after **ist** stays in the nominative: **Wer ist die Frau mit dem kurzen Haar?**"
+   "minLektion": 7,
+   "explanationEn": "**wer** asks for a person; the question word comes first and the verb second: **Wer ist die Tante?**"
   },
   {
    "id": "extra-a12-l07-07",
@@ -5251,7 +5251,7 @@
   "a1.2-l07#5": 0,
   "a1.2-l07#6": 0,
   "a1.2-l07#7": 0,
-  "a1.2-l07#8": null,
+  "a1.2-l07#8": 0,
   "a1.2-l07#9": 0,
   "a1.2-l08#0": 0,
   "a1.2-l08#1": 0,

@@ -114,7 +114,7 @@ export const RULE_CARDS = {
   },
   "imperative": {
     "titleDe": "Der Imperativ: bitten und auffordern",
-    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte, ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
+    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
     "commonMistakes": [
       {
         "wrong": "Sie helfen bitte!",
@@ -193,7 +193,7 @@ export const RULE_CARDS = {
   },
   "nominative-case": {
     "titleDe": "Der Nominativ: wer oder was?",
-    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nBeispiele: Wer ist die Frau da? Sie hat lange Haare.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
+    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nBeispiele: Wer ist die Frau da? Ihr Haar ist lang.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
     "commonMistakes": [
       {
         "wrong": "Das ist meinen Bruder.",

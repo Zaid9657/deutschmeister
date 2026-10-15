@@ -1408,6 +1408,8 @@ export const VERB_3SG = new Map(Object.entries({
   // A1.2's „ich" verbs (DaF review #3, MAJOR 2): without them its papers fell back to quoting
   // the text verbatim, and „… und bezahle" reached a report unchanged.
   bezahle: 'bezahlt',
+  fliege: 'fliegt',
+  frage: 'fragt',
   hole: 'holt',
   trage: 'trägt',
   will: 'will',
@@ -1505,7 +1507,9 @@ function firstPersonForms(curriculum) {
   for (const l of curriculum?.lektionen || []) {
     for (const w of l.wortfeld || []) {
       const word = String(w.word || w.de || '').trim();
-      if (/^[a-zäöüß]+(?:en|ern|eln)$/.test(word)) out.add(word.endsWith('en') ? word.slice(0, -1) : `${word.slice(0, -1)}e`);
+      if (/^[a-zäöüß]+en$/.test(word)) out.add(word.slice(0, -1));                       // kaufen → kaufe
+      else if (/^[a-zäöüß]+eln$/.test(word)) { out.add(`${word.slice(0, -3)}le`); out.add(`${word.slice(0, -1)}e`); } // wechseln → wechsle, wechsele
+      else if (/^[a-zäöüß]+ern$/.test(word)) out.add(`${word.slice(0, -1)}e`);            // feiern → feiere
     }
     for (const line of l.dialog?.lines || []) {
       for (const m of String(line?.de || line || '').matchAll(/\b[Ii]ch\s+([a-zäöüß]+e)\b/g)) out.add(m[1]);
@@ -1524,6 +1528,12 @@ function reportSpec(ctx) {
     firstPerson: firstPersonForms(curriculum),
   };
 }
+
+/** Lower-case words ending in -e that open a phrase after „und" without being a verb. */
+const NOT_A_VERB_AFTER_UND = new Set([
+  'die', 'eine', 'keine', 'meine', 'seine', 'ihre', 'unsere', 'eure', 'diese', 'jede', 'welche',
+  'alle', 'viele', 'beide', 'einige', 'manche', 'wenige', 'andere', 'gerne', 'heute', 'lange', 'alleine',
+]);
 
 /** Does the rest of the sentence carry a word no report survives? */
 const restIsReportable = (words, subject) => {
@@ -1545,11 +1555,14 @@ const restIsReportable = (words, subject) => {
  */
 function reportRest(words, { known, firstPerson }, forms) {
   const out = [];
-  for (const w of words) {
+  for (let i = 0; i < words.length; i += 1) {
+    const w = words[i];
     const bare = bareWord(w);
     const third = VERB_3SG.get(bare.toLowerCase());
     if (!third || bare[0] !== bare[0].toLowerCase()) {
       if (firstPerson?.has(bare)) return null;
+      const opensClause = /^(?:und|oder|aber|sondern)$/i.test(bareWord(words[i - 1] || ''));
+      if (opensClause && /^[a-zäöüß]+e$/.test(bare) && !NOT_A_VERB_AFTER_UND.has(bare)) return null;
       out.push(w);
       continue;
     }
@@ -1578,6 +1591,7 @@ function reportSentence(sentence, { speaker, before, spec }) {
   const forms = [];
   let built = null;
   let engine = null;
+  let ambiguous = false;
 
   if (head === 'ich') {
     const third = VERB_3SG.get(bareWord(words[1]).toLowerCase());
@@ -1602,12 +1616,17 @@ function reportSentence(sentence, { speaker, before, spec }) {
     const verb = bareWord(words[1]).toLowerCase();
     if (verb.endsWith('en')) return null;
     const wanted = PRONOUN_ARTICLE[head];
-    let antecedent = null;
+    const candidates = new Set();
     for (const w of String(before || '').split(/\s+/)) {
       const bare = bareWord(w);
-      if (articles.get(bare) === wanted) antecedent = bare;
+      if (articles.get(bare) === wanted) candidates.add(bare);
     }
-    if (!antecedent) return null;
+    if (!candidates.size) return null;
+    // More than one noun of the gender: no report (`ambiguous`, filtered by windowReports). It is
+    // still BUILT, so the Lesen ladder shuffles the same list as before and a paper this rule does not
+    // touch keeps its draw — the sections share one rng.
+    const antecedent = [...candidates].pop();
+    ambiguous = candidates.size > 1;
     if (!restIsReportable(words.slice(1), subject)) return null;
     const rest = reportRest(words.slice(1), spec, forms);
     if (!rest) return null;
@@ -1633,7 +1652,7 @@ function reportSentence(sentence, { speaker, before, spec }) {
 
   if (!built) return null;
   if (!statementIsKnown(built, known, names)) return null;
-  return { statement: built, engine, verbForms: forms };
+  return { statement: built, engine, verbForms: forms, ambiguous };
 }
 
 /**
@@ -1641,7 +1660,7 @@ function reportSentence(sentence, { speaker, before, spec }) {
  * and the list tests/checkpoint.test.mjs re-derives to prove that a Richtig
  * statement follows from EXACTLY ONE line of its text.
  */
-export function windowReports(window, spec) {
+export function windowReports(window, spec, { withAmbiguous = false } = {}) {
   const out = [];
   const lines = window || [];
   for (let i = 0; i < lines.length; i += 1) {
@@ -1651,7 +1670,7 @@ export function windowReports(window, spec) {
     for (let s = 0; s < sentences.length; s += 1) {
       const before = [...earlier, ...sentences.slice(0, s)].join(' ');
       const report = reportSentence(sentences[s], { speaker: line.speaker, before, spec });
-      if (!report) continue;
+      if (!report || (report.ambiguous && !withAmbiguous)) continue;
       out.push({ ...report, line, lineIndex: i, sentence: sentences[s] });
     }
   }
@@ -1691,8 +1710,9 @@ function windowSpeakerNames(window) {
  * not a fact, and swapping it („Lena, wann …?" → „Paul, …") is a
  * change no reader has to read the text to catch.
  */
-function falsifyStatement(statement, text, ctxWords, rng) {
+function falsifyStatement(statement, text, ctxWords, rng, { sourceSentence = '', windowStatements = new Set() } = {}) {
   const de = String(statement || '');
+  const sourceWords = new Set(String(sourceSentence).split(/\s+/).map((w) => bareWord(w).toLowerCase()).filter(Boolean));
   for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
     const tokens = [...de.matchAll(WORD_RE)];
     const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
@@ -1710,6 +1730,8 @@ function falsifyStatement(statement, text, ctxWords, rng) {
       const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
       if (changed === de) continue;
       if (normaliseStatement(text).includes(normaliseStatement(changed))) continue;
+      if (sourceWords.has(String(replacement).toLowerCase())) continue;
+      if (windowStatements.has(normaliseStatement(changed))) continue;
       // Same second bar as in falsifyWindow — one definition, both surfaces.
       if (agreementViolations(changed, ctxWords.vocab).length) continue;
       return { de: changed, from: match[0], to: replacement };
@@ -1736,11 +1758,14 @@ function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, cha
     const text = windowText(candidate.window);
     const names = windowSpeakerNames(candidate.window);
     const ctxWords = { names, vocab: chapterVocab, printed: chapterPrinted };
-    const reports = shuffle(windowReports(candidate.window, spec), rng)
+    const all = windowReports(candidate.window, spec, { withAmbiguous: true });
+    const windowStatements = new Set(all.filter((r) => !r.ambiguous).map((r) => normaliseStatement(r.statement)));
+    const reports = shuffle(all, rng)
+      .filter((r) => !r.ambiguous)
       .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
     for (const report of reports) {
       if (wantRichtig) return { candidate, text, report, statement: report.statement, changed: null };
-      const falsified = falsifyStatement(report.statement, text, ctxWords, rng);
+      const falsified = falsifyStatement(report.statement, text, ctxWords, rng, { sourceSentence: report.sentence, windowStatements });
       if (falsified) {
         return {
           candidate, text, report, statement: falsified.de, changed: { from: falsified.from, to: falsified.to },

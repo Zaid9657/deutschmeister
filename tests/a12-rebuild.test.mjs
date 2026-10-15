@@ -150,8 +150,8 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   const spec = { ...reportSpecFor(CURRICULUM_A12, cp4), known: null };
   const report = (de) => windowReports([{ speaker: 'Lena', de }], spec).map((r) => r.statement);
   assert.deepEqual(report('Gut. Ich gehe durch das Kaufhaus und bezahle.'), ['Lena geht durch das Kaufhaus und bezahlt.'], 'the measured case');
-  assert.deepEqual(report('Ich gehe durch das Kaufhaus und frage.'), [], 'a first-person verb the table lacks: no report, never half a one');
-  assert.deepEqual(report('Ich lese, frage und schlafe.'), [], 'a verb after a comma counts too');
+  assert.deepEqual(report('Ich gehe durch das Kaufhaus und wechsle.'), [], 'a first-person verb the table lacks: no report, never half a one');
+  assert.deepEqual(report('Ich lese, wechsle und schlafe.'), [], 'a verb after a comma counts too');
   assert.deepEqual(report('Ich dusche und frühstücke jeden Tag.'), ['Lena duscht und frühstückt jeden Tag.']);
   assert.deepEqual(report('Ich koche nicht und esse im Restaurant.'), ['Lena kocht nicht und isst im Restaurant.'], 'negation');
   assert.deepEqual(report('Ich habe Brot gekauft und hole jetzt Milch.'), ['Lena hat Brot gekauft und holt jetzt Milch.'], 'Satzklammer');
@@ -170,7 +170,7 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
       for (const m of String(line.de).matchAll(/(?:^|[\s,.!?])[Ii]ch\s+([a-zäöüß]+e)(?=[\s,.!?]|$)/g)) firstPerson.add(m[1]);
     }
   }
-  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage'), 'the harvest is not vacuous');
+  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage') && firstPerson.has('fliege'), 'the harvest is not vacuous');
   const problems = [];
   let items = 0;
   for (const checkpoint of CURRICULUM_A12.checkpoints) {
@@ -436,6 +436,66 @@ test('DaF review #3 Minor: the can-do lines say what they are — written for th
   // a quotation nobody had checked line by line.
   assert.match(CURRICULUM_A12.provenance.canDo, /^Eigene Kann-Beschreibungen nach /);
   assert.match(CURRICULUM_A12.provenance.canDo, /keine wörtlichen Zitate/);
+});
+
+test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts it — on every paper of both levels', async () => {
+  // CP3 printed „Die Oma ist müde." keyed Falsch (the engine had resolved „Sie ist müde." to the last
+  // feminine noun, die Nase) and CP2 keyed „Der Kopf von Ana tut weh und der Kopf auch." Falsch, which
+  // the text says.
+  const { buildCheckpoint, paperSeed, windowReports, reportSpecFor, normaliseStatement } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const cp3 = CURRICULUM_A12.checkpoints[2];
+  const spec = { ...reportSpecFor(CURRICULUM_A12, cp3), known: null };
+  const reports = (lines) => windowReports(lines, spec).map((r) => r.statement);
+  // A pronoun is reported only when one noun of its gender can be meant.
+  assert.deepEqual(reports([
+    { speaker: 'Lena', de: 'Deine Oma ist traurig? Ihre Nase ist wie deine.' },
+    { speaker: 'Ana', de: 'Sie ist müde.' },
+  ]), [], 'Oma or Nase: no report');
+  assert.deepEqual(reports([
+    { speaker: 'Lena', de: 'Wo ist die Oma?' },
+    { speaker: 'Ana', de: 'Sie ist müde.' },
+  ]), ['Die Oma ist müde.'], 'one candidate: a report');
+  // A coordinated verb the table cannot change refuses the report, whatever the lexicon knows.
+  assert.deepEqual(reports([{ speaker: 'Ana', de: 'Ich koche und wechsle das Zimmer.' }]), []);
+  assert.deepEqual(reports([{ speaker: 'Ana', de: 'Ich gehe und kaufe ein.' }]), ['Ana geht und kauft ein.']);
+
+  const windowOf = (curriculum, item) => {
+    const lines = curriculum.lektionen.find((l) => l.nr === item.lektionNr).dialog.lines;
+    for (const span of [2, 3]) {
+      for (let start = 0; start + span <= lines.length; start += 1) {
+        const w = lines.slice(start, start + span);
+        if (w.map((l) => `${l.speaker}: ${l.de}`).join(' ') === item.text) return w;
+      }
+    }
+    return null;
+  };
+  const problems = [];
+  let checked = 0;
+  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    for (const checkpoint of curriculum.checkpoints) {
+      const cpSpec = reportSpecFor(curriculum, checkpoint);
+      for (let round = 0; round < 3; round += 1) {
+        for (const it of buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) })) {
+          if (it.section !== 'lesen' || !it.transform) continue;
+          checked += 1;
+          const at = `${checkpoint.id}/${round} „${it.statement}"`;
+          const window = windowOf(curriculum, it);
+          if (!window) { problems.push(`${at}: its text is no window of L${it.lektionNr}`); continue; }
+          const truths = new Set(windowReports(window, cpSpec).map((r) => normaliseStatement(r.statement)));
+          if (it.answer === 'Richtig' && !truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Richtig, but no line of the text says it`);
+          if (it.answer === 'Falsch') {
+            if (truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Falsch, but a line of the text says it`);
+            const source = new Set(String(it.sourceSentence).split(/\s+/).map((w) => w.replace(/[.,!?]/g, '').toLowerCase()));
+            if (source.has(String(it.changed?.to).toLowerCase())) problems.push(`${at}: the swapped-in „${it.changed?.to}" stands in the sentence it reports`);
+          }
+        }
+      }
+    }
+  }
+  assert.equal(checked, 96, 'four Lesen reports on each of the twelve papers of both levels');
+  assert.deepEqual(problems, []);
 });
 
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {

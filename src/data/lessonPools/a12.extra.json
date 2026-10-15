@@ -1210,13 +1210,13 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie die Frage: [wer / sein / die Frau / mit dem kurzen Haar]",
+      "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante]",
       "questionEn": "Build the question about the woman.",
       "options": null,
-      "answer": "Wer ist die Frau mit dem kurzen Haar?",
+      "answer": "Wer ist die Tante?",
       "accepted": [
-        "Wer ist die Frau mit dem kurzen Haar?",
-        "Wer ist die Frau mit dem kurzen Haar"
+        "Wer ist die Tante?",
+        "Wer ist die Tante"
       ],
       "explanationDe": "wer fragt nach der Person im Nominativ.",
       "hint": null
