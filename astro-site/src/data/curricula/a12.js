@@ -385,7 +385,7 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Akkusativ: den und einen',
-        bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur der Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu.',
+        bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur das Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu.',
         bodyEn: 'Many verbs take an object in the accusative: brauchen (need), kaufen (buy), bezahlen (pay for). Only masculine nouns change: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminine, neuter and plural stay the same: die Quittung, das Geld, das Museum. The form keinen follows in Lektion 4.',
         examples: ['Ich brauche einen Supermarkt und einen Markt.', 'Ja. Ich bezahle das Brot und den Kuchen.'],
         ruleSlug: 'accusative-intro',
@@ -1051,7 +1051,7 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Präpositionen mit Akkusativ',
-        bodyDe: 'Nach **für**, **ohne** und **durch** steht immer der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur der Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Beim Vergleich hilft **als**: Die Mütze ist **billiger als** der Schal.',
+        bodyDe: 'Nach **für**, **ohne** und **durch** steht immer der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Beim Vergleich hilft **als**: Die Mütze ist **billiger als** der Schal.',
         bodyEn: 'After **für** (for), **ohne** (without) and **durch** (through) always comes the accusative: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Only masculine nouns change; feminine, neuter and plural stay the same: für **die** Oma, für **das** Kind. To compare, use **als** (than): Die Mütze ist **billiger als** der Schal.',
         examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma.'],
         ruleSlug: 'prepositions-accusative',

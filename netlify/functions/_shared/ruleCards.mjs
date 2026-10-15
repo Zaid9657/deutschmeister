@@ -9,7 +9,7 @@
 export const RULE_CARDS = {
   "accusative-intro": {
     "titleDe": "Der Akkusativ: den und einen",
-    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur der Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
+    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur das Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
     "commonMistakes": [
       {
         "wrong": "Ich brauche ein Supermarkt.",
@@ -319,7 +319,7 @@ export const RULE_CARDS = {
   },
   "prepositions-accusative": {
     "titleDe": "Präpositionen mit Akkusativ",
-    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur der Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
+    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
     "commonMistakes": [
       {
         "wrong": "Der Mantel ist für mein Bruder.",

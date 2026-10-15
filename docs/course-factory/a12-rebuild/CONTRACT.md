@@ -5,6 +5,32 @@ unchanged: same field names, same nine Lektion steps, same nine engine rules, sa
 tables, same acceptance gates. Read the A1.1 contract first; this file only says what A1.2 does
 differently and what the integrator still has to do.
 
+## 0. Status 2026-10-15 — what this contract said, and what is measured now
+
+The sections below are the September contract and stay as written; where they disagree with this
+table, the table is the measurement (DaF review #3, Minor: "CONTRACT aktualisieren").
+
+| The contract said (2026-09-13) | Measured 2026-10-15 (branch `claude/a12-rebuild`) |
+|---|---|
+| §1: `a12.json` **MISSING** | Built: 256 items (138 bank rows + 118 hand-written), each stamped with `minLektion` — the later of its words and its grammar (`constructionHorizonIndex`) — plus a `lineHorizon` for the 120 dialogue lines the checkpoints dictate or read aloud. |
+| §4: the extras file is empty, RULE 11 ratchet 0 | 118 hand-written items. RULE 11 measures 26 untaught tokens across the whole pool (bank rows the draw never serves); RULE 11b, what the draw serves, is 0. |
+| §5: rule-card overrides still to write | All twelve A1.2 slugs carry an override (`scripts/rule-card-overrides.mjs`). |
+| §6.1: `COURSE_TASK_KEY_PREFIX` is `'a11-'` | `evaluate-writing.mjs` counts every course key (`a__-%`); A1.2 has its own allowance of 16 — twelve Lektion tasks and four checkpoint tasks `a12-cp1…4`. |
+| §6.4: three missionless Lektionen | One: L11 (RULE 13 = 1). |
+| §6.5: no DaF review yet | Three: #1 and #2 (2026-09-13), #3 (2026-10-15: 2 BLOCKER, 7 MAJOR). Both BLOCKERs and MAJORs 1–6 are closed with a rule and a test each in `tests/a12-rebuild.test.mjs`. |
+| §4: the ratchets | `levelSpec('a1.2').ratchets` in `scripts/validate-curriculum.mjs`; every one equals its measurement (`tests/a12-rebuild.test.mjs`). Non-zero today: RULE 11 (26), RULE 13 (1), RULE 23 (7), RULE 23b (1). |
+
+**Open — owner decision (DaF review #3, MAJOR 7).** The standard's A1.2 grammar ceiling
+(`docs/course-standard-2026-09-12.md` §2.2) lists Dativ (Präpositionen, Verben, Pronomen), temporale
+Präpositionen, wollen/sollen/dürfen/müssen, Imperativ, war/hatte, Perfekt untrennbar, Komparation,
+denn, würde and Ordinalzahlen. The built course teaches the Dativ prepositions, the modal verbs,
+the imperative, the ordinals and the haben-Perfekt, and spends Lektionen on A1.1-ceiling points the
+built A1.1 did not cover (Akkusativ, Verneinung, W-Fragen, Vokalwechsel). Either the missing points
+are taught here or the ceiling is corrected with the later plan that teaches them; until then the
+course must not claim them.
+
+The promotion rule of §6.0 still holds unchanged.
+
 ## 1. Files and owners
 
 | Path | State | Notes |

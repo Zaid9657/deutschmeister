@@ -631,7 +631,7 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'Der Akkusativ: den und einen',
     content: [
       'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.',
-      'Nur der Maskulinum ändert die Form:',
+      'Nur das Maskulinum ändert die Form:',
       'der Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.',
       'Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.',
       'Beispiele: Ich brauche einen Supermarkt und einen Markt.',
@@ -861,7 +861,7 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Nach für, ohne und durch steht immer der Akkusativ:',
       'für den Bruder, ohne den Schal, durch das Kaufhaus.',
-      'Nur der Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:',
+      'Nur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:',
       'für die Oma, für das Kind.',
       'Beim Vergleich hilft als: Die Mütze ist billiger als der Schal.',
       'Im Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?',
