@@ -25,7 +25,7 @@ import PhonetikStage from '../../components/lesson/PhonetikStage.jsx';
 import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';
 import { gradeCard } from '../../services/reviewService.js';
 import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
-import { speakGerman } from '../../lib/lesson/speech.js';
+import { speakGermanChecked } from '../../lib/lesson/speech.js';
 import PretestStage from '../../components/lesson/PretestStage.jsx';
 import PracticeItem from '../../components/lesson/PracticeItem.jsx';
 import DictationItem from '../../components/lesson/DictationItem.jsx';
@@ -182,9 +182,10 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const stage = stages[stageIndex] || null;
   const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
   const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
-  const playWarmupCard = useCallback((content) => {
-    speakGerman((content && (content.speak || content.front)) || '');
-  }, []);
+  const playWarmupCard = useCallback(
+    (content) => speakGermanChecked((content && (content.speak || content.front)) || ''),
+    [],
+  );
 
   useEffect(() => {
     if (!warmupCard) return;
