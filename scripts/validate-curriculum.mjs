@@ -915,6 +915,9 @@ export const LEVELS = {
     // DaF review #3 BLOCKER 2: the pool build folds `constructionHorizonIndex` into minLektion, so no
     // drawn or checkpoint item uses a construction before the Lektion that teaches it.
     constructionHorizon: true,
+    // DaF review #4 BLOCKER 1: the build names the opening of every statement whose word order is
+    // free, and accepts the -e imperative in a gap and „bitte" first (scripts/a12-determinacy.mjs).
+    determinacyRepairs: true,
     neverForms: NEVER_FORMS_A12,
     // Ordinalzahlen are A1.2 grammar (standard §2.2; L2 „das dritte Stockwerk", „die erste
     // Wohnung"), so an ordinal before a noun is not the Adjektivdeklination the level never teaches.

@@ -135,6 +135,7 @@ import {
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
+import { openingOf } from './a12-determinacy.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -335,6 +336,35 @@ function repairDeterminacy(item) {
       item.accepted = [...new Set([...accepted, alt, alt.replace(/!$/, '')])];
       determinacyRepaired.push(`${item.id}:${first}/${other}`);
     }
+  }
+  if (!levelSpec(level)?.determinacyRepairs) return;
+  // DaF review #4 (A1.2) BLOCKER 1 — three more families, each a rule (scripts/a12-determinacy.mjs
+  // generates their alternatives and tests/a12-rebuild.test.mjs runs them through the checker):
+  // 1. A statement may open with its subject or with any one other phrase. When the key's order is
+  //    free, the prompt names the opening, so the order it grades is the order it asked for.
+  if ((item.type === 'sentence_building' || item.type === 'error_correction') && !/\(Beginnen Sie mit /.test(item.questionDe)) {
+    const opening = openingOf(key);
+    if (opening) {
+      item.questionDe = `${String(item.questionDe).trim()} (Beginnen Sie mit „${opening}“)`;
+      determinacyRepaired.push(`${item.id}:opening`);
+    }
+  }
+  // 2. A du-imperative in a gap takes its -e like the sentence does: „Hol" / „Hole".
+  const accepted = () => (item.accepted && item.accepted.length ? item.accepted : [item.answer]);
+  if (item.type === 'fill_blank' && /\([a-zäöüß]+en, du\)/.test(item.questionDe) && /^[A-Za-zäöüß]+$/.test(key)
+      && !STEM_CHANGE_IMPERATIVE_RE.test(key) && !/t$/i.test(key)) {
+    const other = /e$/.test(key) ? (E_REQUIRED_RE.test(key) ? null : key.slice(0, -1)) : `${key}e`;
+    if (other) {
+      item.accepted = [...new Set([...accepted(), other])];
+      determinacyRepaired.push(`${item.id}:${key}/${other}`);
+    }
+  }
+  // 3. „bitte" may open a request: „Nehmen Sie bitte Platz!" = „Bitte nehmen Sie Platz!".
+  const bitte = key.match(/^([A-ZÄÖÜ][a-zäöüß]+)(.*?) bitte(.*)!$/);
+  if ((item.type === 'sentence_building' || item.type === 'error_correction') && bitte) {
+    const fronted = `Bitte ${bitte[1].charAt(0).toLowerCase()}${bitte[1].slice(1)}${bitte[2]}${bitte[3]}!`.replace(/\s+/g, ' ');
+    item.accepted = [...new Set([...accepted(), fronted, fronted.replace(/!$/, '')])];
+    determinacyRepaired.push(`${item.id}:bitte`);
   }
 }
 raw.forEach(repairDeterminacy);

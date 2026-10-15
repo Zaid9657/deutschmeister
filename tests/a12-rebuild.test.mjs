@@ -7,6 +7,7 @@ import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
 import { exclusionReason, isUsableItem, REASON } from '../src/data/lessonPools/quality.js';
 import { pickPracticeItems, planPractice, poolItems } from '../src/lib/lesson/buildLesson.js';
 import { requeueFor } from '../src/lib/lesson/requeue.js';
+import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
@@ -63,6 +64,34 @@ test('DaF review #3 BLOCKER 1: the answer key never rejects correct German the G
   assert.deepEqual(fam({ type: 'multiple_choice', questionDe: 'Er ___ heute arbeiten.', options: ['muss', 'müssen', 'musst', 'müsst'], answer: 'muss' }), [], 'person forms of one verb are not alternatives');
   assert.deepEqual(fam({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [am Platz / sein / die Haltestelle]', answer: 'Am Platz ist die Haltestelle.' }), ['subject-first order']);
   assert.deepEqual(fam({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma]', answer: 'Ich kaufe die Jacke für meine Oma.' }), ['für-phrase first']);
+  // DaF review #4: the families review #3's generator did not know. Every statement's other orders,
+  // an imperative gap with and without -e, and „bitte" first; and what stays wrong stays wrong.
+  const wide = (item) => alternatives({ accepted: [], ...item }, { wide: true }).map((a) => a.text);
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links]', answer: 'Dann gehen Sie an der Ecke links.' }), ['Sie gehen dann an der Ecke links.']);
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus]', answer: 'Wir fahren bei Regen mit dem Bus.' }), ['Bei Regen fahren wir mit dem Bus.', 'Mit dem Bus fahren wir bei Regen.']);
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen]', answer: 'Ich habe die Kartoffel gekauft.' }), ['Die Kartoffel habe ich gekauft.']);
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [dann / gehen / Sie / links] (Beginnen Sie mit „Dann“)', answer: 'Dann gehen Sie links.' }), [], 'a named opening fixes the order');
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie die Frage: [wo / sein / die Haltestelle]', answer: 'Wo ist die Haltestelle?' }), [], 'a question has no free opening');
+  assert.deepEqual(wide({ type: 'fill_blank', topic: 'imperative', questionDe: 'Der Teppich ist da. ___ ihn bitte! (holen, du)', answer: 'Hol' }), ['Hole']);
+  assert.deepEqual(wide({ type: 'fill_blank', topic: 'imperative', questionDe: 'Tim, ___ mir bitte! (helfen, du)', answer: 'hilf' }), [], 'no -e on a changed stem');
+  assert.ok(wide({ type: 'sentence_building', questionDe: 'Schreiben Sie die Bitte: [Sie / bitte / Platz / nehmen]', answer: 'Nehmen Sie bitte Platz!' }).includes('Bitte nehmen Sie Platz!'));
+  // The repairs make the build accept what is German and nothing else.
+  const pool = JSON.parse(read('src/data/lessonPools/a12.json'));
+  const byId = new Map(pool.items.map((it) => [it.id, it]));
+  const verdict = (id, text) => {
+    const it = byId.get(id);
+    return checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  };
+  assert.equal(verdict('extra-a12-l08-07', 'Hole'), RESULT.CORRECT);
+  assert.notEqual(verdict('extra-a12-l08-07', 'Holst'), RESULT.CORRECT, 'the du-form is not the imperative');
+  assert.equal(verdict('extra-a12-l08-04', 'komme'), RESULT.CORRECT);
+  assert.notEqual(verdict('extra-a12-l08-04', 'kommst'), RESULT.CORRECT);
+  assert.match(byId.get('extra-a12-l01-02').questionDe, /\(Beginnen Sie mit „Dann“\)/);
+  // A preposition gap names its choices or its meaning: „Ana geht ___ das Kaufhaus" took only durch
+  // while in is German too.
+  const PREP = /^(?:in|an|auf|mit|bei|nach|zu|zum|zur|im|am|ins|um|für|ohne|durch|aus|von|vom|seit|vor|hinter|neben|über|unter|gegen|bis)$/i;
+  const unnamed = pool.items.filter((it) => it.type === 'fill_blank' && PREP.test(String(it.answer).trim()) && !/\([^)]+\)\s*$/.test(it.questionDe));
+  assert.deepEqual(unnamed.map((it) => it.id), []);
   // …and on what is served today, at both levels, nothing is rejected.
   assert.deepEqual(rejectedAlternatives('a1.2'), []);
   assert.deepEqual(rejectedAlternatives('a1.1'), []);
