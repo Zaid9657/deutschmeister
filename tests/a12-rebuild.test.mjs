@@ -363,9 +363,31 @@ test('DaF review #3 MAJOR 5: the L8 imperative rule produces every du-imperative
   // The three „mistakes" the review confirmed as correct German stay off every card. No predicate
   // decides that a sentence is correct German; a DaF review does, and its verdicts stay pinned.
   const cards = read('netlify/functions/_shared/ruleCards.mjs');
-  for (const correct of ['Haben Sie nicht einen Rabatt?', 'Wo fahren wir im Urlaub?', 'Zu dem Bahnhof gehe ich nicht.']) {
+  for (const correct of ['Haben Sie nicht einen Rabatt?', 'Wo fahren wir im Urlaub?', 'Zu dem Bahnhof gehe ich nicht.',
+    // DaF review #4: „nicht eine Lampe" can be emphatic, „Was ist die Frau?" can ask for her job.
+    'Im Flur ist nicht eine Lampe.', 'Was ist die Frau da?']) {
     assert.ok(!cards.includes(`"wrong": "${correct}"`), `„${correct}" is German, not a mistake`);
   }
+  // DaF review #4 MAJOR 5: the draw also checks ihr- and Sie-imperatives (Kommt! Seid! Nehmt!,
+  // Helfen Sie!), so the notice explains every person it grades, and every graded form follows it.
+  assert.match(notice, /Bei ihr fällt nur das ihr weg/);
+  assert.match(notice, /Bei Sie bleibt das Pronomen/);
+  const IHR_FORM = { kommen: 'Kommt', sein: 'Seid', nehmen: 'Nehmt' };
+  let ihrItems = 0;
+  for (const it of POOL_A12.items.filter((x) => x.topic === 'imperative')) {
+    const ihr = String(it.questionDe).match(/\(([a-zäöüß]+en|sein), ihr\)|ihr-Imperativ von '([a-zäöüß]+)'/);
+    if (ihr) {
+      ihrItems += 1;
+      const verb = ihr[1] || ihr[2];
+      assert.ok(IHR_FORM[verb], `${it.id}: an ihr-imperative of ${verb} the table does not carry`);
+      assert.ok(String(it.answer).startsWith(IHR_FORM[verb]), `${it.id}: ${it.answer} is not ${IHR_FORM[verb]}`);
+    }
+    const sie = String(it.answer).match(/^([A-ZÄÖÜ][a-zäöüß]+) Sie\b/);
+    if (sie) assert.match(sie[1], /en$/, `${it.id}: the Sie-imperative is the infinitive form („${sie[1]} Sie")`);
+  }
+  assert.ok(ihrItems >= 3, 'the ihr-imperatives the review found are still measured');
+  // …and the bank row that said sein has no Perfekt says what the course practises instead.
+  assert.ok(!POOL_A12.items.some((it) => /nicht das Perfekt/.test(it.explanationDe || '')), 'ist gewesen exists');
 });
 
 test('DaF review #3 MAJOR 6: an answer answers its question — the type a W-word asks for, Doch or Nein after a negative one', async () => {

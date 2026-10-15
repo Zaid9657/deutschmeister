@@ -8,6 +8,11 @@
       "explanationDe": "müssen = Notwendigkeit. Mit ich: ich muss.",
       "explanationEn": "müssen = necessity. With ich the form is **muss**.",
       "reason": "DaF review #3 (A1.2) BLOCKER 1: kann, soll, darf and muss all fit „Ich ___ nach Hause.\" and the prompt carried English („implied: gehen\"); the cue now names the verb."
+    },
+    "2ad09e18-9732-5d7a-9af3-e3abf270533f": {
+      "explanationDe": "Bei sein sagt man meistens war: Ich war gestern krank.",
+      "explanationEn": "With sein, German mostly uses **war** (was): Ich war gestern krank.",
+      "reason": "DaF review #4 (A1.2) MAJOR 5: „Für sein benutzt man war, nicht das Perfekt.“ is false as a rule of German (ist gewesen exists); the course practises the common form."
     }
   }
 }

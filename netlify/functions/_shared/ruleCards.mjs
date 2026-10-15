@@ -114,7 +114,7 @@ export const RULE_CARDS = {
   },
   "imperative": {
     "titleDe": "Der Imperativ: bitten und auffordern",
-    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
+    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nBei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
     "commonMistakes": [
       {
         "wrong": "Sie helfen bitte!",
@@ -175,9 +175,9 @@ export const RULE_CARDS = {
     "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nDas Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
     "commonMistakes": [
       {
-        "wrong": "Im Flur ist nicht eine Lampe.",
+        "wrong": "Im Flur ist nicht Lampe.",
         "correct": "Im Flur ist keine Lampe.",
-        "explanationDe": "Ein Nomen mit unbestimmtem Artikel verneint man mit kein: keine Lampe."
+        "explanationDe": "Ein Nomen ohne bestimmten Artikel verneint man mit kein: keine Lampe."
       },
       {
         "wrong": "Die Steckdose funktioniert kein.",
@@ -201,9 +201,9 @@ export const RULE_CARDS = {
         "explanationDe": "Nach sein steht der Nominativ: Das ist mein Bruder."
       },
       {
-        "wrong": "Was ist die Frau da?",
-        "correct": "Wer ist die Frau da?",
-        "explanationDe": "wer fragt nach einer Person, was nach einer Sache."
+        "wrong": "Den Onkel ist groß.",
+        "correct": "Der Onkel ist groß.",
+        "explanationDe": "Das Subjekt steht im Nominativ: der Onkel."
       },
       {
         "wrong": "Mein Oma ist alt.",

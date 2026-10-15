@@ -673,9 +673,9 @@ const RULE_CARD_OVERRIDES = {
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Im Flur ist nicht eine Lampe.',
+        wrong: 'Im Flur ist nicht Lampe.',
         correct: 'Im Flur ist keine Lampe.',
-        explanationDe: 'Ein Nomen mit unbestimmtem Artikel verneint man mit kein: keine Lampe.',
+        explanationDe: 'Ein Nomen ohne bestimmten Artikel verneint man mit kein: keine Lampe.',
       },
       {
         wrong: 'Die Steckdose funktioniert kein.',
@@ -775,9 +775,9 @@ const RULE_CARD_OVERRIDES = {
         explanationDe: 'Nach sein steht der Nominativ: Das ist mein Bruder.',
       },
       {
-        wrong: 'Was ist die Frau da?',
-        correct: 'Wer ist die Frau da?',
-        explanationDe: 'wer fragt nach einer Person, was nach einer Sache.',
+        wrong: 'Den Onkel ist groß.',
+        correct: 'Der Onkel ist groß.',
+        explanationDe: 'Das Subjekt steht im Nominativ: der Onkel.',
       },
       {
         wrong: 'Mein Oma ist alt.',
@@ -797,6 +797,7 @@ const RULE_CARD_OVERRIDES = {
       'Das Pronomen fällt weg, die Endung -st fällt mit.',
       'Aus ä wird wieder a: ich fahre, du fährst → Fahr!',
       'Endet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!',
+      'Bei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!',
       'Die Vorsilbe steht am Ende: Mach den Fernseher aus!',
       'Das Wort bitte macht jede Aufforderung höflich.',
       'Im Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.',
