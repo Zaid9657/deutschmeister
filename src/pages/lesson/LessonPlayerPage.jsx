@@ -291,7 +291,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     // The requeue stage is skipped when nothing was missed.
     if (nextStage && nextStage.kind === 'requeue') {
       const used = attempts.map((a) => a.itemId);
-      const items = requeueFor(misses, pool, used);
+      const items = requeueFor(misses, pool, used, { level: curriculum.level });
       setRequeued(items);
       if (!items.length) landing = target + 1;
     }
@@ -300,7 +300,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     const done = stages[landing] ? sessionCompleted(stage, stages[landing]) : null;
     if (done) setPause({ done });
     goStage(landing);
-  }, [stageIndex, stages, stage, attempts, misses, pool, goStage]);
+  }, [stageIndex, stages, stage, attempts, misses, pool, goStage, curriculum.level]);
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);

@@ -604,7 +604,9 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   const servableHere = (it) =>
     !Object.prototype.hasOwnProperty.call(it, 'minLektion') ||
     (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));
-  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it) && servableHere(it));
+  // The quality rules at the course's own level: without it the A1.1 syllabus rules (no accusative,
+  // no ordinals …) dropped 57 of A1.2's 254 items, and its accusative Lektion drew 3 of 7 (2026-10-15).
+  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it, { level: options.level }) && servableHere(it));
   if (!usable.length) return [];
 
   const primarySlug = options.primarySlug || topicList[0];
@@ -968,6 +970,7 @@ export function planPractice(curriculum, pool, attempt = 1) {
       lektion.practiceRule || { topics: [], typedMin: 0 },
       seedFor(level, lektion.nr, attempt),
       {
+        level,
         lektionNr: lektion.nr,
         primarySlug: lektion.primarySlug || ((lektion.practiceRule || {}).topics || [])[0],
         ownTerms,
@@ -1142,6 +1145,7 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
   const plan = planPractice(curriculum, pool, attempt);
   const practice = plan.get(lektion.nr)
     || pickPracticeItems(pool, lektion.practiceRule || { topics: [], typedMin: 0 }, seed, {
+      level: curriculum.level,
       primarySlug: lektion.primarySlug,
       ownTerms: wortfeldTerms(lektion),
     });
