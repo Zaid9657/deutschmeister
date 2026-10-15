@@ -461,6 +461,9 @@ export default function CheckpointPage() {
               {scope && (
                 <div className="mt-4 space-y-1 text-sm text-graphite">
                   <p>{t('checkpoint.assessed', lang, { list: scope.assessed.map((s) => SECTION_LABELS[s]).join(' · ') })}</p>
+                  {scope.partial.length > 0 && (
+                    <p>{t('checkpoint.partlyAssessed', lang, { list: scope.partial.map((p) => `${SECTION_LABELS[p.section]} ${p.measured}/${p.of}`).join(' · ') })}</p>
+                  )}
                   {scope.notAssessed.length > 0 && (
                     <p>{t('checkpoint.notAssessed', lang, { list: scope.notAssessed.map((s) => SECTION_LABELS[s]).join(' · ') })}</p>
                   )}

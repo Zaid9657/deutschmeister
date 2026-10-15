@@ -2259,7 +2259,8 @@ export const itemIsScored = (item, answer) =>
  * An OPTIONAL item that no machine graded is "not attempted": it leaves the
  * section instead of scoring 0. Only the graded writing task is optional — the
  * grader needs a signed-in learner and an allowance, and neither is something a
- * learner can fail at. Sprechen is NOT optional: its all-or-nothing rule stands.
+ * learner can fail at. Sprechen is NOT optional: an unmeasured line is not dropped from the
+ * section, it is reported as unmeasured (scoreCheckpoint: `partial`).
  */
 export const itemCounts = (item, answer) => !(item?.optional === true && !itemIsScored(item, answer));
 
@@ -2330,12 +2331,27 @@ export function scoreCheckpoint(items, answers = {}) {
     // An un-graded writing task is not attempted, not failed (see itemCounts).
     const inSection = present.filter((i) => itemCounts(i, answers[i.id]));
     if (!inSection.length) continue;
+    // A section is scored on the items a machine measured (Codex rescore, 2026-10-15). Sprechen was
+    // all-or-nothing: one self-confirmed line took the whole part out of the score, so a MEASURED
+    // failure beside it vanished and the checkpoint passed with Sprechen "not assessed". Now the
+    // measured lines count, and a part with some lines unmeasured is `partial` — the result card
+    // names it, so a pass is never wider than its evidence.
+    const measured = inSection.filter((i) => itemIsScored(i, answers[i.id]));
+    if (!measured.length) {
+      // Nothing measured: reported as done, kept out of the score.
+      const done = inSection.filter((i) => isItemCorrect(i, answers[i.id])).length;
+      sections[section] = {
+        correct: done, total: inSection.length, pct: Math.round((done / inSection.length) * 100), scored: false,
+        partial: false, of: inSection.length, guessCeiling: guessCeiling(inSection), realTask: null,
+      };
+      continue;
+    }
     let correct = 0;
-    for (const item of inSection) {
+    for (const item of measured) {
       const answer = answers[item.id];
       const ok = isItemCorrect(item, answer);
       if (ok) correct += 1;
-      else if (itemIsScored(item, answer)) {
+      else {
         // A mic-scored read-aloud miss is a pronunciation/intelligibility miss
         // and carries the same tag the function writes into lesson_attempts —
         // tagError compares two answer strings and has nothing to compare here.
@@ -2347,19 +2363,16 @@ export function scoreCheckpoint(items, answers = {}) {
         errorTags[tag] = (errorTags[tag] || 0) + 1;
       }
     }
-    const total = inSection.length;
-    // Sprechen is scored only when EVERY item of it came back from the mic.
-    const scored = inSection.every((i) => itemIsScored(i, answers[i.id]));
+    const total = measured.length;
     // The graded text, when a grader scored it (unscored ones were dropped above): null = not attempted.
-    const graded = inSection.find((i) => i.kind === 'gradedWriting');
+    const graded = measured.find((i) => i.kind === 'gradedWriting');
     sections[section] = {
-      correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored, guessCeiling: guessCeiling(inSection),
+      correct, total, pct: Math.round((correct / total) * 100), scored: true,
+      partial: total < inSection.length, of: inSection.length, guessCeiling: guessCeiling(measured),
       realTask: graded ? isItemCorrect(graded, answers[graded.id]) : null,
     };
-    if (scored) {
-      scoredCorrect += correct;
-      scoredTotal += total;
-    }
+    scoredCorrect += correct;
+    scoredTotal += total;
   }
 
   const overall = scoredTotal ? Math.round((scoredCorrect / scoredTotal) * 100) : 0;
@@ -2381,7 +2394,13 @@ export function assessedParts(items, result) {
   const assessed = present.filter((s) => result?.sections?.[s]?.scored);
   const w = result?.sections?.schreiben;
   const writing = !w?.scored ? null : w.realTask == null ? 'drills' : 'graded';
-  return { assessed, notAssessed: present.filter((s) => !assessed.includes(s)), writing };
+  // Assessed on fewer tasks than the paper had: a read-aloud line with no recording, a dictation
+  // read instead of heard (those leave before scoring). Schreiben without its graded text is the
+  // `drills` line instead.
+  const partial = assessed
+    .map((s) => ({ section: s, measured: result.sections[s].total, of: items.filter((i) => i.section === s).length }))
+    .filter((p) => p.measured < p.of && !(p.section === 'schreiben' && writing === 'drills'));
+  return { assessed, partial, notAssessed: present.filter((s) => !assessed.includes(s)), writing };
 }
 
 /**

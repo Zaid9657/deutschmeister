@@ -65,6 +65,7 @@ import {
   earlierLektionen,
   itemIsScored,
   isMicResult,
+  assessedParts,
   isWritingResult,
   SPRECHEN_PASS_PCT,
   WRITING_PASS_PCT,
@@ -1137,17 +1138,39 @@ test('the Sprechen threshold is 60 % word recognition, and it is a boundary', ()
   assert.equal(isItemCorrect(item, { usedMic: true, pct: 0.59 }), false);
 });
 
-test('one self-confirm anywhere in Sprechen keeps the whole section out of the score', () => {
+test('Sprechen is scored on its measured lines: a measured failure never hides behind an unmeasured one', () => {
+  // The rule until 2026-10-15 was all-or-nothing: one self-confirmed line took the whole section out
+  // of the score, so a recorded line the recogniser understood 20 % of vanished and the checkpoint
+  // passed with Sprechen "not assessed" (Codex rescore). Every combination of the two lines:
   const items = build(CURRICULUM_FIXTURE, cp1);
   const sprechen = items.filter((i) => i.section === 'sprechen');
-  const answers = answerAll(items, { correctFor: () => true });
-  answers[sprechen[0].id] = { usedMic: true, pct: 0.95 };
-  answers[sprechen[1].id] = true; // no microphone — the honest fallback
-  const result = scoreCheckpoint(items, answers);
-  assert.equal(result.sections.sprechen.scored, false);
-  assert.equal(result.total, 18, 'half a Sprechen score is not a Sprechen score');
-  assert.equal(result.sections.sprechen.correct, 2, 'both are still reported as done');
-  assert.equal(result.passed, true);
+  assert.equal(sprechen.length, 2);
+  const LINE = { P: { usedMic: true, pct: 0.95 }, F: { usedMic: true, pct: 0.2 }, U: true }; // measured pass / fail, unmeasured
+  const run = (a, b) => {
+    const answers = answerAll(items, { correctFor: () => true });
+    answers[sprechen[0].id] = LINE[a];
+    answers[sprechen[1].id] = LINE[b];
+    const result = scoreCheckpoint(items, answers);
+    return { s: result.sections.sprechen, result, scope: assessedParts(items, result) };
+  };
+  const expect = {
+    PP: { scored: true, partial: false, correct: 2, total: 2, passed: true },
+    PF: { scored: true, partial: false, correct: 1, total: 2, passed: true },
+    FF: { scored: true, partial: false, correct: 0, total: 2, passed: false },
+    PU: { scored: true, partial: true, correct: 1, total: 1, passed: true },
+    FU: { scored: true, partial: true, correct: 0, total: 1, passed: false },
+    UU: { scored: false, partial: false, correct: 2, total: 2, passed: true },
+  };
+  for (const [combo, want] of Object.entries(expect)) {
+    const { s, result, scope } = run(combo[0], combo[1]);
+    assert.deepEqual(
+      { scored: s.scored, partial: s.partial, correct: s.correct, total: s.total, passed: result.passed }, want, combo,
+    );
+    assert.equal(result.total, 18 + (s.scored ? s.total : 0), `${combo}: only measured lines enter the total`);
+    assert.equal(scope.partial.some((p) => p.section === 'sprechen'), want.partial, `${combo}: the card names a partly assessed Sprechen`);
+    assert.equal(scope.notAssessed.includes('sprechen'), !want.scored, `${combo}: and an unmeasured one as not assessed`);
+  }
+  assert.deepEqual(run('P', 'U').scope.partial, [{ section: 'sprechen', measured: 1, of: 2 }]);
 });
 
 test('a mic result is recognised only with the flag AND a numeric percentage', () => {

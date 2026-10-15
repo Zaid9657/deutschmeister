@@ -514,3 +514,12 @@ test('the checkpoint progress bar has a name and says which task it is on (Codex
   for (const key of ['checkpoint.progress', 'checkpoint.progressValue']) assert.ok(STRINGS.en[key] && STRINGS.de[key], key);
   assert.equal(STRINGS.de['checkpoint.progressValue'].replace('{n}', 3).replace('{total}', 20), 'Aufgabe 3 von 20');
 });
+
+test('the checkpoint result names a partly assessed part, in both languages (Codex rescore, 2026-10-15)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /scope\.partial\.length > 0 && \(\s*<p>\{t\('checkpoint\.partlyAssessed', lang, \{ list: scope\.partial\.map\(\(p\) => `\$\{SECTION_LABELS\[p\.section\]\} \$\{p\.measured\}\/\$\{p\.of\}`\)/);
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  assert.ok(STRINGS.en['checkpoint.partlyAssessed'] && STRINGS.de['checkpoint.partlyAssessed']);
+  assert.doesNotMatch(STRINGS.de['checkpoint.partlyAssessed'], /\b(du|dich|dir|dein\w*)\b/i);
+});
