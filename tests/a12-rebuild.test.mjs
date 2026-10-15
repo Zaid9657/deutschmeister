@@ -431,6 +431,13 @@ test('DaF review #3 MAJOR 1: every model text meets its own task — each Leitpu
   assert.equal(leitpunktSatisfied('Was in der Küche zu tun ist', 'Mach bitte den Herd aus.'), null);
 });
 
+test('DaF review #3 Minor: the can-do lines say what they are — written for the course, not quoted', () => {
+  // The public course page prints „Quelle: <provenance.canDo>"; naming the Prüfungsziele alone read as
+  // a quotation nobody had checked line by line.
+  assert.match(CURRICULUM_A12.provenance.canDo, /^Eigene Kann-Beschreibungen nach /);
+  assert.match(CURRICULUM_A12.provenance.canDo, /keine wörtlichen Zitate/);
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.

@@ -133,7 +133,9 @@ export const CURRICULUM_A12 = {
   examName: 'Start Deutsch 1',
   testSlug: 'abschlusstest-a1-2',
   provenance: {
-    canDo: 'Goethe-Zertifikat A1 Start Deutsch 1 — Prüfungsziele, Testbeschreibung (Goethe-Institut/telc, 2016 ed.)',
+    // Our own can-do lines, written FOR this course on the basis of the exam goals — not quotations
+    // (DaF review #3, Minor: no unverified claim of quoting the Prüfungsziele).
+    canDo: 'Eigene Kann-Beschreibungen nach den Prüfungszielen Goethe-Zertifikat A1 Start Deutsch 1 (Goethe-Institut/telc, 2016), keine wörtlichen Zitate',
     wortliste: 'Goethe-Zertifikat A1 Wortliste (≈650 units), zweite Hälfte',
     themen: 'BAMF Rahmencurriculum Integrationskurs (Handlungsfelder)',
   },
