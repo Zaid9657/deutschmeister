@@ -747,12 +747,17 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       if (pick) take(pick);
     }
 
-    const primaryCount = () => [...chosen.values()].filter((it) => it.topic === primarySlug).length;
-    const primaryTarget = Math.min(
-      PRIMARY_MIN,
-      PRACTICE_SIZE,
-      ranked.filter((it) => it.topic === primarySlug).length,
-    );
+    // TWO FLOORS ON THE OWN GRAMMAR POINT. The topic floor counts the routing label; the drill
+    // floor counts what the item makes the learner PRODUCE (`drillsSlug`). With the label alone a
+    // seven was "complete" on three real items and one labelled non-producer while a real one
+    // waited behind a cap (A1.2 DaF review #3, MAJOR 4: L4 drew three negation items of seven).
+    // Both targets are capped by what the slice holds, so a short slug stays a pool finding.
+    const onTopic = (it) => it.topic === primarySlug;
+    const drills = (it) => onTopic(it) && drillsSlug(it, primarySlug);
+    const topicCount = () => [...chosen.values()].filter(onTopic).length;
+    const primaryCount = () => [...chosen.values()].filter(drills).length;
+    const topicTarget = Math.min(PRIMARY_MIN, PRACTICE_SIZE, ranked.filter(onTopic).length);
+    const primaryTarget = Math.min(PRIMARY_MIN, PRACTICE_SIZE, ranked.filter(drills).length);
 
     // THE SITUATION FLOOR (`SITUATION_MIN`). „Situational" is measured against
     // the Lektion's OWN Wortfeld only — `relevanceScore` with an empty set of
@@ -766,7 +771,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       ranked.filter(isSituational).length,
     );
     /** Seats `PRIMARY_MIN` still needs — the situation fill may never take them. */
-    const primaryReserve = () => Math.max(0, primaryTarget - primaryCount());
+    const primaryReserve = () => Math.max(0, primaryTarget - primaryCount(), topicTarget - topicCount());
 
     const fill = (list, relax, stop, stage) => {
       for (const it of list) {
@@ -800,8 +805,8 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       const rest = primary.filter((it) => !drillsSlug(it, primarySlug));
       fill(real.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
       fill(real, relax, () => primaryCount() >= primaryTarget, stage);
-      fill(rest.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
-      fill(rest, relax, () => primaryCount() >= primaryTarget, stage);
+      fill(rest.filter(isTypedItem), relax, () => topicCount() >= topicTarget, stage);
+      fill(rest, relax, () => topicCount() >= topicTarget, stage);
       // 2. the typed floor across all topics
       fill(ranked.filter(isTypedItem), relax, () => typed >= typedMin || chosen.size >= PRACTICE_SIZE, stage);
       // 2b. THE SITUATION FLOOR: before the block is filled with whatever ranks
@@ -819,11 +824,13 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       fill(situational, relax, stopSituation, stage);
       // 3. fill up to seven
       fill(ranked, relax, () => chosen.size >= PRACTICE_SIZE, stage);
-      if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
+      if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && topicCount() >= topicTarget
+        && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
     }
 
     const complete = chosen.size >= PRACTICE_SIZE
       && primaryCount() >= primaryTarget
+      && topicCount() >= topicTarget
       && typed >= Math.min(typedMin, PRACTICE_SIZE);
     // The situation share is REPORTED, never a reason to climb the ladder: a
     // block that misses it is short of situational ITEMS, and relaxing a lemma

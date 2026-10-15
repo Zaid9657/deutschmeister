@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 254,
+ "count": 256,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -3210,6 +3210,45 @@
    "hint": null,
    "minLektion": 3,
    "explanationEn": ""
+  },
+  {
+   "id": "extra-a12-l02-11",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Ergänzen Sie die Ordnungszahl: Die Nachbarin hat Geburtstag. Heute ist der ___ Mai. (20.)",
+   "questionEn": "The neighbour has her birthday. Today is the 20th of May.",
+   "options": null,
+   "answer": "zwanzigste",
+   "accepted": [
+    "zwanzigste"
+   ],
+   "explanationDe": "Ab 20 heißt die Endung -ste: der zwanzigste Mai.",
+   "explanationEn": "From 20 on, the ordinal ending is -ste: der zwanzigste Mai (the twentieth of May).",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-12",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Wie viele Stockwerke hat das Haus? (3) — Das Haus hat ___ Stockwerke.",
+   "questionEn": "How many floors does the house have? It has three.",
+   "options": null,
+   "answer": "drei",
+   "accepted": [
+    "drei",
+    "Drei"
+   ],
+   "explanationDe": "Die 3 heißt drei: Das Haus hat drei Stockwerke.",
+   "explanationEn": "The number 3 is drei: the house has three floors.",
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "490e3196-419f-57fd-ad2d-1d07b898585c",

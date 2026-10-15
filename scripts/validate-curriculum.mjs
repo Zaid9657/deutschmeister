@@ -920,7 +920,7 @@ export const LEVELS = {
     // Wohnung"), so an ordinal before a noun is not the Adjektivdeklination the level never teaches.
     // Without this, RULE 15b counted L2's dictation and the horizon retired L2's own ordinal item
     // (DaF review #3, Minor).
-    licensedAdjectives: /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft)(?:e|en|er|es|em)\b/i,
+    licensedAdjectives: /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+igst)(?:e|en|er|es|em)\b/i,
     licensedChunks: LICENSED_CHUNKS_A12,
     // RULE 16. `speaking_missions` at level A1.2, read 2026-09-13: mission_order 9 is
     // „Sprechen Teil 1: Sich komplett vorstellen“, the only Teil-1 mission of the level.

@@ -260,6 +260,34 @@ test('DaF review #3 MAJOR 3: no pool item in two checkpoints, whichever papers t
   }
 });
 
+test('DaF review #3 MAJOR 4: a Lektion\'s share is measured on what the learner produces, with A1.2\'s own predicates', async () => {
+  // drillsSlug answered `true` for every A1.2 slug, so "four of seven drill the Lektion's point" was
+  // vacuous and L4 drew three negation items of seven. The predicates moved into quality.js; the
+  // review named two to correct, and L1's read only five verbs. Each pair is before/after.
+  const { drillsSlug } = await import('../src/data/lessonPools/quality.js');
+  const drills = (slug, questionDe, answer, type = 'fill_blank') => drillsSlug({ questionDe, answer, type }, slug);
+  // An article after a printed preposition IS that preposition's case.
+  assert.equal(drills('prepositions-accusative', 'Ich kaufe die Mütze für ___ Oma.', 'meine'), true);
+  assert.equal(drills('dative-prepositions-intro', 'Ich fahre mit ___ Bus.', 'dem'), true);
+  assert.equal(drills('dative-prepositions-intro', 'Ich sehe ___ Bus.', 'den'), false, 'no preposition, no Dativ');
+  // A haben-gap in front of a printed Partizip is the Perfekt.
+  assert.equal(drills('perfekt-intro', 'Ich ___ Kuchen gegessen.', 'habe'), true);
+  assert.equal(drills('perfekt-intro', 'Ich ___ Kuchen.', 'habe'), false, 'haben alone is no Perfekt');
+  // Word order: any verb of the brick list, and the inversion gap; a gap whose subject is printed only conjugates.
+  assert.equal(drills('basic-sentence-structure', 'Schreiben Sie den Satz: [morgen / ich / aufstehen / früh]', 'Morgen stehe ich früh auf.', 'sentence_building'), true);
+  assert.equal(drills('basic-sentence-structure', 'Heute ___ müde.', 'bin ich'), true);
+  assert.equal(drills('basic-sentence-structure', 'Am Abend ___ ich Musik. (hören)', 'höre'), false);
+  // The ordinal from twenty on is A1.2 grammar (L2 notice: „der zwanzigste Mai"), not the declension.
+  const v = await import('../scripts/validate-curriculum.mjs');
+  assert.ok(v.constructionHorizonIndex('a1.2')({ answer: 'Heute ist der zwanzigste Mai.' }) <= 2);
+  // THE DRAW (tests/lesson-extra-items-a12.test.mjs) holds every Lektion, both attempts, to PRIMARY_MIN
+  // drilling items; here the share the review measured on L4.
+  for (const attempt of [1, 2]) {
+    const l4 = planPractice(CURRICULUM_A12, POOL_A12, attempt).get(4);
+    assert.ok(l4.filter((it) => drillsSlug(it, 'negation')).length >= 4, `L4 attempt ${attempt}: four negation items`);
+  }
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.
