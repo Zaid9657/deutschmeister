@@ -195,19 +195,27 @@ test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Nex
   // The re-review (same day): the tier budget is one ledger for course AND exam texts, so every
   // course's free revisions leave it whichever task is submitted — an exam text at 19 chargeable + 1
   // free revision is 19/20, not a 429.
-  const { tierUsage } = await import('../netlify/functions/evaluate-writing.mjs');
-  const exam = (i) => ({ task_key: 'formular-hotel-anmeldung', created_at: `2026-10-03T10:${String(i).padStart(2, '0')}:00+00:00` });
-  const ledger = [
+  // Third review: the window is counted EXACTLY by the database (a whole-ledger read is capped at
+  // 1,000 rows and would undercount), and only course rows are read to find the free revisions.
+  const { tierUsage, COURSE_TASK_KEY_LIKE } = await import('../netlify/functions/evaluate-writing.mjs');
+  const courseRows = [
     { task_key: 'a11-l01', created_at: '2026-09-28T10:00:00+00:00' }, // last month: outside the window
     { task_key: 'a11-l01', created_at: '2026-10-02T10:00:00+00:00' }, // its free improved version
-    ...Array.from({ length: 19 }, (_, i) => exam(i)),
   ];
-  assert.deepEqual(tierUsage(ledger, 'mitteilung-termin-absagen', month), { used: 19, before: 0, revision: false }, 'an exam text sees 19, not 20');
-  assert.deepEqual(tierUsage(ledger, 'a11-l01', month), { used: 19, before: 2, revision: false }, 'a third text of a task is chargeable');
-  assert.deepEqual(tierUsage(ledger.slice(0, 1), 'a11-l01', month), { used: 0, before: 1, revision: true }, 'the second text of a task is its free revision');
-  assert.deepEqual(tierUsage(ledger, 'a11-l02', null).used, 20, 'the trial window is lifetime: 21 rows, one free');
-  assert.match(grader, /usage = tierUsage\(rows \|\| \[\], task_key, since\);/);
-  assert.match(grader, /\.select\('task_key, created_at'\)\s*\.eq\('user_id', user_id\)\s*\.order\('created_at', \{ ascending: true \}\)/, 'the whole ledger, not one course or one task');
+  // 19 exam texts + that revision = 20 rows in October, as the database counts them.
+  assert.deepEqual(tierUsage(20, courseRows, 'mitteilung-termin-absagen', month), { used: 19, before: 0, revision: false }, 'an exam text sees 19, not 20');
+  assert.deepEqual(tierUsage(20, courseRows, 'a11-l01', month), { used: 19, before: 2, revision: false }, 'a third text of a task is chargeable');
+  assert.deepEqual(tierUsage(0, courseRows.slice(0, 1), 'a11-l01', month), { used: 0, before: 1, revision: true }, 'the second text of a task is its free revision');
+  assert.equal(tierUsage(21, courseRows, 'a11-l02', null).used, 20, 'the trial window is lifetime: 21 rows, one free');
+  assert.equal(tierUsage(5, [{ task_key: 'formular-hotel-anmeldung', created_at: '2026-10-02T10:00:00+00:00' }], 'x', month).used, 5, 'an exam row is never a free revision');
+  assert.match(grader, /select\('id', \{ count: 'exact', head: true \}\)[\s\S]{0,200}gte\('created_at', since\)/, 'the window is an exact count: no row cap');
+  assert.match(grader, /\.like\('task_key', COURSE_TASK_KEY_LIKE\)/);
+  assert.match(grader, /usage = tierUsage\(count \?\? 0, rows \|\| \[\], task_key, since\);/);
+  // The LIKE pattern and the course-key regex name the same keys.
+  const likeRe = new RegExp(`^${COURSE_TASK_KEY_LIKE.replace(/_/g, '.').replace(/%/g, '.*')}$`);
+  const { WRITING_TASKS } = await import('../netlify/functions/_shared/writingTasks.mjs');
+  for (const { taskKey } of WRITING_TASKS.filter((x) => x.course)) assert.match(taskKey, likeRe, `${taskKey} is read as a course row`);
+  for (const { taskKey } of WRITING_TASKS.filter((x) => !x.course)) assert.doesNotMatch(taskKey, likeRe, `${taskKey} (an exam task) is not`);
   assert.match(grader, /course \? !course\.allowed : !revision && used >= limit/, 'a revision passes at the cap');
   // …and the offer to improve is the server's word: a re-run of a Lektion may already have used it.
   assert.match(grader, /can_revise: isCourse && before < REVISIONS_PER_TASK,/);
@@ -218,7 +226,8 @@ test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Nex
   assert.match(stage, /onPending=\{setPending\}/);
   const gw = read('src/components/lesson/GradedWriting.jsx');
   assert.match(gw, /canRevise: data\.can_revise === true,/);
-  assert.match(gw, /allowRevision && outcome\.canRevise && outcome\.corrections\[0\]/);
+  assert.match(gw, /allowRevision && outcome\.canRevise && \(\(\) => \{/, 'the offer needs no correction: a text that misses a point has none');
+  assert.match(gw, /const missing = points\.find\(\(_, i\) => !outcome\.leitpunktCheck\[i\]\);/, 'a missing point is the first thing to fix');
   assert.doesNotMatch(gw, /setRevised|\brevised\b/, 'no local memory decides the offer');
   assert.match(gw, /setBusy\(true\);\s*onPending\?\.\(true\);/);
   assert.match(gw, /setBusy\(false\);\s*onPending\?\.\(false\);/);

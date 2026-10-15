@@ -324,6 +324,36 @@ Not done in this round, from the same review: the 57 Wortfeld entries without co
 23 grammar notices without examples (content authoring, RULE 23/6b ratchets), analytics events
 that carry per-skill assessment status, and the review deck's playback (still `playLine`).
 
+## 8g. Rescore after Wave 1 (2026-10-15, branch `claude/a11-wave1`): 6.1/10
+
+Same unprimed prompt as 8f. Wave 1 (the learner-value plan of 2026-10-09: the learner's own
+introduction first, three short parts, can-dos instead of XP, a writing revision loop, the save ask
+after the first part) is mostly outside what this rubric measures, and the score is flat:
+
+| Dimension | 10-08 | 10-15 | Biggest reason it is not 10 (Codex) |
+|---|---:|---:|---|
+| Curriculum and content | 7.5 | 7.5 | 57 Wortfeld entries and 23 notice forms without contextual input (RULE 23/6b ratchets) |
+| Practice and checker | 7.5 | 8.0 | grammar review is recognition only (pattern cards are flashcards) |
+| Assessment validity | 6.0 | 6.0 | a measured speaking failure plus an unmeasured line reads as "speaking not assessed" and can pass |
+| Listening and audio | 5.5 | 5.5 | browser synthesis; `a11.audio.js` is empty (owner run) |
+| Speaking | 6.0 | 6.0 | transcript matching; `keine` → `eine` still matched at 100 % |
+| Accessibility and mobile | 7.0 | 6.5 | the checkpoint progressbar has no name; no full screen-reader walk of the assessments |
+| Saving | 7.0 | 6.5 | final test: a pending autosave can overwrite the section transition; a failed transition still advances |
+| Evidence of outcomes | 1.0 | 0.0 | no learner study yet (EVIDENCE-PLAN) |
+| Honesty of claims | 8.0 | 8.5 | see assessment: "not assessed" can hide a measured failure |
+
+The next repository batch, in Codex's order, each with a test that fails on today's code:
+1. Checkpoint speaking keeps partial evidence: a measured failure is never shown as "not assessed".
+2. The final test saves in order: drain or cancel the pending autosave before a section transition, do not
+   advance on a failed transition write, and keep a local snapshot (checkpoint answers too).
+3. Checked playback on the final test (count an attempt on confirmed playback) and in warm-up/review.
+4. Context for the 57 + 23 ratchet gaps, and authored typed prompts for grammar review.
+5. Read-aloud: a negation or meaning change („keine" → „eine") is never a match.
+6. Name the checkpoint progressbar; per-skill status in the completion events.
+
+Ceiling without the owner items in §9 (audio, a learner study, rater calibration, device/AT sessions):
+about 8/10.
+
 ## 9. External blockers (owner actions)
 
 1. **Audio:** run `docs/owner-prompts.md` → "Run the A1.1 course audio" (needs the Azure key/region and the

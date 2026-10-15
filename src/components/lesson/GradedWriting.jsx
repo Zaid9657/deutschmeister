@@ -334,21 +334,36 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
         )}
       </Card>
 
-      {done && outcome.scored && allowRevision && outcome.canRevise && outcome.corrections[0] && (
-        <Card tone="wash" className="mt-4 p-5">
-          <p className={FIELD_LABEL}>{t('writing.firstFix', lang)}</p>
-          <p className="mt-2 text-[0.9375rem] leading-relaxed" lang="de">
-            <span className="text-accent-himbeer-ink line-through">{outcome.corrections[0].original}</span>
-            {' → '}
-            <span className="font-bold text-accent-limette-ink">{outcome.corrections[0].corrected}</span>
-          </p>
-          {outcome.corrections[0].note && <p className="mt-1 text-[0.8125rem] text-graphite">{outcome.corrections[0].note}</p>}
-          <Button className="mt-4" variant="secondary" onClick={() => { setOutcome(null); setNote(null); }}>
-            {t('writing.improve', lang)}
-          </Button>
-          <p className="mt-2 text-[0.8125rem] text-graphite">{t('writing.improveNote', lang)}</p>
-        </Card>
-      )}
+      {done && outcome.scored && allowRevision && outcome.canRevise && (() => {
+        // The one thing to fix first: a Leitpunkt the text leaves out (coverage caps the score), else
+        // the first correction. The offer itself needs neither — correct German that misses a point
+        // has no correction, and it is exactly the text that most needs a second version.
+        const missing = points.find((_, i) => !outcome.leitpunktCheck[i]);
+        const fix = outcome.corrections[0];
+        return (
+          <Card tone="wash" className="mt-4 p-5">
+            {(missing || fix) && <p className={FIELD_LABEL}>{t('writing.firstFix', lang)}</p>}
+            {missing ? (
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                {t('writing.notCovered', lang)}: <span lang="de">{missing}</span>
+              </p>
+            ) : fix && (
+              <>
+                <p className="mt-2 text-[0.9375rem] leading-relaxed" lang="de">
+                  <span className="text-accent-himbeer-ink line-through">{fix.original}</span>
+                  {' → '}
+                  <span className="font-bold text-accent-limette-ink">{fix.corrected}</span>
+                </p>
+                {fix.note && <p className="mt-1 text-[0.8125rem] text-graphite">{fix.note}</p>}
+              </>
+            )}
+            <Button className="mt-4" variant="secondary" onClick={() => { setOutcome(null); setNote(null); }}>
+              {t('writing.improve', lang)}
+            </Button>
+            <p className="mt-2 text-[0.8125rem] text-graphite">{t('writing.improveNote', lang)}</p>
+          </Card>
+        );
+      })()}
 
       {done && outcome.scored && (
         <>

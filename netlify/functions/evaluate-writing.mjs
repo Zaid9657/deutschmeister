@@ -82,6 +82,8 @@ const LEVEL_OF_PREFIX = {
 // A checkpoint's own task (`a11-cp1` … `a11-cp4`, 2026-10-07) is a course task too: it posts
 // under the same prefix and is one of the CHECKPOINTS_PER_COURSE submissions the allowance grants.
 const COURSE_TASK_KEY_RE = /^(a\d\d)-(?:l\d\d|cp\d)$/;
+// The same keys as a PostgREST LIKE pattern, to read only course rows (a test keeps the two in step).
+export const COURSE_TASK_KEY_LIKE = 'a__-%';
 
 // Returns the `<course>-` prefix (e.g. 'a11-') to scope the lifetime
 // allowance COUNT to, or null when task_key doesn't match the course task
@@ -219,17 +221,16 @@ export function freeRevisionsSince(rows, since = null) {
  * The tier budget is ONE ledger of submissions for course and exam tasks alike (lifetime on the
  * trial, per calendar month on a plan), so EVERY course's free revisions leave it, whichever task is
  * being submitted now — an exam text at 19 chargeable + 1 free revision is 19/20, not 20/20 (Codex
- * re-review, 2026-10-15). `ledger` = all of the learner's rows, oldest first. Returns the chargeable
- * count in the window, how often `taskKey` was submitted before, and whether this text is a task's
- * free improved version (never an exam task's: those have no course prefix).
+ * re-review, 2026-10-15). `windowCount` is the database's exact count of the window's rows (no row
+ * cap); `courseRows` are the learner's course rows, oldest first. Returns the chargeable count, how
+ * often `taskKey` was submitted before, and whether this text is a task's free improved version
+ * (never an exam task's: those have no course prefix).
  */
-export function tierUsage(ledger, taskKey, since = null) {
-  const from = since ? Date.parse(since) : -Infinity;
-  const courseRows = ledger.filter((r) => courseTaskKeyPrefix(r.task_key));
-  const before = courseTaskKeyPrefix(taskKey) ? courseRows.filter((r) => r.task_key === taskKey).length : 0;
-  const inWindow = ledger.filter((r) => Date.parse(r.created_at) >= from).length;
+export function tierUsage(windowCount, courseRows, taskKey, since = null) {
+  const own = courseRows.filter((r) => courseTaskKeyPrefix(r.task_key));
+  const before = courseTaskKeyPrefix(taskKey) ? own.filter((r) => r.task_key === taskKey).length : 0;
   return {
-    used: Math.max(0, inWindow - freeRevisionsSince(courseRows, since)),
+    used: Math.max(0, windowCount - freeRevisionsSince(own, since)),
     before,
     revision: before >= 1 && before <= REVISIONS_PER_TASK,
   };
@@ -383,13 +384,19 @@ export const handler = async (event) => {
     } else {
       const now = new Date();
       const since = tier === 'free_trial' ? null : new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      // ponytail: the learner's whole ledger, two short columns; a filtered count if anyone ever has thousands.
+      // The window's submissions, counted exactly by the database (no row cap) …
+      let countQuery = supabase.from('writing_submissions').select('id', { count: 'exact', head: true }).eq('user_id', user_id);
+      if (since) countQuery = countQuery.gte('created_at', since);
+      const { count } = await countQuery;
+      // … less the free revisions among them, read from the course rows alone (a few per task).
+      // ponytail: oldest first under PostgREST's 1,000-row cap; page it if a learner ever has that many course texts.
       const { data: rows } = await supabase
         .from('writing_submissions')
         .select('task_key, created_at')
         .eq('user_id', user_id)
+        .like('task_key', COURSE_TASK_KEY_LIKE)
         .order('created_at', { ascending: true });
-      usage = tierUsage(rows || [], task_key, since);
+      usage = tierUsage(count ?? 0, rows || [], task_key, since);
     }
     const { used, before, revision } = usage;
     if (course ? !course.allowed : !revision && used >= limit) {
