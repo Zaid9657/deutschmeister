@@ -37,7 +37,8 @@ const upperFirst = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 /** Alternatives a teacher accepts for this item, by family. Each is { text, why }. */
 export function alternatives(item) {
   const out = [];
-  const q = String(item.questionDe || '');
+  // A checkpoint item carries its prompt as promptDe: read it, or its cue (Beginnen Sie mit …) is unseen.
+  const q = String(item.questionDe || item.promptDe || '');
   const key = String(item.answer || '').trim();
   // du-imperative ±e
   const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
@@ -95,7 +96,7 @@ export function rejectedAlternatives(level, poolFile) {
     const accepted = item.accepted?.length ? item.accepted : [item.answer];
     for (const alt of alternatives(item)) {
       const r = checkAnswer(alt.text, accepted, checkOptionsFor(item));
-      if (r.result !== RESULT.CORRECT && r.result !== RESULT.TYPO) rejected.push({ where: item.where, id: item.id, why: alt.why, q: item.questionDe, key: item.answer, alt: alt.text, result: r.result });
+      if (r.result !== RESULT.CORRECT && r.result !== RESULT.TYPO) rejected.push({ where: item.where, id: item.id, why: alt.why, q: item.questionDe || item.promptDe, key: item.answer, alt: alt.text, result: r.result });
     }
   }
   return rejected;

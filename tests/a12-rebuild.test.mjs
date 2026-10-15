@@ -339,6 +339,58 @@ test('DaF review #3 MAJOR 5: the L8 imperative rule produces every du-imperative
   }
 });
 
+test('DaF review #3 MAJOR 6: an answer answers its question — the type a W-word asks for, Doch or Nein after a negative one', async () => {
+  // Measured before: L9 „Und wo muss ich aussteigen?" → „Ja. Das Flugzeug fliegt um 9 Uhr."; L5
+  // „Um wie viel Uhr?" → „Früh."; L4 „Haben Sie keinen Rabatt?" → „Ja."; „Wo und wohin fahren wir?"
+  // answered with another question. The rule reads what a W-word asks for, not shared keywords.
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const TYPES = [
+    ['wie oft', /\b(jede[nrs]?|immer|oft|manchmal|nie|selten|[a-zäöü]*mal|täglich)\b/i],
+    ['wie lange', /\b(\d+|ein|eine|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|zwanzig|dreißig|halbe?)\s+(minuten?|stunden?|tage?|wochen?|monate?|jahre?)\b|\bbis\b/i],
+    ['wie viele', /\b(\d+|eins|ein|eine|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|[a-zäöüß]+zig|hundert|kein\w*)\b/i],
+    ['um wie viel uhr', /\b(uhr|um)\b/i],
+    ['wohin', /\b(nach|zu|zum|zur|ins|in|auf|an)\b/i],
+    ['wo', /\b(hier|da|dort|am|im|in|an|auf|bei|beim|neben|hinter|vor|unter|über|zwischen)\b/i],
+    ['wann', /\b(um|am|im|heute|morgen|jetzt|bald|früh|spät|abends|morgens|uhr|später|danach|dann|nach)\b/i],
+  ];
+  const typeOf = (question) => {
+    const q = question.replace(/^(?:und|aber|entschuldigung,?)\s+/i, '');
+    return TYPES.find(([w]) => new RegExp(`^${w}\\b`, 'i').test(q)) || null;
+  };
+  const isNegativeYesNo = (q) => /\b(nicht|kein\w*)\b/i.test(q) && !/^(?:und\s+|aber\s+)?(wer|was|wo|wohin|woher|wann|wie|warum|welche\w*)\b/i.test(q);
+  const sentences = (de) => String(de).split(/(?<=[.!?])\s+/).filter(Boolean);
+  // An announcement („Durchsage: …“) interrupts the exchange; it is not the partner's answer.
+  const isAnnouncement = (de) => /^Durchsage:/.test(String(de));
+  const offenders = [];
+  for (const c of [CURRICULUM_A11, CURRICULUM_A12]) {
+    for (const l of c.lektionen) {
+      const lines = l.dialog?.lines || [];
+      for (let i = 0; i < lines.length - 1; i += 1) {
+        const [ask, reply] = [lines[i], lines[i + 1]];
+        if (ask.speaker === reply.speaker || isAnnouncement(reply.de)) continue;
+        const questions = sentences(ask.de).filter((x) => x.endsWith('?'));
+        if (!questions.length) continue;
+        const q = questions[questions.length - 1];
+        const type = typeOf(q);
+        if (type && !type[1].test(reply.de)) offenders.push(`${c.level} L${l.nr}[${i}] „${q}" (${type[0]}) → „${reply.de}"`);
+        if (!type && isNegativeYesNo(q) && !/^(doch|nein)\b/i.test(reply.de)) offenders.push(`${c.level} L${l.nr}[${i}] „${q}" → „${reply.de}" (Doch or Nein)`);
+      }
+    }
+  }
+  // The completed W-question of a pool item („___ fährt der Bus? — Jede Stunde.") answers the same way.
+  for (const it of POOL_A12.items) {
+    const m = /^(.*\?)\s+—\s+(.+)$/.exec(String(it.questionDe || '').trim());
+    if (!m || !/___/.test(m[1])) continue;
+    const type = typeOf(m[1].replace('___', it.answer));
+    if (type && !type[1].test(m[2])) offenders.push(`${it.id} „${m[1].replace('___', it.answer)}" → „${m[2]}"`);
+  }
+  assert.deepEqual(offenders, []);
+  // The two the review named that no type rule reads: the child is named, and the idiom is idiomatic.
+  const l7 = CURRICULUM_A12.lektionen.find((l) => l.nr === 7).dialog.lines;
+  assert.match(l7[5].de, /^Das ist meine Schwester\./, 'asked about the child, the answer names the child');
+  assert.ok(!POOL_A12.items.some((it) => /Wie lange ist der Ausflug/.test(String(it.questionDe).replace('___', it.answer))), '„Wie lange ist der Ausflug?" is not the idiom');
+});
+
 test('A1.2: every ratchet equals its measurement — a ratchet with slack is not a rule', async () => {
   // DaF review #2 MAJOR 7 measured four A1.2 ratchets above their measurement while the tests asked
   // only „measurement ≤ ratchet"; review #3 found the new ones with slack too. Same walk as A1.1's.
