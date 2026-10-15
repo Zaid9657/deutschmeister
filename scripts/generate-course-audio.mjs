@@ -18,9 +18,10 @@
 // (src/lib/checkpoint/buildCheckpoint.js → dialogLines()), so the `line-<i>`
 // keys already cover them — there is deliberately no separate `cp<n>-…` render.
 //
-// TWO VOICES, chosen by the speaker name (SPEAKER_VOICES): the learners and the
-// women speak de-DE-KatjaNeural, the men de-DE-ConradNeural, so a dialogue is
-// audibly a dialogue and not one voice talking to itself. Rate -10 % like
+// ONE VOICE PER CHARACTER (SPEAKER_VOICES), so every dialogue is audibly two
+// people. It used to be two voices — every woman Katja, every man Conrad — and
+// four of the twelve dialogues (L1, L3, L8, L12: two women each) would have been
+// one voice talking to itself (2026-10-15, before the first run). Rate -10 % like
 // scripts/generate-example-audio.mjs — a touch slower than default for A1 ears.
 // The live speaking teacher keeps OpenAI TTS; that split is accepted
 // (see the header of generate-example-audio.mjs).
@@ -61,9 +62,11 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 // ── constants ───────────────────────────────────────────────────────────────
 
+// Voice names as Microsoft lists them for de-DE (learn.microsoft.com, Speech language support,
+// checked 2026-10-15); tests/course-audio.test.mjs holds that list and fails on any other name.
 export const VOICE_FEMALE = 'de-DE-KatjaNeural';
 export const VOICE_MALE = 'de-DE-ConradNeural';
-/** Narration voice for anything that is not a dialogue turn (pretest, Phonetik). */
+/** Narration voice for anything that is not a dialogue turn (pretest, Phonetik): Ana's. */
 export const VOICE_DEFAULT = VOICE_FEMALE;
 export const RATE = '-10%';
 export const OUTPUT_FORMAT = 'audio-24khz-96kbitrate-mono-mp3';
@@ -72,20 +75,20 @@ export const BUCKET = 'audio';
 export const USD_PER_MILLION_CHARS = 16;
 
 /**
- * Every speaker name used in src/data/curricula/a11.js, mapped to a voice.
- * Ana, Lena and the two Frauen are female; Tim, Paul and the two Herren male.
- * An unknown name falls back to VOICE_DEFAULT rather than failing the run —
+ * Every speaker name used in src/data/curricula/a11.js, each with a voice of its own: Ana, Lena and
+ * the two Frauen female, Tim, Paul and the two Herren male. Ana and Tim keep Katja and Conrad (they
+ * speak the most lines). An unknown name falls back to VOICE_DEFAULT rather than failing the run —
  * a wrong-gendered line is a content bug, a crashed run is a blocked owner.
  */
 export const SPEAKER_VOICES = {
   'Ana': VOICE_FEMALE,
-  'Lena': VOICE_FEMALE,
-  'Frau Kaya': VOICE_FEMALE,
-  'Frau Wolf': VOICE_FEMALE,
+  'Lena': 'de-DE-LouisaNeural',
+  'Frau Kaya': 'de-DE-TanjaNeural',
+  'Frau Wolf': 'de-DE-ElkeNeural',
   'Tim': VOICE_MALE,
-  'Paul': VOICE_MALE,
-  'Herr Weber': VOICE_MALE,
-  'Herr Schmidt': VOICE_MALE,
+  'Paul': 'de-DE-KillianNeural',
+  'Herr Weber': 'de-DE-KlausNeural',
+  'Herr Schmidt': 'de-DE-RalfNeural',
 };
 
 // ── pure helpers (unit-tested) ──────────────────────────────────────────────
