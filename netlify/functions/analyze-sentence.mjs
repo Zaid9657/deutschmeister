@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
 import { uaClass, cleanSource } from './_shared/xraySource.mjs';
+import { isUnattendedLinkSource, isPublishedGrammarExample, UNATTENDED_RESPONSE } from './_shared/xrayUnattended.mjs';
 
 // Salt for the per-IP rate-limit key. Reuses an existing secret so no new env
 // var is required; if none is configured the IP ceiling is skipped (the
@@ -241,6 +242,22 @@ export const handler = async (event) => {
     }
     if (sentence.trim().length > 500) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Sentence too long (max 500 characters)' }) };
+    }
+
+    // --- Unattended link render ---
+    // A renderer with a browser user agent walked the grammar-example links
+    // again on 2026-10-09 (fresh id and IP per call, no referrer, no
+    // attribution): an anonymous link render of one of our own grammar
+    // examples with no sign of a person is asked for a press of Analyze, not
+    // run. Checked before the meter and the model, so it costs neither.
+    // See _shared/xrayUnattended.mjs for the numbers.
+    if (!userId && isUnattendedLinkSource(source) && await isPublishedGrammarExample(supabase, sentence)) {
+      console.log('[xray] unattended link render refused', JSON.stringify(source));
+      return {
+        statusCode: UNATTENDED_RESPONSE.statusCode,
+        headers,
+        body: JSON.stringify(UNATTENDED_RESPONSE.body),
+      };
     }
 
     // --- Identity gate ---
