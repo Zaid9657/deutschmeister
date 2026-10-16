@@ -29,14 +29,14 @@
 //   4b. THE LESEN SECTION TESTS READING (DaF review #5). Two things are pinned:
 //      the truth values are DRAWN, so the four checkpoints do not all answer
 //      R–F–R–F (a learner who saw checkpoint 1 scored 4/4 in 2–4 blind), and a
-//      "falsch" statement is the SAME text with one detail changed, not a line
-//      quoted from another Lektion — string recognition was all the old
-//      generator asked for.
-//      A falsified word must also stand where a word can be swapped at all: in
-//      a real NP slot (article/possessive/demonstrative), or it is a bare noun
-//      welded to its verb (Fußball spielen) and the swap breaks the sentence
-//      instead of falsifying it. When a window yields nothing the builder falls
-//      back — adverb pair, then another window — so the section is never short.
+//      "falsch" statement CONTRADICTS its own text (A1.2 DaF review #5, MAJOR 8):
+//      a value the text states changed, the far end of a scale, or the polarity
+//      flipped — never a swapped person or noun, which only produced a statement
+//      the text does not make („Tim ist frei.“ for Lena's „Ich bin frei.“). And
+//      because an added „nicht“ is a cue, the Richtig half carries true negatives
+//      („Der Bruder ist nicht dreißig.“) so that „negative means Falsch“ does not
+//      answer the section. When a window yields nothing the builder moves to
+//      another window, so the section is never short.
 //   4c. THE SCHREIBEN SECTION IS THE COURSE'S OWN WRITING (DaF review #5): the
 //      chapter's real, AI-graded task plus two drills from DIFFERENT Lektionen,
 //      and no invented `register` label on a sentence-building item.
@@ -75,6 +75,9 @@ import {
   windowReports,
   reportSpecFor,
   normaliseStatement,
+  contradictionsOf,
+  trueNegativesOf,
+  hasNegation,
   VERB_3SG,
   servableBy,
   stampsApplyTo,
@@ -284,49 +287,104 @@ test('the Lesen answer key is drawn, not the same R–F–R–F in every checkpo
   assert.ok(new Set(orders).size >= 2, `all four checkpoints share one answer key: ${orders.join(' | ')}`);
 });
 
-test('a falsch statement is this text with ONE detail changed, not another Lektion', () => {
-  for (const cp of CURRICULUM_A11.checkpoints) {
-    const chapterLines = new Set(
-      chapterLektionen(CURRICULUM_A11, cp).flatMap((l) => l.dialog.lines.map((line) => line.de)),
-    );
-    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
-      .filter((i) => i.section === 'lesen');
-    for (const item of items.filter((i) => i.answer === 'Falsch')) {
+/** The report of `item.trueStatement` inside its own window — the builder's own list, re-derived. */
+function reportOf(curriculum, cp, item) {
+  const spec = reportSpecFor(curriculum, cp);
+  const lektion = chapterLektionen(curriculum, cp).find((l) => l.nr === item.lektionNr);
+  const window = windowForText(lektion, item.text);
+  const mine = windowReports(window, spec).filter((r) => r.statement === item.trueStatement);
+  return { spec, window, report: mine.length === 1 ? mine[0] : null, count: mine.length };
+}
+
+/** The capitalised words of a statement that are not values — its people and things. */
+const referents = (statement) => statement.split(' ')
+  .map((w) => w.replace(/[.,!?]/g, ''))
+  .filter((w) => /^[A-ZÄÖÜ]/.test(w) && !WEEKDAYS_TEST.includes(w) && !NUMBER_WORDS_TEST.includes(w.toLowerCase()))
+  .sort();
+
+test('a falsch statement CONTRADICTS its own text — a changed value, the other end of a scale or the polarity, never a swapped person or noun', () => {
+  // Until the A1.2 rebuild's round 7 a Falsch was the report with one name or Wortfeld noun swapped:
+  // „Tim ist frei.“ for Lena's „Ich bin frei.“, „Ana braucht einen Tisch“ for „… einen Computer“.
+  // Every congruence bar held and the key was still wrong — the text says nothing about Tim, and
+  // needing a computer does not exclude a table. *Start Deutsch 1* keys „falsch“ only when the
+  // text says otherwise (A1.2 DaF review #5, MAJOR 8).
+  let checked = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
-      assert.ok(!chapterLines.has(statement), 'a falsch statement is not a real line of any Lektion');
-      // It derives from a line of ITS OWN text, through the SAME report the
-      // Richtig half is built with, with exactly ONE word changed after it —
-      // the explanation names the line, and the line is in the text.
-      assert.match(item.explanationDe, /Im Text steht/, 'the explanation shows what the text really says');
-      const quotedLine = item.explanationDe.slice(item.explanationDe.indexOf('„') + 1, item.explanationDe.indexOf('“'));
-      assert.equal(quotedLine, item.sourceSentence, `${cp.id}: the explanation quotes the source sentence`);
-      assert.ok(item.text.includes(quotedLine), `${cp.id}: the falsified line must be IN this text`);
-      const source = item.trueStatement;
-      const words = statement.split(' ');
-      const other = source.split(' ');
-      assert.equal(other.length, words.length, `${cp.id}: one detail changed, not the sentence`);
-      assert.equal(
-        words.filter((w, i) => w !== other[i]).length,
-        1,
-        `${cp.id}: exactly one word differs — ${statement} vs ${source}`,
-      );
+      const { spec, report } = reportOf(CURRICULUM_A11, cp, item);
+      assert.ok(report, `${item.id}: „${item.trueStatement}“ is the report of one line of its text`);
+      assert.ok(item.changed && ['value', 'scale', 'affirm', 'negate'].includes(item.changed.op),
+        `${item.id}: a falsch item names a contradiction, got ${JSON.stringify(item.changed)}`);
+      const contradictions = contradictionsOf(item.trueStatement, {
+        verbAt: report.verbAt, mfAt: report.mfAt, nouns: spec.nouns, names: spec.names,
+      }).map((c) => c.words.join(' '));
+      assert.ok(contradictions.includes(statement),
+        `${item.id}: „${statement}“ is not a contradiction of „${item.trueStatement}“ — ${contradictions.join(' | ')}`);
+      // No person and no thing is swapped: the statement is about exactly what the text is about.
+      assert.deepEqual(referents(statement), referents(item.trueStatement),
+        `${item.id}: „${statement}“ speaks of someone or something „${item.trueStatement}“ does not`);
+      assert.ok(!item.text.includes(statement), 'a falsch statement is false by construction');
+      // The explanation shows what the text really says.
+      assert.ok(item.explanationDe.includes(item.sourceSentence), `${item.id}: the explanation quotes the source sentence`);
+      assert.ok(item.text.includes(item.sourceSentence), `${item.id}: the source sentence is in this text`);
+      if (item.trueStatement !== item.sourceSentence) {
+        assert.ok(item.explanationDe.includes(item.trueStatement), `${item.id}: the explanation shows the true report`);
+      }
+      checked += 1;
     }
   }
+  assert.equal(checked, 8, 'two falsch statements on each of the four papers');
 });
 
-// ── 4d. A FALSE STATEMENT IS FALSE, NOT BROKEN (DaF review #6, MAJOR 7) ─────
-//
-// The falsifier replaces exactly one detail of a line of the same text. It had
-// no congruence bar: any capitalised word of the dialogues could be swapped for
-// any other, and checkpoint 3 shipped the L9 football line with `Woche` replaced
-// by **Frühstück** — a neuter noun under a feminine `jede`. In the graded Lesen
-// section that hands the answer over through the FORM instead of the content,
-// and shows the learner a wrong form on the way. The replacement must now share
-// the class of the word it replaces: a noun its ARTICLE (from the Wortfeld,
-// where `article` and `plural` already live), a weekday a weekday, a name a
-// name — and a number word inside a digit group (a phone number, read digit by
-// digit) only a SINGLE-DIGIT number word, because „Siebzehn vier zwei“ is not a
-// changed detail but a number nobody can dictate.
+test('the contradiction engine, on annotated cases: follows / contradicts / open', () => {
+  const nouns = reportSpecFor(CURRICULUM_A11, CURRICULUM_A11.checkpoints[3]).nouns;
+  const names = namesOf('a1.1');
+  const of = (statement, verbAt, mfAt) => contradictionsOf(statement, { verbAt, mfAt, nouns, names }).map((c) => c.words.join(' '));
+  // contradicts: a value, a scale point, the polarity
+  assert.ok(of('Der Bruder ist zwanzig.', 2, 3).includes('Der Bruder ist dreißig.'));
+  assert.ok(of('Lena steht um sechs Uhr auf.', 1, 2).includes('Lena steht um neun Uhr auf.'));
+  assert.ok(!of('Lena steht um sechs Uhr auf.', 1, 2).includes('Lena steht um neunzig Uhr auf.'), 'a clock time stays a clock time');
+  assert.deepEqual(of('Tim ist frei.', 1, 2), ['Tim ist nicht frei.']);
+  assert.deepEqual(of('Lena tanzt nicht gut.', 1, 2), ['Lena tanzt gut.']);
+  assert.deepEqual(of('Tim kauft den Stuhl und die Lampe.', 1, 2), ['Tim kauft den Stuhl und die Lampe nicht.']);
+  assert.deepEqual(of('Ana braucht einen Computer und ein Telefon.', 1, 2), ['Ana braucht keinen Computer und kein Telefon.']);
+  assert.deepEqual(of('Tim hat gearbeitet.', 1, 2), ['Tim hat nicht gearbeitet.']);
+  assert.deepEqual(of('Ana hat Durst.', 1, 2), ['Ana hat keinen Durst.']);
+  // open: a swapped person or noun is NOT a contradiction — the text does not speak of them
+  for (const statement of ['Lena ist frei.', 'Ana braucht einen Tisch und ein Telefon.', 'Tim kauft den Stuhl und die Farbe.']) {
+    assert.ok(!of('Tim ist frei.', 1, 2).includes(statement) && !of('Ana braucht einen Computer und ein Telefon.', 1, 2).includes(statement)
+      && !of('Tim kauft den Stuhl und die Lampe.', 1, 2).includes(statement), `„${statement}“ is open, not false`);
+  }
+  for (const c of of('Ana braucht einen Computer und ein Telefon.', 1, 2)) {
+    assert.deepEqual(referents(c), referents('Ana braucht einen Computer und ein Telefon.'), `${c}: no referent changes`);
+  }
+  // open: a weak frequency makes no value exclusive, and a negated statement gets no second negation
+  assert.ok(of('Tim ist manchmal zehn Minuten zu spät.', 1, 2).every((c) => /\bnie\b/.test(c)), 'manchmal zehn excludes neither drei nor zwanzig, only „nie“');
+  assert.ok(!of('Zum Bahnhof geht Ana nicht.', 2, 4).some((c) => /nicht.*nicht|kein/.test(c)));
+  // follows: a true negative is the report with a value changed AND negated, never inside a phone number
+  const tn = (statement, verbAt, mfAt) => trueNegativesOf(statement, { verbAt, mfAt }).map((c) => c.words.join(' '));
+  assert.ok(tn('Der Bruder ist zwanzig.', 2, 3).includes('Der Bruder ist nicht dreißig.'));
+  assert.ok(tn('Die Fahrkarte kostet fünfzehn Euro.', 2, 3).includes('Die Fahrkarte kostet nicht zehn Euro.'));
+  assert.ok(tn('Tim schläft am Sonntag bis neun.', 1, 2).includes('Tim schläft am Sonntag nicht bis zehn.'), 'nicht in front of the whole phrase');
+  assert.deepEqual(tn('Die Telefonnummer von Ana ist null eins sieben sechs.', 4, 5), [], 'no negated digit hunt');
+  assert.ok(tn('Lena steht nie früh auf.', 1, 2).includes('Lena steht nicht früh auf.'));
+  assert.ok(tn('Tim ist manchmal zehn Minuten zu spät.', 1, 2).includes('Tim ist nicht immer zehn Minuten zu spät.'));
+  for (const c of tn('Der Bruder ist zwanzig.', 2, 3)) assert.ok(hasNegation(c));
+});
+
+// „Negative means Falsch“ is the strategy an added negation hands the learner; the true negatives on
+// the Richtig side exist to take it away. Measured on the four default papers after they were built.
+test('„negative means Falsch“ answers no A1.1 paper and scores near chance over the four', () => {
+  let score = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const lesen = items.filter((i) => i.section === 'lesen');
+    const guessed = lesen.filter((i) => (hasNegation(i.statement) ? 'Falsch' : 'Richtig') === i.answer).length;
+    assert.ok(guessed < lesen.length, `${cp.id}: every Lesen item answered by its negation alone`);
+    score += guessed;
+  }
+  assert.ok(score <= 10, `the negation cue scores ${score} of 16 — chance is 8`);
+});
 
 const NUMBER_WORDS_TEST = [
   'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
@@ -335,81 +393,14 @@ const NUMBER_WORDS_TEST = [
   'neunzig', 'hundert',
 ];
 const WEEKDAYS_TEST = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-const isDigitWord = (w) => NUMBER_WORDS_TEST.slice(0, 10).includes(w.toLowerCase());
 
-// ── and the SEMANTIC half of the same rule (DaF review #7, MAJOR 2) ─────────
+// ── 4d. A FALSE STATEMENT IS FALSE, NOT BROKEN (DaF review #6, MAJOR 7) ─────
 //
-// The article bar is morphological only, so checkpoint 3 shipped „Spielst du
-// jede **Kellinerin** Fußball?“ against „… jede **Woche** Fußball?“: `die Woche`
-// and `die Kellnerin` share their article, the swap is impeccable German — and
-// the sentence is broken rather than false, so the learner solves the graded
-// Lesen item through meaning instead of through the text. `jede Woche` is an
-// adverbial accusative: the noun stands there as a time unit, not as a thing,
-// and the Wortfeld (`article`, `plural`) cannot see that. So the word LEFT of
-// the change decides: after a quantifier (jede/jeden/jedes/jeder/alle/allen)
-// nothing may be swapped at all — and the semantic class (time for time,
-// person for person, thing for thing), which review #7 demanded only after a
-// deictic, is demanded on EVERY swap since review #15.
-const QUANTIFIER_DET_TEST = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
-const TIME_NOUNS_TEST = [
-  'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
-  'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
-  'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
-  'Pause', 'Pausen', 'Termin', 'Termine', 'Verspätung', 'Verspätungen',
-  'Geburtstag', 'Geburtstage', 'Wochentag', 'Wochentage', 'Feierabend',
-];
-const PERSON_GLOSS_RE_TEST = /\((?:m|f)\)/;
-const PERSON_NOUNS_TEST = [
-  'Arzt', 'Ärzte', 'Ärztin', 'Ärztinnen', 'Baby', 'Babys', 'Bruder', 'Brüder',
-  'Einzelkind', 'Einzelkinder', 'Eltern', 'Familie', 'Familien', 'Frau', 'Frauen',
-  'Gast', 'Gäste', 'Geschwister', 'Kellner', 'Kellnerin', 'Kellnerinnen',
-  'Kind', 'Kinder', 'Mama', 'Mamas', 'Mann', 'Männer', 'Mutter', 'Mütter',
-  'Papa', 'Papas', 'Schwester', 'Schwestern', 'Sohn', 'Söhne', 'Tochter', 'Töchter',
-  'Vater', 'Väter',
-];
-const semanticClassTest = (w, vocab) => {
-  if (TIME_NOUNS_TEST.includes(w) || WEEKDAYS_TEST.includes(w)) return 'zeit';
-  if (PERSON_NOUNS_TEST.includes(w)) return 'person';
-  if (PERSON_GLOSS_RE_TEST.test(String(vocab?.get?.(w)?.en || ''))) return 'person';
-  return 'ding';
-};
-
-// ── and the POSITIONAL half (the residual of round 8) ───────────────────────
-//
-// The article bar and the quantifier bar both look at a noun and the word to
-// its left, and neither of them can see a noun that has no determiner at all.
-// So checkpoint 3 still shipped „Spielst … jede Woche **Durst**?“ against
-// „… jede Woche **Fußball**?“: `Fußball` is the bare object of the idiom
-// *Fußball spielen*, `Durst` the bare object of *Durst haben*, both `der`, so
-// every congruence check passes and the result is not a false statement about
-// the text but no German sentence at all. A bare noun in German is almost
-// always welded to its verb, and the Wortfeld carries no valency data — so the
-// rule is positional: the vocab branch may only swap a noun that stands in a
-// REAL NP SLOT, immediately preceded by an article, a possessive or a
-// demonstrative.
-//
-// That makes a window able to run out of swappable tokens, and a Lesen section
-// is 4 items on every checkpoint. The builder therefore falls back — to a
-// place/time adverb pair, and then to another window of the chapter — before it
-// would ever ship a short section. This pin allows exactly those two extra
-// sources and nothing else.
-const NP_DET_RE_TEST = /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner|keines|d?ein|d?eine|d?einen|d?einem|d?einer|d?eines|sein|seine|seinen|seinem|seiner|seines|ihr|ihre|ihren|ihrem|ihrer|ihres|unser|unsere|unseren|unserem|unserer|unseres|euer|eure|euren|eurem|eurer|eures|dieser|diese|diesen|diesem|dieses)$/i;
-
-/** The documented adverb fallback table, as ADVERB_SWAPS in the builder. */
-const ADVERB_SWAPS_TEST = new Map([
-  ['heute', ['morgen']],
-  ['morgen', ['heute']],
-  ['hier', ['da', 'dort']],
-  ['da', ['hier']],
-  ['dort', ['hier']],
-  ['links', ['rechts']],
-  ['rechts', ['links']],
-  ['früh', ['spät']],
-  ['spät', ['früh']],
-  ['morgens', ['abends']],
-  ['abends', ['morgens']],
-]);
-
+// The old falsifier swapped a Wortfeld noun for another and had no congruence bar, so checkpoint 3
+// shipped „jede **Frühstück**“ and checkpoint 2 „**einen Taschen**“: not false statements but broken
+// sentences, which hand the answer over through the FORM. Noun swaps are gone since review #5 of
+// A1.2 (a swapped noun is not a contradiction either), but the agreement guard stays on every
+// statement the builder emits — a „kein“ it inserts must agree with its noun.
 // ── and the NUMBER half of the same rule (DaF review #15, MAJOR 3) ──────────
 //
 // The gender bar was built out of a table that had already LOST the gender.
@@ -520,111 +511,6 @@ test('no Falsch statement of the four papers contains a determiner its noun cann
   assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
 });
 
-test('a falsch statement changes ONE word for a word of the same class — article, weekday, name, digit', () => {
-  let checked = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
-    const chapter = chapterLektionen(CURRICULUM_A11, cp);
-    const genders = readingMap(chapter);
-    const printedInChapter = new Set(
-      chapter.flatMap((l) => (l.dialog?.lines || []).flatMap(
-        (line) => [...String(line.de || '').matchAll(/[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+/g)].map((m) => m[0]),
-      )),
-    );
-    const names = new Set(
-      chapter.flatMap((l) => (l.dialog?.lines || []).flatMap((line) => String(line.speaker || '').split(/\s+/)))
-        .filter((part) => part.length >= 3 && /^[A-ZÄÖÜ]/.test(part) && !['Herr', 'Frau'].includes(part)),
-    );
-    for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
-      const statement = quotedStatement(item);
-      // The TRUE report of the source line — what the falsifier changed one
-      // token of (DaF review #9, MAJOR 3: both halves are reports).
-      const source = item.trueStatement;
-      const changed = statement.split(' ');
-      const original = source.split(' ');
-      assert.equal(changed.length, original.length, `${cp.id} ${item.id}: one word, not the sentence`);
-      const diff = changed.map((w, i) => [original[i], w]).filter(([a, b]) => a !== b);
-      assert.equal(diff.length, 1, `${cp.id} ${item.id}: exactly one word differs`);
-      const [rawFrom, rawTo] = diff[0].map((w) => w.replace(/[.,!?„“]/g, ''));
-      const from = rawFrom;
-      const to = rawTo;
-      checked += 1;
-
-      if (NUMBER_WORDS_TEST.includes(from.toLowerCase())) {
-        assert.ok(NUMBER_WORDS_TEST.includes(to.toLowerCase()), `${item.id}: a number is replaced by a number`);
-        // A digit group is two or more number words in a row — the phone number.
-        const words = original.map((w) => w.replace(/[.,!?„“]/g, ''));
-        const at = words.findIndex((w) => w === from);
-        const neighbourIsNumber = [at - 1, at + 1]
-          .some((j) => words[j] && NUMBER_WORDS_TEST.includes(words[j].toLowerCase()));
-        if (neighbourIsNumber) {
-          assert.ok(isDigitWord(to), `${item.id}: inside a phone number only single digits may be swapped, got "${to}"`);
-        } else {
-          assert.ok(!['eins', 'null'].includes(to.toLowerCase()), `${item.id}: "${to} Euro" is broken, not false`);
-        }
-        continue;
-      }
-      if (WEEKDAYS_TEST.includes(from)) {
-        assert.ok(WEEKDAYS_TEST.includes(to), `${item.id}: a weekday is replaced by a weekday`);
-        continue;
-      }
-      if (names.has(from)) {
-        assert.ok(names.has(to), `${item.id}: a name is replaced by a name of this chapter`);
-        continue;
-      }
-      if (/^\d+$/.test(from)) {
-        assert.match(to, /^\d+$/, `${item.id}: a figure is replaced by a figure`);
-        continue;
-      }
-      if (ADVERB_SWAPS_TEST.has(from)) {
-        assert.ok(
-          ADVERB_SWAPS_TEST.get(from).includes(to),
-          `${item.id}: „${from}“ may only become its documented opposite, got „${to}“`,
-        );
-        continue;
-      }
-      assert.ok(genders.has(from), `${item.id}: "${from}" is not a Wortfeld noun of the chapter`);
-      assert.ok(genders.has(to), `${item.id}: "${to}" is not a Wortfeld noun of the chapter`);
-      // Gender AND number, and never a form that is its own plural: „Computer“
-      // is masculine singular under „einen“ and plural under „die“, so an
-      // inserted one would be a number the reader cannot see (review #15).
-      assert.ok(
-        !genders.get(to).isPluralOfSelf,
-        `${item.id}: „${to}“ is spelled the same in both numbers — inserting it hides the number`,
-      );
-      // The determiner the swapped noun stands under, read off the SOURCE line.
-      const at = original.findIndex((w) => w.replace(/[.,!?„“]/g, '') === from);
-      const det = String(at > 0 ? original[at - 1].replace(/[.,!?„“]/g, '') : '').toLowerCase();
-      assert.ok(
-        !QUANTIFIER_DET_TEST.includes(det),
-        `${item.id}: „${det} ${from}“ is a quantity/time expression — „${det} ${to}“ is broken, not false`,
-      );
-      // …and the noun must stand in a real NP slot in the first place: a bare
-      // noun is the object of an idiom (Fußball spielen), never a free slot.
-      assert.ok(
-        NP_DET_RE_TEST.test(det),
-        `${item.id}: „${from}“ is a bare noun here („${det} ${from}“) — swapping it breaks the sentence instead of falsifying it`,
-      );
-      // The semantic bar, now on EVERY swap and not only under a deictic
-      // (DaF review #15, MAJOR 3): a time for a time, a person for a person, a
-      // thing for a thing. „Tim kauft den Stuhl und die Chefin." agrees in
-      // gender and number and is still absurd on sight.
-      assert.equal(
-        semanticClassTest(to, genders),
-        semanticClassTest(from, genders),
-        `${item.id}: „${det} ${from}“ (${semanticClassTest(from, genders)}) may only become a ${semanticClassTest(from, genders)} noun, got „${to}“`,
-      );
-      // …and the replacement must be a noun this chapter PRINTS. A Wortfeld is
-      // a word list: it holds „die Firma" beside „die Lampe", and a learner
-      // cannot weigh a word he was never shown.
-      assert.ok(
-        printedInChapter.has(to),
-        `${item.id}: „${to}“ never appears in a dialogue of this chapter — a distractor the learner cannot find is not a reading item`,
-      );
-    }
-  }
-  assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
-});
-
 // ── 4f. THE LESEN STATEMENT IS A REPORT, NOT A QUOTE (DaF review #9, MAJOR 3) ─
 //
 // Until round 9 `buildLesen` set `statement = quoted.de` and explained it with
@@ -644,8 +530,9 @@ test('a falsch statement changes ONE word for a word of the same class — artic
 //   (a) no statement — Richtig or Falsch — stands in its own text;
 //   (b) every Richtig statement is the report of EXACTLY ONE line of that text,
 //       re-derived here from the builder's own `windowReports`;
-//   (c) every Falsch statement is that same report with exactly one content
-//       detail changed (tests 4b/4d above measure WHICH detail);
+//   (c) every Falsch statement contradicts that same report (test 4b above
+//       measures HOW), and a Richtig that carries a negation is a true negative
+//       of it;
 //   (d) every token of every statement is lexis the course has taught by the
 //       Lektion the checkpoint closes;
 //   (e) every verb form the transformation produced is a form the course
@@ -706,34 +593,31 @@ test('every richtig statement is the report of EXACTLY ONE line of its text', ()
       assert.equal(mine[0].line.de, item.sourceLine, `${item.id}: the item names the line it reports on`);
       assert.ok(item.text.includes(item.sourceSentence), `${item.id}: the source sentence is in the text`);
       if (item.answer === 'Richtig') {
-        assert.equal(item.statement, item.trueStatement, `${item.id}: a richtig statement IS the report`);
-        assert.equal(item.changed, null, `${item.id}: nothing is changed in a richtig statement`);
+        assert.equal(item.changed, null, `${item.id}: nothing is contradicted in a richtig statement`);
+        if (item.negative) {
+          // A true negative: the report with one value changed and negated („Der Bruder ist nicht dreißig.“).
+          const negatives = trueNegativesOf(item.trueStatement, { verbAt: mine[0].verbAt, mfAt: mine[0].mfAt }).map((c) => c.words.join(' '));
+          assert.ok(negatives.includes(item.statement), `${item.id}: „${item.statement}“ is not a true negative of „${item.trueStatement}“`);
+          assert.ok(hasNegation(item.statement));
+        } else {
+          assert.equal(item.statement, item.trueStatement, `${item.id}: a richtig statement IS the report`);
+        }
       }
     }
   }
 });
 
-test('every falsch statement is its own report with exactly one detail changed', () => {
+test('a falsch statement differs from its report by one operation, so the two halves look alike', () => {
   let checked = 0;
   for (const { cp, items } of ALL_CHECKPOINTS) {
     for (const item of lesenItemsOf(cp, items).filter((i) => i.answer === 'Falsch')) {
-      assert.ok(item.changed && item.changed.from && item.changed.to, `${item.id}: a falsch item names its change`);
-      const { from, to } = item.changed;
-      assert.notEqual(from, to, `${item.id}: „${from}“ was not changed at all`);
-      const rebuilt = item.trueStatement.split(' ').map((w) => (w.replace(/[.,!?]/g, '') === from
-        ? w.replace(from, to)
-        : w));
-      assert.equal(
-        rebuilt.join(' '),
-        item.statement,
-        `${item.id}: the statement is not its report with „${from}“ → „${to}“`,
-      );
-      // The two halves must look alike, or the LENGTH is the answer.
-      assert.equal(
-        item.statement.split(' ').length,
-        item.trueStatement.split(' ').length,
-        `${item.id}: one word, not a rewritten sentence`,
-      );
+      assert.ok(item.changed && item.changed.op, `${item.id}: a falsch item names its change`);
+      const a = item.statement.split(' ');
+      const b = item.trueStatement.split(' ');
+      // One word replaced, one word added („nicht“/„kein-“) or one word removed — never a rewritten sentence.
+      assert.ok(Math.abs(a.length - b.length) <= 1, `${item.id}: „${item.statement}“ vs „${item.trueStatement}“ — the LENGTH is the answer`);
+      const shared = a.filter((w) => b.includes(w)).length;
+      assert.ok(Math.min(a.length, b.length) - shared <= 2, `${item.id}: more than one operation between „${item.statement}“ and „${item.trueStatement}“`);
       checked += 1;
     }
   }
@@ -1476,14 +1360,16 @@ test('the bound BITES — an item stamped past the chapter leaves the draw, and 
   // round 18 added two L2 items and `Marokko`/`Ali` to DIALOG_NAMES — which
   // re-stamps every origin item's `minLektion` and reseats the pool — then
   // `extra-a11-l05-22` until checkpoint 2 left out every paper checkpoint 1 can
-  // serve, not only its default one (A1.2 DaF review #3, MAJOR 3); the id is a
-  // measurement of the current build, not a fact about the pool.)
+  // serve, not only its default one (A1.2 DaF review #3, MAJOR 3), then
+  // `extra-a11-l05-05` until the Lesen contradiction engine and the two-round
+  // transfer draw of 2026-10-16 moved the draw; the id is a measurement of the
+  // current build, not a fact about the pool.)
   const cp2 = CURRICULUM_A11.checkpoints[1];
   const drawn = (pool) => new Set(
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),
   );
-  const VICTIM = 'extra-a11-l05-05';
+  const VICTIM = 'extra-a11-l05-11';
   assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
 
   const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };
@@ -1959,7 +1845,10 @@ test('LandeskundeCard is a flat Card (no raised/interactive) and reads its langu
 // measured 2026-10-05 after the change: 1 / 1 / 2 / 0 of the 8 pool items per
 // checkpoint are still lesson items (the leak cap and taught-lexis rule come
 // first on thin topics) — was 5 / 3 / 5 / 5. A ratchet: it only goes down.
-const MAX_LESSON_SEEN_PER_CHECKPOINT = [1, 1, 2, 0];
+// 2026-10-16: 1 / 1 / 1 / 0 — the pool draw and the Schreiben drill draw now seat
+// a lesson item only when no topic of the draw has an unseen one left (two
+// rounds, `drawPool` and `buildSchreiben`), instead of letting the shuffle decide.
+const MAX_LESSON_SEEN_PER_CHECKPOINT = [1, 1, 1, 0];
 test('checkpoints draw prompts the learner has not answered in a lesson (transfer ratchet)', async () => {
   const { default: buildLesson } = await import('../src/lib/lesson/buildLesson.js');
   ALL_CHECKPOINTS.forEach(({ cp: checkpoint, items }, i) => {

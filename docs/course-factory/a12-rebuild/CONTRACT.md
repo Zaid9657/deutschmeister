@@ -20,6 +20,25 @@ table, the table is the measurement (DaF review #3, Minor: "CONTRACT aktualisier
 | §6.5: no DaF review yet | Four: #1 and #2 (2026-09-13), #3 and #4 (2026-10-15). #3 measured 2 BLOCKER and 7 MAJOR; this table then claimed both BLOCKERs and MAJORs 1–6 closed, and #4 measured that claim false (2 BLOCKER, 4 MAJOR: B1, B2, M5 and M6 still open, M8 new; M1, M3 and M4 closed). Round 5 answers B1, B2, M5, M6 and M8 with a rule and a test each in `tests/a12-rebuild.test.mjs`. Whether they are closed is review #5's measurement, not this table's. M7 waits on the owner (below). |
 | §4: the ratchets | `levelSpec('a1.2').ratchets` in `scripts/validate-curriculum.mjs`; every one equals its measurement (`tests/a12-rebuild.test.mjs`). Non-zero today: RULE 11 (26), RULE 13 (1), RULE 23 (4: L3 Kaufhaus, Geschäft, Bibliothek; L7 Körper). RULE 23b is 0. |
 
+**Closed by rule 2026-10-16 — MAJOR 8, „Falsch“ meant „not stated“ (review #5).** 19 of the 24 A1.2
+Falsch seats swapped a person („Ana hat Kuchen gegessen“ → „Lena hat …“), the rest a noun („ein Ticket“ →
+„ein Taxi“); the text contradicts neither. `buildCheckpoint.js` now builds a Falsch only as a
+CONTRADICTION of the report (`contradictionsOf`): a value the text states changed (count, price, clock
+time, phone digit, the weekday of a copula — never under a negation or a weak frequency adverb), the far
+end of an exclusive scale (immer ↔ nie, manchmal/oft → nie, links ↔ rechts, früh ↔ spät), or the polarity
+(nicht/kein- removed; ein- → kein-, kein- before a bare object, viele → keine, nicht where German puts it).
+A person or a noun is never swapped. A pronoun's referent is its determiner plus its noun („meine Oma“ and
+„die Oma von Tim“ are two). Because an added negation is a cue, a paper allows one added negation while the
+chapter offers another contradiction, and the Richtig half carries true negatives (`trueNegativesOf`: „Der
+Bruder ist nicht dreißig.“, „Das Flugzeug fliegt nicht um zwölf.“ — Lesen Teil 1's own pattern); a
+third-person statement of a value („Der Keller kostet zwanzig Euro.“) serves only changed. Measured over
+the 24 papers of both levels: „negative means Falsch“ answers 57 of 96 items (chance 48) and no whole
+paper. The engine is shared with live A1.1, whose eight Falsch seats had the same defect („Tim ist frei.“
+for Lena's line); its pins were re-measured, not gated: the transfer ratchet fell to 1/1/1/0 because the
+pool and drill draws now seat a lesson item only when no topic has an unseen one left. Tests: annotated
+follows/contradicts/open cases and all twelve papers × three seeds in `tests/a12-rebuild.test.mjs`, the
+A1.1 papers in `tests/checkpoint.test.mjs`.
+
 **Decided 2026-10-16 — MAJOR 7, the grammar ceiling (owner: "research … and take the right and most
 correct choices").** Against the Goethe-Zertifikat A1 inventory (Prüfungsziele/Testbeschreibung, 2022,
 pp. 100–106) and a Codex research memo, A1.2 now teaches: war/hatte (L7), denn (L6), the dative of

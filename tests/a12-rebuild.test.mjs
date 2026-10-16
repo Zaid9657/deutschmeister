@@ -807,28 +807,76 @@ test('DaF review #4 minor: every checkpoint writing task reaches the page with i
   }
 });
 
-test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts it — on every paper of both levels', async () => {
-  // CP3 printed „Die Oma ist müde." keyed Falsch (the engine had resolved „Sie ist müde." to the last
-  // feminine noun, die Nase) and CP2 keyed „Der Kopf von Ana tut weh und der Kopf auch." Falsch, which
-  // the text says.
-  const { buildCheckpoint, paperSeed, windowReports, reportSpecFor, normaliseStatement } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+test('DaF review #5 MAJOR 8: Richtig follows from the text, Falsch is CONTRADICTED by it — on every paper of both levels', async () => {
+  // Review #4 found „Die Oma ist müde." keyed Falsch (the pronoun had two referents) and a Falsch the
+  // text says. Review #5 found the class behind the rest: 19 of the 24 A1.2 Falsch seats swapped a
+  // PERSON („Ana hat Kuchen gegessen" → „Lena hat …"), the others a noun („Ana möchte ein Ticket." →
+  // „… ein Taxi."), and the text contradicts neither — it does not speak of Lena or of taxis. The
+  // rule: Richtig follows from the text; Falsch is contradicted by it (a value the text states, the
+  // far end of a scale, the polarity). And because an added „nicht" is a cue, a Richtig may be a
+  // true negative („Das Flugzeug fliegt nicht um zwölf." for „… um neun.").
+  const {
+    buildCheckpoint, paperSeed, windowReports, reportSpecFor, normaliseStatement, contradictionsOf, trueNegativesOf, hasNegation,
+  } = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
-  const cp3 = CURRICULUM_A12.checkpoints[2];
-  const spec = { ...reportSpecFor(CURRICULUM_A12, cp3), known: null };
+  // The whole course's nouns (checkpoint 4), and no lexis gate: these are engine cases, not paper items.
+  const cp4 = CURRICULUM_A12.checkpoints[3];
+  const spec = { ...reportSpecFor(CURRICULUM_A12, cp4), known: null };
   const reports = (lines) => windowReports(lines, spec).map((r) => r.statement);
-  // A pronoun is reported only when one noun of its gender can be meant.
+  const contradictions = (lines) => windowReports(lines, spec)
+    .flatMap((r) => contradictionsOf(r.statement, { verbAt: r.verbAt, mfAt: r.mfAt, nouns: spec.nouns, names: spec.names }))
+    .map((c) => c.words.join(' '));
+
+  // ── annotated cases ──
+  // contradicts: the polarity of what the text says
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Ich habe kein Fieber.' }]), ['Ana hat Fieber.']);
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Ich möchte ein Ticket.' }]), ['Ana möchte kein Ticket.']);
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Ich habe Kuchen und Schokolade gegessen.' }]), ['Ana hat keinen Kuchen und keine Schokolade gegessen.']);
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Zum Bahnhof gehe ich nicht.' }]), ['Zum Bahnhof geht Ana.']);
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Den Pullover ziehe ich morgen an.' }]), ['Den Pullover zieht Ana morgen nicht an.']);
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Ich trage gern eine Hose, ein Hemd und ein Kleid.' }]), ['Ana trägt nicht gern eine Hose, ein Hemd und ein Kleid.']);
+  assert.deepEqual(contradictions([{ speaker: 'Ana', de: 'Ich habe viele Bücher.' }]), ['Ana hat keine Bücher.']);
+  // contradicts: a scale — and a weak frequency makes no value exclusive (open: „drei Minuten")
+  assert.deepEqual(contradictions([{ speaker: 'Lena', de: 'Ich stehe nie früh auf.' }]), ['Lena steht immer früh auf.']);
+  assert.deepEqual(contradictions([{ speaker: 'Tim', de: 'Ich bin manchmal zehn Minuten zu spät.' }]), ['Tim ist nie zehn Minuten zu spät.']);
+  // open: a wish for one thing excludes no other thing; a fact about Ana says nothing about Lena
+  for (const open of ['Ana möchte ein Taxi.', 'Ana hat kein Angebot.', 'Lena hat Kuchen und Schokolade gegessen.', 'Lena möchte ein Ticket.']) {
+    const all = contradictions([
+      { speaker: 'Ana', de: 'Ich möchte ein Ticket.' }, { speaker: 'Ana', de: 'Ich habe kein Fieber.' },
+      { speaker: 'Ana', de: 'Ich habe Kuchen und Schokolade gegessen.' },
+    ]);
+    assert.ok(!all.includes(open), `„${open}" is not stated, which is not the same as false`);
+  }
+  // contradicts: a value the text states — a third-person statement too („aussage"), used only changed
+  assert.ok(contradictions([{ speaker: 'Herr Berg', de: 'Der Keller kostet zwanzig Euro.' }]).includes('Der Keller kostet zwölf Euro.'));
+  assert.ok(contradictions([{ speaker: 'Ana', de: 'Ich komme um acht Uhr an.' }]).includes('Ana kommt um neun Uhr an.'));
+  assert.ok(!contradictions([{ speaker: 'Ana', de: 'Ich komme um acht Uhr an.' }]).includes('Ana kommt um achtzig Uhr an.'));
+  // follows: the true negatives
+  const negatives = (lines) => windowReports(lines, spec).flatMap((r) => trueNegativesOf(r.statement, { verbAt: r.verbAt, mfAt: r.mfAt })).map((c) => c.words.join(' '));
+  assert.ok(negatives([{ speaker: 'Ana', de: 'Das Flugzeug fliegt um neun.' }]).includes('Das Flugzeug fliegt nicht um zwölf.'));
+  assert.ok(negatives([{ speaker: 'Ana', de: 'Die Temperatur ist bei zehn Grad.' }]).includes('Die Temperatur ist nicht bei zwei Grad.'));
+  assert.ok(negatives([{ speaker: 'Tim', de: 'Ich bin manchmal zehn Minuten zu spät.' }]).includes('Tim ist nicht immer zehn Minuten zu spät.'));
+  assert.deepEqual(negatives([{ speaker: 'Ana', de: 'Ich möchte ein Ticket.' }]), [], 'a wish has no true negative');
+  // referents: a pronoun is reported only when ONE referent of its gender can be meant — and two
+  // same-named referents are two („Meine Oma" and „die Oma von Tim")
   assert.deepEqual(reports([
-    { speaker: 'Lena', de: 'Deine Oma ist traurig? Ihre Nase ist wie deine.' },
+    { speaker: 'Lena', de: 'Meine Oma ist traurig? Ihre Nase ist wie meine.' },
     { speaker: 'Ana', de: 'Sie ist müde.' },
   ]), [], 'Oma or Nase: no report');
+  assert.deepEqual(reports([
+    { speaker: 'Lena', de: 'Meine Oma ist hier. Die Oma von Tim ist dort.' },
+    { speaker: 'Ana', de: 'Sie ist müde.' },
+  ]), ['Die Oma von Lena ist hier.'], 'two grandmothers: Lena\'s line reports, the pronoun does not');
   assert.deepEqual(reports([
     { speaker: 'Lena', de: 'Wo ist die Oma?' },
     { speaker: 'Ana', de: 'Sie ist müde.' },
   ]), ['Die Oma ist müde.'], 'one candidate: a report');
-  // A coordinated verb the table cannot change refuses the report, whatever the lexicon knows.
+  // a coordinated verb the table cannot change refuses the report — also behind an adverb (review #5 minor)
   assert.deepEqual(reports([{ speaker: 'Ana', de: 'Ich koche und wechsle das Zimmer.' }]), []);
+  assert.deepEqual(reports([{ speaker: 'Ana', de: 'Ich koche und dann improvisiere.' }]), []);
   assert.deepEqual(reports([{ speaker: 'Ana', de: 'Ich gehe und kaufe ein.' }]), ['Ana geht und kauft ein.']);
 
+  // ── all twelve papers, three seeds each ──
   const windowOf = (curriculum, item) => {
     const lines = curriculum.lektionen.find((l) => l.nr === item.lektionNr).dialog.lines;
     for (const span of [2, 3]) {
@@ -839,32 +887,53 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
     }
     return null;
   };
+  const referents = (statement) => statement.split(' ').map((w) => w.replace(/[.,!?]/g, ''))
+    .filter((w) => /^[A-ZÄÖÜ]/.test(w) && !/^(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)$/.test(w)).sort().join(' ');
   const problems = [];
   let checked = 0;
+  let papers = 0;
+  let guessed = 0;
   for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       const cpSpec = reportSpecFor(curriculum, checkpoint);
       for (let round = 0; round < 3; round += 1) {
-        for (const it of buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) })) {
-          if (it.section !== 'lesen' || !it.transform) continue;
+        const lesen = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        papers += 1;
+        // „negative means Falsch" — the strategy an added negation hands the learner — answers no paper
+        const byCue = lesen.filter((it) => (hasNegation(it.statement) ? 'Falsch' : 'Richtig') === it.answer).length;
+        guessed += byCue;
+        if (byCue === lesen.length) problems.push(`${checkpoint.id}/${round}: every Lesen item answered by its negation alone`);
+        for (const it of lesen) {
+          if (!it.transform) { problems.push(`${checkpoint.id}/${round} „${it.statement}": not a report (verbatim rung)`); continue; }
           checked += 1;
           const at = `${checkpoint.id}/${round} „${it.statement}"`;
           const window = windowOf(curriculum, it);
           if (!window) { problems.push(`${at}: its text is no window of L${it.lektionNr}`); continue; }
-          const truths = new Set(windowReports(window, cpSpec).map((r) => normaliseStatement(r.statement)));
-          if (it.answer === 'Richtig' && !truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Richtig, but no line of the text says it`);
-          if (it.answer === 'Falsch') {
+          const all = windowReports(window, cpSpec);
+          const truths = new Set(all.map((r) => normaliseStatement(r.statement)));
+          const report = all.find((r) => r.statement === it.trueStatement);
+          if (!report) { problems.push(`${at}: „${it.trueStatement}" is not a report of its text`); continue; }
+          if (it.answer === 'Richtig') {
+            if (it.negative) {
+              const ok = trueNegativesOf(report.statement, { verbAt: report.verbAt, mfAt: report.mfAt }).some((c) => c.words.join(' ') === it.statement);
+              if (!ok) problems.push(`${at}: Richtig with a negation, but no true negative of „${it.trueStatement}"`);
+            } else if (!truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Richtig, but no line of the text says it`);
+          } else {
             if (truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Falsch, but a line of the text says it`);
-            const source = new Set(String(it.sourceSentence).split(/\s+/).map((w) => w.replace(/[.,!?]/g, '').toLowerCase()));
-            if (source.has(String(it.changed?.to).toLowerCase())) problems.push(`${at}: the swapped-in „${it.changed?.to}" stands in the sentence it reports`);
+            const ok = contradictionsOf(report.statement, { verbAt: report.verbAt, mfAt: report.mfAt, nouns: cpSpec.nouns, names: cpSpec.names })
+              .some((c) => c.words.join(' ') === it.statement);
+            if (!ok) problems.push(`${at}: Falsch, but „${it.trueStatement}" does not contradict it`);
+            if (referents(it.statement) !== referents(it.trueStatement)) problems.push(`${at}: a person or thing was swapped against „${it.trueStatement}"`);
           }
         }
       }
     }
   }
-  assert.equal(checked, 96, 'four Lesen reports on each of the twelve papers of both levels');
+  assert.equal(checked, 96, 'four Lesen reports on each of the twelve papers of both levels, three seeds');
   assert.deepEqual(problems, []);
+  // chance is 48 of 96; measured 2026-10-16: 57
+  assert.ok(guessed <= 60, `the negation cue answers ${guessed} of ${papers * 4} Lesen items`);
 });
 
 test('DaF review #4 BLOCKER 2: an article-less adjective and a Wechselpräposition the input has not shown are outside the horizon', async () => {
