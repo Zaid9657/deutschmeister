@@ -855,8 +855,15 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // The count falls from 4 to 2 because fewer frontable sentences are DRAWN; every one that is
     // drawn is asserted above, and the pool-wide loop still demands both orders of all of them.
     // RE-MEASURED, not relaxed.
-    'a1.1-cp1-schreiben-1',
-    'a1.1-cp3-schreiben-1',
+    // 2026-10-16 (A1.2 DaF review #5, MAJOR 8): the Lesen half builds Falsch as a contradiction and
+    // seats its Falsch items first, and the pool and drill draws run in two rounds (unseen items
+    // of every topic before any lesson item), so Bausteine and Schreiben reseat on every paper:
+    // checkpoint 1's frontable sentence moves to seat 2, checkpoint 3 draws none, checkpoint 4
+    // draws two. The count rises from 2 to 3 because MORE frontable sentences are drawn; every one
+    // is asserted above to accept both orders. RE-MEASURED, not relaxed.
+    'a1.1-cp1-schreiben-2',
+    'a1.1-cp4-bausteine-1',
+    'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

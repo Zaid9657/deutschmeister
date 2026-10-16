@@ -2642,6 +2642,12 @@ const stripSpeakerFrame = (sentence) => {
   const m = /^([^:„"]*):\s*/.exec(sentence);
   return m && !SEIN_FINITE.test(m[1]) ? sentence.slice(m[0].length) : sentence;
 };
+/**
+ * A person inside a prepositional phrase is not the subject: „Die Staatsangehörigkeit von Ana ist
+ * marokkanisch.“ is a thing subject, exactly like „Der Tee ist marokkanisch.“ — the Lesen reports
+ * phrase a possessive that way („Mein …“ → „… von Ana“, buildCheckpoint engine B).
+ */
+const PERSON_IN_PP_RE = /\b(?:von|mit|für|bei|zu|aus|nach)\s+(?:Herr\s+|Frau\s+)?[A-ZÄÖÜ][a-zäöüß]+/g;
 export function predicativeNationalityAdjectives(c, spec = null, { extraItems = null, poolItems = null } = {}) {
   const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
   extraItems = extraItems ?? loadExtraItems(s.level);
@@ -2657,9 +2663,12 @@ export function predicativeNationalityAdjectives(c, spec = null, { extraItems = 
   const offenders = [];
   const scan = (nr, where, text) => {
     if (!text) return;
-    for (const raw of String(text).split(/(?<=[.!?])\s+|\n+/)) {
+    // A quoted sentence is judged on its own: a Lesen explanation quotes the line AND the report
+    // („Ana sagt: „…“ Im Text steht also: „…““), and the sentence mark inside the closing quote
+    // would otherwise glue the two into one clause.
+    for (const raw of String(text).split(/(?<=[.!?])\s+|(?<=[.!?]“)\s*|\n+/)) {
       const sentence = stripSpeakerFrame(raw);
-      if (!SEIN_FINITE.test(sentence) || !personRe.test(sentence)) continue;
+      if (!SEIN_FINITE.test(sentence) || !personRe.test(sentence.replace(PERSON_IN_PP_RE, ''))) continue;
       const m = predicateRe.exec(sentence);
       if (!m) continue;
       const [, gap, word] = m;
