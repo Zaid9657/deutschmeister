@@ -1301,6 +1301,8 @@ const ITEM_FORMULA_RE = new RegExp([
   // build-lesson-pool.mjs dropped two sound yes-no-questions items over the task line.
   'Schreiben Sie die höfliche Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
+  // The sentence type the build names when a brick list alone leaves it open (DaF review #5, B1).
+  'Bilden Sie den Imperativ', 'Schreiben Sie den Imperativ',
   // „Welche Schreibweise ist richtig?“ is the whole task line of the generated spelling-choice
   // items this file's sibling build script writes from the Wortfeld — the learner picks between two
   // spellings of a word that IS taught. It was missing, so `Schreibweise` and `richtig` counted as

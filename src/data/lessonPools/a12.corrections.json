@@ -47,6 +47,15 @@
         "dreizehn"
       ],
       "reason": "DaF review #5 (A1.2) MAJOR 9: „dreissig“ is the Swiss spelling of the key, not a wrong answer; a distractor the typed checker would accept as the key is replaced by a wrong number (13)."
+    },
+    "ba9eb248-a125-483e-a452-1883fe389de3": {
+      "options": [
+        "Wie viel",
+        "Wann",
+        "Wer",
+        "Wo"
+      ],
+      "reason": "DaF review #5 (A1.2) BLOCKER 1: „Was kostet das?“ is correct German, so a printed „Was“ beside the key „Wie viel“ made two options right; the distractor becomes „Wann“."
     }
   }
 }

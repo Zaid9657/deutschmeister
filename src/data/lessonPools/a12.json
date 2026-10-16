@@ -365,7 +365,9 @@
     "Ana kauft den Kuchen im Geschäft.",
     "Ana kauft den Kuchen im Geschäft",
     "Im Geschäft kauft Ana den Kuchen.",
-    "Im Geschäft kauft Ana den Kuchen"
+    "Im Geschäft kauft Ana den Kuchen",
+    "Ana kauft im Geschäft den Kuchen.",
+    "Ana kauft im Geschäft den Kuchen"
    ],
    "explanationDe": "kaufen verlangt den Akkusativ: den Kuchen.",
    "hint": null,
@@ -385,7 +387,9 @@
    "answer": "Ich brauche einen Markt im Zentrum.",
    "accepted": [
     "Ich brauche einen Markt im Zentrum.",
-    "Ich brauche einen Markt im Zentrum"
+    "Ich brauche einen Markt im Zentrum",
+    "Ich brauche im Zentrum einen Markt.",
+    "Ich brauche im Zentrum einen Markt"
    ],
    "explanationDe": "Nach brauchen heißt es einen Markt.",
    "hint": null,
@@ -405,7 +409,9 @@
    "answer": "Tim bezahlt den Kuchen an der Kasse.",
    "accepted": [
     "Tim bezahlt den Kuchen an der Kasse.",
-    "Tim bezahlt den Kuchen an der Kasse"
+    "Tim bezahlt den Kuchen an der Kasse",
+    "Tim bezahlt an der Kasse den Kuchen.",
+    "Tim bezahlt an der Kasse den Kuchen"
    ],
    "explanationDe": "Das Objekt von bezahlen steht im Akkusativ.",
    "hint": null,
@@ -719,7 +725,9 @@
    "answer": "Dann gehen Sie an der Ecke links.",
    "accepted": [
     "Dann gehen Sie an der Ecke links.",
-    "Dann gehen Sie an der Ecke links"
+    "Dann gehen Sie an der Ecke links",
+    "Dann gehen Sie links an der Ecke.",
+    "Dann gehen Sie links an der Ecke"
    ],
    "explanationDe": "Nach dann steht das Verb, danach das Subjekt Sie.",
    "hint": null,
@@ -1468,7 +1476,8 @@
     "Wir fahren bei Regen mit dem Bus",
     "Wir fahren mit dem Bus bei Regen.",
     "Bei Regen fahren wir mit dem Bus.",
-    "Bei Regen fahren wir mit dem Bus"
+    "Bei Regen fahren wir mit dem Bus",
+    "Wir fahren mit dem Bus bei Regen"
    ],
    "explanationDe": "Nach mit steht der Dativ: mit dem Bus.",
    "hint": null,
@@ -1507,7 +1516,9 @@
    "answer": "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof.",
    "accepted": [
     "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof.",
-    "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof"
+    "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof",
+    "Im Sommer fahren wir zum Bahnhof mit der Straßenbahn.",
+    "Im Sommer fahren wir zum Bahnhof mit der Straßenbahn"
    ],
    "explanationDe": "Feminin im Dativ: mit der Straßenbahn.",
    "hint": null,
@@ -1760,7 +1771,10 @@
     "Machen Sie das Fenster zu, bitte",
     "Machen Sie das Fenster zu, bitte.",
     "Bitte machen Sie das Fenster zu!",
-    "Bitte machen Sie das Fenster zu"
+    "Bitte machen Sie das Fenster zu",
+    "Machen Sie das Fenster bitte zu!",
+    "Machen Sie das Fenster bitte zu.",
+    "Machen Sie das Fenster bitte zu"
    ],
    "explanationDe": "Sie-Imperativ von zumachen: Machen Sie ... zu, Präfix zu am Ende. bitte kann nach dem Verb oder am Ende stehen.",
    "explanationEn": "Sie-imperative of zumachen: Machen Sie ... zu, prefix zu at the end. bitte can stand after the verb or at the end.",
@@ -1782,7 +1796,9 @@
     "Hilf mir bitte mit der Waschmaschine!",
     "Hilf mir bitte mit der Waschmaschine",
     "Bitte hilf mir mit der Waschmaschine!",
-    "Bitte hilf mir mit der Waschmaschine"
+    "Bitte hilf mir mit der Waschmaschine",
+    "Hilf mir mit der Waschmaschine bitte!",
+    "Hilf mir mit der Waschmaschine bitte"
    ],
    "explanationDe": "Die du-Form ohne Endung und ohne Pronomen: Hilf!",
    "hint": null,
@@ -1796,7 +1812,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Schreiben Sie den Satz: [du / die Tür / aufmachen]",
+   "questionDe": "Schreiben Sie den Imperativ: [du / die Tür / aufmachen]",
    "questionEn": "Write the sentence: Open the door! (informal, du)",
    "options": null,
    "answer": "Mach die Tür auf!",
@@ -1818,7 +1834,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Bilden Sie den Satz: [warten / du / in der Garage]",
+   "questionDe": "Bilden Sie den Imperativ: [warten / du / in der Garage]",
    "questionEn": "Build the request to wait.",
    "options": null,
    "answer": "Warte in der Garage!",
@@ -1858,13 +1874,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 3,
-   "questionDe": "Bilden Sie den Satz: [holen / Sie / das Sofa / aus der Garage]",
+   "questionDe": "Bilden Sie den Imperativ: [holen / Sie / das Sofa / aus der Garage]",
    "questionEn": "Build the polite request about the sofa.",
    "options": null,
    "answer": "Holen Sie das Sofa aus der Garage!",
    "accepted": [
     "Holen Sie das Sofa aus der Garage!",
-    "Holen Sie das Sofa aus der Garage"
+    "Holen Sie das Sofa aus der Garage",
+    "Holen Sie aus der Garage das Sofa!",
+    "Holen Sie aus der Garage das Sofa"
    ],
    "explanationDe": "Bei Sie bleibt das Pronomen hinter dem Verb.",
    "hint": null,
@@ -1889,7 +1907,8 @@
     "Lesen Sie das Buch bitte",
     "Lesen Sie das Buch bitte.",
     "Bitte lesen Sie das Buch!",
-    "Bitte lesen Sie das Buch"
+    "Bitte lesen Sie das Buch",
+    "Lesen Sie bitte das Buch!"
    ],
    "explanationDe": "Sie-Imperativ von lesen: Lesen Sie, Verb zuerst.",
    "explanationEn": "Sie-imperative of lesen: Lesen Sie, verb first.",
@@ -1953,7 +1972,9 @@
     "Helfen Sie mir bitte mit dem Schrank!",
     "Helfen Sie mir bitte mit dem Schrank",
     "Bitte helfen Sie mir mit dem Schrank!",
-    "Bitte helfen Sie mir mit dem Schrank"
+    "Bitte helfen Sie mir mit dem Schrank",
+    "Helfen Sie mir mit dem Schrank bitte!",
+    "Helfen Sie mir mit dem Schrank bitte"
    ],
    "explanationDe": "Bei der Bitte steht das Verb auf Position 1.",
    "hint": null,
@@ -2022,7 +2043,8 @@
     "Nehmen Sie Platz bitte",
     "Nehmen Sie Platz bitte.",
     "Bitte nehmen Sie Platz!",
-    "Bitte nehmen Sie Platz"
+    "Bitte nehmen Sie Platz",
+    "Nehmen Sie bitte Platz!"
    ],
    "explanationDe": "Sie-Imperativ von nehmen: Nehmen Sie, Verb zuerst.",
    "explanationEn": "Sie-imperative of nehmen: Nehmen Sie, verb first.",
@@ -2263,7 +2285,9 @@
     "Ich muss den Müll nach Hause nehmen.",
     "Ich muss den Müll nach Hause nehmen",
     "Nach Hause muss ich den Müll nehmen.",
-    "Nach Hause muss ich den Müll nehmen"
+    "Nach Hause muss ich den Müll nehmen",
+    "Ich muss nach Hause den Müll nehmen.",
+    "Ich muss nach Hause den Müll nehmen"
    ],
    "explanationDe": "Das Modalverb auf Position 2, nehmen ganz am Ende.",
    "hint": null,
@@ -2347,7 +2371,9 @@
     "Wir wollen am Sonntag Fußball spielen.",
     "Wir wollen am Sonntag Fußball spielen",
     "Am Sonntag wollen wir Fußball spielen.",
-    "Am Sonntag wollen wir Fußball spielen"
+    "Am Sonntag wollen wir Fußball spielen",
+    "Wir wollen Fußball am Sonntag spielen.",
+    "Wir wollen Fußball am Sonntag spielen"
    ],
    "explanationDe": "wollen ist das konjugierte Modalverb auf Position 2; spielen (Infinitiv) steht am Ende.",
    "explanationEn": "wollen is the conjugated modal in position 2; spielen (infinitive) goes to the end.",
@@ -4458,7 +4484,9 @@
     "Ich kaufe die Jacke für meine Oma.",
     "Ich kaufe die Jacke für meine Oma",
     "Für meine Oma kaufe ich die Jacke.",
-    "Für meine Oma kaufe ich die Jacke"
+    "Für meine Oma kaufe ich die Jacke",
+    "Ich kaufe für meine Oma die Jacke.",
+    "Ich kaufe für meine Oma die Jacke"
    ],
    "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
    "hint": null,
@@ -4518,7 +4546,9 @@
    "answer": "Ana geht ohne den Schal ins Kaufhaus.",
    "accepted": [
     "Ana geht ohne den Schal ins Kaufhaus.",
-    "Ana geht ohne den Schal ins Kaufhaus"
+    "Ana geht ohne den Schal ins Kaufhaus",
+    "Ana geht ins Kaufhaus ohne den Schal.",
+    "Ana geht ins Kaufhaus ohne den Schal"
    ],
    "explanationDe": "Nach ohne steht den Schal im Akkusativ.",
    "hint": null,
@@ -4584,7 +4614,9 @@
     "Ich kaufe ein Geschenk für meine Mutter.",
     "Ich kaufe ein Geschenk für meine Mutter",
     "Für meine Mutter kaufe ich ein Geschenk.",
-    "Für meine Mutter kaufe ich ein Geschenk"
+    "Für meine Mutter kaufe ich ein Geschenk",
+    "Ich kaufe für meine Mutter ein Geschenk.",
+    "Ich kaufe für meine Mutter ein Geschenk"
    ],
    "explanationDe": "für verlangt immer Akkusativ; Mutter ist feminin, deshalb bleibt meine gleich (keine Änderung).",
    "explanationEn": "für always triggers accusative; Mutter is feminine, so meine stays meine (no change).",
@@ -4893,7 +4925,7 @@
    "questionEn": "___ kostet das?",
    "options": [
     "Wie viel",
-    "Was",
+    "Wann",
     "Wer",
     "Wo"
    ],
@@ -4982,7 +5014,9 @@
    "answer": "Ich würde gern einen Ausflug machen.",
    "accepted": [
     "Ich würde gern einen Ausflug machen.",
-    "Ich würde gern einen Ausflug machen"
+    "Ich würde gern einen Ausflug machen",
+    "Ich würde einen Ausflug gern machen.",
+    "Ich würde einen Ausflug gern machen"
    ],
    "explanationDe": "Nach würde gern steht der Infinitiv: machen.",
    "hint": null,
@@ -5229,7 +5263,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 19,
-   "questionDe": "Schreiben Sie den Satz: [wie viele / Kinder / du / haben]",
+   "questionDe": "Schreiben Sie die Frage: [wie viele / Kinder / du / haben]",
    "questionEn": "Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order)",
    "options": null,
    "answer": "Wie viele Kinder hast du?",
@@ -5249,7 +5283,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 20,
-   "questionDe": "Schreiben Sie den Satz: [wann / ihr / ankommen]",
+   "questionDe": "Schreiben Sie die Frage: [wann / ihr / ankommen]",
    "questionEn": "Write the sentence: When do you (pl.) arrive? Start with 'wann'. (W-word + verb + subject order, separable verb ankommen)",
    "options": null,
    "answer": "Wann kommt ihr an?",
@@ -5724,7 +5758,9 @@
    "options": null,
    "answer": "Du liest gern Bücher.",
    "accepted": [
-    "Du liest gern Bücher"
+    "Du liest gern Bücher",
+    "Du liest Bücher gern.",
+    "Du liest Bücher gern"
    ],
    "explanationDe": "lesen wechselt e→ie bei du: liest.",
    "explanationEn": "lesen changes e→ie for du: liest.",

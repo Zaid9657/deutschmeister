@@ -135,7 +135,7 @@ import {
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
-import { openingOf } from './a12-determinacy.mjs';
+import { openingOf, middleFieldOrders } from './a12-determinacy.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -365,6 +365,43 @@ function repairDeterminacy(item) {
     const fronted = `Bitte ${bitte[1].charAt(0).toLowerCase()}${bitte[1].slice(1)}${bitte[2]}${bitte[3]}!`.replace(/\s+/g, ' ');
     item.accepted = [...new Set([...accepted(), fronted, fronted.replace(/!$/, '')])];
     determinacyRepaired.push(`${item.id}:bitte`);
+  }
+  // DaF review #5 (A1.2) BLOCKER 1 — three more, each a rule:
+  // 4. A named opening fixes only the Vorfeld: every middle-field order of a correct answer is the same
+  //    sentence (scripts/a12-determinacy.mjs `middleFieldOrders`).
+  if (item.type === 'sentence_building' || item.type === 'error_correction') {
+    const before = accepted();
+    // From the key and every accepted form; a form written without its final mark gets the key's.
+    const punct = /[.!]$/.test(key) ? key.slice(-1) : null;
+    const sources = [key, ...before].map((a) => String(a).trim()).map((a) => (/[.!?]$/.test(a) || !punct ? a : `${a}${punct}`));
+    const more = sources.filter((a) => /[.!]$/.test(a)).flatMap((a) => middleFieldOrders(a));
+    if (more.length) {
+      item.accepted = [...new Set([...before, ...more, ...more.map((m) => m.replace(/[.!]$/, ''))])];
+      determinacyRepaired.push(`${item.id}:middle`);
+    }
+  }
+  // 5. A brick list does not say whether a request or a question is wanted: „[warten / du / in der
+  //    Garage]" is also „Du wartest in der Garage.". The prompt names the sentence type.
+  //    The bank's prompts are still in the du-register here („Schreib den Satz"); normaliseRegister
+  //    below turns the verb into the Sie-form, so only „den Satz" is swapped.
+  const TASK_RE = /^((?:Bilden Sie|Schreiben Sie|Bilde|Schreibe?) )den Satz/i;
+  if (item.type === 'sentence_building' && TASK_RE.test(item.questionDe)) {
+    if (/!$/.test(key) && !/Imperativ|Bitte\b|bitten/i.test(item.questionDe)) {
+      item.questionDe = item.questionDe.replace(TASK_RE, '$1den Imperativ');
+      determinacyRepaired.push(`${item.id}:Imperativ`);
+    } else if (/\?$/.test(key) && !/Frage/i.test(item.questionDe)) {
+      item.questionDe = item.questionDe.replace(TASK_RE, '$1die Frage');
+      determinacyRepaired.push(`${item.id}:Frage`);
+    }
+  }
+  // 6. „___ kostet …?" asks for a price: „Was kostet das?" and „Wie viel kostet das?" are both German.
+  if (item.type === 'fill_blank' && /___ kosten?\b/.test(item.questionDe)) {
+    const acc = accepted();
+    const other = acc.includes('Wie viel') ? 'Was' : acc.includes('Was') ? 'Wie viel' : null;
+    if (other && !acc.includes(other)) {
+      item.accepted = [...acc, other];
+      determinacyRepaired.push(`${item.id}:kostet`);
+    }
   }
 }
 raw.forEach(repairDeterminacy);

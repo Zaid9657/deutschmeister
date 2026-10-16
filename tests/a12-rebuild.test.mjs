@@ -67,8 +67,8 @@ test('DaF review #3 BLOCKER 1: the answer key never rejects correct German the G
   // DaF review #4: the families review #3's generator did not know. Every statement's other orders,
   // an imperative gap with and without -e, and „bitte" first; and what stays wrong stays wrong.
   const wide = (item) => alternatives({ accepted: [], ...item }, { wide: true }).map((a) => a.text);
-  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links]', answer: 'Dann gehen Sie an der Ecke links.' }), ['Sie gehen dann an der Ecke links.']);
-  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus]', answer: 'Wir fahren bei Regen mit dem Bus.' }), ['Bei Regen fahren wir mit dem Bus.', 'Mit dem Bus fahren wir bei Regen.']);
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links]', answer: 'Dann gehen Sie an der Ecke links.' }), ['Sie gehen dann an der Ecke links.', 'Dann gehen Sie links an der Ecke.']);
+  assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus]', answer: 'Wir fahren bei Regen mit dem Bus.' }), ['Bei Regen fahren wir mit dem Bus.', 'Mit dem Bus fahren wir bei Regen.', 'Wir fahren mit dem Bus bei Regen.']);
   assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen]', answer: 'Ich habe die Kartoffel gekauft.' }), ['Die Kartoffel habe ich gekauft.']);
   assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [dann / gehen / Sie / links] (Beginnen Sie mit „Dann“)', answer: 'Dann gehen Sie links.' }), [], 'a named opening fixes the order');
   assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie die Frage: [wo / sein / die Haltestelle]', answer: 'Wo ist die Haltestelle?' }), [], 'a question has no free opening');
@@ -749,6 +749,47 @@ test('M7, decided 2026-10-16: every A1 grammar point A1.2 owns has its notice, i
   // What moved to A2.1 is not promised: no can-do or notice of A1.2 teaches teurer/größer or a würde paradigm.
   const shown = CURRICULUM_A12.lektionen.flatMap((l) => [...l.canDo, l.notice.bodyDe]).join(' ');
   assert.doesNotMatch(shown, /\b(?:teurer|größer|am größten|würdest|würden)\b/);
+});
+
+test('DaF review #5 BLOCKER 1: a named opening fixes only the Vorfeld — middle-field orders, price questions, and a named sentence type', async () => {
+  const { middleFieldOrders, rejectedAlternatives } = await import('../scripts/a12-determinacy.mjs');
+  // Variants a German teacher accepts, written here by hand — independent of the generator — for the
+  // cases the review measured as wrong (L1, L3, L8, L10, the CP4 key, the price question).
+  const cp4 = POOL_A12.items.find((x) => /ein Geschenk für meine Mutter/.test(String(x.answer)));
+  const VARIANTS = [
+    ['extra-a12-l01-02', 'Dann gehen Sie links an der Ecke.'],
+    ['extra-a12-l03-09', 'Ana kauft im Geschäft den Kuchen.'],
+    ['e1716cd7-ccbe-544a-a65d-796cda3e0fe7', 'Machen Sie das Fenster bitte zu!'],
+    ['extra-a12-l10-05', 'Ich kaufe für meine Oma die Jacke.'],
+    ...(cp4 ? [[cp4.id, 'Ich kaufe für meine Mutter ein Geschenk.']] : []),
+  ];
+  assert.ok(cp4, 'the CP4 key the review measured is still in the pool');
+  for (const [id, text] of VARIANTS) {
+    const it = POOL_A12.items.find((x) => x.id === id);
+    assert.ok(it, id);
+    const r = checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it));
+    assert.equal(r.result, RESULT.CORRECT, `${id}: „${text}"`);
+  }
+  // „Was kostet das?" is German too: a printed „Was" beside the key „Wie viel" made two options right.
+  const price = POOL_A12.items.find((x) => x.id === 'ba9eb248-a125-483e-a452-1883fe389de3');
+  assert.ok(price && !price.options.includes('Was'), 'no second correct option is printed');
+  // … and the controls stay wrong: the verb leaves its place.
+  for (const [id, text] of [['extra-a12-l03-09', 'Ana den Kuchen kauft im Geschäft.'], ['extra-a12-l01-02', 'Dann Sie gehen links an der Ecke.']]) {
+    const it = POOL_A12.items.find((x) => x.id === id);
+    assert.equal(checkAnswer(text, it.accepted, checkOptionsFor(it)).result, RESULT.WRONG, `${id}: „${text}"`);
+  }
+  // The generator keeps a pronoun first and leaves negation and a second clause alone.
+  assert.deepEqual(middleFieldOrders('Hilf mir bitte mit der Waschmaschine!'), ['Hilf mir mit der Waschmaschine bitte!']);
+  assert.deepEqual(middleFieldOrders('Ich kaufe die Jacke nicht für meine Oma.'), []);
+  assert.deepEqual(middleFieldOrders('Ich nehme eine Tablette, denn mein Kopf tut weh.'), []);
+  assert.deepEqual(middleFieldOrders('Gestern war mein Onkel glücklich.'), [], 'the subject stays where it is');
+  // A request or a question is named in the German prompt: a brick list alone also builds the statement.
+  for (const it of POOL_A12.items.filter((x) => x.type === 'sentence_building')) {
+    if (/!$/.test(String(it.answer).trim())) assert.match(it.questionDe, /Imperativ|Bitte\b|bitten/i, `${it.id}: a request`);
+    if (/\?$/.test(String(it.answer).trim())) assert.match(it.questionDe, /Frage/i, `${it.id}: a question`);
+  }
+  // And over every served item and paper, with the opening cues in place, nothing correct is rejected.
+  assert.deepEqual(rejectedAlternatives('a1.2'), []);
 });
 
 test('DaF review #4 minor: every checkpoint writing task reaches the page with its English twin, on both levels', async () => {

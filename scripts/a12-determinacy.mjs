@@ -14,7 +14,7 @@
 //     für-phrase („Ich kaufe die Jacke für meine Oma."): the other order is the same sentence.
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
+import { checkAnswer, checkOptionsFor, isChoiceItem, RESULT } from '../src/lib/lesson/check.js';
 import { planPractice, poolItems } from '../src/lib/lesson/buildLesson.js';
 import { buildCheckpoint, paperSeed } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { anyCurriculumFor } from '../src/data/curricula/index.js';
@@ -107,6 +107,74 @@ export function wordOrderAlternatives(key) {
   return out;
 }
 
+/*
+ * THE MIDDLE FIELD (DaF review #5, A1.2 BLOCKER 1). A named opening fixes the Vorfeld, not the rest:
+ * „Ana kauft den Kuchen im Geschäft." = „Ana kauft im Geschäft den Kuchen.", „Machen Sie bitte das
+ * Fenster zu!" = „Machen Sie das Fenster bitte zu!", „Dann gehen Sie an der Ecke links." = „Dann gehen
+ * Sie links an der Ecke.". The phrases between the finite verb (with a subject pronoun right after it)
+ * and the sentence-final part (a separable prefix, an infinitive, a participle) may stand in any order,
+ * within the limits a teacher keeps: a personal pronoun stays first, the subject stays where it is,
+ * nothing moves in a sentence with a negation (its place is its meaning) or a second clause, and at
+ * most three phrases move.
+ */
+const MIDDLE_PRONOUN_RE = /^(?:mich|dich|ihn|es|uns|euch|mir|dir|ihm|ihr|Ihnen|sich)$/;
+const BRACKET_PARTICLE_RE = /^(?:zu|an|auf|aus|ein|mit|ab|nach|vor|weg|zurück|fern|los|her|hin)$/;
+const NONFINITE_RE = /^(?:ge[a-zäöüß]{2,}(?:t|en)|[a-zäöüß]{3,}en|[a-zäöüß]+iert|bezahlt|besucht|verstanden|verkauft|erzählt|vergessen)$/;
+const MIDDLE_ADVERB_RE = /^(?:bitte|gern|gerne|heute|morgen|gestern|jetzt|bald|oft|manchmal|immer|schon|noch|auch|dann|danach|zuerst|später|hier|dort|da|links|rechts|geradeaus|früh|spät|lange|wieder|sehr|schnell|langsam)$/i;
+
+function middleConstituents(tokens) {
+  const out = [];
+  for (let i = 0; i < tokens.length;) {
+    if (MIDDLE_PRONOUN_RE.test(tokens[i])) { out.push({ words: [tokens[i]], pronoun: true }); i += 1; continue; }
+    const c = constituentAt(tokens, i);
+    if (c && c.kind !== 'pronoun') { out.push({ words: tokens.slice(i, i + c.length) }); i += c.length; continue; }
+    if (MIDDLE_ADVERB_RE.test(tokens[i]) || isNoun(tokens[i])) { out.push({ words: [tokens[i]] }); i += 1; continue; }
+    return null; // a word the segmenter cannot place: no guess
+  }
+  return out;
+}
+
+const orderings = (list) => (list.length <= 1 ? [list]
+  : list.flatMap((x, i) => orderings([...list.slice(0, i), ...list.slice(i + 1)]).map((rest) => [x, ...rest])));
+
+/** The other orders of a key's middle field, each the same German sentence. */
+export function middleFieldOrders(key) {
+  const raw = String(key || '').trim();
+  const end = raw.slice(-1);
+  if (!/[.!]/.test(end) || /[,;:?]/.test(raw.slice(0, -1)) || /\b(?:und|oder|aber|denn|weil|dass|wenn|nicht|nie|kein\w*)\b/i.test(raw)) return [];
+  const tokens = strip(raw).split(/\s+/);
+  let head;
+  if (end === '!') {
+    head = tokens[1] === 'Sie' ? 2 : 1;
+  } else {
+    const opensWithSubject = SUBJECT_PRONOUN_RE.test(lowerFirst(tokens[0])) || tokens[0] === 'Sie';
+    const first = opensWithSubject ? { length: 1, kind: 'pronoun' }
+      : constituentAt(tokens, 0) || (isNoun(tokens[0]) ? { length: 1, kind: 'np' } : null);
+    if (!first) return [];
+    head = first.length + 1;
+    if (first.kind !== 'pronoun' && first.kind !== 'np') {
+      // Something else opens: only a subject pronoun right after the verb keeps the subject in place.
+      if (!(SUBJECT_PRONOUN_RE.test(tokens[head] || '') || tokens[head] === 'Sie')) return [];
+      head += 1;
+    }
+  }
+  let tail = tokens.length;
+  const last = tokens[tail - 1];
+  if (tail - head > 1 && (BRACKET_PARTICLE_RE.test(last) || NONFINITE_RE.test(last))) tail -= 1;
+  const parts = middleConstituents(tokens.slice(head, tail));
+  if (!parts) return [];
+  const pronouns = parts.filter((p) => p.pronoun);
+  const movable = parts.filter((p) => !p.pronoun);
+  if (movable.length < 2 || movable.length > 3) return [];
+  const out = new Set();
+  for (const order of orderings(movable)) {
+    const words = [...tokens.slice(0, head), ...pronouns.flatMap((p) => p.words), ...order.flatMap((p) => p.words), ...tokens.slice(tail)];
+    const text = `${words.join(' ')}${end}`;
+    if (text !== raw) out.add(text);
+  }
+  return [...out];
+}
+
 /** The opening a statement key's prompt has to name, or null when the order is not free. */
 export const openingOf = (key) => {
   if (!wordOrderAlternatives(key).length) return null;
@@ -167,6 +235,12 @@ export function alternatives(item, { wide = false } = {}) {
   if ((item.type === 'sentence_building' || item.type === 'error_correction') && !OPENING_CUE_RE.test(q)) {
     for (const text of wordOrderAlternatives(key)) add(text, 'another word order');
   }
+  // The middle field: a named opening fixes only the Vorfeld (DaF review #5).
+  if (item.type === 'sentence_building' || item.type === 'error_correction') {
+    for (const text of middleFieldOrders(key)) add(text, 'another middle-field order');
+  }
+  // „___ kostet …?" asks for a price: „Was" and „Wie viel" are both German.
+  if (/___ kosten?\b/.test(q) && /^(?:Was|Wie viel)$/.test(key)) add(key === 'Was' ? 'Wie viel' : 'Was', 'Was/Wie viel kostet');
   // A du-imperative in a gap: „Hol" and „Hole" are both the imperative.
   if (item.type === 'fill_blank' && DU_CUE_RE.test(q) && /^[A-Za-zäöüß]+$/.test(key) && !STEM_CHANGE_IMPERATIVE_RE.test(key) && !/t$/i.test(key)) {
     const other = /e$/.test(key) ? (E_REQUIRED_RE.test(key) ? null : key.slice(0, -1)) : `${key}e`;
@@ -208,6 +282,8 @@ export function rejectedAlternatives(level, poolFile) {
   for (const item of servedItems(level, poolFile).items) {
     const accepted = item.accepted?.length ? item.accepted : [item.answer];
     for (const alt of alternatives({ ...item, questionDe: item.questionDe || item.promptDe }, { wide })) {
+      // A choice item is answered by picking: an alternative it does not print cannot be given.
+      if (isChoiceItem(item) && !(item.options || []).includes(alt.text)) continue;
       const r = checkAnswer(alt.text, accepted, checkOptionsFor(item));
       if (r.result !== RESULT.CORRECT && r.result !== RESULT.TYPO) rejected.push({ where: item.where, id: item.id, why: alt.why, q: item.questionDe || item.promptDe, key: item.answer, alt: alt.text, result: r.result });
     }
