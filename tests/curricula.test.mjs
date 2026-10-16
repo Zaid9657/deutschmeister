@@ -1461,7 +1461,11 @@ test('rule 24: no person is an adjective — a nationality is a NOUN in a senten
   // sentence. A thing subject with a nationality adjective is correct German. L2 line 3 is the
   // line the round-20 cp1 draws into `a1.1-cp1-lesen-4`; the extra item pins the two frames
   // directly, so the assertion does not depend on the draw.
-  for (const sentence of ['Der Tee ist marokkanisch.', 'Meine Staatsangehörigkeit ist marokkanisch.', 'Der Tee ist gut, marokkanisch.']) {
+  // 2026-10-16: the Lesen explanation also quotes the REPORT of the line („Im Text steht also: „Die
+  // Staatsangehörigkeit von Ana ist marokkanisch.““) — a thing subject with the speaker in a von-phrase,
+  // and each quoted sentence is judged on its own.
+  for (const sentence of ['Der Tee ist marokkanisch.', 'Meine Staatsangehörigkeit ist marokkanisch.', 'Der Tee ist gut, marokkanisch.',
+    'Die Staatsangehörigkeit von Ana ist marokkanisch.']) {
     const c = cloneOf(CURRICULUM_A11);
     c.lektionen[1].dialog.lines[3].de = sentence;
     assert.deepEqual(predicativeNationalityAdjectives(c, spec, { poolItems: loadPoolItems('a1.1') }), [], `„${sentence}“ on a dialogue line: the speaker label is not its subject`);
