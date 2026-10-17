@@ -1537,6 +1537,16 @@ const NOT_A_VERB_AFTER_UND = new Set([
   'alle', 'viele', 'beide', 'einige', 'manche', 'wenige', 'andere', 'gerne', 'heute', 'lange', 'alleine',
 ]);
 
+/**
+ * The adverbs that may stand between „und" and the verb of its clause: „… und dann frühstücke".
+ * The verb check looks back past them (DaF review #5, minor: „und dann improvisiere" passed
+ * unchanged once the lexis filter was off).
+ */
+const CLAUSE_ADVERBS = new Set([
+  'dann', 'danach', 'auch', 'noch', 'jetzt', 'heute', 'morgen', 'später', 'zuerst', 'gern',
+  'gerne', 'oft', 'immer', 'manchmal', 'schon', 'hier', 'da', 'dort',
+]);
+
 /** Does the rest of the sentence carry a word no report survives? */
 const restIsReportable = (words, subject) => {
   const own = new Set(String(subject).split(/\s+/).map((p) => p.toLowerCase()));
@@ -1563,7 +1573,9 @@ function reportRest(words, { known, firstPerson }, forms) {
     const third = VERB_3SG.get(bare.toLowerCase());
     if (!third || bare[0] !== bare[0].toLowerCase()) {
       if (firstPerson?.has(bare)) return null;
-      const opensClause = /^(?:und|oder|aber|sondern)$/i.test(bareWord(words[i - 1] || ''));
+      let k = i - 1;
+      while (k >= 0 && CLAUSE_ADVERBS.has(bareWord(words[k]).toLowerCase())) k -= 1;
+      const opensClause = /^(?:und|oder|aber|sondern)$/i.test(bareWord(words[k] || ''));
       if (opensClause && /^[a-zäöüß]+e$/.test(bare) && !NOT_A_VERB_AFTER_UND.has(bare)) return null;
       out.push(w);
       continue;

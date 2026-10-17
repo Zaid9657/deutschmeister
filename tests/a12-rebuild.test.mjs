@@ -868,6 +868,21 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
   assert.deepEqual(problems, []);
 });
 
+test('DaF review #5 minor: a report never keeps a first-person verb, not even with an adverb after „und"', async () => {
+  // „und dann improvisiere" passed the coordinated-verb guard unchanged: the guard looked at the
+  // word right after „und" only. The lexis filter caught it on the real papers; the rule must not
+  // need it, so the filter is off here on purpose.
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const reports = (de) => B.windowReports([{ speaker: 'Ana', de }], spec).map((r) => r.statement);
+  assert.deepEqual(reports('Ich koche und dann improvisiere.'), [], 'the review\'s probe');
+  assert.deepEqual(reports('Ich koche und auch improvisiere.'), []);
+  assert.deepEqual(reports('Ich koche und improvisiere.'), [], 'the case the guard always caught');
+  // …and a verb the table does change still reports, adverb or not.
+  assert.deepEqual(reports('Ich koche und dann esse.'), ['Ana kocht und dann isst.']);
+  assert.deepEqual(reports('Ich koche und danach frühstücke.'), ['Ana kocht und danach frühstückt.']);
+});
+
 test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not stated — annotated cases, both levels, every paper', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
