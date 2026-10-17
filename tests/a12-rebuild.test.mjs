@@ -531,11 +531,12 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
     ],
     9: [
       ['Wo darf ich langsam fahren?', 2, 'Am Platz.', 'ort'],
-      ['Wo soll ich einsteigen?', 6, 'Hier.', 'ort'],
+      ['Wo soll ich einsteigen?', 6, 'Hier, ab acht Uhr.', 'ort'],
       ['Und wo muss ich aussteigen?', 8, 'Am Flughafen.', 'ort'],
       ['Wann fährt der Bus ab?', 8, 'Der Bus fährt jetzt ab.', 'zeit'],
     ],
     10: [
+      ['Gehört die Jacke dir?', 1, 'Ja.', 'ja'],
       ['Welche Größe hat der Mantel für meinen Bruder?', 2, 'Größe 50.', 'auswahl'],
     ],
     11: [
@@ -721,31 +722,76 @@ test('DaF review #5 minor: every form a notice teaches in bold stands in its Eng
   }
 });
 
-test('M7, decided 2026-10-16: every A1 grammar point A1.2 owns has its notice, its input and its practice', () => {
+test('M7, decided 2026-10-16 (DaF review #6 MAJOR 7): every decided point has its own notice, input and practice — in both real plans, and every surface carries weight', () => {
   // The Goethe-Zertifikat A1 inventory (Prüfungsziele/Testbeschreibung, 2022, pp. 100–106) lists
   // these points for Start Deutsch 1, and the decision placed each in the Lektion whose situation
-  // carries it. Each row: the Lektion, the forms its notice puts in bold, a dialogue line that uses
-  // them, and at least two servable items of that Lektion whose answer practises them. The matrix
-  // is written here, not read off the course, so a point that disappears from the course fails.
-  const MATRIX = [
-    { point: 'lieber, besser', nr: 3, bold: ['lieber', 'besser'], input: /\b(?:lieber|besser)\b/i, answer: /\b(?:lieber|besser)\b/ },
-    { point: 'Ich würde gern (chunk)', nr: 5, bold: ['Ich würde gern'], input: /Ich würde gern/, answer: /\bwürde\b|^gehen$/ },
-    { point: 'denn', nr: 6, bold: ['denn'], input: /\bdenn\b/, answer: /\bdenn\b/ },
-    { point: 'war, hatte', nr: 7, bold: ['war', 'hatte'], input: /\bwar\b.*\bhatte\b/, answer: /\b(?:war|hatte)\b/ },
-    { point: 'von … bis, ab', nr: 9, bold: ['von sieben bis zehn Uhr'], input: /von sieben bis zehn Uhr/, answer: /\b(?:bis|ab)\b/ },
-    { point: 'Dativ: gefallen, passen, gehören', nr: 10, bold: ['gefällt mir', 'passt dir'], input: /gefällt mir|passt dir/, answer: /\b(?:mir|dir|Ihnen)\b/ },
-    { point: 'vor + Zeit', nr: 11, bold: ['vor einer'], input: /\bVor einer Woche\b/, answer: /^[Vv]or$/ },
-    { point: 'Perfekt mit sein', nr: 12, bold: ['ist', 'gegangen'], input: /\bist\b.*\bgegangen\b/, answer: /^(?:ist|sind)$|\bist\b.*\bgegangen\b/ },
-    { point: 'Partizip ohne ge-', nr: 12, bold: ['bezahlt'], input: /\bbezahlt\b/, answer: /\b(?:bezahlt|verstanden|telefoniert)\b/ },
+  // carries it. ONE ROW PER POINT: review #6 found rows bundled with „or" — `war` stood in for
+  // `hatte`, one `mir` item for three dative verbs — and ran the old body green with a point's notice
+  // and practice deleted. Each row: the form the notice puts in bold, a dialogue line that uses it
+  // (temporal `ab`, not the prefix of `abfahren`), and the items whose TARGET is the point: two
+  // servable items of the Lektion's own, and one served in EACH of the Lektion's two real practice
+  // plans (planPractice, attempts 1 and 2). Written here, not read off the course.
+  const TIME = String.raw`(?:\w+ Uhr|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|heute|morgen)`;
+  const DAT = /\b(?:mir|dir|Ihnen|ihm|ihr|uns)\b/;
+  const SEIN_PARTICIPLE = String.raw`\b(?:gegangen|gefahren|geblieben|passiert|gekommen|geflogen)\b`;
+  const POINTS = [
+    { point: 'lieber', nr: 3, bold: /^lieber$/, input: /\blieber\b/, target: (q, a) => /\blieber\b/.test(a) },
+    { point: 'besser', nr: 3, bold: /^besser$/, input: /\bbesser\b/, target: (q, a) => /\bbesser\b/.test(a) },
+    { point: 'Ich würde gern (chunk)', nr: 5, bold: /^Ich würde gern$/, input: /\bwürde gern\b/, target: (q, a) => /\bwürde\b/.test(a) },
+    { point: 'denn (Konjunktion)', nr: 6, bold: /^denn$/, input: /, denn\b/, target: (q, a) => /, denn\b/.test(a) || /^denn$/i.test(a) },
+    { point: 'war', nr: 7, bold: /^war$/, input: /\bwar\b/, target: (q, a) => /\bwar\b/.test(a) },
+    { point: 'hatte', nr: 7, bold: /^hatte$/, input: /\bhatte\b/, target: (q, a) => /\bhatte\b/.test(a) },
+    { point: 'von … bis', nr: 9, bold: /\bvon \w+ bis \w+ Uhr\b/, input: /\bvon \w+ bis \w+ Uhr\b/,
+      target: (q, a) => /\bbis\b/.test(a) && /\bvon\b/.test(`${q} ${a}`) },
+    { point: 'ab + Zeitangabe', nr: 9, bold: /^ab \w+ Uhr$/, input: new RegExp(String.raw`\b[Aa]b ${TIME}\b`),
+      target: (q, a) => new RegExp(String.raw`\b[Aa]b ${TIME}\b`).test(a) || (/^ab$/i.test(a) && new RegExp(String.raw`___ ${TIME}\b`).test(q)) },
+    { point: 'gefallen + Dativ', nr: 10, bold: /\bgefällt\b/, input: /\bgefällt (?:mir|dir|Ihnen|ihm|ihr)\b/,
+      target: (q, a) => /\bgefäll(?:t|st)\b|\bgefallen\b/i.test(`${q} ${a}`) && (DAT.test(a) || /\bgefäll/i.test(a)) },
+    { point: 'passen + Dativ', nr: 10, bold: /\bpasst\b/, input: /\bpasst (?:mir|dir|Ihnen|ihm|ihr)\b/,
+      target: (q, a) => /\bpass(?:t|en)\b/i.test(`${q} ${a}`) && (DAT.test(a) || /\bpass(?:t|en)\b/i.test(a)) },
+    { point: 'gehören + Dativ', nr: 10, bold: /\bgehört\b/, input: /\b[Gg]ehört\b.*\b(?:mir|dir|Ihnen|ihm|ihr)\b/,
+      target: (q, a) => /\bgehör(?:t|en)\b/i.test(`${q} ${a}`) && (DAT.test(a) || /\bgehör(?:t|en)\b/i.test(a)) },
+    { point: 'vor + Zeitangabe', nr: 11, bold: /^vor einer$/, input: /\b[Vv]or einer Woche\b/,
+      target: (q, a) => /^[Vv]or$/.test(a) || /\b[Vv]or (?:einer|einem|zwei|drei) /.test(a) },
+    { point: 'Perfekt mit sein', nr: 12, bold: /^gegangen$/, input: /\b(?:ist|bin|bist|sind)\b.*\b(?:gegangen|gefahren|geblieben|passiert)\b/,
+      target: (q, a) => new RegExp(String.raw`\b(?:ist|sind|bin|bist|seid)\b.*${SEIN_PARTICIPLE}`).test(a)
+        || (/^(?:ist|sind|bin|bist|seid)$/.test(a) && new RegExp(SEIN_PARTICIPLE).test(q)) },
+    { point: 'Partizip ohne ge-', nr: 12, bold: /^bezahlt$/, input: /\b(?:bezahlt|verstanden|telefoniert|besucht|bekommen|vergessen)\b/,
+      target: (q, a) => /\b(?:bezahlt|verstanden|telefoniert|besucht|bekommen|vergessen|erzählt)\b/.test(a) },
   ];
-  for (const row of MATRIX) {
-    const l = CURRICULUM_A12.lektionen.find((x) => x.nr === row.nr);
+  const targets = (p) => (it) => p.target(String(it.questionDe), String(it.answer));
+  const failures = (curriculum, pool, plans) => POINTS.flatMap((p) => {
+    const out = [];
+    const l = curriculum.lektionen.find((x) => x.nr === p.nr);
     const bold = [...l.notice.bodyDe.matchAll(/\*\*([^*]+)\*\*/g)].map((m) => m[1]);
-    for (const form of row.bold) assert.ok(bold.includes(form), `${row.point}: L${row.nr}'s notice puts „${form}" in bold`);
-    assert.ok(l.dialog.lines.some((x) => row.input.test(x.de)), `${row.point}: a dialogue line of L${row.nr} uses it`);
-    const own = `extra-a12-l${String(row.nr).padStart(2, '0')}-`;
-    const practice = POOL_A12.items.filter((it) => it.id.startsWith(own) && it.minLektion != null && it.minLektion <= row.nr && row.answer.test(String(it.answer)));
-    assert.ok(practice.length >= 2, `${row.point}: ${practice.length} servable L${row.nr} items practise it`);
+    if (!bold.some((b) => p.bold.test(b))) out.push(`${p.point}: L${p.nr}'s notice puts no form of it in bold`);
+    if (!l.dialog.lines.some((x) => p.input.test(x.de))) out.push(`${p.point}: no dialogue line of L${p.nr} uses it`);
+    const own = `extra-a12-l${String(p.nr).padStart(2, '0')}-`;
+    const supply = pool.items.filter((it) => it.id.startsWith(own) && it.minLektion != null && it.minLektion <= p.nr && targets(p)(it));
+    if (supply.length < 2) out.push(`${p.point}: ${supply.length} servable L${p.nr} items practise it`);
+    plans.forEach((plan, k) => {
+      if (!(plan.get(p.nr) || []).some(targets(p))) out.push(`${p.point}: L${p.nr} attempt ${k + 1} does not practise it`);
+    });
+    return out;
+  });
+  const realPlans = [1, 2].map((attempt) => planPractice(CURRICULUM_A12, POOL_A12, attempt));
+  assert.deepEqual(failures(CURRICULUM_A12, POOL_A12, realPlans), []);
+
+  // DELETION MUTATIONS. Every surface of every point is taken away once, and its row must say so.
+  // A practice plan reads the Wortfeld, the practice rule and the pool, never the notice or the
+  // dialogue, so those two mutations keep the real plans; deleting the practice draws new ones.
+  for (const p of POINTS) {
+    const named = (list) => list.some((f) => f.startsWith(`${p.point}:`));
+    const noBold = structuredClone(CURRICULUM_A12);
+    const notice = noBold.lektionen.find((x) => x.nr === p.nr).notice;
+    notice.bodyDe = notice.bodyDe.replace(/\*\*([^*]+)\*\*/g, (m, form) => (p.bold.test(form) ? form : m));
+    assert.ok(named(failures(noBold, POOL_A12, realPlans)), `${p.point}: deleting its bold form goes unnoticed`);
+    const noInput = structuredClone(CURRICULUM_A12);
+    for (const line of noInput.lektionen.find((x) => x.nr === p.nr).dialog.lines) if (p.input.test(line.de)) line.de = '…';
+    assert.ok(named(failures(noInput, POOL_A12, realPlans)), `${p.point}: deleting its input goes unnoticed`);
+    const noPractice = { ...POOL_A12, items: POOL_A12.items.filter((it) => !targets(p)(it)) };
+    const plans = [1, 2].map((attempt) => planPractice(CURRICULUM_A12, noPractice, attempt));
+    assert.ok(named(failures(CURRICULUM_A12, noPractice, plans)), `${p.point}: deleting its practice goes unnoticed`);
   }
   // What moved to A2.1 is not promised: no can-do or notice of A1.2 teaches teurer/größer or a würde paradigm.
   const shown = CURRICULUM_A12.lektionen.flatMap((l) => [...l.canDo, l.notice.bodyDe]).join(' ');
@@ -1059,4 +1105,211 @@ test('A1.2: every ratchet equals its measurement — a ratchet with slack is not
   for (const [rule, measured, ratchet] of checks) {
     assert.equal(measured, ratchet, `A1.2 RULE ${rule} measures ${measured}, ratchet is ${ratchet} — lower it in the same commit`);
   }
+});
+
+test('A1.2 transfer: what a default paper draws that the learner already answered in a lesson equals its measurement', async () => {
+  // A1.1's transfer ratchet (tests/checkpoint.test.mjs), walked on A1.2 and held as an equality like
+  // every A1.2 ratchet. Measured 2026-10-17, once the Schreiben drills were drawn before the
+  // Sprachbausteine — before that the count depended on where the shuffle happened to land (A1.2
+  // checkpoint 2 moved between 1.3 and 2.3 per paper over thirty seeds with nothing but the random
+  // stream shifted). What is left is the supply, not luck: checkpoint 1's accusative Lektion has no
+  // sentence-building item the lessons leave unanswered; checkpoint 2's only earlier topic is
+  // numbers-counting, whose unanswered items checkpoint 1's three papers draw; checkpoint 3 takes one
+  // more numbers item and one of modal-verbs-intro, which has one unanswered item in fourteen.
+  const { default: buildLesson } = await import('../src/lib/lesson/buildLesson.js');
+  const { buildCheckpoint } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const measured = CURRICULUM_A12.checkpoints.map((checkpoint) => {
+    const seen = new Set();
+    for (const lektion of CURRICULUM_A12.lektionen.filter((l) => l.nr <= checkpoint.afterLektion)) {
+      for (const attempt of [1, 2]) {
+        for (const stage of buildLesson({ curriculum: CURRICULUM_A12, lektion, pool: POOL_A12, attempt }).stages) {
+          for (const it of stage.items || []) seen.add(it.id);
+        }
+      }
+    }
+    return buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12 })
+      .filter((it) => it.poolItemId && seen.has(it.poolItemId)).length;
+  });
+  assert.deepEqual(measured, [1, 2, 2, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
+});
+
+test('DaF review #6 BLOCKER 1: a correct answer a task rejects is excluded by a German task condition — annotated variants, both ways', () => {
+  // Written by hand, apart from the repair generator (scripts/a12-determinacy.mjs, which shares the
+  // build's blind spots): the variants the review measured, the condition that now excludes each,
+  // and controls — wrong agreement, wrong verb position, the uncorrected form — that stay wrong.
+  const item = (id) => {
+    const it = POOL_A12.items.find((x) => x.id === id);
+    assert.ok(it, `${id} is in the pool`);
+    return it;
+  };
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  const expect = (it, right, wrong) => {
+    for (const text of right) assert.equal(verdict(it, text), RESULT.CORRECT, `${it.id}: „${text}" is right`);
+    for (const text of wrong) assert.equal(verdict(it, text), RESULT.WRONG, `${it.id}: „${text}" is wrong`);
+  };
+  // L12: an article-less object may open the sentence („Milch hat Ana getrunken.") — the task names the opening.
+  const milch = item('extra-a12-l12-10');
+  assert.match(milch.questionDe, /\(Beginnen Sie mit „Ana“\)/);
+  expect(milch, ['Ana hat Milch getrunken.'], ['Ana hat Milch getrinkt.']);
+  // CP2: the first clause of a „denn" pair has a free Vorfeld — the task names the opening.
+  const tablette = item('extra-a12-l06-13');
+  assert.match(tablette.questionDe, /\(Beginnen Sie mit „Ich“\)/);
+  expect(tablette, ['Ich nehme eine Tablette, denn mein Kopf tut weh.'], ['Ich nehme eine Tablette, denn mein Kopf wehtut.']);
+  // L11: with no anchor „Seit einer Woche war es warm." was possible; a present anchor leaves „vor".
+  const woche = item('extra-a12-l11-10');
+  assert.match(woche.questionDe, /^Heute ist es kalt\. ___ einer Woche/);
+  expect(woche, ['Vor'], ['Seit']);
+  // L8: the source is a grammatical statement, so the task names the operation — and the
+  // du-imperative may carry its pronoun.
+  const fernseher = item('extra-a12-l08-08');
+  assert.match(fernseher.questionDe, /^Bilden Sie den Imperativ:/);
+  expect(fernseher, ['Mach den Fernseher aus!', 'Mache den Fernseher aus!', 'Mach du den Fernseher aus!', 'Mache du den Fernseher aus!'],
+    ['Du machst den Fernseher aus!', 'Macht den Fernseher aus!', 'Mach aus den Fernseher!']);
+  // The positives the review listed: Hol/Hole, „bitte" in each of its places.
+  expect(item('extra-a12-l08-07'), ['Hol', 'Hole'], ['Holt']);
+  expect(item('e1716cd7-ccbe-544a-a65d-796cda3e0fe7'),
+    ['Machen Sie bitte das Fenster zu!', 'Bitte machen Sie das Fenster zu!', 'Machen Sie das Fenster bitte zu!', 'Machen Sie das Fenster zu, bitte!'],
+    ['Sie machen bitte das Fenster zu!']);
+  expect(item('extra-a12-l08-01'), ['Hilf mir bitte mit der Waschmaschine!', 'Hilf du mir bitte mit der Waschmaschine!'], ['Hilfst du mir bitte mit der Waschmaschine?']);
+  // THE CLASS: the INSTRUCTION names a request or a question — a „bitte" among the bricks or inside
+  // the quoted source is no task condition. „Bilden Sie den Satz: [helfen / du / mir / bitte / …]"
+  // also builds „Hilfst du mir bitte …?", and „Korrigieren Sie: „Sie helfen mir bitte …!"" corrected
+  // a grammatical sentence; both passed the old check on the „bitte" they print.
+  const instruction = (q) => String(q).replace(/„[^“]*“/g, ' ').replace(/\[[^\]]*\]/g, ' ');
+  for (const it of POOL_A12.items.filter((x) => x.type === 'sentence_building' || x.type === 'error_correction')) {
+    const key = String(it.answer).trim();
+    if (/!$/.test(key)) assert.match(instruction(it.questionDe), /Imperativ|\bBitte\b|bitten/i, `${it.id}: „${it.questionDe}" names no request`);
+    if (/\?$/.test(key)) assert.match(instruction(it.questionDe), /Frage/i, `${it.id}: „${it.questionDe}" names no question`);
+  }
+  // (Over every served item and paper, the generator side of the same rule is the review #5 test above.)
+});
+
+test('DaF review #6 BLOCKER 2: the dative ordinals are one family and spatial „um" is taught nowhere — outside the horizon and out of every draw', async () => {
+  const v = await import('../scripts/validate-curriculum.mjs');
+  const { buildCheckpoint, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const horizon = v.constructionHorizonIndex('a1.2');
+  const at = (answer) => horizon({ questionDe: '', answer });
+  // The review's probes: „im dritten" was caught, „im dreizehnten/siebzehnten" were not.
+  for (const s of ['Ich wohne im dritten Stockwerk.', 'Ich wohne im dreizehnten Stockwerk.', 'Ich wohne im siebzehnten Stockwerk.', 'Ich wohne im hundertsten Stockwerk.']) {
+    assert.equal(at(s), null, s);
+  }
+  // L10 teaches für, ohne, durch; „um" is a clock time and nothing else.
+  for (const s of ['Wir laufen um den Stuhl.', 'Wir gehen um die Schule.']) assert.equal(at(s), null, s);
+  // …and the contrasts stay inside: a clock time, the nominative ordinal L2 teaches.
+  assert.notEqual(at('Der Bus fährt um acht Uhr.'), null);
+  assert.notEqual(at('Das dritte Stockwerk ist frei.'), null);
+  // THE DRAWS, not the stamps: the items that ask for spatial „um" are never servable, and nothing a
+  // paper (rounds 0–3) or a practice plan serves is past the horizon of where it is served.
+  const filled = (it) => String(it.questionDe).replace('___', String(it.answer));
+  const spatialUm = POOL_A12.items.filter((it) => /\bum (?:den|die|das|einen|eine|ein|meinen|meine|mein) [A-ZÄÖÜ]/.test(filled(it)));
+  assert.ok(spatialUm.length >= 2, 'the CP4 items the review measured are still in the pool');
+  for (const it of spatialUm) assert.equal(it.minLektion, null, `${it.id}: „${filled(it)}"`);
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: paperSeed(checkpoint, round) })) {
+        if (!it.poolItemId) continue;
+        const row = POOL_A12.items.find((x) => x.id === it.poolItemId);
+        assert.ok(row.minLektion != null && row.minLektion <= checkpoint.afterLektion, `${checkpoint.id}/${round} ${it.id}: „${row.questionDe}" (minLektion ${row.minLektion})`);
+      }
+    }
+  }
+  for (const attempt of [1, 2]) {
+    for (const [nr, items] of planPractice(CURRICULUM_A12, POOL_A12, attempt)) {
+      for (const it of items) assert.ok(it.minLektion != null && it.minLektion <= nr, `L${nr}/${attempt} ${it.id} (minLektion ${it.minLektion})`);
+    }
+  }
+});
+
+test('DaF review #6 MAJOR 5: a simplified participle rule claims no more than it covers — German and English, notice and card', async () => {
+  // „Unregelmäßig endet es auf -en" is false: bringen → gebracht, denken → gedacht, wissen → gewusst.
+  // Wherever the rule is printed — the notice, its twin, the card and the card the functions serve —
+  // a claim about irregular participles in -en is scoped (viele/oft/meist; many/often/most).
+  const { default: CARDS } = await import('../scripts/rule-card-overrides.mjs');
+  const strings = (value) => (typeof value === 'string' ? [value] : value && typeof value === 'object' ? Object.values(value).flatMap(strings) : []);
+  const sentences = (text) => String(text).split(/(?<=[.!?])\s+|\n/);
+  const sources = [
+    ...CURRICULUM_A12.lektionen.flatMap((l) => [['de', l.notice.bodyDe, `L${l.nr} notice`], ['en', l.notice.bodyEn, `L${l.nr} notice (en)`]]),
+    ...Object.entries(CARDS).flatMap(([slug, card]) => strings(card).map((text) => ['de', text, `card ${slug}`])),
+    // The generated module keeps each card as a JSON string: its line breaks are written „\n".
+    ['de', read('netlify/functions/_shared/ruleCards.mjs').replace(/\\n/g, '\n'), 'the generated cards'],
+  ];
+  const CLAIM = { de: /unregelmäßig\w*[^.]*-en\b/i, en: /irregular[^.]*-en\b/i };
+  const SCOPE = { de: /\b(?:viele|oft|meist|meistens|manche)\b/i, en: /\b(?:many|often|most|mostly|some)\b/i };
+  let claims = 0;
+  for (const [lang, text, where] of sources) {
+    for (const sentence of sentences(text)) {
+      if (!CLAIM[lang].test(sentence)) continue;
+      claims += 1;
+      assert.match(sentence, SCOPE[lang], `${where}: „${sentence.trim()}" claims it of every irregular verb`);
+    }
+  }
+  assert.ok(claims >= 3, `the rule stands in the L12 notice, its twin and the card (${claims} found)`);
+  // The contrasts, annotated by hand: each sentence of the L12 notice lists only forms of its class.
+  const CLASS = {
+    gekauft: 'regelmäßig', gefeiert: 'regelmäßig', gemacht: 'regelmäßig',
+    gegessen: 'unregelmäßig', getrunken: 'unregelmäßig', gegangen: 'unregelmäßig',
+    gebracht: 'gemischt', gedacht: 'gemischt', gewusst: 'gemischt',
+    bezahlt: 'ohne ge-', verstanden: 'ohne ge-', telefoniert: 'ohne ge-',
+  };
+  const notice = CURRICULUM_A12.lektionen.find((l) => l.nr === 12).notice.bodyDe;
+  const listed = (lead) => {
+    const sentence = sentences(notice).find((x) => lead.test(x)) || '';
+    return Object.keys(CLASS).filter((form) => new RegExp(`\\b${form}\\b`).test(sentence));
+  };
+  for (const [lead, cls] of [[/^Regelmäßig/, 'regelmäßig'], [/unregelmäßige/, 'unregelmäßig'], [/^Ohne ge-/, 'ohne ge-']]) {
+    const forms = listed(lead);
+    assert.ok(forms.length, `the L12 notice has a sentence for „${cls}"`);
+    for (const form of forms) assert.equal(CLASS[form], cls, `„${form}" stands under „${cls}"`);
+  }
+});
+
+test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „von" owners, and no negation cue in a statement or its text', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const candidates = (statement) => new Set([1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+    B.contradictions(statement, spec.nouns, B.mulberry32(seed)).map((c) => c.de)));
+  const reports = (lines) => B.windowReports(lines, spec).map((r) => r.statement);
+  // ANNOTATED BY HAND (widerspricht / offen), not derived from the generator. „mindestens zwei" is
+  // not refuted by twelve or by three: a bound gives no Falsch at all; an exact value still does.
+  assert.deepEqual([...candidates('Ana hat mindestens zwei Koffer.')], [], 'the review\'s probe: „mindestens zwölf" is offen');
+  assert.ok(candidates('Ana hat zwei Koffer.').has('Ana hat drei Koffer.'), 'an exact value: „drei" widerspricht');
+  // Two grandmothers told apart by „von" are two referents; one is one.
+  assert.deepEqual(reports([
+    { speaker: 'Lena', de: 'Die Oma von Tim ist hier.' }, { speaker: 'Ana', de: 'Die Oma von Lena ist dort.' }, { speaker: 'Lena', de: 'Sie ist müde.' },
+  ]).filter((x) => /müde/.test(x)), [], 'the review\'s probe: no report about „die Oma"');
+  assert.ok(reports([{ speaker: 'Lena', de: 'Die Oma von Tim ist krank.' }, { speaker: 'Ana', de: 'Sie ist müde.' }]).includes('Die Oma ist müde.'), 'one grandmother: a report');
+  // The isolated transformer refuses a coordinated first person it does not convert, whatever
+  // stands between „und" and the verb (review #6 Minor: anschließend, plötzlich, zu Hause).
+  const one = (de) => reports([{ speaker: 'Ana', de }]);
+  for (const de of ['Ich koche und anschließend improvisiere.', 'Ich koche und plötzlich improvisiere.', 'Ich koche und zu Hause improvisiere.']) assert.deepEqual(one(de), [], de);
+  assert.deepEqual(one('Ich koche und bin müde.'), ['Ana kocht und ist müde.'], 'a verb the table converts still reports');
+  // NO ANSWER KEY IN THE NEGATIONS. „Negation in the text → Falsch, otherwise Richtig" scored 49 of
+  // 64 keys and solved seven papers. Run that strategy — and the same one on the statements — on every
+  // regular paper of both levels: it solves none, and on A1.2 it scores chance, which is what a paper
+  // whose Richtig and Falsch texts carry the same number of negations leaves it (measured 24 of 48).
+  // A1.1's checkpoint 2 papers keep a one-statement imbalance (the review #5 test's ratchet) that no
+  // whole-paper strategy turns into a solved paper.
+  const NEG = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
+  const solved = { a12: [], a11: [] };
+  const byText = { right: 0, total: 0 };
+  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    for (const checkpoint of curriculum.checkpoints) {
+      for (let round = 0; round < 3; round += 1) {
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        for (const field of ['text', 'statement']) {
+          if (lesen.every((it) => (NEG.test(it[field]) ? 'Falsch' : 'Richtig') === it.answer)) solved[file].push(`${checkpoint.id}/${round}/${field}`);
+        }
+        if (file !== 'a12') continue;
+        for (const it of lesen) {
+          byText.total += 1;
+          if ((NEG.test(it.text) ? 'Falsch' : 'Richtig') === it.answer) byText.right += 1;
+        }
+      }
+    }
+  }
+  assert.deepEqual(solved.a12, [], 'A1.2: no regular paper is solved by spotting a negation');
+  assert.deepEqual(solved.a11, [], 'A1.1: no regular paper is solved by spotting a negation');
+  assert.equal(byText.right * 2, byText.total, `A1.2: the text strategy scores chance, not ${byText.right} of ${byText.total}`);
 });

@@ -67,9 +67,19 @@ function constituentAt(tokens, i) {
   return null;
 }
 
+/** The finite copula forms after which a bare noun is a predicate, not an object. */
+const COPULA_FORMS = new Set(['ist', 'sind', 'bin', 'bist', 'seid', 'war', 'waren', 'bleibt', 'bleiben', 'wird', 'werden', 'heißt', 'heißen']);
+
 /** The other word orders of a statement key, each a correct German sentence. */
 export function wordOrderAlternatives(key) {
   const raw = String(key || '').trim();
+  // A second main clause after „, denn / aber / sondern / oder / und" keeps its place; the FIRST
+  // clause has the free Vorfeld („Eine Tablette nehme ich, denn mein Kopf tut weh.", DaF review #6,
+  // B1 — the old early return gave such keys no alternatives and their prompts no opening cue).
+  const coordinated = raw.match(/^([^,]+), ((?:denn|aber|sondern|oder|und) .+[.!])$/);
+  if (coordinated) {
+    return wordOrderAlternatives(`${coordinated[1]}.`).map((first) => `${first.replace(/\.$/, '')}, ${coordinated[2]}`);
+  }
   if (!/\.$/.test(raw) || /[,;:?!]/.test(raw.slice(0, -1)) || /\b(?:und|oder|aber|weil|dass|wenn)\b/.test(raw)) return [];
   const tokens = strip(raw).split(/\s+/);
   // A sentence-initial function word is written small once it moves; a noun or a name is not.
@@ -91,7 +101,10 @@ export function wordOrderAlternatives(key) {
     // The subject opens: each other phrase may open instead, the subject then follows the verb.
     const rest = tokens.slice(first.length + 1);
     for (let j = 0; j < rest.length; j += 1) {
-      const c = constituentAt(rest, j);
+      // A bare noun right after a full verb is its object („Ana hat Milch getrunken." → „Milch hat
+      // Ana getrunken.", DaF review #6, B1); after a copula it is the predicate and stays.
+      const bareObject = isNoun(rest[j]) && j < rest.length - 1 && !COPULA_FORMS.has(verb) ? { length: 1, kind: 'object' } : null;
+      const c = constituentAt(rest, j) || bareObject;
       if (!c || (c.kind !== 'phrase' && c.kind !== 'object')) continue;
       const fronted = rest.slice(j, j + c.length);
       const remainder = [...rest.slice(0, j), ...rest.slice(j + c.length)];
@@ -196,8 +209,11 @@ export function alternatives(item, { wide = false } = {}) {
   // A checkpoint item carries its prompt as promptDe: read it, or its cue (Beginnen Sie mit …) is unseen.
   const q = String(item.questionDe || item.promptDe || '');
   const key = String(item.answer || '').trim();
-  // du-imperative ±e
+  // du-imperative ±e — and, for a sentence task, with its emphatic pronoun („Mach du den Fernseher aus!")
   const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
+  if (wide && imp && (item.type === 'sentence_building' || item.type === 'error_correction') && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
+    out.push({ text: `${imp[1]} du${imp[2]}!`, why: 'du-imperative with its emphatic pronoun' });
+  }
   if (imp && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
     const other = /e$/.test(imp[1]) ? (E_REQUIRED_RE.test(imp[1]) ? null : imp[1].slice(0, -1)) : `${imp[1]}e`;
     if (other) out.push({ text: `${other}${imp[2]}!`, why: 'du-imperative ±e' });

@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 289,
+ "count": 294,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -307,6 +307,25 @@
    "hint": null,
    "minLektion": 3,
    "explanationEn": "The comparative of **gern** is **lieber**, not gerner."
+  },
+  {
+   "id": "extra-a12-l03-15",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Das Brot ist ___ als der Kuchen. (gut)",
+   "questionEn": "The bread is better than the cake.",
+   "options": null,
+   "answer": "besser",
+   "accepted": [
+    "besser"
+   ],
+   "explanationDe": "gut wird beim Vergleich zu besser: besser als.",
+   "hint": null,
+   "minLektion": 3,
+   "explanationEn": "In a comparison **gut** becomes **besser** (better): besser als."
   },
   {
    "id": "extra-a12-l03-08",
@@ -1273,8 +1292,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 10,
-   "questionDe": "___ einer Woche war es warm. (vor oder seit?)",
-   "questionEn": "A week ago it was warm.",
+   "questionDe": "Heute ist es kalt. ___ einer Woche war es warm. (vor oder seit?)",
+   "questionEn": "Today it is cold. A week ago it was warm.",
    "options": null,
    "answer": "Vor",
    "accepted": [
@@ -1788,13 +1807,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Bilden Sie den Satz: [helfen / du / mir / bitte / mit der Waschmaschine]",
+   "questionDe": "Bilden Sie den Imperativ: [helfen / du / mir / bitte / mit der Waschmaschine]",
    "questionEn": "Build the request for help.",
    "options": null,
    "answer": "Hilf mir bitte mit der Waschmaschine!",
    "accepted": [
     "Hilf mir bitte mit der Waschmaschine!",
     "Hilf mir bitte mit der Waschmaschine",
+    "Hilf du mir bitte mit der Waschmaschine!",
+    "Hilf du mir bitte mit der Waschmaschine",
     "Bitte hilf mir mit der Waschmaschine!",
     "Bitte hilf mir mit der Waschmaschine",
     "Hilf mir mit der Waschmaschine bitte!",
@@ -1820,7 +1841,11 @@
     "Mach die Tür auf",
     "Mach die Tür auf.",
     "Mache die Tür auf!",
-    "Mache die Tür auf"
+    "Mache die Tür auf",
+    "Mach du die Tür auf!",
+    "Mache du die Tür auf!",
+    "Mach du die Tür auf",
+    "Mache du die Tür auf"
    ],
    "explanationDe": "du-Imperativ von aufmachen: Mach ... auf, Präfix am Ende.",
    "explanationEn": "du-imperative of aufmachen: Mach ... auf, prefix at the end.",
@@ -1840,7 +1865,9 @@
    "answer": "Warte in der Garage!",
    "accepted": [
     "Warte in der Garage!",
-    "Warte in der Garage"
+    "Warte in der Garage",
+    "Warte du in der Garage!",
+    "Warte du in der Garage"
    ],
    "explanationDe": "Bei du fällt das Pronomen weg: Warte!",
    "hint": null,
@@ -1942,15 +1969,19 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Korrigieren Sie: „Du machst den Fernseher aus!“",
-   "questionEn": "Turn the statement into a request.",
+   "questionDe": "Bilden Sie den Imperativ: „Du machst den Fernseher aus!“",
+   "questionEn": "Make the statement an imperative.",
    "options": null,
    "answer": "Mach den Fernseher aus!",
    "accepted": [
     "Mach den Fernseher aus!",
     "Mach den Fernseher aus",
     "Mache den Fernseher aus!",
-    "Mache den Fernseher aus"
+    "Mache den Fernseher aus",
+    "Mach du den Fernseher aus!",
+    "Mache du den Fernseher aus!",
+    "Mach du den Fernseher aus",
+    "Mache du den Fernseher aus"
    ],
    "explanationDe": "Die Vorsilbe aus steht am Ende: Mach … aus!",
    "hint": null,
@@ -1964,7 +1995,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Korrigieren Sie: „Sie helfen mir bitte mit dem Schrank!“",
+   "questionDe": "Bilden Sie den Imperativ: „Sie helfen mir bitte mit dem Schrank!“",
    "questionEn": "Turn the statement into a polite request.",
    "options": null,
    "answer": "Helfen Sie mir bitte mit dem Schrank!",
@@ -2269,6 +2300,25 @@
    "hint": null,
    "minLektion": 9,
    "explanationEn": "Start and end: **von … bis**."
+  },
+  {
+   "id": "extra-a12-l09-13",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 13,
+   "questionDe": "Der Bus fährt von acht bis zehn Uhr. Sie können ___ acht Uhr einsteigen. (ab oder bis?)",
+   "questionEn": "The bus runs from eight to ten. You can get on from eight o'clock.",
+   "options": null,
+   "answer": "ab",
+   "accepted": [
+    "ab"
+   ],
+   "explanationDe": "ab nennt den Beginn: ab acht Uhr.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "**ab** names the start: **ab acht Uhr** (from eight o'clock)."
   },
   {
    "id": "extra-a12-l09-06",
@@ -2953,6 +3003,25 @@
    "hint": null,
    "minLektion": 7,
    "explanationEn": "For yesterday use **war**, not ist."
+  },
+  {
+   "id": "extra-a12-l07-14",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Gestern ___ mein Opa Fieber. (haben)",
+   "questionEn": "Yesterday my grandpa had a fever.",
+   "options": null,
+   "answer": "hatte",
+   "accepted": [
+    "hatte"
+   ],
+   "explanationDe": "haben im Präteritum: er hatte.",
+   "hint": null,
+   "minLektion": 7,
+   "explanationEn": "**haben** in the past: er **hatte** (he had)."
   },
   {
    "id": "extra-a12-l07-06",
@@ -4151,7 +4220,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 10,
-   "questionDe": "Korrigieren Sie: „Ana hat Milch getrinkt.“",
+   "questionDe": "Korrigieren Sie: „Ana hat Milch getrinkt.“ (Beginnen Sie mit „Ana“)",
    "questionEn": "Fix the participle.",
    "options": null,
    "answer": "Ana hat Milch getrunken.",
@@ -4470,6 +4539,44 @@
    "explanationEn": "**gefallen** takes the dative: **mir**, not mich."
   },
   {
+   "id": "extra-a12-l10-14",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Die Hose ___ mir gut. (passen)",
+   "questionEn": "The trousers fit me well.",
+   "options": null,
+   "answer": "passt",
+   "accepted": [
+    "passt"
+   ],
+   "explanationDe": "passen verlangt den Dativ: Die Hose passt mir.",
+   "hint": null,
+   "minLektion": 10,
+   "explanationEn": "**passen** (fit) takes the dative: Die Hose **passt** mir."
+  },
+  {
+   "id": "extra-a12-l10-15",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Ana, die Mütze ___ dir. (gehören)",
+   "questionEn": "Ana, the hat belongs to you.",
+   "options": null,
+   "answer": "gehört",
+   "accepted": [
+    "gehört"
+   ],
+   "explanationDe": "gehören verlangt den Dativ: Die Mütze gehört dir.",
+   "hint": null,
+   "minLektion": 10,
+   "explanationEn": "**gehören** (belong) takes the dative: Die Mütze **gehört** dir."
+  },
+  {
    "id": "extra-a12-l10-05",
    "topic": "prepositions-accusative",
    "type": "sentence_building",
@@ -4659,7 +4766,7 @@
    "explanationDe": "um verlangt immer Akkusativ; Stuhl ist maskulin, deshalb wird der zu den.",
    "explanationEn": "um always triggers accusative; Stuhl is masculine, so der becomes den.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": null
   },
   {
    "id": "ca49b948-8f00-500e-8a88-2f8c58ced76e",
@@ -4697,7 +4804,7 @@
    "explanationDe": "Schule ist feminin, deshalb bleibt der Akkusativartikel die, anders als maskulin der → den.",
    "explanationEn": "Schule is feminine, so the accusative article stays die, unlike masculine der → den.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": null
   },
   {
    "id": "0d62a541-125d-54a5-9f64-40a249688b3a",
@@ -5109,7 +5216,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Korrigieren Sie: „Wann der Film im Kino ist?“",
+   "questionDe": "Korrigieren Sie die Frage: „Wann der Film im Kino ist?“",
    "questionEn": "Fix the question.",
    "options": null,
    "answer": "Wann ist der Film im Kino?",
@@ -5695,7 +5802,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 13,
-   "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun]",
+   "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun] (Beginnen Sie mit „Ich“)",
    "questionEn": "Build the sentence: I am taking a tablet because my head hurts.",
    "options": null,
    "answer": "Ich nehme eine Tablette, denn mein Kopf tut weh.",

@@ -753,7 +753,11 @@ const NEVER_FORMS_A12 = [
   // An ordinal with any ending but L2's -e („im dritten Stockwerk", „am zwanzigsten Mai") is the
   // dative or accusative Adjektivdeklination, taught nowhere. constructions.js reads an adjective
   // only after an article, not after im/am/zum, so L2 drew „im ___ Stockwerk" → dritten (DaF review #5, B2).
-  /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+igst)(?:en|er|es|em)\b/i,
+  // …the whole family, -zehnt- and hundertst- included („im dreizehnten Stockwerk", DaF review #6, B2).
+  /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+zehnt|[a-zäöüß]+igst|hundertst)(?:en|er|es|em)\b/i,
+  // Spatial „um + Akkusativ" („Wir laufen um den Stuhl.") is taught nowhere: L10 teaches für, ohne,
+  // durch; „um" is a clock time („um acht Uhr") and nothing else (DaF review #6, B2).
+  /\bum (?:den|die|das|einen|eine|ein|meinen|meine|mein|seinen|seine|sein|ihren|ihre|unseren|unsere|unser) [A-ZÄÖÜ]/,
 ];
 const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
 

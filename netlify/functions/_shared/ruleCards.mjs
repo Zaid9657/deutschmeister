@@ -256,7 +256,7 @@ export const RULE_CARDS = {
   },
   "perfekt-intro": {
     "titleDe": "Das Perfekt: haben oder sein und Partizip II",
-    "content": "Über Vergangenes spricht man im Perfekt:\nhaben oder sein steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nUnregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.\nOhne ge- bei be-, ver- und -ieren: bezahlen → bezahlt, verstehen → verstanden, telefonieren → telefoniert.\nsein steht bei gehen, fahren, kommen, bleiben und passieren.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nTim hat ihn gekocht. Ich habe die Getränke bezahlt.\nIm Kuchen war zu viel Zucker. Tim ist früh gegangen.\nEnglish: haben or sein in second position, and the participle at the very end of the sentence.",
+    "content": "Über Vergangenes spricht man im Perfekt:\nhaben oder sein steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nViele unregelmäßige Verben enden auf -en: essen → gegessen, trinken → getrunken.\nOhne ge- bei be-, ver- und -ieren: bezahlen → bezahlt, verstehen → verstanden, telefonieren → telefoniert.\nsein steht bei gehen, fahren, kommen, bleiben und passieren.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nTim hat ihn gekocht. Ich habe die Getränke bezahlt.\nIm Kuchen war zu viel Zucker. Tim ist früh gegangen.\nEnglish: haben or sein in second position, and the participle at the very end of the sentence.",
     "commonMistakes": [
       {
         "wrong": "Ich habe gegessen Kuchen.",
@@ -329,7 +329,7 @@ export const RULE_CARDS = {
   },
   "prepositions-accusative": {
     "titleDe": "Präpositionen mit Akkusativ",
-    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nDativ bei gefallen, passen, gehören:\nich → mir, du → dir: Der Pullover passt dir gut. Er gefällt mir.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
+    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nDativ bei gefallen, passen, gehören:\nich → mir, du → dir: Der Pullover passt dir gut. Er gefällt mir. Die Jacke gehört dir.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
     "commonMistakes": [
       {
         "wrong": "Der Mantel ist für mein Bruder.",

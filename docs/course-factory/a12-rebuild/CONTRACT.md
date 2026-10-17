@@ -5,19 +5,19 @@ unchanged: same field names, same nine Lektion steps, same nine engine rules, sa
 tables, same acceptance gates. Read the A1.1 contract first; this file only says what A1.2 does
 differently and what the integrator still has to do.
 
-## 0. Status 2026-10-15 — what this contract said, and what is measured now
+## 0. Status 2026-10-17 — what this contract said, and what is measured now
 
 The sections below are the September contract and stay as written; where they disagree with this
 table, the table is the measurement (DaF review #3, Minor: "CONTRACT aktualisieren").
 
-| The contract said (2026-09-13) | Measured 2026-10-15 (branch `claude/a12-rebuild`) |
+| The contract said (2026-09-13) | Measured 2026-10-17 (branch `claude/a12-rebuild`) |
 |---|---|
-| §1: `a12.json` **MISSING** | Built: 256 items (138 bank rows + 118 hand-written), each stamped with `minLektion` — the later of its words and its grammar (`constructionHorizonIndex`) — plus a `lineHorizon` for the 120 dialogue lines the checkpoints dictate or read aloud. |
-| §4: the extras file is empty, RULE 11 ratchet 0 | 118 hand-written items. RULE 11 measures 26 untaught tokens across the whole pool (bank rows the draw never serves); RULE 11b, what the draw serves, is 0. |
+| §1: `a12.json` **MISSING** | Built: 294 items (140 bank rows + 154 hand-written), each stamped with `minLektion` — the later of its words and its grammar (`constructionHorizonIndex`) — plus a `lineHorizon` for the 120 dialogue lines the checkpoints dictate or read aloud. |
+| §4: the extras file is empty, RULE 11 ratchet 0 | 154 hand-written items. RULE 11 measures 26 untaught tokens across the whole pool (bank rows the draw never serves); RULE 11b, what the draw serves, is 0. |
 | §5: rule-card overrides still to write | All twelve A1.2 slugs carry an override (`scripts/rule-card-overrides.mjs`). |
 | §6.1: `COURSE_TASK_KEY_PREFIX` is `'a11-'` | `evaluate-writing.mjs` counts every course key (`a__-%`); A1.2 has its own allowance of 16 — twelve Lektion tasks and four checkpoint tasks `a12-cp1…4`. |
 | §6.4: three missionless Lektionen | One: L11 (RULE 13 = 1). |
-| §6.5: no DaF review yet | Four: #1 and #2 (2026-09-13), #3 and #4 (2026-10-15). #3 measured 2 BLOCKER and 7 MAJOR; this table then claimed both BLOCKERs and MAJORs 1–6 closed, and #4 measured that claim false (2 BLOCKER, 4 MAJOR: B1, B2, M5 and M6 still open, M8 new; M1, M3 and M4 closed). Round 5 answers B1, B2, M5, M6 and M8 with a rule and a test each in `tests/a12-rebuild.test.mjs`. Whether they are closed is review #5's measurement, not this table's. M7 waits on the owner (below). |
+| §6.5: no DaF review yet | Six: #1 and #2 (2026-09-13), #3 and #4 (2026-10-15), #5 and #6 (2026-10-17). #3 measured 2 BLOCKER and 7 MAJOR; this table then claimed both BLOCKERs and MAJORs 1–6 closed, and #4 measured that claim false. #6 measured 2 BLOCKER and 3 MAJOR (B1, B2, M5, M7, M8; M9 closed). Round 7 answers each with a rule and a test in `tests/a12-rebuild.test.mjs` (the „DaF review #6" tests and the M7 matrix). Whether they are closed is review #7's measurement, not this table's. The M7 decision is no longer open: it was taken on 2026-10-16 (below). |
 | §4: the ratchets | `levelSpec('a1.2').ratchets` in `scripts/validate-curriculum.mjs`; every one equals its measurement (`tests/a12-rebuild.test.mjs`). Non-zero today: RULE 11 (26), RULE 13 (1), RULE 23 (4: L3 Kaufhaus, Geschäft, Bibliothek; L7 Körper). RULE 23b is 0. |
 
 **Decided 2026-10-16 — MAJOR 7, the grammar ceiling (owner: "research … and take the right and most
@@ -25,8 +25,8 @@ correct choices").** Against the Goethe-Zertifikat A1 inventory (Prüfungsziele/
 pp. 100–106) and a Codex research memo, A1.2 now teaches: war/hatte (L7), denn (L6), the dative of
 gefallen/passen/gehören with mir/dir/Ihnen (L10), vor + Zeit beside seit (L11), von … bis and ab (L9),
 the sein-Perfekt and participles without ge- (L12), „Ich würde gern …“ as a chunk (L5) and lieber/besser
-as words (L3) — each with a notice line, dialogue input, a card line and practice items, pinned by the
-M7 matrix test. The general Komparation and würde as a paradigm move to A2.1 (standard §2.2 records
+as words (L3) — each with a notice line, dialogue input, a card line and practice items, pinned point by
+point by the M7 matrix test: in both real practice plans, with every surface deleted once (DaF review #6). The general Komparation and würde as a paradigm move to A2.1 (standard §2.2 records
 it). The sein-Perfekt left NEVER_FORMS: it is L12's now.
 
 The promotion rule of §6.0 still holds unchanged.

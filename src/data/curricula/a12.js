@@ -277,11 +277,11 @@ export const CURRICULUM_A12 = {
         title: 'Ein Anruf beim Vermieter',
         setting: 'Ana ruft den Vermieter Herrn Berg an.',
         lines: [
-          { speaker: 'Ana', de: 'Guten Tag! Die Anzeige ist von Ihnen? Ich brauche zwei Zimmer.', en: 'Good day! The listing is yours? I need two rooms.' },
+          { speaker: 'Ana', de: 'Guten Tag, Herr Berg. Die Anzeige ist von Ihnen?', en: 'Good day, Mr Berg. The listing is yours?' },
           { speaker: 'Herr Berg', de: 'Ja. Das Haus hat einundzwanzig Wohnungen und einen Garten.', en: 'Yes. The house has twenty-one flats and a garden.' },
           { speaker: 'Ana', de: 'Was kostet die Wohnung? Wie ist die Miete?', en: 'What does the flat cost? What is the rent?' },
           { speaker: 'Herr Berg', de: 'Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', en: 'The rent is four hundred and eighty euros. The basement costs twenty euros.' },
-          { speaker: 'Ana', de: 'Und die Wohnung? Wie viele Zimmer hat sie?', en: 'And the flat? How many rooms does it have?' },
+          { speaker: 'Ana', de: 'Und die Wohnung? Ich brauche zwei Zimmer. Wie viele Zimmer hat sie?', en: 'And the flat? I need two rooms. How many rooms does it have?' },
           { speaker: 'Herr Berg', de: 'Vier: Küche, Badezimmer, Wohnzimmer und Schlafzimmer.', en: 'Four: kitchen, bathroom, living room and bedroom.' },
           { speaker: 'Ana', de: 'Hat die Wohnung auch einen Balkon?', en: 'Does the flat also have a balcony?' },
           { speaker: 'Herr Berg', de: 'Ja, der Balkon ist da. Das dritte Stockwerk ist frei.', en: 'Yes, the balcony is there. The third floor is free.' },
@@ -717,7 +717,7 @@ export const CURRICULUM_A12 = {
       // Kein A1.2-Lesetext handelt von Gesundheit und keine der sechs Hörübungen von der Praxis —
       // das ist der ehrliche Zustand; ein falsches Etikett wäre schlechter als eine Lücke.
       links: { listeningExercise: null, readingOrder: null },
-      practiceRule: { topics: ['stem-changing-verbs'], typedMin: 4 },
+      practiceRule: { topics: ['stem-changing-verbs'], typedMin: 4, mustCover: ['denn'] },
     },
     {
       nr: 7,
@@ -816,7 +816,7 @@ export const CURRICULUM_A12 = {
         sample: 'Familienname: Berg / Vorname: Lena / Geburtsdatum: 3. März 2002 / Straße: Kölner Straße 12 / Unterschrift: L. Berg',
       },
       links: { listeningExercise: null, readingOrder: 1 },
-      practiceRule: { topics: ['nominative-case'], typedMin: 3 },
+      practiceRule: { topics: ['nominative-case'], typedMin: 3, mustCover: ['hatte', 'war'] },
     },
     {
       nr: 8,
@@ -955,10 +955,10 @@ export const CURRICULUM_A12 = {
           { speaker: 'Ana', de: 'Gut. Ich will zum Flughafen. Ich habe zwei Koffer.', en: 'Fine. I want to go to the airport. I have two suitcases.' },
           { speaker: 'Herr Schmidt', de: 'Der Bus fährt von sieben bis zehn Uhr. Das Taxi ist schnell.', en: 'The bus runs from seven to ten o\'clock. The taxi is fast.' },
           { speaker: 'Ana', de: 'Ich möchte ein Ticket. Wo soll ich einsteigen?', en: 'I would like a ticket. Where should I get on?' },
-          { speaker: 'Herr Schmidt', de: 'Hier. Sie dürfen langsam laufen, aber nicht schnell.', en: 'Here. You may walk slowly, but not fast.' },
+          { speaker: 'Herr Schmidt', de: 'Hier, ab acht Uhr. Sie dürfen langsam laufen, aber nicht schnell.', en: 'Here, from eight o\'clock. You may walk slowly, but not fast.' },
           { speaker: 'Ana', de: 'Und wo muss ich aussteigen? Wann fährt der Bus ab?', en: 'And where do I have to get off? When does the bus leave?' },
           { speaker: 'Herr Schmidt', de: 'Am Flughafen. Der Bus fährt jetzt ab. Gute Reise!', en: 'At the airport. The bus is leaving now. Have a good trip!' },
-          { speaker: 'Ana', de: 'Danke! Ich komme um acht Uhr an. Das Flugzeug fliegt um neun.', en: 'Thank you! I arrive at eight o\'clock. The plane leaves at nine.' },
+          { speaker: 'Ana', de: 'Danke! Ich komme um neun Uhr an. Das Flugzeug fliegt um zehn.', en: 'Thank you! I arrive at nine o\'clock. The plane leaves at ten.' },
         ],
       },
       pretest: {
@@ -969,8 +969,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Modalverben: können, müssen, dürfen, wollen, sollen',
-        bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**. Zeiten: **von sieben bis zehn Uhr**, ab acht Uhr.',
-        bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**. Times: **von sieben bis zehn Uhr** (from seven to ten), ab acht Uhr (from eight on).',
+        bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**. Zeiten: **von sieben bis zehn Uhr**, **ab acht Uhr**.',
+        bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**. Times: **von sieben bis zehn Uhr** (from seven to ten), **ab acht Uhr** (from eight on).',
         examples: ['Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', 'Am Platz. Den Müll müssen Sie nach Hause nehmen.'],
         ruleSlug: 'modal-verbs-intro',
       },
@@ -1001,7 +1001,7 @@ export const CURRICULUM_A12 = {
         sample: 'Familienname: Chakiri / Vorname: Ana / Datum: 14. Juli / Land: Marokko / Unterschrift: A. Chakiri',
       },
       links: { listeningExercise: null, readingOrder: 7 },
-      practiceRule: { topics: ['modal-verbs-intro'], typedMin: 4 },
+      practiceRule: { topics: ['modal-verbs-intro'], typedMin: 4, mustCover: ['bis', 'ab'] },
     },
     {
       nr: 10,
@@ -1045,7 +1045,7 @@ export const CURRICULUM_A12 = {
         title: 'Im Kaufhaus',
         setting: 'Ana und Lena kaufen Kleidung im Kaufhaus.',
         lines: [
-          { speaker: 'Lena', de: 'Ana, die Jacke ist für dich zu groß.', en: 'Ana, the jacket is too big for you.' },
+          { speaker: 'Lena', de: 'Gehört die Jacke dir? Sie ist für dich zu groß.', en: 'Is the jacket yours? It is too big for you.' },
           { speaker: 'Ana', de: 'Ja. Welche Größe hat der Mantel für meinen Bruder?', en: 'Yes. What size is the coat for my brother?' },
           { speaker: 'Lena', de: 'Größe 50. Ohne den Schal ist er billig.', en: 'Size 50. Without the scarf it is cheap.' },
           { speaker: 'Ana', de: 'Ich trage gern eine Hose, ein Hemd und ein Kleid.', en: 'I like wearing trousers, a shirt and a dress.' },
@@ -1065,8 +1065,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Präpositionen mit Akkusativ',
-        bodyDe: 'Nach **für**, **ohne** und **durch** steht immer der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Beim Vergleich hilft **als**: Die Mütze ist **billiger als** der Schal. Dativ bei gefallen, passen, gehören: Er **gefällt mir**, er **passt dir**.',
-        bodyEn: 'After **für** (for), **ohne** (without) and **durch** (through) always comes the accusative: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Only masculine nouns change; feminine, neuter and plural stay the same: für **die** Oma, für **das** Kind. To compare, use **als** (than): Die Mütze ist **billiger als** der Schal. gefallen (please), passen (fit) and gehören (belong) take the dative: Er **gefällt mir** (I like it), er **passt dir** (it fits you).',
+        bodyDe: 'Nach **für**, **ohne** und **durch** steht der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Vergleich mit **als**: Die Mütze ist **billiger als** der Schal. Dativ bei gefallen, passen, gehören: Er **gefällt mir**. Er **passt dir**. Die Jacke **gehört dir**.',
+        bodyEn: 'After **für** (for), **ohne** (without) and **durch** (through) comes the accusative: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Only masculine nouns change; feminine, neuter and plural stay the same: für **die** Oma, für **das** Kind. Comparison with **als** (than): Die Mütze ist **billiger als** der Schal. gefallen (please), passen (fit) and gehören (belong) take the dative: Er **gefällt mir** (I like it). Er **passt dir** (it fits you). Die Jacke **gehört dir** (the jacket is yours).',
         examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma.'],
         ruleSlug: 'prepositions-accusative',
       },
@@ -1259,8 +1259,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Das Perfekt: haben oder sein und Partizip II',
-        bodyDe: 'Über Vergangenes spricht man im Perfekt: **haben** oder sein auf Position 2, das Partizip II am Ende. Regelmäßig mit ge-: **gekauft**, **gefeiert**. Unregelmäßig auf -en: **gegessen**. Ohne ge- bei be-, ver- und -ieren: **bezahlt**, verstanden, telefoniert. sein steht bei gehen, fahren, kommen, bleiben, passieren: Tim **ist** früh **gegangen**.',
-        bodyEn: 'To talk about the past, use the Perfekt: **haben** or sein in position 2, the participle at the end. Regular verbs take ge-: **gekauft**, **gefeiert**. Irregular ones end in -en: **gegessen**. No ge- with be-, ver- and -ieren: **bezahlt**, verstanden, telefoniert. sein goes with gehen, fahren, kommen, bleiben and passieren: Tim **ist** früh **gegangen** (Tim left early).',
+        bodyDe: 'Über Vergangenes spricht man im Perfekt: **haben** oder sein auf Position 2, das Partizip II am Ende. Regelmäßig mit ge-: **gekauft**, **gefeiert**. Viele unregelmäßige auf -en: **gegessen**. Ohne ge- bei be-, ver- und -ieren: **bezahlt**, verstanden, telefoniert. sein steht bei gehen, fahren, kommen, bleiben, passieren: Tim **ist** früh **gegangen**.',
+        bodyEn: 'To talk about the past, use the Perfekt: **haben** or sein in position 2, the participle at the end. Regular verbs take ge-: **gekauft**, **gefeiert**. Many irregular ones end in -en: **gegessen**. No ge- with be-, ver- and -ieren: **bezahlt**, verstanden, telefoniert. sein goes with gehen, fahren, kommen, bleiben and passieren: Tim **ist** früh **gegangen** (Tim left early).',
         examples: ['Ana, wir haben gestern schön gefeiert!', 'Im Kuchen war zu viel Zucker. Tim ist früh gegangen.'],
         ruleSlug: 'perfekt-intro',
       },
@@ -1292,7 +1292,7 @@ export const CURRICULUM_A12 = {
         sample: 'Hallo Lena, ich habe am Samstag mit Tim und Paul gefeiert. Wir haben Fisch und Kartoffeln gegessen und Saft getrunken. Paul hat auch getanzt. Viele Grüße, Ana',
       },
       links: { listeningExercise: null, readingOrder: 2 },
-      practiceRule: { topics: ['perfekt-intro', 'accusative-intro'], typedMin: 4 },
+      practiceRule: { topics: ['perfekt-intro', 'accusative-intro'], typedMin: 4, mustCover: ['ist'] },
     },
   ],
   checkpoints: [

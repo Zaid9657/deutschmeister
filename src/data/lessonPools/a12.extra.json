@@ -605,6 +605,23 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l03-15",
+      "topic": "accusative-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 15,
+      "questionDe": "Das Brot ist ___ als der Kuchen. (gut)",
+      "questionEn": "The bread is better than the cake.",
+      "options": null,
+      "answer": "besser",
+      "accepted": [
+        "besser"
+      ],
+      "explanationDe": "gut wird beim Vergleich zu besser: besser als.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l04-01",
       "topic": "negation",
       "type": "fill_blank",
@@ -982,7 +999,7 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Korrigieren Sie: „Wann der Film im Kino ist?“",
+      "questionDe": "Korrigieren Sie die Frage: „Wann der Film im Kino ist?“",
       "questionEn": "Fix the question.",
       "options": null,
       "answer": "Wann ist der Film im Kino?",
@@ -1503,13 +1520,30 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l07-14",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Gestern ___ mein Opa Fieber. (haben)",
+      "questionEn": "Yesterday my grandpa had a fever.",
+      "options": null,
+      "answer": "hatte",
+      "accepted": [
+        "hatte"
+      ],
+      "explanationDe": "haben im Präteritum: er hatte.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l08-01",
       "topic": "imperative",
       "type": "sentence_building",
       "stage": 5,
       "difficulty": 2,
       "order": 1,
-      "questionDe": "Bilden Sie den Satz: [helfen / du / mir / bitte / mit der Waschmaschine]",
+      "questionDe": "Bilden Sie den Imperativ: [helfen / du / mir / bitte / mit der Waschmaschine]",
       "questionEn": "Build the request for help.",
       "options": null,
       "answer": "Hilf mir bitte mit der Waschmaschine!",
@@ -1635,8 +1669,8 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Korrigieren Sie: „Du machst den Fernseher aus!“",
-      "questionEn": "Turn the statement into a request.",
+      "questionDe": "Bilden Sie den Imperativ: „Du machst den Fernseher aus!“",
+      "questionEn": "Make the statement an imperative.",
       "options": null,
       "answer": "Mach den Fernseher aus!",
       "accepted": [
@@ -1653,7 +1687,7 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Korrigieren Sie: „Sie helfen mir bitte mit dem Schrank!“",
+      "questionDe": "Bilden Sie den Imperativ: „Sie helfen mir bitte mit dem Schrank!“",
       "questionEn": "Turn the statement into a polite request.",
       "options": null,
       "answer": "Helfen Sie mir bitte mit dem Schrank!",
@@ -1871,6 +1905,23 @@
         "Das Taxi fährt von sieben bis zehn Uhr"
       ],
       "explanationDe": "Anfang und Ende: von … bis.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l09-13",
+      "topic": "modal-verbs-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Der Bus fährt von acht bis zehn Uhr. Sie können ___ acht Uhr einsteigen. (ab oder bis?)",
+      "questionEn": "The bus runs from eight to ten. You can get on from eight o'clock.",
+      "options": null,
+      "answer": "ab",
+      "accepted": [
+        "ab"
+      ],
+      "explanationDe": "ab nennt den Beginn: ab acht Uhr.",
       "hint": null
     },
     {
@@ -2102,6 +2153,40 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l10-14",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Die Hose ___ mir gut. (passen)",
+      "questionEn": "The trousers fit me well.",
+      "options": null,
+      "answer": "passt",
+      "accepted": [
+        "passt"
+      ],
+      "explanationDe": "passen verlangt den Dativ: Die Hose passt mir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-15",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 15,
+      "questionDe": "Ana, die Mütze ___ dir. (gehören)",
+      "questionEn": "Ana, the hat belongs to you.",
+      "options": null,
+      "answer": "gehört",
+      "accepted": [
+        "gehört"
+      ],
+      "explanationDe": "gehören verlangt den Dativ: Die Mütze gehört dir.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l11-01",
       "topic": "dative-prepositions-intro",
       "type": "fill_blank",
@@ -2266,8 +2351,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 10,
-      "questionDe": "___ einer Woche war es warm. (vor oder seit?)",
-      "questionEn": "A week ago it was warm.",
+      "questionDe": "Heute ist es kalt. ___ einer Woche war es warm. (vor oder seit?)",
+      "questionEn": "Today it is cold. A week ago it was warm.",
       "options": null,
       "answer": "Vor",
       "accepted": [

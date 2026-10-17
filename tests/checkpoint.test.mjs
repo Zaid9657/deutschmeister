@@ -1854,7 +1854,10 @@ test('LandeskundeCard is a flat Card (no raised/interactive) and reads its langu
 // measured 2026-10-05 after the change: 1 / 1 / 2 / 0 of the 8 pool items per
 // checkpoint are still lesson items (the leak cap and taught-lexis rule come
 // first on thin topics) — was 5 / 3 / 5 / 5. A ratchet: it only goes down.
-const MAX_LESSON_SEEN_PER_CHECKPOINT = [1, 1, 2, 0];
+// 2026-10-17: 1 / 1 / 1 / 0 once the Schreiben drills were drawn before the
+// Sprachbausteine (the scarcer draw first — see buildCheckpoint); every one left
+// is a sentence-building drill of a Lektion with no unseen one the paper can print.
+const MAX_LESSON_SEEN_PER_CHECKPOINT = [1, 1, 1, 0];
 test('checkpoints draw prompts the learner has not answered in a lesson (transfer ratchet)', async () => {
   const { default: buildLesson } = await import('../src/lib/lesson/buildLesson.js');
   ALL_CHECKPOINTS.forEach(({ cp: checkpoint, items }, i) => {

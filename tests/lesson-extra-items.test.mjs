@@ -860,11 +860,15 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // of its window left — which reseats checkpoints 2–4 through the cross-checkpoint exclusion.
     // Five frontable sentences are drawn instead of two; every one is asserted above to accept
     // both orders. RE-MEASURED.
+    // 2026-10-17 (A1.2 DaF review #6): the Lesen section is chosen as one unit, and the Schreiben
+    // drills are drawn before the Sprachbausteine (the scarcer draw first, which is what brought
+    // the transfer ratchet back to 1 / 1 / 1 / 0). Checkpoint 3's and 4's drills now come from
+    // other Lektionen, and checkpoint 4's Bausteine draw a frontable sentence at seat 2. Four are
+    // drawn; every one is asserted above to accept both orders. RE-MEASURED, not relaxed.
     'a1.1-cp1-schreiben-2',
     'a1.1-cp2-bausteine-6',
     'a1.1-cp3-bausteine-2',
-    'a1.1-cp3-schreiben-1',
-    'a1.1-cp4-schreiben-1',
+    'a1.1-cp4-bausteine-2',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

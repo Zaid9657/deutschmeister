@@ -965,6 +965,14 @@ function pickOther(list, not, rng) {
 const FREQUENCY_WORDS = new Set(['manchmal', 'oft', 'meistens', 'selten']);
 
 /**
+ * …and under one of these it is a bound, not a value: „Ana hat mindestens zwei Koffer." is not
+ * refuted by „mindestens zwölf" (DaF review #6, MAJOR 8). Nor is a number after „mehr als",
+ * „weniger als", „bis zu", „über" or „unter".
+ */
+const BOUND_WORDS = new Set(['mindestens', 'höchstens', 'fast', 'etwa', 'ungefähr', 'circa', 'rund', 'knapp']);
+const BOUND_PHRASE_RE = /\b(?:mehr als|weniger als|bis zu)\b/;
+
+/**
  * Words that give a negation its own scope — „nicht gern", „auch nicht", „noch nicht",
  * „nicht mehr", „nicht so gut", „nicht nur … sondern". A polarity change in their sentence
  * changes more than the polarity, so none is made there.
@@ -1120,7 +1128,8 @@ export function contradictions(statement, nouns, rng) {
     const pre = lower[i - 1] || '';
     if (isNumber(i)) {
       // VALUE
-      if (lower.some((w) => FREQUENCY_WORDS.has(w))) continue;
+      if (lower.some((w) => FREQUENCY_WORDS.has(w) || BOUND_WORDS.has(w))) continue;
+      if (BOUND_PHRASE_RE.test(lower.join(' ')) || pre === 'über' || pre === 'unter') continue;
       let to;
       if (/^\d/.test(bare[i])) {
         to = bare[i].replace(/^\d+/, (d) => String(Number(d) >= 10 ? Number(d) + 10 : Number(d) + 3));
@@ -1537,16 +1546,6 @@ const NOT_A_VERB_AFTER_UND = new Set([
   'alle', 'viele', 'beide', 'einige', 'manche', 'wenige', 'andere', 'gerne', 'heute', 'lange', 'alleine',
 ]);
 
-/**
- * The adverbs that may stand between „und" and the verb of its clause: „… und dann frühstücke".
- * The verb check looks back past them (DaF review #5, minor: „und dann improvisiere" passed
- * unchanged once the lexis filter was off).
- */
-const CLAUSE_ADVERBS = new Set([
-  'dann', 'danach', 'auch', 'noch', 'jetzt', 'heute', 'morgen', 'später', 'zuerst', 'gern',
-  'gerne', 'oft', 'immer', 'manchmal', 'schon', 'hier', 'da', 'dort',
-]);
-
 /** Does the rest of the sentence carry a word no report survives? */
 const restIsReportable = (words, subject) => {
   const own = new Set(String(subject).split(/\s+/).map((p) => p.toLowerCase()));
@@ -1567,22 +1566,34 @@ const restIsReportable = (words, subject) => {
  */
 function reportRest(words, { known, firstPerson }, forms) {
   const out = [];
+  // A clause opened by „und/oder/aber/sondern" carries its own finite verb. Until that verb has
+  // been changed, a lowercase word in -e that no determiner governs and that is no known
+  // non-verb IS that verb — the report cannot change it, so there is no report. A class, not a
+  // list of adverbs: „und dann", „und anschließend", „und zu Hause improvisiere" alike (DaF
+  // reviews #5 and #6, the isolated-transformer minor).
+  let inClause = false;
+  let clauseVerbChanged = false;
   for (let i = 0; i < words.length; i += 1) {
     const w = words[i];
     const bare = bareWord(w);
+    if (/^(?:und|oder|aber|sondern)$/i.test(bare)) {
+      inClause = true;
+      clauseVerbChanged = false;
+      out.push(w);
+      continue;
+    }
     const third = VERB_3SG.get(bare.toLowerCase());
     if (!third || bare[0] !== bare[0].toLowerCase()) {
       if (firstPerson?.has(bare)) return null;
-      let k = i - 1;
-      while (k >= 0 && CLAUSE_ADVERBS.has(bareWord(words[k]).toLowerCase())) k -= 1;
-      const opensClause = /^(?:und|oder|aber|sondern)$/i.test(bareWord(words[k] || ''));
-      if (opensClause && /^[a-zäöüß]+e$/.test(bare) && !NOT_A_VERB_AFTER_UND.has(bare)) return null;
+      const governed = DETERMINER_RE.test(bareWord(words[i - 1] || '').toLowerCase());
+      if (inClause && !clauseVerbChanged && /^[a-zäöüß]+e$/.test(bare) && !governed && !NOT_A_VERB_AFTER_UND.has(bare)) return null;
       out.push(w);
       continue;
     }
     if (known && !known.has(third)) return null;
     forms.push(third);
     out.push(third + w.slice(bare.length));
+    if (inClause) clauseVerbChanged = true;
   }
   return out;
 }
@@ -1648,6 +1659,10 @@ function reportSentence(sentence, { speaker, beforeLines, spec }) {
         if (!owners.has(bare)) owners.set(bare, new Set());
         const owner = POSSESSOR_RE.exec(bareWord(tokens[j - 1] || '').toLowerCase());
         if (owner) owners.get(bare).add(`${owner[1]}@${by}`);
+        // …and an owner after the noun: „die Oma von Tim", „die Oma von Lena" (DaF review #6).
+        if (bareWord(tokens[j + 1] || '').toLowerCase() === 'von' && /^[A-ZÄÖÜ]/.test(tokens[j + 2] || '')) {
+          owners.get(bare).add(`von ${bareWord(tokens[j + 2])}`);
+        }
       });
     }
     if (!owners.size) return null;
@@ -1715,18 +1730,20 @@ export const reportSpecFor = (curriculum, checkpoint) =>
  * and be taught by the checkpoint — and a changed value may not be one the source sentence
  * already says („zwei Brötchen und drei Äpfel" never becomes „drei Brötchen").
  */
-function falsifyStatement(statement, text, { vocab, spec }, rng, { sourceSentence = '', windowStatements = new Set() } = {}) {
+function falsifications(statement, text, { vocab, spec }, rng, { sourceSentence = '', windowStatements = new Set() } = {}) {
   const sourceWords = new Set(String(sourceSentence).split(/\s+/).map((w) => bareWord(w).toLowerCase()).filter(Boolean));
-  for (const c of byCueRank(shuffle(contradictions(statement, spec.nouns, rng), rng), statement)) {
-    if (normaliseStatement(text).includes(normaliseStatement(c.de))) continue;
-    if (windowStatements.has(normaliseStatement(c.de))) continue;
-    if (c.kind === 'value' && sourceWords.has(c.to.toLowerCase())) continue;
-    if (agreementViolations(c.de, vocab).length) continue;
+  return byCueRank(shuffle(contradictions(statement, spec.nouns, rng), rng), statement).filter((c) => (
+    !normaliseStatement(text).includes(normaliseStatement(c.de))
+    && !windowStatements.has(normaliseStatement(c.de))
+    && !(c.kind === 'value' && sourceWords.has(c.to.toLowerCase()))
+    && !agreementViolations(c.de, vocab).length
     // The report passed the gate in reportSentence; the word the contradiction brings in must too.
-    if (!statementIsKnown(c.to, spec.known, spec.names)) continue;
-    return c;
-  }
-  return null;
+    && statementIsKnown(c.to, spec.known, spec.names)
+  ));
+}
+
+function falsifyStatement(statement, text, ctxWords, rng, opts = {}) {
+  return falsifications(statement, text, ctxWords, rng, opts)[0] || null;
 }
 
 /**
@@ -1742,11 +1759,16 @@ function falsifyStatement(statement, text, { vocab, spec }, rng, { sourceSentenc
  *      still ships four Lesen items. The A1.1 papers never reach rung 4 and
  *      tests/checkpoint.test.mjs pins them away from it.
  */
-function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources, quote = false, preferNegative = false, spent = new Set() }) {
+function pickLesenSource(candidates, wantRichtig, {
+  rng, spec, chapterVocab, usedSources, quote = false, preferNegative = false, preferNegativeText = false,
+  spent = new Set(),
+}) {
   const ctxWords = { vocab: chapterVocab, spec };
-  // Every report is scored over every window, lowest first, the first of a score kept: for Falsch
-  // its cue rank (see cueRank), for Richtig whether its polarity is the one the paper still needs;
-  // and in both a report an earlier paper of this window already used counts one point worse.
+  // Every report is scored over every window, lowest first, the first of a score kept. A Falsch
+  // costs 2 for a negation in its statement and 1 for one in its printed window (see cueRank —
+  // „Zum Bahnhof gehe ich nicht." printed above a Falsch is a cue too, DaF review #6, MAJOR 8);
+  // a Richtig costs where its statement or window misses the negations the paper still needs.
+  // A report an earlier paper of this window already used counts one point worse.
   let best = null;
   for (const candidate of candidates) {
     const text = windowText(candidate.window);
@@ -1755,14 +1777,18 @@ function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, use
     const reports = shuffle(all, rng)
       .filter((r) => !r.ambiguous)
       .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
+    const printedNegation = Boolean(negations(text));
     for (const report of reports) {
       const used = spent.has(normaliseStatement(report.statement)) ? 1 : 0;
       if (wantRichtig) {
-        const score = (Boolean(negations(report.statement)) === preferNegative ? 0 : 2) + used;
+        const misses = (Boolean(negations(report.statement)) === preferNegative ? 0 : 4)
+          + (printedNegation === preferNegativeText ? 0 : 2);
+        const score = misses + used;
         if (!best || score < best.score) best = { candidate, text, report, score, falsified: null };
       } else {
         const falsified = falsifyStatement(report.statement, text, ctxWords, rng, { sourceSentence: report.sentence, windowStatements });
-        const score = falsified ? falsified.rank * 2 + used : Infinity;
+        const cue = (negations(falsified?.de || '') ? 2 : 0) + (printedNegation ? 1 : 0);
+        const score = falsified ? cue * 2 + used : Infinity;
         if (falsified && (!best || score < best.score)) best = { candidate, text, report, score, falsified };
       }
       if (best?.score === 0) break;
@@ -1794,11 +1820,195 @@ function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, use
   return null;
 }
 
+/**
+ * How much a Lesen section gives away through negation: per key, how many statements carry
+ * one and how many printed windows do, as the gap between Richtig and Falsch. 0 means a
+ * negation tells the reader nothing about the key; a short section counts worse than any cue.
+ */
+export function lesenNegationCue(items) {
+  const count = (key, field) => items.filter((it) => it.answer === key && negations(field(it))).length;
+  const gap = (field) => Math.abs(count('Richtig', field) - count('Falsch', field));
+  return gap((it) => it.statement) + gap((it) => it.text) + (items.length < SECTION_COUNTS.lesen ? 10 : 0);
+}
+
+// The tiers of a Lesen choice, cheapest last to break: a dictated or read-aloud line reprinted (the
+// rule of DaF review #8), another item's answer printed (#14), a negation cue (#6, MAJOR 8).
+const DICTATED_COST = 10000;
+const LEAK_COST = 1500;
+const CUE_COST = 1000;
+/** The cheapest options of each key the search combines — enough for every chapter, cheap to pair. */
+const LESEN_OPTIONS = 20;
+/**
+ * THE LESEN SECTION AS ONE CHOICE (DaF review #6, MAJOR 8). A Falsch statement built by taking a
+ * negation out leaves it in the printed text („Zum Bahnhof gehe ich nicht." above „Zum Bahnhof
+ * geht Ana."), and „negation in the text → Falsch" solved seven papers; a slot-by-slot draw had
+ * taken the two cheapest Falsch items and left the Richtig side nothing to balance them with. So
+ * the four items are chosen together: every Richtig report and every contradiction of the chapter's
+ * windows is an option with two features — a negation in the statement, a negation in its printed
+ * window — and the search takes the two Falsch and two Richtig options, sharing no line and no
+ * source, whose features balance (lesenNegationCue 0) at the lowest cost. The costs keep the old
+ * rules in their old order (DICTATED_COST, LEAK_COST, CUE_COST), then prefer cue-free kinds of
+ * Falsch, a report no earlier paper of this window used, three-line windows and a spread over the
+ * chapter's Lektionen; the seed's own draw breaks every tie, so each paper is still its own.
+ * Null when the chapter has too few reports — the slot ladder (lesenAttempt) then still fills the
+ * section, down to its rung 4.
+ */
+function chooseLesen(ctx) {
+  const { checkpoint, chapter, rng } = ctx;
+  const withDialog = chapter.filter((l) => (l?.dialog?.lines || []).length >= 2);
+  if (!withDialog.length) return null;
+  const order = shuffle(withDialog, rng);
+  // Two richtig and two falsch, in an order this checkpoint's seed decides.
+  const truth = shuffle([true, true, false, false], rng);
+  const spec = reportSpec(ctx);
+  const ctxWords = { vocab: contentWords(chapter), spec };
+  const spent = ctx.spentLesen || new Set();
+  const R = [];
+  const F = [];
+  for (const w of order.flatMap((l) => windowsOf(l))) {
+    const keys = windowLineKeys(w);
+    const text = windowText(w.window);
+    const leaky = ctx.leaks({ section: 'lesen', kind: 'lesenProbe', promptDe: '', text });
+    const base = (keys.some((k) => ctx.usedLineKeys.has(k)) ? DICTATED_COST : 0)
+      + (leaky ? LEAK_COST : 0) + (w.span >= 3 ? 0 : 0.5) + rng();
+    const reports = windowReports(w.window, spec, { withAmbiguous: true }).filter((r) => !r.ambiguous);
+    const windowStatements = new Set(reports.map((r) => normaliseStatement(r.statement)));
+    for (const report of reports) {
+      const option = {
+        w, keys, text, leaky, report,
+        source: lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start + report.lineIndex),
+        t: Boolean(negations(text)),
+        cost: base + (spent.has(normaliseStatement(report.statement)) ? 1 : 0),
+      };
+      R.push({ ...option, s: Boolean(negations(report.statement)), statement: report.statement, changed: null });
+      const contradicted = falsifications(report.statement, text, ctxWords, rng, { sourceSentence: report.sentence, windowStatements });
+      for (const c of contradicted.slice(0, 2)) {
+        const s = Boolean(negations(c.de));
+        F.push({
+          ...option, s, statement: c.de, changed: { kind: c.kind, from: c.from, to: c.to },
+          cost: option.cost + (s ? 2 : 0) + (option.t ? 1 : 0),
+        });
+      }
+    }
+  }
+  if (R.length < 2 || F.length < 2) return null;
+  const clash = (a, b) => a.w === b.w || a.source === b.source || a.keys.some((k) => b.keys.includes(k));
+  const pairsOf = (list) => {
+    const top = [...list].sort((a, b) => a.cost - b.cost).slice(0, LESEN_OPTIONS);
+    const out = [];
+    for (let a = 0; a < top.length; a += 1) {
+      for (let b = a + 1; b < top.length; b += 1) if (!clash(top[a], top[b])) out.push([top[a], top[b]]);
+    }
+    return out;
+  };
+  const perLektion = Math.ceil(SECTION_COUNTS.lesen / order.length);
+  const crowding = (four) => {
+    const per = new Map();
+    for (const o of four) per.set(o.w.lektion, (per.get(o.w.lektion) || 0) + 1);
+    return [...per.values()].reduce((sum, n) => sum + Math.max(0, n - perLektion), 0);
+  };
+  const richtigPairs = pairsOf(R);
+  let best = null;
+  for (const [f1, f2] of pairsOf(F)) {
+    for (const [r1, r2] of richtigPairs) {
+      if (clash(r1, f1) || clash(r1, f2) || clash(r2, f1) || clash(r2, f2)) continue;
+      const cue = Math.abs(f1.s + f2.s - r1.s - r2.s) + Math.abs(f1.t + f2.t - r1.t - r2.t);
+      const cost = cue * CUE_COST + f1.cost + f2.cost + r1.cost + r2.cost + crowding([f1, f2, r1, r2]) * 3;
+      if (!best || cost < best.cost) best = { cost, falsch: [f1, f2], richtig: [r1, r2] };
+    }
+  }
+  if (!best) return null;
+  const items = [];
+  const relaxed = [];
+  const lineKeys = [];
+  truth.forEach((wantRichtig, i) => {
+    const o = (wantRichtig ? best.richtig : best.falsch).shift();
+    const item = lesenItem(checkpoint, i, wantRichtig, {
+      candidate: o.w, text: o.text, report: o.report, statement: o.statement, changed: o.changed,
+    });
+    items.push(item);
+    if (o.leaky) relaxed.push(item.id);
+    for (const k of o.keys) if (!ctx.usedLineKeys.has(k)) lineKeys.push(k);
+  });
+  return { items, lineKeys, relaxed };
+}
+
+/** One Lesen item out of a picked window, report and statement — both paths build it here. */
+function lesenItem(checkpoint, i, wantRichtig, picked) {
+  const { candidate, text, report, statement, changed } = picked;
+  const sourceLine = report ? report.line : picked.line;
+  const sourceSentence = report ? report.sentence : String(sourceLine.de);
+  const trueStatement = report ? report.statement : String(sourceLine.de);
+  const speaker = String(sourceLine.speaker || '');
+  const answer = wantRichtig ? 'Richtig' : 'Falsch';
+  // A changed value names both values; a changed polarity says what the text means.
+  let explanationDe = `${speaker} sagt: „${sourceSentence}“ Die Aussage ist also richtig.`;
+  if (changed?.kind === 'value' || changed?.kind === 'contrary') explanationDe = `${speaker} sagt: „${sourceSentence}“ Im Text steht „${changed.from}“, nicht „${changed.to}“.`;
+  else if (changed) explanationDe = `${speaker} sagt: „${sourceSentence}“ Das heißt: ${trueStatement} Die Aussage ist also falsch.`;
+  return {
+    id: `${checkpoint.id}-lesen-${i + 1}`,
+    section: 'lesen',
+    kind: 'trueFalse',
+    mode: 'options',
+    topic: 'lesen',
+    lektionNr: candidate.lektion.nr,
+    source: 'chapter',
+    register: null,
+    scored: true,
+    // No speaker prefix any more: „Ana: " in front of the statement halved the
+    // search space to one of three lines and made the section a lookup.
+    promptDe: `Steht das im Text? „${statement}“`,
+    promptEn: 'Does the text say this?',
+    audioText: null,
+    text,
+    options: ['Richtig', 'Falsch'],
+    answer,
+    accepted: [answer],
+    explanationDe,
+    // No hint: naming the Lektion is half the answer here (review #5).
+    hint: null,
+    poolItemId: null,
+    type: 'multiple_choice',
+    // The mapping tests/checkpoint.test.mjs reads: which line this statement
+    // reports on, what the TRUE report of that line is, which detail the
+    // Falsch half changed, and which verb forms the transformation produced.
+    statement,
+    trueStatement,
+    sourceLine: String(sourceLine.de),
+    sourceSentence,
+    sourceSpeaker: speaker,
+    transform: report ? report.engine : null,
+    verbForms: report ? report.verbForms : [],
+    changed,
+  };
+}
+
+/**
+ * The Lesen section of the paper: one choice (chooseLesen), or — for a chapter with too few
+ * reports — the slot ladder. Only the kept items spend their lines and take their seats.
+ */
 function buildLesen(ctx) {
-  const { checkpoint, rng, chapter, usedLineKeys } = ctx;
+  const chosen = chooseLesen(ctx) || lesenAttempt(ctx, ctx.rng);
+  for (const key of chosen.lineKeys) ctx.usedLineKeys.add(key);
+  for (const note of chosen.relaxed) ctx.relax('lesen', note);
+  for (const item of chosen.items) ctx.seat(item);
+  return chosen.items;
+}
+
+/**
+ * THE SLOT LADDER — the fallback of buildLesen for a chapter whose windows offer too few reports
+ * to choose from (the test fixtures carry no first-person German at all).
+ */
+function lesenAttempt(ctx, rng) {
+  const { checkpoint, chapter } = ctx;
+  // This attempt's own copies: a redraw must not inherit the lines or seats of a rejected one.
+  const usedLineKeys = new Set(ctx.usedLineKeys);
+  const seatedHere = [];
+  const relaxed = [];
+  const leaks = (probe) => ctx.leaks(probe) || seatedHere.some((placed) => leaksAcross(probe, placed));
   const items = [];
   const withDialog = chapter.filter((l) => (l?.dialog?.lines || []).length >= 2);
-  if (!withDialog.length) return items;
+  if (!withDialog.length) return { items, lineKeys: [], relaxed };
   const order = shuffle(withDialog, rng);
   // Two richtig and two falsch, in an order this checkpoint's seed decides.
   const truth = shuffle([true, true, false, false], rng);
@@ -1818,6 +2028,7 @@ function buildLesen(ctx) {
   // page keeps the seed's order.
   const slots = truth.map((wantRichtig, i) => ({ i, wantRichtig }));
   const negationsByKey = { Richtig: 0, Falsch: 0 };
+  const printedByKey = { Richtig: 0, Falsch: 0 };
   const pageIndex = new Map();
   for (const { i, wantRichtig } of [...slots.filter((x) => !x.wantRichtig), ...slots.filter((x) => x.wantRichtig)]) {
     const preferredLektion = order[i % order.length];
@@ -1840,23 +2051,20 @@ function buildLesen(ctx) {
     // is the last resort, never the first (DaF review #14, MAJOR 3): the leak
     // cap orders the candidates, exactly as freeness does, so a poor chapter
     // still gets four texts.
-    const leakFree = (w) => !ctx.leaks({ section: 'lesen', kind: 'lesenProbe', promptDe: '', text: windowText(w.window) });
+    const leakFree = (w) => !leaks({ section: 'lesen', kind: 'lesenProbe', promptDe: '', text: windowText(w.window) });
     const leakFreeFirst = (ws) => [...ws.filter(leakFree), ...ws.filter((w) => !leakFree(w))];
     candidates = leakFreeFirst(candidates);
     const clean = leakFreeFirst(candidates.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k))));
     const ladder = {
       rng, spec, chapterVocab, usedSources, spent: ctx.spentLesen,
       preferNegative: wantRichtig && negationsByKey.Richtig < negationsByKey.Falsch,
+      preferNegativeText: wantRichtig && printedByKey.Richtig < printedByKey.Falsch,
     };
     const picked = (clean.length ? pickLesenSource(clean, wantRichtig, ladder) : null)
       || pickLesenSource(candidates, wantRichtig, ladder)
       || pickLesenSource(candidates, wantRichtig, { ...ladder, quote: true });
     if (!picked) continue;
-    const { candidate, text, report, statement, changed } = picked;
-    const sourceLine = report ? report.line : picked.line;
-    const sourceSentence = report ? report.sentence : String(sourceLine.de);
-    const trueStatement = report ? report.statement : String(sourceLine.de);
-    const speaker = String(sourceLine.speaker || '');
+    const { candidate, text, report, statement } = picked;
 
     usedWindows.add(windowKeyOf(candidate));
     for (const k of windowLineKeys(candidate)) { usedLineKeys.add(k); usedLesenLines.add(k); }
@@ -1865,53 +2073,16 @@ function buildLesen(ctx) {
     }
 
     const answer = wantRichtig ? 'Richtig' : 'Falsch';
-    // A changed value names both values; a changed polarity says what the text means.
-    let explanationDe = `${speaker} sagt: „${sourceSentence}“ Die Aussage ist also richtig.`;
-    if (changed?.kind === 'value' || changed?.kind === 'contrary') explanationDe = `${speaker} sagt: „${sourceSentence}“ Im Text steht „${changed.from}“, nicht „${changed.to}“.`;
-    else if (changed) explanationDe = `${speaker} sagt: „${sourceSentence}“ Das heißt: ${trueStatement} Die Aussage ist also falsch.`;
-    items.push({
-      id: `${checkpoint.id}-lesen-${i + 1}`,
-      section: 'lesen',
-      kind: 'trueFalse',
-      mode: 'options',
-      topic: 'lesen',
-      lektionNr: candidate.lektion.nr,
-      source: 'chapter',
-      register: null,
-      scored: true,
-      // No speaker prefix any more: „Ana: " in front of the statement halved the
-      // search space to one of three lines and made the section a lookup.
-      promptDe: `Steht das im Text? „${statement}“`,
-      promptEn: 'Does the text say this?',
-      audioText: null,
-      text,
-      options: ['Richtig', 'Falsch'],
-      answer,
-      accepted: [answer],
-      explanationDe,
-      // No hint: naming the Lektion is half the answer here (review #5).
-      hint: null,
-      poolItemId: null,
-      type: 'multiple_choice',
-      // The mapping tests/checkpoint.test.mjs reads: which line this statement
-      // reports on, what the TRUE report of that line is, which detail the
-      // Falsch half changed, and which verb forms the transformation produced.
-      statement,
-      trueStatement,
-      sourceLine: String(sourceLine.de),
-      sourceSentence,
-      sourceSpeaker: speaker,
-      transform: report ? report.engine : null,
-      verbForms: report ? report.verbForms : [],
-      changed,
-    });
+    items.push(lesenItem(checkpoint, i, wantRichtig, picked));
     const seatedItem = items[items.length - 1];
-    if (!leakFree(candidate)) ctx.relax('lesen', `${seatedItem.id}`);
-    ctx.seat(seatedItem);
+    if (!leakFree(candidate)) relaxed.push(`${seatedItem.id}`);
+    seatedHere.push(seatedItem);
     pageIndex.set(seatedItem, i);
     if (negations(statement)) negationsByKey[answer] += 1;
+    if (negations(text)) printedByKey[answer] += 1;
   }
-  return items.sort((a, b) => pageIndex.get(a) - pageIndex.get(b));
+  const lineKeys = [...usedLineKeys].filter((key) => !ctx.usedLineKeys.has(key));
+  return { items: items.sort((a, b) => pageIndex.get(a) - pageIndex.get(b)), lineKeys, relaxed };
 }
 
 // Sprachbausteine: 6 pool items from the chapter's grammar slugs, typed-first
@@ -1923,8 +2094,8 @@ function buildBausteine(ctx) {
   const chapterTopics = topicsOf(chapter);
   const earlierTopics = topicsOf(earlier).filter((t) => !chapterTopics.includes(t));
   const earlierWanted = earlierTopics.length ? POOL_ITEMS_EARLIER : 0;
-  // The Sprachbausteine are seated AFTER Hören, Lesen and Sprechen have spent
-  // their lines, so this draw can see everything the paper prints: an item whose
+  // The Sprachbausteine are seated AFTER Hören, Lesen, Sprechen and the Schreiben
+  // drills, so this draw can see everything the paper prints: an item whose
   // answer stands in a dictation, a Lesen text or a read-aloud line is skipped
   // (DaF review #14, MAJOR 3 — `a1.1-cp3-bausteine-3` „Nach Montag kommt ___.“
   // → `Dienstag`, beside a read-aloud line that names that very weekday).
@@ -1974,9 +2145,10 @@ function buildBausteine(ctx) {
 //     only item with a register is the real task, whose register is real.
 function buildSchreiben(ctx) {
   const { checkpoint, rng, chapter, pool, usedPoolIds, untaught, afterLektion } = ctx;
-  // Built (and seated, so every other section can dodge its prompt) before any
-  // draw: the chapter's own task is not a choice, so it is the one item the
-  // leak cap has to work AROUND rather than on.
+  // Seated (so every other section can dodge its prompt) before any draw: the
+  // chapter's own task is not a choice, so it is the one item the leak cap has to
+  // work AROUND rather than on. The drills are drawn before the Sprachbausteine,
+  // because they are the scarcer draw (see the order in buildCheckpoint).
   const graded = ctx.graded;
   const drillCount = SECTION_COUNTS.schreiben - (graded ? 1 : 0);
   const guard = ctx.poolGuard('schreiben');
@@ -2364,12 +2536,18 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // ORDER OF PLACEMENT ≠ order on the page. The three line-drawn sections go
   // first because a dialogue line cannot move (usedLineKeys, DaF review #8), the
   // two free draws — the Hören word choices and everything that comes out of the
-  // pool — go last, because they can.
+  // pool — go last, because they can. Among the pool draws the scarcer one goes
+  // first: a Schreiben drill needs a sentence-building item of one particular
+  // Lektion, a Sprachbaustein takes any item of any chapter topic. Drawn the other
+  // way round, the Sprachbausteine took `extra-a11-l06-15`, the one sentence-building
+  // item of Lektion 6 the learner had not answered in a lesson, and the drill had to
+  // fall back on one they had (a1.1-cp2's default paper, measured 2026-10-17; the
+  // transfer ratchet in tests/checkpoint.test.mjs had held only because the shuffle missed it).
   const hoerenDictation = buildHoerenDictation(ctx);
   const lesen = buildLesen(ctx);
   const sprechen = buildSprechen(ctx);
-  const bausteine = buildBausteine(ctx);
   const schreiben = buildSchreiben(ctx);
+  const bausteine = buildBausteine(ctx);
   // Dead last, because it is the freest draw on the paper: the chapter's whole
   // Wortfeld is available, so the two word-choice items can dodge everything
   // else, while a three-Lektion chapter has three sentence-building items for

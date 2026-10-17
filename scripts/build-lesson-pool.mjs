@@ -338,6 +338,17 @@ function repairDeterminacy(item) {
     }
   }
   if (!levelSpec(level)?.determinacyRepairs) return;
+  // DaF review #6 (A1.2) BLOCKER 1: a du-imperative may carry its pronoun for emphasis — „Mach du den
+  // Fernseher aus!" is correct German the task does not exclude, so every accepted form takes it too
+  // (after the ±e rule above, so „Mache du …" is in as well).
+  if (imp && (item.type === 'sentence_building' || item.type === 'error_correction')
+      && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
+    // The answer field counts too: the checker takes it as accepted even where `accepted` omits it.
+    const kept = item.accepted && item.accepted.length ? item.accepted : [item.answer];
+    const emphatic = [item.answer, ...kept].filter((a) => /!$/.test(a)).map((a) => a.replace(/^([A-ZÄÖÜ][a-zäöüß]+)\s/, '$1 du '));
+    item.accepted = [...new Set([...kept, ...emphatic, ...emphatic.map((a) => a.replace(/!$/, ''))])];
+    determinacyRepaired.push(`${item.id}:du`);
+  }
   // DaF review #4 (A1.2) BLOCKER 1 — three more families, each a rule (scripts/a12-determinacy.mjs
   // generates their alternatives and tests/a12-rebuild.test.mjs runs them through the checker):
   // 1. A statement may open with its subject or with any one other phrase. When the key's order is
