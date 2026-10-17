@@ -855,8 +855,16 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // The count falls from 4 to 2 because fewer frontable sentences are DRAWN; every one that is
     // drawn is asserted above, and the pool-wide loop still demands both orders of all of them.
     // RE-MEASURED, not relaxed.
-    'a1.1-cp1-schreiben-1',
+    // 2026-10-17 (A1.2 DaF review #5, MAJOR 8): the Lesen falsifier contradicts instead of
+    // swapping and draws its Falsch items first, and a retake now prefers what the earlier papers
+    // of its window left — which reseats checkpoints 2–4 through the cross-checkpoint exclusion.
+    // Five frontable sentences are drawn instead of two; every one is asserted above to accept
+    // both orders. RE-MEASURED.
+    'a1.1-cp1-schreiben-2',
+    'a1.1-cp2-bausteine-6',
+    'a1.1-cp3-bausteine-2',
     'a1.1-cp3-schreiben-1',
+    'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

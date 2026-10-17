@@ -183,7 +183,7 @@ export const CURRICULUM_A12 = {
         title: 'Am Platz vor der Kirche',
         setting: 'Ana sucht das Rathaus. Frau Fischer wohnt in der Stadt.',
         lines: [
-          { speaker: 'Ana', de: 'Entschuldigung, wie komme ich zum Rathaus?', en: 'Excuse me, how do I get to the town hall?' },
+          { speaker: 'Ana', de: 'Entschuldigung, ich wohne nicht hier. Wie komme ich zum Rathaus?', en: 'Excuse me, I do not live here. How do I get to the town hall?' },
           { speaker: 'Frau Fischer', de: 'Zuerst gehen Sie geradeaus bis zur Kirche.', en: 'First you go straight ahead as far as the church.' },
           { speaker: 'Ana', de: 'Und dann? Ist der Weg weit?', en: 'And then? Is it far?' },
           { speaker: 'Frau Fischer', de: 'Nein. Dann gehen Sie an der Ecke links.', en: 'No. Then you go left at the corner.' },
@@ -277,7 +277,7 @@ export const CURRICULUM_A12 = {
         title: 'Ein Anruf beim Vermieter',
         setting: 'Ana ruft den Vermieter Herrn Berg an.',
         lines: [
-          { speaker: 'Ana', de: 'Guten Tag, Herr Berg. Die Anzeige ist von Ihnen?', en: 'Good day, Mr Berg. The listing is yours?' },
+          { speaker: 'Ana', de: 'Guten Tag! Die Anzeige ist von Ihnen? Ich brauche zwei Zimmer.', en: 'Good day! The listing is yours? I need two rooms.' },
           { speaker: 'Herr Berg', de: 'Ja. Das Haus hat einundzwanzig Wohnungen und einen Garten.', en: 'Yes. The house has twenty-one flats and a garden.' },
           { speaker: 'Ana', de: 'Was kostet die Wohnung? Wie ist die Miete?', en: 'What does the flat cost? What is the rent?' },
           { speaker: 'Herr Berg', de: 'Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', en: 'The rent is four hundred and eighty euros. The basement costs twenty euros.' },
@@ -382,7 +382,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Lena', de: 'Und danach? Gehst du lieber in das Museum oder das Restaurant?', en: 'And then? Would you rather go to the museum or the restaurant?' },
           { speaker: 'Ana', de: 'Lieber das Museum. Das Restaurant ist am Abend besser.', en: 'The museum. The restaurant is better in the evening.' },
           { speaker: 'Lena', de: 'Meine Schule ist hier, das Krankenhaus auch. Und die Quittung?', en: 'My school is here, the hospital too. And the receipt?' },
-          { speaker: 'Ana', de: 'Die Quittung ist hier. Ich hole ein Stück Kuchen für dich!', en: 'The receipt is here. I will get a piece of cake for you!' },
+          { speaker: 'Ana', de: 'Die Quittung ist hier. Ich habe zwei Stück Kuchen.', en: 'The receipt is here. I have two pieces of cake.' },
         ],
       },
       pretest: {
@@ -858,7 +858,7 @@ export const CURRICULUM_A12 = {
         setting: 'Tim und Lena räumen die Wohnung auf.',
         lines: [
           { speaker: 'Lena', de: 'Tim, die Waschmaschine ist da. Hilf mir bitte!', en: 'Tim, the washing machine is here. Help me, please!' },
-          { speaker: 'Tim', de: 'Ja, gleich. Ich sehe fern.', en: 'Yes, in a moment. I am watching TV.' },
+          { speaker: 'Tim', de: 'Ja, gleich. Ich sehe zehn Minuten fern.', en: 'Yes, in a moment. I am watching TV for ten minutes.' },
           { speaker: 'Lena', de: 'Nein, komm jetzt! Der Kühlschrank hat kein Brot.', en: 'No, come now! The fridge has no bread.' },
           { speaker: 'Tim', de: 'Gut. Wo hast du die Möbel für das Kinderzimmer?', en: 'Fine. Where do you have the furniture for the children’s room?' },
           { speaker: 'Lena', de: 'Das Sofa und der Schrank sind in der Garage.', en: 'The sofa and the wardrobe are in the garage.' },
@@ -952,7 +952,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Herr Schmidt', de: 'Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', en: 'Good day. You may not cycle here.' },
           { speaker: 'Ana', de: 'Entschuldigung. Wo darf ich langsam fahren?', en: 'Sorry. Where may I ride slowly?' },
           { speaker: 'Herr Schmidt', de: 'Am Platz. Den Müll müssen Sie nach Hause nehmen.', en: 'At the square. You must take the rubbish home.' },
-          { speaker: 'Ana', de: 'Gut. Ich will zum Flughafen. Der Koffer ist da.', en: 'Fine. I want to go to the airport. The suitcase is here.' },
+          { speaker: 'Ana', de: 'Gut. Ich will zum Flughafen. Ich habe zwei Koffer.', en: 'Fine. I want to go to the airport. I have two suitcases.' },
           { speaker: 'Herr Schmidt', de: 'Der Bus fährt von sieben bis zehn Uhr. Das Taxi ist schnell.', en: 'The bus runs from seven to ten o\'clock. The taxi is fast.' },
           { speaker: 'Ana', de: 'Ich möchte ein Ticket. Wo soll ich einsteigen?', en: 'I would like a ticket. Where should I get on?' },
           { speaker: 'Herr Schmidt', de: 'Hier. Sie dürfen langsam laufen, aber nicht schnell.', en: 'Here. You may walk slowly, but not fast.' },

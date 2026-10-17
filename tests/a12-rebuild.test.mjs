@@ -201,7 +201,8 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
       for (const m of String(line.de).matchAll(/(?:^|[\s,.!?])[Ii]ch\s+([a-zäöüß]+e)(?=[\s,.!?]|$)/g)) firstPerson.add(m[1]);
     }
   }
-  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage') && firstPerson.has('hole'), 'the harvest is not vacuous');
+  // („hole" left with „Ich hole ein Stück Kuchen für dich!" when L3 gained a stated value, M8.)
+  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage') && firstPerson.has('brauche'), 'the harvest is not vacuous');
   const problems = [];
   let items = 0;
   for (const checkpoint of CURRICULUM_A12.checkpoints) {
@@ -460,7 +461,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
   // annotation fails, and so does an annotation whose question is gone.
   const ANSWERS = {
     1: [
-      ['Entschuldigung, wie komme ich zum Rathaus?', 1, 'Zuerst gehen Sie geradeaus bis zur Kirche.', 'art'],
+      ['Wie komme ich zum Rathaus?', 1, 'Zuerst gehen Sie geradeaus bis zur Kirche.', 'art'],
       ['Und dann?', 3, 'Dann gehen Sie an der Ecke links.', 'art', 'Wie gehe ich dann?'],
       ['Ist der Weg weit?', 3, 'Nein.', 'ja'],
       ['Ist die Apotheke auch da?', 5, 'Ja.', 'ja'],
@@ -865,6 +866,109 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
   }
   assert.equal(checked, 96, 'four Lesen reports on each of the twelve papers of both levels');
   assert.deepEqual(problems, []);
+});
+
+test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not stated — annotated cases, both levels, every paper', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const reportOf = (speaker, de) => B.windowReports([{ speaker, de }], spec).map((r) => r.statement);
+  const candidates = (statement, nouns = spec.nouns) => new Set([1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+    B.contradictions(statement, nouns, B.mulberry32(seed)).map((c) => c.de)));
+
+  // ANNOTATED BY HAND, not by the builder: a sentence, its true report, statements about it, and
+  // what the text does with each. widerspricht = refuted (and the builder makes it); offen = not
+  // stated, so never a Falsch — the reasons are the review's.
+  const CASES = [
+    ['Ana', 'Ich habe kein Fieber.', 'Ana hat kein Fieber.',
+      [['Ana hat Fieber.', 'widerspricht'], ['Ana hat kein Angebot.', 'offen']]],
+    ['Ana', 'Ich möchte ein Ticket.', 'Ana möchte ein Ticket.',
+      [['Ana möchte kein Ticket.', 'widerspricht'], ['Ana möchte ein Taxi.', 'offen' /* a wish excludes no other */]]],
+    ['Tim', 'Ich habe den Fahrplan.', 'Tim hat den Fahrplan.',
+      [['Tim hat den Fahrplan nicht.', 'widerspricht'], ['Lena hat den Fahrplan.', 'offen' /* another person */]]],
+    ['Lena', 'Ich stehe nie früh auf.', 'Lena steht nie früh auf.',
+      [['Lena steht früh auf.', 'widerspricht'], ['Tim steht nie früh auf.', 'offen']]],
+    ['Ana', 'Ich trage gern eine Hose.', 'Ana trägt gern eine Hose.',
+      [['Ana trägt gern keine Hose.', 'offen' /* „gern" takes the scope of the negation */]]],
+    ['Tim', 'Ich bin manchmal zehn Minuten zu spät.', 'Tim ist manchmal zehn Minuten zu spät.',
+      [['Tim ist manchmal drei Minuten zu spät.', 'offen' /* one value of several */]]],
+    ['Ana', 'Ich arbeite heute.', 'Ana arbeitet heute.',
+      [['Ana arbeitet morgen.', 'offen' /* another day is no opposite */]]],
+  ];
+  for (const [speaker, sentence, report, statements] of CASES) {
+    assert.deepEqual(reportOf(speaker, sentence), [report], `„${sentence}" (${speaker}) — the report follows from it`);
+    const made = candidates(report);
+    for (const [statement, label] of statements) {
+      if (label === 'widerspricht') assert.ok(made.has(statement), `„${statement}" contradicts „${sentence}" and is a Falsch the builder makes`);
+      else assert.ok(!made.has(statement), `„${statement}" is ${label} — never a Falsch`);
+    }
+  }
+  // A stated value changes within its magnitude: a clock time stays a clock time.
+  const times = [...candidates('Ana kommt um acht Uhr an.')];
+  assert.ok(times.length && times.every((de) => /^Ana kommt um (?:zwei|drei|vier|fünf|sechs|sieben|neun|zehn|elf|zwölf) Uhr an\.$/.test(de)), times.join(' | '));
+
+  // Codex's probes (2026-10-17): German the first polarity rules would have produced wrongly.
+  const probeNouns = new Map([
+    ['Frauen', { article: 'plural', number: 'pl', plural: null }],
+    ['Schnee', { article: 'der', number: 'sg', plural: '—' }],
+    ['Lehrer', { article: 'der', number: 'sg', plural: 'Lehrer', isPluralOfSelf: true }],
+    ['Kaffee', { article: 'der', number: 'sg', plural: '—' }],
+    ['Milch', { article: 'die', number: 'sg', plural: '—' }],
+  ]);
+  for (const [statement, expected] of [
+    ['Ana ist es.', []], // not „Ana ist nicht es."
+    ['Tim hört Frauen zu.', []], // zuhören takes the dative
+    ['Morgen kommt Schnee.', []], // Schnee is the subject
+    ['Morgen bleibt Tim Lehrer.', []], // a predicate, not an object
+    ['Ana braucht nicht zu arbeiten.', []], // brauchen needs its negation
+    ['Tim möchte Kaffee oder Milch.', []], // „oder" does not deny both
+    ['Hier sind Lehrer.', ['Hier sind keine Lehrer.']], // plural after „sind"
+    ['Tim ist Lehrer.', ['Tim ist kein Lehrer.']], // nominative after „ist"
+  ]) assert.deepEqual([...candidates(statement, probeNouns)], expected, statement);
+
+  // REFERENTS, not noun strings: Lena's and Ana's „Meine Oma" are two grandmothers.
+  const reports = (lines) => B.windowReports(lines, spec).map((r) => r.statement);
+  assert.ok(!reports([
+    { speaker: 'Lena', de: 'Meine Oma ist hier.' }, { speaker: 'Ana', de: 'Meine Oma ist dort.' }, { speaker: 'Lena', de: 'Sie ist müde.' },
+  ]).includes('Die Oma ist müde.'), 'two grandmothers: no report about „die Oma"');
+  assert.ok(!reports([
+    { speaker: 'Lena', de: 'Meine Oma ist hier. Deine Oma ist dort.' }, { speaker: 'Ana', de: 'Sie ist müde.' },
+  ]).includes('Die Oma ist müde.'), 'the review\'s own probe');
+  assert.ok(reports([
+    { speaker: 'Lena', de: 'Meine Oma ist krank.' }, { speaker: 'Ana', de: 'Sie ist müde.' },
+  ]).includes('Die Oma ist müde.'), 'one grandmother: a report');
+
+  // EVERY PAPER OF BOTH LEVELS: each Falsch is its own report contradicted (the kind
+  // tests/checkpoint.test.mjs reads off the two sentences), never a copy of the text — and a
+  // negation is no answer key: the Falsch and the Richtig statements of a paper carry the same
+  // number of them (Codex, 2026-10-17: „negation → Falsch" had scored 34 of the 48 A1.2 keys).
+  const NEGATION = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
+  const unbalanced = { a11: [], a12: [] };
+  let falsch = 0;
+  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    for (const checkpoint of curriculum.checkpoints) {
+      for (let round = 0; round < 3; round += 1) {
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        const negated = { Richtig: 0, Falsch: 0 };
+        for (const it of lesen) {
+          if (NEGATION.test(it.statement)) negated[it.answer] += 1;
+          if (it.answer !== 'Falsch') continue;
+          falsch += 1;
+          assert.ok(['value', 'contrary', 'polarity'].includes(it.changed?.kind), `${checkpoint.id}/${round} „${it.statement}": no swap of a person or a thing`);
+          assert.ok(it.transform, `${checkpoint.id}/${round} „${it.statement}": a report, not a copy of the text`);
+        }
+        if (negated.Falsch !== negated.Richtig) unbalanced[file].push(`${checkpoint.id}/${round}`);
+      }
+    }
+  }
+  assert.equal(falsch, 48, 'two Falsch statements on each of the twenty-four papers');
+  assert.deepEqual(unbalanced.a12, [], 'A1.2: on every paper a negation tells nothing about the key');
+  // A1.1 is live and recorded: its checkpoint 2 chapter (L4–L6) has one stated value and no
+  // negative first-person line, so its second Falsch has to add a negation. Measured 2026-10-17;
+  // balancing it takes a new dialogue line and its recording — the follow-up in the handoff.
+  // A ratchet: it only goes down.
+  assert.ok(unbalanced.a11.length <= 3, `A1.1: ${unbalanced.a11.length} papers carry the negation cue (ratchet 3): ${unbalanced.a11}`);
 });
 
 test('DaF review #4 BLOCKER 2: an article-less adjective and a Wechselpräposition the input has not shown are outside the horizon', async () => {

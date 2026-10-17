@@ -496,7 +496,7 @@ function drawPool(
   n,
   rng,
   usedIds,
-  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {}, seen = new Set() } = {},
+  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {}, seen = new Set(), spent = new Set() } = {},
 ) {
   if (n <= 0 || !topics.length) return [];
   const buckets = topics.map((topic) => {
@@ -508,8 +508,14 @@ function drawPool(
       // TRANSFER (2026-10 review): an item the learner already answered in the
       // chapter's lessons tests memory of that item, not the rule — 3–5 of the
       // 8 drawn items per checkpoint were exactly that. Unseen items of the
-      // same topic go first; a seen one is only the fallback of a thin topic.
-      return [...ordered.filter((i) => !seen.has(i.id)), ...ordered.filter((i) => seen.has(i.id))];
+      // same topic go first; a seen one is only the fallback of a thin topic. Behind both: an
+      // item an earlier paper of this window drew — its result screen showed the answer (RETAKES).
+      const fresh = ordered.filter((i) => !spent.has(i.id));
+      return [
+        ...fresh.filter((i) => !seen.has(i.id)),
+        ...fresh.filter((i) => seen.has(i.id)),
+        ...ordered.filter((i) => spent.has(i.id)),
+      ];
     };
     return [...pick(false), ...pick(true)];
   });
@@ -724,11 +730,10 @@ function buildHoerenWords(ctx) {
 //      order is the checkpoint's own seed, and tests/checkpoint.test.mjs pins
 //      that at least two different orders occur across the four checkpoints.
 //   2. A FALSE STATEMENT QUOTED ANOTHER LEKTION, so it tested string recognition,
-//      not reading. A false statement is now built from a line of THIS text with
-//      exactly ONE detail changed — a number word, a digit, a weekday, a name —
-//      taken from the dialogue's own vocabulary. That is what Lesen Teil 1/2/3 of
-//      *Start Deutsch 1* asks: the statement is plausible and you have to read the
-//      text to reject it.
+//      not reading. A false statement is now built from a line of THIS text, and
+//      the text refutes it (see CONTRADICTION below). That is what Lesen Teil 1/2/3
+//      of *Start Deutsch 1* asks: the statement is plausible and you have to read
+//      the text to reject it.
 //
 // The `hint` is gone with it: it named the Lektion, which under (2) told the
 // learner which statements were the foreign ones.
@@ -741,13 +746,6 @@ const NUMBER_WORDS = [
   'neunzig', 'hundert',
 ];
 
-const WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-
-// Numbers a REPLACEMENT may use: `eins` is excluded because "eins Euro" is not
-// German (the counted form is `ein`), and a false statement has to be wrong,
-// not broken. `null` goes with it — "null Euro" reads as a mistake, not a detail.
-const REPLACEMENT_NUMBERS = NUMBER_WORDS.filter((w) => w !== 'eins' && w !== 'null');
-
 /**
  * The single-digit number words — the only replacements allowed INSIDE a digit
  * group (DaF review #6, MAJOR 7). A phone number is spoken digit by digit
@@ -758,204 +756,42 @@ const REPLACEMENT_NUMBERS = NUMBER_WORDS.filter((w) => w !== 'eins' && w !== 'nu
  */
 const DIGIT_NUMBERS = NUMBER_WORDS.slice(0, 10);
 
-/** Forms of address are not names: swapping "Ana" for "Herr" is nonsense, not a detail. */
-const TITLES = ['Herr', 'Frau'];
-
 /**
- * THE DETERMINERS THAT GOVERN A NOUN AS A QUANTITY OR A TIME (DaF review #7,
- * MAJOR 2). `jede Woche` is an adverbial accusative: `Woche` stands there as a
- * time unit, not as a thing, and the Wortfeld knows only `article` and
- * `plural`, so the congruence bar of review #6 cannot see it. That is how
- * checkpoint 3 shipped the L9 football line with `Woche` replaced by
- * **Kellnerin** under its unchanged `jede` — grammatically
- * impeccable (`die Woche` and `die Kellnerin` share their article) and not a
- * false statement about the text but a broken sentence, solvable without
- * reading a line of it.
- *
- * `QUANTIFIER_DET` is the review's own list: after `jede/jeden/jedes/jeder/
- * alle/allen` the noun is a quantity or a time expression, and a swap there is
- * NEVER a changed detail — the branch does not fire at all.
- *
- * The semantic class used to be demanded only under a DEICTIC (`diese Woche`,
- * `diesen Schlüssel`). Review #15 lifted it to EVERY vocab swap, because the
- * bar has nothing to do with the determiner: „Tim kauft den Stuhl und **die
- * E-Mail-Adresse**." stood on the graded checkpoint 2 under a plain `die`. A1.1
- * has no semantic field on a Wortfeld entry — `{ de, word, article, plural, en,
- * wordId }` — so the classes we cannot read off the data are written down here,
- * small and documented: TIME_NOUNS plus the weekdays, PERSON_NOUNS (plus the
- * course's own „(m)"/„(f)" gloss, which classifies every job-title pair without
- * a second list), DATA_NOUNS for the fields of a form. Everything else counts
- * as a thing — and a thing is still a coarse class, which is why the swap pool
- * is narrowed a second time, to the nouns the chapter actually PRINTS.
+ * THE MAGNITUDE A CHANGED VALUE KEEPS. „um neunzig Uhr" and „Ana braucht achtzig Zimmer"
+ * are not false statements, they are numbers no reader has to check against the text. So a
+ * number up to twelve becomes another of zwei–zwölf (which is also every hour a clock time
+ * can take), a teen another teen, a ten another ten. „eins" and „null" are never put in:
+ * „eins Euro" and „um eins Uhr" are not German, and „null Euro" reads as a mistake.
  */
-const QUANTIFIER_DET = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
-
-/** The chapter's time nouns — the class `jede/diese` reaches for. */
-const TIME_NOUNS = [
-  'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
-  'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
-  'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
-  'Pause', 'Pausen', 'Termin', 'Termine', 'Verspätung', 'Verspätungen',
-  'Geburtstag', 'Geburtstage', 'Wochentag', 'Wochentage', 'Feierabend',
-];
-
-/**
- * The chapter's PEOPLE — the third class (DaF review #15, MAJOR 3, „Zweitens“).
- * „Ana braucht einen Kellner“ for „… einen Computer“ agrees in gender and
- * number and is still not a reading item: a person is not a thing one needs off
- * a shelf. Like TIME_NOUNS this is written down because a Wortfeld entry is
- * `{ de, word, article, plural, en, wordId }` and carries no semantic field.
- */
-const PERSON_NOUNS = [
-  'Arzt', 'Ärzte', 'Ärztin', 'Ärztinnen', 'Baby', 'Babys', 'Bruder', 'Brüder',
-  'Einzelkind', 'Einzelkinder', 'Eltern', 'Familie', 'Familien', 'Frau', 'Frauen',
-  'Gast', 'Gäste', 'Geschwister', 'Kellner', 'Kellnerin', 'Kellnerinnen',
-  'Kind', 'Kinder', 'Mama', 'Mamas', 'Mann', 'Männer', 'Mutter', 'Mütter',
-  'Nachbar', 'Nachbarn', 'Nachbarin', 'Nachbarinnen', 'Papa', 'Papas',
-  'Schwester', 'Schwestern', 'Sohn', 'Söhne', 'Tochter', 'Töchter',
-  'Vater', 'Väter',
-];
-
-/**
- * …and the pairs the course marks itself. Every job title of the Wortfeld is
- * glossed „teacher (m)" / „teacher (f)", so the person class does not have to
- * be retyped for them: the gloss IS the data (`der Chef` — „boss (m)"), and a
- * pair added to a later level is classified without touching this file.
- */
-const PERSON_GLOSS_RE = /\((?:m|f)\)/;
-
-/**
- * The chapter's FORM FIELDS — the fourth class, and the one the second axis of
- * DaF review #15, MAJOR 3 named: `a1.1-cp2-lesen-4` read „Tim kauft den Stuhl
- * und **die E-Mail-Adresse**.“ — `die Lampe → die E-Mail-Adresse` agrees in
- * gender and number and is absurd without reading a word of the text. A datum
- * one gives on a form is not a thing one buys, carries or needs.
- */
-const DATA_NOUNS = [
-  'Adresse', 'Adressen', 'Alter', 'Beruf', 'Berufe', 'Datum', 'Daten',
-  'E-Mail', 'E-Mails', 'E-Mail-Adresse', 'E-Mail-Adressen', 'Familienname',
-  'Familienstand', 'Geburtsdatum', 'Geburtsdaten', 'Handynummer', 'Handynummern',
-  'Nachname', 'Nachnamen', 'Name', 'Namen', 'Nummer', 'Nummern',
-  'Postleitzahl', 'Postleitzahlen', 'Staatsangehörigkeit', 'Staatsangehörigkeiten',
-  'Telefonnummer', 'Telefonnummern', 'Vorname', 'Vornamen', 'Wohnort', 'Wohnorte',
-];
-
-/**
- * The semantic class of a noun. It is required on EVERY vocab swap, not only
- * under a deictic (DaF review #15, MAJOR 3): a time for a time, a person for a
- * person, a datum for a datum, a thing for a thing. Where the class is unknown the word simply
- * counts as a thing — the classes are a bar, not a taxonomy, and the falsifier
- * has two more passes if this one yields nothing.
- */
-function semanticClass(word, vocab) {
-  if (TIME_NOUNS.includes(word) || WEEKDAYS.includes(word)) return 'zeit';
-  if (PERSON_NOUNS.includes(word)) return 'person';
-  if (PERSON_GLOSS_RE.test(String(vocab?.get?.(word)?.en || ''))) return 'person';
-  if (DATA_NOUNS.includes(word)) return 'daten';
-  return 'ding';
-}
-
-/**
- * THE NP SLOT (DaF review #8, the residual of round 8). The article bar of
- * review #6 and the quantifier/deictic bar of review #7 both look at ONE noun
- * and its determiner — and neither of them sees a noun that has no determiner
- * at all. That is how checkpoint 3 still shipped „Spielst … jede Woche
- * **Durst**?“ against „… jede Woche **Fußball**?“: `Fußball` is a bare object
- * noun inside the verbal idiom *Fußball spielen*, `Durst` is the bare object of
- * *Durst haben*, both are `der`-nouns of the Wortfeld, so every congruence
- * check passes — and the sentence is not a false statement about the text but
- * no German sentence at all. „Woche“ was already protected by QUANTIFIER_DET;
- * the swap simply walked one token to the right.
- *
- * A bare noun in German is almost always welded to its verb (Fußball spielen,
- * Durst/Hunger haben, Klavier spielen, Auto fahren, Deutsch lernen), and the
- * Wortfeld carries no valency data to tell those apart from a genuinely free
- * bare noun. So the rule is positional and conservative: the vocab branch may
- * only swap a noun that stands in a REAL NP SLOT — immediately preceded by an
- * article, a possessive or a demonstrative. Everything else is left alone.
- *
- * `NP_DET_RE` is that list. The possessive stems are written as a pattern
- * (`d?ein` covers the article `ein` and the 2nd-person possessive in one
- * alternative) because tests/checkpoint.test.mjs greps this file for the
- * informal register and a literal one would trip that guard.
- */
-const NP_DET_RE = /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner|keines|d?ein|d?eine|d?einen|d?einem|d?einer|d?eines|sein|seine|seinen|seinem|seiner|seines|ihr|ihre|ihren|ihrem|ihrer|ihres|unser|unsere|unseren|unserem|unserer|unseres|euer|eure|euren|eurem|eurer|eures|dieser|diese|diesen|diesem|dieses)$/i;
-
-/** Does this noun stand in a real NP slot — under an article, possessive or demonstrative? */
-const inNpSlot = (determiner) => NP_DET_RE.test(String(determiner || ''));
-
-/**
- * THE FALLBACK TABLE (same residual). Making the vocab branch positional means
- * a window can now run out of swappable tokens altogether, and a Lesen section
- * that silently drops an item is the failure this whole section exists to
- * avoid — SECTION_COUNTS.lesen is 4 on every checkpoint and the test pins it.
- * So before `falsifyWindow` gives up it tries one more class of changed detail:
- * a place/time adverb swapped for its opposite. These are pairs, not a pool:
- * the replacement is fixed by the table, so it can never produce a form that
- * needs congruence at all.
- *
- * Only lowercase occurrences are swapped, and never a sentence-initial one:
- * capital `Morgen` is the noun („Guten Morgen“), lowercase `morgen` is the
- * adverb, and this branch must not touch the first.
- */
-const ADVERB_SWAPS = new Map([
-  ['heute', ['morgen']],
-  ['morgen', ['heute']],
-  ['hier', ['da', 'dort']],
-  ['da', ['hier']],
-  ['dort', ['hier']],
-  ['links', ['rechts']],
-  ['rechts', ['links']],
-  ['früh', ['spät']],
-  ['spät', ['früh']],
-  ['morgens', ['abends']],
-  ['abends', ['morgens']],
-]);
+const SMALL_NUMBERS = NUMBER_WORDS.slice(2, 13);
+const TEEN_NUMBERS = NUMBER_WORDS.slice(13, 20);
+const TEN_NUMBERS = NUMBER_WORDS.slice(20);
+const sameMagnitude = (word) => {
+  const n = NUMBER_WORDS.indexOf(word);
+  if (n <= 12) return SMALL_NUMBERS;
+  return n <= 19 ? TEEN_NUMBERS : TEN_NUMBERS;
+};
 
 /** A word as it appears in a line — letters (incl. umlauts) or a run of digits. */
 const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
 
 /**
- * The chapter's NOUNS WITH THEIR GENDER AND THEIR NUMBER — the last-resort swap
- * when a window carries no number, weekday or name, as a Map
- * `wort → { article, number, plural, isPluralOfSelf }`.
+ * THE NOUNS OF A SET OF LEKTIONEN WITH THEIR GENDER AND THEIR NUMBER, as a Map
+ * `wort → { article, number, plural, en, isPluralOfSelf }` — what the agreement check
+ * and a polarity change read (`resolvedReading`).
  *
- * It is built from the Wortfeld, not from the dialogue lines, for two reasons
- * (DaF review #6, MAJOR 7). The old version collected every capitalised word of
- * the dialogues and swapped any one of them for any other, which produced
- * `a1.1-cp3-lesen-2`: the L9 football line with `Woche` replaced by
- * **Frühstück** — a NEUTER noun under a feminine `jede`. That is not a false
- * statement, it is not German, and
- * in the graded Lesen section it hands the learner the answer through the form
- * instead of through the content. The Wortfeld already carries `article` and
- * `plural`, so gender is data we have: a noun may only be replaced by a noun of
- * the SAME gender and the SAME number.
+ * It is built from the Wortfeld, not from the dialogue lines: the Wortfeld carries
+ * `article` and `plural`, so gender and number are data we have (DaF review #6, MAJOR 7).
  *
- * THE PLURAL MUST NOT OVERWRITE THE SINGULAR (DaF review #15, MAJOR 3). The old
- * two lines wrote the singular and then the plural into the same Map with
- * `out.set`, so for every noun whose plural is spelled like its singular the
- * plural line ATE the gender: `der Computer` became `{ article: 'plural' }`,
- * and the falsifier read „einen Computer“ as a plural slot and swapped in
- * `Taschen` — „Ana braucht **einen Taschen** und ein Telefon.“ on the graded
- * checkpoint 2. Fifteen Wortfeld entries of A1.1 have that shape (Lehrer,
- * Schalter, Eltern, Geschwister, Euro, Kugelschreiber, Fenster, Zimmer,
- * Schlüssel, Computer, Verkäufer, Wecker, Kuchen, Kellner, Fahrer), so it was a
- * class and not a pair; which of them surfaces is decided by the seed.
- *
- * So the map is built without loss: the singular keeps its gender, a plural
- * form only takes a key that is still free, and a form that is BOTH (plural ===
- * singular) is marked `isPluralOfSelf` and carries both readings. Such a word
- * is then read in ONE direction only:
- *   - as the SOURCE of a swap it is legal, because the determiner standing in
- *     the text decides its number for us („einen Computer“ is singular
- *     masculine, full stop) — and where the determiner does not decide („die
- *     Lehrer“ is either), no swap happens;
- *   - as the REPLACEMENT it is never used, because the inserted form alone
- *     cannot show the reader which number it is in, and a statement the learner
- *     cannot parse is not a false statement (review #15's own „nie getauscht“).
- *
- * Sentence-initial words are still skipped at the call site: a line-initial
- * "Spielst …" is a capitalised VERB, and the map cannot tell them apart.
+ * THE PLURAL MUST NOT OVERWRITE THE SINGULAR (DaF review #15, MAJOR 3). Writing the
+ * singular and then the plural into one Map let every noun whose plural is spelled like
+ * its singular lose its gender — `der Computer` became `{ article: 'plural' }`, and
+ * „einen Computer" read as a plural slot. Fifteen Wortfeld entries of A1.1 have that
+ * shape (Lehrer, Schalter, Eltern, Geschwister, Euro, Kugelschreiber, Fenster, Zimmer,
+ * Schlüssel, Computer, Verkäufer, Wecker, Kuchen, Kellner, Fahrer). So the singular keeps
+ * its gender, a plural form only takes a key that is still free, and a form that is BOTH
+ * is marked `isPluralOfSelf` and carries both readings: the determiner standing in the
+ * text decides which one it is („einen Computer" is singular, „die Lehrer" undecided).
  */
 function contentWords(lektionen) {
   const out = new Map();
@@ -986,28 +822,6 @@ function contentWords(lektionen) {
 }
 
 /**
- * THE NOUNS THE CHAPTER ACTUALLY PRINTS — every capitalised word of its
- * dialogue lines.
- *
- * The swap pool used to be the whole Wortfeld of the chapter, and a Wortfeld is
- * a word LIST: it holds `die Firma` and `die Arbeit` beside `die Lampe`, so
- * „Tim kauft den Stuhl und **die Firma**." passes every congruence bar and is
- * still absurd on sight (DaF review #15, MAJOR 3, second axis). A replacement
- * the learner can FIND in the text he was given is plausible by construction —
- * that is how a Goethe distractor is built — and the statement stays false
- * only because of what the text says, which is the whole point of Lesen Teil 1.
- */
-function printedNouns(lektionen) {
-  const out = new Set();
-  for (const l of lektionen || []) {
-    for (const line of l?.dialog?.lines || []) {
-      for (const m of String(line.de || '').matchAll(/[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+/g)) out.add(m[0]);
-    }
-  }
-  return out;
-}
-
-/**
  * AGREEMENT, AS A FUNCTION OF THE DATA (DaF review #15, MAJOR 3, „Zweitens“).
  *
  * A swap used to be waved through when two Wortfeld entries carried the same
@@ -1015,8 +829,8 @@ function printedNouns(lektionen) {
  * number at all, and it silently trusted a table that had already lost the
  * gender. So gender and number are now read off the Wortfeld as FEATURES, the
  * determiner standing in the text is read as the features it admits, and every
- * swap — every pass, present and future — is checked against both BEFORE the
- * statement is returned. A determiner or a noun this file does not know is
+ * changed statement is checked against both BEFORE it is returned. A determiner
+ * or a noun this file does not know is
  * never a violation: the guard only rejects what it can prove wrong.
  */
 const GENDER_OF_ARTICLE = { der: 'm', die: 'f', das: 'n' };
@@ -1036,7 +850,11 @@ const POSSESSIVE_ENDINGS = {
   '': ['m.sg', 'n.sg'], e: ['f.sg', 'pl'], en: ['m.sg', 'pl'],
   em: ['m.sg', 'n.sg'], er: ['f.sg'], es: ['m.sg', 'n.sg'],
 };
-/** `eur` carries the inflected forms of `euer` (eure, euren …). */
+/**
+ * `eur` carries the inflected forms of `euer` (eure, euren …). The 2nd-person stem is
+ * written `d?ein` because the register guard in tests/checkpoint.test.mjs greps this file
+ * line by line and cannot tell a determiner it must read from a word it must never say.
+ */
 const POSSESSIVE_STEMS = ['kein', 'unser', 'euer', 'eur', 'mein', 'd?ein', 'sein', 'ihr'];
 
 /** The features a determiner admits, or null when this file does not know it. */
@@ -1045,7 +863,7 @@ function determinerFeatures(determiner) {
   if (!det) return null;
   if (DET_FEATURES.has(det)) return DET_FEATURES.get(det);
   for (const pattern of POSSESSIVE_STEMS) {
-    const stem = pattern.replace('d?', '');             // see NP_DET_RE for why the stem is a pattern
+    const stem = pattern.replace('d?', '');             // see POSSESSIVE_STEMS for why the stem is a pattern
     for (const form of pattern.includes('d?') ? [stem, `d${stem}`] : [stem]) {
       if (!det.startsWith(form)) continue;
       const ending = det.slice(form.length);
@@ -1084,7 +902,7 @@ function resolvedReading(word, determiner, vocab) {
 
 /**
  * Every determiner–noun pair of a statement this file can prove ungrammatical.
- * The builder calls it on the pair it just created; tests/checkpoint.test.mjs
+ * The builder calls it on every statement it changes; tests/checkpoint.test.mjs
  * calls it on whole statements of all four papers.
  */
 export function agreementViolations(text, vocab) {
@@ -1101,12 +919,6 @@ export function agreementViolations(text, vocab) {
   return out;
 }
 
-/** Is this match at the start of the line or of a new sentence inside it? */
-function sentenceInitial(text, index) {
-  const before = text.slice(0, index).trimEnd();
-  return before === '' || /[.!?]$/.test(before);
-}
-
 /** Pick a member of `list` that is not `not` — deterministic in `rng`. */
 function pickOther(list, not, rng) {
   const options = list.filter((x) => x.toLowerCase() !== String(not).toLowerCase());
@@ -1114,127 +926,308 @@ function pickOther(list, not, rng) {
   return options[Math.floor(rng() * options.length)];
 }
 
+// ── CONTRADICTION (DaF review A1.2 #5, MAJOR 8) ─────────────────────────────
+//
+// RICHTIG FOLLOWS FROM THE TEXT; FALSCH IS REFUTED BY IT. Until 2026-10-17 a Falsch
+// statement was its report with one token swapped for another of the same class: a
+// number, a weekday, a speaker's name, a printed Wortfeld noun, an adverb's opposite.
+// Only the number made it false. „Lena hat den Fahrplan." against Tim's „Ich habe den
+// Fahrplan." and „Ana möchte ein Taxi." against „Ich möchte ein Ticket." are not refuted
+// by their texts, only not stated — and 41 of the 48 Falsch statements of the twelve
+// A1.1 and A1.2 papers swapped a person or a thing (measured 2026-10-17), so a learner
+// who had read every word still had to guess.
+//
+// A Falsch statement now contradicts its report in one of three ways, and never touches a
+// person or a thing:
+//
+//   VALUE     a number word or a figure — a price, a clock time, an age, a count, a digit
+//             of a phone number — for another. One stated value excludes the other,
+//             except under a frequency adverb („Ich bin manchmal zehn Minuten zu spät."):
+//             there a value is one of several, and none is changed.
+//   CONTRARY  the one-word predicate of „ist/sind/war/waren" for its contrary („Der Mund ist
+//             klein." → „… groß."), from a table of true contraries only (CONTRARIES).
+//   POLARITY  „nicht" or „nie" taken out; „kein-" made „ein-" before a countable singular
+//             and taken out before a mass noun or a plural („kein Fieber" → „Fieber");
+//             „ein-" made „kein-"; „kein-" put before a bare noun („braucht Ana kein
+//             Geld"); „viele" made „keine"; „nicht" put where German puts it — before the
+//             predicate of sein, before a separable particle or a participle („sieht nicht
+//             fern", „hat nicht gearbeitet"), after a definite object closing the clause
+//             („hat den Fahrplan nicht"). Two coordinated phrases are negated together
+//             („keinen Computer und kein Telefon"). None of them is made where it would
+//             change more than the polarity: beside a scope word (gern, auch, nur, noch,
+//             immer …), after a preposition, inside a list, before a unit, or where a
+//             negation already stands.
+//
+// tests/a12-rebuild.test.mjs holds the annotated cases (folgt / widerspricht / offen) and
+// checks every Falsch statement of the twelve papers of both levels against these kinds.
+
+/** A value under one of these is one of several, so changing it refutes nothing. */
+const FREQUENCY_WORDS = new Set(['manchmal', 'oft', 'meistens', 'selten']);
+
 /**
- * The replacement table: one changed DETAIL, drawn from the dialogue's own
- * kinds of token. Returns null for a word that carries no checkable detail.
+ * Words that give a negation its own scope — „nicht gern", „auch nicht", „noch nicht",
+ * „nicht mehr", „nicht so gut", „nicht nur … sondern". A polarity change in their sentence
+ * changes more than the polarity, so none is made there.
  */
-function changedDetail(
-  word,
-  { names, vocab, printed },
-  rng,
-  { allowVocab = true, allowAdverb = false, digitGroup = false, determiner = '' } = {},
-) {
-  const lower = word.toLowerCase();
-  if (allowAdverb) {
-    // The fallback pass: only the adverb table fires here, and only on a
-    // lowercase occurrence (see ADVERB_SWAPS).
-    if (word !== lower) return null;
-    const opposites = ADVERB_SWAPS.get(lower);
-    return opposites ? pickOther(opposites, lower, rng) : null;
+const SCOPE_WORDS = new Set([
+  'gern', 'gerne', 'lieber', 'auch', 'nur', 'noch', 'schon', 'immer', 'oft', 'manchmal',
+  'meistens', 'selten', 'nie', 'mehr', 'wieder', 'sondern', 'gar', 'so', 'ganz',
+]);
+
+/** The degree a one-word predicate may carry: „ist sehr müde", „ist zu kurz". */
+const DEGREE_WORDS = new Set(['sehr', 'zu']);
+
+const SEIN_FORMS = new Set(['ist', 'sind', 'war', 'waren']);
+const KEIN_RE = /^kein(?:e|en|em|er|es)?$/;
+const EIN_RE = /^ein(?:e|en|em|er|es)?$/;
+
+/** A determiner in front of a noun: after one of these the noun is not bare. */
+const DETERMINER_RE = /^(?:der|die|das|den|dem|des|k?ein(?:e|en|em|er|es)?|[mds]ein(?:e|en|em|er|es)?|ihr(?:e|en|em|er|es)?|unser(?:e|en|em|er|es)?|eu(?:e)?r(?:e|en|em|er|es)?|dies(?:e|en|em|er|es)|jede[nmrs]?|allen?|vielen?|wenigen?|einigen?|beiden?)$/;
+
+/** After one of these a noun phrase is an adverbial („in einer Woche"), not the thing negated. */
+const PREPOSITIONS = new Set([
+  'ab', 'am', 'an', 'ans', 'auf', 'aus', 'bei', 'beim', 'bis', 'durch', 'für', 'gegen',
+  'hinter', 'im', 'in', 'ins', 'mit', 'nach', 'neben', 'ohne', 'seit', 'um', 'unter', 'über',
+  'von', 'vom', 'vor', 'zu', 'zum', 'zur', 'zwischen',
+]);
+
+/** The prepositions of a time („am Freitag", „im Mai"): „nicht" may still stand behind them. */
+const TIME_PREPOSITIONS = new Set(['am', 'im', 'um']);
+
+/** The time adverbs a bare object may follow: „hat Lena abends Zeit". */
+const TIME_ADVERBS = new Set(['heute', 'morgen', 'abends', 'morgens', 'mittags', 'jetzt', 'dann', 'danach', 'zuerst', 'später']);
+
+/** The separable particles „nicht" goes in front of: „sieht nicht fern", „kommt nicht mit". */
+const PARTICLES = new Set(['ab', 'an', 'auf', 'aus', 'ein', 'fern', 'los', 'mit', 'nach', 'vor', 'weg', 'zu', 'zurück']);
+
+/** A participle closing the clause: gekauft, gegangen, bezahlt, telefoniert. */
+const PARTICIPLE_RE = /^(?:ge[a-zäöüß]{2,}(?:t|en)|(?:be|ver|er|ent|zer|emp)[a-zäöüß]{2,}t|[a-zäöüß]{2,}iert)$/;
+
+/** „keinen Euro", „keine Stunde" negate a measure, not a thing. */
+const UNIT_NOUNS = new Set([
+  'Euro', 'Cent', 'Uhr', 'Minute', 'Minuten', 'Stunde', 'Stunden', 'Tag', 'Tage',
+  'Woche', 'Wochen', 'Monat', 'Monate', 'Jahr', 'Jahre',
+]);
+
+/**
+ * CONTRARY PREDICATES: one value of a property excludes the other („klein" / „groß"). True
+ * contraries only — „müde" has no partner (awake and tired go together), and a word with two
+ * partners is left out („alt": neu for a thing, jung for a person; „weit": kurz for a way,
+ * nah for a place). „richtig/falsch" stays out too: it would read as the answer key.
+ */
+const CONTRARIES = new Map([
+  ['groß', 'klein'], ['teuer', 'billig'], ['warm', 'kalt'], ['krank', 'gesund'],
+  ['laut', 'leise'], ['schnell', 'langsam'], ['lang', 'kurz'], ['früh', 'spät'],
+  ['voll', 'leer'], ['gut', 'schlecht'], ['hell', 'dunkel'], ['ledig', 'verheiratet'],
+  ['offen', 'geschlossen'], ['leicht', 'schwer'], ['links', 'rechts'], ['glücklich', 'traurig'],
+  ['dick', 'dünn'], ['sauber', 'schmutzig'], ['nass', 'trocken'],
+].flatMap(([a, b]) => [[a, b], [b, a]]));
+
+/**
+ * THE VERBS WHOSE BARE NOUN IS AN ACCUSATIVE OBJECT („hat Hunger", „braucht Geld", „spielt
+ * Fußball"). After any other verb a bare noun may be the subject („Morgen kommt Schnee.") or a
+ * predicate („bleibt Lehrer"), so no „kein-" goes in front of it (Codex's probes, 2026-10-17).
+ */
+const ACCUSATIVE_VERBS = new Set([
+  'hat', 'hatte', 'haben', 'braucht', 'bringt', 'isst', 'hört', 'kauft', 'kocht', 'lädt', 'liest',
+  'möchte', 'ruft', 'spielt', 'feiert', 'lernt', 'macht', 'sieht', 'spricht', 'trinkt', 'bezahlt',
+  'fragt', 'holt', 'trägt', 'will', 'zieht',
+]);
+
+/** Particles that make a verb take the dative („hört … zu", „läuft … nach"): no accusative there. */
+const DATIVE_PARTICLES = new Set(['zu', 'nach', 'bei', 'entgegen']);
+
+/** Pronouns a sein-predicate may be — „Ana ist es." takes „nicht" after it, not before. */
+const PRONOUN_PREDICATES = new Set(['es', 'er', 'das', 'ihn', 'ihm', 'sich', 'ich', 'sie', 'wir']);
+
+/** The kein- form of a bare noun: nominative after sein, accusative after any other verb. */
+const keinFor = (reading, nominative) => {
+  if (reading === 'pl' || reading === 'f.sg') return 'keine';
+  return reading === 'm.sg' && !nominative ? 'keinen' : 'kein';
+};
+
+/**
+ * WHICH CONTRADICTION FIRST. A Falsch statement that GAINS a negation carries a cue: on
+ * the papers of 2026-10-17, 11 of the 24 A1.1 Falsch statements said „nicht" or „kein" and
+ * none of the 24 Richtig ones did, so „nicht means Falsch" scored without reading. So the
+ * falsifier takes a changed value first, a negation taken out second, and a negation put
+ * in only where neither exists — and the ladder applies that order across the reports of
+ * a window, not only inside one sentence.
+ */
+const NEGATION_RE = /^(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)$/i;
+const negations = (de) => String(de).split(/\s+/).filter((w) => NEGATION_RE.test(bareWord(w))).length;
+const cueRank = (c, statement) => {
+  if (c.kind === 'value' || c.kind === 'contrary') return 0;
+  return negations(c.de) < negations(statement) ? 1 : 2;
+};
+const byCueRank = (list, statement) => list
+  .map((c, i) => ({ c, i, rank: cueRank(c, statement) }))
+  .sort((a, b) => a.rank - b.rank || a.i - b.i)
+  .map(({ c, rank }) => ({ ...c, rank }));
+
+/** „kein" → „ein", „Keinen" → „Einen" — and back. */
+const unNegated = (w) => (w[0] === 'K' ? 'E' : 'e') + w.slice(2);
+const negated = (w) => (w[0] === 'E' ? 'K' : 'k') + w.toLowerCase();
+
+/**
+ * EVERY CONTRADICTION OF ONE STATEMENT, in reading order: `{ de, kind, from, to }` with
+ * `kind` 'value' or 'polarity' and `from`/`to` the word that left and the word that came
+ * ('' for none). `nouns` is contentWords over the course so far: it tells „kein Fieber" →
+ * „Fieber" (no plural, a mass noun) from „keine Wohnung" → „eine Wohnung". A replacement
+ * number is drawn from `rng`.
+ */
+export function contradictions(statement, nouns, rng) {
+  const words = String(statement || '').split(/\s+/).filter(Boolean);
+  // Each word as opening quote + core + closing punctuation. The core keeps what stands inside
+  // it („1.1", „8.30", „E-Mail"), so a replacement never cuts a word in two.
+  const parts = words.map((w) => /^([„“"»«]*)(.*?)([.,!?;:„“"»«]*)$/.exec(w));
+  const bare = parts.map((m) => m[2]);
+  const lower = bare.map((w) => w.toLowerCase());
+  const last = words.length - 1;
+  const out = [];
+  const push = (c) => { if (!out.some((o) => o.de === c.de)) out.push(c); };
+  const replaced = (i, to) => words.map((w, j) => (j === i ? parts[j][1] + to + parts[j][3] : w)).join(' ');
+  // A word taken out leaves its punctuation to the word before it: „geht Ana nicht." → „geht Ana."
+  const removed = (i) => words
+    .map((w, j) => (j === i - 1 ? w + parts[i][3] : w))
+    .filter((_, j) => j !== i)
+    .join(' ');
+  const inserted = (at, word) => [...words.slice(0, at), word, ...words.slice(at)].join(' ');
+  const scoped = (except) => lower.some((w) => w !== except && SCOPE_WORDS.has(w));
+  const isNumber = (i) => NUMBER_WORDS.includes(lower[i] || '') || /^\d+(?:[.:]\d+)*$/.test(bare[i] || '');
+  const isNoun = (i) => /^[A-ZÄÖÜ]/.test(bare[i] || '') && nouns.has(bare[i]) && !UNIT_NOUNS.has(bare[i]);
+  const finiteForms = new Set([...VERB_3SG.values(), 'hat', 'hatte', 'haben']);
+  const finite = lower.findIndex((w, j) => j > 0 && (SEIN_FORMS.has(w) || finiteForms.has(w)));
+  const nominative = finite > 0 && SEIN_FORMS.has(lower[finite]);
+  const negative = lower.some((w) => NEGATION_RE.test(w));
+  // „braucht nicht zu arbeiten": a zu-infinitive gives the negation its own job — no polarity change.
+  const zuInfinitive = lower.some((w, j) => w === 'zu' && /^[a-zäöüß]+en$/.test(lower[j + 1] || ''));
+  // A clause a negation or a contrary may go into: no scope word, no negation, no number.
+  const plain = !scoped('') && !negative && !lower.some((_, j) => isNumber(j)) && /\.$/.test(words[last] || '');
+  // A BARE noun stands right after the verb, a name, a time adverb or the end of a phrase
+  // („braucht Ana Geld", „hat abends Zeit", „spielt am Wochenende Fußball") — never after a
+  // determiner, a number or another noun („eine Tasse Kaffee").
+  const bareAt = (i) => {
+    if (i < 1 || !isNoun(i)) return false;
+    const p = lower[i - 1];
+    if (DETERMINER_RE.test(p) || isNumber(i - 1)) return false;
+    if (SEIN_FORMS.has(p) || finiteForms.has(p) || TIME_ADVERBS.has(p)) return true;
+    if (!/^[A-ZÄÖÜ]/.test(bare[i - 1]) || i - 1 === 0) return false;
+    return !nouns.has(bare[i - 1]) || PREPOSITIONS.has(lower[i - 2] || '');
+  };
+
+  for (let i = 0; i <= last; i += 1) {
+    const pre = lower[i - 1] || '';
+    if (isNumber(i)) {
+      // VALUE
+      if (lower.some((w) => FREQUENCY_WORDS.has(w))) continue;
+      let to;
+      if (/^\d/.test(bare[i])) {
+        to = bare[i].replace(/^\d+/, (d) => String(Number(d) >= 10 ? Number(d) + 10 : Number(d) + 3));
+      } else {
+        const digitGroup = NUMBER_WORDS.includes(pre) || NUMBER_WORDS.includes(lower[i + 1] || '');
+        to = pickOther(digitGroup ? DIGIT_NUMBERS : sameMagnitude(lower[i]), lower[i], rng);
+        if (to && /^[A-ZÄÖÜ]/.test(bare[i])) to = to[0].toUpperCase() + to.slice(1);
+      }
+      if (to) push({ de: replaced(i, to), kind: 'value', from: bare[i], to });
+    } else if (lower[i] === 'nicht' || lower[i] === 'nie') {
+      // POLARITY: the negation taken out
+      if (i > 0 && !scoped(lower[i]) && !zuInfinitive) push({ de: removed(i), kind: 'polarity', from: bare[i], to: '' });
+    } else if (scoped('') || zuInfinitive || PREPOSITIONS.has(pre)) {
+      // a scope word in the clause, or a preposition in front: nothing changes here
+    } else if (KEIN_RE.test(lower[i])) {
+      const reading = /^[A-ZÄÖÜ]/.test(bare[i + 1] || '') && resolvedReading(bare[i + 1], lower[i], nouns);
+      if (!reading) continue;
+      const plural = String(nouns.get(bare[i + 1])?.plural || '');
+      if (reading !== 'pl' && plural && plural !== '—') {
+        push({ de: replaced(i, unNegated(bare[i])), kind: 'polarity', from: bare[i], to: unNegated(bare[i]) });
+      } else {
+        push({ de: removed(i), kind: 'polarity', from: bare[i], to: '' });
+      }
+    } else if (negative) {
+      // a negation stands already: nothing more is put into this clause
+    } else if (EIN_RE.test(lower[i]) && isNoun(i + 1)) {
+      // „ein-" → „kein-", and two coordinated „ein-" phrases together
+      // „oder" stays out: „keinen Kaffee oder keine Milch" does not deny both (Codex, 2026-10-17).
+      if (/^(?:und|oder)$/.test(pre) || /,$/.test(words[i - 1] || '') || /,$/.test(words[i + 1]) || lower[i + 2] === 'oder') continue;
+      const pair = lower[i + 2] === 'und' ? i + 3 : -1;
+      if (pair > 0 && !(EIN_RE.test(lower[pair] || '') && isNoun(pair + 1))) continue;
+      const heads = pair > 0 ? [i, pair] : [i];
+      const readings = heads.map((k) => resolvedReading(bare[k + 1], lower[k], nouns));
+      if (readings.some((r) => !r || r === 'pl')) continue;
+      const de = words.map((w, j) => (heads.includes(j) ? parts[j][1] + negated(bare[j]) + parts[j][3] : w)).join(' ');
+      push({ de, kind: 'polarity', from: heads.map((k) => bare[k]).join(' … '), to: heads.map((k) => negated(bare[k])).join(' … ') });
+    } else if (lower[i] === 'viele' && isNoun(i + 1)) {
+      const to = bare[i][0] === 'V' ? 'Keine' : 'keine';
+      push({ de: replaced(i, to), kind: 'polarity', from: bare[i], to });
+    } else if (SEIN_FORMS.has(lower[i])) {
+      // the predicate of sein: its contrary, or „nicht" in front of it
+      const predicate = bare.slice(i + 1);
+      const oneWord = predicate.length === 1 || (predicate.length === 2 && DEGREE_WORDS.has(lower[i + 1]));
+      const nounPhrase = i > 0 && bare.slice(0, i).every((w, j) => /^[A-ZÄÖÜ]/.test(w) || ['von', 'der', 'die', 'das', 'dem'].includes(lower[j]));
+      if (!oneWord || !nounPhrase || !plain || !predicate.every((w) => /^[a-zäöüß]+$/.test(w) && !PRONOUN_PREDICATES.has(w))) continue;
+      const contrary = CONTRARIES.get(lower[last]);
+      if (contrary) push({ de: replaced(last, contrary), kind: 'contrary', from: bare[last], to: contrary });
+      push({ de: inserted(i + 1, 'nicht'), kind: 'polarity', from: '', to: 'nicht' });
+    } else if (plain && bareAt(i) && i > finite && finite > 0) {
+      // „kein-" before a bare noun — and before its partner: „keinen Kuchen und keine Schokolade"
+      const verb = lower[finite];
+      if (!nominative && (!ACCUSATIVE_VERBS.has(verb) || DATIVE_PARTICLES.has(lower[last]))) continue;
+      if (/,$/.test(words[i]) || lower[i + 1] === 'oder') continue;
+      const heads = lower[i + 1] === 'und' ? [i, i + 2] : [i];
+      if (heads.length === 2 && !isNoun(i + 2)) continue;
+      // The number comes from the clause: plural after „sind/waren", singular after „ist/war"; an
+      // object spelled alike in both numbers („Kuchen", „Lehrer") is left alone (Codex, 2026-10-17).
+      const plural = ['sind', 'waren'].includes(verb);
+      const forms = heads.map((k) => {
+        const readings = nounReadings(bare[k], nouns) || [];
+        let reading = null;
+        if (nominative) reading = readings.find((r) => (plural ? r === 'pl' : r !== 'pl')) || null;
+        else if (readings.length === 1) [reading] = readings;
+        return reading ? keinFor(reading, nominative) : null;
+      });
+      if (forms.some((f) => !f)) continue;
+      const de = words.flatMap((w, j) => (heads.includes(j) ? [forms[heads.indexOf(j)], w] : [w])).join(' ');
+      push({ de, kind: 'polarity', from: '', to: forms.join(' … ') });
+    }
   }
-  if (NUMBER_WORDS.includes(lower)) {
-    const other = pickOther(digitGroup ? DIGIT_NUMBERS : REPLACEMENT_NUMBERS, lower, rng);
-    return other ? (/^[A-ZÄÖÜ]/.test(word) ? other[0].toUpperCase() + other.slice(1) : other) : null;
+
+  // „nicht" before the last word of the clause — a separable particle, or a participle after
+  // „hat" — or after a definite object closing it. Not after a pair of verbs („geht … und
+  // bezahlt"), not with a place or a direction in front (a time is fine: „kauft am Freitag
+  // nicht ein"), and not where a bare noun or an „ein-" phrase takes the negation itself.
+  if (plain && finite > 0 && last > finite && !SEIN_FORMS.has(lower[finite])) {
+    const mid = lower.slice(finite + 1, last);
+    const takenElsewhere = bare.some((_, j) => j > finite && (bareAt(j) || (EIN_RE.test(lower[j]) && isNoun(j + 1))));
+    const verbPair = mid.includes('und') || mid.includes('oder');
+    const onlyTimes = mid.every((w) => !PREPOSITIONS.has(w) || TIME_PREPOSITIONS.has(w));
+    const closesWithVerb = PARTICLES.has(lower[last])
+      || (PARTICIPLE_RE.test(lower[last]) && ['hat', 'hatte', 'haben'].includes(lower[finite]));
+    if (takenElsewhere) {
+      // the bare noun or the „ein-" phrase carries the negation
+    } else if (closesWithVerb && !verbPair && onlyTimes) {
+      push({ de: inserted(last, 'nicht'), kind: 'polarity', from: '', to: 'nicht' });
+    } else if (/^(?:der|die|das|den|dem)$/.test(lower[last - 1] || '') && isNoun(last) && !PREPOSITIONS.has(lower[last - 2] || '')) {
+      push({ de: [...words.slice(0, last), `${parts[last][1]}${bare[last]} nicht${parts[last][3]}`].join(' '), kind: 'polarity', from: '', to: 'nicht' });
+    }
   }
-  if (WEEKDAYS.includes(word)) return pickOther(WEEKDAYS, word, rng);
-  if (/^\d+$/.test(word)) {
-    const n = Number(word);
-    return String(n >= 10 ? n + 10 : n + 3);
-  }
-  if (names.includes(word)) return pickOther(names, word, rng);
-  // Congruence: same GENDER and same NUMBER, read off the determiner that
-  // stands in the text (resolvedReading), or no swap at all — plus the semantic
-  // class on every swap, and nothing the chapter has not printed (see
-  // QUANTIFIER_DET, semanticClass, printedNouns).
-  if (allowVocab && vocab.has(word)) {
-    const det = String(determiner || '').toLowerCase();
-    if (QUANTIFIER_DET.includes(det)) return null;
-    // …and a noun with no determiner at all is a bare noun welded to its verb
-    // (Fußball spielen, Durst haben) — not an NP slot, never a swap (see
-    // NP_DET_RE).
-    if (!inNpSlot(det)) return null;
-    // The slot's reading, not the entry's article: „einen Computer“ is
-    // masculine singular even though `Computer` is also its own plural, and
-    // „die Lehrer“ is undecidable and therefore never touched.
-    const reading = resolvedReading(word, det, vocab);
-    if (!reading) return null;
-    const sameClass = (w) => semanticClass(w, vocab) === semanticClass(word, vocab);
-    const same = [...vocab.keys()].filter(
-      (w) => w !== word
-        && !vocab.get(w).isPluralOfSelf                 // never INSERT an ambiguous form
-        && (nounReadings(w, vocab) || []).includes(reading)
-        && sameClass(w)
-        && (!printed || printed.has(w)),                // …and printed in this chapter
-    );
-    return same.length ? pickOther(same, word, rng) : null;
-  }
-  return null;
+  return out;
 }
 
 /**
- * THE ORDER THE FALSIFIER TRIES THINGS IN.
- *
- *   1. DETAIL — a number word, a figure, a weekday, a name. This pass already
- *      walks EVERY token of EVERY line of the window, so "try the other lines
- *      of the window" and "swap a weekday or a number anywhere in the window"
- *      are the same pass, not two later ones: there is nothing left for a
- *      second sweep of that kind to find.
- *   2. VOCAB — a Wortfeld noun in a real NP slot, same gender and number, same
- *      semantic class, and printed in this chapter (NP_DET_RE,
- *      QUANTIFIER_DET, resolvedReading, semanticClass, printedNouns).
- *   3. ADVERB — the fallback pass: a place/time adverb for its opposite
- *      (ADVERB_SWAPS). It exists because pass 2 became positional and a window
- *      of bare-noun idioms would otherwise yield nothing and ship a 3-item
- *      Lesen section.
- *
- * Only if all three fail does buildLesen skip the item — and since the test
- * pins 5/4/6/3/2 on all four checkpoints, a skip means the window is wrong and
- * has to be replaced, not tolerated.
+ * RUNG 4 of the Lesen ladder — a curriculum whose dialogues carry no reportable line: the
+ * same contradictions, made on a sentence of the text as it stands.
  */
-const FALSIFY_PASSES = [
-  { allowVocab: false, allowAdverb: false },
-  { allowVocab: true, allowAdverb: false },
-  { allowVocab: false, allowAdverb: true },
-];
-
-/**
- * Build a FALSE statement out of one line of this very text: the same sentence
- * with exactly one detail replaced. Returns null when no line of the window
- * carries a changeable detail (then the caller keeps the pattern honest by
- * skipping the item rather than quoting a foreign Lektion again).
- */
-function falsifyWindow(window, text, ctxWords, rng) {
-  const lines = shuffle(window, rng);
-  for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
-    for (const line of lines) {
-      const de = String(line.de || '');
-      // Tokens in reading order first, so a number word can see its NEIGHBOURS
-      // (a digit group is two or more number words in a row — a phone number).
-      const tokens = [...de.matchAll(WORD_RE)];
-      const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
-      const matches = shuffle(tokens.map((match, pos) => ({ match, pos })), rng);
-      for (const { match, pos } of matches) {
-        if ((allowVocab || allowAdverb) && sentenceInitial(de, match.index)) continue;
-        const digitGroup = isNumberToken(tokens[pos])
-          && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
-        // The word left of the match, so the vocab branch can see whether the
-        // noun is governed by a quantifier („jede Woche“ — DaF review #7, MAJOR 2).
-        const determiner = tokens[pos - 1] ? tokens[pos - 1][0] : '';
-        const replacement = changedDetail(match[0], ctxWords, rng, {
-          allowVocab,
-          allowAdverb,
-          digitGroup,
-          determiner,
-        });
-        if (!replacement) continue;
-        const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
-        if (changed === de || text.includes(changed)) continue;
-        // THE SECOND BAR (DaF review #15, MAJOR 3): whatever pass produced the
-        // swap, the statement that leaves this function has to agree with
-        // itself. The check is on the finished sentence, so it also covers a
-        // pass that does not know about gender at all.
-        if (agreementViolations(changed, ctxWords.vocab).length) continue;
-        return { line, de: changed, from: match[0], to: replacement };
+function falsifyWindow(window, text, { vocab, spec }, rng) {
+  for (const line of shuffle(window, rng)) {
+    for (const sentence of sentencesOf(line.de)) {
+      if (!sentence.endsWith('.')) continue;                    // a question or a request states nothing
+      for (const c of byCueRank(shuffle(contradictions(sentence, spec.nouns, rng), rng), sentence)) {
+        if (normaliseStatement(text).includes(normaliseStatement(c.de))) continue;
+        if (agreementViolations(c.de, vocab).length) continue;
+        // The rest is the printed line; the word the contradiction brings in must be taught.
+        if (!statementIsKnown(c.to, spec.known, spec.names)) continue;
+        return { line, ...c };
       }
     }
   }
@@ -1327,8 +1320,8 @@ const windowLineKeys = (w) => w.window.map((_, j) => lineKeyOf(w.lektion?.id ?? 
 // REFORMULATION of the text („Ich spiele jede Woche Fußball." → „Tim spielt
 // jede Woche Fußball."), and the reformulation IS the reading. So both halves
 // now go through the same transformation: the Richtig statement is a report
-// ABOUT the text, and the Falsch statement is that same report with one detail
-// changed — the two halves look alike and the length carries no signal.
+// ABOUT the text, and the Falsch statement is that same report, contradicted
+// (see CONTRADICTION) — the two halves look alike.
 //
 // THREE ENGINES, all mechanical, all gated by what the course has taught:
 //
@@ -1427,7 +1420,7 @@ export const VERB_3SG = new Map(Object.entries({
  */
 const REPORT_STOP = new Set([
   // The 2nd-person forms are spelled as a stem plus its endings rather than
-  // written out, for the same reason NP_DET_RE writes `d?ein`: the register
+  // written out, for the same reason POSSESSIVE_STEMS writes `d?ein`: the register
   // guard in tests/checkpoint.test.mjs greps this file line by line and cannot
   // tell a word the course must NEVER say from a word it must never REPORT.
   ...['u', 'ich', 'ir', 'ein', 'eine', 'einen', 'einem', 'einer'].map((f) => `d${f}`),
@@ -1443,11 +1436,17 @@ const REPORT_ARTICLE = { der: 'Der', die: 'Die', das: 'Das', plural: 'Die' };
 /** Which article a subject pronoun stands for — engine C. */
 const PRONOUN_ARTICLE = { er: 'der', sie: 'die', es: 'das' };
 
+/** The possessive in front of a noun, by its stem — whose thing it is (engine C). */
+const POSSESSOR_RE = /^([mds]ein|ihr|unser|euer|eur)(?:e|en|em|er|es)?$/;
+
 /** Sentences of one dialogue line, in reading order. */
 const sentencesOf = (de) => String(de || '').split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
 
-/** „Ja, ich komme mit." is „Ich komme mit." with a particle in front of it. */
-const PARTICLE_RE = /^(?:Ja|Nein|Gut|Doch)[,.]\s+/;
+/**
+ * „Ja, ich komme mit." is „Ich komme mit." with a particle in front of it — and so is
+ * „Entschuldigung, ich wohne nicht hier." with its interjection.
+ */
+const PARTICLE_RE = /^(?:Ja|Nein|Gut|Doch|Entschuldigung|Danke|Okay)[,.]\s+/;
 
 /** A word with its trailing punctuation removed, for comparisons. */
 const bareWord = (w) => String(w).replace(/[.,!?;:„“"»«]/g, '');
@@ -1521,11 +1520,14 @@ function firstPersonForms(curriculum) {
 /** Everything the three engines need, built once per checkpoint. */
 function reportSpec(ctx) {
   const { curriculum, checkpoint, level } = ctx;
+  const last = checkpoint?.afterLektion ?? 0;
   return {
-    articles: articleIndex(curriculum, checkpoint?.afterLektion ?? 0),
-    known: knownUpTo(curriculum, checkpoint?.afterLektion ?? 0),
+    articles: articleIndex(curriculum, last),
+    known: knownUpTo(curriculum, last),
     names: namesOf(level),
     firstPerson: firstPersonForms(curriculum),
+    // The course's nouns so far, with gender and plural — what a polarity change reads.
+    nouns: contentWords((curriculum?.lektionen || []).filter((l) => l.nr <= last)),
   };
 }
 
@@ -1574,14 +1576,19 @@ function reportRest(words, { known, firstPerson }, forms) {
 }
 
 /**
- * ONE SENTENCE → ONE REPORT, or null. `before` is everything the learner has
- * already read inside this window, which is where engine C finds its antecedent.
+ * ONE SENTENCE → ONE REPORT, or null. `beforeLines` is everything the learner has
+ * already read inside this window, `{ speaker, de }` line by line — where engine C finds
+ * its antecedent and tells whose it is.
  */
-function reportSentence(sentence, { speaker, before, spec }) {
+function reportSentence(sentence, { speaker, beforeLines, spec }) {
   const subject = String(speaker || '').trim();
   if (!subject) return null;
-  const text = String(sentence || '').replace(PARTICLE_RE, '').trim();
-  if (!text.endsWith('.')) return null;                 // questions and imperatives report nothing
+  const full = String(sentence || '').replace(PARTICLE_RE, '').trim();
+  if (!full.endsWith('.')) return null;                 // questions and imperatives report nothing
+  // A main clause stands on its own before „, denn / , aber / , weil": „Ich schlafe nicht gut,
+  // denn mein Hals tut weh." reports as „Ana schläft nicht gut." — the possessive of the reason
+  // no longer kills the report, and what is reported still follows from the text.
+  const text = full.replace(/,\s+(?:denn|aber|weil)\s.*$/, '.');
   const words = text.split(/\s+/);
   if (words.length < 3) return null;
   const { known, names, articles } = spec;
@@ -1616,17 +1623,27 @@ function reportSentence(sentence, { speaker, before, spec }) {
     const verb = bareWord(words[1]).toLowerCase();
     if (verb.endsWith('en')) return null;
     const wanted = PRONOUN_ARTICLE[head];
-    const candidates = new Set();
-    for (const w of String(before || '').split(/\s+/)) {
-      const bare = bareWord(w);
-      if (articles.get(bare) === wanted) candidates.add(bare);
+    // The candidates are REFERENTS, not noun strings (DaF review A1.2 #5, MAJOR 8): Lena's
+    // „Meine Oma" and Ana's „Meine Oma" are two grandmothers, and a Set of nouns had folded
+    // them into one „Die Oma". A possessive tells the owners apart, read with the speaker who
+    // says it; an article does not („eine Fahrkarte … die Fahrkarte" is one ticket).
+    const owners = new Map();
+    for (const { speaker: by, de } of beforeLines || []) {
+      const tokens = String(de || '').split(/\s+/);
+      tokens.forEach((w, j) => {
+        const bare = bareWord(w);
+        if (articles.get(bare) !== wanted) return;
+        if (!owners.has(bare)) owners.set(bare, new Set());
+        const owner = POSSESSOR_RE.exec(bareWord(tokens[j - 1] || '').toLowerCase());
+        if (owner) owners.get(bare).add(`${owner[1]}@${by}`);
+      });
     }
-    if (!candidates.size) return null;
-    // More than one noun of the gender: no report (`ambiguous`, filtered by windowReports). It is
+    if (!owners.size) return null;
+    // More than one referent of the gender: no report (`ambiguous`, filtered by windowReports). It is
     // still BUILT, so the Lesen ladder shuffles the same list as before and a paper this rule does not
     // touch keeps its draw — the sections share one rng.
-    const antecedent = [...candidates].pop();
-    ambiguous = candidates.size > 1;
+    const antecedent = [...owners.keys()].pop();
+    ambiguous = owners.size > 1 || [...owners.values()].some((set) => set.size > 1);
     if (!restIsReportable(words.slice(1), subject)) return null;
     const rest = reportRest(words.slice(1), spec, forms);
     if (!rest) return null;
@@ -1665,11 +1682,11 @@ export function windowReports(window, spec, { withAmbiguous = false } = {}) {
   const lines = window || [];
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
-    const earlier = lines.slice(0, i).map((l) => String(l.de || ''));
+    const earlier = lines.slice(0, i).map((l) => ({ speaker: l.speaker, de: String(l.de || '') }));
     const sentences = sentencesOf(line.de);
     for (let s = 0; s < sentences.length; s += 1) {
-      const before = [...earlier, ...sentences.slice(0, s)].join(' ');
-      const report = reportSentence(sentences[s], { speaker: line.speaker, before, spec });
+      const beforeLines = [...earlier, ...sentences.slice(0, s).map((de) => ({ speaker: line.speaker, de }))];
+      const report = reportSentence(sentences[s], { speaker: line.speaker, beforeLines, spec });
       if (!report || (report.ambiguous && !withAmbiguous)) continue;
       out.push({ ...report, line, lineIndex: i, sentence: sentences[s] });
     }
@@ -1681,61 +1698,21 @@ export function windowReports(window, spec, { withAmbiguous = false } = {}) {
 export const reportSpecFor = (curriculum, checkpoint) =>
   reportSpec({ curriculum, checkpoint, level: curriculum?.level });
 /**
- * The speakers of ONE window — the only names the falsifier may swap in, so a
- * changed name is a name the learner can find in the printed text.
- *
- * ONLY SPEAKERS WHO ARE ONE WORD. „Herr Weber" is a title plus a surname; its
- * surname alone is not how the course names him, and a swap that produces
- * „Weber ist Studentin." trades a false statement for a broken one — the same
- * failure class as the bare-noun swap of review #8, one level up.
+ * ONE CONTRADICTION OF A REPORT (see CONTRADICTION), checked against its text: it may not
+ * stand in that text or be the true report of another of its lines, must agree with itself
+ * and be taught by the checkpoint — and a changed value may not be one the source sentence
+ * already says („zwei Brötchen und drei Äpfel" never becomes „drei Brötchen").
  */
-function windowSpeakerNames(window) {
-  const out = new Set();
-  for (const line of window || []) {
-    const speaker = String(line.speaker || '').trim();
-    if (/\s/.test(speaker) || speaker.length < 3 || !/^[A-ZÄÖÜ]/.test(speaker)) continue;
-    if (!TITLES.includes(speaker)) out.add(speaker);
-  }
-  return [...out];
-}
-
-/**
- * ONE DETAIL CHANGED IN A REPORT. The Falsch half inherits the Richtig half's
- * transformation and only then loses a detail, so both halves are reports of
- * the same shape and the length carries no signal (DaF review #9, MAJOR 3).
- *
- * Same three passes as `falsifyWindow` — detail, Wortfeld noun, adverb pair —
- * over the REPORTED sentence instead of the raw line, plus one guard the
- * review asked for by name: a name directly followed by a comma is an address,
- * not a fact, and swapping it („Lena, wann …?" → „Paul, …") is a
- * change no reader has to read the text to catch.
- */
-function falsifyStatement(statement, text, ctxWords, rng, { sourceSentence = '', windowStatements = new Set() } = {}) {
-  const de = String(statement || '');
+function falsifyStatement(statement, text, { vocab, spec }, rng, { sourceSentence = '', windowStatements = new Set() } = {}) {
   const sourceWords = new Set(String(sourceSentence).split(/\s+/).map((w) => bareWord(w).toLowerCase()).filter(Boolean));
-  for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
-    const tokens = [...de.matchAll(WORD_RE)];
-    const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
-    const matches = shuffle(tokens.map((match, pos) => ({ match, pos })), rng);
-    for (const { match, pos } of matches) {
-      if ((allowVocab || allowAdverb) && sentenceInitial(de, match.index)) continue;
-      if (de[match.index + match[0].length] === ',' && ctxWords.names.includes(match[0])) continue;
-      const digitGroup = isNumberToken(tokens[pos])
-        && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
-      const determiner = tokens[pos - 1] ? tokens[pos - 1][0] : '';
-      const replacement = changedDetail(match[0], ctxWords, rng, {
-        allowVocab, allowAdverb, digitGroup, determiner,
-      });
-      if (!replacement) continue;
-      const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
-      if (changed === de) continue;
-      if (normaliseStatement(text).includes(normaliseStatement(changed))) continue;
-      if (sourceWords.has(String(replacement).toLowerCase())) continue;
-      if (windowStatements.has(normaliseStatement(changed))) continue;
-      // Same second bar as in falsifyWindow — one definition, both surfaces.
-      if (agreementViolations(changed, ctxWords.vocab).length) continue;
-      return { de: changed, from: match[0], to: replacement };
-    }
+  for (const c of byCueRank(shuffle(contradictions(statement, spec.nouns, rng), rng), statement)) {
+    if (normaliseStatement(text).includes(normaliseStatement(c.de))) continue;
+    if (windowStatements.has(normaliseStatement(c.de))) continue;
+    if (c.kind === 'value' && sourceWords.has(c.to.toLowerCase())) continue;
+    if (agreementViolations(c.de, vocab).length) continue;
+    // The report passed the gate in reportSentence; the word the contradiction brings in must too.
+    if (!statementIsKnown(c.to, spec.known, spec.names)) continue;
+    return c;
   }
   return null;
 }
@@ -1753,42 +1730,53 @@ function falsifyStatement(statement, text, ctxWords, rng, { sourceSentence = '',
  *      still ships four Lesen items. The A1.1 papers never reach rung 4 and
  *      tests/checkpoint.test.mjs pins them away from it.
  */
-function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) {
+function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources, quote = false, preferNegative = false, spent = new Set() }) {
+  const ctxWords = { vocab: chapterVocab, spec };
+  // Every report is scored over every window, lowest first, the first of a score kept: for Falsch
+  // its cue rank (see cueRank), for Richtig whether its polarity is the one the paper still needs;
+  // and in both a report an earlier paper of this window already used counts one point worse.
+  let best = null;
   for (const candidate of candidates) {
     const text = windowText(candidate.window);
-    const names = windowSpeakerNames(candidate.window);
-    const ctxWords = { names, vocab: chapterVocab, printed: chapterPrinted };
     const all = windowReports(candidate.window, spec, { withAmbiguous: true });
     const windowStatements = new Set(all.filter((r) => !r.ambiguous).map((r) => normaliseStatement(r.statement)));
     const reports = shuffle(all, rng)
       .filter((r) => !r.ambiguous)
       .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
     for (const report of reports) {
-      if (wantRichtig) return { candidate, text, report, statement: report.statement, changed: null };
-      const falsified = falsifyStatement(report.statement, text, ctxWords, rng, { sourceSentence: report.sentence, windowStatements });
-      if (falsified) {
-        return {
-          candidate, text, report, statement: falsified.de, changed: { from: falsified.from, to: falsified.to },
-        };
+      const used = spent.has(normaliseStatement(report.statement)) ? 1 : 0;
+      if (wantRichtig) {
+        const score = (Boolean(negations(report.statement)) === preferNegative ? 0 : 2) + used;
+        if (!best || score < best.score) best = { candidate, text, report, score, falsified: null };
+      } else {
+        const falsified = falsifyStatement(report.statement, text, ctxWords, rng, { sourceSentence: report.sentence, windowStatements });
+        const score = falsified ? falsified.rank * 2 + used : Infinity;
+        if (falsified && (!best || score < best.score)) best = { candidate, text, report, score, falsified };
       }
+      if (best?.score === 0) break;
     }
+    if (best?.score === 0) break;
   }
-  // Rung 4: no report anywhere in the chapter (see the ladder above).
+  if (best && wantRichtig) {
+    return { candidate: best.candidate, text: best.text, report: best.report, statement: best.report.statement, changed: null };
+  }
+  if (best) {
+    const { de, rank: _rank, ...changed } = best.falsified;
+    return { candidate: best.candidate, text: best.text, report: best.report, statement: de, changed };
+  }
+  // Rung 4: no report anywhere in the chapter (see the ladder above) — buildLesen asks for it
+  // only after every window of the list has failed to report.
+  if (!quote) return null;
   for (const candidate of candidates) {
     const text = windowText(candidate.window);
-    const ctxWords = {
-      names: windowSpeakerNames(candidate.window), vocab: chapterVocab, printed: chapterPrinted,
-    };
     if (wantRichtig) {
       const line = candidate.window[Math.floor(rng() * candidate.window.length)];
       return { candidate, text, report: null, statement: String(line.de), changed: null, line };
     }
     const falsified = falsifyWindow(candidate.window, text, ctxWords, rng);
     if (falsified) {
-      return {
-        candidate, text, report: null, statement: falsified.de, line: falsified.line,
-        changed: { from: falsified.from, to: falsified.to },
-      };
+      const { de, line, rank: _rank, ...changed } = falsified;
+      return { candidate, text, report: null, statement: de, line, changed };
     }
   }
   return null;
@@ -1803,7 +1791,6 @@ function buildLesen(ctx) {
   // Two richtig and two falsch, in an order this checkpoint's seed decides.
   const truth = shuffle([true, true, false, false], rng);
   const chapterVocab = contentWords(chapter);
-  const chapterPrinted = printedNouns(chapter);
   const spec = reportSpec(ctx);
   const usedWindows = new Set();
   // Every line any Lesen item of this paper PRINTS — a hard bar, see
@@ -1813,24 +1800,30 @@ function buildLesen(ctx) {
   // line, or two items of one paper hang on one sentence.
   const usedSources = new Set();
 
-  for (let i = 0; i < SECTION_COUNTS.lesen; i += 1) {
+  // FALSCH FIRST (see cueRank): the Richtig items are drawn knowing how many Falsch statements
+  // carry a negation, and take a negative report of their own while fewer of theirs do — and a
+  // positive one once they are even — so a negation tells the reader nothing about the key. The
+  // page keeps the seed's order.
+  const slots = truth.map((wantRichtig, i) => ({ i, wantRichtig }));
+  const negationsByKey = { Richtig: 0, Falsch: 0 };
+  const pageIndex = new Map();
+  for (const { i, wantRichtig } of [...slots.filter((x) => !x.wantRichtig), ...slots.filter((x) => x.wantRichtig)]) {
     const preferredLektion = order[i % order.length];
     const lines = preferredLektion.dialog.lines;
     const span = Math.min(3, lines.length);
     const start = Math.floor(rng() * Math.max(1, lines.length - span + 1));
     let candidates = lesenCandidates(preferredLektion, start, order, usedLineKeys, usedWindows, usedLesenLines);
     if (!candidates.length) continue;
-    const wantRichtig = truth[i];
 
     // TWO PHASES, and the first is the rule: a Lesen text never reprints a line this paper DICTATES
     // or READS ALOUD. `lesenCandidates` only ORDERS by that, and an ordering loses whenever the
     // leading candidates yield no usable statement — which is how one paper could dictate a line
     // and print it (the guard „no dialogue line is used twice across the sections of one
     // checkpoint“ held by luck of the shuffle until the RULE-15b line preference of round 14 moved
-    // the draw). The clean pick wins only when it carries a REPORTED or a FALSIFIED statement:
-    // rung 4 of `pickLesenSource` copies a line of the window out as a richtig statement, which
-    // „no Lesen statement stands in its own text“ forbids, so a degraded clean pick loses to a
-    // proper pick from the full list.
+    // the draw). So the clean windows are asked for a report first, every window second, and
+    // only then rung 4 of `pickLesenSource`, which copies a line of the text — „no Lesen
+    // statement stands in its own text“ forbids that for Richtig, and a contradicted copy is a
+    // search for the changed word, not reading (DaF review A1.2 #5, MAJOR 8).
     // A window that PRINTS the answer of an item this paper has already seated
     // is the last resort, never the first (DaF review #14, MAJOR 3): the leak
     // cap orders the candidates, exactly as freeness does, so a poor chapter
@@ -1839,10 +1832,13 @@ function buildLesen(ctx) {
     const leakFreeFirst = (ws) => [...ws.filter(leakFree), ...ws.filter((w) => !leakFree(w))];
     candidates = leakFreeFirst(candidates);
     const clean = leakFreeFirst(candidates.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k))));
-    const cleanPick = clean.length ? pickLesenSource(clean, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) : null;
-    const picked = (cleanPick?.report || cleanPick?.changed)
-      ? cleanPick
-      : (pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) || cleanPick);
+    const ladder = {
+      rng, spec, chapterVocab, usedSources, spent: ctx.spentLesen,
+      preferNegative: wantRichtig && negationsByKey.Richtig < negationsByKey.Falsch,
+    };
+    const picked = (clean.length ? pickLesenSource(clean, wantRichtig, ladder) : null)
+      || pickLesenSource(candidates, wantRichtig, ladder)
+      || pickLesenSource(candidates, wantRichtig, { ...ladder, quote: true });
     if (!picked) continue;
     const { candidate, text, report, statement, changed } = picked;
     const sourceLine = report ? report.line : picked.line;
@@ -1857,9 +1853,10 @@ function buildLesen(ctx) {
     }
 
     const answer = wantRichtig ? 'Richtig' : 'Falsch';
-    const explanationDe = changed
-      ? `${speaker} sagt: „${sourceSentence}“ Im Text steht „${changed.from}“, nicht „${changed.to}“.`
-      : `${speaker} sagt: „${sourceSentence}“ Die Aussage ist also richtig.`;
+    // A changed value names both values; a changed polarity says what the text means.
+    let explanationDe = `${speaker} sagt: „${sourceSentence}“ Die Aussage ist also richtig.`;
+    if (changed?.kind === 'value' || changed?.kind === 'contrary') explanationDe = `${speaker} sagt: „${sourceSentence}“ Im Text steht „${changed.from}“, nicht „${changed.to}“.`;
+    else if (changed) explanationDe = `${speaker} sagt: „${sourceSentence}“ Das heißt: ${trueStatement} Die Aussage ist also falsch.`;
     items.push({
       id: `${checkpoint.id}-lesen-${i + 1}`,
       section: 'lesen',
@@ -1899,8 +1896,10 @@ function buildLesen(ctx) {
     const seatedItem = items[items.length - 1];
     if (!leakFree(candidate)) ctx.relax('lesen', `${seatedItem.id}`);
     ctx.seat(seatedItem);
+    pageIndex.set(seatedItem, i);
+    if (negations(statement)) negationsByKey[answer] += 1;
   }
-  return items;
+  return items.sort((a, b) => pageIndex.get(a) - pageIndex.get(b));
 }
 
 // Sprachbausteine: 6 pool items from the chapter's grammar slugs, typed-first
@@ -1918,14 +1917,14 @@ function buildBausteine(ctx) {
   // (DaF review #14, MAJOR 3 — `a1.1-cp3-bausteine-3` „Nach Montag kommt ___.“
   // → `Dienstag`, beside a read-aloud line that names that very weekday).
   const guard = ctx.poolGuard('bausteine');
-  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, seen: ctx.lessonSeen, ...guard });
+  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, seen: ctx.lessonSeen, spent: ctx.spentPool, ...guard });
   const drawnChapter = drawPool(
     pool,
     chapterTopics,
     SECTION_COUNTS.bausteine - drawnEarlier.length,
     rng,
     usedPoolIds,
-    { untaught, afterLektion, seen: ctx.lessonSeen, ...guard },
+    { untaught, afterLektion, seen: ctx.lessonSeen, spent: ctx.spentPool, ...guard },
   );
   return [...drawnChapter, ...drawnEarlier].map((p, i) =>
     fromPoolItem(p, {
@@ -2005,15 +2004,15 @@ function buildSchreiben(ctx) {
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const otherSlugs = slugs.filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
+    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, spent: ctx.spentPool, ...guard }));
   }
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const rest = topicsOf(chapter).filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, spent: ctx.spentPool, ...guard }));
   }
   if (chosen.length < drillCount) {
-    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, spent: ctx.spentPool, ...guard }));
   }
 
   const drills = chosen.map((p, i) =>
@@ -2243,6 +2242,12 @@ export const PAPERS_PER_WINDOW = 3;
 /** The seed of paper `round` of a checkpoint — CheckpointPage draws every attempt with it. */
 export const paperSeed = (checkpoint, round) => (round ? `${checkpoint.id}-round-${round}` : undefined);
 
+/** The round a seed is the paper of — paperSeed read backwards; any other seed is round 0. */
+const roundOf = (checkpoint, seed) => {
+  const prefix = `${checkpoint.id}-round-`;
+  return String(seed ?? '').startsWith(prefix) ? Number(String(seed).slice(prefix.length)) || 0 : 0;
+};
+
 // Memoised per (curriculum object, pool object), like the practice plans below: every later
 // checkpoint rebuilds the same earlier papers.
 const paperMemo = new WeakMap();
@@ -2335,6 +2340,13 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // FIRST and every drawn item dodges its prompt („Schreiben Sie Ihrer Chefin
   // eine kurze Nachricht." stood beside the Hören item whose answer was
   // `die Chefin`).
+  // RETAKES (Codex review 2026-10-07: „Nochmal" must be a new paper). Every earlier paper of this
+  // window showed its answers on its result screen, so what it drew goes last here — the pool
+  // items in drawPool, the reported lines in the Lesen ladder. A preference, never a filter: a
+  // thin chapter still fills its paper. Round 0 has no earlier paper and is drawn as before.
+  const earlierRounds = Array.from({ length: roundOf(checkpoint, seed) }, (_, k) => earlierPaper(curriculum, checkpoint, pool, k)).flat();
+  ctx.spentPool = new Set(earlierRounds.map((i) => i.poolItemId).filter(Boolean));
+  ctx.spentLesen = new Set(earlierRounds.filter((i) => i.section === 'lesen').map((i) => normaliseStatement(i.trueStatement)));
   ctx.graded = gradedWritingItem(checkpoint, chapter, curriculum.level);
   ctx.seat(ctx.graded);
   // ORDER OF PLACEMENT ≠ order on the page. The three line-drawn sections go
