@@ -217,6 +217,11 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
   // source lines and their text, measured 2026-09-14 (round 20). A change here is not wrong by
   // itself — but it must be re-measured, re-read as a paper, and re-pinned in the same commit,
   // with the old and the new paper side by side in the diff.
+  // 2026-10-17 (A1.2 DaF review #7, MAJOR 8): Hören now leaves the lines a value or contrary Lesen
+  // window needs until after the free ones. Checkpoint 4's third dictation was „Kostet die Fahrkarte
+  // zwanzig Euro?" — the line „Nein, sie kostet fünfzehn Euro." needs for its „sie" — and it moves
+  // to L12 line 3; checkpoint 2's moves from L4 line 0 to line 4. Re-read: both are construction-free
+  // lines of 6 and 7 words, taught by their chapter, with a recording. RE-MEASURED.
   const dictated = Object.fromEntries(ALL_CHECKPOINTS.map(({ cp, items }) => [
     cp.id,
     items.filter((i) => i.kind === 'dictation').map((i) => [i.id, i.lektionId, i.lineKey, i.audioText]),
@@ -230,7 +235,7 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
     'a1.1-cp2': [
       ['a1.1-cp2-hoeren-1', 'a1.1-l06', 'line-7', 'Null vier zwei – drei drei acht eins.'],
       ['a1.1-cp2-hoeren-2', 'a1.1-l04', 'line-7', 'Das macht zusammen zwanzig Euro.'],
-      ['a1.1-cp2-hoeren-3', 'a1.1-l04', 'line-0', 'Entschuldigung, was ist das?'],
+      ['a1.1-cp2-hoeren-3', 'a1.1-l04', 'line-4', 'Das ist teuer. Und der Stuhl?'],
     ],
     'a1.1-cp3': [
       ['a1.1-cp3-hoeren-1', 'a1.1-l08', 'line-8', 'Und am Mittwoch, am Donnerstag oder am Freitag?'],
@@ -240,7 +245,7 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
     'a1.1-cp4': [
       ['a1.1-cp4-hoeren-1', 'a1.1-l10', 'line-2', 'Hat der Zug Verspätung?'],
       ['a1.1-cp4-hoeren-2', 'a1.1-l12', 'line-8', 'Deine Party ist bestimmt schön!'],
-      ['a1.1-cp4-hoeren-3', 'a1.1-l10', 'line-4', 'Kostet die Fahrkarte zwanzig Euro?'],
+      ['a1.1-cp4-hoeren-3', 'a1.1-l12', 'line-3', 'Ja, meine Mama und mein Papa kommen.'],
     ],
   }, 'the papers were rebuilt — re-measure every dictation, re-read the four papers, re-pin here');
 });

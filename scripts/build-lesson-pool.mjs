@@ -338,17 +338,6 @@ function repairDeterminacy(item) {
     }
   }
   if (!levelSpec(level)?.determinacyRepairs) return;
-  // DaF review #6 (A1.2) BLOCKER 1: a du-imperative may carry its pronoun for emphasis — „Mach du den
-  // Fernseher aus!" is correct German the task does not exclude, so every accepted form takes it too
-  // (after the ±e rule above, so „Mache du …" is in as well).
-  if (imp && (item.type === 'sentence_building' || item.type === 'error_correction')
-      && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
-    // The answer field counts too: the checker takes it as accepted even where `accepted` omits it.
-    const kept = item.accepted && item.accepted.length ? item.accepted : [item.answer];
-    const emphatic = [item.answer, ...kept].filter((a) => /!$/.test(a)).map((a) => a.replace(/^([A-ZÄÖÜ][a-zäöüß]+)\s/, '$1 du '));
-    item.accepted = [...new Set([...kept, ...emphatic, ...emphatic.map((a) => a.replace(/!$/, ''))])];
-    determinacyRepaired.push(`${item.id}:du`);
-  }
   // DaF review #4 (A1.2) BLOCKER 1 — three more families, each a rule (scripts/a12-determinacy.mjs
   // generates their alternatives and tests/a12-rebuild.test.mjs runs them through the checker):
   // 1. A statement may open with its subject or with any one other phrase. When the key's order is
@@ -389,6 +378,25 @@ function repairDeterminacy(item) {
     if (more.length) {
       item.accepted = [...new Set([...before, ...more, ...more.map((m) => m.replace(/[.!]$/, ''))])];
       determinacyRepaired.push(`${item.id}:middle`);
+    }
+  }
+  // DaF review #6 (A1.2) BLOCKER 1: a du-imperative may carry its pronoun for emphasis — „Mach du den
+  // Fernseher aus!" is correct German the task does not exclude, so every accepted form takes it too.
+  // It runs LAST of the order rules (review #7: „Bitte hilf du mir mit der Waschmaschine!" was refused,
+  // because the pronoun went in before „bitte" moved): the verb is the form's first word, or the word
+  // after an opening „Bitte" — never „Bitte" itself.
+  if (imp && (item.type === 'sentence_building' || item.type === 'error_correction')
+      && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
+    // The answer field counts too: the checker takes it as accepted even where `accepted` omits it.
+    const kept = accepted();
+    const stem = imp[1].toLowerCase().replace(/e$/, '');
+    const emphatic = [item.answer, ...kept].map((a) => String(a).trim()).flatMap((a) => {
+      const m = a.match(/^((?:Bitte )?)([A-Za-zÄÖÜäöüß]+)\s(?!du\b)(.*)$/);
+      return m && m[2].toLowerCase().replace(/e$/, '') === stem ? [`${m[1]}${m[2]} du ${m[3]}`] : [];
+    });
+    if (emphatic.length) {
+      item.accepted = [...new Set([...kept, ...emphatic, ...emphatic.map((a) => a.replace(/!$/, ''))])];
+      determinacyRepaired.push(`${item.id}:du`);
     }
   }
   // 5. A brick list does not say whether a request or a question is wanted: „[warten / du / in der
@@ -443,6 +451,27 @@ function repairDeterminerCue(item) {
 }
 
 raw.forEach(repairDeterminerCue);
+
+// ── DaF review #7 (A1.2) BLOCKER 1: a correction names its operation ────────
+//
+// „Korrigieren Sie: „Das Taxi fährt von sieben zu zehn Uhr.““ refused „Von sieben bis zehn Uhr fährt
+// das Taxi." — correct German, and nothing in the task excluded it; nor „… aber früh ist Tim
+// gegangen." after „aber Tim hat früh gegangen". A correction asks for the error to be mended, not
+// for the sentence to be rebuilt, so the task says so: „Korrigieren Sie nur den Fehler". A prompt the
+// pass above already gave its element („Korrigieren Sie den Artikel") names its operation and is
+// left as it is. tests/a12-rebuild.test.mjs pins the class.
+const correctionNamed = [];
+function nameCorrectionOperation(item) {
+  if (!levelSpec(level)?.determinacyRepairs || item.type !== 'error_correction') return;
+  const before = String(item.questionDe || '');
+  const after = before
+    .replace(/^Korrigieren Sie die Frage:/, 'Korrigieren Sie nur den Fehler in der Frage:')
+    .replace(/^Korrigieren Sie:/, 'Korrigieren Sie nur den Fehler:');
+  if (after === before) return;
+  item.questionDe = after;
+  correctionNamed.push(item.id);
+}
+raw.forEach(nameCorrectionOperation);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -824,6 +853,8 @@ if (existsSync(extraUrl)) {
   // the gate that keeps the next hand-written correction from shipping without
   // one, and it reports zero when the JSON is right.
   extra.forEach(repairDeterminerCue);
+  // DaF review #7 B1: and a correction names its operation, after the element cue above.
+  extra.forEach(nameCorrectionOperation);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);

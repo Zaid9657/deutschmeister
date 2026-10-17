@@ -498,7 +498,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
     ],
     5: [
       ['Tim, was machst du am Wochenende?', 1, 'Der Ausflug geht nach Köln.', 'sache'],
-      ['Hast du Zeit?', 1, 'Ja.', 'ja'],
+      ['Gehst du ins Konzert?', 1, 'Ja.', 'ja'],
       ['Wann fährt der Zug?', 3, 'Um acht Uhr.', 'zeit'],
       ['Um wie viel Uhr?', 3, 'Um acht Uhr.', 'zeit'],
       ['Wer kommt mit?', 4, 'Ich würde gern mitkommen.', 'person'],
@@ -757,7 +757,9 @@ test('M7, decided 2026-10-16 (DaF review #6 MAJOR 7): every decided point has it
       target: (q, a) => new RegExp(String.raw`\b(?:ist|sind|bin|bist|seid)\b.*${SEIN_PARTICIPLE}`).test(a)
         || (/^(?:ist|sind|bin|bist|seid)$/.test(a) && new RegExp(SEIN_PARTICIPLE).test(q)) },
     { point: 'Partizip ohne ge-', nr: 12, bold: /^bezahlt$/, input: /\b(?:bezahlt|verstanden|telefoniert|besucht|bekommen|vergessen)\b/,
-      target: (q, a) => /\b(?:bezahlt|verstanden|telefoniert|besucht|bekommen|vergessen|erzählt)\b/.test(a) },
+      // …as a participle: a Perfekt auxiliary stands in the task, not the present „Tim bezahlt den Kuchen".
+      target: (q, a) => /\b(?:bezahlt|verstanden|telefoniert|besucht|bekommen|vergessen|erzählt)\b/.test(a)
+        && /\b(?:habe|hast|hat|haben|habt|bin|bist|ist|sind|seid)\b/.test(`${q} ${a}`) },
   ];
   const targets = (p) => (it) => p.target(String(it.questionDe), String(it.answer));
   const failures = (curriculum, pool, plans) => POINTS.flatMap((p) => {
@@ -1116,6 +1118,9 @@ test('A1.2 transfer: what a default paper draws that the learner already answere
   // sentence-building item the lessons leave unanswered; checkpoint 2's only earlier topic is
   // numbers-counting, whose unanswered items checkpoint 1's three papers draw; checkpoint 3 takes one
   // more numbers item and one of modal-verbs-intro, which has one unanswered item in fourteen.
+  // 2026-10-17 (round 8): 1 / 2 / 1 / 0. The earlier-chapter interleave now visits the topics that
+  // still have unanswered items first, instead of Lektion 2's numbers on every paper; checkpoint 2
+  // keeps two, because numbers-counting is its ONLY earlier topic.
   const { default: buildLesson } = await import('../src/lib/lesson/buildLesson.js');
   const { buildCheckpoint } = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const measured = CURRICULUM_A12.checkpoints.map((checkpoint) => {
@@ -1130,7 +1135,7 @@ test('A1.2 transfer: what a default paper draws that the learner already answere
     return buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12 })
       .filter((it) => it.poolItemId && seen.has(it.poolItemId)).length;
   });
-  assert.deepEqual(measured, [1, 2, 2, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
+  assert.deepEqual(measured, [1, 2, 1, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
 });
 
 test('DaF review #6 BLOCKER 1: a correct answer a task rejects is excluded by a German task condition — annotated variants, both ways', () => {
@@ -1312,4 +1317,189 @@ test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „vo
   assert.deepEqual(solved.a12, [], 'A1.2: no regular paper is solved by spotting a negation');
   assert.deepEqual(solved.a11, [], 'A1.1: no regular paper is solved by spotting a negation');
   assert.equal(byText.right * 2, byText.total, `A1.2: the text strategy scores chance, not ${byText.right} of ${byText.total}`);
+});
+
+test('DaF review #7 MAJOR 8: Richtig and Falsch carry the same negation pairs on every A1.2 paper, and a time bound gives no Falsch', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  // Balancing the statement count and the text count APART left Falsch {text only, statement only}
+  // against Richtig {both, neither}, and „statement and text agree → Richtig" solved six regular
+  // papers (review #7). The pairs are read off the printed fields here, not from the builder: on
+  // every A1.2 paper, rounds 0–3, both sides carry the same multiset of (statement negated, text
+  // negated), so each of the sixteen functions of those two features scores exactly half a paper.
+  const NEG = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
+  const pair = (it) => `${NEG.test(it.statement) ? 1 : 0}${NEG.test(it.text) ? 1 : 0}`;
+  const papers = (curriculum, pool, rounds) => curriculum.checkpoints.flatMap((checkpoint) => Array.from({ length: rounds }, (_, round) => ({
+    id: `${checkpoint.id}/${round}`,
+    lesen: B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen'),
+  })));
+  const best = (lesen) => Math.max(...Array.from({ length: 16 }, (_, fn) =>
+    lesen.filter((it) => (((fn >> parseInt(pair(it), 2)) & 1) ? 'Falsch' : 'Richtig') === it.answer).length));
+  const unbalanced = (list) => list.filter(({ lesen }) => {
+    const side = (key) => lesen.filter((it) => it.answer === key).map(pair).sort().join(',');
+    return side('Richtig') !== side('Falsch');
+  }).map((p) => p.id);
+  const a12 = papers(CURRICULUM_A12, POOL_A12, 4);
+  assert.deepEqual(unbalanced(a12), [], 'A1.2: every paper, the stress round included');
+  for (const { id, lesen } of a12) assert.equal(best(lesen), 2, `${id}: a negation strategy scores ${best(lesen)} of 4`);
+  // A1.1 is live and recorded: its checkpoint 2 chapter has no negative first-person line, so three
+  // papers keep one added negation (the follow-up in the handoff). A ratchet: it only goes down.
+  const a11 = papers(CURRICULUM_A11, JSON.parse(read('src/data/lessonPools/a11.json')), 3);
+  assert.ok(unbalanced(a11).length <= 3, `A1.1: ${unbalanced(a11)}`);
+
+  // ANNOTATED BY HAND: a time a preposition makes a bound or the end of an interval is not refuted by
+  // another number — an arrival at seven makes „vor zehn" and „vor acht" both true (review #7).
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const values = (statement) => [...new Set([1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+    B.contradictions(statement, spec.nouns, B.mulberry32(seed)).filter((c) => c.kind === 'value').map((c) => c.de)))];
+  for (const statement of ['Ana kommt vor zehn Uhr.', 'Ana kommt nach acht Uhr.', 'Ana arbeitet zwischen acht und zehn Uhr.',
+    'Ana arbeitet bis zehn Uhr.', 'Ana arbeitet ab acht Uhr.', 'Ana wartet seit zehn Minuten.', 'Ana kommt gegen acht Uhr.',
+    'Der Bus fährt von sieben bis zehn Uhr.']) assert.deepEqual(values(statement), [], `„${statement}" — offen`);
+  // …while a stated clock time is one value: „um neun" widerspricht „um acht".
+  assert.ok(values('Ana kommt um acht Uhr.').includes('Ana kommt um neun Uhr.'), 'um acht → um neun widerspricht');
+});
+
+test('DaF review #7 BLOCKER 2: a word the course knows does not license a meaning or a form it never taught — annotated, then every real draw', async () => {
+  const v = await import('../scripts/validate-curriculum.mjs');
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const horizon = v.constructionHorizonIndex('a1.2');
+  const at = (answer) => horizon({ questionDe: '', answer });
+  // ANNOTATED BY HAND: what A1.2 teaches (true) and what it teaches nowhere (false). „gegen" is
+  // „against" from L6 („gegen Kopfschmerzen"); the approximate time is a second meaning. „um" is a
+  // clock time; around-a-thing is never taught, whatever determines the noun. An ordinal is taught in
+  // its -e form after the article (L2); declined, simple or compound, it is not.
+  const TAUGHT = [
+    ['Die Tablette hilft gegen Kopfschmerzen.', true],
+    ['Ich komme gegen fünf Uhr.', false], ['Ich komme gegen 5 Uhr.', false], ['Wir essen gegen Abend.', false],
+    ['Der Bus fährt um acht Uhr.', true], ['Um acht Uhr fährt der Bus.', true],
+    ['Wir laufen um den Stuhl.', false], ['Wir laufen um diesen Tisch.', false], ['Wir laufen um drei Häuser.', false],
+    ['Wir laufen ums Haus.', false], ['Um den Tisch laufen wir.', false],
+    ['Das dritte Stockwerk ist frei.', true],
+    ['Ich wohne im dritten Stockwerk.', false], ['Ich wohne im dreizehnten Stockwerk.', false],
+    ['Ich wohne im zweihundertsten Stockwerk.', false], ['Er wohnt im hundertersten Stockwerk.', false],
+  ];
+  for (const [sentence, taught] of TAUGHT) {
+    if (taught) assert.notEqual(at(sentence), null, `„${sentence}" — taught`);
+    else assert.equal(at(sentence), null, `„${sentence}" — taught nowhere`);
+  }
+  // THE DRAWS, with this test's own detectors rather than the validator's patterns: nothing a
+  // practice plan or a paper (rounds 0–3) serves asks for a sense or a form the course never taught.
+  const DET = /^(?:d\w+|ein\w*|mein\w*|dein\w*|sein\w*|ihr\w*|unser\w*|euer\w*|dies\w*|jed\w*|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele|alle)$/i;
+  const nounish = (w) => /^[A-ZÄÖÜ]/.test(w || '') && !/^(?:Uhr|Viertel)$/.test(w);
+  const spatialUm = (t) => [...t.matchAll(/\b([Uu]ms?)\s+([A-Za-zÄÖÜäöüß]+)(?:\s+([A-Za-zÄÖÜäöüß]+))?/g)]
+    .some(([, um, w1, w2]) => (/s$/.test(um) ? nounish(w1) : nounish(w1) || (DET.test(w1) && nounish(w2))));
+  const temporalGegen = (t) => /\b[Gg]egen\s+(?:\d|ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|halb|Mittag|Abend|Morgen)\b/.test(t);
+  const declinedOrdinal = (t) => /\b(?:im|am|zum|vom|beim|dem|den|der|des|einem|einen|einer|eines)\s+[a-zäöüß]*(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|igst|hundertst|tausendst)(?:en|er|es|em)\b/i.test(t);
+  for (const [sentence, taught] of TAUGHT) {
+    assert.equal(!(temporalGegen(sentence) || spatialUm(sentence) || declinedOrdinal(sentence)), taught, `the detectors agree on „${sentence}"`);
+  }
+  const filled = (it) => `${String(it.questionDe).replace('___', String(it.answer))} ${it.answer}`;
+  const check = (it, where) => {
+    const t = filled(it);
+    assert.ok(!temporalGegen(t) && !spatialUm(t) && !declinedOrdinal(t), `${where} ${it.id}: „${t}"`);
+  };
+  for (const attempt of [1, 2]) {
+    for (const [nr, items] of planPractice(CURRICULUM_A12, POOL_A12, attempt)) for (const it of items) check(it, `L${nr}/${attempt}`);
+  }
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      for (const it of B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })) {
+        if (it.poolItemId) check(POOL_A12.items.find((x) => x.id === it.poolItemId), `${checkpoint.id}/${round}`);
+      }
+    }
+  }
+});
+
+test('DaF review #7 BLOCKER 1: a rejected correct answer is excluded by a German task condition — corrections, du with bitte, preposition gaps, German cues', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  // Every item a learner can meet: both real plans and every paper, rounds 0–3.
+  const served = new Map();
+  for (const attempt of [1, 2]) for (const [, items] of planPractice(CURRICULUM_A12, POOL_A12, attempt)) for (const it of items) served.set(it.id, it);
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      for (const it of B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })) {
+        if (it.poolItemId) served.set(it.poolItemId, POOL_A12.items.find((x) => x.id === it.poolItemId));
+      }
+    }
+  }
+  const items = [...served.values()];
+  // 1. A correction says what it corrects. „Korrigieren Sie: „Das Taxi fährt von sieben zu zehn
+  //    Uhr.““ refused „Von sieben bis zehn Uhr fährt das Taxi."; the task now mends only the error.
+  for (const it of items.filter((x) => x.type === 'error_correction')) {
+    assert.doesNotMatch(it.questionDe, /^Korrigieren Sie:/, `${it.id}: „${it.questionDe}" names no operation`);
+  }
+  for (const [id, mended] of [['extra-a12-l09-12', 'Das Taxi fährt von sieben bis zehn Uhr.'], ['extra-a12-l12-17', 'Der Fisch war lecker, aber Tim ist früh gegangen.']]) {
+    const it = POOL_A12.items.find((x) => x.id === id);
+    assert.match(it.questionDe, /^Korrigieren Sie nur den Fehler:/, id);
+    assert.equal(verdict(it, mended), RESULT.CORRECT, `${id}: „${mended}"`);
+  }
+  // 2. A du-imperative takes its emphatic pronoun wherever „bitte" may stand — generated HERE, not by
+  //    the build (review #7: „Bitte hilf du mir mit der Waschmaschine!" was refused).
+  let imperatives = 0;
+  for (const it of items.filter((x) => x.type === 'sentence_building' || x.type === 'error_correction')) {
+    const m = String(it.answer).trim().match(/^([A-ZÄÖÜ][a-zäöüß]+) (.+)!$/);
+    if (it.topic !== 'imperative' || !m || /t$/.test(m[1]) || /^(?:Sie|ihr|wir)\b/.test(m[2])) continue;
+    imperatives += 1;
+    const [, verb, rest] = m;
+    const plain = rest.replace(/\bbitte\b\s*/, '').trim();
+    const forms = [`${verb} du ${rest}!`];
+    if (/\bbitte\b/.test(rest)) forms.push(`Bitte ${verb.toLowerCase()} du ${plain}!`, `${verb} du ${plain} bitte!`);
+    for (const form of forms) assert.equal(verdict(it, form), RESULT.CORRECT, `${it.id}: „${form}"`);
+    assert.notEqual(verdict(it, `Bitte du ${verb.toLowerCase()} ${plain}!`), RESULT.CORRECT, `${it.id}: the pronoun before the verb`);
+  }
+  assert.ok(imperatives >= 3, `the rule reads the served du-imperatives (${imperatives})`);
+  // 3. Every preposition gap that can be served is annotated here BY HAND: the prepositions its
+  //    German context or cue rules out (review #7: a birthday did not rule out „ohne"). A new gap
+  //    fails until someone has judged it.
+  const GAPS = {
+    'extra-a12-l11-01': ['Am', 'In dem'],
+    'extra-a12-l11-02': ['Im', 'An dem'],
+    'extra-a12-l11-03': ['zur', 'zu dem'],
+    '96034fda-42dc-5e3d-8c8d-3c7c82591baf': ['zur', 'zu dem'],
+    'extra-a12-l11-04': ['zum', 'zu der'],
+    '49d0d7b5-dbe0-560a-bce0-266b040e5851': ['zum', 'zu der'],
+    'extra-a12-l11-10': ['Seit'],
+    'extra-a12-l11-11': ['vor'],
+    'extra-a12-l11-12': ['seit'],
+    '8058bf54-3a86-5ed4-8a24-55630a3efbce': ['nach', 'von'], // (Heimat, Land)
+    'fe97d1bc-1569-5fa8-a988-5ab810e33a1c': ['nach', 'zu'], // (Startort, kein Land)
+    'f7aa6e9b-0c37-5874-b2b0-2e311896881a': ['zu', 'mit'],
+    'eec3bcc5-32be-5e44-915e-c9c810980456': ['zu', 'in'], // (Richtung, Land)
+    '7227417e-2b9e-549e-bfcb-6932043bf3d2': ['nach', 'aus', 'von'], // (Richtung, Person)
+    'extra-a12-l09-10': ['ab', 'um'],
+    'extra-a12-l09-11': ['um', 'bis'],
+    'extra-a12-l09-13': ['bis', 'um'],
+    'extra-a12-l10-01': ['ohne', 'durch'], // Oma is in the shop with Ana
+    'extra-a12-l10-02': ['für', 'durch'],
+    'extra-a12-l10-03': ['für', 'ohne'],
+    'extra-a12-l10-04': ['ohne', 'durch'],
+  };
+  const PREPOSITION = /^(?:für|ohne|durch|um|gegen|mit|bei|nach|von|zu|zur|zum|aus|seit|vor|ab|bis|in|im|ins|an|am|auf|unter|über|neben|zwischen|hinter)$/i;
+  const gaps = POOL_A12.items.filter((x) => x.minLektion != null && PREPOSITION.test(String(x.answer).trim())).map((x) => x.id).sort();
+  assert.deepEqual(gaps, Object.keys(GAPS).sort(), 'a new preposition gap is judged here before it can be served');
+  for (const [id, ruledOut] of Object.entries(GAPS)) {
+    const it = POOL_A12.items.find((x) => x.id === id);
+    assert.equal(verdict(it, it.answer), RESULT.CORRECT, id);
+    for (const other of ruledOut) assert.notEqual(verdict(it, other), RESULT.CORRECT, `${id}: „${other}"`);
+  }
+  // 4. A cue in brackets is German: „(approximately)" alone decided „gegen" over „um".
+  const ENGLISH = /\b(?:approximately|before|after|polite|formal|informal|plural|singular|past|present|tense|short|question|request|until|since|ago|from|without|through|around|against|the|and|with|not|you|she|they|of|to|at|for|by)\b/i;
+  for (const it of items) {
+    for (const [, cue] of String(it.questionDe).matchAll(/\(([^)]*)\)/g)) assert.doesNotMatch(cue, ENGLISH, `${it.id}: „(${cue})"`);
+  }
+});
+
+test('DaF review #7 B1: the task formulas are one list — the checkpoint draw and the validator read the same one', async () => {
+  // Two copies had drifted by nine formulas: every „Korrigieren Sie nur den Fehler" item read as
+  // untaught lexis to the checkpoint draw while the validator stamped it servable.
+  const { ITEM_FORMULAS } = await import('../src/lib/checkpoint/lexis.js');
+  const src = read('scripts/validate-curriculum.mjs');
+  assert.match(src, /import \{ ITEM_FORMULAS \} from '\.\.\/src\/lib\/checkpoint\/lexis\.js';/);
+  assert.doesNotMatch(src, /const ITEM_FORMULA_RE = new RegExp\(\[/, 'no second copy of the list');
+  // Longest first: a shorter formula listed earlier would match and leave the rest counted as lexis.
+  ITEM_FORMULAS.forEach((formula, i) => {
+    const shadow = ITEM_FORMULAS.slice(0, i).find((earlier) => formula.startsWith(earlier));
+    assert.equal(shadow, undefined, `„${formula}" comes after „${shadow}", which matches first`);
+  });
 });

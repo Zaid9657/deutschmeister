@@ -865,10 +865,14 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // the transfer ratchet back to 1 / 1 / 1 / 0). Checkpoint 3's and 4's drills now come from
     // other Lektionen, and checkpoint 4's Bausteine draw a frontable sentence at seat 2. Four are
     // drawn; every one is asserted above to accept both orders. RE-MEASURED, not relaxed.
+    // 2026-10-17 (A1.2 DaF review #7): the checkpoint draw now strips the same task formulas as the
+    // validator (one list, src/lib/checkpoint/lexis.js — the copy had drifted), the earlier-chapter
+    // interleave visits topics with unanswered items first, and Hören leaves the lines Lesen needs.
+    // The seats move; three frontable sentences are drawn, each asserted above to accept both orders.
+    // RE-MEASURED, not relaxed.
     'a1.1-cp1-schreiben-2',
-    'a1.1-cp2-bausteine-6',
-    'a1.1-cp3-bausteine-2',
-    'a1.1-cp4-bausteine-2',
+    'a1.1-cp3-bausteine-4',
+    'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

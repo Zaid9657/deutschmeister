@@ -72,6 +72,7 @@ import { COUNTRY_STEMS } from '../src/lib/lesson/countries.js';
 // writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
 import { planPractice } from '../src/lib/lesson/buildLesson.js';
 import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
+import { ITEM_FORMULAS } from '../src/lib/checkpoint/lexis.js';
 
 export const GRAMMAR_SLUGS = [
   'nouns-gender', 'definite-articles', 'personal-pronouns', 'verb-sein', 'alphabet-pronunciation',
@@ -753,11 +754,18 @@ const NEVER_FORMS_A12 = [
   // An ordinal with any ending but L2's -e („im dritten Stockwerk", „am zwanzigsten Mai") is the
   // dative or accusative Adjektivdeklination, taught nowhere. constructions.js reads an adjective
   // only after an article, not after im/am/zum, so L2 drew „im ___ Stockwerk" → dritten (DaF review #5, B2).
-  // …the whole family, -zehnt- and hundertst- included („im dreizehnten Stockwerk", DaF review #6, B2).
-  /\b(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+zehnt|[a-zäöüß]+igst|hundertst)(?:en|er|es|em)\b/i,
-  // Spatial „um + Akkusativ" („Wir laufen um den Stuhl.") is taught nowhere: L10 teaches für, ohne,
-  // durch; „um" is a clock time („um acht Uhr") and nothing else (DaF review #6, B2).
-  /\bum (?:den|die|das|einen|eine|ein|meinen|meine|mein|seinen|seine|sein|ihren|ihre|unseren|unsere|unser) [A-ZÄÖÜ]/,
+  // …the whole family, -zehnt- and hundertst- included („im dreizehnten Stockwerk", DaF review #6, B2),
+  // and every compound of a hundred or a thousand („im zweihundertsten", „hundertersten", review #7, B2).
+  /\b(?:[a-zäöüß]*(?:hundert|tausend)(?:und)?)?(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+zehnt|[a-zäöüß]+igst)(?:en|er|es|em)\b/i,
+  /\b[a-zäöüß]*(?:hundertst|tausendst)(?:en|er|es|em)\b/i,
+  // Spatial „um + Akkusativ" is taught nowhere: L10 teaches für, ohne, durch, and „um" is a clock time
+  // („um acht Uhr", „um halb neun") and nothing else (DaF review #6, B2) — whatever determines the noun:
+  // an article, a possessive, a demonstrative, a number („um diesen Tisch", „um drei Häuser", review #7).
+  /\b[Uu]m (?:(?:den|die|das|dem|einen|eine|ein|einem|diesen|diese|dieses|jeden|jede|jedes|meinen|meine|mein|deinen|deine|dein|seinen|seine|sein|ihren|ihre|ihr|unseren|unsere|unser|euren|eure|euer|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele|alle) )?(?!Uhr\b|Viertel\b)[A-ZÄÖÜ]/,
+  /\b[Uu]ms [A-ZÄÖÜ]/,
+  // „gegen" is taught as „against" („Die Tablette hilft gegen Kopfschmerzen.", L6); the approximate
+  // time („gegen fünf Uhr", „gegen Abend") is a second meaning no surface introduces (review #7, B2).
+  /\b[Gg]egen (?:\d{1,2}(?:[.:]\d{2})?|ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|halb|Mittag|Abend|Morgen|Mitternacht)\b/,
 ];
 const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
 
@@ -1284,41 +1292,11 @@ const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
 // Only COMPLETE formulas are stripped. The bare words („richtig“, „die Frage“, „den Satz“,
 // „das Wort“, „die Zahl“) used to be stripped from every prompt, which hid content words from the
 // check: „___ Gleis vier richtig?“ passed although `richtig` is in no Wortfeld of the course.
-const ITEM_FORMULA_RE = new RegExp([
-  // Longest first: the alternation is tried in order at each position.
-  'Finden Sie den Fehler und schreiben Sie den Satz richtig',
-  'Schreiben Sie die Frage in der normalen Wortfolge', 'Schreiben Sie die Frage richtig',
-  // „Schreiben Sie den Satz“ and „Buchstabieren Sie den Gruß“ are the same closed Sie-Aufgabenformel
-  // as „Bilden Sie den Satz“ next door and were simply missing from the list; without them the
-  // generated half of the pool reports Satz/Schreiben/Fehler as untaught lexis in ~20 items, which
-  // is the formula talking, not the item (added when RULE 11 started reading the built pool).
-  'Schreiben Sie den Satz', 'Buchstabieren Sie den Gruß',
-  // „Schreiben Sie die Zahl in Worten“ is the A1.2 pool's spelling of the same formula. It was
-  // missing, so `Schreiben`/`Zahl`/`Worten` counted as item lexis in four A1.2 items — three of
-  // RULE 11b's 18 were the formula talking (DaF review #6 note in the A1.2 registry row).
-  'Schreiben Sie die Telefonnummer in Worten', 'Schreiben Sie den Preis in Worten',
-  'Schreiben Sie die Zahl in Worten', 'Schreiben Sie die Bitte',
-  'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
-  // „Schreiben Sie die höfliche Frage“ is the register-normalised spelling of the same closed
-  // formula as its „Bilden Sie“ twin next door (the bank duzt: „Schreib die höfliche Frage:“).
-  // It was missing, so `Schreiben` counted as item lexis and the untaught-lexis gate in
-  // build-lesson-pool.mjs dropped two sound yes-no-questions items over the task line.
-  'Schreiben Sie die höfliche Frage',
-  'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
-  // The sentence type the build names when a brick list alone leaves it open (DaF review #5, B1).
-  'Bilden Sie den Imperativ', 'Schreiben Sie den Imperativ',
-  // „Welche Schreibweise ist richtig?“ is the whole task line of the generated spelling-choice
-  // items this file's sibling build script writes from the Wortfeld — the learner picks between two
-  // spellings of a word that IS taught. It was missing, so `Schreibweise` and `richtig` counted as
-  // item lexis in every one of them and they could never be served at any Lektion (minLektion null).
-  'Welche Schreibweise ist richtig',
-  'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
-  'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
-  // The register frame of a du-prompt (DaF review #4, A1.2 minor): the course speaks Sie, so a bare
-  // „___ wohnst du?" is framed as partner speech. Without the formula here `Fragen` counted as item
-  // lexis and the build stamped all six framed items minLektion null — never served.
-  'Fragen Sie eine Freundin',
-].join('|'), 'g');
+// The closed Sie-Aufgabenformeln live in src/lib/checkpoint/lexis.js and are imported from there:
+// the checkpoint draw needs the same list in the browser, and a second copy here had drifted by
+// nine formulas (DaF review #7, A1.2 B1 — every „Korrigieren Sie nur den Fehler" item read as
+// untaught lexis to the draw while the validator stamped it servable).
+const ITEM_FORMULA_RE = new RegExp(ITEM_FORMULAS.join('|'), 'g');
 
 /**
  * The Lektion an item is judged against: its id prefix when it is hand-written, otherwise the

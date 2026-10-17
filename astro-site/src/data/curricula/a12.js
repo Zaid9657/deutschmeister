@@ -38,15 +38,18 @@
 //                                 „Machen Sie bitte…". Ohne Wechselverben (6) gäbe es kein „Hilf!".
 //   9 modal-verbs-intro         — Regeln sind dürfen/müssen/können. Die Satzklammer (Modalverb
 //                                 auf 2, Infinitiv am Ende) setzt den Satzrahmen aus 1 voraus.
-//  10 prepositions-accusative   — für/ohne/gegen/um/durch braucht den Akkusativ aus 3; der
-//                                 Kleidungskauf ist „für meinen Bruder, ohne den Schal".
+//  10 prepositions-accusative   — für/ohne/durch braucht den Akkusativ aus 3; der Kleidungskauf
+//                                 ist „für meinen Bruder, ohne den Schal". „gegen" kennt der Kurs nur
+//                                 als „gegen Kopfschmerzen" (L6), „um" nur als Uhrzeit: zeitliches gegen
+//                                 und räumliches um lehrt A1.2 nicht (NEVER_FORMS, DaF-Review #6/#7, B2).
 //  11 dative-prepositions-intro — das Wetter trägt die temporalen und lokalen Dativpräpositionen:
 //                                 im Sommer, am Abend, seit einer Woche, nach dem Regen.
 //  12 perfekt-intro             — das Fest erzählt Vergangenes. Perfekt steht am Ende: haben auf
 //                                 Position 2, das Partizip II mit ge-…-t oder ge-…-en, an Verben, die
 //                                 der Kurs schon kennt (gefeiert, gekauft, gekocht, gemacht, geholt,
-//                                 gegessen, getrunken, gesprochen). Partizipien ohne ge- (bezahlt,
-//                                 besucht) lehrt er NICHT — offen, CONTRACT §0 (DaF-Review #4, M7).
+//                                 gegessen, getrunken, gesprochen) — und seit der M7-Entscheidung vom
+//                                 2026-10-16 die Partizipien ohne ge- (bezahlt, verstanden,
+//                                 telefoniert) und das Perfekt mit sein (Tim ist früh gegangen).
 //
 // DIE ENTSCHEIDUNG, DIE DER AUFTRAG OFFEN LIESS: WEGBESCHREIBUNG → WELCHE PRÄPOSITIONEN?
 // Weder `prepositions-accusative` noch `dative-prepositions-intro`. Beide setzen einen Kasus
@@ -563,10 +566,10 @@ export const CURRICULUM_A12 = {
         title: 'Zwei Pläne und ein Fahrplan',
         setting: 'Tim und Lena planen das Wochenende.',
         lines: [
-          { speaker: 'Lena', de: 'Tim, was machst du am Wochenende? Hast du Zeit?', en: 'Tim, what are you doing at the weekend? Do you have time?' },
+          { speaker: 'Lena', de: 'Tim, was machst du am Wochenende? Gehst du ins Konzert?', en: 'Tim, what are you doing at the weekend? Are you going to the concert?' },
           { speaker: 'Tim', de: 'Ja. Der Ausflug geht nach Köln. Ich habe den Fahrplan.', en: 'Yes. The trip goes to Cologne. I have the timetable.' },
           { speaker: 'Lena', de: 'Wann fährt der Zug? Um wie viel Uhr?', en: 'When does the train leave? At what time?' },
-          { speaker: 'Tim', de: 'Um acht Uhr. Wer kommt mit? Das Konzert ist am Abend.', en: 'At eight o\'clock. Who is coming along? The concert is in the evening.' },
+          { speaker: 'Tim', de: 'Um acht Uhr. Wer kommt mit? Ich bin um elf in Köln.', en: 'At eight o\'clock. Who is coming along? I will be in Cologne at eleven.' },
           { speaker: 'Lena', de: 'Ich würde gern mitkommen. Warum so früh? Ich stehe nie früh auf.', en: 'I would like to come along. Why so early? I never get up early.' },
           { speaker: 'Tim', de: 'Der Weg ist weit. Wie oft fährt der Bus?', en: 'The way is long. How often does the bus run?' },
           { speaker: 'Lena', de: 'Jede Stunde. Aber wo ist die Haltestelle?', en: 'Every hour. But where is the stop?' },
@@ -672,7 +675,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Frau Berger', de: 'Ja. Jeden Morgen und jeden Abend. Wer krank ist, schläft viel.', en: 'Yes. Every morning and every evening. Whoever is ill sleeps a lot.' },
           { speaker: 'Ana', de: 'Und mein Auge? Der Zahn und der Rücken tun nicht weh.', en: 'And my eye? My tooth and my back do not hurt.' },
           { speaker: 'Frau Berger', de: 'Ihr Auge ist gesund. Die Hand und der Fuß sehen gut aus.', en: 'Your eye is healthy. The hand and the foot look fine.' },
-          { speaker: 'Ana', de: 'Danke. Hier ist meine Versichertenkarte für die Praxis.', en: 'Thank you. Here is my health insurance card for the practice.' },
+          { speaker: 'Ana', de: 'Danke. Ich bin krank. Hier ist meine Versichertenkarte für die Praxis.', en: 'Thank you. I am ill. Here is my health insurance card for the practice.' },
         ],
       },
       pretest: {
@@ -1052,7 +1055,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Lena', de: 'Der Rock ist zu kurz. Der Pullover passt dir gut.', en: 'The skirt is too short. The pullover fits you well.' },
           { speaker: 'Ana', de: 'Er gefällt mir. Den Pullover ziehe ich morgen an.', en: 'I like it. I will put the pullover on tomorrow.' },
           { speaker: 'Lena', de: 'Die Schuhe passen. Ohne Socken gehe ich nicht.', en: 'The shoes fit. I do not go without socks.' },
-          { speaker: 'Ana', de: 'Ich kaufe die Mütze für meine Oma.', en: 'I am buying the cap for my grandma.' },
+          { speaker: 'Ana', de: 'Ich kaufe die Mütze für meine Oma. Ich habe zehn Euro.', en: 'I am buying the cap for my grandma. I have ten euros.' },
           { speaker: 'Lena', de: 'Die Mütze ist billiger als der Schal.', en: 'The cap is cheaper than the scarf.' },
           { speaker: 'Ana', de: 'Gut. Ich gehe durch das Kaufhaus und bezahle.', en: 'Good. I will walk through the store and pay.' },
         ],
@@ -1067,7 +1070,7 @@ export const CURRICULUM_A12 = {
         title: 'Präpositionen mit Akkusativ',
         bodyDe: 'Nach **für**, **ohne** und **durch** steht der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Vergleich mit **als**: Die Mütze ist **billiger als** der Schal. Dativ bei gefallen, passen, gehören: Er **gefällt mir**. Er **passt dir**. Die Jacke **gehört dir**.',
         bodyEn: 'After **für** (for), **ohne** (without) and **durch** (through) comes the accusative: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Only masculine nouns change; feminine, neuter and plural stay the same: für **die** Oma, für **das** Kind. Comparison with **als** (than): Die Mütze ist **billiger als** der Schal. gefallen (please), passen (fit) and gehören (belong) take the dative: Er **gefällt mir** (I like it). Er **passt dir** (it fits you). Die Jacke **gehört dir** (the jacket is yours).',
-        examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma.'],
+        examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma. Ich habe zehn Euro.'],
         ruleSlug: 'prepositions-accusative',
       },
       phonetik: { focus: 'Die Endung -er im Vergleich', items: ['BIL-lig', 'BIL-li-ger', 'GRÖ-ßer'] },
@@ -1242,7 +1245,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Lena', de: 'Ana, wir haben gestern schön gefeiert!', en: 'Ana, we celebrated nicely yesterday!' },
           { speaker: 'Ana', de: 'Ja! Ich habe Kuchen und Schokolade gegessen.', en: 'Yes! I ate cake and chocolate.' },
           { speaker: 'Lena', de: 'Und das Getränk? Hast du den Saft getrunken?', en: 'And the drink? Did you drink the juice?' },
-          { speaker: 'Ana', de: 'Nein, ich habe Milch getrunken. Der Käse war lecker.', en: 'No, I drank milk. The cheese was delicious.' },
+          { speaker: 'Ana', de: 'Nein, ich habe Milch getrunken. Der Käse war lecker. Ich bin glücklich.', en: 'No, I drank milk. The cheese was delicious. I am happy.' },
           { speaker: 'Lena', de: 'Die Wurst und das Fleisch haben wir gekauft. Und den Fisch?', en: 'We bought the sausage and the meat. And the fish?' },
           { speaker: 'Ana', de: 'Tim hat ihn gekocht. Ich habe die Getränke bezahlt.', en: 'Tim cooked it. I paid for the drinks.' },
           { speaker: 'Lena', de: 'Das Ei und das Gemüse hat meine Oma gemacht. Gut, oder?', en: 'My grandma made the egg and the vegetables. Good, isn\'t it?' },
@@ -1292,7 +1295,7 @@ export const CURRICULUM_A12 = {
         sample: 'Hallo Lena, ich habe am Samstag mit Tim und Paul gefeiert. Wir haben Fisch und Kartoffeln gegessen und Saft getrunken. Paul hat auch getanzt. Viele Grüße, Ana',
       },
       links: { listeningExercise: null, readingOrder: 2 },
-      practiceRule: { topics: ['perfekt-intro', 'accusative-intro'], typedMin: 4, mustCover: ['ist'] },
+      practiceRule: { topics: ['perfekt-intro', 'accusative-intro'], typedMin: 4, mustCover: ['ist', 'bezahlt'] },
     },
   ],
   checkpoints: [

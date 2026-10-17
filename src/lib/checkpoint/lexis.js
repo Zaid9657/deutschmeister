@@ -10,8 +10,11 @@
 //
 //   tokenise · participle · verbForms · formsOf · coverageForms ·
 //   seedVocabulary · the knownUpTo loop of itemLexis() · ITEM_CUE_RE ·
-//   ITEM_FORMULA_RE · the per-level rows of LEVELS the known set needs
+//   the per-level rows of LEVELS the known set needs
 //   (function words, dialogue names, irregular forms, seedFrom)
+//
+// …except the task formulas: ITEM_FORMULAS is defined HERE and imported by the validator, because
+// the copy drifted (DaF review #7) and a list has no reason to exist twice.
 //
 // KEEP THEM IN STEP. The validator is the source of truth; a rule changed there
 // must be changed here in the same commit. `tests/checkpoint.test.mjs` measures
@@ -185,7 +188,9 @@ const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
 // Only COMPLETE formulas are stripped. The bare words („richtig“, „die Frage“, „den Satz“,
 // „das Wort“, „die Zahl“) used to be stripped from every prompt, which hid content words from the
 // check: „___ Gleis vier richtig?“ passed although `richtig` is in no Wortfeld of the course.
-const ITEM_FORMULA_RE = new RegExp([
+// The ONE list: scripts/validate-curriculum.mjs imports it (RULE 5/11/11b and the minLektion stamps),
+// the checkpoint draw reads it here. Two copies had drifted by nine formulas (DaF review #7).
+export const ITEM_FORMULAS = [
   // Longest first: the alternation is tried in order at each position.
   'Finden Sie den Fehler und schreiben Sie den Satz richtig',
   'Schreiben Sie die Frage in der normalen Wortfolge', 'Schreiben Sie die Frage richtig',
@@ -194,11 +199,36 @@ const ITEM_FORMULA_RE = new RegExp([
   // generated half of the pool reports Satz/Schreiben/Fehler as untaught lexis in ~20 items, which
   // is the formula talking, not the item (added when RULE 11 started reading the built pool).
   'Schreiben Sie den Satz', 'Buchstabieren Sie den Gruß',
+  // „Schreiben Sie die Zahl in Worten“ is the A1.2 pool's spelling of the same formula. It was
+  // missing, so `Schreiben`/`Zahl`/`Worten` counted as item lexis in four A1.2 items — three of
+  // RULE 11b's 18 were the formula talking (DaF review #6 note in the A1.2 registry row).
+  'Schreiben Sie die Telefonnummer in Worten', 'Schreiben Sie den Preis in Worten',
+  'Schreiben Sie die Zahl in Worten', 'Schreiben Sie die Bitte',
   'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
+  // „Schreiben Sie die höfliche Frage“ is the register-normalised spelling of the same closed
+  // formula as its „Bilden Sie“ twin next door (the bank duzt: „Schreib die höfliche Frage:“).
+  // It was missing, so `Schreiben` counted as item lexis and the untaught-lexis gate in
+  // build-lesson-pool.mjs dropped two sound yes-no-questions items over the task line.
+  'Schreiben Sie die höfliche Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
+  // The sentence type the build names when a brick list alone leaves it open (DaF review #5, B1).
+  'Bilden Sie den Imperativ', 'Schreiben Sie den Imperativ',
+  // „Welche Schreibweise ist richtig?“ is the whole task line of the generated spelling-choice
+  // items scripts/build-lesson-pool.mjs writes from the Wortfeld — the learner picks between two
+  // spellings of a word that IS taught. It was missing, so `Schreibweise` and `richtig` counted as
+  // item lexis in every one of them and they could never be served at any Lektion (minLektion null).
+  'Welche Schreibweise ist richtig',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
+  // The operation a correction names (DaF review #7, A1.2 B1) — longest first, or „Korrigieren Sie"
+  // would match and leave „nur den Fehler" to be counted as item lexis.
+  'Korrigieren Sie nur den Fehler in der Frage', 'Korrigieren Sie nur den Fehler',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
-].join('|'), 'g');
+  // The register frame of a du-prompt (DaF review #4, A1.2 minor): the course speaks Sie, so a bare
+  // „___ wohnst du?" is framed as partner speech. Without the formula here `Fragen` counted as item
+  // lexis and the build stamped all six framed items minLektion null — never served.
+  'Fragen Sie eine Freundin',
+];
+const ITEM_FORMULA_RE = new RegExp(ITEM_FORMULAS.join('|'), 'g');
 
 /**
  * The cumulative vocabulary a level inherits from the level before it

@@ -1931,8 +1931,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 1,
-      "questionDe": "Ana kauft die Mütze ___ ihre Oma: Die Oma hat Geburtstag. (für, ohne oder durch?)",
-      "questionEn": "Ana buys the hat for her grandma.",
+      "questionDe": "Ana und ihre Oma sind im Geschäft. Die Oma hat Geburtstag. Ana kauft die Mütze ___ ihre Oma. (für, ohne oder durch?)",
+      "questionEn": "Ana and her grandma are in the shop. It is Grandma's birthday. Ana buys the hat for her grandma.",
       "options": null,
       "answer": "für",
       "accepted": [

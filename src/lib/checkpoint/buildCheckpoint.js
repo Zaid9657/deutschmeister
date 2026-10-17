@@ -602,17 +602,31 @@ function buildHoerenDictation(ctx) {
   // chapter (chapter 1 has three construction-free reportable lines) must not
   // have Hören eat the one line the fourth Lesen window needs. Dictation takes
   // what Lesen cannot use — greetings, questions, formulas — first.
+  // Between the two: a line that is no report itself but stands in a window whose report a VALUE
+  // or a CONTRARY can contradict — „Kostet die Fahrkarte zwanzig Euro?" above „Nein, sie kostet
+  // fünfzehn Euro.", the line the „sie" needs. Without those windows Lesen is left with polarity
+  // changes, and an added negation can never be balanced on the Richtig side (DaF review #7,
+  // MAJOR 8: A1.1's checkpoint 4 lost its last cue-free Falsch to this dictation).
   const spec = reportSpec(ctx);
   const reportable = new Set();
+  const lesenNeeds = new Set();
+  const kindsOnly = mulberry32(1); // which kinds exist, never which value — not the paper's stream
   for (const lektion of chapter) {
     for (const { window, start } of windowsOf(lektion)) {
-      for (const r of windowReports(window, spec)) reportable.add(lineKeyOf(lektion.id, start + r.lineIndex));
+      for (const r of windowReports(window, spec)) {
+        reportable.add(lineKeyOf(lektion.id, start + r.lineIndex));
+        if (contradictions(r.statement, spec.nouns, kindsOnly).some((c) => c.kind !== 'polarity')) {
+          window.forEach((_, k) => lesenNeeds.add(lineKeyOf(lektion.id, start + k)));
+        }
+      }
     }
   }
-  const unreportableFirst = (ls) => [
-    ...ls.filter((l) => !reportable.has(lineKeyOf(l.lektionId || l.lektionNr, l.idx))),
-    ...ls.filter((l) => reportable.has(lineKeyOf(l.lektionId || l.lektionNr, l.idx))),
-  ];
+  const tier = (l) => {
+    const key = lineKeyOf(l.lektionId || l.lektionNr, l.idx);
+    if (reportable.has(key)) return 2;
+    return lesenNeeds.has(key) ? 1 : 0;
+  };
+  const unreportableFirst = (ls) => [0, 1, 2].flatMap((t) => ls.filter((l) => tier(l) === t));
   // …and, outermost, the lines the chapter itself would dictate: no longer than the longest
   // line of its Lektionen's own dictation windows (`dictationCeiling`, DaF review #18, Minor 10).
   const lines = dictableFirst(unreportableFirst(clampFreeFirst(
@@ -971,6 +985,12 @@ const FREQUENCY_WORDS = new Set(['manchmal', 'oft', 'meistens', 'selten']);
  */
 const BOUND_WORDS = new Set(['mindestens', 'höchstens', 'fast', 'etwa', 'ungefähr', 'circa', 'rund', 'knapp']);
 const BOUND_PHRASE_RE = /\b(?:mehr als|weniger als|bis zu)\b/;
+/**
+ * …nor a time a preposition makes a bound or an end of an interval: an arrival at seven makes
+ * „vor zehn Uhr" and „vor acht Uhr" both true, a start at nine „nach acht" and „nach neun"
+ * (DaF review #7, MAJOR 8). „um acht Uhr", a count or a price states one value and still changes.
+ */
+const TIME_BOUND_PREPOSITIONS = new Set(['vor', 'nach', 'bis', 'ab', 'seit', 'gegen', 'von', 'zwischen']);
 
 /**
  * Words that give a negation its own scope — „nicht gern", „auch nicht", „noch nicht",
@@ -1130,6 +1150,9 @@ export function contradictions(statement, nouns, rng) {
       // VALUE
       if (lower.some((w) => FREQUENCY_WORDS.has(w) || BOUND_WORDS.has(w))) continue;
       if (BOUND_PHRASE_RE.test(lower.join(' ')) || pre === 'über' || pre === 'unter') continue;
+      // „vor zehn Uhr", „bis um zehn", „von sieben bis zehn", „zwischen acht und zehn"
+      if (TIME_BOUND_PREPOSITIONS.has(pre) || (pre === 'um' && TIME_BOUND_PREPOSITIONS.has(lower[i - 2] || ''))) continue;
+      if (lower.slice(0, i).includes('zwischen')) continue;
       let to;
       if (/^\d/.test(bare[i])) {
         to = bare[i].replace(/^\d+/, (d) => String(Number(d) >= 10 ? Number(d) + 10 : Number(d) + 3));
@@ -1826,9 +1849,23 @@ function pickLesenSource(candidates, wantRichtig, {
  * negation tells the reader nothing about the key; a short section counts worse than any cue.
  */
 export function lesenNegationCue(items) {
-  const count = (key, field) => items.filter((it) => it.answer === key && negations(field(it))).length;
-  const gap = (field) => Math.abs(count('Richtig', field) - count('Falsch', field));
-  return gap((it) => it.statement) + gap((it) => it.text) + (items.length < SECTION_COUNTS.lesen ? 10 : 0);
+  const pairs = items.map((it) => ({ richtig: it.answer === 'Richtig', s: Boolean(negations(it.statement)), t: Boolean(negations(it.text)) }));
+  return jointNegationGap(pairs.filter((p) => !p.richtig), pairs.filter((p) => p.richtig))
+    + (items.length < SECTION_COUNTS.lesen ? 10 : 0);
+}
+
+/**
+ * How far the Falsch and the Richtig side are from carrying the same (statement negated, text
+ * negated) pairs — the size of the multiset difference. Balancing the two counts apart was not
+ * enough (DaF review #7, MAJOR 8): Falsch {text only, statement only} against Richtig {both,
+ * neither} balances each count and still hands „statement and text agree → Richtig" every key of
+ * six regular papers. At 0, every function of the two features scores exactly half of the paper.
+ */
+export function jointNegationGap(falsch, richtig) {
+  const diff = [0, 0, 0, 0];
+  for (const o of falsch) diff[(o.s ? 2 : 0) + (o.t ? 1 : 0)] += 1;
+  for (const o of richtig) diff[(o.s ? 2 : 0) + (o.t ? 1 : 0)] -= 1;
+  return diff.reduce((sum, d) => sum + Math.abs(d), 0);
 }
 
 // The tiers of a Lesen choice, cheapest last to break: a dictated or read-aloud line reprinted (the
@@ -1912,7 +1949,7 @@ function chooseLesen(ctx) {
   for (const [f1, f2] of pairsOf(F)) {
     for (const [r1, r2] of richtigPairs) {
       if (clash(r1, f1) || clash(r1, f2) || clash(r2, f1) || clash(r2, f2)) continue;
-      const cue = Math.abs(f1.s + f2.s - r1.s - r2.s) + Math.abs(f1.t + f2.t - r1.t - r2.t);
+      const cue = jointNegationGap([f1, f2], [r1, r2]);
       const cost = cue * CUE_COST + f1.cost + f2.cost + r1.cost + r2.cost + crowding([f1, f2, r1, r2]) * 3;
       if (!best || cost < best.cost) best = { cost, falsch: [f1, f2], richtig: [r1, r2] };
     }
@@ -2092,7 +2129,17 @@ function lesenAttempt(ctx, rng) {
 function buildBausteine(ctx) {
   const { checkpoint, rng, chapter, earlier, pool, usedPoolIds, untaught, afterLektion } = ctx;
   const chapterTopics = topicsOf(chapter);
-  const earlierTopics = topicsOf(earlier).filter((t) => !chapterTopics.includes(t));
+  // The interleave visits the earlier topics that still have something the learner has not
+  // answered in a lesson FIRST — „a seen item is only the fallback of a thin topic", applied to the
+  // choice of topic too. In Lektion order every later checkpoint reached for Lektion 2's numbers,
+  // whose six unanswered items checkpoint 1's own papers draw (A1.2 checkpoint 4, measured
+  // 2026-10-17). Ties keep the Lektion order.
+  const fresh = (t) => byTopics(pool, [t], afterLektion)
+    .filter((i) => !usedPoolIds.has(i.id) && !ctx.lessonSeen.has(i.id) && !ctx.spentPool?.has(i.id) && !untaught(i)).length;
+  const earlierTopics = topicsOf(earlier).filter((t) => !chapterTopics.includes(t))
+    .map((t, order) => ({ t, order, supply: fresh(t) }))
+    .sort((a, b) => (b.supply > 0) - (a.supply > 0) || a.order - b.order)
+    .map((x) => x.t);
   const earlierWanted = earlierTopics.length ? POOL_ITEMS_EARLIER : 0;
   // The Sprachbausteine are seated AFTER Hören, Lesen, Sprechen and the Schreiben
   // drills, so this draw can see everything the paper prints: an item whose
