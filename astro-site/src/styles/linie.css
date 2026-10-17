@@ -237,6 +237,56 @@ html.js .dm-track-draw.is-armed.is-drawn {
   }
 }
 
+/* The ride: LineSection's track, scrubbed by the reader's scroll (scroll-craft,
+   docs/scrollcraft/builds/home-line/BRIEF.md). Its script arms data-ride="on"
+   only when motion is allowed; unarmed, the line renders fully drawn. The fill
+   and the train follow the scroll frame by frame, so neither carries a
+   transition: the scroll is the timeline. */
+.dm-ride-fill {
+  transform-origin: left center;
+}
+.dm-ride-fill-y {
+  transform-origin: center top;
+}
+.dm-ride-sign,
+.dm-ride-train {
+  display: none;
+}
+[data-ride='on'] .dm-ride-sign {
+  display: flex;
+  flex-wrap: wrap;
+  width: fit-content;
+}
+[data-ride='on'] .dm-ride-train {
+  display: flex;
+  will-change: transform;
+}
+[data-ride='on'] .dm-ride-seg {
+  background-color: theme('colors.nacht.sunk');
+}
+[data-ride='on'] [data-ride-dot] {
+  transition:
+    background-color 220ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 220ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+[data-ride='on'] [data-ride-dot]:not(.is-reached) {
+  border-color: theme('colors.nacht.rule');
+}
+.dm-ride-sign.is-new {
+  animation: dmSignIn 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@keyframes dmSignIn {
+  from {
+    opacity: 0.4;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ── First stop (the homepage demo) ───────────────────────────────────── */
 /* [hidden] must win over the flex/grid utilities on the same element
    (applyBaseStyles is off, so there is no preflight rule doing this). */
