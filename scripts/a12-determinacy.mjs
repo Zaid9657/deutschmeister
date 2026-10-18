@@ -196,7 +196,63 @@ export const vorfeldOf = (key) => {
   return tokens.slice(0, first.length).join(' ');
 };
 export const openingOf = (key) => (wordOrderAlternatives(key).length ? vorfeldOf(key) : null);
-const OPENING_CUE_RE = /\(Beginnen Sie mit „([^“"]+)[“"]\)/;
+// The opening cue, with the further places a task may name after a semicolon (review #9).
+const OPENING_CUE_RE = /\(Beginnen Sie mit „([^“"]+)[“"](?:;[^)]*)?\)/;
+
+/** Whether an answer opens with the phrase its task names („Wir …" for „Beginnen Sie mit „Wir“"). */
+export const opensWith = (answer, opening) => {
+  const a = String(answer || '').trim().toLowerCase();
+  const o = String(opening || '').trim().toLowerCase();
+  return a === o || a.startsWith(`${o} `) || a.startsWith(`${o},`);
+};
+
+const NEG_PARTICLE_RE = /^(?:nicht|nie)$/i;
+const COORDINATOR_RE = /^(?:und|aber|oder|denn|sondern)$/i;
+/**
+ * DaF review #9 (A1.2) B1: „nicht"/„nie" has two grammatical places when its clause holds another
+ * middle-field phrase („Ich fahre nicht ohne meinen Bruder." / „Ich fahre ohne meinen Bruder nicht.")
+ * — or two readings („Wir kaufen nicht das Auto." negates the car only). So the German task names the
+ * place; null when there is one place only (a final predicative: „ist nicht schön", „schläft nicht
+ * gut"). For a STATEMENT key; the harness never guesses a place of its own.
+ */
+export function negationPlaceCue(key) {
+  if (!/\.$/.test(String(key || '').trim())) return null;
+  for (const clause of strip(key).split(/,\s+/)) {
+    const t = clause.split(/\s+/);
+    const n = t.findIndex((w) => NEG_PARTICLE_RE.test(w));
+    if (n < 0) continue;
+    const from = COORDINATOR_RE.test(t[0]) ? 1 : 0;
+    let start = from + (constituentAt(t, from) || { length: 1 }).length + 1;
+    if (SUBJECT_PRONOUN_RE.test(t[start] || '') || t[start] === 'Sie') start += 1;
+    let end = t.length;
+    if (end - start > 1 && (BRACKET_PARTICLE_RE.test(t[end - 1]) || NONFINITE_RE.test(t[end - 1]))) end -= 1;
+    const others = t.slice(start, end).filter((_, i) => i + start !== n);
+    if (!others.length || (others.length === 1 && n === end - 2 && /^[a-zäöüß]+$/.test(others[0]))) return null;
+    return n === t.length - 1 ? `„${t[n]}“ steht am Satzende` : `„${t[n]}“ steht vor „${t[n + 1]}“`;
+  }
+  return null;
+}
+
+/**
+ * DaF review #9 (A1.2) B1: a later MAIN clause opens freely too („…, aber früh ist Tim gegangen."), so
+ * the task names its opening as well. Each is { after: the conjunction or null for a bare comma,
+ * opening }; a comma inside one clause (a list: „Brot, Milch und Käse") is no clause and gives none.
+ */
+export function laterOpenings(key) {
+  if (!/\.$/.test(String(key || '').trim())) return [];
+  return strip(key).split(/,\s+/).slice(1).flatMap((clause) => {
+    const t = clause.split(/\s+/);
+    const after = COORDINATOR_RE.test(t[0]) ? t[0] : null;
+    const rest = after ? t.slice(1) : t;
+    const length = (constituentAt(rest, 0) || { length: 1 }).length;
+    const verb = rest[length] || '';
+    if (!/^[a-zäöüß]+$/.test(verb) || COORDINATOR_RE.test(verb) || rest.length < length + 2) return [];
+    return [{ after, opening: rest.slice(0, length).join(' ') }];
+  });
+}
+
+/** A du-imperative gap that opens its clause and carries no pronoun yet: „___ ihn bitte! (holen, du)". */
+export const GAP_IMPERATIVE_RE = /(?:^|[.!?]\s+|,\s+)___\s+(?!du\b)[^!?.]*!/;
 const DU_CUE_RE = /\([a-zäöüß]+en, du\)/;
 
 /**
@@ -262,6 +318,10 @@ export function alternatives(item, { wide = false } = {}) {
   if (item.type === 'fill_blank' && DU_CUE_RE.test(q) && /^[A-Za-zäöüß]+$/.test(key) && !STEM_CHANGE_IMPERATIVE_RE.test(key) && !/t$/i.test(key)) {
     const other = /e$/.test(key) ? (E_REQUIRED_RE.test(key) ? null : key.slice(0, -1)) : `${key}e`;
     if (other) add(other, 'du-imperative ±e (gap)');
+  }
+  // …and with its emphatic pronoun, as in a sentence: „Hol du ihn bitte!" (DaF review #9, B1).
+  if (item.type === 'fill_blank' && DU_CUE_RE.test(q) && /^[A-Za-zäöüß]+$/.test(key) && GAP_IMPERATIVE_RE.test(q)) {
+    add(`${key} du`, 'du-imperative with its emphatic pronoun (gap)');
   }
   // A request with „bitte": it may open the sentence.
   const bitte = key.match(/^([A-ZÄÖÜ][a-zäöüß]+)(.*?) bitte(.*)!$/);

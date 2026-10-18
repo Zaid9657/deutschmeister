@@ -135,7 +135,9 @@ import {
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
-import { openingOf, middleFieldOrders, vorfeldOf } from './a12-determinacy.mjs';
+import {
+  openingOf, middleFieldOrders, vorfeldOf, opensWith, negationPlaceCue, laterOpenings, GAP_IMPERATIVE_RE,
+} from './a12-determinacy.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -352,6 +354,22 @@ function repairDeterminacy(item) {
       determinacyRepaired.push(`${item.id}:opening`);
     }
   }
+  // DaF review #9 (A1.2) B1 — the German task and the accepted set must agree in BOTH directions, and
+  // a named opening fixes only the Vorfeld. So the cue also names what else is free:
+  // 7. the place of „nicht"/„nie" when its clause holds another middle-field phrase („Ich fahre nicht
+  //    ohne meinen Bruder." / „… ohne meinen Bruder nicht."; „Wir kaufen nicht das Auto." is
+  //    contrastive) — scripts/a12-determinacy.mjs `negationPlaceCue`;
+  // 8. the opening of every later main clause („…, aber Tim ist früh gegangen.") — `laterOpenings`.
+  if (item.type === 'sentence_building' && /\(Beginnen Sie mit „[^“]*“/.test(item.questionDe)) {
+    const places = [
+      negationPlaceCue(key),
+      ...laterOpenings(key).map(({ after, opening }) => `${after ? `nach „${after}“` : 'der zweite Teil'} mit „${opening}“`),
+    ].filter((p) => p && !String(item.questionDe).includes(p));
+    if (places.length) {
+      item.questionDe = String(item.questionDe).replace(/(\(Beginnen Sie mit „[^“]*“(?:;[^)]*)?)\)/, (m, cue) => `${cue}${places.map((p) => `; ${p}`).join('')})`);
+      determinacyRepaired.push(`${item.id}:place`);
+    }
+  }
   // 2. A du-imperative in a gap takes its -e like the sentence does: „Hol" / „Hole".
   const accepted = () => (item.accepted && item.accepted.length ? item.accepted : [item.answer]);
   if (item.type === 'fill_blank' && /\([a-zäöüß]+en, du\)/.test(item.questionDe) && /^[A-Za-zäöüß]+$/.test(key)
@@ -361,6 +379,14 @@ function repairDeterminacy(item) {
       item.accepted = [...new Set([...accepted(), other])];
       determinacyRepaired.push(`${item.id}:${key}/${other}`);
     }
+  }
+  // 2b. …and with its emphatic pronoun, as the sentence takes it (rule 6 below): „Hol du ihn bitte!" is
+  //     correct German the gap does not exclude (DaF review #9, B1) — e→i(e) verbs too („Iss du …").
+  if (item.type === 'fill_blank' && /\([a-zäöüß]+en, du\)/.test(item.questionDe) && /^[A-Za-zäöüß]+$/.test(key)
+      && GAP_IMPERATIVE_RE.test(item.questionDe)) {
+    const forms = accepted().filter((a) => /^[A-Za-zäöüß]+$/.test(String(a).trim()));
+    item.accepted = [...new Set([...accepted(), ...forms.map((f) => `${String(f).trim()} du`)])];
+    determinacyRepaired.push(`${item.id}:gap-du`);
   }
   // 3. „bitte" may open a request: „Nehmen Sie bitte Platz!" = „Bitte nehmen Sie Platz!".
   const bitte = key.match(/^([A-ZÄÖÜ][a-zäöüß]+)(.*?) bitte(.*)!$/);
@@ -400,6 +426,18 @@ function repairDeterminacy(item) {
     if (emphatic.length) {
       item.accepted = [...new Set([...kept, ...emphatic, ...emphatic.map((a) => a.replace(/!$/, ''))])];
       determinacyRepaired.push(`${item.id}:du`);
+    }
+  }
+  // 9. LAST of the order rules (DaF review #9, B1): a named opening excludes every other. The fronting
+  //    rule above the cue added „Das Auto kaufen wir nicht." before rule 1 named „Wir" — 17 served items
+  //    accepted an order their German task excludes. Every accepted form opens with the named phrase.
+  const named = String(item.questionDe).match(/\(Beginnen Sie mit „([^“]+)“/)?.[1];
+  if (named && (item.type === 'sentence_building' || item.type === 'error_correction')) {
+    const all = accepted();
+    const kept = all.filter((a) => opensWith(a, named));
+    if (kept.length && kept.length < all.length) {
+      item.accepted = kept;
+      determinacyRepaired.push(`${item.id}:opening-only`);
     }
   }
   // 5. A brick list does not say whether a request or a question is wanted: „[warten / du / in der
@@ -1009,9 +1047,19 @@ const REGISTER = [
   [/\bantworte\b/gi, 'antworten Sie'],
 ];
 
-/** Sentence-initial (or prompt-initial) words keep their capital letter. */
-const recapitalise = (text) =>
-  text.replace(/(^|[.!?:„"“]\s*|→\s*)([a-zäöüß])/g, (_, lead, ch) => lead + ch.toUpperCase());
+/**
+ * Sentence-initial (or prompt-initial) words keep their capital letter. The build's own cue is left
+ * as written: „(Beginnen Sie mit „Wir“; „nicht“ steht am Satzende)" quotes a lower-case word, and a
+ * quotation mark is no sentence start (review #9 cues came out „„Nicht“ Steht").
+ */
+const BUILD_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“(?:;[^)]*)?\)/g;
+const recapitalise = (text) => {
+  const cues = [];
+  return text
+    .replace(BUILD_CUE_RE, (cue) => `${cues.push(cue) - 1}`)
+    .replace(/(^|[.!?:„"“]\s*|→\s*)([a-zäöüß])/g, (_, lead, ch) => lead + ch.toUpperCase())
+    .replace(/(\d+)/g, (_, i) => cues[Number(i)]);
+};
 
 const buchstabiertRewrites = [];
 

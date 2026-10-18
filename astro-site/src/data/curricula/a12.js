@@ -810,8 +810,8 @@ export const CURRICULUM_A12 = {
         taskKey: 'a12-l07',
         // KEIN „Steckbrief“ mit dem Feld „Aussehen“: Schreiben Teil 1 von SD1 ist immer eine
         // ANMELDUNG (Kurs, Bibliothek, Verein, Kasse) mit echten Formularfeldern und Unterschrift.
-        taskDe: 'Lena Berg ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. Füllen Sie die Anmeldung für den Sportverein aus.',
-        taskEn: 'Lena Berg is 24 and lives at Kölner Straße 12 in Cologne. She was born on 3 March 2002. Fill in the registration form for the sports club.',
+        taskDe: 'Lena Brandt ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. Füllen Sie die Anmeldung für den Sportverein aus.',
+        taskEn: 'Lena Brandt is 24 and lives at Kölner Straße 12 in Cologne. She was born on 3 March 2002. Fill in the registration form for the sports club.',
         fields: ['Familienname', 'Vorname', 'Geburtsdatum', 'Straße', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -1192,8 +1192,8 @@ export const CURRICULUM_A12 = {
         taskKey: 'a12-l11',
         // KEIN Formular fragt „Wetter“ und „Temperatur“ ab — die beiden Felder standen dort, weil
         // das Wortfeld sie liefert. Das Wetter gehört in sprechen.open, wo es schon steht.
-        taskDe: 'Lena Berg meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. Füllen Sie die Anmeldung für den Ausflug aus.',
-        taskEn: 'Lena Berg signs up for the outing on Sunday. She lives in Cologne and travels by bus. Fill in the registration form for the outing.',
+        taskDe: 'Lena Brandt meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. Füllen Sie die Anmeldung für den Ausflug aus.',
+        taskEn: 'Lena Brandt signs up for the outing on Sunday. She lives in Cologne and travels by bus. Fill in the registration form for the outing.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Verkehrsmittel', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,

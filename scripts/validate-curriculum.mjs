@@ -750,7 +750,20 @@ const LICENSED_CHUNKS_A11 = ['Füllen Sie'];
 // shapes the um/gegen rules below read, so no list of numbers or determiners has to be complete.
 const NUMBER_WORD = String.raw`(?:ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|[a-zäöüß]+zehn|[a-zäöüß]*zig|[a-zäöüß]*ßig|hundert|tausend)(?![a-zäöüßA-ZÄÖÜ])`;
 const CLOCK_NUMBER = String.raw`(?:\d{1,2}(?:[.:]\d{2})?(?!\d)|${NUMBER_WORD})`;
-const TIME_EXPR = String.raw`(?:(?:[Vv]iertel (?:nach|vor) |halb |kurz (?:nach|vor) )?${CLOCK_NUMBER}(?! (?!Uhr(?![a-zäöüß]))[A-ZÄÖÜ]))`;
+const CLOCK_PREFIX = String.raw`(?:[Vv]iertel (?:nach|vor) |halb |kurz (?:nach|vor) )`;
+// A clock-time GROUP: one time, or several joined by oder/und/bis („um acht oder neun Uhr").
+const CLOCK_GROUP = String.raw`${CLOCK_PREFIX}?${CLOCK_NUMBER}(?:(?:\s+(?:oder|und|bis)|,)\s+${CLOCK_PREFIX}?${CLOCK_NUMBER})*`;
+// What may follow a clock time: „Uhr", the end of the clause, or a lower-case word that is neither a
+// number nor a conjunction adding one. A capitalised word is a noun the numbers count („um drei oder
+// vier Häuser", „um zwei, drei Häuser", DaF review #9, B2) — the group is read to its END, never to its
+// first number.
+const NEXT_NUMBER = String.raw`(?:${CLOCK_PREFIX}|\d|${NUMBER_WORD})`;
+const AFTER_CLOCK = String.raw`(?:\s+Uhr(?![a-zäöüß])|\s*(?:[.!?;:]|,(?!\s*${NEXT_NUMBER})|$)|\s+(?!(?:oder|und|bis)\s+${NEXT_NUMBER})(?!\d|${NUMBER_WORD})[a-zäöüß])`;
+// Every taught „um": a clause-final verb particle („Wo steige ich um?", „Ich steige in Köln um und …"),
+// the question „um wie viel Uhr", or a whole clock-time group.
+const UM_TAUGHT = String.raw`(?:\s*(?:[.!?,;:]|$)|\s+(?:und|oder|aber|denn|sondern)(?![a-zäöüß])|\s+wie\s?viel\s+Uhr(?![a-zäöüß])|\s+${CLOCK_GROUP}${AFTER_CLOCK})`;
+// The one taught complement of „gegen": an illness or a pain („hilft gegen Kopfschmerzen", L6).
+const GEGEN_TAUGHT = String.raw`\s+(?:(?:den|die|das|einen|eine|meinen|meine|deinen|deine|seinen|seine|ihren|ihre)\s+)?(?:(?:[A-ZÄÖÜ][a-zäöüß]*s|S)chmerzen|Fieber|Husten|Schnupfen|Erkältung|Grippe|Allergie)(?![a-zäöüß])`;
 
 const NEVER_FORMS_A12 = [
   // The Partizip II of a separable verb puts ge- between prefix and stem (ein-ge-kauft). L12 teaches
@@ -765,15 +778,15 @@ const NEVER_FORMS_A12 = [
   // and every compound of a hundred or a thousand („im zweihundertsten", „hundertersten", review #7, B2).
   /\b(?:[a-zäöüß]*(?:hundert|tausend)(?:und)?)?(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+zehnt|[a-zäöüß]+igst)(?:en|er|es|em)\b/i,
   /\b[a-zäöüß]*(?:hundertst|tausendst)(?:en|er|es|em)\b/i,
-  // „um" is taught as a clock time and nothing else (DaF review #6/#7/#8, B2). So the TIME is what is
-  // allowed, not a list of noun phrases what is blocked: „um"/„ums" is never-taught unless a clock time
-  // follows (a number in words or digits, „halb …", „Viertel nach …" — not a number that counts a noun,
-  // „um dreizehn Häuser") or it ends its clause as a verb particle („Wo steige ich um?").
-  new RegExp(String.raw`\b[Uu]ms?(?![a-zäöüß])(?!\s*(?:[.!?,;:]|$)|\s+(?:und|oder|aber|denn|sondern)(?![a-zäöüß]))(?!\s+${TIME_EXPR})`),
-  // „gegen" is taught as „against" („Die Tablette hilft gegen Kopfschmerzen.", L6); before ANY time
-  // expression — „gegen dreizehn Uhr", „gegen 13 Uhr", „gegen Viertel vor acht", „gegen Abend" — it is
-  // a second meaning no surface introduces (review #7/#8, B2).
-  new RegExp(String.raw`\b[Gg]egen\s+(?:(?:[Vv]iertel (?:nach|vor) |halb |kurz (?:nach|vor) )?(?:\d|${NUMBER_WORD})|(?:Mittag|Abend|Morgen|Nacht|Mitternacht|Wochenende|Ende|Anfang)(?![a-zäöüß]))`),
+  // „um" is taught as a clock time and as a separable particle, nothing else (DaF review #6–#9, B2).
+  // FAIL CLOSED: every „um" is never-taught unless its whole following expression is one of the taught
+  // shapes (UM_TAUGHT) — a list of blocked noun phrases was outrun four times; known words and known
+  // numbers do not license a new meaning of their combination. „ums" is never a time.
+  new RegExp(String.raw`\b[Uu]ms(?![a-zäöüß])|\b[Uu]m(?![a-zäöüß])(?!${UM_TAUGHT})`),
+  // „gegen" is taught as „against" an illness („Die Tablette hilft gegen Kopfschmerzen.", L6). FAIL
+  // CLOSED: any other complement — a time with or without its article („gegen den Abend", „gegen
+  // acht"), a person, a place — is a meaning no surface introduces (review #7–#9, B2).
+  new RegExp(String.raw`\b[Gg]egen(?![a-zäöüß])(?!${GEGEN_TAUGHT})`),
 ];
 const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
 
@@ -2937,8 +2950,8 @@ const PROFESSIONS = [
  *   Frau Wolf     L4 — verkauft auf dem Flohmarkt.  Herr Schmidt  L10 — Auskunft am Bahnhof.
  */
 export const PERSONAS_A11 = {
-  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'] },
-  Lena: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'], nachname: 'Chakiri' },
+  Lena: { familienstand: null, herkunft: null, beruf: null, sprachen: null, nachname: 'Brandt' },
   Tim: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
   Paul: { familienstand: null, herkunft: null, beruf: ['Kellner'], sprachen: null },
   'Herr Weber': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
@@ -2958,7 +2971,7 @@ export const PERSONAS_A11 = {
  *                 („Ana Chakiri wohnt in Bremen am Platz 4“) and L3. Her flight to Marokko in L9 is
  *                 a journey, not a second Herkunft, and the Reise-Formular names no Wohnort.
  *   Lena          L3, L5, L7, L8, L10, L11, L12 — `alter: 24` and `stadt: 'Köln'` from the
- *                 Steckbrief of L7 („Lena Berg ist 24 Jahre alt und kommt aus Köln“). Familienstand,
+ *                 Steckbrief of L7 („Lena Brandt ist 24 Jahre alt und kommt aus Köln“). Familienstand,
  *                 Herkunftsland, Beruf and Sprachen: A1.2 never says, so they stay A1.1's nulls.
  *   Tim           L5, L8, L11 — the Ausflug-Formular of L5 files him travelling TO Köln, which is a
  *                 destination and not a Wohnort, so `stadt` stays null and the line cannot collide.
@@ -3074,6 +3087,13 @@ export function personaConsistency(c) {
     }
     if (p.familienstand && p.familienstand !== 'verheiratet' && SPOUSE_RE.test(s)) {
       report(nr, where, name, 'familienstand', SPOUSE_RE.exec(s)[0], p.familienstand);
+    }
+    // A recurring person keeps ONE surname at every level: A1.1 named her „Lena Brandt", A1.2's
+    // Formulare said „Lena Berg" — the landlord's name in L2 (A2.1 planner, 2026-10-18).
+    if (p.nachname && !/\s/.test(name)) {
+      for (const m of s.matchAll(new RegExp(`\\b${name}\\s+([A-ZÄÖÜ][a-zäöüß]+)(?=[\\s,.!?:;/]|$)`, 'g'))) {
+        if (m[1] !== p.nachname) report(nr, where, name, 'nachname', m[1], p.nachname);
+      }
     }
   };
 

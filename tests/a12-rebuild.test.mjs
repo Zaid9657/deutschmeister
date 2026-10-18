@@ -72,8 +72,10 @@ test('DaF review #3 BLOCKER 1: the answer key never rejects correct German the G
   assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen]', answer: 'Ich habe die Kartoffel gekauft.' }), ['Die Kartoffel habe ich gekauft.']);
   assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [dann / gehen / Sie / links] (Beginnen Sie mit „Dann“)', answer: 'Dann gehen Sie links.' }), [], 'a named opening fixes the order');
   assert.deepEqual(wide({ type: 'sentence_building', questionDe: 'Bilden Sie die Frage: [wo / sein / die Haltestelle]', answer: 'Wo ist die Haltestelle?' }), [], 'a question has no free opening');
-  assert.deepEqual(wide({ type: 'fill_blank', topic: 'imperative', questionDe: 'Der Teppich ist da. ___ ihn bitte! (holen, du)', answer: 'Hol' }), ['Hole']);
-  assert.deepEqual(wide({ type: 'fill_blank', topic: 'imperative', questionDe: 'Tim, ___ mir bitte! (helfen, du)', answer: 'hilf' }), [], 'no -e on a changed stem');
+  assert.deepEqual(wide({ type: 'fill_blank', topic: 'imperative', questionDe: 'Der Teppich ist da. ___ ihn bitte! (holen, du)', answer: 'Hol' }), ['Hole', 'Hol du']);
+  // no -e on a changed stem („hilfe"), but its emphatic pronoun, like any du-imperative (review #9)
+  assert.deepEqual(wide({ type: 'fill_blank', topic: 'imperative', questionDe: 'Tim, ___ mir bitte! (helfen, du)', answer: 'hilf' }), ['hilf du'], 'no -e on a changed stem');
+  assert.deepEqual(wide({ type: 'fill_blank', topic: 'stem-changing-verbs', questionDe: '___ du gern? (helfen, du)', answer: 'Hilfst' }), [], 'a question gap with its own du takes no second one');
   assert.ok(wide({ type: 'sentence_building', questionDe: 'Schreiben Sie die Bitte: [Sie / bitte / Platz / nehmen]', answer: 'Nehmen Sie bitte Platz!' }).includes('Bitte nehmen Sie Platz!'));
   // The repairs make the build accept what is German and nothing else.
   const pool = JSON.parse(read('src/data/lessonPools/a12.json'));
@@ -1170,7 +1172,8 @@ test('DaF review #6 BLOCKER 1: a correct answer a task rejects is excluded by a 
   expect(milch, ['Ana hat Milch getrunken.'], ['Ana hat Milch getrinkt.']);
   // CP2: the first clause of a „denn" pair has a free Vorfeld — the task names the opening.
   const tablette = item('extra-a12-l06-13');
-  assert.match(tablette.questionDe, /\(Beginnen Sie mit „Ich“\)/);
+  assert.match(tablette.questionDe, /\(Beginnen Sie mit „Ich“(?:;[^)]*)?\)/);
+  assert.match(tablette.questionDe, /; nach „denn“ mit „mein Kopf“\)/, 'the second main clause names its opening too (review #9)');
   expect(tablette, ['Ich nehme eine Tablette, denn mein Kopf tut weh.'], ['Ich nehme eine Tablette, denn mein Kopf wehtut.']);
   // L11: with no anchor „Seit einer Woche war es warm." was possible; a present anchor leaves „vor".
   const woche = item('extra-a12-l11-10');
@@ -1545,7 +1548,10 @@ test('DaF review #7 BLOCKER 1: a rejected correct answer is excluded by a German
   for (const it of items) {
     for (const [, cue] of String(it.questionDe).matchAll(/\(([^)]*)\)/g)) {
       for (const word of cue.split(/[^A-Za-zÄÖÜäöüß]+/).filter(Boolean)) {
-        assert.ok(known.has(word) || known.has(word.toLowerCase()) || TASK_WORDS.has(word), `${it.id}: „${word}" in „(${cue})" is not German the course knows`);
+        // a verb in -ieren is known when its -iert participle is taught: that is the L12 rule itself
+        // („Ohne ge- bei … -ieren: telefoniert"), and „(telefonieren, Perfekt)" asks for exactly that form
+        const ierenKnown = /ieren$/.test(word) && known.has(word.replace(/ieren$/, 'iert'));
+        assert.ok(known.has(word) || known.has(word.toLowerCase()) || TASK_WORDS.has(word) || ierenKnown, `${it.id}: „${word}" in „(${cue})" is not German the course knows`);
       }
     }
   }
@@ -1576,7 +1582,7 @@ test('DaF review #8 BLOCKER 1: a sentence-building statement names its opening, 
   const statements = served.filter((it) => it.type === 'sentence_building' && /\.$/.test(String(it.answer).trim()));
   assert.ok(statements.length >= 20, `the rule reads the served statements (${statements.length})`);
   for (const it of statements) {
-    assert.match(String(it.questionDe ?? it.promptDe), /\(Beginnen Sie mit „[^“]+“\)/, `${it.where} ${it.id}: „${it.questionDe ?? it.promptDe}" names no opening`);
+    assert.match(String(it.questionDe ?? it.promptDe), /\(Beginnen Sie mit „[^“]+“(?:;[^)]*)?\)/, `${it.where} ${it.id}: „${it.questionDe ?? it.promptDe}" names no opening`);
   }
   const eingang = item('extra-a12-l04-12');
   assert.match(eingang.questionDe, /\(Beginnen Sie mit „Der Eingang“\)/);
@@ -1626,5 +1632,160 @@ test('DaF review #8 MAJOR 8: a clock time is a Falsch only for a once-only event
         }
       }
     }
+  }
+});
+
+test('DaF review #9 B1: the German task and the accepted set agree both ways — opening, the place of „nicht", a later clause, the emphatic pronoun in a gap', async () => {
+  const H = await import('../scripts/a12-determinacy.mjs');
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  // ANNOTATED BY HAND: the place of „nicht" is named exactly where a second place or reading exists.
+  for (const [key, cue] of [
+    ['Wir kaufen das Auto nicht.', '„nicht“ steht am Satzende'], // „Wir kaufen nicht das Auto." is contrastive
+    ['Ich fahre nicht ohne meinen Bruder.', '„nicht“ steht vor „ohne“'], // „… ohne meinen Bruder nicht." is German too
+    ['Heute kommt Tim nicht.', '„nicht“ steht am Satzende'],
+    ['Ich kann heute nicht kommen.', '„nicht“ steht vor „kommen“'],
+    ['Der Eingang ist nicht schön.', null], ['Mein Mann schläft nicht gut, sein Rücken tut weh.', null],
+    ['Ich komme nie.', null], ['Nimm das nicht!', null],
+  ]) assert.equal(H.negationPlaceCue(key), cue, key);
+  assert.deepEqual(H.laterOpenings('Der Fisch war lecker, aber Tim ist früh gegangen.'), [{ after: 'aber', opening: 'Tim' }]);
+  assert.deepEqual(H.laterOpenings('Mein Mann schläft nicht gut, sein Rücken tut weh.'), [{ after: null, opening: 'sein Rücken' }]);
+  assert.deepEqual(H.laterOpenings('Ich kaufe Brot, Milch und Käse.'), [], 'a list is no clause');
+  // The two items review #9 measured, both ways.
+  const pool = poolItems(POOL_A12);
+  const auto = pool.find((i) => i.id === '1b0e08fd-2629-52c8-881a-287913fb41a7');
+  assert.match(auto.questionDe, /\(Beginnen Sie mit „Wir“; „nicht“ steht am Satzende\)/);
+  assert.equal(verdict(auto, 'Wir kaufen das Auto nicht.'), RESULT.CORRECT);
+  for (const out of ['Wir kaufen nicht das Auto.', 'Das Auto kaufen wir nicht.']) assert.notEqual(verdict(auto, out), RESULT.CORRECT, `„${out}" is excluded by the German task`);
+  const bruder = pool.find((i) => i.id === '91763b6e-9511-54a0-b044-ff13b01990ac');
+  assert.match(bruder.questionDe, /\(Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“\)/);
+  assert.equal(verdict(bruder, 'Ich fahre nicht ohne meinen Bruder.'), RESULT.CORRECT);
+  for (const out of ['Ich fahre ohne meinen Bruder nicht.', 'Ohne meinen Bruder fahre ich nicht.']) assert.notEqual(verdict(bruder, out), RESULT.CORRECT, `„${out}" is excluded by the German task`);
+  // THE CLASS, over everything a learner is served: both practice attempts and every paper of all four
+  // rounds (the 17 measured contradictions were all on papers).
+  const served = [];
+  for (const attempt of [1, 2]) for (const [nr, list] of planPractice(CURRICULUM_A12, POOL_A12, attempt)) for (const it of list) served.push({ ...it, where: `L${nr}` });
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      for (const it of B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })) {
+        if (it.answer) served.push({ ...it, where: `${checkpoint.id}/${round}` });
+      }
+    }
+  }
+  const STATEMENT = new Set(['sentence_building', 'error_correction']);
+  let cued = 0;
+  for (const it of served) {
+    const q = String(it.questionDe ?? it.promptDe ?? '');
+    const key = String(it.answer || '');
+    const accepted = it.accepted?.length ? it.accepted : [key];
+    const opening = q.match(/\(Beginnen Sie mit „([^“]+)“/)?.[1];
+    if (opening && STATEMENT.has(it.type)) {
+      cued += 1;
+      for (const a of accepted) assert.ok(H.opensWith(a, opening), `${it.where} ${it.id}: the task names „${opening}" but accepts „${a}"`);
+    }
+    if (it.type === 'sentence_building') {
+      const place = H.negationPlaceCue(key);
+      if (place) {
+        assert.ok(q.includes(place), `${it.where} ${it.id}: „${key}" has a second place for „nicht"; the task must name it`);
+        const [, word, next] = place.match(/^„(\w+)“ steht (?:am Satzende|vor „([^“]+)“)$/);
+        for (const a of accepted) {
+          const t = String(a).replace(/[.!?]+$/, '').split(/\s+/);
+          const n = t.findIndex((w) => w === word);
+          assert.ok(next ? t[n + 1] === next : n === t.length - 1, `${it.where} ${it.id}: „${a}" puts „${word}" where the task excludes it`);
+        }
+      }
+      for (const { after, opening: later } of H.laterOpenings(key)) {
+        assert.ok(q.includes(`${after ? `nach „${after}“` : 'der zweite Teil'} mit „${later}“`), `${it.where} ${it.id}: the clause after „${after || ','}" opens freely in „${key}"`);
+      }
+    }
+    if (it.type === 'fill_blank' && /\([a-zäöüß]+en, du\)/.test(q) && /^[A-Za-zäöüß]+$/.test(key) && H.GAP_IMPERATIVE_RE.test(q)) {
+      assert.equal(verdict(it, `${key} du`), RESULT.CORRECT, `${it.where} ${it.id}: „${key} du" is the same imperative with its emphatic pronoun`);
+    }
+  }
+  assert.ok(cued >= 40, `the class is reached: ${cued} cued statements served`);
+  // A question gap that already carries its „du" takes no second one.
+  const hilfst = pool.find((i) => i.id === '7e299b81-ed13-5094-8027-426571eeed01');
+  assert.ok(!(hilfst.accepted || []).some((a) => / du$/.test(a)), 'no „Hilfst du du"');
+});
+
+test('DaF review #9 B2: „um" and „gegen" are read to the END of their expression and fail closed — annotated families', async () => {
+  const v = await import('../scripts/validate-curriculum.mjs');
+  const h = v.constructionHorizonIndex('a1.2');
+  const blocked = (s) => h({ questionDe: '', answer: s }) === null;
+  const W = ['ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn', 'zwanzig', 'einundzwanzig', 'zweiundzwanzig', 'dreiundzwanzig', 'vierundzwanzig'];
+  // ANNOTATED: true = a meaning no surface teaches (spatial „um", temporal „gegen"); false = taught.
+  const cases = [];
+  for (let n = 1; n <= 24; n += 1) {
+    for (const [num, next] of [[W[n - 1], W[n % 24]], [String(n), String((n % 24) + 1)]]) {
+      cases.push([`Der Bus fährt um ${num} Uhr.`, false], [`Der Bus fährt um ${num}.`, false], [`Ich komme um ${num} oder ${next} Uhr.`, false]);
+      cases.push([`Wir laufen um ${num} Häuser.`, true], [`Wir laufen um ${num} oder ${next} Häuser.`, true], [`Wir laufen um ${num}, ${next} Häuser.`, true]);
+      cases.push([`Ich komme gegen ${num} Uhr.`, true], [`Ich komme gegen ${num}.`, true]);
+    }
+  }
+  cases.push(
+    ['Ich komme gegen den Abend.', true], ['Ich komme gegen Abend.', true], ['Die Tablette nehme ich gegen acht Uhr.', true],
+    ['Wir spielen gegen die Kinder.', true], ['Wir laufen um die Ecke.', true], ['Wir laufen ums Haus.', true], ['Ich lerne, um zu arbeiten.', true],
+    ['Die Tablette hilft gegen Kopfschmerzen.', false], ['Das hilft gegen Fieber.', false], ['Die Tablette hilft gegen meinen Husten.', false],
+    ['Der Bus fährt um halb neun.', false], ['Um wie viel Uhr fährt der Bus?', false], ['Wo steige ich um?', false],
+    ['Ich steige in Köln um und fahre nach Bonn.', false], ['Ich komme um acht, dann koche ich.', false], ['Ich komme um 8.30 Uhr.', false],
+  );
+  const wrong = cases.filter(([s, want]) => blocked(s) !== want).map(([s, want]) => `${want ? 'open' : 'blocked'}: ${s}`);
+  assert.deepEqual(wrong, [], 'every annotated case');
+  // The meanings the course TEACHES — its dialogue lines and notices, the surfaces that introduce a
+  // construction — stay open; the round-9 rule had blocked „Um wie viel Uhr?", an L5 dialogue line.
+  // (Task instructions are no such surface: „Bitten Sie … um den Weg" stays a never-form for items.)
+  const taught = CURRICULUM_A12.lektionen.flatMap((l) => [...(l.dialog?.lines || []).map((x) => x.de), l.notice?.bodyDe])
+    .filter((s) => s && /\b(?:[Uu]ms?|[Gg]egen)\b/.test(s));
+  assert.ok(taught.length >= 4, 'the course teaches um/gegen');
+  for (const s of taught) assert.equal(blocked(s), false, `a taught surface is blocked: ${s.slice(0, 80)}`);
+});
+
+test('DaF review #9 MAJOR 8: a clock time is one value only for a one-off EVENT — the verb alone is not the event', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const values = (statement) => [...new Set([1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+    B.contradictions(statement, spec.nouns, B.mulberry32(seed)).filter((c) => c.kind === 'value').map((c) => c.de)))];
+  // ANNOTATED BY HAND, minimal pairs with the same verb: widerspricht (another time refutes it) / offen.
+  for (const [statement, label] of [
+    ['Der Bus fährt um acht.', 'widerspricht'], ['Um acht fährt der Zug.', 'widerspricht'], ['Der Zug fährt um acht ab.', 'widerspricht'],
+    ['Tim fährt um acht ab.', 'widerspricht'], ['Tim fährt um acht mit dem Bus.', 'offen'], ['Tim fährt um acht noch mit dem Fahrrad.', 'offen'],
+    ['Das Flugzeug fliegt um zehn.', 'widerspricht'], ['Ana fliegt um zehn nach Marokko.', 'offen'],
+    ['Tim steht um sechs auf.', 'widerspricht'], ['Tim steht gern um sechs auf.', 'offen'], ['Tim steht um sechs auf und frühstückt.', 'offen'],
+    ['Ana kommt um acht.', 'widerspricht'], ['Ana kommt um acht, dann kocht sie.', 'offen'], ['Die Apotheke öffnet um acht.', 'widerspricht'],
+  ]) {
+    if (label === 'offen') assert.deepEqual(values(statement), [], `„${statement}" — offen`);
+    else assert.ok(values(statement).length > 0, `„${statement}" — widerspricht`);
+  }
+  // …and on every paper of both levels (all four rounds), each clock-time Falsch comes from a report a
+  // person has judged an event — not from this test's own rule. A new source fails until it is annotated.
+  const EVENTS = new Set(['Tim steht um sechs auf.', 'Ana kommt um neun Uhr an.', 'Lena steht um sechs Uhr auf.']);
+  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    for (const checkpoint of curriculum.checkpoints) {
+      for (let round = 0; round < 4; round += 1) {
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        for (const it of lesen.filter((x) => x.answer === 'Falsch' && x.changed?.kind === 'value')) {
+          if (!(/\bUhr\b/.test(it.statement) || new RegExp(`\\bum ${it.changed.to}\\b`).test(it.statement))) continue;
+          const source = it.statement.replace(it.changed.to, it.changed.from);
+          assert.ok(EVENTS.has(source), `${checkpoint.id}/${round}: „${it.statement}" is cut from „${source}" — annotate it as an event or it is no Falsch`);
+        }
+      }
+    }
+  }
+});
+
+test('DaF review #9 (A2.1 planner): a recurring person keeps ONE surname at every level — Lena Brandt', async () => {
+  const v = await import('../scripts/validate-curriculum.mjs');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  assert.equal(v.PERSONAS_A11.Lena.nachname, 'Brandt');
+  assert.equal(v.PERSONAS_A12.Lena.nachname, 'Brandt', 'A1.2 spreads A1.1');
+  for (const c of [CURRICULUM_A11, CURRICULUM_A12]) assert.deepEqual(v.personaConsistency(c).filter((o) => o.fact === 'nachname'), [], c.level);
+  // the rule reaches a planted contradiction
+  const planted = { ...CURRICULUM_A12, lektionen: CURRICULUM_A12.lektionen.map((l, i) => (i ? l : { ...l, dialog: { ...l.dialog, lines: [{ speaker: 'Ana', de: 'Das ist Lena Berg aus Köln.', en: '' }, ...l.dialog.lines] } })) };
+  assert.ok(v.personaConsistency(planted).some((o) => o.fact === 'nachname' && o.found === 'Berg'));
+  // …and the writing tasks the grader reads, in both twins
+  for (const file of ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs']) {
+    assert.deepEqual([...read(file).matchAll(/\bLena ([A-ZÄÖÜ][a-zäöüß]+)\b/g)].map((m) => m[1]).filter((s) => s !== 'Brandt'), [], file);
   }
 });

@@ -771,7 +771,7 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Lena Berg ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. ' +
+      'Lena Brandt ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. ' +
       'Füllen Sie die Anmeldung für den Sportverein aus.',
     leitpunkte: [
       'Familienname',
@@ -843,7 +843,7 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Lena Berg meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. ' +
+      'Lena Brandt meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. ' +
       'Füllen Sie die Anmeldung für den Ausflug aus.',
     leitpunkte: [
       'Familienname',

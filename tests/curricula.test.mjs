@@ -928,7 +928,7 @@ test('A1.2 inherits A1.1 facts and adds its own — Ana stays ledig, aus Marokko
   assert.deepEqual(PERSONAS_A12['Frau Berger'].beruf, ['Ärztin']);
   assert.equal(levelSpec('a1.2').personaSource, 'a1.2');
   // Each new fact bites on its own, in the Lektion whose Formular states it.
-  for (const [nr, text] of [[1, 'Ana Chakiri wohnt in Berlin am Platz 4.'], [7, 'Lena Berg ist 30 Jahre alt und kommt aus Hamburg.']]) {
+  for (const [nr, text] of [[1, 'Ana Chakiri wohnt in Berlin am Platz 4.'], [7, 'Lena Brandt ist 30 Jahre alt und kommt aus Hamburg.']]) {
     const c = cloneOf(CURRICULUM_A12);
     c.lektionen[nr - 1].schreiben.taskDe = text;
     assert.ok(personaConsistency(c).length > 0, `not caught: ${text}`);

@@ -383,8 +383,6 @@
    "accepted": [
     "Ana kauft den Kuchen im Geschäft.",
     "Ana kauft den Kuchen im Geschäft",
-    "Im Geschäft kauft Ana den Kuchen.",
-    "Im Geschäft kauft Ana den Kuchen",
     "Ana kauft im Geschäft den Kuchen.",
     "Ana kauft im Geschäft den Kuchen"
    ],
@@ -526,9 +524,7 @@
    "answer": "Ich habe einen Onkel.",
    "accepted": [
     "Ich habe einen Onkel.",
-    "Ich habe einen Onkel",
-    "Einen Onkel habe ich.",
-    "Einen Onkel habe ich"
+    "Ich habe einen Onkel"
    ],
    "explanationDe": "Onkel ist maskulin und direktes Objekt von haben, deshalb wird ein zu einen.",
    "explanationEn": "Onkel is masculine and the direct object of haben, so ein becomes einen.",
@@ -1494,8 +1490,6 @@
     "Wir fahren bei Regen mit dem Bus.",
     "Wir fahren bei Regen mit dem Bus",
     "Wir fahren mit dem Bus bei Regen.",
-    "Bei Regen fahren wir mit dem Bus.",
-    "Bei Regen fahren wir mit dem Bus",
     "Wir fahren mit dem Bus bei Regen"
    ],
    "explanationDe": "Nach mit steht der Dativ: mit dem Bus.",
@@ -1580,7 +1574,10 @@
    "accepted": [
     "Mach",
     "mach",
-    "Mache"
+    "Mache",
+    "Mach du",
+    "mach du",
+    "Mache du"
    ],
    "explanationDe": "aufmachen ist trennbar: auf bleibt am Ende, Mach kommt von machen.",
    "explanationEn": "aufmachen is separable: auf stays at the end, Mach comes from machen.",
@@ -1600,7 +1597,9 @@
    "answer": "Sprich",
    "accepted": [
     "Sprich",
-    "sprich"
+    "sprich",
+    "Sprich du",
+    "sprich du"
    ],
    "explanationDe": "sprechen wechselt e→i bei du; der Imperativ behält diesen Wechsel.",
    "explanationEn": "sprechen changes e→i in du; the imperative keeps this change.",
@@ -1621,7 +1620,10 @@
    "accepted": [
     "komm",
     "Komm",
-    "komme"
+    "komme",
+    "komm du",
+    "Komm du",
+    "komme du"
    ],
    "explanationDe": "Die du-Form des Imperativs heißt komm.",
    "hint": null,
@@ -1641,7 +1643,9 @@
    "answer": "Iss",
    "accepted": [
     "Iss",
-    "iss"
+    "iss",
+    "Iss du",
+    "iss du"
    ],
    "explanationDe": "essen wechselt e→i bei du; der Imperativ behält diesen Wechsel.",
    "explanationEn": "essen changes e→i in du; the imperative keeps this change.",
@@ -1682,7 +1686,10 @@
    "accepted": [
     "Fahr",
     "fahr",
-    "Fahre"
+    "Fahre",
+    "Fahr du",
+    "fahr du",
+    "Fahre du"
    ],
    "explanationDe": "fahren wechselt a→ä bei du. Der Imperativ verliert den Umlaut wieder: Fahr!, nicht Fähr!",
    "explanationEn": "fahren changes a→ä in du, but the imperative loses the umlaut again: Fahr!, not Fähr!",
@@ -1743,7 +1750,10 @@
    "accepted": [
     "Hol",
     "hol",
-    "Hole"
+    "Hole",
+    "Hol du",
+    "hol du",
+    "Hole du"
    ],
    "explanationDe": "Die du-Form von holen heißt hol.",
    "hint": null,
@@ -2339,8 +2349,6 @@
    "accepted": [
     "Ich muss den Müll nach Hause nehmen.",
     "Ich muss den Müll nach Hause nehmen",
-    "Nach Hause muss ich den Müll nehmen.",
-    "Nach Hause muss ich den Müll nehmen",
     "Ich muss nach Hause den Müll nehmen.",
     "Ich muss nach Hause den Müll nehmen"
    ],
@@ -2425,8 +2433,6 @@
    "accepted": [
     "Wir wollen am Sonntag Fußball spielen.",
     "Wir wollen am Sonntag Fußball spielen",
-    "Am Sonntag wollen wir Fußball spielen.",
-    "Am Sonntag wollen wir Fußball spielen",
     "Wir wollen Fußball am Sonntag spielen.",
     "Wir wollen Fußball am Sonntag spielen"
    ],
@@ -2771,15 +2777,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 19,
-   "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“)",
+   "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“; „nicht“ steht am Satzende)",
    "questionEn": "Write the sentence: We are not buying the car. (nicht after a definite direct object)",
    "options": null,
    "answer": "Wir kaufen das Auto nicht.",
    "accepted": [
     "Wir kaufen das Auto nicht.",
-    "Wir kaufen das Auto nicht",
-    "Das Auto kaufen wir nicht.",
-    "Das Auto kaufen wir nicht"
+    "Wir kaufen das Auto nicht"
    ],
    "explanationDe": "Das bestimmte Objekt (das Auto) steht vor nicht; nicht bleibt am Satzende.",
    "explanationEn": "nicht negates the whole action and goes after the definite object das Auto, at the end.",
@@ -3260,9 +3264,7 @@
    "answer": "Der Lehrer ist heute krank.",
    "accepted": [
     "Der Lehrer ist heute krank.",
-    "Der Lehrer ist heute krank",
-    "Heute ist der Lehrer krank.",
-    "Heute ist der Lehrer krank"
+    "Der Lehrer ist heute krank"
    ],
    "explanationDe": "Der erste Teil des Hinweises, der Lehrer, steht auf Position 1, bleibt Nominativ, dann ist.",
    "explanationEn": "The cue's first element, der Lehrer, is position 1, so it stays nominative and ist follows.",
@@ -4090,9 +4092,7 @@
    "answer": "Wir haben heute eingekauft.",
    "accepted": [
     "Wir haben heute eingekauft.",
-    "Wir haben heute eingekauft",
-    "Heute haben wir eingekauft.",
-    "Heute haben wir eingekauft"
+    "Wir haben heute eingekauft"
    ],
    "explanationDe": "einkaufen ist trennbar → eingekauft, mit haben.",
    "explanationEn": "einkaufen is separable → eingekauft, with haben.",
@@ -4595,8 +4595,6 @@
    "accepted": [
     "Ich kaufe die Jacke für meine Oma.",
     "Ich kaufe die Jacke für meine Oma",
-    "Für meine Oma kaufe ich die Jacke.",
-    "Für meine Oma kaufe ich die Jacke",
     "Ich kaufe für meine Oma die Jacke.",
     "Ich kaufe für meine Oma die Jacke"
    ],
@@ -4725,8 +4723,6 @@
    "accepted": [
     "Ich kaufe ein Geschenk für meine Mutter.",
     "Ich kaufe ein Geschenk für meine Mutter",
-    "Für meine Mutter kaufe ich ein Geschenk.",
-    "Für meine Mutter kaufe ich ein Geschenk",
     "Ich kaufe für meine Mutter ein Geschenk.",
     "Ich kaufe für meine Mutter ein Geschenk"
    ],
@@ -4837,15 +4833,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 25,
-   "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“)",
+   "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“)",
    "questionEn": "Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative)",
    "options": null,
    "answer": "Ich fahre nicht ohne meinen Bruder.",
    "accepted": [
     "Ich fahre nicht ohne meinen Bruder.",
-    "Ich fahre nicht ohne meinen Bruder",
-    "Ohne meinen Bruder fahre ich nicht.",
-    "Ohne meinen Bruder fahre ich nicht"
+    "Ich fahre nicht ohne meinen Bruder"
    ],
    "explanationDe": "ohne verlangt immer Akkusativ; Bruder ist maskulin, deshalb muss das gegebene mein zu meinen werden.",
    "explanationEn": "ohne always triggers accusative; Bruder is masculine, so the given mein must become meinen.",
@@ -5807,7 +5801,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 13,
-   "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun] (Beginnen Sie mit „Ich“)",
+   "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun] (Beginnen Sie mit „Ich“; nach „denn“ mit „mein Kopf“)",
    "questionEn": "Build the sentence: I am taking a tablet because my head hurts.",
    "options": null,
    "answer": "Ich nehme eine Tablette, denn mein Kopf tut weh.",
@@ -5892,9 +5886,7 @@
    "answer": "Er fährt mit dem Zug.",
    "accepted": [
     "Er fährt mit dem Zug.",
-    "Er fährt mit dem Zug",
-    "Mit dem Zug fährt er.",
-    "Mit dem Zug fährt er"
+    "Er fährt mit dem Zug"
    ],
    "explanationDe": "fahren wechselt a→ä bei er: fährt.",
    "explanationEn": "fahren changes a→ä for er: fährt.",
@@ -5913,9 +5905,7 @@
    "options": null,
    "answer": "Wir sehen am Morgen fern.",
    "accepted": [
-    "Wir sehen am Morgen fern",
-    "Am Morgen sehen wir fern.",
-    "Am Morgen sehen wir fern"
+    "Wir sehen am Morgen fern"
    ],
    "explanationDe": "wir wechselt den Vokal nie: sehen bleibt regelmäßig, fern steht am Ende.",
    "explanationEn": "wir never changes the vowel: sehen stays regular, fern goes to the end.",
@@ -6026,7 +6016,7 @@
   "a1.2-l04#9": 0,
   "a1.2-l05#0": 0,
   "a1.2-l05#1": 3,
-  "a1.2-l05#2": null,
+  "a1.2-l05#2": 0,
   "a1.2-l05#3": 0,
   "a1.2-l05#4": 5,
   "a1.2-l05#5": 0,

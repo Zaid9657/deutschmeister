@@ -317,7 +317,9 @@ export const leaksAnswer = (solved, prints) => {
 
 /** Quotation marks the pool uses around the sentence an item works on. */
 const QUOTED = /[„“”"»]([^„“”"»«]+)[“”"«]/;
-const OPENING_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“\)/g;
+// …with the places a task names after it („; „nicht“ steht am Satzende", DaF review #9) — quoted too,
+// so left in, „nicht" would be read as the item's sentence.
+const OPENING_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“(?:;[^)]*)?\)/g;
 /**
  * The prompt without the exercise bank's task formula: the quoted sentence when
  * the prompt quotes one, else what follows the instruction's colon. Two items
