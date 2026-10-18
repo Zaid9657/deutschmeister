@@ -218,8 +218,9 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   is vendored in `.claude/skills/reverse-engineer-anything` (see its SOURCE.md). The scroll-craft skill
   (scroll-driven landing pages, MIT, no MCP server) is vendored in `.claude/skills/scroll-craft`; its
   SOURCE.md says which project rules override it, and `.scrollcraft.json` keeps its builds and
-  fingerprint registry in `docs/scrollcraft/` (first build: the homepage line section's scroll ride,
-  `builds/home-line/`, experiment E7). Values are `${VAR}`
+  fingerprint registry in `docs/scrollcraft/` (builds: the homepage line section's scroll ride,
+  `builds/home-line/`, experiment E7; the course pages' stamped ticket, `builds/course-ticket/`,
+  E8, guarded by `tests/fahrschein.test.mjs`). Values are `${VAR}`
   references Claude Code expands from the environment; the literals belong in the environment's
   variables, never in the file. `.claude/hooks/session-start.sh` materialises
   `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency

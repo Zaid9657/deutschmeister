@@ -29,6 +29,7 @@ changes only grammar and world will fail it.
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
 | home-line (2026-10-17) | One section inside the homepage's own page (no page grammar of its own) | Inherited: the site header | Inherited: the homepage hero and its line board | One scrubbed section, three beats: board, ride, arrival | "Vorerst Endstation": the sign resolves at the end of the built line | German station announcements ride with the scroll ("Bitte einsteigen", "Nächster Halt", "Vorerst Endstation") | Die Linie tokens, existing station art, nothing generated | `astro-site/src/components/linie/LineSection.astro` |
+| course-ticket (2026-10-18) | A companion object across a whole page (the level course pages, one template) | Inherited header, plus the ticket as a table of contents | Inherited: the level hero with its lit stop | Five to eight stamps, one per part, the last ones bunched before the close | A full ticket ("Alles drin.") beside the closing door | A German transit ticket stamped one German section name at a time as each part is read | Die Linie tokens and the existing ticket language, nothing generated | `astro-site/src/pages/courses/[level].astro` |
 
 ---
 
