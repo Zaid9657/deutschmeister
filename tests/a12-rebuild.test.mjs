@@ -104,12 +104,23 @@ test('DaF review #3 BLOCKER 1: a negation answer is asked for by the prompt itse
   // read-aloud lines are the line itself, not a negation task.
   const { servedItems } = await import('../scripts/a12-determinacy.mjs');
   const NEG = /(^|[^a-zäöüß])(kein|keine|keinen|keinem|keiner|keines|nicht)([^a-zäöüß]|$)/i;
-  // A cue asks: Nein, „verneinen", a parenthesised kein/nicht, or the negation given as a brick.
-  const ASKS = /\bnein\b|verneinen|verneint|verneinung|\([^)]*\b(?:kein\w*|nicht)\b[^)]*\)|\[[^\]]*\b(?:kein\w*|nicht)\b[^\]]*\]|korrigieren sie/i;
+  // A cue asks: an instruction („Antworten Sie mit Nein", „verneinen", a parenthesised kein/nicht, the
+  // negation given as a brick, a correction) — or a „Nein" in the TURN that holds the gap. A „Nein" or
+  // a „kein" about another thing in an earlier sentence decides nothing (DaF review #8, B1: „Im Flur ist
+  // keine Lampe. Und ein Spiegel? — Im Flur ist ___ Spiegel." took only „kein").
+  const INSTRUCTION = /antworten sie mit nein|verneinen|verneint|verneinung|\([^)]*\b(?:kein\w*|nicht)\b[^)]*\)|\[[^\]]*\b(?:kein\w*|nicht)\b[^\]]*\]|korrigieren sie/i;
+  const turnOf = (q) => (q.includes(' — ') ? q.slice(q.lastIndexOf(' — ')) : q);
+  const asks = (q) => INSTRUCTION.test(q) || /\bnein\b/i.test(turnOf(q));
+  // One accessor for a lesson item (questionDe) and a checkpoint item (promptDe): the old filter read
+  // questionDe only, so every checkpoint item went unchecked (review #8). Dictation and read-aloud lines
+  // are the line itself, not a negation task.
+  const promptOf = (it) => [it.questionDe, it.promptDe].find((q) => typeof q === 'string') ?? null;
   for (const level of ['a1.2', 'a1.1']) {
-    const offenders = servedItems(level).items
-      .filter((it) => typeof it.questionDe === 'string' && NEG.test([it.answer, ...(it.accepted || [])].join(' ')))
-      .filter((it) => !ASKS.test(it.questionDe))
+    const items = servedItems(level).items.filter((it) => promptOf(it) !== null && it.section !== 'hoeren' && it.section !== 'sprechen');
+    assert.ok(items.some((it) => it.section === 'bausteine'), `${level}: the checkpoint items are read`);
+    const offenders = items
+      .filter((it) => NEG.test([it.answer, ...(it.accepted || [])].join(' ')))
+      .filter((it) => !asks(promptOf(it)))
       .map((it) => `${it.where} ${it.id}`);
     assert.deepEqual(offenders, [], `${level}: a negation the prompt does not ask for`);
   }
@@ -117,7 +128,8 @@ test('DaF review #3 BLOCKER 1: a negation answer is asked for by the prompt itse
     'Das Hotel hat kein Angebot. Und eine Toilette im Flur? — Das Hotel hat ___ Toilette im Flur.',
     'Die Steckdose funktioniert nicht. Und das Kissen? — Im Hotel ist ___ Kissen.',
     'Im Flur ist keine Lampe. Und der Boden? — Der Boden ist ___ schön.',
-  ]) assert.ok(!ASKS.test(old), `the old prompt fails: ${old}`);
+    'Im Flur ist keine Lampe. Und ein Spiegel? — Im Flur ist ___ Spiegel.',
+  ]) assert.ok(!asks(old), `the old prompt fails: ${old}`);
 });
 
 test('DaF review #3 BLOCKER 2: no item is served before the Lektion that teaches its grammar — practice, requeue or checkpoint', async () => {
@@ -1384,11 +1396,52 @@ test('DaF review #7 BLOCKER 2: a word the course knows does not license a meanin
   }
   // THE DRAWS, with this test's own detectors rather than the validator's patterns: nothing a
   // practice plan or a paper (rounds 0–3) serves asks for a sense or a form the course never taught.
-  const DET = /^(?:d\w+|ein\w*|mein\w*|dein\w*|sein\w*|ihr\w*|unser\w*|euer\w*|dies\w*|jed\w*|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele|alle)$/i;
-  const nounish = (w) => /^[A-ZÄÖÜ]/.test(w || '') && !/^(?:Uhr|Viertel)$/.test(w);
-  const spatialUm = (t) => [...t.matchAll(/\b([Uu]ms?)\s+([A-Za-zÄÖÜäöüß]+)(?:\s+([A-Za-zÄÖÜäöüß]+))?/g)]
-    .some(([, um, w1, w2]) => (/s$/.test(um) ? nounish(w1) : nounish(w1) || (DET.test(w1) && nounish(w2))));
-  const temporalGegen = (t) => /\b[Gg]egen\s+(?:\d|ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|halb|Mittag|Abend|Morgen)\b/.test(t);
+  // Review #8: those detectors stopped at zwölf like the patterns they checked. Now by MEANING, with
+  // this test's own number words and a walk over the tokens: „um" is taught only before a clock time
+  // or as a clause-final particle; „gegen" before a time is a meaning the course never taught.
+  const NUMBER_WORDS = ['ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf',
+    'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn', 'zwanzig', 'einundzwanzig',
+    'zweiundzwanzig', 'dreiundzwanzig', 'vierundzwanzig', 'eins', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'hundert'];
+  const isNumber = (w) => NUMBER_WORDS.includes(String(w).toLowerCase()) || /^\d{1,2}(?:[.:]\d{2})?$/.test(String(w));
+  const walk = (t) => String(t).split(/\s+/).filter(Boolean).map((raw) => ({ raw, w: raw.replace(/^[„“"(]+|[.,!?;:„“")]+$/g, '') }));
+  const afterTimeWords = (tok, k) => {
+    // „halb …", „kurz nach …", „Viertel vor …" lead into the number
+    if (/^halb$/i.test(tok[k]?.w)) return k + 1;
+    if (/^(?:kurz|viertel)$/i.test(tok[k]?.w) && /^(?:nach|vor)$/i.test(tok[k + 1]?.w)) return k + 2;
+    return k;
+  };
+  const spatialUm = (t) => {
+    const tok = walk(t);
+    return tok.some(({ raw, w }, k) => {
+      if (!/^ums?$/i.test(w)) return false;
+      if (/[.!?,;:]$/.test(raw) || k === tok.length - 1 || /^(?:und|oder|aber|denn|sondern)$/i.test(tok[k + 1]?.w)) return false;
+      const n = afterTimeWords(tok, k + 1);
+      const clock = isNumber(tok[n]?.w) && !(tok[n + 1] && /^[A-ZÄÖÜ]/.test(tok[n + 1].w) && tok[n + 1].w !== 'Uhr');
+      return /^ums$/i.test(w) || !clock;
+    });
+  };
+  const TIME_NOUNS = /^(?:Uhr|Mittag|Abend|Morgen|Nacht|Mitternacht|Wochenende)$/;
+  const temporalGegen = (t) => {
+    const tok = walk(t);
+    return tok.some(({ w }, k) => /^gegen$/i.test(w) && (isNumber(tok[afterTimeWords(tok, k + 1)]?.w) || TIME_NOUNS.test(tok[k + 1]?.w || '')));
+  };
+  // Systematic: across zwölf/dreizehn and word/digit, every clock number before „Uhr" is taught after
+  // „um" and never after „gegen", and never as a count after „um".
+  NUMBER_WORDS.slice(0, 24).forEach((word, n) => {
+    for (const num of [word, String(n + 1)]) {
+      assert.equal(at(`Ich komme gegen ${num} Uhr.`), null, `gegen ${num} Uhr`);
+      assert.equal(at(`Wir laufen um ${num} Häuser.`), null, `um ${num} Häuser`);
+      assert.notEqual(at(`Der Bus fährt um ${num} Uhr.`), null, `um ${num} Uhr`);
+      assert.ok(temporalGegen(`Ich komme gegen ${num} Uhr.`) && spatialUm(`Wir laufen um ${num} Häuser.`) && !spatialUm(`Der Bus fährt um ${num} Uhr.`), `the detectors on ${num}`);
+    }
+  });
+  for (const sentence of ['Ich komme gegen Viertel vor acht.', 'Ich komme gegen halb neun.', 'Wir essen gegen Abend.', 'Wir laufen um dreißig Häuser.', 'Ich lerne, um zu arbeiten.']) {
+    assert.equal(at(sentence), null, sentence);
+  }
+  for (const sentence of ['Der Bus fährt um halb neun.', 'Wo steige ich um?', 'Ich steige in Köln um.', 'Um acht Uhr fährt der Bus.']) {
+    assert.notEqual(at(sentence), null, sentence);
+    assert.ok(!spatialUm(sentence), `the detector on „${sentence}"`);
+  }
   const declinedOrdinal = (t) => /\b(?:im|am|zum|vom|beim|dem|den|der|des|einem|einen|einer|eines)\s+[a-zäöüß]*(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|igst|hundertst|tausendst)(?:en|er|es|em)\b/i.test(t);
   for (const [sentence, taught] of TAUGHT) {
     assert.equal(!(temporalGegen(sentence) || spatialUm(sentence) || declinedOrdinal(sentence)), taught, `the detectors agree on „${sentence}"`);
@@ -1483,10 +1536,18 @@ test('DaF review #7 BLOCKER 1: a rejected correct answer is excluded by a German
     assert.equal(verdict(it, it.answer), RESULT.CORRECT, id);
     for (const other of ruledOut) assert.notEqual(verdict(it, other), RESULT.CORRECT, `${id}: „${other}"`);
   }
-  // 4. A cue in brackets is German: „(approximately)" alone decided „gegen" over „um".
-  const ENGLISH = /\b(?:approximately|before|after|polite|formal|informal|plural|singular|past|present|tense|short|question|request|until|since|ago|from|without|through|around|against|the|and|with|not|you|she|they|of|to|at|for|by)\b/i;
+  // 4. A cue in brackets is German. „(approximately)" alone decided „gegen" over „um", and a list of
+  //    English words missed „(= Where?)" (review #8) — so every word of a cue is either German the
+  //    course has taught by L12 or one of the task words below, each judged once; a new word fails here.
+  const { knownUpTo } = await import('../src/lib/checkpoint/lexis.js');
+  const known = knownUpTo(CURRICULUM_A12, 12);
+  const TASK_WORDS = new Set(['Beginnen', 'Kurzform', 'Startort', 'Bewegung', 'Heimat', 'verstehen', 'aufmachen', 'U']);
   for (const it of items) {
-    for (const [, cue] of String(it.questionDe).matchAll(/\(([^)]*)\)/g)) assert.doesNotMatch(cue, ENGLISH, `${it.id}: „(${cue})"`);
+    for (const [, cue] of String(it.questionDe).matchAll(/\(([^)]*)\)/g)) {
+      for (const word of cue.split(/[^A-Za-zÄÖÜäöüß]+/).filter(Boolean)) {
+        assert.ok(known.has(word) || known.has(word.toLowerCase()) || TASK_WORDS.has(word), `${it.id}: „${word}" in „(${cue})" is not German the course knows`);
+      }
+    }
   }
 });
 
@@ -1502,4 +1563,68 @@ test('DaF review #7 B1: the task formulas are one list — the checkpoint draw a
     const shadow = ITEM_FORMULAS.slice(0, i).find((earlier) => formula.startsWith(earlier));
     assert.equal(shadow, undefined, `„${formula}" comes after „${shadow}", which matches first`);
   });
+});
+
+test('DaF review #8 BLOCKER 1: a sentence-building statement names its opening, a kein gap asks for its own negation, a meaning cue is German', async () => {
+  const { servedItems } = await import('../scripts/a12-determinacy.mjs');
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  const item = (id) => POOL_A12.items.find((x) => x.id === id);
+  // A predicate may open a statement too („Nicht schön ist der Eingang.", „Schön ist der Eingang
+  // nicht."), more fronting than any generator models — so every served sentence-building statement
+  // names its opening, and the order it grades is the order it asked for.
+  const served = servedItems('a1.2').items;
+  const statements = served.filter((it) => it.type === 'sentence_building' && /\.$/.test(String(it.answer).trim()));
+  assert.ok(statements.length >= 20, `the rule reads the served statements (${statements.length})`);
+  for (const it of statements) {
+    assert.match(String(it.questionDe ?? it.promptDe), /\(Beginnen Sie mit „[^“]+“\)/, `${it.where} ${it.id}: „${it.questionDe ?? it.promptDe}" names no opening`);
+  }
+  const eingang = item('extra-a12-l04-12');
+  assert.match(eingang.questionDe, /\(Beginnen Sie mit „Der Eingang“\)/);
+  assert.equal(verdict(eingang, 'Der Eingang ist nicht schön.'), RESULT.CORRECT);
+  assert.notEqual(verdict(eingang, 'Nicht schön ist der Eingang.'), RESULT.CORRECT, 'excluded by the named opening');
+  // The kein gap asks about ITS object.
+  const spiegel = item('extra-a12-l04-02');
+  assert.match(spiegel.questionDe, /^Antworten Sie mit Nein: Ist im Flur ein Spiegel\?/);
+  assert.equal(verdict(spiegel, 'kein'), RESULT.CORRECT);
+  // „(= Where?)" decided the answer in English; a German answer frame decides it now.
+  const wo = item('3558a177-5f22-4700-9512-ff7dc3ac7d9d');
+  assert.match(wo.questionDe, /— In Berlin\.$/);
+  assert.doesNotMatch(wo.questionDe, /Where/);
+  for (const other of ['Wann', 'Woher', 'Wohin']) assert.notEqual(verdict(wo, other), RESULT.CORRECT, other);
+});
+
+test('DaF review #8 MAJOR 8: a clock time is a Falsch only for a once-only event after „um" — never for a state, a bound or an alternative', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const values = (statement) => [...new Set([1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+    B.contradictions(statement, spec.nouns, B.mulberry32(seed)).filter((c) => c.kind === 'value').map((c) => c.de)))];
+  // ANNOTATED BY HAND (widerspricht / offen). „Tim ist um elf in Köln" is a state: at four he may still
+  // be there. Getting up and arriving happen once: another time refutes them.
+  for (const [statement, label] of [
+    ['Tim ist um elf in Köln.', 'offen'], ['Tim kocht um acht.', 'offen'], ['Ana kommt vor halb zehn.', 'offen'],
+    ['Ana kommt um acht oder neun Uhr.', 'offen'], ['Ana arbeitet bis um zehn.', 'offen'],
+    ['Tim steht um sechs auf.', 'widerspricht'], ['Der Zug fährt um acht Uhr.', 'widerspricht'], ['Ana kommt um neun Uhr an.', 'widerspricht'],
+  ]) {
+    if (label === 'offen') assert.deepEqual(values(statement), [], `„${statement}" — offen`);
+    else assert.ok(values(statement).length > 0, `„${statement}" — widerspricht`);
+  }
+  // …and on every paper of both levels: each clock-time Falsch comes from an event verb after „um",
+  // read with this test's own verb list (review #8 found three from „Ich bin um elf in Köln.").
+  const EVENT = /\b(?:kommt|kommen|fährt|fahren|fliegt|fliegen|beginnt|beginnen|fängt|fangen|öffnet|schließt|landet|startet)\b|\bsteh\w*\b.*\bauf[.!?]?$/;
+  for (const [curriculum, file, rounds] of [[CURRICULUM_A12, 'a12', 4], [CURRICULUM_A11, 'a11', 3]]) {
+    const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
+    for (const checkpoint of curriculum.checkpoints) {
+      for (let round = 0; round < rounds; round += 1) {
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        for (const it of lesen.filter((x) => x.answer === 'Falsch' && x.changed?.kind === 'value')) {
+          const clock = /\bUhr\b/.test(it.statement) || new RegExp(`\\bum ${it.changed.to}\\b`).test(it.statement);
+          if (!clock) continue;
+          assert.match(it.statement, EVENT, `${checkpoint.id}/${round} „${it.statement}": a clock time on a state or an activity`);
+          assert.match(it.statement, new RegExp(`\\bum ${it.changed.to}\\b`), `${checkpoint.id}/${round} „${it.statement}": not governed by „um"`);
+          assert.doesNotMatch(it.statement, /\boder\b/, `${checkpoint.id}/${round} „${it.statement}"`);
+        }
+      }
+    }
+  }
 });

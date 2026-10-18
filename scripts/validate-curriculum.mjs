@@ -745,6 +745,13 @@ const LICENSED_CHUNKS_A11 = ['Füllen Sie'];
  * A1 inventory lists the Perfekt of fahren, bleiben and passieren, so L12 now teaches it and
  * `offLimitsForms['perfekt-intro']` gates it to L12 instead.
  */
+// A number word of any size as a whole word („dreizehn", „einundzwanzig", „dreißig"), a clock number
+// (word or digits) and a clock-time expression („halb neun", „Viertel nach acht", „13 Uhr") — the
+// shapes the um/gegen rules below read, so no list of numbers or determiners has to be complete.
+const NUMBER_WORD = String.raw`(?:ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|[a-zäöüß]+zehn|[a-zäöüß]*zig|[a-zäöüß]*ßig|hundert|tausend)(?![a-zäöüßA-ZÄÖÜ])`;
+const CLOCK_NUMBER = String.raw`(?:\d{1,2}(?:[.:]\d{2})?(?!\d)|${NUMBER_WORD})`;
+const TIME_EXPR = String.raw`(?:(?:[Vv]iertel (?:nach|vor) |halb |kurz (?:nach|vor) )?${CLOCK_NUMBER}(?! (?!Uhr(?![a-zäöüß]))[A-ZÄÖÜ]))`;
+
 const NEVER_FORMS_A12 = [
   // The Partizip II of a separable verb puts ge- between prefix and stem (ein-ge-kauft). L12 teaches
   // the ge- participle of simple verbs; the A1 inventory lists selected participles, none of them
@@ -758,14 +765,15 @@ const NEVER_FORMS_A12 = [
   // and every compound of a hundred or a thousand („im zweihundertsten", „hundertersten", review #7, B2).
   /\b(?:[a-zäöüß]*(?:hundert|tausend)(?:und)?)?(?:erst|zweit|dritt|viert|fünft|sechst|siebt|acht|neunt|zehnt|elft|zwölft|[a-zäöüß]+zehnt|[a-zäöüß]+igst)(?:en|er|es|em)\b/i,
   /\b[a-zäöüß]*(?:hundertst|tausendst)(?:en|er|es|em)\b/i,
-  // Spatial „um + Akkusativ" is taught nowhere: L10 teaches für, ohne, durch, and „um" is a clock time
-  // („um acht Uhr", „um halb neun") and nothing else (DaF review #6, B2) — whatever determines the noun:
-  // an article, a possessive, a demonstrative, a number („um diesen Tisch", „um drei Häuser", review #7).
-  /\b[Uu]m (?:(?:den|die|das|dem|einen|eine|ein|einem|diesen|diese|dieses|jeden|jede|jedes|meinen|meine|mein|deinen|deine|dein|seinen|seine|sein|ihren|ihre|ihr|unseren|unsere|unser|euren|eure|euer|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele|alle) )?(?!Uhr\b|Viertel\b)[A-ZÄÖÜ]/,
-  /\b[Uu]ms [A-ZÄÖÜ]/,
-  // „gegen" is taught as „against" („Die Tablette hilft gegen Kopfschmerzen.", L6); the approximate
-  // time („gegen fünf Uhr", „gegen Abend") is a second meaning no surface introduces (review #7, B2).
-  /\b[Gg]egen (?:\d{1,2}(?:[.:]\d{2})?|ein|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|halb|Mittag|Abend|Morgen|Mitternacht)\b/,
+  // „um" is taught as a clock time and nothing else (DaF review #6/#7/#8, B2). So the TIME is what is
+  // allowed, not a list of noun phrases what is blocked: „um"/„ums" is never-taught unless a clock time
+  // follows (a number in words or digits, „halb …", „Viertel nach …" — not a number that counts a noun,
+  // „um dreizehn Häuser") or it ends its clause as a verb particle („Wo steige ich um?").
+  new RegExp(String.raw`\b[Uu]ms?(?![a-zäöüß])(?!\s*(?:[.!?,;:]|$)|\s+(?:und|oder|aber|denn|sondern)(?![a-zäöüß]))(?!\s+${TIME_EXPR})`),
+  // „gegen" is taught as „against" („Die Tablette hilft gegen Kopfschmerzen.", L6); before ANY time
+  // expression — „gegen dreizehn Uhr", „gegen 13 Uhr", „gegen Viertel vor acht", „gegen Abend" — it is
+  // a second meaning no surface introduces (review #7/#8, B2).
+  new RegExp(String.raw`\b[Gg]egen\s+(?:(?:[Vv]iertel (?:nach|vor) |halb |kurz (?:nach|vor) )?(?:\d|${NUMBER_WORD})|(?:Mittag|Abend|Morgen|Nacht|Mitternacht|Wochenende|Ende|Anfang)(?![a-zäöüß]))`),
 ];
 const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
 

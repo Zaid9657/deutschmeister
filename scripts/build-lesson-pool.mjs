@@ -135,7 +135,7 @@ import {
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
-import { openingOf, middleFieldOrders } from './a12-determinacy.mjs';
+import { openingOf, middleFieldOrders, vorfeldOf } from './a12-determinacy.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -343,7 +343,10 @@ function repairDeterminacy(item) {
   // 1. A statement may open with its subject or with any one other phrase. When the key's order is
   //    free, the prompt names the opening, so the order it grades is the order it asked for.
   if ((item.type === 'sentence_building' || item.type === 'error_correction') && !/\(Beginnen Sie mit /.test(item.questionDe)) {
-    const opening = openingOf(key);
+    // DaF review #8 (A1.2) B1: a predicate, a negated one too, may also open a statement („Nicht
+    // schön ist der Eingang.") — more fronting than the generator models. So a sentence-building
+    // STATEMENT always names its opening; a correction is bounded by „nur den Fehler" instead.
+    const opening = openingOf(key) || (item.type === 'sentence_building' && /\.$/.test(key) ? vorfeldOf(key) : null);
     if (opening) {
       item.questionDe = `${String(item.questionDe).trim()} (Beginnen Sie mit „${opening}“)`;
       determinacyRepaired.push(`${item.id}:opening`);

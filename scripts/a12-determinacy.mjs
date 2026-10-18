@@ -189,12 +189,13 @@ export function middleFieldOrders(key) {
 }
 
 /** The opening a statement key's prompt has to name, or null when the order is not free. */
-export const openingOf = (key) => {
-  if (!wordOrderAlternatives(key).length) return null;
+/** The phrase a statement key opens with — its Vorfeld — whether or not another opening is free. */
+export const vorfeldOf = (key) => {
   const tokens = strip(key).split(/\s+/);
   const first = constituentAt(tokens, 0) || { length: 1 };
   return tokens.slice(0, first.length).join(' ');
 };
+export const openingOf = (key) => (wordOrderAlternatives(key).length ? vorfeldOf(key) : null);
 const OPENING_CUE_RE = /\(Beginnen Sie mit „([^“"]+)[“"]\)/;
 const DU_CUE_RE = /\([a-zäöüß]+en, du\)/;
 

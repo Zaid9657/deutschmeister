@@ -57,14 +57,13 @@
 // wäre genau der Vorgriff, den die A1.1-Reviews vier Runden lang angemahnt haben. L1 lehrt
 // stattdessen den Satzrahmen und nennt „zum Bahnhof / zur Kirche / an der Ecke" ausdrücklich als
 // FESTE WENDUNGEN (so wie A1.1 „Ich habe gearbeitet" als Chunk lehrt); die Regel dahinter kommt
-// in L11. Die Richtungspräpositionen des Akkusativs (durch, um) kommen in L10.
+// in L11. Von den Akkusativpräpositionen lehrt L10 für, ohne und durch; räumliches „um" lehrt A1.2 nicht.
 //
 // WAS DIESE ORDNUNG NICHT TRAGEN KANN, UND WO ES STATTDESSEN STEHT:
 //   *Modalverben* werden vor L9 gebraucht („Ich möchte ein Ticket", „Wo kann ich…?"). Sie sind
 //   darum in FUNCTION_WORDS geführt und werden bis L9 als feste Wendungen benutzt, nicht erklärt.
-//   *war/hatte* (Präteritum von sein/haben) steht im Grammatikdach des Standards, hat aber keinen
-//   eigenen Slug. L12 benutzt „war" im Dialog und die notice sagt, dass es die einzige einfache
-//   Vergangenheitsform dieses Kurses ist.
+//   *war/hatte* (Präteritum von sein/haben) hat keinen eigenen Slug; seit der M7-Entscheidung
+//   (2026-10-16) lehrt L7 beide mit Notice, Dialoginput und Übung, und L12 benutzt „war" im Dialog.
 //   *Komparation* („billiger als") hat ebenfalls keinen Slug: L10 lehrt sie als Muster in der
 //   notice, nicht als Lektionsthema.
 //
@@ -569,7 +568,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Lena', de: 'Tim, was machst du am Wochenende? Gehst du ins Konzert?', en: 'Tim, what are you doing at the weekend? Are you going to the concert?' },
           { speaker: 'Tim', de: 'Ja. Der Ausflug geht nach Köln. Ich habe den Fahrplan.', en: 'Yes. The trip goes to Cologne. I have the timetable.' },
           { speaker: 'Lena', de: 'Wann fährt der Zug? Um wie viel Uhr?', en: 'When does the train leave? At what time?' },
-          { speaker: 'Tim', de: 'Um acht Uhr. Wer kommt mit? Ich bin um elf in Köln.', en: 'At eight o\'clock. Who is coming along? I will be in Cologne at eleven.' },
+          { speaker: 'Tim', de: 'Um acht Uhr. Wer kommt mit? Ich stehe um sechs auf.', en: 'At eight o\'clock. Who is coming along? I get up at six.' },
           { speaker: 'Lena', de: 'Ich würde gern mitkommen. Warum so früh? Ich stehe nie früh auf.', en: 'I would like to come along. Why so early? I never get up early.' },
           { speaker: 'Tim', de: 'Der Weg ist weit. Wie oft fährt der Bus?', en: 'The way is long. How often does the bus run?' },
           { speaker: 'Lena', de: 'Jede Stunde. Aber wo ist die Haltestelle?', en: 'Every hour. But where is the stop?' },

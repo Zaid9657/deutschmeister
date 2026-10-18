@@ -993,6 +993,22 @@ const BOUND_PHRASE_RE = /\b(?:mehr als|weniger als|bis zu)\b/;
 const TIME_BOUND_PREPOSITIONS = new Set(['vor', 'nach', 'bis', 'ab', 'seit', 'gegen', 'von', 'zwischen']);
 
 /**
+ * …and a clock time is one value only for an event that happens once: „Tim steht um sechs auf",
+ * „der Zug fährt um acht". „Tim ist um elf in Köln" is a state — at four he may still be there — and
+ * „Tim kocht um acht" may go on past nine (DaF review #8, MAJOR 8). These are the event verbs a
+ * clock-time Falsch may change; „steht" counts only as „steht … auf".
+ */
+const EVENT_VERBS = new Set([
+  'kommt', 'kommen', 'fährt', 'fahren', 'fliegt', 'fliegen', 'beginnt', 'beginnen', 'fängt', 'fangen',
+  'öffnet', 'öffnen', 'schließt', 'schließen', 'landet', 'landen', 'startet', 'starten', 'steht', 'stehen',
+]);
+const isEventClause = (lower) => {
+  const verb = lower.find((w) => EVENT_VERBS.has(w));
+  if (!verb) return false;
+  return !/^steh/.test(verb) || lower[lower.length - 1] === 'auf';
+};
+
+/**
  * Words that give a negation its own scope — „nicht gern", „auch nicht", „noch nicht",
  * „nicht mehr", „nicht so gut", „nicht nur … sondern". A polarity change in their sentence
  * changes more than the polarity, so none is made there.
@@ -1153,6 +1169,15 @@ export function contradictions(statement, nouns, rng) {
       // „vor zehn Uhr", „bis um zehn", „von sieben bis zehn", „zwischen acht und zehn"
       if (TIME_BOUND_PREPOSITIONS.has(pre) || (pre === 'um' && TIME_BOUND_PREPOSITIONS.has(lower[i - 2] || ''))) continue;
       if (lower.slice(0, i).includes('zwischen')) continue;
+      // Alternatives overlap („um acht oder neun Uhr"): no value of them refutes another (review #8).
+      if (lower.includes('oder')) continue;
+      // The word that governs a clock time, past „halb", „kurz", „Viertel nach/vor": only „um" with an
+      // event verb states one exclusive time („vor halb zehn" is a bound, review #8).
+      let g = i - 1;
+      while (g >= 0 && (['halb', 'kurz', 'viertel'].includes(lower[g])
+        || (['nach', 'vor'].includes(lower[g]) && ['viertel', 'kurz'].includes(lower[g - 1] || '')))) g -= 1;
+      const clock = lower[i + 1] === 'uhr' || g < i - 1 || lower[g] === 'um';
+      if (clock && (lower[g] !== 'um' || !isEventClause(lower))) continue;
       let to;
       if (/^\d/.test(bare[i])) {
         to = bare[i].replace(/^\d+/, (d) => String(Number(d) >= 10 ? Number(d) + 10 : Number(d) + 3));

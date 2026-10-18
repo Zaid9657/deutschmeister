@@ -645,8 +645,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 2,
-      "questionDe": "Im Flur ist keine Lampe. Und ein Spiegel? — Im Flur ist ___ Spiegel.",
-      "questionEn": "The corridor has no lamp. And a mirror?",
+      "questionDe": "Antworten Sie mit Nein: Ist im Flur ein Spiegel? — Im Flur ist ___ Spiegel.",
+      "questionEn": "Answer with no: Is there a mirror in the corridor? — There is no mirror in the corridor.",
       "options": null,
       "answer": "kein",
       "accepted": [
