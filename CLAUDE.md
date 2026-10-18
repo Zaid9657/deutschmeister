@@ -215,7 +215,11 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 - **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
   Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`), and REA (`rea-agents`,
   pinned, keyless), which reverse engineers apps, sites and binaries without their source; its skill
-  is vendored in `.claude/skills/reverse-engineer-anything` (see its SOURCE.md). Values are `${VAR}`
+  is vendored in `.claude/skills/reverse-engineer-anything` (see its SOURCE.md). The scroll-craft skill
+  (scroll-driven landing pages, MIT, no MCP server) is vendored in `.claude/skills/scroll-craft`; its
+  SOURCE.md says which project rules override it, and `.scrollcraft.json` keeps its builds and
+  fingerprint registry in `docs/scrollcraft/` (first build: the homepage line section's scroll ride,
+  `builds/home-line/`, experiment E7). Values are `${VAR}`
   references Claude Code expands from the environment; the literals belong in the environment's
   variables, never in the file. `.claude/hooks/session-start.sh` materialises
   `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency

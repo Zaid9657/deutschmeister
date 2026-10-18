@@ -16,6 +16,8 @@ export default [
       // HyperFrames motion projects (the hero line board): their own toolchain,
       // vendored GSAP, compositions verified by `hyperframes lint/check`.
       'videos/**',
+      // Vendored scroll-craft skill (engine + scripts copied unchanged, see its SOURCE.md).
+      '.claude/skills/scroll-craft/**',
     ],
   },
   js.configs.recommended,
