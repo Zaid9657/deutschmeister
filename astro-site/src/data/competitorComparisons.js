@@ -34,7 +34,7 @@
 // nothing but accuracy owed to the reader. Re-check from a network that can
 // reach the vendors, then update figures and stamps together.
 import { PLANS, deEur } from './pricing.js';
-import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_DAILY_LIMIT, LEVEL_COUNT, TRIAL_DAYS } from './marketing.js';
+import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_DAILY_LIMIT, LEVEL_COUNT, TRIAL_DAYS, PLACEMENT_TEST_MINUTES } from './marketing.js';
 
 const PRO_MONTHLY = `${deEur(PLANS.monthly.price)}/Monat`;
 
@@ -53,10 +53,10 @@ const competitorComparisons = {
       { feature: 'Prüfungsvorbereitung (Goethe/telc/TestDaF)', us: '✓ Inhalte gezielt auf CEFR-Prüfungen abgestimmt, A1–B2', them: '○ Allgemeine Sprachkurse, nicht prüfungsspezifisch' },
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Jedes Thema auf Englisch erklärt — ideal für Nicht-Muttersprachler', them: '✓ Erklärungen in 14 Ausgangssprachen verfügbar' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert, Internet erforderlich', them: '✓ Lektionen offline in der App verfügbar' },
-      { feature: 'Einstufungstest', us: '✓ Kostenloser CEFR-Einstufungstest in 5 Minuten', them: '✓ Einstufungstest beim Kursstart' },
+      { feature: 'Einstufungstest', us: `✓ Kostenloser CEFR-Einstufungstest in etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Einstufungstest beim Kursstart' },
       { feature: 'Kostenlose Inhalte', us: `✓ A1.1 komplett kostenlos + ${TRIAL_DAYS} Tage Pro-Testphase`, them: '○ Erste Lektion kostenlos, danach Abo nötig' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro)`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
-      { feature: 'Von Muttersprachlern entwickelt', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
+      { feature: 'Wer dahintersteht', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
       { feature: 'Hörübungen mit Alltagsdialogen', us: '✓ Hörverständnis auf jedem Niveau mit authentischen Dialogen', them: '✓ Dialoge und Hörübungen in jeder Lektion' },
       { feature: 'Werbung in der kostenlosen Version', us: '✗ Keine Werbung — auch nicht in der Gratisversion', them: '✗ Keine Werbung (reines Abo-Modell)' },
     ],
@@ -123,7 +123,7 @@ const competitorComparisons = {
       { feature: 'Hörübungen mit echten Dialogen', us: '✓ Authentische Dialoge auf jedem Niveau', them: '○ TTS-generierte Sätze, nicht immer authentisch' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro)`, them: 'Kostenlos / Super: ab 6,99 €/Monat (im Jahresabo)' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert', them: '✓ Lektionen offline verfügbar (mit Super)' },
-      { feature: 'Einstufungstest', us: '✓ CEFR-Einstufungstest, 5 Minuten', them: '✓ Placement Test beim Start' },
+      { feature: 'Einstufungstest', us: `✓ CEFR-Einstufungstest, etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Placement Test beim Start' },
     ],
     whyUsBlocks: [
       {
@@ -153,11 +153,11 @@ const competitorComparisons = {
       },
       {
         q: 'Warum ist Deutschmeister nicht kostenlos wie Duolingo?',
-        a: 'Duolingo finanziert sich durch Werbung und Premium-Upsells. Deutschmeister hat keine Werbung und keine künstlichen Limits. A1.1 ist kostenlos, danach kosten die Inhalte — dafür bekommst du KI-Sprechtraining, Sentence X-Ray und prüfungsrelevante Tiefe.',
+        a: 'Duolingo finanziert sich durch Werbung und Premium-Upsells. Deutschmeister hat keine Werbung. Die KI-Funktionen haben feste Nutzungslimits. A1.1 ist kostenlos, danach kosten die Inhalte — dafür bekommst du KI-Sprechtraining, Sentence X-Ray und prüfungsrelevante Tiefe.',
       },
       {
         q: 'Kann ich von Duolingo zu Deutschmeister wechseln?',
-        a: 'Ja. Mach den kostenlosen Einstufungstest — er zeigt dir in 5 Minuten, wo du stehst. Du musst nicht bei Null anfangen.',
+        a: `Ja. Mach den kostenlosen Einstufungstest — er zeigt dir in etwa ${PLACEMENT_TEST_MINUTES} Minuten, wo du stehst. Du musst nicht bei Null anfangen.`,
       },
       {
         q: 'Hat Duolingo auch KI-Sprechtraining?',

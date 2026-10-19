@@ -70,6 +70,7 @@ import {
   READALOUD_DAILY_LIMIT,
   READING_LESSON_COUNT,
   TRIAL_DAYS,
+  PLACEMENT_TEST_MINUTES,
 } from '../src/data/marketing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -156,6 +157,27 @@ test('formatters produce the German and English conventions', () => {
 // ---------------------------------------------------------------------------
 // 2. No retyped literals
 // ---------------------------------------------------------------------------
+
+test('comparison pages and offers FAQ agree on the placement-test duration', async () => {
+  for (const root of ['src/data', 'astro-site/src/data']) {
+    const { default: comparisons } = await import(`../${root}/competitorComparisons.js`);
+    const { OFFER_FAQ } = await import(`../${root}/offers.js`);
+    for (const [name, data, minimum] of [
+      ['competitorComparisons.js', comparisons, 3],
+      ['offers.js OFFER_FAQ', OFFER_FAQ, 1],
+    ]) {
+      let seen = 0;
+      for (const line of JSON.stringify(data, null, 2).split('\n')) {
+        if (!/Einstufungstest|level test/i.test(line)) continue;
+        for (const match of line.matchAll(/(\d+)(?:-|\s+)(?:Minuten|minute)\b/g)) {
+          seen += 1;
+          assert.equal(Number(match[1]), PLACEMENT_TEST_MINUTES, `${root}/${name}: ${line.trim()}`);
+        }
+      }
+      assert.ok(seen >= minimum, `${root}/${name}: expected at least ${minimum} placement-test durations, found ${seen}`);
+    }
+  }
+});
 
 /**
  * Surfaces that render prices or plan claims. A price literal appearing in any
