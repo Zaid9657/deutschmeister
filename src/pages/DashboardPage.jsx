@@ -140,6 +140,7 @@ const DashboardPage = () => {
         hasLessonActivity: stats?.lessonActivity,
         startingPoint: user?.user_metadata?.[STARTING_POINT_KEY],
         currentLevel: profile?.current_level,
+        examTrack: profile?.exam_track,
         hasLevelAccess,
       });
 
