@@ -129,7 +129,7 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue, missingOpeningCue,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -1288,6 +1288,28 @@ console.log(
   `${enSource.missing.length} missing${enSource.missing.length ? ` (sidecar work order: ${enSource.missing.slice(0, 8).join(', ')}${enSource.missing.length > 8 ? ', …' : ''})` : ''}` +
   `${unusedSidecar.length ? `; ${unusedSidecar.length} sidecar key(s) match no item: ${unusedSidecar.slice(0, 8).join(', ')}` : ''}`,
 );
+
+// ── DaF review #11 (A1.2) BLOCKER B1: a named repair accepts only that repair ──
+//
+// The determiner cue above changed the TASK and left `accepted` alone, and that was half of the
+// promise: „Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.““ still took „Das sind
+// meine Onkel." — the repair of the verb. Run last, after every pass that adds to a list (extras,
+// corrections, the fronted forms), so nothing re-adds what this takes out: an entry that does not
+// repair the element the prompt names leaves the list, and the run names it. Both levels; A1.1 has
+// none (measured 2026-10-19).
+const namedRepairDropped = [];
+for (const item of items) {
+  if (!Array.isArray(item.accepted)) continue;
+  const dropped = item.accepted.filter((a) => !namedRepairAccepts(item, a));
+  if (!dropped.length) continue;
+  if (!namedRepairAccepts(item, item.answer)) {
+    console.error(`${item.id}: the model answer does not repair the element its prompt names — fix the item`);
+    process.exit(1);
+  }
+  item.accepted = item.accepted.filter((a) => namedRepairAccepts(item, a));
+  namedRepairDropped.push(`${item.id} (${dropped.join(' | ')})`);
+}
+if (namedRepairDropped.length) console.log(`named repairs: dropped ${namedRepairDropped.length} accepted entr(y/ies) that repair another element: ${namedRepairDropped.join('; ')}`);
 
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 // DaF review #3 (A1.2) BLOCKER 2: the checkpoint's dictation and read-aloud pickers read this map, so

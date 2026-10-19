@@ -925,7 +925,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 4,
-      "questionDe": "___ stehst du so früh auf? — Der Weg ist weit.",
+      "questionDe": "Lena: ___ stehst du so früh auf? — Tim: Der Weg ist weit.",
       "questionEn": "Ask about the reason.",
       "options": null,
       "answer": "Warum",
@@ -1072,7 +1072,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 12,
-      "questionDe": "Kommst du mit ins Konzert? — Ja, ich ___ gern mitkommen. (höflich)",
+      "questionDe": "Tim: Kommst du mit ins Konzert? — Lena: Ja, ich ___ gern mitkommen. (höflich)",
       "questionEn": "Are you coming to the concert? Yes, I would like to come along.",
       "options": null,
       "answer": "würde",
@@ -1456,9 +1456,7 @@
       "answer": "Das ist mein Onkel.",
       "accepted": [
         "Das ist mein Onkel.",
-        "Das ist mein Onkel",
-        "Das sind meine Onkel.",
-        "Das sind meine Onkel"
+        "Das ist mein Onkel"
       ],
       "explanationDe": "Maskulin im Nominativ: mein Onkel.",
       "hint": null
@@ -1916,7 +1914,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 11,
-      "questionDe": "Das Flugzeug fliegt ___ Montag wieder. (ab, um oder bis?)",
+      "questionDe": "Das Flugzeug fliegt ___ Montag wieder. Montag ist der erste Tag. (ab, um oder bis?)",
       "questionEn": "The plane flies again from Monday.",
       "options": null,
       "answer": "ab",

@@ -509,8 +509,8 @@
   {
    "id": "extra-a12-l07-08",
    "answer": "Das sind meine Onkel.",
-   "verdict": "accept",
-   "why": "„Onkel“ kann Plural sein, aber diese Reparatur verändert das Verb statt des Possessivartikels."
+   "verdict": "exclude",
+   "why": "named repair: the task names the possessive article; this repairs the verb and the number instead (DaF review #11, B1 — the first annotation said accept against its own reason)"
   },
   {
    "id": "extra-a12-l07-09",

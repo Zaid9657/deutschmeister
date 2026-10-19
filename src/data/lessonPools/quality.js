@@ -1504,6 +1504,46 @@ export function determinerRepair(item) {
 }
 
 /**
+ * namedRepairAccepts(item, answer) → false when the German prompt NAMES a determiner as the element
+ * to repair and `answer` repairs something else (DaF review #11, A1.2 BLOCKER B1). Naming the element
+ * was half of the promise: „Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.““ still
+ * accepted „Das sind meine Onkel." — correct German, and the repair of the VERB, which the task did
+ * not ask for. The cue is the repair formula withDeterminerCue writes („Korrigieren Sie den Artikel /
+ * den Possessivartikel / die Endung", or the element in brackets after the sentence) — not any
+ * „Artikel" in a prompt: „Schreiben Sie den Satz ohne Artikel" asks for a deletion.
+ * An answer keeps its place when it holds every word of the quoted sentence but ONE, and that one is
+ * a determiner of the named family replaced by another: two possessives for „den Possessivartikel",
+ * two articles for „den Artikel", one family for „die Endung". The order is free — a middle field the
+ * task allows („Ich brauche im Zentrum einen Markt.") is the same repair. A prompt without the
+ * formula, or without a quoted sentence, decides nothing here (true).
+ */
+const NAMED_REPAIR_RE = /\b(?:korrigieren sie|korrigiere)\s+(?:den|die)\s+(artikel|possessivartikel|possessiv|endung)\b|\((artikel|possessivartikel|endung)\)/i;
+const determinerFamily = (w) => (POSSESSIVE_FORM_RE.test(bare(w)) ? 'possessive' : ARTICLE_FAMILY(w) ? 'article' : null);
+export function namedRepairAccepts(item, answer) {
+  if (String(item?.type) !== 'error_correction') return true;
+  const prompt = String(item.questionDe || '');
+  const cue = NAMED_REPAIR_RE.exec(prompt);
+  const quote = QUOTED_SPAN_RE.exec(prompt);
+  if (!cue || !quote) return true;
+  const src = bare(quote[1]).split(/\s+/).filter(Boolean).map(flat);
+  const left = bare(answer).split(/\s+/).filter(Boolean).map(flat);
+  if (src.length !== left.length) return false;
+  const gone = [];
+  for (const w of src) {
+    const at = left.indexOf(w);
+    if (at >= 0) left.splice(at, 1);
+    else gone.push(w);
+  }
+  if (gone.length !== 1 || left.length !== 1) return false;
+  const families = [gone[0], left[0]].map(determinerFamily);
+  if (families.some((f) => !f)) return false;
+  const named = (cue[1] || cue[2]).toLowerCase();
+  if (named.startsWith('possessiv')) return families.every((f) => f === 'possessive');
+  if (named === 'artikel') return families.every((f) => f === 'article');
+  return families[0] === families[1];
+}
+
+/**
  * missingDeterminerCue(item) → the same object when the German prompt does NOT
  * name the element, else null. This is the rule the pool is measured against —
  * always, not only where a partner noun happens to be findable.

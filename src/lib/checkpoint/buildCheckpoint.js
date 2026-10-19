@@ -1001,7 +1001,8 @@ const TIME_BOUND_PREPOSITIONS = new Set(['vor', 'nach', 'bis', 'ab', 'seit', 'ge
  * separable verb of beginning, arriving or leaving closes it with its particle (steht … auf, kommt …
  * an, fährt … ab, fliegt … ab, fängt … an) — the shape of every clock-time Falsch the papers draw —
  * and never with a durative or habitual word („noch", „schon", „immer", „gern" …) or a second clause,
- * whose time may be the other clause's.
+ * whose time may be the other clause's. Nor NEGATED (review #11): „Tim steht um sechs nicht auf" says
+ * when he does not get up, and „um neun nicht" is just as true — the other time is open, not refuted.
  */
 const EVENT_PARTICLES = {
   steht: 'auf', stehen: 'auf', kommt: 'an', kommen: 'an', fährt: 'ab', fahren: 'ab', fliegt: 'ab', fliegen: 'ab',
@@ -1010,7 +1011,7 @@ const EVENT_PARTICLES = {
 const DURATIVE_WORDS = new Set(['noch', 'schon', 'immer', 'gerade', 'lange', 'oft', 'manchmal', 'meistens', 'jeden', 'jede', 'jedes', 'täglich', 'gern', 'gerne']);
 const CLAUSE_JOINS = new Set(['und', 'aber', 'oder', 'denn', 'sondern', 'dann']);
 const isEventClause = (lower) => {
-  if (lower.some((w) => DURATIVE_WORDS.has(w) || CLAUSE_JOINS.has(w))) return false;
+  if (lower.some((w) => DURATIVE_WORDS.has(w) || CLAUSE_JOINS.has(w) || NEGATION_RE.test(w))) return false;
   const last = lower[lower.length - 1];
   return lower.some((w) => EVENT_PARTICLES[w] && last === EVENT_PARTICLES[w]);
 };
@@ -2937,8 +2938,10 @@ export function isItemCorrect(item, answer) {
  * tapping the first one of every item scores what the place count says. The text count alone
  * missed it as soon as every answer was its own sentence: on the two-option Lesen items it said 1
  * of 4 while the first chip took 2, and sectionPasses let „always A" through at 50 %. It was not
- * new there: five A1.1 Hören/Sprachbausteine sections of the rounds 0–3 already let a first-chip
- * learner pass with the text ceiling at 1 and the place ceiling at 2.
+ * new there: on A1.1 (rounds 0–3) the place ceiling stands above the text ceiling in five Hören and
+ * Sprachbausteine sections, and in two of them — checkpoint 1 round 3 and checkpoint 4 round 1, Hören,
+ * 2 of 5 at 40 % — a first-chip learner passed. Both fail now (measured 2026-10-19; DaF review #11
+ * counted the same two, where round 11b's first comment had said five).
  */
 export function guessCeiling(items) {
   const byText = new Map();

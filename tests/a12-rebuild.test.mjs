@@ -683,14 +683,16 @@ test('DaF review #4 minor (register): a du in an A1.2 prompt is framed — partn
   // addressing the learner with du (six prompts, measured 2026-10-15). A du-form in a prompt is framed
   // when the prompt says who is spoken to: a person cue („(sprechen, du)", „du-Imperativ"), a Sie
   // instruction it stands under („Fragen Sie eine Freundin: …", „Korrigieren Sie: …"), a named
-  // addressee („Tim, ___ …"), or a question-and-answer frame („Antwort: … Frage: …", „…? — Der Weg ist weit.").
+  // addressee („Tim, ___ …"), an answer frame („Antwort: … Frage: …"), or a dialogue whose turns are NAMED
+  // („Lena: ___ stehst du so früh auf? — Tim: Der Weg ist weit."). A bare „…? — …" pair was counted as framed
+  // until review #11: it says that two people speak, not who — and the course is the only speaker in sight.
   const DU = /\b(du|dein\w*|dir|dich)\b/i;
   const FRAMED = [
     /\((?:[^)]*,\s*)?du\)|\bdu-(?:Imperativ|Form)\b/,
     /^[A-ZÄÖÜ][a-zäöüß]+en Sie\b[^:]*:/,
     /^(?:Ana|Lena|Tim|Paul|Herr \w+|Frau \w+),\s/,
     /\bAntwort:.*\bFrage:/,
-    /\?\s+—\s+\S/,
+    /^(?:Ana|Lena|Tim|Paul|Herr \w+|Frau \w+):\s.*\s—\s(?:Ana|Lena|Tim|Paul|Herr \w+|Frau \w+):\s/,
   ];
   const bare = POOL_A12.items.filter((it) => DU.test(it.questionDe || '') && !FRAMED.some((re) => re.test(it.questionDe)));
   assert.deepEqual(bare.map((it) => `${it.id}: ${it.questionDe}`), []);
@@ -2059,6 +2061,117 @@ test('round 11b: a constant place is a constant answer — „always the first o
         const closed = items.filter((it) => it.section === section);
         if (!closed.every((it) => Array.isArray(it.options) && it.options.length)) continue;
         assert.equal(sectionPasses(s), false, `${checkpoint.id}/${round} ${section}: the first chip throughout passes (${s.correct}/${s.total}, ceiling ${s.guessCeiling})`);
+      }
+    }
+  }
+});
+
+test('DaF review #11 B1: a correction that names its element accepts only the repair of that element — contrast matrix, then every servable item', async () => {
+  const { namedRepairAccepts } = await import('../src/data/lessonPools/quality.js');
+  const ec = (questionDe) => ({ type: 'error_correction', questionDe });
+  // ANNOTATED BY HAND: one faulty sentence under an open task and under a named one. „Das sind meine
+  // Onkel." is correct German and was accepted (review #11) — but it repairs the verb and the number,
+  // and the task names the possessive article.
+  const open = ec('Korrigieren Sie nur den Fehler: „Das ist meine Onkel.“');
+  const named = ec('Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.“ (Beginnen Sie mit „Das“)');
+  for (const answer of ['Das ist mein Onkel.', 'Das sind meine Onkel.']) {
+    assert.equal(namedRepairAccepts(open, answer), true, `an open task decides „${answer}" elsewhere`);
+  }
+  assert.equal(namedRepairAccepts(named, 'Das ist mein Onkel.'), true, 'the repair the task names');
+  assert.equal(namedRepairAccepts(named, 'Das ist mein Onkel'), true, 'without the full stop');
+  assert.equal(namedRepairAccepts(named, 'Das sind meine Onkel.'), false, 'the verb repaired instead (review #11)');
+  const article = ec('Korrigieren Sie den Artikel: „Ich brauche ein Markt im Zentrum.“ (Beginnen Sie mit „Ich“)');
+  assert.equal(namedRepairAccepts(article, 'Ich brauche einen Markt im Zentrum.'), true);
+  assert.equal(namedRepairAccepts(article, 'Ich brauche im Zentrum einen Markt.'), true, 'a middle field the task allows is the same repair');
+  assert.equal(namedRepairAccepts(article, 'Ich brauche einen Supermarkt im Zentrum.'), false, 'the noun changed as well');
+  assert.equal(namedRepairAccepts(article, 'Ich brauche meinen Markt im Zentrum.'), false, 'an article task takes an article');
+  // „ohne Artikel" asks for a deletion, not for the repair of an article: not this rule's case.
+  assert.equal(namedRepairAccepts(ec('Schreiben Sie den Satz ohne Artikel: „Ich bin eine Lehrerin.“'), 'Ich bin Lehrerin.'), true);
+  // EVERY ITEM of both pools: what a named task takes repairs what it names, the model answer included.
+  for (const [file, pool] of [['a12', POOL_A12], ['a11', JSON.parse(read('src/data/lessonPools/a11.json'))]]) {
+    const offenders = poolItems(pool).filter((it) => it.type === 'error_correction')
+      .flatMap((it) => [it.answer, ...(it.accepted || [])].filter((a) => !namedRepairAccepts(it, a)).map((a) => `${it.id}: „${a}"`));
+    assert.deepEqual(offenders, [], `${file}: a named repair accepts another repair`);
+  }
+});
+
+test('DaF review #11 B1: every servable preposition gap is read in German alone — annotated by hand, both ways', () => {
+  // „Das Flugzeug fliegt ___ Montag wieder. (ab, um oder bis?)" took ab and refused bis, though „bis
+  // Montag fliegt es wieder" (by Monday) is a reading of the German; only the English said „from
+  // Monday". A gap may rest on its German cue or its context, never on the English. ANNOTATED BY HAND,
+  // not by the build: every servable A1.2 gap whose answer is one preposition, the answers its German
+  // allows, and the competing preposition its German rules out — with the reason.
+  const ANNOTATION = {
+    'extra-a12-l11-01': [['im'], ['am'], 'the cue gives in + dem'],
+    'extra-a12-l11-02': [['am'], ['im'], 'the cue gives an + dem'],
+    'extra-a12-l11-03': [['zum'], ['zur'], 'the cue gives zu + dem'],
+    '96034fda-42dc-5e3d-8c8d-3c7c82591baf': [['zum'], ['zur'], 'the cue gives zu + dem'],
+    'extra-a12-l11-04': [['zur'], ['zum'], 'the cue gives zu + der'],
+    '49d0d7b5-dbe0-560a-bce0-266b040e5851': [['zur'], ['zum'], 'the cue gives zu + der'],
+    'extra-a12-l11-10': [['vor'], ['seit'], '„war" and „Heute ist es kalt": a point a week back, not a span up to now'],
+    'extra-a12-l11-11': [['seit'], ['vor'], '„ist … da": a span lasting until now'],
+    'extra-a12-l11-12': [['vor'], ['seit'], '„war": a point in the past'],
+    '8058bf54-3a86-5ed4-8a24-55630a3efbce': [['aus'], ['von', 'nach'], 'the cue „Heimat, Land": origin'],
+    'fe97d1bc-1569-5fa8-a988-5ab810e33a1c': [['von'], ['aus', 'nach'], 'the cue „Startort, kein Land"'],
+    'f7aa6e9b-0c37-5874-b2b0-2e311896881a': [['bei'], ['mit', 'zu'], 'the cue gives bei + Dativ'],
+    'eec3bcc5-32be-5e44-915e-c9c810980456': [['nach'], ['in', 'zu'], 'the cue „Richtung, Land"'],
+    'extra-a12-l09-10': [['bis'], ['ab', 'um'], '„von sieben ___ zehn" and the cue „Ende"'],
+    'extra-a12-l09-11': [['ab'], ['bis', 'um'], '„Montag ist der erste Tag": the beginning, so ab; bis would make Monday the last day'],
+    'extra-a12-l09-13': [['ab'], ['bis'], 'the bus runs from eight to ten: boarding from eight'],
+    'extra-a12-l10-01': [['für'], ['ohne', 'durch'], 'Ana and her grandmother are in the shop together, and it is her birthday'],
+    'extra-a12-l10-02': [['ohne'], ['für', 'durch'], 'only „ohne" makes sense of a cheap coat and a scarf'],
+    'extra-a12-l10-03': [['durch'], ['für', 'ohne'], 'the prompt offers für, ohne, durch: only „durch das Kaufhaus" is a way'],
+    'extra-a12-l10-04': [['für'], ['ohne', 'durch'], 'a pullover for a person'],
+  };
+  const PREP = new Set(['ab', 'am', 'an', 'auf', 'aus', 'bei', 'bis', 'durch', 'für', 'gegen', 'hinter', 'im', 'in', 'ins', 'mit', 'nach',
+    'neben', 'ohne', 'seit', 'um', 'unter', 'über', 'von', 'vom', 'vor', 'zu', 'zum', 'zur', 'zwischen']);
+  const servable = poolItems(POOL_A12).filter((it) => it.type === 'fill_blank' && it.minLektion != null && PREP.has(String(it.answer).toLowerCase().trim()));
+  assert.deepEqual(servable.map((it) => it.id).sort(), Object.keys(ANNOTATION).sort(), 'every servable preposition gap is annotated — a new one fails until it is');
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  for (const it of servable) {
+    const [allowed, excluded, why] = ANNOTATION[it.id];
+    for (const a of allowed) assert.equal(verdict(it, a), RESULT.CORRECT, `${it.id}: „${a}" is what the German allows (${why})`);
+    for (const a of excluded) assert.notEqual(verdict(it, a), RESULT.CORRECT, `${it.id}: „${a}" is ruled out (${why})`);
+  }
+  // The old Flugzeug prompt, without its reference point, would allow both: the cue is load-bearing.
+  assert.match(poolItems(POOL_A12).find((it) => it.id === 'extra-a12-l09-11').questionDe, /Montag ist der erste Tag/);
+});
+
+test('DaF review #11 M8: a negated event states no exclusive time — minimal pairs, then the builder with every clock-time event line negated', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const spec = { ...B.reportSpecFor(CURRICULUM_A12, CURRICULUM_A12.checkpoints[3]), known: null };
+  const values = (statement) => [...new Set([1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+    B.contradictions(statement, spec.nouns, B.mulberry32(seed)).filter((c) => c.kind === 'value').map((c) => c.de)))];
+  // ANNOTATED BY HAND: affirmed and negated minimal pairs. Who does not get up at six may not get up at
+  // nine either — „um neun nicht" is open, not refuted.
+  for (const [statement, label] of [
+    ['Tim steht um sechs auf.', 'widerspricht'], ['Tim steht um sechs nicht auf.', 'offen'],
+    ['Ana kommt um neun Uhr an.', 'widerspricht'], ['Ana kommt um neun Uhr nicht an.', 'offen'],
+    ['Der Zug fährt um acht ab.', 'widerspricht'], ['Der Zug fährt um acht nicht ab.', 'offen'],
+    ['Tim kocht um acht.', 'offen'], ['Tim kocht um acht nicht.', 'offen'],
+  ]) {
+    if (label === 'offen') assert.deepEqual(values(statement), [], `„${statement}" — offen`);
+    else assert.ok(values(statement).length > 0, `„${statement}" — widerspricht`);
+  }
+  // THE WHOLE BUILDER, the pool and its stamps unchanged: every first-person clock-time event line of the
+  // dialogues negated in memory, then all sixteen papers. No Falsch changes the time of a negated line.
+  const curriculum = structuredClone(CURRICULUM_A12);
+  const negated = [];
+  for (const lektion of curriculum.lektionen) {
+    for (const line of lektion.dialog?.lines || []) {
+      const m = /^(.*\b[Ii]ch\b.*\bum [^.!?]*?\s)(auf|an|ab)([.!?].*)$/.exec(line.de);
+      if (!m) continue;
+      line.de = `${m[1]}nicht ${m[2]}${m[3]}`;
+      negated.push(line.de);
+    }
+  }
+  assert.ok(negated.length >= 2, `the mutation needs lines to negate: ${negated.join(' | ')}`);
+  for (const checkpoint of curriculum.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+      for (const it of lesen) {
+        if (it.changed?.kind !== 'value' || !/\bnicht\b/.test(String(it.sourceSentence))) continue;
+        assert.fail(`${checkpoint.id}/${round}: „${falschOf(it)}" changes the time of a negated line („${it.sourceSentence}")`);
       }
     }
   }
