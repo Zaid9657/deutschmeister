@@ -8,10 +8,16 @@
   reach Supabase, GitHub or Netlify.
 - The four v5 Routines therefore wake one bound orchestrator session, `session_01Gzmc2yEsvear5NRgi2Ta1x` ("DM team v5 orchestrator", created 2026-10-19 with `create_session`; a probe confirmed Supabase, GitHub, Netlify, Gmail, Resend and ArtifactData), which holds the
   connectors.
+- **Its permission mode is set to Auto by the owner, by hand** (the mode dropdown next to the
+  prompt box). A session an agent creates starts in default mode and stalls on its first
+  connector call: the first v5 fire (2026-10-19 12:27) wrote its start heartbeat, then waited on
+  an ArtifactData permission prompt. The auto-mode safety guard refuses both an agent-created
+  auto-mode session and binding the team's Routines to the owner's chat (both measured
+  2026-10-19), so this switch is the owner's.
 - The sentinel's 8-hour `team:heartbeat` rule is the alarm, and `TEAM_SESSION_ID` in
   `netlify/functions/_shared/sentinelLib.mjs` names that session.
 - **If the session is lost:** recreate the four Routines below from any session that holds the
-  connectors, and update `TEAM_SESSION_ID`.
+  connectors, update `TEAM_SESSION_ID`, and the owner sets the new session to Auto.
 
 | UTC | Routine | Role (agent files spawned) |
 |---|---|---|
