@@ -1,3 +1,4 @@
+import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
@@ -149,32 +150,44 @@ export const handler = async (event) => {
       `${L.level}: ${level}`,
     ].filter(Boolean).join('\n');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CLAUDE_MODEL,
-        max_tokens: 1024,
-        system,
-        messages: [{ role: 'user', content: userText }],
-      }),
-    });
+    let data;
+    let aiFailed = true;
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: CLAUDE_MODEL,
+          max_tokens: 1024,
+          system,
+          messages: [{ role: 'user', content: userText }],
+        }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[explain-answer] Claude API error:', response.status, CLAUDE_MODEL, errorText);
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({ error: 'Die Erklärung konnte nicht erstellt werden.', stage: 'upstream', upstreamStatus: response.status }),
-      };
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[explain-answer] Claude API error:', response.status, CLAUDE_MODEL, errorText);
+        return {
+          statusCode: 502,
+          headers,
+          body: JSON.stringify({ error: 'Die Erklärung konnte nicht erstellt werden.', stage: 'upstream', upstreamStatus: response.status }),
+        };
+      }
+
+      data = await response.json();
+      aiFailed = false;
+    } finally {
+      try {
+        await recordAiUsage(supabase, {
+          user_id, feature: 'explain-answer', provider: 'anthropic', model: CLAUDE_MODEL,
+          ...usageFromAnthropic(data), failed: aiFailed, retries: 0,
+        });
+      } catch { /* Usage must never change the response. */ }
     }
-
-    const data = await response.json();
     const explanation = (data.content || [])
       .filter((b) => b?.type === 'text')
       .map((b) => b.text || '')

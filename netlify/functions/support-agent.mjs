@@ -1,3 +1,4 @@
+import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
 // Support agent — answers the support tickets it can answer from verified
 // facts, holds every reply so a person can stop it, and tells the owner.
 //
@@ -63,7 +64,9 @@ function corsHeaders(event) {
 // ─── I/O ─────────────────────────────────────────────────────────────────────
 
 /** The same raw Messages API call as evaluate-writing.mjs (same key, version header and model). */
-export async function callModel(fetchImpl, env, { system, user }, { timeoutMs = MODEL_TIMEOUT_MS } = {}) {
+export async function callModel(fetchImpl, env, { system, user }, { timeoutMs = MODEL_TIMEOUT_MS, db = serviceClient, user_id = null } = {}) {
+  let aiData;
+  let aiFailed = true;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
@@ -75,12 +78,20 @@ export async function callModel(fetchImpl, env, { system, user }, { timeoutMs = 
     });
     if (!res.ok) return { error: `Anthropic ${res.status}: ${(await res.text()).slice(0, 200)}` };
     const data = await res.json();
+    aiData = data;
+    aiFailed = data.stop_reason === 'refusal';
     if (data.stop_reason === 'refusal') return { error: 'the model declined' };
     return { text: (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('') };
   } catch (e) {
     return { error: e?.name === 'AbortError' ? `model timeout after ${timeoutMs} ms` : e?.message || String(e) };
   } finally {
     clearTimeout(timer);
+    try {
+      await recordAiUsage(db, {
+        user_id, feature: 'support', provider: 'anthropic', model: SUPPORT_MODEL,
+        ...usageFromAnthropic(aiData), failed: aiFailed, retries: 0,
+      });
+    } catch { /* Usage must never change the response. */ }
   }
 }
 
@@ -250,7 +261,7 @@ async function handleMessage(ctx, ticket, analysis, plan) {
       report.drafted.push({ ref, dry: true, wouldCallModel: true });
     } else {
       const { facts, profile } = await loadFacts(ctx, ticket);
-      const out = await callModel(ctx.fetchImpl, ctx.env, buildPrompt({ facts, ticket, thread: analysis.thread }));
+      const out = await callModel(ctx.fetchImpl, ctx.env, buildPrompt({ facts, ticket, thread: analysis.thread }), { db, user_id: ticket.user_id });
       const parsed = out.error ? null : parseModelOutput(out.text);
       if (!parsed) {
         outcome = { kind: 'not-answered', why: out.error ? `Modellfehler: ${out.error}` : 'Modellantwort unbrauchbar' };

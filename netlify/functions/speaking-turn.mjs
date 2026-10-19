@@ -110,13 +110,14 @@ export const handler = async (event) => {
 
     // 3. Cascade: STT → teacher (Haiku) → TTS. Provider failures surface as
     //    structured errors, never a silent 500.
+    const usageContext = { db: supabase, user_id, feature: 'speaking' };
     let userTranscript = '';
     let replyText = '';
     let replyAudioBase64 = null;
     let ttsWarning = false;
 
     try {
-      userTranscript = await transcribeAudio({ audioBase64, mimeType });
+      userTranscript = await transcribeAudio({ audioBase64, mimeType, usageContext });
 
       const system = buildTeacherSystemPrompt({ level, mission, isPlacement, courseTask });
       // An unintelligible turn still gets a gentle nudge to repeat.
@@ -126,11 +127,12 @@ export const handler = async (event) => {
         history: boundedHistory,
         userText,
         maxTokens: 120,
+        usageContext,
       });
       if (!replyText) replyText = 'Entschuldigung, kannst du das bitte wiederholen?';
 
       try {
-        replyAudioBase64 = await synthesizeSpeech({ text: replyText });
+        replyAudioBase64 = await synthesizeSpeech({ text: replyText, usageContext });
       } catch (ttsErr) {
         // TTS is the least critical hop — keep the text reply rather than losing
         // the turn. The UI can show text and skip playback.

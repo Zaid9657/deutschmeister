@@ -1,3 +1,4 @@
+import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
 import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
@@ -292,55 +293,67 @@ export const handler = async (event) => {
     console.log('[xray] analysis', JSON.stringify({ tier, ...source }));
 
     // --- Call Claude ---
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': anthropicKey,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CLAUDE_MODEL,
-        // Thinking is on by default on this model, and thinking tokens count
-        // against max_tokens — the old 1024 ceiling would truncate mid-answer.
-        max_tokens: 16000,
-        // Low effort: this is a bounded structured-extraction task, not a
-        // reasoning problem. Lowering effort is the documented way to keep cost
-        // and latency down; disabling thinking outright is not (it can leak
-        // reasoning tags into the visible response).
-        output_config: { effort: 'low' },
-        system: SYSTEM_PROMPT,
-        messages: [
-          { role: 'user', content: `Analyze this German sentence: "${sentence.trim()}"` },
-        ],
-      }),
-    });
+    let claudeData;
+    let aiFailed = true;
+    try {
+      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': anthropicKey,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: CLAUDE_MODEL,
+          // Thinking is on by default on this model, and thinking tokens count
+          // against max_tokens — the old 1024 ceiling would truncate mid-answer.
+          max_tokens: 16000,
+          // Low effort: this is a bounded structured-extraction task, not a
+          // reasoning problem. Lowering effort is the documented way to keep cost
+          // and latency down; disabling thinking outright is not (it can leak
+          // reasoning tags into the visible response).
+          output_config: { effort: 'low' },
+          system: SYSTEM_PROMPT,
+          messages: [
+            { role: 'user', content: `Analyze this German sentence: "${sentence.trim()}"` },
+          ],
+        }),
+      });
 
-    if (!claudeResponse.ok) {
-      const errorText = await claudeResponse.text();
-      const upstream = claudeResponse.status;
-      console.error('Claude API error:', upstream, CLAUDE_MODEL, errorText);
+      if (!claudeResponse.ok) {
+        const errorText = await claudeResponse.text();
+        const upstream = claudeResponse.status;
+        console.error('Claude API error:', upstream, CLAUDE_MODEL, errorText);
 
-      await refundUsage(usageId);
+        await refundUsage(usageId);
 
-      // Collapsing every upstream failure into one opaque 502 is what made this
-      // outage undiagnosable from the outside. The cause stays server-side; the
-      // response carries just enough to tell the classes apart.
-      let code = 'upstream_error';
-      if (upstream === 429) code = 'upstream_rate_limited';
-      else if (upstream === 401 || upstream === 403) code = 'upstream_auth';
-      else if (upstream === 404) code = 'upstream_model_unavailable';
-      else if (upstream === 400 && /credit balance/i.test(errorText)) code = 'upstream_credit';
-      else if (upstream === 400) code = 'upstream_bad_request';
+        // Collapsing every upstream failure into one opaque 502 is what made this
+        // outage undiagnosable from the outside. The cause stays server-side; the
+        // response carries just enough to tell the classes apart.
+        let code = 'upstream_error';
+        if (upstream === 429) code = 'upstream_rate_limited';
+        else if (upstream === 401 || upstream === 403) code = 'upstream_auth';
+        else if (upstream === 404) code = 'upstream_model_unavailable';
+        else if (upstream === 400 && /credit balance/i.test(errorText)) code = 'upstream_credit';
+        else if (upstream === 400) code = 'upstream_bad_request';
 
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({ error: 'Failed to analyze sentence', code, upstreamStatus: upstream }),
-      };
+        return {
+          statusCode: 502,
+          headers,
+          body: JSON.stringify({ error: 'Failed to analyze sentence', code, upstreamStatus: upstream }),
+        };
+      }
+
+      claudeData = await claudeResponse.json();
+      aiFailed = false;
+    } finally {
+      try {
+        await recordAiUsage(supabase, {
+          user_id: userId, feature: 'xray', provider: 'anthropic', model: CLAUDE_MODEL,
+          ...usageFromAnthropic(claudeData), failed: aiFailed, retries: 0,
+        });
+      } catch { /* Usage must never change the response. */ }
     }
-
-    const claudeData = await claudeResponse.json();
     // With thinking enabled the first content block is a thinking block, not
     // text — indexing [0] would silently yield '' and fail every parse.
     const responseText = (claudeData.content || [])

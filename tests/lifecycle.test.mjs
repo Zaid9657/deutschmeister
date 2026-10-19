@@ -243,6 +243,7 @@ const NOT_LESSON_ACTIVITY = {
   coupon_redemptions: 'money',
   lifecycle_emails: 'our own mail ledger',
   weekly_metrics: 'our own metrics',
+  ai_usage: 'provider cost metadata, including anonymous calls, support and failures; not lesson activity',
   agent_incidents: 'the hourly sentinel’s incident ledger (ops, no learner row)',
   support_tickets: 'support',
   support_ticket_messages: 'support',
