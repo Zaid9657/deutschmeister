@@ -14,10 +14,10 @@
 //      after a team message, an admin action, a status/assignee/priority
 //      change, a new customer message, or when stale; draft-mode drafts are
 //      never sent. The hold boundary is read, not hard-coded (mutation check).
-//   4. Modes: off by default, draft never mails a customer, send sends;
+//   4. Modes: off by default, send behaves exactly like draft in the agent;
 //      missing OWNER_ALERT_EMAIL or RESEND_API_KEY makes the run inert.
-//   5. One send path: admin-support and the agent both go through
-//      sendTicketReply (claim-before-send; a failed send is not an answer).
+//   5. The shared sendTicketReply path remains available for human replies
+//      (claim-before-send; a failed send is not an answer).
 //   6. Owner mail is one per event and idempotent across runs (ticket tags).
 //   7. The facts the model sees come from the account and the catalogue only,
 //      the thread it sees is public messages only, and the synced catalogue
@@ -37,7 +37,7 @@ import {
 } from '../netlify/functions/_shared/supportAgentLib.mjs';
 import {
   AI_DRAFT_MARKER, AI_BLOCKED_MARKER, isPendingAiDraft, aiDraftState, stripAiDraftMarker, cancelPendingAiDrafts,
-  sendTicketReply, SUPPORT_REPLY_TO,
+  sendTicketReply,
 } from '../netlify/functions/_shared/adminSupportLib.mjs';
 import * as catalog from '../netlify/functions/_shared/supportCatalog.mjs';
 import { CATALOGUE_EURO_AMOUNTS } from '../netlify/functions/_shared/pricing.mjs';
@@ -435,47 +435,54 @@ test('dry run: reports, writes nothing, mails nothing, calls no model', async ()
   assert.equal(f.mails.length + f.modelCalls.length, 0);
 });
 
-test('send mode: draft held, owner told once, sent after the hold through the shared path', async () => {
+test('send mode is inert: stores a draft, tells the owner once, never sends after the hold', async (t) => {
+  const warn = t.mock.method(console, 'warn', () => {});
   const db = fakeDb(world());
   const f = fakeFetch();
 
   const r1 = out(await run(db, f, { min: 0 }));
+  assert.equal(r1.mode, 'draft');
   assert.equal(r1.drafted.length, 1, JSON.stringify(r1));
   assert.equal(f.modelCalls.length, 1);
   assert.equal(f.modelCalls[0].model, SUPPORT_MODEL);
   const [draft] = drafts(db);
   assert.ok(isPendingAiDraft(draft), 'stored as a held internal system row');
   assert.equal(ticketOf(db).context.ai_agent.draft_id, draft.id);
-  assert.equal(ticketOf(db).context.ai_agent.mode, 'send');
+  assert.equal(ticketOf(db).context.ai_agent.mode, 'draft');
+  assert.equal(ticketOf(db).context.ai_agent.send_after, null);
+  assert.match(draft.body, /Entwurf, wird nicht automatisch gesendet/);
   assert.equal(ticketOf(db).context.level, 'A1.1', 'the intake context is kept');
   assert.ok(ticketOf(db).tags.includes(TAG.seen('msg-u1')));
-  assert.equal(f.customer().length, 0, 'nothing reaches the customer during the hold');
+  assert.equal(f.customer().length, 0);
   assert.equal(f.owner().length, 1);
-  assert.match(f.owner()[0].subject, /KI-Entwurf sendet 10:10 UTC — DM-TKT00001/);
-  assert.match(f.owner()[0].text, /KI-Antwort stoppen/);
+  assert.match(f.owner()[0].subject, /KI-Entwurf bereit \(Entwurfsmodus\) — DM-TKT00001/);
+  assert.match(f.owner()[0].text, /Modus draft: Nichts wird automatisch gesendet/);
   assert.match(f.owner()[0].text, /admin\/support\?ticket=tkt-1/);
 
+  const draftDb = fakeDb(world());
+  const draftFetch = fakeFetch();
+  assert.deepEqual(r1, out(await run(draftDb, draftFetch, { env: { ...ENV, SUPPORT_AGENT_MODE: 'draft' } })));
+  assert.deepEqual(db.tables, draftDb.tables);
+  assert.deepEqual(f.mails, draftFetch.mails);
+
   const r2 = out(await run(db, f, { min: 5 }));
-  assert.equal(r2.waiting.length, 1);
+  assert.equal(r2.kept.length, 1);
   assert.equal(f.modelCalls.length, 1, 'no second model call for the same message');
   assert.equal(f.owner().length, 1, 'no second owner mail');
   assert.equal(f.customer().length, 0);
 
   const r3 = out(await run(db, f, { min: 11 }));
-  assert.equal(r3.sent.length, 1, JSON.stringify(r3));
-  const [mail] = f.customer();
-  assert.equal(mail.to[0], 'learner@example.test');
-  assert.equal(mail.reply_to, SUPPORT_REPLY_TO);
-  assert.ok(mail.text.includes(DISCLOSURE.de) && mail.text.includes('Das DeutschMeister-Team'));
-  assert.ok(!mail.text.includes(AI_DRAFT_MARKER), 'the marker line never reaches the customer');
-  const sent = db.tables.support_ticket_messages.find((m) => m.id === draft.id);
-  assert.equal(sent.visibility, 'public');
-  assert.equal(sent.delivery_status, 'sent');
-  assert.equal(ticketOf(db).status, 'waiting_user');
-  assert.ok(ticketOf(db).first_response_at);
+  assert.equal(r3.sent.length, 0, JSON.stringify(r3));
+  assert.equal(r3.kept.length, 1);
+  assert.ok(isPendingAiDraft(drafts(db)[0]));
+  assert.equal(ticketOf(db).status, 'new');
+  assert.equal(ticketOf(db).first_response_at, null);
 
   await run(db, f, { min: 20 });
-  assert.equal(f.customer().length, 1, 'sent once');
+  assert.equal(f.customer().length, 0);
+  assert.equal(f.owner().length, 1);
+  assert.equal(warn.mock.callCount(), 4, 'one warning per send-configured invocation, none for draft');
+  for (const call of warn.mock.calls) assert.match(call.arguments[0], /send is disabled by owner decision 2026-10-19: drafts only/);
 });
 
 test('draft mode: drafts and tells the owner, never mails the customer', async () => {
@@ -492,10 +499,11 @@ test('draft mode: drafts and tells the owner, never mails the customer', async (
   assert.ok(isPendingAiDraft(drafts(db)[0]));
 });
 
-test('a human note after the draft stops it: no customer mail', async () => {
+test('a human note after a legacy send-mode draft stops it: no customer mail', async () => {
   const db = fakeDb(world());
   const f = fakeFetch();
   await run(db, f, { min: 0 });
+  ticketOf(db).context.ai_agent.mode = 'send'; // Simulate a draft stored before send was disabled.
   db.tables.support_ticket_messages.push({ id: 'note-1', ticket_id: 'tkt-1', created_at: iso(3), author_type: 'admin', author_id: 'staff-1', visibility: 'internal', body: 'I will answer this myself.', delivery_status: null, delivery_error: null });
   const r = out(await run(db, f, { min: 11 }));
   assert.equal(r.cancelled.length, 1);
@@ -568,20 +576,35 @@ test('a reply that fails validation is stored blocked, never queued, and the own
   assert.equal(f.customer().length, 0);
 });
 
-test('a failed customer send is not an answer: failed row, ticket unanswered, owner told once', async () => {
-  const db = fakeDb(world());
+test('send mode keeps a legacy pending AI draft past its hold exactly like draft mode', async () => {
+  const seed = world({ messages: [{
+    id: 'legacy-draft', ticket_id: 'tkt-1', created_at: iso(0), author_type: 'system', author_id: null,
+    visibility: 'internal', body: `${AI_DRAFT_MARKER} sendet frühestens 10:10 UTC · de\n${CLEAN_DE}`,
+    delivery_status: 'queued', delivery_error: null,
+  }] });
+  const ticket = seed.support_tickets[0];
+  ticket.context.ai_agent = draftMeta({ draftId: 'legacy-draft', mode: 'send', language: 'de', userMessageId: 'msg-u1', ticket, now: T0, holdMinutes: 10 });
+  assert.equal(sendDecision({ ticket, analysis: analyzeTicket(ticket, seed.support_ticket_messages), gates: GATES_SEND, now: at(11) }).action, 'send', 'the legacy fixture is otherwise sendable');
+
+  const db = fakeDb(seed);
+  const draftDb = fakeDb(seed);
   const f = fakeFetch({ customerResendFails: true });
-  await run(db, f, { min: 0 });
-  const r = out(await run(db, f, { min: 11 }));
-  assert.equal(r.failed.length, 1);
-  const row = drafts(db)[0] || db.tables.support_ticket_messages.find((m) => m.delivery_status === 'failed');
-  assert.equal(db.tables.support_ticket_messages.find((m) => m.id === row.id).delivery_status, 'failed');
+  const draftFetch = fakeFetch({ customerResendFails: true });
+  for (const min of [11, 20]) {
+    const r = out(await run(db, f, { min }));
+    const draftReport = out(await run(draftDb, draftFetch, { env: { ...ENV, SUPPORT_AGENT_MODE: 'draft' }, min }));
+    assert.deepEqual(r, draftReport);
+    assert.deepEqual(r.kept, [{ ref: ticket.reference, why: 'mode is draft' }]);
+    assert.equal(r.sent.length + r.failed.length + r.errors.length, 0);
+    assert.deepEqual(db.tables, draftDb.tables);
+    assert.deepEqual(db.tables, seed, 'the pending draft is never claimed or changed');
+  }
+  assert.equal(f.customer().length, 0, 'no customer send is attempted');
+  assert.equal(f.mails.length + f.modelCalls.length, 0);
+  assert.deepEqual(f.mails, draftFetch.mails);
+  assert.ok(isPendingAiDraft(drafts(db)[0]));
   assert.equal(ticketOf(db).first_response_at, null);
   assert.equal(ticketOf(db).status, 'new');
-  assert.equal(f.owner().filter((m) => /Versand fehlgeschlagen/.test(m.subject)).length, 1);
-  await run(db, f, { min: 20 });
-  assert.equal(f.customer().length, 1, 'a failed send is not retried automatically');
-  assert.equal(f.owner().filter((m) => /Versand fehlgeschlagen/.test(m.subject)).length, 1);
 });
 
 test('SUPPORT_AGENT_NOTIFY_DRAFTS=false silences the new-ticket draft mail only', async () => {
