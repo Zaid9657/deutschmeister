@@ -1,6 +1,7 @@
-import { test, before, after } from 'node:test';
+import { test, before, after, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { registerHooks } from 'node:module';
+import crypto from 'node:crypto';
+import { syncBuiltinESMExports } from 'node:module';
 import { performance } from 'node:perf_hooks';
 import { readFileSync } from 'node:fs';
 import { recordAiUsage, usageFromAnthropic, usageFromOpenAI } from '../netlify/functions/_shared/aiUsage.mjs';
@@ -60,74 +61,117 @@ test('recordAiUsage times out a hung insert and aborts it, even when abort is ig
   await new Promise((resolve) => setImmediate(resolve)); // no unhandled rejection
 });
 
-// Run the actual handlers offline. Only the Supabase constructor is replaced;
-// authentication, feature gates, shared speech helpers and provider parsing run normally.
+// Run the actual handlers offline through the real Supabase client. Only fetch
+// is stubbed: authentication, PostgREST queries, feature gates and providers run normally.
 const USER = '11111111-1111-4111-8111-111111111111';
+const SUPABASE_URL = 'https://supabase.invalid';
+const TABLES = new Set(['ai_usage', 'profiles', 'subscriptions', 'purchases', 'grammar_topics',
+  'xray_usage', 'lesson_attempts', 'speaking_sessions', 'speaking_messages',
+  'speaking_evaluations', 'writing_submissions', 'support_tickets', 'support_ticket_messages']);
 let state;
-const db = {
-  auth: { getUser: async () => ({ data: { user: state.anonymous ? null : { id: USER } }, error: null }) },
-  from: (table) => new Query(table),
-};
-class Query {
-  constructor(table) { this.table = table; this.filters = []; this.singleRow = false; this.op = 'select'; this.max = Infinity; }
-  select(_columns, options) { this.head = options?.head; return this; }
-  insert(rows) { this.op = 'insert'; this.rows = [].concat(rows); return this; }
-  update(patch) { this.op = 'update'; this.patch = patch; return this; }
-  delete() { this.op = 'delete'; return this; }
-  eq(k, v) { this.filters.push((r) => r[k] === v); return this; }
-  neq(k, v) { this.filters.push((r) => r[k] !== v); return this; }
-  is(k, v) { this.filters.push((r) => r[k] == v); return this; }
-  in(k, vs) { this.filters.push((r) => vs.includes(r[k])); return this; }
-  gte(k, v) { this.filters.push((r) => r[k] >= v); return this; }
-  lt(k, v) { this.filters.push((r) => r[k] < v); return this; }
-  like(k, v) { const re = new RegExp('^' + v.replace(/%/g, '.*').replace(/_/g, '.') + '$'); this.filters.push((r) => re.test(r[k])); return this; }
-  not(k, _op, v) { const values = v.slice(1, -1).split(','); this.filters.push((r) => !values.every((x) => (r[k] || []).includes(x))); return this; }
-  order() { return this; }
-  limit(max) { this.max = max; return this; }
-  range(a, b) { this.offset = a; this.max = b - a + 1; return this; }
-  maybeSingle() { this.singleRow = true; return this; }
-  single() { this.singleRow = true; return this; }
-  then(resolve, reject) { return Promise.resolve().then(() => this.run()).then(resolve, reject); }
-  run() {
-    if (this.table === 'ai_usage') {
-      assert.equal(this.op, 'insert');
-      state.events.push('usage');
-      state.ledger.push(...this.rows);
-      if (state.insertMode === 'reject') throw new Error('ledger unavailable');
-      if (state.insertMode === 'error') return { error: { message: 'ledger unavailable' } };
-      return { error: null };
+let db;
+
+function matchesFilter(row, column, filter) {
+  const dot = filter.indexOf('.');
+  const op = filter.slice(0, dot);
+  const value = filter.slice(dot + 1);
+  const actual = row[column];
+  switch (op) {
+    case 'eq': return actual != null && String(actual) === value;
+    case 'neq': return actual != null && String(actual) !== value;
+    case 'is': assert.equal(value, 'null'); return actual == null;
+    case 'in': return actual != null && value.slice(1, -1).split(',').map((v) => v.replace(/^"|"$/g, '')).includes(String(actual));
+    case 'gte': return actual != null && actual >= value;
+    case 'lt': return actual != null && actual < value;
+    case 'like': {
+      const pattern = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/%/g, '.*').replace(/_/g, '.');
+      return actual != null && new RegExp('^' + pattern + '$').test(actual);
     }
-    let rows = (state.tables[this.table] || []).filter((r) => this.filters.every((f) => f(r)));
-    if (this.op === 'insert') {
-      rows = this.rows.map((r) => ({ id: 'saved-id', ...r }));
-      (state.tables[this.table] ||= []).push(...rows);
-    } else if (this.op === 'update') rows.forEach((r) => Object.assign(r, this.patch));
-    else if (this.op === 'delete') state.tables[this.table] = (state.tables[this.table] || []).filter((r) => !rows.includes(r));
-    const count = rows.length;
-    rows = rows.slice(this.offset || 0, (this.offset || 0) + this.max);
-    return { data: this.head ? null : this.singleRow ? rows[0] ?? null : rows, count, error: null };
+    case 'not': {
+      assert.ok(value.startsWith('cs.{') && value.endsWith('}'), 'unsupported negated filter');
+      return !value.slice(4, -1).split(',').every((v) => (actual || []).includes(v));
+    }
+    default: assert.fail('unsupported PostgREST filter');
   }
+}
+
+function supabaseResponse(url, options) {
+  const method = options.method || 'GET';
+  if (url.pathname === '/auth/v1/user') {
+    assert.equal(method, 'GET');
+    return state.anonymous
+      ? Response.json({ message: 'invalid token' }, { status: 401 })
+      : Response.json({ id: USER });
+  }
+  assert.ok(url.pathname.startsWith('/rest/v1/'), 'unexpected Supabase endpoint');
+  const table = url.pathname.slice('/rest/v1/'.length);
+  assert.ok(TABLES.has(table), 'unexpected Supabase table');
+  assert.ok(['GET', 'HEAD', 'POST', 'PATCH', 'DELETE'].includes(method), 'unexpected PostgREST method');
+  const body = options.body ? JSON.parse(options.body) : null;
+  if (table === 'ai_usage') {
+    assert.equal(method, 'POST');
+    state.events.push('usage');
+    state.ledger.push(...[].concat(body));
+    if (state.insertMode === 'reject') throw new Error('ledger unavailable');
+    if (state.insertMode === 'error') return Response.json({ message: 'ledger unavailable' }, { status: 500 });
+    return new Response(null, { status: 201 });
+  }
+  const params = url.searchParams;
+  const controls = new Set(['select', 'order', 'limit', 'offset']);
+  let rows = (state.tables[table] || []).filter((row) =>
+    [...params].every(([column, filter]) => controls.has(column) || matchesFilter(row, column, filter)));
+  if (method === 'POST') {
+    rows = [].concat(body).map((row) => ({ id: 'saved-id', ...row }));
+    (state.tables[table] ||= []).push(...rows);
+  } else if (method === 'PATCH') rows.forEach((row) => Object.assign(row, body));
+  else if (method === 'DELETE') state.tables[table] = (state.tables[table] || []).filter((row) => !rows.includes(row));
+  const count = rows.length;
+  if (params.has('order')) {
+    const ordering = params.get('order').split(',').map((part) => part.split('.'));
+    rows.sort((a, b) => {
+      for (const [column, direction] of ordering) {
+        if (a[column] < b[column]) return direction === 'desc' ? 1 : -1;
+        if (a[column] > b[column]) return direction === 'desc' ? -1 : 1;
+      }
+      return 0;
+    });
+  }
+  const offset = Number(params.get('offset') || 0);
+  rows = rows.slice(offset, offset + Number(params.get('limit') || Infinity));
+  if (params.has('select') && params.get('select') !== '*') {
+    const columns = params.get('select').split(',');
+    rows = rows.map((row) => Object.fromEntries(columns.filter((key) => key in row).map((key) => [key, row[key]])));
+  }
+  const headers = new Headers(options.headers);
+  const responseHeaders = { 'content-range': `*/${count}` };
+  if (method === 'HEAD') return new Response(null, { headers: responseHeaders });
+  if (method !== 'GET' && !headers.get('prefer')?.includes('return=representation')) {
+    return new Response(null, { status: method === 'POST' ? 201 : 204 });
+  }
+  if (headers.get('accept') === 'application/vnd.pgrst.object+json') {
+    if (rows.length !== 1) return Response.json({ code: 'PGRST116', message: 'Expected one row' }, { status: 406 });
+    return Response.json(rows[0], { headers: responseHeaders });
+  }
+  return Response.json(rows, { headers: responseHeaders });
 }
 const modules = {};
 const savedEnv = {};
-let hooks;
+let uuidMock;
 let originalFetch;
 before(async () => {
-  globalThis[Symbol.for('ai-usage-test-db')] = db;
-  hooks = registerHooks({ resolve(specifier, context, nextResolve) {
-    let code;
-    if (specifier === '@supabase/supabase-js') code = "export const createClient = () => globalThis[Symbol.for('ai-usage-test-db')];";
-    if (specifier === 'node:crypto' && context.parentURL?.endsWith('/speaking-session.mjs')) code = "export const randomUUID = () => '22222222-2222-4222-8222-222222222222';";
-    if (code) return { url: 'data:text/javascript,' + encodeURIComponent(code), shortCircuit: true };
-    return nextResolve(specifier, context);
-  } });
-  for (const key of ['SUPABASE_SERVICE_ROLE_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY']) {
+  // speaking-session imports the named node:crypto export. Sync the ordinary
+  // method stub to that export before importing handlers; no loader hooks needed.
+  uuidMock = mock.method(crypto, 'randomUUID', () => '22222222-2222-4222-8222-222222222222');
+  syncBuiltinESMExports();
+  for (const key of ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY']) {
     savedEnv[key] = process.env[key];
-    process.env[key] = 'offline-test-key';
+    process.env[key] = key === 'SUPABASE_URL' ? SUPABASE_URL : 'offline-test-key';
   }
   originalFetch = globalThis.fetch;
-  globalThis.fetch = async (url, options) => {
-    assert.ok(url.startsWith('https://api.anthropic.com/') || url.startsWith('https://api.openai.com/'), 'unexpected network request');
+  globalThis.fetch = async (url, options = {}) => {
+    const target = new URL(url instanceof Request ? url.url : url);
+    if (target.origin === SUPABASE_URL) return supabaseResponse(target, options);
+    assert.ok(['https://api.anthropic.com', 'https://api.openai.com'].includes(target.origin), 'unexpected network request');
     state.events.push('provider');
     state.calls.push({ url, options });
     const outcome = state.providerReplies.shift();
@@ -141,11 +185,12 @@ before(async () => {
   for (const name of ['analyze-sentence', 'explain-answer', 'evaluate-speaking', 'evaluate-writing', 'score-readaloud', 'speaking-session', 'speaking-turn', 'support-agent']) {
     modules[name] = await import(`../netlify/functions/${name}.mjs`);
   }
+  ({ supabase: db } = await import('../netlify/functions/_shared/supabase.mjs'));
 });
 after(() => {
-  hooks?.deregister();
+  uuidMock?.mock.restore();
+  syncBuiltinESMExports();
   globalThis.fetch = originalFetch;
-  delete globalThis[Symbol.for('ai-usage-test-db')];
   for (const [key, value] of Object.entries(savedEnv)) {
     if (value === undefined) delete process.env[key]; else process.env[key] = value;
   }
