@@ -188,7 +188,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
       )}
 
       {item.text && (
-        <Card tone="sunk" className="mt-4 p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.text}</Card>
+        <Card tone="sunk" className="mt-4 whitespace-pre-line p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.text}</Card>
       )}
 
       {item.mode === 'options' && (

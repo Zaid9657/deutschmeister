@@ -96,6 +96,7 @@
 // Migration außerhalb dieser Datei. Bis dahin gilt hier die Prüfungsanrede.
 
 import { FUNCTION_WORDS as FUNCTION_WORDS_A11, DIALOG_NAMES as DIALOG_NAMES_A11 } from './a11.js';
+import { LESEN_A12 } from './a12.lesen.js';
 
 /**
  * A1.2 erbt die geschlossene Funktionswortliste von A1.1 und ergänzt sie um das, was ein
@@ -1300,9 +1301,9 @@ export const CURRICULUM_A12 = {
   checkpoints: [
     // Each checkpoint writes its own task (`a12-cpN`, src/data/writingTasks.js), not the chapter's
     // last Lektion's again (DaF review #3, MAJOR 3).
-    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, writingTaskKey: 'a12-cp1', title: 'Checkpoint 1: Lektion 1–3' },
-    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, writingTaskKey: 'a12-cp2', title: 'Checkpoint 2: Lektion 4–6' },
-    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, writingTaskKey: 'a12-cp3', title: 'Checkpoint 3: Lektion 7–9' },
-    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, writingTaskKey: 'a12-cp4', title: 'Checkpoint 4: Lektion 10–12' },
+    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, writingTaskKey: 'a12-cp1', title: 'Checkpoint 1: Lektion 1–3', lesen: LESEN_A12['a1.2-cp1'] },
+    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, writingTaskKey: 'a12-cp2', title: 'Checkpoint 2: Lektion 4–6', lesen: LESEN_A12['a1.2-cp2'] },
+    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, writingTaskKey: 'a12-cp3', title: 'Checkpoint 3: Lektion 7–9', lesen: LESEN_A12['a1.2-cp3'] },
+    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, writingTaskKey: 'a12-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A12['a1.2-cp4'] },
   ],
 };

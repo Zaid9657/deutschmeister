@@ -11,11 +11,19 @@ import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
-// Since round 11b an A1.2 Lesen item offers TWO statements: the key (the report) and its Falsch, the
-// distractor. A1.1 still prints one statement and asks Richtig or Falsch. These read either shape, so a
-// test written for the Falsch statement reads every distractor too instead of passing over it.
-const falschOf = (it) => (it.kind === 'choice' ? it.distractor : it.answer === 'Falsch' ? it.statement : null);
-const richtigOf = (it) => (it.kind === 'choice' ? it.answer : it.answer === 'Richtig' ? it.statement : null);
+// The generated Lesen statements: A1.1 prints one and asks Richtig or Falsch; round 11b's two-option items
+// printed a key and its Falsch. Since round 12 A1.2 reads AUTHORED units (src/data/curricula/a12.lesen.js),
+// which are no falsification at all — they have no Falsch statement, and these return null for them.
+const falschOf = (it) => (it.source === 'authored' ? null : it.kind === 'choice' ? it.distractor : it.answer === 'Falsch' ? it.statement : null);
+const richtigOf = (it) => (it.source === 'authored' ? null : it.kind === 'choice' ? it.answer : it.answer === 'Richtig' ? it.statement : null);
+// What each A1.2 paper's Lesen section is since round 12: four authored units, never the generator.
+const assertAuthoredA12 = (buildCheckpoint) => {
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (const it of buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12 }).filter((x) => x.section === 'lesen')) {
+      assert.equal(it.source, 'authored', `${checkpoint.id}: A1.2 reads authored units`);
+    }
+  }
+};
 
 test('a course draws its practice by its OWN level\'s rules, not A1.1\'s', () => {
   // The quality filter's syllabus rules (no accusative, no ordinals, no month names …) are A1.1's and
@@ -214,21 +222,24 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   assert.deepEqual(report('Mit meiner Mutter gehe ich ins Kino.'), [], 'the speaker\'s own world in the opening');
   assert.deepEqual(report('Wo darf ich parken?'), [], 'a question reports nothing');
 
-  // Every Lesen item the four A1.2 papers print, over four seeds.
-  const pool = JSON.parse(read('src/data/lessonPools/a12.json'));
+  // Every Lesen item the four papers print, over four seeds — on A1.1, because the report engine writes
+  // only A1.1's statements since round 12; A1.2 reads authored units (the round-12 tests below).
+  assertAuthoredA12(buildCheckpoint);
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const pool = JSON.parse(read('src/data/lessonPools/a11.json'));
   const firstPerson = new Set();
-  for (const l of CURRICULUM_A12.lektionen) {
+  for (const l of CURRICULUM_A11.lektionen) {
     for (const line of l.dialog?.lines || []) {
       for (const m of String(line.de).matchAll(/(?:^|[\s,.!?])[Ii]ch\s+([a-zäöüß]+e)(?=[\s,.!?]|$)/g)) firstPerson.add(m[1]);
     }
   }
   // („hole" left with „Ich hole ein Stück Kuchen für dich!" when L3 gained a stated value, M8.)
-  assert.ok(firstPerson.has('bezahle') && firstPerson.has('frage') && firstPerson.has('brauche'), 'the harvest is not vacuous');
+  assert.ok(firstPerson.has('kaufe') && firstPerson.has('koche') && firstPerson.has('brauche'), 'the harvest is not vacuous');
   const problems = [];
   let items = 0;
-  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+  for (const checkpoint of CURRICULUM_A11.checkpoints) {
     for (const seed of [undefined, 1, 2, 3]) {
-      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool, seed })) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed })) {
         if (it.section !== 'lesen') continue;
         items += 1;
         const at = `${checkpoint.id}/${seed} „${it.statement}"`;
@@ -913,7 +924,9 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
   };
   const problems = [];
   let checked = 0;
-  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+  // Since round 12 the generator writes A1.1's papers only; A1.2's are authored (assertAuthoredA12).
+  assertAuthoredA12(buildCheckpoint);
+  for (const [curriculum, file] of [[CURRICULUM_A11, 'a11']]) {
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       const cpSpec = reportSpecFor(curriculum, checkpoint);
@@ -938,7 +951,7 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
       }
     }
   }
-  assert.equal(checked, 96, 'four Lesen reports on each of the twelve papers of both levels');
+  assert.equal(checked, 48, 'four Lesen reports on each of the twelve A1.1 papers');
   assert.deepEqual(problems, []);
 });
 
@@ -1032,9 +1045,12 @@ test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not sta
   // negation is no answer key: the Falsch and the Richtig statements of a paper carry the same
   // number of them (Codex, 2026-10-17: „negation → Falsch" had scored 34 of the 48 A1.2 keys).
   const NEGATION = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
-  const unbalanced = { a11: [], a12: [] };
+  const unbalanced = { a11: [] };
   let falsch = 0;
-  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+  // A1.2 reads authored units since round 12 — no Falsch to check; a negation tells nothing about their key by
+  // the round-12 gate („Negation±" and the „Text verneint" switch, tests below).
+  assertAuthoredA12(B.buildCheckpoint);
+  for (const [curriculum, file] of [[CURRICULUM_A11, 'a11']]) {
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 3; round += 1) {
@@ -1054,8 +1070,7 @@ test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not sta
       }
     }
   }
-  assert.equal(falsch, 72, 'two Falsch statements on each of the twelve A1.1 papers, and one beside every key of the twelve A1.2 papers');
-  assert.deepEqual(unbalanced.a12, [], 'A1.2: on every paper a negation tells nothing about the key');
+  assert.equal(falsch, 24, 'two Falsch statements on each of the twelve A1.1 papers');
   // A1.1 is live and recorded: its checkpoint 2 chapter (L4–L6) has one stated value and no
   // negative first-person line, so its second Falsch has to add a negation. Measured 2026-10-17;
   // balancing it takes a new dialogue line and its recording — the follow-up in the handoff.
@@ -1166,8 +1181,12 @@ test('A1.2 transfer: what a default paper draws that the learner already answere
   });
   // 2026-10-19 (round 11b): 1 / 1 / 0 / 0. The two-option Lesen selector takes its draws from the paper's one
   // random stream in another order, and the Sprachbausteine drawn after it moved; the supply is unchanged.
-  // Lower is the only direction this ratchet takes.
-  assert.deepEqual(measured, [1, 1, 0, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
+  // 2026-10-19 (round 12): 1 / 2 / 0 / 0, raised at checkpoint 2 by OWNER DECISION (option 1, 2026-10-19). The
+  // authored Lesen draws nothing from the paper's random stream, so checkpoint 1's three papers spend six of the
+  // seven numbers-counting items no lesson asks instead of five, and checkpoint 2 — whose ONLY earlier topic that
+  // is — falls back on a second seen one: round 8's structural value; round 11b's 1 was the stream's luck.
+  // Lower is the only direction this ratchet takes; any further raise needs the owner again.
+  assert.deepEqual(measured, [1, 2, 0, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
 });
 
 test('DaF review #6 BLOCKER 1: a correct answer a task rejects is excluded by a German task condition — annotated variants, both ways', () => {
@@ -1329,41 +1348,22 @@ test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „vo
   // A1.1's checkpoint 2 papers keep a one-statement imbalance (the review #5 test's ratchet) that no
   // whole-paper strategy turns into a solved paper.
   const NEG = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
-  const solved = { a12: [], a11: [] };
-  const byText = { right: 0, total: 0 };
-  for (const [curriculum, file] of [[CURRICULUM_A12, 'a12'], [CURRICULUM_A11, 'a11']]) {
+  const solved = { a11: [] };
+  // A1.2 reads authored units since round 12: its negation shortcuts („Negation±", the „Text verneint" switch)
+  // are part of the frozen gate the round-12 test runs on every A1.2 paper.
+  assertAuthoredA12(B.buildCheckpoint);
+  for (const [curriculum, file] of [[CURRICULUM_A11, 'a11']]) {
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 3; round += 1) {
         const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
-        if (file === 'a11') {
-          for (const field of ['text', 'statement']) {
-            if (lesen.every((it) => (NEG.test(it[field]) ? 'Falsch' : 'Richtig') === it.answer)) solved.a11.push(`${checkpoint.id}/${round}/${field}`);
-          }
-          continue;
+        for (const field of ['text', 'statement']) {
+          if (lesen.every((it) => (NEG.test(it[field]) ? 'Falsch' : 'Richtig') === it.answer)) solved.a11.push(`${checkpoint.id}/${round}/${field}`);
         }
-        // A1.2 offers two options (round 11b): a negation strategy picks one — the negated option, the plain
-        // one, or either by whether the text has a negation. Both options alike: half a point.
-        const negatedPick = (it) => {
-          const [k, d] = [NEG.test(it.answer), NEG.test(it.distractor)];
-          return k === d ? 0.5 : k ? 1 : 0;
-        };
-        const strategies = {
-          negated: negatedPick,
-          plain: (it) => 1 - negatedPick(it),
-          'text → negated': (it) => (NEG.test(it.text) ? negatedPick(it) : 1 - negatedPick(it)),
-          'text → plain': (it) => (NEG.test(it.text) ? 1 - negatedPick(it) : negatedPick(it)),
-        };
-        const score = (pick) => lesen.reduce((sum, it) => sum + pick(it), 0);
-        for (const [name, pick] of Object.entries(strategies)) if (score(pick) === lesen.length) solved.a12.push(`${checkpoint.id}/${round}/${name}`);
-        byText.right += score(strategies['text → negated']);
-        byText.total += lesen.length;
       }
     }
   }
-  assert.deepEqual(solved.a12, [], 'A1.2: no regular paper is solved by spotting a negation');
   assert.deepEqual(solved.a11, [], 'A1.1: no regular paper is solved by spotting a negation');
-  assert.equal(byText.right * 2, byText.total, `A1.2: the text strategy scores chance, not ${byText.right} of ${byText.total}`);
 });
 
 test('DaF review #7 MAJOR 8: Richtig and Falsch carry the same negation pairs on every A1.2 paper, and a time bound gives no Falsch', async () => {
@@ -1898,146 +1898,145 @@ test('DaF review #10 B1: an independent annotation of every servable correction 
   assert.deepEqual(wrong, []);
 });
 
-test('DaF review #10 M8 (round 11b): Lesen offers two statements, and no declared surface strategy beats half of any A1.2 paper — mutation-tested', async () => {
+test('DaF review #11 M8 (round 12): A1.2 reads authored units — four disjoint papers per checkpoint, served by round, checked by the authoring check', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
-  // R/F could not be balanced: seven configurations measured, a cue left on every one (review #10). The
-  // two-option format was Codex's (2026-10-19), with the gate written down BEFORE it was built: the family
-  // below, read off the printed fields with this test's own detectors. An option rule picks by place (A, B),
-  // length (longer, shorter), a number's value (larger, smaller), a negation (negated, plain) or the first
-  // word of a contrary pair (first, second); a conditional uses one rule where the TEXT carries a mark (a
-  // negation, Ja/Doch, Nein, a question, a number) and another where it does not. Ties count half. On every
-  // paper of rounds 0–3 the best of them scores 2 of 4 — what a coin scores.
-  const words = (s) => String(s || '').toLowerCase().split(/[^a-zäöüß0-9]+/).filter(Boolean);
-  const VALUES = {
-    eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9, zehn: 10, elf: 11, zwölf: 12,
-    dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17, achtzehn: 18, neunzehn: 19, zwanzig: 20,
-    dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60, siebzig: 70, achtzig: 80, neunzig: 90, hundert: 100,
-  };
-  const valueIn = (s) => {
-    for (const w of words(s)) {
-      if (/^\d+$/.test(w)) return Number(w);
-      if (w in VALUES) return VALUES[w];
-    }
-    return null;
-  };
-  const negatedIn = (s) => words(s).some((w) => /^(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines|nichts|niemand)$/.test(w));
-  const PAIRS = [['groß', 'klein'], ['teuer', 'billig'], ['warm', 'kalt'], ['krank', 'gesund'], ['laut', 'leise'],
-    ['schnell', 'langsam'], ['lang', 'kurz'], ['früh', 'spät'], ['voll', 'leer'], ['gut', 'schlecht'], ['hell', 'dunkel'],
-    ['ledig', 'verheiratet'], ['offen', 'geschlossen'], ['leicht', 'schwer'], ['links', 'rechts'], ['glücklich', 'traurig'],
-    ['dick', 'dünn'], ['sauber', 'schmutzig'], ['nass', 'trocken']];
-  const firstIn = (s) => words(s).some((w) => PAIRS.some(([a]) => a === w));
-  const same = (k, d) => (k === d ? 0.5 : k ? 1 : 0); // 1 = the rule picks the key
-  const more = (k, d) => (k === null || d === null || k === d ? 0.5 : k > d ? 1 : 0);
-  const RULES = {
-    A: (it) => (it.options[0] === it.answer ? 1 : 0),
-    B: (it) => (it.options[1] === it.answer ? 1 : 0),
-    longer: (it) => more(it.answer.length, it.distractor.length),
-    shorter: (it) => 1 - more(it.answer.length, it.distractor.length),
-    larger: (it) => more(valueIn(it.answer), valueIn(it.distractor)),
-    smaller: (it) => 1 - more(valueIn(it.answer), valueIn(it.distractor)),
-    negated: (it) => same(negatedIn(it.answer), negatedIn(it.distractor)),
-    plain: (it) => 1 - same(negatedIn(it.answer), negatedIn(it.distractor)),
-    first: (it) => same(firstIn(it.answer), firstIn(it.distractor)),
-    second: (it) => 1 - same(firstIn(it.answer), firstIn(it.distractor)),
-  };
-  const MARKS = {
-    negation: (it) => negatedIn(it.text),
-    'Ja/Doch': (it) => words(it.text).some((w) => w === 'ja' || w === 'doch'),
-    Nein: (it) => words(it.text).includes('nein'),
-    question: (it) => it.text.includes('?'),
-    number: (it) => valueIn(it.text) !== null,
-  };
-  const audit = (lesen) => {
-    const score = (pick) => lesen.reduce((sum, it) => sum + pick(it), 0);
-    let best = { score: 0, name: '' };
-    const consider = (name, pick) => { const s = score(pick); if (s > best.score) best = { score: s, name }; };
-    for (const [name, rule] of Object.entries(RULES)) consider(name, rule);
-    for (const [mark, has] of Object.entries(MARKS)) {
-      for (const [n1, r1] of Object.entries(RULES)) {
-        for (const [n2, r2] of Object.entries(RULES)) consider(`${mark} ? ${n1} : ${n2}`, (it) => (has(it) ? r1(it) : r2(it)));
-      }
-    }
-    return best;
-  };
-
-  // EVERY A1.2 PAPER, rounds 0–3.
+  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+  const { spawnSync } = await import('node:child_process');
+  // Review #11 measured a sentence-overlap strategy solving 64/64 generated two-option items; Codex's design
+  // verdicts (docs/course-factory/a12-rebuild/DESIGN-m8-lesen-2026-10-19.md) replaced them with new texts
+  // written for each checkpoint. The authoring check is the bank's own gate — taught words and constructions
+  // in the meaning the course used, no practised sentence, the mirrored pairs, the surface gate per paper —
+  // and it runs on the committed bank, not on a copy.
+  const run = spawnSync(process.execPath, ['scripts/a12-lesen-check.mjs'], { cwd: new URL('..', import.meta.url), encoding: 'utf8' });
+  assert.equal(run.status, 0, `scripts/a12-lesen-check.mjs:\n${String(run.stdout).slice(-2500)}`);
   for (const checkpoint of CURRICULUM_A12.checkpoints) {
-    for (let round = 0; round < 4; round += 1) {
-      const id = `${checkpoint.id}/${round}`;
+    const bank = LESEN_A12[checkpoint.id];
+    assert.equal(checkpoint.lesen, bank, `${checkpoint.id} carries its bank`);
+    const units = bank.papers.flat();
+    assert.equal(new Set(units.map((u) => u.id)).size, 16, `${checkpoint.id}: sixteen distinct units`);
+    assert.equal(new Set(units.map((u) => u.text)).size, 16, `${checkpoint.id}: sixteen distinct texts`);
+    // Paper r serves round r as it was approved — the first four attempts read texts they have not seen,
+    // a fifth reads paper 1 again.
+    for (let round = 0; round < 5; round += 1) {
       const lesen = B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
         .filter((it) => it.section === 'lesen');
-      assert.equal(lesen.length, 4, `${id}: four Lesen items`);
+      assert.deepEqual(lesen.map((it) => it.unitId), bank.papers[round % 4].map((u) => u.id), `${checkpoint.id}/${round}: paper ${(round % 4) + 1} as approved`);
       for (const it of lesen) {
-        assert.equal(it.kind, 'choice', `${id} ${it.id}: two options, not Richtig/Falsch`);
-        assert.equal(it.options.length, 2, `${id} ${it.id}`);
-        assert.ok(it.options.includes(it.answer) && it.options.includes(it.distractor) && it.answer !== it.distractor,
-          `${id} ${it.id}: the options are the key and its Falsch`);
-        if (it.changed.kind === 'contrary') {
-          assert.ok(PAIRS.some((pair) => pair.includes(it.changed.from) && pair.includes(it.changed.to)), `${id} ${it.id}: a contrary this test can read`);
-        }
+        assert.equal(it.source, 'authored');
+        assert.equal(it.kind, 'choice');
+        assert.ok(it.options.length === 2 && it.options.includes(it.answer), `${it.unitId}: the key is one of two options`);
       }
-      assert.equal(lesen.filter((it) => it.options[0] === it.answer).length, 2, `${id}: two keys at A, two at B`);
-      const { score, name } = audit(lesen);
-      assert.ok(score <= 2, `${id}: „${name}" scores ${score} of 4`);
     }
   }
+  // No silent fallback: a bank that cannot serve a whole paper is an error, never the old generator.
+  const broken = structuredClone(CURRICULUM_A12);
+  broken.checkpoints[0].lesen = { papers: [LESEN_A12['a1.2-cp1'].papers[0].slice(0, 3)] };
+  assert.throws(() => B.buildCheckpoint({ curriculum: broken, checkpoint: broken.checkpoints[0], pool: POOL_A12 }), /authored Lesen bank/);
+});
 
-  // MUTATIONS: the audit must see a planted leak, or a pass means nothing. Four items each, built like the
-  // real ones (the key a report, the distractor its change), with one leak planted — and one balanced paper.
-  const item = (text, key, distractor, keyAtA) => ({ text, answer: key, distractor, options: keyAtA ? [key, distractor] : [distractor, key] });
+test('DaF review #11 M8 (round 12): no declared surface strategy beats half of any A1.2 paper — the frozen gate, on the papers as delivered', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { auditPapers } = await import('./helpers/lesenGate.mjs');
+  // The gate Codex froze before a unit was written (DESIGN-m8-lesen-2026-10-19.md, verdicts 1 and 2), read
+  // off what the learner SEES — the delivered items in their delivered order, not the bank — so a builder
+  // that reordered the options would fail here. Per paper no strategy and no one-condition switch above 2 of
+  // 4 (a tie ½, ties also broken to A and to B); over the 16 papers no strategy above 32 of 64.
+  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+      .filter((it) => it.section === 'lesen')
+      .map((it) => ({ at: `${checkpoint.id}/${round}`, text: it.text, question: it.promptDe, options: it.options, answer: it.answer }))));
+  assert.equal(papers.length, 16);
+  assert.ok(papers.every((p) => p.length === 4));
+  const { papers: report, worstTotal } = auditPapers(papers);
+  report.forEach((r, i) => {
+    assert.ok(r.worst.score <= 2, `${papers[i][0].at}: „${r.worst.name}" scores ${r.worst.score} of 4`);
+    assert.ok(r.worstSwitch.score <= 2, `${papers[i][0].at}: the switch ${r.worstSwitch.name} scores ${r.worstSwitch.score} of 4`);
+  });
+  assert.ok(worstTotal.score <= 32, `over the sixteen papers „${worstTotal.name}" scores ${worstTotal.score} of 64`);
+});
+
+test('DaF review #11 M8 (round 12): the gate sees every planted leak family, and passes a balanced control', async () => {
+  const { auditPapers } = await import('./helpers/lesenGate.mjs');
+  const u = (text, question, options, answer) => ({ text, question, options, answer });
+  // A detector that rejects everything is no safeguard (verdict 1): first a paper of two mirrored pairs that
+  // must pass, then one paper per leak family Codex listed, each of which must fail.
+  const CONTROL = [
+    u('Ana: Ich kaufe heute das Brot. Gehst du in den Park?\nTim: Ja, ich gehe in den Park.', 'Wer kauft heute das Brot?', ['Ana', 'Tim'], 'Ana'),
+    u('Ana: Kaufst du heute den Kuchen?\nTim: Ja, das mache ich.', 'Wer kauft heute den Kuchen?', ['Ana', 'Tim'], 'Tim'),
+    u('Lena: Ich koche heute die Suppe. Gehst du in den Park?\nPaul: Ja, ich gehe in den Park.', 'Wer kocht heute die Suppe?', ['Lena', 'Paul'], 'Lena'),
+    u('Lena: Kochst du heute den Tee?\nPaul: Ja, das mache ich.', 'Wer kocht heute den Tee?', ['Lena', 'Paul'], 'Paul'),
+  ];
+  const control = auditPapers([CONTROL]).papers[0];
+  assert.equal(control.passes, true, `the balanced control fails: ${control.worst.name} ${control.worst.score}`);
   const LEAKS = {
-    position: [
-      item('Ana: Ich habe drei Äpfel.', 'Ana hat drei Äpfel.', 'Ana hat vier Äpfel.', true),
-      item('Tim: Ich habe acht Euro.', 'Tim hat acht Euro.', 'Tim hat fünf Euro.', true),
-      item('Ana: Ich habe neun Hefte.', 'Ana hat neun Hefte.', 'Ana hat zehn Hefte.', true),
-      item('Tim: Ich habe zehn Stifte.', 'Tim hat zehn Stifte.', 'Tim hat neun Stifte.', true),
+    'all keys at A': CONTROL.map((x) => ({ ...x, options: [x.answer, x.options.find((o) => o !== x.answer)] })),
+    'always Ana': [
+      u('Ana: Ich kaufe das Brot.\nTim: Gut.', 'Wer kauft das Brot?', ['Ana', 'Tim'], 'Ana'),
+      u('Tim: Wer kocht heute?\nAna: Ich koche.', 'Wer kocht heute?', ['Tim', 'Ana'], 'Ana'),
+      u('Lena: Ich wohne in Köln.\nAna: Ich wohne in Bremen.', 'Wer wohnt in Bremen?', ['Lena', 'Ana'], 'Ana'),
+      u('Ana: Ich habe zwei Koffer.\nPaul: Ich habe einen.', 'Wer hat zwei Koffer?', ['Ana', 'Paul'], 'Ana'),
     ],
-    length: [
-      item('Ana: Ich habe sieben Äpfel.', 'Ana hat sieben Äpfel.', 'Ana hat acht Äpfel.', true),
-      item('Tim: Ich habe sieben Euro.', 'Tim hat sieben Euro.', 'Tim hat neun Euro.', false),
-      item('Ana: Ich habe zwölf Hefte.', 'Ana hat zwölf Hefte.', 'Ana hat drei Hefte.', true),
-      item('Tim: Ich habe zwölf Stifte.', 'Tim hat zwölf Stifte.', 'Tim hat vier Stifte.', false),
+    'first speaker': [
+      u('Ana: Ich kaufe das Brot.\nTim: Ich kaufe den Kuchen.', 'Wer kauft das Brot?', ['Tim', 'Ana'], 'Ana'),
+      u('Tim: Ich koche heute.\nAna: Ich koche morgen.', 'Wer kocht heute?', ['Ana', 'Tim'], 'Tim'),
+      u('Lena: Ich wohne in Bremen.\nPaul: Ich wohne in Köln.', 'Wer wohnt in Bremen?', ['Paul', 'Lena'], 'Lena'),
+      u('Paul: Ich habe zwei Koffer.\nLena: Ich habe drei Koffer.', 'Wer hat zwei Koffer?', ['Lena', 'Paul'], 'Paul'),
     ],
-    number: [
-      item('Ana: Ich habe vier Äpfel.', 'Ana hat vier Äpfel.', 'Ana hat drei Äpfel.', true),
-      item('Tim: Ich habe neun Euro.', 'Tim hat neun Euro.', 'Tim hat acht Euro.', false),
-      item('Ana: Ich habe zehn Hefte.', 'Ana hat zehn Hefte.', 'Ana hat neun Hefte.', true),
-      item('Tim: Ich habe fünf Stifte.', 'Tim hat fünf Stifte.', 'Tim hat vier Stifte.', false),
+    'name in the body': [
+      u('Hallo Ana,\nTim kauft das Brot. Ich koche.\nLena', 'Wer kauft das Brot?', ['Tim', 'Ana'], 'Tim'),
+      u('Hallo Tim,\nAna kocht heute. Ich kaufe ein.\nPaul', 'Wer kocht heute?', ['Tim', 'Ana'], 'Ana'),
+      u('Hallo Lena,\nPaul wohnt in Bremen. Ich wohne in Köln.\nAna', 'Wer wohnt in Bremen?', ['Lena', 'Paul'], 'Paul'),
+      u('Hallo Paul,\nLena hat zwei Koffer. Ich habe einen.\nTim', 'Wer hat zwei Koffer?', ['Lena', 'Paul'], 'Lena'),
     ],
-    polarity: [
-      item('Ana: Ich wohne nicht hier.', 'Ana wohnt nicht hier.', 'Ana wohnt hier.', true),
-      item('Tim: Ich koche nicht.', 'Tim kocht nicht.', 'Tim kocht.', false),
-      item('Ana: Ich habe kein Auto.', 'Ana hat kein Auto.', 'Ana hat ein Auto.', true),
-      item('Tim: Ich arbeite nicht.', 'Tim arbeitet nicht.', 'Tim arbeitet.', false),
+    'literal key overlap': [
+      u('Ana kauft heute das Brot. Tim geht in den Park.', 'Wer kauft heute das Brot?', ['Tim', 'Ana'], 'Ana'),
+      u('Tim kocht heute die Suppe. Ana liest.', 'Wer kocht heute die Suppe?', ['Tim', 'Ana'], 'Tim'),
+      u('Lena wohnt in Bremen am Markt. Paul wohnt in Köln.', 'Wer wohnt in Bremen am Markt?', ['Paul', 'Lena'], 'Lena'),
+      u('Paul hat zwei Koffer und eine Tasche. Lena hat einen Koffer.', 'Wer hat zwei Koffer und eine Tasche?', ['Paul', 'Lena'], 'Paul'),
     ],
-    'text × option': [
-      item('Ana: Ich wohne nicht hier.', 'Ana wohnt nicht hier.', 'Ana wohnt hier.', true),
-      item('Tim: Ich koche nicht.', 'Tim kocht nicht.', 'Tim kocht.', false),
-      item('Ana: Ich habe ein Auto.', 'Ana hat ein Auto.', 'Ana hat kein Auto.', true),
-      item('Tim: Ich arbeite heute.', 'Tim arbeitet heute.', 'Tim arbeitet heute nicht.', false),
+    'inverse paraphrase': [
+      u('Tim: Kaufst du heute das Brot?\nAna: Ja, das mache ich.', 'Wer kauft heute das Brot?', ['Tim', 'Ana'], 'Ana'),
+      u('Ana: Kochst du heute?\nTim: Ja, das mache ich.', 'Wer kocht heute?', ['Tim', 'Ana'], 'Tim'),
+      u('Paul: Wohnst du in Bremen?\nLena: Ja, seit Mai.', 'Wer wohnt in Bremen?', ['Paul', 'Lena'], 'Lena'),
+      u('Lena: Hast du zwei Koffer?\nPaul: Ja, zwei.', 'Wer hat zwei Koffer?', ['Lena', 'Paul'], 'Paul'),
+    ],
+    'question to speaker': [
+      u('Ana: Ich kaufe das Brot.\nTim: Und ich den Kuchen.', 'Wer kauft das Brot?', ['Tim', 'Ana'], 'Ana'),
+      u('Tim: Ich koche die Suppe.\nAna: Und ich den Tee.', 'Wer kocht die Suppe?', ['Ana', 'Tim'], 'Tim'),
+      u('Lena: Ich wohne in Bremen.\nPaul: Und ich in Köln.', 'Wer wohnt in Bremen?', ['Lena', 'Paul'], 'Lena'),
+      u('Paul: Ich habe zwei Koffer.\nLena: Und ich drei.', 'Wer hat zwei Koffer?', ['Paul', 'Lena'], 'Paul'),
+    ],
+    // half of the paper for the plain rule, all of it for a switch on a printed mark
+    'conditional leak': [
+      u('Ana: Ich kaufe das Brot nicht.\nTim: Ich kaufe es.', 'Wer kauft das Brot?', ['Ana', 'Tim'], 'Tim'),
+      u('Tim: Ich koche nicht.\nAna: Ich koche.', 'Wer kocht?', ['Tim', 'Ana'], 'Ana'),
+      u('Lena: Ich wohne in Bremen.\nPaul: Ich wohne in Köln.', 'Wer wohnt in Bremen?', ['Paul', 'Lena'], 'Lena'),
+      u('Paul: Ich habe zwei Koffer.\nLena: Ich habe drei.', 'Wer hat zwei Koffer?', ['Lena', 'Paul'], 'Paul'),
     ],
   };
-  for (const [leak, lesen] of Object.entries(LEAKS)) {
-    const { score, name } = audit(lesen);
-    assert.ok(score > 2, `the audit misses a planted ${leak} leak: its best strategy „${name}" scores ${score} of 4`);
+  for (const [leak, paper] of Object.entries(LEAKS)) {
+    const r = auditPapers([paper]).papers[0];
+    assert.equal(r.passes, false, `the gate misses a planted „${leak}" leak (worst ${r.worst.name} ${r.worst.score})`);
   }
-  // The text × option leak hides from every unconditional rule — only the conditionals find it.
-  const unconditional = Math.max(...Object.values(RULES).map((rule) => LEAKS['text × option'].reduce((sum, it) => sum + rule(it), 0)));
-  assert.ok(unconditional <= 2, 'the text × option leak is invisible to a single option rule');
-  // A balanced paper: two complementary pairs with the same text marks, keys at A and B — a coin.
-  const BALANCED = [
-    item('Ana: Ich habe vier Äpfel.', 'Ana hat vier Äpfel.', 'Ana hat drei Äpfel.', true),
-    item('Tim: Ich habe acht Euro.', 'Tim hat acht Euro.', 'Tim hat neun Euro.', false),
-    item('Ana: Ich wohne nicht hier.', 'Ana wohnt nicht hier.', 'Ana wohnt hier.', true),
-    item('Tim: Ich koche heute. Ana: Ich koche nicht.', 'Tim kocht heute.', 'Tim kocht heute nicht.', false),
-  ];
-  assert.equal(audit(BALANCED).score, 2, `a balanced paper scores a coin's 2 of 4, not ${audit(BALANCED).score} („${audit(BALANCED).name}")`);
-  // …and a real paper with one key moved from B to A gives the place rule three of four.
-  const real = B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint: CURRICULUM_A12.checkpoints[0], pool: POOL_A12 })
-    .filter((it) => it.section === 'lesen');
-  const atB = real.findIndex((it) => it.options[1] === it.answer);
-  const moved = real.map((it, i) => (i === atB ? { ...it, options: [it.answer, it.distractor] } : it));
-  assert.ok(audit(moved).score >= 3, `one key moved to A: the audit sees ${audit(moved).score} of 4`);
+});
+
+test('DaF review #11 M8 (round 12): every authored unit passed the independent semantic review, solved blind before the key', async () => {
+  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+  // Verdict 2: the reviewer solves each unit BEFORE seeing the key, then records the evidence and whether the
+  // unit has one supported answer, natural German, taught meanings and a plausible competitor. The fixture
+  // keeps what was reviewed, so a unit changed afterwards fails here until it is reviewed again.
+  const review = JSON.parse(read('tests/fixtures/a12-lesen-review.json'));
+  const byId = new Map(review.units.map((r) => [r.id, r]));
+  const problems = [];
+  for (const unit of Object.values(LESEN_A12).flatMap((b) => b.papers.flat())) {
+    const r = byId.get(unit.id);
+    if (!r) { problems.push(`${unit.id}: not reviewed`); continue; }
+    if (r.verdict !== 'ok') problems.push(`${unit.id}: ${r.verdict} — ${r.note}`);
+    if (r.solved !== unit.answer) problems.push(`${unit.id}: solved blind as „${r.solved}", keyed „${unit.answer}"`);
+    if (r.text !== unit.text || r.question !== unit.question) problems.push(`${unit.id}: changed since its review`);
+  }
+  assert.deepEqual(problems, []);
+  assert.equal(byId.size, 64, 'the review covers the whole bank');
 });
 
 test('round 11b: a constant place is a constant answer — „always the first option" never passes a section', async () => {
@@ -2154,8 +2153,11 @@ test('DaF review #11 M8: a negated event states no exclusive time — minimal pa
     else assert.ok(values(statement).length > 0, `„${statement}" — widerspricht`);
   }
   // THE WHOLE BUILDER, the pool and its stamps unchanged: every first-person clock-time event line of the
-  // dialogues negated in memory, then all sixteen papers. No Falsch changes the time of a negated line.
-  const curriculum = structuredClone(CURRICULUM_A12);
+  // dialogues negated in memory, then all sixteen papers. No Falsch changes the time of a negated line. On
+  // A1.1 — since round 12 the generator writes no A1.2 Lesen item (A1.2 reads authored units).
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const POOL_A11 = JSON.parse(read('src/data/lessonPools/a11.json'));
+  const curriculum = structuredClone(CURRICULUM_A11);
   const negated = [];
   for (const lektion of curriculum.lektionen) {
     for (const line of lektion.dialog?.lines || []) {
@@ -2168,7 +2170,7 @@ test('DaF review #11 M8: a negated event states no exclusive time — minimal pa
   assert.ok(negated.length >= 2, `the mutation needs lines to negate: ${negated.join(' | ')}`);
   for (const checkpoint of curriculum.checkpoints) {
     for (let round = 0; round < 4; round += 1) {
-      const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+      const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool: POOL_A11, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
       for (const it of lesen) {
         if (it.changed?.kind !== 'value' || !/\bnicht\b/.test(String(it.sourceSentence))) continue;
         assert.fail(`${checkpoint.id}/${round}: „${falschOf(it)}" changes the time of a negated line („${it.sourceSentence}")`);
