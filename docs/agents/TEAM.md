@@ -1,5 +1,45 @@
 # DeutschMeister agent team — one page
 
+## v5 (2026-10-19): read this first
+
+The team now works the plan in `docs/strategy/million-plan-2026-10.md`, the joint Claude + Codex
+evaluation of 2026-10-19 that the owner approved. Everything below this section is v4 history,
+kept for its reasoning.
+
+- **Goal.** $1M a year means about 389 package sales a month at €249. That is revenue after VAT
+  and refunds, about €73.1k a month.
+- **North star.** Package revenue after VAT and refunds over the last 30 days. It starts at €0 on
+  2026-10-19.
+- **Five moves, in order:**
+  1. Contain the live risks and clear one release gate.
+  2. Make the agent loop survive and honour every reserved action.
+  3. Make the telc pilot reviewable and bounded.
+  4. Line up the buyers before opening.
+  5. Prove €199–249 purchases, then earn distribution.
+- **Charter.** The team artifact's `config/charter` (v5) holds the expected effects and kill
+  rules for each move.
+
+**Four roles replace the 12 areas.** The existing agent files stay and are spawned by role:
+
+| Role | Merges | Routine (UTC) | Money metric |
+|---|---|---|---|
+| sales | revenue, conversion | daily 06:10 | Package sales and package revenue after VAT and refunds, 30 days |
+| distribution | acquisition, seo, content | daily 06:40 | Qualified offer views (server-side) and sending partners |
+| fulfilment | product, support, retention | 07:20, 12:20, 18:20 (support desk every pass; 07:20 also builds) | Buyers finishing ≥10 of 20 units by day 45; AI-vs-rater agreement |
+| controller | supervisor, website, webperf, security | daily 05:50, plus the Monday packet | Canary lines, the weekly P&L, P95 AI cost per buyer, owner minutes |
+
+Each role's memory and backlog live in `agents/<role>` in the team artifact. The 12 area records
+are frozen and point at their role. What stays with the owner is in `docs/agents/PROTOCOL.md`
+§ v5 addendum. The Routine prompts are in `docs/scorecard-routine.md` § v5.
+
+**Retired on 2026-10-19:**
+- rubric v2 scoring and the scorecard goal;
+- playbook counters and the Monday curator pass;
+- five-times-daily snapshots;
+- posts-per-week quotas;
+- the 14 area Routines.
+
+
 **Where it lives:** the private artifact **DeutschMeister Agent Team**
 (<https://claude.ai/artifact/NGaePeB3GXkep9oJmMs5hD>) holds the charter (with the shared
 `team_playbook` and `judging_v4`), rubric, daily snapshots, each agent's memory and playbook,

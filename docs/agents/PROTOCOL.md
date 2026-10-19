@@ -1,5 +1,36 @@
 # Agent team protocol (v4, 2026-10-04: playbooks, expected effects, revenue focus)
 
+## v5 addendum (2026-10-19): this section wins over everything below
+
+The plan is `docs/strategy/million-plan-2026-10.md`. The charter is `config/charter` v5 in the
+team artifact. The four roles (sales, distribution, fulfilment, controller) are described in
+`docs/agents/TEAM.md`.
+
+**Owner-only, explicit.** Agents prepare a patch and a one-line approval request in the Monday
+packet; they never merge or execute any of these:
+- money: prices, refunds, budgets, payouts, affiliate commission, and switching ads on;
+- every decision or release that changes access, entitlement, quotas, limits or eligibility;
+- legal: terms, guarantees, the consent basis, Impressum and privacy facts;
+- posting or messaging under the brand: social, communities, partners, list mail;
+- security, auth, RLS and policies, grants, and any new public endpoint;
+- deleting customer data;
+- `CLAUDE.md`.
+
+**Agents may:**
+- ship one change per run, each with an `expected_effect`;
+- run the steward gates, then squash-merge on green CI, at most 3 deploying releases a day;
+- apply additive migrations with a rollback;
+- write Gmail drafts and labels on DeutschMeister threads;
+- edit their own role records and agent docs.
+
+**Support is draft-only, enforced in code**, not only by the Netlify setting.
+
+**Measurement:**
+- No activity quotas (posts, runs, rules written).
+- Each role reports one money metric.
+- Every kill rule waits for a reconciled server-side denominator.
+
+
 Every area agent in `.claude/agents/` follows this protocol. The agent's own file adds its
 metrics, levers and boundaries. The team's shared memory is the private claude.ai artifact
 **DeutschMeister Agent Team** (`https://claude.ai/artifact/NGaePeB3GXkep9oJmMs5hD`), read and
