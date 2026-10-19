@@ -116,9 +116,9 @@ The ranking is by dependency, not by "€ per owner-minute". Revenue estimates w
 ### 1. Contain the live risks and clear one release gate
 
 - **Owner, week 1:**
-  - run the 2 `DROP POLICY` lines on `signup_attempts` (280 rows, still readable by any signed-in account on 10-19);
+  - close the open data-exposure item: 2 owner-only SQL lines, listed in the private team record;
   - revoke the public PostHog personal key;
-  - decide the daily mail's basis now. It goes out opt-out (`DEFAULT true`), with an X-Ray button;
+  - decide the daily mail's legal basis now;
   - confirm that Netlify's `SUPPORT_AGENT_MODE` is not `send`;
   - **book a lawyer and a Steuerberater.**
 - **Agents:**
@@ -296,7 +296,7 @@ Both sides agree. Correctness defects, access failures and promised delivery are
 ## Your decisions, one at a time, in order
 
 1. **Live risks, ≈ 30 min:**
-   - run the 2 `DROP POLICY` lines;
+   - close the data-exposure item (2 SQL lines, in the private team record);
    - revoke the PostHog key;
    - decide the daily mail's basis;
    - confirm `SUPPORT_AGENT_MODE` is not `send`.
@@ -347,7 +347,6 @@ Both sides agree. Correctness defects, access failures and promised delivery are
 - **Renewal benchmark:** the 59.2% figure is Adapty's global number, not an education-specific one.
 
 **Systems:**
-- **`signup_attempts`:** 280 rows on 10-19, with both SELECT policies still live.
 - **The four 10-09 builds:** pushed as branches on 10-19, not merged.
 - **X-Ray cost per call:** not bounded by ~$0.01. Thinking is on with a 16k-token ceiling, so output alone can reach ≈ $0.16.
 - **"50 failed payment attempts":** may count retries twice. Count unique invoices.
