@@ -22,7 +22,7 @@ import {
 } from './pricing.js';
 import {
   LEVELS, LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_WRITING_EVALUATIONS_PER_MONTH,
-  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, READING_LESSON_COUNTS_BY_LEVEL, UNLIMITED_CONTENT_LINE,
+  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, READING_LESSON_COUNTS_BY_LEVEL, UNLIMITED_CONTENT_LINE, PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 import { COURSE_CONTENTS, GUIDED_PLANS, LEVEL_OUTCOME_EN, levelToSlug } from './courseContents.js';
 
@@ -206,7 +206,7 @@ export const FREE_STOP_LINES = [
 export const OFFER_FAQ = [
   {
     q: 'I don’t know my level. Where should I start?',
-    a: 'Use “Where do you get on?” above: pick what you can already do. Or take the free 20-minute level test. You can also start the free A1.1 course and move up when the Lektionen feel easy.',
+    a: `Use “Where do you get on?” above: pick what you can already do. Or take the free ${PLACEMENT_TEST_MINUTES}-minute level test. You can also start the free A1.1 course and move up when the Lektionen feel easy.`,
   },
   {
     q: 'What does buying a level give me, exactly?',
