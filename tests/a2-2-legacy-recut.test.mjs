@@ -9,6 +9,9 @@
 //   2. MIRROR — every guarded UPDATE's NEW value is what the cache carries for
 //      that id/field (the cache is what CI's Astro build and every test read;
 //      the live row is what the Netlify build reads — both halves must agree).
+//      A later migration that changes one of these fields again (LATER) is
+//      composed in, in file order, and its guard must hold on the re-cut text —
+//      exactly what the database did.
 //   3. THE CLASS — no German field of ANY A2.2 grammar row in the cache carries a
 //      banned A2.2 form (tests/helpers/a2Bans.mjs). Before this PR three live
 //      topics taught obwohl/während/bevor/nachdem/bis/seit/als, Präteritum full
@@ -40,6 +43,29 @@ const WORDS_RE = /UPDATE public\.words\r?\nSET level = '([a-z0-9.]+)'\r?\nWHERE 
 const grammarUpdates = [...sql.matchAll(UPDATE_RE)].map((m) => ({
   table: m[1], field: m[2], raw: m[3], value: m[4], jsonb: !!m[5], id: m[6], guardField: m[7],
 }));
+// Later guarded jsonb_set changes of a field the re-cut set: the 2026-10-19 A2 rule fixes changed the memory tricks
+// inside rule c9511dce's re-cut `content` (S163/S164). Any other form on a re-cut field fails the test loudly.
+const LATER = ['2026-10-19-a2-grammar-rule-fixes.sql'].map((f) => readFileSync(join(root, 'migrations', f), 'utf8').replace(/\r\n/g, '\n'));
+const LATER_RE = /\nUPDATE public\.(\w+) SET (\w+) = ([\s\S]*?)\nWHERE id = '([0-9a-f-]{36})' AND ([\s\S]*?(?:\$q\$|::jsonb));\n/g;
+const SET_TEXT_AT = /^jsonb_set\((\w+), '\{([^}]*)\}', to_jsonb\(\$q\$([\s\S]*?)\$q\$::text\)\)$/;
+const GUARD_TEXT_AT = /^(\w+) #>> '\{([^}]*)\}' = \$q\$([\s\S]*?)\$q\$$/;
+function withLaterChanges(table, id, field, value) {
+  const v = structuredClone(value);
+  for (const later of LATER) {
+    for (const m of later.matchAll(LATER_RE)) {
+      if (m[1] !== table || m[4] !== id || m[2] !== field) continue;
+      const set = m[3].match(SET_TEXT_AT);
+      const guard = m[5].match(GUARD_TEXT_AT);
+      assert.ok(set && guard && set[1] === field && guard[1] === field && set[2] === guard[2],
+        `${table} ${id}.${field}: a later migration changes this field in a form this test does not compose`);
+      const path = set[2].split(',');
+      const parent = path.slice(0, -1).reduce((o, k) => o?.[k], v);
+      assert.equal(parent?.[path.at(-1)], guard[3], `${id}.${field}{${set[2]}}: the later guard must hold on the re-cut value`);
+      parent[path.at(-1)] = set[3];
+    }
+  }
+  return v;
+}
 const wordUpdates = [...sql.matchAll(WORDS_RE)].map((m) => ({ newLevel: m[1], id: m[2], oldLevel: m[3], german: unq(m[4]) }));
 
 test('the re-cut migration is UPDATE-only and every statement is guarded on the old value', () => {
@@ -54,7 +80,7 @@ test('every grammar UPDATE mirrors the cache: same id, same field, NEW value pre
   for (const u of grammarUpdates) {
     const row = cache[TABLES[u.table]].find((r) => r.id === u.id);
     assert.ok(row, `${u.table} ${u.id} not in the cache`);
-    const expected = u.raw === 'NULL' ? null : u.jsonb ? JSON.parse(unq(u.value)) : unq(u.value);
+    const expected = withLaterChanges(u.table, u.id, u.field, u.raw === 'NULL' ? null : u.jsonb ? JSON.parse(unq(u.value)) : unq(u.value));
     assert.deepEqual(row[u.field], expected, `${u.table} ${u.id}.${u.field}: cache value differs from the migration's NEW value`);
   }
 });

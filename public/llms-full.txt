@@ -165,7 +165,7 @@ Every URL below is a live, publicly readable lesson page.
 1. Dative Case (Dativ) — https://deutsch-meister.de/grammar/a2.1/dative-case/
 2. Prepositions + Dative (Präpositionen + Dativ) — https://deutsch-meister.de/grammar/a2.1/prepositions-dative/
 3. Two-Way Prepositions (Wechselpräpositionen) — https://deutsch-meister.de/grammar/a2.1/two-way-prepositions/
-4. Possessive Pronouns (Possessivpronomen) — https://deutsch-meister.de/grammar/a2.1/possessive-pronouns/
+4. Possessive Articles (Accusative and Dative) (Possessivartikel im Akkusativ und Dativ) — https://deutsch-meister.de/grammar/a2.1/possessive-pronouns/
 5. Separable Verbs (Trennbare Verben) — https://deutsch-meister.de/grammar/a2.1/separable-verbs/
 6. Perfect Tense (haben) (Perfekt mit "haben") — https://deutsch-meister.de/grammar/a2.1/perfect-tense-haben/
 7. Perfect Tense (sein) (Perfekt mit "sein") — https://deutsch-meister.de/grammar/a2.1/perfect-tense-sein/
