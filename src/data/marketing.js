@@ -95,6 +95,9 @@ export const READALOUD_DAILY_LIMIT = 60;
 /** Length of the free trial. Source: src/config/limits.js, unchanged since launch. */
 export const TRIAL_DAYS = 7;
 
+/** Approximate CEFR placement-test duration. Source: the free level test in OFFER_FAQ, src/data/offers.js (2026-10-19); an editorial estimate, not a server limit. */
+export const PLACEMENT_TEST_MINUTES = 20;
+
 // ---------------------------------------------------------------------------
 // Content — counted against live tables. See rule 2 above before adding.
 // ---------------------------------------------------------------------------

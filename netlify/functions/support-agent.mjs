@@ -1,15 +1,10 @@
-import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
-// Support agent — answers the support tickets it can answer from verified
-// facts, holds every reply so a person can stop it, and tells the owner.
+// Support agent — drafts replies from verified facts for human review
+// and tells the owner. It never sends a customer reply automatically.
 //
 // Every 5 minutes (`schedule('*/5 * * * *')`, mirrored in netlify.toml):
-//   1. PENDING DRAFTS. Each held AI reply is sent only when the hold
-//      (SUPPORT_AGENT_HOLD_MINUTES, default 10) has passed AND nobody acted on
-//      the ticket since it was drafted — a team message or note, a status,
-//      priority or assignee change, "KI-Antwort stoppen" in the admin screen,
-//      or a new customer message. Anything else that can never become sendable
-//      stops the draft. The send is admin-support's own path
-//      (adminSupportLib.sendTicketReply), claimed before Resend is called.
+//   1. PENDING DRAFTS. Kept for human review, never auto-sent, including
+//      legacy send-mode drafts whose hold has passed. Legacy drafts are
+//      stopped when a person acts, a customer writes again, or they expire.
 //   2. NEW WORK. Open tickets whose latest public message is the customer's,
 //      once per message (tag ai:seen:<message>). Deterministic rules first:
 //      cancellation, refund, deletion/GDPR, billing dispute, legal/complaint and
@@ -25,12 +20,14 @@ import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
 //
 // SHIPS OFF / FAILS CLOSED
 //   SUPPORT_AGENT_MODE unset → 'off' → no-op. 'draft' drafts and notifies but
-//   never mails a customer; 'send' also sends. Without OWNER_ALERT_EMAIL or
-//   RESEND_API_KEY the run does nothing at all (logged). Scheduler calls carry
+//   never mails a customer; 'send' behaves exactly like 'draft' and warns.
+//   Without OWNER_ALERT_EMAIL or RESEND_API_KEY the run does nothing at all
+//   (logged). Scheduler calls carry
 //   `next_run`; a manual run needs ?secret=<CAMPAIGN_SECRET>. ?dry=1 reports
 //   what it would do and writes and sends nothing; ?dry=1&preview=1 also calls
 //   the model and returns the drafts it would store.
 // Docs: docs/agents/production-agents.md ("Support agent").
+import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
 import { schedule } from '@netlify/functions';
 import { supabase as serviceClient } from './_shared/supabase.mjs';
 import { fetchAll } from './_shared/adminHttp.mjs';
@@ -324,6 +321,12 @@ export async function runSupportAgent({ event = {}, env = process.env, db = serv
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
   const gates = runGates(env);
+  if (gates.mode === 'send') {
+    // send is disabled by owner decision 2026-10-19: drafts only
+    gates.mode = 'draft';
+    gates.canSendCustomer = false;
+    console.warn('[support-agent] send is disabled by owner decision 2026-10-19: drafts only');
+  }
   if (gates.mode === 'off') {
     console.log('[support-agent] SUPPORT_AGENT_MODE is off — doing nothing.');
     return reply(200, { mode: 'off' });
