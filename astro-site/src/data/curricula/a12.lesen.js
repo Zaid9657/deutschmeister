@@ -13,6 +13,11 @@
 // (tests/helpers/lesenGate.mjs). `options` is the order the learner sees; `evidence` is the span that
 // answers; `rival` says why the other option, though in the text, does not.
 //
+// BANK ORDER (review #12). Each position and each question-type occurrence (Wer / other W-question,
+// first / second in its paper) carries A and B equally often. Every fixed four-letter sequence and
+// type-rank rule, including its inverse, scores at most 32/64. The original per-paper gates still apply.
+// Rebalance only by reordering units or reversing BOTH option arrays of a mirrored pair.
+//
 // BEFORE ANY CHANGE: `node scripts/a12-lesen-check.mjs` (taught words and constructions, no practised
 // sentence, pairs, the gate) must print OK, and a changed unit needs the independent semantic review again
 // (tests/fixtures/a12-lesen-review.json). Edit this file — it is the source — and run sync-curricula.
@@ -99,8 +104,8 @@ export const LESEN_A12 = {
           "question": "Wer geht heute in die Bibliothek?",
           "questionEn": "Who goes to the library today?",
           "options": [
-            "Lena",
-            "Paul"
+            "Paul",
+            "Lena"
           ],
           "answer": "Lena",
           "evidence": "ich gehe heute in die Bibliothek",
@@ -116,8 +121,8 @@ export const LESEN_A12 = {
           "question": "Was kostet das Brot?",
           "questionEn": "What does the bread cost?",
           "options": [
-            "drei Euro",
-            "vier Euro"
+            "vier Euro",
+            "drei Euro"
           ],
           "answer": "drei Euro",
           "evidence": "Nein, es kostet drei Euro.",
@@ -133,8 +138,8 @@ export const LESEN_A12 = {
           "question": "Wer hat heute Zeit?",
           "questionEn": "Who has time today?",
           "options": [
-            "Lena",
-            "Paul"
+            "Paul",
+            "Lena"
           ],
           "answer": "Paul",
           "evidence": "du hast heute Zeit",
@@ -150,8 +155,8 @@ export const LESEN_A12 = {
           "question": "Was kostet die Lampe?",
           "questionEn": "What does the lamp cost?",
           "options": [
-            "vier Euro",
-            "zehn Euro"
+            "zehn Euro",
+            "vier Euro"
           ],
           "answer": "zehn Euro",
           "evidence": "Nein, zehn Euro.",
@@ -239,8 +244,8 @@ export const LESEN_A12 = {
           "question": "Wer kocht am Sonntag?",
           "questionEn": "Who cooks on Sunday?",
           "options": [
-            "Ali",
-            "Thomas"
+            "Thomas",
+            "Ali"
           ],
           "answer": "Ali",
           "evidence": "ich koche am Sonntag",
@@ -256,8 +261,8 @@ export const LESEN_A12 = {
           "question": "Wo ist die Bibliothek?",
           "questionEn": "Where is the library?",
           "options": [
-            "links",
-            "rechts"
+            "rechts",
+            "links"
           ],
           "answer": "links",
           "evidence": "links die Bibliothek",
@@ -273,8 +278,8 @@ export const LESEN_A12 = {
           "question": "Wer kommt am Samstag nach Berlin?",
           "questionEn": "Who comes to Berlin on Saturday?",
           "options": [
-            "Ali",
-            "Thomas"
+            "Thomas",
+            "Ali"
           ],
           "answer": "Thomas",
           "evidence": "du kommst am Samstag nach Berlin",
@@ -290,8 +295,8 @@ export const LESEN_A12 = {
           "question": "Wo ist die Bank?",
           "questionEn": "Where is the bank?",
           "options": [
-            "links",
-            "rechts"
+            "rechts",
+            "links"
           ],
           "answer": "rechts",
           "evidence": "Rechts ist die Bank",
@@ -383,8 +388,8 @@ export const LESEN_A12 = {
           "question": "Wer geht heute in die Praxis?",
           "questionEn": "Who is going to the doctor's practice today?",
           "options": [
-            "Ana",
-            "Tim"
+            "Tim",
+            "Ana"
           ],
           "answer": "Ana",
           "evidence": "Ich gehe heute in die Praxis, denn mein Bauch tut weh.",
@@ -400,8 +405,8 @@ export const LESEN_A12 = {
           "question": "Wer kauft die Fahrkarten?",
           "questionEn": "Who buys the tickets?",
           "options": [
-            "Ana",
-            "Tim"
+            "Tim",
+            "Ana"
           ],
           "answer": "Tim",
           "evidence": "Ich! Ich bin heute am Bahnhof.",
@@ -417,8 +422,8 @@ export const LESEN_A12 = {
           "question": "Wann ist das Konzert?",
           "questionEn": "When is the concert?",
           "options": [
-            "am Samstag",
-            "am Sonntag"
+            "am Sonntag",
+            "am Samstag"
           ],
           "answer": "am Samstag",
           "evidence": "Das Konzert in Köln ist am Samstag.",
@@ -434,8 +439,8 @@ export const LESEN_A12 = {
           "question": "Wann ist ein Zimmer frei?",
           "questionEn": "When is a room free?",
           "options": [
-            "am Samstag",
-            "am Sonntag"
+            "am Sonntag",
+            "am Samstag"
           ],
           "answer": "am Sonntag",
           "evidence": "Nein, leider nur am Sonntag.",
@@ -453,8 +458,8 @@ export const LESEN_A12 = {
           "question": "Wer wechselt das Zimmer?",
           "questionEn": "Who is changing rooms?",
           "options": [
-            "Thomas",
-            "Ali"
+            "Ali",
+            "Thomas"
           ],
           "answer": "Ali",
           "evidence": "Ich wechsele das Zimmer.",
@@ -470,8 +475,8 @@ export const LESEN_A12 = {
           "question": "Wer hat am Montag frei?",
           "questionEn": "Who is off on Monday?",
           "options": [
-            "Thomas",
-            "Ali"
+            "Ali",
+            "Thomas"
           ],
           "answer": "Thomas",
           "evidence": "Du hast am Montag frei.",
@@ -523,8 +528,8 @@ export const LESEN_A12 = {
           "question": "Wer hat eine Erkältung?",
           "questionEn": "Who has a cold?",
           "options": [
-            "Lena",
-            "Tim"
+            "Tim",
+            "Lena"
           ],
           "answer": "Lena",
           "evidence": "Ich habe eine Erkältung.",
@@ -540,8 +545,8 @@ export const LESEN_A12 = {
           "question": "Wer hat den Schlüssel?",
           "questionEn": "Who has the key?",
           "options": [
-            "Lena",
-            "Tim"
+            "Tim",
+            "Lena"
           ],
           "answer": "Tim",
           "evidence": "Doch, hier ist er.",
@@ -557,8 +562,8 @@ export const LESEN_A12 = {
           "question": "Wohin geht der Ausflug?",
           "questionEn": "Where is the outing going?",
           "options": [
-            "nach Köln",
-            "nach Bremen"
+            "nach Bremen",
+            "nach Köln"
           ],
           "answer": "nach Köln",
           "evidence": "Am Samstag machen wir einen Ausflug nach Köln.",
@@ -574,8 +579,8 @@ export const LESEN_A12 = {
           "question": "Wohin fährt der Bus?",
           "questionEn": "Where does the bus go?",
           "options": [
-            "nach Köln",
-            "nach Bremen"
+            "nach Bremen",
+            "nach Köln"
           ],
           "answer": "nach Bremen",
           "evidence": "Nein, nach Bremen.",
@@ -667,8 +672,8 @@ export const LESEN_A12 = {
           "question": "Wer holt den Teppich?",
           "questionEn": "Who fetches the rug?",
           "options": [
-            "Ali",
-            "Thomas"
+            "Thomas",
+            "Ali"
           ],
           "answer": "Ali",
           "evidence": "Ich hole den Teppich.",
@@ -684,8 +689,8 @@ export const LESEN_A12 = {
           "question": "Wo ist Papa?",
           "questionEn": "Where is Dad?",
           "options": [
-            "in der Küche",
-            "im Wohnzimmer"
+            "im Wohnzimmer",
+            "in der Küche"
           ],
           "answer": "in der Küche",
           "evidence": "Nein, er ist in der Küche.",
@@ -701,8 +706,8 @@ export const LESEN_A12 = {
           "question": "Wer holt Oma am Flughafen ab?",
           "questionEn": "Who picks Grandma up at the airport?",
           "options": [
-            "Ali",
-            "Thomas"
+            "Thomas",
+            "Ali"
           ],
           "answer": "Thomas",
           "evidence": "Ich! Ich habe heute Zeit.",
@@ -718,8 +723,8 @@ export const LESEN_A12 = {
           "question": "Wo ist der Fernseher?",
           "questionEn": "Where is the television?",
           "options": [
-            "in der Küche",
-            "im Wohnzimmer"
+            "im Wohnzimmer",
+            "in der Küche"
           ],
           "answer": "im Wohnzimmer",
           "evidence": "Der Fernseher ist im Wohnzimmer.",
@@ -807,8 +812,8 @@ export const LESEN_A12 = {
           "question": "Wer kocht heute?",
           "questionEn": "Who is cooking today?",
           "options": [
-            "Ali",
-            "Paul"
+            "Paul",
+            "Ali"
           ],
           "answer": "Ali",
           "evidence": "Ali kocht heute.",
@@ -824,8 +829,8 @@ export const LESEN_A12 = {
           "question": "Wo müssen Sie aussteigen?",
           "questionEn": "Where do you have to get off?",
           "options": [
-            "am Bahnhof",
-            "am Flughafen"
+            "am Flughafen",
+            "am Bahnhof"
           ],
           "answer": "am Bahnhof",
           "evidence": "Sie müssen am Bahnhof aussteigen",
@@ -841,8 +846,8 @@ export const LESEN_A12 = {
           "question": "Wer soll im Garten helfen?",
           "questionEn": "Who is supposed to help in the garden?",
           "options": [
-            "Ali",
-            "Paul"
+            "Paul",
+            "Ali"
           ],
           "answer": "Paul",
           "evidence": "Hilf du bitte Papa!",
@@ -858,8 +863,8 @@ export const LESEN_A12 = {
           "question": "Wo soll Tim aussteigen?",
           "questionEn": "Where is Tim supposed to get off?",
           "options": [
-            "am Bahnhof",
-            "am Flughafen"
+            "am Flughafen",
+            "am Bahnhof"
           ],
           "answer": "am Flughafen",
           "evidence": "sondern am Flughafen",
@@ -951,8 +956,8 @@ export const LESEN_A12 = {
           "question": "Wer kauft das Kleid?",
           "questionEn": "Who buys the dress?",
           "options": [
-            "Ana",
-            "Paul"
+            "Paul",
+            "Ana"
           ],
           "answer": "Ana",
           "evidence": "Ich kaufe das Kleid für meine Schwester.",
@@ -968,8 +973,8 @@ export const LESEN_A12 = {
           "question": "Wer kauft den Mantel?",
           "questionEn": "Who buys the coat?",
           "options": [
-            "Ana",
-            "Paul"
+            "Paul",
+            "Ana"
           ],
           "answer": "Paul",
           "evidence": "Ja, ich nehme ihn.",
@@ -985,8 +990,8 @@ export const LESEN_A12 = {
           "question": "Wann ist es sonnig?",
           "questionEn": "When is it sunny?",
           "options": [
-            "am Samstag",
-            "am Sonntag"
+            "am Sonntag",
+            "am Samstag"
           ],
           "answer": "am Samstag",
           "evidence": "am Samstag ist es sonnig und warm.",
@@ -1002,8 +1007,8 @@ export const LESEN_A12 = {
           "question": "Wann ist es sonnig?",
           "questionEn": "When is it sunny?",
           "options": [
-            "am Dienstag",
-            "am Mittwoch"
+            "am Mittwoch",
+            "am Dienstag"
           ],
           "answer": "am Mittwoch",
           "evidence": "Am Mittwoch kommt die Sonne.",
@@ -1091,8 +1096,8 @@ export const LESEN_A12 = {
           "question": "Wer ist früh gegangen?",
           "questionEn": "Who left early?",
           "options": [
-            "Thomas",
-            "Ali"
+            "Ali",
+            "Thomas"
           ],
           "answer": "Thomas",
           "evidence": "Ich bin früh gegangen.",
@@ -1108,8 +1113,8 @@ export const LESEN_A12 = {
           "question": "Wer ist mit dem Zug nach Köln gefahren?",
           "questionEn": "Who went to Cologne by train?",
           "options": [
-            "Thomas",
-            "Ali"
+            "Ali",
+            "Thomas"
           ],
           "answer": "Ali",
           "evidence": "Ja, der Zug war schnell.",
@@ -1125,8 +1130,8 @@ export const LESEN_A12 = {
           "question": "Welche Farbe hat der Mantel?",
           "questionEn": "What colour is the coat?",
           "options": [
-            "blau",
-            "grün"
+            "grün",
+            "blau"
           ],
           "answer": "blau",
           "evidence": "Der Mantel ist blau.",
@@ -1142,8 +1147,8 @@ export const LESEN_A12 = {
           "question": "Welche Farbe hat der Rock?",
           "questionEn": "What colour is the skirt?",
           "options": [
-            "blau",
-            "grün"
+            "grün",
+            "blau"
           ],
           "answer": "grün",
           "evidence": "Nein, er ist grün.",

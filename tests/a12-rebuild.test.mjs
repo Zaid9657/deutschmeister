@@ -2116,7 +2116,7 @@ test('DaF review #11 B1: every servable preposition gap is read in German alone 
     'eec3bcc5-32be-5e44-915e-c9c810980456': [['nach'], ['in', 'zu'], 'the cue „Richtung, Land"'],
     'extra-a12-l09-10': [['bis'], ['ab', 'um'], '„von sieben ___ zehn" and the cue „Ende"'],
     'extra-a12-l09-11': [['ab'], ['bis', 'um'], '„Montag ist der erste Tag": the beginning, so ab; bis would make Monday the last day'],
-    'extra-a12-l09-13': [['ab'], ['bis'], 'the bus runs from eight to ten: boarding from eight'],
+    'extra-a12-l09-13': [['ab'], ['bis'], 'the German cue „erste Uhrzeit zum Einsteigen“ explicitly asks for the start of boarding'],
     'extra-a12-l10-01': [['für'], ['ohne', 'durch'], 'Ana and her grandmother are in the shop together, and it is her birthday'],
     'extra-a12-l10-02': [['ohne'], ['für', 'durch'], 'only „ohne" makes sense of a cheap coat and a scarf'],
     'extra-a12-l10-03': [['durch'], ['für', 'ohne'], 'the prompt offers für, ohne, durch: only „durch das Kaufhaus" is a way'],
@@ -2134,6 +2134,95 @@ test('DaF review #11 B1: every servable preposition gap is read in German alone 
   }
   // The old Flugzeug prompt, without its reference point, would allow both: the cue is load-bearing.
   assert.match(poolItems(POOL_A12).find((it) => it.id === 'extra-a12-l09-11').questionDe, /Montag ist der erste Tag/);
+});
+
+// A single accepted member of a temporal contrast needs a deciding GERMAN cue. These are semantic
+// cue families, not item IDs: explicit start/end or point/duration, plus the course's existing first-day,
+// present „ist … da“, completed „war ___ <time>.“, and past/present contrast constructions.
+function undecidedTimePrepositionGaps(items) {
+  const cues = {
+    ab: /\b(?:Beginn|Anfang|der erste Tag|erste Uhrzeit)\b/iu,
+    bis: /\b(?:Ende|Schluss|der letzte Tag)\b/iu,
+    seit: /\bDauer bis jetzt\b|\bist\s+_{2,}\s+[^.!?]+\bda\s*[.!?]/iu,
+    vor: /\bZeitpunkt\b|\bwar\s+_{2,}\s+(?:einer|einem|einen|zwei|drei)\s+(?:Woche|Monat|Jahr|Tag)(?:n|en)?\s*[.!?]|\bHeute ist\b[^.!?]+[.!?]\s*_{2,}[^.!?]+\bwar\b/iu,
+  };
+  return items.filter((it) => it.type === 'fill_blank' && it.minLektion != null).flatMap((it) => {
+    const accepted = new Set((it.accepted?.length ? it.accepted : [it.answer]).map((a) => String(a).trim().toLowerCase()));
+    return [['ab', 'bis'], ['seit', 'vor']].flatMap((pair) => {
+      const only = pair.filter((p) => accepted.has(p));
+      if (only.length !== 1) return [];
+      const chosen = only[0];
+      const other = pair.find((p) => p !== chosen);
+      return cues[chosen].test(it.questionDe || '') && !cues[other].test(it.questionDe || '')
+        ? [] : [`${it.id}: only „${chosen}“ accepted without a deciding German cue`];
+    });
+  });
+}
+
+test('DaF review #12 B1: every single-key time-preposition gap has a deciding German cue, with open/cued contrasts', () => {
+  const gap = (questionDe, accepted) => ({ id: 'contrast', type: 'fill_blank', minLektion: 9, questionDe, accepted });
+  const open = 'Sie können ___ acht Uhr einsteigen. (ab oder bis?)';
+  assert.deepEqual(undecidedTimePrepositionGaps([gap(open, ['ab', 'bis'])]), []);
+  for (const [cue, chosen, other] of [['Beginn', 'ab', 'bis'], ['Anfang', 'ab', 'bis'], ['erste Uhrzeit zum Einsteigen', 'ab', 'bis'], ['Ende', 'bis', 'ab'], ['Schluss', 'bis', 'ab'],
+    ['Zeitpunkt', 'vor', 'seit'], ['Dauer bis jetzt', 'seit', 'vor']]) {
+    const question = ['ab', 'bis'].includes(chosen) ? open : 'Der Regen war ___ einer Woche da. (vor oder seit?)';
+    assert.equal(undecidedTimePrepositionGaps([gap(question, [chosen])]).length, 1, `${chosen}: open context`);
+    assert.deepEqual(undecidedTimePrepositionGaps([gap(`${question} (${cue})`, [chosen])]), [], cue);
+    assert.equal(undecidedTimePrepositionGaps([gap(`${question} (${cue})`, [other])]).length, 1, `${cue}: wrong key`);
+  }
+  const all = poolItems(POOL_A12);
+  assert.deepEqual(undecidedTimePrepositionGaps(all), [], 'every servable item, including future additions');
+  // Planted mutation on a real passing item; English and explanations still contain the start cue.
+  const original = all.find((it) => it.type === 'fill_blank' && it.minLektion != null && /\(erste Uhrzeit zum Einsteigen; ab oder bis\?\)/u.test(it.questionDe));
+  assert.ok(original, 'a servable beginning-cued gap exists');
+  const stripped = { ...original, questionDe: original.questionDe.replace('erste Uhrzeit zum Einsteigen; ', '') };
+  assert.equal(undecidedTimePrepositionGaps(all.map((it) => it === original ? stripped : it)).length, 1);
+});
+
+test('DaF review #12 M8: delivered positions and question-type ranks balance; every order strategy scores at most half', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { auditBankOrder } = await import('./helpers/lesenGate.mjs');
+  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+      .filter((it) => it.section === 'lesen').map((it) => ({ question: it.promptDe, options: it.options, answer: it.answer }))));
+  const bank = auditBankOrder(papers);
+  assert.equal(bank.total, 64);
+  assert.deepEqual(bank.findings, []);
+  assert.equal(bank.passes, true);
+  assert.deepEqual(bank.positions, Array.from({ length: 4 }, () => [8, 8]));
+  assert.deepEqual(Object.values(bank.typeRanks), Array.from({ length: 4 }, () => [8, 8]));
+  for (const family of [bank.fixed, bank.typeRank]) {
+    assert.equal(family.size, 16, 'all binary rules, including each counter-strategy');
+    for (const [name, score] of family) assert.equal(score, 32, `${name}: exactly half`);
+  }
+});
+
+test('DaF review #12 M8: key-A-first mirrored pairs fail the bank gate; an independent counterbalanced control passes', async () => {
+  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+  const { auditPapers, auditBankOrder } = await import('./helpers/lesenGate.mjs');
+  const aligned = structuredClone(Object.values(LESEN_A12).flatMap((b) => b.papers));
+  for (const paper of aligned) for (const pair of [1, 2]) {
+    const two = paper.filter((u) => u.pair === pair);
+    if (two[0].options.indexOf(two[0].answer) === 1) for (const u of two) u.options.reverse();
+    assert.deepEqual(two.map((u) => u.options.indexOf(u.answer)), [0, 1]);
+  }
+  const failed = auditPapers(aligned);
+  assert.ok(failed.papers.every((p) => p.passes), 'the old per-paper family cannot see this leak');
+  assert.equal(failed.bankOrder.passes, false);
+  assert.equal(failed.bankOrder.typeRank.get('ABAB'), 64, 'first A / second B for each type');
+  assert.ok(failed.bankOrder.worstFixed.score > 32);
+  // No bank texts or IDs: the second paper reverses BOTH option arrays of each independent pair.
+  const control = [
+    { question: 'Wer holt den Brief?', options: ['Ada', 'Ben'], answer: 'Ada' },
+    { question: 'Wann öffnet das Büro?', options: ['acht', 'neun'], answer: 'acht' },
+    { question: 'Wer kauft die Zeitung?', options: ['Ada', 'Ben'], answer: 'Ben' },
+    { question: 'Wann fährt der Zug?', options: ['acht', 'neun'], answer: 'neun' },
+  ];
+  const balanced = auditBankOrder([control, control.map((u) => ({ ...u, options: [...u.options].reverse() }))]);
+  assert.equal(balanced.passes, true, balanced.findings.join('\n'));
+  assert.deepEqual(balanced.positions, Array.from({ length: 4 }, () => [1, 1]));
+  assert.deepEqual(Object.values(balanced.typeRanks), Array.from({ length: 4 }, () => [1, 1]));
+  assert.ok([...balanced.fixed.values(), ...balanced.typeRank.values()].every((score) => score === 4));
 });
 
 test('DaF review #11 M8: a negated event states no exclusive time — minimal pairs, then the builder with every clock-time event line negated', async () => {

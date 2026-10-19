@@ -7,6 +7,10 @@
 // between two of them — scores at most 2 of 4 (a tie counts ½), and the 16 papers of a level at most 32
 // of 64 for each. These are the project's acceptance limits, not a Goethe standard; an algorithm that
 // really resolves who did what is allowed to score 4 — that is reading.
+// Review #12 adds BANK-ONLY order strategies: every position and every question-type occurrence
+// (Wer / other W-question, first / second in its paper) must balance A/B. All 16 fixed sequences and
+// all 16 type-rank rules, including their inverses, may score at most half over the bank. They cannot
+// have a per-paper ceiling: one of the 16 sequences necessarily matches any four-unit paper exactly.
 //
 // Independent of the builder: nothing here imports src/lib/checkpoint or reads how a unit was made.
 
@@ -175,6 +179,56 @@ const mark = (pick, u) => (pick === null ? 'T' : u.options[pick] === u.answer ? 
 export const CONDITION_NAMES = Object.keys(CONDITIONS);
 export const conditionsOf = (u) => Object.fromEntries(Object.entries(CONDITIONS).map(([n, c]) => [n, c(u)]));
 
+/** Order strategies see only the displayed position and question history, never pair metadata or keys. */
+export function auditBankOrder(papers) {
+  const positions = Array.from({ length: 4 }, () => [0, 0]);
+  const typeRanks = Object.fromEntries(['Wer 1', 'Wer 2', 'W 1', 'W 2'].map((n) => [n, [0, 0]]));
+  const cells = Object.keys(typeRanks);
+  const findings = [];
+  // Freeze each strategy's inputs before reading any answer. History resets at each paper boundary.
+  const contexts = papers.flatMap((paper, pi) => {
+    const seen = { Wer: 0, W: 0 };
+    if (paper.length !== 4) findings.push(`paper ${pi + 1}: ${paper.length} units, expected 4`);
+    const rows = paper.map((u, position) => {
+      const type = tokens(u.question)[0] === 'wer' ? 'Wer' : 'W';
+      const cell = `${type} ${++seen[type]}`;
+      return { u, position, cell };
+    });
+    if (seen.Wer !== 2 || seen.W !== 2) findings.push(`paper ${pi + 1}: expected two Wer and two other W-questions`);
+    return rows;
+  });
+  const sequences = Array.from({ length: 16 }, (_, mask) =>
+    Array.from({ length: 4 }, (_, i) => (mask >> (3 - i)) & 1));
+  const picks = sequences.map((sequence) => ({
+    name: sequence.map((p) => 'AB'[p]).join(''),
+    fixed: contexts.map(({ position }) => sequence[position]),
+    typeRank: contexts.map(({ cell }) => sequence[cells.indexOf(cell)]),
+  }));
+  for (const { u, position, cell } of contexts) {
+    const key = u.options.indexOf(u.answer);
+    if (key !== 0 && key !== 1) { findings.push('a key is not one of two options'); continue; }
+    if (positions[position]) positions[position][key] += 1;
+    if (typeRanks[cell]) typeRanks[cell][key] += 1;
+  }
+  for (const [name, counts] of [
+    ...positions.map((counts, i) => [`position ${i + 1}`, counts]),
+    ...Object.entries(typeRanks),
+  ]) if (counts[0] !== counts[1]) findings.push(`${name}: A/B ${counts.join('/')} is unbalanced`);
+  const total = contexts.length;
+  if (!total) findings.push('empty bank');
+  const fixed = new Map();
+  const typeRank = new Map();
+  for (const p of picks) {
+    for (const [family, scores] of [['fixed', fixed], ['typeRank', typeRank]]) {
+      const score = contexts.reduce((sum, { u }, i) => sum + scoreOf(p[family][i], u), 0);
+      scores.set(p.name, score);
+      if (score > total / 2) findings.push(`${family} ${p.name}: ${score}/${total} exceeds half`);
+    }
+  }
+  const worst = (scores) => [...scores].reduce((w, [name, score]) => (score > w.score ? { name, score } : w), { name: '', score: -1 });
+  return { total, positions, typeRanks, fixed, typeRank, worstFixed: worst(fixed), worstTypeRank: worst(typeRank), findings, passes: findings.length === 0 };
+}
+
 /**
  * auditPapers(papers) → per paper the strategies that score above 2 of 4, the worst one, and the worst
  * one-condition switch; over all papers the strategy totals. Every base strategy runs with ties as ½ and,
@@ -220,5 +274,5 @@ export function auditPapers(papers, { limit = 2 } = {}) {
     report.push({ worst, worstSwitch, failing, passes: worst.score <= limit && worstSwitch.score <= limit });
   }
   const worstTotal = [...totals.entries()].reduce((w, [n, sc]) => (sc > w.score ? { score: sc, name: n } : w), { score: -1, name: '' });
-  return { papers: report, totals, worstTotal };
+  return { papers: report, totals, worstTotal, bankOrder: auditBankOrder(papers) };
 }

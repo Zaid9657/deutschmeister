@@ -1949,14 +1949,14 @@
       "stage": 4,
       "difficulty": 2,
       "order": 13,
-      "questionDe": "Der Bus fährt von acht bis zehn Uhr. Sie können ___ acht Uhr einsteigen. (ab oder bis?)",
-      "questionEn": "The bus runs from eight to ten. You can get on from eight o'clock.",
+      "questionDe": "Der Bus fährt von acht bis zehn Uhr. Sie können ___ acht Uhr einsteigen. (erste Uhrzeit zum Einsteigen; ab oder bis?)",
+      "questionEn": "The bus runs from eight to ten. You can get on from eight o'clock. (First boarding time.)",
       "options": null,
       "answer": "ab",
       "accepted": [
         "ab"
       ],
-      "explanationDe": "ab nennt den Beginn: ab acht Uhr.",
+      "explanationDe": "ab nennt den Beginn: Sie können ab acht Uhr einsteigen.",
       "hint": null
     },
     {
