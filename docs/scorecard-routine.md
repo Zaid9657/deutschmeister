@@ -34,15 +34,27 @@
 >    '`<role>`-HHMM'). Never enter plan mode, and never wait for the owner mid-run.
 > 1. Fetch and fast-forward to origin/main. Read `config/charter` (v5) and `agents/<role>` in the
 >    team artifact. The charter wins over older PROTOCOL text.
-> 2. Spawn one agent from the role's members with isolation worktree. It builds the top ready
->    item in `agents/<role>.backlog` as ONE change with an `expected_effect`, runs the steward
->    gates, and opens a PR.
+> 2. Build: Codex writes, you supervise. Cut a worktree from origin/main and write a brief for
+>    the top ready item in `agents/<role>.backlog`: the goal, the files, the `expected_effect`,
+>    the tests, and the rules (DeutschMeister only; never touch `CLAUDE.md`, `.env*`, credentials
+>    or an owner-only path; never print environment variables). Run
+>    `codex exec -c model_reasoning_effort="high" -s workspace-write -C <worktree> "<brief>"`,
+>    then review its diff yourself, run the steward gates, and commit, push and open the PR;
+>    record `built_by: codex` in `changes/<id>`. If `codex login status` fails or Codex is
+>    blocked, spawn one agent from the role's members with isolation worktree instead, and log
+>    `codex unavailable` with the reason.
 > 3. Check the diff against the v5 owner-only list. If it is clean, squash-merge on green CI,
 >    at most 3 deploying releases a day across the team. Anything on an owner-only path stays a
 >    draft, with a one-line approval request in `agents/<role>.owner_queue`.
 > 4. Write `agents/<role>`: last_run, a log entry with the expected effect, and the backlog
 >    status. Then write the end heartbeat. Report counts only, never customer text. Start the
 >    final line with URGENT: only for an outage, a data exposure or a money error.
+
+**Codex builds (2026-10-19, the owner's call, to save Claude usage).** Codex runs on the owner's
+OpenAI login, and that login lives on the machine where it was made: run
+`codex login --device-auth` once in the orchestrator session (the owner approves the code in a
+browser), and again whenever that session's machine is replaced. Codex never pushes, merges or
+holds a connector; Claude keeps the brief, the review, the gates and the merge.
 
 
 The team protocol is `docs/agents/PROTOCOL.md`; the one-page overview is
