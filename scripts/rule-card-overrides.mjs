@@ -635,7 +635,7 @@ const RULE_CARD_OVERRIDES = {
       'der Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.',
       'Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.',
       'Beispiele: Ich brauche einen Supermarkt und einen Markt.',
-      'Ich bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.',
+      'Ich bezahle zwölf Euro für das Brot und den Kuchen. Der Markt am Park hat auch Brot.',
       'Die Form keinen kommt in Lektion 4.',
       'Vorlieben: gern → lieber, gut → besser. Das Restaurant ist am Abend besser.',
       'English: only masculine words change in the accusative — der becomes den, ein becomes einen.',

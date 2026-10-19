@@ -2002,6 +2002,222 @@ function chooseLesen(ctx) {
   return { items, lineKeys, relaxed };
 }
 
+/**
+ * A1.2 READS ITS LESEN SECTION AS FOUR TWO-OPTION ITEMS (DaF review #10, Codex's design verdict of
+ * 2026-10-19). Richtig/Falsch let a reader score without reading — „a number in the statement →
+ * Falsch", „Nein in the text → Falsch" — and a chapter's windows do not hold the material to balance
+ * every mark (round 10 measured seven ways). So an item prints ONE window and asks „Was steht im
+ * Text?" between the builder's true report of a line and that report's own falsification: every mark
+ * of the text is shared by both options. The four items come as two PAIRS:
+ *  - both items of a pair carry the same text marks (negation, Ja/Doch, Nein, a question, a number);
+ *  - their option profiles (`optionProfile`: the longer option, the larger value, the negated option,
+ *    the first word of a contrary pair) are complementary, rule by rule;
+ *  - one key stands at A, the other at B.
+ * Every rule of the declared family — alone, or a text mark choosing between two of them — then
+ * scores exactly 2 of 4 on every paper. Null when the chapter, with the earlier chapters' windows,
+ * holds no two such pairs: the Richtig/Falsch section then stands, and tests/a12-rebuild.test.mjs fails
+ * on any A1.2 paper that falls back.
+ */
+const CHOICE_LEVELS = new Set(['a1.2']);
+const CHOICE_NEGATION = /^(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines|nichts|niemand|ohne)$/;
+/** The marks a printed window carries for both options: negation, Ja/Doch, Nein, a question, a number. */
+export function choiceTextMarks(text) {
+  const t = String(text || '').toLowerCase().split(/[^a-zäöüß0-9]+/).filter(Boolean);
+  return [
+    t.some((w) => CHOICE_NEGATION.test(w)), t.includes('ja') || t.includes('doch'), t.includes('nein'), /\?/.test(String(text || '')),
+    t.some((w) => valueOf(w) !== null),
+  ].map(Number).join('');
+}
+/** The number a value word or digit string stands for, or null. */
+export function valueOf(word) {
+  const w = bareWord(word).toLowerCase();
+  if (/^\d+$/.test(w)) return Number(w);
+  const i = NUMBER_WORDS.indexOf(w);
+  if (i < 0) return null;
+  return i <= 20 ? i : i <= 27 ? (i - 18) * 10 : 100;
+}
+
+/** Other values of the same length and magnitude: digits ±1, ±2, ±10; number words of the same group. */
+function sameLengthValues(from) {
+  const word = bareWord(from);
+  const v = valueOf(word);
+  if (v === null) return [];
+  if (/^\d+$/.test(word)) return [v - 10, v - 2, v - 1, v + 1, v + 2, v + 10].filter((x) => x > 0 && String(x).length === word.length).map(String);
+  const lower = word.toLowerCase();
+  const same = sameMagnitude(lower).filter((x) => x !== lower && x.length === lower.length && valueOf(x) !== null);
+  return /^[A-ZÄÖÜ]/.test(word) ? same.map((x) => x[0].toUpperCase() + x.slice(1)) : same;
+}
+/** The statement with one value word replaced, or null when the word is not there exactly once. */
+function withValue(statement, from, to) {
+  const tokens = String(statement).split(/(\s+)/);
+  const at = tokens.map((t, i) => (bareWord(t) === bareWord(from) ? i : -1)).filter((i) => i >= 0);
+  if (at.length !== 1) return null;
+  tokens[at[0]] = tokens[at[0]].replace(bareWord(from), to);
+  return tokens.join('');
+}
+
+/**
+ * How an option pair stands on each content rule a reader might use instead of reading, as 0 / 1 / 2
+ * for „the rule picks the distractor / ties / picks the key": the longer statement, the larger value,
+ * the statement with a negation, and the first word of a CONTRARIES pair. A pair of items is neutral
+ * when, rule by rule, its two items add up to 2 — one point for every rule, so a paper of two pairs
+ * gives every rule exactly 2 of 4.
+ */
+const FIRST_CONTRARIES = new Set([...CONTRARIES.keys()].filter((w, i) => i % 2 === 0));
+const negatedStatement = (s) => String(s || '').toLowerCase().split(/[^a-zäöüß]+/).some((w) => CHOICE_NEGATION.test(w));
+export function optionProfile(key, distractor, change) {
+  const cmp = (a, b) => (a === b ? 1 : a > b ? 2 : 0);
+  const longer = cmp(String(key).length, String(distractor).length);
+  const larger = change.kind === 'value' ? cmp(valueOf(change.from), valueOf(change.to)) : 1;
+  const negKey = negatedStatement(key);
+  const negDistractor = negatedStatement(distractor);
+  const negated = negKey === negDistractor ? 1 : negKey ? 2 : 0;
+  const first = change.kind === 'contrary' ? (FIRST_CONTRARIES.has(String(change.from).toLowerCase()) ? 2 : 0) : 1;
+  return [longer, larger, negated, first];
+}
+const complementOf = (profile) => profile.map((x) => 2 - x).join('');
+
+function chooseLesenChoice(ctx) {
+  if (!CHOICE_LEVELS.has(String(ctx.level || '').toLowerCase())) return null;
+  const { checkpoint, chapter, rng } = ctx;
+  const withDialog = chapter.filter((l) => (l?.dialog?.lines || []).length >= 2);
+  if (!withDialog.length) return null;
+  const order = shuffle(withDialog, rng);
+  const spec = reportSpec(ctx);
+  const ctxWords = { vocab: contentWords(chapter), spec };
+  const spent = ctx.spentLesen || new Set();
+  const earlier = (ctx.earlier || []).filter((l) => (l?.dialog?.lines || []).length >= 2);
+  const windows = [...order.flatMap((l) => windowsOf(l)), ...earlier.flatMap((l) => windowsOf(l).map((w) => ({ ...w, earlier: true })))];
+  const candidates = [];
+  for (const w of windows) {
+    const keys = windowLineKeys(w);
+    // A dictated line is never reprinted and a window never leaks another item's answer — outright here.
+    if (keys.some((k) => ctx.usedLineKeys.has(k))) continue;
+    const text = windowText(w.window);
+    if (ctx.leaks({ section: 'lesen', kind: 'lesenProbe', promptDe: '', text })) continue;
+    const reports = windowReports(w.window, spec, { withAmbiguous: true }).filter((r) => !r.ambiguous);
+    const windowStatements = new Set(reports.map((r) => normaliseStatement(r.statement)));
+    for (const report of reports) {
+      // Every falsification over a dozen draws — a value, a contrary, a negation …
+      const offers = new Map();
+      for (let s = 1; s <= 12; s += 1) {
+        for (const c of falsifications(report.statement, text, ctxWords, mulberry32(s), { sourceSentence: report.sentence, windowStatements })) {
+          if (!offers.has(c.de)) offers.set(c.de, c);
+        }
+      }
+      // … and for a value, the same-length values below and above it too, under the falsifier's filters:
+      // its own draw goes one way only (a digit +10 or +3).
+      for (const c of [...offers.values()].filter((o) => o.kind === 'value')) {
+        for (const to of sameLengthValues(c.from)) {
+          const de = withValue(report.statement, c.from, to);
+          if (!de || offers.has(de) || normaliseStatement(text).includes(normaliseStatement(de))) continue;
+          if (windowStatements.has(normaliseStatement(de)) || agreementViolations(de, ctxWords.vocab).length) continue;
+          if (!statementIsKnown(to, spec.known, spec.names)) continue;
+          if (String(report.sentence).split(/\s+/).some((x) => bareWord(x).toLowerCase() === to.toLowerCase())) continue;
+          offers.set(de, { de, kind: 'value', from: c.from, to });
+        }
+      }
+      const list = [...offers.values()].map((o) => ({ ...o, profile: optionProfile(report.statement, o.de, o).join('') }));
+      if (!list.length) continue;
+      candidates.push({
+        w, keys, text, report, offers: list,
+        source: lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start + report.lineIndex),
+        marks: choiceTextMarks(text),
+        cost: (w.span >= 3 ? 0 : 0.5) + (w.earlier ? 1.5 : 0) + (spent.has(normaliseStatement(report.statement)) ? 1 : 0) + rng(),
+      });
+    }
+  }
+  const clash = (a, b) => a.w === b.w || a.source === b.source || a.keys.some((k) => b.keys.includes(k));
+  const perLektion = Math.ceil(SECTION_COUNTS.lesen / order.length);
+  const crowding = (four) => {
+    const per = new Map();
+    for (const o of four) per.set(o.w.lektion, (per.get(o.w.lektion) || 0) + 1);
+    return [...per.values()].reduce((sum, n) => sum + Math.max(0, n - perLektion), 0);
+  };
+  // PAIRS: identical text marks, no shared line, and two offers whose profiles add up to 2 on every rule.
+  const sorted = [...candidates].sort((a, b) => a.cost - b.cost);
+  const pairs = [];
+  for (let i = 0; i < sorted.length; i += 1) {
+    for (let j = i + 1; j < sorted.length; j += 1) {
+      const [a, b] = [sorted[i], sorted[j]];
+      if (a.marks !== b.marks || clash(a, b)) continue;
+      const fits = [];
+      for (const oa of a.offers) {
+        const want = complementOf([...oa.profile].map(Number));
+        for (const ob of b.offers) if (ob.profile === want) fits.push([oa, ob]);
+      }
+      if (fits.length) pairs.push({ a, b, fits, cost: a.cost + b.cost });
+    }
+  }
+  pairs.sort((p, q) => p.cost - q.cost);
+  const top = pairs.slice(0, 150);
+  let best = null;
+  for (let i = 0; i < top.length; i += 1) {
+    for (let j = i + 1; j < top.length; j += 1) {
+      const [p, q] = [top[i], top[j]];
+      if ([p.a, p.b].some((x) => clash(x, q.a) || clash(x, q.b))) continue;
+      const cost = p.cost + q.cost + crowding([p.a, p.b, q.a, q.b]) * 3;
+      if (!best || cost < best.cost) best = { cost, pairs: [p, q] };
+    }
+  }
+  if (!best) return null;
+  // Inside each pair one key at A and one at B; which complementary offers, and the order, are the seed's.
+  const picked = best.pairs.flatMap((p) => {
+    const [oa, ob] = p.fits[Math.floor(rng() * p.fits.length)];
+    const aFirst = rng() < 0.5;
+    return [
+      { candidate: p.a, offer: oa, keyFirst: aFirst },
+      { candidate: p.b, offer: ob, keyFirst: !aFirst },
+    ];
+  });
+  const items = shuffle(picked, rng).map((x, i) => lesenChoiceItem(checkpoint, i, x));
+  const lineKeys = picked.flatMap((x) => x.candidate.keys).filter((k) => !ctx.usedLineKeys.has(k));
+  return { items, lineKeys, relaxed: [] };
+}
+
+/** One two-option Lesen item: the true report and its own falsification, on one printed window. */
+function lesenChoiceItem(checkpoint, i, { candidate, offer, keyFirst }) {
+  const truth = candidate.report.statement;
+  const speaker = String(candidate.report.line.speaker || '');
+  return {
+    id: `${checkpoint.id}-lesen-${i + 1}`,
+    section: 'lesen',
+    kind: 'choice',
+    mode: 'options',
+    topic: 'lesen',
+    lektionNr: candidate.w.lektion.nr,
+    source: 'chapter',
+    register: null,
+    scored: true,
+    promptDe: 'Was steht im Text?',
+    promptEn: 'What does the text say?',
+    audioText: null,
+    text: candidate.text,
+    options: keyFirst ? [truth, offer.de] : [offer.de, truth],
+    answer: truth,
+    accepted: [truth],
+    // A value or a contrary is named; a negation put in or taken out has no word to name on one side,
+    // so the text's meaning is said instead (as lesenItem does for a Falsch).
+    explanationDe: offer.kind === 'value' || offer.kind === 'contrary'
+      ? `${speaker} sagt: „${candidate.report.sentence}“ Im Text steht „${offer.from}“, nicht „${offer.to}“.`
+      : `${speaker} sagt: „${candidate.report.sentence}“ Das heißt: ${truth}`,
+    hint: null,
+    poolItemId: null,
+    type: 'multiple_choice',
+    // The same mapping a Richtig/Falsch item carries: the key IS the report of one line, the other
+    // option is its falsification by `changed`.
+    statement: truth,
+    trueStatement: truth,
+    distractor: offer.de,
+    sourceLine: String(candidate.report.line.de),
+    sourceSentence: candidate.report.sentence,
+    sourceSpeaker: speaker,
+    transform: candidate.report.engine,
+    verbForms: candidate.report.verbForms,
+    changed: { kind: offer.kind, from: offer.from, to: offer.to },
+  };
+}
+
 /** One Lesen item out of a picked window, report and statement — both paths build it here. */
 function lesenItem(checkpoint, i, wantRichtig, picked) {
   const { candidate, text, report, statement, changed } = picked;
@@ -2057,7 +2273,7 @@ function lesenItem(checkpoint, i, wantRichtig, picked) {
  * reports — the slot ladder. Only the kept items spend their lines and take their seats.
  */
 function buildLesen(ctx) {
-  const chosen = chooseLesen(ctx) || lesenAttempt(ctx, ctx.rng);
+  const chosen = chooseLesenChoice(ctx) || chooseLesen(ctx) || lesenAttempt(ctx, ctx.rng);
   for (const key of chosen.lineKeys) ctx.usedLineKeys.add(key);
   for (const note of chosen.relaxed) ctx.relax('lesen', note);
   for (const item of chosen.items) ctx.seat(item);
@@ -2715,15 +2931,27 @@ export function isItemCorrect(item, answer) {
 /**
  * The most a section's closed-choice items give to ONE answer repeated everywhere (the best
  * constant strategy). Open, typed items add nothing to it — a constant cannot answer them.
+ *
+ * Two constants, not one (round 11b): the same answer text („Richtig" throughout) and the same
+ * PLACE — the first chip throughout. CheckpointPage prints the options in their stored order, so
+ * tapping the first one of every item scores what the place count says. The text count alone
+ * missed it as soon as every answer was its own sentence: on the two-option Lesen items it said 1
+ * of 4 while the first chip took 2, and sectionPasses let „always A" through at 50 %. It was not
+ * new there: five A1.1 Hören/Sprachbausteine sections of the rounds 0–3 already let a first-chip
+ * learner pass with the text ceiling at 1 and the place ceiling at 2.
  */
 export function guessCeiling(items) {
-  const counts = new Map();
+  const byText = new Map();
+  const byPlace = new Map();
   for (const i of items) {
     if (!Array.isArray(i.options) || !i.options.length) continue;
     const key = String(i.answer);
-    counts.set(key, (counts.get(key) || 0) + 1);
+    byText.set(key, (byText.get(key) || 0) + 1);
+    const place = i.options.findIndex((o) => String(o) === key);
+    if (place >= 0) byPlace.set(place, (byPlace.get(place) || 0) + 1);
   }
-  return counts.size ? Math.max(...counts.values()) : 0;
+  const most = (counts) => (counts.size ? Math.max(...counts.values()) : 0);
+  return Math.max(most(byText), most(byPlace));
 }
 
 export function scoreCheckpoint(items, answers = {}) {

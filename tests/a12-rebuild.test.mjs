@@ -11,6 +11,11 @@ import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
+// Since round 11b an A1.2 Lesen item offers TWO statements: the key (the report) and its Falsch, the
+// distractor. A1.1 still prints one statement and asks Richtig or Falsch. These read either shape, so a
+// test written for the Falsch statement reads every distractor too instead of passing over it.
+const falschOf = (it) => (it.kind === 'choice' ? it.distractor : it.answer === 'Falsch' ? it.statement : null);
+const richtigOf = (it) => (it.kind === 'choice' ? it.answer : it.answer === 'Richtig' ? it.statement : null);
 
 test('a course draws its practice by its OWN level\'s rules, not A1.1\'s', () => {
   // The quality filter's syllabus rules (no accusative, no ordinals, no month names …) are A1.1's and
@@ -118,7 +123,9 @@ test('DaF review #3 BLOCKER 1: a negation answer is asked for by the prompt itse
   // are the line itself, not a negation task.
   const promptOf = (it) => [it.questionDe, it.promptDe].find((q) => typeof q === 'string') ?? null;
   for (const level of ['a1.2', 'a1.1']) {
-    const items = servedItems(level).items.filter((it) => promptOf(it) !== null && it.section !== 'hoeren' && it.section !== 'sprechen');
+    // A Lesen item is a choice between printed statements about a printed text (A1.2 since round 11b; the
+    // A1.1 answers are Richtig/Falsch): the learner produces no negation, and the text decides.
+    const items = servedItems(level).items.filter((it) => promptOf(it) !== null && it.section !== 'hoeren' && it.section !== 'sprechen' && it.section !== 'lesen');
     assert.ok(items.some((it) => it.section === 'bausteine'), `${level}: the checkpoint items are read`);
     const offenders = items
       .filter((it) => NEG.test([it.answer, ...(it.accepted || [])].join(' ')))
@@ -916,9 +923,12 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
           const window = windowOf(curriculum, it);
           if (!window) { problems.push(`${at}: its text is no window of L${it.lektionNr}`); continue; }
           const truths = new Set(windowReports(window, cpSpec).map((r) => normaliseStatement(r.statement)));
-          if (it.answer === 'Richtig' && !truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Richtig, but no line of the text says it`);
-          if (it.answer === 'Falsch') {
-            if (truths.has(normaliseStatement(it.statement))) problems.push(`${at}: Falsch, but a line of the text says it`);
+          // A two-option item (A1.2) carries both: its key is checked as a Richtig, its distractor as a Falsch.
+          const richtig = richtigOf(it);
+          const falsch = falschOf(it);
+          if (richtig !== null && !truths.has(normaliseStatement(richtig))) problems.push(`${at}: Richtig, but no line of the text says it`);
+          if (falsch !== null) {
+            if (truths.has(normaliseStatement(falsch))) problems.push(`${at}: Falsch, but a line of the text says it`);
             const source = new Set(String(it.sourceSentence).split(/\s+/).map((w) => w.replace(/[.,!?]/g, '').toLowerCase()));
             if (source.has(String(it.changed?.to).toLowerCase())) problems.push(`${at}: the swapped-in „${it.changed?.to}" stands in the sentence it reports`);
           }
@@ -1029,17 +1039,20 @@ test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not sta
         const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
         const negated = { Richtig: 0, Falsch: 0 };
         for (const it of lesen) {
-          if (NEGATION.test(it.statement)) negated[it.answer] += 1;
-          if (it.answer !== 'Falsch') continue;
+          // A two-option item (A1.2, round 11b) prints its Richtig and its Falsch side by side.
+          const sides = it.kind === 'choice' ? [['Richtig', it.answer], ['Falsch', it.distractor]] : [[it.answer, it.statement]];
+          for (const [side, statement] of sides) if (NEGATION.test(statement)) negated[side] += 1;
+          const statement = falschOf(it);
+          if (statement === null) continue;
           falsch += 1;
-          assert.ok(['value', 'contrary', 'polarity'].includes(it.changed?.kind), `${checkpoint.id}/${round} „${it.statement}": no swap of a person or a thing`);
-          assert.ok(it.transform, `${checkpoint.id}/${round} „${it.statement}": a report, not a copy of the text`);
+          assert.ok(['value', 'contrary', 'polarity'].includes(it.changed?.kind), `${checkpoint.id}/${round} „${statement}": no swap of a person or a thing`);
+          assert.ok(it.transform, `${checkpoint.id}/${round} „${statement}": a report, not a copy of the text`);
         }
         if (negated.Falsch !== negated.Richtig) unbalanced[file].push(`${checkpoint.id}/${round}`);
       }
     }
   }
-  assert.equal(falsch, 48, 'two Falsch statements on each of the twenty-four papers');
+  assert.equal(falsch, 72, 'two Falsch statements on each of the twelve A1.1 papers, and one beside every key of the twelve A1.2 papers');
   assert.deepEqual(unbalanced.a12, [], 'A1.2: on every paper a negation tells nothing about the key');
   // A1.1 is live and recorded: its checkpoint 2 chapter (L4–L6) has one stated value and no
   // negative first-person line, so its second Falsch has to add a negation. Measured 2026-10-17;
@@ -1149,7 +1162,10 @@ test('A1.2 transfer: what a default paper draws that the learner already answere
     return buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12 })
       .filter((it) => it.poolItemId && seen.has(it.poolItemId)).length;
   });
-  assert.deepEqual(measured, [1, 2, 1, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
+  // 2026-10-19 (round 11b): 1 / 1 / 0 / 0. The two-option Lesen selector takes its draws from the paper's one
+  // random stream in another order, and the Sprachbausteine drawn after it moved; the supply is unchanged.
+  // Lower is the only direction this ratchet takes.
+  assert.deepEqual(measured, [1, 1, 0, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
 });
 
 test('DaF review #6 BLOCKER 1: a correct answer a task rejects is excluded by a German task condition — annotated variants, both ways', () => {
@@ -1318,14 +1334,28 @@ test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „vo
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 3; round += 1) {
         const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
-        for (const field of ['text', 'statement']) {
-          if (lesen.every((it) => (NEG.test(it[field]) ? 'Falsch' : 'Richtig') === it.answer)) solved[file].push(`${checkpoint.id}/${round}/${field}`);
+        if (file === 'a11') {
+          for (const field of ['text', 'statement']) {
+            if (lesen.every((it) => (NEG.test(it[field]) ? 'Falsch' : 'Richtig') === it.answer)) solved.a11.push(`${checkpoint.id}/${round}/${field}`);
+          }
+          continue;
         }
-        if (file !== 'a12') continue;
-        for (const it of lesen) {
-          byText.total += 1;
-          if ((NEG.test(it.text) ? 'Falsch' : 'Richtig') === it.answer) byText.right += 1;
-        }
+        // A1.2 offers two options (round 11b): a negation strategy picks one — the negated option, the plain
+        // one, or either by whether the text has a negation. Both options alike: half a point.
+        const negatedPick = (it) => {
+          const [k, d] = [NEG.test(it.answer), NEG.test(it.distractor)];
+          return k === d ? 0.5 : k ? 1 : 0;
+        };
+        const strategies = {
+          negated: negatedPick,
+          plain: (it) => 1 - negatedPick(it),
+          'text → negated': (it) => (NEG.test(it.text) ? negatedPick(it) : 1 - negatedPick(it)),
+          'text → plain': (it) => (NEG.test(it.text) ? 1 - negatedPick(it) : negatedPick(it)),
+        };
+        const score = (pick) => lesen.reduce((sum, it) => sum + pick(it), 0);
+        for (const [name, pick] of Object.entries(strategies)) if (score(pick) === lesen.length) solved.a12.push(`${checkpoint.id}/${round}/${name}`);
+        byText.right += score(strategies['text → negated']);
+        byText.total += lesen.length;
       }
     }
   }
@@ -1348,15 +1378,28 @@ test('DaF review #7 MAJOR 8: Richtig and Falsch carry the same negation pairs on
     id: `${checkpoint.id}/${round}`,
     lesen: B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen'),
   })));
-  const best = (lesen) => Math.max(...Array.from({ length: 16 }, (_, fn) =>
-    lesen.filter((it) => (((fn >> parseInt(pair(it), 2)) & 1) ? 'Falsch' : 'Richtig') === it.answer).length));
   const unbalanced = (list) => list.filter(({ lesen }) => {
     const side = (key) => lesen.filter((it) => it.answer === key).map(pair).sort().join(',');
     return side('Richtig') !== side('Falsch');
   }).map((p) => p.id);
+  // Since round 11b A1.2 prints two options, and what a reader sees is (option A negated, option B negated,
+  // text negated). The best function of that triple takes, per triple, the place where more keys stand; on
+  // every paper, the stress round included, it scores exactly half.
+  const triple = (it) => `${NEG.test(it.options[0]) ? 1 : 0}${NEG.test(it.options[1]) ? 1 : 0}${NEG.test(it.text) ? 1 : 0}`;
+  const bestPlace = (lesen) => {
+    const keysAt = new Map();
+    for (const it of lesen) {
+      const at = keysAt.get(triple(it)) || [0, 0];
+      at[it.options[0] === it.answer ? 0 : 1] += 1;
+      keysAt.set(triple(it), at);
+    }
+    return [...keysAt.values()].reduce((sum, [a, b]) => sum + Math.max(a, b), 0);
+  };
   const a12 = papers(CURRICULUM_A12, POOL_A12, 4);
-  assert.deepEqual(unbalanced(a12), [], 'A1.2: every paper, the stress round included');
-  for (const { id, lesen } of a12) assert.equal(best(lesen), 2, `${id}: a negation strategy scores ${best(lesen)} of 4`);
+  for (const { id, lesen } of a12) {
+    assert.ok(lesen.length === 4 && lesen.every((it) => it.kind === 'choice'), `${id}: four two-option items`);
+    assert.equal(bestPlace(lesen), 2, `${id}: a negation strategy scores ${bestPlace(lesen)} of 4`);
+  }
   // A1.1 is live and recorded: its checkpoint 2 chapter has no negative first-person line, so three
   // papers keep one added negation (the follow-up in the handoff). A ratchet: it only goes down.
   const a11 = papers(CURRICULUM_A11, JSON.parse(read('src/data/lessonPools/a11.json')), 3);
@@ -1624,12 +1667,13 @@ test('DaF review #8 MAJOR 8: a clock time is a Falsch only for a once-only event
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < rounds; round += 1) {
         const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
-        for (const it of lesen.filter((x) => x.answer === 'Falsch' && x.changed?.kind === 'value')) {
-          const clock = /\bUhr\b/.test(it.statement) || new RegExp(`\\bum ${it.changed.to}\\b`).test(it.statement);
+        for (const it of lesen.filter((x) => falschOf(x) !== null && x.changed?.kind === 'value')) {
+          const statement = falschOf(it);
+          const clock = /\bUhr\b/.test(statement) || new RegExp(`\\bum ${it.changed.to}\\b`).test(statement);
           if (!clock) continue;
-          assert.match(it.statement, EVENT, `${checkpoint.id}/${round} „${it.statement}": a clock time on a state or an activity`);
-          assert.match(it.statement, new RegExp(`\\bum ${it.changed.to}\\b`), `${checkpoint.id}/${round} „${it.statement}": not governed by „um"`);
-          assert.doesNotMatch(it.statement, /\boder\b/, `${checkpoint.id}/${round} „${it.statement}"`);
+          assert.match(statement, EVENT, `${checkpoint.id}/${round} „${statement}": a clock time on a state or an activity`);
+          assert.match(statement, new RegExp(`\\bum ${it.changed.to}\\b`), `${checkpoint.id}/${round} „${statement}": not governed by „um"`);
+          assert.doesNotMatch(statement, /\boder\b/, `${checkpoint.id}/${round} „${statement}"`);
         }
       }
     }
@@ -1773,10 +1817,11 @@ test('DaF review #9 MAJOR 8: a clock time is one value only for a one-off EVENT 
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 4; round += 1) {
         const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
-        for (const it of lesen.filter((x) => x.answer === 'Falsch' && x.changed?.kind === 'value')) {
-          if (!(/\bUhr\b/.test(it.statement) || new RegExp(`\\bum ${it.changed.to}\\b`).test(it.statement))) continue;
-          const source = it.statement.replace(it.changed.to, it.changed.from);
-          assert.ok(EVENTS.has(source), `${checkpoint.id}/${round}: „${it.statement}" is cut from „${source}" — annotate it as an event or it is no Falsch`);
+        for (const it of lesen.filter((x) => falschOf(x) !== null && x.changed?.kind === 'value')) {
+          const statement = falschOf(it);
+          if (!(/\bUhr\b/.test(statement) || new RegExp(`\\bum ${it.changed.to}\\b`).test(statement))) continue;
+          const source = statement.replace(it.changed.to, it.changed.from);
+          assert.ok(EVENTS.has(source), `${checkpoint.id}/${round}: „${statement}" is cut from „${source}" — annotate it as an event or it is no Falsch`);
         }
       }
     }
@@ -1849,4 +1894,172 @@ test('DaF review #10 B1: an independent annotation of every servable correction 
     if (a.verdict === 'exclude' && r === RESULT.CORRECT) wrong.push(`${a.id}: „${a.answer}" is excluded (${a.why}) but accepted`);
   }
   assert.deepEqual(wrong, []);
+});
+
+test('DaF review #10 M8 (round 11b): Lesen offers two statements, and no declared surface strategy beats half of any A1.2 paper — mutation-tested', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  // R/F could not be balanced: seven configurations measured, a cue left on every one (review #10). The
+  // two-option format was Codex's (2026-10-19), with the gate written down BEFORE it was built: the family
+  // below, read off the printed fields with this test's own detectors. An option rule picks by place (A, B),
+  // length (longer, shorter), a number's value (larger, smaller), a negation (negated, plain) or the first
+  // word of a contrary pair (first, second); a conditional uses one rule where the TEXT carries a mark (a
+  // negation, Ja/Doch, Nein, a question, a number) and another where it does not. Ties count half. On every
+  // paper of rounds 0–3 the best of them scores 2 of 4 — what a coin scores.
+  const words = (s) => String(s || '').toLowerCase().split(/[^a-zäöüß0-9]+/).filter(Boolean);
+  const VALUES = {
+    eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9, zehn: 10, elf: 11, zwölf: 12,
+    dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17, achtzehn: 18, neunzehn: 19, zwanzig: 20,
+    dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60, siebzig: 70, achtzig: 80, neunzig: 90, hundert: 100,
+  };
+  const valueIn = (s) => {
+    for (const w of words(s)) {
+      if (/^\d+$/.test(w)) return Number(w);
+      if (w in VALUES) return VALUES[w];
+    }
+    return null;
+  };
+  const negatedIn = (s) => words(s).some((w) => /^(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines|nichts|niemand)$/.test(w));
+  const PAIRS = [['groß', 'klein'], ['teuer', 'billig'], ['warm', 'kalt'], ['krank', 'gesund'], ['laut', 'leise'],
+    ['schnell', 'langsam'], ['lang', 'kurz'], ['früh', 'spät'], ['voll', 'leer'], ['gut', 'schlecht'], ['hell', 'dunkel'],
+    ['ledig', 'verheiratet'], ['offen', 'geschlossen'], ['leicht', 'schwer'], ['links', 'rechts'], ['glücklich', 'traurig'],
+    ['dick', 'dünn'], ['sauber', 'schmutzig'], ['nass', 'trocken']];
+  const firstIn = (s) => words(s).some((w) => PAIRS.some(([a]) => a === w));
+  const same = (k, d) => (k === d ? 0.5 : k ? 1 : 0); // 1 = the rule picks the key
+  const more = (k, d) => (k === null || d === null || k === d ? 0.5 : k > d ? 1 : 0);
+  const RULES = {
+    A: (it) => (it.options[0] === it.answer ? 1 : 0),
+    B: (it) => (it.options[1] === it.answer ? 1 : 0),
+    longer: (it) => more(it.answer.length, it.distractor.length),
+    shorter: (it) => 1 - more(it.answer.length, it.distractor.length),
+    larger: (it) => more(valueIn(it.answer), valueIn(it.distractor)),
+    smaller: (it) => 1 - more(valueIn(it.answer), valueIn(it.distractor)),
+    negated: (it) => same(negatedIn(it.answer), negatedIn(it.distractor)),
+    plain: (it) => 1 - same(negatedIn(it.answer), negatedIn(it.distractor)),
+    first: (it) => same(firstIn(it.answer), firstIn(it.distractor)),
+    second: (it) => 1 - same(firstIn(it.answer), firstIn(it.distractor)),
+  };
+  const MARKS = {
+    negation: (it) => negatedIn(it.text),
+    'Ja/Doch': (it) => words(it.text).some((w) => w === 'ja' || w === 'doch'),
+    Nein: (it) => words(it.text).includes('nein'),
+    question: (it) => it.text.includes('?'),
+    number: (it) => valueIn(it.text) !== null,
+  };
+  const audit = (lesen) => {
+    const score = (pick) => lesen.reduce((sum, it) => sum + pick(it), 0);
+    let best = { score: 0, name: '' };
+    const consider = (name, pick) => { const s = score(pick); if (s > best.score) best = { score: s, name }; };
+    for (const [name, rule] of Object.entries(RULES)) consider(name, rule);
+    for (const [mark, has] of Object.entries(MARKS)) {
+      for (const [n1, r1] of Object.entries(RULES)) {
+        for (const [n2, r2] of Object.entries(RULES)) consider(`${mark} ? ${n1} : ${n2}`, (it) => (has(it) ? r1(it) : r2(it)));
+      }
+    }
+    return best;
+  };
+
+  // EVERY A1.2 PAPER, rounds 0–3.
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      const id = `${checkpoint.id}/${round}`;
+      const lesen = B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+        .filter((it) => it.section === 'lesen');
+      assert.equal(lesen.length, 4, `${id}: four Lesen items`);
+      for (const it of lesen) {
+        assert.equal(it.kind, 'choice', `${id} ${it.id}: two options, not Richtig/Falsch`);
+        assert.equal(it.options.length, 2, `${id} ${it.id}`);
+        assert.ok(it.options.includes(it.answer) && it.options.includes(it.distractor) && it.answer !== it.distractor,
+          `${id} ${it.id}: the options are the key and its Falsch`);
+        if (it.changed.kind === 'contrary') {
+          assert.ok(PAIRS.some((pair) => pair.includes(it.changed.from) && pair.includes(it.changed.to)), `${id} ${it.id}: a contrary this test can read`);
+        }
+      }
+      assert.equal(lesen.filter((it) => it.options[0] === it.answer).length, 2, `${id}: two keys at A, two at B`);
+      const { score, name } = audit(lesen);
+      assert.ok(score <= 2, `${id}: „${name}" scores ${score} of 4`);
+    }
+  }
+
+  // MUTATIONS: the audit must see a planted leak, or a pass means nothing. Four items each, built like the
+  // real ones (the key a report, the distractor its change), with one leak planted — and one balanced paper.
+  const item = (text, key, distractor, keyAtA) => ({ text, answer: key, distractor, options: keyAtA ? [key, distractor] : [distractor, key] });
+  const LEAKS = {
+    position: [
+      item('Ana: Ich habe drei Äpfel.', 'Ana hat drei Äpfel.', 'Ana hat vier Äpfel.', true),
+      item('Tim: Ich habe acht Euro.', 'Tim hat acht Euro.', 'Tim hat fünf Euro.', true),
+      item('Ana: Ich habe neun Hefte.', 'Ana hat neun Hefte.', 'Ana hat zehn Hefte.', true),
+      item('Tim: Ich habe zehn Stifte.', 'Tim hat zehn Stifte.', 'Tim hat neun Stifte.', true),
+    ],
+    length: [
+      item('Ana: Ich habe sieben Äpfel.', 'Ana hat sieben Äpfel.', 'Ana hat acht Äpfel.', true),
+      item('Tim: Ich habe sieben Euro.', 'Tim hat sieben Euro.', 'Tim hat neun Euro.', false),
+      item('Ana: Ich habe zwölf Hefte.', 'Ana hat zwölf Hefte.', 'Ana hat drei Hefte.', true),
+      item('Tim: Ich habe zwölf Stifte.', 'Tim hat zwölf Stifte.', 'Tim hat vier Stifte.', false),
+    ],
+    number: [
+      item('Ana: Ich habe vier Äpfel.', 'Ana hat vier Äpfel.', 'Ana hat drei Äpfel.', true),
+      item('Tim: Ich habe neun Euro.', 'Tim hat neun Euro.', 'Tim hat acht Euro.', false),
+      item('Ana: Ich habe zehn Hefte.', 'Ana hat zehn Hefte.', 'Ana hat neun Hefte.', true),
+      item('Tim: Ich habe fünf Stifte.', 'Tim hat fünf Stifte.', 'Tim hat vier Stifte.', false),
+    ],
+    polarity: [
+      item('Ana: Ich wohne nicht hier.', 'Ana wohnt nicht hier.', 'Ana wohnt hier.', true),
+      item('Tim: Ich koche nicht.', 'Tim kocht nicht.', 'Tim kocht.', false),
+      item('Ana: Ich habe kein Auto.', 'Ana hat kein Auto.', 'Ana hat ein Auto.', true),
+      item('Tim: Ich arbeite nicht.', 'Tim arbeitet nicht.', 'Tim arbeitet.', false),
+    ],
+    'text × option': [
+      item('Ana: Ich wohne nicht hier.', 'Ana wohnt nicht hier.', 'Ana wohnt hier.', true),
+      item('Tim: Ich koche nicht.', 'Tim kocht nicht.', 'Tim kocht.', false),
+      item('Ana: Ich habe ein Auto.', 'Ana hat ein Auto.', 'Ana hat kein Auto.', true),
+      item('Tim: Ich arbeite heute.', 'Tim arbeitet heute.', 'Tim arbeitet heute nicht.', false),
+    ],
+  };
+  for (const [leak, lesen] of Object.entries(LEAKS)) {
+    const { score, name } = audit(lesen);
+    assert.ok(score > 2, `the audit misses a planted ${leak} leak: its best strategy „${name}" scores ${score} of 4`);
+  }
+  // The text × option leak hides from every unconditional rule — only the conditionals find it.
+  const unconditional = Math.max(...Object.values(RULES).map((rule) => LEAKS['text × option'].reduce((sum, it) => sum + rule(it), 0)));
+  assert.ok(unconditional <= 2, 'the text × option leak is invisible to a single option rule');
+  // A balanced paper: two complementary pairs with the same text marks, keys at A and B — a coin.
+  const BALANCED = [
+    item('Ana: Ich habe vier Äpfel.', 'Ana hat vier Äpfel.', 'Ana hat drei Äpfel.', true),
+    item('Tim: Ich habe acht Euro.', 'Tim hat acht Euro.', 'Tim hat neun Euro.', false),
+    item('Ana: Ich wohne nicht hier.', 'Ana wohnt nicht hier.', 'Ana wohnt hier.', true),
+    item('Tim: Ich koche heute. Ana: Ich koche nicht.', 'Tim kocht heute.', 'Tim kocht heute nicht.', false),
+  ];
+  assert.equal(audit(BALANCED).score, 2, `a balanced paper scores a coin's 2 of 4, not ${audit(BALANCED).score} („${audit(BALANCED).name}")`);
+  // …and a real paper with one key moved from B to A gives the place rule three of four.
+  const real = B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint: CURRICULUM_A12.checkpoints[0], pool: POOL_A12 })
+    .filter((it) => it.section === 'lesen');
+  const atB = real.findIndex((it) => it.options[1] === it.answer);
+  const moved = real.map((it, i) => (i === atB ? { ...it, options: [it.answer, it.distractor] } : it));
+  assert.ok(audit(moved).score >= 3, `one key moved to A: the audit sees ${audit(moved).score} of 4`);
+});
+
+test('round 11b: a constant place is a constant answer — „always the first option" never passes a section', async () => {
+  const { guessCeiling, sectionPasses, buildCheckpoint, scoreCheckpoint, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  // The text constant („Richtig" throughout) and the place constant (the first chip throughout) are both
+  // strategies a learner has, because CheckpointPage prints the options in their stored order.
+  const two = (answer, other, answerFirst) => ({ section: 'lesen', answer, options: answerFirst ? [answer, other] : [other, answer] });
+  assert.equal(guessCeiling([two('Ana hat drei Äpfel.', 'x', true), two('Tim hat acht Euro.', 'y', true), two('a', 'b', false), two('c', 'd', false)]), 2,
+    'four different answers, two of them first: the first chip scores 2');
+  assert.equal(guessCeiling([two('Richtig', 'Falsch', true), two('Richtig', 'Falsch', true), two('Falsch', 'Richtig', false)]), 2, 'Richtig/Falsch as before');
+  // Every A1.2 paper (rounds 0–3): a learner who taps the first option of every closed item passes no
+  // section, the two-option Lesen included.
+  for (const checkpoint of CURRICULUM_A12.checkpoints) {
+    for (let round = 0; round < 4; round += 1) {
+      const items = buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: paperSeed(checkpoint, round) });
+      const first = Object.fromEntries(items.map((it) => [it.id, Array.isArray(it.options) && it.options.length ? it.options[0] : it.answer]));
+      const result = scoreCheckpoint(items, first);
+      for (const section of ['hoeren', 'lesen', 'bausteine']) {
+        const s = result.sections[section];
+        if (!s) continue;
+        const closed = items.filter((it) => it.section === section);
+        if (!closed.every((it) => Array.isArray(it.options) && it.options.length)) continue;
+        assert.equal(sectionPasses(s), false, `${checkpoint.id}/${round} ${section}: the first chip throughout passes (${s.correct}/${s.total}, ceiling ${s.guessCeiling})`);
+      }
+    }
+  }
 });

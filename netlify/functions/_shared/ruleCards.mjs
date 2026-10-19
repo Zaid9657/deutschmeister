@@ -9,7 +9,7 @@
 export const RULE_CARDS = {
   "accusative-intro": {
     "titleDe": "Der Akkusativ: den und einen",
-    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur das Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nVorlieben: gern → lieber, gut → besser. Das Restaurant ist am Abend besser.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
+    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur das Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle zwölf Euro für das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nVorlieben: gern → lieber, gut → besser. Das Restaurant ist am Abend besser.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
     "commonMistakes": [
       {
         "wrong": "Ich brauche ein Supermarkt.",
