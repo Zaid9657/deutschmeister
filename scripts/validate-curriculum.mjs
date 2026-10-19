@@ -753,12 +753,14 @@ const CLOCK_NUMBER = String.raw`(?:\d{1,2}(?:[.:]\d{2})?(?!\d)|${NUMBER_WORD})`;
 const CLOCK_PREFIX = String.raw`(?:[Vv]iertel (?:nach|vor) |halb |kurz (?:nach|vor) )`;
 // A clock-time GROUP: one time, or several joined by oder/und/bis („um acht oder neun Uhr").
 const CLOCK_GROUP = String.raw`${CLOCK_PREFIX}?${CLOCK_NUMBER}(?:(?:\s+(?:oder|und|bis)|,)\s+${CLOCK_PREFIX}?${CLOCK_NUMBER})*`;
-// What may follow a clock time: „Uhr", the end of the clause, or a lower-case word that is neither a
-// number nor a conjunction adding one. A capitalised word is a noun the numbers count („um drei oder
-// vier Häuser", „um zwei, drei Häuser", DaF review #9, B2) — the group is read to its END, never to its
-// first number.
+// What may follow a clock time is what the course's own surfaces let follow it (dialogue lines and
+// notices: „Um acht Uhr.", „Ich stehe um sechs auf.", „Ich komme um neun Uhr an.", „… fliegt um
+// zehn."): „Uhr", the end of the clause, or a verb particle that closes it. FAIL CLOSED: any other
+// word — a noun the numbers count („um drei oder vier Häuser", review #9), a partitive („um zwei der
+// Häuser", review #10), an adjective — leaves the „um" untaught. A comma ends the clause unless
+// another number follows („um zwei, drei Häuser").
 const NEXT_NUMBER = String.raw`(?:${CLOCK_PREFIX}|\d|${NUMBER_WORD})`;
-const AFTER_CLOCK = String.raw`(?:\s+Uhr(?![a-zäöüß])|\s*(?:[.!?;:]|,(?!\s*${NEXT_NUMBER})|$)|\s+(?!(?:oder|und|bis)\s+${NEXT_NUMBER})(?!\d|${NUMBER_WORD})[a-zäöüß])`;
+const AFTER_CLOCK = String.raw`(?:\s+Uhr(?![a-zäöüß])|\s*(?:[.!?;:]|,(?!\s*${NEXT_NUMBER})|$)|\s+(?:auf|an|ab)(?=\s*(?:[.!?,;:]|$)))`;
 // Every taught „um": a clause-final verb particle („Wo steige ich um?", „Ich steige in Köln um und …"),
 // the question „um wie viel Uhr", or a whole clock-time group.
 const UM_TAUGHT = String.raw`(?:\s*(?:[.!?,;:]|$)|\s+(?:und|oder|aber|denn|sondern)(?![a-zäöüß])|\s+wie\s?viel\s+Uhr(?![a-zäöüß])|\s+${CLOCK_GROUP}${AFTER_CLOCK})`;
@@ -1441,7 +1443,11 @@ export function levelLexicon(level = 'a1.1') {
 export function untaughtTokens(item, knownSet, spec = null) {
   const names = spec?.nameSet || new Set();
   const prompt = String(item?.questionDe || '').replace(ITEM_CUE_RE, ' ').replace(ITEM_FORMULA_RE, ' ');
-  const texts = [prompt, item?.answer, ...(item?.accepted || [])].filter(Boolean);
+  // A1.2 (determinacyRepairs) accepts EVERY correct answer its task allows (DaF review #10, B1): an
+  // accepted alternative is never shown — the checker only stops it being marked wrong — so it is not
+  // lexis the course must teach. The prompt and the key still are.
+  const accepted = spec?.determinacyRepairs ? [] : (item?.accepted || []);
+  const texts = [prompt, item?.answer, ...accepted].filter(Boolean);
   const seen = new Set();
   const out = [];
   for (const s of texts) {
@@ -3119,6 +3125,20 @@ export function personaConsistency(c) {
       for (const t of about) {
         const others = names.filter((n) => n !== name && namesPersona(t, n));
         check(l.nr, 'schreiben', name, others.length ? aboutSpan(t, name, names) : t, ABOUT_PATTERNS);
+      }
+    }
+    // A Formular model names its person by „Vorname:"; her „Familienname:" and an initialled
+    // „Unterschrift:" must be that person's surname, however the form is laid out (DaF review #10: the
+    // task said „Lena Brandt", the model filled in „Familienname: Berg … Unterschrift: L. Berg").
+    const form = String(w.sample || '');
+    const first = form.match(/\bVorname:\s*([A-ZÄÖÜ][a-zäöüß]+)/)?.[1];
+    const formPerson = first && personas[first];
+    if (formPerson?.nachname) {
+      const family = form.match(/\b(?:Familienname|Nachname):\s*([A-ZÄÖÜ][a-zäöüß]+)/)?.[1];
+      if (family && family !== formPerson.nachname) report(l.nr, 'schreiben.sample Familienname', first, 'nachname', family, formPerson.nachname);
+      const signed = form.match(/\bUnterschrift:\s*([A-ZÄÖÜ])\.\s*([A-ZÄÖÜ][a-zäöüß]+)/);
+      if (signed && (signed[2] !== formPerson.nachname || signed[1] !== first[0])) {
+        report(l.nr, 'schreiben.sample Unterschrift', first, 'nachname', `${signed[1]}. ${signed[2]}`, `${first[0]}. ${formPerson.nachname}`);
       }
     }
     // A Mitteilung is written in the first person by whoever signs it.

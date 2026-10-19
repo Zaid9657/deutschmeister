@@ -1370,8 +1370,9 @@ test('DaF review #7 MAJOR 8: Richtig and Falsch carry the same negation pairs on
   for (const statement of ['Ana kommt vor zehn Uhr.', 'Ana kommt nach acht Uhr.', 'Ana arbeitet zwischen acht und zehn Uhr.',
     'Ana arbeitet bis zehn Uhr.', 'Ana arbeitet ab acht Uhr.', 'Ana wartet seit zehn Minuten.', 'Ana kommt gegen acht Uhr.',
     'Der Bus fährt von sieben bis zehn Uhr.']) assert.deepEqual(values(statement), [], `„${statement}" — offen`);
-  // …while a stated clock time is one value: „um neun" widerspricht „um acht".
-  assert.ok(values('Ana kommt um acht Uhr.').includes('Ana kommt um neun Uhr.'), 'um acht → um neun widerspricht');
+  // …while a stated one-off event is one value: „um neun" widerspricht „um acht" (the arrival, „kommt … an";
+  // review #10: without its particle the clause states no one-off event, see the review #9 test).
+  assert.ok(values('Ana kommt um acht Uhr an.').includes('Ana kommt um neun Uhr an.'), 'um acht → um neun widerspricht');
 });
 
 test('DaF review #7 BLOCKER 2: a word the course knows does not license a meaning or a form it never taught — annotated, then every real draw', async () => {
@@ -1545,7 +1546,7 @@ test('DaF review #7 BLOCKER 1: a rejected correct answer is excluded by a German
   const { knownUpTo } = await import('../src/lib/checkpoint/lexis.js');
   const known = knownUpTo(CURRICULUM_A12, 12);
   const TASK_WORDS = new Set(['Beginnen', 'Kurzform', 'Startort', 'Bewegung', 'Heimat', 'verstehen', 'aufmachen', 'U']);
-  for (const it of items) {
+  for (const it of POOL_A12.items.filter((x) => x.minLektion != null)) {
     for (const [, cue] of String(it.questionDe).matchAll(/\(([^)]*)\)/g)) {
       for (const word of cue.split(/[^A-Za-zÄÖÜäöüß]+/).filter(Boolean)) {
         // a verb in -ieren is known when its -iert participle is taught: that is the L12 rule itself
@@ -1610,7 +1611,7 @@ test('DaF review #8 MAJOR 8: a clock time is a Falsch only for a once-only event
   for (const [statement, label] of [
     ['Tim ist um elf in Köln.', 'offen'], ['Tim kocht um acht.', 'offen'], ['Ana kommt vor halb zehn.', 'offen'],
     ['Ana kommt um acht oder neun Uhr.', 'offen'], ['Ana arbeitet bis um zehn.', 'offen'],
-    ['Tim steht um sechs auf.', 'widerspricht'], ['Der Zug fährt um acht Uhr.', 'widerspricht'], ['Ana kommt um neun Uhr an.', 'widerspricht'],
+    ['Tim steht um sechs auf.', 'widerspricht'], ['Der Zug fährt um acht Uhr.', 'offen'], ['Ana kommt um neun Uhr an.', 'widerspricht'],
   ]) {
     if (label === 'offen') assert.deepEqual(values(statement), [], `„${statement}" — offen`);
     else assert.ok(values(statement).length > 0, `„${statement}" — widerspricht`);
@@ -1728,6 +1729,10 @@ test('DaF review #9 B2: „um" and „gegen" are read to the END of their expres
     ['Die Tablette hilft gegen Kopfschmerzen.', false], ['Das hilft gegen Fieber.', false], ['Die Tablette hilft gegen meinen Husten.', false],
     ['Der Bus fährt um halb neun.', false], ['Um wie viel Uhr fährt der Bus?', false], ['Wo steige ich um?', false],
     ['Ich steige in Köln um und fahre nach Bonn.', false], ['Ich komme um acht, dann koche ich.', false], ['Ich komme um 8.30 Uhr.', false],
+    // review #10: a lower-case word does not end a clock time — partitives and adjectives count things
+    ['Wir laufen um zwei der Häuser.', true], ['Wir laufen um zwei große Häuser.', true], ['Wir laufen um zwei von den Häusern.', true],
+    // FAIL CLOSED: no taught surface lets a verb follow the time, so this stays shut until one does
+    ['Um zwei kommen wir.', true], ['Ich stehe um sechs auf.', false], ['Ich komme um neun Uhr an.', false],
   );
   const wrong = cases.filter(([s, want]) => blocked(s) !== want).map(([s, want]) => `${want ? 'open' : 'blocked'}: ${s}`);
   assert.deepEqual(wrong, [], 'every annotated case');
@@ -1748,11 +1753,14 @@ test('DaF review #9 MAJOR 8: a clock time is one value only for a one-off EVENT 
     B.contradictions(statement, spec.nouns, B.mulberry32(seed)).filter((c) => c.kind === 'value').map((c) => c.de)))];
   // ANNOTATED BY HAND, minimal pairs with the same verb: widerspricht (another time refutes it) / offen.
   for (const [statement, label] of [
-    ['Der Bus fährt um acht.', 'widerspricht'], ['Um acht fährt der Zug.', 'widerspricht'], ['Der Zug fährt um acht ab.', 'widerspricht'],
-    ['Tim fährt um acht ab.', 'widerspricht'], ['Tim fährt um acht mit dem Bus.', 'offen'], ['Tim fährt um acht noch mit dem Fahrrad.', 'offen'],
-    ['Das Flugzeug fliegt um zehn.', 'widerspricht'], ['Ana fliegt um zehn nach Marokko.', 'offen'],
-    ['Tim steht um sechs auf.', 'widerspricht'], ['Tim steht gern um sechs auf.', 'offen'], ['Tim steht um sechs auf und frühstückt.', 'offen'],
-    ['Ana kommt um acht.', 'widerspricht'], ['Ana kommt um acht, dann kocht sie.', 'offen'], ['Die Apotheke öffnet um acht.', 'widerspricht'],
+    ['Der Zug fährt um acht ab.', 'widerspricht'], ['Tim fährt um acht ab.', 'widerspricht'], ['Das Flugzeug fliegt um zehn ab.', 'widerspricht'],
+    ['Tim steht um sechs auf.', 'widerspricht'], ['Ana kommt um neun Uhr an.', 'widerspricht'], ['Der Film fängt um acht an.', 'widerspricht'],
+    // review #10: a vehicle word is no event — subject, object or prepositional
+    ['Der Bus fährt um acht.', 'offen'], ['Um acht fährt der Zug.', 'offen'], ['Tim fährt den Bus um acht.', 'offen'],
+    ['Tim fährt um acht mit dem Bus.', 'offen'], ['Tim fährt um acht noch mit dem Fahrrad.', 'offen'],
+    ['Das Flugzeug fliegt um zehn.', 'offen'], ['Ana fliegt um zehn nach Marokko.', 'offen'],
+    ['Tim steht gern um sechs auf.', 'offen'], ['Tim steht um sechs auf und frühstückt.', 'offen'],
+    ['Ana kommt um acht.', 'offen'], ['Ana kommt um acht, dann kocht sie.', 'offen'], ['Die Apotheke öffnet um acht.', 'offen'],
   ]) {
     if (label === 'offen') assert.deepEqual(values(statement), [], `„${statement}" — offen`);
     else assert.ok(values(statement).length > 0, `„${statement}" — widerspricht`);
@@ -1784,8 +1792,61 @@ test('DaF review #9 (A2.1 planner): a recurring person keeps ONE surname at ever
   // the rule reaches a planted contradiction
   const planted = { ...CURRICULUM_A12, lektionen: CURRICULUM_A12.lektionen.map((l, i) => (i ? l : { ...l, dialog: { ...l.dialog, lines: [{ speaker: 'Ana', de: 'Das ist Lena Berg aus Köln.', en: '' }, ...l.dialog.lines] } })) };
   assert.ok(v.personaConsistency(planted).some((o) => o.fact === 'nachname' && o.found === 'Berg'));
+  // …and a Formular model, field by field: the task names Lena Brandt, so „Familienname:" and the
+  // initialled „Unterschrift:" say Brandt; each mutation alone is caught (review #10, new MAJOR).
+  const forms = CURRICULUM_A12.lektionen.filter((l) => /Vorname: Lena/.test(l.schreiben?.sample || ''));
+  assert.ok(forms.length >= 2, 'the two Lena forms');
+  for (const l of forms) assert.match(l.schreiben.sample, /Familienname: Brandt\b.*Unterschrift: L\. Brandt\b/, `L${l.nr}`);
+  const withSample = (nr, fix) => ({ ...CURRICULUM_A12, lektionen: CURRICULUM_A12.lektionen.map((l) => (l.nr === nr ? { ...l, schreiben: { ...l.schreiben, sample: fix(l.schreiben.sample) } } : l)) });
+  for (const l of forms) {
+    const familyOnly = withSample(l.nr, (s) => s.replace('Familienname: Brandt', 'Familienname: Berg'));
+    const signatureOnly = withSample(l.nr, (s) => s.replace('Unterschrift: L. Brandt', 'Unterschrift: L. Berg'));
+    assert.ok(v.personaConsistency(familyOnly).some((o) => o.fact === 'nachname' && o.found === 'Berg'), `L${l.nr}: the Familienname field alone`);
+    assert.ok(v.personaConsistency(signatureOnly).some((o) => o.fact === 'nachname' && o.found === 'L. Berg'), `L${l.nr}: the signature alone`);
+  }
   // …and the writing tasks the grader reads, in both twins
   for (const file of ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs']) {
     assert.deepEqual([...read(file).matchAll(/\bLena ([A-ZÄÖÜ][a-zäöüß]+)\b/g)].map((m) => m[1]).filter((s) => s !== 'Brandt'), [], file);
   }
+});
+
+test('DaF review #10 B1: a correction keeps every minimal repair its task allows, and question words that ask the same are one answer', () => {
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  const pool = poolItems(POOL_A12);
+  const gerner = pool.find((i) => i.id === 'extra-a12-l03-14');
+  assert.match(gerner.questionDe, /^Korrigieren Sie nur den Fehler: „Ich gehe gerner in das Museum.“/);
+  for (const fix of ['Ich gehe lieber in das Museum.', 'Ich gehe gern in das Museum.', 'Ich gehe gerne in das Museum.']) {
+    assert.equal(verdict(gerner, fix), RESULT.CORRECT, `„${fix}" removes the error and nothing else`);
+  }
+  assert.notEqual(verdict(gerner, 'Ich gehe mehr in das Museum.'), RESULT.CORRECT);
+  // Warum, Wieso and Weshalb ask for a reason: the checker takes each for each (src/lib/lesson/check.js
+  // SAME_ANSWER), so an untaught synonym never stamps an item unservable.
+  for (const id of ['extra-a12-l05-04', 'cb094e7e-51c8-49e1-ac2e-60d1413cc7c5']) {
+    const it = pool.find((i) => i.id === id);
+    assert.ok(it.minLektion != null, `${id} stays servable`);
+    // a typed gap takes every synonym; a choice item takes the printed key and no other printed option
+    const typed = !(it.options || []).length;
+    for (const w of typed ? ['Warum', 'Wieso', 'Weshalb', 'wieso'] : ['Warum']) assert.equal(verdict(it, w), RESULT.CORRECT, `${id}: ${w}`);
+    for (const w of typed ? ['Wo', 'Wann', 'Was'] : (it.options || []).filter((o) => o !== it.answer)) assert.notEqual(verdict(it, w), RESULT.CORRECT, `${id}: ${w}`);
+  }
+  assert.doesNotMatch(pool.find((i) => i.id === 'cb094e7e-51c8-49e1-ac2e-60d1413cc7c5').questionDe, /Why|\(=/);
+});
+
+test('DaF review #10 B1: an independent annotation of every servable correction and question-word gap — each correct alternative is accepted, each excluded one refused', () => {
+  // tests/fixtures/a12-b1-alternatives.json: Codex's annotation of all 48 servable A1.2 corrections and
+  // question-word gaps (every other answer it judged correct German), each judged by the reading the
+  // fixture states — a correction repairs what is wrong and keeps meaning, tense and mood.
+  const fx = JSON.parse(read('tests/fixtures/a12-b1-alternatives.json'));
+  const pool = new Map(poolItems(POOL_A12).map((i) => [i.id, i]));
+  const verdict = (it, text) => checkAnswer(text, it.accepted?.length ? it.accepted : [it.answer], checkOptionsFor(it)).result;
+  assert.ok(fx.alternatives.length >= 200 && fx.alternatives.some((a) => a.verdict === 'accept'), 'the annotation is the whole class');
+  const wrong = [];
+  for (const a of fx.alternatives) {
+    const it = pool.get(a.id);
+    assert.ok(it?.minLektion != null, `${a.id} is no longer servable`);
+    const r = verdict(it, a.answer);
+    if (a.verdict === 'accept' && r !== RESULT.CORRECT) wrong.push(`${a.id}: „${a.answer}" is correct (${a.why}) but ${r}`);
+    if (a.verdict === 'exclude' && r === RESULT.CORRECT) wrong.push(`${a.id}: „${a.answer}" is excluded (${a.why}) but accepted`);
+  }
+  assert.deepEqual(wrong, []);
 });

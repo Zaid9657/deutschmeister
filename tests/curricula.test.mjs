@@ -115,8 +115,10 @@ function plantInDrawnItems(c, extraItems, poolItems, n) {
   const planted = [];
   for (const id of drawnAssignment(c, items).keys()) {
     if (planted.length >= n) break;
-    // „Zebra“ is in no Wortfeld, no dialogue and no Notice card of either level.
-    byId.get(id).accepted = [...(byId.get(id).accepted || []), 'Zebra'];
+    // „Zebra“ is in no Wortfeld, no dialogue and no Notice card of either level. It goes into the
+    // PROMPT, which is item lexis at every level; A1.2 no longer reads an accepted ALTERNATIVE as lexis
+    // (DaF review #10 B1: the course accepts correct answers it does not teach — they are never shown).
+    byId.get(id).questionDe = `${String(byId.get(id).questionDe || '')} Zebra`;
     planted.push(id);
   }
   const after = drawnAssignment(c, items);

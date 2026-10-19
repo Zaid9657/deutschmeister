@@ -995,30 +995,24 @@ const TIME_BOUND_PREPOSITIONS = new Set(['vor', 'nach', 'bis', 'ab', 'seit', 'ge
 /**
  * …and a clock time is one value only for an event that happens once: „Tim steht um sechs auf",
  * „der Zug fährt um acht". „Tim ist um elf in Köln" is a state — at four he may still be there — and
- * „Tim kocht um acht" may go on past nine (DaF review #8, MAJOR 8). Review #9: a verb is no event by
- * itself — „Tim fährt um acht noch mit dem Fahrrad" is a ride that may last till ten. So a clause is
- * an event only with
- *  - a punctual verb (kommen, beginnen, öffnen, schließen, landen, starten), or a particle verb whose
- *    particle closes the clause (steht … auf, fängt … an, fährt … ab, fliegt … ab);
- *  - „fahren"/„fliegen" alone only with a TIMETABLE subject: a vehicle no preposition governs („Der Bus
- *    fährt um acht.", never „Tim fährt um acht mit dem Bus.");
+ * „Tim kocht um acht" may go on past nine (DaF review #8, MAJOR 8). A verb is no event by itself:
+ * „Tim fährt um acht noch mit dem Fahrrad" is a ride (review #9), „Tim fährt den Bus um acht" a job
+ * (review #10) — and a vehicle word proves nothing. FAIL CLOSED: a clause is an event only where a
+ * separable verb of beginning, arriving or leaving closes it with its particle (steht … auf, kommt …
+ * an, fährt … ab, fliegt … ab, fängt … an) — the shape of every clock-time Falsch the papers draw —
  * and never with a durative or habitual word („noch", „schon", „immer", „gern" …) or a second clause,
  * whose time may be the other clause's.
  */
-const PUNCTUAL_VERBS = new Set(['kommt', 'kommen', 'beginnt', 'beginnen', 'öffnet', 'öffnen', 'schließt', 'schließen', 'landet', 'landen', 'startet', 'starten']);
-const EVENT_PARTICLES = { steht: 'auf', stehen: 'auf', fängt: 'an', fangen: 'an', fährt: 'ab', fahren: 'ab', fliegt: 'ab', fliegen: 'ab' };
-const TIMETABLE_VERBS = new Set(['fährt', 'fahren', 'fliegt', 'fliegen']);
-const VEHICLES = new Set(['zug', 'bus', 'bahn', 'u-bahn', 's-bahn', 'straßenbahn', 'tram', 'flugzeug', 'flug', 'schiff', 'fähre']);
+const EVENT_PARTICLES = {
+  steht: 'auf', stehen: 'auf', kommt: 'an', kommen: 'an', fährt: 'ab', fahren: 'ab', fliegt: 'ab', fliegen: 'ab',
+  fängt: 'an', fangen: 'an',
+};
 const DURATIVE_WORDS = new Set(['noch', 'schon', 'immer', 'gerade', 'lange', 'oft', 'manchmal', 'meistens', 'jeden', 'jede', 'jedes', 'täglich', 'gern', 'gerne']);
 const CLAUSE_JOINS = new Set(['und', 'aber', 'oder', 'denn', 'sondern', 'dann']);
 const isEventClause = (lower) => {
   if (lower.some((w) => DURATIVE_WORDS.has(w) || CLAUSE_JOINS.has(w))) return false;
   const last = lower[lower.length - 1];
-  const vehicleSubject = () => lower.some((w, j) => VEHICLES.has(w)
-    && !PREPOSITIONS.has(lower[j - 1] || '') && !PREPOSITIONS.has(lower[j - 2] || ''));
-  return lower.some((w) => PUNCTUAL_VERBS.has(w)
-    || (EVENT_PARTICLES[w] && last === EVENT_PARTICLES[w])
-    || (TIMETABLE_VERBS.has(w) && vehicleSubject()));
+  return lower.some((w) => EVENT_PARTICLES[w] && last === EVENT_PARTICLES[w]);
 };
 
 /**

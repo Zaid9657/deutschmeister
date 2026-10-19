@@ -594,14 +594,18 @@
       "difficulty": 1,
       "order": 14,
       "questionDe": "Korrigieren Sie: „Ich gehe gerner in das Museum.“",
-      "questionEn": "Correct the sentence: I would rather go to the museum.",
+      "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“",
       "options": null,
       "answer": "Ich gehe lieber in das Museum.",
       "accepted": [
         "Ich gehe lieber in das Museum.",
-        "Ich gehe lieber in das Museum"
+        "Ich gehe lieber in das Museum",
+        "Ich gehe gern in das Museum.",
+        "Ich gehe gern in das Museum",
+        "Ich gehe gerne in das Museum.",
+        "Ich gehe gerne in das Museum"
       ],
-      "explanationDe": "Der Vergleich von gern heißt lieber, nicht gerner.",
+      "explanationDe": "„gerner“ gibt es nicht: Der Vergleich von gern ist lieber. Ohne Vergleich bleibt es gern.",
       "hint": null
     },
     {
@@ -787,7 +791,9 @@
       "answer": "Im Zimmer ist kein Kissen.",
       "accepted": [
         "Im Zimmer ist kein Kissen.",
-        "Im Zimmer ist kein Kissen"
+        "Im Zimmer ist kein Kissen",
+        "Im Zimmer ist nicht ein Kissen.",
+        "Im Zimmer ist nicht ein Kissen"
       ],
       "explanationDe": "Ein Nomen ohne Artikel verneint kein.",
       "hint": null
@@ -861,7 +867,11 @@
         "Wann",
         "wann",
         "Um wie viel Uhr",
-        "um wie viel Uhr"
+        "um wie viel Uhr",
+        "Um welche Uhrzeit",
+        "um welche Uhrzeit",
+        "Zu welcher Uhrzeit",
+        "zu welcher Uhrzeit"
       ],
       "explanationDe": "Nach der Uhrzeit fragt wann.",
       "hint": null
@@ -879,7 +889,9 @@
       "answer": "Wohin",
       "accepted": [
         "Wohin",
-        "wohin"
+        "wohin",
+        "In welches Land",
+        "in welches Land"
       ],
       "explanationDe": "Nach der Richtung fragt wohin.",
       "hint": null
@@ -897,7 +909,11 @@
       "answer": "Wie oft",
       "accepted": [
         "Wie oft",
-        "wie oft"
+        "wie oft",
+        "Wie häufig",
+        "wie häufig",
+        "Wann",
+        "wann"
       ],
       "explanationDe": "Nach der Zahl der Fahrten fragt wie oft.",
       "hint": null
@@ -933,7 +949,9 @@
       "answer": "Wie lange",
       "accepted": [
         "Wie lange",
-        "wie lange"
+        "wie lange",
+        "Wie lang",
+        "wie lang"
       ],
       "explanationDe": "Nach der Dauer fragt wie lange.",
       "hint": null
@@ -951,7 +969,9 @@
       "answer": "Wer",
       "accepted": [
         "Wer",
-        "wer"
+        "wer",
+        "Welche Person",
+        "welche Person"
       ],
       "explanationDe": "Nach der Person fragt wer.",
       "hint": null
@@ -1058,7 +1078,8 @@
       "answer": "würde",
       "accepted": [
         "würde",
-        "möchte"
+        "möchte",
+        "könnte"
       ],
       "explanationDe": "Ein höflicher Wunsch: Ich würde gern mitkommen.",
       "hint": null
@@ -1267,7 +1288,15 @@
       "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
       "accepted": [
         "Ich schlafe nicht gut, denn mein Hals tut weh.",
-        "Ich schlafe nicht gut, denn mein Hals tut weh"
+        "Ich schlafe nicht gut, denn mein Hals tut weh",
+        "Ich schlafe nicht gut, weil mein Hals weh tut.",
+        "Ich schlafe nicht gut, weil mein Hals weh tut",
+        "Ich schlafe nicht gut, weil mein Hals wehtut.",
+        "Ich schlafe nicht gut, weil mein Hals wehtut",
+        "Ich schlafe nicht gut, da mein Hals weh tut.",
+        "Ich schlafe nicht gut, da mein Hals weh tut",
+        "Ich schlafe nicht gut, da mein Hals wehtut.",
+        "Ich schlafe nicht gut, da mein Hals wehtut"
       ],
       "explanationDe": "Nach denn bleibt das Verb auf Position 2: denn mein Hals tut weh.",
       "hint": null
@@ -1427,7 +1456,9 @@
       "answer": "Das ist mein Onkel.",
       "accepted": [
         "Das ist mein Onkel.",
-        "Das ist mein Onkel"
+        "Das ist mein Onkel",
+        "Das sind meine Onkel.",
+        "Das sind meine Onkel"
       ],
       "explanationDe": "Maskulin im Nominativ: mein Onkel.",
       "hint": null
@@ -1514,7 +1545,9 @@
       "answer": "Gestern war mein Onkel glücklich.",
       "accepted": [
         "Gestern war mein Onkel glücklich.",
-        "Gestern war mein Onkel glücklich"
+        "Gestern war mein Onkel glücklich",
+        "Gestern ist mein Onkel glücklich gewesen.",
+        "Gestern ist mein Onkel glücklich gewesen"
       ],
       "explanationDe": "Für gestern steht war, nicht ist.",
       "hint": null
@@ -1675,7 +1708,11 @@
       "answer": "Mach den Fernseher aus!",
       "accepted": [
         "Mach den Fernseher aus!",
-        "Mach den Fernseher aus"
+        "Mach den Fernseher aus",
+        "Du, mach den Fernseher aus!",
+        "Du, mach den Fernseher aus",
+        "Du, mache den Fernseher aus!",
+        "Du, mache den Fernseher aus"
       ],
       "explanationDe": "Die Vorsilbe aus steht am Ende: Mach … aus!",
       "hint": null
@@ -2703,7 +2740,9 @@
       "answer": "Ich habe die Getränke bezahlt.",
       "accepted": [
         "Ich habe die Getränke bezahlt.",
-        "Ich habe die Getränke bezahlt"
+        "Ich habe die Getränke bezahlt",
+        "Ich habe die Getränke gezahlt.",
+        "Ich habe die Getränke gezahlt"
       ],
       "explanationDe": "bezahlen hat im Partizip kein ge-: bezahlt.",
       "hint": null

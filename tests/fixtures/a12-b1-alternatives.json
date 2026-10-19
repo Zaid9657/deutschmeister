@@ -1,0 +1,1368 @@
+{
+ "source": "Codex annotation of the 48 servable A1.2 corrections and question-word gaps, 2026-10-19 (scratchpad codex-annot), judged for round 11",
+ "reading": "„Korrigieren Sie nur den Fehler\" repairs what is wrong and keeps meaning, tense and mood; a question-word gap takes every question that fits its answer. Choice items take only their printed options.",
+ "alternatives": [
+  {
+   "id": "extra-a12-l03-14",
+   "answer": "Ich gehe gern in das Museum.",
+   "verdict": "accept",
+   "why": "„Gern“ ist die korrekte Grundform."
+  },
+  {
+   "id": "extra-a12-l03-14",
+   "answer": "Ich gehe gerne in das Museum.",
+   "verdict": "accept",
+   "why": "„Gerne“ ist eine korrekte Variante von „gern“."
+  },
+  {
+   "id": "extra-a12-l03-14",
+   "answer": "Ich gehe in das Museum.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche den Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche keinen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche diesen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche jenen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche meinen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche deinen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche seinen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche ihren Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche unseren Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche euren Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche irgendeinen Markt im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-10",
+   "answer": "Ich brauche ein Geschäft im Zentrum.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt einen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt keinen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt diesen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt jenen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt meinen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt deinen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt seinen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt ihren Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt unseren Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt euren Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt irgendeinen Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l03-11",
+   "answer": "Tim bezahlt Kuchen an der Kasse.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l01-03",
+   "answer": "Die Brücke kommt.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l01-04",
+   "answer": "Sie gehen bis zur Kirche.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit einer Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit keiner Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit dieser Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit jener Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit meiner Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit deiner Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit seiner Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit ihrer Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit unserer Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit eurer Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir mit irgendeiner Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir die Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l11-09",
+   "answer": "Im Sommer fahren wir ohne die Straßenbahn zum Bahnhof.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l08-08",
+   "answer": "Du, mach den Fernseher aus!",
+   "verdict": "accept",
+   "why": "Nach der vorangestellten Anrede steht ein korrekter Imperativ."
+  },
+  {
+   "id": "extra-a12-l08-08",
+   "answer": "Du, mache den Fernseher aus!",
+   "verdict": "accept",
+   "why": "Auch der Imperativ mit Endungs-e ist nach der Anrede korrekt."
+  },
+  {
+   "id": "extra-a12-l08-09",
+   "answer": "Helfen Sie bitte mir mit dem Schrank!",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist ein Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist das Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist dieses Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist jenes Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist mein Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist dein Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist sein Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist ihr Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist unser Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist euer Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist irgendein Kissen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht ein Kissen.",
+   "verdict": "accept",
+   "why": "Mit betontem „ein“ bedeutet die Ergänzung, dass kein einziges Kissen vorhanden ist."
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht das Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht dieses Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht jenes Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht mein Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht dein Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht sein Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht ihr Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht unser Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-10",
+   "answer": "Im Zimmer ist nicht euer Kissen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-11",
+   "answer": "Der Vorhang ist am Fenster.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l04-11",
+   "answer": "Der Vorhang ist keineswegs am Fenster.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-11",
+   "answer": "Der Vorhang ist keinesfalls am Fenster.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-11",
+   "answer": "Der Vorhang ist nie am Fenster.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l04-11",
+   "answer": "Der Vorhang ist niemals am Fenster.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Gestern ist mein Onkel glücklich gewesen.",
+   "verdict": "accept",
+   "why": "Das ergänzte Partizip bildet das korrekte Perfekt von „sein“."
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Gestern ist mein Onkel glücklich geworden.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Gestern ist mein Onkel glücklich geblieben.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Gestern wurde mein Onkel glücklich.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Gestern blieb mein Onkel glücklich.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Heute ist mein Onkel glücklich.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Jetzt ist mein Onkel glücklich.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-13",
+   "answer": "Morgen ist mein Onkel glücklich.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-08",
+   "answer": "Das ist dein Onkel.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-08",
+   "answer": "Das ist sein Onkel.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-08",
+   "answer": "Das ist ihr Onkel.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-08",
+   "answer": "Das ist unser Onkel.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-08",
+   "answer": "Das ist euer Onkel.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-08",
+   "answer": "Das sind meine Onkel.",
+   "verdict": "accept",
+   "why": "„Onkel“ kann Plural sein, aber diese Reparatur verändert das Verb statt des Possessivartikels."
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Ein Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Kein Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Dieses Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Jenes Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Mein Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Dein Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Sein Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Ihr Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Unser Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Euer Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Irgendein Kind ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l07-09",
+   "answer": "Der Junge ist klein.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-17",
+   "answer": "Der Fisch war lecker, aber Tim war früh gegangen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-17",
+   "answer": "Der Fisch war lecker, aber Tim hat früh gegessen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-18",
+   "answer": "Ich habe die Getränke gezahlt.",
+   "verdict": "accept",
+   "why": "„Zahlen“ kann hier transitiv im Sinne von „bezahlen“ verwendet werden."
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch zu kaufen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir wollen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir möchten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir mögen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir können das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir müssen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir dürfen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir sollen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir werden das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir würden das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir wollten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir mochten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir konnten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir mussten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir durften das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir sollten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir könnten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir müssten das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir dürften das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir lassen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir gehen das Fleisch kaufen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen wollen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen mögen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen können.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen müssen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen dürfen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen sollen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l12-11",
+   "answer": "Wir haben das Fleisch kaufen lassen.",
+   "verdict": "exclude",
+   "why": "addition: adds a modal, a tense or a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt dir.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt ihm.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt ihr.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt uns.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt euch.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt ihnen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt jemandem.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt niemandem.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt allen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose gefällt jedem.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-13",
+   "answer": "Die Hose kleidet mich.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-07",
+   "answer": "Die Hose ist für deinen Bruder.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-07",
+   "answer": "Die Hose ist für seinen Bruder.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-07",
+   "answer": "Die Hose ist für ihren Bruder.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-07",
+   "answer": "Die Hose ist für unseren Bruder.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-07",
+   "answer": "Die Hose ist für euren Bruder.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-07",
+   "answer": "Die Hose ist für mein Kind.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne einen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne diesen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne jenen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne meinen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne deinen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne seinen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne ihren Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne unseren Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne euren Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne irgendeinen Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l10-08",
+   "answer": "Ana geht ohne Schal ins Kaufhaus.",
+   "verdict": "exclude",
+   "why": "deletion: drops a word that was not wrong"
+  },
+  {
+   "id": "extra-a12-l05-01",
+   "answer": "Um welche Uhrzeit",
+   "verdict": "accept",
+   "why": "Die Frage verlangt die angegebene Abfahrtszeit."
+  },
+  {
+   "id": "extra-a12-l05-01",
+   "answer": "Zu welcher Uhrzeit",
+   "verdict": "accept",
+   "why": "Die Frage verlangt die angegebene Abfahrtszeit."
+  },
+  {
+   "id": "extra-a12-l05-01",
+   "answer": "Zu welcher Zeit",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-01",
+   "answer": "Zu welchem Zeitpunkt",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-01",
+   "answer": "Wie spät",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-01",
+   "answer": "Um wie viel Uhr",
+   "verdict": "accept",
+   "why": "added in review (DaF judgement)"
+  },
+  {
+   "id": "extra-a12-l05-02",
+   "answer": "In welches Land",
+   "verdict": "accept",
+   "why": "„Nach Italien“ nennt das erfragte Reiseland."
+  },
+  {
+   "id": "extra-a12-l05-02",
+   "answer": "In welchen Staat",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-02",
+   "answer": "Zu welchem Reiseziel",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "Wie häufig",
+   "verdict": "accept",
+   "why": "Die Frage nach der Häufigkeit passt zu „jede Stunde“."
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "Wann",
+   "verdict": "accept",
+   "why": "Auch eine allgemeine Zeitfrage kann mit dem regelmäßigen Fahrplan beantwortet werden."
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "In welchem Takt",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "In welchem Rhythmus",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "In welchem Abstand",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "In welchen Abständen",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "In welchen Zeitabständen",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "In welchen Intervallen",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-03",
+   "answer": "Zu welchen Zeiten",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-04",
+   "answer": "Wieso",
+   "verdict": "accept",
+   "why": "„Wieso“ fragt nach dem in der Antwort genannten Grund."
+  },
+  {
+   "id": "extra-a12-l05-04",
+   "answer": "Weshalb",
+   "verdict": "accept",
+   "why": "„Weshalb“ fragt nach dem in der Antwort genannten Grund."
+  },
+  {
+   "id": "extra-a12-l05-04",
+   "answer": "Weswegen",
+   "verdict": "accept",
+   "why": "„Weswegen“ fragt nach dem in der Antwort genannten Grund."
+  },
+  {
+   "id": "extra-a12-l05-04",
+   "answer": "Aus welchem Grund",
+   "verdict": "accept",
+   "why": "Die Wendung fragt unmittelbar nach dem Grund des frühen Aufstehens."
+  },
+  {
+   "id": "extra-a12-l05-04",
+   "answer": "Aus welchen Gründen",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-04",
+   "answer": "Aus was für einem Grund",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-05",
+   "answer": "Wie lang",
+   "verdict": "accept",
+   "why": "„Lang“ ist auch als Temporaladverb korrekt."
+  },
+  {
+   "id": "extra-a12-l05-05",
+   "answer": "Wie viele Stunden",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-06",
+   "answer": "Welche Person",
+   "verdict": "accept",
+   "why": "„Tim“ identifiziert die erfragte Person."
+  },
+  {
+   "id": "extra-a12-l05-11",
+   "answer": "Ich würde gern einen Ausflug unternehmen.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l05-12",
+   "answer": "könnte",
+   "verdict": "accept",
+   "why": "Der Konjunktiv II formuliert die Bereitschaft zur Teilnahme zurückhaltend."
+  },
+  {
+   "id": "extra-a12-l05-12",
+   "answer": "kann",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-12",
+   "answer": "werde",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-12",
+   "answer": "wollte",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l05-12",
+   "answer": "möchte",
+   "verdict": "accept",
+   "why": "added in review (DaF judgement)"
+  },
+  {
+   "id": "758bcf05-88c8-5d4a-a97a-6e9e5ca1a5ef",
+   "answer": "An welchem Ort",
+   "verdict": "accept",
+   "why": "Die Ortsfrage passt zur Antwort „in der Stadt“."
+  },
+  {
+   "id": "758bcf05-88c8-5d4a-a97a-6e9e5ca1a5ef",
+   "answer": "In welcher Gegend",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "ae1873de-5a3e-5e6a-b1f3-26622fe99392",
+   "answer": "In welche Stadt",
+   "verdict": "accept",
+   "why": "„Nach Berlin“ nennt die erfragte Zielstadt."
+  },
+  {
+   "id": "ae1873de-5a3e-5e6a-b1f3-26622fe99392",
+   "answer": "In welchen Ort",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "ae1873de-5a3e-5e6a-b1f3-26622fe99392",
+   "answer": "An welchen Ort",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "ae1873de-5a3e-5e6a-b1f3-26622fe99392",
+   "answer": "Zu welchem Reiseziel",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "b69cdbfe-c42a-5a65-9c7a-fbd09021f4ea",
+   "answer": "Wie viel Geld",
+   "verdict": "accept",
+   "why": "„Zehn Euro“ nennt den erfragten Geldbetrag."
+  },
+  {
+   "id": "b69cdbfe-c42a-5a65-9c7a-fbd09021f4ea",
+   "answer": "Wie viele Euro",
+   "verdict": "accept",
+   "why": "Die Frage nach dem Betrag in Euro passt genau zur Antwort."
+  },
+  {
+   "id": "b69cdbfe-c42a-5a65-9c7a-fbd09021f4ea",
+   "answer": "Wie viel Euro",
+   "verdict": "accept",
+   "why": "Auch „wie viel Euro“ ist eine gebräuchliche Mengenfrage ([Duden](https://shop.duden.de/media/cf/b5/6d/1687429220/Leseprobe_9783411720132_Mathe_in_15_Min_Gr%C3%B6%C3%9Fen_und_Textaufgaben_5_6_Klasse.pdf))."
+  },
+  {
+   "id": "0160ba9f-5d71-5714-afa5-c71d909fe22f",
+   "answer": "Was für",
+   "verdict": "accept",
+   "why": "Die Frage nach den gesprochenen Sprachen kann mit deren Namen beantwortet werden."
+  },
+  {
+   "id": "0160ba9f-5d71-5714-afa5-c71d909fe22f",
+   "answer": "Wie viele",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "2662013f-bb4f-53f8-8fdc-606b5bc1841a",
+   "answer": "Welche Person",
+   "verdict": "accept",
+   "why": "„Mein Bruder“ identifiziert die erfragte Person."
+  },
+  {
+   "id": "2662013f-bb4f-53f8-8fdc-606b5bc1841a",
+   "answer": "Wessen Bruder",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "2662013f-bb4f-53f8-8fdc-606b5bc1841a",
+   "answer": "Welches Familienmitglied",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "2662013f-bb4f-53f8-8fdc-606b5bc1841a",
+   "answer": "Welcher Verwandte",
+   "verdict": "exclude",
+   "why": "does not fit the answer or the task"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, weil mein Hals weh tut.",
+   "verdict": "accept",
+   "why": "„Weil“ erlaubt Verbendstellung, und die getrennte Schreibung bleibt korrekt ([IDS](https://grammis.ids-mannheim.de/verbs/view/401208))."
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, da mein Hals weh tut.",
+   "verdict": "accept",
+   "why": "Die kausale Konjunktion „da“ verlangt hier Verbendstellung."
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, zumal mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, wenn mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, falls mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, sofern mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, solange mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, während mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, seit mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, seitdem mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, sobald mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, sooft mein Hals weh tut.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, weil mein Hals wehtut.",
+   "verdict": "accept",
+   "why": "added in review (DaF judgement)"
+  },
+  {
+   "id": "extra-a12-l06-12",
+   "answer": "Ich schlafe nicht gut, da mein Hals wehtut.",
+   "verdict": "accept",
+   "why": "added in review (DaF judgement)"
+  },
+  {
+   "id": "extra-a12-l06-08",
+   "answer": "Mein Mann schlief nicht gut, sein Rücken tut weh.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-08",
+   "answer": "Mein Mann schliefe nicht gut, sein Rücken tut weh.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-08",
+   "answer": "Mein Mann schlafe nicht gut, sein Rücken tut weh.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-09",
+   "answer": "Die Tablette half gegen Fieber.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-09",
+   "answer": "Die Tablette hälfe gegen Fieber.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-09",
+   "answer": "Die Tablette hülfe gegen Fieber.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-09",
+   "answer": "Die Tablette helfe gegen Fieber.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  },
+  {
+   "id": "extra-a12-l06-09",
+   "answer": "Die Tablette wirkt gegen Fieber.",
+   "verdict": "exclude",
+   "why": "swap: changes a word that was not wrong (meaning, tense, mood or person)"
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 294,
+ "count": 295,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -296,17 +296,25 @@
    "difficulty": 1,
    "order": 14,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ich gehe gerner in das Museum.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: I would rather go to the museum.",
+   "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“",
    "options": null,
    "answer": "Ich gehe lieber in das Museum.",
    "accepted": [
     "Ich gehe lieber in das Museum.",
-    "Ich gehe lieber in das Museum"
+    "Ich gehe lieber in das Museum",
+    "Ich gehe gern in das Museum.",
+    "Ich gehe gern in das Museum",
+    "Ich gehe gerne in das Museum.",
+    "Ich gehe gerne in das Museum",
+    "Ich gehe in das Museum gern.",
+    "Ich gehe in das Museum gerne.",
+    "Ich gehe in das Museum gern",
+    "Ich gehe in das Museum gerne"
    ],
-   "explanationDe": "Der Vergleich von gern heißt lieber, nicht gerner.",
+   "explanationDe": "„gerner“ gibt es nicht: Der Vergleich von gern ist lieber. Ohne Vergleich bleibt es gern.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": "The comparative of **gern** is **lieber**, not gerner."
+   "explanationEn": "There is no word gerner: the comparative of **gern** is **lieber**. Without a comparison it stays **gern**."
   },
   {
    "id": "extra-a12-l03-15",
@@ -1463,7 +1471,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Ich bin ___ meiner Freundin. (bei + Dativ, volle Form)",
+   "questionDe": "Ich bin ___ meiner Freundin. (bei + Dativ)",
    "questionEn": "Fill in bei — use the full form, not a contraction: I'm at my girlfriend's. (bei + Dativ)",
    "options": null,
    "answer": "bei",
@@ -1991,6 +1999,10 @@
    "accepted": [
     "Mach den Fernseher aus!",
     "Mach den Fernseher aus",
+    "Du, mach den Fernseher aus!",
+    "Du, mach den Fernseher aus",
+    "Du, mache den Fernseher aus!",
+    "Du, mache den Fernseher aus",
     "Mache den Fernseher aus!",
     "Mache den Fernseher aus",
     "Mach du den Fernseher aus!",
@@ -2663,7 +2675,9 @@
    "answer": "Im Zimmer ist kein Kissen.",
    "accepted": [
     "Im Zimmer ist kein Kissen.",
-    "Im Zimmer ist kein Kissen"
+    "Im Zimmer ist kein Kissen",
+    "Im Zimmer ist nicht ein Kissen.",
+    "Im Zimmer ist nicht ein Kissen"
    ],
    "explanationDe": "Ein Nomen ohne Artikel verneint kein.",
    "hint": null,
@@ -3006,7 +3020,9 @@
    "answer": "Gestern war mein Onkel glücklich.",
    "accepted": [
     "Gestern war mein Onkel glücklich.",
-    "Gestern war mein Onkel glücklich"
+    "Gestern war mein Onkel glücklich",
+    "Gestern ist mein Onkel glücklich gewesen.",
+    "Gestern ist mein Onkel glücklich gewesen"
    ],
    "explanationDe": "Für gestern steht war, nicht ist.",
    "hint": null,
@@ -3085,7 +3101,9 @@
    "answer": "Das ist mein Onkel.",
    "accepted": [
     "Das ist mein Onkel.",
-    "Das ist mein Onkel"
+    "Das ist mein Onkel",
+    "Das sind meine Onkel.",
+    "Das sind meine Onkel"
    ],
    "explanationDe": "Maskulin im Nominativ: mein Onkel.",
    "hint": null,
@@ -3618,6 +3636,28 @@
    "minLektion": 2
   },
   {
+   "id": "fbdca573-c715-59fb-bc45-d93d44186dd5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Schreiben Sie den Preis in Worten: 4,20 € = ___",
+   "questionEn": "Write the price in words: 4.20 euros (euros + cents)",
+   "options": null,
+   "answer": "vier Euro zwanzig",
+   "accepted": [
+    "vier Euro zwanzig",
+    "vier Euro zwanzig Cent",
+    "vier Euro und zwanzig Cent",
+    "vier zwanzig"
+   ],
+   "explanationDe": "Preise sagt man meistens so: zuerst Euro, dann Cent: vier Euro zwanzig. Auch richtig: vier Euro und zwanzig Cent, oder kurz: vier zwanzig.",
+   "explanationEn": "Prices are usually said euros first, then cents: vier Euro zwanzig. Also correct: vier Euro und zwanzig Cent, or short: vier zwanzig.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
    "id": "490e3196-419f-57fd-ad2d-1d07b898585c",
    "topic": "numbers-counting",
    "type": "fill_blank",
@@ -3910,8 +3950,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 10,
-   "questionDe": "Ich ___ gestern krank. (sein, Präteritum, ich)",
-   "questionEn": "Fill in the Präteritum of sein for ich: I was sick yesterday.",
+   "questionDe": "Ich ___ gestern krank. (sein, ich)",
+   "questionEn": "Fill in the past of sein for ich: I was sick yesterday.",
    "options": null,
    "answer": "war",
    "accepted": [
@@ -4072,7 +4112,9 @@
    "answer": "Ich habe die Getränke bezahlt.",
    "accepted": [
     "Ich habe die Getränke bezahlt.",
-    "Ich habe die Getränke bezahlt"
+    "Ich habe die Getränke bezahlt",
+    "Ich habe die Getränke gezahlt.",
+    "Ich habe die Getränke gezahlt"
    ],
    "explanationDe": "bezahlen hat im Partizip kein ge-: bezahlt.",
    "hint": null,
@@ -4885,7 +4927,11 @@
     "Wann",
     "wann",
     "Um wie viel Uhr",
-    "um wie viel Uhr"
+    "um wie viel Uhr",
+    "Um welche Uhrzeit",
+    "um welche Uhrzeit",
+    "Zu welcher Uhrzeit",
+    "zu welcher Uhrzeit"
    ],
    "explanationDe": "Nach der Uhrzeit fragt wann.",
    "hint": null,
@@ -4929,7 +4975,9 @@
    "answer": "Wohin",
    "accepted": [
     "Wohin",
-    "wohin"
+    "wohin",
+    "In welches Land",
+    "in welches Land"
    ],
    "explanationDe": "Nach der Richtung fragt wohin.",
    "hint": null,
@@ -4949,7 +4997,11 @@
    "answer": "Wie oft",
    "accepted": [
     "Wie oft",
-    "wie oft"
+    "wie oft",
+    "Wie häufig",
+    "wie häufig",
+    "Wann",
+    "wann"
    ],
    "explanationDe": "Nach der Zahl der Fahrten fragt wie oft.",
    "hint": null,
@@ -4983,8 +5035,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 5,
-   "questionDe": "Fragen Sie eine Freundin: ___ lernst du Deutsch? (= Why?)",
-   "questionEn": "Ask a friend why she is learning German: ___ lernst du Deutsch?",
+   "questionDe": "Fragen Sie eine Freundin: ___ lernst du Deutsch? — Ich möchte in Deutschland arbeiten.",
+   "questionEn": "Ask a friend why she is learning German: ___ lernst du Deutsch? — I would like to work in Germany.",
    "options": [
     "Warum",
     "Wann",
@@ -4998,7 +5050,7 @@
    "explanationDe": "warum = warum.",
    "explanationEn": "warum = why.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 9
   },
   {
    "id": "extra-a12-l05-05",
@@ -5013,7 +5065,9 @@
    "answer": "Wie lange",
    "accepted": [
     "Wie lange",
-    "wie lange"
+    "wie lange",
+    "Wie lang",
+    "wie lang"
    ],
    "explanationDe": "Nach der Dauer fragt wie lange.",
    "hint": null,
@@ -5027,8 +5081,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 6,
-   "questionDe": "___ kostet das? (= How much?)",
-   "questionEn": "___ kostet das?",
+   "questionDe": "___ kostet das? — Drei Euro.",
+   "questionEn": "___ kostet das? — Three euros.",
    "options": [
     "Wie viel",
     "Wann",
@@ -5057,7 +5111,9 @@
    "answer": "Wer",
    "accepted": [
     "Wer",
-    "wer"
+    "wer",
+    "Welche Person",
+    "welche Person"
    ],
    "explanationDe": "Nach der Person fragt wer.",
    "hint": null,
@@ -5071,8 +5127,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 8,
-   "questionDe": "Fragen Sie eine Freundin: ___ kommst du? (= When?)",
-   "questionEn": "Ask a friend when she is coming: ___ kommst du?",
+   "questionDe": "Fragen Sie eine Freundin: ___ kommst du? — Am Montag.",
+   "questionEn": "Ask a friend when she is coming: ___ kommst du? — On Monday.",
    "options": [
     "Wann",
     "Warum",
@@ -5142,7 +5198,8 @@
    "answer": "würde",
    "accepted": [
     "würde",
-    "möchte"
+    "möchte",
+    "könnte"
    ],
    "explanationDe": "Ein höflicher Wunsch: Ich würde gern mitkommen.",
    "hint": null,
@@ -5201,7 +5258,8 @@
    "options": null,
    "answer": "Wo",
    "accepted": [
-    "Wo"
+    "Wo",
+    "An welchem Ort"
    ],
    "explanationDe": "Die Antwort nennt einen Ort, deshalb braucht die Frage wo.",
    "explanationEn": "The answer names a place, so the question needs wo (where).",
@@ -5240,7 +5298,8 @@
    "options": null,
    "answer": "Wohin",
    "accepted": [
-    "Wohin"
+    "Wohin",
+    "In welche Stadt"
    ],
    "explanationDe": "Die Antwort nennt ein Ziel, deshalb braucht die Frage wohin.",
    "explanationEn": "The answer names a destination, so the question needs wohin (where to).",
@@ -5279,7 +5338,10 @@
    "answer": "Wie viel",
    "accepted": [
     "Wie viel",
-    "Was"
+    "Was",
+    "Wie viel Geld",
+    "Wie viele Euro",
+    "Wie viel Euro"
    ],
    "explanationDe": "Die Antwort nennt einen Preis, deshalb braucht die Frage wie viel — oder einfach was, wie in Was kostet das?",
    "explanationEn": "The answer gives one price, so the question needs wie viel (how much) — or simply was, as in Was kostet das?",
@@ -5317,7 +5379,8 @@
    "options": null,
    "answer": "Welche",
    "accepted": [
-    "Welche"
+    "Welche",
+    "Was für"
    ],
    "explanationDe": "Die Antwort nennt bestimmte Sprachen aus einer Gruppe, deshalb braucht die Frage welche, nicht wie viele.",
    "explanationEn": "The answer picks specific languages from a group, so the question needs welche (which), not wie viele (how many).",
@@ -5336,7 +5399,8 @@
    "options": null,
    "answer": "Wer",
    "accepted": [
-    "Wer"
+    "Wer",
+    "Welche Person"
    ],
    "explanationDe": "Die Antwort nennt, wer kommt, deshalb braucht die Frage wer.",
    "explanationEn": "The answer names who is coming, so the question needs wer (who).",
@@ -5765,7 +5829,15 @@
    "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
    "accepted": [
     "Ich schlafe nicht gut, denn mein Hals tut weh.",
-    "Ich schlafe nicht gut, denn mein Hals tut weh"
+    "Ich schlafe nicht gut, denn mein Hals tut weh",
+    "Ich schlafe nicht gut, weil mein Hals weh tut.",
+    "Ich schlafe nicht gut, weil mein Hals weh tut",
+    "Ich schlafe nicht gut, weil mein Hals wehtut.",
+    "Ich schlafe nicht gut, weil mein Hals wehtut",
+    "Ich schlafe nicht gut, da mein Hals weh tut.",
+    "Ich schlafe nicht gut, da mein Hals weh tut",
+    "Ich schlafe nicht gut, da mein Hals wehtut.",
+    "Ich schlafe nicht gut, da mein Hals wehtut"
    ],
    "explanationDe": "Nach denn bleibt das Verb auf Position 2: denn mein Hals tut weh.",
    "hint": null,

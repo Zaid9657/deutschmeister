@@ -24,6 +24,8 @@ import { normalizeAnswer } from '../../utils/answerMatch.js';
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
 // not a typo — a wrong pair is a vocabulary miss — and not a first-try success.
 export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong', CORRECTED: 'corrected' };
+/** Whole answers that mean the same — a question word for a reason (see checkAnswer). */
+const SAME_ANSWER = [['warum', 'wieso', 'weshalb', 'weswegen', 'aus welchem grund']];
 
 /**
  * The ONE result a matching exercise records, whatever number of taps it took.
@@ -263,6 +265,13 @@ export function checkAnswer(userInput, expected, {
     return caseSensitive
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
+  }
+  // Words that ask the same are the same answer, taught or not: a learner who writes „Wieso" where
+  // the course taught „Warum" has made no mistake (DaF review #10, A1.2 B1). Here, not in `accepted`,
+  // because an accepted form counts as item lexis and would stamp the item unservable.
+  for (const a of accepted) {
+    const group = SAME_ANSWER.find((g) => g.includes(prepare(a).toLowerCase()));
+    if (group && group.includes(user.toLowerCase())) return { result: RESULT.CORRECT, expected: a };
   }
   for (const a of accepted) {
     if (strict && strictApplies(a)) continue;
