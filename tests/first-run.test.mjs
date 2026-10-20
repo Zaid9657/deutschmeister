@@ -36,12 +36,98 @@ import { FREE_COURSE_LEVEL, FREE_COURSE_HOME } from '../src/lib/courseEntry.js';
 import { isLevelFree } from '../src/config/freeTier.js';
 import { curriculumFor } from '../src/data/curricula/index.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
+import { EXAM_TRACKS } from '../src/data/examTracks.js';
+import { writingTasksForExam } from '../src/data/writingTasks.js';
+import { resolveModelltest } from '../src/data/modelltest.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 
 const everything = () => true;
 const freeOnly = (level) => isLevelFree(level);
+
+const EXAM_TARGETS = {
+  goethe_a1: '/schreiben/start-deutsch-1?task=formular-hotel-anmeldung',
+  goethe_a2: '/schreiben/goethe-a2?task=sms-einladung-absagen',
+  telc_b1: '/schreiben/telc-b1?task=beschwerde-lieferung',
+  goethe_b1: '/modelltest/goethe-b1',
+  dtz: '/modelltest/dtz',
+  telc_b2: '/schreiben/telc-b2?task=beschwerde-kurs',
+};
+
+for (const track of EXAM_TRACKS) {
+  test(`exam-first: ${track.key} opens its existing first task with the original path as alternative`, () => {
+    for (const prefs of [
+      {},
+      { startingPoint: STARTING_POINTS.SOME },
+      { currentLevel: 'B1.1' },
+    ]) {
+      const args = { hasLessonActivity: false, hasLevelAccess: everything, ...prefs };
+      const { alternative: _alternative, ...original } = firstRunAction(args);
+      const action = firstRunAction({ ...args, examTrack: track.key });
+      assert.equal(action.href, EXAM_TARGETS[track.key]);
+      assert.equal(action.fullLoad, false);
+      assert.deepEqual(action.alternative, original);
+    }
+    const url = new URL(EXAM_TARGETS[track.key], 'https://example.test');
+    assert.doesNotMatch(url.pathname, /\/$/, 'ordinary SPA routes have no trailing slash');
+    const writing = writingTasksForExam(track.key)[0];
+    if (writing) {
+      assert.equal(url.searchParams.get('task'), writing.taskKey);
+      assert.ok(read('src/App.jsx').includes('path="/schreiben/:examSlug"'));
+      assert.match(read('netlify.toml'), /from = "\/schreiben\/\*"\s*\n\s*to = "\/app\.html"/);
+    } else {
+      assert.match(resolveModelltest(track.slug).mock.title, /Kurzversion/);
+      assert.ok(read('src/App.jsx').includes('path="/modelltest/:examSlug"'));
+      assert.match(read('netlify.toml'), /from = "\/modelltest\/\*"\s*\n\s*to = "\/app\.html"/);
+    }
+  });
+}
+
+test('unknown, empty and explicit no-exam choices preserve the complete original decision', () => {
+  for (const examTrack of [undefined, null, '', 'none', 'unknown', 'TELC_B1']) {
+    for (const prefs of [{}, { startingPoint: 'some' }, { currentLevel: 'B1.1' }]) {
+      for (const hasLevelAccess of [freeOnly, everything, () => false]) {
+        const args = { hasLessonActivity: false, hasLevelAccess, ...prefs };
+        assert.deepEqual(firstRunAction({ ...args, examTrack }), firstRunAction(args));
+      }
+    }
+  }
+});
+
+test('exam choice never replaces existing or unknown lesson activity', () => {
+  for (const examTrack of Object.keys(EXAM_TARGETS)) {
+    for (const hasLessonActivity of [true, null, undefined]) {
+      assert.equal(firstRunAction({ hasLessonActivity, examTrack, hasLevelAccess: everything }), null);
+    }
+  }
+});
+
+test('exam tasks use the top-sublevel access gate; otherwise keep the original free path', () => {
+  for (const examTrack of Object.keys(EXAM_TARGETS)) {
+    for (const hasLevelAccess of [undefined, freeOnly, () => false]) {
+      for (const prefs of [{}, { startingPoint: 'some' }, { currentLevel: 'B1.1' }]) {
+        const args = { hasLessonActivity: false, hasLevelAccess, ...prefs };
+        assert.deepEqual(firstRunAction({ ...args, examTrack }), firstRunAction(args));
+      }
+    }
+    const track = EXAM_TRACKS.find((t) => t.key === examTrack);
+    const gateLevel = resolveModelltest(track.slug).gateLevel;
+    const action = firstRunAction({ hasLessonActivity: false, examTrack, hasLevelAccess: (level) => level === gateLevel || freeOnly(level) });
+    assert.equal(action.href, EXAM_TARGETS[examTrack], 'the matching level access opens the exam task');
+  }
+});
+
+test('onboarding passes exam choices to the same decision while preserving skip and legacy exits', () => {
+  for (const [examTrack, href] of Object.entries(EXAM_TARGETS)) {
+    for (const exit of ['first-lesson', 'level-test']) {
+      assert.equal(onboardingExitPath(exit, { examTrack, hasLevelAccess: everything }), href);
+    }
+    assert.equal(onboardingExitPath('dashboard', { examTrack, hasLevelAccess: everything }), '/dashboard');
+  }
+  assert.equal(onboardingExitPath('first-lesson', { examTrack: 'dtz', hasLevelAccess: freeOnly }), FIRST_LESSON_HREF);
+  assert.equal(onboardingExitPath('level-test', { examTrack: 'dtz', hasLevelAccess: freeOnly }), '/level-test');
+});
 
 // ── 1. the decision ──────────────────────────────────────────────────────────
 
@@ -167,10 +253,10 @@ test('onboarding asks the one question and its primary answer starts Lektion 1',
   assert.ok(primary, 'the final slide has no primary chooseStart button');
   assert.equal(primary[1], 'NEW');
   assert.match(slides, /chooseStart\(STARTING_POINTS\.SOME\)\} variant="secondary"/);
-  assert.match(slides, /completeOnboarding\(point === STARTING_POINTS\.SOME \? 'level-test' : 'first-lesson'\)/);
+  assert.match(slides, /completeOnboarding\(point === STARTING_POINTS\.SOME \? 'level-test' : 'first-lesson', \{ examTrack \}\)/);
   assert.match(slides, /updateUser\(\{ data: \{ \[STARTING_POINT_KEY\]: point \} \}\)/, 'the "some German" answer must be remembered');
   assert.equal(STARTING_POINT_KEY, 'starting_point');
-  assert.match(read('src/hooks/useOnboarding.js'), /onboardingExitPath\(exitPath\)/);
+  assert.match(read('src/hooks/useOnboarding.js'), /onboardingExitPath\(exitPath, \{ examTrack, currentLevel: profile\?\.current_level, hasLevelAccess \}\)/);
 });
 
 test('the dashboard renders the first-run card in the hero slot and demotes its other primaries', () => {
@@ -178,6 +264,7 @@ test('the dashboard renders the first-run card in the hero slot and demotes its 
   assert.match(dash, /firstRunAction\(\{/);
   assert.match(dash, /hasLessonActivity: stats\?\.lessonActivity/);
   assert.match(dash, /startingPoint: user\?\.user_metadata\?\.\[STARTING_POINT_KEY\]/);
+  assert.match(dash, /examTrack: profile\?\.exam_track/);
   assert.match(dash, /hasLevelAccess,\n/, 'the decision must receive hasLevelAccess');
   assert.match(dash, /\) : firstRun \? \(\s*<FirstRunCard action=\{firstRun\} \/>/);
   const demoted = dash.match(/variant=\{firstRun \? 'secondary' : 'primary'\}/g) || [];
