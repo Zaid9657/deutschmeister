@@ -241,6 +241,7 @@ export const handler = async (event) => {
 
     // -------- Opening line + audio (before charging — a provider failure here
     //          costs the user nothing). --------
+    const usageContext = { db: supabase, user_id, feature: 'speaking' };
     let openingText;
     let openingAudio;
     try {
@@ -259,10 +260,10 @@ export const handler = async (event) => {
         } else if (!isPlacement) {
           system = `${baseSystem}\n\nBEGINN: Begrüße den Schüler herzlich auf Deutsch und stelle EINE einfache, niveaugerechte Frage. Nur die Begrüßung und die Frage.`;
         }
-        openingText = await teacherReply({ system, history: [], userText: '', maxTokens: 120 });
+        openingText = await teacherReply({ system, history: [], userText: '', maxTokens: 120, usageContext });
       }
       if (!openingText) openingText = 'Hallo! Schön, dass du da bist. Erzähl mir ein bisschen von dir.';
-      openingAudio = await synthesizeSpeech({ text: openingText });
+      openingAudio = await synthesizeSpeech({ text: openingText, usageContext });
     } catch (aiErr) {
       if (aiErr instanceof AIError) {
         return { statusCode: aiErr.status || 502, headers, body: JSON.stringify({ error: aiErr.message, stage: aiErr.stage }) };

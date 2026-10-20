@@ -94,9 +94,10 @@ export const handler = async (event) => {
       return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit', limit: READALOUD_DAILY_LIMIT, used }) };
     }
 
+    const usageContext = { db: supabase, user_id, feature: 'readaloud' };
     let transcript = '';
     try {
-      transcript = await transcribeAudio({ audioBase64, mimeType });
+      transcript = await transcribeAudio({ audioBase64, mimeType, usageContext });
     } catch (aiErr) {
       if (aiErr instanceof AIError) {
         return { statusCode: aiErr.status || 502, headers, body: JSON.stringify({ error: aiErr.message, stage: aiErr.stage }) };

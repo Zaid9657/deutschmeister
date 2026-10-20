@@ -1,3 +1,4 @@
+import { recordAiUsage, usageFromAnthropic } from './_shared/aiUsage.mjs';
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
@@ -256,26 +257,38 @@ export const handler = async (event) => {
       ? buildPlacementPrompt(transcript)
       : buildEvaluationPrompt(level, transcript, missionPassCriteria);
 
-    async function callClaude(prompt) {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'x-api-key': anthropicKey,
-          'anthropic-version': '2023-06-01',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1024,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      });
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error('Claude API error:', res.status, errorText);
-        return null;
+    async function callClaude(prompt, retries = 0) {
+      let data;
+      let aiFailed = true;
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': anthropicKey,
+            'anthropic-version': '2023-06-01',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 1024,
+            messages: [{ role: 'user', content: prompt }],
+          }),
+        });
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('Claude API error:', res.status, errorText);
+          return null;
+        }
+        data = await res.json();
+        aiFailed = false;
+      } finally {
+        try {
+          await recordAiUsage(supabase, {
+            user_id, feature: 'speaking', provider: 'anthropic', model: 'claude-sonnet-4-6',
+            ...usageFromAnthropic(data), failed: aiFailed, retries,
+          });
+        } catch { /* Usage must never change the response. */ }
       }
-      const data = await res.json();
       return data.content?.[0]?.text || '';
     }
 
@@ -293,7 +306,7 @@ export const handler = async (event) => {
     if (!evaluation) {
       console.warn('First parse failed, retrying with stricter prompt');
       const retryPrompt = evaluationPrompt + '\n\nWICHTIG: Antworte NUR mit validem JSON. Kein Text davor oder danach. Nur das JSON-Objekt.';
-      const retryText = await callClaude(retryPrompt);
+      const retryText = await callClaude(retryPrompt, 1);
       evaluation = tryParseEvaluation(retryText);
     }
 
