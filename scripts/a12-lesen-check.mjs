@@ -18,6 +18,7 @@
 //   6. THE BANK — 16 distinct texts per checkpoint, no answer text more than twice in a paper;
 //      across all checkpoints, balanced positions and question-type ranks, all order strategies ≤ half;
 //      every surface feature × order rule and its inverse ≤ 36/64.
+// Feature PAIRS × order are reported only (owner decision 2026-10-20); tests pin their measured maxima.
 // Exit code 1 on any finding.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -128,6 +129,11 @@ if (verbose) {
   console.log(`Bank worst fixed sequence: ${order.worstFixed.name} ${order.worstFixed.score}/${order.total}; worst type-rank rule: ${order.worstTypeRank.name} ${order.worstTypeRank.score}/${order.total}`);
   console.log(`Bank feature × order: ${features.rules.size} rules, limit ${features.limit}/${features.total}`);
   for (const rule of features.worst) console.log(`Bank worst feature rule: ${rule.name} ${rule.score}/${features.total}`);
+  console.log(`Bank feature pairs × order: ${features.pairs.families.length} families, measured ratchet (not a gate)`);
+  const pair = features.pairs.worst[0];
+  if (pair) console.log(`Bank worst feature-pair rule: ${pair.name} ${pair.score}/${features.total}; ${pair.rule}`);
+  const perfect = features.pairs.worstPerfect[0];
+  if (perfect) console.log(`Bank most whole papers: ${perfect.name} ${perfect.perfect}/${order.total / 4}; ${perfect.perfectRule}`);
 }
 
 for (const f of findings) console.log(f);

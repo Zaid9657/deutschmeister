@@ -1737,10 +1737,12 @@
    "answer": "Kommt",
    "accepted": [
     "Kommt",
-    "kommt"
+    "kommt",
+    "Kommt ihr",
+    "kommt ihr"
    ],
-   "explanationDe": "ihr-Imperativ = normale ihr-Form ohne ihr.",
-   "explanationEn": "ihr-imperative = normal ihr-form without ihr.",
+   "explanationDe": "ihr-Imperativ: Kommt! Normalerweise ohne Pronomen; zur Betonung möglich: Kommt ihr!",
+   "explanationEn": "The ihr-imperative: Kommt! Normally without a pronoun; possible for emphasis: Kommt ihr!",
    "hint": null,
    "minLektion": 1
   },
@@ -1910,10 +1912,13 @@
    "answer": "Kommt pünktlich!",
    "accepted": [
     "Kommt pünktlich",
-    "Kommt pünktlich."
+    "Kommt pünktlich.",
+    "Kommt ihr pünktlich!",
+    "Kommt ihr pünktlich",
+    "Kommt ihr pünktlich."
    ],
-   "explanationDe": "ihr-Imperativ = normale ihr-Form ohne ihr.",
-   "explanationEn": "ihr-imperative = normal ihr-form without ihr.",
+   "explanationDe": "ihr-Imperativ: Kommt! Normalerweise ohne Pronomen; zur Betonung möglich: Kommt ihr!",
+   "explanationEn": "The ihr-imperative: Kommt! Normally without a pronoun; possible for emphasis: Kommt ihr!",
    "hint": null,
    "minLektion": 1
   },
@@ -1978,7 +1983,9 @@
    "answer": "Seid",
    "accepted": [
     "Seid",
-    "seid"
+    "seid",
+    "Seid ihr",
+    "seid ihr"
    ],
    "explanationDe": "sein ist unregelmäßig: der ihr-Imperativ heißt Seid!",
    "explanationEn": "sein is irregular: the ihr-imperative is Seid!",

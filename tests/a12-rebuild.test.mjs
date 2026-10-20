@@ -11,6 +11,88 @@ import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
+
+test('DaF review #14: every servable ihr-imperative accepts emphasis, including all four checkpoint rounds', async () => {
+  const { servedItems, alternatives } = await import('../scripts/a12-determinacy.mjs');
+  const served = servedItems('a1.2').items;
+  for (const cp of CURRICULUM_A12.checkpoints) for (const round of [0, 1, 2, 3]) {
+    assert.ok(served.some((it) => it.where === `${cp.id}/${round}`), `${cp.id}/${round} is probed`);
+  }
+  const all = [...POOL_A12.items.filter((it) => isUsableItem(it, { level: 'a1.2' })), ...served];
+  let gaps = 0; let sentences = 0;
+  for (const it of all) {
+    const q = String(it.questionDe || it.promptDe || '');
+    if (!/\([^()]*,\s*ihr\)|\[[^\]]*\bihr\b|\bihr-Imperativ\b|[„"']Ihr\s/.test(q)
+        || !['fill_blank', 'sentence_building', 'error_correction'].includes(it.type)) continue;
+    if (it.type === 'fill_blank' ? !/___[^.!?]*!/.test(q) : !/Imperativ|\bBitte\b|\bbitten\b/i.test(q)) continue;
+    if (it.type === 'fill_blank') gaps += 1; else sentences += 1;
+    const m = String(it.answer).match(/^((?:Bitte )?\S+)(?: ihr\b)?(.*)$/);
+    assert.ok(m, it.id);
+    const bare = `${m[1]}${m[2]}`;
+    const emphatic = `${m[1]} ihr${m[2]}`;
+    for (const answer of [bare, emphatic]) {
+      assert.equal(checkAnswer(answer, [it.answer, ...(it.accepted || [])], checkOptionsFor(it)).result, RESULT.CORRECT, `${it.where || 'pool'} ${it.id}: ${answer}`);
+    }
+    for (const wrong of [`${m[1]} du${m[2]}`, `${m[1]} ihr ihr${m[2]}`]) {
+      assert.notEqual(checkAnswer(wrong, [it.answer, ...(it.accepted || [])], checkOptionsFor(it)).result, RESULT.CORRECT, wrong);
+    }
+    assert.ok(alternatives(it, { wide: true }).some((a) => a.text === emphatic), `${it.id}: harness covers ihr`);
+    assert.doesNotMatch(it.explanationDe || '', /ohne ihr\b/);
+  }
+  assert.ok(gaps >= 2 && sentences >= 1, `nonvacuous coverage: ${gaps} gaps, ${sentences} sentences`);
+  const notice = CURRICULUM_A12.lektionen.find((l) => l.nr === 8).notice;
+  assert.match(notice.bodyDe, /normalerweise ohne Pronomen; zur Betonung möglich/);
+  assert.match(notice.bodyEn, /normally omit the pronoun; it is possible for emphasis/);
+});
+
+test('DaF review #14: imperative person × task-mode matrix, regular/sein, existing pronouns and novel Holt probe', async () => {
+  const { imperativePronounVariants } = await import('../scripts/imperative-variants.mjs');
+  const { alternatives } = await import('../scripts/a12-determinacy.mjs');
+  // Independent annotations; neither forms nor expected persons come from the expansion routine.
+  for (const [person, inf, verb] of [['du', 'holen', 'Hol'], ['ihr', 'holen', 'Holt'], ['Sie', 'holen', 'Holen'],
+    ['du', 'sein', 'Sei'], ['ihr', 'sein', 'Seid'], ['Sie', 'sein', 'Seien']]) {
+    for (const type of ['fill_blank', 'sentence_building', 'error_correction']) {
+      const gap = type === 'fill_blank';
+      const rest = inf === 'sein' ? ' pünktlich!' : ' den Brief!';
+      const q = gap ? `___${person === 'Sie' ? ' Sie' : ''}${rest} (${inf}, ${person})`
+        : `Bilden Sie den ${person}-Imperativ: [${inf} / ${person}${inf === 'sein' ? ' / pünktlich' : ' / den Brief'}]`;
+      const answer = gap ? verb : `${verb}${person === 'Sie' ? ' Sie' : ''}${rest}`;
+      const item = { type, topic: 'imperative', questionDe: q, answer, accepted: [answer] };
+      const variants = imperativePronounVariants(item);
+      const accepted = [answer, ...variants];
+      const verdict = (text) => checkAnswer(text, accepted, checkOptionsFor(item)).result;
+      const emphatic = `${verb} ${person}${gap ? '' : rest}`;
+      if (person === 'Sie') {
+        assert.deepEqual(variants, [], 'formal Sie is required, not optional emphasis');
+      } else {
+        assert.equal(verdict(emphatic), RESULT.CORRECT, `${type}: ${emphatic}`);
+        assert.equal(verdict(answer), RESULT.CORRECT);
+        assert.ok(imperativePronounVariants({ ...item, answer: emphatic, accepted: [emphatic] }).includes(answer), 'also expands from an emphatic key back to the bare form');
+        assert.notEqual(verdict(`${verb} ${person} ${person}${gap ? '' : rest}`), RESULT.CORRECT);
+        assert.notEqual(verdict(`${verb} ${person === 'du' ? 'ihr' : 'du'}${gap ? '' : rest}`), RESULT.CORRECT);
+        assert.notEqual(verdict(`${inf === 'sein' ? 'Sind' : 'Holen'} ${person}${gap ? '' : rest}`), RESULT.CORRECT);
+        assert.deepEqual(imperativePronounVariants({ ...item, questionDe: `${q} (ohne Pronomen)` }), []);
+      }
+    }
+  }
+  for (const q of ['___ ihr den Brief? (holen, ihr)', '___ ihr den Brief! (holen, ihr)', 'Ihr ___ den Brief. (holen, ihr)']) {
+    assert.deepEqual(imperativePronounVariants({ type: 'fill_blank', questionDe: q, answer: 'Holt' }), [], q);
+  }
+  const probe = { type: 'sentence_building', topic: 'imperative', questionDe: 'Bilden Sie den Imperativ: [holen / ihr / den Brief]', answer: 'Holt den Brief!' };
+  assert.ok(imperativePronounVariants(probe).includes('Holt ihr den Brief!'));
+  assert.ok(alternatives(probe, { wide: true }).some((a) => a.text === 'Holt ihr den Brief!'));
+  assert.deepEqual(imperativePronounVariants({ ...probe, type: 'multiple_choice', options: ['Holt den Brief!', 'Holen den Brief!'] }), []);
+  assert.ok(imperativePronounVariants({ ...probe, answer: 'Bitte holt den Brief!' }).includes('Bitte holt ihr den Brief!'));
+  const vocative = { ...probe, questionDe: 'Bilden Sie den Imperativ: [holen / du / den Brief]', answer: 'Hol den Brief!', accepted: ['Du, hol den Brief!'] };
+  assert.ok(imperativePronounVariants(vocative).includes('Hol du den Brief!'));
+  assert.ok(imperativePronounVariants(vocative).every((s) => !/^Du du/.test(s)), 'a vocative is not the imperative verb');
+  const sein = { ...probe, questionDe: 'Bilden Sie den ihr-Imperativ: [sein / ihr / pünktlich]', answer: 'Seid pünktlich!' };
+  assert.ok(alternatives(sein, { wide: true }).some((a) => a.text === 'Seid ihr pünktlich!'));
+  assert.ok(alternatives(sein, { wide: true }).every((a) => !/^Seide? du|^Seide\b/.test(a.text)), 'ihr-sein must not inherit du or optional -e');
+  const bareGap = { type: 'fill_blank', topic: 'imperative', questionDe: 'Ergänzen Sie den Imperativ für ihr: ___ (holen)', answer: 'Holt' };
+  assert.ok(imperativePronounVariants(bareGap).includes('Holt ihr'));
+  assert.ok(alternatives(bareGap, { wide: true }).some((a) => a.text === 'Holt ihr'));
+});
 // The generated Lesen statements: A1.1 prints one and asks Richtig or Falsch; round 11b's two-option items
 // printed a key and its Falsch. Since round 12 A1.2 reads AUTHORED units (src/data/curricula/a12.lesen.js),
 // which are no falsification at all — they have no Falsch statement, and these return null for them.
@@ -1907,7 +1989,8 @@ test('DaF review #11 M8 (round 12): A1.2 reads authored units — four disjoint 
   // written for each checkpoint. The authoring check is the bank's own gate — taught words and constructions
   // in the meaning the course used, no practised sentence, the mirrored pairs, the surface gate per paper —
   // and it runs on the committed bank, not on a copy.
-  const run = spawnSync(process.execPath, ['scripts/a12-lesen-check.mjs'], { cwd: new URL('..', import.meta.url), encoding: 'utf8' });
+  // Inherit output so the authoring check also runs where Windows blocks child-process pipes (EPERM).
+  const run = spawnSync(process.execPath, ['scripts/a12-lesen-check.mjs'], { cwd: new URL('..', import.meta.url), encoding: 'utf8', stdio: 'inherit' });
   assert.equal(run.status, 0, `scripts/a12-lesen-check.mjs:\n${String(run.stdout).slice(-2500)}`);
   for (const checkpoint of CURRICULUM_A12.checkpoints) {
     const bank = LESEN_A12[checkpoint.id];
@@ -2301,6 +2384,78 @@ test('DaF review #13 M8: every delivered surface feature × order rule and its i
       assert.ok(family.some(([name]) => name.includes('inverse')), `${feature} × ${context}: counter-strategies`);
     }
   }
+});
+
+test('DaF review #14 M8: delivered feature-pair maxima equal the measured ratchet', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { auditBankFeaturePairs } = await import('./helpers/lesenGate.mjs');
+  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+      .filter((it) => it.section === 'lesen')
+      .map((it) => ({ text: it.text, question: it.promptDe, options: it.options, answer: it.answer }))));
+  const bank = auditBankFeaturePairs(papers);
+  // Owner decision 2026-10-20: a known issue recorded in docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md.
+  // The review's alphabet × length × type-rank rule scores 42/64; the mirrored-pair proof sets a floor of 4/16.
+  assert.deepEqual({ score: [bank.worst[0].score, bank.total], wholePapers: [bank.worstPerfect[0].perfect, papers.length] },
+    { score: [46, 64], wholePapers: [10, 16] }, 'lower the ratchet in the same commit, never raise it');
+});
+
+test('DaF review #14 M8: audit measures the planted rule at 42/64; all sixteen independent answer patterns counterbalance the control', async () => {
+  const { auditBankFeaturePairs } = await import('./helpers/lesenGate.mjs');
+  const units = [
+    { text: 'Ada und Ben holen den Brief.', question: 'Wer holt den Brief?', options: ['Ada', 'Ben'] },
+    { text: 'Das Büro öffnet um acht oder elf.', question: 'Wann öffnet das Büro?', options: ['acht', 'elf'] },
+    { text: 'Ada und Ben kaufen die Zeitung.', question: 'Wer kauft die Zeitung?', options: ['Ada', 'Ben'] },
+    { text: 'Der Zug fährt um acht oder elf.', question: 'Wann fährt der Zug?', options: ['acht', 'elf'] },
+  ];
+  const reviewPicks = [0, 1, 1, 0]; // Equal names: early/late; unequal times: late/early.
+  const mutant = Array.from({ length: 16 }, (_, pi) => units.map((u, i) => {
+    // Balance partial hits across positions so the planted 42/64 is also this family's maximum.
+    const right = pi < 7 || (pi < 14 && i % 2 === pi % 2);
+    return { ...u, answer: u.options[reviewPicks[i] ^ Number(!right)] };
+  }));
+  const hits = mutant.map((p) => p.reduce((n, u, i) => n + Number(u.options[reviewPicks[i]] === u.answer), 0));
+  assert.equal(hits.reduce((a, b) => a + b, 0), 42);
+  assert.equal(hits.filter((n) => n === 4).length, 7);
+  const measured = auditBankFeaturePairs(mutant);
+  const planted = measured.families.find((f) => f.name === 'Länge Zeichen+ + Alphabet (de) × type-rank');
+  assert.equal(planted?.score, 42, 'the audit detects the planted rule at exactly 42/64');
+  assert.equal(planted.perfect, 7);
+  const control = Array.from({ length: 16 }, (_, mask) => units.map((u, i) => ({ ...u, answer: u.options[(mask >> i) & 1] })));
+  const balanced = auditBankFeaturePairs(control);
+  assert.ok(balanced.families.every((f) => f.score === 32 && f.inverseScore === 32 && f.perfect === 1));
+});
+
+test('DaF review #14 M8 feasibility proof: the allowed moves cannot reach a three-whole-paper ceiling', async () => {
+  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+  const papers = Object.values(LESEN_A12).flatMap((b) => b.papers);
+  const permutations = (a) => a.length ? a.flatMap((v, i) => permutations(a.filter((_, j) => j !== i)).map((p) => [v, ...p])) : [[]];
+  const whole = [0, 0, 0, 0];
+  const scores = (paper) => {
+    const seen = { Wer: 0, W: 0 }; const hits = [0, 0, 0, 0];
+    for (const u of paper) {
+      const type = u.question.startsWith('Wer ') ? 'Wer' : 'W';
+      const rank = ++seen[type];
+      const earlier = u.options[0].localeCompare(u.options[1], 'de') < 0 ? 0 : 1;
+      const equal = u.options[0].length === u.options[1].length;
+      const base = equal === (rank === 1) ? earlier : 1 - earlier;
+      // Original review rule plus independently inverting its Wer and other-W preferences.
+      for (let mask = 0; mask < 4; mask += 1) hits[mask] += Number(u.options[base ^ ((mask >> (type === 'Wer' ? 0 : 1)) & 1)] === u.answer);
+    }
+    return hits;
+  };
+  let variants = 0;
+  for (const paper of papers) {
+    scores(paper).forEach((n, i) => { whole[i] += Number(n === 4); });
+    for (const order of permutations([0, 1, 2, 3])) for (let flip = 0; flip < 4; flip += 1) {
+      const variant = order.map((i) => ({ ...paper[i], options: flip & (1 << (paper[i].pair - 1)) ? [...paper[i].options].reverse() : paper[i].options }));
+      assert.equal(scores(variant).filter((n) => n === 4).length, 1, 'exactly one of the same four visible rules solves each allowed variant');
+      variants += 1;
+    }
+  }
+  assert.equal(variants, 1536, 'all 96 allowed variants of each paper, with no semantic edits');
+  assert.equal(whole.reduce((a, b) => a + b, 0), 16);
+  assert.ok(Math.max(...whole) >= 4, 'pigeonhole lower bound: 16 papers / four rules = at least four whole papers');
 });
 
 test('DaF review #13 M8: alphabetical type-rank and aligned-pair mutations fail, even with unchanged semantic content', async () => {

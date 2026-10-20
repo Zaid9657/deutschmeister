@@ -266,12 +266,13 @@ export function alternatives(item, { wide = false } = {}) {
   // A checkpoint item carries its prompt as promptDe: read it, or its cue (Beginnen Sie mit …) is unseen.
   const q = String(item.questionDe || item.promptDe || '');
   const key = String(item.answer || '').trim();
+  const ihrCue = /\((?:[^()]*,\s*)?ihr\)|\bihr-Imperativ\b|Imperativ\s+für\s+ihr\b|\[[^\]]*\bihr\b|[„"']Ihr\s/.test(q);
   // du-imperative ±e — and, for a sentence task, with its emphatic pronoun („Mach du den Fernseher aus!")
   const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
-  if (wide && imp && (item.type === 'sentence_building' || item.type === 'error_correction') && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
+  if (wide && imp && !ihrCue && (item.type === 'sentence_building' || item.type === 'error_correction') && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
     out.push({ text: `${imp[1]} du${imp[2]}!`, why: 'du-imperative with its emphatic pronoun' });
   }
-  if (imp && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
+  if (imp && !ihrCue && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
     const other = /e$/.test(imp[1]) ? (E_REQUIRED_RE.test(imp[1]) ? null : imp[1].slice(0, -1)) : `${imp[1]}e`;
     if (other) out.push({ text: `${other}${imp[2]}!`, why: 'du-imperative ±e' });
   }
@@ -304,6 +305,19 @@ export function alternatives(item, { wide = false } = {}) {
   if (!wide) return out;
   const known = new Set(out.map((a) => a.text));
   const add = (text, why) => { if (!known.has(text)) { known.add(text); out.push({ text, why }); } };
+  // Review #14: independently probe the requested plural, including sein, not a suffix-guessed du.
+  const noPronoun = /ohne (?:das )?(?:Pronomen|ihr\b)|nur (?:das )?Verb|ein Wort/i.test(q);
+  const ihrGap = item.type === 'fill_blank' && !/___\s+(?:du|ihr|Sie|wir)\b/.test(q)
+    && (/(?:^|[.!?]\s+|,\s+)___\s+[^!?.]*!/.test(q) || (/Imperativ/i.test(q) && /___/.test(q)));
+  const ihrSentence = ['sentence_building', 'error_correction'].includes(item.type) && /Imperativ|\bBitte\b|\bbitten\b/i.test(q);
+  if (ihrCue && !noPronoun && (ihrGap || ihrSentence)) {
+    const m = key.match(/^((?:[Bb]itte\s+)?\S+)(?:\s+ihr\b)?(.*)$/);
+    if (m) {
+      const bare = `${m[1]}${m[2]}`;
+      const emphatic = `${m[1]} ihr${m[2]}`;
+      for (const text of [bare, emphatic]) if (text !== key) add(text, `ihr-imperative with/without its emphatic pronoun${ihrGap ? ' (gap)' : ''}`);
+    }
+  }
   // Any statement whose prompt does not name its opening: every other order is the same sentence.
   if ((item.type === 'sentence_building' || item.type === 'error_correction') && !OPENING_CUE_RE.test(q)) {
     for (const text of wordOrderAlternatives(key)) add(text, 'another word order');
@@ -333,7 +347,7 @@ export function alternatives(item, { wide = false } = {}) {
 
 /**
  * Every served item of a level: both practice attempts and every checkpoint paper a learner can sit —
- * the three rounds of an attempt window (paperSeed), each item keyed by its paper, so two rounds of
+ * all four authored A1.2 papers (A1.1 keeps its three-round scope), each item keyed by its paper, so two rounds of
  * one item id are two items (DaF review #4: the harness rebuilt the default and a numeric seed and
  * let one variant overwrite the other).
  */
@@ -343,7 +357,7 @@ export function servedItems(level, poolFile = new URL(`../src/data/lessonPools/$
   const out = new Map();
   for (const attempt of [1, 2]) for (const [nr, items] of planPractice(curriculum, pool, attempt)) for (const it of items) out.set(`L${nr}#${it.id}`, { ...it, where: `L${nr}` });
   for (const checkpoint of curriculum.checkpoints || []) {
-    for (let round = 0; round < 3; round += 1) {
+    for (let round = 0; round < (level === 'a1.2' ? 4 : 3); round += 1) {
       for (const it of buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) })) {
         if (it.answer) out.set(`${checkpoint.id}/${round}#${it.id}`, { ...it, where: `${checkpoint.id}/${round}` });
       }

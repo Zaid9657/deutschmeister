@@ -880,8 +880,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Imperativ: bitten und auffordern',
-        bodyDe: 'Der Imperativ steht vorn. Bei **du** fallen Pronomen und Endung -st weg: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
-        bodyEn: 'The imperative opens the sentence. For **du**, drop the pronoun and the ending -st: du kommst → **Komm!**, du hilfst → **Hilf!** An ä goes back to a: du fährst → **Fahr!** If the stem ends in s, drop only -t: du isst → **Iss!** With ihr only the ihr goes: **Kommt!** With Sie the pronoun stays: Helfen Sie **bitte**!',
+        bodyDe: 'Imperativ vorn: **du** ohne -st: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Beide normalerweise ohne Pronomen; zur Betonung möglich. Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
+        bodyEn: 'The imperative comes first: **du** without -st: du kommst → **Komm!**, du hilfst → **Hilf!** An ä becomes a: du fährst → **Fahr!** If the stem ends in s, drop only -t: du isst → **Iss!** With ihr only the pronoun is dropped: **Kommt!** Both normally omit the pronoun; it is possible for emphasis. With Sie the pronoun stays: Helfen Sie **bitte**!',
         examples: ['Tim, die Waschmaschine ist da. Hilf mir bitte!', 'Mach den Fernseher aus und hilf mir bitte!'],
         ruleSlug: 'imperative',
       },

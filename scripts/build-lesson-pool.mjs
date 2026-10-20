@@ -136,8 +136,9 @@ import {
 // it here is not circular.
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
 import {
-  openingOf, middleFieldOrders, vorfeldOf, opensWith, negationPlaceCue, laterOpenings, GAP_IMPERATIVE_RE,
+  openingOf, middleFieldOrders, vorfeldOf, opensWith, negationPlaceCue, laterOpenings,
 } from './a12-determinacy.mjs';
+import { imperativePerson, imperativePronounVariants } from './imperative-variants.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -329,7 +330,7 @@ function repairDeterminacy(item) {
     determinacyRepaired.push(`${item.id}:Kurzform`);
   }
   const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
-  if (imp && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
+  if (imp && imperativePerson(item) !== 'ihr' && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
     const first = imp[1];
     const other = /e$/.test(first) ? (E_REQUIRED_RE.test(first) ? null : first.slice(0, -1)) : `${first}e`;
     if (other) {
@@ -380,14 +381,6 @@ function repairDeterminacy(item) {
       determinacyRepaired.push(`${item.id}:${key}/${other}`);
     }
   }
-  // 2b. …and with its emphatic pronoun, as the sentence takes it (rule 6 below): „Hol du ihn bitte!" is
-  //     correct German the gap does not exclude (DaF review #9, B1) — e→i(e) verbs too („Iss du …").
-  if (item.type === 'fill_blank' && /\([a-zäöüß]+en, du\)/.test(item.questionDe) && /^[A-Za-zäöüß]+$/.test(key)
-      && GAP_IMPERATIVE_RE.test(item.questionDe)) {
-    const forms = accepted().filter((a) => /^[A-Za-zäöüß]+$/.test(String(a).trim()));
-    item.accepted = [...new Set([...accepted(), ...forms.map((f) => `${String(f).trim()} du`)])];
-    determinacyRepaired.push(`${item.id}:gap-du`);
-  }
   // 3. „bitte" may open a request: „Nehmen Sie bitte Platz!" = „Bitte nehmen Sie Platz!".
   const bitte = key.match(/^([A-ZÄÖÜ][a-zäöüß]+)(.*?) bitte(.*)!$/);
   if ((item.type === 'sentence_building' || item.type === 'error_correction') && bitte) {
@@ -409,24 +402,14 @@ function repairDeterminacy(item) {
       determinacyRepaired.push(`${item.id}:middle`);
     }
   }
-  // DaF review #6 (A1.2) BLOCKER 1: a du-imperative may carry its pronoun for emphasis — „Mach du den
-  // Fernseher aus!" is correct German the task does not exclude, so every accepted form takes it too.
+  // DaF reviews #6/#14: du AND ihr imperatives may carry the requested pronoun for emphasis.
   // It runs LAST of the order rules (review #7: „Bitte hilf du mir mit der Waschmaschine!" was refused,
   // because the pronoun went in before „bitte" moved): the verb is the form's first word, or the word
   // after an opening „Bitte" — never „Bitte" itself.
-  if (imp && (item.type === 'sentence_building' || item.type === 'error_correction')
-      && !/^\s*(?:Sie|ihr|wir|du)\b/.test(imp[2]) && !/t$/.test(imp[1])) {
-    // The answer field counts too: the checker takes it as accepted even where `accepted` omits it.
-    const kept = accepted();
-    const stem = imp[1].toLowerCase().replace(/e$/, '');
-    const emphatic = [item.answer, ...kept].map((a) => String(a).trim()).flatMap((a) => {
-      const m = a.match(/^((?:Bitte )?)([A-Za-zÄÖÜäöüß]+)\s(?!du\b)(.*)$/);
-      return m && m[2].toLowerCase().replace(/e$/, '') === stem ? [`${m[1]}${m[2]} du ${m[3]}`] : [];
-    });
-    if (emphatic.length) {
-      item.accepted = [...new Set([...kept, ...emphatic, ...emphatic.map((a) => a.replace(/!$/, ''))])];
-      determinacyRepaired.push(`${item.id}:du`);
-    }
+  const emphatic = imperativePronounVariants(item);
+  if (emphatic.some((a) => !accepted().includes(a))) {
+    item.accepted = [...new Set([...accepted(), ...emphatic])];
+    determinacyRepaired.push(`${item.id}:emphatic-pronoun`);
   }
   // 9. LAST of the order rules (DaF review #9, B1): a named opening excludes every other. The fronting
   //    rule above the cue added „Das Auto kaufen wir nicht." before rule 1 named „Wir" — 17 served items

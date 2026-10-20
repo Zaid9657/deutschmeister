@@ -2,6 +2,16 @@
   "_doc": "Field-level corrections of A1.2 bank rows, applied last by scripts/build-lesson-pool.mjs (see a11.corrections.json). Each entry says why.",
   "keepBankExplanationEn": {},
   "items": {
+    "d12bc530-e164-55ab-a6be-8a5e51cb4a39": {
+      "explanationDe": "ihr-Imperativ: Kommt! Normalerweise ohne Pronomen; zur Betonung möglich: Kommt ihr!",
+      "explanationEn": "The ihr-imperative: Kommt! Normally without a pronoun; possible for emphasis: Kommt ihr!",
+      "reason": "Review #14: ihr can be emphatic, just like du. Accepted forms are expanded generically by task mode and requested person."
+    },
+    "f957e0b7-85cd-56c6-b645-14be566d80f7": {
+      "explanationDe": "ihr-Imperativ: Kommt! Normalerweise ohne Pronomen; zur Betonung möglich: Kommt ihr!",
+      "explanationEn": "The ihr-imperative: Kommt! Normally without a pronoun; possible for emphasis: Kommt ihr!",
+      "reason": "Review #14: ihr can be emphatic, just like du. Accepted forms are expanded generically by task mode and requested person."
+    },
     "720fd50e-311c-49b2-8474-691d328d3cc4": {
       "questionDe": "Ich ___ nach Hause gehen. (müssen)",
       "questionEn": "I have to go home. (müssen)",

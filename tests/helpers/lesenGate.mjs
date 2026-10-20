@@ -13,6 +13,8 @@
 // have a per-paper ceiling: one of the 16 sequences necessarily matches any four-unit paper exactly.
 // Review #13 also combines EVERY surface strategy with order. All binary preference assignments,
 // including their inverses, must score ≤ 36/64 (ties ½). Pure A/B order keeps its stricter 32/64 limit.
+// Owner decision 2026-10-20: feature PAIRS × order are measured only; their maxima are ratcheted
+// in a12-rebuild.test.mjs. The mirrored-pair residue is documented in the A1.2 handoff.
 //
 // Independent of the builder: nothing here imports src/lib/checkpoint or reads how a unit was made.
 
@@ -275,6 +277,98 @@ export function bankFeatureInputs(papers) {
   return rows;
 }
 
+// Combine two features with EVERY truth table over their joint A/B/tie states, then cross that
+// combined feature with EVERY order preference mask, just as for the single features below.
+// This includes all inverses and equality switches (the review's alphabet × equal-length code).
+// Half-credit ties average the A/B resolutions: they cannot beat their maximum or create a 4/4.
+export function bankPairInputs(papers) {
+  const rows = bankFeatureInputs(papers);
+  const features = Object.keys(rows[0]?.picks || {});
+  const contexts = ['position', 'type-rank', 'option-set occurrence'];
+  const families = [];
+  for (let a = 0; a < features.length; a += 1) for (let b = a + 1; b < features.length; b += 1) {
+    for (const context of contexts) {
+      const labels = rows.map((r) => `${r.picks[features[a]] ?? 'T'}/${r.picks[features[b]] ?? 'T'}`);
+      const cells = [...new Set(labels)].sort();
+      const orderCells = [...new Set(rows.map((r) => r.contexts[context]))].sort();
+      families.push({ name: `${features[a]} + ${features[b]} × ${context}`, cells,
+        indices: labels.map((s) => cells.indexOf(s)), orderCells,
+        order: rows.map((r) => orderCells.indexOf(r.contexts[context])) });
+    }
+  }
+  return { rows, families };
+}
+
+// A paper is solved iff its four cells all choose their required key. Two papers are compatible iff
+// their requirements agree on shared cells. Exhaustive branch-and-bound over paper subsets returns
+// the exact maximum, independently of the rule which maximizes the bank's total score.
+function mostPerfectPapers(requirements) {
+  let best = [];
+  function visit(candidates, chosen) {
+    if (chosen.length + candidates.length <= best.length) return;
+    if (!candidates.length) { best = chosen; return; }
+    const [first, ...rest] = candidates;
+    visit(rest.filter((j) => [...requirements[first]].every(([cell, key]) =>
+      !requirements[j].has(cell) || requirements[j].get(cell) === key)), [...chosen, first]);
+    visit(rest, chosen);
+  }
+  visit(requirements.map((_, i) => i), []);
+  const choices = new Map(best.flatMap((i) => [...requirements[i]]));
+  return { count: best.length, choices };
+}
+
+export function auditBankFeaturePairs(papers) {
+  const { rows, families } = bankPairInputs(papers);
+  const total = rows.length;
+  const cache = new Map();
+  const results = [];
+  for (const family of families) {
+    // Identical partitions have identical rule sets, irrespective of the labels' spelling.
+    const renumber = new Map();
+    const canonical = family.indices.map((cell) => {
+      if (!renumber.has(cell)) renumber.set(cell, renumber.size);
+      return renumber.get(cell);
+    });
+    const signature = `${canonical.join(',')}|${family.order.join(',')}`;
+    if (!cache.has(signature)) {
+      const result = { score: -1, perfect: -1, ruleCount: 2 ** (renumber.size + family.orderCells.length) };
+      for (let mask = 0; mask < 2 ** family.orderCells.length; mask += 1) {
+        const counts = Array.from({ length: renumber.size }, () => [0, 0]);
+        const requirements = [];
+        let offset = 0;
+        for (const paper of papers) {
+          const needs = new Map(); let possible = paper.length === 4;
+          for (const u of paper) {
+            const cell = canonical[offset];
+            const keyIndex = u.options.indexOf(u.answer);
+            if (keyIndex !== 0 && keyIndex !== 1) throw new Error('pair audit: a key is not one of two options');
+            const key = keyIndex ^ ((mask >> family.order[offset++]) & 1);
+            counts[cell][key] += 1;
+            if (needs.has(cell) && needs.get(cell) !== key) possible = false;
+            needs.set(cell, key);
+          }
+          if (possible) requirements.push(needs);
+        }
+        const choices = counts.map(([a, b]) => b > a ? 1 : 0);
+        const score = counts.reduce((sum, c) => sum + Math.max(...c), 0);
+        if (score > result.score) Object.assign(result, { score, inverseScore: total - score, choices, mask });
+        const perfect = mostPerfectPapers(requirements);
+        if (perfect.count > result.perfect) Object.assign(result, { perfect: perfect.count,
+          perfectChoices: choices.map((v, i) => perfect.choices.get(i) ?? v), perfectMask: mask });
+      }
+      cache.set(signature, result);
+    }
+    const result = cache.get(signature);
+    const describe = (choices, mask) => `${[...renumber].map(([cell, i]) => `${family.cells[cell]}:${'AB'[choices[i]]}`).join(', ')}; ${family.orderCells.map((c, i) => `${c}:${(mask >> i) & 1 ? 'inverse' : 'feature'}`).join(', ')}`;
+    results.push({ name: family.name, score: result.score, inverseScore: result.inverseScore,
+      perfect: result.perfect, ruleCount: result.ruleCount,
+      rule: describe(result.choices, result.mask), perfectRule: describe(result.perfectChoices, result.perfectMask) });
+  }
+  const worst = [...results].sort((a, b) => b.score - a.score || b.perfect - a.perfect).slice(0, 10);
+  const worstPerfect = [...results].sort((a, b) => b.perfect - a.perfect || b.score - a.score).slice(0, 10);
+  return { total, families: results, worst, worstPerfect };
+}
+
 export function auditBankFeatures(papers) {
   const rows = bankFeatureInputs(papers);
   const total = rows.length;
@@ -313,7 +407,8 @@ export function auditBankFeatures(papers) {
   });
   if (!total) findings.push('empty bank');
   for (const r of ranked.filter((r) => r.score > limit)) findings.push(`${r.name}: ${r.score}/${total} exceeds ${limit}/${total}`);
-  return { total, limit, rules, worst: worst.slice(0, 10), findings, passes: findings.length === 0 };
+  const pairs = auditBankFeaturePairs(papers);
+  return { total, limit, rules, worst: worst.slice(0, 10), pairs, findings, passes: findings.length === 0 };
 }
 
 /**
