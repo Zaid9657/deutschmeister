@@ -11,6 +11,8 @@
 // (Wer / other W-question, first / second in its paper) must balance A/B. All 16 fixed sequences and
 // all 16 type-rank rules, including their inverses, may score at most half over the bank. They cannot
 // have a per-paper ceiling: one of the 16 sequences necessarily matches any four-unit paper exactly.
+// Review #13 also combines EVERY surface strategy with order. All binary preference assignments,
+// including their inverses, must score ≤ 36/64 (ties ½). Pure A/B order keeps its stricter 32/64 limit.
 //
 // Independent of the builder: nothing here imports src/lib/checkpoint or reads how a unit was made.
 
@@ -227,6 +229,91 @@ export function auditBankOrder(papers) {
   }
   const worst = (scores) => [...scores].reduce((w, [name, score]) => (score > w.score ? { name, score } : w), { name: '', score: -1 });
   return { total, positions, typeRanks, fixed, typeRank, worstFixed: worst(fixed), worstTypeRank: worst(typeRank), findings, passes: findings.length === 0 };
+}
+
+/**
+ * Freeze visible feature picks and order contexts before scoring. A pair's first/second member is
+ * determined by delivery order, never by its id or answer. Without authoring metadata the two Wer
+ * questions and the two detail questions identify the mirrored pairs. Identical option sets have
+ * their own occurrence history, independent of that pairing.
+ */
+export function bankFeatureInputs(papers) {
+  const names = [...new Set(papers.flat().flatMap((u) => u.options.filter(isName)))];
+  const strategies = baseStrategies(names);
+  const rows = papers.flatMap((paper) => {
+    const seenType = new Map();
+    const seenPair = new Map();
+    const seenOptions = new Map();
+    const optionSet = (u) => JSON.stringify([...u.options].sort((a, b) => a.localeCompare(b, 'de')));
+    return paper.map((u, position) => {
+      const type = tokens(u.question)[0] === 'wer' ? 'Wer' : 'W';
+      const pair = u.pair ?? type;
+      const rank = (seenType.get(type) || 0) + 1;
+      const member = (seenPair.get(pair) || 0) + 1;
+      const set = optionSet(u);
+      const occurrence = (seenOptions.get(set) || 0) + 1;
+      seenType.set(type, rank);
+      seenPair.set(pair, member);
+      seenOptions.set(set, occurrence);
+      const partner = paper.find((v) => v !== u && (v.pair ?? (tokens(v.question)[0] === 'wer' ? 'Wer' : 'W')) === pair);
+      const picks = Object.fromEntries(Object.entries(strategies).map(([name, f]) => [name, f(u)]));
+      // Keep the gate's code-point alphabet and also the review's German collation.
+      picks['Alphabet (de)'] = prefer(u.options[0].toLowerCase().localeCompare(u.options[1].toLowerCase(), 'de'), 0, false);
+      picks['identical option set within pair'] = partner && optionSet(partner) === set ? 0 : 1;
+      picks['pair role'] = [...seenPair.keys()].indexOf(pair) % 2;
+      const contexts = {
+        position: String(position + 1),
+        'type-rank': `${type} ${rank}`,
+        'pair member': String(member),
+        'option-set occurrence': String(occurrence),
+      };
+      // The review also names visible text form × order (all 256 A/B rules for four positions).
+      contexts['text form × position'] = `${/\n[^\n:]+:/.test(u.text || '') ? 'exchange' : 'other'} ${position + 1}`;
+      return { u, contexts, picks };
+    });
+  });
+  return rows;
+}
+
+export function auditBankFeatures(papers) {
+  const rows = bankFeatureInputs(papers);
+  const total = rows.length;
+  const limit = total * 36 / 64;
+  const rules = new Map();
+  const findings = [];
+  // Exhaustive preference masks: a 0 uses the feature, a 1 its inverse in that context cell.
+  // Null is deliberately still ½ when inverted. Also audit each fixed A/B tie-break.
+  for (const feature of Object.keys(rows[0]?.picks || {})) {
+    for (const context of Object.keys(rows[0].contexts)) {
+      const cells = [...new Set(rows.map((r) => r.contexts[context]))].sort();
+      for (const tie of [null, 0, 1]) {
+        const scores = cells.map(() => [0, 0]);
+        for (const row of rows) {
+          const pick = row.picks[feature] ?? tie;
+          const cell = cells.indexOf(row.contexts[context]);
+          scores[cell][0] += scoreOf(pick, row.u);
+          scores[cell][1] += scoreOf(pick === null ? null : 1 - pick, row.u);
+        }
+        for (let mask = 0; mask < 2 ** cells.length; mask += 1) {
+          const bits = cells.map((_, i) => (mask >> i) & 1);
+          const score = scores.reduce((n, s, i) => n + s[bits[i]], 0);
+          const name = `${feature}${tie === null ? '' : ` (tie→${'AB'[tie]})`} × ${context} [${cells.map((c, i) => `${c}:${bits[i] ? 'inverse' : 'feature'}`).join(', ')}]`;
+          rules.set(name, score);
+        }
+      }
+    }
+  }
+  const ranked = [...rules].map(([name, score]) => ({ name, score })).sort((a, b) => b.score - a.score);
+  const families = new Set();
+  const worst = ranked.filter(({ name }) => {
+    const family = name.split(' [')[0].replace(/ \(tie→[AB]\)/u, '').replace(/[+−] ×/u, ' ×');
+    if (families.has(family)) return false;
+    families.add(family);
+    return true;
+  });
+  if (!total) findings.push('empty bank');
+  for (const r of ranked.filter((r) => r.score > limit)) findings.push(`${r.name}: ${r.score}/${total} exceeds ${limit}/${total}`);
+  return { total, limit, rules, worst: worst.slice(0, 10), findings, passes: findings.length === 0 };
 }
 
 /**

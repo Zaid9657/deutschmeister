@@ -1296,18 +1296,18 @@
    "stage": 4,
    "difficulty": 1,
    "order": 10,
-   "questionDe": "Heute ist es kalt. ___ einer Woche war es warm. (vor oder seit?)",
-   "questionEn": "Today it is cold. A week ago it was warm.",
+   "questionDe": "Heute ist es kalt. ___ einer Woche war es warm. (Zeit: eine Woche früher, keine Dauer; vor oder seit?)",
+   "questionEn": "Today it is cold. A week ago it was warm. (A point one week earlier, not a duration; vor or seit?)",
    "options": null,
    "answer": "Vor",
    "accepted": [
     "Vor",
     "vor"
    ],
-   "explanationDe": "vor + Zeit: eine Woche früher. Vor einer Woche war es warm.",
+   "explanationDe": "Gefragt ist eine Woche früher, keine Dauer: vor einer Woche.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": "**vor** + time means earlier: **Vor einer Woche** war es warm."
+   "explanationEn": "The task requests a point one week earlier, not a duration: **vor einer Woche**."
   },
   {
    "id": "a7a85f73-b356-5856-b5db-f2b9a744a501",
@@ -1338,17 +1338,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 11,
-   "questionDe": "Der Regen ist ___ einer Woche da. (vor oder seit?)",
-   "questionEn": "The rain has been here for a week.",
+   "questionDe": "Der Regen ist ___ einer Woche da. (Dauer bis heute; vor oder seit?)",
+   "questionEn": "The rain has been here for a week. (Duration up to today; vor or seit?)",
    "options": null,
    "answer": "seit",
    "accepted": [
     "seit"
    ],
-   "explanationDe": "seit: von damals bis jetzt. Der Regen ist seit einer Woche da.",
+   "explanationDe": "Gefragt ist die Dauer bis heute: seit einer Woche.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": "**seit** means from then until now: Der Regen ist **seit einer Woche** da."
+   "explanationEn": "The task requests duration up to today: **seit einer Woche**."
   },
   {
    "id": "8058bf54-3a86-5ed4-8a24-55630a3efbce",
@@ -1376,17 +1376,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 12,
-   "questionDe": "Das Gewitter war ___ einer Woche. (vor oder seit?)",
-   "questionEn": "The thunderstorm was a week ago.",
+   "questionDe": "Das Gewitter war ___ einer Woche. (Zeit: eine Woche früher, keine Dauer; vor oder seit?)",
+   "questionEn": "The thunderstorm was a week ago. (A point one week earlier, not a duration; vor or seit?)",
    "options": null,
    "answer": "vor",
    "accepted": [
     "vor"
    ],
-   "explanationDe": "Das Gewitter ist vorbei: vor einer Woche.",
+   "explanationDe": "Gefragt ist eine Woche früher, keine Dauer: vor einer Woche.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": "The storm is over: it was **vor einer Woche** (a week ago)."
+   "explanationEn": "The task requests a point one week earlier, not a duration: **vor einer Woche**."
   },
   {
    "id": "fe97d1bc-1569-5fa8-a988-5ab810e33a1c",

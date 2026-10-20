@@ -1201,7 +1201,7 @@ export const CURRICULUM_A12 = {
         sample: 'Familienname: Brandt / Vorname: Lena / Stadt: Köln / Verkehrsmittel: Bus / Unterschrift: L. Brandt',
       },
       links: { listeningExercise: 6, readingOrder: null },
-      practiceRule: { topics: ['dative-prepositions-intro'], typedMin: 4 },
+      practiceRule: { topics: ['dative-prepositions-intro'], typedMin: 4, mustCover: ['vor'] },
     },
     {
       nr: 12,

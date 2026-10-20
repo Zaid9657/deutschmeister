@@ -16,13 +16,14 @@
 //      and at B.
 //   5. THE GATE — tests/helpers/lesenGate.mjs on every paper: no strategy above 2 of 4, no switch above 2.
 //   6. THE BANK — 16 distinct texts per checkpoint, no answer text more than twice in a paper;
-//      across all checkpoints, balanced positions and question-type ranks, all order strategies ≤ half.
+//      across all checkpoints, balanced positions and question-type ranks, all order strategies ≤ half;
+//      every surface feature × order rule and its inverse ≤ 36/64.
 // Exit code 1 on any finding.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { levelSpec, taughtUpTo, untaughtTokens, constructionHorizonIndex, loadPoolItems } from './validate-curriculum.mjs';
-import { auditBankOrder, auditPapers, conditionsOf, tokens } from '../tests/helpers/lesenGate.mjs';
+import { auditBankFeatures, auditBankOrder, auditPapers, conditionsOf, tokens } from '../tests/helpers/lesenGate.mjs';
 
 const arg = process.argv.slice(2).find((a) => !a.startsWith('-'));
 const verbose = process.argv.includes('-v');
@@ -117,12 +118,16 @@ for (const [cpId, papers] of Object.entries(byCheckpoint)) {
 // Order strategies have a bank-wide limit, separate from the unchanged per-paper surface gates.
 const order = auditBankOrder(Object.values(byCheckpoint).flat());
 for (const finding of order.findings) flag('bank order', finding);
+const features = auditBankFeatures(Object.values(byCheckpoint).flat());
+for (const finding of features.findings) flag('bank feature × order', finding);
 if (verbose) {
   console.log(`Bank positions (A/B): ${order.positions.map((counts, i) => `${i + 1}=${counts.join('/')}`).join(', ')}`);
   console.log(`Bank type-rank (A/B): ${Object.entries(order.typeRanks).map(([cell, counts]) => `${cell}=${counts.join('/')}`).join(', ')}`);
   console.log(`Bank fixed sequences: ${[...order.fixed].map(([name, score]) => `${name}=${score}/${order.total}`).join(', ')}`);
   console.log(`Bank type-rank rules (Wer1,Wer2,W1,W2): ${[...order.typeRank].map(([name, score]) => `${name}=${score}/${order.total}`).join(', ')}`);
   console.log(`Bank worst fixed sequence: ${order.worstFixed.name} ${order.worstFixed.score}/${order.total}; worst type-rank rule: ${order.worstTypeRank.name} ${order.worstTypeRank.score}/${order.total}`);
+  console.log(`Bank feature × order: ${features.rules.size} rules, limit ${features.limit}/${features.total}`);
+  for (const rule of features.worst) console.log(`Bank worst feature rule: ${rule.name} ${rule.score}/${features.total}`);
 }
 
 for (const f of findings) console.log(f);

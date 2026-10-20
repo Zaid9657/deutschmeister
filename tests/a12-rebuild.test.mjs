@@ -2107,9 +2107,9 @@ test('DaF review #11 B1: every servable preposition gap is read in German alone 
     '96034fda-42dc-5e3d-8c8d-3c7c82591baf': [['zum'], ['zur'], 'the cue gives zu + dem'],
     'extra-a12-l11-04': [['zur'], ['zum'], 'the cue gives zu + der'],
     '49d0d7b5-dbe0-560a-bce0-266b040e5851': [['zur'], ['zum'], 'the cue gives zu + der'],
-    'extra-a12-l11-10': [['vor'], ['seit'], '„war" and „Heute ist es kalt": a point a week back, not a span up to now'],
-    'extra-a12-l11-11': [['seit'], ['vor'], '„ist … da": a span lasting until now'],
-    'extra-a12-l11-12': [['vor'], ['seit'], '„war": a point in the past'],
+    'extra-a12-l11-10': [['vor'], ['seit'], 'the German selector „Zeit: eine Woche früher, keine Dauer" requests a past point, expressly excluding duration'],
+    'extra-a12-l11-11': [['seit'], ['vor'], 'the German selector „Dauer bis heute" requests duration up to today'],
+    'extra-a12-l11-12': [['vor'], ['seit'], 'the German selector „Zeit: eine Woche früher, keine Dauer" requests a past point, expressly excluding duration'],
     '8058bf54-3a86-5ed4-8a24-55630a3efbce': [['aus'], ['von', 'nach'], 'the cue „Heimat, Land": origin'],
     'fe97d1bc-1569-5fa8-a988-5ab810e33a1c': [['von'], ['aus', 'nach'], 'the cue „Startort, kein Land"'],
     'f7aa6e9b-0c37-5874-b2b0-2e311896881a': [['bei'], ['mit', 'zu'], 'the cue gives bei + Dativ'],
@@ -2136,47 +2136,103 @@ test('DaF review #11 B1: every servable preposition gap is read in German alone 
   assert.match(poolItems(POOL_A12).find((it) => it.id === 'extra-a12-l09-11').questionDe, /Montag ist der erste Tag/);
 });
 
-// A single accepted member of a temporal contrast needs a deciding GERMAN cue. These are semantic
-// cue families, not item IDs: explicit start/end or point/duration, plus the course's existing first-day,
-// present „ist … da“, completed „war ___ <time>.“, and past/present contrast constructions.
+// Explicit German meaning selectors only. Tense, contrast, adverbs and a present/past reference
+// point NEVER choose the requested meaning. The lexical validator separately checks selectors at
+// the item's teaching horizon. Spatial von/nach/etc. are outside the temporal contrast.
 function undecidedTimePrepositionGaps(items) {
   const cues = {
     ab: /\b(?:Beginn|Anfang|der erste Tag|erste Uhrzeit)\b/iu,
-    bis: /\b(?:Ende|Schluss|der letzte Tag)\b/iu,
-    seit: /\bDauer bis jetzt\b|\bist\s+_{2,}\s+[^.!?]+\bda\s*[.!?]/iu,
-    vor: /\bZeitpunkt\b|\bwar\s+_{2,}\s+(?:einer|einem|einen|zwei|drei)\s+(?:Woche|Monat|Jahr|Tag)(?:n|en)?\s*[.!?]|\bHeute ist\b[^.!?]+[.!?]\s*_{2,}[^.!?]+\bwar\b/iu,
+    von: /\b(?:Beginn|Anfang|erste Uhrzeit)\b/iu,
+    bis: /\b(?:Ende|Schluss|der letzte Tag|letzte Uhrzeit)\b/iu,
+    seit: /\bDauer bis (?:heute|jetzt|damals)\b/iu,
+    vor: /\bZeitpunkt\b(?!\s+in der Zukunft)|\bZeit: [^;()!?]*früher, keine Dauer\b/iu,
+    um: /\b(?:genaue Uhrzeit|genauer Zeitpunkt)\b/iu,
+    gegen: /\b(?:ungefähre Uhrzeit|ungefährer Zeitpunkt)\b/iu,
+    nach: /\b(?:nach diesem Zeitpunkt|späterer Zeitpunkt)\b/iu,
+    in: /\b(?:Zeitpunkt in der Zukunft|Zeit ab heute)\b/iu,
   };
-  return items.filter((it) => it.type === 'fill_blank' && it.minLektion != null).flatMap((it) => {
+  return items.filter((it) => it.minLektion != null && (it.type === 'fill_blank' || /_{2,}/u.test(it.questionDe || ''))).flatMap((it) => {
     const accepted = new Set((it.accepted?.length ? it.accepted : [it.answer]).map((a) => String(a).trim().toLowerCase()));
-    return [['ab', 'bis'], ['seit', 'vor']].flatMap((pair) => {
+    const q = it.questionDe || '';
+    const temporal = /\b(?:Uhr|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Tag|Tagen|Woche|Wochen|Monat|Monaten|Jahr|Jahren|heute|morgen|gestern)\b/iu.test(q);
+    const pairs = [['ab', 'bis'], ['seit', 'vor'], ['um', 'gegen'], ['von', 'bis'], ['vor', 'nach'], ['vor', 'in']];
+    const offeredPairs = pairs.filter((pair) => pair.every((p) => new RegExp(`\\b${p}\\b`, 'iu').test(q)));
+    const defaults = { ab: ['ab', 'bis'], bis: ['ab', 'bis'], vor: ['seit', 'vor'], seit: ['seit', 'vor'],
+      um: ['um', 'gegen'], gegen: ['um', 'gegen'], von: ['von', 'bis'], nach: ['vor', 'nach'], in: ['vor', 'in'] };
+    const relevant = offeredPairs.length ? offeredPairs : [...new Set([...accepted].map((p) => defaults[p]).filter(Boolean))];
+    return relevant.flatMap((pair) => {
+      // ab/bis and vor/seit are the course's standard temporal contrasts; other families require
+      // time language or both alternatives explicitly printed, so spatial „von der Arbeit" is safe.
+      const offered = pair.every((p) => new RegExp(`\\b${p}\\b`, 'iu').test(q));
+      if (!temporal && !offered && !['ab', 'seit'].includes(pair[0])) return [];
       const only = pair.filter((p) => accepted.has(p));
       if (only.length !== 1) return [];
       const chosen = only[0];
       const other = pair.find((p) => p !== chosen);
-      return cues[chosen].test(it.questionDe || '') && !cues[other].test(it.questionDe || '')
+      return cues[chosen].test(q) && !cues[other].test(q)
         ? [] : [`${it.id}: only „${chosen}“ accepted without a deciding German cue`];
     });
   });
 }
 
-test('DaF review #12 B1: every single-key time-preposition gap has a deciding German cue, with open/cued contrasts', () => {
+test('DaF review #13 B1: every single-key time-preposition gap has an explicit German meaning selector, with open/cued contrasts', async () => {
   const gap = (questionDe, accepted) => ({ id: 'contrast', type: 'fill_blank', minLektion: 9, questionDe, accepted });
   const open = 'Sie können ___ acht Uhr einsteigen. (ab oder bis?)';
   assert.deepEqual(undecidedTimePrepositionGaps([gap(open, ['ab', 'bis'])]), []);
   for (const [cue, chosen, other] of [['Beginn', 'ab', 'bis'], ['Anfang', 'ab', 'bis'], ['erste Uhrzeit zum Einsteigen', 'ab', 'bis'], ['Ende', 'bis', 'ab'], ['Schluss', 'bis', 'ab'],
-    ['Zeitpunkt', 'vor', 'seit'], ['Dauer bis jetzt', 'seit', 'vor']]) {
+    ['Zeitpunkt', 'vor', 'seit'], ['Zeit: eine Woche früher, keine Dauer', 'vor', 'seit'], ['Dauer bis jetzt', 'seit', 'vor'],
+    ['Dauer bis heute', 'seit', 'vor'], ['Dauer bis damals', 'seit', 'vor']]) {
     const question = ['ab', 'bis'].includes(chosen) ? open : 'Der Regen war ___ einer Woche da. (vor oder seit?)';
     assert.equal(undecidedTimePrepositionGaps([gap(question, [chosen])]).length, 1, `${chosen}: open context`);
     assert.deepEqual(undecidedTimePrepositionGaps([gap(`${question} (${cue})`, [chosen])]), [], cue);
     assert.equal(undecidedTimePrepositionGaps([gap(`${question} (${cue})`, [other])]).length, 1, `${cue}: wrong key`);
   }
+  for (const question of [
+    'Heute ist es kalt. ___ einer Woche war es warm. (vor oder seit?)',
+    'Heute ist er gesund. ___ einer Woche war er krank. (vor oder seit?)',
+    'Der Regen ist ___ einer Woche da. (vor oder seit?)',
+    'Das Gewitter war ___ einer Woche. (vor oder seit?)',
+  ]) {
+    for (const key of ['vor', 'seit']) assert.equal(undecidedTimePrepositionGaps([gap(question, [key])]).length, 1, question);
+    assert.deepEqual(undecidedTimePrepositionGaps([gap(question, ['vor', 'seit'])]), []);
+  }
+  const choice = { ...gap('Heute ist er gesund. ___ einer Woche war er krank. (vor oder seit?)', ['vor']),
+    type: 'multiple_choice', options: ['vor', 'seit'] };
+  assert.equal(undecidedTimePrepositionGaps([choice]).length, 1, 'the gap rule also reaches choice items');
+  for (const [question, cue, key, rival] of [
+    ['Der Zug fährt ___ acht Uhr. (um oder gegen?)', 'genaue Uhrzeit', 'um', 'gegen'],
+    ['Der Zug fährt ___ acht Uhr. (um oder gegen?)', 'ungefähre Uhrzeit', 'gegen', 'um'],
+    ['Das Büro ist ___ acht Uhr offen. (von oder bis?)', 'erste Uhrzeit', 'von', 'bis'],
+    ['Das Büro ist ___ acht Uhr offen. (von oder bis?)', 'Ende', 'bis', 'von'],
+    ['Der Kurs ist ___ einer Woche. (vor oder in?)', 'Zeitpunkt in der Zukunft', 'in', 'vor'],
+  ]) {
+    assert.ok(undecidedTimePrepositionGaps([gap(question, [key])]).length > 0);
+    assert.deepEqual(undecidedTimePrepositionGaps([gap(`${question} (${cue})`, [key])]), []);
+    assert.ok(undecidedTimePrepositionGaps([gap(`${question} (${cue})`, [rival])]).length > 0);
+    assert.deepEqual(undecidedTimePrepositionGaps([gap(question, [key, rival])]), []);
+  }
   const all = poolItems(POOL_A12);
   assert.deepEqual(undecidedTimePrepositionGaps(all), [], 'every servable item, including future additions');
+  const { levelSpec, taughtUpTo, untaughtTokens } = await import('../scripts/validate-curriculum.mjs');
+  const spec = levelSpec('a1.2');
+  const known = taughtUpTo(CURRICULUM_A12, spec);
+  for (const it of all.filter((it) => it.type === 'fill_blank' && it.minLektion != null)) {
+    assert.deepEqual(untaughtTokens(it, known.get(it.minLektion), spec), [], `${it.id}: the selector must already be taught`);
+  }
   // Planted mutation on a real passing item; English and explanations still contain the start cue.
   const original = all.find((it) => it.type === 'fill_blank' && it.minLektion != null && /\(erste Uhrzeit zum Einsteigen; ab oder bis\?\)/u.test(it.questionDe));
   assert.ok(original, 'a servable beginning-cued gap exists');
   const stripped = { ...original, questionDe: original.questionDe.replace('erste Uhrzeit zum Einsteigen; ', '') };
   assert.equal(undecidedTimePrepositionGaps(all.map((it) => it === original ? stripped : it)).length, 1);
+  // Strip every selector family from every passing temporal gap; tense and contrasts are left intact.
+  const selector = /Zeit: [^;()!?]*früher, keine Dauer|Dauer bis (?:heute|jetzt)|Montag ist der erste Tag\.|erste Uhrzeit zum Einsteigen|\(Ende\)/gu;
+  const cued = all.filter((it) => it.minLektion != null && it.type === 'fill_blank' && ['ab', 'bis', 'vor', 'seit'].includes(it.answer.toLowerCase()));
+  assert.ok(cued.length >= 6, 'the complete current temporal contrast class is exercised');
+  for (const it of cued) {
+    const questionDe = it.questionDe.replace(selector, '');
+    assert.notEqual(questionDe, it.questionDe, `${it.id}: an explicit selector must be removable`);
+    assert.ok(undecidedTimePrepositionGaps([{ ...it, questionDe }]).length > 0, `${it.id}: context cannot replace its selector`);
+  }
 });
 
 test('DaF review #12 M8: delivered positions and question-type ranks balance; every order strategy scores at most half', async () => {
@@ -2223,6 +2279,76 @@ test('DaF review #12 M8: key-A-first mirrored pairs fail the bank gate; an indep
   assert.deepEqual(balanced.positions, Array.from({ length: 4 }, () => [1, 1]));
   assert.deepEqual(Object.values(balanced.typeRanks), Array.from({ length: 4 }, () => [1, 1]));
   assert.ok([...balanced.fixed.values(), ...balanced.typeRank.values()].every((score) => score === 4));
+});
+
+test('DaF review #13 M8: every delivered surface feature × order rule and its inverse score at most 36/64', async () => {
+  const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { auditBankFeatures } = await import('./helpers/lesenGate.mjs');
+  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+      .filter((it) => it.section === 'lesen')
+      .map((it) => ({ text: it.text, question: it.promptDe, options: it.options, answer: it.answer }))));
+  const bank = auditBankFeatures(papers);
+  assert.equal(bank.total, 64);
+  assert.equal(bank.limit, 36);
+  assert.equal(bank.passes, true, bank.findings.slice(0, 10).join('\n'));
+  for (const [name, score] of bank.rules) assert.ok(score <= 36, `${name}: ${score}/64`);
+  for (const feature of ['Alphabet (de)', 'Länge Zeichen+', 'Länge Wörter+', 'Zahlwert+', 'zuerst im Text+',
+    'zuletzt im Text+', 'identical option set within pair', 'pair role']) {
+    for (const context of ['position', 'type-rank', 'pair member', 'option-set occurrence']) {
+      const family = [...bank.rules].filter(([name]) => name.startsWith(`${feature} × ${context} [`));
+      assert.ok(family.length >= 4, `${feature} × ${context}: both preferences in every cell`);
+      assert.ok(family.some(([name]) => name.includes('inverse')), `${feature} × ${context}: counter-strategies`);
+    }
+  }
+});
+
+test('DaF review #13 M8: alphabetical type-rank and aligned-pair mutations fail, even with unchanged semantic content', async () => {
+  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+  const { auditBankFeatures, auditBankOrder, auditPapers } = await import('./helpers/lesenGate.mjs');
+  const papers = Object.values(LESEN_A12).flatMap((b) => b.papers);
+  const alphabetical = papers.map((paper, pi) => {
+    const pairs = [1, 2].map((pair) => paper.filter((u) => u.pair === pair)
+      .map((u) => ({ ...u, options: [...u.options].sort((a, b) => a.localeCompare(b, 'de')) }))
+      .sort((a, b) => a.options.indexOf(a.answer) - b.options.indexOf(b.answer)));
+    if (pi % 2) for (const u of pairs.flat()) u.options.reverse();
+    return [pairs[0][0], pairs[1][0], pairs[0][1], pairs[1][1]];
+  });
+  assert.equal(auditBankOrder(alphabetical).passes, true, 'the planted code keeps the round-13 A/B balances');
+  assert.ok(auditPapers(alphabetical).papers.every((p) => p.passes), 'the per-paper gates still pass');
+  const failed = auditBankFeatures(alphabetical);
+  assert.equal(failed.passes, false);
+  assert.ok([...failed.rules].some(([name, score]) => name.startsWith('Alphabet (de) × type-rank') && score === 64));
+  const aligned = structuredClone(papers);
+  for (const paper of aligned) for (const pair of [1, 2]) {
+    const two = paper.filter((u) => u.pair === pair);
+    if (two[0].answer !== two[0].options[0]) for (const u of two) u.options.reverse();
+  }
+  const pairFailed = auditBankFeatures(aligned);
+  assert.equal(pairFailed.passes, false);
+  assert.ok([...pairFailed.rules].some(([name, score]) => name.startsWith('A × pair member') && score === 64));
+});
+
+test('DaF review #13 M8: an independent counterbalanced bank passes the generic feature × order audit', async () => {
+  const { auditBankFeatures, auditBankOrder } = await import('./helpers/lesenGate.mjs');
+  const control = [
+    { pair: 1, text: 'Ada und Ben holen den Brief.', question: 'Wer holt den Brief?', options: ['Ada', 'Ben'], answer: 'Ada' },
+    { pair: 2, text: 'Das Büro öffnet um acht und schließt um neun.', question: 'Wann öffnet das Büro?', options: ['acht', 'neun'], answer: 'acht' },
+    { pair: 1, text: 'Ada und Ben kaufen die Zeitung.', question: 'Wer kauft die Zeitung?', options: ['Ada', 'Ben'], answer: 'Ben' },
+    { pair: 2, text: 'Der Zug fährt um acht oder neun.', question: 'Wann fährt der Zug?', options: ['acht', 'neun'], answer: 'neun' },
+  ];
+  // All independent pair-member swaps × both pair option reversals: sixteen papers / 64 units,
+  // no bank ids or texts. Reversing only the options would leave the alphabet×rank code untouched.
+  const papers = [0, 1, 2, 3].flatMap((swap) => [0, 1, 2, 3].map((flip) => {
+    const order = [swap & 1 ? 2 : 0, swap & 2 ? 3 : 1, swap & 1 ? 0 : 2, swap & 2 ? 1 : 3];
+    return order.map((i) => ({ ...control[i], options: flip & (1 << (control[i].pair - 1))
+      ? [...control[i].options].reverse() : [...control[i].options] }));
+  }));
+  assert.equal(auditBankOrder(papers).passes, true);
+  const bank = auditBankFeatures(papers);
+  assert.equal(bank.total, 64);
+  assert.equal(bank.passes, true, bank.findings.slice(0, 10).join('\n'));
+  assert.ok([...bank.rules.values()].every((score) => score === 32));
 });
 
 test('DaF review #11 M8: a negated event states no exclusive time — minimal pairs, then the builder with every clock-time event line negated', async () => {
