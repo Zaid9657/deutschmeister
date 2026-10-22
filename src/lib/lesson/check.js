@@ -2,9 +2,9 @@
 // Rules: normalise like the rest of the site (src/utils/answerMatch.js), allow
 // ONE typo-class slip (Levenshtein ≤ 1 on a word of ≥ 5 letters, diacritics,
 // capitalisation) and count it as correct-with-warning — but an article or an
-// ending is never a typo: if the expected answer is a short function word
-// (≤ 4 letters: der/die/das/ein/eine/dem/den…) or the user's slip changes the
-// final letter of a word (an ending), it is wrong.
+// ending is never a typo: short function words (≤ 4 letters: der/die/das/ein/…)
+// and changed inflection endings are wrong. Recognition items never get typo
+// credit for a selected distractor.
 //
 // Three things are decided by the ITEM rather than by the call site or the
 // answer string: `isCaseTask(item)` is `item.caseSensitive === true` and
@@ -78,7 +78,7 @@ const COMPOUND_UNITS = { ein: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, 
 const TENS = ['zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
 // The umlaut-free keyboard spellings (zwoelf, fuenfzehn, dreissig) are the same numbers — the
 // fold normalizeAnswer applies later, applied here first so both spellings meet (Codex review).
-const asciiFold = (w) => w.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const asciiFold = (w) => w.normalize('NFC').toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
 const withAscii = (words) => [...new Set(words.flatMap((w) => [w, asciiFold(w)]))];
 const NUMBER_VALUE = new Map(Object.entries(DICTATION_NUMBERS).map(([w, v]) => [asciiFold(w), v]));
 const UNIT_VALUE = new Map(Object.entries(COMPOUND_UNITS).map(([w, v]) => [asciiFold(w), v]));
@@ -86,7 +86,7 @@ const NUMBER_RE = new RegExp(
   `(?<!\\p{L})(?:(${withAscii(Object.keys(COMPOUND_UNITS)).join('|')})und(${withAscii(TENS).join('|')})|(${withAscii(Object.keys(DICTATION_NUMBERS)).join('|')}))(?!\\p{L})`,
   'giu',
 );
-export const numberWordsToDigits = (text) => String(text ?? '').replace(NUMBER_RE, (m, unit, ten, word) => (
+export const numberWordsToDigits = (text) => String(text ?? '').normalize('NFC').replace(NUMBER_RE, (m, unit, ten, word) => (
   word
     ? String(NUMBER_VALUE.get(asciiFold(word)))
     : String(UNIT_VALUE.get(asciiFold(unit)) + NUMBER_VALUE.get(asciiFold(ten)))
@@ -113,6 +113,7 @@ export function normalizeDictation(text) {
  */
 export function normalizeSpelling(text) {
   return String(text ?? '')
+    .normalize('NFC')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
     .replace(/\s+/g, ' ')
     .replace(/(?<=(^|\s)\p{L})\s+(?=\p{L}(\s|$))/gu, '')
@@ -126,7 +127,7 @@ export const SPELLED_OUT_RE = /^\p{L}([-\s]\p{L})+$/u;
 export function spellingApplies(expected) {
   const list = Array.isArray(expected) ? expected : [expected];
   // A dictated line ends like a sentence: „C-H-A-K-I-R-I." is still a spelled word (Codex review).
-  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').trim().replace(/[.!?]+$/, '')));
+  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').normalize('NFC').trim().replace(/[.!?]+$/, '')));
 }
 
 const numbersIn = (s) => (String(s).match(/\d+/g) || []).join(',');
@@ -148,10 +149,22 @@ const oneKeyAdded = (given, expected) =>
   given.length === expected.length + 1
   && [...given].some((_, i) => given.slice(0, i) + given.slice(i + 1) === expected);
 
+// Try every suffix: „kostet" can end in -t or -et, and „kostest" in -st or -est.
+// Both have the stem „kost"; comparing just their final t used to forgive them.
+const INFLECTION_ENDINGS = ['e', 'st', 't', 'en', 'et', 'est', 'te', 'ten', 'tet', 'test', 'em', 'er', 'es', 'n', 's'];
+
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
   if (u.length !== e.length) return true;
-  return u.some((w, i) => w !== e[i] && w.slice(-1) !== e[i].slice(-1));
+  return u.some((w, i) => {
+    if (w === e[i]) return false;
+    if (w.slice(-1) !== e[i].slice(-1)) return true;
+    return INFLECTION_ENDINGS.some((ending) => {
+      if (!e[i].endsWith(ending)) return false;
+      const stem = e[i].slice(0, -ending.length);
+      return stem.length >= 2 && INFLECTION_ENDINGS.some((other) => other !== ending && w === stem + other);
+    });
+  });
 }
 
 /**
@@ -191,7 +204,7 @@ function caseOnlyDiff(rawUser, rawAccepted) {
 
 /**
  * checkAnswer(userInput, expected: string | string[],
- *   { strict, dictation, caseSensitive, spelling }) → { result, expected, reason? }.
+ *   { strict, dictation, caseSensitive, spelling, allowTypo }) → { result, expected, reason? }.
  *
  * result ∈ RESULT, `expected` echoes the best matching accepted answer, and
  * `reason: 'case'` marks a miss that is nothing but Groß-/Kleinschreibung so the
@@ -209,14 +222,16 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * caseSensitive off a case-only miss is RESULT.TYPO, i.e. one retry, which is
  * what the standard §3 says capitalisation is worth; it is NOT silently correct
  * any more. Spelled-out words have no meaningful case and are exempt.
+ * allowTypo = false disables both spelling and case-only typo credit for
+ * selectable answers, where every distractor was supplied by the exercise.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, allowTypo = true,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
   const fold = (s) => {
-    let t = String(s ?? '');
+    let t = String(s ?? '').normalize('NFC');
     if (dictation) t = normalizeDictation(t);
     if (spellingMode) t = normalizeSpelling(t.trim().replace(/[.!?]+$/, ''));
     return t;
@@ -235,11 +250,12 @@ export function checkAnswer(userInput, expected, {
   for (const a of accepted) {
     if (prepare(a) !== user) continue;
     if (spellingMode || !caseOnlyDiff(rawUser, raw(a))) return { result: RESULT.CORRECT, expected: a };
-    return caseSensitive
+    return caseSensitive || !allowTypo
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
   }
   for (const a of accepted) {
+    if (!allowTypo) continue;
     if (strict && strictApplies(a)) continue;
     const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
@@ -308,11 +324,14 @@ export const isDictationTask = (item) =>
  */
 export function checkOptionsFor(item) {
   const accepted = item?.accepted && item.accepted.length ? item.accepted : [item?.answer];
+  const selectable = item?.options?.length || item?.type === 'multiple_choice' || item?.type === 'listen_select'
+    || item?.kind === 'choice' || item?.mode === 'options';
   return {
     strict: STRICT_TOPIC.test(item?.topic || ''),
     caseSensitive: isCaseTask(item),
     dictation: isDictationTask(item),
     spelling: spellingApplies(accepted),
+    ...(selectable ? { allowTypo: false } : {}),
   };
 }
 

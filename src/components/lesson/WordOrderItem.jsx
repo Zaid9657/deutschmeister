@@ -79,7 +79,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext, ey
         {t(eyebrowKey, lang, { n: index + 1, total })}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
-        <p className="text-[0.9375rem] text-graphite">{t('wordOrder.instructions', lang)}</p>
+        <p className="text-[0.9375rem] text-graphite">{(lang === 'de' ? item.promptDe : item.promptEn) || t('wordOrder.instructions', lang)}</p>
 
         <div>
           <p className="mt-5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
