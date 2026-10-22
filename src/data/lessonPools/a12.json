@@ -342,18 +342,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel)",
-   "questionEn": "Build the sentence about needing a supermarket.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket.",
    "options": null,
    "answer": "Ich brauche einen Supermarkt.",
    "accepted": [
     "Ich brauche einen Supermarkt.",
     "Ich brauche einen Supermarkt"
    ],
-   "explanationDe": "Das Objekt steht im Akkusativ: einen Supermarkt.",
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: einen Supermarkt.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": "Subject first, verb second, then the object in the accusative. Supermarkt is masculine: **Ich brauche einen Supermarkt.**"
+   "explanationEn": "Requested present tense (Präsens): Subject first, verb second, then the object in the accusative. Supermarkt is masculine: **Ich brauche einen Supermarkt.**"
   },
   {
    "id": "c5971132-1f0f-4f77-864c-da02a732da80",
@@ -384,8 +384,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Beginnen Sie mit „Ana“)",
-   "questionEn": "Build the sentence about buying the cake.",
+   "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Präsens) (Beginnen Sie mit „Ana“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake.",
    "options": null,
    "answer": "Ana kauft den Kuchen im Geschäft.",
    "accepted": [
@@ -394,10 +394,10 @@
     "Ana kauft im Geschäft den Kuchen.",
     "Ana kauft im Geschäft den Kuchen"
    ],
-   "explanationDe": "kaufen verlangt den Akkusativ: den Kuchen.",
+   "explanationDe": "Präsens: kaufen verlangt den Akkusativ: den Kuchen.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": "Kuchen is the object of **kaufen** and masculine, so **der** becomes **den**: **Ana kauft den Kuchen im Geschäft.**"
+   "explanationEn": "Requested present tense (Präsens): Kuchen is the object of **kaufen** and masculine, so **der** becomes **den**: **Ana kauft den Kuchen im Geschäft.**"
   },
   {
    "id": "extra-a12-l03-10",
@@ -526,16 +526,16 @@
    "stage": 5,
    "difficulty": 1,
    "order": 22,
-   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / einen / Onkel / haben]",
-   "questionEn": "Write the sentence: I have an uncle. (accusative direct object, indefinite article)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / einen / Onkel / haben] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I have an uncle. (accusative direct object, indefinite article)",
    "options": null,
    "answer": "Ich habe einen Onkel.",
    "accepted": [
     "Ich habe einen Onkel.",
     "Ich habe einen Onkel"
    ],
-   "explanationDe": "Onkel ist maskulin und direktes Objekt von haben, deshalb wird ein zu einen.",
-   "explanationEn": "Onkel is masculine and the direct object of haben, so ein becomes einen.",
+   "explanationDe": "Präsens: Onkel ist maskulin und direktes Objekt von haben, deshalb wird ein zu einen.",
+   "explanationEn": "Requested present tense (Präsens): Onkel is masculine and the direct object of haben, so ein becomes einen.",
    "hint": null,
    "minLektion": 7
   },
@@ -722,18 +722,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus] (Beginnen Sie mit „Zuerst“)",
-   "questionEn": "Build the sentence about the way.",
+   "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus] (Präsens) (Beginnen Sie mit „Zuerst“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the way.",
    "options": null,
    "answer": "Zuerst gehen Sie geradeaus.",
    "accepted": [
     "Zuerst gehen Sie geradeaus.",
     "Zuerst gehen Sie geradeaus"
    ],
-   "explanationDe": "Steht zuerst vorn, kommt das Verb auf Position 2.",
+   "explanationDe": "Präsens: Steht zuerst vorn, kommt das Verb auf Position 2.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": "When **zuerst** (first) opens the sentence, the verb comes second and the subject after it: **Zuerst gehen Sie geradeaus.**"
+   "explanationEn": "Requested present tense (Präsens): When **zuerst** (first) opens the sentence, the verb comes second and the subject after it: **Zuerst gehen Sie geradeaus.**"
   },
   {
    "id": "extra-a12-l01-02",
@@ -742,8 +742,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links] (Beginnen Sie mit „Dann“)",
-   "questionEn": "Build the sentence about the corner.",
+   "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links] (Präsens) (Beginnen Sie mit „Dann“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the corner.",
    "options": null,
    "answer": "Dann gehen Sie an der Ecke links.",
    "accepted": [
@@ -752,10 +752,10 @@
     "Dann gehen Sie links an der Ecke.",
     "Dann gehen Sie links an der Ecke"
    ],
-   "explanationDe": "Nach dann steht das Verb, danach das Subjekt Sie.",
+   "explanationDe": "Präsens: Nach dann steht das Verb, danach das Subjekt Sie.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": "When **dann** (then) opens the sentence, the verb follows straight away and the subject Sie after it: **Dann gehen Sie an der Ecke links.**"
+   "explanationEn": "Requested present tense (Präsens): When **dann** (then) opens the sentence, the verb follows straight away and the subject Sie after it: **Dann gehen Sie an der Ecke links.**"
   },
   {
    "id": "extra-a12-l01-03",
@@ -804,18 +804,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 5,
-   "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus]",
-   "questionEn": "Build the question about the town hall.",
+   "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the town hall.",
    "options": null,
    "answer": "Wie komme ich zum Rathaus?",
    "accepted": [
     "Wie komme ich zum Rathaus?",
     "Wie komme ich zum Rathaus"
    ],
-   "explanationDe": "In der W-Frage steht das Verb auf Position 2.",
+   "explanationDe": "Präsens: In der W-Frage steht das Verb auf Position 2.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": "In a question with a question word, the verb comes second: **Wie komme ich zum Rathaus?**"
+   "explanationEn": "Requested present tense (Präsens): In a question with a question word, the verb comes second: **Wie komme ich zum Rathaus?**"
   },
   {
    "id": "extra-a12-l01-06",
@@ -824,18 +824,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle]",
-   "questionEn": "Build the question about the stop.",
+   "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the stop.",
    "options": null,
    "answer": "Wo ist die Haltestelle?",
    "accepted": [
     "Wo ist die Haltestelle?",
     "Wo ist die Haltestelle"
    ],
-   "explanationDe": "Nach wo folgt das Verb ist, dann das Subjekt.",
+   "explanationDe": "Präsens: Nach wo folgt das Verb ist, dann das Subjekt.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": "The question word comes first, then the verb, then the subject: **Wo ist die Haltestelle?**"
+   "explanationEn": "Requested present tense (Präsens): The question word comes first, then the verb, then the subject: **Wo ist die Haltestelle?**"
   },
   {
    "id": "extra-a12-l01-07",
@@ -844,18 +844,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle]",
-   "questionEn": "Build the sentence about the square.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the square.",
    "options": null,
    "answer": "Am Platz ist die Haltestelle.",
    "accepted": [
     "Am Platz ist die Haltestelle.",
     "Am Platz ist die Haltestelle"
    ],
-   "explanationDe": "Die Angabe am Platz steht vorn, das Verb auf Position 2.",
+   "explanationDe": "Präsens: Die Angabe am Platz steht vorn, das Verb auf Position 2.",
    "hint": null,
    "minLektion": 1,
-   "explanationEn": "The place phrase opens the sentence, so the verb comes second and the subject after it: **Am Platz ist die Haltestelle.**"
+   "explanationEn": "Requested present tense (Präsens): The place phrase opens the sentence, so the verb comes second and the subject after it: **Am Platz ist die Haltestelle.**"
   },
   {
    "id": "extra-a12-l01-08",
@@ -924,16 +924,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 18,
-   "questionDe": "Schreiben Sie den Satz: [heute / meine Mutter / kochen / das Essen] (Beginnen Sie mit „Heute“)",
-   "questionEn": "Write the sentence: Today my mother is cooking the food. (time-first inversion)",
+   "questionDe": "Schreiben Sie den Satz: [heute / meine Mutter / kochen / das Essen] (Beginnen Sie mit „Heute“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: Today my mother is cooking the food. (time-first inversion)",
    "options": null,
    "answer": "Heute kocht meine Mutter das Essen.",
    "accepted": [
     "Heute kocht meine Mutter das Essen.",
     "Heute kocht meine Mutter das Essen"
    ],
-   "explanationDe": "Heute steht auf Position 1, deshalb rückt kocht auf Position 2, dann das Subjekt.",
-   "explanationEn": "Heute is in position 1, so kocht moves to position 2 and the subject follows.",
+   "explanationDe": "Präsens: Heute steht auf Position 1, deshalb rückt kocht auf Position 2, dann das Subjekt.",
+   "explanationEn": "Requested present tense (Präsens): Heute is in position 1, so kocht moves to position 2 and the subject follows.",
    "hint": null,
    "minLektion": 1
   },
@@ -964,16 +964,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 23,
-   "questionDe": "Schreiben Sie den Satz: [Fußball / wir / am Wochenende / spielen] (Beginnen Sie mit „Fußball“)",
-   "questionEn": "Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis)",
+   "questionDe": "Schreiben Sie den Satz: [Fußball / wir / am Wochenende / spielen] (Beginnen Sie mit „Fußball“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis)",
    "options": null,
    "answer": "Fußball spielen wir am Wochenende.",
    "accepted": [
     "Fußball spielen wir am Wochenende.",
     "Fußball spielen wir am Wochenende"
    ],
-   "explanationDe": "Der Hinweis stellt Fußball zur Betonung an erste Stelle, deshalb rückt spielen auf Position 2, dann wir.",
-   "explanationEn": "The cue puts Fußball first for emphasis, so spielen moves to position 2 and wir follows.",
+   "explanationDe": "Präsens: Der Hinweis stellt Fußball zur Betonung an erste Stelle, deshalb rückt spielen auf Position 2, dann wir.",
+   "explanationEn": "Requested present tense (Präsens): The cue puts Fußball first for emphasis, so spielen moves to position 2 and wir follows.",
    "hint": null,
    "minLektion": 1
   },
@@ -984,15 +984,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 24,
-   "questionDe": "Am Freitag ___ meine Eltern nicht zu Hause. (sein)",
-   "questionEn": "On Friday my parents are not home. (time-first inversion, verb sein, plural)",
+   "questionDe": "Am Freitag ___ meine Eltern nicht zu Hause. (sein) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). On Friday my parents are not home. (time-first inversion, verb sein, plural)",
    "options": null,
    "answer": "sind",
    "accepted": [
     "sind"
    ],
-   "explanationDe": "Am Freitag steht auf Position 1, deshalb rückt sind (Pluralform von sein) auf Position 2.",
-   "explanationEn": "Am Freitag is position 1, so sind (the plural form of sein) moves to position 2.",
+   "explanationDe": "Präsens: Am Freitag steht auf Position 1, deshalb rückt sind (Pluralform von sein) auf Position 2.",
+   "explanationEn": "Requested present tense (Präsens): Am Freitag is position 1, so sind (the plural form of sein) moves to position 2.",
    "hint": null,
    "minLektion": 1
   },
@@ -1414,15 +1414,15 @@
    "stage": 5,
    "difficulty": 3,
    "order": 3,
-   "questionDe": "Schreiben Sie den Satz: [ich / wohnen / bei / meine Eltern] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern]",
+   "questionDe": "Schreiben Sie den Satz: [ich / wohnen / bei / meine Eltern] (Beginnen Sie mit „Ich“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern]",
    "options": null,
    "answer": "Ich wohne bei meinen Eltern.",
    "accepted": [
     "Ich wohne bei meinen Eltern"
    ],
-   "explanationDe": "bei + Dativ Plural: meine Eltern → meinen Eltern.",
-   "explanationEn": "bei + Dativ Plural: meine Eltern → meinen Eltern.",
+   "explanationDe": "Präsens: bei + Dativ Plural: meine Eltern → meinen Eltern.",
+   "explanationEn": "Requested present tense (Präsens): bei + Dativ Plural: meine Eltern → meinen Eltern.",
    "hint": null,
    "minLektion": 11
   },
@@ -1433,15 +1433,15 @@
    "stage": 5,
    "difficulty": 1,
    "order": 4,
-   "questionDe": "Schreiben Sie den Satz: [ich / arbeiten / bei / die Bank] (mit bestimmtem Artikel) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank]",
+   "questionDe": "Schreiben Sie den Satz: [ich / arbeiten / bei / die Bank] (mit bestimmtem Artikel) (Beginnen Sie mit „Ich“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank]",
    "options": null,
    "answer": "Ich arbeite bei der Bank.",
    "accepted": [
     "Ich arbeite bei der Bank"
    ],
-   "explanationDe": "bei + Dativ nennt einen Arbeitgeber: die Bank → der Bank.",
-   "explanationEn": "bei + Dativ names an employer: die Bank → der Bank.",
+   "explanationDe": "Präsens: bei + Dativ nennt einen Arbeitgeber: die Bank → der Bank.",
+   "explanationEn": "Requested present tense (Präsens): bei + Dativ names an employer: die Bank → der Bank.",
    "hint": null,
    "minLektion": 11
   },
@@ -1452,15 +1452,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 5,
-   "questionDe": "Schreiben Sie den Satz: [das Buch / sein / von / meine Mutter] (Beginnen Sie mit „Das Buch“)",
-   "questionEn": "Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter]",
+   "questionDe": "Schreiben Sie den Satz: [das Buch / sein / von / meine Mutter] (Beginnen Sie mit „Das Buch“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter]",
    "options": null,
    "answer": "Das Buch ist von meiner Mutter.",
    "accepted": [
     "Das Buch ist von meiner Mutter"
    ],
-   "explanationDe": "von + Dativ: meine Mutter → meiner Mutter.",
-   "explanationEn": "von + Dativ: meine Mutter → meiner Mutter (feminine).",
+   "explanationDe": "Präsens: von + Dativ: meine Mutter → meiner Mutter.",
+   "explanationEn": "Requested present tense (Präsens): von + Dativ: meine Mutter → meiner Mutter (feminine).",
    "hint": null,
    "minLektion": 11
   },
@@ -1490,8 +1490,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence about the bus in the rain.",
+   "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Präsens) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain.",
    "options": null,
    "answer": "Wir fahren bei Regen mit dem Bus.",
    "accepted": [
@@ -1500,10 +1500,10 @@
     "Wir fahren mit dem Bus bei Regen.",
     "Wir fahren mit dem Bus bei Regen"
    ],
-   "explanationDe": "Nach mit steht der Dativ: mit dem Bus.",
+   "explanationDe": "Präsens: Nach mit steht der Dativ: mit dem Bus.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": "**mit** takes the dative, so Bus (masculine) gets **dem**: **Wir fahren bei Regen mit dem Bus.**"
+   "explanationEn": "Requested present tense (Präsens): **mit** takes the dative, so Bus (masculine) gets **dem**: **Wir fahren bei Regen mit dem Bus.**"
   },
   {
    "id": "eec3bcc5-32be-5e44-915e-c9c810980456",
@@ -2718,18 +2718,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 12,
-   "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön] (Beginnen Sie mit „Der Eingang“)",
-   "questionEn": "Build the sentence about the entrance.",
+   "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön] (Präsens) (Beginnen Sie mit „Der Eingang“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance.",
    "options": null,
    "answer": "Der Eingang ist nicht schön.",
    "accepted": [
     "Der Eingang ist nicht schön.",
     "Der Eingang ist nicht schön"
    ],
-   "explanationDe": "nicht steht vor dem Adjektiv schön.",
+   "explanationDe": "Präsens: nicht steht vor dem Adjektiv schön.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": "**nicht** stands in front of the adjective it negates: **Der Eingang ist nicht schön.**"
+   "explanationEn": "Requested present tense (Präsens): **nicht** stands in front of the adjective it negates: **Der Eingang ist nicht schön.**"
   },
   {
    "id": "extra-a12-l04-13",
@@ -2738,18 +2738,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 13,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Hotel“): [das Hotel / haben / kein / Steckdose]",
-   "questionEn": "Build the sentence about the hotel.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Hotel“): [das Hotel / haben / kein / Steckdose] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel.",
    "options": null,
    "answer": "Das Hotel hat keine Steckdose.",
    "accepted": [
     "Das Hotel hat keine Steckdose.",
     "Das Hotel hat keine Steckdose"
    ],
-   "explanationDe": "Feminin im Akkusativ: keine Steckdose.",
+   "explanationDe": "Präsens: Feminin im Akkusativ: keine Steckdose.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": "Steckdose is feminine, and **haben** takes the accusative: eine → **keine**: **Das Hotel hat keine Steckdose.**"
+   "explanationEn": "Requested present tense (Präsens): Steckdose is feminine, and **haben** takes the accusative: eine → **keine**: **Das Hotel hat keine Steckdose.**"
   },
   {
    "id": "0aae594f-f849-5da0-a289-2aafc08052ba",
@@ -2758,16 +2758,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 17,
-   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kein / Computer / haben]",
-   "questionEn": "Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kein / Computer / haben] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen)",
    "options": null,
    "answer": "Ich habe keinen Computer.",
    "accepted": [
     "Ich habe keinen Computer.",
     "Ich habe keinen Computer"
    ],
-   "explanationDe": "Computer ist maskulin, deshalb muss das gegebene kein im Akkusativ zu keinen werden.",
-   "explanationEn": "Computer is masculine, so the given kein must be inflected to keinen in the accusative.",
+   "explanationDe": "Präsens: Computer ist maskulin, deshalb muss das gegebene kein im Akkusativ zu keinen werden.",
+   "explanationEn": "Requested present tense (Präsens): Computer is masculine, so the given kein must be inflected to keinen in the accusative.",
    "hint": null,
    "minLektion": 4
   },
@@ -2778,16 +2778,16 @@
    "stage": 5,
    "difficulty": 1,
    "order": 18,
-   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / keine / Zeit / haben]",
-   "questionEn": "Write the sentence: We have no time. (kein + feminine noun, wir-form of haben)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / keine / Zeit / haben] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We have no time. (kein + feminine noun, wir-form of haben)",
    "options": null,
    "answer": "Wir haben keine Zeit.",
    "accepted": [
     "Wir haben keine Zeit.",
     "Wir haben keine Zeit"
    ],
-   "explanationDe": "Zeit ist feminin, deshalb wird kein zu keine.",
-   "explanationEn": "Zeit is feminine, so kein becomes keine.",
+   "explanationDe": "Präsens: Zeit ist feminin, deshalb wird kein zu keine.",
+   "explanationEn": "Requested present tense (Präsens): Zeit is feminine, so kein becomes keine.",
    "hint": null,
    "minLektion": 4
   },
@@ -2798,16 +2798,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 19,
-   "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“; „nicht“ steht am Satzende)",
-   "questionEn": "Write the sentence: We are not buying the car. (nicht after a definite direct object)",
+   "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“; „nicht“ steht am Satzende) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We are not buying the car. (nicht after a definite direct object)",
    "options": null,
    "answer": "Wir kaufen das Auto nicht.",
    "accepted": [
     "Wir kaufen das Auto nicht.",
     "Wir kaufen das Auto nicht"
    ],
-   "explanationDe": "Das bestimmte Objekt (das Auto) steht vor nicht; nicht bleibt am Satzende.",
-   "explanationEn": "nicht negates the whole action and goes after the definite object das Auto, at the end.",
+   "explanationDe": "Präsens: Das bestimmte Objekt (das Auto) steht vor nicht; nicht bleibt am Satzende.",
+   "explanationEn": "Requested present tense (Präsens): nicht negates the whole action and goes after the definite object das Auto, at the end.",
    "hint": null,
    "minLektion": 1
   },
@@ -2897,17 +2897,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 5,
-   "questionDe": "Meine Tante ___ glücklich. (sein)",
-   "questionEn": "My aunt is happy.",
+   "questionDe": "Meine Tante ___ glücklich. (sein) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). My aunt is happy.",
    "options": null,
    "answer": "ist",
    "accepted": [
     "ist"
    ],
-   "explanationDe": "Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
+   "explanationDe": "Präsens: Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "**Meine Tante** stands for **sie**, so the verb is **ist**: Meine Tante **ist** glücklich. glücklich describes her and takes no ending."
+   "explanationEn": "Requested present tense (Präsens): **Meine Tante** stands for **sie**, so the verb is **ist**: Meine Tante **ist** glücklich. glücklich describes her and takes no ending."
   },
   {
    "id": "6466fa36-59de-4a0b-9081-378d0fbd217b",
@@ -2964,17 +2964,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 10,
-   "questionDe": "Gestern ___ mein Opa müde. (sein)",
-   "questionEn": "Yesterday my grandpa was tired.",
+   "questionDe": "Gestern ___ mein Opa müde. (sein) (Präteritum)",
+   "questionEn": "Use the simple past (Präteritum). Yesterday my grandpa was tired.",
    "options": null,
    "answer": "war",
    "accepted": [
     "war"
    ],
-   "explanationDe": "Für gestern sagt man war: Gestern war mein Opa müde.",
+   "explanationDe": "Präteritum: Für gestern sagt man war: Gestern war mein Opa müde.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "For yesterday you say **war**: Gestern **war** mein Opa müde."
+   "explanationEn": "Requested simple past (Präteritum): For yesterday you say **war**: Gestern **war** mein Opa müde."
   },
   {
    "id": "extra-a12-l07-11",
@@ -2983,17 +2983,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 11,
-   "questionDe": "Gestern ___ meine Tante keine Zeit. (haben)",
-   "questionEn": "Yesterday my aunt had no time.",
+   "questionDe": "Gestern ___ meine Tante keine Zeit. (haben) (Präteritum)",
+   "questionEn": "Use the simple past (Präteritum). Yesterday my aunt had no time.",
    "options": null,
    "answer": "hatte",
    "accepted": [
     "hatte"
    ],
-   "explanationDe": "haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
+   "explanationDe": "Präteritum: haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "**haben** in the past is **hatte**: Gestern **hatte** meine Tante keine Zeit."
+   "explanationEn": "Requested simple past (Präteritum): **haben** in the past is **hatte**: Gestern **hatte** meine Tante keine Zeit."
   },
   {
    "id": "extra-a12-l07-12",
@@ -3002,17 +3002,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 12,
-   "questionDe": "Früher ___ ich klein. (sein)",
-   "questionEn": "I used to be small.",
+   "questionDe": "Früher ___ ich klein. (sein) (Präteritum)",
+   "questionEn": "Use the simple past (Präteritum). I used to be small.",
    "options": null,
    "answer": "war",
    "accepted": [
     "war"
    ],
-   "explanationDe": "Mit ich heißt die Vergangenheit von sein auch war.",
+   "explanationDe": "Präteritum: Mit ich heißt die Vergangenheit von sein auch war.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "With ich the past of **sein** is also **war**."
+   "explanationEn": "Requested simple past (Präteritum): With ich the past of **sein** is also **war**."
   },
   {
    "id": "extra-a12-l07-13",
@@ -3043,17 +3043,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 14,
-   "questionDe": "Gestern ___ mein Opa Fieber. (haben)",
-   "questionEn": "Yesterday my grandpa had a fever.",
+   "questionDe": "Gestern ___ mein Opa Fieber. (haben) (Präteritum)",
+   "questionEn": "Use the simple past (Präteritum). Yesterday my grandpa had a fever.",
    "options": null,
    "answer": "hatte",
    "accepted": [
     "hatte"
    ],
-   "explanationDe": "haben im Präteritum: er hatte.",
+   "explanationDe": "Präteritum: haben im Präteritum: er hatte.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "**haben** in the past: er **hatte** (he had)."
+   "explanationEn": "Requested simple past (Präteritum): **haben** in the past: er **hatte** (he had)."
   },
   {
    "id": "extra-a12-l07-06",
@@ -3062,18 +3062,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante]",
-   "questionEn": "Build the question about the woman.",
+   "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the woman.",
    "options": null,
    "answer": "Wer ist die Tante?",
    "accepted": [
     "Wer ist die Tante?",
     "Wer ist die Tante"
    ],
-   "explanationDe": "wer fragt nach der Person im Nominativ.",
+   "explanationDe": "Präsens: wer fragt nach der Person im Nominativ.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "**wer** asks for a person; the question word comes first and the verb second: **Wer ist die Tante?**"
+   "explanationEn": "Requested present tense (Präsens): **wer** asks for a person; the question word comes first and the verb second: **Wer ist die Tante?**"
   },
   {
    "id": "extra-a12-l07-07",
@@ -3082,18 +3082,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt] (Beginnen Sie mit „Mein Opa“)",
-   "questionEn": "Build the sentence about the grandpa.",
+   "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt] (Präsens) (Beginnen Sie mit „Mein Opa“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa.",
    "options": null,
    "answer": "Mein Opa ist alt.",
    "accepted": [
     "Mein Opa ist alt.",
     "Mein Opa ist alt"
    ],
-   "explanationDe": "Das Subjekt mein Opa steht im Nominativ.",
+   "explanationDe": "Präsens: Das Subjekt mein Opa steht im Nominativ.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "The subject **mein Opa** is in the nominative, then the verb: **Mein Opa ist alt.**"
+   "explanationEn": "Requested present tense (Präsens): The subject **mein Opa** is in the nominative, then the verb: **Mein Opa ist alt.**"
   },
   {
    "id": "extra-a12-l07-08",
@@ -3281,16 +3281,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 21,
-   "questionDe": "Schreiben Sie den Satz: [der Lehrer / heute / krank / sein] (Beginnen Sie mit „Der Lehrer“)",
-   "questionEn": "Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein)",
+   "questionDe": "Schreiben Sie den Satz: [der Lehrer / heute / krank / sein] (Beginnen Sie mit „Der Lehrer“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein)",
    "options": null,
    "answer": "Der Lehrer ist heute krank.",
    "accepted": [
     "Der Lehrer ist heute krank.",
     "Der Lehrer ist heute krank"
    ],
-   "explanationDe": "Der erste Teil des Hinweises, der Lehrer, steht auf Position 1, bleibt Nominativ, dann ist.",
-   "explanationEn": "The cue's first element, der Lehrer, is position 1, so it stays nominative and ist follows.",
+   "explanationDe": "Präsens: Der erste Teil des Hinweises, der Lehrer, steht auf Position 1, bleibt Nominativ, dann ist.",
+   "explanationEn": "Requested present tense (Präsens): The cue's first element, der Lehrer, is position 1, so it stays nominative and ist follows.",
    "hint": null,
    "minLektion": 1
   },
@@ -3955,15 +3955,15 @@
    "stage": 4,
    "difficulty": 1,
    "order": 10,
-   "questionDe": "Ich ___ gestern krank. (sein, ich)",
-   "questionEn": "Fill in the past of sein for ich: I was sick yesterday.",
+   "questionDe": "Ich ___ gestern krank. (sein, ich) (Präteritum)",
+   "questionEn": "Use the simple past (Präteritum). Fill in the past of sein for ich: I was sick yesterday.",
    "options": null,
    "answer": "war",
    "accepted": [
     "war"
    ],
-   "explanationDe": "Bei sein sagt man meistens war: Ich war gestern krank.",
-   "explanationEn": "With sein, German mostly uses **war** (was): Ich war gestern krank.",
+   "explanationDe": "Präteritum: Bei sein sagt man meistens war: Ich war gestern krank.",
+   "explanationEn": "Requested simple past (Präteritum): With sein, German mostly uses **war** (was): Ich war gestern krank.",
    "hint": null,
    "minLektion": 7
   },
@@ -4191,18 +4191,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence about the potato.",
+   "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen] (Perfekt) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato.",
    "options": null,
    "answer": "Ich habe die Kartoffel gekauft.",
    "accepted": [
     "Ich habe die Kartoffel gekauft.",
     "Ich habe die Kartoffel gekauft"
    ],
-   "explanationDe": "haben auf Position 2, das Partizip am Ende.",
+   "explanationDe": "Perfekt: haben auf Position 2, das Partizip am Ende.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": "**haben** takes position 2 and the participle goes to the end: **Ich habe die Kartoffel gekauft.**"
+   "explanationEn": "Requested perfect tense (Perfekt): **haben** takes position 2 and the participle goes to the end: **Ich habe die Kartoffel gekauft.**"
   },
   {
    "id": "b2912ee9-51c3-551b-8c92-de9d5e10451d",
@@ -4230,18 +4230,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen] (Beginnen Sie mit „Tim“)",
-   "questionEn": "Build the sentence about the rice.",
+   "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen] (Perfekt) (Beginnen Sie mit „Tim“)",
+   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice.",
    "options": null,
    "answer": "Tim hat den Reis gekocht.",
    "accepted": [
     "Tim hat den Reis gekocht.",
     "Tim hat den Reis gekocht"
    ],
-   "explanationDe": "Das Partizip gekocht steht ganz am Ende.",
+   "explanationDe": "Perfekt: Das Partizip gekocht steht ganz am Ende.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": "The participle **gekocht** goes to the very end: **Tim hat den Reis gekocht.**"
+   "explanationEn": "Requested perfect tense (Perfekt): The participle **gekocht** goes to the very end: **Tim hat den Reis gekocht.**"
   },
   {
    "id": "279d7e13-7875-58ef-b396-ce7bca7f21f9",
@@ -4635,8 +4635,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 5,
-   "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence about the jacket.",
+   "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma] (Präsens) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket.",
    "options": null,
    "answer": "Ich kaufe die Jacke für meine Oma.",
    "accepted": [
@@ -4645,10 +4645,10 @@
     "Ich kaufe für meine Oma die Jacke.",
     "Ich kaufe für meine Oma die Jacke"
    ],
-   "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
+   "explanationDe": "Präsens: Nach für steht der Akkusativ: für meine Oma.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": "After **für** comes the accusative: **Ich kaufe die Jacke für meine Oma.**"
+   "explanationEn": "Requested present tense (Präsens): After **für** comes the accusative: **Ich kaufe die Jacke für meine Oma.**"
   },
   {
    "id": "extra-a12-l10-06",
@@ -4657,18 +4657,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel] (Beginnen Sie mit „Tim“)",
-   "questionEn": "Build the sentence about the coat.",
+   "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel] (Präsens) (Beginnen Sie mit „Tim“)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the coat.",
    "options": null,
    "answer": "Tim geht ohne den Mantel.",
    "accepted": [
     "Tim geht ohne den Mantel.",
     "Tim geht ohne den Mantel"
    ],
-   "explanationDe": "ohne verlangt den Akkusativ: ohne den Mantel.",
+   "explanationDe": "Präsens: ohne verlangt den Akkusativ: ohne den Mantel.",
    "hint": null,
    "minLektion": 10,
-   "explanationEn": "**ohne** takes the accusative. Mantel is masculine: **ohne den Mantel**: **Tim geht ohne den Mantel.**"
+   "explanationEn": "Requested present tense (Präsens): **ohne** takes the accusative. Mantel is masculine: **ohne den Mantel**: **Tim geht ohne den Mantel.**"
   },
   {
    "id": "extra-a12-l10-07",
@@ -4763,8 +4763,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 16,
-   "questionDe": "Schreiben Sie den Satz: [ich / kaufen / ein Geschenk / für / meine Mutter] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change)",
+   "questionDe": "Schreiben Sie den Satz: [ich / kaufen / ein Geschenk / für / meine Mutter] (Beginnen Sie mit „Ich“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change)",
    "options": null,
    "answer": "Ich kaufe ein Geschenk für meine Mutter.",
    "accepted": [
@@ -4773,8 +4773,8 @@
     "Ich kaufe für meine Mutter ein Geschenk.",
     "Ich kaufe für meine Mutter ein Geschenk"
    ],
-   "explanationDe": "für verlangt immer Akkusativ; Mutter ist feminin, deshalb bleibt meine gleich (keine Änderung).",
-   "explanationEn": "für always triggers accusative; Mutter is feminine, so meine stays meine (no change).",
+   "explanationDe": "Präsens: für verlangt immer Akkusativ; Mutter ist feminin, deshalb bleibt meine gleich (keine Änderung).",
+   "explanationEn": "Requested present tense (Präsens): für always triggers accusative; Mutter is feminine, so meine stays meine (no change).",
    "hint": null,
    "minLektion": 1
   },
@@ -4880,16 +4880,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 25,
-   "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“)",
-   "questionEn": "Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative)",
+   "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative)",
    "options": null,
    "answer": "Ich fahre nicht ohne meinen Bruder.",
    "accepted": [
     "Ich fahre nicht ohne meinen Bruder.",
     "Ich fahre nicht ohne meinen Bruder"
    ],
-   "explanationDe": "ohne verlangt immer Akkusativ; Bruder ist maskulin, deshalb muss das gegebene mein zu meinen werden.",
-   "explanationEn": "ohne always triggers accusative; Bruder is masculine, so the given mein must become meinen.",
+   "explanationDe": "Präsens: ohne verlangt immer Akkusativ; Bruder ist maskulin, deshalb muss das gegebene mein zu meinen werden.",
+   "explanationEn": "Requested present tense (Präsens): ohne always triggers accusative; Bruder is masculine, so the given mein must become meinen.",
    "hint": null,
    "minLektion": 10
   },
@@ -5218,18 +5218,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert]",
-   "questionEn": "Build the question about the bus.",
+   "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the bus.",
    "options": null,
    "answer": "Wann kommt der Bus zum Konzert?",
    "accepted": [
     "Wann kommt der Bus zum Konzert?",
     "Wann kommt der Bus zum Konzert"
    ],
-   "explanationDe": "Das Fragewort steht vorn, das Verb dahinter.",
+   "explanationDe": "Präsens: Das Fragewort steht vorn, das Verb dahinter.",
    "hint": null,
    "minLektion": 11,
-   "explanationEn": "The question word comes first, then the verb: **Wann kommt der Bus zum Konzert?**"
+   "explanationEn": "Requested present tense (Präsens): The question word comes first, then the verb: **Wann kommt der Bus zum Konzert?**"
   },
   {
    "id": "extra-a12-l05-08",
@@ -5238,18 +5238,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub]",
-   "questionEn": "Build the question about the holiday.",
+   "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the holiday.",
    "options": null,
    "answer": "Wohin fahren wir im Urlaub?",
    "accepted": [
     "Wohin fahren wir im Urlaub?",
     "Wohin fahren wir im Urlaub"
    ],
-   "explanationDe": "Nach wohin folgt sofort das Verb fahren.",
+   "explanationDe": "Präsens: Nach wohin folgt sofort das Verb fahren.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": "After **wohin** the verb follows straight away: **Wohin fahren wir im Urlaub?**"
+   "explanationEn": "Requested present tense (Präsens): After **wohin** the verb follows straight away: **Wohin fahren wir im Urlaub?**"
   },
   {
    "id": "758bcf05-88c8-5d4a-a97a-6e9e5ca1a5ef",
@@ -5438,16 +5438,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 19,
-   "questionDe": "Schreiben Sie die Frage: [wie viele / Kinder / du / haben]",
-   "questionEn": "Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order)",
+   "questionDe": "Schreiben Sie die Frage: [wie viele / Kinder / du / haben] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order)",
    "options": null,
    "answer": "Wie viele Kinder hast du?",
    "accepted": [
     "Wie viele Kinder hast du?",
     "Wie viele Kinder hast du"
    ],
-   "explanationDe": "Der Hinweis stellt wie viele Kinder an erste Stelle, deshalb ist hast (Verb) auf Position 2, dann du.",
-   "explanationEn": "The cue puts wie viele Kinder first, so hast (verb) is position 2 and du follows.",
+   "explanationDe": "Präsens: Der Hinweis stellt wie viele Kinder an erste Stelle, deshalb ist hast (Verb) auf Position 2, dann du.",
+   "explanationEn": "Requested present tense (Präsens): The cue puts wie viele Kinder first, so hast (verb) is position 2 and du follows.",
    "hint": null,
    "minLektion": 1
   },
@@ -5957,16 +5957,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Schreiben Sie den Satz: [er / mit dem Zug / fahren] (Beginnen Sie mit „Er“)",
-   "questionEn": "Write the sentence: He goes by train. (subject: er)",
+   "questionDe": "Schreiben Sie den Satz: [er / mit dem Zug / fahren] (Beginnen Sie mit „Er“) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: He goes by train. (subject: er)",
    "options": null,
    "answer": "Er fährt mit dem Zug.",
    "accepted": [
     "Er fährt mit dem Zug.",
     "Er fährt mit dem Zug"
    ],
-   "explanationDe": "fahren wechselt a→ä bei er: fährt.",
-   "explanationEn": "fahren changes a→ä for er: fährt.",
+   "explanationDe": "Präsens: fahren wechselt a→ä bei er: fährt.",
+   "explanationEn": "Requested present tense (Präsens): fahren changes a→ä for er: fährt.",
    "hint": null,
    "minLektion": 11
   },

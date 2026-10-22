@@ -10,15 +10,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 1,
-      "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus]",
-      "questionEn": "Build the sentence about the way.",
+      "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the way.",
       "options": null,
       "answer": "Zuerst gehen Sie geradeaus.",
       "accepted": [
         "Zuerst gehen Sie geradeaus.",
         "Zuerst gehen Sie geradeaus"
       ],
-      "explanationDe": "Steht zuerst vorn, kommt das Verb auf Position 2.",
+      "explanationDe": "Präsens: Steht zuerst vorn, kommt das Verb auf Position 2.",
       "hint": null
     },
     {
@@ -28,15 +28,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 2,
-      "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links]",
-      "questionEn": "Build the sentence about the corner.",
+      "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the corner.",
       "options": null,
       "answer": "Dann gehen Sie an der Ecke links.",
       "accepted": [
         "Dann gehen Sie an der Ecke links.",
         "Dann gehen Sie an der Ecke links"
       ],
-      "explanationDe": "Nach dann steht das Verb, danach das Subjekt Sie.",
+      "explanationDe": "Präsens: Nach dann steht das Verb, danach das Subjekt Sie.",
       "hint": null
     },
     {
@@ -82,15 +82,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 5,
-      "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus]",
-      "questionEn": "Build the question about the town hall.",
+      "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the town hall.",
       "options": null,
       "answer": "Wie komme ich zum Rathaus?",
       "accepted": [
         "Wie komme ich zum Rathaus?",
         "Wie komme ich zum Rathaus"
       ],
-      "explanationDe": "In der W-Frage steht das Verb auf Position 2.",
+      "explanationDe": "Präsens: In der W-Frage steht das Verb auf Position 2.",
       "hint": null
     },
     {
@@ -100,15 +100,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle]",
-      "questionEn": "Build the question about the stop.",
+      "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the stop.",
       "options": null,
       "answer": "Wo ist die Haltestelle?",
       "accepted": [
         "Wo ist die Haltestelle?",
         "Wo ist die Haltestelle"
       ],
-      "explanationDe": "Nach wo folgt das Verb ist, dann das Subjekt.",
+      "explanationDe": "Präsens: Nach wo folgt das Verb ist, dann das Subjekt.",
       "hint": null
     },
     {
@@ -118,15 +118,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle]",
-      "questionEn": "Build the sentence about the square.",
+      "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the square.",
       "options": null,
       "answer": "Am Platz ist die Haltestelle.",
       "accepted": [
         "Am Platz ist die Haltestelle.",
         "Am Platz ist die Haltestelle"
       ],
-      "explanationDe": "Die Angabe am Platz steht vorn, das Verb auf Position 2.",
+      "explanationDe": "Präsens: Die Angabe am Platz steht vorn, das Verb auf Position 2.",
       "hint": null
     },
     {
@@ -487,15 +487,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie den Satz: [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel)",
-      "questionEn": "Build the sentence about needing a supermarket.",
+      "questionDe": "Bilden Sie den Satz: [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket.",
       "options": null,
       "answer": "Ich brauche einen Supermarkt.",
       "accepted": [
         "Ich brauche einen Supermarkt.",
         "Ich brauche einen Supermarkt"
       ],
-      "explanationDe": "Das Objekt steht im Akkusativ: einen Supermarkt.",
+      "explanationDe": "Präsens: Das Objekt steht im Akkusativ: einen Supermarkt.",
       "hint": null
     },
     {
@@ -505,15 +505,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel)",
-      "questionEn": "Build the sentence about buying the cake.",
+      "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake.",
       "options": null,
       "answer": "Ana kauft den Kuchen im Geschäft.",
       "accepted": [
         "Ana kauft den Kuchen im Geschäft.",
         "Ana kauft den Kuchen im Geschäft"
       ],
-      "explanationDe": "kaufen verlangt den Akkusativ: den Kuchen.",
+      "explanationDe": "Präsens: kaufen verlangt den Akkusativ: den Kuchen.",
       "hint": null
     },
     {
@@ -823,15 +823,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 12,
-      "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön]",
-      "questionEn": "Build the sentence about the entrance.",
+      "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance.",
       "options": null,
       "answer": "Der Eingang ist nicht schön.",
       "accepted": [
         "Der Eingang ist nicht schön.",
         "Der Eingang ist nicht schön"
       ],
-      "explanationDe": "nicht steht vor dem Adjektiv schön.",
+      "explanationDe": "Präsens: nicht steht vor dem Adjektiv schön.",
       "hint": null
     },
     {
@@ -841,15 +841,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 13,
-      "questionDe": "Bilden Sie den Satz: [das Hotel / haben / kein / Steckdose]",
-      "questionEn": "Build the sentence about the hotel.",
+      "questionDe": "Bilden Sie den Satz: [das Hotel / haben / kein / Steckdose] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel.",
       "options": null,
       "answer": "Das Hotel hat keine Steckdose.",
       "accepted": [
         "Das Hotel hat keine Steckdose.",
         "Das Hotel hat keine Steckdose"
       ],
-      "explanationDe": "Feminin im Akkusativ: keine Steckdose.",
+      "explanationDe": "Präsens: Feminin im Akkusativ: keine Steckdose.",
       "hint": null
     },
     {
@@ -983,15 +983,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert]",
-      "questionEn": "Build the question about the bus.",
+      "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the bus.",
       "options": null,
       "answer": "Wann kommt der Bus zum Konzert?",
       "accepted": [
         "Wann kommt der Bus zum Konzert?",
         "Wann kommt der Bus zum Konzert"
       ],
-      "explanationDe": "Das Fragewort steht vorn, das Verb dahinter.",
+      "explanationDe": "Präsens: Das Fragewort steht vorn, das Verb dahinter.",
       "hint": null
     },
     {
@@ -1001,15 +1001,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub]",
-      "questionEn": "Build the question about the holiday.",
+      "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the holiday.",
       "options": null,
       "answer": "Wohin fahren wir im Urlaub?",
       "accepted": [
         "Wohin fahren wir im Urlaub?",
         "Wohin fahren wir im Urlaub"
       ],
-      "explanationDe": "Nach wohin folgt sofort das Verb fahren.",
+      "explanationDe": "Präsens: Nach wohin folgt sofort das Verb fahren.",
       "hint": null
     },
     {
@@ -1397,14 +1397,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "Meine Tante ___ glücklich. (sein)",
-      "questionEn": "My aunt is happy.",
+      "questionDe": "Meine Tante ___ glücklich. (sein) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). My aunt is happy.",
       "options": null,
       "answer": "ist",
       "accepted": [
         "ist"
       ],
-      "explanationDe": "Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
+      "explanationDe": "Präsens: Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
       "hint": null
     },
     {
@@ -1414,15 +1414,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante]",
-      "questionEn": "Build the question about the woman.",
+      "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the woman.",
       "options": null,
       "answer": "Wer ist die Tante?",
       "accepted": [
         "Wer ist die Tante?",
         "Wer ist die Tante"
       ],
-      "explanationDe": "wer fragt nach der Person im Nominativ.",
+      "explanationDe": "Präsens: wer fragt nach der Person im Nominativ.",
       "hint": null
     },
     {
@@ -1432,15 +1432,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt]",
-      "questionEn": "Build the sentence about the grandpa.",
+      "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa.",
       "options": null,
       "answer": "Mein Opa ist alt.",
       "accepted": [
         "Mein Opa ist alt.",
         "Mein Opa ist alt"
       ],
-      "explanationDe": "Das Subjekt mein Opa steht im Nominativ.",
+      "explanationDe": "Präsens: Das Subjekt mein Opa steht im Nominativ.",
       "hint": null
     },
     {
@@ -1486,14 +1486,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 10,
-      "questionDe": "Gestern ___ mein Opa müde. (sein)",
-      "questionEn": "Yesterday my grandpa was tired.",
+      "questionDe": "Gestern ___ mein Opa müde. (sein) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Yesterday my grandpa was tired.",
       "options": null,
       "answer": "war",
       "accepted": [
         "war"
       ],
-      "explanationDe": "Für gestern sagt man war: Gestern war mein Opa müde.",
+      "explanationDe": "Präteritum: Für gestern sagt man war: Gestern war mein Opa müde.",
       "hint": null
     },
     {
@@ -1503,14 +1503,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 11,
-      "questionDe": "Gestern ___ meine Tante keine Zeit. (haben)",
-      "questionEn": "Yesterday my aunt had no time.",
+      "questionDe": "Gestern ___ meine Tante keine Zeit. (haben) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Yesterday my aunt had no time.",
       "options": null,
       "answer": "hatte",
       "accepted": [
         "hatte"
       ],
-      "explanationDe": "haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
+      "explanationDe": "Präteritum: haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
       "hint": null
     },
     {
@@ -1520,14 +1520,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 12,
-      "questionDe": "Früher ___ ich klein. (sein)",
-      "questionEn": "I used to be small.",
+      "questionDe": "Früher ___ ich klein. (sein) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). I used to be small.",
       "options": null,
       "answer": "war",
       "accepted": [
         "war"
       ],
-      "explanationDe": "Mit ich heißt die Vergangenheit von sein auch war.",
+      "explanationDe": "Präteritum: Mit ich heißt die Vergangenheit von sein auch war.",
       "hint": null
     },
     {
@@ -1557,14 +1557,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 14,
-      "questionDe": "Gestern ___ mein Opa Fieber. (haben)",
-      "questionEn": "Yesterday my grandpa had a fever.",
+      "questionDe": "Gestern ___ mein Opa Fieber. (haben) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Yesterday my grandpa had a fever.",
       "options": null,
       "answer": "hatte",
       "accepted": [
         "hatte"
       ],
-      "explanationDe": "haben im Präteritum: er hatte.",
+      "explanationDe": "Präteritum: haben im Präteritum: er hatte.",
       "hint": null
     },
     {
@@ -2034,8 +2034,8 @@
       "stage": 5,
       "difficulty": 2,
       "order": 5,
-      "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma]",
-      "questionEn": "Build the sentence about the jacket.",
+      "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket.",
       "options": null,
       "answer": "Ich kaufe die Jacke für meine Oma.",
       "accepted": [
@@ -2044,7 +2044,7 @@
         "Für meine Oma kaufe ich die Jacke.",
         "Für meine Oma kaufe ich die Jacke"
       ],
-      "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
+      "explanationDe": "Präsens: Nach für steht der Akkusativ: für meine Oma.",
       "hint": null
     },
     {
@@ -2054,15 +2054,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel]",
-      "questionEn": "Build the sentence about the coat.",
+      "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the coat.",
       "options": null,
       "answer": "Tim geht ohne den Mantel.",
       "accepted": [
         "Tim geht ohne den Mantel.",
         "Tim geht ohne den Mantel"
       ],
-      "explanationDe": "ohne verlangt den Akkusativ: ohne den Mantel.",
+      "explanationDe": "Präsens: ohne verlangt den Akkusativ: ohne den Mantel.",
       "hint": null
     },
     {
@@ -2349,8 +2349,8 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel)",
-      "questionEn": "Build the sentence about the bus in the rain.",
+      "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain.",
       "options": null,
       "answer": "Wir fahren bei Regen mit dem Bus.",
       "accepted": [
@@ -2358,7 +2358,7 @@
         "Wir fahren bei Regen mit dem Bus",
         "Wir fahren mit dem Bus bei Regen."
       ],
-      "explanationDe": "Nach mit steht der Dativ: mit dem Bus.",
+      "explanationDe": "Präsens: Nach mit steht der Dativ: mit dem Bus.",
       "hint": null
     },
     {
@@ -2557,15 +2557,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen]",
-      "questionEn": "Build the sentence about the potato.",
+      "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen] (Perfekt)",
+      "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato.",
       "options": null,
       "answer": "Ich habe die Kartoffel gekauft.",
       "accepted": [
         "Ich habe die Kartoffel gekauft.",
         "Ich habe die Kartoffel gekauft"
       ],
-      "explanationDe": "haben auf Position 2, das Partizip am Ende.",
+      "explanationDe": "Perfekt: haben auf Position 2, das Partizip am Ende.",
       "hint": null
     },
     {
@@ -2575,15 +2575,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen]",
-      "questionEn": "Build the sentence about the rice.",
+      "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen] (Perfekt)",
+      "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice.",
       "options": null,
       "answer": "Tim hat den Reis gekocht.",
       "accepted": [
         "Tim hat den Reis gekocht.",
         "Tim hat den Reis gekocht"
       ],
-      "explanationDe": "Das Partizip gekocht steht ganz am Ende.",
+      "explanationDe": "Perfekt: Das Partizip gekocht steht ganz am Ende.",
       "hint": null
     },
     {

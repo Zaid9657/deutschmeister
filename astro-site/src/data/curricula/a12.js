@@ -782,8 +782,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Nominativ: wer oder was?',
-        bodyDe: 'Lektion 3 hat das Objekt gezeigt: den Onkel. Das Subjekt dagegen steht im Nominativ, und danach fragt man mit **wer**: **Wer** ist das? — **Mein Onkel** ist groß. Nach sein steht das zweite Nomen ebenfalls im Nominativ: **Das ist** mein Bruder. Die Artikel im Nominativ: **der** Opa, **die** Oma. Früher: ich/sie **war**, ich/sie **hatte**.',
-        bodyEn: 'Lektion 3 showed the object: den Onkel. The subject is in the nominative, and you ask for it with **wer** (who): **Wer** ist das? — **Mein Onkel** ist groß. After sein the second noun is nominative too: **Das ist** mein Bruder. The nominative articles: **der** Opa, **die** Oma. In the past: ich/sie **war** (was), ich/sie **hatte** (had).',
+        bodyDe: 'Lektion 3 hat das Objekt gezeigt: den Onkel. Das Subjekt dagegen steht im Nominativ, und danach fragt man mit **wer**: **Wer** ist das? — **Mein Onkel** ist groß. Nach sein steht das zweite Nomen ebenfalls im Nominativ: **Das ist** mein Bruder. Die Artikel im Nominativ: **der** Opa, **die** Oma. Präteritum (früher): ich/sie **war**, ich/sie **hatte**.',
+        bodyEn: 'Lektion 3 showed the object: den Onkel. The subject is in the nominative, and you ask for it with **wer** (who): **Wer** ist das? — **Mein Onkel** ist groß. After sein the second noun is nominative too: **Das ist** mein Bruder. The nominative articles: **der** Opa, **die** Oma. Präteritum (simple past): ich/sie **war** (was), ich/sie **hatte** (had).',
         examples: ['Wer ist die Frau da? Ihr Haar ist lang.', 'Das ist mein Bruder. Sein Bein und sein Arm sind lang.'],
         ruleSlug: 'nominative-case',
       },

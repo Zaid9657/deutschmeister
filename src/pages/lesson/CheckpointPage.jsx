@@ -7,7 +7,6 @@ import {
   buildCheckpoint,
   scoreCheckpoint,
   remediationSet,
-  isItemCorrect,
   SECTION_LABELS,
   SECTION_ORDER,
   PASS_OVERALL_PCT,
@@ -17,6 +16,7 @@ import {
   WRITING_PASS_PCT,
   paperSeed,
 } from '../../lib/checkpoint/buildCheckpoint.js';
+import { checkpointFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
@@ -61,7 +61,7 @@ const POOL_LOADERS = {
  * it instead, and that item then leaves the score (`onReadInstead`): reading is not listening, and
  * missing audio is not the learner's failure (Codex score review, 2026-10-08).
  */
-function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
+function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [feedback, setFeedback] = useState(null);
@@ -87,11 +87,11 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
 
   const submit = (answer) => {
     if (feedback) return;
-    const correct = isItemCorrect(item, answer);
-    setFeedback({ correct, answer });
+    setFeedback(checkpointFeedback(item, answer, { graded }));
   };
 
   const advance = () => onAnswer(item, feedback?.answer ?? value);
+  const released = feedback && typeof feedback.correct === 'boolean';
 
   const header = (
     <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -195,10 +195,10 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
         <div className="mt-5 flex flex-wrap gap-2">
           {(item.options || []).map((option) => {
             const chosen = feedback?.answer === option;
-            const isAnswer = option === item.answer;
+            const isAnswer = option === feedback?.key;
             let tone = 'quiet';
-            if (feedback && isAnswer) tone = 'limette';
-            else if (feedback && chosen) tone = 'himbeer';
+            if (released && isAnswer) tone = 'limette';
+            else if (released && chosen) tone = 'himbeer';
             return (
               <Chip
                 key={option}
@@ -207,8 +207,8 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
                 raised={!feedback}
                 onClick={feedback ? undefined : () => submit(option)}
               >
-                {feedback && isAnswer && <Check className="h-4 w-4" aria-hidden="true" />}
-                {feedback && chosen && !isAnswer && <X className="h-4 w-4" aria-hidden="true" />}
+                {released && isAnswer && <Check className="h-4 w-4" aria-hidden="true" />}
+                {released && chosen && !isAnswer && <X className="h-4 w-4" aria-hidden="true" />}
                 {option}
               </Chip>
             );
@@ -252,14 +252,14 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
 
       {feedback && (
         <div className="mt-5 border-t border-rule pt-4">
-          <p ref={verdictRef} tabIndex={-1} className={`flex items-center gap-2 text-sm font-bold outline-none ${feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
-            {feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
-            {t(item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
+          <p ref={verdictRef} tabIndex={-1} className={`flex items-center gap-2 text-sm font-bold outline-none ${!released ? 'text-ink' : feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
+            {released && (feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />)}
+            {t(!released ? 'checkpoint.answerRecorded' : item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
           </p>
-          {!feedback.correct && item.mode !== 'confirm' && (
-            <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{item.answer}</strong></p>
+          {released && !feedback.correct && item.mode !== 'confirm' && (
+            <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{feedback.key}</strong></p>
           )}
-          {(item.explanationEn || item.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe}</p>}
+          {(feedback.explanationEn || feedback.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && feedback.explanationEn ? feedback.explanationEn : feedback.explanationDe}</p>}
           <Button className="mt-4" onClick={advance}>
             {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>
@@ -383,7 +383,8 @@ export default function CheckpointPage() {
   const onAnswer = (item, answer) => {
     const next = { ...answers, [item.id]: answer };
     setAnswers(next);
-    if (index + 1 >= items.length) finish(next);
+    if (item.section === 'lesen' && sectionComplete(items, next, 'lesen')) setPhase('sectionFeedback');
+    else if (index + 1 >= items.length) finish(next);
     else setIndex(index + 1);
   };
 
@@ -443,7 +444,33 @@ export default function CheckpointPage() {
           </Card>
         )}
 
-        {phase === 'run' && current && <PracticeItem key={current.id} item={current} onAnswer={onAnswer} onReadInstead={(id) => setNotHeard((prev) => new Set(prev).add(id))} />}
+        {phase === 'run' && current && <PracticeItem key={current.id} item={current} graded onAnswer={onAnswer} onReadInstead={(id) => setNotHeard((prev) => new Set(prev).add(id))} />}
+
+        {phase === 'sectionFeedback' && sectionComplete(items, answers, 'lesen') && (
+          <Card className="p-5 sm:p-6">
+            <h2 className="font-display text-xl text-ink" tabIndex={-1} ref={(node) => node?.focus()}>{t('checkpoint.readingFeedback', lang)}</h2>
+            <ol className="mt-4 divide-y divide-rule">
+              {items.filter((item) => item.section === 'lesen').map((item) => {
+                const feedback = checkpointFeedback(item, answers[item.id], { graded: true, complete: sectionComplete(items, answers, 'lesen') });
+                return (
+                  <li key={item.id} className="py-4">
+                    <p className="font-bold" lang="de">{item.promptDe}</p>
+                    <p className="mt-1 text-sm">{t('practice.yourAnswer', lang)}: <span lang="de">{feedback.answer}</span></p>
+                    <p className={`mt-1 flex items-center gap-2 text-sm font-bold ${feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
+                      {feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
+                      {t(feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
+                    </p>
+                    <p className="mt-1 text-sm">{t('feedback.correctIs', lang)} <strong lang="de">{feedback.key}</strong></p>
+                    {(feedback.explanationEn || feedback.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && feedback.explanationEn ? feedback.explanationEn : feedback.explanationDe}</p>}
+                  </li>
+                );
+              })}
+            </ol>
+            <Button className="mt-4" onClick={() => { if (index + 1 >= items.length) finish(answers); else { setIndex(index + 1); setPhase('run'); } }}>
+              {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </Card>
+        )}
 
         {phase === 'result' && result && (
           <>
