@@ -51,3 +51,26 @@ SPA/Astro files; complete `migrations/README.md` (6 files missing); move 11 root
 August audits to `docs/archive/`; delete 5 zero-import modules and Astro's unused `lucide-react`;
 add `scripts/README.md` + `tests/README.md`; send audit screenshots to an ignored `.cache/`.
 Do not: monorepo split, feature-folder reshuffle, migration squash, LFS.
+
+## $1M scorecard, refreshed 2026-10-22
+
+Same 10-aspect rubric as `docs/strategy/million-plan-2026-10.md` (2026-10-19: Claude 27, Codex 24),
+re-scored with today's live numbers (Supabase, 2026-10-22) and this review's findings.
+$1M/yr ≈ €73.1k/month ≈ 389 sales/month of a €249 exam package.
+
+| # | Aspect | /10 | Change vs 10-19 | Why |
+|---|--------|-----|-----------------|-----|
+| 1 | Market & demand | 5 | = | ~1.1M compulsory B1/DTZ/naturalisation exams a year; still no paying segment proven |
+| 2 | Offer & pricing | 3 | = | First real course sale ever (A1.2, €43.38, 10-14); the €199–249 exam package still can't be bought |
+| 3 | Positioning | 3 | = | Money pages still sell "a course line", not exam rehearsal |
+| 4 | Acquisition | 2 | = | 70 signups/30 d (18 in the last 7), down from 161 in September; search mostly brand |
+| 5 | Activation | 2 | = | Exam-first first run shipped 10-20, unmeasured; 3 learners active in the last 7 days |
+| 6 | Product & outcomes | 3 | = | A1.1 strong, but the checker credits wrong endings/spellings and paid reading lessons leak |
+| 7 | Retention & LTV | 1 | = | 4 active subs, 2 failing; recovered payers stay locked out (webhook bug) |
+| 8 | Unit economics & AI cost | 3 | −0.5 | Four ways to get unmetered AI calls found today |
+| 9 | AI operations | 2 | = | Reviews run (this one), but no loop yet turns findings into shipped revenue |
+| 10 | Risk, legal & measurement | 1 | −0.5 | Account deletion is a no-op (GDPR), consent withdrawal leaks to PostHog, admin RBAC bypass |
+| | **Total** | **25 / 100** | | |
+
+Outside the rubric: website performance 10/10 (Lighthouse median 99, CLS 0); engineering hygiene 6/10
+(strong guards and tests, but ~60 real bugs concentrated in the money path).
