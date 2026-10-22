@@ -38,7 +38,7 @@ function load({ search = '', referrer = '', path = '/', stored = null } = {}) {
 }
 
 test('utm parameters attribute the landing and only campaign labels are kept', () => {
-  const { stored } = load({ search: '?utm_source=Telegram&utm_medium=social&utm_campaign=A11-Launch&utm_content=pin&fbclid=XYZ&gclid=123', referrer: 'https://t.me/deutschmeister', path: '/courses/a1-1/' });
+  const { stored } = load({ search: '?utm_source=Telegram&utm_medium=social&utm_campaign=A11-Launch&utm_content=pin&fbclid=FBCLIDSENTINEL&gclid=GCLIDSENTINEL', referrer: 'https://t.me/deutschmeister', path: '/courses/a1-1/' });
   const s = stored();
   assert.equal(s.first.source, 'telegram');
   assert.equal(s.first.medium, 'social');
@@ -46,7 +46,7 @@ test('utm parameters attribute the landing and only campaign labels are kept', (
   assert.equal(s.first.content, 'pin');
   assert.equal(s.first.referrer, 't.me');
   assert.equal(s.first.landing, '/courses/a1-1/');
-  assert.ok(!JSON.stringify(s).includes('XYZ') && !JSON.stringify(s).includes('123'), 'click ids must never be stored');
+  assert.ok(!JSON.stringify(s).includes('FBCLIDSENTINEL') && !JSON.stringify(s).includes('GCLIDSENTINEL'), 'click ids must never be stored');
   assert.deepEqual(s.last, s.first);
 });
 
