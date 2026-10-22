@@ -27,7 +27,7 @@ test('bootstrap is short, keeps implementation invariants and points to current 
     /hasLevelAccess\(level\)/, /dm_buy_intent/, /pricing\.js/, /marketing\.js/,
     /Secrets fail closed/, /export const handler/, /_shared\/auth\.mjs/,
     /data-rh="true"/, /design-tokens\.js/, /ratchets only go/, /\*\*Sie\*\*/,
-    /DRAFT_CURRICULA/, /syncOutbox\.js/, /claim unique user\+kind BEFORE send/,
+    /HANDOFF-2026-10-16\.md/, /syncOutbox\.js/, /claim unique user\+kind BEFORE send/,
   ]) assert.match(source, rule);
   const reference = read('docs/agents/claude-reference.md');
   assert.match(reference, /complete[\s\S]*pre-consolidation bootstrap/);

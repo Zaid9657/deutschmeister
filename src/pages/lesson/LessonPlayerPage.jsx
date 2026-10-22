@@ -6,7 +6,7 @@ import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
 import buildLesson, { attemptFromCompletions } from '../../lib/lesson/buildLesson.js';
 import { prevStageIndex, requeueFor } from '../../lib/lesson/requeue.js';
 import { practiceScore, masteryStatus } from '../../lib/lesson/mastery.js';
-import { skillLines } from '../../lib/lesson/skillStatus.js';
+import { skillLines, skillProps } from '../../lib/lesson/skillStatus.js';
 import { countCompletedRuns, fetchWordsByIds, getLessonProgress, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson, retryLocalProgressSave } from '../../lib/course/localProgress.js';
@@ -25,7 +25,7 @@ import PhonetikStage from '../../components/lesson/PhonetikStage.jsx';
 import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';
 import { gradeCard } from '../../services/reviewService.js';
 import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
-import { speakGerman } from '../../lib/lesson/speech.js';
+import { speakGermanChecked } from '../../lib/lesson/speech.js';
 import PretestStage from '../../components/lesson/PretestStage.jsx';
 import PracticeItem from '../../components/lesson/PracticeItem.jsx';
 import DictationItem from '../../components/lesson/DictationItem.jsx';
@@ -194,9 +194,10 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
   const stage = stages[stageIndex] || null;
   const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
   const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
-  const playWarmupCard = useCallback((content) => {
-    speakGerman((content && (content.speak || content.front)) || '');
-  }, []);
+  const playWarmupCard = useCallback(
+    (content) => speakGermanChecked((content && (content.speak || content.front)) || ''),
+    [],
+  );
 
   useEffect(() => {
     if (!warmupCard) return;
@@ -303,7 +304,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
     // The requeue stage is skipped when nothing was missed.
     if (nextStage && nextStage.kind === 'requeue') {
       const used = attempts.map((a) => a.itemId);
-      const items = requeueFor(misses, pool, used);
+      const items = requeueFor(misses, pool, used, { level: curriculum.level });
       setRequeued(items);
       if (!items.length) landing = target + 1;
     }
@@ -312,7 +313,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
     const done = stages[landing] ? sessionCompleted(stage, stages[landing]) : null;
     if (done) setPause({ done });
     goStage(landing);
-  }, [stageIndex, stages, stage, attempts, misses, pool, goStage]);
+  }, [stageIndex, stages, stage, attempts, misses, pool, goStage, curriculum.level]);
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);
@@ -365,7 +366,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
   useEffect(() => {
     if (preview || saved || !stage || stage.kind !== 'recap') return;
     setSaved(true);
-    trackLessonCompleted(curriculum.level, lektion.id, runId);
+    trackLessonCompleted(curriculum.level, lektion.id, runId, skillProps(skillLines({ score, attempts, skills })));
     if (!user) {
       const durable = recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
       setSync(durable ? 'local' : 'localFailed');
@@ -374,7 +375,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
     const entry = enqueueRun({ userId: user.id, level: curriculum.level, lektionId: lektion.id, createdAt: new Date().toISOString(), attempts, accuracy, status });
     runEntryKey.current = entry ? entry.key : null;
     flush();
-  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush]);
+  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush, score, skills]);
 
   // Back online after a failed save: send it again without asking.
   useEffect(() => {

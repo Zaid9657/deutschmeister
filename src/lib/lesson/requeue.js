@@ -44,14 +44,16 @@ function replayOf(missed) {
 const isWriting = (it) => it.stage === 'writing' || String(it.id).startsWith('schreiben-');
 
 /**
- * requeueFor(missedItems, pool, usedIds, { avoidIds }) → up to 4 items to replay.
+ * requeueFor(missedItems, pool, usedIds, { avoidIds, level }) → up to 4 items to replay.
  * `usedIds` are the items already seen this lesson (the controlled seven and
  * anything requeued before), so the learner never meets the same id twice.
  * `avoidIds` are items planned for OTHER Lektionen: avoided when the topic has
  * anything else left, used when it does not — a shorter requeue would be worse.
  */
-export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds } = {}) {
-  const items = poolItems(pool).filter(isUsableItem);
+export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds, level } = {}) {
+  // At the course's own level, like the practice draw (`pickPracticeItems`): without it every level
+  // was filtered by A1.1's syllabus rules.
+  const items = poolItems(pool).filter((it) => isUsableItem(it, { level }));
   const used = new Set(usedIds);
   const avoid = avoidIds instanceof Set ? avoidIds : new Set(avoidIds || []);
   const out = [];

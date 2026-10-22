@@ -28,6 +28,11 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 | [crawl-guard.mjs](crawl-guard.mjs) | check (imported module) | Built-page HTML and route/link metadata supplied by caller | Crawlability/link findings; used by built-HTML checks, not a standalone CLI. |
 | [check-duplicates.mjs](check-duplicates.mjs) | check | Every source/destination in `shared-files.mjs` | Nonzero on any byte drift; `npm run check:duplicates`. |
 | [check-grammar-json.mjs](check-grammar-json.mjs) `<file>... [--cache cache.json]` | check | CREATE/EXTEND grammar JSON; optional current cache | Shape and, with cache, collision/continuation errors; no files written. |
+| [a12-determinacy.mjs](a12-determinacy.mjs) `[level]` | check | Lesson pool draw, checkpoint items and the real answer checker | One line per correct German alternative the key rejects; exit 1 when any. |
+| [a12-lesen-check.mjs](a12-lesen-check.mjs) `[draft.json] [-v]` | check | Committed `src/data/curricula/a12.lesen.js` units or a draft paper file | Authoring findings for the A1.2 checkpoint Lesen units; no files written. |
+| [a12-tense-check.mjs](a12-tense-check.mjs) `[level]` | check | Lesson pool and curriculum production items | Reports open-production items whose German instruction does not select a taught tense. |
+| [imperative-variants.mjs](imperative-variants.mjs) | check (imported module) | Imperative item text supplied by the caller | Requested-person imperative alternatives for the determinacy and pool checks; not a standalone CLI. |
+| [checkpoint-feedback-browser.mjs](checkpoint-feedback-browser.mjs) | check (local server) | Real CheckpointPage with stubbed service, audio and AI boundaries | Offline page at `http://127.0.0.1:5174/?level=a1.2`; no network, auth or database. |
 | [check-legal-release.mjs](check-legal-release.mjs) | check | Astro legal facts/review evidence | Nonzero until verified operator/privacy/review facts exist; legal pages stay draft/noindex. |
 | [validate-curriculum.mjs](validate-curriculum.mjs) `[level]` | check | Curriculum, built lesson pool, content contracts (default A1.1) | Structural/DaF rule checks and measured ratchets; run from root, including Windows. |
 

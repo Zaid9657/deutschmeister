@@ -172,7 +172,7 @@ test('checkpoint Schreiben: a graded text that failed fails the section — two 
 
 test('checkpoint retake: a new paper under the same rules, never the same 20 items reshuffled', async () => {
   // Codex review, 2026-10-07: „Nochmal" reshuffled the paper whose answers the result had just shown.
-  const { buildCheckpoint, scoreCheckpoint, SECTION_ORDER } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { buildCheckpoint, scoreCheckpoint, SECTION_ORDER, paperSeed } = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   const { readFileSync } = await import('node:fs');
   const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
@@ -189,7 +189,11 @@ test('checkpoint retake: a new paper under the same rules, never the same 20 ite
     }
   }
   const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
-  assert.match(page, /buildCheckpoint\(\{ curriculum, checkpoint, pool, seed: round \?/);
+  assert.match(page, /buildCheckpoint\(\{ curriculum, checkpoint, pool, seed: paperSeed\(checkpoint, round\) \}\)/);
+  // …and paperSeed is the seed this test draws the rounds with: round 0 the default paper.
+  const cp1 = CURRICULUM_A11.checkpoints[0];
+  assert.equal(paperSeed(cp1, 0), undefined);
+  assert.equal(paperSeed(cp1, 2), `${cp1.id}-round-2`);
   assert.match(page, /setRound\(attempts\?\.used \|\| 0\)/, 'a reload starts at this window\'s next paper');
   assert.doesNotMatch(page, /shuffle\(built/, 'no reshuffle of the old paper');
 });
@@ -503,4 +507,43 @@ test('the grader returns real booleans, and the read-aloud extra-word count reac
   assert.match(fn, /body: JSON\.stringify\(\{ transcript, words, pct, extra,/);
   const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
   assert.match(line, /setResult\(\{ words, pct, extra \}\)/);
+});
+
+test('the checkpoint progress bar has a name and says which task it is on (Codex rescore, 2026-10-15)', async () => {
+  // It was an unnamed role="progressbar": a screen reader announced a bare number.
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /role="progressbar" aria-label=\{t\('checkpoint\.progress', lang\)\} aria-valuetext=\{t\('checkpoint\.progressValue', lang, \{ n: index \+ 1, total: items\.length \}\)\}/);
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  for (const key of ['checkpoint.progress', 'checkpoint.progressValue']) assert.ok(STRINGS.en[key] && STRINGS.de[key], key);
+  assert.equal(STRINGS.de['checkpoint.progressValue'].replace('{n}', 3).replace('{total}', 20), 'Aufgabe 3 von 20');
+});
+
+test('the checkpoint result names a partly assessed part, in both languages (Codex rescore, 2026-10-15)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /scope\.partial\.length > 0 && \(\s*<p>\{t\('checkpoint\.partlyAssessed', lang, \{ list: scope\.partial\.map\(\(p\) => `\$\{SECTION_LABELS\[p\.section\]\} \$\{p\.measured\}\/\$\{p\.of\}`\)/);
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  assert.ok(STRINGS.en['checkpoint.partlyAssessed'] && STRINGS.de['checkpoint.partlyAssessed']);
+  assert.doesNotMatch(STRINGS.de['checkpoint.partlyAssessed'], /\b(du|dich|dir|dein\w*)\b/i);
+});
+
+test('the final test changes section in one write, only when it landed, and never under a stale autosave (Codex rescore, 2026-10-15)', async () => {
+  // Reproduced by Codex: after a section change, the pending 1.5 s autosave fired with the OLD index
+  // and the saved attempt went back a section; with both writes failing, the screen advanced anyway.
+  const { readFileSync } = await import('node:fs');
+  const run = readFileSync(new URL('../src/pages/Modelltest/ModelltestRun.jsx', import.meta.url), 'utf8');
+  const svc = readFileSync(new URL('../src/services/examService.js', import.meta.url), 'utf8');
+  assert.match(svc, /export async function advanceSection\(attemptId, answers, minutes\)[\s\S]{0,400}\.update\(\{ answers, section_deadline: deadline \}\)/, 'index and timer in ONE update');
+  assert.doesNotMatch(svc + run, /advanceSectionDeadline/);
+  const next = run.slice(run.indexOf('const nextSection = useCallback'), run.indexOf('// Time up'));
+  assert.match(next, /cancelPendingSave\(\);[\s\S]*advanceSection\(attempt\.id, nextAnswers/, 'the stale autosave is cancelled first');
+  assert.match(next, /if \(!newDeadline\) \{\s*setSectionError\(/, 'a failed write stays on the section');
+  assert.ok(next.indexOf('setSectionIndex(nextIdx)') > next.indexOf('if (!newDeadline)'), 'and moves on only after it landed');
+  const fin = run.slice(run.indexOf('const finish = useCallback'), run.indexOf('const nextSection = useCallback'));
+  assert.match(fin, /cancelPendingSave\(\);/);
+  // A play counts once the audio started, and lives in the saved answers so a reload cannot reset it.
+  assert.match(run, /const plays = answers\._plays\?\.\[part\.key\] \?\? 0;/);
+  assert.match(run, /await audioRef\.current\.play\(\);\s*\} catch \{\s*setPlayFailed\(true\);\s*return;\s*\}/);
+  assert.ok(run.indexOf("onAnswer('_plays'") > run.indexOf('await audioRef.current.play()'), 'counted after playback started');
 });

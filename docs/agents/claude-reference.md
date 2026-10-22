@@ -381,9 +381,13 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   (`docs/owner-prompts.md`). The course-reminder mailer is **live**: `COURSE_REMINDER_ENABLED=true`
   was set in the Netlify functions scope on 2026-09-12 and `migrations/2026-09-13-course-reminder.sql`
   is applied; it runs daily 18:00 UTC and claims into `lifecycle_emails` (kind `course_reminder_*`).
-- **A1.2 is PAUSED by owner decision (2026-09-13: "only create A1.1").** Its draft (`src/data/curricula/a12.js`,
-  `lessonPools/a12.*`, twelve cards, two reviews under `docs/course-factory/a12-rebuild/`) stays on main as
-  a draft — `DRAFT_CURRICULA`, never `CURRICULA` — and no A1.2 round runs until the owner reopens it.
+- **A1.2 is rebuilt on the A1.1 standard and LIVE (`CURRICULA`) since the owner's ship decision of
+  2026-10-22**, after DaF reviews #1–#16 (the last: 0 BLOCKER, 1 MAJOR). Read
+  `docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md` before any A1.2 work; its "Known issues at ship"
+  lists what was accepted (the Lesen M8 residue as a ratchet, the Hören word-choice coupling, the review
+  minors). Buyers of the old 28-day A1.2 program land on the new 12-Lektion course; old program progress
+  does not carry over. A1.2 audio is the owner's `node scripts/generate-course-audio.mjs a1.2` run; until
+  then every surface says „Computerstimme".
 - **Read `docs/HANDOFF-2026-09-03.md` first** — current state, measured revenue, the monetization
   decision that blocks money-side builds, and the open first-lesson-leak question.
 - `docs/medmeister-parity-roadmap.md` was the plan and has **fully shipped** (Batches A–F: claims

@@ -1504,6 +1504,46 @@ export function determinerRepair(item) {
 }
 
 /**
+ * namedRepairAccepts(item, answer) → false when the German prompt NAMES a determiner as the element
+ * to repair and `answer` repairs something else (DaF review #11, A1.2 BLOCKER B1). Naming the element
+ * was half of the promise: „Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.““ still
+ * accepted „Das sind meine Onkel." — correct German, and the repair of the VERB, which the task did
+ * not ask for. The cue is the repair formula withDeterminerCue writes („Korrigieren Sie den Artikel /
+ * den Possessivartikel / die Endung", or the element in brackets after the sentence) — not any
+ * „Artikel" in a prompt: „Schreiben Sie den Satz ohne Artikel" asks for a deletion.
+ * An answer keeps its place when it holds every word of the quoted sentence but ONE, and that one is
+ * a determiner of the named family replaced by another: two possessives for „den Possessivartikel",
+ * two articles for „den Artikel", one family for „die Endung". The order is free — a middle field the
+ * task allows („Ich brauche im Zentrum einen Markt.") is the same repair. A prompt without the
+ * formula, or without a quoted sentence, decides nothing here (true).
+ */
+const NAMED_REPAIR_RE = /\b(?:korrigieren sie|korrigiere)\s+(?:den|die)\s+(artikel|possessivartikel|possessiv|endung)\b|\((artikel|possessivartikel|endung)\)/i;
+const determinerFamily = (w) => (POSSESSIVE_FORM_RE.test(bare(w)) ? 'possessive' : ARTICLE_FAMILY(w) ? 'article' : null);
+export function namedRepairAccepts(item, answer) {
+  if (String(item?.type) !== 'error_correction') return true;
+  const prompt = String(item.questionDe || '');
+  const cue = NAMED_REPAIR_RE.exec(prompt);
+  const quote = QUOTED_SPAN_RE.exec(prompt);
+  if (!cue || !quote) return true;
+  const src = bare(quote[1]).split(/\s+/).filter(Boolean).map(flat);
+  const left = bare(answer).split(/\s+/).filter(Boolean).map(flat);
+  if (src.length !== left.length) return false;
+  const gone = [];
+  for (const w of src) {
+    const at = left.indexOf(w);
+    if (at >= 0) left.splice(at, 1);
+    else gone.push(w);
+  }
+  if (gone.length !== 1 || left.length !== 1) return false;
+  const families = [gone[0], left[0]].map(determinerFamily);
+  if (families.some((f) => !f)) return false;
+  const named = (cue[1] || cue[2]).toLowerCase();
+  if (named.startsWith('possessiv')) return families.every((f) => f === 'possessive');
+  if (named === 'artikel') return families.every((f) => f === 'article');
+  return families[0] === families[1];
+}
+
+/**
  * missingDeterminerCue(item) → the same object when the German prompt does NOT
  * name the element, else null. This is the rule the pool is measured against —
  * always, not only where a partner noun happens to be findable.
@@ -1686,6 +1726,188 @@ const endsOnPrefix = (q) => {
  */
 const INVERSION_TYPES = new Set(['sentence_building', 'error_correction']);
 
+/**
+ * A1.2's twelve slugs (DaF review #3 for A1.2, MAJOR 4). They lived in
+ * tests/lesson-extra-items-a12.test.mjs while this table answered `true` for every
+ * slug it did not know — so on A1.2 the engine's "four of seven drill the
+ * Lektion's own point" was vacuous, and L4 drew three negation items of seven
+ * without anything noticing. Two were corrected on the way in: an article the
+ * learner writes after a preposition the prompt prints drills that
+ * preposition's case (L10, L11), and a haben-gap in front of a printed Partizip
+ * drills the Perfekt (L12).
+ */
+const A12_DRILLS = (() => {
+  const PRODUCTION_TYPES = INVERSION_TYPES;
+  const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
+  /** Finite verb forms an A1.2 Wegbeschreibung puts on position 2. */
+  const FINITE_V2 = set(
+    'gehe', 'gehst', 'geht', 'gehen', 'komme', 'kommst', 'kommt', 'kommen',
+    'fahre', 'fährst', 'fährt', 'fahren', 'bin', 'bist', 'ist', 'sind', 'habe', 'hast', 'hat', 'haben',
+  );
+  const NUMBER_WORD_RE =
+    /^(null|eins|ein|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|(?:drei|vier|fuenf|sech|sieb|acht|neun)zehn|(?:zwan|drei|vier|fuenf|sech|sieb|acht|neun)zig|dreissig|hundert)/;
+  const COMPOUND_NUMBER_RE = /^[a-z]*(?:und(?:zwanzig|dreissig|vierzig|fuenfzig|sechzig|siebzig|achtzig|neunzig)|hundert[a-z]*)$/;
+  const ORDINAL_WORD_RE =
+    /^(erste|zweite|dritte|vierte|fuenfte|sechste|siebte|achte|neunte|zehnte|elfte|zwoelfte|zwanzigste)[nrms]?$/;
+  const AKKUSATIV = set('den', 'einen', 'keinen', 'meinen', 'deinen', 'ihren', 'seinen');
+  const NEGATION = set('nicht', 'kein', 'keine', 'keinen', 'keinem', 'keiner');
+  const W_WORDS = set('wer', 'was', 'wo', 'wohin', 'woher', 'wann', 'warum', 'wie');
+  const STEM_CHANGED = set(
+    'nimmst', 'nimmt', 'hilfst', 'hilft', 'siehst', 'sieht', 'isst', 'schlaefst', 'schlaeft',
+    'sprichst', 'spricht', 'faehrst', 'faehrt', 'traegst', 'traegt', 'laeufst', 'laeuft', 'liest', 'gibt',
+  );
+  const NOM_DETERMINER = set('der', 'die', 'das', 'ein', 'eine', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre');
+  const SEIN_FINITE = set('ist', 'sind', 'bin', 'bist');
+  const DU_IMPERATIVE_RE =
+    /^(komm|warte|hilf|mach|hol|geh|nimm|sei|gib|kauf|frag|lies|steh|zieh|sieh|iss|bezahl|trag|lauf|flieg|trink|koch|feier)e?$/;
+  const MODALS = set(
+    'kann', 'kannst', 'koennen', 'koennt', 'muss', 'musst', 'muessen', 'muesst',
+    'darf', 'darfst', 'duerfen', 'duerft', 'will', 'willst', 'wollen', 'wollt',
+    'soll', 'sollst', 'sollen', 'sollt', 'moechte', 'moechtest', 'moechten',
+  );
+  const AKK_PREPOSITIONS = set('fuer', 'ohne', 'gegen', 'um', 'durch');
+  const DAT_PREPOSITIONS = set('mit', 'nach', 'bei', 'seit', 'von', 'zu', 'aus');
+  const DAT_ARTICLES = set('dem', 'der', 'den', 'einem', 'einer');
+  const VERSCHMELZUNG = set('im', 'am', 'beim', 'zum', 'zur', 'vom');
+  const PARTICIPLE_RE = /^ge[a-z]+(t|en)$/;
+  /** A gap right after a preposition the prompt prints: „für ___ Oma", „mit ___ Bus". */
+  const AKK_PREP_GAP_RE = /\b(?:für|ohne|gegen|um|durch)\s+___/i;
+  const DAT_PREP_GAP_RE = /\b(?:mit|nach|bei|seit|von|zu|aus)\s+___/i;
+  const DETERMINER_RE = /^(?:d(?:er|ie|as|en|em)|(?:k|m|d|s)?ein(?:e|en|em|er)?|ihr(?:e|en|em|er)?|unser(?:e|en|em|er)?)$/;
+  const isDeterminer = (a) => DETERMINER_RE.test(flat(bare(a)));
+
+  const SUBJECT_PRONOUNS = set('ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'man');
+  const SEPARABLE_PREFIX_RE = /^(?:auf|an|ein|aus|mit|ab|zu|zurueck|los|weg|fern|um)/;
+  const plain = (w) => flat(w).replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u');
+  /** Bricks that end like an infinitive and are not one („[morgen / ich / aufstehen / früh]"). */
+  const NOT_INFINITIVES = new Set(['morgen', 'gestern', 'gern', 'unten', 'oben', 'hinten', 'zusammen', 'selten', 'draussen']);
+  /**
+   * The stems of the verb a brick list gives as an infinitive — „[morgen / ich / aufstehen / früh]"
+   * → aufsteh, steh — so the finite form is found in any verb, not only in FINITE_V2's five
+   * (DaF review #3 MAJOR 4: „Morgen stehe ich früh auf." did not count as word order).
+   */
+  const brickStems = (q) => {
+    const bricks = (String(q).match(/\[([^\]]+)\]/) || [null, ''])[1].split('/').map((x) => plain(x.trim()));
+    const stems = [];
+    for (const brick of bricks) {
+      if (!/^[a-z]+(?:en|ern|eln)$/.test(brick) || NOT_INFINITIVES.has(brick)) continue;
+      const stem = brick.replace(/e?n$/, '');
+      stems.push(stem);
+      const unprefixed = stem.replace(SEPARABLE_PREFIX_RE, '');
+      if (unprefixed !== stem && unprefixed.length > 2) stems.push(unprefixed);
+    }
+    return stems;
+  };
+
+  return {
+    // L1 — the Satzrahmen: the finite verb on position 2 (token 1 after a one-word Angabe, token
+    // 2 after a two-word one). Either the learner writes the whole sentence (the production types;
+    // the verb is a FINITE_V2 form, a changed stem, or a form of the brick's infinitive), or the
+    // gap after a printed Vorfeld takes verb AND subject („Heute ___ müde." → bin ich), which is
+    // the inversion itself. A gap whose subject the frame prints only conjugates.
+    'basic-sentence-structure': ({ q, type, expected }) =>
+      (PRODUCTION_TYPES.has(type) && expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        const stems = brickStems(q);
+        const at = toks.findIndex((t) => FINITE_V2.has(t) || STEM_CHANGED.has(t) || stems.some((st) => plain(t).startsWith(st)));
+        return at === 1 || at === 2;
+      })) ||
+      (/^\s*\S+(?:\s+\S+)?\s+___/.test(q) && expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        return toks.length === 2 && SUBJECT_PRONOUNS.has(toks[1]) && !SUBJECT_PRONOUNS.has(toks[0]);
+      })),
+
+    // L2 — the number word, derived from a digit that stands in the GERMAN prompt (a digit in
+    // the English gloss is not a cue). Ordinals count: the notice teaches -te/-ste on one card.
+    'numbers-counting': ({ q, expected }) =>
+      /\d/.test(q) && expected.some((a) => {
+        const w = flat(bare(a));
+        if (COMPOUND_NUMBER_RE.test(w) || ORDINAL_WORD_RE.test(w) || NUMBER_WORD_RE.test(w)) return true;
+        // A corrected sentence: one of its words is the number („Die Miete ist fünfundsechzig Euro.").
+        return wordsFlat(w).some((t) => !/^ein(?:e|en|em|er|es)?$/.test(t) && !/^\d+$/.test(t)
+          && (isNumberWord(t) || ORDINAL_WORD_RE.test(t)));
+      }),
+
+    // L3 — the Akkusativ is visible only on the masculine: den/einen/keinen, as a bare form, as
+    // an article+noun chunk or inside a whole sentence.
+    'accusative-intro': ({ expected }) =>
+      expected.some((a) => isOneOf(a, AKKUSATIV) || containsOneOf(a, AKKUSATIV)),
+
+    // L4 — the learner produces the negation itself: nicht, or a kein- form.
+    'negation': ({ expected }) =>
+      expected.some((a) => isOneOf(a, NEGATION) || containsOneOf(a, NEGATION)),
+
+    // L5 — the W-word, or the whole question that opens with one.
+    'question-words': ({ expected }) =>
+      expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        return toks.length > 0 && W_WORDS.has(toks[0]);
+      }),
+
+    // L6 — the CHANGED form (nimmt, hilft, sieht …). The Sie-form shows no change, so it does
+    // not count; and the prompt has to name the infinitive, or several verbs fit the gap.
+    'stem-changing-verbs': ({ q, type, expected }) =>
+      (INFINITIVE_CUE_RE.test(q) || PRODUCTION_TYPES.has(type)) &&
+      expected.some((a) => isOneOf(a, STEM_CHANGED) || containsOneOf(a, STEM_CHANGED)),
+
+    // L7 — the question after the subject (wer), a bare nominative article, or the
+    // Gleichsetzung with sein, where the second noun keeps the nominative.
+    'nominative-case': ({ expected }) =>
+      expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        if (!toks.length) return false;
+        if (toks[0] === 'wer') return true;
+        if (isOneOf(a, set('der', 'die', 'das'))) return true;
+        return toks.some((t) => SEIN_FINITE.has(t)) && toks.some((t) => NOM_DETERMINER.has(t));
+      }),
+
+    // L8 — the imperative: the bare du-form, or the Sie-form (verb on -en followed by Sie), at
+    // the start of what the learner writes; or the one-word gap of „___ Sie mir bitte! (helfen)".
+    'imperative': ({ q, expected }) =>
+      expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        if (!toks.length) return false;
+        if (DU_IMPERATIVE_RE.test(toks[0])) return true;
+        if (/en$/.test(toks[0]) && toks[1] === 'sie') return true;
+        return toks.length === 1 && /en$/.test(toks[0]) && /___\s+Sie\b/.test(q);
+      }),
+
+    // L9 — the Satzklammer: a finite modal, alone in a gap, or on position 2 of a sentence whose
+    // last word is the infinitive.
+    'modal-verbs-intro': ({ expected }) =>
+      expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        if (!toks.length) return false;
+        if (toks.length === 1) return MODALS.has(toks[0]);
+        return toks.some((t) => MODALS.has(t)) && /en$/.test(toks[toks.length - 1]);
+      }),
+
+    // L10 — the preposition itself, a sentence carrying one, or the article the learner writes
+    // after one the prompt prints („für ___ Oma" → meine): that article IS the Akkusativ.
+    'prepositions-accusative': ({ q, expected }) =>
+      expected.some((a) => isOneOf(a, AKK_PREPOSITIONS) || containsOneOf(a, AKK_PREPOSITIONS)) ||
+      (AKK_PREP_GAP_RE.test(q) && expected.some(isDeterminer)),
+
+    // L11 — the Dativ chunk the notice teaches: a verschmolzene form (im, am, zum, zur, vom,
+    // beim), preposition + Dativ article, or the article after a printed preposition („mit ___
+    // Bus" → dem).
+    'dative-prepositions-intro': ({ q, expected }) =>
+      expected.some((a) => {
+        const toks = wordsFlat(bare(a));
+        if (toks.some((t) => VERSCHMELZUNG.has(t))) return true;
+        return toks.some((t, i) => DAT_PREPOSITIONS.has(t) && toks[i + 1] && DAT_ARTICLES.has(toks[i + 1]));
+      }) ||
+      (DAT_PREP_GAP_RE.test(q) && expected.some(isDeterminer)),
+
+    // L12 — the Partizip II, alone or at the end of the sentence; or the haben-form in front of
+    // a Partizip the prompt prints („Ich ___ Kuchen gegessen." → habe): the Perfekt is the pair.
+    'perfekt-intro': ({ q, expected }) =>
+      expected.some((a) => wordsFlat(bare(a)).some((t) => PARTICIPLE_RE.test(t))) ||
+      (/___/.test(q) && expected.some((a) => isOneOf(a, HABEN)) &&
+        wordsFlat(q.replace(/\([^)]*\)/g, ' ')).some((t) => PARTICIPLE_RE.test(t))),
+  };
+})();
+
 /** Predicate per slug. Each one reads what the learner produces, not the label. */
 const DRILLS = {
   // REVIEW #4 MAJOR: only what SHOWS the gender — a bare nominative article the
@@ -1798,6 +2020,8 @@ const DRILLS = {
   // The predicate reads what the learner PRODUCES, like every other one here:
   // the expected answer is a number word.
   numbers: ({ expected }) => expected.some(isNumberWord),
+
+  ...A12_DRILLS,
 };
 
 /**

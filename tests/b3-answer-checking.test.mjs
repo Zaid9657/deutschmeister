@@ -38,12 +38,14 @@ test('selectable answers require an accepted option and never receive typo credi
   assert.equal(grade(spelling, 'Danke'), RESULT.CORRECT);
   const options = ['Danke', 'Dane', 'danke'];
   for (const shape of [
-    { type: 'multiple_choice' }, { type: 'fill_blank', options },
-    { type: 'listen_select', options }, { kind: 'choice', mode: 'options', options },
+    { type: 'fill_blank', options }, { type: 'listen_select', options }, { kind: 'choice', mode: 'options', options },
   ]) {
     const item = { ...shape, answer: 'Danke', accepted: ['Danke'] };
     assert.equal(grade(item, 'Dane'), RESULT.WRONG);
-    assert.equal(grade(item, 'danke'), RESULT.WRONG, 'case-only distractors are also wrong');
+    // Case follows the item (isCaseTask), as in check.js's choice branch: printed „danke" is the
+    // same pick unless capitalisation is the task.
+    assert.equal(grade(item, 'danke'), RESULT.CORRECT);
+    assert.equal(grade({ ...item, caseSensitive: true }, 'danke'), RESULT.WRONG, 'case tasks keep case');
     assert.equal(isItemCorrect(item, 'Dane'), false, 'checkpoint uses the same rule');
   }
   assert.equal(grade({ type: 'fill_blank', answer: 'Danke' }, 'Dane'), RESULT.TYPO, 'typed spelling still gets its allowance');

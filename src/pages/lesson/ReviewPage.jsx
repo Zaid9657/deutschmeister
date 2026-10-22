@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { fetchDueCards, gradeCard, fetchNextDueAt, fetchReviewCounts, buildCardIndex, parseCardKey } from '../../services/reviewService.js';
 import { fetchWordsByIds } from '../../services/lessonService.js';
-import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
+import { audioFor, playChecked, playRecordingChecked, speakGermanChecked } from '../../lib/lesson/speech.js';
 import { LADDER_DAYS } from '../../lib/review/ladder.js';
 import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
 import Button from '../../components/ui/Button.jsx';
@@ -95,12 +95,14 @@ export default function ReviewPage() {
 
   const play = useCallback((row, face) => {
     const text = (face && (face.speak || face.front)) || '';
-    if (!row) return speakGerman(text);
+    // Checked playback: each path resolves to { ok, reason } once sound has started (or why not).
+    if (!row) return speakGermanChecked(text);
     const recorded = recordedKeyFor(row.card_key);
-    if (recorded) return playLine(recorded.lektionId, recorded.key, text);
+    if (recorded) return playChecked(recorded.lektionId, recorded.key, text);
     const parsed = parseCardKey(row.card_key);
-    if (parsed && parsed.kind === 'word') return playWord(wordAudio.get(parsed.ref) || '', text);
-    return speakGerman(text);
+    const wordUrl = parsed && parsed.kind === 'word' ? wordAudio.get(parsed.ref) : '';
+    if (wordUrl) return playRecordingChecked(wordUrl, text);
+    return speakGermanChecked(text);
   }, [wordAudio]);
 
   const hasRecording = (() => {

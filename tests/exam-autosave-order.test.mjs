@@ -14,7 +14,7 @@ function controlledService() {
   const source = read('src/services/examService.js')
     .replace(/^import .*;\n/m, '')
     .replaceAll('export async function ', 'async function ');
-  const service = new Function('supabase', `${source}\nreturn { saveAnswers, advanceSectionDeadline, completeAttempt };`)(supabase);
+  const service = new Function('supabase', `${source}\nreturn { saveAnswers, advanceSection, completeAttempt };`)(supabase);
   return { service, requests };
 }
 
@@ -38,10 +38,10 @@ test('exam transitions, completion and unmount cancel a pending autosave', () =>
   assert.match(run, /return \(\) => autosave\.cancel\(\);/);
   const finish = run.slice(run.indexOf('  const finish ='), run.indexOf('  const nextSection ='));
   const transition = run.slice(run.indexOf('  const nextSection ='), run.indexOf('  // Time up'));
-  assert.match(finish, /autosaveRef\.current\.cancel\(\);/);
-  assert.match(transition, /autosaveRef\.current\.cancel\(\);/);
-  assert.ok(finish.indexOf('autosaveRef.current.cancel();') < finish.indexOf('await loadMissingListeningKeys('));
-  assert.ok(transition.indexOf('autosaveRef.current.cancel();') < transition.indexOf('await advanceSectionDeadline('));
+  assert.match(finish, /cancelPendingSave\(\);/);
+  assert.match(transition, /cancelPendingSave\(\);/);
+  assert.ok(finish.indexOf('cancelPendingSave();') < finish.indexOf('await loadMissingListeningKeys('));
+  assert.ok(transition.indexOf('cancelPendingSave();') < transition.indexOf('await advanceSection('));
 });
 
 test('an already-running exam autosave finishes before a newer section or completion write', async () => {
@@ -50,7 +50,7 @@ test('an already-running exam autosave finishes before a newer section or comple
   await settle();
   assert.equal(requests.length, 1);
   writes.push(service.saveAnswers('attempt', { _meta: { sectionIndex: 1 }, next: 'answer' }));
-  writes.push(service.advanceSectionDeadline('attempt', 15));
+  writes.push(service.advanceSection('attempt', { _meta: { sectionIndex: 1 } }, 15));
   writes.push(service.completeAttempt('attempt', { answers: { _meta: { sectionIndex: 2 }, final: 'answer' }, score: 4, maxScore: 5, sectionScores: {} }));
   await settle();
   assert.equal(requests.length, 1, 'newer writes wait for the old in-flight request');
@@ -88,7 +88,7 @@ test('exam write serialization is per attempt and continues after a rejected req
 test('an exam section transition saves its answers marker and deadline in one ordered update', async () => {
   const { service, requests } = controlledService();
   const answers = { answer: 'a', _meta: { sectionIndex: 1 } };
-  const transition = service.advanceSectionDeadline('attempt', 15, answers);
+  const transition = service.advanceSection('attempt', answers, 15);
   await settle();
   assert.equal(requests.length, 1);
   assert.deepEqual(requests[0].values.answers, answers);
@@ -98,7 +98,7 @@ test('an exam section transition saves its answers marker and deadline in one or
 
   const run = read('src/pages/Modelltest/ModelltestRun.jsx');
   const next = run.slice(run.indexOf('  const nextSection ='), run.indexOf('  // Time up'));
-  assert.match(next, /advanceSectionDeadline\(attempt\.id, mock\.sections\[nextIdx\]\.minutes, nextAnswers\)/);
+  assert.match(next, /advanceSection\(attempt\.id, nextAnswers, mock\.sections\[nextIdx\]\.minutes\)/);
   assert.ok(next.indexOf('if (!newDeadline)') < next.indexOf('setSectionIndex(nextIdx)'));
   assert.doesNotMatch(next, /await saveAnswers\(/);
 });

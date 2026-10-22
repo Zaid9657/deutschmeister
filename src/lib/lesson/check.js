@@ -24,6 +24,8 @@ import { normalizeAnswer } from '../../utils/answerMatch.js';
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
 // not a typo — a wrong pair is a vocabulary miss — and not a first-try success.
 export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong', CORRECTED: 'corrected' };
+/** Whole answers that mean the same — a question word for a reason (see checkAnswer). */
+const SAME_ANSWER = [['warum', 'wieso', 'weshalb', 'weswegen', 'aus welchem grund']];
 
 /**
  * The ONE result a matching exercise records, whatever number of taps it took.
@@ -149,22 +151,21 @@ const oneKeyAdded = (given, expected) =>
   given.length === expected.length + 1
   && [...given].some((_, i) => given.slice(0, i) + given.slice(i + 1) === expected);
 
-// Try every suffix: „kostet" can end in -t or -et, and „kostest" in -st or -est.
-// Both have the stem „kost"; comparing just their final t used to forgive them.
-const INFLECTION_ENDINGS = ['e', 'st', 't', 'en', 'et', 'est', 'te', 'ten', 'tet', 'test', 'em', 'er', 'es', 'n', 's'];
+/**
+ * Inflectional endings, longest first. Standard §3: an ending is never a typo. The last-letter test
+ * below let through every ending change that keeps the final letter — „lernt" for „lernst",
+ * „arbeitst" for „arbeitest", „heißst" for „heißt" (DaF review #5, A1.2 MAJOR 9, measured on both
+ * pools). Two words are another ending of the same stem when both split into that stem plus two
+ * different non-empty endings; a noun that merely ends like one („Kaffe" for „Kaffee") does not.
+ */
+const ENDINGS = ['test', 'ten', 'tet', 'est', 'te', 'st', 'et', 'en', 'em', 'er', 'es', 'e', 't', 'n', 's'];
+const stemSplits = (w) => ENDINGS.filter((x) => w.length >= x.length + 3 && w.endsWith(x)).map((x) => [w.slice(0, -x.length), x]);
+const otherEnding = (a, b) => stemSplits(a).some(([s, x]) => stemSplits(b).some(([t, y]) => s === t && x !== y));
 
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
   if (u.length !== e.length) return true;
-  return u.some((w, i) => {
-    if (w === e[i]) return false;
-    if (w.slice(-1) !== e[i].slice(-1)) return true;
-    return INFLECTION_ENDINGS.some((ending) => {
-      if (!e[i].endsWith(ending)) return false;
-      const stem = e[i].slice(0, -ending.length);
-      return stem.length >= 2 && INFLECTION_ENDINGS.some((other) => other !== ending && w === stem + other);
-    });
-  });
+  return u.some((w, i) => w !== e[i] && (w.slice(-1) !== e[i].slice(-1) || otherEnding(w, e[i])));
 }
 
 /**
@@ -204,7 +205,7 @@ function caseOnlyDiff(rawUser, rawAccepted) {
 
 /**
  * checkAnswer(userInput, expected: string | string[],
- *   { strict, dictation, caseSensitive, spelling, allowTypo }) → { result, expected, reason? }.
+ *   { strict, dictation, caseSensitive, spelling, choice }) → { result, expected, reason? }.
  *
  * result ∈ RESULT, `expected` echoes the best matching accepted answer, and
  * `reason: 'case'` marks a miss that is nothing but Groß-/Kleinschreibung so the
@@ -216,17 +217,19 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * of a spelled-out word (see normalizeSpelling) and is turned on automatically
  * when an accepted answer looks like one (REVIEW #4 BLOCKER 1).
  *
+ * choice = true says the answer was PICKED from printed options (isChoiceItem): it is right or wrong
+ * as printed — no typo allowance and no spelling fold, because picking a printed „sechszehn" or
+ * „dreisig" is a choice, not a slip of the keyboard (DaF review #5, A1.2 MAJOR 9).
+ *
  * caseSensitive = true makes capitalisation part of the answer (REVIEW #4
  * BLOCKER 3: the polite `Ihr`, whose whole point is the capital I) — a case-only
  * miss is then RESULT.WRONG and tagError calls it 'Rechtschreibung'. With
  * caseSensitive off a case-only miss is RESULT.TYPO, i.e. one retry, which is
  * what the standard §3 says capitalisation is worth; it is NOT silently correct
  * any more. Spelled-out words have no meaningful case and are exempt.
- * allowTypo = false disables both spelling and case-only typo credit for
- * selectable answers, where every distractor was supplied by the exercise.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false, allowTypo = true,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -244,18 +247,34 @@ export function checkAnswer(userInput, expected, {
   const rawUser = raw(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
 
+  if (choice) {
+    for (const a of accepted) {
+      if (raw(a) === rawUser) return { result: RESULT.CORRECT, expected: a };
+      if (raw(a).toLowerCase() === rawUser.toLowerCase()) {
+        return caseSensitive ? { result: RESULT.WRONG, expected: a, reason: 'case' } : { result: RESULT.CORRECT, expected: a };
+      }
+    }
+    return { result: RESULT.WRONG, expected: accepted[0] || '' };
+  }
+
   for (const a of accepted) {
     if (raw(a) === rawUser) return { result: RESULT.CORRECT, expected: a };
   }
   for (const a of accepted) {
     if (prepare(a) !== user) continue;
     if (spellingMode || !caseOnlyDiff(rawUser, raw(a))) return { result: RESULT.CORRECT, expected: a };
-    return caseSensitive || !allowTypo
+    return caseSensitive
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
   }
+  // Words that ask the same are the same answer, taught or not: a learner who writes „Wieso" where
+  // the course taught „Warum" has made no mistake (DaF review #10, A1.2 B1). Here, not in `accepted`,
+  // because an accepted form counts as item lexis and would stamp the item unservable.
   for (const a of accepted) {
-    if (!allowTypo) continue;
+    const group = SAME_ANSWER.find((g) => g.includes(prepare(a).toLowerCase()));
+    if (group && group.includes(user.toLowerCase())) return { result: RESULT.CORRECT, expected: a };
+  }
+  for (const a of accepted) {
     if (strict && strictApplies(a)) continue;
     const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
@@ -324,15 +343,24 @@ export const isDictationTask = (item) =>
  */
 export function checkOptionsFor(item) {
   const accepted = item?.accepted && item.accepted.length ? item.accepted : [item?.answer];
-  const selectable = item?.options?.length || item?.type === 'multiple_choice' || item?.type === 'listen_select'
-    || item?.kind === 'choice' || item?.mode === 'options';
   return {
     strict: STRICT_TOPIC.test(item?.topic || ''),
     caseSensitive: isCaseTask(item),
     dictation: isDictationTask(item),
     spelling: spellingApplies(accepted),
-    ...(selectable ? { allowTypo: false } : {}),
+    choice: isChoiceItem(item),
   };
+}
+
+/**
+ * True when the learner PICKS one of the item's printed options instead of typing: the checkpoint's
+ * `mode: 'options'`, or a pool item with options that is not typed production (the rule of
+ * buildLesson's isTypedItem, restated because this module imports nothing from the engine). A
+ * review card is built without options, so it stays typed.
+ */
+export function isChoiceItem(item) {
+  if (item?.mode) return item.mode === 'options';
+  return Boolean(item?.options?.length) && item?.type !== 'sentence_building' && item?.type !== 'error_correction';
 }
 
 // Error tags (standard §3): what a miss is about, for remediation and review.

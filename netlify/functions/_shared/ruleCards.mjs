@@ -9,7 +9,7 @@
 export const RULE_CARDS = {
   "accusative-intro": {
     "titleDe": "Der Akkusativ: den und einen",
-    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur der Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
+    "content": "Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen.\nNur das Maskulinum ändert die Form:\nder Kuchen → den Kuchen, ein Supermarkt → einen Supermarkt.\nFeminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum.\nBeispiele: Ich brauche einen Supermarkt und einen Markt.\nIch bezahle zwölf Euro für das Brot und den Kuchen. Der Markt am Park hat auch Brot.\nDie Form keinen kommt in Lektion 4.\nVorlieben: gern → lieber, gut → besser. Das Restaurant ist am Abend besser.\nEnglish: only masculine words change in the accusative — der becomes den, ein becomes einen.",
     "commonMistakes": [
       {
         "wrong": "Ich brauche ein Supermarkt.",
@@ -72,7 +72,7 @@ export const RULE_CARDS = {
   },
   "dative-prepositions-intro": {
     "titleDe": "Präpositionen mit Dativ",
-    "content": "Nach mit, nach, bei, seit, von, zu und aus steht der Dativ:\nnach dem Regen, bei zehn Grad, seit einer Woche.\nOft verschmelzen Präposition und Artikel:\nin dem wird im Sommer, an dem wird am Abend,\nzu der wird zur Brücke, zu dem wird zum Bahnhof.\nDie drei Wendungen aus Lektion 1 bekommen hier ihre Regel.\nBeim Wetter: Seit einer Woche regnet es. Es ist wolkig.\nIm Sommer ist es sonnig, bei dreißig Grad.\nNach dem Regen gehe ich zur Brücke. Zum Bahnhof gehe ich nicht.\nEnglish: these seven prepositions always take the dative, and several of them merge with the article.",
+    "content": "Nach mit, nach, bei, seit, von, zu und aus steht der Dativ:\nnach dem Regen, bei zehn Grad, seit einer Woche.\nOft verschmelzen Präposition und Artikel:\nin dem wird im Sommer, an dem wird am Abend,\nzu der wird zur Brücke, zu dem wird zum Bahnhof.\nDie drei Wendungen aus Lektion 1 bekommen hier ihre Regel.\nAuch vor + Zeit: vor einer Woche. Vor einer Woche war es warm.\nBeim Wetter: Seit einer Woche regnet es. Es ist wolkig.\nIm Sommer ist es sonnig, bei dreißig Grad.\nNach dem Regen gehe ich zur Brücke. Zum Bahnhof gehe ich nicht.\nEnglish: these seven prepositions always take the dative, and several of them merge with the article.",
     "commonMistakes": [
       {
         "wrong": "Nach der Regen gehe ich zur Brücke.",
@@ -85,9 +85,9 @@ export const RULE_CARDS = {
         "explanationDe": "seit verlangt den Dativ: seit einer Woche."
       },
       {
-        "wrong": "Zu dem Bahnhof gehe ich nicht.",
-        "correct": "Zum Bahnhof gehe ich nicht.",
-        "explanationDe": "zu dem wird zum, zu der wird zur: zum Bahnhof, zur Brücke."
+        "wrong": "Ich gehe zu der Bahnhof.",
+        "correct": "Ich gehe zum Bahnhof.",
+        "explanationDe": "Bahnhof ist maskulin: zu dem Bahnhof, kurz zum Bahnhof."
       }
     ]
   },
@@ -114,7 +114,7 @@ export const RULE_CARDS = {
   },
   "imperative": {
     "titleDe": "Der Imperativ: bitten und auffordern",
-    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich warte, du wartest → Warte!\nich helfe, du hilfst → Hilf! Das Pronomen fällt weg, die Endung -st fällt mit.\nTrennbare Verben schicken die Vorsilbe ans Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte, ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
+    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nBei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
     "commonMistakes": [
       {
         "wrong": "Sie helfen bitte!",
@@ -151,7 +151,7 @@ export const RULE_CARDS = {
   },
   "modal-verbs-intro": {
     "titleDe": "Modalverben: können, müssen, dürfen, wollen, sollen",
-    "content": "Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende:\nHier dürfen Sie nicht fahren.\ndürfen heißt Erlaubnis, müssen Notwendigkeit, wollen Absicht,\nsollen Auftrag, können Fähigkeit.\nIn der ich-Form und in der er-Form fehlt die Endung: ich will, ich muss, sie darf.\nUnterwegs: Hier dürfen Sie nicht mit dem Fahrrad fahren.\nDen Müll müssen Sie nach Hause nehmen. Wo soll ich einsteigen?\nWo darf ich langsam fahren? Und wo muss ich aussteigen?\nEnglish: the modal verb is second and the plain infinitive goes to the very end.",
+    "content": "Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende:\nHier dürfen Sie nicht fahren.\ndürfen heißt Erlaubnis, müssen Notwendigkeit, wollen Absicht,\nsollen Auftrag, können Fähigkeit.\nIn der ich-Form und in der er-Form fehlt die Endung: ich will, ich muss, sie darf.\nZeiten: von sieben bis zehn Uhr, ab acht Uhr. Der Bus fährt von sieben bis zehn Uhr.\nUnterwegs: Hier dürfen Sie nicht mit dem Fahrrad fahren.\nDen Müll müssen Sie nach Hause nehmen. Wo soll ich einsteigen?\nWo darf ich langsam fahren? Und wo muss ich aussteigen?\nEnglish: the modal verb is second and the plain infinitive goes to the very end.",
     "commonMistakes": [
       {
         "wrong": "Sie müssen nehmen den Müll nach Hause.",
@@ -172,12 +172,12 @@ export const RULE_CARDS = {
   },
   "negation": {
     "titleDe": "nicht oder kein?",
-    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nDas Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
+    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nJa, das Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
     "commonMistakes": [
       {
-        "wrong": "Im Flur ist nicht eine Lampe.",
+        "wrong": "Im Flur ist nicht Lampe.",
         "correct": "Im Flur ist keine Lampe.",
-        "explanationDe": "Ein Nomen mit unbestimmtem Artikel verneint man mit kein: keine Lampe."
+        "explanationDe": "Ein Nomen ohne bestimmten Artikel verneint man mit kein: keine Lampe."
       },
       {
         "wrong": "Die Steckdose funktioniert kein.",
@@ -185,15 +185,15 @@ export const RULE_CARDS = {
         "explanationDe": "Ein Verb verneint man immer mit nicht."
       },
       {
-        "wrong": "Haben Sie nicht einen Rabatt?",
+        "wrong": "Haben Sie kein Rabatt?",
         "correct": "Haben Sie keinen Rabatt?",
-        "explanationDe": "Im Akkusativ heißt es keinen Rabatt: maskulin bekommt die Endung -en."
+        "explanationDe": "Rabatt ist maskulin: Im Akkusativ heißt es keinen Rabatt."
       }
     ]
   },
   "nominative-case": {
     "titleDe": "Der Nominativ: wer oder was?",
-    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nBeispiele: Wer ist die Frau da? Sie hat lange Haare.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
+    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nFrüher: ich/sie war, ich/sie hatte. Nein, sie war nur müde. Sie hatte keine Zeit.\nBeispiele: Wer ist die Frau da? Ihr Haar ist lang.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
     "commonMistakes": [
       {
         "wrong": "Das ist meinen Bruder.",
@@ -201,9 +201,9 @@ export const RULE_CARDS = {
         "explanationDe": "Nach sein steht der Nominativ: Das ist mein Bruder."
       },
       {
-        "wrong": "Was ist die Frau da?",
-        "correct": "Wer ist die Frau da?",
-        "explanationDe": "wer fragt nach einer Person, was nach einer Sache."
+        "wrong": "Den Onkel ist groß.",
+        "correct": "Der Onkel ist groß.",
+        "explanationDe": "Das Subjekt steht im Nominativ: der Onkel."
       },
       {
         "wrong": "Mein Oma ist alt.",
@@ -235,7 +235,7 @@ export const RULE_CARDS = {
   },
   "numbers-counting": {
     "titleDe": "Zahlen ab 20 und die Ordnungszahlen",
-    "content": "Zahlen über 20 liest man von hinten nach vorn:\n21 ist einundzwanzig, 48 ist achtundvierzig.\nDie zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.\nDer Hunderter steht vorn: 480 ist vierhundertachtzig.\nDie Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.\nAb 20 heißt die Endung -ste: der zwanzigste Mai.\nIn der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.\nDas dritte Stockwerk ist frei. Die erste Wohnung ist frei.\nEnglish: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.",
+    "content": "Zahlen über 20 liest man von hinten nach vorn:\n21 ist einundzwanzig, 48 ist achtundvierzig.\nDie zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.\nDer Hunderter steht vorn: 480 ist vierhundertachtzig.\nDie Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.\nAb 20 heißt die Endung -ste: der zwanzigste Mai.\nIn der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.\nDas dritte Stockwerk ist frei. Die Nachbarin hat die erste Wohnung.\nEnglish: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.",
     "commonMistakes": [
       {
         "wrong": "Die Miete ist achtvierzig Euro.",
@@ -255,8 +255,8 @@ export const RULE_CARDS = {
     ]
   },
   "perfekt-intro": {
-    "titleDe": "Das Perfekt: haben und Partizip II",
-    "content": "Über Vergangenes spricht man im Perfekt:\nhaben steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nUnregelmäßig endet es auf -en: essen → gegessen, trinken → getrunken.\nDiese Formen lernt man Wort für Wort.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nNein, ich habe Milch getrunken. Der Käse war lecker.\nDie Wurst und das Fleisch haben wir gekauft. Tim hat ihn gekocht.\nwar ist die einzige einfache Vergangenheitsform in diesem Kurs.\nEnglish: haben in second position, and the participle at the very end of the sentence.",
+    "titleDe": "Das Perfekt: haben oder sein und Partizip II",
+    "content": "Über Vergangenes spricht man im Perfekt:\nhaben oder sein steht auf Position 2, das Partizip II ganz am Ende.\nRegelmäßig entsteht es mit ge- …-t: feiern → gefeiert, kaufen → gekauft, kochen → gekocht.\nViele unregelmäßige Verben enden auf -en: essen → gegessen, trinken → getrunken.\nOhne ge- bei be-, ver- und -ieren: bezahlen → bezahlt, verstehen → verstanden, telefonieren → telefoniert.\nsein steht bei gehen, fahren, kommen, bleiben und passieren.\nBeim Fest: Ana, wir haben gestern schön gefeiert!\nTim hat ihn gekocht. Ich habe die Getränke bezahlt.\nIm Kuchen war zu viel Zucker. Tim ist früh gegangen.\nEnglish: haben or sein in second position, and the participle at the very end of the sentence.",
     "commonMistakes": [
       {
         "wrong": "Ich habe gegessen Kuchen.",
@@ -271,7 +271,17 @@ export const RULE_CARDS = {
       {
         "wrong": "Ich bin Kuchen gegessen.",
         "correct": "Ich habe Kuchen gegessen.",
-        "explanationDe": "Das Perfekt steht in diesem Kurs immer mit haben."
+        "explanationDe": "Mit essen steht haben: Ich habe Kuchen gegessen. Bei gehen und fahren steht sein, nicht haben."
+      },
+      {
+        "wrong": "Tim hat früh gegangen.",
+        "correct": "Tim ist früh gegangen.",
+        "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen."
+      },
+      {
+        "wrong": "Ich habe die Getränke gebezahlt.",
+        "correct": "Ich habe die Getränke bezahlt.",
+        "explanationDe": "Verben mit be- haben im Partizip kein ge-: bezahlt."
       }
     ]
   },
@@ -319,7 +329,7 @@ export const RULE_CARDS = {
   },
   "prepositions-accusative": {
     "titleDe": "Präpositionen mit Akkusativ",
-    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur der Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
+    "content": "Nach für, ohne und durch steht immer der Akkusativ:\nfür den Bruder, ohne den Schal, durch das Kaufhaus.\nNur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich:\nfür die Oma, für das Kind.\nBeim Vergleich hilft als: Die Mütze ist billiger als der Schal.\nDativ bei gefallen, passen, gehören:\nich → mir, du → dir: Der Pullover passt dir gut. Er gefällt mir. Die Jacke gehört dir.\nIm Kaufhaus: Welche Größe hat der Mantel für meinen Bruder?\nOhne den Schal ist er billig. Ich kaufe die Mütze für meine Oma.\nIch gehe durch das Kaufhaus und bezahle.\nEnglish: für, ohne and durch always take the accusative.",
     "commonMistakes": [
       {
         "wrong": "Der Mantel ist für mein Bruder.",
@@ -361,7 +371,7 @@ export const RULE_CARDS = {
   },
   "question-words": {
     "titleDe": "W-Fragen: das Fragewort steht vorn",
-    "content": "In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter:\nWann fährt der Zug? Wohin fahren wir? Wie oft kommt der Bus?\nWer fragt nach der Person, was nach der Sache, wo nach dem Ort,\nwohin nach der Richtung, warum nach dem Grund, wie viel nach der Menge\nund wie lange nach der Dauer.\nAus dem Dialog: Wann fährt der Zug? Um wie viel Uhr?\nWarum so früh? Wer kommt mit? Wohin fahren wir im Urlaub?\nEnglish: the question word comes first and the verb second — Wann fährt der Zug?",
+    "content": "In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter:\nWann fährt der Zug? Wie oft kommt der Bus?\nWer fragt nach der Person, was nach der Sache, wo nach dem Ort,\nwohin nach der Richtung, warum nach dem Grund, wie viel nach der Menge\nund wie lange nach der Dauer.\nHöflich: Ich würde gern mitkommen.\nAus dem Dialog: Wann fährt der Zug? Um wie viel Uhr?\nWarum so früh? Wer kommt mit? Wohin fahren wir im Urlaub?\nEnglish: the question word comes first and the verb second — Wann fährt der Zug?",
     "commonMistakes": [
       {
         "wrong": "Wann der Zug fährt?",
@@ -369,9 +379,9 @@ export const RULE_CARDS = {
         "explanationDe": "Nach dem Fragewort steht sofort das Verb, danach das Subjekt."
       },
       {
-        "wrong": "Wo fahren wir im Urlaub?",
-        "correct": "Wohin fahren wir im Urlaub?",
-        "explanationDe": "wo fragt nach dem Ort, wohin nach der Richtung."
+        "wrong": "Wo fahren wir im Urlaub? – Nach Köln.",
+        "correct": "Wohin fahren wir im Urlaub? – Nach Köln.",
+        "explanationDe": "Nach Köln ist eine Richtung: Dann fragt man mit wohin. wo fragt nach dem Ort."
       },
       {
         "wrong": "Was fährt der Bus?",
@@ -403,7 +413,7 @@ export const RULE_CARDS = {
   },
   "stem-changing-verbs": {
     "titleDe": "Verben mit Vokalwechsel",
-    "content": "Einige Verben ändern im Präsens den Stammvokal,\naber nur in den Formen mit -st und -t:\nnehmen → man nimmt, helfen → sie hilft, essen → man isst, schlafen → wer schläft.\nBei ich, wir, ihr und Sie bleibt der Vokal: ich schlafe, Sie nehmen.\nIn der Praxis: Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.\nWie oft nimmt man die Tablette? Und wann isst man?\nIhr Auge ist gesund. Die Hand und der Fuß sehen gut aus.\nEnglish: the vowel changes in exactly two forms of the present tense, nowhere else.",
+    "content": "Einige Verben ändern im Präsens den Stammvokal,\naber nur in den Formen mit -st und -t:\nnehmen → man nimmt, helfen → sie hilft, essen → man isst, schlafen → wer schläft.\nBei ich, wir, ihr und Sie bleibt der Vokal: ich schlafe, Sie nehmen.\nDen Grund nennt denn, das Verb bleibt auf Position 2: Ich schlafe nicht gut, denn mein Hals tut weh.\nIn der Praxis: Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.\nIsst man zuerst? Und wie oft nimmt man die Tablette?\nIhr Auge ist gesund. Die Hand und der Fuß sehen gut aus.\nEnglish: the vowel changes in exactly two forms of the present tense, nowhere else.",
     "commonMistakes": [
       {
         "wrong": "Er nehmt eine Tablette.",

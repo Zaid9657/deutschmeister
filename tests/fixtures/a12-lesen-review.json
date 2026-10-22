@@ -1,0 +1,586 @@
+{
+ "reviewedOn": "2026-10-19",
+ "method": "Independent semantic review (design verdict 2): Codex as DaF examiner solved every unit from a blind copy (text, question, the two options in alphabetical order; no key, no evidence, no rival), then judged one supported answer, natural German, taught meanings and a plausible competitor. `solved` and `evidence` are its answer and span; the test compares `solved` with the key.",
+ "textTypeNotes": [
+  "a12-cp1-p1-u2: a housing ad — L2 talks about an ad but shows none.",
+  "a12-cp3-p1-u4, a12-cp3-p4-u2: public transport notices — prior exposure to the genre not established."
+ ],
+ "units": [
+  {
+   "id": "a12-cp1-p1-u1",
+   "solved": "Ana",
+   "evidence": "Ana: Ich kaufe heute das Brot.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Ich kaufe heute das Brot. Kaufst du den Kuchen?\nTim: Ja, den Kuchen kaufe ich.",
+   "question": "Wer kauft heute das Brot?"
+  },
+  {
+   "id": "a12-cp1-p1-u2",
+   "solved": "20 Euro",
+   "evidence": "Keller: 20 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Wohnung in Köln frei! Drei Zimmer, Küche, Badezimmer und Balkon. Miete: 520 Euro. Keller: 20 Euro.",
+   "question": "Was kostet der Keller?"
+  },
+  {
+   "id": "a12-cp1-p1-u3",
+   "solved": "Tim",
+   "evidence": "Tim: Ja, das mache ich.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Gehst du heute in die Apotheke? Ich arbeite heute im Büro.\nTim: Ja, das mache ich.",
+   "question": "Wer geht heute in die Apotheke?"
+  },
+  {
+   "id": "a12-cp1-p1-u4",
+   "solved": "450 Euro",
+   "evidence": "Die Miete ist 450 Euro.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Tim,\nich habe eine Wohnung in Bremen! Die Miete ist 450 Euro. Die Wohnung hat auch einen Keller, er kostet 30 Euro.\nAna",
+   "question": "Was kostet die Wohnung?"
+  },
+  {
+   "id": "a12-cp1-p2-u1",
+   "solved": "Lena",
+   "evidence": "ich gehe heute in die Bibliothek.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Paul,\nich gehe heute in die Bibliothek. Bezahlst du bitte heute die Miete?\nLena",
+   "question": "Wer geht heute in die Bibliothek?"
+  },
+  {
+   "id": "a12-cp1-p2-u2",
+   "solved": "drei Euro",
+   "evidence": "Nein, es kostet drei Euro.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Ist das Brot teuer?\nFrau Weber: Nein, es kostet drei Euro. Der Kuchen: vier Euro.",
+   "question": "Was kostet das Brot?"
+  },
+  {
+   "id": "a12-cp1-p2-u3",
+   "solved": "Paul",
+   "evidence": "du hast heute Zeit.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Paul,\ndu hast heute Zeit. Kochst du am Abend? Ich bin im Büro.\nLena",
+   "question": "Wer hat heute Zeit?"
+  },
+  {
+   "id": "a12-cp1-p2-u4",
+   "solved": "zehn Euro",
+   "evidence": "Frau Wolf: Nein, zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Tim: Kostet die Lampe vier Euro?\nFrau Wolf: Nein, zehn Euro. Das Buch kostet vier.",
+   "question": "Was kostet die Lampe?"
+  },
+  {
+   "id": "a12-cp1-p3-u1",
+   "solved": "Frau Kaya",
+   "evidence": "Frau Kaya: Ich habe einen Garten.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Frau Kaya: Ich habe einen Garten. Haben Sie einen Balkon?\nHerr Wolf: Ja, ich habe einen Balkon.",
+   "question": "Wer hat einen Garten?"
+  },
+  {
+   "id": "a12-cp1-p3-u2",
+   "solved": "am Samstag",
+   "evidence": "am Samstag bin ich am Markt.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Lena,\nam Freitag arbeite ich, am Samstag bin ich am Markt. Kommst du mit?\nPaul",
+   "question": "Wann ist Paul am Markt?"
+  },
+  {
+   "id": "a12-cp1-p3-u3",
+   "solved": "Herr Wolf",
+   "evidence": "Herr Wolf: Ja, ich bringe Brot und Kaffee mit.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Frau Kaya: Fahren Sie in die Stadt? Ich brauche Brot und Kaffee.\nHerr Wolf: Ja, ich bringe Brot und Kaffee mit.",
+   "question": "Wer fährt in die Stadt?"
+  },
+  {
+   "id": "a12-cp1-p3-u4",
+   "solved": "am Freitag",
+   "evidence": "am Freitag gehe ich in das Museum",
+   "verdict": "ok",
+   "note": "",
+   "text": "Liebe Ana,\nam Freitag gehe ich in das Museum, am Samstag in das Kino. Hast du Zeit?\nTim",
+   "question": "Wann geht Tim in das Museum?"
+  },
+  {
+   "id": "a12-cp1-p4-u1",
+   "solved": "Ali",
+   "evidence": "ich koche am Sonntag.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Thomas,\nich koche am Sonntag. Bringst du bitte den Kuchen mit?\nAli",
+   "question": "Wer kocht am Sonntag?"
+  },
+  {
+   "id": "a12-cp1-p4-u2",
+   "solved": "links",
+   "evidence": "links die Bibliothek.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Liebe Ana,\nmeine Wohnung ist im Zentrum. Rechts ist die Kirche, links die Bibliothek. Die Haltestelle ist an der Ecke.\nLena",
+   "question": "Wo ist die Bibliothek?"
+  },
+  {
+   "id": "a12-cp1-p4-u3",
+   "solved": "Thomas",
+   "evidence": "du kommst am Samstag nach Berlin.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Thomas,\ndu kommst am Samstag nach Berlin. Schön! Ich hole dich am Bahnhof ab. Wann ist der Zug da?\nAli",
+   "question": "Wer kommt am Samstag nach Berlin?"
+  },
+  {
+   "id": "a12-cp1-p4-u4",
+   "solved": "rechts",
+   "evidence": "Rechts ist die Bank, links der Park.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Herr Berg: Das ist das Haus. Rechts ist die Bank, links der Park.\nAna: Das ist gut.",
+   "question": "Wo ist die Bank?"
+  },
+  {
+   "id": "a12-cp2-p1-u1",
+   "solved": "Lena",
+   "evidence": "Lena: Ich habe am Samstag Geburtstag.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Ich habe am Samstag Geburtstag. Ich mache eine Party. Kommst du?\nPaul: Ja, gern! Ich bringe einen Kuchen mit.",
+   "question": "Wer hat am Samstag Geburtstag?"
+  },
+  {
+   "id": "a12-cp2-p1-u2",
+   "solved": "Paul",
+   "evidence": "Paul: Ja, und mein Hals tut weh.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Hast du Kopfschmerzen? Du bist heute so müde.\nPaul: Ja, und mein Hals tut weh.",
+   "question": "Wer hat Kopfschmerzen?"
+  },
+  {
+   "id": "a12-cp2-p1-u3",
+   "solved": "um acht Uhr",
+   "evidence": "Der Zug fährt um acht Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Der Zug fährt um acht Uhr. Kommst du mit?\nTim: Nein, ich habe um neun Uhr einen Termin.",
+   "question": "Wann fährt der Zug?"
+  },
+  {
+   "id": "a12-cp2-p1-u4",
+   "solved": "um neun Uhr",
+   "evidence": "Frau Kaya: Nein, um neun Uhr, im Restaurant.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Herr Wolf: Entschuldigung, ist das Frühstück um acht Uhr?\nFrau Kaya: Nein, um neun Uhr, im Restaurant.",
+   "question": "Wann ist das Frühstück?"
+  },
+  {
+   "id": "a12-cp2-p2-u1",
+   "solved": "Ana",
+   "evidence": "Ana: Ich gehe heute in die Praxis, denn mein Bauch tut weh.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Ich gehe heute in die Praxis, denn mein Bauch tut weh. Wo ist meine Versichertenkarte?\nTim: Hier, bitte. Ich koche Tee.",
+   "question": "Wer geht heute in die Praxis?"
+  },
+  {
+   "id": "a12-cp2-p2-u2",
+   "solved": "Tim",
+   "evidence": "Tim: Ich! Ich bin heute am Bahnhof.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Wer kauft die Fahrkarten? Der Ausflug ist am Samstag.\nTim: Ich! Ich bin heute am Bahnhof.",
+   "question": "Wer kauft die Fahrkarten?"
+  },
+  {
+   "id": "a12-cp2-p2-u3",
+   "solved": "am Samstag",
+   "evidence": "Das Konzert in Köln ist am Samstag.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Das Konzert in Köln ist am Samstag. Kommst du mit?\nPaul: Nein, ich arbeite. Am Sonntag habe ich Zeit.",
+   "question": "Wann ist das Konzert?"
+  },
+  {
+   "id": "a12-cp2-p2-u4",
+   "solved": "am Sonntag",
+   "evidence": "Herr Brandt: Nein, leider nur am Sonntag.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Frau Schmidt: Guten Tag. Haben Sie am Samstag ein Zimmer frei?\nHerr Brandt: Nein, leider nur am Sonntag.",
+   "question": "Wann ist ein Zimmer frei?"
+  },
+  {
+   "id": "a12-cp2-p3-u1",
+   "solved": "Ali",
+   "evidence": "Ich wechsele das Zimmer.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Thomas,\ndie Lampe funktioniert nicht, und ich habe keine Bettdecke. Ich wechsele das Zimmer. Dein Zimmer ist gut, oder?\nAli",
+   "question": "Wer wechselt das Zimmer?"
+  },
+  {
+   "id": "a12-cp2-p3-u2",
+   "solved": "Thomas",
+   "evidence": "Du hast am Montag frei.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Thomas,\nich bin krank und gehe heute nicht ins Büro. Am Montag habe ich einen Termin in der Praxis. Du hast am Montag frei. Kommst du mit?\nAli",
+   "question": "Wer hat am Montag frei?"
+  },
+  {
+   "id": "a12-cp2-p3-u3",
+   "solved": "am Donnerstag",
+   "evidence": "die Party ist am Donnerstag um acht Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Ana,\ndie Party ist am Donnerstag um acht Uhr. Am Freitag habe ich keine Zeit. Bis bald!\nLena",
+   "question": "Wann ist die Party?"
+  },
+  {
+   "id": "a12-cp2-p3-u4",
+   "solved": "am Freitag",
+   "evidence": "Ihr Termin in der Praxis ist nicht am Donnerstag. Er ist am Freitag um acht Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Guten Tag, Frau Weber,\nIhr Termin in der Praxis ist nicht am Donnerstag. Er ist am Freitag um acht Uhr. Sie brauchen Ihre Versichertenkarte.\nPraxis Berger",
+   "question": "Wann ist der Termin?"
+  },
+  {
+   "id": "a12-cp2-p4-u1",
+   "solved": "Lena",
+   "evidence": "Lena: Ich habe eine Erkältung.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Ich habe eine Erkältung. Hast du keine Tabletten?\nTim: Doch, hier. Ich gehe heute in die Apotheke und kaufe Tee.",
+   "question": "Wer hat eine Erkältung?"
+  },
+  {
+   "id": "a12-cp2-p4-u2",
+   "solved": "Tim",
+   "evidence": "Tim: Doch, hier ist er.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Hast du keinen Schlüssel? Wo ist das Zimmer?\nTim: Doch, hier ist er. Das Zimmer ist im Flur links.",
+   "question": "Wer hat den Schlüssel?"
+  },
+  {
+   "id": "a12-cp2-p4-u3",
+   "solved": "nach Köln",
+   "evidence": "Am Samstag machen wir einen Ausflug nach Köln.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Paul: Am Samstag machen wir einen Ausflug nach Köln. Kommst du mit?\nAna: Nein, ich fahre am Samstag nach Bremen.",
+   "question": "Wohin geht der Ausflug?"
+  },
+  {
+   "id": "a12-cp2-p4-u4",
+   "solved": "nach Bremen",
+   "evidence": "Frau Chakiri: Nein, nach Bremen.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Herr Berg: Entschuldigung, fährt der Bus hier nach Köln?\nFrau Chakiri: Nein, nach Bremen. Hier ist der Fahrplan.",
+   "question": "Wohin fährt der Bus?"
+  },
+  {
+   "id": "a12-cp3-p1-u1",
+   "solved": "Lena",
+   "evidence": "Lena: Ich kaufe die Tickets.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Ich kaufe die Tickets. Holst du die Koffer?\nTim: Ja, das mache ich.",
+   "question": "Wer kauft die Tickets?"
+  },
+  {
+   "id": "a12-cp3-p1-u2",
+   "solved": "um acht Uhr",
+   "evidence": "mein Zug kommt um acht Uhr in Köln an, nicht um neun Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Ana,\nmein Zug kommt um acht Uhr in Köln an, nicht um neun Uhr. Hol mich bitte am Bahnhof ab!\nPaul",
+   "question": "Um wie viel Uhr kommt Paul in Köln an?"
+  },
+  {
+   "id": "a12-cp3-p1-u3",
+   "solved": "Tim",
+   "evidence": "Tim: Ja, gern. Ich gehe gleich.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Kaufst du das Brot? Ich koche heute Suppe.\nTim: Ja, gern. Ich gehe gleich.",
+   "question": "Wer kauft das Brot?"
+  },
+  {
+   "id": "a12-cp3-p1-u4",
+   "solved": "um neun Uhr",
+   "evidence": "Der Bus nach Bremen fährt heute nicht um acht Uhr ab, sondern um neun Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Achtung: Der Bus nach Bremen fährt heute nicht um acht Uhr ab, sondern um neun Uhr.",
+   "question": "Um wie viel Uhr fährt der Bus nach Bremen heute ab?"
+  },
+  {
+   "id": "a12-cp3-p2-u1",
+   "solved": "Ali",
+   "evidence": "Ali: Ich hole den Teppich.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ali: Ich hole den Teppich. Wer kauft heute das Brot?\nThomas: Ich! Ich habe Hunger.",
+   "question": "Wer holt den Teppich?"
+  },
+  {
+   "id": "a12-cp3-p2-u2",
+   "solved": "in der Küche",
+   "evidence": "Ana: Nein, er ist in der Küche. Er kocht.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Paul: Ist Papa im Wohnzimmer?\nAna: Nein, er ist in der Küche. Er kocht.",
+   "question": "Wo ist Papa?"
+  },
+  {
+   "id": "a12-cp3-p2-u3",
+   "solved": "Thomas",
+   "evidence": "Thomas: Ich! Ich habe heute Zeit.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ali: Wer holt Oma am Flughafen ab? Ich muss arbeiten.\nThomas: Ich! Ich habe heute Zeit.",
+   "question": "Wer holt Oma am Flughafen ab?"
+  },
+  {
+   "id": "a12-cp3-p2-u4",
+   "solved": "im Wohnzimmer",
+   "evidence": "Der Fernseher ist im Wohnzimmer.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Der Fernseher ist im Wohnzimmer. Ist das Radio auch da?\nPaul: Nein, das Radio ist in der Küche.",
+   "question": "Wo ist der Fernseher?"
+  },
+  {
+   "id": "a12-cp3-p3-u1",
+   "solved": "Ana",
+   "evidence": "Ana: Ich war gestern in Köln.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Ich war gestern in Köln. Meine Tante wohnt da. Und du?\nPaul: Ich war zu Hause. Ich hatte keine Zeit.",
+   "question": "Wer war gestern in Köln?"
+  },
+  {
+   "id": "a12-cp3-p3-u2",
+   "solved": "glücklich",
+   "evidence": "Lena: Nein, er ist glücklich.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Tim: Ist Opa heute traurig?\nLena: Nein, er ist glücklich. Er war nur müde.",
+   "question": "Wie ist Opa heute?"
+  },
+  {
+   "id": "a12-cp3-p3-u3",
+   "solved": "Paul",
+   "evidence": "Paul: Ich war da. Der Film war gut.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Am Samstag war ich nicht im Kino. Ich war krank. Und du?\nPaul: Ich war da. Der Film war gut.",
+   "question": "Wer war am Samstag im Kino?"
+  },
+  {
+   "id": "a12-cp3-p3-u4",
+   "solved": "traurig",
+   "evidence": "Papa ist heute traurig, denn er muss am Samstag arbeiten.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ali: Papa ist heute traurig, denn er muss am Samstag arbeiten. Und Mama?\nThomas: Nein, Mama ist glücklich. Sie fährt am Samstag nach Bremen.",
+   "question": "Wie ist Papa heute?"
+  },
+  {
+   "id": "a12-cp3-p4-u1",
+   "solved": "Ali",
+   "evidence": "Ali kocht heute.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Paul,\nich komme spät. Ali kocht heute. Kauf du bitte das Brot!\nMama",
+   "question": "Wer kocht heute?"
+  },
+  {
+   "id": "a12-cp3-p4-u2",
+   "solved": "am Bahnhof",
+   "evidence": "Sie müssen am Bahnhof aussteigen, nicht am Flughafen.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Achtung: Sie müssen am Bahnhof aussteigen, nicht am Flughafen. Bitte nehmen Sie dann ein Taxi.",
+   "question": "Wo müssen Sie aussteigen?"
+  },
+  {
+   "id": "a12-cp3-p4-u3",
+   "solved": "Paul",
+   "evidence": "Ali möchte im Garten helfen, aber er ist krank. Hilf du bitte Papa!",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Paul,\nAli möchte im Garten helfen, aber er ist krank. Hilf du bitte Papa!\nMama",
+   "question": "Wer soll im Garten helfen?"
+  },
+  {
+   "id": "a12-cp3-p4-u4",
+   "solved": "am Flughafen",
+   "evidence": "steig bitte nicht am Bahnhof aus, sondern am Flughafen.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Tim,\nsteig bitte nicht am Bahnhof aus, sondern am Flughafen. Ich warte da.\nAna",
+   "question": "Wo soll Tim aussteigen?"
+  },
+  {
+   "id": "a12-cp4-p1-u1",
+   "solved": "Lena",
+   "evidence": "Lena: Ich habe den Fisch gekocht.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Ich habe den Fisch gekocht. Hast du den Saft gekauft?\nTim: Ja, und das Obst auch.",
+   "question": "Wer hat den Fisch gekocht?"
+  },
+  {
+   "id": "a12-cp4-p1-u2",
+   "solved": "Tim",
+   "evidence": "Tim: Ja, das habe ich gemacht.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Hast du die Suppe gekocht? Sie war sehr lecker!\nTim: Ja, das habe ich gemacht. Danke!",
+   "question": "Wer hat die Suppe gekocht?"
+  },
+  {
+   "id": "a12-cp4-p1-u3",
+   "solved": "fünfzig Euro",
+   "evidence": "die Jacke kostet nur fünfzig Euro.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Entschuldigung, ist die Jacke teuer?\nFrau Wolf: Nein, die Jacke kostet nur fünfzig Euro. Die Mütze ist billig: zehn Euro.\nAna: Gut, danke!",
+   "question": "Was kostet die Jacke?"
+  },
+  {
+   "id": "a12-cp4-p1-u4",
+   "solved": "zehn Euro",
+   "evidence": "Frau Wolf: Nein, er kostet nur zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Kostet der Schal dreißig Euro?\nFrau Wolf: Nein, er kostet nur zehn Euro.\nLena: Gut, dann nehme ich ihn.",
+   "question": "Was kostet der Schal?"
+  },
+  {
+   "id": "a12-cp4-p2-u1",
+   "solved": "Ana",
+   "evidence": "Ana: Ich kaufe das Kleid für meine Schwester.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Ich kaufe das Kleid für meine Schwester. Gefällt dir der Pullover?\nPaul: Ja, er passt mir gut.",
+   "question": "Wer kauft das Kleid?"
+  },
+  {
+   "id": "a12-cp4-p2-u2",
+   "solved": "Paul",
+   "evidence": "Paul: Ja, ich nehme ihn. Er passt mir.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Ana: Kaufst du den Mantel? Er ist sehr schön.\nPaul: Ja, ich nehme ihn. Er passt mir.",
+   "question": "Wer kauft den Mantel?"
+  },
+  {
+   "id": "a12-cp4-p2-u3",
+   "solved": "am Samstag",
+   "evidence": "am Samstag ist es sonnig und warm.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Paul,\nam Samstag ist es sonnig und warm. Wir fahren dann nach Köln. Am Sonntag kommt der Regen, dann fahre ich nicht.\nLena",
+   "question": "Wann ist es sonnig?"
+  },
+  {
+   "id": "a12-cp4-p2-u4",
+   "solved": "am Mittwoch",
+   "evidence": "Am Mittwoch kommt die Sonne.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Ali,\nam Dienstag ist es nicht sonnig. Es regnet und der Wind ist kalt. Am Mittwoch kommt die Sonne. Dann fahren wir nach Bremen.\nThomas",
+   "question": "Wann ist es sonnig?"
+  },
+  {
+   "id": "a12-cp4-p3-u1",
+   "solved": "Tim",
+   "evidence": "Tim fährt mit dem Fahrrad zum Markt.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Liebe Ana,\nes regnet heute, aber Tim fährt mit dem Fahrrad zum Markt. Ich nehme den Bus, ich fahre bei Regen nicht gern.\nLena",
+   "question": "Wer fährt mit dem Fahrrad zum Markt?"
+  },
+  {
+   "id": "a12-cp4-p3-u2",
+   "solved": "Lena",
+   "evidence": "Tim fährt nicht mit dem Fahrrad zum Bahnhof, er nimmt das Taxi. Ich nehme das Fahrrad, das Taxi ist teuer.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Liebe Ana,\nes schneit, und wir fahren heute nach Köln. Tim fährt nicht mit dem Fahrrad zum Bahnhof, er nimmt das Taxi. Ich nehme das Fahrrad, das Taxi ist teuer.\nLena",
+   "question": "Wer fährt mit dem Fahrrad zum Bahnhof?"
+  },
+  {
+   "id": "a12-cp4-p3-u3",
+   "solved": "den Fisch",
+   "evidence": "Paul hat den Fisch gegessen.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Ana,\ndas Fest war schön! Paul hat den Fisch gegessen. Die Wurst hat Tim gegessen, er isst nicht gern Fisch.\nLena",
+   "question": "Was hat Paul gegessen?"
+  },
+  {
+   "id": "a12-cp4-p3-u4",
+   "solved": "die Wurst",
+   "evidence": "Ali hat gestern den Fisch nicht gegessen. Nur die Wurst hat er gegessen.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Hallo Lena,\nAli hat gestern den Fisch nicht gegessen. Nur die Wurst hat er gegessen. Der Fisch war aber lecker!\nThomas",
+   "question": "Was hat Ali gegessen?"
+  },
+  {
+   "id": "a12-cp4-p4-u1",
+   "solved": "Thomas",
+   "evidence": "Thomas: Ich bin früh gegangen.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Thomas: Ich bin früh gegangen. War das Fest noch schön?\nAli: Ja, wir haben viel getanzt.",
+   "question": "Wer ist früh gegangen?"
+  },
+  {
+   "id": "a12-cp4-p4-u2",
+   "solved": "Ali",
+   "evidence": "Ali: Ja, der Zug war schnell.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Thomas: Bist du mit dem Zug nach Köln gefahren?\nAli: Ja, der Zug war schnell.",
+   "question": "Wer ist mit dem Zug nach Köln gefahren?"
+  },
+  {
+   "id": "a12-cp4-p4-u3",
+   "solved": "blau",
+   "evidence": "Der Mantel ist blau.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Der Mantel ist blau. Die Mütze ist grün. Kaufst du den Mantel?\nAna: Nein, er ist zu groß für mich.",
+   "question": "Welche Farbe hat der Mantel?"
+  },
+  {
+   "id": "a12-cp4-p4-u4",
+   "solved": "grün",
+   "evidence": "Ana: Nein, er ist grün.",
+   "verdict": "ok",
+   "note": "",
+   "text": "Lena: Ist der Rock blau? Er gefällt mir.\nAna: Nein, er ist grün.",
+   "question": "Welche Farbe hat der Rock?"
+  }
+ ]
+}

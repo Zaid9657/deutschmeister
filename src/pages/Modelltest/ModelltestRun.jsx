@@ -8,7 +8,7 @@ import {
   findResumableAttempt,
   loadAttempt,
   saveAnswers,
-  advanceSectionDeadline,
+  advanceSection,
   completeAttempt,
 } from '../../services/examService';
 import { scoreObjectiveSections, mergeListeningResult, scoreListeningAnswers } from '../../services/examScoring';
@@ -50,7 +50,11 @@ const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:tex
 
 function MockListeningPart({ part, answers, onAnswer, registerKey }) {
   const { exercise, questions: allQuestions, loading } = useExerciseDetails(part.level, String(part.exerciseNumber));
-  const [plays, setPlays] = useState(0);
+  // Plays live in the saved answers (`_plays`), so a reload cannot hand out fresh ones, and a play
+  // counts only once the audio has actually started (Codex rescore, 2026-10-15: a blocked or
+  // missing file used to spend both plays).
+  const plays = answers._plays?.[part.key] ?? 0;
+  const [playFailed, setPlayFailed] = useState(false);
   const audioRef = useRef(null);
 
   // The hook returns EVERY question of the exercise (23 per A1 exercise since
@@ -91,11 +95,17 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
       <Card tone="sunk" className="flex flex-wrap items-center gap-3 px-4 py-3">
         <Button
           size="sm"
-          onClick={() => {
+          onClick={async () => {
             if (!canPlay || !audioRef.current) return;
             audioRef.current.currentTime = 0;
-            audioRef.current.play();
-            setPlays((p) => p + 1);
+            try {
+              await audioRef.current.play();
+            } catch {
+              setPlayFailed(true);
+              return;
+            }
+            setPlayFailed(false);
+            onAnswer('_plays', { ...(answers._plays || {}), [part.key]: plays + 1 });
           }}
           disabled={!canPlay}
         >
@@ -107,6 +117,11 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
             : 'Keine Wiedergabe mehr — beantworte die Fragen'}
         </span>
         <audio ref={audioRef} src={audioUrl} preload="none" />
+        {playFailed && (
+          <p role="alert" className="w-full text-[0.8125rem] font-bold text-accent-aprikose-ink">
+            Die Wiedergabe ist nicht gestartet. Bitte erneut versuchen — dieser Versuch zählt nicht.
+          </p>
+        )}
       </Card>
       {questions.map((q) => {
         const qid = q.id || q.question_number;
@@ -160,10 +175,15 @@ const ModelltestRun = () => {
   const [finishing, setFinishing] = useState(false);
   const [changingSection, setChangingSection] = useState(false);
   const [finishError, setFinishError] = useState(null);
+  const [sectionError, setSectionError] = useState(null);
   const listeningKeysRef = useRef({});
   const autosaveRef = useRef(null);
   if (!autosaveRef.current) autosaveRef.current = createExamAutosave(saveAnswers);
   const changingSectionRef = useRef(false);
+  // A pending autosave carries the answers with the section index of the moment it was scheduled;
+  // every transition writes the answers itself, so the pending one is cancelled first (Codex rescore,
+  // 2026-10-15). examService also queues writes per attempt, so one already in flight lands first.
+  const cancelPendingSave = () => autosaveRef.current.cancel();
 
   useEffect(() => {
     const autosave = autosaveRef.current;
@@ -237,7 +257,7 @@ const ModelltestRun = () => {
 
   const finish = useCallback(async () => {
     if (!attempt || finishing) return;
-    autosaveRef.current.cancel();
+    cancelPendingSave();
     if (!frozenRef.current) frozenRef.current = answers;
     const snapshot = frozenRef.current;
     setFinishing(true);
@@ -270,7 +290,7 @@ const ModelltestRun = () => {
 
   const nextSection = useCallback(async () => {
     if (!attempt || changingSectionRef.current) return;
-    autosaveRef.current.cancel();
+    cancelPendingSave();
     if (isLast) {
       finish();
       return;
@@ -280,19 +300,19 @@ const ModelltestRun = () => {
     const nextIdx = sectionIndex + 1;
     const nextAnswers = { ...answers, _meta: { sectionIndex: nextIdx } };
     try {
-      const newDeadline = await advanceSectionDeadline(attempt.id, mock.sections[nextIdx].minutes, nextAnswers);
+      const newDeadline = await advanceSection(attempt.id, nextAnswers, mock.sections[nextIdx].minutes);
       if (!newDeadline) {
-        setFinishError('Ihre Antworten konnten nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut.');
+        setSectionError('Der nächste Teil konnte nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut — Ihre Antworten bleiben erhalten.');
         return;
       }
       setAnswers(nextAnswers);
       setSectionIndex(nextIdx);
       setDeadline(new Date(newDeadline).getTime());
-      setFinishError(null);
+      setSectionError(null);
       window.scrollTo({ top: 0 });
     } catch (error) {
       console.error('[ModelltestRun] next section:', error?.message);
-      setFinishError('Ihre Antworten konnten nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut.');
+      setSectionError('Der nächste Teil konnte nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut — Ihre Antworten bleiben erhalten.');
     } finally {
       changingSectionRef.current = false;
       setChangingSection(false);
@@ -493,7 +513,7 @@ const ModelltestRun = () => {
           ))}
         </div>
 
-        {finishError && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError}</p>}
+        {(finishError || sectionError) && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError || sectionError}</p>}
         <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing || changingSection}>
           {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
           <ChevronRight className="w-4 h-4" />

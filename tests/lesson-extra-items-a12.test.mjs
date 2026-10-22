@@ -30,7 +30,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { exclusionReason, answerInPrompt, isMetaPrompt } from '../src/data/lessonPools/quality.js';
+import { exclusionReason, answerInPrompt, isMetaPrompt, drillsSlug } from '../src/data/lessonPools/quality.js';
 import {
   planPractice, relevanceScore, wortfeldTerms, isTypedItem, isMultipleChoice,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN,
@@ -212,170 +212,20 @@ test('RULE 11 — no extra item uses a word A1.1 or an earlier A1.2 Lektion has 
  * R4 — "really drills the primary slug", the measurement DaF review #3 asked
  * for: a `topic` mark is a ROUTING label, not a description of the item, so the
  * guarantee "the Lektion practises its own grammar point" has to be read off
- * the ANSWER — what the learner actually has to produce.
- *
- * The twelve predicates below are A1.2's. `drillsSlug` in
- * src/data/lessonPools/quality.js carries the A1.1 table and answers `true` for
- * every slug it does not know, i.e. for all twelve of these — a vacuous pass is
- * not a measurement, so the predicates live here until that table grows an A1.2
- * half. When it does, delete this block and import it; the semantics per slug
- * are named in the comment on each entry so the two cannot drift silently.
+ * the ANSWER — what the learner actually has to produce. The twelve A1.2
+ * predicates live in `drillsSlug` (src/data/lessonPools/quality.js) since A1.2
+ * DaF review #3 MAJOR 4, so the engine's draw and this file read one table.
  */
-const flat = (text) =>
-  String(text || '').toLowerCase()
-    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
-const bare = (text) => String(text || '').replace(/[.,!?;:"“”„'’]/g, '').trim();
-const wordsFlat = (text) => flat(text).split(/[^a-z0-9]+/).filter(Boolean);
-const set = (...list) => new Set(list.map((w) => flat(w)));
-const isOneOf = (text, allowed) => allowed.has(flat(bare(text)));
-const containsOneOf = (text, allowed) => wordsFlat(text).some((w) => allowed.has(w));
-/** The learner writes the whole sentence, so its word order is his. */
-const PRODUCTION_TYPES = new Set(['sentence_building', 'error_correction']);
+export const drillsSlugA12 = drillsSlug;
+
+/** A prompt that names the infinitive in brackets has fixed the verb itself. */
 const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
 
-/** Finite verb forms an A1.2 Wegbeschreibung puts on position 2. */
-const FINITE_V2 = set(
-  'gehe', 'gehst', 'geht', 'gehen', 'komme', 'kommst', 'kommt', 'kommen',
-  'fahre', 'fährst', 'fährt', 'fahren', 'bin', 'bist', 'ist', 'sind', 'habe', 'hast', 'hat', 'haben',
-);
-const NUMBER_WORD_RE =
-  /^(null|eins|ein|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|(?:drei|vier|fuenf|sech|sieb|acht|neun)zehn|(?:zwan|drei|vier|fuenf|sech|sieb|acht|neun)zig|dreissig|hundert)/;
-const COMPOUND_NUMBER_RE = /^[a-z]*(?:und(?:zwanzig|dreissig|vierzig|fuenfzig|sechzig|siebzig|achtzig|neunzig)|hundert[a-z]*)$/;
-const ORDINAL_WORD_RE =
-  /^(erste|zweite|dritte|vierte|fuenfte|sechste|siebte|achte|neunte|zehnte|elfte|zwoelfte|zwanzigste)[nrms]?$/;
-const AKKUSATIV = set('den', 'einen', 'keinen', 'meinen', 'deinen', 'ihren', 'seinen');
-const NEGATION = set('nicht', 'kein', 'keine', 'keinen', 'keinem', 'keiner');
-const W_WORDS = set('wer', 'was', 'wo', 'wohin', 'woher', 'wann', 'warum', 'wie');
-const STEM_CHANGED = set(
-  'nimmst', 'nimmt', 'hilfst', 'hilft', 'siehst', 'sieht', 'isst', 'schlaefst', 'schlaeft',
-  'sprichst', 'spricht', 'faehrst', 'faehrt', 'traegst', 'traegt', 'laeufst', 'laeuft', 'liest', 'gibt',
-);
-const NOM_DETERMINER = set('der', 'die', 'das', 'ein', 'eine', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre');
-const SEIN_FINITE = set('ist', 'sind', 'bin', 'bist');
-const DU_IMPERATIVE_RE =
-  /^(komm|warte|hilf|mach|hol|geh|nimm|sei|gib|kauf|frag|lies|steh|zieh|sieh|iss|bezahl|trag|lauf|flieg|trink|koch|feier)e?$/;
-const MODALS = set(
-  'kann', 'kannst', 'koennen', 'koennt', 'muss', 'musst', 'muessen', 'muesst',
-  'darf', 'darfst', 'duerfen', 'duerft', 'will', 'willst', 'wollen', 'wollt',
-  'soll', 'sollst', 'sollen', 'sollt', 'moechte', 'moechtest', 'moechten',
-);
-const AKK_PREPOSITIONS = set('fuer', 'ohne', 'gegen', 'um', 'durch');
-const DAT_PREPOSITIONS = set('mit', 'nach', 'bei', 'seit', 'von', 'zu', 'aus');
-const DAT_ARTICLES = set('dem', 'der', 'den', 'einem', 'einer');
-const VERSCHMELZUNG = set('im', 'am', 'beim', 'zum', 'zur', 'vom');
-const PARTICIPLE_RE = /^ge[a-z]+(t|en)$/;
-
-const DRILLS_A12 = {
-  // L1 — the Satzrahmen: the learner writes the whole sentence and puts the
-  // finite verb on position 2 (which is token 1 after a one-word Angabe, token 2
-  // after a two-word one). A gap in a printed frame cannot drill word order, so
-  // the production types are required.
-  'basic-sentence-structure': ({ type, expected }) =>
-    PRODUCTION_TYPES.has(type) && expected.some((a) => {
-      const toks = wordsFlat(bare(a));
-      const at = toks.findIndex((t) => FINITE_V2.has(t));
-      return at === 1 || at === 2;
-    }),
-
-  // L2 — the number word, derived from a digit that stands in the GERMAN prompt
-  // (the A1.1 lesson of REVIEW #5 MAJOR 13: a digit in the English gloss is not
-  // a cue). Ordinals count: the notice teaches -te/-ste in the same card.
-  'numbers-counting': ({ q, expected }) =>
-    /\d/.test(q) && expected.some((a) => {
-      const w = flat(bare(a));
-      return COMPOUND_NUMBER_RE.test(w) || ORDINAL_WORD_RE.test(w) || NUMBER_WORD_RE.test(w);
-    }),
-
-  // L3 — the Akkusativ is visible only on the masculine: den/einen/keinen, as a
-  // bare form, as an article+noun chunk or inside a whole sentence.
-  'accusative-intro': ({ expected }) =>
-    expected.some((a) => isOneOf(a, AKKUSATIV) || containsOneOf(a, AKKUSATIV)),
-
-  // L4 — the learner produces the negation itself: nicht, or a kein- form.
-  'negation': ({ expected }) =>
-    expected.some((a) => isOneOf(a, NEGATION) || containsOneOf(a, NEGATION)),
-
-  // L5 — the W-word, or the whole question that opens with one.
-  'question-words': ({ expected }) =>
-    expected.some((a) => {
-      const toks = wordsFlat(bare(a));
-      return toks.length > 0 && W_WORDS.has(toks[0]);
-    }),
-
-  // L6 — the CHANGED form (nimmt, hilft, sieht …). The Sie-form shows no change,
-  // so it does not count; and the prompt has to name the infinitive, or several
-  // verbs fit the gap.
-  'stem-changing-verbs': ({ q, type, expected }) =>
-    (INFINITIVE_CUE_RE.test(q) || PRODUCTION_TYPES.has(type)) &&
-    expected.some((a) => isOneOf(a, STEM_CHANGED) || containsOneOf(a, STEM_CHANGED)),
-
-  // L7 — the question after the subject (wer), a bare nominative article, or the
-  // Gleichsetzung with sein, where the second noun keeps the nominative.
-  'nominative-case': ({ expected }) =>
-    expected.some((a) => {
-      const toks = wordsFlat(bare(a));
-      if (!toks.length) return false;
-      if (toks[0] === 'wer') return true;
-      if (isOneOf(a, set('der', 'die', 'das'))) return true;
-      return toks.some((t) => SEIN_FINITE.has(t)) && toks.some((t) => NOM_DETERMINER.has(t));
-    }),
-
-  // L8 — the imperative form: the bare du-form, or the Sie-form (verb on -en
-  // followed by Sie), at the start of what the learner writes. The third clause
-  // is the gap version of the second — „___ Sie mir bitte! (helfen)“ → `Helfen`:
-  // the `Sie` stands in the PROMPT, so the answer is one word and the two-token
-  // test would call the Lektion's own höfliche Bitte a non-instance.
-  'imperative': ({ q, expected }) =>
-    expected.some((a) => {
-      const plain = bare(a);
-      const toks = wordsFlat(plain);
-      if (!toks.length) return false;
-      if (DU_IMPERATIVE_RE.test(toks[0])) return true;
-      if (/en$/.test(toks[0]) && toks[1] === 'sie') return true;
-      return toks.length === 1 && /en$/.test(toks[0]) && /___\s+Sie\b/.test(q);
-    }),
-
-  // L9 — the Satzklammer: a finite modal, alone in a gap, or on position 2 of a
-  // sentence whose last word is the infinitive.
-  'modal-verbs-intro': ({ expected }) =>
-    expected.some((a) => {
-      const toks = wordsFlat(bare(a));
-      if (!toks.length) return false;
-      if (toks.length === 1) return MODALS.has(toks[0]);
-      const last = toks[toks.length - 1];
-      return toks.some((t) => MODALS.has(t)) && /en$/.test(last);
-    }),
-
-  // L10 — the preposition itself, or a sentence carrying one with its Akkusativ.
-  'prepositions-accusative': ({ expected }) =>
-    expected.some((a) => isOneOf(a, AKK_PREPOSITIONS) || containsOneOf(a, AKK_PREPOSITIONS)),
-
-  // L11 — the Dativ chunk the notice teaches: a verschmolzene form (im, am, zum,
-  // zur, vom, beim) or preposition + Dativ article.
-  'dative-prepositions-intro': ({ expected }) =>
-    expected.some((a) => {
-      const toks = wordsFlat(bare(a));
-      if (toks.some((t) => VERSCHMELZUNG.has(t))) return true;
-      return toks.some((t, i) => DAT_PREPOSITIONS.has(t) && toks[i + 1] && DAT_ARTICLES.has(toks[i + 1]));
-    }),
-
-  // L12 — the Partizip II, alone or at the end of the sentence.
-  'perfekt-intro': ({ expected }) =>
-    expected.some((a) => wordsFlat(bare(a)).some((t) => PARTICIPLE_RE.test(t))),
-};
-
-export function drillsSlugA12(item, slug) {
-  const rule = DRILLS_A12[String(slug || '')];
-  assert.ok(rule, `no A1.2 predicate for slug ${slug}`);
-  if (!item) return false;
-  const answer = String(item.answer || '');
-  const expected = [answer, ...(item.accepted || [])].filter((a) => String(a).trim());
-  return Boolean(rule({
-    q: String(item.questionDe || ''), type: String(item.type || ''), answer, expected,
-  }));
-}
-
 test('R4 — each Lektion drills its own grammar point, measured on the answer', () => {
+  // drillsSlug answers `true` for a slug it has no rule for, so first: every A1.2 slug has one.
+  for (const l of CURRICULUM_A12.lektionen) {
+    assert.equal(drillsSlug({ answer: 'Hallo.', questionDe: 'Hallo.' }, l.primarySlug), false, `no predicate for ${l.primarySlug}`);
+  }
   const per = byLektion();
   const lines = [];
   let drilled = 0;
@@ -457,11 +307,9 @@ test('the shipped pool contains them — scripts/build-lesson-pool.mjs a1.2 has 
   assert.deepEqual(missing, [], 'a12.json is stale — run `node scripts/build-lesson-pool.mjs a1.2`');
 });
 
-// PAUSED 2026-09-13 (owner decision: "only create A1.1"). The round-8 A1.1 engine rules — the
-// task-shape axis, politeCaseItem-by-task, the untaught-form gate — thin the A1.2 draft pool so
-// L3 draws 4 of 7. That is A1.2 items work, which is what the pause forbids; the test stays in
-// the file as the work order and is re-enabled by deleting the skip when A1.2 resumes.
-test('THE DRAW — every A1.2 Lektion gets a full, typed, on-topic seven that drills its own slug', { skip: 'A1.2 paused by owner 2026-09-13 — L3 draws 4/7 under the round-8 engine; re-enable when A1.2 resumes' }, () => {
+// Paused 2026-09-13 with A1.2 itself; back on 2026-10-15 (owner: "start now", A1.2 DaF review #3
+// MAJOR 4 — L4 drew three negation items of seven on attempt 1).
+test('THE DRAW — every A1.2 Lektion gets a full, typed, on-topic seven that drills its own slug', () => {
   // Both attempts, because attempt 2 draws from what attempt 1 left: a Lektion
   // whose slug has barely enough drilling items passes the first draw and
   // repeats itself on the second, and the repeat is the failure a learner sees.

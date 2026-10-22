@@ -703,6 +703,9 @@ const ANSWER_SHAPES = [
   { on: ['telefonnumm', 'numm', 'handynumm'], re: PHONE_RE },
   { on: ['sprach', 'muttersprach'], re: LANGUAGE_VALUE_SHAPE, form: languageValueShape },
   { on: ['farb'], re: COLOUR_RE },
+  // wehtun separates („Mein Hals tut weh“), and the noun says it too („Kopfschmerzen“).
+  { on: ['wehtu'], re: /weh\b|schmerz/i },
+  { on: ['zimmernumm'], re: /\bZimmer(?:nummer)?\s+(?:ist\s+)?\d+/i },
   { on: ['frag'], re: /\?/, question: true },
 ];
 
@@ -856,8 +859,11 @@ const QUESTION_SHAPES = [
   // (a W-word first, a modal last), not a list of the two Leitpunkte that currently carry it.
   // Minor 34 (DaF review #21): the modal family is `sollen|müssen|können|dürfen|wollen|möchten|
   // mögen`, the W-list includes `ob`, and a closing mark on the Leitpunkt („… sollen?“, „… sollen.“)
-  // does not turn the Auftrag back into a form.
-  { on: /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?|ob)\b.*\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft|will|willst|wollen|wollt|möchte|möchtest|möchten|möchtet|mag|magst|mögen|mögt)\s*[?.!]?\s*$/i, re: null },
+  // does not turn the Auftrag back into a form. A1.2 DaF review #3 (Minor): the modal infinitive
+  // closes it the same way — „Was in der Küche zu tun ist" is „was getan werden muss" — so `zu
+  // <Infinitiv> ist|sind` joins the modal family; L8's model answered it with an imperative and
+  // the Formcheck called that red.
+  { on: /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?|ob)\b.*\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft|will|willst|wollen|wollt|möchte|möchtest|möchten|möchtet|mag|magst|mögen|mögt|zu\s+[a-zäöüß]+\s+(?:ist|sind))\s*[?.!]?\s*$/i, re: null },
 ];
 
 /**

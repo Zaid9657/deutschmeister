@@ -91,7 +91,8 @@ no TypeScript additions (Astro's existing Props syntax is normal).
   Can-dos lead recap/home; scores stay in closed details; no XP/automatic tours; one course-review destination. See [Wave 1](docs/agents/claude-reference.md#conventions--gotchas).
 - Writing starters come from L2/L4 model text; one improved version costs no other task on
   any tier. FSRS/help evidence wait for owner migration; do not shorten the L2 notice. See [Wave 1 details](docs/agents/claude-reference.md#conventions--gotchas).
-- A1.2 stays paused and in `DRAFT_CURRICULA`, never `CURRICULA`, until the owner reopens it.
+- A1.2 is LIVE (`CURRICULA`) since the owner's ship decision of 2026-10-22; read
+  `docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md` ("Known issues at ship") before any A1.2 work.
   Audio says “Computerstimme” until real manifests exist. See [course history](docs/agents/claude-reference.md#current-state--open-threads).
 
 ## Security, functions and operations

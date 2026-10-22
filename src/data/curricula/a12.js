@@ -38,12 +38,18 @@
 //                                 „Machen Sie bitte…". Ohne Wechselverben (6) gäbe es kein „Hilf!".
 //   9 modal-verbs-intro         — Regeln sind dürfen/müssen/können. Die Satzklammer (Modalverb
 //                                 auf 2, Infinitiv am Ende) setzt den Satzrahmen aus 1 voraus.
-//  10 prepositions-accusative   — für/ohne/gegen/um/durch braucht den Akkusativ aus 3; der
-//                                 Kleidungskauf ist „für meinen Bruder, ohne den Schal".
+//  10 prepositions-accusative   — für/ohne/durch braucht den Akkusativ aus 3; der Kleidungskauf
+//                                 ist „für meinen Bruder, ohne den Schal". „gegen" kennt der Kurs nur
+//                                 als „gegen Kopfschmerzen" (L6), „um" nur als Uhrzeit: zeitliches gegen
+//                                 und räumliches um lehrt A1.2 nicht (NEVER_FORMS, DaF-Review #6/#7, B2).
 //  11 dative-prepositions-intro — das Wetter trägt die temporalen und lokalen Dativpräpositionen:
 //                                 im Sommer, am Abend, seit einer Woche, nach dem Regen.
-//  12 perfekt-intro             — das Fest erzählt Vergangenes. Perfekt steht am Ende, weil es
-//                                 das Partizip II jedes bis hier gelernten Verbs wiederholt.
+//  12 perfekt-intro             — das Fest erzählt Vergangenes. Perfekt steht am Ende: haben auf
+//                                 Position 2, das Partizip II mit ge-…-t oder ge-…-en, an Verben, die
+//                                 der Kurs schon kennt (gefeiert, gekauft, gekocht, gemacht, geholt,
+//                                 gegessen, getrunken, gesprochen) — und seit der M7-Entscheidung vom
+//                                 2026-10-16 die Partizipien ohne ge- (bezahlt, verstanden,
+//                                 telefoniert) und das Perfekt mit sein (Tim ist früh gegangen).
 //
 // DIE ENTSCHEIDUNG, DIE DER AUFTRAG OFFEN LIESS: WEGBESCHREIBUNG → WELCHE PRÄPOSITIONEN?
 // Weder `prepositions-accusative` noch `dative-prepositions-intro`. Beide setzen einen Kasus
@@ -51,14 +57,13 @@
 // wäre genau der Vorgriff, den die A1.1-Reviews vier Runden lang angemahnt haben. L1 lehrt
 // stattdessen den Satzrahmen und nennt „zum Bahnhof / zur Kirche / an der Ecke" ausdrücklich als
 // FESTE WENDUNGEN (so wie A1.1 „Ich habe gearbeitet" als Chunk lehrt); die Regel dahinter kommt
-// in L11. Die Richtungspräpositionen des Akkusativs (durch, um) kommen in L10.
+// in L11. Von den Akkusativpräpositionen lehrt L10 für, ohne und durch; räumliches „um" lehrt A1.2 nicht.
 //
 // WAS DIESE ORDNUNG NICHT TRAGEN KANN, UND WO ES STATTDESSEN STEHT:
 //   *Modalverben* werden vor L9 gebraucht („Ich möchte ein Ticket", „Wo kann ich…?"). Sie sind
 //   darum in FUNCTION_WORDS geführt und werden bis L9 als feste Wendungen benutzt, nicht erklärt.
-//   *war/hatte* (Präteritum von sein/haben) steht im Grammatikdach des Standards, hat aber keinen
-//   eigenen Slug. L12 benutzt „war" im Dialog und die notice sagt, dass es die einzige einfache
-//   Vergangenheitsform dieses Kurses ist.
+//   *war/hatte* (Präteritum von sein/haben) hat keinen eigenen Slug; seit der M7-Entscheidung
+//   (2026-10-16) lehrt L7 beide mit Notice, Dialoginput und Übung, und L12 benutzt „war" im Dialog.
 //   *Komparation* („billiger als") hat ebenfalls keinen Slug: L10 lehrt sie als Muster in der
 //   notice, nicht als Lektionsthema.
 //
@@ -91,6 +96,7 @@
 // Migration außerhalb dieser Datei. Bis dahin gilt hier die Prüfungsanrede.
 
 import { FUNCTION_WORDS as FUNCTION_WORDS_A11, DIALOG_NAMES as DIALOG_NAMES_A11 } from './a11.js';
+import { LESEN_A12 } from './a12.lesen.js';
 
 /**
  * A1.2 erbt die geschlossene Funktionswortliste von A1.1 und ergänzt sie um das, was ein
@@ -133,7 +139,9 @@ export const CURRICULUM_A12 = {
   examName: 'Start Deutsch 1',
   testSlug: 'abschlusstest-a1-2',
   provenance: {
-    canDo: 'Goethe-Zertifikat A1 Start Deutsch 1 — Prüfungsziele, Testbeschreibung (Goethe-Institut/telc, 2016 ed.)',
+    // Our own can-do lines, written FOR this course on the basis of the exam goals — not quotations
+    // (DaF review #3, Minor: no unverified claim of quoting the Prüfungsziele).
+    canDo: 'Eigene Kann-Beschreibungen nach den Prüfungszielen Goethe-Zertifikat A1 Start Deutsch 1 (Goethe-Institut/telc, 2016), keine wörtlichen Zitate',
     wortliste: 'Goethe-Zertifikat A1 Wortliste (≈650 units), zweite Hälfte',
     themen: 'BAMF Rahmencurriculum Integrationskurs (Handlungsfelder)',
   },
@@ -178,7 +186,7 @@ export const CURRICULUM_A12 = {
         title: 'Am Platz vor der Kirche',
         setting: 'Ana sucht das Rathaus. Frau Fischer wohnt in der Stadt.',
         lines: [
-          { speaker: 'Ana', de: 'Entschuldigung, wie komme ich zum Rathaus?', en: 'Excuse me, how do I get to the town hall?' },
+          { speaker: 'Ana', de: 'Entschuldigung, ich wohne nicht hier. Wie komme ich zum Rathaus?', en: 'Excuse me, I do not live here. How do I get to the town hall?' },
           { speaker: 'Frau Fischer', de: 'Zuerst gehen Sie geradeaus bis zur Kirche.', en: 'First you go straight ahead as far as the church.' },
           { speaker: 'Ana', de: 'Und dann? Ist der Weg weit?', en: 'And then? Is it far?' },
           { speaker: 'Frau Fischer', de: 'Nein. Dann gehen Sie an der Ecke links.', en: 'No. Then you go left at the corner.' },
@@ -199,6 +207,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Der Satz: das Verb steht auf Position 2',
         bodyDe: 'Im Aussagesatz steht das Verb an zweiter Stelle: Sie **gehen** geradeaus. Steht eine Angabe vorn, rutscht das Subjekt hinter das Verb: Dann **gehen** Sie links. Auch in der W-Frage steht das Verb auf Position 2: Wie **komme** ich zum Rathaus? Feste Wendungen für den Weg: **zum** Rathaus, **zur** Kirche, **an der** Ecke — die Regel kommt in Lektion 11.',
+        bodyEn: 'In a statement the verb comes second: Sie **gehen** geradeaus. If another phrase opens the sentence, the subject moves behind the verb: Dann **gehen** Sie links. In a question with a question word the verb is second too: Wie **komme** ich zum Rathaus? Learn the route phrases as fixed chunks for now: **zum** Rathaus, **zur** Kirche, **an der** Ecke — the rule comes in Lektion 11.',
         examples: ['Zuerst gehen Sie geradeaus bis zur Kirche.', 'Nein. Dann gehen Sie an der Ecke links.'],
         ruleSlug: 'basic-sentence-structure',
       },
@@ -209,6 +218,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie eine fremde Person höflich um den Weg zur Apotheke.',
+          promptEn: 'Politely ask a stranger the way to the pharmacy.',
           hintWords: ['der Weg', 'geradeaus', 'die Apotheke'],
           // Sie — mission 5 lässt eine fremde Passantin fragen; die Wegfrage ist eine Fremdansprache.
           anrede: 'Sie',
@@ -219,6 +229,7 @@ export const CURRICULUM_A12 = {
         kind: 'formular',
         taskKey: 'a12-l01',
         taskDe: 'Ana Chakiri wohnt in Bremen am Platz 4. Sie fährt mit der Straßenbahn zum Kurs. Ihre Haltestelle heißt Rathaus. Füllen Sie die Anmeldung für die Stadtbibliothek aus.',
+        taskEn: 'Ana Chakiri lives in Bremen, am Platz 4. She takes the tram to her course; her stop is called Rathaus. Fill in the registration form for the city library.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Haltestelle', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -270,15 +281,15 @@ export const CURRICULUM_A12 = {
         setting: 'Ana ruft den Vermieter Herrn Berg an.',
         lines: [
           { speaker: 'Ana', de: 'Guten Tag, Herr Berg. Die Anzeige ist von Ihnen?', en: 'Good day, Mr Berg. The listing is yours?' },
-          { speaker: 'Herr Berg', de: 'Ja. Das Haus hat drei Stockwerke und einen Garten.', en: 'Yes. The house has three floors and a garden.' },
+          { speaker: 'Herr Berg', de: 'Ja. Das Haus hat einundzwanzig Wohnungen und einen Garten.', en: 'Yes. The house has twenty-one flats and a garden.' },
           { speaker: 'Ana', de: 'Was kostet die Wohnung? Wie ist die Miete?', en: 'What does the flat cost? What is the rent?' },
           { speaker: 'Herr Berg', de: 'Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', en: 'The rent is four hundred and eighty euros. The basement costs twenty euros.' },
-          { speaker: 'Ana', de: 'Und die Wohnung? Wie viele Zimmer hat sie?', en: 'And the flat? How many rooms does it have?' },
+          { speaker: 'Ana', de: 'Und die Wohnung? Ich brauche zwei Zimmer. Wie viele Zimmer hat sie?', en: 'And the flat? I need two rooms. How many rooms does it have?' },
           { speaker: 'Herr Berg', de: 'Vier: Küche, Badezimmer, Wohnzimmer und Schlafzimmer.', en: 'Four: kitchen, bathroom, living room and bedroom.' },
           { speaker: 'Ana', de: 'Hat die Wohnung auch einen Balkon?', en: 'Does the flat also have a balcony?' },
           { speaker: 'Herr Berg', de: 'Ja, der Balkon ist da. Das dritte Stockwerk ist frei.', en: 'Yes, the balcony is there. The third floor is free.' },
           { speaker: 'Ana', de: 'Ist die Treppe da? Ich habe viele Bücher.', en: 'Are the stairs there? I have a lot of books.' },
-          { speaker: 'Herr Berg', de: 'Die erste Wohnung ist frei. Die Nachbarin ist einundzwanzig.', en: 'The first flat is free. The neighbour is twenty-one.' },
+          { speaker: 'Herr Berg', de: 'Ja, die Treppe ist da. Die Nachbarin hat die erste Wohnung.', en: 'Yes, there are stairs. The neighbour has the first flat.' },
         ],
       },
       pretest: {
@@ -290,6 +301,7 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'Zahlen ab 20 und die Ordnungszahlen',
         bodyDe: 'Zahlen über 20 liest man von hinten nach vorn: 21 ist **einundzwanzig**, 48 ist achtundvierzig. Der Hunderter steht vorn: 480 ist **vierhundertachtzig**. Die Ordnungszahl bekommt bis 19 die Endung -te: das **dritte** Stockwerk, die **erste** Wohnung. Ab 20 heißt die Endung -ste: der zwanzigste Mai.',
+        bodyEn: 'German reads numbers over 20 from the back: 21 is **einundzwanzig** (one-and-twenty), 48 is achtundvierzig. Hundreds come first: 480 is **vierhundertachtzig**. Ordinal numbers up to 19 take -te: das **dritte** Stockwerk (the third floor), die **erste** Wohnung (the first flat). From 20 on the ending is -ste: der zwanzigste Mai.',
         examples: ['Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', 'Ja, der Balkon ist da. Das dritte Stockwerk ist frei.'],
         ruleSlug: 'numbers-counting',
       },
@@ -300,6 +312,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Wohnen: Zimmer? Stockwerk? Miete?',
+          promptEn: 'Ask and answer questions about housing: rooms? floor? rent?',
           hintWords: ['das Stockwerk', 'die Miete', 'die Küche'],
           // Sie — der Gegenüber ist der Vermieter bzw. der Schalterbeamte aus Mission 4.
           anrede: 'Sie',
@@ -312,10 +325,11 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l02',
         taskDe: 'Sie möchten die Wohnung aus der Anzeige besichtigen. Schreiben Sie dem Vermieter eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        leitpunkte: ['Warum Sie schreiben', 'Wann Sie die Wohnung sehen möchten', 'Ihre Frage zur Miete'],
+        taskEn: 'You would like to view the flat from the advert. Write the landlord a short message. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you would like to come; your question about the rent.',
+        leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen möchten', 'Ihre Frage zur Miete'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrter Herr Berg, ich möchte die Wohnung sehen. Geht es am Montag um 17 Uhr? Wie hoch ist die Miete? Viele Grüße, Ana Chakiri',
+        sample: 'Sehr geehrter Herr Berg, ich möchte die Wohnung besichtigen. Geht es am Montag um 17 Uhr? Und wie ist die Miete? Viele Grüße, Ana Chakiri',
       },
       links: { listeningExercise: 5, readingOrder: 10 },
       practiceRule: { topics: ['numbers-counting', 'basic-sentence-structure'], typedMin: 3 },
@@ -354,6 +368,9 @@ export const CURRICULUM_A12 = {
         { de: 'das Geld', word: 'Geld', article: 'das', plural: '—', en: 'money', wordId: 'a2a37658-f0f4-4778-8ea0-68344661d168' },
         { de: 'das Kilo', word: 'Kilo', article: 'das', plural: 'Kilo', en: 'kilo(gram)', wordId: '6969abbd-5859-4552-83c2-140cf5ebb7a5' },
         { de: 'das Stück', word: 'Stück', article: 'das', plural: 'Stück', en: 'piece', wordId: '0cc9de6f-ba21-49b0-948e-1ce70e45ae02' },
+        // M7 (2026-10-16): the comparatives the Goethe A1 word list carries as words of their own.
+        { de: 'lieber', word: 'lieber', article: null, plural: null, en: 'rather (gern → lieber)' },
+        { de: 'besser', word: 'besser', article: null, plural: null, en: 'better (gut → besser)' },
       ],
       dialog: {
         title: 'Erledigungen am Nachmittag',
@@ -362,13 +379,13 @@ export const CURRICULUM_A12 = {
           { speaker: 'Lena', de: 'Ana, was machst du heute in der Stadt?', en: 'Ana, what are you doing in town today?' },
           { speaker: 'Ana', de: 'Ich brauche einen Supermarkt und einen Markt.', en: 'I need a supermarket and a market.' },
           { speaker: 'Lena', de: 'Der Markt am Park hat auch Brot. Gehst du?', en: 'The market by the park has bread too. Are you going?' },
-          { speaker: 'Ana', de: 'Ja. Danach brauche ich Geld für das Museum.', en: 'Yes. After that I need money for the museum.' },
+          { speaker: 'Ana', de: 'Ja. Danach brauche ich zehn Euro für das Museum.', en: 'Yes. After that I need ten euros for the museum.' },
           { speaker: 'Lena', de: 'Und die Kasse? Bezahlst du ein Kilo Brot?', en: 'And the till? Are you paying for a kilo of bread?' },
-          { speaker: 'Ana', de: 'Ja. Ich bezahle das Brot und den Kuchen.', en: 'Yes. I pay for the bread and the cake.' },
-          { speaker: 'Lena', de: 'Und danach? Gehst du in das Museum oder das Restaurant?', en: 'And after that? Are you going to the museum or the restaurant?' },
-          { speaker: 'Ana', de: 'Zuerst das Museum, dann das Restaurant.', en: 'First the museum, then the restaurant.' },
-          { speaker: 'Lena', de: 'Und die Quittung? Meine Schule ist hier, das Krankenhaus auch.', en: 'And the receipt? My school is here, the hospital too.' },
-          { speaker: 'Ana', de: 'Gut. Ich hole ein Stück Kuchen für dich!', en: 'Good. I will get a piece of cake for you!' },
+          { speaker: 'Ana', de: 'Ja. Ich bezahle zwölf Euro für das Brot und den Kuchen.', en: 'Yes. I pay twelve euros for the bread and the cake.' },
+          { speaker: 'Lena', de: 'Und danach? Gehst du lieber in das Museum oder das Restaurant?', en: 'And then? Would you rather go to the museum or the restaurant?' },
+          { speaker: 'Ana', de: 'Lieber das Museum. Das Restaurant ist am Abend besser.', en: 'The museum. The restaurant is better in the evening.' },
+          { speaker: 'Lena', de: 'Meine Schule ist hier, das Krankenhaus auch. Und die Quittung?', en: 'My school is here, the hospital too. And the receipt?' },
+          { speaker: 'Ana', de: 'Die Quittung ist hier. Ich habe drei Stück Kuchen.', en: 'The receipt is here. I have three pieces of cake.' },
         ],
       },
       pretest: {
@@ -379,8 +396,9 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Akkusativ: den und einen',
-        bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur der Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu.',
-        examples: ['Ich brauche einen Supermarkt und einen Markt.', 'Ja. Ich bezahle das Brot und den Kuchen.'],
+        bodyDe: 'Viele Verben verlangen ein Objekt im Akkusativ: brauchen, kaufen, bezahlen. Nur das Maskulinum ändert die Form: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminin, Neutrum und Plural bleiben gleich: die Quittung, das Geld, das Museum. Die Form keinen kommt in Lektion 4 dazu. Vorlieben: gern → **lieber**, gut → **besser**.',
+        bodyEn: 'Many verbs take an object in the accusative: brauchen (need), kaufen (buy), bezahlen (pay for). Only masculine nouns change: der Kuchen → **den** Kuchen, ein Supermarkt → **einen** Supermarkt. Feminine, neuter and plural stay the same: die Quittung, das Geld, das Museum. The form keinen follows in Lektion 4. Preferences: gern → **lieber** (rather), gut → **besser** (better).',
+        examples: ['Ich brauche einen Supermarkt und einen Markt.', 'Ja. Ich bezahle zwölf Euro für das Brot und den Kuchen.'],
         ruleSlug: 'accusative-intro',
       },
       phonetik: { focus: 'Die Endung -en klingt kurz: einen, den', items: ['ei-nen MARKT', 'den KU-chen', 'den SU-per-markt'] },
@@ -390,6 +408,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Sagen Sie im Kaufhaus, was Sie brauchen, und fragen Sie nach dem Geschäft.',
+          promptEn: 'In the department store, say what you need and ask for the shop.',
           hintWords: ['das Kaufhaus', 'das Geschäft', 'brauchen'],
           // Sie — der Gegenüber ist Verkaufspersonal (Mission 3, „helpful supermarket employee“).
           anrede: 'Sie',
@@ -400,6 +419,7 @@ export const CURRICULUM_A12 = {
         kind: 'formular',
         taskKey: 'a12-l03',
         taskDe: 'Ana Chakiri wohnt in Bremen und hat am Donnerstag Kurs. Sie möchte Bücher lesen und geht in die Bibliothek. Füllen Sie die Anmeldung für die Bibliothek aus.',
+        taskEn: 'Ana Chakiri lives in Bremen and has her course on Thursday. She wants to read books and goes to the library. Fill in the library registration form.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Tag', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -449,15 +469,15 @@ export const CURRICULUM_A12 = {
         setting: 'Ana übernachtet vor dem Umzug im Hotel. Frau Kaya arbeitet an der Rezeption.',
         lines: [
           { speaker: 'Ana', de: 'Guten Abend, Frau Kaya. Im Zimmer ist keine Bettdecke.', en: 'Good evening, Mrs Kaya. There is no duvet in the room.' },
-          { speaker: 'Frau Kaya', de: 'Entschuldigung! Und das Kissen? Ist es nicht da?', en: 'Sorry! And the pillow? Is it not there?' },
-          { speaker: 'Ana', de: 'Das Kissen ist da, aber die Steckdose funktioniert nicht.', en: 'The pillow is there, but the socket does not work.' },
+          { speaker: 'Frau Kaya', de: 'Entschuldigung! Und das Kissen? Ist es da?', en: 'Sorry! And the pillow? Is it there?' },
+          { speaker: 'Ana', de: 'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.', en: 'Yes, the pillow is there, but the socket does not work.' },
           { speaker: 'Frau Kaya', de: 'Wir wechseln das Zimmer. Der Flur hat keine Lampe?', en: 'We will change the room. Does the hallway have no lamp?' },
           { speaker: 'Ana', de: 'Nein. Hier ist keine Lampe und kein Spiegel.', en: 'No. Here there is no lamp and no mirror.' },
           { speaker: 'Frau Kaya', de: 'Und der Vorhang? Ist der Vorhang am Fenster?', en: 'And the curtain? Is the curtain at the window?' },
           { speaker: 'Ana', de: 'Nein. Die Decke und die Wand sind nicht schön.', en: 'No. The ceiling and the wall are not nice.' },
-          { speaker: 'Frau Kaya', de: 'Ja, der Boden ist alt. Der Eingang ist auch alt.', en: 'Yes, the floor is old. The entrance is old too.' },
+          { speaker: 'Frau Kaya', de: 'Ja, der Boden ist alt, der Eingang auch. Die Toilette ist neu.', en: 'Yes, the floor is old, the entrance too. The toilet is new.' },
           { speaker: 'Ana', de: 'Und die Rechnung? Haben Sie keinen Rabatt?', en: 'And the bill? Do you have no discount?' },
-          { speaker: 'Frau Kaya', de: 'Ja. Das Angebot ist gut: Sie bezahlen die Nacht nicht.', en: 'Yes. The offer is good: you do not pay for the night.' },
+          { speaker: 'Frau Kaya', de: 'Doch. Das Angebot ist gut: Sie bezahlen die Nacht nicht.', en: 'Yes, we do. The offer is good: you do not pay for the night.' },
         ],
       },
       pretest: {
@@ -471,7 +491,8 @@ export const CURRICULUM_A12 = {
       notice: {
         title: 'nicht oder kein?',
         bodyDe: '**kein** verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel: eine Lampe → **keine** Lampe, ein Spiegel → **kein** Spiegel, im Akkusativ **keinen** Rabatt. **nicht** verneint alles andere: ein Verb (funktioniert **nicht**), ein Adjektiv (**nicht** schön) oder ein Nomen mit bestimmtem Artikel. **nicht** steht am Satzende oder direkt vor dem Wort.',
-        examples: ['Nein. Hier ist keine Lampe und kein Spiegel.', 'Das Kissen ist da, aber die Steckdose funktioniert nicht.'],
+        bodyEn: '**kein** negates a noun with ein or with no article: eine Lampe → **keine** Lampe, ein Spiegel → **kein** Spiegel, in the accusative **keinen** Rabatt. **nicht** negates everything else: a verb (funktioniert **nicht**), an adjective (**nicht** schön) or a noun with der, die or das. **nicht** stands at the end of the sentence or right before the word it negates.',
+        examples: ['Nein. Hier ist keine Lampe und kein Spiegel.', 'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.'],
         ruleSlug: 'negation',
       },
       phonetik: { focus: 'Die Verneinung wird betont', items: ['NICHT gut', 'KEIN Spiegel', 'KEI-ne Lam-pe'] },
@@ -481,6 +502,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Reklamieren Sie höflich an der Rezeption: Im Zimmer fehlt etwas.',
+          promptEn: 'Make a polite complaint at reception: something is missing from your room.',
           hintWords: ['nicht', 'kein', 'die Rechnung'],
           // Sie — der Gegenüber ist die Rezeption; die höfliche Absage in Mission 6 siezt ebenso.
           anrede: 'Sie',
@@ -493,10 +515,11 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l04',
         taskDe: 'Sie wohnen im Hotel. Im Zimmer funktioniert etwas nicht. Schreiben Sie dem Hotel eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are staying in a hotel and something in your room does not work. Write the hotel a short message. Open with a greeting and close with a sign-off. Cover three points: your room number and the day; what in the room does not work; your question about the toilet in the corridor.',
         leitpunkte: ['Ihre Zimmernummer und der Tag', 'Was im Zimmer nicht funktioniert', 'Ihre Frage zur Toilette im Flur'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrte Damen und Herren, ich bin in Zimmer 12. Die Steckdose funktioniert nicht. Ist die Toilette im Flur frei? Viele Grüße, Ana Chakiri',
+        sample: 'Sehr geehrte Damen und Herren, ich bin bis Freitag in Zimmer 12. Die Steckdose funktioniert nicht. Ist die Toilette im Flur frei? Viele Grüße, Ana Chakiri',
       },
       links: { listeningExercise: null, readingOrder: 9 },
       practiceRule: { topics: ['negation', 'accusative-intro'], typedMin: 3 },
@@ -520,6 +543,9 @@ export const CURRICULUM_A12 = {
       minutes: 15,
       wortfeld: [
         { de: 'jetzt', word: 'jetzt', article: null, plural: null, en: 'now', wordId: 'f83cc466-8786-4551-9503-76694340a72c' },
+        // M7 (2026-10-16): the polite wish as a fixed chunk — the Goethe A1 inventory lists the
+        // Konjunktiv II of werden („Ich würde gerne ins Kino gehen.") to be learnt as a lexical unit.
+        { de: 'ich würde gern', word: 'würde', article: null, plural: null, en: 'I would like to (polite wish)' },
         { de: 'bald', word: 'bald', article: null, plural: null, en: 'soon', wordId: 'c4e66eae-5ae1-4e92-94fe-7dba0a1c6269' },
         { de: 'oft', word: 'oft', article: null, plural: null, en: 'often', wordId: '4416d7a3-6e8f-47c2-b5f0-28a377bd507f' },
         { de: 'manchmal', word: 'manchmal', article: null, plural: null, en: 'sometimes', wordId: 'f53ef92d-3fb0-4776-ad6e-f5596eb510a0' },
@@ -540,16 +566,16 @@ export const CURRICULUM_A12 = {
         title: 'Zwei Pläne und ein Fahrplan',
         setting: 'Tim und Lena planen das Wochenende.',
         lines: [
-          { speaker: 'Lena', de: 'Tim, was machst du am Wochenende? Hast du Zeit?', en: 'Tim, what are you doing at the weekend? Do you have time?' },
-          { speaker: 'Tim', de: 'Ja. Wo und wohin fahren wir? Ich habe den Fahrplan.', en: 'Yes. Where are we and where are we going? I have the timetable.' },
+          { speaker: 'Lena', de: 'Tim, was machst du am Wochenende? Gehst du ins Konzert?', en: 'Tim, what are you doing at the weekend? Are you going to the concert?' },
+          { speaker: 'Tim', de: 'Ja. Der Ausflug geht nach Köln. Ich habe den Fahrplan.', en: 'Yes. The trip goes to Cologne. I have the timetable.' },
           { speaker: 'Lena', de: 'Wann fährt der Zug? Um wie viel Uhr?', en: 'When does the train leave? At what time?' },
-          { speaker: 'Tim', de: 'Früh. Wer kommt mit? Das Konzert ist in zwei Stunden.', en: 'Early. Who is coming along? The concert is in two hours.' },
-          { speaker: 'Lena', de: 'Warum so früh? Ich stehe nie früh auf.', en: 'Why so early? I never get up early.' },
-          { speaker: 'Tim', de: 'Der Ausflug ist weit. Wie oft fährt der Bus?', en: 'The outing is far. How often does the bus run?' },
-          { speaker: 'Lena', de: 'Manchmal jede Stunde. Ich bin oft zu spät.', en: 'Sometimes every hour. I am often too late.' },
-          { speaker: 'Tim', de: 'Jetzt nicht. In zehn Minuten gehen wir wieder.', en: 'Not now. In ten minutes we will go again.' },
+          { speaker: 'Tim', de: 'Um acht Uhr. Wer kommt mit? Ich stehe um sechs auf.', en: 'At eight o\'clock. Who is coming along? I get up at six.' },
+          { speaker: 'Lena', de: 'Ich würde gern mitkommen. Warum so früh? Ich stehe nie früh auf.', en: 'I would like to come along. Why so early? I never get up early.' },
+          { speaker: 'Tim', de: 'Der Weg ist weit. Wie oft fährt der Bus?', en: 'The way is long. How often does the bus run?' },
+          { speaker: 'Lena', de: 'Jede Stunde. Aber wo ist die Haltestelle?', en: 'Every hour. But where is the stop?' },
+          { speaker: 'Tim', de: 'Am Bahnhof. Ich bin manchmal zehn Minuten zu spät.', en: 'At the station. I am sometimes ten minutes late.' },
           { speaker: 'Lena', de: 'Und die Ferien? Wohin fahren wir im Urlaub?', en: 'And the school holidays? Where are we going on holiday?' },
-          { speaker: 'Tim', de: 'Bald nach Italien. Und danach kommt der Film ins Kino!', en: 'To Italy soon. And after that the film comes to the cinema!' },
+          { speaker: 'Tim', de: 'Bald nach Italien. Und jetzt kommt der Film wieder ins Kino!', en: 'To Italy soon. And now the film is back in the cinema!' },
         ],
       },
       pretest: {
@@ -560,8 +586,9 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'W-Fragen: das Fragewort steht vorn',
-        bodyDe: 'In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter: **Wann** fährt der Zug? **Wohin** fahren wir? **Wie oft** kommt der Bus? **Wer** fragt nach der Person, **was** nach der Sache, **wo** nach dem Ort, **wohin** nach der Richtung, **warum** nach dem Grund, **wie viel** nach der Menge und wie lange nach der Dauer.',
-        examples: ['Wann fährt der Zug? Um wie viel Uhr?', 'Der Ausflug ist weit. Wie oft fährt der Bus?'],
+        bodyDe: 'In der W-Frage steht das Fragewort auf Position 1 und das Verb direkt dahinter: **Wann** fährt der Zug? **Wie oft** kommt der Bus? **Wer** fragt nach der Person, **was** nach der Sache, **wo** nach dem Ort, **wohin** nach der Richtung, **warum** nach dem Grund, **wie viel** nach der Menge und wie lange nach der Dauer. Höflich: **Ich würde gern** mitkommen.',
+        bodyEn: 'The question word comes first and the verb right after it: **Wann** fährt der Zug? **Wie oft** kommt der Bus? **Wer** asks for a person, **was** for a thing, **wo** for a place, **wohin** for a direction, **warum** for a reason, **wie viel** for an amount and wie lange for a duration. Politely: **Ich würde gern** mitkommen (I would like to come along).',
+        examples: ['Wann fährt der Zug? Um wie viel Uhr?', 'Der Weg ist weit. Wie oft fährt der Bus?'],
         ruleSlug: 'question-words',
       },
       phonetik: { focus: 'Die W-Frage endet fallend', items: ['WANN fährt der Zug', 'WO-hin fahren wir', 'WIE oft kommt der Bus'] },
@@ -573,6 +600,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen Sie am Schalter nach dem Zug: Wann? Wohin? Wie lange?',
+          promptEn: 'Ask at the ticket desk about the train: when? where to? how long?',
           hintWords: ['wann', 'wohin', 'der Fahrplan'],
           // Sie — Teil 2 spielt mit einem Prüfungspartner, die Prüfungsanrede bleibt Sie.
           anrede: 'Sie',
@@ -587,6 +615,7 @@ export const CURRICULUM_A12 = {
         // KEIN erfundenes „Formular für den Ausflug“ (es stand zweimal im Kurs): Schreiben Teil 1
         // von SD1 ist eine Anmeldung mit echten Formularfeldern und Unterschrift.
         taskDe: 'Tim Berger fährt am Samstag zum Konzert nach Köln. Der Zug fährt um 8 Uhr. Er bleibt zwei Tage. Füllen Sie die Anmeldung für die Fahrt zum Konzert aus.',
+        taskEn: 'Tim Berger is going to a concert in Cologne on Saturday. The train leaves at 8 and he is staying two days. Fill in the registration form for the trip to the concert.',
         fields: ['Familienname', 'Vorname', 'Tag', 'Uhrzeit', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -638,15 +667,15 @@ export const CURRICULUM_A12 = {
         setting: 'Ana ist in der Praxis. Frau Berger ist Ärztin.',
         lines: [
           { speaker: 'Frau Berger', de: 'Guten Tag, Frau Chakiri. Was tut Ihnen weh?', en: 'Good day, Mrs Chakiri. What hurts?' },
-          { speaker: 'Ana', de: 'Mein Hals tut weh und der Kopf auch.', en: 'My throat hurts and my head too.' },
-          { speaker: 'Frau Berger', de: 'Haben Sie Fieber? Ist das eine Erkältung?', en: 'Do you have a fever? Is it a cold?' },
-          { speaker: 'Ana', de: 'Nein, ich habe kein Fieber. Ich schlafe nicht gut.', en: 'No, I do not have a fever. I do not sleep well.' },
+          { speaker: 'Ana', de: 'Mein Hals tut weh, der Kopf und der Bauch auch.', en: 'My throat hurts, my head and my stomach too.' },
+          { speaker: 'Frau Berger', de: 'Haben Sie Fieber oder eine Erkältung?', en: 'Do you have a fever or a cold?' },
+          { speaker: 'Ana', de: 'Nein. Ich schlafe nicht gut, denn mein Hals tut weh.', en: 'No. I am not sleeping well, because my throat hurts.' },
           { speaker: 'Frau Berger', de: 'Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.', en: 'You take a tablet. The tablet helps against headaches.' },
-          { speaker: 'Ana', de: 'Wie oft nimmt man die Tablette? Und wann isst man?', en: 'How often does one take the tablet? And when does one eat?' },
-          { speaker: 'Frau Berger', de: 'Am Morgen und am Abend. Wer krank ist, schläft viel.', en: 'In the morning and in the evening. Whoever is ill sleeps a lot.' },
-          { speaker: 'Ana', de: 'Und mein Zahn? Der Rücken und der Bauch tun weh.', en: 'And my tooth? My back and my stomach hurt.' },
+          { speaker: 'Ana', de: 'Isst man zuerst? Und wie oft nimmt man die Tablette?', en: 'Does one eat first? And how often does one take the tablet?' },
+          { speaker: 'Frau Berger', de: 'Ja. Jeden Morgen und jeden Abend. Wer krank ist, schläft viel.', en: 'Yes. Every morning and every evening. Whoever is ill sleeps a lot.' },
+          { speaker: 'Ana', de: 'Und mein Auge? Der Zahn und der Rücken tun nicht weh.', en: 'And my eye? My tooth and my back do not hurt.' },
           { speaker: 'Frau Berger', de: 'Ihr Auge ist gesund. Die Hand und der Fuß sehen gut aus.', en: 'Your eye is healthy. The hand and the foot look fine.' },
-          { speaker: 'Ana', de: 'Danke. Hier ist meine Versichertenkarte für die Praxis.', en: 'Thank you. Here is my health insurance card for the practice.' },
+          { speaker: 'Ana', de: 'Danke. Ich bin krank. Hier ist meine Versichertenkarte für die Praxis.', en: 'Thank you. I am ill. Here is my health insurance card for the practice.' },
         ],
       },
       pretest: {
@@ -657,7 +686,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Verben mit Vokalwechsel',
-        bodyDe: 'Einige Verben ändern im Präsens den Stammvokal, aber nur in den Formen mit -st und -t: nehmen → man **nimmt**, helfen → sie **hilft**, essen → man **isst**, schlafen → wer **schläft**. Bei ich, wir, ihr und Sie bleibt der Vokal: ich **schlafe**, Sie **nehmen**.',
+        bodyDe: 'Einige Verben ändern im Präsens den Stammvokal, aber nur in den Formen mit -st und -t: nehmen → man **nimmt**, helfen → sie **hilft**, essen → man **isst**, schlafen → wer **schläft**. Bei ich, wir, ihr und Sie bleibt der Vokal: ich **schlafe**, Sie **nehmen**. Den Grund nennt **denn**, das Verb bleibt auf Position 2.',
+        bodyEn: 'Some verbs change their stem vowel in the present tense, but only in the forms ending in -st and -t: nehmen → man **nimmt**, helfen → sie **hilft**, essen → man **isst**, schlafen → wer **schläft**. With ich, wir, ihr and Sie the vowel stays: ich **schlafe**, Sie **nehmen**. **denn** (because) gives the reason, and the verb stays in position 2.',
         examples: ['Sie nehmen eine Tablette. Die Tablette hilft gegen Kopfschmerzen.', 'Ihr Auge ist gesund. Die Hand und der Fuß sehen gut aus.'],
         ruleSlug: 'stem-changing-verbs',
       },
@@ -670,6 +700,7 @@ export const CURRICULUM_A12 = {
           // jetzt in L7, mit mission_order 9). Sich anmelden und um einen Termin bitten ist Teil 3.
           teil: 'Sprechen Teil 3',
           promptDe: 'Melden Sie sich in der Praxis an und bitten Sie um einen Termin.',
+          promptEn: 'Register at the doctor\'s practice and ask for an appointment.',
           hintWords: ['die Praxis', 'wehtun', 'die Versichertenkarte'],
           // Sie — der Gegenüber ist das Praxispersonal (Mission 1, „calm medical receptionist“).
           anrede: 'Sie',
@@ -680,15 +711,16 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l06',
         taskDe: 'Sie sind krank. Sie kommen heute nicht in die Praxis. Schreiben Sie der Praxis eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are ill and cannot come to the practice today. Write the practice a short message. Open with a greeting and close with a sign-off. Cover three points: why you are writing; what hurts; your question about a new appointment.',
         leitpunkte: ['Warum Sie schreiben', 'Was Ihnen wehtut', 'Ihre Frage nach einem neuen Termin'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrte Damen und Herren, ich bin krank. Mein Hals tut weh und ich habe Fieber. Wann ist ein neuer Termin frei? Viele Grüße, Ana Chakiri',
+        sample: 'Sehr geehrte Damen und Herren, ich bin krank. Mein Hals tut weh und ich habe Fieber. Wann ist ein Termin frei? Viele Grüße, Ana Chakiri',
       },
       // Kein A1.2-Lesetext handelt von Gesundheit und keine der sechs Hörübungen von der Praxis —
       // das ist der ehrliche Zustand; ein falsches Etikett wäre schlechter als eine Lücke.
       links: { listeningExercise: null, readingOrder: null },
-      practiceRule: { topics: ['stem-changing-verbs'], typedMin: 4 },
+      practiceRule: { topics: ['stem-changing-verbs'], typedMin: 4, mustCover: ['denn'] },
     },
     {
       nr: 7,
@@ -730,15 +762,15 @@ export const CURRICULUM_A12 = {
         title: 'Fotos aus Marokko',
         setting: 'Lena sieht Fotos von Anas Familie.',
         lines: [
-          { speaker: 'Lena', de: 'Wer ist die Frau da? Sie hat lange Haare.', en: 'Who is the woman there? She has long hair.' },
+          { speaker: 'Lena', de: 'Wer ist die Frau da? Ihr Haar ist lang.', en: 'Who is the woman there? Her hair is long.' },
           { speaker: 'Ana', de: 'Das ist meine Tante. Ihr Gesicht ist schön.', en: 'That is my aunt. Her face is beautiful.' },
           { speaker: 'Lena', de: 'Und der Mann? Wer ist das? Dein Onkel?', en: 'And the man? Who is that? Your uncle?' },
-          { speaker: 'Ana', de: 'Ja, mein Onkel. Er ist groß und immer glücklich.', en: 'Yes, my uncle. He is tall and always happy.' },
+          { speaker: 'Ana', de: 'Ja. Mein Onkel ist groß und immer glücklich.', en: 'Yes. My uncle is tall and always happy.' },
           { speaker: 'Lena', de: 'Und das Kind da? Der Mund ist klein.', en: 'And the child there? The mouth is small.' },
-          { speaker: 'Ana', de: 'Das sind meine Oma und mein Opa. Sie sind alt.', en: 'Those are my grandma and my grandpa. They are old.' },
+          { speaker: 'Ana', de: 'Das ist meine Schwester. Und da sind meine Oma und mein Opa.', en: 'That is my sister. And there are my grandma and my grandpa.' },
           { speaker: 'Lena', de: 'Deine Oma ist traurig? Ihre Nase ist wie deine.', en: 'Is your grandma sad? Her nose is like yours.' },
-          { speaker: 'Ana', de: 'Nein, sie ist nicht traurig. Sie ist müde.', en: 'No, she is not sad. She is tired.' },
-          { speaker: 'Lena', de: 'Wer ist der Mann mit dem kurzen Haar?', en: 'Who is the man with the short hair?' },
+          { speaker: 'Ana', de: 'Nein, sie war nur müde. Sie hatte keine Zeit.', en: 'No, she was just tired. She had no time.' },
+          { speaker: 'Lena', de: 'Und der Mann da? Sein Haar ist kurz.', en: 'And the man there? His hair is short.' },
           { speaker: 'Ana', de: 'Das ist mein Bruder. Sein Bein und sein Arm sind lang.', en: 'That is my brother. His leg and his arm are long.' },
         ],
       },
@@ -750,8 +782,9 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Nominativ: wer oder was?',
-        bodyDe: 'Lektion 3 hat das Objekt gezeigt: den Onkel. Das Subjekt dagegen steht im Nominativ, und danach fragt man mit **wer**: **Wer** ist das? — **Mein Onkel** ist groß. Nach sein steht das zweite Nomen ebenfalls im Nominativ: **Das ist** mein Bruder. Die Artikel im Nominativ: **der** Opa, **die** Oma.',
-        examples: ['Wer ist die Frau da? Sie hat lange Haare.', 'Das ist mein Bruder. Sein Bein und sein Arm sind lang.'],
+        bodyDe: 'Lektion 3 hat das Objekt gezeigt: den Onkel. Das Subjekt dagegen steht im Nominativ, und danach fragt man mit **wer**: **Wer** ist das? — **Mein Onkel** ist groß. Nach sein steht das zweite Nomen ebenfalls im Nominativ: **Das ist** mein Bruder. Die Artikel im Nominativ: **der** Opa, **die** Oma. Präteritum (früher): ich/sie **war**, ich/sie **hatte**.',
+        bodyEn: 'Lektion 3 showed the object: den Onkel. The subject is in the nominative, and you ask for it with **wer** (who): **Wer** ist das? — **Mein Onkel** ist groß. After sein the second noun is nominative too: **Das ist** mein Bruder. The nominative articles: **der** Opa, **die** Oma. Präteritum (simple past): ich/sie **war** (was), ich/sie **hatte** (had).',
+        examples: ['Wer ist die Frau da? Ihr Haar ist lang.', 'Das ist mein Bruder. Sein Bein und sein Arm sind lang.'],
         ruleSlug: 'nominative-case',
       },
       // Der Kontrast muss im KLANG liegen, nicht in der Bedeutung: „lang“ [laŋ] und „kurz“ [kʊʁts]
@@ -766,6 +799,7 @@ export const CURRICULUM_A12 = {
           // verlinkte die Mission, die ihn trainiert.
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vollständig vor: Name, Alter, Land, Wohnort, Sprachen, Beruf und Familie.',
+          promptEn: 'Introduce yourself fully: name, age, country, home town, languages, job and family.',
           hintWords: ['der Name', 'das Land', 'die Familie'],
           // Sie — die Gegenüber ist die Prüferin (Mission 9).
           anrede: 'Sie',
@@ -777,14 +811,15 @@ export const CURRICULUM_A12 = {
         taskKey: 'a12-l07',
         // KEIN „Steckbrief“ mit dem Feld „Aussehen“: Schreiben Teil 1 von SD1 ist immer eine
         // ANMELDUNG (Kurs, Bibliothek, Verein, Kasse) mit echten Formularfeldern und Unterschrift.
-        taskDe: 'Lena Berg ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. Füllen Sie die Anmeldung für den Sportverein aus.',
+        taskDe: 'Lena Brandt ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. Füllen Sie die Anmeldung für den Sportverein aus.',
+        taskEn: 'Lena Brandt is 24 and lives at Kölner Straße 12 in Cologne. She was born on 3 March 2002. Fill in the registration form for the sports club.',
         fields: ['Familienname', 'Vorname', 'Geburtsdatum', 'Straße', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
-        sample: 'Familienname: Berg / Vorname: Lena / Geburtsdatum: 3. März 2002 / Straße: Kölner Straße 12 / Unterschrift: L. Berg',
+        sample: 'Familienname: Brandt / Vorname: Lena / Geburtsdatum: 3. März 2002 / Straße: Kölner Straße 12 / Unterschrift: L. Brandt',
       },
       links: { listeningExercise: null, readingOrder: 1 },
-      practiceRule: { topics: ['nominative-case'], typedMin: 3 },
+      practiceRule: { topics: ['nominative-case'], typedMin: 3, mustCover: ['hatte', 'war'] },
     },
     {
       nr: 8,
@@ -826,11 +861,11 @@ export const CURRICULUM_A12 = {
         setting: 'Tim und Lena räumen die Wohnung auf.',
         lines: [
           { speaker: 'Lena', de: 'Tim, die Waschmaschine ist da. Hilf mir bitte!', en: 'Tim, the washing machine is here. Help me, please!' },
-          { speaker: 'Tim', de: 'Ja, gleich. Ich sehe fern.', en: 'Yes, in a moment. I am watching TV.' },
+          { speaker: 'Tim', de: 'Ja, gleich. Ich sehe zehn Minuten fern.', en: 'Yes, in a moment. I am watching TV for ten minutes.' },
           { speaker: 'Lena', de: 'Nein, komm jetzt! Der Kühlschrank hat kein Brot.', en: 'No, come now! The fridge has no bread.' },
           { speaker: 'Tim', de: 'Gut. Wo hast du die Möbel für das Kinderzimmer?', en: 'Fine. Where do you have the furniture for the children’s room?' },
           { speaker: 'Lena', de: 'Das Sofa und der Schrank sind in der Garage.', en: 'The sofa and the wardrobe are in the garage.' },
-          { speaker: 'Tim', de: 'Und das Bett? Warte, ich frage die Nachbarin.', en: 'And the bed? Wait, I will ask the neighbour.' },
+          { speaker: 'Tim', de: 'Und das Bett? Warte! Ich frage die Nachbarin.', en: 'And the bed? Wait! I will ask the neighbour.' },
           { speaker: 'Lena', de: 'Gut. Der Teppich ist auf der Terrasse. Hol ihn!', en: 'Good. The carpet is on the terrace. Get it!' },
           { speaker: 'Tim', de: 'Und der Herd? Der Herd ist neu, das Dach ist alt.', en: 'And the stove? The stove is new, the roof is old.' },
           { speaker: 'Lena', de: 'Mach den Fernseher aus und hilf mir bitte!', en: 'Turn off the television and help me, please!' },
@@ -845,7 +880,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Imperativ: bitten und auffordern',
-        bodyDe: 'Der Imperativ steht auf Position 1. Bei **du** fällt das Pronomen weg und die Endung -st fällt mit: **Komm!**, **Warte!**, **Hilf!** Trennbare Verben schicken die Vorsilbe ans Ende: **Mach** den Fernseher **aus**! Bei Sie bleibt das Pronomen stehen: Helfen Sie bitte! Das Wort **bitte** macht jede Aufforderung höflich.',
+        bodyDe: 'Imperativ vorn: **du** ohne -st: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Beide normalerweise ohne Pronomen; zur Betonung möglich. Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
+        bodyEn: 'The imperative comes first: **du** without -st: du kommst → **Komm!**, du hilfst → **Hilf!** An ä becomes a: du fährst → **Fahr!** If the stem ends in s, drop only -t: du isst → **Iss!** With ihr only the pronoun is dropped: **Kommt!** Both normally omit the pronoun; it is possible for emphasis. With Sie the pronoun stays: Helfen Sie **bitte**!',
         examples: ['Tim, die Waschmaschine ist da. Hilf mir bitte!', 'Mach den Fernseher aus und hilf mir bitte!'],
         ruleSlug: 'imperative',
       },
@@ -856,6 +892,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Formulieren Sie drei höfliche Bitten in der Sie-Form und reagieren Sie auf eine Bitte.',
+          promptEn: 'Make three polite requests in the Sie-form and respond to a request.',
           hintWords: ['bitte', 'helfen', 'die Waschmaschine'],
           // Sie — die Gegenüber ist die Prüferin (Mission 12, Sprechen Teil 3); die Sie-Bitte ist
           // die Prüfungsform, die du-Bitte übt der Dialog.
@@ -866,11 +903,12 @@ export const CURRICULUM_A12 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a12-l08',
-        taskDe: 'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit drei Bitten für den Haushalt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskDe: 'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit zwei Bitten für den Haushalt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are not at home today. Write Tim a short message with two requests about the housework. Open with a greeting and close with a sign-off. Cover three points: what needs doing in the kitchen; where the rug should go; when you will be home.',
         leitpunkte: ['Was in der Küche zu tun ist', 'Wohin der Teppich soll', 'Wann Sie nach Hause kommen'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Tim, mach bitte den Kühlschrank leer. Der Teppich kommt auf die Terrasse. Ich komme um sechs Uhr. Bis später, Lena',
+        sample: 'Hallo Tim, ich bin heute nicht zu Hause. Mach bitte in der Küche den Herd aus. Bring bitte den Teppich ins Kinderzimmer. Ich komme um sechs Uhr nach Hause. Bis später, Lena',
       },
       links: { listeningExercise: null, readingOrder: 4 },
       practiceRule: { topics: ['imperative'], typedMin: 4 },
@@ -917,13 +955,13 @@ export const CURRICULUM_A12 = {
           { speaker: 'Herr Schmidt', de: 'Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', en: 'Good day. You may not cycle here.' },
           { speaker: 'Ana', de: 'Entschuldigung. Wo darf ich langsam fahren?', en: 'Sorry. Where may I ride slowly?' },
           { speaker: 'Herr Schmidt', de: 'Am Platz. Den Müll müssen Sie nach Hause nehmen.', en: 'At the square. You must take the rubbish home.' },
-          { speaker: 'Ana', de: 'Gut. Ich will zum Flughafen. Der Koffer ist da.', en: 'Fine. I want to go to the airport. The suitcase is here.' },
-          { speaker: 'Herr Schmidt', de: 'Mit dem Taxi schnell, mit dem Bus langsam.', en: 'Quick by taxi, slow by bus.' },
+          { speaker: 'Ana', de: 'Gut. Ich will zum Flughafen. Ich habe zwei Koffer.', en: 'Fine. I want to go to the airport. I have two suitcases.' },
+          { speaker: 'Herr Schmidt', de: 'Der Bus fährt von sieben bis zehn Uhr. Das Taxi ist schnell.', en: 'The bus runs from seven to ten o\'clock. The taxi is fast.' },
           { speaker: 'Ana', de: 'Ich möchte ein Ticket. Wo soll ich einsteigen?', en: 'I would like a ticket. Where should I get on?' },
-          { speaker: 'Herr Schmidt', de: 'Hier. Sie dürfen langsam laufen, aber nicht schnell.', en: 'Here. You may walk slowly, but not fast.' },
-          { speaker: 'Ana', de: 'Und wo muss ich aussteigen? Das Flugzeug fliegt bald.', en: 'And where do I have to get off? The plane leaves soon.' },
-          { speaker: 'Herr Schmidt', de: 'Ja. Das Flugzeug fliegt um 9 Uhr. Die Reise ist kurz.', en: 'Yes. The plane leaves at 9 o’clock. The journey is short.' },
-          { speaker: 'Ana', de: 'Wann fährt der Bus ab? Wann kommt er an?', en: 'When does the bus depart? When does it arrive?' },
+          { speaker: 'Herr Schmidt', de: 'Hier, ab acht Uhr. Sie dürfen langsam laufen, aber nicht schnell.', en: 'Here, from eight o\'clock. You may walk slowly, but not fast.' },
+          { speaker: 'Ana', de: 'Und wo muss ich aussteigen? Wann fährt der Bus ab?', en: 'And where do I have to get off? When does the bus leave?' },
+          { speaker: 'Herr Schmidt', de: 'Am Flughafen. Der Bus fährt jetzt ab. Gute Reise!', en: 'At the airport. The bus is leaving now. Have a good trip!' },
+          { speaker: 'Ana', de: 'Danke! Ich komme um neun Uhr an. Das Flugzeug fliegt um zehn.', en: 'Thank you! I arrive at nine o\'clock. The plane leaves at ten.' },
         ],
       },
       pretest: {
@@ -934,7 +972,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Modalverben: können, müssen, dürfen, wollen, sollen',
-        bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**.',
+        bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**. Zeiten: **von sieben bis zehn Uhr**, **ab acht Uhr**.',
+        bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**. Times: **von sieben bis zehn Uhr** (from seven to ten), **ab acht Uhr** (from eight on).',
         examples: ['Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', 'Am Platz. Den Müll müssen Sie nach Hause nehmen.'],
         ruleSlug: 'modal-verbs-intro',
       },
@@ -947,6 +986,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen Sie nach den Regeln im Haus: Was ist erlaubt, was nicht?',
+          promptEn: 'Ask about the house rules: what is allowed and what is not?',
           hintWords: ['dürfen', 'müssen', 'der Müll'],
           // Sie — der Gegenüber ist der Hausmeister (Mission 7, „strict but kind caretaker“).
           anrede: 'Sie',
@@ -957,13 +997,14 @@ export const CURRICULUM_A12 = {
         kind: 'formular',
         taskKey: 'a12-l09',
         taskDe: 'Ana Chakiri fliegt am 14. Juli nach Marokko. Sie wohnt in Bremen und fährt mit dem Taxi zum Flughafen. Füllen Sie die Anmeldung für die Reise aus.',
+        taskEn: 'Ana Chakiri is flying to Morocco on 14 July. She lives in Bremen and takes a taxi to the airport. Fill in the registration form for the trip.',
         fields: ['Familienname', 'Vorname', 'Datum', 'Land', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
         sample: 'Familienname: Chakiri / Vorname: Ana / Datum: 14. Juli / Land: Marokko / Unterschrift: A. Chakiri',
       },
       links: { listeningExercise: null, readingOrder: 7 },
-      practiceRule: { topics: ['modal-verbs-intro'], typedMin: 4 },
+      practiceRule: { topics: ['modal-verbs-intro'], typedMin: 4, mustCover: ['bis', 'ab'] },
     },
     {
       nr: 10,
@@ -976,7 +1017,7 @@ export const CURRICULUM_A12 = {
         'Ich kann sagen, für wen ich etwas kaufe.',
         'Ich kann nach der Größe fragen.',
         'Ich kann sagen, welche Jacke mir passt.',
-        'Ich kann zwei Sachen vergleichen: billiger oder teurer.',
+        'Ich kann zwei Sachen vergleichen: billiger als.',
       ],
       examTeile: ['Hören Teil 1', 'Sprechen Teil 2', 'Schreiben Teil 2'],
       grammarSlugs: ['prepositions-accusative', 'accusative-intro'],
@@ -999,19 +1040,22 @@ export const CURRICULUM_A12 = {
         { de: 'anziehen', word: 'anziehen', article: null, plural: null, en: 'to put on', wordId: 'c5a3a2ce-5066-4e81-9ec0-e62a4b3020d6' },
         { de: 'passen', word: 'passen', article: null, plural: null, en: 'to fit', wordId: '28162199-b453-48cb-9b78-455fdfd9ec39' },
         { de: 'billig', word: 'billig', article: null, plural: null, en: 'cheap', wordId: '1f291da6-52ee-438c-9e70-9e9e212a301a' },
+        // M7 (2026-10-16): the Dativverben the Goethe A1 inventory names with mir/dir (Prüfungsziele 2022, p. 103).
+        { de: 'gefallen', word: 'gefallen', article: null, plural: null, en: 'to please (es gefällt mir: I like it)' },
+        { de: 'gehören', word: 'gehören', article: null, plural: null, en: 'to belong to' },
       ],
       dialog: {
         title: 'Im Kaufhaus',
         setting: 'Ana und Lena kaufen Kleidung im Kaufhaus.',
         lines: [
-          { speaker: 'Lena', de: 'Ana, die Jacke ist für dich zu groß.', en: 'Ana, the jacket is too big for you.' },
+          { speaker: 'Lena', de: 'Gehört die Jacke dir? Sie ist für dich zu groß.', en: 'Is the jacket yours? It is too big for you.' },
           { speaker: 'Ana', de: 'Ja. Welche Größe hat der Mantel für meinen Bruder?', en: 'Yes. What size is the coat for my brother?' },
           { speaker: 'Lena', de: 'Größe 50. Ohne den Schal ist er billig.', en: 'Size 50. Without the scarf it is cheap.' },
           { speaker: 'Ana', de: 'Ich trage gern eine Hose, ein Hemd und ein Kleid.', en: 'I like wearing trousers, a shirt and a dress.' },
-          { speaker: 'Lena', de: 'Und der Rock? Der Pullover passt gut zu dir.', en: 'And the skirt? The pullover suits you.' },
-          { speaker: 'Ana', de: 'Den Pullover ziehe ich morgen an.', en: 'I will put the pullover on tomorrow.' },
-          { speaker: 'Lena', de: 'Und die Schuhe? Ohne Socken gehe ich nicht.', en: 'And the shoes? I do not go without socks.' },
-          { speaker: 'Ana', de: 'Ich kaufe die Mütze für meine Oma.', en: 'I am buying the cap for my grandma.' },
+          { speaker: 'Lena', de: 'Der Rock ist zu kurz. Der Pullover passt dir gut.', en: 'The skirt is too short. The pullover fits you well.' },
+          { speaker: 'Ana', de: 'Er gefällt mir. Den Pullover ziehe ich morgen an.', en: 'I like it. I will put the pullover on tomorrow.' },
+          { speaker: 'Lena', de: 'Die Schuhe passen. Ohne Socken gehe ich nicht.', en: 'The shoes fit. I do not go without socks.' },
+          { speaker: 'Ana', de: 'Ich kaufe die Mütze für meine Oma. Ich habe zehn Euro.', en: 'I am buying the cap for my grandma. I have ten euros.' },
           { speaker: 'Lena', de: 'Die Mütze ist billiger als der Schal.', en: 'The cap is cheaper than the scarf.' },
           { speaker: 'Ana', de: 'Gut. Ich gehe durch das Kaufhaus und bezahle.', en: 'Good. I will walk through the store and pay.' },
         ],
@@ -1024,8 +1068,9 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Präpositionen mit Akkusativ',
-        bodyDe: 'Nach **für**, **ohne** und **durch** steht immer der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur der Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Beim Vergleich hilft **als**: Die Mütze ist **billiger als** der Schal.',
-        examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma.'],
+        bodyDe: 'Nach **für**, **ohne** und **durch** steht der Akkusativ: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Nur das Maskulinum ändert die Form; feminin, neutrum und Plural bleiben gleich: für **die** Oma, für **das** Kind. Vergleich mit **als**: Die Mütze ist **billiger als** der Schal. Dativ bei gefallen, passen, gehören: Er **gefällt mir**. Er **passt dir**. Die Jacke **gehört dir**.',
+        bodyEn: 'After **für** (for), **ohne** (without) and **durch** (through) comes the accusative: **für den** Bruder, **ohne den** Schal, **durch das** Kaufhaus. Only masculine nouns change; feminine, neuter and plural stay the same: für **die** Oma, für **das** Kind. Comparison with **als** (than): Die Mütze ist **billiger als** der Schal. gefallen (please), passen (fit) and gehören (belong) take the dative: Er **gefällt mir** (I like it). Er **passt dir** (it fits you). Die Jacke **gehört dir** (the jacket is yours).',
+        examples: ['Die Mütze ist billiger als der Schal.', 'Ich kaufe die Mütze für meine Oma. Ich habe zehn Euro.'],
         ruleSlug: 'prepositions-accusative',
       },
       phonetik: { focus: 'Die Endung -er im Vergleich', items: ['BIL-lig', 'BIL-li-ger', 'GRÖ-ßer'] },
@@ -1035,6 +1080,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie im Geschäft: Für wen? Welche Größe? Ohne was?',
+          promptEn: 'Ask and answer in the shop: for whom? which size? without what?',
           hintWords: ['die Jacke', 'die Größe', 'passen'],
           // Sie — der Gegenüber ist Verkaufspersonal (Mission 8, „quick café barista“).
           anrede: 'Sie',
@@ -1047,10 +1093,11 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l10',
         taskDe: 'Sie kaufen Kleidung für eine Freundin. Schreiben Sie ihr eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are buying clothes for a friend. Write her a short message. Open with a greeting and close with a sign-off. Cover three points: what you are buying; what size the jacket is; when you will bring the things.',
         leitpunkte: ['Was Sie kaufen', 'Welche Größe die Jacke hat', 'Wann Sie die Sachen bringen'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena, ich kaufe eine Jacke für dich. Die Größe ist 38. Der Pullover ist billiger. Ich bringe alles am Montag. Viele Grüße, Ana',
+        sample: 'Hallo Lena, ich kaufe eine Jacke und einen Pullover für dich. Die Jacke hat Größe 38. Der Pullover ist billiger. Ich bringe alles am Montag. Viele Grüße, Ana',
       },
       links: { listeningExercise: 1, readingOrder: 3 },
       practiceRule: { topics: ['prepositions-accusative', 'accusative-intro'], typedMin: 3 },
@@ -1102,12 +1149,12 @@ export const CURRICULUM_A12 = {
           { speaker: 'Tim', de: 'Wie ist das Wetter im Sommer bei dir?', en: 'What is the weather like in summer where you are?' },
           { speaker: 'Ana', de: 'Im Sommer ist es sonnig, bei dreißig Grad.', en: 'In summer it is sunny, around thirty degrees.' },
           { speaker: 'Tim', de: 'Und im Winter? Bei uns schneit es oft.', en: 'And in winter? Where we live it often snows.' },
-          { speaker: 'Ana', de: 'Bei uns kommt der Schnee nie.', en: 'Where we live the snow never comes.' },
+          { speaker: 'Ana', de: 'Bei uns kommt der Schnee nie. Die Sonne ist immer warm.', en: 'Where I live, the snow never comes. The sun is always warm.' },
           { speaker: 'Tim', de: 'Seit einer Woche regnet es. Es ist wolkig.', en: 'It has been raining for a week. It is cloudy.' },
           { speaker: 'Ana', de: 'Die Wolke ist da und der Wind ist kalt.', en: 'The cloud is there and the wind is cold.' },
           { speaker: 'Tim', de: 'Heute ist es windig. Am Abend kommt ein Gewitter.', en: 'Today it is windy. In the evening a thunderstorm is coming.' },
           { speaker: 'Ana', de: 'Die Temperatur ist bei zehn Grad. Zum Bahnhof gehe ich nicht.', en: 'The temperature is around ten degrees. I am not walking to the station.' },
-          { speaker: 'Tim', de: 'Welche Jahreszeit ist bei dir schön?', en: 'Which season is nice where you are?' },
+          { speaker: 'Tim', de: 'Vor einer Woche war es warm. Welche Jahreszeit ist bei dir schön?', en: 'A week ago it was warm. Which season is nice where you are?' },
           { speaker: 'Ana', de: 'Der Sommer. Nach dem Regen gehe ich zur Brücke.', en: 'Summer. After the rain I walk to the bridge.' },
         ],
       },
@@ -1119,7 +1166,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Präpositionen mit Dativ',
-        bodyDe: 'Nach mit, nach, bei, seit, von, zu und aus steht der Dativ: **nach dem** Regen, **bei** zehn Grad, **seit einer** Woche. Oft verschmelzen Präposition und Artikel: in dem wird **im** Sommer, an dem wird **am** Abend, zu der wird **zur** Brücke, zu dem wird **zum** Bahnhof — die drei Wendungen aus Lektion 1 bekommen hier ihre Regel.',
+        bodyDe: 'Nach mit, nach, bei, seit, von, zu und aus steht der Dativ: **nach dem** Regen, **bei** zehn Grad, **seit einer** Woche. Auch vor + Zeit: **vor einer** Woche. In dem wird **im** Sommer, an dem **am** Abend, zu der **zur** Brücke, zu dem **zum** Bahnhof — die Wendungen aus Lektion 1.',
+        bodyEn: 'After mit, nach, bei, seit, von, zu and aus comes the dative: **nach dem** Regen, **bei** zehn Grad, **seit einer** Woche (for a week). Also vor with time: **vor einer** Woche (a week ago). in dem → **im** Sommer, an dem → **am** Abend, zu der → **zur** Brücke, zu dem → **zum** Bahnhof — the phrases from Lektion 1.',
         examples: ['Seit einer Woche regnet es. Es ist wolkig.', 'Der Sommer. Nach dem Regen gehe ich zur Brücke.'],
         ruleSlug: 'dative-prepositions-intro',
       },
@@ -1131,6 +1179,7 @@ export const CURRICULUM_A12 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Wetter: Sommer? Winter? Temperatur?',
+          promptEn: 'Ask and answer questions about the weather: summer? winter? temperature?',
           hintWords: ['das Wetter', 'sonnig', 'die Temperatur'],
           // Sie — Teil 2 spielt mit einem Prüfungspartner.
           anrede: 'Sie',
@@ -1144,14 +1193,15 @@ export const CURRICULUM_A12 = {
         taskKey: 'a12-l11',
         // KEIN Formular fragt „Wetter“ und „Temperatur“ ab — die beiden Felder standen dort, weil
         // das Wortfeld sie liefert. Das Wetter gehört in sprechen.open, wo es schon steht.
-        taskDe: 'Lena Berg meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. Füllen Sie die Anmeldung für den Ausflug aus.',
+        taskDe: 'Lena Brandt meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. Füllen Sie die Anmeldung für den Ausflug aus.',
+        taskEn: 'Lena Brandt signs up for the outing on Sunday. She lives in Cologne and travels by bus. Fill in the registration form for the outing.',
         fields: ['Familienname', 'Vorname', 'Stadt', 'Verkehrsmittel', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
-        sample: 'Familienname: Berg / Vorname: Lena / Stadt: Köln / Verkehrsmittel: Bus / Unterschrift: L. Berg',
+        sample: 'Familienname: Brandt / Vorname: Lena / Stadt: Köln / Verkehrsmittel: Bus / Unterschrift: L. Brandt',
       },
       links: { listeningExercise: 6, readingOrder: null },
-      practiceRule: { topics: ['dative-prepositions-intro'], typedMin: 4 },
+      practiceRule: { topics: ['dative-prepositions-intro'], typedMin: 4, mustCover: ['vor'] },
     },
     {
       nr: 12,
@@ -1195,13 +1245,13 @@ export const CURRICULUM_A12 = {
           { speaker: 'Lena', de: 'Ana, wir haben gestern schön gefeiert!', en: 'Ana, we celebrated nicely yesterday!' },
           { speaker: 'Ana', de: 'Ja! Ich habe Kuchen und Schokolade gegessen.', en: 'Yes! I ate cake and chocolate.' },
           { speaker: 'Lena', de: 'Und das Getränk? Hast du den Saft getrunken?', en: 'And the drink? Did you drink the juice?' },
-          { speaker: 'Ana', de: 'Nein, ich habe Milch getrunken. Der Käse war lecker.', en: 'No, I drank milk. The cheese was delicious.' },
-          { speaker: 'Lena', de: 'Die Wurst und das Fleisch haben wir gekauft.', en: 'We bought the sausage and the meat.' },
-          { speaker: 'Ana', de: 'Und den Fisch? Tim hat ihn gekocht.', en: 'And the fish? Tim cooked it.' },
-          { speaker: 'Lena', de: 'Das Ei und das Gemüse hat meine Oma gemacht.', en: 'My grandma made the egg and the vegetables.' },
-          { speaker: 'Ana', de: 'Das Obst und die Kartoffeln habe ich gekauft.', en: 'I bought the fruit and the potatoes.' },
+          { speaker: 'Ana', de: 'Nein, ich habe Milch getrunken. Der Käse war lecker. Ich bin glücklich.', en: 'No, I drank milk. The cheese was delicious. I am happy.' },
+          { speaker: 'Lena', de: 'Die Wurst und das Fleisch haben wir gekauft. Und den Fisch?', en: 'We bought the sausage and the meat. And the fish?' },
+          { speaker: 'Ana', de: 'Tim hat ihn gekocht. Ich habe die Getränke bezahlt.', en: 'Tim cooked it. I paid for the drinks.' },
+          { speaker: 'Lena', de: 'Das Ei und das Gemüse hat meine Oma gemacht. Gut, oder?', en: 'My grandma made the egg and the vegetables. Good, isn\'t it?' },
+          { speaker: 'Ana', de: 'Ja! Das Obst und die Kartoffeln habe ich gekauft.', en: 'Yes! I bought the fruit and the potatoes.' },
           { speaker: 'Lena', de: 'Die Nudeln und den Reis hat Tim gekocht.', en: 'Tim cooked the noodles and the rice.' },
-          { speaker: 'Ana', de: 'Im Kuchen war zu viel Zucker. Aber es war schön!', en: 'There was too much sugar in the cake. But it was lovely!' },
+          { speaker: 'Ana', de: 'Im Kuchen war zu viel Zucker. Tim ist früh gegangen.', en: 'There was too much sugar in the cake. Tim left early.' },
         ],
       },
       pretest: {
@@ -1211,9 +1261,10 @@ export const CURRICULUM_A12 = {
         accepted: ['Ich habe', 'Gestern habe ich'],
       },
       notice: {
-        title: 'Das Perfekt: haben und Partizip II',
-        bodyDe: 'Über Vergangenes spricht man im Perfekt: **haben** steht auf Position 2, das Partizip II ganz am Ende. Regelmäßig entsteht es mit **ge- …-t**: feiern → **gefeiert**, kaufen → **gekauft**, kochen → **gekocht**. Unregelmäßig endet es auf **-en**: essen → **gegessen**, trinken → **getrunken**. **war** ist die einzige einfache Vergangenheitsform in diesem Kurs.',
-        examples: ['Ana, wir haben gestern schön gefeiert!', 'Nein, ich habe Milch getrunken. Der Käse war lecker.'],
+        title: 'Das Perfekt: haben oder sein und Partizip II',
+        bodyDe: 'Über Vergangenes spricht man im Perfekt: **haben** oder sein auf Position 2, das Partizip II am Ende. Regelmäßig mit ge-: **gekauft**, **gefeiert**. Viele unregelmäßige auf -en: **gegessen**. Ohne ge- bei be-, ver- und -ieren: **bezahlt**, verstanden, telefoniert. sein steht bei gehen, fahren, kommen, bleiben, passieren: Tim **ist** früh **gegangen**.',
+        bodyEn: 'To talk about the past, use the Perfekt: **haben** or sein in position 2, the participle at the end. Regular verbs take ge-: **gekauft**, **gefeiert**. Many irregular ones end in -en: **gegessen**. No ge- with be-, ver- and -ieren: **bezahlt**, verstanden, telefoniert. sein goes with gehen, fahren, kommen, bleiben and passieren: Tim **ist** früh **gegangen** (Tim left early).',
+        examples: ['Ana, wir haben gestern schön gefeiert!', 'Im Kuchen war zu viel Zucker. Tim ist früh gegangen.'],
         ruleSlug: 'perfekt-intro',
       },
       phonetik: { focus: 'Die Vorsilbe ge- ist unbetont', items: ['ge-FEI-ert', 'ge-GES-sen', 'ge-KAUFT'] },
@@ -1226,6 +1277,7 @@ export const CURRICULUM_A12 = {
           // Thema dieser Lektion — und Mission 6 (Verneinung) ist jetzt bei L4.
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie mit einer Wortkarte zum Thema Essen und Trinken.',
+          promptEn: 'Ask and answer with a word card about food and drink.',
           hintWords: ['das Fest', 'lecker', 'gefeiert'],
           // Sie — Teil 2 spielt mit einem Prüfungspartner.
           anrede: 'Sie',
@@ -1236,19 +1288,22 @@ export const CURRICULUM_A12 = {
         kind: 'mitteilung',
         taskKey: 'a12-l12',
         taskDe: 'Sie haben ein Fest gefeiert. Schreiben Sie einer Freundin eine kurze Nachricht über das Fest. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        leitpunkte: ['Wann Sie gefeiert haben', 'Was Sie gegessen und getrunken haben', 'Wen Sie eingeladen haben'],
+        taskEn: 'You have had a party. Write a friend a short message about it. Open with a greeting and close with a sign-off. Cover three points: when you celebrated; what you ate and drank; who you celebrated with.',
+        leitpunkte: ['Wann Sie gefeiert haben', 'Was Sie gegessen und getrunken haben', 'Mit wem Sie gefeiert haben'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena, ich habe am Samstag gefeiert. Wir haben Fisch und Kartoffeln gegessen. Meine Oma hat auch getanzt. Viele Grüße, Ana',
+        sample: 'Hallo Lena, ich habe am Samstag mit Tim und Paul gefeiert. Wir haben Fisch und Kartoffeln gegessen und Saft getrunken. Paul hat auch getanzt. Viele Grüße, Ana',
       },
       links: { listeningExercise: null, readingOrder: 2 },
-      practiceRule: { topics: ['perfekt-intro', 'accusative-intro'], typedMin: 4 },
+      practiceRule: { topics: ['perfekt-intro', 'accusative-intro'], typedMin: 4, mustCover: ['ist', 'bezahlt'] },
     },
   ],
   checkpoints: [
-    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, title: 'Checkpoint 1: Lektion 1–3' },
-    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, title: 'Checkpoint 2: Lektion 4–6' },
-    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, title: 'Checkpoint 3: Lektion 7–9' },
-    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, title: 'Checkpoint 4: Lektion 10–12' },
+    // Each checkpoint writes its own task (`a12-cpN`, src/data/writingTasks.js), not the chapter's
+    // last Lektion's again (DaF review #3, MAJOR 3).
+    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, writingTaskKey: 'a12-cp1', title: 'Checkpoint 1: Lektion 1–3', lesen: LESEN_A12['a1.2-cp1'] },
+    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, writingTaskKey: 'a12-cp2', title: 'Checkpoint 2: Lektion 4–6', lesen: LESEN_A12['a1.2-cp2'] },
+    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, writingTaskKey: 'a12-cp3', title: 'Checkpoint 3: Lektion 7–9', lesen: LESEN_A12['a1.2-cp3'] },
+    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, writingTaskKey: 'a12-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A12['a1.2-cp4'] },
   ],
 };

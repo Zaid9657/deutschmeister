@@ -87,15 +87,21 @@ export async function saveAnswers(attemptId, answers) {
   });
 }
 
-/** Move the timer anchor and answers' section marker together. */
-export async function advanceSectionDeadline(attemptId, minutes, answers) {
+/**
+ * Move to the next section in ONE write: the answers (carrying the new section index) and the timer
+ * anchor together. Two writes could half-succeed — a saved index with the old, expired deadline, or
+ * the reverse (Codex rescore, 2026-10-15). Queued behind any autosave already in flight for this
+ * attempt, so an older answers map can never land after it (Codex review 2026-10-22).
+ * Returns the new deadline, or null when nothing was saved.
+ */
+export async function advanceSection(attemptId, answers, minutes) {
   return queueAttemptWrite(attemptId, async () => {
     const deadline = new Date(Date.now() + minutes * 60000).toISOString();
     const { error } = await supabase
       .from('exam_attempts')
-      .update({ section_deadline: deadline, ...(answers ? { answers } : {}) })
+      .update({ answers, section_deadline: deadline })
       .eq('id', attemptId);
-    if (error) console.error('[examService] advanceSectionDeadline:', error.message);
+    if (error) console.error('[examService] advanceSection:', error.message);
     return error ? null : deadline;
   });
 }

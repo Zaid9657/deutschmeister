@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Check, Volume2, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -32,6 +33,10 @@ export const modeForCard = (kind, index) => {
  * caller's job: ReviewPage writes through `gradeCard` and moves to the next
  * due card; the player's warm-up grades the same way but never blocks the
  * lesson on the write (see LessonPlayerPage.jsx's warm-up section).
+ *
+ * `onPlay()` resolves to the checked player's `{ ok, reason }` (speech.js): the listening face says
+ * when no sound started and offers to try again or show the text (Codex rescore, 2026-10-15 — the
+ * deck and the warm-up used unchecked playback, so a silent card looked like a heard one).
  */
 export default function ReviewCard({
   content,
@@ -47,7 +52,13 @@ export default function ReviewCard({
   hasRecording,
   onGrade,
 }) {
+  const [failed, setFailed] = useState(null);
+  useEffect(() => { setFailed(null); }, [content]);
   if (!content) return null;
+  const listen = async () => {
+    const result = await onPlay();
+    setFailed(result && result.ok === false ? result.reason || 'error' : null);
+  };
   return (
     <Card className="mt-6 p-5 sm:p-6">
       <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -62,11 +73,27 @@ export default function ReviewCard({
       {mode === 'listening' ? (
         <>
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="secondary" onClick={onPlay}>
+            <Button variant="secondary" onClick={listen}>
               <Volume2 className="h-4 w-4" aria-hidden="true" /> {t('action.listenAgain', lang)}
             </Button>
             <AudioSourceBadge recorded={hasRecording} />
           </div>
+          <p className="sr-only" aria-live="polite">{failed ? t(`audio.failed.${failed}`, lang) : ''}</p>
+          {failed && (
+            <div className="mt-3 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-[0.875rem] text-accent-aprikose-ink">
+              <p className="font-bold">{t(`audio.failed.${failed}`, lang)}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button type="button" onClick={listen} className="min-h-11 rounded-pill border border-current bg-white/70 px-3 font-bold">
+                  {t('audio.retry', lang)}
+                </button>
+                {!revealed && (
+                  <button type="button" onClick={onReveal} className="min-h-11 rounded-pill border border-current bg-white/70 px-3 font-bold">
+                    {t('audio.showText', lang)}
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
           {revealed && <p className="mt-4 font-display text-xl text-ink" lang="de">{content.front}</p>}
         </>
       ) : mode === 'typed' ? (

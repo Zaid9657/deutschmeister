@@ -317,7 +317,9 @@ export const leaksAnswer = (solved, prints) => {
 
 /** Quotation marks the pool uses around the sentence an item works on. */
 const QUOTED = /[„“”"»]([^„“”"»«]+)[“”"«]/;
-const OPENING_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“\)/g;
+// …with the places a task names after it („; „nicht“ steht am Satzende", DaF review #9) — quoted too,
+// so left in, „nicht" would be read as the item's sentence.
+const OPENING_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“(?:;[^)]*)?\)/g;
 /**
  * The prompt without the exercise bank's task formula: the quoted sentence when
  * the prompt quotes one, else what follows the instruction's colon. Two items
@@ -604,7 +606,9 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   const servableHere = (it) =>
     !Object.prototype.hasOwnProperty.call(it, 'minLektion') ||
     (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));
-  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it) && servableHere(it));
+  // The quality rules at the course's own level: without it the A1.1 syllabus rules (no accusative,
+  // no ordinals …) dropped 57 of A1.2's 254 items, and its accusative Lektion drew 3 of 7 (2026-10-15).
+  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it, { level: options.level }) && servableHere(it));
   if (!usable.length) return [];
 
   const primarySlug = options.primarySlug || topicList[0];
@@ -745,12 +749,17 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       if (pick) take(pick);
     }
 
-    const primaryCount = () => [...chosen.values()].filter((it) => it.topic === primarySlug).length;
-    const primaryTarget = Math.min(
-      PRIMARY_MIN,
-      PRACTICE_SIZE,
-      ranked.filter((it) => it.topic === primarySlug).length,
-    );
+    // TWO FLOORS ON THE OWN GRAMMAR POINT. The topic floor counts the routing label; the drill
+    // floor counts what the item makes the learner PRODUCE (`drillsSlug`). With the label alone a
+    // seven was "complete" on three real items and one labelled non-producer while a real one
+    // waited behind a cap (A1.2 DaF review #3, MAJOR 4: L4 drew three negation items of seven).
+    // Both targets are capped by what the slice holds, so a short slug stays a pool finding.
+    const onTopic = (it) => it.topic === primarySlug;
+    const drills = (it) => onTopic(it) && drillsSlug(it, primarySlug);
+    const topicCount = () => [...chosen.values()].filter(onTopic).length;
+    const primaryCount = () => [...chosen.values()].filter(drills).length;
+    const topicTarget = Math.min(PRIMARY_MIN, PRACTICE_SIZE, ranked.filter(onTopic).length);
+    const primaryTarget = Math.min(PRIMARY_MIN, PRACTICE_SIZE, ranked.filter(drills).length);
 
     // THE SITUATION FLOOR (`SITUATION_MIN`). „Situational" is measured against
     // the Lektion's OWN Wortfeld only — `relevanceScore` with an empty set of
@@ -764,7 +773,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       ranked.filter(isSituational).length,
     );
     /** Seats `PRIMARY_MIN` still needs — the situation fill may never take them. */
-    const primaryReserve = () => Math.max(0, primaryTarget - primaryCount());
+    const primaryReserve = () => Math.max(0, primaryTarget - primaryCount(), topicTarget - topicCount());
 
     const fill = (list, relax, stop, stage) => {
       for (const it of list) {
@@ -798,8 +807,8 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       const rest = primary.filter((it) => !drillsSlug(it, primarySlug));
       fill(real.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
       fill(real, relax, () => primaryCount() >= primaryTarget, stage);
-      fill(rest.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
-      fill(rest, relax, () => primaryCount() >= primaryTarget, stage);
+      fill(rest.filter(isTypedItem), relax, () => topicCount() >= topicTarget, stage);
+      fill(rest, relax, () => topicCount() >= topicTarget, stage);
       // 2. the typed floor across all topics
       fill(ranked.filter(isTypedItem), relax, () => typed >= typedMin || chosen.size >= PRACTICE_SIZE, stage);
       // 2b. THE SITUATION FLOOR: before the block is filled with whatever ranks
@@ -817,11 +826,13 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       fill(situational, relax, stopSituation, stage);
       // 3. fill up to seven
       fill(ranked, relax, () => chosen.size >= PRACTICE_SIZE, stage);
-      if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
+      if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && topicCount() >= topicTarget
+        && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
     }
 
     const complete = chosen.size >= PRACTICE_SIZE
       && primaryCount() >= primaryTarget
+      && topicCount() >= topicTarget
       && typed >= Math.min(typedMin, PRACTICE_SIZE);
     // The situation share is REPORTED, never a reason to climb the ladder: a
     // block that misses it is short of situational ITEMS, and relaxing a lemma
@@ -968,6 +979,7 @@ export function planPractice(curriculum, pool, attempt = 1) {
       lektion.practiceRule || { topics: [], typedMin: 0 },
       seedFor(level, lektion.nr, attempt),
       {
+        level,
         lektionNr: lektion.nr,
         primarySlug: lektion.primarySlug || ((lektion.practiceRule || {}).topics || [])[0],
         ownTerms,
@@ -1144,6 +1156,7 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
   const plan = planPractice(curriculum, pool, attempt);
   const practice = plan.get(lektion.nr)
     || pickPracticeItems(pool, lektion.practiceRule || { topics: [], typedMin: 0 }, seed, {
+      level: curriculum.level,
       primarySlug: lektion.primarySlug,
       ownTerms: wortfeldTerms(lektion),
     });

@@ -1,0 +1,460 @@
+// THE LESEN SURFACE GATE (DaF review #11, MAJOR M8; frozen by Codex before the authored units were
+// written — docs/course-factory/a12-rebuild/DESIGN-m8-lesen-2026-10-19.md, verdicts 1 and 2).
+//
+// A Lesen unit as the learner sees it: a printed `text`, a `question`, two `options` in their displayed
+// order. `answer` is read only AFTER every strategy has picked, to score it. Each strategy below uses only
+// what is printed. A paper of four units passes when every strategy — and every one-condition switch
+// between two of them — scores at most 2 of 4 (a tie counts ½), and the 16 papers of a level at most 32
+// of 64 for each. These are the project's acceptance limits, not a Goethe standard; an algorithm that
+// really resolves who did what is allowed to score 4 — that is reading.
+// Review #12 adds BANK-ONLY order strategies: every position and every question-type occurrence
+// (Wer / other W-question, first / second in its paper) must balance A/B. All 16 fixed sequences and
+// all 16 type-rank rules, including their inverses, may score at most half over the bank. They cannot
+// have a per-paper ceiling: one of the 16 sequences necessarily matches any four-unit paper exactly.
+// Review #13 also combines EVERY surface strategy with order. All binary preference assignments,
+// including their inverses, must score ≤ 36/64 (ties ½). Pure A/B order keeps its stricter 32/64 limit.
+// Owner decision 2026-10-20: feature PAIRS × order are measured only; their maxima are ratcheted
+// in a12-rebuild.test.mjs. The mirrored-pair residue is documented in the A1.2 handoff.
+//
+// Independent of the builder: nothing here imports src/lib/checkpoint or reads how a unit was made.
+
+const TOKEN_RE = /[\p{L}\p{N}]+/gu;
+export const tokens = (s) => (String(s || '').toLowerCase().match(TOKEN_RE) || []);
+
+const NUMBER_WORDS = {
+  null: 0, eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9, zehn: 10,
+  elf: 11, zwölf: 12, dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17, achtzehn: 18,
+  neunzehn: 19, zwanzig: 20, dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60, siebzig: 70, achtzig: 80,
+  neunzig: 90, hundert: 100,
+};
+const numberOf = (t) => {
+  if (/^\d+$/.test(t)) return Number(t);
+  if (t in NUMBER_WORDS) return NUMBER_WORDS[t];
+  const m = /^(ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun)und(zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig)$/.exec(t);
+  return m ? NUMBER_WORDS[m[1]] + NUMBER_WORDS[m[2]] : null;
+};
+const NEGATION = new Set(['nicht', 'nie', 'kein', 'keine', 'keinen', 'keinem', 'keiner', 'keines', 'nichts', 'niemand']);
+const FUNCTION = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'und', 'oder', 'aber',
+  'ist', 'sind', 'hat', 'haben', 'in', 'im', 'am', 'an', 'auf', 'zu', 'zum', 'zur', 'mit', 'von', 'vom', 'für', 'nach', 'bei', 'auch',
+  'wer', 'was', 'wo', 'wann', 'wie', 'wohin', 'woher', 'welche', 'welcher', 'welches', 'viel', 'viele', 'es', 'er', 'sie', 'ich', 'du',
+  'wir', 'ihr', 'man', 'nicht', 'ja', 'nein', 'so', 'sehr', 'noch', 'schon', 'heute', 'dann']);
+// A crude normaliser for „taught-verb-normalized" comparison: the inflection a reader would ignore.
+const stem = (t) => (t.length <= 3 ? t : t.replace(/(?:est|en|em|er|es|st|e|t|n|s)$/u, ''));
+
+const sentencesOf = (text) => String(text || '').split(/(?<=[.!?])\s+|\n+/).map((s) => s.trim()).filter(Boolean);
+const NAME_RE = /^(?:(?:Herr|Frau)\s+)?[A-ZÄÖÜ][a-zäöüß]+$/;
+const isName = (o) => NAME_RE.test(String(o).trim());
+
+// The parts of a text a "named person" shortcut reads: speaker labels („Ana: …"), a salutation („Liebe
+// Lena," / „Hallo Tim,"), a signature (a name alone on the last line, or after „Gruß/Grüße").
+function layout(text) {
+  const lines = String(text || '').split('\n').map((l) => l.trim()).filter(Boolean);
+  const speakers = [];
+  for (const l of lines) { const m = /^((?:(?:Herr|Frau)\s+)?[A-ZÄÖÜ][a-zäöüß]+):\s/.exec(l); if (m) speakers.push({ name: m[1], words: tokens(l.slice(m[0].length)).length }); }
+  const salutation = /^(?:Liebe|Lieber|Hallo|Hi|Sehr geehrte|Sehr geehrter)\s+((?:(?:Herr|Frau)\s+)?[A-ZÄÖÜ][a-zäöüß]+)/.exec(lines[0] || '')?.[1] || null;
+  const last = lines[lines.length - 1] || '';
+  const signature = (/^((?:(?:Herr|Frau)\s+)?[A-ZÄÖÜ][a-zäöüß]+)[.!]?$/.exec(last) || /(?:Gruß|Grüße),?\s+((?:(?:Herr|Frau)\s+)?[A-ZÄÖÜ][a-zäöüß]+)\s*$/.exec(last))?.[1] || null;
+  const body = lines.map((l) => l.replace(/^((?:(?:Herr|Frau)\s+)?[A-ZÄÖÜ][a-zäöüß]+):\s/, '')).join(' ');
+  return { lines, speakers, salutation, signature, body };
+}
+const countIn = (hay, needle) => {
+  const h = tokens(hay);
+  const n = tokens(needle);
+  if (!n.length) return 0;
+  let c = 0;
+  for (let i = 0; i + n.length <= h.length; i += 1) if (n.every((t, j) => h[i + j] === t)) c += 1;
+  return c;
+};
+const firstAt = (hay, needle) => {
+  const h = tokens(hay);
+  const n = tokens(needle);
+  for (let i = 0; i + n.length <= h.length; i += 1) if (n.every((t, j) => h[i + j] === t)) return i;
+  return Infinity;
+};
+const lastAt = (hay, needle) => {
+  const h = tokens(hay);
+  const n = tokens(needle);
+  for (let i = h.length - n.length; i >= 0; i -= 1) if (n.every((t, j) => h[i + j] === t)) return i;
+  return -Infinity;
+};
+
+// A strategy maps a unit to the INDEX it picks (0 or 1) or null for a tie. `prefer(a, b, more)` turns two
+// scores into a pick: the higher one when `more`, the lower one otherwise.
+const prefer = (a, b, more = true) => (a === b || a == null || b == null || Number.isNaN(a) || Number.isNaN(b) ? null : (a > b) === more ? 0 : 1);
+const both = (u, f) => [f(u.options[0], u), f(u.options[1], u)];
+
+function baseStrategies(names) {
+  const S = {};
+  const add = (name, f) => { S[name] = f; };
+  const textTok = (u) => new Set(tokens(u.text));
+  // ── review #11's family, both preferences ──
+  for (const more of [true, false]) {
+    const tag = more ? '+' : '−';
+    add(`Zahl${tag}`, (u) => prefer(...both(u, (o) => tokens(o).filter((t) => numberOf(t) !== null && textTok(u).has(t)).length), more));
+    add(`Wörter${tag}`, (u) => prefer(...both(u, (o) => tokens(o).filter((t) => textTok(u).has(t)).length), more));
+    add(`Anteil${tag}`, (u) => prefer(...both(u, (o) => { const t = tokens(o); return t.length ? t.filter((x) => textTok(u).has(x)).length / t.length : 0; }), more));
+    add(`Satznähe${tag}`, (u) => prefer(...both(u, (o) => {
+      const t = tokens(o);
+      if (!t.length) return 0;
+      return Math.max(0, ...sentencesOf(u.text).map((s) => { const st = new Set(tokens(s)); return t.filter((x) => st.has(x)).length / t.length; }));
+    }), more));
+    add(`Verbform${tag}`, (u) => prefer(...both(u, (o) => tokens(o).filter((t) => /(?:e|st|t|en)$/.test(t) && !FUNCTION.has(t) && textTok(u).has(t) && !/^[A-ZÄÖÜ]/.test(t)).length), more));
+    // ── answer presentation ──
+    add(`Länge Zeichen${tag}`, (u) => prefer(u.options[0].length, u.options[1].length, more));
+    add(`Länge Wörter${tag}`, (u) => prefer(tokens(u.options[0]).length, tokens(u.options[1]).length, more));
+    add(`Zahlwert${tag}`, (u) => prefer(...both(u, (o) => tokens(o).map(numberOf).find((v) => v !== null) ?? null), more));
+    add(`Negation${tag}`, (u) => prefer(...both(u, (o) => Number(tokens(o).some((t) => NEGATION.has(t)))), more));
+    add(`Alphabet${tag}`, (u) => { const [a, b] = u.options.map((o) => o.toLowerCase()); return a === b ? null : (a < b) === more ? 0 : 1; });
+    // ── named persons and candidate details in the text ──
+    add(`zuerst im Text${tag}`, (u) => prefer(...both(u, (o) => -firstAt(u.text, o)), more));
+    add(`zuletzt im Text${tag}`, (u) => prefer(...both(u, (o) => lastAt(u.text, o)), more));
+    add(`Häufigkeit${tag}`, (u) => prefer(...both(u, (o) => countIn(u.text, o)), more));
+    add(`Häufigkeit ohne Sprecher${tag}`, (u) => prefer(...both(u, (o) => countIn(layout(u.text).body, o)), more));
+    add(`im Text überhaupt${tag}`, (u) => prefer(...both(u, (o) => Number(countIn(u.text, o) > 0)), more));
+    add(`im Fließtext${tag}`, (u) => prefer(...both(u, (o) => Number(countIn(layout(u.text).body, o) > 0)), more));
+    add(`Sprecher Wortzahl${tag}`, (u) => prefer(...both(u, (o) => layout(u.text).speakers.filter((s) => s.name === o).reduce((n, s) => n + s.words, 0)), more));
+    add(`Sprecher Züge${tag}`, (u) => prefer(...both(u, (o) => layout(u.text).speakers.filter((s) => s.name === o).length), more));
+  }
+  add('A', () => 0);
+  add('B', () => 1);
+  add('erster Sprecher', (u) => { const f = layout(u.text).speakers[0]?.name; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
+  add('letzter Sprecher', (u) => { const s = layout(u.text).speakers; const f = s[s.length - 1]?.name; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
+  add('Anrede', (u) => { const f = layout(u.text).salutation; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
+  add('Unterschrift', (u) => { const f = layout(u.text).signature; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
+  // ── question-conditioned: the option in the sentence closest (or farthest) to the question ──
+  for (const by of ['Zahl', 'Anteil']) {
+    for (const extreme of ['nächster', 'fernster']) {
+      for (const norm of ['wörtlich', 'normalisiert']) {
+        for (const fw of ['mit Funktionswörtern', 'ohne Funktionswörter']) {
+          add(`Frage→Satz ${by} ${extreme} ${norm} ${fw}`, (u) => {
+            const prep = (s) => tokens(s).filter((t) => fw === 'mit Funktionswörtern' || !FUNCTION.has(t)).map((t) => (norm === 'normalisiert' ? stem(t) : t));
+            const q = new Set(prep(u.question));
+            const scored = sentencesOf(u.text).map((s) => { const st = prep(s); const hit = st.filter((t) => q.has(t)).length; return { s, v: by === 'Zahl' ? hit : st.length ? hit / st.length : 0 }; });
+            if (!scored.length) return null;
+            const target = extreme === 'nächster' ? Math.max(...scored.map((x) => x.v)) : Math.min(...scored.map((x) => x.v));
+            const chosen = scored.filter((x) => x.v === target).map((x) => x.s).join(' ');
+            return prefer(Number(countIn(chosen, u.options[0]) > 0), Number(countIn(chosen, u.options[1]) > 0));
+          });
+        }
+      }
+    }
+  }
+  for (const more of [true, false]) {
+    // Read in the BODY: a speaker label („Tim:") stands next to the end of the line before it, so in an
+    // exchange the label of the next speaker would always be the „nearest name" — layout, not a cue.
+    add(`Abstand zu Fragewörtern${more ? ' fern' : ' nah'}`, (u) => {
+      const h = tokens(layout(u.text).body);
+      const q = new Set(tokens(u.question).filter((t) => !FUNCTION.has(t)));
+      const qAt = h.map((t, i) => (q.has(t) ? i : -1)).filter((i) => i >= 0);
+      if (!qAt.length) return null;
+      const dist = (o) => {
+        const n = tokens(o);
+        let best = Infinity;
+        for (let i = 0; i + n.length <= h.length; i += 1) if (n.every((t, j) => h[i + j] === t)) best = Math.min(best, ...qAt.map((k) => Math.abs(k - i)));
+        return best;
+      };
+      return prefer(...both(u, dist), more);
+    });
+  }
+  // ── fixed name-priority orders over every name the paper offers ──
+  const perms = (xs) => (xs.length <= 1 ? [xs] : xs.flatMap((x, i) => perms([...xs.slice(0, i), ...xs.slice(i + 1)]).map((p) => [x, ...p])));
+  for (const order of names.length <= 6 ? perms(names) : []) {
+    add(`Namensrang ${order.join('>')}`, (u) => {
+      const r = u.options.map((o) => order.indexOf(o));
+      if (r.some((x) => x < 0)) return null;
+      return r[0] === r[1] ? null : r[0] < r[1] ? 0 : 1;
+    });
+  }
+  return S;
+}
+
+// The one-condition switches: a printed feature of the item chooses between two strategies.
+const CONDITIONS = {
+  'Text verneint': (u) => tokens(u.text).some((t) => NEGATION.has(t)),
+  'Ja/Doch': (u) => tokens(u.text).some((t) => t === 'ja' || t === 'doch'),
+  Nein: (u) => tokens(u.text).includes('nein'),
+  Fragezeichen: (u) => String(u.text).includes('?'),
+  Zahl: (u) => tokens(u.text).some((t) => numberOf(t) !== null),
+  Personenfrage: (u) => u.options.every(isName),
+};
+
+const scoreOf = (pick, u) => (pick === null ? 0.5 : u.options[pick] === u.answer ? 1 : 0);
+const mark = (pick, u) => (pick === null ? 'T' : u.options[pick] === u.answer ? 'R' : 'W');
+export const CONDITION_NAMES = Object.keys(CONDITIONS);
+export const conditionsOf = (u) => Object.fromEntries(Object.entries(CONDITIONS).map(([n, c]) => [n, c(u)]));
+
+/** Order strategies see only the displayed position and question history, never pair metadata or keys. */
+export function auditBankOrder(papers) {
+  const positions = Array.from({ length: 4 }, () => [0, 0]);
+  const typeRanks = Object.fromEntries(['Wer 1', 'Wer 2', 'W 1', 'W 2'].map((n) => [n, [0, 0]]));
+  const cells = Object.keys(typeRanks);
+  const findings = [];
+  // Freeze each strategy's inputs before reading any answer. History resets at each paper boundary.
+  const contexts = papers.flatMap((paper, pi) => {
+    const seen = { Wer: 0, W: 0 };
+    if (paper.length !== 4) findings.push(`paper ${pi + 1}: ${paper.length} units, expected 4`);
+    const rows = paper.map((u, position) => {
+      const type = tokens(u.question)[0] === 'wer' ? 'Wer' : 'W';
+      const cell = `${type} ${++seen[type]}`;
+      return { u, position, cell };
+    });
+    if (seen.Wer !== 2 || seen.W !== 2) findings.push(`paper ${pi + 1}: expected two Wer and two other W-questions`);
+    return rows;
+  });
+  const sequences = Array.from({ length: 16 }, (_, mask) =>
+    Array.from({ length: 4 }, (_, i) => (mask >> (3 - i)) & 1));
+  const picks = sequences.map((sequence) => ({
+    name: sequence.map((p) => 'AB'[p]).join(''),
+    fixed: contexts.map(({ position }) => sequence[position]),
+    typeRank: contexts.map(({ cell }) => sequence[cells.indexOf(cell)]),
+  }));
+  for (const { u, position, cell } of contexts) {
+    const key = u.options.indexOf(u.answer);
+    if (key !== 0 && key !== 1) { findings.push('a key is not one of two options'); continue; }
+    if (positions[position]) positions[position][key] += 1;
+    if (typeRanks[cell]) typeRanks[cell][key] += 1;
+  }
+  for (const [name, counts] of [
+    ...positions.map((counts, i) => [`position ${i + 1}`, counts]),
+    ...Object.entries(typeRanks),
+  ]) if (counts[0] !== counts[1]) findings.push(`${name}: A/B ${counts.join('/')} is unbalanced`);
+  const total = contexts.length;
+  if (!total) findings.push('empty bank');
+  const fixed = new Map();
+  const typeRank = new Map();
+  for (const p of picks) {
+    for (const [family, scores] of [['fixed', fixed], ['typeRank', typeRank]]) {
+      const score = contexts.reduce((sum, { u }, i) => sum + scoreOf(p[family][i], u), 0);
+      scores.set(p.name, score);
+      if (score > total / 2) findings.push(`${family} ${p.name}: ${score}/${total} exceeds half`);
+    }
+  }
+  const worst = (scores) => [...scores].reduce((w, [name, score]) => (score > w.score ? { name, score } : w), { name: '', score: -1 });
+  return { total, positions, typeRanks, fixed, typeRank, worstFixed: worst(fixed), worstTypeRank: worst(typeRank), findings, passes: findings.length === 0 };
+}
+
+/**
+ * Freeze visible feature picks and order contexts before scoring. A pair's first/second member is
+ * determined by delivery order, never by its id or answer. Without authoring metadata the two Wer
+ * questions and the two detail questions identify the mirrored pairs. Identical option sets have
+ * their own occurrence history, independent of that pairing.
+ */
+export function bankFeatureInputs(papers) {
+  const names = [...new Set(papers.flat().flatMap((u) => u.options.filter(isName)))];
+  const strategies = baseStrategies(names);
+  const rows = papers.flatMap((paper) => {
+    const seenType = new Map();
+    const seenPair = new Map();
+    const seenOptions = new Map();
+    const optionSet = (u) => JSON.stringify([...u.options].sort((a, b) => a.localeCompare(b, 'de')));
+    return paper.map((u, position) => {
+      const type = tokens(u.question)[0] === 'wer' ? 'Wer' : 'W';
+      const pair = u.pair ?? type;
+      const rank = (seenType.get(type) || 0) + 1;
+      const member = (seenPair.get(pair) || 0) + 1;
+      const set = optionSet(u);
+      const occurrence = (seenOptions.get(set) || 0) + 1;
+      seenType.set(type, rank);
+      seenPair.set(pair, member);
+      seenOptions.set(set, occurrence);
+      const partner = paper.find((v) => v !== u && (v.pair ?? (tokens(v.question)[0] === 'wer' ? 'Wer' : 'W')) === pair);
+      const picks = Object.fromEntries(Object.entries(strategies).map(([name, f]) => [name, f(u)]));
+      // Keep the gate's code-point alphabet and also the review's German collation.
+      picks['Alphabet (de)'] = prefer(u.options[0].toLowerCase().localeCompare(u.options[1].toLowerCase(), 'de'), 0, false);
+      picks['identical option set within pair'] = partner && optionSet(partner) === set ? 0 : 1;
+      picks['pair role'] = [...seenPair.keys()].indexOf(pair) % 2;
+      const contexts = {
+        position: String(position + 1),
+        'type-rank': `${type} ${rank}`,
+        'pair member': String(member),
+        'option-set occurrence': String(occurrence),
+      };
+      // The review also names visible text form × order (all 256 A/B rules for four positions).
+      contexts['text form × position'] = `${/\n[^\n:]+:/.test(u.text || '') ? 'exchange' : 'other'} ${position + 1}`;
+      return { u, contexts, picks };
+    });
+  });
+  return rows;
+}
+
+// Combine two features with EVERY truth table over their joint A/B/tie states, then cross that
+// combined feature with EVERY order preference mask, just as for the single features below.
+// This includes all inverses and equality switches (the review's alphabet × equal-length code).
+// Half-credit ties average the A/B resolutions: they cannot beat their maximum or create a 4/4.
+export function bankPairInputs(papers) {
+  const rows = bankFeatureInputs(papers);
+  const features = Object.keys(rows[0]?.picks || {});
+  const contexts = ['position', 'type-rank', 'option-set occurrence'];
+  const families = [];
+  for (let a = 0; a < features.length; a += 1) for (let b = a + 1; b < features.length; b += 1) {
+    for (const context of contexts) {
+      const labels = rows.map((r) => `${r.picks[features[a]] ?? 'T'}/${r.picks[features[b]] ?? 'T'}`);
+      const cells = [...new Set(labels)].sort();
+      const orderCells = [...new Set(rows.map((r) => r.contexts[context]))].sort();
+      families.push({ name: `${features[a]} + ${features[b]} × ${context}`, cells,
+        indices: labels.map((s) => cells.indexOf(s)), orderCells,
+        order: rows.map((r) => orderCells.indexOf(r.contexts[context])) });
+    }
+  }
+  return { rows, families };
+}
+
+// A paper is solved iff its four cells all choose their required key. Two papers are compatible iff
+// their requirements agree on shared cells. Exhaustive branch-and-bound over paper subsets returns
+// the exact maximum, independently of the rule which maximizes the bank's total score.
+function mostPerfectPapers(requirements) {
+  let best = [];
+  function visit(candidates, chosen) {
+    if (chosen.length + candidates.length <= best.length) return;
+    if (!candidates.length) { best = chosen; return; }
+    const [first, ...rest] = candidates;
+    visit(rest.filter((j) => [...requirements[first]].every(([cell, key]) =>
+      !requirements[j].has(cell) || requirements[j].get(cell) === key)), [...chosen, first]);
+    visit(rest, chosen);
+  }
+  visit(requirements.map((_, i) => i), []);
+  const choices = new Map(best.flatMap((i) => [...requirements[i]]));
+  return { count: best.length, choices };
+}
+
+export function auditBankFeaturePairs(papers) {
+  const { rows, families } = bankPairInputs(papers);
+  const total = rows.length;
+  const cache = new Map();
+  const results = [];
+  for (const family of families) {
+    // Identical partitions have identical rule sets, irrespective of the labels' spelling.
+    const renumber = new Map();
+    const canonical = family.indices.map((cell) => {
+      if (!renumber.has(cell)) renumber.set(cell, renumber.size);
+      return renumber.get(cell);
+    });
+    const signature = `${canonical.join(',')}|${family.order.join(',')}`;
+    if (!cache.has(signature)) {
+      const result = { score: -1, perfect: -1, ruleCount: 2 ** (renumber.size + family.orderCells.length) };
+      for (let mask = 0; mask < 2 ** family.orderCells.length; mask += 1) {
+        const counts = Array.from({ length: renumber.size }, () => [0, 0]);
+        const requirements = [];
+        let offset = 0;
+        for (const paper of papers) {
+          const needs = new Map(); let possible = paper.length === 4;
+          for (const u of paper) {
+            const cell = canonical[offset];
+            const keyIndex = u.options.indexOf(u.answer);
+            if (keyIndex !== 0 && keyIndex !== 1) throw new Error('pair audit: a key is not one of two options');
+            const key = keyIndex ^ ((mask >> family.order[offset++]) & 1);
+            counts[cell][key] += 1;
+            if (needs.has(cell) && needs.get(cell) !== key) possible = false;
+            needs.set(cell, key);
+          }
+          if (possible) requirements.push(needs);
+        }
+        const choices = counts.map(([a, b]) => b > a ? 1 : 0);
+        const score = counts.reduce((sum, c) => sum + Math.max(...c), 0);
+        if (score > result.score) Object.assign(result, { score, inverseScore: total - score, choices, mask });
+        const perfect = mostPerfectPapers(requirements);
+        if (perfect.count > result.perfect) Object.assign(result, { perfect: perfect.count,
+          perfectChoices: choices.map((v, i) => perfect.choices.get(i) ?? v), perfectMask: mask });
+      }
+      cache.set(signature, result);
+    }
+    const result = cache.get(signature);
+    const describe = (choices, mask) => `${[...renumber].map(([cell, i]) => `${family.cells[cell]}:${'AB'[choices[i]]}`).join(', ')}; ${family.orderCells.map((c, i) => `${c}:${(mask >> i) & 1 ? 'inverse' : 'feature'}`).join(', ')}`;
+    results.push({ name: family.name, score: result.score, inverseScore: result.inverseScore,
+      perfect: result.perfect, ruleCount: result.ruleCount,
+      rule: describe(result.choices, result.mask), perfectRule: describe(result.perfectChoices, result.perfectMask) });
+  }
+  const worst = [...results].sort((a, b) => b.score - a.score || b.perfect - a.perfect).slice(0, 10);
+  const worstPerfect = [...results].sort((a, b) => b.perfect - a.perfect || b.score - a.score).slice(0, 10);
+  return { total, families: results, worst, worstPerfect };
+}
+
+export function auditBankFeatures(papers) {
+  const rows = bankFeatureInputs(papers);
+  const total = rows.length;
+  const limit = total * 36 / 64;
+  const rules = new Map();
+  const findings = [];
+  // Exhaustive preference masks: a 0 uses the feature, a 1 its inverse in that context cell.
+  // Null is deliberately still ½ when inverted. Also audit each fixed A/B tie-break.
+  for (const feature of Object.keys(rows[0]?.picks || {})) {
+    for (const context of Object.keys(rows[0].contexts)) {
+      const cells = [...new Set(rows.map((r) => r.contexts[context]))].sort();
+      for (const tie of [null, 0, 1]) {
+        const scores = cells.map(() => [0, 0]);
+        for (const row of rows) {
+          const pick = row.picks[feature] ?? tie;
+          const cell = cells.indexOf(row.contexts[context]);
+          scores[cell][0] += scoreOf(pick, row.u);
+          scores[cell][1] += scoreOf(pick === null ? null : 1 - pick, row.u);
+        }
+        for (let mask = 0; mask < 2 ** cells.length; mask += 1) {
+          const bits = cells.map((_, i) => (mask >> i) & 1);
+          const score = scores.reduce((n, s, i) => n + s[bits[i]], 0);
+          const name = `${feature}${tie === null ? '' : ` (tie→${'AB'[tie]})`} × ${context} [${cells.map((c, i) => `${c}:${bits[i] ? 'inverse' : 'feature'}`).join(', ')}]`;
+          rules.set(name, score);
+        }
+      }
+    }
+  }
+  const ranked = [...rules].map(([name, score]) => ({ name, score })).sort((a, b) => b.score - a.score);
+  const families = new Set();
+  const worst = ranked.filter(({ name }) => {
+    const family = name.split(' [')[0].replace(/ \(tie→[AB]\)/u, '').replace(/[+−] ×/u, ' ×');
+    if (families.has(family)) return false;
+    families.add(family);
+    return true;
+  });
+  if (!total) findings.push('empty bank');
+  for (const r of ranked.filter((r) => r.score > limit)) findings.push(`${r.name}: ${r.score}/${total} exceeds ${limit}/${total}`);
+  const pairs = auditBankFeaturePairs(papers);
+  return { total, limit, rules, worst: worst.slice(0, 10), pairs, findings, passes: findings.length === 0 };
+}
+
+/**
+ * auditPapers(papers) → per paper the strategies that score above 2 of 4, the worst one, and the worst
+ * one-condition switch; over all papers the strategy totals. Every base strategy runs with ties as ½ and,
+ * as its own strategy, with ties broken to A and to B — a tie the key's position settles is a cue too.
+ * `outcomes` gives R/W/T per unit for each failing strategy, so an author sees what to change.
+ */
+export function auditPapers(papers, { limit = 2 } = {}) {
+  const names = [...new Set(papers.flat().flatMap((u) => u.options.filter(isName)))];
+  const base = baseStrategies(names);
+  const all = {};
+  for (const [n, f] of Object.entries(base)) {
+    all[n] = f;
+    all[`${n} (Gleichstand→A)`] = (u) => f(u) ?? 0;
+    all[`${n} (Gleichstand→B)`] = (u) => f(u) ?? 1;
+  }
+  const entries = Object.entries(all);
+  const totals = new Map();
+  const report = [];
+  for (const paper of papers) {
+    const picks = entries.map(([n, f]) => [n, paper.map((u) => f(u))]);
+    const scoresOf = (p) => paper.reduce((sum, u, i) => sum + scoreOf(p[i], u), 0);
+    const failing = [];
+    let worst = { score: -1, name: '' };
+    for (const [n, p] of picks) {
+      const sc = scoresOf(p);
+      totals.set(n, (totals.get(n) || 0) + sc);
+      if (sc > worst.score) worst = { score: sc, name: n };
+      if (sc > limit) failing.push({ name: n, score: sc, outcomes: paper.map((u, i) => mark(p[i], u)).join('') });
+    }
+    let worstSwitch = { score: -1, name: '' };
+    for (const [c, cond] of Object.entries(CONDITIONS)) {
+      const on = paper.map((u) => cond(u));
+      if (on.every((x) => x === on[0])) continue;
+      const best = (want) => picks.reduce((b, [n, p]) => {
+        const sc = paper.reduce((sum, u, i) => sum + (on[i] === want ? scoreOf(p[i], u) : 0), 0);
+        return sc > b.score ? { score: sc, name: n } : b;
+      }, { score: -1, name: '' });
+      const yes = best(true);
+      const no = best(false);
+      const sc = yes.score + no.score;
+      if (sc > worstSwitch.score) worstSwitch = { score: sc, name: `„${c}" ? ${yes.name} : ${no.name}` };
+    }
+    report.push({ worst, worstSwitch, failing, passes: worst.score <= limit && worstSwitch.score <= limit });
+  }
+  const worstTotal = [...totals.entries()].reduce((w, [n, sc]) => (sc > w.score ? { score: sc, name: n } : w), { score: -1, name: '' });
+  return { papers: report, totals, worstTotal, bankOrder: auditBankOrder(papers) };
+}
