@@ -581,8 +581,8 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
       }
       $('pro-btn').disabled = true;
       try {
-        // Recheck at the click, including failed/paused billing. Cached profile
-        // flags or a charge retry date cannot authorize another subscription.
+        // Recheck at the click, including failed/paused billing and recurring IDs
+        // retained by legacy course rows until provider reconciliation retires them.
         billing = await loadBilling();
         if (billing.userId !== currentUser()?.id) throw new Error('Billing account changed');
         const checked = proCta({ signedIn: true, cycle, subscription: billing.subscription });

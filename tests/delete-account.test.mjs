@@ -58,7 +58,7 @@ test('a recurring subscription that still charges blocks deletion with 409; a co
 });
 
 test('complimentary plans without a real provider subscription never block deletion', async () => {
-  for (const status of ['active', 'on_trial', 'past_due', 'unpaid']) {
+  for (const status of ['active', 'on_trial', 'past_due', 'unpaid', 'paused']) {
     for (const providerId of [undefined, null, '', '   ']) {
       const granted = endpoint({ subs: [{ status, plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: providerId }] });
       assert.equal((await granted.handler(POST)).statusCode, 200, `${status}: ${String(providerId)}`);
@@ -68,6 +68,16 @@ test('complimentary plans without a real provider subscription never block delet
     const charging = endpoint({ subs: [{ status, plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }] });
     assert.equal((await charging.handler(POST)).statusCode, 409, status);
     assert.equal(charging.deleted.length, 0);
+  }
+});
+
+test('a paused provider subscription requires cancellation before account deletion', async () => {
+  for (const cancel_at_period_end of [false, true]) {
+    const paused = endpoint({ subs: [{
+      status: 'paused', plan_type: 'monthly', cancel_at_period_end, lemonsqueezy_subscription_id: 'sub-paused',
+    }] });
+    assert.equal((await paused.handler(POST)).statusCode, cancel_at_period_end ? 200 : 409);
+    assert.equal(paused.deleted.length, cancel_at_period_end ? 1 : 0);
   }
 });
 

@@ -8,6 +8,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 // Each evaluation is a large Sonnet call that retries once on a bad response.
 // Well above any genuine day's practice, low enough to bound abuse.
 const MAX_EVALUATIONS_PER_DAY = 20;
+const EVALUATION_LEASE_MS = 10 * 60 * 1000;
 
 let supabase;
 try {
@@ -28,6 +29,11 @@ function storedEvaluation(row) {
     passed: null,
   };
   return { ...evaluation, evaluation_id: row.id, saved: true };
+}
+
+function reservationExpired(row) {
+  const started = Date.parse(row?.scores?._lease_started_at || row?.created_at);
+  return Number.isFinite(started) && Date.now() - started >= EVALUATION_LEASE_MS;
 }
 
 function buildEvaluationPrompt(level, messages, passCriteria = null) {
@@ -194,7 +200,7 @@ export const handler = async (event) => {
     }
 
     // A completed session is graded once, including when today's allowance
-    // has since been consumed. Pending reservations never start another call.
+    // has since been consumed. Only an expired pending reservation can restart.
     const { data: existingEvaluation, error: existingError } = await supabase
       .from('speaking_evaluations')
       .select('*')
@@ -207,11 +213,13 @@ export const handler = async (event) => {
     if (existingError) throw new Error('Evaluation could not be loaded');
     if (existingEvaluation && !existingEvaluation.scores?._failed) {
       const evaluation = storedEvaluation(existingEvaluation);
-      return {
-        statusCode: evaluation ? 200 : 409,
-        headers,
-        body: JSON.stringify(evaluation || { error: 'evaluation_in_progress' }),
-      };
+      if (evaluation || !reservationExpired(existingEvaluation)) {
+        return {
+          statusCode: evaluation ? 200 : 409,
+          headers,
+          body: JSON.stringify(evaluation || { error: 'evaluation_in_progress' }),
+        };
+      }
     }
 
     // Grade only the transcript stored server-side by the speaking functions.
@@ -275,8 +283,11 @@ export const handler = async (event) => {
       : buildEvaluationPrompt(level, transcript, missionPassCriteria);
 
     let evaluationId;
+    let evaluationLease;
     try {
-      const reservation = await reserveUsage(supabase, 'reserve_speaking_evaluation', {
+      const reservation = existingEvaluation?.scores?._pending
+        ? { allowed: true, id: existingEvaluation.id, existing: true, evaluation: existingEvaluation }
+        : await reserveUsage(supabase, 'reserve_speaking_evaluation', {
         p_user_id: user_id, p_session_token: session_token, p_level: level,
         p_limit: MAX_EVALUATIONS_PER_DAY,
       }, async () => {
@@ -324,8 +335,10 @@ export const handler = async (event) => {
       });
       if (reservation.existing) {
         const evaluation = storedEvaluation(reservation.evaluation);
-        return { statusCode: evaluation ? 200 : 409, headers,
-          body: JSON.stringify(evaluation || { error: 'evaluation_in_progress' }) };
+        if (evaluation || !reservationExpired(reservation.evaluation)) {
+          return { statusCode: evaluation ? 200 : 409, headers,
+            body: JSON.stringify(evaluation || { error: 'evaluation_in_progress' }) };
+        }
       }
       if (!reservation.allowed) {
         return { statusCode: reservation.pending ? 409 : 429, headers,
@@ -333,6 +346,21 @@ export const handler = async (event) => {
             : { error: 'limit_reached', limit: MAX_EVALUATIONS_PER_DAY }) };
       }
       evaluationId = reservation.id;
+      // Compare the old lease so concurrent recoveries share the reserved row.
+      // JSON metadata exists before the quota migration is installed too.
+      evaluationLease = new Date().toISOString();
+      let claim = supabase.from('speaking_evaluations')
+        .update({ scores: { _pending: true, _lease_started_at: evaluationLease } })
+        .eq('id', evaluationId).eq('user_id', user_id)
+        .eq('scores->>_pending', 'true');
+      const previousLease = reservation.evaluation?.scores?._lease_started_at;
+      claim = previousLease == null ? claim.is('scores->>_lease_started_at', null)
+        : claim.eq('scores->>_lease_started_at', previousLease);
+      const { data: claimed, error: claimError } = await claim.select('id').maybeSingle();
+      if (claimError) throw new Error('Evaluation lease could not be claimed');
+      if (!claimed) {
+        return { statusCode: 409, headers, body: JSON.stringify({ error: 'evaluation_in_progress' }) };
+      }
     } catch (error) {
       console.error('evaluate-speaking: reservation failed:', error.message);
       return { statusCode: 503, headers, body: JSON.stringify({ error: 'Usage could not be reserved' }) };
@@ -390,11 +418,13 @@ export const handler = async (event) => {
         evaluation_failed: true,
         message: 'Auswertung konnte nicht erstellt werden.',
       };
-      const { error } = await supabase.from('speaking_evaluations')
+      const { data: failedEval, error } = await supabase.from('speaking_evaluations')
         .update({ scores: { _failed: true } })
-        .eq('id', evaluationId).eq('user_id', user_id);
+        .eq('id', evaluationId).eq('user_id', user_id)
+        .eq('scores->>_lease_started_at', evaluationLease)
+        .select('id').maybeSingle();
       if (error) console.error('Error saving failed evaluation:', JSON.stringify(error));
-      else {
+      else if (failedEval) {
         const { error: releaseError } = await supabase.from('speaking_sessions')
           .update({ evaluated: false }).eq('session_token', session_token).eq('user_id', user_id);
         if (releaseError) console.error('Error releasing failed evaluation:', JSON.stringify(releaseError));
@@ -419,29 +449,39 @@ export const handler = async (event) => {
     // Table schema requires: session_id (NOT NULL) and score (NOT NULL).
     // session_id maps to the session_token string sent from the frontend.
     // score is the 0-100 total; individual breakdown goes in *_score columns.
-    const { data: savedEval, error: saveError } = await supabase
-      .from('speaking_evaluations')
-      .update({
-        score:                evaluation.total_score ?? 0,
-        total_score:          evaluation.total_score ?? 0,
-        // DB column still named pronunciation_score; maps to intelligibility score
-        // from the standard eval, or the legacy pronunciation key in placement mode
-        pronunciation_score:  evaluation.scores?.intelligibility ?? evaluation.scores?.pronunciation ?? null,
-        grammar_score:        evaluation.scores?.grammar       ?? null,
-        vocabulary_score:     evaluation.scores?.vocabulary    ?? null,
-        fluency_score:        evaluation.scores?.fluency       ?? null,
-        comprehension_score:  evaluation.scores?.comprehension ?? null,
-        scores:               { ...evaluation.scores, _evaluation: { ...evaluation, passed: missionSessionToken ? evaluation.passed === true : null } },
-        feedback:             evaluation.feedback,
-        strengths:            evaluation.strengths,
-        improvements:         evaluation.improvements,
-        recommendation:       evaluation.recommendation,
-        message_count:        transcript.length,
-      })
-      .eq('id', evaluationId)
-      .eq('user_id', user_id)
-      .select()
-      .single();
+    const evaluationRow = {
+      score:                evaluation.total_score ?? 0,
+      total_score:          evaluation.total_score ?? 0,
+      // DB column still named pronunciation_score; maps to intelligibility score
+      // from the standard eval, or the legacy pronunciation key in placement mode
+      pronunciation_score:  evaluation.scores?.intelligibility ?? evaluation.scores?.pronunciation ?? null,
+      grammar_score:        evaluation.scores?.grammar       ?? null,
+      vocabulary_score:     evaluation.scores?.vocabulary    ?? null,
+      fluency_score:        evaluation.scores?.fluency       ?? null,
+      comprehension_score:  evaluation.scores?.comprehension ?? null,
+      scores:               { ...evaluation.scores, _evaluation: { ...evaluation, passed: missionSessionToken ? evaluation.passed === true : null } },
+      feedback:             evaluation.feedback,
+      strengths:            evaluation.strengths,
+      improvements:         evaluation.improvements,
+      recommendation:       evaluation.recommendation,
+      message_count:        transcript.length,
+    };
+    let savedEval = null;
+    let saveError = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const saved = await supabase.from('speaking_evaluations')
+          .update(evaluationRow)
+          .eq('id', evaluationId).eq('user_id', user_id)
+          .eq('scores->>_lease_started_at', evaluationLease)
+          .select('id').maybeSingle();
+        savedEval = saved.data;
+        saveError = saved.error;
+      } catch (error) {
+        saveError = error;
+      }
+      if (!saveError) break;
+    }
 
     if (saveError) {
       console.error('Error saving evaluation:', JSON.stringify(saveError));
@@ -451,6 +491,8 @@ export const handler = async (event) => {
     let passed = null;
     if (missionSessionToken) {
       passed = evaluation.passed === true;
+    }
+    if (missionSessionToken && savedEval) {
       const { error: sessionUpdateError } = await supabase
         .from('speaking_sessions')
         .update({ evaluated: true, passed })
@@ -468,7 +510,7 @@ export const handler = async (event) => {
         ...evaluation,
         passed,
         evaluation_id: savedEval?.id || null,
-        saved: !saveError,
+        saved: !!savedEval && !saveError,
       }),
     };
   } catch (error) {
