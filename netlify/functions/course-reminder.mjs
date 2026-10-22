@@ -379,16 +379,21 @@ const innerHandler = async (event) => {
       // Claim BEFORE send: UNIQUE(user_id, kind) means a repeated or concurrent
       // run on the same day cannot double-mail; a crash after this point costs
       // at most one missed reminder.
-      const { error: claimError } = await supabase
+      const { data: claims, error: claimError } = await supabase
         .from('lifecycle_emails')
-        .upsert(slice.map((r) => ({ user_id: r.id, kind })), { onConflict: 'user_id,kind', ignoreDuplicates: true });
+        .upsert(slice.map((r) => ({ user_id: r.id, kind })), { onConflict: 'user_id,kind', ignoreDuplicates: true })
+        .select('user_id');
       if (claimError) {
         console.error('[course-reminder] could not claim batch, skipping:', claimError.message);
         failed += slice.length;
         continue;
       }
 
-      const items = slice.map((r) => {
+      const claimedIds = new Set((claims || []).map((r) => r.user_id));
+      const claimed = slice.filter((r) => claimedIds.has(r.id));
+      if (claimed.length === 0) continue;
+
+      const items = claimed.map((r) => {
         const msg = buildMessage({ level: r.level, nextNr: r.nextNr, vorname: r.vorname });
         return {
           from: FROM_ADDRESS,
@@ -407,9 +412,9 @@ const innerHandler = async (event) => {
 
       try {
         await sendBatch(resendKey, items);
-        sent += slice.length;
+        sent += claimed.length;
       } catch (err) {
-        failed += slice.length;
+        failed += claimed.length;
         console.error('[course-reminder] batch failed:', err.message);
       }
     }

@@ -1,34 +1,7 @@
-// Speaking session close-out — the ONE rule for how a speaking session ends.
-//
-// A session RESERVES its allowance at start (speaking-session action 'start'):
-// a trial user's lifetime session is recorded in `speaking_usage`, a paid
-// session debits the wallet, and a subscriber's free 5-minute session counts
-// towards today's two. Until 2026-09-27 nothing ever gave that back. Measured
-// over the preceding 30 days: 7 of the 20 trial sessions recorded (35 %, six of
-// twelve trial users) belonged to sessions in which the learner never said a
-// word, and two users lost BOTH lifetime sessions that way.
-//
-// THE RULE: a session closes on the learner turns the SERVER counted in
-// `speaking_messages`, never on a client-reported count.
-//   - any learner turn → 'completed'; the reservation is consumed.
-//   - zero learner turns → 'cancelled'; the reservation is released (the trial
-//     unit is deleted, a wallet debit is refunded, and the subscriber count in
-//     speaking-session skips cancelled rows).
-//
-// WHO CLOSES A SESSION. The client's 'end' call (Finish, the timer, Cancel);
-// failing that — tab closed, phone locked — anyone who finds it STALE, i.e.
-// past the moment speaking-turn stops accepting turns (started_at +
-// planned_minutes + SESSION_GRACE_MINUTES). That is check-speaking-usage and
-// 'start' for the caller's own sessions, and the speaking-closeout schedule for
-// everyone's. Before this, 36 sessions sat in 'active' forever with
-// user_turns 0 — twelve of the 18 in the last 30 days in fact HAD learner
-// turns, which is why the "53 % zero-turn" figure overstated the problem.
-//
-// RACE SAFETY. The status flip is conditional on status = 'active', so exactly
-// one closer wins and only the winner releases the allowance.
-//
-// No imports: the database client is passed in, so the suite can drive the
-// whole close-out against an in-memory fake (tests/speaking-closeout.test.mjs).
+import { isMissingSchema, logMigrationPending } from './migrationPending.mjs';
+
+// Database reservations serialize session starts, turns and close-out.
+// Missing migration RPCs use the existing tables until the owner applies SQL.
 
 /** Minutes after planned_minutes during which speaking-turn still accepts a turn. */
 export const SESSION_GRACE_MINUTES = 2;
@@ -87,19 +60,21 @@ export function closeOutPlan({ userTurns, mode, costCents }) {
  */
 export async function creditWallet(client, userId, amount) {
   for (let attempt = 0; attempt < 5; attempt++) {
-    const { data: row } = await client
+    const { data: row, error: readError } = await client
       .from('speaking_wallet')
       .select('balance_cents')
       .eq('user_id', userId)
       .maybeSingle();
+    if (readError) return false;
     const balance = row?.balance_cents ?? 0;
-    const { data: updated } = await client
+    const { data: updated, error: updateError } = await client
       .from('speaking_wallet')
       .update({ balance_cents: balance + amount, updated_at: new Date().toISOString() })
       .eq('user_id', userId)
       .eq('balance_cents', balance)
       .select('balance_cents')
       .maybeSingle();
+    if (updateError) return false;
     if (updated) return true;
   }
   return false;
@@ -128,7 +103,15 @@ async function countTurns(client, sessionToken) {
  * @param {object} opts.durationSeconds  client-measured duration (the 'end' call)
  * @param {Date}   opts.now              injectable clock
  */
-export async function closeOutSession(client, session, { durationSeconds, now = new Date() } = {}) {
+async function closeOutSessionLegacy(client, session, { durationSeconds, now = new Date() } = {}) {
+  if (!session.mode || !session.started_at || !Number.isFinite(session.cost_cents)) {
+    const { data: row, error } = await client.from('speaking_sessions')
+      .select(CLOSEOUT_COLUMNS).eq('session_token', session.session_token)
+      .eq('user_id', session.user_id).maybeSingle();
+    if (error) return { closed: false, error: 'lookup_failed' };
+    if (!row) return { closed: false };
+    session = row;
+  }
   const counted = await countTurns(client, session.session_token);
   if (counted.error) {
     console.error('[speaking-closeout] message count failed:', JSON.stringify(counted.error));
@@ -157,6 +140,7 @@ export async function closeOutSession(client, session, { durationSeconds, now = 
     .from('speaking_sessions')
     .update({ status: plan.status, user_turns: plan.userTurns, duration_seconds: duration, completed_at: endedAt })
     .eq('session_token', session.session_token)
+    .eq('user_id', session.user_id)
     .eq('status', 'active')
     .select('session_token');
   if (flipError) {
@@ -203,30 +187,71 @@ export async function closeOutSession(client, session, { durationSeconds, now = 
   return { closed: true, status: plan.status, userTurns: plan.userTurns, released, refundCents };
 }
 
-/**
- * Close every stale 'active' session — the caller's own (`userId`) or, from the
- * schedule, everyone's. Returns { scanned, closed, cancelled, completed }.
- */
+/** Close and release in one database transaction, serialized with accepted turns. */
+export async function closeOutSession(client, session, { durationSeconds, now = new Date() } = {}) {
+  const { data, error } = await client.rpc('settle_speaking_session', {
+    p_session_token: session.session_token,
+    p_user_id: session.user_id,
+    p_duration_seconds: Number.isFinite(durationSeconds) ? durationSeconds : null,
+  });
+  if (isMissingSchema(error)) {
+    logMigrationPending('settle_speaking_session');
+    return closeOutSessionLegacy(client, session, { durationSeconds, now });
+  }
+  if (error || !data || typeof data.closed !== 'boolean') {
+    console.error('[speaking-closeout] settlement failed:', error?.message || 'Invalid response');
+    return { closed: false, error: 'settlement_failed' };
+  }
+  return data;
+}
+
+/** A turn is accepted under the same row lock close-out takes. */
+export async function reserveTurn(client, sessionToken, userId, turnId) {
+  const { data, error } = await client.rpc('reserve_speaking_turn', {
+    p_session_token: sessionToken, p_user_id: userId, p_turn_id: turnId,
+  });
+  if (isMissingSchema(error)) {
+    logMigrationPending('reserve_speaking_turn');
+    const { data: row, error: writeError } = await client.from('speaking_sessions')
+      .update({ status: 'active' }).eq('session_token', sessionToken)
+      .eq('user_id', userId).eq('status', 'active')
+      .select('status, started_at, planned_minutes').maybeSingle();
+    if (writeError) throw new Error('Speaking turn could not be reserved');
+    if (!row) return { ok: false, code: 'session_closed' };
+    const deadline = sessionDeadlineMs(row);
+    if (deadline !== null && Date.now() > deadline) return { ok: false, code: 'session_expired' };
+    return { ok: true, legacy: true };
+  }
+  if (error || !data || typeof data.ok !== 'boolean') throw new Error('Speaking turn could not be reserved');
+  return data;
+}
+
+export async function settleTurn(client, sessionToken, userId, turnId, delivered, legacy = false) {
+  if (legacy) return;
+  const { data, error } = await client.rpc('settle_speaking_turn', {
+    p_session_token: sessionToken, p_user_id: userId, p_turn_id: turnId, p_delivered: delivered,
+  });
+  if (isMissingSchema(error)) {
+    logMigrationPending('settle_speaking_turn');
+    return;
+  }
+  if (error || data !== true) throw new Error('Speaking turn could not be settled');
+}
+
+/** Failed settlements remain active and are picked up on the next sweep. */
 export async function closeOutStaleSessions(client, { userId = null, now = new Date(), limit = 100 } = {}) {
-  // No planned session is shorter than 5 minutes, so nothing started after
-  // this cutoff can be stale yet; isStale() then applies each row's own budget.
   const cutoff = new Date(now.getTime() - (5 + SESSION_GRACE_MINUTES) * 60 * 1000).toISOString();
-  let query = client
-    .from('speaking_sessions')
-    .select(CLOSEOUT_COLUMNS)
-    .eq('status', 'active')
-    .lt('started_at', cutoff);
+  let query = client.from('speaking_sessions').select(CLOSEOUT_COLUMNS)
+    .eq('status', 'active').lt('started_at', cutoff);
   if (userId) query = query.eq('user_id', userId);
   const { data, error } = await query.order('started_at', { ascending: true }).limit(limit);
-  if (error) {
-    console.error('[speaking-closeout] stale scan failed:', JSON.stringify(error));
-    return { scanned: 0, closed: 0, cancelled: 0, completed: 0, error: 'scan_failed' };
-  }
+  if (error) return { scanned: 0, closed: 0, cancelled: 0, completed: 0, error: 'scan_failed' };
   const summary = { scanned: 0, closed: 0, cancelled: 0, completed: 0 };
   for (const session of Array.isArray(data) ? data : []) {
     if (!isStale(session, now.getTime())) continue;
     summary.scanned += 1;
     const result = await closeOutSession(client, session, { now });
+    if (result.error) summary.error = result.error;
     if (!result.closed) continue;
     summary.closed += 1;
     summary[result.status] += 1;

@@ -81,6 +81,10 @@ status unverified” does not mean pending; verify the live schema/data first.
 | `2026-10-20-signup-attempts-no-client-reads.sql` | Drops the two SELECT policies granted to `authenticated` on `public.signup_attempts` (both `USING (true)`). The signup page only inserts and the admin marketing endpoint reads through the service role, so no client role needs to read the table; the two INSERT policies stay. No rollback intended. | ✅ Applied 2026-10-20 by the owner in the Supabase SQL editor |
 | `2026-10-22-lesson-better-run.sql` | Adds the own-user, SECURITY INVOKER `complete_lesson` RPC: an atomic conflict comparison preserves the stronger lesson run under concurrent completions, and writes the course tick in the same transaction. The client detects the RPC and keeps its existing completion path until it is available; concurrent weaker overwrites remain possible until applied. | not applied — owner applies |
 
+| `2026-10-22-ai-usage-reservations.sql` | Atomic X-Ray, writing, explanation and read-aloud reservations; blocks learner deletion of metered lesson stages while retaining ordinary resets. Until applied these AI paths fail closed before provider work. | **not applied — owner applies** |
+| `2026-10-22-speaking-reservations.sql` | Atomic session allowance/wallet reservations, accepted turn tracking, and transactional close-out/refunds. Until applied speaking reservations and settlement fail closed. | **not applied — owner applies** |
+| `2026-10-22-course-reminder-checkpoints.sql` | Replaces `course_reminder_candidates`: counts/numbers only lesson IDs, retaining checkpoint activity. Until applied checkpoint completions can still halt reminders. | **not applied — owner applies** |
+
 Every file above marked ✅ records a change that is **already live** on project
 `omqyueddktqeyrrqvnyq`. They are idempotent, so re-running one is safe and is how you
 would reproduce the same state on a branch or fresh database — with one exception, called

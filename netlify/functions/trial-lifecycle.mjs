@@ -245,16 +245,21 @@ async function sendKind(resendKey, kind) {
 
     // Claim first: the unique key means a concurrent or repeated run can't
     // re-send, and a failure after this point costs at most a missed email.
-    const { error: claimError } = await supabase
+    const { data: claims, error: claimError } = await supabase
       .from('lifecycle_emails')
-      .upsert(slice.map((r) => ({ user_id: r.id, kind })), { onConflict: 'user_id,kind', ignoreDuplicates: true });
+      .upsert(slice.map((r) => ({ user_id: r.id, kind })), { onConflict: 'user_id,kind', ignoreDuplicates: true })
+      .select('user_id');
     if (claimError) {
       console.error(`[trial-lifecycle] ${kind}: could not claim batch, skipping:`, claimError.message);
       failed += slice.length;
       continue;
     }
 
-    const items = slice.map((r) => ({
+    const claimedIds = new Set((claims || []).map((r) => r.user_id));
+    const claimed = slice.filter((r) => claimedIds.has(r.id));
+    if (claimed.length === 0) continue;
+
+    const items = claimed.map((r) => ({
       from: FROM_ADDRESS,
       to: [r.email],
       reply_to: 'zaid@deutsch-meister.de',
@@ -264,9 +269,9 @@ async function sendKind(resendKey, kind) {
 
     try {
       await sendBatch(resendKey, items);
-      sent += slice.length;
+      sent += claimed.length;
     } catch (err) {
-      failed += slice.length;
+      failed += claimed.length;
       console.error(`[trial-lifecycle] ${kind} batch failed:`, err.message);
     }
   }
