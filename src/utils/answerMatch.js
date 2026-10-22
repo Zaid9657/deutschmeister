@@ -12,6 +12,7 @@
  */
 export function normalizeAnswer(text) {
   return String(text ?? '')
+    .normalize('NFC')
     .trim()
     .toLowerCase()
     .replace(/\s+/g, ' ')

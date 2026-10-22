@@ -9,7 +9,7 @@ import { practiceScore, masteryStatus } from '../../lib/lesson/mastery.js';
 import { skillLines } from '../../lib/lesson/skillStatus.js';
 import { countCompletedRuns, fetchWordsByIds, getLessonProgress, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
-import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
+import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson, retryLocalProgressSave } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards } from '../../services/reviewService.js';
 import { enqueueRun, flushOutbox, outboxIsDurable, pendingRuns } from '../../lib/course/syncOutbox.js';
 import { clearRun, packRun, readRun, resumeStageIndex, saveRun } from '../../lib/lesson/runState.js';
@@ -73,12 +73,24 @@ import { SESSION_COUNT, sessionCompleted } from '../../lib/lesson/sessions.js';
 /** The multi-item stages the player pages through one item at a time. */
 const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup']);
 
-export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
+export function LessonPlayer(props) {
+  const { user, loading } = useAuth();
+  if (!props.preview && loading) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">{t('player.loading', readLessonLang())}</p>
+      </div>
+    );
+  }
+  return <LessonRun key={user?.id || 'guest'} {...props} />;
+}
+
+function LessonRun({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [lang] = useLessonLang();
   // The run this tab was in the middle of, if any (read once, on mount).
-  // The route waits for auth (LevelSubscriptionGuard), so `user` is settled here: the snapshot read is the owner's own.
+  // LessonPlayer waits for auth and remounts this run when the owner changes.
   const owner = user ? user.id : null;
   const [resumed] = useState(() => (preview ? null : readRun(curriculum.level, lektion.id, Date.now(), owner)));
   // The DRAW attempt, derived from how often this learner has already finished
@@ -338,7 +350,10 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // not that the lesson is kept on this device (Codex review, 2026-10-07).
   const runEntryKey = useRef(null);
   const flush = useCallback(() => {
-    if (!user) return;
+    if (!user) {
+      setSync(retryLocalProgressSave() ? 'local' : 'localFailed');
+      return;
+    }
     setSync('syncing');
     flushOutbox(user.id).then((r) => {
       const pending = pendingRuns(user.id).some((e) => e.key === runEntryKey.current);
@@ -352,8 +367,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     setSaved(true);
     trackLessonCompleted(curriculum.level, lektion.id, runId);
     if (!user) {
-      recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
-      setSync('local');
+      const durable = recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
+      setSync(durable ? 'local' : 'localFailed');
       return;
     }
     const entry = enqueueRun({ userId: user.id, level: curriculum.level, lektionId: lektion.id, createdAt: new Date().toISOString(), attempts, accuracy, status });

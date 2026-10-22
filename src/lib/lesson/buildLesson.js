@@ -1058,6 +1058,8 @@ function buildWordOrderItem(lektion, attempt, rng) {
     type: 'word_order',
     topic: lektion.primarySlug || null,
     lineIndex: chosen.index,
+    promptDe: 'Bilden Sie diese Dialogzeile in ihrer ursprünglichen Wortfolge nach.',
+    promptEn: 'Rebuild this dialogue line in its original word order.',
     tokens: shuffled,
     answer: chosen.de,
     accepted: [chosen.de],

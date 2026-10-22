@@ -5,7 +5,9 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import WordsLearnedCards from './WordsLearnedCards.jsx';
-import { accuracyPercent, nextReviewDate } from '../../lib/lesson/mastery.js';
+import { accuracyPercent } from '../../lib/lesson/mastery.js';
+import { fetchLektionReviewDueAt } from '../../services/reviewService.js';
+import { recapReviewSchedule } from '../../lib/review/recapSchedule.js';
 import { useAuth } from '../../contexts/AuthContext';
 import SaveProgressCard from '../course/SaveProgressCard.jsx';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -45,7 +47,8 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
-  const review = nextReviewDate();
+  const [reviewDueAt, setReviewDueAt] = useState(null);
+  const review = recapReviewSchedule(reviewDueAt);
   const date = lessonDateFormat(lang, { day: 'numeric', month: 'long' });
 
   // "Go deeper": the Lektion this recap belongs to, found by reference — the
@@ -58,6 +61,16 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
     () => curriculum?.lektionen?.find((l) => l.wortfeld === stage.wortfeld) || null,
     [curriculum, stage.wortfeld],
   );
+
+  useEffect(() => {
+    setReviewDueAt(null);
+    if (!user || !lektion || sync !== 'synced') return undefined;
+    let cancelled = false;
+    fetchLektionReviewDueAt(user.id, lektion, level)
+      .then((dueAt) => { if (!cancelled) setReviewDueAt(dueAt); })
+      .catch(() => { /* no date promised without a saved schedule */ });
+    return () => { cancelled = true; };
+  }, [user, lektion, level, sync]);
 
   const listeningHref =
     lektion?.links?.listeningExercise != null ? `/listening/${level}/${lektion.links.listeningExercise}` : null;
@@ -125,13 +138,13 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
           </>
         )}
         <p className={`${canDo.length ? 'mt-4 border-t border-rule pt-4 ' : ''}flex items-start gap-2 text-[0.875rem] leading-relaxed text-graphite`}>
-          <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t('recap.canDo.next', lang, { date: date.format(review) })}
+          <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t(`recap.canDo.${review.state}`, lang, { date: review.date ? date.format(review.date) : '' })}
         </p>
 
         {/* Where this run is saved (syncOutbox.js) — said in words, and never a reason to stop: Continue works either way. */}
         <p role="status" className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] leading-snug text-graphite">
           {sync && <span>{t(`sync.${sync}`, lang)}</span>}
-          {(sync === 'failed' || sync === 'failedTemp') && onRetrySync && (
+          {(sync === 'failed' || sync === 'failedTemp' || sync === 'localFailed') && onRetrySync && (
             <button type="button" onClick={onRetrySync} className="min-h-11 font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
               {t('sync.retry', lang)}
             </button>

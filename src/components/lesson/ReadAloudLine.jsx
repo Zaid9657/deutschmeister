@@ -5,6 +5,7 @@ import Card from '../ui/Card.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import PlayButton from './PlayButton.jsx';
 import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
+import { canRetryReadAloud, canSelfConfirmReadAloud } from '../../lib/lesson/readAloudControls.js';
 import { getAuthHeaders } from '../../utils/supabase';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
@@ -78,7 +79,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       const res = await fetch('/.netlify/functions/score-readaloud', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders },
-        body: JSON.stringify({ audioBase64, mimeType, expected: text, lektionId, lineKey }),
+        body: JSON.stringify({ audioBase64, mimeType, expected: text.normalize('NFC'), lektionId, lineKey }),
       });
       const data = await res.json().catch(() => ({}));
 
@@ -90,8 +91,8 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       // safety net for a response that arrived without the word list.
       const words = Array.isArray(data.words) && data.words.length
         ? data.words
-        : alignTranscript(text, data.transcript || '').words;
-      const local = alignTranscript(text, data.transcript || '');
+        : alignTranscript(text.normalize('NFC'), (data.transcript || '').normalize('NFC')).words;
+      const local = alignTranscript(text.normalize('NFC'), (data.transcript || '').normalize('NFC'));
       const pct = typeof data.pct === 'number' ? data.pct : local.pct;
       const extra = typeof data.extra === 'number' ? data.extra : local.extra;
 
@@ -153,7 +154,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
     onResultRef.current?.(selfConfirmedResult(result, attempts));
   };
 
-  const canRetry = phase === 'scored' && attempts < MAX_ATTEMPTS;
+  const canRetry = canRetryReadAloud({ phase, attempts, maxAttempts: MAX_ATTEMPTS, micError });
   const pctLabel = result ? Math.round(result.pct * 100) : 0;
 
   return (
@@ -195,7 +196,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <PlayButton lektionId={lektionId} audioKey={lineKey} text={text} rate={0.85} label={t('speaking.model', lang)} />
 
-        {scoringPossible && phase === 'idle' && attempts === 0 && (
+        {scoringPossible && phase === 'idle' && attempts === 0 && !micError && (
           <Button size="sm" onClick={startRecording}>
             <Mic className="h-4 w-4" aria-hidden="true" /> {t('speaking.record', lang)}
           </Button>
@@ -216,7 +217,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
           </Button>
         )}
 
-        {(!scoringPossible || (phase === 'scored' && !canRetry)) && !confirmed && (
+        {canSelfConfirmReadAloud({ scoringPossible, phase, canRetry, micError }) && !confirmed && (
           <button
             type="button"
             onClick={selfConfirm}

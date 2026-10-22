@@ -63,6 +63,19 @@ export const startLesson = async (userId, level, lektionId) => {
 export const completeLesson = async (userId, { level, lektionId, accuracy = 0, status = 'complete' }, client = supabase) => {
   if (!userId || !lektionId) return false;
   const lvl = String(level).toLowerCase();
+  // The owner-applied RPC compares against the row locked by ON CONFLICT, so two devices cannot
+  // replace a stronger run. Only a missing RPC falls back to the pre-migration client path.
+  if (typeof client.rpc === 'function') {
+    const { data, error } = await client.rpc('complete_lesson', {
+      p_user_id: userId, p_level: lvl, p_lektion_id: lektionId, p_accuracy: accuracy, p_status: status,
+    });
+    if (!error) return data === true;
+    const missing = ['PGRST202', '42883'].includes(error.code) && /\bcomplete_lesson\b/.test(error.message || '');
+    if (!missing) {
+      console.error('[lessonService] completeLesson RPC:', error.message);
+      return false;
+    }
+  }
   const { data: prev, error: readError } = await client
     .from('lesson_progress')
     .select('status, accuracy')
