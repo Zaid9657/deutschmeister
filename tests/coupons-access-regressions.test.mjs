@@ -36,7 +36,7 @@ globalThis.fetch = async (url, init = {}) => {
   const offset = Number(href.searchParams.get('offset') || 0);
   const limit = Number(href.searchParams.get('limit') || rows.length);
   rows = rows.slice(offset, offset + limit);
-  if (table === 'profiles' && init.method === 'POST' && failProfileWrites) {
+  if (table === 'profiles' && ['POST', 'PATCH'].includes(init.method) && failProfileWrites) {
     return new Response(JSON.stringify({ message: 'profile write failed' }), { status: 400, headers: { 'content-type': 'application/json' } });
   }
   if (init.method === 'PATCH') {

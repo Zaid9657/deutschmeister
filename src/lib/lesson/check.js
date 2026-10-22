@@ -162,10 +162,34 @@ const ENDINGS = ['test', 'ten', 'tet', 'est', 'te', 'st', 'et', 'en', 'em', 'er'
 const stemSplits = (w) => ENDINGS.filter((x) => w.length >= x.length + 3 && w.endsWith(x)).map((x) => [w.slice(0, -x.length), x]);
 const otherEnding = (a, b) => stemSplits(a).some(([s, x]) => stemSplits(b).some(([t, y]) => s === t && x !== y));
 
+// Present-tense strong stems, after normalizeAnswer's umlaut/ß fold. Changing the stem vowel is
+// conjugation even when the ending stays -t („spricht/sprecht", „fährt/fahrt"). Equal prefixes
+// preserve the rule for compounds („vorliest/vorlest") without treating every vowel slip as grammar.
+const STRONG_STEMS = [
+  ['sprech', 'sprich'], ['les', 'lies'], ['fahr', 'faehr'], ['ess', 'iss'], ['seh', 'sieh'],
+  ['nehm', 'nimm'], ['geb', 'gib'], ['helf', 'hilf'], ['treff', 'triff'], ['lauf', 'laeuf'],
+  ['schlaf', 'schlaef'], ['trag', 'traeg'], ['wasch', 'waesch'], ['halt', 'haelt'],
+  ['fall', 'faell'], ['lass', 'laess'], ['fang', 'faeng'], ['stoss', 'stoess'],
+  ['werf', 'wirf'], ['brech', 'brich'], ['sterb', 'stirb'], ['tret', 'tritt'],
+  ['vergess', 'vergiss'], ['empfehl', 'empfiehl'], ['befehl', 'befiehl'], ['fress', 'friss'],
+  ['mess', 'miss'], ['stech', 'stich'], ['gelt', 'gilt'], ['rat', 'raet'], ['brat', 'braet'],
+  ['grab', 'graeb'], ['blas', 'blaes'], ['berg', 'birg'], ['schlag', 'schlaeg'],
+  ['wachs', 'waechs'], ['sauf', 'saeuf'], ['schmelz', 'schmilz'],
+  ['schwell', 'schwill'], ['quell', 'quill'], ['schreck', 'schrick'],
+];
+
+function otherStrongStem(a, b) {
+  return ['e', 'st', 't', 'en', 'et'].some((ending) => STRONG_STEMS.some(([base, changed]) => {
+    const plain = `${base}${ending}`; const strong = `${changed}${ending}`;
+    return (a.endsWith(plain) && b.endsWith(strong) && a.slice(0, -plain.length) === b.slice(0, -strong.length))
+      || (a.endsWith(strong) && b.endsWith(plain) && a.slice(0, -strong.length) === b.slice(0, -plain.length));
+  }));
+}
+
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
   if (u.length !== e.length) return true;
-  return u.some((w, i) => w !== e[i] && (w.slice(-1) !== e[i].slice(-1) || otherEnding(w, e[i])));
+  return u.some((w, i) => w !== e[i] && (w.slice(-1) !== e[i].slice(-1) || otherEnding(w, e[i]) || otherStrongStem(w, e[i])));
 }
 
 /**
@@ -405,12 +429,13 @@ function commonPrefix(a, b) {
 }
 
 /**
- * Two finite forms of the same verb: both end in a personal ending and they
- * share a stem of at least three characters (spreche/spricht → `spr`). Deliberately
- * loose — it only has to separate a conjugation slip from a different word.
+ * Two finite forms of the same verb: a known strong-stem pair, or personal endings with
+ * a shared stem of at least three characters (spreche/spricht → `spr`). Deliberately loose —
+ * it only has to separate a conjugation slip from a different word.
  */
 function sameLemmaVerb(usr, exp) {
   if (!usr || !exp || usr === exp) return false;
+  if (otherStrongStem(usr, exp)) return true;
   if (!VERB_ENDING_RE.test(usr) || !VERB_ENDING_RE.test(exp)) return false;
   return commonPrefix(usr, exp) >= 3;
 }

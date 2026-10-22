@@ -35,6 +35,8 @@ export function subscriptionEventRow(existing, data, eventType, now = Date.now()
     // recurring subscription. New checkouts carry the provider creation date.
     if (!createdAt) return null;
     if (existing.plan_type !== 'course' && !(Date.parse(createdAt) > Date.parse(existing.subscription_start))) return null;
+    if (existing.plan_type === 'course'
+      && Date.parse(attributes.updated_at || createdAt) < Date.parse(existing.subscription_start)) return null;
     if (!['active', 'on_trial'].includes(attributes.status)) return null;
     if (existing.plan_type === 'course' && !(Date.parse(attributes.status === 'on_trial' ? attributes.trial_ends_at : attributes.renews_at) > Number(now))) return null;
   }
@@ -85,10 +87,22 @@ async function confirmedSubscriptionEnd(supabase, subscriptionId) {
     : attributes.status === 'cancelled' ? attributes.ends_at : attributes.renews_at);
 }
 
-async function recordSupersededId(supabase, userId, subscriptionId) {
+async function latestSubscriptionSnapshot(supabase, subscriptionId) {
+  const { data: snapshots, error } = await supabase.from('webhook_logs')
+    .select('event_type, payload')
+    .in('event_type', SUBSCRIPTION_EVENTS)
+    .eq('payload->data->>id', subscriptionId)
+    .order('payload->data->attributes->>updated_at', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false })
+    .limit(1);
+  if (error) throw error;
+  return snapshots?.[0];
+}
+
+async function recordSupersededId(supabase, userId, subscriptionId, supersededAt) {
   const { error } = await supabase.from('webhook_logs').insert({
     event_type: 'subscription_superseded',
-    payload: { meta: { custom_data: { user_id: userId } }, data: { id: subscriptionId } },
+    payload: { meta: { custom_data: { user_id: userId }, superseded_at: supersededAt }, data: { id: subscriptionId } },
     processed: true,
     error: null,
   });
@@ -97,7 +111,21 @@ async function recordSupersededId(supabase, userId, subscriptionId) {
 
 async function retireLegacyCourseId(supabase, subscription, userId, now) {
   if (subscription?.plan_type !== 'course' || !subscription.lemonsqueezy_subscription_id) return subscription;
-  await recordSupersededId(supabase, userId, subscription.lemonsqueezy_subscription_id);
+  const snapshot = await latestSubscriptionSnapshot(supabase, subscription.lemonsqueezy_subscription_id);
+  if (!snapshot) return subscription;
+  const status = snapshot?.payload?.data?.attributes?.status;
+  if ((ACCESS_STATUSES.has(status) || status === 'unpaid') && snapshot.event_type !== 'subscription_expired') {
+    const attributes = snapshot.payload.data.attributes;
+    if (['active', 'on_trial', 'cancelled'].includes(status)
+      && Date.parse(attributes.updated_at || attributes.created_at) < Date.parse(subscription.subscription_start)) return subscription;
+    // The old course upsert could leave an overdue recurring identity here.
+    // Restore its provider state; purchases independently grant included Pro.
+    const recurring = { ...subscriptionEventRow(null, snapshot.payload.data, snapshot.event_type, now), user_id: userId };
+    const { error } = await supabase.from('subscriptions').upsert(recurring, { onConflict: 'user_id' });
+    if (error) throw error;
+    return recurring;
+  }
+  await recordSupersededId(supabase, userId, subscription.lemonsqueezy_subscription_id, subscription.subscription_start);
   const { error } = await supabase.from('subscriptions').update({
     lemonsqueezy_subscription_id: null, cancel_at_period_end: false, cancelled_at: null, updated_at: new Date(now).toISOString(),
   }).eq('user_id', userId).eq('plan_type', 'course').eq('lemonsqueezy_subscription_id', subscription.lemonsqueezy_subscription_id);
@@ -106,12 +134,14 @@ async function retireLegacyCourseId(supabase, subscription, userId, now) {
 }
 
 export async function reconcileUserEntitlement(supabase, userId, now = Date.now()) {
-  const [subscriptionResult, purchasesResult] = await Promise.all([
+  const [subscriptionResult, purchasesResult, profileResult] = await Promise.all([
     supabase.from('subscriptions').select('*').eq('user_id', userId).maybeSingle(),
     supabase.from('purchases').select('*').eq('user_id', userId).eq('status', 'active'),
+    supabase.from('profiles').select('subscription_tier').eq('id', userId).maybeSingle(),
   ]);
   if (subscriptionResult.error) throw subscriptionResult.error;
   if (purchasesResult.error) throw purchasesResult.error;
+  if (profileResult.error) throw profileResult.error;
   let subscription = await retireLegacyCourseId(supabase, subscriptionResult.data, userId, now);
   if (subscription?.lemonsqueezy_subscription_id && ['past_due', 'paused'].includes(subscription.status)) {
     // Older handlers copied retry dates into this column. Repair them from
@@ -130,14 +160,14 @@ export async function reconcileUserEntitlement(supabase, userId, now = Date.now(
   const course = latestCourseWindow(purchases, now);
   const liveRecurring = subscription?.plan_type !== 'course' && subscriptionHasPaidAccess(subscription, now);
   // Keep a recoverable recurring row so a later successful retry can find it.
-  const recoverableRecurring = subscription?.lemonsqueezy_subscription_id && subscription?.plan_type !== 'course'
-    && (ACCESS_STATUSES.has(subscription.status) || subscription.status === 'unpaid');
+  const recoverableRecurring = subscription?.lemonsqueezy_subscription_id
+    && (subscription.plan_type === 'course' || ACCESS_STATUSES.has(subscription.status) || subscription.status === 'unpaid');
   const nowIso = new Date(now).toISOString();
   if (!liveRecurring && !recoverableRecurring && course) {
     if (subscription?.lemonsqueezy_subscription_id) {
       // Preserve retired identities before clearing the one-row subscription
       // slot. An old expiry/replay can then never take over a course window.
-      await recordSupersededId(supabase, userId, subscription.lemonsqueezy_subscription_id);
+      await recordSupersededId(supabase, userId, subscription.lemonsqueezy_subscription_id, nowIso);
     }
     const courseRow = {
       user_id: userId,
@@ -160,17 +190,24 @@ export async function reconcileUserEntitlement(supabase, userId, now = Date.now(
     subscription = courseRow;
   } else if (!course && subscription?.plan_type === 'course') {
     const { error } = await supabase.from('subscriptions')
-      .update({ status: 'expired', lemonsqueezy_subscription_id: null, updated_at: nowIso }).eq('user_id', userId);
+      .update({ status: 'expired', updated_at: nowIso }).eq('user_id', userId);
     if (error) throw error;
-    subscription = { ...subscription, status: 'expired', lemonsqueezy_subscription_id: null };
+    subscription = { ...subscription, status: 'expired' };
   }
-  const isSubscribed = !!(liveRecurring || course);
-  const { error } = await supabase.from('profiles').upsert({
+  const premium = profileResult.data?.subscription_tier === 'premium';
+  const isSubscribed = !!(premium || liveRecurring || course);
+  const profilePatch = {
     id: userId,
     is_subscribed: isSubscribed,
-    subscription_tier: isSubscribed ? 'pro' : 'free',
+    subscription_tier: premium ? 'premium' : isSubscribed ? 'pro' : 'free',
     updated_at: nowIso,
-  }, { onConflict: 'id' });
+  };
+  // The conditional write also protects a grant made after the profile read.
+  const { error } = await (profileResult.data
+    ? premium
+      ? supabase.from('profiles').update({ is_subscribed: true, updated_at: nowIso }).eq('id', userId).eq('subscription_tier', 'premium')
+      : supabase.from('profiles').update(profilePatch).eq('id', userId).or('subscription_tier.is.null,subscription_tier.neq.premium')
+    : supabase.from('profiles').upsert(profilePatch, { onConflict: 'id', ignoreDuplicates: true }));
   if (error) throw error;
   return { subscription, purchases, isSubscribed };
 }
@@ -180,25 +217,24 @@ export async function reconcileSubscriptionEvent(supabase, userId, data, eventTy
     .select('*').eq('user_id', userId).maybeSingle();
   if (lookupError) throw lookupError;
   const existing = await retireLegacyCourseId(supabase, current, userId, now);
-  const { data: retired, error: retiredError } = await supabase.from('webhook_logs').select('id')
-    .eq('event_type', 'subscription_superseded').eq('payload->data->>id', String(data?.id || '')).limit(1);
+  const { data: retired, error: retiredError } = await supabase.from('webhook_logs').select('created_at, payload')
+    .eq('event_type', 'subscription_superseded').eq('payload->data->>id', String(data?.id || ''))
+    .order('created_at', { ascending: false }).limit(1);
   if (retiredError) throw retiredError;
-  if (retired?.length) return reconcileUserEntitlement(supabase, userId, now);
   // Compare provider timestamps in stored snapshots, never the row's local
   // updated_at (price writes and administrative changes also update it).
-  const { data: snapshots, error: snapshotError } = await supabase.from('webhook_logs')
-    .select('event_type, payload')
-    .in('event_type', SUBSCRIPTION_EVENTS)
-    .eq('payload->data->>id', String(data?.id || ''))
-    .order('payload->data->attributes->>updated_at', { ascending: false, nullsFirst: false })
-    .limit(1);
-  if (snapshotError) throw snapshotError;
-  const latest = snapshots?.[0];
+  const latest = await latestSubscriptionSnapshot(supabase, String(data?.id || ''));
   const incomingTime = Date.parse(data?.attributes?.updated_at);
   const latestTime = Date.parse(latest?.payload?.data?.attributes?.updated_at);
   if (Number.isFinite(latestTime) && (!Number.isFinite(incomingTime) || latestTime > incomingTime)) {
     data = latest.payload.data;
     eventType = latest.event_type;
+  }
+  const eventTime = Date.parse(data?.attributes?.updated_at || data?.attributes?.created_at);
+  const supersededTime = Date.parse(retired?.[0]?.payload?.meta?.superseded_at
+    || (existing?.plan_type === 'course' ? existing.subscription_start : null) || retired?.[0]?.created_at);
+  if (Number.isFinite(supersededTime) && (!Number.isFinite(eventTime) || eventTime < supersededTime)) {
+    return reconcileUserEntitlement(supabase, userId, now);
   }
   const row = subscriptionEventRow(existing, data, eventType, now);
   if (row) {

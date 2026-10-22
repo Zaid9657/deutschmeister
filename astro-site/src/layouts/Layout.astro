@@ -499,15 +499,17 @@ const authAttrs = (item) =>
       // inside track(); before Accept every call is a no-op.
       import { autoTrack } from '../lib/track.js';
       import { courseHomeFor } from '../../../src/lib/courseEntry.js';
+      import { subscriptionStatus } from '../../../src/lib/subscriptionStatus.js';
       import { isLevelFree } from '../../../src/config/freeTier.js';
       import { levelsForProduct } from '../data/pricing.js';
 
       function continueCourseHref({ profile, subscription, purchases = [] }, now = Date.now()) {
         const trialOpen = profile?.trial_started_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > now;
-        const proOpen = Date.parse(subscription?.subscription_end) > now;
+        const activePurchases = purchases.filter((purchase) => purchase.status === 'active');
+        const proOpen = subscriptionStatus(subscription, now).isActive || activePurchases.some((purchase) => Date.parse(purchase.access_until) > now);
         return courseHomeFor({
           level: profile?.current_level,
-          hasLevelAccess: (level) => isLevelFree(level) || Boolean(trialOpen || proOpen) || purchases.some((p) => levelsForProduct(p.product_key).includes(level)),
+          hasLevelAccess: (level) => isLevelFree(level) || Boolean(trialOpen || proOpen) || activePurchases.some((p) => levelsForProduct(p.product_key).includes(level)),
         });
       }
 
@@ -521,8 +523,8 @@ const authAttrs = (item) =>
         if (!user) return;
         const [profile, subscription, purchases] = await Promise.all([
           supabase.from('profiles').select('current_level, is_subscribed, trial_started_at, trial_ends_at').eq('id', user.id).maybeSingle(),
-          supabase.from('subscriptions').select('subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
-          supabase.from('purchases').select('product_key').eq('user_id', user.id).eq('status', 'active'),
+          supabase.from('subscriptions').select('status, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
+          supabase.from('purchases').select('product_key, status, access_until').eq('user_id', user.id).eq('status', 'active'),
         ]);
         if (profile.error || subscription.error || purchases.error) return;
         const href = continueCourseHref({ profile: profile.data, subscription: subscription.data, purchases: purchases.data || [] });

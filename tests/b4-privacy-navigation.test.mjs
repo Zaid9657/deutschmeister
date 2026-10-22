@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { courseHomeFor } from '../src/lib/courseEntry.js';
+import { subscriptionStatus } from '../src/lib/subscriptionStatus.js';
 import { isLevelFree } from '../src/config/freeTier.js';
 import { LEVEL_COURSES, levelsForProduct } from '../src/data/pricing.js';
 
@@ -184,7 +185,7 @@ function astroContinuation() {
   const source = read('astro-site/src/layouts/Layout.astro');
   const helper = source.match(/ {6}function continueCourseHref\([\s\S]*?\n {6}\}/);
   assert.ok(helper, 'the Astro continuation must resolve a course rather than /dashboard');
-  const context = vm.createContext({ courseHomeFor, isLevelFree, levelsForProduct });
+  const context = vm.createContext({ courseHomeFor, subscriptionStatus, isLevelFree, levelsForProduct });
   vm.runInContext(helper[0], context);
   return { source, href: context.continueCourseHref };
 }
@@ -196,11 +197,11 @@ test('Astro continue links use the SPA course-entry rule and free fallback', () 
   const expired = { current_level: 'A2.1', trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08' };
   assert.equal(href({ profile: expired }, now), '/course/a1.1');
   assert.equal(href({ profile: { ...expired, trial_ends_at: '2026-10-23' } }, now), '/course/a2.1');
-  assert.equal(href({ profile: expired, subscription: { subscription_end: '2026-10-23' } }, now), '/course/a2.1');
+  assert.equal(href({ profile: expired, subscription: { status: 'active', subscription_end: '2026-10-23' } }, now), '/course/a2.1');
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
   assert.ok(product, 'select the product from the canonical pricing data');
-  assert.equal(href({ profile: expired, purchases: [{ product_key: product.key }] }, now), '/course/a2.1');
-  assert.equal(href({ profile: { ...expired, current_level: 'B1.1' }, purchases: [{ product_key: product.key }] }, now), '/course/a1.1');
+  assert.equal(href({ profile: expired, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a2.1');
+  assert.equal(href({ profile: { ...expired, current_level: 'B1.1' }, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a1.1');
   assert.equal(href({ profile: { ...expired, is_subscribed: true } }, now), '/course/a1.1', 'an old profile flag is not a live paid period');
   for (const path of [source, home]) {
     const links = path.match(/<a\s[^>]*data-continue-course[^>]*>/g) || [];
@@ -211,13 +212,33 @@ test('Astro continue links use the SPA course-entry rule and free fallback', () 
   assert.match(source, /import \{ courseHomeFor \} from '\.\.\/\.\.\/\.\.\/src\/lib\/courseEntry\.js'/);
 });
 
+test('Astro continuation rejects inactive future periods and includes active course Pro windows', () => {
+  const { source, href } = astroContinuation();
+  const now = Date.parse('2026-10-22T12:00:00Z');
+  const profile = { current_level: 'A2.2' };
+  for (const status of ['expired', 'unpaid', 'subscription_superseded', undefined]) {
+    assert.equal(href({ profile, subscription: { status, subscription_end: '2026-11-01' } }, now), '/course/a1.1', String(status));
+  }
+  for (const status of ['active', 'on_trial', 'cancelled', 'past_due', 'paused']) {
+    assert.equal(href({ profile, subscription: { status, subscription_end: '2026-11-01' } }, now), '/course/a2.2', status);
+    assert.equal(href({ profile, subscription: { status, subscription_end: '2026-10-21' } }, now), '/course/a1.1', status);
+  }
+  const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
+  const purchase = { product_key: product.key, status: 'active', access_until: '2026-11-01' };
+  assert.equal(href({ profile, purchases: [purchase] }, now), '/course/a2.2', 'included Pro also opens a placed level outside the bought course');
+  assert.equal(href({ profile, purchases: [{ ...purchase, access_until: '2026-10-21' }] }, now), '/course/a1.1');
+  assert.equal(href({ profile, purchases: [{ ...purchase, status: 'refunded' }] }, now), '/course/a1.1');
+  assert.match(source, /select\('status, subscription_end'\)/);
+  assert.match(source, /select\('product_key, status, access_until'\)/);
+});
+
 test('Astro continuation reads only the verified account and keeps free links on query errors', async () => {
   const { source, href } = astroContinuation();
   const updater = source.match(/ {6}async function updateContinueLinks\(\) \{[\s\S]*?\n {6}\}/)[0].replace("import('../lib/supabase.js')", 'loadSupabase()');
   const links = [{ href: '/course/a1.1' }, { href: '/course/a1.1' }];
   const filters = [];
   let failed = true;
-  const rows = { profiles: { current_level: 'A2.1' }, subscriptions: { subscription_end: '2099-01-01' }, purchases: [] };
+  const rows = { profiles: { current_level: 'A2.1' }, subscriptions: { status: 'active', subscription_end: '2099-01-01' }, purchases: [] };
   const supabase = {
     auth: { getUser: async () => ({ data: { user: { id: 'verified-user' } } }) },
     from(table) {

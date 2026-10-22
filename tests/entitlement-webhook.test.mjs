@@ -23,6 +23,7 @@ globalThis.Date = FixedDate;
 let tables;
 let failProfile;
 let failLogWrites;
+let grantPremiumBeforeProfileWrite;
 const json = (value, status = 200) => new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json' } });
 const originalFetch = globalThis.fetch;
 globalThis.fetch = async (url, init = {}) => {
@@ -36,8 +37,13 @@ globalThis.fetch = async (url, init = {}) => {
     ? name.split(/->>?/).reduce((value, key) => value?.[key], row) : row[name];
   const matches = (row) => [...u.searchParams].every(([key, value]) => {
     if (['select', 'order', 'limit', 'on_conflict'].includes(key)) return true;
+    if (key === 'or') {
+      assert.equal(value, '(subscription_tier.is.null,subscription_tier.neq.premium)');
+      return row.subscription_tier == null || row.subscription_tier !== 'premium';
+    }
     const actual = field(row, key);
     if (value.startsWith('eq.')) return String(actual) === value.slice(3);
+    if (value.startsWith('neq.')) return String(actual) !== value.slice(4);
     if (value.startsWith('is.')) return value === 'is.null' && actual == null;
     if (value.startsWith('in.')) return value.slice(4, -1).split(',').includes(String(actual));
     throw new Error(`Unhandled filter ${key}=${value}`);
@@ -59,6 +65,10 @@ globalThis.fetch = async (url, init = {}) => {
     return json(rows);
   }
   if (table === 'profiles' && failProfile) return json({ message: 'profile unavailable', code: 'XX000' }, 500);
+  if (table === 'profiles' && grantPremiumBeforeProfileWrite) {
+    Object.assign(values.find((row) => row.id === USER), { subscription_tier: 'premium', is_subscribed: true });
+    grantPremiumBeforeProfileWrite = false;
+  }
   if (table === 'webhook_logs' && failLogWrites) return json({ message: 'webhook log unavailable', code: 'XX000' }, 500);
   const body = JSON.parse(init.body);
   let changed = [];
@@ -86,6 +96,7 @@ beforeEach(() => {
   tables = { subscriptions: [], purchases: [], profiles: [], webhook_logs: [] };
   failProfile = false;
   failLogWrites = false;
+  grantPremiumBeforeProfileWrite = false;
 });
 after(() => { globalThis.Date = RealDate; globalThis.fetch = originalFetch; });
 
@@ -253,6 +264,113 @@ test('successful invoice delivery reconciles a live subscription without inventi
   assert.equal(subscription().subscription_end, paidThrough);
 });
 
+test('invoice and expiry reconciliation preserve an explicit admin premium grant', async () => {
+  await deliver(subscriptionEvent('subscription_created'));
+  profile().subscription_tier = 'premium';
+  profile().is_subscribed = false;
+  await deliver(event('subscription_payment_success', 'invoice-1', { subscription_id: 'sub-1', status: 'paid', total: Math.round(MONTHLY_PRICE_EUR * 100) }));
+  assert.equal(profile().subscription_tier, 'premium');
+  assert.equal(profile().is_subscribed, true);
+  advance(32);
+  await deliver(subscriptionEvent('subscription_expired', { status: 'expired', updated_at: new Date().toISOString() }));
+  assert.equal(profile().subscription_tier, 'premium');
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('reconciliation updates a legacy profile with a null subscription tier', async () => {
+  tables.profiles.push({ id: USER, subscription_tier: null, is_subscribed: false });
+  await deliver(subscriptionEvent('subscription_created'));
+  assert.equal(profile().subscription_tier, 'pro');
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('reconciliation cannot overwrite a premium grant made after its profile read', async () => {
+  await deliver(subscriptionEvent('subscription_created'));
+  grantPremiumBeforeProfileWrite = true;
+  await deliver(event('subscription_payment_success', 'invoice-1', { subscription_id: 'sub-1', status: 'paid', total: Math.round(MONTHLY_PRICE_EUR * 100) }));
+  assert.equal(profile().subscription_tier, 'premium');
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('legacy course reconciliation preserves an overdue recurring identity and derives Pro from the purchase', async () => {
+  tables.purchases.push({ user_id: USER, status: 'active', product_key: 'course_a2_1', lemonsqueezy_order_id: 'course-1',
+    access_until: '2026-04-01T00:00:00Z', created_at: '2026-01-01T00:00:00Z' });
+  tables.subscriptions.push({ user_id: USER, plan_type: 'course', status: 'active',
+    lemonsqueezy_subscription_id: 'sub-1', lemonsqueezy_order_id: 'course-1',
+    subscription_start: '2026-01-01T00:00:00Z', subscription_end: '2026-04-01T00:00:00Z' });
+  tables.webhook_logs.push({ id: 'past-due', processed: true, event_type: 'subscription_updated',
+    created_at: '2025-12-31T00:00:00Z', payload: subscriptionEvent('subscription_updated', {
+      status: 'past_due', updated_at: '2025-12-31T00:00:00Z', renews_at: '2026-01-08T00:00:00Z',
+    }) });
+  assert.equal((await recover()).status, 'active');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  assert.equal(subscription().plan_type, 'monthly');
+  assert.equal(subscription().subscription_end, null, 'the course deadline is not a recurring paid period');
+  assert.equal(profile().is_subscribed, true, 'the independent purchase window grants included Pro');
+  advance(91);
+  assert.equal((await recover()).status, 'not_found');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  assert.equal(profile().is_subscribed, false);
+  await deliver(subscriptionEvent('subscription_updated', {
+    updated_at: new Date().toISOString(), renews_at: '2026-05-01T00:00:00Z',
+  }));
+  assert.equal(subscription().status, 'active');
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('a recovery newer than course installation wins even for a previously superseded recurring id', async () => {
+  tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'expired',
+    lemonsqueezy_subscription_id: 'sub-1', subscription_start: '2025-12-01T00:00:00Z', subscription_end: '2025-12-31T00:00:00Z' });
+  await deliver(orderEvent('order_created', 'course-1', new Date().toISOString()));
+  advance(1);
+  await deliver(subscriptionEvent('subscription_updated', {
+    updated_at: new Date().toISOString(), renews_at: '2026-06-01T00:00:00Z',
+  }));
+  assert.equal(subscription().plan_type, 'monthly');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  advance(COURSE_PRO_DAYS + 1);
+  assert.equal((await recover()).status, 'active');
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('a legacy retirement marker cannot hide a recovery newer than the installed course window', async () => {
+  tables.purchases.push({ user_id: USER, status: 'active', product_key: 'course_a2_1', lemonsqueezy_order_id: 'course-1',
+    access_until: '2026-04-01T00:00:00Z', created_at: '2026-01-01T00:00:00Z' });
+  tables.subscriptions.push({ user_id: USER, plan_type: 'course', status: 'active',
+    lemonsqueezy_subscription_id: null, subscription_start: '2026-01-01T00:00:00Z', subscription_end: '2026-04-01T00:00:00Z' });
+  tables.webhook_logs.push({ id: 'legacy-marker', processed: true, event_type: 'subscription_superseded',
+    created_at: '2026-01-10T00:00:00Z', payload: { data: { id: 'sub-1' } } });
+  advance(20);
+  await deliver(subscriptionEvent('subscription_updated', {
+    updated_at: '2026-01-02T00:00:00Z', renews_at: '2026-06-01T00:00:00Z',
+  }));
+  assert.equal(subscription().plan_type, 'monthly');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  advance(COURSE_PRO_DAYS);
+  assert.equal((await recover()).status, 'active');
+});
+
+test('a legacy course without provider snapshots accepts a newer active recovery after course expiry', async () => {
+  tables.subscriptions.push({ user_id: USER, plan_type: 'course', status: 'active',
+    lemonsqueezy_subscription_id: 'sub-1', subscription_start: '2025-01-01T00:00:00Z', subscription_end: '2025-04-01T00:00:00Z' });
+  await deliver(subscriptionEvent('subscription_updated', { updated_at: new Date().toISOString() }));
+  assert.equal(subscription().plan_type, 'monthly');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('legacy course rows retain an unknown recurring identity without granting it an unconfirmed period', async () => {
+  tables.subscriptions.push({ user_id: USER, plan_type: 'course', status: 'active',
+    lemonsqueezy_subscription_id: 'sub-1', subscription_start: '2025-01-01T00:00:00Z', subscription_end: '2025-04-01T00:00:00Z' });
+  assert.equal((await recover()).status, 'not_found');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  assert.equal(profile().is_subscribed, false);
+  await deliver(subscriptionEvent('subscription_updated', { updated_at: '2024-12-31T00:00:00Z' }));
+  assert.equal((await recover()).status, 'not_found', 'a logged stale active replay must also remain ignored');
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  assert.equal(profile().is_subscribed, false);
+});
+
 test('an old recurring expiry or update cannot modify a newer course window', async () => {
   await deliver(subscriptionEvent('subscription_created', { status: 'expired', renews_at: null }));
   await deliver(orderEvent('order_created', 'course-1', new Date().toISOString()));
@@ -266,14 +384,14 @@ test('an old recurring expiry or update cannot modify a newer course window', as
   }
 });
 
-test('a superseded recurring id stays retired even if its terminal delivery log was absent', async () => {
+test('an older recurring replay stays retired even if its terminal delivery log was absent', async () => {
   tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'expired',
     lemonsqueezy_subscription_id: 'sub-1', subscription_start: '2025-12-01T00:00:00Z', subscription_end: '2025-12-31T00:00:00Z' });
   await deliver(orderEvent('order_created', 'course-1', new Date().toISOString()));
   assert.ok(tables.webhook_logs.some((row) => row.event_type === 'subscription_superseded' && row.payload.data.id === 'sub-1'));
   const end = subscription().subscription_end;
   advance(1);
-  await deliver(subscriptionEvent('subscription_updated', { updated_at: new Date().toISOString() }));
+  await deliver(subscriptionEvent('subscription_updated', { updated_at: '2025-12-31T00:00:00Z' }));
   assert.equal(subscription().plan_type, 'course');
   assert.equal(subscription().subscription_end, end);
   assert.equal(subscription().lemonsqueezy_subscription_id, null);
@@ -286,6 +404,8 @@ test('legacy course rows retire their obsolete recurring id before an active rep
   tables.subscriptions.push({ user_id: USER, plan_type: 'course', status: 'active',
     lemonsqueezy_subscription_id: 'sub-1', lemonsqueezy_order_id: 'course-1',
     subscription_start: '2026-01-01T00:00:00Z', subscription_end: '2026-04-01T00:00:00Z' });
+  tables.webhook_logs.push({ id: 'terminal', processed: true, event_type: 'subscription_expired', created_at: '2025-12-31T00:00:00Z',
+    payload: subscriptionEvent('subscription_expired', { status: 'expired', updated_at: '2025-12-31T00:00:00Z' }) });
   await deliver(subscriptionEvent('subscription_created', { renews_at: '2026-12-01T00:00:00Z' }));
   assert.equal(subscription().plan_type, 'course');
   assert.equal(subscription().lemonsqueezy_subscription_id, null);
@@ -297,7 +417,9 @@ test('legacy course rows retire their obsolete recurring id before an active rep
 test('an expired legacy course row retires its obsolete recurring id without a remaining purchase window', async () => {
   tables.subscriptions.push({ user_id: USER, plan_type: 'course', status: 'expired',
     lemonsqueezy_subscription_id: 'sub-1', subscription_start: '2025-01-01T00:00:00Z', subscription_end: '2025-04-01T00:00:00Z' });
-  await deliver(subscriptionEvent('subscription_updated'));
+  tables.webhook_logs.push({ id: 'terminal', processed: true, event_type: 'subscription_expired', created_at: '2024-12-31T00:00:00Z',
+    payload: subscriptionEvent('subscription_expired', { status: 'expired', updated_at: '2024-12-31T00:00:00Z' }) });
+  await deliver(subscriptionEvent('subscription_updated', { updated_at: '2024-12-31T00:00:00Z' }));
   assert.equal(subscription().plan_type, 'course');
   assert.equal(subscription().lemonsqueezy_subscription_id, null);
   assert.equal(subscription().status, 'expired');

@@ -44,10 +44,11 @@ export function calculatePlacement({ answers, questions, listeningScore, speakin
 
   const totalQuestions = questions.length;
   const writtenPercentage = totalQuestions > 0 ? Math.round(totalCorrect / totalQuestions * 100) : 0;
-  const speakingPercentage = speakingScore?.score || speakingScore?.total_score || 0;
+  const speakingPercentage = [speakingScore?.score, speakingScore?.total_score]
+    .find(value => Number.isFinite(value) && value >= 0 && value <= 100) ?? null;
   const demotions = [];
   if (listeningScore != null && listeningScore < 50 && writtenPercentage >= 70) demotions.push('listening');
-  if (speakingPercentage > 0 && speakingPercentage < 50 && writtenPercentage >= 70) demotions.push('speaking');
+  if (speakingPercentage != null && speakingPercentage < 50 && writtenPercentage >= 70) demotions.push('speaking');
   const sublevel = stepDownSublevel(writtenSublevel, demotions.length);
 
   return { level: bandOf(sublevel), sublevel, writtenSublevel, writtenPercentage, speakingPercentage, demotions, totalCorrect, totalQuestions, typeScores, weakTopics };
