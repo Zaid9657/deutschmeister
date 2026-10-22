@@ -486,13 +486,15 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
   import { track } from '../lib/track.js';
 
   let cycle = 'monthly';
+  let billing = null;
   const $ = (id) => document.getElementById(id);
 
   function applyCycle() {
     const plan = DATA[cycle];
     $('pro-price').textContent = EUR(plan.price);
     $('pro-period').textContent = plan.interval;
-    const cta = proCta({ signedIn: Boolean(currentUser()), cycle });
+    let cta = proCta({ signedIn: Boolean(currentUser()), cycle });
+    if (billing?.userId === currentUser()?.id) cta = proCta({ signedIn: true, cycle, subscription: billing.subscription });
     $('pro-btn-label').textContent = cta.label;
     $('plan-note').textContent = cta.note;
 
@@ -523,8 +525,20 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
     return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
   }
 
+  async function loadBilling() {
+    const { supabase } = await import('../lib/supabase.js');
+    const { data: { user } = {}, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) throw new Error('Billing account could not be checked');
+    const { data: subscription, error } = await supabase.from('subscriptions')
+      .select('plan_type, status, subscription_end, lemonsqueezy_subscription_id')
+      .eq('user_id', user.id).maybeSingle();
+    if (error) throw error;
+    return { userId: user.id, subscription };
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     applyCycle();
+    if (currentUser()) loadBilling().then((result) => { billing = result; applyCycle(); }).catch(() => { /* checked again before checkout */ });
     $('toggle-monthly').addEventListener('click', () => { cycle = 'monthly'; applyCycle(); });
     $('toggle-yearly').addEventListener('click', () => { cycle = 'yearly'; applyCycle(); });
 
@@ -558,14 +572,31 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
     // Signed out, this button starts the account trial and nothing else: no
     // buy intent, so signup is not followed by a paid checkout the label never
     // mentioned. Signed in, it is the checkout it says it is.
-    $('pro-btn').addEventListener('click', () => {
+    $('pro-btn').addEventListener('click', async () => {
       const cta = proCta({ signedIn: Boolean(currentUser()), cycle });
       track('checkout_intent', { product: cycle, surface: 'pricing_pro', signed_in: cta.action !== 'signup' });
       if (cta.action === 'signup') {
         window.location.href = cta.href;
         return;
       }
-      open(VARIANTS[cycle], cycle);
+      $('pro-btn').disabled = true;
+      try {
+        // Recheck at the click, including failed/paused billing. Cached profile
+        // flags or a charge retry date cannot authorize another subscription.
+        billing = await loadBilling();
+        if (billing.userId !== currentUser()?.id) throw new Error('Billing account changed');
+        const checked = proCta({ signedIn: true, cycle, subscription: billing.subscription });
+        if (checked.action === 'portal') {
+          window.location.href = checked.href;
+          return;
+        }
+        open(VARIANTS[cycle], cycle);
+      } catch {
+        window.location.href = 'https://deutsch-meister.de/subscription';
+      } finally {
+        $('pro-btn').disabled = false;
+        applyCycle();
+      }
     });
   });
 </script>

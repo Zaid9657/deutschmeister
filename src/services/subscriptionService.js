@@ -1,8 +1,8 @@
 import { supabase } from '../utils/supabase';
 
 // Fetch the user's most relevant subscription row.
-// We do NOT filter by status: access is decided by the paid period
-// (subscription_end), so 'cancelled' and 'past_due' rows must be visible too.
+// Keep cancelled and past_due rows visible; their last confirmed paid period
+// may still grant access. checkSubscriptionStatus also checks the status.
 // Order by subscription_end desc so the row with the furthest-out period wins.
 export const getSubscription = async (userId) => {
   const { data, error } = await supabase
@@ -134,13 +134,12 @@ export const checkTrialStatus = (profile) => {
   };
 };
 
-// Single source of truth for paid access: a subscription grants access iff its
-// PAID PERIOD is still live (subscription_end > now), regardless of status.
-//   - 'cancelled' with a future end → renewal off but paid through period → access
-//   - 'past_due'  with a future end → failed-renewal grace period → access
-//   - end <= now, or missing/unparseable end, or no row → no access
+// subscription_end is the last confirmed paid-through deadline. In past_due,
+// Lemon Squeezy's renews_at is a retry attempt, so it never extends this date.
+// Cancelled/paused/past_due retain that period, with no extra unpaid grace.
 export const checkSubscriptionStatus = (subscription) => {
-  if (!subscription || !subscription.subscription_end) {
+  if (!subscription || !subscription.subscription_end ||
+      !['active', 'on_trial', 'cancelled', 'past_due', 'paused'].includes(subscription.status)) {
     return { isActive: false, expiresAt: null };
   }
 

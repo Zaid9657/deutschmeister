@@ -9,11 +9,12 @@ import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
+import { checkoutEntitlementConfirmed, hasRecurringBilling, ownsCheckoutProduct } from '../lib/checkoutAccess.js';
 import { planStatusCopy } from '../lib/planStatus.js';
 import { proPlanLines } from '../lib/proPlanLines.js';
 import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
-import { PLANS, num, levelsForProduct } from '../data/pricing.js';
+import { PLANS, num } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
@@ -42,6 +43,7 @@ const SubscriptionPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const autoBuyRef = useRef(false);
   const [verifying, setVerifying] = useState(false);
+  const [pendingProduct, setPendingProduct] = useState(null);
   const [verifyMessage, setVerifyMessage] = useState('');
   const pollRef = useRef(null);
   const isGerman = i18n.language === 'de';
@@ -49,6 +51,8 @@ const SubscriptionPage = () => {
   const inTrial = isInFreeTrial();
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
+  const recurringBilling = hasRecurringBilling(subscription);
+  const billingAction = subscriptionPortalAction(recurringBilling, subscription, isGerman);
   // Card, invoices, cancelling: the Lemon Squeezy portal, for a live LS
   // subscription only (lib/billingPortal.js, tests/subscription-portal-link.test.mjs).
   const portal = subscriptionPortalAction(isSubscribed, subscription, isGerman);
@@ -66,21 +70,23 @@ const SubscriptionPage = () => {
     return d.toLocaleDateString(isGerman ? 'de-DE' : 'en-US');
   })();
 
-  // Stop polling once subscription is confirmed
+  // Pro may already be active when a course is bought. Wait for the product
+  // being purchased, rather than mistaking existing Pro for a new payment.
   useEffect(() => {
-    if (isSubscribed && verifying) {
+    if (verifying && checkoutEntitlementConfirmed(pendingProduct, { isSubscribed, purchases })) {
       setVerifying(false);
+      setPendingProduct(null);
       setVerifyMessage('');
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
       }
       // Same-tab checkout path: access flipping to active while we were
-      // polling is the purchase signal (the overlay path reports via
-      // Checkout.Success in LemonSqueezyProvider; the flag is consumed once).
+      // polling is the purchase signal. The overlay opens the success page,
+      // which waits for the same entitlement; the flag is consumed once.
       consumeCheckoutSuccess();
     }
-  }, [isSubscribed, verifying]);
+  }, [isSubscribed, purchases, pendingProduct, verifying]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -89,21 +95,28 @@ const SubscriptionPage = () => {
     };
   }, []);
 
-  // A validated coupon ({ code }) rides into every checkout URL; null = none.
+  // A validated coupon is bound to the selected product; null = none.
   const [coupon, setCoupon] = useState(null);
+  const [couponProduct, setCouponProduct] = useState('monthly');
 
   const handleSubscribe = (planType) => {
+    if (subLoading || verifying) return;
+    if (recurringBilling) {
+      window.location.href = billingAction.href;
+      return;
+    }
     const plan = LEMONSQUEEZY_CONFIG.plans[planType];
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       plan.variantId,
       user?.email || '',
       user?.id || '',
-      coupon
+      coupon?.productKey === planType ? coupon : null
     );
     markCheckoutStarted(planType, PLANS[planType]?.price);
     openCheckout(checkoutUrl);
 
     // Start polling: first poll Supabase, then call verify as fallback
+    setPendingProduct(planType);
     setVerifying(true);
     setVerifyMessage('');
     let count = 0;
@@ -135,9 +148,6 @@ const SubscriptionPage = () => {
   // to a CEFR band. Same render rule as the telc card — an unset variant
   // hides the card — and the same poll observes the webhook landing.
   const levelCourses = Object.values(LEMONSQUEEZY_CONFIG.levelCourses);
-  const ownsBundle = hasProduct('course_alle');
-  // A retired band row (course_a2) still owns both of its sub-levels.
-  const ownsLevel = (level) => purchases.some((p) => levelsForProduct(p.product_key).includes(level));
   // A coming-soon course is listed (priced, no checkout) so the ladder reads
   // complete; a live course needs its checkout id or an existing purchase.
   const visibleLevelCourses = levelCourses.filter((c) => c.variantId || c.comingSoon || hasProduct(c.key));
@@ -145,20 +155,22 @@ const SubscriptionPage = () => {
   // live course (checkout id, not coming soon) the learner does not own yet,
   // the same tests the card applies (lib/subscriptionHeading.js).
   const canBuyLevel = levelCourses.some(
-    (c) => c.variantId && !c.comingSoon && !(hasProduct(c.key) || ownsBundle || ownsLevel(c.levels[0]))
+    (c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)
   );
   const heading = subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel }, isGerman);
 
   const startPurchase = (productKey, variantId, price) => {
+    if (subLoading || verifying || ownsCheckoutProduct(productKey, purchases)) return;
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       variantId,
       user?.email || '',
       user?.id || '',
-      coupon
+      coupon?.productKey === productKey ? coupon : null
     );
     markCheckoutStarted(productKey, price);
     openCheckout(checkoutUrl);
 
+    setPendingProduct(productKey);
     setVerifying(true);
     setVerifyMessage('');
     let count = 0;
@@ -186,16 +198,18 @@ const SubscriptionPage = () => {
     clearBuyIntent();
     setSearchParams({}, { replace: true });
     if (key === 'monthly' || key === 'yearly') {
-      if (!isSubscribed) handleSubscribe(key);
+      if (recurringBilling || !isSubscribed) handleSubscribe(key);
       return;
     }
     const target = key === 'telc_b1_komplett' ? course : LEMONSQUEEZY_CONFIG.levelCourses[key];
+    if (target?.comingSoon || ownsCheckoutProduct(key, purchases)) return;
     if (target?.variantId && !hasProduct(key)) startPurchase(key, target.variantId, target.price);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, subLoading, user]);
 
   // Manual "Verify my subscription" button handler
   const handleManualVerify = async () => {
+    setPendingProduct(null);
     setVerifying(true);
     setVerifyMessage('');
     const recovered = await verifySubscription();
@@ -253,10 +267,20 @@ const SubscriptionPage = () => {
           />
         </div>
 
-        {/* Coupon: validated server-side; the code rides into every checkout URL below. */}
+        {/* The server validates a coupon against the selected offer. */}
         {user ? (
-          <div className="mb-8 flex justify-center">
-            <CouponField onApplied={setCoupon} isGerman={isGerman} />
+          <div className="mb-8 flex flex-col items-center gap-3">
+            <label className="flex flex-col gap-1 text-sm text-graphite">
+              {isGerman ? 'Gutschein für' : 'Coupon for'}
+              <select value={couponProduct} onChange={(event) => setCouponProduct(event.target.value)} className="rounded-clay border border-rule bg-white px-3 py-2 text-ink">
+                {plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
+                {levelCourses.filter((c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)).map((c) => (
+                  <option key={c.key} value={c.key}>{isGerman ? c.nameDe : c.name}</option>
+                ))}
+                {course.variantId && !ownsCourse && <option value="telc_b1_komplett">{course.name}</option>}
+              </select>
+            </label>
+            <CouponField productKey={couponProduct} onApplied={setCoupon} isGerman={isGerman} />
           </div>
         ) : null}
 
@@ -392,7 +416,7 @@ const SubscriptionPage = () => {
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {visibleLevelCourses.map((c) => {
                 const firstLevel = c.levels[0];
-                const owned = hasProduct(c.key) || ownsBundle || ownsLevel(firstLevel);
+                const owned = ownsCheckoutProduct(c.key, purchases);
                 return (
                   <Card
                     key={c.key}
@@ -429,6 +453,7 @@ const SubscriptionPage = () => {
                     ) : (
                       <Button
                         onClick={() => startPurchase(c.key, c.variantId, c.price)}
+                        disabled={verifying}
                         variant="secondary"
                         size="md"
                         className="mt-4 w-full"
@@ -501,13 +526,15 @@ const SubscriptionPage = () => {
 
                   <Button
                     onClick={() => handleSubscribe(plan.id)}
-                    disabled={isSubscribed}
+                    disabled={subLoading || verifying || (isSubscribed && !recurringBilling)}
                     variant={plan.highlight ? 'primary' : 'secondary'}
                     shimmer={plan.highlight && !isSubscribed}
                     size="lg"
                     className="mt-auto w-full"
                   >
-                    {isSubscribed
+                    {recurringBilling
+                      ? billingAction.label
+                      : isSubscribed
                       ? isGerman ? 'Bereits abonniert' : 'Already Subscribed'
                       : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
                   </Button>
@@ -566,7 +593,7 @@ const SubscriptionPage = () => {
                       {isGerman ? 'einmalig' : 'one time'}
                     </span>
                   </p>
-                  <Button onClick={handleBuyCourse} variant="secondary" size="lg" className="mt-4 w-full sm:w-auto">
+                  <Button onClick={handleBuyCourse} disabled={verifying} variant="secondary" size="lg" className="mt-4 w-full sm:w-auto">
                     {isGerman ? 'Kurs kaufen' : 'Buy the course'}
                   </Button>
                   <p className="mt-3 text-xs">
