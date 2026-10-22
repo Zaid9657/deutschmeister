@@ -1,8 +1,11 @@
 # Database migrations
 
 SQL in this folder is **never applied automatically** — there is no migration
-runner in the build. Apply each file by hand in the Supabase SQL editor
-(Dashboard → SQL Editor → New query → paste → Run), in filename order.
+runner in the build. The ledger is not a replay order: filename order does not
+reconstruct historical application order. Before an owner applies an intended
+pending file in the Supabase SQL editor (Dashboard → SQL Editor → New query →
+paste → Run), check its prerequisites and live application status. “Application
+status unverified” does not mean pending; verify the live schema/data first.
 
 ## Files
 
@@ -11,9 +14,9 @@ runner in the build. Apply each file by hand in the Supabase SQL editor
 | `2026-08-16-fix-rls-security.sql` | Closes the self-grant-Pro RLS hole on `subscriptions`/`profiles`, locks down `webhook_logs` and `xray_usage`, narrows anonymous access to paid reading/listening content to the free tier (a1.1). | ✅ **Applied 2026-08-16** |
 | `2026-08-16-enable-rls-on-unprotected-tables.sql` | Enables RLS on 13 tables that had it switched off entirely (the whole course catalogue was publicly deletable via the anon key), and revokes public EXECUTE on `debit_speaking_wallet`. | ✅ **Applied 2026-08-16** |
 | `2026-08-16-content-cleanup.sql` | De-CAPS of 270 shouting `grammar_rules` rows (892 edits, correct German orthography restored); `related_slugs` populated for all 64 topics; documents the dead `grammar_introductions` table (commented DROP, owner's call). | ✅ **Applied 2026-08-16** |
-| `2026-08-16-reading-lessons.md` (note) | 22 new reading lessons inserted (every level now ≥8) — source of truth lives in `content/reading/*.json` in the repo; re-seed with `scripts/seed-reading-lessons.mjs`. | ✅ **Applied 2026-08-16** |
+| [2026-08-16 reading seed sources](../content/reading/) | 22 new reading lessons inserted (every level now ≥8) — source of truth lives in `content/reading/*.json` in the repo; re-seed with `scripts/seed-reading-lessons.mjs`. No separate migration note exists. | ✅ **Applied 2026-08-16** |
 | `2026-08-16-welcome-email-webhook.sql` | Wires the never-called `send-welcome-email` function: `pg_net` + an `AFTER INSERT` trigger on `auth.users` POSTing to the Netlify function with the `WEBHOOK_SECRET` bearer. The repo copy redacts the secret — the live function body embeds it (rotate both together). | ✅ **Applied 2026-08-16** |
-| `2026-08-17-audit-remediation.sql` | Remediates `AUDIT-2026-08-16.md`: drops the PUBLIC/ALL policy on `speaking_usage` and the client write policies on the other speaking tables; allows `'placement'` in `speaking_sessions_level_check` (restoring the level test); dedupes b1.2 reading lessons and `payment_failures` (+ unique indexes); reconciles `profiles.is_subscribed`; reshuffles the skewed answer-option positions; adds `xray_usage.ip_hash` for per-IP metering. | ✅ **Applied 2026-08-17** |
+| `2026-08-17-audit-remediation.sql` | Remediates [AUDIT-2026-08-16.md](../docs/archive/audits/2026-08/AUDIT-2026-08-16.md): drops the PUBLIC/ALL policy on `speaking_usage` and the client write policies on the other speaking tables; allows `'placement'` in `speaking_sessions_level_check` (restoring the level test); dedupes b1.2 reading lessons and `payment_failures` (+ unique indexes); reconciles `profiles.is_subscribed`; reshuffles the skewed answer-option positions; adds `xray_usage.ip_hash` for per-IP metering. | ✅ **Applied 2026-08-17** |
 | `2026-08-17-speaking-missions.md` (note) | 56 speaking missions inserted for A1.2–B2.2 (the table previously held only A1.1, so 7 of 8 levels showed an empty Speaking tab). Data-only; ordering column is `mission_order`. | ✅ **Applied 2026-08-17** |
 | `2026-08-17-content-backfill.md` (note) | Six data migrations: `acceptable_answers` for all 433 fill-blanks (only 7 have real variants; `[]` would have broken every one — see the note), plurals resolved for 101 nouns (98 are mass nouns marked `'null'`), 47 duplicate vocabulary rows removed, reading-lesson CRLF/plural-marker/`word_count`/`estimated_reading_time` hygiene, `prerequisite_slugs` for 60 topics, and 3 unanswerable exercises rewritten. | ✅ **Applied 2026-08-17** |
 | `2026-08-17-lifecycle-and-listening.sql` | `lifecycle_emails` ledger for the new trial lifecycle job (UNIQUE(user_id, kind) is what makes the daily cron safe to re-run); adds the `answers`/`plays_used` columns the SPA has always written to `user_listening_progress`, so listening completions finally persist and can feed the streak; consolidates that table's overlapping policies; and records the 64-title restore. | ✅ **Applied 2026-08-17** |
@@ -32,6 +35,13 @@ runner in the build. Apply each file by hand in the Supabase SQL editor
 | `2026-09-13-admin-panel-product.sql` | Admin panel phase 3: content lifecycle columns (`lifecycle_status` default `published` — every existing row IS published — plus owner/reviewer/review dates) on the six content tables, existing `is_published=false`/`published=false` rows mapped to `hidden`; `coupons` + `coupon_redemptions` (governance record around a Lemon Squeezy discount, ledger idempotent on `(coupon_id, order_id)`, RLS on with no policies); three usage-analytics indexes. Guarded by `tests/admin-product.test.mjs`. | ✅ **Applied 2026-09-13** via the Supabase connector (migration `admin_panel_product_2026_09_13`) |
 | `2026-09-03-weekly-metrics.sql` | `weekly_metrics` (service-role only) + `weekly_truth_metrics()` SECURITY DEFINER with EXECUTE revoked from anon/authenticated. Powers `netlify/functions/weekly-truth.mjs` (Monday 06:00 UTC: stored history + owner email). | ✅ **Applied 2026-09-03** (via Supabase connector) |
 | `2026-09-03-a1-1-reorder.sql` | A1.1 lesson order: Nouns & Gender first, alphabet fifth (the first-lesson leak); unique key dropped/re-added around the permutation. Mirrored in `src/data/grammarTopics.js` + the grammar cache; `tests/topic-order.test.mjs` pins all three. | ✅ **Applied 2026-09-03** (via Supabase connector) |
+| `2026-09-04-a1-grammar-fixes.sql` | Guarded A1 grammar content corrections, including conjugation exceptions, pronouns, profession articles and exercise wording; mirrors the reviewed grammar cache. | application status unverified |
+| `2026-09-05-a1-1-new-topics.sql` | Adds A1.1 topics 9–12 (possessive articles, separable verbs, yes/no questions, time and dates), their content, and widens the topic-order constraint. | application status unverified |
+| `2026-09-05-sd1-sprechen-missions.sql` | Adds four Start Deutsch 1 speaking missions covering introductions, word-card questions and picture-card requests. | application status unverified |
+| `2026-09-12-lesson-engine.sql` | Creates lesson progress, answer attempts and review-card persistence with own-row policies for the in-app Lektion player. | application status unverified |
+| `2026-09-13-a1-1-course-words.sql` | Seeds missing A1.1 course Wortfeld words idempotently; course audio generation and curriculum word-id backfills are separate steps. | application status unverified |
+| `2026-09-13-course-reminder.sql` | Adds course-reminder ledger kinds and the service-role candidate function; later migrations refine activity checks and revoke public execution. | application status unverified |
+| `2026-09-19-course-funnel.sql` | Adds the lesson-progress course funnel to `weekly_truth_metrics()`, preserving its existing metrics and service-role access. | application status unverified |
 | `2026-09-05-a1-1-reading.sql` | Course Factory Wave 2, PR C: adds `reading_lessons.checks` (auto-checkable Richtig/Falsch + exam-choice items), rewrites the 8 live A1.1 lessons with `checks` populated, and inserts 2 new exam-format A1.1 lessons (order_index 9/10). Generated by `scripts/reading-from-json.mjs`; every UPDATE is guarded `AND checks IS NULL`, every INSERT `WHERE NOT EXISTS`. | **Applied 2026-09-05** via the Supabase connector (Wave 2 close); verified 10 A1.1 lessons, all with `checks` |
 | `2026-09-05-a1-1-listening.sql` | Course Factory Wave 2, PR C: adds `listening_questions.acceptable_answers`, widens the `question_type` CHECK to admit `'dictation'`, patches 2 existing rows' `options` (author's late review pass), and inserts 78 new A1.1 questions (13 per exercise across the 6 A1.1 exercises, including number/time/price dictation). Generated by `scripts/listening-questions-from-json.mjs`; every INSERT is guarded `WHERE NOT EXISTS` on `(exercise_id, question_number)`. | **Applied 2026-09-05** via the Supabase connector (Wave 2 close); verified 6×23 A1.1 questions incl. dictation rows |
 | `2026-09-05-a1-1-wortliste.sql` | Course Factory Wave 2, PR B (#69): 114 new A1.1 words (Länder/Sprachen, Beruf, Formular, Getränke, Uhrzeit/Termine, formal Sie) and 51 guarded fixes to live rows ("null" plurals, article-in-word, above-level examples). Generated by `scripts/words-from-json.mjs`. | **Applied 2026-09-05** via the Supabase connector; verified 339 A1.1 words, 0 "null" plurals, 0 article prefixes |
@@ -102,10 +112,10 @@ Some live objects were created by hand before this folder existed. They are reco
   a `SECURITY DEFINER` function still executable by `PUBLIC`, `anon` or `authenticated`, or
   any of those done inside a `DO` block, which it cannot read. A new file must pass on its own.
 
-## Legacy SQL at the repo root
+## Archived legacy SQL
 
-The eleven `*.sql` files at the repo root (`supabase-grammar-schema.sql`,
-`fix-*.sql`, `create-*.sql`, …) are **historical**: they were run by hand at
+The eleven `*.sql` files in [docs/archive/legacy-sql/](../docs/archive/legacy-sql/)
+(`supabase-grammar-schema.sql`, `fix-*.sql`, `create-*.sql`, …) are **historical**: they were run by hand at
 various points and represent how the current database state was reached. They
 are kept for reference — do not re-run them blindly (some contain one-off data
 fixes with hardcoded UUIDs). New schema changes belong here in `migrations/`.
