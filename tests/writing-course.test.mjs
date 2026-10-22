@@ -300,7 +300,7 @@ const formcheckTask = (nr) => {
 // Leitpunkte answered, and `lp0 lp1 lp2` all red under the round-13 rule.
 const EXAM_GRADE_ANSWERS = {
   2: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Viele Grüße, Ana Chakiri',
-  4: 'Hallo Lena! Ich kaufe auf dem Flohmarkt einen Stuhl. Er kostet zwölf Euro, das ist nicht teuer. Treffen wir uns um vier Uhr am Eingang? Tschüss, Tim',
+  4: 'Hallo Lena! Ich kaufe auf dem Flohmarkt einen Stuhl. Er kostet zwölf Euro, das ist nicht teuer. Ich komme um vier Uhr. Treffen wir uns um vier Uhr am Eingang? Tschüss, Tim',
   6: 'Guten Tag, Frau Berg! Für das Büro brauche ich noch einen Computer. Meine Telefonnummer ist 0176 22 44 88. Ab neun Uhr bin ich im Büro. Viele Grüße, Ana',
   8: 'Hallo Lena! Leider passt der Termin am Montag nicht. Ich schreibe dir deshalb schnell. Geht es am Dienstag um halb neun? Hast du dann Zeit für mich? Viele Grüße, Ana',
   10: 'Liebe Kollegin, der Zug hat leider Verspätung. Ich bin erst um zehn Uhr da. Bitte machen Sie die Arbeit ohne mich. Vielen Dank und viele Grüße, Ana',
@@ -1128,9 +1128,71 @@ test('Minor 18 (round 19): a question that echoes the verb answers a shape-less 
     ['Was Sie brauchen', 'Ich brauche einen Stuhl.'], ['Was Sie brauchen', 'Wir brauchen nichts.']]) {
     assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), true, `„${lp}“ ← „${t}“ answers`);
   }
-  // A shape still reads the whole text, questions included: „Eine Frage an Lena“ IS a question.
+  // An explicitly requested question reads the whole text; a factual arrival still needs an answer.
   assert.equal(leitpunktSatisfied('Eine Frage an Lena', 'Lena, hast du Zeit?'), true);
-  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Kommen Sie um zehn?'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Kommen Sie um zehn?'), false);
+});
+
+test('recipient questions never supply the writer’s factual arrival or availability', () => {
+  for (const [nr, statement, question] of [
+    [4, 'Wir kommen morgen.', 'Kommst du morgen?'],
+    [6, 'Ich bin um neun Uhr im Büro.', 'Sind Sie um neun Uhr im Büro?'],
+  ]) {
+    const task = LEKTIONEN[nr - 1].schreiben;
+    assert.ok(task.sample.includes(statement), `L${nr}: regression replaces the writer's factual answer`);
+    const result = scoreWriting(task, task.sample.replace(statement, question));
+    assert.equal(result.ok, false, `L${nr}: recipient question cannot complete the sample`);
+    assert.deepEqual(result.checks.filter((c) => !c.ok).map((c) => c.key), ['lp2']);
+  }
+  for (const [requirement, question] of [
+    ['Wann Sie kommen', 'Kommst du morgen?'],
+    ['Wann Sie kommen', 'Treffen wir uns um vier Uhr am Eingang?'],
+    ['Wann Sie kommen', 'Können wir um zehn Uhr kommen?'],
+    ['Wann Sie im Büro sind', 'Sind Sie um neun Uhr im Büro?'],
+    ['Tag und Uhrzeit', 'Hast du am Dienstag um neun Uhr Zeit?'],
+    ['Ihr Termin', 'Passt es um neun Uhr?'],
+  ]) {
+    assert.equal(leitpunktSatisfied(requirement, question), false, `${requirement}: ${question}`);
+  }
+});
+
+test('verb-first questions stay interrogative with a period while polite imperatives keep their evidence', () => {
+  for (const [requirement, question] of [
+    ['Wann Sie kommen', 'Kommst du morgen.'],
+    ['Wann Sie kommen', 'Kommt ihr morgen.'],
+    ['Wann Sie im Büro sind', 'Sind Sie um neun Uhr im Büro.'],
+    ['Wann Sie im Büro sind', 'Waren Sie um neun Uhr im Büro.'],
+  ]) {
+    assert.equal(leitpunktSatisfied(requirement, question), false, question);
+  }
+  assert.equal(leitpunktSatisfied('Ihre Telefonnummer', 'Rufen Sie mich unter 0176 22 44 88 an.'), true);
+});
+
+test('question evidence is limited to requested questions and genuine new scheduling proposals', () => {
+  for (const question of ['Geht es am Dienstag um halb neun?', 'Geht Dienstag um neun Uhr?', 'Wäre Dienstag um neun Uhr möglich?',
+    'Treffen wir uns am Dienstag um neun Uhr?', 'Hast du am Dienstag um neun Uhr Zeit?']) {
+    assert.equal(leitpunktSatisfied('Neuer Tag und neue Uhrzeit', question), true, question);
+  }
+  assert.equal(leitpunktSatisfied('Eine Frage an Lena', 'Kommst du morgen?'), true);
+  for (const question of ['Warst du am Dienstag um neun Uhr im Büro?', 'Hast du am Dienstag um neun Uhr gearbeitet?',
+    'Hast du am Dienstag um neun Uhr Zeit gehabt?', 'Wäre Dienstag um neun Uhr möglich gewesen?', 'Wann kommst du am Dienstag um neun Uhr?']) {
+    assert.equal(leitpunktSatisfied('Neuer Tag und neue Uhrzeit', question), false, question);
+  }
+});
+
+test('every canonical course Mitteilung model keeps a green Formcheck', () => {
+  for (const curriculum of Object.values(ALL_CURRICULA)) {
+    const models = curriculum.lektionen.map((l) => ({ key: l.id, ...l.schreiben }))
+      .filter((task) => task.kind === 'mitteilung');
+    for (const cp of curriculum.checkpoints) {
+      const task = writingTaskByKey('goethe_a1', cp.writingTaskKey);
+      if (task.register !== 'formular') models.push({ key: cp.id, kind: 'mitteilung', ...task });
+    }
+    for (const task of models) {
+      const result = scoreWriting(task, task.sample);
+      assert.equal(result.ok, true, `${task.key}: ${JSON.stringify(result.checks.filter((c) => !c.ok))}`);
+    }
+  }
 });
 
 test('Minor 21 (round 19): the year behind the comma belongs to the birth clause it follows', () => {
@@ -1430,7 +1492,7 @@ test('MAJOR 2 (round 22): the Wann shape reads the sentence — the writer\'s cl
   // The Leitpunkt's own matter without a first person.
   assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Zug kommt um zehn Uhr an.'), true);
   assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Das Büro ist ab neun Uhr offen.'), true);
-  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Kommen Sie um zehn?'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Kommen Sie um zehn?'), false);
   // Someone else's time is not the writer's.
   assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Zug hat heute Verspätung. Ich komme später.'), false);
   assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Termin ist um zehn Uhr.'), false);

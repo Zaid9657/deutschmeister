@@ -47,6 +47,8 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   const recorderRef = useRef(null);
   const chunksRef = useRef([]);
   const timerRef = useRef(null);
+  const mountedRef = useRef(false);
+  const pendingStartRef = useRef(null);
   const onResultRef = useRef(onResult);
   onResultRef.current = onResult;
 
@@ -66,7 +68,14 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
     }
   }, []);
 
-  useEffect(() => releaseMic, [releaseMic]);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      pendingStartRef.current?.();
+      releaseMic();
+    };
+  }, [releaseMic]);
 
   const micUnavailable = !support.supported;
   const signedOut = !user;
@@ -74,14 +83,17 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   const scoringPossible = !reason;
 
   const score = useCallback(async (audioBase64, mimeType) => {
+    if (!mountedRef.current) return;
     try {
       const authHeaders = await getAuthHeaders();
+      if (!mountedRef.current) return;
       const res = await fetch('/.netlify/functions/score-readaloud', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({ audioBase64, mimeType, expected: text.normalize('NFC'), lektionId, lineKey }),
       });
       const data = await res.json().catch(() => ({}));
+      if (!mountedRef.current) return;
 
       if (res.status === 429) { setFallbackReason('limit'); setPhase('idle'); return; }
       if (res.status === 401) { setFallbackReason('signed_out'); setPhase('idle'); return; }
@@ -102,6 +114,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       setPhase('scored');
       onResultRef.current?.({ pct, attempts: nextAttempts, usedMic: true });
     } catch (err) {
+      if (!mountedRef.current) return;
       console.error('[ReadAloudLine] scoring failed:', err);
       setFallbackReason('server');
       setPhase('idle');
@@ -109,6 +122,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   }, [attempts, lektionId, lineKey, text]);
 
   const handleStopped = useCallback(async () => {
+    if (!mountedRef.current) return;
     const mimeType = recorderRef.current?.mimeType || pickAudioMimeType() || 'audio/webm';
     const blob = new Blob(chunksRef.current, { type: mimeType });
     chunksRef.current = [];
@@ -127,9 +141,18 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   }, []);
 
   const startRecording = useCallback(async () => {
+    if (!mountedRef.current || pendingStartRef.current) return;
     setMicError(null);
+    let cancelled = false;
+    const cancelStart = () => { cancelled = true; };
+    pendingStartRef.current = cancelStart;
     try {
-      streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (cancelled || !mountedRef.current) {
+        stream.getTracks().forEach((t) => t.stop());
+        return;
+      }
+      streamRef.current = stream;
       const mimeType = pickAudioMimeType();
       const recorder = mimeType
         ? new MediaRecorder(streamRef.current, { mimeType })
@@ -142,10 +165,13 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       setPhase('recording');
       timerRef.current = setTimeout(stopRecording, MAX_RECORD_MS);
     } catch (err) {
+      if (cancelled || !mountedRef.current) return;
       console.error('[ReadAloudLine] mic error:', err);
       setMicError(micErrorMessage(err));
       releaseMic();
       setPhase('idle');
+    } finally {
+      if (pendingStartRef.current === cancelStart) pendingStartRef.current = null;
     }
   }, [handleStopped, releaseMic, stopRecording]);
 

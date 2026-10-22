@@ -253,16 +253,18 @@ const stripPunct = (w) => String(w || '').replace(/[.,!?;:()"„“»«]/g, '');
 /**
  * A QUESTION IS NOT AN ANSWER (DaF review #18, Minor 18). „Was Sie kaufen“ ← „Kaufst du auch?“ was
  * green because the folded predicate `kauf` decides a shape-less Leitpunkt and a question carries the
- * verb as well as a statement does. A question is a sentence that closes with `?` or opens with a
- * question word; the fold half of `leitpunktSatisfied` reads only the sentences that are not one.
+ * verb as well as a statement does. A question closes with `?`, opens with a question word, or
+ * has an unambiguous verb-first question form; a missing question mark does not make it a fact.
  */
 const QUESTION_WORD_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)$/i;
 const QUESTION_END_RE = new RegExp(`\\?[!?]*${SENTENCE_CLOSE}$`, 'u');
+// Formal imperatives share the infinitive („Rufen Sie …“), but „Sind Sie …“ cannot be one.
+const VERB_FIRST_QUESTION_RE = /^(?:\p{L}+st\s+du|(?:\p{L}+t|seid)\s+ihr|\p{L}+e\s+ich|\p{L}+en\s+wir|(?:sind|waren|wären|waeren|hatten|hätten|haetten|können|koennen|könnten|koennten|dürfen|duerfen|dürften|duerften|müssen|muessen|müssten|muessten|sollen|sollten|wollen|wollten|möchten|moechten)\s+Sie)\b/iu;
 const isQuestion = (sentence) => {
   const s = String(sentence || '').trim();
   if (QUESTION_END_RE.test(s)) return true;
   const first = stripPunct(words(s)[0] || '');
-  return QUESTION_WORD_RE.test(first);
+  return QUESTION_WORD_RE.test(first) || VERB_FIRST_QUESTION_RE.test(s);
 };
 
 /** The number words the course writes out, 0–20 plus the round tens — used by the value shapes. */
@@ -388,6 +390,14 @@ const TIME_OF_DAY_RE = new RegExp(
   + `|${WEEKDAY}\\s*(?:früh|${TIME_OF_DAY_NOUN}))(?!\\p{L})`,
   'iu',
 );
+
+// New appointment details may be proposed as a question; past availability is no proposal.
+const SCHEDULING_REQUIREMENT_RE = /\b(?:neu(?:e[nrms]?)?|vorschlag|vorschlagen)\b/i;
+const SCHEDULING_PROPOSAL_RE = /^(?:(?:geht|ginge|passt)\s+(?:es|das|dir|euch|Ihnen)\b|(?:wäre|waere)\b.*\bmöglich\b|(?:treffen|sehen)\s+wir\s+uns\b|(?:können|koennen|könnten|koennten|wollen|sollen)\s+(?:wir|ich)\b|(?:hast|habt|haben|hättest|haettest|hättet|haettet|hätten|haetten)\s+(?:du|ihr|Sie)\b.*\bZeit\b)/iu;
+const DIRECT_TIME_PROPOSAL_RE = new RegExp(`^(?:geht|ginge|passt)\\s+(?:${WEEKDAY}|${DAY_ADVERB}|(?:am|um|ab|von|gegen)\\b|\\d)`, 'iu');
+const PAST_SCHEDULING_RE = /\b(?:Zeit\b.*\bgehabt|möglich\b.*\bgewesen)\b/iu;
+const isSchedulingProposal = (sentence) => !PAST_SCHEDULING_RE.test(sentence)
+  && (SCHEDULING_PROPOSAL_RE.test(sentence) || DIRECT_TIME_PROPOSAL_RE.test(sentence));
 /** A PRICE is a number with Euro — „Das kostet Euro.“ is not a price. */
 const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:Euro|€)|€\\s*\\d`, 'i');
 
@@ -838,7 +848,7 @@ const wannShape = (conjunct) => {
 
 const QUESTION_SHAPES = [
   // `shape` is built per conjunct (the anchor words differ), where `re` is one regex for all.
-  { on: /\bwann\b/i, shape: wannShape, allowQuestions: true },
+  { on: /\bwann\b/i, shape: wannShape },
   // ROUND 16 (DaF review #15, MAJOR 2, „Zweitens“): „Warum“ is UNDECIDABLE, and that is a row of
   // its own rather than a missing row. Without it the word half decided the conjunct, and in an
   // indirect question the only lower-case word of „Warum Sie feiern“ is the TASK's verb — so
@@ -932,7 +942,14 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
   const fullTextShapes = [];
   const addShape = (re, { question, allowQuestions } = {}) => {
     shapes.push(re);
-    if (question || allowQuestions) fullTextShapes.push(re);
+    if (question) fullTextShapes.push(re);
+    if (allowQuestions && SCHEDULING_REQUIREMENT_RE.test(conjunct)) {
+      const proposal = {
+        test: (body) => sentences(body).some((s) => isQuestion(s) && isSchedulingProposal(s) && re.test(s)),
+      };
+      shapes.push(proposal);
+      fullTextShapes.push(proposal);
+    }
   };
   for (const w of keywords) {
     const f = [foldWord(w), ...splitVerbStem(w)];

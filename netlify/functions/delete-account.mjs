@@ -1,9 +1,9 @@
 import { supabase } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
-// Statuses under which Lemon Squeezy will still charge a recurring plan. Course rows
+// Statuses under which Lemon Squeezy can still charge a recurring plan. Course rows
 // (plan_type 'course') are one-time purchases and never block a deletion.
-const CHARGING_STATUSES = ['active', 'on_trial', 'past_due', 'unpaid'];
+const CHARGING_STATUSES = ['active', 'on_trial', 'past_due', 'unpaid', 'paused'];
 
 export function hasChargingSubscription(rows) {
   return (rows || []).some((s) => s.plan_type !== 'course'

@@ -14,7 +14,7 @@ const result = {
   feedback: 'Gut gemacht.', strengths: ['Wortschatz'], improvements: ['Grammatik'], recommendation: 'GLEICH',
 };
 
-function database({ used = 0, rpcError = null, countError = null, insertError = null, saveError = null,
+function database({ used = 0, rpcError = null, countError = null, insertError = null, saveError = null, saveFailures = 0,
   lookupError = null, sessions = [token], evaluations = [] } = {}) {
   const now = new Date().toISOString();
   const tables = {
@@ -26,7 +26,7 @@ function database({ used = 0, rpcError = null, countError = null, insertError = 
       { user_id: userId, session_token, role: 'user', content: 'Mir geht es gut.' },
     ]),
   };
-  const state = { providerCalls: 0, events: [], tables };
+  const state = { providerCalls: 0, events: [], tables, now, saveError, saveFailures, saveAttempts: 0 };
   function insert(row) {
     const saved = { id: `evaluation-${tables.speaking_evaluations.length}`, created_at: now, ...row };
     tables.speaking_evaluations.push(saved);
@@ -36,7 +36,17 @@ function database({ used = 0, rpcError = null, countError = null, insertError = 
   class Query {
     constructor(table) { this.table = table; this.op = 'select'; this.filters = []; }
     select(_columns, options) { this.head = options?.head; return this; }
-    eq(key, value) { this.filters.push((row) => row[key] === value); return this; }
+    eq(key, value) {
+      this.filters.push((row) => {
+        const actual = key.split('->>').reduce((part, field) => part?.[field], row);
+        return key.includes('->>') ? String(actual) === value : actual === value;
+      });
+      return this;
+    }
+    is(key, value) {
+      this.filters.push((row) => (key.split('->>').reduce((part, field) => part?.[field], row) ?? null) === value);
+      return this;
+    }
     gte(key, value) { this.filters.push((row) => row[key] >= value); return this; }
     or(value) {
       if (value === 'evaluated.is.null,evaluated.eq.false') this.filters.push((row) => row.evaluated !== true);
@@ -59,7 +69,11 @@ function database({ used = 0, rpcError = null, countError = null, insertError = 
           if (this.head && countError) return { error: countError };
           if (this.op === 'select' && !this.head && lookupError) return { error: lookupError };
           if (this.op === 'insert') return insertError ? { error: insertError } : { data: insert(this.row), error: null };
-          if (this.op === 'update' && saveError) return { error: saveError };
+          if (this.op === 'update' && this.patch.scores?._evaluation) {
+            state.saveAttempts++;
+            if (state.saveError) return { error: state.saveError };
+            if (state.saveFailures-- > 0) return { error: { message: 'temporary write failure' } };
+          }
         }
         let rows = tables[this.table].filter((row) => this.filters.every((filter) => filter(row)));
         const count = rows.length;
@@ -95,9 +109,13 @@ function database({ used = 0, rpcError = null, countError = null, insertError = 
   };
 }
 
-function handler(db, { invalidProvider = false, failProvider = false } = {}) {
+function handler(db, { invalidProvider = false, failProvider = false, beforeProvider = null } = {}) {
+  class Clock extends Date {
+    constructor(...args) { super(...(args.length ? args : [db.state.now])); }
+    static now() { return new Date(db.state.now).getTime(); }
+  }
   const context = vm.createContext({
-    createClient: () => db, reserveUsage,
+    createClient: () => db, reserveUsage, Date: Clock,
     process: { env: { SUPABASE_SERVICE_ROLE_KEY: 'configured', ANTHROPIC_API_KEY: 'configured' } },
     getAuthenticatedUserId: async () => userId,
     unauthorizedResponse: () => ({ statusCode: 401 }), console: quiet,
@@ -105,6 +123,7 @@ function handler(db, { invalidProvider = false, failProvider = false } = {}) {
       db.state.providerCalls++;
       db.state.events.push('provider');
       assert.ok(db.state.tables.speaking_evaluations.some((row) => row.scores?._pending), 'provider requires a committed reservation');
+      if (beforeProvider) await beforeProvider();
       if (failProvider) throw new Error('provider unavailable');
       return { ok: true, json: async () => ({ content: [{ text: invalidProvider ? 'invalid JSON' : JSON.stringify(result) }] }) };
     },
@@ -206,8 +225,79 @@ test('speaking evaluation keeps reserved usage when saving feedback fails', asyn
   assert.equal(JSON.parse(response.body).saved, false);
   assert.equal(db.state.providerCalls, 1);
   assert.equal(db.state.tables.speaking_evaluations.length, 1);
+  assert.equal(db.state.saveAttempts, 2, 'retry the generated feedback before giving up');
   assert.equal((await handler(db)(event())).statusCode, 409);
   assert.equal(db.state.providerCalls, 1);
+  db.state.saveError = null;
+  db.state.now = new Date(Date.parse(db.state.now) + 10 * 60 * 1000).toISOString();
+  const recovered = await handler(db)(event());
+  assert.equal(recovered.statusCode, 200, recovered.body);
+  assert.equal(JSON.parse(recovered.body).saved, true);
+  assert.equal(db.state.providerCalls, 2);
+  assert.equal(db.state.tables.speaking_evaluations.length, 1, 'recovery reuses the consumed allowance');
+  assert.equal(db.state.tables.speaking_evaluations[0].scores._pending, undefined);
+});
+
+test('speaking evaluation retries a temporary feedback write without another provider call', async () => {
+  const db = database({ saveFailures: 1 });
+  const response = await handler(db)(event());
+  assert.equal(response.statusCode, 200, response.body);
+  assert.equal(JSON.parse(response.body).saved, true);
+  assert.equal(db.state.saveAttempts, 2);
+  assert.equal(db.state.providerCalls, 1);
+  assert.equal((await handler(db)(event())).statusCode, 200);
+  assert.equal(db.state.providerCalls, 1);
+});
+
+test('abandoned speaking reservations recover once on the same row even at the daily cap', async () => {
+  for (const rpcError of [null, { code: 'PGRST202' }]) {
+    for (const leased of [false, true]) {
+      const stale = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+      const db = database({ used: 19, rpcError, evaluations: [{ id: 'abandoned', user_id: userId, session_id: token,
+        created_at: stale, total_score: null, scores: { _pending: true, ...(leased ? { _lease_started_at: stale } : {}) } }] });
+      const run = handler(db);
+      const responses = await Promise.all([run(event()), run(event()), run(event())]);
+      assert.deepEqual(responses.map(response => response.statusCode).sort(), [200, 409, 409]);
+      assert.equal(db.state.providerCalls, 1);
+      assert.equal(db.state.tables.speaking_evaluations.length, 20);
+      assert.equal(JSON.parse(responses.find(response => response.statusCode === 200).body).evaluation_id, 'abandoned');
+      assert.equal(db.state.tables.speaking_evaluations.at(-1).scores._pending, undefined);
+      assert.equal(db.state.events.includes('rpc'), false, 'recovery never reserves another allowance');
+    }
+  }
+});
+
+test('a renewed speaking reservation lease keeps its original timestamp from expiring the retry', async () => {
+  const stale = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const fresh = new Date().toISOString();
+  const db = database({ evaluations: [{ id: 'recovering', user_id: userId, session_id: token,
+    created_at: stale, scores: { _pending: true, _lease_started_at: fresh } }] });
+  const response = await handler(db)(event());
+  assert.equal(response.statusCode, 409);
+  assert.equal(db.state.providerCalls, 0);
+});
+
+test('a speaking worker whose lease expired cannot overwrite the recovered feedback', async () => {
+  for (const failProvider of [false, true]) {
+    const db = database();
+    let resume;
+    let started;
+    const providerStarted = new Promise(resolve => { started = resolve; });
+    const blocked = new Promise(resolve => { resume = resolve; });
+    const original = handler(db, { failProvider, beforeProvider: async () => { started(); await blocked; } })(event());
+    await providerStarted;
+    db.state.now = new Date(Date.parse(db.state.now) + 10 * 60 * 1000).toISOString();
+    const retry = await handler(db)(event());
+    assert.equal(retry.statusCode, 200, retry.body);
+    assert.equal(JSON.parse(retry.body).saved, true);
+    const saved = structuredClone(db.state.tables.speaking_evaluations[0]);
+    resume();
+    const late = await original;
+    assert.equal(JSON.parse(late.body).saved, false, 'the replaced lease no longer owns the feedback write');
+    assert.deepEqual(db.state.tables.speaking_evaluations[0], saved);
+    assert.equal(db.state.tables.speaking_evaluations.length, 1);
+    assert.equal(db.state.tables.speaking_sessions[0].evaluated, true, 'a stale failure cannot release the recovered session');
+  }
 });
 
 test('unusable speaking evaluation responses remain counted while a later retry can succeed', async () => {

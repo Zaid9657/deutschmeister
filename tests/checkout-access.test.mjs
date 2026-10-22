@@ -57,7 +57,7 @@ test('B1 #1: existing recurring customers manage billing, including failed and p
     assert.equal(cta.href, 'https://deutsch-meister.lemonsqueezy.com/billing');
   }
   for (const subscription of [null,
-    { plan_type: 'course', status: 'active', lemonsqueezy_subscription_id: 'old' },
+    { plan_type: 'course', status: 'active', lemonsqueezy_subscription_id: null },
     { plan_type: 'monthly', status: 'expired', lemonsqueezy_subscription_id: 'ended' },
     { plan_type: 'monthly', status: 'cancelled', subscription_end: '2020-01-01', lemonsqueezy_subscription_id: 'ended' },
   ]) assert.equal(proCta({ signedIn: true, subscription }).action, 'checkout');
@@ -66,6 +66,40 @@ test('B1 #1: existing recurring customers manage billing, including failed and p
   assert.match(pricing, /if \(error\) throw error;/, 'a failed billing lookup cannot open a checkout');
   const subscribe = page.slice(page.indexOf('  const handleSubscribe ='), page.indexOf('  // One-time course'));
   assert.ok(subscribe.indexOf('if (recurringBilling)') < subscribe.indexOf('openCheckout(checkoutUrl)'));
+});
+
+test('R3 #2: a retained recurring provider ID on a course routes pricing to billing until reconciliation clears it', async () => {
+  const pricing = read('astro-site/src/pages/pricing.astro');
+  const start = pricing.indexOf("    $('pro-btn').addEventListener('click', async () => {");
+  const end = pricing.indexOf('\n    });', start) + '\n    });'.length;
+  assert.ok(start >= 0 && end > start);
+  const click = async (subscription) => {
+    const opened = [];
+    let onClick;
+    const button = { addEventListener: (_type, callback) => { onClick = callback; } };
+    const location = { href: '' };
+    vm.runInNewContext(pricing.slice(start, end), {
+      $: () => button, proCta, currentUser: () => ({ id: 'learner' }), cycle: 'monthly',
+      track() {}, billing: null, loadBilling: async () => ({ userId: 'learner', subscription }),
+      window: { location }, VARIANTS: { monthly: 'monthly-checkout' },
+      open: (...args) => opened.push(args), applyCycle() {},
+    });
+    await onClick();
+    return { opened, href: location.href };
+  };
+  for (const status of ['active', 'paused', 'expired', 'cancelled']) {
+    const legacyCourse = {
+      plan_type: 'course', status, subscription_end: '2020-01-01T00:00:00Z',
+      lemonsqueezy_subscription_id: 'recoverable-recurring',
+    };
+    assert.equal(hasRecurringBilling(legacyCourse), true, status);
+    const routed = await click(legacyCourse);
+    assert.equal(routed.href, 'https://deutsch-meister.lemonsqueezy.com/billing', status);
+    assert.deepEqual(routed.opened, [], status);
+    const reconciled = { ...legacyCourse, lemonsqueezy_subscription_id: null };
+    assert.equal(hasRecurringBilling(reconciled), false, status);
+    assert.deepEqual((await click(reconciled)).opened, [['monthly-checkout', 'monthly']], status);
+  }
 });
 
 test('B1 #13: pre-existing Pro cannot confirm a pending course before purchases refresh', () => {

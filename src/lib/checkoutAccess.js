@@ -20,7 +20,11 @@ export const ownsCheckoutProduct = (key, purchases = []) => {
 // stale paid-access flag must never sell a second recurring subscription.
 export const hasRecurringBilling = (subscription, now = Date.now()) => {
   const id = subscription?.lemonsqueezy_subscription_id;
-  if (typeof id !== 'string' || !id.trim() || subscription.plan_type === 'course' || subscription.status === 'expired') return false;
+  if (typeof id !== 'string' || !id.trim()) return false;
+  // Legacy course rows describe course access, not the retained recurring plan.
+  // Reconciliation clears its ID once the provider confirms it is terminal.
+  if (subscription.plan_type === 'course') return true;
+  if (subscription.status === 'expired') return false;
   if (subscription.status === 'cancelled' && Date.parse(subscription.subscription_end) <= now) return false;
   return true;
 };
