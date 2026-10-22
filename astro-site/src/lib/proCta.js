@@ -23,22 +23,33 @@
 // once it knows whether a session exists.
 import { PLANS, eur } from '../data/pricing.js';
 import { TRIAL_DAYS } from '../data/marketing.js';
+import { hasRecurringBilling } from '../../../src/lib/checkoutAccess.js';
+import { BILLING_PORTAL_URL } from '../../../src/lib/billingPortal.js';
 
 /** Absolute, because /signup is an SPA route: a full page load, never the Astro router. */
 export const SIGNUP_URL = 'https://deutsch-meister.de/signup';
 
 /**
  * What the Pro button says and does.
- * @param {{ signedIn?: boolean, cycle?: 'monthly'|'yearly' }} [p]
- * @returns {{ action: 'signup'|'checkout', label: string, note: string, href: string|null, plan: string|null }}
+ * @param {{ signedIn?: boolean, cycle?: 'monthly'|'yearly', subscription?: object|null }} [p]
+ * @returns {{ action: 'signup'|'checkout'|'portal', label: string, note: string, href: string|null, plan: string|null }}
  */
-export function proCta({ signedIn = false, cycle = 'monthly' } = {}) {
+export function proCta({ signedIn = false, cycle = 'monthly', subscription = null } = {}) {
   if (!signedIn) {
     return {
       action: 'signup',
       label: `Start ${TRIAL_DAYS}-day Pro trial`,
       note: 'No card · no automatic charge',
       href: SIGNUP_URL,
+      plan: null,
+    };
+  }
+  if (hasRecurringBilling(subscription)) {
+    return {
+      action: 'portal',
+      label: 'Manage billing',
+      note: 'Change your plan, payment details or cancellation in the Lemon Squeezy customer portal.',
+      href: BILLING_PORTAL_URL,
       plan: null,
     };
   }

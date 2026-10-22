@@ -59,14 +59,17 @@ export async function getReadingLessonsByLevel(level) {
 }
 
 /**
- * Fetch a single reading lesson by ID from Supabase.
+ * Fetch a single reading lesson by ID and route level from Supabase.
  * Returns null if not found.
  */
-export async function getReadingLessonById(id) {
+export async function getReadingLessonById(id, level) {
+  if (!id || typeof level !== 'string' || !level) return null;
+  const dbLevel = toDbLevel(level);
   const { data, error } = await supabase
     .from('reading_lessons')
     .select('*')
     .eq('id', id)
+    .eq('level', dbLevel)
     .single();
 
   if (error) {
@@ -74,7 +77,7 @@ export async function getReadingLessonById(id) {
     return null;
   }
 
-  if (!data) {
+  if (!data || data.level !== dbLevel) {
     return null;
   }
 

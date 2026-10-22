@@ -1,7 +1,7 @@
 // Admin panel — coupons: the governance record around a Lemon Squeezy
 // discount. Creating a coupon here creates the rules and the ledger — NOT
 // the discount; the code must exist identically in LS. The screen says so.
-import { adminEndpoint, badRequest, notFound, conflict, fetchAll, exactCount, counting } from './_shared/adminHttp.mjs';
+import { adminEndpoint, badRequest, notFound, conflict, fetchAll, exactCount, counting, corsHeaders } from './_shared/adminHttp.mjs';
 import { writeAudit } from './_shared/adminRbac.mjs';
 import { hasCapability } from './_shared/adminRbacLib.mjs';
 import { effectiveStatus, remainingLimit, needsElevatedApproval, validateCouponInput, STATUS_TRANSITIONS, LOCKED_AFTER_REDEMPTION } from './_shared/adminCouponsLib.mjs';
@@ -21,11 +21,11 @@ function present(c, count, nowMs) {
   return { ...c, redemptions: count, effectiveStatus: effectiveStatus(c, count, nowMs), remaining: remainingLimit(c, count), elevated: needsElevatedApproval(c), provider: { managed: false, note: 'Der Rabatt selbst liegt in Lemon Squeezy. Dieses System legt keine LS-Rabatte an — der Code muss dort identisch existieren.' } };
 }
 
-export const handler = adminEndpoint(
+const couponEndpoint = adminEndpoint(
   { capabilityFor: (b) => (b.action === 'refund_adjustment' ? 'finance.write' : b.action === 'archive' ? 'marketing.coupons.archive' : WRITE.includes(b.action) ? 'marketing.coupons.write' : 'marketing.coupons.read') },
   async ({ body, supabase, auth, event }) => {
     const now = new Date();
-    const action = String(body.action || 'list');
+    const action = body.action || 'list';
     const audit = (a, id, extra) => writeAudit(supabase, { actorId: auth.userId, actorRole: auth.role, action: `coupons.${a}`, targetType: 'coupon', targetId: id, outcome: 'success', source: event.path, ...extra });
 
     if (action === 'list') {
@@ -127,3 +127,16 @@ export const handler = adminEndpoint(
     throw badRequest(`Unbekannte Aktion "${action}".`);
   },
 );
+
+// Validate before capability selection, so a value cannot authorize as a read
+// and then become a write when dispatching (for example ["pause"]).
+export const handler = async (event) => {
+  if (event.httpMethod === 'POST') {
+    let body;
+    try { body = JSON.parse(event.body || '{}'); } catch { return couponEndpoint(event); }
+    if (body && Object.hasOwn(body, 'action') && typeof body.action !== 'string') {
+      return { statusCode: 400, headers: corsHeaders(event), body: JSON.stringify({ error: 'action muss eine Zeichenfolge sein.' }) };
+    }
+  }
+  return couponEndpoint(event);
+};

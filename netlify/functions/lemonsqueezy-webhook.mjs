@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { BILLING_PORTAL_URL, SIGNED_URL_MAX_AGE_MS, pickUpdatePaymentUrl } from './_shared/dunningLink.mjs';
+import { courseAccessUntil, reconcileSubscriptionEvent, reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
 
 // Initialize Supabase with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -200,13 +201,15 @@ export const handler = async (event) => {
     if (handlerError) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: handlerError.message }) };
     }
-    // A refund is acknowledged only once it is on record. For an order that was
+    // Entitlement changes are acknowledged only once they are on record;
+    // subscription snapshots are also the ordering evidence for later replays.
+    // For an order that was
     // never delivered this log row is the ONLY trace of the refund, and it is
     // what stops a later retry of that order's order_created from granting it
     // (handleCourseOrder). A 500 makes Lemon Squeezy retry; revoking is
     // idempotent (Codex review of the telc pilot PR A).
-    if (eventType === 'order_refunded' && !logged) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: 'refund processed but not recorded in webhook_logs; retry' }) };
+    if ((eventType === 'order_refunded' || ['subscription_created', 'subscription_updated', 'subscription_cancelled', 'subscription_expired'].includes(eventType)) && !logged) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'entitlement processed but not recorded in webhook_logs; retry' }) };
     }
 
     return { statusCode: 200, headers, body: 'OK' };
@@ -441,7 +444,7 @@ async function handleCourseOrder({ course, orderId, customData, attributes, meta
   }
   const { data: priorPurchase, error: priorError } = await supabase
     .from('purchases')
-    .select('status')
+    .select('*')
     .eq('lemonsqueezy_order_id', orderId)
     .maybeSingle();
   if (priorError) {
@@ -492,83 +495,31 @@ async function handleCourseOrder({ course, orderId, customData, attributes, meta
   const now = new Date();
   const pricePaid = attributes.total != null ? Number(attributes.total) / 100 : null;
 
-  // Does a live subscription already cover the Pro window?
-  const { data: existingSub, error: subLookupError } = await supabase
-    .from('subscriptions')
-    .select('plan_type, subscription_end')
-    .eq('user_id', userId)
-    .maybeSingle();
-  if (subLookupError) {
-    console.error('course order: subscription lookup error:', JSON.stringify(subLookupError));
-    throw new Error(`course order subscription lookup failed: ${subLookupError.message}`);
+  // Every order keeps its original included-Pro deadline, even if another
+  // subscription currently covers it. Retries may finish provisioning but
+  // cannot restart the window or overwrite a concurrent refund.
+  const accessUntil = courseAccessUntil(priorPurchase, attributes, course.proDays, now.getTime());
+  if (!priorPurchase) {
+    const { error: purchaseError } = await supabase.from('purchases').upsert({
+      user_id: userId,
+      product_key: course.productKey,
+      lemonsqueezy_order_id: orderId,
+      price_paid: pricePaid,
+      status: 'active',
+      access_until: accessUntil,
+      created_at: attributes.created_at || now.toISOString(),
+      updated_at: now.toISOString(),
+    }, { onConflict: 'lemonsqueezy_order_id', ignoreDuplicates: true });
+    if (purchaseError) throw new Error(`purchases upsert failed: ${purchaseError.message}`);
+  } else if (!priorPurchase.access_until) {
+    // Legacy purchases made during a recurring plan had no included window
+    // stored. Recover it from the original purchase date, never delivery time.
+    const { error } = await supabase.from('purchases')
+      .update({ access_until: accessUntil, updated_at: now.toISOString() })
+      .eq('lemonsqueezy_order_id', orderId).eq('status', 'active').is('access_until', null);
+    if (error) throw error;
   }
-  const hasLiveRealSub =
-    existingSub &&
-    existingSub.plan_type !== 'course' &&
-    existingSub.subscription_end &&
-    new Date(existingSub.subscription_end) > now;
-
-  const accessUntil = hasLiveRealSub
-    ? null // course content is lifetime; Pro is already covered by the real sub
-    : new Date(now.getTime() + course.proDays * 24 * 60 * 60 * 1000).toISOString();
-
-  const { error: purchaseError } = await supabase
-    .from('purchases')
-    .upsert(
-      {
-        user_id: userId,
-        product_key: course.productKey,
-        lemonsqueezy_order_id: orderId,
-        price_paid: pricePaid,
-        status: 'active',
-        access_until: accessUntil,
-        updated_at: now.toISOString(),
-      },
-      { onConflict: 'lemonsqueezy_order_id' }
-    );
-  if (purchaseError) {
-    console.error('course order: purchases upsert error:', JSON.stringify(purchaseError));
-    throw new Error(`purchases upsert failed: ${purchaseError.message} (code: ${purchaseError.code})`);
-  }
-
-  if (!hasLiveRealSub) {
-    // Included Pro window: the user's one subscriptions row becomes a 'course'
-    // row. A later real subscription_created upserts over it (real sub wins);
-    // expiry of course rows is swept by the daily trial-lifecycle run.
-    const { error: subError } = await supabase
-      .from('subscriptions')
-      .upsert(
-        {
-          user_id: userId,
-          plan_type: 'course',
-          status: 'active',
-          subscription_start: now.toISOString(),
-          subscription_end: accessUntil,
-          lemonsqueezy_order_id: orderId,
-          lemonsqueezy_customer_id: String(attributes.customer_id || ''),
-          lemonsqueezy_product_id: String(attributes.first_order_item?.product_id || ''),
-          lemonsqueezy_variant_id: String(attributes.first_order_item?.variant_id || ''),
-          price_paid: pricePaid,
-          updated_at: now.toISOString(),
-        },
-        { onConflict: 'user_id' }
-      );
-    if (subError) {
-      console.error('course order: subscriptions upsert error:', JSON.stringify(subError));
-      throw new Error(`course subscriptions upsert failed: ${subError.message} (code: ${subError.code})`);
-    }
-
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .upsert(
-        { id: userId, is_subscribed: true, subscription_tier: 'pro', updated_at: now.toISOString() },
-        { onConflict: 'id' }
-      );
-    if (profileError) {
-      console.error('course order: profiles upsert error:', JSON.stringify(profileError));
-      throw new Error(`course profiles upsert failed: ${profileError.message} (code: ${profileError.code})`);
-    }
-  }
+  await reconcileUserEntitlement(supabase, userId, now.getTime());
 
   console.log(
     'SUCCESS: course purchase recorded:', course.productKey, 'user:', userId,
@@ -610,43 +561,11 @@ async function handleOrderRefunded(data, _meta) {
     throw updateError;
   }
 
-  // Revoke the included Pro window only if it came from THIS order — a real
-  // subscription row (different plan_type or order id) is left alone.
-  const { data: courseSub, error: subFindError } = await supabase
-    .from('subscriptions')
-    .select('id')
-    .eq('user_id', purchase.user_id)
-    .eq('plan_type', 'course')
-    .eq('lemonsqueezy_order_id', orderId)
-    .maybeSingle();
-  if (subFindError) {
-    console.error('order_refunded: subscriptions lookup error:', JSON.stringify(subFindError));
-    throw subFindError;
-  }
-  if (courseSub) {
-    const { error: subError } = await supabase
-      .from('subscriptions')
-      .update({ status: 'expired', subscription_end: nowIso, updated_at: nowIso })
-      .eq('id', courseSub.id);
-    if (subError) {
-      console.error('order_refunded: subscriptions update error:', JSON.stringify(subError));
-      throw subError;
-    }
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({ is_subscribed: false, subscription_tier: 'free', updated_at: nowIso })
-      .eq('id', purchase.user_id);
-    if (profileError) {
-      console.error('order_refunded: profile update error:', JSON.stringify(profileError));
-      throw profileError;
-    }
-  }
+  // Included Pro is the union of the remaining purchase windows and the
+  // current recurring entitlement, not whichever order last wrote the row.
+  await reconcileUserEntitlement(supabase, purchase.user_id, Date.parse(nowIso));
 
   console.log('order_refunded: purchase', orderId, `(${purchase.product_key})`, 'revoked for user', purchase.user_id);
-}
-
-function getSubscriptionTier(_variantId) {
-  return 'pro';
 }
 
 // subscription_payment_success: data is a subscription-invoice, so data.id is the
@@ -668,7 +587,7 @@ async function handleSubscriptionPaymentSuccess(data, _meta) {
     .from('subscriptions')
     .update({ price_paid: pricePaid, updated_at: new Date().toISOString() })
     .eq('lemonsqueezy_subscription_id', subscriptionId)
-    .select('id');
+    .select('id, user_id');
 
   if (error) {
     console.error('subscription_payment_success: price_paid update error:', JSON.stringify(error));
@@ -679,284 +598,32 @@ async function handleSubscriptionPaymentSuccess(data, _meta) {
     console.warn('subscription_payment_success: no subscription row for', subscriptionId, '— price_paid not written');
   } else {
     console.log('subscription_payment_success: price_paid', pricePaid, 'set for sub', subscriptionId);
+    for (const row of updated) {
+      await reconcileUserEntitlement(supabase, row.user_id);
+    }
   }
+}
+
+async function applySubscriptionEvent(data, meta, eventType) {
+  const userId = await resolveUserId(meta?.custom_data || {}, data?.attributes || {}, data?.id);
+  if (!userId) throw new Error(`${eventType}: no resolvable user for subscription ${data?.id}`);
+  await reconcileSubscriptionEvent(supabase, userId, data, eventType);
 }
 
 async function handleSubscriptionCreated(data, meta) {
-  const customData = meta?.custom_data || {};
-  const userId = customData.user_id;
-  const attributes = data?.attributes || {};
-
-  console.log('subscription_created — custom_data:', JSON.stringify(customData));
-  console.log('subscription_created — attributes:', JSON.stringify(attributes));
-
-  if (!userId) {
-    console.error('No user_id in custom data. Full meta:', JSON.stringify(meta));
-    throw new Error('No user_id in webhook custom_data. Keys present: ' + Object.keys(customData).join(', '));
-  }
-
-  // Determine plan type from variant name
-  const variantName = attributes.variant_name || '';
-  const planType = variantName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
-  const variantId = String(attributes.variant_id || '');
-  const tier = getSubscriptionTier(variantId);
-
-  // Calculate subscription end date
-  const subscriptionEnd = attributes.renews_at
-    ? new Date(attributes.renews_at)
-    : new Date(Date.now() + (planType === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000);
-
-  console.log('Upserting subscription for user:', userId, 'plan:', planType);
-
-  // Create or update subscription (upsert on user_id unique constraint)
-  const { error: subError } = await supabase
-    .from('subscriptions')
-    .upsert({
-      user_id: userId,
-      plan_type: planType,
-      status: 'active',
-      subscription_start: new Date().toISOString(),
-      subscription_end: subscriptionEnd.toISOString(),
-      lemonsqueezy_subscription_id: String(data.id),
-      lemonsqueezy_customer_id: String(attributes.customer_id || ''),
-      lemonsqueezy_order_id: String(attributes.order_id || ''),
-      lemonsqueezy_product_id: String(attributes.product_id || ''),
-      lemonsqueezy_variant_id: String(attributes.variant_id || ''),
-      price_paid: parseFloat(attributes.first_subscription_item?.price || 0) / 100,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'user_id'
-    });
-
-  if (subError) {
-    console.error('Supabase subscriptions upsert error:', JSON.stringify(subError));
-    throw new Error(`subscriptions upsert failed: ${subError.message} (code: ${subError.code}, details: ${subError.details})`);
-  }
-
-  console.log('Subscription upserted OK. Now updating profile...');
-
-  // Update profile — use upsert so it works even if profile row doesn't exist yet
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .upsert({
-      id: userId,
-      is_subscribed: true,
-      subscription_tier: tier,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'id'
-    });
-
-  if (profileError) {
-    console.error('Supabase profiles upsert error:', JSON.stringify(profileError));
-    throw new Error(`profiles upsert failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
-  }
-
-  console.log('SUCCESS: Subscription created for user:', userId, 'Plan:', planType, 'Tier:', tier);
+  await applySubscriptionEvent(data, meta, 'subscription_created');
 }
 
 async function handleSubscriptionUpdated(data, meta) {
-  const attributes = data?.attributes || {};
-  const subscriptionId = String(data.id);
-  const customData = meta?.custom_data || {};
-  const userId = customData.user_id;
-
-  console.log('subscription_updated — subscriptionId:', subscriptionId, 'userId:', userId);
-
-  const renewsAt = attributes.renews_at
-    ? new Date(attributes.renews_at).toISOString()
-    : null;
-
-  // Try to update by lemonsqueezy_subscription_id first
-  const { data: updated, error } = await supabase
-    .from('subscriptions')
-    .update({
-      status: attributes.status || 'active',
-      subscription_end: renewsAt,
-      cancel_at_period_end: attributes.cancelled || false,
-      updated_at: new Date().toISOString()
-    })
-    .eq('lemonsqueezy_subscription_id', subscriptionId)
-    .select('id');
-
-  if (error) {
-    console.error('Error updating subscription:', JSON.stringify(error));
-    throw new Error(`subscription update failed: ${error.message}`);
-  }
-
-  // Entitlement follows status. Only the subscription_expired handler used to
-  // clear profiles.is_subscribed, so an account that went past_due/unpaid — or
-  // whose status moved to expired via this event rather than its own — kept full
-  // Pro access indefinitely. 'cancelled' deliberately keeps access: the customer
-  // has paid through the end of the period and expiry revokes it later.
-  const revokedStatuses = ['expired', 'unpaid', 'past_due'];
-  if (updated && updated.length > 0 && revokedStatuses.includes(attributes.status)) {
-    const { data: sub } = await supabase
-      .from('subscriptions')
-      .select('user_id')
-      .eq('lemonsqueezy_subscription_id', subscriptionId)
-      .maybeSingle();
-    if (sub?.user_id) {
-      const { error: revokeError } = await supabase
-        .from('profiles')
-        .update({ is_subscribed: false, subscription_tier: 'free', updated_at: new Date().toISOString() })
-        .eq('id', sub.user_id);
-      if (revokeError) {
-        console.error('subscription_updated: failed to revoke entitlement:', JSON.stringify(revokeError));
-      } else {
-        console.log(`subscription_updated: entitlement revoked for ${sub.user_id} (status ${attributes.status})`);
-      }
-    }
-  }
-
-  // If no rows matched (subscription_updated arrived before subscription_created),
-  // create the subscription if we can resolve a user. custom_data.user_id may be
-  // absent, so fall back to matching on lemonsqueezy_subscription_id / user_email.
-  if (!updated || updated.length === 0) {
-    const resolvedUserId = await resolveUserId(customData, attributes, subscriptionId);
-    console.warn('No subscription found for ID:', subscriptionId, '— attempting upsert with user_id:', resolvedUserId);
-
-    if (resolvedUserId) {
-      const variantName = attributes.variant_name || '';
-      const planType = variantName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
-      const variantId = String(attributes.variant_id || '');
-      const tier = getSubscriptionTier(variantId);
-
-      const { error: upsertError } = await supabase
-        .from('subscriptions')
-        .upsert({
-          user_id: resolvedUserId,
-          plan_type: planType,
-          status: attributes.status || 'active',
-          subscription_start: new Date().toISOString(),
-          subscription_end: renewsAt,
-          lemonsqueezy_subscription_id: subscriptionId,
-          lemonsqueezy_customer_id: String(attributes.customer_id || ''),
-          lemonsqueezy_order_id: String(attributes.order_id || ''),
-          lemonsqueezy_product_id: String(attributes.product_id || ''),
-          lemonsqueezy_variant_id: String(attributes.variant_id || ''),
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id'
-        });
-
-      if (upsertError) {
-        console.error('Fallback upsert error:', JSON.stringify(upsertError));
-        throw new Error(`subscription fallback upsert failed: ${upsertError.message}`);
-      }
-
-      // Also mark profile as subscribed with tier
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: resolvedUserId,
-          is_subscribed: true,
-          subscription_tier: tier,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'id' });
-
-      if (profileError) {
-        console.error('Fallback profile upsert error:', JSON.stringify(profileError));
-        throw new Error(`profiles upsert failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
-      }
-
-      console.log('Fallback upsert OK for user:', resolvedUserId, 'Tier:', tier);
-    } else {
-      console.error('subscription_updated: no matching row and could not resolve user by id, subscription_id, or email — cannot process');
-      throw new Error(`subscription_updated: no subscription found for ID ${subscriptionId} and could not resolve user_id (no custom_data.user_id, no match on lemonsqueezy_subscription_id, no user_email match) — retry needed`);
-    }
-  }
-
-  console.log('Subscription updated:', subscriptionId);
+  await applySubscriptionEvent(data, meta, 'subscription_updated');
 }
 
-async function handleSubscriptionCancelled(data, _meta) {
-  const subscriptionId = String(data.id);
-  const attributes = data?.attributes || {};
-
-  const { data: subscription, error: findError } = await supabase
-    .from('subscriptions')
-    .select('user_id')
-    .eq('lemonsqueezy_subscription_id', subscriptionId)
-    .maybeSingle();
-
-  if (findError) {
-    console.error('Error finding subscription for cancellation:', JSON.stringify(findError));
-    throw findError;
-  }
-
-  if (!subscription) {
-    console.warn('Subscription not found for cancellation:', subscriptionId);
-    return;
-  }
-
-  const endsAt = attributes.ends_at
-    ? new Date(attributes.ends_at).toISOString()
-    : null;
-
-  const { error } = await supabase
-    .from('subscriptions')
-    .update({
-      status: 'cancelled',
-      cancel_at_period_end: true,
-      cancelled_at: new Date().toISOString(),
-      subscription_end: endsAt,
-      updated_at: new Date().toISOString()
-    })
-    .eq('lemonsqueezy_subscription_id', subscriptionId);
-
-  if (error) {
-    console.error('Error cancelling subscription:', JSON.stringify(error));
-    throw error;
-  }
-
-  console.log('Subscription cancelled:', subscriptionId);
+async function handleSubscriptionCancelled(data, meta) {
+  await applySubscriptionEvent(data, meta, 'subscription_cancelled');
 }
 
-async function handleSubscriptionExpired(data, _meta) {
-  const subscriptionId = String(data.id);
-
-  const { data: subscription, error: findError } = await supabase
-    .from('subscriptions')
-    .select('user_id')
-    .eq('lemonsqueezy_subscription_id', subscriptionId)
-    .maybeSingle();
-
-  if (findError) {
-    console.error('Error finding subscription for expiry:', JSON.stringify(findError));
-    throw findError;
-  }
-
-  if (!subscription) {
-    console.warn('Subscription not found for expiration:', subscriptionId);
-    return;
-  }
-
-  const { error: subError } = await supabase
-    .from('subscriptions')
-    .update({
-      status: 'expired',
-      updated_at: new Date().toISOString()
-    })
-    .eq('lemonsqueezy_subscription_id', subscriptionId);
-
-  if (subError) {
-    console.error('Error expiring subscription:', JSON.stringify(subError));
-    throw subError;
-  }
-
-  // Mark profile as unsubscribed and reset tier
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .update({ is_subscribed: false, subscription_tier: 'free', updated_at: new Date().toISOString() })
-    .eq('id', subscription.user_id);
-
-  if (profileError) {
-    console.error('Error updating profile on expiry:', JSON.stringify(profileError));
-    throw new Error(`profile update on expiry failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
-  }
-
-  console.log('Subscription expired:', subscriptionId, 'User:', subscription.user_id);
+async function handleSubscriptionExpired(data, meta) {
+  await applySubscriptionEvent(data, meta, 'subscription_expired');
 }
 
 // subscription_payment_failed: data is a subscription-invoice.

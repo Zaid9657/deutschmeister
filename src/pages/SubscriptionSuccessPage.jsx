@@ -10,6 +10,8 @@ import confettiBurst from '../lib/confetti.js';
 import { consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { courseHomeFor } from '../lib/courseEntry.js';
 import { ALL_LEVELS, COURSE_PRO_MONTHS, courseForProduct } from '../data/pricing.js';
+import { checkoutEntitlementConfirmed, checkoutProductKey, isRecurringProduct } from '../lib/checkoutAccess.js';
+import { safeGetJSON } from '../utils/safeStorage';
 
 // "Your ticket is valid" — the confirmation after a checkout (v4 "Die Linie",
 // docs/redesign-2026-10/). The Lemon Squeezy redirect and the overlay's
@@ -34,6 +36,7 @@ const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
   const { refreshSubscription, hasActiveSubscription, hasLevelAccess, purchases } = useSubscription();
   const [polling, setPolling] = useState(true);
+  const [pendingProduct] = useState(() => checkoutProductKey(safeGetJSON('dm_checkout_pending', null, { session: true })?.plan));
   const celebratedRef = useRef(false);
 
   // A one-time course purchase lands here too. The most recent purchase, if it
@@ -41,7 +44,8 @@ const SubscriptionSuccessPage = () => {
   // rather than a subscription the buyer may not have. An older purchase on
   // the account is not "just bought" and falls through to the Pro copy.
   const RECENT_MS = 30 * 60 * 1000;
-  const latestPurchase = [...purchases].sort(
+  const expectedCourse = pendingProduct && !isRecurringProduct(pendingProduct);
+  const latestPurchase = purchases.filter((p) => !expectedCourse || p.product_key === pendingProduct).sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at),
   )[0];
   const justBought =
@@ -56,7 +60,9 @@ const SubscriptionSuccessPage = () => {
   // Derive verification from context state on every render (a [] effect kept
   // reading the mount-time `subscription = null` and every payer fell through
   // to the "may take a moment" branch).
-  const verified = hasActiveSubscription() || Boolean(justBought);
+  const verified = pendingProduct
+    ? checkoutEntitlementConfirmed(pendingProduct, { isSubscribed: hasActiveSubscription(), purchases })
+    : hasActiveSubscription() || Boolean(justBought);
 
   // Where the first lesson is: the level's guided course when it has one
   // (A1.1–A2.2), else its level page. courseHomeFor falls back to the free
@@ -93,9 +99,9 @@ const SubscriptionSuccessPage = () => {
       const delayMs = 3000;
 
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
         if (cancelled) return;
         await refreshSubscription();
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
       }
 
       if (!cancelled) setPolling(false);

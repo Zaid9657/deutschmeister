@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
+import { reconcileSubscriptionEvent, reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -49,24 +50,13 @@ export const handler = async (event) => {
 
     console.log('verify-subscription called for user:', user_id);
 
-    // Step 1: Check if user already has an active subscription
-    const { data: existingSub } = await supabase
-      .from('subscriptions')
-      .select('id, status')
-      .eq('user_id', user_id)
-      .eq('status', 'active')
-      .maybeSingle();
-
-    if (existingSub) {
-      console.log('User already has active subscription:', existingSub.id);
-      // Ensure profile is also marked
-      await supabase
-        .from('profiles')
-        .upsert({ id: user_id, is_subscribed: true, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+    const existing = await reconcileUserEntitlement(supabase, user_id);
+    if (existing.isSubscribed) {
       return { statusCode: 200, headers, body: JSON.stringify({ status: 'active', source: 'existing' }) };
     }
 
-    // Step 2: Search webhook_logs for unprocessed subscription events for THIS user.
+    // Search the latest subscription snapshot for THIS user. A processed
+    // terminal snapshot must also block recovery of older failed deliveries.
     // The user filter has to be in the query, not applied afterwards: this used
     // to take the 10 newest unprocessed events globally and then discard the ones
     // belonging to other customers, so a paying user's recovery silently failed
@@ -74,93 +64,31 @@ export const handler = async (event) => {
     // condition this recovery path exists for.
     const { data: logs, error: logsError } = await supabase
       .from('webhook_logs')
-      .select('id, event_type, payload')
-      .in('event_type', ['subscription_created', 'subscription_updated'])
-      .eq('processed', false)
+      .select('id, event_type, payload, processed')
+      .in('event_type', ['subscription_created', 'subscription_updated', 'subscription_cancelled', 'subscription_expired'])
       .filter('payload->meta->custom_data->>user_id', 'eq', user_id)
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(1);
 
     if (logsError) {
       console.error('Error reading webhook_logs:', JSON.stringify(logsError));
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to read webhook logs' }) };
     }
 
-    console.log('Found', logs?.length || 0, 'unprocessed webhook logs');
+    console.log('Found', logs?.length || 0, 'subscription snapshots');
 
-    // Step 3: Find logs matching this user_id
-    let activated = false;
-
-    for (const log of (logs || [])) {
-      const payload = log.payload;
-      const meta = payload?.meta || {};
-      const data = payload?.data || {};
-      const customData = meta.custom_data || {};
-      const attributes = data.attributes || {};
-
-      if (customData.user_id !== user_id) continue;
-
-      console.log('Found matching webhook log:', log.id, 'event:', log.event_type);
-
-      // Determine plan type
-      const productName = attributes.product_name || attributes.variant_name || '';
-      const planType = productName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
-
-      // Calculate subscription end
-      const subscriptionEnd = attributes.renews_at
-        ? new Date(attributes.renews_at).toISOString()
-        : new Date(Date.now() + (planType === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString();
-
-      // Upsert subscription
-      const { error: subError } = await supabase
-        .from('subscriptions')
-        .upsert({
-          user_id: user_id,
-          plan_type: planType,
-          status: 'active',
-          subscription_start: attributes.created_at || new Date().toISOString(),
-          subscription_end: subscriptionEnd,
-          lemonsqueezy_subscription_id: String(data.id || ''),
-          lemonsqueezy_customer_id: String(attributes.customer_id || ''),
-          lemonsqueezy_order_id: String(attributes.order_id || ''),
-          lemonsqueezy_product_id: String(attributes.product_id || ''),
-          lemonsqueezy_variant_id: String(attributes.variant_id || ''),
-          price_paid: parseFloat(attributes.first_subscription_item?.price || 0) / 100,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'user_id' });
-
-      if (subError) {
-        console.error('Subscription upsert error:', JSON.stringify(subError));
-        continue;
-      }
-
-      // Update profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user_id,
-          is_subscribed: true,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'id' });
-
-      if (profileError) {
-        console.error('Profile upsert error:', JSON.stringify(profileError));
-        continue;
-      }
-
-      // Mark webhook log as processed
-      await supabase
-        .from('webhook_logs')
-        .update({ processed: true, error: 'Recovered via verify-subscription' })
-        .eq('id', log.id);
-
-      activated = true;
-      console.log('SUCCESS: Activated subscription for user:', user_id, 'plan:', planType);
-      break;
-    }
-
-    if (activated) {
-      return { statusCode: 200, headers, body: JSON.stringify({ status: 'active', source: 'recovered' }) };
+    // Recover only the newest snapshot. Replaying an older active snapshot
+    // after a terminal event would undo that event; delivery order is not a
+    // paid period. Normal webhooks and recovery use the same status rules.
+    const log = (logs || []).find((row) => !row.processed && row.payload?.meta?.custom_data?.user_id === user_id);
+    if (log) {
+      const recovered = await reconcileSubscriptionEvent(supabase, user_id, log.payload.data, log.event_type);
+      const { error } = await supabase.from('webhook_logs')
+        .update({ processed: true, error: 'Recovered via verify-subscription' }).eq('id', log.id);
+      if (error) throw error;
+      return { statusCode: 200, headers, body: JSON.stringify({
+        status: recovered.isSubscribed ? 'active' : 'not_found', source: 'recovered',
+      }) };
     }
 
     console.log('No matching unprocessed webhook found for user:', user_id);

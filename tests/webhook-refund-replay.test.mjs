@@ -56,6 +56,11 @@ globalThis.fetch = async (url, init = {}) => {
     const orderId = (u.searchParams.get('lemonsqueezy_order_id') || '').replace(/^eq\./, '');
     if (method === 'GET') {
       if (failPurchaseLookup) return json({ message: 'stub lookup failure', code: 'XX000' }, 500);
+      if (!orderId) {
+        const userId = (u.searchParams.get('user_id') || '').replace(/^eq\./, '');
+        const status = (u.searchParams.get('status') || '').replace(/^eq\./, '');
+        return json([...purchases.values()].filter((row) => (!userId || row.user_id === userId) && (!status || row.status === status)));
+      }
       const row = purchases.get(orderId);
       return json(row ? [row] : []);
     }
