@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { createHash } from 'node:crypto';
 import { reserveUsage, validAnonymousId, validExamAttemptId } from '../netlify/functions/_shared/aiReservation.mjs';
+import { isMissingSchema, logMigrationPending } from '../netlify/functions/_shared/migrationPending.mjs';
 import { uaClass, cleanSource } from '../netlify/functions/_shared/xraySource.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from '../netlify/functions/_shared/writingTasks.mjs';
 
@@ -49,6 +50,7 @@ function handler(name, db, { anonymous = false, failProvider = false, badEvaluat
     createClient: () => db, supabase: db, supabaseKey: 'test-service-key',
     process: { env: { SUPABASE_SERVICE_ROLE_KEY: 'test-service-key', ANTHROPIC_API_KEY: 'test-key', OPENAI_API_KEY: 'test-key' } },
     console: quiet, createHash, reserveUsage, validAnonymousId, validExamAttemptId, uaClass, cleanSource,
+    isMissingSchema, logMigrationPending,
     getAuthenticatedUserId: async () => anonymous ? null : userId,
     unauthorizedResponse: () => ({ statusCode: 401 }), getTier: async () => 'free_expired',
     writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS,
@@ -102,9 +104,9 @@ test('anonymous IDs reject NUL, control characters, whitespace and excessive len
 });
 
 for (const name of Object.keys(bodies)) {
-  test(`${name}: failed or missing reservation never calls a provider`, async () => {
+  test(`${name}: reservation errors never spend without a committed usage row`, async () => {
     for (const failure of [{ message: 'database unavailable' }, { code: 'PGRST202', message: 'RPC not applied' }]) {
-      const db = database({ reservationError: failure });
+      const db = database({ reservationError: failure, saveError: { message: 'legacy usage insert failed' } });
       const response = await handler(name, db, { anonymous: name === 'analyze-sentence' })(event(bodies[name]));
       assert.equal(response.statusCode, 503);
       assert.equal(db.state.providerCalls, 0);

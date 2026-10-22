@@ -21,7 +21,7 @@ import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
 // own would sooner or later contradict the Grammatikkarte the learner just read.
 //
 // Cost control is a per-user daily cap counted from the `lesson_attempts`
-// ledger, protected from learner deletion by the reservation migration.
+// ledger. The migration makes its check and insert atomic and prevents deletion.
 const EXPLAIN_DAILY_LIMIT = 40;
 
 // Haiku is the cheap tier and this is a 60-word answer; override without a
@@ -123,6 +123,18 @@ export const handler = async (event) => {
         p_user_id: user_id, p_stage: 'explain', p_limit: EXPLAIN_DAILY_LIMIT,
         p_level: level, p_lektion_id: lektionId, p_item_id: itemId,
         p_error_tag: 'Erklärung',
+      }, async () => {
+        const { data, error } = await supabase.from('lesson_attempts').insert({
+          user_id,
+          level,
+          lektion_id: lektionId,
+          item_id: itemId,
+          stage: 'explain',
+          correct: false,
+          error_tag: 'Erklärung',
+        }).select('id').single();
+        if (error) throw new Error(error.message || 'Usage insert failed');
+        return { allowed: true, id: data?.id, used };
       });
       used = reservation.used;
       if (!reservation.allowed) {

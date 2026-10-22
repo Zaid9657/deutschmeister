@@ -3,6 +3,7 @@ import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
 import { uaClass, cleanSource } from './_shared/xraySource.mjs';
 import { reserveUsage, validAnonymousId } from './_shared/aiReservation.mjs';
+import { isMissingSchema, logMigrationPending } from './_shared/migrationPending.mjs';
 
 // Salt for the per-IP rate-limit key. Reuses an existing secret so no new env
 // var is required; if none is configured the IP ceiling is skipped (the
@@ -107,6 +108,43 @@ function hashIp(ip) {
   return 'ip_' + createHash('sha256').update(`${ip}|${IP_HASH_SALT}`).digest('hex').slice(0, 32);
 }
 
+async function reserveLegacyUsage(args) {
+  const dayStart = new Date();
+  dayStart.setUTCHours(0, 0, 0, 0);
+  const today = () => supabase.from('xray_usage')
+    .select('id', { count: 'exact', head: true }).gte('used_at', dayStart.toISOString());
+  const checkedCount = async (query) => {
+    const { count, error } = await query;
+    if (error || !Number.isSafeInteger(count) || count < 0) {
+      throw new Error(error?.message || 'Usage count failed');
+    }
+    return count;
+  };
+  const used = await checkedCount(args.p_user_id
+    ? today().eq('user_id', args.p_user_id)
+    : today().is('user_id', null).eq('anonymous_id', args.p_anonymous_id));
+  if (!args.p_user_id && args.p_ip_hash) {
+    const ipUsed = await checkedCount(today().is('user_id', null).eq('ip_hash', args.p_ip_hash));
+    if (ipUsed >= args.p_ip_limit) return { allowed: false, used: ipUsed };
+  }
+  if (used >= args.p_limit) return { allowed: false, used };
+
+  const row = {
+    user_id: args.p_user_id,
+    anonymous_id: args.p_anonymous_id,
+    sentence: args.p_sentence,
+    ip_hash: args.p_ip_hash,
+  };
+  let { data, error } = await supabase.from('xray_usage')
+    .insert({ ...row, source: args.p_source }).select('id').single();
+  if (isMissingSchema(error)) {
+    logMigrationPending('xray_usage.source');
+    ({ data, error } = await supabase.from('xray_usage').insert(row).select('id').single());
+  }
+  if (error || !data?.id) throw new Error(error?.message || 'Usage insert failed');
+  return { allowed: true, used, id: data.id };
+}
+
 // An outage is not the visitor's fault. The free tier gets ONE analysis a day,
 // so charging it for a 5xx would lock them out of the product's main hook until
 // tomorrow. supabase-js resolves rather than throws, so check `error`.
@@ -196,7 +234,7 @@ export const handler = async (event) => {
     const ipKey = !userId && IP_HASH_SALT ? hashIp(clientIp(event) || 'unknown') : null;
     let reservation;
     try {
-      reservation = await reserveUsage(supabase, 'reserve_xray_usage', {
+      const args = {
         p_user_id: userId || null,
         p_anonymous_id: userId ? null : anonymousId,
         p_sentence: sentence.trim(),
@@ -204,7 +242,8 @@ export const handler = async (event) => {
         p_source: source,
         p_limit: limit,
         p_ip_limit: ANON_IP_DAILY_CEILING,
-      });
+      };
+      reservation = await reserveUsage(supabase, 'reserve_xray_usage', args, () => reserveLegacyUsage(args));
     } catch (error) {
       console.error('xray reservation failed:', error.message);
       return { statusCode: 503, headers, body: JSON.stringify({ error: 'Usage could not be reserved', code: 'usage_unavailable' }) };

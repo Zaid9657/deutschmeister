@@ -1,8 +1,22 @@
-// RPCs own the quota check and insert in one transaction. No fallback to a
-// client-side count: an absent migration or failed insert must stop spending.
-export async function reserveUsage(db, name, args) {
+import { isMissingSchema, logMigrationPending } from './migrationPending.mjs';
+
+// Prefer an atomic reservation. While its migration is pending, callers can
+// reserve in the old ledger; every other database error still stops spending.
+export async function reserveUsage(db, name, args, fallback) {
   if (!db) throw new Error('Usage storage unavailable');
-  const { data, error } = await db.rpc(name, args);
+  let result;
+  try {
+    result = await db.rpc(name, args);
+  } catch (error) {
+    if (!isMissingSchema(error)) throw error;
+    result = { error };
+  }
+  let { data, error } = result;
+  if (error && isMissingSchema(error) && fallback) {
+    logMigrationPending(name);
+    data = await fallback();
+    error = null;
+  }
   if (error || !data || typeof data.allowed !== 'boolean' ||
       !Number.isSafeInteger(data.used) || data.used < 0 || (data.allowed && !data.id)) {
     throw new Error(error?.message || 'Usage reservation failed');

@@ -114,7 +114,7 @@ test('ending during transcription waits for the accepted turn and cannot refund 
     synthesizeSpeech: async () => { sequence.push('tts'); return 'audio'; },
   };
   const turnSource = read('netlify/functions/speaking-turn.mjs');
-  assert.ok(turnSource.indexOf('await settleTurn(supabase, sessionToken, user_id, turnId, true)') < turnSource.indexOf("supabase.from('speaking_messages').insert(rows)"), 'delivery is fenced before readable messages are persisted');
+  assert.ok(turnSource.indexOf('await settleTurn(supabase, sessionToken, user_id, turnId, true, reservation.legacy)') < turnSource.indexOf("supabase.from('speaking_messages').insert(rows)"), 'delivery is fenced before readable messages are persisted');
   const source = stripImports(read('netlify/functions/speaking-turn.mjs')).replace('export const handler', 'const handler');
   const handler = new Function(...Object.keys(mocks), `${source}; return handler;`)(...Object.values(mocks));
   const event = { httpMethod: 'POST', headers, body: JSON.stringify({ sessionToken: token, audioBase64: 'audio' }) };

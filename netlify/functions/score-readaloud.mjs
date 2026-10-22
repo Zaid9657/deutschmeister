@@ -102,6 +102,18 @@ export const handler = async (event) => {
         p_user_id: user_id, p_stage: 'readaloud', p_limit: READALOUD_DAILY_LIMIT,
         p_level: level || 'a1.1', p_lektion_id: String(lektionId || ''),
         p_item_id: String(lineKey || ''), p_error_tag: null,
+      }, async () => {
+        const { data, error } = await supabase.from('lesson_attempts').insert({
+          user_id,
+          level: level || 'a1.1',
+          lektion_id: String(lektionId || ''),
+          item_id: String(lineKey || ''),
+          stage: 'readaloud',
+          correct: false,
+          error_tag: null,
+        }).select('id').single();
+        if (error) throw new Error(error.message || 'Usage insert failed');
+        return { allowed: true, id: data?.id, used };
       });
       used = reservation.used;
       if (!reservation.allowed) {

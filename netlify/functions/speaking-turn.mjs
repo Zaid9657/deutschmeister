@@ -150,7 +150,7 @@ export const handler = async (event) => {
         }
       }
     } catch (aiErr) {
-      await settleTurn(supabase, sessionToken, user_id, turnId, false);
+      await settleTurn(supabase, sessionToken, user_id, turnId, false, reservation.legacy);
       if (aiErr instanceof AIError) {
         return {
           statusCode: aiErr.status || 502,
@@ -161,9 +161,9 @@ export const handler = async (event) => {
       throw aiErr;
     }
 
-    // Commit delivery before persisting readable messages or returning audio.
-    // A late reply whose reservation expired cannot escape a refunded session.
-    await settleTurn(supabase, sessionToken, user_id, turnId, true);
+    // With the migration, delivery is fenced before returning audio. Legacy
+    // turns keep their original message-based settlement until SQL is applied.
+    await settleTurn(supabase, sessionToken, user_id, turnId, true, reservation.legacy);
 
     // 4. Persist both sides (as the old flow did). Best-effort — a save failure
     //    must not lose the turn the user already heard.

@@ -202,8 +202,8 @@ export const handler = async (event) => {
       if (!openingText) openingText = 'Hallo! Schön, dass du da bist. Erzähl mir ein bisschen von dir.';
       openingAudio = await synthesizeSpeech({ text: openingText });
     } catch (aiErr) {
-      // Transactional close-out keeps the reservation retryable if refunding
-      // fails. The stale sweep will retry without losing the wallet debit.
+      // With the migration, a failed refund remains retryable by the sweep.
+      // The fallback releases through the existing message-based close-out.
       await closeOutSession(supabase, { session_token: sessionToken, user_id });
       if (aiErr instanceof AIError) {
         return { statusCode: aiErr.status || 502, headers, body: JSON.stringify({ error: aiErr.message, stage: aiErr.stage }) };

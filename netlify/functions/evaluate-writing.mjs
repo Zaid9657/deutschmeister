@@ -432,6 +432,23 @@ export const handler = async (event) => {
         p_model: MODEL, p_limit: limit, p_since: since,
         p_course_prefix: courseAllowance ? courseTaskKeyPrefix(task_key) : null,
         p_revisions: REVISIONS_PER_TASK,
+      }, async () => {
+        // Until the reservation RPC is applied, use the checked legacy ledger
+        // and commit the placeholder before asking the provider for feedback.
+        const { data: saved, error } = await supabase.from('writing_submissions')
+          .insert({
+            user_id,
+            exam_key,
+            task_key,
+            exam_attempt_id: exam_attempt_id || null,
+            submission_text: text,
+            word_count: text.trim().split(/\s+/).length,
+            model: MODEL,
+          })
+          .select('id')
+          .single();
+        if (error || !saved?.id) throw new Error(error?.message || 'Writing usage could not be reserved');
+        return { allowed: true, id: saved.id, used, before, revision };
       });
       if (!reservation.allowed) {
         return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit_reached', used: reservation.used, limit, tier, scope: isCourse ? 'course' : 'exam' }) };
