@@ -97,9 +97,9 @@ const LevelTestResults = ({
     {
       name: 'Speaking',
       icon: Mic,
-      completed: speakingScore != null,
+      completed: speakingPercentage != null,
       score: speakingPercentage,
-      detail: speakingScore ? `${speakingPercentage}/100` : 'Skipped'
+      detail: speakingPercentage != null ? `${speakingPercentage}/100` : 'Skipped'
     }
   ];
 
@@ -271,7 +271,7 @@ const LevelTestResults = ({
       )}
 
       {/* Speaking Score (if taken) */}
-      {speakingScore && (
+      {speakingPercentage != null && (
         <Reveal delay={300} className="mt-8">
           <h2 className="flex items-center gap-2 font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">
             <Mic size={20} className="text-siegel" aria-hidden="true" />
@@ -384,7 +384,7 @@ const LevelTestResults = ({
             </Card>
           )}
 
-          {speakingScore && speakingPercentage < 70 && (
+          {speakingPercentage != null && speakingPercentage < 70 && (
             <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
               <span className="text-2xl" aria-hidden="true">🗣️</span>
               <span className="min-w-0">

@@ -15,8 +15,18 @@ test('course reminders extract lesson numbers without casting checkpoint ids', (
   assert.doesNotMatch(SQL, /regexp_replace\(lp\.lektion_id/);
 });
 
+test('course reminders reject malformed or oversized learner-controlled lesson numbers before casting', () => {
+  const extraction = SQL.match(/max\(substring\(lp\.lektion_id from '([^']+)'\)::int\)/);
+  assert.ok(extraction);
+  const pattern = new RegExp(extraction[1]);
+  for (const id of ['a1.1-l2147483648', 'a1.1-l' + '9'.repeat(300), 'a1.1-l1234', 'a1.1-l-1', 'a1.1-l1.5', 'a1.1-l', 'a1.1-cp1']) {
+    assert.equal(pattern.exec(id)?.[1] ?? null, null, id);
+  }
+  for (const nr of ['1', '12', '123']) assert.equal(pattern.exec(`a1.1-l${nr}`)?.[1], nr);
+});
+
 test('course reminders count only completed lessons and retain checkpoint activity', () => {
-  assert.match(SQL, /count\(\*\) FILTER\s*\(\s*WHERE lp\.status IN \('complete', 'gold'\) AND lp\.lektion_id ~ '-l\[0-9\]\+\$'\s*\)::int AS done_count/);
+  assert.match(SQL, /count\(\*\) FILTER\s*\(\s*WHERE lp\.status IN \('complete', 'gold'\) AND lp\.lektion_id ~ '-l\[0-9\]\{1,3\}\$'\s*\)::int AS done_count/);
   const progress = SQL.slice(SQL.indexOf('WITH prog AS ('), SQL.indexOf('att AS ('));
   assert.match(progress, /max\(lp\.updated_at\) AS last_progress_at/);
   const where = progress.slice(progress.indexOf('FROM public.lesson_progress lp'));

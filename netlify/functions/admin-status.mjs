@@ -44,7 +44,7 @@ export const handler = adminEndpoint({ capability: 'status.read' }, async ({ sup
   const since30 = new Date(nowMs - 30 * 86400000).toISOString();
   const sessions = await fetchAll(() => supabase.from('speaking_sessions').select('session_token, status, created_at').gte('created_at', since30));
   const tokens = sessions.map((s) => s.session_token).filter(Boolean);
-  const evals = tokens.length ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score').in('session_token', tokens)) : [];
+  const evals = tokens.length ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score').in('session_token', tokens).is('scores->>_pending', null).is('scores->>_failed', null)) : [];
   const cov = reconcileCoverage(sessions, evals);
   checks.push(cov.eligible > 0
     ? check('evaluation', 'Bewertungsabdeckung Sprechen (30 T)', { value: Number(cov.coverage.toFixed(3)), thresholdKey: 'evalCoverage', unit: 'Anteil', detail: `${cov.evaluatedSessions} von ${cov.eligible} abgeschlossenen Sitzungen bewertet`, action: { label: 'Fehlende Bewertungen öffnen', route: '/admin/usage?tab=quality' } })

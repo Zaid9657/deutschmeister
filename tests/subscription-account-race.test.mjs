@@ -4,12 +4,13 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { levelsForProduct } from '../src/data/pricing.js';
 import { isLevelFree } from '../src/config/freeTier.js';
+import { subscriptionStatus } from '../src/lib/subscriptionStatus.js';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 const withoutImports = (source) => source.replace(/^import[\s\S]*?;\n/gm, '');
 const statusChecks = vm.runInNewContext(
   withoutImports(read('../src/services/subscriptionService.js')).replace(/export const /g, 'const ') +
-  '\n({ checkTrialStatus, checkSubscriptionStatus });', { supabase: {}, console, Date },
+  '\n({ checkTrialStatus, checkSubscriptionStatus });', { supabase: {}, console, Date, subscriptionStatus },
 );
 const deferred = () => {
   let resolve;

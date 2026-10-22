@@ -8,6 +8,7 @@ const withoutImports = (src) => src.replace(/^import .*;\n/gm, '').replace(/\bex
 
 function endpoint({ deletionError = null, subs = [], env = {} } = {}) {
   const verified = [];
+  const selected = [];
   const deleted = [];
   const mails = [];
   const supabase = {
@@ -23,32 +24,50 @@ function endpoint({ deletionError = null, subs = [], env = {} } = {}) {
         deleteUser: async (...args) => { deleted.push(args); return { error: deletionError }; },
       },
     },
-    from: () => ({ select: () => ({ eq: async () => ({ data: subs, error: null }) }) }),
+    from: () => ({ select: (columns) => {
+      selected.push(columns);
+      return { eq: async () => ({ data: subs, error: null }) };
+    } }),
   };
   const fetch = async (url, init) => { mails.push({ url, body: JSON.parse(init.body) }); return { ok: true }; };
   const handler = vm.runInNewContext(`${withoutImports(read('netlify/functions/_shared/auth.mjs'))}
     ${withoutImports(read('netlify/functions/delete-account.mjs'))}; handler`, {
     supabase, fetch, process: { env }, console: { error() {} },
   });
-  return { handler, verified, deleted, mails };
+  return { handler, verified, deleted, mails, selected };
 }
 
 const POST = { httpMethod: 'POST', headers: { authorization: 'Bearer valid-jwt' }, body: '{}' };
 
 test('a recurring subscription that still charges blocks deletion with 409; a course or cancelled plan does not', async () => {
-  const live = endpoint({ subs: [{ status: 'active', plan_type: 'monthly', cancel_at_period_end: false }] });
+  const live = endpoint({ subs: [{ status: 'active', plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }] });
   const res = await live.handler(POST);
   assert.equal(res.statusCode, 409);
   assert.match(JSON.parse(res.body).error, /cancel your subscription/i);
   assert.equal(live.deleted.length, 0);
+  assert.match(live.selected[0], /lemonsqueezy_subscription_id/);
   for (const subs of [
-    [{ status: 'active', plan_type: 'course', cancel_at_period_end: false }],
-    [{ status: 'active', plan_type: 'monthly', cancel_at_period_end: true }],
-    [{ status: 'expired', plan_type: 'monthly', cancel_at_period_end: false }],
+    [{ status: 'active', plan_type: 'course', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }],
+    [{ status: 'active', plan_type: 'monthly', cancel_at_period_end: true, lemonsqueezy_subscription_id: 'sub-1' }],
+    [{ status: 'expired', plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }],
   ]) {
     const ok = endpoint({ subs });
     assert.equal((await ok.handler(POST)).statusCode, 200, JSON.stringify(subs));
     assert.equal(ok.deleted.length, 1);
+  }
+});
+
+test('complimentary plans without a real provider subscription never block deletion', async () => {
+  for (const status of ['active', 'on_trial', 'past_due', 'unpaid']) {
+    for (const providerId of [undefined, null, '', '   ']) {
+      const granted = endpoint({ subs: [{ status, plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: providerId }] });
+      assert.equal((await granted.handler(POST)).statusCode, 200, `${status}: ${String(providerId)}`);
+      assert.equal(granted.deleted.length, 1);
+      assert.equal(granted.mails.length, 0);
+    }
+    const charging = endpoint({ subs: [{ status, plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }] });
+    assert.equal((await charging.handler(POST)).statusCode, 409, status);
+    assert.equal(charging.deleted.length, 0);
   }
 });
 

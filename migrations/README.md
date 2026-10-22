@@ -83,7 +83,8 @@ status unverified” does not mean pending; verify the live schema/data first.
 
 | `2026-10-22-ai-usage-reservations.sql` | Atomic X-Ray, writing, explanation and read-aloud reservations; blocks learner deletion of metered lesson stages while retaining ordinary resets. Until applied these AI paths fail closed before provider work. | **not applied — owner applies** |
 | `2026-10-22-speaking-reservations.sql` | Atomic session allowance/wallet reservations, accepted turn tracking, and transactional close-out/refunds. Until applied speaking reservations and settlement fail closed. | **not applied — owner applies** |
-| `2026-10-22-course-reminder-checkpoints.sql` | Replaces `course_reminder_candidates`: counts/numbers only lesson IDs, retaining checkpoint activity. Until applied checkpoint completions can still halt reminders. | **not applied — owner applies** |
+| `2026-10-22-course-reminder-checkpoints.sql` | Replaces `course_reminder_candidates`: counts/numbers only lesson IDs with 1–3 digit suffixes, retaining checkpoint activity. Until applied checkpoint completions or oversized learner-controlled IDs can still halt reminders. | **not applied — owner applies** |
+| `2026-10-22-speaking-evaluation-reservations.sql` | Atomically reserves the daily speaking-evaluation allowance and claims each owned session before provider work; completed session retries return the stored result. Missing-RPC fallback reserves the old ledger and deduplicates a session, but cross-session quota concurrency still needs this RPC. | **not applied — owner applies** |
 
 Every file above marked ✅ records a change that is **already live** on project
 `omqyueddktqeyrrqvnyq`. They are idempotent, so re-running one is safe and is how you

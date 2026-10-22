@@ -18,7 +18,7 @@ function controlledService() {
   return { service, requests };
 }
 
-test('exam transitions, completion and unmount cancel a pending autosave', () => {
+test('exam transitions and completion cancel a pending autosave', () => {
   const writes = [];
   const timers = new Map();
   let timerId = 0;
@@ -26,7 +26,7 @@ test('exam transitions, completion and unmount cancel a pending autosave', () =>
     setTimer: callback => { timers.set(++timerId, callback); return timerId; },
     clearTimer: id => timers.delete(id),
   });
-  for (const _action of ['transition', 'completion', 'unmount']) {
+  for (const _action of ['transition', 'completion']) {
     autosave.schedule('attempt', { _meta: { sectionIndex: 0 } });
     autosave.cancel();
     for (const callback of timers.values()) callback();
@@ -35,13 +35,53 @@ test('exam transitions, completion and unmount cancel a pending autosave', () =>
   }
 
   const run = read('src/pages/Modelltest/ModelltestRun.jsx');
-  assert.match(run, /return \(\) => autosave\.cancel\(\);/);
   const finish = run.slice(run.indexOf('  const finish ='), run.indexOf('  const nextSection ='));
   const transition = run.slice(run.indexOf('  const nextSection ='), run.indexOf('  // Time up'));
   assert.match(finish, /cancelPendingSave\(\);/);
   assert.match(transition, /cancelPendingSave\(\);/);
   assert.ok(finish.indexOf('cancelPendingSave();') < finish.indexOf('await loadMissingListeningKeys('));
   assert.ok(transition.indexOf('cancelPendingSave();') < transition.indexOf('await advanceSection('));
+});
+
+test('ordinary exam unmount flushes the latest answers once through the ordered writer', async () => {
+  const { service, requests } = controlledService();
+  const timers = new Map();
+  let timerId = 0;
+  const autosave = createExamAutosave(service.saveAnswers, {
+    setTimer: callback => { timers.set(++timerId, callback); return timerId; },
+    clearTimer: id => timers.delete(id),
+  });
+  const earlier = service.saveAnswers('attempt', { answer: 'earlier' });
+  await settle();
+  autosave.schedule('attempt', { answer: 'draft' });
+  const answers = { answer: 'latest', _meta: { sectionIndex: 0 } };
+  autosave.schedule('attempt', answers);
+  const flushed = autosave.flush();
+  await autosave.flush();
+  assert.equal(timers.size, 0);
+  await settle();
+  assert.equal(requests.length, 1, 'the flush waits for the earlier in-flight save');
+  requests[0].resolve({ error: null });
+  await settle();
+  assert.equal(requests.length, 2);
+  assert.deepEqual(requests[1].values.answers, answers);
+  requests[1].resolve({ error: null });
+  await Promise.all([earlier, flushed]);
+  await settle();
+  assert.equal(requests.length, 2, 'repeated cleanup cannot replay the flushed snapshot');
+  const run = read('src/pages/Modelltest/ModelltestRun.jsx');
+  assert.match(run, /return \(\) => \{ autosave\.flush\(\); \};/);
+});
+
+test('cancelled exam snapshots cannot be flushed after a transition or completion', async () => {
+  const writes = [];
+  const autosave = createExamAutosave((...args) => writes.push(args), {
+    setTimer: () => 1, clearTimer: () => {},
+  });
+  autosave.schedule('attempt', { answer: 'stale' });
+  autosave.cancel();
+  await autosave.flush();
+  assert.deepEqual(writes, []);
 });
 
 test('an already-running exam autosave finishes before a newer section or completion write', async () => {

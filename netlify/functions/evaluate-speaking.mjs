@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
+import { reserveUsage } from './_shared/aiReservation.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -13,6 +14,20 @@ try {
   supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 } catch (e) {
   console.error('Failed to initialize Supabase client:', e.message);
+}
+
+function storedEvaluation(row) {
+  if (!row || row.scores?._pending) return null;
+  const evaluation = row.scores?._evaluation || {
+    scores: row.scores,
+    total_score: row.total_score ?? row.score,
+    feedback: row.feedback,
+    strengths: row.strengths,
+    improvements: row.improvements,
+    recommendation: row.recommendation,
+    passed: null,
+  };
+  return { ...evaluation, evaluation_id: row.id, saved: true };
 }
 
 function buildEvaluationPrompt(level, messages, passCriteria = null) {
@@ -178,21 +193,24 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
     }
 
-    // Per-user daily cap. Each evaluation is a large Sonnet call (and retries
-    // once on a malformed response), so an uncapped loop is the most expensive
-    // endpoint on the site.
-    const startOfDay = new Date();
-    startOfDay.setUTCHours(0, 0, 0, 0);
-    const { count: evaluationsToday } = await supabase
+    // A completed session is graded once, including when today's allowance
+    // has since been consumed. Pending reservations never start another call.
+    const { data: existingEvaluation, error: existingError } = await supabase
       .from('speaking_evaluations')
-      .select('id', { count: 'exact', head: true })
+      .select('*')
       .eq('user_id', user_id)
-      .gte('created_at', startOfDay.toISOString());
-    if ((evaluationsToday ?? 0) >= MAX_EVALUATIONS_PER_DAY) {
+      .eq('session_id', session_token)
+      .or('scores->>_failed.is.null,scores->>_failed.neq.true')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (existingError) throw new Error('Evaluation could not be loaded');
+    if (existingEvaluation && !existingEvaluation.scores?._failed) {
+      const evaluation = storedEvaluation(existingEvaluation);
       return {
-        statusCode: 429,
+        statusCode: evaluation ? 200 : 409,
         headers,
-        body: JSON.stringify({ error: 'limit_reached', limit: MAX_EVALUATIONS_PER_DAY }),
+        body: JSON.stringify(evaluation || { error: 'evaluation_in_progress' }),
       };
     }
 
@@ -256,27 +274,96 @@ export const handler = async (event) => {
       ? buildPlacementPrompt(transcript)
       : buildEvaluationPrompt(level, transcript, missionPassCriteria);
 
-    async function callClaude(prompt) {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'x-api-key': anthropicKey,
-          'anthropic-version': '2023-06-01',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1024,
-          messages: [{ role: 'user', content: prompt }],
-        }),
+    let evaluationId;
+    try {
+      const reservation = await reserveUsage(supabase, 'reserve_speaking_evaluation', {
+        p_user_id: user_id, p_session_token: session_token, p_level: level,
+        p_limit: MAX_EVALUATIONS_PER_DAY,
+      }, async () => {
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(0, 0, 0, 0);
+        const { count, error: countError } = await supabase
+          .from('speaking_evaluations')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user_id)
+          .gte('created_at', startOfDay.toISOString());
+        if (countError || !Number.isSafeInteger(count) || count < 0) throw new Error('Evaluation usage could not be checked');
+        if (count >= MAX_EVALUATIONS_PER_DAY) return { allowed: false, used: count };
+        // The existing session flag is a conditional claim even before the
+        // quota RPC is installed, so concurrent retries cannot grade it twice.
+        const { data: claimed, error: claimError } = await supabase
+          .from('speaking_sessions')
+          .update({ evaluated: true })
+          .eq('session_token', session_token)
+          .eq('user_id', user_id)
+          .or('evaluated.is.null,evaluated.eq.false')
+          .select('id')
+          .maybeSingle();
+        if (claimError) throw new Error('Evaluation session could not be claimed');
+        if (!claimed) {
+          const { data: existing, error } = await supabase.from('speaking_evaluations')
+            .select('*').eq('user_id', user_id).eq('session_id', session_token)
+            .or('scores->>_failed.is.null,scores->>_failed.neq.true')
+            .order('created_at', { ascending: false }).limit(1).maybeSingle();
+          if (error) throw new Error('Evaluation could not be loaded');
+          return existing && !existing.scores?._failed ? { allowed: true, used: count, id: existing.id, existing: true, evaluation: existing }
+            : { allowed: false, used: count, pending: true };
+        }
+        const { data: saved, error: insertError } = await supabase
+          .from('speaking_evaluations')
+          .insert({ user_id, session_id: session_token, session_token, level,
+            score: 0, total_score: null, scores: { _pending: true } })
+          .select('id')
+          .single();
+        if (insertError || !saved?.id) {
+          await supabase.from('speaking_sessions').update({ evaluated: false })
+            .eq('session_token', session_token).eq('user_id', user_id);
+          throw new Error(insertError?.message || 'Evaluation usage could not be reserved');
+        }
+        return { allowed: true, used: count, id: saved.id };
       });
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error('Claude API error:', res.status, errorText);
+      if (reservation.existing) {
+        const evaluation = storedEvaluation(reservation.evaluation);
+        return { statusCode: evaluation ? 200 : 409, headers,
+          body: JSON.stringify(evaluation || { error: 'evaluation_in_progress' }) };
+      }
+      if (!reservation.allowed) {
+        return { statusCode: reservation.pending ? 409 : 429, headers,
+          body: JSON.stringify(reservation.pending ? { error: 'evaluation_in_progress' }
+            : { error: 'limit_reached', limit: MAX_EVALUATIONS_PER_DAY }) };
+      }
+      evaluationId = reservation.id;
+    } catch (error) {
+      console.error('evaluate-speaking: reservation failed:', error.message);
+      return { statusCode: 503, headers, body: JSON.stringify({ error: 'Usage could not be reserved' }) };
+    }
+
+    async function callClaude(prompt) {
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': anthropicKey,
+            'anthropic-version': '2023-06-01',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 1024,
+            messages: [{ role: 'user', content: prompt }],
+          }),
+        });
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('Claude API error:', res.status, errorText);
+          return null;
+        }
+        const data = await res.json();
+        return data.content?.[0]?.text || '';
+      } catch (error) {
+        console.error('Claude API error:', error.message);
         return null;
       }
-      const data = await res.json();
-      return data.content?.[0]?.text || '';
     }
 
     function tryParseEvaluation(text) {
@@ -299,13 +386,23 @@ export const handler = async (event) => {
 
     if (!evaluation) {
       console.error('Evaluation JSON parse failed after retry');
+      const failed = {
+        evaluation_failed: true,
+        message: 'Auswertung konnte nicht erstellt werden.',
+      };
+      const { error } = await supabase.from('speaking_evaluations')
+        .update({ scores: { _failed: true } })
+        .eq('id', evaluationId).eq('user_id', user_id);
+      if (error) console.error('Error saving failed evaluation:', JSON.stringify(error));
+      else {
+        const { error: releaseError } = await supabase.from('speaking_sessions')
+          .update({ evaluated: false }).eq('session_token', session_token).eq('user_id', user_id);
+        if (releaseError) console.error('Error releasing failed evaluation:', JSON.stringify(releaseError));
+      }
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify({
-          evaluation_failed: true,
-          message: 'Auswertung konnte nicht erstellt werden, bitte versuche es erneut.',
-        }),
+        body: JSON.stringify({ ...failed, evaluation_id: evaluationId, saved: false }),
       };
     }
 
@@ -318,17 +415,13 @@ export const handler = async (event) => {
       evaluation.recommendation = 'GLEICH';
     }
 
-    // Save evaluation to Supabase.
+    // Save into the usage reservation rather than adding another daily row.
     // Table schema requires: session_id (NOT NULL) and score (NOT NULL).
     // session_id maps to the session_token string sent from the frontend.
     // score is the 0-100 total; individual breakdown goes in *_score columns.
     const { data: savedEval, error: saveError } = await supabase
       .from('speaking_evaluations')
-      .insert({
-        user_id,
-        session_id:           session_token,
-        session_token,
-        level,
+      .update({
         score:                evaluation.total_score ?? 0,
         total_score:          evaluation.total_score ?? 0,
         // DB column still named pronunciation_score; maps to intelligibility score
@@ -338,14 +431,15 @@ export const handler = async (event) => {
         vocabulary_score:     evaluation.scores?.vocabulary    ?? null,
         fluency_score:        evaluation.scores?.fluency       ?? null,
         comprehension_score:  evaluation.scores?.comprehension ?? null,
-        scores:               evaluation.scores,
+        scores:               { ...evaluation.scores, _evaluation: { ...evaluation, passed: missionSessionToken ? evaluation.passed === true : null } },
         feedback:             evaluation.feedback,
         strengths:            evaluation.strengths,
         improvements:         evaluation.improvements,
         recommendation:       evaluation.recommendation,
         message_count:        transcript.length,
-        created_at:           new Date().toISOString(),
       })
+      .eq('id', evaluationId)
+      .eq('user_id', user_id)
       .select()
       .single();
 

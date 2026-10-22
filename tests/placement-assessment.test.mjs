@@ -35,6 +35,35 @@ test('placement uses all selected questions in level and skill denominators', ()
   assert.equal(calculatePlacement({ answers: [], questions: [] }).sublevel, 'A1.1');
 });
 
+test('a valid zero speaking score demotes placement just like every other score below 50', () => {
+  const answers = questions.map(correctAnswer);
+  for (const speakingScore of [{ total_score: 0 }, { score: 0 }, { score: 0, total_score: 80 }, { score: null, total_score: 0 }, { score: NaN, total_score: 0 }, { total_score: 1 }, { total_score: 49 }]) {
+    const result = calculatePlacement({ answers, questions, speakingScore });
+    assert.equal(result.sublevel, 'B2.1', JSON.stringify(speakingScore));
+    assert.deepEqual(result.demotions, ['speaking']);
+  }
+  assert.equal(calculatePlacement({ answers, questions, speakingScore: { total_score: 0 } }).speakingPercentage, 0);
+  assert.equal(calculatePlacement({ answers, questions, speakingScore: { total_score: 50 } }).sublevel, 'B2.2');
+  const both = calculatePlacement({ answers, questions, listeningScore: 0, speakingScore: { total_score: 0 } });
+  assert.equal(both.sublevel, 'B1.2');
+  assert.deepEqual(both.demotions, ['listening', 'speaking']);
+});
+
+test('missing or invalid speaking evaluations do not count as a zero score', () => {
+  const answers = questions.map(correctAnswer);
+  for (const speakingScore of [undefined, null, {}, { total_score: null }, { total_score: '0' }, { total_score: NaN }, { total_score: -1 }, { total_score: 101 }]) {
+    const result = calculatePlacement({ answers, questions, speakingScore });
+    assert.equal(result.sublevel, 'B2.2');
+    assert.equal(result.speakingPercentage, null);
+    assert.deepEqual(result.demotions, []);
+  }
+  const result = read('src/components/LevelTest/LevelTestResults.jsx');
+  assert.match(result, /completed: speakingPercentage != null/);
+  assert.match(result, /\{speakingPercentage != null && \(/);
+  assert.match(result, /\{speakingPercentage != null && speakingPercentage < 70 && \(/);
+  assert.doesNotMatch(result, /\{speakingScore &&/);
+});
+
 test('displayed and persisted placement share the adjusted result across a band boundary', async () => {
   // 8/10 in B2 qualifies for B2.1, but not .2; weak listening moves it to B1.2.
   const answers = questions.filter(question => question.id !== 'B2-8' && question.id !== 'B2-9').map(correctAnswer);

@@ -1,4 +1,5 @@
 import { supabase } from '../utils/supabase';
+import { subscriptionStatus } from '../lib/subscriptionStatus.js';
 
 // Fetch the user's most relevant subscription row.
 // Keep cancelled and past_due rows visible; their last confirmed paid period
@@ -137,23 +138,4 @@ export const checkTrialStatus = (profile) => {
 // subscription_end is the last confirmed paid-through deadline. In past_due,
 // Lemon Squeezy's renews_at is a retry attempt, so it never extends this date.
 // Cancelled/paused/past_due retain that period, with no extra unpaid grace.
-export const checkSubscriptionStatus = (subscription) => {
-  if (!subscription || !subscription.subscription_end ||
-      !['active', 'on_trial', 'cancelled', 'past_due', 'paused'].includes(subscription.status)) {
-    return { isActive: false, expiresAt: null };
-  }
-
-  const endDate = new Date(subscription.subscription_end);
-  // Guard against an unparseable date — never crash, treat as no access.
-  if (Number.isNaN(endDate.getTime())) {
-    return { isActive: false, expiresAt: null };
-  }
-
-  const isActive = endDate > new Date();
-
-  return {
-    isActive,
-    expiresAt: subscription.subscription_end,
-    planType: subscription.plan_type,
-  };
-};
+export const checkSubscriptionStatus = subscriptionStatus;

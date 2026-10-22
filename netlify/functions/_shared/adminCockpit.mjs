@@ -157,7 +157,7 @@ export async function productGroup(supabase, w, level, sets) {
   const completed = speakingW.filter((s) => s.status === 'completed');
   const tokens = speakingW.map((s) => s.session_token).filter(Boolean);
   const evals = tokens.length
-    ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score, created_at').in('session_token', tokens))
+    ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score, created_at').in('session_token', tokens).is('scores->>_pending', null).is('scores->>_failed', null))
     : [];
   const coverage = reconcileCoverage(speakingW, evals);
   const grammarW = sets.grammarRows.filter((g) => inWindow(g.last_accessed || g.created_at, w.from, w.to));

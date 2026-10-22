@@ -187,7 +187,7 @@ const ModelltestRun = () => {
 
   useEffect(() => {
     const autosave = autosaveRef.current;
-    return () => autosave.cancel();
+    return () => { autosave.flush(); };
   }, [examSlug]);
 
   const registerListeningKey = useCallback((partKey, items) => {

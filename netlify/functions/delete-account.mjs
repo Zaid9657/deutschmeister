@@ -7,6 +7,7 @@ const CHARGING_STATUSES = ['active', 'on_trial', 'past_due', 'unpaid'];
 
 export function hasChargingSubscription(rows) {
   return (rows || []).some((s) => s.plan_type !== 'course'
+    && typeof s.lemonsqueezy_subscription_id === 'string' && s.lemonsqueezy_subscription_id.trim() !== ''
     && CHARGING_STATUSES.includes(s.status) && !s.cancel_at_period_end);
 }
 
@@ -67,7 +68,7 @@ export const handler = async (event) => {
     // read-only, so the learner cancels in the billing portal first.
     const { data: subs, error: subError } = await supabase
       .from('subscriptions')
-      .select('status, plan_type, cancel_at_period_end')
+      .select('status, plan_type, cancel_at_period_end, lemonsqueezy_subscription_id')
       .eq('user_id', userId);
     if (subError) throw subError;
     if (hasChargingSubscription(subs)) {

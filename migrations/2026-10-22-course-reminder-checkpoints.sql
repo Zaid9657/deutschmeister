@@ -1,4 +1,4 @@
--- Fix course reminders failing on completed checkpoint ids such as a1.1-cp1.
+-- Fix course reminders failing on checkpoint ids or oversized lesson numbers.
 -- Only numbered Lektionen contribute to completion counts and the next number;
 -- checkpoints still contribute to latest activity. Idempotent; owner applies.
 -- Verify: call course_reminder_candidates with complete '*-cp1' progress;
@@ -31,9 +31,9 @@ AS $$
       lower(lp.level) AS level,
       max(lp.updated_at) AS last_progress_at,
       count(*) FILTER (
-        WHERE lp.status IN ('complete', 'gold') AND lp.lektion_id ~ '-l[0-9]+$'
+        WHERE lp.status IN ('complete', 'gold') AND lp.lektion_id ~ '-l[0-9]{1,3}$'
       )::int AS done_count,
-      max(substring(lp.lektion_id from '-l([0-9]+)$')::int)
+      max(substring(lp.lektion_id from '-l([0-9]{1,3})$')::int)
         FILTER (WHERE lp.status IN ('complete', 'gold')) AS max_done_nr
     FROM public.lesson_progress lp
     WHERE lp.updated_at > now() - make_interval(days => p_window_days)
