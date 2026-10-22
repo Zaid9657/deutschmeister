@@ -43,9 +43,21 @@ half-level, inside Goethe's own guidance (A1 = 80–200 UE for the full level).
 | Half-level | The 12 Lektionen, in order | Grammar ceiling |
 |---|---|---|
 | **A1.1** | Begrüßung & Vorstellen & Alphabet · Angaben zur Person, Beruf, Zahlen · Familie & Sprachen · Einkaufen, Möbel, Preise · Gegenstände & Farben · Büro, Technik, Telefon · Freizeit & Hobbys · Verabredungen, Uhrzeit, Tagesablauf · Essen & Trinken, Einladung · Verkehrsmittel & Reisen · Gestern (Perfekt mit haben) · Feste & Vergangenes (Perfekt mit sein) | sein/haben; Präsens incl. Vokalwechsel; W-/Ja-Nein-Fragen; Artikel def/indef/neg; Plural; Akkusativ; mein/dein; können/möchten; trennbare Verben; Perfekt regelmäßig + sein |
-| **A1.2** | Wegbeschreibung · Wohnen & Wohnungsanzeigen · In der Stadt · Hotel, Termine, Reklamation · Pläne & Wünsche · Gesundheit, Körper, Arzt · Aussehen & Charakter · Haushalt · Regeln (Verkehr, Umwelt) · Kleidung & Vergleiche · Wetter · Feste & Feiern | Dativ (Präp., Verben, Pronomen); temporale Präp.; wollen/sollen/dürfen/müssen; Imperativ; war/hatte; Perfekt untrennbar; Komparation; denn; würde; Ordinalzahlen |
+| **A1.2** | Wegbeschreibung · Wohnen & Wohnungsanzeigen · In der Stadt · Hotel, Termine, Reklamation · Pläne & Wünsche · Gesundheit, Körper, Arzt · Aussehen & Charakter · Haushalt · Regeln (Verkehr, Umwelt) · Kleidung & Vergleiche · Wetter · Feste & Feiern | Dativ (Präp.; gefallen/passen/gehören + mir/dir/Ihnen); temporale Präp. (vor, seit, ab, von … bis); wollen/sollen/dürfen/müssen; Imperativ; war/hatte; Perfekt mit sein und Partizip ohne ge-; lieber/besser als Wörter; denn; „Ich würde gern …“ als Chunk; Ordinalzahlen — *decided 2026-10-16 (M7), see below* |
 | **A2.1** | Berufe & Familiengeschichte · Wohnen & Umzug · Tourismus & Landschaft · Lebensmittel & Einkaufen · Stadtbesichtigung · Kultur & Veranstaltungen · Sport & Fitness · Gesundheit & Unfall · Arbeitsleben · Restaurant · Ernährung · Schule & Ausbildung | Perfekt/Präteritum Wdh.; Wechselpräpositionen; Adjektivdeklination; Konjunktiv II könnte/sollte; weil/dass/wenn; Reflexiv; Wortbildung |
 | **A2.2** | Sprachen lernen · Post & Telekommunikation · Medien · Hotel & Reisen · Wetter & Klima · Kulturelle Veranstaltungen · Bücher & Presse · Ämter & Verwaltung · Mobilität & Verkehr · Ausbildung & Beruf · Arbeiten im Ausland · Online-Einkauf & Reklamation | Passiv Präsens; indirekte Fragen mit ob; Relativsatz; als/seit/bis; Präteritum Modalverben + starke Verben; Genitiv; Verben mit Dat+Akk |
+
+**The A1.2 ceiling, decided 2026-10-16 (DaF review M7, delegated by the owner).** The yardstick is the
+grammar inventory of the Goethe-Zertifikat A1: Start Deutsch 1 (Prüfungsziele/Testbeschreibung, 4th ed.
+2022, pp. 100–106), checked against a Codex research memo that read Schritte plus Neu, Menschen, Netzwerk
+neu and Studio 21. A1 lists the Präteritum of haben and sein (1st and 3rd person), denn, the dative with
+danken/gehören/helfen and „es geht mir“, the Perfekt of selected verbs (fahren, bleiben, passieren,
+verstehen among them) and the Konjunktiv II of werden — the last explicitly as a lexical unit, not a
+system. So A1.2 teaches war/hatte (L7), denn (L6), the dative of gefallen/passen/gehören (L10), vor +
+Zeit beside seit (L11), von … bis and ab (L9), the sein-Perfekt and participles without ge- (L12),
+„Ich würde gern …“ as a chunk (L5) and lieber/besser as words (L3). The general Komparation (teurer als,
+the Superlativ) and würde as a paradigm are not A1 and move to A2.1. `tests/a12-rebuild.test.mjs`
+pins each point to its Lektion, notice, input and practice.
 
 Mapping rule for every Lektion: (i) 3–5 Kann-Beschreibungen quoted from the Goethe Prüfungsziele
 (SD1 for A1, Goethe A2 for A2), (ii) its BAMF Handlungsfeld, (iii) the exam Teil it rehearses,

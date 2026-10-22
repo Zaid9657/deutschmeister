@@ -42,6 +42,7 @@ const PAIRS = [
   // scripts/sync-curricula.mjs after every change to it, or this fails.
   ['src/data/curricula/a11.js', 'astro-site/src/data/curricula/a11.js'],
   ['src/data/curricula/a12.js', 'astro-site/src/data/curricula/a12.js'],
+  ['src/data/curricula/a12.lesen.js', 'astro-site/src/data/curricula/a12.lesen.js'],
   ['src/data/curricula/a11.audio.js', 'astro-site/src/data/curricula/a11.audio.js'],
   ['src/data/curricula/index.js', 'astro-site/src/data/curricula/index.js'],
   ['src/data/curricula/constructions.js', 'astro-site/src/data/curricula/constructions.js'],

@@ -1,0 +1,233 @@
+{
+  "_doc": "Field-level corrections of A1.2 bank rows, applied last by scripts/build-lesson-pool.mjs (see a11.corrections.json). Each entry says why.",
+  "keepBankExplanationEn": {},
+  "items": {
+    "d12bc530-e164-55ab-a6be-8a5e51cb4a39": {
+      "explanationDe": "ihr-Imperativ: Kommt! Normalerweise ohne Pronomen; zur Betonung möglich: Kommt ihr!",
+      "explanationEn": "The ihr-imperative: Kommt! Normally without a pronoun; possible for emphasis: Kommt ihr!",
+      "reason": "Review #14: ihr can be emphatic, just like du. Accepted forms are expanded generically by task mode and requested person."
+    },
+    "f957e0b7-85cd-56c6-b645-14be566d80f7": {
+      "explanationDe": "ihr-Imperativ: Kommt! Normalerweise ohne Pronomen; zur Betonung möglich: Kommt ihr!",
+      "explanationEn": "The ihr-imperative: Kommt! Normally without a pronoun; possible for emphasis: Kommt ihr!",
+      "reason": "Review #14: ihr can be emphatic, just like du. Accepted forms are expanded generically by task mode and requested person."
+    },
+    "720fd50e-311c-49b2-8474-691d328d3cc4": {
+      "questionDe": "Ich ___ nach Hause gehen. (müssen)",
+      "questionEn": "I have to go home. (müssen)",
+      "explanationDe": "müssen = Notwendigkeit. Mit ich: ich muss.",
+      "explanationEn": "müssen = necessity. With ich the form is **muss**.",
+      "reason": "DaF review #3 (A1.2) BLOCKER 1: kann, soll, darf and muss all fit „Ich ___ nach Hause.\" and the prompt carried English („implied: gehen\"); the cue now names the verb."
+    },
+    "2ad09e18-9732-5d7a-9af3-e3abf270533f": {
+      "questionDe": "Ich ___ gestern krank. (sein, ich) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Fill in the past of sein for ich: I was sick yesterday.",
+      "explanationDe": "Präteritum: Bei sein sagt man meistens war: Ich war gestern krank.",
+      "explanationEn": "Requested simple past (Präteritum): With sein, German mostly uses **war** (was): Ich war gestern krank.",
+      "reason": "DaF review #4 (A1.2) MAJOR 5: „Für sein benutzt man war, nicht das Perfekt.“ is false as a rule of German (ist gewesen exists); the course practises the common form. Round 11: the cue check now reads every servable item (DaF review #10 found an English cue on a sibling the served-only check had missed); „Präteritum“ in the cue is a term the course never teaches — „gestern“ and the one-word gap already ask for war. Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "2750daba-c009-532c-8b99-be42586588ac": {
+      "questionDe": "Fragen Sie eine Freundin: Was hast du gestern ___? (machen, Perfekt)",
+      "questionEn": "Ask a friend, with the Partizip II: What did you do yesterday? (machen, Perfekt)",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "4f4d40d0-305d-4028-bc32-e8c944f25c1d": {
+      "questionDe": "Fragen Sie eine Freundin: ___ heißt du?",
+      "questionEn": "Ask a friend her name: ___ heißt du?",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech."
+    },
+    "3558a177-5f22-4700-9512-ff7dc3ac7d9d": {
+      "questionDe": "Fragen Sie eine Freundin: ___ wohnst du? — In Berlin.",
+      "questionEn": "Ask a friend where she lives: ___ wohnst du? — In Berlin.",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech. DaF review #8 B1: the meaning cue „(= Where?)\" was English and decided the answer; a German answer frame decides it now (Wann/Woher/Wohin do not fit „In Berlin.\")."
+    },
+    "cb094e7e-51c8-49e1-ac2e-60d1413cc7c5": {
+      "questionDe": "Fragen Sie eine Freundin: ___ lernst du Deutsch? — Ich möchte in Deutschland arbeiten.",
+      "questionEn": "Ask a friend why she is learning German: ___ lernst du Deutsch? — I would like to work in Germany.",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech. DaF review #10 B1: „(= Why?)\" was the English meaning cue of the sibling round 9 missed; a German answer that gives a reason decides the question word now, and Warum, Wieso and Weshalb are all accepted."
+    },
+    "f7aa6e9b-0c37-5874-b2b0-2e311896881a": {
+      "questionDe": "Ich bin ___ meiner Freundin. (bei + Dativ)",
+      "reason": "Round 11 (the cue check now reads every servable item, after review #10): „volle Form\" was a word the course never teaches, and it named nothing — no contraction exists before „meiner\"."
+    },
+    "475c7b01-7771-4219-8170-e9646e4dcff3": {
+      "questionDe": "Fragen Sie eine Freundin: ___ kommst du? — Am Montag.",
+      "questionEn": "Ask a friend when she is coming: ___ kommst du? — On Monday.",
+      "reason": "DaF review #4 (A1.2) minor (Register): a du printed bare reads as the course addressing the learner; the course speaks Sie, so the du is framed as partner speech. Round 11: the cue check now reads every servable item (DaF review #10 found an English cue on a sibling the served-only check had missed); „(= When?)“ was English; „— Am Montag.“ decides Wann among the printed options."
+    },
+    "9e49a70d-4e55-4e18-9c1a-3d8467c29c00": {
+      "options": [
+        "dreisig",
+        "dreizig",
+        "dreißig",
+        "dreizehn"
+      ],
+      "reason": "DaF review #5 (A1.2) MAJOR 9: „dreissig“ is the Swiss spelling of the key, not a wrong answer; a distractor the typed checker would accept as the key is replaced by a wrong number (13)."
+    },
+    "ba9eb248-a125-483e-a452-1883fe389de3": {
+      "questionDe": "___ kostet das? — Drei Euro.",
+      "questionEn": "___ kostet das? — Three euros.",
+      "options": [
+        "Wie viel",
+        "Wann",
+        "Wer",
+        "Wo"
+      ],
+      "reason": "DaF review #5 (A1.2) BLOCKER 1: „Was kostet das?“ is correct German, so a printed „Was“ beside the key „Wie viel“ made two options right; the distractor becomes „Wann“. Round 11: the cue check now reads every servable item (DaF review #10 found an English cue on a sibling the served-only check had missed); „(= How much?)“ was English; „— Drei Euro.“ decides Wie viel among the printed options."
+    },
+    "758bcf05-88c8-5d4a-a97a-6e9e5ca1a5ef": {
+      "accepted": [
+        "Wo",
+        "An welchem Ort"
+      ],
+      "reason": "DaF review #10 B1 (round 11): every question that fits the answer is accepted — from an independent annotation (tests/fixtures/a12-b1-alternatives.json)."
+    },
+    "ae1873de-5a3e-5e6a-b1f3-26622fe99392": {
+      "accepted": [
+        "Wohin",
+        "In welche Stadt"
+      ],
+      "reason": "DaF review #10 B1 (round 11): every question that fits the answer is accepted — from an independent annotation (tests/fixtures/a12-b1-alternatives.json)."
+    },
+    "b69cdbfe-c42a-5a65-9c7a-fbd09021f4ea": {
+      "accepted": [
+        "Wie viel",
+        "Was",
+        "Wie viel Geld",
+        "Wie viele Euro",
+        "Wie viel Euro"
+      ],
+      "reason": "DaF review #10 B1 (round 11): every question that fits the answer is accepted — from an independent annotation (tests/fixtures/a12-b1-alternatives.json)."
+    },
+    "0160ba9f-5d71-5714-afa5-c71d909fe22f": {
+      "accepted": [
+        "Welche",
+        "Was für"
+      ],
+      "reason": "DaF review #10 B1 (round 11): every question that fits the answer is accepted — from an independent annotation (tests/fixtures/a12-b1-alternatives.json)."
+    },
+    "2662013f-bb4f-53f8-8fdc-606b5bc1841a": {
+      "accepted": [
+        "Wer",
+        "Welche Person"
+      ],
+      "reason": "DaF review #10 B1 (round 11): every question that fits the answer is accepted — from an independent annotation (tests/fixtures/a12-b1-alternatives.json)."
+    },
+    "fbdca573-c715-59fb-bc45-d93d44186dd5": {
+      "accepted": [
+        "vier Euro zwanzig",
+        "vier Euro zwanzig Cent",
+        "vier Euro und zwanzig Cent",
+        "vier zwanzig"
+      ],
+      "explanationDe": "Preise sagt man meistens so: zuerst Euro, dann Cent: vier Euro zwanzig. Auch richtig: vier Euro und zwanzig Cent, oder kurz: vier zwanzig.",
+      "explanationEn": "Prices are usually said euros first, then cents: vier Euro zwanzig. Also correct: vier Euro und zwanzig Cent, or short: vier zwanzig.",
+      "reason": "Round 11: the item became servable once A1.2 stopped counting accepted alternatives as lexis (DaF review #10, B1). Its explanation called „und\" wrong and the answer set refused the common forms; both are correct German."
+    },
+    "c8ba2936-e494-510a-b33e-75feca9f2678": {
+      "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / einen / Onkel / haben] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: I have an uncle. (accusative direct object, indefinite article)",
+      "explanationDe": "Präsens: Onkel ist maskulin und direktes Objekt von haben, deshalb wird ein zu einen.",
+      "explanationEn": "Requested present tense (Präsens): Onkel is masculine and the direct object of haben, so ein becomes einen.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "20fdea30-db58-5380-b2e5-c2a3eff7f6c7": {
+      "questionDe": "Schreiben Sie den Satz: [heute / meine Mutter / kochen / das Essen] (Beginnen Sie mit „Heute“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: Today my mother is cooking the food. (time-first inversion)",
+      "explanationDe": "Präsens: Heute steht auf Position 1, deshalb rückt kocht auf Position 2, dann das Subjekt.",
+      "explanationEn": "Requested present tense (Präsens): Heute is in position 1, so kocht moves to position 2 and the subject follows.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "5223d628-e272-56f3-888a-d9ac6d33fe18": {
+      "questionDe": "Am Freitag ___ meine Eltern nicht zu Hause. (sein) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). On Friday my parents are not home. (time-first inversion, verb sein, plural)",
+      "explanationDe": "Präsens: Am Freitag steht auf Position 1, deshalb rückt sind (Pluralform von sein) auf Position 2.",
+      "explanationEn": "Requested present tense (Präsens): Am Freitag is position 1, so sind (the plural form of sein) moves to position 2.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "8b2e5c13-dce3-5540-a8dc-6e37a389d300": {
+      "questionDe": "Schreiben Sie den Satz: [ich / arbeiten / bei / die Bank] (mit bestimmtem Artikel) (Beginnen Sie mit „Ich“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank]",
+      "explanationDe": "Präsens: bei + Dativ nennt einen Arbeitgeber: die Bank → der Bank.",
+      "explanationEn": "Requested present tense (Präsens): bei + Dativ names an employer: die Bank → der Bank.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "b484df20-10dc-5a1d-ab9e-68374c0fce16": {
+      "questionDe": "Schreiben Sie den Satz: [das Buch / sein / von / meine Mutter] (Beginnen Sie mit „Das Buch“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter]",
+      "explanationDe": "Präsens: von + Dativ: meine Mutter → meiner Mutter.",
+      "explanationEn": "Requested present tense (Präsens): von + Dativ: meine Mutter → meiner Mutter (feminine).",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "0aae594f-f849-5da0-a289-2aafc08052ba": {
+      "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kein / Computer / haben] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen)",
+      "explanationDe": "Präsens: Computer ist maskulin, deshalb muss das gegebene kein im Akkusativ zu keinen werden.",
+      "explanationEn": "Requested present tense (Präsens): Computer is masculine, so the given kein must be inflected to keinen in the accusative.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "e2bd9783-ab59-5017-87b9-74872bf836c4": {
+      "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / keine / Zeit / haben] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: We have no time. (kein + feminine noun, wir-form of haben)",
+      "explanationDe": "Präsens: Zeit ist feminin, deshalb wird kein zu keine.",
+      "explanationEn": "Requested present tense (Präsens): Zeit is feminine, so kein becomes keine.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "1b0e08fd-2629-52c8-881a-287913fb41a7": {
+      "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“; „nicht“ steht am Satzende) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: We are not buying the car. (nicht after a definite direct object)",
+      "explanationDe": "Präsens: Das bestimmte Objekt (das Auto) steht vor nicht; nicht bleibt am Satzende.",
+      "explanationEn": "Requested present tense (Präsens): nicht negates the whole action and goes after the definite object das Auto, at the end.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "d2d9655f-6089-5f12-a81b-aabc0ea911ae": {
+      "questionDe": "Schreiben Sie den Satz: [der Lehrer / heute / krank / sein] (Beginnen Sie mit „Der Lehrer“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein)",
+      "explanationDe": "Präsens: Der erste Teil des Hinweises, der Lehrer, steht auf Position 1, bleibt Nominativ, dann ist.",
+      "explanationEn": "Requested present tense (Präsens): The cue's first element, der Lehrer, is position 1, so it stays nominative and ist follows.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "18fdc9ae-c2b8-5aa4-83cf-c9e11fe8edf5": {
+      "questionDe": "Schreiben Sie den Satz: [ich / kaufen / ein Geschenk / für / meine Mutter] (Beginnen Sie mit „Ich“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change)",
+      "explanationDe": "Präsens: für verlangt immer Akkusativ; Mutter ist feminin, deshalb bleibt meine gleich (keine Änderung).",
+      "explanationEn": "Requested present tense (Präsens): für always triggers accusative; Mutter is feminine, so meine stays meine (no change).",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "91763b6e-9511-54a0-b044-ff13b01990ac": {
+      "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative)",
+      "explanationDe": "Präsens: ohne verlangt immer Akkusativ; Bruder ist maskulin, deshalb muss das gegebene mein zu meinen werden.",
+      "explanationEn": "Requested present tense (Präsens): ohne always triggers accusative; Bruder is masculine, so the given mein must become meinen.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "97cb2bd7-3f5d-586f-bee1-032808437aab": {
+      "questionDe": "Schreiben Sie die Frage: [wie viele / Kinder / du / haben] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order)",
+      "explanationDe": "Präsens: Der Hinweis stellt wie viele Kinder an erste Stelle, deshalb ist hast (Verb) auf Position 2, dann du.",
+      "explanationEn": "Requested present tense (Präsens): The cue puts wie viele Kinder first, so hast (verb) is position 2 and du follows.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "9ffacea3-144f-5ec1-8d5a-4a89c5e0aec9": {
+      "questionDe": "Schreiben Sie den Satz: [er / mit dem Zug / fahren] (Beginnen Sie mit „Er“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: He goes by train. (subject: er)",
+      "explanationDe": "Präsens: fahren wechselt a→ä bei er: fährt.",
+      "explanationEn": "Requested present tense (Präsens): fahren changes a→ä for er: fährt.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "686d81f5-816b-53fc-b84e-2ea6c5aa237a": {
+      "questionDe": "Schreiben Sie den Satz: [Fußball / wir / am Wochenende / spielen] (Beginnen Sie mit „Fußball“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis)",
+      "explanationDe": "Präsens: Der Hinweis stellt Fußball zur Betonung an erste Stelle, deshalb rückt spielen auf Position 2, dann wir.",
+      "explanationEn": "Requested present tense (Präsens): The cue puts Fußball first for emphasis, so spielen moves to position 2 and wir follows.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    },
+    "ee2c444a-6f1f-5166-85e7-a801dbcd5590": {
+      "questionDe": "Schreiben Sie den Satz: [ich / wohnen / bei / meine Eltern] (Beginnen Sie mit „Ich“) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern]",
+      "explanationDe": "Präsens: bei + Dativ Plural: meine Eltern → meinen Eltern.",
+      "explanationEn": "Requested present tense (Präsens): bei + Dativ Plural: meine Eltern → meinen Eltern.",
+      "reason": "Round 16 M15-2: German tense selector before answering; also unambiguous when reused after the competing tense is taught."
+    }
+  }
+}

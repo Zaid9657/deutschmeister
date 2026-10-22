@@ -45,7 +45,10 @@ export const EVENTS = {
   email_verified: { when: 'The verify-email screen sees the address confirmed.', once: true },
   onboarding_completed: { when: 'The onboarding slides are finished or left.', once: true },
   lesson_started: { when: 'A course Lektion is opened in the lesson player.', once: false },
-  lesson_completed: { when: 'A course Lektion reaches its recap.', once: false },
+  lesson_completed: {
+    when: 'A course Lektion reaches its recap (practice_pct = first-try practice score; listening, speaking, writing = what the run measured, as the recap states it).',
+    once: false,
+  },
   lesson_first_sentence: { when: 'In the model-first pretest of Lektion 1, the learner writes their own introduction with the model hidden (hit = it was an introduction).', once: false },
   lesson_resumed: { when: 'The lesson player reopens a saved, unfinished run of a Lektion (same run_id as its lesson_started).', once: false },
   lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key).', once: false },
@@ -80,6 +83,8 @@ export const ALLOWED_PROPS = [
   'topic', // grammar/lesson slug
   'run_id', // one lesson-player run (runState.js): joins start, stages and completion — random, never personal
   'signed_in', // boolean
+  'practice_pct', // lesson_completed: first-try practice score, 0–100
+  'listening', 'speaking', 'writing', // lesson_completed: skillStatus.js states (heard, recognised, assessed, skipped …)
   'entry_page', // first path of this page view
   'channel', // a SOCIAL_LINKS key: youtube | instagram | facebook
   'dm_source', 'dm_medium', 'dm_campaign', // first-touch attribution labels (public/attribution.js)

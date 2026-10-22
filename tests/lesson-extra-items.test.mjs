@@ -845,10 +845,34 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // a lesson (buildCheckpoint lessonSeenIds), which reseats Bausteine and Schreiben: three more
     // frontable sentences are drawn. Every one is asserted above to accept both orders — the set
     // grew, nothing stopped accepting anything. RE-MEASURED.
-    'a1.1-cp1-schreiben-1',
-    'a1.1-cp2-bausteine-6',
-    'a1.1-cp3-schreiben-2',
-    'a1.1-cp4-schreiben-2',
+    // 2026-10-15 (A1.2 DaF review #3): two builder changes reseat these papers. MAJOR 2 gave the
+    // Lesen reports a Vorfeld engine, and it reaches A1.1 too („Am Wochenende arbeitet Lena
+    // nicht.", „Heute lernt Tim Deutsch." — four new reports, all governed by the Lesen rules of
+    // tests/checkpoint.test.mjs), so the paper-wide leak cap moves checkpoint 3's frontable item
+    // from seat 2 to seat 1 and checkpoint 4 draws „Kommst du am Samstag mit?" (no Angabe).
+    // MAJOR 3 then made each checkpoint leave out every paper an earlier one can serve; the
+    // larger exclusion reshuffles checkpoint 2's Bausteine, and seat 6 now asks for `du`.
+    // The count falls from 4 to 2 because fewer frontable sentences are DRAWN; every one that is
+    // drawn is asserted above, and the pool-wide loop still demands both orders of all of them.
+    // RE-MEASURED, not relaxed.
+    // 2026-10-17 (A1.2 DaF review #5, MAJOR 8): the Lesen falsifier contradicts instead of
+    // swapping and draws its Falsch items first, and a retake now prefers what the earlier papers
+    // of its window left — which reseats checkpoints 2–4 through the cross-checkpoint exclusion.
+    // Five frontable sentences are drawn instead of two; every one is asserted above to accept
+    // both orders. RE-MEASURED.
+    // 2026-10-17 (A1.2 DaF review #6): the Lesen section is chosen as one unit, and the Schreiben
+    // drills are drawn before the Sprachbausteine (the scarcer draw first, which is what brought
+    // the transfer ratchet back to 1 / 1 / 1 / 0). Checkpoint 3's and 4's drills now come from
+    // other Lektionen, and checkpoint 4's Bausteine draw a frontable sentence at seat 2. Four are
+    // drawn; every one is asserted above to accept both orders. RE-MEASURED, not relaxed.
+    // 2026-10-17 (A1.2 DaF review #7): the checkpoint draw now strips the same task formulas as the
+    // validator (one list, src/lib/checkpoint/lexis.js — the copy had drifted), the earlier-chapter
+    // interleave visits topics with unanswered items first, and Hören leaves the lines Lesen needs.
+    // The seats move; three frontable sentences are drawn, each asserted above to accept both orders.
+    // RE-MEASURED, not relaxed.
+    'a1.1-cp1-schreiben-2',
+    'a1.1-cp3-bausteine-4',
+    'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

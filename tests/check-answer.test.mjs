@@ -9,8 +9,9 @@
 // ONE retry, while an article or an ending is never a typo.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
-  checkAnswer, tagError, isCaseTask, isDictationTask, checkOptionsFor,
+  checkAnswer, tagError, isCaseTask, isDictationTask, checkOptionsFor, isChoiceItem,
   normalizeSpelling, spellingApplies, STRICT_TOPIC,
   RESULT, ERROR_TAGS,
 } from '../src/lib/lesson/check.js';
@@ -222,6 +223,7 @@ test('checkOptionsFor derives every option from the item alone', () => {
     caseSensitive: true,
     dictation: false,
     spelling: false,
+    choice: false,
   });
 
   const spelledItem = { topic: 'alphabet-pronunciation', accepted: ['H-A-L-L-O'] };
@@ -271,6 +273,7 @@ test('checkOptionsFor is safe for the three derived item types', () => {
     caseSensitive: false,
     dictation: false,
     spelling: false,
+    choice: false,
   });
 
   const wordOrderItem = { type: 'word_order', topic: 'verb-sein', answer: 'Ich bin Ana.', accepted: ['Ich bin Ana.'] };
@@ -302,4 +305,56 @@ test('word_order grades a rebuilt sentence through checkAnswer, punctuation and 
   const opts = checkOptionsFor(item);
   assert.equal(checkAnswer('Ich bin Ana', item.accepted, opts).result, RESULT.CORRECT, 'a missing final period is still correct');
   assert.equal(checkAnswer('Ana bin ich.', item.accepted, opts).result, RESULT.WRONG, 'the wrong order is wrong');
+});
+
+// --- DaF review #5 (A1.2) MAJOR 9: a picked option is a choice, not a typo ---------------------
+
+test('a picked option is right or wrong as printed: no typo credit, no spelling fold', () => {
+  // Measured 2026-10-15: the shared one-typo allowance scored 20 printed distractors as correct, 10 in
+  // each pool — „sechszehn", „dreisig", „siebezehn" in A1.2, „lernt", „spielst", „heißst" in A1.1 —
+  // and „dreissig" next to the key „dreißig" scored CORRECT through the ß fold.
+  const item = { type: 'multiple_choice', topic: 'numbers-counting', options: ['sechzig', 'sechszehn', 'sechzehn'], answer: 'sechzehn', accepted: ['sechzehn'] };
+  assert.equal(isChoiceItem(item), true);
+  assert.equal(checkAnswer('sechszehn', item.accepted, checkOptionsFor(item)).result, RESULT.WRONG);
+  assert.equal(checkAnswer('sechzehn', item.accepted, checkOptionsFor(item)).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('dreissig', ['dreißig'], { choice: true }).result, RESULT.WRONG, 'a printed variant is a distractor');
+  // The checkpoint says it with mode; a typed item, a word-order item and a review card stay typed.
+  assert.equal(isChoiceItem({ ...item, mode: 'options' }), true);
+  assert.equal(isChoiceItem({ ...item, mode: 'typed' }), false);
+  assert.equal(isChoiceItem({ type: 'word_order', tokens: ['Ich', 'bin', 'Ana.'] }), false);
+  assert.equal(isChoiceItem({ topic: 'pattern:numbers', accepted: ['sechzehn'] }), false);
+  assert.equal(isChoiceItem({ type: 'listen_select', options: ['Ich bin Ana.', 'Ich bin Tim.'], answer: 'Ich bin Ana.' }), true, 'a picked dialogue line is a choice');
+  assert.equal(checkAnswer('sechzhn', ['sechzehn'], checkOptionsFor({ type: 'fill_blank', topic: 'numbers-counting', answer: 'sechzehn' })).result, RESULT.TYPO, 'typing keeps its one slip');
+  // The polite capital stays the point when it is picked.
+  assert.equal(checkAnswer('sie', ['Sie'], { choice: true, caseSensitive: true }).result, RESULT.WRONG);
+});
+
+test('every printed option of every choice item, in both pools, scores exactly as its key says', () => {
+  let options = 0;
+  for (const file of ['a11', 'a12']) {
+    const pool = JSON.parse(readFileSync(new URL(`../src/data/lessonPools/${file}.json`, import.meta.url), 'utf8'));
+    for (const it of pool.items.filter(isChoiceItem)) {
+      const accepted = it.accepted && it.accepted.length ? it.accepted : [it.answer];
+      for (const o of it.options) {
+        options += 1;
+        const key = accepted.includes(o);
+        assert.equal(checkAnswer(o, accepted, checkOptionsFor(it)).result === RESULT.CORRECT, key, `${file} ${it.id}: picked „${o}"`);
+        // A distractor the typed checker would take for the key is no distractor („dreissig").
+        if (!key) assert.notEqual(checkAnswer(o, accepted, { ...checkOptionsFor(it), choice: false }).result, RESULT.CORRECT, `${file} ${it.id}: „${o}" spells the key`);
+      }
+    }
+  }
+  assert.ok(options > 300, `the rule reads the printed options it was written for (${options})`);
+});
+
+test('typed: another ending of the same stem is grammar, never a typo (standard §3)', () => {
+  // The last-letter test let „lernt" for „lernst" through as a typo: both end in t.
+  for (const [given, key] of [['lernt', 'lernst'], ['arbeitst', 'arbeitest'], ['heißst', 'heißt'], ['spielst', 'spielt'], ['macht', 'machst']]) {
+    assert.equal(checkAnswer(given, [key]).result, RESULT.WRONG, `${given} for ${key}`);
+    assert.equal(checkAnswer(`Du ${given} viel.`, [`Du ${key} viel.`]).result, RESULT.WRONG, `${given} for ${key} in a sentence`);
+  }
+  // A slip that only looks like an ending stays a slip.
+  for (const [given, key] of [['Kaffe', 'Kaffee'], ['Vornae', 'Vorname'], ['Telefonummer', 'Telefonnummer'], ['lrnst', 'lernst']]) {
+    assert.equal(checkAnswer(given, [key]).result, RESULT.TYPO, `${given} for ${key}`);
+  }
 });

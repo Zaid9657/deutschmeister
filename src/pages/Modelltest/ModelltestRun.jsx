@@ -8,7 +8,7 @@ import {
   findResumableAttempt,
   loadAttempt,
   saveAnswers,
-  advanceSectionDeadline,
+  advanceSection,
   completeAttempt,
 } from '../../services/examService';
 import { scoreObjectiveSections, mergeListeningResult, scoreListeningAnswers } from '../../services/examScoring';
@@ -49,7 +49,11 @@ const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:tex
 
 function MockListeningPart({ part, answers, onAnswer, registerKey }) {
   const { exercise, questions: allQuestions, loading } = useExerciseDetails(part.level, String(part.exerciseNumber));
-  const [plays, setPlays] = useState(0);
+  // Plays live in the saved answers (`_plays`), so a reload cannot hand out fresh ones, and a play
+  // counts only once the audio has actually started (Codex rescore, 2026-10-15: a blocked or
+  // missing file used to spend both plays).
+  const plays = answers._plays?.[part.key] ?? 0;
+  const [playFailed, setPlayFailed] = useState(false);
   const audioRef = useRef(null);
 
   // The hook returns EVERY question of the exercise (23 per A1 exercise since
@@ -90,11 +94,17 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
       <Card tone="sunk" className="flex flex-wrap items-center gap-3 px-4 py-3">
         <Button
           size="sm"
-          onClick={() => {
+          onClick={async () => {
             if (!canPlay || !audioRef.current) return;
             audioRef.current.currentTime = 0;
-            audioRef.current.play();
-            setPlays((p) => p + 1);
+            try {
+              await audioRef.current.play();
+            } catch {
+              setPlayFailed(true);
+              return;
+            }
+            setPlayFailed(false);
+            onAnswer('_plays', { ...(answers._plays || {}), [part.key]: plays + 1 });
           }}
           disabled={!canPlay}
         >
@@ -106,6 +116,11 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
             : 'Keine Wiedergabe mehr — beantworte die Fragen'}
         </span>
         <audio ref={audioRef} src={audioUrl} preload="none" />
+        {playFailed && (
+          <p role="alert" className="w-full text-[0.8125rem] font-bold text-accent-aprikose-ink">
+            Die Wiedergabe ist nicht gestartet. Bitte erneut versuchen — dieser Versuch zählt nicht.
+          </p>
+        )}
       </Card>
       {questions.map((q) => {
         const qid = q.id || q.question_number;
@@ -158,6 +173,7 @@ const ModelltestRun = () => {
   const [loading, setLoading] = useState(true);
   const [finishing, setFinishing] = useState(false);
   const [finishError, setFinishError] = useState(null);
+  const [sectionError, setSectionError] = useState(null);
   const listeningKeysRef = useRef({});
   const saveTimerRef = useRef(null);
 
@@ -228,8 +244,17 @@ const ModelltestRun = () => {
     }
   };
 
+  // A pending autosave carries the answers with the section index of the moment it was scheduled;
+  // firing after a section change it put the saved attempt back a section (Codex rescore,
+  // 2026-10-15). Every transition writes the answers itself, so the pending one is cancelled.
+  const cancelPendingSave = () => {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = null;
+  };
+
   const finish = useCallback(async () => {
     if (!attempt || finishing) return;
+    cancelPendingSave();
     if (!frozenRef.current) frozenRef.current = answers;
     const snapshot = frozenRef.current;
     setFinishing(true);
@@ -266,13 +291,20 @@ const ModelltestRun = () => {
       finish();
       return;
     }
+    cancelPendingSave();
     const nextIdx = sectionIndex + 1;
     const nextAnswers = { ...answers, _meta: { sectionIndex: nextIdx } };
+    // The screen moves on only once the attempt has: a failed write used to advance it anyway, and a
+    // reload then reopened the old section (Codex rescore, 2026-10-15).
+    const newDeadline = await advanceSection(attempt.id, nextAnswers, mock.sections[nextIdx].minutes);
+    if (!newDeadline) {
+      setSectionError('Der nächste Teil konnte nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut — Ihre Antworten bleiben erhalten.');
+      return;
+    }
+    setSectionError(null);
     setAnswers(nextAnswers);
-    await saveAnswers(attempt.id, nextAnswers);
-    const newDeadline = await advanceSectionDeadline(attempt.id, mock.sections[nextIdx].minutes);
     setSectionIndex(nextIdx);
-    setDeadline(newDeadline ? new Date(newDeadline).getTime() : Date.now() + mock.sections[nextIdx].minutes * 60000);
+    setDeadline(new Date(newDeadline).getTime());
     window.scrollTo({ top: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt, isLast, sectionIndex, answers, finish]);
@@ -470,7 +502,7 @@ const ModelltestRun = () => {
           ))}
         </div>
 
-        {finishError && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError}</p>}
+        {(finishError || sectionError) && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError || sectionError}</p>}
         <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing}>
           {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
           <ChevronRight className="w-4 h-4" />

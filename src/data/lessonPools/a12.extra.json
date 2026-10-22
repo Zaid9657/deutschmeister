@@ -10,15 +10,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 1,
-      "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus]",
-      "questionEn": "Build the sentence about the way.",
+      "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the way.",
       "options": null,
       "answer": "Zuerst gehen Sie geradeaus.",
       "accepted": [
         "Zuerst gehen Sie geradeaus.",
         "Zuerst gehen Sie geradeaus"
       ],
-      "explanationDe": "Steht zuerst vorn, kommt das Verb auf Position 2.",
+      "explanationDe": "Präsens: Steht zuerst vorn, kommt das Verb auf Position 2.",
       "hint": null
     },
     {
@@ -28,15 +28,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 2,
-      "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links]",
-      "questionEn": "Build the sentence about the corner.",
+      "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the corner.",
       "options": null,
       "answer": "Dann gehen Sie an der Ecke links.",
       "accepted": [
         "Dann gehen Sie an der Ecke links.",
         "Dann gehen Sie an der Ecke links"
       ],
-      "explanationDe": "Nach dann steht das Verb, danach das Subjekt Sie.",
+      "explanationDe": "Präsens: Nach dann steht das Verb, danach das Subjekt Sie.",
       "hint": null
     },
     {
@@ -82,15 +82,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 5,
-      "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus]",
-      "questionEn": "Build the question about the town hall.",
+      "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the town hall.",
       "options": null,
       "answer": "Wie komme ich zum Rathaus?",
       "accepted": [
         "Wie komme ich zum Rathaus?",
         "Wie komme ich zum Rathaus"
       ],
-      "explanationDe": "In der W-Frage steht das Verb auf Position 2.",
+      "explanationDe": "Präsens: In der W-Frage steht das Verb auf Position 2.",
       "hint": null
     },
     {
@@ -100,15 +100,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle]",
-      "questionEn": "Build the question about the stop.",
+      "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the stop.",
       "options": null,
       "answer": "Wo ist die Haltestelle?",
       "accepted": [
         "Wo ist die Haltestelle?",
         "Wo ist die Haltestelle"
       ],
-      "explanationDe": "Nach wo folgt das Verb ist, dann das Subjekt.",
+      "explanationDe": "Präsens: Nach wo folgt das Verb ist, dann das Subjekt.",
       "hint": null
     },
     {
@@ -118,15 +118,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie den Satz: [am Platz / sein / die Haltestelle]",
-      "questionEn": "Build the sentence about the square.",
+      "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the square.",
       "options": null,
       "answer": "Am Platz ist die Haltestelle.",
       "accepted": [
         "Am Platz ist die Haltestelle.",
         "Am Platz ist die Haltestelle"
       ],
-      "explanationDe": "Die Angabe am Platz steht vorn, das Verb auf Position 2.",
+      "explanationDe": "Präsens: Die Angabe am Platz steht vorn, das Verb auf Position 2.",
       "hint": null
     },
     {
@@ -297,14 +297,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 8,
-      "questionDe": "Die Wohnung ist im 3. Stockwerk. Ergänzen Sie: Die Küche ist auch im ___ Stockwerk.",
-      "questionEn": "The flat is on the third floor.",
+      "questionDe": "Die Wohnung ist im 3. Stockwerk. Ergänzen Sie: Das ___ Stockwerk ist frei.",
+      "questionEn": "The flat is on the 3rd floor. The third floor is free.",
       "options": null,
-      "answer": "dritten",
+      "answer": "dritte",
       "accepted": [
-        "dritten"
+        "dritte"
       ],
-      "explanationDe": "Die Ordnungszahl bekommt die Endung: im dritten Stockwerk.",
+      "explanationDe": "Die 3. heißt dritte: das dritte Stockwerk.",
       "hint": null
     },
     {
@@ -322,6 +322,43 @@
         "erste"
       ],
       "explanationDe": "Die Ordnungszahl zu eins heißt erste.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l02-11",
+      "topic": "numbers-counting",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie die Ordnungszahl: Die Nachbarin hat Geburtstag. Heute ist der ___ Mai. (20.)",
+      "questionEn": "The neighbour has her birthday. Today is the 20th of May.",
+      "options": null,
+      "answer": "zwanzigste",
+      "accepted": [
+        "zwanzigste"
+      ],
+      "explanationDe": "Ab 20 heißt die Endung -ste: der zwanzigste Mai.",
+      "explanationEn": "From 20 on, the ordinal ending is -ste: der zwanzigste Mai (the twentieth of May).",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l02-12",
+      "topic": "numbers-counting",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Wie viele Stockwerke hat das Haus? (3) — Das Haus hat ___ Stockwerke.",
+      "questionEn": "How many floors does the house have? It has three.",
+      "options": null,
+      "answer": "drei",
+      "accepted": [
+        "drei",
+        "Drei"
+      ],
+      "explanationDe": "Die 3 heißt drei: Das Haus hat drei Stockwerke.",
+      "explanationEn": "The number 3 is drei: the house has three floors.",
       "hint": null
     },
     {
@@ -450,15 +487,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie den Satz: [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel)",
-      "questionEn": "Build the sentence about needing a supermarket.",
+      "questionDe": "Bilden Sie den Satz: [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket.",
       "options": null,
       "answer": "Ich brauche einen Supermarkt.",
       "accepted": [
         "Ich brauche einen Supermarkt.",
         "Ich brauche einen Supermarkt"
       ],
-      "explanationDe": "Das Objekt steht im Akkusativ: einen Supermarkt.",
+      "explanationDe": "Präsens: Das Objekt steht im Akkusativ: einen Supermarkt.",
       "hint": null
     },
     {
@@ -468,15 +505,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel)",
-      "questionEn": "Build the sentence about buying the cake.",
+      "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake.",
       "options": null,
       "answer": "Ana kauft den Kuchen im Geschäft.",
       "accepted": [
         "Ana kauft den Kuchen im Geschäft.",
         "Ana kauft den Kuchen im Geschäft"
       ],
-      "explanationDe": "kaufen verlangt den Akkusativ: den Kuchen.",
+      "explanationDe": "Präsens: kaufen verlangt den Akkusativ: den Kuchen.",
       "hint": null
     },
     {
@@ -516,6 +553,79 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l03-12",
+      "topic": "accusative-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Ich gehe ___ in das Museum als in das Restaurant. (gern)",
+      "questionEn": "I would rather go to the museum than to the restaurant.",
+      "options": null,
+      "answer": "lieber",
+      "accepted": [
+        "lieber"
+      ],
+      "explanationDe": "gern wird beim Vergleich zu lieber: lieber als.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l03-13",
+      "topic": "accusative-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Das Restaurant ist am Abend ___ als am Morgen. (gut)",
+      "questionEn": "The restaurant is better in the evening than in the morning.",
+      "options": null,
+      "answer": "besser",
+      "accepted": [
+        "besser"
+      ],
+      "explanationDe": "gut wird beim Vergleich zu besser: besser als.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l03-14",
+      "topic": "accusative-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Korrigieren Sie: „Ich gehe gerner in das Museum.“",
+      "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“",
+      "options": null,
+      "answer": "Ich gehe lieber in das Museum.",
+      "accepted": [
+        "Ich gehe lieber in das Museum.",
+        "Ich gehe lieber in das Museum",
+        "Ich gehe gern in das Museum.",
+        "Ich gehe gern in das Museum",
+        "Ich gehe gerne in das Museum.",
+        "Ich gehe gerne in das Museum"
+      ],
+      "explanationDe": "„gerner“ gibt es nicht: Der Vergleich von gern ist lieber. Ohne Vergleich bleibt es gern.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l03-15",
+      "topic": "accusative-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 15,
+      "questionDe": "Das Brot ist ___ als der Kuchen. (gut)",
+      "questionEn": "The bread is better than the cake.",
+      "options": null,
+      "answer": "besser",
+      "accepted": [
+        "besser"
+      ],
+      "explanationDe": "gut wird beim Vergleich zu besser: besser als.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l04-01",
       "topic": "negation",
       "type": "fill_blank",
@@ -539,8 +649,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 2,
-      "questionDe": "Im Flur ist keine Lampe. Und ein Spiegel? — Im Flur ist ___ Spiegel.",
-      "questionEn": "The corridor has no lamp. And a mirror?",
+      "questionDe": "Antworten Sie mit Nein: Ist im Flur ein Spiegel? — Im Flur ist ___ Spiegel.",
+      "questionEn": "Answer with no: Is there a mirror in the corridor? — There is no mirror in the corridor.",
       "options": null,
       "answer": "kein",
       "accepted": [
@@ -573,8 +683,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 4,
-      "questionDe": "Das Hotel hat kein Angebot. Und eine Toilette im Flur? — Das Hotel hat ___ Toilette im Flur.",
-      "questionEn": "The hotel has no offer. And a toilet?",
+      "questionDe": "Hat das Hotel eine Toilette im Flur? — Nein, das Hotel hat ___ Toilette im Flur.",
+      "questionEn": "Does the hotel have a toilet in the hallway? — No, the hotel has no toilet in the hallway.",
       "options": null,
       "answer": "keine",
       "accepted": [
@@ -590,8 +700,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "Die Steckdose funktioniert nicht. Und das Kissen? — Im Hotel ist ___ Kissen.",
-      "questionEn": "The socket does not work. And the pillow?",
+      "questionDe": "Ist im Hotel ein Kissen? — Nein, im Hotel ist ___ Kissen.",
+      "questionEn": "Is there a pillow in the hotel? — No, there is no pillow in the hotel.",
       "options": null,
       "answer": "kein",
       "accepted": [
@@ -624,8 +734,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 7,
-      "questionDe": "Im Flur ist keine Lampe. Und der Boden? — Der Boden ist ___ schön.",
-      "questionEn": "There is no lamp. And the floor?",
+      "questionDe": "Ist der Boden schön? — Nein, der Boden ist ___ schön.",
+      "questionEn": "Is the floor nice? — No, the floor is not nice.",
       "options": null,
       "answer": "nicht",
       "accepted": [
@@ -681,7 +791,9 @@
       "answer": "Im Zimmer ist kein Kissen.",
       "accepted": [
         "Im Zimmer ist kein Kissen.",
-        "Im Zimmer ist kein Kissen"
+        "Im Zimmer ist kein Kissen",
+        "Im Zimmer ist nicht ein Kissen.",
+        "Im Zimmer ist nicht ein Kissen"
       ],
       "explanationDe": "Ein Nomen ohne Artikel verneint kein.",
       "hint": null
@@ -711,15 +823,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 12,
-      "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön]",
-      "questionEn": "Build the sentence about the entrance.",
+      "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance.",
       "options": null,
       "answer": "Der Eingang ist nicht schön.",
       "accepted": [
         "Der Eingang ist nicht schön.",
         "Der Eingang ist nicht schön"
       ],
-      "explanationDe": "nicht steht vor dem Adjektiv schön.",
+      "explanationDe": "Präsens: nicht steht vor dem Adjektiv schön.",
       "hint": null
     },
     {
@@ -729,15 +841,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 13,
-      "questionDe": "Bilden Sie den Satz: [das Hotel / haben / kein / Steckdose]",
-      "questionEn": "Build the sentence about the hotel.",
+      "questionDe": "Bilden Sie den Satz: [das Hotel / haben / kein / Steckdose] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel.",
       "options": null,
       "answer": "Das Hotel hat keine Steckdose.",
       "accepted": [
         "Das Hotel hat keine Steckdose.",
         "Das Hotel hat keine Steckdose"
       ],
-      "explanationDe": "Feminin im Akkusativ: keine Steckdose.",
+      "explanationDe": "Präsens: Feminin im Akkusativ: keine Steckdose.",
       "hint": null
     },
     {
@@ -753,7 +865,13 @@
       "answer": "Wann",
       "accepted": [
         "Wann",
-        "wann"
+        "wann",
+        "Um wie viel Uhr",
+        "um wie viel Uhr",
+        "Um welche Uhrzeit",
+        "um welche Uhrzeit",
+        "Zu welcher Uhrzeit",
+        "zu welcher Uhrzeit"
       ],
       "explanationDe": "Nach der Uhrzeit fragt wann.",
       "hint": null
@@ -765,13 +883,15 @@
       "stage": 4,
       "difficulty": 1,
       "order": 2,
-      "questionDe": "___ fahren wir in den Ferien? — Nach Italien.",
+      "questionDe": "___ fahren wir im Urlaub? — Nach Italien.",
       "questionEn": "Ask about the direction.",
       "options": null,
       "answer": "Wohin",
       "accepted": [
         "Wohin",
-        "wohin"
+        "wohin",
+        "In welches Land",
+        "in welches Land"
       ],
       "explanationDe": "Nach der Richtung fragt wohin.",
       "hint": null
@@ -783,13 +903,17 @@
       "stage": 4,
       "difficulty": 1,
       "order": 3,
-      "questionDe": "___ fährt der Bus? — Manchmal jede Stunde.",
+      "questionDe": "___ fährt der Bus? — Jede Stunde.",
       "questionEn": "Ask about frequency.",
       "options": null,
       "answer": "Wie oft",
       "accepted": [
         "Wie oft",
-        "wie oft"
+        "wie oft",
+        "Wie häufig",
+        "wie häufig",
+        "Wann",
+        "wann"
       ],
       "explanationDe": "Nach der Zahl der Fahrten fragt wie oft.",
       "hint": null
@@ -801,7 +925,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 4,
-      "questionDe": "___ stehst du so früh auf? — Der Ausflug ist weit.",
+      "questionDe": "Lena: ___ stehst du so früh auf? — Tim: Der Weg ist weit.",
       "questionEn": "Ask about the reason.",
       "options": null,
       "answer": "Warum",
@@ -819,13 +943,15 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "___ ist der Ausflug? — Zwei Stunden.",
+      "questionDe": "___ fährt der Zug nach Köln? — Zwei Stunden.",
       "questionEn": "Ask about duration.",
       "options": null,
       "answer": "Wie lange",
       "accepted": [
         "Wie lange",
-        "wie lange"
+        "wie lange",
+        "Wie lang",
+        "wie lang"
       ],
       "explanationDe": "Nach der Dauer fragt wie lange.",
       "hint": null
@@ -843,7 +969,9 @@
       "answer": "Wer",
       "accepted": [
         "Wer",
-        "wer"
+        "wer",
+        "Welche Person",
+        "welche Person"
       ],
       "explanationDe": "Nach der Person fragt wer.",
       "hint": null
@@ -855,15 +983,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert]",
-      "questionEn": "Build the question about the bus.",
+      "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the bus.",
       "options": null,
       "answer": "Wann kommt der Bus zum Konzert?",
       "accepted": [
         "Wann kommt der Bus zum Konzert?",
         "Wann kommt der Bus zum Konzert"
       ],
-      "explanationDe": "Das Fragewort steht vorn, das Verb dahinter.",
+      "explanationDe": "Präsens: Das Fragewort steht vorn, das Verb dahinter.",
       "hint": null
     },
     {
@@ -873,15 +1001,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub]",
-      "questionEn": "Build the question about the holiday.",
+      "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the holiday.",
       "options": null,
       "answer": "Wohin fahren wir im Urlaub?",
       "accepted": [
         "Wohin fahren wir im Urlaub?",
         "Wohin fahren wir im Urlaub"
       ],
-      "explanationDe": "Nach wohin folgt sofort das Verb fahren.",
+      "explanationDe": "Präsens: Nach wohin folgt sofort das Verb fahren.",
       "hint": null
     },
     {
@@ -891,7 +1019,7 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Korrigieren Sie: „Wann der Film im Kino ist?“",
+      "questionDe": "Korrigieren Sie die Frage: „Wann der Film im Kino ist?“",
       "questionEn": "Fix the question.",
       "options": null,
       "answer": "Wann ist der Film im Kino?",
@@ -900,6 +1028,60 @@
         "Wann ist der Film im Kino"
       ],
       "explanationDe": "Hinter dem Fragewort steht das Verb.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l05-10",
+      "topic": "question-words",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Ich würde gern ins Konzert ___. (gehen)",
+      "questionEn": "I would like to go to the concert.",
+      "options": null,
+      "answer": "gehen",
+      "accepted": [
+        "gehen"
+      ],
+      "explanationDe": "Nach ich würde gern steht der Infinitiv am Ende.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l05-11",
+      "topic": "question-words",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Korrigieren Sie: „Ich würde gern einen Ausflug mache.“",
+      "questionEn": "Correct the sentence: I would like to go on a trip.",
+      "options": null,
+      "answer": "Ich würde gern einen Ausflug machen.",
+      "accepted": [
+        "Ich würde gern einen Ausflug machen.",
+        "Ich würde gern einen Ausflug machen"
+      ],
+      "explanationDe": "Nach würde gern steht der Infinitiv: machen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l05-12",
+      "topic": "question-words",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Tim: Kommst du mit ins Konzert? — Lena: Ja, ich ___ gern mitkommen. (höflich)",
+      "questionEn": "Are you coming to the concert? Yes, I would like to come along.",
+      "options": null,
+      "answer": "würde",
+      "accepted": [
+        "würde",
+        "möchte",
+        "könnte"
+      ],
+      "explanationDe": "Ein höflicher Wunsch: Ich würde gern mitkommen.",
       "hint": null
     },
     {
@@ -977,8 +1159,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "Tim ___ am Morgen nichts, sein Bauch ist krank. (essen)",
-      "questionEn": "Tim eats nothing in the morning.",
+      "questionDe": "Tim ___ am Morgen nichts, sein Bauch tut weh. (essen)",
+      "questionEn": "Tim eats nothing in the morning; his stomach hurts.",
       "options": null,
       "answer": "isst",
       "accepted": [
@@ -1011,8 +1193,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 7,
-      "questionDe": "___ du den Arzt in der Praxis? (sehen)",
-      "questionEn": "Do you see the doctor at the practice?",
+      "questionDe": "Fragen Sie eine Freundin: ___ du den Arzt in der Praxis? (sehen)",
+      "questionEn": "Ask a friend: do you see the doctor at the practice?",
       "options": null,
       "answer": "Siehst",
       "accepted": [
@@ -1029,13 +1211,13 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Korrigieren Sie: „Mein Mann schlaft nicht gut, sein Rücken ist krank.“",
+      "questionDe": "Korrigieren Sie: „Mein Mann schlaft nicht gut, sein Rücken tut weh.“",
       "questionEn": "Fix the verb form.",
       "options": null,
-      "answer": "Mein Mann schläft nicht gut, sein Rücken ist krank.",
+      "answer": "Mein Mann schläft nicht gut, sein Rücken tut weh.",
       "accepted": [
-        "Mein Mann schläft nicht gut, sein Rücken ist krank.",
-        "Mein Mann schläft nicht gut, sein Rücken ist krank"
+        "Mein Mann schläft nicht gut, sein Rücken tut weh.",
+        "Mein Mann schläft nicht gut, sein Rücken tut weh"
       ],
       "explanationDe": "Die er-Form von schlafen heißt schläft.",
       "hint": null
@@ -1075,6 +1257,67 @@
       "explanationDe": "Höflich zu Frau Chakiri: Ihnen mit großem I.",
       "hint": null,
       "caseSensitive": true
+    },
+    {
+      "id": "extra-a12-l06-11",
+      "topic": "stem-changing-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Ich arbeite heute nicht, ___ ich habe Fieber. (Grund)",
+      "questionEn": "I am not working today because I have a fever.",
+      "options": null,
+      "answer": "denn",
+      "accepted": [
+        "denn"
+      ],
+      "explanationDe": "denn nennt den Grund; danach steht das Verb auf Position 2.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l06-12",
+      "topic": "stem-changing-verbs",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Korrigieren Sie: „Ich schlafe nicht gut, denn mein Hals weh tut.“",
+      "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts.",
+      "options": null,
+      "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
+      "accepted": [
+        "Ich schlafe nicht gut, denn mein Hals tut weh.",
+        "Ich schlafe nicht gut, denn mein Hals tut weh",
+        "Ich schlafe nicht gut, weil mein Hals weh tut.",
+        "Ich schlafe nicht gut, weil mein Hals weh tut",
+        "Ich schlafe nicht gut, weil mein Hals wehtut.",
+        "Ich schlafe nicht gut, weil mein Hals wehtut",
+        "Ich schlafe nicht gut, da mein Hals weh tut.",
+        "Ich schlafe nicht gut, da mein Hals weh tut",
+        "Ich schlafe nicht gut, da mein Hals wehtut.",
+        "Ich schlafe nicht gut, da mein Hals wehtut"
+      ],
+      "explanationDe": "Nach denn bleibt das Verb auf Position 2: denn mein Hals tut weh.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l06-13",
+      "topic": "stem-changing-verbs",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun]",
+      "questionEn": "Build the sentence: I am taking a tablet because my head hurts.",
+      "options": null,
+      "answer": "Ich nehme eine Tablette, denn mein Kopf tut weh.",
+      "accepted": [
+        "Ich nehme eine Tablette, denn mein Kopf tut weh.",
+        "Ich nehme eine Tablette, denn mein Kopf tut weh"
+      ],
+      "explanationDe": "denn verbindet zwei Sätze; das Verb steht beide Male auf Position 2.",
+      "hint": null
     },
     {
       "id": "extra-a12-l07-01",
@@ -1154,14 +1397,14 @@
       "stage": 4,
       "difficulty": 1,
       "order": 5,
-      "questionDe": "Meine Tante ___ glücklich. (sein)",
-      "questionEn": "My aunt is happy.",
+      "questionDe": "Meine Tante ___ glücklich. (sein) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). My aunt is happy.",
       "options": null,
       "answer": "ist",
       "accepted": [
         "ist"
       ],
-      "explanationDe": "Nach sein steht das Subjekt im Nominativ.",
+      "explanationDe": "Präsens: Meine Tante steht für sie, deshalb die Form ist. glücklich bleibt ohne Endung.",
       "hint": null
     },
     {
@@ -1171,15 +1414,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie die Frage: [wer / sein / die Frau / mit dem kurzen Haar]",
-      "questionEn": "Build the question about the woman.",
+      "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the question about the woman.",
       "options": null,
-      "answer": "Wer ist die Frau mit dem kurzen Haar?",
+      "answer": "Wer ist die Tante?",
       "accepted": [
-        "Wer ist die Frau mit dem kurzen Haar?",
-        "Wer ist die Frau mit dem kurzen Haar"
+        "Wer ist die Tante?",
+        "Wer ist die Tante"
       ],
-      "explanationDe": "wer fragt nach der Person im Nominativ.",
+      "explanationDe": "Präsens: wer fragt nach der Person im Nominativ.",
       "hint": null
     },
     {
@@ -1189,15 +1432,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 7,
-      "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt]",
-      "questionEn": "Build the sentence about the grandpa.",
+      "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa.",
       "options": null,
       "answer": "Mein Opa ist alt.",
       "accepted": [
         "Mein Opa ist alt.",
         "Mein Opa ist alt"
       ],
-      "explanationDe": "Das Subjekt mein Opa steht im Nominativ.",
+      "explanationDe": "Präsens: Das Subjekt mein Opa steht im Nominativ.",
       "hint": null
     },
     {
@@ -1237,13 +1480,101 @@
       "hint": null
     },
     {
+      "id": "extra-a12-l07-10",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Gestern ___ mein Opa müde. (sein) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Yesterday my grandpa was tired.",
+      "options": null,
+      "answer": "war",
+      "accepted": [
+        "war"
+      ],
+      "explanationDe": "Präteritum: Für gestern sagt man war: Gestern war mein Opa müde.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-11",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Gestern ___ meine Tante keine Zeit. (haben) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Yesterday my aunt had no time.",
+      "options": null,
+      "answer": "hatte",
+      "accepted": [
+        "hatte"
+      ],
+      "explanationDe": "Präteritum: haben für gestern: hatte. Gestern hatte meine Tante keine Zeit.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-12",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Früher ___ ich klein. (sein) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). I used to be small.",
+      "options": null,
+      "answer": "war",
+      "accepted": [
+        "war"
+      ],
+      "explanationDe": "Präteritum: Mit ich heißt die Vergangenheit von sein auch war.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-13",
+      "topic": "nominative-case",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Korrigieren Sie: „Gestern ist mein Onkel glücklich.“",
+      "questionEn": "Correct the sentence: Yesterday my uncle was happy.",
+      "options": null,
+      "answer": "Gestern war mein Onkel glücklich.",
+      "accepted": [
+        "Gestern war mein Onkel glücklich.",
+        "Gestern war mein Onkel glücklich",
+        "Gestern ist mein Onkel glücklich gewesen.",
+        "Gestern ist mein Onkel glücklich gewesen"
+      ],
+      "explanationDe": "Für gestern steht war, nicht ist.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l07-14",
+      "topic": "nominative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Gestern ___ mein Opa Fieber. (haben) (Präteritum)",
+      "questionEn": "Use the simple past (Präteritum). Yesterday my grandpa had a fever.",
+      "options": null,
+      "answer": "hatte",
+      "accepted": [
+        "hatte"
+      ],
+      "explanationDe": "Präteritum: haben im Präteritum: er hatte.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l08-01",
       "topic": "imperative",
       "type": "sentence_building",
       "stage": 5,
       "difficulty": 2,
       "order": 1,
-      "questionDe": "Bilden Sie den Satz: [helfen / du / mir / bitte / mit der Waschmaschine]",
+      "questionDe": "Bilden Sie den Imperativ: [helfen / du / mir / bitte / mit der Waschmaschine]",
       "questionEn": "Build the request for help.",
       "options": null,
       "answer": "Hilf mir bitte mit der Waschmaschine!",
@@ -1261,13 +1592,13 @@
       "stage": 5,
       "difficulty": 2,
       "order": 2,
-      "questionDe": "Bilden Sie den Satz: [warten / du / kurz / vor der Garage]",
+      "questionDe": "Bilden Sie den Satz: [warten / du / in der Garage]",
       "questionEn": "Build the request to wait.",
       "options": null,
-      "answer": "Warte kurz vor der Garage!",
+      "answer": "Warte in der Garage!",
       "accepted": [
-        "Warte kurz vor der Garage!",
-        "Warte kurz vor der Garage"
+        "Warte in der Garage!",
+        "Warte in der Garage"
       ],
       "explanationDe": "Bei du fällt das Pronomen weg: Warte!",
       "hint": null
@@ -1333,8 +1664,8 @@
       "stage": 4,
       "difficulty": 1,
       "order": 6,
-      "questionDe": "___ Sie kurz vor dem Kühlschrank! (warten)",
-      "questionEn": "Please wait in front of the fridge.",
+      "questionDe": "___ Sie bitte in der Küche! (warten)",
+      "questionEn": "Please wait in the kitchen.",
       "options": null,
       "answer": "Warten",
       "accepted": [
@@ -1369,13 +1700,17 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Korrigieren Sie: „Du machst den Fernseher aus!“",
-      "questionEn": "Turn the statement into a request.",
+      "questionDe": "Bilden Sie den Imperativ: „Du machst den Fernseher aus!“",
+      "questionEn": "Make the statement an imperative.",
       "options": null,
       "answer": "Mach den Fernseher aus!",
       "accepted": [
         "Mach den Fernseher aus!",
-        "Mach den Fernseher aus"
+        "Mach den Fernseher aus",
+        "Du, mach den Fernseher aus!",
+        "Du, mach den Fernseher aus",
+        "Du, mache den Fernseher aus!",
+        "Du, mache den Fernseher aus"
       ],
       "explanationDe": "Die Vorsilbe aus steht am Ende: Mach … aus!",
       "hint": null
@@ -1387,7 +1722,7 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Korrigieren Sie: „Sie helfen mir bitte mit dem Schrank!“",
+      "questionDe": "Bilden Sie den Imperativ: „Sie helfen mir bitte mit dem Schrank!“",
       "questionEn": "Turn the statement into a polite request.",
       "options": null,
       "answer": "Helfen Sie mir bitte mit dem Schrank!",
@@ -1556,14 +1891,83 @@
       "caseSensitive": true
     },
     {
+      "id": "extra-a12-l09-10",
+      "topic": "modal-verbs-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Das Taxi fährt von sieben ___ zehn Uhr. (Ende)",
+      "questionEn": "The taxi runs from seven to ten o'clock.",
+      "options": null,
+      "answer": "bis",
+      "accepted": [
+        "bis"
+      ],
+      "explanationDe": "bis nennt das Ende: von sieben bis zehn Uhr.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l09-11",
+      "topic": "modal-verbs-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Das Flugzeug fliegt ___ Montag wieder. Montag ist der erste Tag. (ab, um oder bis?)",
+      "questionEn": "The plane flies again from Monday.",
+      "options": null,
+      "answer": "ab",
+      "accepted": [
+        "ab"
+      ],
+      "explanationDe": "ab nennt den Beginn: ab Montag.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l09-12",
+      "topic": "modal-verbs-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Korrigieren Sie: „Das Taxi fährt von sieben zu zehn Uhr.“",
+      "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock.",
+      "options": null,
+      "answer": "Das Taxi fährt von sieben bis zehn Uhr.",
+      "accepted": [
+        "Das Taxi fährt von sieben bis zehn Uhr.",
+        "Das Taxi fährt von sieben bis zehn Uhr"
+      ],
+      "explanationDe": "Anfang und Ende: von … bis.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l09-13",
+      "topic": "modal-verbs-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Der Bus fährt von acht bis zehn Uhr. Sie können ___ acht Uhr einsteigen. (erste Uhrzeit zum Einsteigen; ab oder bis?)",
+      "questionEn": "The bus runs from eight to ten. You can get on from eight o'clock. (First boarding time.)",
+      "options": null,
+      "answer": "ab",
+      "accepted": [
+        "ab"
+      ],
+      "explanationDe": "ab nennt den Beginn: Sie können ab acht Uhr einsteigen.",
+      "hint": null
+    },
+    {
       "id": "extra-a12-l10-01",
       "topic": "prepositions-accusative",
       "type": "fill_blank",
       "stage": 4,
       "difficulty": 1,
       "order": 1,
-      "questionDe": "Ana kauft die Mütze ___ ihre Oma.",
-      "questionEn": "Ana buys the hat for her grandma.",
+      "questionDe": "Ana und ihre Oma sind im Geschäft. Die Oma hat Geburtstag. Ana kauft die Mütze ___ ihre Oma. (für, ohne oder durch?)",
+      "questionEn": "Ana and her grandma are in the shop. It is Grandma's birthday. Ana buys the hat for her grandma.",
       "options": null,
       "answer": "für",
       "accepted": [
@@ -1579,7 +1983,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 2,
-      "questionDe": "Der Mantel ist ___ den Schal billig.",
+      "questionDe": "Der Mantel ist ___ den Schal billig. (für, ohne oder durch?)",
       "questionEn": "The coat is cheap without the scarf.",
       "options": null,
       "answer": "ohne",
@@ -1596,7 +2000,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 3,
-      "questionDe": "Ana geht ___ das Kaufhaus und kauft eine Hose.",
+      "questionDe": "Ana geht ___ das Kaufhaus und kauft eine Hose. (für, ohne oder durch?)",
       "questionEn": "Ana walks through the department store.",
       "options": null,
       "answer": "durch",
@@ -1613,7 +2017,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 4,
-      "questionDe": "Der Pullover ist ___ meinen Bruder.",
+      "questionDe": "Der Pullover ist ___ meinen Bruder. (für, ohne oder durch?)",
       "questionEn": "The pullover is for my brother.",
       "options": null,
       "answer": "für",
@@ -1630,15 +2034,17 @@
       "stage": 5,
       "difficulty": 2,
       "order": 5,
-      "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma]",
-      "questionEn": "Build the sentence about the jacket.",
+      "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket.",
       "options": null,
       "answer": "Ich kaufe die Jacke für meine Oma.",
       "accepted": [
         "Ich kaufe die Jacke für meine Oma.",
-        "Ich kaufe die Jacke für meine Oma"
+        "Ich kaufe die Jacke für meine Oma",
+        "Für meine Oma kaufe ich die Jacke.",
+        "Für meine Oma kaufe ich die Jacke"
       ],
-      "explanationDe": "Nach für steht der Akkusativ: für meine Oma.",
+      "explanationDe": "Präsens: Nach für steht der Akkusativ: für meine Oma.",
       "hint": null
     },
     {
@@ -1648,15 +2054,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 6,
-      "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel]",
-      "questionEn": "Build the sentence about the coat.",
+      "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel] (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the coat.",
       "options": null,
       "answer": "Tim geht ohne den Mantel.",
       "accepted": [
         "Tim geht ohne den Mantel.",
         "Tim geht ohne den Mantel"
       ],
-      "explanationDe": "ohne verlangt den Akkusativ: ohne den Mantel.",
+      "explanationDe": "Präsens: ohne verlangt den Akkusativ: ohne den Mantel.",
       "hint": null
     },
     {
@@ -1693,6 +2099,126 @@
         "Ana geht ohne den Schal ins Kaufhaus"
       ],
       "explanationDe": "Nach ohne steht den Schal im Akkusativ.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-09",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 9,
+      "questionDe": "Die Jacke gefällt ___. (ich)",
+      "questionEn": "I like the jacket.",
+      "options": null,
+      "answer": "mir",
+      "accepted": [
+        "mir"
+      ],
+      "explanationDe": "gefallen verlangt den Dativ: ich → mir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-10",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Passt ___ der Mantel? (du)",
+      "questionEn": "Does the coat fit you?",
+      "options": null,
+      "answer": "dir",
+      "accepted": [
+        "dir"
+      ],
+      "explanationDe": "passen verlangt den Dativ: du → dir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-11",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Der Schal gehört ___. (ich)",
+      "questionEn": "The scarf belongs to me.",
+      "options": null,
+      "answer": "mir",
+      "accepted": [
+        "mir"
+      ],
+      "explanationDe": "gehören verlangt den Dativ: ich → mir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-12",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Gefällt ___ das Kleid? (Sie)",
+      "questionEn": "Do you like the dress?",
+      "options": null,
+      "answer": "Ihnen",
+      "accepted": [
+        "Ihnen"
+      ],
+      "explanationDe": "gefallen verlangt den Dativ: Sie → Ihnen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-13",
+      "topic": "prepositions-accusative",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Korrigieren Sie: „Die Hose gefällt mich.“",
+      "questionEn": "Correct the sentence: I like the trousers.",
+      "options": null,
+      "answer": "Die Hose gefällt mir.",
+      "accepted": [
+        "Die Hose gefällt mir.",
+        "Die Hose gefällt mir"
+      ],
+      "explanationDe": "gefallen verlangt den Dativ: mir, nicht mich.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-14",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Die Hose ___ mir gut. (passen)",
+      "questionEn": "The trousers fit me well.",
+      "options": null,
+      "answer": "passt",
+      "accepted": [
+        "passt"
+      ],
+      "explanationDe": "passen verlangt den Dativ: Die Hose passt mir.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l10-15",
+      "topic": "prepositions-accusative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 15,
+      "questionDe": "Ana, die Mütze ___ dir. (gehören)",
+      "questionEn": "Ana, the hat belongs to you.",
+      "options": null,
+      "answer": "gehört",
+      "accepted": [
+        "gehört"
+      ],
+      "explanationDe": "gehören verlangt den Dativ: Die Mütze gehört dir.",
       "hint": null
     },
     {
@@ -1823,8 +2349,8 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel)",
-      "questionEn": "Build the sentence about the bus in the rain.",
+      "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Präsens)",
+      "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain.",
       "options": null,
       "answer": "Wir fahren bei Regen mit dem Bus.",
       "accepted": [
@@ -1832,7 +2358,7 @@
         "Wir fahren bei Regen mit dem Bus",
         "Wir fahren mit dem Bus bei Regen."
       ],
-      "explanationDe": "Nach mit steht der Dativ: mit dem Bus.",
+      "explanationDe": "Präsens: Nach mit steht der Dativ: mit dem Bus.",
       "hint": null
     },
     {
@@ -1851,6 +2377,58 @@
         "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof"
       ],
       "explanationDe": "Feminin im Dativ: mit der Straßenbahn.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l11-10",
+      "topic": "dative-prepositions-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 10,
+      "questionDe": "Heute ist es kalt. ___ einer Woche war es warm. (Zeit: eine Woche früher, keine Dauer; vor oder seit?)",
+      "questionEn": "Today it is cold. A week ago it was warm. (A point one week earlier, not a duration; vor or seit?)",
+      "options": null,
+      "answer": "Vor",
+      "accepted": [
+        "Vor",
+        "vor"
+      ],
+      "explanationDe": "Gefragt ist eine Woche früher, keine Dauer: vor einer Woche.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l11-11",
+      "topic": "dative-prepositions-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 11,
+      "questionDe": "Der Regen ist ___ einer Woche da. (Dauer bis heute; vor oder seit?)",
+      "questionEn": "The rain has been here for a week. (Duration up to today; vor or seit?)",
+      "options": null,
+      "answer": "seit",
+      "accepted": [
+        "seit"
+      ],
+      "explanationDe": "Gefragt ist die Dauer bis heute: seit einer Woche.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l11-12",
+      "topic": "dative-prepositions-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Das Gewitter war ___ einer Woche. (Zeit: eine Woche früher, keine Dauer; vor oder seit?)",
+      "questionEn": "The thunderstorm was a week ago. (A point one week earlier, not a duration; vor or seit?)",
+      "options": null,
+      "answer": "vor",
+      "accepted": [
+        "vor"
+      ],
+      "explanationDe": "Gefragt ist eine Woche früher, keine Dauer: vor einer Woche.",
       "hint": null
     },
     {
@@ -1979,15 +2557,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 8,
-      "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen]",
-      "questionEn": "Build the sentence about the potato.",
+      "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen] (Perfekt)",
+      "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato.",
       "options": null,
       "answer": "Ich habe die Kartoffel gekauft.",
       "accepted": [
         "Ich habe die Kartoffel gekauft.",
         "Ich habe die Kartoffel gekauft"
       ],
-      "explanationDe": "haben auf Position 2, das Partizip am Ende.",
+      "explanationDe": "Perfekt: haben auf Position 2, das Partizip am Ende.",
       "hint": null
     },
     {
@@ -1997,15 +2575,15 @@
       "stage": 5,
       "difficulty": 2,
       "order": 9,
-      "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen]",
-      "questionEn": "Build the sentence about the rice.",
+      "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen] (Perfekt)",
+      "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice.",
       "options": null,
       "answer": "Tim hat den Reis gekocht.",
       "accepted": [
         "Tim hat den Reis gekocht.",
         "Tim hat den Reis gekocht"
       ],
-      "explanationDe": "Das Partizip gekocht steht ganz am Ende.",
+      "explanationDe": "Perfekt: Das Partizip gekocht steht ganz am Ende.",
       "hint": null
     },
     {
@@ -2042,6 +2620,129 @@
         "Wir haben das Fleisch gekauft"
       ],
       "explanationDe": "Nach haben steht das Partizip gekauft.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-12",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 12,
+      "questionDe": "Der Fisch war lecker, aber Tim ___ früh gegangen. (haben oder sein?)",
+      "questionEn": "The fish was delicious, but Tim left early.",
+      "options": null,
+      "answer": "ist",
+      "accepted": [
+        "ist"
+      ],
+      "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-13",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 13,
+      "questionDe": "Tim ___ zum Markt gefahren und hat Obst gekauft. (haben oder sein?)",
+      "questionEn": "Tim drove to the market and bought fruit.",
+      "options": null,
+      "answer": "ist",
+      "accepted": [
+        "ist"
+      ],
+      "explanationDe": "fahren bildet das Perfekt mit sein: Tim ist gefahren.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-14",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 14,
+      "questionDe": "Ich habe die Getränke ___. (bezahlen)",
+      "questionEn": "I paid for the drinks.",
+      "options": null,
+      "answer": "bezahlt",
+      "accepted": [
+        "bezahlt"
+      ],
+      "explanationDe": "Verben mit be- haben im Partizip kein ge-: bezahlt.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-15",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 15,
+      "questionDe": "„Das ist Reis.“ – „Danke, ich habe ___.“ (verstehen)",
+      "questionEn": "\"This is rice.\" – \"Thanks, I understood.\"",
+      "options": null,
+      "answer": "verstanden",
+      "accepted": [
+        "verstanden"
+      ],
+      "explanationDe": "Verben mit ver- haben im Partizip kein ge-: verstanden.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-16",
+      "topic": "perfekt-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 16,
+      "questionDe": "Tim hat ___: „Der Saft ist da.“ (telefonieren)",
+      "questionEn": "Tim phoned: \"The juice is here.\"",
+      "options": null,
+      "answer": "telefoniert",
+      "accepted": [
+        "telefoniert"
+      ],
+      "explanationDe": "Verben auf -ieren haben im Partizip kein ge-: telefoniert.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-17",
+      "topic": "perfekt-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 17,
+      "questionDe": "Korrigieren Sie: „Der Fisch war lecker, aber Tim hat früh gegangen.“",
+      "questionEn": "Correct the sentence: The fish was delicious, but Tim left early.",
+      "options": null,
+      "answer": "Der Fisch war lecker, aber Tim ist früh gegangen.",
+      "accepted": [
+        "Der Fisch war lecker, aber Tim ist früh gegangen.",
+        "Der Fisch war lecker, aber Tim ist früh gegangen"
+      ],
+      "explanationDe": "gehen bildet das Perfekt mit sein: Tim ist gegangen.",
+      "hint": null
+    },
+    {
+      "id": "extra-a12-l12-18",
+      "topic": "perfekt-intro",
+      "type": "error_correction",
+      "stage": 4,
+      "difficulty": 1,
+      "order": 18,
+      "questionDe": "Korrigieren Sie: „Ich habe die Getränke gebezahlt.“",
+      "questionEn": "Correct the sentence: I paid for the drinks.",
+      "options": null,
+      "answer": "Ich habe die Getränke bezahlt.",
+      "accepted": [
+        "Ich habe die Getränke bezahlt.",
+        "Ich habe die Getränke bezahlt",
+        "Ich habe die Getränke gezahlt.",
+        "Ich habe die Getränke gezahlt"
+      ],
+      "explanationDe": "bezahlen hat im Partizip kein ge-: bezahlt.",
       "hint": null
     }
   ]

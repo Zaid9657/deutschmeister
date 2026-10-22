@@ -587,6 +587,8 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Tim Berger ist verheiratet. Er kommt aus Österreich und spricht Englisch und Deutsch. Füllen Sie das Formular für Tim aus.',
+    taskEn:
+      'Tim Berger is married. He comes from Austria and speaks English and German. Fill in the form for Tim (first name, surname, marital status, languages, country).',
     leitpunkte: ['Vorname', 'Familienname', 'Familienstand', 'Sprachen', 'Land'],
     sample: 'Vorname: Tim / Familienname: Berger / Familienstand: verheiratet / Sprachen: Englisch, Deutsch / Land: Österreich',
   },
@@ -601,6 +603,8 @@ export const WRITING_TASKS = [
     maxWords: 45,
     task:
       'Schreiben Sie Ihrer Chefin, Frau Berg, eine kurze Nachricht: Sie brauchen eine Lampe und einen Stuhl. Ihre Telefonnummer ist 0176 22 44 88. Sie sind um zehn Uhr im Büro. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'Write your boss, Frau Berg, a short message: you need a lamp and a chair. Your phone number is 0176 22 44 88. You are in the office at ten o\'clock. Open with a greeting and close with a sign-off. Cover three points: what you need; your phone number; when you are in the office.',
     leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
     sample: 'Guten Tag, Frau Berg! Ich brauche eine Lampe und einen Stuhl. Meine Telefonnummer ist 0176 22 44 88. Ich bin um zehn Uhr im Büro. Viele Grüße, Ana',
   },
@@ -615,6 +619,8 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Tim Berger ist im Café. Er möchte am Donnerstag um 18 Uhr einen Tisch für vier Personen. Die Telefonnummer ist 030 66 33 99. Füllen Sie das Formular aus.',
+    taskEn:
+      'Tim Berger is at the café. He would like a table for four people on Thursday at 6 pm. The phone number is 030 66 33 99. Fill in the form (name, day, time, people, phone number).',
     leitpunkte: ['Name', 'Tag', 'Uhrzeit', 'Personen', 'Telefonnummer'],
     sample: 'Name: Berger / Tag: Donnerstag / Uhrzeit: 18 Uhr / Personen: 4 / Telefonnummer: 030 66 33 99',
   },
@@ -629,6 +635,8 @@ export const WRITING_TASKS = [
     maxWords: 45,
     task:
       'Schreiben Sie Lena eine Karte: Sie kochen am Sonntag um 16 Uhr zu Hause und laden Lena ein. Lena soll Brot und Orangensaft mitbringen. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'Write Lena a card: you are cooking at home on Sunday at 4 pm and invite Lena. Lena should bring bread and orange juice. Open with a greeting and close with a sign-off. Cover three points: why you are writing; the day and the time; what Lena should bring.',
     leitpunkte: ['Warum Sie schreiben', 'Tag und Uhrzeit', 'Was Lena mitbringen soll'],
     sample: 'Hallo Lena! Ich koche am Sonntag und lade dich ein. Wir essen um 16 Uhr bei mir zu Hause. Bringst du bitte Brot und Orangensaft mit? Bis bald, Ana',
   },
@@ -643,8 +651,9 @@ export const WRITING_TASKS = [
   //   2. Die Wortgrenzen sind die, die der Grader annehmen kann: Formular
   //      5–40 Wörter, Mitteilung 25–45 (netlify/functions/evaluate-writing.mjs
   //      leitet seine Zeichen-Untergrenze aus `register` ab).
-  // ACHTUNG INTEGRATION: `COURSE_TASK_KEY_PREFIX` in evaluate-writing.mjs ist
-  // 'a11-' und trifft diese Schlüssel NICHT. Siehe CONTRACT.md §Offene Fragen.
+  // evaluate-writing.mjs zählt sie über COURSE_TASK_KEY_LIKE ('a__-%') als
+  // Kursaufgaben, mit eigener Freigrenze je Kurs (zwölf Lektionen + vier
+  // Checkpoints).
   {
     examKey: 'goethe_a1',
     course: 'a1.2',
@@ -677,7 +686,7 @@ export const WRITING_TASKS = [
       'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Warum Sie schreiben',
-      'Wann Sie die Wohnung sehen möchten',
+      'Wann Sie kommen möchten',
       'Ihre Frage zur Miete',
     ],
   },
@@ -762,7 +771,7 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Lena Berg ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. ' +
+      'Lena Brandt ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. ' +
       'Füllen Sie die Anmeldung für den Sportverein aus.',
     leitpunkte: [
       'Familienname',
@@ -781,7 +790,7 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit drei Bitten für den Haushalt. ' +
+      'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit zwei Bitten für den Haushalt. ' +
       'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Was in der Küche zu tun ist',
@@ -834,7 +843,7 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Lena Berg meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. ' +
+      'Lena Brandt meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. ' +
       'Füllen Sie die Anmeldung für den Ausflug aus.',
     leitpunkte: [
       'Familienname',
@@ -858,8 +867,78 @@ export const WRITING_TASKS = [
     leitpunkte: [
       'Wann Sie gefeiert haben',
       'Was Sie gegessen und getrunken haben',
-      'Wen Sie eingeladen haben',
+      'Mit wem Sie gefeiert haben',
     ],
+  },
+
+  // ---- A1.2-Checkpoint-Aufgaben (DaF-Review #3, MAJOR 3, 2026-10-15) ------
+  // Wie die A1.1-Aufgaben oben: die Textsorte der letzten Lektion des Kapitels
+  // mit neuen Personen und Fakten, nur aus Wörtern, die bis zum Checkpoint
+  // gelehrt sind. Bis hierher schrieb jeder A1.2-Checkpoint noch einmal
+  // a12-l03/06/09/12 – samt dem Feedback, das der Lernende dazu schon hatte.
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 1,
+    taskKey: 'a12-cp1',
+    title: 'Checkpoint 1: Ins Museum',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Paul Fischer wohnt in Köln. Am Mittwoch möchte er ins Museum gehen. Er fährt mit der Straßenbahn bis zur Haltestelle Markt. Füllen Sie die Anmeldung für das Museum aus.',
+    taskEn:
+      'Paul Fischer lives in Cologne. On Wednesday he would like to go to the museum. He takes the tram to the Markt stop. Fill in the museum registration form (surname, first name, city, stop, day).',
+    leitpunkte: ['Familienname', 'Vorname', 'Stadt', 'Haltestelle', 'Tag'],
+    sample: 'Familienname: Fischer / Vorname: Paul / Stadt: Köln / Haltestelle: Markt / Tag: Mittwoch',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 2,
+    taskKey: 'a12-cp2',
+    title: 'Checkpoint 2: Eine Nachricht an das Hotel',
+    register: 'formell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie haben im Hotel ein Zimmer für Freitag und Samstag. Sie sind krank und kommen am Samstag, nicht am Freitag. Schreiben Sie dem Hotel eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'You have a hotel room for Friday and Saturday. You are ill and are coming on Saturday, not on Friday. Write the hotel a short message. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you are coming; your question about breakfast.',
+    leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Ihre Frage zum Frühstück'],
+    sample: 'Guten Tag, ich habe ein Zimmer für Freitag und Samstag. Ich bin krank, mein Kopf tut weh. Ich komme am Samstag, nicht am Freitag. Haben Sie am Samstag auch Frühstück? Viele Grüße, Ana Chakiri',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 3,
+    taskKey: 'a12-cp3',
+    title: 'Checkpoint 3: Eine Reise nach Spanien',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Tim Berger wohnt in Berlin. Er fliegt am 2. Mai nach Spanien. Füllen Sie die Anmeldung für die Reise aus.',
+    taskEn:
+      'Tim Berger lives in Berlin. He is flying to Spain on 2 May. Fill in the registration form for the trip (surname, first name, city, date, country).',
+    leitpunkte: ['Familienname', 'Vorname', 'Stadt', 'Datum', 'Land'],
+    sample: 'Familienname: Berger / Vorname: Tim / Stadt: Berlin / Datum: 2. Mai / Land: Spanien',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    checkpoint: 4,
+    taskKey: 'a12-cp4',
+    title: 'Checkpoint 4: Eine Nachricht an Tim',
+    register: 'informell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie haben am Sonntag mit Lena eine Jacke gekauft. Schreiben Sie Ihrem Freund Tim eine kurze Nachricht über den Sonntag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    taskEn:
+      'On Sunday you bought a jacket with Lena. Write your friend Tim a short message about Sunday. Open with a greeting and close with a sign-off. Cover three points: what you bought; what colour the jacket is; what you ate afterwards.',
+    leitpunkte: ['Was Sie gekauft haben', 'Welche Farbe die Jacke hat', 'Was Sie danach gegessen haben'],
+    sample: 'Hallo Tim, am Sonntag habe ich mit Lena eine Jacke gekauft. Die Jacke ist blau und warm. Danach haben wir Kuchen gegessen und Kaffee getrunken. Liebe Grüße, Ana',
   },
 
   // ---- Goethe-Zertifikat A2 ---------------------------------------------

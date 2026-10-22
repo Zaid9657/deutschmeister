@@ -54,6 +54,22 @@ export function listeningSummary(attempts = []) {
 }
 
 /**
+ * What the completion event says about the run (Codex rescore, 2026-10-15: lesson_completed carried
+ * only level, topic and run id, so no report could tell a measured Lektion from a skipped one). The
+ * same four states the recap shows, as short labels sanitizeProps keeps: never answers or text.
+ */
+export function skillProps(lines = []) {
+  const by = Object.fromEntries(lines.map((l) => [l.skill, l]));
+  const p = by.practice;
+  return {
+    practice_pct: p && p.total ? Math.round((p.correct / p.total) * 100) : 0,
+    listening: by.listening?.state || 'none',
+    speaking: by.speaking?.state || 'skipped',
+    writing: by.writing?.state || 'skipped',
+  };
+}
+
+/**
  * The four lines the recap renders, in order. `skills` is what the speaking
  * and writing stages reported this run (absent = never reached = skipped).
  */

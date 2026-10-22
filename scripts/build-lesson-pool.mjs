@@ -129,12 +129,16 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue, missingOpeningCue,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
-import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from './validate-curriculum.mjs';
+import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex, constructionHorizonIndex, lineHorizons } from './validate-curriculum.mjs';
+import {
+  openingOf, middleFieldOrders, vorfeldOf, opensWith, negationPlaceCue, laterOpenings,
+} from './a12-determinacy.mjs';
+import { imperativePerson, imperativePronounVariants } from './imperative-variants.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -299,6 +303,152 @@ function repairOpeningCue(item) {
 
 raw.forEach(repairOpeningCue);
 
+// ── DaF review #3 for A1.2, BLOCKER 1: the key may not restrict what the German prompt leaves open ──
+// Three classes, each repaired in the PROMPT or the accepted list so the item asks exactly what its
+// key wants (never by id; A1.1's pool has none of these shapes, measured 2026-10-15):
+//   a. „Sie ___ den Bus. (nehmen, sie)" with a singular key: `sie` is she or they, and a
+//      sentence-initial „Sie" also the formal you — the cue names the person;
+//   b. „___ Abend … (an + dem)" with the contraction as key: the cue spells out the two words, so it
+//      must ask for the short form, or „An dem" — what the cue says — is marked wrong;
+//   c. a du-imperative of a regular verb: „Mach" and „Mache" are both correct German, so `accepted`
+//      takes both. Not for e→i(e) verbs (Iss, Nimm …) and not where the -e is required (Warte …).
+const SIE_CUE_RE = /\(([a-zäöüß]+en), sie\)/;
+const PAIR_CUE_RE = /\(((?:an|in|zu|von|bei) \+ (?:dem|der|das))\)/;
+const CONTRACTED_RE = /^(?:am|im|zum|zur|vom|beim|ins|ans)$/i;
+const STEM_CHANGE_IMPERATIVE_RE = /^(?:iss|nimm|gib|lies|sieh|hilf|sprich|triff|vergiss|wirf|brich|tritt|miss|lass)$/i;
+const E_REQUIRED_RE = /(?:t|d|chn|ffn|tm|gn|dm)e$/i;
+const determinacyRepaired = [];
+function repairDeterminacy(item) {
+  const q = String(item.questionDe || '');
+  const key = String(item.answer || '').trim();
+  if (/^Sie ___/.test(q) && SIE_CUE_RE.test(q) && /t$/.test(key)) {
+    item.questionDe = q.replace(SIE_CUE_RE, '($1, sie = eine Frau)');
+    determinacyRepaired.push(`${item.id}:sie`);
+  }
+  if (PAIR_CUE_RE.test(item.questionDe) && CONTRACTED_RE.test(key)) {
+    item.questionDe = item.questionDe.replace(PAIR_CUE_RE, '($1 → Kurzform)');
+    determinacyRepaired.push(`${item.id}:Kurzform`);
+  }
+  const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
+  if (imp && imperativePerson(item) !== 'ihr' && !/^\s*(?:Sie|ihr|wir)\b/.test(imp[2]) && !STEM_CHANGE_IMPERATIVE_RE.test(imp[1]) && !/t$/.test(imp[1])) {
+    const first = imp[1];
+    const other = /e$/.test(first) ? (E_REQUIRED_RE.test(first) ? null : first.slice(0, -1)) : `${first}e`;
+    if (other) {
+      const alt = `${other}${imp[2]}!`;
+      const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
+      item.accepted = [...new Set([...accepted, alt, alt.replace(/!$/, '')])];
+      determinacyRepaired.push(`${item.id}:${first}/${other}`);
+    }
+  }
+  if (!levelSpec(level)?.determinacyRepairs) return;
+  // DaF review #4 (A1.2) BLOCKER 1 — three more families, each a rule (scripts/a12-determinacy.mjs
+  // generates their alternatives and tests/a12-rebuild.test.mjs runs them through the checker):
+  // 1. A statement may open with its subject or with any one other phrase. When the key's order is
+  //    free, the prompt names the opening, so the order it grades is the order it asked for.
+  if ((item.type === 'sentence_building' || item.type === 'error_correction') && !/\(Beginnen Sie mit /.test(item.questionDe)) {
+    // DaF review #8 (A1.2) B1: a predicate, a negated one too, may also open a statement („Nicht
+    // schön ist der Eingang.") — more fronting than the generator models. So a sentence-building
+    // STATEMENT always names its opening; a correction is bounded by „nur den Fehler" instead.
+    const opening = openingOf(key) || (item.type === 'sentence_building' && /\.$/.test(key) ? vorfeldOf(key) : null);
+    if (opening) {
+      item.questionDe = `${String(item.questionDe).trim()} (Beginnen Sie mit „${opening}“)`;
+      determinacyRepaired.push(`${item.id}:opening`);
+    }
+  }
+  // DaF review #9 (A1.2) B1 — the German task and the accepted set must agree in BOTH directions, and
+  // a named opening fixes only the Vorfeld. So the cue also names what else is free:
+  // 7. the place of „nicht"/„nie" when its clause holds another middle-field phrase („Ich fahre nicht
+  //    ohne meinen Bruder." / „… ohne meinen Bruder nicht."; „Wir kaufen nicht das Auto." is
+  //    contrastive) — scripts/a12-determinacy.mjs `negationPlaceCue`;
+  // 8. the opening of every later main clause („…, aber Tim ist früh gegangen.") — `laterOpenings`.
+  if (item.type === 'sentence_building' && /\(Beginnen Sie mit „[^“]*“/.test(item.questionDe)) {
+    const places = [
+      negationPlaceCue(key),
+      ...laterOpenings(key).map(({ after, opening }) => `${after ? `nach „${after}“` : 'der zweite Teil'} mit „${opening}“`),
+    ].filter((p) => p && !String(item.questionDe).includes(p));
+    if (places.length) {
+      item.questionDe = String(item.questionDe).replace(/(\(Beginnen Sie mit „[^“]*“(?:;[^)]*)?)\)/, (m, cue) => `${cue}${places.map((p) => `; ${p}`).join('')})`);
+      determinacyRepaired.push(`${item.id}:place`);
+    }
+  }
+  // 2. A du-imperative in a gap takes its -e like the sentence does: „Hol" / „Hole".
+  const accepted = () => (item.accepted && item.accepted.length ? item.accepted : [item.answer]);
+  if (item.type === 'fill_blank' && /\([a-zäöüß]+en, du\)/.test(item.questionDe) && /^[A-Za-zäöüß]+$/.test(key)
+      && !STEM_CHANGE_IMPERATIVE_RE.test(key) && !/t$/i.test(key)) {
+    const other = /e$/.test(key) ? (E_REQUIRED_RE.test(key) ? null : key.slice(0, -1)) : `${key}e`;
+    if (other) {
+      item.accepted = [...new Set([...accepted(), other])];
+      determinacyRepaired.push(`${item.id}:${key}/${other}`);
+    }
+  }
+  // 3. „bitte" may open a request: „Nehmen Sie bitte Platz!" = „Bitte nehmen Sie Platz!".
+  const bitte = key.match(/^([A-ZÄÖÜ][a-zäöüß]+)(.*?) bitte(.*)!$/);
+  if ((item.type === 'sentence_building' || item.type === 'error_correction') && bitte) {
+    const fronted = `Bitte ${bitte[1].charAt(0).toLowerCase()}${bitte[1].slice(1)}${bitte[2]}${bitte[3]}!`.replace(/\s+/g, ' ');
+    item.accepted = [...new Set([...accepted(), fronted, fronted.replace(/!$/, '')])];
+    determinacyRepaired.push(`${item.id}:bitte`);
+  }
+  // DaF review #5 (A1.2) BLOCKER 1 — three more, each a rule:
+  // 4. A named opening fixes only the Vorfeld: every middle-field order of a correct answer is the same
+  //    sentence (scripts/a12-determinacy.mjs `middleFieldOrders`).
+  if (item.type === 'sentence_building' || item.type === 'error_correction') {
+    const before = accepted();
+    // From the key and every accepted form; a form written without its final mark gets the key's.
+    const punct = /[.!]$/.test(key) ? key.slice(-1) : null;
+    const sources = [key, ...before].map((a) => String(a).trim()).map((a) => (/[.!?]$/.test(a) || !punct ? a : `${a}${punct}`));
+    const more = sources.filter((a) => /[.!]$/.test(a)).flatMap((a) => middleFieldOrders(a));
+    if (more.length) {
+      item.accepted = [...new Set([...before, ...more, ...more.map((m) => m.replace(/[.!]$/, ''))])];
+      determinacyRepaired.push(`${item.id}:middle`);
+    }
+  }
+  // DaF reviews #6/#14: du AND ihr imperatives may carry the requested pronoun for emphasis.
+  // It runs LAST of the order rules (review #7: „Bitte hilf du mir mit der Waschmaschine!" was refused,
+  // because the pronoun went in before „bitte" moved): the verb is the form's first word, or the word
+  // after an opening „Bitte" — never „Bitte" itself.
+  const emphatic = imperativePronounVariants(item);
+  if (emphatic.some((a) => !accepted().includes(a))) {
+    item.accepted = [...new Set([...accepted(), ...emphatic])];
+    determinacyRepaired.push(`${item.id}:emphatic-pronoun`);
+  }
+  // 9. LAST of the order rules (DaF review #9, B1): a named opening excludes every other. The fronting
+  //    rule above the cue added „Das Auto kaufen wir nicht." before rule 1 named „Wir" — 17 served items
+  //    accepted an order their German task excludes. Every accepted form opens with the named phrase.
+  const named = String(item.questionDe).match(/\(Beginnen Sie mit „([^“]+)“/)?.[1];
+  if (named && (item.type === 'sentence_building' || item.type === 'error_correction')) {
+    const all = accepted();
+    const kept = all.filter((a) => opensWith(a, named));
+    if (kept.length && kept.length < all.length) {
+      item.accepted = kept;
+      determinacyRepaired.push(`${item.id}:opening-only`);
+    }
+  }
+  // 5. A brick list does not say whether a request or a question is wanted: „[warten / du / in der
+  //    Garage]" is also „Du wartest in der Garage.". The prompt names the sentence type.
+  //    The bank's prompts are still in the du-register here („Schreib den Satz"); normaliseRegister
+  //    below turns the verb into the Sie-form, so only „den Satz" is swapped.
+  const TASK_RE = /^((?:Bilden Sie|Schreiben Sie|Bilde|Schreibe?) )den Satz/i;
+  if (item.type === 'sentence_building' && TASK_RE.test(item.questionDe)) {
+    if (/!$/.test(key) && !/Imperativ|Bitte\b|bitten/i.test(item.questionDe)) {
+      item.questionDe = item.questionDe.replace(TASK_RE, '$1den Imperativ');
+      determinacyRepaired.push(`${item.id}:Imperativ`);
+    } else if (/\?$/.test(key) && !/Frage/i.test(item.questionDe)) {
+      item.questionDe = item.questionDe.replace(TASK_RE, '$1die Frage');
+      determinacyRepaired.push(`${item.id}:Frage`);
+    }
+  }
+  // 6. „___ kostet …?" asks for a price: „Was kostet das?" and „Wie viel kostet das?" are both German.
+  if (item.type === 'fill_blank' && /___ kosten?\b/.test(item.questionDe)) {
+    const acc = accepted();
+    const other = acc.includes('Wie viel') ? 'Was' : acc.includes('Was') ? 'Wie viel' : null;
+    if (other && !acc.includes(other)) {
+      item.accepted = [...acc, other];
+      determinacyRepaired.push(`${item.id}:kostet`);
+    }
+  }
+}
+raw.forEach(repairDeterminacy);
+
 // ── REVIEW #14 MAJOR 2: name the element an article repair changes ──────────
 //
 // „Korrigieren Sie: „Ihre Papa kommt auch."" has TWO one-token repairs — the
@@ -325,6 +475,27 @@ function repairDeterminerCue(item) {
 }
 
 raw.forEach(repairDeterminerCue);
+
+// ── DaF review #7 (A1.2) BLOCKER 1: a correction names its operation ────────
+//
+// „Korrigieren Sie: „Das Taxi fährt von sieben zu zehn Uhr.““ refused „Von sieben bis zehn Uhr fährt
+// das Taxi." — correct German, and nothing in the task excluded it; nor „… aber früh ist Tim
+// gegangen." after „aber Tim hat früh gegangen". A correction asks for the error to be mended, not
+// for the sentence to be rebuilt, so the task says so: „Korrigieren Sie nur den Fehler". A prompt the
+// pass above already gave its element („Korrigieren Sie den Artikel") names its operation and is
+// left as it is. tests/a12-rebuild.test.mjs pins the class.
+const correctionNamed = [];
+function nameCorrectionOperation(item) {
+  if (!levelSpec(level)?.determinacyRepairs || item.type !== 'error_correction') return;
+  const before = String(item.questionDe || '');
+  const after = before
+    .replace(/^Korrigieren Sie die Frage:/, 'Korrigieren Sie nur den Fehler in der Frage:')
+    .replace(/^Korrigieren Sie:/, 'Korrigieren Sie nur den Fehler:');
+  if (after === before) return;
+  item.questionDe = after;
+  correctionNamed.push(item.id);
+}
+raw.forEach(nameCorrectionOperation);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -700,11 +871,14 @@ if (existsSync(extraUrl)) {
   extra.forEach(repairFrontedOrder);
   // Codex review 2026-10-07: the hand items are where both measured items live.
   extra.forEach(repairOpeningCue);
+  extra.forEach(repairDeterminacy);
   // REVIEW #14 MAJOR 2: and the same convention — the eight items the review
   // measured are hand-written, so they carry their cue in the JSON; this call is
   // the gate that keeps the next hand-written correction from shipping without
   // one, and it reports zero when the JSON is right.
   extra.forEach(repairDeterminerCue);
+  // DaF review #7 B1: and a correction names its operation, after the element cue above.
+  extra.forEach(nameCorrectionOperation);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);
@@ -856,9 +1030,19 @@ const REGISTER = [
   [/\bantworte\b/gi, 'antworten Sie'],
 ];
 
-/** Sentence-initial (or prompt-initial) words keep their capital letter. */
-const recapitalise = (text) =>
-  text.replace(/(^|[.!?:„"“]\s*|→\s*)([a-zäöüß])/g, (_, lead, ch) => lead + ch.toUpperCase());
+/**
+ * Sentence-initial (or prompt-initial) words keep their capital letter. The build's own cue is left
+ * as written: „(Beginnen Sie mit „Wir“; „nicht“ steht am Satzende)" quotes a lower-case word, and a
+ * quotation mark is no sentence start (review #9 cues came out „„Nicht“ Steht").
+ */
+const BUILD_CUE_RE = /\s*\(Beginnen Sie mit „[^“]*“(?:;[^)]*)?\)/g;
+const recapitalise = (text) => {
+  const cues = [];
+  return text
+    .replace(BUILD_CUE_RE, (cue) => `${cues.push(cue) - 1}`)
+    .replace(/(^|[.!?:„"“]\s*|→\s*)([a-zäöüß])/g, (_, lead, ch) => lead + ch.toUpperCase())
+    .replace(/(\d+)/g, (_, i) => cues[Number(i)]);
+};
 
 const buchstabiertRewrites = [];
 
@@ -1012,9 +1196,15 @@ for (const [id, fix] of Object.entries(fieldFixes)) {
 // It is stamped on EVERY item — legacy, generated and hand-written alike —
 // because the draw filters all three.
 const minLektionOf = minLektionIndex(level);
+// DaF review #3 (A1.2) BLOCKER 2: the words AND the grammar. The word stamp alone let L3 draw
+// „keinen" a Lektion before the course teaches it; the later of the two stamps is the Lektion the
+// item may first be served in, and a construction the level never teaches means never.
+const horizonOf = constructionHorizonIndex(level);
 const minLektionHist = new Map();
 for (const item of items) {
-  item.minLektion = minLektionOf(item);
+  const byWords = minLektionOf(item);
+  const byGrammar = horizonOf(item);
+  item.minLektion = byWords === null || byGrammar === null ? null : Math.max(byWords, byGrammar);
   const key = item.minLektion === null ? 'null' : item.minLektion;
   minLektionHist.set(key, (minLektionHist.get(key) || 0) + 1);
 }
@@ -1082,7 +1272,33 @@ console.log(
   `${unusedSidecar.length ? `; ${unusedSidecar.length} sidecar key(s) match no item: ${unusedSidecar.slice(0, 8).join(', ')}` : ''}`,
 );
 
+// ── DaF review #11 (A1.2) BLOCKER B1: a named repair accepts only that repair ──
+//
+// The determiner cue above changed the TASK and left `accepted` alone, and that was half of the
+// promise: „Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.““ still took „Das sind
+// meine Onkel." — the repair of the verb. Run last, after every pass that adds to a list (extras,
+// corrections, the fronted forms), so nothing re-adds what this takes out: an entry that does not
+// repair the element the prompt names leaves the list, and the run names it. Both levels; A1.1 has
+// none (measured 2026-10-19).
+const namedRepairDropped = [];
+for (const item of items) {
+  if (!Array.isArray(item.accepted)) continue;
+  const dropped = item.accepted.filter((a) => !namedRepairAccepts(item, a));
+  if (!dropped.length) continue;
+  if (!namedRepairAccepts(item, item.answer)) {
+    console.error(`${item.id}: the model answer does not repair the element its prompt names — fix the item`);
+    process.exit(1);
+  }
+  item.accepted = item.accepted.filter((a) => namedRepairAccepts(item, a));
+  namedRepairDropped.push(`${item.id} (${dropped.join(' | ')})`);
+}
+if (namedRepairDropped.length) console.log(`named repairs: dropped ${namedRepairDropped.length} accepted entr(y/ies) that repair another element: ${namedRepairDropped.join('; ')}`);
+
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
+// DaF review #3 (A1.2) BLOCKER 2: the checkpoint's dictation and read-aloud pickers read this map, so
+// no checkpoint makes the learner type or say a dialogue line built on grammar taught later.
+const lineHorizon = lineHorizons(level);
+if (lineHorizon) out.lineHorizon = lineHorizon;
 const target = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url);
 writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
 

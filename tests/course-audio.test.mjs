@@ -290,7 +290,13 @@ test('the three playback screens ask the manifest before they synthesise', () =>
 
   const review = read('src/pages/lesson/ReviewPage.jsx');
   assert.match(review, /line-\$\{parsed\.lineIdx\}/, 'sentence:<lektionId>:<idx> → line-<idx>');
-  assert.match(review, /playWord\(/, 'word cards use the words row recording');
+  assert.match(review, /playRecordingChecked\(wordUrl, text\)/, 'word cards use the words row recording, checked');
+  // Checked everywhere (Codex rescore, 2026-10-15): the deck and the warm-up used unchecked playback.
+  assert.doesNotMatch(review, /\bplayLine\(|\bplayWord\(|\bspeakGerman\(/, 'no unchecked player left in the deck');
+  assert.match(read('src/pages/lesson/LessonPlayerPage.jsx'), /speakGermanChecked\(\(content && \(content\.speak \|\| content\.front\)\) \|\| ''\)/, 'nor in the warm-up');
+  const card = read('src/components/lesson/ReviewCard.jsx');
+  assert.match(card, /const result = await onPlay\(\);\s*setFailed\(result && result\.ok === false/, 'the card hears whether sound started');
+  assert.match(card, /t\(`audio\.failed\.\$\{failed\}`, lang\)[\s\S]{0,900}t\('audio\.retry', lang\)[\s\S]{0,400}t\('audio\.showText', lang\)/, 'and says so, with retry and show-text');
   assert.ok(!/new SpeechSynthesisUtterance/.test(review), 'ReviewPage speaks through lib/lesson/speech.js, not its own utterance');
 });
 

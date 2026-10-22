@@ -23,8 +23,8 @@ import Aurora from '../components/ui/Aurora.jsx';
 // node is done (mirrors CurriculumHomePage). A level with no curriculum
 // module keeps the legacy course.programKey ledger, unchanged. The "next
 // level" card for a rebuilt level never links straight to the next level's
-// course player — A1.2 is a paused draft (DRAFT_CURRICULA, not CURRICULA;
-// owner decision 2026-09-13) — it links to "All courses" instead.
+// course player — written while A1.2 was a draft (live since 2026-10-22) —
+// it links to "All courses" instead.
 export default function CourseCompletePage() {
   const { level } = useParams();
   const curriculum = curriculumFor(level);
