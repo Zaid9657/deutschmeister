@@ -89,9 +89,11 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
           <p class="hero-line mx-auto mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:200ms">
             {totalTopics} topics from A1.1 to B2.2, each with clear English explanations, German examples, and interactive exercises.
           </p>
-          <p class="hero-line mt-4 text-[0.9375rem] text-graphite" lang="en" style="--d:320ms">
-            New to German? Start with <a href="/grammar/a1.1/nouns-gender/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">German noun genders (der, die, das)</a> — the first A1.1 topic.
-          </p>
+          {firstTopic && (
+            <p class="hero-line mt-4 text-[0.9375rem] text-graphite" lang="en" style="--d:320ms">
+              New to German? Start with <a href={`/grammar/${firstTopic.level}/${firstTopic.slug}/`} class="font-bold text-siegel transition-colors hover:text-siegel-deep">{firstTopic.title}</a> — the first {firstTopic.level.toUpperCase()} topic.
+            </p>
+          )}
         </div>
 
         <!-- Level picker: the grid a visitor chooses from — clay, tilting -->
@@ -131,7 +133,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
                         New here? Start with the basics
                       </p>
                       <p id="gm-hero-title" class="font-display text-lg font-semibold leading-snug sm:text-xl" data-atropos-offset="4">
-                        A1.1 · Topic 1: {firstTopic.title}
+                        {firstTopic.level.toUpperCase()} · Topic 1: {firstTopic.title}
                       </p>
                       <p id="gm-hero-sub" class="mt-0.5 text-sm text-graphite" data-atropos-offset="2">
                         {totalTopics} topics from complete beginner to upper-intermediate.

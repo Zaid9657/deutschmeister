@@ -633,7 +633,7 @@ const offerFreeCourse = level.startsWith('a1');
 
     <!-- Related Topics -->
     {relatedTopics.length > 0 && (
-      <section id="questions" class="dm-defer mb-12 scroll-mt-24">
+      <section class="dm-defer mb-12">
         <h2 class={`reveal ${H2} mb-6`}>Related Topics</h2>
         <div class="grid gap-4 sm:grid-cols-2">
           {relatedTopics.map((rt, i) => {
@@ -662,7 +662,7 @@ const offerFreeCourse = level.startsWith('a1');
 
     <!-- Per-topic FAQ (see src/lib/topicSeo.js) — reference, flat -->
     {seoExtra?.faqs?.length > 0 && (
-      <section class="dm-defer mb-12">
+      <section id="questions" class="dm-defer mb-12 scroll-mt-24">
         <h2 class={`reveal ${H2} mb-6`}>{seoExtra.faqHeading ?? 'Common questions'}</h2>
         <div class="space-y-3">
           {seoExtra.faqs.map(({ q, a }, i) => (

@@ -12,18 +12,26 @@ const SUB_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.
 // scripts/dump-grammar-cache.mjs), every function below serves from it and no
 // Supabase request is made. This lets the Astro site build in environments
 // without Supabase egress (CI, sandboxes) and can act as an outage fallback.
-// Without the env var, behavior is exactly as before.
+// Without the env var, acquire one complete live snapshot before any route is
+// generated. All later reads use that snapshot, even if Supabase goes offline.
 // ---------------------------------------------------------------------------
 let contentCache;
-function loadCacheFile(cachePath) {
-  const raw = JSON.parse(readFileSync(cachePath, 'utf8'));
+let contentSnapshot;
+function normalizeSnapshot(raw) {
+  const topics = (raw.topics ?? [])
+    .filter((t) => t.is_published === true)
+    .map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
+  const topicIds = new Set(topics.map((t) => t.id));
   return {
-    topics:    (raw.topics    ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) })),
-    rules:     raw.rules      ?? [],
-    examples:  raw.examples   ?? [],
-    exercises: raw.exercises  ?? [],
+    topics,
+    rules:     (raw.rules ?? []).filter((r) => topicIds.has(r.topic_id)),
+    examples:  (raw.examples ?? []).filter((e) => topicIds.has(e.topic_id)),
+    exercises: (raw.exercises ?? []).filter((e) => topicIds.has(e.topic_id)),
     dumpedAt:  raw.dumpedAt ?? null,
   };
+}
+function loadCacheFile(cachePath) {
+  return normalizeSnapshot(JSON.parse(readFileSync(cachePath, 'utf8')));
 }
 function getCache() {
   if (contentCache !== undefined) return contentCache;
@@ -44,8 +52,8 @@ function getCache() {
 // `getTopicsForLevel(a1.1): TypeError: fetch failed` — once because the Supabase
 // project had been paused, once right after it was restored. The build-time
 // fetch is a hard dependency the CI never exercises (CI builds from the
-// committed cache), so every Supabase read below now goes through
-// `withFallback`: up to three attempts with backoff, and if the network still
+// committed cache), so snapshot acquisition goes through `withFallback`:
+// up to three attempts with backoff, and if the network still
 // fails, the committed repo-root `grammar-content-cache.json` (the same file
 // CI verifies) serves the whole build, loudly. A stale cache beats no deploy;
 // the warning names the dump date so the next `dump-grammar-cache` run is
@@ -53,6 +61,7 @@ function getCache() {
 // ---------------------------------------------------------------------------
 const EMERGENCY_CACHE_URL = new URL('../../../grammar-content-cache.json', import.meta.url);
 const FETCH_ATTEMPTS = 3;
+const FETCH_PAGE_SIZE = 1000;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function useEmergencyCache(label, err) {
@@ -108,72 +117,59 @@ export const LEVEL_META = {
 // of the code never has to worry about case.
 const normalizeLevel = (level) => level?.toLowerCase() ?? level;
 
-/** Fetch every topic (slug + level) — used in getStaticPaths */
-async function fetchTopicPaths() {
-  // Connectivity diagnostic — visible in Netlify build logs
-  try {
-    const diagUrl = `https://omqyueddktqeyrrqvnyq.supabase.co/rest/v1/grammar_topics?select=count&limit=1`;
-    const diagKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-    console.log('[grammar] Testing Supabase connectivity:', diagUrl);
-    const diagResp = await fetch(diagUrl, {
-      headers: { apikey: diagKey ?? '', Authorization: `Bearer ${diagKey ?? ''}` },
-    });
-    console.log('[grammar] Supabase test response status:', diagResp.status);
-  } catch (diagErr) {
-    console.error('[grammar] Raw fetch test FAILED:', diagErr.message, diagErr.cause?.code);
+async function fetchSnapshotTable(table, topicIds) {
+  const rows = [];
+  for (let from = 0; ; from += FETCH_PAGE_SIZE) {
+    let query = supabase.from(table).select('*').order('id')
+      .range(from, from + FETCH_PAGE_SIZE - 1);
+    query = table === 'grammar_topics'
+      ? query.eq('is_published', true)
+      : query.in('topic_id', topicIds);
+    const { data, error } = await query;
+    if (error) throw new Error(`${table}: ${error.message}`);
+    const batch = data ?? [];
+    rows.push(...batch);
+    if (batch.length < FETCH_PAGE_SIZE) return rows;
   }
-
-  const { data, error } = await supabase
-    .from('grammar_topics')
-    .select('slug, sub_level')
-    .order('sub_level')
-    .order('topic_order');
-
-  if (error) throw new Error(`getAllTopicPaths: ${error.message}`);
-  return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
 }
 
+async function snapshotFromNetwork() {
+  const topics = (await fetchSnapshotTable('grammar_topics'))
+    .filter((t) => t.is_published === true);
+  const topicIds = topics.map((t) => t.id);
+  if (!topicIds.length) return normalizeSnapshot({ topics });
+  const [rules, examples, exercises] = await Promise.all([
+    fetchSnapshotTable('grammar_rules', topicIds),
+    fetchSnapshotTable('grammar_examples', topicIds),
+    fetchSnapshotTable('grammar_exercises', topicIds),
+  ]);
+  return normalizeSnapshot({ topics, rules, examples, exercises });
+}
+
+function getSnapshot() {
+  contentSnapshot ??= withFallback('grammar snapshot', snapshotFromNetwork, (cache) => cache);
+  return contentSnapshot;
+}
+
+/** Fetch every topic (slug + level) — used in getStaticPaths */
 export async function getAllTopicPaths() {
-  return withFallback('getAllTopicPaths', fetchTopicPaths, (cache) =>
-    cache.topics
-      .slice()
-      .sort((a, b) => a.sub_level.localeCompare(b.sub_level) || (a.topic_order ?? 0) - (b.topic_order ?? 0))
-      .map((t) => ({ slug: t.slug, sub_level: t.sub_level })));
+  return (await getAllTopics()).map((t) => ({ slug: t.slug, sub_level: t.sub_level }));
 }
 
 /** Fetch all topics for a given level — used on level index pages */
 export async function getTopicsForLevel(subLevel) {
-  return withFallback(`getTopicsForLevel(${subLevel})`, async () => {
-    // Query using ilike so it matches regardless of case stored in DB
-    const { data, error } = await supabase
-      .from('grammar_topics')
-      .select('id, slug, title_en, title_de, description_en, description_de, topic_order, updated_at')
-      .ilike('sub_level', subLevel)
-      .order('topic_order');
-
-    if (error) throw new Error(`getTopicsForLevel(${subLevel}): ${error.message}`);
-    return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
-  }, (cache) =>
-    cache.topics
-      .filter((t) => t.sub_level === normalizeLevel(subLevel))
-      .sort(byOrder('topic_order')));
+  const snapshot = await getSnapshot();
+  return snapshot.topics
+    .filter((t) => t.sub_level === normalizeLevel(subLevel))
+    .sort(byOrder('topic_order'));
 }
 
 /** Fetch all topics for all levels — used on the /grammar index */
 export async function getAllTopics() {
-  return withFallback('getAllTopics', async () => {
-    const { data, error } = await supabase
-      .from('grammar_topics')
-      .select('id, slug, title_en, title_de, description_en, sub_level, topic_order, updated_at')
-      .order('sub_level')
-      .order('topic_order');
-
-    if (error) throw new Error(`getAllTopics: ${error.message}`);
-    return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
-  }, (cache) =>
-    cache.topics
-      .slice()
-      .sort((a, b) => a.sub_level.localeCompare(b.sub_level) || (a.topic_order ?? 0) - (b.topic_order ?? 0)));
+  const snapshot = await getSnapshot();
+  return snapshot.topics
+    .slice()
+    .sort((a, b) => a.sub_level.localeCompare(b.sub_level) || (a.topic_order ?? 0) - (b.topic_order ?? 0));
 }
 
 // Options/correct_answer may arrive as JSON strings or {label,value} objects;
@@ -190,92 +186,29 @@ function normalizeExercises(list) {
   });
 }
 
-function topicFullFromCache(cache, subLevel, slug) {
+function topicFullFromSnapshot(snapshot, subLevel, slug) {
     const level = normalizeLevel(subLevel);
-    const topic = cache.topics.find((t) => t.sub_level === level && t.slug === slug);
+    const topic = snapshot.topics.find((t) => t.sub_level === level && t.slug === slug);
     if (!topic) return null;
 
-    const siblings = cache.topics
+    const siblings = snapshot.topics
       .filter((t) => t.sub_level === level)
       .sort(byOrder('topic_order'));
     const idx = siblings.findIndex((t) => t.slug === slug);
 
     return {
       topic,
-      rules:     cache.rules.filter((r) => r.topic_id === topic.id).sort(byOrder('order_index')),
-      examples:  cache.examples.filter((e) => e.topic_id === topic.id).sort(byOrder('order_index')),
-      exercises: normalizeExercises(cache.exercises.filter((e) => e.topic_id === topic.id).sort(byOrder('order_index'))),
+      rules:     snapshot.rules.filter((r) => r.topic_id === topic.id).sort(byOrder('order_index')),
+      examples:  snapshot.examples.filter((e) => e.topic_id === topic.id).sort(byOrder('order_index')),
+      exercises: normalizeExercises(snapshot.exercises.filter((e) => e.topic_id === topic.id).sort(byOrder('order_index'))),
       prev: idx > 0 ? siblings[idx - 1] : null,
       next: idx !== -1 && idx < siblings.length - 1 ? siblings[idx + 1] : null,
     };
 }
 
-async function topicFullFromNetwork(subLevel, slug) {
-  // 1. Topic — use ilike so "a1.1" matches "A1.1" in the DB
-  const { data: topic, error: topicErr } = await supabase
-    .from('grammar_topics')
-    .select('*')
-    .ilike('sub_level', subLevel)
-    .eq('slug', slug)
-    .single();
-
-  if (topicErr) throw new Error(`getTopicFull topic(${subLevel}/${slug}): ${topicErr.message}`);
-  if (!topic) return null;
-
-  // Normalize the level on the topic itself
-  topic.sub_level = normalizeLevel(topic.sub_level);
-
-  // 2. Rules, examples, exercises — parallel fetch
-  const [rulesRes, examplesRes, exercisesRes] = await Promise.all([
-    supabase
-      .from('grammar_rules')
-      .select('*')
-      .eq('topic_id', topic.id)
-      .order('order_index'),
-    supabase
-      .from('grammar_examples')
-      .select('*')
-      .eq('topic_id', topic.id)
-      .order('order_index'),
-    supabase
-      .from('grammar_exercises')
-      .select('*')
-      .eq('topic_id', topic.id)
-      .order('order_index'),
-  ]);
-
-  if (rulesRes.error)     throw new Error(`rules: ${rulesRes.error.message}`);
-  if (examplesRes.error)  throw new Error(`examples: ${examplesRes.error.message}`);
-  if (exercisesRes.error) throw new Error(`exercises: ${exercisesRes.error.message}`);
-
-  const exercises_normalized = normalizeExercises(exercisesRes.data);
-
-  // 3. Adjacent topics for prev/next navigation
-  const { data: siblings } = await supabase
-    .from('grammar_topics')
-    .select('slug, title_en, topic_order')
-    .ilike('sub_level', subLevel)
-    .order('topic_order');
-
-  const idx = (siblings ?? []).findIndex(t => t.slug === slug);
-  const prev = idx > 0 ? siblings[idx - 1] : null;
-  const next = idx !== -1 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
-
-  return {
-    topic,
-    rules:     rulesRes.data       ?? [],
-    examples:  examplesRes.data    ?? [],
-    exercises: exercises_normalized,
-    prev,
-    next,
-  };
-}
-
 /** Fetch full topic data including rules, examples, exercises */
 export async function getTopicFull(subLevel, slug) {
-  return withFallback(`getTopicFull(${subLevel}/${slug})`,
-    () => topicFullFromNetwork(subLevel, slug),
-    (cache) => topicFullFromCache(cache, subLevel, slug));
+  return topicFullFromSnapshot(await getSnapshot(), subLevel, slug);
 }
 
 export { SUB_LEVELS };

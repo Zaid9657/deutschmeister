@@ -27,6 +27,9 @@ import {
   READING_LESSON_COUNTS_BY_LEVEL,
   LEVEL_COUNT,
   TRIAL_SPEAKING_SESSIONS,
+  FREE_LEVEL_LABEL,
+  PODCAST_EPISODE_COUNT,
+  TRIAL_DAYS,
 } from '../src/data/marketing.js';
 // Head fields come from the one registry both this script and the <SEO> calls
 // consume — src/data/seoRoutes.js. The route objects below carry only what is
@@ -145,13 +148,13 @@ const LEVEL_TEST_FAQS = [
 ];
 
 const PODCAST_FAQS = [
-  { q: 'What level are the German podcasts?', a: 'We have 24 podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.' },
-  { q: 'Are the German podcasts free?', a: 'Yes, all podcasts are free to listen to. A1.1 content is available without signup, while other levels require a free account.' },
+  { q: 'What level are the German podcasts?', a: `We have ${PODCAST_EPISODE_COUNT} podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.` },
+  { q: 'Are the German podcasts free?', a: `${FREE_LEVEL_LABEL} podcasts are free without an account. Higher levels are available during the ${TRIAL_DAYS}-day trial, with Pro, or with a purchased course covering that level.` },
   // NOTE: do not reinstate a transcript claim here. All 24 episodes in the
   // database have empty transcripts. The 2026-08-16 audit (B-04) removed this
   // claim from src/pages/PodcastsPage.jsx but missed this second, hardcoded
   // copy, so the indexed FAQPage rich result kept promising transcripts.
-  { q: 'How many podcast episodes are there?', a: 'We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly.' },
+  { q: 'How many podcast episodes are there?', a: `We have ${PODCAST_EPISODE_COUNT} episodes total — ${PODCAST_EPISODE_COUNT / LEVEL_COUNT} episodes for each of the ${LEVEL_COUNT} CEFR levels (${LEVELS.join(', ')}).` },
 ];
 
 const faqPageSchema = (faqs) => ({
@@ -374,16 +377,16 @@ ${faqSection(LEVEL_TEST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'PodcastSeries',
         name: 'DeutschMeister German Learning Podcast',
-        description: 'German learning podcast: 24 episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level.',
+        description: `German learning podcast: ${PODCAST_EPISODE_COUNT} episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level. ${FREE_LEVEL_LABEL} is free; higher levels require trial, Pro or a course covering the level.`,
         url: 'https://deutsch-meister.de/podcasts/',
         // webFeed must be an RSS/Atom feed, not the HTML page. The feed is served
         // by netlify/functions/podcast-feed.js via the netlify.toml rewrite.
         webFeed: 'https://deutsch-meister.de/podcast-feed.xml',
         inLanguage: ['de', 'en'],
-        numberOfEpisodes: 24,
+        numberOfEpisodes: PODCAST_EPISODE_COUNT,
         genre: ['Education', 'Language Learning'],
         author: ORG_REF,
-        isAccessibleForFree: true,
+        isAccessibleForFree: false,
       },
       faqPageSchema(PODCAST_FAQS),
       {
@@ -398,7 +401,7 @@ ${faqSection(LEVEL_TEST_FAQS)}
     content: `
 <div class="min-h-screen bg-paper pt-24 pb-16"><div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
   <div class="mb-12 text-center">
-    <div class="${CHIP} bg-accent-aprikose-wash text-accent-aprikose-ink">24 Episodes Available</div>
+    <div class="${CHIP} bg-accent-aprikose-wash text-accent-aprikose-ink">${PODCAST_EPISODE_COUNT} Episodes Available</div>
     <h1 class="mt-4 ${H_PAGE}">German Podcasts for Learners</h1>
     <p class="mx-auto mt-4 max-w-2xl ${LEAD}">Native speaker audio, graded by CEFR level • A1 to B2</p>
     <p class="mx-auto mt-2 max-w-xl ${BODY}">Listen to authentic German conversations designed for language learners. Every episode is graded by CEFR level, from A1 to B2.</p>
@@ -414,7 +417,7 @@ ${faqSection(LEVEL_TEST_FAQS)}
       <li class="border-l-2 border-siegel pl-3">Vocabulary highlights teach you new words in context</li>
     </ul>
     <h3 class="mt-8 ${H_CARD}">Podcasts for every level</h3>
-    <p class="mt-3 ${BODY}">Whether you're just starting with German (A1) or working toward fluency (B2), we have 24 episodes across all 8 CEFR levels. Each podcast is labeled with its level so you always know it's right for you.</p>
+    <p class="mt-3 ${BODY}">Whether you're just starting with German (A1) or working toward fluency (B2), we have ${PODCAST_EPISODE_COUNT} episodes across all ${LEVEL_COUNT} CEFR levels. Each podcast is labeled with its level so you always know it's right for you.</p>
     <div class="mt-8 flex flex-col gap-4 sm:flex-row">
       <a href="/level/a1.1?tab=podcasts" class="${BTN_PRIMARY}">Start Listening</a>
       <a href="/signup" class="${BTN_SECONDARY}">Sign Up Free</a>
@@ -655,7 +658,7 @@ for (const route of ROUTES) {
   // Route-specific JSON-LD (mirrored from the page's <SEO structuredData>).
   if (route.jsonLd.length > 0) {
     const ld = route.jsonLd
-      .map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`)
+      .map((o) => `<script type="application/ld+json" data-rh="true">${JSON.stringify(o)}</script>`)
       .join('\n    ');
     html = mustReplace(html, '</head>', `  ${ld}\n  </head>`, 'head end', route.path);
   }

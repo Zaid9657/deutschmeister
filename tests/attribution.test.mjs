@@ -69,6 +69,33 @@ test('social referrers classify without any parameter; search and unknown hosts 
   assert.deepEqual(c('https://www.example-blog.org/post'), { source: 'example-blog.org', medium: 'referral' });
 });
 
+test('search country domains record canonical sources in both first and last touch', () => {
+  const searches = [
+    ['www.google.co.uk', 'google'], ['www.google.com.au', 'google'], ['google.de', 'google'],
+    ['search.yahoo.co.jp', 'yahoo'], ['yahoo.com.au', 'yahoo'], ['search.yahoo.com', 'yahoo'],
+    ['www.bing.com', 'bing'], ['cn.bing.com', 'bing'],
+    ['duckduckgo.com', 'duckduckgo'], ['www.ecosia.org', 'ecosia'],
+    ['yandex.ru', 'yandex'], ['yandex.com.tr', 'yandex'],
+  ];
+  for (const [host, source] of searches) {
+    const { stored } = load({ referrer: `https://${host}/search?q=german` });
+    const record = stored();
+    assert.equal(record.first.source, source, host);
+    assert.equal(record.first.medium, 'organic', host);
+    assert.equal(record.last.source, source, host);
+    const returning = load({ search: '?ref=telegram', stored: record }).stored();
+    assert.equal(returning.first.source, source, 'the canonical first source survives later landings');
+    assert.equal(returning.last.source, 'telegram');
+  }
+});
+
+test('search classification matches host boundaries instead of domain substrings', () => {
+  const { api } = load();
+  for (const host of ['notgoogle.de', 'google.com.example.org', 'bing.com.example.org', 'notyahoo.co.jp', 'duckduckgo.com.example.org', 'ecosia.org.example.org', 'yandex.ru.example.org']) {
+    assert.deepEqual({ ...api.classifyReferrer(`https://${host}/`) }, { source: host, medium: 'referral' }, host);
+  }
+});
+
 test('Android app referrers are reversed package names and classify by the app, never as source "android"', () => {
   const { api } = load();
   const c = (u) => ({ ...api.classifyReferrer(u) });
