@@ -143,6 +143,12 @@ const SpeakingPage = () => {
   const [startError, setStartError] = useState(null); // { type:'funds'|'error', ... }
   const [session, setSession] = useState(null);
   const [evaluation, setEvaluation] = useState(null);
+  const pendingStartRef = useRef(null);
+
+  useEffect(() => () => pendingStartRef.current?.(), []);
+  useEffect(() => {
+    if (phase === 'session') pendingStartRef.current = null;
+  }, [phase]);
 
   const levelInitRef = useRef(false);
   const browserSupport = useMemo(() => checkSpeakingSupport(), []);
@@ -286,7 +292,7 @@ const SpeakingPage = () => {
 
   // ---- start ----
   const handleStart = async () => {
-    if (startDisabled) return;
+    if (startDisabled || pendingStartRef.current) return;
     setStarting(true);
     setStartError(null);
     // Microphone FIRST. The start call reserves the learner's allowance (a
@@ -294,19 +300,45 @@ const SpeakingPage = () => {
     // run before the permission prompt, so a denied or missing mic cost a
     // session the learner could never speak in.
     let mic;
+    let cancelled = false;
+    let sessionToken;
+    let authHeaders;
+    let closeCreatedSession;
+    const cancelStart = () => {
+      cancelled = true;
+      releaseMicrophone(mic);
+      closeCreatedSession?.();
+    };
+    pendingStartRef.current = cancelStart;
     try {
       mic = await acquireMicrophone();
+      if (cancelled) { releaseMicrophone(mic); return; }
     } catch (err) {
+      if (cancelled) return;
+      pendingStartRef.current = null;
       console.error('Mic error:', err);
       setStartError({ type: 'error', message: micErrorMessage(err) });
       setStarting(false);
       return;
     }
+    closeCreatedSession = () => {
+      if (sessionToken) {
+        const token = sessionToken;
+        sessionToken = null;
+        void fetch('/api/speaking/speaking-session', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
+          body: JSON.stringify({ action: 'end', session_token: token, duration_seconds: 0 }),
+        }).catch((err) => console.warn('Abandoned speaking session close failed:', err.message));
+      }
+    };
     let handedOver = false;
     try {
+      authHeaders = await getAuthHeaders();
+      if (cancelled) return;
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({
           action: 'start',
           level: selectedLevel,
@@ -328,6 +360,8 @@ const SpeakingPage = () => {
         }),
       });
       const data = await res.json().catch(() => ({}));
+      sessionToken = data.session_token;
+      if (cancelled) { cancelStart(); return; }
       if (res.status === 402) {
         setStartError({ type: 'funds', balance: data.balance_cents ?? walletCents, cost: data.cost_cents ?? selectedCost });
         // The server priced it: the free allowance is gone. Re-read it so the
@@ -339,6 +373,7 @@ const SpeakingPage = () => {
         setStartError({ type: 'error', message: data.error || 'The session could not be started.' });
         return;
       }
+      if (!sessionToken) throw new Error('Failed to create speaking session');
       setSession({
         sessionToken: data.session_token,
         plannedMinutes: data.planned_minutes || selectedMinutes,
@@ -358,11 +393,15 @@ const SpeakingPage = () => {
       setEvaluation(null);
       setPhase('session');
     } catch (err) {
+      if (cancelled) return;
       console.error('start error:', err);
       setStartError({ type: 'error', message: 'Network error — please try again.' });
     } finally {
-      if (!handedOver) releaseMicrophone(mic);
-      setStarting(false);
+      if (!handedOver) {
+        releaseMicrophone(mic);
+        if (pendingStartRef.current === cancelStart) pendingStartRef.current = null;
+      }
+      if (!cancelled) setStarting(false);
     }
   };
 

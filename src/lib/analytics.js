@@ -35,6 +35,7 @@ export async function initAnalytics() {
 
   loading = import('posthog-js')
     .then((mod) => {
+      if (!hasConsent()) return;
       posthog = mod.default;
       posthog.init(key, {
         api_host: host || 'https://us.i.posthog.com',
@@ -61,7 +62,7 @@ export async function initAnalytics() {
 }
 
 export function identify(userId, traits) {
-  if (!initialized || !posthog) return;
+  if (!hasConsent() || !initialized || !posthog) return;
   posthog.identify(userId, traits);
 }
 
@@ -89,7 +90,7 @@ function mirrorToGa(event, props) {
 
 export function track(event, props) {
   mirrorToGa(event, props);
-  if (!initialized || !posthog) return;
+  if (!hasConsent() || !initialized || !posthog) return;
   posthog.capture(event, props);
 }
 

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, User, LogOut, Globe, Crown, Sparkles, ChevronDown, Film, ShieldCheck, LifeBuoy } from 'lucide-react';
@@ -56,7 +56,6 @@ const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { user, signOut } = useAuth();
   const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasLevelAccess, profile } = useSubscription();
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -73,8 +72,8 @@ const Navbar = () => {
   const handleSignOut = async () => {
     setUserMenuOpen(false);
     await signOut();
-    navigate('/');
     setIsOpen(false);
+    window.location.assign('/');
   };
 
   // Close user menu on outside click
