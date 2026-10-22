@@ -10,13 +10,13 @@ import { CURRICULUM_A12 } from './a12.js';
  * render. A level is promoted here only when its lesson pool (lessonPools/<level>.json),
  * its rule-card overrides and its hand-written items exist and a DaF review has signed it
  * off; before that, registering it would switch a PAID course page to an engine with
- * nothing behind it. A1.2 is a validated DRAFT (2026-09-13): validator and tests see it
- * through ALL_CURRICULA, the app does not.
+ * nothing behind it. A1.2 was promoted by owner decision (2026-10-22) after DaF reviews #12–#16;
+ * its accepted known issues are listed in docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md.
  */
-export const CURRICULA = { 'a1.1': CURRICULUM_A11 };
+export const CURRICULA = { 'a1.1': CURRICULUM_A11, 'a1.2': CURRICULUM_A12 };
 
 /** Validated but not yet shipped — see the promotion rule above. */
-export const DRAFT_CURRICULA = { 'a1.2': CURRICULUM_A12 };
+export const DRAFT_CURRICULA = {};
 
 /** Every curriculum module, live or draft — for the validator and the test suites. */
 export const ALL_CURRICULA = { ...CURRICULA, ...DRAFT_CURRICULA };

@@ -68,17 +68,17 @@ test('the next step walks the course in order and its links are the course homeâ
   for (const route of ['`/course/${level}/l/${node.nr}`', '`/course/${level}/checkpoint/${node.nr}`', '`/modelltest/${node.testSlug}`']) {
     assert.ok(home.includes(route), `CurriculumHomePage still links ${route}`);
   }
-  // A 28-day program: the first item that is not done (CourseHomePage's currentItem).
-  const items = flattenCourse(COURSES['a1.2']);
-  const step = courseNextStep('a1.2', new Set([items[0].id, items[1].id]));
-  assert.equal(step.href, `/course/a1.2/${encodeURIComponent(items[2].id)}`);
+  // A 28-day program (A2.1 since A1.2 was rebuilt): the first item that is not done (CourseHomePage's currentItem).
+  const items = flattenCourse(COURSES['a2.1']);
+  const step = courseNextStep('a2.1', new Set([items[0].id, items[1].id]));
+  assert.equal(step.href, `/course/a2.1/${encodeURIComponent(items[2].id)}`);
   assert.equal(step.total, items.length);
 });
 
 test('a finished course says so and names the next stop', () => {
-  const items = flattenCourse(COURSES['a1.2']);
-  const done = courseNextStep('a1.2', new Set(items.map((i) => i.id)));
-  assert.deepEqual(done, { kind: 'complete', level: 'a1.2', code: 'A1.2', next: 'a2.1', total: items.length });
+  const items = flattenCourse(COURSES['a2.1']);
+  const done = courseNextStep('a2.1', new Set(items.map((i) => i.id)));
+  assert.deepEqual(done, { kind: 'complete', level: 'a2.1', code: 'A2.1', next: 'a2.2', total: items.length });
   assert.equal(courseNextStep('b1.1', new Set()), null);
 });
 

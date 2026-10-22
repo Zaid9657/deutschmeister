@@ -1779,9 +1779,10 @@ test('rule 12: a can-do is rehearsed at a PRODUCTION surface, not by a silently 
 
 test('the registry, the curriculum index and the modules agree on which levels exist', () => {
   assert.deepEqual(LEVEL_KEYS.sort(), Object.keys(ALL_CURRICULA).sort());
-  // Only A1.1 is LIVE: promoting a level into CURRICULA switches the paid course page to
-  // the lesson engine, so it must wait for its pool, cards, items and a DaF sign-off.
-  assert.deepEqual(Object.keys(CURRICULA), ['a1.1']);
+  // A1.1 and A1.2 are LIVE (A1.2 since 2026-10-22, owner decision): promoting a level into CURRICULA
+  // switches the paid course page to the lesson engine, so it must wait for its pool, cards, items and
+  // a DaF review.
+  assert.deepEqual(Object.keys(CURRICULA), ['a1.1', 'a1.2']);
   for (const key of LEVEL_KEYS) {
     assert.equal(LEVELS[key].curriculum, anyCurriculumFor(key), `${key}: registry and index disagree`);
     assert.equal(LEVELS[key].curriculum.level, key);
@@ -1789,7 +1790,7 @@ test('the registry, the curriculum index and the modules agree on which levels e
   }
   // The two levels this suite knows by name, so a silent removal is caught too.
   assert.equal(curriculumFor('a1.1'), CURRICULUM_A11);
-  assert.equal(curriculumFor('a1.2'), null, 'A1.2 is a draft — not live');
+  assert.equal(curriculumFor('a1.2'), CURRICULUM_A12, 'A1.2 is live (promoted 2026-10-22, owner decision)');
   assert.equal(anyCurriculumFor('a1.2'), CURRICULUM_A12);
 });
 
