@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Check, ArrowLeft } from 'lucide-react';
 import { readCourseContext, courseHome, courseLesson } from '../lib/courseFlow.js';
@@ -27,11 +27,24 @@ import { readCourseContext, courseHome, courseLesson } from '../lib/courseFlow.j
 export default function CourseReturnBar() {
   const { pathname } = useLocation();
   const [ctx, setCtx] = useState(null);
+  const [height, setHeight] = useState(0);
+  const barRef = useRef(null);
   useEffect(() => { setCtx(readCourseContext()); }, [pathname]);
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    const measure = () => setHeight(bar.getBoundingClientRect().height);
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(bar);
+    return () => observer?.disconnect();
+  }, [ctx, pathname]);
   if (!ctx || pathname.startsWith('/course/') || (ctx.homeHref && pathname === ctx.homeHref)) return null;
   const home = ctx.homeHref || courseHome(ctx.level);
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-white/95 backdrop-blur print:hidden">
+    <>
+    <div style={{ height }} aria-hidden="true" className="print:hidden" />
+    <div ref={barRef} className="fixed inset-x-0 bottom-[var(--dm-bottom-nav-h,0px)] z-40 border-t border-rule bg-white/95 backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-2.5">
         <Link to={home} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"><ArrowLeft className="h-4 w-4" /> {ctx.code}</Link>
         <p className="min-w-0 flex-1 truncate text-[0.8125rem] text-graphite">{ctx.position ? <><span className="font-data">{ctx.position}/{ctx.total}</span> · </> : null}{ctx.title}</p>
@@ -46,5 +59,6 @@ export default function CourseReturnBar() {
         )}
       </div>
     </div>
+    </>
   );
 }

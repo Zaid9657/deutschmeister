@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Mic, Loader2, AlertCircle, Phone, Sparkles, Hand } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
@@ -21,6 +21,12 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
   const [stage, setStage] = useState('intro'); // intro | connecting | session | error
   const [error, setError] = useState(null);
   const [session, setSession] = useState(null);
+  const pendingStartRef = useRef(null);
+
+  useEffect(() => () => pendingStartRef.current?.(), []);
+  useEffect(() => {
+    if (stage === 'session') pendingStartRef.current = null;
+  }, [stage]);
 
   // No authenticated session → the speaking step can't run (backend is
   // JWT-required). Proceed silently as if the user pressed skip.
@@ -29,27 +35,57 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
   }, [authLoading, user, stage, onSkip]);
 
   const startSession = async () => {
+    if (pendingStartRef.current) return;
     if (!user) { setError('Please log in to take the speaking test.'); return; }
     setStage('connecting');
     setError(null);
     // Microphone before the session exists: a denied mic used to leave an
     // 'active' placement session behind that nobody could speak in.
     let mic;
+    let cancelled = false;
+    let sessionToken;
+    let authHeaders;
+    let closeCreatedSession;
+    const cancelStart = () => {
+      cancelled = true;
+      releaseMicrophone(mic);
+      closeCreatedSession?.();
+    };
+    pendingStartRef.current = cancelStart;
     try {
       mic = await acquireMicrophone();
+      if (cancelled) { releaseMicrophone(mic); return; }
     } catch (err) {
+      if (cancelled) return;
+      pendingStartRef.current = null;
       console.error('Placement mic error:', err);
       setError(micErrorMessage(err));
       setStage('error');
       return;
     }
+    closeCreatedSession = () => {
+      if (sessionToken) {
+        const token = sessionToken;
+        sessionToken = null;
+        void fetch('/api/speaking/speaking-session', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
+          body: JSON.stringify({ action: 'end', session_token: token, duration_seconds: 0 }),
+        }).catch((err) => console.warn('Abandoned placement session close failed:', err.message));
+      }
+    };
+    let handedOver = false;
     try {
+      authHeaders = await getAuthHeaders();
+      if (cancelled) return;
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({ action: 'start', mode: 'placement' }),
       });
       const data = await res.json().catch(() => ({}));
+      sessionToken = data.session_token;
+      if (cancelled) { cancelStart(); return; }
       if (!res.ok) throw new Error(data.error || 'Failed to create speaking session');
       if (!data.session_token) throw new Error('Failed to create speaking session');
       setSession({
@@ -58,12 +94,18 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
         opening: { text: data.replyText, audioBase64: data.replyAudioBase64 },
         micStream: mic,
       });
+      handedOver = true;
       setStage('session');
     } catch (err) {
-      releaseMicrophone(mic);
+      if (cancelled) return;
       console.error('Placement speaking error:', err);
       setError(err.message || 'Failed to start speaking session');
       setStage('error');
+    } finally {
+      if (!handedOver) {
+        releaseMicrophone(mic);
+        if (pendingStartRef.current === cancelStart) pendingStartRef.current = null;
+      }
     }
   };
 

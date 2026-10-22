@@ -19,6 +19,7 @@ import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
+import { createExamAutosave } from './examAutosave.js';
 
 // /modelltest/:examSlug/run — the timed runner (renovation Phase 5a).
 //
@@ -157,9 +158,17 @@ const ModelltestRun = () => {
   const [remaining, setRemaining] = useState(null);
   const [loading, setLoading] = useState(true);
   const [finishing, setFinishing] = useState(false);
+  const [changingSection, setChangingSection] = useState(false);
   const [finishError, setFinishError] = useState(null);
   const listeningKeysRef = useRef({});
-  const saveTimerRef = useRef(null);
+  const autosaveRef = useRef(null);
+  if (!autosaveRef.current) autosaveRef.current = createExamAutosave(saveAnswers);
+  const changingSectionRef = useRef(false);
+
+  useEffect(() => {
+    const autosave = autosaveRef.current;
+    return () => autosave.cancel();
+  }, [examSlug]);
 
   const registerListeningKey = useCallback((partKey, items) => {
     listeningKeysRef.current[partKey] = items;
@@ -206,12 +215,10 @@ const ModelltestRun = () => {
   const frozenRef = useRef(null);
   const setAnswer = (key, value) => {
     if (frozenRef.current) return;
+    if (changingSectionRef.current) return;
     setAnswers((prev) => {
       const next = { ...prev, [key]: value, _meta: { sectionIndex } };
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      saveTimerRef.current = setTimeout(() => {
-        if (attempt) saveAnswers(attempt.id, next);
-      }, 1500);
+      if (attempt) autosaveRef.current.schedule(attempt.id, next);
       return next;
     });
   };
@@ -230,6 +237,7 @@ const ModelltestRun = () => {
 
   const finish = useCallback(async () => {
     if (!attempt || finishing) return;
+    autosaveRef.current.cancel();
     if (!frozenRef.current) frozenRef.current = answers;
     const snapshot = frozenRef.current;
     setFinishing(true);
@@ -261,19 +269,34 @@ const ModelltestRun = () => {
   }, [attempt, finishing, answers, sectionIndex]);
 
   const nextSection = useCallback(async () => {
-    if (!attempt) return;
+    if (!attempt || changingSectionRef.current) return;
+    autosaveRef.current.cancel();
     if (isLast) {
       finish();
       return;
     }
+    changingSectionRef.current = true;
+    setChangingSection(true);
     const nextIdx = sectionIndex + 1;
     const nextAnswers = { ...answers, _meta: { sectionIndex: nextIdx } };
-    setAnswers(nextAnswers);
-    await saveAnswers(attempt.id, nextAnswers);
-    const newDeadline = await advanceSectionDeadline(attempt.id, mock.sections[nextIdx].minutes);
-    setSectionIndex(nextIdx);
-    setDeadline(newDeadline ? new Date(newDeadline).getTime() : Date.now() + mock.sections[nextIdx].minutes * 60000);
-    window.scrollTo({ top: 0 });
+    try {
+      const newDeadline = await advanceSectionDeadline(attempt.id, mock.sections[nextIdx].minutes, nextAnswers);
+      if (!newDeadline) {
+        setFinishError('Ihre Antworten konnten nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut.');
+        return;
+      }
+      setAnswers(nextAnswers);
+      setSectionIndex(nextIdx);
+      setDeadline(new Date(newDeadline).getTime());
+      setFinishError(null);
+      window.scrollTo({ top: 0 });
+    } catch (error) {
+      console.error('[ModelltestRun] next section:', error?.message);
+      setFinishError('Ihre Antworten konnten nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut.');
+    } finally {
+      changingSectionRef.current = false;
+      setChangingSection(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt, isLast, sectionIndex, answers, finish]);
 
@@ -471,7 +494,7 @@ const ModelltestRun = () => {
         </div>
 
         {finishError && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError}</p>}
-        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing}>
+        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing || changingSection}>
           {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
           <ChevronRight className="w-4 h-4" />
         </Button>

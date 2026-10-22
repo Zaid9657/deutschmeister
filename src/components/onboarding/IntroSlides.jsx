@@ -55,8 +55,9 @@ const slideVariants = {
 // The prev/next arrows: a round secondary key (raised, depresses on press).
 const ARROW = 'h-10 w-10 !p-0 rounded-pill';
 
-export default function IntroSlides() {
-  const { currentStep, setCurrentStep, completeOnboarding, needsOnboarding } = useOnboarding();
+export default function IntroSlides({ onComplete }) {
+  const { currentStep, setCurrentStep, completeOnboarding: completeStandaloneOnboarding, needsOnboarding } = useOnboarding();
+  const completeOnboarding = onComplete || completeStandaloneOnboarding;
   const { user } = useAuth();
   const [examTrack, setExamTrack] = useState(null);
 

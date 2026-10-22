@@ -1,5 +1,20 @@
 import { supabase } from '../utils/supabase.js';
 
+const attemptWrites = new Map();
+
+// A debounce can cancel a pending save, but cannot cancel a request already
+// sent. Keep every write for an attempt in order, including its final result.
+function queueAttemptWrite(attemptId, write) {
+  const previous = attemptWrites.get(attemptId) || Promise.resolve();
+  const current = previous.catch(() => {}).then(write);
+  attemptWrites.set(attemptId, current);
+  const clear = () => {
+    if (attemptWrites.get(attemptId) === current) attemptWrites.delete(attemptId);
+  };
+  current.then(clear, clear);
+  return current;
+}
+
 // exam_attempts data access (renovation Phase 5a) — the programProgress.js
 // pattern: thin, fail-soft, every result inspected (the documented supabase-js
 // gotcha: errors come back on the result, they are not thrown).
@@ -62,40 +77,46 @@ export async function loadAttempt(attemptId) {
 
 /** Persist the answers map (merged server-side state is the whole map). */
 export async function saveAnswers(attemptId, answers) {
-  const { error } = await supabase
-    .from('exam_attempts')
-    .update({ answers })
-    .eq('id', attemptId);
-  if (error) console.error('[examService] saveAnswers:', error.message);
-  return !error;
+  return queueAttemptWrite(attemptId, async () => {
+    const { error } = await supabase
+      .from('exam_attempts')
+      .update({ answers })
+      .eq('id', attemptId);
+    if (error) console.error('[examService] saveAnswers:', error.message);
+    return !error;
+  });
 }
 
-/** Move the timer anchor to the next section. */
-export async function advanceSectionDeadline(attemptId, minutes) {
-  const deadline = new Date(Date.now() + minutes * 60000).toISOString();
-  const { error } = await supabase
-    .from('exam_attempts')
-    .update({ section_deadline: deadline })
-    .eq('id', attemptId);
-  if (error) console.error('[examService] advanceSectionDeadline:', error.message);
-  return error ? null : deadline;
+/** Move the timer anchor and answers' section marker together. */
+export async function advanceSectionDeadline(attemptId, minutes, answers) {
+  return queueAttemptWrite(attemptId, async () => {
+    const deadline = new Date(Date.now() + minutes * 60000).toISOString();
+    const { error } = await supabase
+      .from('exam_attempts')
+      .update({ section_deadline: deadline, ...(answers ? { answers } : {}) })
+      .eq('id', attemptId);
+    if (error) console.error('[examService] advanceSectionDeadline:', error.message);
+    return error ? null : deadline;
+  });
 }
 
 /** Finish an attempt with its computed result. */
 export async function completeAttempt(attemptId, { answers, score, maxScore, sectionScores }) {
-  const { error } = await supabase
-    .from('exam_attempts')
-    .update({
-      status: 'completed',
-      completed_at: new Date().toISOString(),
-      answers,
-      score,
-      max_score: maxScore,
-      section_scores: sectionScores,
-    })
-    .eq('id', attemptId);
-  if (error) console.error('[examService] completeAttempt:', error.message);
-  return !error;
+  return queueAttemptWrite(attemptId, async () => {
+    const { error } = await supabase
+      .from('exam_attempts')
+      .update({
+        status: 'completed',
+        completed_at: new Date().toISOString(),
+        answers,
+        score,
+        max_score: maxScore,
+        section_scores: sectionScores,
+      })
+      .eq('id', attemptId);
+    if (error) console.error('[examService] completeAttempt:', error.message);
+    return !error;
+  });
 }
 
 /** Completed attempts for an exam, newest first (the history list). */

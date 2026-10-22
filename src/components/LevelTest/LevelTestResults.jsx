@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { stepDownSublevel, bandOf } from '../../config/levels';
 import { getTopicsForLevel } from '../../data/grammarTopics';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -27,11 +26,9 @@ import { TRIAL_DAYS, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
 const scoreTone = (value, strong, fair) => (value >= strong ? 'limette' : value >= fair ? 'quiet' : 'aprikose');
 
 const LevelTestResults = ({
-  answers,
-  questions,
+  placement,
   listeningScore,
   speakingScore,
-  determinedSublevel,
   onRetake
 }) => {
   const { user } = useAuth();
@@ -45,93 +42,12 @@ const LevelTestResults = ({
     confettiBurst();
   }, []);
 
-  // Calculate written test scores
-  const calculateWrittenResults = () => {
-    const typeScores = {
-      grammar: { correct: 0, total: 0 },
-      vocabulary: { correct: 0, total: 0 },
-      reading: { correct: 0, total: 0 }
-    };
-    const weakTopics = [];
-
-    answers.forEach(answer => {
-      const question = questions.find(q => q.id === answer.questionId);
-      if (!question) return;
-
-      typeScores[answer.type].total++;
-
-      if (answer.isCorrect) {
-        typeScores[answer.type].correct++;
-      } else {
-        const existingTopic = weakTopics.find(t => t.topic === question.topicDisplayName);
-        if (existingTopic) {
-          existingTopic.wrong++;
-        } else {
-          weakTopics.push({
-            topic: question.topicDisplayName,
-            // Grammar lessons are Astro-served — canonical trailing-slash form,
-            // rendered as full-load <a> tags below.
-            url: question.relatedTopicUrl.endsWith('/')
-              ? question.relatedTopicUrl
-              : `${question.relatedTopicUrl}/`,
-            wrong: 1,
-            level: answer.level
-          });
-        }
-      }
-    });
-
-    return { typeScores, weakTopics };
-  };
-
-  const { typeScores, weakTopics } = calculateWrittenResults();
-
-  // Get top weak topics for recommendations
-  const topWeakTopics = weakTopics
-    .sort((a, b) => b.wrong - a.wrong)
-    .slice(0, 3);
-
-  // Calculate percentages
+  const { typeScores, weakTopics, writtenPercentage, speakingPercentage, totalCorrect, totalQuestions, sublevel: finalSublevel, demotions } = placement;
+  const topWeakTopics = [...weakTopics].sort((a, b) => b.wrong - a.wrong).slice(0, 3);
   const getTypePercentage = (type) => {
     if (typeScores[type].total === 0) return 0;
     return Math.round((typeScores[type].correct / typeScores[type].total) * 100);
   };
-
-  const totalCorrect = answers.filter(a => a.isCorrect).length;
-  const totalAnswered = answers.length;
-  const writtenPercentage = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-
-  // Speaking scores breakdown
-  const speakingPercentage = speakingScore?.score || speakingScore?.total_score || 0;
-
-  // Calculate final adjusted level based on all sections.
-  //
-  // The demotion used to be `finalSublevel.replace('.2', '.1')`, which is a
-  // no-op on any sub-level already ending in '.1'. So a strong written score
-  // with a failed listening section produced e.g. B2.1 and stayed B2.1 — the
-  // rule fired and changed nothing. Stepping down the shared ladder handles
-  // band boundaries too (B2.1 → B1.2).
-  const calculateFinalLevel = () => {
-    let finalSublevel = determinedSublevel || 'A1.1';
-    const demotions = [];
-
-    if (listeningScore != null && listeningScore < 50 && writtenPercentage >= 70) {
-      demotions.push('listening');
-    }
-    if (speakingPercentage > 0 && speakingPercentage < 50 && writtenPercentage >= 70) {
-      demotions.push('speaking');
-    }
-
-    if (demotions.length) {
-      finalSublevel = stepDownSublevel(finalSublevel, demotions.length);
-    }
-
-    // Keep the band label consistent with the (possibly demoted) sub-level
-    // rather than reporting the pre-adjustment band.
-    return { level: bandOf(finalSublevel), sublevel: finalSublevel, demotions };
-  };
-
-  const { sublevel: finalSublevel, demotions } = calculateFinalLevel();
 
   // A signed-out tester's result is kept on this browser, so the "save my
   // results" door below keeps its promise: the first profile load after
@@ -169,7 +85,7 @@ const LevelTestResults = ({
       icon: PenTool,
       completed: true,
       score: writtenPercentage,
-      detail: `${totalCorrect}/${totalAnswered} correct`
+      detail: `${totalCorrect}/${totalQuestions} correct`
     },
     {
       name: 'Listening',

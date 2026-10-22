@@ -246,8 +246,9 @@ const authAttrs = (item) =>
               Start A1.1 free
             </a>
             <a
-              href="/dashboard"
+              href={FREE_COURSE_HREF}
               data-auth-only
+              data-continue-course
               style="display:none"
               class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
             >
@@ -260,8 +261,8 @@ const authAttrs = (item) =>
             <a href={FREE_COURSE_HREF} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
               Start A1.1 free
             </a>
-            <a href="/dashboard" data-auth-only style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
-              Dashboard
+            <a href={FREE_COURSE_HREF} data-auth-only data-continue-course style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
+              Continue learning
             </a>
             <details class="relative">
               <summary class:list={['flex min-h-11 cursor-pointer list-none items-center justify-center rounded-pill p-2.5 [&::-webkit-details-marker]:hidden', night ? 'hover:bg-nacht-raised' : 'hover:bg-paper-sunk']} aria-label="Menu">
@@ -497,6 +498,38 @@ const authAttrs = (item) =>
       // Funnel events for the static pages (src/data/events.js). Consent-gated
       // inside track(); before Accept every call is a no-op.
       import { autoTrack } from '../lib/track.js';
+      import { courseHomeFor } from '../../../src/lib/courseEntry.js';
+      import { isLevelFree } from '../../../src/config/freeTier.js';
+      import { levelsForProduct } from '../data/pricing.js';
+
+      function continueCourseHref({ profile, subscription, purchases = [] }, now = Date.now()) {
+        const trialOpen = profile?.trial_started_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > now;
+        const proOpen = Date.parse(subscription?.subscription_end) > now;
+        return courseHomeFor({
+          level: profile?.current_level,
+          hasLevelAccess: (level) => isLevelFree(level) || Boolean(trialOpen || proOpen) || purchases.some((p) => levelsForProduct(p.product_key).includes(level)),
+        });
+      }
+
+      async function updateContinueLinks() {
+        const links = document.querySelectorAll('[data-continue-course]');
+        if (!links.length) return;
+        const storedSession = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).some((key) => key && /^sb-.*-auth-token$/.test(key));
+        if (!storedSession) return;
+        const { supabase } = await import('../lib/supabase.js');
+        const { data: { user } = {} } = await supabase.auth.getUser();
+        if (!user) return;
+        const [profile, subscription, purchases] = await Promise.all([
+          supabase.from('profiles').select('current_level, is_subscribed, trial_started_at, trial_ends_at').eq('id', user.id).maybeSingle(),
+          supabase.from('subscriptions').select('subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
+          supabase.from('purchases').select('product_key').eq('user_id', user.id).eq('status', 'active'),
+        ]);
+        if (profile.error || subscription.error || purchases.error) return;
+        const href = continueCourseHref({ profile: profile.data, subscription: subscription.data, purchases: purchases.data || [] });
+        links.forEach((link) => { link.href = href; });
+      }
+
+      updateContinueLinks().catch(() => { /* keep the free course when account data is unavailable */ });
       autoTrack();
     </script>
   </body>

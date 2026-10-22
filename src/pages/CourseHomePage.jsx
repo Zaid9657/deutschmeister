@@ -151,7 +151,7 @@ export default function CourseHomePage() {
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           Lessons open in order. Your progress is saved on every lesson you mark done, on any device.{' '}
-          <Link to={`/modelltest/${course.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">Final test</Link> · <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep">All courses</Link> ·{' '}
+          <Link to={`/modelltest/${course.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">Final test</Link> · <a href="/courses/" className="font-bold text-siegel hover:text-siegel-deep">All courses</a> ·{' '}
           {/* No site footer on the course home (src/lib/chrome.js) — support lives here. */}
           <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{SUPPORT_LINK.labelEn}</Link>
         </footer>
