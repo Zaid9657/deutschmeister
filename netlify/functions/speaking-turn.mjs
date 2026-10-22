@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import {
@@ -10,6 +11,7 @@ import {
 } from './_shared/speakingAI.mjs';
 // One grace window for both "turns stop here" and "the session is stale".
 import { SESSION_GRACE_MINUTES } from './_shared/speakingCloseout.mjs';
+import { reserveTurn, settleTurn } from './_shared/speakingCloseout.mjs';
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -108,6 +110,12 @@ export const handler = async (event) => {
     // every turn stays on the task the lesson promised.
     const courseTask = (!isPlacement && !mission) ? taskFromSession(session) : null;
 
+    const turnId = randomUUID();
+    const reservation = await reserveTurn(supabase, sessionToken, user_id, turnId);
+    if (!reservation.ok) {
+      return { statusCode: 409, headers, body: JSON.stringify({ error: 'Diese Sitzung nimmt gerade keine Aufnahme an.', stage: 'session', code: reservation.code }) };
+    }
+
     // 3. Cascade: STT → teacher (Haiku) → TTS. Provider failures surface as
     //    structured errors, never a silent 500.
     let userTranscript = '';
@@ -142,6 +150,7 @@ export const handler = async (event) => {
         }
       }
     } catch (aiErr) {
+      await settleTurn(supabase, sessionToken, user_id, turnId, false);
       if (aiErr instanceof AIError) {
         return {
           statusCode: aiErr.status || 502,
@@ -151,6 +160,10 @@ export const handler = async (event) => {
       }
       throw aiErr;
     }
+
+    // Commit delivery before persisting readable messages or returning audio.
+    // A late reply whose reservation expired cannot escape a refunded session.
+    await settleTurn(supabase, sessionToken, user_id, turnId, true);
 
     // 4. Persist both sides (as the old flow did). Best-effort — a save failure
     //    must not lose the turn the user already heard.

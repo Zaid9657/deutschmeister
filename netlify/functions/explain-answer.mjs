@@ -1,5 +1,6 @@
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
+import { reserveUsage } from './_shared/aiReservation.mjs';
 import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
 
 // "Explain this to me" / „Erklär mir das" (plan P5). One missed practice item
@@ -20,7 +21,7 @@ import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
 // own would sooner or later contradict the Grammatikkarte the learner just read.
 //
 // Cost control is a per-user daily cap counted from the `lesson_attempts`
-// ledger the row is written to — one table, one truth, like score-readaloud.mjs.
+// ledger, protected from learner deletion by the reservation migration.
 const EXPLAIN_DAILY_LIMIT = 40;
 
 // Haiku is the cheap tier and this is a 60-word answer; override without a
@@ -112,26 +113,25 @@ export const handler = async (event) => {
       console.error('[explain-answer] usage count failed:', JSON.stringify(countError));
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Nutzung konnte nicht geprüft werden', stage: 'usage' }) };
     }
-    const used = count || 0;
+    let used = count || 0;
     if (used >= EXPLAIN_DAILY_LIMIT) {
       return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit', limit: EXPLAIN_DAILY_LIMIT, used }) };
     }
 
-    // One row per call: the ledger the cap above is derived from, written BEFORE
-    // the model call so concurrent requests stay metered. `correct` is NOT NULL
-    // in the schema, so an explanation is logged as false with its own tag —
-    // 'Erklärung' is not one of the ERROR_TAGS a wrong answer uses, so the error
-    // report can tell the two apart.
-    const { error: insertError } = await supabase.from('lesson_attempts').insert({
-      user_id,
-      level,
-      lektion_id: lektionId,
-      item_id: itemId,
-      stage: 'explain',
-      correct: false,
-      error_tag: 'Erklärung',
-    });
-    if (insertError) console.error('[explain-answer] attempt insert failed:', JSON.stringify(insertError));
+    try {
+      const reservation = await reserveUsage(supabase, 'reserve_lesson_ai_usage', {
+        p_user_id: user_id, p_stage: 'explain', p_limit: EXPLAIN_DAILY_LIMIT,
+        p_level: level, p_lektion_id: lektionId, p_item_id: itemId,
+        p_error_tag: 'Erklärung',
+      });
+      used = reservation.used;
+      if (!reservation.allowed) {
+        return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit', limit: EXPLAIN_DAILY_LIMIT, used }) };
+      }
+    } catch (error) {
+      console.error('[explain-answer] reservation failed:', error.message);
+      return { statusCode: 503, headers, body: JSON.stringify({ error: 'Nutzung konnte nicht reserviert werden', stage: 'usage' }) };
+    }
 
     const card = ruleCardText(topic);
     if (!card) console.warn(`[explain-answer] no rule card for topic "${topic}"`);

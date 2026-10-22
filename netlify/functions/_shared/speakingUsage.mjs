@@ -11,11 +11,13 @@ const TRIAL_TOTAL_LIMIT  = 2;
 // Exported: evaluate-writing.mjs reuses the same tier resolution so speaking
 // and writing can never disagree about who is pro/trial/expired.
 export async function getTier(userId) {
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from('profiles')
     .select('subscription_tier, is_subscribed, trial_ends_at')
     .eq('id', userId)
     .maybeSingle();
+
+  if (error) throw new Error('Speaking entitlement could not be checked');
 
   // No profile row → treat as blocked (no NULL bypass)
   if (!profile) return 'free_expired';
@@ -28,89 +30,32 @@ export async function getTier(userId) {
   return trialActive ? 'free_trial' : 'free_expired';
 }
 
-async function getMonthlySessionCount(userId) {
-  const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  const { count, error } = await supabase
-    .from('speaking_usage')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .gte('created_at', monthStart);
-
-  if (error) {
-    console.error('Error counting monthly sessions:', error.message);
-    return 0;
-  }
-  return count || 0;
-}
-
-async function getTotalSessionCount(userId) {
-  const { count, error } = await supabase
-    .from('speaking_usage')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId);
-
-  if (error) {
-    console.error('Error counting total sessions:', error.message);
-    return 0;
-  }
-  return count || 0;
-}
-
 export async function checkUsage(userId) {
-  console.log('[checkUsage] Checking usage for user:', userId);
   const tier = await getTier(userId);
-  console.log('[checkUsage] User tier:', tier);
-
-  if (tier === 'free_expired') {
-    return { allowed: false, tier, reason: 'subscription_required' };
+  const { data, error } = await supabase.rpc('speaking_usage_status', { p_user_id: userId });
+  if (error || !data || !Number.isInteger(data.monthly) || !Number.isInteger(data.total)) {
+    throw new Error('Speaking allowance could not be checked');
   }
-
-  if (tier === 'premium') {
-    return { allowed: true, unlimited: true, tier };
-  }
-
-  if (tier === 'pro') {
-    const used = await getMonthlySessionCount(userId);
-    console.log('[checkUsage] Pro user sessions this month:', used, '/', PRO_MONTHLY_LIMIT);
-    return {
-      allowed: used < PRO_MONTHLY_LIMIT,
-      used,
-      limit: PRO_MONTHLY_LIMIT,
-      tier,
-      ...(used >= PRO_MONTHLY_LIMIT && { reason: 'monthly_limit_reached' }),
-    };
-  }
-
-  // free_trial: 2 sessions total (lifetime)
-  const used = await getTotalSessionCount(userId);
-  console.log('[checkUsage] Trial user total sessions:', used, '/', TRIAL_TOTAL_LIMIT);
-  return {
-    allowed: used < TRIAL_TOTAL_LIMIT,
-    used,
-    limit: TRIAL_TOTAL_LIMIT,
-    tier,
-    ...(used >= TRIAL_TOTAL_LIMIT && { reason: 'trial_limit_reached' }),
-  };
+  if (tier === 'free_expired') return { allowed: false, tier, reason: 'subscription_required' };
+  if (tier === 'premium') return { allowed: true, unlimited: true, tier };
+  const used = tier === 'pro' ? data.monthly : data.total;
+  const limit = tier === 'pro' ? PRO_MONTHLY_LIMIT : TRIAL_TOTAL_LIMIT;
+  const usage = { allowed: used < limit, used, limit, tier };
+  if (used < limit) return usage;
+  return tier === 'pro'
+    ? { ...usage, reason: 'monthly_limit_reached' }
+    : { ...usage, reason: 'trial_limit_reached' };
 }
 
-// `id` links the usage row to its session (usageIdForToken in
-// speakingCloseout.mjs), so a session that ends with zero learner turns can
-// release exactly this row. Without it the row is unlinkable and permanent.
-export async function incrementUsage(userId, { id = null } = {}) {
-  console.log('[incrementUsage] Recording session for user:', userId);
-  const { error } = await supabase
-    .from('speaking_usage')
-    .insert({
-      ...(id ? { id } : {}),
-      user_id: userId,
-      created_at: new Date().toISOString(),
-    });
-
-  if (error) {
-    console.error('[incrementUsage] Error:', error.message);
-    throw error;
+// The database repeats the allowance check under the same user lock as the
+// usage insert, wallet debit and session insert. Missing RPC = no provider call.
+export async function reserveSession(client, session, tier) {
+  const { data, error } = await client.rpc('reserve_speaking_session', {
+    p_session: session, p_tier: tier,
+    p_pro_limit: PRO_MONTHLY_LIMIT, p_trial_limit: TRIAL_TOTAL_LIMIT,
+  });
+  if (error || !data || typeof data.ok !== 'boolean') {
+    throw new Error('Speaking reservation could not be created');
   }
-  console.log('[incrementUsage] Success');
+  return data;
 }

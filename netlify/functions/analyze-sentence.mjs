@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
 import { uaClass, cleanSource } from './_shared/xraySource.mjs';
+import { reserveUsage, validAnonymousId } from './_shared/aiReservation.mjs';
 
 // Salt for the per-IP rate-limit key. Reuses an existing secret so no new env
 // var is required; if none is configured the IP ceiling is skipped (the
@@ -88,34 +89,6 @@ async function getUserTier(userId) {
   return { tier, limit: DAILY_LIMITS[tier] };
 }
 
-// Returns how many times this user/anon has analyzed today (UTC day).
-// Callers must pass an identity: a verified user id, or an anonymous key. An
-// absent key used to return 0, which made the gate unreachable — omitting
-// anonymousId turned this into an unauthenticated, unmetered Claude endpoint.
-async function countTodayUsage(userId, anonymousId) {
-  if (!supabase) return 0;
-
-  const startOfDay = new Date();
-  startOfDay.setUTCHours(0, 0, 0, 0);
-
-  let query = supabase
-    .from('xray_usage')
-    .select('id', { count: 'exact', head: true })
-    .gte('used_at', startOfDay.toISOString());
-
-  if (userId) {
-    query = query.eq('user_id', userId);
-  } else if (anonymousId) {
-    query = query.eq('anonymous_id', anonymousId).is('user_id', null);
-  } else {
-    // No identity at all — treat as over quota rather than under it.
-    return Number.MAX_SAFE_INTEGER;
-  }
-
-  const { count } = await query;
-  return count ?? 0;
-}
-
 // Per-IP ceiling, independent of the client-supplied anonymous id (which the
 // caller can regenerate at will). Anonymous traffic from one address cannot
 // exceed this many analyses per UTC day regardless of how many ids it invents.
@@ -132,42 +105,6 @@ function clientIp(event) {
 // The IP is hashed before storage so the usage table never holds a raw address.
 function hashIp(ip) {
   return 'ip_' + createHash('sha256').update(`${ip}|${IP_HASH_SALT}`).digest('hex').slice(0, 32);
-}
-
-async function countTodayUsageByIp(ipKey) {
-  if (!supabase || !ipKey) return 0;
-  const startOfDay = new Date();
-  startOfDay.setUTCHours(0, 0, 0, 0);
-  const { count } = await supabase
-    .from('xray_usage')
-    .select('id', { count: 'exact', head: true })
-    .gte('used_at', startOfDay.toISOString())
-    .is('user_id', null)
-    .eq('ip_hash', ipKey);
-  return count ?? 0;
-}
-
-async function recordUsage(userId, anonymousId, sentence, ipKey, source) {
-  if (!supabase) return null;
-  // Returns the row id so an upstream failure can refund it. The row is still
-  // written BEFORE the model call, so concurrent requests stay metered.
-  const row = {
-    user_id:      userId || null,
-    anonymous_id: userId ? null : (anonymousId || null),
-    ip_hash:      userId ? null : (ipKey || null),
-    sentence:     sentence?.slice(0, 500) || null,
-  };
-  const insert = (r) => supabase.from('xray_usage').insert(r).select('id').single();
-  let { data, error } = await insert(source ? { ...row, source } : row);
-  // `source` needs migrations/2026-09-27-xray-usage-source.sql. Until it is
-  // applied PostgREST rejects the unknown column, and the row must still be
-  // written without it — this row IS the meter.
-  if (error && source) ({ data, error } = await insert(row));
-  if (error) {
-    console.error('xray_usage insert failed:', error.message);
-    return null;
-  }
-  return data?.id ?? null;
 }
 
 // An outage is not the visitor's fault. The free tier gets ONE analysis a day,
@@ -246,7 +183,7 @@ export const handler = async (event) => {
     // --- Identity gate ---
     // Anonymous callers must supply an anonymousId. Without one there is nothing
     // to meter against, and the daily limit below can never trigger.
-    if (!userId && (typeof anonymousId !== 'string' || anonymousId.trim().length < 8)) {
+    if (!userId && !validAnonymousId(anonymousId)) {
       return {
         statusCode: 400,
         headers,
@@ -256,39 +193,30 @@ export const handler = async (event) => {
 
     // --- Usage gate ---
     const { tier, limit } = await getUserTier(userId || null);
-    const usedToday = await countTodayUsage(userId || null, anonymousId || null);
-
-    // Per-IP ceiling for anonymous traffic — the anonymousId is client-generated
-    // and can be regenerated, so it cannot be the only thing standing between an
-    // attacker and an unmetered paid model.
     const ipKey = !userId && IP_HASH_SALT ? hashIp(clientIp(event) || 'unknown') : null;
-    if (ipKey) {
-      const ipUsedToday = await countTodayUsageByIp(ipKey);
-      if (ipUsedToday >= ANON_IP_DAILY_CEILING) {
-        return {
-          statusCode: 429,
-          headers,
-          body: JSON.stringify({ error: 'limit_reached', tier, limit, usedToday: ipUsedToday, remaining: 0 }),
-        };
-      }
+    let reservation;
+    try {
+      reservation = await reserveUsage(supabase, 'reserve_xray_usage', {
+        p_user_id: userId || null,
+        p_anonymous_id: userId ? null : anonymousId,
+        p_sentence: sentence.trim(),
+        p_ip_hash: ipKey,
+        p_source: source,
+        p_limit: limit,
+        p_ip_limit: ANON_IP_DAILY_CEILING,
+      });
+    } catch (error) {
+      console.error('xray reservation failed:', error.message);
+      return { statusCode: 503, headers, body: JSON.stringify({ error: 'Usage could not be reserved', code: 'usage_unavailable' }) };
     }
-
-    if (limit !== Infinity && usedToday >= limit) {
+    const { id: usageId, used: usedToday } = reservation;
+    if (!reservation.allowed) {
       return {
-        statusCode: 429,
-        headers,
-        body: JSON.stringify({
-          error: 'limit_reached',
-          tier,
-          limit,
-          usedToday,
-          remaining: 0,
-        }),
+        statusCode: 429, headers,
+        body: JSON.stringify({ error: 'limit_reached', tier, limit, usedToday, remaining: 0 }),
       };
     }
 
-    // --- Record usage before calling Claude (counts even on API error) ---
-    const usageId = await recordUsage(userId || null, anonymousId || null, sentence.trim(), ipKey, source);
     console.log('[xray] analysis', JSON.stringify({ tier, ...source }));
 
     // --- Call Claude ---

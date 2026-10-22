@@ -1,12 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
-import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
+import { checkUsage, reserveSession } from './_shared/speakingUsage.mjs';
 import {
   CLOSEOUT_COLUMNS,
   closeOutSession,
   closeOutStaleSessions,
-  creditWallet,
-  usageIdForToken,
 } from './_shared/speakingCloseout.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import {
@@ -21,55 +19,6 @@ import {
 // Session pricing (cents). 10/15-min always cost; 5-min may be free (see below).
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
 const ALLOWED_MINUTES = [5, 10, 15];
-// Subscribers get this many free 5-min sessions per day.
-const SUBSCRIBER_FREE_5MIN_PER_DAY = 2;
-
-// --- subscription_end check (mirrors the frontend's single source of truth) ---
-async function isActiveSubscriber(userId) {
-  const { data } = await supabase
-    .from('subscriptions')
-    .select('subscription_end')
-    .eq('user_id', userId)
-    .order('subscription_end', { ascending: false, nullsFirst: false })
-    .limit(1)
-    .maybeSingle();
-  if (!data?.subscription_end) return false;
-  const end = new Date(data.subscription_end);
-  return !Number.isNaN(end.getTime()) && end > new Date();
-}
-
-// Count today's (UTC day) free 5-minute practice sessions for a subscriber.
-// A 'cancelled' session ended with zero learner turns and costs nothing
-// (_shared/speakingCloseout.mjs), so it does not use up a free session.
-async function freeFiveMinuteSessionsToday(userId) {
-  const now = new Date();
-  const dayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
-  const { count, error } = await supabase
-    .from('speaking_sessions')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .eq('planned_minutes', 5)
-    .eq('cost_cents', 0)
-    .neq('mode', 'placement')
-    .neq('status', 'cancelled')
-    .gte('started_at', dayStart);
-  if (error) {
-    console.error('[speaking-session] free-session count error:', JSON.stringify(error));
-    return SUBSCRIBER_FREE_5MIN_PER_DAY; // fail closed → treat as no free session left
-  }
-  return count || 0;
-}
-
-// Read the current wallet balance (0 when the user has no wallet row yet).
-async function walletBalance(userId) {
-  const { data } = await supabase
-    .from('speaking_wallet')
-    .select('balance_cents')
-    .eq('user_id', userId)
-    .maybeSingle();
-  return data?.balance_cents ?? 0;
-}
-
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -134,7 +83,7 @@ export const handler = async (event) => {
           .maybeSingle();
         if (rowError) {
           console.error('[speaking-session] end lookup failed:', JSON.stringify(rowError));
-        } else if (row && row.status === 'active') {
+        } else if (row) {
           outcome = await closeOutSession(supabase, row, {
             durationSeconds: Number.isFinite(duration_seconds) ? duration_seconds : 0,
           });
@@ -183,11 +132,7 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'level is required' }) };
     }
 
-    // Validate the level up front. The teacher reply and the TTS render below
-    // both cost money and happen before the session row is written, so a level
-    // the speaking_sessions check constraint would reject must be caught here —
-    // otherwise every such attempt pays for an AI call and then 500s. ('placement'
-    // was exactly this bug until it was added to the constraint.)
+    // Reject unsupported levels before reserving a session or calling AI.
     const ALLOWED_LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'placement'];
     if (!ALLOWED_LEVELS.includes(effectiveLevel)) {
       console.warn(`[speaking-session] rejected unsupported level: ${effectiveLevel}`);
@@ -215,32 +160,25 @@ export const handler = async (event) => {
       console.error('[speaking-session] stale close-out threw:', err.message);
     }
 
-    // -------- Pricing decision (skipped entirely for placement) --------
-    let costCents = 0;
-    let freeTrialConsumed = false; // non-subscriber free path → consume a trial session
-    if (!isPlacement) {
-      if (plannedMinutes === 5) {
-        const subscriber = await isActiveSubscriber(user_id);
-        if (subscriber) {
-          const usedToday = await freeFiveMinuteSessionsToday(user_id);
-          costCents = usedToday < SUBSCRIBER_FREE_5MIN_PER_DAY ? 0 : PRICE_CENTS[5];
-        } else {
-          // Non-subscriber: existing trial rules grant the free 5-min session.
-          const usage = await checkUsage(user_id);
-          if (usage.allowed) {
-            costCents = 0;
-            freeTrialConsumed = true;
-          } else {
-            costCents = PRICE_CENTS[5]; // wallet payment allowed for any signed-in user
-          }
-        }
-      } else {
-        costCents = PRICE_CENTS[plannedMinutes]; // 10 → 200, 15 → 300 always
-      }
+    const usage = await checkUsage(user_id);
+    const costCents = isPlacement || (plannedMinutes === 5 && usage.allowed) ? 0 : PRICE_CENTS[plannedMinutes];
+    const sessionToken = `sp_${randomUUID()}`;
+    const reservation = await reserveSession(supabase, {
+      user_id, session_token: sessionToken, level: effectiveLevel,
+      mission_id: isMission ? missionId : null,
+      mode: isPlacement ? 'placement' : (isMission ? 'mission' : 'free'),
+      planned_minutes: plannedMinutes, cost_cents: costCents,
+      ...courseTaskColumns(courseTask),
+    }, usage.tier);
+    if (!reservation.ok) {
+      return {
+        statusCode: reservation.code === 'insufficient_funds' ? 402 : 409, headers,
+        body: JSON.stringify({ error: reservation.code === 'insufficient_funds' ? 'Nicht genügend Guthaben.' : 'Das Freikontingent hat sich geändert. Bitte erneut versuchen.', ...reservation }),
+      };
     }
+    const balanceCents = reservation.balance_cents;
 
-    // -------- Opening line + audio (before charging — a provider failure here
-    //          costs the user nothing). --------
+    // The reservation exists before either provider can be called.
     let openingText;
     let openingAudio;
     try {
@@ -264,77 +202,13 @@ export const handler = async (event) => {
       if (!openingText) openingText = 'Hallo! Schön, dass du da bist. Erzähl mir ein bisschen von dir.';
       openingAudio = await synthesizeSpeech({ text: openingText });
     } catch (aiErr) {
+      // Transactional close-out keeps the reservation retryable if refunding
+      // fails. The stale sweep will retry without losing the wallet debit.
+      await closeOutSession(supabase, { session_token: sessionToken, user_id });
       if (aiErr instanceof AIError) {
         return { statusCode: aiErr.status || 502, headers, body: JSON.stringify({ error: aiErr.message, stage: aiErr.stage }) };
       }
       throw aiErr;
-    }
-
-    // -------- Charge the wallet if the session costs anything. --------
-    // Atomic debit via Postgres RPC (service role): returns the new balance, or
-    // -1 when the balance can't cover the cost.
-    let balanceCents;
-    if (costCents > 0) {
-      const { data: newBalance, error: debitError } = await supabase
-        .rpc('debit_speaking_wallet', { p_user_id: user_id, p_cost: costCents });
-      if (debitError) {
-        console.error('[speaking-session] wallet debit RPC error:', JSON.stringify(debitError));
-        return { statusCode: 500, headers, body: JSON.stringify({ error: 'Guthaben konnte nicht belastet werden.' }) };
-      }
-      if (newBalance === -1) {
-        return {
-          statusCode: 402,
-          headers,
-          body: JSON.stringify({ error: 'Nicht genügend Guthaben.', code: 'insufficient_funds', balance_cents: await walletBalance(user_id), cost_cents: costCents }),
-        };
-      }
-      balanceCents = newBalance;
-    }
-
-    // -------- Create the session row. --------
-    // Always minted here: the uuid inside the token is also the id of the
-    // trial's speaking_usage row (usageIdForToken), which is how a zero-turn
-    // close-out releases exactly that row — so the client never chooses it.
-    const sessionToken = `sp_${randomUUID()}`;
-    const { error: insertError } = await supabase
-      .from('speaking_sessions')
-      .insert({
-        user_id,
-        session_token: sessionToken,
-        level: effectiveLevel,
-        mission_id: isMission ? missionId : null,
-        mode: isPlacement ? 'placement' : (isMission ? 'mission' : 'free'),
-        status: 'active',
-        started_at: new Date().toISOString(),
-        planned_minutes: plannedMinutes,
-        cost_cents: costCents,
-        // Course task → the two unused nullable columns (no schema change).
-        ...courseTaskColumns(courseTask),
-      });
-    if (insertError) {
-      console.error('[speaking-session] Session insert failed:', JSON.stringify(insertError));
-      if (costCents > 0) {
-        const refunded = await creditWallet(supabase, user_id, costCents);
-        console.error('[speaking-session] refund after failed insert:', refunded ? 'ok' : 'FAILED');
-      }
-      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Sitzung konnte nicht erstellt werden' }) };
-    }
-
-    // -------- Record the debit transaction (after the session exists). --------
-    if (costCents > 0) {
-      const { error: txError } = await supabase
-        .from('speaking_wallet_transactions')
-        .insert({
-          user_id,
-          amount_cents: -costCents,
-          reason: `session_${plannedMinutes}min`,
-          session_token: sessionToken,
-        });
-      if (txError) console.error('[speaking-session] wallet transaction insert failed:', JSON.stringify(txError));
-    } else if (freeTrialConsumed) {
-      // Non-subscriber free session counts against the trial allowance —
-      // reserved under the session's own id, released if no turn arrives.
-      try { await incrementUsage(user_id, { id: usageIdForToken(sessionToken) }); } catch (err) { console.error('[speaking-session] incrementUsage failed:', err.message); }
     }
 
     // -------- Persist the opening line so the record starts with the teacher. --

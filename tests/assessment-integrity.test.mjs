@@ -312,7 +312,7 @@ test('writing grader: a malformed AI result is unassessed, never a score (empty 
   ]) assert.equal(validEvaluation(task, bad), false, why);
   const { readFileSync } = await import('node:fs');
   const src = readFileSync(new URL('../netlify/functions/evaluate-writing.mjs', import.meta.url), 'utf8');
-  assert.match(src, /if \(!validEvaluation\(task, evaluation\)\) \{\s*return \{/, 'an invalid result returns evaluation_failed, after one retry');
+  assert.match(src, /if \(!validEvaluation\(task, evaluation\)\) \{[\s\S]*?from\('writing_submissions'\)\.delete\(\)[\s\S]*?return \{[\s\S]*?evaluation_failed: true/, 'an invalid result releases its reservation and returns evaluation_failed, after one retry');
 });
 
 /** A Supabase stand-in: chainable filters over an in-memory table, inserts that can fail. */
