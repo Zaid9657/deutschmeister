@@ -5,26 +5,22 @@
 //   npm i --no-save playwright   # not needed here, but chrome-launcher is a dep
 //   CHROME_PATH=/path/to/chromium node scripts/lighthouse-batch.mjs
 //
-// Output: docs/evaluation/lighthouse.json
+// Output: .cache/evaluation/lighthouse-<run>/lighthouse.json (--out overrides the directory)
 //
 // Comparable before/after runs on chosen routes (e.g. the course):
-//   node scripts/lighthouse-batch.mjs --pages=/course/a1.1,/course/a1.1/l/1 --runs=3 --out=docs/evaluation/x.json
+//   node scripts/lighthouse-batch.mjs --pages=/course/a1.1,/course/a1.1/l/1 --runs=3 --out=.cache/evaluation/course
 // (Measured 2026-10-05: system Chrome 154 closes the CDP session under Lighthouse 13
 //  — "Session closed" on Page.enable. CHROME_PATH=<puppeteer chrome 143> works.)
-import { createServer } from 'node:http';
-import { gzipSync } from 'node:zlib';
-import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join, extname } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { launch } from 'chrome-launcher';
 import lighthouse from 'lighthouse';
+import { createNetlifyStaticServer } from './lib/netlify-static-server.mjs';
+import { evaluationOutput, flag } from './lib/evaluation-output.mjs';
 
-const DIST = join(process.cwd(), 'dist');
-const OUT = join(process.cwd(), 'docs', 'evaluation');
+const ARGS = process.argv.slice(2);
+const RUNS = Number(flag(ARGS, 'runs', 1));
+const { directory: OUT, report: OUT_FILE } = evaluationOutput('lighthouse', { argv: ARGS, report: 'lighthouse.json' });
 mkdirSync(OUT, { recursive: true });
-
-const flag = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split('=')[1];
-const RUNS = Number(flag('runs') || 1);
-const OUT_FILE = flag('out') || join(OUT, 'lighthouse.json');
 
 const DEFAULT_PAGES = [
   { path: '/', name: 'home (Astro)' },
@@ -34,37 +30,9 @@ const DEFAULT_PAGES = [
   { path: '/leitfaden/telc-b1/', name: 'telc-B1 guide (Astro)' },
   { path: '/level-test', name: 'level test (SPA shell)' },
 ];
-const PAGES = flag('pages') ? flag('pages').split(',').map((path) => ({ path, name: path })) : DEFAULT_PAGES;
+const PAGES = flag(ARGS, 'pages') ? flag(ARGS, 'pages').split(',').map((path) => ({ path, name: path })) : DEFAULT_PAGES;
 
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json' };
-const server = createServer((req, res) => {
-  const clean = decodeURIComponent(req.url.split('?')[0]);
-  for (const c of [clean, `${clean}/index.html`, `${clean}index.html`]) {
-    const p = join(DIST, c);
-    if (p.startsWith(DIST) && existsSync(p) && statSync(p).isFile()) {
-      const type = MIME[extname(p)] ?? 'application/octet-stream';
-      const body = readFileSync(p);
-      // Netlify serves text assets compressed. Serving them raw here made
-      // Lighthouse score ~30 points lower than production on the SPA pages —
-      // a harness artifact that sent a previous audit chasing a phantom
-      // 477 KiB of "unused JS".
-      const compressible = /^(text\/|application\/(javascript|json)|image\/svg)/.test(type);
-      const acceptsGzip = (req.headers['accept-encoding'] || '').includes('gzip');
-      if (compressible && acceptsGzip) {
-        const gz = gzipSync(body);
-        res.writeHead(200, { 'Content-Type': type, 'Content-Encoding': 'gzip', 'Content-Length': gz.length });
-        res.end(gz);
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': type, 'Content-Length': body.length });
-      res.end(body);
-      return;
-    }
-  }
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  // A merged deploy build names the SPA shell app.html; a plain `vite build` leaves index.html.
-  res.end(readFileSync(join(DIST, existsSync(join(DIST, 'app.html')) ? 'app.html' : 'index.html')));
-});
+const server = createNetlifyStaticServer({ gzip: true, spaShellFallback: true });
 await new Promise((r) => server.listen(4181, r));
 
 const chrome = await launch({ chromeFlags: ['--headless=new', '--disable-gpu'] });
