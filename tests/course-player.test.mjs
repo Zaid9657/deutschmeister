@@ -356,7 +356,6 @@ test('no owned lesson chrome file carries a banned German chrome literal outside
 
 test('every stage screen the player renders reads its chrome through useLessonLang', () => {
   for (const f of OWNED_CHROME_FILES) {
-    if (f.endsWith('LessonPreviewPage.jsx')) continue; // dev-only redirect wrapper, no copy
     assert.match(read(f), /useLessonLang\(\)|lang\b/, `${f} renders chrome without a chrome language`);
   }
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');

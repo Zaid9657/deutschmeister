@@ -19,7 +19,9 @@
     "check:legal-release": "node scripts/check-legal-release.mjs",
     "check:duplicates": "node scripts/check-duplicates.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check:html": "node scripts/check-built-html.mjs dist"
+    "check:html": "node scripts/check-built-html.mjs dist",
+    "test:course": "node --test tests/a1*.test.mjs tests/a2*.test.mjs tests/b1*.test.mjs tests/course*.test.mjs tests/lesson*.test.mjs tests/checkpoint.test.mjs tests/curricula.test.mjs tests/writing-course.test.mjs tests/readaloud.test.mjs tests/assessment-integrity.test.mjs tests/sync-outbox.test.mjs",
+    "test:site": "node --test tests/astro*.test.mjs tests/brand.test.mjs tests/claims.test.mjs tests/consent.test.mjs tests/crawl-guard.test.mjs tests/guides.test.mjs tests/head-tags.test.mjs tests/linie-design.test.mjs tests/llms.test.mjs tests/navigation.test.mjs tests/offers.test.mjs tests/site-*.test.mjs tests/spa-shell-h1.test.mjs tests/web-performance.test.mjs tests/repository-guidance.test.mjs"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.5",

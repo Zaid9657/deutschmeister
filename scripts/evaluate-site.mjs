@@ -6,59 +6,20 @@
 //   npm i --no-save playwright        # browsers come from PLAYWRIGHT_BROWSERS_PATH
 //   node scripts/evaluate-site.mjs
 //
-// Outputs:
-//   docs/evaluation/screenshots/<slug>-{desktop,mobile}.jpg
-//   docs/evaluation/walkthrough.json
-import { createServer } from 'node:http';
-import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join, extname } from 'node:path';
+// Outputs (override the run directory with --out=path or --out path):
+//   .cache/evaluation/walkthrough-<run>/screenshots/<slug>-{desktop,mobile}.jpg
+//   .cache/evaluation/walkthrough-<run>/walkthrough.json
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { createNetlifyStaticServer } from './lib/netlify-static-server.mjs';
+import { evaluationOutput } from './lib/evaluation-output.mjs';
 
 const DIST = join(process.cwd(), 'dist');
-const OUT = join(process.cwd(), 'docs', 'evaluation');
+const { directory: OUT, report: OUT_FILE } = evaluationOutput('walkthrough', { report: 'walkthrough.json' });
 const SHOTS = join(OUT, 'screenshots');
 mkdirSync(SHOTS, { recursive: true });
-
-// --- Minimal Netlify-style static server -----------------------------------
-// Real files win; known SPA routes rewrite to app.html; everything else 404s.
-const SPA_PREFIXES = [
-  '/intro', '/login', '/signup', '/reset-password', '/update-password',
-  '/verify-email', '/onboarding', '/faq', '/ueber-uns', '/podcasts',
-  '/level-test', '/dashboard', '/profile', '/vocabulary', '/speaking',
-  '/analyze', '/subscription', '/vergleich/', '/leitfaden/', '/video-library',
-  '/level/', '/reading', '/listening', '/admin/', '/grammar/',
-];
-const MIME = {
-  '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
-  '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp',
-  '.svg': 'image/svg+xml', '.txt': 'text/plain', '.xml': 'application/xml',
-};
-function resolveFile(urlPath) {
-  const clean = decodeURIComponent(urlPath.split('?')[0]);
-  const candidates = [clean, `${clean}/index.html`, `${clean}index.html`, `${clean}.html`];
-  for (const c of candidates) {
-    const p = join(DIST, c);
-    if (p.startsWith(DIST) && existsSync(p) && statSync(p).isFile()) return p;
-  }
-  return null;
-}
-const server = createServer((req, res) => {
-  const file = resolveFile(req.url);
-  if (file) {
-    res.writeHead(200, { 'Content-Type': MIME[extname(file)] ?? 'application/octet-stream' });
-    res.end(readFileSync(file));
-    return;
-  }
-  const isSpa = SPA_PREFIXES.some((p) =>
-    p.endsWith('/') ? req.url.startsWith(p) : (req.url === p || req.url.startsWith(`${p}/`) || req.url.startsWith(`${p}?`)));
-  if (isSpa) {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(readFileSync(join(DIST, 'app.html')));
-    return;
-  }
-  res.writeHead(404, { 'Content-Type': 'text/html' });
-  res.end(readFileSync(join(DIST, '404.html')));
-});
+const server = createNetlifyStaticServer({ dist: DIST });
 
 // --- Route list -------------------------------------------------------------
 const ROUTES = [
@@ -156,5 +117,5 @@ for (const route of ROUTES) {
 
 await browser.close();
 server.close();
-writeFileSync(join(OUT, 'walkthrough.json'), JSON.stringify(results, null, 1));
-console.log(`\n${results.length} routes captured → docs/evaluation/walkthrough.json`);
+writeFileSync(OUT_FILE, JSON.stringify(results, null, 1));
+console.log(`\n${results.length} routes captured → ${OUT_FILE}`);

@@ -2,15 +2,16 @@
 // plus the document width at each (horizontal overflow = docWidth > viewport).
 // Uses puppeteer-core (already installed with lighthouse) — no extra dependency.
 //
-//   CHROME_PATH=<chrome> node scripts/course-screens.mjs --base=http://localhost:4173 --tag=before --out=docs/evaluation/screenshots
+//   CHROME_PATH=<chrome> node scripts/course-screens.mjs --base=http://localhost:4173 --tag=before --out=.cache/evaluation/course-before
 import puppeteer from 'puppeteer-core';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { evaluationOutput, flag } from './lib/evaluation-output.mjs';
 
-const flag = (name, fallback) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split('=')[1] ?? fallback;
-const BASE = flag('base', 'http://localhost:4173');
-const TAG = flag('tag', 'before');
-const OUT = flag('out', 'docs/evaluation/screenshots');
+const ARGS = process.argv.slice(2);
+const BASE = flag(ARGS, 'base', 'http://localhost:4173');
+const TAG = flag(ARGS, 'tag', 'before');
+const { directory: OUT } = evaluationOutput('course-screens', { argv: ARGS });
 // `scrollTo`: a second, scrolled shot of the part below the fold. Scroll-reveal
 // sections stay blank in a full-page capture, so shots are viewport-sized.
 const ROUTES = [

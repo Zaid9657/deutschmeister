@@ -368,7 +368,13 @@ function fakeDb(seed, { fail = [], failMessage = null, authUsers = [], rpc = {} 
     gte(k, v) { this.filters.push((r) => r[k] >= v); return this; }
     lt(k, v) { this.filters.push((r) => r[k] < v); return this; }
     in(k, vs) { this.filters.push((r) => vs.includes(r[k])); return this; }
-    is(k, v) { this.filters.push((r) => (v === null ? r[k] == null : r[k] === v)); return this; }
+    is(k, v) {
+      this.filters.push((r) => {
+        const value = k.split('->>').reduce((row, field) => row?.[field], r);
+        return v === null ? value == null : value === v;
+      });
+      return this;
+    }
     like(k, p) { const re = likeRe(p); this.filters.push((r) => re.test(String(r[k] ?? ''))); return this; }
     order(k, { ascending = true } = {}) { this.sort = { k, ascending }; return this; }
     limit(n) { this.max = n; return this; }

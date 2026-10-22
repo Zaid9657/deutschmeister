@@ -27,6 +27,7 @@
 import { safeGetJSON, safeSetJSON, safeRemove } from '../../utils/safeStorage.js';
 import { completeLesson, logAttempts, runMarkerAttempt } from '../../services/lessonService.js';
 import { betterRun } from '../lesson/mastery.js';
+import { outboxDeps } from './syncOutbox.js';
 
 export const LOCAL_KEY = 'dm_course_local';
 
@@ -69,10 +70,20 @@ function trimAttempts(list) {
 }
 
 const emptyStore = (level = null) => ({ level, lektionen: {}, attempts: [] });
+let memory = null;
+
+function writeLocalProgress(store) {
+  const stored = safeSetJSON(LOCAL_KEY, store);
+  memory = stored ? null : store;
+  return stored;
+}
+
+/** Retry a guest save without counting the completed run a second time. */
+export const retryLocalProgressSave = () => memory ? writeLocalProgress(memory) : true;
 
 /** The store as written, or an empty one. Shape-checked: a hand-edited blob must not crash a render. */
 export function readLocalProgress() {
-  const raw = safeGetJSON(LOCAL_KEY, null);
+  const raw = memory || safeGetJSON(LOCAL_KEY, null);
   if (!raw || typeof raw !== 'object') return emptyStore();
   return {
     level: typeof raw.level === 'string' ? raw.level : null,
@@ -82,6 +93,7 @@ export function readLocalProgress() {
 }
 
 export function clearLocalProgress() {
+  memory = null;
   safeRemove(LOCAL_KEY);
 }
 
@@ -145,7 +157,7 @@ export function recordLocalLesson({ level, lektionId, status = 'complete', accur
       errorTag: a.errorTag || null,
     })),
   ]);
-  return safeSetJSON(LOCAL_KEY, store);
+  return writeLocalProgress(store);
 }
 
 let merging = false;
@@ -244,6 +256,7 @@ export async function mergeLocalProgress(userId, deps = {}) {
   if (!userId || merging) return 0;
   const complete = deps.completeLesson || completeLesson;
   const log = deps.logAttempts || logAttempts;
+  const seed = deps.seedCards || outboxDeps.seedCards;
   const store = readLocalProgress();
   const plans = planLocalMerge(store);
   if (!plans.length) return 0;
@@ -263,6 +276,8 @@ export async function mergeLocalProgress(userId, deps = {}) {
         const logged = await log(userId, { level: plan.level, lektionId: plan.lektionId, createdAt: batch.createdAt }, batch.attempts);
         allOk = allOk && logged === true;
       }
+      const seeded = await seed(userId, plan);
+      allOk = allOk && seeded === true;
     }
     if (!allOk) return 0;
     clearLocalProgress();

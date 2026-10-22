@@ -2,9 +2,9 @@
 // Rules: normalise like the rest of the site (src/utils/answerMatch.js), allow
 // ONE typo-class slip (Levenshtein ≤ 1 on a word of ≥ 5 letters, diacritics,
 // capitalisation) and count it as correct-with-warning — but an article or an
-// ending is never a typo: if the expected answer is a short function word
-// (≤ 4 letters: der/die/das/ein/eine/dem/den…) or the user's slip changes the
-// final letter of a word (an ending), it is wrong.
+// ending is never a typo: short function words (≤ 4 letters: der/die/das/ein/…)
+// and changed inflection endings are wrong. Recognition items never get typo
+// credit for a selected distractor.
 //
 // Three things are decided by the ITEM rather than by the call site or the
 // answer string: `isCaseTask(item)` is `item.caseSensitive === true` and
@@ -80,7 +80,7 @@ const COMPOUND_UNITS = { ein: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, 
 const TENS = ['zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
 // The umlaut-free keyboard spellings (zwoelf, fuenfzehn, dreissig) are the same numbers — the
 // fold normalizeAnswer applies later, applied here first so both spellings meet (Codex review).
-const asciiFold = (w) => w.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const asciiFold = (w) => w.normalize('NFC').toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
 const withAscii = (words) => [...new Set(words.flatMap((w) => [w, asciiFold(w)]))];
 const NUMBER_VALUE = new Map(Object.entries(DICTATION_NUMBERS).map(([w, v]) => [asciiFold(w), v]));
 const UNIT_VALUE = new Map(Object.entries(COMPOUND_UNITS).map(([w, v]) => [asciiFold(w), v]));
@@ -88,7 +88,7 @@ const NUMBER_RE = new RegExp(
   `(?<!\\p{L})(?:(${withAscii(Object.keys(COMPOUND_UNITS)).join('|')})und(${withAscii(TENS).join('|')})|(${withAscii(Object.keys(DICTATION_NUMBERS)).join('|')}))(?!\\p{L})`,
   'giu',
 );
-export const numberWordsToDigits = (text) => String(text ?? '').replace(NUMBER_RE, (m, unit, ten, word) => (
+export const numberWordsToDigits = (text) => String(text ?? '').normalize('NFC').replace(NUMBER_RE, (m, unit, ten, word) => (
   word
     ? String(NUMBER_VALUE.get(asciiFold(word)))
     : String(UNIT_VALUE.get(asciiFold(unit)) + NUMBER_VALUE.get(asciiFold(ten)))
@@ -115,6 +115,7 @@ export function normalizeDictation(text) {
  */
 export function normalizeSpelling(text) {
   return String(text ?? '')
+    .normalize('NFC')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
     .replace(/\s+/g, ' ')
     .replace(/(?<=(^|\s)\p{L})\s+(?=\p{L}(\s|$))/gu, '')
@@ -128,7 +129,7 @@ export const SPELLED_OUT_RE = /^\p{L}([-\s]\p{L})+$/u;
 export function spellingApplies(expected) {
   const list = Array.isArray(expected) ? expected : [expected];
   // A dictated line ends like a sentence: „C-H-A-K-I-R-I." is still a spelled word (Codex review).
-  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').trim().replace(/[.!?]+$/, '')));
+  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').normalize('NFC').trim().replace(/[.!?]+$/, '')));
 }
 
 const numbersIn = (s) => (String(s).match(/\d+/g) || []).join(',');
@@ -157,14 +158,38 @@ const oneKeyAdded = (given, expected) =>
  * pools). Two words are another ending of the same stem when both split into that stem plus two
  * different non-empty endings; a noun that merely ends like one („Kaffe" for „Kaffee") does not.
  */
-const ENDINGS = ['est', 'st', 'et', 'en', 'em', 'er', 'es', 'e', 't', 'n', 's'];
+const ENDINGS = ['test', 'ten', 'tet', 'est', 'te', 'st', 'et', 'en', 'em', 'er', 'es', 'e', 't', 'n', 's'];
 const stemSplits = (w) => ENDINGS.filter((x) => w.length >= x.length + 3 && w.endsWith(x)).map((x) => [w.slice(0, -x.length), x]);
 const otherEnding = (a, b) => stemSplits(a).some(([s, x]) => stemSplits(b).some(([t, y]) => s === t && x !== y));
+
+// Present-tense strong stems, after normalizeAnswer's umlaut/ß fold. Changing the stem vowel is
+// conjugation even when the ending stays -t („spricht/sprecht", „fährt/fahrt"). Equal prefixes
+// preserve the rule for compounds („vorliest/vorlest") without treating every vowel slip as grammar.
+const STRONG_STEMS = [
+  ['sprech', 'sprich'], ['les', 'lies'], ['fahr', 'faehr'], ['ess', 'iss'], ['seh', 'sieh'],
+  ['nehm', 'nimm'], ['geb', 'gib'], ['helf', 'hilf'], ['treff', 'triff'], ['lauf', 'laeuf'],
+  ['schlaf', 'schlaef'], ['trag', 'traeg'], ['wasch', 'waesch'], ['halt', 'haelt'],
+  ['fall', 'faell'], ['lass', 'laess'], ['fang', 'faeng'], ['stoss', 'stoess'],
+  ['werf', 'wirf'], ['brech', 'brich'], ['sterb', 'stirb'], ['tret', 'tritt'],
+  ['vergess', 'vergiss'], ['empfehl', 'empfiehl'], ['befehl', 'befiehl'], ['fress', 'friss'],
+  ['mess', 'miss'], ['stech', 'stich'], ['gelt', 'gilt'], ['rat', 'raet'], ['brat', 'braet'],
+  ['grab', 'graeb'], ['blas', 'blaes'], ['berg', 'birg'], ['schlag', 'schlaeg'],
+  ['wachs', 'waechs'], ['sauf', 'saeuf'], ['schmelz', 'schmilz'],
+  ['schwell', 'schwill'], ['quell', 'quill'], ['schreck', 'schrick'],
+];
+
+function otherStrongStem(a, b) {
+  return ['e', 'st', 't', 'en', 'et'].some((ending) => STRONG_STEMS.some(([base, changed]) => {
+    const plain = `${base}${ending}`; const strong = `${changed}${ending}`;
+    return (a.endsWith(plain) && b.endsWith(strong) && a.slice(0, -plain.length) === b.slice(0, -strong.length))
+      || (a.endsWith(strong) && b.endsWith(plain) && a.slice(0, -strong.length) === b.slice(0, -plain.length));
+  }));
+}
 
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
   if (u.length !== e.length) return true;
-  return u.some((w, i) => w !== e[i] && (w.slice(-1) !== e[i].slice(-1) || otherEnding(w, e[i])));
+  return u.some((w, i) => w !== e[i] && (w.slice(-1) !== e[i].slice(-1) || otherEnding(w, e[i]) || otherStrongStem(w, e[i])));
 }
 
 /**
@@ -204,7 +229,7 @@ function caseOnlyDiff(rawUser, rawAccepted) {
 
 /**
  * checkAnswer(userInput, expected: string | string[],
- *   { strict, dictation, caseSensitive, spelling }) → { result, expected, reason? }.
+ *   { strict, dictation, caseSensitive, spelling, choice }) → { result, expected, reason? }.
  *
  * result ∈ RESULT, `expected` echoes the best matching accepted answer, and
  * `reason: 'case'` marks a miss that is nothing but Groß-/Kleinschreibung so the
@@ -233,7 +258,7 @@ export function checkAnswer(userInput, expected, {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
   const fold = (s) => {
-    let t = String(s ?? '');
+    let t = String(s ?? '').normalize('NFC');
     if (dictation) t = normalizeDictation(t);
     if (spellingMode) t = normalizeSpelling(t.trim().replace(/[.!?]+$/, ''));
     return t;
@@ -404,12 +429,13 @@ function commonPrefix(a, b) {
 }
 
 /**
- * Two finite forms of the same verb: both end in a personal ending and they
- * share a stem of at least three characters (spreche/spricht → `spr`). Deliberately
- * loose — it only has to separate a conjugation slip from a different word.
+ * Two finite forms of the same verb: a known strong-stem pair, or personal endings with
+ * a shared stem of at least three characters (spreche/spricht → `spr`). Deliberately loose —
+ * it only has to separate a conjugation slip from a different word.
  */
 function sameLemmaVerb(usr, exp) {
   if (!usr || !exp || usr === exp) return false;
+  if (otherStrongStem(usr, exp)) return true;
   if (!VERB_ENDING_RE.test(usr) || !VERB_ENDING_RE.test(exp)) return false;
   return commonPrefix(usr, exp) >= 3;
 }

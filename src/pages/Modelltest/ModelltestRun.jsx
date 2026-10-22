@@ -19,6 +19,7 @@ import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
+import { createExamAutosave } from './examAutosave.js';
 
 // /modelltest/:examSlug/run — the timed runner (renovation Phase 5a).
 //
@@ -172,10 +173,22 @@ const ModelltestRun = () => {
   const [remaining, setRemaining] = useState(null);
   const [loading, setLoading] = useState(true);
   const [finishing, setFinishing] = useState(false);
+  const [changingSection, setChangingSection] = useState(false);
   const [finishError, setFinishError] = useState(null);
   const [sectionError, setSectionError] = useState(null);
   const listeningKeysRef = useRef({});
-  const saveTimerRef = useRef(null);
+  const autosaveRef = useRef(null);
+  if (!autosaveRef.current) autosaveRef.current = createExamAutosave(saveAnswers);
+  const changingSectionRef = useRef(false);
+  // A pending autosave carries the answers with the section index of the moment it was scheduled;
+  // every transition writes the answers itself, so the pending one is cancelled first (Codex rescore,
+  // 2026-10-15). examService also queues writes per attempt, so one already in flight lands first.
+  const cancelPendingSave = () => autosaveRef.current.cancel();
+
+  useEffect(() => {
+    const autosave = autosaveRef.current;
+    return () => { autosave.flush(); };
+  }, [examSlug]);
 
   const registerListeningKey = useCallback((partKey, items) => {
     listeningKeysRef.current[partKey] = items;
@@ -222,12 +235,10 @@ const ModelltestRun = () => {
   const frozenRef = useRef(null);
   const setAnswer = (key, value) => {
     if (frozenRef.current) return;
+    if (changingSectionRef.current) return;
     setAnswers((prev) => {
       const next = { ...prev, [key]: value, _meta: { sectionIndex } };
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      saveTimerRef.current = setTimeout(() => {
-        if (attempt) saveAnswers(attempt.id, next);
-      }, 1500);
+      if (attempt) autosaveRef.current.schedule(attempt.id, next);
       return next;
     });
   };
@@ -242,14 +253,6 @@ const ModelltestRun = () => {
       const questions = selectListeningQuestions(await fetchExerciseQuestions(part.level, String(part.exerciseNumber)), part);
       if (questions.length) registerListeningKey(key, questions.map((q) => ({ id: q.id || q.question_number, correct: q.correct_answer })));
     }
-  };
-
-  // A pending autosave carries the answers with the section index of the moment it was scheduled;
-  // firing after a section change it put the saved attempt back a section (Codex rescore,
-  // 2026-10-15). Every transition writes the answers itself, so the pending one is cancelled.
-  const cancelPendingSave = () => {
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = null;
   };
 
   const finish = useCallback(async () => {
@@ -286,26 +289,34 @@ const ModelltestRun = () => {
   }, [attempt, finishing, answers, sectionIndex]);
 
   const nextSection = useCallback(async () => {
-    if (!attempt) return;
+    if (!attempt || changingSectionRef.current) return;
+    cancelPendingSave();
     if (isLast) {
       finish();
       return;
     }
-    cancelPendingSave();
+    changingSectionRef.current = true;
+    setChangingSection(true);
     const nextIdx = sectionIndex + 1;
     const nextAnswers = { ...answers, _meta: { sectionIndex: nextIdx } };
-    // The screen moves on only once the attempt has: a failed write used to advance it anyway, and a
-    // reload then reopened the old section (Codex rescore, 2026-10-15).
-    const newDeadline = await advanceSection(attempt.id, nextAnswers, mock.sections[nextIdx].minutes);
-    if (!newDeadline) {
+    try {
+      const newDeadline = await advanceSection(attempt.id, nextAnswers, mock.sections[nextIdx].minutes);
+      if (!newDeadline) {
+        setSectionError('Der nächste Teil konnte nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut — Ihre Antworten bleiben erhalten.');
+        return;
+      }
+      setAnswers(nextAnswers);
+      setSectionIndex(nextIdx);
+      setDeadline(new Date(newDeadline).getTime());
+      setSectionError(null);
+      window.scrollTo({ top: 0 });
+    } catch (error) {
+      console.error('[ModelltestRun] next section:', error?.message);
       setSectionError('Der nächste Teil konnte nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut — Ihre Antworten bleiben erhalten.');
-      return;
+    } finally {
+      changingSectionRef.current = false;
+      setChangingSection(false);
     }
-    setSectionError(null);
-    setAnswers(nextAnswers);
-    setSectionIndex(nextIdx);
-    setDeadline(new Date(newDeadline).getTime());
-    window.scrollTo({ top: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt, isLast, sectionIndex, answers, finish]);
 
@@ -503,7 +514,7 @@ const ModelltestRun = () => {
         </div>
 
         {(finishError || sectionError) && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError || sectionError}</p>}
-        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing}>
+        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing || changingSection}>
           {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
           <ChevronRight className="w-4 h-4" />
         </Button>

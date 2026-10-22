@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { consumeCheckoutSuccess } from '../lib/funnelTracking';
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSubscription } from '../contexts/SubscriptionContext';
 
 // Routes that can actually open a Lemon Squeezy checkout. Everywhere else the
 // script is dead weight (it used to load on every page of the app).
@@ -9,6 +9,10 @@ const COMMERCE_ROUTES = ['/pricing', '/subscription', '/payment', '/profile', '/
 // Load LemonSqueezy.js script for popup checkout — only on commerce routes.
 const LemonSqueezyProvider = ({ children }) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { refreshSubscription } = useSubscription();
+  const refreshRef = useRef(refreshSubscription);
+  refreshRef.current = refreshSubscription;
   const needed = COMMERCE_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
   useEffect(() => {
@@ -21,22 +25,25 @@ const LemonSqueezyProvider = ({ children }) => {
     const script = document.createElement('script');
     script.src = 'https://app.lemonsqueezy.com/js/lemon.js';
     script.defer = true;
-    // Overlay checkout path: report the purchase the moment Lemon Squeezy
-    // says so. Tracking only — a failure here must never break checkout.
+    // The success page waits for the purchased product to land. Existing Pro
+    // must not make a newly bought course look confirmed before its refresh.
     script.onload = () => {
       try {
         window.createLemonSqueezy?.();
         window.LemonSqueezy?.Setup?.({
           eventHandler: (evt) => {
-            if (evt?.event === 'Checkout.Success') consumeCheckoutSuccess();
+            if (evt?.event === 'Checkout.Success') {
+              refreshRef.current();
+              navigate('/subscription/success');
+            }
           },
         });
       } catch {
-        /* analytics only */
+        /* overlay optional */
       }
     };
     document.head.appendChild(script);
-  }, [needed]);
+  }, [needed, navigate]);
 
   return children;
 };

@@ -25,6 +25,7 @@ import {
   ANON_ID_KEY, getOrCreateAnonId, CRAWLER_UA as CLIENT_CRAWLER_UA, isLikelyCrawler,
   referrerLabel, xraySource, XRAY_OFFER,
 } from '../src/lib/xray.js';
+import { reserveUsage, validAnonymousId } from '../netlify/functions/_shared/aiReservation.mjs';
 import {
   CRAWLER_UA as SERVER_CRAWLER_UA, isCrawlerUA, uaClass, cleanSource,
 } from '../netlify/functions/_shared/xraySource.mjs';
@@ -162,34 +163,32 @@ test('the page sends the coarse source with every request', () => {
 // 3b. The function: crawler refusal, source logging (behavioural)
 // ---------------------------------------------------------------------------
 
-// The handler reads its env at import. Scrub the live-service keys first so a
-// shell with secrets loaded can never reach Supabase from this test (node
-// --test runs each file in its own process, so nothing else sees this).
-for (const k of ['SUPABASE_SERVICE_ROLE_KEY', 'IP_HASH_SALT', 'UNSUB_SECRET', 'CAMPAIGN_SECRET']) delete process.env[k];
-
+// Run the actual handler with an isolated usage store and provider. No live
+// credentials or network calls are available to this context.
 async function callFunction({ ua, body }) {
-  const saved = { key: process.env.ANTHROPIC_API_KEY, fetch: globalThis.fetch, log: console.log };
-  process.env.ANTHROPIC_API_KEY = 'test-key';
   const fetchCalls = [];
   const logs = [];
-  globalThis.fetch = async (url, init) => {
-    fetchCalls.push({ url, init });
-    return new Response(JSON.stringify({ content: [{ type: 'text', text: '{"words":[],"insight":null,"fullTranslation":"x"}' }] }), { status: 200 });
-  };
-  console.log = (...args) => logs.push(args.join(' '));
-  try {
-    const { handler } = await import('../netlify/functions/analyze-sentence.mjs');
-    const res = await handler({
-      httpMethod: 'POST',
-      headers: { origin: 'https://deutsch-meister.de', 'user-agent': ua },
-      body: JSON.stringify(body),
-    });
-    return { res, fetchCalls, logs };
-  } finally {
-    globalThis.fetch = saved.fetch;
-    console.log = saved.log;
-    if (saved.key === undefined) delete process.env.ANTHROPIC_API_KEY; else process.env.ANTHROPIC_API_KEY = saved.key;
-  }
+  const db = { rpc: async () => ({ data: { allowed: true, id: 'usage-1', used: 0 } }) };
+  const context = vm.createContext({
+    process: { env: { ANTHROPIC_API_KEY: 'test-key', SUPABASE_SERVICE_ROLE_KEY: 'test-service-key' } },
+    createClient: () => db,
+    createHash: () => { throw new Error('No IP hash expected without a configured salt'); },
+    getAuthenticatedUserId: async () => null,
+    uaClass, cleanSource, reserveUsage, validAnonymousId,
+    console: { log: (...args) => logs.push(args.join(' ')), error: () => {} },
+    fetch: async (url, init) => {
+      fetchCalls.push({ url, init });
+      return { ok: true, json: async () => ({ content: [{ type: 'text', text: '{"words":[],"insight":null,"fullTranslation":"x"}' }] }) };
+    },
+  });
+  const source = read('netlify/functions/analyze-sentence.mjs').replace(/^import .*;\n/gm, '').replace('export const handler', 'const handler');
+  const handler = vm.runInContext(`${source}\nhandler;`, context);
+  const res = await handler({
+    httpMethod: 'POST',
+    headers: { origin: 'https://deutsch-meister.de', 'user-agent': ua },
+    body: JSON.stringify(body),
+  });
+  return { res, fetchCalls, logs };
 }
 
 test('an anonymous crawler is refused before any model call', async () => {
@@ -218,8 +217,11 @@ test('a browser analysis still runs and logs its coarse source', async () => {
 
 test('the usage row carries the source, and the meter survives a database without the column', () => {
   const fn = read('netlify/functions/analyze-sentence.mjs');
-  assert.match(fn, /insert\(source \? \{ \.\.\.row, source \} : row\)/);
-  assert.match(fn, /if \(error && source\) \(\{ data, error \} = await insert\(row\)\);/);
+  assert.match(fn, /reserveUsage\(supabase, 'reserve_xray_usage'/);
+  assert.match(fn, /p_source: source/);
+  const reservation = read('migrations/2026-10-22-ai-usage-reservations.sql');
+  assert.match(reservation, /IF EXISTS \(SELECT 1 FROM pg_attribute[\s\S]*?attname = 'source'/);
+  assert.match(reservation, /ELSE\s+INSERT INTO public\.xray_usage\(user_id, anonymous_id, sentence, ip_hash\)/);
   const migration = read('migrations/2026-09-27-xray-usage-source.sql');
   assert.match(migration, /ADD COLUMN IF NOT EXISTS source jsonb/);
 });

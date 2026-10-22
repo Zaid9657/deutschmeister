@@ -26,4 +26,4 @@ npm-debug.log*
 
 # Lighthouse reports
 lighthouse-reports/
-/.cache
+.cache/

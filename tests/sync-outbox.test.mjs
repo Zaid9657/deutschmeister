@@ -160,11 +160,11 @@ test('explain and read-aloud rows are not completed runs', async () => {
 test('a guest merge with any failed write keeps the guest store; a clean merge clears it', async () => {
   map.delete(LOCAL_KEY);
   recordLocalLesson({ level: 'a1.1', lektionId: 'a1.1-l01', accuracy: 0.9, status: 'gold', attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] });
-  assert.equal(await mergeLocalProgress('u1', { completeLesson: async () => false, logAttempts: async () => true }), 0);
+  assert.equal(await mergeLocalProgress('u1', { completeLesson: async () => false, logAttempts: async () => true, seedCards: async () => true }), 0);
   assert.equal(readLocalProgress().level, 'a1.1', 'the progress row failed: nothing is thrown away');
-  assert.equal(await mergeLocalProgress('u1', { completeLesson: async () => true, logAttempts: async () => false }), 0);
+  assert.equal(await mergeLocalProgress('u1', { completeLesson: async () => true, logAttempts: async () => false, seedCards: async () => true }), 0);
   assert.equal(readLocalProgress().level, 'a1.1', 'the attempt batch failed: nothing is thrown away');
-  assert.equal(await mergeLocalProgress('u1', { completeLesson: async () => true, logAttempts: async () => true }), 1);
+  assert.equal(await mergeLocalProgress('u1', { completeLesson: async () => true, logAttempts: async () => true, seedCards: async () => true }), 1);
   assert.equal(readLocalProgress().level, null, 'cleared once everything landed');
 });
 

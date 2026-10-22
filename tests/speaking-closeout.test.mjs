@@ -89,7 +89,31 @@ function fakeDb(seed) {
       return { data: this.single ? (data[0] ?? null) : data, error: null };
     }
   }
-  return { from: (name) => new Query(name), tables: () => tables, log };
+  // Model the transactional RPC contract; assertions below remain about the
+  // resulting sessions, balances and allowance, rather than query ordering.
+  const rpc = async (name, args) => {
+    assert.equal(name, 'settle_speaking_session');
+    const row = tables.speaking_sessions.find((r) => r.session_token === args.p_session_token && r.user_id === args.p_user_id);
+    if (!row || row.status !== 'active') return { data: { closed: false } };
+    const messages = tables.speaking_messages.filter((m) => m.session_token === row.session_token);
+    const plan = closeOutPlan({ userTurns: messages.filter((m) => m.role === 'user').length, mode: row.mode, costCents: row.cost_cents });
+    const budget = (row.planned_minutes + SESSION_GRACE_MINUTES) * 60;
+    const last = messages.map((m) => m.created_at).sort().at(-1) || row.started_at;
+    const measured = args.p_duration_seconds ?? Math.round((Date.parse(last) - Date.parse(row.started_at)) / 1000);
+    Object.assign(row, { status: plan.status, user_turns: plan.userTurns, duration_seconds: Math.min(Math.max(0, measured), budget), completed_at: last });
+    let released = false;
+    if (plan.releaseTrial) {
+      tables.speaking_usage = tables.speaking_usage.filter((u) => u.id !== usageIdForToken(row.session_token) || u.user_id !== row.user_id);
+      released = true;
+    }
+    if (plan.refundCents) {
+      tables.speaking_wallet.find((w) => w.user_id === row.user_id).balance_cents += plan.refundCents;
+      tables.speaking_wallet_transactions.push({ user_id: row.user_id, amount_cents: plan.refundCents, reason: 'refund_no_speech', session_token: row.session_token });
+      released = true;
+    }
+    return { data: { closed: true, status: plan.status, userTurns: plan.userTurns, released, refundCents: plan.refundCents } };
+  };
+  return { from: (name) => new Query(name), rpc, tables: () => tables, log };
 }
 
 const U1 = '11111111-1111-4111-8111-111111111111';
@@ -268,19 +292,20 @@ test('start links the trial unit to its session and settles stale sessions first
   const src = read('netlify/functions/speaking-session.mjs');
   assert.ok(src.includes('const sessionToken = `sp_${randomUUID()}`;'), 'the token is minted server-side, never chosen by the client');
   assert.ok(!src.includes('providedToken ||'), 'no client-chosen token on start');
-  assert.ok(src.includes('incrementUsage(user_id, { id: usageIdForToken(sessionToken) })'),
-    'the trial unit must be written under the session id so it can be released');
+  const sql = read('migrations/2026-10-22-speaking-reservations.sql');
+  assert.ok(sql.includes('substring(v_token FROM 4)::uuid, v_user, now()'), 'the transactional reservation links the trial unit to its server token');
+  assert.ok(src.includes('await reserveSession(supabase'), 'session creation and allowance reservation must be atomic');
   const settle = src.indexOf('closeOutStaleSessions(supabase, { userId: user_id })');
   assert.ok(settle > 0 && settle < src.indexOf('await checkUsage(user_id)'), 'settle before the allowance is checked');
 });
 
 test('a cancelled session never uses up a subscriber free session — server and page agree', () => {
-  const server = read('netlify/functions/speaking-session.mjs');
-  const fn = server.slice(server.indexOf('async function freeFiveMinuteSessionsToday'), server.indexOf('async function walletBalance'));
-  assert.ok(fn.includes(".neq('status', 'cancelled')"));
+  const sql = read('migrations/2026-10-22-speaking-reservations.sql');
+  assert.ok(sql.includes("s.status <> 'cancelled'"));
+  assert.ok(sql.includes("DELETE FROM public.speaking_usage WHERE id = substring(p_session_token FROM 4)::uuid"));
   const page = read('src/pages/SpeakingPage.jsx');
-  const meta = page.slice(page.indexOf('const loadMeta'), page.indexOf("fetch('/api/speaking/check-speaking-usage'"));
-  assert.ok(meta.includes(".neq('status', 'cancelled')"), 'the setup screen must count what the server counts');
+  assert.ok(page.includes('setUsage(usageRes)'), 'setup uses the same allowance endpoint as session start');
+  assert.ok(page.includes('!!usage?.allowed'), 'cancelled reservations released by that endpoint are available again');
 });
 
 test('check-speaking-usage settles the caller before it reports the allowance', () => {

@@ -17,7 +17,7 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playCount, setPlayCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [hasUnfinishedPlay, setHasUnfinishedPlay] = useState(false);
 
   const canPlay = playCount < MAX_PLAYS;
 
@@ -35,6 +35,7 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
 
   const handleEnded = useCallback(() => {
     setIsPlaying(false);
+    setHasUnfinishedPlay(false);
   }, []);
 
   useEffect(() => {
@@ -57,14 +58,14 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      if (!canPlay) return;
-      if (!hasStarted || audioRef.current.ended) {
+      if (!hasUnfinishedPlay || audioRef.current.ended) {
+        if (!canPlay) return;
         // Starting a new play-through
         audioRef.current.currentTime = 0;
         const newCount = playCount + 1;
         setPlayCount(newCount);
         onPlayCountChange?.(newCount);
-        setHasStarted(true);
+        setHasUnfinishedPlay(true);
       }
       audioRef.current.play();
       setIsPlaying(true);
@@ -79,7 +80,7 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
     onPlayCountChange?.(newCount);
     audioRef.current.play();
     setIsPlaying(true);
-    setHasStarted(true);
+    setHasUnfinishedPlay(true);
   };
 
   const handleSeek = (e) => {
@@ -91,7 +92,7 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
   };
 
   const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
-  const playDisabled = disabled || (!isPlaying && !canPlay);
+  const playDisabled = disabled || (!isPlaying && !hasUnfinishedPlay && !canPlay);
   const restartDisabled = disabled || !canPlay;
 
   return (

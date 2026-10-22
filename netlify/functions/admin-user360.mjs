@@ -110,7 +110,7 @@ export const handler = adminEndpoint({ capability: 'user360.read' }, async ({ bo
     ]);
     const topicMap = new Map(topics.map((t) => [t.id, t]));
     const evals = speaking.length
-      ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score, created_at').in('session_token', speaking.map((s) => s.session_token).filter(Boolean)))
+      ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score, created_at').in('session_token', speaking.map((s) => s.session_token).filter(Boolean)).is('scores->>_pending', null).is('scores->>_failed', null))
       : [];
     const evalBy = new Map();
     for (const e of evals) if (!evalBy.has(e.session_token)) evalBy.set(e.session_token, e.total_score ?? e.score ?? null);

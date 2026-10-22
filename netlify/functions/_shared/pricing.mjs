@@ -53,6 +53,23 @@ export const deEur = (v) => `${cents(v).toFixed(2).replace('.', ',')} €`;
 /** 'a1.2' → 'course_a1_2' (mirrors pricing.js productKeyForLevel). */
 export const productKeyForLevel = (level) => `course_${String(level).toLowerCase().replace('.', '_')}`;
 
+// Coupon eligibility uses provider variant IDs (functions scope), never the
+// checkout UUIDs the front ends use to open a checkout. Prices stay in this
+// synced catalogue; a caller cannot lower the order value in their request.
+export function couponProduct(productKey, env = process.env) {
+  if (typeof productKey !== 'string') return null;
+  const level = Object.keys(SUBLEVEL_PRICES_EUR).find((l) => productKeyForLevel(l) === productKey);
+  const price = productKey === 'monthly' ? MONTHLY_PRICE_EUR
+    : productKey === 'yearly' ? YEARLY_PRICE_EUR
+      : productKey === 'telc_b1_komplett' ? COURSE_TELC_B1_PRICE_EUR
+        : level && !COMING_SOON_LEVELS.includes(level) ? SUBLEVEL_PRICES_EUR[level] : null;
+  if (price == null) return null;
+  const envKey = productKey === 'telc_b1_komplett' ? 'TELC_B1' : productKey.toUpperCase();
+  const variantId = String(env[`LEMONSQUEEZY_${envKey}_VARIANT_ID`] || '').trim();
+  if (!/^[1-9]\d*$/.test(variantId)) return null;
+  return { productKey, variantId, amountMinor: Math.round(price * 100) };
+}
+
 // The retired band keys an old purchase can still carry (pricing.js
 // LEGACY_LEVEL_COURSES): not for sale, but a purchases row with one of them
 // still unlocks these levels.

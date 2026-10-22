@@ -47,7 +47,7 @@ export const handler = adminEndpoint(
     const sessionsAll = await fetchAll(() => applyLevelFilter(supabase.from('speaking_sessions').select('id, user_id, session_token, level, mode, status, duration_seconds, user_turns, evaluated, passed, planned_minutes, cost_cents, mission_id, started_at, completed_at, created_at').order('created_at', { ascending: false }), 'speaking_sessions', level));
     const sessions = sessionsAll.filter((s) => inWindow(s.created_at, w));
     const tokens = sessions.map((s) => s.session_token).filter(Boolean);
-    const evals = tokens.length ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score, pronunciation_score, grammar_score, vocabulary_score, fluency_score, comprehension_score, created_at').in('session_token', tokens)) : [];
+    const evals = tokens.length ? await fetchAll(() => supabase.from('speaking_evaluations').select('session_token, score, total_score, pronunciation_score, grammar_score, vocabulary_score, fluency_score, comprehension_score, created_at').in('session_token', tokens).is('scores->>_pending', null).is('scores->>_failed', null)) : [];
     const scoreBy = new Map();
     for (const e of evals) if (!scoreBy.has(e.session_token)) scoreBy.set(e.session_token, e);
     const scoreOf = (s) => { const e = scoreBy.get(s.session_token); const v = e ? (e.total_score ?? e.score) : null; return v == null ? null : Number(v); };

@@ -40,7 +40,16 @@ const [topics, rules, examples, exercises] = await Promise.all([
   fetchAll('grammar_exercises'),
 ]);
 
-// dumpedAt lets CI warn when the committed cache goes stale; the loader in
-// astro-site/src/lib/grammar.js ignores unknown keys.
-writeFileSync(out, JSON.stringify({ dumpedAt: new Date().toISOString().slice(0, 10), topics, rules, examples, exercises }));
+// select=* retains is_published, which the offline reader must check too.
+const publishedTopics = topics.filter((t) => t.is_published === true);
+const topicIds = new Set(publishedTopics.map((t) => t.id));
+const snapshot = {
+  topics: publishedTopics,
+  rules: rules.filter((r) => topicIds.has(r.topic_id)),
+  examples: examples.filter((e) => topicIds.has(e.topic_id)),
+  exercises: exercises.filter((e) => topicIds.has(e.topic_id)),
+};
+
+// dumpedAt lets CI warn when the committed cache goes stale.
+writeFileSync(out, JSON.stringify({ dumpedAt: new Date().toISOString().slice(0, 10), ...snapshot }));
 console.log(`Wrote ${out}`);

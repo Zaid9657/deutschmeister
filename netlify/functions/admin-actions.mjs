@@ -12,6 +12,7 @@ import { adminEndpoint, badRequest, notFound, conflict } from './_shared/adminHt
 import { writeAudit } from './_shared/adminRbac.mjs';
 import { ROLES } from './_shared/adminRbacLib.mjs';
 import { PRODUCT_KEYS } from './_shared/adminOpsLib.mjs';
+import { flagsFromRows } from './_shared/adminEntitlement.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const MAX_PRO_DAYS = 365;
@@ -37,12 +38,6 @@ async function loadUser(supabase, userId) {
   const { data: subs } = await supabase.from('subscriptions').select('*').eq('user_id', userId);
   const { data: purchases } = await supabase.from('purchases').select('*').eq('user_id', userId);
   return { profile, subs: subs || [], purchases: purchases || [] };
-}
-
-function flagsFromRows(subs, purchases, now) {
-  const live = subs.some((s) => s.subscription_end && new Date(s.subscription_end) > now);
-  const course = purchases.some((p) => p.status === 'active');
-  return { is_subscribed: live || course, subscription_tier: live || course ? 'pro' : 'free' };
 }
 
 async function updateProfile(supabase, userId, patch) {
@@ -72,7 +67,7 @@ const HANDLERS = {
       if (error) throw new Error(error.message);
       rowId = data?.id;
     }
-    const flags = flagsFromRows([...subs.filter((s) => s.id !== rowId), { subscription_end: newEnd }], purchases, now);
+    const flags = flagsFromRows([...subs.filter((s) => s.id !== rowId), { status: 'active', subscription_end: newEnd }], purchases, now);
     await updateProfile(supabase, userId, flags);
     return { before, after: { manualRow: { id: rowId, subscription_end: newEnd, status: 'active' }, profile: flags }, summary: `${days} Pro-Tage bis ${newEnd.slice(0, 10)}` };
   },

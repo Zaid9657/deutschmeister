@@ -15,6 +15,7 @@
 // (profiles.email_daily_sentence = false) are skipped entirely.
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
+import { reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
 import { createHmac } from 'crypto';
 import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
@@ -244,16 +245,21 @@ async function sendKind(resendKey, kind) {
 
     // Claim first: the unique key means a concurrent or repeated run can't
     // re-send, and a failure after this point costs at most a missed email.
-    const { error: claimError } = await supabase
+    const { data: claims, error: claimError } = await supabase
       .from('lifecycle_emails')
-      .upsert(slice.map((r) => ({ user_id: r.id, kind })), { onConflict: 'user_id,kind', ignoreDuplicates: true });
+      .upsert(slice.map((r) => ({ user_id: r.id, kind })), { onConflict: 'user_id,kind', ignoreDuplicates: true })
+      .select('user_id');
     if (claimError) {
       console.error(`[trial-lifecycle] ${kind}: could not claim batch, skipping:`, claimError.message);
       failed += slice.length;
       continue;
     }
 
-    const items = slice.map((r) => ({
+    const claimedIds = new Set((claims || []).map((r) => r.user_id));
+    const claimed = slice.filter((r) => claimedIds.has(r.id));
+    if (claimed.length === 0) continue;
+
+    const items = claimed.map((r) => ({
       from: FROM_ADDRESS,
       to: [r.email],
       reply_to: 'zaid@deutsch-meister.de',
@@ -263,9 +269,9 @@ async function sendKind(resendKey, kind) {
 
     try {
       await sendBatch(resendKey, items);
-      sent += slice.length;
+      sent += claimed.length;
     } catch (err) {
-      failed += slice.length;
+      failed += claimed.length;
       console.error(`[trial-lifecycle] ${kind} batch failed:`, err.message);
     }
   }
@@ -278,12 +284,12 @@ async function sendKind(resendKey, kind) {
 // A course purchase grants an included Pro window as a subscriptions row with
 // plan_type 'course' (see lemonsqueezy-webhook.mjs handleCourseOrder). Lemon
 // Squeezy never emits a subscription_expired for it — one-time orders have no
-// subscription — so this daily run sweeps the expired ones. A user who later
-// bought a real subscription no longer has a 'course' row (subscription_created
-// upserts over it on user_id), so the sweep can never touch a paying subscriber.
-async function expireCourseWindows() {
-  const nowIso = new Date().toISOString();
-  const { data: expired, error } = await supabase
+// subscription — so this daily run sweeps the expired ones. A recurring row
+// can remain while a purchase supplies Pro; those purchase windows need the
+// same expiry check, preserving any other current purchase or paid period.
+export async function expireCourseWindows(client = supabase, now = Date.now()) {
+  const nowIso = new Date(now).toISOString();
+  const { data: expired, error } = await client
     .from('subscriptions')
     .update({ status: 'expired', updated_at: nowIso })
     .eq('plan_type', 'course')
@@ -291,16 +297,25 @@ async function expireCourseWindows() {
     .lt('subscription_end', nowIso)
     .select('user_id');
   if (error) throw new Error(`course-window sweep failed: ${error.message}`);
-  for (const row of expired || []) {
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({ is_subscribed: false, subscription_tier: 'free', updated_at: nowIso })
-      .eq('id', row.user_id);
-    if (profileError) {
-      console.error('[trial-lifecycle] course-window profile reset failed for', row.user_id, profileError.message);
+
+  const users = new Set((expired || []).map((row) => row.user_id));
+  const candidates = [
+    () => client.from('purchases').select('user_id').lte('access_until', nowIso).eq('status', 'active').order('id'),
+    () => client.from('subscriptions').select('user_id').lte('subscription_end', nowIso).eq('plan_type', 'course').order('id'),
+    () => client.from('subscriptions').select('user_id').in('status', ['past_due', 'paused', 'unpaid']).order('id'),
+  ];
+  for (const query of candidates) {
+    // Revisit expired rows too: a prior profile write may have failed after
+    // the subscription status committed. Page through lifetime purchases.
+    for (let from = 0; ; from += 1000) {
+      const { data, error: readError } = await query().range(from, from + 999);
+      if (readError) throw new Error(`course-window candidates failed: ${readError.message}`);
+      for (const row of data || []) users.add(row.user_id);
+      if (!data || data.length < 1000) break;
     }
   }
-  return { swept: expired?.length || 0 };
+  for (const userId of users) await reconcileUserEntitlement(client, userId, now);
+  return { swept: expired?.length || 0, reconciled: users.size };
 }
 
 // ─── handler ─────────────────────────────────────────────────────────────────

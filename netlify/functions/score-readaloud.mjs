@@ -1,6 +1,7 @@
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { AIError, transcribeAudio } from './_shared/speakingAI.mjs';
+import { reserveUsage } from './_shared/aiReservation.mjs';
 import { alignTranscript } from './_shared/readaloud.mjs';
 
 // Scored read-aloud (plan P3). One short clip in, one word-by-word score out:
@@ -89,9 +90,39 @@ export const handler = async (event) => {
       console.error('[score-readaloud] usage count failed:', JSON.stringify(countError));
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Nutzung konnte nicht geprüft werden', stage: 'usage' }) };
     }
-    const used = count || 0;
+    let used = count || 0;
     if (used >= READALOUD_DAILY_LIMIT) {
       return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit', limit: READALOUD_DAILY_LIMIT, used }) };
+    }
+
+    const level = String(lektionId || '').split('-')[0].toLowerCase();
+    let attemptId;
+    try {
+      const reservation = await reserveUsage(supabase, 'reserve_lesson_ai_usage', {
+        p_user_id: user_id, p_stage: 'readaloud', p_limit: READALOUD_DAILY_LIMIT,
+        p_level: level || 'a1.1', p_lektion_id: String(lektionId || ''),
+        p_item_id: String(lineKey || ''), p_error_tag: null,
+      }, async () => {
+        const { data, error } = await supabase.from('lesson_attempts').insert({
+          user_id,
+          level: level || 'a1.1',
+          lektion_id: String(lektionId || ''),
+          item_id: String(lineKey || ''),
+          stage: 'readaloud',
+          correct: false,
+          error_tag: null,
+        }).select('id').single();
+        if (error) throw new Error(error.message || 'Usage insert failed');
+        return { allowed: true, id: data?.id, used };
+      });
+      used = reservation.used;
+      if (!reservation.allowed) {
+        return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit', limit: READALOUD_DAILY_LIMIT, used }) };
+      }
+      attemptId = reservation.id;
+    } catch (error) {
+      console.error('[score-readaloud] reservation failed:', error.message);
+      return { statusCode: 503, headers, body: JSON.stringify({ error: 'Nutzung konnte nicht reserviert werden', stage: 'usage' }) };
     }
 
     let transcript = '';
@@ -107,23 +138,12 @@ export const handler = async (event) => {
     const { words, pct, extra } = alignTranscript(expected, transcript);
     const correct = pct >= CORRECT_PCT;
 
-    // One row per clip: it is both the attempt record the error report reads
-    // and the counter the cap above is derived from.
-    const level = String(lektionId || '').split('-')[0].toLowerCase();
-    try {
-      const { error: insertError } = await supabase.from('lesson_attempts').insert({
-        user_id,
-        level: level || 'a1.1',
-        lektion_id: String(lektionId || ''),
-        item_id: String(lineKey || ''),
-        stage: 'readaloud',
-        correct,
-        error_tag: correct ? null : 'Aussprache',
-      });
-      if (insertError) console.error('[score-readaloud] attempt insert failed:', JSON.stringify(insertError));
-    } catch (err) {
-      console.error('[score-readaloud] attempt insert threw:', err.message);
-    }
+    // The reserved row is already the counter, even if saving the score fails.
+    const { error: saveError } = await supabase.from('lesson_attempts').update({
+      correct,
+      error_tag: correct ? null : 'Aussprache',
+    }).eq('id', attemptId).eq('user_id', user_id).eq('stage', 'readaloud');
+    if (saveError) console.error('[score-readaloud] score save failed:', JSON.stringify(saveError));
 
     return {
       statusCode: 200,

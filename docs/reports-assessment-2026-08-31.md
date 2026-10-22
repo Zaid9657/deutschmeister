@@ -1,7 +1,7 @@
 # Assessment of the reports and documentation structure (2026-08-31)
 
 Scope: every report, audit, plan, draft, and doc-adjacent file in the repository —
-`EVALUATION.md`, `AUDIT-2026-08-16.md`, `REMEDIATION.md`, `README.md`, `docs/**`,
+[EVALUATION.md](archive/audits/2026-08/EVALUATION.md), [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md), [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md), `README.md`, `docs/**`,
 `drafts/**`, `migrations/README.md` + notes — assessed for structure, currency,
 navigability, and internal consistency. Every claim below was checked against the named
 file this session; where a doc disagreed with code, the code (`.github/workflows/ci.yml`,
@@ -33,8 +33,8 @@ navigation defects, and the three companion files above close the worst of them.
 Four report generations, each superseding parts of the last:
 
 1. **v1 remediation** (PR #13, referenced only from within EVALUATION) — security/SEO fixes.
-2. **The 2026-08-16 cycle**: `EVALUATION.md` (v2, measured), `AUDIT-2026-08-16.md`
-   (six parallel audits), `REMEDIATION.md` (four fix passes, merged 08-18).
+2. **The 2026-08-16 cycle**: [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) (v2, measured), [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md)
+   (six parallel audits), [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) (four fix passes, merged 08-18).
 3. **The 2026-08-22 parity cycle**: `docs/medmeister-parity-roadmap.md` + Batches A–F,
    plus the SEO-routines machinery (`docs/seo-routines/`, `drafts/` ledger).
 4. **The 2026-08-24 SEO cycle**: `drafts/seo-audit-2026-08-24.md`,
@@ -69,7 +69,7 @@ Plus the applied-migrations ledger (`migrations/README.md`), evaluation artifact
 
 Before this assessment, the only map of the corpus lived in cross-references buried inside
 the files themselves (and in the agent-instructions file, which is not a reader's index).
-`EVALUATION.md` says "read it with AUDIT and REMEDIATION, which supersede much of it" —
+[EVALUATION.md](archive/audits/2026-08/EVALUATION.md) says "read it with AUDIT and REMEDIATION, which supersede much of it" —
 in its *own* closing sections, findable only after reading it. A newcomer cannot tell that
 EVALUATION's perf-62 numbers were retracted, that its reading counts were later re-measured
 wrong, or that its roadmap is dead. **Fixed by `docs/README.md`** with per-file status.
@@ -83,7 +83,7 @@ The root readme disagrees with the code in four measured places:
 | "ESLint (errors fail; legacy warnings tolerated)" | `package.json`: `eslint . --max-warnings=0` — warnings fail (ratcheted 2026-08-24) |
 | CI runs "lint, the duplicate check, a syntax check … and the SPA build"; "The Astro build runs only on Netlify (it needs Supabase credentials)" | `ci.yml` also runs `npm test`, builds **Astro offline** from the committed `grammar-content-cache.json`, merges dist, prerenders, and runs `check-built-html.mjs` over all ~95 pages |
 | Quality-gates list omits `npm test`, `npm run build:verify`, `npm run check:html` | All three exist and gate CI |
-| "See `EVALUATION.md` for the full audit" | EVALUATION is the *oldest* of four report generations; no mention of REMEDIATION, the roadmap, or the 08-24 audit |
+| "See [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) for the full audit" | EVALUATION is the *oldest* of four report generations; no mention of REMEDIATION, the roadmap, or the 08-24 audit |
 
 This is exactly the doc-rot class the corpus keeps catching elsewhere. Recommended fix:
 update those two sections and point the audit line at `docs/README.md`. Deliberately not
@@ -126,7 +126,7 @@ never be found again.
 
 ### 5. Naming carries no status signal
 
-`AUDIT-2026-08-16.md` is dated; `EVALUATION.md` and `REMEDIATION.md` are not (EVALUATION
+[AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md) is dated; [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) and [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) are not (EVALUATION
 is also 08-16; REMEDIATION spans 08-16→08-18 and was appended to four times). `drafts/`
 got the convention right (`<type>-<date>.md`). Recommendation going forward: every new
 report file is dated in its name; undated names are reserved for living documents

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
+import { reserveUsage, validExamAttemptId } from './_shared/aiReservation.mjs';
 import { getTier } from './_shared/speakingUsage.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
 
@@ -326,12 +327,24 @@ export const handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
   }
 
+  let reservedSubmissionId = null;
+  let evaluationReady = false;
   try {
     // Identity comes from the verified JWT, never from the request body.
     const user_id = await getAuthenticatedUserId(event);
     if (!user_id) return unauthorizedResponse(headers);
 
     const { exam_key, task_key, text, exam_attempt_id, feedback_lang } = JSON.parse(event.body || '{}');
+
+    if (!validExamAttemptId(exam_attempt_id)) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'invalid exam_attempt_id' }) };
+    }
+    if (exam_attempt_id) {
+      const { data: attempt, error } = await supabase.from('exam_attempts')
+        .select('id').eq('id', exam_attempt_id).eq('user_id', user_id).eq('exam_key', exam_key).maybeSingle();
+      if (error) return { statusCode: 503, headers, body: JSON.stringify({ error: 'Exam attempt could not be checked' }) };
+      if (!attempt) return { statusCode: 400, headers, body: JSON.stringify({ error: 'invalid exam_attempt_id' }) };
+    }
 
     const task = writingTaskByKey(exam_key, task_key);
     if (!task) {
@@ -370,41 +383,82 @@ export const handler = async (event) => {
     }
     let course = null;
     let usage;
+    let since = null;
     if (courseAllowance) {
       // The free course allowance counts TASKS of this course, lifetime: its own rows only — the
       // prefix is derived from the submitted task_key itself, never a fixed literal.
-      const { data: rows } = await supabase
+      const { data: rows, error: rowsError } = await supabase
         .from('writing_submissions')
         .select('task_key')
         .eq('user_id', user_id)
         .like('task_key', `${courseTaskKeyPrefix(task_key)}%`);
+      if (rowsError) throw new Error('Writing usage could not be checked');
       const keys = (rows || []).map((r) => r.task_key);
       course = courseSubmissionAllowed(keys, task_key, limit);
       usage = { used: course.used, before: keys.filter((k) => k === task_key).length, revision: course.revision };
     } else {
       const now = new Date();
-      const since = tier === 'free_trial' ? null : new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      since = tier === 'free_trial' ? null : new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
       // The window's submissions, counted exactly by the database (no row cap) …
       let countQuery = supabase.from('writing_submissions').select('id', { count: 'exact', head: true }).eq('user_id', user_id);
       if (since) countQuery = countQuery.gte('created_at', since);
-      const { count } = await countQuery;
+      const { count, error: countError } = await countQuery;
+      if (countError) throw new Error('Writing usage could not be checked');
       // … less the free revisions among them, read from the course rows alone (a few per task).
       // ponytail: oldest first under PostgREST's 1,000-row cap; page it if a learner ever has that many course texts.
-      const { data: rows } = await supabase
+      const { data: rows, error: rowsError } = await supabase
         .from('writing_submissions')
         .select('task_key, created_at')
         .eq('user_id', user_id)
         .like('task_key', COURSE_TASK_KEY_LIKE)
         .order('created_at', { ascending: true });
+      if (rowsError) throw new Error('Writing usage could not be checked');
       usage = tierUsage(count ?? 0, rows || [], task_key, since);
     }
-    const { used, before, revision } = usage;
+    let { used, before, revision } = usage;
     if (course ? !course.allowed : !revision && used >= limit) {
       return {
         statusCode: 429,
         headers,
         body: JSON.stringify({ error: 'limit_reached', used, limit, tier, scope: isCourse ? 'course' : 'exam' }),
       };
+    }
+
+    let submissionId;
+    try {
+      const reservation = await reserveUsage(supabase, 'reserve_writing_usage', {
+        p_user_id: user_id, p_exam_key: exam_key, p_task_key: task_key,
+        p_exam_attempt_id: exam_attempt_id || null, p_text: text,
+        p_model: MODEL, p_limit: limit, p_since: since,
+        p_course_prefix: courseAllowance ? courseTaskKeyPrefix(task_key) : null,
+        p_revisions: REVISIONS_PER_TASK,
+      }, async () => {
+        // Until the reservation RPC is applied, use the checked legacy ledger
+        // and commit the placeholder before asking the provider for feedback.
+        const { data: saved, error } = await supabase.from('writing_submissions')
+          .insert({
+            user_id,
+            exam_key,
+            task_key,
+            exam_attempt_id: exam_attempt_id || null,
+            submission_text: text,
+            word_count: text.trim().split(/\s+/).length,
+            model: MODEL,
+          })
+          .select('id')
+          .single();
+        if (error || !saved?.id) throw new Error(error?.message || 'Writing usage could not be reserved');
+        return { allowed: true, id: saved.id, used, before, revision };
+      });
+      if (!reservation.allowed) {
+        return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit_reached', used: reservation.used, limit, tier, scope: isCourse ? 'course' : 'exam' }) };
+      }
+      submissionId = reservation.id;
+      reservedSubmissionId = submissionId;
+      ({ used, before, revision } = reservation);
+    } catch (error) {
+      console.error('evaluate-writing: reservation failed:', error.message);
+      return { statusCode: 503, headers, body: JSON.stringify({ error: 'Usage could not be reserved' }) };
     }
 
     async function callClaude(prompt) {
@@ -444,6 +498,10 @@ export const handler = async (event) => {
       evaluation = tryParse(await callClaude(prompt + '\n\nWICHTIG: Antworte NUR mit validem JSON im verlangten Format.'));
     }
     if (!validEvaluation(task, evaluation)) {
+      // No feedback was delivered. Keep the previous retry behaviour without
+      // leaving an empty letter in history or consuming its improved version.
+      const { error: releaseError } = await supabase.from('writing_submissions').delete().eq('id', submissionId).eq('user_id', user_id);
+      if (releaseError) console.error('evaluate-writing: reservation release failed:', releaseError.message);
       return {
         statusCode: 200,
         headers,
@@ -456,22 +514,18 @@ export const handler = async (event) => {
 
     evaluation = gateEvaluation(task, text, evaluation);
     const wordCount = text.trim().split(/\s+/).length;
+    evaluationReady = true;
     const totalScore = evaluation.total_score;
 
     const { data: saved, error: saveError } = await supabase
       .from('writing_submissions')
-      .insert({
-        user_id,
-        exam_key,
-        task_key,
-        exam_attempt_id: exam_attempt_id || null,
-        submission_text: text,
-        word_count: wordCount,
+      .update({
         feedback: evaluation,
         total_score: totalScore,
         max_score: MAX_WRITING_POINTS,
-        model: MODEL,
       })
+      .eq('id', submissionId)
+      .eq('user_id', user_id)
       .select('id')
       .single();
     if (saveError) {
@@ -487,7 +541,7 @@ export const handler = async (event) => {
         max_score: MAX_WRITING_POINTS,
         word_count: wordCount,
         submission_id: saved?.id || null,
-        saved: !saveError,
+        saved: !saveError && !!saved?.id,
         used: used + (revision ? 0 : 1),
         // Whether the NEXT text of this task is still its free improved version: the screen offers
         // "Improve this version" only then, so a re-run of a Lektion never offers a second one.
@@ -498,6 +552,14 @@ export const handler = async (event) => {
       }),
     };
   } catch (error) {
+    if (reservedSubmissionId && !evaluationReady) {
+      try {
+        const { error: releaseError } = await supabase.from('writing_submissions').delete().eq('id', reservedSubmissionId);
+        if (releaseError) console.error('evaluate-writing: reservation release failed:', releaseError.message);
+      } catch (releaseError) {
+        console.error('evaluate-writing: reservation release failed:', releaseError.message);
+      }
+    }
     console.error('evaluate-writing error:', error.message, error.stack);
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }

@@ -5,7 +5,7 @@ document and how long it has been open. **This file is an index, not a source of
 if it disagrees with a source document or the code, the source wins — then fix this file.**
 
 Rule: any commit that closes, obsoletes, or reclassifies an item here updates this file
-in the same commit. Last full reconciliation: **2026-08-31** (from `REMEDIATION.md`,
+in the same commit. Last full reconciliation: **2026-08-31** (from [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md),
 `docs/medmeister-parity-roadmap.md`, `docs/seo-routines/README.md`,
 `drafts/seo-CORRECTION-2026-08-24.md`, `drafts/seo-audit-2026-08-24.md`, the two Class-B
 drafts, and `migrations/README.md`). Partial reconciliation 2026-09-03 against the code (E-6, E-7 closed) —
@@ -15,16 +15,16 @@ see `docs/HANDOFF-2026-09-03.md` for measured state.
 
 | # | Item | Source | Open since |
 |---|---|---|---|
-| O-1 | **Rotate the exposed Supabase service-role key** | `REMEDIATION.md` §Still open; `EVALUATION.md` | 2026-08-16 |
-| O-2 | Enable Supabase leaked-password protection | `REMEDIATION.md` §Still open | 2026-08-16 |
-| O-3 | **Fill the Impressum** (real operator data, §5 DDG) and de-noindex `/privacy/` + `/impressum/` after legal review | `AUDIT-2026-08-16.md` A-10; `REMEDIATION.md` | 2026-08-16 |
-| O-4 | **Fix the upstream Resend bounce job at source** — re-measured 2026-08-31 via the Resend connector: **the storm appears over.** The last ~15 sends (MedMeister lifecycle + DeutschMeister welcome/confirmation) are all `delivered`; recent bounce suppressions are ordinary bad addresses (typos), not the dead-address loop; no `emailinbo.live` traffic visible. Also: **`deutsch-meister.de` is already a verified Resend sending domain** (sending enabled since 2026-03-09), so the dedicated-domain item is done. Keep monitoring the confirmation rate for the week-2 gate rather than treating this as an emergency | `AUDIT-2026-08-16.md` A-07; measured 2026-08-31 | 2026-08-16 |
-| O-5 | **Decide card-at-trial-start** — the structural conversion blocker (trial takes no card; the roadmap calls this the highest-leverage single decision) | `REMEDIATION.md` §Still open; roadmap §3.6 | 2026-08-17 |
+| O-1 | **Rotate the exposed Supabase service-role key** | [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) §Still open; [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) | 2026-08-16 |
+| O-2 | Enable Supabase leaked-password protection | [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) §Still open | 2026-08-16 |
+| O-3 | **Fill the Impressum** (real operator data, §5 DDG) and de-noindex `/privacy/` + `/impressum/` after legal review | [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md) A-10; [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) | 2026-08-16 |
+| O-4 | **Fix the upstream Resend bounce job at source** — re-measured 2026-08-31 via the Resend connector: **the storm appears over.** The last ~15 sends (MedMeister lifecycle + DeutschMeister welcome/confirmation) are all `delivered`; recent bounce suppressions are ordinary bad addresses (typos), not the dead-address loop; no `emailinbo.live` traffic visible. Also: **`deutsch-meister.de` is already a verified Resend sending domain** (sending enabled since 2026-03-09), so the dedicated-domain item is done. Keep monitoring the confirmation rate for the week-2 gate rather than treating this as an emergency | [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md) A-07; measured 2026-08-31 | 2026-08-16 |
+| O-5 | **Decide card-at-trial-start** — the structural conversion blocker (trial takes no card; the roadmap calls this the highest-leverage single decision) | [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) §Still open; roadmap §3.6 | 2026-08-17 |
 | O-6 | **GSC property**: confirm which Google account owns the verified `deutsch-meister.de` Search Console property (verification files are already deployed) and grant the service account access. Until then both SEO Routines run without impressions/clicks/position/URL-Inspection data | `docs/seo-routines/README.md`; `drafts/seo-CORRECTION-2026-08-24.md` | 2026-08-24 (reclassified; connector work opened 08-22) |
 | O-7 | ~~Activate the activation-lifecycle mailer~~ — **DONE 2026-08-31, fully via connectors**: migration applied (Supabase), selection dry-checked in SQL (1,371 new / 159 activated / 7 subscribed; next run mails 6 d1 + 10 d4), `LIFECYCLE_ACTIVATION_ENABLED=true` set in Netlify (production, functions scope). First live run: next 09:30 UTC — check the function log once | roadmap §3.1 (Batch E) | closed 2026-08-31 |
-| O-8 | Run `scripts/generate-example-audio.mjs` with an Azure Speech key (free tier covers it; switched from OpenAI 2026-09-05) — 0/757 grammar examples and 0/2215 words have audio; the script covers both tables and is resumable | `AUDIT-2026-08-16.md` P2; roadmap §3.4 | 2026-08-16 |
-| O-9 | `REVOKE EXECUTE` on `public.notify_welcome_email()` from `anon`/`authenticated` | `AUDIT-2026-08-16.md` §Owner-only | 2026-08-16 |
-| O-10 | Move `pg_net` out of the `public` schema (needs a coordinated trigger update) | `AUDIT-2026-08-16.md`; `REMEDIATION.md` | 2026-08-16 |
+| O-8 | Run `scripts/generate-example-audio.mjs` with an Azure Speech key (free tier covers it; switched from OpenAI 2026-09-05) — 0/757 grammar examples and 0/2215 words have audio; the script covers both tables and is resumable | [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md) P2; roadmap §3.4 | 2026-08-16 |
+| O-9 | `REVOKE EXECUTE` on `public.notify_welcome_email()` from `anon`/`authenticated` | [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md) §Owner-only | 2026-08-16 |
+| O-10 | Move `pg_net` out of the `public` schema (needs a coordinated trigger update) | [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md); [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) | 2026-08-16 |
 | O-11 | Create the two SEO Routines from the bootstrap texts — only after O-6, or their GSC halves write BLOCKED every run (`geo-weekly` can run degraded on DataForSEO alone since the 08-24 amendment) | `docs/seo-routines/README.md` | 2026-08-22 |
 | O-12 | **E-E-A-T identity**: supply a real author name, precise qualification, and one verifiable `sameAs` URL; decide whether `/ueber-uns` becomes a real Astro page or stays a noindex utility page | `drafts/eeat-author-identity.md` (Class B) | 2026-08-24 |
 | O-13 | Verify the official telc/Goethe Modelltest PDF download URLs (vendor domains are proxy-blocked from agent sessions) before the Modelltest cluster ships | `drafts/brief-modelltest.md` (Class B) | 2026-08-24 |
@@ -41,7 +41,7 @@ see `docs/HANDOFF-2026-09-03.md` for measured state.
 | D-3 | `Offer.priceValidUntil` on `/pricing/` — a pricing commitment through a date; owner's call | same | 2026-08-24 |
 | D-4 | Bilingual URL strategy (one language per page vs `/en/` split with reciprocal hreflang) — gates whether future guides are written once or twice | roadmap §1.5 | 2026-08-22 |
 | D-6 | ~~Grammar gating~~ — **DECIDED + DONE 2026-09-03**: rule text stays public, exercises above A1.1 need trial / Pro / course (`astro-site/src/lib/levelAccess.js`, `ExercisePlayer.jsx`) | `docs/HANDOFF-2026-09-03.md` §11 | closed 2026-09-03 |
-| D-5 | Promote CSP from Report-Only to enforcing — only after a clean report window review | `EVALUATION.md`; standing note | 2026-08-16 |
+| D-5 | Promote CSP from Report-Only to enforcing — only after a clean report window review | [EVALUATION.md](archive/audits/2026-08/EVALUATION.md); standing note | 2026-08-16 |
 
 ## 3 · Engineering backlog (no decision blocking)
 
@@ -56,14 +56,14 @@ see `docs/HANDOFF-2026-09-03.md` for measured state.
 | E-7 | ~~`LevelTest.css` token migration~~ — **DONE**: the file is deleted; `src/index.css` is the SPA's only stylesheet | roadmap Batch F close | closed by 2026-09-03 |
 | E-8 | Thin prerendered SPA routes (37–297 body words) — `/analyze/` first (the unique asset) | `drafts/seo-audit-2026-08-24.md` §Roadmap 7 | 2026-08-24 |
 | E-9 | More guides (Goethe B2, TestDaF, "B1 in drei Monaten") — now keyword-validatable via DataForSEO before writing | roadmap Batch C close; `seo-CORRECTION-2026-08-24.md` | 2026-08-22 |
-| E-10 | Content completion: reading depth beyond 8/level where warranted; pick ONE grammar-intro system (`grammar_introductions` table vs `rules` introduction type); real `acceptable_answers` for genuine synonyms | `EVALUATION.md` roadmap; roadmap §3.4 | 2026-08-16 |
+| E-10 | Content completion: reading depth beyond 8/level where warranted; pick ONE grammar-intro system (`grammar_introductions` table vs `rules` introduction type); real `acceptable_answers` for genuine synonyms | [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) roadmap; roadmap §3.4 | 2026-08-16 |
 | E-11 | Fix root `README.md` drift (lint policy, CI description, quality-gates list, audit pointer) — the four rows are enumerated in `docs/reports-assessment-2026-08-31.md` §2 | this assessment | 2026-08-31 |
 | E-12 | Test/CI depth: route-consistency test for the three-place rule, level-case boundary test (no component/E2E tests exist yet) | roadmap §3.3 | 2026-08-22 |
-| E-13 | Drop the dead `scripts` DB table (0 rows, no code references) | `EVALUATION.md` B-07 note | 2026-08-16 |
+| E-13 | Drop the dead `scripts` DB table (0 rows, no code references) | [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) B-07 note | 2026-08-16 |
 
 ## 4 · Discrepancies to verify before working (do not trust either side yet)
 
 | # | Conflict | The two sources |
 |---|---|---|
 | V-1 | **De-CAPS of shouting grammar rules**: applied 2026-08-16 (270 rows, 892 edits) per `migrations/README.md` — yet roadmap §3.4 (2026-08-22) still lists "de-CAPS the 222 rules at source" as open. Query the DB (`content::text ~ '[A-ZÄÖÜ]{4,}'`) and close whichever is wrong here + in JOURNAL | `migrations/README.md` vs roadmap §3.4 |
-| V-2 | **`related_slugs`**: populated for all 64 topics per the same 08-16 migration; EVALUATION measured 0/64 the same day; Batch D later corrected the roadmap to "column is a preferred override, falls back to the code map". Verify the column state before anyone re-populates it | `migrations/README.md` vs `EVALUATION.md` |
+| V-2 | **`related_slugs`**: populated for all 64 topics per the same 08-16 migration; EVALUATION measured 0/64 the same day; Batch D later corrected the roadmap to "column is a preferred override, falls back to the code map". Verify the column state before anyone re-populates it | `migrations/README.md` vs [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) |

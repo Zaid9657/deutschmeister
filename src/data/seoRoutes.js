@@ -65,7 +65,7 @@ export const SEO_ROUTES = {
   },
   '/podcasts': {
     title: 'German Podcasts for Learners A1–B2',
-    description: `Free German podcasts for learners: ${PODCAST_EPISODE_COUNT} episodes of native-speaker audio graded A1 to B2. Build listening skills while you commute or relax.`,
+    description: `German podcasts for learners: ${PODCAST_EPISODE_COUNT} episodes of native-speaker audio graded A1 to B2, with A1.1 free. Build listening skills while you commute or relax.`,
     keywords:
       'German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast by CEFR level',
   },

@@ -16,6 +16,10 @@ import Reveal from '../../components/ui/Reveal.jsx';
 
 const ExercisePlayer = () => {
   const { level, exerciseNumber } = useParams();
+  return <ExerciseAttempt key={`${level}/${exerciseNumber}`} level={level} exerciseNumber={exerciseNumber} />;
+};
+
+const ExerciseAttempt = ({ level, exerciseNumber }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const isGerman = i18n.language === 'de';

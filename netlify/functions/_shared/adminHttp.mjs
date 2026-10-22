@@ -70,6 +70,11 @@ export function adminEndpoint({ capability = null, capabilityFor = null }, fn) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Ungültiger JSON-Body.' }) };
     }
     if (!body || typeof body !== 'object' || Array.isArray(body)) body = {};
+    for (const field of ['action', 'view', 'format']) {
+      if (Object.hasOwn(body, field) && typeof body[field] !== 'string') {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: `${field} muss ein String sein.` }) };
+      }
+    }
 
     // A per-action capability (e.g. export vs read) is resolved from the body
     // BEFORE any row is fetched.

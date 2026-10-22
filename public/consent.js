@@ -128,18 +128,23 @@
 
   function init() {
     var choice = readChoice();
-    if (choice === 'accepted') { loadAnalytics(); return; }
-    if (choice === 'declined') { declineAnalytics(); return; }
+    if (choice === 'accepted') { loadAnalytics(); removeBanner(); return; }
+    declineAnalytics();
+    if (choice === 'declined') { removeBanner(); return; }
     showBanner();
   }
+
+  window.addEventListener('storage', function (event) {
+    if (event.key === STORAGE_KEY || event.key === null) init();
+  });
 
   // Small API so a "Manage cookies" / "Withdraw consent" link (e.g. on the
   // Privacy page) can re-open or change the choice later.
   window.dmCookieConsent = {
     accept: function () { saveChoice('accepted'); loadAnalytics(); removeBanner(); },
     decline: function () { saveChoice('declined'); declineAnalytics(); removeBanner(); },
-    reset: function () { clearChoice(); showBanner(); },
-    manage: function () { declineAnalytics(); clearChoice(); showBanner(); }
+    reset: function () { clearChoice(); declineAnalytics(); showBanner(); },
+    manage: function () { clearChoice(); declineAnalytics(); showBanner(); }
   };
 
   if (document.readyState === 'loading') {
