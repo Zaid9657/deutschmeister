@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { getTier } from './_shared/speakingUsage.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
+import { a2WritingFormat } from './_shared/examFormats.mjs';
 
 // AI writing feedback (renovation Phase 5b) — grades an exam-style letter
 // against our rubric and stores the result with the SERVICE ROLE (clients
@@ -147,6 +148,8 @@ export function validEvaluation(task, ev) {
 
 /** The model's evaluation with both rules applied; `gate` says what changed. */
 export function gateEvaluation(task, text, evaluation) {
+  const a2 = a2WritingFormat(task);
+  const belowWordFloor = a2 && String(text || '').trim().split(/\s+/).filter(Boolean).length < a2.range[0] / 2;
   const s = evaluation.scores || {};
   const clamp = (n) => Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
   const scores = { task: clamp(s.task), structure: clamp(s.structure), accuracy: clamp(s.accuracy), vocabulary: clamp(s.vocabulary) };
@@ -155,7 +158,7 @@ export function gateEvaluation(task, text, evaluation) {
   const covered = n && checks.length === n ? checks.filter((c) => c === true || c === 'true').length : null;
   if (covered !== null) scores.task = Math.min(scores.task, Math.ceil((5 * covered) / n));
   const copied = task.register !== 'formular' && copiedShare(task, text) >= COPY_SHARE;
-  if (copied) scores.task = 0;
+  if (copied || belowWordFloor) scores.task = 0;
   const reported = Math.max(0, Math.min(MAX_WRITING_POINTS, Math.round(Number(evaluation.total_score) || 0)));
   const sum = scores.task + scores.structure + scores.accuracy + scores.vocabulary;
   const total = Math.min(reported, sum, 4 * scores.task);
@@ -164,10 +167,10 @@ export function gateEvaluation(task, text, evaluation) {
     ...evaluation,
     scores,
     total_score: total,
-    improvements: copied ? ['Schreiben Sie eigene Sätze – nicht die Aufgabe abschreiben.', ...improvements] : improvements,
+    improvements: belowWordFloor ? [`Schreiben Sie mindestens ${a2.range[0] / 2} Wörter; darunter erhält diese Aufgabe 0 Punkte.`, ...improvements] : copied ? ['Schreiben Sie eigene Sätze – nicht die Aufgabe abschreiben.', ...improvements] : improvements,
     // Real booleans: a „false" string would read as covered on the client (`!!value`).
     leitpunkt_check: checks.map((c) => c === true || c === 'true'),
-    gate: { copied, covered, reported_total: reported },
+    gate: { copied, covered, reported_total: reported, ...(a2 ? { below_word_floor: Boolean(belowWordFloor) } : {}) },
   };
 }
 
@@ -240,6 +243,8 @@ export function tierUsage(windowCount, courseRows, taskKey, since = null) {
 export const FEEDBACK_LANGS = new Set(['de', 'en']);
 
 export function buildWritingPrompt(task, submission, feedbackLang = 'de') {
+  const a2 = a2WritingFormat(task);
+  if (a2) task = { ...task, minWords: a2.range[0], maxWords: a2.range[1] };
   const leitpunkte = task.leitpunkte.map((p, i) => `${i + 1}. ${p}`).join('\n');
   // N booleans, not a fixed 3 — src/pages/SchreibenPage.jsx indexes
   // leitpunkt_check by the task's own leitpunkte position, so this must match
@@ -251,7 +256,9 @@ export function buildWritingPrompt(task, submission, feedbackLang = 'de') {
   // down for lacking them — register:'formular' (the 6 Goethe A1 Teil-1
   // tasks) gets its own wording for criterion 2, same 0–5 scale/output shape.
   const structureCriterion =
-    task.register === 'formular'
+    a2?.textsorte === 'sms'
+      ? '2. **Kohärenz** (structure) – Ist die SMS verständlich und sinnvoll verknüpft? Kein förmlicher Briefaufbau nötig; Register gehört zur Aufgabenbewältigung.'
+      : task.register === 'formular'
       ? '2. **Kommunikative Gestaltung** (structure) – Sind alle Formularfelder ausgefüllt, mit passenden und korrekten Angaben? (Kein Abzug für fehlende Anrede/Schluss — ein Formular hat keine.)'
       : `2. **Kommunikative Gestaltung** (structure) – Textsorte, Anrede/Schluss, Register (${task.register}), Aufbau, Verknüpfungen.`;
   // A1 learners cannot read B1 feedback about their A1 text. Same criteria,
@@ -259,7 +266,9 @@ export function buildWritingPrompt(task, submission, feedbackLang = 'de') {
   // An A0 learner using the English interface could not read German feedback about their own text
   // (Codex learner-value review): they may ask for English. German examples and corrections stay German.
   const english = feedbackLang === 'en' && FEEDBACK_LANGS.has(feedbackLang);
-  const levelLine = english && task.examKey === 'goethe_a1'
+  const levelLine = a2
+    ? `\n\nWICHTIG: Niveau A2. Schreiben Sie Feedback in ${english ? 'short, simple English' : 'kurzem, einfachem Deutsch'} (höchstens 60 Wörter, kurze Sätze, kein Fachjargon). Beispiele und Korrekturen bleiben Deutsch. A2 ${a2.label}: ${a2.range[0]}–${a2.range[1]} Wörter. Unter ${a2.range[0] / 2} Wörtern erhält die gesamte Aufgabe 0 Punkte. Bewerten Sie jeden der drei Leitpunkte und das Register unter Aufgabenbewältigung; Kohärenz unter structure, Wortschatz unter vocabulary und Strukturen unter accuracy. Für eine SMS ist kein förmlicher Briefaufbau erforderlich.`
+    : english && task.examKey === 'goethe_a1'
     ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1 und liest die Oberfläche auf Englisch. Schreib "feedback", "strengths", "improvements" und jede "note" in short, simple English (höchstens 60 Wörter, kurze Sätze, kein Fachjargon); "original" und "corrected" bleiben Deutsch. Die Bewertungskriterien bleiben unverändert.'
     : task.examKey === 'goethe_a1'
       ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1. Schreib das Feedback in kurzem, einfachem Deutsch (höchstens 60 Wörter, kurze Sätze, kein Fachjargon). Die Bewertungskriterien bleiben unverändert.'

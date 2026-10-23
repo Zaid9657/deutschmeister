@@ -948,11 +948,12 @@ export const WRITING_TASKS = [
     taskKey: 'sms-einladung-absagen',
     title: 'SMS: Eine Einladung absagen',
     register: 'informell',
+    textsorte: 'sms',
     minWords: 20,
-    maxWords: 40,
+    maxWords: 30,
     task:
-      'Deine Freundin Nina hat dich zum Essen eingeladen. Du kannst am Samstag nicht kommen. ' +
-      'Schreib Nina eine SMS. Schreib 20 bis 30 Wörter.',
+      'Ihre Freundin Nina hat Sie zum Essen eingeladen. Sie können am Samstag nicht kommen. ' +
+      'Schreiben Sie Nina eine SMS. Schreiben Sie 20 bis 30 Wörter.',
     leitpunkte: [
       'Dank für die Einladung',
       'Grund für die Absage',
@@ -968,11 +969,12 @@ export const WRITING_TASKS = [
     taskKey: 'sms-treffen-verschieben',
     title: 'SMS: Einen neuen Tag vorschlagen',
     register: 'informell',
+    textsorte: 'sms',
     minWords: 20,
-    maxWords: 40,
+    maxWords: 30,
     task:
-      'Du hast am Dienstag einen Termin mit deinem Freund Jonas. Der Dienstag passt dir nicht mehr. ' +
-      'Schreib Jonas eine SMS. Schreib 20 bis 30 Wörter.',
+      'Sie haben am Dienstag einen Termin mit Ihrem Freund Jonas. Der Dienstag passt Ihnen nicht mehr. ' +
+      'Schreiben Sie Jonas eine SMS. Schreiben Sie 20 bis 30 Wörter.',
     leitpunkte: [
       'Absage für den Dienstag',
       'Vorschlag für einen neuen Tag',
@@ -990,11 +992,12 @@ export const WRITING_TASKS = [
     taskKey: 'email-kursanmeldung',
     title: 'E-Mail: Nach einem Deutschkurs fragen',
     register: 'halbformell',
+    textsorte: 'email',
     minWords: 30,
-    maxWords: 60,
+    maxWords: 40,
     task:
-      'Du möchtest einen Deutschkurs an der Volkshochschule machen. Schreib eine E-Mail an die Volkshochschule. ' +
-      'Schreib 30 bis 40 Wörter. Vergiss die Anrede und den Gruß nicht.',
+      'Sie möchten einen Deutschkurs an der Volkshochschule machen. Schreiben Sie eine E-Mail an die Volkshochschule. ' +
+      'Schreiben Sie 30 bis 40 Wörter. Vergessen Sie die Anrede und den Gruß nicht.',
     leitpunkte: [
       'Name und Niveau',
       'Frage nach einem Kurs für A2',
@@ -1010,11 +1013,12 @@ export const WRITING_TASKS = [
     taskKey: 'email-termin-beim-amt',
     title: 'E-Mail: Einen Termin beim Amt ändern',
     register: 'halbformell',
+    textsorte: 'email',
     minWords: 30,
-    maxWords: 60,
+    maxWords: 40,
     task:
-      'Du hast am Montag einen Termin beim Amt. Du kannst am Montag nicht kommen. ' +
-      'Schreib eine E-Mail an das Amt. Schreib 30 bis 40 Wörter. Vergiss die Anrede und den Gruß nicht.',
+      'Sie haben am Montag einen Termin beim Amt. Sie können am Montag nicht kommen. ' +
+      'Schreiben Sie eine E-Mail an das Amt. Schreiben Sie 30 bis 40 Wörter. Vergessen Sie die Anrede und den Gruß nicht.',
     leitpunkte: [
       'Termin am Montag',
       'Absage und Grund',

@@ -6,7 +6,7 @@ import StageShell from './StageShell.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
-import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
+import { wortfeldIconsFor, WORTFELD_ICON_FALLBACK } from '../../lib/course/meta.js';
 import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from './wortfeldIcons.js';
 import { groupWords, lineFor } from '../../lib/lesson/wortfeldPacing.js';
@@ -60,18 +60,18 @@ function lektionIdFromWords(words) {
   return found ? found.id : null;
 }
 
-function iconFor(word) {
-  const name = (word && WORTFELD_ICONS[word]) || WORTFELD_ICON_FALLBACK;
+function iconFor(word, curriculum) {
+  const name = (word && wortfeldIconsFor(curriculum)[word]) || WORTFELD_ICON_FALLBACK;
   return WORTFELD_ICON_COMPONENTS[name] || WORTFELD_ICON_COMPONENTS[WORTFELD_ICON_FALLBACK];
 }
 
-function WordCard({ w, lang, flipped, onToggle, line }) {
+function WordCard({ w, lang, flipped, onToggle, line, curriculum }) {
   const article = w.article || (w.db && w.db.article) || '';
   const plural = w.plural || (w.db && w.db.plural) || '';
   const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
   const spoken = w.de || w.word || '';
   const english = w.en || (w.db && w.db.english) || '';
-  const Icon = iconFor(w.word || w.de);
+  const Icon = iconFor(w.word || w.de, curriculum);
 
   return (
     <Card interactive as="div" className="flex h-full flex-col items-center gap-2.5 p-3.5 text-center">
@@ -156,7 +156,7 @@ function WortfeldAudioBadge({ words, lang }) {
   );
 }
 
-export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
+export default function WortfeldStage({ stage, lektionId, curriculum, onBack, onDone }) {
   const [open, setOpen] = useState(() => new Set());
   const [allOpen, setAllOpen] = useState(false);
   const [group, setGroup] = useState(0);
@@ -199,7 +199,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
     const spoken = w.de || w.word || '';
     return (
       <li key={`${spoken}-${i}`}>
-        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={lineFor(spoken, stage.lines)} />
+        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={lineFor(spoken, stage.lines)} curriculum={curriculum} />
       </li>
     );
   };

@@ -71,7 +71,7 @@ import { SESSION_COUNT, sessionCompleted } from '../../lib/lesson/sessions.js';
 // content (dialogue, questions, answers) is German in both.
 
 /** The multi-item stages the player pages through one item at a time. */
-const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup']);
+const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup', 'exam']);
 
 export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
@@ -256,6 +256,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
         result: typeof result === 'string' ? result : undefined,
         ...(revealed ? { revealed: true } : {}),
         ...(listened === false ? { listened: false } : {}),
+        ...(stageKind === 'exam' ? { section: item.section } : {}),
       }]));
     if (!correct && stageKind !== 'requeue') {
       setMisses((prev) => (prev.some((m) => m.id === item.id) ? prev : [...prev, confused && confused.length ? { ...item, confused } : item]));
@@ -426,7 +427,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'wortfeld':
-      body = <WortfeldStage stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
+      body = <WortfeldStage stage={{ ...stage, words: wortfeld }} curriculum={curriculum} onBack={back} onDone={advance} />;
       break;
     case 'notice':
       body = <NoticeStage stage={stage} onBack={back} onDone={advance} />;
@@ -435,6 +436,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       body = <PhonetikStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'practice':
+    case 'exam':
     case 'requeue':
     case 'derived': {
       const item = items[itemIndex];
@@ -452,7 +454,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
         onNext: onItemNext,
         ...(retry ? { eyebrowKey: 'stage.requeue.eyebrow' } : {}),
       };
-      if (item.type === 'match') body = <MatchItem key={item.id} {...derivedProps} />;
+      if (item.type === 'match' && item.pairs) body = <MatchItem key={item.id} {...derivedProps} />;
       else if (item.type === 'word_order') body = <WordOrderItem key={item.id} {...derivedProps} />;
       else if (item.type === 'listen_select') body = <ListenSelectItem key={item.id} {...derivedProps} />;
       else if (item.type === 'dictation') {

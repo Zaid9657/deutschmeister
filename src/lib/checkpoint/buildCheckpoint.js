@@ -58,6 +58,7 @@
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.js';
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 import { examFormat } from '../../data/curricula/examFormats.js';
+import { buildExamBank, isExamItem } from '../lesson/exam.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
 import { leaksAnswer, planPractice } from '../lesson/buildLesson.js';
@@ -148,7 +149,7 @@ const VERDICT_KINDS = new Set(['trueFalse', 'gradedWriting']);
 // An authored Lesen unit SELECTS between two options its own text prints („Ana" or „Tim"): its answer
 // is no production another item could give away — but its text still prints answers, and the other
 // direction of leaksAcross keeps every later draw clear of them.
-export const leakable = (item) => Boolean(item) && !VERDICT_KINDS.has(item.kind) && !(item.section === 'lesen' && item.kind === 'choice');
+export const leakable = (item) => Boolean(item) && !VERDICT_KINDS.has(item.kind) && !isExamItem(item) && !(item.section === 'lesen' && item.kind === 'choice');
 
 /** True when either item's whole production is already printed by the other. */
 export const leaksAcross = (a, b) =>
@@ -379,7 +380,7 @@ export const isTyped = (item) =>
  * short section is a smaller failure than a graded item the course contradicts.
  * Every pool draw in this file goes through byTopics, so this is the one gate.
  */
-export const NEXT_LEVEL_RE = /Vorschau|A1\.2|kommt in A1/i;
+export const NEXT_LEVEL_RE = /Vorschau|A1\.2|kommt in (?:A[12]|B[12]|C[12])/i;
 
 /** Does this pool item advertise itself as a preview of the next level? */
 export const isNextLevelPreview = (item) =>
@@ -2115,7 +2116,7 @@ function lesenItem(checkpoint, i, wantRichtig, picked) {
  */
 function buildLesen(ctx) {
   if (examFormat(ctx.curriculum.examKey).checkpointReading !== 'dialogue-true-false') {
-    throw new Error(`${ctx.curriculum.examKey}: authored exam Lesen surfaces are required (G9)`);
+    return buildExamBank(ctx.checkpoint.lesen, { ...ctx, section: 'lesen' }).map(ctx.seat);
   }
   if (ctx.checkpoint.lesen) return authoredLesen(ctx, ctx.checkpoint.lesen);
   const chosen = chooseLesen(ctx) || lesenAttempt(ctx, ctx.rng);
@@ -2684,7 +2685,12 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // item of Lektion 6 the learner had not answered in a lesson, and the drill had to
   // fall back on one they had (a1.1-cp2's default paper, measured 2026-10-17; the
   // transfer ratchet in tests/checkpoint.test.mjs had held only because the shuffle missed it).
-  const hoerenDictation = buildHoerenDictation(ctx);
+  const authoredExam = examFormat(curriculum.examKey).checkpointReading === 'authored-exam-parts';
+  // Check Lesen first to retain the fail-closed G9 guard, before any A1 builder can run.
+  if (authoredExam) buildExamBank(checkpoint.lesen, { ...ctx, section: 'lesen' });
+  const hoerenDictation = authoredExam
+    ? buildExamBank(checkpoint.hoeren, { ...ctx, section: 'hoeren' }).map(ctx.seat)
+    : buildHoerenDictation(ctx);
   const lesen = buildLesen(ctx);
   const sprechen = buildSprechen(ctx);
   const schreiben = buildSchreiben(ctx);
@@ -2694,7 +2700,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // else, while a three-Lektion chapter has three sentence-building items for
   // its Schreiben drills and cannot. Placing them earlier cost checkpoint 1 two
   // recorded fallbacks; placing them last costs none.
-  const hoerenWords = buildHoerenWords(ctx);
+  const hoerenWords = authoredExam ? [] : buildHoerenWords(ctx);
   const items = [...hoerenDictation, ...hoerenWords, ...lesen, ...bausteine, ...schreiben, ...sprechen];
   checkpointReports.set(items, { leakFallbacks });
   return items;

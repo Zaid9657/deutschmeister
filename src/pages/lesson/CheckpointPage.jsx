@@ -16,10 +16,12 @@ import {
   WRITING_PASS_PCT,
   paperSeed,
 } from '../../lib/checkpoint/buildCheckpoint.js';
-import { checkpointFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
+import { checkpointFeedback, sectionComplete, sectionFeedbackReady } from '../../lib/checkpoint/feedback.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
+import ExamStimulus from '../../components/lesson/ExamStimulus.jsx';
+import { isExamItem } from '../../lib/lesson/exam.js';
 import {
   fetchAttemptState,
   recordAttempt,
@@ -32,6 +34,7 @@ import Chip from '../../components/ui/Chip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
 import LandeskundeCard from '../../components/course/LandeskundeCard.jsx';
 import { LANDESKUNDE } from '../../data/curricula/a11.meta.js';
+import { landeskundeFor } from '../../lib/course/meta.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The checkpoint screen (standard §3): 20 items, one per screen, a thin
@@ -61,7 +64,7 @@ const POOL_LOADERS = {
  * it instead, and that item then leaves the score (`onReadInstead`): reading is not listening, and
  * missing audio is not the learner's failure (Codex score review, 2026-10-08).
  */
-function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false }) {
+export function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [feedback, setFeedback] = useState(null);
@@ -175,7 +178,8 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
       <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
       {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
 
-      {isAudio && (
+      {isExamItem(item) && <ExamStimulus key={item.id} item={item} onReadInstead={onReadInstead} />}
+      {isAudio && !isExamItem(item) && (
         <div className="mt-4">
           <PlayButton lektionId={item.lektionId} audioKey={item.lineKey} text={item.audioText} rate={0.9} onFallback={() => { setShownText(true); onReadInstead(item.id); }} />
           {shownText && (
@@ -187,7 +191,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
         </div>
       )}
 
-      {item.text && (
+      {item.text && !isExamItem(item) && (
         <Card tone="sunk" className="mt-4 whitespace-pre-line p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.text}</Card>
       )}
 
@@ -254,7 +258,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
         <div className="mt-5 border-t border-rule pt-4">
           <p ref={verdictRef} tabIndex={-1} className={`flex items-center gap-2 text-sm font-bold outline-none ${!released ? 'text-ink' : feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
             {released && (feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />)}
-            {t(!released ? 'checkpoint.answerRecorded' : item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
+            {t(!released ? item.section === 'hoeren' ? 'checkpoint.listeningAnswerRecorded' : 'checkpoint.answerRecorded' : item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
           </p>
           {released && !feedback.correct && item.mode !== 'confirm' && (
             <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{feedback.key}</strong></p>
@@ -383,7 +387,7 @@ export default function CheckpointPage() {
   const onAnswer = (item, answer) => {
     const next = { ...answers, [item.id]: answer };
     setAnswers(next);
-    if (item.section === 'lesen' && sectionComplete(items, next, 'lesen')) setPhase('sectionFeedback');
+    if (sectionFeedbackReady(items, next, item.section)) setPhase('sectionFeedback');
     else if (index + 1 >= items.length) finish(next);
     else setIndex(index + 1);
   };
@@ -446,12 +450,12 @@ export default function CheckpointPage() {
 
         {phase === 'run' && current && <PracticeItem key={current.id} item={current} graded onAnswer={onAnswer} onReadInstead={(id) => setNotHeard((prev) => new Set(prev).add(id))} />}
 
-        {phase === 'sectionFeedback' && sectionComplete(items, answers, 'lesen') && (
+        {phase === 'sectionFeedback' && sectionComplete(items, answers, current.section) && (
           <Card className="p-5 sm:p-6">
-            <h2 className="font-display text-xl text-ink" tabIndex={-1} ref={(node) => node?.focus()}>{t('checkpoint.readingFeedback', lang)}</h2>
+            <h2 className="font-display text-xl text-ink" tabIndex={-1} ref={(node) => node?.focus()}>{t(current.section === 'hoeren' ? 'checkpoint.listeningFeedback' : 'checkpoint.readingFeedback', lang)}</h2>
             <ol className="mt-4 divide-y divide-rule">
-              {items.filter((item) => item.section === 'lesen').map((item) => {
-                const feedback = checkpointFeedback(item, answers[item.id], { graded: true, complete: sectionComplete(items, answers, 'lesen') });
+              {items.filter((item) => item.section === current.section).map((item) => {
+                const feedback = checkpointFeedback(item, answers[item.id], { graded: true, complete: sectionComplete(items, answers, current.section) });
                 return (
                   <li key={item.id} className="py-4">
                     <p className="font-bold" lang="de">{item.promptDe}</p>
@@ -540,6 +544,11 @@ export default function CheckpointPage() {
             {curriculum.level === 'a1.1' && LANDESKUNDE[checkpoint.nr] && (
               <div className="mt-6">
                 <LandeskundeCard note={LANDESKUNDE[checkpoint.nr]} />
+              </div>
+            )}
+            {curriculum.level !== 'a1.1' && landeskundeFor(curriculum)[checkpoint.nr] && (
+              <div className="mt-6">
+                <LandeskundeCard note={landeskundeFor(curriculum)[checkpoint.nr]} />
               </div>
             )}
 

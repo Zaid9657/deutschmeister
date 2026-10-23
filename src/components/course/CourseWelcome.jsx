@@ -44,7 +44,7 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
         <Chip tone="label">{curriculum.code} · Free course</Chip>
         {/* h2: the course home's own header carries the page's one <h1> („German A1.1“). */}
         <h2 id="dm-course-welcome" className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[2.5rem]">
-          German {curriculum.code}, from the first „Hallo“
+          {curriculum.level === 'a1.1' ? `German ${curriculum.code}, from the first „Hallo“` : `German ${curriculum.code}`}
         </h2>
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">{meta.aboutEn}</p>
       </Reveal>
@@ -118,7 +118,7 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
             {characters.map((c) => (
               <li key={c.name} className="flex items-start gap-3 rounded-clay border border-rule bg-white p-3">
                 <span className="shrink-0 overflow-hidden rounded-full bg-siegel-wash" data-avatar-slot={c.name}>
-                  <CharacterAvatar name={c.name} size={44} />
+                  <CharacterAvatar name={c.name} size={44} roleEn={curriculum.meta ? c.roleEn : undefined} />
                 </span>
                 <div className="min-w-0">
                   <p className="font-bold text-ink">{c.name}</p>

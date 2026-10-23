@@ -7,8 +7,13 @@ export function sectionComplete(items, answers, section) {
   return group.length > 0 && group.every((item) => Object.hasOwn(answers, item.id));
 }
 
+export function sectionFeedbackReady(items, answers, section) {
+  return (section === 'lesen' || items.some((item) => item.section === section && item.groupId))
+    && sectionComplete(items, answers, section);
+}
+
 export function checkpointFeedback(item, answer, { graded = false, complete = false } = {}) {
-  if (graded && item.section === 'lesen' && !complete) return { answer };
+  if (graded && (item.section === 'lesen' || item.groupId) && !complete) return { answer };
   return {
     answer,
     correct: isItemCorrect(item, answer),

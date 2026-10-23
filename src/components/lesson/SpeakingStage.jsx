@@ -6,6 +6,8 @@ import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { saveCourseContext } from '../../lib/courseFlow.js';
+import { speakingMaterials } from '../../lib/lesson/speaking.js';
+import SpeakingFormat from './SpeakingFormat.jsx';
 import { speakingSummary } from '../../lib/lesson/skillStatus.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -53,7 +55,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
   };
 
   const speakingHref = open
-    ? `/speaking?level=${encodeURIComponent(level)}${open.missionOrder ? `&mission=${open.missionOrder}` : ''}`
+    ? `/speaking?level=${encodeURIComponent(level)}${open.missionOrder && !open.cards && !open.prompts && !open.calendar ? `&mission=${open.missionOrder}` : ''}`
     : `/speaking?level=${encodeURIComponent(level)}`;
 
   const goSpeak = () => {
@@ -71,6 +73,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
       openTeil: open ? open.teil || null : null,
       hintWords: open && Array.isArray(open.hintWords) ? open.hintWords : [],
       anrede: open ? open.anrede || 'Sie' : 'Sie',
+      ...speakingMaterials(open || {}),
     });
     window.location.assign(speakingHref);
   };
@@ -119,6 +122,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
           </div>
           <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de">{open.promptDe}</p>
           {open.promptEn && <p className="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{open.promptEn}</p>}
+          <SpeakingFormat open={open} />
           <p className="mt-2 text-[0.875rem] text-graphite">
             {t('speaking.coachLead', lang)}
           </p>

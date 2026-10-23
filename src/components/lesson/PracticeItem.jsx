@@ -7,6 +7,7 @@ import FeedbackSheet from './FeedbackSheet.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
+import ExamStimulus from './ExamStimulus.jsx';
 
 /**
  * Shown when the only thing wrong with an answer is its capitalisation — in
@@ -57,10 +58,11 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
   const [explain, setExplain] = useState(false);
+  const [readInstead, setReadInstead] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setValue(''); setPicked(null); setState(null); setExplain(false);
+    setValue(''); setPicked(null); setState(null); setExplain(false); setReadInstead(false);
     if (inputRef.current) inputRef.current.focus();
   }, [item.id]);
 
@@ -87,6 +89,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       result,
       correct,
       errorTag: correct ? null : tagError(item, answer, item.answer),
+      ...(readInstead ? { listened: false } : {}),
     });
   };
 
@@ -114,6 +117,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       <Card className="mt-4 p-5 sm:p-6">
         <p id={`question-${item.id}`} className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
         {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
+        {item.source === 'authored' && <ExamStimulus key={item.id} item={item} onReadInstead={() => setReadInstead(true)} />}
 
         {chips ? (
           // Full-width, stacked options on mobile (one thumb-width tap target

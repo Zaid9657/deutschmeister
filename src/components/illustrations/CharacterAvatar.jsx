@@ -1,5 +1,5 @@
 import { color, accent } from '../../data/design-tokens.js';
-import { A11_META } from '../../data/curricula/a11.meta.js';
+import { courseMetaFor } from '../../lib/course/meta.js';
 import { A11_ART } from '../../data/curricula/a11.art.js';
 
 // Flat-vector busts for the A1.1 cast — the Wave 2 placeholder art
@@ -50,7 +50,7 @@ const CAST = {
   'Herr Schmidt': { skin: SKIN.deep, hair: HAIR.dark, hairStyle: 'short', garment: GARMENT.teal, accessory: 'cap' },
 };
 
-const ROLE_EN = Object.fromEntries((A11_META.characters || []).map((c) => [c.name, c.roleEn]));
+const ROLE_EN = Object.fromEntries((courseMetaFor('a1.1').characters || []).map((c) => [c.name, c.roleEn]));
 
 /** Every name this component can draw. Exported so the manifest and the test can pin coverage. */
 export const CHARACTER_NAMES = Object.keys(CAST);
@@ -152,9 +152,8 @@ function Accessory({ kind, cast }) {
  * `A11_ART.characters[name].src` is filled (see the manifest header); until
  * then, this flat-vector placeholder.
  */
-export default function CharacterAvatar({ name, size = 40, className = '' }) {
+export default function CharacterAvatar({ name, size = 40, className = '', roleEn = ROLE_EN[name] || '' }) {
   const cast = CAST[name];
-  const roleEn = ROLE_EN[name] || '';
   const label = roleEn ? `${name}, ${roleEn}` : name || 'Course character';
   const art = A11_ART.characters?.[name];
 

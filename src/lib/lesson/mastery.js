@@ -19,7 +19,7 @@
 
 export const GOLD_THRESHOLD = 0.8;
 
-const FIRST_PASS_STAGES = new Set(['practice', 'derived', 'dictation']);
+const FIRST_PASS_STAGES = new Set(['practice', 'derived', 'dictation', 'exam']);
 
 /**
  * Is this logged attempt part of the first pass? Attempts written before

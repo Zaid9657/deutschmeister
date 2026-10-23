@@ -4,7 +4,8 @@ import StageShell from './StageShell.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
 import { useLessonLang } from '../../lib/lesson/strings.js';
-import { A11_META, lektionMinutesEstimate } from '../../data/curricula/a11.meta.js';
+import { courseMetaFor, lektionMinutesEstimate } from '../../lib/course/meta.js';
+export { courseMetaFor } from '../../lib/course/meta.js';
 import { courseHome } from '../../lib/courseFlow.js';
 
 // The Lektion intro screen (Wave 1, 2026-09-19): the one screen a first-time
@@ -65,7 +66,6 @@ const ti = (key, lang, vars) => {
 };
 
 /** The orientation module for a level, when one exists (A1.1 only today). */
-export const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
 
 /** Cast of one Lektion: from the meta module when there is one, else read off the dialogue. */
 export function castFor(lektion, meta) {
@@ -78,7 +78,7 @@ export function castFor(lektion, meta) {
   return seen;
 }
 
-export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(curriculum?.level), onStart }) {
+export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(curriculum), onStart }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
   // An estimate from the Lektion's own step counts, labelled as one — never the 15-minute design target.
@@ -148,7 +148,7 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
                 {cast.map((c) => (
                   <li key={c.name} className="flex items-center gap-2.5">
                     <span className="shrink-0 overflow-hidden rounded-full bg-siegel-wash" data-avatar-slot={c.name}>
-                      <CharacterAvatar name={c.name} size={40} />
+                      <CharacterAvatar name={c.name} size={40} roleEn={curriculum.meta ? c.roleEn : undefined} />
                     </span>
                     <span className="min-w-0">
                       <span className="block text-[0.875rem] font-bold leading-tight text-ink">{c.name}</span>

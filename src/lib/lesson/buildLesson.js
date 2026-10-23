@@ -20,6 +20,7 @@
 // Lektion, so the plan walks the Lektionen in order and carries what has been
 // used — see planPractice for the five rules it enforces.
 import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
+import { examUnitsErrors, examUnitItem, speakingFormatErrors } from './exam.js';
 
 /** Tiny seeded PRNG (mulberry32, public domain). 32-bit state, uniform [0,1). */
 export function mulberry32(seed) {
@@ -1025,6 +1026,7 @@ const line = (dialog, i) => {
 
 export const DERIVED_MATCH_PAIRS = 4;
 export const DERIVED_WORD_ORDER_MAX_TOKENS = 8;
+export const derivedWordOrderMaxTokens = (level) => /^a2\./i.test(level || '') ? 11 : DERIVED_WORD_ORDER_MAX_TOKENS;
 export const DERIVED_LISTEN_SELECT_OPTIONS = 3;
 
 /** Stable 32-bit hash for the derived-items draw, keyed on the Lektion's OWN id
@@ -1052,11 +1054,11 @@ function buildMatchItem(lektion, attempt, rng) {
   };
 }
 
-function buildWordOrderItem(lektion, attempt, rng) {
+function buildWordOrderItem(lektion, attempt, rng, level) {
   const lines = (lektion.dialog && lektion.dialog.lines) || [];
   const candidates = lines
     .map((l, i) => ({ de: l && l.de, index: i, tokens: String((l && l.de) || '').trim().split(/\s+/).filter(Boolean) }))
-    .filter((c) => c.de && c.tokens.length >= 2 && c.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS);
+    .filter((c) => c.de && c.tokens.length >= 2 && c.tokens.length <= derivedWordOrderMaxTokens(level));
   if (!candidates.length) return null;
   const [chosen] = seededShuffle(candidates, rng);
   // Reshuffle away from the original order when more than one arrangement
@@ -1100,12 +1102,12 @@ function buildListenSelectItem(lektion, attempt, rng) {
  * Lektion's own data is too thin to build it — e.g. fewer than 4 Wortfeld
  * rows, or no dialogue line short enough for a word-order tile set).
  */
-export function derivedItems(lektion, attempt = 1) {
+export function derivedItems(lektion, attempt = 1, level = lektion?.id?.split('-l')[0]) {
   if (!lektion) return [];
   const rng = mulberry32(derivedSeedFor(lektion.id, attempt));
   const items = [
     buildMatchItem(lektion, attempt, rng),
-    buildWordOrderItem(lektion, attempt, rng),
+    buildWordOrderItem(lektion, attempt, rng, level),
     buildListenSelectItem(lektion, attempt, rng),
   ].filter(Boolean);
   return items;
@@ -1162,18 +1164,29 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     stages.push({ nr: 4, key: 'practice', kind: 'practice', title: 'Üben', items: practice });
   }
 
-  const derived = derivedItems(lektion, attempt);
+  const derived = derivedItems(lektion, attempt, level);
   if (derived.length) {
     stages.push({ nr: 4, key: 'derived', kind: 'derived', title: 'Mehr üben', items: derived });
   }
 
   const hoeren = lektion.hoeren;
+  for (const section of ['lesen', 'hoeren']) {
+    const block = lektion[section];
+    if (!block || section === 'hoeren' && block.kind === 'dictation') continue;
+    const errors = examUnitsErrors(block.units, { examKey: curriculum.examKey, section, teil: block.teil });
+    if (errors.length) throw new Error(`${lektion.id} ${section}: ${errors.join('; ')}`);
+    stages.push({ nr: 4, key: section, kind: 'exam', title: block.teil, items: block.units.map((unit) => examUnitItem(unit, { section, level, lektionId: lektion.id, lektionNr: lektion.nr })) });
+  }
   if (hoeren && hoeren.kind === 'dictation' && hoeren.lines && hoeren.lines.length) {
     const lines = hoeren.lines.map((i) => line(lektion.dialog, i)).filter(Boolean);
     if (lines.length) stages.push({ nr: 4, key: 'dictation', kind: 'dictation', title: 'Hören und schreiben', lines });
   }
 
   const sprechen = lektion.sprechen;
+  if (sprechen?.open) {
+    const errors = speakingFormatErrors(sprechen.open, curriculum.examKey);
+    if (errors.length) throw new Error(`${lektion.id} Sprechen: ${errors.join('; ')}`);
+  }
   if (sprechen && ((sprechen.readAloud && sprechen.readAloud.length) || sprechen.open)) {
     stages.push({
       nr: 5,

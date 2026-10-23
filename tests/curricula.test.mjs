@@ -12,6 +12,8 @@
 //      green run means nothing.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { examFormat, lessonWritingFormat, writingSequenceErrors } from '../src/data/curricula/examFormats.js';
+import { examUnitsErrors } from '../src/lib/lesson/exam.js';
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -1796,6 +1798,7 @@ test('the registry, the curriculum index and the modules agree on which levels e
 
 for (const key of LEVEL_KEYS) {
   const spec = LEVELS[key];
+  const exam = examFormat(spec.examKey);
   const C = spec.curriculum;
   const LL = C.lektionen;
 
@@ -1826,10 +1829,10 @@ for (const key of LEVEL_KEYS) {
       assert.ok(l.handlungsfeld.length > 0);
       assert.ok(l.canDo.length >= 3 && l.canDo.length <= 5);
       for (const c of l.canDo) assert.match(c, /^Ich kann .+\.$/);
-      for (const t of l.examTeile) assert.ok(EXAM_TEILE.includes(t), t);
+      for (const t of l.examTeile) assert.ok(exam.teile.includes(t), t);
     });
     const seen = new Set(LL.flatMap((l) => l.examTeile));
-    assert.deepEqual([...EXAM_TEILE].filter((t) => !seen.has(t)), [], 'every one of the 11 SD1 Teile is rehearsed');
+    assert.deepEqual([...exam.teile].filter((t) => !seen.has(t)), [], 'every exam Teil is rehearsed');
   });
 
   test(`${spec.code}: every grammar slug of the level is primary exactly once, in the taught order`, () => {
@@ -1852,7 +1855,7 @@ for (const key of LEVEL_KEYS) {
     let withId = 0;
     let total = 0;
     for (const l of LL) {
-      assert.ok(l.wortfeld.length >= 15 && l.wortfeld.length <= 25, `L${l.nr}: ${l.wortfeld.length}`);
+      assert.ok(l.wortfeld.length >= 15 && l.wortfeld.length <= (spec.maxWortfeldEntries ?? 25), `L${l.nr}: ${l.wortfeld.length}`);
       const added = l.wortfeld.filter((w) => !w.wordId).length;
       assert.ok(added <= 5, `L${l.nr}: ${added} words outside the words table`);
       for (const w of l.wortfeld) {
@@ -1880,7 +1883,7 @@ for (const key of LEVEL_KEYS) {
       assert.equal(new Set(l.dialog.lines.map((x) => x.speaker)).size, 2);
       for (const line of l.dialog.lines) {
         assert.ok(line.de && line.en);
-        assert.ok(wordCount(line.de) <= 12, `L${l.nr}: "${line.de}"`);
+        assert.ok(wordCount(line.de) <= (spec.maxDialogueWords ?? 12), `L${l.nr}: "${line.de}"`);
       }
     }
   });
@@ -1888,7 +1891,7 @@ for (const key of LEVEL_KEYS) {
   test(`${spec.code}: the Notice card is one point, <= 60 words, with two verbatim dialogue lines`, () => {
     for (const l of LL) {
       assert.equal(l.notice.ruleSlug, l.primarySlug);
-      assert.ok(wordCount(l.notice.bodyDe) <= 60, `L${l.nr}: ${wordCount(l.notice.bodyDe)} words`);
+      assert.ok(wordCount(l.notice.bodyDe) <= (spec.maxNoticeWords ?? 60), `L${l.nr}: ${wordCount(l.notice.bodyDe)} words`);
       assert.doesNotMatch(l.notice.bodyDe, /[<>#]|\]\(/);
       assert.equal(l.notice.examples.length, 2);
       const lines = l.dialog.lines.map((x) => x.de);
@@ -1897,16 +1900,21 @@ for (const key of LEVEL_KEYS) {
   });
 
   test(`${spec.code}: pretest, Phonetik, Hören, Sprechen, Schreiben and the links`, () => {
+    assert.deepEqual(writingSequenceErrors(C), []);
     const missions = new Set();
     const listenings = new Set();
     const readings = new Set();
     for (const l of LL) {
       assert.ok(l.pretest.promptDe && l.pretest.promptEn && l.pretest.model && l.pretest.accepted.length);
       assert.equal(l.phonetik.items.length, 3);
-      assert.equal(l.hoeren.kind, 'dictation');
-      assert.equal(l.hoeren.lines.length, 2);
+      if (exam.checkpointReading === 'authored-exam-parts' && l.hoeren.kind === 'exam') {
+        assert.deepEqual(examUnitsErrors(l.hoeren.units, { examKey: C.examKey, section: 'hoeren', teil: l.hoeren.teil }), []);
+      } else {
+        assert.equal(l.hoeren.kind, 'dictation');
+        assert.equal(l.hoeren.lines.length, 2);
+      }
       assert.equal(l.sprechen.readAloud.length, 2);
-      for (const i of [...l.hoeren.lines, ...l.sprechen.readAloud]) {
+      for (const i of [...(l.hoeren.lines || []), ...l.sprechen.readAloud]) {
         assert.ok(Number.isInteger(i) && i >= 0 && i < l.dialog.lines.length, `L${l.nr}: index ${i}`);
       }
       const open = l.sprechen.open;
@@ -1918,9 +1926,12 @@ for (const key of LEVEL_KEYS) {
         missions.add(open.missionOrder);
       }
       const w = l.schreiben;
-      assert.equal(w.kind, l.nr % 2 === 1 ? 'formular' : 'mitteilung');
+      const form = lessonWritingFormat(C.examKey, l);
+      assert.ok(form, `L${l.nr}: declared writing type belongs to the exam`);
+      assert.equal(w.kind, form.kind);
+      if (form.textsorte) assert.equal(w.textsorte, form.textsorte);
       assert.equal(w.taskKey, `${spec.taskKeyPrefix}-l${String(l.nr).padStart(2, '0')}`);
-      assert.deepEqual([w.minWords, w.maxWords], w.kind === 'formular' ? [5, 40] : [25, 45], `L${l.nr}: word range`);
+      assert.deepEqual([w.minWords, w.maxWords], form.range, `L${l.nr}: word range`);
       // The sample's LENGTH is RULE 17's business and RULE 17 reads the window off the bank (see
       // „rule 17: every Beispieltext passes the form checklist“ below). The `<= 30` that used to
       // stand here was a third number beside the bank's two, and it contradicted them: 25–45 is
@@ -2008,16 +2019,16 @@ for (const key of LEVEL_KEYS) {
       'a word used in two Lektionen': (c) => { c.lektionen[4].wortfeld[0] = c.lektionen[3].wortfeld[0]; },
       'an English word in a dialogue': (c) => { c.lektionen[0].dialog.lines[0].de = 'Hello and welcome!'; },
       'an untaught content word': (c) => { c.lektionen[0].dialog.lines[0].de = 'Guten Tag, der Elefant!'; },
-      'a 13-word line': (c) => { c.lektionen[0].dialog.lines[0].de = 'eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn'; },
+      'a line over the level limit': (c) => { c.lektionen[0].dialog.lines[0].de = (spec.maxDialogueWords ?? 12) === 12 ? 'eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn' : Array(spec.maxDialogueWords + 1).fill('eins').join(' '); },
       'a Notice example that is not in the dialogue': (c) => { c.lektionen[0].notice.examples[0] = 'Hallo.'; },
-      'a Notice card over 60 words': (c) => { c.lektionen[0].notice.bodyDe = Array(61).fill('Wort').join(' '); },
+      'a Notice card over the level limit': (c) => { c.lektionen[0].notice.bodyDe = Array((spec.maxNoticeWords ?? 60) + 1).fill('Wort').join(' '); },
       'a taskKey that points at another Lektion': (c) => { c.lektionen[0].schreiben.taskKey = `${spec.taskKeyPrefix}-l03`; },
       'a practice topic outside grammarSlugs': (c) => { c.lektionen[0].practiceRule.topics = ['no-such-slug']; },
       'a practice topic that is neither a grammar slug nor practice-only': (c) => { c.lektionen[0].practiceRule.topics = [...c.lektionen[0].practiceRule.topics, 'no-such-topic']; },
       'a can-do that is not in ich-Form': (c) => { c.lektionen[0].canDo[0] = 'Du kannst dich vorstellen.'; },
-      'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren.lines = [0, 99]; },
+      'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren = { ...c.lektionen[0].hoeren, kind: 'dictation', lines: [0, 99] }; },
       'hoursTotal that no longer follows from the minutes': (c) => { c.hoursTotal = 40; },
-      'a Schreiben task that breaks the alternation': (c) => { c.lektionen[0].schreiben.kind = 'mitteilung'; },
+      'a Schreiben task that breaks the exam contract': (c) => { c.lektionen[0].schreiben.kind = exam.writingSequence === 'alternating' ? 'mitteilung' : 'formular'; },
       'the primary slug order scrambled': (c) => {
         const [a, b] = [c.lektionen[0].primarySlug, c.lektionen[1].primarySlug];
         c.lektionen[0].primarySlug = b;

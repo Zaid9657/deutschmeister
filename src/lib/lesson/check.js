@@ -330,7 +330,7 @@ export function isCaseTask(item) {
  * carries dictation-shaped answers without either field.
  */
 export const isDictationTask = (item) =>
-  item?.kind === 'dictation' || item?.type === 'dictation' || item?.stage === 'listening';
+  item?.kind === 'dictation' || item?.type === 'dictation' || (item?.stage === 'listening' && !['mc3', 'match', 'trueFalse'].includes(item?.kind));
 
 /**
  * Derive every checkAnswer() option from the ITEM alone, so every grading site
@@ -358,6 +358,7 @@ export function checkOptionsFor(item) {
  * review card is built without options, so it stays typed.
  */
 export function isChoiceItem(item) {
+  if (['mc3', 'match'].includes(item?.kind)) return true;
   if (item?.mode) return item.mode === 'options';
   return Boolean(item?.options?.length) && item?.type !== 'sentence_building' && item?.type !== 'error_correction';
 }

@@ -261,11 +261,17 @@ const DU_CUE_RE = /\([a-zäöüß]+en, du\)/;
  * „bitte" at the front — for a level that has opted in (A1.2); A1.1's own word-order rules are the
  * ones its 23 reviews settled (frontableOrders, missingOpeningCue).
  */
-export function alternatives(item, { wide = false } = {}) {
+export function alternatives(item, { wide = false, a2 = false } = {}) {
   const out = [];
   // A checkpoint item carries its prompt as promptDe: read it, or its cue (Beginnen Sie mit …) is unseen.
   const q = String(item.questionDe || item.promptDe || '');
   const key = String(item.answer || '').trim();
+  if (a2 && ['sentence_building', 'error_correction'].includes(item.type)) {
+    for (const text of a2ClauseOrders(key)) {
+      const opening = q.match(OPENING_CUE_RE)?.[1];
+      if (!opening || opensWith(text, opening)) out.push({ text, why: 'A2 clause order' });
+    }
+  }
   const ihrCue = /\((?:[^()]*,\s*)?ihr\)|\bihr-Imperativ\b|Imperativ\s+für\s+ihr\b|\[[^\]]*\bihr\b|[„"']Ihr\s/.test(q);
   // du-imperative ±e — and, for a sentence task, with its emphatic pronoun („Mach du den Fernseher aus!")
   const imp = item.topic === 'imperative' && key.match(/^([A-ZÄÖÜ][a-zäöüß]+)((?:\s+[^!]*)?)!$/);
@@ -351,13 +357,18 @@ export function alternatives(item, { wide = false } = {}) {
  * one item id are two items (DaF review #4: the harness rebuilt the default and a numeric seed and
  * let one variant overwrite the other).
  */
-export function servedItems(level, poolFile = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url)) {
-  const curriculum = anyCurriculumFor(level);
-  const pool = JSON.parse(readFileSync(poolFile, 'utf8'));
+export function servedItems(level, poolFile = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url), fixture = {}) {
+  const curriculum = fixture.curriculum || anyCurriculumFor(level);
+  if (!curriculum) throw new Error(`${level}: curriculum is not built`);
+  const pool = fixture.pool || JSON.parse(readFileSync(poolFile, 'utf8'));
   const out = new Map();
   for (const attempt of [1, 2]) for (const [nr, items] of planPractice(curriculum, pool, attempt)) for (const it of items) out.set(`L${nr}#${it.id}`, { ...it, where: `L${nr}` });
+  if (curriculum.examKey === 'goethe_a2') for (const l of curriculum.lektionen) {
+    for (const section of ['lesen', 'hoeren']) for (const it of l[section]?.units || []) out.set(`L${l.nr}#${it.id}`, { ...it, where: `L${l.nr}` });
+  }
   for (const checkpoint of curriculum.checkpoints || []) {
-    for (let round = 0; round < (level === 'a1.2' ? 4 : 3); round += 1) {
+    const rounds = curriculum.examKey === 'goethe_a2' ? Math.max(checkpoint.lesen?.papers?.length || 1, checkpoint.hoeren?.papers?.length || 1) : level === 'a1.2' ? 4 : 3;
+    for (let round = 0; round < rounds; round += 1) {
       for (const it of buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) })) {
         if (it.answer) out.set(`${checkpoint.id}/${round}#${it.id}`, { ...it, where: `${checkpoint.id}/${round}` });
       }
@@ -366,13 +377,40 @@ export function servedItems(level, poolFile = new URL(`../src/data/lessonPools/$
   return { items: [...out.values()], poolSize: poolItems(pool).length };
 }
 
+// Bounded A2 subordinate clauses: moving the clause first is correct German,
+// even when it is outside the course's production horizon. A task must name
+// its opening to exclude that answer. Never penalise punctuation in the checker.
+export function a2ClauseOrders(key) {
+  const m = String(key || '').match(/^([^,]+), ((?:weil|dass|wenn) .+)\.$/);
+  if (!m) return [];
+  const main = m[1].split(/\s+/);
+  const size = (constituentAt(main, 0) || { length: 1 }).length;
+  const subject = main.slice(0, size).join(' ');
+  const verb = main[size];
+  if (!verb || !/^[a-zäöüß]+$/.test(verb)) return [];
+  return [
+    `${upperFirst(m[2])}, ${verb} ${SUBJECT_PRONOUN_RE.test(lowerFirst(subject)) && subject !== 'Sie' ? lowerFirst(subject) : subject}${main.length > size + 1 ? ` ${main.slice(size + 1).join(' ')}` : ''}.`,
+    ...[...wordOrderAlternatives(`${m[1]}.`), ...middleFieldOrders(`${m[1]}.`)].map((s) => `${s.slice(0, -1)}, ${m[2]}.`),
+  ];
+}
+
+export function choiceDeterminacyErrors(item) {
+  if (!['mc3', 'match'].includes(item.kind)) return [];
+  const options = item.options;
+  if (!Array.isArray(options) || options.length < 2 || item.kind === 'mc3' && options.length !== 3) return ['invalid printed option count'];
+  const accepted = item.accepted?.length ? item.accepted : [item.answer];
+  const correct = options.filter((o) => checkAnswer(o, accepted, checkOptionsFor(item)).result === RESULT.CORRECT);
+  return correct.length === 1 && correct[0] === item.answer ? [] : ['exactly one printed option must be accepted'];
+}
+
 /** The rejected alternatives of a level. */
-export function rejectedAlternatives(level, poolFile) {
+export function rejectedAlternatives(level, poolFile, fixture) {
   const rejected = [];
   const wide = Boolean(levelSpec(level)?.determinacyRepairs);
-  for (const item of servedItems(level, poolFile).items) {
+  for (const item of servedItems(level, poolFile, fixture).items) {
     const accepted = item.accepted?.length ? item.accepted : [item.answer];
-    for (const alt of alternatives({ ...item, questionDe: item.questionDe || item.promptDe }, { wide })) {
+    for (const why of choiceDeterminacyErrors(item)) rejected.push({ where: item.where, id: item.id, why, q: item.question || item.questionDe || item.promptDe, key: item.answer, alt: item.options, result: 'invalid-choice' });
+    for (const alt of alternatives({ ...item, questionDe: item.questionDe || item.promptDe }, { wide, a2: /^a2\./.test(level) })) {
       // A choice item is answered by picking: an alternative it does not print cannot be given.
       if (isChoiceItem(item) && !(item.options || []).includes(alt.text)) continue;
       const r = checkAnswer(alt.text, accepted, checkOptionsFor(item));

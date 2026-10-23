@@ -36,6 +36,10 @@ const PAIRS = [
   // function writes the one that counts. Two copies of this arithmetic that
   // drift would mark the same clip differently on the same screen.
   ['src/lib/lesson/readaloud.js', 'netlify/functions/_shared/readaloud.mjs'],
+  // A2 exam formats and speaking task materials: the grading and speaking functions read the same
+  // contract as the SPA (A2.1 build, step 2) — a twin, like every other function import from src.
+  ['src/data/curricula/examFormats.js', 'netlify/functions/_shared/examFormats.mjs'],
+  ['src/lib/lesson/speaking.js', 'netlify/functions/_shared/speaking.mjs'],
   // Curriculum registry (docs/course-factory/a11-rebuild/CONTRACT.md): the
   // lesson engine and the public syllabus page must read the same 12
   // Lektionen. The SPA side is still being authored — run

@@ -22,7 +22,7 @@ import { isUsableItem } from '../../data/lessonPools/quality.js';
 
 export const REQUEUE_CAP = 4;
 
-const REPLAYED_TYPES = new Set(['match', 'word_order', 'listen_select', 'dictation']);
+const REPLAYED_TYPES = new Set(['match', 'word_order', 'listen_select', 'dictation', 'mc3', 'trueFalse']);
 const MIN_RETRY_PAIRS = 3;
 
 /**
@@ -32,7 +32,7 @@ const MIN_RETRY_PAIRS = 3;
  */
 function replayOf(missed) {
   const id = `${missed.id}~retry`;
-  if (missed.type !== 'match') return { ...missed, id };
+  if (missed.type !== 'match' || !missed.pairs) return { ...missed, id };
   const confused = (missed.confused || []).map((p) => p.de);
   const pairs = [
     ...missed.pairs.filter((p) => confused.includes(p.de)),

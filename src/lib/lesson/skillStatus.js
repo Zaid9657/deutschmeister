@@ -47,7 +47,7 @@ export function writingSummary(r) {
 
 /** listeningSummary(attempts) → heard vs. read, over the first-pass dictations. */
 export function listeningSummary(attempts = []) {
-  const dictations = attempts.filter((a) => a && a.stage === 'dictation' && a.pass !== 'retry');
+  const dictations = attempts.filter((a) => a && (a.stage === 'dictation' || a.stage === 'exam' && a.section === 'hoeren') && a.pass !== 'retry');
   if (!dictations.length) return { state: 'none', heard: 0, read: 0 };
   const read = dictations.filter((a) => a.listened === false).length;
   return { state: read ? 'partly-read' : 'heard', heard: dictations.length - read, read };

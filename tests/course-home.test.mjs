@@ -32,7 +32,10 @@ const RESULTS = 'src/components/LevelTest/LevelTestResults.jsx';
 
 test('CurriculumHomePage imports A11_META and CourseWelcome', () => {
   const src = read(HOME);
-  assert.match(src, /import \{ A11_META(, [A-Za-z]+)* \} from '\.\.\/data\/curricula\/a11\.meta\.js'/, 'the page must read the meta module');
+  // Since the A2.1 build the page reads the meta through courseMetaFor (src/lib/course/meta.js), which
+  // returns A11_META itself for A1.1 — both halves pinned, so the page still reads the meta module.
+  assert.match(src, /import \{ courseMetaFor(, [A-Za-z]+)* \} from '\.\.\/lib\/course\/meta\.js'/, 'the page must read the meta module');
+  assert.match(read('src/lib/course/meta.js'), /import \{ A11_META(, [A-Za-z_]+)* \} from '\.\.\/\.\.\/data\/curricula\/a11\.meta\.js'/, 'courseMetaFor reads A11_META');
   assert.match(src, /import CourseWelcome from '\.\.\/components\/course\/CourseWelcome\.jsx'/);
   assert.match(src, /<CourseWelcome curriculum=\{curriculum\} meta=\{meta\}/, 'CourseWelcome must be rendered with the curriculum and its meta');
 });

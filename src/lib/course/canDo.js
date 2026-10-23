@@ -11,7 +11,7 @@
 // No new storage: both facts are path nodes the course home already loads. How much help a run
 // needed is not stored per Lektion yet (lesson_progress has no column for it) — that waits for the
 // owner-applied migration batch, with FSRS.
-import { A11_META } from '../../data/curricula/a11.meta.js';
+import { courseMetaFor } from './meta.js';
 
 // ponytail: an id is `<lektionId>#<n>`, the line's place in `lektion.canDo`; give the entries
 // explicit ids if can-dos are ever reordered, or stored evidence would point at the wrong line.
@@ -22,8 +22,8 @@ export const checkpointFor = (curriculum, nr) =>
   [...(curriculum.checkpoints || [])].sort((a, b) => a.afterLektion - b.afterLektion).find((cp) => cp.afterLektion >= nr) || null;
 
 /** A Lektion's can-do lines in the chrome language. English exists for A1.1 only (its meta module). */
-export function canDoLines(lektion, lang = 'en') {
-  const en = lang === 'de' ? null : A11_META.lektionIntro[lektion.id]?.canDoEn;
+export function canDoLines(lektion, lang = 'en', curriculum = lektion.id?.split('-l')[0]) {
+  const en = lang === 'de' ? null : courseMetaFor(curriculum)?.lektionIntro?.[lektion.id]?.canDoEn;
   return (lektion.canDo || []).map((de, i) => en?.[i] || de);
 }
 
@@ -32,7 +32,7 @@ export function canDoList(curriculum, done = new Set()) {
   return curriculum.lektionen.flatMap((l) => {
     const cp = checkpointFor(curriculum, l.nr);
     const state = !done.has(l.id) ? 'open' : cp && done.has(cp.id) ? 'again' : 'shown';
-    const en = canDoLines(l, 'en');
+    const en = canDoLines(l, 'en', curriculum);
     return (l.canDo || []).map((de, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de, en: en[i], state }));
   });
 }

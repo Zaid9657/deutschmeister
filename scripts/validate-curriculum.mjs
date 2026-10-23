@@ -59,7 +59,12 @@ import {
 } from '../src/data/curricula/a12.js';
 import { constructionHits, deferredConstructionHits, adjectiveHitsA21 } from '../src/data/curricula/constructions.js';
 import { priorLevelSpecs } from '../src/data/curricula/inheritance.js';
-import { examFormat, writingFormat } from '../src/data/curricula/examFormats.js';
+import { examFormat, writingFormat, writingSequenceErrors } from '../src/data/curricula/examFormats.js';
+import { examSurfaceErrors, examUnitsErrors } from '../src/lib/lesson/exam.js';
+// The engine gate accepts small fixtures; the full validator below also checks content.
+export { examSurfaceErrors as validateExamSurfaces };
+import { courseMetaErrors } from '../src/lib/course/meta.js';
+export { examSurfaceErrors } from '../src/lib/lesson/exam.js';
 import { PRIMARY_ORDER_A21, FUNCTION_WORDS_A21_ADDED, IRREGULAR_FORMS_A21_ADDED, formsOfA21, OFF_LIMITS_FORMS_A21, NEVER_FORMS_A21 } from '../src/data/curricula/a21-language.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 // RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
@@ -2107,7 +2112,11 @@ export function examTeileBacked(c) {
       const covers = EXAM_TEIL_COVERS[family];
       const writing = family === 'Schreiben' ? writingFormat(examKey, teil) : null;
       let why = null;
-      if (covers && !covers(l)) {
+      const a2 = examFormat(examKey).checkpointReading === 'authored-exam-parts';
+      const section = family === 'Lesen' ? 'lesen' : family === 'Hören' ? 'hoeren' : null;
+      if (a2 && section && (l[section]?.teil !== teil || examUnitsErrors(l[section]?.units, { examKey, section, teil }).length)) {
+        why = `no valid authored ${teil} surface`;
+      } else if (!(a2 && section) && covers && !covers(l)) {
         why = EXAM_TEIL_SURFACE_WHY[family];
       } else if (examFormat(examKey).parts.some((part) => part.teil === teil && part.format === 'self-introduction')
         && !SELF_INTRO_RE.test(open.promptDe || '')
@@ -3254,6 +3263,11 @@ export function validateCurriculum(c, extraItems, poolItems) {
   if (!spec) return [`level "${c?.level}" is not registered in LEVELS — add its row before validating`];
   const exam = examFormat(c.examKey || spec.examKey);
   const examTeile = exam.teile;
+  const surfaceErrors = examSurfaceErrors({ ...c, examKey: c.examKey || spec.examKey });
+  // Reject malformed authored banks before the draw, which deliberately throws
+  // rather than silently serving A1 items for A2.
+  errors.push(...surfaceErrors);
+  errors.push(...courseMetaErrors(c));
   extraItems = extraItems ?? loadExtraItems(spec.level);
   poolItems = poolItems ?? loadPoolItems(spec.level);
 
@@ -3401,6 +3415,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
   const missions = new Map();
   const listenings = new Map();
   const readings = new Map();
+  errors.push(...writingSequenceErrors({ ...c, examKey: c.examKey || spec.examKey }));
   L.forEach((l) => {
     const p = l.pretest || {};
     if (!p.promptDe || !p.promptEn || !p.model) fail(`Lektion ${l.nr}: pretest needs promptDe, promptEn and model`);
@@ -3412,10 +3427,12 @@ export function validateCurriculum(c, extraItems, poolItems) {
 
     const lineCount = (l.dialog?.lines || []).length;
     const h = l.hoeren || {};
-    if (h.kind !== 'dictation') fail(`Lektion ${l.nr}: hoeren.kind must be 'dictation'`);
-    if ((h.lines || []).length !== 2) fail(`Lektion ${l.nr}: hoeren needs exactly 2 dictation lines`);
-    if (new Set(h.lines || []).size !== (h.lines || []).length) fail(`Lektion ${l.nr}: hoeren lines must differ`);
-    for (const i of h.lines || []) if (!Number.isInteger(i) || i < 0 || i >= lineCount) fail(`Lektion ${l.nr}: hoeren line index ${i} out of range`);
+    if (exam.checkpointReading !== 'authored-exam-parts' || h.kind === 'dictation') {
+      if (h.kind !== 'dictation') fail(`Lektion ${l.nr}: hoeren.kind must be 'dictation'`);
+      if ((h.lines || []).length !== 2) fail(`Lektion ${l.nr}: hoeren needs exactly 2 dictation lines`);
+      if (new Set(h.lines || []).size !== (h.lines || []).length) fail(`Lektion ${l.nr}: hoeren lines must differ`);
+      for (const i of h.lines || []) if (!Number.isInteger(i) || i < 0 || i >= lineCount) fail(`Lektion ${l.nr}: hoeren line index ${i} out of range`);
+    } else if (h.kind !== 'exam' || !h.units?.length) fail(`Lektion ${l.nr}: hoeren needs an authored exam block or dictation`);
 
     const s = l.sprechen || {};
     if ((s.readAloud || []).length !== 2) fail(`Lektion ${l.nr}: sprechen needs exactly 2 readAloud lines`);
@@ -3433,10 +3450,6 @@ export function validateCurriculum(c, extraItems, poolItems) {
     }
 
     const w = l.schreiben || {};
-    const expectedWriting = exam.writing[(l.nr - 1) % exam.writing.length];
-    const expectedKind = expectedWriting.kind;
-    if (w.kind !== expectedKind) fail(`Lektion ${l.nr}: schreiben.kind must alternate (expected ${expectedKind})`);
-    if (expectedWriting.textsorte && w.textsorte !== expectedWriting.textsorte) fail(`Lektion ${l.nr}: schreiben.textsorte must alternate (expected ${expectedWriting.textsorte})`);
     if (!w.taskDe) fail(`Lektion ${l.nr}: schreiben needs a taskDe`);
     // One word range per Textsorte, not one constant: a filled five-field Formular is ~10 words and
     // a complete SD1 Teil 2 Mitteilung (Anrede + 3 Leitpunkte + Gruß) is 35–40, which the old
@@ -3521,6 +3534,9 @@ export function validateCurriculum(c, extraItems, poolItems) {
       if (FEE.test(s)) fail(`Lektion ${l.nr}: exam fee reference: "${s}"`);
     }
   });
+
+  // Structural diagnostics still run for malformed banks. Their draw fails closed.
+  if (surfaceErrors.length) return errors;
 
   // ---- RULE 10 (Wortfeld coverage) and RULE 11 (hand-written item lexis) ------------------------
   const r = spec.ratchets;

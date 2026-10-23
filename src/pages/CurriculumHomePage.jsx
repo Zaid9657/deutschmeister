@@ -4,7 +4,7 @@ import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } f
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
-import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
+import { courseMetaFor, lektionMinutesEstimate } from '../lib/course/meta.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
@@ -67,7 +67,6 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 //     the in-order rule simply stops applying.
 
 /** The orientation module for a level, when one exists (A1.1 only today). */
-const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
 
 /** Is `placed` (profiles.current_level, either case) strictly above `level` on the ladder? */
 export const placedAbove = (placed, level) => {
@@ -103,7 +102,7 @@ export default function CurriculumHomePage({ curriculum }) {
   const { profile } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
-  const meta = courseMetaFor(level);
+  const meta = courseMetaFor(curriculum);
   const programKey = programKeyFor(level);
   const KIND_LABEL = kindLabelFor(level);
   // A visitor's progress is synchronous (localStorage), so their FIRST render is already final.

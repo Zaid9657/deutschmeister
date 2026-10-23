@@ -16,6 +16,8 @@ import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
 import { readCourseContext } from '../lib/courseFlow.js';
+import { speakingMaterials } from '../lib/lesson/speaking.js';
+import SpeakingFormat from '../components/lesson/SpeakingFormat.jsx';
 import { levelsForProduct } from '../data/pricing.js';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import { isFreeSpeakingCapped, speakingLimitMoment, speakingLimitOffer } from '../lib/speakingOffer.js';
@@ -184,6 +186,7 @@ const SpeakingPage = () => {
       lektion: ctx.title || null,
       level: String(ctx.level || '').toUpperCase(),
       anrede: ctx.anrede === 'du' ? 'du' : 'Sie',
+      ...speakingMaterials(ctx),
     };
   }, [wantedMission]);
 
@@ -320,6 +323,9 @@ const SpeakingPage = () => {
               taskPrompt: courseTask.promptDe,
               taskTeil: courseTask.teil,
               taskAnrede: courseTask.anrede,
+              ...(courseTask.cards ? { taskCards: courseTask.cards } : {}),
+              ...(courseTask.prompts ? { taskPrompts: courseTask.prompts } : {}),
+              ...(courseTask.calendar ? { taskCalendar: courseTask.calendar } : {}),
               ...(Array.isArray(courseTask.hintWords) && courseTask.hintWords.length
                 ? { taskHintWords: courseTask.hintWords }
                 : {}),
@@ -588,6 +594,7 @@ const SpeakingPage = () => {
                 {courseTask.lektion && <Chip tone="quiet">{courseTask.lektion}</Chip>}
               </div>
               <p className="mt-3 text-[1.0625rem] font-semibold text-ink leading-snug">{courseTask.promptDe}</p>
+              <SpeakingFormat open={courseTask} />
               {courseTask.hintWords.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {courseTask.hintWords.map((w, i) => (
