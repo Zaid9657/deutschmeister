@@ -57,7 +57,10 @@ import {
   FUNCTION_WORDS as FUNCTION_WORDS_A12,
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
-import { constructionHits, deferredConstructionHits } from '../src/data/curricula/constructions.js';
+import { constructionHits, deferredConstructionHits, adjectiveHitsA21 } from '../src/data/curricula/constructions.js';
+import { priorLevelSpecs } from '../src/data/curricula/inheritance.js';
+import { examFormat, writingFormat } from '../src/data/curricula/examFormats.js';
+import { PRIMARY_ORDER_A21, FUNCTION_WORDS_A21_ADDED, IRREGULAR_FORMS_A21_ADDED, formsOfA21, OFF_LIMITS_FORMS_A21, NEVER_FORMS_A21 } from '../src/data/curricula/a21-language.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 // RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
 // `scoreWriting` is what `GradedWriting.jsx` calls, and the word window it measures against comes
@@ -80,12 +83,8 @@ export const GRAMMAR_SLUGS = [
   'separable-verbs-intro', 'yes-no-questions', 'time-and-dates',
 ];
 
-export const EXAM_TEILE = [
-  'Hören Teil 1', 'Hören Teil 2', 'Hören Teil 3',
-  'Lesen Teil 1', 'Lesen Teil 2', 'Lesen Teil 3',
-  'Schreiben Teil 1', 'Schreiben Teil 2',
-  'Sprechen Teil 1', 'Sprechen Teil 2', 'Sprechen Teil 3',
-];
+// Compatibility export: the existing A1 assertions still read exactly these 11 Teile.
+export const EXAM_TEILE = examFormat('goethe_a1').teile;
 
 // The 12 situations of the standard (§2.2), in order. Each entry is the set of keywords the
 // Lektion's `situation` must contain, so the order cannot silently drift.
@@ -217,7 +216,8 @@ function verbForms(inf) {
 }
 
 /** Every form of one Wortfeld entry a dialogue line may legitimately use. */
-export function formsOf(entry, irregulars = IRREGULAR_FORMS) {
+export function formsOf(entry, irregulars = IRREGULAR_FORMS, level = 'a1.1') {
+  if (String(level).toLowerCase() === 'a2.1') return formsOfA21(entry, irregulars);
   const forms = new Set();
   for (const t of tokenise(entry.de)) forms.add(t.toLowerCase());
   for (const t of tokenise(entry.word || '')) forms.add(t.toLowerCase());
@@ -862,6 +862,7 @@ export const LEVELS = {
   'a1.1': {
     level: 'a1.1',
     code: 'A1.1',
+    examKey: 'goethe_a1',
     curriculum: CURRICULUM_A11,
     functionWords: FUNCTION_WORDS,
     dialogNames: DIALOG_NAMES,
@@ -935,6 +936,7 @@ export const LEVELS = {
   'a1.2': {
     level: 'a1.2',
     code: 'A1.2',
+    examKey: 'goethe_a1',
     curriculum: CURRICULUM_A12,
     functionWords: FUNCTION_WORDS_A12,
     dialogNames: DIALOG_NAMES_A12,
@@ -1141,8 +1143,55 @@ export const LEVELS = {
   },
 };
 
-/** The registry row for a level (any case), or null when the level is not rebuilt yet. */
-export const levelSpec = (level) => LEVELS[String(level || '').toLowerCase()] || null;
+// Step 1 is an engine registration only: no curriculum module exists yet. CLI validation refuses
+// this row until content is supplied. Zero debt is measured on the absent corpus, not a claim
+// that an A2.1 course has passed; new content must satisfy these ceilings, never raise them.
+export const PENDING_LEVELS = { 'a2.1': {
+  level: 'a2.1', code: 'A2.1', examKey: 'goethe_a2', curriculum: null,
+  functionWords: [...FUNCTION_WORDS_A12, ...FUNCTION_WORDS_A21_ADDED],
+  functionSet: lowerSet([...FUNCTION_WORDS_A12, ...FUNCTION_WORDS_A21_ADDED]),
+  dialogNames: [...DIALOG_NAMES_A12], nameSet: lowerSet(DIALOG_NAMES_A12),
+  grammarSlugs: PRIMARY_ORDER_A21, primaryOrder: PRIMARY_ORDER_A21, practiceOnlyTopics: [],
+  situationKeywords: [['Familie'], ['Umzug'], ['Wohnen'], ['Wochenmarkt'], ['Geschenk'], ['Veranstaltung'], ['Sport'], ['Unfall'], ['Büro'], ['Besuch'], ['Stadtführung'], ['Besuch']],
+  primaryPatterns: {
+    'possessive-pronouns': /\b(?:mein|dein|sein|ihr|unser|euer|eur)(?:e|en|em|er)?\b/gi,
+    'separable-verbs': OFF_LIMITS_FORMS_A21['separable-verbs'],
+    'two-way-prepositions': /\b(?:in|an|auf|vor|hinter|neben|über|unter|zwischen)\s+(?:dem|der|den|die|das|ein\w*)\b/gi,
+    'adjective-endings-intro': /\b(?:der|die|das|den|ein\w*|kein\w*|mein\w*)\s+[a-zäöüß]+(?:e|en|er|es)\s+[A-ZÄÖÜ][a-zäöüß]+/g,
+    'dative-case': /\b(?:dem|einem|meinem|deinem|ihm|ihnen|mir|dir)\b/gi,
+    'modal-verbs-past': /\b(?:konn|muss|woll|durf|moch)te(?:st|n|t)?\b/gi,
+    'imperative-mood': PRIMARY_PATTERNS_A12.imperative,
+    'perfect-tense-sein': /\b(?:bin|bist|ist|sind|seid)\b[^.!?]*\b[a-zäöüß]*ge[a-zäöüß]+(?:t|en)\b/gi,
+    'pronouns-accusative-dative': OFF_LIMITS_FORMS_A21['pronouns-accusative-dative'],
+    'temporal-prepositions': OFF_LIMITS_FORMS_A21['temporal-prepositions'],
+    'prepositions-dative': /\b(?:gegenüber|mit|nach|bei|seit|von|zu|aus)\s+(?:dem|der|den|ein\w*|mein\w*|dir|mir|ihm|ihr|ihnen)\b|\b(?:zum|zur|beim|vom)\b/gi,
+    'perfect-tense-haben': /\b(?:habe|hast|hat|haben|habt)\b[^.!?]*\b[a-zäöüß]+(?:t|en)\b/gi,
+  },
+  irregularForms: { ...IRREGULAR_FORMS, ...IRREGULAR_FORMS_A12, ...IRREGULAR_FORMS_A21_ADDED },
+  seedFrom: 'a1.2', personaSource: 'a2.1',
+  extraPath: '../src/data/lessonPools/a21.extra.json', poolPath: '../src/data/lessonPools/a21.json',
+  taskKeyPrefix: 'a21', minUnionWords: 200,
+  // Offline plan/Wave 4 inventory; deliberately no live database measurement in Step 1.
+  missionCount: 8, listeningCount: 6, readingCount: 10, teil1MissionOrders: [],
+  maxDialogueWords: 14, maxNoticeWords: 70, maxWortfeldEntries: 30,
+  constructionHorizon: true, determinacyRepairs: true,
+  offLimitsForms: OFF_LIMITS_FORMS_A21, neverForms: NEVER_FORMS_A21,
+  licensedChunks: [...LICENSED_CHUNKS_A12, 'Ich würde gern', 'ich würde gern'],
+  ratchets: {
+    uncoveredWortfeld: 0, untaughtItemTokens: 0, untaughtDrawnTokens: 0,
+    missionlessLektionen: 0, unexemplifiedNoticeForms: 0, untaughtInProduction: 0,
+    deferredConstructions: 0, unbackedExamTeile: 0, modelChecklistBreaks: 0,
+    sharedProductionLines: 0, untaughtInModelTexts: 0, unanswerableLeitpunkte: 0,
+    wortfeldWithoutInput: 0, gradedTaskWordsWithoutInput: 0, formSpeakSentences: 0,
+    missingEnglishTwins: 0,
+  },
+} };
+
+/** Pending engine policies are queryable, but LEVELS still enumerates complete curricula. */
+export const levelSpec = (level) => {
+  const key = String(level || '').toLowerCase();
+  return LEVELS[key] || PENDING_LEVELS[key] || null;
+};
 
 /**
  * The function words a single Lektion PUTS IN FRONT OF THE LEARNER — its dialogue (lines, title,
@@ -1185,12 +1234,11 @@ function functionWordsUsedIn(l, spec) {
 function seedVocabulary(spec, freeOnly = false) {
   const base = freeOnly ? FUNCTION_FREE_SET : spec.functionSet;
   const known = new Set([...base, ...spec.nameSet]);
-  const prior = spec.seedFrom ? levelSpec(spec.seedFrom) : null;
-  if (!prior) return known;
+  const priors = priorLevelSpecs(spec, levelSpec);
   // The CURRENT level's irregular table, not the previous level's: an A1.2 learner knows A1.1's
   // `trinken` and now meets its Partizip II, so the inherited entry has to yield `getrunken`.
-  for (const l of prior.curriculum.lektionen || []) {
-    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+  for (const prior of priors) for (const l of prior.curriculum?.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms, spec.level)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     // …and, on the item side, every function word the finished level actually SAID. An A1.2 learner
     // has met `dem` and `einen` in A1.1's dialogues; they are taught for that reason and not because
@@ -1250,7 +1298,7 @@ const FUNCTION_SET = LEVELS['a1.1'].functionSet;
  * function words of multi-word entries ("von Beruf", "Viertel nach"), which would make almost
  * anything look covered, so they are dropped: an entry is carried by its content word or not at all.
  */
-export function coverageForms(w, functionSet = FUNCTION_SET, irregulars = IRREGULAR_FORMS) {
+export function coverageForms(w, functionSet = FUNCTION_SET, irregulars = IRREGULAR_FORMS, level = 'a1.1') {
   // Meta entries („die Zahlen 0–10“) name a SET of words, not a word: no input can ever contain
   // them verbatim, so counting them as debt makes a ratchet that can never be paid off.
   if (w.meta) return new Set();
@@ -1259,7 +1307,7 @@ export function coverageForms(w, functionSet = FUNCTION_SET, irregulars = IRREGU
   // Entries whose only content IS a function word (gern, schon, bitte, danke, hallo) can never be
   // "missing" — RULE 5 lets any line use them — so they are outside this rule.
   if (!head.length || head.every((t) => functionSet.has(t))) return new Set();
-  const forms = formsOf(w, irregulars);
+  const forms = formsOf(w, irregulars, level);
   if (w.article) forms.delete(String(w.article).toLowerCase());
   for (const f of [...forms]) if (functionSet.has(f)) forms.delete(f);
   return forms;
@@ -1275,7 +1323,7 @@ export function wortfeldCoverage(c, extraItems, poolItems) {
   for (const it of extraItems) add(lektionOfItem(it.id), it);
   // Generated items have no Lektion in their id; they reach a Lektion through its practiceRule.
   const byTopic = new Map();
-  for (const l of c.lektionen || []) {
+  for (const l of c?.lektionen || []) {
     for (const t of (l.practiceRule?.topics) || []) byTopic.set(t, [...(byTopic.get(t) || []), l.nr]);
   }
   for (const it of poolItems) {
@@ -1301,7 +1349,7 @@ export function wortfeldCoverage(c, extraItems, poolItems) {
     const seen = new Set();
     for (const s of sources) for (const t of tokenise(s)) seen.add(t.toLowerCase());
     for (const w of l.wortfeld || []) {
-      const forms = coverageForms(w, spec.functionSet, spec.irregularForms);
+      const forms = coverageForms(w, spec.functionSet, spec.irregularForms, spec.level);
       if (!forms.size) continue;                       // greetings whose only token is a function word
       if (![...forms].some((f) => seen.has(f))) uncovered.push({ nr: l.nr, de: w.de });
     }
@@ -1390,9 +1438,9 @@ export function taughtUpTo(c, spec) {
   // build on every word A1.1 taught, and must not reach past that.
   const known = seedVocabulary(spec, true);
   const knownUpTo = new Map();
-  for (const l of c.lektionen || []) {
-    for (const w of l.wortfeld || []) for (const f of coverageForms(w, spec.functionSet, spec.irregularForms)) known.add(f);
-    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+  for (const l of c?.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of coverageForms(w, spec.functionSet, spec.irregularForms, spec.level)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms, spec.level)) known.add(f);
     // The Notice card is input the learner reads in this very Lektion, on the screen before the
     // practice items — so a word it teaches (the letter names Zett, Ypsilon, Jot, Vau, Eszett,
     // scharfes S in L1) counts as taught from here on (DaF review #4).
@@ -1496,7 +1544,7 @@ export function constructionHorizonIndex(level = 'a1.1') {
   const spec = levelSpec(level);
   if (!spec || !spec.constructionHorizon) return () => 0;
   const taughtIn = new Map();
-  for (const l of spec.curriculum.lektionen || []) if (!taughtIn.has(l.primarySlug)) taughtIn.set(l.primarySlug, l.nr);
+  for (const l of spec.curriculum?.lektionen || []) if (!taughtIn.has(l.primarySlug)) taughtIn.set(l.primarySlug, l.nr);
   const wechsel = wechselInventory(level);
   const adjectives = adjectiveLexicon(level);
   return (item) => {
@@ -1506,9 +1554,15 @@ export function constructionHorizonIndex(level = 'a1.1') {
       .replace(new RegExp(ITEM_FORMULA_RE.source, 'g'), ' ');
     for (const chunk of spec.licensedChunks || []) text = text.split(chunk).join(' ');
     if ((spec.neverForms || []).some((re) => new RegExp(re.source, re.flags).test(text))) return null;
-    if (constructionHits(text).some((h) => h.never && !licensedAdjective(spec, h))) return null;
-    if (attributiveAdjectives(text, adjectives).length) return null;
+    const constructions = constructionHits(text, spec.level);
+    if (constructions.some((h) => h.never && !licensedAdjective(spec, h))) return null;
+    if (untaughtAttributiveAdjectives(text, adjectives, spec).length) return null;
     let horizon = 0;
+    for (const hit of constructions.filter((h) => h.introducedBy)) {
+      const at = taughtIn.get(hit.introducedBy);
+      if (!at) return null;
+      horizon = Math.max(horizon, at);
+    }
     for (const combination of wechselCombinations(text)) {
       const at = wechsel.get(combination);
       if (at === undefined) return null;
@@ -1561,8 +1615,9 @@ const inventoryTexts = (l) => [
 export function wechselInventory(level) {
   const spec = levelSpec(level);
   const out = new Map();
-  const prior = spec?.seedFrom ? levelSpec(spec.seedFrom)?.curriculum : null;
-  for (const l of prior?.lektionen || []) for (const t of inventoryTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, 0);
+  for (const prior of priorLevelSpecs(spec, levelSpec)) {
+    for (const l of prior.curriculum?.lektionen || []) for (const t of inventoryTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, 0);
+  }
   for (const l of spec?.curriculum?.lektionen || []) for (const t of inventoryTexts(l)) for (const c of wechselCombinations(t)) if (!out.has(c)) out.set(c, l.nr);
   return out;
 }
@@ -1577,9 +1632,9 @@ const NUMBER_TOKEN_RE = /^(?:null|eins|ein|zwei|drei|vier|fünf|sechs|sieben|ach
 /** The course's adjectives, from its own Wortfeld and its own predicative uses (both levels). */
 export function adjectiveLexicon(level) {
   const spec = levelSpec(level);
-  const prior = spec?.seedFrom ? levelSpec(spec.seedFrom)?.curriculum : null;
+  const priors = priorLevelSpecs(spec, levelSpec).map((p) => p.curriculum);
   const out = new Set();
-  for (const c of [prior, spec?.curriculum].filter(Boolean)) {
+  for (const c of [...priors, spec?.curriculum].filter(Boolean)) {
     for (const l of c.lektionen || []) {
       for (const w of l.wortfeld || []) {
         const word = String(w.word || '').trim();
@@ -1601,6 +1656,14 @@ export const attributiveAdjectives = (text, lexicon) =>
   [...String(text || '').replace(LICENSED_FORMULAS_RE, ' ').matchAll(/\b([A-Za-zÄÖÜäöüß][a-zäöüß]*?)(e|en|er|es|em)\s+([A-ZÄÖÜ][a-zäöüß]+)/g)]
     .filter((m) => lexicon.has(m[1].toLowerCase()))
     .map((m) => m[0]);
+
+function untaughtAttributiveAdjectives(text, lexicon, spec) {
+  let remaining = String(text || '');
+  if (spec?.level === 'a2.1') {
+    for (const { hit } of adjectiveHitsA21(remaining)) remaining = remaining.split(hit).join(' ');
+  }
+  return attributiveAdjectives(remaining, lexicon);
+}
 
 /** A `never` hit the level teaches after all, as a fixed class of forms (A1.2's ordinals). */
 const licensedAdjective = (spec, h) => Boolean(spec?.licensedAdjectives && spec.licensedAdjectives.test(h.hit));
@@ -1783,7 +1846,7 @@ export function canDoRehearsal(c, extraItems) {
     for (const t of tokenise(rehearsalText(l, byLektion.get(l.nr) || []))) {
       const low = t.toLowerCase();
       slots.add(low);
-      for (const f of formsOf({ de: low }, spec.irregularForms)) slots.add(f);
+      for (const f of formsOf({ de: low }, spec.irregularForms, spec.level)) slots.add(f);
     }
     for (const line of l.canDo || []) {
       // SPLIT AT „ und “, AND EVERY HALF NEEDS ITS OWN EVIDENCE (round 17, DaF review #16, MAJOR 3;
@@ -1809,7 +1872,7 @@ export function canDoRehearsal(c, extraItems) {
           }
           return null;
         };
-        const backed = (k) => slots.has(k) || [...formsOf({ de: k }, spec.irregularForms)].some((f) => slots.has(f));
+        const backed = (k) => slots.has(k) || [...formsOf({ de: k }, spec.irregularForms, spec.level)].some((f) => slots.has(f));
         const hit = keywords.some((k) => {
           if (backed(k)) return true;
           const parts = split(k);
@@ -1906,7 +1969,7 @@ export function producedBeforeTaught(c, extraKnown) {
   const offenders = [];
   for (const l of c.lektionen || []) {
     // Grow the known set exactly as RULE 5 does, so „taught by this Lektion“ means the same thing.
-    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms, spec.level)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     for (const { i, de } of productionLines(l)) {
       for (const t of tokenise(de)) {
@@ -1961,7 +2024,7 @@ export function constructionsBeforeTaught(c, pool = null) {
   const adjectives = spec?.constructionHorizon ? adjectiveLexicon(c.level) : null;
   const deferred = (nr, text) => [
     ...deferredConstructionHits(c, nr, text).filter((h) => !(h.never && licensedAdjective(spec, h))),
-    ...(adjectives ? attributiveAdjectives(text, adjectives).map((hit) => ({ slug: 'adjective-declension', taught: null, hit })) : []),
+    ...(adjectives ? untaughtAttributiveAdjectives(text, adjectives, spec).map((hit) => ({ slug: 'adjective-declension', taught: null, hit })) : []),
     ...(wechsel ? wechselCombinations(text)
       .filter((comb) => !wechsel.has(comb) || wechsel.get(comb) > nr)
       .map((hit) => ({ slug: 'wechselpraeposition', taught: wechsel.get(hit) ?? null, hit })) : []),
@@ -2034,6 +2097,7 @@ const EXAM_TEIL_SURFACE_WHY = {
  */
 export function examTeileBacked(c) {
   const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  const examKey = c?.examKey || spec.examKey;
   const teil1 = spec.teil1MissionOrders || [];
   const offenders = [];
   for (const l of c.lektionen || []) {
@@ -2041,17 +2105,18 @@ export function examTeileBacked(c) {
     for (const teil of l.examTeile || []) {
       const family = String(teil).split(' ')[0];
       const covers = EXAM_TEIL_COVERS[family];
+      const writing = family === 'Schreiben' ? writingFormat(examKey, teil) : null;
       let why = null;
       if (covers && !covers(l)) {
         why = EXAM_TEIL_SURFACE_WHY[family];
-      } else if (teil === 'Sprechen Teil 1'
+      } else if (examFormat(examKey).parts.some((part) => part.teil === teil && part.format === 'self-introduction')
         && !SELF_INTRO_RE.test(open.promptDe || '')
         && !(open.missionOrder !== null && open.missionOrder !== undefined && teil1.includes(open.missionOrder))) {
         why = 'the sprechen.open prompt is no self-introduction and missionOrder is not the level’s Teil-1 mission';
-      } else if (teil === 'Schreiben Teil 1' && l.schreiben?.kind !== 'formular') {
-        why = `schreiben.kind is "${l.schreiben?.kind}", Teil 1 is a Formular`;
-      } else if (teil === 'Schreiben Teil 2' && l.schreiben?.kind !== 'mitteilung') {
-        why = `schreiben.kind is "${l.schreiben?.kind}", Teil 2 is a Mitteilung`;
+      } else if (writing && l.schreiben?.kind !== writing.kind) {
+        why = `schreiben.kind is "${l.schreiben?.kind}", ${teil.replace('Schreiben ', '')} is a ${writing.label}`;
+      } else if (writing?.textsorte && l.schreiben?.textsorte !== writing.textsorte) {
+        why = `schreiben.textsorte is "${l.schreiben?.textsorte}", ${teil.replace('Schreiben ', '')} is a ${writing.label}`;
       }
       if (why) offenders.push({ nr: l.nr, teil, why });
     }
@@ -2470,7 +2535,7 @@ export function wortfeldInputCoverage(c, spec = null) {
   for (const l of c.lektionen || []) {
     const seen = inputSurfaceTokens(l);
     for (const w of l.wortfeld || []) {
-      const forms = coverageForms(w, s.functionSet, s.irregularForms);
+      const forms = coverageForms(w, s.functionSet, s.irregularForms, s.level);
       if (!forms.size) continue;                     // meta entries and bare function words
       if (![...forms].some((f) => seen.has(f))) uncovered.push({ nr: l.nr, de: w.de });
     }
@@ -2521,7 +2586,7 @@ export function gradedTaskWordsWithoutInput(c, spec = null) {
     const seen = inputSurfaceTokens(l);
     const lowerTask = taskTexts.map((t) => t.toLowerCase());
     for (const entry of l.wortfeld || []) {
-      const forms = coverageForms(entry, s.functionSet, s.irregularForms);
+      const forms = coverageForms(entry, s.functionSet, s.irregularForms, s.level);
       if (!forms.size) continue;
       const headword = String(entry.word || entry.de || '').replace(/^(der|die|das)\s+/i, '').trim();
       const named = /\s/.test(headword)
@@ -2998,7 +3063,8 @@ export const PERSONAS_A12 = {
 };
 
 /** The per-level persona tables, keyed by the registry row's `personaSource`. */
-export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11, 'a1.2': PERSONAS_A12 };
+export const PERSONAS_A21 = { ...PERSONAS_A12 };
+export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11, 'a1.2': PERSONAS_A12, 'a2.1': PERSONAS_A21 };
 
 const alt = (list) => list.join('|');
 // SELF — the person asserts something about themselves: a dialogue line they speak, or the
@@ -3186,6 +3252,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
   const L = c.lektionen || [];
   const spec = levelSpec(c?.level);
   if (!spec) return [`level "${c?.level}" is not registered in LEVELS — add its row before validating`];
+  const exam = examFormat(c.examKey || spec.examKey);
+  const examTeile = exam.teile;
   extraItems = extraItems ?? loadExtraItems(spec.level);
   poolItems = poolItems ?? loadPoolItems(spec.level);
 
@@ -3234,11 +3302,11 @@ export function validateCurriculum(c, extraItems, poolItems) {
     const teile = l.examTeile || [];
     if (teile.length < 1 || teile.length > 3) fail(`Lektion ${l.nr}: ${teile.length} examTeile, expected 1–3`);
     for (const t of teile) {
-      if (!EXAM_TEILE.includes(t)) fail(`Lektion ${l.nr}: unknown exam Teil "${t}"`);
+      if (!examTeile.includes(t)) fail(`Lektion ${l.nr}: unknown exam Teil "${t}"`);
       teileSeen.add(t);
     }
   });
-  for (const t of EXAM_TEILE) if (!teileSeen.has(t)) fail(`exam Teil "${t}" is never rehearsed`);
+  for (const t of examTeile) if (!teileSeen.has(t)) fail(`exam Teil "${t}" is never rehearsed`);
 
   // ---- RULE 3 (grammar slugs) ---------------------------------------------------------------
   const primaryCount = new Map();
@@ -3263,7 +3331,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
   let withId = 0;
   L.forEach((l) => {
     const wf = l.wortfeld || [];
-    if (wf.length < 15 || wf.length > 25) fail(`Lektion ${l.nr}: ${wf.length} Wortfeld entries, expected 15–25`);
+    const maxWortfeld = spec.maxWortfeldEntries ?? 25;
+    if (wf.length < 15 || wf.length > maxWortfeld) fail(`Lektion ${l.nr}: ${wf.length} Wortfeld entries, expected 15–${maxWortfeld}`);
     let added = 0;
     for (const w of wf) {
       total += 1;
@@ -3288,7 +3357,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
   // ---- RULE 5 (dialogue) ---------------------------------------------------------------------
   const known = seedVocabulary(spec);
   L.forEach((l) => {
-    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms, spec.level)) known.add(f);
     const d = l.dialog || {};
     const lines = d.lines || [];
     if (!d.title || !d.setting) fail(`Lektion ${l.nr}: dialog needs title and setting`);
@@ -3298,7 +3367,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
     for (const sp of speakers) if (!sp || !/^[A-ZÄÖÜ]/.test(sp)) fail(`Lektion ${l.nr}: speaker "${sp}" is not a name`);
     lines.forEach((line, i) => {
       if (!line.de || !line.en) fail(`Lektion ${l.nr} line ${i}: missing de/en`);
-      if (words(line.de).length > 12) fail(`Lektion ${l.nr} line ${i}: ${words(line.de).length} words, max 12`);
+      const maxLine = spec.maxDialogueWords ?? 12;
+      if (words(line.de).length > maxLine) fail(`Lektion ${l.nr} line ${i}: ${words(line.de).length} words, max ${maxLine}`);
       for (const t of tokenise(line.de)) {
         if (!known.has(t.toLowerCase())) fail(`Lektion ${l.nr} line ${i}: "${t}" is neither in a Wortfeld up to here nor a function word`);
       }
@@ -3315,7 +3385,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
     if (!n.title) fail(`Lektion ${l.nr}: notice needs a title`);
     if (n.ruleSlug !== l.primarySlug) fail(`Lektion ${l.nr}: notice.ruleSlug must be the primarySlug`);
     const len = words(n.bodyDe || '').length;
-    if (!len || len > 60) fail(`Lektion ${l.nr}: notice.bodyDe is ${len} words, expected 1–60`);
+    const maxNotice = spec.maxNoticeWords ?? 60;
+    if (!len || len > maxNotice) fail(`Lektion ${l.nr}: notice.bodyDe is ${len} words, expected 1–${maxNotice}`);
     if (/[<>#]|\]\(/.test(n.bodyDe || '')) fail(`Lektion ${l.nr}: notice.bodyDe must be plain text with optional **bold**`);
     const dl = (l.dialog?.lines || []).map((x) => x.de);
     if ((n.examples || []).length !== 2) fail(`Lektion ${l.nr}: notice needs exactly 2 examples`);
@@ -3351,7 +3422,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
     if (new Set(s.readAloud || []).size !== (s.readAloud || []).length) fail(`Lektion ${l.nr}: readAloud lines must differ`);
     for (const i of s.readAloud || []) if (!Number.isInteger(i) || i < 0 || i >= lineCount) fail(`Lektion ${l.nr}: readAloud index ${i} out of range`);
     const open = s.open || {};
-    if (!EXAM_TEILE.includes(open.teil) || !open.teil.startsWith('Sprechen')) fail(`Lektion ${l.nr}: sprechen.open.teil must be a Sprechen Teil`);
+    if (!examTeile.includes(open.teil) || !open.teil.startsWith('Sprechen')) fail(`Lektion ${l.nr}: sprechen.open.teil must be a Sprechen Teil`);
     if (!(l.examTeile || []).includes(open.teil)) fail(`Lektion ${l.nr}: sprechen.open.teil "${open.teil}" is not in examTeile`);
     if (!open.promptDe) fail(`Lektion ${l.nr}: sprechen.open needs a promptDe`);
     if ((open.hintWords || []).length !== 3) fail(`Lektion ${l.nr}: sprechen.open needs exactly 3 hintWords`);
@@ -3362,14 +3433,16 @@ export function validateCurriculum(c, extraItems, poolItems) {
     }
 
     const w = l.schreiben || {};
-    const expectedKind = l.nr % 2 === 1 ? 'formular' : 'mitteilung';
+    const expectedWriting = exam.writing[(l.nr - 1) % exam.writing.length];
+    const expectedKind = expectedWriting.kind;
     if (w.kind !== expectedKind) fail(`Lektion ${l.nr}: schreiben.kind must alternate (expected ${expectedKind})`);
+    if (expectedWriting.textsorte && w.textsorte !== expectedWriting.textsorte) fail(`Lektion ${l.nr}: schreiben.textsorte must alternate (expected ${expectedWriting.textsorte})`);
     if (!w.taskDe) fail(`Lektion ${l.nr}: schreiben needs a taskDe`);
     // One word range per Textsorte, not one constant: a filled five-field Formular is ~10 words and
     // a complete SD1 Teil 2 Mitteilung (Anrede + 3 Leitpunkte + Gruß) is 35–40, which the old
     // maxWords 30 cut off. netlify/functions/evaluate-writing.mjs derives its floor from the same
     // register, so the two halves move together (DaF review #2, §B).
-    const range = w.kind === 'formular' ? [5, 40] : [25, 45];
+    const range = exam.writing.find((form) => form.kind === w.kind && (!form.textsorte || form.textsorte === w.textsorte))?.range || exam.writing.at(-1).range;
     if (w.minWords !== range[0] || w.maxWords !== range[1]) fail(`Lektion ${l.nr}: schreiben word range ${w.minWords}–${w.maxWords}, expected ${range[0]}–${range[1]} for a ${w.kind}`);
     // The sample's length is RULE 17's business and RULE 17 reads the BANK. The constant that used
     // to stand here — „longer than 30 words“ — was a third number beside the two real ones, and it
@@ -3586,6 +3659,10 @@ if (isMain) {
     process.exit(2);
   }
   const c = spec.curriculum;
+  if (!c) {
+    console.error(`✗ ${spec.code}: engine policy registered; curriculum module not built yet`);
+    process.exit(2);
+  }
   const r = spec.ratchets;
   const errors = validateCurriculum(c);
   const wf = c.lektionen.flatMap((l) => l.wortfeld);

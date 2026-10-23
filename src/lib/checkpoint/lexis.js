@@ -36,9 +36,12 @@ import {
   DIALOG_NAMES as DIALOG_NAMES_A11,
 } from '../../data/curricula/a11.js';
 import {
+  CURRICULUM_A12,
   FUNCTION_WORDS as FUNCTION_WORDS_A12,
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../../data/curricula/a12.js';
+import { priorLevelSpecs } from '../../data/curricula/inheritance.js';
+import { FUNCTION_WORDS_A21_ADDED, IRREGULAR_FORMS_A21_ADDED, formsOfA21 } from '../../data/curricula/a21-language.js';
 
 
 /** validate-curriculum.mjs: IRREGULAR_FORMS. */
@@ -99,7 +102,8 @@ function verbForms(inf) {
 }
 
 /** Every form of one Wortfeld entry an input may legitimately use (validate-curriculum.mjs: formsOf). */
-export function formsOf(entry, irregulars = IRREGULAR_FORMS) {
+export function formsOf(entry, irregulars = IRREGULAR_FORMS, level = 'a1.1') {
+  if (String(level).toLowerCase() === 'a2.1') return formsOfA21(entry, irregulars);
   const forms = new Set();
   for (const t of tokenise(entry.de)) forms.add(t.toLowerCase());
   for (const t of tokenise(entry.word || '')) forms.add(t.toLowerCase());
@@ -140,6 +144,7 @@ const lowerSet = (list) => new Set(list.map((w) => String(w).toLowerCase()));
  */
 export const LEXIS_LEVELS = {
   'a1.1': {
+    inheritGloss: false,
     curriculum: CURRICULUM_A11,
     functionSet: lowerSet(FUNCTION_WORDS_A11),
     nameSet: lowerSet(DIALOG_NAMES_A11),
@@ -147,9 +152,8 @@ export const LEXIS_LEVELS = {
     seedFrom: null,
   },
   'a1.2': {
-    // Only the level a seeded level SEEDS FROM has to be here; A1.2's own module
-    // is never read by this file, so the bundle is not made to carry it twice.
-    curriculum: null,
+    inheritGloss: false,
+    curriculum: CURRICULUM_A12,
     functionSet: lowerSet(FUNCTION_WORDS_A12),
     nameSet: lowerSet(DIALOG_NAMES_A12),
     irregularForms: { ...IRREGULAR_FORMS, ...IRREGULAR_FORMS_A12 },
@@ -157,6 +161,13 @@ export const LEXIS_LEVELS = {
     // A1.1 Wortfeld union plus its notice cards (validate-curriculum: seedFrom).
     seedFrom: 'a1.1',
   },
+};
+
+LEXIS_LEVELS['a2.1'] = {
+  level: 'a2.1', curriculum: null, seedFrom: 'a1.2',
+  functionSet: lowerSet([...FUNCTION_WORDS_A12, ...FUNCTION_WORDS_A21_ADDED]),
+  nameSet: lowerSet(DIALOG_NAMES_A12),
+  irregularForms: { ...IRREGULAR_FORMS, ...IRREGULAR_FORMS_A12, ...IRREGULAR_FORMS_A21_ADDED },
 };
 
 /** The lexis row for a level (any case), or null when the level has no tables. */
@@ -167,7 +178,7 @@ export const lexisSpec = (level) => LEXIS_LEVELS[String(level || '').toLowerCase
  * coverageForms) — formsOf() minus the article and the function words, so an
  * entry is carried by its content word or not at all.
  */
-export function coverageForms(w, functionSet, irregulars = IRREGULAR_FORMS) {
+export function coverageForms(w, functionSet, irregulars = IRREGULAR_FORMS, level = 'a1.1') {
   // Meta entries („die Zahlen 0–10“) name a SET of words, not a word: no input can ever contain
   // them verbatim, so counting them as debt makes a ratchet that can never be paid off.
   if (w.meta) return new Set();
@@ -176,7 +187,7 @@ export function coverageForms(w, functionSet, irregulars = IRREGULAR_FORMS) {
   // Entries whose only content IS a function word (gern, schon, bitte, danke, hallo) can never be
   // "missing" — RULE 5 lets any line use them — so they are outside this rule.
   if (!head.length || head.every((t) => functionSet.has(t))) return new Set();
-  const forms = formsOf(w, irregulars);
+  const forms = formsOf(w, irregulars, level);
   if (w.article) forms.delete(String(w.article).toLowerCase());
   for (const f of [...forms]) if (functionSet.has(f)) forms.delete(f);
   return forms;
@@ -238,9 +249,9 @@ const ITEM_FORMULA_RE = new RegExp(ITEM_FORMULAS.join('|'), 'g');
  */
 function seedVocabulary(spec, priorCurriculum) {
   const known = new Set([...spec.functionSet, ...spec.nameSet]);
-  if (!priorCurriculum) return known;
-  for (const l of priorCurriculum.lektionen || []) {
-    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+  const priors = priorLevelSpecs(spec, lexisSpec);
+  for (const [index, prior] of priors.entries()) for (const l of (index === 0 && priorCurriculum ? priorCurriculum : prior.curriculum)?.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms, spec.level)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
   }
   return known;
@@ -257,12 +268,11 @@ function seedVocabulary(spec, priorCurriculum) {
 export function knownUpTo(curriculum, lastNr, priorCurriculum = null) {
   const spec = lexisSpec(curriculum?.level);
   if (!spec) return null;
-  const prior = spec.seedFrom ? (priorCurriculum || lexisSpec(spec.seedFrom)?.curriculum || null) : null;
-  const known = seedVocabulary(spec, prior);
+  const known = seedVocabulary(spec, priorCurriculum);
   for (const l of curriculum?.lektionen || []) {
     if (!(l.nr <= lastNr)) continue;
-    for (const w of l.wortfeld || []) for (const f of coverageForms(w, spec.functionSet, spec.irregularForms)) known.add(f);
-    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of coverageForms(w, spec.functionSet, spec.irregularForms, spec.level)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms, spec.level)) known.add(f);
     // The Notice card is input the learner reads in this very Lektion, on the
     // screen before the practice items, so what it teaches counts as taught.
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());

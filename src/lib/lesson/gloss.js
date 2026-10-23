@@ -1,4 +1,6 @@
 import { curriculumFor } from '../../data/curricula/index.js';
+import { priorLevelSpecs } from '../../data/curricula/inheritance.js';
+import { lexisSpec } from '../checkpoint/lexis.js';
 
 /**
  * Tap-word gloss for DialogStage. A dialogue line is tokenised on whitespace;
@@ -41,10 +43,13 @@ export function parseLektionId(lektionId) {
  * word count, longest first, so phrase entries ("Wie geht es Ihnen?") win
  * over any single-word entry they contain.
  */
-export function buildLexicon(level, nr) {
-  const curriculum = curriculumFor(level);
+export function buildLexicon(level, nr, resolveCurriculum = curriculumFor) {
+  const curriculum = resolveCurriculum(level);
   if (!curriculum || !Number.isFinite(nr)) return [];
-  const lektionen = curriculum.lektionen.slice(0, nr);
+  // New levels inherit by default; the live A1 rows preserve their same-level gloss contract.
+  const spec = lexisSpec(level);
+  const inherited = spec?.inheritGloss !== false ? priorLevelSpecs(spec, lexisSpec).reverse().flatMap((p) => p.curriculum?.lektionen || []) : [];
+  const lektionen = [...inherited, ...curriculum.lektionen.slice(0, nr)];
   const byKey = new Map();
   for (const lektion of lektionen) {
     for (const w of lektion.wortfeld || []) {

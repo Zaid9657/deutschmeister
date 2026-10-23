@@ -1,0 +1,32 @@
+{
+  "a1.1": {
+    "lexicon": "0781716524601b910e1268ba56af6ac42737e6bf831d71ccdec270b81f4d4250",
+    "lexiconSize": 1239,
+    "taught": "8be6eb059d96c2bfd1030ed5fa30d1ccc30a05acdb648a7b18225a2f2c5a8d17",
+    "browserLexicons": "40e01db344a7eb7e1957105b7db7c63de2fe87d9ff00525a4c81936ef1ac2efe",
+    "wordForms": "6abc38c24568ffa4e83de5d1dad1ff350114a468a4930bd832e16bfbffffd4c8",
+    "browserWordForms": "6abc38c24568ffa4e83de5d1dad1ff350114a468a4930bd832e16bfbffffd4c8",
+    "wechsel": "741b27057138f465bbeeee81d67b8a83f464ae5e258600457a81bf7bb925f8f4",
+    "adjectives": "c730f29accaf12d8196987bc4cc2d205a8e5b7a6239d9cc0aec08e16e217dc3b",
+    "horizons": "1436890c5ed4cf42d1c1c9daeeca121dda8a02585e32ceda1799bd7ca51e46de",
+    "lines": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "examCoverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "ratchets": "4a590bd170e5a98a3d2b30571c065b44028060cf049e909faf231c156495444a",
+    "checkpoints": "a2a43cd8fdfc64119385ffedcf826aa9d16ed6a290f598ce1634388399819c55"
+  },
+  "a1.2": {
+    "lexicon": "6dcf81f243c1a19df0ada169694c3fd4496afa66b7d58529f01370c9f27bfe04",
+    "lexiconSize": 2074,
+    "taught": "7c0a8a182f6ec4f51e52db19a8ff9e01183b98bc39e6c7c9963d595a23df731b",
+    "browserLexicons": "d43bbd5bf7ae84a83094309761847780b3359f775a6aca55a66afb93297da276",
+    "wordForms": "8d9a8ac2de747ca5b544fb2fdda82d7e063bd698ebc98e463250eb63949a8031",
+    "browserWordForms": "6ce0cb90f7edf5f9059a4a2d472c0d063300a9e8b9b007bb071c9420aea7ebde",
+    "wechsel": "7cca01bce33cd98dd8848b142527ff647cba17adab4c5ecbd86cd2ef678a2636",
+    "adjectives": "fc4a00f4081bbd25de52e19b5c641dcabebf833b5514c443ec27a621f2265065",
+    "horizons": "9dbd917a511b9794a39b5fd41c41f8999323c3d999e9266c3a467e6ca769b62b",
+    "lines": "0a669032cf03dc1729e1685a443661122bc73425f9daa9fd84abf1f97e54223c",
+    "examCoverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "ratchets": "4e63ab865d40ab0b55ac7fcca414a9a5d6b37b6a2b62eff69345e4c9df41c698",
+    "checkpoints": "8deefab981eed6f91693380d82251aaef5efe40d091a3a2623b3b23faa3957fd"
+  }
+}

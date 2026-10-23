@@ -57,6 +57,7 @@
 // test a learner already saw.
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.js';
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
+import { examFormat } from '../../data/curricula/examFormats.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
 import { leaksAnswer, planPractice } from '../lesson/buildLesson.js';
@@ -2113,6 +2114,9 @@ function lesenItem(checkpoint, i, wantRichtig, picked) {
  * reports — the slot ladder. Only the kept items spend their lines and take their seats.
  */
 function buildLesen(ctx) {
+  if (examFormat(ctx.curriculum.examKey).checkpointReading !== 'dialogue-true-false') {
+    throw new Error(`${ctx.curriculum.examKey}: authored exam Lesen surfaces are required (G9)`);
+  }
   if (ctx.checkpoint.lesen) return authoredLesen(ctx, ctx.checkpoint.lesen);
   const chosen = chooseLesen(ctx) || lesenAttempt(ctx, ctx.rng);
   for (const key of chosen.lineKeys) ctx.usedLineKeys.add(key);
@@ -2352,13 +2356,13 @@ function buildSchreiben(ctx) {
  * key it knows. Returns null when the curriculum carries no taskKey (the test
  * fixture) or the bank has no such task — then Schreiben stays three drills.
  */
-export function chapterWritingTask(chapter, level) {
+export function chapterWritingTask(chapter, level, examKey = 'goethe_a1') {
   const lektion = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey);
   if (!lektion) return null;
   const taskKey = lektion.schreiben.taskKey;
   const bank =
-    courseWritingTasks(level).find((t) => t.taskKey === taskKey) ||
-    writingTaskByKey('goethe_a1', taskKey);
+    courseWritingTasks(level).find((t) => t.taskKey === taskKey && t.examKey === examKey) ||
+    writingTaskByKey(examKey, taskKey);
   return bank ? { lektion, schreiben: lektion.schreiben, bank } : null;
 }
 
@@ -2367,8 +2371,8 @@ export function chapterWritingTask(chapter, level) {
  * with new people and facts, so the checkpoint measures transfer instead of replaying the lesson's
  * task (Codex review, 2026-10-07). Same shape as chapterWritingTask; null without a key.
  */
-export function checkpointWritingTask(checkpoint, chapter) {
-  const bank = checkpoint?.writingTaskKey ? writingTaskByKey('goethe_a1', checkpoint.writingTaskKey) : null;
+export function checkpointWritingTask(checkpoint, chapter, examKey = 'goethe_a1') {
+  const bank = checkpoint?.writingTaskKey ? writingTaskByKey(examKey, checkpoint.writingTaskKey) : null;
   if (!bank) return null;
   const lektion = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey) || (chapter || []).at(-1);
   const kind = bank.register === 'formular' ? 'formular' : 'mitteilung';
@@ -2376,8 +2380,8 @@ export function checkpointWritingTask(checkpoint, chapter) {
 }
 
 /** That task as a checkpoint item — rendered by GradedWriting on CheckpointPage. */
-function gradedWritingItem(checkpoint, chapter, level) {
-  const found = checkpointWritingTask(checkpoint, chapter) || chapterWritingTask(chapter, level);
+function gradedWritingItem(checkpoint, chapter, level, examKey) {
+  const found = checkpointWritingTask(checkpoint, chapter, examKey) || chapterWritingTask(chapter, level, examKey);
   if (!found) return null;
   const { lektion, schreiben: s, bank } = found;
   // The English twin the page prints under the task (CheckpointPage reads task.taskEn).
@@ -2668,7 +2672,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   const earlierRounds = Array.from({ length: ctx.round }, (_, k) => earlierPaper(curriculum, checkpoint, pool, k)).flat();
   ctx.spentPool = new Set(earlierRounds.map((i) => i.poolItemId).filter(Boolean));
   ctx.spentLesen = new Set(earlierRounds.filter((i) => i.section === 'lesen').map((i) => normaliseStatement(i.trueStatement)));
-  ctx.graded = gradedWritingItem(checkpoint, chapter, curriculum.level);
+  ctx.graded = gradedWritingItem(checkpoint, chapter, curriculum.level, curriculum.examKey);
   ctx.seat(ctx.graded);
   // ORDER OF PLACEMENT ≠ order on the page. The three line-drawn sections go
   // first because a dialogue line cannot move (usedLineKeys, DaF review #8), the

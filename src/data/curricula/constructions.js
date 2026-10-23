@@ -228,21 +228,45 @@ export const CONSTRUCTION_PATTERNS = [
  * caller decides which slugs are still in the future. Returns
  * `{ slug, label, hit }`, `hit` being the matched text.
  */
-export const constructionHits = (sentence) => {
+export const constructionHits = (sentence, level = 'a1.1') => {
   const text = String(sentence || '');
   const out = [];
   for (const { slug, label, re, skip, never } of CONSTRUCTION_PATTERNS) {
+    if (String(level).toLowerCase() === 'a2.1' && slug === 'adjective-declension') continue;
     for (const m of text.matchAll(new RegExp(re.source, re.flags))) {
       if (skip && skip(m, text)) continue;
       out.push({ slug, label, hit: m[0].trim(), never: !!never });
     }
   }
+  if (String(level).toLowerCase() === 'a2.1') out.push(...adjectiveHitsA21(text));
   return out;
 };
 
+// Article-led Nom/Akk at adjective-endings-intro; dative -en at prepositions-dative.
+// The primary slugs, rather than lesson numbers, let a moved lesson move its horizon too.
+export function adjectiveHitsA21(text) {
+  const determiner = '(?:der|die|das|den|dem|ein(?:e|en|em|er)?|kein(?:e|en|em|er)?|(?:mein|dein|sein|ihr|unser)(?:e|en|em|er)?|euer|eur(?:e|en|em|er)|im|am|beim|vom|zum|zur)';
+  const re = new RegExp(`\\b(${determiner})\\s+([a-zäöüß]+(?:e|en|er|es))\\s+([A-ZÄÖÜ][a-zäöüß]+)`, 'g');
+  // Case-insensitive determiners, but the adjective must remain lower case and the noun upper case.
+  const source = String(text || '').replace(/\b(?:Der|Die|Das|Den|Dem|Ein\w*|Kein\w*|Mein\w*|Dein\w*|Sein\w*|Ihr\w*|Unser\w*|Euer|Eur\w*|Im|Am|Beim|Vom|Zum|Zur)\b/g, (s) => s.toLowerCase());
+  return [...source.matchAll(re)].filter((m) => !isMetaNoun(m[3]) && !NOT_AN_ADJECTIVE_RE.test(m[2])).map((m) => {
+    const before = source.slice(0, m.index);
+    const dative = /^(?:dem|einem|keinem|.*em|im|am|beim|vom|zum|zur)$/.test(m[1])
+      || (/en$/.test(m[2]) && /^(?:der|einer|keiner|.*er)$/.test(m[1]))
+      || /\b(?:mit|bei|aus|von|zu|nach|seit|gegenüber)\s*$/i.test(before)
+      || /\b(?:helf\w*|hilf\w*|dank\w*|schenk\w*|geb\w*|gib\w*|zeig\w*|schick\w*)\s*$/i.test(before);
+    return {
+      slug: 'adjective-declension', label: 'Adjektiv mit Endung vor einem Nomen',
+      hit: String(text).slice(m.index, m.index + m[0].length), never: false,
+      introducedBy: dative ? 'prepositions-dative' : 'adjective-endings-intro',
+    };
+  });
+}
+
 /** The Lektion of a curriculum whose `primarySlug` is `slug` — the curriculum's own answer. */
 export const introducedAt = (curriculum, slug) => {
-  const l = (curriculum?.lektionen || []).find((x) => x.primarySlug === slug);
+  const primary = curriculum?.level?.toLowerCase() === 'a2.1' && slug === 'adjective-declension' ? 'adjective-endings-intro' : slug;
+  const l = (curriculum?.lektionen || []).find((x) => x.primarySlug === primary);
   return l ? l.nr : null;
 };
 
@@ -251,8 +275,8 @@ export const introducedAt = (curriculum, slug) => {
  * `lektionNr`. One function, used by the card guard and by RULE 15b.
  */
 export const deferredConstructionHits = (curriculum, lektionNr, sentence) =>
-  constructionHits(sentence)
-    .map((h) => ({ ...h, taught: h.never ? null : introducedAt(curriculum, h.slug) }))
+  constructionHits(sentence, curriculum?.level)
+    .map((h) => ({ ...h, taught: h.never ? null : introducedAt(curriculum, h.introducedBy || h.slug) }))
     // `never` is the strongest case of deferred: the level teaches the pattern in NO
     // Lektion, so it is in the future of every one of them.
-    .filter((h) => h.never || (h.taught && h.taught > lektionNr));
+    .filter((h) => h.never || (h.introducedBy && !h.taught) || (h.taught && h.taught > lektionNr));
