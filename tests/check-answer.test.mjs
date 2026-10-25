@@ -12,7 +12,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   checkAnswer, tagError, isCaseTask, isDictationTask, checkOptionsFor, isChoiceItem,
-  normalizeSpelling, spellingApplies, STRICT_TOPIC,
+  normalizeSpelling, spellingApplies, spelledPrompt, STRICT_TOPIC,
   RESULT, ERROR_TAGS,
 } from '../src/lib/lesson/check.js';
 
@@ -29,10 +29,70 @@ test('a spelled-out word is one answer however the learner separates it', () => 
 });
 
 test('spelling mode forgives the separator, not the letters', () => {
-  assert.notEqual(checkAnswer('HALO', ['H-A-L-L-O']).result, RESULT.CORRECT);
-  assert.notEqual(checkAnswer('H-A-L-O', ['H-A-L-L-O']).result, RESULT.CORRECT);
+  // A dropped letter is the very thing a spelling task asks about: wrong, not a forgiven typo — every
+  // grading site counts TYPO as correct (2026-10-25 review, C-052).
+  assert.equal(checkAnswer('HALO', ['H-A-L-L-O']).result, RESULT.WRONG);
+  assert.equal(checkAnswer('H-A-L-O', ['H-A-L-L-O']).result, RESULT.WRONG);
   assert.equal(checkAnswer('TSCHÜSS', ['T-S-C-H-Ü-S-S']).result, RESULT.CORRECT);
   assert.equal(checkAnswer('tschuess', ['T-S-C-H-Ü-S-S']).result, RESULT.CORRECT);
+  // The checkpoint 1 Hören dictation of a spelled name: the K not heard is the K not written.
+  const cp = { stage: 'listening', kind: 'dictation', mode: 'typed', accepted: ['C-H-A-K-I-R-I.'] };
+  assert.equal(checkAnswer('CHAIRI', cp.accepted, checkOptionsFor(cp)).result, RESULT.WRONG);
+  assert.equal(checkAnswer('Chakiri', cp.accepted, checkOptionsFor(cp)).result, RESULT.CORRECT);
+});
+
+test('a prompt that prints the letters makes the task a spelling task, whatever the key looks like', () => {
+  // „Lesen Sie die Buchstaben: W-I-L-L-K-O-M-M-E-N. Schreiben Sie das Wort" has the plain word as its
+  // key, so spellingApplies(key) never saw it and „Wilkommen" was forgiven (C-052).
+  const read = { type: 'fill_blank', topic: 'alphabet-pronunciation', questionDe: 'Lesen Sie die Buchstaben: W-I-L-L-K-O-M-M-E-N. Schreiben Sie das Wort: ___', answer: 'Willkommen', accepted: ['Willkommen'] };
+  assert.equal(spelledPrompt(read), true);
+  assert.equal(checkOptionsFor(read).spelling, true);
+  assert.equal(checkAnswer('Wilkommen', read.accepted, checkOptionsFor(read)).result, RESULT.WRONG);
+  assert.equal(checkAnswer('Willkommen', read.accepted, checkOptionsFor(read)).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('W-I-L-L-K-O-M-M-E-N', read.accepted, checkOptionsFor(read)).result, RESULT.CORRECT);
+  // „Buchstabieren Sie …" is the instruction; the verb inside a word bag is content.
+  assert.equal(spelledPrompt({ questionDe: 'Buchstabieren Sie den Gruß: Hallo → ___' }), true);
+  assert.equal(spelledPrompt({ questionDe: 'Bilden Sie den Satz: [ich / buchstabieren / Ana]' }), false);
+  assert.equal(spelledPrompt({ promptDe: 'Lesen Sie die Buchstaben: G-R-U-ß. Schreiben Sie das Wort: ___' }), true, 'a checkpoint prompt');
+  assert.equal(spelledPrompt({ questionDe: 'Wie geht es ___?' }), false);
+  // The rule over the live pools: every task whose prompt prints its letters takes no typo — drop any
+  // one letter of its answer and it is wrong.
+  let measured = 0;
+  for (const file of ['a11', 'a12']) {
+    const pool = JSON.parse(readFileSync(new URL(`../src/data/lessonPools/${file}.json`, import.meta.url), 'utf8'));
+    for (const item of pool.items.filter((i) => spelledPrompt(i) && !isChoiceItem(i))) {
+      const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
+      const word = String(item.answer);
+      if (word.replace(/[^\p{L}]/gu, '').length < 5) continue;
+      measured += 1;
+      for (let i = 0; i < word.length; i += 1) {
+        if (!/\p{L}/u.test(word[i])) continue;
+        const dropped = word.slice(0, i) + word.slice(i + 1);
+        if (accepted.some((a) => a.toLowerCase() === dropped.toLowerCase())) continue;
+        assert.equal(checkAnswer(dropped, accepted, checkOptionsFor(item)).result, RESULT.WRONG, `${file} ${item.id}: „${dropped}" for „${word}"`);
+      }
+    }
+  }
+  assert.ok(measured >= 10, `the letter tasks of A1.1 L1/L2 are measured (${measured})`);
+});
+
+test('on a case task a typo does not buy back the lost polite capital', () => {
+  // „Wie geht es ihnen?" is wrong on extra-a11-l01-19; „Wie geht es ihnenn?" — the same miss plus a
+  // spelling slip — came back TYPO and was counted correct (2026-10-25 review, X-042).
+  const item = { type: 'sentence_building', topic: 'alphabet-pronunciation', caseSensitive: true, answer: 'Wie geht es Ihnen?', accepted: ['Wie geht es Ihnen?', 'Wie geht es Ihnen'] };
+  const grade = (typed) => checkAnswer(typed, item.accepted, checkOptionsFor(item)).result;
+  assert.equal(grade('Wie geht es ihnen?'), RESULT.WRONG);
+  assert.equal(grade('Wie geht es ihnenn?'), RESULT.WRONG);
+  assert.equal(grade('Wie gehtt es ihnen?'), RESULT.WRONG);
+  assert.equal(grade('Wie gehtt es Ihnen?'), RESULT.TYPO, 'one slip with the capital in place is still a slip');
+  assert.equal(grade('Wie geht es Ihnenn?'), RESULT.TYPO);
+  // Off a case task the capital costs nothing extra, as before.
+  assert.equal(checkAnswer('Wie geht es ihnenn?', item.accepted).result, RESULT.TYPO);
+  // The live item.
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const live = pool.items.find((i) => i.id === 'extra-a11-l01-19');
+  assert.equal(live.caseSensitive, true);
+  assert.equal(checkAnswer('Wie geht es ihnenn?', live.accepted, checkOptionsFor(live)).result, RESULT.WRONG);
 });
 
 test('spelling is detected from the expected answer, and can be forced', () => {

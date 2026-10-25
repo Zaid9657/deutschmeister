@@ -929,9 +929,13 @@ const MODAL_ADVERB_RE = /^(?:zusammen|gern|gerne|oft|immer|manchmal|bald|später
 /** The copula forms A1.1 meets: their complement is a predicate („Ich bin Lehrer."), not an object. */
 const COPULA_RE = /^(?:bin|bist|ist|sind|seid|heiße|heißt|heißen|heisse|heisst|heissen|werde|wird|werden)$/i;
 
-/** What may open an object noun phrase: an article, a possessive, kein-, a number word. */
+/** What may open an object noun phrase: an article, a possessive, kein-, a number word or digits —
+ * every number, so a price („zwanzig Euro", „20 Euro") opens a phrase like „zwei Brötchen" does. */
 const NP_DETERMINER_RE =
-  /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|keinen|mein|meine|meinen|dein|deine|deinen|sein|seine|seinen|ihr|ihre|ihren|unser|unsere|unseren|euer|eure|euren|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele)$/i;
+  /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|keinen|mein|meine|meinen|dein|deine|deinen|sein|seine|seinen|ihr|ihre|ihren|unser|unsere|unseren|euer|eure|euren|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|dreizehn|vierzehn|fünfzehn|sechzehn|siebzehn|achtzehn|neunzehn|(?:(?:ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun)und)?(?:zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig)|hundert|\d+(?:[.,]\d+)?|viele)$/i;
+
+/** A separable prefix after the object: it stays last when the object opens („Meine Mutter rufe ich an."). */
+const OBJECT_PREFIX_RE = /^(?:ab|an|auf|aus|ein|mit|nach|vor|weg|zu|zurück|zurueck|fern|los|her|hin|um)$/i;
 
 /** The canonical opens with its subject: a nominative pronoun, a determiner, or one name. */
 function subjectFirst(words, verbAt) {
@@ -943,23 +947,36 @@ function subjectFirst(words, verbAt) {
 /**
  * The object fronted: „Die Firma braucht ein Büro." → „Ein Büro braucht die Firma." — the same V2
  * sentence, marked wrong in a graded checkpoint (Codex review, 2026-10-07). Only the narrowest
- * shape: [subject] [full verb] [one object noun phrase] and nothing after it — the phrase an
- * optional determiner, lower-case adjectives and a capitalised noun or name. A copula's
- * predicate, a pronoun object, a separable prefix, an infinitive or a participle all stay put.
+ * shape: [subject] [full verb] [one object noun phrase] and at most a separable prefix after it —
+ * the phrase an optional determiner, lower-case adjectives and a capitalised noun or name, and a
+ * determiner- or number-led phrase may hold the nouns of a measure phrase („ein Glas Wasser",
+ * „zwanzig Euro"). A copula's predicate, a pronoun object, an infinitive or a participle stay put.
+ * The prefix was the gap the 2026-10-25 review measured (X-041): „Meine Mutter rufe ich an." and
+ * „Ein Glas Wasser möchte ich." were graded wrong, because the old shape wanted a capitalised noun
+ * as the LAST word and nothing capitalised inside the phrase — so the prompt named no opening.
  * It is NOT derived into an answer key: REVIEW #12/#13 keep objects out of `frontableOrders`.
  * `missingOpeningCue` uses it to make the prompt name the opening instead.
  */
 function objectFronted(words, verbAt) {
-  if (COPULA_RE.test(bare(words[verbAt])) || !subjectFirst(words, verbAt)) return null;
+  // An article read as the verb („Mach die Tür auf!": `die` has the shape of a personal ending) is
+  // an imperative or a question, whose order is not free — not a subject-first statement.
+  if (COPULA_RE.test(bare(words[verbAt])) || NP_DETERMINER_RE.test(bare(words[verbAt])) || !subjectFirst(words, verbAt)) return null;
   const subject = words.slice(0, verbAt);
-  const object = words.slice(verbAt + 1);
+  const after = words.slice(verbAt + 1);
+  // The prefix of a separable verb closes the clause and stays there when the object opens it.
+  const prefix = after.length >= 2 && OBJECT_PREFIX_RE.test(bare(after[after.length - 1])) ? after[after.length - 1] : null;
+  const object = prefix ? after.slice(0, -1) : after;
   if (!object.length || object.length > 4) return null;
   const noun = object[object.length - 1];
   if (!/^[A-ZÄÖÜ]/.test(noun) || /^(?:Sie|Ihnen)$/.test(bare(noun))) return null;
   const head = object.slice(0, -1);
   if (head.length && !NP_DETERMINER_RE.test(bare(head[0]))) return null;
-  if (head.slice(1).some((w) => !/^[a-zäöüß]+$/.test(bare(w)))) return null;
-  return [capitalise(object[0]), ...object.slice(1), words[verbAt], lowerSubject(subject[0]), ...subject.slice(1)].join(' ');
+  // Inside the phrase: adjectives and the nouns of a measure phrase — never a preposition, which
+  // opens a second constituent („den Kuchen im Geschäft").
+  if (head.slice(1).some((w) => !/^[A-Za-zÄÖÜäöüß]+$/.test(bare(w)) || /^(?:Sie|Ihnen)$/.test(bare(w))
+    || PREPOSITION_RE.test(bare(w)))) return null;
+  return [capitalise(object[0]), ...object.slice(1), words[verbAt], lowerSubject(subject[0]), ...subject.slice(1),
+    ...(prefix ? [prefix] : [])].join(' ');
 }
 
 /** The determiners that open a bare accusative time phrase („jeden Tag",
@@ -981,13 +998,15 @@ const LOWERCASABLE_SUBJECT_RE =
 /** A finite-verb shape: a personal ending on a lower-case word, plus the forms
  * of the two irregular verbs A1.1 teaches that carry no personal ending at all
  * (`bin`, `sind`) and the modals it meets. Without them „Ich bin Lehrer von
- * Beruf." has no readable verb and the whole item falls out of the rule. */
+ * Beruf." has no readable verb and the whole item falls out of the rule. The
+ * -ern/-eln verbs end their plural in a bare -n („wir feiern", „wir sammeln") —
+ * without that „Wir feiern unser Fest." had no verb either (X-041). */
 const FRONTABLE_FINITE_RE =
-  /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et)|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
+  /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et)|[a-zäöüß]{2,}(?:er|el)n|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
 
 /** Words of that shape that are not verbs — the A1.1 adverbs and particles that
  * happen to end in a personal ending. Measured against the built pool. */
-const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon)$/i;
+const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|vorgestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon)$/i;
 
 /** A word that could be the subject of the clause: a nominative pronoun or a
  * determiner opening a noun phrase. Used to refuse an already-inverted
