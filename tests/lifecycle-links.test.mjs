@@ -11,8 +11,11 @@
 //      utm_campaign=<the kind, hyphenated> and its own utm_content;
 //   2. the unsubscribe link is untouched: no tag, same function path, same
 //      signed token;
-//   3. the CTA still opens the page it opened before (same origin and path,
-//      trailing slash kept) and the footer opens the homepage;
+//   3. every link opens the page this table names (a prerendered route with
+//      its trailing slash, the course route without one) and the footer opens
+//      the homepage. activation_d1's button opens Lektion 1 of the free course
+//      since 2026-10-25 (the level test became a text link), and that path is
+//      pinned to the SPA's own FIRST_LESSON_HREF;
 //   4. the labels follow the naming rule and are fixed strings (no id, address
 //      or date), so the same mail renders the same bytes;
 //   5. public/attribution.js (the one classifier, run as-is under node:vm) reads
@@ -35,20 +38,22 @@ const trial = await import('../netlify/functions/trial-lifecycle.mjs');
 const activation = await import('../netlify/functions/activation-lifecycle.mjs');
 const { EMAIL_LABEL, tagEmailLink } = await import('../netlify/functions/_shared/emailLinks.mjs');
 const { isSocialHref } = await import('../netlify/functions/_shared/socialLinks.mjs');
+const { FIRST_LESSON_HREF } = await import('../src/lib/firstRun.js');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const SITE = 'https://deutsch-meister.de';
 const USER_ID = '00000000-0000-4000-8000-000000000001';
 
-// The expected campaign and CTA page per kind, written out rather than derived,
-// so a renamed kind or a moved CTA fails here instead of passing silently.
+// The expected campaign and the page behind each link (by utm_content) per
+// kind, written out rather than derived, so a renamed kind or a moved link fails
+// here instead of passing silently.
 const EXPECTED = {
-  trial_day3: { render: trial.renderHtml, campaign: 'trial-day3', cta: '/analyze/' },
-  trial_day6: { render: trial.renderHtml, campaign: 'trial-day6', cta: '/pricing/' },
-  trial_ended: { render: trial.renderHtml, campaign: 'trial-ended', cta: '/pricing/' },
-  activation_d1: { render: activation.renderHtml, campaign: 'activation-d1', cta: '/level-test/' },
-  activation_d4: { render: activation.renderHtml, campaign: 'activation-d4', cta: '/analyze/' },
+  trial_day3: { render: trial.renderHtml, campaign: 'trial-day3', links: { cta: '/analyze/', footer: '/' } },
+  trial_day6: { render: trial.renderHtml, campaign: 'trial-day6', links: { cta: '/pricing/', footer: '/' } },
+  trial_ended: { render: trial.renderHtml, campaign: 'trial-ended', links: { cta: '/pricing/', footer: '/' } },
+  activation_d1: { render: activation.renderHtml, campaign: 'activation-d1', links: { cta: '/course/a1.1/l/1', 'level-test': '/level-test/', footer: '/' } },
+  activation_d4: { render: activation.renderHtml, campaign: 'activation-d4', links: { cta: '/analyze/', footer: '/' } },
 };
 
 // Social-channel links leave the site, so they carry no utm_* tags; they are
@@ -71,9 +76,9 @@ test('the table above covers every lifecycle kind the two mailers send', () => {
 });
 
 test('every link into the site carries the lifecycle UTM tags, one utm_content per link', () => {
-  for (const [kind, { render, campaign }] of Object.entries(EXPECTED)) {
+  for (const [kind, { render, campaign, links: expected }] of Object.entries(EXPECTED)) {
     const links = hrefs(render(kind, USER_ID)).filter((h) => !isUnsubscribe(h));
-    assert.equal(links.length, 2, `${kind}: the CTA button and the footer link`);
+    assert.equal(links.length, Object.keys(expected).length, `${kind}: ${Object.keys(expected).join(', ')}`);
     for (const href of links) {
       assert.ok(href.startsWith(`${SITE}/`), `${kind}: site link ${href}`);
       const p = new URL(href).searchParams;
@@ -82,7 +87,7 @@ test('every link into the site carries the lifecycle UTM tags, one utm_content p
       assert.equal(p.get('utm_campaign'), campaign, href);
     }
     const contents = links.map((h) => new URL(h).searchParams.get('utm_content')).sort();
-    assert.deepEqual(contents, ['cta', 'footer'], `${kind}: each link names itself`);
+    assert.deepEqual(contents, Object.keys(expected).sort(), `${kind}: each link names itself`);
   }
 });
 
@@ -96,17 +101,25 @@ test('the unsubscribe link is untouched: no tag, same path, same signed token', 
   }
 });
 
-test('the CTA opens the same page as before, trailing slash kept; the footer opens the homepage', () => {
-  for (const [kind, { render, cta }] of Object.entries(EXPECTED)) {
+test('every link opens its page: prerendered routes with their slash, the course route without; the footer opens the homepage', () => {
+  for (const [kind, { render, links }] of Object.entries(EXPECTED)) {
     const byContent = Object.fromEntries(
       hrefs(render(kind, USER_ID)).filter((h) => !isUnsubscribe(h)).map((h) => [new URL(h).searchParams.get('utm_content'), new URL(h)]),
     );
-    assert.equal(byContent.cta.origin, SITE, kind);
-    assert.equal(byContent.cta.pathname, cta, `${kind}: prerendered route with its trailing slash (CLAUDE.md case 2)`);
-    assert.equal(byContent.footer.origin, SITE, kind);
+    for (const [content, path] of Object.entries(links)) {
+      assert.equal(byContent[content].origin, SITE, `${kind} ${content}`);
+      assert.equal(byContent[content].pathname, path, `${kind} ${content}: CLAUDE.md trailing slashes (case 2 prerendered, case 3 SPA)`);
+    }
     assert.equal(byContent.footer.pathname, '/', kind);
     for (const url of Object.values(byContent)) assert.equal(url.hash, '', kind);
   }
+});
+
+test('activation_d1 opens Lektion 1 where the SPA first run opens it (review 2026-10-25)', () => {
+  // A first lesson row is the activation event; the placement test is not one.
+  assert.equal(EXPECTED.activation_d1.links.cta, FIRST_LESSON_HREF);
+  assert.equal(new URL(activation.TEMPLATES.activation_d1.ctaHref).pathname, FIRST_LESSON_HREF);
+  assert.equal(activation.TEMPLATES.activation_d1.ctaLabel, 'Start Lektion 1 →');
 });
 
 test('labels follow the naming rule and are fixed strings, so a mail renders the same bytes', () => {
@@ -141,8 +154,8 @@ test('labels follow the naming rule and are fixed strings, so a mail renders the
 
 test('the classifier reads the tags back without losing a label', () => {
   const { parse } = attribution();
-  for (const [kind, { render, campaign, cta }] of Object.entries(EXPECTED)) {
-    const href = hrefs(render(kind, USER_ID)).find((h) => !isUnsubscribe(h) && new URL(h).pathname === cta);
+  for (const [kind, { render, campaign, links }] of Object.entries(EXPECTED)) {
+    const href = hrefs(render(kind, USER_ID)).find((h) => !isUnsubscribe(h) && new URL(h).pathname === links.cta);
     const url = new URL(href);
     const touch = parse(url.search, '', url.pathname, Date.UTC(2026, 9, 4));
     assert.equal(touch.source, 'email', kind);

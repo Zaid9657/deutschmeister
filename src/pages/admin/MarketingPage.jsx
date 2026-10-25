@@ -129,7 +129,7 @@ export default function MarketingPage() {
             <Stat label="Registrierungen" value={num(data.signups.count)} definition="profiles.created_at im Zeitraum" timeClass="Zeitraum" />
             <Stat label="Fehlgeschlagene Registrierungen" value={num(data.signups.attempts)} definition={data.signups.definition} timeClass="Zeitraum" />
             <Stat label="Lebenszyklus-Mails" value={num(data.lifecycle.total)} definition={data.lifecycle.definition} timeClass="Zeitraum" />
-            <Stat label="Satz des Tages abbestellt" value={num(data.lifecycle.optedOut)} definition="profiles.email_daily_sentence = false" timeClass="Aktueller Stand" />
+            <Stat label="E-Mails abbestellt" value={num(data.lifecycle.optedOut)} definition="profiles.email_daily_sentence = false (stoppt alle Lern- und Angebotsmails, nicht nur den Satz des Tages)" timeClass="Aktueller Stand" />
             <Stat label="Gutscheine aktiv" value={num(data.coupons.active)} definition={`${num(data.coupons.total)} Codes gesamt`} timeClass="Aktueller Stand" />
             <Stat label="Rabatt gewährt" value={money(data.coupons.discountGivenInWindow)} definition={`${num(data.coupons.redemptionsInWindow)} Einlösungen (EUR) im Zeitraum`} timeClass="Zeitraum" />
           </StatRow>

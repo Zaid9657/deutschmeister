@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
-import { createHmac } from 'crypto';
+import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const UNSUB_SECRET = unsubscribeSecret();
 const BASE_URL = 'https://deutsch-meister.de';
 
 let supabase;
@@ -20,17 +20,29 @@ const TEST_EMAIL   = 'zaid199660@gmail.com';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
 import { fetchOptedOutIds, withoutOptedOut } from './_shared/emailOptOut.mjs';
 
-function unsubscribeUrl(userId) {
-  const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
-  return `${BASE_URL}/unsubscribe?uid=${userId}&token=${token}`;
-}
-
-function unsubscribeFooter(userId) {
+// The footer link and the List-Unsubscribe headers carry the same signed
+// function URL (_shared/unsubscribe.mjs). Until 2026-10-25 this footer pointed at
+// the /unsubscribe rewrite; the rewrite still serves links already delivered.
+function unsubscribeFooter(unsubUrl) {
   return `
 <p style="margin:24px 0 0;font-size:12px;color:#94a3b8;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   You're receiving this because you signed up at <a href="${BASE_URL}" style="color:#94a3b8;">deutsch-meister.de</a>.<br>
-  <a href="${unsubscribeUrl(userId)}" style="color:#94a3b8;">Unsubscribe from DeutschMeister emails</a>
+  <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from DeutschMeister emails</a>
 </p>`;
+}
+
+/** One batch's Resend items: the operator's subject and body, a per-recipient footer and headers. */
+export function campaignItems(recipients, subject, body) {
+  return recipients.map(({ id, email }) => {
+    const unsubUrl = unsubscribeUrl(id);
+    return {
+      from: FROM_ADDRESS,
+      to: [email],
+      subject: subject.trim(),
+      html: body.trim() + unsubscribeFooter(unsubUrl),
+      headers: unsubscribeHeaders(unsubUrl),
+    };
+  });
 }
 
 // Optional audience exclusions, so a launch sequence never mails "last chance"
@@ -213,12 +225,7 @@ export const handler = async (event) => {
 
   for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
     const slice = recipients.slice(i, i + BATCH_SIZE);
-    const items = slice.map(({ id, email }) => ({
-      from: FROM_ADDRESS,
-      to: [email],
-      subject: subject.trim(),
-      html: body.trim() + unsubscribeFooter(id),
-    }));
+    const items = campaignItems(slice, subject, body);
     try {
       await sendBatch(resendKey, items);
       sent += slice.length;

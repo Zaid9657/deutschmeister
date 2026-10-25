@@ -118,7 +118,12 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 // (created in [first - MAX_AGE_DAYS, last - MIN_AGE_DAYS)), so an account that
 // turned two days old after the last run — the next run's work — is not
 // counted as missed.
-export async function selectCandidates(client = supabase, { span = null, limit = PER_RUN } = {}) {
+//
+// `canary` (the handler's LIFECYCLE_TEST_RECIPIENTS set) narrows the cohort
+// BEFORE the PER_RUN cut. Until 2026-10-25 the handler filtered after it, so
+// while a backlog existed the same 40 oldest non-canary accounts filled every
+// run and a fresh test account behind them could never be sent (review X-030).
+export async function selectCandidates(client = supabase, { span = null, limit = PER_RUN, canary = null } = {}) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
   const newest = new Date((span ? span.last : now) - MIN_AGE_DAYS * day).toISOString();
@@ -138,7 +143,9 @@ export async function selectCandidates(client = supabase, { span = null, limit =
         u.created_at < newest &&
         !isBlockedEmail(u.email)
       ) {
-        unconfirmed.push({ id: u.id, email: u.email.trim().toLowerCase(), createdAt: u.created_at });
+        const email = u.email.trim().toLowerCase();
+        if (canary && canary.size > 0 && !canary.has(email)) continue;
+        unconfirmed.push({ id: u.id, email, createdAt: u.created_at });
       }
     }
     if (data.users.length < 1000) break;
@@ -216,8 +223,9 @@ const innerHandler = async (event) => {
   );
   if (canary.size > 0) console.log(`[confirmation-nudge] canary mode: ${canary.size} allowlisted address(es)`);
 
-  let recipients = await selectCandidates();
-  if (canary.size > 0) recipients = recipients.filter((r) => canary.has(r.email));
+  // The allowlist goes INTO the selection, ahead of the per-run cap; the
+  // accounts it leaves out stay unclaimed, so emptying it resumes them.
+  const recipients = await selectCandidates(supabase, { canary });
 
   if (dry) {
     const result = { enabled: true, dry: true, wouldSend: recipients.length };

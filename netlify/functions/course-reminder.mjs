@@ -9,13 +9,27 @@
 // being the queue you mailed.
 //
 // THE RULE THIS FUNCTION EXISTS TO KEEP: never tell someone they have not done
-// a lesson when they have. Two things enforce it. The 20-hour floor is inside
-// the SQL, so a learner who studied today cannot be selected at all; and
+// a lesson when they have. Three things enforce it. The 20-hour floor is inside
+// the SQL, so a learner who studied today cannot be selected at all;
 // eligibility is RE-READ immediately before the claim, so a learner who opens
-// a Lektion between selection and send is dropped from that batch. The copy
-// then says nothing at all about what the learner did: it names the next
-// Lektion and stops. (Until 2026-09-12 it opened with "du warst vor Kurzem im
-// Kurs", which was exactly the claim the comment below promised not to make.)
+// a Lektion between selection and send is dropped from that batch; and the step
+// the mail names is read from ALL of the learner's progress in the level (see
+// "the next step" below). The copy then says nothing at all about what the
+// learner did: it names the next step and stops. (Until 2026-09-12 it opened
+// with "du warst vor Kurzem im Kurs", which was exactly the claim the comment
+// below promised not to make.)
+//
+// THE NEXT STEP (2026-10-25). The SQL's next_lektion_nr is the highest Lektion
+// finished in the last 30 days plus one, and it ignores checkpoints. So the
+// mail named Lektion 4 at every chapter end, where the course home locks it
+// until Checkpoint 1 is passed; "Weiter mit Lektion 12" after Lektion 12 was
+// finished (13 was clamped to 12); and "Lektion 1" to someone whose earlier
+// Lektionen were older than 30 days. nextStep() reads the learner's own
+// lesson_progress rows (Lektion and checkpoint ids only, never a timestamp:
+// who is warm stays the SQL's job) and names the open checkpoint, the next
+// Lektion, or nothing: a learner with no Lektion and no checkpoint left is not
+// mailed. Neither is a learner who can no longer open the level (canOpenLevel,
+// the course guard's own rule): the link would end on a lock.
 //
 // FREQUENCY. At most 3 reminders per rolling 7 days per learner, counted from
 // the ledger. The per-day claim is `course_reminder_<YYYY-MM-DD>` against
@@ -32,16 +46,20 @@
 // sends nothing, claims nothing.
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
-import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
+import { productInfo } from './_shared/pricing.mjs';
+import { subscriptionHasPaidAccess, latestCourseWindow } from './_shared/subscriptionEntitlement.mjs';
+import { FREE_LEVELS } from './_shared/supportCatalog.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const FROM_ADDRESS = 'Zaid from DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const UNSUB_SECRET = unsubscribeSecret();
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 const BATCH_SIZE = 100;
 
@@ -57,11 +75,6 @@ try {
   supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 } catch (e) {
   console.error('Supabase init error:', e.message);
-}
-
-function unsubscribeUrl(userId) {
-  const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
-  return `${BASE_URL}/.netlify/functions/unsubscribe?uid=${userId}&token=${token}`;
 }
 
 // ─── pure helpers (tested) ───────────────────────────────────────────────────
@@ -93,28 +106,12 @@ export function overWeeklyCap(sentAt = [], now = new Date(), max = MAX_PER_7_DAY
   return sentAt.filter((ts) => new Date(ts).getTime() >= cutoff).length >= max;
 }
 
-// ─── copy ────────────────────────────────────────────────────────────────────
-// German, short, kind, no pressure: no streak threat, no "nur noch", no
-// figures, no exclamation mark other than the greeting's, and NO claim about
-// what the learner did or did not do — not even a friendly one. It names the
-// next Lektion and links to the course home — /course/<level> is an SPA rewrite
-// route, so it carries NO trailing slash (CLAUDE.md's three-slash-case rule,
-// case 3).
-//
-// THE LEVEL IS A1, AND SO IS THE GERMAN (owner-approved 2026-09-12, after the
-// DaF review §F). Every recipient is by definition an A1.1 learner somewhere in
-// Lektion 1–12, and the previous copy was idiomatic B1: an ellipsis („Wenn
-// heute nichts geht: auch gut“), a Funktionsverbgefüge and a figurative
-// „nichts geht verloren“ — a course that writes its own screens in controlled
-// A1 must not mail B1. Short main clauses, present tense, words the course has
-// already taught. `vorname` is optional because the selection function carries
-// no name today: with one the greeting is „Hallo <Vorname>,“, without it the
-// bare „Hallo!“ — never „Hallo, du …“, which reads as a vocative.
-//
-// The Lektion titles are copied here because a Netlify function cannot import
-// src/data/curricula/a11.js (a browser module in the SPA bundle). The copy is
-// drift-guarded: tests/course-reminder.test.mjs compares this table against
-// CURRICULUM_A11 title by title and fails if either side moves.
+// ─── the course tables ───────────────────────────────────────────────────────
+// The Lektion titles and checkpoints are copied here because a Netlify function
+// cannot import src/data/curricula/ (browser modules in the SPA bundle). The
+// copies are drift-guarded: tests/course-reminder.test.mjs compares both tables
+// against CURRICULA, level by level, and fails if either side moves or a live
+// level is missing here.
 
 export const LEKTION_TITLES = {
   'a1.1': [
@@ -131,50 +128,186 @@ export const LEKTION_TITLES = {
     'Mein Tag',
     'Feste feiern',
   ],
+  'a1.2': [
+    'Wie komme ich zum Rathaus?',
+    'Die Wohnungsanzeige',
+    'In der Stadt unterwegs',
+    'Im Hotel reklamieren',
+    'Pläne für das Wochenende',
+    'In der Arztpraxis',
+    'Wer ist das?',
+    'Im Haushalt helfen',
+    'Regeln unterwegs',
+    'Kleidung kaufen',
+    'Wie ist das Wetter?',
+    'Das Fest war schön',
+  ],
 };
+
+/** Each level's checkpoints: the Lektion that closes the chapter, and the title the course home shows. */
+export const CHECKPOINT_AFTER = {
+  'a1.1': [
+    { nr: 1, afterLektion: 3, title: 'Checkpoint 1: Lektion 1–3' },
+    { nr: 2, afterLektion: 6, title: 'Checkpoint 2: Lektion 4–6' },
+    { nr: 3, afterLektion: 9, title: 'Checkpoint 3: Lektion 7–9' },
+    { nr: 4, afterLektion: 12, title: 'Checkpoint 4: Lektion 10–12' },
+  ],
+  'a1.2': [
+    { nr: 1, afterLektion: 3, title: 'Checkpoint 1: Lektion 1–3' },
+    { nr: 2, afterLektion: 6, title: 'Checkpoint 2: Lektion 4–6' },
+    { nr: 3, afterLektion: 9, title: 'Checkpoint 3: Lektion 7–9' },
+    { nr: 4, afterLektion: 12, title: 'Checkpoint 4: Lektion 10–12' },
+  ],
+};
+
+const lower = (level) => String(level || '').toLowerCase();
 
 /** `a1.1` → `A1.1`, the code the learner sees on the course home. */
 const levelCode = (level) => String(level || '').toUpperCase();
 
-/** The next Lektion's number and title, clamped to the level's length. */
+/**
+ * The Lektion with this number, or null: a level without titles here, or a
+ * number past the last Lektion (a finished course names no Lektion; until
+ * 2026-10-25 13 was clamped to 12, "Weiter mit Lektion 12" after Lektion 12).
+ */
 export function nextLektion(level, nextNr) {
-  const titles = LEKTION_TITLES[String(level || '').toLowerCase()];
+  const titles = LEKTION_TITLES[lower(level)];
   if (!titles || !titles.length) return null;
-  const nr = Math.min(Math.max(Number(nextNr) || 1, 1), titles.length);
+  const nr = Math.max(Math.trunc(Number(nextNr)) || 1, 1);
+  if (nr > titles.length) return null;
   return { nr, title: titles[nr - 1] };
 }
 
+/** A checkpoint by number, with the Lektionen it covers, or null. */
+export function checkpointFor(level, nr) {
+  const list = CHECKPOINT_AFTER[lower(level)] || [];
+  const i = list.findIndex((c) => c.nr === Number(nr));
+  if (i === -1) return null;
+  return { ...list[i], fromLektion: i === 0 ? 1 : list[i - 1].afterLektion + 1 };
+}
+
+const DONE = new Set(['complete', 'gold']);
+
+/**
+ * The learner's next step in a level, from their own lesson_progress rows for
+ * it — all of them, not the SQL's 30-day slice. A course id is `<level>-l<nr>`
+ * for a Lektion and `<level>-cp<nr>` for a checkpoint (checkpointService.js
+ * writes those with status 'complete').
+ *   { kind: 'checkpoint', nr, title }  the last finished Lektion closes a
+ *                                      chapter whose checkpoint is not passed
+ *                                      (the course home locks the next Lektion)
+ *   { kind: 'lektion', nr, title }     the Lektion after the last finished one
+ *   { kind: 'complete' }               no Lektion and no checkpoint left
+ *   null                               a level with no tables here
+ * `floorNr` (the SQL's next_lektion_nr) can only raise the Lektion: it is read
+ * from the same table over 30 days.
+ */
+export function nextStep(level, rows = [], { floorNr = 1 } = {}) {
+  const lvl = lower(level);
+  const titles = LEKTION_TITLES[lvl];
+  const checkpoints = CHECKPOINT_AFTER[lvl];
+  if (!titles || !checkpoints) return null;
+  let maxDone = Math.max((Math.trunc(Number(floorNr)) || 1) - 1, 0);
+  const passed = new Set();
+  for (const row of rows || []) {
+    const id = String(row?.lektion_id || '');
+    if (!DONE.has(row?.status) || !id.startsWith(`${lvl}-`)) continue;
+    const rest = id.slice(lvl.length + 1);
+    const lektion = /^l(\d{1,3})$/.exec(rest);
+    if (lektion) maxDone = Math.max(maxDone, Number(lektion[1]));
+    const cp = /^cp(\d{1,2})$/.exec(rest);
+    if (cp) passed.add(Number(cp[1]));
+  }
+  // A number past the course is a row the course never writes: it ends the course, no further.
+  maxDone = Math.min(maxDone, titles.length);
+  const cp = checkpoints.find((c) => c.afterLektion === maxDone);
+  if (cp && !passed.has(cp.nr)) return { kind: 'checkpoint', nr: cp.nr, title: cp.title };
+  const next = nextLektion(lvl, maxDone + 1);
+  return next ? { kind: 'lektion', ...next } : { kind: 'complete' };
+}
+
+/**
+ * Can this learner still open the level? Mirrors SubscriptionContext.jsx
+ * hasLevelAccess, the guard every /course/<level> link lands on: a free level;
+ * a live trial (started, not ended, not flagged subscribed — checkTrialStatus);
+ * a paid period (the latest subscriptions row, subscriptionStatus) or an
+ * included course window (a purchase with access_until ahead); or an active
+ * purchase whose course covers the level, which is lifetime.
+ */
+export function canOpenLevel(level, { profile = null, subscription = null, purchases = [] } = {}, now = Date.now()) {
+  const lvl = lower(level);
+  if (FREE_LEVELS.includes(lvl)) return true;
+  const t = Number(now);
+  if (profile?.trial_started_at && profile?.trial_ends_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > t) return true;
+  const active = (purchases || []).filter((p) => p.status === 'active');
+  if (subscriptionHasPaidAccess(subscription, t) || latestCourseWindow(active, t)) return true;
+  return active.some((p) => (productInfo(p.product_key)?.levels || []).includes(lvl));
+}
+
+// ─── copy ────────────────────────────────────────────────────────────────────
+// German, short, kind, no pressure: no streak threat, no "nur noch", no
+// figures, no exclamation mark other than the greeting's, and NO claim about
+// what the learner did or did not do — not even a friendly one. It names the
+// next step and links straight to it. /course/<level>, /course/<level>/l/<nr>
+// and /course/<level>/checkpoint/<nr> are SPA rewrite routes, so they carry NO
+// trailing slash (CLAUDE.md's three-slash-case rule, case 3). Until 2026-10-25
+// the button said „Lektion N öffnen“ and opened the course home, untagged.
+//
+// THE LEVEL IS A1, AND SO IS THE GERMAN (owner-approved 2026-09-12, after the
+// DaF review §F). Every recipient is by definition an A1 learner somewhere in
+// Lektion 1–12, and the previous copy was idiomatic B1: an ellipsis („Wenn
+// heute nichts geht: auch gut“), a Funktionsverbgefüge and a figurative
+// „nichts geht verloren“ — a course that writes its own screens in controlled
+// A1 must not mail B1. Short main clauses, present tense, words the course has
+// already taught.
+//
+// SIE (2026-10-25). The course speaks Sie in its tasks, notices, cards and mail
+// (CLAUDE.md, binding since 2026-09-30); this mail still said du. The greeting
+// is „Guten Tag!“, the formal greeting Lektion 1's can-do teaches, and with a
+// first name „Guten Tag, Ana!“. `vorname` is optional because the selection
+// function carries no name today. „Sie“ is capitalised either way, so the
+// sentence after the greeting needs no case juggling.
+
+const REMINDER_UTM = { medium: 'lifecycle', campaign: 'course-reminder' };
+
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:${BRAND.graphite};line-height:1.6;">${text}</p>`;
 
-/** „Hallo Ana,“ with a first name, „Hallo!“ without one. Nothing in between. */
+/** „Guten Tag, Ana!“ with a first name, „Guten Tag!“ without one. Nothing in between. */
 export const greeting = (vorname) => {
   const name = String(vorname || '').trim().split(/\s+/)[0] || '';
-  return name ? `Hallo ${name},` : 'Hallo!';
+  return name ? `Guten Tag, ${name}!` : 'Guten Tag!';
 };
 
 /**
- * Subject + body + CTA for one learner. `next` may be null (a level whose
- * titles are not in the table yet) — the copy then names no Lektion rather
- * than inventing one. `vorname` is optional; see the note above.
+ * Subject + body + CTA for one learner. `checkpointNr` names an open
+ * checkpoint, else `nextNr` names a Lektion; with neither (or a level whose
+ * tables are not here) the copy names no step rather than inventing one.
+ * `vorname` is optional; see the note above.
  */
-export function buildMessage({ level, nextNr, vorname = null }) {
-  const next = nextLektion(level, nextNr);
-  const code = levelCode(level);
-  const ctaHref = `${BASE_URL}/course/${String(level).toLowerCase()}`;
+export function buildMessage({ level, nextNr = null, checkpointNr = null, vorname = null }) {
+  const lvl = lower(level);
+  const code = levelCode(lvl);
+  const cp = checkpointNr == null ? null : checkpointFor(lvl, checkpointNr);
+  const next = cp || nextNr == null ? null : nextLektion(lvl, nextNr);
+  const path = cp ? `/course/${lvl}/checkpoint/${cp.nr}` : next ? `/course/${lvl}/l/${next.nr}` : `/course/${lvl}`;
+  const strong = (text) => `<strong style="color:${BRAND.ink};">${text}</strong>`;
   return {
-    subject: next ? `Weiter mit Lektion ${next.nr}: ${next.title}` : `Weiter im Kurs ${code}`,
-    ctaHref,
-    ctaLabel: next ? `Lektion ${next.nr} öffnen →` : 'Zum Kurs →',
+    subject: cp ? `Weiter mit ${cp.title}` : next ? `Weiter mit Lektion ${next.nr}: ${next.title}` : `Weiter im Kurs ${code}`,
+    ctaHref: tagEmailLink(`${BASE_URL}${path}`, { ...REMINDER_UTM, content: 'cta' }),
+    ctaLabel: cp ? `Checkpoint ${cp.nr} öffnen →` : next ? `Lektion ${next.nr} öffnen →` : 'Zum Kurs →',
     body:
-      // „Hallo!“ opens a new sentence, „Hallo Ana,“ continues one — so the
-      // pronoun after it is capitalised in the first case and not in the second.
-      P(`${greeting(vorname)} ${vorname ? 'du' : 'Du'} lernst Deutsch — sehr gut.`) +
-      (next
-        ? P(`Lektion ${next.nr} heißt <strong style="color:${BRAND.ink};">${next.title}</strong>. Sie ist kurz: ein Schritt pro Bildschirm.`)
-        : P(`Dein Kurs ${code} geht weiter. Die Lektionen sind kurz: ein Schritt pro Bildschirm.`)) +
-      P('Du kannst jederzeit aufhören. Bis bald.'),
+      P(`${greeting(vorname)} Sie lernen Deutsch — sehr gut.`) +
+      (cp
+        ? P(`Als Nächstes kommt ${strong(`Checkpoint ${cp.nr}`)}. Er wiederholt Lektion ${cp.fromLektion} bis ${cp.afterLektion}.`)
+        : next
+          ? P(`Lektion ${next.nr} heißt ${strong(next.title)}. Sie ist kurz: ein Schritt pro Bildschirm.`)
+          : P(`Ihr Kurs ${code} geht weiter. Die Lektionen sind kurz: ein Schritt pro Bildschirm.`)) +
+      P('Sie können jederzeit aufhören. Bis bald.'),
   };
 }
+
+/** The footer's link home, tagged like the button (docs/tracking-links.md). */
+export const FOOTER_HREF = tagEmailLink(`${BASE_URL}/`, { ...REMINDER_UTM, content: 'footer' });
 
 const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE html>
 <html lang="de">
@@ -196,8 +329,8 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a>${socialFooterLine(BRAND.graphite, 'de')}<br>
-              <a href="${unsubUrl}" style="color:${BRAND.graphite};">Diese E-Mails abbestellen</a>
+              DeutschMeister · <a href="${FOOTER_HREF}" style="color:${BRAND.graphite};">deutsch-meister.de</a>${socialFooterLine(BRAND.graphite, 'de')}<br>
+              <a href="${unsubUrl}" style="color:${BRAND.graphite};">E-Mails von DeutschMeister abbestellen</a>
             </p>
           </td>
         </tr>
@@ -206,6 +339,23 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
   </table>
 </body>
 </html>`;
+
+/**
+ * One Resend item for one recipient. The unsubscribe link asks for the German
+ * page (&lang=de), and the List-Unsubscribe headers carry that same link.
+ */
+export function reminderItem(r) {
+  const msg = buildMessage({ level: r.level, nextNr: r.nextNr, checkpointNr: r.checkpointNr, vorname: r.vorname });
+  const unsubUrl = unsubscribeUrl(r.id, { lang: 'de' });
+  return {
+    from: FROM_ADDRESS,
+    to: [r.email],
+    reply_to: 'zaid@deutsch-meister.de',
+    subject: msg.subject,
+    html: SHELL({ heading: msg.subject, body: msg.body, ctaHref: msg.ctaHref, ctaLabel: msg.ctaLabel, unsubUrl }),
+    headers: unsubscribeHeaders(unsubUrl),
+  };
+}
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
@@ -237,11 +387,72 @@ export function windowHoursFor(span, now = Date.now(), window = WINDOW_HOURS) {
   };
 }
 
+const ID_CHUNK = 100;
+const PAGE = 1000;
+
+/** Every row of a paged read for `ids`, a chunk of ids per request. Throws on any error. */
+async function readForIds(ids, build, what) {
+  const rows = [];
+  for (let i = 0; i < ids.length; i += ID_CHUNK) {
+    const chunk = ids.slice(i, i + ID_CHUNK);
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await build(chunk).range(from, from + PAGE - 1);
+      if (error) throw new Error(`${what} read failed: ${error.message}`);
+      rows.push(...(data || []));
+      if (!data || data.length < PAGE) break;
+    }
+  }
+  return rows;
+}
+
+const groupBy = (rows, key) => {
+  const out = new Map();
+  for (const row of rows) {
+    if (!out.has(row[key])) out.set(row[key], []);
+    out.get(row[key]).push(row);
+  }
+  return out;
+};
+
+/**
+ * Each learner's finished Lektionen and passed checkpoints, all time. Ids and
+ * status only: when they were done is not this file's question, so nothing
+ * here can drift from the SQL's idea of who is warm.
+ */
+async function readProgress(client, ids) {
+  const rows = await readForIds(ids, (chunk) => client
+    .from('lesson_progress')
+    .select('user_id, lektion_id, status')
+    .in('user_id', chunk)
+    .in('status', [...DONE])
+    .order('user_id')
+    .order('lektion_id'), 'progress');
+  return groupBy(rows, 'user_id');
+}
+
+/** The rows canOpenLevel reads, for the learners in a paid level. */
+async function readAccess(client, ids) {
+  if (ids.length === 0) return new Map();
+  const [profiles, subscriptions, purchases] = await Promise.all([
+    readForIds(ids, (chunk) => client.from('profiles').select('id, trial_started_at, trial_ends_at, is_subscribed').in('id', chunk).order('id'), 'profile'),
+    readForIds(ids, (chunk) => client.from('subscriptions').select('user_id, status, subscription_end').in('user_id', chunk).order('user_id'), 'subscription'),
+    readForIds(ids, (chunk) => client.from('purchases').select('user_id, product_key, status, access_until').in('user_id', chunk).eq('status', 'active').order('user_id'), 'purchase'),
+  ]);
+  const subsBy = groupBy(subscriptions, 'user_id');
+  const purchasesBy = groupBy(purchases, 'user_id');
+  const profileBy = new Map(profiles.map((p) => [p.id, p]));
+  // getSubscription reads the row with the latest subscription_end; so does this.
+  const latest = (rows = []) => rows.reduce((a, b) => (!a || (Date.parse(b.subscription_end) || 0) > (Date.parse(a.subscription_end) || 0) ? b : a), null);
+  return new Map(ids.map((id) => [id, { profile: profileBy.get(id) || null, subscription: latest(subsBy.get(id)), purchases: purchasesBy.get(id) || [] }]));
+}
+
 // ONE definition of "who is due", read by this job and by the sentinel. The
 // job passes nothing and gets today's run. The sentinel passes `span` =
 // { first, last } (the scheduled runs since the last course_reminder_* row)
 // and its clock, so a learner who became due after the last run — the next
-// run's work — is not counted as missed.
+// run's work — is not counted as missed. A learner with nothing left to name,
+// or a level they can no longer open, is due for nothing: the job sends them
+// nothing, so the sentinel counts nothing.
 export async function selectRecipients({ client = supabase, span = null, now = Date.now() } = {}) {
   const rows = (await fetchCandidates(client, windowHoursFor(span, now))).filter((r) => !r.email_opted_out);
   if (rows.length === 0) return [];
@@ -285,20 +496,35 @@ export async function selectRecipients({ client = supabase, span = null, now = D
   // confirmed by then was confirmed at that run. Without a span this is moot.
   const confirmedInTime = (r) => !span || confirmedAt.get(r.user_id) <= Date.parse(r.last_activity_at) + WINDOW_HOURS.minHours * 3600000;
 
-  return rows
+  const reachable = rows
     .filter((r) => emails.has(r.user_id) && confirmedInTime(r))
     .filter((r) => !isBlockedEmail(emails.get(r.user_id)))
-    .filter((r) => !overWeeklyCap(history.get(r.user_id) || [], new Date(now)))
-    .map((r) => ({
+    .filter((r) => !overWeeklyCap(history.get(r.user_id) || [], new Date(now)));
+  if (reachable.length === 0) return [];
+
+  // The step to name, and whether the link would open. A failed read throws:
+  // the run then sends nothing, rather than a guess at a Lektion or a lock.
+  const progress = await readProgress(client, reachable.map((r) => r.user_id));
+  const access = await readAccess(client, reachable.filter((r) => !FREE_LEVELS.includes(lower(r.level))).map((r) => r.user_id));
+
+  const out = [];
+  for (const r of reachable) {
+    const step = nextStep(r.level, progress.get(r.user_id) || [], { floorNr: r.next_lektion_nr });
+    if (step?.kind === 'complete') continue;
+    if (!canOpenLevel(r.level, access.get(r.user_id), now)) continue;
+    out.push({
       id: r.user_id,
       email: emails.get(r.user_id),
       level: r.level,
-      nextNr: r.next_lektion_nr,
+      nextNr: step?.kind === 'lektion' ? step.nr : null,
+      checkpointNr: step?.kind === 'checkpoint' ? step.nr : null,
       lastActivityAt: r.last_activity_at,
       // The selection function returns no name today, so the greeting is the
-      // bare „Hallo!“. If it ever does, the copy picks it up with no edit here.
+      // bare „Guten Tag!“. If it ever does, the copy picks it up with no edit here.
       vorname: r.vorname ?? null,
-    }));
+    });
+  }
+  return out;
 }
 
 /**
@@ -393,22 +619,7 @@ const innerHandler = async (event) => {
       const claimed = slice.filter((r) => claimedIds.has(r.id));
       if (claimed.length === 0) continue;
 
-      const items = claimed.map((r) => {
-        const msg = buildMessage({ level: r.level, nextNr: r.nextNr, vorname: r.vorname });
-        return {
-          from: FROM_ADDRESS,
-          to: [r.email],
-          reply_to: 'zaid@deutsch-meister.de',
-          subject: msg.subject,
-          html: SHELL({
-            heading: msg.subject,
-            body: msg.body,
-            ctaHref: msg.ctaHref,
-            ctaLabel: msg.ctaLabel,
-            unsubUrl: unsubscribeUrl(r.id),
-          }),
-        };
-      });
+      const items = claimed.map((r) => reminderItem(r));
 
       try {
         await sendBatch(resendKey, items);

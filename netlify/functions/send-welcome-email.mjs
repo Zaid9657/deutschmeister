@@ -1,11 +1,19 @@
 import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
 
-// The two site links carry the email tags (docs/tracking-links.md, "Our own
+// The site links carry the email tags (docs/tracking-links.md, "Our own
 // email"), so a click from the welcome mail is filed as email/lifecycle/welcome
 // instead of untracked or a webmail host. Fixed strings: no id, address or date.
+//
+// The button opens Lektion 1 of the free A1.1 course (2026-10-25; it opened
+// Sentence X-Ray before). The mail arrives with, often before, the confirmation
+// mail, and a first lesson row is the activation event: Lektion 1 works with no
+// account, and its save-progress ask leads back to the account. An SPA route, so
+// no trailing slash (src/lib/firstRun.js FIRST_LESSON_HREF; tests/welcome-links
+// pins the two together). X-Ray stays as a text link.
 const WELCOME_UTM = { medium: 'lifecycle', campaign: 'welcome' };
-export const WELCOME_CTA_HREF = tagEmailLink('https://deutsch-meister.de/analyze/', { ...WELCOME_UTM, content: 'cta' });
+export const WELCOME_CTA_HREF = tagEmailLink('https://deutsch-meister.de/course/a1.1/l/1', { ...WELCOME_UTM, content: 'cta' });
+export const WELCOME_XRAY_HREF = tagEmailLink('https://deutsch-meister.de/analyze/', { ...WELCOME_UTM, content: 'xray' });
 export const WELCOME_FOOTER_HREF = tagEmailLink('https://deutsch-meister.de/', { ...WELCOME_UTM, content: 'footer' });
 
 const WELCOME_HTML = (_email) => `<!DOCTYPE html>
@@ -41,7 +49,7 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
               </p>
 
               <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
-                The first thing I'd suggest trying is <strong style="color:#1e293b;">Sentence X-Ray</strong> — paste any German sentence and it breaks down exactly what each word is doing: the cases, the roles, and <em>why</em>. It's the fastest way to start understanding German grammar rather than just memorising it.
+                The first thing I'd suggest is <strong style="color:#1e293b;">Lektion 1</strong> of the free A1.1 course. It starts with the first Hallo, one short step per screen.
               </p>
 
               <!-- CTA -->
@@ -50,14 +58,18 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
                   <td style="border-radius:10px;background:#0F766E;">
                     <a href="${WELCOME_CTA_HREF}"
                        style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">
-                      Try Sentence X-Ray →
+                      Start Lektion 1 →
                     </a>
                   </td>
                 </tr>
               </table>
 
               <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
-                Everything else — grammar lessons, listening, podcasts — is there when you're ready. But start with one sentence. That's all it takes.
+                Confirm your address with the other email to save progress.
+              </p>
+
+              <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
+                Already reading German? Paste any sentence into <a href="${WELCOME_XRAY_HREF}" style="color:#0F766E;font-weight:600;">Sentence X-Ray</a> and it shows what each word is doing: the cases, the roles, and <em>why</em>. Everything else — grammar lessons, listening, podcasts — is there when you're ready.
               </p>
 
               <p style="margin:0;font-size:16px;color:#1e293b;line-height:1.6;">

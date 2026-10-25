@@ -17,9 +17,16 @@
 //      per-day claim lock. The migration's CHECK is a pattern; this suite
 //      pins that the kind the code writes MATCHES that pattern, and that the
 //      migration still admits every kind the other four jobs claim.
-//   5. THE COPIED LEKTION TITLES. A Netlify function cannot import the SPA's
-//      curriculum module, so the titles are duplicated in the mailer. This
-//      suite is the drift guard — it compares them to CURRICULUM_A11.
+//   5. THE COPIED COURSE TABLES. A Netlify function cannot import the SPA's
+//      curriculum modules, so the Lektion titles and the checkpoints are
+//      duplicated in the mailer. This suite is the drift guard — it compares
+//      both tables to every live curriculum in CURRICULA (A1.2 since
+//      2026-10-25; until then A1.2 learners got the generic mail).
+//   6. THE COPY: the next step only, never a claim about the learner, A1
+//      German, and Sie (course mail speaks Sie, CLAUDE.md; the reminder said du
+//      until 2026-10-25). The button opens the step it names, tagged
+//      (docs/tracking-links.md), and the unsubscribe page answers in German.
+//      tests/course-reminder-checkpoints.test.mjs holds the step selection.
 //
 // WHY THERE IS NO WINDOW-DISJOINTNESS TABLE HERE (tests/lifecycle.test.mjs's
 // job): the trial and activation windows are measured in days since SIGNUP and
@@ -41,9 +48,10 @@ import { dirname, join } from 'node:path';
 import {
   WINDOW_HOURS, WINDOW_DAYS, MAX_PER_7_DAYS,
   isWithinWindow, overWeeklyCap, reminderKindFor,
-  LEKTION_TITLES, nextLektion, buildMessage, greeting,
+  LEKTION_TITLES, CHECKPOINT_AFTER, nextLektion, checkpointFor, buildMessage, greeting,
+  reminderItem, FOOTER_HREF,
 } from '../netlify/functions/course-reminder.mjs';
-import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { CURRICULA } from '../src/data/curricula/index.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -134,7 +142,14 @@ test('eligibility is re-read inside the send loop, before the claim, before the 
 test('selection reads ONE definition and never re-derives status', () => {
   assert.ok(SRC.includes(`rpc('course_reminder_candidates'`), 'selection must call the shared SQL definition');
   // The mailer must not build its own idea of "warm" out of the raw tables.
-  assert.ok(!SRC.includes("from('lesson_progress')"), 'mailer must not query lesson_progress itself');
+  // Since 2026-10-25 it reads lesson_progress for ONE thing, the step to name
+  // (which Lektionen and checkpoints are done, all time): one read, ids and
+  // status only. No timestamp is selected, so no activity window can be built
+  // here; who is due stays the SQL's answer.
+  const reads = [...SRC.matchAll(/\.from\('lesson_progress'\)\s*\.select\('([^']*)'\)/g)];
+  assert.equal((SRC.match(/from\('lesson_progress'\)/g) || []).length, 1, 'one lesson_progress read, for the step only');
+  assert.equal(reads.length, 1, 'the lesson_progress read must name its columns');
+  assert.deepEqual(reads[0][1].split(',').map((c) => c.trim()).sort(), ['lektion_id', 'status', 'user_id'], 'the step read selects ids and status, never a timestamp');
   assert.ok(!SRC.includes("from('lesson_attempts')"), 'mailer must not query lesson_attempts itself');
   // Hygiene and confirmation, same as every other job.
   assert.ok(SRC.includes('isBlockedEmail'), 'disposable-domain hygiene missing');
@@ -180,19 +195,37 @@ test('the candidate function is service-role only and defines the window itself'
 // 5. the copied Lektion titles
 // ---------------------------------------------------------------------------
 
-test('the mailer\'s Lektion titles are byte-identical to the curriculum', () => {
-  const titles = CURRICULUM_A11.lektionen.map((l) => l.title);
-  assert.deepEqual(
-    LEKTION_TITLES['a1.1'],
-    titles,
-    'src/data/curricula/a11.js and course-reminder.mjs disagree — the mail would name the wrong Lektion',
-  );
+test('the mailer\'s Lektion titles are byte-identical to every live curriculum', () => {
+  assert.deepEqual(Object.keys(LEKTION_TITLES).sort(), Object.keys(CURRICULA).sort(), 'a live level without titles here gets the generic mail');
+  for (const [level, curriculum] of Object.entries(CURRICULA)) {
+    assert.deepEqual(
+      LEKTION_TITLES[level],
+      curriculum.lektionen.map((l) => l.title),
+      `src/data/curricula (${level}) and course-reminder.mjs disagree — the mail would name the wrong Lektion`,
+    );
+  }
 });
 
-test('nextLektion clamps to the level and tolerates an unknown level', () => {
+test('the mailer\'s checkpoints are the curriculum\'s: number, the Lektion that closes the chapter, title', () => {
+  assert.deepEqual(Object.keys(CHECKPOINT_AFTER).sort(), Object.keys(CURRICULA).sort());
+  for (const [level, curriculum] of Object.entries(CURRICULA)) {
+    assert.deepEqual(
+      CHECKPOINT_AFTER[level],
+      curriculum.checkpoints.map(({ nr, afterLektion, title }) => ({ nr, afterLektion, title })),
+      `${level}: the mail would name the wrong checkpoint, or a Lektion the course home still locks`,
+    );
+  }
+  assert.deepEqual(checkpointFor('a1.2', 2), { nr: 2, afterLektion: 6, title: 'Checkpoint 2: Lektion 4–6', fromLektion: 4 });
+  assert.equal(checkpointFor('a1.1', 9), null);
+});
+
+test('nextLektion names a Lektion of the level, never one past the end, and tolerates an unknown level', () => {
   assert.deepEqual(nextLektion('a1.1', 1), { nr: 1, title: 'Hallo, ich bin …' });
   assert.deepEqual(nextLektion('A1.1', 4), { nr: 4, title: 'Auf dem Flohmarkt' });
-  assert.deepEqual(nextLektion('a1.1', 99), { nr: 12, title: 'Feste feiern' }, 'a finished course must not index past the end');
+  assert.deepEqual(nextLektion('a1.2', 5), { nr: 5, title: 'Pläne für das Wochenende' });
+  // Until 2026-10-25, 13 was clamped to 12: "Weiter mit Lektion 12" to a learner who had finished it.
+  assert.equal(nextLektion('a1.1', 13), null, 'a finished course names no Lektion');
+  assert.equal(nextLektion('a1.1', 99), null);
   assert.deepEqual(nextLektion('a1.1', 0), { nr: 1, title: 'Hallo, ich bin …' });
   assert.equal(nextLektion('b2.2', 3), null, 'a level without titles names no Lektion rather than inventing one');
 });
@@ -201,14 +234,41 @@ test('nextLektion clamps to the level and tolerates an unknown level', () => {
 // 6. copy
 // ---------------------------------------------------------------------------
 
-test('the reminder names the next Lektion and links the course without a trailing slash', () => {
+const TAGS = 'utm_source=email&utm_medium=lifecycle&utm_campaign=course-reminder';
+
+test('the reminder names the next Lektion and its button opens that Lektion, tagged, without a trailing slash', () => {
   const msg = buildMessage({ level: 'a1.1', nextNr: 4 });
   assert.equal(msg.subject, 'Weiter mit Lektion 4: Auf dem Flohmarkt');
   assert.ok(msg.body.includes('Auf dem Flohmarkt'), 'the body must name the Lektion too');
-  // CLAUDE.md's three-slash-case rule: /course/:level is a netlify.toml
-  // rewrite to app.html (case 3) — a trailing slash 301-hops every click.
-  assert.equal(msg.ctaHref, 'https://deutsch-meister.de/course/a1.1');
-  assert.ok(!msg.ctaHref.endsWith('/'), 'an SPA rewrite route must carry NO trailing slash');
+  assert.equal(msg.ctaLabel, 'Lektion 4 öffnen →');
+  // The button names a Lektion, so it opens that Lektion (it opened the course
+  // home until 2026-10-25). CLAUDE.md's three-slash-case rule: /course/... is a
+  // netlify.toml rewrite to app.html (case 3) — no trailing slash.
+  assert.equal(msg.ctaHref, `https://deutsch-meister.de/course/a1.1/l/4?${TAGS}&utm_content=cta`);
+  assert.ok(!new URL(msg.ctaHref).pathname.endsWith('/'), 'an SPA rewrite route must carry NO trailing slash');
+});
+
+test('an open checkpoint is named and linked as the course home names and links it', () => {
+  const msg = buildMessage({ level: 'a1.1', checkpointNr: 1 });
+  assert.equal(msg.subject, 'Weiter mit Checkpoint 1: Lektion 1–3');
+  assert.equal(msg.ctaLabel, 'Checkpoint 1 öffnen →');
+  assert.equal(msg.ctaHref, `https://deutsch-meister.de/course/a1.1/checkpoint/1?${TAGS}&utm_content=cta`);
+  assert.ok(msg.body.includes('Er wiederholt Lektion 1 bis 3.'), msg.body);
+  assert.ok(!/Lektion 4/.test(`${msg.subject} ${msg.body}`), 'never the Lektion the course home still locks');
+});
+
+test('the footer link is tagged; the unsubscribe link asks for the German page and is the List-Unsubscribe header', () => {
+  process.env.UNSUB_SECRET = process.env.UNSUB_SECRET || 'test-only-unsub-secret';
+  assert.equal(FOOTER_HREF, `https://deutsch-meister.de/?${TAGS}&utm_content=footer`);
+  const id = '00000000-0000-4000-8000-000000000001';
+  const item = reminderItem({ id, email: 'learner@example.test', level: 'a1.1', nextNr: 4 });
+  const hrefs = [...item.html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+  assert.ok(hrefs.includes(FOOTER_HREF));
+  const unsub = hrefs.find((h) => h.includes('/.netlify/functions/unsubscribe'));
+  assert.match(unsub, /&lang=de$/);
+  assert.equal(item.headers['List-Unsubscribe'], `<${unsub}>`);
+  assert.equal(item.headers['List-Unsubscribe-Post'], 'List-Unsubscribe=One-Click');
+  assert.match(item.html, />E-Mails von DeutschMeister abbestellen</, 'the link says what it stops: every DeutschMeister mail, not just these');
 });
 
 test('the copy makes no claim about what the learner did not do', () => {
@@ -223,8 +283,8 @@ test('the copy makes no claim about what the learner did not do', () => {
     // No urgency or streak threat: this is the lever, not a loss-aversion trick.
     assert.ok(!/nur noch|letzte Chance|Serie verlieren|Streak/i.test(text), 'pressure language in reminder copy');
     // The register stays calm: the ONLY exclamation mark allowed is the
-    // greeting's („Hallo!“), which is how A1 material greets a learner.
-    assert.equal(text.replace('Hallo!', '').includes('!'), false, 'no exclamation marks beyond the greeting');
+    // greeting's („Guten Tag!“), which is how A1 material greets a learner.
+    assert.equal(text.replace(greeting(null), '').includes('!'), false, 'no exclamation marks beyond the greeting');
     // The door stays open.
     assert.ok(/auch gut|jederzeit/i.test(msg.body), 'the copy must leave an out');
     // And nothing is asserted about the learner's own behaviour. The 20-hour
@@ -234,25 +294,36 @@ test('the copy makes no claim about what the learner did not do', () => {
   }
 });
 
-test('the greeting is a name or a bare Hallo, never the flapsig „Hallo, du …“', () => {
-  assert.equal(greeting('Ana'), 'Hallo Ana,');
-  assert.equal(greeting('Ana Chakiri'), 'Hallo Ana,', 'only the first name');
-  assert.equal(greeting('  '), 'Hallo!');
-  assert.equal(greeting(null), 'Hallo!');
-  assert.equal(greeting(undefined), 'Hallo!');
-  // The pronoun follows the punctuation: new sentence after „Hallo!“, same
-  // sentence after „Hallo Ana,“.
+test('the reminder speaks Sie: „Guten Tag!“, never du, dich, dir or dein (CLAUDE.md, course mail)', () => {
+  assert.equal(greeting('Ana'), 'Guten Tag, Ana!');
+  assert.equal(greeting('Ana Chakiri'), 'Guten Tag, Ana!', 'only the first name');
+  assert.equal(greeting('  '), 'Guten Tag!');
+  assert.equal(greeting(null), 'Guten Tag!');
+  assert.equal(greeting(undefined), 'Guten Tag!');
   const named = buildMessage({ level: 'a1.1', nextNr: 4, vorname: 'Ana' });
-  assert.ok(named.body.includes('Hallo Ana, du lernst Deutsch'), named.body);
+  assert.ok(named.body.includes('Guten Tag, Ana! Sie lernen Deutsch — sehr gut.'), named.body);
   const anon = buildMessage({ level: 'a1.1', nextNr: 4 });
-  assert.ok(anon.body.includes('Hallo! Du lernst Deutsch'), anon.body);
+  assert.ok(anon.body.includes('Guten Tag! Sie lernen Deutsch — sehr gut.'), anon.body);
+  // Every shape the mail can take: a Lektion, a checkpoint, a level with no tables.
+  const shapes = [
+    ...[1, 4, 12].map((nextNr) => ({ level: 'a1.1', nextNr })),
+    { level: 'a1.2', nextNr: 7, vorname: 'Ana' },
+    { level: 'a1.1', checkpointNr: 4 },
+    { level: 'b1.1' },
+  ];
+  for (const shape of shapes) {
+    const msg = buildMessage(shape);
+    const text = `${msg.subject} ${msg.ctaLabel} ${msg.body}`.replace(/<[^>]+>/g, ' ');
+    assert.doesNotMatch(text, /\b(du|Du|dich|Dich|dir|Dir|dein\w*|Dein\w*)\b/, `du in reminder copy: ${text}`);
+    assert.match(text, /Sie können jederzeit aufhören\./, 'the door stays open, in Sie');
+  }
 });
 
 test('the German is A1, not B1 — the level every recipient is at', () => {
   // Owner-approved rewrite, DaF review 2026-09-12 §F. The three constructions
   // below are what made the old copy B1; none may come back.
-  for (const nextNr of [1, 4, 12]) {
-    const body = buildMessage({ level: 'a1.1', nextNr }).body;
+  for (const shape of [1, 4, 12].map((nextNr) => ({ level: 'a1.1', nextNr })).concat([{ level: 'a1.1', checkpointNr: 2 }, { level: 'b1.1' }])) {
+    const body = buildMessage(shape).body;
     const text = body.replace(/<[^>]+>/g, ' ');
     assert.ok(!/nichts geht verloren|der Teil, der zählt|nichts geht\b/i.test(text), `B1 idiom in the copy: ${text}`);
     assert.ok(!/wenn heute nichts/i.test(text), 'elliptical B1 conditional in the copy');
@@ -267,11 +338,16 @@ test('the German is A1, not B1 — the level every recipient is at', () => {
   }
 });
 
-test('a level with no titles still produces a sendable message', () => {
+test('a level with no titles, or no step at all, still produces a sendable message naming nothing', () => {
   const msg = buildMessage({ level: 'b1.1', nextNr: 2 });
   assert.equal(msg.subject, 'Weiter im Kurs B1.1');
-  assert.equal(msg.ctaHref, 'https://deutsch-meister.de/course/b1.1');
+  assert.equal(msg.ctaHref, `https://deutsch-meister.de/course/b1.1?${TAGS}&utm_content=cta`);
   assert.ok(!/Lektion \d/.test(msg.subject));
+  // A finished A1.1 never reads "Weiter mit Lektion 12" again (the 13 → 12 clamp).
+  for (const msg2 of [buildMessage({ level: 'a1.1', nextNr: 13 }), buildMessage({ level: 'a1.1' })]) {
+    assert.equal(msg2.subject, 'Weiter im Kurs A1.1');
+    assert.ok(!/Lektion \d/.test(`${msg2.subject} ${msg2.ctaLabel} ${msg2.body}`), msg2.body);
+  }
 });
 
 // ---------------------------------------------------------------------------

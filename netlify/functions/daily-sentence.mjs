@@ -1,9 +1,9 @@
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
-import { createHmac } from 'crypto';
 import sentences from './data/daily-sentences.json' with { type: 'json' };
 import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
+import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
 
 // ─── config ──────────────────────────────────────────────────────────────────
 
@@ -15,7 +15,7 @@ const TEST_EMAIL = 'zaid199660@gmail.com';
 
 // Secret used to sign unsubscribe tokens — must be set in env vars.
 // No fallback: the handler refuses to run without it (fail closed).
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const UNSUB_SECRET = unsubscribeSecret();
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 
 let supabase;
@@ -35,16 +35,6 @@ function todaysSentence() {
   const oneDay = 1000 * 60 * 60 * 24;
   const dayOfYear = Math.floor(diff / oneDay); // 1–365
   return sentences[(dayOfYear - 1) % sentences.length];
-}
-
-/** HMAC-SHA256 token so we can verify unsubscribe requests without a DB lookup. */
-function unsubscribeToken(userId) {
-  return createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
-}
-
-function unsubscribeUrl(userId) {
-  const token = unsubscribeToken(userId);
-  return `${BASE_URL}/.netlify/functions/unsubscribe?uid=${userId}&token=${token}`;
 }
 
 // ─── site links ──────────────────────────────────────────────────────────────
@@ -74,6 +64,14 @@ export function analyzeUrl(sentenceDe) {
 
 export function homeUrl() {
   return `${BASE_URL}/?${DAILY_UTM}&utm_content=footer`;
+}
+
+// The free course, under the X-Ray button (2026-10-25): until then the mail that
+// reaches the most people had no way into a Lektion. /course/a1.1 is an SPA
+// rewrite route, so no trailing slash (CLAUDE.md, trailing slashes); the course
+// home opens Lektion 1 for a newcomer and the next step for a learner.
+export function courseUrl() {
+  return `${BASE_URL}/course/a1.1?${DAILY_UTM}&utm_content=course`;
 }
 
 /**
@@ -169,8 +167,12 @@ function buildEmail({ sentence, recipient, runDate = utcRunDate() }) {
               </tr>
             </table>
 
-            <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.6;">
+            <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;line-height:1.6;">
               The X-Ray tool breaks this sentence into its grammatical parts — cases, roles, and <em>why</em> each word takes the form it does.
+            </p>
+
+            <p style="margin:0;font-size:14px;line-height:1.6;">
+              <a href="${courseUrl()}" style="color:#0F766E;font-weight:600;text-decoration:none;">Next step: the free A1.1 course →</a>
             </p>
           </td>
         </tr>
@@ -180,7 +182,7 @@ function buildEmail({ sentence, recipient, runDate = utcRunDate() }) {
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#f8fafc;">
             <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">
               You're receiving this because you signed up at <a href="${homeUrl()}" style="color:#94a3b8;">deutsch-meister.de</a>.${socialFooterLine('#94a3b8')}<br>
-              <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from daily sentences</a>
+              <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from DeutschMeister emails</a>
             </p>
           </td>
         </tr>
@@ -282,12 +284,16 @@ export async function sendDailyBatches({ recipients, sentence, runDate, resendKe
   for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
     const batchIndex = i / BATCH_SIZE;
     const slice = recipients.slice(i, i + BATCH_SIZE);
+    // The List-Unsubscribe headers carry the body's own unsubscribe link
+    // (_shared/unsubscribe.mjs); both are fixed per recipient, so a retry still
+    // rebuilds byte-identical batches for the idempotency key.
     const items = slice.map((recipient) => ({
       from: FROM_ADDRESS,
       to: [recipient.email],
       reply_to: 'zaid@deutsch-meister.de',
       subject,
       html: buildEmail({ sentence, recipient, runDate }),
+      headers: unsubscribeHeaders(unsubscribeUrl(recipient.id)),
     }));
     const key = live ? dailyBatchKey(runDate, batchIndex) : undefined;
     try {

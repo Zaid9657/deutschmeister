@@ -6,13 +6,16 @@
 // audit's diagnosed cliff, where ~85% of ~170 monthly signups stall. Two
 // messages, once each, per user:
 //
-//   activation_d1 — day 1–2 after signup, zero lessons: one 10-minute start
+//   activation_d1 — day 1–2 after signup, zero lessons: Lektion 1 of the free course
 //   activation_d4 — day 4–5, still zero lessons: the one feature worth seeing
 //
 // The windows are chosen to be DISJOINT from the trial sequence's (days 3–4,
 // 6–7 and 7–8 from signup for a 7-day trial), so no user gets two lifecycle
-// mails on the same day. tests/lifecycle.test.mjs pins this; move a window
-// and the test tells you which day now collides.
+// mails on the same day. Both jobs count those days from 00:00 UTC of the
+// run's day (trial-lifecycle.mjs utcDayStart), so the 90 minutes between their
+// runs cannot make them meet. tests/lifecycle.test.mjs pins this against the
+// real 08:00 and 09:30 runs; move a window and the test tells you which day
+// now collides.
 //
 // THE RULE THIS FUNCTION EXISTS TO KEEP: never tell someone they have not
 // used a lesson when they have. Selection reads public.lifecycle_customer_state
@@ -42,16 +45,17 @@
 // claims nothing.
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
-import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
+import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
+import { utcDayStart } from './trial-lifecycle.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const FROM_ADDRESS = 'Zaid from DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const UNSUB_SECRET = unsubscribeSecret();
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 const BATCH_SIZE = 100;
 
@@ -62,20 +66,35 @@ try {
   console.error('Supabase init error:', e.message);
 }
 
-function unsubscribeUrl(userId) {
-  const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
-  return `${BASE_URL}/.netlify/functions/unsubscribe?uid=${userId}&token=${token}`;
-}
-
 // ─── windows ─────────────────────────────────────────────────────────────────
 
-// [lower, upper) in days since registration. Exported for the disjointness
-// test. Trial windows for reference (do not overlap them): day3 = [3,4),
-// day6 ≈ [6,7), ended ≈ [7,8).
+// [lower, upper) in days since registration, counted from 00:00 UTC of the
+// run's day. Exported for the disjointness test. Trial windows for reference
+// (do not overlap them): day3 = [3,4), day6 ≈ [6,7), ended ≈ [7,8).
 export const WINDOWS = {
   activation_d1: { lowerDays: 1, upperDays: 2 },
   activation_d4: { lowerDays: 4, upperDays: 5 },
 };
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * The [lower, upper) bounds (ISO) of registered_at for the run at `now`, or over
+ * a sentinel `span` = { first, last } of run times. Measured from the start of
+ * the run's UTC day, the reference trial_day3 uses too (utcDayStart).
+ */
+export function activationWindowBounds(kind, { span = null, now = Date.now() } = {}) {
+  const w = WINDOWS[kind];
+  return {
+    lower: new Date(utcDayStart(span ? span.first : now) - w.upperDays * DAY_MS).toISOString(),
+    upper: new Date(utcDayStart(span ? span.last : now) - w.lowerDays * DAY_MS).toISOString(),
+  };
+}
+
+/** The first midnight at which a run selects a registration at `at` (ms): the run that day comes after it. */
+export function activationWindowOpens(kind, at) {
+  return utcDayStart(at + WINDOWS[kind].lowerDays * DAY_MS) + DAY_MS;
+}
 
 // ─── copy ────────────────────────────────────────────────────────────────────
 // English (the post-signup product is English); Zaid voice, same register as
@@ -104,7 +123,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
               DeutschMeister · <a href="${footerHref}" style="color:${BRAND.graphite};">deutsch-meister.de</a>${socialFooterLine(BRAND.graphite)}<br>
-              <a href="${unsubUrl}" style="color:${BRAND.graphite};">Unsubscribe from these emails</a>
+              <a href="${unsubUrl}" style="color:${BRAND.graphite};">Unsubscribe from DeutschMeister emails</a>
             </p>
           </td>
         </tr>
@@ -116,15 +135,25 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:${BRAND.graphite};line-height:1.6;">${text}</p>`;
 
+// Lektion 1 of the free A1.1 course: the first lesson row is the activation
+// event this mail exists for, and the lesson needs no account. An SPA route, so
+// no trailing slash (src/lib/firstRun.js FIRST_LESSON_HREF; the tests pin the two
+// together). Until 2026-10-25 the CTA was the level test, promised as "ten
+// minutes" against about 20 (PLACEMENT_TEST_MINUTES in src/data/marketing.js),
+// and finishing it is not lesson activity. The test stays as a text link, with
+// no duration: a function cannot import marketing.js, and a typed figure rots.
+const FIRST_LESSON_URL = `${BASE_URL}/course/a1.1/l/1`;
+const LEVEL_TEST_HREF = tagEmailLink(`${BASE_URL}/level-test/`, { medium: 'lifecycle', campaign: 'activation-d1', content: 'level-test' });
+
 export const TEMPLATES = {
   activation_d1: {
-    subject: 'Ten minutes is enough for a first step',
-    ctaHref: `${BASE_URL}/level-test/`,
-    ctaLabel: 'Find your level →',
+    subject: 'Your first lesson: Lektion 1',
+    ctaHref: FIRST_LESSON_URL,
+    ctaLabel: 'Start Lektion 1 →',
     body:
       P('Hey! You signed up for DeutschMeister — and then, if the data is right, life happened. That\'s normal; it\'s what happens to most people after most signups.') +
-      P(`So here's the smallest useful first step: the <strong style="color:${BRAND.ink};">level test</strong>. Ten minutes, and it tells you exactly which lesson to start with instead of leaving you staring at a syllabus.`) +
-      P('If you already know your level, skip the test and open any lesson at it. The first one you finish is the one that makes the second one easy.'),
+      P(`So here's the smallest useful first step: <strong style="color:${BRAND.ink};">Lektion 1</strong> of the free A1.1 course. It starts with the first Hallo, one short step per screen.`) +
+      P(`Already know some German? The <a href="${LEVEL_TEST_HREF}" style="color:${BRAND.siegel};">level test</a> tells you which lesson to start with. The first one you finish is the one that makes the second one easy.`),
   },
   activation_d4: {
     subject: 'The three-second trick for German sentences',
@@ -140,10 +169,10 @@ export const TEMPLATES = {
 // Every link into the site carries the lifecycle UTM tags, so a click reaches
 // dm_attribution as source "email" instead of untracked or a webmail host
 // (docs/tracking-links.md, "Our own email"). The campaign is the kind with
-// hyphens (activation_d1 -> activation-d1); utm_content names the link. The
-// CTA keeps its trailing slash before the query (test 5 in
-// tests/lifecycle.test.mjs). The unsubscribe link is never tagged. Exported
-// for tests/lifecycle-links.test.mjs.
+// hyphens (activation_d1 -> activation-d1); utm_content names the link. A CTA
+// to a prerendered route keeps its trailing slash before the query, one to the
+// course (an SPA route) has none (test 5 in tests/lifecycle.test.mjs). The
+// unsubscribe link is never tagged. Exported for tests/lifecycle-links.test.mjs.
 export function renderHtml(kind, userId) {
   const tpl = TEMPLATES[kind];
   const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
@@ -157,26 +186,32 @@ export function renderHtml(kind, userId) {
   });
 }
 
+/** One Resend item. The List-Unsubscribe headers carry the footer's own link. */
+export function mailItem(kind, recipient) {
+  return {
+    from: FROM_ADDRESS,
+    to: [recipient.email],
+    reply_to: 'zaid@deutsch-meister.de',
+    subject: TEMPLATES[kind].subject,
+    html: renderHtml(kind, recipient.id),
+    headers: unsubscribeHeaders(unsubscribeUrl(recipient.id)),
+  };
+}
+
 // ─── selection ───────────────────────────────────────────────────────────────
 
 // Users inside the window whose funnel status is still 'new' (no lesson
 // activity of any kind, not subscribed), not opted out, message not yet sent.
 //
 // ONE definition of "who is due", read by this job and by the sentinel. The
-// job passes nothing and gets today's run. The sentinel passes `span` =
-// { first, last }, the scheduled runs since the job's last ledger row: the
-// window then covers all of them ([first - upper, last - lower)), and a user
-// counts only if their address was confirmed by the time their window opened
-// — so nobody who became due (or confirmed) after a run is counted as missed;
-// the next run mails them.
-export async function selectCandidates(kind, { client = supabase, span = null } = {}) {
-  const day = 24 * 60 * 60 * 1000;
-  const now = Date.now();
-  const first = span ? span.first : now;
-  const last = span ? span.last : now;
-  const w = WINDOWS[kind];
-  const lower = new Date(first - w.upperDays * day).toISOString();
-  const upper = new Date(last - w.lowerDays * day).toISOString();
+// job passes nothing and gets today's run (`now` lets a test replay a run). The
+// sentinel passes `span` = { first, last }, the scheduled runs since the job's
+// last ledger row: the window then covers all of them ([day(first) - upper,
+// day(last) - lower), activationWindowBounds), and a user counts only if their
+// address was confirmed by the time their window opened — so nobody who became
+// due (or confirmed) after a run is counted as missed; the next run mails them.
+export async function selectCandidates(kind, { client = supabase, span = null, now = Date.now() } = {}) {
+  const { lower, upper } = activationWindowBounds(kind, { span, now });
 
   const { data: rows, error } = await client
     .from('lifecycle_customer_state')
@@ -220,9 +255,9 @@ export async function selectCandidates(kind, { client = supabase, span = null } 
   }
 
   // Over a span, due at a run means confirmed at it: the run that selects a
-  // user comes after their window opens (registered_at + lower), so an address
+  // user comes after their window opens (activationWindowOpens), so an address
   // confirmed by then was confirmed at that run. Without a span this is moot.
-  const confirmedInTime = (r) => !span || confirmedAt.get(r.user_id) <= Date.parse(r.registered_at) + w.lowerDays * day;
+  const confirmedInTime = (r) => !span || confirmedAt.get(r.user_id) <= activationWindowOpens(kind, Date.parse(r.registered_at));
 
   return candidates
     .filter((r) => !sentAlready.has(r.user_id) && emails.has(r.user_id) && confirmedInTime(r))
@@ -264,7 +299,6 @@ async function sendKind(resendKey, kind, { dry, canary }) {
   if (dry) return { kind, wouldSend: recipients.length, sent: 0, failed: 0 };
   if (recipients.length === 0) return { kind, sent: 0, failed: 0 };
 
-  const tpl = TEMPLATES[kind];
   let sent = 0;
   let failed = 0;
 
@@ -289,13 +323,7 @@ async function sendKind(resendKey, kind, { dry, canary }) {
     const claimed = slice.filter((r) => claimedIds.has(r.id));
     if (claimed.length === 0) continue;
 
-    const items = claimed.map((r) => ({
-      from: FROM_ADDRESS,
-      to: [r.email],
-      reply_to: 'zaid@deutsch-meister.de',
-      subject: tpl.subject,
-      html: renderHtml(kind, r.id),
-    }));
+    const items = claimed.map((r) => mailItem(kind, r));
 
     try {
       await sendBatch(resendKey, items);
