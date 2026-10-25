@@ -4,6 +4,15 @@ import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { calculatePlacement } from '../components/LevelTest/placementResult.js';
+import {
+  drawQuestions,
+  answerFor,
+  placementSnapshot,
+  restorePlacement,
+  PLACEMENT_PROGRESS_KEY,
+  RESUMABLE_STEPS,
+} from '../components/LevelTest/drawQuestions.js';
+import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage';
 import { supabase } from '../utils/supabase';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
 import LevelTestQuestion from '../components/LevelTest/LevelTestQuestion';
@@ -11,6 +20,12 @@ import LevelTestListening from '../components/LevelTest/LevelTestListening';
 import LevelTestSpeaking from '../components/LevelTest/LevelTestSpeaking';
 import LevelTestResults from '../components/LevelTest/LevelTestResults';
 import questionData from '../data/levelTestQuestions.json';
+
+const BANK = questionData.questions;
+// The run in progress lives in this tab only (sessionStorage, through safeStorage).
+const SESSION = { session: true };
+// Ten questions per band, each with its own option order (drawQuestions.js).
+const newDraw = () => drawQuestions(BANK);
 
 const LevelTest = () => {
   const { user } = useAuth();
@@ -24,6 +39,12 @@ const LevelTest = () => {
   const [listeningScore, setListeningScore] = useState(null);
   const [, setListeningAnswers] = useState([]);
   const [speakingScore, setSpeakingScore] = useState(null);
+  // The draw is state, not a memo: "Retake Test" used to serve the same 40
+  // questions in the same order, because the memo never re-ran.
+  const [questions, setQuestions] = useState(newDraw);
+  // A run this tab left unfinished (a back-swipe, an iOS tab reload), offered
+  // on the landing page while every question still exists in the bank.
+  const [resumable, setResumable] = useState(() => restorePlacement(BANK, safeGetJSON(PLACEMENT_PROGRESS_KEY, null, SESSION)));
   const assessmentRef = useRef(null);
 
   // Route changes in this SPA preserve the previous document scroll position.
@@ -40,30 +61,6 @@ const LevelTest = () => {
     return () => window.cancelAnimationFrame(frameId);
   }, [testState, currentQuestionIndex]);
 
-  // Shuffle questions within each level for variety
-  const questions = useMemo(() => {
-    const shuffleArray = (array) => {
-      const shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    };
-
-    // Get 10 questions per level (40 total)
-    const levels = ['A1', 'A2', 'B1', 'B2'];
-    let selectedQuestions = [];
-
-    levels.forEach(level => {
-      const levelQuestions = questionData.questions.filter(q => q.level === level);
-      const shuffled = shuffleArray(levelQuestions);
-      selectedQuestions = [...selectedQuestions, ...shuffled.slice(0, 10)];
-    });
-
-    return selectedQuestions;
-  }, []);
-
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
 
@@ -71,20 +68,19 @@ const LevelTest = () => {
     [answers, questions, listeningScore, speakingScore]);
   const finalSublevel = placement.sublevel;
 
+  // Keep the run in progress on this tab after every step; a finished run
+  // leaves nothing behind. Listening and speaking resume at their intro screens.
+  useEffect(() => {
+    if (RESUMABLE_STEPS.includes(testState)) {
+      safeSetJSON(PLACEMENT_PROGRESS_KEY, placementSnapshot({ questions, answers, currentQuestionIndex, testState, listeningScore }), SESSION);
+    } else if (testState === 'results') {
+      safeRemove(PLACEMENT_PROGRESS_KEY, SESSION);
+    }
+  }, [questions, answers, currentQuestionIndex, testState, listeningScore]);
+
+  // Scored against the shown option order (drawQuestions.js remaps the key).
   const handleAnswer = (selectedIndex) => {
-    const isCorrect = selectedIndex === currentQuestion.correctIndex;
-
-    const newAnswer = {
-      questionId: currentQuestion.id,
-      level: currentQuestion.level,
-      sublevel: currentQuestion.sublevel,
-      type: currentQuestion.type,
-      selectedIndex,
-      isCorrect,
-      points: isCorrect ? currentQuestion.points : 0
-    };
-
-    const updatedAnswers = [...answers, newAnswer];
+    const updatedAnswers = [...answers, answerFor(currentQuestion, selectedIndex)];
     setAnswers(updatedAnswers);
 
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -102,7 +98,12 @@ const LevelTest = () => {
     }
   };
 
+  // A new run, from the landing page or "Retake Test": a new draw, and the old
+  // run's snapshot is gone.
   const startTest = () => {
+    safeRemove(PLACEMENT_PROGRESS_KEY, SESSION);
+    setResumable(null);
+    setQuestions(newDraw());
     setTestState('testing');
     setCurrentQuestionIndex(0);
     setAnswers([]);
@@ -110,6 +111,22 @@ const LevelTest = () => {
     setListeningAnswers([]);
     setSpeakingScore(null);
   };
+
+  const resumeTest = () => {
+    if (!resumable) return;
+    setQuestions(resumable.questions);
+    setAnswers(resumable.answers);
+    setCurrentQuestionIndex(resumable.currentQuestionIndex);
+    setListeningScore(resumable.listeningScore);
+    setListeningAnswers([]);
+    setSpeakingScore(null);
+    setTestState(resumable.testState);
+    setResumable(null);
+  };
+
+  const resumeAt = !resumable ? null
+    : resumable.testState === 'testing' ? `question ${resumable.currentQuestionIndex + 1} of ${resumable.questions.length}`
+      : `the ${resumable.testState} section`;
 
   // Persist the placement result. Without this the whole test was decorative:
   // profiles.current_level stayed at its 'a1' default for every account, and
@@ -219,7 +236,7 @@ const LevelTest = () => {
         className="min-h-screen bg-paper text-ink outline-none"
       >
         {testState === 'landing' && (
-          <LevelTestLanding onStart={startTest} />
+          <LevelTestLanding onStart={startTest} resumeAt={resumeAt} onResume={resumeTest} />
         )}
 
         {testState === 'testing' && currentQuestion && (

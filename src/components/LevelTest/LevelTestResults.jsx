@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
+import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle, Crown } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getTopicsForLevel } from '../../data/grammarTopics';
 import Button from '../ui/Button.jsx';
@@ -9,8 +9,11 @@ import Chip from '../ui/Chip.jsx';
 import Reveal from '../ui/Reveal.jsx';
 import Aurora from '../ui/Aurora.jsx';
 import confettiBurst from '../../lib/confetti.js';
-import { placementSignupHref, rememberPlacement } from '../../lib/placement.js';
+import { placementSignupHref, rememberPlacement, PLACEMENT_REF } from '../../lib/placement.js';
+import { placedCourseHref } from '../../lib/firstRun.js';
+import { focusTopics } from './placementResult.js';
 import { TRIAL_DAYS, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
+import { stationFor, stationStatusLine, EXAM_ROUTE } from '../../data/offers.js';
 
 // The earned moment (docs/design/playbook.md). Finishing the placement test IS
 // a win — one confetti burst, one `celebrate` action — and that is true at
@@ -43,7 +46,9 @@ const LevelTestResults = ({
   }, []);
 
   const { typeScores, weakTopics, writtenPercentage, speakingPercentage, totalCorrect, totalQuestions, sublevel: finalSublevel, demotions } = placement;
-  const topWeakTopics = [...weakTopics].sort((a, b) => b.wrong - a.wrong).slice(0, 3);
+  // Only topics up to one band above the result (placementResult.js): a
+  // beginner is never sent to review B1/B2 grammar they have not met.
+  const topWeakTopics = focusTopics(weakTopics, finalSublevel);
   const getTypePercentage = (type) => {
     if (typeScores[type].total === 0) return 0;
     return Math.round((typeScores[type].correct / typeScores[type].total) * 100);
@@ -57,14 +62,37 @@ const LevelTestResults = ({
     if (!user) rememberPlacement(finalSublevel);
   }, [user, finalSublevel]);
 
-  // Deep link into the first lesson of the placed level. Grammar lessons are
-  // served by the Astro build, so this must be rendered as a full-load <a>
-  // (trailing-slash class). Falls back to the hub if the topic list ever
-  // comes back empty for a level.
+  // Deep link into the first lesson of the placed level: its guided course when
+  // the level has one (src/lib/firstRun.js placedCourseHref, the same target as
+  // the dashboard's first-run card) — Lektion 1 of the free course for the most
+  // common result, A1.1 — an SPA route. Only a level with no course yet (B1/B2)
+  // starts in grammar, served by the Astro build: a full-load <a> with the
+  // trailing slash, falling back to the hub if the topic list is ever empty.
+  const placedCourse = placedCourseHref(finalSublevel);
   const firstTopic = getTopicsForLevel(finalSublevel.toLowerCase())[0];
-  const firstLessonHref = firstTopic
-    ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}/`
-    : '/grammar/';
+  const firstLesson = placedCourse
+    ? { to: placedCourse }
+    : { href: firstTopic ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}/` : '/grammar/' };
+
+  // The placed level's own course and offer, every figure from offers.js (prices
+  // from pricing.js, never retyped). A ticket station (A1.2–A2.2) gets the first
+  // card: its course, where LevelSubscriptionGuard serves the trial or signup
+  // door or the offer, and one line to its ticket page. B1/B2 have no course
+  // yet: the route offers.js names for them, Pro. Both links are page loads
+  // tagged as level-test doors (public/attribution.js reads a tag only on a
+  // load). The A1.1 card below stays for every result.
+  const station = stationFor(finalSublevel);
+  const doorTag = new URLSearchParams({ ref: PLACEMENT_REF, utm_medium: 'onsite', utm_content: finalSublevel.toLowerCase() });
+  const placedTicket = station?.status === 'ticket' && placedCourse ? {
+    to: placedCourse,
+    label: `Start the ${station.code} course`,
+    detail: `Your test suggests ${station.code}. The guided course for your level starts here.`,
+    ticketHref: `${station.coursePage}?${doorTag}`,
+    ticketLine: `Your stop: ${station.code} · ${stationStatusLine(station)}`,
+  } : null;
+  const proLink = station?.status === 'building' ? EXAM_ROUTE.links.find((link) => link.href.startsWith('/pricing/')) : null;
+  const [proPath, proHash] = proLink ? proLink.href.split('#') : [];
+  const proHref = proLink ? `${proPath}?${doorTag}${proHash ? `#${proHash}` : ''}` : null;
 
   // The placement hook into the free A1.1 course (Wave 1). An A1.1 result
   // starts at Lektion 1; any higher result opens the same course with every
@@ -346,6 +374,35 @@ const LevelTestResults = ({
       <Reveal delay={380} className="mt-8">
         <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Recommended Next Steps</h2>
         <div className="mt-3 flex flex-col gap-3">
+          {placedTicket && (
+            <Card raised edge="siegel" className="p-4" data-placement-station={station.level}>
+              <Link to={placedTicket.to} className="flex items-center gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
+                  <BookOpen className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[0.9375rem] font-bold text-ink">{placedTicket.label}</span>
+                  <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{placedTicket.detail}</span>
+                </span>
+              </Link>
+              <a href={placedTicket.ticketHref} className="mt-3 block text-sm font-bold text-siegel transition-colors hover:text-siegel-deep sm:ml-[3.75rem]">
+                {placedTicket.ticketLine} →
+              </a>
+            </Card>
+          )}
+
+          {proHref && (
+            <Card interactive as="a" href={proHref} className="flex items-center gap-4 p-4" data-placement-pro>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
+                <Crown className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">{EXAM_ROUTE.title}</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{EXAM_ROUTE.body}</span>
+              </span>
+            </Card>
+          )}
+
           <Card interactive as={Link} to={courseHref} className="flex items-center gap-4 p-4" data-placement-course>
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
               <BookOpen className="h-5 w-5" aria-hidden="true" />
@@ -414,7 +471,7 @@ const LevelTestResults = ({
           <RefreshCw size={18} />
           Retake Test
         </Button>
-        <Button variant="celebrate" size="lg" href={firstLessonHref} className="flex-1">
+        <Button variant="celebrate" size="lg" {...firstLesson} className="flex-1">
           Start your first lesson
         </Button>
       </Reveal>

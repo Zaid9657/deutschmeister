@@ -137,12 +137,12 @@
       "topicDisplayName": "Definite Articles",
       "question": "_____ Sonne scheint heute.",
       "options": [
-        "Der",
         "Die",
+        "Der",
         "Das",
         "Den"
       ],
-      "correctIndex": 1,
+      "correctIndex": 0,
       "explanation": "'Sonne' (sun) is feminine in German, so we use 'die'. Die Sonne = The sun.",
       "relatedTopicUrl": "/grammar/a1.1/definite-articles",
       "difficulty": "easy",
@@ -198,11 +198,11 @@
       "question": "Das ist meine Schwester. _____ ist 20 Jahre alt.",
       "options": [
         "Er",
-        "Sie",
+        "Wir",
         "Es",
-        "Wir"
+        "Sie"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "'Sie' replaces feminine nouns like 'Schwester' (sister). Sie = She.",
       "relatedTopicUrl": "/grammar/a1.1/personal-pronouns",
       "difficulty": "easy",
@@ -215,14 +215,14 @@
       "type": "grammar",
       "topic": "personal_pronouns",
       "topicDisplayName": "Personal Pronouns",
-      "question": "Das Haus ist alt. _____ hat 100 Jahre.",
+      "question": "Das ist unser Haus. _____ ist 100 Jahre alt.",
       "options": [
         "Er",
         "Sie",
-        "Es",
-        "Sie (plural)"
+        "Sie (plural)",
+        "Es"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "explanation": "'Es' replaces neuter nouns like 'Haus' (house). Es = It.",
       "relatedTopicUrl": "/grammar/a1.1/personal-pronouns",
       "difficulty": "medium",
@@ -358,11 +358,11 @@
       "question": "_____ wohnst du? – In Hamburg.",
       "options": [
         "Was",
-        "Wo",
+        "Wie",
         "Wer",
-        "Wie"
+        "Wo"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "'Wo' asks about location. Wo wohnst du? = Where do you live?",
       "relatedTopicUrl": "/grammar/a1.2/question-words",
       "difficulty": "easy",
@@ -419,11 +419,11 @@
       "question": "Wie alt ist Peter?",
       "options": [
         "20 Jahre",
-        "30 Jahre",
+        "32 Jahre",
         "40 Jahre",
-        "32 Jahre"
+        "30 Jahre"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "The text says 'Ich bin 30 Jahre alt' (I am 30 years old).",
       "relatedTopicUrl": "/reading/a1.1",
       "difficulty": "easy",
@@ -579,11 +579,11 @@
       "question": "Wann _____ der Film _____?",
       "options": [
         "anfängt / -",
-        "fängt / an",
         "fangen / an",
+        "fängt / an",
         "- / anfangen"
       ],
-      "correctIndex": 1,
+      "correctIndex": 2,
       "explanation": "Separable verbs split: conjugated part in position 2, prefix at the end. Der Film fängt an.",
       "relatedTopicUrl": "/grammar/a2.1/separable-verbs",
       "difficulty": "medium",
@@ -599,11 +599,11 @@
       "question": "Ich _____ jeden Tag um 7 Uhr _____.",
       "options": [
         "aufstehe / -",
-        "stehe / auf",
+        "- / aufstehen",
         "stehen / auf",
-        "- / aufstehen"
+        "stehe / auf"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "'Aufstehen' splits into 'stehe...auf' in present tense. Ich stehe auf = I get up.",
       "relatedTopicUrl": "/grammar/a2.1/separable-verbs",
       "difficulty": "medium",
@@ -616,15 +616,15 @@
       "type": "grammar",
       "topic": "separable_verbs",
       "topicDisplayName": "Separable Verbs",
-      "question": "Bitte _____ das Licht _____!",
+      "question": "Lena, bitte _____ das Licht _____!",
       "options": [
         "ausmachen / -",
-        "mach / aus",
-        "macht / aus",
-        "- / ausmacht"
+        "- / ausmacht",
+        "machst / aus",
+        "mach / aus"
       ],
-      "correctIndex": 1,
-      "explanation": "In imperative (du-form), the verb splits: Mach...aus! = Turn off!",
+      "correctIndex": 3,
+      "explanation": "Lena is one person you call du, so the imperative is the du-form without -st, and the prefix goes to the end: Mach … aus! = Turn off!",
       "relatedTopicUrl": "/grammar/a2.1/separable-verbs",
       "difficulty": "hard",
       "points": 1
@@ -699,12 +699,12 @@
       "question": "Er _____ drei Stunden _____.",
       "options": [
         "ist / geschlafen",
-        "hat / geschlafen",
         "hat / schlafen",
+        "hat / geschlafen",
         "ist / geschlaft"
       ],
-      "correctIndex": 1,
-      "explanation": "'Schlafen' uses 'haben' (no movement/change of state). Past participle: geschlafen.",
+      "correctIndex": 2,
+      "explanation": "'Schlafen' uses 'haben' (no movement/change of state): Er hat geschlafen. Past participle: geschlafen.",
       "relatedTopicUrl": "/grammar/a2.1/perfect-tense-haben",
       "difficulty": "medium",
       "points": 1
@@ -738,13 +738,13 @@
       "topicDisplayName": "Dative Prepositions",
       "question": "Das Geschenk ist _____ meiner Mutter.",
       "options": [
-        "mit",
+        "für",
+        "ohne",
         "von",
-        "bei",
-        "nach"
+        "durch"
       ],
-      "correctIndex": 1,
-      "explanation": "'Von' (from) takes dative case. Von meiner Mutter = from my mother.",
+      "correctIndex": 2,
+      "explanation": "'Von' (from) takes dative case. Von meiner Mutter = from my mother. Für, ohne and durch take the accusative (für meine Mutter).",
       "relatedTopicUrl": "/grammar/a2.1/prepositions-dative",
       "difficulty": "medium",
       "points": 1
@@ -758,12 +758,12 @@
       "topicDisplayName": "Dative Prepositions",
       "question": "Nach _____ Arbeit gehe ich nach Hause.",
       "options": [
-        "der",
+        "dem",
         "die",
         "den",
-        "dem"
+        "der"
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "'Nach' takes dative. 'Arbeit' is feminine: die → der in dative. Nach der Arbeit = after work.",
       "relatedTopicUrl": "/grammar/a2.1/prepositions-dative",
       "difficulty": "hard",
@@ -798,12 +798,12 @@
       "topicDisplayName": "Daily Activities",
       "question": "Um einen Termin zu machen, muss ich _____.",
       "options": [
-        "anrufen",
+        "ausgehen",
         "aufstehen",
         "einkaufen",
-        "ausgehen"
+        "anrufen"
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "explanation": "Anrufen = to call. You call to make an appointment (Termin).",
       "relatedTopicUrl": "/level/a2.1?tab=vocabulary",
       "difficulty": "easy",
@@ -820,11 +820,11 @@
       "question": "Was war das Problem im Restaurant?",
       "options": [
         "Das Essen war schlecht",
-        "Der Service war langsam",
+        "Das Restaurant war geschlossen",
         "Es gab keinen Platz",
-        "Das Restaurant war geschlossen"
+        "Der Service war langsam"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "The text says 'der Service war langsam' (the service was slow).",
       "relatedTopicUrl": "/reading/a2.1",
       "difficulty": "easy",
@@ -945,7 +945,7 @@
         "werden"
       ],
       "correctIndex": 1,
-      "explanation": "'An deiner Stelle' (in your position) introduces advice with Konjunktiv II.",
+      "explanation": "'An deiner Stelle' (in your position) introduces advice with Konjunktiv II: An deiner Stelle würde ich … sprechen = In your position, I would talk …",
       "relatedTopicUrl": "/grammar/b1.1/konjunktiv-ii-wurde",
       "difficulty": "medium",
       "points": 1
@@ -1042,10 +1042,10 @@
         "ist",
         "wird",
         "hat",
-        "wurde"
+        "werden"
       ],
       "correctIndex": 1,
-      "explanation": "Present passive = 'werden' + past participle. Es wird getrunken = It is drunk.",
+      "explanation": "Present passive = 'werden' + past participle. 'Viel Bier' is singular, so the verb is 'wird', not 'werden'. Es wird getrunken = It is drunk.",
       "relatedTopicUrl": "/grammar/b1.2/passive-voice-present",
       "difficulty": "medium",
       "points": 1
@@ -1062,10 +1062,10 @@
         "ist",
         "wird",
         "hat",
-        "wurde"
+        "werden"
       ],
       "correctIndex": 1,
-      "explanation": "Present passive with 'gerade' (currently). Das Auto wird repariert = The car is being repaired.",
+      "explanation": "Present passive with 'gerade' (currently). 'Das Auto' is singular, so: Das Auto wird repariert = The car is being repaired.",
       "relatedTopicUrl": "/grammar/b1.2/passive-voice-present",
       "difficulty": "easy",
       "points": 1
@@ -1080,12 +1080,12 @@
       "question": "Die E-Mails _____ jeden Tag gelesen.",
       "options": [
         "sind",
-        "werden",
+        "wird",
         "haben",
-        "wurden"
+        "werden"
       ],
-      "correctIndex": 1,
-      "explanation": "Present passive plural: werden + past participle. Die E-Mails werden gelesen = The emails are read.",
+      "correctIndex": 3,
+      "explanation": "Present passive plural: werden + past participle ('wird' is singular). Die E-Mails werden gelesen = The emails are read.",
       "relatedTopicUrl": "/grammar/b1.2/passive-voice-present",
       "difficulty": "easy",
       "points": 1
@@ -1200,11 +1200,11 @@
       "question": "Er hat viel _____ mit Computern. Er arbeitet seit 15 Jahren in der IT.",
       "options": [
         "Meinung",
-        "Erfahrung",
+        "Erinnerung",
         "Hoffnung",
-        "Erinnerung"
+        "Erfahrung"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "Erfahrung = experience. 15 years of work gives experience.",
       "relatedTopicUrl": "/level/b1.1?tab=vocabulary",
       "difficulty": "easy",
@@ -1222,10 +1222,10 @@
       "options": [
         "Man spart keine Zeit",
         "Man muss mehr arbeiten",
-        "Es ist schwer, Beruf und Privatleben zu trennen",
-        "Man verdient weniger Geld"
+        "Man verdient weniger Geld",
+        "Es ist schwer, Beruf und Privatleben zu trennen"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "explanation": "The text mentions 'Schwierigkeiten, Beruf und Privatleben zu trennen' as a problem.",
       "relatedTopicUrl": "/reading/b1.1",
       "difficulty": "medium",
@@ -1321,11 +1321,11 @@
       "question": "Das Gebäude _____ letztes Jahr renoviert.",
       "options": [
         "wird",
-        "wurde",
         "ist",
+        "wurde",
         "war"
       ],
-      "correctIndex": 1,
+      "correctIndex": 2,
       "explanation": "Past passive (Präteritum): wurde + past participle. Es wurde renoviert = It was renovated.",
       "relatedTopicUrl": "/grammar/b2.1/passive-alternatives",
       "difficulty": "medium",
@@ -1341,11 +1341,11 @@
       "question": "Die neue Brücke _____ nächstes Jahr gebaut werden.",
       "options": [
         "wurde",
-        "wird",
         "ist",
+        "wird",
         "hat"
       ],
-      "correctIndex": 1,
+      "correctIndex": 2,
       "explanation": "Future passive: wird + past participle + werden. Es wird gebaut werden = It will be built.",
       "relatedTopicUrl": "/grammar/b2.1/passive-alternatives",
       "difficulty": "hard",
@@ -1381,11 +1381,11 @@
       "question": "Die _____ Ergebnisse werden morgen veröffentlicht.",
       "options": [
         "gestern durchführende Studie zeigenden",
-        "in der Studie gewonnenen",
+        "zu gewinnende",
         "Studie gewinnenden",
-        "zu gewinnende"
+        "in der Studie gewonnenen"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "Past participle as attribute: 'die in der Studie gewonnenen Ergebnisse' = results obtained in the study.",
       "relatedTopicUrl": "/grammar/b2.1/participial-adjectives",
       "difficulty": "hard",
@@ -1421,11 +1421,11 @@
       "question": "Die _____ Konsequenzen sind noch nicht absehbar.",
       "options": [
         "sich ergebend",
-        "sich daraus ergebenden",
+        "sich ergebende daraus",
         "ergeben sich",
-        "sich ergebende daraus"
+        "sich daraus ergebenden"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "'Die sich daraus ergebenden Konsequenzen' = The consequences resulting from this. Reflexive participle.",
       "relatedTopicUrl": "/grammar/b2.1/participial-adjectives",
       "difficulty": "hard",
@@ -1438,7 +1438,7 @@
       "type": "grammar",
       "topic": "nominalization",
       "topicDisplayName": "Nominalization",
-      "question": "Das _____ des Projekts dauerte drei Monate.",
+      "question": "Die _____ des Projekts dauerte drei Monate.",
       "options": [
         "Durchführ",
         "Durchführen",
@@ -1483,10 +1483,10 @@
         "Bemühen",
         "Bemühungen",
         "bemüht",
-        "Bemühung"
+        "Bemühens"
       ],
       "correctIndex": 1,
-      "explanation": "'Bemühungen' (plural) = efforts. Trotz seiner Bemühungen = Despite his efforts.",
+      "explanation": "'Bemühungen' (plural) = efforts. Trotz seiner Bemühungen = Despite his efforts. Das Bemühen would need 'seines': trotz seines Bemühens.",
       "relatedTopicUrl": "/grammar/b2.1/nominalization",
       "difficulty": "medium",
       "points": 1
@@ -1520,12 +1520,12 @@
       "topicDisplayName": "Complex Connectors",
       "question": "_____ der hohen Kosten wurde das Projekt gestrichen.",
       "options": [
-        "Trotz",
         "Aufgrund",
+        "Trotz",
         "Ohne",
         "Mit"
       ],
-      "correctIndex": 1,
+      "correctIndex": 0,
       "explanation": "'Aufgrund' = because of/due to (takes genitive). Aufgrund der Kosten = due to the costs.",
       "relatedTopicUrl": "/grammar/b2.2/advanced-conjunctions",
       "difficulty": "medium",
@@ -1541,11 +1541,11 @@
       "question": "Je mehr man übt, _____ besser wird man.",
       "options": [
         "so",
-        "desto",
+        "wie",
         "als",
-        "wie"
+        "desto"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "'Je...desto' = the more...the more. Je mehr...desto besser = The more...the better.",
       "relatedTopicUrl": "/grammar/b2.2/advanced-conjunctions",
       "difficulty": "medium",
@@ -1560,13 +1560,13 @@
       "topicDisplayName": "Formal Subjunctive",
       "question": "Ich wäre Ihnen sehr dankbar, wenn Sie mir die Unterlagen _____ könnten.",
       "options": [
-        "senden",
+        "zuzusenden",
         "sendeten",
         "zusenden",
         "gesendet"
       ],
       "correctIndex": 2,
-      "explanation": "Formal request with Konjunktiv II. 'Zusenden' (separable) stays together in subordinate clause.",
+      "explanation": "Formal request with Konjunktiv II. 'Könnten' takes the bare infinitive, so 'zusenden' (separable) stays together at the end; 'zuzusenden' is a zu-infinitive.",
       "relatedTopicUrl": "/grammar/b2.1/konjunktiv-i-reported-speech",
       "difficulty": "hard",
       "points": 1
@@ -1581,11 +1581,11 @@
       "question": "Es _____ mich freuen, wenn Sie an der Veranstaltung teilnehmen könnten.",
       "options": [
         "wird",
-        "würde",
+        "werden",
         "wurde",
-        "werden"
+        "würde"
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "explanation": "Polite formal expression with Konjunktiv II. Es würde mich freuen = I would be pleased.",
       "relatedTopicUrl": "/grammar/b2.1/konjunktiv-i-reported-speech",
       "difficulty": "medium",
@@ -1623,10 +1623,10 @@
       "options": [
         "Dass es keine neuen Technologien gibt",
         "Dass alle Menschen zu Hause arbeiten",
-        "Wie erfolgreich Umschulungsmaßnahmen umgesetzt werden",
-        "Dass der Staat alle Arbeitsplätze garantiert"
+        "Dass der Staat alle Arbeitsplätze garantiert",
+        "Wie erfolgreich Umschulungsmaßnahmen umgesetzt werden"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "explanation": "The text states: 'Entscheidend wird sein, wie erfolgreich...Umschulungs- und Weiterbildungsmaßnahmen umsetzt.'",
       "relatedTopicUrl": "/reading/b2.1",
       "difficulty": "medium",

@@ -66,3 +66,35 @@ export function deriveCurrent(progress, placementLevel) {
   const topics = getTopicsForLevel(last) || [];
   return { level: last, topics, nextTopic: null, nextIndex: topics.length, started: true, allDone: true };
 }
+
+/**
+ * The finished topic most worth revisiting, from the placement floor up: the
+ * lowest best score first, then the oldest completion (a completion with no
+ * date counts as the oldest). null while nothing is finished.
+ *
+ * The dashboard's Review card opens it. It used to open the next NEW topic —
+ * the same link as the hero for B1+ learners — so nothing on the dashboard ever
+ * brought back grammar a learner had already learned.
+ * @param {object} progress        useProgress() shape
+ * @param {string} [placementLevel] profiles.current_level; topics below it are not offered
+ * @returns {null | { level: string, topic: object, score: number, completedAt: string|null }}
+ */
+export function reviewTopic(progress, placementLevel) {
+  const floor = normalizeLevel(placementLevel);
+  const startIndex = floor ? ALL_LEVELS.indexOf(floor) : 0;
+  let best = null;
+  for (const level of ALL_LEVELS.slice(startIndex)) {
+    for (const topic of getTopicsForLevel(level) || []) {
+      const entry = progress?.[level]?.grammarTopics?.[topic.id];
+      if (!entry?.completed) continue;
+      const score = Number.isFinite(entry.score) ? entry.score : 0;
+      const at = Date.parse(entry.completedAt);
+      const time = Number.isFinite(at) ? at : 0;
+      if (!best || score < best.score || (score === best.score && time < best.time)) {
+        best = { level, topic, score, completedAt: entry.completedAt ?? null, time };
+      }
+    }
+  }
+  if (!best) return null;
+  return { level: best.level, topic: best.topic, score: best.score, completedAt: best.completedAt };
+}

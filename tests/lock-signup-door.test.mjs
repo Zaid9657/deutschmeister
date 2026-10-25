@@ -171,6 +171,43 @@ test('every paywall reaches /signup only through a tagged door helper, as a plai
   }
 });
 
+// C-161: a signup started at the lock in front of /course/a1.2 went, after the
+// confirmation link, to the dashboard and A1.1's Lektion 1, although the new
+// trial opens the course the visitor had tried to open.
+test('the lock door remembers the course page it stands in front of, for after the confirmation link', async () => {
+  const lock = code(read('src/components/LockedContentOverlay.jsx'));
+  assert.match(lock, /import \{ setReturnPath \} from '\.\.\/lib\/returnPath\.js';/);
+  assert.match(lock, /<Button href=\{levelLockSignupHref\(level\)\} onClick=\{\(\) => setReturnPath\(location\.pathname\)\}/,
+    'the click on the signup door stores the page under the lock');
+  assert.match(lock, /const location = useLocation\(\);/);
+  // postAuthPath resumes what returnPath.js keeps (after a pending checkout).
+  assert.match(read('src/lib/buyIntent.js'), /return peekReturnPath\(\) \|\| '\/dashboard';/);
+
+  const had = Object.prototype.hasOwnProperty.call(globalThis, 'window');
+  const prev = globalThis.window;
+  const store = new Map();
+  globalThis.window = { localStorage: {
+    getItem: (k) => (store.has(k) ? store.get(k) : null),
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+  } };
+  try {
+    const { setReturnPath, peekReturnPath, clearReturnPath } = await import('../src/lib/returnPath.js');
+    for (const path of ['/course/a1.2', '/course/a2.1', '/course/b2.2']) {
+      setReturnPath(path);
+      assert.equal(peekReturnPath(), path, `${path} is resumed after signup`);
+    }
+    // Locks in front of other pages store nothing new: only a course page is ever resumed.
+    clearReturnPath();
+    for (const path of ['/level/b1.1', '/reading/a2.1', '/listening/b1.1', '//evil.test/course/a1.2', 'https://evil.test/course/a1.2']) {
+      setReturnPath(path);
+      assert.equal(peekReturnPath(), null, path);
+    }
+  } finally {
+    if (had) globalThis.window = prev; else delete globalThis.window;
+  }
+});
+
 test('the walk is not vacuous: the lock is a paywall with exactly one signup door, the tagged one', () => {
   const found = paywalls();
   assert.ok(found.includes('src/components/LockedContentOverlay.jsx'), `paywalls found: ${found.join(', ')}`);

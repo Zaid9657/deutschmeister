@@ -5,6 +5,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import Reveal from '../ui/Reveal.jsx';
+import { placementListeningQuestions } from './drawQuestions.js';
 
 // The listening step of the placement test. Calm like the written step; the
 // transport reuses the /listening/ player's treatment (docs/design/playbook.md):
@@ -68,10 +69,13 @@ const LevelTestListening = ({ onComplete, onSkip }) => {
 
         if (qError) throw qError;
 
+        // Only questions this card can present and score: since Course Factory
+        // Wave 2 each A1/A2 exercise also carries dictation rows with no options,
+        // and one of those kept "Next Exercise" disabled for good.
         return {
           level,
           exercise,
-          questions: questionsData || []
+          questions: placementListeningQuestions(questionsData || [])
         };
       });
 
@@ -210,6 +214,26 @@ const LevelTestListening = ({ onComplete, onSkip }) => {
   const currentExercise = exercises[currentExerciseIndex]?.exercise;
   const currentLevel = exercises[currentExerciseIndex]?.level;
 
+  // Error state — checked first. A failed load leaves stage at 'loading'
+  // (loadExercises clears the error when it starts again), and while the
+  // loading screen was checked first, Retry and Skip never rendered: the
+  // spinner turned forever and only a reload, which discards the written
+  // answers, got the tester out.
+  if (error) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
+        <Card tone="himbeer" className="p-6 text-center">
+          <AlertCircle size={36} className="mx-auto mb-3 text-accent-himbeer-ink" aria-hidden="true" />
+          <p className="text-[0.9375rem] font-bold text-accent-himbeer-ink">{error}</p>
+          <div className="mt-5 flex flex-col-reverse justify-center gap-3 sm:flex-row">
+            <Button variant="secondary" onClick={onSkip}>Skip Listening</Button>
+            <Button onClick={loadExercises}>Try Again</Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   // Intro screen
   if (stage === 'intro') {
     return (
@@ -282,22 +306,6 @@ const LevelTestListening = ({ onComplete, onSkip }) => {
           <Loader2 size={44} className="mx-auto mb-4 animate-spin text-siegel" aria-hidden="true" />
           <h2 className="font-display text-[1.25rem] font-semibold text-ink">Loading Exercises...</h2>
           <p className="mt-2 text-[0.9375rem] text-graphite">Preparing listening test from all levels</p>
-        </Card>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
-        <Card tone="himbeer" className="p-6 text-center">
-          <AlertCircle size={36} className="mx-auto mb-3 text-accent-himbeer-ink" aria-hidden="true" />
-          <p className="text-[0.9375rem] font-bold text-accent-himbeer-ink">{error}</p>
-          <div className="mt-5 flex flex-col-reverse justify-center gap-3 sm:flex-row">
-            <Button variant="secondary" onClick={onSkip}>Skip Listening</Button>
-            <Button onClick={loadExercises}>Try Again</Button>
-          </div>
         </Card>
       </div>
     );

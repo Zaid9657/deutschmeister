@@ -16,6 +16,7 @@ import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
 import {
+  FREE_LEVEL_LABEL,
   GRAMMAR_TOPIC_COUNT,
   LEVEL_COUNT,
   TRIAL_DAILY_LIMIT,
@@ -23,6 +24,7 @@ import {
   TRIAL_SPEAKING_SESSIONS,
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
+import { FREE_COURSE_HREF } from '../data/offers.js';
 import { pendingPlacement } from '../lib/placement.js';
 import { postAuthPath } from '../lib/buyIntent';
 import { peekBuyIntent } from '../lib/buyIntent.js';
@@ -69,8 +71,6 @@ const SignupPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { signUp } = useAuth();
-
-  useEffect(() => { trackSignupStarted(); }, []);
 
   // A level-test result taken signed out on this browser, waiting to be saved
   // (src/lib/placement.js). Read once: the line below names the level the
@@ -141,6 +141,11 @@ const SignupPage = () => {
       return;
     }
 
+    // signup_started means "the signup form is submitted" (src/data/events.js):
+    // once per submit that passed the checks above, before the account
+    // request. It used to fire on every visit to this page, and the homepage
+    // door fired it again on the click, so the funnel counted views, twice.
+    trackSignupStarted();
     setLoading(true);
 
     try {
@@ -264,9 +269,12 @@ const SignupPage = () => {
               </li>
             ))}
           </ul>
+          {/* The free first stop is the guided course (offers.js FREE_COURSE_HREF),
+              not the grammar library: Lektion 1 is where the save-progress ask
+              brings a hesitant visitor back here. tests/free-door.test.mjs. */}
           <p className="hero-line mt-3 text-sm text-graphite" style={{ '--d': '380ms' }}>
             Want to look around first?{' '}
-            <a href="/grammar/a1.1/" className={TEXT_LINK}>Explore A1.1 without an account.</a>
+            <Link to={FREE_COURSE_HREF} className={TEXT_LINK}>Start the {FREE_LEVEL_LABEL} course without an account.</Link>
           </p>
         </div>
 

@@ -104,8 +104,11 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
             <!-- The account door. Die Linie (PRs 181 and 184) left the first screen with
                  no signup link, and untagged homepage signups fell 22 → 1
                  (10.6 d before vs 6.9 d after, measured 2026-10-11). Tagged so the
-                 door is countable as acquisition_last_source = 'home'. -->
-            <a href={HOME_SIGNUP_HREF} class="dm-key dm-key-ghost-nacht" data-anon-only data-track="signup_started" data-track-surface="hero">Create a free account</a>
+                 door is countable as acquisition_last_source = 'home'. No
+                 data-track: signup_started means a submitted signup form, and
+                 SignupPage fires it on submit; firing it here as well counted a
+                 click, then the page view, as two signups started. -->
+            <a href={HOME_SIGNUP_HREF} class="dm-key dm-key-ghost-nacht" data-anon-only>Create a free account</a>
             <a href="#line" class="dm-key dm-key-ghost-nacht" data-track="course_selected" data-track-surface="hero_line">I know my level</a>
           </div>
           <p class="mt-5 text-[0.875rem] leading-relaxed text-nacht-muted">

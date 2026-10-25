@@ -40,6 +40,8 @@ export const EVENTS = {
   checkout_opened: { when: 'The Lemon Squeezy checkout is opened for a signed-in buyer (overlay or same tab).', once: false },
 
   // --- App (SPA) — names already in use since 2026-08 ---------------------------
+  // One emitter: SignupPage's submit handler, after the client-side checks. The
+  // homepage's account door is a tagged link (ref=home), not a second emitter.
   signup_started: { when: 'The signup form is submitted.', once: false },
   signup_completed: { when: 'A new account is confirmed and signed in for the first time on this browser.', once: true },
   email_verified: { when: 'The verify-email screen sees the address confirmed.', once: true },
@@ -88,6 +90,11 @@ export const ALLOWED_PROPS = [
   'entry_page', // first path of this page view
   'channel', // a SOCIAL_LINKS key: youtube | instagram | facebook
   'dm_source', 'dm_medium', 'dm_campaign', // first-touch attribution labels (public/attribution.js)
+  // Fixed values the app already sends; until 2026-10-25 the GA mirror dropped them.
+  'exit_path', // onboarding_completed: first-lesson | level-test | dashboard
+  'slide', // onboarding slide number
+  'hit', // lesson_first_sentence: boolean
+  'offer', 'reason', 'moment', // paywall_shown, speaking limit: course | pro, why, when it showed
 ];
 
 const MAX_LEN = 64;
