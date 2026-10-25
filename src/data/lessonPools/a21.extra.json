@@ -1,0 +1,3718 @@
+{
+  "level": "a2.1",
+  "authored": "2026-10-23",
+  "why": "Hand-authored typed practice. German cues fix the form. Each bounded point has four items; sentence building has an explicit opening cue. No database work.",
+  "items": [
+    {
+      "id": "extra-a21-l01-01",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Das ist ___ Oma. (wir)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "unsere",
+      "accepted": [
+        "unsere"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-02",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Ist das ___ Garten? (ihr)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "euer",
+      "accepted": [
+        "euer"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-03",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Wir wohnen bei ___ Eltern. (wir)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "unseren",
+      "accepted": [
+        "unseren"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-04",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Ana kommt zu ___ Oma. (wir)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "unserer",
+      "accepted": [
+        "unserer"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-05",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Wo wohnt ___ Bruder? (ihr)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "euer",
+      "accepted": [
+        "euer"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-06",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: ___ Familie wohnt in Köln. (wir)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Unsere",
+      "accepted": [
+        "Unsere"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-07",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Wir spielen in ___ Garten. (ihr)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "eurem",
+      "accepted": [
+        "eurem"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-08",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Ist das Kind bei ___ Mutter? (ihr)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "eurer",
+      "accepted": [
+        "eurer"
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-09",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Ergänzen Sie: Das ist ___ Garten. (Oma, Genitiv-s)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Omas",
+      "accepted": [
+        "Omas"
+      ],
+      "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+      "explanationEn": "Names take -s; von takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-10",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie: Das Kind ist der Sohn von ___ Bruder. (mein)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "meinem",
+      "accepted": [
+        "meinem"
+      ],
+      "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+      "explanationEn": "Names take -s; von takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-11",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 11,
+      "questionDe": "Ergänzen Sie: Das ist ___ Buch. (Lena, Genitiv-s)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Lenas",
+      "accepted": [
+        "Lenas"
+      ],
+      "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+      "explanationEn": "Names take -s; von takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-12",
+      "topic": "possessive-pronouns",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 12,
+      "questionDe": "Ergänzen Sie: Die Karte ist von ___ Schwester. (mein)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "meiner",
+      "accepted": [
+        "meiner"
+      ],
+      "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+      "explanationEn": "Names take -s; von takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-13",
+      "topic": "possessive-pronouns",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [Unsere Oma / wohnt / in Köln] (Beginnen Sie mit „Unsere Oma“)",
+      "questionEn": "Build the sentence. Begin with “Unsere Oma”.",
+      "options": null,
+      "answer": "Unsere Oma wohnt in Köln.",
+      "accepted": [
+        "Unsere Oma wohnt in Köln."
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l01-14",
+      "topic": "possessive-pronouns",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 14,
+      "questionDe": "Bilden Sie den Satz: [Mein Bruder / wohnt / bei unseren Eltern] (Beginnen Sie mit „Mein Bruder“)",
+      "questionEn": "Build the sentence. Begin with “Mein Bruder”.",
+      "options": null,
+      "answer": "Mein Bruder wohnt bei unseren Eltern.",
+      "accepted": [
+        "Mein Bruder wohnt bei unseren Eltern."
+      ],
+      "explanationDe": "Das Possessivwort passt zu Person, Genus und Kasus.",
+      "explanationEn": "The possessive matches person, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-01",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Ich habe die Bücher ___. (einpacken, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "eingepackt",
+      "accepted": [
+        "eingepackt"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-02",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Ana hat die Küche ___. (aufräumen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "aufgeräumt",
+      "accepted": [
+        "aufgeräumt"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-03",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Tim hat den Vermieter ___. (anrufen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "angerufen",
+      "accepted": [
+        "angerufen"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-04",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Wir haben die Schlüssel ___. (abholen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "abgeholt",
+      "accepted": [
+        "abgeholt"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-05",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Ana hat ihr Handy ___. (mitbringen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "mitgebracht",
+      "accepted": [
+        "mitgebracht"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-06",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Haben Sie die Möbel schon ___? (abholen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "abgeholt",
+      "accepted": [
+        "abgeholt"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-07",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Tim hat den Computer ___. (einpacken, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "eingepackt",
+      "accepted": [
+        "eingepackt"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-08",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Wir haben den Keller ___. (aufräumen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "aufgeräumt",
+      "accepted": [
+        "aufgeräumt"
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-09",
+      "topic": "separable-verbs",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Bilden Sie den Satz: [Ich / habe / die Bücher / eingepackt] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Build the sentence. Begin with “Ich”.",
+      "options": null,
+      "answer": "Ich habe die Bücher eingepackt.",
+      "accepted": [
+        "Ich habe die Bücher eingepackt."
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-10",
+      "topic": "separable-verbs",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Bilden Sie den Satz: [Ana / hat / die Küche / aufgeräumt] (Beginnen Sie mit „Ana“)",
+      "questionEn": "Build the sentence. Begin with “Ana”.",
+      "options": null,
+      "answer": "Ana hat die Küche aufgeräumt.",
+      "accepted": [
+        "Ana hat die Küche aufgeräumt."
+      ],
+      "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+      "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-01",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Ich stelle das Sofa an ___ Wand. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "die",
+      "accepted": [
+        "die"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-02",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Das Bild hängt über ___ Tisch. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-03",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Ana stellt die Pflanze auf ___ Balkon. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "den",
+      "accepted": [
+        "den"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-04",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Die Lampe steht in ___ Ecke. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "der",
+      "accepted": [
+        "der"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-05",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Tim legt die Bücher in ___ Regal. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "das",
+      "accepted": [
+        "das"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-06",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Die Bücher liegen in ___ Regal. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-07",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Ana stellt Stühle neben ___ Tisch. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "den",
+      "accepted": [
+        "den"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-08",
+      "topic": "two-way-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Der Stuhl steht neben ___ Tisch. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-09",
+      "topic": "two-way-prepositions",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Bilden Sie den Satz: [Ich / stelle / das Sofa / an die Wand] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Build the sentence. Begin with “Ich”.",
+      "options": null,
+      "answer": "Ich stelle das Sofa an die Wand.",
+      "accepted": [
+        "Ich stelle das Sofa an die Wand."
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l03-10",
+      "topic": "two-way-prepositions",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Bilden Sie den Satz: [Die Bücher / liegen / im Regal] (Beginnen Sie mit „Die Bücher“)",
+      "questionEn": "Build the sentence. Begin with “Die Bücher”.",
+      "options": null,
+      "answer": "Die Bücher liegen im Regal.",
+      "accepted": [
+        "Die Bücher liegen im Regal."
+      ],
+      "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+      "explanationEn": "Here destination takes the accusative; location takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-01",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Ich kaufe die ___ Tomaten. (rot)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "roten",
+      "accepted": [
+        "roten"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-02",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Ana möchte einen ___ Salat. (frisch)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "frischen",
+      "accepted": [
+        "frischen"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-03",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Das ist ein ___ Brot. (frisch)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "frisches",
+      "accepted": [
+        "frisches"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-04",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Mein ___ Käse ist lecker. (frisch)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "frischer",
+      "accepted": [
+        "frischer"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-05",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Ich nehme die ___ Flasche Öl. (groß)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "große",
+      "accepted": [
+        "große"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-06",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Die ___ Birnen kosten drei Euro. (gelb)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "gelben",
+      "accepted": [
+        "gelben"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-07",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Ich brauche kein ___ Brot. (frisch)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "frisches",
+      "accepted": [
+        "frisches"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-08",
+      "topic": "adjective-endings-intro",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Der ___ Salat ist lecker. (frisch)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "frische",
+      "accepted": [
+        "frische"
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-09",
+      "topic": "adjective-endings-intro",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Bilden Sie den Satz: [Ich / kaufe / einen frischen Salat] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Build the sentence. Begin with “Ich”.",
+      "options": null,
+      "answer": "Ich kaufe einen frischen Salat.",
+      "accepted": [
+        "Ich kaufe einen frischen Salat."
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l04-10",
+      "topic": "adjective-endings-intro",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Bilden Sie den Satz: [Die roten Tomaten / sind / lecker] (Beginnen Sie mit „Die roten Tomaten“)",
+      "questionEn": "Build the sentence. Begin with “Die roten Tomaten”.",
+      "options": null,
+      "answer": "Die roten Tomaten sind lecker.",
+      "accepted": [
+        "Die roten Tomaten sind lecker."
+      ],
+      "explanationDe": "Die Adjektivendung folgt Artikel, Genus und Kasus.",
+      "explanationEn": "The adjective ending follows the article, gender and case.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-01",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Wir schenken ___ Oma eine Kette. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "der",
+      "accepted": [
+        "der"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-02",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Ana schenkt ___ Bruder ein Buch. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-03",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Lena gratuliert ___ Kindern. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "den",
+      "accepted": [
+        "den"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-04",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Ich schenke ___ Onkel eine Karte. (mein)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "meinem",
+      "accepted": [
+        "meinem"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-05",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Wir schenken ___ Mutter Blumen. (unser)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "unserer",
+      "accepted": [
+        "unserer"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-06",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Lenas Oma hat Geburtstag. Wir gratulieren ___. (sie, Singular)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "ihr",
+      "accepted": [
+        "ihr"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-07",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Die Kinder feiern. Wir schenken ___ einen Kuchen. (sie, Plural)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "ihnen",
+      "accepted": [
+        "ihnen"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-08",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Ich backe ___ Tante einen Kuchen. (mein)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "meiner",
+      "accepted": [
+        "meiner"
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-09",
+      "topic": "dative-case",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Bilden Sie den Satz: [Wir / schenken / der Oma / eine Kette] (Beginnen Sie mit „Wir“)",
+      "questionEn": "Build the sentence. Begin with “Wir”.",
+      "options": null,
+      "answer": "Wir schenken der Oma eine Kette.",
+      "accepted": [
+        "Wir schenken der Oma eine Kette."
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-10",
+      "topic": "dative-case",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Bilden Sie den Satz: [Ana / gratuliert / ihrem Onkel] (Beginnen Sie mit „Ana“)",
+      "questionEn": "Build the sentence. Begin with “Ana”.",
+      "options": null,
+      "answer": "Ana gratuliert ihrem Onkel.",
+      "accepted": [
+        "Ana gratuliert ihrem Onkel."
+      ],
+      "explanationDe": "Der Empfänger steht im Dativ.",
+      "explanationEn": "The recipient takes the dative.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-01",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Gestern ___ ich lange arbeiten. (müssen, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "musste",
+      "accepted": [
+        "musste"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-02",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Tim ___ nicht kommen. (können, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "konnte",
+      "accepted": [
+        "konnte"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-03",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Wir ___ zusammen grillen. (wollen, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "wollten",
+      "accepted": [
+        "wollten"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-04",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Du ___ um neun nach Hause gehen. (dürfen, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "durftest",
+      "accepted": [
+        "durftest"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-05",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Lena ___ Tim anrufen. (wollen, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "wollte",
+      "accepted": [
+        "wollte"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-06",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Die Kinder ___ keinen Kaffee trinken. (dürfen, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "durften",
+      "accepted": [
+        "durften"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-07",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: ___ Sie gestern arbeiten? (müssen, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Mussten",
+      "accepted": [
+        "Mussten"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-08",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Wir ___ den Termin verschieben. (können, Präteritum)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "konnten",
+      "accepted": [
+        "konnten"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-09",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Ergänzen Sie: Es tut mir leid, ___ ich nicht da war. (dass / denn)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dass",
+      "accepted": [
+        "dass"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-10",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie: Gut, ___ du Zeit hast! (dass / denn)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dass",
+      "accepted": [
+        "dass"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-11",
+      "topic": "modal-verbs-past",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 11,
+      "questionDe": "Bilden Sie den Satz: [Es tut mir leid / dass / ich / nicht da / war] (Beginnen Sie mit „Es tut mir leid“)",
+      "questionEn": "Write the sentence: I am sorry that I was not there. Begin with Es tut mir leid.",
+      "options": null,
+      "answer": "Es tut mir leid, dass ich nicht da war.",
+      "accepted": [
+        "Es tut mir leid, dass ich nicht da war."
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-12",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 12,
+      "questionDe": "Ergänzen Sie: Es tut mir leid, dass ich krank ___. (sein, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "bin",
+      "accepted": [
+        "bin"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-13",
+      "topic": "modal-verbs-past",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [Ich / musste / gestern / arbeiten] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Build the sentence. Begin with “Ich”.",
+      "options": null,
+      "answer": "Ich musste gestern arbeiten.",
+      "accepted": [
+        "Ich musste gestern arbeiten."
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-14",
+      "topic": "modal-verbs-past",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 14,
+      "questionDe": "Bilden Sie den Satz: [Wir / wollten / zusammen / grillen] (Beginnen Sie mit „Wir“)",
+      "questionEn": "Build the sentence. Begin with “Wir”.",
+      "options": null,
+      "answer": "Wir wollten zusammen grillen.",
+      "accepted": [
+        "Wir wollten zusammen grillen."
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Ende.",
+      "explanationEn": "The modal is in the simple past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-01",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: ___ doch mit in den Verein! (kommen, du)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Komm",
+      "accepted": [
+        "Komm"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-02",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: ___ eine Pause! (machen, du)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Mach",
+      "accepted": [
+        "Mach"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-03",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: ___ bitte Wasser mit! (nehmen, du)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Nimm",
+      "accepted": [
+        "Nimm"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-04",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: ___ Sie doch mit! (kommen, Sie)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Kommen",
+      "accepted": [
+        "Kommen"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-05",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: ___ mal die Übung! (machen, ihr)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Macht",
+      "accepted": [
+        "Macht"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-06",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: ___ doch mit! (kommen, ihr)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Kommt",
+      "accepted": [
+        "Kommt"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-07",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: ___ Sie bitte Wasser! (trinken, Sie)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Trinken",
+      "accepted": [
+        "Trinken"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-08",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: ___ heute viel! (schlafen, du)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Schlaf",
+      "accepted": [
+        "Schlaf"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-09",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Ergänzen Sie: Du ___ eine Pause machen. (sollen, Ratschlag)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "solltest",
+      "accepted": [
+        "solltest"
+      ],
+      "explanationDe": "Solltest gibt einen Rat; könnten macht einen gemeinsamen Vorschlag.",
+      "explanationEn": "Solltest gives advice; könnten makes a joint suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-10",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie: Wir ___ zusammen trainieren. (können, Vorschlag)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "könnten",
+      "accepted": [
+        "könnten"
+      ],
+      "explanationDe": "Solltest gibt einen Rat; könnten macht einen gemeinsamen Vorschlag.",
+      "explanationEn": "Solltest gives advice; könnten makes a joint suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-11",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 11,
+      "questionDe": "Ergänzen Sie: Du ___ viel schlafen. (sollen, Ratschlag)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "solltest",
+      "accepted": [
+        "solltest"
+      ],
+      "explanationDe": "Solltest gibt einen Rat; könnten macht einen gemeinsamen Vorschlag.",
+      "explanationEn": "Solltest gives advice; könnten makes a joint suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-12",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 12,
+      "questionDe": "Ergänzen Sie: Wir ___ am Freitag zusammen essen. (können, Vorschlag)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "könnten",
+      "accepted": [
+        "könnten"
+      ],
+      "explanationDe": "Solltest gibt einen Rat; könnten macht einen gemeinsamen Vorschlag.",
+      "explanationEn": "Solltest gives advice; könnten makes a joint suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-13",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [Kommen / Sie / doch / mit] (Beginnen Sie mit „Kommen“)",
+      "questionEn": "Build the sentence. Begin with “Kommen”.",
+      "options": null,
+      "answer": "Kommen Sie doch mit!",
+      "accepted": [
+        "Kommen Sie doch mit!"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-14",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 14,
+      "questionDe": "Bilden Sie den Satz: [Macht / eine Pause] (Beginnen Sie mit „Macht“)",
+      "questionEn": "Build the sentence. Begin with “Macht”.",
+      "options": null,
+      "answer": "Macht eine Pause!",
+      "accepted": [
+        "Macht eine Pause!"
+      ],
+      "explanationDe": "Der Imperativ passt zur angegebenen Anrede.",
+      "explanationEn": "The imperative matches the specified form of address.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-01",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Ana ist vom Fahrrad ___. (fallen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "gefallen",
+      "accepted": [
+        "gefallen"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-02",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Ich bin spät ___. (aufwachen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "aufgewacht",
+      "accepted": [
+        "aufgewacht"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-03",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Tim ist früh ___. (einschlafen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "eingeschlafen",
+      "accepted": [
+        "eingeschlafen"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-04",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Wir sind um sieben ___. (aufstehen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "aufgestanden",
+      "accepted": [
+        "aufgestanden"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-05",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Der Krankenwagen ___ schnell gekommen. (sein, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "ist",
+      "accepted": [
+        "ist"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-06",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Ich ___ zur Praxis gegangen. (sein, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "bin",
+      "accepted": [
+        "bin"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-07",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Die Kinder ___ zu Hause geblieben. (sein, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "sind",
+      "accepted": [
+        "sind"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-08",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: ___ Sie gut eingeschlafen? (sein, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Sind",
+      "accepted": [
+        "Sind"
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-09",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Ergänzen Sie: Ich bin gefallen, ___ der Weg nass war. (weil / denn)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "weil",
+      "accepted": [
+        "weil"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-10",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie: Ana bleibt zu Hause, ___ sie krank ist. (weil / denn)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "weil",
+      "accepted": [
+        "weil"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-11",
+      "topic": "perfect-tense-sein",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 11,
+      "questionDe": "Bilden Sie den Satz: [Ich / komme / nicht / weil / ich / krank / bin] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Write the sentence: I am not coming because I am ill. Begin with Ich.",
+      "options": null,
+      "answer": "Ich komme nicht, weil ich krank bin.",
+      "accepted": [
+        "Ich komme nicht, weil ich krank bin."
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-12",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 12,
+      "questionDe": "Ergänzen Sie: Ich schlafe, weil ich eine Pause ___. (brauchen, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "brauche",
+      "accepted": [
+        "brauche"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-13",
+      "topic": "perfect-tense-sein",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [Ana / ist / vom Fahrrad / gefallen] (Beginnen Sie mit „Ana“)",
+      "questionEn": "Build the sentence. Begin with “Ana”.",
+      "options": null,
+      "answer": "Ana ist vom Fahrrad gefallen.",
+      "accepted": [
+        "Ana ist vom Fahrrad gefallen."
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-14",
+      "topic": "perfect-tense-sein",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 14,
+      "questionDe": "Bilden Sie den Satz: [Wir / sind / früh / aufgewacht] (Beginnen Sie mit „Wir“)",
+      "questionEn": "Build the sentence. Begin with “Wir”.",
+      "options": null,
+      "answer": "Wir sind früh aufgewacht.",
+      "accepted": [
+        "Wir sind früh aufgewacht."
+      ],
+      "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+      "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-01",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Die Datei ist da. Ich schicke ___ Ihnen. (Akkusativpronomen)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "sie",
+      "accepted": [
+        "sie"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-02",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Der Drucker ist neu. Ich erkläre ___ Ihnen. (Akkusativpronomen)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "ihn",
+      "accepted": [
+        "ihn"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-03",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Das Passwort ist da. Ich zeige ___ Ihnen. (Akkusativpronomen)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "es",
+      "accepted": [
+        "es"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-04",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Die Datei ist für Tim. Ich schicke sie ___. (er, Dativ)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "ihm",
+      "accepted": [
+        "ihm"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-05",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Der Vertrag ist für Ana. Ich zeige ihn ___. (sie, Singular, Dativ)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "ihr",
+      "accepted": [
+        "ihr"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-06",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Die Datei ist für mich. Können Sie sie ___ schicken? (ich, Dativ)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "mir",
+      "accepted": [
+        "mir"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-07",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Das Passwort ist für dich. Ich schicke es ___. (du, Dativ)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dir",
+      "accepted": [
+        "dir"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-08",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Die Aufgabe ist für Tim und mich. Frau Yilmaz erklärt sie ___. (wir, Dativ)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "uns",
+      "accepted": [
+        "uns"
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-09",
+      "topic": "pronouns-accusative-dative",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Bilden Sie den Satz: [Ich / schicke / sie / Ihnen] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Build the sentence. Begin with “Ich”.",
+      "options": null,
+      "answer": "Ich schicke sie Ihnen.",
+      "accepted": [
+        "Ich schicke sie Ihnen."
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-10",
+      "topic": "pronouns-accusative-dative",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Bilden Sie den Satz: [Frau Yilmaz / zeigt / es / ihm] (Beginnen Sie mit „Frau Yilmaz“)",
+      "questionEn": "Build the sentence. Begin with “Frau Yilmaz”.",
+      "options": null,
+      "answer": "Frau Yilmaz zeigt es ihm.",
+      "accepted": [
+        "Frau Yilmaz zeigt es ihm."
+      ],
+      "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+      "explanationEn": "An accusative pronoun comes before a dative pronoun.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-01",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Der Besuch ist ___ zwei Wochen. (in / für)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "in",
+      "accepted": [
+        "in"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-02",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Sie bleiben ___ zehn Tage. (in / für)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "für",
+      "accepted": [
+        "für"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-03",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: ___ Montag arbeite ich wieder. (ab / für)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "Ab",
+      "accepted": [
+        "Ab"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-04",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Wir fahren ___ das Wochenende nach Köln. (über / zwischen)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "über",
+      "accepted": [
+        "über"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-05",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Der Besuch ist ___ zwei und drei Uhr. (zwischen / ab)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "zwischen",
+      "accepted": [
+        "zwischen"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-06",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Der Urlaub ist von Montag ___ Freitag. (bis / für)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "bis",
+      "accepted": [
+        "bis"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-07",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Ana hat ___ drei Tage Urlaub. (für / bis)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "für",
+      "accepted": [
+        "für"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-08",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Das Flugzeug kommt ___ einer Stunde an. (in / für)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "in",
+      "accepted": [
+        "in"
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-09",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Bilden Sie den Satz: [Meine Eltern / kommen / in zwei Wochen] (Beginnen Sie mit „Meine Eltern“)",
+      "questionEn": "Build the sentence. Begin with “Meine Eltern”.",
+      "options": null,
+      "answer": "Meine Eltern kommen in zwei Wochen.",
+      "accepted": [
+        "Meine Eltern kommen in zwei Wochen."
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-10",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Bilden Sie den Satz: [Sie / bleiben / für zehn Tage] (Beginnen Sie mit „Sie“)",
+      "questionEn": "Build the sentence. Begin with “Sie”.",
+      "options": null,
+      "answer": "Sie bleiben für zehn Tage.",
+      "accepted": [
+        "Sie bleiben für zehn Tage."
+      ],
+      "explanationDe": "Die Präposition unterscheidet Zeitpunkt, Dauer, Anfang und Ende.",
+      "explanationEn": "The preposition distinguishes a time, duration, start or end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-01",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Das Café liegt gegenüber ___ Rathaus. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-02",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Wir fahren mit ___ Bus. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-03",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Nach ___ Führung essen wir. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "der",
+      "accepted": [
+        "der"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-04",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Ana ist bei ___ Brücke. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "der",
+      "accepted": [
+        "der"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-05",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Wir kommen aus ___ Museum. (bestimmter Artikel)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-06",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Gehen Sie ___ Hafen. (zu + dem)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "zum",
+      "accepted": [
+        "zum"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-07",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Der Bus fährt ___ Rathaus ab. (von + dem)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "vom",
+      "accepted": [
+        "vom"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-08",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Bei ___ Eltern ist es schön. (mein)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "meinen",
+      "accepted": [
+        "meinen"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-09",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Ergänzen Sie: Wir fahren mit dem ___ Bus. (alt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "alten",
+      "accepted": [
+        "alten"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-10",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie: Das Café liegt bei der ___ Brücke. (klein)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "kleinen",
+      "accepted": [
+        "kleinen"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-11",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 11,
+      "questionDe": "Ergänzen Sie: Gegenüber dem ___ Rathaus steht ein Brunnen. (alt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "alten",
+      "accepted": [
+        "alten"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-12",
+      "topic": "prepositions-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 12,
+      "questionDe": "Ergänzen Sie: Die Führung ist ab dem ___ Mai. (3., Ordinalzahl)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "dritten",
+      "accepted": [
+        "dritten"
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-13",
+      "topic": "prepositions-dative",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [Wir / fahren / mit dem alten Bus] (Beginnen Sie mit „Wir“)",
+      "questionEn": "Build the sentence. Begin with “Wir”.",
+      "options": null,
+      "answer": "Wir fahren mit dem alten Bus.",
+      "accepted": [
+        "Wir fahren mit dem alten Bus."
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l11-14",
+      "topic": "prepositions-dative",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 14,
+      "questionDe": "Bilden Sie den Satz: [Das Café / liegt / bei der kleinen Brücke] (Beginnen Sie mit „Das Café“)",
+      "questionEn": "Build the sentence. Begin with “Das Café”.",
+      "options": null,
+      "answer": "Das Café liegt bei der kleinen Brücke.",
+      "accepted": [
+        "Das Café liegt bei der kleinen Brücke."
+      ],
+      "explanationDe": "Diese Präposition braucht Dativ; ein Adjektiv nach Artikel endet auf -en.",
+      "explanationEn": "This preposition takes dative; an adjective after an article ends in -en.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-01",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 1,
+      "questionDe": "Ergänzen Sie: Wir haben die Stadt ___. (besichtigen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "besichtigt",
+      "accepted": [
+        "besichtigt"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-02",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 2,
+      "questionDe": "Ergänzen Sie: Ana hat viel ___. (fotografieren, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "fotografiert",
+      "accepted": [
+        "fotografiert"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-03",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 3,
+      "questionDe": "Ergänzen Sie: Lena hat Geld ___. (sparen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "gespart",
+      "accepted": [
+        "gespart"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-04",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 4,
+      "questionDe": "Ergänzen Sie: Die Gäste haben Kuchen ___. (essen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "gegessen",
+      "accepted": [
+        "gegessen"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-05",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 5,
+      "questionDe": "Ergänzen Sie: Wir haben lange ___. (sprechen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "gesprochen",
+      "accepted": [
+        "gesprochen"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-06",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 6,
+      "questionDe": "Ergänzen Sie: Meine Freundin hat einen Film ___. (mitbringen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "mitgebracht",
+      "accepted": [
+        "mitgebracht"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-07",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 7,
+      "questionDe": "Ergänzen Sie: Wir haben beim Film viel ___. (lachen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "gelacht",
+      "accepted": [
+        "gelacht"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-08",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 8,
+      "questionDe": "Ergänzen Sie: Tim hat das Essen ___. (bezahlen, Perfekt)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "bezahlt",
+      "accepted": [
+        "bezahlt"
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-09",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 9,
+      "questionDe": "Ergänzen Sie: Sie kommen wieder, ___ sie Urlaub haben. (wenn / aber)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "wenn",
+      "accepted": [
+        "wenn"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-10",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 10,
+      "questionDe": "Ergänzen Sie: Ich fliege, ___ ich Zeit habe. (wenn / aber)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "wenn",
+      "accepted": [
+        "wenn"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-11",
+      "topic": "perfect-tense-haben",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 11,
+      "questionDe": "Bilden Sie den Satz: [Wir / kochen / wenn / unsere Gäste / hier / sind] (Beginnen Sie mit „Wir“)",
+      "questionEn": "Write the sentence: We cook when our guests are here. Begin with Wir.",
+      "options": null,
+      "answer": "Wir kochen, wenn unsere Gäste hier sind.",
+      "accepted": [
+        "Wir kochen, wenn unsere Gäste hier sind."
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-12",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 12,
+      "questionDe": "Ergänzen Sie: Ana spart, wenn sie Geld ___. (haben, Präsens)",
+      "questionEn": "Complete the gap using the German cue.",
+      "options": null,
+      "answer": "hat",
+      "accepted": [
+        "hat"
+      ],
+      "explanationDe": "Der Nebensatz folgt dem Hauptsatz; das finite Verb steht am Ende.",
+      "explanationEn": "The subordinate clause follows the main clause; the finite verb is last.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-13",
+      "topic": "perfect-tense-haben",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 13,
+      "questionDe": "Bilden Sie den Satz: [Wir / haben / die Stadt / besichtigt] (Beginnen Sie mit „Wir“)",
+      "questionEn": "Build the sentence. Begin with “Wir”.",
+      "options": null,
+      "answer": "Wir haben die Stadt besichtigt.",
+      "accepted": [
+        "Wir haben die Stadt besichtigt."
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-14",
+      "topic": "perfect-tense-haben",
+      "type": "sentence_building",
+      "stage": 5,
+      "difficulty": 2,
+      "order": 14,
+      "questionDe": "Bilden Sie den Satz: [Ana / hat / viel / fotografiert] (Beginnen Sie mit „Ana“)",
+      "questionEn": "Build the sentence. Begin with “Ana”.",
+      "options": null,
+      "answer": "Ana hat viel fotografiert.",
+      "accepted": [
+        "Ana hat viel fotografiert."
+      ],
+      "explanationDe": "Haben steht auf Position zwei; das Partizip steht am Ende.",
+      "explanationEn": "Haben is second; the participle is at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-21",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Ich habe die Möbel ___. (abholen)",
+      "questionEn": "I collected the furniture.",
+      "options": null,
+      "answer": "abgeholt",
+      "accepted": [
+        "abgeholt"
+      ],
+      "explanationDe": "Trennbares Perfekt mit haben: Vorsilbe, ge-, Stamm und Endung stehen im Partizip zusammen.",
+      "explanationEn": "Separable perfect tense with haben: prefix, ge-, stem and ending form the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-22",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Ana hat den Keller ___. (aufräumen)",
+      "questionEn": "Ana tidied the cellar.",
+      "options": null,
+      "answer": "aufgeräumt",
+      "accepted": [
+        "aufgeräumt"
+      ],
+      "explanationDe": "Trennbares Perfekt mit haben: Vorsilbe, ge-, Stamm und Endung stehen im Partizip zusammen.",
+      "explanationEn": "Separable perfect tense with haben: prefix, ge-, stem and ending form the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-23",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Tim hat den Computer ___. (einpacken)",
+      "questionEn": "Tim packed the computer.",
+      "options": null,
+      "answer": "eingepackt",
+      "accepted": [
+        "eingepackt"
+      ],
+      "explanationDe": "Trennbares Perfekt mit haben: Vorsilbe, ge-, Stamm und Endung stehen im Partizip zusammen.",
+      "explanationEn": "Separable perfect tense with haben: prefix, ge-, stem and ending form the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-24",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Meine Mutter hat das Handy ___. (mitbringen)",
+      "questionEn": "My mother brought the phone.",
+      "options": null,
+      "answer": "mitgebracht",
+      "accepted": [
+        "mitgebracht"
+      ],
+      "explanationDe": "Trennbares Perfekt mit haben: Vorsilbe, ge-, Stamm und Endung stehen im Partizip zusammen.",
+      "explanationEn": "Separable perfect tense with haben: prefix, ge-, stem and ending form the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-25",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Ich habe meinen Vermieter ___. (anrufen)",
+      "questionEn": "I phoned my landlord.",
+      "options": null,
+      "answer": "angerufen",
+      "accepted": [
+        "angerufen"
+      ],
+      "explanationDe": "Trennbares Perfekt mit haben: Vorsilbe, ge-, Stamm und Endung stehen im Partizip zusammen.",
+      "explanationEn": "Separable perfect tense with haben: prefix, ge-, stem and ending form the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l02-26",
+      "topic": "separable-verbs",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Wir haben die Bücher ___. (einpacken)",
+      "questionEn": "We packed the books.",
+      "options": null,
+      "answer": "eingepackt",
+      "accepted": [
+        "eingepackt"
+      ],
+      "explanationDe": "Trennbares Perfekt mit haben: Vorsilbe, ge-, Stamm und Endung stehen im Partizip zusammen.",
+      "explanationEn": "Separable perfect tense with haben: prefix, ge-, stem and ending form the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-21",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Ana schenkt ___ Tante eine Blume. (ihr, Dativ)",
+      "questionEn": "Ana gives her aunt a flower.",
+      "options": null,
+      "answer": "ihrer",
+      "accepted": [
+        "ihrer"
+      ],
+      "explanationDe": "Der Empfänger oder die betroffene Person steht hier im Dativ.",
+      "explanationEn": "The recipient or person affected takes the dative here.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-22",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Wir gratulieren ___ Onkel. (unser, Dativ)",
+      "questionEn": "We congratulate our uncle.",
+      "options": null,
+      "answer": "unserem",
+      "accepted": [
+        "unserem"
+      ],
+      "explanationDe": "Der Empfänger oder die betroffene Person steht hier im Dativ.",
+      "explanationEn": "The recipient or person affected takes the dative here.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-23",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Die Kette gefällt ___ Mutter. (mein, Dativ)",
+      "questionEn": "My mother likes the necklace.",
+      "options": null,
+      "answer": "meiner",
+      "accepted": [
+        "meiner"
+      ],
+      "explanationDe": "Der Empfänger oder die betroffene Person steht hier im Dativ.",
+      "explanationEn": "The recipient or person affected takes the dative here.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-24",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Das Geschenk gehört ___ Kind. (das, Dativ)",
+      "questionEn": "The present belongs to the child.",
+      "options": null,
+      "answer": "dem",
+      "accepted": [
+        "dem"
+      ],
+      "explanationDe": "Der Empfänger oder die betroffene Person steht hier im Dativ.",
+      "explanationEn": "The recipient or person affected takes the dative here.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-25",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Ich helfe ___ Oma beim Backen. (mein, Dativ)",
+      "questionEn": "I help my grandma with baking.",
+      "options": null,
+      "answer": "meiner",
+      "accepted": [
+        "meiner"
+      ],
+      "explanationDe": "Der Empfänger oder die betroffene Person steht hier im Dativ.",
+      "explanationEn": "The recipient or person affected takes the dative here.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l05-26",
+      "topic": "dative-case",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Wir schenken ___ Eltern einen Kuchen. (unser, Dativ)",
+      "questionEn": "We give our parents a cake.",
+      "options": null,
+      "answer": "unseren",
+      "accepted": [
+        "unseren"
+      ],
+      "explanationDe": "Der Empfänger oder die betroffene Person steht hier im Dativ.",
+      "explanationEn": "The recipient or person affected takes the dative here.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-21",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Ich ___ die Einladung verschieben. (müssen, Präteritum, ich)",
+      "questionEn": "I had to postpone the invitation.",
+      "options": null,
+      "answer": "musste",
+      "accepted": [
+        "musste"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Satzende.",
+      "explanationEn": "The modal verb is in the past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-22",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Die Veranstaltung war schön. Wir ___ bleiben. (wollen, Präteritum, wir)",
+      "questionEn": "The event was lovely. We wanted to stay.",
+      "options": null,
+      "answer": "wollten",
+      "accepted": [
+        "wollten"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Satzende.",
+      "explanationEn": "The modal verb is in the past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-23",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Tim ___ die Nachricht nicht lesen. (können, Präteritum, er)",
+      "questionEn": "Tim could not read the message.",
+      "options": null,
+      "answer": "konnte",
+      "accepted": [
+        "konnte"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Satzende.",
+      "explanationEn": "The modal verb is in the past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-24",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Wir ___ in der Pause essen. (dürfen, Präteritum, wir)",
+      "questionEn": "We were allowed to eat during the break.",
+      "options": null,
+      "answer": "durften",
+      "accepted": [
+        "durften"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Satzende.",
+      "explanationEn": "The modal verb is in the past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-25",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Mein Chef ___ den Termin verschieben. (müssen, Präteritum, er)",
+      "questionEn": "My boss had to move the appointment.",
+      "options": null,
+      "answer": "musste",
+      "accepted": [
+        "musste"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Satzende.",
+      "explanationEn": "The modal verb is in the past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l06-26",
+      "topic": "modal-verbs-past",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Wir ___ am Freitag grillen. (wollen, Präteritum, wir)",
+      "questionEn": "We wanted to have a barbecue on Friday.",
+      "options": null,
+      "answer": "wollten",
+      "accepted": [
+        "wollten"
+      ],
+      "explanationDe": "Das Modalverb steht im Präteritum; der Infinitiv bleibt am Satzende.",
+      "explanationEn": "The modal verb is in the past; the infinitive stays at the end.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-21",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "___ das Wasser zum Training mit! (mitnehmen, du-Form)",
+      "questionEn": "Take the water to training.",
+      "options": null,
+      "answer": "Nimm",
+      "accepted": [
+        "Nimm"
+      ],
+      "explanationDe": "Achten Sie auf die genannte Anrede und auf den Ratschlag oder Vorschlag.",
+      "explanationEn": "Use the specified form of address and distinguish advice from a suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-22",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "___ Sie die Übung am Abend! (machen, Sie-Form)",
+      "questionEn": "Do the exercise in the evening.",
+      "options": null,
+      "answer": "Machen",
+      "accepted": [
+        "Machen"
+      ],
+      "explanationDe": "Achten Sie auf die genannte Anrede und auf den Ratschlag oder Vorschlag.",
+      "explanationEn": "Use the specified form of address and distinguish advice from a suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-23",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "___ beim Sport Wasser! (trinken, ihr-Form, ein Wort)",
+      "questionEn": "Drink water while exercising.",
+      "options": null,
+      "answer": "Trinkt",
+      "accepted": [
+        "Trinkt"
+      ],
+      "explanationDe": "Achten Sie auf die genannte Anrede und auf den Ratschlag oder Vorschlag.",
+      "explanationEn": "Use the specified form of address and distinguish advice from a suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-24",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "___ Sie heute nicht so lange! (trainieren, Sie-Form)",
+      "questionEn": "Do not train for so long today.",
+      "options": null,
+      "answer": "Trainieren",
+      "accepted": [
+        "Trainieren"
+      ],
+      "explanationDe": "Achten Sie auf die genannte Anrede und auf den Ratschlag oder Vorschlag.",
+      "explanationEn": "Use the specified form of address and distinguish advice from a suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-25",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Du bist müde. Du ___ eine Pause machen. (sollen, Ratschlag)",
+      "questionEn": "You are tired. You should take a break.",
+      "options": null,
+      "answer": "solltest",
+      "accepted": [
+        "solltest"
+      ],
+      "explanationDe": "Achten Sie auf die genannte Anrede und auf den Ratschlag oder Vorschlag.",
+      "explanationEn": "Use the specified form of address and distinguish advice from a suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-26",
+      "topic": "imperative-mood",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Wir ___ zusammen Volleyball spielen. (können, höflicher Vorschlag)",
+      "questionEn": "We could play volleyball together.",
+      "options": null,
+      "answer": "könnten",
+      "accepted": [
+        "könnten"
+      ],
+      "explanationDe": "Achten Sie auf die genannte Anrede und auf den Ratschlag oder Vorschlag.",
+      "explanationEn": "Use the specified form of address and distinguish advice from a suggestion.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-21",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Ana ist im Wartezimmer ___. (einschlafen)",
+      "questionEn": "Ana fell asleep in the waiting room.",
+      "options": null,
+      "answer": "eingeschlafen",
+      "accepted": [
+        "eingeschlafen"
+      ],
+      "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+      "explanationEn": "A change of location or state takes sein plus the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-22",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Der Krankenwagen ist um drei ___. (ankommen)",
+      "questionEn": "The ambulance arrived at three.",
+      "options": null,
+      "answer": "angekommen",
+      "accepted": [
+        "angekommen"
+      ],
+      "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+      "explanationEn": "A change of location or state takes sein plus the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-23",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Ich bin nach dem Unfall zu Hause ___. (bleiben)",
+      "questionEn": "I stayed at home after the accident.",
+      "options": null,
+      "answer": "geblieben",
+      "accepted": [
+        "geblieben"
+      ],
+      "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+      "explanationEn": "A change of location or state takes sein plus the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-24",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Der Arzt ist in die Praxis ___. (kommen)",
+      "questionEn": "The doctor came into the practice.",
+      "options": null,
+      "answer": "gekommen",
+      "accepted": [
+        "gekommen"
+      ],
+      "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+      "explanationEn": "A change of location or state takes sein plus the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-25",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Ana ist beim Unfall ___. (fallen)",
+      "questionEn": "Ana fell in the accident.",
+      "options": null,
+      "answer": "gefallen",
+      "accepted": [
+        "gefallen"
+      ],
+      "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+      "explanationEn": "A change of location or state takes sein plus the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l08-26",
+      "topic": "perfect-tense-sein",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Ich bin mit Husten ___. (aufwachen)",
+      "questionEn": "I woke up coughing.",
+      "options": null,
+      "answer": "aufgewacht",
+      "accepted": [
+        "aufgewacht"
+      ],
+      "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+      "explanationEn": "A change of location or state takes sein plus the participle.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-21",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Der Drucker ist neu. Ich zeige ___ Ihnen. (Akkusativpronomen)",
+      "questionEn": "The printer is new. I show it to you.",
+      "options": null,
+      "answer": "ihn",
+      "accepted": [
+        "ihn"
+      ],
+      "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+      "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-22",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Das Passwort fehlt. Schicken Sie ___ mir bitte. (Akkusativpronomen)",
+      "questionEn": "The password is missing. Please send it to me.",
+      "options": null,
+      "answer": "es",
+      "accepted": [
+        "es"
+      ],
+      "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+      "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-23",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Frau Yilmaz braucht die Datei. Ich schicke sie ___. (sie, Dativ)",
+      "questionEn": "Ms Yilmaz needs the file. I send it to her.",
+      "options": null,
+      "answer": "ihr",
+      "accepted": [
+        "ihr"
+      ],
+      "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+      "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-24",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Tim hat ein Problem mit dem Drucker. Ich erkläre ihn ___. (er, Dativ)",
+      "questionEn": "Tim has a problem with the printer. I explain it to him.",
+      "options": null,
+      "answer": "ihm",
+      "accepted": [
+        "ihm"
+      ],
+      "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+      "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-25",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Wir brauchen Hilfe mit der Aufgabe. Erklären Sie sie ___. (wir, Dativ)",
+      "questionEn": "We need help with the task. Explain it to us.",
+      "options": null,
+      "answer": "uns",
+      "accepted": [
+        "uns"
+      ],
+      "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+      "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l09-26",
+      "topic": "pronouns-accusative-dative",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Der Vertrag liegt im Büro. Bringen Sie ___ mir bitte. (Akkusativpronomen)",
+      "questionEn": "The contract is in the office. Please bring it to me.",
+      "options": null,
+      "answer": "ihn",
+      "accepted": [
+        "ihn"
+      ],
+      "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+      "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-21",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Die Ankunft ist ___ zwei Stunden. (Zeitpunkt ab jetzt: in / für)",
+      "questionEn": "Arrival is in two hours.",
+      "options": null,
+      "answer": "in",
+      "accepted": [
+        "in"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-22",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Der Reisepass liegt ___ Montag hier. (Beginn: ab / für)",
+      "questionEn": "The passport will be here from Monday.",
+      "options": null,
+      "answer": "ab",
+      "accepted": [
+        "ab"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-23",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Ich plane den Urlaub ___ eine Woche. (Dauer: für / ab)",
+      "questionEn": "I plan a holiday lasting one week.",
+      "options": null,
+      "answer": "für",
+      "accepted": [
+        "für"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-24",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Wir fahren ___ das Wochenende nach Bremen. (über / seit)",
+      "questionEn": "We are travelling to Bremen for the weekend.",
+      "options": null,
+      "answer": "über",
+      "accepted": [
+        "über"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-25",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Das Flugzeug kommt ___ zehn und elf Uhr. (zwischen / für)",
+      "questionEn": "The plane arrives between ten and eleven.",
+      "options": null,
+      "answer": "zwischen",
+      "accepted": [
+        "zwischen"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-26",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Das Gepäck bleibt ___ Freitag am Flughafen. (Ende: bis / ab)",
+      "questionEn": "The luggage stays at the airport until Friday.",
+      "options": null,
+      "answer": "bis",
+      "accepted": [
+        "bis"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-27",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 27,
+      "questionDe": "Wir buchen die Reise ___ drei Tage. (Dauer: für / in)",
+      "questionEn": "We book the trip for three days.",
+      "options": null,
+      "answer": "für",
+      "accepted": [
+        "für"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-28",
+      "topic": "temporal-prepositions",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 28,
+      "questionDe": "Die Abfahrt ist ___ einer Stunde. (Zeitpunkt ab jetzt: in / für)",
+      "questionEn": "Departure is in one hour.",
+      "options": null,
+      "answer": "in",
+      "accepted": [
+        "in"
+      ],
+      "explanationDe": "Die Klammer nennt die Zeitbedeutung: Beginn, Ende, Dauer oder ein Zeitpunkt.",
+      "explanationEn": "The cue specifies the meaning: start, end, duration or a point in time.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-21",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 21,
+      "questionDe": "Ana hat die Gäste ___. (fotografieren)",
+      "questionEn": "Ana photographed the guests.",
+      "options": null,
+      "answer": "fotografiert",
+      "accepted": [
+        "fotografiert"
+      ],
+      "explanationDe": "Haben und das Partizip bilden das Perfekt; trennen Sie regelmäßige und unregelmäßige Formen.",
+      "explanationEn": "Haben and the participle form the perfect; distinguish regular and irregular forms.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-22",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 22,
+      "questionDe": "Wir haben beim Film viel ___. (lachen)",
+      "questionEn": "We laughed a lot during the film.",
+      "options": null,
+      "answer": "gelacht",
+      "accepted": [
+        "gelacht"
+      ],
+      "explanationDe": "Haben und das Partizip bilden das Perfekt; trennen Sie regelmäßige und unregelmäßige Formen.",
+      "explanationEn": "Haben and the participle form the perfect; distinguish regular and irregular forms.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-23",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 23,
+      "questionDe": "Ich habe für die Reise Geld ___. (sparen)",
+      "questionEn": "I saved money for the journey.",
+      "options": null,
+      "answer": "gespart",
+      "accepted": [
+        "gespart"
+      ],
+      "explanationDe": "Haben und das Partizip bilden das Perfekt; trennen Sie regelmäßige und unregelmäßige Formen.",
+      "explanationEn": "Haben and the participle form the perfect; distinguish regular and irregular forms.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-24",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 24,
+      "questionDe": "Mein Vater hat ein Foto ___. (machen)",
+      "questionEn": "My father took a photo.",
+      "options": null,
+      "answer": "gemacht",
+      "accepted": [
+        "gemacht"
+      ],
+      "explanationDe": "Haben und das Partizip bilden das Perfekt; trennen Sie regelmäßige und unregelmäßige Formen.",
+      "explanationEn": "Haben and the participle form the perfect; distinguish regular and irregular forms.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-25",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 25,
+      "questionDe": "Wir haben beim Abschied lange ___. (sprechen)",
+      "questionEn": "We talked for a long time when saying goodbye.",
+      "options": null,
+      "answer": "gesprochen",
+      "accepted": [
+        "gesprochen"
+      ],
+      "explanationDe": "Haben und das Partizip bilden das Perfekt; trennen Sie regelmäßige und unregelmäßige Formen.",
+      "explanationEn": "Haben and the participle form the perfect; distinguish regular and irregular forms.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l12-26",
+      "topic": "perfect-tense-haben",
+      "type": "fill_blank",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 26,
+      "questionDe": "Die Gäste haben zur Musik ___. (tanzen)",
+      "questionEn": "The guests danced to the music.",
+      "options": null,
+      "answer": "getanzt",
+      "accepted": [
+        "getanzt"
+      ],
+      "explanationDe": "Haben und das Partizip bilden das Perfekt; trennen Sie regelmäßige und unregelmäßige Formen.",
+      "explanationEn": "Haben and the participle form the perfect; distinguish regular and irregular forms.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-31",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 31,
+      "questionDe": "Bilden Sie den Satz: [Sie / das Wasser / trinken] (Beginnen Sie mit „Trinken Sie“)",
+      "questionEn": "Please drink the water.",
+      "options": null,
+      "answer": "Trinken Sie das Wasser!",
+      "accepted": [
+        "Trinken Sie das Wasser!"
+      ],
+      "explanationDe": "Achten Sie auf die Anrede und die Verbform.",
+      "explanationEn": "Use the specified form of address and verb form.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-32",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 32,
+      "questionDe": "Bilden Sie den Satz: [ihr-Form / die Schuhe / zum Training / mitnehmen] (Beginnen Sie mit „Nehmt“)",
+      "questionEn": "Take your shoes to training.",
+      "options": null,
+      "answer": "Nehmt die Schuhe zum Training mit!",
+      "accepted": [
+        "Nehmt die Schuhe zum Training mit!",
+        "Nehmt ihr die Schuhe zum Training mit!"
+      ],
+      "explanationDe": "Achten Sie auf die Anrede und die Verbform.",
+      "explanationEn": "Use the specified form of address and verb form.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-33",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 33,
+      "questionDe": "Bilden Sie den Satz: [ihr-Form / mit der Mannschaft / trainieren] (Beginnen Sie mit „Trainiert“)",
+      "questionEn": "Train with the team.",
+      "options": null,
+      "answer": "Trainiert mit der Mannschaft!",
+      "accepted": [
+        "Trainiert mit der Mannschaft!",
+        "Trainiert ihr mit der Mannschaft!"
+      ],
+      "explanationDe": "Achten Sie auf die Anrede und die Verbform.",
+      "explanationEn": "Use the specified form of address and verb form.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-34",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 34,
+      "questionDe": "Bilden Sie den Satz: [Sie / die Übung / machen] (Beginnen Sie mit „Machen Sie“)",
+      "questionEn": "Do the exercise.",
+      "options": null,
+      "answer": "Machen Sie die Übung!",
+      "accepted": [
+        "Machen Sie die Übung!"
+      ],
+      "explanationDe": "Achten Sie auf die Anrede und die Verbform.",
+      "explanationEn": "Use the specified form of address and verb form.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-35",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 35,
+      "questionDe": "Bilden Sie den Satz: [ihr-Form / heute / Volleyball / spielen] (Beginnen Sie mit „Spielt“)",
+      "questionEn": "Play volleyball today.",
+      "options": null,
+      "answer": "Spielt heute Volleyball!",
+      "accepted": [
+        "Spielt heute Volleyball!",
+        "Spielt ihr heute Volleyball!"
+      ],
+      "explanationDe": "Achten Sie auf die Anrede und die Verbform.",
+      "explanationEn": "Use the specified form of address and verb form.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l07-36",
+      "topic": "imperative-mood",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 36,
+      "questionDe": "Bilden Sie den Satz: [du-Form / nach dem Sport / Wasser / trinken] (Beginnen Sie mit „Trink“)",
+      "questionEn": "Drink water after sport.",
+      "options": null,
+      "answer": "Trink nach dem Sport Wasser!",
+      "accepted": [
+        "Trink nach dem Sport Wasser!"
+      ],
+      "explanationDe": "Achten Sie auf die Anrede und die Verbform.",
+      "explanationEn": "Use the specified form of address and verb form.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-31",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 31,
+      "questionDe": "Bilden Sie den Satz: [Die Ankunft / sein / zwischen neun und zehn] (Beginnen Sie mit „Die Ankunft“)",
+      "questionEn": "Arrival is between nine and ten.",
+      "options": null,
+      "answer": "Die Ankunft ist zwischen neun und zehn.",
+      "accepted": [
+        "Die Ankunft ist zwischen neun und zehn."
+      ],
+      "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+      "explanationEn": "The conjugated verb follows the initial time phrase.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-32",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 32,
+      "questionDe": "Bilden Sie den Satz: [ab Montag / wir / Urlaub / haben] (Beginnen Sie mit „Ab Montag“)",
+      "questionEn": "We are on holiday from Monday.",
+      "options": null,
+      "answer": "Ab Montag haben wir Urlaub.",
+      "accepted": [
+        "Ab Montag haben wir Urlaub."
+      ],
+      "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+      "explanationEn": "The conjugated verb follows the initial time phrase.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-33",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 33,
+      "questionDe": "Bilden Sie den Satz: [für drei Tage / wir / die Reise / buchen] (Beginnen Sie mit „Für drei Tage“)",
+      "questionEn": "We book the trip for three days.",
+      "options": null,
+      "answer": "Für drei Tage buchen wir die Reise.",
+      "accepted": [
+        "Für drei Tage buchen wir die Reise."
+      ],
+      "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+      "explanationEn": "The conjugated verb follows the initial time phrase.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-34",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 34,
+      "questionDe": "Bilden Sie den Satz: [bis Freitag / ich / den Besuch / planen / müssen] (Beginnen Sie mit „Bis Freitag“)",
+      "questionEn": "I must plan the visit by Friday.",
+      "options": null,
+      "answer": "Bis Freitag muss ich den Besuch planen.",
+      "accepted": [
+        "Bis Freitag muss ich den Besuch planen."
+      ],
+      "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+      "explanationEn": "The conjugated verb follows the initial time phrase.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-35",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 35,
+      "questionDe": "Bilden Sie den Satz: [seit einer Stunde / der Zug / Verspätung / haben] (Beginnen Sie mit „Seit einer Stunde“)",
+      "questionEn": "The train has been delayed for an hour.",
+      "options": null,
+      "answer": "Seit einer Stunde hat der Zug Verspätung.",
+      "accepted": [
+        "Seit einer Stunde hat der Zug Verspätung."
+      ],
+      "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+      "explanationEn": "The conjugated verb follows the initial time phrase.",
+      "hint": null
+    },
+    {
+      "id": "extra-a21-l10-36",
+      "topic": "temporal-prepositions",
+      "type": "sentence_building",
+      "stage": 4,
+      "difficulty": 2,
+      "order": 36,
+      "questionDe": "Bilden Sie den Satz: [über das Wochenende / wir / unsere Eltern / besuchen] (Beginnen Sie mit „Über das Wochenende“)",
+      "questionEn": "We visit our parents over the weekend.",
+      "options": null,
+      "answer": "Über das Wochenende besuchen wir unsere Eltern.",
+      "accepted": [
+        "Über das Wochenende besuchen wir unsere Eltern."
+      ],
+      "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+      "explanationEn": "The conjugated verb follows the initial time phrase.",
+      "hint": null
+    }
+  ]
+}

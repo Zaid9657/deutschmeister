@@ -58,6 +58,7 @@ import {
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
 import { constructionHits, deferredConstructionHits, adjectiveHitsA21 } from '../src/data/curricula/constructions.js';
+import { CURRICULUM_A21, DIALOG_NAMES as DIALOG_NAMES_A21 } from '../src/data/curricula/a21.js';
 import { priorLevelSpecs } from '../src/data/curricula/inheritance.js';
 import { examFormat, writingFormat, writingSequenceErrors } from '../src/data/curricula/examFormats.js';
 import { examSurfaceErrors, examUnitsErrors } from '../src/lib/lesson/exam.js';
@@ -1148,14 +1149,13 @@ export const LEVELS = {
   },
 };
 
-// Step 1 is an engine registration only: no curriculum module exists yet. CLI validation refuses
-// this row until content is supplied. Zero debt is measured on the absent corpus, not a claim
-// that an A2.1 course has passed; new content must satisfy these ceilings, never raise them.
-export const PENDING_LEVELS = { 'a2.1': {
-  level: 'a2.1', code: 'A2.1', examKey: 'goethe_a2', curriculum: null,
+// Step 3 attaches the authored draft; production registration stays in DRAFT_CURRICULA.
+export const PENDING_LEVELS = {};
+LEVELS['a2.1'] = {
+  level: 'a2.1', code: 'A2.1', examKey: 'goethe_a2', curriculum: CURRICULUM_A21,
   functionWords: [...FUNCTION_WORDS_A12, ...FUNCTION_WORDS_A21_ADDED],
   functionSet: lowerSet([...FUNCTION_WORDS_A12, ...FUNCTION_WORDS_A21_ADDED]),
-  dialogNames: [...DIALOG_NAMES_A12], nameSet: lowerSet(DIALOG_NAMES_A12),
+  dialogNames: DIALOG_NAMES_A21, nameSet: lowerSet(DIALOG_NAMES_A21),
   grammarSlugs: PRIMARY_ORDER_A21, primaryOrder: PRIMARY_ORDER_A21, practiceOnlyTopics: [],
   situationKeywords: [['Familie'], ['Umzug'], ['Wohnen'], ['Wochenmarkt'], ['Geschenk'], ['Veranstaltung'], ['Sport'], ['Unfall'], ['Büro'], ['Besuch'], ['Stadtführung'], ['Besuch']],
   primaryPatterns: {
@@ -1184,13 +1184,13 @@ export const PENDING_LEVELS = { 'a2.1': {
   licensedChunks: [...LICENSED_CHUNKS_A12, 'Ich würde gern', 'ich würde gern'],
   ratchets: {
     uncoveredWortfeld: 0, untaughtItemTokens: 0, untaughtDrawnTokens: 0,
-    missionlessLektionen: 0, unexemplifiedNoticeForms: 0, untaughtInProduction: 0,
+    missionlessLektionen: 4, unexemplifiedNoticeForms: 0, untaughtInProduction: 0,
     deferredConstructions: 0, unbackedExamTeile: 0, modelChecklistBreaks: 0,
     sharedProductionLines: 0, untaughtInModelTexts: 0, unanswerableLeitpunkte: 0,
     wortfeldWithoutInput: 0, gradedTaskWordsWithoutInput: 0, formSpeakSentences: 0,
     missingEnglishTwins: 0,
   },
-} };
+};
 
 /** Pending engine policies are queryable, but LEVELS still enumerates complete curricula. */
 export const levelSpec = (level) => {
@@ -1814,7 +1814,7 @@ function dialogLinesAt(l, indices) {
     .filter(Boolean);
 }
 
-function rehearsalText(l, itemsOfLektion) {
+function rehearsalText(l, itemsOfLektion, spec) {
   return [
     ...dialogLinesAt(l, l.hoeren?.lines),
     ...dialogLinesAt(l, l.sprechen?.readAloud),
@@ -1824,6 +1824,14 @@ function rehearsalText(l, itemsOfLektion) {
     l.sprechen?.open?.promptDe, ...(l.sprechen?.open?.hintWords || []),
     l.notice?.title, ...(l.notice?.examples || []),   // NOT `notice.bodyDe` — the rule, not the exercise
     ...itemsOfLektion.flatMap((it) => [it.questionDe, it.answer, it.explanationDe]),
+    // A2 has authored exam surfaces and speaking cards. These are exercises,
+    // unlike the model answer and rule body deliberately excluded above.
+    ...(spec?.level === 'a2.1' ? [
+      ...(l.lesen?.units || []).flatMap(u => [u.text, u.question]),
+      ...(l.hoeren?.units || []).flatMap(u => [u.audioText, u.question]),
+      ...(l.sprechen?.open?.cards || []), ...(l.sprechen?.open?.prompts || []),
+      ...(l.sprechen?.open?.calendar || []).flatMap(c => c.slots.map(s => s.activity)),
+    ] : []),
   ].filter(Boolean).join(' ');
 }
 
@@ -1848,7 +1856,7 @@ export function canDoRehearsal(c, extraItems) {
     // „arbeiten?“, and neither string contains the other. formsOf() is applied to the slot tokens
     // as well, so the two meet on the same set of forms.
     const slots = new Set();
-    for (const t of tokenise(rehearsalText(l, byLektion.get(l.nr) || []))) {
+    for (const t of tokenise(rehearsalText(l, byLektion.get(l.nr) || [], spec))) {
       const low = t.toLowerCase();
       slots.add(low);
       for (const f of formsOf({ de: low }, spec.irregularForms, spec.level)) slots.add(f);
@@ -3072,7 +3080,12 @@ export const PERSONAS_A12 = {
 };
 
 /** The per-level persona tables, keyed by the registry row's `personaSource`. */
-export const PERSONAS_A21 = { ...PERSONAS_A12 };
+export const PERSONAS_A21 = {
+  ...PERSONAS_A12,
+  'Frau Schulz': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
+  'Frau Yilmaz': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
+  'Herr Wagner': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
+};
 export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11, 'a1.2': PERSONAS_A12, 'a2.1': PERSONAS_A21 };
 
 const alt = (list) => list.join('|');

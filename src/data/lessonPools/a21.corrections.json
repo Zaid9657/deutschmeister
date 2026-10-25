@@ -1,0 +1,101 @@
+{
+  "level": "a2.1",
+  "keepBankExplanationEn": {},
+  "items": {
+    "ba7409e1-0c15-5846-9f03-e5686268acf2": {
+      "questionDe": "Schreiben Sie die Frage: [wo / sein / euer / Garten] (Beginnen Sie mit „Wo“)",
+      "questionEn": "Ask where the garden belonging to several friends is. Start with Wo.",
+      "answer": "Wo ist euer Garten?",
+      "accepted": [
+        "Wo ist euer Garten?",
+        "Wo ist euer Garten"
+      ],
+      "explanationDe": "Maskulin Nominativ ohne Endung: euer Garten.",
+      "explanationEn": "Masculine nominative takes no ending: euer Garten.",
+      "hint": "Ohne Endung bleibt euer gleich.",
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "391c40a6-d205-5c00-801a-b7d66be585b5": {
+      "questionDe": "Ana stellt die Lampe auf ___ Tisch. (wohin? der Tisch)",
+      "questionEn": "Ana puts the lamp on the table. Enter the definite article; this is a destination.",
+      "answer": "den",
+      "accepted": [
+        "den"
+      ],
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "428928b8-3f4c-55e1-be89-d83d0c1cbdc3": {
+      "questionDe": "Schreiben Sie den Satz: [das / sind / keine / gut / Bilder] (Beginnen Sie mit „Das“)",
+      "questionEn": "Write the sentence about the pictures, starting with Das. Use the adjective gut after keine.",
+      "answer": "Das sind keine guten Bilder.",
+      "accepted": [
+        "Das sind keine guten Bilder.",
+        "Das sind keine guten Bilder"
+      ],
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "c1da8c4f-ca9f-4f0b-a3cc-64da97337087": {
+      "questionDe": "Er schenkt ___ Kindern Geschenke.",
+      "questionEn": "He gives presents to the children. Choose the definite article.",
+      "answer": "den",
+      "accepted": [
+        "den"
+      ],
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "e8a171ce-d5d1-548d-bb9a-4b9928ff86ff": {
+      "questionDe": "Schreiben Sie den Satz: [ich / schenken / mein Freund / die Bilder] (Beginnen Sie mit „Ich“)",
+      "questionEn": "Write: I give my friend the pictures as a present. Start with Ich.",
+      "answer": "Ich schenke meinem Freund die Bilder.",
+      "accepted": [
+        "Ich schenke meinem Freund die Bilder.",
+        "Ich schenke meinem Freund die Bilder",
+        "Ich schenke die Bilder meinem Freund.",
+        "Ich schenke die Bilder meinem Freund"
+      ],
+      "explanationDe": "Mein Freund ist der Empfänger im Dativ. Die Bilder stehen im Akkusativ.",
+      "explanationEn": "My friend is the recipient in the dative. The pictures are the accusative object.",
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "71777d16-3fd2-5c3e-baf8-1146303a84c1": {
+      "questionDe": "___ bitte das Wasser mit! (mitnehmen, du-Form)",
+      "questionEn": "Ask one friend to take the water along. Enter the imperative of mitnehmen.",
+      "answer": "Nimm",
+      "accepted": [
+        "Nimm",
+        "nimm"
+      ],
+      "explanationDe": "Nehmen hat im du-Imperativ einen Vokalwechsel: nimm. Mit steht am Ende.",
+      "explanationEn": "Nehmen changes its vowel in the singular informal imperative: nimm. Mit goes at the end.",
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "41ea4c27-69a6-5cc0-9a63-ffb649037cb3": {
+      "questionDe": "Ich ___ die Küche nicht aufräumen. (können, Präteritum, ich)",
+      "questionEn": "I could not tidy the kitchen. Choose the past form of können for ich.",
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "547c67c4-a1b3-50ae-8455-d168cc964d4c": {
+      "questionDe": "Schreiben Sie den Satz: [er / schicken / mir / den Schlüssel] (Beginnen Sie mit „Er“)",
+      "questionEn": "Write: He sends me the key. Begin with Er.",
+      "answer": "Er schickt mir den Schlüssel.",
+      "accepted": [
+        "Er schickt mir den Schlüssel.",
+        "Er schickt mir den Schlüssel"
+      ],
+      "explanationDe": "Ein Pronomen und ein Nomen: mir steht vor den Schlüssel.",
+      "explanationEn": "With a pronoun and a noun object, mir comes before den Schlüssel.",
+      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+    },
+    "1625eef6-b914-541f-9708-19123927b52a": {
+      "questionDe": "Ich ___ keine Zeit. Ich musste arbeiten. (haben, Präteritum, ich)",
+      "questionEn": "I had no time. I had to work. Enter the past form of haben for ich.",
+      "answer": "hatte",
+      "accepted": [
+        "hatte"
+      ],
+      "explanationDe": "Hatte ist die ich-Form von haben im Präteritum.",
+      "explanationEn": "Hatte is the past form of haben for ich.",
+      "reason": "Review the already taught singular before using the untaught plural form."
+    }
+  }
+}

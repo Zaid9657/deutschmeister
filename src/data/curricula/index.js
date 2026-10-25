@@ -4,6 +4,7 @@
 // without an entry keep the legacy 28-day program in the course player.
 import { CURRICULUM_A11 } from './a11.js';
 import { CURRICULUM_A12 } from './a12.js';
+import { CURRICULUM_A21 } from './a21.js';
 
 /**
  * LIVE curricula — what the course player, the checkpoint page and the Astro syllabus
@@ -16,7 +17,7 @@ import { CURRICULUM_A12 } from './a12.js';
 export const CURRICULA = { 'a1.1': CURRICULUM_A11, 'a1.2': CURRICULUM_A12 };
 
 /** Validated but not yet shipped — see the promotion rule above. */
-export const DRAFT_CURRICULA = {};
+export const DRAFT_CURRICULA = { 'a2.1': CURRICULUM_A21 };
 
 /** Every curriculum module, live or draft — for the validator and the test suites. */
 export const ALL_CURRICULA = { ...CURRICULA, ...DRAFT_CURRICULA };

@@ -19,6 +19,7 @@ import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
+import { CourseExamAudio, CourseExamSpeaking } from '../../components/exams/CourseExamParts.jsx';
 
 // /modelltest/:examSlug/run — the timed runner (renovation Phase 5a).
 //
@@ -413,6 +414,7 @@ const ModelltestRun = () => {
 
               {part.type === 'mc-group' && (
                 <div className="space-y-4">
+                  {part.audioText && <CourseExamAudio part={part} answers={answers} onAnswer={setAnswer} />}
                   {part.text && (
                     <Card tone="sunk" className="p-4 text-sm text-ink leading-relaxed whitespace-pre-line">
                       {part.text}
@@ -431,7 +433,7 @@ const ModelltestRun = () => {
                               onChange={() => setAnswer(item.id, o.key)}
                               className="mt-0.5 accent-siegel"
                             />
-                            <span>{o.label}</span>
+                            <span>{o.picture && <img src={o.picture.src} alt={o.picture.alt} className="w-40 h-28 object-contain mb-2" />}{o.label}</span>
                           </label>
                         ))}
                       </div>
@@ -498,6 +500,7 @@ const ModelltestRun = () => {
                   </Card>
                 </div>
               )}
+              {part.type === 'speaking' && <CourseExamSpeaking part={part} answers={answers} onAnswer={setAnswer} />}
             </div>
           ))}
         </div>

@@ -188,7 +188,7 @@ function addProducedVorgriffe(c, spec, n) {
   const sample = lateFormSample(c, spec);
   if (!sample) return 0;
   const l = c.lektionen[0];
-  const idx = l.hoeren.lines[0];
+  const idx = spec.level === 'a2.1' ? l.sprechen.readAloud[0] : l.hoeren.lines[0];
   l.dialog.lines[idx].de += ` ${Array.from({ length: n }, () => sample).join(' ')}`;
   return n;
 }
@@ -208,6 +208,11 @@ function unbackExamTeile(c, n) {
   let done = 0;
   for (const l of c.lektionen) {
     if (done >= n) break;
+    if (c.level === 'a2.1' && l.examTeile.some(t => t.startsWith('Lesen')) && l.lesen?.units) {
+      delete l.lesen;
+      done += 1;
+      continue;
+    }
     if (l.examTeile.some((t) => t.startsWith('Lesen')) && l.links.readingOrder !== null && l.links.readingOrder !== undefined) {
       l.links.readingOrder = null;
       done += 1;
@@ -2064,6 +2069,9 @@ for (const key of LEVEL_KEYS) {
 
     const c12 = cloneOf(C);
     const need12 = overshoot(canDoRehearsal(C).length, 0);
+    // A2.1 uses all five slots. Replace one only in this mutation fixture so
+    // RULE 12 still has to reject a new unrehearsed promise; A1 fixtures stay exact.
+    if (spec.level === 'a2.1') c12.lektionen[0].canDo.pop();
     assert.equal(addUnrehearsedCanDos(c12, need12), need12, `${spec.code}: not enough room for unrehearsed can-dos`);
     assert.ok(failsWith(validateCurriculum(c12), 12), `${spec.code}: not caught: can-do lines nothing rehearses`);
 

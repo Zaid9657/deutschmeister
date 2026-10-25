@@ -941,6 +941,300 @@ export const WRITING_TASKS = [
     sample: 'Hallo Tim, am Sonntag habe ich mit Lena eine Jacke gekauft. Die Jacke ist blau und warm. Danach haben wir Kuchen gegessen und Kaffee getrunken. Liebe Grüße, Ana',
   },
 
+  // ---- A2.1 course and checkpoint writing; DRAFT curriculum ----------------
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l01",
+    "title": "Lektion 1: Unsere Familiengeschichte",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "task": "Sie haben am Wochenende Ihre Großeltern besucht. Schreiben Sie Ihrer Freundin Lena eine SMS.",
+    "taskEn": "You visited your grandparents at the weekend. Write your friend Lena a text message.",
+    "leitpunkte": [
+      "Bei wem Sie waren",
+      "Was Sie dort gekocht haben",
+      "Wann Sie wieder zu Hause sind"
+    ],
+    "sample": "Hallo Lena, ich war bei unserer Oma. Wir haben zusammen Suppe gekocht und Musik gehört. Am Sonntag bin ich wieder zu Hause. Liebe Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l02",
+    "title": "Lektion 2: Alles muss in Kisten",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "task": "Sie ziehen bald um. Schreiben Sie Ihrer Vermieterin, Frau Sommer, eine E-Mail.",
+    "taskEn": "You are moving soon. Write an email to your landlady, Ms Sommer.",
+    "leitpunkte": [
+      "Wann Ihr Umzug ist",
+      "Was Sie schon eingepackt haben",
+      "Wann Sie die Schlüssel bringen"
+    ],
+    "sample": "Guten Tag Frau Sommer, mein Umzug ist am Samstag. Ich habe die Bücher eingepackt und die Küche aufgeräumt. Die Schlüssel bringe ich Ihnen am Sonntag um zehn Uhr. Vielen Dank! Viele Grüße, Tim Berger"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l03",
+    "title": "Lektion 3: Wohin mit dem Sofa?",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "task": "Sie wohnen seit gestern in einer anderen Wohnung. Schreiben Sie Ihrem Freund Tim eine SMS.",
+    "taskEn": "You moved into a different flat yesterday. Write your friend Tim a text message.",
+    "leitpunkte": [
+      "Wie die Wohnung ist",
+      "Wo Sie gern sitzen",
+      "Wann Tim kommen kann"
+    ],
+    "sample": "Hallo Tim, meine Wohnung ist schön und groß. Ich sitze gern auf dem Balkon. Hast du am Samstag um drei Uhr Zeit? Liebe Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l04",
+    "title": "Lektion 4: Auf dem Wochenmarkt",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "task": "Sie sind auf dem Markt. Ihre Freundin Lena kocht heute. Schreiben Sie ihr eine SMS.",
+    "taskEn": "You are at the market. Your friend Lena is cooking today. Send her a text message.",
+    "leitpunkte": [
+      "Was Sie schon gekauft haben",
+      "Was heute fehlt",
+      "Frage: Was braucht Lena noch?"
+    ],
+    "sample": "Hallo Lena, ich habe die roten Tomaten und den frischen Salat gekauft. Heute fehlt das Brot. Brauchst du noch Käse? Liebe Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l05",
+    "title": "Lektion 5: Ein Geschenk für Oma",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "task": "Ihre Kollegin, Frau Hoffmann, hat Geburtstag. Schreiben Sie Ihrem Kollegen, Herrn Krüger, eine E-Mail.",
+    "taskEn": "Your colleague Ms Hoffmann has a birthday. Email your colleague Mr Krüger.",
+    "leitpunkte": [
+      "Was Sie Frau Hoffmann schenken möchten",
+      "Wer das Geschenk kauft",
+      "Wann Sie ihr gratulieren"
+    ],
+    "sample": "Guten Tag Herr Krüger, ich möchte Frau Hoffmann zum Geburtstag Blumen schenken. Ich kaufe die Blumen am Freitag nach der Arbeit. Wir gratulieren ihr am Montag um neun im Büro. Viele Grüße, Ana Chakiri"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l06",
+    "title": "Lektion 6: Leider konnte ich nicht kommen",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "task": "Sie waren gestern nicht beim Treffen mit Ihrem Freund Tim. Schreiben Sie ihm eine SMS.",
+    "taskEn": "You missed yesterday’s meeting with your friend Tim. Send him a text message.",
+    "leitpunkte": [
+      "Eine Entschuldigung",
+      "Warum Sie nicht kommen konnten",
+      "Wann Sie wieder zusammen essen möchten"
+    ],
+    "sample": "Hallo Tim, Entschuldigung, dass ich nicht da war. Ich musste lange arbeiten. Ich möchte am Freitag mit dir essen. Hast du Zeit? Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l07",
+    "title": "Lektion 7: Fit und aktiv",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "task": "Sie möchten im Sportverein Volleyball spielen. Schreiben Sie dem Trainer, Herrn Novak, eine E-Mail.",
+    "taskEn": "You would like to play volleyball in the club. Write an email to the coach, Mr Novak.",
+    "leitpunkte": [
+      "Frage nach dem Termin für das Training",
+      "Frage nach dem Preis",
+      "Frage: Was sollen Sie mitbringen?"
+    ],
+    "sample": "Guten Tag Herr Novak, ich möchte gern bei Ihnen Volleyball spielen. Wann ist das Training? Was kostet es im Monat? Soll ich Schuhe und Wasser mitbringen? Danke für Ihre Hilfe. Viele Grüße, Ana Chakiri"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l08",
+    "title": "Lektion 8: Ein Unfall mit dem Fahrrad",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "task": "Sie hatten einen Unfall und kommen heute nicht zum Deutschkurs. Schreiben Sie Ihrer Freundin Lena eine SMS.",
+    "taskEn": "You had an accident and cannot come to your German class today. Text your friend Lena.",
+    "leitpunkte": [
+      "Ihr Unfall",
+      "Warum Sie nicht kommen",
+      "Eine Bitte"
+    ],
+    "sample": "Hallo Lena, ich hatte einen Unfall. Ich bin vom Fahrrad gefallen. Ich komme nicht, weil ich krank bin. Bring mir bitte das Buch mit. Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l09",
+    "title": "Lektion 9: Der erste Tag im Büro",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "task": "Ihre Kollegin, Frau Yilmaz, hat Ihnen eine Datei geschickt. Sie können die Datei nicht öffnen. Schreiben Sie ihr eine E-Mail.",
+    "taskEn": "Your colleague Ms Yilmaz sent you a file, but you cannot open it. Email her.",
+    "leitpunkte": [
+      "Dank für die Datei",
+      "Das Problem",
+      "Bitte um eine neue Datei"
+    ],
+    "sample": "Guten Tag Frau Yilmaz, danke für die Datei. Ich habe ein Problem: Ich kann sie leider nicht öffnen. Können Sie sie mir bitte schicken? Ich brauche sie morgen. Viele Grüße, Tim Berger"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l10",
+    "title": "Lektion 10: Besuch aus Marokko",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "task": "Ihre Eltern besuchen Sie. Sie möchten frei haben. Schreiben Sie Ihrem Chef, Herrn Krüger, eine E-Mail.",
+    "taskEn": "Your parents are visiting and you would like time off. Email your boss, Mr Krüger.",
+    "leitpunkte": [
+      "Wann Ihre Eltern kommen",
+      "Wie lange Sie frei brauchen",
+      "Wer Ihre Arbeit macht"
+    ],
+    "sample": "Guten Tag Herr Krüger, meine Eltern kommen in zwei Wochen am Freitag. Ich brauche für drei Tage frei. Meine Kollegin Frau Yilmaz macht meine Arbeit. Geht das? Vielen Dank! Viele Grüße, Ana Chakiri"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l11",
+    "title": "Lektion 11: Eine Stadtführung",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "task": "Sie haben mit Ihren Eltern eine Stadtführung gemacht. Schreiben Sie Ihrer Freundin Lena eine SMS.",
+    "taskEn": "You took a guided city tour with your parents. Text your friend Lena.",
+    "leitpunkte": [
+      "Was Sie gesehen haben",
+      "Wo Sie gegessen haben",
+      "Wann Sie zu Lena kommen"
+    ],
+    "sample": "Hallo Lena, wir haben das Rathaus gesehen. Danach haben wir im Café bei der kleinen Brücke gegessen. Wir kommen morgen um drei zu dir. Liebe Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "taskKey": "a21-l12",
+    "title": "Lektion 12: Wie war der Besuch?",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "task": "Ihre Eltern haben Sie besucht. Ihre Kollegin, Frau Yilmaz, hat Ihnen geholfen. Schreiben Sie ihr eine E-Mail.",
+    "taskEn": "Your parents visited you and your colleague Ms Yilmaz helped you. Write her an email.",
+    "leitpunkte": [
+      "Dank für die Hilfe",
+      "Was Sie mit Ihren Eltern besichtigt haben",
+      "Frage nach einem Besuch zum Kaffee"
+    ],
+    "sample": "Guten Tag Frau Yilmaz, danke für Ihre Hilfe beim Besuch meiner Eltern. Wir haben Bremen besichtigt und zusammen gekocht. Kommen Sie am Samstag um drei zum Kaffee? Ich backe einen Kuchen. Viele Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "checkpoint": 1,
+    "taskKey": "a21-cp1",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "title": "Checkpoint 1: Hilfe mit einem Regal",
+    "task": "Sie haben ein Regal für Ihre Wohnung gekauft. Ihr Freund Tim hilft beim Abholen. Schreiben Sie ihm eine SMS.",
+    "taskEn": "You bought a shelf for your flat. Your friend Tim will help collect it. Text him.",
+    "leitpunkte": [
+      "Was Sie gekauft haben",
+      "Wann Sie das Regal abholen",
+      "Eine Bitte"
+    ],
+    "sample": "Hallo Tim, ich habe ein Regal gekauft. Am Samstag um zehn hole ich es ab. Komm bitte mit deinem Auto. Vielen Dank! Liebe Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "checkpoint": 2,
+    "taskKey": "a21-cp2",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "title": "Checkpoint 2: Ein Termin bei Frau Schulz",
+    "task": "Sie haben am Freitag einen Termin mit Frau Schulz. Sie müssen arbeiten. Schreiben Sie Frau Schulz eine E-Mail.",
+    "taskEn": "You have an appointment with Ms Schulz on Friday but must work. Email her.",
+    "leitpunkte": [
+      "Eine Entschuldigung",
+      "Warum Sie nicht kommen können",
+      "Ein Vorschlag für einen neuen Termin"
+    ],
+    "sample": "Guten Tag Frau Schulz, es tut mir leid, dass ich am Freitag keine Zeit habe. Ich muss leider arbeiten. Können wir den Termin auf Montag um zehn Uhr verschieben? Vielen Dank! Viele Grüße, Tim Berger"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "checkpoint": 3,
+    "taskKey": "a21-cp3",
+    "register": "informell",
+    "textsorte": "sms",
+    "minWords": 20,
+    "maxWords": 30,
+    "title": "Checkpoint 3: Ein Besuch bei Tim",
+    "task": "Ihr Freund Tim ist krank. Sie möchten ihn besuchen. Schreiben Sie ihm eine SMS.",
+    "taskEn": "Your friend Tim is ill and you would like to visit him. Text him.",
+    "leitpunkte": [
+      "Wann Sie kommen",
+      "Was Sie mitbringen",
+      "Eine Frage"
+    ],
+    "sample": "Hallo Tim, ich komme am Freitag um drei. Ich bringe dir das Buch vom Kurs mit. Brauchst du auch Wasser oder etwas vom Markt? Liebe Grüße, Ana"
+  },
+  {
+    "examKey": "goethe_a2",
+    "course": "a2.1",
+    "checkpoint": 4,
+    "taskKey": "a21-cp4",
+    "register": "formell",
+    "textsorte": "email",
+    "minWords": 30,
+    "maxWords": 40,
+    "title": "Checkpoint 4: Dank an den Reiseführer",
+    "task": "Herr Wagner hat Ihnen bei einer Stadtführung geholfen. Schreiben Sie ihm eine E-Mail.",
+    "taskEn": "Mr Wagner helped you during a city tour. Email him.",
+    "leitpunkte": [
+      "Dank für die Führung",
+      "Was Ihnen gefallen hat",
+      "Eine Frage nach einer weiteren Führung"
+    ],
+    "sample": "Guten Tag Herr Wagner, vielen Dank für die Führung. Uns hat der Hafen sehr gefallen. Meine Eltern kommen in zwei Monaten wieder. Gibt es dann eine Führung zum Museum? Vielen Dank! Viele Grüße, Ana Chakiri"
+  },
+
   // ---- Goethe-Zertifikat A2 ---------------------------------------------
   // ---- Teil 1: kurze persönliche Nachricht (SMS), 20–30 Wörter (2) -------
   {
@@ -961,8 +1255,8 @@ export const WRITING_TASKS = [
     ],
     pointsNote:
       'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
-      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
-      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchen Sie mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchen Sie mindestens 15 von 25 Punkten.',
   },
   {
     examKey: 'goethe_a2',
@@ -982,8 +1276,8 @@ export const WRITING_TASKS = [
     ],
     pointsNote:
       'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
-      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
-      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchen Sie mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchen Sie mindestens 15 von 25 Punkten.',
   },
 
   // ---- Teil 2: halbformelle E-Mail, 30–40 Wörter (2) ---------------------
@@ -1005,8 +1299,8 @@ export const WRITING_TASKS = [
     ],
     pointsNote:
       'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
-      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
-      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchen Sie mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchen Sie mindestens 15 von 25 Punkten.',
   },
   {
     examKey: 'goethe_a2',
@@ -1026,8 +1320,8 @@ export const WRITING_TASKS = [
     ],
     pointsNote:
       'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
-      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
-      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchen Sie mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchen Sie mindestens 15 von 25 Punkten.',
   },
 ];
 

@@ -321,7 +321,8 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
 
     const mock = ct.mock;
     assert.equal(mock.examKey, ct.key);
-    assert.match(mock.title, /Kurzversion/, `${ct.key}: shortened sets must say so in the title`);
+    if (ct.level === 'a2.1') assert.doesNotMatch(mock.title, /Kurzversion/);
+    else assert.match(mock.title, /Kurzversion/, `${ct.key}: shortened sets must say so in the title`);
     assert.ok(mock.passPercent >= 50 && mock.passPercent <= 100);
 
     const perfect = {};
@@ -356,6 +357,8 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
           );
         } else if (part.type === 'writing') {
           assert.ok(part.task && part.criteria?.length >= 3, `${part.key}: writing needs a task + criteria`);
+        } else if (ct.level === 'a2.1' && part.type === 'speaking') {
+          assert.ok(part.task && part.criteria?.length >= 2, `${part.key}: speaking needs a task and checklist`);
         } else {
           assert.fail(`${part.key}: unexpected part type ${part.type} for a course test`);
         }

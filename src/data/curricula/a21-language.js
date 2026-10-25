@@ -7,6 +7,8 @@ export const PRIMARY_ORDER_A21 = [
   'pronouns-accusative-dative', 'temporal-prepositions', 'prepositions-dative', 'perfect-tense-haben',
 ];
 export const FUNCTION_WORDS_A21_ADDED = [
+  'mal',
+  'unser', 'unsere', 'unseren', 'unserem', 'unserer', 'euer', 'eure', 'euren', 'eurem', 'eurer',
   'weil', 'dass', 'wenn', 'zwischen', 'über', 'gegenüber',
   'konnte', 'konntest', 'konnten', 'konntet', 'musste', 'musstest', 'mussten', 'musstet',
   'wollte', 'wolltest', 'wollten', 'wolltet', 'durfte', 'durftest', 'durften', 'durftet',
@@ -58,7 +60,7 @@ const modal = /^(?:können|müssen|wollen|dürfen|mögen|sollen|möchten)$/;
 function verbForms(inf, irregulars) {
   const stem = inf.endsWith('en') ? inf.slice(0, -2) : inf.slice(0, -1);
   const forms = new Set([inf, stem]);
-  const endings = /[td]$|[^aeiouäöülr][mn]$/.test(stem) ? ['e', 'est', 'et', 'en']
+  const endings = /[td]$|[^aeiouäöülrh][mn]$/.test(stem) ? ['e', 'est', 'et', 'en']
     : /[sßzx]$/.test(stem) ? ['e', 't', 'en'] : ['e', 'st', 't', 'en'];
   for (const ending of endings) forms.add(stem + ending);
   if (inf.endsWith('eln')) forms.add(stem.slice(0, -2) + 'le');
@@ -75,7 +77,7 @@ function verbForms(inf, irregulars) {
         if (/^ge[a-zäöüß]+(?:t|en)$/.test(form)) forms.add(prefix + form);
       }
   } else if (!exceptions && !modal.test(inf)) {
-      forms.add((inseparable.test(inf) || inf.endsWith('ieren') ? '' : 'ge') + stem + (/[td]$|[^aeiouäöülr][mn]$/.test(stem) ? 'et' : 't'));
+      forms.add((inseparable.test(inf) || inf.endsWith('ieren') ? '' : 'ge') + stem + (/[td]$|[^aeiouäöülrh][mn]$/.test(stem) ? 'et' : 't'));
   }
   return forms;
 }

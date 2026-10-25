@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as v from '../scripts/validate-curriculum.mjs';
 import { a1EngineSnapshot } from './helpers/a21-engine-baseline.mjs';
+import { CURRICULUM_A21 } from '../src/data/curricula/a21.js';
 
 test('A1 engine behaviour is byte-for-byte identical to the pre-Step-1 baseline', () => {
   const before = JSON.parse(readFileSync(new URL('./fixtures/a21-engine-a1-baseline.json', import.meta.url), 'utf8'));
@@ -22,11 +23,11 @@ test('G2: a third level inherits A1.1-only Wortfeld entries', () => {
   } finally { delete v.LEVELS[level]; }
 });
 
-test('G5: A2.1 has an engine row without a curriculum module', () => {
+test('G5: A2.1 has a complete draft engine row with its curriculum module', () => {
   const spec = v.levelSpec('a2.1');
   assert.ok(spec);
-  assert.equal(spec.curriculum, null);
+  assert.equal(spec.curriculum, CURRICULUM_A21);
   assert.equal(spec.examKey, 'goethe_a2');
-  assert.equal(v.PENDING_LEVELS['a2.1'], spec, 'pending engine policy is explicit and queryable');
-  assert.deepEqual(Object.keys(v.LEVELS), ['a1.1', 'a1.2'], 'complete-curriculum registry keeps its existing contract');
+  assert.equal(v.LEVELS['a2.1'], spec, 'complete draft engine policy is explicit and queryable');
+  assert.deepEqual(Object.keys(v.LEVELS), ['a1.1', 'a1.2', 'a2.1'], 'complete-curriculum registry includes the authored draft');
 });

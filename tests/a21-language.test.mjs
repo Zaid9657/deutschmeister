@@ -9,6 +9,8 @@ import { knownUpTo, lexisSpec, formsOf as browserForms } from '../src/lib/checkp
 import { buildCheckpoint, checkpointWritingTask, chapterWritingTask } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { buildLexicon } from '../src/lib/lesson/gloss.js';
 import { curriculumFor, anyCurriculumFor } from '../src/data/curricula/index.js';
+import { CURRICULUM_A21 } from '../src/data/curricula/a21.js';
+import { a21RatchetMeasurements } from './helpers/a21-measurements.mjs';
 
 function withA21(run) {
   const spec = v.levelSpec('a2.1');
@@ -134,18 +136,26 @@ test('G4: adjective gating reaches line horizons and model-production checks, A1
   }
 }));
 
-test('G5: engine limits, personas and zero initial debt do not register a curriculum', () => {
+test('G5: engine limits, personas and exact ratchets register a draft curriculum only', () => {
   const spec = v.levelSpec('A2.1');
   assert.equal(spec.code, 'A2.1');
-  assert.equal(spec.curriculum, null);
+  assert.equal(spec.curriculum, CURRICULUM_A21);
   assert.equal(curriculumFor('a2.1'), null);
-  assert.equal(anyCurriculumFor('a2.1'), null);
+  assert.equal(anyCurriculumFor('a2.1'), CURRICULUM_A21);
   assert.deepEqual([spec.maxDialogueWords, spec.maxNoticeWords, spec.maxWortfeldEntries], [14, 70, 30]);
   assert.equal(spec.personaSource, 'a2.1');
-  assert.deepEqual(v.PERSONA_TABLES[spec.personaSource], v.PERSONAS_A12);
-  assert.ok(Object.values(spec.ratchets).every((value) => value === 0));
-  assert.equal(v.loadPoolItems('a2.1').length, 0);
-  assert.equal(v.loadExtraItems('a2.1').length, 0);
+  // A2.1 inherits every A1.2 persona unchanged and adds the plan's new cast (Frau Schulz, Frau Yilmaz,
+  // Herr Wagner); RULE 14 guards contradictions between them (supervisor authorization, step 3).
+  const personas = v.PERSONA_TABLES[spec.personaSource];
+  for (const [name, row] of Object.entries(v.PERSONAS_A12)) assert.deepEqual(personas[name], row, `${name} is inherited unchanged`);
+  assert.deepEqual(spec.ratchets, a21RatchetMeasurements(), 'every ratchet equals its measurement');
+  // Step 3 authored the pool: the build carries every hand-authored item with its answer, and every item has
+  // a German cue, an answer and an English explanation.
+  const pool = v.loadPoolItems('a2.1');
+  const extra = v.loadExtraItems('a2.1');
+  assert.ok(pool.length > 0 && extra.length > 0, 'the A2.1 pool is built');
+  assert.ok(pool.every((item) => item.questionDe && item.answer && item.explanationEn), 'every pool item is complete');
+  assert.ok(extra.every((item) => pool.some((built) => built.id === item.id && built.answer === item.answer)), 'the build carries every authored item');
 });
 
 test('G5: validation accepts the D5 boundaries and rejects one word or entry above each', () => withA21((c) => {
