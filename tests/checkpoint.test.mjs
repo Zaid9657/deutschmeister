@@ -995,6 +995,47 @@ test('a section at exactly 40 % and an overall at exactly 60 % pass', () => {
   assert.equal(result.passed, true);
 });
 
+test('Hören items read instead of heard never fail a perfect paper on the guess ceiling (2026-10-25 review, X-044)', () => {
+  // CheckpointPage scores `scoredItems`: the paper minus every item whose audio did not play. With
+  // four Hören items read, the one heard choice answered right was 1/1 against a ceiling of 1, and
+  // sectionPasses wants correct > ceiling — overall 100 %, passed: false, one attempt of three gone.
+  // Every A1.1 paper (rounds 0–3), every way to hear only one or only two of the five items.
+  const perfect = (list) => Object.fromEntries(list.map((i) => [i.id,
+    i.kind === 'readAloud' ? { usedMic: true, pct: 1 } : i.kind === 'gradedWriting' ? { graded: true, pct: 1 } : i.answer]));
+  let cases = 0;
+  for (const { cp } of ALL_CHECKPOINTS) {
+    for (let round = 0; round < 4; round += 1) {
+      const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL, seed: round ? `${cp.id}-round-${round}` : undefined });
+      const hoeren = items.filter((i) => i.section === 'hoeren');
+      assert.equal(hoeren.length, SECTION_COUNTS.hoeren);
+      const heardSets = [...hoeren.map((h) => [h]), ...hoeren.flatMap((h, k) => hoeren.slice(k + 1).map((g) => [h, g]))];
+      for (const heard of heardSets) {
+        const scored = items.filter((i) => i.section !== 'hoeren' || heard.includes(i));
+        const result = scoreCheckpoint(scored, perfect(scored));
+        cases += 1;
+        assert.equal(result.passed, true, `${cp.id}/${round}, heard ${heard.map((h) => h.id).join(' + ')}: a perfect paper must pass (Hören ${JSON.stringify(result.sections.hoeren)})`);
+        const s = result.sections.hoeren;
+        // What is left either beats a constant answer, or the part is reported as not assessed.
+        assert.ok(!s.scored || !s.guessCeiling || s.correct > s.guessCeiling, `${cp.id}/${round}: a scored Hören section the ceiling cannot judge`);
+        if (!s.scored) assert.ok(assessedParts(items, result).notAssessed.includes('hoeren'), 'and the result card says so');
+      }
+    }
+  }
+  assert.equal(cases, 4 * 4 * 15);
+  // A FULLY printed section keeps the ceiling rule: five choices with the key in the same place are
+  // answered by a constant, and five right of five fail the part.
+  const choice = (n) => ({ id: `h${n}`, section: 'hoeren', kind: 'wordChoice', mode: 'options', scored: true, options: ['Brot', 'Milch', 'Tee', 'Saft'], answer: 'Brot', accepted: ['Brot'] });
+  const full = Array.from({ length: SECTION_COUNTS.hoeren }, (_, n) => choice(n));
+  const fullResult = scoreCheckpoint(full, Object.fromEntries(full.map((i) => [i.id, 'Brot'])));
+  assert.equal(fullResult.sections.hoeren.scored, true);
+  assert.equal(fullResult.passed, false, 'a constant answer still never passes a printed section');
+  // …and the same section with four of the five read instead is not assessed rather than failed.
+  const one = full.slice(0, 1);
+  const oneResult = scoreCheckpoint(one, { h0: 'Brot' });
+  assert.equal(oneResult.sections.hoeren.scored, false);
+  assert.equal(oneResult.total, 0, 'it leaves the score instead of failing it');
+});
+
 test('Sprechen is required but never decides the result', () => {
   const items = build(CURRICULUM_FIXTURE, cp1);
   const answers = answerAll(items, { correctFor: () => true });
@@ -1807,6 +1848,40 @@ test('the lowercase answer is wrong exactly where the polite predicate fires —
         `${cp.id} ${item.id}: the lowercase form of "${accepted[0]}" must be wrong in a graded test`);
     }
   }
+
+  // (d) every LESSON dictation line of both courses (2026-10-25 review, X-043). DictationItem.jsx
+  // built its item without the flag, so „Gut. Wie geht es ihnen?" was a forgiven case typo in L1 and
+  // wrong in the checkpoint's dictation of the same line. The component builds the item inline, so
+  // its source is pinned here and the item is built the way that source builds it.
+  const { lineIsCaseTask } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A12 } = await import('../src/data/curricula/a12.js');
+  const dictationSrc = readFileSync(new URL('../src/components/lesson/DictationItem.jsx', import.meta.url), 'utf8');
+  assert.match(dictationSrc, /import \{ politeCaseItem \} from '\.\.\/\.\.\/data\/lessonPools\/quality\.js';/);
+  assert.match(dictationSrc, /caseSensitive: politeCaseItem\(\{ answer: line\.de, accepted: \[line\.de\] \}\),/);
+  const lessonDictation = (de) => ({
+    topic: 'hoeren', kind: 'dictation', stage: 'dictation', type: 'dictation', answer: de, accepted: [de],
+    caseSensitive: politeCaseItem({ answer: de, accepted: [de] }),
+  });
+  let lessonPolite = 0;
+  for (const curriculum of [CURRICULUM_A11, CURRICULUM_A12]) {
+    for (const lektion of curriculum.lektionen) {
+      for (const i of lektion.hoeren?.kind === 'dictation' ? lektion.hoeren.lines : []) {
+        const de = lektion.dialog?.lines?.[i]?.de;
+        if (!de) continue;
+        const item = lessonDictation(de);
+        assert.equal(item.caseSensitive, lineIsCaseTask(de), `${curriculum.level} L${lektion.nr} line ${i}: lesson and checkpoint read one predicate`);
+        if (!item.caseSensitive) continue;
+        lessonPolite += 1;
+        fired += 1;
+        const result = checkAnswer(de.toLowerCase(), item.accepted, checkOptionsFor(item)).result;
+        assert.equal(result, RESULT.WRONG, `${curriculum.level} L${lektion.nr}: the lowercase form of "${de}" must grade wrong`);
+      }
+    }
+  }
+  assert.ok(lessonPolite >= 1, 'A1.1 L1 dictates the polite „Wie geht es Ihnen?"');
+  const l1 = lessonDictation('Gut. Wie geht es Ihnen?');
+  assert.equal(checkAnswer('Gut. Wie geht es ihnen?', l1.accepted, checkOptionsFor(l1)).result, RESULT.WRONG);
+  assert.equal(checkAnswer('Gut. Wie geht es Ihnen?', l1.accepted, checkOptionsFor(l1)).result, RESULT.CORRECT);
 
   assert.ok(fired >= 10, `only ${fired} polite answers measured — the predicate stopped reaching the surfaces`);
 });
