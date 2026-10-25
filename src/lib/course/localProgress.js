@@ -69,7 +69,7 @@ function trimAttempts(list) {
   return list.filter((a) => !dropped.has(`${a.lektionId}#${runOf(a)}`));
 }
 
-const emptyStore = (level = null) => ({ level, lektionen: {}, attempts: [] });
+const emptyStore = (level = null) => ({ level, lektionen: {}, attempts: [], checkpoints: {} });
 let memory = null;
 
 function writeLocalProgress(store) {
@@ -89,6 +89,7 @@ export function readLocalProgress() {
     level: typeof raw.level === 'string' ? raw.level : null,
     lektionen: raw.lektionen && typeof raw.lektionen === 'object' ? raw.lektionen : {},
     attempts: Array.isArray(raw.attempts) ? raw.attempts : [],
+    checkpoints: raw.checkpoints && typeof raw.checkpoints === 'object' && !Array.isArray(raw.checkpoints) ? raw.checkpoints : {},
   };
 }
 
@@ -97,12 +98,19 @@ export function clearLocalProgress() {
   safeRemove(LOCAL_KEY);
 }
 
-/** Lektion ids finished locally for `level` — what the course home renders as done for a visitor. */
+/**
+ * Lektion and checkpoint ids finished locally for `level` — what the course home renders as done for
+ * a visitor. A passed checkpoint counts (2026-10-25): a guest's pass used to be stored nowhere, so
+ * the home kept offering it, the KannIch card counted 0 checkpoints and the next Lektion stayed locked.
+ */
 export function localDoneIds(level) {
   const store = readLocalProgress();
   const lvl = String(level || '').toLowerCase();
   if (!store.level || store.level !== lvl) return new Set();
-  return new Set(Object.keys(store.lektionen).filter((id) => store.lektionen[id]?.status));
+  return new Set([
+    ...Object.keys(store.lektionen).filter((id) => store.lektionen[id]?.status),
+    ...Object.keys(store.checkpoints).filter((id) => store.checkpoints[id]?.passedAt),
+  ]);
 }
 
 export const hasLocalProgress = (level) => localDoneIds(level).size > 0;
@@ -158,6 +166,38 @@ export function recordLocalLesson({ level, lektionId, status = 'complete', accur
     })),
   ]);
   return writeLocalProgress(store);
+}
+
+/**
+ * Record a checkpoint a signed-out learner PASSED (2026-10-25). `stamp` is the finished paper's
+ * stamp: the merge writes the attempt's summary row with it, so a merge that is run again finds the
+ * row it already wrote instead of counting a second attempt (checkpointService.recordAttempt).
+ * Switching level throws the old store away, as recordLocalLesson does.
+ */
+export function recordLocalCheckpoint({ level, checkpointId, accuracy = 0, stamp = null }) {
+  if (!level || !checkpointId) return false;
+  const lvl = String(level).toLowerCase();
+  const prev = readLocalProgress();
+  const store = prev.level === lvl ? prev : emptyStore(lvl);
+  store.level = lvl;
+  const passedAt = typeof stamp === 'string' && stamp ? stamp : new Date().toISOString();
+  store.checkpoints = { ...store.checkpoints, [checkpointId]: { passedAt, accuracy: Number(accuracy) || 0, stamp: passedAt } };
+  return writeLocalProgress(store);
+}
+
+/** The stored checkpoint passes as merge plans: one stamped summary row and a completion each. */
+export function planLocalCheckpointMerge(store) {
+  const level = store && typeof store.level === 'string' ? store.level : null;
+  if (!level) return [];
+  return Object.entries(store.checkpoints || {})
+    .filter(([, row]) => row && row.passedAt)
+    .map(([checkpointId, row]) => ({
+      level,
+      checkpointId,
+      stamp: typeof row.stamp === 'string' && row.stamp ? row.stamp : row.passedAt,
+      // scoreCheckpoint's `overall` is a whole percent; the store keeps lesson_progress's 0…1.
+      overall: Math.round((Number(row.accuracy) || 0) * 100),
+    }));
 }
 
 let merging = false;
@@ -248,9 +288,16 @@ export function planLocalMerge(store) {
  * run is the whole point, and separate statements also keep their `created_at`
  * distinct even if the explicit stamp is ever refused.
  *
+ * A checkpoint the guest passed (2026-10-25) is written the way the checkpoint
+ * page writes a pass: its summary row under the paper's own stamp — what the
+ * attempt limit counts and the course home's reconcile reads — and the
+ * completion in lesson_progress/program_progress, both through
+ * checkpointService.recordAttempt, which reports true only when both landed.
+ * It loads on demand: only a store that holds a pass needs the service.
+ *
  * `deps` is a seam for tests only.
  *
- * @returns {Promise<number>} Lektionen merged (0 when there was nothing or a write failed).
+ * @returns {Promise<number>} Lektionen and checkpoints merged (0 when there was nothing or a write failed).
  */
 export async function mergeLocalProgress(userId, deps = {}) {
   if (!userId || merging) return 0;
@@ -259,7 +306,8 @@ export async function mergeLocalProgress(userId, deps = {}) {
   const seed = deps.seedCards || outboxDeps.seedCards;
   const store = readLocalProgress();
   const plans = planLocalMerge(store);
-  if (!plans.length) return 0;
+  const passes = planLocalCheckpointMerge(store);
+  if (!plans.length && !passes.length) return 0;
 
   merging = true;
   try {
@@ -279,9 +327,25 @@ export async function mergeLocalProgress(userId, deps = {}) {
       const seeded = await seed(userId, plan);
       allOk = allOk && seeded === true;
     }
+    if (passes.length) {
+      const record = deps.recordCheckpoint || (await import('../../services/checkpointService.js')).recordAttempt;
+      for (const pass of passes) {
+        const saved = await record(userId, {
+          level: pass.level,
+          checkpointId: pass.checkpointId,
+          items: [],
+          answers: {},
+          result: { passed: true, overall: pass.overall },
+          stamp: pass.stamp,
+          // The guest attempt was counted on this device when it was taken.
+          retry: true,
+        });
+        allOk = allOk && saved === true;
+      }
+    }
     if (!allOk) return 0;
     clearLocalProgress();
-    return plans.length;
+    return plans.length + passes.length;
   } catch (err) {
     // A failed merge keeps the store: the next render tries again.
     console.error('[localProgress] merge failed:', err.message);

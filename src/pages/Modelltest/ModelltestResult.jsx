@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Loader2, RotateCcw } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useSubscription } from '../../contexts/SubscriptionContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
+import { stationFor } from '../../data/offers.js';
+import { courseHome } from '../../lib/courseFlow.js';
 import { resolveModelltest } from '../../data/modelltest';
 import { verdictFor } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
@@ -65,14 +68,20 @@ const sectionHints = (level = 'b1.1') => ({
 // runner's own disclaimer discipline; this is a trend line, never a promise.
 //
 // What comes after a course test is keyed by its level (resolved.gateLevel):
-// after A1.1 the A1.2-Phase plan; after A1.2 the full Start-Deutsch-1-format
+// after A1.1 the A1.2 course; after A1.2 the full Start-Deutsch-1-format
 // mock and the 30-day plan in front of the real exam; after A2.1 the A2.2
 // level hub (there is no A2.2 plan yet). A course level without an entry
 // falls back to its level hub, never to a dead button.
+//
+// A primary that names a `level` leads to that level's COURSE (2026-10-25): A1.2
+// has been the live 12-Lektion course since 2026-10-22, and „Weiter mit A1.2"
+// opened the legacy 28-day plan instead — not what A1.2 buyers pay for. A
+// learner with access continues in /course/<level>; everyone else gets the
+// level's course page with its offer (a full page load: it is an Astro page).
 const COURSE_NEXT = {
   'a1.1': {
     body: 'Nächster Schritt: A1.2 — die zweite Hälfte bis Start Deutsch 1.',
-    primary: { to: '/a1-2-phase', label: 'Weiter mit A1.2' },
+    primary: { level: 'a1.2', label: 'Weiter mit A1.2' },
     secondary: { to: '/level/a1.2', label: 'Zur Stufe A1.2' },
   },
   'a1.2': {
@@ -98,6 +107,13 @@ const courseNext = (resolved) =>
     secondary: null,
   };
 
+/** Where a `{ level }` step leads this learner: the course with access, else the level's offer page. */
+const stepTarget = (step, hasLevelAccess) => {
+  if (!step.level) return { to: step.to };
+  if (typeof hasLevelAccess === 'function' && hasLevelAccess(step.level)) return { to: courseHome(step.level) };
+  return { href: stationFor(step.level)?.coursePage };
+};
+
 const readyBody = (resolved, lastTwo) => {
   const [recent, prior] = lastTwo; // lastTwo[0] is most recent
   const pctLine = `${prior.pct} % und ${recent.pct} %`;
@@ -110,6 +126,7 @@ const readyBody = (resolved, lastTwo) => {
 const ModelltestResult = () => {
   const { examSlug, attemptId } = useParams();
   const { user } = useAuth();
+  const { hasLevelAccess } = useSubscription() || {};
   const resolved = resolveModelltest(examSlug);
   const mock = resolved?.mock;
 
@@ -264,7 +281,7 @@ const ModelltestResult = () => {
                 <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
                   {resolved.kind === 'course' ? (
                     <>
-                      <Button variant="celebrate" to={courseNext(resolved).primary.to}>{courseNext(resolved).primary.label}</Button>
+                      <Button variant="celebrate" {...stepTarget(courseNext(resolved).primary, hasLevelAccess)}>{courseNext(resolved).primary.label}</Button>
                       {courseNext(resolved).secondary && (
                         <Button variant="secondary" to={courseNext(resolved).secondary.to}>{courseNext(resolved).secondary.label}</Button>
                       )}

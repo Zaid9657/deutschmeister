@@ -23,6 +23,7 @@ import PlayButton from '../../components/lesson/PlayButton.jsx';
 import {
   fetchAttemptState,
   recordAttempt,
+  guestPassKept,
   ATTEMPT_LIMIT,
   ATTEMPT_WINDOW_HOURS,
 } from '../../services/checkpointService.js';
@@ -33,6 +34,14 @@ import LangToggle from '../../components/lesson/LangToggle.jsx';
 import LandeskundeCard from '../../components/course/LandeskundeCard.jsx';
 import { LANDESKUNDE } from '../../data/curricula/a11.meta.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import {
+  checkpointRunFits,
+  clearCheckpointRun,
+  packCheckpointRun,
+  paperFingerprint,
+  readCheckpointRun,
+  saveCheckpointRun,
+} from '../../lib/lesson/runState.js';
 
 // The checkpoint screen (standard §3): 20 items, one per screen, a thin
 // progress bar, then a result that says what to do next. Design rules it
@@ -85,8 +94,11 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
     if (item.mode === 'typed') inputRef.current?.focus();
   }, [item.id, item.mode]);
 
+  // An empty typed answer is not an answer (the lesson's PracticeItem canSubmit rule): Enter, the
+  // keyboard's Go key or Check on an empty field used to lock the item as a graded wrong answer.
+  const canSubmit = String(value || '').trim().length > 0;
   const submit = (answer) => {
-    if (feedback) return;
+    if (feedback || (item.mode === 'typed' && !String(answer ?? '').trim())) return;
     setFeedback(checkpointFeedback(item, answer, { graded }));
   };
 
@@ -237,7 +249,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
             className="w-full rounded-clay border border-rule bg-white px-4 py-3 font-body text-base text-ink placeholder:text-graphite/60 disabled:bg-paper-sunk"
             placeholder={t('checkpoint.typedPlaceholder', lang)}
           />
-          {!feedback && <Button type="submit" className="sm:w-auto">{t('action.check', lang)}</Button>}
+          {!feedback && <Button type="submit" disabled={!canSubmit} className="sm:w-auto">{t('action.check', lang)}</Button>}
         </form>
       )}
 
@@ -295,9 +307,32 @@ function SectionRow({ name, section }) {
   );
 }
 
+/**
+ * The owner boundary of a checkpoint paper (2026-10-25): the paper in progress — and the snapshot it
+ * saves — belongs to ONE owner. A sign-out in another tab leaves a free level's page mounted, and the
+ * paper used to be saved again under the guest key the moment the owner changed, where a guest reload
+ * or the next account could resume the previous learner's answers. So the paper mounts only once auth
+ * has settled, keyed by its owner (as LessonPlayer keys a lesson run): a new owner is a new mount, at
+ * the intro, with that owner's own snapshot — nothing of the old paper is written under the new key.
+ */
 export default function CheckpointPage() {
+  const { user, loading } = useAuth();
+  const [lang] = useLessonLang();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">{t('checkpoint.loadingItems', lang)}</p>
+      </div>
+    );
+  }
+  return <CheckpointRun key={user?.id || 'guest'} />;
+}
+
+function CheckpointRun() {
   const { level, nr } = useParams();
   const { user } = useAuth();
+  // Fixed for this mount: CheckpointPage remounts the paper when the owner changes.
+  const owner = user ? user.id : null;
   const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
   const checkpoint = useMemo(
@@ -306,25 +341,35 @@ export default function CheckpointPage() {
   );
 
   const [pool, setPool] = useState(null);
+  // A pool that did not load is the app's ErrorBoundary's to handle (a stale chunk reloads once,
+  // anything else offers a refresh): it used to leave the intro on "Loading the tasks …" for ever.
+  const [poolError, setPoolError] = useState(null);
   const [phase, setPhase] = useState('intro');
   const [round, setRound] = useState(0);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [attempts, setAttempts] = useState(null);
   const [remediation, setRemediation] = useState([]);
-  // Where the finished paper is saved: null (signed out) | 'saving' | 'saved' | 'failed'.
+  // Where the finished paper is saved: null (signed out, not passed) | 'local' (a signed-out pass, kept
+  // on this device until sign-in) | 'saving' | 'saved' | 'failed'.
   const [saveState, setSaveState] = useState(null);
   // Items read instead of heard (audio failed): they leave the score — see PracticeItem.
   const [notHeard, setNotHeard] = useState(() => new Set());
   const saveRef = useRef(null);
 
   useEffect(() => {
+    if (!curriculum) return undefined;
     const load = POOL_LOADERS[String(level || '').toLowerCase()];
-    if (!load) return;
+    if (!load) {
+      setPoolError(new Error(`[checkpoint] no pool for level ${level}`));
+      return undefined;
+    }
     let cancelled = false;
-    load().then((mod) => { if (!cancelled) setPool(mod.default || mod); });
+    load()
+      .then((mod) => { if (!cancelled) setPool(mod.default || mod); })
+      .catch((err) => { console.error('[checkpoint] pool load failed:', err); if (!cancelled) setPoolError(err); });
     return () => { cancelled = true; };
-  }, [level]);
+  }, [level, curriculum]);
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -342,6 +387,47 @@ export default function CheckpointPage() {
     return buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) });
   }, [curriculum, checkpoint, pool, round]);
 
+  // RESUME (2026-10-25): a paper in progress comes back after a reload, a tab the phone discarded, the
+  // idle sign-out or a guard remount (runState.js, checkpoint runs) — this owner's snapshot, once the
+  // paper can be rebuilt (pool). A snapshot is checked against this window's attempt count, so with
+  // one stored the decision also waits for that count: a snapshot from before a finished attempt, or
+  // of a paper that has changed, starts at the intro. Until the decision is made (`restoreDone`) Start
+  // stays disabled and nothing is saved — a fast Start used to save a fresh paper at index 0 over the
+  // run that was about to be restored.
+  const [restoreDone, setRestoreDone] = useState(false);
+  useEffect(() => {
+    if (restoreDone || !curriculum || !checkpoint || !pool) return;
+    const run = readCheckpointRun(level, checkpoint.id, Date.now(), owner);
+    if (!run) {
+      setRestoreDone(true);
+      return;
+    }
+    if (!attempts) return;
+    const paper = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, run.round) });
+    if (checkpointRunFits(run, paper, attempts.used)) {
+      setRound(run.round);
+      setAnswers(run.answers);
+      setNotHeard(new Set(run.notHeard));
+      setIndex(run.index);
+      setPhase(run.phase);
+    } else {
+      clearCheckpointRun(level, checkpoint.id, owner);
+    }
+    setRestoreDone(true);
+  }, [restoreDone, curriculum, checkpoint, pool, attempts, level, owner]);
+
+  // Saved on every answer while a paper is open (with the fingerprint of the paper it belongs to);
+  // the result clears it. Never before the restore decision.
+  const paper = useMemo(() => paperFingerprint(items), [items]);
+  useEffect(() => {
+    if (!restoreDone || !checkpoint || !items.length) return;
+    if (phase === 'run' || phase === 'sectionFeedback') {
+      saveCheckpointRun(level, checkpoint.id, packCheckpointRun({ paper, round, index, answers, notHeard: [...notHeard], phase }), owner);
+    } else if (phase === 'result') {
+      clearCheckpointRun(level, checkpoint.id, owner);
+    }
+  }, [restoreDone, phase, paper, items.length, round, index, answers, notHeard, level, checkpoint, owner]);
+
   const scoredItems = useMemo(() => items.filter((i) => !notHeard.has(i.id)), [items, notHeard]);
   const result = useMemo(() => (scoredItems.length ? scoreCheckpoint(scoredItems, answers) : null), [scoredItems, answers]);
   // What this result covers — said on the card, so a pass without graded production is not read as more.
@@ -357,10 +443,13 @@ export default function CheckpointPage() {
       .catch(() => false)
       .then((ok) => {
         if (user) setSaveState(ok ? 'saved' : 'failed');
+        // Signed out, a pass is kept on this device and merged at sign-in (checkpointService): said so
+        // only when it was stored.
+        else if (saveRef.current?.args.result?.passed && guestPassKept(level, checkpoint.id)) setSaveState('local');
         return fetchAttemptState(user?.id, checkpoint.id);
       })
       .then(setAttempts);
-  }, [user, checkpoint]);
+  }, [user, checkpoint, level]);
 
   const finish = useCallback(
     (finalAnswers) => {
@@ -389,6 +478,7 @@ export default function CheckpointPage() {
   };
 
   if (!curriculum || !checkpoint) return <Navigate to={`/course/${level || ''}`} replace />;
+  if (poolError) throw poolError;
 
   const path = curriculumPath(curriculum);
   const cpIndex = path.findIndex((entry) => entry.id === checkpoint.id);
@@ -436,10 +526,10 @@ export default function CheckpointPage() {
                 : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
-              <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
+              <Button disabled={!items.length || !restoreDone || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
                 {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
-              {!items.length && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
+              {(!items.length || !restoreDone) && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
             </div>
           </Card>
         )}
@@ -518,7 +608,7 @@ export default function CheckpointPage() {
                       {t('sync.retry', lang)}
                     </button>
                   </>
-                ) : saveState ? t(saveState === 'saved' ? 'sync.synced' : 'sync.syncing', lang) : null}
+                ) : saveState ? t({ saved: 'sync.synced', local: 'sync.local' }[saveState] || 'sync.syncing', lang) : null}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {result.passed ? (

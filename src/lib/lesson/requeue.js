@@ -17,10 +17,36 @@
 // item of the Lektion's primary topic, and a missed dictation as a practice
 // card with no question on it. A writing task is never requeued — its feedback
 // is the retry.
+//
+// And it is drawn under the practice draw's LEKTION BOUND (2026-10-25): an item
+// a Lektion may not serve (`servableIn`) never reaches the learner through a
+// retry either. The retry only filtered on quality and topic, so an L2 miss on
+// „Ich ___ Studentin. (sein)" came back as „Ich ___ müde." — an item stamped for
+// L11 — introducing a word the course had not taught exactly when the learner
+// needed support (21 of 84 single-miss retries in A1.1, 25 of 84 in A1.2). The
+// player passes the ids of those items with the ones already seen
+// (`unservableIds`), so the miss comes back as itself when its topic has
+// nothing else this Lektion may show.
 import { poolItems } from './buildLesson.js';
 import { isUsableItem } from '../../data/lessonPools/quality.js';
 
 export const REQUEUE_CAP = 4;
+
+/**
+ * May Lektion `lektionNr` serve this pool item? The practice draw's rule
+ * (buildLesson.js pickPracticeItems): `minLektion`, stamped by
+ * scripts/build-lesson-pool.mjs, is the first Lektion that has taught every
+ * word of the item — a stamped item is served at or after its stamp,
+ * `minLektion: null` never, an unstamped item (a hand-built test pool) always.
+ * tests/requeue-lektion.test.mjs holds both predicates to the same verdicts.
+ */
+export const servableIn = (item, lektionNr) =>
+  !Object.prototype.hasOwnProperty.call(item, 'minLektion')
+  || (Number.isInteger(item.minLektion) && (!Number.isInteger(lektionNr) || item.minLektion <= lektionNr));
+
+/** The ids of the pool items Lektion `lektionNr` may not serve: a retry there skips them like seen ones. */
+export const unservableIds = (pool, lektionNr) =>
+  poolItems(pool).filter((it) => !servableIn(it, lektionNr)).map((it) => it.id);
 
 const REPLAYED_TYPES = new Set(['match', 'word_order', 'listen_select', 'dictation']);
 const MIN_RETRY_PAIRS = 3;
@@ -45,8 +71,11 @@ const isWriting = (it) => it.stage === 'writing' || String(it.id).startsWith('sc
 
 /**
  * requeueFor(missedItems, pool, usedIds, { avoidIds, level }) → up to 4 items to replay.
- * `usedIds` are the items already seen this lesson (the controlled seven and
- * anything requeued before), so the learner never meets the same id twice.
+ * `usedIds` are the ids the retry must not serve: the items already seen this
+ * lesson (the controlled seven and anything requeued before), so the learner
+ * never meets the same id twice, and — from the player — the items this Lektion
+ * may not serve at all (`unservableIds`). Either way the missed item itself
+ * comes back when its topic has nothing else left.
  * `avoidIds` are items planned for OTHER Lektionen: avoided when the topic has
  * anything else left, used when it does not — a shorter requeue would be worse.
  */

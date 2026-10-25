@@ -336,3 +336,55 @@ test('a pass whose completion write failed is completed from the saved attempt w
   assert.equal(await reconcileLevelTest('u1', CURRICULUM_A11, deps([{ status: 'completed', score: 70, max_score: 100 }])), true);
   assert.deepEqual(completed, [['a1.1', levelTestNodeId(CURRICULUM_A11)]]);
 });
+
+// Reconnecting on the course home (2026-10-25 cross-check, LSN-15). The only 'online' listener belonged
+// to the lesson player and left with it; the course home flushed once on mount, so a Lektion finished
+// offline stayed queued — and the next Lektion locked — until another navigation or a reload. The
+// course home's own signed-in effect is run here, its services stubbed.
+test('the course home sends what is waiting when the connection comes back, and stops listening when it unmounts', async () => {
+  const { default: vm } = await import('node:vm');
+  const src = read('src/pages/CurriculumHomePage.jsx');
+  const start = src.lastIndexOf('useEffect(() => {', src.indexOf('// Signed out: the only progress that can exist is local'));
+  const end = src.indexOf('}, [user, programKey, level, curriculum, path]);', start);
+  assert.ok(start > 0 && end > start, 'the signed-in effect of the course home');
+  // The effect's two on-demand imports load stubs here (a vm script has no module loader).
+  const body = src.slice(start + 'useEffect('.length, end + 1).replace(/\bimport\(/g, '__import(');
+  const listeners = new Map();
+  const flushed = [];
+  const loaded = [];
+  const context = vm.createContext({
+    user: { id: 'u1' }, level: 'a1.1', programKey: 'a11_course', path: [], curriculum: { checkpoints: [], lektionen: [] },
+    window: {
+      addEventListener: (type, fn) => listeners.set(type, fn),
+      removeEventListener: (type, fn) => { if (listeners.get(type) === fn) listeners.delete(type); },
+    },
+    hasLocalProgress: () => false,
+    mergeLocalProgress: async () => 0,
+    flushOutbox: async (userId) => { flushed.push(userId); return { state: 'synced', failed: [] }; },
+    getProgramProgress: async () => new Set(['a1.1-l01']),
+    onlyFinalTestOpen: () => false,
+    reconcileLevelTest: async () => false,
+    levelTestNodeId: () => 'x',
+    loadDashboardStats: async () => null,
+    __import: async () => ({ fetchReviewCounts: async () => ({ due: 0 }), reconcileCheckpoints: async () => [] }),
+    localDoneIds: () => new Set(),
+    setDone: (set) => loaded.push(set),
+    setLoaded: () => {},
+    setStreak: () => {},
+    setReviewDue: () => {},
+    Promise,
+    Set,
+  });
+  const settle = () => new Promise((r) => setTimeout(r, 10));
+  const cleanup = vm.runInContext(`(${body})()`, context);
+  await settle();
+  assert.deepEqual(flushed, ['u1'], 'mount: one flush');
+  assert.equal(loaded.length, 1, 'then the path is read');
+  assert.equal(typeof listeners.get('online'), 'function', 'the home listens for the connection');
+  listeners.get('online')();
+  await settle();
+  assert.deepEqual(flushed, ['u1', 'u1'], 'back online: the waiting run is sent again');
+  assert.equal(loaded.length, 2, 'and the path re-read, so the next Lektion unlocks');
+  cleanup();
+  assert.equal(listeners.has('online'), false, 'unmounted: no listener left behind');
+});

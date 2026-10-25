@@ -56,7 +56,7 @@ test('guest recap reports failed storage and retries the retained run without re
 
 test('recap uses the saved review schedule for new, overdue, repeated and unsaved lessons', () => {
   const now = Date.parse('2026-10-22T12:00:00Z');
-  assert.equal(recapReviewSchedule('2026-10-22T12:00:00Z', now).state, 'due', 'new cards are due immediately');
+  assert.equal(recapReviewSchedule('2026-10-22T12:00:00Z', now).state, 'due', 'a card due now is due');
   assert.equal(recapReviewSchedule('2026-10-21T12:00:00Z', now).state, 'due');
   const existing = recapReviewSchedule('2026-11-12T08:30:00Z', now);
   assert.equal(existing.state, 'next');

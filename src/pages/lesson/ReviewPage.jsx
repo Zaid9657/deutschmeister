@@ -75,6 +75,11 @@ export default function ReviewPage() {
       const due = rows.filter((row) => cardIndex.has(row.card_key));
       setCards(due);
       setIndex(0);
+      // Nothing due: say when the next card comes back — the reason to return. Only grading the last
+      // card of a batch used to fetch it, so an empty deck never named a date.
+      if (!due.length) {
+        fetchNextDueAt(user.id, curriculum.level).then((at) => { if (!cancelled) setNextDueAt(at); });
+      }
       // Word cards reference a words row by id — fetch the real recordings once.
       const ids = due
         .map((row) => parseCardKey(row.card_key))
@@ -142,7 +147,11 @@ export default function ReviewPage() {
 
   if (!curriculum) return <Navigate to={`/course/${level || ''}`} replace />;
 
-  const done = cards && index >= cards.length;
+  // Done means a batch was worked through. An empty fetch is the "nothing due" card alone: with
+  // `cards = []`, 0 >= 0 rendered "Done for today" under "Nothing is due today" (and under the
+  // sign-in card for a visitor).
+  const done = cards && cards.length > 0 && index >= cards.length;
+  const nextOn = formatDue(nextDueAt, lang);
 
   const checkTyped = () => {
     const { ok } = gradeTypedReview(card.card_key, content.accepted, typed, { caseSensitive: content.caseSensitive });
@@ -177,6 +186,11 @@ export default function ReviewPage() {
                   — the Sie-register line tests/checkpoint.test.mjs §6 pins; in the string table now. */}
               {t(user ? 'review.nothingDue' : 'review.signIn', lang)}
             </p>
+            {user && (
+              <p className="mt-2 text-sm text-graphite">
+                {nextOn ? t('review.nextOn', lang, { date: nextOn }) : t('review.newCards', lang)}
+              </p>
+            )}
             <Button className="mt-4" variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
           </Card>
         )}
@@ -213,7 +227,7 @@ export default function ReviewPage() {
             )}
             <p className="mt-2 text-sm text-graphite">
               {/* Deutsch-Modus: „Neue Karten kommen, sobald Sie eine Lektion abschließen." (same test). */}
-              {formatDue(nextDueAt, lang) ? t('review.nextOn', lang, { date: formatDue(nextDueAt, lang) }) : t('review.newCards', lang)}
+              {nextOn ? t('review.nextOn', lang, { date: nextOn }) : t('review.newCards', lang)}
             </p>
             <Button className="mt-4" to={`/course/${curriculum.level}`}>
               {t('action.toCoursePlan', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />

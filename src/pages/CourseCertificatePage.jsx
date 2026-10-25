@@ -7,6 +7,7 @@ import { programKeyFor } from '../services/lessonService.js';
 import { getProgramProgress } from '../services/programProgress';
 import { flattenCourse, isComplete, courseComplete } from '../lib/courseFlow.js';
 import Button from '../components/ui/Button.jsx';
+import FullPageRedirect from '../components/FullPageRedirect.jsx';
 
 // A printable certificate — only rendered once the course is complete (the
 // same program_progress check as the completion page; the URL alone earns
@@ -40,7 +41,7 @@ export default function CourseCertificatePage() {
     getProgramProgress(user.id, programKey).then((set) => { setDone(set); setLoaded(true); });
   }, [user, programKey]);
 
-  if (!curriculum && !course) return <Navigate to="/courses/" replace />;
+  if (!curriculum && !course) return <FullPageRedirect to="/courses/" />;
 
   const complete = curriculum
     ? path.length > 0 && path.every((n) => done.has(n.id))
