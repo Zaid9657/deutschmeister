@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, Lock } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
@@ -41,7 +41,7 @@ const iconMap = {
 // unmounts and remounts all eight cards, discarding their DOM and animations.
 function VocabularyLevelCard({
   level, iconMap, contentLevelThemes, wordCounts, countsLoaded,
-  getCompletedCount, isLevelFree, user, hasLevelAccess, navigate,
+  getCompletedCount, isLevelFree, user, hasLevelAccess,
 }) {
   const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
@@ -53,19 +53,14 @@ function VocabularyLevelCard({
   const isFree = isLevelFree(level);
   const canAccess = isFree || (user && hasLevelAccess(level));
 
-  const handleClick = () => {
-    if (canAccess) {
-      navigate(`/level/${level}?tab=vocabulary`);
-    } else {
-      navigate('/subscription');
-    }
-  };
-
+  // A real link (Tab reaches it, Enter opens it — a clickable div did
+  // neither): the level's word list, or the subscription page for a locked one.
   return (
     <Card
+      as={Link}
+      to={canAccess ? `/level/${level}?tab=vocabulary` : '/subscription'}
       interactive={canAccess}
-      onClick={handleClick}
-      className={`relative overflow-hidden group ${canAccess ? 'cursor-pointer' : ''}`}
+      className="relative block overflow-hidden group"
     >
       <div className="p-5">
         {/* Header */}
@@ -283,7 +278,6 @@ const VocabularySectionPage = () => {
                             isLevelFree={isLevelFree}
                             user={user}
                             hasLevelAccess={hasLevelAccess}
-                            navigate={navigate}
                           />
                         ))}
                       </motion.div>
@@ -305,7 +299,6 @@ const VocabularySectionPage = () => {
                             isLevelFree={isLevelFree}
                             user={user}
                             hasLevelAccess={hasLevelAccess}
-                            navigate={navigate}
                           />
                       ))}
                     </div>

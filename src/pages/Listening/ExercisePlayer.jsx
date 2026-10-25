@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -36,9 +36,27 @@ const ExerciseAttempt = ({ level, exerciseNumber }) => {
   const [score, setScore] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  const handleAnswer = (questionNumber, answer) => {
+  // One dialogue's questions together: q2, q12 and the q21 dictation all belong
+  // to dialogue 2, so a learner can answer them while that dialogue plays
+  // instead of needing a full play per block of question numbers (plays are
+  // capped). question_number orders within a dialogue; answers and the score
+  // are keyed by question id, so the order changes nothing else.
+  const orderedQuestions = useMemo(
+    () => [...questions].sort((a, b) => (a.dialogue_number ?? 1e9) - (b.dialogue_number ?? 1e9) || a.question_number - b.question_number),
+    [questions]
+  );
+
+  // A dictation field registers on every edit (QuestionCard); a cleared field
+  // is no answer at all, because "all answered" counts the keys.
+  const handleAnswer = (questionKey, answer) => {
     if (submitted) return;
-    setAnswers((prev) => ({ ...prev, [questionNumber]: answer }));
+    setAnswers((prev) => {
+      if (answer === '' || answer == null) {
+        const { [questionKey]: _cleared, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [questionKey]: answer };
+    });
   };
 
   const handleSubmit = async () => {
@@ -116,10 +134,11 @@ const ExerciseAttempt = ({ level, exerciseNumber }) => {
         {submitted ? (
           <ResultsView
             exercise={exercise}
-            questions={questions}
+            questions={orderedQuestions}
             answers={answers}
             score={score}
             dialogues={dialogues}
+            audioUrl={audioUrl}
             playsUsed={playsUsed}
             onRetry={handleRetry}
             nextExerciseHref={
@@ -160,7 +179,7 @@ const ExerciseAttempt = ({ level, exerciseNumber }) => {
               <h3 className="font-display text-[1.0625rem] font-semibold text-ink">
                 {isGerman ? 'Fragen' : 'Questions'} ({Object.keys(answers).length}/{questions.length})
               </h3>
-              {questions.map((q, i) => (
+              {orderedQuestions.map((q, i) => (
                 <QuestionCard
                   key={q.id || q.question_number}
                   question={q}

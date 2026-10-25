@@ -153,10 +153,14 @@ const PodcastsTab = ({ subLevel }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {podcasts.map((podcast, index) => (
           <Reveal key={podcast.id} delay={Math.min(index, 8) * 80}>
+            {/* A real button (Tab reaches it, Enter/Space open the player) — a
+                clickable div was mouse-only. */}
             <Card
               interactive
+              as="button"
+              type="button"
               onClick={() => selectPodcast(podcast)}
-              className="h-full p-4 cursor-pointer group"
+              className="block w-full h-full p-4 text-left group"
             >
               {/* Thumbnail / Icon */}
               <div className="w-full h-32 rounded-clay bg-siegel flex items-center justify-center mb-4 relative overflow-hidden">

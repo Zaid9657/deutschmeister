@@ -49,7 +49,7 @@ const optionClass = (selected) =>
 const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
 function MockListeningPart({ part, answers, onAnswer, registerKey }) {
-  const { exercise, questions: allQuestions, loading } = useExerciseDetails(part.level, String(part.exerciseNumber));
+  const { exercise, questions: allQuestions, loading, error, retry } = useExerciseDetails(part.level, String(part.exerciseNumber));
   // Plays live in the saved answers (`_plays`), so a reload cannot hand out fresh ones, and a play
   // counts only once the audio has actually started (Codex rescore, 2026-10-15: a blocked or
   // missing file used to spend both plays).
@@ -82,8 +82,19 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
       </div>
     );
   }
-  if (!exercise) {
-    return <p className="text-sm text-graphite py-4">Dieser Hörtext konnte nicht geladen werden.</p>;
+  // A failed or empty load is a load failure with a retry — never playable audio with no
+  // questions to answer, whose unseen items the final scoring would count as wrong.
+  if (error || !exercise || questions.length === 0) {
+    return (
+      <div className="space-y-3 py-4">
+        <p role="alert" className="text-sm text-graphite">
+          Dieser Hörtext konnte nicht geladen werden. Bitte prüfen Sie die Verbindung und laden Sie ihn erneut.
+        </p>
+        <Button size="sm" variant="secondary" onClick={retry}>
+          Erneut laden
+        </Button>
+      </div>
+    );
   }
 
   const audioUrl = getAudioUrl(part.level.toLowerCase(), part.exerciseNumber);
