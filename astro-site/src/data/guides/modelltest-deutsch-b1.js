@@ -194,7 +194,7 @@ export const modelltestDeutschB1 = {
             {
               eyebrow: 'Sprechen',
               title: 'KI-Sprechtraining',
-              body: 'Prüfungsnahe Gesprächssituationen mit sofortigem Feedback — der Teil, den fast alle zu spät üben.',
+              body: 'Prüfungsnahe Gesprächssituationen mit einer Auswertung nach dem Gespräch — der Teil, den fast alle zu spät üben.',
             },
           ],
         },

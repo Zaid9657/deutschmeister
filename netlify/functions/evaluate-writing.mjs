@@ -3,6 +3,7 @@ import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs
 import { reserveUsage, validExamAttemptId } from './_shared/aiReservation.mjs';
 import { getTier } from './_shared/speakingUsage.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
+import { productInfo } from './_shared/pricing.mjs';
 
 // AI writing feedback (renovation Phase 5b) — grades an exam-style letter
 // against our rubric and stores the result with the SERVICE ROLE (clients
@@ -56,10 +57,19 @@ export const COURSE_WRITING_FREE_LIFETIME = 12;
 /** One graded writing task per checkpoint — four checkpoints per rebuilt course. */
 export const CHECKPOINTS_PER_COURSE = 4;
 
+// WHOSE COURSE IT IS. The allowance above is the course's own budget, not a
+// licence to the course: after the trial only the free level's course
+// (src/config/freeTier.js FREE_LEVELS — this is a synced copy, and
+// tests/writing-course.test.mjs holds the two equal) or a course the learner
+// bought (an active purchases row whose product unlocks that level) may draw on
+// it. A free_expired account used to get the A1.2 course's sixteen gradings —
+// and every future course's — just by posting its task keys.
+export const FREE_COURSE_LEVELS = Object.freeze(['a1.1']);
+
 // The course level behind a task-key prefix. The bank keys tasks by course
 // (`a11-l03`), the writing bank keys them by level (`a1.1`); this is the one
 // place the two spellings meet.
-const LEVEL_OF_PREFIX = {
+export const LEVEL_OF_PREFIX = {
   'a11-': 'a1.1',
   'a12-': 'a1.2',
   'a21-': 'a2.1',
@@ -105,6 +115,11 @@ export function courseAllowanceFor(taskKey) {
   const level = LEVEL_OF_PREFIX[courseTaskKeyPrefix(taskKey)];
   const n = level ? courseWritingTasks(level).length : 0;
   return n ? n + CHECKPOINTS_PER_COURSE : 0;
+}
+
+/** Does an active purchase unlock this course level (level course or retired band key)? */
+export function purchasesCoverLevel(purchases, level) {
+  return Array.isArray(purchases) && purchases.some((p) => (productInfo(p?.product_key)?.levels || []).includes(level));
 }
 
 // TASK FULFILMENT DECIDES (Codex review, 2026-10-07). Four criteria of 0–5 let a text that answered
@@ -227,11 +242,21 @@ export function freeRevisionsSince(rows, since = null) {
  * often `taskKey` was submitted before, and whether this text is a task's free improved version
  * (never an exam task's: those have no course prefix).
  */
+//
+// THE TRIAL'S EXAM BUDGET IS EXAM TEXTS ONLY (cross-check 2026-10-25, AI-13). On the trial (the
+// lifetime window, `since === null`) course texts are billed against their course's own allowance,
+// so none of them uses up one of the trial's exam evaluations — marketing calls the course allowance
+// separate, and Lektion 1 and 2 used to leave a trial learner's first exam letter at 2/2. A paid
+// plan keeps the one shared monthly ledger. migrations/2026-10-25-trial-writing-exam-count.sql gives
+// reserve_writing_usage the same rule; until the owner applies it the RPC still counts the course
+// rows and stays the authority.
 export function tierUsage(windowCount, courseRows, taskKey, since = null) {
   const own = courseRows.filter((r) => courseTaskKeyPrefix(r.task_key));
-  const before = courseTaskKeyPrefix(taskKey) ? own.filter((r) => r.task_key === taskKey).length : 0;
+  const courseTask = !!courseTaskKeyPrefix(taskKey);
+  const before = courseTask ? own.filter((r) => r.task_key === taskKey).length : 0;
+  const exempt = since === null && !courseTask ? own.length : freeRevisionsSince(own, since);
   return {
-    used: Math.max(0, windowCount - freeRevisionsSince(own, since)),
+    used: Math.max(0, windowCount - exempt),
     before,
     revision: before >= 1 && before <= REVISIONS_PER_TASK,
   };
@@ -373,8 +398,19 @@ export const handler = async (event) => {
     // A free/expired learner's course tasks get the course allowance; everyone
     // else (and every exam task) keeps the tier limit above.
     const courseLimit = courseAllowanceFor(task_key);
-    const courseAllowance =
+    let courseAllowance =
       isCourse && courseLimit > 0 && (tier === 'free_trial' || tier === 'free_expired');
+    // After the trial, a paid course's allowance needs the course (see FREE_COURSE_LEVELS).
+    const courseLevel = LEVEL_OF_PREFIX[courseTaskKeyPrefix(task_key)] || null;
+    if (courseAllowance && tier === 'free_expired' && !FREE_COURSE_LEVELS.includes(courseLevel)) {
+      const { data: purchases, error: purchasesError } = await supabase
+        .from('purchases')
+        .select('product_key')
+        .eq('user_id', user_id)
+        .eq('status', 'active');
+      if (purchasesError) throw new Error('Course ownership could not be checked');
+      courseAllowance = purchasesCoverLevel(purchases, courseLevel);
+    }
     const limit = courseAllowance
       ? courseLimit
       : WRITING_LIMITS[tier] ?? WRITING_LIMITS.pro; // premium falls through to pro's cap
@@ -517,18 +553,34 @@ export const handler = async (event) => {
     evaluationReady = true;
     const totalScore = evaluation.total_score;
 
-    const { data: saved, error: saveError } = await supabase
-      .from('writing_submissions')
-      .update({
-        feedback: evaluation,
-        total_score: totalScore,
-        max_score: MAX_WRITING_POINTS,
-      })
-      .eq('id', submissionId)
-      .eq('user_id', user_id)
-      .select('id')
-      .single();
-    if (saveError) {
+    // The reserved row is the learner's record of this feedback (history,
+    // revision day): a temporary write failure is retried once, as
+    // evaluate-speaking does. If it still fails the response says saved:false
+    // and both screens tell the learner the feedback was not kept.
+    let saved = null;
+    let saveError = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const result = await supabase
+          .from('writing_submissions')
+          .update({
+            feedback: evaluation,
+            total_score: totalScore,
+            max_score: MAX_WRITING_POINTS,
+          })
+          .eq('id', submissionId)
+          .eq('user_id', user_id)
+          .select('id')
+          .single();
+        saved = result.data;
+        saveError = result.error;
+      } catch (error) {
+        saved = null;
+        saveError = error;
+      }
+      if (!saveError && saved?.id) break;
+    }
+    if (saveError || !saved?.id) {
       console.error('evaluate-writing: save failed:', JSON.stringify(saveError));
     }
 

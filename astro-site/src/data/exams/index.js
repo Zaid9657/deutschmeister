@@ -26,6 +26,7 @@ import {
   GRAMMAR_TOPIC_COUNT,
   LISTENING_EXERCISE_COUNT,
   READING_LESSON_COUNT,
+  PLACEMENT_TEST_MINUTES,
 } from '../marketing.js';
 
 const GUIDES_BY_SLUG = {
@@ -73,7 +74,7 @@ const HUB_COPY = {
     intro:
       'Das Goethe-Zertifikat B1 besteht aus vier einzeln ablegbaren Modulen — du kannst also gezielt das Modul trainieren, das dir fehlt. So deckst du jedes Modul mit DeutschMeister ab.',
     focus:
-      'Die Modulstruktur ist deine Chance: Wer weiß, welches Modul wackelt, übt effizienter. Der Einstufungstest zeigt dir in 20 Minuten, wo du wirklich stehst.',
+      `Die Modulstruktur ist deine Chance: Wer weiß, welches Modul wackelt, übt effizienter. Der Einstufungstest zeigt dir in etwa ${PLACEMENT_TEST_MINUTES} Minuten, wo du wirklich stehst.`,
   },
   dtz: {
     title: 'DTZ Vorbereitung online | DeutschMeister',
@@ -98,7 +99,10 @@ const HUB_COPY = {
 // The preparation path, derived from the track's library sublevels + counts.
 // The two exam tools appear only where their content exists (hasMock /
 // hasWriting on the shared registry, drift-pinned by tests/exams.test.mjs).
-// Both are SPA routes behind a login — full-load links, no trailing slash.
+// Both are SPA routes behind a login — full-load links, no trailing slash —
+// and both carry the hub's own exam: the bare /schreiben falls back to the
+// profile's exam or telc B1, and the bare /modelltest asks for the exam again
+// (2026-10-25: a Start Deutsch 1 visitor was handed a B1 complaint letter).
 function buildPath(track) {
   const levelLinks = track.sublevels
     .map((s) => `<a href="/grammar/${s}/">${s.toUpperCase()}</a>`)
@@ -107,7 +111,7 @@ function buildPath(track) {
     {
       eyebrow: 'Schritt 1 · Einstufung',
       title: 'Wo stehst du wirklich?',
-      body: 'Der kostenlose Einstufungstest (Schriftlich, Hören, Sprechen) zeigt dir dein Niveau in ~20 Minuten — bevor du auch nur eine Lektion lernst.',
+      body: `Der kostenlose Einstufungstest (Schriftlich, Hören, Sprechen) zeigt dir dein Niveau in etwa ${PLACEMENT_TEST_MINUTES} Minuten — bevor du auch nur eine Lektion lernst.`,
       href: '/level-test/',
       linkLabel: 'Einstufungstest starten',
     },
@@ -128,7 +132,7 @@ function buildPath(track) {
     {
       eyebrow: 'Schritt 4 · Sprechen',
       title: 'Frei sprechen, bevor es zählt',
-      body: 'Das KI-Sprechtraining simuliert Gesprächssituationen auf deinem Niveau und gibt sofort Feedback zu Grammatik und Ausdruck — der Teil, den die meisten zu spät üben.',
+      body: 'Das KI-Sprechtraining simuliert Gesprächssituationen auf deinem Niveau und wertet nach dem Gespräch Grammatik, Wortschatz und Verständlichkeit aus — der Teil, den die meisten zu spät üben.',
       href: '/speaking/',
       linkLabel: 'Sprechtraining öffnen',
     },
@@ -137,7 +141,7 @@ function buildPath(track) {
           eyebrow: 'Schritt 5 · Schreiben',
           title: 'Der Brief, den die Prüfung will',
           body: 'Schreib die Prüfungsaufgabe (Brief/E-Mail mit Leitpunkten) und die KI bewertet nach den vier Kriterien — Aufgabe, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen.',
-          href: '/schreiben',
+          href: `/schreiben/${track.slug}`,
           linkLabel: 'Schreibtraining öffnen',
         }]
       : []),
@@ -146,7 +150,7 @@ function buildPath(track) {
           eyebrow: 'Ernstfall-Check',
           title: 'Der Ernstfall vor dem Ernstfall',
           body: 'Ein Übungstest im Stil der Prüfung, mit Zeitlimit und automatischer Auswertung gegen die dokumentierte Bestehensgrenze — damit dein erster Testlauf nicht der Prüfungstag ist.',
-          href: '/modelltest',
+          href: `/modelltest/${track.slug}`,
           linkLabel: 'Übungstest starten',
         }]
       : []),

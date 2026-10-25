@@ -18,8 +18,10 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 import { AuthApiError } from '@supabase/supabase-js';
 import { resendRefusal } from '../src/lib/signupConfirmation.js';
+import { authLinkError, isExpiredLink } from '../src/lib/loginReturn.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const read = (path) => readFileSync(join(ROOT, path), 'utf8');
@@ -188,4 +190,48 @@ test('/login counts down the named wait, for the address it was named for', () =
   assert.ok(src.includes('setCooldown({ to: email, seconds: refusal?.wait ?? 0 });'), 'a refusal starts the countdown; any other error clears it');
   assert.ok(src.includes('const waiting = cooldown.seconds > 0 && cooldown.to === email;'), 'another address is not held by this wait');
   assert.ok(src.includes('{waiting ? `Send a fresh email in ${cooldown.seconds} s` : \'Send me a fresh confirmation email\'}'), 'the button names the seconds left');
+});
+
+// An expired confirmation link (cross-check 2026-10-25, SHL-09). GoTrue sends
+// the learner back to /login with `#error=access_denied&error_code=otp_expired`.
+// The page ignored it: "Welcome Back" and a password form, and the resend
+// rescue above appeared only after a refused sign-in, so learners signed up
+// again instead. The hash now opens the rescue at once, with its own email
+// field, and leaves the address bar.
+function expiredLinkEffect(hash) {
+  const src = read('src/pages/LoginPage.jsx');
+  const effect = src.match(/ {2}useEffect\(\(\) => \{\n {4}if \(!isExpiredLink\(authLinkError\(window\.location\)\)\) return;([\s\S]*?)\n {2}\}, \[\]\);/);
+  assert.ok(effect, 'LoginPage reads the link error on mount');
+  const state = { unconfirmed: false, linkExpired: false, replaced: null };
+  vm.runInNewContext(`(() => {\n    if (!isExpiredLink(authLinkError(window.location))) return;${effect[1]}\n})()`, {
+    authLinkError,
+    isExpiredLink,
+    setUnconfirmed: (v) => { state.unconfirmed = v; },
+    setLinkExpired: (v) => { state.linkExpired = v; },
+    window: {
+      location: { pathname: '/login', search: '', hash },
+      history: { state: { usr: null, key: 'k', idx: 0 }, replaceState: (s, _t, url) => { state.replaced = { url, keptRouterState: s?.key === 'k' }; } },
+    },
+  });
+  return state;
+}
+
+test('an expired confirmation link opens the resend rescue and clears the hash', () => {
+  const opened = expiredLinkEffect('#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired');
+  assert.deepEqual(opened, { unconfirmed: true, linkExpired: true, replaced: { url: '/login', keptRouterState: true } });
+  // A successful link's tokens, or no hash at all, leave the page as it is.
+  for (const hash of ['', '#access_token=a&refresh_token=b&expires_in=3600&token_type=bearer&type=signup']) {
+    assert.deepEqual(expiredLinkEffect(hash), { unconfirmed: false, linkExpired: false, replaced: null }, hash);
+  }
+});
+
+test('the expired-link rescue carries its own labelled email field and honest copy', () => {
+  const src = read('src/pages/LoginPage.jsx');
+  assert.match(src, /\{linkExpired && resendState !== 'sent' && \(/);
+  assert.match(src, /<label htmlFor="resend-email"/);
+  assert.match(src, /id="resend-email"\s+type="email"\s+autoComplete="email"\s+value=\{email\}/);
+  // The link may have been used already: the copy must not insist the account is inactive.
+  assert.match(src, /This confirmation link has expired or was already used\./);
+  // A new login attempt closes it like the refused-sign-in rescue.
+  assert.match(squash(src), /setUnconfirmed\(false\); setLinkExpired\(false\);/);
 });

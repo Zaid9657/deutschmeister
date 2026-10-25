@@ -14,6 +14,10 @@
 // link whose own text offers the free level for free opens FREE_COURSE_HREF.
 // A destination this suite cannot resolve fails; add its resolution to
 // NAMED below rather than loosening the match.
+//
+// "Without an account" offers it for free too: the signup page's way out,
+// "Explore A1.1 without an account.", opened the /grammar/a1.1/ library until
+// 2026-10-25 (C-100/C-144), and the rule missed it for want of the word "free".
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -59,8 +63,9 @@ const code = (src) =>
 const ELEMENT = /<(Link|NavLink|Button|a)\b((?:[^>{]|\{(?:[^{}]|\{[^{}]*\})*\})*?)>([\s\S]*?)<\/\1>/g;
 const DESTINATION = /\b(?:to|href)=(?:"([^"]*)"|\{`([^`]*)`\}|\{([^}]*)\})/;
 
-// The link's own words offer the free level for free, in either language.
-const FREE_WORD = /\b(free|kostenlos|gratis)\b/i;
+// The link's own words offer the free level for free, in either language —
+// "free", or "without an account" / "ohne Konto".
+const FREE_WORD = /\b(free|kostenlos|gratis)\b|\bwithout (an )?account\b|\bohne (ein )?(Konto|Account)\b/i;
 const FREE_LEVEL_NAMED = new RegExp(`${FREE_LEVEL_LABEL.replace('.', '\\.')}|\\{FREE_LEVEL_LABEL\\}`);
 const offersFreeLevel = (text) => FREE_WORD.test(text) && FREE_LEVEL_NAMED.test(text);
 
@@ -113,6 +118,13 @@ test('the pattern finds the line it was written for and leaves other links alone
   assert.equal([...code('{/* <a href="/level/a1.1">A1.1 free</a> */}\n// <Link to="/x">A1.1 free</Link>').matchAll(ELEMENT)].length, 0);
   assert.ok(offersFreeLevel('Start the free {FREE_LEVEL_LABEL} course'));
   assert.ok(offersFreeLevel("{isGerman ? 'A1.1 gratis starten' : 'Start A1.1 free'}"));
+  // The signup page's old way out is a door too, and so is its German form.
+  const old = '<a href="/grammar/a1.1/" className={TEXT_LINK}>Explore A1.1 without an account.</a>';
+  const [door] = [...old.matchAll(ELEMENT)];
+  assert.ok(offersFreeLevel(door[3]));
+  assert.equal(resolve(door[2]).href, '/grammar/a1.1/', 'the destination the rule now refuses');
+  assert.ok(offersFreeLevel('A1.1 ohne Konto ausprobieren'));
+  assert.equal(offersFreeLevel('Log in to your account'), false);
 });
 
 test('the named door is the free level\'s course, open without an account', () => {
@@ -140,6 +152,8 @@ test('the scan is not vacuous: the known free doors are found', () => {
   assert.equal(count('src/components/LockedContentOverlay.jsx'), 1, 'the level lock\'s free link');
   assert.equal(count('src/components/Navbar.jsx'), 2, 'desktop + mobile free key');
   assert.ok(count('src/pages/SentenceXRay.jsx') >= 1, 'the X-Ray offer\'s course link');
+  assert.equal(count('src/pages/SignupPage.jsx'), 1, 'the signup page\'s "look around first" link');
+  assert.match(read('src/pages/SignupPage.jsx'), /<Link to=\{FREE_COURSE_HREF\}/, 'named, not retyped');
   // The lock names the door, it does not retype it.
   assert.match(read('src/components/LockedContentOverlay.jsx'), /to=\{FREE_COURSE_HREF\}/);
 });

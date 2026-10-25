@@ -1814,3 +1814,167 @@ test('the four checkpoint tasks: their own facts, taught words, and a sample the
   assert.equal(COURSE.length, 12);
   assert.ok(writingTasksForExam('goethe_a1').every((t) => !t.checkpoint));
 });
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// WHO MAY DRAW ON A COURSE ALLOWANCE, AND WHAT THE TRIAL'S EXAM BUDGET COUNTS (cross-check 2026-10-25)
+//
+// AI-12: a free_expired (or refunded) account got the PAID A1.2 course's sixteen gradings — and any
+// future course's — just by posting its task keys: the server granted the course allowance on tier
+// alone. AI-13: the trial's two exam evaluations were used up by free A1.1 course texts. AI-14: a
+// feedback write that failed once was not retried. The handler runs here against an in-memory ledger.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+const EW = await import('../netlify/functions/evaluate-writing.mjs');
+const { reserveUsage, validExamAttemptId } = await import('../netlify/functions/_shared/aiReservation.mjs');
+const serverTasks = await import('../netlify/functions/_shared/writingTasks.mjs');
+const { productInfo } = await import('../netlify/functions/_shared/pricing.mjs');
+const { FREE_LEVELS } = await import('../src/config/freeTier.js');
+const { default: vm } = await import('node:vm');
+
+const WRITING_SOURCE = readFileSync(join(ROOT, 'netlify/functions/evaluate-writing.mjs'), 'utf8')
+  .replace(/^import .*;\n/gm, '').replace(/\bexport /g, '');
+const WRITER = '12345678-1234-1234-1234-123456789abc';
+const GOOD_EVALUATION = (n) => JSON.stringify({
+  scores: { task: 3, structure: 3, accuracy: 3, vocabulary: 3 }, total_score: 12, feedback: 'Gut',
+  leitpunkt_check: Array.from({ length: n }, () => true), corrections: [], strengths: [], improvements: [],
+});
+
+/** evaluate-writing over an in-memory database; the reservation RPC is "not applied" (legacy ledger). */
+function writingHarness({ tier, purchases = [], rows = [], updateFailures = 0 }) {
+  const state = { providerCalls: 0, purchaseQueries: [], updates: 0, inserts: [] };
+  const db = {
+    async rpc() { return { error: { code: 'PGRST202', message: 'RPC not applied' } }; },
+    from(table) {
+      const filters = [];
+      let op = 'select';
+      const query = {
+        select() { return query; },
+        eq(key, value) { filters.push([key, value]); return query; },
+        like(key, value) { filters.push([key, value]); return query; },
+        gte(key, value) { filters.push([key, value]); return query; },
+        order() { return query; },
+        insert(value) { op = 'insert'; state.inserts.push(value); return query; },
+        update() { op = 'update'; return query; },
+        delete() { op = 'delete'; return query; },
+        maybeSingle() { return Promise.resolve({ data: null }); },
+        single() {
+          if (op === 'insert') return Promise.resolve({ data: { id: 'submission-1' }, error: null });
+          state.updates++;
+          return Promise.resolve(state.updates <= updateFailures
+            ? { data: null, error: { message: 'temporary write failure' } }
+            : { data: { id: 'submission-1' }, error: null });
+        },
+        then(resolve, reject) {
+          let result;
+          if (table === 'purchases') {
+            state.purchaseQueries.push(filters);
+            const wanted = Object.fromEntries(filters);
+            result = { data: purchases.filter((p) => p.user_id === wanted.user_id && p.status === wanted.status), error: null };
+          } else {
+            result = { data: rows, count: rows.length, error: null };
+          }
+          return Promise.resolve(result).then(resolve, reject);
+        },
+      };
+      return query;
+    },
+  };
+  const context = vm.createContext({
+    createClient: () => db, productInfo, reserveUsage, validExamAttemptId, ...serverTasks,
+    process: { env: { SUPABASE_SERVICE_ROLE_KEY: 'test', ANTHROPIC_API_KEY: 'test' } },
+    console: { log() {}, warn() {}, error() {} },
+    getAuthenticatedUserId: async () => WRITER, unauthorizedResponse: () => ({ statusCode: 401 }),
+    getTier: async () => tier,
+    fetch: async (_url, init) => {
+      state.providerCalls++;
+      const slots = JSON.parse(init.body).messages[0].content.match(/"leitpunkt_check": \[([^\]]*)\]/)[1];
+      return { ok: true, json: async () => ({ content: [{ text: GOOD_EVALUATION((slots.match(/true\|false/g) || []).length) }] }) };
+    },
+  });
+  const handler = vm.runInContext(`${WRITING_SOURCE}\nhandler;`, context);
+  const submit = (task) => handler({ httpMethod: 'POST', headers: {}, body: JSON.stringify({
+    exam_key: task.examKey, task_key: task.taskKey, text: task.sample || 'Anna Keller, Berlin, Deutschland, Deutsch, Lehrerin',
+  }) });
+  return { submit, state };
+}
+
+test('the free course level is a synced copy of src/config/freeTier.js', () => {
+  assert.deepEqual([...EW.FREE_COURSE_LEVELS], FREE_LEVELS);
+});
+
+test('after the trial, a paid course\'s writing allowance needs the course: every course level in the bank, as a rule', async () => {
+  const firstTaskOf = new Map();
+  for (const t of WRITING_TASKS.filter((x) => x.course)) {
+    const level = EW.LEVEL_OF_PREFIX[EW.courseTaskKeyPrefix(t.taskKey)];
+    assert.ok(level, `${t.taskKey}: its prefix names a course level`);
+    if (!firstTaskOf.has(level)) firstTaskOf.set(level, t);
+  }
+  assert.ok(firstTaskOf.has('a1.1') && firstTaskOf.has('a1.2'), 'the rule runs over the free and a paid course');
+  for (const [level, task] of firstTaskOf) {
+    const productKey = `course_${level.replace('.', '_')}`;
+    const expired = writingHarness({ tier: 'free_expired' });
+    const res = await expired.submit(task);
+    if (FREE_LEVELS.includes(level)) {
+      assert.equal(res.statusCode, 200, `${level}: the free course stays graded after the trial — ${res.body}`);
+      assert.equal(expired.state.purchaseQueries.length, 0, 'the free level needs no ownership read');
+    } else {
+      assert.equal(res.statusCode, 403, `${level}: no purchase, no grading — ${res.body}`);
+      assert.equal(JSON.parse(res.body).error, 'subscription_required');
+      assert.equal(expired.state.providerCalls, 0);
+      assert.equal(expired.state.inserts.length, 0, 'nothing reserved');
+      assert.deepEqual(expired.state.purchaseQueries[0], [['user_id', WRITER], ['status', 'active']]);
+
+      const owner = writingHarness({ tier: 'free_expired', purchases: [{ user_id: WRITER, status: 'active', product_key: productKey }] });
+      assert.equal((await owner.submit(task)).statusCode, 200, `${level}: the owner keeps the course's allowance after its Pro window`);
+      const refunded = writingHarness({ tier: 'free_expired', purchases: [{ user_id: WRITER, status: 'refunded', product_key: productKey }] });
+      assert.equal((await refunded.submit(task)).statusCode, 403, `${level}: a refunded course is no entitlement`);
+      const otherLevel = writingHarness({ tier: 'free_expired', purchases: [{ user_id: WRITER, status: 'active', product_key: 'course_b2_2' }] });
+      assert.equal((await otherLevel.submit(task)).statusCode, 403, `${level}: another level's course does not unlock it`);
+    }
+    // The trial keeps every course while it runs.
+    assert.equal((await writingHarness({ tier: 'free_trial' }).submit(task)).statusCode, 200, `${level}: trial`);
+  }
+  // A retired band key still unlocks its levels; the telc course unlocks none.
+  assert.equal(EW.purchasesCoverLevel([{ product_key: 'course_a1' }], 'a1.2'), true);
+  assert.equal(EW.purchasesCoverLevel([{ product_key: 'telc_b1_komplett' }], 'a1.2'), false);
+  assert.equal(EW.purchasesCoverLevel(null, 'a1.2'), false);
+});
+
+test('the trial\'s exam evaluations are exam texts only; a paid plan keeps the shared monthly ledger', async () => {
+  const courseRows = [
+    { task_key: 'a11-l01', created_at: '2026-10-20T10:00:00+00:00' },
+    { task_key: 'a11-l02', created_at: '2026-10-21T10:00:00+00:00' },
+  ];
+  // Two course texts on the trial: the first telc letter is 0/2, not 2/2.
+  assert.deepEqual(EW.tierUsage(2, courseRows, 'einladung-absage', null), { used: 0, before: 0, revision: false });
+  assert.equal(EW.tierUsage(3, courseRows, 'einladung-absage', null).used, 1, 'one exam letter already written');
+  // The paid window still counts course texts (less their free revisions).
+  assert.equal(EW.tierUsage(2, courseRows, 'einladung-absage', '2026-10-01T00:00:00.000Z').used, 2);
+  // Handler level: a trial learner with two course texts gets the exam evaluation.
+  const exam = WRITING_TASKS.find((t) => t.examKey === 'telc_b1' && !t.course);
+  const letter = 'Liebe Frau Müller, vielen Dank für Ihre Einladung. Leider kann ich nicht kommen, weil ich an diesem Tag arbeiten muss. Ich wünsche Ihnen ein schönes Fest und hoffe, dass wir uns bald sehen. Viele Grüße, Anna';
+  const trial = writingHarness({ tier: 'free_trial', rows: courseRows });
+  const res = await trial.submit({ ...exam, sample: letter });
+  assert.equal(res.statusCode, 200, res.body);
+  assert.equal(JSON.parse(res.body).used, 1, 'the letter is the first of the two');
+  // The owner-applied SQL repeats the rule, so the RPC agrees once applied.
+  const sql = readFileSync(join(ROOT, 'migrations/2026-10-25-trial-writing-exam-count.sql'), 'utf8');
+  assert.match(sql, /v_exam_only boolean := p_since IS NULL\s+AND coalesce\(p_task_key, ''\) !~ '\^a\[0-9\]\[0-9\]-\(l\[0-9\]\[0-9\]\|cp\[0-9\]\)\$'/);
+  assert.match(sql, /CASE WHEN v_exam_only\s+THEN count\(\*\) FILTER \(WHERE coalesce\(task_key, ''\) !~/);
+  assert.match(sql, /REVOKE ALL ON FUNCTION public\.reserve_writing_usage\(uuid,text,text,uuid,text,text,integer,timestamptz,text,integer\) FROM PUBLIC, anon, authenticated;/);
+  assert.match(sql, /LANGUAGE plpgsql SECURITY INVOKER SET search_path = public, pg_temp/);
+});
+
+test('a feedback write that fails once is retried; a second failure is reported as saved:false', async () => {
+  const task = writingTaskByKey('goethe_a1', 'a11-l01');
+  const once = writingHarness({ tier: 'free_trial', updateFailures: 1 });
+  const ok = JSON.parse((await once.submit(task)).body);
+  assert.equal(ok.saved, true);
+  assert.equal(once.state.updates, 2);
+  assert.equal(once.state.providerCalls, 1, 'no second grading for a write retry');
+  const twice = writingHarness({ tier: 'free_trial', updateFailures: 2 });
+  const failed = JSON.parse((await twice.submit(task)).body);
+  assert.equal(failed.saved, false);
+  assert.equal(failed.total_score, 12, 'the learner still sees the feedback that was made');
+  assert.equal(twice.state.updates, 2);
+});

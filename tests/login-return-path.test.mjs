@@ -14,7 +14,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { returnPath } from '../src/lib/loginReturn.js';
+import vm from 'node:vm';
+import { returnPath, nextPath, needsFullLoad } from '../src/lib/loginReturn.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const ORIGIN = 'https://deutsch-meister.de';
@@ -87,14 +88,90 @@ test('whatever returnPath accepts resolves to this origin in a URL parser', () =
   }
 });
 
-test('LoginPage reads the door through returnPath and keeps the postAuthPath() fallback byte for byte', () => {
+test('LoginPage reads the door through returnPath, then ?next=, and keeps the postAuthPath() fallback byte for byte', () => {
   const src = read('src/pages/LoginPage.jsx');
-  assert.match(src, /^import \{ returnPath \} from '\.\.\/lib\/loginReturn';$/m);
+  assert.match(src, /^import \{ returnPath, nextPath, needsFullLoad[^}]*\} from '\.\.\/lib\/loginReturn';$/m);
+  // state.from (an app door) beats ?next= (a static door), and both beat
+  // postAuthPath() (a pending checkout, then the dashboard).
   assert.equal(
-    (src.match(/^ {2}const from = returnPath\(location\.state\?\.from\) \|\| postAuthPath\(\);$/gm) || []).length,
+    (src.match(/^ {2}const from = returnPath\(location\.state\?\.from\) \|\| nextPath\(searchParams\.get\('next'\)\) \|\| postAuthPath\(\);$/gm) || []).length,
     1,
   );
   assert.ok(!/from\?\.pathname/.test(src), 'no second reading of from.pathname alone');
   // Both ways out of /login (already signed in, and a successful login) use it.
   assert.equal((src.match(/navigate\(from, \{ replace: true \}\)/g) || []).length, 2);
+});
+
+// ── ?next= (cross-check 2026-10-25, SHL-10) ─────────────────────────────────
+// The Astro pages' "Log in" links (nav, grammar exercise lock) are plain links:
+// they cannot hand over router state, so a learner who logged in from a grammar
+// topic landed on /dashboard and had to find the topic again.
+
+test('?next= returns only to the learning pages a static login door sits on', () => {
+  const accepted = [
+    '/grammar/a1.2/question-words/',
+    '/grammar/',
+    '/grammar/a1.1/articles/?tab=rules#beispiele',
+    '/courses/a1-2/',
+    '/course/a1.2',
+    '/course/a1.1/l/3',
+  ];
+  for (const next of accepted) assert.equal(nextPath(next), next, next);
+  const refused = [
+    undefined, null, 42, '', '/', '/dashboard', '/admin', '/subscription?buy=course_a1_2', '/grammar', '/coursesx/',
+    '//evil.example/grammar/', 'https://evil.example/grammar/', 'javascript:alert(1)', '/\\evil.example',
+    '/grammar/../admin', '/grammar/%2e%2e/admin', '/courses/./../dashboard', '/grammar/\n/x', '/grammar\\..\\admin',
+  ];
+  for (const next of refused) assert.equal(nextPath(next), null, JSON.stringify(next));
+});
+
+test('whatever nextPath accepts resolves to this origin, under an allowed prefix', () => {
+  for (const next of ['/grammar/a1.1/x/', '/course/a1.1?s=2', '/grammar/%2F%2Fevil.example', '/courses/a1-2/#//evil.example']) {
+    const path = nextPath(next);
+    if (path === null) continue;
+    const url = new URL(path, ORIGIN);
+    assert.equal(url.origin, ORIGIN, path);
+    assert.ok(/^\/(grammar|courses|course)\//.test(url.pathname), path);
+  }
+});
+
+test('Astro pages are left with a full page load, SPA course pages with the router', () => {
+  assert.equal(needsFullLoad('/grammar/a1.1/articles/'), true);
+  assert.equal(needsFullLoad('/courses/a2-1/'), true);
+  for (const path of ['/course/a1.2', '/course/a1.1/l/3', '/dashboard', '/subscription?buy=x', '/speaking/?level=a1.1', '', null]) {
+    assert.equal(needsFullLoad(path), false, String(path));
+  }
+
+  const src = read('src/pages/LoginPage.jsx');
+  const wrapper = src.match(/ {2}const navigate = useCallback\(\(to, options\) => \{[\s\S]*?\n {2}\}, \[routerNavigate\]\);/);
+  assert.ok(wrapper, 'LoginPage wraps the router navigate');
+  assert.match(src, /const routerNavigate = useNavigate\(\);/);
+  const calls = [];
+  const navigate = vm.runInNewContext(`${wrapper[0]}\nnavigate;`, {
+    useCallback: (fn) => fn,
+    needsFullLoad,
+    routerNavigate: (to, options) => calls.push(['router', to, options.replace]),
+    window: { location: { replace: (to) => calls.push(['load', to]) } },
+  });
+  navigate('/grammar/a1.2/question-words/', { replace: true });
+  navigate('/course/a1.2', { replace: true });
+  navigate('/dashboard', { replace: true });
+  assert.deepEqual(calls, [
+    ['load', '/grammar/a1.2/question-words/'],
+    ['router', '/course/a1.2', true],
+    ['router', '/dashboard', true],
+  ], 'a replace either way, so /login never stays in the history');
+});
+
+test('the Astro login doors hand over the page they are on', () => {
+  const layout = read('astro-site/src/layouts/Layout.astro');
+  const doors = layout.match(/<a\s[^>]*href="\/login"[^>]*>/g) || [];
+  assert.equal(doors.length, 2, 'desktop bar and menu sheet');
+  for (const door of doors) assert.match(door, /data-login-next/);
+  assert.match(layout, /document\.querySelectorAll\('\[data-login-next\]'\)/);
+  assert.match(layout, /'\/login\?next=' \+ encodeURIComponent\(location\.pathname\)/);
+
+  const island = read('astro-site/src/components/ExercisePlayer.jsx');
+  assert.ok(!island.includes('deutsch-meister.de/login'), 'no absolute login link: it broke previews and dropped the page');
+  assert.match(island, /`\/login\?next=\$\{encodeURIComponent\(window\.location\.pathname\)\}`/);
 });

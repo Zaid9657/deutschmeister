@@ -35,11 +35,17 @@ const COPY = {
     lead: 'The placement test (15–20 min) finds your exact level and the lesson to start with — so you never repeat what you already know.',
     cta: 'Start the placement test',
   }),
-  placed: (a) => ({
-    title: a.topic?.titleEn || `Your first ${a.level.toUpperCase()} lesson`,
-    sub: a.topic?.titleDe,
+  // The placed level's guided course; only a level with no course yet (B1/B2)
+  // carries a grammar topic instead (src/lib/firstRun.js).
+  placed: (a) => (a.topic ? {
+    title: a.topic.titleEn || `Your first ${a.level.toUpperCase()} lesson`,
+    sub: a.topic.titleDe,
     lead: `Your placement test suggests ${a.level.toUpperCase()}. Start with its first lesson.`,
     cta: 'Start the lesson',
+  } : {
+    title: `Your ${a.level.toUpperCase()} course`,
+    lead: `Your placement test suggests ${a.level.toUpperCase()}. Its guided course starts here, one short step at a time.`,
+    cta: 'Start the course',
   }),
   course: () => ({
     title: 'Your free course',
@@ -51,7 +57,7 @@ const COPY = {
 const ALT_LABEL = {
   placement: 'Already know some German? Find your level first',
   lesson: 'Or start from zero with Lektion 1',
-  placed: 'Or start with your placed level’s lesson',
+  placed: 'Or start at your placed level',
   course: 'Or open the free course',
 };
 

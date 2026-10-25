@@ -13,9 +13,12 @@ export function useOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [onboardingCompletedAt, setOnboardingCompletedAt] = useState(undefined);
+  // Keyed on WHO is signed in: the user object is replaced at every tab focus
+  // and token refresh, and each replacement refetched the profile.
+  const userId = user?.id;
 
   useEffect(() => {
-    if (!user) {
+    if (!userId) {
       setProfileLoaded(false);
       setOnboardingCompletedAt(undefined);
       return;
@@ -25,7 +28,7 @@ export function useOnboarding() {
     supabase
       .from('profiles')
       .select('onboarding_completed_at')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
       .then(({ data, error }) => {
         if (cancelled) return;
@@ -40,7 +43,7 @@ export function useOnboarding() {
       });
 
     return () => { cancelled = true; };
-  }, [user]);
+  }, [userId]);
 
   const needsOnboarding =
     profileLoaded && !!user && isEmailVerified && onboardingCompletedAt === null;

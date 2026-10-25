@@ -5,8 +5,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Aurora from '../../components/Aurora.astro';
 import LanguageNotice from '../../components/LanguageNotice.astro';
-import competitorComparisons from '../../data/competitorComparisons.js';
-import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
+import competitorComparisons, { COMPARISON_DATA_DATE } from '../../data/competitorComparisons.js';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 const competitors = Object.values(competitorComparisons);
@@ -22,7 +22,9 @@ const jsonLd = {
   description,
   url: 'https://deutsch-meister.de/vergleich/',
   inLanguage: 'de',
-  dateModified: BUILD_DATE,
+  // The comparison data's date ("Stand: Mai 2026"), not the build date — the
+  // cards quote competitor figures that have not been re-checked since.
+  dateModified: COMPARISON_DATA_DATE,
   publisher: ORGANIZATION,
   mainEntity: {
     '@type': 'ItemList',

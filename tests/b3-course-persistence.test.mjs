@@ -179,13 +179,17 @@ function reviewClient() {
 
 const lektion = { id: 'a1.1-l01', level: 'a1.1', wortfeld: [{ de: 'Hallo' }], practiceRule: { topics: ['greetings'] } };
 
-test('B3 #12: a first completion reports its actual due-now review schedule', async () => {
+test('B3 #12: a first completion reports its actual review schedule — the first rung, tomorrow', async () => {
   const client = reviewClient();
-  const before = Date.now();
-  await seedCardsForLektion('u1', lektion, 'A1.1', client);
+  const seededAt = new Date('2026-10-21T18:00:00.000Z');
+  await seedCardsForLektion('u1', lektion, 'A1.1', client, seededAt);
   const due = await fetchLektionReviewDueAt('u1', lektion, 'A1.1', client);
-  assert.equal(due, client.rows[0].due_at);
-  assert.ok(Date.parse(due) >= before && Date.parse(due) <= Date.now(), 'new cards are due now, not a promised invented date');
+  assert.equal(due, client.rows[0].due_at, 'the date the recap names is the saved one, never an invented promise');
+  // New cards come back on the ladder's first rung (2026-10-25 cross-check, LSN-11), not at once: the
+  // next local calendar day at the same clock time (a daylight-saving change is not a day).
+  const tomorrow = new Date(seededAt.getTime());
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  assert.equal(due, tomorrow.toISOString());
 });
 
 test('B3 #12: a repeat reports the earned schedule of this lesson, including overdue cards', async () => {
@@ -198,4 +202,90 @@ test('B3 #12: a repeat reports the earned schedule of this lesson, including ove
   assert.equal(await fetchLektionReviewDueAt('u1', lektion, 'a1.1', client), '2027-05-14T10:00:00.000Z');
   client.rows[0].due_at = '2026-01-01T00:00:00.000Z';
   assert.equal(await fetchLektionReviewDueAt('u1', lektion, 'a1.1', client), '2026-01-01T00:00:00.000Z');
+});
+
+// ── A checkpoint passed while signed out (2026-10-25 cross-check, LSN-02) ────────────────────────
+// recordAttempt counted the guest's attempt and returned false: the pass was stored nowhere. The course
+// home kept offering Checkpoint 1, KannIch counted 0 checkpoints, Lektion 4 stayed locked, and after
+// signup the learner had to pass it again inside the 3-attempts-per-8-hours window.
+
+const PAPER = { level: 'a1.1', checkpointId: 'a1.1-cp1', items: [], answers: {}, result: { passed: true, overall: 75 }, stamp: '2026-10-21T18:30:00.000Z' };
+
+test('LSN-02: a guest\'s checkpoint pass is kept on the device and counts as done on the course home', async () => {
+  storage();
+  const { recordAttempt, guestPassKept } = await import('../src/services/checkpointService.js');
+  const { localDoneIds, hasLocalProgress } = await import('../src/lib/course/localProgress.js');
+  const { courseNextStep } = await import('../src/lib/courseNext.js');
+  for (const nr of [1, 2, 3]) recordLocalLesson({ level: 'a1.1', lektionId: `a1.1-l0${nr}`, status: 'complete', accuracy: 0.7 });
+  assert.equal(courseNextStep('a1.1', localDoneIds('a1.1')).href, '/course/a1.1/checkpoint/1', 'before: the checkpoint is next');
+  assert.equal(await recordAttempt(null, { ...PAPER, result: { passed: false, overall: 40 } }), false);
+  assert.equal(localDoneIds('a1.1').has('a1.1-cp1'), false, 'a failed paper is not a pass');
+  assert.equal(await recordAttempt(null, PAPER), false, 'nothing reached an account');
+  assert.equal(localDoneIds('a1.1').has('a1.1-cp1'), true, 'the pass is done on this device');
+  assert.equal(guestPassKept('a1.1', 'a1.1-cp1'), true, 'the result card says it is kept here');
+  assert.equal(courseNextStep('a1.1', localDoneIds('a1.1')).href, '/course/a1.1/l/4', 'after: Lektion 4 is next, and open');
+  assert.deepEqual(readLocalProgress().checkpoints['a1.1-cp1'], { passedAt: PAPER.stamp, accuracy: 0.75, stamp: PAPER.stamp });
+  assert.equal(readLocalProgress().lektionen['a1.1-l03'].status, 'complete', 'the guest Lektionen are untouched');
+  // A store holding only a pass is still progress to merge.
+  storage();
+  await recordAttempt(null, PAPER);
+  assert.equal(hasLocalProgress('a1.1'), true);
+});
+
+test('LSN-02: signing in writes the stamped summary row and the completion, and clears the pass only once both landed', async () => {
+  storage();
+  recordLocalLesson(run);
+  const { recordAttempt } = await import('../src/services/checkpointService.js');
+  await recordAttempt(null, PAPER);
+  const pending = readLocalProgress();
+  const calls = [];
+  let ok = false;
+  const deps = {
+    completeLesson: async () => true,
+    logAttempts: async () => true,
+    seedCards: async () => true,
+    recordCheckpoint: async (userId, args) => { calls.push({ userId, args }); return ok; },
+  };
+  assert.equal(await mergeLocalProgress('u1', deps), 0, 'a checkpoint write that did not land keeps the store');
+  assert.deepEqual(readLocalProgress(), pending, 'the pass and the Lektion are both still on the device');
+  ok = true;
+  assert.equal(await mergeLocalProgress('u1', deps), 2, 'one Lektion and one checkpoint');
+  assert.deepEqual(calls[1], { userId: 'u1', args: {
+    level: 'a1.1', checkpointId: 'a1.1-cp1', items: [], answers: {}, result: { passed: true, overall: 75 }, stamp: PAPER.stamp, retry: true,
+  } }, 'the paper\'s own stamp, so a second merge finds the row it wrote; retry, so the guest attempt is not counted twice');
+  assert.equal(readLocalProgress().level, null, 'cleared once everything landed');
+});
+
+test('LSN-02: the production merge writes the pass through recordAttempt — one summary row under the stamp, then the completion', async () => {
+  storage();
+  const { recordAttempt } = await import('../src/services/checkpointService.js');
+  await recordAttempt(null, PAPER);
+  const writes = [];
+  const attempts = [];
+  const original = supabase.from;
+  supabase.from = (table) => {
+    const filters = [];
+    const query = {
+      select: () => query,
+      eq: (k, v) => { filters.push((r) => r[k] === v); return query; },
+      insert: async (rows) => { attempts.push(...rows); writes.push({ table, op: 'insert', rows }); return { error: null }; },
+      upsert: async (row) => { writes.push({ table, op: 'upsert', row }); return { error: null }; },
+      then: (resolve) => resolve({ data: attempts.filter((r) => filters.every((f) => f(r))), error: null }),
+    };
+    return query;
+  };
+  try {
+    assert.equal(await mergeLocalProgress('u1'), 1);
+    assert.equal(await mergeLocalProgress('u1'), 0, 'nothing left to merge');
+  } finally {
+    supabase.from = original;
+  }
+  const inserted = writes.filter((w) => w.op === 'insert');
+  assert.equal(inserted.length, 1);
+  assert.deepEqual(inserted[0].rows, [{
+    user_id: 'u1', level: 'a1.1', lektion_id: 'a1.1-cp1', item_id: 'a1.1-cp1', stage: 'checkpoint', correct: true, error_tag: null, created_at: PAPER.stamp,
+  }], 'the summary row the attempt limit counts and the course home reconciles from');
+  const progress = writes.find((w) => w.table === 'lesson_progress');
+  assert.deepEqual([progress.row.lektion_id, progress.row.status, progress.row.accuracy], ['a1.1-cp1', 'complete', 0.75]);
+  assert.deepEqual(writes.find((w) => w.table === 'program_progress').row, { user_id: 'u1', program_key: 'a11_course', item_id: 'a1.1-cp1' });
 });

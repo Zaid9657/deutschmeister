@@ -22,6 +22,15 @@ export const REPORTS = Object.freeze([
 
 const row = (label, value, { definition, route, unit } = {}) => ({ label, value, definition: definition ?? null, route: route ?? null, unit: unit ?? null });
 
+// A text cell that starts like a spreadsheet formula (= + - @, tab, CR) gets a
+// leading apostrophe before it is quoted — same rule as the directory export.
+// A real number is data and stays numeric.
+export function csvCell(v) {
+  let s = v === null || v === undefined ? '' : String(v);
+  if (typeof v !== 'number' && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return /[";\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
 export const handler = adminEndpoint(
   { capabilityFor: (b) => (b.format === 'csv' ? 'export' : 'reports.read') },
   async ({ body, supabase, auth, event }) => {
@@ -92,9 +101,8 @@ export const handler = adminEndpoint(
     }
 
     if (body.format === 'csv') {
-      const esc = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[";\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
       const lines = ['Abschnitt;Kennzahl;Wert;Einheit;Definition'];
-      for (const sec of sections) for (const r of sec.rows) lines.push([sec.title, r.label, r.value, r.unit || '', r.definition || ''].map(esc).join(';'));
+      for (const sec of sections) for (const r of sec.rows) lines.push([sec.title, r.label, r.value, r.unit || '', r.definition || ''].map(csvCell).join(';'));
       await writeAudit(supabase, { actorId: auth.userId, actorRole: auth.role, action: 'reports.export', targetType: 'report', targetId: id, after: { range, level: level || 'all', rows: lines.length - 1 }, outcome: 'success', source: event.path });
       return { format: 'csv', csv: lines.join('\n'), filename: `bericht-${id}-${now.toISOString().slice(0, 10)}.csv` };
     }

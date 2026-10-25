@@ -4,16 +4,40 @@ import { safeGet, safeSet } from '../utils/safeStorage';
 import Button from './ui/Button';
 import Card from './ui/Card.jsx';
 
-function isChunkLoadError(error) {
+// How each browser says a lazy chunk is gone — a deploy replaced the hashed
+// files, so /assets/* 404s. Only Chrome's wording was recognised, and Safari/iOS
+// and Firefox learners met a dead-end error screen after every deploy.
+const CHUNK_ERROR_MESSAGES = [
+  'Failed to fetch dynamically imported module', // Chrome, Edge
+  'Importing a module script failed', // Safari, iOS
+  'error loading dynamically imported module', // Firefox
+  'Unable to preload CSS', // Vite's preload helper
+  'Loading chunk',
+  'Loading CSS chunk',
+  'is not a valid JavaScript MIME type',
+  'Expected a JavaScript',
+];
+
+export function isChunkLoadError(error) {
   if (!error) return false;
   const msg = error.message || '';
-  return (
-    msg.includes('Failed to fetch dynamically imported module') ||
-    msg.includes('Loading chunk') ||
-    msg.includes('Loading CSS chunk') ||
-    msg.includes('is not a valid JavaScript MIME type') ||
-    msg.includes("Expected a JavaScript")
-  );
+  return CHUNK_ERROR_MESSAGES.some((text) => msg.includes(text));
+}
+
+const RELOAD_KEY = 'chunk_reload_ts';
+
+/**
+ * Reload once for a stale chunk. Returns false, and does nothing, when a reload
+ * already happened in the last 10 seconds: the new deploy is broken too, so the
+ * error screen shows instead of a reload loop. Shared with main.jsx's
+ * vite:preloadError listener.
+ */
+export function reloadForStaleChunk(now = Date.now()) {
+  const last = safeGet(RELOAD_KEY, { session: true });
+  if (last && now - Number(last) <= 10000) return false;
+  safeSet(RELOAD_KEY, String(now), { session: true });
+  window.location.reload();
+  return true;
 }
 
 class ErrorBoundary extends React.Component {
@@ -30,17 +54,7 @@ class ErrorBoundary extends React.Component {
     console.error('ErrorBoundary caught:', error, errorInfo);
 
     // Auto-reload once for stale chunk errors (new deploy invalidated old assets)
-    if (isChunkLoadError(error)) {
-      const key = 'chunk_reload_ts';
-      const last = safeGet(key, { session: true });
-      const now = Date.now();
-      // Only auto-reload if we haven't done so in the last 10 seconds (prevent loop)
-      if (!last || now - Number(last) > 10000) {
-        safeSet(key, String(now), { session: true });
-        window.location.reload();
-        return;
-      }
-    }
+    if (isChunkLoadError(error) && reloadForStaleChunk()) return;
   }
 
   handleReload = () => {

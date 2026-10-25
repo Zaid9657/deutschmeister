@@ -35,7 +35,7 @@ import {
 } from '../src/data/programs/telcB1Komplett.js';
 import { writingTasksForExam } from '../src/data/writingTasks.js';
 import { telcB1Mock } from '../src/data/mockExams/telcB1.js';
-import { parseCourseTask } from '../netlify/functions/_shared/speakingAI.mjs';
+import { parseCourseTask, SPEAKING_LEVELS } from '../netlify/functions/_shared/speakingAI.mjs';
 import { gapPriorities, pilotEvidence, sectionAnswered, dayDone, rehearsalTopics, arrive } from '../src/lib/telcPilot.js';
 import { telcCourseContext, normalizeCourseContext, TELC_COURSE_HOME } from '../src/lib/courseFlow.js';
 
@@ -102,9 +102,10 @@ test('every item has a short version for a busy day, and every day is one unit',
 // ── 2. hand-off ─────────────────────────────────────────────────────────────
 
 test('every rehearsal survives the speaking server parser unchanged, at an accepted level', () => {
+  // The level list the start handler checks (and evaluate-speaking grades against).
   const server = read('netlify/functions/speaking-session.mjs');
-  const allowed = server.match(/const ALLOWED_LEVELS = \[([^\]]+)\]/)[1].match(/'([^']+)'/g).map((q) => q.slice(1, -1));
-  assert.ok(allowed.includes(SPEAKING_LEVEL.toUpperCase()), `${SPEAKING_LEVEL} is not an ALLOWED_LEVEL`);
+  assert.match(server, /if \(!SPEAKING_LEVELS\.includes\(effectiveLevel\)\)/);
+  assert.ok(SPEAKING_LEVELS.includes(SPEAKING_LEVEL.toUpperCase()), `${SPEAKING_LEVEL} is not an accepted speaking level`);
   for (const s of speaking) {
     assert.equal(s.href, `/speaking/?level=${SPEAKING_LEVEL.toUpperCase()}`);
     const parsed = parseCourseTask({ taskPrompt: s.task.prompt, taskTeil: s.task.teil, taskHintWords: s.task.hintWords, taskAnrede: 'Sie' });

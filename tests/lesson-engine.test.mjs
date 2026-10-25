@@ -19,6 +19,7 @@ import buildLesson, {
 } from '../src/lib/lesson/buildLesson.js';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
 import { requeueFor, REQUEUE_CAP } from '../src/lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus, masteryLabel, accuracyPercent, GOLD_THRESHOLD, nextReviewDate } from '../src/lib/lesson/mastery.js';
 import { checkAnswer, RESULT, STRICT_TOPIC, STRICT_MAX_SPACES, strictApplies, normalizeDictation, tagError } from '../src/lib/lesson/check.js';
@@ -1396,4 +1397,38 @@ test('the fixture matches the contract shape the curriculum author is writing to
     const needle = ex.replace(/[.?!]$/, '').toLowerCase();
     assert.ok(FIXTURE_LEKTION.dialog.lines.some((l) => l.de.toLowerCase().includes(needle)), `${ex} is not in the dialogue`);
   }
+});
+
+// ── 2026-10-25 review, C-058: the draw's memory never changes a draw ─────────────────────────────
+// planPractice runs inside the lesson's render, and an A1.2 learner opening a finished Lektion
+// (attempt 3, which plans attempts 1 and 2 first) waited about a second on the intro screen while
+// the draw recomputed the same per-item keys for every salt, ladder stage and fill pass. The keys
+// are now kept per item; this pins that keeping them changes nothing a learner is drawn.
+test('the memoised practice draw plans exactly what the plain one plans — every level, Lektion and attempt — and faster', () => {
+  const ids = (plan) => [...plan].map(([nr, items]) => [nr, items.map((i) => i.id)]);
+  const time = (fn) => {
+    const t0 = performance.now();
+    const value = fn();
+    return [value, performance.now() - t0];
+  };
+  let plainMs = 0;
+  for (const [curriculum, pool] of [[CURRICULUM_A11, POOL], [CURRICULUM_A12, POOL_A12]]) {
+    // Fresh curriculum objects: the plan cache is keyed on the curriculum, so neither side reads the other's plans.
+    const plain = { ...curriculum };
+    const memo = { ...curriculum };
+    for (const attempt of [1, 2, 3]) {
+      // `memo: false` plans attempt n with attempts 1…n-1 recomputed, as a learner's first visit does.
+      const [a, ms] = time(() => planPractice(plain, pool, attempt, { memo: false }));
+      if (curriculum === CURRICULUM_A12 && attempt === 3) plainMs = ms;
+      const b = planPractice(memo, pool, attempt);
+      assert.deepEqual(ids(b), ids(a), `${curriculum.level} attempt ${attempt}: the memory changed the draw`);
+      assert.deepEqual([...practiceReport(b)], [...practiceReport(a)], `${curriculum.level} attempt ${attempt}: …or its report`);
+    }
+  }
+  // A coarse smoke bound on the case the review measured — attempt 3 of A1.2 on a curriculum the plan
+  // cache has never seen. Relative, so a slow machine cannot fail it (the memory must at least halve
+  // the plain planner's time), and absolute only far above the ~0.2 s it takes on a desktop.
+  const [, memoMs] = time(() => planPractice({ ...CURRICULUM_A12 }, POOL_A12, 3));
+  assert.ok(memoMs < plainMs / 2, `memoised ${memoMs.toFixed(0)} ms vs plain ${plainMs.toFixed(0)} ms`);
+  assert.ok(memoMs < 3000, `A1.2 attempt-3 planning took ${memoMs.toFixed(0)} ms`);
 });

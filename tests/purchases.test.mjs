@@ -58,7 +58,7 @@ import {
   allItemIds as ga2AllItemIds,
 } from '../src/data/programs/goetheA2Kurs.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
-import { LEVEL_COURSES } from '../src/data/pricing.js';
+import { LEVEL_COURSES, levelsForProduct } from '../src/data/pricing.js';
 import { FREE_LEVELS } from '../src/config/freeTier.js';
 import { readinessFromAttempts } from '../src/services/readiness.js';
 
@@ -116,11 +116,29 @@ test('every level course has a webhook route and the level surfaces read the ent
     'src/pages/PodcastsPage.jsx',
     'src/pages/ReadingSectionPage.jsx',
     'src/pages/VocabularySectionPage.jsx',
+    // A level ticket lists the level's speaking missions (offers.js ticketLines).
+    'src/pages/SpeakingPage.jsx',
   ]) {
     const src = read(file);
     assert.ok(src.includes('hasLevelAccess('), `${file} does not gate on hasLevelAccess(level)`);
     assert.ok(!/\bhasAccess\b/.test(src), `${file} still reads the subscription-only hasAccess`);
   }
+});
+
+test('a speaking mission is locked by its level entitlement, so a bought course keeps its missions after its Pro window', () => {
+  // Cross-check AI-07 / C-140: an A1.2 buyer whose included Pro window ended saw
+  // "This mission is part of Pro" on the missions the ticket says they own.
+  const page = read('src/pages/SpeakingPage.jsx');
+  assert.match(page, /const missionLocked = !!activeMission && !activeMission\.is_free\s*&& !hasLevelAccess\(activeMission\.level \|\| selectedLevel\);/,
+    'the selected mission\'s lock');
+  assert.match(page, /const locked = !m\.is_free && !hasLevelAccess\(m\.level \|\| selectedLevel\);/, 'each mission card\'s lock icon');
+  // The rule, run: a purchase of the mission's level opens it without any subscription.
+  const purchases = [{ product_key: 'course_a1_2' }];
+  const hasLevelAccess = (level) => FREE_LEVELS.includes(level.toLowerCase())
+    || purchases.some((p) => levelsForProduct(p.product_key).includes(level.toLowerCase()));
+  const lockedFor = (mission) => !mission.is_free && !hasLevelAccess(mission.level);
+  assert.equal(lockedFor({ is_free: false, level: 'A1.2' }), false, 'the owned level\'s missions stay open');
+  assert.equal(lockedFor({ is_free: false, level: 'A2.1' }), true, 'another level stays locked');
 });
 
 test('a checkout interrupted by signup resumes, and a purchase lands on our success page', () => {

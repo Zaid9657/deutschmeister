@@ -23,6 +23,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkCrawlability } from './crawl-guard.mjs';
+import { COURSE_TELC_B1_PRICE_EUR, eur, deEur } from '../src/data/pricing.js';
 
 const args = process.argv.slice(2);
 const SPA_ONLY = args.includes('--spa-only');
@@ -139,6 +140,17 @@ const BANNED_LITERALS = [
   // occurrences that shipped on /podcasts/.
   'with transcript',
   'audio with transcripts',
+  // Outcome promises on the comparison pages, removed 2026-10-25: an equal-
+  // efficacy claim against live teachers (also in the FAQPage JSON-LD) and a
+  // pass promise as the Duolingo <h1>. Nothing in the product measures either,
+  // and src/data/examTracks.js says we never predict a pass.
+  'denselben Lerneffekt',
+  'bringt dich durch die Prüfung',
+  // No grammar example has audio (0 of 933 carry an audio_url; llms-full.txt
+  // says "text-only"), yet the course pages and the SPA shell's description,
+  // og:description and twitter:description promised it until 2026-10-25.
+  'examples with audio',
+  'audio examples',
 ];
 
 const fail = [];
@@ -300,6 +312,47 @@ if (found.has(TELC_PAGE) && existsSync(join(DIST, TELC_PAGE))) {
     if (offer) note(fail, TELC_PAGE, 'off sale, but the JSON-LD still publishes an Offer');
   }
   console.log(`telc sale gate: ${onSale ? 'ON sale' : 'off sale'} — ${buttons} Buy button(s), Offer ${offer ? 'present' : 'absent'}`);
+}
+
+// The same switch holds the other surfaces that sold the package to it
+// (2026-10-25). Built pages: off sale, no page but the package's own may quote
+// its price — the /pricing/ card says it starts soon, its FAQ (and FAQPage
+// JSON-LD) drops the sentence, and the shared offer copy (offers.js EXAM_ROUTE,
+// on the homepage, /courses/ and /pricing/) names no price at all. On sale,
+// /pricing/ must quote it. The AI-facing catalogue is a committed file, not a
+// built one, so it is held to the switch only where the switch is the deploy's
+// truth — a Netlify build (NETLIFY=true). In CI or a local build the switch is
+// simply unset ("off" there says nothing about production), so a mismatch only
+// warns; tests/llms.test.mjs holds both files to one generator state. A
+// catalogue that still says "not on sale yet" while the sale is on only
+// understates, so it warns everywhere — regenerate it with the switch set
+// (scripts/build-llms.mjs reads the same two variables).
+const telcSaleOn = process.env.PUBLIC_TELC_B1_ON_SALE === 'true' && Boolean(process.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID);
+const deployBuild = process.env.NETLIFY === 'true';
+const telcPrices = [eur(COURSE_TELC_B1_PRICE_EUR), deEur(COURSE_TELC_B1_PRICE_EUR)];
+// Either format, never as the tail of a longer amount ("189,00 €" is not it).
+const TELC_PRICE_RE = new RegExp(`(?<![\\d.,])(?:${telcPrices.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`);
+const quotesTelcPrice = (text) => TELC_PRICE_RE.test(text);
+const PRICING_PAGE = 'pricing/index.html';
+if (!telcSaleOn) {
+  for (const entry of MANIFEST) {
+    if (entry.path === TELC_PAGE || !existsSync(join(DIST, entry.path))) continue;
+    if (quotesTelcPrice(readFileSync(join(DIST, entry.path), 'utf8'))) {
+      note(fail, entry.path, `off sale, but the telc B1 package is still priced (${telcPrices.join(' / ')})`);
+    }
+  }
+} else if (found.has(PRICING_PAGE) && existsSync(join(DIST, PRICING_PAGE))) {
+  if (!quotesTelcPrice(readFileSync(join(DIST, PRICING_PAGE), 'utf8'))) {
+    note(fail, PRICING_PAGE, `on sale, but the telc B1 card quotes no price (${telcPrices[0]})`);
+  }
+}
+for (const file of ['llms.txt', 'llms-full.txt']) {
+  if (!existsSync(join(DIST, file))) continue;
+  const quoted = quotesTelcPrice(readFileSync(join(DIST, file), 'utf8'));
+  if (!telcSaleOn && quoted) {
+    note(deployBuild ? fail : warn, file, `off sale, but the telc B1 package is listed at ${telcPrices[0]} — regenerate it without the switch: node scripts/build-llms.mjs`);
+  }
+  if (telcSaleOn && !quoted) note(warn, file, 'the telc B1 package is on sale, but the catalogue still says it is not — regenerate it with the switch set');
 }
 
 // --- sitemap integrity ------------------------------------------------------

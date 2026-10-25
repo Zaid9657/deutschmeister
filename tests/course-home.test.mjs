@@ -132,8 +132,10 @@ test('IntroStage exists, the player imports it, and it is player state that prev
 test('Start fires lesson_started and the recap write fires lesson_completed', () => {
   const player = read(PLAYER);
   assert.match(player, /import \{ trackLessonCompleted, [^}]*trackLessonStarted[^}]* \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
-  // One run id (runState.js) joins start and completion, so time-to-complete is measurable.
-  assert.match(player, /onStart=\{\(\) => \{ trackLessonStarted\(curriculum\.level, lektion\.id, runId\); setIntroDone\(true\); \}\}/);
+  // One run id (runState.js) joins start and completion, so time-to-complete is measurable. Start is
+  // a no-op until the run's inputs are in (tests/lesson-late-load.test.mjs), and freezes them.
+  assert.match(player, /const start = \(\) => \{\s*if \(!ready\) return;\s*started\.current = true;\s*trackLessonStarted\(curriculum\.level, lektion\.id, runId\);\s*setIntroDone\(true\);\s*\};/);
+  assert.match(player, /return <IntroStage curriculum=\{curriculum\} lektion=\{lektion\} ready=\{ready\} onStart=\{start\} \/>;/);
   assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id, runId, skillProps\(skillLines\(\{ score, attempts, skills \}\)\)\);/, 'completed is tracked exactly where the lesson is persisted, with what the run measured');
   const funnel = read('src/lib/funnelTracking.js');
   assert.match(funnel, /export const trackLessonStarted = \(level, topic, runId\) => track\('lesson_started', \{ level, topic, run_id: runId \}\)/);
@@ -164,7 +166,8 @@ test('every A1.1 Lektion has a cast, a chapter and an intro to render', () => {
 test('LevelTestResults links the A1.1 course: Lektion 1 for an A1.1 result, unlocked for anything higher', () => {
   const src = read(RESULTS);
   assert.match(src, /const placedAtStart = finalSublevel === 'A1\.1';/);
-  assert.match(src, /placedAtStart \? '\/course\/a1\.1' : '\/course\/a1\.1\?from=placement'/, 'the two hrefs');
+  assert.match(src, /placedAtStart \? FIRST_LESSON_HREF : '\/course\/a1\.1\?from=placement'/, 'the two hrefs: Lektion 1 itself for an A1.1 result');
+  assert.match(src, /import \{[^}]*\bFIRST_LESSON_HREF\b[^}]*\} from '\.\.\/\.\.\/lib\/firstRun\.js'/, 'the same Lektion 1 URL as the primary CTA');
   assert.match(src, /Start your course at Lektion 1/);
   assert.match(src, /Open the A1\.1 course \(all Lektionen unlocked for you\)/);
   assert.match(src, /to=\{courseHref\}/, 'the CTA is a client-side Link (no trailing slash — case 3 SPA route)');

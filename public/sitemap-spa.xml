@@ -9,21 +9,26 @@
        SCRIPT changes, not when the site is rebuilt. Auto-stamping every build
        would claim a freshness the content does not have, which is the fastest
        way to teach a crawler to ignore the field.
-       Bump these when you change the prerendered copy. Last content change:
-       2026-08-22 — the identity <h1> was removed from every prerendered route
-       and the podcast transcript claims were deleted (all 24 episodes have
-       empty transcripts). -->
+       Bump these when you change the prerendered copy. Each route records the
+       date of its last copy change as `updated` in src/data/seoRoutes.js (the
+       /faq/ answers also as FAQ_COPY_UPDATED in src/data/faqContent.js), and a
+       lastmod may never fall behind it (tests/sitemap-lastmod.test.mjs).
+       Changes since 2026-08-24: /podcasts/ on 2026-10-22 (the access FAQ and
+       PodcastSeries copy); on 2026-10-25 /level-test/ (head description),
+       /speaking/ (head description and the feedback card), /faq/ (the exam,
+       free-version and speaking-feedback answers) and /ueber-uns/ (keywords,
+       the feature cards and the exam line of the roadmap). -->
 
   <!-- Main Sections -->
   <url>
     <loc>https://deutsch-meister.de/level-test/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/speaking/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -41,7 +46,7 @@
   </url>
   <url>
     <loc>https://deutsch-meister.de/podcasts/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -65,13 +70,13 @@
        submitted blank pages to Google. Re-add a URL only once it is prerendered. -->
   <url>
     <loc>https://deutsch-meister.de/faq/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/ueber-uns/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

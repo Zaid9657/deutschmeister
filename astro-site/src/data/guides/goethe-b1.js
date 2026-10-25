@@ -229,7 +229,7 @@ export const goetheB1 = {
             {
               eyebrow: 'Modul Sprechen',
               title: 'KI-Sprechtraining',
-              body: 'Freies Gespräch zu Prüfungsthemen, mit sofortigem Feedback zu Grammatik, Wortschatz und Ausdruck. Kein Termin, kein Partner nötig.',
+              body: 'Freies Gespräch zu Prüfungsthemen, danach eine Auswertung zu Grammatik, Wortschatz und Ausdruck. Kein Termin, kein Partner nötig.',
             },
             {
               eyebrow: 'Modul Hören',

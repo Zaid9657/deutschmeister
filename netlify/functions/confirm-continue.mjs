@@ -74,10 +74,15 @@ export const handler = async (event) => {
   // use it — this endpoint only exists to rescue unconfirmed accounts.
   if (data.user.email_confirmed_at) return redirect(`${BASE_URL}/login`);
 
+  // The link lands on /login, signed in: LoginPage sends a signed-in visitor on
+  // to postAuthPath() (a pending checkout, the course step they left, else the
+  // dashboard). Straight to /dashboard skipped a stored buy intent, and a late
+  // confirmer whose trial had ended met the paywall there (ACC-06). /login is
+  // already an allowed redirect (AuthContext signUp's emailRedirectTo).
   const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
     type: 'magiclink',
     email: data.user.email,
-    options: { redirectTo: `${BASE_URL}/dashboard` },
+    options: { redirectTo: `${BASE_URL}/login` },
   });
   const actionLink = linkData?.properties?.action_link;
   if (linkError || !actionLink) {

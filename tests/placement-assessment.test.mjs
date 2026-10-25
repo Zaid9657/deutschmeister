@@ -26,6 +26,29 @@ test('skipping 39 written placement questions cannot turn one B2.2 answer into B
   assert.equal(calculatePlacement({ answers: [], questions }).writtenPercentage, 0);
 });
 
+// C-162: the band loop had no stop, so each later band that reached 60%
+// overwrote the result even after a lower band failed.
+test('a band counts only when every band below it passed', () => {
+  const correct = (ids) => questions.filter((q) => ids(q)).map(correctAnswer);
+  const sixB2 = correct((q) => q.level === 'B2' && Number(q.id.split('-')[1]) < 6);
+  const onlyB2 = calculatePlacement({ answers: sixB2, questions });
+  assert.equal(onlyB2.sublevel, 'A1.1', '6 B2 answers + 34 skips');
+  assert.equal(onlyB2.writtenPercentage, 15);
+
+  const threeEach = correct((q) => q.level !== 'B2' && Number(q.id.split('-')[1]) < 3);
+  const gappy = calculatePlacement({ answers: [...threeEach, ...sixB2], questions });
+  assert.equal(gappy.sublevel, 'A1.1', 'A1, A2 and B1 at 3/10 with B2 at 6/10');
+
+  const a2Gap = correct((q) => q.level === 'A1' || q.level === 'B1' || q.level === 'B2');
+  assert.equal(calculatePlacement({ answers: a2Gap, questions }).sublevel, 'A1.2', 'a failed A2 band stops the climb at A1');
+
+  // An honest B1 profile still reaches B1: every band up to B1 passed, B2 failed.
+  const b1 = correct((q) => q.level !== 'B2');
+  assert.equal(calculatePlacement({ answers: b1, questions }).sublevel, 'B1.2');
+  const b1Lower = correct((q) => q.level !== 'B2' && !(q.level === 'B1' && q.sublevel === 'B1.2' && q.id !== 'B1-5'));
+  assert.equal(calculatePlacement({ answers: b1Lower, questions }).sublevel, 'B1.1', 'B1 passed at 6/10, B1.2 below 70%');
+});
+
 test('placement uses all selected questions in level and skill denominators', () => {
   const result = calculatePlacement({ answers: questions.map(correctAnswer), questions });
   assert.equal(result.sublevel, 'B2.2');
@@ -80,8 +103,9 @@ test('displayed and persisted placement share the adjusted result across a band 
     writes.push({ payload, column, id });
     return { error: null };
   } }) }) };
-  const run = new Function('useEffect', 'testState', 'userId', 'finalSublevel', 'supabase', 'refreshSubscriptionRef', effect);
-  run(callback => callback(), 'results', 'learner', placement.sublevel, supabase, { current: async () => refreshes.push(writes.length) });
+  // The run belongs to the learner who took it (tests/placement-owner.test.mjs).
+  const run = new Function('useEffect', 'testState', 'userId', 'runOwner', 'finalSublevel', 'supabase', 'refreshSubscriptionRef', effect);
+  run(callback => callback(), 'results', 'learner', 'learner', placement.sublevel, supabase, { current: async () => refreshes.push(writes.length) });
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(writes.length, 1);
   assert.equal(writes[0].payload.current_level, placement.sublevel);
@@ -91,6 +115,6 @@ test('displayed and persisted placement share the adjusted result across a band 
   assert.match(page, /<LevelTestResults\s+placement=\{placement\}/);
   const result = read('src/components/LevelTest/LevelTestResults.jsx');
   assert.match(result, /sublevel: finalSublevel, demotions \} = placement;/);
-  assert.match(result, /if \(!user\) rememberPlacement\(finalSublevel\);/);
+  assert.match(result, /if \(guestRun\) rememberPlacement\(finalSublevel\);/);
   assert.match(result, /\$\{totalCorrect\}\/\$\{totalQuestions\} correct/);
 });

@@ -2816,7 +2816,14 @@ export function scoreCheckpoint(items, answers = {}) {
     // measured lines count, and a part with some lines unmeasured is `partial` — the result card
     // names it, so a pass is never wider than its evidence.
     const measured = inSection.filter((i) => itemIsScored(i, answers[i.id]));
-    if (!measured.length) {
+    // A section the paper printed with more items than reach this point lost them before scoring —
+    // the Hören items read instead of heard (CheckpointPage scores `scoredItems`). When what is left
+    // cannot beat answering one option everywhere (guessCeiling ≥ items), the section measured
+    // nothing: one heard choice answered right was 1/1 against a ceiling of 1, and a perfect paper
+    // failed on audio that did not play (2026-10-25 review, X-044). A fully printed section keeps
+    // the ceiling rule (sectionPasses).
+    const shortened = present.length < (SECTION_COUNTS[section] || 0);
+    if (!measured.length || (shortened && guessCeiling(measured) >= measured.length)) {
       // Nothing measured: reported as done, kept out of the score.
       const done = inSection.filter((i) => isItemCorrect(i, answers[i.id])).length;
       sections[section] = {

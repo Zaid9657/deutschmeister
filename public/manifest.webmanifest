@@ -2,7 +2,7 @@
   "name": "DeutschMeister",
   "short_name": "DeutschMeister",
   "description": "Learn German with AI — grammar, listening, reading and speaking, A1.1 to B2.2.",
-  "start_url": "/dashboard",
+  "start_url": "/start",
   "scope": "/",
   "display": "standalone",
   "background_color": "#F7F5F0",

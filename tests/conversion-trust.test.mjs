@@ -37,7 +37,8 @@ test('signup describes the trial without presenting A1.1 as account-gated', () =
   const signup = read('src/pages/SignupPage.jsx');
 
   assert.match(signup, /Start your \{TRIAL_DAYS\}-day Pro trial/);
-  assert.match(signup, /Explore A1\.1 without an account/);
+  // The way out opens the free course itself (tests/free-door.test.mjs).
+  assert.match(signup, /Start the \{FREE_LEVEL_LABEL\} course without an account/);
   assert.match(signup, /no automatic charge when the trial ends/);
 });
 

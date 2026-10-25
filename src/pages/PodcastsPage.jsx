@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Headphones, Clock, Play, ChevronRight, Radio, Sparkles, Lock } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -48,7 +48,6 @@ const PodcastsPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { hasLevelAccess } = useSubscription();
 
@@ -234,11 +233,14 @@ const PodcastsPage = () => {
                       ) : (
                         <div className="space-y-3">
                           {podcasts.map((podcast, podcastIndex) => {
+                            // A real link to the level's podcast tab: Tab reaches it and
+                            // Enter opens it (a clickable div was mouse-only).
                             const row = (
                               <Card
                                 interactive
-                                className="group flex items-start gap-4 p-4 cursor-pointer"
-                                onClick={() => navigate(`/level/${level.toLowerCase()}?tab=podcasts`)}
+                                as={Link}
+                                to={`/level/${level.toLowerCase()}?tab=podcasts`}
+                                className="group flex items-start gap-4 p-4"
                               >
                                 {/* Thumbnail */}
                                 <div className="flex-shrink-0 w-16 h-16 rounded-clay bg-siegel flex items-center justify-center relative overflow-hidden" data-atropos-offset="6">

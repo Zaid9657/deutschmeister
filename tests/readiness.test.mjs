@@ -108,6 +108,13 @@ test('the result screen names a next step for every course-test level', () => {
   for (const ct of COURSE_TESTS) {
     assert.ok(block.includes(`'${ct.level}': {`), `COURSE_NEXT has no entry for ${ct.level} (${ct.key})`);
   }
-  assert.match(block, /'a1\.1': \{[^}]*primary: \{ to: '\/a1-2-phase'/s, 'after A1.1 the next step is the A1.2 plan');
+  // After A1.1 the next step is the live A1.2 COURSE (since 2026-10-22), never the legacy 28-day plan:
+  // the course itself with access, else its offer page (2026-10-25 cross-check, LSN-03).
+  assert.match(block, /'a1\.1': \{[^}]*primary: \{ level: 'a1\.2'/s, 'after A1.1 the next step is the A1.2 course');
+  assert.doesNotMatch(block, /'a1\.1': \{[^}]*\/a1-2-phase/s, 'not the legacy A1.2-Phase plan');
+  const target = resultSrc.slice(resultSrc.indexOf('const stepTarget'), resultSrc.indexOf('const readyBody'));
+  assert.match(target, /hasLevelAccess\(step\.level\)\) return \{ to: courseHome\(step\.level\) \}/, 'with access: /course/<level>');
+  assert.match(target, /return \{ href: stationFor\(step\.level\)\?\.coursePage \}/, 'without: the level\'s offer page, a full page load');
+  assert.match(resultSrc, /<Button variant="celebrate" \{\.\.\.stepTarget\(courseNext\(resolved\)\.primary, hasLevelAccess\)\}>/);
   assert.match(block, /'a1\.2': \{[^}]*primary: \{ to: '\/modelltest\/start-deutsch-1'/s, 'after A1.2 the next step is the full SD1 mock');
 });

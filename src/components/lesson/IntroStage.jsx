@@ -25,6 +25,11 @@ import { courseHome } from '../../lib/courseFlow.js';
 //   * the estimated time (a11.meta.js `lektionMinutesEstimate`, labelled as an estimate);
 //   * ONE primary action, Start.
 //
+// The screen needs only the curriculum and the Lektion, so it shows at once — while the exercise
+// pool still downloads (2026-10-25). Start stays disabled, labelled "Loading …", until `ready`:
+// until the run's inputs (pool, warm-up cards, draw count) are in, so nothing that arrives after
+// Start can rebuild the stages under the learner (LessonPlayerPage's LessonRun).
+//
 // Chrome strings live in INTRO_STRINGS below, keyed `intro.*` in the same shape
 // as src/lib/lesson/strings.js (`en` default, `de` in Sie), and are picked by
 // the same `useLessonLang()` flag — so the language toggle in the player header
@@ -45,6 +50,7 @@ export const INTRO_STRINGS = {
     'intro.people': 'Who speaks in this Lektion',
     'intro.minutes': 'about {lo}–{hi} min (estimate)',
     'intro.start': 'Start',
+    'intro.loading': 'Loading …',
     'intro.backToCourse': 'Back to the course',
   },
   de: {
@@ -55,6 +61,7 @@ export const INTRO_STRINGS = {
     'intro.people': 'Wer in dieser Lektion spricht',
     'intro.minutes': 'etwa {lo}–{hi} Min. (Schätzung)',
     'intro.start': 'Starten',
+    'intro.loading': 'Wird geladen …',
     'intro.backToCourse': 'Zurück zum Kurs',
   },
 };
@@ -78,7 +85,7 @@ export function castFor(lektion, meta) {
   return seen;
 }
 
-export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(curriculum?.level), onStart }) {
+export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(curriculum?.level), ready = true, onStart }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
   // An estimate from the Lektion's own step counts, labelled as one — never the 15-minute design target.
@@ -114,8 +121,9 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           eyebrow={chapter ? ti('intro.chapter', lang, { nr: chapter.nr, title: chapterTitle }) : ti('intro.eyebrow', lang)}
           title={ti('intro.lektion', lang, { nr: lektion.nr, title: lektion.title })}
           lead={situation}
-          primaryLabel={ti('intro.start', lang)}
+          primaryLabel={ti(ready ? 'intro.start' : 'intro.loading', lang)}
           onPrimary={onStart}
+          primaryDisabled={!ready}
         >
           {chapter && !de && (
             <p className="-mt-2 mb-5 font-data text-[0.75rem] text-graphite">

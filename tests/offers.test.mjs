@@ -15,6 +15,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import vm from 'node:vm';
+import * as MARKETING from '../src/data/marketing.js';
 import {
   STATIONS, TICKET_STATIONS, FIT_CHOICES, FREE_COURSE_HREF, stationFor, ticketLines, planLine, OFFER_FAQ, minutesPerDay,
 } from '../src/data/offers.js';
@@ -124,4 +126,23 @@ test('a Buy button only ever renders behind a checkout id, and never for an Im B
   }
   const variants = read('astro-site/src/lib/courseVariants.js');
   assert.match(variants, /c\.comingSoon \? ''/, 'a coming-soon course never gets an id');
+});
+
+test('the /pricing/ table never shows Pro narrower than the trial, nor a free level as paid', () => {
+  // The Pro "Timed practice exam" cell said "telc B1" beside the trial's
+  // "Included" — one exam of the six the Pro-and-trial /modelltest hub serves —
+  // and "Podcasts & video" said "—" without an account although the free
+  // level's podcasts play for anyone (2026-10-25).
+  const block = read('astro-site/src/pages/pricing.astro').match(/const ROWS = (\[[\s\S]*?\n\]);/);
+  assert.ok(block, 'const ROWS not found in pricing.astro');
+  const rows = vm.runInNewContext(`(${block[1]})`, { ...MARKETING, FREE_RUNGS: 1, TOPICS_PER_LEVEL: 12 });
+  for (const row of rows) {
+    if (row.trial === 'Included') assert.equal(row.pro, 'Included', `${row.label}: Pro shows "${row.pro}" where the trial includes it`);
+  }
+  const exam = rows.find((r) => /practice exam/i.test(r.label));
+  assert.equal(exam.pro, exam.trial, 'every practice exam opens with Pro exactly as in the trial');
+  const podcasts = rows.find((r) => /podcast/i.test(r.label));
+  assert.equal(podcasts.anonymous, MARKETING.FREE_LEVEL_LABEL, 'the free level\'s podcasts play without an account');
+  // …which holds while the podcast page lets the free level through for everyone.
+  assert.match(read('src/pages/PodcastsPage.jsx'), /isLevelFree\(level\) \|\|/);
 });

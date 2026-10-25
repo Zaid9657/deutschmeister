@@ -231,6 +231,60 @@ test('courseHomeFor: the free course is the default, the placement level only wh
   assert.equal(courseHomeFor({ level: 'a1.1', hasLevelAccess: () => false }), '/course/a1.1', 'a1.1 is free regardless');
 });
 
+// A bought course beats a missing or lower placement (cross-check 2026-10-25,
+// SHL-17): current_level is written only by the placement test, so an A1.2
+// buyer who never took it was sent to free A1.1 by "Continue learning" (SPA
+// and Astro) and the Kurs tab, while the dashboard already continued A1.2.
+test('courseHomeFor: a buyer continues the course they bought', async () => {
+  const { courseHomeFor } = await import('../src/lib/courseEntry.js');
+  const { productKeyForLevel, LEGACY_LEVEL_COURSES, levelsForProduct } = await import('../src/data/pricing.js');
+  const bought = (level, extra = {}) => ({ product_key: productKeyForLevel(level), status: 'active', ...extra });
+  const owns = (purchases) => (l) => l === 'a1.1' || purchases.some((p) => p.status === 'active' && levelsForProduct(p.product_key).includes(l));
+
+  const a12 = [bought('a1.2')];
+  assert.equal(courseHomeFor({ level: null, hasLevelAccess: owns(a12), purchases: a12 }), '/course/a1.2', 'no placement');
+  assert.equal(courseHomeFor({ level: 'A1', hasLevelAccess: owns(a12), purchases: a12 }), '/course/a1.2', "the column's 'a1' default is no placement");
+  assert.equal(courseHomeFor({ level: 'A1.1', hasLevelAccess: owns(a12), purchases: a12 }), '/course/a1.2', 'placed below the course they bought');
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: () => true, purchases: a12 }), '/course/a2.1', 'placed above it, with access (trial or Pro): the placement');
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: owns(a12), purchases: a12 }), '/course/a1.2', 'placed above it without access: still never a lock');
+  assert.equal(courseHomeFor({ level: 'B1.1', hasLevelAccess: owns(a12), purchases: a12 }), '/course/a1.2', 'a placement with no course home');
+  assert.equal(courseHomeFor({ level: null, hasLevelAccess: owns([]), purchases: [bought('a1.2', { status: 'refunded' })] }), '/course/a1.1', 'a refunded course is not owned');
+
+  // Two courses: the newest purchase, like the dashboard's courseLevelFor.
+  const two = [bought('a2.1', { created_at: '2026-10-01' }), bought('a1.2', { created_at: '2026-09-01' })];
+  assert.equal(courseHomeFor({ level: null, hasLevelAccess: owns(two), purchases: two }), '/course/a2.1');
+  const back = [bought('a2.1', { created_at: '2026-09-01' }), bought('a1.2', { created_at: '2026-10-01' })];
+  assert.equal(courseHomeFor({ level: null, hasLevelAccess: owns(back), purchases: back }), '/course/a1.2');
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: owns(back), purchases: back }), '/course/a2.1', 'the newest owned course at or above the placement');
+
+  // A retired bundle walks the ladder from its first level, then the placement.
+  const bundle = [{ product_key: LEGACY_LEVEL_COURSES.course_alle.key, status: 'active' }];
+  assert.equal(courseHomeFor({ level: null, hasLevelAccess: owns(bundle), purchases: bundle }), '/course/a1.1');
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: owns(bundle), purchases: bundle }), '/course/a2.1');
+  // Callers without purchases keep the placement-only rule.
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: () => true }), '/course/a2.1');
+});
+
+test('courseHomeFor agrees with the dashboard for a buyer with no placement', async () => {
+  const { courseHomeFor } = await import('../src/lib/courseEntry.js');
+  const { courseLevelFor } = await import('../src/lib/courseNext.js');
+  const { LEVEL_COURSES, LEGACY_LEVEL_COURSES } = await import('../src/data/pricing.js');
+  for (const { key } of [...Object.values(LEVEL_COURSES), ...Object.values(LEGACY_LEVEL_COURSES)]) {
+    const purchases = [{ product_key: key, status: 'active' }];
+    const dashboard = courseLevelFor({ purchases, hasLevelAccess: () => true });
+    if (!dashboard) continue; // a course with no guided course home yet (B1/B2)
+    assert.equal(courseHomeFor({ level: null, hasLevelAccess: () => true, purchases }), `/course/${dashboard}`, key);
+  }
+});
+
+test('both navs hand their purchases to courseHomeFor', () => {
+  for (const src of [navbarSrc, bottomNavSrc]) {
+    assert.match(src, /const \{[^}]*\bpurchases\b[^}]*\} = useSubscription\(\);/);
+    assert.match(src, /courseHomeFor\(\{ level: profile\?\.current_level, hasLevelAccess, purchases \}\)/);
+  }
+  assert.match(layoutSrc, /purchases: activePurchases,/, 'the Astro continuation passes the active purchases');
+});
+
 test('the /course/* target of every tab is rewritten to /app.html (three-place rule)', () => {
   assert.ok(appShellRewrites.has('/course/*'), '/course/* must be in the netlify.toml allow-list');
 });

@@ -80,6 +80,12 @@ test('only a live Lemon Squeezy subscription gets the link', async () => {
   // A renewal that failed is exactly who needs it: the row keeps its end date
   // and its Lemon Squeezy id, so the page still says "Active Subscription".
   assert.equal(subscriptionPortalAction(true, PAST_DUE, false)?.href, BILLING_PORTAL_URL);
+  // ACC-03: a course row that kept a subscription id is billing until
+  // reconciliation clears it (lib/checkoutAccess.js hasRecurringBilling), so
+  // it gets the portal (tests/legacy-course-billing.test.mjs).
+  for (const isGerman of [false, true]) {
+    assert.equal(subscriptionPortalAction(true, { ...COURSE_ROW, lemonsqueezy_subscription_id: '2468531' }, isGerman)?.href, BILLING_PORTAL_URL);
+  }
 
   const none = [
     ['trial user, no row', false, null],
@@ -89,7 +95,6 @@ test('only a live Lemon Squeezy subscription gets the link', async () => {
     ['comped row, null ids', true, COMPED],
     ['comped row, empty ids', true, COMPED_EMPTY],
     ['course row: an order, no subscription', true, COURSE_ROW],
-    ['course row that kept an old subscription id', true, { ...COURSE_ROW, lemonsqueezy_subscription_id: '2468531' }],
     ['no row at all', true, null],
   ];
   for (const [why, isSubscribed, row] of none) {

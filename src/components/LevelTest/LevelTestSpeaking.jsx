@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Mic, Loader2, AlertCircle, Phone, Sparkles, Hand } from 'lucide-react';
+import { Mic, Loader2, AlertCircle, Phone, Sparkles, Hand, Clock, RotateCcw } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
-import SpeakingSession from '../speaking/SpeakingSession';
+import SpeakingSession, { requestSpeakingEvaluation } from '../speaking/SpeakingSession';
 import { acquireMicrophone, releaseMicrophone, micErrorMessage } from '../speaking/mediaSupport';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -16,11 +16,24 @@ import Reveal from '../ui/Reveal.jsx';
 // Only the intro/connecting/error screens are dressed here: the live
 // conversation, its mic permission flow and its record button all belong to
 // SpeakingSession, which already carries the Playful Depth treatment.
+
+/** When the free speaking test opens again, from the server's placement_limit answer. */
+function placementLimitMessage(data) {
+  const at = Date.parse(data?.retry_after || '');
+  const when = Number.isFinite(at)
+    ? ` You can take it again from ${new Date(at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}.`
+    : ' You can take it again later.';
+  return `You have already taken the speaking test recently. It is free, so it can be taken a limited number of times.${when} Skip this part to see your results now.`;
+}
+
 const LevelTestSpeaking = ({ onComplete, onSkip }) => {
   const { user, loading: authLoading } = useAuth();
-  const [stage, setStage] = useState('intro'); // intro | connecting | session | error
+  const [stage, setStage] = useState('intro'); // intro | connecting | session | error | limit | eval_failed
   const [error, setError] = useState(null);
   const [session, setSession] = useState(null);
+  // The feedback request failed after the conversation: { status, code, retryable }.
+  const [evalFailure, setEvalFailure] = useState(null);
+  const [retrying, setRetrying] = useState(false);
   const pendingStartRef = useRef(null);
 
   useEffect(() => () => pendingStartRef.current?.(), []);
@@ -86,6 +99,12 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
       const data = await res.json().catch(() => ({}));
       sessionToken = data.session_token;
       if (cancelled) { cancelStart(); return; }
+      // The free test's own cap (speaking-session.mjs): explain, offer the skip.
+      if (res.status === 429 && data.error === 'placement_limit') {
+        setError(placementLimitMessage(data));
+        setStage('limit');
+        return;
+      }
       if (!res.ok) throw new Error(data.error || 'Failed to create speaking session');
       if (!data.session_token) throw new Error('Failed to create speaking session');
       setSession({
@@ -109,6 +128,29 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
     }
   };
 
+  // The feedback request failed, or came back unusable: stay in this step and
+  // offer the same request again — the level test used to record speaking as
+  // skipped for a conversation the learner had just finished.
+  const handleEvaluationFailed = (failure) => {
+    setEvalFailure(failure);
+    setStage('eval_failed');
+  };
+  const handleSessionComplete = (result) => {
+    if (result?.evaluation_failed) {
+      handleEvaluationFailed({ status: 200, code: 'evaluation_failed', retryable: true, result });
+      return;
+    }
+    onComplete(result);
+  };
+  const retryEvaluation = async () => {
+    if (!session?.sessionToken || retrying) return;
+    setRetrying(true);
+    const outcome = await requestSpeakingEvaluation(session.sessionToken);
+    setRetrying(false);
+    if (outcome.ok) onComplete(outcome.evaluation);
+    else setEvalFailure(outcome);
+  };
+
   // Live conversation — shared turn-based engine, placement evaluation.
   if (stage === 'session' && session) {
     return (
@@ -119,9 +161,58 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
         plannedMinutes={session.plannedMinutes}
         opening={session.opening}
         micStream={session.micStream}
-        onComplete={onComplete}
+        onComplete={handleSessionComplete}
+        onEvaluationFailed={handleEvaluationFailed}
         onCancel={onSkip}
       />
+    );
+  }
+
+  if (stage === 'eval_failed') {
+    const preparing = evalFailure?.code === 'evaluation_in_progress';
+    const canRetry = !!session?.sessionToken && evalFailure?.retryable !== false;
+    return (
+      <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
+        <Card tone="aprikose" className="p-6 text-center">
+          {preparing
+            ? <Clock size={40} className="mx-auto mb-3 text-accent-aprikose-ink" aria-hidden="true" />
+            : <AlertCircle size={40} className="mx-auto mb-3 text-accent-aprikose-ink" aria-hidden="true" />}
+          <h2 className="font-display text-[1.25rem] font-semibold text-ink">
+            {preparing ? 'Your result is on its way' : 'Your speaking result is not ready'}
+          </h2>
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-accent-aprikose-ink" role="status" aria-live="polite">
+            {preparing
+              ? 'Frau Schmidt is still scoring the conversation — try again in a moment.'
+              : canRetry
+                ? 'The conversation is saved, but its score could not be loaded just now. Please try again.'
+                : 'This conversation cannot be scored. Skip this part to see your results.'}
+          </p>
+          <div className="mt-5 flex flex-col-reverse justify-center gap-3 sm:flex-row">
+            <Button variant="secondary" onClick={onSkip}>Skip Speaking</Button>
+            {canRetry && (
+              <Button onClick={retryEvaluation} disabled={retrying}>
+                {retrying ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <RotateCcw size={16} aria-hidden="true" />}
+                Try Again
+              </Button>
+            )}
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (stage === 'limit') {
+    return (
+      <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
+        <Card tone="aprikose" className="p-6 text-center">
+          <Clock size={40} className="mx-auto mb-3 text-accent-aprikose-ink" aria-hidden="true" />
+          <h2 className="font-display text-[1.25rem] font-semibold text-ink">Speaking test taken recently</h2>
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-accent-aprikose-ink">{error}</p>
+          <div className="mt-5 flex justify-center">
+            <Button onClick={onSkip}>Skip Speaking</Button>
+          </div>
+        </Card>
+      </div>
     );
   }
 

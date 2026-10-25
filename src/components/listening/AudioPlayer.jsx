@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { formatDuration } from '../../utils/listeningHelpers';
 import Card from '../ui/Card.jsx';
 
@@ -8,18 +9,28 @@ import Card from '../ui/Card.jsx';
 // physically depress, and the equalizer bars run in siegel only while audio is
 // actually playing — paused is seven calm, static dots, so motion always means
 // "sound is coming out of this".
+//
+// A play counts only once the audio has actually STARTED: a rejected play()
+// (missing file, weak connection, blocked autoplay) spends none of the three
+// plays, shows no "playing" state and says so — the Modelltest player's rule
+// (ModelltestRun.jsx, Codex rescore 2026-10-15). The element's own pause and
+// error events keep the playing state honest when the OS or the network stops
+// the sound. `review` is the after-submit player: no cap, nothing counted.
 const MAX_PLAYS = 3;
 const BARS = [1, 2, 3, 4, 5, 6, 7];
 
-const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
+const AudioPlayer = ({ src, onPlayCountChange, disabled = false, review = false }) => {
   const audioRef = useRef(null);
+  const { i18n } = useTranslation();
+  const isGerman = i18n.language === 'de';
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playCount, setPlayCount] = useState(0);
   const [hasUnfinishedPlay, setHasUnfinishedPlay] = useState(false);
+  const [playFailed, setPlayFailed] = useState(false);
 
-  const canPlay = playCount < MAX_PLAYS;
+  const canPlay = review || playCount < MAX_PLAYS;
 
   const handleTimeUpdate = useCallback(() => {
     if (audioRef.current) {
@@ -38,49 +49,72 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
     setHasUnfinishedPlay(false);
   }, []);
 
+  const handleStopped = useCallback(() => {
+    setIsPlaying(false);
+  }, []);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('pause', handleStopped);
+    audio.addEventListener('error', handleStopped);
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('pause', handleStopped);
+      audio.removeEventListener('error', handleStopped);
     };
-  }, [handleTimeUpdate, handleLoadedMetadata, handleEnded]);
+  }, [handleTimeUpdate, handleLoadedMetadata, handleEnded, handleStopped]);
 
-  const togglePlay = () => {
+  // Resolves true once sound has started; a rejection spends nothing.
+  const startPlayback = async () => {
+    try {
+      await audioRef.current.play();
+    } catch {
+      setIsPlaying(false);
+      setPlayFailed(true);
+      return false;
+    }
+    setPlayFailed(false);
+    setIsPlaying(true);
+    return true;
+  };
+
+  const countPlay = () => {
+    setHasUnfinishedPlay(true);
+    if (review) return;
+    const newCount = playCount + 1;
+    setPlayCount(newCount);
+    onPlayCountChange?.(newCount);
+  };
+
+  const togglePlay = async () => {
     if (disabled || !audioRef.current) return;
 
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
-    } else {
-      if (!hasUnfinishedPlay || audioRef.current.ended) {
-        if (!canPlay) return;
-        // Starting a new play-through
-        audioRef.current.currentTime = 0;
-        const newCount = playCount + 1;
-        setPlayCount(newCount);
-        onPlayCountChange?.(newCount);
-        setHasUnfinishedPlay(true);
-      }
-      audioRef.current.play();
-      setIsPlaying(true);
+      return;
     }
+    // Starting a new play-through, or resuming the unfinished one (free).
+    const newPlay = !hasUnfinishedPlay || audioRef.current.ended;
+    if (newPlay) {
+      if (!canPlay) return;
+      audioRef.current.currentTime = 0;
+    }
+    if (!(await startPlayback())) return;
+    if (newPlay) countPlay();
   };
 
-  const restart = () => {
+  const restart = async () => {
     if (disabled || !canPlay || !audioRef.current) return;
     audioRef.current.currentTime = 0;
-    const newCount = playCount + 1;
-    setPlayCount(newCount);
-    onPlayCountChange?.(newCount);
-    audioRef.current.play();
-    setIsPlaying(true);
-    setHasUnfinishedPlay(true);
+    if (!(await startPlayback())) return;
+    countPlay();
   };
 
   const handleSeek = (e) => {
@@ -146,9 +180,11 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
             <span>
               {formatDuration(currentTime)} / {formatDuration(duration)}
             </span>
-            <span className={!canPlay ? 'font-bold text-accent-himbeer-ink' : ''}>
-              {playCount}/{MAX_PLAYS} plays
-            </span>
+            {!review && (
+              <span className={!canPlay ? 'font-bold text-accent-himbeer-ink' : ''}>
+                {playCount}/{MAX_PLAYS} plays
+              </span>
+            )}
           </div>
         </div>
 
@@ -168,6 +204,14 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
           <RotateCcw size={16} />
         </button>
       </div>
+
+      {playFailed && (
+        <p role="alert" className="mt-3 text-[0.8125rem] font-bold text-accent-aprikose-ink">
+          {isGerman
+            ? 'Die Wiedergabe ist nicht gestartet. Bitte erneut versuchen — dieser Versuch zählt nicht.'
+            : 'Playback did not start. Please try again — this try does not count.'}
+        </p>
+      )}
     </Card>
   );
 };

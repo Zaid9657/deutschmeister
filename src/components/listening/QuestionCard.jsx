@@ -14,13 +14,19 @@ const getAnswerKey = (option) => {
 // while the exercise is live every option is a raised, pressable surface that
 // depresses under the pointer; once the answers are in they all go FLAT and the
 // verdict is carried by a wash AND an icon — never by colour alone.
+//
+// The badge is the card's position on the page (`index`), not question_number:
+// ExercisePlayer lists one dialogue's questions together, so the stored numbers
+// would read 1, 11, 2, 12, 21 …
 const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, index }) => {
   const options = question.options || [];
   const questionKey = question.id || question.question_number;
   const isDictation = question.question_type === 'dictation';
-  // Draft text for a dictation answer, registered into the shared `answers`
-  // state only once the learner presses "Prüfen" — mirrors how a multiple-
-  // choice option is only registered on click, not on hover.
+  // The visible text of a dictation answer. Every edit also registers it
+  // (trimmed) as the answer, so what is graded, saved and shown in the review
+  // is always what the field shows. A "Prüfen" button used to register a
+  // snapshot: an edit made after it was silently dropped, and a typed answer
+  // that was never "geprüft" kept "Antworten abgeben" disabled with no hint.
   const [draft, setDraft] = useState(selectedAnswer || '');
 
   if (isDictation) {
@@ -32,7 +38,7 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
         <Card className="p-5">
           <div className="flex items-start gap-3 mb-4">
             <span className="flex-shrink-0 w-7 h-7 rounded-pill bg-siegel-wash text-siegel-deep flex items-center justify-center font-data text-[0.75rem] font-bold">
-              {question.question_number || (index + 1)}
+              {index + 1}
             </span>
             <p className="text-ink font-bold leading-relaxed">{question.question_text}</p>
           </div>
@@ -42,7 +48,7 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
               <input
                 type="text"
                 value={showResult ? (selectedAnswer || '') : draft}
-                onChange={(e) => setDraft(e.target.value)}
+                onChange={(e) => { setDraft(e.target.value); onAnswer(questionKey, e.target.value.trim()); }}
                 disabled={showResult}
                 placeholder="Antwort eingeben..."
                 className={`flex-1 min-w-0 px-4 py-3 rounded-clay border font-body text-ink transition-colors duration-100 ${
@@ -55,16 +61,6 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
                     : 'border-rule bg-white focus:border-siegel focus:outline-none'
                 }`}
               />
-              {!showResult && (
-                <button
-                  type="button"
-                  onClick={() => draft.trim() && onAnswer(questionKey, draft.trim())}
-                  disabled={!draft.trim()}
-                  className="flex-shrink-0 px-4 py-3 rounded-clay border border-rule bg-white text-ink font-bold shadow-raise transition-all duration-100 ease-snap hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40 disabled:pointer-events-none"
-                >
-                  Prüfen
-                </button>
-              )}
               {showResult && hasAnswer && (
                 isCorrect ? (
                   <CheckCircle size={22} className="flex-shrink-0 self-center text-accent-limette-ink" />
@@ -96,7 +92,7 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
         {/* Question header */}
         <div className="flex items-start gap-3 mb-4">
           <span className="flex-shrink-0 w-7 h-7 rounded-pill bg-siegel-wash text-siegel-deep flex items-center justify-center font-data text-[0.75rem] font-bold">
-            {question.question_number || (index + 1)}
+            {index + 1}
           </span>
           <p className="text-ink font-bold leading-relaxed">{question.question_text}</p>
         </div>

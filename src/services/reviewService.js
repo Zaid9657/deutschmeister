@@ -1,5 +1,5 @@
 import { supabase } from '../utils/supabase.js';
-import { nextDue, cardKinds, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../lib/review/ladder.js';
+import { nextDue, cardKinds, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey, LADDER_DAYS } from '../lib/review/ladder.js';
 import { politeCaseItem } from '../data/lessonPools/quality.js';
 
 // review_cards data access — the spaced review over WORDS, GRAMMAR PATTERNS and
@@ -35,13 +35,53 @@ function cardsForLektion(lektion) {
 }
 
 /**
+ * `days` calendar days after `from` in the learner's local time, at the same local
+ * clock time (2026-10-25). "Due" is read by the local calendar day (endOfLocalDay),
+ * so a due date is a calendar step, never elapsed hours: `days * DAY_MS` turns the
+ * 23- and 25-hour days of a daylight-saving change into a skipped day (Europe/Berlin:
+ * graded 28 March 23:30 → due 30 March 00:30) or a same-day review (graded 25 October
+ * 00:30 → due 25 October 23:30). A clock time the target day skips (02:30 on the
+ * spring change) rolls forward within that same day.
+ */
+export const addLocalDays = (from, days) => {
+  const date = new Date(from.getTime());
+  date.setDate(date.getDate() + days);
+  return date;
+};
+
+/**
+ * When a NEW card first comes back: the ladder's first rung from now — tomorrow
+ * (2026-10-25). Seeded "now", every card a Lektion had just shown was due at
+ * once: the learner who finished Lektion 1 found „25 cards to review first"
+ * placed ahead of Lektion 2, and Lektion 2's warm-up pulled cards minutes old.
+ * The ladder's own rule is that a new card returns tomorrow, and the first
+ * review is only a spaced retrieval — and a reason to come back — from then.
+ */
+export const firstDueAt = (now = new Date()) => addLocalDays(now, LADDER_DAYS[0]);
+
+/**
+ * The end of the learner's LOCAL day — what "due today" means (2026-10-25). The
+ * ladder stamps an exact time (a card graded at 20:00 comes back at 20:00), and
+ * reads compared against the current millisecond, so a learner who returned the
+ * next morning, as the recap promised, found nothing due until the evening: the
+ * 1-day rung slipped to 2 days, the 4-day rung to 5. Every "due" read uses this
+ * bound; the next date shown is the first card due AFTER today.
+ */
+export const endOfLocalDay = (now = new Date()) => {
+  const end = new Date(now.getTime());
+  end.setHours(23, 59, 59, 999);
+  return end;
+};
+
+/**
  * Called by the lesson engine after a Lektion completes (the integration hook).
  * Idempotent: a card that already exists keeps the schedule it has earned.
+ * `now` is a seam for tests.
  */
-export async function seedCardsForLektion(userId, lektion, level, client = supabase) {
+export async function seedCardsForLektion(userId, lektion, level, client = supabase, now = new Date()) {
   if (!userId || !lektion) return 0;
   const lvl = lc(level || lektion.level);
-  const dueAt = new Date().toISOString();
+  const dueAt = firstDueAt(now).toISOString();
   const rows = cardsForLektion(lektion).map((card) => ({ ...card, user_id: userId, level: lvl, step: 0, due_at: dueAt }));
   if (!rows.length) return 0;
 
@@ -73,7 +113,7 @@ export async function fetchLektionReviewDueAt(userId, lektion, level, client = s
   return data?.[0]?.due_at || null;
 }
 
-/** Cards due now (or earlier) for one level, oldest-due first. */
+/** Cards due today (or earlier) for one level, oldest-due first. */
 export async function fetchDueCards(userId, level, limit = 12) {
   if (!userId) return [];
   const { data, error } = await supabase
@@ -81,7 +121,7 @@ export async function fetchDueCards(userId, level, limit = 12) {
     .select('*')
     .eq('user_id', userId)
     .eq('level', lc(level))
-    .lte('due_at', new Date().toISOString())
+    .lte('due_at', endOfLocalDay().toISOString())
     .order('due_at', { ascending: true })
     .limit(limit);
   if (error) {
@@ -91,16 +131,16 @@ export async function fetchDueCards(userId, level, limit = 12) {
   return data || [];
 }
 
-/** The dashboard tile's two numbers: cards in the deck and cards due now. */
+/** The dashboard tile's two numbers: cards in the deck and cards due today. */
 export async function fetchReviewCounts(userId, level) {
   if (!userId) return { total: 0, due: 0 };
-  const nowIso = new Date().toISOString();
+  const dueBy = endOfLocalDay().toISOString();
   const base = () => supabase.from(TABLE).select('card_key', { count: 'exact', head: true }).eq('user_id', userId).eq('level', lc(level));
-  const [total, due] = await Promise.all([base(), base().lte('due_at', nowIso)]);
+  const [total, due] = await Promise.all([base(), base().lte('due_at', dueBy)]);
   return { total: total.count || 0, due: due.count || 0 };
 }
 
-/** When does the next card come back? null = nothing scheduled. */
+/** When does the next card come back after today? null = nothing scheduled. */
 export async function fetchNextDueAt(userId, level) {
   if (!userId) return null;
   const { data, error } = await supabase
@@ -108,7 +148,7 @@ export async function fetchNextDueAt(userId, level) {
     .select('due_at')
     .eq('user_id', userId)
     .eq('level', lc(level))
-    .gt('due_at', new Date().toISOString())
+    .gt('due_at', endOfLocalDay().toISOString())
     .order('due_at', { ascending: true })
     .limit(1);
   if (error) {
@@ -118,8 +158,14 @@ export async function fetchNextDueAt(userId, level) {
   return data?.[0]?.due_at || null;
 }
 
-/** Grade one card and move it up (or back to the start) on the ladder. */
-export async function gradeCard(userId, cardKey, correct) {
+/**
+ * Grade one card and move it up (or back to the start) on the ladder. The ladder
+ * decides the interval in days; the due date is that many local calendar days on
+ * (addLocalDays), not nextDue's elapsed `days * DAY_MS`, which a daylight-saving
+ * change turns into a skipped or a same-day review now that "due" is read by the
+ * learner's local day. `now` is a seam for tests.
+ */
+export async function gradeCard(userId, cardKey, correct, now = new Date()) {
   if (!userId || !cardKey) return null;
   const { data, error } = await supabase
     .from(TABLE)
@@ -131,10 +177,11 @@ export async function gradeCard(userId, cardKey, correct) {
     console.error('[reviewService] gradeCard read:', error.message);
     return null;
   }
-  const next = nextDue(data?.step ?? 0, Boolean(correct));
+  const next = nextDue(data?.step ?? 0, Boolean(correct), now);
+  const dueAt = addLocalDays(now, next.dueInDays);
   const patch = {
     step: next.step,
-    due_at: next.dueAt.toISOString(),
+    due_at: dueAt.toISOString(),
     lapses: (data?.lapses ?? 0) + (next.lapsed ? 1 : 0),
     last_result: correct ? 'correct' : 'wrong',
   };
@@ -143,7 +190,7 @@ export async function gradeCard(userId, cardKey, correct) {
     console.error('[reviewService] gradeCard write:', writeError.message);
     return null;
   }
-  return next;
+  return { ...next, dueAt };
 }
 
 /**
@@ -249,6 +296,21 @@ export function buildCardIndex(curriculum) {
     });
   }
   return index;
+}
+
+/**
+ * The lesson warm-up's cards from due rows: each row's face from the curriculum
+ * index, and the row's own ladder `step`. The step is what picks the card's mode
+ * (`modeForCard(kind, step ?? position)`, as the Wiederholen deck does); the
+ * warm-up used to drop it, so a word card due for its typed recall was shown as
+ * a self-graded flashcard whenever it sat in seat 0 or 3 of today's batch, and a
+ * self-report moved it up the ladder with no recall tested. A row whose key no
+ * longer resolves is skipped.
+ */
+export function warmupCards(rows, index) {
+  return (rows || [])
+    .map((r) => ({ cardKey: r.card_key, step: r.step, ...(index.get(r.card_key) || {}) }))
+    .filter((c) => c.front);
 }
 
 export { parseCardKey, wordCardKey, patternCardKey, sentenceCardKey, cardKinds };

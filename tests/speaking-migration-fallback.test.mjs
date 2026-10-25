@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { isMissingSchema, logMigrationPending } from '../netlify/functions/_shared/migrationPending.mjs';
 import { closeOutSession, creditWallet, reserveTurn, settleTurn, usageIdForToken } from '../netlify/functions/_shared/speakingCloseout.mjs';
+import { SPEAKING_LEVELS, HISTORY_MESSAGES } from '../netlify/functions/_shared/speakingAI.mjs';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const stripImports = (source) => source.replace(/^import[\s\S]*?from ['"][^'"]+['"];\s*/gm, '');
@@ -28,6 +29,7 @@ function fakeDb({ code = 'PGRST202', rpcErrors = {}, failures = {}, seed = {} } 
     constructor(table) { this.table = table; this.op = 'select'; this.filters = []; }
     select(_columns, options = {}) { this.head = options.head; return this; }
     order() { return this; }
+    limit() { return this; }
     range(start, end) { this.rangeStart = start; this.rangeEnd = end; return this; }
     eq(key, value) { this.filters.push((row) => row[key] === value); return this; }
     neq(key, value) { this.filters.push((row) => row[key] !== value); return this; }
@@ -83,10 +85,11 @@ function loadHandler(path, db, overrides = {}) {
     CLOSEOUT_COLUMNS: '', closeOutSession, closeOutStaleSessions: async () => ({}),
     SESSION_GRACE_MINUTES: 2, reserveTurn, settleTurn,
     getAuthenticatedUserId: async () => userId, unauthorizedResponse: () => ({ statusCode: 401 }),
-    AIError, buildTeacherSystemPrompt: () => 'system', courseTaskColumns: () => ({}),
+    AIError, SPEAKING_LEVELS, HISTORY_MESSAGES, buildTeacherSystemPrompt: () => 'system', courseTaskColumns: () => ({}),
     parseCourseTask: () => null, taskFromSession: () => null,
     teacherReply: async () => { db.calls.push('teacher'); return 'Hallo!'; },
     synthesizeSpeech: async () => { db.calls.push('tts'); return 'audio'; },
+    synthesizeFixedLine: async () => { db.calls.push('tts'); return 'audio'; },
     transcribeAudio: async () => { db.calls.push('stt'); return 'Guten Tag'; },
     ...overrides,
   };

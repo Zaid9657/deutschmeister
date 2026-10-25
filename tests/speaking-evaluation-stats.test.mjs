@@ -11,6 +11,7 @@ function dashboard(evaluations) {
       select(_columns, options) { this.head = options?.head; return this; },
       eq(key, value) { filters.push(row => row[key] === value); return this; },
       not() { return this; },
+      order() { return this; },
       is(key, value) {
         calls.push([key, value]);
         const [column, property] = key.split('->>');

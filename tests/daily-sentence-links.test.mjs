@@ -26,7 +26,7 @@ import vm from 'node:vm';
 // The module reads its secrets at import time and fails closed without them.
 process.env.UNSUB_SECRET = 'test-only-unsub-secret';
 delete process.env.SUPABASE_SERVICE_ROLE_KEY; // no live client in tests
-const { sendDailyBatches, analyzeUrl, DAILY_UTM } = await import('../netlify/functions/daily-sentence.mjs');
+const { sendDailyBatches, analyzeUrl, courseUrl, DAILY_UTM } = await import('../netlify/functions/daily-sentence.mjs');
 const { isSocialHref } = await import('../netlify/functions/_shared/socialLinks.mjs');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -103,6 +103,24 @@ test('the X-Ray link opens /analyze/ with exactly the mailed sentence, for every
   }
   const html = await mailedHtml(SENTENCES[0]);
   assert.ok(hrefs(html).includes(analyzeUrl(SENTENCES[0].sentence_de)), 'the button uses analyzeUrl()');
+});
+
+test('a text link under the button opens the free A1.1 course, tagged, without a trailing slash (2026-10-25)', async () => {
+  // The mail that reaches the most people had no way into a Lektion.
+  const html = await mailedHtml();
+  const course = hrefs(html).filter((h) => new URL(h).pathname.startsWith('/course/'));
+  assert.deepEqual(course, [courseUrl()], 'exactly one course link, built by courseUrl()');
+  const url = new URL(course[0]);
+  assert.equal(url.origin, SITE);
+  assert.equal(url.pathname, '/course/a1.1', 'an SPA rewrite route: no trailing slash (CLAUDE.md case 3)');
+  assert.equal(url.searchParams.get('utm_content'), 'course');
+  assert.equal(url.search, `?${DAILY_UTM}&utm_content=course`, 'fixed strings, so a retry rebuilds the same batch bytes');
+  assert.match(html, /Next step: the free A1\.1 course →/);
+  assert.ok(html.indexOf(courseUrl()) > html.indexOf('See the X-Ray Breakdown'), 'secondary: under the X-Ray button');
+  const { parse } = attribution();
+  const touch = parse(url.search, '', url.pathname, Date.UTC(2026, 9, 25));
+  assert.equal(touch.source, 'email');
+  assert.equal(touch.content, 'course');
 });
 
 test('the classifier reads the tags back without losing a label', () => {

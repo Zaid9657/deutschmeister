@@ -8,14 +8,18 @@
 //
 //   1. firstRunAction (src/lib/firstRun.js) — the ONE decision: no lesson
 //      activity → Lektion 1 of the free course, or the placement test for a
-//      learner who said they know some German, or the placed level's first
-//      lesson; unknown activity is never first-run; hasLevelAccess decides.
+//      learner who said they know some German, or the placed level's guided
+//      course (its grammar only where no course exists); the chosen exam's
+//      first task until exam work exists; unknown activity is never first-run;
+//      hasLevelAccess decides.
 //   2. lessonActivityFrom (dashboardStats) — the scorecard's own definition
-//      (any user_grammar_progress OR lesson_progress row), fail-safe on errors.
+//      (any user_grammar_progress OR lesson_progress row), fail-safe on errors;
+//      examActivityFrom (examActivity.js) — the same shape for exam work.
 //   3. The hrefs are real: Lektion 1 exists in a live FREE curriculum, the
 //      routes exist in App.jsx and netlify.toml, the trailing-slash classes hold.
-//   4. The wiring: onboarding's primary exit lands IN Lektion 1, the dashboard
-//      renders the card in the hero slot, /login forwards a signed-in visitor.
+//   4. The wiring: each onboarding exit lands where its label says, the
+//      dashboard renders the card in the hero slot, /login forwards a signed-in
+//      visitor.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -25,16 +29,20 @@ import { dirname, join } from 'node:path';
 import {
   firstRunAction,
   placedSublevel,
+  placedCourseHref,
   onboardingExitPath,
   FIRST_LESSON_HREF,
   PLACEMENT_HREF,
+  LEKTION_COURSE_LEVELS,
   STARTING_POINTS,
   STARTING_POINT_KEY,
 } from '../src/lib/firstRun.js';
 import { lessonActivityFrom } from '../src/services/dashboardStats.js';
+import { examActivityFrom } from '../src/services/examActivity.js';
 import { FREE_COURSE_LEVEL, FREE_COURSE_HOME } from '../src/lib/courseEntry.js';
 import { isLevelFree } from '../src/config/freeTier.js';
-import { curriculumFor } from '../src/data/curricula/index.js';
+import { curriculumFor, CURRICULA } from '../src/data/curricula/index.js';
+import { COURSE_LEVELS } from '../src/data/courses/levels.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
 import { EXAM_TRACKS } from '../src/data/examTracks.js';
 import { writingTasksForExam } from '../src/data/writingTasks.js';
@@ -118,15 +126,62 @@ test('exam tasks use the top-sublevel access gate; otherwise keep the original f
   }
 });
 
-test('onboarding passes exam choices to the same decision while preserving skip and legacy exits', () => {
-  for (const [examTrack, href] of Object.entries(EXAM_TARGETS)) {
-    for (const exit of ['first-lesson', 'level-test']) {
-      assert.equal(onboardingExitPath(exit, { examTrack, hasLevelAccess: everything }), href);
+// C-132/C-150: an exam pick used to send "I'm new to German — start Lektion 1"
+// and "find my level" to a B1/B2 writing task. Each exit goes where its label
+// says; the exam's first task waits on the dashboard card (tests above).
+test('onboarding exits go where their labels say, whatever exam was picked', () => {
+  for (const examTrack of [...Object.keys(EXAM_TARGETS), 'none', null, undefined]) {
+    for (const hasLevelAccess of [everything, freeOnly, undefined]) {
+      for (const currentLevel of [undefined, 'a1', 'B1.1']) {
+        const prefs = { examTrack, currentLevel, hasLevelAccess };
+        assert.equal(onboardingExitPath('first-lesson', prefs), FIRST_LESSON_HREF, `${examTrack}: start Lektion 1`);
+        assert.equal(onboardingExitPath('level-test', prefs), '/level-test', `${examTrack}: find my level`);
+        assert.equal(onboardingExitPath('dashboard', prefs), '/dashboard');
+      }
     }
-    assert.equal(onboardingExitPath('dashboard', { examTrack, hasLevelAccess: everything }), '/dashboard');
   }
-  assert.equal(onboardingExitPath('first-lesson', { examTrack: 'dtz', hasLevelAccess: freeOnly }), FIRST_LESSON_HREF);
-  assert.equal(onboardingExitPath('level-test', { examTrack: 'dtz', hasLevelAccess: freeOnly }), '/level-test');
+  // The exam task is still the dashboard's first-run action for the same learner.
+  assert.equal(firstRunAction({ hasLessonActivity: false, examTrack: 'telc_b1', hasLevelAccess: everything }).href, EXAM_TARGETS.telc_b1);
+});
+
+// C-149: the exam-first card offered the same task on every visit after the
+// letter was written — that work writes no lesson row.
+test('exam work retires the exam-first card: the course decision takes over', () => {
+  for (const examTrack of Object.keys(EXAM_TARGETS)) {
+    for (const prefs of [{}, { startingPoint: 'some' }, { currentLevel: 'B1.1' }, { currentLevel: 'A1.2' }]) {
+      const args = { hasLessonActivity: false, hasLevelAccess: everything, ...prefs };
+      assert.deepEqual(firstRunAction({ ...args, examTrack, examActivity: true }), firstRunAction(args), `${examTrack} ${JSON.stringify(prefs)}`);
+      for (const examActivity of [false, null, undefined]) {
+        assert.equal(firstRunAction({ ...args, examTrack, examActivity }).href, EXAM_TARGETS[examTrack], 'no (or unknown) exam work: the task stays');
+      }
+    }
+    assert.equal(firstRunAction({ hasLessonActivity: true, examTrack, examActivity: true, hasLevelAccess: everything }), null);
+  }
+});
+
+test('examActivityFrom: any writing submission OR completed exam is exam work; a failed read is unknown', () => {
+  const rows = (n) => ({ data: Array.from({ length: n }, () => ({ id: 'x' })), error: null });
+  const failed = { data: null, error: { message: 'boom' } };
+  assert.equal(examActivityFrom(rows(0), rows(0)), false);
+  assert.equal(examActivityFrom(rows(1), rows(0)), true);
+  assert.equal(examActivityFrom(rows(0), rows(1)), true);
+  assert.equal(examActivityFrom(failed, rows(1)), true);
+  assert.equal(examActivityFrom(failed, rows(0)), null);
+  assert.equal(examActivityFrom(rows(0), failed), null);
+  assert.equal(examActivityFrom(undefined, rows(0)), null);
+  const svc = read('src/services/examActivity.js');
+  assert.match(svc, /from\('writing_submissions'\)\.select\('id'\)\.eq\('user_id', userId\)\.limit\(1\)/);
+  assert.match(svc, /from\('exam_attempts'\)\.select\('id'\)\.eq\('user_id', userId\)\.eq\('status', 'completed'\)\.limit\(1\)/);
+});
+
+test('the dashboard reads exam work before it decides, and only while an exam is chosen', () => {
+  const dash = read('src/pages/DashboardPage.jsx');
+  assert.match(dash, /import \{ fetchExamActivity \} from '\.\.\/services\/examActivity';/);
+  assert.match(dash, /const examActivityFor = user && examTrack \? `\$\{user\.id\}:\$\{examTrack\.key\}` : null;/);
+  assert.match(dash, /fetchExamActivity\(user\.id\)\.then\(/);
+  assert.match(dash, /const loading = progressLoading \|\| statsLoading \|\| examActivityLoading;/, 'the card never flashes the task it retires');
+  assert.match(dash, /examActivity,\n\s*hasLevelAccess,\n/);
+  assert.doesNotMatch(read('src/services/dashboardStats.js'), /examActivity/, 'dashboardStats stays as it was (another batch owns it)');
 });
 
 // ── 1. the decision ──────────────────────────────────────────────────────────
@@ -166,14 +221,56 @@ test('placed at the free level → Lektion 1, whatever they said before the test
   }
 });
 
-test('placed above the free level with access → the first grammar lesson of the placed level (full load, slash)', () => {
-  const a = firstRunAction({ hasLessonActivity: false, currentLevel: 'B1.1', hasLevelAccess: everything });
-  const first = getTopicsForLevel('b1.1')[0];
-  assert.equal(a.kind, 'placed');
-  assert.equal(a.level, 'b1.1', 'UPPERCASE DB level normalised to the URL form');
-  assert.equal(a.href, `/grammar/b1.1/${first.slug}/`);
-  assert.equal(a.fullLoad, true, 'grammar is Astro-served — an <a>, never a router Link');
-  assert.match(a.href, /\/$/, 'Astro pages end in a slash (trailing-slash case 1)');
+test('placed above the free level with access, at a level with no course yet → its first grammar lesson (full load, slash)', () => {
+  for (const level of ['B1.1', 'B1.2', 'B2.1', 'B2.2']) {
+    const a = firstRunAction({ hasLessonActivity: false, currentLevel: level, hasLevelAccess: everything });
+    const lower = level.toLowerCase();
+    const first = getTopicsForLevel(lower)[0];
+    assert.equal(a.kind, 'placed');
+    assert.equal(a.level, lower, 'UPPERCASE DB level normalised to the URL form');
+    assert.equal(a.href, `/grammar/${lower}/${first.slug}/`);
+    assert.equal(a.fullLoad, true, 'grammar is Astro-served — an <a>, never a router Link');
+    assert.match(a.href, /\/$/, 'Astro pages end in a slash (trailing-slash case 1)');
+    assert.equal(placedCourseHref(level), null, `${level} has no guided course`);
+  }
+});
+
+// C-134/C-151: an A1.2–A2.2 placement was sent to the grammar library by slug,
+// while the hero, the Kurs tab and the navbar opened the level's course.
+test('placed at a level with a guided course → that course: Lektion 1 of a live rebuilt course, else its home', () => {
+  const expected = { 'A1.2': '/course/a1.2/l/1', 'A2.1': '/course/a2.1', 'A2.2': '/course/a2.2' };
+  for (const [level, href] of Object.entries(expected)) {
+    const a = firstRunAction({ hasLessonActivity: false, currentLevel: level, hasLevelAccess: everything });
+    assert.equal(a.kind, 'placed', level);
+    assert.equal(a.level, level.toLowerCase());
+    assert.equal(a.href, href);
+    assert.equal(a.fullLoad, false, 'the course player is an SPA route');
+    assert.doesNotMatch(a.href, /\/$/, 'a plain SPA route has no trailing slash (case 3)');
+    assert.equal(a.topic, undefined, 'no grammar slug');
+    assert.equal(placedCourseHref(level), href);
+  }
+  // The routes exist, and the rule matches the registries it mirrors.
+  assert.ok(read('src/App.jsx').includes('path="/course/:level"'));
+  assert.ok(read('src/App.jsx').includes('path="/course/:level/l/:nr"'));
+  assert.deepEqual([...LEKTION_COURSE_LEVELS].sort(), Object.keys(CURRICULA).sort(), 'LEKTION_COURSE_LEVELS mirrors the LIVE curricula');
+  for (const level of COURSE_LEVELS) {
+    assert.equal(placedCourseHref(level), level === FREE_COURSE_LEVEL ? FIRST_LESSON_HREF : curriculumFor(level) ? `/course/${level}/l/1` : `/course/${level}`);
+  }
+  assert.doesNotMatch(read('src/lib/firstRun.js'), /from '\.\.\/data\/curricula/, 'firstRun rides in the entry chunk: no curriculum import');
+});
+
+// C-169: a placed learner had no way back to the free course on the card.
+test('a placed learner keeps Lektion 1 of the free course as the alternative, when it opens', () => {
+  for (const level of ['A1.2', 'A2.1', 'B1.1', 'B2.2']) {
+    const a = firstRunAction({ hasLessonActivity: false, currentLevel: level, hasLevelAccess: everything });
+    assert.deepEqual(a.alternative, { kind: 'lesson', level: FREE_COURSE_LEVEL, href: FIRST_LESSON_HREF, fullLoad: false }, level);
+  }
+  const freeClosed = firstRunAction({ hasLessonActivity: false, currentLevel: 'B1.1', hasLevelAccess: (l) => l === 'b1.1' });
+  assert.equal(freeClosed.kind, 'placed');
+  assert.equal(freeClosed.alternative, null, 'never offer a Lektion the learner cannot open');
+  const card = read('src/components/FirstRunCard.jsx');
+  assert.match(card, /lesson: 'Or start from zero with Lektion 1'/, 'the card already renders it');
+  assert.match(card, /placed: \(a\) => \(a\.topic \? \{/, 'course copy for a course, grammar copy for a topic');
 });
 
 test('placed above the free level WITHOUT access → the free course home, never a lock', () => {
@@ -241,6 +338,19 @@ test('onboarding exits: the beginner answer lands IN Lektion 1', () => {
   assert.equal(onboardingExitPath(undefined), '/dashboard');
 });
 
+// C-135/X-095: the exam pick was written fire-and-forget and the shared profile
+// never reloaded, so the dashboard after "Just show me around first" showed no
+// goal and the course card (tests/onboarding-completion-regressions.test.mjs
+// runs the exits).
+test('every onboarding exit waits for the exam write, completes, then reloads the shared profile', () => {
+  const slides = read('src/components/onboarding/IntroSlides.jsx');
+  assert.match(slides, /const \{ refreshSubscription \} = useSubscription\(\);/);
+  assert.match(slides, /examSave\.current = supabase\.from\('profiles'\)\.update\(\{ exam_track: key \}\)/);
+  assert.match(slides, /const saved = examSave\.current \? await withTimeout\(examSave\.current, 3000\)\.catch\(\(\) => false\) : false;\n\s*await completeOnboarding\(exitPath\);\n\s*if \(saved\) await refreshSubscription\(\);/);
+  assert.match(slides, /const handleSkip = \(\) => \{\n\s*trackOnboardingSkipped\(\);\n\s*return finish\('dashboard'\);/);
+  assert.equal((slides.match(/\bcompleteOnboarding\(/g) || []).length, 1, 'no exit completes around finish()');
+});
+
 // ── 4. the wiring ───────────────────────────────────────────────────────────
 
 test('onboarding asks the one question and its primary answer starts Lektion 1', () => {
@@ -253,7 +363,7 @@ test('onboarding asks the one question and its primary answer starts Lektion 1',
   assert.ok(primary, 'the final slide has no primary chooseStart button');
   assert.equal(primary[1], 'NEW');
   assert.match(slides, /chooseStart\(STARTING_POINTS\.SOME\)\} variant="secondary"/);
-  assert.match(slides, /completeOnboarding\(point === STARTING_POINTS\.SOME \? 'level-test' : 'first-lesson', \{ examTrack \}\)/);
+  assert.match(slides, /return finish\(point === STARTING_POINTS\.SOME \? 'level-test' : 'first-lesson'\);/);
   assert.match(slides, /updateUser\(\{ data: \{ \[STARTING_POINT_KEY\]: point \} \}\)/, 'the "some German" answer must be remembered');
   assert.equal(STARTING_POINT_KEY, 'starting_point');
   assert.match(read('src/hooks/useOnboarding.js'), /onboardingExitPath\(exitPath, \{ examTrack, currentLevel: profile\?\.current_level, hasLevelAccess \}\)/);

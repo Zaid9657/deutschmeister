@@ -24,17 +24,23 @@ const WordCard = ({ word, level }) => {
 
   const learned = isItemLearned(level, 'vocabulary', word.id);
 
-  const handleSpeak = (text) => {
+  // The recording (words.audio_url) is of the HEADWORD only, so only the
+  // headword button may play it. The example sentence has no recording and is
+  // always spoken by the synthesiser — it used to go through this same path and
+  // played the word's recording instead of the sentence.
+  const speakWord = () => {
     if (word.audioUrl) {
       const audio = new Audio(word.audioUrl);
       audio.play().catch(() => {
         // Fall back to speech synthesis if audio_url fails
-        speakWithSynthesis(text);
+        speakWithSynthesis(word.word);
       });
     } else {
-      speakWithSynthesis(text);
+      speakWithSynthesis(word.word);
     }
   };
+
+  const speakExample = () => speakWithSynthesis(word.example);
 
   const speakWithSynthesis = (text) => {
     if ('speechSynthesis' in window) {
@@ -91,7 +97,7 @@ const WordCard = ({ word, level }) => {
                 {word.word}
               </h3>
               <button
-                onClick={() => handleSpeak(word.word)}
+                onClick={speakWord}
                 className="p-2 rounded-pill text-siegel hover:bg-siegel-wash transition-colors"
                 title={t('levelPage.listenPronunciation')}
               >
@@ -113,7 +119,7 @@ const WordCard = ({ word, level }) => {
                 <div className="flex items-start justify-between">
                   <p className="text-ink font-medium">{word.example}</p>
                   <button
-                    onClick={() => handleSpeak(word.example)}
+                    onClick={speakExample}
                     className="p-1 text-graphite hover:bg-siegel-wash hover:text-siegel-deep rounded-pill transition-colors flex-shrink-0 ml-2"
                   >
                     <Volume2 className="w-4 h-4" />

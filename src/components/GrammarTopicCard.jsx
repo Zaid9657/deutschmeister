@@ -16,12 +16,6 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   const free = isLevelFree(level);
   const locked = !free && !(user && hasLevelAccess(level));
 
-  const handleClick = () => {
-    // The lesson is served by the Astro build (one lesson, one URL) — a
-    // client-side navigate would hit a route the SPA no longer carries.
-    window.location.assign(`/grammar/${level}/${topic.slug}/`);
-  };
-
   // Status marks: limette for "done" (the success token), aprikose for
   // "in progress" (attention). Never a level colour — colour means case.
   const getStatusIcon = () => {
@@ -40,12 +34,17 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
     return isGerman ? 'Nicht gestartet' : 'Not Started';
   };
 
+  // A real link, so Tab reaches it and Enter opens it (a clickable div did
+  // neither). The lesson is served by the Astro build (one lesson, one URL), so
+  // it is a plain <a> — a full page load, never a client-side navigate to a
+  // route the SPA no longer carries.
   return (
     <Card
       interactive
+      as="a"
+      href={`/grammar/${level}/${topic.slug}/`}
       edge={isCompleted ? 'limette' : 'paper'}
-      onClick={handleClick}
-      className="relative overflow-hidden cursor-pointer"
+      className="relative block overflow-hidden"
     >
       <div className="p-4">
         <div className="flex items-start gap-4">

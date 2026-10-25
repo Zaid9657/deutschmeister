@@ -62,6 +62,7 @@ import {
   FREE_DAILY_LIMIT,
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
+  PRO_INCLUDED_SESSION_MINUTES,
   TRIAL_SPEAKING_SESSIONS,
   PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_WRITING_EVALUATIONS,
@@ -72,6 +73,10 @@ import {
   TRIAL_DAYS,
   PLACEMENT_TEST_MINUTES,
 } from '../src/data/marketing.js';
+import { FAQ_CATEGORIES } from '../src/data/faqContent.js';
+import { SEO_ROUTES } from '../src/data/seoRoutes.js';
+import { EXAM_TRACKS } from '../src/data/examTracks.js';
+import { EXAM_HUBS } from '../astro-site/src/data/exams/index.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -681,4 +686,288 @@ test('both head consumers read from the one registry', () => {
   }
   if (/\n\s{4}title: '/.test(prerender)) failures.push('prerender-spa-routes.mjs: a route re-declares a literal title');
   assert.deepEqual(failures, []);
+});
+
+// ---------------------------------------------------------------------------
+// 6. What we say the product does (2026-10-25)
+// ---------------------------------------------------------------------------
+//
+// The /vergleich/ pages, /faq/ and the head registry sold TestDaF preparation,
+// exam-tuned AI speaking "auf jedem Niveau" and "real-time" feedback, put the
+// trial's speaking sessions in the no-account tier, and promised grammar
+// examples "with audio". None of it was true, and the comparison pages name
+// three competitors (UWG §5/§6). These rules hold the class, not the sentences.
+
+/** Every string value in a nested object or array. */
+const stringsIn = (value, out = []) => {
+  if (typeof value === 'string') out.push(value);
+  else if (Array.isArray(value)) value.forEach((v) => stringsIn(v, out));
+  else if (value && typeof value === 'object') Object.values(value).forEach((v) => stringsIn(v, out));
+  return out;
+};
+
+/**
+ * Clauses — a claim and the negation that takes it back must share one. A dash
+ * ends a clause ("auf Goethe, telc und TestDaF abgestimmt — nicht auf
+ * allgemeines Sprachgefühl" is a claim followed by a contrast), a comma does
+ * not ("TestDaF, DSH, ÖSD, and C1 or C2 exams are not offered" is one).
+ */
+const clausesOf = (text) => String(text).split(/[.;:!?—–]+\s*/).map((c) => c.trim()).filter(Boolean);
+const NEGATED = /\b(not|no|never|none|neither|nor|without|nicht|kein\w*|nie|niemals|ohne)\b/i;
+const sentencesOf = (text) => String(text).split(/(?<=[.!?])\s+/).filter(Boolean);
+
+const FAQ_ITEMS = FAQ_CATEGORIES.flatMap((c) => c.items);
+const comparisonTwins = () =>
+  Promise.all(['src/data', 'astro-site/src/data'].map(async (root) => [root, (await import(`../${root}/competitorComparisons.js`)).default]));
+
+test('our claims name only the exams the product has a track for (the support agent\'s rule)', async () => {
+  // detectContentRequests() is how the production support agent recognises a
+  // request for content we do not have (TestDaF, DSH, ÖSD, C1/C2, an exam
+  // family + level without a track). Run over our own copy, a hit is a claim
+  // that we offer it — allowed only inside a clause that negates it.
+  const { detectContentRequests } = await import('../netlify/functions/_shared/supportAgentLib.mjs');
+  const old = 'Die Inhalte sind auf Goethe, telc und TestDaF abgestimmt — nicht auf allgemeines Sprachgefühl.';
+  const oldHits = clausesOf(old).filter((c) => detectContentRequests(c).length && !NEGATED.test(c));
+  assert.equal(oldHits.length, 1, 'the rule must catch the sentence that shipped (the dash ends the claim)');
+
+  const surfaces = [
+    ...(await comparisonTwins()).map(([root, data]) => [`${root}/competitorComparisons.js`, data]),
+    ['src/data/faqContent.js', FAQ_CATEGORIES],
+    ['src/data/seoRoutes.js', SEO_ROUTES],
+  ];
+  const failures = [];
+  let negated = 0;
+  for (const [name, data] of surfaces) {
+    for (const text of stringsIn(data)) {
+      for (const clause of clausesOf(text)) {
+        const hits = detectContentRequests(clause);
+        if (!hits.length) continue;
+        if (NEGATED.test(clause)) negated += 1;
+        else failures.push(`${name}: "${clause}" → ${hits.join(', ')}`);
+      }
+    }
+  }
+  assert.ok(negated >= 1, 'the FAQ says which exams are not offered; the scan must see that clause');
+  assert.deepEqual(failures, [], `claims about exams the product has no track for:\n  ${failures.join('\n  ')}`);
+});
+
+test('the FAQ lists exactly the exam tracks and what the support agent says is not offered', async () => {
+  const { buildFacts } = await import('../netlify/functions/_shared/supportAgentLib.mjs');
+  const facts = buildFacts({ ticket: { reference: 'T-1', subject: '', category: 'other', created_at: '2026-10-25T00:00:00Z' } });
+  const item = FAQ_ITEMS.find((i) => /which exams/i.test(i.q));
+  assert.ok(item, 'the FAQ answers which exams Deutschmeister prepares for');
+  for (const track of EXAM_TRACKS) assert.ok(item.a.includes(track.nameDe), `the exam answer must name ${track.nameDe}`);
+  for (const missing of facts.library.not_offered) {
+    assert.ok(item.a.includes(missing), `the exam answer must say ${missing} is not offered, as the support agent does`);
+  }
+});
+
+test('/ueber-uns/ names only exams with a track, and its crawlable copy says what the page says', async () => {
+  // "What comes next" promised "Live exam simulations for Goethe, telc, and
+  // TestDaF" — TestDaF has no track, and the FAQ and the support agent say it is
+  // not offered. The prerendered mirror had drifted from the page as well (it
+  // promised feedback on pronunciation, which the evaluator never judges): a
+  // mirror that says more than the page is a claim only crawlers read.
+  const { detectContentRequests } = await import('../netlify/functions/_shared/supportAgentLib.mjs');
+  const jsx = read('src/pages/UeberUnsPage.jsx');
+  const prerender = read('scripts/prerender-spa-routes.mjs');
+  const html = prerender.slice(prerender.indexOf("path: '/ueber-uns'")).match(/content: `([\s\S]*?)`,\n/)[1];
+  const norm = (s) => s.replace(/\s+/g, ' ').trim();
+  const array = (name) => {
+    const body = jsx.match(new RegExp(`const ${name} = \\[([\\s\\S]*?)\\n\\];`));
+    assert.ok(body, `const ${name} not found in UeberUnsPage.jsx`);
+    return [...body[1].matchAll(/\b(?:label|title|body|text): '((?:[^'\\]|\\.)*)'/g)].map((m) => m[1]);
+  };
+  const roadmap = array('ROADMAP');
+  const mirrored = [...html.split('What comes next')[1].split('</ul>')[0].matchAll(/<li[^>]*>([^<]+)<\/li>/g)].map((m) => m[1]);
+  assert.ok(roadmap.length >= 3, 'the ROADMAP list was not read');
+  assert.deepEqual(mirrored, roadmap, 'the crawlable "What comes next" list must be the page\'s ROADMAP, item for item');
+  const htmlTexts = [...html.matchAll(/>([^<>]+)</g)].map((m) => norm(m[1])).filter(Boolean);
+  const paragraphs = [...jsx.matchAll(/<Reveal as="p"[^>]*>\s*([\s\S]*?)\s*<\/Reveal>/g)].map((m) => norm(m[1]));
+  assert.ok(paragraphs.length >= 8, 'the page\'s paragraphs were not read');
+  for (const text of [...array('BADGES'), ...array('DIFFERENTIATORS'), ...paragraphs]) {
+    assert.ok(htmlTexts.includes(norm(text)), `the prerendered /ueber-uns/ does not say what the page says: "${text.slice(0, 100)}"`);
+  }
+  for (const text of new Set([...roadmap, ...htmlTexts])) {
+    const exams = detectContentRequests(text).filter((t) => t.startsWith('exam-'));
+    assert.deepEqual(exams, [], `/ueber-uns/ names an exam the product has no track for: "${text}"`);
+  }
+});
+
+test('speaking is described as the code runs it: evaluated after the conversation, never exam-tuned', async () => {
+  // The feedback arrives after "Finish & get feedback" (SpeakingSession.jsx →
+  // evaluate-speaking.mjs); CONVERSATION_RULES hold no correction step, and the
+  // evaluation takes no exam input and no audio ("Du hast KEIN Audio –
+  // beurteile NICHT die akustische Aussprache"). So: no "real-time"/"instant"/
+  // "sofort"/"korrigiert", no feedback on pronunciation, and no speaking clause
+  // "abgestimmt auf" an exam unless it negates it. Until 2026-10-25 seven Leitfäden
+  // and the level-test result promised "sofortiges Feedback"/"instant feedback",
+  // and the crawlable /speaking/ and /ueber-uns/ copies promised pronunciation.
+  const SPEAKING = /spr[ei]ch|gespräch|speaking|conversation/i;
+  const REAL_TIME = /echtzeit|live-feedback|sofort\w*\s+feedback|instant\s+feedback|real[- ]time|\bkorrigiert\b/i;
+  const PRONUNCIATION = /pronunciation|aussprache/i;
+  const FEEDBACK = /feedback|after each session|rückmeldung|auswertung|korrektur|corrections/i;
+  const EXAM_TUNED = /\b(abgestimmt|ausgerichtet|tuned|tailored)\b/i;
+  const EXAM = /prüfung|exam|goethe|telc|testdaf|dtz/i;
+  /** A real-time claim is held per string ("sprich … — mit Feedback in Echtzeit" spans clauses); exam tuning per clause. */
+  const speakingProblems = (text) => [
+    ...(SPEAKING.test(text) && REAL_TIME.test(text) ? [`real-time claim — "${text.slice(0, 110)}"`] : []),
+    ...(PRONUNCIATION.test(text) && FEEDBACK.test(text) ? [`pronunciation feedback — "${text.slice(0, 110)}"`] : []),
+    ...clausesOf(text)
+      .filter((c) => SPEAKING.test(c) && EXAM_TUNED.test(c) && EXAM.test(c) && !NEGATED.test(c))
+      .map((c) => `exam-tuned speaking — "${c.slice(0, 110)}"`),
+  ];
+  for (const [sample, bad] of [
+    ['Aber nur eine lässt dich wirklich sprechen üben — mit KI-Feedback in Echtzeit.', true],
+    ['Deutschmeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt', true],
+    ['Bei Deutschmeister sprichst du — und die KI hört zu, analysiert und korrigiert.', true],
+    ['Sprechen · KI-Sprechtraining · Vorstellen und buchstabieren — jeden Tag laut üben, mit sofortigem Feedback.', true],
+    ['Have a real conversation at your A2.1 level and get instant feedback on grammar.', true],
+    ['After each session: grammar, vocabulary and pronunciation, with concrete corrections.', true],
+    ['Es ist spielerisch angelegt, nicht auf Prüfungen ausgerichtet.', false],
+    ['Practice speaking German with an AI conversation partner, and feedback after each session.', false],
+    ['Freies Gespräch zu Prüfungsthemen, danach eine Auswertung zu Grammatik, Wortschatz und Ausdruck.', false],
+    ['Speech recognition understood 80 % of your words — a rough clarity check, not a pronunciation grade', false],
+  ]) {
+    assert.equal(speakingProblems(sample).length > 0, bad, `rule self-check: "${sample}"`);
+  }
+  /** Every string, plus each object's own strings read together: a guide card's eyebrow ("Sprechen") and body. */
+  const cardTextsIn = (value, out = []) => {
+    if (typeof value === 'string') out.push(value);
+    else if (Array.isArray(value)) value.forEach((v) => cardTextsIn(v, out));
+    else if (value && typeof value === 'object') {
+      const own = Object.values(value).filter((v) => typeof v === 'string');
+      if (own.length > 1) out.push(own.join(' · '));
+      Object.values(value).forEach((v) => cardTextsIn(v, out));
+    }
+    return out;
+  };
+  const { GUIDES } = await import('../astro-site/src/data/guides/index.js');
+  const hubCopy = EXAM_HUBS.map(({ title, description, intro, focus, path }) => ({ title, description, intro, focus, path }));
+  const surfaces = [
+    ...(await comparisonTwins()).map(([root, data]) => [`${root}/competitorComparisons.js`, data]),
+    ['src/data/faqContent.js', FAQ_CATEGORIES],
+    ['src/data/seoRoutes.js', SEO_ROUTES],
+    ['astro-site/src/data/exams/index.js', hubCopy],
+    ...GUIDES.map((g) => [`guide ${g.slug}`, g]),
+  ];
+  const failures = [];
+  for (const [name, data] of surfaces) {
+    for (const text of cardTextsIn(data)) failures.push(...speakingProblems(text).map((p) => `${name}: ${p}`));
+  }
+  // The pages and components themselves, line by line (copy sits on one line
+  // of JSX/HTML), including the crawlable mirrors the prerender writes.
+  const walk = (dir) => readdirSync(join(ROOT, dir), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(`${dir}/${e.name}`) : /\.(jsx?|astro)$/.test(e.name) ? [`${dir}/${e.name}`] : []);
+  const pages = [
+    ...['src/pages', 'src/components', 'astro-site/src/pages', 'astro-site/src/components'].flatMap(walk),
+    'scripts/prerender-spa-routes.mjs',
+    'index.html',
+  ];
+  assert.ok(pages.includes('src/components/LevelTest/LevelTestResults.jsx'), 'the scan must reach the level-test result');
+  for (const file of pages) {
+    read(file).split('\n').forEach((line, i) => {
+      if (/^\s*(\/\/|\/?\*)/.test(line)) return; // comments describe the rule, they do not ship
+      failures.push(...speakingProblems(line).map((p) => `${file}:${i + 1}: ${p}`));
+    });
+  }
+  assert.deepEqual(failures, [], `speaking claims the code does not back:\n  ${failures.join('\n  ')}`);
+});
+
+test('the included speaking-session length matches the server, and every comparison states it', async () => {
+  // Only a 5-minute session is free inside the allowance; 10 and 15 minutes are
+  // paid from credit (speaking-session.mjs). The Lingoda page weighed "30
+  // Gespräche im Monat" against hour-long lessons without saying so.
+  const src = read('netlify/functions/speaking-session.mjs');
+  const rule = src.match(/plannedMinutes\s*===\s*(\d+)\s*&&\s*usage\.allowed/);
+  assert.ok(rule, 'the free-session rule (`plannedMinutes === N && usage.allowed`) not found in speaking-session.mjs');
+  assert.equal(PRO_INCLUDED_SESSION_MINUTES, Number(rule[1]), 'marketing.js states a different included session length than the server charges for');
+
+  const ALLOWANCE = new RegExp(`\\b${PRO_SPEAKING_SESSIONS_PER_MONTH}\\b[^.]{0,40}(Gespräch|Sprech)`);
+  const LENGTH = new RegExp(`à ${PRO_INCLUDED_SESSION_MINUTES} Minuten`);
+  for (const [root, data] of await comparisonTwins()) {
+    let seen = 0;
+    for (const text of stringsIn(data)) {
+      assert.doesNotMatch(text, /eine Stunde Sprechtraining/, `${root}: weighs the allowance against an hour of teaching`);
+      if (!ALLOWANCE.test(text)) continue;
+      seen += 1;
+      assert.match(text, LENGTH, `${root}: the monthly allowance without its session length — "${text.slice(0, 110)}"`);
+    }
+    assert.ok(seen >= 5, `${root}: expected the allowance on every comparison, found ${seen}`);
+  }
+});
+
+test('the FAQ never puts the trial\'s allowances in the no-account tier', () => {
+  // Speaking needs a signed-in user (speaking-session.mjs → 401), and the two
+  // sessions are the trial's lifetime total. The free-version answer said
+  // "free without registration. You also get 2 free AI speaking sessions…".
+  for (const { q, a } of FAQ_ITEMS) {
+    for (const s of sentencesOf(a)) {
+      if (/without (?:an )?(?:account|registration|signup)|no account/i.test(s)) {
+        assert.doesNotMatch(s, /speaking/i, `${q}: "${s}" offers speaking without an account`);
+      }
+      if (/speaking sessions/i.test(s)) assert.match(s, /trial|account/i, `${q}: "${s}" states speaking sessions without the account trial they belong to`);
+    }
+  }
+  const free = FAQ_ITEMS.find((i) => /free version/i.test(i.q));
+  assert.ok(free.a.includes(`${ANON_DAILY_LIMIT} Sentence X-Ray analysis`), 'the no-account X-Ray allowance');
+  assert.ok(free.a.includes(`${TRIAL_DAYS}-day Pro trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions`), 'the trial speaking allowance, inside the trial');
+  assert.ok(free.a.includes(`${TRIAL_DAILY_LIMIT} X-Ray analyses a day`), 'the trial X-Ray allowance (it said 1)');
+});
+
+test('no surface promises audio for grammar examples', () => {
+  // 0 of 933 grammar examples carry an audio_url, and llms-full.txt says
+  // "text-only"; the course pages and the SPA shell's three description tags
+  // said "worked examples with audio" / "audio examples" until 2026-10-25.
+  const GRAMMAR_AUDIO = /\b(?:audio examples|examples with audio)\b/i;
+  const failures = [];
+  for (const file of [...copyFiles(), 'index.html']) {
+    for (const line of renderedCopy(read(file)).split('\n')) {
+      if (GRAMMAR_AUDIO.test(line)) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  assert.deepEqual(failures, [], `grammar audio claims:\n  ${failures.join('\n  ')}`);
+  // The built-HTML gate bans both shapes too, so a data file cannot bring them back.
+  const block = read('scripts/check-built-html.mjs').match(/const BANNED_LITERALS = \[([\s\S]*?)\n\];/);
+  for (const literal of ['examples with audio', 'audio examples']) assert.ok(block[1].includes(`'${literal}'`), `BANNED_LITERALS lacks '${literal}'`);
+});
+
+test('the head registry and the exam hubs derive the placement-test duration', () => {
+  // The /level-test snippet said "in 15 minutes" against PLACEMENT_TEST_MINUTES;
+  // the hubs typed "~20" and "20". A retyped figure rots without failing anything.
+  const minutes = (text) => [...String(text).matchAll(/(\d+)(?:-|–|\s+)(?:minutes?|Minuten)\b/gi)].map((m) => Number(m[1]));
+  assert.deepEqual(minutes(SEO_ROUTES['/level-test'].description), [PLACEMENT_TEST_MINUTES], 'the /level-test description');
+  let seen = 0;
+  for (const hub of EXAM_HUBS) {
+    for (const text of stringsIn({ intro: hub.intro, focus: hub.focus, path: hub.path })) {
+      if (!/Einstufungstest/.test(text)) continue;
+      for (const value of minutes(text)) {
+        seen += 1;
+        assert.equal(value, PLACEMENT_TEST_MINUTES, `${hub.slug}: "${text.slice(0, 100)}"`);
+      }
+    }
+  }
+  assert.ok(seen >= EXAM_HUBS.length, `expected the duration on every hub's level-test step, found ${seen}`);
+  assert.doesNotMatch(rendered(read('astro-site/src/data/exams/index.js')), /\d+\s+Minuten/, 'exams/index.js retypes a duration');
+});
+
+test('the social card states the measured counts (public/og-image.png carries the line it draws)', async () => {
+  // scripts/generate-og-image.mjs draws the card from marketing.js, but the
+  // committed PNG was generated at 64 grammar topics and still said so at 84:
+  // nothing re-ran it. The generator now stamps the line it draws into the PNG
+  // (tEXt), so a count change without a regeneration fails here, as an
+  // llms.txt change without one fails tests/llms.test.mjs.
+  const { OG_CLAIM, OG_CLAIM_KEYWORD, pngTextChunks, withTextChunk } = await import('../scripts/generate-og-image.mjs');
+  const { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, FREE_LEVEL_LABEL } = await import('../src/data/marketing.js');
+  for (const value of [`${GRAMMAR_TOPIC_COUNT} grammar topics`, `${LEVEL_COUNT} levels`, `${FREE_LEVEL_LABEL} free`]) {
+    assert.ok(OG_CLAIM.includes(value), `the card's line does not derive "${value}" from marketing.js: "${OG_CLAIM}"`);
+  }
+  const png = readFileSync(join(ROOT, 'public/og-image.png'));
+  assert.equal(png.toString('latin1', 12, 16), 'IHDR');
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [1200, 630], 'the card is 1200×630');
+  assert.equal(pngTextChunks(png)[OG_CLAIM_KEYWORD], OG_CLAIM, 'public/og-image.png states other figures than marketing.js — run: node scripts/generate-og-image.mjs');
+  // The stamp round-trips, and an unstamped card (the one that shipped) has none.
+  const bare = Buffer.concat([png.subarray(0, 33), Buffer.from('0000000049454e44ae426082', 'hex')]);
+  assert.deepEqual(pngTextChunks(bare), {});
+  assert.equal(pngTextChunks(withTextChunk(bare, OG_CLAIM_KEYWORD, OG_CLAIM))[OG_CLAIM_KEYWORD], OG_CLAIM);
 });

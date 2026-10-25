@@ -37,7 +37,9 @@ const DIFFERENTIATORS = [
 
 const ROADMAP = [
   { icon: BookOpen, text: 'More levels, including C1 and beyond' },
-  { icon: Target, text: 'Live exam simulations for Goethe, telc, and TestDaF' },
+  // Only exams with a track (examTracks.js): TestDaF was listed here until
+  // 2026-10-25, while the FAQ and the support agent say it is not offered.
+  { icon: Target, text: 'Live exam simulations for Goethe and telc' },
   { icon: Briefcase, text: 'Specialist modules for nursing and business German' },
   { icon: Users, text: 'A learning community for practising with others' },
 ];

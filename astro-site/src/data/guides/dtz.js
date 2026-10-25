@@ -237,7 +237,7 @@ export const dtz = {
             {
               eyebrow: 'Sprechen',
               title: 'KI-Sprechtraining',
-              body: 'Vorstellen, über eine Situation sprechen, gemeinsam planen — jeden Tag, ohne Termin und ohne Partner, mit sofortigem Feedback.',
+              body: 'Vorstellen, über eine Situation sprechen, gemeinsam planen — jeden Tag, ohne Termin und ohne Partner, mit einer Auswertung nach jedem Gespräch.',
             },
             {
               eyebrow: 'Hören',

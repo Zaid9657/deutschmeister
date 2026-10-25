@@ -20,6 +20,7 @@ import {
   RESOLUTION_CATEGORIES, RESOLUTION_LABELS, CLOSURE_REASONS, CLOSURE_LABELS, slaDueAt, slaState, ticketReference,
   sendTicketReply, cancelPendingAiDrafts, aiDraftState,
 } from './_shared/adminSupportLib.mjs';
+import { profileIdForEmail } from './_shared/subscriptionEntitlement.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -129,11 +130,9 @@ export const handler = adminEndpoint(
       if (!subject || !text) throw badRequest('Betreff und Text sind erforderlich.');
       const category = CATEGORIES.includes(p.category) ? p.category : 'other';
       const priority = PRIORITIES.includes(p.priority) ? p.priority : 'normal';
-      let userId = null;
-      if (email) {
-        const { data: prof } = await supabase.from('profiles').select('id').ilike('email', email).maybeSingle();
-        userId = prof?.id ?? null;
-      }
+      // Exact match only: a raw ILIKE treats '_' and '%' as wildcards and could
+      // attach the ticket (and the reply e-mail's context) to another account.
+      const userId = email ? (await profileIdForEmail(supabase, email)).id : null;
       const id = randomUUID();
       const createdAt = p.createdAt && Number.isFinite(Date.parse(p.createdAt)) ? new Date(p.createdAt).toISOString() : now.toISOString();
       const { data: t, error } = await supabase.from('support_tickets').insert({ id, reference: ticketReference(id), user_id: userId, user_email: email || null, subject, category, priority, channel: p.channel === 'email' ? 'email' : 'manual', created_at: createdAt, sla_due_at: slaDueAt(createdAt, priority), context: { intake: 'admin', by: auth.userId } }).select('*').maybeSingle();

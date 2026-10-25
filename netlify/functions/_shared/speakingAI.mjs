@@ -3,6 +3,7 @@
 //   brain → Anthropic    (Claude Haiku — same client shape as evaluate-speaking)
 //   voice → OpenAI TTS   (gpt-4o-mini-tts)
 // Plus the shared teacher system-prompt scaffolding (CONVERSATION_RULES etc.).
+import { createHash } from 'node:crypto';
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const HAIKU_MODEL = 'claude-haiku-4-5-20251001';
@@ -11,6 +12,19 @@ const TTS_MODEL = 'gpt-4o-mini-tts';
 
 // Warm, teacher-suited OpenAI voice.
 export const TEACHER_VOICE = 'coral';
+
+// The levels a speaking session may carry — the speaking_sessions_level_check
+// values (migrations/2026-08-17-audit-remediation.sql). speaking-session.mjs
+// refuses any other level before reserving, and evaluate-speaking.mjs grades
+// with the level stored on the session row, held to the same list.
+export const SPEAKING_LEVELS = Object.freeze(['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'placement']);
+
+// The teacher sees the last few turns of the transcript the server stored
+// itself (speaking-turn.mjs reads them from speaking_messages); a request body
+// never supplies the conversation. Six exchanges keep the reply on topic, and
+// a per-message ceiling keeps one long transcript from inflating every turn.
+export const HISTORY_MESSAGES = 12;
+const HISTORY_MESSAGE_CHARS = 2000;
 
 // A provider (STT / LLM / TTS) failure. Callers turn this into a structured
 // JSON error the UI can show — never a silent 500.
@@ -251,14 +265,35 @@ export async function synthesizeSpeech({ text, voice = TEACHER_VOICE }) {
   return Buffer.from(arrayBuf).toString('base64');
 }
 
-// Cap history to the last 20 messages and coerce to a valid Anthropic sequence
-// (only user/assistant, non-empty, starting with a user turn).
+// A mission opens with a fixed line (speaking_missions.ai_opening_line), and
+// the same text in the same voice and model is the same audio — so a warm
+// function instance synthesizes each line once instead of on every start.
+// Bounded: the least recently used line leaves first. No storage, no schema.
+const FIXED_LINE_AUDIO_MAX = 50;
+const fixedLineAudio = new Map();
+
+export async function synthesizeFixedLine({ text, voice = TEACHER_VOICE, synthesize = synthesizeSpeech }) {
+  const key = createHash('sha256').update(`${text}|${voice}|${TTS_MODEL}`).digest('hex');
+  if (fixedLineAudio.has(key)) {
+    const audio = fixedLineAudio.get(key);
+    fixedLineAudio.delete(key); // re-insert: most recently used last
+    fixedLineAudio.set(key, audio);
+    return audio;
+  }
+  const audio = await synthesize({ text, voice });
+  fixedLineAudio.set(key, audio);
+  if (fixedLineAudio.size > FIXED_LINE_AUDIO_MAX) fixedLineAudio.delete(fixedLineAudio.keys().next().value);
+  return audio;
+}
+
+// Cap history to the last HISTORY_MESSAGES messages and coerce to a valid
+// Anthropic sequence (only user/assistant, non-empty, starting with a user turn).
 function normalizeHistory(history) {
   if (!Array.isArray(history)) return [];
   const cleaned = history
     .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string' && m.content.trim())
-    .slice(-20)
-    .map((m) => ({ role: m.role, content: m.content.trim() }));
+    .slice(-HISTORY_MESSAGES)
+    .map((m) => ({ role: m.role, content: m.content.trim().slice(0, HISTORY_MESSAGE_CHARS) }));
   while (cleaned.length && cleaned[0].role !== 'user') cleaned.shift();
   return cleaned;
 }

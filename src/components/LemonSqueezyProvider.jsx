@@ -3,8 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
 // Routes that can actually open a Lemon Squeezy checkout. Everywhere else the
-// script is dead weight (it used to load on every page of the app).
-const COMMERCE_ROUTES = ['/pricing', '/subscription', '/payment', '/profile', '/dashboard'];
+// script is dead weight (it used to load on every page of the app). Only
+// SubscriptionPage opens a checkout; /pricing and /payment are not SPA routes,
+// and /dashboard and /profile (the most visited signed-in screens) never open
+// one, so the third-party script stays off them (ACC-12). openCheckout falls
+// back to same-tab navigation wherever the overlay is missing.
+const COMMERCE_ROUTES = ['/subscription'];
 
 // Load LemonSqueezy.js script for popup checkout — only on commerce routes.
 const LemonSqueezyProvider = ({ children }) => {

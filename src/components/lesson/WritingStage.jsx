@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import StageShell from './StageShell.jsx';
-import GradedWriting from './GradedWriting.jsx';
+import GradedWriting, { forgetAssessedWriting } from './GradedWriting.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { writingSummary } from '../../lib/lesson/skillStatus.js';
 
@@ -29,11 +30,22 @@ const PASS_PCT = 0.6;
 
 export default function WritingStage({ stage, onBack, onDone, onResult, onReport }) {
   const schreiben = stage.schreiben || {};
+  const { user } = useAuth();
+  const lektionId = stage.lektionId || null;
+  // Starts false even after a reload: an assessment GradedWriting kept (keepAssessed) is reported
+  // back through handleResult on mount, which opens Next without a second grading request.
   const [graded, setGraded] = useState(false);
   // A text is being graded — the first one or the improved version. Leaving now would unmount its
   // feedback while the request still spends the learner's revision (Codex review, 2026-10-15).
   const [pending, setPending] = useState(false);
   const [lang] = useLessonLang();
+
+  // Moving on ends the kept assessment: Back keeps it, and a later re-run of the Lektion starts a
+  // new text instead of inheriting this one.
+  const next = useCallback(() => {
+    forgetAssessedWriting(user?.id, schreiben.taskKey, lektionId);
+    onDone?.();
+  }, [user?.id, schreiben.taskKey, lektionId, onDone]);
 
   const handleResult = useCallback(
     (r) => {
@@ -60,7 +72,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
       lead={schreiben.taskEn || null}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
-      onPrimary={onDone}
+      onPrimary={next}
       primaryDisabled={!graded || pending}
     >
       <GradedWriting
@@ -77,8 +89,9 @@ export default function WritingStage({ stage, onBack, onDone, onResult, onReport
           starters: schreiben.starters,
         }}
         allowRevision
+        keepAssessed
         onPending={setPending}
-        lektionId={stage.lektionId || null}
+        lektionId={lektionId}
         onResult={handleResult}
       />
     </StageShell>

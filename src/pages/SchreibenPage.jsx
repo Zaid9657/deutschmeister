@@ -14,13 +14,27 @@ import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Stat from '../components/ui/Stat.jsx';
-import { examFeedbackOffer } from '../lib/examFeedbackOffer.js';
+import { examFeedbackOffer, writingOfferMoment } from '../lib/examFeedbackOffer.js';
+import { levelsForProduct } from '../data/pricing.js';
+import { trackPaywallShown } from '../lib/funnelTracking.js';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy.js';
 
 const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 const CRITERIA = [['task', 'Aufgabe'], ['structure', 'Aufbau'], ['accuracy', 'Korrektheit'], ['vocabulary', 'Wortschatz']];
 // Each criterion carries an equal share of the server's maximum (derive, never retype).
 const CRITERION_MAX = MAX_WRITING_POINTS / CRITERIA.length;
+
+// The fewest words a text may be sent with. A Formular is five short field values (5–40 words in
+// the bank, and a correct value-only form can be eight words), so the floor is the task's own
+// minimum, capped at the ten words a letter needs before grading is worth it. The server keeps its
+// own character floor (evaluate-writing MIN_CHARS).
+const submitWordFloor = (task) => Math.min(10, Number(task?.minWords) || 10);
+
+// The task after this one in the bank (wrapping round); the first when none is open.
+const nextTaskKey = (list, current) => {
+  const i = list.findIndex((t) => t.taskKey === current);
+  return list[(i + 1) % list.length]?.taskKey ?? null;
+};
 
 // /schreiben — exam-style writing with AI feedback (renovation Phase 5b).
 // The grading happens server-side (netlify/functions/evaluate-writing.mjs,
@@ -42,7 +56,11 @@ const SchreibenPage = () => {
   const { examSlug } = useParams();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
-  const { profile, hasLevelAccess, hasProduct, loading: subscriptionLoading } = useSubscription();
+  const { profile, purchases, hasProduct, hasActiveSubscription, loading: subscriptionLoading } = useSubscription();
+  // Paid access to a level — a running subscription or included Pro window, or a bought course
+  // covering it (retired band keys too). Not the trial: a trial learner is who the offer is for.
+  const hasPaidAccess = (level) => (typeof hasActiveSubscription === 'function' && hasActiveSubscription())
+    || (purchases || []).some((p) => levelsForProduct(p.product_key).includes(level));
 
   const defaultExamKey = useMemo(() => {
     if (examSlug) return examTrackBySlug(examSlug)?.key || 'telc_b1';
@@ -67,7 +85,7 @@ const SchreibenPage = () => {
   const activeTask = tasks.find((t) => t.taskKey === taskKey) || tasks[0] || null;
   const feedbackOffer = examFeedbackOffer({
     examKey: activeTask?.examKey,
-    hasLevelAccess,
+    hasPaidAccess,
     hasProduct,
     telcVariantId: LEMONSQUEEZY_CONFIG.courses.telc_b1_komplett.variantId,
     loading: subscriptionLoading,
@@ -79,9 +97,20 @@ const SchreibenPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [errorBody, setErrorBody] = useState(null); // the refusal behind errorMsg, if the server sent one
   const [history, setHistory] = useState([]);
 
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const minWords = submitWordFloor(activeTask);
+
+  // The offer for the moment the learner is at (src/lib/examFeedbackOffer.js): after a trial
+  // result, when the trial is over (403) or at the trial's limit (429). A refusal is a paywall.
+  const offerMoment = writingOfferMoment({ result, error: errorBody, offer: feedbackOffer });
+  const paywallKind = offerMoment && offerMoment.kind !== 'after_feedback' ? offerMoment.kind : null;
+  const paywallOffer = paywallKind ? offerMoment.offer.href : null;
+  useEffect(() => {
+    if (paywallKind) trackPaywallShown('writing_limit', { moment: paywallKind, offer: paywallOffer });
+  }, [paywallKind, paywallOffer]);
 
   // Revision day: the learner's own latest letter for this task, with its
   // correction. Undefined while loading, null when there is none yet.
@@ -134,6 +163,7 @@ const SchreibenPage = () => {
     if (!activeTask || submitting) return;
     setSubmitting(true);
     setErrorMsg(null);
+    setErrorBody(null);
     setResult(null);
     try {
       const res = await fetch('/.netlify/functions/evaluate-writing', {
@@ -143,11 +173,14 @@ const SchreibenPage = () => {
       });
       const data = await res.json();
       if (!res.ok) {
+        setErrorBody(data);
+        // The alert names the offer the card under it shows (writingOfferMoment).
+        const shown = writingOfferMoment({ error: data, offer: feedbackOffer })?.offer;
         setErrorMsg(
           data.error === 'limit_reached'
             ? `Limit erreicht (${data.used}/${data.limit}). ${data.tier === 'free_trial' ? 'Mit Pro bekommen Sie mehr Bewertungen pro Monat.' : 'Nächsten Monat geht es weiter.'}`
             : data.error === 'subscription_required'
-              ? 'Ihre Testphase ist abgelaufen – mit Pro können Sie weiter Texte bewerten lassen.'
+              ? `Ihre Testphase ist abgelaufen – weitere Bewertungen gibt es mit „${shown.title}“.`
               : 'Die Bewertung ist fehlgeschlagen. Bitte versuchen Sie es noch einmal.'
         );
       } else if (data.evaluation_failed) {
@@ -167,6 +200,12 @@ const SchreibenPage = () => {
     setResult(null);
     setText('');
     setLoadedFor(null);
+  };
+
+  // "Nächste Aufgabe schreiben" opens the next task of the bank; reset() alone reopened this one.
+  const writeNext = () => {
+    setTaskKey(nextTaskKey(tasks, activeTask?.taskKey));
+    reset();
   };
 
   const inRange = activeTask ? wordCount >= activeTask.minWords && wordCount <= activeTask.maxWords : false;
@@ -309,10 +348,22 @@ const SchreibenPage = () => {
                 <Chip tone={inRange ? 'limette' : 'quiet'} size="md" className="font-data tabular-nums">
                   {wordCount} Wörter
                 </Chip>
-                <Button shimmer onClick={submit} disabled={submitting || wordCount < 10}>
-                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
-                  {submitting ? 'Wird bewertet…' : 'Bewerten lassen'}
-                </Button>
+                <div className="flex flex-wrap items-center justify-end gap-3">
+                  {wordCount < minWords && (
+                    <span id="submit-floor" className="text-xs text-graphite">
+                      Mindestens {minWords} Wörter – dann können Sie den Text bewerten lassen.
+                    </span>
+                  )}
+                  <Button
+                    shimmer
+                    onClick={submit}
+                    disabled={submitting || wordCount < minWords}
+                    aria-describedby={wordCount < minWords ? 'submit-floor' : undefined}
+                  >
+                    {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
+                    {submitting ? 'Wird bewertet…' : 'Bewerten lassen'}
+                  </Button>
+                </div>
               </div>
             </div>
           </>
@@ -322,6 +373,13 @@ const SchreibenPage = () => {
           <Card tone="himbeer" className="mt-4 flex items-start gap-2.5 border-accent-himbeer-ink/30 px-4 py-3 text-sm text-accent-himbeer-ink" role="alert">
             <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
             <span>{errorMsg}</span>
+          </Card>
+        )}
+        {/* The trial is over, or at its limit: the alert used to recommend an offer with no way to it. */}
+        {errorMsg && paywallKind && (
+          <Card className="mt-3 p-5">
+            <h2 className="font-display text-xl text-ink">{offerMoment.offer.title}</h2>
+            <Button href={offerMoment.offer.href} className="mt-4">{offerMoment.offer.cta}</Button>
           </Card>
         )}
 
@@ -338,6 +396,11 @@ const SchreibenPage = () => {
                 <p className="mt-3 font-data text-[0.75rem] text-graphite">
                   Einschätzung nach Prüfungskriterien – keine offizielle Bewertung und keine Vorhersage Ihres Ergebnisses.
                 </p>
+                {result.saved === false && (
+                  <p role="status" className="mt-3 rounded-clay border border-accent-aprikose/30 bg-accent-aprikose-wash px-3 py-2 text-sm text-accent-aprikose-ink">
+                    Ihre Bewertung konnte nicht gespeichert werden — notieren Sie sich die Korrekturen.
+                  </p>
+                )}
               </Card>
             </Reveal>
 
@@ -423,14 +486,14 @@ const SchreibenPage = () => {
                     {`Noch ${Math.max(0, (result.limit ?? 0) - (result.used ?? 0))} Bewertung(en) in Ihrem Kontingent.`}
                   </span>
                 )}
-                nextLabel="Nächste Aufgabe schreiben"
-                onNext={reset}
+                nextLabel={tasks.length > 1 ? 'Nächste Aufgabe schreiben' : 'Diese Aufgabe noch einmal schreiben'}
+                onNext={writeNext}
               />
             </Reveal>
-            {feedbackOffer && (
+            {offerMoment?.kind === 'after_feedback' && (
               <Card className="p-5">
-                <h2 className="font-display text-xl text-ink">{feedbackOffer.title}</h2>
-                <Button href={feedbackOffer.href} className="mt-4">{feedbackOffer.cta}</Button>
+                <h2 className="font-display text-xl text-ink">{offerMoment.offer.title}</h2>
+                <Button href={offerMoment.offer.href} className="mt-4">{offerMoment.offer.cta}</Button>
               </Card>
             )}
           </div>

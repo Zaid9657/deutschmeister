@@ -154,10 +154,16 @@ export function useExerciseDetails(level, exerciseNumber) {
         );
         if (exError) throw exError;
 
+        // Bounded like fetchExerciseQuestions, and a failed read is a failed load:
+        // supabase-js resolves a network/HTTP failure as { error, data: null }, and
+        // publishing `data || []` turned a timed mock part into playable audio with
+        // no questions, whose unseen items were later scored wrong.
         const [dialogueRes, questionRes] = await Promise.all([
-          supabase.from('listening_dialogues').select('*').eq('exercise_id', exerciseData.id).order('dialogue_number'),
-          supabase.from('listening_questions').select('*').eq('exercise_id', exerciseData.id).order('question_number'),
+          withTimeout(supabase.from('listening_dialogues').select('*').eq('exercise_id', exerciseData.id).order('dialogue_number')),
+          withTimeout(supabase.from('listening_questions').select('*').eq('exercise_id', exerciseData.id).order('question_number')),
         ]);
+        if (dialogueRes.error) throw dialogueRes.error;
+        if (questionRes.error) throw questionRes.error;
 
         if (!cancelled) {
           setExercise(exerciseData);

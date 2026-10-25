@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { courseForLevel, eur, PLANS } from '../data/pricing.js';
 import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../data/marketing.js';
+import { levelToSlug } from '../data/courseContents.js';
+import { sameAnswer } from '../data/sameAnswer.js';
 
 // Cheap synchronous check for a stored Supabase session, so the logged-out
 // majority never fetches the Supabase client chunk.
@@ -42,8 +44,51 @@ const OPTION_CORRECT = 'border-accent-limette bg-accent-limette-wash text-accent
 const OPTION_WRONG = 'border-accent-himbeer bg-accent-himbeer-wash text-accent-himbeer-ink shadow-none';
 const OPTION_MUTED = 'border-rule bg-paper-sunk text-graphite shadow-none';
 
-function MultipleChoice({ exercise, onAnswer, answered }) {
+// Dealing order. The stored order put the correct option first in 34% of the
+// four-option items, and "Practice again" replayed the identical sequence right
+// after the corrections — rewarding a remembered position, not the grammar.
+// Seeded, not Math.random, where it decides the first render: the island is
+// client:visible, so React hydrates the HTML the build rendered, and a
+// different order on each side would be a hydration mismatch.
+function seededRandom(seedText) {
+  let h = 1779033703 ^ seedText.length;
+  for (let i = 0; i < seedText.length; i++) {
+    h = Math.imul(h ^ seedText.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  let a = h >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffled(list, random = Math.random) {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+// The order of the next run: shuffled, and never the order just played.
+function nextRunOrder(previous, random = Math.random) {
+  const order = shuffled(previous, random);
+  if (order.length > 1 && order.every((item, i) => item === previous[i])) order.push(order.shift());
+  return order;
+}
+
+function MultipleChoice({ exercise, onAnswer, answered, run = 0 }) {
   const [selected, setSelected] = useState(null);
+  // Dealt once per question and run; the answer is compared by value, so the
+  // order changes nothing else.
+  const options = useMemo(
+    () => shuffled(exercise.options ?? [], seededRandom(`${exercise.id}:${run}`)),
+    [exercise, run],
+  );
 
   const choose = (opt) => {
     if (answered) return;
@@ -53,7 +98,7 @@ function MultipleChoice({ exercise, onAnswer, answered }) {
 
   return (
     <div className="space-y-3">
-      {(exercise.options ?? []).map((opt) => {
+      {options.map((opt) => {
         const isSelected = selected === opt;
         const isCorrect = opt === exercise.correct_answer;
         let cls = `${OPTION_BASE} `;
@@ -94,9 +139,12 @@ function MultipleChoice({ exercise, onAnswer, answered }) {
 }
 
 // Forgiving comparison: case, whitespace, and umlaut/ß ASCII spellings
-// (ä↔ae …) are equivalent. Mirrors src/utils/answerMatch.js in the SPA.
+// (ä↔ae …) are equivalent. Mirrors src/utils/answerMatch.js in the SPA —
+// NFC first, like it: a decomposed umlaut (u + ¨, from a paste or some
+// keyboards) is the same letter (tests/exercise-player.test.mjs).
 function normalizeAnswer(text) {
   return String(text ?? '')
+    .normalize('NFC')
     .trim()
     .toLowerCase()
     .replace(/\s+/g, ' ')
@@ -113,6 +161,14 @@ function answerMatches(userInput, exercise) {
   return accepted.some((a) => normalizeAnswer(a) === user);
 }
 
+// What a typed answer is graded by: the literal match above, or a whole answer that is the same
+// answer as the key — „Wieso" where the key says „Warum". That rule is the lesson checker's own,
+// shared byte-identical (../data/sameAnswer.js ← src/data/sameAnswer.js), never a widened key.
+function acceptsAnswer(userInput, exercise) {
+  return answerMatches(userInput, exercise)
+    || [exercise.correct_answer, ...(exercise.acceptable_answers ?? [])].some((a) => sameAnswer(a, userInput));
+}
+
 function FillBlank({ exercise, onAnswer, answered }) {
   const [value, setValue] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -120,10 +176,10 @@ function FillBlank({ exercise, onAnswer, answered }) {
   const submit = () => {
     if (!value.trim() || submitted) return;
     setSubmitted(true);
-    onAnswer(answerMatches(value, exercise));
+    onAnswer(acceptsAnswer(value, exercise));
   };
 
-  const isCorrect = answerMatches(value, exercise);
+  const isCorrect = acceptsAnswer(value, exercise);
 
   // Placeholder-only labelling fails WCAG 3.3.2 (the label vanishes on input)
   // and leaves screen-reader users with an unnamed field. The exercise prompt
@@ -186,6 +242,16 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
   const course = courseForLevel(level);
   const buyable = Boolean(course) && !course.comingSoon;
   const code = course?.code || level.toUpperCase();
+  // The level's own course page (an Astro page, trailing slash): its Buy button
+  // opens this course's checkout. /pricing/ opened on another course's ticket.
+  const coursePage = `/courses/${levelToSlug(level.toLowerCase())}/`;
+  // "Log in" names this page in ?next=, so login returns here, not to the
+  // dashboard (src/lib/loginReturn.js). Set after mount: the lock also renders
+  // at build time, with no location, and hydration keeps the built attribute.
+  const [loginHref, setLoginHref] = useState('/login');
+  useEffect(() => {
+    setLoginHref(`/login?next=${encodeURIComponent(window.location.pathname)}`);
+  }, []);
   const BTN = 'inline-flex select-none items-center justify-center gap-2 rounded-clay font-bold transition-all duration-100 ease-snap';
   const primary = `${BTN} bg-siegel px-6 py-3 text-sm text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
   const secondary = `${BTN} border border-rule bg-white px-6 py-3 text-sm text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
@@ -208,11 +274,11 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
         {signedIn ? (
           <>
             {buyable && (
-              <a href="/pricing/" className={primary}>
+              <a href={coursePage} className={primary}>
                 Buy the {code} course — {eur(course.price)} once
               </a>
             )}
-            <a href="/pricing/" className={buyable ? secondary : primary}>
+            <a href="/pricing/#pro" className={buyable ? secondary : primary}>
               Go Pro — {eur(PLANS.monthly.price)}/month
             </a>
           </>
@@ -221,12 +287,20 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
             <a href={signupHref} className={primary}>
               Start free — {TRIAL_DAYS} days of Pro included
             </a>
-            <a href="https://deutsch-meister.de/login" className={secondary}>
+            <a href={loginHref} className={secondary}>
               Log in
             </a>
           </>
         )}
       </div>
+      {!signedIn && buyable && (
+        <p className="mt-4 text-sm text-graphite">
+          <a href={coursePage} className="font-bold text-siegel hover:text-siegel-deep">
+            Own {code} for {eur(course.price)}
+          </a>{' '}
+          — one payment, no subscription.
+        </p>
+      )}
     </div>
   );
 }
@@ -269,6 +343,10 @@ export default function ExercisePlayer({ exercises, topicId, level, nextHref, ne
 }
 
 function ExerciseRun({ exercises, topicId, nextHref, nextTitle, signupHref }) {
+  // The order this run plays: the stored order first (what the build rendered),
+  // a fresh one for every "Practice again". `run` re-deals the options too.
+  const [order, setOrder] = useState(() => exercises ?? []);
+  const [run, setRun] = useState(0);
   const [current, setCurrent] = useState(0);
   const [results, setResults] = useState([]); // array of booleans
   const [answered, setAnswered] = useState(false);
@@ -300,7 +378,7 @@ function ExerciseRun({ exercises, topicId, nextHref, nextTitle, signupHref }) {
     );
   }
 
-  const exercise = exercises[current];
+  const exercise = order[current];
   const score = results.filter(Boolean).length;
 
   const handleAnswer = (correct) => {
@@ -320,6 +398,8 @@ function ExerciseRun({ exercises, topicId, nextHref, nextTitle, signupHref }) {
   };
 
   const restart = () => {
+    setOrder((previous) => nextRunOrder(previous));
+    setRun((r) => r + 1);
     setCurrent(0);
     setResults([]);
     setAnswered(false);
@@ -425,7 +505,7 @@ function ExerciseRun({ exercises, topicId, nextHref, nextTitle, signupHref }) {
           there is no Next button either. The lesson dead-ends with no control
           on screen. Keying by exercise id remounts per question. */}
       {exercise.exercise_type === 'multiple_choice' ? (
-        <MultipleChoice key={exercise.id ?? current} exercise={exercise} onAnswer={handleAnswer} answered={answered} />
+        <MultipleChoice key={exercise.id ?? current} exercise={exercise} onAnswer={handleAnswer} answered={answered} run={run} />
       ) : (
         <FillBlank key={exercise.id ?? current} exercise={exercise} onAnswer={handleAnswer} answered={answered} />
       )}

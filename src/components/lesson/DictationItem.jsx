@@ -3,6 +3,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
+import { politeCaseItem } from '../../data/lessonPools/quality.js';
 import PlayButton from './PlayButton.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -40,10 +41,14 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   const itemId = `dictation-${line.index}`;
   // The item, not the call site, decides the check options (REVIEW #6 BLOCKER 3):
   // this one is built here rather than drawn from a pool, so it is built in full
-  // and handed to checkOptionsFor, which reads `kind: 'dictation'` off it.
+  // and handed to checkOptionsFor, which reads `kind: 'dictation'` off it. The
+  // polite capital is part of it like everywhere else the line is graded: the
+  // ONE predicate the checkpoint's dictation of the same line reads (lineIsCaseTask),
+  // so „Gut. Wie geht es ihnen?" is wrong here too (2026-10-25 review, X-043).
   const item = {
     id: itemId, topic: 'hoeren', kind: 'dictation', stage: 'dictation', type: 'dictation',
     lineIndex: line.index, answer: line.de, accepted: [line.de],
+    caseSensitive: politeCaseItem({ answer: line.de, accepted: [line.de] }),
   };
 
   const submit = () => {

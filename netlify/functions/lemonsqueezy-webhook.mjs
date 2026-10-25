@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { BILLING_PORTAL_URL, SIGNED_URL_MAX_AGE_MS, pickUpdatePaymentUrl } from './_shared/dunningLink.mjs';
-import { courseAccessUntil, reconcileSubscriptionEvent, reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
+import { courseAccessUntil, profileIdForEmail, reconcileSubscriptionEvent, reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
 
 // Initialize Supabase with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -161,6 +161,7 @@ export const handler = async (event) => {
 
     // Handle event types
     let handlerError = null;
+    let handlerNote = null;
     try {
       switch (eventType) {
         case 'order_created':
@@ -170,16 +171,16 @@ export const handler = async (event) => {
           await handleOrderRefunded(data, payload.meta);
           break;
         case 'subscription_created':
-          await handleSubscriptionCreated(data, payload.meta);
+          handlerNote = await handleSubscriptionCreated(data, payload.meta);
           break;
         case 'subscription_updated':
-          await handleSubscriptionUpdated(data, payload.meta);
+          handlerNote = await handleSubscriptionUpdated(data, payload.meta);
           break;
         case 'subscription_cancelled':
-          await handleSubscriptionCancelled(data, payload.meta);
+          handlerNote = await handleSubscriptionCancelled(data, payload.meta);
           break;
         case 'subscription_expired':
-          await handleSubscriptionExpired(data, payload.meta);
+          handlerNote = await handleSubscriptionExpired(data, payload.meta);
           break;
         case 'subscription_payment_success':
           await handleSubscriptionPaymentSuccess(data, payload.meta);
@@ -195,8 +196,9 @@ export const handler = async (event) => {
       console.error('Handler error for', eventType, ':', err.message, err.stack);
     }
 
-    // Log result
-    const logged = await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
+    // Log result. A note (an event with nothing to apply) rides in the payload:
+    // the error column means failure to the sentinel and the truth mail.
+    const logged = await logWebhookEvent(eventType, handlerNote ? { ...payload, dm_note: handlerNote } : payload, !handlerError, handlerError?.message);
 
     if (handlerError) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: handlerError.message }) };
@@ -225,8 +227,9 @@ export const handler = async (event) => {
 // Order of precedence:
 //   1. custom_data.user_id (the happy path)
 //   2. an existing subscriptions row matching lemonsqueezy_subscription_id
-//   3. the payload's user_email matched against auth.users, then profiles
-// Returns null only if every strategy fails.
+//   3. the payload's user_email matched EXACTLY against auth.users (every
+//      page), then profiles (profileIdForEmail — never a wildcard pattern)
+// Returns null only if every strategy fails, or the e-mail is ambiguous.
 async function resolveUserId(customData, attributes, lemonsqueezySubscriptionId) {
   if (customData?.user_id) return customData.user_id;
 
@@ -245,36 +248,62 @@ async function resolveUserId(customData, attributes, lemonsqueezySubscriptionId)
     }
   }
 
-  // (b) email → auth.users, then profiles
-  const email = attributes?.user_email;
+  // (b) email → auth.users, then profiles — exact matches only
+  const email = String(attributes?.user_email ?? '').trim().toLowerCase();
   if (email) {
-    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-    if (authError) {
-      console.error('resolveUserId: auth listUsers error:', JSON.stringify(authError));
-    } else {
-      const match = authUsers?.users?.find(
-        (u) => (u.email || '').toLowerCase() === email.toLowerCase()
-      );
-      if (match) {
-        console.log('resolveUserId: matched by user_email via auth.users:', email);
-        return match.id;
-      }
+    const authId = await authUserIdForEmail(email);
+    if (authId) {
+      console.log('resolveUserId: matched by user_email via auth.users:', email);
+      return authId;
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id')
-      .ilike('email', email)
-      .maybeSingle();
-    if (profileError) {
-      console.error('resolveUserId: profiles lookup error:', JSON.stringify(profileError));
-    } else if (profile?.id) {
+    const profile = await profileIdForEmail(supabase, email);
+    if (profile.error) {
+      console.error('resolveUserId: profiles lookup error:', JSON.stringify(profile.error));
+    } else if (profile.id) {
       console.log('resolveUserId: matched by user_email via profiles:', email);
       return profile.id;
+    } else if (profile.ambiguous) {
+      console.error('resolveUserId: more than one profile has e-mail', email, '— not guessing');
     }
   }
 
   return null;
+}
+
+// GoTrue lists users a page at a time (50 by default — a bare listUsers() saw
+// only the first 50 of ~1,700 accounts). Read every page; stop at an empty one,
+// which holds whatever page size the server actually applies.
+const AUTH_USERS_PER_PAGE = 1000;
+const AUTH_USERS_MAX_PAGES = 100;
+async function authUserIdForEmail(email) {
+  for (let page = 1; page <= AUTH_USERS_MAX_PAGES; page += 1) {
+    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: AUTH_USERS_PER_PAGE });
+    if (error) {
+      console.error('resolveUserId: auth listUsers error:', JSON.stringify(error));
+      return null;
+    }
+    const users = data?.users || [];
+    const match = users.find((u) => String(u.email ?? '').trim().toLowerCase() === email);
+    if (match) return match.id;
+    if (users.length === 0) return null;
+  }
+  return null;
+}
+
+// A custom_data user id outlives its account: delete-account removes the auth
+// user (subscriptions, profiles and purchases cascade), but Lemon Squeezy keeps
+// sending that id, and writing it again violates the auth.users foreign key — a
+// 500 retried for ever. Only a definite "user not found" counts as deleted; any
+// other lookup trouble proceeds as before, so the write itself stays the check.
+async function accountDeleted(userId) {
+  try {
+    const { error } = await supabase.auth.admin.getUserById(userId);
+    return Boolean(error) && (error.status === 404 || error.code === 'user_not_found');
+  } catch (e) {
+    console.error('accountDeleted: auth lookup threw (proceeding):', e.message);
+    return false;
+  }
 }
 
 // One-time products, keyed by Lemon Squeezy variant id. Env-configured so a
@@ -331,6 +360,10 @@ async function recordCouponRedemption(meta, orderId, attributes, userId) {
       return { skipped: 'unknown_code' };
     }
     const discount = Number(attributes?.discount_total ?? 0) || 0;
+    // The custom field outlives the checkout's discount field, which the buyer
+    // can clear and Lemon Squeezy can refuse: no discount applied, no redemption
+    // (a row would burn the per-user, new-customer and total limits).
+    if (discount <= 0) return { skipped: 'no_discount' };
     const total = Number(attributes?.total ?? 0) || 0;
     const { error } = await supabase.from('coupon_redemptions').insert({
       coupon_id: coupon.id,
@@ -475,7 +508,14 @@ async function handleCourseOrder({ course, orderId, customData, attributes, meta
     return;
   }
 
-  const userId = await resolveUserId(customData, attributes, null);
+  let userId = await resolveUserId(customData, attributes, null);
+  if (userId && userId === customData?.user_id && await accountDeleted(userId)) {
+    // The buyer deleted that account. An owner resend after they signed up
+    // again reaches the new account through the order's e-mail; otherwise this
+    // is a paid order without an account, handled just below.
+    console.log(`course order ${orderId}: account ${userId} was deleted — matching the order by e-mail`);
+    userId = await resolveUserId({}, attributes, null);
+  }
   if (!userId) {
     // A paying customer we cannot attach is a loud failure, not a warning:
     // throwing 500s the webhook so Lemon Squeezy retries (the buyer may be
@@ -604,26 +644,33 @@ async function handleSubscriptionPaymentSuccess(data, _meta) {
   }
 }
 
+// Returns a note for the event's log row when there was nothing to apply.
 async function applySubscriptionEvent(data, meta, eventType) {
   const userId = await resolveUserId(meta?.custom_data || {}, data?.attributes || {}, data?.id);
   if (!userId) throw new Error(`${eventType}: no resolvable user for subscription ${data?.id}`);
+  if (await accountDeleted(userId)) {
+    // The account and its rows are gone; there is nothing to reconcile.
+    console.log(`${eventType}: account ${userId} was deleted — subscription ${data?.id} not applied`);
+    return `account ${userId} deleted — event not applied`;
+  }
   await reconcileSubscriptionEvent(supabase, userId, data, eventType);
+  return null;
 }
 
 async function handleSubscriptionCreated(data, meta) {
-  await applySubscriptionEvent(data, meta, 'subscription_created');
+  return applySubscriptionEvent(data, meta, 'subscription_created');
 }
 
 async function handleSubscriptionUpdated(data, meta) {
-  await applySubscriptionEvent(data, meta, 'subscription_updated');
+  return applySubscriptionEvent(data, meta, 'subscription_updated');
 }
 
 async function handleSubscriptionCancelled(data, meta) {
-  await applySubscriptionEvent(data, meta, 'subscription_cancelled');
+  return applySubscriptionEvent(data, meta, 'subscription_cancelled');
 }
 
 async function handleSubscriptionExpired(data, meta) {
-  await applySubscriptionEvent(data, meta, 'subscription_expired');
+  return applySubscriptionEvent(data, meta, 'subscription_expired');
 }
 
 // subscription_payment_failed: data is a subscription-invoice.
@@ -641,22 +688,27 @@ async function handlePaymentFailed(data, meta, payload) {
 
   console.log(`Payment failed — user: ${userId} sub: ${subscriptionId}`);
 
-  // Dunning rate limit: only email on the FIRST failure per subscription per
-  // 7 days. Lemon Squeezy retries failed renewals several times; the customer
-  // needs one nudge, not one per retry. Checked BEFORE inserting this event.
+  // Dunning rate limit: one DELIVERED email per subscription per 7 days.
+  // Lemon Squeezy retries failed renewals several times; the customer needs one
+  // nudge, not one per retry. A send that failed (Resend down, a refused
+  // address) must not count, so the gate reads the dunning_sent_at stamp a
+  // delivered send leaves on its payment_failures row, not the row itself.
+  // Rows written before that stamp existed carry no dunning_tracked flag; the
+  // old rule counted any recent row as emailed, so those still count — for the
+  // seven days they can stay inside the window after the deploy.
   let firstRecentFailure = false;
   try {
     const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     const { data: recent, error: recentError } = await supabase
       .from('payment_failures')
-      .select('id')
+      .select('id, sent:raw_payload->>dunning_sent_at, tracked:raw_payload->>dunning_tracked')
       .eq('lemonsqueezy_subscription_id', String(subscriptionId))
       .gte('failed_at', since)
-      .limit(1);
+      .limit(50);
     if (recentError) {
       console.error('payment_failed: recency check error (skipping dunning):', JSON.stringify(recentError));
     } else {
-      firstRecentFailure = !recent || recent.length === 0;
+      firstRecentFailure = !(recent || []).some((row) => row.sent != null || row.tracked == null);
     }
   } catch (e) {
     console.error('payment_failed: recency check threw (skipping dunning):', e.message);
@@ -669,7 +721,8 @@ async function handlePaymentFailed(data, meta, payload) {
       user_id: userId,
       lemonsqueezy_subscription_id: String(subscriptionId),
       lemonsqueezy_event_id: String(eventId),
-      raw_payload: payload
+      // Tracked: a delivered mail for this row is stamped dunning_sent_at.
+      raw_payload: { ...payload, dunning_tracked: true }
     },
     { onConflict: 'lemonsqueezy_event_id', ignoreDuplicates: true }
   );
@@ -693,7 +746,8 @@ async function handlePaymentFailed(data, meta, payload) {
   const { url: updateUrl, source: linkSource } = await updatePaymentLink(attributes, subscriptionId);
   console.log(`payment_failed: update link for sub ${subscriptionId} from ${linkSource}`);
 
-  // 1) Dunning email to the customer.
+  // 1) Dunning email to the customer. Its outcome goes into the owner alert.
+  let dunning = 'not attempted';
   if (customerEmail && customerEmail.includes('@')) {
     try {
       const res = await fetch('https://api.resend.com/emails', {
@@ -707,22 +761,44 @@ async function handlePaymentFailed(data, meta, payload) {
         }),
       });
       if (!res.ok) {
+        dunning = `Resend ${res.status}`;
         console.error(`payment_failed: Resend dunning error ${res.status}:`, (await res.text()).slice(0, 300));
       } else {
+        dunning = 'sent';
         console.log(`payment_failed: dunning email sent to customer for sub ${subscriptionId}`);
       }
     } catch (e) {
+      dunning = 'threw';
       console.error('payment_failed: dunning email threw:', e.message);
     }
   } else {
+    dunning = 'no customer email';
     console.warn(`payment_failed: no user_email in payload for sub ${subscriptionId} — customer not emailed`);
   }
+  if (dunning === 'sent') await stampDunningSent(eventId, payload);
 
   // 2) One-line alert to the owner.
+  const outcome = dunning === 'sent'
+    ? 'The customer was sent a dunning email'
+    : `The dunning email to the customer was NOT sent: ${dunning}. Forward the update-payment link below by hand; the next failed retry tries the mail again`;
   await sendOwnerAlert(
     `Payment failed — subscription ${subscriptionId}`,
-    `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\nThe customer ${customerEmail ? 'was' : 'could NOT be'} sent a dunning email (rate-limited to one per subscription per 7 days).\nUpdate-payment link source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
+    `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\n${outcome} (one delivered dunning email per subscription per 7 days).\nUpdate-payment link: ${updateUrl}\nLink source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
   );
+}
+
+// Record a DELIVERED dunning mail on this event's payment_failures row — the
+// stamp the 7-day gate reads. Fail-open: an unrecorded send only means a later
+// retry may mail the customer again.
+async function stampDunningSent(eventId, payload) {
+  try {
+    const { error } = await supabase.from('payment_failures')
+      .update({ raw_payload: { ...payload, dunning_tracked: true, dunning_sent_at: new Date().toISOString() } })
+      .eq('lemonsqueezy_event_id', String(eventId));
+    if (error) console.error('payment_failed: dunning send not recorded:', JSON.stringify(error));
+  } catch (e) {
+    console.error('payment_failed: dunning send record threw:', e.message);
+  }
 }
 
 // The signed update link for this subscription. Read-only and fail-open: any
@@ -779,7 +855,7 @@ const DUNNING_HTML = (updateUrl, portalUrl) => `<!DOCTYPE html>
               </p>
 
               <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
-                Updating your payment details takes about a minute, and your access continues without interruption:
+                Until the payment goes through, your Pro access is paused. Updating your payment details takes about a minute, and Pro switches back on as soon as the payment succeeds:
               </p>
 
               <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
