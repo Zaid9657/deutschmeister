@@ -37,13 +37,22 @@
 
   // One entitlement snapshot per page view (lib/levelAccess.js), loaded lazily
   // so the logged-out majority never fetches the Supabase chunk. Never rejects:
-  // a failed lookup resolves to null.
+  // a failed lookup resolves to null. It is bounded too: Buy waits for it, so a
+  // stalled auth, profile or purchases read would keep every Buy disabled. After
+  // LOOKUP_TIMEOUT_MS the answer is "unknown" (null): Buy comes back, and its
+  // click takes the app's guarded resume (/subscription?buy=), which re-checks
+  // ownership before any checkout.
+  const LOOKUP_TIMEOUT_MS = 4000;
   let entitlements = null;
   function loadEntitlements() {
     if (!entitlements) {
-      entitlements = import('../lib/levelAccess.js')
-        .then(async (lib) => ({ lib, snapshot: await lib.loadEntitlementSnapshot() }))
-        .catch(() => null);
+      let timer;
+      const bound = new Promise((resolve) => { timer = setTimeout(() => resolve(null), LOOKUP_TIMEOUT_MS); });
+      const lookup = import('../lib/levelAccess.js')
+        .then(async (lib) => ({ lib, snapshot: await lib.loadEntitlementSnapshot() }));
+      entitlements = Promise.race([lookup, bound])
+        .catch(() => null)
+        .finally(() => clearTimeout(timer));
     }
     return entitlements;
   }

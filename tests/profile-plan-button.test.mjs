@@ -15,12 +15,15 @@
 // The rule, not a list of screens:
 //   1. The SPA's portal address equals the mailed one.
 //   2. One decision picks the control, from the paid-access answer and the
-//      subscription row the page already has. A live Lemon Squeezy
-//      subscription gets "Manage plan" and the portal, by the same rule as
-//      /subscription (subscriptionPortalAction). No paid access gets "Upgrade"
-//      and /pricing/. Paid access without one (comped, course) gets neither:
-//      a plain line and a support link. The label never travels without the
-//      portal link.
+//      subscription row the page already has. Recurring billing gets "Manage
+//      plan" and the portal, by the one rule of /pricing/, the /subscription
+//      plan buttons and the deletion check (lib/checkoutAccess.js
+//      hasRecurringBilling: a row that still carries a Lemon Squeezy
+//      subscription id), with or without paid access right now (cross-check
+//      2026-10-25, ACC-03). No paid access and no recurring billing gets
+//      "Upgrade" and /pricing/. Paid access without recurring billing (comped,
+//      a course order) gets neither: a plain line and a support link. The
+//      label never travels without the portal link.
 //   3. /profile renders that decision and types neither the label nor a
 //      /pricing/ link itself. The switch stays the paid-access answer it
 //      already had (hasActiveSubscription()) and the row is the one
@@ -38,6 +41,7 @@ import { dirname, join } from 'node:path';
 import { BILLING_PORTAL_URL as MAILED_PORTAL_URL } from '../netlify/functions/_shared/dunningLink.mjs';
 import { SUPPORT_LINK } from '../src/data/navigation.js';
 import { categoryForTopic } from '../src/lib/supportTicket.js';
+import { hasRecurringBilling } from '../src/lib/checkoutAccess.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -84,7 +88,7 @@ test('the SPA portal address is the one the dunning mail and the support agent u
   assert.match(BILLING_PORTAL_URL, /^https:\/\/[a-z0-9-]+\.lemonsqueezy\.com\/billing$/);
 });
 
-test('a Lemon Squeezy subscriber manages the plan in the portal; no paid access upgrades on /pricing/', async () => {
+test('a Lemon Squeezy subscriber manages the plan in the portal; no paid access and no billing upgrades on /pricing/', async () => {
   const { BILLING_PORTAL_URL, profilePlanAction } = await loadLib();
 
   // A failed renewal keeps its id and end date: exactly who needs the portal.
@@ -99,15 +103,28 @@ test('a Lemon Squeezy subscriber manages the plan in the portal; no paid access 
     assert.match(sub.hint, /email address you paid with/);
   }
 
+  // Without paid access right now, a row that still bills (a failed renewal
+  // past its paid period, a paused plan, a legacy course row whose included Pro
+  // expired) is managed in the portal; "Upgrade" would sell a second plan.
+  // Every other row upgrades on /pricing/.
+  let billing = 0;
   for (const notSubscribed of [false, undefined, null]) {
     for (const row of ROWS) {
       const plan = profilePlanAction(notSubscribed, row);
-      assert.equal(plan.kind, 'upgrade', `${notSubscribed}, ${JSON.stringify(row)}: no paid access upgrades`);
+      if (hasRecurringBilling(row)) {
+        billing++;
+        assert.equal(plan.kind, 'portal', `${notSubscribed}, ${JSON.stringify(row)}: recurring billing is managed, not sold again`);
+        assert.equal(plan.href, BILLING_PORTAL_URL);
+        assert.equal(plan.label, 'Manage plan');
+        continue;
+      }
+      assert.equal(plan.kind, 'upgrade', `${notSubscribed}, ${JSON.stringify(row)}: no paid access and no billing upgrades`);
       assert.equal(plan.href, '/pricing/', `${notSubscribed}: a non-subscriber upgrades on /pricing/`);
       assert.equal(plan.label, 'Upgrade');
       assert.equal(plan.hint, null);
     }
   }
+  assert.equal(billing, 9, 'LS_SUB, PAST_DUE and COURSE_STALE bill; the other six rows do not (x3 inputs)');
 
   // The label never travels without the portal link, whatever the input.
   for (const input of [true, false, undefined, null]) {
@@ -157,10 +174,17 @@ test('the portal decision on /profile is the /subscription rule (one rule, two s
   for (const isSubscribed of [true, false, undefined, null]) {
     for (const row of ROWS) {
       const onProfile = profilePlanAction(isSubscribed, row).kind === 'portal';
-      const onSubscription = subscriptionPortalAction(isSubscribed, row, false) !== null;
-      assert.equal(onProfile, onSubscription, `${isSubscribed}, ${JSON.stringify(row)}: /profile and /subscription disagree`);
+      // /subscription's plan buttons: subscriptionPortalAction(recurringBilling, …).
+      const planButtons = subscriptionPortalAction(hasRecurringBilling(row), row, false) !== null;
+      assert.equal(onProfile, planButtons, `${isSubscribed}, ${JSON.stringify(row)}: /profile and the /subscription plan buttons disagree`);
+      // Its status card links the portal only with paid access; /profile never offers less.
+      if (subscriptionPortalAction(isSubscribed, row, false)) {
+        assert.equal(onProfile, true, `${isSubscribed}, ${JSON.stringify(row)}: /subscription links the portal, /profile does not`);
+      }
     }
   }
+  const page = readFileSync(join(ROOT, 'src/pages/SubscriptionPage.jsx'), 'utf8');
+  assert.match(page, /const billingAction = subscriptionPortalAction\(recurringBilling, subscription, isGerman\);/, 'the plan buttons decide with the billing rule');
 });
 
 test('/profile renders the plan button from that decision and types neither the label nor the link', () => {

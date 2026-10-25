@@ -155,6 +155,38 @@ test('an unanswerable lookup sends the click to the app\'s resume, which checks 
   assert.match(read('src/pages/SubscriptionPage.jsx'), /if \(target\?\.comingSoon \|\| ownsCheckoutProduct\(key, purchases\)\) return;/);
 });
 
+// Cross-check follow-up: Buy waits for the lookup, and the auth, profile and
+// purchases reads had no timeout, so one stalled request kept every Buy on the
+// page disabled, and with it the guarded fallback. The lookup is bounded: after
+// a few seconds the answer is "unknown", Buy comes back, and its click takes
+// the app's /subscription?buy= resume, which re-checks ownership.
+test('a stalled lookup cannot hold Buy: after a few seconds it returns and a click takes the guarded resume', async () => {
+  const stalled = new Promise(() => {}); // the lookup never answers
+  const buy = buyButton('course_a1_2');
+  const body = new FakeElement('body', {}, [door('a1.2', [buy])]);
+  const page = runCourseCheckout({ body, snapshot: OWNER_A12, gate: stalled });
+  assert.equal(buy.disabled, true, 'Buy waits while the lookup runs');
+  const delays = page.pendingTimers();
+  assert.equal(delays.length, 1, 'the lookup is bounded by a timer');
+  assert.ok(delays[0] >= 2000 && delays[0] <= 6000, `the bound is a few seconds, not ${delays[0]} ms`);
+  page.runTimers(); // the bound passes
+  await page.flush();
+  assert.equal(buy.disabled, false, 'Buy is back after the bound');
+  assert.equal(buy.getAttribute('aria-busy'), null);
+  assert.equal(body.children[0].innerHTML, null, 'an unknown answer swaps no door');
+  await buy.click();
+  assert.equal(page.opened.length, 0, 'an unknown answer opens no checkout');
+  assert.equal(page.location.href, 'https://deutsch-meister.de/subscription?buy=course_a1_2');
+});
+
+test('a lookup that answers in time clears its timer', async () => {
+  const buy = buyButton('course_a2_1');
+  const page = runCourseCheckout({ body: new FakeElement('body', {}, [buy]), snapshot: OWNER_A12 });
+  await page.settle();
+  assert.deepEqual(page.pendingTimers(), [], 'no timer left running');
+  assert.equal(buy.disabled, false);
+});
+
 test('a signed-out visitor still takes the signup detour with the intent stored', async () => {
   const buy = buyButton('course_a1_2');
   const body = new FakeElement('body', {}, [door('a1.2', [buy])]);

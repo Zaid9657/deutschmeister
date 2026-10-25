@@ -82,10 +82,32 @@ test('a course row with a retained id is treated exactly like the live plan it c
 test('a deletion refused for a legacy course row still has a way to the portal on every account screen', () => {
   for (const [name, row, expected] of ROWS) {
     if (!expected.charging) continue;
-    // Paid access (hasActiveSubscription true): /profile's button is the portal.
-    assert.equal(profilePlanAction(true, row).kind, 'portal', `${name}: /profile`);
+    // With or without paid access right now, /profile's button is the portal.
+    for (const isSubscribed of [true, false]) {
+      assert.equal(profilePlanAction(isSubscribed, row).kind, 'portal', `${name}: /profile (paid access ${isSubscribed})`);
+    }
     // /subscription's plan buttons read subscriptionPortalAction(recurringBilling, …).
     assert.ok(subscriptionPortalAction(true, row, true), `${name}: /subscription`);
+  }
+});
+
+// Cross-check follow-up: /profile followed the paid-access answer first, so a
+// legacy course row whose included Pro had expired (hasActiveSubscription()
+// false) was offered "Upgrade" to /pricing/ while its retained subscription id
+// still billed, deletion was refused, and /subscription offered the portal.
+// /profile's plan button now follows the same billing rule: hasRecurringBilling.
+test('/profile follows the billing rule, not the paid-access answer', () => {
+  const expiredWindow = ROWS.find(([name]) => name === 'course row that kept a subscription id, window over')[1];
+  const plan = profilePlanAction(false, expiredWindow);
+  assert.equal(plan.kind, 'portal', 'the retained plan is managed in the portal, not sold again');
+  assert.equal(plan.href, BILLING_PORTAL_URL);
+  for (const [name, row, expected] of ROWS) {
+    for (const isSubscribed of [true, false]) {
+      const kind = profilePlanAction(isSubscribed, row).kind;
+      // /profile shows the portal exactly when /subscription's plan buttons manage billing.
+      assert.equal(kind === 'portal', expected.billing, `${name} (paid access ${isSubscribed}): ${kind}`);
+      if (!expected.billing) assert.equal(kind, isSubscribed ? 'support' : 'upgrade', `${name} (paid access ${isSubscribed})`);
+    }
   }
 });
 

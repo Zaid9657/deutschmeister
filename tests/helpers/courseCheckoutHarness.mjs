@@ -121,6 +121,8 @@ export function runCourseCheckout({ body, signedIn = true, snapshot = null, gate
   const tracked = [];
   const stored = new Map();
   const location = { href: '/start-page' };
+  // Fake timers: nothing fires until the test calls runTimers().
+  const timers = [];
   let ready = null;
   const head = new FakeElement('head');
   const document = {
@@ -143,6 +145,8 @@ export function runCourseCheckout({ body, signedIn = true, snapshot = null, gate
     window: { location, LemonSqueezy: { Url: { Open: (url) => opened.push(url) } } },
     track: (event, props) => tracked.push({ event, props }),
     __levelAccess: () => Promise.resolve(lib),
+    setTimeout: (fn, ms) => timers.push({ fn, ms, done: false }),
+    clearTimeout: (id) => { if (timers[id - 1]) timers[id - 1].done = true; },
     URLSearchParams, encodeURIComponent, JSON, Number, Boolean, Promise, Error,
   };
   const source = script
@@ -155,10 +159,16 @@ export function runCourseCheckout({ body, signedIn = true, snapshot = null, gate
     opened, tracked, stored, location,
     /** How many times the page loaded the entitlement snapshot. */
     get snapshotCalls() { return snapshotCalls; },
+    /** The delays (ms) of the timers the page set and has not cleared or run. */
+    pendingTimers: () => timers.filter((t) => !t.done).map((t) => t.ms),
+    /** Fire every pending timer once (time passes). */
+    runTimers() { for (const t of timers) if (!t.done) { t.done = true; t.fn(); } },
+    /** Run every then/finally that is ready, without waiting for the lookup. */
+    async flush() { for (let i = 0; i < 3; i++) await new Promise((r) => setImmediate(r)); },
     /** Let the lookup land and every then/finally after it run. */
     async settle() {
       await gate;
-      for (let i = 0; i < 3; i++) await new Promise((r) => setImmediate(r));
+      await this.flush();
     },
   };
 }

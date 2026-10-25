@@ -18,17 +18,23 @@
 // (tests/subscription-portal-link.test.mjs).
 
 import { SUPPORT_LINK } from '../data/navigation.js';
+import { hasRecurringBilling } from './checkoutAccess.js';
 
 /** The store's customer portal. The customer signs in with the email address they paid with. */
 export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/billing';
 
 /**
  * The plan control on /profile. Three answers:
- *   - 'portal': a live Lemon Squeezy subscription, by the same rule as the
- *     /subscription link (subscriptionPortalAction): "Manage plan" opens the
+ *   - 'portal': recurring billing, by the one rule of /pricing/, the
+ *     /subscription plan buttons and the deletion check
+ *     (lib/checkoutAccess.js hasRecurringBilling): a row that still carries a
+ *     Lemon Squeezy subscription id until reconciliation clears it, with or
+ *     without paid access right now. A failed renewal past its paid period, a
+ *     paused plan or a legacy course row whose included Pro expired can still
+ *     charge; "Upgrade" would sell them a second plan. "Manage plan" opens the
  *     portal.
- *   - 'upgrade': no paid access (a trial, an ended plan, none): "Upgrade" on
- *     /pricing/.
+ *   - 'upgrade': no paid access and no recurring billing (a trial, an ended
+ *     plan, none): "Upgrade" on /pricing/.
  *   - 'support': paid access with no Lemon Squeezy subscription. The portal's
  *     sign-in finds no account for a comped row (an owner grant: no Lemon
  *     Squeezy ids; 2 of 9 live paid periods on 2026-10-02), and a course row
@@ -43,8 +49,8 @@ export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/bill
  * @returns {{ kind: 'portal' | 'upgrade' | 'support', href: string, label: string, hint: string | null }}
  */
 export function profilePlanAction(isSubscribed, subscription) {
-  if (!isSubscribed) return { kind: 'upgrade', href: '/pricing/', label: 'Upgrade', hint: null };
-  if (subscriptionPortalAction(isSubscribed, subscription, false)) {
+  // The /subscription plan buttons' decision, subscriptionPortalAction(recurringBilling, …).
+  if (subscriptionPortalAction(hasRecurringBilling(subscription), subscription, false)) {
     return {
       kind: 'portal',
       href: BILLING_PORTAL_URL,
@@ -52,6 +58,7 @@ export function profilePlanAction(isSubscribed, subscription) {
       hint: 'Opens the Lemon Squeezy customer portal. Sign in there with the email address you paid with.',
     };
   }
+  if (!isSubscribed) return { kind: 'upgrade', href: '/pricing/', label: 'Upgrade', hint: null };
   const support = { kind: 'support', href: `${SUPPORT_LINK.href}?topic=payment`, label: 'Contact support' };
   if (subscription?.plan_type === 'course') {
     return { ...support, hint: 'Your Pro access comes with your course purchase and does not renew, so there is nothing to manage.' };
