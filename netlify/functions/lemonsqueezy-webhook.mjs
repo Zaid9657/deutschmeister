@@ -693,20 +693,22 @@ async function handlePaymentFailed(data, meta, payload) {
   // nudge, not one per retry. A send that failed (Resend down, a refused
   // address) must not count, so the gate reads the dunning_sent_at stamp a
   // delivered send leaves on its payment_failures row, not the row itself.
+  // Rows written before that stamp existed carry no dunning_tracked flag; the
+  // old rule counted any recent row as emailed, so those still count — for the
+  // seven days they can stay inside the window after the deploy.
   let firstRecentFailure = false;
   try {
     const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     const { data: recent, error: recentError } = await supabase
       .from('payment_failures')
-      .select('id')
+      .select('id, sent:raw_payload->>dunning_sent_at, tracked:raw_payload->>dunning_tracked')
       .eq('lemonsqueezy_subscription_id', String(subscriptionId))
       .gte('failed_at', since)
-      .not('raw_payload->>dunning_sent_at', 'is', null)
-      .limit(1);
+      .limit(50);
     if (recentError) {
       console.error('payment_failed: recency check error (skipping dunning):', JSON.stringify(recentError));
     } else {
-      firstRecentFailure = !recent || recent.length === 0;
+      firstRecentFailure = !(recent || []).some((row) => row.sent != null || row.tracked == null);
     }
   } catch (e) {
     console.error('payment_failed: recency check threw (skipping dunning):', e.message);
@@ -719,7 +721,8 @@ async function handlePaymentFailed(data, meta, payload) {
       user_id: userId,
       lemonsqueezy_subscription_id: String(subscriptionId),
       lemonsqueezy_event_id: String(eventId),
-      raw_payload: payload
+      // Tracked: a delivered mail for this row is stamped dunning_sent_at.
+      raw_payload: { ...payload, dunning_tracked: true }
     },
     { onConflict: 'lemonsqueezy_event_id', ignoreDuplicates: true }
   );
@@ -790,7 +793,7 @@ async function handlePaymentFailed(data, meta, payload) {
 async function stampDunningSent(eventId, payload) {
   try {
     const { error } = await supabase.from('payment_failures')
-      .update({ raw_payload: { ...payload, dunning_sent_at: new Date().toISOString() } })
+      .update({ raw_payload: { ...payload, dunning_tracked: true, dunning_sent_at: new Date().toISOString() } })
       .eq('lemonsqueezy_event_id', String(eventId));
     if (error) console.error('payment_failed: dunning send not recorded:', JSON.stringify(error));
   } catch (e) {

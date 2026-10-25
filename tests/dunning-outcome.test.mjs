@@ -29,6 +29,14 @@ let customerThrows;
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 const field = (row, path) => path.split(/->>?/).reduce((value, key) => value?.[key], row);
+/** PostgREST select: plain columns and aliased JSON paths (alias:col->>key). */
+function project(row, select) {
+  if (!select || select === '*') return row;
+  return Object.fromEntries(select.split(',').map((item) => {
+    const [alias, path] = item.includes(':') ? item.split(':') : [item, item];
+    return [alias, field(row, path)];
+  }));
+}
 function matches(row, params) {
   return [...params].every(([key, value]) => {
     if (['select', 'limit', 'order', 'on_conflict'].includes(key)) return true;
@@ -54,7 +62,10 @@ globalThis.fetch = async (url, init = {}) => {
   const u = new URL(href);
   assert.equal(u.host, 'supabase.dunning.stub', 'the harness contacts nothing else');
   if (u.pathname === '/rest/v1/payment_failures') {
-    if (method === 'GET') return json(failures.filter((row) => matches(row, u.searchParams)).slice(0, Number(u.searchParams.get('limit') || 1e9)));
+    if (method === 'GET') {
+      const rows = failures.filter((row) => matches(row, u.searchParams)).slice(0, Number(u.searchParams.get('limit') || 1e9));
+      return json(rows.map((row) => project(row, u.searchParams.get('select'))));
+    }
     if (method === 'POST') {
       const row = JSON.parse(init.body);
       if (!failures.some((r) => r.lemonsqueezy_event_id === row.lemonsqueezy_event_id)) failures.push({ id: `pf-${failures.length + 1}`, failed_at: new Date().toISOString(), ...row });
@@ -119,6 +130,27 @@ test('a delivered send keeps the next retries quiet (one mail per subscription p
   assert.equal(customerMails().length, 1, 'no second customer mail within 7 days of a delivered one');
   assert.equal(ownerAlerts().length, 1);
   assert.equal(failures.length, 3, 'every failure is still logged');
+});
+
+test('a row from before delivered sends were stamped still keeps its 7-day quiet period (deploy transition)', async () => {
+  // The previous code wrote rows with neither marker and counted any recent row
+  // as emailed. A customer it mailed 24 hours ago must not get a second mail
+  // just because this code was deployed in between.
+  const legacy = { id: 'pf-legacy', lemonsqueezy_subscription_id: SUB, lemonsqueezy_event_id: 'inv-old',
+    failed_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    raw_payload: { meta: { event_name: 'subscription_payment_failed' }, data: { id: 'inv-old' } } };
+  failures.push(legacy);
+  assert.equal((await handler(paymentFailed('inv-1'))).statusCode, 200);
+  assert.equal(customerMails().length, 0, 'mailed by the previous code within 7 days: no second mail');
+  assert.equal(ownerAlerts().length, 0, 'and no second owner alert, as before the deploy');
+  assert.equal(failures.length, 2, 'the failure is still logged');
+
+  // Once the legacy row is outside the old window it no longer counts, and the
+  // unmailed row this code wrote does not suppress either.
+  legacy.failed_at = new Date(Date.now() - 8 * 86400000).toISOString();
+  await handler(paymentFailed('inv-2'));
+  assert.equal(customerMails().length, 1);
+  assert.match(ownerAlerts()[0].text, /customer was sent a dunning email/);
 });
 
 test('a throwing send or a missing address is reported as NOT sent, never as sent', async () => {
