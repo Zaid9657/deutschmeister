@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { reserveUsage } from './_shared/aiReservation.mjs';
+import { SPEAKING_LEVELS } from './_shared/speakingAI.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -9,6 +10,36 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 // Well above any genuine day's practice, low enough to bound abuse.
 const MAX_EVALUATIONS_PER_DAY = 20;
 const EVALUATION_LEASE_MS = 10 * 60 * 1000;
+
+const RECOMMENDATIONS = new Set(['GLEICH', 'HÖHER', 'WIEDERHOLEN']);
+const SUBLEVELS = new Set(SPEAKING_LEVELS.filter((l) => l !== 'placement'));
+
+/**
+ * Is the model's answer a complete evaluation? Five category scores 0–20, a
+ * total 0–100, written feedback and a known recommendation — plus the placed
+ * sub-level for the level test and a real pass/fail for a mission. Anything
+ * less is an unusable answer (retried once, then marked `_failed` so the
+ * session can be graded again), never a stored zero-score result that every
+ * retry would return. The first category is `intelligibility` in the practice
+ * rubric and `pronunciation` in the placement rubric; either name is read.
+ */
+export function validSpeakingEvaluation(evaluation, { isPlacement = false, isMission = false } = {}) {
+  if (!evaluation || typeof evaluation !== 'object' || Array.isArray(evaluation)) return false;
+  const inRange = (n, max) => typeof n === 'number' && Number.isFinite(n) && n >= 0 && n <= max;
+  const s = evaluation.scores;
+  if (!s || typeof s !== 'object') return false;
+  const clarity = s.intelligibility ?? s.pronunciation;
+  if (![clarity, s.grammar, s.vocabulary, s.fluency, s.comprehension].every((n) => inRange(n, 20))) return false;
+  if (!inRange(evaluation.total_score, 100)) return false;
+  if (typeof evaluation.feedback !== 'string' || !evaluation.feedback.trim()) return false;
+  if (!RECOMMENDATIONS.has(evaluation.recommendation)) return false;
+  for (const list of [evaluation.strengths, evaluation.improvements]) {
+    if (list !== undefined && !Array.isArray(list)) return false;
+  }
+  if (isPlacement && !SUBLEVELS.has(evaluation.determined_sublevel)) return false;
+  if (isMission && typeof evaluation.passed !== 'boolean') return false;
+  return true;
+}
 
 let supabase;
 try {
@@ -180,23 +211,34 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
-    const { session_token, level: requestedLevel, messages, mode } = JSON.parse(event.body || '{}');
-
-    const isPlacement = mode === 'placement';
-    const level = isPlacement ? 'placement' : requestedLevel;
-
-    if (!session_token || !level || !Array.isArray(messages) || messages.length === 0) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'session_token, level, and messages are required' }),
-      };
+    // THE SESSION ROW IS THE AUTHORITY. The token names the caller's own
+    // session; its level, mode and mission come from the row speaking-session
+    // stored, never from the body — a body `level` went into the grading
+    // prompt unbounded, and a body `mode` could grade a mission as the level
+    // test. Older clients still send level/mode/messages; all three are ignored.
+    const { session_token } = JSON.parse(event.body || '{}');
+    if (typeof session_token !== 'string' || !session_token || session_token.length > 100) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'session_token is required' }) };
     }
 
-    // Bound the input — a real session never exceeds this, but an abusive
-    // caller could otherwise feed arbitrarily large prompts to Claude.
-    if (messages.length > 200 || messages.some(m => typeof m?.content !== 'string' || m.content.length > 5000)) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
+    const { data: sessionRow, error: sessionLookupError } = await supabase
+      .from('speaking_sessions')
+      .select('level, mode, mission_id')
+      .eq('session_token', session_token)
+      .eq('user_id', user_id)
+      .maybeSingle();
+    if (sessionLookupError) {
+      console.error('Error looking up speaking session:', JSON.stringify(sessionLookupError));
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
+    }
+    if (!sessionRow) {
+      return { statusCode: 404, headers, body: JSON.stringify({ error: 'Session not found' }) };
+    }
+    const isPlacement = sessionRow.mode === 'placement';
+    const level = isPlacement ? 'placement' : sessionRow.level;
+    if (!SPEAKING_LEVELS.includes(level)) {
+      console.error(`evaluate-speaking: session ${session_token} carries an unsupported level`);
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Unsupported level' }) };
     }
 
     // A completed session is graded once, including when today's allowance
@@ -247,36 +289,33 @@ export const handler = async (event) => {
         body: JSON.stringify({ error: 'No transcript found for this session' }),
       };
     }
+    // The teacher's opening line alone is not a conversation to grade: with no
+    // learner line stored there is nothing to assess, so nothing is reserved,
+    // nothing is sent to the model and nothing is stored for later retries.
+    if (!storedMessages.some((m) => m.role === 'user')) {
+      return { statusCode: 409, headers, body: JSON.stringify({ error: 'no_learner_turns' }) };
+    }
     const transcript = storedMessages;
 
     // Mission sessions carry a mission_id in speaking_sessions; when present we
     // fold the mission's pass_criteria into the evaluation and record pass/fail.
     let missionPassCriteria = null;
     let missionSessionToken = null;
-    if (!isPlacement && session_token) {
-      const { data: sessionRow, error: sessionLookupError } = await supabase
-        .from('speaking_sessions')
-        .select('mission_id')
-        .eq('session_token', session_token)
-        .eq('user_id', user_id)
-        .maybeSingle();
-      if (sessionLookupError) {
-        console.error('Error looking up speaking session:', JSON.stringify(sessionLookupError));
-      }
-      if (sessionRow?.mission_id) {
-        const { data: missionRow, error: missionError } = await supabase
-          .from('speaking_missions')
-          .select('pass_criteria')
-          .eq('id', sessionRow.mission_id)
-          .single();
-        if (missionError) {
-          console.error('Error fetching mission pass_criteria:', JSON.stringify(missionError));
-        } else {
-          missionPassCriteria = missionRow?.pass_criteria || null;
-          missionSessionToken = session_token;
-        }
+    if (!isPlacement && sessionRow.mission_id) {
+      const { data: missionRow, error: missionError } = await supabase
+        .from('speaking_missions')
+        .select('pass_criteria')
+        .eq('id', sessionRow.mission_id)
+        .single();
+      if (missionError) {
+        console.error('Error fetching mission pass_criteria:', JSON.stringify(missionError));
+      } else {
+        missionPassCriteria = missionRow?.pass_criteria || null;
+        missionSessionToken = session_token;
       }
     }
+    // The prompt asks for a `passed` verdict only when it carries criteria.
+    const isMission = !!missionPassCriteria;
 
     const evaluationPrompt = isPlacement
       ? buildPlacementPrompt(transcript)
@@ -402,18 +441,19 @@ export const handler = async (event) => {
       return null;
     }
 
+    const usable = (candidate) => validSpeakingEvaluation(candidate, { isPlacement, isMission });
     const responseText = await callClaude(evaluationPrompt);
     let evaluation = tryParseEvaluation(responseText);
 
-    if (!evaluation) {
-      console.warn('First parse failed, retrying with stricter prompt');
-      const retryPrompt = evaluationPrompt + '\n\nWICHTIG: Antworte NUR mit validem JSON. Kein Text davor oder danach. Nur das JSON-Objekt.';
+    if (!usable(evaluation)) {
+      console.warn('First evaluation unusable, retrying with stricter prompt');
+      const retryPrompt = evaluationPrompt + '\n\nWICHTIG: Antworte NUR mit validem JSON im verlangten Format. Kein Text davor oder danach. Nur das JSON-Objekt.';
       const retryText = await callClaude(retryPrompt);
       evaluation = tryParseEvaluation(retryText);
     }
 
-    if (!evaluation) {
-      console.error('Evaluation JSON parse failed after retry');
+    if (!usable(evaluation)) {
+      console.error('Evaluation unusable after retry');
       const failed = {
         evaluation_failed: true,
         message: 'Auswertung konnte nicht erstellt werden.',

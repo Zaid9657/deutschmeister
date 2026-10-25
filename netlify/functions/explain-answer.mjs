@@ -1,6 +1,8 @@
+import { createHash } from 'node:crypto';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { reserveUsage } from './_shared/aiReservation.mjs';
+import { isMissingSchema, logMigrationPending } from './_shared/migrationPending.mjs';
 import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
 
 // "Explain this to me" / „Erklär mir das" (plan P5). One missed practice item
@@ -41,6 +43,61 @@ const RULE_CARD_HEADING = {
 const LANGS = new Set(['en', 'de']);
 
 const trim = (v) => (typeof v === 'string' ? v.trim().slice(0, MAX_FIELD_CHARS) : '');
+
+// SHARED EXPLANATIONS (cross-check 2026-10-25, AI-22). Every learner who misses
+// the same item with the same answer, in the same chrome language, gets the
+// same grounded explanation — written once, then read from `explain_cache`
+// instead of a model call and a reservation. The key is a hash of everything
+// the model sees: the item, the model, the whole system prompt (so a rebuilt
+// rule card is a new key) and the user turn (question, correct answer, the
+// learner's answer exactly as typed — a capitalisation slip gets its own
+// explanation — and level). Only grounded explanations are shared: without a
+// rule card there is nothing that keeps a wrong one from spreading. The table
+// and its insert-only store function are migrations/2026-10-25-explain-cache.sql;
+// until the owner applies it every lookup and store fails open and the model
+// answers as before.
+function explainCacheKey(parts) {
+  try {
+    return createHash('sha256').update(JSON.stringify(parts)).digest('hex');
+  } catch (error) {
+    console.error('[explain-answer] cache key failed:', error.message);
+    return null; // no cache, never no explanation
+  }
+}
+
+async function cachedExplanation(key) {
+  try {
+    const { data, error } = await supabase
+      .from('explain_cache')
+      .select('explanation')
+      .eq('cache_key', key)
+      .maybeSingle();
+    if (error) {
+      if (isMissingSchema(error)) logMigrationPending('explain_cache');
+      else console.error('[explain-answer] cache read failed:', error.message);
+      return null;
+    }
+    const text = data?.explanation?.text;
+    return typeof text === 'string' && text.trim() ? text : null;
+  } catch (error) {
+    console.error('[explain-answer] cache read threw:', error.message);
+    return null;
+  }
+}
+
+async function storeExplanation(key, text) {
+  try {
+    const { error } = await supabase.rpc('store_explain_cache', {
+      p_cache_key: key, p_explanation: { text, model: CLAUDE_MODEL },
+    });
+    if (error) {
+      if (isMissingSchema(error)) logMigrationPending('store_explain_cache');
+      else console.error('[explain-answer] cache store failed:', error.message);
+    }
+  } catch (error) {
+    console.error('[explain-answer] cache store threw:', error.message);
+  }
+}
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -99,6 +156,34 @@ export const handler = async (event) => {
       };
     }
 
+    const card = ruleCardText(topic);
+    if (!card) console.warn(`[explain-answer] no rule card for topic "${topic}"`);
+    const system = [SYSTEM_RULES[lang], card && `${RULE_CARD_HEADING[lang]}\n${card}`]
+      .filter(Boolean)
+      .join('\n\n');
+
+    const L = lang === 'en'
+      ? { task: 'Task', expected: 'Correct answer', user: "Learner's answer", level: 'Level' }
+      : { task: 'Aufgabe', expected: 'Richtige Antwort', user: 'Antwort der Lernenden', level: 'Niveau' };
+    const userText = [
+      `${L.task}: ${questionDe}`,
+      `${L.expected}: ${expected}`,
+      userAnswer ? `${L.user}: ${userAnswer}` : null,
+      `${L.level}: ${level}`,
+    ].filter(Boolean).join('\n');
+
+    // Already written for this exact question, answer and language: shared,
+    // so no model call and nothing reserved against the daily cap.
+    const cacheKey = card ? explainCacheKey([itemId, CLAUDE_MODEL, system, userText]) : null;
+    const shared = cacheKey ? await cachedExplanation(cacheKey) : null;
+    if (shared) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ explanation: shared, lang, used: null, limit: EXPLAIN_DAILY_LIMIT, topic: ruleCard(topic) ? topic : null, cached: true }),
+      };
+    }
+
     // Daily cap — today's explanation rows for this user, from midnight UTC.
     const dayStart = new Date();
     dayStart.setUTCHours(0, 0, 0, 0);
@@ -145,22 +230,6 @@ export const handler = async (event) => {
       return { statusCode: 503, headers, body: JSON.stringify({ error: 'Nutzung konnte nicht reserviert werden', stage: 'usage' }) };
     }
 
-    const card = ruleCardText(topic);
-    if (!card) console.warn(`[explain-answer] no rule card for topic "${topic}"`);
-    const system = [SYSTEM_RULES[lang], card && `${RULE_CARD_HEADING[lang]}\n${card}`]
-      .filter(Boolean)
-      .join('\n\n');
-
-    const L = lang === 'en'
-      ? { task: 'Task', expected: 'Correct answer', user: "Learner's answer", level: 'Level' }
-      : { task: 'Aufgabe', expected: 'Richtige Antwort', user: 'Antwort der Lernenden', level: 'Niveau' };
-    const userText = [
-      `${L.task}: ${questionDe}`,
-      `${L.expected}: ${expected}`,
-      userAnswer ? `${L.user}: ${userAnswer}` : null,
-      `${L.level}: ${level}`,
-    ].filter(Boolean).join('\n');
-
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -197,6 +266,8 @@ export const handler = async (event) => {
       console.error('[explain-answer] empty explanation from', CLAUDE_MODEL);
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Die Erklärung war leer.', stage: 'upstream' }) };
     }
+
+    if (cacheKey) await storeExplanation(cacheKey, explanation);
 
     return {
       statusCode: 200,

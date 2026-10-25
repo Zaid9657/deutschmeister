@@ -70,6 +70,19 @@
   },
   "pendingApply": {
     "why": "Tables a written migration CREATES but the owner has not applied yet. tests/db-columns.test.mjs lets queries name them, and only while the migration file exists, its CREATE TABLE declares exactly these columns, migrations/README.md marks it not yet applied, and the table is absent from \"tables\" above. Once applied: refresh \"tables\" from the live DB (the table then appears there) and delete its entry here.",
-    "tables": {}
+    "tables": {
+      "explain_cache": {
+        "migration": "2026-10-25-explain-cache.sql",
+        "columns": ["cache_key", "created_at", "explanation"]
+      },
+      "vocab_srs_reviews": {
+        "migration": "2026-10-25-vocab-srs-review-log.sql",
+        "columns": ["id", "reviewed_at", "user_id", "word_id"]
+      },
+      "xray_cache": {
+        "migration": "2026-10-25-xray-cache.sql",
+        "columns": ["analysis", "created_at", "model", "sentence_hash"]
+      }
+    }
   }
 }

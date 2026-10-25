@@ -9,16 +9,31 @@ import {
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import {
   AIError,
+  SPEAKING_LEVELS,
   buildTeacherSystemPrompt,
   courseTaskColumns,
   parseCourseTask,
   teacherReply,
   synthesizeSpeech,
+  synthesizeFixedLine,
 } from './_shared/speakingAI.mjs';
 
 // Session pricing (cents). 10/15-min always cost; 5-min may be free (see below).
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
 const ALLOWED_MINUTES = [5, 10, 15];
+
+// THE PLACEMENT CHECK IS A TEST, NOT A TUTOR. It costs the learner nothing and
+// runs on every tier, so it is bounded here instead: always 5 minutes (the
+// level test sends no duration), and a few non-cancelled starts per account in
+// rolling windows. A start the learner never spoke in is closed as 'cancelled'
+// and does not count. Owner-adjustable; migrations/2026-10-25-placement-speaking-cap.sql
+// repeats the same numbers under the reservation lock (tests/speaking-reservations.test.mjs
+// holds the two equal).
+const PLACEMENT_MINUTES = 5;
+const PLACEMENT_SESSIONS_PER_DAY = 1;
+const PLACEMENT_SESSIONS_PER_30_DAYS = 3;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -133,17 +148,17 @@ export const handler = async (event) => {
     }
 
     // Reject unsupported levels before reserving a session or calling AI.
-    const ALLOWED_LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'placement'];
-    if (!ALLOWED_LEVELS.includes(effectiveLevel)) {
+    if (!SPEAKING_LEVELS.includes(effectiveLevel)) {
       console.warn(`[speaking-session] rejected unsupported level: ${effectiveLevel}`);
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Unsupported level' }) };
     }
 
-    // Planned minutes: placement is a short quota-exempt test; practice sessions
-    // must pick one of the allowed durations.
+    // Planned minutes: placement is the short level test, always the same
+    // length whatever the body asks for; practice sessions must pick one of
+    // the allowed durations.
     let plannedMinutes;
     if (isPlacement) {
-      plannedMinutes = ALLOWED_MINUTES.includes(Number(minutes)) ? Number(minutes) : 5;
+      plannedMinutes = PLACEMENT_MINUTES;
     } else {
       plannedMinutes = Number(minutes);
       if (!ALLOWED_MINUTES.includes(plannedMinutes)) {
@@ -160,6 +175,42 @@ export const handler = async (event) => {
       console.error('[speaking-session] stale close-out threw:', err.message);
     }
 
+    // The placement cap, counted from the caller's own sessions (the stale
+    // sweep above has already cancelled abandoned zero-turn starts). It holds
+    // before the SQL is applied; afterwards the reservation repeats it under
+    // the user lock, so concurrent starts cannot both pass.
+    if (isPlacement) {
+      const now = Date.now();
+      const { data: recent, error: recentError } = await supabase
+        .from('speaking_sessions')
+        .select('started_at')
+        .eq('user_id', user_id)
+        .eq('mode', 'placement')
+        .neq('status', 'cancelled')
+        .gte('started_at', new Date(now - 30 * DAY_MS).toISOString());
+      if (recentError || !Array.isArray(recent)) {
+        console.error('[speaking-session] placement count failed:', JSON.stringify(recentError));
+        return { statusCode: 503, headers, body: JSON.stringify({ error: 'Der Sprechtest kann gerade nicht gestartet werden.' }) };
+      }
+      const starts = recent.map((r) => Date.parse(r.started_at)).filter(Number.isFinite).sort((a, b) => b - a);
+      const today = starts.filter((t) => t > now - DAY_MS);
+      // Newest first, so [limit - 1] is the start whose expiry frees a place.
+      const dayFreeAt = today.length >= PLACEMENT_SESSIONS_PER_DAY ? today[PLACEMENT_SESSIONS_PER_DAY - 1] + DAY_MS : 0;
+      const monthFreeAt = starts.length >= PLACEMENT_SESSIONS_PER_30_DAYS
+        ? starts[PLACEMENT_SESSIONS_PER_30_DAYS - 1] + 30 * DAY_MS : 0;
+      if (dayFreeAt || monthFreeAt) {
+        return {
+          statusCode: 429,
+          headers,
+          body: JSON.stringify({
+            error: 'placement_limit',
+            window: monthFreeAt > dayFreeAt ? 'month' : 'day',
+            retry_after: new Date(Math.max(dayFreeAt, monthFreeAt)).toISOString(),
+          }),
+        };
+      }
+    }
+
     const usage = await checkUsage(user_id);
     const costCents = isPlacement || (plannedMinutes === 5 && usage.allowed) ? 0 : PRICE_CENTS[plannedMinutes];
     const sessionToken = `sp_${randomUUID()}`;
@@ -170,6 +221,11 @@ export const handler = async (event) => {
       planned_minutes: plannedMinutes, cost_cents: costCents,
       ...courseTaskColumns(courseTask),
     }, usage.tier);
+    if (!reservation.ok && reservation.code === 'placement_limit') {
+      // The locked recount of the placement cap (SQL applied) refused a start
+      // the count above let through — a concurrent start won.
+      return { statusCode: 429, headers, body: JSON.stringify({ error: 'placement_limit' }) };
+    }
     if (!reservation.ok) {
       return {
         statusCode: reservation.code === 'insufficient_funds' ? 402 : 409, headers,
@@ -181,8 +237,9 @@ export const handler = async (event) => {
     // The reservation exists before either provider can be called.
     let openingText;
     let openingAudio;
+    const fixedLine = isMission && !!mission.ai_opening_line;
     try {
-      if (isMission && mission.ai_opening_line) {
+      if (fixedLine) {
         openingText = mission.ai_opening_line;
       } else {
         const baseSystem = buildTeacherSystemPrompt({
@@ -200,7 +257,10 @@ export const handler = async (event) => {
         openingText = await teacherReply({ system, history: [], userText: '', maxTokens: 120 });
       }
       if (!openingText) openingText = 'Hallo! Schön, dass du da bist. Erzähl mir ein bisschen von dir.';
-      openingAudio = await synthesizeSpeech({ text: openingText });
+      // A mission's fixed opening line is synthesized once per warm instance.
+      openingAudio = fixedLine
+        ? await synthesizeFixedLine({ text: openingText })
+        : await synthesizeSpeech({ text: openingText });
     } catch (aiErr) {
       // With the migration, a failed refund remains retryable by the sweep.
       // The fallback releases through the existing message-based close-out.
