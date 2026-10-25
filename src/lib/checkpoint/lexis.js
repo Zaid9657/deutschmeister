@@ -222,6 +222,9 @@ export const ITEM_FORMULAS = [
   // The operation a correction names (DaF review #7, A1.2 B1) — longest first, or „Korrigieren Sie"
   // would match and leave „nur den Fehler" to be counted as item lexis.
   'Korrigieren Sie nur den Fehler in der Frage', 'Korrigieren Sie nur den Fehler',
+  // The named token stays in the lexical scan; only the complete task formula
+  // is removed. A content sentence containing „das Wort“ is never exempted.
+  'Korrigieren Sie das Wort(?= [A-Za-zÄÖÜäöüß]+:)',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
   // The register frame of a du-prompt (DaF review #4, A1.2 minor): the course speaks Sie, so a bare
   // „___ wohnst du?" is framed as partner speech. Without the formula here `Fragen` counted as item

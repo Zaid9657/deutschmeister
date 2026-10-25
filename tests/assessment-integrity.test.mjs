@@ -211,9 +211,9 @@ test('word order: when an object or a modal adverb could open the sentence, the 
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]', 'Die Firma braucht ein Büro.')), 'Die Firma');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), 'Wir');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / trinken / gern / Kaffee]', 'Ich trinke gern Kaffee.')), 'Ich');
-  // Nothing competes for the opening: a copula's predicate, a pronoun object with its prefix.
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), null);
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), null);
+  // Predicates and pronoun objects can front too: Lehrer bin ich. Dich rufe ich an.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), 'Ich');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), 'Ich');
   // …and a cued prompt is done; the answer-key rule is untouched by any of it.
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), null);
   assert.deepEqual(frontableOrders(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), []);

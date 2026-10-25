@@ -144,7 +144,7 @@ const lektionIntro = {
       'I can say where I come from and what my job is.',
       'I can ask what someone’s job is.',
       'I can understand and say the numbers from zero to ten.',
-      'I can give my phone number and my address.',
+      'I can give my phone number and say where I live.',
       'I can give personal details in a short message.',
     ],
   },

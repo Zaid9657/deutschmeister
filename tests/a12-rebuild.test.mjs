@@ -588,7 +588,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
       ['Was kostet die Wohnung?', 3, 'Die Miete ist vierhundertachtzig Euro.', 'menge'],
       ['Wie ist die Miete?', 3, 'Die Miete ist vierhundertachtzig Euro.', 'art'],
       ['Und die Wohnung?', null, null, 'thema'],
-      ['Wie viele Zimmer hat sie?', 5, 'Vier: Küche, Badezimmer, Wohnzimmer und Schlafzimmer.', 'menge'],
+      ['Wie viele Zimmer hat sie?', 5, 'Zwei Zimmer: Wohnzimmer und Schlafzimmer.', 'menge'],
       ['Hat die Wohnung auch einen Balkon?', 7, 'Ja, der Balkon ist da.', 'ja'],
       ['Ist die Treppe da?', 9, 'Ja, die Treppe ist da.', 'ja'],
     ],

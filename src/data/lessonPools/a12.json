@@ -295,8 +295,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 14,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Ich gehe gerner in das Museum.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Ich gehe gerner in das Museum.“ (Wort gerner) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“ Begin with “Ich”. Correct only the error. Correct only the word “gerner”.",
    "options": null,
    "answer": "Ich gehe lieber in das Museum.",
    "accepted": [
@@ -343,7 +343,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket. Begin with “Ich”. Use the present tense. Use an indefinite article.",
    "options": null,
    "answer": "Ich brauche einen Supermarkt.",
    "accepted": [
@@ -384,8 +384,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Bilden Sie den Satz: [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Präsens) (Beginnen Sie mit „Ana“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ana“): [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake. Begin with “Ana”. Use the present tense. Use a definite article.",
    "options": null,
    "answer": "Ana kauft den Kuchen im Geschäft.",
    "accepted": [
@@ -407,7 +407,7 @@
    "difficulty": 2,
    "order": 10,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche ein Markt im Zentrum.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Fix the case.",
+   "questionEn": "Fix the case. Begin with “Ich”. Correct only the article.",
    "options": null,
    "answer": "Ich brauche einen Markt im Zentrum.",
    "accepted": [
@@ -429,7 +429,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Korrigieren Sie den Artikel: „Tim bezahlt der Kuchen an der Kasse.“ (Beginnen Sie mit „Tim“)",
-   "questionEn": "Fix the case.",
+   "questionEn": "Fix the case. Begin with “Tim”. Correct only the article.",
    "options": null,
    "answer": "Tim bezahlt den Kuchen an der Kasse.",
    "accepted": [
@@ -527,7 +527,7 @@
    "difficulty": 1,
    "order": 22,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / einen / Onkel / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I have an uncle. (accusative direct object, indefinite article)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I have an uncle. (accusative direct object, indefinite article) Begin with “Ich”. Use the present tense.",
    "options": null,
    "answer": "Ich habe einen Onkel.",
    "accepted": [
@@ -722,8 +722,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Bilden Sie den Satz: [zuerst / gehen / Sie / geradeaus] (Präsens) (Beginnen Sie mit „Zuerst“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the way.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Zuerst“): [zuerst / gehen / Sie / geradeaus] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the way. Begin with “Zuerst”. Use the present tense.",
    "options": null,
    "answer": "Zuerst gehen Sie geradeaus.",
    "accepted": [
@@ -742,8 +742,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Bilden Sie den Satz: [dann / gehen / Sie / an der Ecke / links] (Präsens) (Beginnen Sie mit „Dann“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the corner.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Dann“): [dann / gehen / Sie / an der Ecke / links] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the corner. Begin with “Dann”. Use the present tense.",
    "options": null,
    "answer": "Dann gehen Sie an der Ecke links.",
    "accepted": [
@@ -764,8 +764,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 3,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Danach die Brücke kommt.“ (Beginnen Sie mit „Danach“)",
-   "questionEn": "Fix the word order.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Danach die Brücke kommt.“ (Verb auf Position 2) (Beginnen Sie mit „Danach“)",
+   "questionEn": "Fix the word order. Begin with “Danach”. Correct only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Danach kommt die Brücke.",
    "accepted": [
@@ -784,8 +784,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 4,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Zuerst Sie gehen bis zur Kirche.“ (Beginnen Sie mit „Zuerst“)",
-   "questionEn": "Fix the word order.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Zuerst Sie gehen bis zur Kirche.“ (Verb auf Position 2) (Beginnen Sie mit „Zuerst“)",
+   "questionEn": "Fix the word order. Begin with “Zuerst”. Correct only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Zuerst gehen Sie bis zur Kirche.",
    "accepted": [
@@ -804,8 +804,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 5,
-   "questionDe": "Bilden Sie die Frage: [wie / kommen / ich / zum Rathaus] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the town hall.",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / kommen / ich / zum Rathaus] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the town hall. Begin with “Wie”. Use the present tense. Build a question.",
    "options": null,
    "answer": "Wie komme ich zum Rathaus?",
    "accepted": [
@@ -824,8 +824,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie die Frage: [wo / sein / die Haltestelle] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the stop.",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Haltestelle] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the stop. Begin with “Wo”. Use the present tense. Build a question.",
    "options": null,
    "answer": "Wo ist die Haltestelle?",
    "accepted": [
@@ -845,7 +845,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the square.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the square. Begin with “Am Platz”. Use the present tense.",
    "options": null,
    "answer": "Am Platz ist die Haltestelle.",
    "accepted": [
@@ -864,8 +864,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Die Straßenbahn zum Zentrum fährt.“ (Beginnen Sie mit „Die Straßenbahn“)",
-   "questionEn": "Fix the word order.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Die Straßenbahn zum Zentrum fährt.“ (Verb auf Position 2) (Beginnen Sie mit „Die Straßenbahn“)",
+   "questionEn": "Fix the word order. Begin with “Die Straßenbahn”. Correct only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Die Straßenbahn fährt zum Zentrum.",
    "accepted": [
@@ -884,8 +884,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 16,
-   "questionDe": "Schreiben Sie den Satz: [morgen / ich / aufstehen / früh] (Beginnen Sie mit „Morgen“)",
-   "questionEn": "Write the sentence: Tomorrow I am getting up early. (time-first inversion, separable verb aufstehen)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Morgen“): [morgen / ich / aufstehen / früh]",
+   "questionEn": "Write the sentence: Tomorrow I am getting up early. (time-first inversion, separable verb aufstehen) Begin with “Morgen”.",
    "options": null,
    "answer": "Morgen stehe ich früh auf.",
    "accepted": [
@@ -904,8 +904,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 17,
-   "questionDe": "Schreiben Sie den Satz: [am Montag / wir / einkaufen] (Beginnen Sie mit „Am Montag“)",
-   "questionEn": "Write the sentence: On Monday we are going shopping. (time-first inversion, separable verb einkaufen)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Am Montag“): [am Montag / wir / einkaufen]",
+   "questionEn": "Write the sentence: On Monday we are going shopping. (time-first inversion, separable verb einkaufen) Begin with “Am Montag”.",
    "options": null,
    "answer": "Am Montag kaufen wir ein.",
    "accepted": [
@@ -925,7 +925,7 @@
    "difficulty": 2,
    "order": 18,
    "questionDe": "Schreiben Sie den Satz: [heute / meine Mutter / kochen / das Essen] (Beginnen Sie mit „Heute“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: Today my mother is cooking the food. (time-first inversion)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: Today my mother is cooking the food. (time-first inversion) Begin with “Heute”. Use the present tense.",
    "options": null,
    "answer": "Heute kocht meine Mutter das Essen.",
    "accepted": [
@@ -944,8 +944,8 @@
    "stage": 5,
    "difficulty": 1,
    "order": 21,
-   "questionDe": "Schreiben Sie den Satz: [am Samstag / wir / nach Berlin / fliegen] (Beginnen Sie mit „Am Samstag“)",
-   "questionEn": "Write the sentence: On Saturday we are flying to Berlin. (time-first inversion, plain verb)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Am Samstag“): [am Samstag / wir / nach Berlin / fliegen]",
+   "questionEn": "Write the sentence: On Saturday we are flying to Berlin. (time-first inversion, plain verb) Begin with “Am Samstag”.",
    "options": null,
    "answer": "Am Samstag fliegen wir nach Berlin.",
    "accepted": [
@@ -965,7 +965,7 @@
    "difficulty": 2,
    "order": 23,
    "questionDe": "Schreiben Sie den Satz: [Fußball / wir / am Wochenende / spielen] (Beginnen Sie mit „Fußball“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis) Begin with “Fußball”. Use the present tense.",
    "options": null,
    "answer": "Fußball spielen wir am Wochenende.",
    "accepted": [
@@ -985,7 +985,7 @@
    "difficulty": 2,
    "order": 24,
    "questionDe": "Am Freitag ___ meine Eltern nicht zu Hause. (sein) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). On Friday my parents are not home. (time-first inversion, verb sein, plural)",
+   "questionEn": "Use the present tense (Präsens). On Friday my parents are not home. (time-first inversion, verb sein, plural) Use the present tense.",
    "options": null,
    "answer": "sind",
    "accepted": [
@@ -1042,7 +1042,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "___ Sommer ist es sonnig und warm. (in + dem → Kurzform)",
-   "questionEn": "In summer it is sunny and warm.",
+   "questionEn": "In summer it is sunny and warm. Use the contracted form.",
    "options": null,
    "answer": "Im",
    "accepted": [
@@ -1081,7 +1081,7 @@
    "difficulty": 1,
    "order": 2,
    "questionDe": "___ Abend kommt ein Gewitter. (an + dem → Kurzform)",
-   "questionEn": "In the evening a thunderstorm comes.",
+   "questionEn": "In the evening a thunderstorm comes. Use the contracted form.",
    "options": null,
    "answer": "Am",
    "accepted": [
@@ -1101,7 +1101,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Im Winter fährt Ana ___ Bahnhof. (zu + dem → Kurzform)",
-   "questionEn": "In winter Ana goes to the station.",
+   "questionEn": "In winter Ana goes to the station. Use the contracted form.",
    "options": null,
    "answer": "zum",
    "accepted": [
@@ -1120,7 +1120,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Ich gehe ___ Bahnhof. (zu + dem, Kurzform)",
-   "questionEn": "Fill in the contraction of zu + dem: I'm going to the train station.",
+   "questionEn": "Fill in the contraction of zu + dem: I'm going to the train station. Use the contracted form.",
    "options": null,
    "answer": "zum",
    "accepted": [
@@ -1139,7 +1139,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Bei Wind geht Tim ___ Kirche. (zu + der → Kurzform)",
-   "questionEn": "In the wind Tim goes to church.",
+   "questionEn": "In the wind Tim goes to church. Use the contracted form.",
    "options": null,
    "answer": "zur",
    "accepted": [
@@ -1158,7 +1158,7 @@
    "difficulty": 1,
    "order": 5,
    "questionDe": "Ich gehe ___ Post. (zu + der, Kurzform)",
-   "questionEn": "Fill in the contraction of zu + der: I'm going to the post office.",
+   "questionEn": "Fill in the contraction of zu + der: I'm going to the post office. Use the contracted form.",
    "options": null,
    "answer": "zur",
    "accepted": [
@@ -1196,7 +1196,7 @@
    "difficulty": 1,
    "order": 6,
    "questionDe": "Ich bin ___ Arzt. (bei + dem, Kurzform)",
-   "questionEn": "Fill in the contraction of bei + dem: I'm at the doctor's.",
+   "questionEn": "Fill in the contraction of bei + dem: I'm at the doctor's. Use the contracted form.",
    "options": null,
    "answer": "beim",
    "accepted": [
@@ -1234,7 +1234,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Ich komme ___ Supermarkt. (von + dem, Kurzform)",
-   "questionEn": "Choose the contraction of von + dem: I'm coming from the supermarket.",
+   "questionEn": "Choose the contraction of von + dem: I'm coming from the supermarket. Use the contracted form.",
    "options": [
     "vom",
     "von der",
@@ -1415,7 +1415,7 @@
    "difficulty": 3,
    "order": 3,
    "questionDe": "Schreiben Sie den Satz: [ich / wohnen / bei / meine Eltern] (Beginnen Sie mit „Ich“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern]",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern] Begin with “Ich”. Use the present tense.",
    "options": null,
    "answer": "Ich wohne bei meinen Eltern.",
    "accepted": [
@@ -1434,7 +1434,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Schreiben Sie den Satz: [ich / arbeiten / bei / die Bank] (mit bestimmtem Artikel) (Beginnen Sie mit „Ich“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank]",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank] Begin with “Ich”. Use the present tense. Use a definite article.",
    "options": null,
    "answer": "Ich arbeite bei der Bank.",
    "accepted": [
@@ -1453,7 +1453,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "Schreiben Sie den Satz: [das Buch / sein / von / meine Mutter] (Beginnen Sie mit „Das Buch“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter]",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter] Begin with “Das Buch”. Use the present tense.",
    "options": null,
    "answer": "Das Buch ist von meiner Mutter.",
    "accepted": [
@@ -1490,8 +1490,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie den Satz: [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Präsens) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain. Begin with “Wir”. Use the present tense. Use a definite article.",
    "options": null,
    "answer": "Wir fahren bei Regen mit dem Bus.",
    "accepted": [
@@ -1532,7 +1532,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Korrigieren Sie den Artikel: „Im Sommer fahren wir mit die Straßenbahn zum Bahnhof.“ (Beginnen Sie mit „Im Sommer“)",
-   "questionEn": "Fix the case after the preposition.",
+   "questionEn": "Fix the case after the preposition. Begin with “Im Sommer”. Correct only the article.",
    "options": null,
    "answer": "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof.",
    "accepted": [
@@ -1800,7 +1800,7 @@
    "difficulty": 3,
    "order": 1,
    "questionDe": "Schreiben Sie die Bitte: [Sie / bitte / das Fenster / zumachen]",
-   "questionEn": "Write the request: Please close the window. (formal, Sie)",
+   "questionEn": "Write the request: Please close the window. (formal, Sie) Build a request in the imperative.",
    "options": null,
    "answer": "Machen Sie bitte das Fenster zu!",
    "accepted": [
@@ -1828,7 +1828,7 @@
    "difficulty": 2,
    "order": 1,
    "questionDe": "Bilden Sie den Imperativ: [helfen / du / mir / bitte / mit der Waschmaschine]",
-   "questionEn": "Build the request for help.",
+   "questionEn": "Build the request for help. Build a request in the imperative.",
    "options": null,
    "answer": "Hilf mir bitte mit der Waschmaschine!",
    "accepted": [
@@ -1858,7 +1858,7 @@
    "difficulty": 2,
    "order": 2,
    "questionDe": "Schreiben Sie den Imperativ: [du / die Tür / aufmachen]",
-   "questionEn": "Write the sentence: Open the door! (informal, du)",
+   "questionEn": "Write the sentence: Open the door! (informal, du) Build a request in the imperative.",
    "options": null,
    "answer": "Mach die Tür auf!",
    "accepted": [
@@ -1885,7 +1885,7 @@
    "difficulty": 2,
    "order": 2,
    "questionDe": "Bilden Sie den Imperativ: [warten / du / in der Garage]",
-   "questionEn": "Build the request to wait.",
+   "questionEn": "Build the request to wait. Build a request in the imperative.",
    "options": null,
    "answer": "Warte in der Garage!",
    "accepted": [
@@ -1907,7 +1907,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Schreiben Sie die Bitte: [ihr / pünktlich / kommen]",
-   "questionEn": "Write the request: Come on time! (informal plural, ihr)",
+   "questionEn": "Write the request: Come on time! (informal plural, ihr) Build a request in the imperative.",
    "options": null,
    "answer": "Kommt pünktlich!",
    "accepted": [
@@ -1930,7 +1930,7 @@
    "difficulty": 2,
    "order": 3,
    "questionDe": "Bilden Sie den Imperativ: [holen / Sie / das Sofa / aus der Garage]",
-   "questionEn": "Build the polite request about the sofa.",
+   "questionEn": "Build the polite request about the sofa. Build a request in the imperative.",
    "options": null,
    "answer": "Holen Sie das Sofa aus der Garage!",
    "accepted": [
@@ -1952,7 +1952,7 @@
    "difficulty": 3,
    "order": 4,
    "questionDe": "Schreiben Sie die Bitte: [Sie / bitte / das Buch / lesen]",
-   "questionEn": "Write the request: Please read the book. (formal, Sie)",
+   "questionEn": "Write the request: Please read the book. (formal, Sie) Build a request in the imperative.",
    "options": null,
    "answer": "Lesen Sie bitte das Buch!",
    "accepted": [
@@ -2098,7 +2098,7 @@
    "difficulty": 3,
    "order": 13,
    "questionDe": "Schreiben Sie die Bitte: [Sie / bitte / Platz / nehmen]",
-   "questionEn": "Write the request: Please have a seat. (formal, Sie)",
+   "questionEn": "Write the request: Please have a seat. (formal, Sie) Build a request in the imperative.",
    "options": null,
    "answer": "Nehmen Sie bitte Platz!",
    "accepted": [
@@ -2322,8 +2322,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 12,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Das Taxi fährt von sieben zu zehn Uhr.“",
-   "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Das Taxi fährt von sieben zu zehn Uhr.“ (Wort zu)",
+   "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock. Correct only the error. Correct only the word “zu”.",
    "options": null,
    "answer": "Das Taxi fährt von sieben bis zehn Uhr.",
    "accepted": [
@@ -2361,8 +2361,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie den Satz: [ich / müssen / den Müll / nach Hause / nehmen] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence about the rubbish.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / müssen / den Müll / nach Hause / nehmen]",
+   "questionEn": "Build the sentence about the rubbish. Begin with “Ich”.",
    "options": null,
    "answer": "Ich muss den Müll nach Hause nehmen.",
    "accepted": [
@@ -2383,8 +2383,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie die Frage: [wo / dürfen / ich / langsam / fahren]",
-   "questionEn": "Build the question about cycling slowly.",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / dürfen / ich / langsam / fahren]",
+   "questionEn": "Build the question about cycling slowly. Begin with “Wo”. Build a question.",
    "options": null,
    "answer": "Wo darf ich langsam fahren?",
    "accepted": [
@@ -2403,8 +2403,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Ich kann fliegen um neun Uhr.“",
-   "questionEn": "Fix the word order.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Ich kann fliegen um neun Uhr.“ (Infinitiv am Satzende)",
+   "questionEn": "Fix the word order. Correct only the error. Put the infinitive at the end of the sentence.",
    "options": null,
    "answer": "Ich kann um neun Uhr fliegen.",
    "accepted": [
@@ -2445,8 +2445,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 17,
-   "questionDe": "Schreiben Sie den Satz: [wir / am Sonntag / wollen / Fußball / spielen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We want to play football on Sunday. (modal wollen, infinitive at the end)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / am Sonntag / wollen / Fußball / spielen]",
+   "questionEn": "Write the sentence: We want to play football on Sunday. (modal wollen, infinitive at the end) Begin with “Wir”.",
    "options": null,
    "answer": "Wir wollen am Sonntag Fußball spielen.",
    "accepted": [
@@ -2676,8 +2676,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 10,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Im Zimmer ist nicht Kissen.“ (Beginnen Sie mit „Im Zimmer“)",
-   "questionEn": "Fix the negation.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Im Zimmer ist nicht Kissen.“ (Wort nicht) (Beginnen Sie mit „Im Zimmer“)",
+   "questionEn": "Fix the negation. Begin with “Im Zimmer”. Correct only the error. Correct only the word “nicht”.",
    "options": null,
    "answer": "Im Zimmer ist kein Kissen.",
    "accepted": [
@@ -2698,8 +2698,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 11,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Der Vorhang ist kein am Fenster.“ (Beginnen Sie mit „Der Vorhang“)",
-   "questionEn": "Fix the negation.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Der Vorhang ist kein am Fenster.“ (Wort kein) (Beginnen Sie mit „Der Vorhang“)",
+   "questionEn": "Fix the negation. Begin with “Der Vorhang”. Correct only the error. Correct only the word “kein”.",
    "options": null,
    "answer": "Der Vorhang ist nicht am Fenster.",
    "accepted": [
@@ -2718,8 +2718,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 12,
-   "questionDe": "Bilden Sie den Satz: [der Eingang / sein / nicht / schön] (Präsens) (Beginnen Sie mit „Der Eingang“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Eingang“): [der Eingang / sein / nicht / schön] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance. Begin with “Der Eingang”. Use the present tense.",
    "options": null,
    "answer": "Der Eingang ist nicht schön.",
    "accepted": [
@@ -2739,7 +2739,7 @@
    "difficulty": 2,
    "order": 13,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Hotel“): [das Hotel / haben / kein / Steckdose] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel. Begin with “Das Hotel”. Use the present tense.",
    "options": null,
    "answer": "Das Hotel hat keine Steckdose.",
    "accepted": [
@@ -2759,7 +2759,7 @@
    "difficulty": 2,
    "order": 17,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kein / Computer / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen) Begin with “Ich”. Use the present tense.",
    "options": null,
    "answer": "Ich habe keinen Computer.",
    "accepted": [
@@ -2779,7 +2779,7 @@
    "difficulty": 1,
    "order": 18,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / keine / Zeit / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: We have no time. (kein + feminine noun, wir-form of haben)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We have no time. (kein + feminine noun, wir-form of haben) Begin with “Wir”. Use the present tense.",
    "options": null,
    "answer": "Wir haben keine Zeit.",
    "accepted": [
@@ -2799,7 +2799,7 @@
    "difficulty": 2,
    "order": 19,
    "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“; „nicht“ steht am Satzende) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: We are not buying the car. (nicht after a definite direct object)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We are not buying the car. (nicht after a definite direct object) Begin with “Wir”. Put “nicht” at the end of the sentence. Use the present tense.",
    "options": null,
    "answer": "Wir kaufen das Auto nicht.",
    "accepted": [
@@ -2898,7 +2898,7 @@
    "difficulty": 1,
    "order": 5,
    "questionDe": "Meine Tante ___ glücklich. (sein) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). My aunt is happy.",
+   "questionEn": "Use the present tense (Präsens). My aunt is happy. Use the present tense.",
    "options": null,
    "answer": "ist",
    "accepted": [
@@ -3021,8 +3021,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 13,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Gestern ist mein Onkel glücklich.“ (Beginnen Sie mit „Gestern“)",
-   "questionEn": "Correct the sentence: Yesterday my uncle was happy.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Gestern ist mein Onkel glücklich.“ (Verb) (Beginnen Sie mit „Gestern“)",
+   "questionEn": "Correct the sentence: Yesterday my uncle was happy. Begin with “Gestern”. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Gestern war mein Onkel glücklich.",
    "accepted": [
@@ -3062,8 +3062,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie die Frage: [wer / sein / die Tante] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the woman.",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wer“): [wer / sein / die Tante] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the woman. Begin with “Wer”. Use the present tense. Build a question.",
    "options": null,
    "answer": "Wer ist die Tante?",
    "accepted": [
@@ -3082,8 +3082,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie den Satz: [mein Opa / sein / alt] (Präsens) (Beginnen Sie mit „Mein Opa“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Mein Opa“): [mein Opa / sein / alt] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa. Begin with “Mein Opa”. Use the present tense.",
    "options": null,
    "answer": "Mein Opa ist alt.",
    "accepted": [
@@ -3103,7 +3103,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.“ (Beginnen Sie mit „Das“)",
-   "questionEn": "Fix the form.",
+   "questionEn": "Fix the form. Begin with “Das”. Correct only the possessive determiner.",
    "options": null,
    "answer": "Das ist mein Onkel.",
    "accepted": [
@@ -3123,7 +3123,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Korrigieren Sie den Artikel: „Der Kind ist klein.“",
-   "questionEn": "Fix the article.",
+   "questionEn": "Fix the article. Correct only the article.",
    "options": null,
    "answer": "Das Kind ist klein.",
    "accepted": [
@@ -3282,7 +3282,7 @@
    "difficulty": 2,
    "order": 21,
    "questionDe": "Schreiben Sie den Satz: [der Lehrer / heute / krank / sein] (Beginnen Sie mit „Der Lehrer“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein) Begin with “Der Lehrer”. Use the present tense.",
    "options": null,
    "answer": "Der Lehrer ist heute krank.",
    "accepted": [
@@ -4091,8 +4091,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 17,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Der Fisch war lecker, aber Tim hat früh gegangen.“",
-   "questionEn": "Correct the sentence: The fish was delicious, but Tim left early.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Der Fisch war lecker, aber Tim hat früh gegangen.“ (Verb)",
+   "questionEn": "Correct the sentence: The fish was delicious, but Tim left early. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Der Fisch war lecker, aber Tim ist früh gegangen.",
    "accepted": [
@@ -4111,8 +4111,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 18,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Ich habe die Getränke gebezahlt.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: I paid for the drinks.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Ich habe die Getränke gebezahlt.“ (Verb) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct the sentence: I paid for the drinks. Begin with “Ich”. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Ich habe die Getränke bezahlt.",
    "accepted": [
@@ -4133,8 +4133,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Schreiben Sie den Satz im Perfekt: [wir / heute / einkaufen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence in the Perfekt: We went shopping today. Start with wir. [wir / heute / einkaufen]",
+   "questionDe": "Schreiben Sie den Satz im Perfekt (Beginnen Sie mit „Wir“): [wir / heute / einkaufen]",
+   "questionEn": "Write the sentence in the Perfekt: We went shopping today. Start with wir. [wir / heute / einkaufen] Begin with “Wir”.",
    "options": null,
    "answer": "Wir haben heute eingekauft.",
    "accepted": [
@@ -4153,8 +4153,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 3,
-   "questionDe": "Schreiben Sie den Satz im Perfekt: [ich / früh / aufstehen] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence in the Perfekt: I got up early. Start with ich. [ich / früh / aufstehen]",
+   "questionDe": "Schreiben Sie den Satz im Perfekt (Beginnen Sie mit „Ich“): [ich / früh / aufstehen]",
+   "questionEn": "Write the sentence in the Perfekt: I got up early. Start with ich. [ich / früh / aufstehen] Begin with “Ich”.",
    "options": null,
    "answer": "Ich bin früh aufgestanden.",
    "accepted": [
@@ -4191,8 +4191,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie den Satz: [ich / haben / die Kartoffel / kaufen] (Perfekt) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / haben / die Kartoffel / kaufen] (Perfekt)",
+   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato. Begin with “Ich”. Use the Perfekt.",
    "options": null,
    "answer": "Ich habe die Kartoffel gekauft.",
    "accepted": [
@@ -4230,8 +4230,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Bilden Sie den Satz: [Tim / haben / den Reis / kochen] (Perfekt) (Beginnen Sie mit „Tim“)",
-   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Tim“): [Tim / haben / den Reis / kochen] (Perfekt)",
+   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice. Begin with “Tim”. Use the Perfekt.",
    "options": null,
    "answer": "Tim hat den Reis gekocht.",
    "accepted": [
@@ -4272,8 +4272,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 10,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Ana hat Milch getrinkt.“ (Beginnen Sie mit „Ana“)",
-   "questionEn": "Fix the participle.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Ana hat Milch getrinkt.“ (Verb) (Beginnen Sie mit „Ana“)",
+   "questionEn": "Fix the participle. Begin with “Ana”. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Ana hat Milch getrunken.",
    "accepted": [
@@ -4314,8 +4314,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 11,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Wir haben das Fleisch kaufen.“ (Beginnen Sie mit „Wir“)",
-   "questionEn": "Fix the participle.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Wir haben das Fleisch kaufen.“ (Verb) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Fix the participle. Begin with “Wir”. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Wir haben das Fleisch gekauft.",
    "accepted": [
@@ -4577,8 +4577,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 13,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Die Hose gefällt mich.“",
-   "questionEn": "Correct the sentence: I like the trousers.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Die Hose gefällt mich.“ (Wort mich)",
+   "questionEn": "Correct the sentence: I like the trousers. Correct only the error. Correct only the word “mich”.",
    "options": null,
    "answer": "Die Hose gefällt mir.",
    "accepted": [
@@ -4635,8 +4635,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 5,
-   "questionDe": "Bilden Sie den Satz: [ich / kaufen / die Jacke / für / meine Oma] (Präsens) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / kaufen / die Jacke / für / meine Oma] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket. Begin with “Ich”. Use the present tense.",
    "options": null,
    "answer": "Ich kaufe die Jacke für meine Oma.",
    "accepted": [
@@ -4657,8 +4657,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Bilden Sie den Satz: [Tim / gehen / ohne / den Mantel] (Präsens) (Beginnen Sie mit „Tim“)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the coat.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Tim“): [Tim / gehen / ohne / den Mantel] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the coat. Begin with “Tim”. Use the present tense.",
    "options": null,
    "answer": "Tim geht ohne den Mantel.",
    "accepted": [
@@ -4678,7 +4678,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Die Hose ist für mein Bruder.“ (Beginnen Sie mit „Die Hose“)",
-   "questionEn": "Fix the case after the preposition.",
+   "questionEn": "Fix the case after the preposition. Begin with “Die Hose”. Correct only the possessive determiner.",
    "options": null,
    "answer": "Die Hose ist für meinen Bruder.",
    "accepted": [
@@ -4698,7 +4698,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie den Artikel: „Ana geht ohne der Schal ins Kaufhaus.“ (Beginnen Sie mit „Ana“)",
-   "questionEn": "Fix the case after the preposition.",
+   "questionEn": "Fix the case after the preposition. Begin with “Ana”. Correct only the article.",
    "options": null,
    "answer": "Ana geht ohne den Schal ins Kaufhaus.",
    "accepted": [
@@ -4764,7 +4764,7 @@
    "difficulty": 2,
    "order": 16,
    "questionDe": "Schreiben Sie den Satz: [ich / kaufen / ein Geschenk / für / meine Mutter] (Beginnen Sie mit „Ich“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change) Begin with “Ich”. Use the present tense.",
    "options": null,
    "answer": "Ich kaufe ein Geschenk für meine Mutter.",
    "accepted": [
@@ -4881,7 +4881,7 @@
    "difficulty": 2,
    "order": 25,
    "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative) Begin with “Ich”. Put “nicht” before “ohne”. Use the present tense.",
    "options": null,
    "answer": "Ich fahre nicht ohne meinen Bruder.",
    "accepted": [
@@ -5175,8 +5175,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 11,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Ich würde gern einen Ausflug mache.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: I would like to go on a trip.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Ich würde gern einen Ausflug mache.“ (Verb) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct the sentence: I would like to go on a trip. Begin with “Ich”. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Ich würde gern einen Ausflug machen.",
    "accepted": [
@@ -5218,8 +5218,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 7,
-   "questionDe": "Bilden Sie die Frage: [wann / kommen / der Bus / zum Konzert] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the bus.",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wann“): [wann / kommen / der Bus / zum Konzert] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the bus. Begin with “Wann”. Use the present tense. Build a question.",
    "options": null,
    "answer": "Wann kommt der Bus zum Konzert?",
    "accepted": [
@@ -5238,8 +5238,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Bilden Sie die Frage: [wohin / fahren / wir / im Urlaub] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the holiday.",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wohin“): [wohin / fahren / wir / im Urlaub] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Build the question about the holiday. Begin with “Wohin”. Use the present tense. Build a question.",
    "options": null,
    "answer": "Wohin fahren wir im Urlaub?",
    "accepted": [
@@ -5278,8 +5278,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Korrigieren Sie nur den Fehler in der Frage: „Wann der Film im Kino ist?“",
-   "questionEn": "Fix the question.",
+   "questionDe": "Korrigieren Sie nur den Fehler in der Frage: „Wann der Film im Kino ist?“ (Verb auf Position 2)",
+   "questionEn": "Fix the question. Correct only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Wann ist der Film im Kino?",
    "accepted": [
@@ -5438,8 +5438,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 19,
-   "questionDe": "Schreiben Sie die Frage: [wie viele / Kinder / du / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order)",
+   "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Wie“): [wie viele / Kinder / du / haben] (Präsens)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order) Begin with “Wie”. Use the present tense. Build a question.",
    "options": null,
    "answer": "Wie viele Kinder hast du?",
    "accepted": [
@@ -5458,8 +5458,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 20,
-   "questionDe": "Schreiben Sie die Frage: [wann / ihr / ankommen]",
-   "questionEn": "Write the sentence: When do you (pl.) arrive? Start with 'wann'. (W-word + verb + subject order, separable verb ankommen)",
+   "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Wann“): [wann / ihr / ankommen]",
+   "questionEn": "Write the sentence: When do you (pl.) arrive? Start with 'wann'. (W-word + verb + subject order, separable verb ankommen) Begin with “Wann”. Build a question.",
    "options": null,
    "answer": "Wann kommt ihr an?",
    "accepted": [
@@ -5828,8 +5828,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 12,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Ich schlafe nicht gut, denn mein Hals weh tut.“",
-   "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Ich schlafe nicht gut, denn mein Hals weh tut.“ (Verb auf Position 2 oder Wort denn)",
+   "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts. Correct only the error. Correct the verb position or the word “denn”.",
    "options": null,
    "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
    "accepted": [
@@ -5878,8 +5878,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 13,
-   "questionDe": "Bilden Sie den Satz: [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun] (Beginnen Sie mit „Ich“; nach „denn“ mit „mein Kopf“)",
-   "questionEn": "Build the sentence: I am taking a tablet because my head hurts.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“; nach „denn“ mit „mein Kopf“): [ich / nehmen / eine Tablette / denn / mein Kopf / wehtun]",
+   "questionEn": "Build the sentence: I am taking a tablet because my head hurts. Begin with “Ich”. After “denn”, begin with “mein Kopf”.",
    "options": null,
    "answer": "Ich nehme eine Tablette, denn mein Kopf tut weh.",
    "accepted": [
@@ -5937,7 +5937,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Du“): [du / gern / Bücher / lesen]",
-   "questionEn": "Write the sentence: You like reading books. (subject: du)",
+   "questionEn": "Write the sentence: You like reading books. (subject: du) Begin with “Du”.",
    "options": null,
    "answer": "Du liest gern Bücher.",
    "accepted": [
@@ -5958,7 +5958,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Schreiben Sie den Satz: [er / mit dem Zug / fahren] (Beginnen Sie mit „Er“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: He goes by train. (subject: er)",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: He goes by train. (subject: er) Begin with “Er”. Use the present tense.",
    "options": null,
    "answer": "Er fährt mit dem Zug.",
    "accepted": [
@@ -5977,8 +5977,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Schreiben Sie den Satz: [wir / am Morgen / fernsehen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We watch TV in the morning. (subject: wir)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / am Morgen / fernsehen]",
+   "questionEn": "Write the sentence: We watch TV in the morning. (subject: wir) Begin with “Wir”.",
    "options": null,
    "answer": "Wir sehen am Morgen fern.",
    "accepted": [
@@ -5996,8 +5996,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 8,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Mein Mann schlaft nicht gut, sein Rücken tut weh.“",
-   "questionEn": "Fix the verb form.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Mein Mann schlaft nicht gut, sein Rücken tut weh.“ (Verb)",
+   "questionEn": "Fix the verb form. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Mein Mann schläft nicht gut, sein Rücken tut weh.",
    "accepted": [
@@ -6036,8 +6036,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Korrigieren Sie nur den Fehler: „Die Tablette helft gegen Fieber.“ (Beginnen Sie mit „Die Tablette“)",
-   "questionEn": "Fix the verb form.",
+   "questionDe": "Korrigieren Sie nur den Fehler: „Die Tablette helft gegen Fieber.“ (Verb) (Beginnen Sie mit „Die Tablette“)",
+   "questionEn": "Fix the verb form. Begin with “Die Tablette”. Correct only the error. Correct only the verb.",
    "options": null,
    "answer": "Die Tablette hilft gegen Fieber.",
    "accepted": [

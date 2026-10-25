@@ -9,6 +9,13 @@
   "da9e486f-2548-4462-9bdd-c59560ed7276": "Sidecar says das \"is one thing\"; \"Das sind meine Eltern\" contradicts it."
  },
  "items": {
+  "dd1c3d60-8ae7-4c94-8990-19633dcba36f": {
+   "questionDe": "Meine Mutter ist hier. ___ spricht Deutsch.",
+   "questionEn": "My mother is here. ___ speaks German. Refer to meine Mutter.",
+   "explanationDe": "Meine Mutter ist feminin: Das Pronomen ist sie.",
+   "explanationEn": "The antecedent **meine Mutter** is feminine: use **sie**.",
+   "reason": "A pronoun gap names its antecedent; Es ist meine Mutter was also correct in the isolated identification sentence."
+  },
   "ffec1d33-2826-5332-93e5-2b8efe7ece89": {
    "options": [
     "Ja, ich komme aus Italien.",
@@ -114,7 +121,7 @@
    "reason": "questionEn repeated the German."
   },
   "8908dc09-b16b-57e4-b056-e0f3060766c8": {
-   "questionDe": "[das / ist / sein / Schwester] → Schreiben Sie den Satz.",
+   "questionDe": "[das / ist / sein / Schwester] → Schreiben Sie den Satz. (Beginnen Sie mit „Das“)",
    "reason": "The prompt handed over the inflected possessive (seine) the item tests."
   },
   "19f1aa27-7634-5599-8a61-8f69e259f6d4": {

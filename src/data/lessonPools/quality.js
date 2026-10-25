@@ -921,47 +921,6 @@ const PREPOSITION_RE =
 const ADVERBIAL_ADVERB_RE =
   /^(?:gestern|vorgestern|heute|morgen|übermorgen|jetzt|dann|danach|hier|dort|da)$/i;
 
-/** The modal and frequency adverbs. Not an Angabe at A1.1 (REVIEW #13 pins „Wir tanzen zusammen."
- * as having nothing to front), yet „Zusammen tanzen wir." is German — so a prompt whose answer
- * holds one names its opening (`missingOpeningCue`, Codex review 2026-10-07). */
-const MODAL_ADVERB_RE = /^(?:zusammen|gern|gerne|oft|immer|manchmal|bald|später|sofort|leider|zuerst)$/i;
-
-/** The copula forms A1.1 meets: their complement is a predicate („Ich bin Lehrer."), not an object. */
-const COPULA_RE = /^(?:bin|bist|ist|sind|seid|heiße|heißt|heißen|heisse|heisst|heissen|werde|wird|werden)$/i;
-
-/** What may open an object noun phrase: an article, a possessive, kein-, a number word. */
-const NP_DETERMINER_RE =
-  /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|keinen|mein|meine|meinen|dein|deine|deinen|sein|seine|seinen|ihr|ihre|ihren|unser|unsere|unseren|euer|eure|euren|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele)$/i;
-
-/** The canonical opens with its subject: a nominative pronoun, a determiner, or one name. */
-function subjectFirst(words, verbAt) {
-  const first = words[0];
-  return SUBJECT_SHAPED_RE.test(bare(first))
-    || (verbAt === 1 && /^[A-ZÄÖÜ]/.test(first) && !ADVERBIAL_ADVERB_RE.test(bare(first)) && !MODAL_ADVERB_RE.test(bare(first)));
-}
-
-/**
- * The object fronted: „Die Firma braucht ein Büro." → „Ein Büro braucht die Firma." — the same V2
- * sentence, marked wrong in a graded checkpoint (Codex review, 2026-10-07). Only the narrowest
- * shape: [subject] [full verb] [one object noun phrase] and nothing after it — the phrase an
- * optional determiner, lower-case adjectives and a capitalised noun or name. A copula's
- * predicate, a pronoun object, a separable prefix, an infinitive or a participle all stay put.
- * It is NOT derived into an answer key: REVIEW #12/#13 keep objects out of `frontableOrders`.
- * `missingOpeningCue` uses it to make the prompt name the opening instead.
- */
-function objectFronted(words, verbAt) {
-  if (COPULA_RE.test(bare(words[verbAt])) || !subjectFirst(words, verbAt)) return null;
-  const subject = words.slice(0, verbAt);
-  const object = words.slice(verbAt + 1);
-  if (!object.length || object.length > 4) return null;
-  const noun = object[object.length - 1];
-  if (!/^[A-ZÄÖÜ]/.test(noun) || /^(?:Sie|Ihnen)$/.test(bare(noun))) return null;
-  const head = object.slice(0, -1);
-  if (head.length && !NP_DETERMINER_RE.test(bare(head[0]))) return null;
-  if (head.slice(1).some((w) => !/^[a-zäöüß]+$/.test(bare(w)))) return null;
-  return [capitalise(object[0]), ...object.slice(1), words[verbAt], lowerSubject(subject[0]), ...subject.slice(1)].join(' ');
-}
-
 /** The determiners that open a bare accusative time phrase („jeden Tag",
  * „nächste Woche") — an Angabe without a preposition. */
 const TIME_DETERMINER_RE =
@@ -983,11 +942,11 @@ const LOWERCASABLE_SUBJECT_RE =
  * (`bin`, `sind`) and the modals it meets. Without them „Ich bin Lehrer von
  * Beruf." has no readable verb and the whole item falls out of the rule. */
 const FRONTABLE_FINITE_RE =
-  /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et)|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
+  /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et|ern|eln)|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
 
 /** Words of that shape that are not verbs — the A1.1 adverbs and particles that
  * happen to end in a personal ending. Measured against the built pool. */
-const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon)$/i;
+const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon|acht|sieben|hundert|tausend)$/i;
 
 /** A word that could be the subject of the clause: a nominative pronoun or a
  * determiner opening a noun phrase. Used to refuse an already-inverted
@@ -1106,27 +1065,70 @@ export function frontedAcceptedForms(item) {
 }
 
 /**
- * The opening a sentence-building prompt must name, or null. An item whose answer could also open
- * with its OBJECT („Ein Büro braucht die Firma.") or a modal adverb („Zusammen tanzen wir.")
- * accepted only the subject-first order, and the task never said which part opens — both were
- * marked wrong in graded checkpoints (Codex review, 2026-10-07). Neither is an Angabe the answer-key
- * rule derives (REVIEW #12/#13 pin that), so the PROMPT gains the information instead — the
- * convention of the determiner cue: „(Beginnen Sie mit „Die Firma“)". `answer`/`accepted` are
- * never touched.
+ * Name the opening of every statement or question. Objects, predicates and
+ * pronouns can also occupy the Vorfeld; questions can use confirmation/echo
+ * order. Imperatives retain their separately enumerated verb/bitte openings.
  */
 export function missingOpeningCue(item) {
   if (String(item?.type) !== 'sentence_building') return null;
   const q = String(item.questionDe || '');
-  if (/\bfrage\b/i.test(q) || /\(Beginnen Sie mit /.test(q) || !BRACKET_LIST_RE.test(q)) return null;
+  if (/\(Beginnen Sie mit /.test(q) || /\b(?:Imperativ|Bitte)\b/i.test(q)) return null;
   const answer = String(item.answer || '').trim();
-  if (!answer || answer.includes('?')) return null;
+  if (!answer || /!$/.test(answer)) return null;
   const words = answer.replace(/[.!?]+$/, '').split(/\s+/).filter(Boolean);
   if (words.length < 3) return null;
   const verbAt = finiteVerbAt(words);
-  if (verbAt < 1 || !subjectFirst(words, verbAt)) return null;
-  const adverb = words.slice(verbAt + 1).some((w) => MODAL_ADVERB_RE.test(bare(w)));
-  if (!adverb && !objectFronted(words, verbAt)) return null;
+  if (verbAt < 1) return words[0];
+  // A statement can also front a predicate, pronoun object or a phrase inside
+  // the verbal bracket. Naming its Vorfeld avoids guessing a complete German
+  // grammar from the shape of its last noun. This is the A1.2 convention too.
   return words.slice(0, verbAt).join(' ');
+}
+
+/** Binding task directions must survive the optional English hint. */
+export function taskConstraintsEn(item) {
+  const q = String(item?.questionDe || '');
+  const constraints = [];
+  const opening = q.match(/\(Beginnen Sie mit „([^“]+)“([^)]*)\)/);
+  if (opening) {
+    constraints.push(`Begin with “${opening[1]}”.`);
+    for (const part of opening[2].split(';').map((s) => s.trim()).filter(Boolean)) {
+      let m;
+      if ((m = part.match(/^„([^“]+)“ steht am Satzende$/))) constraints.push(`Put “${m[1]}” at the end of the sentence.`);
+      else if ((m = part.match(/^„([^“]+)“ steht vor „([^“]+)“$/))) constraints.push(`Put “${m[1]}” before “${m[2]}”.`);
+      else if ((m = part.match(/^nach „([^“]+)“ mit „([^“]+)“$/))) constraints.push(`After “${m[1]}”, begin with “${m[2]}”.`);
+      else if ((m = part.match(/^der zweite Teil mit „([^“]+)“$/))) constraints.push(`Begin the second clause with “${m[1]}”.`);
+      else throw new Error(`Untranslated opening constraint: ${part}`);
+    }
+  }
+  const directions = [
+    [/\(Präsens\)/, 'Use the present tense.'],
+    [/\(Perfekt\)/, 'Use the Perfekt.'],
+    [/mit bestimmtem Artikel/, 'Use a definite article.'],
+    [/mit unbestimmtem Artikel/, 'Use an indefinite article.'],
+    [/\bKurzform\b/, 'Use the contracted form.'],
+    [/\bvolle Form\b/, 'Use the full form.'],
+    [/Korrigieren Sie den Artikel/, 'Correct only the article.'],
+    [/Korrigieren Sie den Possessivartikel/, 'Correct only the possessive determiner.'],
+    [/Korrigieren Sie (?:nur )?das Verb/, 'Correct only the verb.'],
+    [/Korrigieren Sie nur den Fehler/, 'Correct only the error.'],
+  ];
+  if (item?.type === 'sentence_building') directions.push(
+    [/\b(?:Frage|Verb auf Position 1|Antwort: ja oder nein)\b/, 'Build a question.'],
+    [/\b(?:Imperativ|Bitte):/, 'Build a request in the imperative.'],
+  );
+  for (const [pattern, en] of directions) if (pattern.test(q)) constraints.push(en);
+  const word = q.match(/Korrigieren Sie das Wort (\p{L}+):/u);
+  if (word) constraints.push(`Correct only the word “${word[1]}”.`);
+  const repair = NAMED_REPAIR_RE.exec(q)?.[2];
+  if (repair) {
+    if (/^Wort /i.test(repair)) constraints.push(`Correct only the word “${repair.slice(5)}”.`);
+    else if (/^Verb$/i.test(repair)) constraints.push('Correct only the verb.');
+    else if (/^Verb auf Position 2 oder Wort denn$/i.test(repair)) constraints.push('Correct the verb position or the word “denn”.');
+    else if (/^Verb auf Position 2$/i.test(repair)) constraints.push('Put the verb in position 2.');
+    else if (/^Infinitiv am Satzende$/i.test(repair)) constraints.push('Put the infinitive at the end of the sentence.');
+  }
+  return [...new Set(constraints)];
 }
 
 /**
@@ -1517,7 +1519,7 @@ export function determinerRepair(item) {
  * task allows („Ich brauche im Zentrum einen Markt.") is the same repair. A prompt without the
  * formula, or without a quoted sentence, decides nothing here (true).
  */
-const NAMED_REPAIR_RE = /\b(?:korrigieren sie|korrigiere)\s+(?:den|die)\s+(artikel|possessivartikel|possessiv|endung)\b|\((artikel|possessivartikel|endung)\)/i;
+const NAMED_REPAIR_RE = /\b(?:korrigieren sie|korrigiere)\s+(?:den|die|das)\s+(artikel|possessivartikel|possessiv|endung|verb|wort \p{L}+)\b|\((artikel|possessivartikel|endung|verb(?: auf position 2(?: oder wort denn)?)?|infinitiv am satzende|wort \p{L}+)\)/iu;
 const determinerFamily = (w) => (POSSESSIVE_FORM_RE.test(bare(w)) ? 'possessive' : ARTICLE_FAMILY(w) ? 'article' : null);
 export function namedRepairAccepts(item, answer) {
   if (String(item?.type) !== 'error_correction') return true;
@@ -1525,8 +1527,37 @@ export function namedRepairAccepts(item, answer) {
   const cue = NAMED_REPAIR_RE.exec(prompt);
   const quote = QUOTED_SPAN_RE.exec(prompt);
   if (!cue || !quote) return true;
+  const named = (cue[1] || cue[2]).toLowerCase();
+  if (named === 'verb auf position 2 oder wort denn') {
+    // A causal clause may repair its order or replace denn with weil/da.
+    // Treat the two standard spellings of wehtun as the same verb here.
+    const tokens = (text) => bare(text).replace(/wehtut/g, 'weh tut').split(/\s+/).map(flat)
+      .map((word) => /^(denn|weil|da)$/.test(word) ? 'causal' : word).sort();
+    return JSON.stringify(tokens(quote[1])) === JSON.stringify(tokens(answer));
+  }
   const src = bare(quote[1]).split(/\s+/).filter(Boolean).map(flat);
   const left = bare(answer).split(/\s+/).filter(Boolean).map(flat);
+  if (named === 'verb' || named.startsWith('wort ')) {
+    // Locate the named slot from the model; its licensed repair may be a phrase
+    // (ist → ist … gewesen, nicht → nicht ein), not just one token.
+    const model = bare(item.answer).split(/\s+/).filter(Boolean).map(flat);
+    const changed = src.filter((word) => {
+      const at = model.indexOf(word);
+      if (at < 0) return true;
+      model.splice(at, 1);
+      return false;
+    });
+    const target = named.startsWith('wort ') ? flat(named.slice(5)) : changed.length === 1 ? changed[0] : null;
+    if (!target || !src.includes(target)) return false;
+    const unchanged = [...src];
+    unchanged.splice(unchanged.indexOf(target), 1);
+    for (const word of unchanged) {
+      const at = left.indexOf(word);
+      if (at < 0) return false;
+      left.splice(at, 1);
+    }
+    return left.length > 0 && !(left.length === 1 && left[0] === target);
+  }
   if (src.length !== left.length) return false;
   const gone = [];
   for (const w of src) {
@@ -1534,10 +1565,10 @@ export function namedRepairAccepts(item, answer) {
     if (at >= 0) left.splice(at, 1);
     else gone.push(w);
   }
+  if (named === 'verb auf position 2' || named === 'infinitiv am satzende') return gone.length === 0 && left.length === 0;
   if (gone.length !== 1 || left.length !== 1) return false;
   const families = [gone[0], left[0]].map(determinerFamily);
   if (families.some((f) => !f)) return false;
-  const named = (cue[1] || cue[2]).toLowerCase();
   if (named.startsWith('possessiv')) return families.every((f) => f === 'possessive');
   if (named === 'artikel') return families.every((f) => f === 'article');
   return families[0] === families[1];
@@ -1551,7 +1582,7 @@ export function namedRepairAccepts(item, answer) {
 export function missingDeterminerCue(item) {
   const repair = determinerRepair(item);
   if (!repair) return null;
-  if (DETERMINER_CUE_RE.test(String(item.questionDe || ''))) return null;
+  if (NAMED_REPAIR_RE.test(String(item.questionDe || ''))) return null;
   return repair;
 }
 
@@ -1563,7 +1594,7 @@ export function missingDeterminerCue(item) {
  */
 export function withDeterminerCue(questionDe, kind) {
   const text = String(questionDe || '').trim();
-  if (!text || DETERMINER_CUE_RE.test(text)) return text;
+  if (!text || NAMED_REPAIR_RE.test(text)) return text;
   const cue = DETERMINER_CUE[kind] || DETERMINER_CUE.artikel;
   const formula = /(korrigieren sie|korrigiere)(\s+den satz)?(?=\s*:)/i;
   if (formula.test(text)) return text.replace(formula, (_m, verb) => `${verb} ${cue}`);

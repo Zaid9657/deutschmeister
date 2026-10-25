@@ -253,7 +253,7 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, wordOrder = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -270,6 +270,13 @@ export function checkAnswer(userInput, expected, {
   const user = prepare(userInput);
   const rawUser = raw(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
+
+  // Tiles carry the source line's capitals and punctuation with them. Moving
+  // one cannot be a spelling slip; only an exact, licensed word order passes.
+  if (wordOrder) {
+    const match = accepted.find((a) => prepare(a) === user);
+    return { result: match ? RESULT.CORRECT : RESULT.WRONG, expected: match || accepted[0] || '' };
+  }
 
   if (choice) {
     for (const a of accepted) {
@@ -373,6 +380,7 @@ export function checkOptionsFor(item) {
     dictation: isDictationTask(item),
     spelling: spellingApplies(accepted),
     choice: isChoiceItem(item),
+    ...(item?.type === 'word_order' ? { wordOrder: true } : {}),
   };
 }
 
