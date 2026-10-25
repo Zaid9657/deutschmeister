@@ -25,6 +25,18 @@ const settled = (promise) => Promise.resolve(promise).then(
   (error) => ({ ok: false, error }),
 );
 
+// Background re-reads closer together than this are skipped: one tab return
+// fires visibilitychange and auth-js's SIGNED_IN together, and every load counts.
+const REFRESH_THROTTLE_MS = 5000;
+// After an entitlement deadline, wait this long before re-reading, so a renewal
+// charged at the deadline has time to reach the database through the webhook.
+const DEADLINE_GRACE_MS = 60 * 1000;
+// setTimeout overflows past 2^31 - 1 ms (about 24.8 days).
+const MAX_TIMER_MS = 24 * 24 * 60 * 60 * 1000;
+// What a masked (other or no) account shows: one list, so effects keyed on the
+// purchases do not re-run on every render.
+const NO_PURCHASES = Object.freeze([]);
+
 export const SubscriptionProvider = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id ?? null;
@@ -39,7 +51,7 @@ export const SubscriptionProvider = ({ children }) => {
   }
   const subscription = data.userId === userId ? data.subscription : null;
   const profile = data.userId === userId ? data.profile : null;
-  const purchases = data.userId === userId ? data.purchases : [];
+  const purchases = data.userId === userId ? data.purchases : NO_PURCHASES;
   // True only for the first load of an account (or an identity change). A
   // refresh of the account on screen revalidates in the background: every
   // guard swaps its page for a spinner while `loading` is true, and an
@@ -63,6 +75,7 @@ export const SubscriptionProvider = ({ children }) => {
       setData({ userId, subscription: null, profile: null, purchases: [], loading: false, billingVerified: false });
       return;
     }
+    lastRefreshRef.current = Date.now();
 
     // A refresh of the account already on screen keeps its data and does not
     // set `loading` (tab return, the hourly token refresh, a settings save).
@@ -161,22 +174,57 @@ export const SubscriptionProvider = ({ children }) => {
     loadSubscriptionData();
   }, [loadSubscriptionData]);
 
+  // A background re-read of the account on screen (no loading flash),
+  // throttled: skipped within REFRESH_THROTTLE_MS of the last load.
+  const revalidate = useCallback(() => {
+    if (!userId || Date.now() - lastRefreshRef.current <= REFRESH_THROTTLE_MS) return;
+    loadSubscriptionData();
+  }, [userId, loadSubscriptionData]);
+
   // Refresh subscription data when user returns to tab (e.g. after LemonSqueezy checkout)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && userId) {
-        // Throttle: only refresh if more than 5 seconds since last refresh
-        const now = Date.now();
-        if (now - lastRefreshRef.current > 5000) {
-          lastRefreshRef.current = now;
-          loadSubscriptionData();
-        }
-      }
+      if (document.visibilityState === 'visible') revalidate();
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [userId, loadSubscriptionData]);
+  }, [revalidate]);
+
+  // auth-js announces the account on screen again, with a new user object, on
+  // every tab return (SIGNED_IN) and about hourly (TOKEN_REFRESHED). That no
+  // longer recreates the loader, but it is the regular chance to see what the
+  // server changed since the last read: a renewal's new paid-through date above
+  // all. Without it a session that stayed visible across a renewal kept the old
+  // date and lost paid access. Re-read in the background, throttled.
+  const authUserRef = useRef(user);
+  useEffect(() => {
+    const previous = authUserRef.current;
+    authUserRef.current = user;
+    if (user && previous && previous !== user && previous.id === user.id) revalidate();
+  }, [user, revalidate]);
+
+  // Access changes at known times: the subscription's paid-through date, the
+  // trial end, a course's included-Pro end. Shortly after the nearest one still
+  // ahead, re-read in the background, so a tab left open sees a renewal the
+  // webhook recorded (and an ended trial ends) without waiting for a tab return.
+  // Re-armed on every load; a deadline beyond setTimeout's range re-reads at
+  // the cap and arms again.
+  useEffect(() => {
+    if (!userId) return undefined;
+    const now = Date.now();
+    const next = [
+      subscription?.subscription_end,
+      profile?.trial_ends_at,
+      ...purchases.filter((p) => p.status === 'active').map((p) => p.access_until),
+    ]
+      .map((value) => Date.parse(value))
+      .filter((time) => Number.isFinite(time) && time > now)
+      .reduce((nearest, time) => Math.min(nearest, time), Infinity);
+    if (next === Infinity) return undefined;
+    const timer = setTimeout(() => loadSubscriptionData(), Math.min(next - now + DEADLINE_GRACE_MS, MAX_TIMER_MS));
+    return () => clearTimeout(timer);
+  }, [userId, subscription, profile, purchases, loadSubscriptionData]);
 
   const isInFreeTrial = () => {
     const trialStatus = checkTrialStatus(profile);
@@ -188,9 +236,15 @@ export const SubscriptionProvider = ({ children }) => {
     return trialStatus.daysRemaining;
   };
 
-  // Pro comes from a confirmed subscription period or an included course
-  // window. Lifetime ownership below remains independent of that deadline.
-  const hasActiveSubscription = () => checkSubscriptionStatus(subscription).isActive ||
+  // Pro comes from a confirmed subscription period, an included course window,
+  // or the owner's explicit premium grant (profiles.subscription_tier
+  // 'premium', the admin set_tier action). Server reconciliation preserves that
+  // grant and every server tool counts it as paid; with no subscription or
+  // purchase row the app read it as nothing at all. ('pro' is derived from the
+  // rows above and cleared by reconciliation, so it is not a grant of its own.)
+  // Lifetime ownership below remains independent of all three.
+  const premiumGrant = profile?.subscription_tier === 'premium';
+  const hasActiveSubscription = () => premiumGrant || checkSubscriptionStatus(subscription).isActive ||
     purchases.some((purchase) => purchase.status === 'active' && Date.parse(purchase.access_until) > Date.now());
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();
