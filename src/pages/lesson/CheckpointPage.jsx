@@ -307,9 +307,31 @@ function SectionRow({ name, section }) {
   );
 }
 
+/**
+ * The owner boundary of a checkpoint paper (2026-10-25): the paper in progress — and the snapshot it
+ * saves — belongs to ONE owner. A sign-out in another tab leaves a free level's page mounted, and the
+ * paper used to be saved again under the guest key the moment the owner changed, where a guest reload
+ * or the next account could resume the previous learner's answers. So the paper mounts only once auth
+ * has settled, keyed by its owner (as LessonPlayer keys a lesson run): a new owner is a new mount, at
+ * the intro, with that owner's own snapshot — nothing of the old paper is written under the new key.
+ */
 export default function CheckpointPage() {
+  const { user, loading } = useAuth();
+  const [lang] = useLessonLang();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">{t('checkpoint.loadingItems', lang)}</p>
+      </div>
+    );
+  }
+  return <CheckpointRun key={user?.id || 'guest'} />;
+}
+
+function CheckpointRun() {
   const { level, nr } = useParams();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
+  // Fixed for this mount: CheckpointPage remounts the paper when the owner changes.
   const owner = user ? user.id : null;
   const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
@@ -366,38 +388,45 @@ export default function CheckpointPage() {
   }, [curriculum, checkpoint, pool, round]);
 
   // RESUME (2026-10-25): a paper in progress comes back after a reload, a tab the phone discarded, the
-  // idle sign-out or a guard remount (runState.js, checkpoint runs). Once, when the owner is known
-  // (auth settled), the paper can be rebuilt (pool) and this window's attempt count has loaded — a
-  // snapshot from before a finished attempt, or of a paper that has changed, starts at the intro.
-  const restored = useRef(false);
+  // idle sign-out or a guard remount (runState.js, checkpoint runs) — this owner's snapshot, once the
+  // paper can be rebuilt (pool). A snapshot is checked against this window's attempt count, so with
+  // one stored the decision also waits for that count: a snapshot from before a finished attempt, or
+  // of a paper that has changed, starts at the intro. Until the decision is made (`restoreDone`) Start
+  // stays disabled and nothing is saved — a fast Start used to save a fresh paper at index 0 over the
+  // run that was about to be restored.
+  const [restoreDone, setRestoreDone] = useState(false);
   useEffect(() => {
-    if (restored.current || authLoading || !curriculum || !checkpoint || !pool || !attempts) return;
-    restored.current = true;
+    if (restoreDone || !curriculum || !checkpoint || !pool) return;
     const run = readCheckpointRun(level, checkpoint.id, Date.now(), owner);
-    if (!run) return;
-    const paper = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, run.round) });
-    if (!checkpointRunFits(run, paper, attempts.used)) {
-      clearCheckpointRun(level, checkpoint.id, owner);
+    if (!run) {
+      setRestoreDone(true);
       return;
     }
-    setRound(run.round);
-    setAnswers(run.answers);
-    setNotHeard(new Set(run.notHeard));
-    setIndex(run.index);
-    setPhase(run.phase);
-  }, [authLoading, curriculum, checkpoint, pool, attempts, level, owner]);
+    if (!attempts) return;
+    const paper = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, run.round) });
+    if (checkpointRunFits(run, paper, attempts.used)) {
+      setRound(run.round);
+      setAnswers(run.answers);
+      setNotHeard(new Set(run.notHeard));
+      setIndex(run.index);
+      setPhase(run.phase);
+    } else {
+      clearCheckpointRun(level, checkpoint.id, owner);
+    }
+    setRestoreDone(true);
+  }, [restoreDone, curriculum, checkpoint, pool, attempts, level, owner]);
 
   // Saved on every answer while a paper is open (with the fingerprint of the paper it belongs to);
-  // the result clears it.
+  // the result clears it. Never before the restore decision.
   const paper = useMemo(() => paperFingerprint(items), [items]);
   useEffect(() => {
-    if (!checkpoint || !items.length) return;
+    if (!restoreDone || !checkpoint || !items.length) return;
     if (phase === 'run' || phase === 'sectionFeedback') {
       saveCheckpointRun(level, checkpoint.id, packCheckpointRun({ paper, round, index, answers, notHeard: [...notHeard], phase }), owner);
     } else if (phase === 'result') {
       clearCheckpointRun(level, checkpoint.id, owner);
     }
-  }, [phase, paper, items.length, round, index, answers, notHeard, level, checkpoint, owner]);
+  }, [restoreDone, phase, paper, items.length, round, index, answers, notHeard, level, checkpoint, owner]);
 
   const scoredItems = useMemo(() => items.filter((i) => !notHeard.has(i.id)), [items, notHeard]);
   const result = useMemo(() => (scoredItems.length ? scoreCheckpoint(scoredItems, answers) : null), [scoredItems, answers]);
@@ -497,10 +526,10 @@ export default function CheckpointPage() {
                 : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
-              <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
+              <Button disabled={!items.length || !restoreDone || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
                 {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
-              {!items.length && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
+              {(!items.length || !restoreDone) && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
             </div>
           </Card>
         )}

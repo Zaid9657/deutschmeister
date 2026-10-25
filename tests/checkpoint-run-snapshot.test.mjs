@@ -6,6 +6,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
 import {
   CHECKPOINT_RUN_PREFIX, RUN_MAX_AGE_MS, RUN_VERSION, checkpointRunFits, checkpointRunKey, clearCheckpointRun,
   packCheckpointRun, paperFingerprint, readCheckpointRun, saveCheckpointRun, unpackCheckpointRun,
@@ -82,20 +83,104 @@ test('save / read / clear: one key per level, checkpoint and owner; the newer of
   assert.equal(readCheckpointRun('a1.1', CP.id, NOW, 'user-a'), null, 'no storage at all is a fresh paper');
 });
 
-test('the checkpoint page restores the run once the paper can be rebuilt, saves it on every answer, and clears it on the result', () => {
-  const page = read('src/pages/lesson/CheckpointPage.jsx');
-  assert.match(page, /const \{ user, loading: authLoading \} = useAuth\(\);\s*const owner = user \? user\.id : null;/);
-  const restore = page.slice(page.indexOf('const restored = useRef(false);'), page.indexOf('// Saved on every answer'));
-  assert.match(restore, /if \(restored\.current \|\| authLoading \|\| !curriculum \|\| !checkpoint \|\| !pool \|\| !attempts\) return;/, 'owner, paper and attempt count known first');
-  assert.match(restore, /const run = readCheckpointRun\(level, checkpoint\.id, Date\.now\(\), owner\);/);
-  assert.match(restore, /buildCheckpoint\(\{ curriculum, checkpoint, pool, seed: paperSeed\(checkpoint, run\.round\) \}\)/, 'the paper is rebuilt from its round, never stored');
-  assert.match(restore, /if \(!checkpointRunFits\(run, paper, attempts\.used\)\) \{\s*clearCheckpointRun\(level, checkpoint\.id, owner\);/);
-  for (const set of ['setRound(run.round)', 'setAnswers(run.answers)', 'setNotHeard(new Set(run.notHeard))', 'setIndex(run.index)', 'setPhase(run.phase)']) {
-    assert.ok(restore.includes(set), set);
+// ── The page's own code ────────────────────────────────────────────────────────────────────────
+const PAGE = read('src/pages/lesson/CheckpointPage.jsx');
+const RESTORE_DEPS = '[restoreDone, curriculum, checkpoint, pool, attempts, level, owner]';
+const SAVE_DEPS = '[restoreDone, phase, paper, items.length, round, index, answers, notHeard, level, checkpoint, owner]';
+
+/** The arrow function of the page effect that contains `marker` and ends at `deps`. */
+function effectSource(marker, deps) {
+  const at = PAGE.indexOf(marker);
+  assert.ok(at >= 0, `the page has: ${marker}`);
+  const start = PAGE.lastIndexOf('useEffect(', at) + 'useEffect('.length;
+  const end = PAGE.indexOf(`}, ${deps});`, start);
+  assert.ok(end > start, `…ending at ${deps}`);
+  return PAGE.slice(start, end + 1);
+}
+
+/** Run the restore effect once against `state`; returns what it set. */
+function runRestore(state) {
+  const set = {};
+  const record = (name) => (v) => { set[name] = v; };
+  const context = vm.createContext({
+    curriculum: CURRICULUM_A11, checkpoint: CP, pool, level: 'a1.1', owner: null, restoreDone: false, attempts: null, ...state,
+    readCheckpointRun, checkpointRunFits, clearCheckpointRun, buildCheckpoint, paperSeed, Date, Set,
+    setRound: record('round'), setAnswers: record('answers'), setNotHeard: record('notHeard'), setIndex: record('index'),
+    setPhase: record('phase'), setRestoreDone: record('restoreDone'),
+  });
+  vm.runInContext(`(${effectSource('const run = readCheckpointRun(level, checkpoint.id, Date.now(), owner);', RESTORE_DEPS)})()`, context);
+  return set;
+}
+
+/** Run the save effect once against `state`; returns the storage writes it made. */
+function runSave(state) {
+  const writes = [];
+  const context = vm.createContext({
+    restoreDone: true, checkpoint: CP, items: paper(0), level: 'a1.1', owner: null, phase: 'run', paper: paperFingerprint(paper(0)),
+    round: 0, index: 0, answers: {}, notHeard: new Set(), ...state,
+    packCheckpointRun,
+    saveCheckpointRun: (level, id, run, owner) => writes.push({ op: 'save', owner, run }),
+    clearCheckpointRun: (level, id, owner) => writes.push({ op: 'clear', owner }),
+  });
+  vm.runInContext(`(${effectSource('if (phase === \'run\' || phase === \'sectionFeedback\') {', SAVE_DEPS)})()`, context);
+  return writes;
+}
+
+test('restoring waits for the attempt count only when a snapshot exists, and then decides once (cross-check review)', () => {
+  withStorage(() => {
+    // Nothing stored: the decision is immediate — Start need not wait for the attempt count.
+    assert.deepEqual(runRestore({}), { restoreDone: true });
+    // A snapshot of the current paper: nothing is decided until the count is in…
+    const items = paper(1);
+    const answers = { [items[0].id]: items[0].answer, [items[1].id]: 'x' };
+    saveCheckpointRun('a1.1', CP.id, packCheckpointRun({ paper: paperFingerprint(items), round: 1, index: 2, answers, phase: 'run' }, Date.now()));
+    assert.deepEqual(runRestore({ attempts: null }), {}, 'Start stays disabled and nothing is set while the count loads');
+    // …then the run comes back where it was.
+    const restored = runRestore({ attempts: { used: 1 } });
+    assert.deepEqual([restored.round, restored.index, restored.phase, restored.restoreDone], [1, 2, 'run', true]);
+    assert.deepEqual(restored.answers, answers);
+    // A snapshot that does not fit is dropped, and the decision is made all the same.
+    assert.deepEqual(runRestore({ attempts: { used: 2 } }), { restoreDone: true }, 'a paper from before a finished attempt');
+    assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), null), null, 'and it is gone from storage');
+    assert.deepEqual(runRestore({ restoreDone: true, attempts: { used: 0 } }), {}, 'decided once');
+  });
+});
+
+test('nothing is saved before the restore decision, so a fast Start can never overwrite the saved run (cross-check review)', () => {
+  assert.deepEqual(runSave({ restoreDone: false, phase: 'run', index: 0 }), [], 'a fresh paper at index 0 is not written over the run being restored');
+  assert.deepEqual(runSave({ restoreDone: false, phase: 'result' }), [], 'nor is it cleared');
+  const writes = runSave({ restoreDone: true, phase: 'run', index: 3, answers: { a: 'b' } });
+  assert.equal(writes.length, 1);
+  assert.deepEqual([writes[0].op, writes[0].run.index, writes[0].run.answers], ['save', 3, { a: 'b' }]);
+  assert.deepEqual(runSave({ restoreDone: true, phase: 'result' }).map((w) => w.op), ['clear'], 'the result clears it');
+  assert.deepEqual(runSave({ restoreDone: true, phase: 'intro' }), [], 'the intro saves nothing');
+  // Start itself waits for the decision.
+  assert.match(PAGE, /<Button disabled=\{!items\.length \|\| !restoreDone \|\| Boolean\(attempts\?\.blocked\)\} onClick=\{\(\) => \{ setRound\(attempts\?\.used \|\| 0\);/);
+  assert.match(PAGE, /\{\(!items\.length \|\| !restoreDone\) && <p className="mt-2 text-sm text-graphite">\{t\('checkpoint\.loadingItems', lang\)\}<\/p>\}/);
+});
+
+test('a paper belongs to one owner: it mounts after auth settles, keyed by the owner, so a sign-out never saves it under the guest key (cross-check review)', () => {
+  // The wrapper: waits for auth, renders the paper keyed by its owner, and touches no snapshot itself.
+  const wrapper = PAGE.slice(PAGE.indexOf('export default function CheckpointPage('), PAGE.indexOf('function CheckpointRun('));
+  assert.match(wrapper, /const \{ user, loading \} = useAuth\(\);/);
+  assert.match(wrapper, /if \(loading\) \{\s*return \(/, 'nothing of the paper renders before the owner is known');
+  assert.match(wrapper, /return <CheckpointRun key=\{user\?\.id \|\| 'guest'\} \/>;/, 'a new owner is a new mount');
+  assert.doesNotMatch(wrapper, /readCheckpointRun\(|saveCheckpointRun\(|clearCheckpointRun\(|useState\(/, 'the wrapper holds no paper state');
+  // Inside the boundary the owner is the mount's: every read and write uses it.
+  const paperRun = PAGE.slice(PAGE.indexOf('function CheckpointRun('));
+  assert.match(paperRun, /const \{ user \} = useAuth\(\);\s*\/\/[^\n]*\n\s*const owner = user \? user\.id : null;/);
+  for (const call of ['readCheckpointRun(level, checkpoint.id, Date.now(), owner)', 'clearCheckpointRun(level, checkpoint.id, owner)']) {
+    assert.ok(paperRun.includes(call), call);
   }
-  const persist = page.slice(page.indexOf('// Saved on every answer'), page.indexOf('const scoredItems'));
-  assert.match(persist, /const paper = useMemo\(\(\) => paperFingerprint\(items\), \[items\]\);/);
-  assert.match(persist, /if \(phase === 'run' \|\| phase === 'sectionFeedback'\) \{\s*saveCheckpointRun\(level, checkpoint\.id, packCheckpointRun\(\{ paper, round, index, answers, notHeard: \[\.\.\.notHeard\], phase \}\), owner\);/);
-  assert.match(persist, /\} else if \(phase === 'result'\) \{\s*clearCheckpointRun\(level, checkpoint\.id, owner\);/);
-  assert.match(page, /setRound\(attempts\?\.used \|\| 0\)/, 'a fresh Start still draws this window\'s next paper');
+  assert.match(paperRun, /saveCheckpointRun\(level, checkpoint\.id, packCheckpointRun\(\{ paper, round, index, answers, notHeard: \[\.\.\.notHeard\], phase \}\), owner\);/);
+  // What the guest's own mount does on arrival: it starts at the intro with nothing restored yet, so its
+  // save effect writes nothing — the previous account's answers have no way into the guest key.
+  withStorage((map) => {
+    saveCheckpointRun('a1.1', CP.id, packCheckpointRun({ paper: paperFingerprint(paper(0)), round: 0, index: 12, answers: { a: 'x' } }, Date.now()), 'user-a');
+    assert.deepEqual(runSave({ restoreDone: false, phase: 'intro', owner: null }), []);
+    assert.equal(map.has(checkpointRunKey('a1.1', CP.id)), false, 'no guest snapshot was written');
+    assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), null), null, 'a guest reload resumes nothing');
+    assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), 'user-b'), null, 'nor does the next account');
+  });
+  assert.match(PAGE, /setRound\(attempts\?\.used \|\| 0\)/, 'a fresh Start still draws this window\'s next paper');
 });
