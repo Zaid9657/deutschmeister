@@ -1,5 +1,13 @@
 const { createClient } = require('@supabase/supabase-js');
 
+// No episode count and no level range: the channel description said "24
+// episodes … for levels A1 to B2" while the feed carries the published episodes
+// only (14, A1.1 to B1.1, measured 2026-10-07). Which count the site states is
+// an open owner decision (src/data/marketing.js PODCAST_EPISODE_COUNT), and the
+// items below are the count a directory shows anyway.
+const CHANNEL_DESCRIPTION =
+  'German language learning podcast: native speaker conversations, each episode graded by CEFR level. Perfect for improving your German listening skills.';
+
 exports.handler = async (_event) => {
   // No hardcoded key fallback. The literal that used to live here was a valid
   // anon JWT good until 2084 — not a disclosure (the same key ships in the SPA
@@ -37,6 +45,12 @@ exports.handler = async (_event) => {
   }
 
   const baseUrl = 'https://deutsch-meister.de';
+  // The prerendered page canonicalises to the trailing slash; the bare form 301s.
+  const podcastsUrl = `${baseUrl}/podcasts/`;
+  // A square 3000x3000 RGB PNG: directories reject a feed without a JPG/PNG
+  // cover, and the SVG this pointed at never existed (it fell through to the 404
+  // page). public/podcast-cover.png, drawn from the design tokens like og-image.
+  const coverUrl = `${baseUrl}/podcast-cover.png`;
   const storageBaseUrl = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public';
 
   const items = podcasts
@@ -81,7 +95,7 @@ exports.handler = async (_event) => {
       <itunes:episode>${episodeNumber}</itunes:episode>
       <itunes:season>${season}</itunes:season>
       <itunes:episodeType>full</itunes:episodeType>
-      <link>${baseUrl}/podcasts</link>
+      <link>${podcastsUrl}</link>
     </item>`;
   }).join('\n');
 
@@ -92,12 +106,12 @@ exports.handler = async (_event) => {
   xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>DeutschMeister - Learn German Podcast</title>
-    <link>${baseUrl}/podcasts</link>
+    <link>${podcastsUrl}</link>
     <language>de</language>
     <copyright>© ${new Date().getFullYear()} DeutschMeister</copyright>
-    <description>German language learning podcast for levels A1 to B2. 24 episodes featuring native speaker conversations, graded by CEFR level. Perfect for improving your German listening skills.</description>
+    <description>${CHANNEL_DESCRIPTION}</description>
     <itunes:author>DeutschMeister</itunes:author>
-    <itunes:summary>German language learning podcast for levels A1 to B2. 24 episodes featuring native speaker conversations, graded by CEFR level. Perfect for improving your German listening skills.</itunes:summary>
+    <itunes:summary>${CHANNEL_DESCRIPTION}</itunes:summary>
     <itunes:owner>
       <itunes:name>DeutschMeister</itunes:name>
       <itunes:email>contact@deutsch-meister.de</itunes:email>
@@ -107,11 +121,11 @@ exports.handler = async (_event) => {
     <itunes:category text="Education">
       <itunes:category text="Language Learning"/>
     </itunes:category>
-    <itunes:image href="${baseUrl}/podcast-cover.svg"/>
+    <itunes:image href="${coverUrl}"/>
     <image>
-      <url>${baseUrl}/podcast-cover.svg</url>
+      <url>${coverUrl}</url>
       <title>DeutschMeister - Learn German Podcast</title>
-      <link>${baseUrl}/podcasts</link>
+      <link>${podcastsUrl}</link>
     </image>
     <atom:link href="${baseUrl}/podcast-feed.xml" rel="self" type="application/rss+xml"/>
     ${items}

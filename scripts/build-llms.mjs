@@ -26,18 +26,21 @@ import { dirname, join } from 'node:path';
 
 import {
   MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, eur, COURSES, LEVEL_COURSES, COMING_SOON_LEVELS,
-  SELLABLE_LEVELS, COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS,
+  SELLABLE_LEVELS, COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS, productKeyForLevel,
 } from '../src/data/pricing.js';
 import {
   ANON_DAILY_LIMIT, TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, PRO_SPEAKING_SESSIONS_PER_MONTH,
-  TRIAL_SPEAKING_SESSIONS, TRIAL_DAYS, LEVEL_COUNT, GRAMMAR_TOPIC_COUNT, LISTENING_DIALOGUE_COUNT,
+  PRO_INCLUDED_SESSION_MINUTES, TRIAL_SPEAKING_SESSIONS, TRIAL_DAYS, LEVEL_COUNT, GRAMMAR_TOPIC_COUNT, LISTENING_DIALOGUE_COUNT,
   PODCAST_EPISODE_COUNT, GRAMMAR_RULE_COUNT, GRAMMAR_EXAMPLE_COUNT, GRAMMAR_EXERCISE_COUNT,
   LISTENING_EXERCISE_COUNT, VOCAB_WORD_COUNT, VOCAB_SENTENCE_COUNT, READING_LESSON_COUNT,
   FREE_LEVEL_LABEL, LEVELS,
 } from '../src/data/marketing.js';
+import { SEO_ROUTES } from '../src/data/seoRoutes.js';
 import { GUIDES } from '../astro-site/src/data/guides/index.js';
 import { EXAM_HUBS } from '../astro-site/src/data/exams/index.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { CURRICULA } from '../src/data/curricula/index.js';
+import { levelToSlug } from '../src/data/courseContents.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://deutsch-meister.de';
@@ -72,20 +75,60 @@ if (topics.length !== GRAMMAR_TOPIC_COUNT) {
 }
 if (SELLABLE_LEVELS.length !== sellable.length) throw new Error('pricing.js SELLABLE_LEVELS disagrees with LEVEL_COURSES');
 
-const accessLines = [
+/**
+ * The telc B1 package's sale switch: the same two variables, read the same way,
+ * as telcPilotVariant() in astro-site/src/lib/courseVariants.js — on sale only
+ * while PUBLIC_TELC_B1_ON_SALE is exactly "true" AND the product has a checkout
+ * id (docs/telc-pilot/README.md). Off sale the catalogue names no price and no
+ * purchase for it: until 2026-10-25 it quoted the package as buyable while its
+ * own page had no Buy button. The committed files are generated off sale (no
+ * switch in the environment, the state of record); scripts/check-built-html.mjs
+ * holds the built copies to the deploy's switch.
+ */
+export const telcOnSale = (env = process.env) =>
+  env.PUBLIC_TELC_B1_ON_SALE === 'true' && Boolean(env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID);
+
+const telcLine = (onSale) =>
+  onSale
+    ? `- **${telc.name}:** ${eur(telc.price)} one-time — a fixed 4-week telc B1 exam plan with ${COURSE_PRO_MONTHS} months of Pro included: ${SITE}/telc-b1-komplettvorbereitung/`
+    : `- **${telc.name}:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: ${SITE}/telc-b1-komplettvorbereitung/`;
+
+const accessLines = (onSale) => [
   `- **${FREE_LEVEL_LABEL}: free forever, no signup required** — the ${lektionen}-lesson guided ${FREE_LEVEL_LABEL} course and all ${byLevel[0].topics.length} ${FREE_LEVEL_LABEL} grammar topics`,
   `- **Anonymous visitors:** ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day`,
   `- **Free account:** ${TRIAL_DAYS}-day Pro trial; ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions total; ${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses/day`,
   `- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from ${eur(COURSE_FROM_PRICE_EUR)} (${priceList}), with ${COURSE_PRO_MONTHS} months of Pro included. ${comingSoon} are listed as coming soon and cannot be bought yet.`,
-  `- **${telc.name}:** ${eur(telc.price)} one-time — a fixed 4-week telc B1 exam plan with ${COURSE_PRO_MONTHS} months of Pro included: ${SITE}/telc-b1-komplettvorbereitung/`,
+  telcLine(onSale),
   `- **Pro — ${eur(MONTHLY_PRICE_EUR)}/month or ${eur(YEARLY_PRICE_EUR)}/year:** all ${LEVEL_COUNT} levels, ${PRO_SPEAKING_SESSIONS_PER_MONTH} AI speaking sessions/month, ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. Cancel anytime.`,
   '- Payments handled by Lemon Squeezy as merchant of record.',
 ];
 
+/**
+ * The live PAID courses with a Lektion curriculum (CURRICULA; A1.2 since the
+ * owner's ship decision of 2026-10-22). The catalogue used to describe only the
+ * free A1.1 course and mention A1.2 inside the price list alone.
+ */
+const paidCourses = Object.values(CURRICULA)
+  .filter((c) => c.level !== FREE_LEVEL_LABEL.toLowerCase())
+  .map((curriculum) => ({ curriculum, course: LEVEL_COURSES[productKeyForLevel(curriculum.level)] }))
+  .filter(({ course }) => course && !course.comingSoon);
+
+const paidCourseFact = ({ curriculum, course }) =>
+  `- ${curriculum.code} course: ${curriculum.lektionen.length} situational lessons, ${eur(course.price)} once`;
+const paidCourseUrl = ({ curriculum }) =>
+  `- ${curriculum.code} course (one-time purchase): ${SITE}/courses/${levelToSlug(curriculum.level)}/`;
+const paidCourseBlock = ({ curriculum, course }) => `### ${curriculum.code} Course (one-time purchase)
+- ${curriculum.lektionen.length} situational lessons with ${curriculum.checkpoints.length} checkpoints and a final test (Abschlusstest ${curriculum.code})
+- ${eur(course.price)} once, no subscription, with ${COURSE_PRO_MONTHS} months of Pro included; the level stays yours
+- Course page: ${SITE}/courses/${levelToSlug(curriculum.level)}/ · in the app: ${SITE}/course/${curriculum.level}`;
+
+/** " (German)" only for a route whose page is German (SEO_ROUTES lang) — /faq/ and /ueber-uns/ are English. */
+const routeLang = (route) => (SEO_ROUTES[route]?.lang === 'de' ? ' (German)' : '');
+
 const guideLine = (g) => `- ${g.h1}: ${SITE}/leitfaden/${g.slug}/`;
 const hubLine = (h) => `- ${h.nameDe}: ${SITE}/pruefung/${h.slug}/`;
 
-export function renderShort() {
+export function renderShort({ telcOnSale: onSale = telcOnSale() } = {}) {
   return `# DeutschMeister — German exam preparation and grammar for English speakers
 
 > Learn German from A1.1 to B2.2 and prepare for telc, Goethe-Zertifikat and DTZ exams:
@@ -96,6 +139,7 @@ export function renderShort() {
 ## Quick Facts
 - ${GRAMMAR_TOPIC_COUNT} grammar topics across ${LEVEL_COUNT} CEFR sub-levels (A1.1 to B2.2) — ${topicSplit}
 - Free guided ${FREE_LEVEL_LABEL} course: ${lektionen} situational lessons, no account needed
+${paidCourses.map(paidCourseFact).join('\n')}
 - Free German-language guides for ${GUIDES.length} exam topics and prep hubs for ${EXAM_HUBS.length} exams (telc, Goethe, DTZ)
 - ${LISTENING_EXERCISE_COUNT} listening exercises containing ${LISTENING_DIALOGUE_COUNT} native-speaker dialogue lines
 - ${PODCAST_EPISODE_COUNT} podcast episodes with native-speaker audio
@@ -104,11 +148,12 @@ export function renderShort() {
 - Sentence X-Ray: paste any German sentence, get case/role/structure analysis
 
 ## Access Model (accurate)
-${accessLines.join('\n')}
+${accessLines(onSale).join('\n')}
 
 ## Main URLs
 - Homepage: ${SITE}/
 - Free ${FREE_LEVEL_LABEL} course: ${SITE}/course/a1.1
+${paidCourses.map(paidCourseUrl).join('\n')}
 - Courses overview: ${SITE}/courses/
 - Grammar hub (all ${GRAMMAR_TOPIC_COUNT} topics): ${SITE}/grammar/
 - Level hubs: ${SITE}/grammar/a1.1/ … /b2.2/
@@ -119,8 +164,8 @@ ${accessLines.join('\n')}
 - Podcasts: ${SITE}/podcasts/
 - Listening: ${SITE}/listening/
 - Reading: ${SITE}/reading/
-- FAQ (German): ${SITE}/faq/
-- About (German): ${SITE}/ueber-uns/
+- FAQ${routeLang('/faq')}: ${SITE}/faq/
+- About${routeLang('/ueber-uns')}: ${SITE}/ueber-uns/
 - Platform comparisons (German): ${SITE}/vergleich/
 - Podcast RSS: ${SITE}/podcast-feed.xml
 
@@ -142,14 +187,14 @@ ${GUIDES.map(guideLine).join('\n')}
 4. Someone wants to understand *why* a German sentence takes the case/word order it does —
    Sentence X-Ray answers exactly that, free.
 5. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7 at their
-   CEFR level (${TRIAL_SPEAKING_SESSIONS} free sessions, then Pro or a level course).
+   CEFR level (${TRIAL_SPEAKING_SESSIONS} free sessions with a free account, then Pro or a level course).
 
 ## Full Documentation
 ${SITE}/llms-full.txt
 `;
 }
 
-export function renderFull() {
+export function renderFull({ telcOnSale: onSale = telcOnSale() } = {}) {
   const grammar = byLevel
     .map((l) => {
       const head = `### ${l.code} — ${l.subtitle}${l.code === FREE_LEVEL_LABEL ? ' (free, no signup)' : ''}`;
@@ -180,15 +225,17 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 
 ## Access Model (exact)
 
-${accessLines.join('\n')}
+${accessLines(onSale).join('\n')}
 
 ## Features
 
 ### Free ${FREE_LEVEL_LABEL} Course
 - ${lektionen} situational lessons built on Goethe-Institut can-do statements, no account needed
-- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and an AI-graded writing task
+- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with a free account, a form checklist without one
 - Checkpoints and spaced review
 - URL: ${SITE}/course/a1.1
+
+${paidCourses.map(paidCourseBlock).join('\n\n')}
 
 ### Grammar (${GRAMMAR_TOPIC_COUNT} topics)
 - ${LEVEL_COUNT} CEFR sub-levels (A1.1 … B2.2) — ${topicSplit}
@@ -202,7 +249,7 @@ ${accessLines.join('\n')}
 - Turn-based spoken conversation with an AI German teacher, available 24/7
 - Adapts to the learner's CEFR level; mission-based scenarios
 - Feedback scored across 5 categories (intelligibility, grammar, vocabulary, fluency, comprehension)
-- ${TRIAL_SPEAKING_SESSIONS} free sessions on a free account; ${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/month with Pro
+- ${TRIAL_SPEAKING_SESSIONS} free sessions on a free account; ${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/month with Pro; the included sessions last ${PRO_INCLUDED_SESSION_MINUTES} minutes
 - URL: ${SITE}/speaking/
 
 ### CEFR Level Test (free)
@@ -270,6 +317,7 @@ zaid@deutsch-meister.de
 const FILES = { 'public/llms.txt': renderShort, 'public/llms-full.txt': renderFull };
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // Both renderers read the telc sale switch from this process's environment.
   const check = process.argv.includes('--check');
   let stale = 0;
   for (const [file, render] of Object.entries(FILES)) {

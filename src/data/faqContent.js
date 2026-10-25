@@ -13,11 +13,28 @@ import { PLANS, deEur } from './pricing.js';
 import {
   TRIAL_SPEAKING_SESSIONS,
   ANON_DAILY_LIMIT,
+  TRIAL_DAILY_LIMIT,
   TRIAL_DAYS,
   FREE_LEVEL_LABEL,
   GRAMMAR_TOPIC_COUNT,
 } from './marketing.js';
+import { EXAM_TRACKS } from './examTracks.js';
 import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
+
+/**
+ * The date of the last change to the FAQ copy below. public/sitemap-spa.xml
+ * carries /faq/'s lastmod by hand (the prerendered copy changes when this file
+ * changes, not on every build), and tests/sitemap-lastmod.test.mjs fails while
+ * that lastmod is older than this date. Bumping it is part of any FAQ copy
+ * change; the check needs no repository history, so a shallow CI clone runs it.
+ */
+export const FAQ_COPY_UPDATED = '2026-10-25';
+
+// The exams the product prepares for, from the exam-track registry — the only
+// list (2026-10-25: the answers named TestDaF, which has no track, while the
+// support agent tells customers it is not offered; supportAgentLib.mjs).
+const EXAM_NAMES = EXAM_TRACKS.map((t) => t.nameDe);
+const examList = `${EXAM_NAMES.slice(0, -1).join(', ')}, and ${EXAM_NAMES.at(-1)}`;
 
 // Where a subscriber cancels: the Lemon Squeezy customer portal (content agent,
 // 2026-10-02, from support's handoff). The answer used to say you can cancel but
@@ -36,7 +53,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Who is the platform for?',
-        a: 'It is for learners who need to use German in real life—especially migrants, professionals, students, and people preparing for Goethe, telc, TestDaF, or DTZ exams.',
+        a: 'It is for learners who need to use German in real life—especially migrants, professionals, students, and people preparing for Goethe, telc, or DTZ exams.',
       },
       {
         q: 'Who is behind Deutschmeister?',
@@ -61,7 +78,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'How does AI speaking feedback work?',
-        a: 'After you speak, the system analyses your response and shows what worked, what could improve, and which phrasing may sound more natural. AI feedback can make mistakes, so treat it as practice support rather than an official assessment.',
+        a: 'When you finish a conversation, the system analyses what you said and shows what worked, what could improve, and which phrasing may sound more natural. AI feedback can make mistakes, so treat it as practice support rather than an official assessment.',
       },
       {
         q: 'What is the Sentence X-Ray tool?',
@@ -92,7 +109,9 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Is there a free version?',
-        a: `Yes. ${FREE_LEVEL_LABEL} is free without registration. You also get ${TRIAL_SPEAKING_SESSIONS} free AI speaking sessions and ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day. Creating an account starts a ${TRIAL_DAYS}-day Pro trial.`,
+        // The speaking sessions belong to the account trial (speaking needs a
+        // signed-in user), never to the no-account tier (2026-10-25).
+        a: `Yes. ${FREE_LEVEL_LABEL} is free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day Pro trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
       },
       {
         q: 'Can I cancel at any time?',
@@ -112,8 +131,8 @@ export const FAQ_CATEGORIES = [
     title: 'Exam preparation',
     items: [
       {
-        q: 'Does Deutschmeister prepare me for Goethe, telc, TestDaF, or DTZ?',
-        a: 'The grammar, vocabulary, and speaking materials cover skills relevant to these exams, and some exercises simulate oral-exam situations. Use the German-language exam guides to understand a specific format.',
+        q: 'Which exams does Deutschmeister prepare for?',
+        a: `Deutschmeister prepares for ${examList}. Each has a preparation page and a German-language exam guide; the grammar, vocabulary, listening, and speaking materials cover skills these exams test, and some exercises simulate oral-exam situations. TestDaF, DSH, ÖSD, and C1 or C2 exams are not offered.`,
       },
       {
         q: 'Is Deutschmeister enough for a B1 or B2 exam?',
