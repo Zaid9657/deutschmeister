@@ -21,13 +21,12 @@
 // verb topic (REVIEW #6 MAJOR 9) — see the decision table above
 // tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
+import { sameAnswer } from '../../data/sameAnswer.js';
 
 // CORRECTED: the exercise was finished, but only after a wrong try that the
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
 // not a typo — a wrong pair is a vocabulary miss — and not a first-try success.
 export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong', CORRECTED: 'corrected' };
-/** Whole answers that mean the same — a question word for a reason (see checkAnswer). */
-const SAME_ANSWER = [['warum', 'wieso', 'weshalb', 'weswegen', 'aus welchem grund']];
 
 /**
  * The ONE result a matching exercise records, whatever number of taps it took.
@@ -397,10 +396,10 @@ export function checkAnswer(userInput, expected, {
   }
   // Words that ask the same are the same answer, taught or not: a learner who writes „Wieso" where
   // the course taught „Warum" has made no mistake (DaF review #10, A1.2 B1). Here, not in `accepted`,
-  // because an accepted form counts as item lexis and would stamp the item unservable.
+  // because an accepted form counts as item lexis and would stamp the item unservable. The groups
+  // live in src/data/sameAnswer.js, which the grammar pages' island grades by too.
   for (const a of accepted) {
-    const group = SAME_ANSWER.find((g) => g.includes(prepare(a).toLowerCase()));
-    if (group && group.includes(user.toLowerCase())) return { result: RESULT.CORRECT, expected: a };
+    if (sameAnswer(prepare(a), user)) return { result: RESULT.CORRECT, expected: a };
   }
   for (const a of accepted) {
     // A spelled word is nothing BUT its letters: „H-A-L-O" for „H-A-L-L-O", „Wilkommen" read off
