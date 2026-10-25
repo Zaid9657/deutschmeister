@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import QuestionCard from './QuestionCard';
 import DialogueTranscript from './DialogueTranscript';
+import AudioPlayer from './AudioPlayer';
 import CompletionMoment from '../CompletionMoment';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -18,7 +19,7 @@ import Reveal from '../ui/Reveal.jsx';
 // = celebrate, fail = calm — so it is also what gates the confetti.
 const PASS_SCORE = 70;
 
-const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed, onRetry, nextExerciseHref }) => {
+const ResultsView = ({ exercise, questions, answers, score, dialogues, audioUrl, playsUsed, onRetry, nextExerciseHref }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const isGerman = i18n.language === 'de';
@@ -77,6 +78,17 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
         }
         nextHref={nextExerciseHref || `/listening/${String(exercise.level ?? '').toLowerCase()}`}
       />
+
+      {/* Listen again with the corrections in view: the answers are in, so this
+          player is not rationed (no play cap, nothing counted). */}
+      {audioUrl && (
+        <div>
+          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite mb-2">
+            {isGerman ? 'Zum Nachhören — ohne Limit' : 'Listen again — no limit'}
+          </p>
+          <AudioPlayer src={audioUrl} review />
+        </div>
+      )}
 
       {/* Transcript */}
       {dialogues && dialogues.length > 0 && (
