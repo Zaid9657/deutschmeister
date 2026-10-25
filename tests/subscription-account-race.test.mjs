@@ -99,30 +99,40 @@ const OWNER = {
   getPurchases: async () => [{ product_key: 'course_a1_2', status: 'active', access_until: '2000-01-01' }],
 };
 
-test('ACC-01: a new auth user object for the same account neither blanks guarded pages nor reloads', async () => {
+/** A clock the provider reads (Date.now) that a test moves by hand; Date.parse stays real. */
+const clockAt = (start = Date.now()) => {
+  const clock = { now: start, Date: { now: () => clock.now, parse: (value) => Date.parse(value) } };
+  return clock;
+};
+
+test('ACC-01: a new auth user object for the same account neither blanks guarded pages nor reloads it within the throttle', async () => {
   let reads = 0;
   const h = providerHarness({ ...OWNER, getSubscription: async (...args) => { reads++; return OWNER.getSubscription(...args); } });
   h.account('A'); h.render(); await settle();
   const loaded = h.render();
   assert.equal(loaded.loading, false);
   assert.equal(reads, 1);
-  h.account('A'); // auth-js: SIGNED_IN on a tab return, TOKEN_REFRESHED about hourly
+  h.account('A'); // auth-js: INITIAL_SESSION / SIGNED_IN right after the first load
   h.render();
   const during = h.render(false);
   assert.equal(during.loading, false, 'a token refresh must not swap guarded pages for the spinner');
   assert.equal(during.subscription?.status, 'active');
   assert.equal(during.hasLevelAccess('a1.2'), true);
   await settle();
-  assert.equal(reads, 1, 'the same account id must not recreate the loader');
+  assert.equal(reads, 1, 'the same account id neither recreates the loader nor re-reads within seconds of a load');
 });
 
 test('ACC-01: a tab return revalidates in the background and keeps the data on screen', async () => {
   const refresh = deferred();
+  const clock = clockAt();
   let reads = 0;
-  const h = providerHarness({ ...OWNER, getSubscription: () => (++reads === 1 ? OWNER.getSubscription() : refresh.promise) });
+  const h = providerHarness({ ...OWNER, Date: clock.Date, getSubscription: () => (++reads === 1 ? OWNER.getSubscription() : refresh.promise) });
   h.account('A'); h.render(); await settle();
   assert.equal(h.render().loading, false);
-  h.visible(); // more than 5 s since the last refresh (the first return always counts)
+  h.visible();
+  assert.equal(reads, 1, 'a tab return within seconds of the load is the same read');
+  clock.now += 6000; // past the throttle
+  h.visible();
   assert.equal(reads, 2, 'the tab return still refreshes');
   const during = h.render(false);
   assert.equal(during.loading, false, 'a background refresh must not unmount the page');
@@ -161,4 +171,100 @@ test('ACC-01: an identity change still loads from nothing and never shows the pr
   const loaded = h.render();
   assert.equal(loaded.loading, false);
   assert.equal(loaded.profile.id, 'B');
+});
+
+// Integration review (2026-10-25): keying the loader on the account id (ACC-01)
+// meant the same-account TOKEN_REFRESHED events (about hourly) no longer re-read
+// entitlements at all. A session that stayed visible across a successful
+// renewal kept the old paid-through date and lost paid access until a tab
+// return. Same-account auth events now re-read in the background (throttled),
+// and the provider re-reads shortly after the nearest entitlement deadline.
+const endingSoon = (renewed) => ({
+  status: 'active', plan_type: 'monthly', lemonsqueezy_subscription_id: 'sub-1',
+  subscription_end: renewed.value ? '2100-01-01T00:00:00Z' : renewed.end,
+});
+const passRealTime = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+test('a same-account token refresh past the throttle re-reads in the background', async () => {
+  const clock = clockAt();
+  const refresh = deferred();
+  let reads = 0;
+  const h = providerHarness({ ...OWNER, Date: clock.Date, getSubscription: () => (++reads === 1 ? OWNER.getSubscription() : refresh.promise) });
+  h.account('A'); h.render(); await settle();
+  clock.now += 55 * 60 * 1000; // about an hour later
+  h.account('A'); // TOKEN_REFRESHED: a new user object, same id
+  h.render();
+  assert.equal(reads, 2, 'the token refresh re-reads');
+  const during = h.render(false);
+  assert.equal(during.loading, false, 'in the background: no spinner, the page stays');
+  assert.equal(during.subscription?.status, 'active');
+  refresh.resolve({ status: 'active', plan_type: 'monthly', subscription_end: '2101-01-01', lemonsqueezy_subscription_id: 'sub-1' });
+  await settle();
+  assert.equal(h.render().subscription.subscription_end, '2101-01-01', 'the renewed row lands');
+});
+
+test('a renewal recorded while the tab stays open restores access at the next token refresh, without a tab return', async () => {
+  const clock = clockAt();
+  const renewed = { value: false, end: new Date(Date.now() + 150).toISOString() };
+  const h = providerHarness({ Date: clock.Date, getSubscription: async () => endingSoon(renewed) });
+  h.account('A'); h.render(); await settle();
+  assert.equal(h.render().hasAccess, true);
+  renewed.value = true; // the renewal is charged and the webhook records it
+  await passRealTime(200); // the old paid-through date passes while the tab stays open
+  clock.now += 60 * 60 * 1000;
+  assert.equal(h.render().hasAccess, false, 'the cached row has lapsed');
+  h.account('A'); // TOKEN_REFRESHED
+  h.render();
+  await settle();
+  const after = h.render();
+  assert.equal(after.hasAccess, true, 'the renewed row restores access');
+  assert.equal(after.loading, false);
+});
+
+test('the provider re-reads shortly after the paid-through date: a renewal restores access with no tab return or token refresh', async () => {
+  const timers = [];
+  const renewed = { value: false, end: new Date(Date.now() + 150).toISOString() };
+  const h = providerHarness({
+    getSubscription: async () => endingSoon(renewed),
+    setTimeout: (fn, ms) => timers.push({ fn, ms, cleared: false }),
+    clearTimeout: (id) => { if (timers[id - 1]) timers[id - 1].cleared = true; },
+  });
+  h.account('A'); h.render(); await settle();
+  assert.equal(h.render().hasAccess, true);
+  const armed = timers.filter((t) => !t.cleared);
+  assert.equal(armed.length, 1, 'one re-read is armed, for the nearest deadline');
+  assert.ok(armed[0].ms >= 60 * 1000 && armed[0].ms <= 61 * 1000, `shortly after the deadline, not ${armed[0].ms} ms`);
+  renewed.value = true; // the renewal is charged and the webhook records it
+  await passRealTime(200); // the old paid-through date passes; nothing else happens
+  assert.equal(h.render().hasAccess, false, 'the cached row has lapsed');
+  armed[0].fn(); // the armed re-read
+  await settle();
+  const after = h.render();
+  assert.equal(after.hasAccess, true, 'the renewed row restores access');
+  assert.equal(after.loading, false, 'in the background');
+  const next = timers.filter((t) => !t.cleared && t !== armed[0]);
+  assert.equal(next.length, 1, 're-armed for the renewed paid-through date');
+  assert.ok(next[0].ms > 0 && next[0].ms < 2 ** 31, 'a deadline decades ahead stays inside setTimeout\'s range');
+});
+
+test('the deadline re-read covers the trial end and a course\'s included-Pro end, and arms nothing without a deadline', async () => {
+  const armedFor = async (services) => {
+    const timers = [];
+    const h = providerHarness({
+      ...services,
+      setTimeout: (fn, ms) => timers.push({ fn, ms, cleared: false }),
+      clearTimeout: (id) => { if (timers[id - 1]) timers[id - 1].cleared = true; },
+    });
+    h.account('A'); h.render(); await settle();
+    h.render();
+    return timers.filter((t) => !t.cleared).map((t) => t.ms);
+  };
+  const inAnHour = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+  const trial = await armedFor({ getUserProfile: async (id) => ({ id, trial_started_at: '2026-10-20', trial_ends_at: inAnHour }) });
+  assert.equal(trial.length, 1);
+  assert.ok(Math.abs(trial[0] - 61 * 60 * 1000) < 2000, `the trial end: ${trial[0]} ms`);
+  const course = await armedFor({ getPurchases: async () => [{ product_key: 'course_a1_2', status: 'active', access_until: inAnHour }] });
+  assert.equal(course.length, 1);
+  assert.ok(Math.abs(course[0] - 61 * 60 * 1000) < 2000, `the course window: ${course[0]} ms`);
+  assert.deepEqual(await armedFor({}), [], 'an expired trial and no plan: nothing to wait for');
 });

@@ -32,6 +32,8 @@ export const settle = async () => { for (let i = 0; i < 20; i++) await Promise.r
 
 /**
  * @param {object} services  replacements for the provider's imports (getSubscription, getPurchases, …)
+ *   and globals (setTimeout, clearTimeout, Date). The default timers are unref'd,
+ *   so a deadline timer weeks ahead never keeps the test process alive.
  * @returns {{ account(id: string|null): void, render(runEffects?: boolean): object, visible(): void }}
  *   account() always installs a NEW user object, as auth-js does on every
  *   SIGNED_IN / TOKEN_REFRESHED event, even for the same id.
@@ -81,8 +83,11 @@ export function providerHarness(services = {}) {
     settlePendingPlacement: async (_id, profile) => profile,
     getAuthHeaders: async () => ({}),
     fetch: async () => ({ json: async () => ({ status: 'none' }) }),
-    isLevelFree, levelsForProduct, ...statusChecks, ...services,
-    setTimeout, console: { error() {}, warn() {}, log() {} }, Date, Promise,
+    isLevelFree, levelsForProduct, ...statusChecks,
+    setTimeout: (fn, ms) => { const timer = setTimeout(fn, ms); timer.unref?.(); return timer; },
+    clearTimeout,
+    console: { error() {}, warn() {}, log() {} }, Date, Promise,
+    ...services,
   });
   return {
     account(id) { auth = { user: id ? { id } : null, loading: false }; },
