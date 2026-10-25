@@ -63,6 +63,7 @@ async function customerItems() {
     'course-reminder.mjs': [
       course.reminderItem({ ...R, level: 'a1.1', nextNr: 4 }),
       course.reminderItem({ ...R, level: 'a1.2', checkpointNr: 1 }),
+      course.reminderItem({ ...R, level: 'a1.1', finalTest: true }),
       course.reminderItem({ ...R, level: 'b1.1' }),
     ],
   };

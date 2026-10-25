@@ -27,9 +27,11 @@
 // Lektionen were older than 30 days. nextStep() reads the learner's own
 // lesson_progress rows (Lektion and checkpoint ids only, never a timestamp:
 // who is warm stays the SQL's job) and names the open checkpoint, the next
-// Lektion, or nothing: a learner with no Lektion and no checkpoint left is not
-// mailed. Neither is a learner who can no longer open the level (canOpenLevel,
-// the course guard's own rule): the link would end on a lock.
+// Lektion, or, after Lektion 12 and Checkpoint 4, the Abschlusstest: the last
+// node of the course path, which the course home requires before it calls the
+// course complete (curriculumPath). Only a learner who passed it is not mailed.
+// Neither is a learner who can no longer open the level (canOpenLevel, the
+// course guard's own rule): the link would end on a lock.
 //
 // FREQUENCY. At most 3 reminders per rolling 7 days per learner, counted from
 // the ledger. The per-day claim is `course_reminder_<YYYY-MM-DD>` against
@@ -107,10 +109,11 @@ export function overWeeklyCap(sentAt = [], now = new Date(), max = MAX_PER_7_DAY
 }
 
 // ─── the course tables ───────────────────────────────────────────────────────
-// The Lektion titles and checkpoints are copied here because a Netlify function
-// cannot import src/data/curricula/ (browser modules in the SPA bundle). The
-// copies are drift-guarded: tests/course-reminder.test.mjs compares both tables
-// against CURRICULA, level by level, and fails if either side moves or a live
+// The Lektion titles, checkpoints and final tests are copied here because a
+// Netlify function cannot import src/data/curricula/ or src/data/courseTests/
+// (browser modules in the SPA bundle). The copies are drift-guarded:
+// tests/course-reminder.test.mjs compares all three tables against CURRICULA
+// and COURSE_TESTS, level by level, and fails if either side moves or a live
 // level is missing here.
 
 export const LEKTION_TITLES = {
@@ -160,10 +163,33 @@ export const CHECKPOINT_AFTER = {
   ],
 };
 
+/**
+ * Each level's final test: the Modelltest the course path's last node opens
+ * (CURRICULA testSlug), its exam_attempts key and its pass mark (COURSE_TESTS).
+ */
+export const FINAL_TESTS = {
+  'a1.1': { slug: 'abschlusstest-a1-1', examKey: 'a1_1_abschluss', passPercent: 60 },
+  'a1.2': { slug: 'abschlusstest-a1-2', examKey: 'a1_2_abschluss', passPercent: 60 },
+};
+
 const lower = (level) => String(level || '').toLowerCase();
 
 /** `a1.1` → `A1.1`, the code the learner sees on the course home. */
 const levelCode = (level) => String(level || '').toUpperCase();
+
+/** The course path's last node (curricula/index.js levelTestNodeId) and the program it is ticked in (lessonService.js programKeyFor). */
+export const finalTestNodeId = (level) => `${lower(level)}-leveltest`;
+export const programKeyFor = (level) => `${lower(level).replace(/\./g, '')}_course`;
+
+/**
+ * A completed attempt at or above the pass mark: the rule levelTestReconcile.js
+ * uses to complete the final-test node when the result screen's own write was
+ * lost (examScoring.js verdictFor: 'knapp' and 'solide' pass).
+ */
+export function passesFinalTest(attempt, passPercent) {
+  if (!attempt || attempt.status !== 'completed' || !Number(attempt.max_score)) return false;
+  return Math.round((Number(attempt.score) / Number(attempt.max_score)) * 100) >= passPercent;
+}
 
 /**
  * The Lektion with this number, or null: a level without titles here, or a
@@ -197,12 +223,16 @@ const DONE = new Set(['complete', 'gold']);
  *                                      chapter whose checkpoint is not passed
  *                                      (the course home locks the next Lektion)
  *   { kind: 'lektion', nr, title }     the Lektion after the last finished one
- *   { kind: 'complete' }               no Lektion and no checkpoint left
+ *   { kind: 'finaltest', title, slug } every Lektion and checkpoint done, the
+ *                                      Abschlusstest not passed: the path's
+ *                                      last node (curriculumPath)
+ *   { kind: 'complete' }               the final test passed (`finalTestPassed`)
  *   null                               a level with no tables here
  * `floorNr` (the SQL's next_lektion_nr) can only raise the Lektion: it is read
- * from the same table over 30 days.
+ * from the same table over 30 days. `finalTestPassed` comes from the course's
+ * own record of the final test (readFinalTestPasses).
  */
-export function nextStep(level, rows = [], { floorNr = 1 } = {}) {
+export function nextStep(level, rows = [], { floorNr = 1, finalTestPassed = false } = {}) {
   const lvl = lower(level);
   const titles = LEKTION_TITLES[lvl];
   const checkpoints = CHECKPOINT_AFTER[lvl];
@@ -223,7 +253,13 @@ export function nextStep(level, rows = [], { floorNr = 1 } = {}) {
   const cp = checkpoints.find((c) => c.afterLektion === maxDone);
   if (cp && !passed.has(cp.nr)) return { kind: 'checkpoint', nr: cp.nr, title: cp.title };
   const next = nextLektion(lvl, maxDone + 1);
-  return next ? { kind: 'lektion', ...next } : { kind: 'complete' };
+  if (next) return { kind: 'lektion', ...next };
+  // Past the last Lektion and its checkpoint, the course still asks for the
+  // Abschlusstest; until 2026-10-25 this point was called "complete" and the
+  // reminder stopped one step short of the course's end.
+  const finalTest = FINAL_TESTS[lvl];
+  if (finalTest && !finalTestPassed) return { kind: 'finaltest', title: `Abschlusstest ${levelCode(lvl)}`, slug: finalTest.slug };
+  return { kind: 'complete' };
 }
 
 /**
@@ -280,29 +316,37 @@ export const greeting = (vorname) => {
 
 /**
  * Subject + body + CTA for one learner. `checkpointNr` names an open
- * checkpoint, else `nextNr` names a Lektion; with neither (or a level whose
- * tables are not here) the copy names no step rather than inventing one.
- * `vorname` is optional; see the note above.
+ * checkpoint, `finalTest` the Abschlusstest, else `nextNr` names a Lektion;
+ * with none of them (or a level whose tables are not here) the copy names no
+ * step rather than inventing one. `vorname` is optional; see the note above.
+ * The final test opens where the course home's last node opens it:
+ * /modelltest/<slug>, an SPA route, so no trailing slash.
  */
-export function buildMessage({ level, nextNr = null, checkpointNr = null, vorname = null }) {
+export function buildMessage({ level, nextNr = null, checkpointNr = null, finalTest = false, vorname = null }) {
   const lvl = lower(level);
   const code = levelCode(lvl);
   const cp = checkpointNr == null ? null : checkpointFor(lvl, checkpointNr);
-  const next = cp || nextNr == null ? null : nextLektion(lvl, nextNr);
-  const path = cp ? `/course/${lvl}/checkpoint/${cp.nr}` : next ? `/course/${lvl}/l/${next.nr}` : `/course/${lvl}`;
+  const test = cp || !finalTest ? null : FINAL_TESTS[lvl] || null;
+  const next = cp || test || nextNr == null ? null : nextLektion(lvl, nextNr);
+  const path = cp ? `/course/${lvl}/checkpoint/${cp.nr}`
+    : test ? `/modelltest/${test.slug}`
+      : next ? `/course/${lvl}/l/${next.nr}` : `/course/${lvl}`;
   const strong = (text) => `<strong style="color:${BRAND.ink};">${text}</strong>`;
+  const subject = cp ? `Weiter mit ${cp.title}`
+    : test ? `Weiter mit dem Abschlusstest ${code}`
+      : next ? `Weiter mit Lektion ${next.nr}: ${next.title}` : `Weiter im Kurs ${code}`;
+  const ctaLabel = cp ? `Checkpoint ${cp.nr} öffnen →`
+    : test ? 'Abschlusstest öffnen →'
+      : next ? `Lektion ${next.nr} öffnen →` : 'Zum Kurs →';
+  const step = cp ? P(`Als Nächstes kommt ${strong(`Checkpoint ${cp.nr}`)}. Er wiederholt Lektion ${cp.fromLektion} bis ${cp.afterLektion}.`)
+    : test ? P(`Als Nächstes kommt der ${strong(`Abschlusstest ${code}`)}. Er ist der letzte Schritt im Kurs.`)
+      : next ? P(`Lektion ${next.nr} heißt ${strong(next.title)}. Sie ist kurz: ein Schritt pro Bildschirm.`)
+        : P(`Ihr Kurs ${code} geht weiter. Die Lektionen sind kurz: ein Schritt pro Bildschirm.`);
   return {
-    subject: cp ? `Weiter mit ${cp.title}` : next ? `Weiter mit Lektion ${next.nr}: ${next.title}` : `Weiter im Kurs ${code}`,
+    subject,
     ctaHref: tagEmailLink(`${BASE_URL}${path}`, { ...REMINDER_UTM, content: 'cta' }),
-    ctaLabel: cp ? `Checkpoint ${cp.nr} öffnen →` : next ? `Lektion ${next.nr} öffnen →` : 'Zum Kurs →',
-    body:
-      P(`${greeting(vorname)} Sie lernen Deutsch — sehr gut.`) +
-      (cp
-        ? P(`Als Nächstes kommt ${strong(`Checkpoint ${cp.nr}`)}. Er wiederholt Lektion ${cp.fromLektion} bis ${cp.afterLektion}.`)
-        : next
-          ? P(`Lektion ${next.nr} heißt ${strong(next.title)}. Sie ist kurz: ein Schritt pro Bildschirm.`)
-          : P(`Ihr Kurs ${code} geht weiter. Die Lektionen sind kurz: ein Schritt pro Bildschirm.`)) +
-      P('Sie können jederzeit aufhören. Bis bald.'),
+    ctaLabel,
+    body: P(`${greeting(vorname)} Sie lernen Deutsch — sehr gut.`) + step + P('Sie können jederzeit aufhören. Bis bald.'),
   };
 }
 
@@ -345,7 +389,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
  * page (&lang=de), and the List-Unsubscribe headers carry that same link.
  */
 export function reminderItem(r) {
-  const msg = buildMessage({ level: r.level, nextNr: r.nextNr, checkpointNr: r.checkpointNr, vorname: r.vorname });
+  const msg = buildMessage({ level: r.level, nextNr: r.nextNr, checkpointNr: r.checkpointNr, finalTest: r.finalTest, vorname: r.vorname });
   const unsubUrl = unsubscribeUrl(r.id, { lang: 'de' });
   return {
     from: FROM_ADDRESS,
@@ -430,6 +474,44 @@ async function readProgress(client, ids) {
   return groupBy(rows, 'user_id');
 }
 
+/**
+ * Who of these learners (all at the final-test step) has passed their level's
+ * final test, by the course's own record: the path node the result screen ticks
+ * in program_progress, or, when that write was lost, a passing completed attempt
+ * in exam_attempts, from which the course home completes the node
+ * (levelTestReconcile.js). Scores and status only, no timestamps. → Set of ids.
+ */
+async function readFinalTestPasses(client, learners) {
+  if (learners.length === 0) return new Set();
+  const levelOf = new Map(learners.map((r) => [r.user_id, lower(r.level)]));
+  const ids = [...levelOf.keys()];
+  const passed = new Set();
+  const nodes = await readForIds(ids, (chunk) => client
+    .from('program_progress')
+    .select('user_id, program_key, item_id')
+    .in('user_id', chunk)
+    .in('item_id', Object.keys(FINAL_TESTS).map(finalTestNodeId))
+    .order('user_id'), 'final-test node');
+  for (const row of nodes) {
+    const lvl = levelOf.get(row.user_id);
+    if (lvl && row.item_id === finalTestNodeId(lvl) && row.program_key === programKeyFor(lvl)) passed.add(row.user_id);
+  }
+  const open = ids.filter((id) => !passed.has(id));
+  if (open.length === 0) return passed;
+  const attempts = await readForIds(open, (chunk) => client
+    .from('exam_attempts')
+    .select('user_id, exam_key, status, score, max_score')
+    .in('user_id', chunk)
+    .in('exam_key', Object.values(FINAL_TESTS).map((t) => t.examKey))
+    .eq('status', 'completed')
+    .order('user_id'), 'final-test attempt');
+  for (const a of attempts) {
+    const test = FINAL_TESTS[levelOf.get(a.user_id)];
+    if (test && a.exam_key === test.examKey && passesFinalTest(a, test.passPercent)) passed.add(a.user_id);
+  }
+  return passed;
+}
+
 /** The rows canOpenLevel reads, for the learners in a paid level. */
 async function readAccess(client, ids) {
   if (ids.length === 0) return new Map();
@@ -503,13 +585,16 @@ export async function selectRecipients({ client = supabase, span = null, now = D
   if (reachable.length === 0) return [];
 
   // The step to name, and whether the link would open. A failed read throws:
-  // the run then sends nothing, rather than a guess at a Lektion or a lock.
+  // the run then sends nothing, rather than a guess at a step or a lock. The
+  // final test's record is read only for learners who have reached it.
   const progress = await readProgress(client, reachable.map((r) => r.user_id));
+  const stepOf = (r, finalTestPassed = false) => nextStep(r.level, progress.get(r.user_id) || [], { floorNr: r.next_lektion_nr, finalTestPassed });
+  const passedFinal = await readFinalTestPasses(client, reachable.filter((r) => stepOf(r)?.kind === 'finaltest'));
   const access = await readAccess(client, reachable.filter((r) => !FREE_LEVELS.includes(lower(r.level))).map((r) => r.user_id));
 
   const out = [];
   for (const r of reachable) {
-    const step = nextStep(r.level, progress.get(r.user_id) || [], { floorNr: r.next_lektion_nr });
+    const step = stepOf(r, passedFinal.has(r.user_id));
     if (step?.kind === 'complete') continue;
     if (!canOpenLevel(r.level, access.get(r.user_id), now)) continue;
     out.push({
@@ -518,6 +603,7 @@ export async function selectRecipients({ client = supabase, span = null, now = D
       level: r.level,
       nextNr: step?.kind === 'lektion' ? step.nr : null,
       checkpointNr: step?.kind === 'checkpoint' ? step.nr : null,
+      finalTest: step?.kind === 'finaltest',
       lastActivityAt: r.last_activity_at,
       // The selection function returns no name today, so the greeting is the
       // bare „Guten Tag!“. If it ever does, the copy picks it up with no edit here.

@@ -155,6 +155,7 @@ test('no mailer states a placement-test duration other than PLACEMENT_TEST_MINUT
     ...Object.keys(activation.TEMPLATES).map((kind) => [kind, activation.mailItem(kind, r)]),
     ['course-reminder lektion', course.reminderItem({ ...r, level: 'a1.1', nextNr: 4 })],
     ['course-reminder checkpoint', course.reminderItem({ ...r, level: 'a1.2', checkpointNr: 2 })],
+    ['course-reminder final test', course.reminderItem({ ...r, level: 'a1.1', finalTest: true })],
     ['course-reminder generic', course.reminderItem({ ...r, level: 'b1.1' })],
     ['welcome', { subject: 'Welcome to DeutschMeister', html: welcome.welcomeHtml(r.email) }],
     ['confirm-nudge', { subject: '', html: nudge.bodyHtml('https://deutsch-meister.de/.netlify/functions/confirm-continue?uid=x&exp=1&token=y') }],

@@ -135,10 +135,10 @@ campaign is the mail kind with hyphens, and the content names the link: `cta`
 | trial ended | `trial-ended` | `/pricing/` | |
 | activation day 1 | `activation-d1` | `/course/a1.1/l/1` (since 2026-10-25; `/level-test/` before) | `level-test` → `/level-test/` |
 | activation day 4 | `activation-d4` | `/analyze/` | |
-| course reminder | `course-reminder` | the step it names: `/course/<level>/l/<nr>`, `/course/<level>/checkpoint/<nr>`, or `/course/<level>` (since 2026-10-25) | |
+| course reminder | `course-reminder` | the step it names: `/course/<level>/l/<nr>`, `/course/<level>/checkpoint/<nr>`, the final test `/modelltest/<testSlug>`, or `/course/<level>` (since 2026-10-25) | |
 | confirmation nudge | `confirm-nudge` | (a signed function URL, never tagged) | |
 
-Lektion 1 and the course pages are SPA routes, so they carry no trailing slash;
+Lektion 1, the course pages and `/modelltest/<slug>` are SPA routes, so they carry no trailing slash;
 `/analyze/`, `/pricing/` and `/level-test/` are prerendered and keep theirs.
 
 ```

@@ -48,10 +48,11 @@ import { dirname, join } from 'node:path';
 import {
   WINDOW_HOURS, WINDOW_DAYS, MAX_PER_7_DAYS,
   isWithinWindow, overWeeklyCap, reminderKindFor,
-  LEKTION_TITLES, CHECKPOINT_AFTER, nextLektion, checkpointFor, buildMessage, greeting,
-  reminderItem, FOOTER_HREF,
+  LEKTION_TITLES, CHECKPOINT_AFTER, FINAL_TESTS, nextLektion, checkpointFor, buildMessage, greeting,
+  reminderItem, FOOTER_HREF, finalTestNodeId, programKeyFor,
 } from '../netlify/functions/course-reminder.mjs';
-import { CURRICULA } from '../src/data/curricula/index.js';
+import { CURRICULA, curriculumPath, levelTestNodeId } from '../src/data/curricula/index.js';
+import { courseTestBySlug } from '../src/data/courseTests/index.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -151,6 +152,13 @@ test('selection reads ONE definition and never re-derives status', () => {
   assert.equal(reads.length, 1, 'the lesson_progress read must name its columns');
   assert.deepEqual(reads[0][1].split(',').map((c) => c.trim()).sort(), ['lektion_id', 'status', 'user_id'], 'the step read selects ids and status, never a timestamp');
   assert.ok(!SRC.includes("from('lesson_attempts')"), 'mailer must not query lesson_attempts itself');
+  // The final test's record (the path node, or a saved passing attempt) is read
+  // the same way: what was passed, never when.
+  for (const table of ['program_progress', 'exam_attempts']) {
+    const select = [...SRC.matchAll(new RegExp(`\\.from\\('${table}'\\)\\s*\\.select\\('([^']*)'\\)`, 'g'))];
+    assert.equal(select.length, 1, `one ${table} read, for the final-test step only`);
+    assert.ok(!/(_at|deadline)\b/.test(select[0][1]), `${table}: no timestamp in a step read (${select[0][1]})`);
+  }
   // Hygiene and confirmation, same as every other job.
   assert.ok(SRC.includes('isBlockedEmail'), 'disposable-domain hygiene missing');
   assert.ok(SRC.includes('u.email_confirmed_at'), 'unconfirmed addresses must never be mailed');
@@ -219,6 +227,24 @@ test('the mailer\'s checkpoints are the curriculum\'s: number, the Lektion that 
   assert.equal(checkpointFor('a1.1', 9), null);
 });
 
+test('the mailer\'s final tests are the course path\'s last node: slug, exam key, pass mark, node and program', () => {
+  assert.deepEqual(Object.keys(FINAL_TESTS).sort(), Object.keys(CURRICULA).sort());
+  for (const [level, curriculum] of Object.entries(CURRICULA)) {
+    const last = curriculumPath(curriculum).at(-1);
+    assert.equal(last.kind, 'leveltest', `${level}: the course path still ends with the final test`);
+    assert.equal(FINAL_TESTS[level].slug, last.testSlug, `${level}: the mail would open another test than the course home`);
+    assert.equal(finalTestNodeId(level), levelTestNodeId(curriculum), `${level}: the node the result screen ticks`);
+    const courseTest = courseTestBySlug(last.testSlug);
+    assert.equal(FINAL_TESTS[level].examKey, courseTest.key, `${level}: exam_attempts key`);
+    assert.equal(courseTest.level, level);
+    assert.equal(FINAL_TESTS[level].passPercent, courseTest.mock.passPercent, `${level}: the pass mark levelTestReconcile.js applies`);
+  }
+  // lessonService.js programKeyFor, the program the node is ticked in.
+  assert.equal(programKeyFor('a1.1'), 'a11_course');
+  assert.equal(programKeyFor('A1.2'), 'a12_course');
+  assert.match(read('src/services/lessonService.js'), /programKeyFor = \(level\) => `\$\{String\(level \|\| ''\)\.toLowerCase\(\)\.replace\(\/\\\.\/g, ''\)\}_course`/);
+});
+
 test('nextLektion names a Lektion of the level, never one past the end, and tolerates an unknown level', () => {
   assert.deepEqual(nextLektion('a1.1', 1), { nr: 1, title: 'Hallo, ich bin …' });
   assert.deepEqual(nextLektion('A1.1', 4), { nr: 4, title: 'Auf dem Flohmarkt' });
@@ -257,6 +283,18 @@ test('an open checkpoint is named and linked as the course home names and links 
   assert.ok(!/Lektion 4/.test(`${msg.subject} ${msg.body}`), 'never the Lektion the course home still locks');
 });
 
+test('after the last Lektion and checkpoint the reminder names the Abschlusstest and opens it where the course home does', () => {
+  for (const [level, code] of [['a1.1', 'A1.1'], ['a1.2', 'A1.2']]) {
+    const msg = buildMessage({ level, finalTest: true });
+    assert.equal(msg.subject, `Weiter mit dem Abschlusstest ${code}`);
+    assert.equal(msg.ctaLabel, 'Abschlusstest öffnen →');
+    // CurriculumHomePage hrefFor: /modelltest/<testSlug>, an SPA route (no trailing slash).
+    assert.equal(msg.ctaHref, `https://deutsch-meister.de/modelltest/${FINAL_TESTS[level].slug}?${TAGS}&utm_content=cta`);
+    assert.ok(msg.body.includes(`Abschlusstest ${code}</strong>. Er ist der letzte Schritt im Kurs.`), msg.body);
+    assert.ok(!/Lektion \d/.test(`${msg.subject} ${msg.ctaLabel} ${msg.body}`), 'no Lektion is left to name');
+  }
+});
+
 test('the footer link is tagged; the unsubscribe link asks for the German page and is the List-Unsubscribe header', () => {
   process.env.UNSUB_SECRET = process.env.UNSUB_SECRET || 'test-only-unsub-secret';
   assert.equal(FOOTER_HREF, `https://deutsch-meister.de/?${TAGS}&utm_content=footer`);
@@ -272,8 +310,8 @@ test('the footer link is tagged; the unsubscribe link asks for the German page a
 });
 
 test('the copy makes no claim about what the learner did not do', () => {
-  for (const nextNr of [1, 7, 12]) {
-    const msg = buildMessage({ level: 'a1.1', nextNr });
+  for (const shape of [1, 7, 12].map((nextNr) => ({ nextNr })).concat([{ checkpointNr: 3 }, { finalTest: true }])) {
+    const msg = buildMessage({ level: 'a1.1', ...shape });
     const text = `${msg.subject} ${msg.body}`;
     // The window spans two calendar days, so naming a day would be a guess.
     assert.ok(!/gestern|heute hast|nicht gelernt|nichts gemacht|vergessen/i.test(text), `guessy or scolding copy: ${text}`);
@@ -304,11 +342,12 @@ test('the reminder speaks Sie: „Guten Tag!“, never du, dich, dir or dein (CL
   assert.ok(named.body.includes('Guten Tag, Ana! Sie lernen Deutsch — sehr gut.'), named.body);
   const anon = buildMessage({ level: 'a1.1', nextNr: 4 });
   assert.ok(anon.body.includes('Guten Tag! Sie lernen Deutsch — sehr gut.'), anon.body);
-  // Every shape the mail can take: a Lektion, a checkpoint, a level with no tables.
+  // Every shape the mail can take: a Lektion, a checkpoint, the final test, a level with no tables.
   const shapes = [
     ...[1, 4, 12].map((nextNr) => ({ level: 'a1.1', nextNr })),
     { level: 'a1.2', nextNr: 7, vorname: 'Ana' },
     { level: 'a1.1', checkpointNr: 4 },
+    { level: 'a1.2', finalTest: true },
     { level: 'b1.1' },
   ];
   for (const shape of shapes) {
@@ -322,7 +361,7 @@ test('the reminder speaks Sie: „Guten Tag!“, never du, dich, dir or dein (CL
 test('the German is A1, not B1 — the level every recipient is at', () => {
   // Owner-approved rewrite, DaF review 2026-09-12 §F. The three constructions
   // below are what made the old copy B1; none may come back.
-  for (const shape of [1, 4, 12].map((nextNr) => ({ level: 'a1.1', nextNr })).concat([{ level: 'a1.1', checkpointNr: 2 }, { level: 'b1.1' }])) {
+  for (const shape of [1, 4, 12].map((nextNr) => ({ level: 'a1.1', nextNr })).concat([{ level: 'a1.1', checkpointNr: 2 }, { level: 'a1.1', finalTest: true }, { level: 'b1.1' }])) {
     const body = buildMessage(shape).body;
     const text = body.replace(/<[^>]+>/g, ' ');
     assert.ok(!/nichts geht verloren|der Teil, der zählt|nichts geht\b/i.test(text), `B1 idiom in the copy: ${text}`);

@@ -275,7 +275,7 @@ test('German mail and pages from netlify/functions speak Sie, never du', async (
   const uid = '00000000-0000-4000-8000-000000000001';
   const learner = { id: uid, email: 'learner@example.test' };
   const html = [
-    ...[{ level: 'a1.1', nextNr: 4 }, { level: 'a1.2', nextNr: 1, vorname: 'Ana' }, { level: 'a1.1', checkpointNr: 2 }, { level: 'b1.1' }]
+    ...[{ level: 'a1.1', nextNr: 4 }, { level: 'a1.2', nextNr: 1, vorname: 'Ana' }, { level: 'a1.1', checkpointNr: 2 }, { level: 'a1.2', finalTest: true }, { level: 'b1.1' }]
       .map((shape) => course.reminderItem({ ...learner, ...shape }).html),
     socialFooterLine('#000', 'de'),
   ];
