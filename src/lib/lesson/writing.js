@@ -668,6 +668,26 @@ const nameValueShape = (opts = {}) => ({
 const NAME_VALUE_SHAPE = nameValueShape();
 
 /**
+ * „ICH HEISSE …“ NEEDS THE NAME (2026-10-25 review, X-047). The name shape accepted any heiß- or
+ * nenn- token, so „Sehr geehrte Damen und Herren, ich heiße. …“ turned „Ihr Name“ green — while
+ * „Mein Name ist.“ was red, because the named field (namedFieldShape) asks for its value. The verb
+ * now needs a name after it IN ITS CLAUSE, read like a form field (case-folded: „ich heiße ana“ is
+ * a name), the function words of that clause left out („ich heiße nicht“ names nobody).
+ * „ich bin <Name>“ stays as it was.
+ */
+const NAME_VERB_RE = /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b/g;
+const NAME_AFTER_VERB = nameValueShape({ foldCase: true });
+const NAME_SHAPE = {
+  test: (body) => /\bich\s+bin\s+[A-ZÄÖÜ]/.test(body) || sentences(body).some((sentence) => clauses(sentence).some((clause) => {
+    for (const m of clause.matchAll(NAME_VERB_RE)) {
+      const rest = words(clause.slice(m.index + m[0].length)).filter((w) => !isFunctionWord(stripPunct(w)));
+      if (NAME_AFTER_VERB.test(rest.join(' '))) return true;
+    }
+    return false;
+  })),
+};
+
+/**
  * A PHONE NUMBER, and the shape is bound to the question rather than to the text. Round 14's
  * `PHONE_RE` accepted ONE numeral, so „Wir sind zwei Kollegen.“ and „Ich bin um neun Uhr im Büro.“
  * both satisfied „Ihre Telefonnummer“ (DaF review #14, MAJOR 1, probes 3 and 4). A number is four
@@ -697,7 +717,7 @@ const ANSWER_SHAPES = [
   // option that differs there); a row without `form` reads the field exactly as the Mitteilung.
   {
     on: ['nam', 'vornam', 'nachnam', 'familiennam'],
-    re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/,
+    re: NAME_SHAPE,
     value: NAME_VALUE_SHAPE,
     form: nameValueShape,
   },
