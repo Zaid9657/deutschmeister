@@ -10,6 +10,7 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
+import FullPageRedirect from '../components/FullPageRedirect.jsx';
 
 // One lesson of a course: what to do, the door into the material, and the
 // "done → next" step that moves the learner along the path. The material
@@ -55,7 +56,7 @@ export default function CourseLessonPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded, item?.id, search]);
 
-  if (!course) return <Navigate to="/courses/" replace />;
+  if (!course) return <FullPageRedirect to="/courses/" />;
   if (!item) return <Navigate to={courseHome(course.level)} replace />;
 
   const unlocked = loaded && isUnlocked(items, item.position, done);

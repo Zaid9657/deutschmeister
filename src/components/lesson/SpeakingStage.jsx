@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { Mic, SkipForward } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Check, Mic, SkipForward } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
@@ -27,6 +27,15 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * learner moves on — skipped, self-confirmed or recognised — so the recap can
  * say it instead of letting one Gold imply it.
  *
+ * THE TRIP TO THE COACH (2026-10-25). "Speak freely" is a full page load, and
+ * the line results lived only here: on the way back every line was idle again,
+ * so the learner recorded each one again (spending scoring allowance) or skipped,
+ * and the recap said speaking was skipped although it had been measured. Every
+ * result now goes to `onProgress(results)` as it is recorded — the player keeps
+ * it in the run snapshot (runState `readAloud`) — and comes back as
+ * `initialResults`: a line measured before shows what was measured, and Next is
+ * open. Recording it again replaces it.
+ *
  * THE WAY OUT. The primary stays disabled until every read-aloud line is
  * confirmed or scored — but a learner without a microphone, or without the
  * nerve on day one, used to have only "Back" here and looped into the
@@ -36,8 +45,11 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * practice responses only (LessonPlayerPage.recordResult), and a skipped line
  * is simply absent from it. Skipped ≠ correct, and skipped ≠ wrong.
  */
-export default function SpeakingStage({ stage, level, code, lektion, onBack, onDone, onReport }) {
-  const [results, setResults] = useState(() => ({}));
+export default function SpeakingStage({ stage, level, code, lektion, onBack, onDone, onReport, initialResults = null, onProgress }) {
+  const [results, setResults] = useState(() => ({ ...(initialResults || {}) }));
+  // Lines recorded on THIS visit show their result in ReadAloudLine itself; a result that came back
+  // with the run is said under its line (ReadAloudLine starts idle — it keeps no history).
+  const [recordedNow, setRecordedNow] = useState(() => new Set());
   const [lang] = useLessonLang();
   const lines = stage.readAloud || [];
   const open = stage.open;
@@ -45,16 +57,28 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
 
   const recordResult = useCallback((index, result) => {
     setResults((prev) => ({ ...prev, [index]: result }));
+    setRecordedNow((prev) => new Set(prev).add(index));
   }, []);
+
+  // Each recorded result goes to the run snapshot as it happens — not only on Next, which the trip
+  // to the coach never reaches.
+  const reported = useRef(results);
+  useEffect(() => {
+    if (results === reported.current) return;
+    reported.current = results;
+    if (typeof onProgress === 'function') onProgress(results);
+  }, [results, onProgress]);
 
   const finish = () => {
     if (typeof onReport === 'function') onReport(speakingSummary(lines.length, results));
     onDone();
   };
 
+  // /speaking is a prerendered route, so the hand-off carries its slash (CLAUDE.md trailing-slash
+  // rule): the slashless form paid a canonical redirect on this full page load.
   const speakingHref = open
-    ? `/speaking?level=${encodeURIComponent(level)}${open.missionOrder ? `&mission=${open.missionOrder}` : ''}`
-    : `/speaking?level=${encodeURIComponent(level)}`;
+    ? `/speaking/?level=${encodeURIComponent(level)}${open.missionOrder ? `&mission=${open.missionOrder}` : ''}`
+    : `/speaking/?level=${encodeURIComponent(level)}`;
 
   const goSpeak = () => {
     // The task travels with the hand-off. Four A1.1 Lektionen have no
@@ -105,6 +129,14 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
               speaker={l.speaker}
               onResult={(result) => recordResult(l.index, result)}
             />
+            {results[l.index] && !recordedNow.has(l.index) && (
+              <p className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-bold text-siegel-deep">
+                <Check className="h-4 w-4" aria-hidden="true" />
+                {results[l.index].usedMic && typeof results[l.index].pct === 'number'
+                  ? t('speaking.intelligibility', lang, { pct: Math.round(results[l.index].pct * 100) })
+                  : t('speaking.said', lang)}
+              </p>
+            )}
           </li>
         ))}
       </ul>

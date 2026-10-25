@@ -108,9 +108,10 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
   }, [level, lektion]);
 
   // Same query shape SpeakingStage.jsx hands the player for the in-lesson
-  // "open" speaking task: `/speaking?level=<level>&mission=<missionOrder>`.
+  // "open" speaking task: `/speaking/?level=<level>&mission=<missionOrder>` — with the slash,
+  // because /speaking is a prerendered route (CLAUDE.md trailing-slash rule).
   const missionOrder = lektion?.sprechen?.open?.missionOrder;
-  const speakingHref = missionOrder != null ? `/speaking?level=${encodeURIComponent(level)}&mission=${missionOrder}` : null;
+  const speakingHref = missionOrder != null ? `/speaking/?level=${encodeURIComponent(level)}&mission=${missionOrder}` : null;
 
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 

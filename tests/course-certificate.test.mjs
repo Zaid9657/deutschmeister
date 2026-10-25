@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import vm from 'node:vm';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -71,11 +72,60 @@ test('the certificate and complete page counts are derived from curriculum/path 
   assert.match(complete, /curriculum\.lektionen\.reduce\(\(s, l\) => s \+ \(l\.wortfeld\?\.length \|\| 0\), 0\)/, 'words-met must be summed from every Lektion\'s wortfeld length');
 });
 
-test('the complete page never links a rebuilt level straight to the next (paused/draft) level; it offers "All courses" instead', () => {
+// What's next, derived (2026-10-25 cross-check, LSN-03). The card told every rebuilt level that the
+// next one was "a paused draft" — written while A1.2 was one. A1.2 has been a live course since
+// 2026-10-22 (CURRICULA) and A2.1 after it has its 28-day course, so the warmest buyer, a learner who
+// has just finished A1.1, was told there was nothing to buy. nextStepFor derives the step from the
+// registries; it is pure, so the test runs the page's own function against the real data modules.
+async function loadNextStepFor() {
   const src = read('src/pages/CourseCompletePage.jsx');
-  assert.match(src, /curriculum \? \(/s, 'the "next" card must branch on whether a curriculum exists');
-  assert.ok(src.includes('to="/courses/"'), 'the curriculum branch of the next-step card must link to /courses/');
-  assert.ok(src.includes('All courses'), 'the curriculum branch must label the link "All courses"');
+  const fn = src.match(/export function nextStepFor\([\s\S]*?\n\}\n/);
+  assert.ok(fn, 'CourseCompletePage defines nextStepFor');
+  const { courseFor } = await import('../src/data/courses/index.js');
+  const { curriculumFor } = await import('../src/data/curricula/index.js');
+  const { stationFor, ticketLines } = await import('../src/data/offers.js');
+  const { productKeyForLevel } = await import('../src/data/pricing.js');
+  const { courseHome } = await import('../src/lib/courseFlow.js');
+  const context = vm.createContext({ courseFor, curriculumFor, stationFor, ticketLines, productKeyForLevel, courseHome });
+  vm.runInContext(fn[0].replace('export function', 'function'), context);
+  return { nextStepFor: context.nextStepFor, stationFor, ticketLines, productKeyForLevel };
+}
+
+test('after A1.1 the next step is the live A1.2 course: the course itself with access, its ticket without', async () => {
+  const { nextStepFor, stationFor, ticketLines, productKeyForLevel } = await loadNextStepFor();
+  const owner = (level) => level === 'a1.2';
+  const none = () => false;
+  assert.deepEqual(JSON.parse(JSON.stringify(nextStepFor('a1.1', owner))), { kind: 'continue', level: 'a1.2', to: '/course/a1.2' });
+  const offer = nextStepFor('a1.1', none);
+  assert.equal(offer.kind, 'offer', 'never "a paused draft" for a live level');
+  assert.equal(offer.level, 'a1.2');
+  assert.equal(offer.productKey, productKeyForLevel('a1.2'), 'Buy resumes /subscription?buy=<the pricing.js key>');
+  assert.deepEqual(offer.station, stationFor('a1.2'), 'price and status come from offers.js, never retyped');
+  assert.deepEqual(offer.ticket, ticketLines('a1.2')[0]);
+  assert.equal(offer.coursePage, '/courses/a1-2/');
+  // A1.2 finishers: A2.1 has a course, so it is offered too; the legacy ledger reads the same rule.
+  assert.equal(nextStepFor('a1.2', none).kind, 'offer');
+  assert.equal(nextStepFor('a1.2', none).level, 'a2.1');
+  assert.equal(nextStepFor('a2.1', (level) => level === 'a2.2').to, '/course/a2.2');
+  // Only a level without any course is the draft.
+  assert.deepEqual(JSON.parse(JSON.stringify(nextStepFor('a2.2', none))), { kind: 'draft', level: 'b1.1' });
+});
+
+test('the next-step card renders what nextStepFor decided: the course, the offer with a gated Buy, or the draft', () => {
+  const src = read('src/pages/CourseCompletePage.jsx');
+  assert.match(src, /const step = subLoading \? null : nextStepFor\(level, hasLevelAccess\);/, 'no offer before entitlements load');
+  // The draft sentence and the catalogue link are the draft branch, and only that branch.
+  const draft = src.slice(src.indexOf("step?.kind === 'draft' ? ("), src.indexOf(') : (', src.indexOf("step?.kind === 'draft' ? (")));
+  assert.match(draft, /paused draft/);
+  assert.ok(draft.includes('to="/courses/"') && draft.includes('All courses'), 'the draft branch links the catalogue');
+  assert.equal((src.match(/is a paused draft, not a guided course yet/g) || []).length, 1, 'the draft sentence is said nowhere else');
+  // The offer: a Buy only when the checkout id is set, through the buy-intent path, tracked.
+  assert.match(src, /const checkoutReady = step\?\.kind === 'offer' && Boolean\(LEMONSQUEEZY_CONFIG\.levelCourses\[step\.productKey\]\?\.variantId\);/);
+  assert.match(src, /<Button to=\{`\/subscription\?buy=\$\{step\.productKey\}`\} onClick=\{buyNext\}/);
+  assert.match(src, /track\('checkout_intent', \{ product: step\.productKey, surface: 'course_complete'/);
+  assert.match(src, /if \(!user\) setBuyIntent\(step\.productKey\);/, 'a signed-out Buy is resumed after sign-up');
+  assert.match(src, /<a href=\{step\.coursePage\}/, 'the course page is an Astro page: a full page load');
+  assert.match(src, /<Link to=\{step\.to\}/, 'the next course itself for a learner with access');
 });
 
 // No pass promise, no fee, no bare usage-count claim — same family of bans as
