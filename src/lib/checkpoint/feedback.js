@@ -4,7 +4,8 @@ import { isItemCorrect } from './buildCheckpoint.js';
 // every level: even correctness alone can reveal a later mirrored answer.
 export function sectionComplete(items, answers, section) {
   const group = items.filter((item) => item.section === section);
-  return group.length > 0 && group.every((item) => Object.hasOwn(answers, item.id));
+  // hasOwnProperty.call, not Object.hasOwn (Safari 14 lacks it; tests/no-object-hasown.test.mjs).
+  return group.length > 0 && group.every((item) => Object.prototype.hasOwnProperty.call(answers, item.id));
 }
 
 export function checkpointFeedback(item, answer, { graded = false, complete = false } = {}) {

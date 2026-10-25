@@ -396,6 +396,13 @@
   from = "/profile"
   to = "/app.html"
   status = 200
+# The home-screen app's start_url (public/manifest.webmanifest): a launcher that
+# redirects by entitlement (src/pages/AppLauncher.jsx). Not crawlable, so not
+# prerendered and not in the sitemap.
+[[redirects]]
+  from = "/start"
+  to = "/app.html"
+  status = 200
 [[redirects]]
   from = "/vocabulary"
   to = "/app.html"

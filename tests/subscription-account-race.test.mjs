@@ -1,82 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import vm from 'node:vm';
-import { levelsForProduct } from '../src/data/pricing.js';
-import { isLevelFree } from '../src/config/freeTier.js';
-import { subscriptionStatus } from '../src/lib/subscriptionStatus.js';
+import { deferred, providerHarness, settle, statusChecks } from './helpers/subscriptionProvider.mjs';
 
-const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
-const withoutImports = (source) => source.replace(/^import[\s\S]*?;\n/gm, '');
-const statusChecks = vm.runInNewContext(
-  withoutImports(read('../src/services/subscriptionService.js')).replace(/export const /g, 'const ') +
-  '\n({ checkTrialStatus, checkSubscriptionStatus });', { supabase: {}, console, Date, subscriptionStatus },
-);
-const deferred = () => {
-  let resolve;
-  const promise = new Promise((done) => { resolve = done; });
-  return { promise, resolve };
-};
-const settle = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
-
-// Execute the provider's real hooks and async callbacks; only its JSX return
-// is replaced so Node can observe the context value without a browser.
-function providerHarness(services = {}) {
-  const slots = [];
-  let cursor = 0;
-  let auth = { user: null, loading: false };
-  let pendingEffects = [];
-  const sameDeps = (a, b) => a && b && a.length === b.length && a.every((value, i) => value === b[i]);
-  const source = withoutImports(read('../src/contexts/SubscriptionContext.jsx'))
-    .replace(/export const /g, 'const ')
-    .replace(/return \(\s*<SubscriptionContext\.Provider[\s\S]*?<\/SubscriptionContext\.Provider>\s*\);/, 'return value;');
-  const provider = vm.runInNewContext(source + '\nSubscriptionProvider;', {
-    createContext: () => ({}), useContext: () => ({}),
-    useAuth: () => auth,
-    useState(initial) {
-      const slot = slots[cursor++] ??= { value: initial };
-      return [slot.value, (next) => { slot.value = typeof next === 'function' ? next(slot.value) : next; }];
-    },
-    useRef(initial) { return slots[cursor++] ??= { current: initial }; },
-    useCallback(callback, deps) {
-      const index = cursor++;
-      if (!sameDeps(slots[index]?.deps, deps)) slots[index] = { callback, deps };
-      return slots[index].callback;
-    },
-    useEffect(callback, deps) {
-      const index = cursor++;
-      if (!sameDeps(slots[index]?.deps, deps)) {
-        const previous = slots[index];
-        const slot = slots[index] = { deps, cleanup: previous?.cleanup };
-        pendingEffects.push(() => { slot.cleanup?.(); slot.cleanup = callback(); });
-      }
-    },
-    document: { addEventListener() {}, removeEventListener() {} },
-    withTimeout: (promise) => promise,
-    getSubscription: async () => null,
-    getUserProfile: async (id) => ({ id, trial_started_at: '2000-01-01', trial_ends_at: '2000-01-08' }),
-    getPurchases: async () => [],
-    startFreeTrial: async () => {},
-    settlePendingPlacement: async (_id, profile) => profile,
-    getAuthHeaders: async () => ({}),
-    fetch: async () => ({ json: async () => ({ status: 'none' }) }),
-    isLevelFree, levelsForProduct, ...statusChecks, ...services,
-    setTimeout, console, Date,
-  });
-  return {
-    account(id) { auth = { user: id ? { id } : null, loading: false }; },
-    render(runEffects = true) {
-      cursor = 0;
-      const value = provider({ children: null });
-      if (runEffects) {
-        const effects = pendingEffects;
-        pendingEffects = [];
-        effects.forEach((effect) => effect());
-      }
-      return value;
-    },
-  };
-}
+// The provider runs as shipped (tests/helpers/subscriptionProvider.mjs): its
+// real hooks and async callbacks, only the JSX return replaced.
 
 test('late account A responses cannot overwrite account B or clear its loading state', async () => {
   const accountA = deferred();
@@ -156,4 +83,82 @@ test('terminal and unknown statuses never grant paid access from a future date',
     assert.equal(statusChecks.checkSubscriptionStatus({ status, subscription_end: '2100-01-01' }).isActive, true, status);
     assert.equal(statusChecks.checkSubscriptionStatus({ status, subscription_end: '2000-01-01' }).isActive, false, status);
   }
+});
+
+// ACC-01 (cross-check 2026-10-25): a refresh of the account on screen is a
+// background revalidation. Every guard (LevelSubscriptionGuard,
+// SubscriptionGuard, ExamSubscriptionGuard, PurchaseGuard) swaps its page for a
+// spinner while `loading` is true, and an unmounted page loses its work: an
+// A1.2 checkpoint restarted at its intro with no answers, a Modelltest Hören
+// clip stopped after its play was counted, /profile blanked on every goal chip.
+// The refresh came from a tab return, from auth-js's SIGNED_IN /
+// TOKEN_REFRESHED (a new user object for the same id, about hourly) and from
+// refreshSubscription().
+const OWNER = {
+  getSubscription: async () => ({ status: 'active', plan_type: 'monthly', subscription_end: '2100-01-01', lemonsqueezy_subscription_id: 'sub-1' }),
+  getPurchases: async () => [{ product_key: 'course_a1_2', status: 'active', access_until: '2000-01-01' }],
+};
+
+test('ACC-01: a new auth user object for the same account neither blanks guarded pages nor reloads', async () => {
+  let reads = 0;
+  const h = providerHarness({ ...OWNER, getSubscription: async (...args) => { reads++; return OWNER.getSubscription(...args); } });
+  h.account('A'); h.render(); await settle();
+  const loaded = h.render();
+  assert.equal(loaded.loading, false);
+  assert.equal(reads, 1);
+  h.account('A'); // auth-js: SIGNED_IN on a tab return, TOKEN_REFRESHED about hourly
+  h.render();
+  const during = h.render(false);
+  assert.equal(during.loading, false, 'a token refresh must not swap guarded pages for the spinner');
+  assert.equal(during.subscription?.status, 'active');
+  assert.equal(during.hasLevelAccess('a1.2'), true);
+  await settle();
+  assert.equal(reads, 1, 'the same account id must not recreate the loader');
+});
+
+test('ACC-01: a tab return revalidates in the background and keeps the data on screen', async () => {
+  const refresh = deferred();
+  let reads = 0;
+  const h = providerHarness({ ...OWNER, getSubscription: () => (++reads === 1 ? OWNER.getSubscription() : refresh.promise) });
+  h.account('A'); h.render(); await settle();
+  assert.equal(h.render().loading, false);
+  h.visible(); // more than 5 s since the last refresh (the first return always counts)
+  assert.equal(reads, 2, 'the tab return still refreshes');
+  const during = h.render(false);
+  assert.equal(during.loading, false, 'a background refresh must not unmount the page');
+  assert.equal(during.subscription?.status, 'active', 'the subscription stays while the refresh is in flight');
+  assert.equal(during.purchases.length, 1);
+  assert.equal(during.profile?.id, 'A');
+  assert.equal(during.hasLevelAccess('a1.2'), true);
+  refresh.resolve({ status: 'cancelled', plan_type: 'monthly', subscription_end: '2100-01-01', lemonsqueezy_subscription_id: 'sub-1' });
+  await settle();
+  const after = h.render();
+  assert.equal(after.loading, false);
+  assert.equal(after.subscription.status, 'cancelled', 'the refreshed row lands');
+});
+
+test('ACC-01: refreshSubscription() (a settings save) keeps loading false', async () => {
+  const h = providerHarness(OWNER);
+  h.account('A'); h.render(); await settle();
+  const pending = h.render().refreshSubscription();
+  assert.equal(h.render(false).loading, false);
+  await pending;
+  assert.equal(h.render().loading, false);
+});
+
+test('ACC-01: an identity change still loads from nothing and never shows the previous account', async () => {
+  const h = providerHarness(OWNER);
+  h.account('A'); h.render(); await settle();
+  assert.equal(h.render().hasLevelAccess('a1.2'), true);
+  h.account('B');
+  h.render(); // effects run: B's first load starts
+  const switching = h.render(false);
+  assert.equal(switching.loading, true, 'a different account is a first load');
+  assert.equal(switching.subscription, null);
+  assert.equal(switching.purchases.length, 0);
+  assert.equal(switching.profile, null);
+  await settle();
+  const loaded = h.render();
+  assert.equal(loaded.loading, false);
+  assert.equal(loaded.profile.id, 'B');
 });

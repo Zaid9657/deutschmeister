@@ -88,7 +88,9 @@ test('a Lemon Squeezy subscriber manages the plan in the portal; no paid access 
   const { BILLING_PORTAL_URL, profilePlanAction } = await loadLib();
 
   // A failed renewal keeps its id and end date: exactly who needs the portal.
-  for (const row of [LS_SUB, PAST_DUE]) {
+  // So does a course row that kept a subscription id: billing until
+  // reconciliation clears it (ACC-03, tests/legacy-course-billing.test.mjs).
+  for (const row of [LS_SUB, PAST_DUE, COURSE_STALE]) {
     const sub = profilePlanAction(true, row);
     assert.equal(sub.kind, 'portal', `${row.status}: a Lemon Squeezy subscriber gets the portal`);
     assert.equal(sub.href, BILLING_PORTAL_URL);
@@ -126,7 +128,6 @@ test('paid access without a Lemon Squeezy subscription gets neither the portal n
     ['an admin grant (grant_pro_days)', GRANT, /managed by our team/],
     ['no row the page can see', null, /managed by our team/],
     ['course row: an order, no subscription', COURSE_ROW, /course purchase/],
-    ['course row that kept an old subscription id', COURSE_STALE, /course purchase/],
   ];
   for (const [why, row, copy] of cases) {
     const plan = profilePlanAction(true, row);

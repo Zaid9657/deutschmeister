@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,13 +9,15 @@ import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
-import { checkoutEntitlementConfirmed, hasRecurringBilling, ownsCheckoutProduct } from '../lib/checkoutAccess.js';
+import { blockedLevelFrom, checkoutEntitlementConfirmed, hasFailedPayment, hasRecurringBilling, ownsCheckoutProduct } from '../lib/checkoutAccess.js';
+import { courseHomeFor } from '../lib/courseEntry.js';
+import { FREE_COURSE_HREF } from '../data/offers.js';
 import { planStatusCopy } from '../lib/planStatus.js';
 import { proPlanLines } from '../lib/proPlanLines.js';
 import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
-import { PLANS, num } from '../data/pricing.js';
-import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
+import { PLANS, num, productKeyForLevel } from '../data/pricing.js';
+import { FREE_LEVEL_LABEL, LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
@@ -26,6 +28,14 @@ import Aurora from '../components/ui/Aurora.jsx';
 import Tilt from '../components/ui/Tilt.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 
+// Where an owned level opens: its guided course when it has one, else the
+// level page. The rule of the success page and the dashboard strip; "Owned ·
+// open" sent course buyers to the /level topic hub instead (ACC-14).
+export const ownedLevelHref = (level, hasLevelAccess) => {
+  const home = courseHomeFor({ level, hasLevelAccess });
+  return home === `/course/${level}` ? home : `/level/${level}`;
+};
+
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
   const { user } = useAuth();
@@ -34,17 +44,21 @@ const SubscriptionPage = () => {
     getTrialDaysRemaining,
     hasActiveSubscription,
     hasProduct,
+    hasLevelAccess,
     purchases,
     subscription,
     refreshSubscription,
     verifySubscription,
+    billingVerified,
     loading: subLoading,
   } = useSubscription();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const autoBuyRef = useRef(false);
   const [verifying, setVerifying] = useState(false);
   const [pendingProduct, setPendingProduct] = useState(null);
   const [verifyMessage, setVerifyMessage] = useState('');
+  const [reloading, setReloading] = useState(false);
   const pollRef = useRef(null);
   const isGerman = i18n.language === 'de';
 
@@ -52,7 +66,12 @@ const SubscriptionPage = () => {
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
   const recurringBilling = hasRecurringBilling(subscription);
+  // Non-null whenever recurringBilling is true, a legacy course row with a
+  // retained subscription id included (tests/legacy-course-billing.test.mjs);
+  // still read with ?. so a plan button can never throw.
   const billingAction = subscriptionPortalAction(recurringBilling, subscription, isGerman);
+  // A failed renewal: a new card in the portal, never "Trial expired" (ACC-04).
+  const paymentFailed = billingVerified && hasFailedPayment(subscription);
   // Card, invoices, cancelling: the Lemon Squeezy portal, for a live LS
   // subscription only (lib/billingPortal.js, tests/subscription-portal-link.test.mjs).
   const portal = subscriptionPortalAction(isSubscribed, subscription, isGerman);
@@ -100,9 +119,11 @@ const SubscriptionPage = () => {
   const [couponProduct, setCouponProduct] = useState('monthly');
 
   const handleSubscribe = (planType) => {
-    if (subLoading || verifying) return;
+    // Nothing is sold from billing that failed to load: an unread row is not
+    // "no plan", and a second checkout would bill twice (ACC-02).
+    if (subLoading || verifying || !billingVerified) return;
     if (recurringBilling) {
-      window.location.href = billingAction.href;
+      if (billingAction) window.location.href = billingAction.href;
       return;
     }
     const plan = LEMONSQUEEZY_CONFIG.plans[planType];
@@ -157,10 +178,21 @@ const SubscriptionPage = () => {
   const canBuyLevel = levelCourses.some(
     (c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)
   );
-  const heading = subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel }, isGerman);
+  const heading = subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel, paymentFailed }, isGerman);
+
+  // The level a guard just refused (state.from): its course leads the offers
+  // when it is on sale and not owned yet (ACC-13). Copy and order only.
+  const blockedLevel = blockedLevelFrom(location.state?.from?.pathname);
+  const blockedCourse = blockedLevel ? LEMONSQUEEZY_CONFIG.levelCourses[productKeyForLevel(blockedLevel)] : null;
+  const leadCourse = blockedCourse && blockedCourse.variantId && !blockedCourse.comingSoon && !ownsCheckoutProduct(blockedCourse.key, purchases)
+    ? blockedCourse
+    : null;
+  const orderedLevelCourses = leadCourse
+    ? [leadCourse, ...visibleLevelCourses.filter((c) => c.key !== leadCourse.key)]
+    : visibleLevelCourses;
 
   const startPurchase = (productKey, variantId, price) => {
-    if (subLoading || verifying || ownsCheckoutProduct(productKey, purchases)) return;
+    if (subLoading || verifying || !billingVerified || ownsCheckoutProduct(productKey, purchases)) return;
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       variantId,
       user?.email || '',
@@ -190,10 +222,11 @@ const SubscriptionPage = () => {
   // key before sending the visitor to /signup, and every post-auth redirect
   // lands here with ?buy=<key>. Opens exactly once, after entitlements have
   // loaded (so an already-owned product never re-opens its checkout), then
-  // clears both the query and the stored intent.
+  // clears both the query and the stored intent. It waits for verified
+  // billing: a failed read keeps the intent until a retry reads it (ACC-02).
   useEffect(() => {
     const key = searchParams.get('buy');
-    if (!key || autoBuyRef.current || subLoading || !user) return;
+    if (!key || autoBuyRef.current || subLoading || !billingVerified || !user) return;
     autoBuyRef.current = true;
     clearBuyIntent();
     setSearchParams({}, { replace: true });
@@ -205,7 +238,17 @@ const SubscriptionPage = () => {
     if (target?.comingSoon || ownsCheckoutProduct(key, purchases)) return;
     if (target?.variantId && !hasProduct(key)) startPurchase(key, target.variantId, target.price);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, subLoading, user]);
+  }, [searchParams, subLoading, billingVerified, user]);
+
+  // The retry on the "could not load" notice (ACC-02).
+  const reloadBilling = async () => {
+    setReloading(true);
+    try {
+      await refreshSubscription();
+    } finally {
+      setReloading(false);
+    }
+  };
 
   // Manual "Verify my subscription" button handler
   const handleManualVerify = async () => {
@@ -266,23 +309,6 @@ const SubscriptionPage = () => {
             lead={heading.lead}
           />
         </div>
-
-        {/* The server validates a coupon against the selected offer. */}
-        {user ? (
-          <div className="mb-8 flex flex-col items-center gap-3">
-            <label className="flex flex-col gap-1 text-sm text-graphite">
-              {isGerman ? 'Gutschein für' : 'Coupon for'}
-              <select value={couponProduct} onChange={(event) => setCouponProduct(event.target.value)} className="rounded-clay border border-rule bg-white px-3 py-2 text-ink">
-                {plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
-                {levelCourses.filter((c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)).map((c) => (
-                  <option key={c.key} value={c.key}>{isGerman ? c.nameDe : c.name}</option>
-                ))}
-                {course.variantId && !ownsCourse && <option value="telc_b1_komplett">{course.name}</option>}
-              </select>
-            </label>
-            <CouponField productKey={couponProduct} onApplied={setCoupon} isGerman={isGerman} />
-          </div>
-        ) : null}
 
         {/* Payment verification */}
         {verifying && (
@@ -355,8 +381,65 @@ const SubscriptionPage = () => {
           </Card>
         )}
 
-        {/* Expired notice */}
-        {!inTrial && !isSubscribed && (
+        {/* Billing could not be read: say so and offer a retry. Nothing on the
+            page sells until it is read (ACC-02, tests/checkout-access.test.mjs). */}
+        {!subLoading && !billingVerified && (
+          <Card tone="aprikose" className="mb-8 p-4 animate-pop-in">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-accent-aprikose-ink flex-shrink-0" aria-hidden="true" />
+              <div>
+                <p className="font-bold text-accent-aprikose-ink" role="status">
+                  {isGerman
+                    ? 'Ihr Abo-Status konnte gerade nicht geladen werden. Bitte versuchen Sie es gleich noch einmal.'
+                    : 'Your plan status could not be loaded just now. Please try again in a moment.'}
+                </p>
+                <button
+                  type="button"
+                  onClick={reloadBilling}
+                  disabled={reloading}
+                  className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep disabled:opacity-60"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${reloading ? 'animate-spin' : ''}`} aria-hidden="true" />
+                  {isGerman ? 'Erneut laden' : 'Try again'}
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* A failed renewal: the fix is a new card in the portal, not a new
+            plan, and certainly not "Trial expired" (ACC-04). */}
+        {!inTrial && !isSubscribed && paymentFailed && (
+          <Card tone="himbeer" className="mb-8 p-4 animate-pop-in">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-accent-himbeer-ink flex-shrink-0" aria-hidden="true" />
+              <div>
+                <p className="font-bold text-accent-himbeer-ink">
+                  {isGerman ? 'Ihre letzte Zahlung ist nicht durchgegangen' : 'Your last payment didn’t go through'}
+                </p>
+                <p className="text-sm text-accent-himbeer-ink">
+                  {isGerman
+                    ? 'Aktualisieren Sie Ihre Karte, um weiterzulernen. Ihr Fortschritt bleibt erhalten.'
+                    : 'Update your card to keep learning. Your progress stays.'}
+                </p>
+                {billingAction && (
+                  <>
+                    <p className="mt-2 text-sm">
+                      <a href={billingAction.href} className="font-bold text-siegel transition-colors hover:text-siegel-deep">
+                        {billingAction.label} →
+                      </a>
+                    </p>
+                    <p className="mt-1 text-xs text-accent-himbeer-ink">{billingAction.hint}</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Expired notice — only from billing that was read, and with the free
+            course one tap away (ACC-02, ACC-06). */}
+        {!inTrial && !isSubscribed && billingVerified && !paymentFailed && (
           <Card tone="himbeer" className="mb-8 p-4 animate-pop-in">
             <div className="flex items-center gap-3">
               <Zap className="w-5 h-5 text-accent-himbeer-ink flex-shrink-0" aria-hidden="true" />
@@ -369,13 +452,19 @@ const SubscriptionPage = () => {
                     ? 'Abonnieren Sie jetzt, um weiter auf alle Inhalte zuzugreifen.'
                     : 'Subscribe now to continue accessing all content.'}
                 </p>
+                <p className="mt-2 text-sm">
+                  <Link to={FREE_COURSE_HREF} className="font-bold text-siegel transition-colors hover:text-siegel-deep">
+                    {isGerman ? `Oder kostenlos mit dem ${FREE_LEVEL_LABEL}-Kurs weitermachen →` : `Or continue the free ${FREE_LEVEL_LABEL} course →`}
+                  </Link>
+                </p>
               </div>
             </div>
           </Card>
         )}
 
-        {/* Already paid? Verify button */}
-        {!isSubscribed && !verifying && (
+        {/* Already paid? Verify button — not for a failed renewal: that row is
+            already found, and its fix is the card above. */}
+        {!isSubscribed && !verifying && !paymentFailed && (
           <div className="mb-8 text-center">
             <button
               type="button"
@@ -413,15 +502,23 @@ const SubscriptionPage = () => {
                 ? `Eine Teilstufe für immer, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive. Danach bleibt die Stufe Ihre, und nichts verlängert sich.`
                 : `One sub-level for good, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included. After that the level stays yours, and nothing renews.`}
             />
+            {/* The level the learner was just refused leads, with its card first. */}
+            {leadCourse && (
+              <p className="mt-6 text-center text-[0.9375rem] font-bold text-ink">
+                {isGerman
+                  ? `Sie wollten gerade ${leadCourse.code} öffnen. Behalten Sie die Stufe dauerhaft: €${num(leadCourse.price)} einmalig, ${leadCourse.proMonths} Monate Pro inklusive.`
+                  : `You were about to open ${leadCourse.code}. Keep it for good: €${num(leadCourse.price)} once, ${leadCourse.proMonths} months of Pro included.`}
+              </p>
+            )}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {visibleLevelCourses.map((c) => {
+              {orderedLevelCourses.map((c) => {
                 const firstLevel = c.levels[0];
                 const owned = ownsCheckoutProduct(c.key, purchases);
                 return (
                   <Card
                     key={c.key}
                     raised
-                    edge="paper"
+                    edge={c.key === leadCourse?.key ? 'siegel' : 'paper'}
                     className={`relative flex flex-col p-5 ${c.comingSoon ? 'opacity-80' : ''}`}
                   >
                     {c.comingSoon && (
@@ -443,7 +540,7 @@ const SubscriptionPage = () => {
                       {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
                     </p>
                     {owned ? (
-                      <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
+                      <Button to={ownedLevelHref(firstLevel, hasLevelAccess)} variant="secondary" size="md" className="mt-4 w-full">
                         {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
                       </Button>
                     ) : c.comingSoon || !c.variantId ? (
@@ -453,7 +550,7 @@ const SubscriptionPage = () => {
                     ) : (
                       <Button
                         onClick={() => startPurchase(c.key, c.variantId, c.price)}
-                        disabled={verifying}
+                        disabled={verifying || !billingVerified}
                         variant="secondary"
                         size="md"
                         className="mt-4 w-full"
@@ -526,14 +623,14 @@ const SubscriptionPage = () => {
 
                   <Button
                     onClick={() => handleSubscribe(plan.id)}
-                    disabled={subLoading || verifying || (isSubscribed && !recurringBilling)}
+                    disabled={subLoading || verifying || !billingVerified || (isSubscribed && !recurringBilling)}
                     variant={plan.highlight ? 'primary' : 'secondary'}
                     shimmer={plan.highlight && !isSubscribed}
                     size="lg"
                     className="mt-auto w-full"
                   >
                     {recurringBilling
-                      ? billingAction.label
+                      ? billingAction?.label
                       : isSubscribed
                       ? isGerman ? 'Bereits abonniert' : 'Already Subscribed'
                       : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
@@ -593,7 +690,7 @@ const SubscriptionPage = () => {
                       {isGerman ? 'einmalig' : 'one time'}
                     </span>
                   </p>
-                  <Button onClick={handleBuyCourse} disabled={verifying} variant="secondary" size="lg" className="mt-4 w-full sm:w-auto">
+                  <Button onClick={handleBuyCourse} disabled={verifying || !billingVerified} variant="secondary" size="lg" className="mt-4 w-full sm:w-auto">
                     {isGerman ? 'Kurs kaufen' : 'Buy the course'}
                   </Button>
                   <p className="mt-3 text-xs">
@@ -606,6 +703,29 @@ const SubscriptionPage = () => {
             </Card>
           </Reveal>
         )}
+
+        {/* A code is for the few who have one: behind a disclosure, below the
+            offers (ACC-13). The server validates it against the selected offer. */}
+        {user ? (
+          <details className="mb-12 text-center">
+            <summary className="cursor-pointer text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
+              {isGerman ? 'Haben Sie einen Gutscheincode?' : 'Have a code?'}
+            </summary>
+            <div className="mt-4 flex flex-col items-center gap-3">
+              <label className="flex flex-col gap-1 text-sm text-graphite">
+                {isGerman ? 'Gutschein für' : 'Coupon for'}
+                <select value={couponProduct} onChange={(event) => setCouponProduct(event.target.value)} className="rounded-clay border border-rule bg-white px-3 py-2 text-ink">
+                  {plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
+                  {levelCourses.filter((c) => c.variantId && !c.comingSoon && !ownsCheckoutProduct(c.key, purchases)).map((c) => (
+                    <option key={c.key} value={c.key}>{isGerman ? c.nameDe : c.name}</option>
+                  ))}
+                  {course.variantId && !ownsCourse && <option value="telc_b1_komplett">{course.name}</option>}
+                </select>
+              </label>
+              <CouponField productKey={couponProduct} onApplied={setCoupon} isGerman={isGerman} />
+            </div>
+          </details>
+        ) : null}
 
         {/* Features grid — reference cards, flat */}
         <div className="text-center">

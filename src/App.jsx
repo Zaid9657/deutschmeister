@@ -34,6 +34,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const ReadingLessonPage = lazy(() => import('./pages/ReadingLessonPage'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
 const SubscriptionSuccessPage = lazy(() => import('./pages/SubscriptionSuccessPage'));
+const AppLauncher = lazy(() => import('./pages/AppLauncher'));
 const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ReadingSectionPage = lazy(() => import('./pages/ReadingSectionPage'));
@@ -315,11 +316,15 @@ function Shell() {
                       }
                     />
 
-                    {/* Dashboard & Profile (require auth + email verification + subscription/trial) */}
+                    {/* Dashboard (auth + email verification + subscription/trial or a
+                        bought product). freeFallback: a signed-in learner without
+                        that access lands on the course they can open, never the
+                        paywall: login, the confirmation link and every "Zum
+                        Dashboard" button land here. tests/dashboard-free-fallback.test.mjs */}
                     <Route
                       path="/dashboard"
                       element={
-                        <SubscriptionGuard>
+                        <SubscriptionGuard freeFallback>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <DashboardPage />
@@ -328,18 +333,30 @@ function Shell() {
                         </SubscriptionGuard>
                       }
                     />
+                    {/* Profile is account management, not paid content: the only
+                        self-service account deletion (Art. 17), the exam goal and
+                        the settings. Behind SubscriptionGuard it was unreachable for
+                        every expired-trial, free and refunded account. Paid-only
+                        parts inside check access themselves (profilePlanAction
+                        answers "Upgrade" without paid access).
+                        tests/account-access.test.mjs */}
                     <Route
                       path="/profile"
                       element={
-                        <SubscriptionGuard>
+                        <ProtectedRoute>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <ProfilePage />
                             </OnboardingGate>
                           </EmailVerificationGate>
-                        </SubscriptionGuard>
+                        </ProtectedRoute>
                       }
                     />
+                    {/* The home-screen app's start_url (public/manifest.webmanifest):
+                        a launcher that goes where this learner can learn. Not
+                        crawlable: not prerendered, not in the sitemap; netlify.toml
+                        rewrites /start. tests/app-launcher.test.mjs */}
+                    <Route path="/start" element={<AppLauncher />} />
 
                     {/* The guided courses (decision 2026-09-08): /course/:level is
                         the course home (unit path), /course/:level/:itemId one
