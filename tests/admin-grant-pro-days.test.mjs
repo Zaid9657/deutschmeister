@@ -30,6 +30,7 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), { status
 function matches(row, params) {
   return [...params].every(([key, value]) => {
     if (['select', 'order', 'limit', 'on_conflict'].includes(key)) return true;
+    if (key === 'or' && value === '(subscription_tier.is.null,subscription_tier.neq.premium)') return row.subscription_tier !== 'premium';
     if (value.startsWith('eq.')) return String(row[key]) === value.slice(3);
     if (value === 'is.null') return row[key] == null;
     if (value.startsWith('in.(')) return value.slice(4, -1).split(',').includes(String(row[key]));

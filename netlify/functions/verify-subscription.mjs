@@ -50,10 +50,12 @@ export const handler = async (event) => {
 
     console.log('verify-subscription called for user:', user_id);
 
+    // Access the account already has (a complimentary grant, say) is no reason
+    // to stop here: a pending paid snapshot is still recovered below, or its
+    // billing id would never reach the row billing management and
+    // delete-account read.
     const existing = await reconcileUserEntitlement(supabase, user_id);
-    if (existing.isSubscribed) {
-      return { statusCode: 200, headers, body: JSON.stringify({ status: 'active', source: 'existing' }) };
-    }
+    const existingResponse = { statusCode: 200, headers, body: JSON.stringify({ status: 'active', source: 'existing' }) };
 
     // Search the recent subscription snapshots for THIS user. The user filter
     // has to be in the query, not applied afterwards: this used to take the 10
@@ -71,6 +73,7 @@ export const handler = async (event) => {
 
     if (logsError) {
       console.error('Error reading webhook_logs:', JSON.stringify(logsError));
+      if (existing.isSubscribed) return existingResponse;
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to read webhook logs' }) };
     }
 
@@ -100,6 +103,7 @@ export const handler = async (event) => {
       }) };
     }
 
+    if (existing.isSubscribed) return existingResponse;
     console.log('No matching unprocessed webhook found for user:', user_id);
     return { statusCode: 200, headers, body: JSON.stringify({ status: 'not_found' }) };
 

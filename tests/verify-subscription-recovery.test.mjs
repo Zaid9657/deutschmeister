@@ -79,6 +79,7 @@ globalThis.fetch = async (url, init = {}) => {
 };
 
 const { handler: verify } = await import('../netlify/functions/verify-subscription.mjs');
+const { hasChargingSubscription } = await import('../netlify/functions/delete-account.mjs');
 beforeEach(() => { tables = { subscriptions: [], purchases: [], profiles: [], webhook_logs: [] }; });
 after(() => { globalThis.Date = RealDate; globalThis.fetch = originalFetch; });
 
@@ -109,6 +110,30 @@ test("an old subscription's processed expiry does not hide the failed creation o
   assert.equal(profile().is_subscribed, true);
   assert.equal(tables.webhook_logs.find((row) => row.id === 'b-created').processed, true, 'the recovered delivery is marked processed');
   assert.equal(tables.webhook_logs.find((row) => row.id === 'a-expired').error, null, 'the other subscription is untouched');
+});
+
+test('an account a grant already opened still gets its pending paid subscription recorded', async () => {
+  // Round-2 review (HIGH): verify used to answer "active" from the grant and
+  // never looked at the failed creation, so the billing id stayed absent.
+  tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'active', price_paid: 0, lemonsqueezy_subscription_id: null,
+    subscription_start: '2026-01-01T00:30:00Z', subscription_end: '2026-01-08T00:30:00Z' });
+  tables.profiles.push({ id: USER, subscription_tier: 'pro', is_subscribed: true });
+  tables.webhook_logs.push(log('s-created', false, '2026-01-01T00:00:00Z', 'subscription_created', 'sub-S',
+    { status: 'active', created_at: '2025-12-31T23:00:00Z', updated_at: '2025-12-31T23:00:00Z', renews_at: '2026-01-31T00:00:00Z' }));
+  const result = await recover();
+  assert.deepEqual(result, { status: 'active', source: 'recovered' });
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-S', 'the billing subscription is on record');
+  assert.equal(hasChargingSubscription([subscription()]), true, 'delete-account answers 409 on the recovered row');
+  assert.equal(tables.webhook_logs.find((row) => row.id === 's-created').processed, true);
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('an account with access and nothing pending is still answered from what it has', async () => {
+  tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'active', price_paid: 0, lemonsqueezy_subscription_id: null,
+    subscription_start: '2026-01-01T00:30:00Z', subscription_end: '2026-01-08T00:30:00Z' });
+  tables.profiles.push({ id: USER, subscription_tier: 'pro', is_subscribed: true });
+  assert.deepEqual(await recover(), { status: 'active', source: 'existing' });
+  assert.equal(subscription().lemonsqueezy_subscription_id, null);
 });
 
 test('an older failed snapshot behind a processed terminal event of the SAME subscription stays retired', async () => {
