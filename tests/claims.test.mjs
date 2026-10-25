@@ -762,18 +762,57 @@ test('the FAQ lists exactly the exam tracks and what the support agent says is n
   }
 });
 
+test('/ueber-uns/ names only exams with a track, and its crawlable copy says what the page says', async () => {
+  // "What comes next" promised "Live exam simulations for Goethe, telc, and
+  // TestDaF" — TestDaF has no track, and the FAQ and the support agent say it is
+  // not offered. The prerendered mirror had drifted from the page as well (it
+  // promised feedback on pronunciation, which the evaluator never judges): a
+  // mirror that says more than the page is a claim only crawlers read.
+  const { detectContentRequests } = await import('../netlify/functions/_shared/supportAgentLib.mjs');
+  const jsx = read('src/pages/UeberUnsPage.jsx');
+  const prerender = read('scripts/prerender-spa-routes.mjs');
+  const html = prerender.slice(prerender.indexOf("path: '/ueber-uns'")).match(/content: `([\s\S]*?)`,\n/)[1];
+  const norm = (s) => s.replace(/\s+/g, ' ').trim();
+  const array = (name) => {
+    const body = jsx.match(new RegExp(`const ${name} = \\[([\\s\\S]*?)\\n\\];`));
+    assert.ok(body, `const ${name} not found in UeberUnsPage.jsx`);
+    return [...body[1].matchAll(/\b(?:label|title|body|text): '((?:[^'\\]|\\.)*)'/g)].map((m) => m[1]);
+  };
+  const roadmap = array('ROADMAP');
+  const mirrored = [...html.split('What comes next')[1].split('</ul>')[0].matchAll(/<li[^>]*>([^<]+)<\/li>/g)].map((m) => m[1]);
+  assert.ok(roadmap.length >= 3, 'the ROADMAP list was not read');
+  assert.deepEqual(mirrored, roadmap, 'the crawlable "What comes next" list must be the page\'s ROADMAP, item for item');
+  const htmlTexts = [...html.matchAll(/>([^<>]+)</g)].map((m) => norm(m[1])).filter(Boolean);
+  const paragraphs = [...jsx.matchAll(/<Reveal as="p"[^>]*>\s*([\s\S]*?)\s*<\/Reveal>/g)].map((m) => norm(m[1]));
+  assert.ok(paragraphs.length >= 8, 'the page\'s paragraphs were not read');
+  for (const text of [...array('BADGES'), ...array('DIFFERENTIATORS'), ...paragraphs]) {
+    assert.ok(htmlTexts.includes(norm(text)), `the prerendered /ueber-uns/ does not say what the page says: "${text.slice(0, 100)}"`);
+  }
+  for (const text of new Set([...roadmap, ...htmlTexts])) {
+    const exams = detectContentRequests(text).filter((t) => t.startsWith('exam-'));
+    assert.deepEqual(exams, [], `/ueber-uns/ names an exam the product has no track for: "${text}"`);
+  }
+});
+
 test('speaking is described as the code runs it: evaluated after the conversation, never exam-tuned', async () => {
   // The feedback arrives after "Finish & get feedback" (SpeakingSession.jsx →
   // evaluate-speaking.mjs); CONVERSATION_RULES hold no correction step, and the
-  // evaluation takes no exam input. So: no "real-time"/"instant"/"korrigiert",
-  // and no speaking clause "abgestimmt auf" an exam unless it negates it.
+  // evaluation takes no exam input and no audio ("Du hast KEIN Audio –
+  // beurteile NICHT die akustische Aussprache"). So: no "real-time"/"instant"/
+  // "sofort"/"korrigiert", no feedback on pronunciation, and no speaking clause
+  // "abgestimmt auf" an exam unless it negates it. Until 2026-10-25 seven Leitfäden
+  // and the level-test result promised "sofortiges Feedback"/"instant feedback",
+  // and the crawlable /speaking/ and /ueber-uns/ copies promised pronunciation.
   const SPEAKING = /spr[ei]ch|gespräch|speaking|conversation/i;
   const REAL_TIME = /echtzeit|live-feedback|sofort\w*\s+feedback|instant\s+feedback|real[- ]time|\bkorrigiert\b/i;
+  const PRONUNCIATION = /pronunciation|aussprache/i;
+  const FEEDBACK = /feedback|after each session|rückmeldung|auswertung|korrektur|corrections/i;
   const EXAM_TUNED = /\b(abgestimmt|ausgerichtet|tuned|tailored)\b/i;
   const EXAM = /prüfung|exam|goethe|telc|testdaf|dtz/i;
   /** A real-time claim is held per string ("sprich … — mit Feedback in Echtzeit" spans clauses); exam tuning per clause. */
   const speakingProblems = (text) => [
     ...(SPEAKING.test(text) && REAL_TIME.test(text) ? [`real-time claim — "${text.slice(0, 110)}"`] : []),
+    ...(PRONUNCIATION.test(text) && FEEDBACK.test(text) ? [`pronunciation feedback — "${text.slice(0, 110)}"`] : []),
     ...clausesOf(text)
       .filter((c) => SPEAKING.test(c) && EXAM_TUNED.test(c) && EXAM.test(c) && !NEGATED.test(c))
       .map((c) => `exam-tuned speaking — "${c.slice(0, 110)}"`),
@@ -782,21 +821,55 @@ test('speaking is described as the code runs it: evaluated after the conversatio
     ['Aber nur eine lässt dich wirklich sprechen üben — mit KI-Feedback in Echtzeit.', true],
     ['Deutschmeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt', true],
     ['Bei Deutschmeister sprichst du — und die KI hört zu, analysiert und korrigiert.', true],
+    ['Sprechen · KI-Sprechtraining · Vorstellen und buchstabieren — jeden Tag laut üben, mit sofortigem Feedback.', true],
+    ['Have a real conversation at your A2.1 level and get instant feedback on grammar.', true],
+    ['After each session: grammar, vocabulary and pronunciation, with concrete corrections.', true],
     ['Es ist spielerisch angelegt, nicht auf Prüfungen ausgerichtet.', false],
     ['Practice speaking German with an AI conversation partner, and feedback after each session.', false],
+    ['Freies Gespräch zu Prüfungsthemen, danach eine Auswertung zu Grammatik, Wortschatz und Ausdruck.', false],
+    ['Speech recognition understood 80 % of your words — a rough clarity check, not a pronunciation grade', false],
   ]) {
     assert.equal(speakingProblems(sample).length > 0, bad, `rule self-check: "${sample}"`);
   }
+  /** Every string, plus each object's own strings read together: a guide card's eyebrow ("Sprechen") and body. */
+  const cardTextsIn = (value, out = []) => {
+    if (typeof value === 'string') out.push(value);
+    else if (Array.isArray(value)) value.forEach((v) => cardTextsIn(v, out));
+    else if (value && typeof value === 'object') {
+      const own = Object.values(value).filter((v) => typeof v === 'string');
+      if (own.length > 1) out.push(own.join(' · '));
+      Object.values(value).forEach((v) => cardTextsIn(v, out));
+    }
+    return out;
+  };
+  const { GUIDES } = await import('../astro-site/src/data/guides/index.js');
   const hubCopy = EXAM_HUBS.map(({ title, description, intro, focus, path }) => ({ title, description, intro, focus, path }));
   const surfaces = [
     ...(await comparisonTwins()).map(([root, data]) => [`${root}/competitorComparisons.js`, data]),
     ['src/data/faqContent.js', FAQ_CATEGORIES],
     ['src/data/seoRoutes.js', SEO_ROUTES],
     ['astro-site/src/data/exams/index.js', hubCopy],
+    ...GUIDES.map((g) => [`guide ${g.slug}`, g]),
   ];
   const failures = [];
   for (const [name, data] of surfaces) {
-    for (const text of stringsIn(data)) failures.push(...speakingProblems(text).map((p) => `${name}: ${p}`));
+    for (const text of cardTextsIn(data)) failures.push(...speakingProblems(text).map((p) => `${name}: ${p}`));
+  }
+  // The pages and components themselves, line by line (copy sits on one line
+  // of JSX/HTML), including the crawlable mirrors the prerender writes.
+  const walk = (dir) => readdirSync(join(ROOT, dir), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(`${dir}/${e.name}`) : /\.(jsx?|astro)$/.test(e.name) ? [`${dir}/${e.name}`] : []);
+  const pages = [
+    ...['src/pages', 'src/components', 'astro-site/src/pages', 'astro-site/src/components'].flatMap(walk),
+    'scripts/prerender-spa-routes.mjs',
+    'index.html',
+  ];
+  assert.ok(pages.includes('src/components/LevelTest/LevelTestResults.jsx'), 'the scan must reach the level-test result');
+  for (const file of pages) {
+    read(file).split('\n').forEach((line, i) => {
+      if (/^\s*(\/\/|\/?\*)/.test(line)) return; // comments describe the rule, they do not ship
+      failures.push(...speakingProblems(line).map((p) => `${file}:${i + 1}: ${p}`));
+    });
   }
   assert.deepEqual(failures, [], `speaking claims the code does not back:\n  ${failures.join('\n  ')}`);
 });
@@ -876,4 +949,25 @@ test('the head registry and the exam hubs derive the placement-test duration', (
   }
   assert.ok(seen >= EXAM_HUBS.length, `expected the duration on every hub's level-test step, found ${seen}`);
   assert.doesNotMatch(rendered(read('astro-site/src/data/exams/index.js')), /\d+\s+Minuten/, 'exams/index.js retypes a duration');
+});
+
+test('the social card states the measured counts (public/og-image.png carries the line it draws)', async () => {
+  // scripts/generate-og-image.mjs draws the card from marketing.js, but the
+  // committed PNG was generated at 64 grammar topics and still said so at 84:
+  // nothing re-ran it. The generator now stamps the line it draws into the PNG
+  // (tEXt), so a count change without a regeneration fails here, as an
+  // llms.txt change without one fails tests/llms.test.mjs.
+  const { OG_CLAIM, OG_CLAIM_KEYWORD, pngTextChunks, withTextChunk } = await import('../scripts/generate-og-image.mjs');
+  const { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, FREE_LEVEL_LABEL } = await import('../src/data/marketing.js');
+  for (const value of [`${GRAMMAR_TOPIC_COUNT} grammar topics`, `${LEVEL_COUNT} levels`, `${FREE_LEVEL_LABEL} free`]) {
+    assert.ok(OG_CLAIM.includes(value), `the card's line does not derive "${value}" from marketing.js: "${OG_CLAIM}"`);
+  }
+  const png = readFileSync(join(ROOT, 'public/og-image.png'));
+  assert.equal(png.toString('latin1', 12, 16), 'IHDR');
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [1200, 630], 'the card is 1200×630');
+  assert.equal(pngTextChunks(png)[OG_CLAIM_KEYWORD], OG_CLAIM, 'public/og-image.png states other figures than marketing.js — run: node scripts/generate-og-image.mjs');
+  // The stamp round-trips, and an unstamped card (the one that shipped) has none.
+  const bare = Buffer.concat([png.subarray(0, 33), Buffer.from('0000000049454e44ae426082', 'hex')]);
+  assert.deepEqual(pngTextChunks(bare), {});
+  assert.equal(pngTextChunks(withTextChunk(bare, OG_CLAIM_KEYWORD, OG_CLAIM))[OG_CLAIM_KEYWORD], OG_CLAIM);
 });

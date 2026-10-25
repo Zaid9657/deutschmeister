@@ -14,11 +14,14 @@
 // exam registry, grammar topics from grammar-content-cache.json (the same
 // snapshot CI builds the Astro site from). Only the connecting prose is typed.
 //
-//   node scripts/build-llms.mjs          write both files
-//   node scripts/build-llms.mjs --check  exit 1 if the committed files differ
+//   node scripts/build-llms.mjs          write both files (telc sale switch from the env)
+//   node scripts/build-llms.mjs --check  exit 1 if the committed files differ from the
+//                                        render of their telc sale state
 //
-// tests/llms.test.mjs runs the --check comparison, so a data change that is not
-// followed by a regeneration fails `npm test`.
+// tests/llms.test.mjs runs the same comparison, so a data change that is not
+// followed by a regeneration fails `npm test`. The committed pair may be in
+// either telc sale state — generated with the switch set or not — but both files
+// in the same one; scripts/check-built-html.mjs holds a deploy to its switch.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -316,22 +319,45 @@ zaid@deutsch-meister.de
 
 const FILES = { 'public/llms.txt': renderShort, 'public/llms-full.txt': renderFull };
 
+/**
+ * The telc sale state each committed file was generated in: `false` (off sale)
+ * or `true` (on sale) when it equals that state's render, `null` when it equals
+ * neither — stale. Only the off-sale render omits the package's price.
+ */
+export function committedSaleStates(read = (file) => readFileSync(join(ROOT, file), 'utf8')) {
+  return Object.fromEntries(
+    Object.entries(FILES).map(([file, render]) => {
+      const body = read(file);
+      const state = [false, true].find((onSale) => body === render({ telcOnSale: onSale }));
+      return [file, state === undefined ? null : state];
+    }),
+  );
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  // Both renderers read the telc sale switch from this process's environment.
   const check = process.argv.includes('--check');
-  let stale = 0;
-  for (const [file, render] of Object.entries(FILES)) {
-    const path = join(ROOT, file);
-    const want = render();
-    if (check) {
-      if (readFileSync(path, 'utf8') !== want) {
+  if (check) {
+    const states = committedSaleStates();
+    let bad = 0;
+    for (const [file, state] of Object.entries(states)) {
+      if (state === null) {
         console.error(`${file} is stale — run: node scripts/build-llms.mjs`);
-        stale++;
+        bad++;
+      } else {
+        console.log(`${file} is current (telc ${state ? 'on' : 'off'} sale)`);
       }
-    } else {
-      writeFileSync(path, want);
-      console.log(`wrote ${file} (${want.length} bytes)`);
     }
+    if (!bad && new Set(Object.values(states)).size > 1) {
+      console.error('llms.txt and llms-full.txt describe different telc sale states — regenerate both together');
+      bad++;
+    }
+    process.exit(bad ? 1 : 0);
   }
-  process.exit(stale ? 1 : 0);
+  // Both renderers read the telc sale switch from this process's environment.
+  for (const [file, render] of Object.entries(FILES)) {
+    const want = render();
+    writeFileSync(join(ROOT, file), want);
+    console.log(`wrote ${file} (${want.length} bytes)`);
+  }
+  process.exit(0);
 }

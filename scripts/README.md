@@ -17,14 +17,14 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 | [optimize-images.cjs](optimize-images.cjs) | local generator | PNG/JPG images in `public/` except social assets | WebP siblings; also invoked by `npm run build`. |
 | [merge-site-builds.mjs](merge-site-builds.mjs) | local generator | Fresh `dist/` and `astro-site/dist/` | Carves `app.html` if needed; copies every Astro directory/file into `dist/`. |
 | [prerender-spa-routes.mjs](prerender-spa-routes.mjs) | local generator | Fresh `dist/app.html`, the Vite build manifest `dist/.vite/manifest.json` (required for a built shell), route metadata/data registries | Static public SPA route HTML (each with its page chunk's `modulepreload`) and shell edits in `dist/`; then deletes `dist/.vite/`, so a second run fails: not idempotent, rebuild first. |
-| [build-llms.mjs](build-llms.mjs) `[--check]` | local generator; check with `--check` | Pricing/marketing, guides/exams, grammar cache | `public/llms.txt`, `public/llms-full.txt`; check mode fails on drift without writing. |
-| [generate-og-image.mjs](generate-og-image.mjs) `[out.png]` | local generator | Tokens, marketing counts, system Fraunces/Nunito Sans fonts | Default `public/og-image.png` (PNG social card). |
+| [build-llms.mjs](build-llms.mjs) `[--check]` | local generator; check with `--check` | Pricing/marketing, guides/exams, grammar cache, telc B1 sale switch (env) | `public/llms.txt`, `public/llms-full.txt`; check mode fails without writing unless both files equal one sale state's render. |
+| [generate-og-image.mjs](generate-og-image.mjs) `[out.png]` | local generator | Tokens, marketing counts, system Fraunces/Nunito Sans fonts | Default `public/og-image.png` (PNG social card), its claim line stamped as a tEXt chunk that `npm test` holds to the counts. |
 
 ## Checks
 
 | Command (`node scripts/…`) | Effect | Inputs | Outputs / behavior |
 |---|---|---|---|
-| [check-built-html.mjs](check-built-html.mjs) `[dist] [--spa-only]` | check | Built HTML, manifest, crawl rules | Reports missing/wrong heads, copy, indexability and links; full CI omits `--spa-only`. |
+| [check-built-html.mjs](check-built-html.mjs) `[dist] [--spa-only]` | check | Built HTML, manifest, crawl rules | Reports missing/wrong heads, copy, indexability and links, and holds every page (and, on Netlify builds, `llms*.txt`) to the telc B1 sale switch; full CI omits `--spa-only`. |
 | [crawl-guard.mjs](crawl-guard.mjs) | check (imported module) | Built-page HTML and route/link metadata supplied by caller | Crawlability/link findings; used by built-HTML checks, not a standalone CLI. |
 | [check-duplicates.mjs](check-duplicates.mjs) | check | Every source/destination in `shared-files.mjs` | Nonzero on any byte drift; `npm run check:duplicates`. |
 | [check-grammar-json.mjs](check-grammar-json.mjs) `<file>... [--cache cache.json]` | check | CREATE/EXTEND grammar JSON; optional current cache | Shape and, with cache, collision/continuation errors; no files written. |

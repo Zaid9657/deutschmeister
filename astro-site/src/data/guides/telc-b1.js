@@ -99,7 +99,7 @@ export const telcB1 = {
         },
         {
           type: 'p',
-          text: 'Das <a href="/speaking/">KI-Sprechtraining von Deutschmeister</a> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst sofort Feedback zu Grammatik und Ausdruck.',
+          text: 'Das <a href="/speaking/">KI-Sprechtraining von Deutschmeister</a> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst nach dem Gespräch eine Auswertung zu Grammatik und Ausdruck.',
         },
       ],
     },
@@ -246,7 +246,7 @@ export const telcB1 = {
             {
               eyebrow: 'Mündliche Prüfung',
               title: 'KI-Sprechtraining',
-              body: 'Übe Prüfungsthemen (Reisen, Wohnen, Gesundheit) im freien Gespräch. Die KI gibt sofort Feedback zu Grammatik, Wortschatz und Ausdruck.',
+              body: 'Übe Prüfungsthemen (Reisen, Wohnen, Gesundheit) im freien Gespräch. Danach wertet die KI Grammatik, Wortschatz und Ausdruck aus.',
             },
             {
               eyebrow: 'Hörverstehen',

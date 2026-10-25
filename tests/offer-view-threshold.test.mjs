@@ -3,9 +3,11 @@
 // observer (astro-site/src/lib/track.js) counted any entry with isIntersecting
 // — and the first entry after observe(), like every hidden-to-visible change,
 // arrives that way at ANY ratio — then stopped observing: a one-pixel sliver of
-// a pricing card was a full impression (2026-10-25). An element taller than two
-// viewports (the station line) can never show half of itself, so for it half
-// the viewport counts; the thresholds re-check it as it scrolls.
+// a pricing card was a full impression (2026-10-25). Only an element taller
+// than two viewports (the station line) can never show half of itself, so only
+// for it does half the viewport count; the thresholds re-check it as it
+// scrolls. The first version applied that exception to any element, so a
+// 1,200 px card in an 800 px viewport counted at a third.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -51,21 +53,30 @@ const element = (attrs) => ({
   addEventListener() {},
 });
 
-const entry = (target, ratio, visiblePx, viewportPx = 800) => ({
+/** An entry for an element `heightPx` tall with `visiblePx` of it on screen. */
+const entry = (target, heightPx, visiblePx, viewportPx = 800) => ({
   target,
-  isIntersecting: ratio > 0,
-  intersectionRatio: ratio,
+  isIntersecting: visiblePx > 0,
+  intersectionRatio: visiblePx / heightPx,
   intersectionRect: { height: visiblePx },
+  boundingClientRect: { height: heightPx },
   rootBounds: { height: viewportPx },
 });
 
-test('halfOnScreen: half the element, or half the viewport for a very tall one', async () => {
+test('halfOnScreen: half the element; half the viewport only for an element that cannot show its half', async () => {
   const { halfOnScreen } = await loadTrack();
-  assert.equal(halfOnScreen(entry({}, 0.01, 4)), false, 'a sliver is not a view');
-  assert.equal(halfOnScreen(entry({}, 0.49, 300)), false, 'just under half of a normal card');
-  assert.equal(halfOnScreen(entry({}, 0.5, 300)), true, 'half of a normal card');
-  assert.equal(halfOnScreen(entry({}, 0.3, 450)), true, 'a section 1,500 px tall with half the viewport on screen');
-  assert.equal(halfOnScreen(entry({}, 0.1, 300)), false, 'a tall section with less than half the viewport on screen');
+  assert.equal(halfOnScreen(entry({}, 400, 4)), false, 'a sliver is not a view');
+  assert.equal(halfOnScreen(entry({}, 600, 294)), false, 'just under half of a normal card');
+  assert.equal(halfOnScreen(entry({}, 600, 300)), true, 'half of a normal card');
+  // Taller than the viewport but not than two: its half fits on screen, so it needs it.
+  assert.equal(halfOnScreen(entry({}, 1200, 400)), false, 'a 1,200 px card at a third (half the viewport) is not a view');
+  assert.equal(halfOnScreen(entry({}, 1200, 600)), true, 'a 1,200 px card with half of itself on screen');
+  assert.equal(halfOnScreen(entry({}, 1600, 400)), false, 'exactly two viewports tall can still show its half');
+  // Taller than two viewports: it never shows half of itself, so half the viewport counts.
+  assert.equal(halfOnScreen(entry({}, 2000, 450)), true, 'a 2,000 px section filling more than half the viewport');
+  assert.equal(halfOnScreen(entry({}, 2000, 300)), false, 'a tall section filling less than half the viewport');
+  // Without the element's height the exception cannot be judged: no view.
+  assert.equal(halfOnScreen({ ...entry({}, 2000, 450), boundingClientRect: undefined }), false);
   assert.equal(halfOnScreen({ isIntersecting: false, intersectionRatio: 0.9 }), false);
   assert.equal(halfOnScreen(null), false);
 });
@@ -88,16 +99,20 @@ test('autoTrack records an offer only once it is half on screen, and keeps watch
 
   const viewed = () => calls.filter(([, name]) => name === 'offer_viewed').map(([, , p]) => p.surface);
 
-  io.callback([entry(card, 0.01, 4)]);
+  io.callback([entry(card, 1200, 12)]);
   assert.deepEqual(viewed(), [], 'a sliver of the card was recorded as a view');
   assert.ok(io.observed.has(card), 'the card stops being watched before it was ever half on screen');
 
-  io.callback([entry(card, 0.6, 360)]);
+  io.callback([entry(card, 1200, 400)]);
+  assert.deepEqual(viewed(), [], 'a 1,200 px card at a third of itself was recorded as a view');
+  assert.ok(io.observed.has(card));
+
+  io.callback([entry(card, 1200, 600)]);
   assert.deepEqual(viewed(), ['pricing_own']);
   assert.ok(!io.observed.has(card), 'a recorded card is no longer watched');
 
-  io.callback([entry(line, 1 / 8, 300, 800)]);
+  io.callback([entry(line, 2400, 300, 800)]);
   assert.deepEqual(viewed(), ['pricing_own'], 'the line at 300 of 800 px is under half the viewport');
-  io.callback([entry(line, 1 / 4, 600, 800)]);
+  io.callback([entry(line, 2400, 600, 800)]);
   assert.deepEqual(viewed(), ['pricing_own', 'line'], 'the line with 600 of 800 px on screen is a view');
 });
