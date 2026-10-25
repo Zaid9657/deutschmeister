@@ -14,6 +14,8 @@ import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Stat from '../components/ui/Stat.jsx';
+import { examFeedbackOffer } from '../lib/examFeedbackOffer.js';
+import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy.js';
 
 const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 const CRITERIA = [['task', 'Aufgabe'], ['structure', 'Aufbau'], ['accuracy', 'Korrektheit'], ['vocabulary', 'Wortschatz']];
@@ -40,7 +42,7 @@ const SchreibenPage = () => {
   const { examSlug } = useParams();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
-  const { profile } = useSubscription();
+  const { profile, hasLevelAccess, hasProduct, loading: subscriptionLoading } = useSubscription();
 
   const defaultExamKey = useMemo(() => {
     if (examSlug) return examTrackBySlug(examSlug)?.key || 'telc_b1';
@@ -63,6 +65,13 @@ const SchreibenPage = () => {
     setLoadedFor(null);
   }, [wantedTask]);
   const activeTask = tasks.find((t) => t.taskKey === taskKey) || tasks[0] || null;
+  const feedbackOffer = examFeedbackOffer({
+    examKey: activeTask?.examKey,
+    hasLevelAccess,
+    hasProduct,
+    telcVariantId: LEMONSQUEEZY_CONFIG.courses.telc_b1_komplett.variantId,
+    loading: subscriptionLoading,
+  });
   // The revision view belongs to the task the link named, and only to it.
   const revising = wantsRevision && !!activeTask && activeTask.taskKey === wantedTask;
 
@@ -418,6 +427,12 @@ const SchreibenPage = () => {
                 onNext={reset}
               />
             </Reveal>
+            {feedbackOffer && (
+              <Card className="p-5">
+                <h2 className="font-display text-xl text-ink">{feedbackOffer.title}</h2>
+                <Button href={feedbackOffer.href} className="mt-4">{feedbackOffer.cta}</Button>
+              </Card>
+            )}
           </div>
         )}
 

@@ -7,6 +7,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
+import { FREE_LEVEL_LABEL, LEVEL_COUNT, PODCAST_EPISODE_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import DataState from '../components/DataState';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -98,10 +99,10 @@ const PodcastsPage = () => {
             "@context": "https://schema.org",
             "@type": "PodcastSeries",
             "name": "DeutschMeister German Learning Podcast",
-            "description": "German language learning podcast with 24 episodes covering levels A1 to B2. Each episode features native speaker conversations at a defined CEFR level.",
-            "webFeed": "https://deutsch-meister.de/podcasts/",
+            "description": `German language learning podcast with ${PODCAST_EPISODE_COUNT} episodes covering levels A1 to B2. Each episode features native speaker conversations at a defined CEFR level. ${FREE_LEVEL_LABEL} is free; higher levels require trial, Pro or a course covering the level.`,
+            "webFeed": "https://deutsch-meister.de/podcast-feed.xml",
             "inLanguage": ["de", "en"],
-            "numberOfEpisodes": 24,
+            "numberOfEpisodes": PODCAST_EPISODE_COUNT,
             "genre": ["Education", "Language Learning"],
             "author": {
               "@type": "Organization",
@@ -109,7 +110,7 @@ const PodcastsPage = () => {
               "name": "DeutschMeister",
               "url": "https://deutsch-meister.de"
             },
-            "isAccessibleForFree": true
+            "isAccessibleForFree": false
           },
           {
             "@context": "https://schema.org",
@@ -120,7 +121,7 @@ const PodcastsPage = () => {
                 "name": "What level are the German podcasts?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "We have 24 podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills."
+                  "text": `We have ${PODCAST_EPISODE_COUNT} podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.`
                 }
               },
               {
@@ -128,7 +129,7 @@ const PodcastsPage = () => {
                 "name": "Are the German podcasts free?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes, all podcasts are free to listen to. A1.1 content is available without signup, while other levels require a free account."
+                  "text": `${FREE_LEVEL_LABEL} podcasts are free without an account. Higher levels are available during the ${TRIAL_DAYS}-day trial, with Pro, or with a purchased course covering that level.`
                 }
               },
               {
@@ -136,7 +137,7 @@ const PodcastsPage = () => {
                 "name": "How many podcast episodes are there?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly."
+                  "text": `We have ${PODCAST_EPISODE_COUNT} episodes total — ${PODCAST_EPISODE_COUNT / LEVEL_COUNT} episodes for each of the ${LEVEL_COUNT} CEFR levels (${LEVEL_ORDER.join(', ')}).`
                 }
               }
             ]
@@ -345,7 +346,7 @@ const PodcastsPage = () => {
 
               <h3 className="font-display text-xl font-semibold text-ink mt-6 mb-3">Podcasts for every level</h3>
               <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-                Whether you're just starting with German (A1) or working toward fluency (B2), we have 24 episodes across all 8 CEFR levels. Each podcast is labeled with its level so you always know it's right for you.
+                Whether you're just starting with German (A1) or working toward fluency (B2), we have {PODCAST_EPISODE_COUNT} episodes across all {LEVEL_COUNT} CEFR levels. Each podcast is labeled with its level so you always know it's right for you.
               </p>
             </div>
 

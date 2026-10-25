@@ -7,17 +7,22 @@ import { dirname, relative } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const changed = new Set(execFileSync('git', ['-C', root, 'diff', '--name-only', 'HEAD', '--', 'src', 'netlify'], { encoding: 'utf8' }).trim().split(/\r?\n/));
+// The committed A1 surface. A pinned commit is absent from CI's shallow clone, so the baseline is HEAD:
+// the check guards uncommitted engine edits and passes trivially on a clean checkout. To compare
+// against another commit (as the 2026-10-25 merge did, against live-fixes 1263407), set
+// A1_RENDER_BASELINE=<sha> locally.
+const A1_BASELINE = process.env.A1_RENDER_BASELINE || 'HEAD';
+const changed = new Set(execFileSync('git', ['-C', root, 'diff', '--name-only', '--diff-filter=M', A1_BASELINE, '--', 'src', 'netlify'], { encoding: 'utf8' }).trim().split(/\r?\n/));
 async function renderer(before = false) {
 const bundle = await build({
   stdin: { contents: `import React from 'react'; import {renderToStaticMarkup} from 'react-dom/server'; import {MemoryRouter} from 'react-router-dom'; import {Surface, A1Surface, modes} from './tests/fixtures/a2-render.jsx'; export {modes}; export const render = (mode) => renderToStaticMarkup(<MemoryRouter><Surface mode={mode}/></MemoryRouter>); export const renderA1 = (level, mode) => renderToStaticMarkup(<MemoryRouter><A1Surface level={level} mode={mode}/></MemoryRouter>);`, resolveDir: root, loader: 'jsx' },
   bundle: true, write: false, format: 'cjs', platform: 'node', packages: 'external', jsx: 'automatic', logLevel: 'silent',
   define: { 'import.meta.env': JSON.stringify({ MODE: 'test', DEV: false, PROD: false }) },
-  plugins: before ? [{ name: 'a1-before-at-head', setup(builder) {
+  plugins: before ? [{ name: 'a1-live-fixes-baseline', setup(builder) {
     builder.onLoad({ filter: /\.(?:mjs|jsx?)$/ }, (args) => {
       const file = relative(root, args.path).replaceAll('\\', '/');
       if (!changed.has(file)) return;
-      let contents = execFileSync('git', ['-C', root, 'show', `HEAD:${file}`], { encoding: 'utf8', maxBuffer: 4e6 });
+      let contents = execFileSync('git', ['-C', root, 'show', `${A1_BASELINE}:${file}`], { encoding: 'utf8', maxBuffer: 4e6 });
       // Expose the pre-edit local renderer to the fixture without changing it.
       if (file === 'src/pages/lesson/CheckpointPage.jsx') contents = contents.replace('function PracticeItem(', 'export function PracticeItem(');
       return { contents, loader: file.endsWith('jsx') ? 'jsx' : 'js' };
@@ -33,7 +38,7 @@ return compiled.exports;
 }
 const { render, renderA1 } = await renderer();
 
-test('A1.1 and A1.2 rendered markup is byte-identical to HEAD before the engine edits', async () => {
+test('A1.1 and A1.2 rendered markup is byte-identical to the committed baseline', async () => {
   const before = await renderer(true);
   for (const level of ['a1.1', 'a1.2']) for (const mode of ['Intro', 'Wortfeld', 'Welcome', 'Speaking', 'Checkpoint']) {
     assert.equal(renderA1(level, mode), before.renderA1(level, mode), `${level}: ${mode}`);

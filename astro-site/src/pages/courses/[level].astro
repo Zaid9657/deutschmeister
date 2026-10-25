@@ -59,6 +59,23 @@ const station = stationFor(level);
 const lines = ticketLines(level);
 const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 
+// The Fahrschein (scroll-craft, docs/scrollcraft/builds/course-ticket/BRIEF.md): a level a visitor
+// can start or buy carries a ticket beside its contents, stamped with each part as the reader
+// passes it (a bottom bar below 1280px). Im Bau levels sell nothing, so they carry none. Every count
+// below is one the page already renders. Beside the ticket the contents column is 704px at 1280px,
+// which is why the syllabus table's min-width is 680px: keep it under that or it scrolls sideways.
+const rides = !course?.comingSoon;
+const stamps = [
+  showSyllabus && { id: 'lehrplan', de: 'Lehrplan', en: `${curriculum.lektionen.length} lessons` },
+  { id: 'grammatik', de: 'Grammatik', en: `${topics.length} topics` },
+  { id: 'lesen', de: 'Lesen', en: `${content.reading.length} texts` },
+  { id: 'hoeren', de: 'Hören', en: `${content.listening.length} exercises` },
+  { id: 'wortschatz', de: 'Wortschatz', en: `${content.words} words with audio` },
+  { id: 'sprechen', de: 'Sprechen', en: `${content.missions} missions` },
+  content.finalTest && { id: 'test', de: 'Abschlusstest', en: `${content.finalTest.format} format` },
+  content.finalTest && { id: 'plan', de: '28-Tage-Plan', en: 'to the final test' },
+].filter(Boolean);
+
 const priceLine = isFree ? 'Free' : `${eur(course.price)} once`;
 const title = `German ${code} Course — ${isFree ? 'free' : course.comingSoon ? 'coming soon' : priceLine} | DeutschMeister`;
 const description = `${LEVEL_OUTCOME_EN[level]} ${topics.length} grammar topics, ${content.reading.length} reading texts, ${content.listening.length} listening exercises, ${content.words} words${content.finalTest ? ', a final test and a 28-day plan' : ''}. ${isFree ? 'Free, no account needed.' : course.comingSoon ? 'Coming soon.' : `${priceLine}, lifetime access, ${COURSE_PRO_MONTHS} months of Pro included.`}`;
@@ -112,7 +129,7 @@ const jsonLd = {
             <p class="mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">{LEVEL_OUTCOME_EN[level]}</p>
             {planLine(station) && <p class="mt-2 max-w-xl text-[0.9375rem] leading-relaxed text-nacht-muted">{planLine(station)}</p>}
           </div>
-          <div class="rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
+          <div class="rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6" data-hero-door>
             <StationArt level={level} eager class="-mx-6 -mt-6 mb-5 h-44 w-[calc(100%+3rem)] rounded-t-[1.25rem] border-b border-nacht-rule" />
             <p class="sign-code text-[2.5rem] leading-none text-linie">{isFree ? 'Free' : eur(course.price)}</p>
             <p class="mt-2 text-[0.875rem] text-nacht-muted">
@@ -163,208 +180,324 @@ const jsonLd = {
       </section>
     )}
 
-    <div class="mx-auto max-w-3xl px-5 pb-20 pt-12">
-      {showSyllabus && (
-        <!-- Lehrplan -->
-        <section class="reveal mt-4" aria-labelledby="lehrplan-h">
-          <h2 id="lehrplan-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">Lehrplan: 12 Lektionen</h2>
-          <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-            Jede Lektion ist eine Situation aus dem Alltag, keine Grammatikliste — mit Kann-Beschreibungen
-            aus den Goethe-Prüfungszielen, dem geübten Prüfungsteil und einem Ausschnitt aus der
-            offiziellen Wortliste.
-          </p>
+    <div class:list={['mx-auto px-5 pb-20 pt-12', rides ? 'max-w-5xl xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10' : 'max-w-3xl']} data-fahrschein-root={rides ? '' : undefined}>
+      <div class="mx-auto min-w-0 max-w-3xl xl:mx-0 xl:max-w-none">
+        {showSyllabus && (
+          <!-- Lehrplan -->
+          <section id="stamp-lehrplan" class="reveal mt-4 scroll-mt-24" aria-labelledby="lehrplan-h" data-stamp="lehrplan">
+            <h2 id="lehrplan-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">Lehrplan: 12 Lektionen</h2>
+            <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+              Jede Lektion ist eine Situation aus dem Alltag, keine Grammatikliste — mit Kann-Beschreibungen
+              aus den Goethe-Prüfungszielen, dem geübten Prüfungsteil und einem Ausschnitt aus der
+              offiziellen Wortliste.
+            </p>
 
-          <div class="mt-5 overflow-x-auto rounded-clay border border-rule" tabindex="0" role="region" aria-label="Lehrplan">
-            <table class="w-full min-w-[720px] border-collapse text-left text-[0.8125rem]">
-              <thead>
-                <tr class="border-b border-rule bg-paper-sunk font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">
-                  <th class="px-3 py-2">Nr</th>
-                  <th class="px-3 py-2">Situation</th>
-                  <th class="px-3 py-2">Kann-Beschreibungen</th>
-                  <th class="px-3 py-2">Wortfeld</th>
-                  <th class="px-3 py-2">Grammatik</th>
-                  <th class="px-3 py-2">Prüfungsteil</th>
-                </tr>
-              </thead>
-              <tbody>
-                {curriculum.lektionen.map((l, i) => {
-                  const row = wortfeldRows[i];
-                  const cp = checkpointAfter(curriculum, l.nr);
-                  return (
-                    <>
-                      <tr class="border-b border-rule/60 align-top">
-                        <td class="px-3 py-3 font-data font-bold text-siegel">{String(l.nr).padStart(2, '0')}</td>
-                        <td class="px-3 py-3 font-bold text-ink">{l.title}</td>
-                        <td class="px-3 py-3 text-graphite">
-                          <ul class="list-disc space-y-0.5 pl-4">
-                            {(l.canDo ?? []).map((c) => <li>{c}</li>)}
-                          </ul>
-                        </td>
-                        <td class="px-3 py-3 text-graphite">
-                          +{row?.count ?? 0} → {row?.running ?? 0}{wortlisteTotal ? `/${wortlisteTotal}` : ''}
-                        </td>
-                        <td class="px-3 py-3 text-graphite">{primaryGrammarTitle(l, titlesBySlug)}</td>
-                        <td class="px-3 py-3 text-graphite">{(l.examTeile ?? []).join(', ')}</td>
-                      </tr>
-                      {cp && (
-                        <tr class="border-b border-rule/60 bg-siegel-wash">
-                          <td class="px-3 py-2" colspan="6">
-                            <span class="font-data text-[0.75rem] font-bold uppercase tracking-[0.08em] text-siegel-deep">{cp.title}</span>
+            <div class="mt-5 overflow-x-auto rounded-clay border border-rule" tabindex="0" role="region" aria-label="Lehrplan">
+              <table class="w-full min-w-[680px] border-collapse text-left text-[0.8125rem]">
+                <thead>
+                  <tr class="border-b border-rule bg-paper-sunk font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">
+                    <th class="px-3 py-2">Nr</th>
+                    <th class="px-3 py-2">Situation</th>
+                    <th class="px-3 py-2">Kann-Beschreibungen</th>
+                    <th class="px-3 py-2">Wortfeld</th>
+                    <th class="px-3 py-2">Grammatik</th>
+                    <th class="px-3 py-2">Prüfungsteil</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {curriculum.lektionen.map((l, i) => {
+                    const row = wortfeldRows[i];
+                    const cp = checkpointAfter(curriculum, l.nr);
+                    return (
+                      <>
+                        <tr class="border-b border-rule/60 align-top">
+                          <td class="px-3 py-3 font-data font-bold text-siegel">{String(l.nr).padStart(2, '0')}</td>
+                          <td class="px-3 py-3 font-bold text-ink">{l.title}</td>
+                          <td class="px-3 py-3 text-graphite">
+                            <ul class="list-disc space-y-0.5 pl-4">
+                              {(l.canDo ?? []).map((c) => <li>{c}</li>)}
+                            </ul>
                           </td>
+                          <td class="px-3 py-3 text-graphite">
+                            +{row?.count ?? 0} → {row?.running ?? 0}{wortlisteTotal ? `/${wortlisteTotal}` : ''}
+                          </td>
+                          <td class="px-3 py-3 text-graphite">{primaryGrammarTitle(l, titlesBySlug)}</td>
+                          <td class="px-3 py-3 text-graphite">{(l.examTeile ?? []).join(', ')}</td>
                         </tr>
-                      )}
-                    </>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        {cp && (
+                          <tr class="border-b border-rule/60 bg-siegel-wash">
+                            <td class="px-3 py-2" colspan="6">
+                              <span class="font-data text-[0.75rem] font-bold uppercase tracking-[0.08em] text-siegel-deep">{cp.title}</span>
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
 
-          <!-- Lektion anatomy strip -->
-          <h3 class="mt-8 sign-label text-[1.125rem] text-ink">So läuft eine Lektion ab</h3>
-          <div class="mt-3 overflow-x-auto" tabindex="0" role="region" aria-label="So läuft eine Lektion ab">
-            <ol class="flex min-w-max gap-2">
-              {LEKTION_ANATOMY.map((step) => (
-                <li class="flex w-32 flex-none flex-col rounded-clay border border-rule bg-white p-3">
-                  <span class="font-data text-[0.6875rem] font-bold text-siegel">{String(step.nr).padStart(2, '0')}</span>
-                  <span class="mt-1 text-[0.8125rem] font-bold text-ink">{step.titleDe}</span>
-                  <span class="mt-1 font-data text-[0.6875rem] text-graphite">{step.minutes} Min.</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+            <!-- Lektion anatomy strip -->
+            <h3 class="mt-8 sign-label text-[1.125rem] text-ink">So läuft eine Lektion ab</h3>
+            <div class="mt-3 overflow-x-auto" tabindex="0" role="region" aria-label="So läuft eine Lektion ab">
+              <ol class="flex min-w-max gap-2">
+                {LEKTION_ANATOMY.map((step) => (
+                  <li class="flex w-32 flex-none flex-col rounded-clay border border-rule bg-white p-3">
+                    <span class="font-data text-[0.6875rem] font-bold text-siegel">{String(step.nr).padStart(2, '0')}</span>
+                    <span class="mt-1 text-[0.8125rem] font-bold text-ink">{step.titleDe}</span>
+                    <span class="mt-1 font-data text-[0.6875rem] text-graphite">{step.minutes} Min.</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
 
-          <!-- Running counters -->
-          <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <div class="rounded-clay border border-rule bg-white p-4">
-              <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Wörter / Wortliste</dt>
-              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{wortfeldTotal}{wortlisteTotal ? `/${wortlisteTotal}` : ''}</dd>
-            </div>
-            <div class="rounded-clay border border-rule bg-white p-4">
-              <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Geführte Lektionszeit</dt>
-              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{hoursDe(time.guidedHours)} h</dd>
-              <dd class="mt-1 font-data text-[0.6875rem] leading-relaxed text-graphite">+ {hoursDe(time.practiceHours)} h Übungsmaterial</dd>
-            </div>
-            <div class="rounded-clay border border-rule bg-white p-4">
-              <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Kann-Beschreibungen</dt>
-              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{kannCount}</dd>
-            </div>
-            <div class="rounded-clay border border-rule bg-white p-4">
-              <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Prüfungsteile geübt</dt>
-              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{teileCoverage.covered} von {teileCoverage.of}</dd>
-            </div>
-          </dl>
+            <!-- Running counters -->
+            <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div class="rounded-clay border border-rule bg-white p-4">
+                <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Wörter / Wortliste</dt>
+                <dd class="mt-1 sign-code text-[1.5rem] text-ink">{wortfeldTotal}{wortlisteTotal ? `/${wortlisteTotal}` : ''}</dd>
+              </div>
+              <div class="rounded-clay border border-rule bg-white p-4">
+                <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Geführte Lektionszeit</dt>
+                <dd class="mt-1 sign-code text-[1.5rem] text-ink">{hoursDe(time.guidedHours)} h</dd>
+                <dd class="mt-1 font-data text-[0.6875rem] leading-relaxed text-graphite">+ {hoursDe(time.practiceHours)} h Übungsmaterial</dd>
+              </div>
+              <div class="rounded-clay border border-rule bg-white p-4">
+                <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Kann-Beschreibungen</dt>
+                <dd class="mt-1 sign-code text-[1.5rem] text-ink">{kannCount}</dd>
+              </div>
+              <div class="rounded-clay border border-rule bg-white p-4">
+                <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Prüfungsteile geübt</dt>
+                <dd class="mt-1 sign-code text-[1.5rem] text-ink">{teileCoverage.covered} von {teileCoverage.of}</dd>
+              </div>
+            </dl>
 
-          <p class="mt-6 text-[0.8125rem] leading-relaxed text-graphite">
-            Die {hoursDe(time.guidedHours)} h sind geführte Lektionszeit, die als Inhalt existiert: {curriculum.lektionen.length} Lektionen,
-            {' '}{curriculum.checkpoints?.length ?? 0} Checkpoints und die Wiederholungen dazwischen. Die weiteren
-            {' '}{hoursDe(time.practiceHours)} h sind Übungsmaterial rund um die Lektionen — Hören, Lesen, Sprechen, Wortschatz und
-            Schreiben; dieses Material ist noch nicht zu jeder Lektion vollständig.{richtwert ? ` Goethe-Richtwert für das ganze Niveau: ${richtwert[0]}–${richtwert[1]} Unterrichtseinheiten.` : ''}
+            <p class="mt-6 text-[0.8125rem] leading-relaxed text-graphite">
+              Die {hoursDe(time.guidedHours)} h sind geführte Lektionszeit, die als Inhalt existiert: {curriculum.lektionen.length} Lektionen,
+              {' '}{curriculum.checkpoints?.length ?? 0} Checkpoints und die Wiederholungen dazwischen. Die weiteren
+              {' '}{hoursDe(time.practiceHours)} h sind Übungsmaterial rund um die Lektionen — Hören, Lesen, Sprechen, Wortschatz und
+              Schreiben; dieses Material ist noch nicht zu jeder Lektion vollständig.{richtwert ? ` Goethe-Richtwert für das ganze Niveau: ${richtwert[0]}–${richtwert[1]} Unterrichtseinheiten.` : ''}
+            </p>
+
+            <p class="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
+              Quelle: {curriculum.provenance?.canDo}. Wortliste: {curriculum.provenance?.wortliste}. Themen: {curriculum.provenance?.themen}.
+            </p>
+
+            <a href={`/course/${level}`} class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">Open the course →</a>
+          </section>
+        )}
+
+        <!-- Grammar -->
+        <section id="stamp-grammatik" class="reveal mt-4 scroll-mt-24" aria-labelledby="grammar-h" data-stamp="grammatik">
+          <h2 id="grammar-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">{topics.length} grammar topics, in order</h2>
+          <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+            Every topic: rules in plain language, worked examples with audio, and exercises you answer by
+            typing or choosing, each checked on the spot. The rules are free to read at every level; the practice is part of the course.
           </p>
-
-          <p class="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
-            Quelle: {curriculum.provenance?.canDo}. Wortliste: {curriculum.provenance?.wortliste}. Themen: {curriculum.provenance?.themen}.
-          </p>
-
-          <a href={`/course/${level}`} class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">Open the course →</a>
+          <ol class="mt-5 grid gap-2 sm:grid-cols-2">
+            {topics.map((t, i) => (
+              <li class="flex items-baseline gap-3 rounded-clay border border-rule bg-white px-4 py-3">
+                <span class="font-data text-[0.6875rem] font-bold text-siegel">{String(i + 1).padStart(2, '0')}</span>
+                <a href={`/grammar/${level}/${t.slug}/`} class="text-[0.9375rem] font-bold text-ink transition-colors hover:text-siegel-deep">{t.title_en}</a>
+              </li>
+            ))}
+          </ol>
         </section>
+
+        <!-- Reading + listening -->
+        <section class="reveal mt-12 grid gap-8 sm:grid-cols-2" style="--rd:80ms" aria-labelledby="skills-h">
+          <div id="stamp-lesen" class="scroll-mt-24" data-stamp="lesen">
+            <h2 id="skills-h" class="sign-head text-[1.5rem]">{content.reading.length} reading texts</h2>
+            <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+              {content.finalTest ? 'Short, in-level texts with richtig/falsch checks and exam-style parts.' : 'Longer texts on the level\'s themes; checks arrive with the rebuild.'}
+            </p>
+            <ul class="mt-3 space-y-1 text-[0.875rem] text-ink">
+              {content.reading.map((t) => <li class="border-b border-rule/60 py-1.5">{t}</li>)}
+            </ul>
+          </div>
+          <div id="stamp-hoeren" class="scroll-mt-24" data-stamp="hoeren">
+            <h2 class="sign-head text-[1.5rem]">{content.listening.length} listening exercises</h2>
+            <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+              Native-speaker dialogues, {content.listeningQuestions} questions{content.dictation ? `, ${content.dictation} of them dictation` : ''}.
+            </p>
+            <ul class="mt-3 space-y-1 text-[0.875rem] text-ink">
+              {content.listening.map((t) => <li class="border-b border-rule/60 py-1.5">{t}</li>)}
+            </ul>
+          </div>
+        </section>
+
+        <!-- Vocabulary, speaking, test, plan -->
+        <section class="reveal mt-12 grid gap-4 sm:grid-cols-2" style="--rd:120ms" aria-label="Also in this course">
+          <div id="stamp-wortschatz" class="scroll-mt-24 rounded-clay border border-rule bg-white p-5" data-stamp="wortschatz">
+            <h3 class="font-bold text-ink">{content.words} words with audio</h3>
+            <p class="mt-1 text-[0.875rem] text-graphite">{content.wordCategories} themed lists, every word spoken by a native voice, spaced repetition built in.</p>
+          </div>
+          <div id="stamp-sprechen" class="scroll-mt-24 rounded-clay border border-rule bg-white p-5" data-stamp="sprechen">
+            <h3 class="font-bold text-ink">{content.missions} speaking missions</h3>
+            <p class="mt-1 text-[0.875rem] text-graphite">Role-play with the AI coach on this level's situations; feedback on grammar and expression.</p>
+          </div>
+          {content.finalTest ? (
+            <>
+              <div id="stamp-test" class="scroll-mt-24 rounded-clay border border-rule bg-white p-5" data-stamp="test">
+                <h3 class="font-bold text-ink">Final test in the {content.finalTest.format} format</h3>
+                <p class="mt-1 text-[0.875rem] text-graphite">Timed, half exam length: listening and reading are scored against the exam's pass line, writing is a self-check.</p>
+              </div>
+              <div id="stamp-plan" class="scroll-mt-24 rounded-clay border border-rule bg-white p-5" data-stamp="plan">
+                <h3 class="font-bold text-ink">28-day plan</h3>
+                <p class="mt-1 text-[0.875rem] text-graphite">A few short activities a day through the whole level, ending in the final test.</p>
+              </div>
+            </>
+          ) : (
+            <div class="rounded-clay border border-rule bg-paper-sunk p-5 sm:col-span-2">
+              <h3 class="font-bold text-ink">Final test and 28-day plan: coming with the rebuild</h3>
+              <p class="mt-1 text-[0.875rem] text-graphite">The A1 and A2 courses have them today; {code} gets them before it goes on sale.</p>
+            </div>
+          )}
+        </section>
+
+        <!-- Buy again + neighbours -->
+        <section class="reveal mt-12 rounded-clay border border-rule bg-white p-6 shadow-raise" style="--rd:160ms" data-fahrschein-close>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="sign-head text-[1.375rem] text-ink">{isFree ? `${code} is free — start now.` : course.comingSoon ? `${code} is Im Bau.` : `Own ${code} for ${eur(course.price)}.`}</p>
+              <p class="mt-1 text-[0.875rem] text-graphite">
+                {isFree ? `${FREE_LEVEL_LABEL} needs no account. A free account adds a trial of Pro on top.` : course.comingSoon ? 'Pro opens every level today, including this one.' : `Pay once. Nothing renews, nothing expires. ${COURSE_PRO_MONTHS} months of Pro included.`}
+              </p>
+            </div>
+            <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
+            {isFree ? (
+              <a href={`/course/${level}`} class={BTN_PRIMARY}>Start the free {code} course</a>
+            ) : buyable ? (
+              <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="course_page_bottom">Buy {code} — {eur(course.price)}</button>
+            ) : (
+              <a href="/pricing/" class={BTN_SECONDARY}>See Pro</a>
+            )}
+            </div>
+          </div>
+        </section>
+
+        <nav class="mt-8 flex justify-between font-data text-[0.75rem] text-graphite" aria-label="Neighbouring levels">
+          {prev ? <a href={`/courses/${levelToSlug(prev)}/`} class="dm-link">← {prev.toUpperCase()}</a> : <span />}
+          <a href="/courses/" class="dm-link">All courses</a>
+          {next ? <a href={`/courses/${levelToSlug(next)}/`} class="dm-link">{next.toUpperCase()} →</a> : <span />}
+        </nav>
+      </div>
+
+      {rides && (
+        <!-- The Fahrschein: every part of the level, stamped as the reader passes it. -->
+        <aside class="hidden xl:block" aria-labelledby="fahrschein-h">
+          <div class="sticky top-24">
+            <article class="max-h-[calc(100vh-7rem)] overflow-y-auto rounded-[1.25rem] border border-ink bg-white">
+              <div class="bg-linie px-5 py-4 text-linie-ink">
+                <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]" lang="de">Einzelfahrschein</p>
+                <p id="fahrschein-h" class="sign-code mt-1 text-[2rem] leading-none">{code}</p>
+                <p class="mt-1.5 text-[0.8125rem]">{isFree ? 'Free · no account' : `${eur(course.price)} once · yours to keep`}</p>
+              </div>
+              <ol class="px-3 py-2">
+                {stamps.map((s) => (
+                  <li>
+                    <a href={`#stamp-${s.id}`} class="flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-paper-sunk" data-stamp-slot={s.id}>
+                      <span class="dm-stamp flex h-6 w-6 flex-none items-center justify-center rounded-full border-2 border-linie bg-linie text-linie-ink" aria-hidden="true">
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7.5l2.5 2.5L11 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                      </span>
+                      <span class="min-w-0">
+                        <span class="block text-[0.9375rem] font-bold leading-tight text-ink" lang="de">{s.de}</span>
+                        <span class="block text-[0.75rem] leading-snug text-graphite">{s.en}</span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+              <div class="border-t border-dashed border-rule px-5 pb-5 pt-4">
+                <p class="mb-3 text-[0.8125rem] text-graphite" data-fahrschein-done><span class="font-bold text-siegel-deep" lang="de">Alles drin.</span> {isFree ? 'All of it, free.' : 'All of it, one payment.'}</p>
+                <div data-course-door={level} data-course-code={code} data-course-open-class={`${BTN_PRIMARY} w-full`}>
+                {isFree ? (
+                  <a href={`/course/${level}`} class={`${BTN_PRIMARY} w-full`}>Start {code} free</a>
+                ) : buyable ? (
+                  <button type="button" class={`${BTN_PRIMARY} w-full`} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="course_fahrschein">Buy {code} — {eur(course.price)}</button>
+                ) : (
+                  <a href="/pricing/" class="dm-key dm-key-ghost w-full">See pricing</a>
+                )}
+                </div>
+              </div>
+            </article>
+          </div>
+        </aside>
       )}
 
-      <!-- Grammar -->
-      <section class="reveal mt-4" aria-labelledby="grammar-h">
-        <h2 id="grammar-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">{topics.length} grammar topics, in order</h2>
-        <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-          Every topic: rules in plain language, worked examples with audio, and exercises you answer by
-          typing or choosing, each checked on the spot. The rules are free to read at every level; the practice is part of the course.
-        </p>
-        <ol class="mt-5 grid gap-2 sm:grid-cols-2">
-          {topics.map((t, i) => (
-            <li class="flex items-baseline gap-3 rounded-clay border border-rule bg-white px-4 py-3">
-              <span class="font-data text-[0.6875rem] font-bold text-siegel">{String(i + 1).padStart(2, '0')}</span>
-              <a href={`/grammar/${level}/${t.slug}/`} class="text-[0.9375rem] font-bold text-ink transition-colors hover:text-siegel-deep">{t.title_en}</a>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <!-- Reading + listening -->
-      <section class="reveal mt-12 grid gap-8 sm:grid-cols-2" style="--rd:80ms" aria-labelledby="skills-h">
-        <div>
-          <h2 id="skills-h" class="sign-head text-[1.5rem]">{content.reading.length} reading texts</h2>
-          <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-            {content.finalTest ? 'Short, in-level texts with richtig/falsch checks and exam-style parts.' : 'Longer texts on the level\'s themes; checks arrive with the rebuild.'}
-          </p>
-          <ul class="mt-3 space-y-1 text-[0.875rem] text-ink">
-            {content.reading.map((t) => <li class="border-b border-rule/60 py-1.5">{t}</li>)}
-          </ul>
-        </div>
-        <div>
-          <h2 class="sign-head text-[1.5rem]">{content.listening.length} listening exercises</h2>
-          <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-            Native-speaker dialogues, {content.listeningQuestions} questions{content.dictation ? `, ${content.dictation} of them dictation` : ''}.
-          </p>
-          <ul class="mt-3 space-y-1 text-[0.875rem] text-ink">
-            {content.listening.map((t) => <li class="border-b border-rule/60 py-1.5">{t}</li>)}
-          </ul>
-        </div>
-      </section>
-
-      <!-- Vocabulary, speaking, test, plan -->
-      <section class="reveal mt-12 grid gap-4 sm:grid-cols-2" style="--rd:120ms" aria-label="Also in this course">
-        <div class="rounded-clay border border-rule bg-white p-5">
-          <h3 class="font-bold text-ink">{content.words} words with audio</h3>
-          <p class="mt-1 text-[0.875rem] text-graphite">{content.wordCategories} themed lists, every word spoken by a native voice, spaced repetition built in.</p>
-        </div>
-        <div class="rounded-clay border border-rule bg-white p-5">
-          <h3 class="font-bold text-ink">{content.missions} speaking missions</h3>
-          <p class="mt-1 text-[0.875rem] text-graphite">Role-play with the AI coach on this level's situations; feedback on grammar and expression.</p>
-        </div>
-        {content.finalTest ? (
-          <>
-            <div class="rounded-clay border border-rule bg-white p-5">
-              <h3 class="font-bold text-ink">Final test in the {content.finalTest.format} format</h3>
-              <p class="mt-1 text-[0.875rem] text-graphite">Timed, half exam length: listening and reading are scored against the exam's pass line, writing is a self-check.</p>
+      {rides && (
+        <!-- Below 1280px: the ticket rides along as a bar once the hero's door has scrolled away. -->
+        <aside class="dm-fahrschein-bar fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md xl:hidden" aria-label={`${code} ticket`} data-fahrschein-bar>
+          <div class="mx-auto flex max-w-3xl items-center gap-3 px-4 py-2.5">
+            <div class="min-w-0 flex-1">
+              <p class="truncate"><span class="sign-code text-[1.125rem] text-ink">{code}</span> <span class="text-[0.8125rem] text-graphite">{isFree ? 'Free' : `${eur(course.price)} once`}</span></p>
+              <p class="mt-1 flex items-center gap-1.5" aria-hidden="true">
+                {stamps.map((s) => <span class="dm-stamp-dot block h-2 w-2 flex-none rounded-full bg-linie" data-stamp-dot={s.id} data-de={s.de}></span>)}
+                <span class="ml-1 truncate font-data text-[0.6875rem] text-graphite" lang="de" data-stamp-latest>Alles drin.</span>
+              </p>
             </div>
-            <div class="rounded-clay border border-rule bg-white p-5">
-              <h3 class="font-bold text-ink">28-day plan</h3>
-              <p class="mt-1 text-[0.875rem] text-graphite">A few short activities a day through the whole level, ending in the final test.</p>
+            <div class="flex-none" data-course-door={level} data-course-code={code} data-course-open-class={`${BTN_PRIMARY} !min-h-10 !px-4 !py-2 !text-[0.875rem]`}>
+            {isFree ? (
+              <a href={`/course/${level}`} class={`${BTN_PRIMARY} !min-h-10 !px-4 !py-2 !text-[0.875rem]`}>Start free</a>
+            ) : buyable ? (
+              <button type="button" class={`${BTN_PRIMARY} !min-h-10 !px-4 !py-2 !text-[0.875rem]`} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="course_bar">Buy {code}</button>
+            ) : (
+              <a href="/pricing/" class="dm-key dm-key-ghost !min-h-10 !px-4 !py-2 !text-[0.875rem]">Pricing</a>
+            )}
             </div>
-          </>
-        ) : (
-          <div class="rounded-clay border border-rule bg-paper-sunk p-5 sm:col-span-2">
-            <h3 class="font-bold text-ink">Final test and 28-day plan: coming with the rebuild</h3>
-            <p class="mt-1 text-[0.875rem] text-graphite">The A1 and A2 courses have them today; {code} gets them before it goes on sale.</p>
           </div>
-        )}
-      </section>
-
-      <!-- Buy again + neighbours -->
-      <section class="reveal mt-12 rounded-clay border border-rule bg-white p-6 shadow-raise" style="--rd:160ms">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p class="sign-head text-[1.375rem] text-ink">{isFree ? `${code} is free — start now.` : course.comingSoon ? `${code} is Im Bau.` : `Own ${code} for ${eur(course.price)}.`}</p>
-            <p class="mt-1 text-[0.875rem] text-graphite">
-              {isFree ? `${FREE_LEVEL_LABEL} needs no account. A free account adds a trial of Pro on top.` : course.comingSoon ? 'Pro opens every level today, including this one.' : `Pay once. Nothing renews, nothing expires. ${COURSE_PRO_MONTHS} months of Pro included.`}
-            </p>
-          </div>
-          <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
-          {isFree ? (
-            <a href={`/course/${level}`} class={BTN_PRIMARY}>Start the free {code} course</a>
-          ) : buyable ? (
-            <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="course_page_bottom">Buy {code} — {eur(course.price)}</button>
-          ) : (
-            <a href="/pricing/" class={BTN_SECONDARY}>See Pro</a>
-          )}
-          </div>
-        </div>
-      </section>
-
-      <nav class="mt-8 flex justify-between font-data text-[0.75rem] text-graphite" aria-label="Neighbouring levels">
-        {prev ? <a href={`/courses/${levelToSlug(prev)}/`} class="dm-link">← {prev.toUpperCase()}</a> : <span />}
-        <a href="/courses/" class="dm-link">All courses</a>
-        {next ? <a href={`/courses/${levelToSlug(next)}/`} class="dm-link">{next.toUpperCase()} →</a> : <span />}
-      </nav>
+        </aside>
+      )}
     </div>
   </div>
   <CourseCheckout />
 </Layout>
+
+<script>
+  // The Fahrschein. A part of the level is stamped once its top passes the reading line (65 %
+  // down the screen), and unstamped when the reader scrolls back above it: the scroll is the
+  // timeline. With reduced motion the ticket is never armed and shows every stamp, as drawn.
+  // The bottom bar is shown once the hero's door has scrolled away and until the closing door
+  // clears it, so two doors are never on screen together; never beside the course return bar.
+  const root = document.querySelector('[data-fahrschein-root]');
+  if (root) {
+    const armed = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const targets = [...root.querySelectorAll('[data-stamp]')];
+    const marks = [...root.querySelectorAll('[data-stamp-slot], [data-stamp-dot]')];
+    const dots = [...root.querySelectorAll('[data-stamp-dot]')];
+    const latest = root.querySelector('[data-stamp-latest]');
+    const bar = root.querySelector('[data-fahrschein-bar]');
+    const hero = document.querySelector('[data-hero-door]');
+    const closeDoor = root.querySelector('[data-fahrschein-close] [data-course-door]');
+    let frame = 0;
+    let stamped = null;
+
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      if (armed) {
+        const passed = targets.filter((t) => t.getBoundingClientRect().top < vh * 0.65).map((t) => t.dataset.stamp);
+        const key = passed.join();
+        if (key !== stamped) {
+          stamped = key;
+          marks.forEach((m) => m.classList.toggle('is-stamped', passed.includes(m.dataset.stampSlot || m.dataset.stampDot)));
+          const all = passed.length === targets.length;
+          root.classList.toggle('is-complete', all);
+          const last = dots.find((d) => d.dataset.stampDot === passed.at(-1));
+          latest.textContent = all ? 'Alles drin.' : last ? `Gestempelt: ${last.dataset.de}` : '';
+        }
+      }
+      const show = hero.getBoundingClientRect().bottom < 64
+        && closeDoor.getBoundingClientRect().top > vh - bar.offsetHeight
+        && !document.querySelector('[data-course-return-bar]');
+      bar.classList.toggle('is-shown', show);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    if (armed) root.dataset.fahrschein = 'on';
+    update();
+  }
+</script>

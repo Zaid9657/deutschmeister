@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase } from '../utils/supabase';
 import { trackOnboardingCompleted } from '../lib/funnelTracking';
 import { onboardingExitPath } from '../lib/firstRun.js';
 
 export function useOnboarding() {
   const { user, isEmailVerified } = useAuth();
+  const { profile, hasLevelAccess } = useSubscription();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [profileLoaded, setProfileLoaded] = useState(false);
@@ -47,10 +49,10 @@ export function useOnboarding() {
     // `href` is for full-load destinations outside the SPA (the grammar
     // lessons are served by the Astro build) — the completion is persisted
     // FIRST, so the page unload cannot lose it. The in-app exits are mapped
-    // by src/lib/firstRun.js: 'first-lesson' lands IN Lektion 1 of the free
-    // course, 'level-test' on the placement test, anything else /dashboard.
-    async (exitPath = 'dashboard', { href } = {}) => {
-      const dest = onboardingExitPath(exitPath);
+    // by src/lib/firstRun.js: learning exits prefer the chosen exam's task;
+    // without an accessible exam task they keep their existing destinations.
+    async (exitPath = 'dashboard', { href, examTrack = profile?.exam_track } = {}) => {
+      const dest = onboardingExitPath(exitPath, { examTrack, currentLevel: profile?.current_level, hasLevelAccess });
 
       if (user) {
         const { error } = await supabase
@@ -71,7 +73,7 @@ export function useOnboarding() {
       }
       navigate(dest, { replace: true });
     },
-    [user, navigate],
+    [user, navigate, profile, hasLevelAccess],
   );
 
   return { needsOnboarding, profileLoaded, completeOnboarding, currentStep, setCurrentStep };

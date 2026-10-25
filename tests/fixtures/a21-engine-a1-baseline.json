@@ -12,13 +12,13 @@
     "lines": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
     "examCoverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "ratchets": "4a590bd170e5a98a3d2b30571c065b44028060cf049e909faf231c156495444a",
-    "checkpoints": "a2a43cd8fdfc64119385ffedcf826aa9d16ed6a290f598ce1634388399819c55"
+    "checkpoints": "8e722bc9045d32b7b2e5a74fecd315073f70d9c9d4f7ad05b232d3005528bb49"
   },
   "a1.2": {
-    "lexicon": "6dcf81f243c1a19df0ada169694c3fd4496afa66b7d58529f01370c9f27bfe04",
-    "lexiconSize": 2074,
-    "taught": "7c0a8a182f6ec4f51e52db19a8ff9e01183b98bc39e6c7c9963d595a23df731b",
-    "browserLexicons": "d43bbd5bf7ae84a83094309761847780b3359f775a6aca55a66afb93297da276",
+    "lexicon": "01b963f95ffb4ee556181c9a740be30ecfadde8a3342e67dd20369b37dbc5825",
+    "lexiconSize": 2075,
+    "taught": "e0c2e179e594367cfb5d93b58aa25ce440a13536d3d58ee5865650d263e4cf83",
+    "browserLexicons": "c0b6e66aa63e2760968281f8813ece768537f1b45e0f86a5e09c2caec240060e",
     "wordForms": "8d9a8ac2de747ca5b544fb2fdda82d7e063bd698ebc98e463250eb63949a8031",
     "browserWordForms": "6ce0cb90f7edf5f9059a4a2d472c0d063300a9e8b9b007bb071c9420aea7ebde",
     "wechsel": "7cca01bce33cd98dd8848b142527ff647cba17adab4c5ecbd86cd2ef678a2636",
@@ -27,6 +27,6 @@
     "lines": "0a669032cf03dc1729e1685a443661122bc73425f9daa9fd84abf1f97e54223c",
     "examCoverage": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "ratchets": "4e63ab865d40ab0b55ac7fcca414a9a5d6b37b6a2b62eff69345e4c9df41c698",
-    "checkpoints": "8deefab981eed6f91693380d82251aaef5efe40d091a3a2623b3b23faa3957fd"
+    "checkpoints": "6840e64568a0cf560f228648bfd71cf7afcdcd7b351b99dc553f85642a3074c7"
   }
 }

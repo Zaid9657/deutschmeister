@@ -1,0 +1,418 @@
+# Extended repository guidance and historical bootstrap
+
+The current bootstrap is [CLAUDE.md](../../CLAUDE.md). Team workflow is governed by
+[TEAM.md](TEAM.md) v5 and the [PROTOCOL.md](PROTOCOL.md) v5 addendum. The complete
+pre-consolidation bootstrap is retained below so its explanations, decisions, measurements
+and history remain available. Its dated operational state is a snapshot, not a fresh
+measurement; its v1/v2 team and scorecard instructions are superseded by v5.
+
+Relocation corrections: August audits now live in [the archive](../archive/README.md)
+and root SQL now lives in [legacy SQL](../archive/README.md). The named
+`TelcB1Page.jsx` and `StatsBar.jsx` below are historical examples, not existing modules.
+Do not infer current deployment flags, migration application or connector access from this
+snapshot: verify the live state and consult [the migration ledger](../../migrations/README.md).
+
+## Preserved bootstrap (before 2026-10-22 consolidation)
+
+# CLAUDE.md
+
+Guidance for AI agents working in this repository (deutsch-meister.de — German-learning
+platform: Vite/React SPA + Astro static site + Netlify functions + Supabase).
+
+## Architecture in one paragraph
+
+Two front ends merge into one `dist/` at deploy: the **SPA** (`src/`, Vite+React 18,
+becomes `dist/app.html`) is the app; the **Astro site** (`astro-site/`, separate
+package+lockfile) statically renders the SEO-facing routes (`/`, `/pricing/`, `/courses/**`,
+`/grammar/**`, `/vergleich/*`, `/leitfaden/*`, `/privacy/`, `/impressum/`, 404) and wins
+over the SPA for those URLs. 15 **Netlify functions** (`netlify/functions/`) power AI
+speaking, X-Ray, payments (Lemon Squeezy webhook), and email (Resend). Content lives in
+**Supabase**; the Astro build fetches it at build time. Full details: `README.md`.
+
+## The SPA has no "/" route, on purpose
+
+`/` is served by the Astro build (`astro-site/src/pages/index.astro`) via `netlify.toml`. The SPA
+used to carry its own divergent `LandingPage.jsx` at `/`, unreachable after the August remediation
+made every in-app "/" link a full page load — two homepages, one dead. It was deleted 2026-08-22.
+On the Vite dev server `/` now falls through to `NotFoundPage`; work on the homepage in
+`astro-site/`.
+
+## The three-place route rule (most common mistake)
+
+Adding a `<Route>` in `src/App.jsx` is not enough. Every public SPA route must ALSO be:
+1. added to the netlify.toml SPA allow-list (`from = "/route" to = "/app.html"`), or it
+   returns a hard 404 in production;
+2. (if crawlable) mirrored in `scripts/prerender-spa-routes.mjs` and `public/sitemap-spa.xml`.
+
+## Commands
+
+```bash
+npm run dev          # SPA dev server
+npm run build        # optimize images + vite build → dist/
+npm run lint         # ESLint 9 flat config — zero tolerance: errors AND warnings fail (ratcheted to 0 on 2026-08-24)
+npm run check:duplicates  # SPA/Astro shared data files must stay byte-identical
+npm test             # node --test: claim/pricing, brand, guide and lifecycle guard suites
+npm run build:verify # build + prerender + check the BUILT html (spa-only mode)
+cd astro-site && npm run build   # needs PUBLIC_SUPABASE_URL/_ANON_KEY — or a cache:
+GRAMMAR_CONTENT_CACHE=path/to/cache.json npx astro build   # offline build (CI/sandbox)
+node scripts/dump-grammar-cache.mjs   # produce that cache (needs Supabase network)
+node scripts/evaluate-site.mjs        # route walkthrough + screenshots (playwright)
+```
+
+CI (`.github/workflows/ci.yml`) runs lint + duplicate check + `npm test` + `node --check` on
+functions + the SPA build + **the Astro build, offline, from the committed
+`grammar-content-cache.json`** + the netlify.toml merge + prerender +
+`check-built-html.mjs` with **no** `--spa-only` — all ~95 pages, closed 2026-08-24. The cache
+carries a `dumpedAt` stamp and CI warns when it is >30 days old; refresh with
+`node scripts/dump-grammar-cache.mjs grammar-content-cache.json` (needs Supabase network). A stale
+cache means CI verifies a snapshot, not the database — the warning exists so that is visible.
+
+## Conventions & gotchas
+
+- **JS only** (no TypeScript; `Layout.astro` frontmatter uses TS-syntax Props interface —
+  that's Astro-normal). ESLint stylistic rules are off; match surrounding style.
+- **Levels are lowercase in URLs and code** (`a1.1`…`b2.2`), but **UPPERCASE in the DB**
+  (`sub_level = 'A1.1'`) and in Supabase Storage folders (`audio/listening/A1.1/…`) —
+  EXCEPT `reading_lessons.level`, which a check constraint forces to **lowercase**.
+  Normalize at boundaries; queries use `ilike`/`lower()`. Mixed-case bugs are a recurring
+  source of empty pages and failed inserts.
+- **Trailing slashes** — three cases, get them right or every link 301-hops:
+  1. **Astro pages** always end in `/` (`trailingSlash: 'always'`).
+  2. **Prerendered SPA routes** (`/analyze`, `/level-test`, `/speaking`, `/podcasts`,
+     `/listening`, `/reading`, `/faq`, `/ueber-uns`) also end in `/`. `scripts/prerender-spa-routes.mjs`
+     writes `dist/<route>/index.html` and canonicalises to the slash form, and
+     `public/sitemap-spa.xml` matches — so links to them must carry the slash too.
+  3. **Every other SPA route** (`/dashboard`, `/profile`, `/level/:level`…)
+     has **no** slash; it is served by a `netlify.toml` rewrite to `/app.html`.
+     (`/faq` and `/ueber-uns` moved to case 2 on 2026-08-24 when they were
+     prerendered.)
+- **Duplicated on purpose** (until refactor): `competitorComparisons.js`, `pricing.js` and
+  `marketing.js` under `src/data/` + `astro-site/src/data/` (all byte-identical, CI-guarded by
+  `scripts/check-duplicates.mjs`), grammar rule rendering (SPA stages vs `RuleContent.astro`),
+  comparison pages. Change both sides or the drift check fails.
+- **Design tokens: `src/data/design-tokens.js` is the only place a hex value or font stack is
+  written.** Both tailwind configs import it (`tailwindColors`, `tailwindFontFamily`), and it is
+  drift-guarded against its `astro-site/src/data/` twin. Three binding rules live in its header:
+  colour means grammatical case (the four `kasus` values may appear only where a case is named,
+  never as decoration or on a CTA), one interactive colour (`siegel` teal), and structure from
+  hairline rules rather than resting shadows. `font-display` resolves to **Fraunces**, not the
+  Cormorant Garamond it used to be — and Cormorant is now gone from both front ends entirely, along
+  with Inter. Tailwind is JIT, so a token class only reaches the CSS once a component
+  uses it; to check the wiring, build and grep the emitted CSS rather than reading the config.
+  **That is not a style preference — `rounded-pill` was called on the Astro pricing page for weeks
+  against a config that never extended `borderRadius`, so the billing toggle rendered square and
+  nothing said so.** Only `pill` is wired: the token `sm`/`md`/`lg` values collide with Tailwind's
+  own defaults and adopting them would reshape every `rounded-lg` in the app.
+- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`), in v4 colours: TÜRKIS.**
+  The owner picked türkis over night + signal yellow on 2026-10-04 (the palette they had already
+  chosen for the Course v2 player). The token NAMES stayed: `nacht` is now the light türkis feature
+  ground (hero, line section, footer, tab bar — read it as "feature ground", not night) and `linie`
+  is the same türkis as `siegel` (`#0A8276`, white text 4.7:1). Rule 2 is whole again: one action
+  colour on every ground. Never put `text-white`/inverse tones on a `nacht` ground any more — use
+  `text-nacht-text`/`-muted`. `tests/linie-design.test.mjs` pins the contrast values and
+  `linie === siegel`; `netlify/functions/_shared/brand.mjs` (email colours) must match the tokens.
+  The homepage hero carries **the line board** (`components/linie/LineBoard.astro`): a HyperFrames loop
+  whose sources are `videos/hero-line` (1600×560) and `videos/hero-line-mobile` (1080×1350). Edit the
+  composition, run `hyperframes check` + `render` there (`HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium`
+  in cloud sessions; GSAP is vendored because the CDN is blocked), then `videos/encode-web.sh` writes
+  `public/motion/` (MP4 + VP9 WebM + poster). The sentences must match the plan and the page (test).
+  The `sign` face (Archivo, `sign-display/head/label/code` in `astro-site/src/styles/linie.css`) is
+  for the four marketing/commerce pages that pass `preloads={[...signFontPreloads, …]}` to `Layout`
+  (`/`, `/pricing/`, `/courses/`, `/courses/<level>/`). Every other page renders `data-sign="off"`
+  and the same roles fall back to the body face — so a page that starts using a sign role must also
+  preload the face (the test walks every page). Motion uses the token tiers (140/220/420/800 ms) and
+  the `ease-out-strong`/`in-out-strong`/`drawer` curves; only transform/opacity/clip-path move,
+  hover motion only under `(hover:hover) and (pointer:fine)`. Astro files carry no hex literals
+  (`tests/astro-hex.test.mjs`); offers and station data are `src/data/offers.js` (+ twin).
+- **The app has one button and one card: `src/components/ui/`.** Before them the primary CTA was
+  `bg-gradient-to-r from-amber-500 to-rose-500 …` copy-pasted into twenty files, which is why the
+  retired brand outlived its own retirement. `Button.jsx` carries the same treatment as the Astro
+  pricing page, so both front ends render one button. Two rules travel with it: the global
+  `*:focus-visible` ring and `::selection` in `src/index.css` are brand surfaces on **every screen**
+  — change them and you have changed the whole product — and `tests/brand.test.mjs` bans the retired
+  palette outright across the chrome (`src/App.jsx`, the nav, the guards, the overlays, `ui/`, and
+  the five signup screens, and the nine content screens). **Two** ratchets hold the rest and both
+  have reached their floor: `MAX_LEGACY_CTA_FILES` (the exact retired CTA) and
+  `MAX_RETIRED_STOP_FILES` (**any** retired gradient stop in any pairing) are **both 0** — the
+  migration is complete and any reappearance of the retired palette fails the suite. The second
+  ratchet exists because the first reached 0 while the palette was still live in other stop
+  combinations; what exposed it was Tailwind still emitting `.from-amber-500` into the built CSS.
+  **Verify a colour sweep against `dist/`, not against a source grep** — and note a doc comment
+  quoting a class is enough to emit it, since the scanner does not parse comments.
+  `src/components/LevelTest/LevelTest.css` has been **deleted** (token migration done); `src/index.css`
+  is the only stylesheet left in the SPA.
+- **The money path (one-time courses).** Product keys live in `src/data/pricing.js`
+  (`COURSES` + `LEVEL_COURSES`); the webhook maps `LEMONSQUEEZY_<KEY>_VARIANT_ID` env vars
+  (numeric variant ids, functions scope) to those keys and upserts `purchases` keyed on the LS
+  order id; the client opens checkouts from `VITE_`/`PUBLIC_LEMONSQUEEZY_<KEY>_VARIANT_ID`
+  (checkout UUIDs, builds scope) and **hides any card whose id is unset** — never a dead
+  checkout. Entitlement is `hasLevelAccess(level)` in `SubscriptionContext` (free ∨ trial/sub ∨
+  bought course); every level lock must read it, and `tests/purchases.test.mjs` pins the list.
+  A signed-out Buy click stores `dm_buy_intent` and resumes at `/subscription?buy=<key>`.
+  **Grammar rule text on the Astro side is public at every level; the exercises above A1.1 are
+  locked client-side** by `astro-site/src/components/ExercisePlayer.jsx` (decision 2026-09-03,
+  `docs/HANDOFF-2026-09-03.md` §11) — a UX lock, not a security boundary, so never sell "grammar
+  rules" as the paid thing.
+  Lemon Squeezy products, discounts and redirect URLs are **dashboard-only** (API read-only);
+  paste-ready owner prompts are in `docs/owner-prompts.md`; ids in
+  `docs/monetization-2026-09-03.md`.
+- **The lesson checker is `src/lib/lesson/check.js`, and it decides every answer in the course.**
+  Spelling answers fold their separators (`HALLO` = `H A L L O` = `H-A-L-L-O`), a case-only miss is
+  `TYPO` (one retry) rather than `WRONG` — except where capitalisation IS the task (`caseSensitive`,
+  the polite `Ihr/Ihre/Ihren`), where it is `WRONG`. Never "fix" an item by widening its `accepted`
+  list alone: the rule belongs in the checker or in `scripts/build-lesson-pool.mjs`, with a test.
+- **Checkpoints measure transfer, and the grader scores content first (2026-10-07, REMEDIATION §8e).**
+  Each checkpoint has its own writing task (`checkpoint.writingTaskKey` → `a11-cpN`, bank `checkpoint: N`,
+  outside `courseWritingTasks()`), a retake is a new paper (seeded per attempt), and `sectionPasses()` is
+  the one pass rule (floor, above the constant-answer score, a graded text that failed fails Schreiben).
+  `gateEvaluation()` in `evaluate-writing.mjs` caps the model's score by Leitpunkt coverage and zeroes a
+  copied task. A sentence-building item whose object or modal adverb could open the sentence gets
+  „(Beginnen Sie mit „…“)" in its prompt (`missingOpeningCue`) — objects and modal adverbs stay out of
+  the answer-key fronting rule (REVIEW #12/#13).
+- **What a Lektion's numbers mean (2026-10 remediation, `docs/course-factory/a11-rebuild/REMEDIATION-2026-10.md`).**
+  The practice score is the FIRST response to each first-pass practice / derived / dictation item,
+  one per (stage, item) — never a retry (`requeue`), a reveal, warm-up, writing, speaking, or a
+  dictation read as text (`listened:false`) (`mastery.js` `practiceScore`). "Practice gold" is that
+  score ≥ 80 % and says nothing about speaking or writing, which the recap states on their own lines
+  (`skillStatus.js`); a weaker repeat never overwrites a better run (`betterRun`, on the server and on
+  the device). A wrong match pairing is `corrected` (complete, not first-try correct), never a typo.
+  Learner-facing durations are `a11.meta.js` `lektionMinutesEstimate` (labelled "estimate");
+  `lektion.minutes` stays the validator's 15-minute design target and is never shown as a duration.
+- **Bank text in the course pool is corrected in `src/data/lessonPools/a11.corrections.json`, not in the
+  DB-derived cache.** The pool build applies it (and, for reviewed levels only, prefers the reviewed
+  `explanationsEn` sidecar over bank English); the DB half is an unapplied migration
+  (`scripts/pool-corrections-sql.mjs`). A generated item is fixed in its build template instead.
+- **A finished Lektion is saved local-first (`src/lib/course/syncOutbox.js`).** Signed in, the run goes to
+  a localStorage outbox BEFORE any write, then three idempotent steps (stamped attempt batch, better-run
+  progress row, review cards) are retried until they land; the recap says where the run is saved. The
+  in-progress run snapshot is localStorage for 7 days (`runState.js`), and a guest merge clears the
+  guest store only when every write succeeded. `countCompletedRuns` ignores explain/read-aloud rows.
+- **Wave 1 (2026-10-14, plan approved 2026-10-09): every sitting ends with something the learner can
+  do.** A Lektion runs in three parts with a pause screen between them (`src/lib/lesson/sessions.js`);
+  a signed-out learner's save ask takes the place of the FIRST pause (`saveAskDue`, owner decision
+  2026-10-09 — never after a single answer). The recap leads with the Lektion's can-dos and keeps every
+  score inside one closed `<details>`; the course home leads with „Kann ich" (`src/lib/course/canDo.js`:
+  shown = Lektion done, again = its chapter checkpoint passed) — no XP, and no tour opens by itself.
+  The course review is the one review destination. Writing: starters for L2/L4 cut from the model
+  text, and one improved version per task that costs no other task on ANY tier
+  (`courseSubmissionAllowed`, `freeRevisionsSince`). Deliberately not done: FSRS and per-run
+  help evidence wait for an owner-applied migration; the L2 notice is NOT shortened (every clause
+  closes a DaF finding and is an input surface RULE 6b/6c/11/23 measure).
+- **On Windows, run `node scripts/validate-curriculum.mjs` from the repo root** — before 2026-10-05 its
+  main guard compared a POSIX path and the script silently did nothing on Windows.
+
+- **Acquisition attribution (which link brought each customer, 2026-09-20).** `public/attribution.js`
+  is loaded by BOTH heads (`index.html`, `Layout.astro`) and records `utm_*` / `?ref=<source>` / a
+  classified social referrer into localStorage `dm_attribution` `{first,last}` — first touch is never
+  overwritten. `src/lib/attribution.js` reads it; `AuthContext.signUp` sends it as user metadata and the
+  `handle_new_user()` trigger writes `profiles.acquisition_*`. PostHog gets it as super-properties
+  (`dm_source/medium/campaign`), `weekly_truth_metrics()` reports signups + course sales by source, and
+  the admin Marketing page renders it. NULL = "untracked" (pre-2026-09-20 or direct) — never report it as
+  "direct". No click ids are stored (gclid/fbclid), only the labels the owner typed into the link.
+  The one classifier lives in the public script and `tests/attribution.test.mjs` runs that exact file
+  under `node:vm` — add a social host there, not in a second list. Ready-made links: `docs/tracking-links.md`.
+- **Measure before you claim: read `weekly_metrics` first.** `netlify/functions/weekly-truth.mjs`
+  runs every Monday 06:00 UTC, calls `public.weekly_truth_metrics()` (one SQL pass: users,
+  paying subs + MRR, course sales, grammar activity and one-and-done rate, AI usage, lifecycle
+  sends, failed webhooks), stores the JSON in `weekly_metrics` and emails the owner the deltas.
+  A session that needs a revenue or usage figure reads the latest row (or calls the function via
+  the Supabase connector) instead of re-deriving it — the handoff had to correct a stale
+  "9 subs, €75–90/mo" claim once already. `tests/weekly-truth.test.mjs` pins store-before-email.
+- **Production agents (the hourly sentinel, the support agent) are documented in `docs/agents/production-agents.md`** — env vars, checks, owners, what is mailed to `OWNER_ALERT_EMAIL`, how to mute a check; incidents live in `agent_incidents` (service role only), and the sentinel ships off (`SENTINEL_ENABLED`).
+- **The Astro build survives a Supabase outage.** Every build-time read in `astro-site/src/lib/grammar.js`
+  retries three times, then serves the whole build from the committed `grammar-content-cache.json`
+  with a loud warning (two deploys died on `fetch failed` on 2026-09-14, once because the Supabase
+  project had been **paused** — `get_project` said `INACTIVE`, `restore_project` fixed it). If a
+  production build log shows that warning, check the project status first, then re-dump the cache.
+- **Agent environment.** Cloud sessions cannot reach `deutsch-meister.de`, `*.netlify.app`,
+  `supabase.co`, or `app.lemonsqueezy.com` (egress proxy) — use the Netlify, Supabase and
+  GitHub connectors instead; the Claude in Chrome MCP exists only in local sessions. PR
+  conventions (squash, gates, the lockfile trap) are in `.claude/skills/steward/SKILL.md`.
+- **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
+  Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`), and REA (`rea-agents`,
+  pinned, keyless), which reverse engineers apps, sites and binaries without their source; its skill
+  is vendored in `.claude/skills/reverse-engineer-anything` (see its SOURCE.md). The scroll-craft skill
+  (scroll-driven landing pages, MIT, no MCP server) is vendored in `.claude/skills/scroll-craft`; its
+  SOURCE.md says which project rules override it, and `.scrollcraft.json` keeps its builds and
+  fingerprint registry in `docs/scrollcraft/` (builds: the homepage line section's scroll ride,
+  `builds/home-line/`, experiment E7; the course pages' stamped ticket, `builds/course-ticket/`,
+  E8, guarded by `tests/fahrschein.test.mjs`). Values are `${VAR}`
+  references Claude Code expands from the environment; the literals belong in the environment's
+  variables, never in the file. `.claude/hooks/session-start.sh` materialises
+  `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency
+  trees — it skips silently when the secret is unset. **DataForSEO now works; GSC does not, and the
+  reason changed.** Measured 2026-08-24: the network allowlist that used to answer
+  `CONNECT tunnel failed, 403` for `api.dataforseo.com` has been fixed — a bare curl now returns
+  `401` (the API answering, per the diagnostic in `docs/seo-routines/README.md`), both
+  `DATAFORSEO_USERNAME` and `DATAFORSEO_PASSWORD` are set, and a live batched
+  `keywords_data/google_ads/search_volume` call returned real German volumes. The connector is
+  usable and has credit. **GSC is the blocker now, and it is not a network or credential problem:
+  `deutsch-meister.de` is not a verified Search Console property at all** — `list_properties`
+  returns only `https://medmeister.eu/`. So there is no impressions/clicks/position data, no URL
+  Inspection, no Indexing API and no CrUX field data for this site, which disables the GSC half of
+  both Routines. The verification files are already committed (`public/google4d10fa3ea1dd99b5.html`,
+  `public/BingSiteAuth.xml`), so the property may exist under a different Google account than the
+  one this connector is authorised for — the owner action is "confirm which account owns it", not
+  "start from zero". Diagnose with
+  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. Routine prompts live in
+  `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
+  create and a UI-only prompt drifts from the repo silently.
+- **Social posts: carousels from the next pack on (owner decision 2026-09-27).** The first pack
+  (`drafts/instagram-100/`, 50 single-image posts, 2026-09-28 → 11-16) is the template: brand
+  tokens, 1080×1350 JPEG (4:5), exam facts only from the checked Leitfaden modules, per-channel
+  captions with UTM tags, images served from `public/social/ig/`. Every later pack uses **2–4
+  images per post where the content needs it** (hook → rule/example → practice/CTA), not one
+  card by default. Instagram (Publish Photo(s)) and Facebook (Create Page Photo) take a list of
+  up to 10 image URLs in Zapier; Zapier's Telegram action sends ONE photo, so a Telegram album
+  needs the Bot API's `sendMediaGroup` (or one photo + the rest as a follow-up). The sheet needs
+  one column per slide, not one `image_url`.
+- **Leitfäden are data, not pages.** A guide lives in
+  `astro-site/src/data/guides/<slug>.js` and is rendered by
+  `pages/leitfaden/[slug].astro`; the hub lists the registry. Adding one is a data module,
+  a line in `GUIDES`, and a line in `scripts/check-built-html.mjs`'s MANIFEST — nothing in
+  `netlify.toml` (the whole `/leitfaden/` directory is already copied) and nothing in the
+  sitemap config (the filter already whitelists the prefix). A new **top-level** segment
+  needs nothing either: `scripts/merge-site-builds.mjs` copies every Astro output directory.
+  Guides get **no SPA twin**: Netlify serves the static
+  page. The former `src/pages/leitfaden/TelcB1Page.jsx` was dead code on the dev server only; it has already been deleted.
+  `tests/guides.test.mjs` pins slug/title/description/anchor integrity, the three
+  trailing-slash cases on every internal link, and the ban on outcome promises and fee
+  figures. Exam facts carry `factsCheckedOn` + `sources`, both rendered on the page.
+- **Prices and claims: derive, never retype.** `src/data/pricing.js` is what the checkout
+  charges; `src/data/marketing.js` is what the copy claims, and every value there carries its
+  provenance inline (the server file it was verified against, and when). `src/config/limits.js`
+  is now a thin re-export of the latter. `tests/claims.test.mjs` enforces it three ways: derived
+  figures follow from the prices, no page source contains a price literal, and the limits are
+  parsed out of the Netlify functions that enforce them and compared. That last check is what
+  caught `lemonsqueezy.js` advertising "5 speaking sessions per month" against a server that has
+  always granted 30.
+- **Static head tags need `data-rh="true"` or Helmet duplicates them.** react-helmet-async
+  only reconciles tags carrying its marker; an unstamped static tag is invisible to it, so on
+  mount it appends its own copy and the hydrated page ships two. `index.html` stamps exactly
+  the set `src/components/SEO.jsx` re-renders. The inverse is the dangerous half: stamping a
+  tag SEO.jsx does NOT render makes Helmet **delete** it — which is why `robots` (conditional,
+  so most routes would strip the shell's noindex), `og:image:width/height/alt` and the
+  WebSite/Organization JSON-LD are deliberately unstamped. `tests/head-tags.test.mjs` pins both
+  directions. Note this is only observable AFTER hydration — the served HTML is clean, so a
+  `dist/` grep cannot see it; check with a browser.
+- **`<head>` and headings must be verified against `dist/`, not the source.** The prerendered SPA
+  routes get their title/canonical/visible copy injected at build time by
+  `scripts/prerender-spa-routes.mjs`, so reading the source tells you what the injector intends,
+  never what a crawler receives. `scripts/check-built-html.mjs` reads the artifact. Note the
+  script is **not idempotent** — it strips the canonical from `app.html` — so a second run
+  against an already-prerendered `dist/` fails; rebuild from scratch.
+- **Secrets fail closed**: email functions 500 without `CAMPAIGN_SECRET`/`UNSUB_SECRET`.
+  Never reintroduce fallback secrets. Never widen the send-daily-test/daily-sentence auth.
+- **Lifecycle email is two jobs with one ledger and one rule.** `trial-lifecycle.mjs` is
+  clock-based (days 3/6/8 of the trial); `activation-lifecycle.mjs` is behaviour-based (days 1
+  and 4, ONLY users with zero lesson activity) and **ships off** — it no-ops unless
+  `LIFECYCLE_ACTIVATION_ENABLED=true`, supports `?dry=1` and a `LIFECYCLE_TEST_RECIPIENTS`
+  canary allowlist, and cannot send until `migrations/2026-08-22-activation-lifecycle.sql` is
+  applied (the ledger's CHECK rejects unmigrated kinds, and claim-before-send means no claim →
+  no send). Both jobs claim into `lifecycle_emails` (UNIQUE user_id+kind) BEFORE sending.
+  Funnel status has ONE definition: the `lifecycle_customer_state` view (service-role only) —
+  the mailer, any dashboard, and ad-hoc queries must read it rather than re-deriving status,
+  or the queue shown diverges from the queue mailed. The activation windows are deliberately
+  disjoint from the trial windows and `tests/lifecycle.test.mjs` pins that — move a window in
+  either file and update the test's occupied-days table in the same commit. The rule the
+  re-read defends: never tell someone they have not used a lesson when they have.
+- **DB writes to privileged columns** (`subscriptions`, `profiles.is_subscribed`, trial
+  dates) go through the service role only — RLS + a trigger enforce this. Schema changes
+  are hand-applied SQL in `migrations/` (see its README); legacy `docs/archive/legacy-sql/*.sql` is history,
+  do not re-run.
+- **Functions**: v1 handler signature (`export const handler`), CORS preamble per file,
+  identity from the verified JWT via `_shared/auth.mjs` — never from the request body.
+  The scheduled function `daily-sentence` distinguishes scheduler calls by the
+  `next_run` body marker.
+- The Netlify build command in `netlify.toml` runs `scripts/merge-site-builds.mjs`, which copies
+  every Astro output directory into `dist/` (CI runs the same script) — a new top-level Astro route
+  needs no extra build step, only its `check-built-html.mjs` MANIFEST line.
+- **`public/llms.txt` and `public/llms-full.txt` are generated** — `node scripts/build-llms.mjs`
+  derives them from `pricing.js`, `marketing.js`, the guide and exam registries and
+  `grammar-content-cache.json`; `tests/llms.test.mjs` fails when they are stale. Never hand-edit them:
+  hand-typed, they had drifted to 64 of 84 topics, 4 of 8 guides, no exam hubs and no courses.
+- `public/consent.js` gates GA4 **and** PostHog behind the `dm_cookie_consent`
+  localStorage flag; new analytics must hook the same consent (`dm-consent-accepted`).
+
+## Current state / open threads
+
+- **The October redesign ("Die Linie", branch `claude/wonderful-davinci-071dhj`) is documented in
+  `docs/redesign-2026-10/`** — baseline, strategy (offers, revenue model, owner decisions), art
+  direction, copy deck and the measurement plan (event map in `src/data/events.js`, experiments
+  E1–E6). The homepage sells the level ladder as a transit line; the hero copy is data
+  (`astro-site/src/data/homepage.js`, `ACTIVE_HERO`), so a sequential test is a one-line change.
+  The SPA chrome (Navbar, Footer, BottomNav) was ported to Die Linie on 2026-10-04 without waiting
+  for Course v2: same promoted doors as `Layout.astro`, night footer with the station line, a night
+  timetable menu and tab bar, labels in the body face (the app never loads Archivo). A route whose
+  first screen is night goes in `groundFor` (`src/lib/chrome.js`). PR #149 then needs one re-merge
+  in `Navbar.jsx`: its `freeCourseHref` swap now lands on the bar key and the menu key.
+
+- **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
+  supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory
+  live in the private artifact linked there, and their verified daily queries in
+  `docs/agents/pulse.sql`. `docs/SCORECARD.md` below is the v1 history.
+- **Read `docs/SCORECARD.md` before choosing any work.** It is the living business
+  scorecard: 8 areas scored by a fixed rubric, the tracked metrics, the ordered work queue
+  (take the top open item, one at a time), an experiments log and the score history. A PR
+  that moves an aspect updates its row, the queue status, one history line and one
+  experiment line in the same PR. There is one agent per area in `.claude/agents/` (plus
+  `scorecard-steward`), all following `docs/agents/PROTOCOL.md`: one move per run, and they
+  open PRs but never merge them. The schedule and prompts are in `docs/scorecard-routine.md`.
+  30/100 on 2026-09-27. Revenue and acquisition, not product quality, are the bottleneck.
+- **Course rebuilds are bound by `docs/course-standard-2026-09-12.md`** — what a course is (12
+  situational Lektionen with Goethe can-dos, 9-step Lektion, in-app lesson engine, checkpoints, spaced
+  review, dated plan), the measured gap of the four live courses, and the rebuild order. Never sequence
+  a course by grammar slug again; the three research memos behind it are `docs/research/*-2026-09-12.md`.
+- **A1.1 is rebuilt on that standard and is the template for every other level** (PRs #114–#120,
+  2026-09-12/13; tracker Wave 8). Live: 12 situational Lektionen (`src/data/curricula/a11.js`), the
+  9-stage player at `/course/a1.1/l/:nr`, 4 checkpoints, a Babbel review ladder, 12 AI-graded writing
+  tasks, scored read-aloud, an exam-date plan and a forgiving streak. **A1.1 was declared finished on
+  2026-09-14** after 23 adversarial DaF reviews (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`,
+  PRs #114–#140): 5 BLOCKER/45 MAJOR → … → 0/0 at #23 (24 minors, mean 21.6/25). Rounds 17–22 spent
+  every MAJOR on the pre-submit writing checklist; the standard now says the checklist decides form and
+  the KI decides meaning, and an indirect Auftrag Leitpunkt shows „prüft die KI". Two rules from that ladder:
+  **close a finding class with a rule + a test, never with a list of ids**, and the course speaks **Sie**
+  everywhere (tasks, notices, rule cards, mail) — only the dialogues duzen, and only between learners.
+  The ratchets in `scripts/validate-curriculum.mjs` (RULE 10/11/13/6b/15/23 = 14/59/4/23/3/57, the
+  rest hard 0) only go down and must equal their measurement (test).
+  After ANY content edit re-run both, in order: `node scripts/build-lesson-pool.mjs a1.1` then
+  `node scripts/validate-curriculum.mjs`. `src/data/curricula/a11.audio.js` is still the empty
+  manifest stub, so every audio surface honestly says „Computerstimme" until the owner's Azure run
+  (`docs/owner-prompts.md`). The course-reminder mailer is **live**: `COURSE_REMINDER_ENABLED=true`
+  was set in the Netlify functions scope on 2026-09-12 and `migrations/2026-09-13-course-reminder.sql`
+  is applied; it runs daily 18:00 UTC and claims into `lifecycle_emails` (kind `course_reminder_*`).
+- **A1.2 is rebuilt on the A1.1 standard and LIVE (`CURRICULA`) since the owner's ship decision of
+  2026-10-22**, after DaF reviews #1–#16 (the last: 0 BLOCKER, 1 MAJOR). Read
+  `docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md` before any A1.2 work; its "Known issues at ship"
+  lists what was accepted (the Lesen M8 residue as a ratchet, the Hören word-choice coupling, the review
+  minors). Buyers of the old 28-day A1.2 program land on the new 12-Lektion course; old program progress
+  does not carry over. A1.2 audio is the owner's `node scripts/generate-course-audio.mjs a1.2` run; until
+  then every surface says „Computerstimme".
+- **Read `docs/HANDOFF-2026-09-03.md` first** — current state, measured revenue, the monetization
+  decision that blocks money-side builds, and the open first-lesson-leak question.
+- `docs/medmeister-parity-roadmap.md` was the plan and has **fully shipped** (Batches A–F: claims
+  data layer + guards, design tokens + rebuilt `/` and `/pricing`, the Leitfaden engine + guides,
+  SEO-routine machinery, the activation lifecycle — migration applied and
+  `LIFECYCLE_ACTIVATION_ENABLED=true` set 2026-08-31 — and the full token migration, brand
+  ratchets at 0 and `LevelTest.css` deleted). Also since shipped: the exam-first renovation
+  (`docs/renovation-plan-2026-08-31.md`, PR #31), the design renovation Waves 0–5
+  (`docs/design-renovation-2026-09-01.md`, PRs #33–39), and mock exams for Goethe B1, DTZ and
+  telc B2 (PR #40). Still open: GSC property verification for `deutsch-meister.de` (see
+  `docs/seo-routines/README.md` — DataForSEO is working as of 2026-08-24). NOTE: grammar pages already carry
+  `['Article','LearningResource']` schema and Related-Topics links — two earlier claims that
+  they were missing were wrong (see the corrections section in the roadmap).
+- **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
+  re-verified** — every vendor domain is blocked by the agent proxy. Aggregators suggest all
+  three have since raised prices, i.e. the stored figures understate them, which is the
+  conservative direction. Never advance a "Stand:" stamp without checking the vendor's own
+  page: an overstated competitor price is actionable under §6 UWG.
+- **User-facing counts are content counts, never usage counts.** The homepage, `StatsBar.jsx` and
+  the `/vergleich/` pages each used to claim learner/usage figures, and by August 2026 the three
+  disagreed with each other; one ("2,488 AI speaking exercises") had no source in any audit. They
+  now render only `marketing.js` constants counted against live tables. Before adding a usage
+  claim, measure it and record the provenance — see the counts rule in `src/data/marketing.js`.
+- `docs/archive/audits/2026-08/EVALUATION.md` holds the older full audit: scores, issue tables, roadmap. Read it with
+  `docs/archive/audits/2026-08/AUDIT-2026-08-16.md` and `docs/archive/audits/2026-08/REMEDIATION.md`, which supersede much of it.
+- CSP ships as Report-Only — do not promote to enforcing without checking reports.
+- `/privacy/` + `/impressum/` are noindex drafts pending owner legal review.
+- Astro build in CI runs via the committed `grammar-content-cache.json` (see the CI section above).

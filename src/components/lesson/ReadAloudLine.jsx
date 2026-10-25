@@ -5,6 +5,7 @@ import Card from '../ui/Card.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import PlayButton from './PlayButton.jsx';
 import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
+import { canRetryReadAloud, canSelfConfirmReadAloud } from '../../lib/lesson/readAloudControls.js';
 import { getAuthHeaders } from '../../utils/supabase';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
@@ -46,6 +47,8 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   const recorderRef = useRef(null);
   const chunksRef = useRef([]);
   const timerRef = useRef(null);
+  const mountedRef = useRef(false);
+  const pendingStartRef = useRef(null);
   const onResultRef = useRef(onResult);
   onResultRef.current = onResult;
 
@@ -65,7 +68,14 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
     }
   }, []);
 
-  useEffect(() => releaseMic, [releaseMic]);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      pendingStartRef.current?.();
+      releaseMic();
+    };
+  }, [releaseMic]);
 
   const micUnavailable = !support.supported;
   const signedOut = !user;
@@ -73,14 +83,17 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   const scoringPossible = !reason;
 
   const score = useCallback(async (audioBase64, mimeType) => {
+    if (!mountedRef.current) return;
     try {
       const authHeaders = await getAuthHeaders();
+      if (!mountedRef.current) return;
       const res = await fetch('/.netlify/functions/score-readaloud', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders },
-        body: JSON.stringify({ audioBase64, mimeType, expected: text, lektionId, lineKey }),
+        body: JSON.stringify({ audioBase64, mimeType, expected: text.normalize('NFC'), lektionId, lineKey }),
       });
       const data = await res.json().catch(() => ({}));
+      if (!mountedRef.current) return;
 
       if (res.status === 429) { setFallbackReason('limit'); setPhase('idle'); return; }
       if (res.status === 401) { setFallbackReason('signed_out'); setPhase('idle'); return; }
@@ -90,8 +103,8 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       // safety net for a response that arrived without the word list.
       const words = Array.isArray(data.words) && data.words.length
         ? data.words
-        : alignTranscript(text, data.transcript || '').words;
-      const local = alignTranscript(text, data.transcript || '');
+        : alignTranscript(text.normalize('NFC'), (data.transcript || '').normalize('NFC')).words;
+      const local = alignTranscript(text.normalize('NFC'), (data.transcript || '').normalize('NFC'));
       const pct = typeof data.pct === 'number' ? data.pct : local.pct;
       const extra = typeof data.extra === 'number' ? data.extra : local.extra;
 
@@ -101,6 +114,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       setPhase('scored');
       onResultRef.current?.({ pct, attempts: nextAttempts, usedMic: true });
     } catch (err) {
+      if (!mountedRef.current) return;
       console.error('[ReadAloudLine] scoring failed:', err);
       setFallbackReason('server');
       setPhase('idle');
@@ -108,6 +122,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   }, [attempts, lektionId, lineKey, text]);
 
   const handleStopped = useCallback(async () => {
+    if (!mountedRef.current) return;
     const mimeType = recorderRef.current?.mimeType || pickAudioMimeType() || 'audio/webm';
     const blob = new Blob(chunksRef.current, { type: mimeType });
     chunksRef.current = [];
@@ -126,9 +141,18 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   }, []);
 
   const startRecording = useCallback(async () => {
+    if (!mountedRef.current || pendingStartRef.current) return;
     setMicError(null);
+    let cancelled = false;
+    const cancelStart = () => { cancelled = true; };
+    pendingStartRef.current = cancelStart;
     try {
-      streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (cancelled || !mountedRef.current) {
+        stream.getTracks().forEach((t) => t.stop());
+        return;
+      }
+      streamRef.current = stream;
       const mimeType = pickAudioMimeType();
       const recorder = mimeType
         ? new MediaRecorder(streamRef.current, { mimeType })
@@ -141,10 +165,13 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       setPhase('recording');
       timerRef.current = setTimeout(stopRecording, MAX_RECORD_MS);
     } catch (err) {
+      if (cancelled || !mountedRef.current) return;
       console.error('[ReadAloudLine] mic error:', err);
       setMicError(micErrorMessage(err));
       releaseMic();
       setPhase('idle');
+    } finally {
+      if (pendingStartRef.current === cancelStart) pendingStartRef.current = null;
     }
   }, [handleStopped, releaseMic, stopRecording]);
 
@@ -153,7 +180,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
     onResultRef.current?.(selfConfirmedResult(result, attempts));
   };
 
-  const canRetry = phase === 'scored' && attempts < MAX_ATTEMPTS;
+  const canRetry = canRetryReadAloud({ phase, attempts, maxAttempts: MAX_ATTEMPTS, micError });
   const pctLabel = result ? Math.round(result.pct * 100) : 0;
 
   return (
@@ -195,7 +222,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <PlayButton lektionId={lektionId} audioKey={lineKey} text={text} rate={0.85} label={t('speaking.model', lang)} />
 
-        {scoringPossible && phase === 'idle' && attempts === 0 && (
+        {scoringPossible && phase === 'idle' && attempts === 0 && !micError && (
           <Button size="sm" onClick={startRecording}>
             <Mic className="h-4 w-4" aria-hidden="true" /> {t('speaking.record', lang)}
           </Button>
@@ -216,7 +243,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
           </Button>
         )}
 
-        {(!scoringPossible || (phase === 'scored' && !canRetry)) && !confirmed && (
+        {canSelfConfirmReadAloud({ scoringPossible, phase, canRetry, micError }) && !confirmed && (
           <button
             type="button"
             onClick={selfConfirm}

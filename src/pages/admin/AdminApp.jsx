@@ -1,8 +1,7 @@
 // The admin panel's router. Mounted at /admin/* by src/App.jsx behind
 // ProtectedRoute + EmailVerificationGate; the role check happens in
-// AdminSessionProvider (server-side, via admin-session). Every route resolves
-// — a module that is not built yet renders AdminPending, never a 404, and no
-// previous admin URL was deleted (/admin/videos still works).
+// AdminSessionProvider (server-side, via admin-session). Every module is built,
+// and no previous admin URL was deleted (/admin/videos still works).
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AdminSessionProvider } from '../../components/admin/AdminSessionContext.jsx';

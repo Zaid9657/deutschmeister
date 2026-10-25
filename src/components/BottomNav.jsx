@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Headphones, GraduationCap, BookMarked, User, Route } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -43,6 +43,20 @@ const BottomNav = () => {
   const { hasAccess, hasLevelAccess, profile } = useSubscription();
   const { pathname } = useLocation();
   const [dueCount, setDueCount] = useState(0);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const measure = () => document.documentElement.style.setProperty('--dm-bottom-nav-h', `${nav.getBoundingClientRect().height}px`);
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(nav);
+    return () => {
+      observer?.disconnect();
+      document.documentElement.style.removeProperty('--dm-bottom-nav-h');
+    };
+  }, [user]);
 
   // Due-card badge on the Wörter tab — the in-app reason to come back today.
   useEffect(() => {
@@ -64,6 +78,7 @@ const BottomNav = () => {
     {/* In-flow spacer so the fixed bar never covers page-end content */}
     <div className={`h-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden ${spacer}`} aria-hidden="true" />
     <nav
+      ref={navRef}
       className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-nacht-rule bg-nacht/95 pb-[env(safe-area-inset-bottom)] text-nacht-muted backdrop-blur-md"
       data-ground="nacht"
       aria-label="App navigation"

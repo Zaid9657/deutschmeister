@@ -283,7 +283,7 @@
    "difficulty": 2,
    "order": 1,
    "questionDe": "Schreiben Sie den Satz: [das / sind / keine / gut / Bilder] (Beginnen Sie mit „Das“)",
-   "questionEn": "Write the sentence about the pictures, starting with Das. Use the adjective gut after keine.",
+   "questionEn": "Write the sentence about the pictures, starting with Das. Use the adjective gut after keine. Begin with “Das”.",
    "options": null,
    "answer": "Das sind keine guten Bilder.",
    "accepted": [
@@ -303,7 +303,7 @@
    "difficulty": 2,
    "order": 2,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kaufen / die / rot / Jacke]",
-   "questionEn": "Write the sentence: I am buying the red jacket. (Akkusativ, feminine)",
+   "questionEn": "Write the sentence: I am buying the red jacket. (Akkusativ, feminine) Begin with “Ich”.",
    "options": null,
    "answer": "Ich kaufe die rote Jacke.",
    "accepted": [
@@ -326,8 +326,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 3,
-   "questionDe": "Schreiben Sie den Satz: [wir / arbeiten / in / ein / groß / Büro] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We work in a big office. (wo? → in + Dativ, neuter; both word orders are accepted)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / arbeiten / in / ein / groß / Büro]",
+   "questionEn": "Write the sentence: We work in a big office. (wo? → in + Dativ, neuter; both word orders are accepted) Begin with “Wir”.",
    "options": null,
    "answer": "Wir arbeiten in einem großen Büro.",
    "accepted": [
@@ -351,7 +351,7 @@
    "difficulty": 3,
    "order": 5,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / helfen / die / alt / Frau]",
-   "questionEn": "Write the sentence: I am helping the old woman. (helfen + Dativ, feminine)",
+   "questionEn": "Write the sentence: I am helping the old woman. (helfen + Dativ, feminine) Begin with “Ich”.",
    "options": null,
    "answer": "Ich helfe der alten Frau.",
    "accepted": [
@@ -413,7 +413,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / brauchen / ein / gut / Arzt]",
-   "questionEn": "Write the sentence: We need a good doctor. (brauchen + Akkusativ, masculine)",
+   "questionEn": "Write the sentence: We need a good doctor. (brauchen + Akkusativ, masculine) Begin with “Wir”.",
    "options": null,
    "answer": "Wir brauchen einen guten Arzt.",
    "accepted": [
@@ -991,8 +991,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 22,
-   "questionDe": "Schreiben Sie den Satz: [wir / schenken / unsere Eltern / eine Reise] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We give our parents a trip as a present. Start with 'Wir'; dative object before accusative object.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / schenken / unsere Eltern / eine Reise]",
+   "questionEn": "Write the sentence: We give our parents a trip as a present. Start with 'Wir'; dative object before accusative object. Begin with “Wir”.",
    "options": null,
    "answer": "Wir schenken unseren Eltern eine Reise.",
    "accepted": [
@@ -1014,7 +1014,7 @@
    "difficulty": 3,
    "order": 23,
    "questionDe": "Schreiben Sie den Satz: [ich / schenken / mein Freund / die Bilder] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write: I give my friend the pictures as a present. Start with Ich.",
+   "questionEn": "Write: I give my friend the pictures as a present. Start with Ich. Begin with “Ich”.",
    "options": null,
    "answer": "Ich schenke meinem Freund die Bilder.",
    "accepted": [
@@ -1056,7 +1056,7 @@
    "difficulty": 3,
    "order": 26,
    "questionDe": "Korrigieren Sie den Satz: „Wir helfen die Kinder.“ (Beginnen Sie mit „Wir“)",
-   "questionEn": "Correct the sentence: helfen takes the dative, and the dative plural also needs an -n on the noun. Write the whole sentence.",
+   "questionEn": "Correct the sentence: helfen takes the dative, and the dative plural also needs an -n on the noun. Write the whole sentence. Begin with “Wir”.",
    "options": null,
    "answer": "Wir helfen den Kindern.",
    "accepted": [
@@ -1076,7 +1076,7 @@
    "difficulty": 3,
    "order": 27,
    "questionDe": "Korrigieren Sie den Artikel: „Der Kellner bringt die Frau die Rechnung.“ (Beginnen Sie mit „Der Kellner“)",
-   "questionEn": "Correct the sentence: the person who receives must be dative. Write the whole sentence.",
+   "questionEn": "Correct the sentence: the person who receives must be dative. Write the whole sentence. Begin with “Der Kellner”. Correct only the article.",
    "options": null,
    "answer": "Der Kellner bringt der Frau die Rechnung.",
    "accepted": [
@@ -1605,7 +1605,7 @@
    "difficulty": 2,
    "order": 31,
    "questionDe": "Bilden Sie den Imperativ: [Sie / das Wasser / trinken] (Beginnen Sie mit „Trinken Sie“)",
-   "questionEn": "Please drink the water.",
+   "questionEn": "Please drink the water. Begin with “Trinken Sie”. Build a request in the imperative.",
    "options": null,
    "answer": "Trinken Sie das Wasser!",
    "accepted": [
@@ -1624,7 +1624,7 @@
    "difficulty": 2,
    "order": 32,
    "questionDe": "Bilden Sie den Imperativ: [ihr-Form / die Schuhe / zum Training / mitnehmen] (Beginnen Sie mit „Nehmt“)",
-   "questionEn": "Take your shoes to training.",
+   "questionEn": "Take your shoes to training. Begin with “Nehmt”. Build a request in the imperative.",
    "options": null,
    "answer": "Nehmt die Schuhe zum Training mit!",
    "accepted": [
@@ -1648,7 +1648,7 @@
    "difficulty": 2,
    "order": 33,
    "questionDe": "Bilden Sie den Imperativ: [ihr-Form / mit der Mannschaft / trainieren] (Beginnen Sie mit „Trainiert“)",
-   "questionEn": "Train with the team.",
+   "questionEn": "Train with the team. Begin with “Trainiert”. Build a request in the imperative.",
    "options": null,
    "answer": "Trainiert mit der Mannschaft!",
    "accepted": [
@@ -1668,7 +1668,7 @@
    "difficulty": 2,
    "order": 34,
    "questionDe": "Bilden Sie den Imperativ: [Sie / die Übung / machen] (Beginnen Sie mit „Machen Sie“)",
-   "questionEn": "Do the exercise.",
+   "questionEn": "Do the exercise. Begin with “Machen Sie”. Build a request in the imperative.",
    "options": null,
    "answer": "Machen Sie die Übung!",
    "accepted": [
@@ -1687,7 +1687,7 @@
    "difficulty": 2,
    "order": 35,
    "questionDe": "Bilden Sie den Imperativ: [ihr-Form / heute / Volleyball / spielen] (Beginnen Sie mit „Spielt“)",
-   "questionEn": "Play volleyball today.",
+   "questionEn": "Play volleyball today. Begin with “Spielt”. Build a request in the imperative.",
    "options": null,
    "answer": "Spielt heute Volleyball!",
    "accepted": [
@@ -1711,7 +1711,7 @@
    "difficulty": 2,
    "order": 36,
    "questionDe": "Bilden Sie den Imperativ: [du-Form / nach dem Sport / Wasser / trinken] (Beginnen Sie mit „Trink“)",
-   "questionEn": "Drink water after sport.",
+   "questionEn": "Drink water after sport. Begin with “Trink”. Build a request in the imperative.",
    "options": null,
    "answer": "Trink nach dem Sport Wasser!",
    "accepted": [
@@ -1752,7 +1752,7 @@
    "difficulty": 2,
    "order": 13,
    "questionDe": "Bilden Sie den Imperativ: [Kommen / Sie / doch / mit] (Beginnen Sie mit „Kommen“)",
-   "questionEn": "Build the sentence. Begin with “Kommen”.",
+   "questionEn": "Build the sentence. Begin with “Kommen”. Build a request in the imperative.",
    "options": null,
    "answer": "Kommen Sie doch mit!",
    "accepted": [
@@ -1791,7 +1791,7 @@
    "difficulty": 2,
    "order": 14,
    "questionDe": "Bilden Sie den Imperativ: [Macht / eine Pause] (Beginnen Sie mit „Macht“)",
-   "questionEn": "Build the sentence. Begin with “Macht”.",
+   "questionEn": "Build the sentence. Begin with “Macht”. Build a request in the imperative.",
    "options": null,
    "answer": "Macht eine Pause!",
    "accepted": [
@@ -2179,7 +2179,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Bilden Sie den Satz: [Es tut mir leid / dass / ich / nicht da / war] (Beginnen Sie mit „Es tut mir leid“; „nicht“ steht vor „da“; der zweite Teil mit „dass“)",
-   "questionEn": "Write the sentence: I am sorry that I was not there. Begin with Es tut mir leid.",
+   "questionEn": "Write the sentence: I am sorry that I was not there. Begin with Es tut mir leid. Begin with “Es tut mir leid”. Put “nicht” before “da”. Begin the second clause with “dass”.",
    "options": null,
    "answer": "Es tut mir leid, dass ich nicht da war.",
    "accepted": [
@@ -2330,8 +2330,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Schreiben Sie den Satz: [ich / gestern Abend / nicht kommen / können] (Beginnen Sie mit „Ich“; „nicht“ steht vor „kommen“)",
-   "questionEn": "Write the sentence in the Präteritum: I couldn't come yesterday evening. (können, ich; start with Ich or Gestern Abend)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“; „nicht“ steht vor „kommen“): [ich / gestern Abend / nicht kommen / können]",
+   "questionEn": "Write the sentence in the Präteritum: I couldn't come yesterday evening. (können, ich; start with Ich or Gestern Abend) Begin with “Ich”. Put “nicht” before “kommen”.",
    "options": null,
    "answer": "Ich konnte gestern Abend nicht kommen.",
    "accepted": [
@@ -2350,8 +2350,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Schreiben Sie den Satz: [wir / am Sonntag / ins Kino gehen / wollen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence in the Präteritum: We wanted to go to the cinema on Sunday. (wollen, wir)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / am Sonntag / ins Kino gehen / wollen]",
+   "questionEn": "Write the sentence in the Präteritum: We wanted to go to the cinema on Sunday. (wollen, wir) Begin with “Wir”.",
    "options": null,
    "answer": "Wir wollten am Sonntag ins Kino gehen.",
    "accepted": [
@@ -2783,7 +2783,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Bilden Sie den Satz: [Wir / kochen / wenn / unsere Gäste / hier / sind] (Beginnen Sie mit „Wir“; der zweite Teil mit „wenn“)",
-   "questionEn": "Write the sentence: We cook when our guests are here. Begin with Wir.",
+   "questionEn": "Write the sentence: We cook when our guests are here. Begin with Wir. Begin with “Wir”. Begin the second clause with “wenn”.",
    "options": null,
    "answer": "Wir kochen, wenn unsere Gäste hier sind.",
    "accepted": [
@@ -2991,8 +2991,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 16,
-   "questionDe": "Schreiben Sie den Satz: [ich / haben / gestern / im Garten / arbeiten] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I worked in the garden yesterday. Perfekt with haben. Start with 'Ich'.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / haben / gestern / im Garten / arbeiten]",
+   "questionEn": "Write the sentence: I worked in the garden yesterday. Perfekt with haben. Start with 'Ich'. Begin with “Ich”.",
    "options": null,
    "answer": "Ich habe gestern im Garten gearbeitet.",
    "accepted": [
@@ -3013,8 +3013,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 18,
-   "questionDe": "Schreiben Sie den Satz: [wir / haben / unsere Kollegen / einladen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We invited our colleagues. Separable verb einladen. Start with 'Wir'.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / haben / unsere Kollegen / einladen]",
+   "questionEn": "Write the sentence: We invited our colleagues. Separable verb einladen. Start with 'Wir'. Begin with “Wir”.",
    "options": null,
    "answer": "Wir haben unsere Kollegen eingeladen.",
    "accepted": [
@@ -3290,7 +3290,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Bilden Sie den Satz: [Ich / komme / nicht / weil / ich / krank / bin] (Beginnen Sie mit „Ich“; der zweite Teil mit „weil“)",
-   "questionEn": "Write the sentence: I am not coming because I am ill. Begin with Ich.",
+   "questionEn": "Write the sentence: I am not coming because I am ill. Begin with Ich. Begin with “Ich”. Begin the second clause with “weil”.",
    "options": null,
    "answer": "Ich komme nicht, weil ich krank bin.",
    "accepted": [
@@ -3574,8 +3574,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 24,
-   "questionDe": "Schreiben Sie den Satz: [wir / sein / um acht Uhr / ankommen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We arrived at eight o'clock. Separable verb ankommen with sein. Start with 'Wir'.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / sein / um acht Uhr / ankommen]",
+   "questionEn": "Write the sentence: We arrived at eight o'clock. Separable verb ankommen with sein. Start with 'Wir'. Begin with “Wir”.",
    "options": null,
    "answer": "Wir sind um acht Uhr angekommen.",
    "accepted": [
@@ -3595,7 +3595,7 @@
    "difficulty": 2,
    "order": 26,
    "questionDe": "Finden Sie den Fehler und schreiben Sie den Satz richtig: \"Die Kinder haben zum Bahnhof gelaufen.\" (Beginnen Sie mit „Die Kinder“)",
-   "questionEn": "Find the error and write the sentence correctly: \"Die Kinder haben zum Bahnhof gelaufen.\" (auxiliary for a movement verb)",
+   "questionEn": "Find the error and write the sentence correctly: \"Die Kinder haben zum Bahnhof gelaufen.\" (auxiliary for a movement verb) Begin with “Die Kinder”.",
    "options": null,
    "answer": "Die Kinder sind zum Bahnhof gelaufen.",
    "accepted": [
@@ -3962,8 +3962,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 15,
-   "questionDe": "Schreiben Sie den Satz: [wir / helfen / unser / Lehrerin] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We help our teacher. helfen takes the dative; feminine noun. Start with 'Wir'.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / helfen / unser / Lehrerin]",
+   "questionEn": "Write the sentence: We help our teacher. helfen takes the dative; feminine noun. Start with 'Wir'. Begin with “Wir”.",
    "options": null,
    "answer": "Wir helfen unserer Lehrerin.",
    "accepted": [
@@ -3982,8 +3982,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 17,
-   "questionDe": "Schreiben Sie den Satz: [er / fahren / mit / sein / Fahrrad] (Beginnen Sie mit „Er“)",
-   "questionEn": "Write the sentence: He goes by his bike. mit + dative, neuter noun, and fahren becomes fährt. Start with 'Er'.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Er“): [er / fahren / mit / sein / Fahrrad]",
+   "questionEn": "Write the sentence: He goes by his bike. mit + dative, neuter noun, and fahren becomes fährt. Start with 'Er'. Begin with “Er”.",
    "options": null,
    "answer": "Er fährt mit seinem Fahrrad.",
    "accepted": [
@@ -4003,7 +4003,7 @@
    "difficulty": 3,
    "order": 18,
    "questionDe": "Schreiben Sie die Frage: [wo / sein / euer / Garten] (Beginnen Sie mit „Wo“)",
-   "questionEn": "Ask where the garden belonging to several friends is. Start with Wo.",
+   "questionEn": "Ask where the garden belonging to several friends is. Start with Wo. Begin with “Wo”. Build a question.",
    "options": null,
    "answer": "Wo ist euer Garten?",
    "accepted": [
@@ -4228,7 +4228,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Ergänzen Sie: Gehen Sie ___ Hafen. (zu + dem → Kurzform)",
-   "questionEn": "Complete the gap using the German cue.",
+   "questionEn": "Complete the gap using the German cue. Use the contracted form.",
    "options": null,
    "answer": "zum",
    "accepted": [
@@ -4272,7 +4272,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Ergänzen Sie: Der Bus fährt ___ Rathaus ab. (von + dem → Kurzform)",
-   "questionEn": "Complete the gap using the German cue.",
+   "questionEn": "Complete the gap using the German cue. Use the contracted form.",
    "options": null,
    "answer": "vom",
    "accepted": [
@@ -4405,7 +4405,7 @@
    "difficulty": 1,
    "order": 19,
    "questionDe": "Am Samstag fahre ich ___ Flughafen. (zu + dem → Kurzform)",
-   "questionEn": "On Saturday I drive to the airport. Type the short form of zu + dem (the long form counts too).",
+   "questionEn": "On Saturday I drive to the airport. Type the short form of zu + dem (the long form counts too). Use the contracted form.",
    "options": null,
    "answer": "zum",
    "accepted": [
@@ -4528,8 +4528,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 20,
-   "questionDe": "Schreiben Sie den Satz: [ich / fahren / mit / mein Fahrrad / zu / die Arbeit] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I ride my bike to work. Both prepositions take the dative; either word order counts.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / fahren / mit / mein Fahrrad / zu / die Arbeit]",
+   "questionEn": "Write the sentence: I ride my bike to work. Both prepositions take the dative; either word order counts. Begin with “Ich”.",
    "options": null,
    "answer": "Ich fahre mit meinem Fahrrad zur Arbeit.",
    "accepted": [
@@ -4550,8 +4550,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 23,
-   "questionDe": "Schreiben Sie den Satz: [ich / fahren / heute / zu / der Arzt] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I drive to the doctor today. Start with 'Ich'; the short form is the everyday one.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / fahren / heute / zu / der Arzt]",
+   "questionEn": "Write the sentence: I drive to the doctor today. Start with 'Ich'; the short form is the everyday one. Begin with “Ich”.",
    "options": null,
    "answer": "Ich fahre heute zum Arzt.",
    "accepted": [
@@ -4597,7 +4597,7 @@
    "difficulty": 2,
    "order": 25,
    "questionDe": "Korrigieren Sie den Satz: „Ich arbeite bei eine Firma.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: bei takes the dative. Write the whole sentence.",
+   "questionEn": "Correct the sentence: bei takes the dative. Write the whole sentence. Begin with “Ich”.",
    "options": null,
    "answer": "Ich arbeite bei einer Firma.",
    "accepted": [
@@ -5064,7 +5064,7 @@
    "difficulty": 2,
    "order": 1,
    "questionDe": "[ich / anrufen / dich / morgen] → Schreiben Sie den Satz. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I'll call you tomorrow. (verb: anrufen, accusative; the time phrase may open the sentence)",
+   "questionEn": "Write the sentence: I'll call you tomorrow. (verb: anrufen, accusative; the time phrase may open the sentence) Begin with “Ich”.",
    "options": null,
    "answer": "Ich rufe dich morgen an.",
    "accepted": [
@@ -5084,7 +5084,7 @@
    "difficulty": 2,
    "order": 4,
    "questionDe": "[wir / danken / Ihnen / für die Hilfe] → Schreiben Sie den Satz. (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We thank you for the help. (formal, verb: danken, start with Wir)",
+   "questionEn": "Write the sentence: We thank you for the help. (formal, verb: danken, start with Wir) Begin with “Wir”.",
    "options": null,
    "answer": "Wir danken Ihnen für die Hilfe.",
    "accepted": [
@@ -5105,7 +5105,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "[das Buch / gehören / ihr] → Schreiben Sie den Satz. (Beginnen Sie mit „Das Buch“)",
-   "questionEn": "Write the sentence: The book belongs to her. (verb: gehören, dative, start with Das)",
+   "questionEn": "Write the sentence: The book belongs to her. (verb: gehören, dative, start with Das) Begin with “Das Buch”.",
    "options": null,
    "answer": "Das Buch gehört ihr.",
    "accepted": [
@@ -5125,7 +5125,7 @@
    "difficulty": 3,
    "order": 7,
    "questionDe": "Schreiben Sie den Satz: [er / schicken / mir / den Schlüssel] (Beginnen Sie mit „Er“)",
-   "questionEn": "Write: He sends me the key. Begin with Er.",
+   "questionEn": "Write: He sends me the key. Begin with Er. Begin with “Er”.",
    "options": null,
    "answer": "Er schickt mir den Schlüssel.",
    "accepted": [
@@ -5145,7 +5145,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "[ich / kommen / mit / sie (eine Frau)] → Schreiben Sie den Satz. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I'm coming with her. (mit + dative, start with Ich)",
+   "questionEn": "Write the sentence: I'm coming with her. (mit + dative, start with Ich) Begin with “Ich”.",
    "options": null,
    "answer": "Ich komme mit ihr.",
    "accepted": [
@@ -5206,7 +5206,7 @@
    "difficulty": 3,
    "order": 10,
    "questionDe": "Korrigieren Sie: Ich schicke ihm es. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the word order: two pronouns, accusative first. Write the whole sentence.",
+   "questionEn": "Correct the word order: two pronouns, accusative first. Write the whole sentence. Begin with “Ich”.",
    "options": null,
    "answer": "Ich schicke es ihm.",
    "accepted": [
@@ -5246,7 +5246,7 @@
    "difficulty": 3,
    "order": 11,
    "questionDe": "[ich / zeigen / es / dem Chef] → Schreiben Sie den Satz. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I'll show it to the boss. (pronoun + noun object, start with Ich)",
+   "questionEn": "Write the sentence: I'll show it to the boss. (pronoun + noun object, start with Ich) Begin with “Ich”.",
    "options": null,
    "answer": "Ich zeige es dem Chef.",
    "accepted": [
@@ -5266,7 +5266,7 @@
    "difficulty": 2,
    "order": 12,
    "questionDe": "[die Blumen / sein / von / ich] → Schreiben Sie den Satz. (Beginnen Sie mit „Die Blumen“)",
-   "questionEn": "Write the sentence: The flowers are from me. (von + dative, start with Die)",
+   "questionEn": "Write the sentence: The flowers are from me. (von + dative, start with Die) Begin with “Die Blumen”.",
    "options": null,
    "answer": "Die Blumen sind von mir.",
    "accepted": [
@@ -5286,7 +5286,7 @@
    "difficulty": 3,
    "order": 13,
    "questionDe": "[ich / helfen / ihnen / gern] → Schreiben Sie den Satz. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I'm happy to help them. (verb: helfen, dative plural, start with Ich)",
+   "questionEn": "Write the sentence: I'm happy to help them. (verb: helfen, dative plural, start with Ich) Begin with “Ich”.",
    "options": null,
    "answer": "Ich helfe ihnen gern.",
    "accepted": [
@@ -5782,8 +5782,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 20,
-   "questionDe": "Schreiben Sie den Satz: [am Freitag / ich / einladen / meine Freunde] (Beginnen Sie mit „Am Freitag“)",
-   "questionEn": "Write the sentence: On Friday I invite my friends. Start with 'Am Freitag', so the verb comes second.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Am Freitag“): [am Freitag / ich / einladen / meine Freunde]",
+   "questionEn": "Write the sentence: On Friday I invite my friends. Start with 'Am Freitag', so the verb comes second. Begin with “Am Freitag”.",
    "options": null,
    "answer": "Am Freitag lade ich meine Freunde ein.",
    "accepted": [
@@ -5802,8 +5802,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 23,
-   "questionDe": "Schreiben Sie den Satz im Perfekt: [gestern / ich / einkaufen] (Beginnen Sie mit „Gestern“)",
-   "questionEn": "Write the sentence in the perfect tense: Yesterday I did the shopping. Start with 'Gestern'; einkaufen takes haben.",
+   "questionDe": "Schreiben Sie den Satz im Perfekt (Beginnen Sie mit „Gestern“): [gestern / ich / einkaufen]",
+   "questionEn": "Write the sentence in the perfect tense: Yesterday I did the shopping. Start with 'Gestern'; einkaufen takes haben. Begin with “Gestern”.",
    "options": null,
    "answer": "Gestern habe ich eingekauft.",
    "accepted": [
@@ -5823,7 +5823,7 @@
    "difficulty": 3,
    "order": 26,
    "questionDe": "Korrigieren Sie den Satz: „Meine Freundin ist gestern spät ankommen.“ (Beginnen Sie mit „Meine Freundin“)",
-   "questionEn": "Correct the sentence: the participle of ankommen is missing its ge-. Write the whole sentence.",
+   "questionEn": "Correct the sentence: the participle of ankommen is missing its ge-. Write the whole sentence. Begin with “Meine Freundin”.",
    "options": null,
    "answer": "Meine Freundin ist gestern spät angekommen.",
    "accepted": [
@@ -5845,7 +5845,7 @@
    "difficulty": 2,
    "order": 27,
    "questionDe": "Korrigieren Sie den Satz: „Ruf bitte an deine Schwester.“ (Beginnen Sie mit „Ruf“)",
-   "questionEn": "Correct the imperative: the separated prefix must come last. Write the whole sentence.",
+   "questionEn": "Correct the imperative: the separated prefix must come last. Write the whole sentence. Begin with “Ruf”.",
    "options": null,
    "answer": "Ruf bitte deine Schwester an.",
    "accepted": [
@@ -6279,7 +6279,7 @@
    "difficulty": 2,
    "order": 31,
    "questionDe": "Bilden Sie den Satz: [Die Ankunft / sein / zwischen neun und zehn] (Beginnen Sie mit „Die Ankunft“)",
-   "questionEn": "Arrival is between nine and ten.",
+   "questionEn": "Arrival is between nine and ten. Begin with “Die Ankunft”.",
    "options": null,
    "answer": "Die Ankunft ist zwischen neun und zehn.",
    "accepted": [
@@ -6298,7 +6298,7 @@
    "difficulty": 2,
    "order": 32,
    "questionDe": "Bilden Sie den Satz: [ab Montag / wir / Urlaub / haben] (Beginnen Sie mit „Ab Montag“)",
-   "questionEn": "We are on holiday from Monday.",
+   "questionEn": "We are on holiday from Monday. Begin with “Ab Montag”.",
    "options": null,
    "answer": "Ab Montag haben wir Urlaub.",
    "accepted": [
@@ -6317,7 +6317,7 @@
    "difficulty": 2,
    "order": 33,
    "questionDe": "Bilden Sie den Satz: [für drei Tage / wir / die Reise / buchen] (Beginnen Sie mit „Für drei Tage“)",
-   "questionEn": "We book the trip for three days.",
+   "questionEn": "We book the trip for three days. Begin with “Für drei Tage”.",
    "options": null,
    "answer": "Für drei Tage buchen wir die Reise.",
    "accepted": [
@@ -6336,7 +6336,7 @@
    "difficulty": 2,
    "order": 34,
    "questionDe": "Bilden Sie den Satz: [bis Freitag / ich / den Besuch / planen / müssen] (Beginnen Sie mit „Bis Freitag“)",
-   "questionEn": "I must plan the visit by Friday.",
+   "questionEn": "I must plan the visit by Friday. Begin with “Bis Freitag”.",
    "options": null,
    "answer": "Bis Freitag muss ich den Besuch planen.",
    "accepted": [
@@ -6355,7 +6355,7 @@
    "difficulty": 2,
    "order": 35,
    "questionDe": "Bilden Sie den Satz: [seit einer Stunde / der Zug / Verspätung / haben] (Beginnen Sie mit „Seit einer Stunde“)",
-   "questionEn": "The train has been delayed for an hour.",
+   "questionEn": "The train has been delayed for an hour. Begin with “Seit einer Stunde”.",
    "options": null,
    "answer": "Seit einer Stunde hat der Zug Verspätung.",
    "accepted": [
@@ -6374,7 +6374,7 @@
    "difficulty": 2,
    "order": 36,
    "questionDe": "Bilden Sie den Satz: [über das Wochenende / wir / unsere Eltern / besuchen] (Beginnen Sie mit „Über das Wochenende“)",
-   "questionEn": "We visit our parents over the weekend.",
+   "questionEn": "We visit our parents over the weekend. Begin with “Über das Wochenende”.",
    "options": null,
    "answer": "Über das Wochenende besuchen wir unsere Eltern.",
    "accepted": [
@@ -6392,8 +6392,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Schreiben Sie den Satz: [wir / am Sonntag / ins Kino / gehen] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: On Sunday we go to the cinema. (both word orders are correct)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / am Sonntag / ins Kino / gehen]",
+   "questionEn": "Write the sentence: On Sunday we go to the cinema. (both word orders are correct) Begin with “Wir”.",
    "options": null,
    "answer": "Wir gehen am Sonntag ins Kino.",
    "accepted": [
@@ -6414,8 +6414,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Schreiben Sie den Satz: [ich / im Mai / Geburtstag / haben] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: My birthday is in May (literally: I have birthday in May). (both word orders are correct)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / im Mai / Geburtstag / haben]",
+   "questionEn": "Write the sentence: My birthday is in May (literally: I have birthday in May). (both word orders are correct) Begin with “Ich”.",
    "options": null,
    "answer": "Ich habe im Mai Geburtstag.",
    "accepted": [
@@ -6436,8 +6436,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 6,
-   "questionDe": "Schreiben Sie den Satz: [ich / von Montag bis Freitag / arbeiten] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I work from Monday to Friday. (both word orders are correct)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / von Montag bis Freitag / arbeiten]",
+   "questionEn": "Write the sentence: I work from Monday to Friday. (both word orders are correct) Begin with “Ich”.",
    "options": null,
    "answer": "Ich arbeite von Montag bis Freitag.",
    "accepted": [
@@ -6456,8 +6456,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 7,
-   "questionDe": "Antworten Sie auf „Ab wann arbeitest du in Köln?“: [ich / ab dem 1. Mai / in Köln / arbeiten] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Answer the question Ab wann arbeitest du in Köln? — From 1 May on I work in Cologne. (both word orders are correct)",
+   "questionDe": "Antworten Sie auf „Ab wann arbeitest du in Köln?“ (Beginnen Sie mit „Ich“): [ich / ab dem 1. Mai / in Köln / arbeiten]",
+   "questionEn": "Answer the question Ab wann arbeitest du in Köln? — From 1 May on I work in Cologne. (both word orders are correct) Begin with “Ich”.",
    "options": null,
    "answer": "Ich arbeite ab dem 1. Mai in Köln.",
    "accepted": [
@@ -6514,8 +6514,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 11,
-   "questionDe": "Schreiben Sie den Satz: [wir / zwischen acht und neun Uhr / frühstücken] (Beginnen Sie mit „Wir“)",
-   "questionEn": "Write the sentence: We have breakfast between eight and nine. (both word orders are correct)",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / zwischen acht und neun Uhr / frühstücken]",
+   "questionEn": "Write the sentence: We have breakfast between eight and nine. (both word orders are correct) Begin with “Wir”.",
    "options": null,
    "answer": "Wir frühstücken zwischen acht und neun Uhr.",
    "accepted": [
@@ -6968,8 +6968,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 20,
-   "questionDe": "Schreiben Sie den Satz: [ich / stellen / die Lampe / neben / das Sofa] (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I put the lamp next to the sofa. Start with 'Ich'; stellen answers wohin?.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / stellen / die Lampe / neben / das Sofa]",
+   "questionEn": "Write the sentence: I put the lamp next to the sofa. Start with 'Ich'; stellen answers wohin?. Begin with “Ich”.",
    "options": null,
    "answer": "Ich stelle die Lampe neben das Sofa.",
    "accepted": [
@@ -6990,8 +6990,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 21,
-   "questionDe": "Schreiben Sie den Satz: [die Schuhe / stehen / hinter / die Tür] (mit bestimmtem Artikel) (Beginnen Sie mit „Die Schuhe“)",
-   "questionEn": "Write the sentence: The shoes are behind the door. Start with 'Die Schuhe'; stehen answers wo?.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Die Schuhe“): [die Schuhe / stehen / hinter / die Tür] (mit bestimmtem Artikel)",
+   "questionEn": "Write the sentence: The shoes are behind the door. Start with 'Die Schuhe'; stehen answers wo?. Begin with “Die Schuhe”. Use a definite article.",
    "options": null,
    "answer": "Die Schuhe stehen hinter der Tür.",
    "accepted": [
@@ -7010,8 +7010,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 23,
-   "questionDe": "Schreiben Sie den Satz: [der Schlüssel / liegen / zwischen / die Bücher] (mit bestimmtem Artikel) (Beginnen Sie mit „Der Schlüssel“)",
-   "questionEn": "Write the sentence: The key is lying between the books. Start with 'Der Schlüssel'; liegen answers wo?.",
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Der Schlüssel“): [der Schlüssel / liegen / zwischen / die Bücher] (mit bestimmtem Artikel)",
+   "questionEn": "Write the sentence: The key is lying between the books. Start with 'Der Schlüssel'; liegen answers wo?. Begin with “Der Schlüssel”. Use a definite article.",
    "options": null,
    "answer": "Der Schlüssel liegt zwischen den Büchern.",
    "accepted": [
@@ -7031,7 +7031,7 @@
    "difficulty": 2,
    "order": 25,
    "questionDe": "Korrigieren Sie den Artikel: „Das Kind sitzt auf den Stuhl.“ (Beginnen Sie mit „Das Kind“)",
-   "questionEn": "Correct the sentence: sitzen answers wo?, so the case after auf is wrong. Write the whole sentence.",
+   "questionEn": "Correct the sentence: sitzen answers wo?, so the case after auf is wrong. Write the whole sentence. Begin with “Das Kind”. Correct only the article.",
    "options": null,
    "answer": "Das Kind sitzt auf dem Stuhl.",
    "accepted": [
@@ -7051,7 +7051,7 @@
    "difficulty": 3,
    "order": 26,
    "questionDe": "Korrigieren Sie den Artikel: „Hängen Sie das Bild bitte über dem Sofa.“",
-   "questionEn": "Correct the sentence: here hängen means putting the picture up, so it answers wohin?. Write the whole sentence.",
+   "questionEn": "Correct the sentence: here hängen means putting the picture up, so it answers wohin?. Write the whole sentence. Correct only the article.",
    "options": null,
    "answer": "Hängen Sie das Bild bitte über das Sofa.",
    "accepted": [
@@ -7087,7 +7087,7 @@
    "difficulty": 3,
    "order": 27,
    "questionDe": "Korrigieren Sie den Artikel: „Ich warte vor die Schule.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: warten answers wo?, so the case after vor is wrong. Write the whole sentence.",
+   "questionEn": "Correct the sentence: warten answers wo?, so the case after vor is wrong. Write the whole sentence. Begin with “Ich”. Correct only the article.",
    "options": null,
    "answer": "Ich warte vor der Schule.",
    "accepted": [

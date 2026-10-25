@@ -2,69 +2,25 @@
 // Astro site (a cross-package import would be fragile with two separate
 // node_modules trees). This check fails CI when the copies drift.
 import { readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { SHARED_FILES } from './shared-files.mjs';
 
-const PAIRS = [
-  ['src/data/competitorComparisons.js', 'astro-site/src/data/competitorComparisons.js'],
-  // What the checkout charges, and what the copy claims. Both sides render
-  // prices and limits; a drift here puts two different numbers in front of the
-  // same buyer. See the header of src/data/marketing.js.
-  ['src/data/pricing.js', 'astro-site/src/data/pricing.js'],
-  ['src/data/marketing.js', 'astro-site/src/data/marketing.js'],
-  // The design system. Both tailwind configs import this, so a drift here puts
-  // two different palettes on the two halves of the same site.
-  ['src/data/design-tokens.js', 'astro-site/src/data/design-tokens.js'],
-  // One Organization entity, one @id — both trees must agree on who publishes.
-  ['src/data/organization.js', 'astro-site/src/data/organization.js'],
-  // THE navigation registry — every nav/footer link on both front ends. A
-  // drift here recreates the three-navs-three-worlds problem this file fixed.
-  ['src/data/navigation.js', 'astro-site/src/data/navigation.js'],
-  // THE exam-track registry — /pruefung/ hubs, dashboard exam goal, and the
-  // mock-exam/writing keys all resolve exams through this one module.
-  ['src/data/examTracks.js', 'astro-site/src/data/examTracks.js'],
-  // THE funnel event registry — one name and one meaning per analytics event on
-  // both front ends, so a report never mixes two definitions of the same step.
-  ['src/data/events.js', 'astro-site/src/data/events.js'],
-  // What each course contains, and the offer built on it: the static pages
-  // sell a ticket and the app's checkout/success screens describe the same one.
-  ['src/data/courseContents.js', 'astro-site/src/data/courseContents.js'],
-  ['src/data/offers.js', 'astro-site/src/data/offers.js'],
-  // Writing task bank: the SPA renders tasks, the grading function validates
-  // keys and derives the rubric — grading a task the UI doesn't show (or vice
-  // versa) is exactly the drift this pair-check exists for.
-  ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs'],
-  // Read-aloud alignment: the browser shows a provisional score and the
-  // function writes the one that counts. Two copies of this arithmetic that
-  // drift would mark the same clip differently on the same screen.
-  ['src/lib/lesson/readaloud.js', 'netlify/functions/_shared/readaloud.mjs'],
-  // A2 exam formats and speaking task materials: the grading and speaking functions read the same
-  // contract as the SPA (A2.1 build, step 2) — a twin, like every other function import from src.
-  ['src/data/curricula/examFormats.js', 'netlify/functions/_shared/examFormats.mjs'],
-  ['src/lib/lesson/speaking.js', 'netlify/functions/_shared/speaking.mjs'],
-  // Curriculum registry (docs/course-factory/a11-rebuild/CONTRACT.md): the
-  // lesson engine and the public syllabus page must read the same 12
-  // Lektionen. The SPA side is still being authored — run
-  // scripts/sync-curricula.mjs after every change to it, or this fails.
-  ['src/data/curricula/a11.js', 'astro-site/src/data/curricula/a11.js'],
-  ['src/data/curricula/a12.js', 'astro-site/src/data/curricula/a12.js'],
-  ['src/data/curricula/a12.lesen.js', 'astro-site/src/data/curricula/a12.lesen.js'],
-  ...['a21.js', 'a21.exams.js', 'a21.meta.js', 'a21.word-ids.js', 'a21-language.js'].map((name) => [`src/data/curricula/${name}`, `astro-site/src/data/curricula/${name}`]),
-  ['src/data/curricula/examFormats.js', 'astro-site/src/data/curricula/examFormats.js'],
-  ['src/data/curricula/inheritance.js', 'astro-site/src/data/curricula/inheritance.js'],
-  ['src/data/curricula/a11.audio.js', 'astro-site/src/data/curricula/a11.audio.js'],
-  ['src/data/curricula/index.js', 'astro-site/src/data/curricula/index.js'],
-  ['src/data/curricula/constructions.js', 'astro-site/src/data/curricula/constructions.js'],
-];
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-let failed = false;
-for (const [a, b] of PAIRS) {
-  const contentA = readFileSync(a, 'utf8');
-  const contentB = readFileSync(b, 'utf8');
-  if (contentA !== contentB) {
-    console.error(`DRIFT: ${a} and ${b} are no longer identical — sync them.`);
-    failed = true;
-  } else {
-    console.log(`OK: ${a} === ${b}`);
-  }
+export function checkSharedFiles(root = ROOT) {
+  return SHARED_FILES.map(([source, destination]) => ({
+    source,
+    destination,
+    identical: readFileSync(join(root, source)).equals(readFileSync(join(root, destination))),
+  }));
 }
 
-process.exit(failed ? 1 : 0);
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const results = checkSharedFiles();
+  for (const { source, destination, identical } of results) {
+    if (identical) console.log(`OK: ${source} === ${destination}`);
+    else console.error(`DRIFT: ${source} and ${destination} are no longer identical — sync them.`);
+  }
+  process.exitCode = results.some(({ identical }) => !identical) ? 1 : 0;
+}

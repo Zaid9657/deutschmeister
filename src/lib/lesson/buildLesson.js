@@ -21,6 +21,7 @@
 // used — see planPractice for the five rules it enforces.
 import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
 import { examUnitsErrors, examUnitItem, speakingFormatErrors } from './exam.js';
+import { wordOrderAnswers } from './wordOrder.js';
 
 /** Tiny seeded PRNG (mulberry32, public domain). 32-bit state, uniform [0,1). */
 export function mulberry32(seed) {
@@ -1059,22 +1060,38 @@ function buildWordOrderItem(lektion, attempt, rng, level) {
   const candidates = lines
     .map((l, i) => ({ de: l && l.de, index: i, tokens: String((l && l.de) || '').trim().split(/\s+/).filter(Boolean) }))
     .filter((c) => c.de && c.tokens.length >= 2 && c.tokens.length <= derivedWordOrderMaxTokens(level));
-  if (!candidates.length) return null;
-  const [chosen] = seededShuffle(candidates, rng);
+  // A long dialogue turn can contain a short complete sentence. Keep its audio
+  // line intact; only the derived tile task uses the sentence, with provenance.
+  const sentences = lines.flatMap((line, index) => String(line?.de || '').split(/(?<=[.!?])\s+/)
+    .map((de, sentenceIndex) => ({ de, index, sentenceIndex, tokens: de.trim().split(/\s+/).filter(Boolean) })))
+    .filter((c) => c.tokens.length >= 2 && c.tokens.length <= derivedWordOrderMaxTokens(level) && wordOrderAnswers(c.de).length);
+  if (!candidates.length && !sentences.length) return null;
+  const ordered = seededShuffle(candidates, rng);
+  const original = ordered[0] || sentences[0];
   // Reshuffle away from the original order when more than one arrangement
   // exists, so the tiles are never handed over already solved.
-  let shuffled = seededShuffle(chosen.tokens, rng);
-  for (let tries = 0; tries < 6 && shuffled.join(' ') === chosen.tokens.join(' ') && chosen.tokens.length > 1; tries += 1) {
+  let shuffled = seededShuffle(original.tokens, rng);
+  for (let tries = 0; tries < 6 && shuffled.join(' ') === original.tokens.join(' ') && original.tokens.length > 1; tries += 1) {
     shuffled = seededShuffle(shuffled, rng);
   }
+  // Consume the old draw's random stream before choosing a supported frame,
+  // so omitting an unsafe tile task does not redraw the listening task.
+  const chosen = ordered.find((candidate) => wordOrderAnswers(candidate.de).length)
+    || seededShuffle(sentences, mulberry32(derivedSeedFor(`${lektion.id}-sentences`, attempt)))[0];
+  if (!chosen) return null;
+  if (chosen !== original) shuffled = seededShuffle(chosen.tokens, mulberry32(derivedSeedFor(`${lektion.id}-tiles`, attempt)));
+  if (shuffled.join(' ') === chosen.tokens.join(' ')) shuffled = [...shuffled.slice(1), shuffled[0]];
   return {
     id: `derived-${lektion.id}-word_order-${attempt}`,
     type: 'word_order',
     topic: lektion.primarySlug || null,
     lineIndex: chosen.index,
+    ...(chosen.sentenceIndex == null ? {} : { sentenceIndex: chosen.sentenceIndex }),
+    promptDe: 'Bilden Sie diesen Satz aus der Dialogzeile in seiner ursprünglichen Wortfolge nach. Andere korrekte Wortfolgen werden ebenfalls akzeptiert.',
+    promptEn: 'Rebuild this sentence from the dialogue line in its original word order. Other correct word orders are also accepted.',
     tokens: shuffled,
     answer: chosen.de,
-    accepted: [chosen.de],
+    accepted: [...new Set([chosen.de, ...wordOrderAnswers(chosen.de)])],
   };
 }
 
@@ -1097,18 +1114,25 @@ function buildListenSelectItem(lektion, attempt, rng) {
 }
 
 /**
- * derivedItems(lektion, attempt) → up to 3 items, one `match`, one
- * `word_order`, one `listen_select` (omitted, never padded, when the
- * Lektion's own data is too thin to build it — e.g. fewer than 4 Wortfeld
- * rows, or no dialogue line short enough for a word-order tile set).
+ * Up to three tasks from taught material: matching, supported word order (or
+ * matching with different words), and listening. Omit any slot without enough
+ * source material; never invent vocabulary or an unsupported tile answer key.
  */
 export function derivedItems(lektion, attempt = 1, level = lektion?.id?.split('-l')[0]) {
   if (!lektion) return [];
   const rng = mulberry32(derivedSeedFor(lektion.id, attempt));
+  const match = buildMatchItem(lektion, attempt, rng);
+  const wordOrder = buildWordOrderItem(lektion, attempt, rng, level);
+  const listenSelect = buildListenSelectItem(lektion, attempt, rng);
+  // Keep the practice slot when a line's grammar is outside the tile rule.
+  // Reuse matching with different, already-taught words and a distinct id.
+  const remaining = (lektion.wortfeld || []).filter((word) => !match?.pairs.some((pair) => pair.de === word.de));
+  const replacement = !wordOrder && buildMatchItem({ ...lektion, wortfeld: remaining }, attempt,
+    mulberry32(derivedSeedFor(`${lektion.id}-more-words`, attempt)));
   const items = [
-    buildMatchItem(lektion, attempt, rng),
-    buildWordOrderItem(lektion, attempt, rng, level),
-    buildListenSelectItem(lektion, attempt, rng),
+    match,
+    wordOrder || (replacement && { ...replacement, id: `derived-${lektion.id}-match-more-${attempt}` }),
+    listenSelect,
   ].filter(Boolean);
   return items;
 }

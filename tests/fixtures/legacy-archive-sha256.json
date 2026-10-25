@@ -1,0 +1,16 @@
+{
+  "legacy-sql/create-grammar-introductions-table.sql": "75aff1edcdfc9c10351606891af44832f4d3661b14cede210aad0da3c201c011",
+  "legacy-sql/create-xray-usage-table.sql": "b3634cd866359dedb265375c8517293fdb32d0c516d7f1aef0d8cdf48d2cf331",
+  "legacy-sql/diagnose-topic-mismatch.sql": "776dd89f23a46f27d61ddbeee3b2375f11293c1dfeb97e7182096ef77432ac51",
+  "legacy-sql/fix-anon-access-free-tier.sql": "f1e160ee33cf774d60edd3e6cc4fd280a868512a327499c3e4331d46ac7bf248",
+  "legacy-sql/fix-grammar-introductions-rls.sql": "2ad49e5045090a4404b5b115175bf22a7ec39bd4db513e70a4368b88f5b4032e",
+  "legacy-sql/fix-subscription-schema.sql": "d234493b95680df9774b6036d73043dea5c1444825fc371a7a1f063869fe2922",
+  "legacy-sql/fix-topic-mismatch.sql": "a5f40c94d49d000df4477e687d98d0653d6d4d7c6a3bc77c9441be411e8732e7",
+  "legacy-sql/migrate-introduction-to-rules.sql": "7ed68da4cef85097059a0361514578bcf8dc7e3c2841e7cfe31e6a01371cdfb0",
+  "legacy-sql/supabase-grammar-content-tables.sql": "26bdb94391ebc0dd823d0e6d1ff97370dd7ec0a6e192a5b486d05ebd2631d8fd",
+  "legacy-sql/supabase-grammar-schema.sql": "1733b0d9412003f2cef969e3cfdb0835780c489b92c05fe5a35319f3c2d05626",
+  "legacy-sql/supabase-subscription-schema.sql": "32a1c29b8976417081a361e68d2b59b1ea28571260dbcd0e17098b8186c364d7",
+  "audits/2026-08/AUDIT-2026-08-16.md": "570150cfa97395f2c72a3ac22d754c79d402d6bba82fc9ccbb07191076479ced",
+  "audits/2026-08/EVALUATION.md": "eba40f2745ec12c1da5bb2a2fcba02bcd9845610bf676d65f450c0481c5a5494",
+  "audits/2026-08/REMEDIATION.md": "06f0f51b48c30a3b61479abefb6b7795d2a8dc47fd1a3eac1ed08dfe72b75bd8"
+}

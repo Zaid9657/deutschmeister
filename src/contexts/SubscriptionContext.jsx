@@ -20,54 +20,54 @@ export const useSubscription = () => useContext(SubscriptionContext);
 
 export const SubscriptionProvider = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
-  const [subscription, setSubscription] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [purchases, setPurchases] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const userId = user?.id ?? null;
+  const [data, setData] = useState({ userId: null, subscription: null, profile: null, purchases: [], loading: true });
   const lastRefreshRef = useRef(0);
-  const prevUserIdRef = useRef(null);
+  const requestRef = useRef({ userId, generation: 0 });
 
-  // When user changes (login/logout), immediately set loading=true so the
-  // guard never sees a stale hasAccess=false between user change and data load.
-  useEffect(() => {
-    const newUserId = user?.id ?? null;
-    if (newUserId !== prevUserIdRef.current) {
-      if (newUserId) {
-        setLoading(true);
-      }
-      prevUserIdRef.current = newUserId;
-    }
-  }, [user]);
+  // Mask the previous account during the render that changes identity, before
+  // effects run. Invalidate its requests at the same boundary.
+  if (requestRef.current.userId !== userId) {
+    requestRef.current = { userId, generation: requestRef.current.generation + 1 };
+  }
+  const subscription = data.userId === userId ? data.subscription : null;
+  const profile = data.userId === userId ? data.profile : null;
+  const purchases = data.userId === userId ? data.purchases : [];
+  const loading = authLoading || data.userId !== userId || data.loading;
+
+  useEffect(() => () => { requestRef.current.generation += 1; }, []);
 
   const loadSubscriptionData = useCallback(async () => {
     // Don't resolve loading until auth is done — otherwise the guard
     // sees loading=false + hasAccess=false and redirects prematurely.
-    if (authLoading) return;
+    if (authLoading || requestRef.current.userId !== userId) return;
 
-    if (!user) {
-      setSubscription(null);
-      setProfile(null);
-      setPurchases([]);
-      setLoading(false);
+    const generation = ++requestRef.current.generation;
+    const isCurrent = () => requestRef.current.userId === userId && requestRef.current.generation === generation;
+
+    if (!userId) {
+      setData({ userId, subscription: null, profile: null, purchases: [], loading: false });
       return;
     }
 
-    setLoading(true);
+    setData((previous) => previous.userId === userId
+      ? { ...previous, loading: true }
+      : { userId, subscription: null, profile: null, purchases: [], loading: true });
 
     try {
       // Timeout so a hung network resolves to the logged-in-but-unverified
       // state instead of an infinite loading spinner on every guarded page.
       const [sub, prof, bought] = await withTimeout(
         Promise.all([
-          getSubscription(user.id),
-          getUserProfile(user.id),
-          getPurchases(user.id),
+          getSubscription(userId),
+          getUserProfile(userId),
+          getPurchases(userId),
         ]),
         10000
       );
 
-      setSubscription(sub);
-      setPurchases(bought);
+      if (!isCurrent()) return;
+      const setProfile = (profile) => setData({ userId, subscription: sub, purchases: bought, profile, loading: false });
 
       // Auto-start free trial for new users
       let currentProfile = prof;
@@ -76,32 +76,38 @@ export const SubscriptionProvider = ({ children }) => {
       // If not yet available (slight delay), retry once after a short wait.
       if (!currentProfile) {
         await new Promise(r => setTimeout(r, 800));
-        currentProfile = await getUserProfile(user.id);
+        if (!isCurrent()) return;
+        currentProfile = await getUserProfile(userId);
+        if (!isCurrent()) return;
       }
 
       // Safety net: if DB trigger didn't fire or profile still missing,
       // create profile with trial dates from the frontend.
       if (!currentProfile) {
-        await startFreeTrial(user.id);
-        currentProfile = await getUserProfile(user.id);
+        await startFreeTrial(userId);
+        if (!isCurrent()) return;
+        currentProfile = await getUserProfile(userId);
       } else if (!currentProfile.trial_started_at) {
         // Profile exists but trial dates are NULL — backfill them
-        await startFreeTrial(user.id);
-        currentProfile = await getUserProfile(user.id);
+        await startFreeTrial(userId);
+        if (!isCurrent()) return;
+        currentProfile = await getUserProfile(userId);
       }
+      if (!isCurrent()) return;
 
       // A level-test result taken signed out on this browser ("Sign up free —
       // save my results", src/lib/placement.js) lands on the account here,
       // before anything reads current_level. Only fills an empty placement.
       currentProfile = await settlePendingPlacement(user.id, currentProfile);
+      if (!isCurrent()) return;
 
       setProfile(currentProfile);
     } catch (error) {
       console.error('Error loading subscription data:', error);
     } finally {
-      setLoading(false);
+      if (isCurrent()) setData((previous) => ({ ...previous, loading: false }));
     }
-  }, [user, authLoading]);
+  }, [userId, user, authLoading]);
 
   useEffect(() => {
     loadSubscriptionData();
@@ -134,13 +140,10 @@ export const SubscriptionProvider = ({ children }) => {
     return trialStatus.daysRemaining;
   };
 
-  // Single source of truth for paid access: the subscription's paid period.
-  // We deliberately do NOT fall back to profile.is_subscribed here — that flag
-  // and the subscriptions row used to disagree (blocking payers / showing the
-  // wrong page). Both the route guard and the "Pro" badge now read this value,
-  // so they can never diverge. (Trial access is handled separately by
-  // isInFreeTrial(); this only governs paid access.)
-  const hasActiveSubscription = () => checkSubscriptionStatus(subscription).isActive;
+  // Pro comes from a confirmed subscription period or an included course
+  // window. Lifetime ownership below remains independent of that deadline.
+  const hasActiveSubscription = () => checkSubscriptionStatus(subscription).isActive ||
+    purchases.some((purchase) => purchase.status === 'active' && Date.parse(purchase.access_until) > Date.now());
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();
 
@@ -172,14 +175,17 @@ export const SubscriptionProvider = ({ children }) => {
 
   // Safety net: call verify-subscription function to recover missed webhooks
   const verifySubscription = async () => {
-    if (!user) return false;
+    if (!userId || requestRef.current.userId !== userId) return false;
     try {
+      const authHeaders = await getAuthHeaders();
+      if (requestRef.current.userId !== userId) return false;
       const res = await fetch('/.netlify/functions/verify-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({}),
       });
       const data = await res.json();
+      if (requestRef.current.userId !== userId) return false;
       if (data.status === 'active') {
         await loadSubscriptionData();
         return true;

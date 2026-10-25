@@ -1,7 +1,9 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { calculatePlacement } from '../components/LevelTest/placementResult.js';
 import { supabase } from '../utils/supabase';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
 import LevelTestQuestion from '../components/LevelTest/LevelTestQuestion';
@@ -12,12 +14,13 @@ import questionData from '../data/levelTestQuestions.json';
 
 const LevelTest = () => {
   const { user } = useAuth();
+  const userId = user?.id;
+  const { refreshSubscription } = useSubscription();
+  const refreshSubscriptionRef = useRef(refreshSubscription);
+  useEffect(() => { refreshSubscriptionRef.current = refreshSubscription; }, [refreshSubscription]);
   const [testState, setTestState] = useState('landing');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [skipped, setSkipped] = useState([]);
-  const [determinedLevel, setDeterminedLevel] = useState('A1');
-  const [determinedSublevel, setDeterminedSublevel] = useState('A1.1');
   const [listeningScore, setListeningScore] = useState(null);
   const [, setListeningAnswers] = useState([]);
   const [speakingScore, setSpeakingScore] = useState(null);
@@ -64,53 +67,9 @@ const LevelTest = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
 
-  // Calculate level from written test answers
-  const calculateLevel = useCallback((writtenAnswers) => {
-    const levelScores = {};
-    const sublevelScores = {};
-
-    ['A1', 'A2', 'B1', 'B2'].forEach(level => {
-      levelScores[level] = { correct: 0, total: 0 };
-    });
-    ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'].forEach(sub => {
-      sublevelScores[sub] = { correct: 0, total: 0 };
-    });
-
-    writtenAnswers.forEach(answer => {
-      levelScores[answer.level].total++;
-      sublevelScores[answer.sublevel].total++;
-      if (answer.isCorrect) {
-        levelScores[answer.level].correct++;
-        sublevelScores[answer.sublevel].correct++;
-      }
-    });
-
-    let level = 'A1';
-    let sublevel = 'A1.1';
-
-    for (const lvl of ['A1', 'A2', 'B1', 'B2']) {
-      const score = levelScores[lvl];
-      if (score.total === 0) continue;
-      const percentage = (score.correct / score.total) * 100;
-
-      if (percentage >= 60) {
-        level = lvl;
-        const sub2 = `${lvl}.2`;
-        const sub2Score = sublevelScores[sub2];
-        const sub2Pct = sub2Score.total > 0 ? (sub2Score.correct / sub2Score.total) * 100 : 0;
-        sublevel = sub2Pct >= 70 ? sub2 : `${lvl}.1`;
-      }
-    }
-
-    return { level, sublevel };
-  }, []);
-
-  const finishWrittenTest = useCallback((finalAnswers) => {
-    const { level, sublevel } = calculateLevel(finalAnswers);
-    setDeterminedLevel(level);
-    setDeterminedSublevel(sublevel);
-    setTestState('listening');
-  }, [calculateLevel]);
+  const placement = useMemo(() => calculatePlacement({ answers, questions, listeningScore, speakingScore }),
+    [answers, questions, listeningScore, speakingScore]);
+  const finalSublevel = placement.sublevel;
 
   const handleAnswer = (selectedIndex) => {
     const isCorrect = selectedIndex === currentQuestion.correctIndex;
@@ -131,17 +90,15 @@ const LevelTest = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      finishWrittenTest(updatedAnswers);
+      setTestState('listening');
     }
   };
 
   const handleSkip = () => {
-    setSkipped(prev => [...prev, currentQuestion.id]);
-
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      finishWrittenTest(answers);
+      setTestState('listening');
     }
   };
 
@@ -149,9 +106,6 @@ const LevelTest = () => {
     setTestState('testing');
     setCurrentQuestionIndex(0);
     setAnswers([]);
-    setSkipped([]);
-    setDeterminedLevel('A1');
-    setDeterminedSublevel('A1.1');
     setListeningScore(null);
     setListeningAnswers([]);
     setSpeakingScore(null);
@@ -165,21 +119,24 @@ const LevelTest = () => {
   // tester's result is kept on the browser by LevelTestResults and written at
   // the first profile load after sign-in (src/lib/placement.js).
   useEffect(() => {
-    if (testState !== 'results' || !user || !determinedSublevel) return;
+    if (testState !== 'results' || !userId) return;
     let cancelled = false;
     (async () => {
       const { error } = await supabase
         .from('profiles')
-        .update({ current_level: determinedSublevel, updated_at: new Date().toISOString() })
-        .eq('id', user.id);
+        .update({ current_level: finalSublevel, updated_at: new Date().toISOString() })
+        .eq('id', userId);
       // supabase-js resolves rather than throws, so the error has to be read
       // off the result or a failed write looks identical to a successful one.
-      if (!cancelled && error) {
+      if (cancelled) return;
+      if (error) {
         console.error('Failed to save placement level:', error.message);
+      } else {
+        await refreshSubscriptionRef.current();
       }
     })();
     return () => { cancelled = true; };
-  }, [testState, user, determinedSublevel]);
+  }, [testState, userId, finalSublevel]);
 
   return (
     <>
@@ -306,13 +263,9 @@ const LevelTest = () => {
 
         {testState === 'results' && (
           <LevelTestResults
-            answers={answers}
-            skipped={skipped}
-            questions={questions}
+            placement={placement}
             listeningScore={listeningScore}
             speakingScore={speakingScore}
-            determinedLevel={determinedLevel}
-            determinedSublevel={determinedSublevel}
             onRetake={startTest}
           />
         )}

@@ -18,7 +18,8 @@
 // pins that this stays the only import and that it never reaches into `src/data/`.
 import { COUNTRY_STEMS, COUNTRY_NAMES, LANGUAGE_NAMES } from './countries.js';
 
-const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean);
+const nfc = (text) => String(text || '').normalize('NFC');
+const words = (text) => nfc(text).trim().split(/\s+/).filter(Boolean);
 
 export const countWords = (text) => words(text).length;
 
@@ -184,7 +185,7 @@ const ENDINGS = ['est', 'en', 'er', 'es', 'em', 'st', 'et', 'e', 'n', 's', 't'];
  * keeps `neun` (→ `neun`) apart from `neue` (→ `neu`).
  */
 export function foldWord(word) {
-  const w = String(word || '').replace(/[^A-Za-zÄÖÜäöüßẞ]/g, '').toLowerCase();
+  const w = nfc(word).replace(/[^A-Za-zÄÖÜäöüßẞ]/g, '').toLowerCase();
   for (const end of ENDINGS) {
     if (w.length - end.length >= 3 && w.endsWith(end)) return w.slice(0, -end.length);
   }
@@ -234,13 +235,16 @@ const splitVerbStem = (word) => {
 /**
  * A SENTENCE, for the shapes that need one. „geboren“ is a date only NEXT TO a number, and
  * „Arabisch“ is a language only next to „sprechen“ — both are sentence-local facts, so the shapes
- * below read sentences rather than the whole Mitteilung. The split deliberately does NOT break at
- * a full stop that follows a digit: „am 3. Mai“ and „3.5.1998.“ are one date, not three sentences.
+ * below read sentences rather than the whole Mitteilung. A digit's full stop stays inside an
+ * ordinal date („am 3. Mai“); after a phone number it still closes a sentence.
  * The closing mark STAYS on the sentence (round 19): a question is a sentence type, and the `?` is
  * how German writes it — `isQuestion` below reads it, the token readers strip it.
  */
-const sentences = (text) => String(text || '')
-  .split(/(?<=(?<![0-9])[.!?]+)\s+|\n+/)
+const MONTH = 'Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember';
+const SENTENCE_CLOSE = /["'“”‘’»«)\]}]*/.source;
+const SENTENCE_BREAK_RE = new RegExp(`(?<=[!?])${SENTENCE_CLOSE}\\s+|(?<=(?<![0-9])\\.)${SENTENCE_CLOSE}\\s+|(?<=\\d\\.)${SENTENCE_CLOSE}\\s+(?!(?:${MONTH})\\b|\\d)|\\n+`, 'i');
+const sentences = (text) => nfc(text)
+  .split(SENTENCE_BREAK_RE)
   .map((s) => s.trim())
   .filter(Boolean);
 
@@ -249,23 +253,24 @@ const stripPunct = (w) => String(w || '').replace(/[.,!?;:()"„“»«]/g, '');
 /**
  * A QUESTION IS NOT AN ANSWER (DaF review #18, Minor 18). „Was Sie kaufen“ ← „Kaufst du auch?“ was
  * green because the folded predicate `kauf` decides a shape-less Leitpunkt and a question carries the
- * verb as well as a statement does. A question is a sentence that closes with `?` or opens with a
- * question word; the fold half of `leitpunktSatisfied` reads only the sentences that are not one.
+ * verb as well as a statement does. A question closes with `?`, opens with a question word, or
+ * has an unambiguous verb-first question form; a missing question mark does not make it a fact.
  */
 const QUESTION_WORD_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)$/i;
+const QUESTION_END_RE = new RegExp(`\\?[!?]*${SENTENCE_CLOSE}$`, 'u');
+// Formal imperatives share the infinitive („Rufen Sie …“), but „Sind Sie …“ cannot be one.
+const VERB_FIRST_QUESTION_RE = /^(?:\p{L}+st\s+du|(?:\p{L}+t|seid)\s+ihr|\p{L}+e\s+ich|\p{L}+en\s+wir|(?:sind|waren|wären|waeren|hatten|hätten|haetten|können|koennen|könnten|koennten|dürfen|duerfen|dürften|duerften|müssen|muessen|müssten|muessten|sollen|sollten|wollen|wollten|möchten|moechten)\s+Sie)\b/iu;
 const isQuestion = (sentence) => {
   const s = String(sentence || '').trim();
-  if (/\?$/.test(s)) return true;
+  if (QUESTION_END_RE.test(s)) return true;
   const first = stripPunct(words(s)[0] || '');
-  return QUESTION_WORD_RE.test(first);
+  return QUESTION_WORD_RE.test(first) || VERB_FIRST_QUESTION_RE.test(s);
 };
 
 /** The number words the course writes out, 0–20 plus the round tens — used by the value shapes. */
 const NUMBER_WORD = '(?:null|ein[sm]?|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn|elf'
   + '|zwölf|zwoelf|dreizehn|vierzehn|fünfzehn|fuenfzehn|sechzehn|siebzehn|achtzehn|neunzehn'
   + '|zwanzig|dreißig|dreissig|vierzig|fünfzig|fuenfzig|sechzig|siebzig|achtzig|neunzig|hundert)';
-
-const MONTH = 'Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember';
 
 /**
  * A DATE IS A VALUE, NOT THE WORD `geboren` (DaF review #16, MAJOR 1).
@@ -385,6 +390,14 @@ const TIME_OF_DAY_RE = new RegExp(
   + `|${WEEKDAY}\\s*(?:früh|${TIME_OF_DAY_NOUN}))(?!\\p{L})`,
   'iu',
 );
+
+// New appointment details may be proposed as a question; past availability is no proposal.
+const SCHEDULING_REQUIREMENT_RE = /\b(?:neu(?:e[nrms]?)?|vorschlag|vorschlagen)\b/i;
+const SCHEDULING_PROPOSAL_RE = /^(?:(?:geht|ginge|passt)\s+(?:es|das|dir|euch|Ihnen)\b|(?:wäre|waere)\b.*\bmöglich\b|(?:treffen|sehen)\s+wir\s+uns\b|(?:können|koennen|könnten|koennten|wollen|sollen)\s+(?:wir|ich)\b|(?:hast|habt|haben|hättest|haettest|hättet|haettet|hätten|haetten)\s+(?:du|ihr|Sie)\b.*\bZeit\b)/iu;
+const DIRECT_TIME_PROPOSAL_RE = new RegExp(`^(?:geht|ginge|passt)\\s+(?:${WEEKDAY}|${DAY_ADVERB}|(?:am|um|ab|von|gegen)\\b|\\d)`, 'iu');
+const PAST_SCHEDULING_RE = /\b(?:Zeit\b.*\bgehabt|möglich\b.*\bgewesen)\b/iu;
+const isSchedulingProposal = (sentence) => !PAST_SCHEDULING_RE.test(sentence)
+  && (SCHEDULING_PROPOSAL_RE.test(sentence) || DIRECT_TIME_PROPOSAL_RE.test(sentence));
 /** A PRICE is a number with Euro — „Das kostet Euro.“ is not a price. */
 const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:Euro|€)|€\\s*\\d`, 'i');
 
@@ -693,8 +706,8 @@ const ANSWER_SHAPES = [
   { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_SHAPE, value: COUNTRY_VALUE_SHAPE, form: countryValueShape },
   { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_SHAPE },
   { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden|verwitwet)\b/i },
-  { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE, form: () => FORM_CLOCK_SHAPE },
-  { on: ['tag', 'wochentag'], re: DAY_OR_DATE_SHAPE },
+  { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE, form: () => FORM_CLOCK_SHAPE, allowQuestions: true },
+  { on: ['tag', 'wochentag'], re: DAY_OR_DATE_SHAPE, allowQuestions: true },
   { on: ['preis', 'kost', 'geld'], re: PRICE_RE },
   { on: ['zimm', 'person', 'anzahl', 'hausnumm', 'postleitzahl', 'plz'], re: NUMBER_VALUE_RE },
   { on: ['telefonnumm', 'numm', 'handynumm'], re: PHONE_RE },
@@ -703,7 +716,7 @@ const ANSWER_SHAPES = [
   // wehtun separates („Mein Hals tut weh“), and the noun says it too („Kopfschmerzen“).
   { on: ['wehtu'], re: /weh\b|schmerz/i },
   { on: ['zimmernumm'], re: /\bZimmer(?:nummer)?\s+(?:ist\s+)?\d+/i },
-  { on: ['frag'], re: /\?/ },
+  { on: ['frag'], re: /\?/, question: true },
 ];
 
 /**
@@ -903,7 +916,7 @@ const INDIRECT_QUESTION_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|
  * Leitpunkt is one unit and half an answer is no answer (DaF review #14, MAJOR 1, „Erstens“).
  */
 export function leitpunktConjuncts(leitpunkt) {
-  return String(leitpunkt || '')
+  return nfc(leitpunkt)
     .split(/\s+und\s+|,\s+/)
     .map((s) => s.trim())
     .filter(Boolean);
@@ -926,21 +939,35 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
   }
   const folded = keywords.flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean);
   const shapes = [];
+  const fullTextShapes = [];
+  const addShape = (re, { question, allowQuestions } = {}) => {
+    shapes.push(re);
+    if (question) fullTextShapes.push(re);
+    if (allowQuestions && SCHEDULING_REQUIREMENT_RE.test(conjunct)) {
+      const proposal = {
+        test: (body) => sentences(body).some((s) => isQuestion(s) && isSchedulingProposal(s) && re.test(s)),
+      };
+      shapes.push(proposal);
+      fullTextShapes.push(proposal);
+    }
+  };
   for (const w of keywords) {
     const f = [foldWord(w), ...splitVerbStem(w)];
     for (const shape of ANSWER_SHAPES) {
       if (!f.some((x) => shape.on.includes(x))) continue;
-      shapes.push(shape.re);
+      addShape(shape.re, shape);
       // THE NAMED FIELD IS THE LEARNER'S ANSWER AND NEVER THE COURSE'S. `allowNamedField` is true
       // on the screen — a learner who writes „Die Telefonnummer ist null eins sieben sechs.“ has
       // answered — and false where the COURSE is measured (RULE 21), because a rule that accepts
       // the form line is satisfied by the one sentence type *Start Deutsch 1* takes points off for,
       // and the model text then gets written to the checker (DaF review #15, MAJOR 1).
-      if (allowNamedField) shapes.push(namedFieldShape(w, shape.value || shape.re));
+      if (allowNamedField) addShape(namedFieldShape(w, shape.value || shape.re), shape);
     }
   }
-  shapes.push(...QUESTION_SHAPES.filter((s) => (s.re || s.shape) && s.on.test(conjunct)).map((s) => (s.shape ? s.shape(conjunct) : s.re)));
-  return { text: conjunct, words: keywords, folded, shapes };
+  for (const s of QUESTION_SHAPES.filter((s) => (s.re || s.shape) && s.on.test(conjunct))) {
+    addShape(s.shape ? s.shape(conjunct) : s.re, s);
+  }
+  return { text: conjunct, words: keywords, folded, shapes, fullTextShapes };
 };
 
 /**
@@ -974,12 +1001,12 @@ export function leitpunktSatisfied(leitpunkt, text, opts = {}) {
   // A header line before it (a place and date, a Betreff — Minor 40) goes with it: the letter's
   // date is not the party's date.
   const body = openingCut(text).body;
-  // The fold half reads STATEMENTS only: a question that carries the Leitpunkt's verb („Kaufst du
-  // auch?“ for „Was Sie kaufen“) asks, and answers nothing (DaF review #18, Minor 18).
+  // Factual details read statements only. Requested questions and scheduling proposals such as
+  // „Geht es am Dienstag um halb neun?“ may use question evidence, separately for each shape.
   const statements = sentences(body).filter((s) => !isQuestion(s)).join(' ');
   const inText = new Set(words(statements).map(foldWord).filter(Boolean));
   const met = (c) => (c.shapes.length
-    ? c.shapes.some((re) => re.test(body))
+    ? c.shapes.some((re) => re.test(c.fullTextShapes.includes(re) ? body : statements))
     : c.folded.some((f) => inText.has(f)));
   return decidable.every(met);
 }
@@ -1091,7 +1118,7 @@ const isHeaderSegment = (seg) => !ANREDE_RE.test(seg) && !FIRST_PERSON_RE.test(s
  * header line), and the text with the header and the Anrede(s) removed, for the shapes to read.
  */
 export const openingCut = (text) => {
-  let t = String(text || '').replace(/^\s+/, '');
+  let t = nfc(text).replace(/^\s+/, '');
   const segs = sentences(t);
   if (segs.length > 1 && isHeaderSegment(segs[0])) {
     const at = t.indexOf(segs[0]);
@@ -1149,7 +1176,7 @@ const isAppendixLine = (line) => POSTSCRIPT_RE.test(line) || CONTACT_LINE_RE.tes
   || (ADDRESS_LINE_RE.test(line) && /\d/.test(line) && words(line).length <= 6);
 /** The text without its appendix: everything from a P.S. on, and the contact lines under the name. */
 const withoutAppendix = (text) => {
-  const lines = String(text || '').split('\n').map((l) => l.trim()).filter(Boolean);
+  const lines = nfc(text).split('\n').map((l) => l.trim()).filter(Boolean);
   const ps = lines.findIndex((l, i) => i > 0 && POSTSCRIPT_RE.test(l));
   if (ps > 0) lines.length = ps;
   while (lines.length > 1 && isAppendixLine(lines[lines.length - 1])) lines.pop();
@@ -1194,7 +1221,7 @@ export function scoreWriting(schreiben, value) {
   if (schreiben.kind === 'formular') {
     const map = value && typeof value === 'object' ? value : {};
     const checks = (schreiben.fields || []).map((field) => {
-      const v = String(map[field] || '').trim();
+      const v = nfc(map[field]).trim();
       const filled = /[\p{L}\d]/u.test(v);
       const shape = fieldValueShape(field);
       if (!filled) return { key: field, label: field, ok: false, filled: false };
@@ -1204,7 +1231,7 @@ export function scoreWriting(schreiben, value) {
     return { ok: checks.length > 0 && checks.every((c) => c.ok), checks, count: checks.length };
   }
 
-  const text = String(value || '');
+  const text = nfc(value);
   const count = countWords(text);
   const min = Number(schreiben.minWords) || 0;
   const max = Number(schreiben.maxWords) || Infinity;

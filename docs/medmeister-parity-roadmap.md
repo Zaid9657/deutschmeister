@@ -13,7 +13,7 @@ identity built from a blank sheet). Everything else is Tier 3.
 
 **Standing inputs, reconciled:**
 
-- `EVALUATION.md` / `AUDIT-2026-08-16.md` / `REMEDIATION.md` — the Aug 16–18 remediation already
+- [EVALUATION.md](archive/audits/2026-08/EVALUATION.md) / [AUDIT-2026-08-16.md](archive/audits/2026-08/AUDIT-2026-08-16.md) / [REMEDIATION.md](archive/audits/2026-08/REMEDIATION.md) — the Aug 16–18 remediation already
   fixed the security holes, funnel-blocking bugs, and most technical SEO (PRs #13, #15–#18).
   This roadmap builds on REMEDIATION's "still open" list, not EVALUATION's older roadmap.
 - `kp-med/deutschmeister-port-checklist.md` (2026-05-27) — an earlier port plan. Its Tier 1 is
@@ -436,7 +436,7 @@ deferred on purpose — see below.
 
 **A note on the landing rebuild before it starts.** Its current stats band claims "1,400+
 Learners", "170+ New learners this month" and "2,488 AI speaking exercises". The first two are
-traceable to EVALUATION.md's 2026-08-16 database audit (1,449 accounts all-time, 172 signups in 30
+traceable to [EVALUATION.md](archive/audits/2026-08/EVALUATION.md)'s 2026-08-16 database audit (1,449 accounts all-time, 172 signups in 30
 days) but the second is a rolling claim that is stale by construction; the third appears in no
 audit and has **no source at all**. Per the counts rule in `src/data/marketing.js`, a figure with
 no provenance should not survive a rebuild. Re-measure against the live database, or drop it.

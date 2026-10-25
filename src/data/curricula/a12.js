@@ -285,7 +285,7 @@ export const CURRICULUM_A12 = {
           { speaker: 'Ana', de: 'Was kostet die Wohnung? Wie ist die Miete?', en: 'What does the flat cost? What is the rent?' },
           { speaker: 'Herr Berg', de: 'Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', en: 'The rent is four hundred and eighty euros. The basement costs twenty euros.' },
           { speaker: 'Ana', de: 'Und die Wohnung? Ich brauche zwei Zimmer. Wie viele Zimmer hat sie?', en: 'And the flat? I need two rooms. How many rooms does it have?' },
-          { speaker: 'Herr Berg', de: 'Vier: Küche, Badezimmer, Wohnzimmer und Schlafzimmer.', en: 'Four: kitchen, bathroom, living room and bedroom.' },
+          { speaker: 'Herr Berg', de: 'Zwei Zimmer: Wohnzimmer und Schlafzimmer. Küche und Badezimmer sind auch da.', en: 'Two rooms: living room and bedroom. There is also a kitchen and a bathroom.' },
           { speaker: 'Ana', de: 'Hat die Wohnung auch einen Balkon?', en: 'Does the flat also have a balcony?' },
           { speaker: 'Herr Berg', de: 'Ja, der Balkon ist da. Das dritte Stockwerk ist frei.', en: 'Yes, the balcony is there. The third floor is free.' },
           { speaker: 'Ana', de: 'Ist die Treppe da? Ich habe viele Bücher.', en: 'Are the stairs there? I have a lot of books.' },
@@ -715,7 +715,7 @@ export const CURRICULUM_A12 = {
         leitpunkte: ['Warum Sie schreiben', 'Was Ihnen wehtut', 'Ihre Frage nach einem neuen Termin'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrte Damen und Herren, ich bin krank. Mein Hals tut weh und ich habe Fieber. Wann ist ein Termin frei? Viele Grüße, Ana Chakiri',
+        sample: 'Sehr geehrte Damen und Herren, ich bin krank. Ich komme heute nicht. Mein Hals tut weh und ich habe Fieber. Wann ist ein Termin frei? Viele Grüße, Ana Chakiri',
       },
       // Kein A1.2-Lesetext handelt von Gesundheit und keine der sechs Hörübungen von der Praxis —
       // das ist der ehrliche Zustand; ein falsches Etikett wäre schlechter als eine Lücke.
@@ -880,7 +880,7 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Imperativ: bitten und auffordern',
-        bodyDe: 'Imperativ vorn: **du** ohne -st: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Beide normalerweise ohne Pronomen; zur Betonung möglich. Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
+        bodyDe: 'Imperativ: **du** ohne -st: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Beide normalerweise ohne Pronomen; zur Betonung möglich (betont). Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
         bodyEn: 'The imperative comes first: **du** without -st: du kommst → **Komm!**, du hilfst → **Hilf!** An ä becomes a: du fährst → **Fahr!** If the stem ends in s, drop only -t: du isst → **Iss!** With ihr only the pronoun is dropped: **Kommt!** Both normally omit the pronoun; it is possible for emphasis. With Sie the pronoun stays: Helfen Sie **bitte**!',
         examples: ['Tim, die Waschmaschine ist da. Hilf mir bitte!', 'Mach den Fernseher aus und hilf mir bitte!'],
         ruleSlug: 'imperative',

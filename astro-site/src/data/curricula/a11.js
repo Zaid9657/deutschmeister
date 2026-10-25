@@ -67,6 +67,8 @@
  * receptionist's, clerk's, seller's, waiter's and station staff's lines (Codex review, 2026-10-09).
  * tests/course-value.test.mjs holds every Lektion to it.
  */
+import { LESEN_A11 } from './a11.lesen.js';
+
 export const LEARNER_CAST = ['Ana', 'Tim', 'Lena'];
 
 /**
@@ -1714,9 +1716,9 @@ export const CURRICULUM_A11 = {
     },
   ],
   checkpoints: [
-    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3' },
-    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6' },
-    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9' },
-    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12' },
+    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3', lesen: LESEN_A11['a1.1-cp1'] },
+    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6', lesen: LESEN_A11['a1.1-cp2'] },
+    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9', lesen: LESEN_A11['a1.1-cp3'] },
+    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A11['a1.1-cp4'] },
   ],
 };

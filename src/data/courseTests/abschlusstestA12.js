@@ -6,9 +6,8 @@
 // material. Whatever surface renders this module must also render
 // MOCK_DISCLAIMER_DE (see src/data/examTracks.js) and label every score a
 // Richtwert, not an official result. "Kurzversion" stays in the title
-// because this is a half-length pass at the SD1 format, not the full
-// Start-Deutsch-1-format practice exam the learner meets again once A1.2
-// is done.
+// because the scored sections cover listening and reading only; writing
+// is self-checked and speaking and form completion are absent.
 //
 // Shape: identical to src/data/mockExams/goetheA1.js (examKey, title, intro,
 // passPercent, sections[{key,title,minutes,instructions,parts[]}] with part
@@ -118,13 +117,14 @@ export const abschlusstestA12 = {
   examKey: 'a1_2_abschluss',
   courseLevel: 'a1.2',
   formatOf: 'goethe_a1',
-  title: 'Abschlusstest A1.2 (Kurzversion im Start-Deutsch-1-Format)',
+  title: 'Abschlusstest A1.2 (Kurzversion)',
   intro:
-    'Das ist der Abschlusstest deines A1.2-Kurses. Er hat den Aufbau der echten Prüfung Start Deutsch 1, aber nur ' +
-    'die halbe Länge, damit du das Prüfungsformat schon früh kennenlernst. Dieser Test ist eigenes Übungsmaterial ' +
-    'von DeutschMeister und keine offizielle Prüfung. Wie bei der echten Prüfung bestehst du ab 60 % der ' +
-    'bewerteten Aufgaben. Sprechen trainierst du im Speaking-Missions-Trainer, nicht hier. Dein A1.2-Kurs endet ' +
-    'hier — als Nächstes wartet die vollständige Übungsprüfung im Start-Deutsch-1-Format.',
+    'Das ist der Abschlusstest Ihres A1.2-Kurses. Hören und Lesen werden automatisch bewertet; ' +
+    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen. Eine kurze Mitteilung zum Schreiben ' +
+    'bearbeiten Sie mit einem Selbstcheck; sie zählt nicht zur Punktzahl. Ein Formular und Sprechen sind nicht enthalten. ' +
+    'Dieser Test übt einzelne Aufgabenarten von Start Deutsch 1 und bildet nicht die vollständige Prüfung ab. ' +
+    'Er ist eigenes Übungsmaterial von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. ' +
+    'Als Nächstes können Sie die Übungsprüfung zu Start Deutsch 1 bearbeiten.',
   passPercent: 60,
 
   sections: [
@@ -132,7 +132,7 @@ export const abschlusstestA12 = {
       key: 'hoeren',
       title: 'Hören',
       minutes: 15,
-      instructions: 'Eine Hörübung zum Thema Freizeit. Du darfst die Aufnahme zweimal abspielen.',
+      instructions: 'Eine Hörübung zum Thema Freizeit. Sie dürfen die Aufnahme zweimal abspielen.',
       parts: [
         {
           key: 'hoeren-1',
@@ -149,8 +149,8 @@ export const abschlusstestA12 = {
       title: 'Lesen',
       minutes: 15,
       instructions:
-        'Teil 1: Lies die E-Mail und entscheide: richtig oder falsch? Teil 2: Lies die Situation und die zwei ' +
-        'Anzeigen. Welche Anzeige passt? Teil 3: Lies die Schilder und entscheide: richtig oder falsch?',
+        'Teil 1: Lesen Sie die E-Mail und entscheiden Sie: richtig oder falsch? Teil 2: Lesen Sie die Situation und die zwei ' +
+        'Anzeigen. Welche Anzeige passt? Teil 3: Lesen Sie die Schilder und entscheiden Sie: richtig oder falsch?',
       parts: [
         {
           key: 'lesen-1',
@@ -273,21 +273,21 @@ export const abschlusstestA12 = {
       title: 'Schreiben',
       minutes: 10,
       instructions:
-        'Kurze Mitteilung: Schreib deine Antwort in das Textfeld. Diese Aufgabe wird nicht automatisch bewertet — ' +
-        'nutze den Selbstcheck.',
+        'Kurze Mitteilung: Schreiben Sie Ihre Antwort in das Textfeld. Diese Aufgabe wird nicht automatisch bewertet — ' +
+        'nutzen Sie den Selbstcheck.',
       parts: [
         {
           key: 'schreiben-1',
           type: 'writing',
           label: 'Teil 2 · Mitteilung',
           task:
-            'Du kannst morgen nicht zum Termin bei deiner Ärztin kommen. Schreib eine Mitteilung (ca. 30 Wörter) ' +
-            'an die Praxis. Nenne diese drei Punkte: Warum kannst du nicht kommen? Wann hast du Zeit? Schreib ' +
+            'Sie können morgen nicht zum Termin bei Ihrer Ärztin kommen. Schreiben Sie eine Mitteilung (ca. 30 Wörter) ' +
+            'an die Praxis. Nennen Sie diese drei Punkte: Warum können Sie nicht kommen? Wann haben Sie Zeit? Schreiben Sie ' +
             'auch eine Entschuldigung.',
           criteria: [
-            'Du hast alle drei Punkte geschrieben: Grund, Termin, Entschuldigung.',
-            'Du hast eine Anrede und einen Gruß geschrieben.',
-            'Du hast kurze Sätze und die Wörter richtig geschrieben.',
+            'Sie haben alle drei Punkte geschrieben: Grund, Termin, Entschuldigung.',
+            'Sie haben eine Anrede und einen Gruß geschrieben.',
+            'Sie haben kurze Sätze und die Wörter richtig geschrieben.',
           ],
         },
       ],

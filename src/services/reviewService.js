@@ -16,19 +16,13 @@ import { politeCaseItem } from '../data/lessonPools/quality.js';
 const TABLE = 'review_cards';
 const lc = (level) => String(level || '').toLowerCase();
 
-/**
- * Called by the lesson engine after a Lektion completes (the integration hook).
- * Idempotent: a card that already exists keeps the schedule it has earned.
- */
-export async function seedCardsForLektion(userId, lektion, level) {
-  if (!userId || !lektion) return 0;
-  const lvl = lc(level || lektion.level);
+function cardsForLektion(lektion) {
   const seen = new Set();
   const rows = [];
   const push = (card_key, kind) => {
     if (!card_key || seen.has(card_key)) return;
     seen.add(card_key);
-    rows.push({ user_id: userId, card_key, kind, level: lvl, step: 0, due_at: new Date().toISOString() });
+    rows.push({ card_key, kind });
   };
 
   for (const word of lektion.wortfeld || []) push(wordCardKey(word), cardKinds.WORD);
@@ -37,14 +31,46 @@ export async function seedCardsForLektion(userId, lektion, level) {
   for (const idx of lineIdx) {
     if (lektion.dialog?.lines?.[idx]) push(sentenceCardKey(lektion.id, idx), cardKinds.SENTENCE);
   }
+  return rows;
+}
+
+/**
+ * Called by the lesson engine after a Lektion completes (the integration hook).
+ * Idempotent: a card that already exists keeps the schedule it has earned.
+ */
+export async function seedCardsForLektion(userId, lektion, level, client = supabase) {
+  if (!userId || !lektion) return 0;
+  const lvl = lc(level || lektion.level);
+  const dueAt = new Date().toISOString();
+  const rows = cardsForLektion(lektion).map((card) => ({ ...card, user_id: userId, level: lvl, step: 0, due_at: dueAt }));
   if (!rows.length) return 0;
 
-  const { error } = await supabase.from(TABLE).upsert(rows, { onConflict: 'user_id,card_key', ignoreDuplicates: true });
+  const { error } = await client.from(TABLE).upsert(rows, { onConflict: 'user_id,card_key', ignoreDuplicates: true });
   if (error) {
     console.error('[reviewService] seedCardsForLektion:', error.message);
     return 0;
   }
   return rows.length;
+}
+
+/** The recap uses the saved schedule, including cards already due today. */
+export async function fetchLektionReviewDueAt(userId, lektion, level, client = supabase) {
+  if (!userId || !lektion) return null;
+  const keys = cardsForLektion(lektion).map((card) => card.card_key);
+  if (!keys.length) return null;
+  const { data, error } = await client
+    .from(TABLE)
+    .select('due_at')
+    .eq('user_id', userId)
+    .eq('level', lc(level || lektion.level))
+    .in('card_key', keys)
+    .order('due_at', { ascending: true })
+    .limit(1);
+  if (error) {
+    console.error('[reviewService] fetchLektionReviewDueAt:', error.message);
+    return null;
+  }
+  return data?.[0]?.due_at || null;
 }
 
 /** Cards due now (or earlier) for one level, oldest-due first. */

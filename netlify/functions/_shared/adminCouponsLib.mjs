@@ -59,7 +59,7 @@ export function evaluateCoupon(coupon, ctx = {}) {
   if (coupon.new_customer_only && ctx.isNewCustomer === false) return { ok: false, reason: 'new_customer_only', message: REFUSAL_MESSAGES.new_customer_only };
   const scope = Array.isArray(coupon.applicable_variant_ids) ? coupon.applicable_variant_ids : [];
   if (scope.length > 0 && (!ctx.variantId || !scope.includes(String(ctx.variantId)))) return { ok: false, reason: 'variant_scope', message: REFUSAL_MESSAGES.variant_scope };
-  if (coupon.minimum_order_amount != null && ctx.amountMinor != null && ctx.amountMinor < coupon.minimum_order_amount) return { ok: false, reason: 'minimum_order', message: REFUSAL_MESSAGES.minimum_order };
+  if (coupon.minimum_order_amount != null && (ctx.amountMinor == null || ctx.amountMinor < coupon.minimum_order_amount)) return { ok: false, reason: 'minimum_order', message: REFUSAL_MESSAGES.minimum_order };
   const discount = ctx.amountMinor != null ? computeDiscount(coupon, ctx.amountMinor) : null;
   return { ok: true, reason: 'ok', discount, final: ctx.amountMinor != null ? ctx.amountMinor - discount : null };
 }

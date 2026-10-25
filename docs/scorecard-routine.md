@@ -1,5 +1,62 @@
 # Agent team — schedule and Routine prompts (v4, 2026-10-04: playbooks and revenue focus)
 
+## v5 (2026-10-19): four role Routines. This section wins.
+
+**Where the Routines run.**
+- `create_trigger` refused the `connectors` parameter again on 2026-10-19 ("not available for this
+  organization"; the third measurement). So a Routine that starts a fresh session still can't
+  reach Supabase, GitHub or Netlify.
+- The four v5 Routines therefore wake one bound orchestrator session, `session_01Gzmc2yEsvear5NRgi2Ta1x` ("DM team v5 orchestrator", created 2026-10-19 with `create_session`; a probe confirmed Supabase, GitHub, Netlify, Gmail, Resend and ArtifactData), which holds the
+  connectors.
+- **Its permission mode is set to Auto by the owner, by hand** (the mode dropdown next to the
+  prompt box). A session an agent creates starts in default mode and stalls on its first
+  connector call: the first v5 fire (2026-10-19 12:27) wrote its start heartbeat, then waited on
+  an ArtifactData permission prompt. The auto-mode safety guard refuses both an agent-created
+  auto-mode session and binding the team's Routines to the owner's chat (both measured
+  2026-10-19), so this switch is the owner's.
+- The sentinel's 8-hour `team:heartbeat` rule is the alarm, and `TEAM_SESSION_ID` in
+  `netlify/functions/_shared/sentinelLib.mjs` names that session.
+- **If the session is lost:** recreate the four Routines below from any session that holds the
+  connectors, update `TEAM_SESSION_ID`, and the owner sets the new session to Auto.
+
+| UTC | Routine | Role (agent files spawned) |
+|---|---|---|
+| 05:50 daily | DM team v5: controller | controller (supervisor, website, webperf, security). Mondays add the owner packet |
+| 06:10 daily | DM team v5: sales | sales (revenue, conversion) |
+| 06:40 daily | DM team v5: distribution | distribution (acquisition, seo, content) |
+| 07:20, 12:20, 18:20 daily | DM team v5: fulfilment | fulfilment (product, support, retention). Support desk every pass; the 07:20 pass also builds |
+| 00:50 daily | DM team v5: overnight heartbeat | none: a heartbeat row and a critical-incident check, so the 18:20 → 05:50 gap never trips the 8-hour alarm |
+
+**Role prompt** (swap `<role>`):
+
+> DeutschMeister agent team v5: `<role>` run. Plan: `docs/strategy/million-plan-2026-10.md`.
+> 0. Write the start heartbeat (`public.agent_heartbeats`, agent 'orchestrator', wake
+>    '`<role>`-HHMM'). Never enter plan mode, and never wait for the owner mid-run.
+> 1. Fetch and fast-forward to origin/main. Read `config/charter` (v5) and `agents/<role>` in the
+>    team artifact. The charter wins over older PROTOCOL text.
+> 2. Build: Codex writes, you supervise. Cut a worktree from origin/main and write a brief for
+>    the top ready item in `agents/<role>.backlog`: the goal, the files, the `expected_effect`,
+>    the tests, and the rules (DeutschMeister only; never touch `CLAUDE.md`, `.env*`, credentials
+>    or an owner-only path; never print environment variables). Run
+>    `codex exec -c model_reasoning_effort="high" -s workspace-write -C <worktree> "<brief>"`,
+>    then review its diff yourself, run the steward gates, and commit, push and open the PR;
+>    record `built_by: codex` in `changes/<id>`. If `codex login status` fails or Codex is
+>    blocked, spawn one agent from the role's members with isolation worktree instead, and log
+>    `codex unavailable` with the reason.
+> 3. Check the diff against the v5 owner-only list. If it is clean, squash-merge on green CI,
+>    at most 3 deploying releases a day across the team. Anything on an owner-only path stays a
+>    draft, with a one-line approval request in `agents/<role>.owner_queue`.
+> 4. Write `agents/<role>`: last_run, a log entry with the expected effect, and the backlog
+>    status. Then write the end heartbeat. Report counts only, never customer text. Start the
+>    final line with URGENT: only for an outage, a data exposure or a money error.
+
+**Codex builds (2026-10-19, the owner's call, to save Claude usage).** Codex runs on the owner's
+OpenAI login, and that login lives on the machine where it was made: run
+`codex login --device-auth` once in the orchestrator session (the owner approves the code in a
+browser), and again whenever that session's machine is replaced. Codex never pushes, merges or
+holds a connector; Claude keeps the brief, the review, the gates and the merge.
+
+
 The team protocol is `docs/agents/PROTOCOL.md`; the one-page overview is
 `docs/agents/TEAM.md`. This file is the schedule and the prompt used to re-create the Routines.
 

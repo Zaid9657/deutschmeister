@@ -101,6 +101,12 @@ const ALL_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
   items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL }),
 }));
 
+// Legacy generator coverage remains intact; live A1.1 now has a separate authored-bank gate.
+const GENERATED_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
+  cp,
+  items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL }),
+}));
+
 const cp1 = CURRICULUM_FIXTURE.checkpoints[0];
 const cp2of6 = CURRICULUM_FIXTURE_6.checkpoints[1];
 
@@ -294,7 +300,7 @@ test('a falsch statement contradicts a line of THIS text, not another Lektion', 
     const chapterLines = new Set(
       chapterLektionen(CURRICULUM_A11, cp).flatMap((l) => l.dialog.lines.map((line) => line.de)),
     );
-    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL })
       .filter((i) => i.section === 'lesen');
     for (const item of items.filter((i) => i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
@@ -489,7 +495,7 @@ test('no Falsch statement of the four papers contains a determiner its noun cann
 test('a falsch statement changes a value, a contrary or the polarity of its report — never a person or a thing (A1.2 DaF review #5, MAJOR 8)', () => {
   let checked = 0;
   const kinds = new Set();
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
       const kind = contradictionOf(item.trueStatement, statement);
@@ -571,7 +577,7 @@ const lesenItemsOf = (cp, items) => items.filter((i) => i.section === 'lesen');
 
 test('no Lesen statement — richtig or falsch — stands in its own text', () => {
   let checked = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     for (const item of lesenItemsOf(cp, items)) {
       const statement = quotedStatement(item);
       assert.equal(statement, item.statement, `${item.id}: the prompt shows the item's statement`);
@@ -591,7 +597,7 @@ test('no Lesen statement — richtig or falsch — stands in its own text', () =
 });
 
 test('every richtig statement is the report of EXACTLY ONE line of its text', () => {
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     const spec = reportSpecFor(CURRICULUM_A11, cp);
     const chapter = chapterLektionen(CURRICULUM_A11, cp);
     for (const item of lesenItemsOf(cp, items)) {
@@ -617,7 +623,7 @@ test('every richtig statement is the report of EXACTLY ONE line of its text', ()
 
 test('every falsch statement is its own report, contradicted — and the change it names undoes', () => {
   let checked = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     for (const item of lesenItemsOf(cp, items).filter((i) => i.answer === 'Falsch')) {
       const { kind, from, to } = item.changed || {};
       assert.ok(['value', 'contrary', 'polarity'].includes(kind), `${item.id}: a falsch item names its kind of change`);
@@ -688,7 +694,7 @@ test('the stem-changing verbs are in the table as forms, not as suffixations', (
 test('every verb form a Lesen statement produced is one the course has taught by then', () => {
   const offenders = [];
   let produced = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     const known = knownUpTo(CURRICULUM_A11, cp.afterLektion);
     for (const item of lesenItemsOf(cp, items)) {
       for (const form of item.verbForms || []) {

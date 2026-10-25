@@ -55,8 +55,9 @@ const slideVariants = {
 // The prev/next arrows: a round secondary key (raised, depresses on press).
 const ARROW = 'h-10 w-10 !p-0 rounded-pill';
 
-export default function IntroSlides() {
-  const { currentStep, setCurrentStep, completeOnboarding, needsOnboarding } = useOnboarding();
+export default function IntroSlides({ onComplete }) {
+  const { currentStep, setCurrentStep, completeOnboarding: completeStandaloneOnboarding, needsOnboarding } = useOnboarding();
+  const completeOnboarding = onComplete || completeStandaloneOnboarding;
   const { user } = useAuth();
   const [examTrack, setExamTrack] = useState(null);
 
@@ -106,6 +107,7 @@ export default function IntroSlides() {
   // card keeps offering the test until it is done. "new" is not written — it is
   // the default, and not writing it keeps a USER_UPDATED auth event out of the
   // lesson player's first render.
+  // Pass the local exam choice: its profile write can still be in flight.
   const chooseStart = (point) => {
     if (point === STARTING_POINTS.SOME && user) {
       supabase.auth.updateUser({ data: { [STARTING_POINT_KEY]: point } })
@@ -113,7 +115,7 @@ export default function IntroSlides() {
           if (error) console.error('starting_point save failed:', error.message);
         });
     }
-    completeOnboarding(point === STARTING_POINTS.SOME ? 'level-test' : 'first-lesson');
+    completeOnboarding(point === STARTING_POINTS.SOME ? 'level-test' : 'first-lesson', { examTrack });
   };
 
   const slide = SLIDES[currentStep];

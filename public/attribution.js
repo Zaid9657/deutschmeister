@@ -41,7 +41,14 @@
     ['threads.net', 'threads'],
     ['pinterest.com', 'pinterest'], ['pinterest.de', 'pinterest'],
   ];
-  var SEARCH_HOSTS = ['google.', 'bing.com', 'duckduckgo.com', 'ecosia.org', 'yahoo.', 'yandex.'];
+  var SEARCH_HOSTS = [
+    [/(^|\.)google\.(?:[a-z]{2,3}|(?:com|co)\.[a-z]{2})$/, 'google'],
+    [/(^|\.)bing\.com$/, 'bing'],
+    [/(^|\.)duckduckgo\.com$/, 'duckduckgo'],
+    [/(^|\.)ecosia\.org$/, 'ecosia'],
+    [/(^|\.)yahoo\.(?:[a-z]{2,3}|(?:com|co)\.[a-z]{2})$/, 'yahoo'],
+    [/(^|\.)yandex\.(?:[a-z]{2,3}|com\.[a-z]{2})$/, 'yandex'],
+  ];
   var OWN_HOSTS = ['deutsch-meister.de', 'localhost', '127.0.0.1', 'netlify.app'];
 
   // An Android app that opens a link sends the referrer android-app://<package>,
@@ -97,7 +104,7 @@
       if (endsWithHost(host, SOCIAL_HOSTS[i][0])) return { source: SOCIAL_HOSTS[i][1], medium: 'social' };
     }
     for (var j = 0; j < SEARCH_HOSTS.length; j++) {
-      if (host.indexOf(SEARCH_HOSTS[j]) !== -1) return { source: host.split('.').slice(-2)[0], medium: 'organic' };
+      if (SEARCH_HOSTS[j][0].test(host)) return { source: SEARCH_HOSTS[j][1], medium: 'organic' };
     }
     return { source: pkg || host.replace(/^www\./, ''), medium: 'referral' };
   }

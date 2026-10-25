@@ -55,22 +55,22 @@ The pilot is on sale only while both are true:
 2. **[Owner] Close the store side:** set product 1329566 to Draft and check the old checkout link no longer sells (prompt step 0).
 3. **[Owner] Rename and reprice** product 1329566 / variant 2077984 to „telc-B1-Prüfungsprobe", €149.
    Use the prompt in `docs/owner-prompts.md` → *telc pilot*; it also sets the redirect, reports the tax category and discounts, and turns on sale notifications.
-4. **[Agent] PR B and PR C go live.** These are the 20-unit route, the deep links, the €149 page and the guarantee copy.
+4. **[Owner approves → Agent] PR B and PR C go live.** These are the 20-unit route, the deep links, the €149 page and the guarantee copy.
    The switch stays off until the page says €149.
-5. **[Owner + Agent] Test purchase**, before the switch, with a 99 %-off code. The owner first publishes the product again; it stays published from here. A €0 order cannot be refunded in Lemon Squeezy; a €1.49 one can.
+5. **[Owner; agent verifies] Test purchase, full refund and order replay**, all before the public opening, with a 99 %-off code. The owner temporarily publishes the product for the test and returns it to Draft after verification, until the public opening. A €0 order cannot be refunded in Lemon Squeezy; a €1.49 one can.
    The Buy buttons are still hidden, so the agent hands the owner a direct checkout link for the test account. That link carries the test account's user id. Then the agent verifies:
    - the purchase (*Verify a purchase* below);
    - the owner refunds in full, and the agent verifies the revocation (*Refunds*);
    - the owner resends that `order_created`, and the agent verifies that it stays refunded.
-6. **[Owner] Recommended:** turn on tax-inclusive pricing (`docs/owner-prompts.md`), so the checkout total equals the shown €149.
-   If the store stays tax-exclusive, PR C must print „zzgl. MwSt. (an der Kasse)" next to every price.
-7. **[Owner says "open the sale"] → [Agent]** sets `PUBLIC_TELC_B1_ON_SALE=true` (builds scope) via the Netlify connector and redeploys.
+6. **[Owner] Required release gate before opening:** turn on tax-inclusive pricing (`docs/owner-prompts.md`), so the checkout total equals the shown €149.
+   The sale stays closed until this and every release-gate item in `docs/strategy/million-plan-2026-10.md` are evidenced, including the test purchase, full refund and order replay with the intended access states.
+7. **[Owner says "open the sale" after the gate passes and publishes the product] → [Agent]** sets `PUBLIC_TELC_B1_ON_SALE=true` (builds scope) via the Netlify connector and redeploys.
    It then smoke-tests Buy signed out (lands on signup with the intent stored) and signed in (the overlay opens; no payment).
 8. **[Owner] Invite:**
    - the waitlist below;
    - partners;
    - Telegram.
-   Mailing the existing list is the owner's call. If chosen, it goes through `send-campaign` with unsubscribe links.
+   Mailing the existing list is the owner's call. If chosen, the owner sends it only with a documented legal basis and unsubscribe links; agents prepare drafts only.
 9. **At 10 sales, [Agent]** sets the switch back to `false` and redeploys, and **[Owner]** closes the store side again (step 2). The sale query below counts them.
 
 ## Verify a purchase
@@ -94,7 +94,7 @@ The course area `/telc-b1-kurs` opens for any `active` purchase row. The AI tool
 
 ## Refunds: full refunds only
 
-**Refund in Lemon Squeezy** (Orders → the order → Refund → **full amount**).
+**[Owner] Refund in Lemon Squeezy** (Orders → the order → Refund → **full amount**).
 
 `order_refunded` then:
 - sets the purchase to `refunded`;
@@ -123,11 +123,11 @@ A refund is acknowledged to Lemon Squeezy only once its event is logged. If the 
 - `is_subscribed = false`, unless that paid plan is live;
 - `access_until` ≈ the refund time.
 
-If any field is off, the agent revokes by hand with the same three updates `handleOrderRefunded` makes.
+If any field is off, the owner repairs access by hand with the same three updates `handleOrderRefunded` makes; agents may verify and prepare instructions, but never repair entitlements or move money.
 
 ## The practice extension (guarantee step 2)
 
-**Grant it once per buyer, after checking eligibility.**
+**[Owner] Grant it once per buyer, after checking eligibility.**
 - **Eligibility:**
   - all 20 units;
   - the three writing tasks, each with its revision (six AI corrections);
@@ -190,9 +190,9 @@ from subscriptions where user_id = '<USER_ID>';
 |---|---|
 | `plan_type = course` and this pilot order's id | Run the whole transaction below. |
 | A paid plan (`monthly`/`yearly`) ending at least 30 days from now | The AI tools are covered. Run only step 1. |
-| Anything else: an expired paid plan, a manual row, another course's window, no row | Stop and hand it to the agent. Do not improvise: a wrong update can break a paying subscriber's row. |
+| Anything else: an expired paid plan, a manual row, another course's window, no row | Stop and hand it to the owner for an access decision and any repair; agents may investigate and draft instructions only. Do not improvise: a wrong update can break a paying subscriber's row. |
 
-**Then run one transaction, and check every row count before `commit`.**
+**[Owner] Then run one transaction, and check every row count before `commit`.**
 
 ```sql
 begin;
@@ -218,7 +218,7 @@ commit;  -- or rollback; if any count differs
 
 **How the extra allowance is covered.** For 30 days the Pro allowance applies. It already covers the promised five extra 5-minute rehearsals and two extra writing corrections.
 
-**Record it in the reply to the buyer, with the new end date** from the purchase query.
+**[Owner] Record it in the reply to the buyer, with the new end date** from the purchase query; agents may draft the reply only.
 
 ## Queries
 

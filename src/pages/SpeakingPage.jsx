@@ -9,7 +9,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase, getAuthHeaders } from '../utils/supabase';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
-import { TRIAL_SPEAKING_SESSIONS } from '../data/marketing.js';
+import { TRIAL_SPEAKING_SESSIONS, PRO_SPEAKING_SESSIONS_PER_MONTH } from '../data/marketing.js';
 import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport, acquireMicrophone, releaseMicrophone, micErrorMessage } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
@@ -41,7 +41,6 @@ const LEVEL_NAMES_EN = {
 };
 const DURATIONS = [5, 10, 15];
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
-const SUB_FREE_5MIN_PER_DAY = 2;
 
 const FIELD_LABEL = 'block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel mb-2';
 const PRESS = 'transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none';
@@ -64,11 +63,6 @@ function nextSpeakingLevel(level) {
 function euros(cents) {
   if (!cents) return '€0';
   return cents % 100 === 0 ? `€${cents / 100}` : `€${(cents / 100).toFixed(2)}`;
-}
-
-function utcMidnightISO() {
-  const n = new Date();
-  return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate())).toISOString();
 }
 
 function BrowserUnsupportedBanner({ browserSupport }) {
@@ -137,14 +131,19 @@ const SpeakingPage = () => {
   const [missionsLoading, setMissionsLoading] = useState(true);
 
   const [walletCents, setWalletCents] = useState(0);
-  const [freeFiveUsed, setFreeFiveUsed] = useState(0); // subscriber daily count
-  const [usage, setUsage] = useState(null);            // non-subscriber trial state
+  const [usage, setUsage] = useState(null);
   const [metaLoading, setMetaLoading] = useState(true);
 
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState(null); // { type:'funds'|'error', ... }
   const [session, setSession] = useState(null);
   const [evaluation, setEvaluation] = useState(null);
+  const pendingStartRef = useRef(null);
+
+  useEffect(() => () => pendingStartRef.current?.(), []);
+  useEffect(() => {
+    if (phase === 'session') pendingStartRef.current = null;
+  }, [phase]);
 
   const levelInitRef = useRef(false);
   const browserSupport = useMemo(() => checkSpeakingSupport(), []);
@@ -195,20 +194,13 @@ const SpeakingPage = () => {
     if (!user?.id) { setMetaLoading(false); return; }
     setMetaLoading(true);
     try {
-      const [{ data: wallet }, { count }, usageRes] = await Promise.all([
+      const [{ data: wallet }, usageRes] = await Promise.all([
         supabase.from('speaking_wallet').select('balance_cents').eq('user_id', user.id).maybeSingle(),
-        // Mirrors freeFiveMinuteSessionsToday in speaking-session.mjs: a
-        // 'cancelled' session got no learner turn and used nothing up.
-        supabase.from('speaking_sessions').select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id).eq('planned_minutes', 5).eq('cost_cents', 0).neq('mode', 'placement')
-          .neq('status', 'cancelled')
-          .gte('started_at', utcMidnightISO()),
         fetch('/api/speaking/check-speaking-usage', {
           method: 'POST', headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) }, body: '{}',
         }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
       ]);
       setWalletCents(wallet?.balance_cents ?? 0);
-      setFreeFiveUsed(count || 0);
       setUsage(usageRes);
     } catch (err) {
       console.error('Failed to load speaking meta:', err);
@@ -242,20 +234,19 @@ const SpeakingPage = () => {
   }, [selectedLevel, user, wantedMission, wantedLevel]);
 
   // ---- pricing / allowance ----
-  const fiveMinFreeRemaining = subscriber
-    ? Math.max(0, SUB_FREE_5MIN_PER_DAY - freeFiveUsed)
-    : (usage && usage.allowed && Number.isFinite(usage.limit - usage.used) ? Math.max(0, usage.limit - usage.used) : (usage?.allowed ? 1 : 0));
-  const fiveMinIsFree = subscriber ? fiveMinFreeRemaining > 0 : !!usage?.allowed;
+  const fiveMinFreeRemaining = usage?.allowed && Number.isFinite(usage.limit - usage.used)
+    ? Math.max(0, usage.limit - usage.used) : (usage?.allowed ? 1 : 0);
+  const fiveMinIsFree = !!usage?.allowed;
   const costFor = (m) => (m === 5 ? (fiveMinIsFree ? 0 : PRICE_CENTS[5]) : PRICE_CENTS[m]);
   const selectedCost = costFor(selectedMinutes);
 
   let fiveMinLabel;
-  if (subscriber) {
-    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining}/${SUB_FREE_5MIN_PER_DAY} free today` : '5 min — €1';
+  if (usage?.tier === 'pro') {
+    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining}/${PRO_SPEAKING_SESSIONS_PER_MONTH} free this month` : `5 min — ${euros(PRICE_CENTS[5])}`;
   } else if (usage?.unlimited) {
     fiveMinLabel = '5 min · free';
   } else {
-    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining} free left` : '5 min — €1';
+    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining} free left` : `5 min — ${euros(PRICE_CENTS[5])}`;
   }
   const durationLabel = (m) => (m === 5 ? fiveMinLabel : `${m} min — ${euros(PRICE_CENTS[m])}`);
 
@@ -289,7 +280,7 @@ const SpeakingPage = () => {
 
   // ---- start ----
   const handleStart = async () => {
-    if (startDisabled) return;
+    if (startDisabled || pendingStartRef.current) return;
     setStarting(true);
     setStartError(null);
     // Microphone FIRST. The start call reserves the learner's allowance (a
@@ -297,19 +288,45 @@ const SpeakingPage = () => {
     // run before the permission prompt, so a denied or missing mic cost a
     // session the learner could never speak in.
     let mic;
+    let cancelled = false;
+    let sessionToken;
+    let authHeaders;
+    let closeCreatedSession;
+    const cancelStart = () => {
+      cancelled = true;
+      releaseMicrophone(mic);
+      closeCreatedSession?.();
+    };
+    pendingStartRef.current = cancelStart;
     try {
       mic = await acquireMicrophone();
+      if (cancelled) { releaseMicrophone(mic); return; }
     } catch (err) {
+      if (cancelled) return;
+      pendingStartRef.current = null;
       console.error('Mic error:', err);
       setStartError({ type: 'error', message: micErrorMessage(err) });
       setStarting(false);
       return;
     }
+    closeCreatedSession = () => {
+      if (sessionToken) {
+        const token = sessionToken;
+        sessionToken = null;
+        void fetch('/api/speaking/speaking-session', {
+          method: 'POST', keepalive: true,
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
+          body: JSON.stringify({ action: 'end', session_token: token, duration_seconds: 0 }),
+        }).catch((err) => console.warn('Abandoned speaking session close failed:', err.message));
+      }
+    };
     let handedOver = false;
     try {
+      authHeaders = await getAuthHeaders();
+      if (cancelled) return;
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({
           action: 'start',
           level: selectedLevel,
@@ -334,6 +351,8 @@ const SpeakingPage = () => {
         }),
       });
       const data = await res.json().catch(() => ({}));
+      sessionToken = data.session_token;
+      if (cancelled) { cancelStart(); return; }
       if (res.status === 402) {
         setStartError({ type: 'funds', balance: data.balance_cents ?? walletCents, cost: data.cost_cents ?? selectedCost });
         // The server priced it: the free allowance is gone. Re-read it so the
@@ -345,6 +364,7 @@ const SpeakingPage = () => {
         setStartError({ type: 'error', message: data.error || 'The session could not be started.' });
         return;
       }
+      if (!sessionToken) throw new Error('Failed to create speaking session');
       setSession({
         sessionToken: data.session_token,
         plannedMinutes: data.planned_minutes || selectedMinutes,
@@ -364,11 +384,15 @@ const SpeakingPage = () => {
       setEvaluation(null);
       setPhase('session');
     } catch (err) {
+      if (cancelled) return;
       console.error('start error:', err);
       setStartError({ type: 'error', message: 'Network error — please try again.' });
     } finally {
-      if (!handedOver) releaseMicrophone(mic);
-      setStarting(false);
+      if (!handedOver) {
+        releaseMicrophone(mic);
+        if (pendingStartRef.current === cancelStart) pendingStartRef.current = null;
+      }
+      if (!cancelled) setStarting(false);
     }
   };
 
@@ -693,7 +717,7 @@ const SpeakingPage = () => {
           ) : (
             <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
               {subscriber && selectedMinutes === 5
-                ? `Today's ${SUB_FREE_5MIN_PER_DAY} free sessions are used. New ones start at midnight UTC.`
+                ? `This month's ${PRO_SPEAKING_SESSIONS_PER_MONTH} included sessions are used. New ones start next month (UTC).`
                 : 'Not enough credit — top-ups are coming soon.'}
             </Card>
           )

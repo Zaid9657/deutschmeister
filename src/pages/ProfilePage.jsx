@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight, GraduationCap, Target } from 'lucide-react';
@@ -7,7 +7,8 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels } from '../data/content';
 import { EXAM_TRACKS } from '../data/examTracks';
-import { supabase } from '../utils/supabase';
+import { supabase, getAuthHeaders } from '../utils/supabase';
+import { resetAnalytics } from '../lib/analytics';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -46,6 +47,40 @@ const ProfilePage = () => {
   const plan = profilePlanAction(isSubscribed, subscription);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteEmail, setDeleteEmail] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [accountDeleted, setAccountDeleted] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+  const deletionPending = useRef(false);
+  const emailMatches = !!user?.email && deleteEmail.trim() === user.email;
+
+  const deleteAccount = async () => {
+    if (!emailMatches || deletionPending.current) return;
+    deletionPending.current = true;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      if (!accountDeleted) {
+        const res = await fetch('/.netlify/functions/delete-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+          body: '{}',
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.deleted) throw new Error(data.error || 'Account deletion failed. Please try again.');
+        setAccountDeleted(true);
+        resetAnalytics();
+      }
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      if (error) throw new Error('Your account was deleted, but sign-out failed. Please try again to finish signing out.');
+      window.location.assign('/');
+    } catch (error) {
+      setDeleteError(error.message || 'Account deletion failed. Please try again.');
+    } finally {
+      deletionPending.current = false;
+      setDeleting(false);
+    }
+  };
 
   const stats = getTotalStats();
   const overallProgress = getOverallProgress();
@@ -330,7 +365,7 @@ const ProfilePage = () => {
             <div className="pt-4">
               <button
                 type="button"
-                onClick={() => setShowDeleteConfirm(true)}
+                onClick={() => { setDeleteEmail(''); setDeleteError(null); setShowDeleteConfirm(true); }}
                 className="flex items-center gap-3 font-bold text-accent-himbeer-ink transition-colors hover:opacity-80"
               >
                 <Trash2 className="w-5 h-5" />
@@ -362,22 +397,25 @@ const ProfilePage = () => {
                   <p className="text-graphite text-sm">This action cannot be undone.</p>
                 </div>
               </div>
-              <p className="text-graphite mb-6">
-                All your progress and data will be permanently deleted. Are you sure you want to continue?
+              <p className="text-graphite mb-4">
+                Your account and linked learning progress will be permanently deleted. Support correspondence and payment records may be retained. Deleting your account does not cancel a paid subscription; manage it above first.
               </p>
+              <label className="block mb-4">
+                <span className="block text-sm text-graphite mb-2">Type your account email ({user?.email}) to confirm.</span>
+                <input type="email" value={deleteEmail} onChange={(e) => setDeleteEmail(e.target.value)} disabled={deleting} autoComplete="off" className={FIELD} />
+              </label>
+              {deleteError && <p role="alert" className="text-sm text-accent-himbeer-ink mb-4">{deleteError}</p>}
               <div className="flex gap-3">
-                <Button variant="secondary" className="flex-1" onClick={() => setShowDeleteConfirm(false)}>
+                <Button variant="secondary" className="flex-1" disabled={deleting} onClick={() => setShowDeleteConfirm(false)}>
                   {t('common.cancel')}
                 </Button>
                 <button
                   type="button"
-                  onClick={() => {
-                    // Handle account deletion
-                    setShowDeleteConfirm(false);
-                  }}
+                  onClick={deleteAccount}
+                  disabled={!emailMatches || deleting}
                   className="flex-1 inline-flex items-center justify-center gap-2 rounded-clay border border-accent-himbeer-ink bg-accent-himbeer-wash px-5 py-2.5 text-sm font-bold text-accent-himbeer-ink shadow-raise-himbeer transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none"
                 >
-                  <Trash2 className="w-4 h-4" /> Delete
+                  <Trash2 className="w-4 h-4" /> {deleting ? 'Please wait…' : accountDeleted ? 'Finish signing out' : 'Delete'}
                 </button>
               </div>
             </Card>

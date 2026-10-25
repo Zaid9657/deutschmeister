@@ -114,7 +114,7 @@ test('A2 picture MC, assignment groups and speaking materials have enforced shap
   }
 });
 
-test('new Lesen and dependent Hören items defer all answer evidence until completion', () => {
+test('new Lesen and all Hören items defer all answer evidence until completion', () => {
   for (const [kind, section] of [['mc3', 'lesen'], ['match', 'lesen'], ['match', 'hoeren'], ['mc3', 'hoeren']]) {
     const item = { id: kind, kind, section, groupId: 'shared', answer: 'A', accepted: ['A'], options: ['A', 'B', 'C'], explanationDe: 'secret' };
     assert.deepEqual(checkpointFeedback(item, 'B', { graded: true }), { answer: 'B' });
@@ -125,7 +125,8 @@ test('new Lesen and dependent Hören items defer all answer evidence until compl
     assert.equal(checkpointFeedback(item, 'B', { graded: false }).correct, false);
   }
   const independent = { id: 'single', section: 'hoeren' };
-  assert.equal(sectionFeedbackReady([independent], { single: 'answer' }, 'hoeren'), false);
+  assert.equal(sectionFeedbackReady([independent], { single: 'answer' }, 'hoeren'), true);
+  assert.deepEqual(checkpointFeedback(independent, 'answer', { graded: true }), { answer: 'answer' });
 });
 
 test('derived word order allows eleven A2 tokens while A1 stays at eight', () => {
@@ -134,10 +135,18 @@ test('derived word order allows eleven A2 tokens while A1 stays at eight', () =>
   assert.equal(derivedWordOrderMaxTokens('a1.1'), 8);
   assert.equal(derivedWordOrderMaxTokens('a1.2'), 8);
   assert.equal(derivedWordOrderMaxTokens('a2.1'), 11);
-  assert.ok(derivedItems(l).some((i) => i.type === 'word_order'));
-  assert.ok(!derivedItems(l, 1, 'a1.2').some((i) => i.type === 'word_order'));
-  l.dialog.lines[0].de += ' heute';
+  // The token ceiling survives, but the live tile rule rejects unsupported
+  // grammar at every level; a long subordinate clause is not a licensed frame.
+  assert.ok(l.dialog.lines[0].de.split(/\s+/).length <= derivedWordOrderMaxTokens('a2.1'));
+  assert.ok(!(l.dialog.lines[0].de.split(/\s+/).length <= derivedWordOrderMaxTokens('a1.2')));
   assert.ok(!derivedItems(l).some((i) => i.type === 'word_order'));
+  l.dialog.lines[0].de += ' heute';
+  assert.ok(!(l.dialog.lines[0].de.split(/\s+/).length <= derivedWordOrderMaxTokens('a2.1')));
+  assert.ok(!derivedItems(l).some((i) => i.type === 'word_order'));
+  l.dialog.lines[0].de = 'Ich bin Studentin.';
+  const tile = derivedItems(l).find((i) => i.type === 'word_order');
+  assert.ok(tile);
+  assert.ok(tile.accepted.includes('Studentin bin ich.'));
 });
 
 test('G7 probes mc3/match and A2 object and subordinate-clause alternatives', () => {

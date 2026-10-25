@@ -211,9 +211,9 @@ test('word order: when an object or a modal adverb could open the sentence, the 
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]', 'Die Firma braucht ein Büro.')), 'Die Firma');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), 'Wir');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / trinken / gern / Kaffee]', 'Ich trinke gern Kaffee.')), 'Ich');
-  // Nothing competes for the opening: a copula's predicate, a pronoun object with its prefix.
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), null);
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), null);
+  // Predicates and pronoun objects can front too: Lehrer bin ich. Dich rufe ich an.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), 'Ich');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), 'Ich');
   // …and a cued prompt is done; the answer-key rule is untouched by any of it.
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), null);
   assert.deepEqual(frontableOrders(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), []);
@@ -316,7 +316,7 @@ test('writing grader: a malformed AI result is unassessed, never a score (empty 
   ]) assert.equal(validEvaluation(task, bad), false, why);
   const { readFileSync } = await import('node:fs');
   const src = readFileSync(new URL('../netlify/functions/evaluate-writing.mjs', import.meta.url), 'utf8');
-  assert.match(src, /if \(!validEvaluation\(task, evaluation\)\) \{\s*return \{/, 'an invalid result returns evaluation_failed, after one retry');
+  assert.match(src, /if \(!validEvaluation\(task, evaluation\)\) \{[\s\S]*?from\('writing_submissions'\)\.delete\(\)[\s\S]*?return \{[\s\S]*?evaluation_failed: true/, 'an invalid result releases its reservation and returns evaluation_failed, after one retry');
 });
 
 /** A Supabase stand-in: chainable filters over an in-memory table, inserts that can fail. */

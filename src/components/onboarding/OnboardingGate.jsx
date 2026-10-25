@@ -17,7 +17,7 @@ const Spinner = () => (
 
 const OnboardingGate = ({ children }) => {
   const { user } = useAuth();
-  const { needsOnboarding, profileLoaded } = useOnboarding();
+  const { needsOnboarding, profileLoaded, completeOnboarding } = useOnboarding();
 
   // Anonymous visitors have no profile to load and no onboarding to do. Without
   // this, `profileLoaded` never flips (useOnboarding returns early when there is
@@ -34,7 +34,7 @@ const OnboardingGate = ({ children }) => {
   if (needsOnboarding) {
     return (
       <Suspense fallback={<Spinner />}>
-        <IntroSlides />
+        <IntroSlides onComplete={completeOnboarding} />
       </Suspense>
     );
   }

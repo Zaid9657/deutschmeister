@@ -5,7 +5,7 @@ import * as v from '../scripts/validate-curriculum.mjs';
 import { a1EngineSnapshot } from './helpers/a21-engine-baseline.mjs';
 import { CURRICULUM_A21 } from '../src/data/curricula/a21.js';
 
-test('A1 engine behaviour is byte-for-byte identical to the pre-Step-1 baseline', () => {
+test('A1 engine behaviour is byte-for-byte identical to the live-fixes integration baseline', () => {
   const before = JSON.parse(readFileSync(new URL('./fixtures/a21-engine-a1-baseline.json', import.meta.url), 'utf8'));
   assert.deepEqual(a1EngineSnapshot(), before);
 });

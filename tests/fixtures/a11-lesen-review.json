@@ -1,0 +1,647 @@
+{
+ "status": "reviewed",
+ "reviewedOn": "2026-10-25",
+ "method": "Independent blind semantic review (Codex as DaF/SD1 examiner, read-only): each unit solved from text, statement and alphabetically ordered options only — no key, evidence, rival or explanation — and judged for one supported answer, refutation (not silence), referents, natural German, a plausible text purpose and taught meanings. Round 1 reviewed all 64 units (51 OK, 13 FIX, every answer as keyed); the 13 were fixed and round 2 re-reviewed exactly those (7 OK, 6 FIX: phone numbers spelled out in words, one sign wording); the 6 were fixed and round 3 re-reviewed exactly those (5 OK, 1 FIX: a tandem ad offered Arabic its writer does not speak); that unit was rewritten and round 4 re-reviewed it. Every round reviewed only units whose text changed. `solved` and `evidence` are the reviewer's; `round` says which review covers the current text.",
+ "units": [
+  {
+   "id": "a11-cp1-p1-u1",
+   "solved": "Richtig",
+   "evidence": "Ana wohnt in Berlin.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Hallo Lena, Ana wohnt in Berlin. Ihre Eltern wohnen auch in Berlin. Ich wohne in Bremen. Kommst du auch nach Bremen? Grüße, Tim",
+   "question": "Steht das im Text? „Ana wohnt in Berlin.“"
+  },
+  {
+   "id": "a11-cp1-p1-u2",
+   "solved": "Falsch",
+   "evidence": "Tim kommt aus Polen und wohnt in Köln.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Kaya, guten Morgen! Tim kommt aus Polen und wohnt in Köln. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg",
+   "question": "Steht das im Text? „Tim wohnt in Bremen.“"
+  },
+  {
+   "id": "a11-cp1-p1-u3",
+   "solved": "Richtig",
+   "evidence": "Herr Weber ist hier.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Amt: Herr Weber ist hier. Frau Kaya ist nicht hier. Formulare bitte hier ausfüllen: Name, Adresse und Familienstand.",
+   "question": "Steht das im Text? „Herr Weber ist hier.“"
+  },
+  {
+   "id": "a11-cp1-p1-u4",
+   "solved": "Falsch",
+   "evidence": "Lena spricht Englisch, aber nicht Deutsch.",
+   "verdict": "ok",
+   "note": "",
+   "round": 3,
+   "text": "Englisch mit Lena! Lena spricht Englisch, aber nicht Deutsch. Sprichst du Deutsch und auch Englisch? Wir sprechen zusammen! Telefonnummer: 0173 2468501.",
+   "question": "Steht das im Text? „Lena spricht auch Deutsch.“"
+  },
+  {
+   "id": "a11-cp1-p2-u1",
+   "solved": "Falsch",
+   "evidence": "Frau Wolf ist Lehrerin aus Österreich, nicht Studentin.",
+   "verdict": "ok",
+   "note": "",
+   "round": 3,
+   "text": "Deutsch mit Frau Wolf! Frau Wolf ist Lehrerin aus Österreich, nicht Studentin. Sie spricht auch Arabisch. Sie wohnen in Köln? Frau Wolf wohnt hier. Telefonnummer: 0176 3582604.",
+   "question": "Steht das im Text? „Frau Wolf ist Studentin.“"
+  },
+  {
+   "id": "a11-cp1-p2-u2",
+   "solved": "Falsch",
+   "evidence": "Ali ist acht, Lena ist schon zehn.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Paul, Ali ist acht, Lena ist schon zehn. Die Kinder sprechen Deutsch und Englisch. Wie alt ist die Tochter von Frau Kaya? Grüße, Thomas",
+   "question": "Steht das im Text? „Ali ist schon zehn.“"
+  },
+  {
+   "id": "a11-cp1-p2-u3",
+   "solved": "Richtig",
+   "evidence": "Frau Berger ist verheiratet und wohnt in Bremen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Berger ist verheiratet und wohnt in Bremen. Bitte für das Formular nicht die Adresse von Frau Wolf: Sie wohnt in Berlin.",
+   "question": "Steht das im Text? „Frau Berger ist verheiratet.“"
+  },
+  {
+   "id": "a11-cp1-p2-u4",
+   "solved": "Richtig",
+   "evidence": "Paul ist schon zehn.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Abend, Lena! Paul ist schon zehn. Er spricht Deutsch und Englisch. Die Schwester von Paul ist acht und spricht Deutsch. Grüße, Ana",
+   "question": "Steht das im Text? „Paul ist schon zehn.“"
+  },
+  {
+   "id": "a11-cp1-p3-u1",
+   "solved": "Richtig",
+   "evidence": "Lena wohnt in Polen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ali! Lena wohnt in Polen. Thomas und ich wohnen nicht in Polen, wir wohnen in Berlin. Kommst du auch nach Berlin? Grüße, Paul",
+   "question": "Steht das im Text? „Lena wohnt in Polen.“"
+  },
+  {
+   "id": "a11-cp1-p3-u2",
+   "solved": "Falsch",
+   "evidence": "Frau Schmidt wohnt nicht hier.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Frau Schmidt wohnt nicht hier. Frau Brandt ist hier und spricht auch Englisch. Bitte sprechen Sie mit Frau Brandt.",
+   "question": "Steht das im Text? „Frau Schmidt wohnt hier.“"
+  },
+  {
+   "id": "a11-cp1-p3-u3",
+   "solved": "Richtig",
+   "evidence": "Thomas kommt aus Italien",
+   "verdict": "ok",
+   "note": "",
+   "round": 4,
+   "text": "Deutsch mit Thomas: Thomas kommt aus Italien und spricht Deutsch und Englisch. Sprichst du auch Englisch? Wir sprechen zusammen Deutsch und Englisch! Wohnort: Bremen. Telefonnummer: 0172 5328640.",
+   "question": "Steht das im Text? „Thomas kommt aus Italien.“"
+  },
+  {
+   "id": "a11-cp1-p3-u4",
+   "solved": "Falsch",
+   "evidence": "Frau Kaya kommt aus Marokko. Sie ist Lehrerin, nicht Studentin.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag, Herr Berg! Frau Kaya kommt aus Marokko. Sie ist Lehrerin, nicht Studentin. Ihre Tochter kommt aus Deutschland und ist Studentin. Grüße, Frau Wolf",
+   "question": "Steht das im Text? „Frau Kaya ist Studentin.“"
+  },
+  {
+   "id": "a11-cp1-p4-u1",
+   "solved": "Falsch",
+   "evidence": "Hier wohnt Familie Weber, nicht Familie Wolf.",
+   "verdict": "ok",
+   "note": "",
+   "round": 3,
+   "text": "Hier wohnt Familie Weber, nicht Familie Wolf. Frau Wolf wohnt in Berlin. Bitte sprechen Sie mit Frau Weber.",
+   "question": "Steht das im Text? „Hier wohnt Familie Wolf.“"
+  },
+  {
+   "id": "a11-cp1-p4-u2",
+   "solved": "Richtig",
+   "evidence": "Herr Brandt kommt aus Spanien und wohnt in Köln.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ana, Herr Brandt kommt aus Spanien und wohnt in Köln. Frau Brandt kommt aus Italien. Sie spricht Deutsch mit mir. Grüße, Tim",
+   "question": "Steht das im Text? „Herr Brandt kommt aus Spanien.“"
+  },
+  {
+   "id": "a11-cp1-p4-u3",
+   "solved": "Falsch",
+   "evidence": "Er wohnt in Bremen, nicht in Köln.",
+   "verdict": "ok",
+   "note": "",
+   "round": 3,
+   "text": "Arabisch mit Ali: Ali spricht Arabisch und Englisch. Er wohnt in Bremen, nicht in Köln. Du wohnst auch in Bremen? Telefonnummer: 0421 5826349.",
+   "question": "Steht das im Text? „Ali wohnt auch in Köln.“"
+  },
+  {
+   "id": "a11-cp1-p4-u4",
+   "solved": "Richtig",
+   "evidence": "Paul wohnt mit Frau Brandt in Berlin.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Frau Berger, Paul wohnt mit Frau Brandt in Berlin. Herr Brandt wohnt in Österreich. Grüße, Lena",
+   "question": "Steht das im Text? „Paul wohnt in Berlin.“"
+  },
+  {
+   "id": "a11-cp2-p1-u1",
+   "solved": "Richtig",
+   "evidence": "Der Tisch kostet zwanzig Euro, der Stuhl acht Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich verkaufe einen Tisch und einen Stuhl. Der Tisch kostet zwanzig Euro, der Stuhl acht Euro. Tisch und Stuhl sind weiß. Bitte Mail an Frau Wolf.",
+   "question": "Steht das im Text? „Der Stuhl kostet acht Euro.“"
+  },
+  {
+   "id": "a11-cp2-p1-u2",
+   "solved": "Falsch",
+   "evidence": "Die Tasche kostet zwölf Euro, der Rucksack kostet zwanzig Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Tim, die Tasche ist für Ana. Der Rucksack ist hier im Büro. Die Tasche kostet zwölf Euro, der Rucksack kostet zwanzig Euro. Grüße, Paul",
+   "question": "Steht das im Text? „Die Tasche kostet zwanzig Euro.“"
+  },
+  {
+   "id": "a11-cp2-p1-u3",
+   "solved": "Falsch",
+   "evidence": "Frau Kaya ist nicht im Büro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Büro Frau Kaya: Frau Kaya ist nicht im Büro. Frau Wolf ist hier und hat das Telefon. Bitte sprechen Sie mit Frau Wolf.",
+   "question": "Steht das im Text? „Frau Kaya ist im Büro.“"
+  },
+  {
+   "id": "a11-cp2-p1-u4",
+   "solved": "Richtig",
+   "evidence": "Ihr Wörterbuch ist im Büro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag, Frau Brandt, Ihr Wörterbuch ist im Büro. Das Heft ist nicht hier, es ist bei Frau Kaya. Brauchen Sie auch Papier? Das Papier ist hier. Grüße, Lena",
+   "question": "Steht das im Text? „Das Wörterbuch ist im Büro.“"
+  },
+  {
+   "id": "a11-cp2-p2-u1",
+   "solved": "Richtig",
+   "evidence": "der Stuhl ist schwarz.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Paul, der Stuhl ist schwarz. Ich brauche den Stuhl für das Büro. Der Tisch ist weiß und ist für Ana. Grüße, Lena",
+   "question": "Steht das im Text? „Der Stuhl ist schwarz.“"
+  },
+  {
+   "id": "a11-cp2-p2-u2",
+   "solved": "Falsch",
+   "evidence": "Die Lampe ist weiß.",
+   "verdict": "ok",
+   "note": "",
+   "round": 3,
+   "text": "Lampe für das Büro: acht Euro! Die Lampe ist weiß. Das Regal ist braun und kostet dreißig Euro. Ich verkaufe auch Bücher. Frau Brandt, Telefonnummer 0174 5236802.",
+   "question": "Steht das im Text? „Die Lampe für das Büro ist braun.“"
+  },
+  {
+   "id": "a11-cp2-p2-u3",
+   "solved": "Falsch",
+   "evidence": "Die Tasche ist blau.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Wolf, Ihre Tasche ist hier bei mir. Die Tasche ist blau. Das Bild ist rot und ist von Tim. Brauchen Sie das Bild auch? Grüße, Ana",
+   "question": "Steht das im Text? „Die Tasche ist rot.“"
+  },
+  {
+   "id": "a11-cp2-p2-u4",
+   "solved": "Richtig",
+   "evidence": "Die Uhr für Frau Kaya ist schwarz und kostet zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Uhr für Frau Kaya ist schwarz und kostet zehn Euro. Die Uhr für Frau Schmidt ist weiß. Bitte die Uhr für Frau Kaya kaufen!",
+   "question": "Steht das im Text? „Die Uhr für Frau Kaya ist schwarz.“"
+  },
+  {
+   "id": "a11-cp2-p3-u1",
+   "solved": "Richtig",
+   "evidence": "Frau Schmidt hat die Nummer drei zwei fünf.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Schmidt hat die Nummer drei zwei fünf. Bitte nicht die Nummer drei zwei vier! Die Nummer ist von Frau Wolf. Frau Schmidt ist hier im Büro.",
+   "question": "Steht das im Text? „Frau Schmidt hat die Nummer drei zwei fünf.“"
+  },
+  {
+   "id": "a11-cp2-p3-u2",
+   "solved": "Richtig",
+   "evidence": "Das Lineal ist für Tim.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ana! Das Lineal ist für Tim. Ich brauche die Schere für das Büro. Bitte auch einen Stift für mich! Danke und Grüße, Paul",
+   "question": "Steht das im Text? „Das Lineal ist für Tim.“"
+  },
+  {
+   "id": "a11-cp2-p3-u3",
+   "solved": "Falsch",
+   "evidence": "Das Handy kostet vierzig Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ich verkaufe ein Handy. Das Handy kostet vierzig Euro. Der Computer kostet hundert Euro. Handy und Computer sind von der Firma. Brauchen Sie ein Handy? Bitte Mail an Frau Wolf.",
+   "question": "Steht das im Text? „Das Handy kostet hundert Euro.“"
+  },
+  {
+   "id": "a11-cp2-p3-u4",
+   "solved": "Falsch",
+   "evidence": "Das Buch ist für Tim, nicht für Frau Wolf.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Frau Schmidt! Das Buch ist für Tim, nicht für Frau Wolf. Ana hat schon ein Buch. Das Heft ist für Ana. Grüße, Herr Berg",
+   "question": "Steht das im Text? „Das Buch ist für Frau Wolf.“"
+  },
+  {
+   "id": "a11-cp2-p4-u1",
+   "solved": "Falsch",
+   "evidence": "Herr Weber ist Ingenieur.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Lena, Herr Weber ist Ingenieur. Er ist nicht der Chef. Die Chefin heißt Frau Brandt. Ich brauche ihre Telefonnummer für das Formular. Grüße, Tim",
+   "question": "Steht das im Text? „Herr Weber ist nicht Ingenieur.“"
+  },
+  {
+   "id": "a11-cp2-p4-u2",
+   "solved": "Falsch",
+   "evidence": "Frau Kaya ist nicht hier im Büro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Firma Berg: Frau Kaya ist nicht hier im Büro. Bitte sprechen Sie mit Frau Wolf. Sie ist Verkäuferin und hat die Telefonnummer von Frau Kaya.",
+   "question": "Steht das im Text? „Frau Kaya ist hier im Büro.“"
+  },
+  {
+   "id": "a11-cp2-p4-u3",
+   "solved": "Richtig",
+   "evidence": "die Chefin ist hier im Büro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Schmidt, die Chefin ist hier im Büro. Der Kollege ist bei Frau Wolf. Brauchen Sie den Computer? Das Telefon ist auch hier. Grüße, Paul",
+   "question": "Steht das im Text? „Die Chefin ist hier im Büro.“"
+  },
+  {
+   "id": "a11-cp2-p4-u4",
+   "solved": "Richtig",
+   "evidence": "Das Heft ist nicht neu und kostet einen Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bücher für das Büro: Das Wörterbuch ist neu. Ich verkaufe es für zwölf Euro. Das Heft ist nicht neu und kostet einen Euro. Mail an Frau Berger.",
+   "question": "Steht das im Text? „Das Heft ist nicht neu.“"
+  },
+  {
+   "id": "a11-cp3-p1-u1",
+   "solved": "Richtig",
+   "evidence": "Sie hat um elf Uhr Zeit.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Termin bei Frau Kaya: Bitte um elf Uhr kommen. Frau Kaya arbeitet heute bis zehn Uhr bei der Firma Wolf. Sie hat um elf Uhr Zeit.",
+   "question": "Steht das im Text? „Frau Kaya hat um elf Uhr Zeit.“"
+  },
+  {
+   "id": "a11-cp3-p1-u2",
+   "solved": "Richtig",
+   "evidence": "Am Montag habe ich frei und arbeite nicht.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Lena, der Termin ist am Dienstag. Am Montag habe ich frei und arbeite nicht. Hast du am Montag auch Zeit? Wir gehen ins Kino! Grüße, Tim",
+   "question": "Steht das im Text? „Tim hat am Montag frei.“"
+  },
+  {
+   "id": "a11-cp3-p1-u3",
+   "solved": "Falsch",
+   "evidence": "Tee kostet zwei Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frühstück bei Frau Wolf: Brot und Kaffee für fünf Euro. Tee kostet zwei Euro. Wir haben morgens Zeit für Sie. Kommen Sie zum Frühstück!",
+   "question": "Steht das im Text? „Der Tee kostet fünf Euro.“"
+  },
+  {
+   "id": "a11-cp3-p1-u4",
+   "solved": "Falsch",
+   "evidence": "Ich arbeite am Montag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Morgen, Herr Berg! Ich arbeite am Montag. Die Pause ist um zwölf Uhr, nicht um zehn Uhr. Die Kollegin hat am Dienstag frei. Haben Sie dann Zeit? Grüße, Frau Brandt",
+   "question": "Steht das im Text? „Frau Brandt hat am Montag frei.“"
+  },
+  {
+   "id": "a11-cp3-p2-u1",
+   "solved": "Falsch",
+   "evidence": "ich bin heute krank. Wir gehen nicht ins Kino.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ana, ich bin heute krank. Wir gehen nicht ins Kino. Ich habe am Freitag Zeit. Gehen wir dann? Grüße, Paul",
+   "question": "Steht das im Text? „Paul geht heute ins Kino.“"
+  },
+  {
+   "id": "a11-cp3-p2-u2",
+   "solved": "Richtig",
+   "evidence": "Wir arbeiten heute im Büro bis zwölf Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Wir arbeiten heute im Büro bis zwölf Uhr. Frau Wolf arbeitet bis elf Uhr. Bitte kommen Sie vor zwölf Uhr. Nachmittags haben wir Pause.",
+   "question": "Steht das im Text? „Wir arbeiten im Büro bis zwölf Uhr.“"
+  },
+  {
+   "id": "a11-cp3-p2-u3",
+   "solved": "Falsch",
+   "evidence": "Der Kuchen kostet zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Kuchen und Brot von Frau Schmidt: Der Kuchen kostet zehn Euro. Das Brot kostet drei Euro. Frau Schmidt arbeitet morgens und hat nachmittags frei.",
+   "question": "Steht das im Text? „Der Kuchen von Frau Schmidt kostet drei Euro.“"
+  },
+  {
+   "id": "a11-cp3-p2-u4",
+   "solved": "Richtig",
+   "evidence": "ich gehe heute ins Kino.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Tim, ich gehe heute ins Kino. Ana hat nicht frei und arbeitet. Kommst du auch? Das Kino ist hier in Bremen. Grüße, Lena",
+   "question": "Steht das im Text? „Lena geht heute ins Kino.“"
+  },
+  {
+   "id": "a11-cp3-p3-u1",
+   "solved": "Richtig",
+   "evidence": "Die Suppe kostet hier vier Euro, der Salat fünf Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Suppe bei Frau Kaya: Die Suppe kostet hier vier Euro, der Salat fünf Euro. Wir haben auch Mineralwasser. Bitte kommen Sie um zwölf Uhr zum Essen.",
+   "question": "Steht das im Text? „Die Suppe kostet hier vier Euro.“"
+  },
+  {
+   "id": "a11-cp3-p3-u2",
+   "solved": "Richtig",
+   "evidence": "ich trinke nicht gern Kaffee.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Paul, ich trinke nicht gern Kaffee. Bitte Tee für mich! Frau Wolf trinkt gern Kaffee und möchte auch Brot. Wir kommen zum Frühstück. Grüße, Lena",
+   "question": "Steht das im Text? „Lena trinkt nicht gern Kaffee.“"
+  },
+  {
+   "id": "a11-cp3-p3-u3",
+   "solved": "Falsch",
+   "evidence": "Die Pause ist heute um zehn Uhr!",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Pause ist heute um zehn Uhr! Wir haben Kuchen und Brot. Herr Berg hat Mineralwasser für alle. Bitte kommen Sie pünktlich, wir arbeiten um elf Uhr.",
+   "question": "Steht das im Text? „Die Pause ist um elf Uhr.“"
+  },
+  {
+   "id": "a11-cp3-p3-u4",
+   "solved": "Falsch",
+   "evidence": "Ich habe Hunger und möchte Suppe. Salat möchte ich nicht.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Tag, Frau Brandt! Ich habe Hunger und möchte Suppe. Salat möchte ich nicht. Ali möchte Salat und ein Glas Wasser. Grüße, Thomas",
+   "question": "Steht das im Text? „Thomas möchte Salat, nicht Suppe.“"
+  },
+  {
+   "id": "a11-cp3-p4-u1",
+   "solved": "Falsch",
+   "evidence": "Frau Berger schwimmt nicht gern.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Tim, Frau Berger schwimmt nicht gern. Sie tanzt gern. Ich schwimme am Sonntag. Hast du am Sonntag Zeit? Kommst du auch? Grüße, Ana",
+   "question": "Steht das im Text? „Frau Berger schwimmt gern.“"
+  },
+  {
+   "id": "a11-cp3-p4-u2",
+   "solved": "Falsch",
+   "evidence": "die Chefin arbeitet am Mittwoch. Sie hat am Donnerstag frei.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Frau Wolf, die Chefin arbeitet am Mittwoch. Sie hat am Donnerstag frei. Ich habe am Mittwoch frei und komme dann zu Ihnen. Grüße, Herr Berg",
+   "question": "Steht das im Text? „Die Chefin arbeitet am Donnerstag.“"
+  },
+  {
+   "id": "a11-cp3-p4-u3",
+   "solved": "Richtig",
+   "evidence": "Herr Kaya spielt am Samstag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Fußball am Wochenende: Herr Kaya spielt am Samstag. Am Sonntag spielt Herr Schmidt. Herr Kaya und Herr Schmidt kommen um zehn Uhr. Spielen Sie auch? Bitte kommen Sie pünktlich!",
+   "question": "Steht das im Text? „Herr Kaya spielt am Samstag.“"
+  },
+  {
+   "id": "a11-cp3-p4-u4",
+   "solved": "Richtig",
+   "evidence": "Frau Brandt hört gern Musik und spricht Deutsch mit Ihnen.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Deutsch und Musik mit Frau Brandt! Frau Brandt hört gern Musik und spricht Deutsch mit Ihnen. Wir hören zusammen Musik. Haben Sie am Freitag Zeit? Bitte Mail an Frau Brandt.",
+   "question": "Steht das im Text? „Frau Brandt hört gern Musik.“"
+  },
+  {
+   "id": "a11-cp4-p1-u1",
+   "solved": "Falsch",
+   "evidence": "Die Fahrkarte kostet zwanzig Euro. Kinder zahlen zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Fahrt nach Berlin: Der Bus fährt um acht Uhr. Die Fahrkarte kostet zwanzig Euro. Kinder zahlen zehn Euro. Bitte kaufen Sie die Fahrkarte am Bahnhof.",
+   "question": "Steht das im Text? „Die Fahrkarte kostet dreißig Euro.“"
+  },
+  {
+   "id": "a11-cp4-p1-u2",
+   "solved": "Richtig",
+   "evidence": "Der Zug nach Köln fährt heute von Gleis vier.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Der Zug nach Köln fährt heute von Gleis vier. Bitte nicht zu Gleis drei gehen! Der Zug nach Berlin fährt von Gleis drei. Abfahrt nach Köln: neun Uhr.",
+   "question": "Steht das im Text? „Der Zug nach Köln fährt von Gleis vier.“"
+  },
+  {
+   "id": "a11-cp4-p1-u3",
+   "solved": "Richtig",
+   "evidence": "meine Ankunft in Bremen ist um zehn Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Paul, meine Ankunft in Bremen ist um zehn Uhr. Meine Abfahrt in Köln ist schon um sieben Uhr. Holst du mich am Bahnhof ab? Grüße, Lena",
+   "question": "Steht das im Text? „Lena kommt um zehn Uhr.“"
+  },
+  {
+   "id": "a11-cp4-p1-u4",
+   "solved": "Falsch",
+   "evidence": "ich fahre um acht Uhr mit dem Bus nach Berlin.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ana, ich fahre um acht Uhr mit dem Bus nach Berlin. Der Zug fährt nicht nach Berlin, er fährt nach Köln. Kommst du auch nach Berlin? Grüße, Tim",
+   "question": "Steht das im Text? „Tim fährt um acht Uhr mit dem Zug.“"
+  },
+  {
+   "id": "a11-cp4-p2-u1",
+   "solved": "Falsch",
+   "evidence": "Eine Karte kaufe ich nicht.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Lena, ich kaufe ein Buch für Ana. Eine Karte kaufe ich nicht. Tim hat schon eine Karte für sie. Wir kommen auch am Freitag. Grüße, Paul",
+   "question": "Steht das im Text? „Paul kauft eine Karte für Ana.“"
+  },
+  {
+   "id": "a11-cp4-p2-u2",
+   "solved": "Richtig",
+   "evidence": "Meine Schwester bringt Wein mit.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Tim! Meine Schwester bringt Wein mit. Mein Bruder bringt Kuchen, aber nicht Wein mit. Wir feiern am Samstag bei Frau Wolf. Kommst du? Grüße, Ana",
+   "question": "Steht das im Text? „Die Schwester bringt Wein mit.“"
+  },
+  {
+   "id": "a11-cp4-p2-u3",
+   "solved": "Richtig",
+   "evidence": "Am Samstag arbeitet sie nicht.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Kuchen für Ihre Party: Frau Kaya hat am Freitag Zeit und macht Kuchen für zwanzig Euro. Am Samstag arbeitet sie nicht. Bitte rufen Sie Frau Kaya an.",
+   "question": "Steht das im Text? „Frau Kaya arbeitet am Samstag nicht.“"
+  },
+  {
+   "id": "a11-cp4-p2-u4",
+   "solved": "Falsch",
+   "evidence": "Die Party bei Frau Wolf ist am Sonntag, nicht am Samstag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Die Party bei Frau Wolf ist am Sonntag, nicht am Samstag. Bitte bringen Sie kein Geschenk mit! Kuchen und Wein sind schon hier. Wir feiern zusammen!",
+   "question": "Steht das im Text? „Die Party ist nicht am Sonntag.“"
+  },
+  {
+   "id": "a11-cp4-p3-u1",
+   "solved": "Richtig",
+   "evidence": "Frau Brandt arbeitet morgen ab neun Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Frau Brandt ist heute nicht im Büro. Frau Brandt arbeitet morgen ab neun Uhr. Herr Berg kommt um zehn Uhr. Bitte kommen Sie morgen oder rufen Sie an.",
+   "question": "Steht das im Text? „Frau Brandt arbeitet morgen ab neun Uhr.“"
+  },
+  {
+   "id": "a11-cp4-p3-u2",
+   "solved": "Falsch",
+   "evidence": "ich rufe um neun Uhr meine Schwester an. Lena ruft meine Schwester um zehn Uhr an.",
+   "verdict": "ok",
+   "note": "",
+   "round": 2,
+   "text": "Hallo Paul, ich rufe um neun Uhr meine Schwester an. Lena ruft meine Schwester um zehn Uhr an. Die Kinder und ich kommen später zu dir. Grüße, Tim",
+   "question": "Steht das im Text? „Tim ruft um zehn Uhr die Schwester an.“"
+  },
+  {
+   "id": "a11-cp4-p3-u3",
+   "solved": "Richtig",
+   "evidence": "Ich verkaufe drei Bücher zusammen für zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Bücher für Kinder: Ich verkaufe drei Bücher zusammen für zehn Euro. Ein Wörterbuch kostet zwanzig Euro. Bitte nicht vor neun Uhr anrufen. Frau Schmidt",
+   "question": "Steht das im Text? „Drei Bücher kosten zusammen zehn Euro.“"
+  },
+  {
+   "id": "a11-cp4-p3-u4",
+   "solved": "Falsch",
+   "evidence": "Wir essen heute um eins, nicht um zwei Uhr.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Ana, meine Mama arbeitet heute. Mein Papa hat frei und kocht Suppe. Mama hat morgen frei. Wir essen heute um eins, nicht um zwei Uhr. Kommst du auch? Grüße, Lena",
+   "question": "Steht das im Text? „Lena isst heute um zwei Uhr.“"
+  },
+  {
+   "id": "a11-cp4-p4-u1",
+   "solved": "Falsch",
+   "evidence": "Abfahrt nach Österreich heute um elf Uhr! Der Bus um zehn Uhr fährt in die Schweiz.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Abfahrt nach Österreich heute um elf Uhr! Der Bus um zehn Uhr fährt in die Schweiz. Fahrkarten für die Schweiz: beim Fahrer. Fahrkarten nach Österreich: am Bahnhof.",
+   "question": "Steht das im Text? „Der Bus um zehn Uhr fährt nach Österreich.“"
+  },
+  {
+   "id": "a11-cp4-p4-u2",
+   "solved": "Richtig",
+   "evidence": "das Buch ist von Frau Brandt.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Hallo Ali, das Buch ist von Frau Brandt. Die Karte ist von Paul. Buch und Karte sind für dich zum Geburtstag. Wir kommen am Sonntag! Grüße, Ana",
+   "question": "Steht das im Text? „Das Buch ist von Frau Brandt.“"
+  },
+  {
+   "id": "a11-cp4-p4-u3",
+   "solved": "Falsch",
+   "evidence": "Herr Berg feiert am Freitag.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Guten Morgen, Tim! Herr Berg feiert am Freitag. Frau Kaya feiert schon am Montag. Ich komme am Freitag mit und bringe Kuchen mit. Grüße, Lena",
+   "question": "Steht das im Text? „Herr Berg feiert am Montag.“"
+  },
+  {
+   "id": "a11-cp4-p4-u4",
+   "solved": "Richtig",
+   "evidence": "Die Fahrt kostet zehn Euro.",
+   "verdict": "ok",
+   "note": "",
+   "round": 1,
+   "text": "Am Sonntag fahren wir nach Bremen. Die Fahrt kostet zehn Euro. Am Samstag fahren wir nicht. Kommen Sie mit! Bitte rufen Sie Frau Wolf an.",
+   "question": "Steht das im Text? „Die Fahrt kostet zehn Euro.“"
+  }
+ ]
+}

@@ -15,6 +15,9 @@
 // THE RULE (one primary action, everything else secondary):
 //   * any lesson activity, or activity unknown (a failed read) → null: the
 //     ordinary dashboard. Never show "start here" to someone who has started.
+//   * a known exam choice → its first writing task, or its Kurzversion when
+//     no writing bank exists and hasLevelAccess opens the mock. The ordinary
+//     course/placement decision stays available as the alternative.
 //   * placed by the level test (profiles.current_level is a sub-level — the
 //     column's 'a1' default is NOT a placement) above the free level → the
 //     first grammar lesson of the placed level when hasLevelAccess opens it,
@@ -29,6 +32,8 @@
 import { FREE_COURSE_LEVEL, FREE_COURSE_HOME } from './courseEntry.js';
 import { LEVEL_ORDER } from '../config/levels.js';
 import { getTopicsForLevel } from '../data/grammarTopics.js';
+import { examTrackByKey } from '../data/examTracks.js';
+import { writingTasksForExam } from '../data/writingTasks.js';
 
 /** Lektion 1 of the free course — an SPA route, no trailing slash (CLAUDE.md case 3). */
 export const FIRST_LESSON_HREF = `/course/${FREE_COURSE_LEVEL}/l/1`;
@@ -63,11 +68,37 @@ const placement = () => ({ kind: 'placement', href: PLACEMENT_HREF, fullLoad: fa
  *                                                         null/undefined = unknown (not first-run)
  * @param {string|null|undefined} args.startingPoint       user_metadata.starting_point ('new' | 'some')
  * @param {string|null|undefined} args.currentLevel        profiles.current_level ('B1.1', 'a1', …)
+ * @param {string|null|undefined} args.examTrack           profiles.exam_track
  * @param {(level: string) => boolean} [args.hasLevelAccess] SubscriptionContext.hasLevelAccess
  * @returns {null | { kind: string, href: string, fullLoad: boolean, level?: string, topic?: object,
  *                    alternative: null | { kind: string, href: string, fullLoad: boolean } }}
  */
-export function firstRunAction({ hasLessonActivity, startingPoint, currentLevel, hasLevelAccess } = {}) {
+export function firstRunAction(args = {}) {
+  const fallback = courseFirstRunAction(args);
+  if (!fallback) return null;
+  const { examTrack, hasLevelAccess } = args;
+  const track = examTrackByKey(examTrack);
+  if (!track) return fallback;
+
+  const task = writingTasksForExam(track.key)[0];
+  // The writing editor renders for signed-in learners, but exam feedback
+  // needs trial/paid access. Use the band's top sublevel for both task types,
+  // matching ExamSubscriptionGuard and avoiding the always-free A1.1 gate.
+  const gateLevel = track.sublevels[track.sublevels.length - 1];
+  const examOpen = typeof hasLevelAccess === 'function' && hasLevelAccess(gateLevel);
+  if (!examOpen || (!task && !track.hasMock)) return fallback;
+
+  const { alternative: _alternative, ...alternative } = fallback;
+  return {
+    kind: task ? 'writing' : 'mock',
+    examName: track.nameDe,
+    href: task ? `/schreiben/${track.slug}?task=${encodeURIComponent(task.taskKey)}` : `/modelltest/${track.slug}`,
+    fullLoad: false,
+    alternative,
+  };
+}
+
+function courseFirstRunAction({ hasLessonActivity, startingPoint, currentLevel, hasLevelAccess }) {
   if (hasLessonActivity !== false) return null;
   const may = (level) => typeof hasLevelAccess !== 'function' || hasLevelAccess(level);
   const freeOpen = may(FREE_COURSE_LEVEL);
@@ -92,10 +123,20 @@ export function firstRunAction({ hasLessonActivity, startingPoint, currentLevel,
 
 /**
  * Where the onboarding exits go (useOnboarding.completeOnboarding). The
- * beginner answer lands IN Lektion 1 — not on a menu, not on a 15–20 minute
- * test.
+ * exam choice takes priority on the two learning exits. Other exits retain
+ * their existing destinations, including skipping straight to the dashboard.
  */
-export const onboardingExitPath = (exitPath) => {
+export const onboardingExitPath = (exitPath, { examTrack, currentLevel, hasLevelAccess } = {}) => {
+  if (exitPath === 'first-lesson' || exitPath === 'level-test') {
+    const action = firstRunAction({
+      hasLessonActivity: false,
+      startingPoint: exitPath === 'level-test' ? STARTING_POINTS.SOME : STARTING_POINTS.NEW,
+      currentLevel,
+      examTrack,
+      hasLevelAccess,
+    });
+    if (action.kind === 'writing' || action.kind === 'mock') return action.href;
+  }
   if (exitPath === 'first-lesson') return FIRST_LESSON_HREF;
   if (exitPath === 'level-test') return '/level-test';
   return '/dashboard';

@@ -230,18 +230,25 @@ const innerHandler = async (event) => {
 
   // Claim BEFORE send: UNIQUE(user_id, kind) makes re-runs and crashes safe —
   // the worst outcome after this line is a missed email, never a double one.
-  const { error: claimError } = await supabase
+  const { data: claims, error: claimError } = await supabase
     .from('lifecycle_emails')
     .upsert(recipients.map((r) => ({ user_id: r.id, kind: 'confirm_nudge' })), {
       onConflict: 'user_id,kind',
       ignoreDuplicates: true,
-    });
+    })
+    .select('user_id');
   if (claimError) {
     console.error('[confirmation-nudge] claim failed (migration applied?):', claimError.message);
     return { statusCode: 500, body: JSON.stringify({ error: `claim failed: ${claimError.message}` }) };
   }
 
-  const items = recipients.map((r) => ({
+  const claimedIds = new Set((claims || []).map((r) => r.user_id));
+  const claimed = recipients.filter((r) => claimedIds.has(r.id));
+  if (claimed.length === 0) {
+    return { statusCode: 200, body: JSON.stringify({ enabled: true, dry: false, sent: 0, failed: 0 }) };
+  }
+
+  const items = claimed.map((r) => ({
     from: FROM_ADDRESS,
     to: [r.email],
     reply_to: 'zaid@deutsch-meister.de',

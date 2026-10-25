@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
@@ -10,6 +10,8 @@ import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, TRIAL_DAYS } from '../config/limits
 import { FREE_LEVEL_LABEL } from '../data/marketing.js';
 import { getAttribution } from '../lib/attribution';
 import { getOrCreateAnonId, isLikelyCrawler, xraySource, XRAY_OFFER } from '../lib/xray.js';
+import { grammarTopicLink } from '../lib/xrayTopics.js';
+import { topics as grammarTopics } from '../../grammar-content-cache.json';
 import { withTimeout } from '../utils/withTimeout';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -144,6 +146,7 @@ function WordCard({ word, index }) {
   const [expanded, setExpanded] = useState(false);
   const style = getStyle(word.case);
   const roleLabel = ROLE_LABELS[word.role] || word.role;
+  const topic = grammarTopicLink(word.grammarTopic, grammarTopics);
 
   return (
     <Reveal delay={index * 60}>
@@ -184,12 +187,12 @@ function WordCard({ word, index }) {
                 <p className="mt-3 text-sm text-graphite leading-relaxed border-t border-rule pt-3">
                   {word.explanation}
                 </p>
-                {word.grammarTopic && (
+                {topic && (
                   <a
-                    href={`/grammar/a1.1/${word.grammarTopic}/`}
+                    href={topic.href}
                     className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-siegel hover:text-siegel-deep transition-colors"
                   >
-                    Learn more: {word.grammarTopic.replace(/-/g, ' ')}
+                    Learn more: {topic.title}
                     <ArrowRight size={11} />
                   </a>
                 )}
@@ -370,6 +373,7 @@ const SentenceXRay = () => {
   const [selectedWord, setSelectedWord] = useState(null);
   const [limitReached, setLimitReached] = useState(null); // { tier, limit }
   const [usage, setUsage]             = useState(null);   // { tier, limit, usedToday, remaining }
+  const analysisInFlight = useRef(false);
 
   // Stable anonymous ID
   const [anonId] = useState(() => getOrCreateAnonId());
@@ -400,7 +404,8 @@ const SentenceXRay = () => {
   // travels with the coarse source so link traffic and typing can be told apart.
   const analyze = async (text, entry = 'typed') => {
     const trimmed = (text || sentence).trim();
-    if (!trimmed) return;
+    if (!trimmed || analysisInFlight.current) return;
+    analysisInFlight.current = true;
 
     setLoading(true);
     setError(null);
@@ -448,6 +453,7 @@ const SentenceXRay = () => {
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
+      analysisInFlight.current = false;
       setLoading(false);
     }
   };

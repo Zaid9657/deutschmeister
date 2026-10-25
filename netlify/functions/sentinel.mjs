@@ -263,7 +263,7 @@ export async function runChecks({ db, fetchImpl, env, now }) {
         .order('created_at', { ascending: true }));
       const tokens = sessions.map((s) => s.session_token).filter(Boolean);
       const evals = tokens.length
-        ? await fetchAll(() => db.from('speaking_evaluations').select('session_token, score, total_score').in('session_token', tokens).order('created_at', { ascending: true }))
+        ? await fetchAll(() => db.from('speaking_evaluations').select('session_token, score, total_score').in('session_token', tokens).is('scores->>_pending', null).is('scores->>_failed', null).order('created_at', { ascending: true }))
         : [];
       return checkSpeakingFlows(sessions, evals, now);
     }),

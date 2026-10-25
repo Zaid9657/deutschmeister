@@ -14,7 +14,10 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const shell = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const seo = readFileSync(new URL('../src/components/SEO.jsx', import.meta.url), 'utf8');
@@ -89,4 +92,28 @@ test('SEO.jsx derives og:locale from lang rather than hardcoding it', () => {
     'og:locale:alternate is hardcoded again');
   assert.match(seo, /const ogLocale = lang === 'de' \? 'de_DE' : 'en_US';/,
     'og:locale must follow the same rule as scripts/prerender-spa-routes.mjs');
+});
+
+test('prerendered route schemas are Helmet-owned while shell schemas stay site-wide', () => {
+  const root = dirname(dirname(fileURLToPath(import.meta.url)));
+  const dir = mkdtempSync(join(root, '.head-tags-test-'));
+  const shellSchemas = [...shell.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  try {
+    writeFileSync(join(dir, 'app.html'), shell);
+    execFileSync(process.execPath, [join(root, 'scripts/prerender-spa-routes.mjs'), dir], { stdio: 'ignore' });
+    for (const route of ['speaking', 'level-test', 'analyze', 'podcasts', 'listening', 'reading', 'faq', 'ueber-uns']) {
+      const html = readFileSync(join(dir, route, 'index.html'), 'utf8');
+      let routeSchemas = 0;
+      for (const m of html.matchAll(/<script type="application\/ld\+json"([^>]*)>([\s\S]*?)<\/script>/g)) {
+        const data = JSON.parse(m[2]);
+        const siteWide = shellSchemas.includes(m[2]);
+        assert.equal(m[1].includes('data-rh="true"'), !siteWide,
+          `${route}: ${data['@type']} has the wrong Helmet ownership`);
+        if (!siteWide) routeSchemas += 1;
+      }
+      assert.ok(routeSchemas > 0, `${route}: expected route-specific schemas`);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

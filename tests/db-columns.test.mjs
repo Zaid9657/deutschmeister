@@ -117,7 +117,8 @@ const MIN_COLUMN_REFS = 1200;
 // (admin tables chosen at runtime, rows built by helpers). A ratchet: it must
 // equal the measurement. Lower it when you make one static; raise it only
 // with a reason, since every one of these is a query this rule cannot see.
-const UNRESOLVED = 15;
+// X-Ray now reserves through a typed RPC rather than inserting a dynamic row.
+const UNRESOLVED = 14;
 
 test('the scanner still sees the repo (coverage floor and unresolved ratchet)', () => {
   const { refs, chains, skipped } = scanRepo();

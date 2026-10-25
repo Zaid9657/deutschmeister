@@ -1,4 +1,5 @@
-// Offline A1 behaviour fingerprint, captured before the A2.1 engine changes.
+// Offline A1 behaviour fingerprint, recaptured independently from live-fixes
+// during the A2.1 integration merge (2026-10-25).
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import * as validator from '../../scripts/validate-curriculum.mjs';

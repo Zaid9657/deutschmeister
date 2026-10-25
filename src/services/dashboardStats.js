@@ -55,6 +55,8 @@ async function fetchActivityTimestamps(userId) {
     supabase
       .from('speaking_evaluations')
       .select('created_at')
+      .is('scores->>_pending', null)
+      .is('scores->>_failed', null)
       .eq('user_id', userId),
     // Reading and listening both counted for nothing before this: a learner
     // could finish a lesson or a dialogue every day and still show a 0-day
@@ -246,6 +248,8 @@ export async function loadDashboardStats(userId) {
       supabase
         .from('speaking_evaluations')
         .select('id', { count: 'exact', head: true })
+        .is('scores->>_pending', null)
+        .is('scores->>_failed', null)
         .eq('user_id', userId),
       supabase
         .from('xray_usage')

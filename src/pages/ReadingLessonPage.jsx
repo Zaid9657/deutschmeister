@@ -14,6 +14,7 @@ import {
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
+import LevelSubscriptionGuard from '../components/LevelSubscriptionGuard';
 import { levels } from '../data/content';
 import {
   getReadingLessonById,
@@ -38,9 +39,11 @@ const ReadingLessonPage = () => {
   const { isItemLearned, markAsLearned } = useProgress();
   const { user } = useAuth();
 
-  const [lesson, setLesson] = useState(null);
-  const [allLessons, setAllLessons] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const routeKey = `${level}/${lessonId}`;
+  const [result, setResult] = useState(null);
+  const lesson = result?.key === routeKey ? result.lesson : null;
+  const allLessons = result?.key === routeKey ? result.allLessons : [];
+  const loading = result?.key !== routeKey;
   const [showTranslation, setShowTranslation] = useState(false);
   // Completing the lesson is the earned moment; RE-OPENING a finished one is
   // not. `isCompleted` comes from persisted progress, so the celebration has
@@ -61,26 +64,22 @@ const ReadingLessonPage = () => {
     return () => setCurrentLevel(null);
   }, [level, navigate, setCurrentLevel]);
 
-  // Fetch lesson data
+  // Keep the fetched row bound to both route segments, including during a
+  // route transition before the next effect has started.
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      setLoading(true);
       const [fetchedLesson, fetchedAll] = await Promise.all([
-        getReadingLessonById(lessonId),
+        getReadingLessonById(lessonId, level),
         getReadingLessonsByLevel(level),
       ]);
       if (!cancelled) {
-        setLesson(fetchedLesson);
-        setAllLessons(fetchedAll);
-        setLoading(false);
+        setResult({ key: routeKey, lesson: fetchedLesson, allLessons: fetchedAll });
       }
     };
-    if (levels.includes(level)) {
-      load();
-    }
+    if (levels.includes(level)) load();
     return () => { cancelled = true; };
-  }, [level, lessonId]);
+  }, [level, lessonId, routeKey]);
 
   // Find current lesson index and neighbors
   const currentIndex = allLessons.findIndex((l) => l.id === lessonId);
@@ -121,7 +120,7 @@ const ReadingLessonPage = () => {
     );
   }
 
-  if (!lesson) {
+  if (!lesson || lesson.level !== level) {
     return (
       <div className="min-h-screen bg-paper pt-20 pb-12">
         <div className="max-w-2xl mx-auto px-4 pt-12">
@@ -152,6 +151,7 @@ const ReadingLessonPage = () => {
     : [];
 
   return (
+    <LevelSubscriptionGuard level={lesson.level}>
     <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
       <SEO
         title={lesson ? `${lesson.title_en || lesson.title} - German Reading ${level.toUpperCase()}` : `German Reading Practice ${level.toUpperCase()}`}
@@ -333,6 +333,7 @@ const ReadingLessonPage = () => {
         </Reveal>
       </div>
     </div>
+    </LevelSubscriptionGuard>
   );
 };
 

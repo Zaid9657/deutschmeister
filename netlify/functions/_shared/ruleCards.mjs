@@ -136,7 +136,7 @@ export const RULE_CARDS = {
   },
   "imperative": {
     "titleDe": "Der Imperativ: bitten und auffordern",
-    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt weg, die Endung -st fällt mit.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nBei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.",
+    "content": "Der Imperativ steht auf Position 1.\nBei Sie bleibt das Pronomen stehen: Helfen Sie bitte!\nDie zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!\nDas Pronomen fällt meist weg; betont bleibt es stehen. Die Endung -st fällt weg.\nAus ä wird wieder a: ich fahre, du fährst → Fahr!\nEndet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!\nBei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!\nDie Vorsilbe steht am Ende: Mach den Fernseher aus!\nDas Wort bitte macht jede Aufforderung höflich.\nIm Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.\nDer Teppich ist auf der Terrasse. Hol ihn!\nEnglish: Keep polite Sie; du drops -st. Familiar pronouns are usually omitted but possible for emphasis.",
     "commonMistakes": [
       {
         "wrong": "Sie helfen bitte!",
@@ -438,7 +438,7 @@ export const RULE_CARDS = {
   },
   "present-tense-regular": {
     "titleDe": "Präsens: regelmäßige Verben",
-    "content": "Regelmäßige Verben haben feste Endungen am Stamm:\nich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.\nSo bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.\nEndet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.\nAchtung: einige Verben wechseln den Vokal: sprechen → er spricht.\ngern steht nach dem Verb: Ich höre gern Musik.\nEnglish: add the ending to the stem; stems on -t take an extra e (arbeitest).",
+    "content": "Regelmäßige Verben haben feste Endungen am Stamm:\nich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.\nSo bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.\nEndet der Stamm auf s, ß, x oder z, steht in der du-Form nur -t (ich tanze → du tanzt).\nEndet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.\nAchtung: einige Verben wechseln den Vokal: sprechen → er spricht.\ngern steht nach dem Verb: Ich höre gern Musik.\nEnglish: Add endings; -t stems add e (arbeitest); s/ß/x/z stems take -t in the du-form (du tanzt).",
     "commonMistakes": [
       {
         "wrong": "Ich spielen Fußball.",
@@ -634,12 +634,12 @@ export const RULE_CARDS = {
   },
   "yes-no-questions": {
     "titleDe": "Ja/Nein-Fragen: das Verb steht vorn",
-    "content": "Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: in a written yes/no question the verb comes first and the subject second.",
+    "content": "Bei der neutralen Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nEine Bestätigungsfrage hat die Wortfolge der Aussage, gesprochen und geschrieben.\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.",
     "commonMistakes": [
       {
-        "wrong": "Sie kommen aus Österreich?",
+        "wrong": "Sie aus Österreich kommen?",
         "correct": "Kommen Sie aus Österreich?",
-        "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit der Wortfolge der Aussage; in Übungen schreibt man die Frage mit dem Verb auf Platz 1."
+        "explanationDe": "Neutrale Ja/Nein-Frage: In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen und geschrieben gibt es auch die Bestätigungsfrage mit der Wortfolge der Aussage."
       },
       {
         "wrong": "Kommen aus Österreich Sie?",

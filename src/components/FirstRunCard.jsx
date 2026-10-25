@@ -15,6 +15,16 @@ import Chip from './ui/Chip.jsx';
 // anything this card cannot derive, it does not claim.
 
 const COPY = {
+  writing: (a) => ({
+    title: `Your first task: ${a.examName}`,
+    lead: 'Start with an exam-style writing task and read the AI feedback on your text.',
+    cta: 'Start the writing task',
+  }),
+  mock: (a) => ({
+    title: `Your first task: ${a.examName}`,
+    lead: 'Start with the Übungstest (Kurzversion) in your exam’s format.',
+    cta: 'Open the Kurzversion',
+  }),
   lesson: (a) => ({
     title: 'Your first lesson: Lektion 1',
     lead: `The free ${a.level.toUpperCase()} course starts with the first „Hallo“ — one short step at a time, right here in your browser.`,
@@ -41,6 +51,8 @@ const COPY = {
 const ALT_LABEL = {
   placement: 'Already know some German? Find your level first',
   lesson: 'Or start from zero with Lektion 1',
+  placed: 'Or start with your placed level’s lesson',
+  course: 'Or open the free course',
 };
 
 export default function FirstRunCard({ action }) {

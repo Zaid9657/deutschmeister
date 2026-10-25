@@ -40,7 +40,7 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const dayNumber = (value) => {
   const d = value instanceof Date ? new Date(value.getTime()) : new Date(value);
   if (Number.isNaN(d.getTime())) return null;
-  return Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() / MS_PER_DAY);
+  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / MS_PER_DAY;
 };
 
 /**
