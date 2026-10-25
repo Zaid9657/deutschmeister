@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { courseForLevel, eur, PLANS } from '../data/pricing.js';
 import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../data/marketing.js';
 import { levelToSlug } from '../data/courseContents.js';
+import { sameAnswer } from '../data/sameAnswer.js';
 
 // Cheap synchronous check for a stored Supabase session, so the logged-out
 // majority never fetches the Supabase client chunk.
@@ -160,6 +161,14 @@ function answerMatches(userInput, exercise) {
   return accepted.some((a) => normalizeAnswer(a) === user);
 }
 
+// What a typed answer is graded by: the literal match above, or a whole answer that is the same
+// answer as the key — „Wieso" where the key says „Warum". That rule is the lesson checker's own,
+// shared byte-identical (../data/sameAnswer.js ← src/data/sameAnswer.js), never a widened key.
+function acceptsAnswer(userInput, exercise) {
+  return answerMatches(userInput, exercise)
+    || [exercise.correct_answer, ...(exercise.acceptable_answers ?? [])].some((a) => sameAnswer(a, userInput));
+}
+
 function FillBlank({ exercise, onAnswer, answered }) {
   const [value, setValue] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -167,10 +176,10 @@ function FillBlank({ exercise, onAnswer, answered }) {
   const submit = () => {
     if (!value.trim() || submitted) return;
     setSubmitted(true);
-    onAnswer(answerMatches(value, exercise));
+    onAnswer(acceptsAnswer(value, exercise));
   };
 
-  const isCorrect = answerMatches(value, exercise);
+  const isCorrect = acceptsAnswer(value, exercise);
 
   // Placeholder-only labelling fails WCAG 3.3.2 (the label vanishes on input)
   // and leaves screen-reader users with an unnamed field. The exercise prompt
