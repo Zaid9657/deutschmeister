@@ -10,6 +10,7 @@ import Aurora from './ui/Aurora.jsx';
 import { TRIAL_DAYS } from '../data/marketing.js';
 import { FREE_COURSE_HREF } from '../data/offers.js';
 import { levelLockSignupHref } from '../lib/lockDoor.js';
+import { setReturnPath } from '../lib/returnPath.js';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
@@ -61,8 +62,12 @@ const LockedContentOverlay = ({ level }) => {
               public/attribution.js records the tag only on a page load, so a
               signup from this lock is countable in
               profiles.acquisition_last_source. src/lib/lockDoor.js,
-              tests/lock-signup-door.test.mjs. */}
-          <Button href={levelLockSignupHref(level)} shimmer size="lg" className="w-full">
+              tests/lock-signup-door.test.mjs. The click also remembers this
+              course page (returnPath.js keeps /course/ paths only, a no-op
+              elsewhere), so after the confirmation link postAuthPath brings the
+              new learner back to the level they tried to open, which their
+              trial now opens, instead of to the dashboard and Lektion 1 of A1.1. */}
+          <Button href={levelLockSignupHref(level)} onClick={() => setReturnPath(location.pathname)} shimmer size="lg" className="w-full">
             {isGerman ? 'Kostenlos registrieren' : 'Sign Up Free'}
           </Button>
 

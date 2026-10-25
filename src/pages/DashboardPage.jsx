@@ -10,7 +10,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
-import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
+import { deriveCurrent, isTopicCompleted, topicPercent, reviewTopic } from '../services/currentPosition';
+import { fetchExamActivity } from '../services/examActivity';
 import { examTrackByKey } from '../data/examTracks';
 import { courseForProduct } from '../data/pricing.js';
 import { courseFor } from '../data/courses/index.js';
@@ -109,6 +110,23 @@ const DashboardPage = () => {
   })();
   const goalTarget = profile?.daily_goal_target || DAILY_GOAL_TARGET;
 
+  // Exam work — a writing submission or a finished practice exam — retires the
+  // exam-first "Start here" card (src/lib/firstRun.js); that work writes no
+  // lesson row. Read only while an exam is chosen, and waited for with the
+  // rest, so the card never shows the task it is about to retire.
+  const examActivityFor = user && examTrack ? `${user.id}:${examTrack.key}` : null;
+  const [examActivityRead, setExamActivityRead] = useState({ key: null, value: null });
+  useEffect(() => {
+    let alive = true;
+    if (!examActivityFor) return undefined;
+    fetchExamActivity(user.id).then((value) => {
+      if (alive) setExamActivityRead({ key: examActivityFor, value });
+    });
+    return () => { alive = false; };
+  }, [user, examActivityFor]);
+  const examActivityLoading = !!examActivityFor && examActivityRead.key !== examActivityFor;
+  const examActivity = examActivityFor && examActivityRead.key === examActivityFor ? examActivityRead.value : null;
+
   // Exam goal card readiness — the same "Du bist bereit" trend line
   // ModelltestResult.jsx renders, read once here for whichever exam track
   // the learner set (src/services/readiness.js). Only shown once at least
@@ -126,14 +144,14 @@ const DashboardPage = () => {
     return () => { alive = false; };
   }, [user, examTrack]);
 
-  const loading = progressLoading || statsLoading;
+  const loading = progressLoading || statsLoading || examActivityLoading;
 
   // First run (work order #6): no lesson activity yet → ONE primary action,
   // decided by src/lib/firstRun.js (Lektion 1 of the free course, or the
   // placement test for a learner who said they know some German, or the
-  // placed level's first lesson). The card takes the hero's slot and every
-  // other button on this screen turns secondary. Unknown activity (a failed
-  // read) is never first-run.
+  // placed level's course, or the chosen exam's first task until exam work
+  // exists). The card takes the hero's slot and every other button on this
+  // screen turns secondary. Unknown activity (a failed read) is never first-run.
   const firstRun = loading
     ? null
     : firstRunAction({
@@ -141,6 +159,7 @@ const DashboardPage = () => {
         startingPoint: user?.user_metadata?.[STARTING_POINT_KEY],
         currentLevel: profile?.current_level,
         examTrack: profile?.exam_track,
+        examActivity,
         hasLevelAccess,
       });
 
@@ -195,6 +214,14 @@ const DashboardPage = () => {
     'M650,150 C715,150 750,92 806,96',
   ];
 
+  // The finished topic most worth revisiting: lowest best score, then the
+  // oldest completion (currentPosition.js). Until a topic is finished, Review
+  // falls back to the current one.
+  const review = useMemo(
+    () => reviewTopic(progress, profile?.current_level),
+    [progress, profile?.current_level]
+  );
+
   const practice = [
     { title: 'Speaking', en: 'Say a few lines with your AI partner', Icon: Mic, to: '/speaking' },
     { title: 'Sentence X-Ray', en: 'X-ray any German sentence', Icon: ScanSearch, to: '/analyze' },
@@ -204,10 +231,14 @@ const DashboardPage = () => {
       to: `/listening/${String(cur.level ?? '').toLowerCase()}` },
     { title: 'Reading', en: 'A short story with vocabulary help', Icon: FileText,
       to: `/reading/${cur.level}` },
-    // No spaced-repetition flow exists yet → route Review to the next topic to
-    // revisit. Grammar is Astro-served, so this card is a full-load link.
-    { title: 'Review', en: 'Revisit your current grammar topic', Icon: RotateCcw,
-      to: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}/` : '/grammar/', fullLoad: true },
+    // Review brings back grammar already learned (reviewTopic above), the
+    // current topic until something is finished. Grammar is Astro-served, so
+    // this card is a full-load link.
+    review
+      ? { title: 'Review', en: `Practise ${review.topic.titleEn} again`, Icon: RotateCcw,
+          to: `/grammar/${review.level}/${review.topic.slug}/`, fullLoad: true }
+      : { title: 'Review', en: 'Revisit your current grammar topic', Icon: RotateCcw,
+          to: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}/` : '/grammar/', fullLoad: true },
     // The level hub (vocab/sentences/grammar/reading/listening/podcast tabs)
     // was unreachable for logged-in users — nothing in the app linked it.
     { title: 'Your level', en: `Everything in ${cur.level.toUpperCase()} — words, texts, audio`, Icon: BookOpen,

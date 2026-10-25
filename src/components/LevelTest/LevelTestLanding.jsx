@@ -58,7 +58,10 @@ const BENEFITS = [
   { icon: Target, title: 'Personalized Path', body: 'Topics to focus on first' },
 ];
 
-const LevelTestLanding = ({ onStart }) => {
+// `resumeAt` names where a run this tab left unfinished stopped ("question 12 of
+// 40", "the listening section"; src/pages/LevelTest.jsx). While it is set,
+// continuing is the one primary action and a fresh start turns secondary.
+const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
   return (
     <div className="mx-auto max-w-2xl px-4 pt-16 pb-16 sm:pt-20">
       {/* Hero */}
@@ -75,6 +78,19 @@ const LevelTestLanding = ({ onStart }) => {
           />
         </div>
       </section>
+
+      {resumeAt && (
+        <Card raised edge="siegel" className="mt-2 p-5 text-center sm:p-6" data-level-test-resume>
+          <p className="font-display text-[1.125rem] font-semibold leading-snug text-ink">Your test is waiting</p>
+          <p className="mx-auto mt-2 max-w-prose text-[0.9375rem] leading-relaxed text-graphite">
+            You stopped at {resumeAt}. Your answers so far are kept in this tab.
+          </p>
+          <Button size="lg" shimmer className="mt-4" onClick={onResume}>
+            Continue your test
+            <ChevronRight size={20} />
+          </Button>
+        </Card>
+      )}
 
       {/* At a glance */}
       <Reveal delay={90} className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -161,12 +177,18 @@ const LevelTestLanding = ({ onStart }) => {
         </Card>
       </Reveal>
 
-      {/* The one primary action on the screen */}
+      {/* The one primary action on the screen (secondary while a run can be continued) */}
       <Reveal delay={120} className="mt-8 text-center">
-        <Button size="lg" shimmer onClick={onStart}>
-          Start the Test
-          <ChevronRight size={20} />
-        </Button>
+        {resumeAt ? (
+          <Button size="lg" variant="secondary" onClick={onStart}>
+            Start a new test
+          </Button>
+        ) : (
+          <Button size="lg" shimmer onClick={onStart}>
+            Start the Test
+            <ChevronRight size={20} />
+          </Button>
+        )}
         <p className="mt-4 font-data text-[0.75rem] text-graphite">
           No account required • Results are instant • 100% free
         </p>
