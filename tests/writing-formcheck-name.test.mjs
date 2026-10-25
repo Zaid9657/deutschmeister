@@ -37,3 +37,22 @@ test('a name after heißen/nennen, in its clause', () => {
   assert.equal(name('Hallo, ich bin Ana.'), true, '„ich bin <Name>" stays');
   assert.equal(name('Ich heiße Marokko.'), false, 'a country is no name');
 });
+
+test('a learner\'s own name is a name — in her letters, and when it is also a German function word (batch B4 review)', () => {
+  // The first repair read the slot with the German-only letter class and dropped every function word:
+  // „Ich heiße José.", „Chloé" and „Nur" — green before it — turned red on the real L2 task.
+  const body = (who) => `Sehr geehrte Damen und Herren, ich heiße ${who}. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Viele Grüße`;
+  for (const who of ['José', 'Chloé', 'Nur', 'Will', 'An', 'Łukasz', 'Zoë', "O'Neill", 'Anne-Marie', 'José García']) {
+    const lp0 = scoreWriting(L2, body(who)).checks.find((c) => c.key === 'lp0');
+    assert.equal(lp0.ok, true, `„ich heiße ${who}." answers „${L2.leitpunkte[0]}"`);
+  }
+  const name = (text) => leitpunktSatisfied('Ihr Name', text);
+  assert.equal(name('Ich heiße Nur.'), true, 'capitalised in the name slot: the name');
+  assert.equal(name('Ich heiße nur.'), false, 'lower case: the particle');
+  assert.equal(name('Ich heiße Sie.'), false, 'the polite pronoun is capitalised by grammar, not a name');
+  assert.equal(name('ich heiße élodie.'), true, 'a lower-case name in its own letters');
+  assert.equal(name('Hallo, ich bin Élodie.'), true, '„ich bin <Name>" reads the same letters');
+  // The form reads the one name shape too.
+  assert.equal(scoreWriting({ kind: 'formular', fields: ['Vorname', 'Familienname'] }, { Vorname: 'José', Familienname: 'García' }).ok, true);
+  assert.equal(scoreWriting({ kind: 'formular', fields: ['Vorname'] }, { Vorname: 'Marokko' }).ok, false, 'a country is still no name');
+});

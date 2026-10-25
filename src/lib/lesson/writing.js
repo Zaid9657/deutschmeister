@@ -657,12 +657,15 @@ const NATIONALITY_SHAPE = {
  * „Familienname: Marokko“ and „Vorname: Arabisch“ fill the field with a value of another field's
  * kind, „Name: 12“ with none. A city („Vorname: Bremen“) is NOT caught: there is no world list of
  * cities and a surname may be one. ONE definition: the named field of the Mitteilung („Mein Name
- * ist Ana Ruiz“) and the name fields of the Formular read it alike.
+ * ist Ana Ruiz“) and the name fields of the Formular read it alike. A name is written in the
+ * letters of the learner's language (2026-10-25 review of batch B4): „José“, „Chloé“, „Łukasz“,
+ * „Zoë“ and „O'Neill“ are names, and the German-only letter class marked them red.
  */
+const NAME_TOKEN_RE = /^\p{Lu}[\p{L}\p{M}'’-]+$/u;
 const nameValueShape = (opts = {}) => ({
   test: (value) => words(value).map(stripPunct).some((raw) => {
     const t = opts.foldCase ? capitalise(raw) : raw;
-    return /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+$/.test(t) && t.length >= 2 && !isCountryName(t, { asName: true }) && !isLanguageName(t, opts);
+    return NAME_TOKEN_RE.test(t) && t.length >= 2 && !isCountryName(t, { asName: true }) && !isLanguageName(t, opts);
   }),
 });
 const NAME_VALUE_SHAPE = nameValueShape();
@@ -672,15 +675,23 @@ const NAME_VALUE_SHAPE = nameValueShape();
  * nenn- token, so „Sehr geehrte Damen und Herren, ich heiße. …“ turned „Ihr Name“ green — while
  * „Mein Name ist.“ was red, because the named field (namedFieldShape) asks for its value. The verb
  * now needs a name after it IN ITS CLAUSE, read like a form field (case-folded: „ich heiße ana“ is
- * a name), the function words of that clause left out („ich heiße nicht“ names nobody).
- * „ich bin <Name>“ stays as it was.
+ * a name), the lower-case function words of that clause left out („ich heiße nicht“ names nobody).
+ * A CAPITALISED word there is a name even where it is also a function word — „Ich heiße Nur.“,
+ * „Will“, „An“ (batch B4 review) — except the polite pronoun, which German capitalises anyway
+ * („Ich heiße Sie willkommen.“). „ich bin <Name>“ stays as it was.
  */
 const NAME_VERB_RE = /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b/g;
 const NAME_AFTER_VERB = nameValueShape({ foldCase: true });
+const POLITE_PRONOUN_RE = /^(?:Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
+/** May this word of the name slot be the name? Lower case: not a function word. Capitalised: not `Sie`. */
+const nameSlotWord = (w) => {
+  const t = stripPunct(w);
+  return /^\p{Lu}/u.test(t) ? !POLITE_PRONOUN_RE.test(t) : !isFunctionWord(t);
+};
 const NAME_SHAPE = {
-  test: (body) => /\bich\s+bin\s+[A-ZÄÖÜ]/.test(body) || sentences(body).some((sentence) => clauses(sentence).some((clause) => {
+  test: (body) => /\bich\s+bin\s+\p{Lu}/u.test(body) || sentences(body).some((sentence) => clauses(sentence).some((clause) => {
     for (const m of clause.matchAll(NAME_VERB_RE)) {
-      const rest = words(clause.slice(m.index + m[0].length)).filter((w) => !isFunctionWord(stripPunct(w)));
+      const rest = words(clause.slice(m.index + m[0].length)).filter(nameSlotWord);
       if (NAME_AFTER_VERB.test(rest.join(' '))) return true;
     }
     return false;

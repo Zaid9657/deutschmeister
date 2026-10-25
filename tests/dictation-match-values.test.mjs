@@ -5,12 +5,15 @@
 // 100 times off got a green tick, and QuestionCard hides the correction on a green tick — while
 // „20:00" (→ 2000) failed the listed 20, „Um 10 Uhr" (→ um10) failed 10, and „3,98 EUR", „15 qm",
 // „10 °C", „15 Min." and „Rathaus." failed rows whose lists carry the same answer in other words.
+// A clock and a telephone number are no values, though (batch B4 review): read as a value, „19 Uhr 3"
+// (19:03) passed the 19:30 row and the two-digit groups of „0176 543.21.08" became decimal places, so
+// the row decides the reading — a clock, a digit sequence or a value.
 // The rows are read from the four listening migrations with the statement parser of
 // tests/a1-1-listening.test.mjs (copied: importing a test file would run its tests).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dictationMatches, canonical } from '../src/utils/dictationMatch.js';
+import { dictationMatches, canonical, clock, digitSequence } from '../src/utils/dictationMatch.js';
 
 const FILES = ['2026-09-05-a1-1-listening.sql', '2026-09-05-a1-2-listening.sql', '2026-09-06-a2-1-listening.sql', '2026-09-06-a2-2-listening.sql'];
 
@@ -85,11 +88,39 @@ test('every time row accepts hh:mm and „hh:mm Uhr", with or without „um"', (
     const m = row.correct.match(/^(\d{1,2})(?::(\d{2}))?(?:\s*Uhr)?$/);
     assert.ok(m, `${row.where}: „${row.correct}" reads as a time`);
     const [, h, mm = '00'] = m;
-    for (const typed of [`${h}:${mm}`, `${h}:${mm} Uhr`, `${h.padStart(2, '0')}:${mm}`, `${h}.${mm} Uhr`, `um ${h}:${mm} Uhr`, `Um ${h} Uhr${mm === '00' ? '' : ` ${mm}`}`]) {
+    for (const typed of [`${h}:${mm}`, `${h}:${mm} Uhr`, `${h.padStart(2, '0')}:${mm}`, `${h}.${mm} Uhr`, `um ${h}:${mm} Uhr`,
+      `Um ${h} Uhr${mm === '00' ? '' : ` ${mm}`}`, `${h}${mm}`, `${h} ${mm}`]) {
       assert.ok(matches(typed, row), `${row.where}: „${typed}" for „${row.correct}"`);
     }
     assert.equal(matches(`${Number(h) + 1}:${mm}`, row), false, `${row.where}: another hour is another time`);
+    // The minutes are digits of their own, never a fraction whose zeros may go.
+    const otherMinute = String((Number(mm) + 1) % 60).padStart(2, '0');
+    assert.equal(matches(`${h}:${otherMinute}`, row), false, `${row.where}: another minute is another time`);
+    assert.equal(matches(`${h} Uhr ${Number(otherMinute)}`, row), false, `${row.where}: „${h} Uhr ${Number(otherMinute)}"`);
+    if (mm !== '00' && mm.endsWith('0')) {
+      assert.equal(matches(`${h} Uhr ${mm[0]}`, row), false, `${row.where}: „${h} Uhr ${mm[0]}" is ${h}:0${mm[0]}, not ${h}:${mm}`);
+    }
   }
+});
+
+test('a clock is read as a clock: „19 Uhr 3" is 19:03, never the 19:30 of the Elternabend (batch B4 review)', () => {
+  const elternabend = rowOf('a2-1 q21', '19:30');
+  assert.equal(matches('19 Uhr 3', elternabend), false, 'the value reading trimmed 19:30 to 19:3');
+  assert.equal(matches('19:3', elternabend), false);
+  for (const typed of ['19:30', '19 Uhr 30', '19.30 Uhr', '1930', 'um 19:30 Uhr', '19 30']) assert.ok(matches(typed, elternabend), typed);
+  // …and where 19:03 IS the answer, „19 Uhr 3" says it.
+  const threePast = { correct: '19:03', acceptable: ['19:03', '19.03', '19:03 Uhr', 'neunzehn Uhr drei'] };
+  assert.ok(matches('19 Uhr 3', threePast));
+  assert.equal(matches('19:30', threePast), false);
+});
+
+test('a telephone number is read digit by digit: any grouping of its digits is the same number (batch B4 review)', () => {
+  const phone = rowOf('a1-1 q21', '0176 5432108');
+  for (const typed of ['0176 543.21.08', '0176 543 21 08', '0176.5432108', '0176-543-21-08', '0176/5432108']) assert.ok(matches(typed, phone), typed);
+  for (const typed of ['0176 543.21.09', '176 5432108', '0176 543 21 0']) assert.equal(matches(typed, phone), false, typed);
+  const order = rowOf('a1-2 q21', '78345');
+  assert.ok(matches('7.8.3.4.5', order), 'an order number read digit by digit');
+  assert.equal(matches('7.8.3.4', order), false);
 });
 
 test('the measured probes: magnitudes rejected, ordinary spellings of the right value accepted', () => {
@@ -131,7 +162,7 @@ test('the measured probes: magnitudes rejected, ordinary spellings of the right 
     ['8 km', rowOf('a2-2 q22', '8', '8 Kilometer')],
     ['50 l', rowOf('a2-2 q23', '50')],
     ['10.000 €', rowOf('a2-2 q23', '10.000')],
-    ['1930', rowOf('a2-1 q21', '19:30')], // a time keeps the separator-free way in
+    ['1930', rowOf('a2-1 q21', '19:30')], // a time written without its colon
     // C-175: a closing full stop is no part of the answer.
     ['Rathaus.', rowOf('a2-2 q23', 'Rathaus')],
     ['Spätburgunder.', rowOf('a2-1 q23', 'Spätburgunder')],
@@ -140,14 +171,26 @@ test('the measured probes: magnitudes rejected, ordinary spellings of the right 
   for (const [typed, row] of accepted) assert.ok(matches(typed, row), `${row.where}: „${typed}" for „${row.correct}"`);
 });
 
-test('canonical reads a value, never a digit string', () => {
+test('the three readings: a value, a clock, a digit sequence', () => {
+  // canonical: a value, never a digit string
   assert.equal(canonical('2,50 €'), canonical('2.50'));
   assert.notEqual(canonical('2,50'), canonical('250'));
   assert.equal(canonical('2 Euro 50'), canonical('2,50 €'));
-  assert.equal(canonical('5 Uhr 53'), canonical('5:53'));
   assert.equal(canonical('10.000'), canonical('10000'));
   assert.equal(canonical('4,00 €'), canonical('4'));
-  assert.equal(canonical('05:53'), canonical('5:53'));
-  assert.equal(canonical('0176 543 21 08'), canonical('0176-5432108'));
-  assert.notEqual(canonical('0176 5432108'), canonical('176 5432108'), 'a leading zero of a phone number stays');
+  assert.equal(canonical('05,49'), canonical('5,49'));
+  // clock: the minutes are digits of their own
+  assert.equal(clock('19:30'), '19:30');
+  assert.equal(clock('19 Uhr 30'), '19:30');
+  assert.equal(clock('19.30 Uhr'), '19:30');
+  assert.equal(clock('um 19:30 Uhr.'), '19:30');
+  assert.equal(clock('1930'), '19:30');
+  assert.equal(clock('19 Uhr 3'), '19:03');
+  assert.equal(clock('20'), '20:00');
+  assert.equal(clock('05:53'), '5:53');
+  assert.equal(clock('19.3'), null, 'one digit after the mark is no minute');
+  assert.equal(clock('25:00'), null);
+  // digitSequence: the grouping goes, every digit stays
+  assert.equal(digitSequence('0176 543.21.08'), digitSequence('0176-5432108'));
+  assert.notEqual(digitSequence('0176 5432108'), digitSequence('176 5432108'), 'a leading zero of a phone number stays');
 });
