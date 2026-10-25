@@ -1058,9 +1058,14 @@ function buildWordOrderItem(lektion, attempt, rng) {
   const candidates = lines
     .map((l, i) => ({ de: l && l.de, index: i, tokens: String((l && l.de) || '').trim().split(/\s+/).filter(Boolean) }))
     .filter((c) => c.de && c.tokens.length >= 2 && c.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS);
-  if (!candidates.length) return null;
+  // A long dialogue turn can contain a short complete sentence. Keep its audio
+  // line intact; only the derived tile task uses the sentence, with provenance.
+  const sentences = lines.flatMap((line, index) => String(line?.de || '').split(/(?<=[.!?])\s+/)
+    .map((de, sentenceIndex) => ({ de, index, sentenceIndex, tokens: de.trim().split(/\s+/).filter(Boolean) })))
+    .filter((c) => c.tokens.length >= 2 && c.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS && wordOrderAnswers(c.de).length);
+  if (!candidates.length && !sentences.length) return null;
   const ordered = seededShuffle(candidates, rng);
-  const original = ordered[0];
+  const original = ordered[0] || sentences[0];
   // Reshuffle away from the original order when more than one arrangement
   // exists, so the tiles are never handed over already solved.
   let shuffled = seededShuffle(original.tokens, rng);
@@ -1069,7 +1074,8 @@ function buildWordOrderItem(lektion, attempt, rng) {
   }
   // Consume the old draw's random stream before choosing a supported frame,
   // so omitting an unsafe tile task does not redraw the listening task.
-  const chosen = ordered.find((candidate) => wordOrderAnswers(candidate.de).length);
+  const chosen = ordered.find((candidate) => wordOrderAnswers(candidate.de).length)
+    || seededShuffle(sentences, mulberry32(derivedSeedFor(`${lektion.id}-sentences`, attempt)))[0];
   if (!chosen) return null;
   if (chosen !== original) shuffled = seededShuffle(chosen.tokens, mulberry32(derivedSeedFor(`${lektion.id}-tiles`, attempt)));
   if (shuffled.join(' ') === chosen.tokens.join(' ')) shuffled = [...shuffled.slice(1), shuffled[0]];
@@ -1078,8 +1084,9 @@ function buildWordOrderItem(lektion, attempt, rng) {
     type: 'word_order',
     topic: lektion.primarySlug || null,
     lineIndex: chosen.index,
-    promptDe: 'Bilden Sie diese Dialogzeile in ihrer ursprünglichen Wortfolge nach. Andere korrekte Wortfolgen werden ebenfalls akzeptiert.',
-    promptEn: 'Rebuild this dialogue line in its original word order. Other correct word orders are also accepted.',
+    ...(chosen.sentenceIndex == null ? {} : { sentenceIndex: chosen.sentenceIndex }),
+    promptDe: 'Bilden Sie diesen Satz aus der Dialogzeile in seiner ursprünglichen Wortfolge nach. Andere korrekte Wortfolgen werden ebenfalls akzeptiert.',
+    promptEn: 'Rebuild this sentence from the dialogue line in its original word order. Other correct word orders are also accepted.',
     tokens: shuffled,
     answer: chosen.de,
     accepted: [...new Set([chosen.de, ...wordOrderAnswers(chosen.de)])],

@@ -1,7 +1,7 @@
 // Closed grammar for derived tiles. Unsupported dialogue lines stay dialogue
 // input: a single stored order is not evidence that every other order is wrong.
 const pronoun = '(?:ich|du|er|sie|es|wir|ihr|Sie)';
-const subject = `(?:${pronoun}|(?:der|die|das|mein|meine|dein|deine|sein|seine|ihr|ihre|unser|unsere) [A-ZÄÖÜ][a-zäöüß]+)`;
+const subject = `(?:${pronoun}|das|(?:der|die|das|mein|meine|dein|deine|sein|seine|ihr|ihre|unser|unsere) [A-ZÄÖÜ][a-zäöüß]+)`;
 const copula = '(?:bin|bist|ist|sind|seid|war|warst|waren|wart)';
 const capitalise = (s) => s[0].toUpperCase() + s.slice(1);
 const lowerFirst = (s) => s === 'Sie' ? s : s[0].toLowerCase() + s.slice(1);
@@ -17,13 +17,42 @@ export function wordOrderAnswers(text) {
 
   // One subject and one predicate, optionally modified by a certainty adverb.
   // No arbitrary adjective/verb guesses: the predicate vocabulary is closed.
-  const pred = '(?:Studentin|Student|Lehrer|Lehrerin|müde|krank|schön|gut|teuer|billig|alt|jung|groß|klein|rot|blau|gelb|grün|weiß|schwarz)';
+  const number = '(?:eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|zwanzig|fünfzehn|vierhundertachtzig)';
+  const pred = `(?:Studentin|Student|Lehrer|Lehrerin|müde|krank|schön|gut|teuer|billig|alt|jung|groß|klein|rot|blau|gelb|grün|weiß|schwarz|frei|neu|weit|gesund|schnell|lecker|sonnig|wolkig|windig|warm|kalt|glücklich|pünktlich|hier|da|zu kurz|${number}(?: Euro)?|um ${number}(?: Uhr)?)`;
   const statement = new RegExp(`^(${subject}) (${copula}) (?:(bestimmt|wirklich) )?(${pred})$`, 'i').exec(body);
   if (statement && end !== '?') {
     const [, s, v, adv, p] = statement;
     const sub = lowerFirst(s);
     if (!adv) return finish([`${s} ${v} ${p}`, `${p} ${v} ${sub}`]);
     return finish([`${s} ${v} ${adv} ${p}`, `${s} ${v} ${p} ${adv}`, `${adv} ${v} ${sub} ${p}`, `${adv} ${p} ${v} ${sub}`, `${p} ${v} ${sub} ${adv}`]);
+  }
+
+  // A copular question permits V1 and confirmation/echo V2. The subject and
+  // predicate remain whole constituents, including a price or a time phrase.
+  const polar = new RegExp(`^(${copula}) (${subject}) (${pred})$`, 'i').exec(body);
+  if (polar && end === '?') {
+    const [, v, s, p] = polar;
+    const verb = v.toLowerCase();
+    return finish([`${verb} ${s} ${p}`, `${s} ${verb} ${p}`, `${p} ${verb} ${s}`,
+      // A weak subject pronoun cannot follow the predicate: *Ist rot es?
+      ...(s.includes(' ') ? [`${verb} ${p} ${s}`] : [])]);
+  }
+
+  const price = new RegExp(`^(${subject}) kostet (${number} Euro)$`, 'i').exec(body);
+  if (price && end !== '?') return finish([body, `${price[2]} kostet ${lowerFirst(price[1])}`]);
+
+  const arrival = new RegExp(`^(${subject}) (komme|kommst|kommt|kommen) (jetzt|heute|morgen)$`, 'i').exec(body);
+  if (arrival && end !== '?') return finish([body, `${arrival[3]} ${arrival[2]} ${lowerFirst(arrival[1])}`]);
+
+  // Bare accusative states are a closed lexical frame, not arbitrary haben objects.
+  const have = new RegExp(`^(${subject}) (habe|hast|hat|haben|habt) (Hunger|Durst|Zeit|Verspätung)$`, 'i').exec(body);
+  if (have && end !== '?') return finish([body, `${have[3]} ${have[2]} ${lowerFirst(have[1])}`]);
+  const haveQuestion = new RegExp(`^(Habe|Hast|Hat|Haben|Habt) (${subject}) (Hunger|Durst|Zeit|Verspätung)$`, 'i').exec(body);
+  if (haveQuestion && end === '?') {
+    const [, verb, s, object] = haveQuestion;
+    const v = verb.toLowerCase();
+    return finish([`${v} ${s} ${object}`, `${s} ${v} ${object}`, `${object} ${v} ${s}`,
+      ...(s.includes(' ') ? [`${v} ${object} ${s}`] : [])]);
   }
 
   // A polar question with one pronoun, one time adverb and a separable verb.

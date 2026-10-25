@@ -699,9 +699,9 @@ function buildHoerenWords(ctx) {
     targets.push(remaining.splice(at, 1)[0]);
   }
   targets.forEach((word, i) => {
-    const others = words.filter((w) => w.de !== word.de);
-    const distractors = take(others.slice(i * 3), 3);
-    while (distractors.length < 3 && others.length) distractors.push(others[distractors.length % others.length]);
+    const occupied = new Set([...targets.map((w) => w.de), ...items.flatMap((item) => item.options)]);
+    const distractors = take(words.filter((w) => !occupied.has(w.de)), 3);
+    if (distractors.length !== 3) throw new Error(`${checkpoint.id}: Hören needs eight distinct taught words`);
     const options = shuffle([word.de, ...new Set(distractors.map((d) => d.de))], rng);
     items.push({
       id: `${checkpoint.id}-hoeren-${i + 4}`,
@@ -2021,7 +2021,7 @@ function chooseLesen(ctx) {
  * A bank without four complete papers is an error, never a fallback to the generator.
  */
 function authoredLesen(ctx, { papers } = {}) {
-  const complete = Array.isArray(papers) && papers.length > 0
+  const complete = Array.isArray(papers) && papers.length === 4
     && papers.every((p) => Array.isArray(p) && p.length === SECTION_COUNTS.lesen);
   if (!complete) throw new Error(`${ctx.checkpoint.id}: an authored Lesen bank needs papers of ${SECTION_COUNTS.lesen} units`);
   const paper = papers[ctx.round % papers.length];
@@ -2033,7 +2033,7 @@ function lesenUnitItem(checkpoint, i, unit) {
   return {
     id: `${checkpoint.id}-lesen-${i + 1}`,
     section: 'lesen',
-    kind: 'choice',
+    kind: unit.format === 'trueFalse' ? 'trueFalse' : 'choice',
     mode: 'options',
     topic: 'lesen',
     lektionNr: checkpoint.afterLektion,
@@ -2055,6 +2055,7 @@ function lesenUnitItem(checkpoint, i, unit) {
     unitId: unit.id,
     textType: unit.type,
     evidence: unit.evidence,
+    ...(unit.statement ? { statement: unit.statement } : {}),
   };
 }
 

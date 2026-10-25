@@ -1,7 +1,7 @@
 // Offline renderer for the real CheckpointPage. No Vite/esbuild child process,
 // network services, authentication or database. Only the service and audio/AI
 // boundaries are stubbed; the page, UI primitives, builders and scorer are real.
-// Run from the repository root; open http://127.0.0.1:5174/?level=a1.2 (or a1.1).
+// --html [a1.1|a1.2] [--pause] emits a self-contained page without opening a server.
 import { createServer } from 'node:http';
 import { readFileSync, existsSync } from 'node:fs';
 import { dirname, resolve, relative } from 'node:path';
@@ -60,7 +60,7 @@ const exercise = async function () {
   const until = async (condition) => { for (let n = 0; n < 200; n += 1) { if (condition()) return; await wait(); } throw new Error('Timed out waiting for the page'); };
   const click = async (text) => { await until(() => button(text) && !button(text).disabled); button(text).click(); await wait(); };
   const pause = async (label) => {
-    if (!new URLSearchParams(location.search).has('pause')) return;
+    if (!window.fixture.pause && !new URLSearchParams(location.search).has('pause')) return;
     status.textContent = label;
     const resume = document.createElement('button'); resume.textContent = 'Resume verification';
     status.appendChild(resume);
@@ -70,9 +70,11 @@ const exercise = async function () {
   try {
     await click('Start the checkpoint');
     let reading = 0;
+    let listening = 0;
     const answers = {};
     for (const item of window.fixture.items) {
       let answer = item.answer;
+      if (item.section === 'hoeren') listening += 1;
       if (item.section === 'lesen') {
         reading += 1;
         if (reading === 1) answer = item.options.find((option) => option !== item.answer);
@@ -92,23 +94,25 @@ const exercise = async function () {
         await wait(); await click('Check');
       }
       answers[item.id] = answer;
-      if (item.section === 'lesen') {
+      if (['lesen', 'hoeren'].includes(item.section)) {
         assert(app.textContent.includes('Answer recorded.'), 'No neutral receipt');
         assert(!app.querySelector('[data-icon="Check"], [data-icon="X"], [class*="limette"], [class*="himbeer"]'), 'Correctness colour or icon leaked');
         assert(!app.textContent.includes('The answer is:') && !app.textContent.includes('Not right'), 'Correctness text leaked');
         assert(!item.explanationEn || !app.textContent.includes(item.explanationEn), 'Explanation leaked');
-        if (reading === 1) await pause('Observed: wrong Lesen response; neutral receipt; no correctness, key marking or explanation.');
+        if (item.section === 'hoeren') assert(app.textContent.includes('Feedback follows after Hören.'), 'Hören receipt names the wrong section');
+        if (item.section === 'hoeren' && listening === 4) await pause('Observed: Hören word choice; neutral receipt; no correctness, key marking or explanation.');
+        if (item.section === 'lesen' && reading === 1) await pause('Observed: wrong Lesen response; neutral receipt; no correctness, key marking or explanation.');
       }
       await click('Continue');
-      if (item.section === 'lesen' && reading === 4) {
-        assert(app.textContent.includes('Lesen — feedback'), 'Section review missing');
-        assert(app.querySelectorAll('ol > li').length === 4, 'Incomplete feedback');
-        for (const row of window.fixture.items.filter((it) => it.section === 'lesen')) {
+      if ((item.section === 'lesen' && reading === 4) || (item.section === 'hoeren' && listening === 5)) {
+        assert(app.textContent.includes(item.section === 'lesen' ? 'Lesen — feedback' : 'Your answers: listening'), 'Section review missing');
+        assert(app.querySelectorAll('ol > li').length === (item.section === 'lesen' ? 4 : 5), 'Incomplete feedback');
+        for (const row of window.fixture.items.filter((it) => it.section === item.section)) {
           assert(app.textContent.includes(row.answer), 'Released key missing');
           assert(!row.explanationEn || app.textContent.includes(row.explanationEn), 'Released explanation missing');
         }
         assert(!window.saved.length, 'Section review saved an attempt');
-        await pause('Observed: all four Lesen items complete; full feedback released.');
+        await pause(`Observed: ${item.section} complete; full feedback released.`);
         await click('Continue');
       }
     }
@@ -118,22 +122,23 @@ const exercise = async function () {
     assert(JSON.stringify(window.saved[0].result) === JSON.stringify(expected), 'Saved score changed');
     assert(window.saved[0].stamp && window.saved[0].level === window.fixture.curriculum.level, 'Attempt identity missing');
     assert(app.textContent.includes(`${expected.overall} %`), 'Result score missing');
-    status.textContent = `PASS browser ${window.fixture.curriculum.level}: 20 items; Lesen text unchanged; 4 neutral receipts; full section feedback; 1 stamped attempt; answers, scoring and result preserved.`;
+    status.textContent = `PASS browser ${window.fixture.curriculum.level}: 20 items; Lesen text unchanged; 9 neutral receipts; Hören and Lesen section feedback; 1 stamped attempt; answers, scoring and result preserved.`;
   } catch (error) { status.textContent = `FAIL browser: ${error.message}`; console.error(error); }
 };
 
-createServer((request, response) => {
-  const url = new URL(request.url, 'http://127.0.0.1:5174');
-  if (url.pathname === '/react.js' || url.pathname === '/react-dom.js') {
-    const library = url.pathname === '/react.js' ? 'react' : 'react-dom';
-    response.setHeader('Content-Type', 'text/javascript');
-    response.end(readFileSync(resolve(root, `node_modules/${library}/umd/${library}.development.js`))); return;
-  }
-  const curriculum = anyCurriculumFor(url.searchParams.get('level') === 'a1.1' ? 'a1.1' : 'a1.2');
+function checkpointHtml(level) {
+  const curriculum = anyCurriculumFor(level === 'a1.1' ? 'a1.1' : 'a1.2');
   const checkpoint = curriculum.checkpoints[2];
   const pool = JSON.parse(readFileSync(resolve(root, `src/data/lessonPools/${curriculum.level.replace('.', '')}.json`), 'utf8'));
-  const fixture = { curriculum, path: curriculumPath(curriculum), items: buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, 0) }) };
+  const fixture = { curriculum, path: curriculumPath(curriculum), items: buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, 0) }), pause: process.argv.includes('--pause') };
+  const react = readFileSync(resolve(root, 'node_modules/react/umd/react.development.js'), 'utf8');
+  const reactDom = readFileSync(resolve(root, 'node_modules/react-dom/umd/react-dom.development.js'), 'utf8');
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; font-src data:"><title>Offline checkpoint verification</title><style>${css}</style><body><p id="status" style="padding:1rem">Verification running</p><div id="app"></div><script>${react}</script><script>${reactDom}</script><script>window.fixture=${JSON.stringify(fixture).replaceAll('<', '\\u003c')};${bundle}\n(${exercise})();</script></body></html>`;
+}
+
+if (process.argv.includes('--html')) process.stdout.write(checkpointHtml(process.argv.find((a) => ['a1.1', 'a1.2'].includes(a))));
+else createServer((request, response) => {
+  const url = new URL(request.url, 'http://127.0.0.1:5174');
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
-  response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'");
-  response.end(`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 16 offline checkpoint verification</title><style>${css}</style><body><p id="status" style="padding:1rem;background:#eee">Verification running</p><div id="app"></div><script src="/react.js"></script><script src="/react-dom.js"></script><script>window.fixture=${JSON.stringify(fixture).replaceAll('<', '\\u003c')};${bundle}\n(${exercise})();</script></body></html>`);
+  response.end(checkpointHtml(url.searchParams.get('level')));
 }).listen(5174, '127.0.0.1', () => console.log('Offline checkpoint renderer: http://127.0.0.1:5174/?level=a1.2&pause'));

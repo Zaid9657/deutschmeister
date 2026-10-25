@@ -38,6 +38,7 @@ export const SHARED_FILES = [
   // Lektionen. The SPA side is still being authored — run
   // scripts/sync-shared.mjs after every change to it, or this fails.
   ['src/data/curricula/a11.js', 'astro-site/src/data/curricula/a11.js'],
+  ['src/data/curricula/a11.lesen.js', 'astro-site/src/data/curricula/a11.lesen.js'],
   ['src/data/curricula/a12.js', 'astro-site/src/data/curricula/a12.js'],
   ['src/data/curricula/a12.lesen.js', 'astro-site/src/data/curricula/a12.lesen.js'],
   ['src/data/curricula/a11.audio.js', 'astro-site/src/data/curricula/a11.audio.js'],

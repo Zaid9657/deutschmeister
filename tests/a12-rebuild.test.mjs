@@ -304,7 +304,8 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   assert.deepEqual(report('Mit meiner Mutter gehe ich ins Kino.'), [], 'the speaker\'s own world in the opening');
   assert.deepEqual(report('Wo darf ich parken?'), [], 'a question reports nothing');
 
-  // Every Lesen item the four papers print, over four seeds — on A1.1, because the report engine writes
+  // Retained generator path: live A1.1 is now covered by a11-lesen.test.mjs.
+  // Every Lesen item the four legacy papers print, over four seeds — on A1.1, because the report engine writes
   // only A1.1's statements since round 12; A1.2 reads authored units (the round-12 tests below).
   assertAuthoredA12(buildCheckpoint);
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
@@ -321,7 +322,7 @@ test('DaF review #3 MAJOR 2: a Lesen statement is a report that changes every fi
   let items = 0;
   for (const checkpoint of CURRICULUM_A11.checkpoints) {
     for (const seed of [undefined, 1, 2, 3]) {
-      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed })) {
+      for (const it of buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...checkpoint, lesen: undefined }, pool, seed })) {
         if (it.section !== 'lesen') continue;
         items += 1;
         const at = `${checkpoint.id}/${seed} „${it.statement}"`;
@@ -1006,14 +1007,14 @@ test('DaF review #4 MAJOR 8: Richtig follows from the text, Falsch contradicts i
   };
   const problems = [];
   let checked = 0;
-  // Since round 12 the generator writes A1.1's papers only; A1.2's are authored (assertAuthoredA12).
+  // Retained generator regression (live A1.1 now uses a11-lesen.test.mjs). Since round 12 the generator wrote A1.1's papers only; A1.2's are authored (assertAuthoredA12).
   assertAuthoredA12(buildCheckpoint);
   for (const [curriculum, file] of [[CURRICULUM_A11, 'a11']]) {
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       const cpSpec = reportSpecFor(curriculum, checkpoint);
       for (let round = 0; round < 3; round += 1) {
-        for (const it of buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) })) {
+        for (const it of buildCheckpoint({ curriculum, checkpoint: { ...checkpoint, lesen: undefined }, pool, seed: paperSeed(checkpoint, round) })) {
           if (it.section !== 'lesen' || !it.transform) continue;
           checked += 1;
           const at = `${checkpoint.id}/${round} „${it.statement}"`;
@@ -1136,7 +1137,7 @@ test('DaF review #5 MAJOR 8: Falsch is refuted by the text, never merely not sta
     const pool = JSON.parse(read(`src/data/lessonPools/${file}.json`));
     for (const checkpoint of curriculum.checkpoints) {
       for (let round = 0; round < 3; round += 1) {
-        const lesen = B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
+        const lesen = B.buildCheckpoint({ curriculum, checkpoint: { ...checkpoint, lesen: undefined }, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen');
         const negated = { Richtig: 0, Falsch: 0 };
         for (const it of lesen) {
           // A two-option item (A1.2, round 11b) prints its Richtig and its Falsch side by side.
