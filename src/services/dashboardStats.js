@@ -13,7 +13,8 @@ import { supabase } from '../utils/supabase.js';
 //   - user_grammar_progress.last_accessed / completed_at  → activity dates
 //   - xray_usage.used_at                                  → activity dates + X-Ray count
 //   - speaking_evaluations.created_at                     → activity dates + session count
-// No new tables. No writes. Streak is derived from existing timestamps.
+// No writes. Streak is derived from persisted timestamps (the vocabulary
+// review log, vocab_srs_reviews, counts once its owner-applied migration lands).
 // ──────────────────────────────────────────────────────────────
 
 /** Local YYYY-MM-DD key for a timestamp (day-streak is per calendar day, local time). */
@@ -39,11 +40,37 @@ export function grammarRowStamps(row) {
 }
 
 /**
+ * Vocabulary-trainer activity stamps (cross-check 2026-10-25, AI-25). A card
+ * row keeps only its LATEST review, so re-reviewing Monday's cards on Tuesday
+ * erased Monday from both streaks. The append-only vocab_srs_reviews log
+ * (migrations/2026-10-25-vocab-srs-review-log.sql, written by a trigger on
+ * vocab_srs_cards) keeps every review. A review both hold — the card's latest,
+ * which the trigger copies verbatim — counts once, so the daily goal is not
+ * filled twice by one card. Until the log exists its read fails soft (no rows)
+ * and the card stamps count alone, as before. Pure.
+ */
+export function srsReviewStamps(cards, reviews) {
+  const seen = new Set();
+  const stamps = [];
+  const add = (wordId, ts) => {
+    const time = ts ? new Date(ts).getTime() : NaN;
+    if (Number.isNaN(time)) return;
+    const key = `${wordId}|${time}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    stamps.push(ts);
+  };
+  (cards || []).forEach((r) => add(r.word_id, r.last_reviewed_at));
+  (reviews || []).forEach((r) => add(r.word_id, r.reviewed_at));
+  return stamps;
+}
+
+/**
  * Gather every activity timestamp for a user across the activity tables, plus
  * whether any lesson row exists (the same two reads, no extra query).
  */
 async function fetchActivityTimestamps(userId) {
-  const [grammar, xray, speaking, reading, listening, srs, writing, exams, lessonItems, lessons] = await Promise.all([
+  const [grammar, xray, speaking, reading, listening, srs, writing, exams, lessonItems, lessons, srsLog] = await Promise.all([
     supabase
       .from('user_grammar_progress')
       .select('last_accessed, completed_at')
@@ -78,7 +105,7 @@ async function fetchActivityTimestamps(userId) {
     // practice exams are real daily work and feed the streak + goal too.
     supabase
       .from('vocab_srs_cards')
-      .select('last_reviewed_at')
+      .select('word_id, last_reviewed_at')
       .eq('user_id', userId)
       .not('last_reviewed_at', 'is', null),
     supabase
@@ -103,6 +130,13 @@ async function fetchActivityTimestamps(userId) {
       .from('lesson_progress')
       .select('updated_at')
       .eq('user_id', userId),
+    // Every trainer review, not only each card's latest (srsReviewStamps).
+    // Newest first, so a long history keeps its recent days under the row cap.
+    supabase
+      .from('vocab_srs_reviews')
+      .select('word_id, reviewed_at')
+      .eq('user_id', userId)
+      .order('reviewed_at', { ascending: false }),
   ]);
 
   const stamps = [];
@@ -111,7 +145,7 @@ async function fetchActivityTimestamps(userId) {
   (speaking.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
   (reading.data || []).forEach((r) => r.last_read_at && stamps.push(r.last_read_at));
   (listening.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
-  (srs.data || []).forEach((r) => r.last_reviewed_at && stamps.push(r.last_reviewed_at));
+  stamps.push(...srsReviewStamps(srs.data, srsLog.data));
   (writing.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
   (exams.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   (lessonItems.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));

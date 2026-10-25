@@ -109,31 +109,78 @@ const readDraft = (key) => {
   return d && typeof d === 'object' && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
 };
 
-export default function GradedWriting({ task, lektionId = null, onResult, onPending, allowRevision = false }) {
+// AN ASSESSED LESSON TEXT STAYS (cross-check 2026-10-25, AI-15). After the AI assessment a reload or
+// a step Back used to come back to an empty editor with Next disabled — and the retyped text spent
+// the task's one free improved version. With `keepAssessed` (the lesson's WritingStage) the text and
+// its assessment are kept beside the draft — which is still dropped on submit — and come back with
+// the assessment shown and reported upward, without a second evaluate-writing request, until the
+// learner moves on (WritingStage's Next) or opens the improved-version editor. A checkpoint keeps
+// none: each attempt there is a new one. Only an AI assessment is kept, never the form-check fallback.
+const assessedKeyOf = (key) => key.replace(/^dm_writing_draft:/, 'dm_writing_assessed:');
+const readAssessed = (key) => {
+  const d = safeGetJSON(assessedKeyOf(key), null);
+  return d && typeof d === 'object' && d.outcome?.scored === true
+    && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
+};
+
+/** Drop a lesson's kept assessment — the learner has moved on past the writing stage. */
+export function forgetAssessedWriting(userId, taskKey, lektionId) {
+  safeRemove(assessedKeyOf(draftKey(userId, taskKey, lektionId)));
+}
+
+// The feedback reached the screen but not the learner's record (evaluate-writing answered
+// saved:false after retrying the write): said plainly, so it is not taken for a normal save.
+const NOT_SAVED = {
+  de: 'Ihre Bewertung konnte nicht gespeichert werden — notieren Sie sich die Korrekturen.',
+  en: 'Your assessment could not be saved — please note down the corrections.',
+};
+
+export default function GradedWriting({ task, lektionId = null, onResult, onPending, allowRevision = false, keepAssessed = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const isFormular = task?.kind === 'formular';
   const points = (isFormular ? task?.fields : task?.leitpunkte) || [];
 
   const key = draftKey(user?.id, task?.taskKey, lektionId);
+  const [restored] = useState(() => (keepAssessed ? readAssessed(key) : null));
   const [text, setText] = useState(() => readDraft(key)?.text || '');
-  const [fields, setFields] = useState(() => readDraft(key)?.fields || {});
+  const [fields, setFields] = useState(() => restored?.fields || readDraft(key)?.fields || {});
   const [busy, setBusy] = useState(false);
-  const [outcome, setOutcome] = useState(null); // the r object, once submitted
-  const [note, setNote] = useState(null); // honest one-liner about the fallback
+  const [outcome, setOutcome] = useState(() => restored?.outcome || null); // the r object, once submitted
+  const [note, setNote] = useState(() => restored?.note || null); // honest one-liner about the fallback
   // One improved version after feedback, in a lesson only (Wave 1 writing loop): the server counts
   // it against no other task (evaluate-writing courseSubmissionAllowed). A checkpoint never offers it.
 
-  // The account resolves after the first render: then take that learner's draft, if nothing is typed.
+  // A kept assessment comes back as the learner left it: the text in the (locked) editor, the result
+  // reported upward once — the stage opens Next, the recap counts it. No grading request is made.
+  const onResultRef = useRef(onResult);
+  useEffect(() => { onResultRef.current = onResult; });
+  useEffect(() => {
+    if (!restored) return;
+    setText(restored.text || '');
+    onResultRef.current?.(restored.outcome);
+  }, [restored]);
+
+  // The account resolves after the first render: then take that learner's kept assessment or draft,
+  // if nothing is typed.
   const loadedKey = useRef(key);
   useEffect(() => {
     if (loadedKey.current === key) return;
     loadedKey.current = key;
+    const kept = keepAssessed && !outcome ? readAssessed(key) : null;
+    if (kept) {
+      setText(kept.text || '');
+      setFields(kept.fields || {});
+      setOutcome(kept.outcome);
+      setNote(kept.note || null);
+      onResultRef.current?.(kept.outcome);
+      return;
+    }
     const d = readDraft(key);
     if (!d) return;
     setText((prev) => prev || d.text || '');
     setFields((prev) => (Object.keys(prev).length ? prev : d.fields || {}));
-  }, [key]);
+  }, [key, keepAssessed, outcome]);
   useEffect(() => {
     if (outcome) return;
     const empty = !text.trim() && !Object.values(fields).some((v) => String(v ?? '').trim());
@@ -171,6 +218,10 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
 
   const finish = (r, noteText) => {
     safeRemove(key);
+    // A lesson keeps its AI-assessed text until the learner moves on (see readAssessed).
+    if (keepAssessed && r.scored) {
+      safeSetJSON(assessedKeyOf(key), { text, fields, outcome: r, note: noteText || null, savedAt: Date.now() });
+    }
     setOutcome(r);
     setNote(noteText || null);
     if (typeof onResult === 'function') onResult(r);
@@ -236,6 +287,8 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
         scores: data.scores || null,
         lektionId,
         remaining: typeof data.limit === 'number' ? Math.max(0, data.limit - (data.used ?? 0)) : null,
+        // false: the feedback is on screen but not in the learner's record (see NOT_SAVED).
+        saved: data.saved !== false,
       });
     } catch (e) {
       console.error('[GradedWriting] evaluate-writing call failed:', e);
@@ -357,7 +410,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
                 {fix.note && <p className="mt-1 text-[0.8125rem] text-graphite">{fix.note}</p>}
               </>
             )}
-            <Button className="mt-4" variant="secondary" onClick={() => { setOutcome(null); setNote(null); }}>
+            <Button className="mt-4" variant="secondary" onClick={() => { safeRemove(assessedKeyOf(key)); setOutcome(null); setNote(null); }}>
               {t('writing.improve', lang)}
             </Button>
             <p className="mt-2 text-[0.8125rem] text-graphite">{t('writing.improveNote', lang)}</p>
@@ -379,6 +432,11 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
               {t('writing.assessmentNote', lang)}
               {typeof outcome.remaining === 'number' && t('writing.remaining', lang, { n: outcome.remaining })}
             </p>
+            {outcome.saved === false && (
+              <p role="status" className="mt-3 rounded-clay border border-accent-aprikose/30 bg-accent-aprikose-wash px-3 py-2 text-[0.875rem] leading-relaxed text-accent-aprikose-ink">
+                {lang === 'de' ? NOT_SAVED.de : NOT_SAVED.en}
+              </p>
+            )}
           </Card>
 
           <Card className="mt-4 overflow-hidden">
