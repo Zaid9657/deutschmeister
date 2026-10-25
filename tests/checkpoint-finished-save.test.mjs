@@ -93,10 +93,11 @@ const FINISH = () => callback('finish', /,\s*\[scoredItems[^\]]*\],\s*\);/);
 const RESTORE = () => effect('const run = readCheckpointRun(level, checkpoint.id, Date.now(), owner);', '[restoreDone, curriculum, checkpoint, pool, attempts, level, owner]');
 const SNAPSHOT = () => effect("if (phase === 'run' || phase === 'sectionFeedback') {", '[restoreDone, phase, paper, items.length, round, index, answers, notHeard, level, checkpoint, owner]');
 const FLUSH = () => effect("window.addEventListener('online', flush);", '[restoreDone, owner, pool, curriculum, checkpoint, level, save]');
-const HELPER = () => {
-  const start = PAGE.indexOf('function finishedPaperItems(');
-  return start < 0 ? 'function finishedPaperItems() { return null; }' : PAGE.slice(start, PAGE.indexOf('\n}\n', start) + 2);
-};
+/** The page's module-level helpers the sliced code calls (a stub where a tree lacks one). */
+const HELPER = () => [['finishedPaperItems', 'return null;'], ['runOfJob', 'return true;']].map(([name, stub]) => {
+  const start = PAGE.indexOf(`function ${name}(`);
+  return start < 0 ? `function ${name}() { ${stub} }` : PAGE.slice(start, PAGE.indexOf('\n}\n', start) + 2);
+}).join('\n');
 
 /** One mount of CheckpointRun for `owner` (null: a guest), with its state as plain variables. */
 function mount(owner) {
@@ -281,6 +282,74 @@ test('a refused finished-paper write with the account reachable is saved and lea
     await settle();
     assert.equal(page.ctx.saveState, 'saved');
     assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), 'u1'), null);
+  } finally {
+    supabase.from = original;
+  }
+}));
+
+// Two tabs, one account (Codex re-check of e292e4e): tab A's finished paper is still waiting for the
+// account while tab B starts the checkpoint again and stores its answers. A's save landing must clear
+// only A's own snapshot — B's run, newer and of the same paper and round, stays.
+test('two tabs: an older save landing never deletes the newer run another tab is taking', () => quiet(async () => {
+  const original = supabase.from;
+  try {
+    withStorage();
+    const db = database();
+    const tabA = mount('u1');
+    tabA.ctx.restoreDone = true;
+    tabA.finish(RIGHT);
+    await settle();
+    assert.equal(tabA.ctx.saveState, 'failed');
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    // Tab B: the same checkpoint, a fresh run of the same round (A's attempt has not reached the
+    // account), three answers in.
+    const tabB = mount('u1');
+    tabB.ctx.restoreDone = true;
+    tabB.ctx.phase = 'run';
+    tabB.ctx.index = 3;
+    tabB.ctx.answers = Object.fromEntries(PAPER.slice(0, 3).map((item) => [item.id, item.answer]));
+    tabB.snapshot();
+    // The connection returns; tab A's retry lands.
+    db.online = true;
+    tabA.ctx.save(true);
+    await settle();
+    assert.equal(tabA.ctx.saveState, 'saved');
+    const run = readCheckpointRun('a1.1', CP.id, Date.now(), 'u1');
+    assert.ok(run, 'tab B\'s run is still there');
+    assert.deepEqual([run.index, run.answers], [3, tabB.ctx.answers]);
+  } finally {
+    supabase.from = original;
+  }
+}));
+
+// Capacity-based quota (Codex re-check of e292e4e): a full store refuses the large writes — the
+// finished paper and its fallback snapshot — but still takes the small attempt counter. With no copy of
+// the paper on the device, its attempt must not be counted there either; the card keeps its retry.
+test('a store full for the paper but not for the counter counts no attempt without the paper', () => quiet(async () => {
+  const original = supabase.from;
+  try {
+    let roomy = false;
+    const values = withStorage((key) => !roomy && key !== 'dm_checkpoint_attempts');
+    database();
+    const page = mount('u1');
+    page.ctx.restoreDone = true;
+    page.finish(RIGHT);
+    await settle();
+    assert.equal(page.ctx.saveState, 'localFailed', 'stored nowhere: the retry stays');
+    assert.equal(readFinishedPapers('a1.1', CP.id, Date.now(), 'u1').length, 0);
+    assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), 'u1'), null);
+    assert.equal(values.has('dm_checkpoint_attempts'), false, 'no attempt counted for a paper the device does not hold');
+    // A reload now finds nothing, and nothing was counted: the learner is not a wasted attempt down.
+    assert.equal((await fetchAttemptState('u1', CP.id)).used, 0);
+    // Room again, same tab: the retry keeps the paper and counts its attempt — once.
+    roomy = true;
+    page.ctx.save(true);
+    await settle();
+    assert.equal(readFinishedPapers('a1.1', CP.id, Date.now(), 'u1').length, 1);
+    assert.equal(JSON.parse(values.get('dm_checkpoint_attempts'))[CP.id].length, 1);
+    page.ctx.save(true);
+    await settle();
+    assert.equal(JSON.parse(values.get('dm_checkpoint_attempts'))[CP.id].length, 1, 'counted once');
   } finally {
     supabase.from = original;
   }

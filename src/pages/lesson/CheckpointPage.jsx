@@ -75,6 +75,16 @@ const POOL_LOADERS = {
 };
 
 /**
+ * Is the stored run snapshot this saved paper's own — its stamped copy, or the run it was finished from
+ * (same paper and round, saved before it finished)? A newer run (a retake in another tab) is not.
+ */
+function runOfJob(run, job) {
+  if (!run || !job || !job.finished) return false;
+  if (run.stamp) return run.stamp === job.stamp;
+  return run.paper === job.finished.paper && run.round === job.finished.round && run.savedAt <= Date.parse(job.stamp);
+}
+
+/**
  * The scored items of a finished paper that waits for its save, as its round rebuilds them today —
  * or null when the paper has changed since (a new pool after a deploy: its fingerprint differs).
  */
@@ -425,7 +435,8 @@ function CheckpointRun() {
     // failed write) comes back as its result — the newest whose paper still rebuilds — and the flush
     // below sends it again, so a reload no longer costs the answers and the pass.
     const show = (entry, scored) => {
-      saveRef.current = { args: { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result }, stamp: entry.stamp, finished: entry };
+      // Counted on this device when it was finished (save() counts only a paper it could keep).
+      saveRef.current = { args: { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result }, stamp: entry.stamp, finished: entry, counted: true };
       unsaved.current = true;
       setRound(entry.round);
       setAnswers(entry.answers);
@@ -503,29 +514,38 @@ function CheckpointRun() {
   // connection used to lose the answers and the pass. One send per paper at a time, and a paper no
   // longer on screen (a retake began) changes nothing here.
   const sending = useRef(new Set());
-  const save = useCallback((retry = false) => {
+  const save = useCallback(() => {
     const job = saveRef.current;
     if (!job || sending.current.has(job.stamp)) return;
     sending.current.add(job.stamp);
+    // Only this paper's own snapshot is ever cleared here — never a newer run another tab started.
+    const clearOwnRun = () => {
+      if (runOfJob(readCheckpointRun(level, checkpoint.id, Date.now(), owner), job)) clearCheckpointRun(level, checkpoint.id, owner);
+    };
     // The paper's run snapshot goes only once the finished paper reads back from storage. A refused
     // write (a full or blocked store) keeps the snapshot, with the final answers, so a reload resumes
     // the paper instead of losing it, and the card offers a retry ('localFailed').
     const kept = owner ? keepFinishedPaper(level, checkpoint.id, job.finished, owner) : true;
-    if (owner && kept) clearCheckpointRun(level, checkpoint.id, owner);
+    let durable = kept;
+    if (owner && kept) clearOwnRun();
     else if (owner) {
       const { paper: print, round: paperRound, answers: final, notHeard: unheard } = job.finished;
       const last = job.args.items.length + unheard.length - 1;
       saveCheckpointRun(level, checkpoint.id, packCheckpointRun({ paper: print, round: paperRound, index: last, answers: final, notHeard: unheard, phase: 'run', stamp: job.stamp }), owner);
+      durable = readCheckpointRun(level, checkpoint.id, Date.now(), owner)?.stamp === job.stamp;
     }
+    // The attempt is counted on this device once, and only when the paper itself is on the device
+    // too: with neither copy stored, a counted attempt would outlive the paper it counts.
+    const count = durable && !job.counted;
+    if (count) job.counted = true;
     if (user) setSaveState('saving');
-    recordAttempt(user?.id, { ...saveRef.current.args, stamp: saveRef.current.stamp, retry })
+    recordAttempt(user?.id, { ...saveRef.current.args, stamp: saveRef.current.stamp, retry: !count })
       .catch(() => false)
       .then((ok) => {
         sending.current.delete(job.stamp);
         if (owner && ok) {
           dropFinishedPaper(level, checkpoint.id, job.stamp, owner);
-          // Saved: a snapshot kept for it is not needed (unless a retake's own run is open by now).
-          if (saveRef.current === job) clearCheckpointRun(level, checkpoint.id, owner);
+          clearOwnRun();
         }
         if (saveRef.current !== job) return null;
         unsaved.current = !ok;
