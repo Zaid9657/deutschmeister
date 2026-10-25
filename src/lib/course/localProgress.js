@@ -115,6 +115,19 @@ export function localDoneIds(level) {
 
 export const hasLocalProgress = (level) => localDoneIds(level).size > 0;
 
+/**
+ * Is this checkpoint pass in the browser's storage, not only in this tab's memory? A write the
+ * browser refused (QuotaExceededError, a full or blocked store) is kept in memory so the course home
+ * and a sign-in from this tab still have it, but a reload loses it: only a stored pass may be called
+ * saved on this device. With `stamp` it must be that paper's pass, not an earlier one.
+ */
+export function localCheckpointStored(level, checkpointId, stamp = null) {
+  const raw = safeGetJSON(LOCAL_KEY, null);
+  if (!raw || typeof raw !== 'object' || !checkpointId || raw.level !== String(level || '').toLowerCase()) return false;
+  const row = raw.checkpoints && typeof raw.checkpoints === 'object' ? raw.checkpoints[checkpointId] : null;
+  return Boolean(row && row.passedAt && (!stamp || row.stamp === stamp));
+}
+
 /** How often a signed-out learner finished one Lektion — 0 when never. */
 export function localRunCount(level, lektionId) {
   const store = readLocalProgress();

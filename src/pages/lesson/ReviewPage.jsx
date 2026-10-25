@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -44,7 +44,27 @@ const formatDue = (iso, lang) => {
   }
 };
 
+/**
+ * The owner boundary of a review session (2026-10-25): the deck, its position and the batch-end counts
+ * belong to ONE account. A grade still being saved when another account signed in (another tab) used to
+ * land on the new account's deck — its late continuation set that deck's index from the old one, so
+ * three unanswered cards showed the finished-batch screen. So the session mounts once auth has settled,
+ * keyed by its owner (as CheckpointPage keys a paper): a new owner is a new session.
+ */
 export default function ReviewPage() {
+  const { user, loading } = useAuth();
+  const [lang] = useLessonLang();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm">{t('review.loading', lang)}</p>
+      </div>
+    );
+  }
+  return <ReviewSession key={user?.id || 'guest'} />;
+}
+
+function ReviewSession() {
   const { level } = useParams();
   const { user } = useAuth();
   const [lang] = useLessonLang();
@@ -63,8 +83,12 @@ export default function ReviewPage() {
 
   const cardIndex = useMemo(() => buildCardIndex(curriculum), [curriculum]);
 
+  // Which deck is on screen: counted up whenever one loads (another level, the next round). A grade or a
+  // batch-end count that resolves after the deck changed belongs to the old deck and is dropped.
+  const deck = useRef(0);
   useEffect(() => {
     if (!curriculum) return;
+    deck.current += 1;
     let cancelled = false;
     if (!user) {
       setCards([]);
@@ -129,14 +153,17 @@ export default function ReviewPage() {
 
   const finish = useCallback(() => {
     if (!user || !curriculum) return;
-    fetchNextDueAt(user.id, curriculum.level).then(setNextDueAt);
+    const shown = deck.current;
+    fetchNextDueAt(user.id, curriculum.level).then((at) => { if (deck.current === shown) setNextDueAt(at); });
     // A batch is 12; a learner with 25 due used to read „Done for today" after the first 12.
-    fetchReviewCounts(user.id, curriculum.level).then((c) => setStillDue(c.due || 0));
+    fetchReviewCounts(user.id, curriculum.level).then((c) => { if (deck.current === shown) setStillDue(c.due || 0); });
   }, [user, curriculum]);
 
   const grade = async (correct) => {
     if (!card) return;
+    const shown = deck.current;
     await gradeCard(user?.id, card.card_key, correct);
+    if (deck.current !== shown) return;
     if (index + 1 >= (cards?.length || 0)) {
       setIndex(index + 1);
       finish();
