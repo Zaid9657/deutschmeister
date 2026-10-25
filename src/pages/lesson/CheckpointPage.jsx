@@ -37,9 +37,13 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
   checkpointRunFits,
   clearCheckpointRun,
+  dropFinishedPaper,
+  keepFinishedPaper,
   packCheckpointRun,
+  packFinishedPaper,
   paperFingerprint,
   readCheckpointRun,
+  readFinishedPapers,
   saveCheckpointRun,
 } from '../../lib/lesson/runState.js';
 
@@ -57,10 +61,27 @@ import {
 // (English by default, Deutsch-Modus on the header toggle). The SECTION names
 // (Hören, Lesen, …) stay German in both: they are the parts of the exam.
 
+// A signed-out pass the browser refused to store (saveState 'localFailed'). The shared table's
+// 'sync.localFailed' names the Lektion, so this one is kept here in its shape (IntroStage's pattern),
+// `de` in Sie, ready to move into STRINGS verbatim.
+const LOCAL_SAVE_FAILED = {
+  en: 'This browser could not save your result. Keep this page open and try saving again.',
+  de: 'Ihr Browser konnte Ihr Ergebnis nicht speichern. Lassen Sie diese Seite offen und versuchen Sie das Speichern erneut.',
+};
+
 const POOL_LOADERS = {
   'a1.1': () => import('../../data/lessonPools/a11.json'),
   'a1.2': () => import('../../data/lessonPools/a12.json'),
 };
+
+/**
+ * The scored items of a finished paper that waits for its save, as its round rebuilds them today —
+ * or null when the paper has changed since (a new pool after a deploy: its fingerprint differs).
+ */
+function finishedPaperItems({ curriculum, checkpoint, pool }, entry) {
+  const paper = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, entry.round) });
+  return paperFingerprint(paper) === entry.paper ? paper.filter((item) => !entry.notHeard.includes(item.id)) : null;
+}
 
 /**
  * One item, one screen. Typed input, option chips, dictation or self-confirm.
@@ -350,8 +371,9 @@ function CheckpointRun() {
   const [answers, setAnswers] = useState({});
   const [attempts, setAttempts] = useState(null);
   const [remediation, setRemediation] = useState([]);
-  // Where the finished paper is saved: null (signed out, not passed) | 'local' (a signed-out pass, kept
-  // on this device until sign-in) | 'saving' | 'saved' | 'failed'.
+  // Where the finished paper is saved: null (signed out, not passed) | 'local' (a signed-out pass in this
+  // browser's storage until sign-in) | 'localFailed' (one the browser refused: in this tab's memory only,
+  // so it offers a retry) | 'saving' | 'saved' | 'failed'.
   const [saveState, setSaveState] = useState(null);
   // Items read instead of heard (audio failed): they leave the score — see PracticeItem.
   const [notHeard, setNotHeard] = useState(() => new Set());
@@ -397,8 +419,27 @@ function CheckpointRun() {
   const [restoreDone, setRestoreDone] = useState(false);
   useEffect(() => {
     if (restoreDone || !curriculum || !checkpoint || !pool) return;
+    // Without a paper in progress, a paper FINISHED but not yet saved to this account (offline, a
+    // failed write) comes back as its result — the newest whose paper still rebuilds — and the flush
+    // below sends it again, so a reload no longer costs the answers and the pass.
+    const showFinished = () => {
+      const waiting = owner ? readFinishedPapers(level, checkpoint.id, Date.now(), owner) : [];
+      for (let k = waiting.length - 1; k >= 0; k -= 1) {
+        const entry = waiting[k];
+        const scored = finishedPaperItems({ curriculum, checkpoint, pool }, entry);
+        if (!scored) continue;
+        saveRef.current = { args: { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result }, stamp: entry.stamp, finished: entry };
+        setRound(entry.round);
+        setAnswers(entry.answers);
+        setNotHeard(new Set(entry.notHeard));
+        setPhase('result');
+        if (!entry.result.passed) setRemediation(remediationSet(scored, entry.answers, pool, { afterLektion: checkpoint.afterLektion }));
+        return;
+      }
+    };
     const run = readCheckpointRun(level, checkpoint.id, Date.now(), owner);
     if (!run) {
+      showFinished();
       setRestoreDone(true);
       return;
     }
@@ -412,6 +453,7 @@ function CheckpointRun() {
       setPhase(run.phase);
     } else {
       clearCheckpointRun(level, checkpoint.id, owner);
+      showFinished();
     }
     setRestoreDone(true);
   }, [restoreDone, curriculum, checkpoint, pool, attempts, level, owner]);
@@ -436,28 +478,70 @@ function CheckpointRun() {
   // One stamped attempt per finished paper, so „Try again" after a failed save finds what already
   // landed instead of counting a second attempt (Codex score review, 2026-10-08). The attempt count
   // is read AFTER the attempt is written — reading it in parallel showed the count from before it.
+  // LOCAL FIRST (2026-10-25): signed in, the finished paper is kept on this device BEFORE any network
+  // write and dropped only once every write landed (runState.js, finished papers) — a reload or a dead
+  // connection used to lose the answers and the pass. One send per paper at a time, and a paper no
+  // longer on screen (a retake began) changes nothing here.
+  const sending = useRef(new Set());
   const save = useCallback((retry = false) => {
-    if (!saveRef.current) return;
+    const job = saveRef.current;
+    if (!job || sending.current.has(job.stamp)) return;
+    sending.current.add(job.stamp);
+    if (owner) keepFinishedPaper(level, checkpoint.id, job.finished, owner);
     if (user) setSaveState('saving');
     recordAttempt(user?.id, { ...saveRef.current.args, stamp: saveRef.current.stamp, retry })
       .catch(() => false)
       .then((ok) => {
+        sending.current.delete(job.stamp);
+        if (owner && ok) dropFinishedPaper(level, checkpoint.id, job.stamp, owner);
+        if (saveRef.current !== job) return null;
         if (user) setSaveState(ok ? 'saved' : 'failed');
         // Signed out, a pass is kept on this device and merged at sign-in (checkpointService): said so
-        // only when it was stored.
-        else if (saveRef.current?.args.result?.passed && guestPassKept(level, checkpoint.id)) setSaveState('local');
+        // only when this paper's pass reached the browser's storage. A refused write (a full or blocked
+        // store) is held in memory, which a reload loses, so it is a failed save with a retry.
+        else if (job.args.result?.passed) setSaveState(guestPassKept(level, checkpoint.id, job.stamp) ? 'local' : 'localFailed');
         return fetchAttemptState(user?.id, checkpoint.id);
       })
-      .then(setAttempts);
-  }, [user, checkpoint, level]);
+      .then((state) => { if (state) setAttempts(state); });
+  }, [user, owner, checkpoint, level]);
+
+  // Sent again on arrival and whenever the connection returns: every finished paper of this account
+  // still waiting — the one on screen through save(), so its status line follows; the others quietly,
+  // each rebuilt from its round (a paper that changed since still writes its summary row and completion).
+  useEffect(() => {
+    if (!restoreDone || !owner || !pool) return undefined;
+    const flush = () => {
+      for (const entry of readFinishedPapers(level, checkpoint.id, Date.now(), owner)) {
+        if (entry.stamp === saveRef.current?.stamp) {
+          save(true);
+          continue;
+        }
+        if (sending.current.has(entry.stamp)) continue;
+        sending.current.add(entry.stamp);
+        const scored = finishedPaperItems({ curriculum, checkpoint, pool }, entry) || [];
+        recordAttempt(owner, { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result, stamp: entry.stamp, retry: true })
+          .catch(() => false)
+          .then((ok) => {
+            sending.current.delete(entry.stamp);
+            if (ok) dropFinishedPaper(level, checkpoint.id, entry.stamp, owner);
+          });
+      }
+    };
+    flush();
+    window.addEventListener('online', flush);
+    return () => window.removeEventListener('online', flush);
+  }, [restoreDone, owner, pool, curriculum, checkpoint, level, save]);
 
   const finish = useCallback(
     (finalAnswers) => {
       const scored = scoreCheckpoint(scoredItems, finalAnswers);
+      const stamp = new Date().toISOString();
       setPhase('result');
       saveRef.current = {
         args: { level, checkpointId: checkpoint.id, items: scoredItems, answers: finalAnswers, result: scored },
-        stamp: new Date().toISOString(),
+        stamp,
+        // What a reload needs to show this result again and send it (runState.js, finished papers).
+        finished: packFinishedPaper({ stamp, paper, round, answers: finalAnswers, notHeard: [...notHeard], result: scored }),
       };
       save();
       // The bound the paper itself was drawn under (see servableBy): a remediation
@@ -466,7 +550,7 @@ function CheckpointRun() {
         setRemediation(remediationSet(scoredItems, finalAnswers, pool, { afterLektion: checkpoint.afterLektion }));
       }
     },
-    [scoredItems, level, checkpoint, pool, save],
+    [scoredItems, level, checkpoint, pool, save, paper, round, notHeard],
   );
 
   const onAnswer = (item, answer) => {
@@ -601,9 +685,9 @@ function CheckpointRun() {
                 </div>
               )}
               <p className="mt-4 text-sm text-graphite" role="status">
-                {saveState === 'failed' ? (
+                {saveState === 'failed' || saveState === 'localFailed' ? (
                   <>
-                    {t('checkpoint.saveFailed', lang)}{' '}
+                    {saveState === 'failed' ? t('checkpoint.saveFailed', lang) : LOCAL_SAVE_FAILED[lang] || LOCAL_SAVE_FAILED.en}{' '}
                     <button type="button" className="font-bold text-siegel-deep underline underline-offset-2" onClick={() => save(true)}>
                       {t('sync.retry', lang)}
                     </button>
@@ -618,7 +702,7 @@ function CheckpointRun() {
                 ) : (
                   <Button
                     disabled={Boolean(attempts?.blocked)}
-                    onClick={() => { setRound(Math.max(round + 1, attempts?.used || 0)); setAnswers({}); setNotHeard(new Set()); setIndex(0); setRemediation([]); setSaveState(null); setPhase('run'); }}
+                    onClick={() => { saveRef.current = null; setRound(Math.max(round + 1, attempts?.used || 0)); setAnswers({}); setNotHeard(new Set()); setIndex(0); setRemediation([]); setSaveState(null); setPhase('run'); }}
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('action.again', lang)}
                   </Button>

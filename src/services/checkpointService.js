@@ -2,7 +2,7 @@ import { supabase } from '../utils/supabase.js';
 import { setProgramItemDone } from './programProgress.js';
 import { isItemCorrect } from '../lib/checkpoint/buildCheckpoint.js';
 import { tagError } from '../lib/lesson/check.js';
-import { localDoneIds, recordLocalCheckpoint } from '../lib/course/localProgress.js';
+import { localCheckpointStored, recordLocalCheckpoint } from '../lib/course/localProgress.js';
 
 // Checkpoint persistence (CONTRACT.md "Persistence"; standard §3).
 //
@@ -99,8 +99,12 @@ export async function fetchAttemptState(userId, checkpointId) {
   return attemptState((data || []).map((r) => new Date(r.created_at).getTime()));
 }
 
-/** Is a signed-out pass of this checkpoint kept on this device, waiting for the sign-in merge? */
-export const guestPassKept = (level, checkpointId) => localDoneIds(level).has(checkpointId);
+/**
+ * Is a signed-out pass of this checkpoint kept on this device, waiting for the sign-in merge? Only
+ * when the browser stored it: a pass it refused lives in this tab's memory and is gone after a reload,
+ * so the result card offers a retry instead of "Saved on this device". `stamp` narrows it to one paper.
+ */
+export const guestPassKept = (level, checkpointId, stamp = null) => localCheckpointStored(level, checkpointId, stamp);
 
 /** Has this checkpoint already been passed? */
 export async function fetchCheckpointStatus(userId, checkpointId) {
