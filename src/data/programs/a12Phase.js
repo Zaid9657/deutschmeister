@@ -292,10 +292,14 @@ const readingLesen10 = (id, minutes = 20) => ({
 // brief — unlike a11Phase.js this plan does not also browse per-category
 // vocabulary lists day to day (that item family, `vocab()`, is an a11Phase.js
 // invention not requested here; see notes.md for the deliberate omission).
-const srsReview = (id, weekLabel, minutes = 25) => ({
+// The title promises what the trainer serves: the cards that are DUE. It used
+// to promise "deine Karteikarten aus Woche N", but no step of this plan adds
+// words and the trainer has no notion of weeks (its empty state now offers a
+// one-click start with the level's words instead).
+const srsReview = (id, minutes = 25) => ({
   id,
   type: 'review',
-  title: `Wortschatz-Wiederholung: deine Karteikarten aus ${weekLabel}`,
+  title: 'Wortschatz-Wiederholung: fällige Karteikarten',
   minutes,
   href: '/vocabulary',
 });
@@ -467,7 +471,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 7',
-        items: [srsReview('d7-srs', 'Woche 1', 25), xray('d7-xray', 20), hubReview('d7-review', 'Wiederholen: alle drei Themen der Woche', 20)],
+        items: [srsReview('d7-srs', 25), xray('d7-xray', 20), hubReview('d7-review', 'Wiederholen: alle drei Themen der Woche', 20)],
       },
     ],
   },
@@ -504,7 +508,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 14 — Puffertag',
-        items: [srsReview('d14-srs', 'Woche 2', 25), hubReview('d14-review2', 'Wiederholen: deine zwei schwächsten Themen', 15)],
+        items: [srsReview('d14-srs', 25), hubReview('d14-review2', 'Wiederholen: deine zwei schwächsten Themen', 15)],
       },
     ],
   },
@@ -537,7 +541,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 20',
-        items: [srsReview('d20-srs', 'Woche 3', 25), hubReview('d20-review', 'Wiederholen: deine zwei schwächsten Themen aus Woche 3', 20), xray('d20-xray', 25)],
+        items: [srsReview('d20-srs', 25), hubReview('d20-review', 'Wiederholen: deine zwei schwächsten Themen aus Woche 3', 20), xray('d20-xray', 25)],
       },
       {
         label: 'Tag 21',
@@ -576,7 +580,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 27 — Puffertag',
-        items: [srsReview('d27-srs', 'Woche 4', 25), hubReview('d27-review', 'Wiederholen: deine letzten drei Themen', 15)],
+        items: [srsReview('d27-srs', 25), hubReview('d27-review', 'Wiederholen: deine letzten drei Themen', 15)],
       },
       {
         label: 'Tag 28',

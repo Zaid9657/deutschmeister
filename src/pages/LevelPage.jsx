@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -58,15 +58,22 @@ const LevelPage = () => {
   const { user } = useAuth();
 
   // "In den Trainer": enqueue the visible words as SRS cards (idempotent).
+  // 'added' only when the write landed (enqueueWords returns 0 on an error),
+  // and only for the words it added: another category or level starts again
+  // at "In den Trainer" (the effect after the category state resets it).
   const [trainerAddState, setTrainerAddState] = useState('idle');
+  const trainerAddTarget = useRef(null);
   const handleAddToTrainer = async () => {
     if (!user || trainerAddState === 'adding') return;
+    const target = `${level}|${selectedCategory}`;
+    trainerAddTarget.current = target;
     setTrainerAddState('adding');
     // Only real DB ids — the mapper falls back to `word-${index}` when a row
     // has none, and those can't reference public.words.
     const ids = filteredVocabulary.map((w) => w.id).filter((id) => /^[0-9a-f-]{36}$/.test(String(id)));
-    await enqueueWords(user.id, ids);
-    setTrainerAddState('added');
+    const added = await enqueueWords(user.id, ids);
+    if (trainerAddTarget.current !== target) return; // the learner moved on meanwhile
+    setTrainerAddState(added > 0 ? 'added' : 'error');
   };
 
   // Deep links carry the tab in the query string — PodcastsPage sends users to
@@ -104,6 +111,10 @@ const LevelPage = () => {
   const [grammarLoading, setGrammarLoading] = useState(true);
   const [readingLoading, setReadingLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  useEffect(() => {
+    trainerAddTarget.current = null;
+    setTrainerAddState('idle');
+  }, [selectedCategory, level]);
 
   // Listening exercises for this level
   const { exercises: listeningExercises, loading: listeningLoading } = useLevelExercises(level.toUpperCase());
@@ -422,20 +433,30 @@ const LevelPage = () => {
                         <p className="text-sm text-siegel-deep">
                           Diese Wörter in wachsenden Abständen üben, statt sie nur zu lesen?
                         </p>
-                        <Button
-                          size="sm"
-                          onClick={handleAddToTrainer}
-                          disabled={trainerAddState === 'adding'}
-                          className="shrink-0"
-                        >
-                          {trainerAddState === 'added'
-                            ? 'Im Trainer ✓'
-                            : trainerAddState === 'adding'
-                              ? 'Wird hinzugefügt…'
-                              : selectedCategory === 'all'
-                                ? 'In den Trainer'
-                                : `${selectedCategory} in den Trainer`}
-                        </Button>
+                        <div className="flex shrink-0 flex-wrap items-center gap-3">
+                          <Button
+                            size="sm"
+                            onClick={handleAddToTrainer}
+                            disabled={trainerAddState === 'adding'}
+                            className="shrink-0"
+                          >
+                            {trainerAddState === 'added'
+                              ? 'Im Trainer ✓'
+                              : trainerAddState === 'adding'
+                                ? 'Wird hinzugefügt…'
+                                : trainerAddState === 'error'
+                                  ? 'Nicht hinzugefügt — nochmal versuchen'
+                                  : selectedCategory === 'all'
+                                    ? 'In den Trainer'
+                                    : `${selectedCategory} in den Trainer`}
+                          </Button>
+                          {/* The first review can start the day the words are added. */}
+                          {trainerAddState === 'added' && (
+                            <Link to="/vocabulary" className="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
+                              Jetzt üben →
+                            </Link>
+                          )}
+                        </div>
                       </Card>
                     )}
 

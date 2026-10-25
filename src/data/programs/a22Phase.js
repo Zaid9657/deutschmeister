@@ -324,11 +324,13 @@ const reading = (id, n, minutes = 15) => {
 
 // The spaced-repetition trainer lives at the dedicated /vocabulary route
 // (VocabularySectionPage.jsx renders SrsTrainer there). Used once per week
-// (4 total), per the brief.
-const srsReview = (id, weekLabel, minutes = 25) => ({
+// (4 total), per the brief. The title promises the DUE cards — never "cards
+// from week N": no step of this plan adds words and the trainer has no notion
+// of weeks (see a12Phase.js).
+const srsReview = (id, minutes = 25) => ({
   id,
   type: 'review',
-  title: `Wortschatz-Wiederholung: deine Karteikarten aus ${weekLabel}`,
+  title: 'Wortschatz-Wiederholung: fällige Karteikarten',
   minutes,
   href: '/vocabulary',
 });
@@ -536,7 +538,7 @@ const WEEKS = [
       {
         label: 'Tag 7',
         items: [
-          srsReview('d7-srs', 'Woche 1', 25),
+          srsReview('d7-srs', 25),
           gReview('simple-past-sein-haben'),
           hubReview('d7-review', 'Wiederholen: die drei Themen aus Woche 1', 15),
         ],
@@ -597,7 +599,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 14 — Puffertag',
-        items: [srsReview('d14-srs', 'Woche 2', 25), gReview('subordinate-word-order', 15)],
+        items: [srsReview('d14-srs', 25), gReview('subordinate-word-order', 15)],
       },
     ],
   },
@@ -651,7 +653,7 @@ const WEEKS = [
       {
         label: 'Tag 21',
         items: [
-          srsReview('d21-srs', 'Woche 3', 25),
+          srsReview('d21-srs', 25),
           gReview('comparative'),
           hubReview('d21-review', 'Wiederholen: alle Themen aus Woche 1 bis Woche 3', 20),
         ],
@@ -698,7 +700,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 27 — Puffertag',
-        items: [srsReview('d27-srs', 'Woche 4', 25), gReview('future-tense', 15)],
+        items: [srsReview('d27-srs', 25), gReview('future-tense', 15)],
       },
       {
         label: 'Tag 28',
