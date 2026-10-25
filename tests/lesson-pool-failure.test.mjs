@@ -68,7 +68,8 @@ test('the error goes to the ErrorBoundary, and the run — where completion is w
   // The boundary that takes it: the whole app, reloading once for a stale chunk.
   assert.match(read('src/main.jsx'), /<ErrorBoundary>/);
   const boundary = read('src/components/ErrorBoundary.jsx');
-  assert.match(boundary, /msg\.includes\('Failed to fetch dynamically imported module'\)/);
+  assert.match(boundary, /'Failed to fetch dynamically imported module'/);
+  assert.match(boundary, /isChunkLoadError\(error\) && reloadForStaleChunk\(\)/);
   assert.match(boundary, /window\.location\.reload\(\);/);
 });
 

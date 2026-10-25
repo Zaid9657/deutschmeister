@@ -130,7 +130,8 @@ test("the confirmation nudge's link lands on /login, which runs postAuthPath()",
   assert.equal(links[0].options.redirectTo, 'https://deutsch-meister.de/login');
   // LoginPage sends a signed-in visitor on to postAuthPath() (buy intent, course step, dashboard).
   assert.match(read('src/pages/LoginPage.jsx'), /if \(!authLoading && user\) navigate\(from, \{ replace: true \}\);/);
-  assert.match(read('src/pages/LoginPage.jsx'), /const from = returnPath\(location\.state\?\.from\) \|\| postAuthPath\(\);/);
+  // A static door's ?next= (src/lib/loginReturn.js) comes before the default.
+  assert.match(read('src/pages/LoginPage.jsx'), /const from = returnPath\(location\.state\?\.from\) \|\| nextPath\(searchParams\.get\('next'\)\) \|\| postAuthPath\(\);/);
 });
 
 test('/subscription\'s "Trial expired" card links the free course', () => {
