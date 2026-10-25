@@ -17,11 +17,14 @@ export const useAuth = () => useContext(AuthContext);
 // event can fire before AuthProvider below has subscribed; listening from import
 // time means it is never lost. UpdatePasswordPage opens its form only after this
 // signal: a session that merely exists (another account signed in on this
-// browser, which an expired link leaves in place) never qualifies.
-let recoverySignal = false;
-supabase.auth.onAuthStateChange((event) => {
-  if (event === 'PASSWORD_RECOVERY') recoverySignal = true;
-  else if (event === 'SIGNED_OUT') recoverySignal = false;
+// browser, which an expired link leaves in place) never qualifies. The signal
+// belongs to the account the link signed in: any change of who is signed in —
+// another account's SIGNED_IN (from another tab, say), a sign-out — ends it.
+let recoveryFor = null;
+supabase.auth.onAuthStateChange((event, session) => {
+  const signedIn = session?.user?.id ?? null;
+  if (event === 'PASSWORD_RECOVERY') recoveryFor = signedIn;
+  else if (signedIn !== recoveryFor) recoveryFor = null;
 });
 
 // A confirmation link that arrives with tokens in the URL is a real sign-in even
@@ -48,10 +51,12 @@ function clearStoredSession() {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [passwordRecovery, setPasswordRecovery] = useState(recoverySignal);
-  // Who the auth events last said was signed in, to tell a sign-in from the
-  // SIGNED_IN supabase-js emits when it merely recovers the stored session.
-  const knownUserIdRef = useRef(null);
+  // The account a password-recovery link signed in, while it still is the one signed in.
+  const [recoveringUserId, setRecoveringUserId] = useState(recoveryFor);
+  // Who the auth events last said was signed in (undefined before the first
+  // event), to tell a sign-in from the SIGNED_IN supabase-js emits when it
+  // merely recovers the stored session.
+  const knownUserIdRef = useRef(undefined);
 
   useEffect(() => {
     // Get initial session. getSession() can hang on a dead/slow network (the
@@ -77,12 +82,14 @@ export const AuthProvider = ({ children }) => {
         setUser(session?.user ?? null);
         setLoading(false);
 
-        if (event === 'PASSWORD_RECOVERY') {
-          setPasswordRecovery(true);
-          urlSignIn = false;
-        }
+        // A recovery is the recovered account's alone (see recoveryFor above).
+        const signedIn = session?.user?.id ?? null;
+        setRecoveringUserId((current) => {
+          if (event === 'PASSWORD_RECOVERY') return signedIn;
+          return current === signedIn ? current : null;
+        });
+        if (event === 'PASSWORD_RECOVERY') urlSignIn = false;
         if (event === 'SIGNED_OUT') {
-          setPasswordRecovery(false);
           // Every sign-out, not only the signOut() wrapper's: the idle timeout,
           // another tab, an admin sign-out and the one after account deletion
           // bypass it, and PostHog stayed attached to the previous learner.
@@ -107,15 +114,19 @@ export const AuthProvider = ({ children }) => {
           // supabase-js also emits SIGNED_IN when it recovers the stored session
           // (every tab focus, every hourly refresh, other tabs' broadcasts), and
           // each of those wrote an 'auth.login' row. Only a sign-in that changes
-          // who is signed in, or one that came through a link, is a login.
-          const realSignIn = urlSignIn || previousUserId !== session.user.id;
+          // who is signed in, or one that came through a link, is a login. A
+          // SIGNED_IN heard before any other event is the stored session being
+          // read at startup, when this provider subscribed before supabase-js
+          // had finished reading it.
+          const realSignIn = urlSignIn || (previousUserId !== undefined && previousUserId !== session.user.id);
           urlSignIn = false;
           if (realSignIn) {
+            // The session names the user: no getUser() round trip for the row.
             const createdAt = new Date(session.user.created_at);
             if (Date.now() - createdAt.getTime() < 60_000) {
-              logAuditEvent(AUDIT_EVENTS.SIGNUP);
+              logAuditEvent(AUDIT_EVENTS.SIGNUP, {}, { userId: session.user.id });
             } else {
-              logAuditEvent(AUDIT_EVENTS.LOGIN);
+              logAuditEvent(AUDIT_EVENTS.LOGIN, {}, { userId: session.user.id });
             }
           }
         }
@@ -123,7 +134,7 @@ export const AuthProvider = ({ children }) => {
     );
     // The import-time listener may have caught the recovery event before this
     // subscription existed.
-    if (recoverySignal) setPasswordRecovery(true);
+    if (recoveryFor) setRecoveringUserId(recoveryFor);
 
     return () => subscription.unsubscribe();
   }, []);
@@ -151,9 +162,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signOut = async () => {
-    // Fire and forget: the audit row needs getUser(), a network round trip,
-    // and a logout must never wait on it (a slow one made the button look dead).
-    logAuditEvent(AUDIT_EVENTS.LOGOUT);
+    // The row names the user this provider knows. logAuditEvent would otherwise
+    // call getUser(), a network round trip that holds supabase-js's auth lock,
+    // and the sign-out below queues behind that lock: a stalled request made
+    // the logout button look dead. Not awaited either; its request reads the
+    // session before the sign-out below takes the lock (see auditLogger.js).
+    if (user?.id) logAuditEvent(AUDIT_EVENTS.LOGOUT, {}, { userId: user.id });
     resetAnalytics();
     const { error } = await supabase.auth.signOut();
     if (!error) return { error: null };
@@ -186,6 +200,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isEmailVerified = !!user?.email_confirmed_at;
+  // The new-password form is for the account the recovery link signed in, and
+  // only while it is the one signed in.
+  const passwordRecovery = recoveringUserId !== null && recoveringUserId === (user?.id ?? null);
 
   const value = {
     user,

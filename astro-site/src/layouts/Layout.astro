@@ -490,6 +490,36 @@ const authAttrs = (item) =>
         } catch (e) { /* storage blocked — keep the logged-out default */ }
       })();
     </script>
+    <!-- Idle timeout: the app signs a learner out after 30 minutes without
+         activity in ANY tab — it reads the last activity from localStorage
+         (src/hooks/useSessionTimeout.js, same key, same 5-second throttle).
+         Activity on these static pages counts too: without this, an idle app
+         tab signed out a learner who was working through a grammar lesson. -->
+    <script is:inline>
+      (function () {
+        try {
+          var authed = false;
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && /^sb-.*-auth-token$/.test(k)) { authed = true; break; }
+          }
+          if (!authed) return;
+          var ACTIVITY_KEY = 'dm_last_activity';
+          var THROTTLE_MS = 5000;
+          var last = 0;
+          var record = function () {
+            var now = Date.now();
+            if (now - last < THROTTLE_MS) return;
+            last = now;
+            try { localStorage.setItem(ACTIVITY_KEY, String(now)); } catch (e) { /* storage full or blocked */ }
+          };
+          record();
+          ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(function (name) {
+            window.addEventListener(name, record, { passive: true });
+          });
+        } catch (e) { /* storage blocked — the app falls back to its own tab's activity */ }
+      })();
+    </script>
     <!-- Course return bar: when a lesson was opened from a guided course
          (/course/<level>/<item>, SPA), the lesson page stored a context in
          sessionStorage; render the same bar the SPA shows, so the learner never
@@ -541,10 +571,15 @@ const authAttrs = (item) =>
       import { levelsForProduct } from '../data/pricing.js';
 
       // What the account opens, from the three rows updateContinueLinks reads.
+      // An admin's premium grant (profiles.subscription_tier 'premium') is Pro
+      // with no subscription or purchase row behind it, and the server keeps it
+      // through every reconciliation (netlify/functions/_shared/
+      // subscriptionEntitlement.mjs); is_subscribed alone can be stale.
       function accountAccess({ profile, subscription, purchases = [] }, now = Date.now()) {
         const trialOpen = Boolean(profile?.trial_started_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > now);
         const activePurchases = purchases.filter((purchase) => purchase.status === 'active');
-        const proOpen = subscriptionStatus(subscription, now).isActive || activePurchases.some((purchase) => Date.parse(purchase.access_until) > now);
+        const premiumGrant = profile?.subscription_tier === 'premium';
+        const proOpen = premiumGrant || subscriptionStatus(subscription, now).isActive || activePurchases.some((purchase) => Date.parse(purchase.access_until) > now);
         return { trialOpen, proOpen, activePurchases };
       }
 
@@ -573,9 +608,12 @@ const authAttrs = (item) =>
         const { data: { user } = {} } = await supabase.auth.getUser();
         if (!user) return;
         const [profile, subscription, purchases] = await Promise.all([
-          supabase.from('profiles').select('current_level, is_subscribed, trial_started_at, trial_ends_at').eq('id', user.id).maybeSingle(),
+          supabase.from('profiles').select('current_level, is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
           supabase.from('subscriptions').select('status, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
-          supabase.from('purchases').select('product_key, status, access_until').eq('user_id', user.id).eq('status', 'active'),
+          // created_at: courseHomeFor resumes the NEWEST course, as the SPA does
+          // (getPurchases selects the same column); without it the two front
+          // ends sent a two-course buyer to different courses.
+          supabase.from('purchases').select('product_key, status, access_until, created_at').eq('user_id', user.id).eq('status', 'active').order('created_at', { ascending: false }),
         ]);
         if (profile.error || subscription.error || purchases.error) return;
         const account = { profile: profile.data, subscription: subscription.data, purchases: purchases.data || [] };
