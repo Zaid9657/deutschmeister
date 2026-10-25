@@ -185,8 +185,11 @@ test('B3 #12: a first completion reports its actual review schedule — the firs
   await seedCardsForLektion('u1', lektion, 'A1.1', client, seededAt);
   const due = await fetchLektionReviewDueAt('u1', lektion, 'A1.1', client);
   assert.equal(due, client.rows[0].due_at, 'the date the recap names is the saved one, never an invented promise');
-  // New cards come back on the ladder's first rung (2026-10-25 cross-check, LSN-11), not at once.
-  assert.equal(Date.parse(due), seededAt.getTime() + 24 * 60 * 60 * 1000);
+  // New cards come back on the ladder's first rung (2026-10-25 cross-check, LSN-11), not at once: the
+  // next local calendar day at the same clock time (a daylight-saving change is not a day).
+  const tomorrow = new Date(seededAt.getTime());
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  assert.equal(due, tomorrow.toISOString());
 });
 
 test('B3 #12: a repeat reports the earned schedule of this lesson, including overdue cards', async () => {
