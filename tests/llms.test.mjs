@@ -11,7 +11,10 @@ import { dirname, join } from 'node:path';
 import { renderShort, renderFull } from '../scripts/build-llms.mjs';
 import { GUIDES } from '../astro-site/src/data/guides/index.js';
 import { EXAM_HUBS } from '../astro-site/src/data/exams/index.js';
-import { GRAMMAR_TOPIC_COUNT } from '../src/data/marketing.js';
+import { GRAMMAR_TOPIC_COUNT, FREE_LEVEL_LABEL } from '../src/data/marketing.js';
+import { SEO_ROUTES } from '../src/data/seoRoutes.js';
+import { CURRICULA } from '../src/data/curricula/index.js';
+import { LEVEL_COURSES, productKeyForLevel, eur } from '../src/data/pricing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
@@ -27,4 +30,49 @@ test('llms-full lists every grammar topic, guide and exam hub', () => {
   assert.equal(new Set(topicLinks).size, GRAMMAR_TOPIC_COUNT);
   for (const g of GUIDES) assert.ok(full.includes(`/leitfaden/${g.slug}/`), `guide ${g.slug} missing`);
   for (const h of EXAM_HUBS) assert.ok(full.includes(`/pruefung/${h.slug}/`), `exam hub ${h.slug} missing`);
+});
+
+test('a route is labelled German only when its page is German', () => {
+  // /faq/ and /ueber-uns/ render English (<html lang="en">), yet the catalogue
+  // told answer engines they were German until 2026-10-25. The label follows
+  // SEO_ROUTES[route].lang, the field the prerender reads.
+  for (const render of [renderShort, renderFull]) {
+    for (const line of render().split('\n')) {
+      for (const [route, entry] of Object.entries(SEO_ROUTES)) {
+        if (!line.includes(`https://deutsch-meister.de${route}/`)) continue;
+        if (!/^- [^:]+:\s*https:/.test(line)) continue; // a link line, "- Label: URL"
+        assert.equal(/\(German\)/.test(line), entry.lang === 'de', `${render.name}: "${line}" (SEO_ROUTES lang: ${entry.lang ?? 'en'})`);
+      }
+    }
+  }
+});
+
+test('every live paid course is described, not only priced', () => {
+  // A1.2 went live on 2026-10-22, but the catalogue described only the free
+  // A1.1 course; A1.2 appeared inside the price list alone.
+  const paid = Object.values(CURRICULA).filter((c) => c.level !== FREE_LEVEL_LABEL.toLowerCase());
+  assert.ok(paid.length >= 1, 'A1.2 is live in CURRICULA');
+  const full = renderFull();
+  const short = renderShort();
+  for (const c of paid) {
+    const course = LEVEL_COURSES[productKeyForLevel(c.level)];
+    const block = full.split('\n### ').find((b) => b.startsWith(`${c.code} Course`));
+    assert.ok(block, `llms-full.txt has no "${c.code} Course" block`);
+    assert.ok(block.includes(`${c.lektionen.length} situational lessons with ${c.checkpoints.length} checkpoints and a final test`), `${c.code}: lessons and checkpoints are counted from the curriculum`);
+    assert.ok(block.includes(`${eur(course.price)} once`), `${c.code}: the price derives from pricing.js`);
+    assert.ok(block.includes(`https://deutsch-meister.de/course/${c.level}`), `${c.code}: the in-app course link (SPA route, no slash)`);
+    assert.ok(block.includes(`https://deutsch-meister.de/courses/${c.level.replace('.', '-')}/`), `${c.code}: the course page`);
+    assert.ok(short.includes(`https://deutsch-meister.de/courses/${c.level.replace('.', '-')}/`), `${c.code}: llms.txt links the course page`);
+  }
+});
+
+test('an AI-graded claim always says it needs an account', () => {
+  // "no account needed" sat beside "an AI-graded writing task", while a guest
+  // gets only the form checklist (GradedWriting.jsx: AI grading needs a session).
+  for (const render of [renderShort, renderFull]) {
+    for (const line of render().split('\n')) {
+      if (/AI-graded/i.test(line)) assert.match(line, /free account|with an account/i, `${render.name}: "${line}"`);
+    }
+  }
+  assert.match(renderFull(), /AI-graded with a free account, a form checklist without one/);
 });

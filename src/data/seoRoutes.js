@@ -28,6 +28,7 @@ import {
   LISTENING_EXERCISE_COUNT,
   LISTENING_DIALOGUE_COUNT,
   READING_LESSON_COUNT,
+  PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 
 export const SITE_TITLE = 'DeutschMeister';
@@ -44,15 +45,19 @@ export const fullTitle = (title) =>
 export const SEO_ROUTES = {
   '/speaking': {
     title: 'German Speaking Practice with AI',
+    // The evaluation comes when the conversation ends ("Finish & get feedback"),
+    // never during it — not "instant" (2026-10-25, tests/claims.test.mjs).
     description:
-      'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
+      'Practice speaking German with an AI conversation partner: guided missions or free conversation, and feedback after each session. Levels A1 to B2.',
     keywords:
       'German speaking practice, speak German with AI, German conversation practice, practice German online',
   },
   '/level-test': {
     title: 'Free German Level Test (A1–B2)',
-    description:
-      'Free German level test: find your CEFR level in 15 minutes. Reading, listening and speaking, with instant results and a personalised next step.',
+    // The duration is the claims registry's (it said a retyped "15 minutes"),
+    // and the sections are the test's own: grammar and reading questions,
+    // then listening, then speaking.
+    description: `Free German level test: find your CEFR level in about ${PLACEMENT_TEST_MINUTES} minutes. Grammar and reading, listening and speaking, then a personalised next step.`,
     keywords:
       'German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test',
   },
@@ -88,14 +93,14 @@ export const SEO_ROUTES = {
     description:
       'Answers about Deutschmeister pricing, exam preparation, AI speaking practice, Sentence X-Ray, privacy, and learning German from A1 to B2.',
     keywords:
-      'Deutschmeister FAQ, learn German, Goethe exam, telc exam, TestDaF, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
+      'Deutschmeister FAQ, learn German, Goethe exam, telc exam, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
   },
   '/ueber-uns': {
     title: 'About Deutschmeister',
     description:
       'Meet the team behind Deutschmeister and learn why doctors in Germany built focused tools for German grammar, speaking, and exam preparation.',
     keywords:
-      'Deutschmeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, TestDaF',
+      'Deutschmeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, DTZ',
   },
 };
 

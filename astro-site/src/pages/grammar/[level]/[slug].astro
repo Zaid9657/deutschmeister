@@ -10,6 +10,8 @@ import { TOPIC_SEO } from '../../../lib/topicSeo.js';
 import { ORGANIZATION, SITE_PUBLISHED } from '../../../lib/siteMeta.js';
 import { onsiteHref } from '../../../lib/onsiteLinks.js';
 import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../../../data/marketing.js';
+import { stationFor, stationStatusLine, planLine } from '../../../data/offers.js';
+import { curriculumFor } from '../../../data/curricula/index.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -224,6 +226,26 @@ const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[
 // detour for a B2 reader.
 const signupHref = onsiteHref('signup', 'grammar', slug);
 const offerFreeCourse = level.startsWith('a1');
+
+// The level's course, on every level sold as a one-time ticket (offers.js
+// stations). A paid-level topic is read by people working at exactly that
+// level, yet its only calls to action were the account trial and the free A1.1
+// course — no link to the course this topic belongs to (2026-10-25). All of it
+// is derived: price and terms from offers.js, the lesson count and the Lektion
+// that practises this topic from the live curriculum, else the guided plan.
+const station = stationFor(level);
+const courseCurriculum = station?.status === 'ticket' ? curriculumFor(level) : null;
+const courseLektion = courseCurriculum?.lektionen.find((l) => l.grammarSlugs?.includes(slug)) ?? null;
+const courseOffer = station?.status === 'ticket'
+  ? {
+      code: station.code,
+      href: station.coursePage,
+      terms: stationStatusLine(station),
+      contents: courseCurriculum
+        ? `${courseCurriculum.lektionen.length} situational lessons with checkpoints and a final test.`
+        : planLine(station),
+    }
+  : null;
 ---
 
 <Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={jsonLdSchemas} ogType="article">
@@ -609,6 +631,24 @@ const offerFreeCourse = level.startsWith('a1');
         </a>
       </div>
     </section>
+
+    <!-- The level's course — a flat card: reference to an offer, not a second shimmer -->
+    {courseOffer && (
+      <section class={`dm-defer reveal mb-12 p-6 ${CARD_FLAT}`} aria-labelledby="course-offer-h">
+        <p class={`${CALLOUT_LABEL} text-siegel`}>Level course</p>
+        <h2 id="course-offer-h" class="mt-2 font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] text-ink">
+          Part of the {courseOffer.code} course
+        </h2>
+        <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+          {courseOffer.contents}
+          {courseLektion && (
+            <Fragment> This topic is practised in Lektion {courseLektion.nr} (<span lang="de">{courseLektion.title}</span>).</Fragment>
+          )}
+        </p>
+        <p class="mt-2 font-data text-[0.8125rem] text-graphite">{courseOffer.terms}</p>
+        <a href={courseOffer.href} class={`mt-5 ${BTN_SECONDARY}`}>See the {courseOffer.code} course</a>
+      </section>
+    )}
 
     <!-- Upgrade CTA — the page's promotional shimmer action -->
     <section class="dm-defer reveal relative mb-12 overflow-hidden rounded-clay border border-rule bg-paper-sunk p-6 text-center sm:p-8">

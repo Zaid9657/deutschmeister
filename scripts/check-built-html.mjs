@@ -23,6 +23,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkCrawlability } from './crawl-guard.mjs';
+import { COURSE_TELC_B1_PRICE_EUR, eur } from '../src/data/pricing.js';
 
 const args = process.argv.slice(2);
 const SPA_ONLY = args.includes('--spa-only');
@@ -139,6 +140,17 @@ const BANNED_LITERALS = [
   // occurrences that shipped on /podcasts/.
   'with transcript',
   'audio with transcripts',
+  // Outcome promises on the comparison pages, removed 2026-10-25: an equal-
+  // efficacy claim against live teachers (also in the FAQPage JSON-LD) and a
+  // pass promise as the Duolingo <h1>. Nothing in the product measures either,
+  // and src/data/examTracks.js says we never predict a pass.
+  'denselben Lerneffekt',
+  'bringt dich durch die Prüfung',
+  // No grammar example has audio (0 of 933 carry an audio_url; llms-full.txt
+  // says "text-only"), yet the course pages and the SPA shell's description,
+  // og:description and twitter:description promised it until 2026-10-25.
+  'examples with audio',
+  'audio examples',
 ];
 
 const fail = [];
@@ -300,6 +312,28 @@ if (found.has(TELC_PAGE) && existsSync(join(DIST, TELC_PAGE))) {
     if (offer) note(fail, TELC_PAGE, 'off sale, but the JSON-LD still publishes an Offer');
   }
   console.log(`telc sale gate: ${onSale ? 'ON sale' : 'off sale'} — ${buttons} Buy button(s), Offer ${offer ? 'present' : 'absent'}`);
+}
+
+// The same switch holds the two other surfaces that sold the package to it
+// (2026-10-25): the /pricing/ card and FAQ (also its FAQPage JSON-LD), and the
+// AI-facing catalogue. Off sale, neither may quote the package's price: the
+// card says it starts soon, the FAQ drops the sentence, and llms*.txt lists it
+// as not on sale yet. On sale, /pricing/ must quote it; a catalogue that still
+// says "not on sale yet" only understates, so it warns — regenerate it with
+// the switch set (scripts/build-llms.mjs reads the same two variables).
+const telcSaleOn = process.env.PUBLIC_TELC_B1_ON_SALE === 'true' && Boolean(process.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID);
+const telcPrice = eur(COURSE_TELC_B1_PRICE_EUR);
+const PRICING_PAGE = 'pricing/index.html';
+if (found.has(PRICING_PAGE) && existsSync(join(DIST, PRICING_PAGE))) {
+  const quoted = readFileSync(join(DIST, PRICING_PAGE), 'utf8').includes(telcPrice);
+  if (!telcSaleOn && quoted) note(fail, PRICING_PAGE, `off sale, but the telc B1 package is still priced (${telcPrice})`);
+  if (telcSaleOn && !quoted) note(fail, PRICING_PAGE, `on sale, but the telc B1 card quotes no price (${telcPrice})`);
+}
+for (const file of ['llms.txt', 'llms-full.txt']) {
+  if (!existsSync(join(DIST, file))) continue;
+  const quoted = readFileSync(join(DIST, file), 'utf8').includes(telcPrice);
+  if (!telcSaleOn && quoted) note(fail, file, `off sale, but the telc B1 package is listed at ${telcPrice} — run: node scripts/build-llms.mjs`);
+  if (telcSaleOn && !quoted) note(warn, file, 'the telc B1 package is on sale, but the catalogue still says it is not — regenerate it with the switch set');
 }
 
 // --- sitemap integrity ------------------------------------------------------

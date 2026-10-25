@@ -13,6 +13,29 @@
 // Werbung under UWG §5, not a wording preference. The real figure is still the
 // stronger claim against scripted-scenario competitors: say the number.
 //
+// 2026-10-25: our OWN claims corrected to what the product does (UWG §5/§6 on
+// pages that name competitors; tests/claims.test.mjs and
+// tests/comparison-claims.test.mjs hold each rule):
+//   - exam preparation names only the exams with a track in examTracks.js
+//     (Goethe, telc, DTZ; A1–B2). TestDaF, DSH, ÖSD and C1/C2 are not offered,
+//     the facts the support agent states (_shared/supportAgentLib.mjs);
+//   - speaking is free conversation on the learner's level with an evaluation
+//     AFTER the conversation — never "Echtzeit", "Live-Feedback" or "korrigiert",
+//     and never tuned to an exam;
+//   - the allowance is stated with its session length
+//     (PRO_INCLUDED_SESSION_MINUTES): only 5-minute sessions are included;
+//   - no outcome promise ("bringt dich durch die Prüfung", "denselben
+//     Lerneffekt"), and no uniqueness claim for Sentence X-Ray;
+//   - unsourced claims about a competitor's quality were removed, not replaced;
+//   - every completed course prints a Teilnahmebescheinigung, and the product
+//     shows a day streak — the table says so.
+//
+// THE SYMBOLS are read from the learner's side: ✓ good for the learner, ○
+// partly, ✗ missing; a cell without a symbol is a neutral statement. The
+// renderer colours by the symbol (vergleich/[slug].astro), so an ad-free cell
+// carries ✓, never the ✗ of "keine". A competitor's cell is changed only in its
+// symbol, never in its facts.
+//
 // COMPETITOR figures below are stamped "Stand: Mai 2026" and have NOT been
 // re-verified since. The stamp is deliberate — it labels the data as of a date
 // rather than implying it is current. Re-check the three competitors' public
@@ -34,9 +57,30 @@
 // nothing but accuracy owed to the reader. Re-check from a network that can
 // reach the vendors, then update figures and stamps together.
 import { PLANS, deEur } from './pricing.js';
-import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_DAILY_LIMIT, LEVEL_COUNT, TRIAL_DAYS, PLACEMENT_TEST_MINUTES } from './marketing.js';
+import {
+  PRO_SPEAKING_SESSIONS_PER_MONTH,
+  PRO_INCLUDED_SESSION_MINUTES,
+  PRO_DAILY_LIMIT,
+  LEVEL_COUNT,
+  TRIAL_DAYS,
+  PLACEMENT_TEST_MINUTES,
+} from './marketing.js';
 
 const PRO_MONTHLY = `${deEur(PLANS.monthly.price)}/Monat`;
+// Pro's speaking allowance, always with the length of the sessions it includes.
+const PRO_SPEAKING = `${PRO_SPEAKING_SESSIONS_PER_MONTH} KI-Gespräche à ${PRO_INCLUDED_SESSION_MINUTES} Minuten pro Monat`;
+// What every conversation ends with — an evaluation after the session, never during it.
+const EVALUATION = 'eine Auswertung zu Grammatik, Wortschatz und Verständlichkeit';
+
+/**
+ * The date these comparisons were published with their "Stand: Mai 2026"
+ * competitor data. The pages use it as the schema dateModified instead of the
+ * build date: competitor figures unverified since May must not be stamped as
+ * modified on every deploy (guides/index.js makes the same argument for
+ * factsCheckedOn). Advance it only together with the stamps, after re-checking
+ * the vendors' own pages.
+ */
+export const COMPARISON_DATA_DATE = '2026-05-28';
 
 const competitorComparisons = {
   babbel: {
@@ -45,12 +89,12 @@ const competitorComparisons = {
     displayName: 'Babbel',
     positioning: 'Strukturiertes Vokabel- und Grammatik-Training auf Abo-Basis.',
     priceRange: '€6,99 – €12,99/Monat (Stand: Mai 2026)',
-    heroHeadline: 'Babbel lehrt dich Deutsch. Deutschmeister bringt es zum Sprechen.',
-    heroSubheadline: 'Beide Plattformen haben gute Grammatik. Aber nur eine lässt dich wirklich sprechen üben — mit KI-Feedback in Echtzeit.',
+    heroHeadline: 'Babbel lehrt dich Deutsch. Bei Deutschmeister sprichst du es frei.',
+    heroSubheadline: `Beide Plattformen haben gute Grammatik, und beide bieten KI-Gespräche. Bei Deutschmeister sprichst du frei auf jedem Niveau und bekommst nach dem Gespräch ${EVALUATION}.`,
     comparisonTable: [
-      { feature: 'KI-Sprechtraining mit Live-Feedback', us: `✓ ${PRO_SPEAKING_SESSIONS_PER_MONTH} freie KI-Gespräche pro Monat, auf jedem Niveau — mit Auswertung von Grammatik, Wortschatz und Verständlichkeit, abgestimmt auf Prüfungen`, them: '○ Babbel Speak (seit 2025): KI-Gespräche in vorgegebenen Szenarien, Beta, nur in der App' },
-      { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Einzigartig: Jeder deutsche Satz wird zerlegt — Fälle, Satzglieder, Wortarten, farbcodiert', them: '✗ Nicht verfügbar' },
-      { feature: 'Prüfungsvorbereitung (Goethe/telc/TestDaF)', us: '✓ Inhalte gezielt auf CEFR-Prüfungen abgestimmt, A1–B2', them: '○ Allgemeine Sprachkurse, nicht prüfungsspezifisch' },
+      { feature: 'KI-Sprechtraining', us: `✓ Mit Pro ${PRO_SPEAKING}, frei auf jedem Niveau — danach ${EVALUATION}`, them: '○ Babbel Speak (seit 2025): KI-Gespräche in vorgegebenen Szenarien, Beta, nur in der App' },
+      { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Jeder deutsche Satz wird zerlegt — Fälle, Satzglieder, Wortarten, farbcodiert', them: '✗ Nicht verfügbar' },
+      { feature: 'Prüfungsvorbereitung (Goethe/telc/DTZ)', us: '✓ Inhalte gezielt auf Goethe-, telc- und DTZ-Prüfungen abgestimmt, A1–B2', them: '○ Allgemeine Sprachkurse, nicht prüfungsspezifisch' },
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Jedes Thema auf Englisch erklärt — ideal für Nicht-Muttersprachler', them: '✓ Erklärungen in 14 Ausgangssprachen verfügbar' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert, Internet erforderlich', them: '✓ Lektionen offline in der App verfügbar' },
       { feature: 'Einstufungstest', us: `✓ Kostenloser CEFR-Einstufungstest in etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Einstufungstest beim Kursstart' },
@@ -58,29 +102,29 @@ const competitorComparisons = {
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro)`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
       { feature: 'Wer dahintersteht', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
       { feature: 'Hörübungen mit Alltagsdialogen', us: '✓ Hörverständnis auf jedem Niveau mit authentischen Dialogen', them: '✓ Dialoge und Hörübungen in jeder Lektion' },
-      { feature: 'Werbung in der kostenlosen Version', us: '✗ Keine Werbung — auch nicht in der Gratisversion', them: '✗ Keine Werbung (reines Abo-Modell)' },
+      { feature: 'Werbung in der kostenlosen Version', us: '✓ Keine Werbung — auch nicht in der Gratisversion', them: '✓ Keine Werbung (reines Abo-Modell)' },
     ],
     whyUsBlocks: [
       {
         icon: 'Mic',
-        title: 'Sprechtraining mit Prüfungs-Tiefe',
-        body: `Babbel hat mit Babbel Speak ein KI-Sprechtraining in vorgegebenen Szenarien (Beta, nur App). Bei Deutschmeister führst du ${PRO_SPEAKING_SESSIONS_PER_MONTH} freie Gespräche pro Monat auf jedem Niveau — und bekommst Feedback zu Grammatik, Ausdruck und Verständlichkeit, gezielt auf deine Prüfung ausgerichtet. Der Unterschied liegt in Tiefe und Prüfungsfokus, nicht im Ob.`,
+        title: 'Frei sprechen, auf jedem Niveau',
+        body: `Babbel hat mit Babbel Speak ein KI-Sprechtraining in vorgegebenen Szenarien (Beta, nur App). Bei Deutschmeister führst du mit Pro ${PRO_SPEAKING} frei auf jedem Niveau — und bekommst nach jedem Gespräch ${EVALUATION}. Der Unterschied liegt im freien Gespräch und in der Auswertung, nicht im Ob.`,
       },
       {
         icon: 'ScanSearch',
-        title: 'Sentence X-Ray — einzigartig bei Deutschmeister',
-        body: 'Gib irgendeinen deutschen Satz ein und sieh sofort: Welcher Fall? Welches Satzglied? Warum „dem" und nicht „den"? Kein anderes Tool zerlegt deutsche Sätze so detailliert. Babbel bietet das nicht.',
+        title: 'Sentence X-Ray: jeder Satz zerlegt',
+        body: 'Gib irgendeinen deutschen Satz ein und sieh sofort: Welcher Fall? Welches Satzglied? Warum „dem" und nicht „den"? Babbel bietet das nicht.',
       },
       {
         icon: 'GraduationCap',
         title: 'Prüfungsfokus, nicht nur Vokabeltraining',
-        body: 'Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Inhalte sind auf Goethe, telc und TestDaF abgestimmt — nicht auf allgemeines Sprachgefühl.',
+        body: 'Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Inhalte sind auf Goethe, telc und DTZ abgestimmt — nicht auf allgemeines Sprachgefühl.',
       },
     ],
     faq: [
       {
         q: 'Soll ich von Babbel zu Deutschmeister wechseln?',
-        a: 'Wenn dir echtes Sprechtraining und Prüfungsvorbereitung wichtig sind — ja. Babbel ist gut für strukturiertes Vokabellernen. Aber wenn du frei sprechen willst und dich auf eine Prüfung vorbereitest, bietet Deutschmeister mehr.',
+        a: 'Wenn dir freies Sprechtraining und Prüfungsvorbereitung wichtig sind — ja. Babbel ist gut für strukturiertes Vokabellernen. Aber wenn du frei sprechen willst und dich auf eine Prüfung vorbereitest, bietet Deutschmeister mehr.',
       },
       {
         q: 'Kann ich Babbel und Deutschmeister zusammen nutzen?',
@@ -88,11 +132,11 @@ const competitorComparisons = {
       },
       {
         q: 'Ist Deutschmeister günstiger als Babbel?',
-        a: `Ja. Deutschmeister Pro kostet ${PRO_MONTHLY} oder ${deEur(PLANS.yearly.asMonthly)}/Monat im Jahresabo. Babbel liegt bei 6,99 – 12,99 €/Monat je nach Laufzeit. Und bei Deutschmeister gibt es A1.1 komplett kostenlos.`,
+        a: `Ja, nach den Babbel-Preisen in diesem Vergleich. Deutschmeister Pro kostet ${PRO_MONTHLY} oder ${deEur(PLANS.yearly.asMonthly)}/Monat im Jahresabo. Und bei Deutschmeister gibt es A1.1 komplett kostenlos.`,
       },
       {
         q: 'Hat Babbel auch KI-Sprechtraining?',
-        a: `Ja — Babbel hat seit 2025 „Babbel Speak", ein KI-Sprechtraining in vorgegebenen Szenarien (derzeit Beta, nur in der App). Bei Deutschmeister bekommst du ${PRO_SPEAKING_SESSIONS_PER_MONTH} KI-Gespräche pro Monat, frei auf jedem Niveau und gezielt auf Goethe, telc und TestDaF abgestimmt.`,
+        a: `Ja — Babbel hat seit 2025 „Babbel Speak", ein KI-Sprechtraining in vorgegebenen Szenarien (derzeit Beta, nur in der App). Bei Deutschmeister führst du mit Pro ${PRO_SPEAKING}, frei auf jedem Niveau, und bekommst nach jedem Gespräch ${EVALUATION}.`,
       },
       {
         q: 'Welche Plattform ist besser für Anfänger?',
@@ -109,18 +153,15 @@ const competitorComparisons = {
     displayName: 'Duolingo',
     positioning: 'Gamifiziertes Sprachlern-Spiel mit kostenloser Stufe.',
     priceRange: 'Kostenlos / Super: ab €6,99/Monat im Jahresabo (Stand: Mai 2026)',
-    heroHeadline: 'Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung.',
+    heroHeadline: 'Duolingo macht Spaß. Deutschmeister bereitet gezielt auf Goethe, telc und DTZ vor.',
     heroSubheadline: 'Duolingo motiviert mit Streaks und Punkten. Aber wenn du Deutsch für Prüfungen, Arbeit oder das echte Leben brauchst — reicht das?',
     comparisonTable: [
-      { feature: 'KI-Sprechtraining mit Live-Feedback', us: '✓ Freie Gespräche mit KI, sofortiges Feedback zu Grammatik und Ausdruck', them: '○ Roleplay (seit 2026 kostenlos): GPT-basierte Gespräche in Alltagsszenarien, spielerisch, kein Prüfungsfokus' },
+      { feature: 'KI-Sprechtraining', us: `✓ Mit Pro ${PRO_SPEAKING}, freie Gespräche auf deinem Niveau — danach ${EVALUATION}`, them: '○ Roleplay (seit 2026 kostenlos): GPT-basierte Gespräche in Alltagsszenarien, spielerisch, kein Prüfungsfokus' },
       { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Jeder Satz zerlegt in Fälle, Satzglieder, Wortarten', them: '✗ Nicht verfügbar' },
-      { feature: 'Grammatik-Erklärungen', us: '✓ Ausführliche Erklärungen auf Englisch — das WARUM hinter jeder Regel', them: '○ Kurze Tips vor Lektionen, keine tiefgehenden Erklärungen' },
-      { feature: 'Prüfungsvorbereitung (Goethe/telc/TestDaF)', us: '✓ Inhalte auf CEFR-Prüfungen abgestimmt, A1–B2', them: '✗ Kein Prüfungsfokus — allgemeines Sprachtraining' },
-      { feature: 'B1+ tatsächlich erreichbar', us: '✓ Durchgängige Inhalte bis B2.2 mit steigender Komplexität', them: '○ Offiziell bis B2, aber Tiefe ab B1 stark begrenzt' },
+      { feature: 'Prüfungsvorbereitung (Goethe/telc/DTZ)', us: '✓ Inhalte auf Goethe-, telc- und DTZ-Prüfungen abgestimmt, A1–B2', them: '✗ Kein Prüfungsfokus — allgemeines Sprachtraining' },
       { feature: 'Kostenlose Version', us: `✓ A1.1 kostenlos, ${TRIAL_DAYS} Tage Pro-Testphase`, them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
-      { feature: 'Werbung', us: '✗ Keine Werbung — niemals', them: '✓ Werbung in der Gratisversion (entfällt mit Super-Abo)' },
-      { feature: 'Gamification (Streaks, XP, Liga)', us: '✗ Kein Gamification — Fokus auf echten Fortschritt', them: '✓ Stark gamifiziert: Streaks, XP, Ligen, Achievements' },
-      { feature: 'Hörübungen mit echten Dialogen', us: '✓ Authentische Dialoge auf jedem Niveau', them: '○ TTS-generierte Sätze, nicht immer authentisch' },
+      { feature: 'Werbung', us: '✓ Keine Werbung — auch nicht in der Gratisversion', them: 'Werbung in der Gratisversion (entfällt mit Super-Abo)' },
+      { feature: 'Gamification (Streaks, XP, Liga)', us: '○ Tages-Streak und Meilensteine, aber keine XP, Ligen oder Punkte', them: '✓ Stark gamifiziert: Streaks, XP, Ligen, Achievements' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro)`, them: 'Kostenlos / Super: ab 6,99 €/Monat (im Jahresabo)' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert', them: '✓ Lektionen offline verfügbar (mit Super)' },
       { feature: 'Einstufungstest', us: `✓ CEFR-Einstufungstest, etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Placement Test beim Start' },
@@ -133,23 +174,23 @@ const competitorComparisons = {
       },
       {
         icon: 'Mic',
-        title: 'Echte Konversation, nicht nur Multiple Choice',
-        body: 'Bei Duolingo tippst du Wörter in die richtige Reihenfolge. Bei Deutschmeister sprichst du — und die KI hört zu, analysiert und korrigiert. Echte Sprechkompetenz baut man nur durch echtes Sprechen auf.',
+        title: 'Frei sprechen, mit Auswertung danach',
+        body: `Bei Deutschmeister sprichst du frei auf deinem Niveau, mit Pro ${PRO_SPEAKING}. Nach jedem Gespräch bekommst du ${EVALUATION}: was gut war und was du verbessern kannst. Sprechkompetenz baut man durch Sprechen auf.`,
       },
       {
         icon: 'GraduationCap',
-        title: 'Prüfung bestehen, nicht nur Streak halten',
-        body: 'Deutschmeister ist auf Goethe, telc und TestDaF abgestimmt. Wenn du eine Prüfung vor dir hast, brauchst du gezielte Vorbereitung — kein Spiel, das dich für 50 XP lobt.',
+        title: 'Gezielt auf die Prüfung vorbereiten, nicht nur Streak halten',
+        body: 'Deutschmeister ist auf Goethe, telc und DTZ abgestimmt. Wenn du eine Prüfung vor dir hast, brauchst du gezielte Vorbereitung — kein Spiel, das dich für 50 XP lobt.',
       },
     ],
     faq: [
       {
         q: 'Reicht Duolingo, um eine Deutschprüfung zu bestehen?',
-        a: 'Für A1 vielleicht. Ab A2 wird es schwierig. Duolingo baut Vokabeln auf und ist motivierend, aber die Grammatiktiefe und das Sprechtraining reichen für Goethe oder telc nicht aus.',
+        a: 'Das kann dir keine App versprechen. Entscheidend ist, dass du das Format deiner Prüfung kennst und übst: mit den offiziellen Modellsätzen des Prüfungsanbieters und, bei Deutschmeister, mit Leitfäden und Übungstests für Goethe, telc und DTZ.',
       },
       {
         q: 'Ist Deutschmeister besser als Duolingo?',
-        a: 'Kommt drauf an, was du brauchst. Für tägliche Motivation und Vokabelaufbau ist Duolingo stark. Für echtes Sprechen, Grammatik-Verständnis und Prüfungsvorbereitung ist Deutschmeister die bessere Wahl.',
+        a: 'Kommt drauf an, was du brauchst. Für tägliche Motivation und Vokabelaufbau ist Duolingo stark. Für freies Sprechen mit Auswertung, Grammatik-Verständnis und Prüfungsvorbereitung ist Deutschmeister gebaut.',
       },
       {
         q: 'Warum ist Deutschmeister nicht kostenlos wie Duolingo?',
@@ -161,7 +202,7 @@ const competitorComparisons = {
       },
       {
         q: 'Hat Duolingo auch KI-Sprechtraining?',
-        a: `Ja — Duolingos „Roleplay" ist seit Anfang 2026 für alle kostenlos und bietet GPT-basierte Gespräche in Alltagsszenarien. Es ist spielerisch angelegt, nicht auf Prüfungen ausgerichtet. Deutschmeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt und auf jedem Niveau verfügbar — ${PRO_SPEAKING_SESSIONS_PER_MONTH} Gespräche pro Monat.`,
+        a: `Ja — Duolingos „Roleplay" ist seit Anfang 2026 für alle kostenlos und bietet GPT-basierte Gespräche in Alltagsszenarien. Es ist spielerisch angelegt, nicht auf Prüfungen ausgerichtet. Bei Deutschmeister sprichst du frei auf jedem Niveau und bekommst nach jedem Gespräch ${EVALUATION} — mit Pro ${PRO_SPEAKING}.`,
       },
     ],
     ctaHeadline: 'Vom Spielen zum Sprechen — teste Deutschmeister kostenlos.',
@@ -173,20 +214,21 @@ const competitorComparisons = {
     name: 'lingoda',
     displayName: 'Lingoda',
     positioning: 'Live-Online-Unterricht mit echten Lehrern in Gruppen.',
-    priceRange: 'ca. €7 – €15/Gruppenstunde je nach Abo (Stand: Mai 2026)',
+    // The Sprint row below is the one Lingoda price basis on these pages.
+    priceRange: 'Sprint: €310 / 2 Monate mit 15 Std./Monat (Stand: Mai 2026)',
     heroHeadline: 'Lingoda gibt dir Lehrer. Deutschmeister gibt dir Freiheit.',
     heroSubheadline: 'Live-Unterricht ist wertvoll. Aber was, wenn du um 23 Uhr üben willst — ohne auf einen Termin zu warten?',
     comparisonTable: [
       { feature: 'Verfügbarkeit', us: '✓ 24/7 — lerne wann du willst, keine Terminbuchung nötig', them: '○ Stundenplan nötig, Kurse zu festen Zeiten' },
-      { feature: 'KI-Sprechtraining', us: `✓ Sofort verfügbar, ${PRO_SPEAKING_SESSIONS_PER_MONTH} Gespräche/Monat, auf deinem Niveau`, them: '✗ Kein KI-Training — nur Live-Unterricht mit Lehrern' },
+      { feature: 'KI-Sprechtraining', us: `✓ Sofort verfügbar, mit Pro ${PRO_SPEAKING}, auf deinem Niveau`, them: '✗ Kein KI-Training — nur Live-Unterricht mit Lehrern' },
       { feature: 'Echte Lehrer', us: '✗ KI-basiert, keine menschlichen Lehrer', them: '✓ Zertifizierte Muttersprachler als Lehrer' },
-      { feature: 'Sentence X-Ray (Satzanalyse)', us: `✓ Jeder Satz zerlegt und erklärt — ${PRO_DAILY_LIMIT} Analysen pro Tag`, them: '✗ Nicht verfügbar' },
+      { feature: 'Sentence X-Ray (Satzanalyse)', us: `✓ Jeder Satz zerlegt und erklärt — mit Pro ${PRO_DAILY_LIMIT} Analysen pro Tag`, them: '✗ Nicht verfügbar' },
       { feature: 'Gruppenunterricht', us: '✗ Einzellernen mit KI', them: '✓ Kleine Gruppen (3–5 Teilnehmer) oder Einzelstunden' },
-      { feature: 'Offizielle Zertifikate', us: '✗ Kein eigenes Zertifikat (bereitet auf externe Prüfungen vor)', them: '✓ Lingoda-Zertifikat nach Kursabschluss' },
+      { feature: 'Abschlussbescheinigung', us: '✓ Teilnahmebescheinigung nach Kursabschluss (kein Goethe-/telc-Ergebnis)', them: '✓ Lingoda-Zertifikat nach Kursabschluss' },
       { feature: 'Wartezeit bis zur nächsten Übung', us: '✓ Keine — sofort loslegen, auch nachts', them: '○ Nächster freier Slot oft Stunden oder Tage entfernt' },
       { feature: 'Preis pro Monat (Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro) — alle ${LEVEL_COUNT} Level inklusive`, them: 'Sprint: €310 / 2 Monate (15 Std./Monat), 50% Cashback bei voller Teilnahme' },
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Ausführlich, jederzeit nachschlagbar', them: '○ Abhängig vom Lehrer und der Unterrichtssprache' },
-      { feature: 'Prüfungsvorbereitung', us: '✓ Gezielt auf Goethe/telc/TestDaF abgestimmt', them: '○ Allgemeine Sprachkurse, Sprint-Programme' },
+      { feature: 'Prüfungsvorbereitung', us: '✓ Gezielt auf Goethe/telc/DTZ abgestimmt', them: '○ Allgemeine Sprachkurse, Sprint-Programme' },
       { feature: 'Stornierung / Flexibilität', us: '✓ Jederzeit kündbar, keine Vertragsbindung', them: '○ Sprint: 50% Cashback bei voller Teilnahme (Super Sprint: 100%), sonst keine Erstattung' },
     ],
     whyUsBlocks: [
@@ -198,12 +240,12 @@ const competitorComparisons = {
       {
         icon: 'Mic',
         title: '24/7 Sprechpartner statt Terminstunde',
-        body: `Lingoda gibt dir eine Stunde Sprechtraining pro gebuchtem Slot. Deutschmeister gibt dir einen KI-Sprechpartner, der immer da ist — ${PRO_SPEAKING_SESSIONS_PER_MONTH} Gespräche im Monat, wann immer du willst. Kein Buchen, kein Warten.`,
+        body: `Bei Lingoda sprichst du im Live-Unterricht zu festen Zeiten. Deutschmeister gibt dir einen KI-Sprechpartner, der immer da ist — mit Pro ${PRO_SPEAKING}, wann immer du willst. Kein Buchen, kein Warten.`,
       },
       {
         icon: 'Wallet',
         title: `Bruchteil der Kosten, voller Zugang zu allen ${LEVEL_COUNT} Leveln`,
-        body: `Lingoda kostet ab ~100 €/Monat für 8 Stunden. Deutschmeister Pro kostet ${PRO_MONTHLY} — mit Zugang zu allen ${LEVEL_COUNT} Leveln und ${PRO_SPEAKING_SESSIONS_PER_MONTH} KI-Gesprächen im Monat. Das ist weniger als eine einzige Lingoda-Stunde.`,
+        body: `Deutschmeister Pro kostet ${PRO_MONTHLY} — mit Zugang zu allen ${LEVEL_COUNT} Leveln und ${PRO_SPEAKING}. Den Lingoda-Preis findest du im Vergleich oben.`,
       },
     ],
     faq: [
@@ -221,11 +263,11 @@ const competitorComparisons = {
       },
       {
         q: 'Bekomme ich bei Deutschmeister ein Zertifikat?',
-        a: 'Deutschmeister stellt kein eigenes Zertifikat aus. Die Plattform bereitet dich auf anerkannte Prüfungen (Goethe, telc, TestDaF) vor — deren Zertifikate sind international gültig.',
+        a: 'Ja: nach jedem abgeschlossenen Kurs eine druckbare Teilnahmebescheinigung. Sie ist kein offizielles Prüfungsergebnis — für Behörden zählen nur die Zeugnisse der Prüfungsanbieter.',
       },
       {
         q: 'Warum ist Deutschmeister so viel günstiger als Lingoda?',
-        a: 'Lingoda bezahlt echte Lehrer für Live-Unterricht — das ist teuer. Deutschmeister nutzt KI für Sprechtraining und skalierbare Inhalte. Das ermöglicht denselben Lerneffekt zu einem Bruchteil der Kosten.',
+        a: 'Lingoda bezahlt echte Lehrer für Live-Unterricht — das ist teuer. Deutschmeister nutzt KI für Sprechtraining und skalierbare Inhalte.',
       },
     ],
     ctaHeadline: 'Flexibel lernen, ohne auf einen Termin zu warten.',

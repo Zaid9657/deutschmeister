@@ -78,6 +78,35 @@ test('every track has a hub copy entry in the exams data module', () => {
   }
 });
 
+test('each hub\'s writing and mock steps open that hub\'s own exam', async () => {
+  // The steps linked the bare /schreiben (which falls back to the profile's exam
+  // or telc B1 — a Start Deutsch 1 visitor got a B1 complaint letter) and the
+  // bare /modelltest (which asks for the exam again). Both slugged SPA routes
+  // exist (App.jsx, netlify.toml); they take no trailing slash.
+  const { EXAM_HUBS } = await import('../astro-site/src/data/exams/index.js');
+  const { resolveModelltest } = await import('../src/data/modelltest.js');
+  let writing = 0;
+  let mocks = 0;
+  for (const hub of EXAM_HUBS) {
+    for (const step of hub.path) {
+      if (/^\/schreiben/.test(step.href)) {
+        writing += 1;
+        assert.equal(step.href, `/schreiben/${hub.slug}`, `${hub.slug}: the writing step must carry the hub's exam`);
+        assert.equal(examTrackBySlug(step.href.split('/')[2])?.key, hub.key, `${hub.slug}: /schreiben/<slug> must resolve to this exam`);
+      }
+      if (/^\/modelltest/.test(step.href)) {
+        mocks += 1;
+        const resolved = resolveModelltest(step.href.split('/')[2]);
+        assert.ok(resolved, `${hub.slug}: ${step.href} resolves to no mock exam`);
+        assert.equal(resolved.key, hub.key, `${hub.slug}: ${step.href} opens another exam's mock`);
+      }
+    }
+  }
+  assert.equal(writing, EXAM_TRACKS.filter((t) => t.hasWriting).length, 'one writing step per writing-enabled hub');
+  assert.equal(mocks, EXAM_TRACKS.filter((t) => t.hasMock).length, 'one mock step per hub with a mock');
+  assert.match(netlifyToml, /from = "\/schreiben\/\*"/, 'the slugged writing route is in the SPA allow-list');
+});
+
 // ── 2. truth bans ────────────────────────────────────────────────────────
 
 const OUTCOME = /\b(garantiert bestehst|bestehst du garantiert|Bestehensgarantie|100\s?% Erfolg|sicher bestehen)\b/i;

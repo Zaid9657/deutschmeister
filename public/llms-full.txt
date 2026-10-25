@@ -18,7 +18,7 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 - **Anonymous visitors:** 1 Sentence X-Ray analysis per day
 - **Free account:** 7-day Pro trial; 2 AI speaking sessions total; 10 Sentence X-Ray analyses/day
 - **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from €40.00 (A1.2 €40.00, A2.1 €50.00, A2.2 €50.00), with 3 months of Pro included. B1.1, B1.2, B2.1, B2.2 are listed as coming soon and cannot be bought yet.
-- **telc B1 Komplettvorbereitung:** €89.00 one-time — a fixed 4-week telc B1 exam plan with 3 months of Pro included: https://deutsch-meister.de/telc-b1-komplettvorbereitung/
+- **telc B1 Komplettvorbereitung:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: https://deutsch-meister.de/telc-b1-komplettvorbereitung/
 - **Pro — €9.99/month or €79.99/year:** all 8 levels, 30 AI speaking sessions/month, 50 Sentence X-Ray analyses/day. Cancel anytime.
 - Payments handled by Lemon Squeezy as merchant of record.
 
@@ -26,9 +26,14 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 
 ### Free A1.1 Course
 - 12 situational lessons built on Goethe-Institut can-do statements, no account needed
-- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and an AI-graded writing task
+- Each lesson: dialogue, vocabulary, grammar rule, practice, speaking and a writing task — AI-graded with a free account, a form checklist without one
 - Checkpoints and spaced review
 - URL: https://deutsch-meister.de/course/a1.1
+
+### A1.2 Course (one-time purchase)
+- 12 situational lessons with 4 checkpoints and a final test (Abschlusstest A1.2)
+- €40.00 once, no subscription, with 3 months of Pro included; the level stays yours
+- Course page: https://deutsch-meister.de/courses/a1-2/ · in the app: https://deutsch-meister.de/course/a1.2
 
 ### Grammar (84 topics)
 - 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1, A1.2, A2.1, A2.2, B1.1; 8 in B1.2, B2.1, B2.2
@@ -42,7 +47,7 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 - Turn-based spoken conversation with an AI German teacher, available 24/7
 - Adapts to the learner's CEFR level; mission-based scenarios
 - Feedback scored across 5 categories (intelligibility, grammar, vocabulary, fluency, comprehension)
-- 2 free sessions on a free account; 30 sessions/month with Pro
+- 2 free sessions on a free account; 30 sessions/month with Pro; the included sessions last 5 minutes
 - URL: https://deutsch-meister.de/speaking/
 
 ### CEFR Level Test (free)

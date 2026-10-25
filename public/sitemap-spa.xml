@@ -9,10 +9,12 @@
        SCRIPT changes, not when the site is rebuilt. Auto-stamping every build
        would claim a freshness the content does not have, which is the fastest
        way to teach a crawler to ignore the field.
-       Bump these when you change the prerendered copy. Last content change:
-       2026-08-22 — the identity <h1> was removed from every prerendered route
-       and the podcast transcript claims were deleted (all 24 episodes have
-       empty transcripts). -->
+       Bump these when you change the prerendered copy. Content changes since
+       2026-08-24: /podcasts/ on 2026-10-22 (the access FAQ and PodcastSeries
+       copy), /faq/ on 2026-10-25 (the exam, free-version and speaking-feedback
+       answers). The /faq/ copy lives in src/data/faqContent.js, whose
+       FAQ_COPY_UPDATED this lastmod may never fall behind
+       (tests/sitemap-lastmod.test.mjs). -->
 
   <!-- Main Sections -->
   <url>
@@ -41,7 +43,7 @@
   </url>
   <url>
     <loc>https://deutsch-meister.de/podcasts/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -65,7 +67,7 @@
        submitted blank pages to Google. Re-add a URL only once it is prerendered. -->
   <url>
     <loc>https://deutsch-meister.de/faq/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

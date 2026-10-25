@@ -56,6 +56,16 @@ export const PRO_SPEAKING_SESSIONS_PER_MONTH = 30;
 /** Free speaking sessions during the trial, in TOTAL (not per month). Source: TRIAL_TOTAL_LIMIT, speakingUsage.mjs:9 (2026-08-22). */
 export const TRIAL_SPEAKING_SESSIONS = 2;
 
+/**
+ * Length, in minutes, of the sessions the speaking allowances above include.
+ * Only a 5-minute session is free inside PRO_SPEAKING_SESSIONS_PER_MONTH (and
+ * TRIAL_SPEAKING_SESSIONS); 10- and 15-minute sessions are paid from credit.
+ * State it wherever the allowance is weighed against hour-long lessons.
+ * Source: the costCents rule `plannedMinutes === 5 && usage.allowed`,
+ * netlify/functions/speaking-session.mjs (2026-10-25).
+ */
+export const PRO_INCLUDED_SESSION_MINUTES = 5;
+
 /** AI writing evaluations included with Pro, per month. Source: WRITING_LIMITS.pro, netlify/functions/evaluate-writing.mjs (2026-08-31). */
 export const PRO_WRITING_EVALUATIONS_PER_MONTH = 20;
 

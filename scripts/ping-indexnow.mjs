@@ -4,6 +4,16 @@ const HOST = 'deutsch-meister.de';
 const BATCH_SIZE = 10_000;
 const INDEXNOW_API = 'https://api.indexnow.org/IndexNow';
 
+// Production deploys only. netlify.toml runs this script at the end of EVERY
+// build, and Netlify sets CONTEXT per build: deploy previews and branch deploys
+// used to submit every production URL for changes that were not live, and
+// IndexNow de-prioritises hosts that resubmit unchanged URLs (2026-10-25).
+// A manual run sets CONTEXT=production explicitly.
+if (process.env.CONTEXT !== 'production') {
+  console.log(`IndexNow: skipped — CONTEXT is "${process.env.CONTEXT || 'unset'}", only production deploys submit URLs.`);
+  process.exit(0);
+}
+
 const key = process.env.INDEXNOW_KEY;
 if (!key) {
   console.error('ERROR: INDEXNOW_KEY env var is not set.');

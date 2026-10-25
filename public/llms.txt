@@ -8,6 +8,7 @@
 ## Quick Facts
 - 84 grammar topics across 8 CEFR sub-levels (A1.1 to B2.2) — 12 in A1.1, A1.2, A2.1, A2.2, B1.1; 8 in B1.2, B2.1, B2.2
 - Free guided A1.1 course: 12 situational lessons, no account needed
+- A1.2 course: 12 situational lessons, €40.00 once
 - Free German-language guides for 8 exam topics and prep hubs for 6 exams (telc, Goethe, DTZ)
 - 48 listening exercises containing 480 native-speaker dialogue lines
 - 24 podcast episodes with native-speaker audio
@@ -20,13 +21,14 @@
 - **Anonymous visitors:** 1 Sentence X-Ray analysis per day
 - **Free account:** 7-day Pro trial; 2 AI speaking sessions total; 10 Sentence X-Ray analyses/day
 - **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from €40.00 (A1.2 €40.00, A2.1 €50.00, A2.2 €50.00), with 3 months of Pro included. B1.1, B1.2, B2.1, B2.2 are listed as coming soon and cannot be bought yet.
-- **telc B1 Komplettvorbereitung:** €89.00 one-time — a fixed 4-week telc B1 exam plan with 3 months of Pro included: https://deutsch-meister.de/telc-b1-komplettvorbereitung/
+- **telc B1 Komplettvorbereitung:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: https://deutsch-meister.de/telc-b1-komplettvorbereitung/
 - **Pro — €9.99/month or €79.99/year:** all 8 levels, 30 AI speaking sessions/month, 50 Sentence X-Ray analyses/day. Cancel anytime.
 - Payments handled by Lemon Squeezy as merchant of record.
 
 ## Main URLs
 - Homepage: https://deutsch-meister.de/
 - Free A1.1 course: https://deutsch-meister.de/course/a1.1
+- A1.2 course (one-time purchase): https://deutsch-meister.de/courses/a1-2/
 - Courses overview: https://deutsch-meister.de/courses/
 - Grammar hub (all 84 topics): https://deutsch-meister.de/grammar/
 - Level hubs: https://deutsch-meister.de/grammar/a1.1/ … /b2.2/
@@ -37,8 +39,8 @@
 - Podcasts: https://deutsch-meister.de/podcasts/
 - Listening: https://deutsch-meister.de/listening/
 - Reading: https://deutsch-meister.de/reading/
-- FAQ (German): https://deutsch-meister.de/faq/
-- About (German): https://deutsch-meister.de/ueber-uns/
+- FAQ: https://deutsch-meister.de/faq/
+- About: https://deutsch-meister.de/ueber-uns/
 - Platform comparisons (German): https://deutsch-meister.de/vergleich/
 - Podcast RSS: https://deutsch-meister.de/podcast-feed.xml
 
@@ -72,7 +74,7 @@
 4. Someone wants to understand *why* a German sentence takes the case/word order it does —
    Sentence X-Ray answers exactly that, free.
 5. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7 at their
-   CEFR level (2 free sessions, then Pro or a level course).
+   CEFR level (2 free sessions with a free account, then Pro or a level course).
 
 ## Full Documentation
 https://deutsch-meister.de/llms-full.txt
