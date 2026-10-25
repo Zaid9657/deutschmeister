@@ -18,7 +18,7 @@
 // SentenceXRay.jsx, PodcastsPage.jsx, Listening/ListeningHome.jsx,
 // ReadingSectionPage.jsx) with the default English locale — keep them in sync.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 // Counts come from the claims data layer, never retyped here. The ramp that used
 // to live in this file was invented — see rule 2 in src/data/marketing.js.
@@ -58,6 +58,49 @@ if (!existsSync(SHELL)) {
   process.exit(1);
 }
 const shell = readFileSync(SHELL, 'utf8');
+
+// ─── the page's own chunk ────────────────────────────────────────────────────
+//
+// The shell modulepreloads only the vendor chunks. Each route's page component
+// is a React.lazy chunk (LevelTest and SentenceXRay ≈ 75 KB each) that the
+// browser discovered only after the entry bundle had run, so the prerendered
+// content gave way to the loading spinner until it arrived (createRoot replaces
+// #root; nothing hydrates). The build manifest (vite.config.js build.manifest)
+// names the chunk of each route's `module` and its static imports: they are
+// modulepreloaded here, and the manifest is removed afterwards — it is a build
+// artifact, not a page. tests/prerender-modulepreload.test.mjs pins every
+// route's module to App.jsx's lazy import of it.
+//
+// Only a shell the build produced (its entry is a hashed /assets/ bundle) has
+// page chunks, and such a shell must come with its manifest. The source
+// index.html, which tests prerender as a fixture, has neither.
+const MANIFEST = join(DIST, '.vite', 'manifest.json');
+const builtShell = /<script type="module"[^>]*\ssrc="\/assets\//.test(shell);
+if (builtShell && !existsSync(MANIFEST)) {
+  console.error(`prerender-spa-routes: ${MANIFEST} not found — run on a fresh build (vite.config.js build.manifest); this script is not idempotent`);
+  process.exit(1);
+}
+const manifest = builtShell ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : null;
+
+/** Hrefs of a module's chunk and its static imports that `loaded` (the shell's own scripts) lacks. */
+function chunkPreloads(manifestEntries, moduleKey, loaded) {
+  const out = [];
+  const seen = new Set();
+  const visit = (key) => {
+    if (seen.has(key)) return;
+    seen.add(key);
+    const entry = manifestEntries[key];
+    if (!entry) throw new Error(`prerender-spa-routes: ${key} is not in the build manifest`);
+    if (entry.isEntry) return; // the entry bundle and what it imports load from the shell already
+    const href = `/${entry.file}`;
+    if (!loaded.has(href)) out.push(href);
+    (entry.imports || []).forEach(visit);
+  };
+  visit(moduleKey);
+  return out;
+}
+
+const shellScripts = new Set([...shell.matchAll(/<(?:script[^>]*\ssrc|link[^>]*\shref)="(\/assets\/[^"]+\.js)"/g)].map((m) => m[1]));
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -202,6 +245,7 @@ const ROUTES = [
   {
     path: '/speaking',
     dir: 'speaking',
+    module: 'src/pages/SpeakingPage.jsx',
     ...head('/speaking'),
     jsonLd: [
       {
@@ -241,6 +285,7 @@ const ROUTES = [
   {
     path: '/level-test',
     dir: 'level-test',
+    module: 'src/pages/LevelTest.jsx',
     ...head('/level-test'),
     jsonLd: [
       {
@@ -308,6 +353,7 @@ ${faqSection(LEVEL_TEST_FAQS)}
   {
     path: '/analyze',
     dir: 'analyze',
+    module: 'src/pages/SentenceXRay.jsx',
     ...head('/analyze'),
     jsonLd: [
       {
@@ -371,6 +417,7 @@ ${faqSection(LEVEL_TEST_FAQS)}
   {
     path: '/podcasts',
     dir: 'podcasts',
+    module: 'src/pages/PodcastsPage.jsx',
     ...head('/podcasts'),
     jsonLd: [
       {
@@ -429,6 +476,7 @@ ${faqSection(PODCAST_FAQS)}
   {
     path: '/listening',
     dir: 'listening',
+    module: 'src/pages/Listening/ListeningHome.jsx',
     ...head('/listening'),
     jsonLd: [
       {
@@ -453,6 +501,7 @@ ${faqSection(PODCAST_FAQS)}
   {
     path: '/reading',
     dir: 'reading',
+    module: 'src/pages/ReadingSectionPage.jsx',
     ...head('/reading'),
     jsonLd: [
       {
@@ -487,6 +536,7 @@ ${faqSection(PODCAST_FAQS)}
     // React page renders, so the two cannot drift.
     path: '/faq',
     dir: 'faq',
+    module: 'src/pages/FAQPage.jsx',
     ...head('/faq'),
     jsonLd: [
       faqPageJsonLd(),
@@ -527,6 +577,7 @@ ${faqSection(PODCAST_FAQS)}
     // E-E-A-T page (founder, team, mission) was invisible to crawlers.
     path: '/ueber-uns',
     dir: 'ueber-uns',
+    module: 'src/pages/UeberUnsPage.jsx',
     ...head('/ueber-uns'),
     jsonLd: [
       // organization.js says the entity is introduced on the homepage and here,
@@ -655,6 +706,14 @@ for (const route of ROUTES) {
     /"@type":\s*"FAQPage"/.test(body) ? '' : m
   );
 
+  // The route's page chunk, preloaded beside the vendor chunks (see chunkPreloads).
+  const preloads = manifest ? chunkPreloads(manifest, route.module, shellScripts) : [];
+  if (manifest && !preloads.length) throw new Error(`prerender-spa-routes: no page chunk for ${route.module}`);
+  if (preloads.length) {
+    const links = preloads.map((href) => `<link rel="modulepreload" crossorigin href="${href}">`).join('\n    ');
+    html = mustReplace(html, '</head>', `  ${links}\n  </head>`, 'head end (modulepreload)', route.path);
+  }
+
   // Route-specific JSON-LD (mirrored from the page's <SEO structuredData>).
   if (route.jsonLd.length > 0) {
     const ld = route.jsonLd
@@ -688,7 +747,7 @@ for (const route of ROUTES) {
   writeFileSync(join(outDir, 'index.html'), html);
 
   const words = route.content.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-  summary.push(`  ${route.path.padEnd(12)} → ${route.dir}/index.html (${words} visible words in #root)`);
+  summary.push(`  ${route.path.padEnd(12)} → ${route.dir}/index.html (${words} visible words in #root, ${preloads.length} page chunk preloads)`);
 }
 
 // The SPA shell itself (dist/app.html, served for every non-prerendered app
@@ -715,5 +774,9 @@ shellOut = mustReplace(
 
 writeFileSync(SHELL, shellOut);
 summary.push('  app.html      → og:locale=en_US, canonical removed');
+
+// The manifest is not a page: it must not ship as /.vite/manifest.json.
+rmSync(join(DIST, '.vite'), { recursive: true, force: true });
+summary.push('  .vite/        → build manifest removed');
 
 console.log(`prerender-spa-routes: wrote ${ROUTES.length} routes:\n${summary.join('\n')}`);

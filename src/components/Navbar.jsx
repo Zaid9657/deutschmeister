@@ -55,7 +55,7 @@ const stationNote = (st, isGerman) => {
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { user, signOut } = useAuth();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasLevelAccess, profile } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasLevelAccess, profile, purchases } = useSubscription();
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -97,8 +97,9 @@ const Navbar = () => {
   // profile has loaded. Showing a link is not authorisation.
   const isAdmin = Boolean(profile?.role) || isAdminEmail(user?.email);
   // "Continue learning" resumes the learner's course, never a bare /dashboard
-  // (a paywall for a free learner — the same rule as BottomNav's Kurs tab).
-  const continueHref = courseHomeFor({ level: profile?.current_level, hasLevelAccess });
+  // (a paywall for a free learner — the same rule as BottomNav's Kurs tab);
+  // a bought course beats a missing or lower placement.
+  const continueHref = courseHomeFor({ level: profile?.current_level, hasLevelAccess, purchases });
 
   const label = (item) => (isGerman ? item.labelDe : item.labelEn);
   const allItems = NAV_GROUPS.flatMap((g) => g.items).filter((item) => isVisible(item, user));

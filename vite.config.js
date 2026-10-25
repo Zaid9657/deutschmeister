@@ -27,6 +27,10 @@ export default defineConfig({
     host: true
   },
   build: {
+    // dist/.vite/manifest.json: which chunk each page module became. The
+    // prerender step (scripts/prerender-spa-routes.mjs) modulepreloads a
+    // prerendered route's own page chunk from it, then deletes the file.
+    manifest: true,
     rollupOptions: {
       output: {
         manualChunks(id) {

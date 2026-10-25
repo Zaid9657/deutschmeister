@@ -5,10 +5,7 @@ import { safeGetJSON, safeSetJSON } from '../utils/safeStorage';
 import { levels } from '../data/content';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import { loadUserGrammarProgress } from '../services/grammarService';
-import {
-  loadUserReadingProgress,
-  getReadingLessonsByLevel,
-} from '../services/readingService';
+import { loadUserReadingProgress } from '../services/readingService';
 
 // ──────────────────────────────────────────────────────────────
 // Progress = persisted signals only. Every percentage this context
@@ -38,20 +35,128 @@ const getInitialProgress = () => ({
   'b2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
 });
 
+// Per-level listening totals + completions in two small queries.
+// listening_exercises.level is UPPERCASE in the DB; keys here are lowercase
+// (the URL/progress form) — normalize at this boundary.
+const loadListeningSummary = async (userId) => {
+  try {
+    const [exercises, done] = await Promise.all([
+      supabase.from('listening_exercises').select('id, level'),
+      supabase
+        .from('user_listening_progress')
+        .select('exercise_id')
+        .eq('user_id', userId)
+        // completed_at, not `completed`: the live table has no flag column
+        // (src/lib/listeningProgress.js). The flag made this a 400 on every load.
+        .not('completed_at', 'is', null),
+    ]);
+    const doneIds = new Set((done.data || []).map((r) => r.exercise_id));
+    const summary = {};
+    (exercises.data || []).forEach((ex) => {
+      const level = String(ex.level || '').toLowerCase();
+      if (!summary[level]) summary[level] = { total: 0, completed: 0 };
+      summary[level].total += 1;
+      if (doneIds.has(ex.id)) summary[level].completed += 1;
+    });
+    return summary;
+  } catch (error) {
+    console.error('Error loading listening summary:', error);
+    return {};
+  }
+};
+
+// Every reading lesson's id and level in one light query, the way the
+// listening summary is loaded. It used to be eight select('*') calls (whole
+// lesson bodies, only to count them), made only once the first reading lesson
+// was done — so that first completion grew the denominator and the level
+// percentage dropped. reading_lessons.level is lowercase (CLAUDE.md); it is
+// lower-cased here anyway, at the boundary.
+const loadReadingLessons = async () => {
+  try {
+    const { data, error } = await supabase.from('reading_lessons').select('id, level');
+    if (error) throw error;
+    return (data || [])
+      .map((row) => ({ id: row.id, level: String(row.level || '').toLowerCase() }))
+      .filter((row) => levels.includes(row.level));
+  } catch (error) {
+    console.error('Error loading reading lessons:', error);
+    return [];
+  }
+};
+
+// One signed-in learner's persisted progress. Pure data: the provider decides
+// whether the answer still belongs to whoever is signed in when it arrives.
+const fetchProgress = async (userId) => {
+  const progress = getInitialProgress();
+  const [supabaseGrammarProgress, completedLessonIds, listeningSummary, readingLessons] = await Promise.all([
+    loadUserGrammarProgress(userId),
+    loadUserReadingProgress(userId),
+    loadListeningSummary(userId),
+    loadReadingLessons(),
+  ]);
+
+  // supabaseGrammarProgress keys are like "a1.1-gt1"
+  Object.entries(supabaseGrammarProgress).forEach(([topicId, topicProgress]) => {
+    // topicId format: "a1.1-gt1" → level is everything before the last "-gt"
+    const levelMatch = topicId.match(/^(.+)-gt\d+$/);
+    if (levelMatch && progress[levelMatch[1]]) {
+      progress[levelMatch[1]].grammarTopics[topicId] = { ...topicProgress };
+    }
+  });
+
+  // Totals give getLevelProgress a real denominator from the first load;
+  // completed ids map to their level from the same rows.
+  const readingTotals = {};
+  readingLessons.forEach(({ id, level }) => {
+    readingTotals[level] = (readingTotals[level] || 0) + 1;
+    if (completedLessonIds.has(id) && !progress[level].readingLessons.includes(id)) {
+      progress[level].readingLessons.push(id);
+    }
+  });
+
+  return { progress, readingTotals, listeningSummary };
+};
+
 export const ProgressProvider = ({ children }) => {
   const { user } = useAuth();
+  // WHO is signed in, not the user object: AuthContext hands out a new object
+  // at every tab focus and token refresh, and each one refetched everything.
+  const userId = user?.id ?? null;
   const [progress, setProgress] = useState(getInitialProgress());
   const [loading, setLoading] = useState(true);
-  // Per-level totals for the persisted signals, filled as they are fetched.
+  // Per-level totals for the persisted signals.
   // { 'b1.1': n } — reading lessons that exist per level
   const [readingTotals, setReadingTotals] = useState({});
   // { 'b1.1': { total, completed } } — listening exercises per level
   const [listeningSummary, setListeningSummary] = useState({});
 
-  // Load progress from Supabase when user logs in
+  // A change of account, sign-out included, drops the previous account's
+  // numbers in the same render (React's "adjust state while rendering"
+  // pattern), so no screen shows account A's progress under account B or
+  // after signing out. It used to reset only when a guest blob existed.
+  const [shownFor, setShownFor] = useState(userId);
+  if (shownFor !== userId) {
+    setShownFor(userId);
+    setProgress(getInitialProgress());
+    setReadingTotals({});
+    setListeningSummary({});
+    setLoading(true);
+  }
+
   useEffect(() => {
-    if (user) {
-      loadProgress();
+    // An answer that arrives after the account changed again is discarded:
+    // a slow load for A must never land under B.
+    let current = true;
+    if (userId) {
+      fetchProgress(userId)
+        .then((loaded) => {
+          if (!current) return;
+          setListeningSummary(loaded.listeningSummary);
+          setReadingTotals(loaded.readingTotals);
+          setProgress(loaded.progress);
+        })
+        .catch((error) => console.error('Error loading progress:', error))
+        .finally(() => { if (current) setLoading(false); });
     } else {
       // Load from localStorage for non-authenticated users
       const parsed = safeGetJSON('deutschmeister_progress', null);
@@ -61,88 +166,8 @@ export const ProgressProvider = ({ children }) => {
       }
       setLoading(false);
     }
-    // loadProgress is intentionally not a dependency: it is re-created every
-    // render (not memoised) and closes only over `user`, which IS the
-    // dependency — adding the function would re-run the fetch on every render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  const loadProgress = async () => {
-    try {
-      const baseProgress = getInitialProgress();
-
-      const [supabaseGrammarProgress, completedLessonIds, listening] = await Promise.all([
-        loadUserGrammarProgress(user.id),
-        loadUserReadingProgress(user.id),
-        loadListeningSummary(user.id),
-      ]);
-
-      setListeningSummary(listening);
-
-      // supabaseGrammarProgress keys are like "a1.1-gt1"
-      Object.entries(supabaseGrammarProgress).forEach(([topicId, topicProgress]) => {
-        // topicId format: "a1.1-gt1" → level is everything before the last "-gt"
-        const levelMatch = topicId.match(/^(.+)-gt\d+$/);
-        if (levelMatch && baseProgress[levelMatch[1]]) {
-          baseProgress[levelMatch[1]].grammarTopics[topicId] = { ...topicProgress };
-        }
-      });
-
-      // Map completed reading lesson ids to their levels, and keep the totals
-      // so getLevelProgress has a real denominator.
-      if (completedLessonIds.size > 0) {
-        const allLevelLessons = await Promise.all(
-          levels.map(async (level) => ({ level, lessons: await getReadingLessonsByLevel(level) }))
-        );
-        const totals = {};
-        allLevelLessons.forEach(({ level, lessons }) => {
-          totals[level] = lessons.length;
-          lessons.forEach((lesson) => {
-            if (completedLessonIds.has(lesson.id) && !baseProgress[level].readingLessons.includes(lesson.id)) {
-              baseProgress[level].readingLessons.push(lesson.id);
-            }
-          });
-        });
-        setReadingTotals(totals);
-      }
-
-      setProgress(baseProgress);
-    } catch (error) {
-      console.error('Error loading progress:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Per-level listening totals + completions in two small queries.
-  // listening_exercises.level is UPPERCASE in the DB; keys here are lowercase
-  // (the URL/progress form) — normalize at this boundary.
-  const loadListeningSummary = async (userId) => {
-    try {
-      const [exercises, done] = await Promise.all([
-        supabase.from('listening_exercises').select('id, level'),
-        supabase
-          .from('user_listening_progress')
-          .select('exercise_id')
-          .eq('user_id', userId)
-          // completed_at, not `completed`: the live table has no flag column
-          // (src/lib/listeningProgress.js). The flag made this a 400 on every load.
-          .not('completed_at', 'is', null),
-      ]);
-      const doneIds = new Set((done.data || []).map((r) => r.exercise_id));
-      const summary = {};
-      (exercises.data || []).forEach((ex) => {
-        const level = String(ex.level || '').toLowerCase();
-        if (!summary[level]) summary[level] = { total: 0, completed: 0 };
-        summary[level].total += 1;
-        if (doneIds.has(ex.id)) summary[level].completed += 1;
-      });
-      return summary;
-    } catch (error) {
-      console.error('Error loading listening summary:', error);
-      return {};
-    }
-  };
+    return () => { current = false; };
+  }, [userId]);
 
   // Anonymous visitors keep their marks across reloads via localStorage;
   // logged-in users' real progress lives in the per-feature tables.
