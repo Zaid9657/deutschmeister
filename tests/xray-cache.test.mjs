@@ -186,9 +186,9 @@ test('the migration: service-role table, insert-only validated store, ledger row
   assert.match(sql, /REVOKE ALL ON FUNCTION public\.store_xray_cache\(text,text,jsonb\) FROM PUBLIC, anon, authenticated;/);
   assert.match(sql, /GRANT EXECUTE ON FUNCTION public\.store_xray_cache\(text,text,jsonb\) TO service_role;/);
   const row = read('migrations/README.md').split('\n').find((l) => l.includes('`2026-10-25-xray-cache.sql`'));
-  assert.match(row, /not yet applied/i);
+  assert.match(row, /applied 2026-10-25/i);
   const fixture = JSON.parse(read('tests/fixtures/db-schema.json'));
-  assert.equal(fixture.pendingApply.tables.xray_cache.migration, '2026-10-25-xray-cache.sql');
+  assert.deepEqual(fixture.tables.xray_cache, ['analysis', 'created_at', 'model', 'sentence_hash']);
   // The handler names only what the migration creates, for link/example entries only.
   const fn = read('netlify/functions/analyze-sentence.mjs');
   assert.match(fn, /\.from\('xray_cache'\)\s*\.select\('analysis'\)\s*\.eq\('sentence_hash', key\)/);
