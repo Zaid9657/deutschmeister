@@ -150,7 +150,11 @@ test('the door is /signup (no trailing slash) and is filed as level-test / onsit
 
 test('the results screen remembers a signed-out result and links the attributed door', () => {
   const src = read('src/components/LevelTest/LevelTestResults.jsx');
-  assert.match(src, /if \(!user\) rememberPlacement\(finalSublevel\);/, 'signed-out only, and the level this screen shows');
+  // A guest's run only — the run decides, not who is signed in when the screen
+  // shows (an account's result after a sign-out on another tab is never kept:
+  // tests/placement-owner.test.mjs) — and the level this screen shows.
+  assert.match(src, /if \(guestRun\) rememberPlacement\(finalSublevel\);/);
+  assert.match(read('src/pages/LevelTest.jsx'), /guestRun=\{runOwner === null\}/);
   assert.match(src, /href=\{placementSignupHref\(finalSublevel\)\}/, 'a full-load link: a router <Link> would drop ?ref=');
   assert.doesNotMatch(src, /to=\{`\/signup/, 'no bare router door to signup');
   assert.doesNotMatch(src, /\/signup\?level=/, 'SignupPage never read ?level=');

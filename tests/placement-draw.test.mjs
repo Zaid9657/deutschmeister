@@ -123,17 +123,19 @@ test('"Retake Test" starts a new run with a new draw and no old snapshot', () =>
   const set = (name) => (value) => calls.push([name, value]);
   let seed = 0;
   const run = new Function(
-    'safeRemove', 'PLACEMENT_PROGRESS_KEY', 'SESSION', 'newDraw', 'setResumable', 'setQuestions', 'setTestState',
-    'setCurrentQuestionIndex', 'setAnswers', 'setListeningScore', 'setListeningAnswers', 'setSpeakingScore',
+    'safeRemove', 'PLACEMENT_PROGRESS_KEY', 'SESSION', 'newDraw', 'setStoredRun', 'setRunOwner', 'authLoading', 'userId',
+    'setQuestions', 'setTestState', 'setCurrentQuestionIndex', 'setAnswers', 'setListeningScore', 'setListeningAnswers', 'setSpeakingScore',
     body,
   );
   const args = [
     (key, opts) => calls.push(['remove', key, opts]), PLACEMENT_PROGRESS_KEY, { session: true },
     () => { const d = drawQuestions(BANK, { random: seeded(++seed) }); draws.push(d); return d; },
-    set('resumable'), set('questions'), set('state'), set('index'), set('answers'), set('listening'), set('listeningAnswers'), set('speaking'),
+    set('storedRun'), set('owner'), false, 'learner-a',
+    set('questions'), set('state'), set('index'), set('answers'), set('listening'), set('listeningAnswers'), set('speaking'),
   ];
   run(...args);
   run(...args);
+  assert.deepEqual(calls.filter(([n]) => n === 'owner').map(([, v]) => v), ['learner-a', 'learner-a'], 'each run belongs to whoever is signed in when it starts');
   const given = calls.filter(([n]) => n === 'questions').map(([, v]) => v);
   assert.equal(given.length, 2);
   assert.equal(given[0], draws[0]);
@@ -146,13 +148,13 @@ test('"Retake Test" starts a new run with a new draw and no old snapshot', () =>
 
 // ── 3. the run in progress ──────────────────────────────────────────────────
 
-const midRun = (seed = 3) => {
+const midRun = (seed = 3, owner = 'learner-a') => {
   const questions = drawQuestions(BANK, { random: seeded(seed) });
   const answers = questions.slice(0, 12).map((q, i) => answerFor(q, i % 4));
-  return { questions, answers, currentQuestionIndex: 12, testState: 'testing', listeningScore: null };
+  return { questions, answers, currentQuestionIndex: 12, testState: 'testing', listeningScore: null, owner };
 };
 
-test('a snapshot rebuilds the same run: questions, option orders, answers re-scored, position', () => {
+test('a snapshot rebuilds the same run: questions, option orders, answers re-scored, position, owner', () => {
   const state = midRun();
   const snapshot = JSON.parse(JSON.stringify(placementSnapshot(state)));
   assert.equal(snapshot.v, PLACEMENT_PROGRESS_VERSION);
@@ -162,6 +164,8 @@ test('a snapshot rebuilds the same run: questions, option orders, answers re-sco
   assert.deepEqual(back.answers, state.answers);
   assert.equal(back.currentQuestionIndex, 12);
   assert.equal(back.testState, 'testing');
+  assert.equal(back.owner, 'learner-a');
+  assert.equal(restorePlacement(BANK, JSON.parse(JSON.stringify(placementSnapshot(midRun(3, null))))).owner, null, 'a guest run');
   assert.deepEqual(calculatePlacement(back), calculatePlacement(state));
 
   for (const step of ['listening', 'speaking']) {
@@ -176,6 +180,7 @@ test('a snapshot that cannot be rebuilt exactly is not offered', () => {
   const snapshot = placementSnapshot(midRun());
   const broken = [
     null, 'x', {}, { ...snapshot, v: 0 },
+    { ...snapshot, owner: undefined }, { ...snapshot, owner: '' }, { ...snapshot, owner: 42 },
     { ...snapshot, testState: 'results' }, { ...snapshot, testState: 'landing' },
     { ...snapshot, questionIds: snapshot.questionIds.map((id, i) => (i === 5 ? 'A1-999' : id)) },
     { ...snapshot, questionIds: [...snapshot.questionIds.slice(0, 39), snapshot.questionIds[0]] },
@@ -197,24 +202,34 @@ test('LevelTest keeps the snapshot in this tab on every step and clears it on re
   const page = read('src/pages/LevelTest.jsx');
   assert.match(page, /const SESSION = \{ session: true \};/, 'sessionStorage: this tab only');
   assert.match(page, /useState\(\(\) => restorePlacement\(BANK, safeGetJSON\(PLACEMENT_PROGRESS_KEY, null, SESSION\)\)\)/);
-  const effect = page.match(/ {2}useEffect\(\(\) => \{\n {4}if \(RESUMABLE_STEPS\.includes\(testState\)\) \{([\s\S]*?)\n {2}\}, \[questions, answers, currentQuestionIndex, testState, listeningScore\]\);/);
+  const effect = page.match(/ {2}useEffect\(\(\) => \{\n( {4}if \(runOwner === undefined \|\| accountChanged\) return;\n[\s\S]*?)\n {2}\}, \[questions, answers, currentQuestionIndex, testState, listeningScore, runOwner, accountChanged\]\);/);
   assert.ok(effect, 'the snapshot effect');
   const store = new Map();
-  const run = (testState, state = midRun()) => new Function(
+  const run = (testState, opts = {}) => {
+    const { state = midRun(), accountChanged = false } = opts;
+    const runOwner = 'runOwner' in opts ? opts.runOwner : 'learner-a'; // an explicit undefined is "no owner yet"
+    return runEffect(testState, state, runOwner, accountChanged);
+  };
+  const runEffect = (testState, state, runOwner, accountChanged) => new Function(
     'RESUMABLE_STEPS', 'safeSetJSON', 'safeRemove', 'placementSnapshot', 'PLACEMENT_PROGRESS_KEY', 'SESSION',
-    'questions', 'answers', 'currentQuestionIndex', 'testState', 'listeningScore',
-    `if (RESUMABLE_STEPS.includes(testState)) {${effect[1]}`,
+    'questions', 'answers', 'currentQuestionIndex', 'testState', 'listeningScore', 'runOwner', 'accountChanged',
+    effect[1],
   )(
     RESUMABLE_STEPS, (k, v, o) => { assert.deepEqual(o, { session: true }); store.set(k, JSON.parse(JSON.stringify(v))); return true; },
     (k, o) => { assert.deepEqual(o, { session: true }); store.delete(k); return true; }, placementSnapshot, PLACEMENT_PROGRESS_KEY, { session: true },
-    state.questions, state.answers, state.currentQuestionIndex, testState, state.listeningScore,
+    state.questions, state.answers, state.currentQuestionIndex, testState, state.listeningScore, runOwner, accountChanged,
   );
   run('landing');
   assert.equal(store.size, 0, 'the landing page writes nothing (an old run stays offerable)');
+  run('testing', { runOwner: undefined });
+  assert.equal(store.size, 0, 'no snapshot before the run has an owner');
   run('testing');
   assert.ok(restorePlacement(BANK, store.get(PLACEMENT_PROGRESS_KEY)), 'a step writes a snapshot that rebuilds');
+  assert.equal(store.get(PLACEMENT_PROGRESS_KEY).owner, 'learner-a', 'under its owner');
   run('speaking');
   assert.equal(store.get(PLACEMENT_PROGRESS_KEY).testState, 'speaking');
+  run('listening', { runOwner: 'learner-a', accountChanged: true });
+  assert.equal(store.get(PLACEMENT_PROGRESS_KEY).testState, 'speaking', 'nothing is written once the account changed');
   run('results');
   assert.equal(store.has(PLACEMENT_PROGRESS_KEY), false, 'results clear it');
 

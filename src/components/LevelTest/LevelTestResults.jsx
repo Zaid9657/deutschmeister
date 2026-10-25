@@ -28,10 +28,13 @@ import { stationFor, stationStatusLine, EXAM_ROUTE } from '../../data/offers.js'
 
 const scoreTone = (value, strong, fair) => (value >= strong ? 'limette' : value >= fair ? 'quiet' : 'aprikose');
 
+// `guestRun`: the run was started signed out (src/pages/LevelTest.jsx binds
+// every run to its owner). Only a guest's result is kept on the browser.
 const LevelTestResults = ({
   placement,
   listeningScore,
   speakingScore,
+  guestRun = false,
   onRetake
 }) => {
   const { user } = useAuth();
@@ -54,13 +57,17 @@ const LevelTestResults = ({
     return Math.round((typeScores[type].correct / typeScores[type].total) * 100);
   };
 
-  // A signed-out tester's result is kept on this browser, so the "save my
-  // results" door below keeps its promise: the first profile load after
-  // sign-in writes it to profiles.current_level (src/lib/placement.js). The
-  // level stored is the one this screen shows, i.e. after any demotion.
+  // A guest's result is kept on this browser, so the "save my results" door
+  // below keeps its promise: the first profile load after sign-in writes it to
+  // profiles.current_level when the account has no placement yet
+  // (src/lib/placement.js) — also when the guest signed in during the test.
+  // The run decides, not who is signed in now: an account's result whose
+  // account signed out on another tab was kept here too, and handed to the
+  // next account that signed in. The level stored is the one this screen
+  // shows, i.e. after any demotion.
   useEffect(() => {
-    if (!user) rememberPlacement(finalSublevel);
-  }, [user, finalSublevel]);
+    if (guestRun) rememberPlacement(finalSublevel);
+  }, [guestRun, finalSublevel]);
 
   // Deep link into the first lesson of the placed level: its guided course when
   // the level has one (src/lib/firstRun.js placedCourseHref, the same target as
