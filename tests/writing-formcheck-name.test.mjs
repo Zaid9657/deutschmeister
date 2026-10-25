@@ -35,7 +35,8 @@ test('a name after heißen/nennen, in its clause', () => {
   assert.equal(name('Mein Name ist Ana Ruiz.'), true, 'the named field, as before');
   assert.equal(name('Mein Name ist.'), false, 'and without its value, as before');
   assert.equal(name('Hallo, ich bin Ana.'), true, '„ich bin <Name>" stays');
-  assert.equal(name('Ich heiße Marokko.'), false, 'a country is no name');
+  // A country in a named FIELD is another field's value, and stays red there (the verb slot: below).
+  assert.equal(name('Mein Name ist Marokko.'), false, 'a country fills no name field');
 });
 
 test('a learner\'s own name is a name — in her letters, and when it is also a German function word (batch B4 review)', () => {
@@ -55,4 +56,28 @@ test('a learner\'s own name is a name — in her letters, and when it is also a 
   // The form reads the one name shape too.
   assert.equal(scoreWriting({ kind: 'formular', fields: ['Vorname', 'Familienname'] }, { Vorname: 'José', Familienname: 'García' }).ok, true);
   assert.equal(scoreWriting({ kind: 'formular', fields: ['Vorname'] }, { Vorname: 'Marokko' }).ok, false, 'a country is still no name');
+});
+
+test('after „ich heiße" a name that is also a country or a language is still the name (batch B4 review)', () => {
+  // India is a given name, Deutsch a surname, Jordan and Paris both — and „ich heiße India." flipped
+  // lp0 to red on the real L2 task, because the verb slot borrowed the form field's country and
+  // language exclusions. What follows the verb is the name by construction; the exclusions stay
+  // where a FIELD is filled with another field's kind of value.
+  const body = (who) => `Sehr geehrte Damen und Herren, ich heiße ${who}. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Viele Grüße`;
+  for (const who of ['India', 'Deutsch', 'Jordan', 'Paris', 'India Deutsch', 'india']) {
+    const lp0 = scoreWriting(L2, body(who)).checks.find((c) => c.key === 'lp0');
+    assert.equal(lp0.ok, true, `„ich heiße ${who}." answers „${L2.leitpunkte[0]}"`);
+  }
+  const name = (text) => leitpunktSatisfied('Ihr Name', text);
+  assert.equal(name('Ich nenne mich Jordan.'), true);
+  // …while a missing value and the polite pronoun stay red in the slot,
+  assert.equal(name('ich heiße.'), false);
+  assert.equal(name('ich heiße nicht.'), false);
+  assert.equal(name('Ich heiße Sie.'), false);
+  // …and the field exclusions are exactly what they were.
+  assert.equal(name('Mein Name ist Marokko.'), false);
+  const form = (field, value) => scoreWriting({ kind: 'formular', fields: [field] }, { [field]: value }).ok;
+  assert.equal(form('Familienname', 'Marokko'), false);
+  assert.equal(form('Vorname', 'Arabisch'), false);
+  assert.equal(form('Vorname', 'India'), false, 'a country name in a name FIELD stays red');
 });
