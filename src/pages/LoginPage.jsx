@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
-import { returnPath } from '../lib/loginReturn';
+import { returnPath, nextPath, needsFullLoad, authLinkError, isExpiredLink } from '../lib/loginReturn';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -24,7 +24,14 @@ const TEXT_LINK = 'font-bold text-siegel transition-colors hover:text-siegel-dee
 
 const LoginPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const routerNavigate = useNavigate();
+  // A page a static door handed over (?next=, src/lib/loginReturn.js) is an
+  // Astro page with no SPA route, so it is left with a full page load — a
+  // replace, like the router's: /login never stays behind in the history.
+  const navigate = useCallback((to, options) => {
+    if (needsFullLoad(to)) window.location.replace(to);
+    else routerNavigate(to, options);
+  }, [routerNavigate]);
   const location = useLocation();
   const { signIn, user, loading: authLoading } = useAuth();
   const [searchParams] = useSearchParams();
@@ -37,6 +44,9 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   // 'idle' | 'sending' | 'sent' — the unconfirmed-account rescue path below.
   const [unconfirmed, setUnconfirmed] = useState(false);
+  // The rescue opened by an expired confirmation link rather than a refused
+  // sign-in: it says so and carries its own email field.
+  const [linkExpired, setLinkExpired] = useState(false);
   const [resendState, setResendState] = useState('idle');
   // The last refused resend when the refusal was the send-rate limit (what
   // resendRefusal returns), shown as a plain line instead of GoTrue's text.
@@ -57,8 +67,21 @@ const LoginPage = () => {
   }, [cooldown]);
 
   // A pending checkout (set on /pricing/ before the signup detour) beats the dashboard.
-  // The door's page comes back whole, query and hash included (src/lib/loginReturn.js).
-  const from = returnPath(location.state?.from) || postAuthPath();
+  // The door's page comes back whole, query and hash included (src/lib/loginReturn.js);
+  // a static page's door, which cannot hand over state, names its page in ?next=.
+  const from = returnPath(location.state?.from) || nextPath(searchParams.get('next')) || postAuthPath();
+
+  // A confirmation link that expired (or was already used) lands here with
+  // GoTrue's error in the hash. The page used to show "Welcome Back" and a
+  // password form, and the resend rescue appeared only after a refused sign-in,
+  // so learners signed up again instead. Open the rescue straight away and take
+  // the error out of the address bar.
+  useEffect(() => {
+    if (!isExpiredLink(authLinkError(window.location))) return;
+    setUnconfirmed(true);
+    setLinkExpired(true);
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}`);
+  }, []);
 
   // The signup confirmation link lands HERE already signed in: signUp's
   // emailRedirectTo is /login (AuthContext), and supabase-js reads the session
@@ -77,6 +100,7 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     setUnconfirmed(false);
+    setLinkExpired(false);
     setResendState('idle');
     setResendRefused(null);
     setLoading(true);
@@ -181,15 +205,40 @@ const LoginPage = () => {
             >
               <div className="flex items-start gap-3">
                 <Mail className="mt-0.5 w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                <div className="text-sm">
-                  <p className="font-bold">Your account exists — it just isn't activated yet.</p>
-                  <p className="mt-1">
-                    Look for an email with the subject{' '}
-                    <span className="font-semibold">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click
-                    the link in the newest one. Check your spam folder too.
-                  </p>
-                </div>
+                {linkExpired ? (
+                  <div className="text-sm">
+                    <p className="font-bold">This confirmation link has expired or was already used.</p>
+                    <p className="mt-1">
+                      Not activated yet? Enter your email and we will send you a fresh link. Already activated? Just log in below.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-sm">
+                    <p className="font-bold">Your account exists — it just isn't activated yet.</p>
+                    <p className="mt-1">
+                      Look for an email with the subject{' '}
+                      <span className="font-semibold">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click
+                      the link in the newest one. Check your spam folder too.
+                    </p>
+                  </div>
+                )}
               </div>
+              {linkExpired && resendState !== 'sent' && (
+                <div className="mt-3">
+                  <label htmlFor="resend-email" className="mb-1 block text-sm font-bold">
+                    {t('auth.email')}
+                  </label>
+                  <input
+                    id="resend-email"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-clay border border-rule bg-white px-4 py-2.5 text-ink placeholder:text-graphite focus:border-siegel transition-colors"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              )}
               {resendRefused && (
                 <p role="status" className="mt-3 text-sm font-semibold">
                   {resendRefused.limitReached

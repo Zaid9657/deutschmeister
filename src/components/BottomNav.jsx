@@ -40,7 +40,7 @@ const buildTabs = ({ hasAccess, courseHome }) => {
 
 const BottomNav = () => {
   const { user } = useAuth();
-  const { hasAccess, hasLevelAccess, profile } = useSubscription();
+  const { hasAccess, hasLevelAccess, profile, purchases } = useSubscription();
   const { pathname } = useLocation();
   const [dueCount, setDueCount] = useState(0);
   const navRef = useRef(null);
@@ -59,16 +59,19 @@ const BottomNav = () => {
   }, [user]);
 
   // Due-card badge on the Wörter tab — the in-app reason to come back today.
+  // Keyed on the user's id: the user object is replaced at every tab focus and
+  // token refresh, and each replacement refetched the deck counts.
+  const userId = user?.id;
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
     let alive = true;
-    fetchDeckCounts(user.id).then(({ due }) => { if (alive) setDueCount(due); });
+    fetchDeckCounts(userId).then(({ due }) => { if (alive) setDueCount(due); });
     return () => { alive = false; };
-  }, [user, pathname]);
+  }, [userId, pathname]);
 
   if (!user) return null;
 
-  const tabs = buildTabs({ hasAccess, courseHome: courseHomeFor({ level: profile?.current_level, hasLevelAccess }) });
+  const tabs = buildTabs({ hasAccess, courseHome: courseHomeFor({ level: profile?.current_level, hasLevelAccess, purchases }) });
 
   // chromeFor 'full' is exactly the routes App.jsx gives the (night) Footer.
   const spacer = chromeFor(pathname) === 'full' ? 'bg-nacht' : '';

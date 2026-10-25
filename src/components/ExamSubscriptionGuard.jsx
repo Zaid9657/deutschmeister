@@ -4,7 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useTranslation } from 'react-i18next';
 import { trackPaywallShown } from '../lib/funnelTracking';
-import { resolveModelltest } from '../data/modelltest';
+// Only the gate: the full resolver (src/data/modelltest.js) imports every mock
+// body, and this guard is in the SPA entry chunk.
+import { resolveModelltestGate } from '../data/modelltestGate';
 import LockedContentOverlay from './LockedContentOverlay';
 
 // Same brand-new-user race as SubscriptionGuard (see there for the full note).
@@ -39,7 +41,7 @@ const ExamSubscriptionGuard = ({ children }) => {
   const [retrying, setRetrying] = useState(false);
   const retriedRef = useRef(false);
 
-  const resolved = resolveModelltest(examSlug);
+  const resolved = resolveModelltestGate(examSlug);
   const examAccess = hasAccess || (resolved?.gateLevel ? hasLevelAccess(resolved.gateLevel) : false);
 
   const isBrandNew =
