@@ -1,3 +1,5 @@
+import { COURSE_PRO_DAYS } from './pricing.mjs';
+
 const ACCESS_STATUSES = new Set(['active', 'on_trial', 'cancelled', 'past_due', 'paused']);
 const SUBSCRIPTION_EVENTS = ['subscription_created', 'subscription_updated', 'subscription_cancelled', 'subscription_expired'];
 
@@ -24,7 +26,10 @@ export function courseAccessUntil(priorPurchase, attributes, proDays, now = Date
   return new Date(Date.parse(start) + proDays * 24 * 60 * 60 * 1000).toISOString();
 }
 
-export function subscriptionEventRow(existing, data, eventType, now = Date.now()) {
+// `superseded`: a course row replaced this subscription id for the user — it is
+// recorded as superseded (a subscription_superseded log) or a legacy course row
+// still carries it.
+export function subscriptionEventRow(existing, data, eventType, now = Date.now(), { superseded = true } = {}) {
   const attributes = data?.attributes || {};
   const subscriptionId = String(data?.id || '');
   if (!subscriptionId) throw new Error('Subscription event has no subscription id');
@@ -35,10 +40,17 @@ export function subscriptionEventRow(existing, data, eventType, now = Date.now()
     // recurring subscription. New checkouts carry the provider creation date.
     if (!createdAt) return null;
     if (existing.plan_type !== 'course' && !(Date.parse(createdAt) > Date.parse(existing.subscription_start))) return null;
-    if (existing.plan_type === 'course'
+    // Only a superseded id has to be newer than the course row. A never-seen
+    // one — a delayed creation for a subscription bought before the course —
+    // replaces it whatever its timestamps: the purchase keeps its own window.
+    if (existing.plan_type === 'course' && superseded
       && Date.parse(attributes.updated_at || createdAt) < Date.parse(existing.subscription_start)) return null;
-    if (!['active', 'on_trial'].includes(attributes.status)) return null;
-    if (existing.plan_type === 'course' && !(Date.parse(attributes.status === 'on_trial' ? attributes.trial_ends_at : attributes.renews_at) > Number(now))) return null;
+    // A replacement must be paid for now: active, on trial, or cancelled but
+    // paid through ends_at (a cancellation can arrive before its creation).
+    if (!['active', 'on_trial', 'cancelled'].includes(attributes.status)) return null;
+    const paidUntil = attributes.status === 'on_trial' ? attributes.trial_ends_at
+      : attributes.status === 'cancelled' ? attributes.ends_at : attributes.renews_at;
+    if ((existing.plan_type === 'course' || attributes.status === 'cancelled') && !(Date.parse(paidUntil) > Number(now))) return null;
   }
 
   const previous = sameSubscription ? existing : null;
@@ -133,6 +145,29 @@ async function retireLegacyCourseId(supabase, subscription, userId, now) {
   return { ...subscription, lemonsqueezy_subscription_id: null, cancel_at_period_end: false, cancelled_at: null };
 }
 
+// Course orders taken during a live recurring plan before 2026-10-22 were
+// stored with access_until = null, which latestCourseWindow ignores — so their
+// included Pro vanished when the plan ended. Recover the deadline from the
+// original purchase date (never from now) and store it once, conditionally.
+// Manual grants ('manual-…') are deadline-free on purpose and stay untouched.
+async function recoverLegacyCourseDeadlines(supabase, purchases, now) {
+  const recovered = [];
+  for (const purchase of purchases) {
+    const orderId = String(purchase.lemonsqueezy_order_id || '');
+    if (purchase.access_until != null || !orderId || orderId.startsWith('manual-') || !isoDate(purchase.created_at)) {
+      recovered.push(purchase);
+      continue;
+    }
+    const accessUntil = courseAccessUntil(purchase, {}, COURSE_PRO_DAYS, now);
+    const { error } = await supabase.from('purchases')
+      .update({ access_until: accessUntil, updated_at: new Date(now).toISOString() })
+      .eq('lemonsqueezy_order_id', orderId).eq('status', 'active').is('access_until', null);
+    if (error) throw error;
+    recovered.push({ ...purchase, access_until: accessUntil });
+  }
+  return recovered;
+}
+
 export async function reconcileUserEntitlement(supabase, userId, now = Date.now()) {
   const [subscriptionResult, purchasesResult, profileResult] = await Promise.all([
     supabase.from('subscriptions').select('*').eq('user_id', userId).maybeSingle(),
@@ -156,7 +191,7 @@ export async function reconcileUserEntitlement(supabase, userId, now = Date.now(
       subscription = { ...subscription, subscription_end: paidThrough };
     }
   }
-  const purchases = purchasesResult.data || [];
+  const purchases = await recoverLegacyCourseDeadlines(supabase, purchasesResult.data || [], now);
   const course = latestCourseWindow(purchases, now);
   const liveRecurring = subscription?.plan_type !== 'course' && subscriptionHasPaidAccess(subscription, now);
   // Keep a recoverable recurring row so a later successful retry can find it.
@@ -231,12 +266,20 @@ export async function reconcileSubscriptionEvent(supabase, userId, data, eventTy
     eventType = latest.event_type;
   }
   const eventTime = Date.parse(data?.attributes?.updated_at || data?.attributes?.created_at);
-  const supersededTime = Date.parse(retired?.[0]?.payload?.meta?.superseded_at
-    || (existing?.plan_type === 'course' ? existing.subscription_start : null) || retired?.[0]?.created_at);
+  // The course row's start stands in for a missing superseded_at only for an
+  // id the course actually superseded: one recorded as superseded, or the id a
+  // legacy course row still carries. A never-seen subscription id is not
+  // dropped for being older than a course bought while its event was delayed.
+  const superseded = Boolean(retired?.length)
+    || (existing?.plan_type === 'course' && existing.lemonsqueezy_subscription_id === String(data?.id || ''));
+  const supersededTime = superseded
+    ? Date.parse(retired?.[0]?.payload?.meta?.superseded_at
+      || (existing?.plan_type === 'course' ? existing.subscription_start : null) || retired?.[0]?.created_at)
+    : NaN;
   if (Number.isFinite(supersededTime) && (!Number.isFinite(eventTime) || eventTime < supersededTime)) {
     return reconcileUserEntitlement(supabase, userId, now);
   }
-  const row = subscriptionEventRow(existing, data, eventType, now);
+  const row = subscriptionEventRow(existing, data, eventType, now, { superseded });
   if (row) {
     const { error } = await supabase.from('subscriptions').upsert({
       user_id: userId,
@@ -257,4 +300,23 @@ export async function reconcileSubscriptionEvent(supabase, userId, data, eventTy
     if (error) throw error;
   }
   return reconcileUserEntitlement(supabase, userId, now);
+}
+
+// E-mail → profile id, matched EXACTLY (case- and whitespace-insensitive),
+// never as a pattern. ILIKE treats '_' and '%' as wildcards, so an unescaped
+// 'al_ce@…' matched 'alice@…' and a purchase went to the wrong account. The
+// pattern is escaped to narrow the candidates ('*' cannot be escaped — PostgREST
+// turns every '*' into '%' — so it only widens them) and each candidate is then
+// compared literally; more than one literal match is ambiguous and resolves to
+// nobody. Used by the webhook's order-to-account fallback and the admin support
+// intake.
+export async function profileIdForEmail(supabase, email) {
+  const wanted = String(email ?? '').trim().toLowerCase();
+  if (!wanted) return { id: null, ambiguous: false, error: null };
+  const { data, error } = await supabase.from('profiles').select('id, email')
+    .ilike('email', wanted.replace(/[\\%_]/g, '\\$&'))
+    .limit(10);
+  if (error) return { id: null, ambiguous: false, error };
+  const exact = (data || []).filter((row) => String(row.email ?? '').trim().toLowerCase() === wanted);
+  return { id: exact.length === 1 ? exact[0].id : null, ambiguous: exact.length > 1, error: null };
 }

@@ -2,6 +2,7 @@ import { test, beforeEach, after } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { COURSE_PRO_DAYS, LEVEL_COURSES, MONTHLY_PRICE_EUR } from '../src/data/pricing.js';
+import { hasRecurringBilling } from '../src/lib/checkoutAccess.js';
 import { courseAccessUntil, subscriptionEventRow, subscriptionHasPaidAccess } from '../netlify/functions/_shared/subscriptionEntitlement.mjs';
 
 process.env.SUPABASE_URL = 'http://supabase.entitlement.stub';
@@ -545,4 +546,89 @@ test('legacy null course deadlines are recovered from the original purchase date
   const end = courseAccessUntil(purchase, { created_at: '2026-01-01T00:00:00Z' }, COURSE_PRO_DAYS, now);
   assert.equal(end, new Date(Date.parse(purchase.created_at) + COURSE_PRO_DAYS * 24 * 60 * 60 * 1000).toISOString());
   assert.ok(Date.parse(end) < now);
+});
+
+// X-002: a cancellation delivered before its subscription_created.
+test('a cancellation that arrives before its creation still installs the newly paid subscription until ends_at', async () => {
+  tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'expired', lemonsqueezy_subscription_id: 'sub-old',
+    subscription_start: '2025-06-01T00:00:00Z', subscription_end: '2025-07-01T00:00:00Z' });
+  const created = { created_at: '2025-12-31T00:00:00Z', updated_at: '2025-12-31T00:00:00Z', renews_at: '2026-01-31T00:00:00Z' };
+  const cancelled = { ...created, status: 'cancelled', cancelled: true, ends_at: '2026-01-31T00:00:00Z', updated_at: '2025-12-31T12:00:00Z' };
+  await deliver(subscriptionEvent('subscription_cancelled', cancelled, 'sub-new'));
+  await deliver(subscriptionEvent('subscription_updated', cancelled, 'sub-new'));
+  await deliver(subscriptionEvent('subscription_created', created, 'sub-new'));
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-new');
+  assert.equal(subscription().status, 'cancelled');
+  assert.equal(Date.parse(subscription().subscription_end), Date.parse(cancelled.ends_at));
+  assert.equal(profile().is_subscribed, true, 'a cancelled subscription is paid through ends_at');
+});
+
+test('a cancelled newer subscription whose paid period is over never replaces a live one', async () => {
+  await deliver(subscriptionEvent('subscription_created'));
+  await deliver(subscriptionEvent('subscription_cancelled', {
+    status: 'cancelled', created_at: '2025-12-15T00:00:00Z', updated_at: '2025-12-20T00:00:00Z', ends_at: '2025-12-31T00:00:00Z',
+  }, 'sub-2'));
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-1');
+  assert.equal(subscription().status, 'active');
+  assert.equal(profile().is_subscribed, true);
+});
+
+// C-019: a subscription bought before a course purchase whose creation event arrives late.
+test('a delayed subscription_created for a subscription bought before a course purchase still installs it', async () => {
+  // 00:00 — S2 is bought; its subscription_created delivery fails before anything is written.
+  const s2 = subscriptionEvent('subscription_created', {
+    created_at: '2026-01-01T00:00:00Z', updated_at: '2026-01-01T00:00:00Z', renews_at: '2026-02-01T00:00:00Z',
+  }, 'sub-2');
+  tables.webhook_logs.push({ id: 'failed-s2', event_type: 'subscription_created', processed: false, error: 'transient',
+    created_at: '2026-01-01T00:00:05Z', payload: s2 });
+  // 01:00 — a course order installs the course row.
+  now = RealDate.parse('2026-01-01T01:00:00Z');
+  await deliver(orderEvent('order_created', 'course-1', new Date().toISOString()));
+  assert.equal(subscription().plan_type, 'course');
+  // 03:00 — Lemon Squeezy retries S2's creation.
+  now = RealDate.parse('2026-01-01T03:00:00Z');
+  await deliver(s2);
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-2', 'the billing subscription is on record');
+  assert.equal(subscription().plan_type, 'monthly');
+  assert.equal(hasRecurringBilling(subscription(), now), true, 'the portal, not a second checkout');
+  assert.equal(profile().is_subscribed, true);
+  // The course window is independent: when S2 ends, the course row returns until its own deadline.
+  now = RealDate.parse('2026-02-02T00:00:00Z');
+  await deliver(subscriptionEvent('subscription_expired', { status: 'expired', created_at: '2026-01-01T00:00:00Z', updated_at: new Date().toISOString() }, 'sub-2'));
+  assert.equal(subscription().plan_type, 'course');
+  assert.equal(subscription().subscription_end, tables.purchases[0].access_until);
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('a recorded superseded subscription stays retired behind the course row (the timestamp guard is kept for it)', async () => {
+  tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'expired', lemonsqueezy_subscription_id: 'sub-1',
+    subscription_start: '2025-12-01T00:00:00Z', subscription_end: '2025-12-31T00:00:00Z' });
+  await deliver(orderEvent('order_created', 'course-1', new Date().toISOString()));
+  advance(1);
+  await deliver(subscriptionEvent('subscription_updated', { updated_at: '2025-12-20T00:00:00Z', renews_at: '2026-06-01T00:00:00Z' }));
+  assert.equal(subscription().plan_type, 'course');
+  assert.equal(subscription().lemonsqueezy_subscription_id, null);
+});
+
+// X-005: purchases stored with access_until = null before 2026-10-22.
+test('a legacy provider purchase without a stored deadline keeps its included Pro when the subscription ends', async () => {
+  tables.purchases.push({ id: 'p-legacy', user_id: USER, status: 'active', product_key: 'course_a2_1', lemonsqueezy_order_id: 'legacy-order',
+    access_until: null, created_at: '2025-12-15T00:00:00Z' });
+  tables.subscriptions.push({ user_id: USER, plan_type: 'monthly', status: 'active', lemonsqueezy_subscription_id: 'sub-1',
+    subscription_start: '2025-12-01T00:00:00Z', subscription_end: '2026-01-01T00:00:00Z' });
+  await deliver(subscriptionEvent('subscription_expired', { status: 'expired', updated_at: new Date().toISOString() }));
+  const deadline = new Date(RealDate.parse('2025-12-15T00:00:00Z') + COURSE_PRO_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  assert.equal(deadline, '2026-03-15T00:00:00.000Z');
+  assert.equal(tables.purchases[0].access_until, deadline, 'the deadline is stored from the purchase date, never from now');
+  assert.equal(subscription().plan_type, 'course');
+  assert.equal(subscription().subscription_end, deadline);
+  assert.equal(profile().is_subscribed, true);
+});
+
+test('a manual course grant without a deadline stays deadline-free and grants no Pro', async () => {
+  tables.purchases.push({ id: 'p-manual', user_id: USER, status: 'active', product_key: 'course_a2_1', lemonsqueezy_order_id: 'manual-1760000000000-course_a2_1',
+    access_until: null, created_at: '2025-12-15T00:00:00Z' });
+  assert.equal((await recover()).status, 'not_found');
+  assert.equal(tables.purchases[0].access_until, null);
+  assert.equal(profile().is_subscribed, false);
 });
