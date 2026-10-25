@@ -35,23 +35,75 @@ const delta = (now, prev, fmt = (x) => String(x)) => {
   return `${fmt(now)} (prev ${fmt(prev)}, ${sign}${fmt(d)})`;
 };
 const pct = (a, b) => (Number(b) > 0 ? `${Math.round((Number(a) / Number(b)) * 100)}%` : 'n/a');
+const DAY_MS = 24 * 60 * 60 * 1000;
+const DONE = ['complete', 'gold'];
+
+/**
+ * Lektion 1 → Lektion 2 continuation as a COHORT: of the learners who finished
+ * A1.1 Lektion 1 in the window, the share with any Lektion 2 row. Read with the
+ * service role here, so the SQL function stays as it is.
+ *
+ * Why (2026-10-25, review X-029): the SQL's l1_to_l2_pct divides two
+ * independent 14-day row counts, L2 rows touched by L1 rows finished. Learners
+ * who finished L1 earlier and open L2 now count in the numerator only, so the
+ * course's success metric could read 200 %. Here the numerator is a subset of
+ * the denominator by construction, so the figure never passes 100 %. The row
+ * ratio stays in the line, labelled as what it is.
+ * → { l1_cohort, l1_cohort_to_l2, l1_to_l2_cohort_pct } (pct null when nobody finished L1).
+ */
+export async function courseCohort(client, { now = Date.now(), windowDays = 14 } = {}) {
+  const since = new Date(Number(now) - windowDays * DAY_MS).toISOString();
+  const finished = new Set();
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await client.from('lesson_progress')
+      .select('user_id')
+      .eq('lektion_id', 'a1.1-l01')
+      .in('status', DONE)
+      .gt('completed_at', since)
+      .order('user_id')
+      .range(from, from + 999);
+    if (error) throw new Error(`L1 cohort read failed: ${error.message}`);
+    for (const row of data || []) finished.add(row.user_id);
+    if (!data || data.length < 1000) break;
+  }
+  const ids = [...finished];
+  const continued = new Set();
+  for (let i = 0; i < ids.length; i += 100) {
+    const { data, error } = await client.from('lesson_progress')
+      .select('user_id')
+      .eq('lektion_id', 'a1.1-l02')
+      .in('user_id', ids.slice(i, i + 100));
+    if (error) throw new Error(`L2 continuation read failed: ${error.message}`);
+    for (const row of data || []) if (finished.has(row.user_id)) continued.add(row.user_id);
+  }
+  return {
+    l1_cohort: finished.size,
+    l1_cohort_to_l2: continued.size,
+    l1_to_l2_cohort_pct: finished.size > 0 ? Math.round((1000 * continued.size) / finished.size) / 10 : null,
+  };
+}
 
 /**
  * The A1.1 course funnel line (migrations/2026-09-19-course-funnel.sql). The
  * rebuild's success metric is Lektion 1 → Lektion 2 continuation, so it gets
- * its own line. An older function without the `course` block says so instead
- * of rendering "undefined" — the migration must be applied by hand.
+ * its own line and leads it, as the cohort figure (courseCohort). The SQL's
+ * l1_to_l2_pct follows as "Zeilenquote" (a ratio of row counts, not a share of
+ * people). An older function without the `course` block says so instead of
+ * rendering "undefined" — the migration must be applied by hand.
  */
 export function renderCourseLine(course) {
   if (!course || typeof course !== 'object') {
     return 'Kurs A1.1: nicht gemessen — migrations/2026-09-19-course-funnel.sql noch nicht angewendet';
   }
   const n = (v) => (v == null ? '–' : String(v));
+  const cohort = course.l1_to_l2_cohort_pct != null
+    ? `${Number(course.l1_to_l2_cohort_pct)} % (${n(course.l1_cohort_to_l2)} von ${n(course.l1_cohort)})`
+    : 'n/a';
   const ratio = course.l1_to_l2_pct != null
     ? `${Number(course.l1_to_l2_pct)} %`
     : (Number(course.l01_finished) > 0 ? pct(course.l02_started, course.l01_finished).replace('%', ' %') : 'n/a');
   const level = String(course.level || 'a1.1').toUpperCase();
-  return `Kurs ${level}: L1 gestartet ${n(course.l01_started)} · beendet ${n(course.l01_finished)} · L2 gestartet ${n(course.l02_started)} (${ratio}) · one-and-done ${n(course.one_and_done_14d)}`
+  return `Kurs ${level}: L1→L2-Kohorte ${cohort} · L1 gestartet ${n(course.l01_started)} · beendet ${n(course.l01_finished)} · L2 gestartet ${n(course.l02_started)} (Zeilenquote ${ratio}) · one-and-done ${n(course.one_and_done_14d)}`
     + ` · L3 beendet ${n(course.l03_finished)} · L12 beendet ${n(course.l12_finished)} · CP1 bestanden ${n(course.checkpoint1_passed)} · aktiv (7d) ${n(course.active_learners_7d)}`;
 }
 
@@ -103,6 +155,19 @@ const innerHandler = async (event) => {
   if (rpcError || !metrics) {
     console.error('[weekly-truth] rpc failed (migration applied?):', rpcError?.message);
     return { statusCode: 500, body: JSON.stringify({ error: `metrics failed: ${rpcError?.message || 'empty'}` }) };
+  }
+
+  // The cohort figure joins the course block, so the stored row carries it too.
+  // A failed read leaves it out ("n/a" in the line): the week's row matters more.
+  if (metrics.course && typeof metrics.course === 'object') {
+    try {
+      Object.assign(metrics.course, await courseCohort(supabase, {
+        now: Date.parse(metrics.measured_at) || Date.now(),
+        windowDays: Number(metrics.course.window_days) || 14,
+      }));
+    } catch (e) {
+      console.error('[weekly-truth] L1→L2 cohort read failed:', e.message);
+    }
   }
 
   const { data: prevRows } = await supabase

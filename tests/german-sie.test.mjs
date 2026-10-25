@@ -242,3 +242,55 @@ test('the listening results upgrade card speaks Sie and means the trial (conv-b1
   assert.match(src, /nach Ihrer Testphase/, 'the card is about the trial (Testphase), not the listening test just taken');
   assert.doesNotMatch(src, /nach deinem Test\b/);
 });
+
+// The German mail and pages the Netlify functions render (review 2026-10-25,
+// C-204): the course reminder said „Du lernst Deutsch … Du kannst jederzeit
+// aufhören“ while the course it reminds of says Sie. The rule, not a list of
+// lines: every function file with a German branch is rendered here (or named
+// with the reason it renders no German text), and no visible string says du.
+const GERMAN_FUNCTION_SURFACES = ['netlify/functions/course-reminder.mjs', 'netlify/functions/unsubscribe.mjs', 'netlify/functions/_shared/socialLinks.mjs'];
+const NO_GERMAN_TEXT = { 'netlify/functions/_shared/unsubscribe.mjs': 'only adds &lang=de to the link; the page renders the German' };
+
+const visibleStrings = (html) => html
+  .replace(/<style[\s\S]*?<\/style>/g, ' ')
+  .split(/<[^>]+>/)
+  .map((s) => s.replace(/\s+/g, ' ').trim())
+  .filter(Boolean);
+
+test('German mail and pages from netlify/functions speak Sie, never du', async () => {
+  const fnDir = join(ROOT, 'netlify/functions');
+  const files = [
+    ...readdirSync(fnDir).filter((f) => f.endsWith('.mjs')).map((f) => `netlify/functions/${f}`),
+    ...readdirSync(join(fnDir, '_shared')).filter((f) => f.endsWith('.mjs')).map((f) => `netlify/functions/_shared/${f}`),
+  ];
+  const german = files.filter((f) => /lang="de"|lang === 'de'/.test(readFileSync(join(ROOT, f), 'utf8')));
+  assert.deepEqual(german.sort(), [...GERMAN_FUNCTION_SURFACES, ...Object.keys(NO_GERMAN_TEXT)].sort(), 'a function file with a German branch must be rendered by this test');
+
+  process.env.UNSUB_SECRET = process.env.UNSUB_SECRET || 'test-only-unsub-secret';
+  const course = await import('../netlify/functions/course-reminder.mjs');
+  const unsubscribe = await import('../netlify/functions/unsubscribe.mjs');
+  const { socialFooterLine } = await import('../netlify/functions/_shared/socialLinks.mjs');
+  const { unsubscribeToken } = await import('../netlify/functions/_shared/unsubscribe.mjs');
+
+  const uid = '00000000-0000-4000-8000-000000000001';
+  const learner = { id: uid, email: 'learner@example.test' };
+  const html = [
+    ...[{ level: 'a1.1', nextNr: 4 }, { level: 'a1.2', nextNr: 1, vorname: 'Ana' }, { level: 'a1.1', checkpointNr: 2 }, { level: 'a1.2', finalTest: true }, { level: 'b1.1' }]
+      .map((shape) => course.reminderItem({ ...learner, ...shape }).html),
+    socialFooterLine('#000', 'de'),
+  ];
+  const client = { from: () => ({ update: () => ({ eq: async () => ({ error: null }) }) }) };
+  const qs = { uid, token: unsubscribeToken(uid), lang: 'de' };
+  for (const event of [
+    { httpMethod: 'GET', queryStringParameters: qs },
+    { httpMethod: 'POST', queryStringParameters: qs, body: 'action=unsubscribe' },
+    { httpMethod: 'POST', queryStringParameters: qs, body: 'action=resubscribe' },
+    { httpMethod: 'GET', queryStringParameters: { ...qs, token: 'bad' } },
+  ]) html.push((await unsubscribe.handleUnsubscribe(event, { client })).body);
+
+  const hits = html.flatMap(visibleStrings).filter(addressesWithDu);
+  assert.deepEqual(hits, [], `German function copy says du:\n  ${hits.join('\n  ')}`);
+  // And it is German that was checked, not an empty render.
+  assert.ok(html.join(' ').includes('Sie können jederzeit aufhören.'));
+  assert.ok(html.join(' ').includes('E-Mails von DeutschMeister abbestellen?'));
+});

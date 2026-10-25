@@ -41,6 +41,8 @@ const { fetchOptedOutIds, withoutOptedOut, OPT_OUT_PAGE_SIZE } = await import('.
 const { getRecipients, orderRecipients } = await import('../netlify/functions/daily-sentence.mjs');
 const { fetchAllUserEmails } = await import('../netlify/functions/send-campaign.mjs');
 const { selectCandidates, MIN_AGE_DAYS, MAX_AGE_DAYS, PER_RUN } = await import('../netlify/functions/confirmation-nudge.mjs');
+const { handleUnsubscribe, COPY } = await import('../netlify/functions/unsubscribe.mjs');
+const { unsubscribeToken } = await import('../netlify/functions/_shared/unsubscribe.mjs');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => readFileSync(path.join(ROOT, rel), 'utf8');
@@ -338,4 +340,120 @@ test('rule: every mailer that reads opt-outs itself imports the shared reader', 
     assert.ok(src.includes('fetchOptedOutIds('), `${f} does not call the shared opt-out reader`);
     assert.ok(!/may not exist yet/.test(src), `${f} still carries the "column may not exist yet" send-to-everyone fallback`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// 6. the endpoint: only a POST writes, the page says what stops, Undo restores
+// ---------------------------------------------------------------------------
+//
+// Review 2026-10-25 (C-200, C-201): any fetch of the signed link wrote the
+// global flag, a GET or HEAD included, so a mail gateway that opens links at
+// delivery, a prefetch or a forwarded copy stopped every mailer without a click;
+// the page said only "daily German sentences" stop; and nothing could set the
+// flag back. These run the real handler against a recording client.
+
+const UID = uuid(7);
+const signed = (extra = {}) => ({ uid: UID, token: unsubscribeToken(UID), ...extra });
+
+/** A client that records each profiles update instead of writing it. */
+function recorder({ error = null } = {}) {
+  const writes = [];
+  return {
+    writes,
+    from: (table) => ({
+      update: (patch) => ({ eq: async (col, value) => { writes.push({ table, patch, col, value }); return { error }; } }),
+    }),
+  };
+}
+
+const formTarget = (html) => {
+  const m = /<form method="post" action="([^"]+)">\s*<input type="hidden" name="action" value="([a-z]+)">/.exec(html);
+  return m ? { action: m[1].replace(/&amp;/g, '&'), value: m[2] } : null;
+};
+
+test('unsubscribe: a GET or HEAD only asks — one POST button, nothing written', async () => {
+  for (const httpMethod of ['GET', 'HEAD']) {
+    const db = recorder();
+    const res = await handleUnsubscribe({ httpMethod, queryStringParameters: signed() }, { client: db });
+    assert.equal(res.statusCode, 200, httpMethod);
+    assert.deepEqual(db.writes, [], `${httpMethod} must never write the opt-out flag (a link scanner opens it)`);
+    const form = formTarget(res.body);
+    assert.ok(form, 'the page asks with a form');
+    assert.equal(form.value, 'unsubscribe');
+    const target = new URL(form.action, 'https://deutsch-meister.de');
+    assert.equal(target.pathname, '/.netlify/functions/unsubscribe');
+    assert.equal(target.searchParams.get('uid'), UID);
+    assert.equal(target.searchParams.get('token'), unsubscribeToken(UID), 'the POST carries the same signed link');
+    assert.match(res.body, new RegExp(COPY.en.askTitle.replace(/[?]/g, '\\?')));
+    assert.equal(res.headers['Cache-Control'], 'no-store');
+  }
+});
+
+test('unsubscribe: a POST writes the flag — the button, and Gmail\'s RFC 8058 one-click body', async () => {
+  for (const [body, headers] of [
+    ['action=unsubscribe', { 'content-type': 'application/x-www-form-urlencoded' }],
+    ['List-Unsubscribe=One-Click', { 'content-type': 'application/x-www-form-urlencoded' }],
+    ['--b\r\nContent-Disposition: form-data; name="List-Unsubscribe"\r\n\r\nOne-Click\r\n--b--', { 'content-type': 'multipart/form-data; boundary=b' }],
+    // Netlify may hand the function a base64 body.
+    [Buffer.from('List-Unsubscribe=One-Click').toString('base64'), { 'content-type': 'application/x-www-form-urlencoded' }],
+  ]) {
+    const db = recorder();
+    const res = await handleUnsubscribe({ httpMethod: 'POST', queryStringParameters: signed(), headers, body, isBase64Encoded: body.startsWith('TGlzd') }, { client: db });
+    assert.equal(res.statusCode, 200, body);
+    assert.deepEqual(db.writes, [{ table: 'profiles', patch: { email_daily_sentence: false }, col: 'id', value: UID }], body);
+    // The result page says what actually stopped, and offers the way back.
+    assert.match(res.body, /No more daily sentences, learning reminders or offers; account and payment emails still arrive\./);
+    assert.doesNotMatch(res.body, /daily German sentences anymore/, 'the old copy promised less than the flag does');
+    assert.equal(formTarget(res.body)?.value, 'resubscribe', 'Undo is offered');
+  }
+});
+
+test('unsubscribe: Undo (POST action=resubscribe) sets the flag back to true', async () => {
+  const db = recorder();
+  const res = await handleUnsubscribe({ httpMethod: 'POST', queryStringParameters: signed(), headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: 'action=resubscribe' }, { client: db });
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(db.writes, [{ table: 'profiles', patch: { email_daily_sentence: true }, col: 'id', value: UID }]);
+  assert.match(res.body, new RegExp(COPY.en.resubscribedTitle.replace(/'/g, '.')));
+  assert.equal(formTarget(res.body)?.value, 'unsubscribe', 'and the page can stop them again');
+});
+
+test('unsubscribe: a bad token, an odd method, a missing client or a failed write never succeed', async () => {
+  for (const httpMethod of ['GET', 'HEAD', 'POST']) {
+    const db = recorder();
+    const res = await handleUnsubscribe({ httpMethod, queryStringParameters: { uid: UID, token: 'bad' }, body: 'action=resubscribe' }, { client: db });
+    assert.equal(res.statusCode, 400, httpMethod);
+    assert.deepEqual(db.writes, []);
+  }
+  const forged = await handleUnsubscribe({ httpMethod: 'POST', queryStringParameters: { uid: uuid(8), token: unsubscribeToken(UID) } }, { client: recorder() });
+  assert.equal(forged.statusCode, 400, 'a token signs one account only');
+  for (const httpMethod of ['PUT', 'DELETE', 'PATCH']) {
+    const db = recorder();
+    assert.equal((await handleUnsubscribe({ httpMethod, queryStringParameters: signed() }, { client: db })).statusCode, 405);
+    assert.deepEqual(db.writes, []);
+  }
+  assert.equal((await handleUnsubscribe({ httpMethod: 'POST', queryStringParameters: signed() }, { client: null })).statusCode, 500);
+  const failing = recorder({ error: { message: 'boom' } });
+  const res = await handleUnsubscribe({ httpMethod: 'POST', queryStringParameters: signed() }, { client: failing });
+  assert.equal(res.statusCode, 500, 'a failed write never reports success');
+});
+
+test('unsubscribe: &lang=de answers in German, in Sie, and keeps the language through the form', async () => {
+  const ask = await handleUnsubscribe({ httpMethod: 'GET', queryStringParameters: signed({ lang: 'de' }) }, { client: recorder() });
+  assert.match(ask.body, /<html lang="de">/);
+  assert.match(ask.body, /E-Mails von DeutschMeister abbestellen\?/);
+  assert.match(ask.body, /keinen Satz des Tages, keine Lern-Erinnerungen und keine Angebote mehr/);
+  assert.equal(new URL(formTarget(ask.body).action, 'https://deutsch-meister.de').searchParams.get('lang'), 'de');
+  const done = await handleUnsubscribe({ httpMethod: 'POST', queryStringParameters: signed({ lang: 'de' }), body: '' }, { client: recorder() });
+  assert.match(done.body, /E-Mails zu Ihrem Konto und zu Zahlungen bekommen Sie weiter\./);
+  assert.match(done.body, />Rückgängig machen</);
+  const english = await handleUnsubscribe({ httpMethod: 'GET', queryStringParameters: signed({ lang: 'fr' }) }, { client: recorder() });
+  assert.match(english.body, /<html lang="en">/, 'any other value is English');
+});
+
+test('rule: the endpoint writes only inside the POST branch', () => {
+  const src = read('netlify/functions/unsubscribe.mjs');
+  const askReturn = src.indexOf("if (method !== 'POST')");
+  const write = src.indexOf('.update({ email_daily_sentence');
+  assert.ok(askReturn > 0 && write > askReturn, 'GET and HEAD must return before the only write');
+  assert.equal((src.match(/\.update\(/g) || []).length, 1, 'one write path');
 });

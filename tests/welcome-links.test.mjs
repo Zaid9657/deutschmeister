@@ -8,8 +8,10 @@
 // trial and activation mails. These tests pin:
 //   1. every site link carries utm_source=email, utm_medium=lifecycle, the
 //      mail's campaign and its own utm_content;
-//   2. the CTA still opens /analyze/ (trailing slash, CLAUDE.md case 2) and the
-//      footer opens the homepage;
+//   2. the welcome button opens Lektion 1 of the free course (since 2026-10-25,
+//      an SPA route without a trailing slash, pinned to the SPA's own
+//      FIRST_LESSON_HREF), Sentence X-Ray stays a text link to /analyze/
+//      (trailing slash, CLAUDE.md case 2), and the footer opens the homepage;
 //   3. the nudge's button, a function URL with a signed token, is passed
 //      through byte for byte and never tagged;
 //   4. the labels are fixed strings (no id, address or date), so the recipient
@@ -31,6 +33,7 @@ const welcome = await import('../netlify/functions/send-welcome-email.mjs');
 const nudge = await import('../netlify/functions/confirmation-nudge.mjs');
 const { EMAIL_LABEL } = await import('../netlify/functions/_shared/emailLinks.mjs');
 const { isSocialHref } = await import('../netlify/functions/_shared/socialLinks.mjs');
+const { FIRST_LESSON_HREF } = await import('../src/lib/firstRun.js');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -47,9 +50,19 @@ const isFunction = (href) => new URL(href).pathname.startsWith('/.netlify/functi
 // The expected links per mail, written out rather than derived, so a renamed
 // campaign or a moved CTA fails here instead of passing silently.
 const MAILS = {
-  welcome: { html: () => welcome.welcomeHtml(ADDRESS), campaign: 'welcome', links: { cta: '/analyze/', footer: '/' } },
+  welcome: { html: () => welcome.welcomeHtml(ADDRESS), campaign: 'welcome', links: { cta: '/course/a1.1/l/1', xray: '/analyze/', footer: '/' } },
   'confirm-nudge': { html: () => nudge.bodyHtml(CONTINUE), campaign: 'confirm-nudge', links: { footer: '/' } },
 };
+
+test('the welcome button opens Lektion 1 where the SPA first run does, and asks for the confirmation (review 2026-10-25)', () => {
+  assert.equal(MAILS.welcome.links.cta, FIRST_LESSON_HREF);
+  assert.equal(new URL(welcome.WELCOME_CTA_HREF).pathname, FIRST_LESSON_HREF);
+  const html = welcome.welcomeHtml(ADDRESS);
+  assert.match(html, /Start Lektion 1 →/);
+  assert.doesNotMatch(html, /Try Sentence X-Ray/, 'X-Ray is a text link now, not the button');
+  // The mail arrives with the confirmation mail; progress is saved to a confirmed account.
+  assert.match(html, /Confirm your address with the other email to save progress\./);
+});
 
 function attribution() {
   const window = { localStorage: { getItem: () => null, setItem() {}, removeItem() {} }, location: { search: '', pathname: '/' } };
