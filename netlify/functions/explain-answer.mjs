@@ -99,6 +99,29 @@ async function storeExplanation(key, text) {
   }
 }
 
+// A daily slot is spent only on an explanation that reaches the learner
+// (cross-check review 2026-10-25). Every failure after the reservation — an
+// upstream error, an empty answer, a dropped connection, any throw — releases
+// exactly the ledger row it reserved (the RPC's id or the legacy insert's id),
+// as X-Ray refunds in analyze-sentence.mjs, so the retry is not refused as
+// "limit". The service role is not bound by the restrictive "Keep metered
+// lesson attempts" policy, which only stops learners deleting these rows.
+// supabase-js resolves rather than throws, so check `error` — and a release
+// that itself throws must not replace the answer the learner gets.
+async function releaseReservation({ id, userId }) {
+  try {
+    const { error } = await supabase
+      .from('lesson_attempts')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId)
+      .eq('stage', 'explain');
+    if (error) console.error('[explain-answer] reservation release failed:', error.message);
+  } catch (error) {
+    console.error('[explain-answer] reservation release threw:', error.message);
+  }
+}
+
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -133,6 +156,16 @@ export const handler = async (event) => {
       body: JSON.stringify({ error: 'Die Erklärung ist gerade nicht verfügbar.', stage: 'config' }),
     };
   }
+
+  // The slot this request reserved, until its explanation is handed over:
+  // every exit in between releases it, once.
+  let slot = null;
+  let delivered = false;
+  const releaseSlot = async () => {
+    const held = slot;
+    slot = null;
+    if (held && !delivered) await releaseReservation(held);
+  };
 
   try {
     const user_id = await getAuthenticatedUserId(event);
@@ -225,6 +258,7 @@ export const handler = async (event) => {
       if (!reservation.allowed) {
         return { statusCode: 429, headers, body: JSON.stringify({ error: 'limit', limit: EXPLAIN_DAILY_LIMIT, used }) };
       }
+      slot = { id: reservation.id, userId: user_id };
     } catch (error) {
       console.error('[explain-answer] reservation failed:', error.message);
       return { statusCode: 503, headers, body: JSON.stringify({ error: 'Nutzung konnte nicht reserviert werden', stage: 'usage' }) };
@@ -248,6 +282,7 @@ export const handler = async (event) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('[explain-answer] Claude API error:', response.status, CLAUDE_MODEL, errorText);
+      await releaseSlot();
       return {
         statusCode: 502,
         headers,
@@ -264,18 +299,18 @@ export const handler = async (event) => {
 
     if (!explanation) {
       console.error('[explain-answer] empty explanation from', CLAUDE_MODEL);
+      await releaseSlot();
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Die Erklärung war leer.', stage: 'upstream' }) };
     }
 
     if (cacheKey) await storeExplanation(cacheKey, explanation);
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ explanation, lang, used: used + 1, limit: EXPLAIN_DAILY_LIMIT, topic: ruleCard(topic) ? topic : null }),
-    };
+    const answer = JSON.stringify({ explanation, lang, used: used + 1, limit: EXPLAIN_DAILY_LIMIT, topic: ruleCard(topic) ? topic : null });
+    delivered = true;
+    return { statusCode: 200, headers, body: answer };
   } catch (error) {
     console.error('explain-answer error:', error.message, error.stack);
+    await releaseSlot();
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Unerwarteter Serverfehler', stage: 'server' }) };
   }
 };

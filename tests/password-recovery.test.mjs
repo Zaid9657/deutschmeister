@@ -13,6 +13,9 @@
 //     to request a new link.
 //   * Neither the reset nor the update page tied its labels to its inputs, set
 //     autocomplete, or named the show-password toggle.
+//   * The recovery signal was a bare flag: A's link followed by B's SIGNED_IN
+//     (another tab) left the form enabled, and updateUser() changes the
+//     password of whoever is signed in — B (review of 2026-10-25).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -74,8 +77,11 @@ test('the form opens only after the recovery signal, never for a session alone',
 test('AuthContext captures PASSWORD_RECOVERY even before the provider subscribes', () => {
   const recovery = session('learner-a');
   // supabase-js reads the URL at import; the event can beat the first render.
+  // The provider then learns who is signed in from its own INITIAL_SESSION.
   const early = authHarness({ hash: '#access_token=a&type=recovery' });
   early.emit('PASSWORD_RECOVERY', recovery);
+  early.render();
+  early.emit('INITIAL_SESSION', recovery);
   assert.equal(early.render().passwordRecovery, true);
 
   // Between the first render and the provider's effect.
@@ -83,6 +89,7 @@ test('AuthContext captures PASSWORD_RECOVERY even before the provider subscribes
   assert.equal(between.render({ runEffects: false }).passwordRecovery, false);
   between.emit('PASSWORD_RECOVERY', recovery);
   between.flushEffects();
+  between.emit('INITIAL_SESSION', recovery);
   assert.equal(between.render().passwordRecovery, true);
 
   // After it.
@@ -105,6 +112,34 @@ test('a session that merely exists is not a recovery, and a sign-out ends one', 
   assert.equal(h.render().passwordRecovery, true);
   h.emit('SIGNED_OUT', null);
   assert.equal(h.render().passwordRecovery, false);
+});
+
+test('a recovery belongs to the account its link signed in; another account ends it', () => {
+  const h = authHarness();
+  h.render();
+  h.emit('PASSWORD_RECOVERY', session('learner-a'));
+  h.emit('TOKEN_REFRESHED', session('learner-a'));
+  h.emit('SIGNED_IN', session('learner-a')); // tab focus re-reads the same session
+  assert.equal(h.render().passwordRecovery, true, 'the same account keeps its recovery');
+
+  h.emit('SIGNED_IN', session('learner-b')); // another tab signs B in
+  const value = h.render();
+  assert.equal(value.user.id, 'learner-b');
+  assert.equal(value.passwordRecovery, false, 'B is not offered A\'s password change');
+
+  h.emit('SIGNED_IN', session('learner-a'));
+  assert.equal(h.render().passwordRecovery, false, 'A signing back in is no recovery either');
+});
+
+test('an account change before the provider subscribes ends the recovery as well', () => {
+  const h = authHarness({ hash: '#access_token=a&type=recovery' });
+  h.emit('PASSWORD_RECOVERY', session('learner-a'));
+  h.emit('SIGNED_IN', session('learner-b')); // before the first render
+  h.render();
+  h.emit('INITIAL_SESSION', session('learner-b'));
+  const value = h.render();
+  assert.equal(value.user.id, 'learner-b');
+  assert.equal(value.passwordRecovery, false);
 });
 
 test('both password pages name their fields, set autocomplete and label the toggle', () => {

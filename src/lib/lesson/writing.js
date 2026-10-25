@@ -678,10 +678,18 @@ const NAME_VALUE_SHAPE = nameValueShape();
  * a name), the lower-case function words of that clause left out („ich heiße nicht“ names nobody).
  * A CAPITALISED word there is a name even where it is also a function word — „Ich heiße Nur.“,
  * „Will“, „An“ (batch B4 review) — except the polite pronoun, which German capitalises anyway
- * („Ich heiße Sie willkommen.“). „ich bin <Name>“ stays as it was.
+ * („Ich heiße Sie willkommen.“). And the slot takes ANY name-shaped word: what follows „ich heiße“
+ * is the name by construction, and a person may be called India, Jordan or Deutsch — the country
+ * and language exclusions belong to a form FIELD („Familienname: Marokko“, „Vorname: Arabisch“
+ * fill it with another field's kind of value) and stay there. „ich bin <Name>“ stays as it was.
  */
 const NAME_VERB_RE = /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b/g;
-const NAME_AFTER_VERB = nameValueShape({ foldCase: true });
+const NAME_AFTER_VERB = {
+  test: (value) => words(value).map(stripPunct).some((raw) => {
+    const t = capitalise(raw);
+    return NAME_TOKEN_RE.test(t) && t.length >= 2;
+  }),
+};
 const POLITE_PRONOUN_RE = /^(?:Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
 /** May this word of the name slot be the name? Lower case: not a function word. Capitalised: not `Sie`. */
 const nameSlotWord = (w) => {

@@ -16,7 +16,7 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 |---|---|---|---|
 | [optimize-images.cjs](optimize-images.cjs) | local generator | PNG/JPG images in `public/` except social assets | WebP siblings; also invoked by `npm run build`. |
 | [merge-site-builds.mjs](merge-site-builds.mjs) | local generator | Fresh `dist/` and `astro-site/dist/` | Carves `app.html` if needed; copies every Astro directory/file into `dist/`. |
-| [prerender-spa-routes.mjs](prerender-spa-routes.mjs) | local generator | Fresh `dist/app.html`, route metadata/data registries | Static public SPA route HTML and shell edits in `dist/`; not idempotent. |
+| [prerender-spa-routes.mjs](prerender-spa-routes.mjs) | local generator | Fresh `dist/app.html`, the Vite build manifest `dist/.vite/manifest.json` (required for a built shell), route metadata/data registries | Static public SPA route HTML (each with its page chunk's `modulepreload`) and shell edits in `dist/`; then deletes `dist/.vite/`, so a second run fails: not idempotent, rebuild first. |
 | [build-llms.mjs](build-llms.mjs) `[--check]` | local generator; check with `--check` | Pricing/marketing, guides/exams, grammar cache | `public/llms.txt`, `public/llms-full.txt`; check mode fails on drift without writing. |
 | [generate-og-image.mjs](generate-og-image.mjs) `[out.png]` | local generator | Tokens, marketing counts, system Fraunces/Nunito Sans fonts | Default `public/og-image.png` (PNG social card). |
 

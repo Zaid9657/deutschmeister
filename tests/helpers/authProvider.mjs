@@ -4,6 +4,10 @@
 // supabase client records every call and lets a test emit auth events; the
 // import-time listener and the provider's own subscription both receive them,
 // in registration order, as supabase-js delivers them.
+//
+// With `client`, the provider runs against that client instead — a real
+// supabase-js client over a fake fetch (tests/auth-session-events.test.mjs) —
+// and src/lib/auditLogger.js runs for real alongside it.
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
@@ -11,14 +15,20 @@ const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), '
 
 const sameDeps = (a, b) => a && b && a.length === b.length && a.every((value, i) => Object.is(value, b[i]));
 
+/** Module source as a script: imports dropped, exports made plain declarations. */
+const script = (path) => read(path)
+  .replace(/^import[\s\S]*?;\n/gm, '')
+  .replace(/^export (const|async function|function) /gm, '$1 ');
+
 /**
  * @param {object} [options]
  * @param {string} [options.hash]            window.location.hash when the module is imported
  * @param {Array<{error: unknown}>} [options.signOutResults]  what successive supabase.auth.signOut calls resolve to
  * @param {Map<string,string>} [options.storage]  window.localStorage contents
- * @param {boolean} [options.auditHangs]     logAuditEvent never settles (a dead network)
+ * @param {boolean} [options.auditHangs]     the fake logAuditEvent never settles (a dead network)
+ * @param {object} [options.client]          a supabase-js client to run against instead of the fake
  */
-export function authHarness({ hash = '', signOutResults = [], storage = new Map(), auditHangs = false } = {}) {
+export function authHarness({ hash = '', signOutResults = [], storage = new Map(), auditHangs = false, client = null } = {}) {
   const calls = [];
   const listeners = [];
   const slots = [];
@@ -26,7 +36,7 @@ export function authHarness({ hash = '', signOutResults = [], storage = new Map(
   let pendingEffects = [];
   const signOutQueue = [...signOutResults];
 
-  const supabase = {
+  const fake = {
     auth: {
       onAuthStateChange(callback) {
         const entry = { callback, active: true };
@@ -53,12 +63,18 @@ export function authHarness({ hash = '', signOutResults = [], storage = new Map(
     removeItem: (key) => { storage.delete(key); },
   };
 
-  const source = read('src/contexts/AuthContext.jsx')
-    .replace(/^import[\s\S]*?;\n/gm, '')
-    .replace(/^export const /gm, 'const ')
+  const authContext = script('src/contexts/AuthContext.jsx')
     .replace(/return \(\s*<AuthContext\.Provider[\s\S]*?<\/AuthContext\.Provider>\s*\);/, 'return value;');
+  const auditLogger = client ? script('src/lib/auditLogger.js') : '';
+  const fakeAudit = client ? {} : {
+    logAuditEvent: (type, detail, options) => {
+      calls.push(['audit', type, options?.userId ?? null]);
+      return auditHangs ? new Promise(() => {}) : Promise.resolve();
+    },
+    AUDIT_EVENTS: { LOGIN: 'auth.login', LOGOUT: 'auth.logout', SIGNUP: 'auth.signup', PASSWORD_CHANGED: 'auth.password_changed' },
+  };
 
-  const provider = vm.runInNewContext(`${source}\nAuthProvider;`, {
+  const provider = vm.runInNewContext(`${auditLogger}\n${authContext}\nAuthProvider;`, {
     createContext: () => ({}),
     useContext: () => ({}),
     useState(initial) {
@@ -74,18 +90,15 @@ export function authHarness({ hash = '', signOutResults = [], storage = new Map(
         pendingEffects.push(() => { slot.cleanup?.(); slot.cleanup = callback(); });
       }
     },
-    supabase,
+    supabase: client ?? fake,
     window: { location: { hash, origin: 'https://deutsch-meister.de' }, localStorage },
+    navigator: { userAgent: 'node-test' },
     signupAttributionMetadata: () => ({}),
     identify: (...args) => calls.push(['identify', ...args]),
     resetAnalytics: () => calls.push(['resetAnalytics']),
     trackSignupCompleted: () => calls.push(['trackSignupCompleted']),
     claimSignupCompletion: () => false,
-    logAuditEvent: (type) => {
-      calls.push(['audit', type]);
-      return auditHangs ? new Promise(() => {}) : Promise.resolve();
-    },
-    AUDIT_EVENTS: { LOGIN: 'auth.login', LOGOUT: 'auth.logout', SIGNUP: 'auth.signup', PASSWORD_CHANGED: 'auth.password_changed' },
+    ...fakeAudit,
     withTimeout: (promise) => promise,
     console: { error() {}, warn() {}, log() {} },
     Date,
@@ -94,7 +107,7 @@ export function authHarness({ hash = '', signOutResults = [], storage = new Map(
   return {
     calls,
     storage,
-    /** Deliver an auth event to every live subscriber, the import-time one first. */
+    /** Deliver an auth event to every live subscriber, the import-time one first (fake client only). */
     emit(event, session = null) {
       for (const entry of listeners.filter((l) => l.active)) entry.callback(event, session);
     },

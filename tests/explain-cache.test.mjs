@@ -192,6 +192,9 @@ test('the migration: service-role table, insert-only validated store, ledger row
   const fn = read('netlify/functions/explain-answer.mjs');
   assert.match(fn, /const cacheKey = card \? explainCacheKey\(\[itemId, CLAUDE_MODEL, system, userText\]\) : null;/);
   // The lookup comes before the daily-cap count and the reservation.
-  assert.ok(fn.indexOf('await cachedExplanation(cacheKey)') < fn.indexOf(".from('lesson_attempts')"));
-  assert.ok(fn.indexOf('await cachedExplanation(cacheKey)') < fn.indexOf("reserveUsage(supabase, 'reserve_lesson_ai_usage'"));
+  const lookupAt = fn.indexOf('await cachedExplanation(cacheKey)');
+  const countAt = fn.indexOf('const { count, error: countError } = await supabase');
+  assert.ok(lookupAt > 0 && countAt > 0);
+  assert.ok(lookupAt < countAt);
+  assert.ok(lookupAt < fn.indexOf("reserveUsage(supabase, 'reserve_lesson_ai_usage'"));
 });
