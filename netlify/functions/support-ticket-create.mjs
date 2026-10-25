@@ -65,6 +65,14 @@ export const handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Die Anfrage konnte nicht gespeichert werden.' }) };
   }
   const { error: mErr } = await supabase.from('support_ticket_messages').insert({ ticket_id: id, author_type: 'user', author_id: userId, visibility: 'public', body: text });
-  if (mErr) console.error('[support-ticket-create] message insert failed:', mErr.message);
+  if (mErr) {
+    // A ticket without the learner's words is worse than none: support sees a
+    // bare subject and the agent skips it. Remove it and fail, so the form keeps
+    // the text for another try instead of confirming receipt.
+    console.error('[support-ticket-create] message insert failed:', mErr.message);
+    const { error: dErr } = await supabase.from('support_tickets').delete().eq('id', id);
+    if (dErr) console.error('[support-ticket-create] orphan ticket not removed:', id, dErr.message);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Die Anfrage konnte nicht gespeichert werden.' }) };
+  }
   return { statusCode: 200, headers, body: JSON.stringify({ ok: true, reference: ticketReference(id), ticketId: id }) };
 };

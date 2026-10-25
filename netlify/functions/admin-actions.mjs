@@ -13,6 +13,7 @@ import { writeAudit } from './_shared/adminRbac.mjs';
 import { ROLES } from './_shared/adminRbacLib.mjs';
 import { PRODUCT_KEYS } from './_shared/adminOpsLib.mjs';
 import { flagsFromRows } from './_shared/adminEntitlement.mjs';
+import { subscriptionHasPaidAccess, latestCourseWindow } from './_shared/subscriptionEntitlement.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const MAX_PRO_DAYS = 365;
@@ -20,7 +21,7 @@ export const MAX_TRIAL_DAYS = 60;
 const TIERS = ['free', 'trial', 'pro', 'premium'];
 
 export const ACTIONS = Object.freeze({
-  grant_pro_days: { label: 'Pro-Tage gutschreiben', sensitive: true, params: ['days'], writes: 'subscriptions (manuelle Zeile, price_paid 0) + profiles.is_subscribed/subscription_tier' },
+  grant_pro_days: { label: 'Pro-Tage gutschreiben', sensitive: true, params: ['days'], writes: 'subscriptions (manuelle Zeile, price_paid 0 — eine abgelaufene Abo-/Kurszeile wird übernommen, laufende Abrechnung abgelehnt) + profiles.is_subscribed/subscription_tier' },
   revoke_manual_access: { label: 'Manuellen Zugang beenden', sensitive: true, params: [], writes: 'subscriptions (manuelle Zeilen → expired) + profiles-Flags neu berechnet' },
   grant_course: { label: 'Kurs freischalten', sensitive: true, params: ['productKey'], writes: 'purchases (manual-…, price_paid 0)' },
   revoke_course: { label: 'Kursfreischaltung zurücknehmen', sensitive: true, params: ['productKey'], writes: 'purchases.status → refunded' },
@@ -46,22 +47,71 @@ async function updateProfile(supabase, userId, patch) {
   if (!data || data.length === 0) throw conflict('Profil-Update hat keine Zeile getroffen.');
 }
 
+// Statuses whose Lemon Squeezy subscription can still bill or recover.
+const RECOVERABLE_BILLING = ['active', 'on_trial', 'past_due', 'paused', 'unpaid'];
+
+/** Why a non-manual row must not become a manual grant, or null when it grants and keeps nothing. */
+function grantBlocker(row, purchases, now) {
+  if (row.lemonsqueezy_subscription_id && (row.plan_type === 'course' || subscriptionHasPaidAccess(row, now) || RECOVERABLE_BILLING.includes(row.status))) {
+    return 'Laufendes oder noch wiederherstellbares Lemon-Squeezy-Abo — Pro-Zeit dort verlängern, nicht hier (es gibt nur eine Abo-Zeile pro Person).';
+  }
+  if (subscriptionHasPaidAccess(row, now) || latestCourseWindow(purchases, now)) {
+    return 'Laufender bezahlter Zugang (Kurs-Pro-Fenster) — die einzige Abo-Zeile ist belegt; Pro-Tage erst nach dessen Ende gutschreiben.';
+  }
+  return null;
+}
+
 const HANDLERS = {
   async grant_pro_days({ supabase, userId, params, now }) {
     const days = Number(params.days);
     if (!Number.isInteger(days) || days < 1 || days > MAX_PRO_DAYS) throw badRequest(`days muss eine ganze Zahl zwischen 1 und ${MAX_PRO_DAYS} sein.`);
     const { profile, subs, purchases } = await loadUser(supabase, userId);
     const manual = subs.find((s) => !s.lemonsqueezy_subscription_id && Number(s.price_paid || 0) === 0 && s.plan_type !== 'course');
-    const latestEnd = subs.map((s) => s.subscription_end).filter(Boolean).map((d) => new Date(d)).sort((a, b) => b - a)[0];
+    // subscriptions holds ONE row per user (UNIQUE(user_id), which every
+    // webhook upsert relies on): without a manual row, the grant takes over the
+    // existing row or is refused — inserting a second row always fails.
+    const occupied = manual ? null : subs[0] || null;
+    if (occupied) {
+      const blocker = grantBlocker(occupied, purchases, now);
+      if (blocker) throw conflict(blocker, { row: { id: occupied.id, plan_type: occupied.plan_type, status: occupied.status, subscription_end: occupied.subscription_end } });
+    }
+    // A taken-over row grants nothing, so its end never extends the grant.
+    const latestEnd = (occupied ? [] : subs).map((s) => s.subscription_end).filter(Boolean).map((d) => new Date(d)).sort((a, b) => b - a)[0];
     const base = latestEnd && latestEnd > now ? latestEnd : now;
     const newEnd = new Date(base.getTime() + days * 86400000).toISOString();
-    const before = { manualRow: manual ? { id: manual.id, subscription_end: manual.subscription_end, status: manual.status } : null, profile: { is_subscribed: profile.is_subscribed, subscription_tier: profile.subscription_tier } };
+    const before = {
+      manualRow: manual ? { id: manual.id, subscription_end: manual.subscription_end, status: manual.status } : null,
+      supersededRow: occupied ? {
+        id: occupied.id, plan_type: occupied.plan_type, status: occupied.status, subscription_end: occupied.subscription_end, price_paid: occupied.price_paid ?? null,
+        lemonsqueezy_subscription_id: occupied.lemonsqueezy_subscription_id ?? null, lemonsqueezy_customer_id: occupied.lemonsqueezy_customer_id ?? null,
+        lemonsqueezy_order_id: occupied.lemonsqueezy_order_id ?? null, lemonsqueezy_product_id: occupied.lemonsqueezy_product_id ?? null,
+        lemonsqueezy_variant_id: occupied.lemonsqueezy_variant_id ?? null,
+      } : null,
+      profile: { is_subscribed: profile.is_subscribed, subscription_tier: profile.subscription_tier },
+    };
     let rowId;
     if (manual) {
       const { data, error } = await supabase.from('subscriptions').update({ subscription_end: newEnd, status: 'active', updated_at: now.toISOString() }).eq('id', manual.id).select('id');
       if (error) throw new Error(error.message);
       if (!data?.length) throw conflict('Abo-Zeile nicht getroffen.');
       rowId = manual.id;
+    } else if (occupied) {
+      // The row grants and keeps nothing (an expired Lemon Squeezy row, one
+      // cancelled past its end, an ended course row): it becomes the manual
+      // grant. Its provider ids are cleared — a manual row has none — and kept
+      // in the audit entry (before.supersededRow). Conditional on the state
+      // just checked, so a webhook that changed the row meanwhile wins.
+      let take = supabase.from('subscriptions').update({
+        plan_type: 'monthly', status: 'active', subscription_start: now.toISOString(), subscription_end: newEnd, price_paid: 0,
+        lemonsqueezy_subscription_id: null, lemonsqueezy_customer_id: null, lemonsqueezy_order_id: null,
+        lemonsqueezy_product_id: null, lemonsqueezy_variant_id: null, cancel_at_period_end: false, cancelled_at: null,
+        updated_at: now.toISOString(),
+      }).eq('id', occupied.id).eq('status', occupied.status);
+      take = occupied.lemonsqueezy_subscription_id ? take.eq('lemonsqueezy_subscription_id', occupied.lemonsqueezy_subscription_id) : take.is('lemonsqueezy_subscription_id', null);
+      const { data, error } = await take.select('id');
+      if (error) throw new Error(error.message);
+      if (!data?.length) throw conflict('Die Abo-Zeile hat sich gerade geändert — bitte neu laden und erneut prüfen.');
+      rowId = occupied.id;
     } else {
       const { data, error } = await supabase.from('subscriptions').insert({ user_id: userId, plan_type: 'monthly', status: 'active', subscription_start: now.toISOString(), subscription_end: newEnd, price_paid: 0 }).select('id').maybeSingle();
       if (error) throw new Error(error.message);

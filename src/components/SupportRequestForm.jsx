@@ -1,8 +1,9 @@
 // Learner-facing support form (/support and Profil). Opens a ticket through
 // support-ticket-create (identity from the JWT); the thread the learner sees
-// back is public messages only. The request shape lives in
-// src/lib/supportTicket.js, which tests/support.test.mjs drives through the
-// real handler.
+// back is public messages only — each ticket row opens it on demand, so a
+// reply whose e-mail bounced or landed in spam can still be read here. The
+// request shape lives in src/lib/supportTicket.js, which tests/support.test.mjs
+// drives through the real handler.
 import { useEffect, useState } from 'react';
 import { supabase, getAuthHeaders } from '../utils/supabase';
 import { SUPPORT_ENDPOINT, SUPPORT_CATEGORIES, SUBJECT_MIN, SUBJECT_MAX, BODY_MIN, BODY_MAX, ticketPayload } from '../lib/supportTicket.js';
@@ -14,6 +15,41 @@ async function call(body) {
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json.error || `Fehler ${res.status}`);
   return json;
+}
+
+const statusLabel = (status) => (status === 'closed' || status === 'resolved' ? 'erledigt' : status === 'waiting_user' ? 'Antwort erhalten' : 'in Bearbeitung');
+
+// One ticket: a disclosure that loads its public thread the first time it opens.
+// Bodies are rendered as text, never as HTML.
+function TicketRow({ ticket }) {
+  const [state, setState] = useState('idle'); // idle | loading | error | done
+  const [messages, setMessages] = useState([]);
+  const fetchThread = () => {
+    setState('loading');
+    call({ action: 'thread', ticketId: ticket.id })
+      .then((r) => { setMessages(r.messages || []); setState('done'); })
+      .catch(() => setState('error'));
+  };
+  return (
+    <li className="border-t border-rule py-1.5">
+      <details onToggle={(e) => { if (e.currentTarget.open && state === 'idle') fetchThread(); }}>
+        <summary className="flex cursor-pointer justify-between gap-2"><span className="truncate">{ticket.reference} · {ticket.subject}</span><span className="text-graphite">{statusLabel(ticket.status)}</span></summary>
+        <div className="mt-2 space-y-2">
+          {state === 'loading' ? <p className="text-graphite">Verlauf wird geladen…</p> : null}
+          {state === 'error' ? (
+            <p className="flex flex-wrap items-center gap-2 text-viz-error">Der Verlauf konnte nicht geladen werden.<Button variant="ghost" size="sm" onClick={fetchThread}>Erneut versuchen</Button></p>
+          ) : null}
+          {state === 'done' && messages.length === 0 ? <p className="text-graphite">Noch keine Nachrichten.</p> : null}
+          {state === 'done' ? messages.map((m) => (
+            <div key={m.id} className="rounded-lg border border-rule px-3 py-2">
+              <p className="text-xs text-graphite">{m.author_type === 'user' ? 'Sie' : 'DeutschMeister'} · {new Date(m.created_at).toLocaleDateString('de-DE')}</p>
+              <p className="whitespace-pre-wrap text-ink">{m.body}</p>
+            </div>
+          )) : null}
+        </div>
+      </details>
+    </li>
+  );
 }
 
 export default function SupportRequestForm({ initialCategory = 'technical' }) {
@@ -65,7 +101,7 @@ export default function SupportRequestForm({ initialCategory = 'technical' }) {
       </form>
       {tickets.length > 0 ? (
         <ul className="mt-4 space-y-1 text-sm">
-          {tickets.map((t) => <li key={t.id} className="flex justify-between gap-2 border-t border-rule py-1.5"><span className="truncate">{t.reference} · {t.subject}</span><span className="text-graphite">{t.status === 'closed' || t.status === 'resolved' ? 'erledigt' : t.status === 'waiting_user' ? 'Antwort erhalten' : 'in Bearbeitung'}</span></li>)}
+          {tickets.map((t) => <TicketRow key={t.id} ticket={t} />)}
         </ul>
       ) : null}
     </div>
