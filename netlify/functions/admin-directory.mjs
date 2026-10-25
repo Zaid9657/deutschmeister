@@ -129,11 +129,19 @@ function postFilter(rows, f, now) {
   });
 }
 
-function toCsv(rows) {
+// full_name is learner-controlled: a text cell that starts like a spreadsheet
+// formula (= + - @, tab, CR) gets a leading apostrophe before it is quoted, so
+// opening the export never runs it. A real number is data and stays numeric.
+export function csvCell(v) {
+  let s = v === null || v === undefined ? '' : String(v);
+  if (typeof v !== 'number' && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return /[",\n\r;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+export function toCsv(rows) {
   const cols = ['id', 'email', 'fullName', 'createdAt', 'currentLevel', 'examTrack', 'tier', 'isSubscribed', 'trialEndsAt', 'role', 'accessKind', 'grammarTopics', 'speakingCompleted', 'lastActivityAt', 'lastLoginAt', 'openTickets', 'paymentFailed', 'discrepancies'];
-  const esc = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   const lines = [cols.join(';')];
-  for (const r of rows) lines.push(cols.map((c) => esc(c === 'accessKind' ? r.access?.kind : r[c])).join(';'));
+  for (const r of rows) lines.push(cols.map((c) => csvCell(c === 'accessKind' ? r.access?.kind : r[c])).join(';'));
   return lines.join('\n');
 }
 
