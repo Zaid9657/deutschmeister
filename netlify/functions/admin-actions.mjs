@@ -13,7 +13,7 @@ import { writeAudit } from './_shared/adminRbac.mjs';
 import { ROLES } from './_shared/adminRbacLib.mjs';
 import { PRODUCT_KEYS } from './_shared/adminOpsLib.mjs';
 import { flagsFromRows } from './_shared/adminEntitlement.mjs';
-import { subscriptionHasPaidAccess, latestCourseWindow } from './_shared/subscriptionEntitlement.mjs';
+import { subscriptionHasPaidAccess, latestCourseWindow, reconcileUserEntitlement, GRANT_WINDOW_PRODUCT } from './_shared/subscriptionEntitlement.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const MAX_PRO_DAYS = 365;
@@ -143,14 +143,46 @@ const HANDLERS = {
   async revoke_manual_access({ supabase, userId, now }) {
     const { profile, subs, purchases } = await loadUser(supabase, userId);
     const manualRows = subs.filter((s) => !s.lemonsqueezy_subscription_id && Number(s.price_paid || 0) === 0 && s.plan_type !== 'course' && s.subscription_end && new Date(s.subscription_end) > now);
-    if (manualRows.length === 0) throw conflict('Kein laufender manueller Zugang vorhanden.');
-    const before = { rows: manualRows.map((s) => ({ id: s.id, subscription_end: s.subscription_end, status: s.status })), profile: { is_subscribed: profile.is_subscribed, subscription_tier: profile.subscription_tier } };
-    const { data, error } = await supabase.from('subscriptions').update({ subscription_end: now.toISOString(), status: 'expired', updated_at: now.toISOString() }).in('id', manualRows.map((s) => s.id)).select('id');
-    if (error) throw new Error(error.message);
-    if (!data?.length) throw conflict('Keine Abo-Zeile getroffen.');
-    const remaining = subs.filter((s) => !manualRows.some((m) => m.id === s.id));
-    const flags = await applyFlags(supabase, userId, profile, remaining, purchases, now);
-    return { before, after: { rows: data.map((r) => ({ id: r.id, status: 'expired' })), profile: flags }, summary: `${data.length} manuelle Zeile(n) beendet` };
+    // A Pro-day grant a paid subscription took the row from lives on as a
+    // purchases window (subscriptionEntitlement keepGrantWindow). Only those
+    // manual windows are ended here — never a provider row or a bought course.
+    const grantWindows = purchases.filter((p) => p.product_key === GRANT_WINDOW_PRODUCT && p.status === 'active'
+      && String(p.lemonsqueezy_order_id || '').startsWith('manual-') && Date.parse(p.access_until) > now.getTime());
+    if (manualRows.length === 0 && grantWindows.length === 0) throw conflict('Kein laufender manueller Zugang vorhanden.');
+    const before = {
+      rows: manualRows.map((s) => ({ id: s.id, subscription_end: s.subscription_end, status: s.status })),
+      grantWindows: grantWindows.map((p) => ({ id: p.id, access_until: p.access_until })),
+      profile: { is_subscribed: profile.is_subscribed, subscription_tier: profile.subscription_tier },
+    };
+    let rows = [];
+    if (manualRows.length) {
+      const { data, error } = await supabase.from('subscriptions').update({ subscription_end: now.toISOString(), status: 'expired', updated_at: now.toISOString() }).in('id', manualRows.map((s) => s.id)).select('id');
+      if (error) throw new Error(error.message);
+      if (!data?.length) throw conflict('Keine Abo-Zeile getroffen.');
+      rows = data;
+    }
+    let windows = [];
+    if (grantWindows.length) {
+      const { data, error } = await supabase.from('purchases').update({ status: 'refunded', access_until: now.toISOString(), updated_at: now.toISOString() })
+        .in('id', grantWindows.map((p) => p.id)).eq('product_key', GRANT_WINDOW_PRODUCT).eq('status', 'active').select('id');
+      if (error) throw new Error(error.message);
+      if (!data?.length) throw conflict('Kein Pro-Tage-Fenster getroffen.');
+      windows = data;
+    }
+    let flags;
+    if (windows.length) {
+      // A kept window may stand behind a course row reconciliation derived from
+      // it; reconciling retires that row and recomputes the flags (premium kept).
+      const { isSubscribed } = await reconcileUserEntitlement(supabase, userId, now.getTime());
+      flags = profile.subscription_tier === 'premium' ? { is_subscribed: true, subscription_tier: 'premium' } : { is_subscribed: isSubscribed, subscription_tier: isSubscribed ? 'pro' : 'free' };
+    } else {
+      flags = await applyFlags(supabase, userId, profile, subs.filter((s) => !manualRows.some((m) => m.id === s.id)), purchases, now);
+    }
+    return {
+      before,
+      after: { rows: rows.map((r) => ({ id: r.id, status: 'expired' })), grantWindows: windows.map((p) => ({ id: p.id, status: 'refunded' })), profile: flags },
+      summary: `${rows.length} manuelle Zeile(n), ${windows.length} Pro-Tage-Fenster beendet`,
+    };
   },
 
   async grant_course({ supabase, userId, params, now }) {

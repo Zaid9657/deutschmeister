@@ -577,9 +577,13 @@ const authAttrs = (item) =>
       // subscriptionEntitlement.mjs); is_subscribed alone can be stale.
       function accountAccess({ profile, subscription, purchases = [] }, now = Date.now()) {
         const trialOpen = Boolean(profile?.trial_started_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > now);
-        const activePurchases = purchases.filter((purchase) => purchase.status === 'active');
+        // Owned products only: a kept Pro-day grant window ('pro_days', pricing.js
+        // GRANT_WINDOW_PRODUCT) opens Pro while its access_until is ahead and is
+        // never a bought course. Spelled out: these helpers also run in tests
+        // that inject only the imports above.
+        const activePurchases = purchases.filter((purchase) => purchase.status === 'active' && purchase.product_key !== 'pro_days');
         const premiumGrant = profile?.subscription_tier === 'premium';
-        const proOpen = premiumGrant || subscriptionStatus(subscription, now).isActive || activePurchases.some((purchase) => Date.parse(purchase.access_until) > now);
+        const proOpen = premiumGrant || subscriptionStatus(subscription, now).isActive || purchases.some((purchase) => purchase.status === 'active' && Date.parse(purchase.access_until) > now);
         return { trialOpen, proOpen, activePurchases };
       }
 

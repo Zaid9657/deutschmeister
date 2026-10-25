@@ -9,7 +9,7 @@ import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import confettiBurst from '../lib/confetti.js';
 import { consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { courseHomeFor } from '../lib/courseEntry.js';
-import { ALL_LEVELS, COURSE_PRO_MONTHS, courseForProduct } from '../data/pricing.js';
+import { ALL_LEVELS, COURSE_PRO_MONTHS, courseForProduct, ownedPurchases } from '../data/pricing.js';
 import { checkoutEntitlementConfirmed, checkoutProductKey, hasRecurringBilling, isRecurringProduct } from '../lib/checkoutAccess.js';
 import { safeGetJSON } from '../utils/safeStorage';
 
@@ -77,7 +77,7 @@ const SubscriptionSuccessPage = () => {
   // the account is not "just bought" and falls through to the Pro copy.
   const RECENT_MS = 30 * 60 * 1000;
   const expectedCourse = pendingProduct && !isRecurringProduct(pendingProduct);
-  const latestPurchase = purchases.filter((p) => !expectedCourse || p.product_key === pendingProduct).sort(
+  const latestPurchase = ownedPurchases(purchases).filter((p) => !expectedCourse || p.product_key === pendingProduct).sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at),
   )[0];
   const justBought =
