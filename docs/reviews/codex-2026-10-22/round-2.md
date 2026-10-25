@@ -11,11 +11,9 @@ other's findings before anything was changed.
 2. **Cross-verification.** Codex verified every Claude finding against the code and
    Claude verified every Codex finding (confirmed 195 of 223 and 92 of 108). Rejected
    findings (44) were dropped with the verifier's reason.
-3. **Clustering.** The 287 confirmed findings were merged into
-   186 clusters (6 HIGH,
-   75 MEDIUM, 105 LOW;
-   140 defects, 46 enhancements),
-   then split into 10 batches whose owned files never overlap.
+3. **Clustering.** The 287 confirmed findings became 186 clusters:
+   6 HIGH, 75 MEDIUM and 105 LOW; 140 defects and 46 enhancements.
+   They were split into 10 batches whose owned files never overlap.
 4. **Fix, review, re-fix.** A Claude agent implemented each batch in its own worktree:
    every defect class got a rule and a regression test that fails on the old code.
    Codex then reviewed each batch diff read-only. Its findings went back to the
@@ -27,16 +25,37 @@ other's findings before anything was changed.
 |---|---|---|---|
 | B1 | Access & checkout: SPA subscription context, guards, /subscription & success page, Astro buy doors | 18 | 18 |
 | B2 | Money backend (Lemon Squeezy webhook, entitlement reconciliation, verify, admin grants), admin metrics & support functions | 16 | 16 |
-| B3 | AI features & usage accounting (speaking, writing, X-Ray, explain — server and UI) + every new SQL migration of this round | 25 | 18 |
-| B4 | Answer checking & lesson-engine rules (typo checker, dictation matchers, pool quality rules, checkpoint scoring) | 12 | 11 |
+| B3 | AI features & usage accounting (speaking, writing, X-Ray, explain — server and UI) + every new SQL migration of this round | 25 | 24 |
+| B4 | Answer checking & lesson-engine rules (typo checker, dictation matchers, pool quality rules, checkpoint scoring) | 12 | 12 |
 | B5 | Lesson player, checkpoints, review & course pages | 17 | 17 |
 | B6 | Listening practice, mock-exam loading & vocabulary SRS trainer | 19 | 19 |
 | B7 | Growth funnel: placement test, onboarding & first run, signup tracking, dashboard grammar path | 20 | 20 |
 | B8 | Emails, lifecycle jobs, unsubscribe & ops reports | 12 | 12 |
-| B9 | SEO, Astro content & our own product claims (comparison pages, FAQ, pricing copy, llms, sitemap, guides, exam hubs) | 24 | 22 |
-| B10 | Auth, analytics, navigation & site shell (SPA auth/profile pages + Astro layout and grammar island) | 23 | 19 |
+| B9 | SEO, Astro content & our own product claims (comparison pages, FAQ, pricing copy, llms, sitemap, guides, exam hubs) | 24 | 24 |
+| B10 | Auth, analytics, navigation & site shell (SPA auth/profile pages + Astro layout and grammar island) | 23 | 23 |
 
-Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
+Final status across all clusters: 185 fixed, 1 skipped.
+
+## Whole-branch review
+
+After every batch was merged, Codex reviewed the combined branch for problems between
+batches. It found 10 (1 HIGH, 7 MEDIUM, 2 LOW). Nine were fixed and re-checked:
+
+- A manual Pro-day grant could hide a still-billing subscription after a failed webhook
+  (HIGH). Provider subscriptions now always record, and a grant's remainder is kept as a
+  time-limited, revocable `pro_days` window. A production check found no real customer
+  affected; the one match was a Lemon Squeezy test-mode subscription.
+- Explicit premium grants were ignored by the SPA and the Astro navigation, and revoked
+  by unrelated admin actions.
+- Account switches in another tab could carry the first account's state: the static Buy
+  door's ownership snapshot, the placement result, and a review deck's late response.
+- A checkpoint finished offline (or with storage full) was lost on reload; a guest
+  checkpoint claimed "saved" when the browser refused the write.
+- Astro grammar exercises rejected "Wieso" where the course accepts it (one shared
+  whole-answer rule now).
+- A failed explanation consumed the daily allowance.
+
+The tenth (stale Pro flags up to the daily sweep) is under Deliberately left open.
 
 ## Deliberately left open
 
@@ -52,6 +71,13 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
   or speaking session); paid podcast episodes stay in the public feed; the trial still
   starts at signup; no per-list email opt-outs; the podcast tile stays off the comparison
   pages until the 24-vs-14 episode count is settled.
+- **Stale Pro flags after a lapse** (whole-branch review #5, MEDIUM): when a manual grant
+  or an included course window ends after the daily 08:00 UTC sweep, the AI endpoints and
+  the Astro grammar locks keep trusting the profile's Pro flags until the next sweep (the
+  SPA locks at once). The window is at most 24 hours and in the customer's favour;
+  resolving entitlement at request time in every AI endpoint risks locking out paying
+  customers, and running the sweep hourly would move trial-mail timing (the sweep lives in
+  `trial-lifecycle`). A dedicated hourly entitlement sweep is the clean follow-up.
 
 ## Every cluster
 
@@ -91,7 +117,7 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
 | MNY-14 | LOW | defect | Support form confirms receipt and clears the fields although the ticket message failed to save | fixed |
 | MNY-15 | LOW | defect | A temporary failure during support-agent processing permanently prevents automated handling (seen tag claimed before work that can throw) | fixed |
 | MNY-16 | LOW | enhancement | Support replies cannot be read in the app although an owner-scoped, public-only thread endpoint exists | fixed |
-| AI-01 | HIGH | defect | Placement speaking sessions are free, unlimited, 15 minutes long and open to every tier (incl. free_expired/refunded): an unmetered AI speaking tutor for any account | partial |
+| AI-01 | HIGH | defect | Placement speaking sessions are free, unlimited, 15 minutes long and open to every tier (incl. free_expired/refunded): an unmetered AI speaking tutor for any account | fixed |
 | AI-02 | MEDIUM | defect | evaluate-speaking takes `level` and `mode` from the request body: unbounded client text goes into the Sonnet prompt twice (cost inflation, self-awarded mission passes/levels) and a mission can be graded as placement | fixed |
 | AI-03 | MEDIUM | defect | speaking-turn sends up to 20×5,000 characters of client-supplied history to the teacher model on every turn instead of the transcript the server already stores | fixed |
 | AI-04 | LOW | defect | A model reply that parses as JSON but lacks evaluation fields is stored as a completed zero-score speaking evaluation and returned on every retry | fixed |
@@ -103,7 +129,7 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
 | AI-10 | MEDIUM | defect | Speaking session auto-scroll (block 'start') pushes the latest teacher reply and the countdown above the fold on every message and record tap | fixed |
 | AI-11 | LOW | defect | A delayed speaking reply starts playing audio after the learner navigated away | fixed |
 | AI-12 | MEDIUM | defect | Free/expired/refunded accounts get AI writing grading for the paid A1.2 course (up to 16 tasks + revisions) through the 'free course allowance' | fixed |
-| AI-13 | MEDIUM | defect | Trial learners' free A1.1 course writings use up the trial's two exam-writing evaluations, although marketing calls them a separate allowance | partial |
+| AI-13 | MEDIUM | defect | Trial learners' free A1.1 course writings use up the trial's two exam-writing evaluations, although marketing calls them a separate allowance | fixed |
 | AI-14 | LOW | defect | Writing feedback whose save failed is shown as a normal success and is gone after leaving; a repeat consumes the free revision | fixed |
 | AI-15 | MEDIUM | defect | Reloading or going Back after assessed course writing shows an empty editor with Next disabled; resubmitting spends the one free improved version | fixed |
 | AI-16 | MEDIUM | defect | The exam-writing offer (#222) can never render (hidden for anyone with level access, i.e. every trial user), and the real limit moments (limit_reached / subscription_required) show text with no button | fixed |
@@ -111,11 +137,11 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
 | AI-18 | LOW | defect | 'Nächste Aufgabe schreiben' after feedback reopens the same task | fixed |
 | AI-19 | MEDIUM | defect | X-Ray connection/decoding failures keep the usage reservation, so a free or anonymous learner's retry gets 'limit reached' until midnight | fixed |
 | AI-20 | LOW | defect | Structurally invalid X-Ray JSON is returned as success (allowance consumed) and crashes the results screen | fixed |
-| AI-21 | LOW | enhancement | Cache X-Ray analyses for the fixed grammar-example sentences so repeat clicks are instant and cost no AI spend | partial |
-| AI-22 | LOW | enhancement | Share explain-answer results across learners per (item, wrong answer, language) | partial |
+| AI-21 | LOW | enhancement | Cache X-Ray analyses for the fixed grammar-example sentences so repeat clicks are instant and cost no AI spend | fixed |
+| AI-22 | LOW | enhancement | Share explain-answer results across learners per (item, wrong answer, language) | fixed |
 | AI-23 | LOW | enhancement | score-readaloud and explain-answer run an unlocked usage pre-count before the authoritative reservation RPC | skipped |
-| AI-24 | LOW | enhancement | A1.2 Übung 4 dictation corrections show a time as a bare number ('Richtig: 20') | partial |
-| AI-25 | LOW | defect | Days whose only activity was a vocab-trainer session drop out of both streaks once those cards are reviewed again (last_reviewed_at is overwritten) | partial |
+| AI-24 | LOW | enhancement | A1.2 Übung 4 dictation corrections show a time as a bare number ('Richtig: 20') | fixed |
+| AI-25 | LOW | defect | Days whose only activity was a vocab-trainer session drop out of both streaks once those cards are reviewed again (last_reviewed_at is overwritten) | fixed |
 | CHK-01 | HIGH | defect | Wrong articles, possessives, pronouns, sein/haben/modal forms and short prepositions inside typed answers are graded 'Almost — just a typo' and count as correct (lesson, checkpoint, review) | fixed |
 | CHK-02 | MEDIUM | defect | Spelling and letter-decoding tasks credit a missing letter as a typo (L1 alphabet, L2 Formular, Checkpoint 1 Hören spelled-name dictation) | fixed |
 | CHK-03 | MEDIUM | defect | A1.2 stem-vowel forms the item explicitly teaches get typo credit: strong Perfekt participles (getrinken, gegingen, gesprechen, geessen), du-imperative ('Sprech'), modal singular stems ('müss') | fixed |
@@ -125,7 +151,7 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
 | CHK-07 | MEDIUM | defect | Grammatical object-first answers ('Ein Glas Wasser möchte ich.', 'Meine Mutter rufe ich an.') are graded wrong because objectFronted misses separable prefixes, measure phrases and -ern/-eln verbs, so no opening cue is added | fixed |
 | CHK-08 | LOW | defect | When read-instead audio fallbacks remove most Hören items, a perfectly answered checkpoint fails (guess-ceiling rule applied to 1 measured item) | fixed |
 | CHK-09 | LOW | defect | Writing Formcheck marks the name requirement complete for 'ich heiße.' (no name value) | fixed |
-| CHK-10 | MEDIUM | defect | Listening dictation grader compares separator-stripped digit strings, not values: prices 10–100× off are marked correct, and correct '20:00', '250,00 €', 'Um 10 Uhr', '3,98 EUR', '15 qm', '10 °C' are marked wrong | partial |
+| CHK-10 | MEDIUM | defect | Listening dictation grader compares separator-stripped digit strings, not values: prices 10–100× off are marked correct, and correct '20:00', '250,00 €', 'Um 10 Uhr', '3,98 EUR', '15 qm', '10 °C' are marked wrong | fixed |
 | CHK-11 | LOW | defect | Dictation word answers ending with a period ('Rathaus.', 'Spätburgunder.', 'zehn Uhr.') are marked wrong | fixed |
 | CHK-12 | MEDIUM | enhancement | Practice-draw planning recomputes per-item keys synchronously during render (A1.2 attempt 3 ≈0.7–1 s main-thread freeze; checkpoint planning repeats it) | fixed |
 | LSN-01 | MEDIUM | defect | Read-aloud results are lost on the full-page trip to the speaking coach: on return every line is idle again (re-record, spending allowance) or the recap reports speaking as skipped | fixed |
@@ -213,21 +239,21 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
 | SEO-15 | LOW | enhancement | The AI-facing catalogue describes only the free A1.1 course, not the live paid A1.2 course | fixed |
 | SEO-16 | LOW | enhancement | llms catalogue puts 'no account needed' next to 'an AI-graded writing task', but guests only get a form checklist | fixed |
 | SEO-17 | LOW | defect | /level-test meta description retypes 'in 15 minutes' while the claims registry says about 20 | fixed |
-| SEO-18 | LOW | defect | sitemap-spa.xml lastmod is frozen at 2026-08-24 despite later changes to the prerendered FAQ and podcast copy | partial |
+| SEO-18 | LOW | defect | sitemap-spa.xml lastmod is frozen at 2026-08-24 despite later changes to the prerendered FAQ and podcast copy | fixed |
 | SEO-19 | LOW | defect | IndexNow resubmits all ~133 URLs on every build, including deploy previews and branch builds | fixed |
 | SEO-20 | LOW | defect | The podcast RSS feed references a cover image that does not exist (/podcast-cover.svg → 404), so directories reject it | fixed |
 | SEO-21 | MEDIUM | defect | Guide pages render five learning links (level test, X-Ray, speaking, letter guide) as literal `<a href>` markup | fixed |
 | SEO-22 | LOW | defect | Exam hubs link their writing and mock steps to the generic /schreiben and /modelltest routes, so Start Deutsch 1, Goethe A2 and telc B2 visitors get telc B1 tasks or must pick the exam again | fixed |
 | SEO-23 | LOW | enhancement | Paid-level grammar topic pages never link their level's course offer | fixed |
-| SEO-24 | LOW | defect | offer_viewed impressions are recorded for cards that are barely visible (any isIntersecting entry counts) | partial |
-| SHL-01 | MEDIUM | defect | The 30-minute idle timeout in any one tab calls a global signOut: every tab and device is signed out, ending a lesson or exam in progress elsewhere | partial |
+| SEO-24 | LOW | defect | offer_viewed impressions are recorded for cards that are barely visible (any isIntersecting entry counts) | fixed |
+| SHL-01 | MEDIUM | defect | The 30-minute idle timeout in any one tab calls a global signOut: every tab and device is signed out, ending a lesson or exam in progress elsewhere | fixed |
 | SHL-02 | LOW | defect | Sign-outs that bypass the wrapper (idle timeout, cross-tab, deletion) leave PostHog attached to the previous learner | fixed |
 | SHL-03 | MEDIUM | defect | PostHog identify() is dropped when called before the lazy client initialises or before consent, so returning or later-consenting learners stay anonymous until the next auth event | fixed |
 | SHL-04 | LOW | enhancement | SPA route changes are not recorded as PostHog pageviews (capture_pageview: true disables History-API pageviews in posthog-js 1.376) | fixed |
 | SHL-05 | LOW | defect | Per-user loaders keyed on the auth user object refetch on every tab focus/hourly token refresh (incl. an 'auth.login' audit row each time), and ProgressContext lets a stale response from a previous account overwrite or survive a sign-out/account switch | fixed |
 | SHL-06 | LOW | enhancement | Reading totals load only after the first reading completion, so the progress-percentage denominator jumps and the percentage can drop | fixed |
-| SHL-07 | MEDIUM | defect | A logout that fails on the network or server keeps the stored session but navigates home as if signed out (shared computers stay signed in) | partial |
-| SHL-08 | MEDIUM | defect | Password reset/update: an expired reset link changes the password of whoever is signed in, the update page dead-ends on 'Auth session missing!', and the fields/toggle have no accessible names or autocomplete | partial |
+| SHL-07 | MEDIUM | defect | A logout that fails on the network or server keeps the stored session but navigates home as if signed out (shared computers stay signed in) | fixed |
+| SHL-08 | MEDIUM | defect | Password reset/update: an expired reset link changes the password of whoever is signed in, the update page dead-ends on 'Auth session missing!', and the fields/toggle have no accessible names or autocomplete | fixed |
 | SHL-09 | LOW | enhancement | An expired confirmation link lands on /login's password form; the resend rescue only appears after a failed sign-in | fixed |
 | SHL-10 | LOW | enhancement | Login links on Astro pages (nav, grammar exercise lock) drop the page the learner was on; after login they land on /dashboard | fixed |
 | SHL-11 | MEDIUM | defect | The trial countdown banner and its Upgrade/Dismiss controls render underneath the fixed navbar and are never visible (and leave a blank 64 px band) | fixed |
@@ -236,7 +262,7 @@ Final status across all clusters: 172 fixed, 13 partial, 1 skipped.
 | SHL-14 | LOW | defect | Stale-chunk auto-reload only recognises Chrome's error text; Safari/iOS and Firefox get a dead-end error screen after each deploy | fixed |
 | SHL-15 | LOW | enhancement | All mock-exam and course-test content (~68 KB min / ~19 KB gz) ships in the SPA entry chunk because the eager ExamSubscriptionGuard imports resolveModelltest | fixed |
 | SHL-16 | LOW | enhancement | Prerendered pages preload only vendor bundles; the lazy page chunk (LevelTest/SentenceXRay ≈75 KB) is discovered after the entry runs, causing a content→spinner→content flash | fixed |
-| SHL-17 | MEDIUM | enhancement | 'Continue learning' (SPA navbar and Astro) and the Kurs tab resolve only the placement level, so a course buyer who never took the test returns to free A1.1 instead of the course they paid for | partial |
+| SHL-17 | MEDIUM | enhancement | 'Continue learning' (SPA navbar and Astro) and the Kurs tab resolve only the placement level, so a course buyer who never took the test returns to free A1.1 instead of the course they paid for | fixed |
 | SHL-18 | LOW | enhancement | Signed-in learners on Astro pages get no Upgrade/Pricing link (Pricing is anon-only), unlike the SPA chip | fixed |
 | SHL-19 | MEDIUM | defect | Astro's course return bar shows 'undefined/undefined' after a rebuilt-lesson speaking hand-off and its 'Done → next' sends the learner to the course overview instead of their unfinished Lektion | fixed |
 | SHL-20 | LOW | defect | With the English preference, German guides/comparisons/exam hubs get <html lang='en'> (screen readers mispronounce) | fixed |

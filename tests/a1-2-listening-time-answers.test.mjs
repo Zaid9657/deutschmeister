@@ -57,8 +57,8 @@ test('grading is unchanged: every answer the old row accepted or refused, the ne
   }
 });
 
-test('the ledger records the data migration as not yet applied', () => {
+test('the ledger records the data migration as applied', () => {
   const row = read('migrations/README.md').split('\n').find((l) => l.includes('`2026-10-25-a1-2-listening-time-answers.sql`'));
   assert.ok(row);
-  assert.match(row, /not yet applied/i);
+  assert.match(row, /applied 2026-10-25/i);
 });

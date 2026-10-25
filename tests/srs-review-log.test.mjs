@@ -124,9 +124,9 @@ test('the migration: append-only log, own-row reads, a locked SECURITY DEFINER t
   assert.match(sql, /AND NOT EXISTS \(/, 'the backfill is idempotent');
   assert.doesNotMatch(sql, /^\s*DO\b/m);
   const row = read('migrations/README.md').split('\n').find((l) => l.includes('`2026-10-25-vocab-srs-review-log.sql`'));
-  assert.match(row, /not yet applied/i);
+  assert.match(row, /applied 2026-10-25/i);
   const fixture = JSON.parse(read('tests/fixtures/db-schema.json'));
-  assert.deepEqual(fixture.pendingApply.tables.vocab_srs_reviews.columns, ['id', 'reviewed_at', 'user_id', 'word_id']);
+  assert.deepEqual(fixture.tables.vocab_srs_reviews, ['id', 'reviewed_at', 'user_id', 'word_id']);
   // The trainer's write path is untouched: the trigger does the logging.
   assert.doesNotMatch(read('src/services/srsService.js'), /vocab_srs_reviews/);
 });

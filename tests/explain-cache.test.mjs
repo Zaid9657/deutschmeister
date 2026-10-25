@@ -187,8 +187,8 @@ test('the migration: service-role table, insert-only validated store, ledger row
   assert.match(sql, /REVOKE ALL ON FUNCTION public\.store_explain_cache\(text,jsonb\) FROM PUBLIC, anon, authenticated;/);
   assert.match(sql, /GRANT EXECUTE ON FUNCTION public\.store_explain_cache\(text,jsonb\) TO service_role;/);
   const row = read('migrations/README.md').split('\n').find((l) => l.includes('`2026-10-25-explain-cache.sql`'));
-  assert.match(row, /not yet applied/i);
-  assert.equal(JSON.parse(read('tests/fixtures/db-schema.json')).pendingApply.tables.explain_cache.migration, '2026-10-25-explain-cache.sql');
+  assert.match(row, /applied 2026-10-25/i);
+  assert.deepEqual(JSON.parse(read('tests/fixtures/db-schema.json')).tables.explain_cache, ['cache_key', 'created_at', 'explanation']);
   const fn = read('netlify/functions/explain-answer.mjs');
   assert.match(fn, /const cacheKey = card \? explainCacheKey\(\[itemId, CLAUDE_MODEL, system, userText\]\) : null;/);
   // The lookup comes before the daily-cap count and the reservation.
