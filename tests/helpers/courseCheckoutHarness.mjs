@@ -101,20 +101,27 @@ export const door = (level, children, attrs = {}) =>
  * @param {object} options
  * @param {FakeElement} options.body  the page
  * @param {boolean} [options.signedIn]  a Supabase session in localStorage
- * @param {object|null|Error} [options.snapshot]  what loadEntitlementSnapshot answers (an Error rejects)
+ * @param {string} [options.user]  the account of that session (switch it later with signIn())
+ * @param {object|null|Error|((userId: string|null) => object|null|Error)} [options.snapshot]
+ *   what loadEntitlementSnapshot answers (an Error rejects); a function answers per
+ *   account: it gets the account signed in when the read started. A signed-in
+ *   snapshot without a userId answers for that account.
  * @param {Promise} [options.gate]  resolves before the snapshot does (to click before it lands)
  */
-export function runCourseCheckout({ body, signedIn = true, snapshot = null, gate = Promise.resolve() }) {
+export function runCourseCheckout({ body, signedIn = true, user = 'learner', snapshot = null, gate = Promise.resolve() }) {
   const script = read('astro-site/src/components/CourseCheckout.astro').match(/<script>([\s\S]*?)<\/script>/)[1];
   const real = loadLevelAccess({});
+  let viewer = signedIn ? user : null;
   let snapshotCalls = 0;
   const lib = {
     ...real,
     loadEntitlementSnapshot: async () => {
       snapshotCalls++;
+      const asked = viewer;
       await gate;
-      if (snapshot instanceof Error) throw snapshot;
-      return snapshot;
+      const answer = typeof snapshot === 'function' ? snapshot(asked) : snapshot;
+      if (answer instanceof Error) throw answer;
+      return answer && answer.signedIn && answer.userId === undefined ? { ...answer, userId: asked } : answer;
     },
   };
   const opened = [];
@@ -132,11 +139,11 @@ export function runCourseCheckout({ body, signedIn = true, snapshot = null, gate
     head,
     addEventListener: (type, fn) => { if (type === 'DOMContentLoaded') ready = fn; },
   };
-  const session = signedIn ? JSON.stringify({ user: { id: 'learner', email: 'learner@example.com' } }) : null;
+  const session = () => (viewer ? JSON.stringify({ user: { id: viewer, email: `${viewer}@example.com` } }) : null);
   const localStorage = {
-    get length() { return session ? 1 : 0; },
+    get length() { return viewer ? 1 : 0; },
     key: () => 'sb-project-auth-token',
-    getItem: () => session,
+    getItem: () => session(),
     setItem: (k, v) => stored.set(k, v),
   };
   const context = {
@@ -157,6 +164,8 @@ export function runCourseCheckout({ body, signedIn = true, snapshot = null, gate
   ready();
   return {
     opened, tracked, stored, location,
+    /** Another tab signs in a different account (the stored session changes). */
+    signIn(id) { viewer = id; },
     /** How many times the page loaded the entitlement snapshot. */
     get snapshotCalls() { return snapshotCalls; },
     /** The delays (ms) of the timers the page set and has not cleared or run. */

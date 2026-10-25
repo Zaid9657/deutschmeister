@@ -117,9 +117,10 @@ test('ACC-18: one snapshot serves every door on the page', async () => {
   const run = runCourseCheckout({ body, snapshot: snap(TRIAL) });
   await run.settle();
   assert.equal(run.snapshotCalls, 1, 'one lookup per page view, not one per level');
-  // A click reuses it.
+  // A Buy click reads ownership once more, for the account signed in at that
+  // moment (tests/course-door-rule.test.mjs: another tab may have switched it).
   await buyIn(body.children[1].children[0]).click();
-  assert.equal(run.snapshotCalls, 1);
+  assert.equal(run.snapshotCalls, 2);
 });
 
 test('ACC-18: the snapshot is one auth read, one profile read and one purchases read; a failed read is not "nothing bought"', async () => {
@@ -127,6 +128,7 @@ test('ACC-18: the snapshot is one auth read, one profile read and one purchases 
   const snapshot = await loadLevelAccess(ok.client).loadEntitlementSnapshot();
   assert.deepEqual([...ok.reads], ['auth', 'profiles', 'purchases']);
   assert.equal(snapshot.signedIn, true);
+  assert.equal(snapshot.userId, 'learner', 'a snapshot names the account it answers for');
   assert.equal(snapshot.verified, true);
   assert.equal(snapshot.purchases.length, 1);
   const failed = fakeSupabase({ purchasesError: { message: 'Failed to fetch' } });
@@ -134,6 +136,7 @@ test('ACC-18: the snapshot is one auth read, one profile read and one purchases 
   const signedOut = fakeSupabase({ user: null });
   const out = await loadLevelAccess(signedOut.client).loadEntitlementSnapshot();
   assert.equal(out.signedIn, false);
+  assert.equal(out.userId, null);
   assert.deepEqual([...signedOut.reads], ['auth'], 'no table read without a user');
 });
 

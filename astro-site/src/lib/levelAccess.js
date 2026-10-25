@@ -35,12 +35,15 @@ const activePurchases = (snapshot) => (snapshot?.purchases || []).filter((p) => 
 /**
  * The signed-in visitor's entitlements, read once.
  * `verified` is false when a read failed: a failed read is never "nothing bought".
+ * `userId` is the account the reads answered for: a snapshot belongs to one
+ * account, and a caller must not apply it to another (another tab can sign in
+ * a different account while this page stays open).
  *
- * @returns {Promise<{ signedIn: boolean, verified: boolean, profile: object|null, purchases: object[] }>}
+ * @returns {Promise<{ signedIn: boolean, userId: string|null, verified: boolean, profile: object|null, purchases: object[] }>}
  */
 export async function loadEntitlementSnapshot() {
   const { data: { user } = {} } = await supabase.auth.getUser();
-  if (!user) return { signedIn: false, verified: false, profile: null, purchases: [] };
+  if (!user) return { signedIn: false, userId: null, verified: false, profile: null, purchases: [] };
 
   const [profileRead, purchasesRead] = await Promise.all([
     supabase.from('profiles').select('is_subscribed, trial_ends_at').eq('id', user.id).maybeSingle(),
@@ -48,6 +51,7 @@ export async function loadEntitlementSnapshot() {
   ]);
   return {
     signedIn: true,
+    userId: user.id,
     verified: !profileRead.error && !purchasesRead.error,
     profile: profileRead.data || null,
     purchases: purchasesRead.data || [],
