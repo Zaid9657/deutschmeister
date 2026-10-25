@@ -237,7 +237,8 @@ test('Astro continuation rejects inactive future periods and includes active cou
   assert.equal(href({ profile, purchases: [{ ...purchase, access_until: '2026-10-21' }] }, now), '/course/a2.1');
   assert.equal(href({ profile, purchases: [{ ...purchase, status: 'refunded' }] }, now), '/course/a1.1');
   assert.match(source, /select\('status, subscription_end'\)/);
-  assert.match(source, /select\('product_key, status, access_until'\)/);
+  // created_at too: the shared resolver resumes the newest course (tests/course-resume-parity.test.mjs).
+  assert.match(source, /select\('product_key, status, access_until, created_at'\)\.eq\('user_id', user\.id\)\.eq\('status', 'active'\)\.order\('created_at', \{ ascending: false \}\)/);
 });
 
 test('Astro continuation reads only the verified account and keeps free links on query errors', async () => {
@@ -314,4 +315,50 @@ test('the Astro Upgrade link shows only without a live trial, a live Pro or a co
     assert.match(door, /style="display:none"/, 'hidden until the account is known');
     assert.doesNotMatch(door, /data-auth-only/, 'the session check alone must not reveal it');
   }
+});
+
+// An admin's premium grant (profiles.subscription_tier = 'premium') has no
+// subscription or purchase row, and the server keeps it through every
+// reconciliation; the static nav offered it Upgrade and resumed the free course
+// (review of the integrated round-2 branch, 2026-10-25).
+test('an admin premium grant is Pro on the static pages: no Upgrade link, the placed course', async () => {
+  const { source, href, upgrade } = astroContinuation();
+  const now = Date.parse('2026-10-22T12:00:00Z');
+  const premium = { current_level: 'A2.1', trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08', is_subscribed: true, subscription_tier: 'premium' };
+  assert.equal(upgrade({ profile: premium }, now), false, 'no Upgrade link');
+  assert.equal(href({ profile: premium }, now), '/course/a2.1', 'the placed course opens');
+  for (const tier of ['pro', 'free', null]) {
+    assert.equal(href({ profile: { ...premium, subscription_tier: tier } }, now), '/course/a1.1', `${tier}: the flag alone is not a paid period`);
+  }
+
+  // Through the page script, against a fake that returns only the selected
+  // columns: the tier has to be one of them.
+  const updater = source.match(/ {6}async function updateContinueLinks\(\) \{[\s\S]*?\n {6}\}/)[0].replace("import('../lib/supabase.js')", 'loadSupabase()');
+  const rows = { profiles: premium, subscriptions: null, purchases: [] };
+  const supabase = {
+    auth: { getUser: async () => ({ data: { user: { id: 'premium-user' } } }) },
+    from(table) {
+      let columns = [];
+      const project = (row) => row && Object.fromEntries(columns.filter((c) => c in row).map((c) => [c, row[c]]));
+      const query = {
+        select(list) { columns = list.split(',').map((c) => c.trim()); return query; },
+        eq() { return query; }, order() { return query; }, limit() { return query; }, maybeSingle() { return query; },
+        then(resolve) { resolve({ data: Array.isArray(rows[table]) ? rows[table].map(project) : project(rows[table]), error: null }); },
+      };
+      return query;
+    },
+  };
+  const links = [{ href: '/course/a1.1' }, { href: '/course/a1.1' }];
+  const upgradeLinks = [{ style: { display: 'none' } }, { style: { display: 'none' } }];
+  const context = vm.createContext({
+    document: { querySelectorAll: (selector) => (selector === '[data-upgrade]' ? upgradeLinks : links) },
+    localStorage: { length: 1, key: () => 'sb-project-auth-token' },
+    loadSupabase: async () => ({ supabase }),
+    continueCourseHref: href,
+    showsUpgrade: upgrade,
+  });
+  vm.runInContext(updater, context);
+  await context.updateContinueLinks();
+  assert.deepEqual(links.map((link) => link.href), ['/course/a2.1', '/course/a2.1']);
+  assert.deepEqual(upgradeLinks.map((link) => link.style.display), ['none', 'none']);
 });

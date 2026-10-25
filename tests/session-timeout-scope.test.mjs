@@ -198,6 +198,76 @@ test('"Stay signed in" restarts the window from now', async () => {
   assert.equal(tab.render().showWarning, false);
 });
 
+// ── Activity on the static (Astro) pages counts too (review of B10) ────────
+// The app reads the shared timestamp, but the grammar lessons, guides and exam
+// hubs are Astro pages that never wrote it: an idle app tab still signed out a
+// learner who was working through a grammar lesson in another tab.
+
+/** Layout.astro's activity script, run against the same storage and clock as the app tabs. */
+function astroPage({ clock, storage }) {
+  const layout = read('astro-site/src/layouts/Layout.astro');
+  const script = [...layout.matchAll(/<script is:inline>([\s\S]*?)<\/script>/g)].map((m) => m[1])
+    .find((s) => s.includes("'dm_last_activity'"));
+  assert.ok(script, 'Layout.astro records activity for the app idle timeout');
+  const listeners = new Map();
+  vm.runInNewContext(script, {
+    localStorage: {
+      get length() { return storage.size; },
+      key: (i) => [...storage.keys()][i] ?? null,
+      getItem: (key) => storage.get(key) ?? null,
+      setItem: (key, value) => { storage.set(key, String(value)); },
+    },
+    window: { addEventListener: (name, fn) => { listeners.set(name, fn); } },
+    Date: { now: clock.now },
+  });
+  return { script, listening: [...listeners.keys()], fire: (name) => listeners.get(name)?.() };
+}
+
+const SESSION_KEY = 'sb-omqyueddktqeyrrqvnyq-auth-token';
+
+test('a learner busy on the static pages is not signed out by an idle app tab', async () => {
+  const clock = fakeClock();
+  const storage = new Map([[SESSION_KEY, '{}']]);
+  const idle = openTab({ clock, storage });
+  const grammar = astroPage({ clock, storage });
+  for (let minute = 0; minute < 90; minute += 5) {
+    clock.advance(5 * MIN);
+    grammar.fire('scroll'); // reading the lesson, answering the exercises
+  }
+  await settle();
+  assert.deepEqual(idle.signOuts, [], 'the app tab re-reads the shared activity before it signs out');
+  clock.advance(30 * MIN); // and once the learner stops everywhere, the timeout still applies
+  await settle();
+  assert.deepEqual(idle.signOuts, [{ scope: 'local' }]);
+});
+
+test('the static pages record activity at most every 5 seconds, and only with a session', () => {
+  const clock = fakeClock();
+  const storage = new Map([[SESSION_KEY, '{}']]);
+  const page = astroPage({ clock, storage });
+  assert.deepEqual(page.listening.sort(), ['keydown', 'mousemove', 'scroll', 'touchstart']);
+  const loaded = storage.get('dm_last_activity');
+  assert.equal(loaded, String(clock.now()), 'arriving on a page is activity');
+  clock.advance(1000);
+  page.fire('mousemove');
+  assert.equal(storage.get('dm_last_activity'), loaded, 'throttled');
+  clock.advance(5000);
+  page.fire('keydown');
+  assert.equal(storage.get('dm_last_activity'), String(clock.now()));
+
+  const anonymous = new Map();
+  const visitor = astroPage({ clock, storage: anonymous });
+  assert.deepEqual(visitor.listening, [], 'no listeners without a session');
+  assert.equal(anonymous.has('dm_last_activity'), false);
+});
+
+test('the app and the static pages share one key and one throttle', () => {
+  const hook = read('src/hooks/useSessionTimeout.js');
+  const { script } = astroPage({ clock: fakeClock(), storage: new Map() });
+  assert.equal(script.match(/var ACTIVITY_KEY = '([^']+)';/)[1], hook.match(/const ACTIVITY_KEY = '([^']+)';/)[1]);
+  assert.equal(Number(script.match(/var THROTTLE_MS = (\d+);/)[1]), Number(hook.match(/const DEBOUNCE_MS = (\d+);/)[1]));
+});
+
 test('the live-work routes are the stage routes, the exam run and the coach only', () => {
   const { isLiveWorkPath } = openTab({ clock: fakeClock(), storage: new Map(), userId: null });
   for (const path of ['/course/a1.1/l/1', '/course/a1.2/checkpoint/2/', '/course/a2.1/review', '/modelltest/telc-b1/run', '/speaking']) {
