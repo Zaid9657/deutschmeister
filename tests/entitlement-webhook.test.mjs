@@ -92,6 +92,7 @@ globalThis.fetch = async (url, init = {}) => {
 
 const { handler: webhook } = await import('../netlify/functions/lemonsqueezy-webhook.mjs');
 const { handler: verify } = await import('../netlify/functions/verify-subscription.mjs');
+const { hasChargingSubscription } = await import('../netlify/functions/delete-account.mjs');
 beforeEach(() => {
   now = RealDate.parse('2026-01-01T00:00:00Z');
   tables = { subscriptions: [], purchases: [], profiles: [], webhook_logs: [] };
@@ -623,6 +624,67 @@ test('a legacy provider purchase without a stored deadline keeps its included Pr
   assert.equal(subscription().plan_type, 'course');
   assert.equal(subscription().subscription_end, deadline);
   assert.equal(profile().is_subscribed, true);
+});
+
+// Round-2 review (HIGH): a complimentary grant never hides a still-billing subscription.
+const manualGrant = (start, days) => ({ user_id: USER, plan_type: 'monthly', status: 'active', price_paid: 0, lemonsqueezy_subscription_id: null,
+  subscription_start: start, subscription_end: new Date(RealDate.parse(start) + days * 24 * 60 * 60 * 1000).toISOString() });
+function paidSubscriptionWhoseCreationFailed() {
+  const created = subscriptionEvent('subscription_created', {
+    created_at: '2026-01-01T00:00:00Z', updated_at: '2026-01-01T00:00:00Z', renews_at: '2026-02-01T00:00:00Z',
+  }, 'sub-paid');
+  tables.webhook_logs.push({ id: 'failed-created', event_type: 'subscription_created', processed: false, error: 'transient',
+    created_at: '2026-01-01T00:00:05Z', payload: created });
+  return created;
+}
+
+test('a paid subscription retried after support granted Pro days is recorded: billing visible, deletion blocked', async () => {
+  const created = paidSubscriptionWhoseCreationFailed();
+  // 02:00 — "I paid but have no access": support grants seven Pro days.
+  now = RealDate.parse('2026-01-01T02:00:00Z');
+  tables.subscriptions.push(manualGrant(new Date().toISOString(), 7));
+  tables.profiles.push({ id: USER, subscription_tier: 'pro', is_subscribed: true });
+  // 03:00 — Lemon Squeezy retries the creation, which predates the grant.
+  now = RealDate.parse('2026-01-01T03:00:00Z');
+  await deliver(created);
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-paid', 'the billing subscription is on record');
+  assert.equal(subscription().status, 'active');
+  assert.equal(Date.parse(subscription().subscription_end), RealDate.parse('2026-02-01T00:00:00Z'));
+  assert.equal(hasRecurringBilling(subscription(), now), true, 'billing management sees it — never a second checkout');
+  assert.equal(hasChargingSubscription([subscription()]), true, 'delete-account answers 409 while it can charge');
+  assert.equal(profile().is_subscribed, true);
+  assert.deepEqual(tables.purchases, [], 'the paid period covers the whole grant: nothing to keep apart');
+});
+
+test('a grant that outlasts the paid period keeps its remainder as a window, which survives the plan ending early', async () => {
+  const created = paidSubscriptionWhoseCreationFailed();
+  now = RealDate.parse('2026-01-01T02:00:00Z');
+  const grant = manualGrant(new Date().toISOString(), 60);
+  const grantEnd = grant.subscription_end; // the harness upserts rows in place
+  tables.subscriptions.push(grant);
+  now = RealDate.parse('2026-01-01T03:00:00Z');
+  await deliver(created);
+  assert.equal(subscription().lemonsqueezy_subscription_id, 'sub-paid');
+  const [kept] = tables.purchases;
+  assert.equal(kept.access_until, grantEnd, 'the complimentary remainder is kept');
+  assert.equal(kept.status, 'active');
+  assert.equal(kept.price_paid, 0);
+  assert.match(kept.lemonsqueezy_order_id, /^manual-/);
+  assert.deepEqual(LEVEL_COURSES[kept.product_key], undefined, 'the kept window is no course: it opens no level');
+  // The plan ends early (a refund): the complimentary days still hold.
+  now = RealDate.parse('2026-01-10T00:00:00Z');
+  await deliver(subscriptionEvent('subscription_expired', { status: 'expired', created_at: '2026-01-01T00:00:00Z', updated_at: new Date().toISOString() }, 'sub-paid'));
+  assert.equal(profile().is_subscribed, true);
+  assert.equal(Date.parse(subscription().subscription_end), Date.parse(grantEnd));
+});
+
+test('a provider event with nothing to track (an old expired subscription) leaves a live grant alone', async () => {
+  tables.subscriptions.push(manualGrant('2025-12-31T00:00:00Z', 30));
+  await deliver(subscriptionEvent('subscription_expired', { status: 'expired', created_at: '2025-06-01T00:00:00Z', updated_at: '2025-12-31T12:00:00Z' }, 'sub-old'));
+  assert.equal(subscription().lemonsqueezy_subscription_id, null);
+  assert.equal(subscription().status, 'active');
+  assert.equal(profile().is_subscribed, true);
+  assert.deepEqual(tables.purchases, []);
 });
 
 test('a manual course grant without a deadline stays deadline-free and grants no Pro', async () => {

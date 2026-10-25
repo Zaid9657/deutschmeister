@@ -47,6 +47,25 @@ async function updateProfile(supabase, userId, patch) {
   if (!data || data.length === 0) throw conflict('Profil-Update hat keine Zeile getroffen.');
 }
 
+// Recompute the profile flags from the rows — except that an explicit premium
+// grant survives: only set_tier changes the tier. The writes are conditional on
+// the tier, like reconcileUserEntitlement's, so a premium grant made after this
+// action read the profile is never overwritten.
+async function applyFlags(supabase, userId, profile, subs, purchases, now) {
+  const premium = profile.subscription_tier === 'premium';
+  const flags = premium ? { is_subscribed: true, subscription_tier: 'premium' } : flagsFromRows(subs, purchases, now);
+  const updatedAt = new Date().toISOString();
+  const write = supabase.from('profiles').update(premium ? { is_subscribed: true, updated_at: updatedAt } : { ...flags, updated_at: updatedAt }).eq('id', userId);
+  const { data, error } = await (premium ? write.eq('subscription_tier', 'premium') : write.or('subscription_tier.is.null,subscription_tier.neq.premium')).select('id');
+  if (error) throw new Error(error.message);
+  if (data?.length) return flags;
+  // Nothing matched: the tier changed since the read. A premium grant made meanwhile stands.
+  const { data: fresh, error: freshError } = await supabase.from('profiles').select('subscription_tier').eq('id', userId).maybeSingle();
+  if (freshError) throw new Error(freshError.message);
+  if (!premium && fresh?.subscription_tier === 'premium') return { is_subscribed: true, subscription_tier: 'premium' };
+  throw conflict('Profil-Update hat keine Zeile getroffen.');
+}
+
 // Statuses whose Lemon Squeezy subscription can still bill or recover.
 const RECOVERABLE_BILLING = ['active', 'on_trial', 'past_due', 'paused', 'unpaid'];
 
@@ -117,8 +136,7 @@ const HANDLERS = {
       if (error) throw new Error(error.message);
       rowId = data?.id;
     }
-    const flags = flagsFromRows([...subs.filter((s) => s.id !== rowId), { status: 'active', subscription_end: newEnd }], purchases, now);
-    await updateProfile(supabase, userId, flags);
+    const flags = await applyFlags(supabase, userId, profile, [...subs.filter((s) => s.id !== rowId), { status: 'active', subscription_end: newEnd }], purchases, now);
     return { before, after: { manualRow: { id: rowId, subscription_end: newEnd, status: 'active' }, profile: flags }, summary: `${days} Pro-Tage bis ${newEnd.slice(0, 10)}` };
   },
 
@@ -131,8 +149,7 @@ const HANDLERS = {
     if (error) throw new Error(error.message);
     if (!data?.length) throw conflict('Keine Abo-Zeile getroffen.');
     const remaining = subs.filter((s) => !manualRows.some((m) => m.id === s.id));
-    const flags = flagsFromRows(remaining, purchases, now);
-    await updateProfile(supabase, userId, flags);
+    const flags = await applyFlags(supabase, userId, profile, remaining, purchases, now);
     return { before, after: { rows: data.map((r) => ({ id: r.id, status: 'expired' })), profile: flags }, summary: `${data.length} manuelle Zeile(n) beendet` };
   },
 
@@ -144,22 +161,20 @@ const HANDLERS = {
     const orderId = `manual-${now.getTime()}-${key}`;
     const { data, error } = await supabase.from('purchases').insert({ user_id: userId, product_key: key, lemonsqueezy_order_id: orderId, price_paid: 0, status: 'active', access_until: null }).select('id').maybeSingle();
     if (error) throw new Error(error.message);
-    const flags = flagsFromRows(subs, [...purchases, { status: 'active' }], now);
-    await updateProfile(supabase, userId, flags);
+    const flags = await applyFlags(supabase, userId, profile, subs, [...purchases, { status: 'active' }], now);
     return { before: { purchases: purchases.map((p) => p.product_key), profile: { is_subscribed: profile.is_subscribed } }, after: { purchase: { id: data?.id, product_key: key, order: orderId }, profile: flags }, summary: `Kurs ${key} freigeschaltet` };
   },
 
   async revoke_course({ supabase, userId, params, now }) {
     const key = String(params.productKey || '');
-    const { subs, purchases } = await loadUser(supabase, userId);
+    const { profile, subs, purchases } = await loadUser(supabase, userId);
     const row = purchases.find((p) => p.product_key === key && p.status === 'active');
     if (!row) throw conflict('Kein aktiver Kauf mit diesem Schlüssel.');
     if (!String(row.lemonsqueezy_order_id || '').startsWith('manual-')) throw conflict('Ein bezahlter Kauf wird nicht hier zurückgenommen — Erstattung läuft über Lemon Squeezy und den Webhook (order_refunded).');
     const { data, error } = await supabase.from('purchases').update({ status: 'refunded', updated_at: now.toISOString() }).eq('id', row.id).select('id');
     if (error) throw new Error(error.message);
     if (!data?.length) throw conflict('Kaufzeile nicht getroffen.');
-    const flags = flagsFromRows(subs, purchases.filter((p) => p.id !== row.id), now);
-    await updateProfile(supabase, userId, flags);
+    const flags = await applyFlags(supabase, userId, profile, subs, purchases.filter((p) => p.id !== row.id), now);
     return { before: { purchase: { id: row.id, status: 'active' } }, after: { purchase: { id: row.id, status: 'refunded' }, profile: flags }, summary: `Kurs ${key} zurückgenommen` };
   },
 
@@ -185,8 +200,7 @@ const HANDLERS = {
 
   async sync_flags({ supabase, userId, now }) {
     const { profile, subs, purchases } = await loadUser(supabase, userId);
-    const flags = flagsFromRows(subs, purchases, now);
-    await updateProfile(supabase, userId, flags);
+    const flags = await applyFlags(supabase, userId, profile, subs, purchases, now);
     return { before: { subscription_tier: profile.subscription_tier, is_subscribed: profile.is_subscribed }, after: flags, summary: `Flags: ${flags.subscription_tier}` };
   },
 

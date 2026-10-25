@@ -2,6 +2,14 @@ import { COURSE_PRO_DAYS } from './pricing.mjs';
 
 const ACCESS_STATUSES = new Set(['active', 'on_trial', 'cancelled', 'past_due', 'paused']);
 const SUBSCRIPTION_EVENTS = ['subscription_created', 'subscription_updated', 'subscription_cancelled', 'subscription_expired'];
+// Provider states that still bill, can recover, or hold a paid period: these
+// must be on record even when a complimentary grant holds the row.
+const TRACKED_STATUSES = ['active', 'on_trial', 'cancelled', 'past_due', 'unpaid', 'paused'];
+// The purchases product of a kept grant window: no course, so it opens no level.
+export const GRANT_WINDOW_PRODUCT = 'pro_days';
+
+/** A row no provider subscription stands behind: an admin Pro-day grant (admin-actions grant_pro_days). */
+const isGrantRow = (row) => !!row && row.plan_type !== 'course' && !row.lemonsqueezy_subscription_id;
 
 function isoDate(value) {
   if (!value) return null;
@@ -35,7 +43,19 @@ export function subscriptionEventRow(existing, data, eventType, now = Date.now()
   if (!subscriptionId) throw new Error('Subscription event has no subscription id');
   const sameSubscription = existing?.plan_type !== 'course' && existing?.lemonsqueezy_subscription_id === subscriptionId;
   const createdAt = isoDate(attributes.created_at);
-  if (existing && !sameSubscription) {
+  if (existing && !sameSubscription && isGrantRow(existing)) {
+    // A complimentary grant never decides provider ordering. A subscription
+    // that can still bill or holds a paid period takes the row whatever its
+    // creation date — billing management and delete-account read its id here —
+    // and reconcileSubscriptionEvent keeps what is left of the grant apart.
+    // An event with nothing to track (expired, cancelled and paid out) leaves
+    // the grant alone.
+    if (!createdAt) return null;
+    const incoming = eventType === 'subscription_expired' ? 'expired'
+      : eventType === 'subscription_cancelled' ? 'cancelled' : attributes.status;
+    if (!TRACKED_STATUSES.includes(incoming)) return null;
+    if (incoming === 'cancelled' && !(Date.parse(attributes.ends_at) > Number(now))) return null;
+  } else if (existing && !sameSubscription) {
     // A different/old subscription must not overwrite a newer purchase or
     // recurring subscription. New checkouts carry the provider creation date.
     if (!createdAt) return null;
@@ -247,6 +267,26 @@ export async function reconcileUserEntitlement(supabase, userId, now = Date.now(
   return { subscription, purchases, isSubscribed };
 }
 
+// A complimentary grant gives up the one subscriptions row to a provider
+// subscription (subscriptionEventRow). The part of it the paid period does not
+// cover is kept as a purchases window — the included-Pro store both
+// reconcileUserEntitlement (latestCourseWindow) and the SPA read — so the grant
+// still holds if the paid plan ends first. Idempotent per grant under retries.
+async function keepGrantWindow(supabase, userId, grant, now) {
+  const start = isoDate(grant.subscription_start) || new Date(now).toISOString();
+  const { error } = await supabase.from('purchases').upsert({
+    user_id: userId,
+    product_key: GRANT_WINDOW_PRODUCT,
+    lemonsqueezy_order_id: `manual-grant-${userId}-${Date.parse(start)}`,
+    price_paid: 0,
+    status: 'active',
+    access_until: isoDate(grant.subscription_end),
+    created_at: start,
+    updated_at: new Date(now).toISOString(),
+  }, { onConflict: 'lemonsqueezy_order_id', ignoreDuplicates: true });
+  if (error) throw error;
+}
+
 export async function reconcileSubscriptionEvent(supabase, userId, data, eventType, now = Date.now()) {
   const { data: current, error: lookupError } = await supabase.from('subscriptions')
     .select('*').eq('user_id', userId).maybeSingle();
@@ -281,6 +321,10 @@ export async function reconcileSubscriptionEvent(supabase, userId, data, eventTy
   }
   const row = subscriptionEventRow(existing, data, eventType, now, { superseded });
   if (row) {
+    if (isGrantRow(existing) && subscriptionHasPaidAccess(existing, now)
+      && Date.parse(existing.subscription_end) > (Date.parse(row.subscription_end) || 0)) {
+      await keepGrantWindow(supabase, userId, existing, now);
+    }
     const { error } = await supabase.from('subscriptions').upsert({
       user_id: userId,
       plan_type: row.plan_type,
