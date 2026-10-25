@@ -5,6 +5,13 @@
 // ends on OUR success page), same-tab navigation as the fallback, and the
 // signup detour with dm_buy_intent for signed-out visitors — identical to the
 // pricing page's behaviour, so the two entry points cannot drift.
+//
+// A lifetime course is never sold twice (ACC-16): for a signed-in visitor,
+// Buy waits (aria-busy) until their entitlements are known, and the click
+// checks ownership again: an owner goes to the course. When the lookup cannot
+// answer, the app's resume path (/subscription?buy=) checks before any checkout.
+// Every level-course Buy also sits in a data-course-door
+// (tests/course-door-rule.test.mjs).
 ---
 <script>
   import { track } from '../lib/track.js';
@@ -28,12 +35,48 @@
     return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
   }
 
-  function open(variant, intentKey, amount, surface) {
+  // One entitlement snapshot per page view (lib/levelAccess.js), loaded lazily
+  // so the logged-out majority never fetches the Supabase chunk. Never rejects:
+  // a failed lookup resolves to null. It is bounded too: Buy waits for it, so a
+  // stalled auth, profile or purchases read would keep every Buy disabled. After
+  // LOOKUP_TIMEOUT_MS the answer is "unknown" (null): Buy comes back, and its
+  // click takes the app's guarded resume (/subscription?buy=), which re-checks
+  // ownership before any checkout.
+  const LOOKUP_TIMEOUT_MS = 4000;
+  let entitlements = null;
+  function loadEntitlements() {
+    if (!entitlements) {
+      let timer;
+      const bound = new Promise((resolve) => { timer = setTimeout(() => resolve(null), LOOKUP_TIMEOUT_MS); });
+      const lookup = import('../lib/levelAccess.js')
+        .then(async (lib) => ({ lib, snapshot: await lib.loadEntitlementSnapshot() }));
+      entitlements = Promise.race([lookup, bound])
+        .catch(() => null)
+        .finally(() => clearTimeout(timer));
+    }
+    return entitlements;
+  }
+
+  async function open(variant, intentKey, amount, surface) {
     const u = currentUser();
     track('checkout_intent', { product: intentKey, surface, signed_in: Boolean(u) });
     if (!u) {
       try { localStorage.setItem('dm_buy_intent', intentKey); } catch (e) { /* private mode */ }
       window.location.href = 'https://deutsch-meister.de/signup';
+      return;
+    }
+    // Ownership at click time: an owner continues in the course instead of
+    // paying again. Unknown ownership (a failed or signed-out lookup) goes to
+    // the app's resume path, which checks it before opening any checkout.
+    const loaded = await loadEntitlements();
+    const snapshot = loaded && loaded.snapshot;
+    if (!snapshot || !snapshot.signedIn || !snapshot.verified) {
+      window.location.href = 'https://deutsch-meister.de/subscription?buy=' + encodeURIComponent(intentKey);
+      return;
+    }
+    const home = loaded.lib.ownedProductHome(snapshot, intentKey);
+    if (home) {
+      window.location.href = home;
       return;
     }
     // The SPA's checkout_completed observer (src/lib/funnelTracking.js) consumes
@@ -49,8 +92,33 @@
     }
   }
 
+  // Owner door (ACC-17). Only a bought course swaps Buy for Open: a level that a
+  // live trial or Pro opens for a while keeps its Buy button (the lifetime
+  // course stays on sale) and gains a small way in beside it. A door with
+  // nothing to buy (free, coming soon) simply opens when the level is open.
+  function applyDoor(d, access, lib) {
+    if (!access || !access.open) return;
+    const level = d.getAttribute('data-course-door');
+    const code = d.getAttribute('data-course-code') || level.toUpperCase();
+    const href = lib.levelHref(level);
+    const label = (lib.GUIDED_LEVELS.includes(level) ? 'Continue course ' : 'Open ') + code + ' →';
+    if (access.owned || !d.querySelector('[data-course-variant]')) {
+      d.innerHTML = '<a href="' + href + '" class="' + (d.getAttribute('data-course-open-class') || '') + '">' + label + '</a>';
+      return;
+    }
+    // The ride-along bar on /courses/<level>/ has room for one key only.
+    if (d.closest('[data-fahrschein-bar]') || d.querySelector('[data-course-continue]')) return;
+    const link = document.createElement('a');
+    link.href = href;
+    link.className = d.closest('[data-ground="nacht"]') ? 'dm-link-nacht' : 'dm-link';
+    link.setAttribute('data-course-continue', '');
+    link.textContent = label;
+    d.append(' ', link);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    if (currentUser() && !document.querySelector('script[src*="lemon.js"]')) {
+    const signedIn = Boolean(currentUser());
+    if (signedIn && !document.querySelector('script[src*="lemon.js"]')) {
       const s = document.createElement('script');
       s.src = 'https://app.lemonsqueezy.com/js/lemon.js';
       s.defer = true;
@@ -68,7 +136,8 @@
       };
       document.head.appendChild(s);
     }
-    document.querySelectorAll('[data-course-variant]').forEach((btn) => {
+    const buys = [...document.querySelectorAll('[data-course-variant]')];
+    buys.forEach((btn) => {
       btn.addEventListener('click', () =>
         open(
           btn.getAttribute('data-course-variant'),
@@ -79,24 +148,18 @@
       );
     });
 
-    // Owner door: a signed-in visitor who already has the level (a bought
-    // course, Pro, or a live trial) gets "Open" instead of "Buy" / "Coming
-    // soon". Lazy so the logged-out majority never loads the Supabase chunk;
-    // the same three doors as the SPA's hasLevelAccess via lib/levelAccess.js.
-    const doors = document.querySelectorAll('[data-course-door]');
-    if (currentUser() && doors.length) {
-      import('../lib/levelAccess.js').then(async ({ getLevelAccess }) => {
-        const levels = [...new Set([...doors].map((d) => d.getAttribute('data-course-door')))];
-        const access = Object.fromEntries(await Promise.all(levels.map(async (l) => [l, await getLevelAccess(l)])));
-        doors.forEach((d) => {
-          const level = d.getAttribute('data-course-door');
-          if (!access[level] || !access[level].open) return;
-          const code = d.getAttribute('data-course-code') || level.toUpperCase();
-          const cls = d.getAttribute('data-course-open-class') || '';
-          const guided = ['a1.1', 'a1.2', 'a2.1', 'a2.2'].includes(level);
-          d.innerHTML = '<a href="https://deutsch-meister.de/' + (guided ? 'course' : 'level') + '/' + level + '" class="' + cls + '">' + (guided ? 'Continue course ' : 'Open ') + code + ' \u2192</a>';
-        });
-      }).catch(() => { /* door optional */ });
-    }
+    const doors = [...document.querySelectorAll('[data-course-door]')];
+    if (!signedIn || (!buys.length && !doors.length)) return;
+    // Until this visitor's entitlements are known, Buy waits: an owner who
+    // clicks before the lookup lands must not reach a second checkout.
+    const waiting = buys.filter((btn) => !btn.disabled);
+    waiting.forEach((btn) => { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); });
+    loadEntitlements()
+      .then((loaded) => {
+        if (!loaded || !loaded.snapshot || !loaded.snapshot.signedIn) return;
+        doors.forEach((d) => applyDoor(d, loaded.lib.levelOpen(loaded.snapshot, d.getAttribute('data-course-door')), loaded.lib));
+      })
+      .catch(() => { /* door optional */ })
+      .finally(() => waiting.forEach((btn) => { btn.disabled = false; btn.removeAttribute('aria-busy'); }));
   });
 </script>

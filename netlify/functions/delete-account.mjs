@@ -1,14 +1,24 @@
 import { supabase } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
-// Statuses under which Lemon Squeezy can still charge a recurring plan. Course rows
-// (plan_type 'course') are one-time purchases and never block a deletion.
+// Statuses under which Lemon Squeezy can still charge a recurring plan.
 const CHARGING_STATUSES = ['active', 'on_trial', 'past_due', 'unpaid', 'paused'];
 
+// A row with a Lemon Squeezy subscription id is recurring billing until
+// reconciliation clears the id, whatever its plan_type: the SPA's rule
+// (src/lib/checkoutAccess.js hasRecurringBilling; functions cannot import src/,
+// so tests/legacy-course-billing.test.mjs pins the two copies together). An
+// older course upsert left the subscription's id on a 'course' row, and
+// reconciliation keeps it while that plan may still charge. A course row's
+// status describes the course window, not that plan (the yearly plan of a
+// course buyer renews long after the window has expired), so only its cancel
+// flag can clear it here. A course row without an id is a one-time order and
+// never blocks a deletion.
 export function hasChargingSubscription(rows) {
-  return (rows || []).some((s) => s.plan_type !== 'course'
-    && typeof s.lemonsqueezy_subscription_id === 'string' && s.lemonsqueezy_subscription_id.trim() !== ''
-    && CHARGING_STATUSES.includes(s.status) && !s.cancel_at_period_end);
+  return (rows || []).some((s) => typeof s.lemonsqueezy_subscription_id === 'string'
+    && s.lemonsqueezy_subscription_id.trim() !== ''
+    && !s.cancel_at_period_end
+    && (s.plan_type === 'course' || CHARGING_STATUSES.includes(s.status)));
 }
 
 // The owner keeps a record of every deletion (this button answers Art. 17 requests).

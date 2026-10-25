@@ -33,10 +33,11 @@
  * @param {boolean} state.inTrial  isInFreeTrial()
  * @param {number} state.daysLeft  getTrialDaysRemaining()
  * @param {boolean} state.canBuyLevel  the course section shows a Buy button
+ * @param {boolean} [state.paymentFailed]  a Lemon Squeezy renewal failed (lib/checkoutAccess.js hasFailedPayment)
  * @param {boolean} isGerman  the page's language switch
  * @returns {{ title: string, lead: string }}
  */
-export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel }, isGerman) {
+export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel, paymentFailed = false }, isGerman) {
   if (isSubscribed) {
     return isGerman
       ? {
@@ -50,6 +51,23 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
           lead: canBuyLevel
             ? 'Pro is active. You can also add a level course — it stays yours for life.'
             : 'Pro is active.',
+        };
+  }
+
+  // A failed renewal (past_due, unpaid) lost Pro to a card problem, not to an
+  // ended trial: the heading said "Your trial is over" above a "Subscribe now"
+  // a subscriber cannot use. The fix is a new card in the billing portal (ACC-04).
+  if (paymentFailed) {
+    return isGerman
+      ? {
+          title: 'Ihre letzte Zahlung ist nicht durchgegangen',
+          lead: 'Aktualisieren Sie Ihre Karte im Kundenportal, dann läuft Pro weiter. Ihr Fortschritt bleibt erhalten.'
+            + (canBuyLevel ? ' Oder kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft.' : ''),
+        }
+      : {
+          title: 'Your last payment didn’t go through',
+          lead: 'Update your card in the customer portal and Pro carries on. Your progress stays.'
+            + (canBuyLevel ? ' Or buy the level you need once and keep it.' : ''),
         };
   }
 

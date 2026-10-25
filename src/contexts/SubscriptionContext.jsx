@@ -18,10 +18,17 @@ const SubscriptionContext = createContext({});
 
 export const useSubscription = () => useContext(SubscriptionContext);
 
+// Each entitlement read settles on its own: a failed read is a failure to
+// remember, never an answer of "none" (the services throw on errors).
+const settled = (promise) => Promise.resolve(promise).then(
+  (value) => ({ ok: true, value }),
+  (error) => ({ ok: false, error }),
+);
+
 export const SubscriptionProvider = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id ?? null;
-  const [data, setData] = useState({ userId: null, subscription: null, profile: null, purchases: [], loading: true });
+  const [data, setData] = useState({ userId: null, subscription: null, profile: null, purchases: [], loading: true, billingVerified: false });
   const lastRefreshRef = useRef(0);
   const requestRef = useRef({ userId, generation: 0 });
 
@@ -33,7 +40,14 @@ export const SubscriptionProvider = ({ children }) => {
   const subscription = data.userId === userId ? data.subscription : null;
   const profile = data.userId === userId ? data.profile : null;
   const purchases = data.userId === userId ? data.purchases : [];
+  // True only for the first load of an account (or an identity change). A
+  // refresh of the account on screen revalidates in the background: every
+  // guard swaps its page for a spinner while `loading` is true, and an
+  // unmounted page loses its work (an A1.2 checkpoint, a Modelltest clip).
   const loading = authLoading || data.userId !== userId || data.loading;
+  // The latest load read both billing tables (subscriptions, purchases). A page
+  // that sells must not open a checkout from data that failed to load.
+  const billingVerified = data.userId === userId && data.billingVerified === true;
 
   useEffect(() => () => { requestRef.current.generation += 1; }, []);
 
@@ -46,31 +60,56 @@ export const SubscriptionProvider = ({ children }) => {
     const isCurrent = () => requestRef.current.userId === userId && requestRef.current.generation === generation;
 
     if (!userId) {
-      setData({ userId, subscription: null, profile: null, purchases: [], loading: false });
+      setData({ userId, subscription: null, profile: null, purchases: [], loading: false, billingVerified: false });
       return;
     }
 
+    // A refresh of the account already on screen keeps its data and does not
+    // set `loading` (tab return, the hourly token refresh, a settings save).
+    // Only a first load or a different account starts from nothing.
     setData((previous) => previous.userId === userId
-      ? { ...previous, loading: true }
-      : { userId, subscription: null, profile: null, purchases: [], loading: true });
+      ? previous
+      : { userId, subscription: null, profile: null, purchases: [], loading: true, billingVerified: false });
 
     try {
       // Timeout so a hung network resolves to the logged-in-but-unverified
       // state instead of an infinite loading spinner on every guarded page.
-      const [sub, prof, bought] = await withTimeout(
+      const [subRead, profileRead, purchasesRead] = await withTimeout(
         Promise.all([
-          getSubscription(userId),
-          getUserProfile(userId),
-          getPurchases(userId),
+          settled(getSubscription(userId)),
+          settled(getUserProfile(userId)),
+          settled(getPurchases(userId)),
         ]),
         10000
       );
 
       if (!isCurrent()) return;
-      const setProfile = (profile) => setData({ userId, subscription: sub, purchases: bought, profile, loading: false });
+      const billingVerified = subRead.ok && purchasesRead.ok;
+      // A failed read keeps what this account already had: a refresh on a
+      // flaky network must never replace a paying learner's entitlements with
+      // "no subscription, no purchases" (the guards would send them to the
+      // paywall, and /subscription would sell a second plan).
+      const setProfile = (profile) => setData((previous) => {
+        const kept = previous.userId === userId ? previous : { subscription: null, profile: null, purchases: [] };
+        return {
+          userId,
+          subscription: subRead.ok ? subRead.value : kept.subscription,
+          purchases: purchasesRead.ok ? purchasesRead.value : kept.purchases,
+          profile: profile === undefined ? kept.profile : profile,
+          loading: false,
+          billingVerified,
+        };
+      });
+
+      // An unreadable profile is not a missing one: keep the one this account
+      // had and never run the trial backfill on it.
+      if (!profileRead.ok) {
+        setProfile(undefined);
+        return;
+      }
 
       // Auto-start free trial for new users
-      let currentProfile = prof;
+      let currentProfile = profileRead.value;
 
       // Profile should be created by DB trigger on auth.users insert.
       // If not yet available (slight delay), retry once after a short wait.
@@ -98,16 +137,25 @@ export const SubscriptionProvider = ({ children }) => {
       // A level-test result taken signed out on this browser ("Sign up free —
       // save my results", src/lib/placement.js) lands on the account here,
       // before anything reads current_level. Only fills an empty placement.
+      // user.id === userId here: the callback is recreated whenever the id
+      // changes, so the user it captured is always this account.
       currentProfile = await settlePendingPlacement(user.id, currentProfile);
       if (!isCurrent()) return;
 
       setProfile(currentProfile);
     } catch (error) {
       console.error('Error loading subscription data:', error);
+      // A timeout or a failed retry verified nothing: the account keeps the
+      // data it had, but never as verified billing.
+      if (isCurrent()) setData((previous) => ({ ...previous, billingVerified: false }));
     } finally {
       if (isCurrent()) setData((previous) => ({ ...previous, loading: false }));
     }
-  }, [userId, user, authLoading]);
+    // Keyed on the account id, not the auth user object: auth-js emits
+    // SIGNED_IN / TOKEN_REFRESHED with a new object for the same user (every
+    // tab return, about hourly), which must not recreate the loader.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, authLoading]);
 
   useEffect(() => {
     loadSubscriptionData();
@@ -116,7 +164,7 @@ export const SubscriptionProvider = ({ children }) => {
   // Refresh subscription data when user returns to tab (e.g. after LemonSqueezy checkout)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && user) {
+      if (document.visibilityState === 'visible' && userId) {
         // Throttle: only refresh if more than 5 seconds since last refresh
         const now = Date.now();
         if (now - lastRefreshRef.current > 5000) {
@@ -128,7 +176,7 @@ export const SubscriptionProvider = ({ children }) => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [user, loadSubscriptionData]);
+  }, [userId, loadSubscriptionData]);
 
   const isInFreeTrial = () => {
     const trialStatus = checkTrialStatus(profile);
@@ -204,6 +252,7 @@ export const SubscriptionProvider = ({ children }) => {
     hasProduct,
     hasLevelAccess,
     loading,
+    billingVerified,
     hasAccess,
     isInFreeTrial,
     getTrialDaysRemaining,

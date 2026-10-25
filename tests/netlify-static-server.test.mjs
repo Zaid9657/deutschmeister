@@ -55,7 +55,8 @@ test('browser audits follow Netlify redirects, the SPA allow-list and hard 404s'
     const pricing = await get('/pricing?ref=audit');
     assert.equal(pricing.status, 301);
     assert.equal(pricing.headers.location, '/pricing/?ref=audit');
-    for (const path of ['/course/a1.1', '/course/a1.1/l/1', '/support']) {
+    // /start: the home-screen app's start_url (ACC-07, tests/app-launcher.test.mjs).
+    for (const path of ['/course/a1.1', '/course/a1.1/l/1', '/support', '/start']) {
       const res = await get(path);
       assert.equal(res.status, 200, path);
       assert.equal(res.body.toString(), app, path);

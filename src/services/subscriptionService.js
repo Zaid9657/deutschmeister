@@ -1,6 +1,14 @@
 import { supabase } from '../utils/supabase';
 import { subscriptionStatus } from '../lib/subscriptionStatus.js';
 
+// A failed read THROWS; it never answers "none". postgrest-js resolves a
+// network or 5xx failure as { error }, and these reads used to turn that into
+// null / [] / null: a background refresh then replaced a paying learner's
+// entitlements with nothing (the level guards sent them to the paywall) and
+// /subscription offered a second recurring checkout. SubscriptionContext is
+// the only caller; it keeps what the account already had when a read fails
+// (tests/checkout-access.test.mjs).
+
 // Fetch the user's most relevant subscription row.
 // Keep cancelled and past_due rows visible; their last confirmed paid period
 // may still grant access. checkSubscriptionStatus also checks the status.
@@ -16,7 +24,7 @@ export const getSubscription = async (userId) => {
 
   if (error) {
     console.error('Error fetching subscription:', error);
-    return null;
+    throw error;
   }
   return data;
 };
@@ -34,12 +42,14 @@ export const getPurchases = async (userId) => {
 
   if (error) {
     console.error('Error fetching purchases:', error);
-    return [];
+    throw error;
   }
   return data || [];
 };
 
-// Fetch user profile (for trial info)
+// Fetch user profile (for trial info). null means the row is missing (the
+// trial backfill may create it); a failed read throws, because an unreadable
+// profile is not a missing one.
 export const getUserProfile = async (userId) => {
   const { data, error } = await supabase
     .from('profiles')
@@ -49,7 +59,7 @@ export const getUserProfile = async (userId) => {
 
   if (error) {
     console.error('[getUserProfile] error:', error);
-    return null;
+    throw error;
   }
   if (!data) {
     console.warn('[getUserProfile] no profile found for user:', userId);

@@ -5,7 +5,23 @@
 // which is how the order webhook attributes the redemption deterministically.
 import { useState, useEffect, useRef } from 'react';
 import { getAuthHeaders } from '../utils/supabase';
+import { deEur, eur } from '../data/pricing.js';
 import Button from './ui/Button.jsx';
+
+// What an accepted code does, in the server's numbers: coupon-validate returns
+// the saving and the price at checkout for the selected offer, in minor units,
+// computed from the synced pricing catalogue (ACC-15). Formatted by the
+// pricing.js helpers; no price is typed here. Without both amounts the line
+// only says the code applies.
+export const couponAppliedLine = (result, isGerman) => {
+  const label = result.label || result.code;
+  const money = (minor) => (isGerman ? deEur(minor / 100) : eur(minor / 100));
+  const amounts = Number.isFinite(result.discount) && Number.isFinite(result.final) && result.discount > 0;
+  if (!amounts) return isGerman ? `✓ ${label} wird im Checkout angewendet` : `✓ ${label} applies at checkout`;
+  return isGerman
+    ? `✓ ${label}: Sie sparen ${money(result.discount)}, Preis im Checkout ${money(result.final)}`
+    : `✓ ${label}: you save ${money(result.discount)}, price at checkout ${money(result.final)}`;
+};
 
 export default function CouponField({ onApplied, productKey, isGerman = false }) {
   const [code, setCode] = useState('');
@@ -44,7 +60,7 @@ export default function CouponField({ onApplied, productKey, isGerman = false })
       <label className="sr-only" htmlFor="coupon-code">{isGerman ? 'Gutscheincode' : 'Coupon code'}</label>
       <input id="coupon-code" value={code} onChange={(e) => { requestRef.current += 1; setCode(e.target.value.toUpperCase()); setResult(null); onApplied?.(null); }} placeholder={isGerman ? 'Gutscheincode' : 'Coupon code'} className="w-44 rounded-lg border border-rule bg-white px-3 py-2 font-data text-sm uppercase text-ink focus:border-siegel focus:outline-none" maxLength={32} />
       <Button type="submit" variant="secondary" size="sm" disabled={busy || !code.trim() || !productKey}>{busy ? '…' : isGerman ? 'Prüfen' : 'Apply'}</Button>
-      {result ? <span className={`text-sm ${result.ok ? 'text-siegel-deep' : 'text-graphite'}`}>{result.ok ? (isGerman ? `✓ ${result.label || result.code} wird im Checkout angewendet` : `✓ ${result.label || result.code} applies at checkout`) : result.message}</span> : null}
+      {result ? <span className={`text-sm ${result.ok ? 'text-siegel-deep' : 'text-graphite'}`}>{result.ok ? couponAppliedLine(result, isGerman) : result.message}</span> : null}
     </form>
   );
 }

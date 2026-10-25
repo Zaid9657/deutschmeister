@@ -34,6 +34,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, relative } from 'node:path';
 
 import { subscriptionHeadingCopy } from '../src/lib/subscriptionHeading.js';
+import { hasFailedPayment } from '../src/lib/checkoutAccess.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -193,6 +194,8 @@ const STATES = [
   { name: 'trial, 1 day', isSubscribed: false, inTrial: true, daysLeft: 1 },
   { name: 'trial, 5 days', isSubscribed: false, inTrial: true, daysLeft: 5 },
   { name: 'trial over', isSubscribed: false, inTrial: false, daysLeft: 0 },
+  // ACC-04: a renewal that failed (past_due past its paid period, or unpaid).
+  { name: 'payment failed', isSubscribed: false, inTrial: false, daysLeft: 0, paymentFailed: true },
 ];
 const each = (fn) => {
   for (const s of STATES) for (const canBuyLevel of [true, false]) fn({ ...s, canBuyLevel });
@@ -267,4 +270,54 @@ test('/subscription renders the heading from the lib, with the course cards\' Bu
   }
   assert.match(src, /c\.comingSoon \|\| !c\.variantId \?/, 'the card shows Buy only for a live course with a checkout id');
   assert.match(canBuy[1], /c\.variantId && !c\.comingSoon/);
+});
+
+// ACC-04 (cross-check 2026-10-25): every level guard sends a failed-payment
+// subscriber here, and the page told them "Trial expired — Subscribe now",
+// headed "Your trial is over", and offered "Already paid? Verify my
+// subscription", which answers "No subscription found". The fix for them is a
+// new card in the Lemon Squeezy portal. No past_due grace was added: whether
+// such a row grants access stays checkSubscriptionStatus's (an owner) decision.
+const FAILED = [
+  { plan_type: 'monthly', status: 'past_due', subscription_end: '2000-01-01', lemonsqueezy_subscription_id: 'sub-1' },
+  { plan_type: 'yearly', status: 'unpaid', subscription_end: '2000-01-01', lemonsqueezy_subscription_id: 'sub-2' },
+];
+
+test('ACC-04: past_due and unpaid Lemon Squeezy rows read as a failed payment; nothing else does', () => {
+  for (const row of FAILED) assert.equal(hasFailedPayment(row), true, row.status);
+  for (const row of [
+    null,
+    { plan_type: 'monthly', status: 'active', subscription_end: '2100-01-01', lemonsqueezy_subscription_id: 'sub-1' },
+    { plan_type: 'monthly', status: 'expired', subscription_end: '2000-01-01', lemonsqueezy_subscription_id: 'sub-1' },
+    { plan_type: 'monthly', status: 'past_due', subscription_end: '2000-01-01', lemonsqueezy_subscription_id: null },
+    { plan_type: 'course', status: 'active', subscription_end: '2100-01-01', lemonsqueezy_subscription_id: null },
+  ]) assert.equal(hasFailedPayment(row), false, JSON.stringify(row));
+});
+
+test('ACC-04: a failed payment is headed as one, in both languages, never as an ended trial', () => {
+  for (const canBuyLevel of [true, false]) {
+    const en = subscriptionHeadingCopy({ isSubscribed: false, inTrial: false, daysLeft: 0, canBuyLevel, paymentFailed: true }, false);
+    const de = subscriptionHeadingCopy({ isSubscribed: false, inTrial: false, daysLeft: 0, canBuyLevel, paymentFailed: true }, true);
+    assert.match(en.title, /payment/i);
+    assert.match(en.lead, /card/);
+    assert.doesNotMatch(`${en.title} ${en.lead}`, /trial/i);
+    assert.match(de.title, /Zahlung/);
+    assert.match(de.lead, /Karte/);
+    assert.doesNotMatch(`${de.title} ${de.lead}`, /Testphase/);
+  }
+  // A subscriber still inside the paid period keeps the plan heading.
+  assert.equal(subscriptionHeadingCopy({ isSubscribed: true, inTrial: false, daysLeft: 0, canBuyLevel: false, paymentFailed: true }, false).title, 'Your plan');
+});
+
+test('ACC-04: /subscription shows the portal card instead of "Trial expired" and hides the verify button', () => {
+  const src = code(read(PAGE));
+  assert.match(src, /import \{[^}]*\bhasFailedPayment\b[^}]*\} from '\.\.\/lib\/checkoutAccess\.js';/);
+  assert.match(src, /const paymentFailed = billingVerified && hasFailedPayment\(subscription\);/);
+  const failedCard = src.match(/\{!inTrial && !isSubscribed && paymentFailed && \(([\s\S]*?)\n {8}\)\}/);
+  assert.ok(failedCard, 'the failed-payment card renders on its own condition');
+  assert.match(failedCard[1], /href=\{billingAction\.href\}/, 'the card links the portal through the decision module');
+  assert.match(failedCard[1], /\{billingAction\.label\}/);
+  assert.match(failedCard[1], /Aktualisieren Sie Ihre Karte/);
+  assert.match(src, /\{!inTrial && !isSubscribed && billingVerified && !paymentFailed && \(/, '"Trial expired" is not shown to a failed payment');
+  assert.match(src, /\{!isSubscribed && !verifying && !paymentFailed && \(/, 'no "Already paid? Verify" for a row that is already found');
 });
