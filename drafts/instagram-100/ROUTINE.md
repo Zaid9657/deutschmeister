@@ -1,5 +1,12 @@
 # Daily post Routine — the prompt a fresh session runs every day at ~18:00 Berlin
 
+> **STOPPED 2026-10-25 by the owner.** The Routine is disabled (not deleted). The final count,
+> verified against the Instagram and Facebook APIs, is 25 of 27 scheduled posts published on
+> both channels (001–027, 2026-09-28 → 10-24). Posts 006 (10-03) and 019 (10-16) never went out,
+> and 028–050 were never posted. Engagement on this series was 1 Instagram like, 0 Facebook
+> reactions and 0 comments. Over the same days the separate `shorts-daily` reel series got
+> 55 Instagram likes and 2 comments from 24 posts. Do not re-enable without the owner.
+
 Kept in the repo (not only in the Routines UI) so it cannot drift silently — same
 rule as `docs/seo-routines/`. One fire = one post on up to three channels, through
 the owner's existing Zapier connections. Nothing else.

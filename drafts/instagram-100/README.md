@@ -1,6 +1,6 @@
 # 50 posts for Instagram, Facebook and Telegram: one a day, Zapier-ready
 
-**Status: 50 posts rendered, scheduled 2026-09-28 → 2026-11-16, ~18:00 Berlin (start moved up by the owner).**
+**Status: STOPPED by the owner on 2026-10-25 after 25 published posts. See the top of `ROUTINE.md`.**
 The first 3 are the samples the owner approved on 2026-09-27; the other 47 follow
 the same template and voice. The daily Routine in `ROUTINE.md` publishes them to
 Instagram (@deutschmeisterde) and the Deutsch Meister Facebook page. Telegram follows later.
