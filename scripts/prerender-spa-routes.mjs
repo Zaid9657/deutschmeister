@@ -275,7 +275,7 @@ const ROUTES = [
     </div>
     <div class="${CARD_FLAT} p-5">
       <h2 class="${H_CARD}">Feedback you can use</h2>
-      <p class="mt-2 ${SMALL}">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor who never rushes you.</p>
+      <p class="mt-2 ${SMALL}">After each session: grammar, vocabulary and clarity, with concrete corrections — like a patient tutor who never rushes you.</p>
     </div>
   </div>
   <p class="mt-10"><a href="/signup" class="${BTN_PRIMARY}">Sign up free</a></p>
@@ -626,9 +626,9 @@ ${faqSection(PODCAST_FAQS)}
   <section class="py-20"><div class="mx-auto max-w-4xl px-4 sm:px-6">
     <h2 class="text-center ${H_SECTION}">What makes Deutschmeister different</h2>
     <div class="mt-12 grid gap-6 sm:grid-cols-3">
-      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Real speaking, not just clicking</h3><p class="mt-2 ${SMALL}">Practise complete responses and receive AI feedback on pronunciation, grammar, and vocabulary—not only multiple-choice drills.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Real speaking, not just clicking</h3><p class="mt-2 ${SMALL}">Practice complete responses and receive AI feedback on grammar, vocabulary and clarity—not only multiple-choice drills.</p></div>
       <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Grammar that makes sense</h3><p class="mt-2 ${SMALL}">Sentence X-Ray breaks down real sentences so you can understand why the language works, not only what the answer is.</p></div>
-      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Built by people who faced the same barrier</h3><p class="mt-2 ${SMALL}">Deutschmeister is developed by a team of doctors in Germany who understand when language stands between you and your work or daily life.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Built by people who faced the same barrier</h3><p class="mt-2 ${SMALL}">Deutschmeister is developed by a team of doctors in Germany who know what it means when language stands between you and your work or daily life.</p></div>
     </div>
   </div></section>
   <section class="bg-ink py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
@@ -639,7 +639,7 @@ ${faqSection(PODCAST_FAQS)}
     <h2 class="text-center ${H_SECTION}">What comes next</h2>
     <ul class="mt-8 flex list-none flex-col gap-4">
       <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">More levels, including C1 and beyond</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Live exam simulations for Goethe, telc, and TestDaF</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Live exam simulations for Goethe and telc</li>
       <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Specialist modules for nursing and business German</li>
       <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">A learning community for practising with others</li>
     </ul>

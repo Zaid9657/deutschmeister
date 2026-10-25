@@ -282,7 +282,7 @@ export const startDeutsch1 = {
             {
               eyebrow: 'Sprechen',
               title: 'KI-Sprechtraining',
-              body: 'Vorstellen und buchstabieren, Informationen erfragen, Bitten formulieren — jeden Tag laut üben, ohne Termin und ohne Partner, mit sofortigem Feedback.',
+              body: 'Vorstellen und buchstabieren, Informationen erfragen, Bitten formulieren — jeden Tag laut üben, ohne Termin und ohne Partner, mit einer Auswertung nach jedem Gespräch.',
             },
             {
               eyebrow: 'Hören',

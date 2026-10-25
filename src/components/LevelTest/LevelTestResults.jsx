@@ -419,7 +419,7 @@ const LevelTestResults = ({
             <span className="min-w-0">
               <span className="block text-[0.9375rem] font-bold text-ink">Practice Speaking with AI</span>
               <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">
-                Have a real conversation at your {finalSublevel} level and get instant feedback on grammar, vocabulary and how clearly you got your meaning across.
+                Have a real conversation at your {finalSublevel} level, then get feedback on grammar, vocabulary and how clearly you got your meaning across.
               </span>
             </span>
           </Card>

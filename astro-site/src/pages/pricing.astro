@@ -81,16 +81,6 @@ const firstTicket = TICKET_STATIONS[0];
 // starts soon and offers the attributed free-account door the telc page uses.
 const telcOnSale = Boolean(telcPilotVariant());
 const telcSignupHref = onsiteHref('signup', 'telc-pilot', 'pricing');
-// offers.js EXAM_ROUTE closes on the telc package with its price. Off sale this
-// page drops that clause; scripts/check-built-html.mjs fails the build if the
-// price comes back on /pricing/.
-const examRouteBody = telcOnSale
-  ? EXAM_ROUTE.body
-  : EXAM_ROUTE.body
-      .split(/;\s*/)
-      .filter((clause) => !clause.includes(eur(COURSE_TELC_B1_PRICE_EUR)))
-      .join('; ')
-      .replace(/\.?$/, '.');
 
 // Pro alone, for the same months a ticket carries — arithmetic on our own
 // prices, shown beside the ticket so "own vs rent" is a sum, not a slogan.
@@ -289,7 +279,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
           <div>
             <Ticket surface="pricing_ticket" defaultLevel={firstTicket ? firstTicket.level : 'a1.2'} headingLevel={3} />
             <p class="mt-6 rounded-clay border border-dashed border-rule p-5 text-[0.9375rem] leading-relaxed text-graphite">
-              <strong class="text-ink">{EXAM_ROUTE.title}</strong> {examRouteBody}
+              <strong class="text-ink">{EXAM_ROUTE.title}</strong> {EXAM_ROUTE.body}
             </p>
           </div>
         </div>

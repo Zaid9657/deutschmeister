@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { renderShort, renderFull } from '../scripts/build-llms.mjs';
+import { renderShort, renderFull, committedSaleStates } from '../scripts/build-llms.mjs';
 import { GUIDES } from '../astro-site/src/data/guides/index.js';
 import { EXAM_HUBS } from '../astro-site/src/data/exams/index.js';
 import { GRAMMAR_TOPIC_COUNT, FREE_LEVEL_LABEL } from '../src/data/marketing.js';
@@ -20,8 +20,17 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => readFileSync(join(ROOT, f), 'utf8');
 
 test('committed llms files equal the generator output (run node scripts/build-llms.mjs)', () => {
-  assert.equal(read('public/llms.txt'), renderShort(), 'public/llms.txt is stale');
-  assert.equal(read('public/llms-full.txt'), renderFull(), 'public/llms-full.txt is stale');
+  // The generator has two outputs, with the telc B1 sale switch off or on
+  // (the owner opens the sale by regenerating with it set), so the committed
+  // pair is compared with the render of the state it is in — never with the
+  // state of the machine running the tests — and both files share that state.
+  const states = committedSaleStates();
+  assert.notEqual(states['public/llms.txt'], null, 'public/llms.txt is stale');
+  assert.notEqual(states['public/llms-full.txt'], null, 'public/llms-full.txt is stale');
+  assert.equal(states['public/llms.txt'], states['public/llms-full.txt'], 'the two files were generated with different telc sale states');
+  const onSale = states['public/llms.txt'];
+  assert.equal(read('public/llms.txt'), renderShort({ telcOnSale: onSale }));
+  assert.equal(read('public/llms-full.txt'), renderFull({ telcOnSale: onSale }));
 });
 
 test('llms-full lists every grammar topic, guide and exam hub', () => {

@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
-import { COURSE_TELC_B1_PRICE_EUR, COURSE_PRO_MONTHS, PLANS, eur } from '../src/data/pricing.js';
+import { COURSE_TELC_B1_PRICE_EUR, COURSE_PRO_MONTHS, PLANS, eur, deEur } from '../src/data/pricing.js';
 import { renderShort, renderFull, telcOnSale } from '../scripts/build-llms.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -166,60 +166,108 @@ test('/pricing/ reads the same switch and sells the package only while it is on'
   assert.match(template, /\{!telcOnSale && \(\s*<a href=\{telcSignupHref\}/, 'off sale, the card offers the attributed free-account door');
 });
 
-test('/pricing/ renders the exam route without the package\'s price while it is off sale', async () => {
-  // offers.js EXAM_ROUTE ends on "the telc B1 course is its own <price>
-  // programme"; the page renders it beside the level tickets.
-  const { EXAM_ROUTE } = await import('../astro-site/src/data/offers.js');
-  assert.ok(EXAM_ROUTE.body.includes(TELC_PRICE), 'offers.js no longer prices the package here — simplify this rule');
-  const expr = pricing.match(/const examRouteBody = ([\s\S]*?);\n/);
-  assert.ok(expr, 'const examRouteBody not found in pricing.astro');
-  const body = (onSale) => vm.runInNewContext(`(${expr[1]})`, { EXAM_ROUTE, eur, COURSE_TELC_B1_PRICE_EUR, telcOnSale: onSale });
-  assert.ok(!body(false).includes(TELC_PRICE), `off sale, the exam route prices the package: "${body(false)}"`);
-  assert.match(body(false), /\.$/, 'the shortened route still ends as a sentence');
-  assert.equal(body(true), EXAM_ROUTE.body, 'on sale, the route is offers.js word for word');
-  assert.match(pricing, /\{EXAM_ROUTE\.title\}<\/strong> \{examRouteBody\}/, 'the page renders the gated body');
+test('the shared offer copy names no price for the package, whatever the switch', async () => {
+  // offers.js renders on the homepage, /courses/, /pricing/ and the level-test
+  // result, none of which reads the sale switch: EXAM_ROUTE ended on "the telc
+  // B1 course is its own <price> programme" on all four while it was off sale.
+  // The package's own page states the price and whether it can be bought.
+  const TELC_PRICE_DE = deEur(COURSE_TELC_B1_PRICE_EUR);
+  for (const root of ['src/data', 'astro-site/src/data']) {
+    const offers = await import(`../${root}/offers.js`);
+    const texts = [];
+    const walk = (value) => {
+      if (typeof value === 'string') texts.push(value);
+      else if (Array.isArray(value)) value.forEach(walk);
+      else if (value && typeof value === 'object') Object.values(value).forEach(walk);
+    };
+    for (const value of Object.values(offers)) {
+      // Functions build their lines from a station; call them for every one.
+      if (typeof value === 'function') {
+        for (const s of offers.STATIONS) {
+          try { walk(value(s.level)); walk(value(s)); } catch { /* not a station-shaped helper */ }
+        }
+      } else walk(value);
+    }
+    assert.ok(texts.length > 20, `${root}/offers.js: the walk found too little copy`);
+    for (const text of texts) {
+      assert.ok(!text.includes(TELC_PRICE) && !text.includes(TELC_PRICE_DE), `${root}/offers.js prices the telc package: "${text.slice(0, 110)}"`);
+    }
+    assert.ok(offers.EXAM_ROUTE.links.some((l) => l.href === '/telc-b1-komplettvorbereitung/'), 'the route still links the package\'s page');
+  }
+  assert.match(pricing, /\{EXAM_ROUTE\.title\}<\/strong> \{EXAM_ROUTE\.body\}/, '/pricing/ renders the shared route as it is');
+  assert.match(read('src/components/LevelTest/LevelTestResults.jsx'), /\{EXAM_ROUTE\.body\}/, 'the level-test result renders the same copy');
 });
 
-test('the AI-facing catalogue reads the same switch, and the committed copy is the off-sale state', () => {
+test('the AI-facing catalogue reads the same switch; the committed pair is one state\'s render', async () => {
+  const { committedSaleStates } = await import('../scripts/build-llms.mjs');
   for (const [env, open] of ENVS) {
     assert.equal(telcOnSale({ ...env, PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID: env.ID }), open, `build-llms gate with ${JSON.stringify(env)}`);
   }
+  // Off sale the package is named without a price; on sale it carries its price.
   for (const render of [renderShort, renderFull]) {
-    assert.ok(!render({ telcOnSale: false }).includes(TELC_PRICE), `${render.name}: off sale, the package is priced`);
-    assert.match(render({ telcOnSale: false }), /Komplettvorbereitung:\*\* starts soon, not on sale yet/);
-    assert.ok(render({ telcOnSale: true }).includes(TELC_PRICE), `${render.name}: on sale, the package is listed with its price`);
+    const off = render({ telcOnSale: false });
+    assert.ok(!off.includes(TELC_PRICE), `${render.name}: off sale, the package is priced`);
+    assert.match(off, /Komplettvorbereitung:\*\* starts soon, not on sale yet/);
+    const on = render({ telcOnSale: true });
+    assert.ok(on.includes(TELC_PRICE), `${render.name}: on sale, the package is listed with its price`);
+    assert.doesNotMatch(on, /not on sale yet/, `${render.name}: on sale, the package is listed as not on sale`);
   }
-  for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
-    assert.ok(!read(file).includes(TELC_PRICE), `${file} quotes the off-sale package (regenerate without the switch set)`);
+  // The committed files may be generated in either state (the owner opens the
+  // sale with a regeneration), but each equals that state's render, the two
+  // agree, and only an off-sale render may leave the price out.
+  const states = committedSaleStates();
+  for (const [file, state] of Object.entries(states)) {
+    assert.notEqual(state, null, `${file} equals neither sale state's render — run: node scripts/build-llms.mjs`);
+    assert.equal(read(file).includes(TELC_PRICE), state, `${file}: the price is present exactly when the file is the on-sale render`);
   }
+  assert.equal(new Set(Object.values(states)).size, 1, 'llms.txt and llms-full.txt describe different sale states');
+  // Both states are accepted by the comparison, and a hand edit by neither.
+  const fake = (state) => (file) => (file.endsWith('llms.txt') ? renderShort : renderFull)({ telcOnSale: state });
+  assert.deepEqual(Object.values(committedSaleStates(fake(true))), [true, true]);
+  assert.deepEqual(Object.values(committedSaleStates(fake(false))), [false, false]);
+  assert.deepEqual(Object.values(committedSaleStates(() => 'hand-edited')), [null, null]);
 });
 
-test('the built-HTML check holds /pricing/ and llms*.txt to the deploy\'s switch', () => {
+test('the built-HTML check holds every page, and on a deploy the catalogue, to the switch', () => {
   const dir = mkdtempSync(join(tmpdir(), 'telc-gate-'));
-  const page = (body) => `<html lang="en"><head><title>Pricing</title></head><body>${body}</body></html>`;
+  const page = (title, body) => `<html lang="en"><head><title>${title}</title></head><body>${body}</body></html>`;
   const run = (env) => {
     const r = spawnSync(process.execPath, ['scripts/check-built-html.mjs', dir, '--spa-only'], {
       cwd: ROOT, env: { PATH: process.env.PATH, ...env }, encoding: 'utf8',
     });
     return `${r.stdout}\n${r.stderr}`;
   };
+  const ON = { PUBLIC_TELC_B1_ON_SALE: 'true', PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID: 'uuid-1' };
   try {
-    mkdirSync(join(dir, 'pricing'));
-    writeFileSync(join(dir, 'app.html'), page(''));
-    writeFileSync(join(dir, 'pricing', 'index.html'), page(`<p>${TELC_PRICE}</p>`));
+    for (const d of ['pricing', 'courses', 'telc-b1-komplettvorbereitung']) mkdirSync(join(dir, d));
+    writeFileSync(join(dir, 'app.html'), page('App', ''));
+    writeFileSync(join(dir, 'index.html'), page('Home', `<p>the telc B1 course is its own ${TELC_PRICE} programme</p>`));
+    writeFileSync(join(dir, 'pricing', 'index.html'), page('Pricing', `<p>${TELC_PRICE}</p>`));
+    writeFileSync(join(dir, 'courses', 'index.html'), page('Courses', `<p>${deEur(COURSE_TELC_B1_PRICE_EUR)} einmalig</p>`));
+    writeFileSync(join(dir, 'telc-b1-komplettvorbereitung', 'index.html'), page('telc', `<p>${deEur(COURSE_TELC_B1_PRICE_EUR)}</p>`));
     writeFileSync(join(dir, 'llms.txt'), `- telc B1: ${TELC_PRICE} one-time`);
     writeFileSync(join(dir, 'llms-full.txt'), '- telc B1: starts soon, not on sale yet');
 
+    // Off sale: every page but the package's own fails on its price, in either format.
     const off = run({});
+    assert.match(off, /FAIL\s+index\.html: off sale, but the telc B1 package is still priced/);
     assert.match(off, /FAIL\s+pricing\/index\.html: off sale, but the telc B1 package is still priced/);
-    assert.match(off, /FAIL\s+llms\.txt: off sale, but the telc B1 package is listed/);
+    assert.match(off, /FAIL\s+courses\/index\.html: off sale, but the telc B1 package is still priced/);
+    assert.doesNotMatch(off, /telc-b1-komplettvorbereitung\/index\.html: off sale, but the telc B1 package is still priced/);
+    // The committed catalogue: outside a deploy the switch is unknown, so it warns;
+    // on a Netlify build the switch is the truth, so it fails.
+    assert.match(off, /WARN\s+llms\.txt: off sale, but the telc B1 package is listed/);
+    assert.doesNotMatch(off, /FAIL\s+llms/);
+    assert.match(run({ NETLIFY: 'true' }), /FAIL\s+llms\.txt: off sale, but the telc B1 package is listed/);
     assert.doesNotMatch(off, /llms-full\.txt: off sale/);
 
-    writeFileSync(join(dir, 'pricing', 'index.html'), page('<p>Starts soon</p>'));
-    const on = run({ PUBLIC_TELC_B1_ON_SALE: 'true', PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID: 'uuid-1' });
+    // On sale: /pricing/ must quote the price; an understating catalogue only warns.
+    writeFileSync(join(dir, 'pricing', 'index.html'), page('Pricing', '<p>Starts soon</p>'));
+    const on = run({ ...ON, NETLIFY: 'true' });
     assert.match(on, /FAIL\s+pricing\/index\.html: on sale, but the telc B1 card quotes no price/);
     assert.match(on, /WARN\s+llms-full\.txt: the telc B1 package is on sale/, 'an understating catalogue warns');
     assert.doesNotMatch(on, /FAIL\s+llms/, 'an understating catalogue never blocks the deploy that opens the sale');
+    assert.doesNotMatch(on, /off sale, but the telc B1 package is still priced/, 'on sale, other pages may name the price');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

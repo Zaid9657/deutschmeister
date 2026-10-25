@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
@@ -118,4 +118,15 @@ test('the feed links the canonical /podcasts/ and states no episode count of its
   const channel = res.body.slice(0, res.body.indexOf('<item>'));
   assert.doesNotMatch(channel, /\b\d+\s+episodes\b/i, 'the channel retypes an episode count (24 claimed, 14 published: an owner decision)');
   assert.doesNotMatch(channel, /\bA1 to B2\b/, 'the channel states a level range the published episodes do not cover');
+});
+
+test('every public PNG ships with its committed WebP twin, the cover included', () => {
+  // npm run build (scripts/optimize-images.cjs) writes a .webp beside each
+  // public image. The logo, icons and og-image have theirs committed; the
+  // podcast cover's was left untracked by every build until 2026-10-25.
+  const pngs = readdirSync(join(ROOT, 'public')).filter((f) => f.endsWith('.png'));
+  assert.ok(pngs.includes('podcast-cover.png'), 'the cover is a public PNG');
+  for (const png of pngs) {
+    assert.ok(existsSync(join(ROOT, 'public', png.replace(/\.png$/, '.webp'))), `public/${png} has no WebP twin (node scripts/optimize-images.cjs)`);
+  }
 });
