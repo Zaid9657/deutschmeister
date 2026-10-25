@@ -103,8 +103,9 @@ test('displayed and persisted placement share the adjusted result across a band 
     writes.push({ payload, column, id });
     return { error: null };
   } }) }) };
-  const run = new Function('useEffect', 'testState', 'userId', 'finalSublevel', 'supabase', 'refreshSubscriptionRef', effect);
-  run(callback => callback(), 'results', 'learner', placement.sublevel, supabase, { current: async () => refreshes.push(writes.length) });
+  // The run belongs to the learner who took it (tests/placement-owner.test.mjs).
+  const run = new Function('useEffect', 'testState', 'userId', 'runOwner', 'finalSublevel', 'supabase', 'refreshSubscriptionRef', effect);
+  run(callback => callback(), 'results', 'learner', 'learner', placement.sublevel, supabase, { current: async () => refreshes.push(writes.length) });
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(writes.length, 1);
   assert.equal(writes[0].payload.current_level, placement.sublevel);
@@ -114,6 +115,6 @@ test('displayed and persisted placement share the adjusted result across a band 
   assert.match(page, /<LevelTestResults\s+placement=\{placement\}/);
   const result = read('src/components/LevelTest/LevelTestResults.jsx');
   assert.match(result, /sublevel: finalSublevel, demotions \} = placement;/);
-  assert.match(result, /if \(!user\) rememberPlacement\(finalSublevel\);/);
+  assert.match(result, /if \(guestRun\) rememberPlacement\(finalSublevel\);/);
   assert.match(result, /\$\{totalCorrect\}\/\$\{totalQuestions\} correct/);
 });

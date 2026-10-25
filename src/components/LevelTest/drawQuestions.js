@@ -70,15 +70,22 @@ export function answerFor(question, selectedIndex) {
 // iOS tab reload on question 30 started it over. LevelTest writes this snapshot
 // to sessionStorage (this tab only, through safeStorage) on every step and offers
 // "Continue your test" on the landing page while it can be rebuilt exactly.
+//
+// A snapshot names its owner — the account that took the run, or null for a
+// guest — and is offered back to that owner only, never to the next account
+// signed in on the tab.
 
 export const PLACEMENT_PROGRESS_KEY = 'dm_level_test_run';
 export const PLACEMENT_PROGRESS_VERSION = 1;
 /** Steps a run resumes in. Listening and speaking start again at their intro screens. */
 export const RESUMABLE_STEPS = ['testing', 'listening', 'speaking'];
 
-export function placementSnapshot({ questions, answers, currentQuestionIndex, testState, listeningScore }) {
+const isOwner = (owner) => owner === null || (typeof owner === 'string' && owner.length > 0);
+
+export function placementSnapshot({ questions, answers, currentQuestionIndex, testState, listeningScore, owner }) {
   return {
     v: PLACEMENT_PROGRESS_VERSION,
+    owner,
     questionIds: questions.map((q) => q.id),
     optionOrders: questions.map((q) => q.optionOrder),
     answers: answers.map(({ questionId, selectedIndex }) => ({ questionId, selectedIndex })),
@@ -90,13 +97,15 @@ export function placementSnapshot({ questions, answers, currentQuestionIndex, te
 
 /**
  * A stored snapshot → the run to resume, or null when it cannot be rebuilt
- * exactly: another version, a step that does not resume, an id the bank no
- * longer has, a broken option order, an answer to a question the run did not
- * ask. Answers are re-scored against the rebuilt keys, never trusted as stored.
+ * exactly: another version, no owner, a step that does not resume, an id the
+ * bank no longer has, a broken option order, an answer to a question the run
+ * did not ask. Answers are re-scored against the rebuilt keys, never trusted as
+ * stored. The caller offers it to `owner` only.
  */
 export function restorePlacement(bank, snapshot) {
   if (!snapshot || typeof snapshot !== 'object' || snapshot.v !== PLACEMENT_PROGRESS_VERSION) return null;
-  const { questionIds, optionOrders, answers, currentQuestionIndex, testState, listeningScore } = snapshot;
+  const { owner, questionIds, optionOrders, answers, currentQuestionIndex, testState, listeningScore } = snapshot;
+  if (!isOwner(owner)) return null;
   if (!RESUMABLE_STEPS.includes(testState)) return null;
   if (!Array.isArray(questionIds) || !Array.isArray(optionOrders) || !Array.isArray(answers)) return null;
   if (questionIds.length === 0 || questionIds.length !== optionOrders.length || new Set(questionIds).size !== questionIds.length) return null;
@@ -118,7 +127,7 @@ export function restorePlacement(bank, snapshot) {
     restored.push(answerFor(question, answer.selectedIndex));
   }
   const score = Number.isFinite(listeningScore) && listeningScore >= 0 && listeningScore <= 100 ? listeningScore : null;
-  return { questions, answers: restored, currentQuestionIndex, testState, listeningScore: score };
+  return { owner, questions, answers: restored, currentQuestionIndex, testState, listeningScore: score };
 }
 
 // ── The listening step (C-073/C-086/X-070) ─────────────────────────────────
