@@ -378,6 +378,8 @@ function CheckpointRun() {
   // Items read instead of heard (audio failed): they leave the score — see PracticeItem.
   const [notHeard, setNotHeard] = useState(() => new Set());
   const saveRef = useRef(null);
+  // The paper on screen still waits for its save (finished, or brought back by a reload).
+  const unsaved = useRef(false);
 
   useEffect(() => {
     if (!curriculum) return undefined;
@@ -422,24 +424,41 @@ function CheckpointRun() {
     // Without a paper in progress, a paper FINISHED but not yet saved to this account (offline, a
     // failed write) comes back as its result — the newest whose paper still rebuilds — and the flush
     // below sends it again, so a reload no longer costs the answers and the pass.
+    const show = (entry, scored) => {
+      saveRef.current = { args: { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result }, stamp: entry.stamp, finished: entry };
+      unsaved.current = true;
+      setRound(entry.round);
+      setAnswers(entry.answers);
+      setNotHeard(new Set(entry.notHeard));
+      setPhase('result');
+      if (!entry.result.passed) setRemediation(remediationSet(scored, entry.answers, pool, { afterLektion: checkpoint.afterLektion }));
+    };
     const showFinished = () => {
       const waiting = owner ? readFinishedPapers(level, checkpoint.id, Date.now(), owner) : [];
       for (let k = waiting.length - 1; k >= 0; k -= 1) {
-        const entry = waiting[k];
-        const scored = finishedPaperItems({ curriculum, checkpoint, pool }, entry);
-        if (!scored) continue;
-        saveRef.current = { args: { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result }, stamp: entry.stamp, finished: entry };
-        setRound(entry.round);
-        setAnswers(entry.answers);
-        setNotHeard(new Set(entry.notHeard));
-        setPhase('result');
-        if (!entry.result.passed) setRemediation(remediationSet(scored, entry.answers, pool, { afterLektion: checkpoint.afterLektion }));
-        return;
+        const scored = finishedPaperItems({ curriculum, checkpoint, pool }, waiting[k]);
+        if (scored) return show(waiting[k], scored);
       }
+      return undefined;
     };
     const run = readCheckpointRun(level, checkpoint.id, Date.now(), owner);
     if (!run) {
       showFinished();
+      setRestoreDone(true);
+      return;
+    }
+    // A finished paper whose own copy the browser refused (save() kept its run snapshot, stamped,
+    // instead): its result comes back under that stamp, so sending it again is never a second attempt.
+    if (owner && run.stamp) {
+      const entry = { stamp: run.stamp, paper: run.paper, round: run.round, answers: run.answers, notHeard: run.notHeard };
+      const scored = finishedPaperItems({ curriculum, checkpoint, pool }, entry);
+      if (scored) {
+        const scoredResult = scoreCheckpoint(scored, run.answers);
+        show(packFinishedPaper({ ...entry, result: scoredResult }, run.savedAt), scored);
+      } else {
+        clearCheckpointRun(level, checkpoint.id, owner);
+        showFinished();
+      }
       setRestoreDone(true);
       return;
     }
@@ -459,13 +478,14 @@ function CheckpointRun() {
   }, [restoreDone, curriculum, checkpoint, pool, attempts, level, owner]);
 
   // Saved on every answer while a paper is open (with the fingerprint of the paper it belongs to);
-  // the result clears it. Never before the restore decision.
+  // a guest's result clears it. Never before the restore decision. Signed in, save() clears it, and
+  // only once the finished paper is stored on this device in its place.
   const paper = useMemo(() => paperFingerprint(items), [items]);
   useEffect(() => {
     if (!restoreDone || !checkpoint || !items.length) return;
     if (phase === 'run' || phase === 'sectionFeedback') {
       saveCheckpointRun(level, checkpoint.id, packCheckpointRun({ paper, round, index, answers, notHeard: [...notHeard], phase }), owner);
-    } else if (phase === 'result') {
+    } else if (phase === 'result' && !owner) {
       clearCheckpointRun(level, checkpoint.id, owner);
     }
   }, [restoreDone, phase, paper, items.length, round, index, answers, notHeard, level, checkpoint, owner]);
@@ -487,15 +507,29 @@ function CheckpointRun() {
     const job = saveRef.current;
     if (!job || sending.current.has(job.stamp)) return;
     sending.current.add(job.stamp);
-    if (owner) keepFinishedPaper(level, checkpoint.id, job.finished, owner);
+    // The paper's run snapshot goes only once the finished paper reads back from storage. A refused
+    // write (a full or blocked store) keeps the snapshot, with the final answers, so a reload resumes
+    // the paper instead of losing it, and the card offers a retry ('localFailed').
+    const kept = owner ? keepFinishedPaper(level, checkpoint.id, job.finished, owner) : true;
+    if (owner && kept) clearCheckpointRun(level, checkpoint.id, owner);
+    else if (owner) {
+      const { paper: print, round: paperRound, answers: final, notHeard: unheard } = job.finished;
+      const last = job.args.items.length + unheard.length - 1;
+      saveCheckpointRun(level, checkpoint.id, packCheckpointRun({ paper: print, round: paperRound, index: last, answers: final, notHeard: unheard, phase: 'run', stamp: job.stamp }), owner);
+    }
     if (user) setSaveState('saving');
     recordAttempt(user?.id, { ...saveRef.current.args, stamp: saveRef.current.stamp, retry })
       .catch(() => false)
       .then((ok) => {
         sending.current.delete(job.stamp);
-        if (owner && ok) dropFinishedPaper(level, checkpoint.id, job.stamp, owner);
+        if (owner && ok) {
+          dropFinishedPaper(level, checkpoint.id, job.stamp, owner);
+          // Saved: a snapshot kept for it is not needed (unless a retake's own run is open by now).
+          if (saveRef.current === job) clearCheckpointRun(level, checkpoint.id, owner);
+        }
         if (saveRef.current !== job) return null;
-        if (user) setSaveState(ok ? 'saved' : 'failed');
+        unsaved.current = !ok;
+        if (user) setSaveState(ok ? 'saved' : kept ? 'failed' : 'localFailed');
         // Signed out, a pass is kept on this device and merged at sign-in (checkpointService): said so
         // only when this paper's pass reached the browser's storage. A refused write (a full or blocked
         // store) is held in memory, which a reload loses, so it is a failed save with a retry.
@@ -511,12 +545,10 @@ function CheckpointRun() {
   useEffect(() => {
     if (!restoreDone || !owner || !pool) return undefined;
     const flush = () => {
+      // The paper on screen, also when only its snapshot could be kept.
+      if (unsaved.current) save(true);
       for (const entry of readFinishedPapers(level, checkpoint.id, Date.now(), owner)) {
-        if (entry.stamp === saveRef.current?.stamp) {
-          save(true);
-          continue;
-        }
-        if (sending.current.has(entry.stamp)) continue;
+        if (entry.stamp === saveRef.current?.stamp || sending.current.has(entry.stamp)) continue;
         sending.current.add(entry.stamp);
         const scored = finishedPaperItems({ curriculum, checkpoint, pool }, entry) || [];
         recordAttempt(owner, { level, checkpointId: checkpoint.id, items: scored, answers: entry.answers, result: entry.result, stamp: entry.stamp, retry: true })
@@ -543,6 +575,7 @@ function CheckpointRun() {
         // What a reload needs to show this result again and send it (runState.js, finished papers).
         finished: packFinishedPaper({ stamp, paper, round, answers: finalAnswers, notHeard: [...notHeard], result: scored }),
       };
+      unsaved.current = true;
       save();
       // The bound the paper itself was drawn under (see servableBy): a remediation
       // item must not be the first place the learner meets a word.

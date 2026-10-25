@@ -187,8 +187,11 @@ export function paperFingerprint(items) {
 }
 
 /** The serialisable snapshot of a checkpoint run. `now` is a seam for tests. */
-export function packCheckpointRun({ paper = '', round = 0, index = 0, answers = {}, notHeard = [], phase = 'run' } = {}, now = Date.now()) {
+export function packCheckpointRun({ paper = '', round = 0, index = 0, answers = {}, notHeard = [], phase = 'run', stamp = '' } = {}, now = Date.now()) {
   return {
+    // Set only on the snapshot of a FINISHED paper whose own copy the browser refused (see the
+    // finished papers below): the page brings it back as its result, under this stamp.
+    ...(typeof stamp === 'string' && stamp ? { stamp } : {}),
     v: RUN_VERSION,
     savedAt: now,
     paper: typeof paper === 'string' ? paper.slice(0, 16) : '',
@@ -281,12 +284,17 @@ export function readFinishedPapers(level, checkpointId, now = Date.now(), owner 
   return asList(raw).map((entry) => unpackFinishedPaper(entry, now)).filter(Boolean);
 }
 
-/** Keep one finished paper before its writes; once per stamp. False when the browser refused it. */
+/**
+ * Keep one finished paper before its writes; once per stamp. True only when it reads back from the
+ * browser's storage — a refused write (QuotaExceededError, blocked storage) is false, and then the
+ * page keeps the paper's run snapshot instead of dropping it.
+ */
 export function keepFinishedPaper(level, checkpointId, entry, owner = null) {
   if (!owner || !entry || !entry.stamp) return false;
+  const stored = () => readFinishedPapers(level, checkpointId, Date.now(), owner).some((e) => e.stamp === entry.stamp);
+  if (stored()) return true;
   const kept = readFinishedPapers(level, checkpointId, Date.now(), owner);
-  if (kept.some((e) => e.stamp === entry.stamp)) return true;
-  return safeSetJSON(checkpointDoneKey(level, checkpointId, owner), [...kept, entry]);
+  return safeSetJSON(checkpointDoneKey(level, checkpointId, owner), [...kept, entry]) && stored();
 }
 
 /** Drop a finished paper — only once every one of its writes landed. */

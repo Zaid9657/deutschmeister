@@ -91,6 +91,7 @@ function pageSave(result = PAPER.result) {
     user: null,
     owner: null,
     sending: { current: new Set() },
+    unsaved: { current: false },
     keepFinishedPaper: () => assert.fail('a guest paper is not kept in the account store'),
     dropFinishedPaper: () => assert.fail('a guest paper is not kept in the account store'),
     level: 'a1.1',

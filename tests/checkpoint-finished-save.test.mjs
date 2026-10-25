@@ -29,11 +29,15 @@ const PAPER = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: CP, pool
 const RIGHT = Object.fromEntries(PAPER.map((item) => [item.id, item.answer]));
 const WRONG = Object.fromEntries(PAPER.map((item) => [item.id, 'völlig falsch']));
 
-function withStorage() {
+/** localStorage; `refuse(key)` makes a write to that key throw QuotaExceededError, as a full store does. */
+function withStorage(refuse = () => false) {
   const values = new Map();
   globalThis.window = { localStorage: {
     getItem: (k) => (values.has(k) ? values.get(k) : null),
-    setItem: (k, v) => { values.set(k, String(v)); },
+    setItem: (k, v) => {
+      if (refuse(k)) throw new DOMException(`Setting the value of '${k}' exceeded the quota.`, 'QuotaExceededError');
+      values.set(k, String(v));
+    },
     removeItem: (k) => { values.delete(k); },
   } };
   return values;
@@ -101,7 +105,7 @@ function mount(owner) {
     user: owner ? { id: owner } : null, owner, level: 'a1.1', curriculum: CURRICULUM_A11, checkpoint: CP, pool,
     phase: 'intro', round: 0, index: 0, answers: {}, notHeard: new Set(), attempts: null, restoreDone: false, saveState: null, remediation: [],
     items: PAPER, scoredItems: PAPER, paper: paperFingerprint(PAPER),
-    saveRef: { current: null }, sending: { current: new Set() },
+    saveRef: { current: null }, sending: { current: new Set() }, unsaved: { current: false },
     readCheckpointRun, checkpointRunFits, clearCheckpointRun, saveCheckpointRun, packCheckpointRun, paperFingerprint,
     readFinishedPapers, keepFinishedPaper, dropFinishedPaper, packFinishedPaper,
     buildCheckpoint, paperSeed, remediationSet, scoreCheckpoint, recordAttempt, guestPassKept, fetchAttemptState,
@@ -212,6 +216,71 @@ test('a retake after a failed paper keeps the paper before it, and both are sent
     await settle();
     assert.equal(readFinishedPapers('a1.1', CP.id, Date.now(), 'u1').length, 0);
     assert.deepEqual(db.attempts.filter((r) => r.item_id === CP.id).map((r) => r.correct).sort(), [false, true]);
+  } finally {
+    supabase.from = original;
+  }
+}));
+
+// When the finished paper's own write is refused (QuotaExceededError on its key), the run snapshot is
+// the only copy left on the device: it must stay — stamped with the paper — and the card must offer a
+// retry instead of "Not saved to your account yet" over a result a reload would lose (Codex re-check).
+test('a finished paper the browser refused to store keeps its run snapshot, comes back after a reload, and is saved under one stamp', () => quiet(async () => {
+  const original = supabase.from;
+  try {
+    let full = true;
+    const values = withStorage((key) => full && key.startsWith('dm_checkpoint_done:'));
+    const db = database();
+    const last = PAPER[PAPER.length - 1].id;
+    const first = mount('u1');
+    first.ctx.restoreDone = true;
+    first.ctx.phase = 'run';
+    first.ctx.index = PAPER.length - 1;
+    first.ctx.answers = Object.fromEntries(Object.entries(RIGHT).filter(([id]) => id !== last));
+    first.snapshot();
+    first.finish(RIGHT);
+    first.snapshot();
+    await settle();
+    assert.equal(readFinishedPapers('a1.1', CP.id, Date.now(), 'u1').length, 0, 'the finished paper was refused');
+    assert.equal(first.ctx.saveState, 'localFailed', 'stored nowhere: the card says so, with its retry');
+    const stamp = first.ctx.saveRef.current.stamp;
+    const run = readCheckpointRun('a1.1', CP.id, Date.now(), 'u1');
+    assert.ok(run, 'the run snapshot was not dropped');
+    assert.deepEqual([run.answers, run.stamp], [RIGHT, stamp], 'it holds every answer, and the paper\'s stamp');
+
+    // A reload (offline, so the attempt count comes from this device): the result, under that stamp.
+    const second = mount('u1');
+    second.ctx.attempts = await fetchAttemptState('u1', CP.id);
+    second.restore();
+    assert.equal(second.ctx.phase, 'result', 'not a paper to take again');
+    assert.deepEqual(second.ctx.answers, RIGHT);
+    assert.equal(second.ctx.saveRef.current.stamp, stamp);
+    // Storage has room again and the connection is back: one summary row, then nothing left over.
+    full = false;
+    db.online = true;
+    second.flush();
+    await settle();
+    assert.equal(second.ctx.saveState, 'saved');
+    assert.deepEqual(db.attempts.filter((r) => r.item_id === CP.id).map((r) => r.created_at), [stamp]);
+    assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), 'u1'), null);
+    assert.equal(readFinishedPapers('a1.1', CP.id, Date.now(), 'u1').length, 0);
+    assert.equal(JSON.parse(values.get('dm_checkpoint_attempts'))[CP.id].length, 1, 'one attempt counted on this device');
+  } finally {
+    supabase.from = original;
+  }
+}));
+
+test('a refused finished-paper write with the account reachable is saved and leaves nothing behind', () => quiet(async () => {
+  const original = supabase.from;
+  try {
+    withStorage((key) => key.startsWith('dm_checkpoint_done:'));
+    const db = database();
+    db.online = true;
+    const page = mount('u1');
+    page.ctx.restoreDone = true;
+    page.finish(RIGHT);
+    await settle();
+    assert.equal(page.ctx.saveState, 'saved');
+    assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), 'u1'), null);
   } finally {
     supabase.from = original;
   }
