@@ -236,9 +236,15 @@ export const SubscriptionProvider = ({ children }) => {
     return trialStatus.daysRemaining;
   };
 
-  // Pro comes from a confirmed subscription period or an included course
-  // window. Lifetime ownership below remains independent of that deadline.
-  const hasActiveSubscription = () => checkSubscriptionStatus(subscription).isActive ||
+  // Pro comes from a confirmed subscription period, an included course window,
+  // or the owner's explicit premium grant (profiles.subscription_tier
+  // 'premium', the admin set_tier action). Server reconciliation preserves that
+  // grant and every server tool counts it as paid; with no subscription or
+  // purchase row the app read it as nothing at all. ('pro' is derived from the
+  // rows above and cleared by reconciliation, so it is not a grant of its own.)
+  // Lifetime ownership below remains independent of all three.
+  const premiumGrant = profile?.subscription_tier === 'premium';
+  const hasActiveSubscription = () => premiumGrant || checkSubscriptionStatus(subscription).isActive ||
     purchases.some((purchase) => purchase.status === 'active' && Date.parse(purchase.access_until) > Date.now());
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();

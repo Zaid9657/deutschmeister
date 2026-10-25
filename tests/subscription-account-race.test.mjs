@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { deferred, providerHarness, settle, statusChecks } from './helpers/subscriptionProvider.mjs';
 
 // The provider runs as shipped (tests/helpers/subscriptionProvider.mjs): its
@@ -267,4 +268,59 @@ test('the deadline re-read covers the trial end and a course\'s included-Pro end
   assert.equal(course.length, 1);
   assert.ok(Math.abs(course[0] - 61 * 60 * 1000) < 2000, `the course window: ${course[0]} ms`);
   assert.deepEqual(await armedFor({}), [], 'an expired trial and no plan: nothing to wait for');
+});
+
+// Integration review (2026-10-25): the owner's explicit premium grant
+// (profiles.subscription_tier 'premium', the admin set_tier action) opened
+// nothing in the app when the account had no subscription or purchase row,
+// although server reconciliation preserves the grant, the server tools count
+// it as paid and the static grammar exercises open for it.
+const profileWith = (flags) => async (id) => ({ id, trial_started_at: '2000-01-01', trial_ends_at: '2000-01-08', ...flags });
+
+test('an explicit premium grant opens paid access, the account screens and every level, with no subscription or purchase', async () => {
+  const h = providerHarness({ getUserProfile: profileWith({ subscription_tier: 'premium', is_subscribed: true }) });
+  h.account('A'); h.render(); await settle();
+  const value = h.render();
+  assert.equal(value.hasActiveSubscription(), true, 'the paid-access answer (plan card, /subscription status)');
+  assert.equal(value.hasAccess, true, 'the account screens and level guards');
+  for (const level of ['a1.2', 'a2.1', 'b1.1', 'b2.2']) assert.equal(value.hasLevelAccess(level), true, level);
+  assert.equal(value.isInFreeTrial(), false, 'a grant is not a trial');
+  assert.equal(value.hasProduct('course_a1_2'), false, 'a grant is not a purchase: lifetime ownership stays with purchases');
+  assert.equal(value.hasProduct('telc_b1_komplett'), false);
+});
+
+test('only premium is a grant: a derived pro tier or a stale is_subscribed flag alone opens nothing', async () => {
+  for (const flags of [
+    { subscription_tier: 'pro', is_subscribed: true },
+    { subscription_tier: 'free', is_subscribed: true },
+    { subscription_tier: null, is_subscribed: true },
+    { subscription_tier: 'Premium', is_subscribed: false },
+  ]) {
+    const h = providerHarness({ getUserProfile: profileWith(flags) });
+    h.account('A'); h.render(); await settle();
+    const value = h.render();
+    assert.equal(value.hasAccess, false, JSON.stringify(flags));
+    assert.equal(value.hasLevelAccess('a2.1'), false, JSON.stringify(flags));
+    assert.equal(value.hasLevelAccess('a1.1'), true, 'the free level stays free');
+  }
+});
+
+test('the app and the static pages read the premium grant by the same rule', () => {
+  // The static pages' rule is held by tests/b4-privacy-navigation.test.mjs; this
+  // only checks that both sides still test the same field the same way.
+  const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+  const rule = /const premiumGrant = profile\?\.subscription_tier === 'premium';/;
+  assert.match(read('src/contexts/SubscriptionContext.jsx'), rule);
+  assert.match(read('astro-site/src/layouts/Layout.astro'), rule);
+  assert.match(read('src/contexts/SubscriptionContext.jsx'), /const hasActiveSubscription = \(\) => premiumGrant \|\| checkSubscriptionStatus\(subscription\)\.isActive \|\|/);
+});
+
+test('a premium grant is never shown to another account', async () => {
+  const h = providerHarness({ getUserProfile: async (id) => (id === 'A' ? profileWith({ subscription_tier: 'premium', is_subscribed: true })(id) : profileWith({})(id)) });
+  h.account('A'); h.render(); await settle();
+  assert.equal(h.render().hasAccess, true);
+  h.account('B');
+  assert.equal(h.render(false).hasAccess, false, 'masked during the identity change');
+  h.render(); await settle();
+  assert.equal(h.render().hasAccess, false, 'B has no grant');
 });
