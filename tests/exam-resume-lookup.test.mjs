@@ -15,6 +15,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
+import { FORM_KEY, formNumber, hasForm, mockForm } from '../src/data/mockExams/forms.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const settle = () => new Promise((resolve) => setImmediate(resolve));
@@ -51,19 +52,24 @@ test('findResumableAttempt tells "no attempt" (null) apart from a failed lookup 
 const overview = read('src/pages/Modelltest/ModelltestOverview.jsx');
 
 /** The overview's hooks-and-handlers section (everything before its first early return) in a VM. */
-function overviewHarness({ lookup }) {
+const STUB_MOCK = { sections: [{ minutes: 30 }], forms: { 2: { form: 2, sections: [{ minutes: 25 }] } } };
+
+function overviewHarness({ lookup, search = '' }) {
   const open = 'const ModelltestOverview = () => {';
   const body = overview.slice(overview.indexOf(open) + open.length, overview.indexOf('  if (!resolved) {'));
   const states = [];
   let cursor = 0;
   let effect = null;
   const created = [];
+  const starts = [];
   const navigated = [];
   const context = {
     useParams: () => ({ examSlug: 'telc-b1' }),
     useNavigate: () => (to, opts) => navigated.push([to, opts]),
+    useSearchParams: () => [new URLSearchParams(search)],
+    FORM_KEY, formNumber, hasForm, mockForm,
     useAuth: () => ({ user: { id: 'u1' } }),
-    resolveModelltest: () => ({ key: 'telc_b1', mock: { sections: [{ minutes: 30 }] } }),
+    resolveModelltest: () => ({ key: 'telc_b1', mock: STUB_MOCK }),
     useState(initial) {
       const index = cursor++;
       if (!(index in states)) states[index] = initial;
@@ -72,11 +78,16 @@ function overviewHarness({ lookup }) {
     useEffect: (fn) => { effect = fn; },
     findResumableAttempt: lookup,
     listAttempts: async () => [],
-    createAttempt: async (userId, key) => { created.push([userId, key]); return { id: 'new-attempt' }; },
+    createAttempt: async (userId, key, minutes, answers) => {
+      created.push([userId, key]);
+      starts.push({ minutes, answers });
+      return { id: 'new-attempt' };
+    },
   };
   const render = runInNewContext(`(function render() { ${body} return { lookup, canStart, handleStart, resumable, setLookupRun }; })`, context);
   return {
     created,
+    starts,
     navigated,
     render() { cursor = 0; return render(); },
     runEffect() { return effect(); },
@@ -129,6 +140,25 @@ test('only a confirmed "no attempt" enables Start', async () => {
   await view.handleStart();
   assert.deepEqual(h.created, [['u1', 'telc_b1']]);
   assert.equal(h.navigated[0][0], '/modelltest/telc-b1/run');
+});
+
+// f1 (2026-10-26): the telc route's day-20 retest opens `?form=2` — a parallel
+// form with unseen items. The form is fixed on the attempt row at insert time.
+test('?form=2 starts the parallel form and stores it on the attempt; an unknown form is form 1', async () => {
+  for (const [search, minutes, answers] of [
+    ['', 30, {}],
+    ['?form=2', 25, { [FORM_KEY]: 2 }],
+    ['?form=9', 30, {}],
+    ['?form=abc', 30, {}],
+  ]) {
+    const h = overviewHarness({ lookup: async () => null, search });
+    h.render();
+    h.runEffect();
+    await settle();
+    await h.render().handleStart();
+    // JSON round-trip: the objects were made inside the VM realm.
+    assert.deepEqual(JSON.parse(JSON.stringify(h.starts)), [{ minutes, answers }], `start for "${search}"`);
+  }
 });
 
 test('the overview renders resume, retry or a guarded Start from the lookup state', () => {

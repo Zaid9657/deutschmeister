@@ -35,6 +35,8 @@ import {
 } from '../src/data/programs/telcB1Komplett.js';
 import { writingTasksForExam } from '../src/data/writingTasks.js';
 import { telcB1Mock } from '../src/data/mockExams/telcB1.js';
+import { FORM_KEY, attemptMock, mockForm } from '../src/data/mockExams/forms.js';
+import { scoreObjectiveSections } from '../src/services/examScoring.js';
 import { parseCourseTask, SPEAKING_LEVELS } from '../netlify/functions/_shared/speakingAI.mjs';
 import { gapPriorities, pilotEvidence, sectionAnswered, dayDone, rehearsalTopics, arrive } from '../src/lib/telcPilot.js';
 import { telcCourseContext, normalizeCourseContext, TELC_COURSE_HOME } from '../src/lib/courseFlow.js';
@@ -51,13 +53,91 @@ const dayOf = (id) => days.findIndex((d) => d.items.some((i) => i.id === id));
 
 test('the short test opens and closes the route, in one sitting without Schreiben', () => {
   assert.equal(items[0].href, '/modelltest/telc-b1');
-  assert.equal(items.at(-1).href, '/modelltest/telc-b1');
+  assert.equal(items.at(-1).href, '/modelltest/telc-b1?form=2', 'the retest opens form 2, never a replay of day 1');
   assert.equal(items[0].type, 'exam');
   assert.equal(items.at(-1).type, 'exam');
   assert.match(items.at(-1).title, /Probe, nicht als Beweis/, 'the retest is a rehearsal, never proof of a result');
   const expected = telcB1Mock.sections.filter((s) => s.key !== 'schreiben').reduce((m, s) => m + s.minutes, 0);
   assert.equal(SHORT_TEST_MINUTES, expected, 'the minutes are derived from the mock, never typed');
   for (const t of [items[0], items.at(-1)]) assert.equal(t.minutes, SHORT_TEST_MINUTES);
+});
+
+// f1 (2026-10-26): the day-20 retest runs a SECOND form — unseen items in the
+// same shape — so the before/after compare measures progress, not memory.
+const formOf = (item) => mockForm(telcB1Mock, item.form);
+const objectiveTexts = (mock) => mock.sections.flatMap((s) => s.parts).flatMap((p) => {
+  if (p.type === 'matching') return [...p.texts.map((t) => t.text), ...p.options.map((o) => o.label)];
+  if (p.type === 'mc-group') return [p.text || '', ...p.items.flatMap((i) => [i.prompt, ...i.options.map((o) => o.label)])];
+  if (p.type === 'cloze') return p.gapsText.filter((g) => g.text).map((g) => g.text.trim());
+  if (p.type === 'writing') return [p.task];
+  return [];
+}).filter((t) => t.length > 12); // short labels ("Bis zum 15. November") may legitimately recur
+const itemIds = (mock) => mock.sections.flatMap((s) => s.parts).flatMap((p) => [
+  p.key,
+  ...(p.texts || []).map((t) => t.id),
+  ...(p.items || []).map((i) => i.id),
+  ...(p.gaps || []).map((g) => g.id),
+]);
+const listeningRefs = (mock) => mock.sections.flatMap((s) => s.parts).filter((p) => p.type === 'listening')
+  .map((p) => `${p.level}#${p.exerciseNumber}`);
+const shape = (mock) => mock.sections.map((s) => ({
+  key: s.key,
+  minutes: s.minutes,
+  parts: s.parts.map((p) => ({
+    type: p.type,
+    items: (p.texts || p.items || p.gaps || []).length,
+    options: p.type === 'matching' ? p.options.length
+      : p.type === 'mc-group' ? p.items.map((i) => i.options.length)
+        : p.type === 'cloze' ? p.gaps.map((g) => g.options.length) : null,
+    listening: p.type === 'listening' ? { level: p.level, questionMax: p.questionMax } : null,
+  })),
+}));
+
+test('the day-20 retest serves a different form from day 1: same shape, no shared item', () => {
+  const [first, retest] = [items[0], items.at(-1)];
+  assert.equal(first.form, 1);
+  assert.equal(retest.form, 2);
+  const before = formOf(first);
+  const after = formOf(retest);
+  assert.equal(before, telcB1Mock, 'day 1 is the mock itself');
+  assert.notEqual(after, before, 'day 20 is not a replay of day 1');
+  assert.equal(after.examKey, before.examKey);
+  assert.match(after.title, /Kurzversion/);
+  assert.equal(after.passPercent, before.passPercent);
+
+  // Comparable: same sections, minutes, part types, item and option counts.
+  assert.deepEqual(shape(after), shape(before));
+  const perfect = (mock) => {
+    const a = {};
+    for (const p of mock.sections.flatMap((s) => s.parts)) {
+      if (p.type === 'matching') for (const t of p.texts) a[`${p.key}:${t.id}`] = p.answers[t.id];
+      if (p.type === 'mc-group') for (const i of p.items) a[i.id] = i.answer;
+      if (p.type === 'cloze') for (const g of p.gaps) a[g.id] = g.answer;
+    }
+    return a;
+  };
+  const scoreBefore = scoreObjectiveSections(before, perfect(before));
+  const scoreAfter = scoreObjectiveSections(after, perfect(after));
+  assert.deepEqual(scoreAfter.sectionScores, scoreBefore.sectionScores, 'the same max per section');
+  assert.equal(scoreAfter.score, scoreAfter.maxScore);
+  assert.equal(scoreObjectiveSections(after, perfect(before)).score, 0, 'form 1 answers score nothing on form 2');
+
+  // Unseen: no shared item id, item text or listening exercise.
+  const ids = new Set(itemIds(before));
+  assert.deepEqual(itemIds(after).filter((id) => ids.has(id)), [], 'item ids overlap');
+  const texts = new Set(objectiveTexts(before));
+  assert.deepEqual(objectiveTexts(after).filter((t) => texts.has(t)), [], 'item texts overlap');
+  const refs = new Set(listeningRefs(before));
+  assert.deepEqual(listeningRefs(after).filter((r) => refs.has(r)), [], 'a listening exercise is reused');
+  assert.equal(new Set(listeningRefs(after)).size, listeningRefs(after).length);
+});
+
+test('a form travels with the attempt; anything unknown falls back to form 1', () => {
+  assert.equal(attemptMock(telcB1Mock, { answers: { [FORM_KEY]: 2 } }), telcB1Mock.forms[2]);
+  for (const answers of [undefined, {}, { [FORM_KEY]: 1 }, { [FORM_KEY]: 7 }, { [FORM_KEY]: 'x' }]) {
+    assert.equal(attemptMock(telcB1Mock, { answers }), telcB1Mock);
+  }
+  assert.equal(attemptMock(telcB1Mock, null), telcB1Mock);
 });
 
 test('three telc letters, each written before it is revised: six corrections', () => {
@@ -143,9 +223,11 @@ test('the buyer is addressed with Sie: route, telc tasks and the telc mock instr
   for (const i of items) texts.push(i.title, i.minimum, i.note || '', ...(i.task ? [i.task.prompt, ...i.task.hintWords] : []));
   for (const b of BONUSES) texts.push(b.title, b.lead || '', ...(b.lines || []));
   for (const t of writingTasksForExam(EXAM_KEY)) texts.push(t.title, t.task, ...t.leitpunkte);
-  texts.push(telcB1Mock.intro, ...telcB1Mock.sections.map((s) => s.instructions));
-  const writing = telcB1Mock.sections.find((s) => s.key === 'schreiben').parts.find((p) => p.type === 'writing');
-  texts.push(writing.task);
+  for (const mock of [telcB1Mock, telcB1Mock.forms[2]]) {
+    texts.push(mock.title, mock.intro, ...mock.sections.map((s) => s.instructions));
+    const writing = mock.sections.find((s) => s.key === 'schreiben').parts.find((p) => p.type === 'writing');
+    texts.push(writing.task);
+  }
   for (const text of texts) assert.doesNotMatch(text, DU, `du-form in: ${text}`);
 });
 
@@ -182,6 +264,18 @@ test('a section nobody answered is unmeasured, never the weakest', () => {
   assert.deepEqual(gaps.map((g) => g.key), ['lesen', 'sprachbausteine'], 'Hören (0 points, never answered) is not a gap');
   assert.equal(gaps[1].external, true, 'the B1.2 grammar hub is an Astro page');
   assert.deepEqual(gapPriorities({}), [], 'no measurement, no gaps');
+});
+
+test('a form-2 attempt is judged "answered" against the form-2 items it showed', () => {
+  const form2 = telcB1Mock.forms[2];
+  const l = form2.sections.find((s) => s.key === 'lesen');
+  const key = `${l.parts[0].key}:${l.parts[0].texts[0].id}`;
+  const attempt = {
+    section_scores: { lesen: { score: 2, max: 8 }, sprachbausteine: { score: 0, max: 10 } },
+    answers: { [FORM_KEY]: 2, [key]: 'a' },
+  };
+  assert.deepEqual(gapPriorities({ attempt }).map((g) => g.key), ['lesen'], 'form-2 Lesen counts; untouched Sprachbausteine does not');
+  assert.deepEqual(gapPriorities({ attempt: { ...attempt, answers: { [key]: 'a' } } }), [], 'read against form 1, the same answers measure nothing');
 });
 
 test('letter criteria point back at the learner\'s own letter; a full score is no gap', () => {

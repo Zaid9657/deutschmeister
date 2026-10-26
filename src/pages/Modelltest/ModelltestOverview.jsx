@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Clock, Play, RotateCcw, History } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { resolveModelltest } from '../../data/modelltest';
+import { FORM_KEY, formNumber, hasForm, mockForm } from '../../data/mockExams/forms.js';
 import { createAttempt, findResumableAttempt, listAttempts } from '../../services/examService';
 import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
@@ -13,14 +14,19 @@ import SectionHeading from '../../components/ui/SectionHeading.jsx';
 import Reveal from '../../components/ui/Reveal.jsx';
 
 // /modelltest/:examSlug — what's in the test, start or resume, past attempts.
+// `?form=2` starts a parallel form of the mock (new items, same shape — the telc
+// route's day-20 retest); the form is stored on the attempt (src/data/mockExams/forms.js).
 const ModelltestOverview = () => {
   const { examSlug } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const userId = user?.id;
 
   const resolved = resolveModelltest(examSlug);
-  const mock = resolved?.mock;
+  // An unknown form number falls back to form 1, never to an empty test.
+  const form = hasForm(resolved?.mock, searchParams.get('form')) ? formNumber(searchParams.get('form')) : 1;
+  const mock = mockForm(resolved?.mock, form);
 
   const [resumable, setResumable] = useState(null);
   // The resume lookup decides which door is safe: 'pending' | 'none' | 'found' | 'error'.
@@ -55,7 +61,7 @@ const ModelltestOverview = () => {
   const handleStart = async () => {
     if (!user || !mock || !canStart) return;
     setStarting(true);
-    const attempt = await createAttempt(user.id, resolved.key, mock.sections[0].minutes);
+    const attempt = await createAttempt(user.id, resolved.key, mock.sections[0].minutes, form > 1 ? { [FORM_KEY]: form } : {});
     setStarting(false);
     if (attempt) navigate(`/modelltest/${examSlug}/run`, { state: { attemptId: attempt.id } });
   };

@@ -11,6 +11,7 @@
 //     it can be (writing_submissions, speaking_sessions); only the units come
 //     from the learner's own checkboxes (program_progress).
 import { telcB1Mock } from '../data/mockExams/telcB1.js';
+import { attemptMock } from '../data/mockExams/forms.js';
 import { GAP_TARGETS, EXAM_KEY, allDays, writeHref } from '../data/programs/telcB1Komplett.js';
 
 const SECTION_KEYS = ['lesen', 'sprachbausteine', 'hoeren'];
@@ -49,9 +50,12 @@ export function gapPriorities({ attempt = null, writing = null, limit = 3 } = {}
 
   const sectionScores = attempt?.section_scores || {};
   const answers = attempt?.answers || {};
+  // The attempt's OWN form (day 1 = form 1, day 20 = form 2): "answered" is
+  // judged against the items the learner actually saw.
+  const mock = attemptMock(telcB1Mock, attempt);
   for (const key of SECTION_KEYS) {
     const s = sectionScores[key];
-    const section = telcB1Mock.sections.find((x) => x.key === key);
+    const section = mock.sections.find((x) => x.key === key);
     if (!s || !section || !Number.isFinite(s.score) || !Number.isFinite(s.max) || s.max <= 0) continue;
     if (!sectionAnswered(section, answers)) continue; // unmeasured, never "weakest"
     const target = GAP_TARGETS[key];

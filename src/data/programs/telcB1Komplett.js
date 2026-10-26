@@ -5,7 +5,8 @@
 // no writing task and no telc mock in the schedule — the review's weakest lever
 // ("Likelihood: an exam name over a grammar-first checklist"). This route is the
 // exam instead:
-//   - the short telc test on day 1 and day 20 (a rehearsal, never "proof");
+//   - the short telc test on day 1 and day 20 (a rehearsal, never "proof"):
+//     day 20 is a second form with unseen items in the same shape;
 //   - the three telc letters, each written, AI-corrected, revised and corrected
 //     again — six corrections (/schreiben/telc-b1?task=…, then &revise=1);
 //   - ten guided five-minute speaking rehearsals of the three telc Teile, handed
@@ -46,12 +47,17 @@ const TEST_SECTIONS = telcB1Mock.sections.filter((s) => s.key !== 'schreiben');
 export const SHORT_TEST_MINUTES = TEST_SECTIONS.reduce((sum, s) => sum + s.minutes, 0);
 const testHref = `/modelltest/${SLUG}`;
 
-const shortTest = (id, title) => ({
+// Day 1 runs form 1 (the mock itself); day 20 runs form 2 — new items in the
+// same shape (src/data/mockExams/telcB1Form2.js), so the before/after compare
+// measures on unseen items instead of a replay. The form is fixed when the
+// attempt starts (src/data/mockExams/forms.js).
+const shortTest = (id, title, form = 1) => ({
   id,
   type: 'exam',
   title,
+  form,
   minutes: SHORT_TEST_MINUTES,
-  href: testHref,
+  href: form === 1 ? testHref : `${testHref}?form=${form}`,
   note: `${TEST_SECTIONS.map((s) => s.title).join(', ')} am Stück. Den Schreibteil überspringen Sie mit „Test abschließen“ – den Brief schreiben Sie mit KI-Korrektur.`,
   minimum: `Wenig Zeit? Starten Sie den Test erst, wenn Sie ${SHORT_TEST_MINUTES} Minuten am Stück haben – die Uhr läuft pro Teil. Bis dahin können Sie den nächsten Tag vorziehen.`,
 });
@@ -228,13 +234,13 @@ export const PROGRAM = {
     },
     {
       title: 'Woche 4 – Prüfungswoche',
-      intro: 'Generalproben ohne Notizen, die letzte Lücke – und der Kurztest ein zweites Mal.',
+      intro: 'Generalproben ohne Notizen, die letzte Lücke – und ein zweiter Kurztest mit neuen Aufgaben im selben Format.',
       days: [
         day(16, [R8]),
         day(17, [R9]),
         day(18, [R10]),
         day(19, [gap(3, 'Die letzte Lücke vor der Prüfung schließen')]),
-        day(20, [shortTest('kurztest-2', 'Kurztest wiederholen – als Probe, nicht als Beweis')]),
+        day(20, [shortTest('kurztest-2', 'Kurztest 2 mit neuen Aufgaben – als Probe, nicht als Beweis', 2)]),
       ],
     },
   ],
