@@ -1,5 +1,7 @@
 # How to sell DeutschMeister: live-site evaluation, 2026-10-26
 
+> **Superseded** the same day by the [20-aspect deep evaluation + clean sheet](sales-deep-evaluation-2026-10-26.md). Kept as the first-pass record.
+
 *Claude, with a blind second evaluator (Claude subagent) and Codex, the official `codex@openai-codex`
 plugin / Codex CLI 0.164.0, model gpt-6.1-sol. Codex ran two read-only passes: one blind evaluation
 and one red-team of the first draft. The red-team verdict was **REWORK**. Every finding was

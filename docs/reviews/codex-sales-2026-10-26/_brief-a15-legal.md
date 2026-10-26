@@ -1,0 +1,5 @@
+YOUR ASPECT:
+**15. Legal & compliance as a sales blocker — what must be true before selling more.**
+Sub-questions: (a) the million plan's release gate items, each: status evidenced in repo/docs (operator & tax, FernUSG/ZFU determination for Pro, tickets and the telc package, §7 UWG, Impressum facts, AGB/Widerruf, Lemon Squeezy merchant identity, VAT-inclusive pricing); (b) consumer-law requirements for digital content sold to German consumers (Widerruf waiver at checkout for immediate access, Button-Lösung "zahlungspflichtig bestellen", price indication PAngV incl. VAT, subscription cancellation button §312k BGB) — check what Lemon Squeezy provides vs what the site must show; (c) GDPR: consent banner, analytics, AI processing of learner text/voice, data deletion (delete-account bug in codex review), DPAs; (d) claims law: UWG on "Geld-zurück", outcome promises, competitor comparisons (/vergleich/ "3 false claims"); (e) which items block the telc pilot vs which only need fixing. Give a checklist with owner/counsel/agents split and minimal path to a lawful first sale. Note: this is not legal advice; flag what counsel must confirm.
+
+
