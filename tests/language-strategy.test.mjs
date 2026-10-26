@@ -32,9 +32,19 @@ test('every German acquisition template shows the shared language notice', () =>
     'astro-site/src/pages/telc-b1-komplettvorbereitung.astro',
   ];
 
+  // The guide renderer serves German guides and, since d2 (2026-10-26), English
+  // ones: it declares each page's own language (guideLang, default 'de') and
+  // shows the notice on every German page.
+  const PER_GUIDE = 'astro-site/src/pages/leitfaden/[slug].astro';
   for (const path of templates) {
     const source = read(path);
-    assert.match(source, /lang="de"/, `${path} must retain its German document language`);
+    if (path === PER_GUIDE) {
+      assert.match(source, /const lang = guideLang\(guide\);/, `${path} must derive the document language from the guide`);
+      assert.match(source, /lang=\{lang\}/, `${path} must declare that language`);
+      assert.match(source, /\{lang === 'de' && <div[^\n]*<LanguageNotice/, `${path} must show the notice on German guides`);
+    } else {
+      assert.match(source, /lang="de"/, `${path} must retain its German document language`);
+    }
     assert.match(source, /import LanguageNotice/, `${path} must import the shared notice`);
     assert.match(source, /<LanguageNotice/, `${path} must render the shared notice`);
   }
@@ -68,4 +78,10 @@ test('the lesson chrome defaults to English and only the learner switches it to 
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
   assert.match(player, /useLessonLang\(\)/, 'the player reads the chrome language');
   assert.ok(!/useLessonLang\('de'\)|DEFAULT_LESSON_LANG = 'de'/.test(read('src/lib/lesson/strings.js')));
+});
+
+test('a guide is German unless it says otherwise', async () => {
+  const { GUIDES, guideLang } = await import('../astro-site/src/data/guides/index.js');
+  assert.equal(guideLang({}), 'de');
+  for (const g of GUIDES) if (!g.lang) assert.equal(guideLang(g), 'de', g.slug);
 });

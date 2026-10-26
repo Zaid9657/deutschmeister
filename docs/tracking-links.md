@@ -58,7 +58,7 @@ are pages, not channels.
 |---|---|---|
 | `xray` | the offer under an X-Ray result and at the anonymous limit (`src/lib/xray.js`) | — |
 | `grammar` | every grammar lesson (both signup doors, the locked-exercise door, the signed-out finish line, the free-course door on A1 pages), the `/grammar/` hub, the nav trial button on `/grammar/**` | the topic slug, `index`, or `nav` |
-| `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**` | the guide slug, `index`, or `nav` |
+| `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**`; since 2026-10-26 the exam long-tail guides lead with an offer door carrying `utm_campaign`: `telc-b1-offer` (to `/telc-b1-komplettvorbereitung/`), `dtz-waitlist` or `goethe-b1-waitlist` (to `/signup`) — `GUIDE_OFFERS` in `astro-site/src/data/guides/index.js` | the guide slug, `index`, or `nav` |
 | `level-test` | "Sign up free — save my results" under a signed-out level-test result (`src/lib/placement.js`, 2026-09-28). The result itself travels in localStorage `dm_placement` and is written to `profiles.current_level` at the first sign-in on that browser | the placed sub-level (`b1.2`) |
 | `save-progress-first` | "Save my progress — create a free account" on the A1.1 lesson player's save-progress ask, once per Lektion, on the screen after a signed-out learner's first checked answer (`src/lib/course/saveProgressAsk.js`, 2026-10-06) | level and Lektion (`a1.1-l1`) |
 | `save-progress-recap` | "Save progress" on the same ask's recap card, after a signed-out learner finished a Lektion (`SaveProgressCard.jsx`, tagged 2026-10-06) | the level (`a1.1`) |

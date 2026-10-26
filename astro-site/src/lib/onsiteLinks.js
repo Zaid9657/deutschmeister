@@ -40,6 +40,10 @@ export const DOORS = Object.freeze({
   freeCourse: `/course/${FREE_LEVEL_LABEL.toLowerCase()}`,
   levelTest: '/level-test/',
   pricing: '/pricing/',
+  // The telc B1 sales page (an Astro page, slash). Off sale it is the pilot's
+  // invitation door (docs/telc-pilot/README.md); exam long-tail guides send
+  // their readers here with a campaign label (d2, 2026-10-26).
+  telcOffer: '/telc-b1-komplettvorbereitung/',
 });
 
 /**
@@ -47,12 +51,15 @@ export const DOORS = Object.freeze({
  * @param {keyof DOORS} door
  * @param {'grammar'|'leitfaden'|'telc-pilot'} source
  * @param {string} [content]  the lesson/guide slug, or a placement label
+ * @param {string} [campaign] optional utm_campaign label, e.g. `dtz-waitlist`:
+ *   counts the people a door collects for one offer without a new source
  */
-export function onsiteHref(door, source, content) {
+export function onsiteHref(door, source, content, campaign) {
   const path = DOORS[door];
   if (!path) throw new Error(`onsiteHref: unknown door "${door}"`);
   if (!ONSITE_SOURCES.includes(source)) throw new Error(`onsiteHref: unknown source "${source}"`);
   const params = new URLSearchParams({ ref: source, utm_medium: ONSITE_MEDIUM });
+  if (campaign) params.set('utm_campaign', String(campaign).toLowerCase());
   if (content) params.set('utm_content', String(content).toLowerCase());
   return `${path}?${params}`;
 }
