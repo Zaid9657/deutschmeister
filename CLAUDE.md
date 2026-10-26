@@ -93,7 +93,9 @@ no TypeScript additions (Astro's existing Props syntax is normal).
   any tier. FSRS/help evidence wait for owner migration; do not shorten the L2 notice. See [Wave 1 details](docs/agents/claude-reference.md#conventions--gotchas).
 - A1.2 is LIVE (`CURRICULA`) since the owner's ship decision of 2026-10-22; read
   `docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md` ("Known issues at ship") before any A1.2 work.
-  Audio says “Computerstimme” until real manifests exist. See [course history](docs/agents/claude-reference.md#current-state--open-threads).
+  A1.1 plays the 168 recorded clips of `a11.audio.js` (owner's Azure run, 2026-10-15); a changed
+  line changes its sha1 and needs `node scripts/generate-course-audio.mjs a1.1`. A1.2 and anything
+  without a clip say “Computerstimme”. See [course history](docs/agents/claude-reference.md#current-state--open-threads).
 
 ## Security, functions and operations
 

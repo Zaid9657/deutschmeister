@@ -95,6 +95,24 @@ export const SPEAKER_VOICES = {
 
 export const sha1 = (text) => createHash('sha1').update(String(text), 'utf8').digest('hex');
 
+/**
+ * One Azure TTS request, retried when Azure throttles. The free tier (F0) allows 20 requests per
+ * 60 seconds, not per second: the first owner run (2026-10-15) stopped after 35 clips on 429s. A 429
+ * now waits as long as Azure's Retry-After says (else 5 s) and tries again, up to `maxRetries` times;
+ * any other error throws at once. `fetchImpl` and `sleep` are seams for the test.
+ */
+export async function ttsRequest(url, init, { fetchImpl = fetch, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), maxRetries = 8 } = {}) {
+  for (let attempt = 0; ; attempt += 1) {
+    const res = await fetchImpl(url, init);
+    if (res.status === 429 && attempt < maxRetries) {
+      await sleep((Number(res.headers.get('retry-after')) || 5) * 1000);
+      continue;
+    }
+    if (!res.ok) throw new Error(`TTS ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    return Buffer.from(await res.arrayBuffer());
+  }
+}
+
 export function voiceForSpeaker(speaker) {
   const name = String(speaker || '').trim();
   return SPEAKER_VOICES[name] || VOICE_DEFAULT;
@@ -311,20 +329,16 @@ async function main() {
   const supabase = createClient(supabaseUrl, serviceKey);
   const TTS_URL = `https://${azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`;
 
-  const synthesize = async (text, voice) => {
-    const res = await fetch(TTS_URL, {
-      method: 'POST',
-      headers: {
-        'Ocp-Apim-Subscription-Key': azureKey,
-        'Content-Type': 'application/ssml+xml',
-        'X-Microsoft-OutputFormat': OUTPUT_FORMAT,
-        'User-Agent': 'deutsch-meister-course-audio',
-      },
-      body: ssml(text, voice),
-    });
-    if (!res.ok) throw new Error(`TTS ${res.status}: ${(await res.text()).slice(0, 200)}`);
-    return Buffer.from(await res.arrayBuffer());
-  };
+  const synthesize = (text, voice) => ttsRequest(TTS_URL, {
+    method: 'POST',
+    headers: {
+      'Ocp-Apim-Subscription-Key': azureKey,
+      'Content-Type': 'application/ssml+xml',
+      'X-Microsoft-OutputFormat': OUTPUT_FORMAT,
+      'User-Agent': 'deutsch-meister-course-audio',
+    },
+    body: ssml(text, voice),
+  });
 
   const lektionen = JSON.parse(JSON.stringify(previous.lektionen || {}));
   const voices = {};
@@ -374,7 +388,7 @@ async function main() {
       rendered += 1;
       renderedChars += entry.text.length;
       if (rendered % 25 === 0) console.log(`  ${rendered} rendered …`);
-      await new Promise((r) => setTimeout(r, 150)); // stay far below the 20 req/s free-tier ceiling
+      await new Promise((r) => setTimeout(r, 150)); // the free tier's 20-per-minute limit is waited out in ttsRequest()
     } catch (err) {
       failed += 1;
       console.error(`FAILED ${entry.path}: ${err.message}`);
