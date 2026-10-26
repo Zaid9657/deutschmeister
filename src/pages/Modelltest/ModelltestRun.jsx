@@ -114,7 +114,7 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
         <span className="font-data text-[0.8125rem] text-graphite">
           {canPlay
             ? `Noch ${playsAllowed - plays}× abspielbar (wie in der Prüfung begrenzt)`
-            : 'Keine Wiedergabe mehr — beantworte die Fragen'}
+            : 'Keine Wiedergabe mehr — beantworten Sie die Fragen.'}
         </span>
         <audio ref={audioRef} src={audioUrl} preload="none" />
         {playFailed && (

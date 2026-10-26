@@ -6,21 +6,21 @@
   {
    "id": "a11-cp1-p1-u1",
    "solved": "Richtig",
-   "evidence": "Ana wohnt in Berlin.",
+   "evidence": "Ana wohnt in Bremen.",
    "verdict": "ok",
    "note": "",
-   "round": 2,
-   "text": "Hallo Lena, Ana wohnt in Berlin. Ihre Eltern wohnen auch in Berlin. Ich wohne in Bremen. Kommst du auch nach Bremen? Grüße, Tim",
-   "question": "Steht das im Text? „Ana wohnt in Berlin.“"
+   "round": 5,
+   "text": "Hallo Lena, Ana wohnt in Bremen. Ihre Eltern wohnen auch in Bremen. Ich wohne in Berlin. Kommst du auch nach Berlin? Grüße, Tim",
+   "question": "Steht das im Text? „Ana wohnt in Bremen.“"
   },
   {
    "id": "a11-cp1-p1-u2",
    "solved": "Falsch",
-   "evidence": "Tim kommt aus Polen und wohnt in Köln.",
+   "evidence": "wohnt in Berlin.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Frau Kaya, guten Morgen! Tim kommt aus Polen und wohnt in Köln. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg",
+   "round": 5,
+   "text": "Frau Kaya, guten Morgen! Tim kommt aus Österreich und wohnt in Berlin. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg",
    "question": "Steht das im Text? „Tim wohnt in Bremen.“"
   },
   {

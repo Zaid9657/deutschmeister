@@ -4,6 +4,7 @@ import { Loader2, RotateCcw } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { resolveModelltest } from '../../data/modelltest';
+import { describeCourseTest } from '../../data/courseTests/description.js';
 import { verdictFor } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
@@ -21,8 +22,8 @@ import Stat from '../../components/ui/Stat.jsx';
 
 // /modelltest/:examSlug/result/:attemptId — the Richtwert readout.
 //
-// The verdict language is deliberately careful: the pass threshold mirrors
-// the publicly documented rule (via the guide), but nothing here is an
+// External mocks refer to the documented exam threshold (via the guide);
+// course assessments instead describe their own course rule. Nothing here is an
 // official evaluation and no surface may promise a pass — the disclaimer
 // renders on this screen like on every mock surface.
 //
@@ -183,7 +184,9 @@ const ModelltestResult = () => {
   const percent = Math.round((attempt.score / attempt.max_score) * 100);
   const verdict = verdictFor(percent, mock.passPercent);
   const passed = verdict !== 'nicht-bereit';
-  const copy = mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
+  const copy = resolved.kind === 'course'
+    ? { title: passed ? 'Kurs-Bestehensgrenze erreicht' : 'Kurs-Bestehensgrenze noch nicht erreicht', body: describeCourseTest(mock, 'de') }
+    : mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
   const sections = attempt.section_scores || {};
   const weakest = Object.entries(sections)
     .map(([key, s]) => ({ key, pct: s.max ? s.score / s.max : 1 }))

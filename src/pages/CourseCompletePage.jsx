@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { Trophy, Award, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { courseFor } from '../data/courses/index.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
 import { programKeyFor } from '../services/lessonService.js';
 import { getProgramProgress } from '../services/programProgress';
@@ -61,7 +62,6 @@ export default function CourseCompletePage() {
   const wordsTotal = curriculum ? curriculum.lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0) : 0;
   const nextCourse = curriculum ? null : courseFor(course.next);
   const testSlug = curriculum ? curriculum.testSlug : course.testSlug;
-  const testFormat = curriculum ? curriculum.examName : course.testFormat;
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
@@ -89,8 +89,8 @@ export default function CourseCompletePage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Reveal>
             <Card raised className="flex h-full flex-col p-5">
-              <h2 className="font-bold text-ink">Final test · {testFormat} format</h2>
-              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">Timed, half exam length, scored against the real pass threshold.</p>
+              <h2 className="font-bold text-ink">Final course assessment</h2>
+              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{courseTestDescription(testSlug, 'en')}</p>
               <Button to={`/modelltest/${testSlug}`} variant="primary" size="md" className="mt-4">Take the final test <ArrowRight className="ml-1 h-4 w-4" /></Button>
             </Card>
           </Reveal>

@@ -58,7 +58,9 @@ import {
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
 import { constructionHits, deferredConstructionHits } from '../src/data/curricula/constructions.js';
-import { writingTaskByKey } from '../src/data/writingTasks.js';
+import { writingTaskByKey, WRITING_TASKS } from '../src/data/writingTasks.js';
+import { LESEN_A11 } from '../src/data/curricula/a11.lesen.js';
+import { LESEN_A12 } from '../src/data/curricula/a12.lesen.js';
 // RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
 // `scoreWriting` is what `GradedWriting.jsx` calls, and the word window it measures against comes
 // from the server's own task bank above, never from a number retyped here.
@@ -2915,7 +2917,7 @@ export function modelTextsMatchDialogue(c) {
 // and the Mitteilung of Lektion 2 both say **ledig**. „Der Widerspruch ist sonst nur mit dem Auge
 // zu finden“, so this is the table that finds it.
 //
-// The facts below are READ OFF a11.js (dialogues, settings, schreiben tasks, samples and fields),
+// The facts below are READ OFF the lesson dialogues/writing and checkpoint writingTasks.js,
 // not invented; `null` means the course never states that fact about the person, and then there is
 // nothing to contradict and the check stays silent. This is a hard gate, not a ratchet: a
 // contradiction is never older debt, it is always something a repair round just wrote.
@@ -2949,16 +2951,19 @@ const PROFESSIONS = [
  *                 das ist ein Arbeitsplatz, kein zweiter Beruf, deshalb bleibt `beruf` Studentin.
  *   Lena Brandt   L3, L5, L7, L8, L11, L12 — Kursteilnehmerin (Kurs A1, Zimmer 12), Hobby Sport
  *                 und Schwimmen. Familienstand, Herkunft und Beruf sagt der Kurs nie: null.
- *   Tim Berger    L4, L5, L7, L11 — Kursteilnehmer (Kurs am Donnerstag). Ebenfalls nichts gesagt.
+ *   Tim Berger    L4, L5, L7, L11 — Kursteilnehmer; CP1 Formular: verheiratet, aus Österreich,
+ *                 spricht Englisch und Deutsch. A1.2 CP3 states his home Berlin; Ana's home Bremen
+ *                 is already stated in A1.1 L2.
  *   Herr Weber    L2, L6 — „vom Amt“, Schalter im Bürgerbüro; kein Berufswort genannt.
  *   Frau Kaya     L1 — Rezeption im Hostel; kein Berufswort genannt.
  *   Paul          L9 — Kellner im Café (dialog.setting).
  *   Frau Wolf     L4 — verkauft auf dem Flohmarkt.  Herr Schmidt  L10 — Auskunft am Bahnhof.
  */
 export const PERSONAS_A11 = {
-  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'], nachname: 'Chakiri' },
+  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'], nachname: 'Chakiri', stadt: 'Bremen' },
   Lena: { familienstand: null, herkunft: null, beruf: null, sprachen: null, nachname: 'Brandt' },
-  Tim: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  // CP1 supplies the form facts; the later A1.2 CP3 fixes his home as Berlin across the shared cast.
+  Tim: { familienstand: 'verheiratet', herkunft: 'Österreich', beruf: null, sprachen: ['Englisch', 'Deutsch'], nachname: 'Berger', stadt: 'Berlin' },
   Paul: { familienstand: null, herkunft: null, beruf: ['Kellner'], sprachen: null },
   'Herr Weber': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
   'Frau Kaya': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
@@ -2980,7 +2985,7 @@ export const PERSONAS_A11 = {
  *                 Steckbrief of L7 („Lena Brandt ist 24 Jahre alt und kommt aus Köln“). Familienstand,
  *                 Herkunftsland, Beruf and Sprachen: A1.2 never says, so they stay A1.1's nulls.
  *   Tim           L5, L8, L11 — the Ausflug-Formular of L5 files him travelling TO Köln, which is a
- *                 destination and not a Wohnort, so `stadt` stays null and the line cannot collide.
+ *                 destination and not a Wohnort. CP3's travel registration states his home Berlin.
  *   Frau Berger   L6 — Ärztin (`dialog.setting`: „Frau Berger ist Ärztin.“).
  *   Frau Fischer  L1 — „wohnt in der Stadt“; no city and no Berufswort is ever named.
  *   Herr Berg     L2 — the Vermieter of the Wohnungsanzeige; „Vermieter“ is not a Berufswort the
@@ -2991,7 +2996,7 @@ export const PERSONAS_A12 = {
   ...PERSONAS_A11,
   Ana: { ...PERSONAS_A11.Ana, stadt: 'Bremen', alter: null },
   Lena: { ...PERSONAS_A11.Lena, stadt: 'Köln', alter: 24 },
-  Tim: { ...PERSONAS_A11.Tim, stadt: null, alter: null },
+  Tim: { ...PERSONAS_A11.Tim, alter: null },
   'Frau Berger': { familienstand: null, herkunft: null, beruf: ['Ärztin'], sprachen: null, stadt: null, alter: null },
   'Frau Fischer': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
   'Herr Berg': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
@@ -3056,10 +3061,14 @@ function aboutSpan(text, name, allNames) {
 }
 
 /**
- * RULE 14: no dialogue line and no Schreiben text may state a fact about a recurring character
- * that contradicts the PERSONAS table. Returns one entry per contradiction.
+ * RULE 14: lesson input, every reading paper and checkpoint writing must preserve the cast.
+ * Assessment banks are injectable for planted-contradiction tests; defaults are the served sources.
+ * False reading statements/distractors are intentionally not biography claims.
  */
-export function personaConsistency(c) {
+export function personaConsistency(c, {
+  readingBank = c?.level === 'a1.2' ? LESEN_A12 : LESEN_A11,
+  writingTasks = WRITING_TASKS,
+} = {}) {
   const spec = levelSpec(c?.level) || LEVELS['a1.1'];
   const personas = PERSONA_TABLES[spec.personaSource] || {};
   const names = Object.keys(personas);
@@ -3144,6 +3153,63 @@ export function personaConsistency(c) {
     // A Mitteilung is written in the first person by whoever signs it.
     const author = signatureName(w.sample);
     if (author && personas[author]) check(l.nr, 'schreiben.sample', author, w.sample, SELF_PATTERNS);
+  }
+
+  // Reading messages can name a recipient, a subject, relatives and a signing author. Bind
+  // facts to grammatical subjects, not every name in the same sentence ("Die Familie von Tim"
+  // is not Tim). Carry only an immediately following singular pronoun back to that subject.
+  const assessmentText = (nr, where, text) => {
+    const s = String(text || '').replace(/[„“»«"]/g, '');
+    let subject = null;
+    const namePattern = names.map((name) => name.replace(' ', '\\s+')).join('|');
+    const clauses = s.split(new RegExp(`[.?!\\n]+|\\bund\\s+(?=(?:${namePattern})\\b)`, 'g'));
+    for (const clause of clauses) {
+      const exchange = clause.match(new RegExp(`^\\s*(${namePattern})\\s*:\\s*(.*)$`));
+      if (exchange) check(nr, where, exchange[1].replace(/\s+/g, ' '), exchange[2], SELF_PATTERNS);
+      const named = clause.match(new RegExp(`(?:^|[,!:]\\s*)\\s*(${namePattern})(?:\\s+[A-ZÄÖÜ][a-zäöüß]+)?\\s+(?=(?:ist|kommt|wohnt|spricht|arbeitet)\\b)(.*)$`));
+      if (named) {
+        subject = named[1].replace(/\s+/g, ' ');
+        check(nr, where, subject, named[0], ABOUT_PATTERNS);
+      } else if (subject && /^\s*(?:Er|Sie|er|sie)\s+(?:ist|kommt|wohnt|spricht|arbeitet)\b/.test(clause)) {
+        check(nr, where, subject, clause, ABOUT_PATTERNS);
+      } else {
+        subject = null;
+      }
+    }
+    // Some bank messages sign on their own line, without a closing formula.
+    const author = signatureName(s) || names.find((name) => s.trim().endsWith(`\n${name}`));
+    if (author && personas[author]) check(nr, where, author, s, SELF_PATTERNS);
+  };
+  for (const cp of c.checkpoints || []) {
+    for (const paper of readingBank[cp.id]?.papers || []) {
+      for (const unit of paper) {
+        assessmentText(cp.afterLektion, `lesen ${unit.id}`, unit.text);
+        // The evidence and feedback are affirmative teaching text, unlike a false statement.
+        assessmentText(cp.afterLektion, `lesen ${unit.id} explanation`, unit.explanationDe);
+      }
+    }
+  }
+  for (const task of writingTasks.filter((t) => t.course === c.level && t.checkpoint)) {
+    const cp = (c.checkpoints || []).find((entry) => entry.nr === task.checkpoint || entry.id === `${c.level}-cp${task.checkpoint}`);
+    const nr = cp?.afterLektion ?? task.checkpoint * 3;
+    const where = `checkpoint schreiben ${task.taskKey}`;
+    assessmentText(nr, `${where} task`, task.task);
+    assessmentText(nr, `${where} sample`, task.sample);
+    if (task.register !== 'formular') continue;
+    const named = names.filter((name) => namesPersona(task.task, name));
+    if (named.length !== 1) continue;
+    const name = named[0];
+    // "Land" in a travel registration is a destination, not a country of origin. Only the
+    // task's explicit Herkunft frame licenses interpreting this ambiguous form-field label.
+    // Prose was attributed above. Here only labelled fields belong to the form's owner;
+    // a following sentence about Ana must not give her country to Tim.
+    const patterns = ABOUT_PATTERNS.filter(([fact, re]) => re.source.includes('\\s*:')
+      && (fact !== 'herkunft' || !re.source.includes('Land') || /kommt\s+aus\b/.test(task.task)));
+    check(nr, `${where} fields`, name, task.sample, patterns);
+    const family = task.sample?.match(/\b(?:Familienname|Nachname):\s*([A-ZÄÖÜ][a-zäöüß]+)/)?.[1];
+    if (family && personas[name].nachname && family !== personas[name].nachname) {
+      report(nr, `${where} Familienname`, name, 'nachname', family, personas[name].nachname);
+    }
   }
   return offenders;
 }

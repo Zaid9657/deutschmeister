@@ -3,6 +3,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck, Check, Lock, Flame, Zap, Trophy } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { courseFor } from '../data/courses/index.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { flattenCourse, isUnlocked, currentItem, isComplete, percentDone, courseLesson, courseComplete } from '../lib/courseFlow.js';
@@ -74,7 +75,7 @@ export default function CourseHomePage() {
               German {course.code}
             </Reveal>
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
-              {items.length} lessons in {course.program.weeks.length} units · ends with the {course.testFormat} final test
+              {items.length} lessons in {course.program.weeks.length} units · {courseTestDescription(course.testSlug, 'en')}
             </Reveal>
 
             <Reveal delay={140} className="mt-5 grid grid-cols-3 gap-3">

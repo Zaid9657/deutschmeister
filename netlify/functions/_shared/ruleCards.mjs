@@ -172,7 +172,7 @@ export const RULE_CARDS = {
   },
   "negation": {
     "titleDe": "nicht oder kein?",
-    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nnicht steht am Satzende oder direkt vor dem Wort.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nJa, das Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein negates a noun that has ein or no article; nicht negates everything else.",
+    "content": "kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:\neine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.\nnicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.\nSatznegation: nicht steht meist spät, vor dem letzten Verbteil (Vorsilbe/Infinitiv/Partizip): Ich kaufe heute nicht ein. Ohne Verbteil auch am Satzende.\nWortnegation: nicht steht direkt vor dem Wort: nicht heute, sondern morgen.\nIm Hotel: Hier ist keine Lampe und kein Spiegel.\nJa, das Kissen ist da, aber die Steckdose funktioniert nicht.\nDie Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?\nEnglish: kein replaces ein/no article; nicht ends clauses or precedes their final prefix/infinitive/participle; for contrast, nicht precedes the contrasted word.",
     "commonMistakes": [
       {
         "wrong": "Im Flur ist nicht Lampe.",
@@ -287,12 +287,12 @@ export const RULE_CARDS = {
   },
   "personal-pronouns": {
     "titleDe": "er, sie, es – die Personalpronomen",
-    "content": "Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: the pronoun follows the article of the noun: das Kind → es.",
+    "content": "Das Pronomen richtet sich normalerweise nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nBei bekannten Personen ist auch er oder sie möglich. Beispiel: Das Kind heißt Paul. Er ist zwei.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: normally follow the noun’s article (das Kind → es); for a known person, er/sie is also possible.",
     "commonMistakes": [
       {
-        "wrong": "Das Kind ist jung. Er ist zwei.",
+        "wrong": "Das Kind ist jung. Es bist zwei.",
         "correct": "Das Kind ist jung. Es ist zwei.",
-        "explanationDe": "das Kind → es. Der Artikel entscheidet, nicht die Person."
+        "explanationDe": "das Kind → normalerweise es. Bei bekannten Personen ist auch er oder sie möglich. Nach es steht ist, nicht bist."
       },
       {
         "wrong": "Die Mutter kommt aus Marokko. Es spricht Arabisch.",

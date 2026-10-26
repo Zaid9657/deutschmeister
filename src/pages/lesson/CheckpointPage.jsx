@@ -136,7 +136,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
   }
 
   // Schreiben: one of the three items is the chapter's real writing task, graded
-  // on the Goethe criteria by evaluate-writing through GradedWriting — the same
+  // on the course practice rubric by evaluate-writing through GradedWriting — the same
   // component and the same request the lesson's Schreiben step makes.
   if (item.kind === 'gradedWriting') {
     // Only a real grader verdict is an answer. GradedWriting falls back to its
@@ -423,7 +423,7 @@ export default function CheckpointPage() {
             <Chip tone="label">{t('checkpoint.label', lang, { nr: checkpoint.nr })}</Chip>
             <h1 className="mt-3 font-display text-2xl text-ink sm:text-3xl">{checkpoint.title}</h1>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
-              {/* Deutsch-Modus: „… im Format Ihrer Prüfung …" (tests/checkpoint.test.mjs §6). */}
+              {/* Deutsch-Modus: „ein adaptierter Kurstest, keine Prüfungssimulation". */}
               {t('checkpoint.intro', lang, { sections: sectionsCovered })}
             </p>
             <p className="mt-3 text-[0.9375rem] font-bold text-ink">

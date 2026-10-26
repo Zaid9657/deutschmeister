@@ -22,6 +22,7 @@
 // fact the course could later contradict.
 
 import { CURRICULUM_A11 } from './a11.js';
+import { courseTestDescription } from '../courseTests/index.js';
 import { curriculumPath } from './index.js';
 import { SUSTAINABLE_PER_WEEK } from '../../lib/course/plan.js';
 
@@ -392,8 +393,7 @@ const aboutEn =
   `${CURRICULUM_A11.code} is the first half of level A1: ${CURRICULUM_A11.lektionen.length} short lessons ` +
   `(Lektionen), each built around one everyday situation — arriving, registering, shopping, making an ` +
   `appointment, ordering in a café — with the grammar as one step inside it. Every ${chapters[0]?.lektionen.length ?? 3} ` +
-  `Lektionen a checkpoint shows you what stuck, and the course ends with a shortened practice test in the ` +
-  `${CURRICULUM_A11.examName} format — our own, not an official exam. No account is needed to start; you need ` +
+  `Lektionen an adapted checkpoint shows you what stuck. ${courseTestDescription(CURRICULUM_A11.testSlug, 'en')} No account is needed to start; you need ` +
   `one to save your progress and for the AI feedback on your writing and speaking.`;
 
 export const A11_META = {

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { courseFor } from '../data/courses/index.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
 import { programKeyFor } from '../services/lessonService.js';
 import { getProgramProgress } from '../services/programProgress';
@@ -53,7 +54,7 @@ export default function CourseCertificatePage() {
   const date = new Date().toLocaleDateString(curriculum ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   const code = curriculum ? curriculum.code : course.code;
-  const testFormat = curriculum ? curriculum.examName : course.testFormat;
+  const testSlug = curriculum ? curriculum.testSlug : course.testSlug;
   const lektionenDone = curriculum ? path.filter((n) => n.kind === 'lektion' && done.has(n.id)).length : 0;
   const lektionenTotal = curriculum ? curriculum.lektionen.length : 0;
   const checkpointsDone = curriculum ? path.filter((n) => n.kind === 'checkpoint' && done.has(n.id)).length : 0;
@@ -78,7 +79,7 @@ export default function CourseCertificatePage() {
           )}
           {curriculum ? (
             // What was completed, and nothing more: the Lektionen and checkpoints
-            // done and a passed course test in the exam's format. It is not a
+            // done and a passed adapted course assessment. It is not a
             // Goethe/telc result and it does not certify a CEFR level.
             <>
               <p className="mt-8 text-[0.9375rem] text-graphite">Hiermit wird bestätigt, dass</p>
@@ -87,7 +88,7 @@ export default function CourseCertificatePage() {
               <p className="mt-2 font-display text-[1.5rem] font-semibold text-ink">Deutsch {code}</p>
               <p className="mt-2 text-[0.9375rem] text-graphite">abgeschlossen hat.</p>
               <p className="mt-3 text-[0.875rem] text-graphite">
-                {lektionenDone}/{lektionenTotal} Lektionen · {checkpointsDone}/{checkpointsTotal} Checkpoints · Abschlusstest bestanden (Übungstest im Format {testFormat})
+                {lektionenDone}/{lektionenTotal} Lektionen · {checkpointsDone}/{checkpointsTotal} Checkpoints · Abschlusstest bestanden. {courseTestDescription(testSlug, 'de')}
               </p>
             </>
           ) : (
@@ -99,7 +100,7 @@ export default function CourseCertificatePage() {
                   2026-10-14: it used to end by naming the exam's level). */}
               <p className="mt-6 text-[0.9375rem] text-graphite">has worked through all {items.length} activities of the</p>
               <p className="mt-2 font-display text-[1.5rem] font-semibold text-ink">German {code} Course</p>
-              <p className="mt-1 text-[0.875rem] text-graphite">grammar, reading, listening, vocabulary and speaking · practice test in the {testFormat} format</p>
+              <p className="mt-1 text-[0.875rem] text-graphite">grammar, reading, listening, vocabulary and speaking · {courseTestDescription(testSlug, 'en')}</p>
               <p className="mt-3 text-[0.8125rem] text-graphite">A DeutschMeister course certificate: not an official exam result and not a CEFR certificate.</p>
             </>
           )}

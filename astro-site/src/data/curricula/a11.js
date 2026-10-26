@@ -238,7 +238,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Das Alphabet: buchstabieren',
         bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We [veː]). Der Name ist nicht der Laut: In *Wasser* hört man [v]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
-        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett**. To ask how a word is written: **Wie buchstabiert man das?**',
+        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett** or scharfes S. To ask how a word is written: **Wie buchstabiert man das?**',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
@@ -625,8 +625,8 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'er, sie, es – die Personalpronomen',
-        bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form. Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
-        bodyEn: 'A pronoun follows the article of the noun it stands for: **der** Bruder → **er**, **die** Schwester → **sie**, **das** Kind → **es**. For more than one person use **wir** (we), **ihr** (you, several people, informal) and **sie** (they). **Sie** with a capital S is the polite "you" – for one person or several. One verb to watch: **sprechen** changes its vowel – er **spricht**. Lektion 7 explains the pattern.',
+        bodyDe: 'Pronomen richten sich normalerweise nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Bei bekannten Personen ist auch er oder sie möglich. Das Kind heißt Paul. Er ist zwei. Plural: **wir**, **ihr**, **sie**. Höflich: **Sie** mit großem S (eine/mehrere Personen). Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
+        bodyEn: 'Normally a pronoun follows the noun’s article: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. A known person can also be referred to with er/sie. Example: Das Kind heißt Paul. Er ist zwei. For several people: **wir**, **ihr**, **sie**. Polite **Sie** has a capital S and addresses one person or several. **sprechen** changes its vowel: er **spricht** — more in Lektion 7.',
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
       },
@@ -730,7 +730,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Jedes Nomen hat ein Genus',
-        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Das Genus ist Teil des Wortes — lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
+        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Die Bedeutung zeigt das Genus nicht sicher. Lernen Sie Nomen mit Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
         bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender of a thing usually cannot be guessed from its meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
@@ -1085,8 +1085,8 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Präsens: regelmäßige Verben',
-        bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. Endet der Stamm auf **-t**, kommt ein **e** dazu: du arbeit**e**st, er arbeit**e**t. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
-        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If it ends in -s or -z, du adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
+        bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Stamm auf **-t**: ein **e** dazu: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
+        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },

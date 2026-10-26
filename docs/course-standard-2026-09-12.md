@@ -17,12 +17,20 @@ grading of every spoken and written exam task, and the law forbids promising per
 
 A DeutschMeister course is **one half-level (A1.1 … B2.2) taught as 12 situational Lektionen, each a
 Kann-Beschreibung from the Goethe Prüfungsziele, closed by a checkpoint test every three Lektionen and a
-full level test in the official exam format**, played inside our own lesson engine (dialogue in, one
-grammar point, typed practice, speaking and writing graded by AI on the Goethe criteria, spaced review
+an adapted final course assessment**, played inside our own lesson engine (dialogue in, one
+grammar point, typed practice, speaking and writing with a course-specific AI rubric, spaced review
 of everything learned), planned backward from the learner's exam date, bought once and kept for life.
 It is not a grammar reference, not a link list, and not a game: it is the Lehrwerk that
 professional teachers use (Menschen / Schritte plus / Netzwerk) rebuilt as a web course, with the
 speaking and writing feedback those books cannot give.
+
+**OPEN requirement: full-format level test.** The delivered final tests do not reproduce a complete
+official exam or its scoring. A1.1 currently has Hören 15 min, Lesen 15 min and a Formular self-check
+10 min; A1.2 has the same timings with a Mitteilung self-check instead. Both total 40 min; neither
+includes Sprechen. Writing is outside the score. Passing means at least 60 % of the combined
+automatically scored Hören/Lesen points, a course rule. A complete representative level assessment,
+including both A1 writing tasks and communicative speaking/listening, remains OPEN; it must be
+implemented and independently checked before a full-format delivery claim is made.
 
 ## 2. Curriculum specification
 
@@ -74,7 +82,7 @@ so the running total is auditable on the public syllabus page.
 6. **Phonetik** micro-slot.
 7. **Grammatik + Kommunikation** overview page.
 8. **Test + Selbstevaluation** ("Das kann ich") and the Lernwortschatz list.
-9. Every 3 Lektionen: **Plateau** — Wiederholung, Landeskunde, exam-format checkpoint.
+9. Every 3 Lektionen: **Plateau** — Wiederholung, Landeskunde, adapted course checkpoint.
 
 ### 2.4 The public syllabus page (beats Goethe DO's grid and Lingoda's chapter cards)
 
@@ -96,7 +104,7 @@ Target 12–15 min, ~22 items, one exercise per screen, primary action at the bo
 | 3 | Notice | 1 | 1 | One grammar card ≤60 words, case-coloured, 2 examples from the dialogue |
 | 4 | Controlled practice | 3 | 7 | 2 listening-select, 2 typed gap-fill, 1 word order, 1 match, 1 dictation |
 | 5 | Speaking | 2 | 2 | Read-aloud with per-word score, then one 20 s open prompt in Goethe Sprechen format |
-| 6 | Writing | 1.5 | 1 | A1: Formular or 2-sentence SMS; A2: 3-sentence E-Mail; AI-graded on the Goethe criteria |
+| 6 | Writing | 1.5 | 1 | A1: Formular or 2-sentence SMS; A2: 3-sentence E-Mail; AI-graded with a course practice rubric (four criteria, 0–5 each), not the official SD1 scale |
 | 7 | Re-queue | 1.5 | 0–4 | Every miss returns as a different variant |
 | 8 | Recap | 0.5 | — | Words learned, grammar point, mastery delta, next review date |
 
@@ -109,8 +117,8 @@ number, a clock time, a price, an age, a weekday or time of day, a name; the Anr
 sentence and the Gruß at the last line; a Formular field by the shape its name implies. A Leitpunkt
 that asks for a meaning — „Warum Sie schreiben", „Warum Sie feiern", and every indirect Auftrag closed
 by a modal („Was die Gäste mitbringen sollen", „Was die Kollegin bis dahin machen soll") — shows
-„prüft die KI" and is graded only by the AI runner against the Goethe criteria, exactly as two human
-raters decide Inhaltspunkte. Reviews #17–#20 spent four rounds on shape rules for the Auftrag and
+„prüft die KI" and is graded only by the AI runner with the course practice rubric; this is not
+official exam marking or a claim of equivalence to human raters. Reviews #17–#20 spent four rounds on shape rules for the Auftrag and
 each was too narrow or too wide, because one sentence form carries two meanings; the rule above is
 the lesson, and `tests/writing-course.test.mjs` pins both halves (the 184-sentence Auftrag fixture
 yields the KI row; non-modal Leitpunkte of the same tasks are still decided by form).
@@ -135,12 +143,17 @@ speaking, writing), cap 30/day. Fallback if FSRS is too much: Babbel's ladder 1 
 180 d, lapse → 1 d (expanding vs uniform spacing differ by g = 0.03, so the ladder is defensible). Block
 vocabulary by topic, interleave grammar forms (interleaving: g = 0.42 overall, g = −0.39 for words).
 
-**Checkpoint (every 3 Lektionen, ~12 min, 20 items):** 5 Hören, 4 Lesen, 6 Sprachbausteine typed,
-3 Schreiben, 2 Sprechen; 70 % from the chapter, 30 % from earlier; pass 60 % overall and no section
-below 40 % (the Goethe/telc mirror); unlimited attempts, 3 per 8 h with a remediation set between;
+**Delivered checkpoint (every 3 Lektionen, estimated ~12 min, 20 items):** 3 dictations and 2 word
+recognition tasks in Hören, 4 text questions in Lesen, 6 typed Sprachbausteine,
+2 sentence-writing drills plus 1 separate writing task, and 2 read-alouds. These are adapted course
+diagnostics, not an official exam simulation. The course rule is 60 % overall and at least 40 %
+in each assessed section, also exceeding that section's constant-choice ceiling; a separately
+graded writing task must pass independently. Unassessed skills cannot certify a pass in that skill.
+Unlimited attempts, 3 per 8 h with a remediation set between;
 sub-scores by skill and error tag. Mastery per Lektion: Begonnen → Vertraut (≥ 70 %) → Sicher
 (checkpoint passed) → Gefestigt (checkpoint items correct again ≥ 14 d later), with downgrade.
-**Level test:** 40 items, same rule, unlocks the existing Prüfungssimulation mock.
+**Delivered level test:** the partial course assessments described in §1, with their own combined
+Hören/Lesen pass rule. **OPEN:** the full-format level test; the checkpoint rule is not its scoring.
 
 Evidence base (meta-analyses): retrieval practice g = 0.50–0.61; spaced retrieval g = 0.74; written
 corrective feedback g = 0.54; oral corrective feedback d = 0.61; immediate feedback beats delayed in
@@ -190,11 +203,11 @@ Counted 2026-09-12 from `src/data/programs/*Phase.js`, `src/data/courses/index.j
 | Grammar exercises available | typed-heavy pool | **347-item built pool, 119 of them hand-written situational items** | 287 (163) | 300 (183) | 262 (166) |
 | Examples with audio (cache) | all | 0 / 118 — the recorded-audio pipeline ships, the manifest is an empty stub until the owner run | 0 / 143 | 0 / 151 | 0 / 142 |
 | Vocabulary per unit with audio | 15–25 words + audio | **✓ 262 Wortfeld entries across the 12 Lektionen**, each keyed to a `words` row; recorded audio pending the run | same | same | same |
-| Writing tasks, graded | 1 per lesson | **✓ 12 graded** (`a11-l01…a11-l12`, 6 Formular / 6 Mitteilung, Goethe criteria) | 0 | 0 | 0 |
+| Writing tasks, graded | 1 per lesson | **✓ 12 graded** (`a11-l01…a11-l12`, 6 Formular / 6 Mitteilung, course practice rubric) | 0 | 0 | 0 |
 | Speaking per lesson with score | read-aloud + open prompt | **✓ scored read-aloud + open prompt in every Lektion**; the coach works the Lektion's own task | 13 | 8 | 8 |
 | Spaced review | FSRS or ladder over words + patterns | **✓ Babbel ladder over `review_cards`**, seeded on lesson completion, served as the warm-up and at `/course/a1.1/review` | same | same | same |
 | Checkpoints | 4 per half-level, 5-section, 60 % + 40 % rule | **✓ 4** (20 items, five sections, 60/40, remediation sets) | 0 | 0 | 0 |
-| Level test | 40 items, official format | existing `abschlusstest-a1-1` (SD1 format, free) | yes | yes | yes |
+| Level test | **OPEN: full-format assessment, independently checked** | adapted `abschlusstest-a1-1`: Hören/Lesen + Formular self-check, 40 min, no Sprechen or free message | adapted `abschlusstest-a1-2`: Hören/Lesen + Mitteilung self-check, 40 min, no Sprechen or form | adapted Hören/Lesen + SMS/E-Mail self-checks, 55 min, no Sprechen | adapted Hören/Lesen + SMS/E-Mail self-checks, 55 min, no Sprechen |
 | Public syllabus | 12 × 6 grid + counters | **✓ 12 × 6 grid + running counters** on `/courses/a1-1/` | same | same | same |
 | Dated plan | exam date → weekly targets | **✓ exam date → weekly targets** + on-track banner on the course home | same | same | same |
 | Streak / reminders / certificate | forgiving streak, timed reminders, honest certificate | **✓ forgiving streak** (one missed day per week); reminder mailer live since 2026-09-12 (`COURSE_REMINDER_ENABLED=true`, migration applied, daily 18:00 UTC); certificate as before | same | same | same |
@@ -229,7 +242,7 @@ below touches pricing, Lemon Squeezy or e-mail.
 | 1 | Curriculum data | `src/data/curricula/<level>.js`: 12 Lektionen per level with situation, Goethe can-dos, Handlungsfeld, exam Teil, grammar slugs, Wortfeld drawn from the cached examples; public syllabus grid on `/courses/<level>/` and in the player | ~2 sessions; owner reads the A1.1 grid once | Buyers can audit before paying; every later phase hangs off this table | **shipped** #114 (curriculum module, public 12×6 Lehrplan, curriculum course home) |
 | 2 | Lesson engine | `/course/:level/:lektion` 9-stage screen: warm-up, pretest, dialogue, notice card, 7 controlled items from the pool, re-queue, recap; typo rules, error tags, mastery states; program items replaced by Lektionen | ~4 sessions | The course stops linking out; the "not an online course" complaint ends | **shipped** #114 (`/course/:level/l/:nr`, 9 stages, typo rules, error tags, mastery) |
 | 3 | Checkpoints + level test wiring | 4 checkpoints per level from the pool + listening + reading; 60 %/40 % rule; remediation sets; certificate wording | ~2 sessions | Finishing means something; refunds drop | **shipped** #114 (4 checkpoints, 60/40, remediation sets) |
-| 4 | Speaking + writing in every lesson | A1 writing tasks (6 Formular + 6 Mitteilung per half-level) on the existing AI-writing runner with the Goethe criteria; read-aloud + open prompt on the existing speaking coach; results logged to error tags | ~3 sessions | The moat: nobody else grades every exam task instantly | **shipped** #116, hardened #117–#120 (12 graded writing tasks; scored read-aloud + the Lektion task on the coach) |
+| 4 | Speaking + writing in every lesson | A1 writing tasks (6 Formular + 6 Mitteilung per half-level) on the existing AI-writing runner with the course practice rubric; read-aloud + open prompt on the existing speaking coach; results logged to error tags | ~3 sessions | Practice feedback in the course | **shipped** #116, hardened #117–#120 (12 graded writing tasks; scored read-aloud + the Lektion task on the coach) |
 | 5 | Dialogues + audio | 12 unit dialogues per level (scripted to the Wortfeld, recorded via the Azure TTS pipeline already used for B1.1), audio for every Wortfeld word and example | ~2 sessions + one owner Azure run per level | Input before output; removes the "no audio" false claim | **shipped** #116 — 12 dialogues written and the Azure pipeline + manifest in place; the OWNER RUN is still open, so playback says „Computerstimme" |
 | 6 | Spaced review | `ts-fsrs` over words, grammar patterns and production sentences; 4 due items per lesson; dashboard Wiederholen tile | ~2 sessions | Retention; the universal "nothing comes back" complaint | **shipped** #114 — Babbel ladder over `review_cards`, not `ts-fsrs` |
 | 7 | Plan + habit layer | Exam-date input → weekly targets, on-track banner; forgiving streak; Resend reminders at last-practice + 23.5 h; first lesson open before sign-up | ~2 sessions | Completion (the strongest predictors in the evidence) | **shipped** #116 (exam-date plan, on-track banner, forgiving streak, signed-out first lesson); the reminder mailer is live (`COURSE_REMINDER_ENABLED=true` set 2026-09-12, migration applied) |

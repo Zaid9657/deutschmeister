@@ -1516,7 +1516,7 @@ test('the review_cards migration carries own-row RLS and the checkpoint marker',
 // next to the builder, because the checkpoint's own generated prompts
 // ("Hören Sie zu und schreiben Sie den Satz.") are written HERE, not in the page,
 // and a du-form reintroduced in either place puts two Anreden on one screen.
-const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|Versuch es)\b/;
+const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|beantworte|Beantworte|Versuch es)\b/;
 
 test('the checkpoint and review screens (and the prompts the builder writes) sieze', () => {
   const offenders = [];
@@ -1525,6 +1525,9 @@ test('the checkpoint and review screens (and the prompts the builder writes) sie
     'src/pages/lesson/ReviewPage.jsx',
     'src/lib/checkpoint/buildCheckpoint.js',
     'src/lib/checkpoint/reviewGrading.js',
+    'src/pages/Modelltest/ModelltestRun.jsx',
+    'src/pages/Modelltest/ModelltestOverview.jsx',
+    'src/pages/Modelltest/ModelltestResult.jsx',
   ]) {
     const src = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
     src.split('\n').forEach((line, i) => {
@@ -1538,7 +1541,8 @@ test('the four strings DaF review #5 named now address the learner as Sie', () =
   const checkpoint = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
   const review = readFileSync(new URL('../src/pages/lesson/ReviewPage.jsx', import.meta.url), 'utf8');
   assert.ok(checkpoint.includes('Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis.'));
-  assert.ok(checkpoint.includes('im Format Ihrer Prüfung'));
+  assert.ok(checkpoint.includes('ein adaptierter Kurstest, keine Prüfungssimulation'));
+  assert.ok(!checkpoint.includes('im Format Ihrer Prüfung'));
   assert.ok(review.includes('Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.'));
   assert.ok(review.includes('Neue Karten kommen, sobald Sie eine Lektion abschließen.'));
 });

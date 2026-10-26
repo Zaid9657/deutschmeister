@@ -479,14 +479,16 @@ test('assessment a11y: a checkpoint verdict takes focus, and the writing coverag
 });
 
 test('the course says what its final test is and what an account is for', async () => {
-  // Codex score review, 2026-10-08: „ends with the Start Deutsch 1 final test" (it is our shortened
-  // practice test in that format), and „sign up only to save your progress" (AI feedback needs it too).
+  // Course assessments describe their actual sections and own scoring rule, not the reference
+  // exam's format. Account disclosure must also include AI feedback, not only saving progress.
   const { readFileSync } = await import('node:fs');
   const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
   assert.doesNotMatch(home, /ends with the \{curriculum\.examName\} final test/);
-  assert.match(home, /ends with a shortened practice test in the \{curriculum\.examName\} format/);
+  assert.match(home, /courseTestDescription\(curriculum\.testSlug, 'en'\)/);
+  assert.doesNotMatch(home, /shortened practice test in the \{curriculum\.examName\} format/);
   const { A11_META } = await import('../src/data/curricula/a11.meta.js');
-  assert.match(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
+  assert.match(A11_META.aboutEn, /Adapted course assessment: Listening \(15 min\), Reading \(15 min\), Writing \(10 min\)/);
+  assert.doesNotMatch(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
   assert.match(A11_META.aboutEn, /not an official exam/);
   assert.match(A11_META.aboutEn, /AI feedback/);
   assert.doesNotMatch(A11_META.aboutEn, /only if you want to save/);

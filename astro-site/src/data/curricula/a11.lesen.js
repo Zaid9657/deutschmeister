@@ -4,8 +4,8 @@
 // needs that independent review again before it ships.
 const papers = [
   [
-    ['message', 'Hallo Lena, Ana wohnt in Berlin. Ihre Eltern wohnen auch in Berlin. Ich wohne in Bremen. Kommst du auch nach Bremen? Grüße, Tim', 'Ana wohnt in Berlin.', true, 'Ana wohnt in Berlin.', 'Ana lives in Berlin; Bremen is Tim’s home.'],
-    ['message', 'Frau Kaya, guten Morgen! Tim kommt aus Polen und wohnt in Köln. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg', 'Tim wohnt in Bremen.', false, 'Tim kommt aus Polen und wohnt in Köln.', 'Tim lives in Cologne. Bremen is where his family lives.'],
+    ['message', 'Hallo Lena, Ana wohnt in Bremen. Ihre Eltern wohnen auch in Bremen. Ich wohne in Berlin. Kommst du auch nach Berlin? Grüße, Tim', 'Ana wohnt in Bremen.', true, 'Ana wohnt in Bremen.', 'Ana lives in Bremen; Berlin is Tim’s home.'],
+    ['message', 'Frau Kaya, guten Morgen! Tim kommt aus Österreich und wohnt in Berlin. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg', 'Tim wohnt in Bremen.', false, 'Tim kommt aus Österreich und wohnt in Berlin.', 'Tim lives in Berlin. Bremen is where his family lives.'],
     ['sign', 'Amt: Herr Weber ist hier. Frau Kaya ist nicht hier. Formulare bitte hier ausfüllen: Name, Adresse und Familienstand.', 'Herr Weber ist hier.', true, 'Herr Weber ist hier.', 'The notice directs visitors to Weber; Kaya is absent.'],
     ['ad', 'Englisch mit Lena! Lena spricht Englisch, aber nicht Deutsch. Sprichst du Deutsch und auch Englisch? Wir sprechen zusammen! Telefonnummer: 0173 2468501.', 'Lena spricht auch Deutsch.', false, 'Lena spricht Englisch, aber nicht Deutsch.', 'Lena explicitly says she does not speak German.'],
   ],

@@ -15,6 +15,7 @@ import { ALL_LEVELS, COURSE_PRO_MONTHS, CURRENCY, PLANS, eur, productKeyForLevel
 import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
 import { curriculumFor } from '../../data/curricula/index.js';
+import { courseTestDescription } from '../../../../src/data/courseTests/index.js';
 import { hasSyllabus, wortfeldRunningTotals, wortlisteTotalFor, checkpointAfter, primaryGrammarTitle, kannBeschreibungenCount, pruefungsteileCoverage, goetheRichtwertFor, courseTimeSplit, hoursDe, LEKTION_ANATOMY } from '../../lib/syllabus.js';
 import StationArt from '../../components/linie/StationArt.astro';
 
@@ -72,7 +73,7 @@ const stamps = [
   { id: 'hoeren', de: 'Hören', en: `${content.listening.length} exercises` },
   { id: 'wortschatz', de: 'Wortschatz', en: `${content.words} words with audio` },
   { id: 'sprechen', de: 'Sprechen', en: `${content.missions} missions` },
-  content.finalTest && { id: 'test', de: 'Abschlusstest', en: `${content.finalTest.format} format` },
+  content.finalTest && { id: 'test', de: 'Abschlusstest', en: 'adapted course assessment' },
   content.finalTest && { id: 'plan', de: '28-Tage-Plan', en: 'to the final test' },
 ].filter(Boolean);
 
@@ -340,8 +341,8 @@ const jsonLd = {
           {content.finalTest ? (
             <>
               <div id="stamp-test" class="scroll-mt-24 rounded-clay border border-rule bg-white p-5" data-stamp="test">
-                <h3 class="font-bold text-ink">Final test in the {content.finalTest.format} format</h3>
-                <p class="mt-1 text-[0.875rem] text-graphite">Timed, half exam length: listening and reading are scored against the exam's pass line, writing is a self-check.</p>
+                <h3 class="font-bold text-ink">Final course assessment</h3>
+                <p class="mt-1 text-[0.875rem] text-graphite">{courseTestDescription(content.finalTest.slug, 'en')}</p>
               </div>
               <div id="stamp-plan" class="scroll-mt-24 rounded-clay border border-rule bg-white p-5" data-stamp="plan">
                 <h3 class="font-bold text-ink">28-day plan</h3>

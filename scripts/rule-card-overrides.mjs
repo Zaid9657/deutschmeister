@@ -204,19 +204,20 @@ const RULE_CARD_OVERRIDES = {
   'personal-pronouns': {
     titleDe: 'er, sie, es – die Personalpronomen',
     content: [
-      'Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Das Pronomen richtet sich normalerweise nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Bei bekannten Personen ist auch er oder sie möglich. Beispiel: Das Kind heißt Paul. Er ist zwei.',
       'Für mehrere Personen stehen die Formen wir, ihr, sie.',
       'Sie mit großem S ist die höfliche Form.',
       'Beispiele: Wie alt ist er? Er ist zwanzig.',
       'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
       'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
-      'English: the pronoun follows the article of the noun: das Kind → es.',
+      'English: normally follow the noun’s article (das Kind → es); for a known person, er/sie is also possible.',
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Das Kind ist jung. Er ist zwei.',
+        wrong: 'Das Kind ist jung. Es bist zwei.',
         correct: 'Das Kind ist jung. Es ist zwei.',
-        explanationDe: 'das Kind → es. Der Artikel entscheidet, nicht die Person.',
+        explanationDe: 'das Kind → normalerweise es. Bei bekannten Personen ist auch er oder sie möglich. Nach es steht ist, nicht bist.',
       },
       {
         wrong: 'Die Mutter kommt aus Marokko. Es spricht Arabisch.',
@@ -668,11 +669,12 @@ const RULE_CARD_OVERRIDES = {
       'kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:',
       'eine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.',
       'nicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.',
-      'nicht steht am Satzende oder direkt vor dem Wort.',
+      'Satznegation: nicht steht meist spät, vor dem letzten Verbteil (Vorsilbe/Infinitiv/Partizip): Ich kaufe heute nicht ein. Ohne Verbteil auch am Satzende.',
+      'Wortnegation: nicht steht direkt vor dem Wort: nicht heute, sondern morgen.',
       'Im Hotel: Hier ist keine Lampe und kein Spiegel.',
       'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.',
       'Die Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?',
-      'English: kein negates a noun that has ein or no article; nicht negates everything else.',
+      'English: kein replaces ein/no article; nicht ends clauses or precedes their final prefix/infinitive/participle; for contrast, nicht precedes the contrasted word.',
     ].join('\n'),
     commonMistakes: [
       {

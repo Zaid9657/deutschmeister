@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { GraduationCap, ArrowRight, ClipboardCheck } from 'lucide-react';
 import { EXAM_TRACKS, MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { MOCK_EXAMS } from '../../data/mockExams';
-import { COURSE_TESTS } from '../../data/courseTests';
+import { COURSE_TESTS, courseTestDescription } from '../../data/courseTests';
 import SEO from '../../components/SEO';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
@@ -84,7 +84,6 @@ const ModelltestHub = () => {
             </p>
             <ul className="grid gap-4 sm:grid-cols-2">
               {COURSE_TESTS.map((ct, i) => {
-                const minutes = ct.mock.sections.reduce((sum, s) => sum + s.minutes, 0);
                 return (
                   <Reveal as="li" key={ct.key} delay={90 * (tracksWithMocks.length + tracksComing.length + i)} className="h-full">
                     <Tilt className="h-full">
@@ -99,7 +98,7 @@ const ModelltestHub = () => {
                           {ct.mock.title}
                         </p>
                         <p className="mt-1 flex-1 text-sm text-graphite" data-atropos-offset="2">
-                          {ct.nameDe} — Kurzversion im Start-Deutsch-1-Format · {ct.level} · {minutes} Min.
+                          {courseTestDescription(ct.slug, 'de')}
                         </p>
                         <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-siegel" data-atropos-offset="6">
                           <ArrowRight className="w-4 h-4" />
