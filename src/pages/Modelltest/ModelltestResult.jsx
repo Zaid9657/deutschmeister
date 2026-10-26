@@ -7,6 +7,7 @@ import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { stationFor } from '../../data/offers.js';
 import { courseHome } from '../../lib/courseFlow.js';
 import { resolveModelltest } from '../../data/modelltest';
+import { attemptMock } from '../../data/mockExams/forms.js';
 import { verdictFor } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
@@ -128,9 +129,10 @@ const ModelltestResult = () => {
   const { user } = useAuth();
   const { hasLevelAccess } = useSubscription() || {};
   const resolved = resolveModelltest(examSlug);
-  const mock = resolved?.mock;
 
   const [attempt, setAttempt] = useState(null);
+  // The attempt's own form: its title and pass line (a parallel form, or the mock itself).
+  const mock = attemptMock(resolved?.mock, attempt);
   const [loading, setLoading] = useState(true);
   const [readiness, setReadiness] = useState(null);
   const readinessConfettiFired = useRef(false);

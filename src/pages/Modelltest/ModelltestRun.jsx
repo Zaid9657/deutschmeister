@@ -4,6 +4,7 @@ import { Clock, ChevronRight, Volume2, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { resolveModelltest } from '../../data/modelltest';
+import { attemptMock } from '../../data/mockExams/forms.js';
 import {
   findResumableAttempt,
   loadAttempt,
@@ -175,9 +176,10 @@ const ModelltestRun = () => {
   const { user } = useAuth();
 
   const resolved = resolveModelltest(examSlug);
-  const mock = resolved?.mock;
 
   const [attempt, setAttempt] = useState(null);
+  // The item set this attempt was started on (a parallel form, or the mock itself).
+  const mock = attemptMock(resolved?.mock, attempt);
   const [answers, setAnswers] = useState({});
   const [sectionIndex, setSectionIndex] = useState(0);
   const [deadline, setDeadline] = useState(null);
@@ -220,7 +222,7 @@ const ModelltestRun = () => {
       setAttempt(a);
       const saved = a.answers || {};
       setAnswers(saved);
-      setSectionIndex(Math.min(saved._meta?.sectionIndex ?? 0, mock.sections.length - 1));
+      setSectionIndex(Math.min(saved._meta?.sectionIndex ?? 0, attemptMock(resolved.mock, a).sections.length - 1));
       setDeadline(a.section_deadline ? new Date(a.section_deadline).getTime() : null);
       setLoading(false);
     };

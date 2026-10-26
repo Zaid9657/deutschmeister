@@ -170,8 +170,11 @@ test('every mock exam is internally consistent', async () => {
   const { MOCK_EXAMS, countScorableItems } = await import('../src/data/mockExams/index.js');
   const { scoreObjectiveSections } = await import('../src/services/examScoring.js');
 
-  for (const [examKey, mock] of Object.entries(MOCK_EXAMS)) {
+  // Parallel forms (src/data/mockExams/forms.js) meet the same contract as their mock.
+  const withForms = Object.entries(MOCK_EXAMS).flatMap(([key, m]) => [[key, m], ...Object.values(m.forms || {}).map((f) => [key, f])]);
+  for (const [examKey, mock] of withForms) {
     assert.ok(examTrackByKey(examKey), `mock keyed to unknown exam ${examKey}`);
+    assert.equal(mock.examKey, examKey, `${examKey}: a form keeps its exam key`);
     assert.match(mock.title, /Kurzversion/, `${examKey}: shortened sets must say so in the title`);
     assert.ok(mock.passPercent >= 50 && mock.passPercent <= 100);
 

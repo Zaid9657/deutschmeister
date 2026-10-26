@@ -21,6 +21,12 @@
 //   writing:  task description + criteria checklist (NOT auto-scored).
 //
 // Timing: minutes per section, persisted as exam_attempts.section_deadline.
+//
+// Form 2 (./telcB1Form2.js) is the unseen retest in the same shape — the telc
+// route's day 20 opens it (src/data/mockExams/forms.js says how a form is
+// chosen and stored).
+
+import { telcB1Form2Mock } from './telcB1Form2.js';
 
 export const telcB1Mock = {
   examKey: 'telc_b1',
@@ -29,6 +35,7 @@ export const telcB1Mock = {
     'Drei Teile unter Zeitdruck: Lesen, Sprachbausteine und Hören werden automatisch ausgewertet. ' +
     'Der Schreibteil kommt mit Aufgabe und Selbstcheck — bewerten Sie ihn ehrlich selbst oder nutzen Sie das Schreibtraining.',
   passPercent: 60,
+  forms: { 2: telcB1Form2Mock },
 
   sections: [
     {
