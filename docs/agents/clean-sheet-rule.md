@@ -45,8 +45,10 @@ funnel, and the red-team rejected ideas for conflicting with the existing plan. 
 3. **Then compare.** Read what exists. Put *evolve the current one*, *replace it with the clean
    sheet* and a *hybrid* side by side on expected impact, cost, time and risk. Recommend one, in
    one line: `Clean sheet: <evolve | replace | hybrid> — because …`.
-4. **Existing work is evidence, not a requirement.** Code, designs, plans, kill lists and past
-   decisions show what was tried and learned. They don't bind the answer. Sunk cost is never a
+4. **The goal is the one fixed point; everything else is evidence, not a requirement.** The goal
+   never changes (owner, 2026-10-26). Plans, strategies, kill lists, products, designs, code and
+   past decisions show what was tried and learned. They don't bind the answer, and a clean sheet
+   may propose replacing any of them. Sunk cost is never a
    reason. "Match the surrounding code" governs style, not direction.
 5. **Reviews judge direction too.** Every review or red-team also answers: "Is this the right
    thing to build at all, versus the clean-sheet alternative?"
@@ -68,7 +70,8 @@ Rule, for any non-trivial build, redesign, strategy, plan or evaluation:
 2. Give at least one real alternative: a different model or design, not a variation.
 3. Then read what exists and compare evolve / replace / hybrid on impact, cost, time and risk;
    recommend one: "Clean sheet: <choice> — because …".
-4. Existing code, designs and plans are evidence, not requirements; sunk cost is no reason;
+4. The goal never changes. Plans, products, designs and code are evidence, not requirements,
+   and may be replaced; sunk cost is no reason;
    "match surrounding code" means style, not direction.
 5. Reviews also judge direction: is this the right thing at all?
 Exempt: bug fixes, small edits, explicit "just fix it".

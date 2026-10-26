@@ -13,7 +13,8 @@ no TypeScript additions (Astro's existing Props syntax is normal).
   what exists first, so it frames every option as a fix or extension of itself (a local maximum). Before a non-trivial
   build, redesign, strategy or evaluation, design the zero-based answer blind — goal, users, evidence, hard constraints
   only — then read what exists, compare evolve vs replace on impact and cost, and recommend one ("Clean sheet: …").
-  Existing code, plans and kill lists are evidence, not requirements; "match surrounding" is style, not direction.
+  The goal never changes; plans, kill lists, products, designs and code are evidence, not requirements, and may
+  be replaced. "Match surrounding" is style, not direction.
 - Vite/React `src/` becomes `dist/app.html`; Astro `astro-site/` supplies public static pages
   and wins those URLs in merged `dist/`. Supabase stores content; Netlify functions supply services. See [README](README.md#architecture).
 - The SPA deliberately has no `/` route; edit the homepage in `astro-site/` and use full-page
