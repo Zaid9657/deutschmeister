@@ -44,7 +44,16 @@ export const GUIDES = Object.freeze([
   { slug: 'start-deutsch-1', title: 'Start Deutsch 1 / Goethe-Zertifikat A1: Ablauf, Punkte und Vorbereitung' },
   { slug: 'goethe-a2', title: 'Goethe-Zertifikat A2: Ablauf, Punkte und Vorbereitung' },
   { slug: 'brief-schreiben-b1', title: 'Brief schreiben auf B1: der Aufbau, der in jeder Prüfung funktioniert' },
-  { slug: 'modelltest-deutsch-b1', title: 'Modelltest Deutsch B1: Wo du ihn findest — und wie du ihn richtig nutzt' },
+  { slug: 'modelltest-deutsch-b1', title: 'Modelltest Deutsch B1: Wo du ihn findest — und wie du ihn richtig nutzt' },  { slug: 'telc-b1-brief-beschwerde', title: 'telc B1 Beschwerde schreiben: Musterbrief, Redemittel und Bewertung' },
+  { slug: 'telc-b1-email-einladung', title: 'telc B1 informelle E-Mail: auf eine Einladung antworten — mit Musterbrief' },
+  { slug: 'telc-b1-sprechen-ueber-ein-thema', title: 'telc B1 Sprechen Teil 2: über ein Thema sprechen — Ablauf, Beispiel und Redemittel' },
+  { slug: 'telc-b1-gemeinsam-etwas-planen', title: 'telc B1 Sprechen Teil 3: gemeinsam etwas planen — Beispieldialog und Redemittel' },
+  { slug: 'dtz-brief-vermieter', title: 'DTZ Brief an den Vermieter: Musterbrief, Aufbau und Redemittel' },
+  { slug: 'dtz-brief-termin-absagen', title: 'DTZ Brief: einen Termin absagen und einen neuen vorschlagen — mit Musterbrief' },
+  { slug: 'dtz-sprechen-bild-beschreiben', title: 'DTZ Sprechen Teil 2: ein Bild beschreiben und über Erfahrungen sprechen' },
+  { slug: 'dtz-gemeinsam-etwas-planen', title: 'DTZ Sprechen Teil 3: gemeinsam etwas planen — Beispieldialog und Redemittel' },
+  { slug: 'goethe-b1-writing-examples', title: 'Goethe-Zertifikat B1 Writing: model answers and phrases for all three tasks' },
+  { slug: 'goethe-b1-speaking-presentation', title: 'Goethe-Zertifikat B1 Speaking: the presentation, the planning task and the phrases you need' },
 ]);
 
 /**

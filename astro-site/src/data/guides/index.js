@@ -34,6 +34,18 @@ import { briefSchreibenB1 } from './brief-schreiben-b1.js';
 import { modelltestDeutschB1 } from './modelltest-deutsch-b1.js';
 import { startDeutsch1 } from './start-deutsch-1.js';
 import { goetheA2 } from './goethe-a2.js';
+// Exam long-tail pages (backlog d2, 2026-10-26): one task type each, a model
+// text or dialogue, Redemittel, and a tagged door to the matching offer.
+import { telcB1BriefBeschwerde } from './telc-b1-brief-beschwerde.js';
+import { telcB1EmailEinladung } from './telc-b1-email-einladung.js';
+import { telcB1SprechenThema } from './telc-b1-sprechen-ueber-ein-thema.js';
+import { telcB1GemeinsamPlanen } from './telc-b1-gemeinsam-etwas-planen.js';
+import { dtzBriefVermieter } from './dtz-brief-vermieter.js';
+import { dtzBriefTerminAbsagen } from './dtz-brief-termin-absagen.js';
+import { dtzSprechenBild } from './dtz-sprechen-bild-beschreiben.js';
+import { dtzGemeinsamPlanen } from './dtz-gemeinsam-etwas-planen.js';
+import { goetheB1WritingEn } from './goethe-b1-writing-examples.js';
+import { goetheB1SpeakingEn } from './goethe-b1-speaking-presentation.js';
 
 /**
  * @typedef {{type:'p', text:string}} BlockP            paragraph; may carry inline <a>/<strong>
@@ -44,7 +56,9 @@ import { goetheA2 } from './goethe-a2.js';
  * @typedef {{type:'steps', items:{label:string,title:string,tasks:string[],tip?:string}[]}} BlockSteps
  * @typedef {{type:'warnings', items:{title:string,body:string}[]}} BlockWarnings
  * @typedef {{type:'cards', items:{eyebrow:string,title:string,body:string}[]}} BlockCards
- * @typedef {BlockP|BlockH3|BlockList|BlockCallout|BlockTable|BlockSteps|BlockWarnings|BlockCards} Block
+ * @typedef {{type:'model', label?:string, lines:string[]}} BlockModel  a model letter or dialogue,
+ *                                     one rendered line per entry ('' = gap); text only
+ * @typedef {BlockP|BlockH3|BlockList|BlockCallout|BlockTable|BlockSteps|BlockWarnings|BlockCards|BlockModel} Block
  *
  * @typedef {object} Guide
  * @property {string}  slug            URL segment under /leitfaden/
@@ -63,10 +77,37 @@ import { goetheA2 } from './goethe-a2.js';
  * @property {{id:string, heading:string, blocks:Block[]}[]} sections
  * @property {{q:string,a:string}[]} faq
  * @property {{heading:string, body:string}} cta
+ * @property {'de'|'en'} [lang]   page language; default 'de'. An English guide
+ *                                explains in English and quotes German models.
+ * @property {keyof GUIDE_OFFERS} [offer]  the tagged door the CTA leads with;
+ *                                without one the CTA opens with the level test.
  */
 
+/**
+ * Where an exam long-tail guide sends its reader (backlog d2, 2026-10-26).
+ * Only doors that exist: the telc B1 sales page (which, off sale, carries the
+ * pilot invitation itself), or a free account labelled with the waitlist the
+ * plan counts (docs/strategy/million-plan-2026-10.md: "the DTZ waitlist (≥10
+ * sign-ups) or paid Goethe validation"). The label is a utm_campaign on the
+ * attributed door, so profiles.acquisition_campaign counts each list; no copy
+ * here promises a notification or a mail — that would need a consent basis.
+ * No price either: the sales page states it, and only while it can be bought.
+ */
+export const GUIDE_OFFERS = Object.freeze({
+  telc: { door: 'telcOffer', campaign: 'telc-b1-offer', label: 'Zur telc-B1-Komplettvorbereitung' },
+  'dtz-waitlist': { door: 'signup', campaign: 'dtz-waitlist', label: 'Kostenloses Konto erstellen' },
+  'goethe-waitlist': { door: 'signup', campaign: 'goethe-b1-waitlist', label: 'Create a free account' },
+});
+
+export const guideLang = (guide) => guide.lang || 'de';
+
 /** Every guide, in the order the hub lists them. */
-export const GUIDES = [telcB1, goetheB1, telcB2, dtz, startDeutsch1, goetheA2, briefSchreibenB1, modelltestDeutschB1];
+export const GUIDES = [
+  telcB1, goetheB1, telcB2, dtz, startDeutsch1, goetheA2, briefSchreibenB1, modelltestDeutschB1,
+  telcB1BriefBeschwerde, telcB1EmailEinladung, telcB1SprechenThema, telcB1GemeinsamPlanen,
+  dtzBriefVermieter, dtzBriefTerminAbsagen, dtzSprechenBild, dtzGemeinsamPlanen,
+  goetheB1WritingEn, goetheB1SpeakingEn,
+];
 
 export const getGuide = (slug) => GUIDES.find((g) => g.slug === slug);
 
@@ -77,7 +118,7 @@ export const getGuide = (slug) => GUIDES.find((g) => g.slug === slug);
  */
 export const guideToc = (guide) => [
   ...guide.sections.map((s) => ({ href: `#${s.id}`, label: s.heading })),
-  { href: '#faq', label: 'Häufige Fragen' },
+  { href: '#faq', label: guideLang(guide) === 'en' ? 'Frequently asked questions' : 'Häufige Fragen' },
 ];
 
 /**
@@ -112,6 +153,8 @@ function blockText(b) {
       return b.items.flatMap((i) => [i.title, i.body]);
     case 'cards':
       return b.items.flatMap((i) => [i.title, i.body]);
+    case 'model':
+      return [b.label || '', ...b.lines];
     default:
       return [];
   }
@@ -133,7 +176,7 @@ export const guideJsonLd = (guide, { organization, buildDate }) => [
     '@type': 'Article',
     headline: guide.h1,
     description: guide.description,
-    inLanguage: 'de',
+    inLanguage: guideLang(guide),
     author: organization,
     publisher: organization,
     image: 'https://deutsch-meister.de/og-image.png',
@@ -158,7 +201,7 @@ export const guideJsonLd = (guide, { organization, buildDate }) => [
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Start', item: `${BASE}/` },
-      { '@type': 'ListItem', position: 2, name: 'Leitfäden', item: `${BASE}/leitfaden/` },
+      { '@type': 'ListItem', position: 2, name: guideLang(guide) === 'en' ? 'Guides' : 'Leitfäden', item: `${BASE}/leitfaden/` },
       { '@type': 'ListItem', position: 3, name: guide.h1, item: guideUrl(guide) },
     ],
   },

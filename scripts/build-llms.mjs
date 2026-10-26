@@ -143,7 +143,7 @@ export function renderShort({ telcOnSale: onSale = telcOnSale() } = {}) {
 - ${GRAMMAR_TOPIC_COUNT} grammar topics across ${LEVEL_COUNT} CEFR sub-levels (A1.1 to B2.2) — ${topicSplit}
 - Free guided ${FREE_LEVEL_LABEL} course: ${lektionen} situational lessons, no account needed
 ${paidCourses.map(paidCourseFact).join('\n')}
-- Free German-language guides for ${GUIDES.length} exam topics and prep hubs for ${EXAM_HUBS.length} exams (telc, Goethe, DTZ)
+- Free exam guides for ${GUIDES.length} topics (German; ${GUIDES.filter((g) => g.lang === 'en').length} in English) and prep hubs for ${EXAM_HUBS.length} exams (telc, Goethe, DTZ)
 - ${LISTENING_EXERCISE_COUNT} listening exercises containing ${LISTENING_DIALOGUE_COUNT} native-speaker dialogue lines
 - ${PODCAST_EPISODE_COUNT} podcast episodes with native-speaker audio
 - ${n(VOCAB_WORD_COUNT)} vocabulary words and ${VOCAB_SENTENCE_COUNT} example sentences

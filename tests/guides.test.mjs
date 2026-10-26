@@ -15,8 +15,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
+import { onsiteHref, DOORS } from '../astro-site/src/lib/onsiteLinks.js';
+
 import {
   GUIDES,
+  GUIDE_OFFERS,
+  guideLang,
   getGuide,
   guideToc,
   guideReadingMinutes,
@@ -122,6 +126,7 @@ function* guideFields(g) {
         }
       }
       if (b.type === 'warnings') for (const w of b.items) for (const value of [w.title, w.body]) yield [at, value, false];
+      if (b.type === 'model') for (const value of [b.label ?? '', ...b.lines]) yield [at, value, false];
       if (b.type === 'cards') {
         for (const c of b.items) {
           yield [`${at} body`, c.body, true];
@@ -284,4 +289,63 @@ test('the JSON-LD builder emits Article, FAQPage and BreadcrumbList', () => {
     // The breadcrumb's last item must be this guide, or the trail lies.
     assert.equal(crumbs.itemListElement.at(-1).item, guideUrl(g));
   }
+});
+
+// ── exam long-tail pages (backlog d2, 2026-10-26) ──────────────────────────
+//
+// Each exam page leads its CTA with a tagged door to the matching offer or
+// waitlist. The rules, not a list of pages: an offer names a door that exists,
+// its link is attributed (ref=leitfaden, onsite, a campaign label, the slug),
+// and a page's chrome, schema and cross-links speak the page's language.
+
+test('every guide offer resolves to an existing, attributed door with a campaign label', () => {
+  const failures = [];
+  for (const [key, spec] of Object.entries(GUIDE_OFFERS)) {
+    if (!DOORS[spec.door]) failures.push(`offer ${key}: unknown door ${spec.door}`);
+    if (!/^[a-z0-9-]+$/.test(spec.campaign || '')) failures.push(`offer ${key}: campaign "${spec.campaign}" is not a clean label`);
+    if (!spec.label) failures.push(`offer ${key}: no button label`);
+  }
+  for (const g of GUIDES.filter((x) => x.offer)) {
+    const spec = GUIDE_OFFERS[g.offer];
+    if (!spec) { failures.push(`${g.slug}: unknown offer "${g.offer}"`); continue; }
+    const url = new URL(onsiteHref(spec.door, 'leitfaden', g.slug, spec.campaign), 'https://deutsch-meister.de');
+    if (url.pathname !== DOORS[spec.door]) failures.push(`${g.slug}: door path changed by the query`);
+    for (const [k, v] of [['ref', 'leitfaden'], ['utm_medium', 'onsite'], ['utm_campaign', spec.campaign], ['utm_content', g.slug]]) {
+      if (url.searchParams.get(k) !== v) failures.push(`${g.slug}: ${k} is "${url.searchParams.get(k)}", want "${v}"`);
+    }
+  }
+  assert.deepEqual(failures, [], `offer doors:\n  ${failures.join('\n  ')}`);
+});
+
+test('the renderer leads with the offer door and never shows the same signup door twice', () => {
+  assert.match(renderer, /onsiteHref\(offerSpec\.door, 'leitfaden', guide\.slug, offerSpec\.campaign\)/, 'the offer door must be built with onsiteHref and its campaign');
+  assert.match(renderer, /href=\{primary\.href\}/);
+  assert.match(renderer, /secondary = offerSpec\s*\?\s*\{ href: doors\.levelTest/, 'with an offer, the second button is the level test');
+});
+
+test('an offer copy promises no notification and quotes no price', () => {
+  // A waitlist door is a free account with a campaign label. Promising to write
+  // to the person would need a consent basis (owner-only), and the telc price
+  // is stated only on its sales page while it can be bought.
+  const PROMISE = /benachrichtig|informieren wir|melden uns|we will (?:email|notify|let you know)|notify you|\bwaitlist\b|warteliste/i;
+  const PRICE = /\d\s?(?:€|euro)\b|€\s?\d/i;
+  const failures = [];
+  for (const g of GUIDES.filter((x) => x.offer)) {
+    const copy = [g.cta.heading, g.cta.body, GUIDE_OFFERS[g.offer].label].join(' ');
+    if (PROMISE.test(copy)) failures.push(`${g.slug}: CTA promises a notification or names a waitlist`);
+    if (PRICE.test(copy)) failures.push(`${g.slug}: CTA quotes a price`);
+  }
+  assert.deepEqual(failures, []);
+});
+
+test('a guide declares a supported language, and the schema and cross-links follow it', () => {
+  const org = { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' };
+  for (const g of GUIDES) {
+    assert.ok(['de', 'en'].includes(guideLang(g)), `${g.slug}: unsupported lang "${g.lang}"`);
+    const [article] = guideJsonLd(g, { organization: org, buildDate: '2026-10-26' });
+    assert.equal(article.inLanguage, guideLang(g), `${g.slug}: Article inLanguage`);
+  }
+  assert.ok(GUIDES.some((g) => guideLang(g) === 'en'), 'expected at least one English guide');
+  assert.match(renderer, /guideLang\(g\) === lang/, 'cross-links stay within the page language');
+  assert.match(renderer, /lang=\{lang\}/, 'the page declares its own language');
 });
