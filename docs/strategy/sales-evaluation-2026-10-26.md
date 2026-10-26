@@ -1,129 +1,134 @@
 # How to sell DeutschMeister: live-site evaluation, 2026-10-26
 
-*Claude, with an independent blind second evaluator. The Codex pass is in §6. Scope: the live
-site as a first-time buyer sees it, plus live sales data. Nothing was changed on the site or in
-the store for this.*
+*Claude, with a blind second evaluator (Claude subagent) and Codex, the official `codex@openai-codex`
+plugin / Codex CLI 0.164.0, model gpt-6.1-sol. Codex ran two read-only passes: one blind evaluation
+and one red-team of the first draft. The red-team verdict was **REWORK**. Every finding was
+checked against the code, and this version applies them (§6).*
 
 **Sources.**
 - **Firecrawl live crawl** (`maxAge: 0`): 16+ URLs and two 360 px mobile screenshots.
 - **Buyer searches:** 5 searches, plus offer pages of the ranking competitors.
 - **Supabase reads:** read-only, project `omqyueddktqeyrrqvnyq`, 2026-10-26.
-- **The plan this sits under:** [the million plan](million-plan-2026-10.md) (2026-10-19). This
-  document sharpens its moves 3–5 with what the site shows today. It does not replace them.
+- **The plan this sits under:** [the million plan](million-plan-2026-10.md) (2026-10-19). Its
+  release gate, kill list and move order stand. This document sharpens moves 3–5 with what the
+  site shows today.
 
 ---
 
 ## Bottom line
 
-**The store sells what visitors aren't asking for, and nothing at the level they are asking
-for.**
+**Exam demand sits at B1. What the site lets people buy sits at A1–A2 or is general Pro.**
 
-**Demand (live DB, signups in the last 60 days that named an exam):**
-- **74 of 104 chose a B1/B2 exam:**
+**Demand.** In the last 60 days, signups named an exam 95 times (9 more chose "none", 129 left it
+unset).
+- **74 of the 95 named a B1/B2 exam:**
   - Goethe B1: 45
   - telc B2: 11
   - telc B1: 10
   - DTZ: 8
-- 21 chose A1/A2.
+- These are preferences, not proven buyers.
 
-**Supply:**
-- **What can be bought:** A1.2 (€40), A2.1/A2.2 (€50) and Pro (€9.99).
-- **What can't:** B1.1–B2.2 show "Im Bau · coming soon". The telc B1 course shows "89,00 €" next to
-  "Der Kurs startet in Kürze", with only a free-signup button.
+**Supply.**
+- **Tickets on sale:** A1.2, A2.1 and A2.2.
+- **B1/B2 tickets:** they show "Im Bau · coming soon".
+- **The telc package:** its page shows "89,00 €" next to "Der Kurs startet in Kürze".
+- **The only paid route at B1:** general Pro (€9.99), which does include every level's lessons,
+  AI feedback and the timed practice exams (`src/data/offers.js:193`).
 
 **Result:**
 - Lifetime purchases: 3 rows, about €268 lifetime revenue.
 - Subscriptions: 5 `active`.
 - Signups: 65 in 30 days, 16 in the last 7.
 
-**The binding constraint is still reach.** Even a perfect store converts 16 signups a week into
-very little money. Every change below is chosen so that the visitors we already have leave
-something behind: a purchase where one is possible, otherwise a dated waitlist entry. That list
-is the buyer source for the telc pilot (million plan move 4).
+**The order doesn't change.** First the owner's release gate, then a telc pilot people can buy
+(owner decision: €149), then buyers through partners. At 16 signups a week, reach stays the
+binding constraint. Site changes only make sure the visitors we already have reach the right
+door.
 
 ---
 
-## 1. Scores (two evaluators, live site)
+## 1. Scores (three evaluators, live site)
 
-| # | Aspect | Score | Evidence |
-|---|---|---|---|
-| 1 | Who it's for | 3 | Distinctive train-line hero, but exams first appear far down the page. The buyer (immigrant, residence/citizenship/job, deadline) is never named |
-| 2 | Offer & pricing | 2 | 4 offer types. "Pro alone for 3 months: €29.97" sits beside the €40 ticket and tells the buyer Pro is cheaper. Yearly is behind a toggle. B1/B2 cards show prices with no waitlist |
-| 3 | Positioning | 2 | `/vergleich/` fights Babbel, Duolingo and Lingoda. The rivals that rank for buyer queries are exam shops: telc-trainer.de, TestHelden ("39 € Komplettpaket… 30 Tage Geld-zurück-Garantie") and DeutschAkademie ("ab 89 €", 4.9 from 7,328 reviews), per search snippets and their own pages on 2026-10-26 |
-| 4 | Trust & proof | 2 | Honest, but 0 testimonials, no guarantee, no outcome data. The founder line differs: "a doctor" on the homepage, "a team of doctors" on `/ueber-uns/` and the telc guide |
-| 5 | Conversion path | 3 | Good: A1.1 needs no account. Bad: 4 hero CTAs, with "Continue learning →" shown to new visitors and going to the same URL as "Start A1.1 free". At 360 px the hero copy and the "Create a free account" button are clipped at the right edge (screenshot) |
-| 6 | Free → paid moments | 2 | The trial gives "2 AI speaking sessions total", "no card · no automatic charge", and ends with no offer. The level test and exam choice don't lead to a matching product |
-| 7 | Exam-intent capture | 2 | There are 6 `/pruefung/` routes and 18 guides, but `/leitfaden/telc-b1/` never links the telc course (verified in the HTML), and `/pruefung/dtz/` has no paid offer. The site was in no top-10 result for the 5 buyer queries |
-| 8 | Language for the buyer | 2 | The homepage, `/pricing/`, `/level-test/` and `/signup` are English only, and `/de/` returns 404. The buyers search in German ("telc B1 Vorbereitung online", "DTZ Vorbereitung") |
-| 9 | Stickiness | 2 | Tickets never renew. Pro has nothing tied to an exam date. Yearly isn't the default |
-| 10 | Technical / trust pages | 3 | Fast (0.2–0.6 s). `/agb/` and `/widerruf/` are 404, and the footer has no AGB/Widerruf link. Lemon Squeezy is the merchant of record, but German buyers look for these pages. The telc page says both "20-Tage-Plan" and "Vier Wochen" |
-| | **Total** | **23/50** | |
+| # | Aspect | Claude | 2nd eval | Codex | Evidence (verified) |
+|---|---|---|---|---|---|
+| 1 | Who it's for | 3 | 3 | 2 | The hero sells a beginner line, and the primary action is free A1.1 (`astro-site/src/pages/index.astro:102`). The exam buyer is never named |
+| 2 | Offer & pricing | 2 | 2 | 2 | Tickets €40–65, Pro €9.99 or €79.99, and an unavailable telc package all overlap. "Pro alone for 3 months: €29.97" next to the €40 ticket argues against the ticket |
+| 3 | Positioning | 2 | 2 | 2 | The telc page sells "weeks of grammar", but the built programme is exam-task-first with an unseen retest on day 20 (`src/data/programs/telcB1Komplett.js:48`). The real search rivals are exam shops (TestHelden "39 € Komplettpaket… 30 Tage Geld-zurück-Garantie"; DeutschAkademie "ab 89 €", 4.9 from 7,328 reviews, per their pages and snippets on 2026-10-26), not Babbel |
+| 4 | Trust & proof | 2 | 2 | 2 | There are content counts, but no outcomes, sample corrections or guarantee. The founder line was inconsistent and is **fixed in this PR**. The telc hero's "Die meisten fallen nicht durch, weil…" is unsupported (`telc-b1-komplettvorbereitung.astro:138`) |
+| 5 | Conversion path | 3 | 3 | 2 | The 360 px screenshot clips the hero copy and the "Create a free account" button. Buy intent survives signup (`src/lib/buyIntent.js`) |
+| 6 | Free → paid moments | 2 | 2 | 3 | Offers already exist: a trial banner "Upgrade to Pro" (`TrialBanner.jsx:86`), offers matched to trial feedback (`examFeedbackOffer.js`), and next-course offers on completion. **But the telc offer leads to a product that can't be bought** |
+| 7 | Exam-intent capture | 2 | 2 | 2 | Four telc long-tail guides already have an offer door (`astro-site/src/data/guides/index.js:96`). The **main** telc B1 guide ends on the level test only (`guides/telc-b1.js:311`). `firstRun` sends exam choosers to beginner or placement steps (`src/lib/firstRun.js`) |
+| 8 | Language | 2 | 2 | 2 | The homepage, `/pricing/`, `/level-test/` and `/signup` are English, and `/de/` is 404. German exam buyers land on English money pages |
+| 9 | Retention | 2 | 2 | 2 | 5 active and 2 unpaid subscriptions. 11 of 12 payers ever hit a failed payment (million plan) |
+| 10 | Technical / trust pages | 3 | 3 | 1 | Pages load fast. `/agb/` and `/widerruf/` are 404, and the Impressum shows "Entwurf — nicht freigegeben" (`impressum.astro:30`) |
+| | **Total** | **23** | **23** | **20** | |
+
+**Withdrawn from the first draft:**
+- "Continue learning →" is shown to new visitors: false. It is `data-auth-only`, hidden by default
+  (`index.astro:103`), so the crawler read hidden text.
+- "The trial ends with no offer": false (see row 6).
+- "Nothing at B1/B2 can be bought": overstated. Pro covers B1/B2 practice.
 
 ---
 
 ## 2. What to sell, to whom, in what order
 
-1. **Now: B1 exam readiness, sold as a waitlist, then as the telc pilot.**
-   - The buyer is someone in Germany who needs B1 (telc, DTZ or Goethe) for residence,
-     citizenship or a job, has a date, and searches in German.
-   - The release gate in the million plan (operator, FernUSG/ZFU, terms, VAT-inclusive store,
-     telc at €149 in Draft) still decides when the sale opens. Until then, every B1 surface
-     collects **email + exam + exam date**.
-2. **Second variant: Goethe B1.**
-   - New evidence for the million plan's open disagreement (DTZ vs Goethe next): Goethe B1 is
-     45 of 104 in-app exam choices. telc B1 + DTZ together are 18.
-   - The plan's rule stands: whichever clears first after telc sells ≥5 of 10. But the waitlist
-     should split by exam from day one, so that rule has data.
-3. **Always on: Pro yearly as "the library behind the plan".** Make it the default and name it in
-   euros a month.
-4. **Start Deutsch 1 for visa families abroad.** Sell A1.1 free + the A1.2 ticket as "bereit für
-   Start Deutsch 1". The content already ends in that exam's format. It counts as zero until it
-   sells.
+1. **First: the telc B1 rehearsal pilot, once the gate passes.**
+   - Price: €149 (owner decision on record).
+   - Buyer: an adult near B1 with a telc date 4–8 weeks out.
+   - Pitch: the mechanism that is actually built, which is written and revised letters, guided
+     speaking rehearsals, targeted gap practice and an unseen retest. Not "a German course".
+2. **Next variant: decided by the million plan's rule, unchanged.**
+   - After telc sells ≥5 of 10, DTZ opens at ≥10 waitlist signups; Goethe B1 needs **paid**
+     validation abroad.
+   - Goethe B1 is the largest preference (45), but a preference is not a payment.
+3. **Pro stays as it is:** only loss-stoppers (dunning, access follows payment). Pushing yearly
+   or optimising Pro is on the kill list. Parked unless the owner changes it.
+4. **A1–A2 tickets:** no new work. They stay on sale.
 
 ---
 
-## 3. The changes, ranked by revenue per hour of work
+## 3. The changes, in dependency order
 
 **Who may do what:**
 - `[agents]` means it can ship as a normal PR. It is copy, links or layout derived from
   `pricing.js`/`marketing.js`.
-- `[owner]` touches money, terms, legal or brand messages (Team v5 reserved list).
+- `[owner]` touches money, terms, legal, consent or brand messages (Team v5 reserved list).
 
 | # | Change | Where | Why | Who |
 |---|---|---|---|---|
-| 1 | **B1/B2 waitlist with exam + date** replaces the dead "coming soon" and "startet in Kürze" states. The confirmation sets the mail basis: one notice when the sale opens, nothing else without consent | telc page, B1/B2 cards on `/` and `/pricing/`, `/pruefung/telc-b1/`, `/pruefung/goethe-b1/`, `/pruefung/dtz/` | Converts the 74 of 104 B-level visitors we have, and builds the buyer list move 4 needs | [agents] build; [owner] approves the new form/endpoint and the consent text |
-| 2 | **Exam guides end in the matching offer**: waitlist now, the course once it's on sale, with Pro yearly as the second option | `/leitfaden/telc-b1/` and the other B1/DTZ guides | Guides are the pages that rank for exam intent. Today they end in "Kostenloses Konto erstellen" only | [agents] |
-| 3 | **Fix the mobile hero overflow** at 360 px | `astro-site` homepage hero | Touches every mobile visitor. It is a correctness defect, so it's exempt from the polish freeze | [agents] |
-| 4 | **Reverse the pricing anchor; yearly as default.** Drop "Pro alone for 3 months: €29.97". Show the yearly toggle first, with the per-month figure derived in `pricing.js` | `/pricing/`, homepage ticket section | The current line argues against the ticket. Yearly collects 8 months up front, and dunning is the known LTV leak (11 of 12 payers hit a failed payment) | [agents] copy; [owner] if anything about what Pro includes changes |
-| 5 | **Two hero CTAs and one exam line**: hide "Continue learning →" for new visitors; add "Prüfung bald? telc B1 · Goethe B1 · DTZ →" to `/pruefung/` | homepage | Puts the paying segment one tap away | [agents] copy; [owner] approves the brand line |
-| 6 | **One founder line everywhere** ("a doctor" or "a team of doctors", whichever is true) | `/`, `/ueber-uns/`, telc page and guide | An inconsistent claim costs trust on the trust axis | [owner] picks the true line; [agents] apply it |
-| 7 | **AGB/Widerruf pages and footer links** (Lemon Squeezy MoR terms stated plainly) | new legal pages | German buyers check them before paying, and they are on the release gate anyway | [owner] + counsel; pages stay noindex drafts until review |
-| 8 | **A money-back guarantee** on the telc package at launch | telc page, checkout | The ranking rival sells with "30 Tage Geld-zurück-Garantie". With 0 reviews, a guarantee is the cheapest proof | [owner]: money/terms decision |
-| 9 | **German homepage and level test** (`/de/`) framed by Aufenthalt / Einbürgerung / Job | new Astro page | Buyers search in German. A bigger build: do it after 1–5 show waitlist pull | [agents] after owner approves the brand framing |
-| 10 | **Trial ends in an offer**: day 5–7 in-app card for the placed level's ticket, B1 waitlist, or Pro yearly. No mail without basis | SPA dashboard | The trial currently runs out silently | [agents]; lifecycle mail only with a documented basis |
+| 0 | **Founder line = "a team of doctors" everywhere** | `marketing.js` (both copies), telc page | One true claim across homepage, guides, exam hubs, comparisons and `/ueber-uns/` | **Done in this PR** (owner decision 2026-10-26) |
+| 1 | **Clear the release gate**: operator/tax, FernUSG/ZFU (covering Pro and tickets too), §7 UWG mail basis, Impressum facts, AGB/Widerruf, VAT-inclusive store, telc renamed and repriced to €149 in Draft, test purchase → refund → replay | million plan move 1 | Every conversion change below still ends at a product that can't be bought until this passes | [owner] + counsel; agents prepare the brief |
+| 2 | **Fix the mobile hero overflow** at 360 px, with the cookie banner visible, checked in a real browser | `astro-site` homepage hero | Touches every mobile visitor. It's a defect, so it's exempt from the polish freeze | [agents] |
+| 3 | **Sell the built mechanism on the telc page.** Replace the grammar-weeks description with what `telcB1Komplett.js` does. Remove the unsupported "Die meisten fallen nicht durch" claim. Align "20 Tage / 4 Wochen" | `telc-b1-komplettvorbereitung.astro` | It's PR C's content from million plan move 3. The page under-sells what was built | [agents]; the €149 price and terms are [owner] |
+| 4 | **Point the main telc guide at the telc offer door** (the same `GUIDE_OFFERS.telc` door its four long-tail guides already use). List any other guide without a door one by one; don't replace existing doors | `astro-site/src/data/guides/telc-b1.js` / registry | The guide that ranks for "telc B1" ends on the level test | [agents] |
+| 5 | **Labelled signup doors, not a new waitlist system**, on the B1/B2 cards and the telc page: the same campaign-labelled signup pattern as `dtz-waitlist` and `goethe-b1-waitlist`. No promise to notify (enforced by `tests/guides.test.mjs`) | `/`, `/pricing/`, telc page | Counts B-level interest per exam in `profiles.acquisition_campaign`, with no new endpoint and no consent question | [agents] |
+| 6 | **Exam choosers start on an exam task** (`firstRun` honours `exam_track`) | `src/lib/firstRun.js` | Million plan move 3's narrow funnel change. Today experienced learners land on A1.1 or a 20-minute test | [agents]; ships with the pilot |
+| 7 | **Visible proof beside the offer**: one labelled sample letter with its corrections, revision and rubric | telc page | With 0 reviews against rivals with thousands, an inspectable sample is the cheapest proof | [agents] build; [owner] approves it as a brand message |
+| 8 | **A money-back guarantee** on the pilot | terms, telc page | The ranking rival sells with "30 Tage Geld-zurück-Garantie" | [owner]: a money/terms decision inside the gate |
+| 9 | **German money pages** (`/de/` home, German level-test entry) | new Astro pages | Buyers search in German. A larger build: only after the pilot shows pull | [agents] after the owner approves the framing |
 
-**Not recommended now:**
-- **Selling the telc course "today" at €89** (the second evaluator's #1). It's blocked by the release
-  gate, and the owner decision on record is €149.
-- **Expanding `/vergleich/`.** The kill list says fix the false claims, then stop. Re-targeting it at
-  exam shops is a later move.
-- **New social packs:** 0 attributed signups so far.
+**Parked:**
+- **Yearly as default, or reworking the "€29.97" anchor:** Pro optimisation is on the kill list.
+  If the owner reopens it, show the €79.99 charge with the derived monthly figure next to it.
+- **A notify-me waitlist with mail:** it needs an owner-approved consent basis, a verified address,
+  consent version and time, withdrawal, rate limits and restricted reads. That's a security/consent
+  release, not copy.
+- **Expanding `/vergleich/`** and **new social packs:** both on the kill list.
 
 ---
 
 ## 4. Measures
 
-**Starting point** (2026-10-26):
-- B-level waitlist: 0
-- Exam dates on profiles: 3
-- Signups: 16 a week
+**Exploratory, available now:**
+- Signups per labelled door (`profiles.acquisition_campaign`), per exam.
+- Starting point: 3 profiles with an exam date; 10 telc B1 choices in 60 days.
 
-**Week-4 targets:**
-- **Waitlist:** ≥40 entries with an exam date, ≥10 of them telc B1 (the pilot's 10 places).
-- **Guides:** ≥5% of guide visitors click the offer or waitlist block, measured by the
-  `public/attribution.js` labels.
-- **Kill rule:** under 15 waitlist entries after ≥300 B-level page views means the B1 surfaces
-  don't convince. Change the offer copy once before blaming the price.
+**Binding, per the million plan:**
+- A reconciled **server-side** denominator: qualified offer view → checkout → payment → refund.
+  It is privacy-approved and in place **before** any kill clock starts. `public/attribution.js`
+  stores first/last campaign labels, so it is not a view or click denominator.
+- The pilot is judged on sales after ≥300 qualified offer views (move 4's rule).
 
 ---
 
@@ -132,13 +137,29 @@ is the buyer source for the telc pilot (million plan move 4).
 | Measure | Value |
 |---|---|
 | Accounts | 1,748 total; 65 created in 30 days; 16 in 7 days |
-| Exam choice, last 60 days | Goethe B1 45 · Goethe A1 11 · telc B2 11 · Goethe A2 10 · telc B1 10 · none 9 · DTZ 8 · unset 129 |
+| Exam choice, last 60 days | Goethe B1 45 · Goethe A1 11 · telc B2 11 · Goethe A2 10 · telc B1 10 · DTZ 8 (95 named) · none 9 · unset 129 |
 | First-touch source, last 60 days | untracked 165 · google 56 · bing 4 · chatgpt.com 3 · other 5 |
 | Purchases (rows) | `course_alle` 09-08 · `course_a1` 09-03 · `course_a1_2` 10-14 |
 | Subscriptions | active 5 · expired 7 · unpaid 2 · cancelled 1 |
 
+**Queries:**
+- Counts from `auth.users` and `profiles` (`exam_track`, `acquisition_source`, `created_at > now() - 60/30/7 days`).
+- Purchase and subscription rows grouped by `product_key` and `status`.
+
 ---
 
-## 6. Codex pass
+## 6. Codex red-team: findings and what changed
 
-*Pending: run with the official `codex@openai-codex` plugin once the Codex CLI is signed in.*
+| # | Codex finding | Verdict | Change |
+|---|---|---|---|
+| 1 | The draft put the waitlist before the release gate | Agreed | The gate is #1, and everything else is ordered behind it |
+| 2 | The waitlist is a new consent/security system. Labelled doors already exist, and tests forbid notify promises | Verified (`guides/index.js:96`, `tests/guides.test.mjs:326`) | Now #5 as labelled signup doors. A notify list is parked |
+| 3 | Yearly-Pro pushes break the kill list | Agreed (million plan, kill list 5) | Parked |
+| 4 | Attribution is not a denominator; kill rules need server-side measures | Verified (`public/attribution.js:10`) | §4 rewritten |
+| 5 | "Nothing at B1/B2" ignores Pro; the trial does show offers | Verified | Withdrawn and reworded |
+| 6 | "Continue learning" is auth-only | Verified (`index.astro:103`) | Withdrawn |
+| 7 | Long-tail telc guides already have offer doors | Verified | #4 narrowed to the main telc guide |
+| 8 | 95 named exams, not 104 | Verified (arithmetic) | Corrected to 74 of 95 |
+
+**From Codex's blind pass:** the telc page under-sells the built programme (#3) and the Impressum
+shows a draft notice (scores row 10). Both adopted.
