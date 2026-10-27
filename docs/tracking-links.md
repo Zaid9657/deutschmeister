@@ -58,7 +58,7 @@ are pages, not channels.
 |---|---|---|
 | `xray` | the offer under an X-Ray result and at the anonymous limit (`src/lib/xray.js`) | — |
 | `grammar` | every grammar lesson (both signup doors, the locked-exercise door, the signed-out finish line, the free-course door on A1 pages), the `/grammar/` hub, the nav trial button on `/grammar/**` | the topic slug, `index`, or `nav` |
-| `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**` | the guide slug, `index`, or `nav` |
+| `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**`; since 2026-10-26 the exam long-tail guides lead with an offer door carrying `utm_campaign`: `telc-b1-offer` (to `/telc-b1-komplettvorbereitung/`), `dtz-waitlist` or `goethe-b1-waitlist` (to `/signup`) — `GUIDE_OFFERS` in `astro-site/src/data/guides/index.js` | the guide slug, `index`, or `nav` |
 | `level-test` | "Sign up free — save my results" under a signed-out level-test result (`src/lib/placement.js`, 2026-09-28). The result itself travels in localStorage `dm_placement` and is written to `profiles.current_level` at the first sign-in on that browser | the placed sub-level (`b1.2`) |
 | `save-progress-first` | "Save my progress — create a free account" on the A1.1 lesson player's save-progress ask, once per Lektion, on the screen after a signed-out learner's first checked answer (`src/lib/course/saveProgressAsk.js`, 2026-10-06) | level and Lektion (`a1.1-l1`) |
 | `save-progress-recap` | "Save progress" on the same ask's recap card, after a signed-out learner finished a Lektion (`SaveProgressCard.jsx`, tagged 2026-10-06) | the level (`a1.1`) |
@@ -109,38 +109,50 @@ In our own mail `email` is the source, not the medium. `utm_medium=email` (table
 above) stays for a link placed in someone else's newsletter, whose name is then the
 source.
 
-**Daily sentence** (shipped 2026-10-02 in #176): `DAILY_UTM` in
-`netlify/functions/daily-sentence.mjs` builds both links.
+**Daily sentence** (shipped 2026-10-02 in #176; the course link 2026-10-25):
+`DAILY_UTM` in `netlify/functions/daily-sentence.mjs` builds all three links.
 
 ```
 https://deutsch-meister.de/analyze/?s=<sentence>&utm_source=email&utm_medium=daily&utm_campaign=daily-sentence&utm_content=xray
+https://deutsch-meister.de/course/a1.1?utm_source=email&utm_medium=daily&utm_campaign=daily-sentence&utm_content=course
 https://deutsch-meister.de/?utm_source=email&utm_medium=daily&utm_campaign=daily-sentence&utm_content=footer
 ```
 
 `tests/daily-sentence-links.test.mjs` pins them: every site link is tagged with its
 own `utm_content`, the tags are fixed strings, and `public/attribution.js` reads
 them back. It also checks that the unsubscribe link is untagged and byte-identical.
-**Lifecycle** (2026-10-04): `trial-lifecycle` and `activation-lifecycle` tag every
-site link through `tagEmailLink()` in `netlify/functions/_shared/emailLinks.mjs`.
-The medium is `lifecycle`, the campaign is the mail kind with hyphens, and the
-content is `cta` (the button) or `footer` (the home link).
+**Lifecycle** (2026-10-04; the welcome mail, the confirmation nudge's footer and
+the course reminder since): every site link is tagged through `tagEmailLink()` in
+`netlify/functions/_shared/emailLinks.mjs`. The medium is `lifecycle`, the
+campaign is the mail kind with hyphens, and the content names the link: `cta`
+(the button), `footer` (the home link), or a secondary text link's own label.
 
-| Mail | `utm_campaign` | `cta` lands on |
-|---|---|---|
-| trial day 3 | `trial-day3` | `/analyze/` |
-| trial day 6 | `trial-day6` | `/pricing/` |
-| trial ended | `trial-ended` | `/pricing/` |
-| activation day 1 | `activation-d1` | `/level-test/` |
-| activation day 4 | `activation-d4` | `/analyze/` |
+| Mail | `utm_campaign` | `cta` lands on | Other links (`utm_content` → page) |
+|---|---|---|---|
+| welcome | `welcome` | `/course/a1.1/l/1` (since 2026-10-25; `/analyze/` before) | `xray` → `/analyze/` |
+| trial day 3 | `trial-day3` | `/analyze/` | |
+| trial day 6 | `trial-day6` | `/pricing/` | |
+| trial ended | `trial-ended` | `/pricing/` | |
+| activation day 1 | `activation-d1` | `/course/a1.1/l/1` (since 2026-10-25; `/level-test/` before) | `level-test` → `/level-test/` |
+| activation day 4 | `activation-d4` | `/analyze/` | |
+| course reminder | `course-reminder` | the step it names: `/course/<level>/l/<nr>`, `/course/<level>/checkpoint/<nr>`, the final test `/modelltest/<testSlug>`, or `/course/<level>` (since 2026-10-25) | |
+| confirmation nudge | `confirm-nudge` | (a signed function URL, never tagged) | |
+
+Lektion 1, the course pages and `/modelltest/<slug>` are SPA routes, so they carry no trailing slash;
+`/analyze/`, `/pricing/` and `/level-test/` are prerendered and keep theirs.
 
 ```
 https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=cta
 https://deutsch-meister.de/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=footer
+https://deutsch-meister.de/course/a1.1/l/4?utm_source=email&utm_medium=lifecycle&utm_campaign=course-reminder&utm_content=cta
 ```
 
-`tests/lifecycle-links.test.mjs` pins them the same way, unsubscribe link included.
-`course-reminder`, `confirmation-nudge`, `send-welcome-email` and `send-campaign`
-still carry no `utm_` (grep of `netlify/functions/`). The unsent launch draft
+`tests/lifecycle-links.test.mjs`, `tests/welcome-links.test.mjs` and
+`tests/course-reminder.test.mjs` pin them the same way, unsubscribe link included.
+`send-campaign` still tags nothing: its body is the operator's HTML. Every
+customer mail's unsubscribe link (never tagged) is built by
+`netlify/functions/_shared/unsubscribe.mjs` and also travels as the
+`List-Unsubscribe` header (`tests/unsubscribe-headers.test.mjs`). The unsent launch draft
 `drafts/launch-sublevel-1.mjs` already follows the scheme
 (`utm_medium=launch&utm_campaign=sublevel-2026-09`).
 

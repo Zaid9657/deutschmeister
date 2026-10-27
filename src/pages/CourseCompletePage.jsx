@@ -1,10 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Trophy, Award, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import { courseFor } from '../data/courses/index.js';
 import { courseTestDescription } from '../data/courseTests/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
+import { stationFor, stationStatusLine, ticketLines } from '../data/offers.js';
+import { productKeyForLevel } from '../data/pricing.js';
+import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy.js';
+import { setBuyIntent } from '../lib/buyIntent.js';
+import { track } from '../lib/analytics';
 import { programKeyFor } from '../services/lessonService.js';
 import { getProgramProgress } from '../services/programProgress';
 import { flattenCourse, isComplete, percentDone, courseHome, courseCertificate } from '../lib/courseFlow.js';
@@ -12,6 +18,7 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import FullPageRedirect from '../components/FullPageRedirect.jsx';
 
 // The end of the path: the one screen that may celebrate (design rule 2 —
 // himbeer only for a completed goal). Hands the learner to the final test if
@@ -22,15 +29,45 @@ import Aurora from '../components/ui/Aurora.jsx';
 // under programKeyFor(level) and counts against curriculumPath(curriculum) —
 // Lektionen, checkpoints and the level-test node, "complete" meaning every
 // node is done (mirrors CurriculumHomePage). A level with no curriculum
-// module keeps the legacy course.programKey ledger, unchanged. The "next
-// level" card for a rebuilt level never links straight to the next level's
-// course player — written while A1.2 was a draft (live since 2026-10-22) —
-// it links to "All courses" instead.
+// module keeps the legacy course.programKey ledger, unchanged.
+//
+// WHAT'S NEXT (2026-10-25). The card used to tell every rebuilt level that the
+// next one was "a paused draft" — written while A1.2 was one; A1.2 has been a
+// live course since 2026-10-22, and A2.1 (after A1.2) has its 28-day course. So
+// the next step is derived from the registries for both ledgers (nextStepFor):
+// the next course itself for a learner who may open it, its ticket for everyone
+// else — price and lines from offers.js/pricing.js, never retyped, Buy through
+// the buy-intent path — and the draft sentence only where no course exists yet.
+
+/**
+ * What follows `level` on the ladder and how this learner gets there. Pure: the
+ * registries in, a plain object out (tests/course-certificate.test.mjs runs it).
+ *   continue — the next level has a course (rebuilt or 28-day) the learner may open;
+ *   offer    — it has a course the learner does not have yet: its station and first ticket line;
+ *   draft    — it has no course yet: the library is open today.
+ */
+export function nextStepFor(level, hasLevelAccess) {
+  const next = courseFor(level)?.next || null;
+  if (!next) return null;
+  if (!curriculumFor(next) && !courseFor(next)) return { kind: 'draft', level: next };
+  if (typeof hasLevelAccess === 'function' && hasLevelAccess(next)) return { kind: 'continue', level: next, to: courseHome(next) };
+  const station = stationFor(next);
+  return {
+    kind: 'offer',
+    level: next,
+    station,
+    ticket: ticketLines(next)[0] || null,
+    productKey: productKeyForLevel(next),
+    coursePage: station ? station.coursePage : null,
+  };
+}
+
 export default function CourseCompletePage() {
   const { level } = useParams();
   const curriculum = curriculumFor(level);
   const course = courseFor(level);
   const { user } = useAuth();
+  const { hasLevelAccess, loading: subLoading } = useSubscription() || {};
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
 
@@ -43,7 +80,7 @@ export default function CourseCompletePage() {
     getProgramProgress(user.id, programKey).then((set) => { setDone(set); setLoaded(true); });
   }, [user, programKey]);
 
-  if (!curriculum && !course) return <Navigate to="/courses/" replace />;
+  if (!curriculum && !course) return <FullPageRedirect to="/courses/" />;
 
   const code = curriculum ? curriculum.code : course.code;
   const complete = curriculum
@@ -60,7 +97,16 @@ export default function CourseCompletePage() {
   const checkpointsDone = curriculum ? path.filter((n) => n.kind === 'checkpoint' && done.has(n.id)).length : 0;
   const checkpointsTotal = curriculum ? curriculum.checkpoints.length : 0;
   const wordsTotal = curriculum ? curriculum.lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0) : 0;
-  const nextCourse = curriculum ? null : courseFor(course.next);
+  // Entitlements decide between the course and its offer: none is shown until they have loaded,
+  // so a buyer is never offered the level they own.
+  const step = subLoading ? null : nextStepFor(level, hasLevelAccess);
+  const nextCode = (step?.level || course?.next || '').toUpperCase();
+  const checkoutReady = step?.kind === 'offer' && Boolean(LEMONSQUEEZY_CONFIG.levelCourses[step.productKey]?.variantId);
+  // Signed out, the Buy click is remembered and resumed after sign-up (src/lib/buyIntent.js).
+  const buyNext = () => {
+    track('checkout_intent', { product: step.productKey, surface: 'course_complete', level: step.level, signed_in: Boolean(user) });
+    if (!user) setBuyIntent(step.productKey);
+  };
   const testSlug = curriculum ? curriculum.testSlug : course.testSlug;
 
   return (
@@ -108,8 +154,8 @@ export default function CourseCompletePage() {
         </div>
 
         <Reveal delay={120} className="mt-6">
-          <Card className="p-5">
-            {curriculum ? (
+          <Card className="p-5" data-next-step={step?.kind || 'loading'}>
+            {step?.kind === 'draft' ? (
               <>
                 <h2 className="font-bold text-ink">What's next</h2>
                 <p className="mt-1 text-[0.875rem] text-graphite">The next level is a paused draft, not a guided course yet — the full course library is open today.</p>
@@ -119,15 +165,36 @@ export default function CourseCompletePage() {
               </>
             ) : (
               <>
-                <h2 className="font-bold text-ink">Next: German {course.next.toUpperCase()}</h2>
-                <p className="mt-1 text-[0.875rem] text-graphite">
-                  {nextCourse ? 'The next course continues the same path.' : 'The next level is being rebuilt as a guided course; its library is open today.'}
-                </p>
-                <div className="mt-3">
-                  {nextCourse
-                    ? <Link to={courseHome(nextCourse.level)} className="font-bold text-siegel hover:text-siegel-deep">Go to {nextCourse.code} →</Link>
-                    : <a href={`/courses/${course.next.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep">See {course.next.toUpperCase()} →</a>}
-                </div>
+                <h2 className="font-bold text-ink">Next: German {nextCode}</h2>
+                {step?.kind === 'continue' && (
+                  <>
+                    <p className="mt-1 text-[0.875rem] text-graphite">The next course continues the same path.</p>
+                    <div className="mt-3">
+                      <Link to={step.to} className="font-bold text-siegel hover:text-siegel-deep">Go to {nextCode} →</Link>
+                    </div>
+                  </>
+                )}
+                {step?.kind === 'offer' && (
+                  <>
+                    {step.ticket && (
+                      <>
+                        <p className="mt-2 text-[0.9375rem] font-bold text-ink">{step.ticket.title}</p>
+                        <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{step.ticket.body}</p>
+                      </>
+                    )}
+                    {step.station && <p className="mt-2 font-data text-[0.75rem] text-graphite">{stationStatusLine(step.station)}</p>}
+                    <div className="mt-4 flex flex-wrap items-center gap-4">
+                      {checkoutReady && (
+                        <Button to={`/subscription?buy=${step.productKey}`} onClick={buyNext} variant="primary" size="md">
+                          Buy {nextCode} · {step.station.priceLabel}
+                        </Button>
+                      )}
+                      {step.coursePage && (
+                        <a href={step.coursePage} className="font-bold text-siegel hover:text-siegel-deep">See {nextCode} →</a>
+                      )}
+                    </div>
+                  </>
+                )}
               </>
             )}
           </Card>

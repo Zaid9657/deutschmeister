@@ -447,6 +447,11 @@ const SentenceXRay = () => {
       if (!res.ok) {
         throw new Error(failureMessage(res.status, data));
       }
+      // A 200 without a word list is not a result: rendering it would crash
+      // the page on result.words.map (cross-check AI-20).
+      if (!Array.isArray(data.words)) {
+        throw new Error('Analysis failed. Please try again.');
+      }
 
       setResult(data);
       if (data.usage) setUsage(data.usage);

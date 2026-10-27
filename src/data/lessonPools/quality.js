@@ -921,6 +921,67 @@ const PREPOSITION_RE =
 const ADVERBIAL_ADVERB_RE =
   /^(?:gestern|vorgestern|heute|morgen|übermorgen|jetzt|dann|danach|hier|dort|da)$/i;
 
+/** The modal and frequency adverbs. Not an Angabe at A1.1 (REVIEW #13 pins „Wir tanzen zusammen."
+ * as having nothing to front), yet „Zusammen tanzen wir." is German — so a prompt whose answer
+ * holds one names its opening (`missingOpeningCue`, Codex review 2026-10-07). */
+const MODAL_ADVERB_RE = /^(?:zusammen|gern|gerne|oft|immer|manchmal|bald|später|sofort|leider|zuerst)$/i;
+
+/** The copula forms A1.1 meets: their complement is a predicate („Ich bin Lehrer."), not an object. */
+const COPULA_RE = /^(?:bin|bist|ist|sind|seid|heiße|heißt|heißen|heisse|heisst|heissen|werde|wird|werden)$/i;
+
+/** What may open an object noun phrase: an article, a possessive, kein-, a number word or digits —
+ * every number, so a price („zwanzig Euro", „20 Euro") opens a phrase like „zwei Brötchen" does. */
+const NP_DETERMINER_RE =
+  /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|keinen|mein|meine|meinen|dein|deine|deinen|sein|seine|seinen|ihr|ihre|ihren|unser|unsere|unseren|euer|eure|euren|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|dreizehn|vierzehn|fünfzehn|sechzehn|siebzehn|achtzehn|neunzehn|(?:(?:ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun)und)?(?:zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig)|hundert|\d+(?:[.,]\d+)?|viele)$/i;
+
+/** A separable prefix after the object: it stays last when the object opens („Meine Mutter rufe ich an."). */
+const OBJECT_PREFIX_RE = /^(?:ab|an|auf|aus|ein|mit|nach|vor|weg|zu|zurück|zurueck|fern|los|her|hin|um)$/i;
+
+/** The canonical opens with its subject: a nominative pronoun, a determiner, or one name. */
+function subjectFirst(words, verbAt) {
+  const first = words[0];
+  return SUBJECT_SHAPED_RE.test(bare(first))
+    || (verbAt === 1 && /^[A-ZÄÖÜ]/.test(first) && !ADVERBIAL_ADVERB_RE.test(bare(first)) && !MODAL_ADVERB_RE.test(bare(first)));
+}
+
+/**
+ * The object fronted: „Die Firma braucht ein Büro." → „Ein Büro braucht die Firma." — the same V2
+ * sentence, marked wrong in a graded checkpoint (Codex review, 2026-10-07). Only the narrowest
+ * shape: [subject] [full verb] [one object noun phrase] and at most a separable prefix after it —
+ * the phrase an optional determiner, lower-case adjectives and a capitalised noun or name, and a
+ * determiner- or number-led phrase may hold the nouns of a measure phrase („ein Glas Wasser",
+ * „zwanzig Euro"). Predicates and pronoun objects also need an opening cue (live Batch 1).
+ * The prefix was the gap the 2026-10-25 review measured (X-041): „Meine Mutter rufe ich an." and
+ * „Ein Glas Wasser möchte ich." were graded wrong, because the old shape wanted a capitalised noun
+ * as the LAST word and nothing capitalised inside the phrase — so the prompt named no opening.
+ * It is NOT derived into an answer key: REVIEW #12/#13 keep objects out of `frontableOrders`.
+ * `missingOpeningCue` uses it to make the prompt name the opening instead.
+ */
+function objectFronted(words, verbAt) {
+  // An article read as the verb („Mach die Tür auf!": `die` has the shape of a personal ending) is
+  // an imperative or a question, whose order is not free — not a subject-first statement.
+  if (NP_DETERMINER_RE.test(bare(words[verbAt])) || !subjectFirst(words, verbAt)) return null;
+  const subject = words.slice(0, verbAt);
+  const after = words.slice(verbAt + 1);
+  // The prefix of a separable verb closes the clause and stays there when the object opens it.
+  const prefix = after.length >= 2 && OBJECT_PREFIX_RE.test(bare(after[after.length - 1])) ? after[after.length - 1] : null;
+  const object = prefix ? after.slice(0, -1) : after;
+  if (!object.length || object.length > 4) return null;
+  const pronoun = object.length === 1 && /^(?:mich|dich|ihn|sie|es|uns|euch|Sie|mir|dir|ihm|ihr|ihnen|Ihnen)$/.test(bare(object[0]));
+  const predicate = COPULA_RE.test(bare(words[verbAt]));
+  const noun = object[object.length - 1];
+  if (!pronoun && !predicate && (!/^[A-ZÄÖÜ]/.test(noun) || /^(?:Sie|Ihnen)$/.test(bare(noun)))) return null;
+  const head = object.slice(0, -1);
+  if (head.length && !NP_DETERMINER_RE.test(bare(head[0])) && !predicate) return null;
+  // Inside the phrase: adjectives and the nouns of a measure phrase — never a preposition, which
+  // opens a second constituent („den Kuchen im Geschäft").
+  if (head.slice(1).some((w) => !/^[A-Za-zÄÖÜäöüß]+$/.test(bare(w)) || /^(?:Sie|Ihnen)$/.test(bare(w))
+    || PREPOSITION_RE.test(bare(w)))) return null;
+  if (object.some((w) => PREPOSITION_RE.test(bare(w)))) return null;
+  return [capitalise(object[0]), ...object.slice(1), words[verbAt], lowerSubject(subject[0]), ...subject.slice(1),
+    ...(prefix ? [prefix] : [])].join(' ');
+}
+
 /** The determiners that open a bare accusative time phrase („jeden Tag",
  * „nächste Woche") — an Angabe without a preposition. */
 const TIME_DETERMINER_RE =
@@ -940,13 +1001,15 @@ const LOWERCASABLE_SUBJECT_RE =
 /** A finite-verb shape: a personal ending on a lower-case word, plus the forms
  * of the two irregular verbs A1.1 teaches that carry no personal ending at all
  * (`bin`, `sind`) and the modals it meets. Without them „Ich bin Lehrer von
- * Beruf." has no readable verb and the whole item falls out of the rule. */
+ * Beruf." has no readable verb and the whole item falls out of the rule. The
+ * -ern/-eln verbs end their plural in a bare -n („wir feiern", „wir sammeln") —
+ * without that „Wir feiern unser Fest." had no verb either (X-041). */
 const FRONTABLE_FINITE_RE =
   /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et|ern|eln)|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
 
 /** Words of that shape that are not verbs — the A1.1 adverbs and particles that
  * happen to end in a personal ending. Measured against the built pool. */
-const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon|acht|sieben|hundert|tausend)$/i;
+const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|vorgestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon|acht|sieben|hundert|tausend)$/i;
 
 /** A word that could be the subject of the clause: a nominative pronoun or a
  * determiner opening a noun phrase. Used to refuse an already-inverted
@@ -1065,11 +1128,13 @@ export function frontedAcceptedForms(item) {
 }
 
 /**
- * Name the opening of every statement or question. Objects, predicates and
+ * Name the opening of a frontable statement or question. Objects, predicates and
  * pronouns can also occupy the Vorfeld; questions can use confirmation/echo
  * order. Imperatives retain their separately enumerated verb/bitte openings.
+ * The generator uses allStatements to retain live Batch 1's explicit openings
+ * even when X-041 leaves an Angabe to the answer-key rule instead.
  */
-export function missingOpeningCue(item) {
+export function missingOpeningCue(item, { allStatements = false } = {}) {
   if (String(item?.type) !== 'sentence_building') return null;
   const q = String(item.questionDe || '');
   if (/\(Beginnen Sie mit /.test(q) || /\b(?:Imperativ|Bitte)\b/i.test(q)) return null;
@@ -1079,9 +1144,13 @@ export function missingOpeningCue(item) {
   if (words.length < 3) return null;
   const verbAt = finiteVerbAt(words);
   if (verbAt < 1) return words[0];
-  // A statement can also front a predicate, pronoun object or a phrase inside
-  // the verbal bracket. Naming its Vorfeld avoids guessing a complete German
-  // grammar from the shape of its last noun. This is the A1.2 convention too.
+  // Questions and already-fronted statements retain Batch 1's explicit opening.
+  // For subject-first statements, X-041 keeps an Angabe in the answer-key rule
+  // and refuses to read two constituents as one frontable object.
+  if (!allStatements && !answer.includes('?') && subjectFirst(words, verbAt)) {
+    const adverb = words.slice(verbAt + 1).some((w) => MODAL_ADVERB_RE.test(bare(w)));
+    if (!adverb && !objectFronted(words, verbAt)) return null;
+  }
   return words.slice(0, verbAt).join(' ');
 }
 

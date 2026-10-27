@@ -11,6 +11,7 @@
     "coupon_redemptions": ["coupon_id","currency","discount_amount","final_amount","id","order_id","original_amount","payment_status","redeemed_at","refund_adjusted_at","refund_adjusted_by","user_email","user_id","variant_id"],
     "coupons": ["applicable_variant_ids","archived_at","code","created_at","created_by","currency","discount_type","discount_value","ends_at","id","internal_name","minimum_order_amount","new_customer_only","normalized_code","per_user_limit","public_label","stackable","starts_at","status","total_limit","updated_at"],
     "exam_attempts": ["answers","completed_at","created_at","exam_key","id","max_score","score","section","section_deadline","section_scores","started_at","status","user_id"],
+    "explain_cache": ["cache_key","created_at","explanation"],
     "grammar": ["created_at","examples","explanation","explanation_de","id","level","order_index","title","title_de"],
     "grammar_examples": ["audio_url","category","created_at","difficulty","explanation_de","explanation_en","grammar_highlight","id","order_index","sentence_de","sentence_en","topic_id","word_breakdown"],
     "grammar_exercises": ["acceptable_answers","correct_answer","created_at","difficulty","exercise_type","explanation_de","explanation_en","hint","id","options","order_index","question_de","question_en","related_rule_title","stage","topic_id","why_correct_de","why_correct_en"],
@@ -62,10 +63,12 @@
     "user_script_progress": ["completed","created_at","id","last_practiced_at","listened","practiced","score","script_id","times_practiced","updated_at","user_id"],
     "video_library": ["archived_at","audio_url","audio_url_ar","created_at","description","id","last_reviewed_at","level","lifecycle_status","mindmap_url","next_review_at","owner_id","published","reviewer_id","slides_url","thumbnail_url","title"],
     "vocab_srs_cards": ["created_at","due_at","ease","interval_days","lapses","last_grade","last_reviewed_at","reps","user_id","word_id"],
+    "vocab_srs_reviews": ["id","reviewed_at","user_id","word_id"],
     "webhook_logs": ["created_at","error","event_type","id","payload","processed"],
     "weekly_metrics": ["id","measured_at","metrics","summary"],
     "words": ["article","audio_url","category","created_at","english","example_sentence","german","id","level","plural"],
     "writing_submissions": ["created_at","exam_attempt_id","exam_key","feedback","id","max_score","model","submission_text","task_key","total_score","user_id","word_count"],
+    "xray_cache": ["analysis","created_at","model","sentence_hash"],
     "xray_usage": ["anonymous_id","id","ip_hash","sentence","source","used_at","user_id"]
   },
   "pendingApply": {

@@ -124,13 +124,15 @@ const ResetPasswordPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-bold text-ink mb-2">
+              <label htmlFor="reset-email" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
+                  id="reset-email"
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

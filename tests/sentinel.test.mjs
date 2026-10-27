@@ -36,8 +36,8 @@ import { runSentinel } from '../netlify/functions/sentinel.mjs';
 // §5: a quiet day is not an outage.
 import { LEDGER_JOB_DUE, dailyRunTimes, dueSpan, needsDueCheck, countDue, parseCanary } from '../netlify/functions/_shared/sentinelLib.mjs';
 import { DUE_READERS } from '../netlify/functions/sentinel.mjs';
-import { selectRecipients as trialRecipients } from '../netlify/functions/trial-lifecycle.mjs';
-import { selectCandidates as activationCandidates } from '../netlify/functions/activation-lifecycle.mjs';
+import { selectRecipients as trialRecipients, TRIAL_KINDS } from '../netlify/functions/trial-lifecycle.mjs';
+import { selectCandidates as activationCandidates, WINDOWS as ACTIVATION_WINDOWS } from '../netlify/functions/activation-lifecycle.mjs';
 import { selectCandidates as nudgeCandidates } from '../netlify/functions/confirmation-nudge.mjs';
 import { windowHoursFor, WINDOW_HOURS } from '../netlify/functions/course-reminder.mjs';
 // §6: the team's dead-man switch.
@@ -848,7 +848,8 @@ function ledgerWorld({ due = false } = {}) {
     authUser('nudged', { createdAt: '2026-08-30T00:00:00Z' }),
     authUser('fresh', { createdAt: '2026-09-27T10:40:00Z' }),
     authUser('ancient', { createdAt: '2026-06-21T00:00:00Z' }),
-    // trial: day 3 opened 09-29 09:00, after the 08:00 run.
+    // trial: began 09-26, so its day 3 (counted from 00:00 UTC of the run's day,
+    // trial-lifecycle.mjs utcDayStart) is the 09-30 run, after the span.
     authUser('late3', { confirmedAt: '2026-09-26T09:05:00Z', createdAt: '2026-09-26T09:00:00Z' }),
     // activation: d1 due at the 09-29 09:30 run, but confirmed only at 10:00.
     authUser('lateconfirm', { confirmedAt: '2026-09-29T10:00:00Z', createdAt: '2026-09-27T20:00:00Z' }),
@@ -870,7 +871,7 @@ function ledgerWorld({ due = false } = {}) {
     );
     // day 3 of this trial fell on the 09-29 08:00 run
     w.profiles.push({ id: 'd3', trial_started_at: '2026-09-25T12:00:00.000Z', trial_ends_at: '2026-10-02T12:00:00.000Z', is_subscribed: false, email_daily_sentence: true });
-    // d1 fell on the 09-28 09:30 run
+    // d1 (registered on 09-27, counted from 00:00 UTC of the run's day) fell on the 09-29 09:30 run
     w.lifecycle_customer_state.push({ user_id: 'a1', registered_at: '2026-09-27T08:00:00.000Z', status: 'new', has_lesson_activity: false, email_opted_out: false, is_subscribed: false });
     // 22 h before the 09-28 18:00 run
     learners.push({ user_id: 'c1', level: 'a1.1', last_activity_at: hoursBefore('2026-09-28T18:00:00Z', 22), next_lektion_nr: 2, email_opted_out: false });
@@ -1002,6 +1003,35 @@ test('each job’s own selection, asked about past runs, counts only who was due
   assert.deepEqual(windowHoursFor(null), WINDOW_HOURS);
   const one = Date.parse('2026-09-28T18:00:00Z');
   assert.deepEqual(windowHoursFor({ first: one, last: one }, NOW.getTime()), { minHours: 37, maxHours: 60 }, '16.8 h after the run: floor rounds up, ceiling down');
+});
+
+test('a span replay counts exactly whom the job’s own runs selected, day-start windows included (review X-097)', async () => {
+  // trial_day3 and both activation mails count days from 00:00 UTC of the run's
+  // day since 2026-10-25. The sentinel's span must still add up to the union of
+  // the job's daily runs. A signup every 30 minutes for five days, each address
+  // confirmed a minute after signup, nothing mailed yet.
+  const H = 3600000;
+  const iso = (t) => new Date(t).toISOString();
+  const start = Date.UTC(2026, 8, 18);
+  const signups = Array.from({ length: 5 * 48 }, (_, i) => ({ id: `r${i}`, at: start + i * 0.5 * H }));
+  const w = healthyWorld();
+  w.lifecycle_emails = [];
+  w.profiles.push(...signups.map((s) => ({ id: s.id, trial_started_at: iso(s.at), trial_ends_at: iso(s.at + 7 * 24 * H), is_subscribed: false, email_daily_sentence: true })));
+  w.lifecycle_customer_state = signups.map((s) => ({ user_id: s.id, registered_at: iso(s.at), status: 'new', has_lesson_activity: false, email_opted_out: false, is_subscribed: false }));
+  const db = fakeDb(w, { authUsers: signups.map((s) => authUser(s.id, { confirmedAt: iso(s.at + 60000), createdAt: iso(s.at) })) });
+  const runsAt = (cron) => [0, 1, 2].map((i) => Date.UTC(2026, 8, 24) + i * 24 * H + cron);
+  const ids = (list) => list.map((r) => r.id).sort();
+
+  const jobs = [
+    ...TRIAL_KINDS.map((kind) => [kind, runsAt(8 * H), (opts) => trialRecipients(kind, { client: db, ...opts })]),
+    ...Object.keys(ACTIVATION_WINDOWS).map((kind) => [kind, runsAt(9.5 * H), (opts) => activationCandidates(kind, { client: db, ...opts })]),
+  ];
+  for (const [kind, runs, select] of jobs) {
+    const each = new Set();
+    for (const now of runs) for (const r of await select({ now })) each.add(r.id);
+    assert.ok(each.size > 0, `${kind}: the world must reach this window`);
+    assert.deepEqual(ids(await select({ span: { first: runs[0], last: runs.at(-1) } })), [...each].sort(), `${kind}: span replay ≠ the job's own runs`);
+  }
 });
 
 test('a failed ledger read stops a selection: "nobody mailed yet" would mean mailing twice', async () => {

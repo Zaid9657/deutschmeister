@@ -4,11 +4,14 @@
 // localStorage. So a user who signed in via the SPA is already authenticated
 // here, and RLS lets them read/write only their own user_grammar_progress rows.
 //
-// This mirrors the SPA's write shape exactly (see GrammarLessonPage.jsx):
+// It writes the row shape the SPA reads (src/services/grammarService.js):
 //   { user_id, topic_id, current_stage:1, is_completed, score, last_accessed, completed_at? }
-// so the dashboard's existing continue-state (which reads the same table) stays
-// in sync without any extra plumbing.
+// so the dashboard's continue-state (which reads the same table) stays in sync
+// without any extra plumbing.
 import { supabase } from './supabase.js';
+
+/** A practice run at or above this percentage completes the topic. */
+const PASS_PCT = 70;
 
 /** Cheap synchronous check — is there any Supabase auth token in localStorage?
  *  Lets callers skip loading this module's async work (and the network) for the
@@ -58,28 +61,57 @@ export async function getProgress() {
 }
 
 /**
- * Record a completed practice run for a topic. Matches GrammarLessonPage's
- * upsert exactly: score is a 0–100 percentage, is_completed at ≥70%. Only the
- * columns provided are written, so an existing row's other fields are preserved.
+ * One practice run merged into the stored row, so a better run always survives
+ * a weaker repeat (CLAUDE.md; src/lib/course/localProgress.js rule 2, "never
+ * overwrites server truth downwards"):
+ *   is_completed  — once passed, stays passed;
+ *   score         — the best run (0–100);
+ *   completed_at  — the FIRST pass (streak stamps read it), now when this run is it;
+ *   last_accessed — now.
+ * `prev` is the stored { is_completed, score, completed_at }, or null for none.
+ * Pure: tests/grammar-attempt-merge.test.mjs pins it.
+ */
+export function mergeGrammarAttempt(prev, scorePct, now = new Date().toISOString()) {
+  const passed = scorePct >= PASS_PCT;
+  const best = Number.isFinite(prev?.score) ? Math.max(prev.score, scorePct) : scorePct;
+  const completedAt = prev?.completed_at || (passed ? now : null);
+  return {
+    is_completed: prev?.is_completed === true || passed,
+    score: best,
+    last_accessed: now,
+    ...(completedAt ? { completed_at: completedAt } : {}),
+  };
+}
+
+/**
+ * Record a finished practice run for a topic (score: a 0–100 percentage).
+ * The upsert replaces every column it names, so the run is merged into the
+ * stored row first: writing this run's values alone let one 50% re-run mark a
+ * topic passed at 85% not completed, lower its score and move the learner's
+ * dashboard path back. When that read fails the write is insert-only: a first
+ * run is kept, an existing row is never overwritten unread.
  * Fire-and-forget — never throws into the caller.
  */
 export async function recordAttempt(topicId, scorePct) {
   try {
     const user = await currentUser();
     if (!user || !topicId) return;
-    const completed = scorePct >= 70;
+    const { data: prev, error: readError } = await supabase
+      .from('user_grammar_progress')
+      .select('is_completed, score, completed_at')
+      .eq('user_id', user.id)
+      .eq('topic_id', topicId)
+      .maybeSingle();
+    if (readError) console.warn('[grammarProgress] read before record failed:', readError.message);
     const row = {
       user_id: user.id,
       topic_id: topicId,
       current_stage: 1,
-      is_completed: completed,
-      score: scorePct,
-      last_accessed: new Date().toISOString(),
-      ...(completed ? { completed_at: new Date().toISOString() } : {}),
+      ...mergeGrammarAttempt(readError ? null : prev, scorePct),
     };
     await supabase
       .from('user_grammar_progress')
-      .upsert(row, { onConflict: 'user_id,topic_id' });
+      .upsert(row, { onConflict: 'user_id,topic_id', ...(readError ? { ignoreDuplicates: true } : {}) });
   } catch (err) {
     console.warn('[grammarProgress] record failed:', err?.message);
   }

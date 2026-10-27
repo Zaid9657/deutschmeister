@@ -183,11 +183,14 @@ test('course return controls follow the measured bottom navigation and reserve t
 
 function astroContinuation() {
   const source = read('astro-site/src/layouts/Layout.astro');
-  const helper = source.match(/ {6}function continueCourseHref\([\s\S]*?\n {6}\}/);
-  assert.ok(helper, 'the Astro continuation must resolve a course rather than /dashboard');
+  const helpers = ['accountAccess', 'continueCourseHref', 'showsUpgrade'].map((name) => {
+    const helper = source.match(new RegExp(` {6}function ${name}\\([\\s\\S]*?\\n {6}\\}`));
+    assert.ok(helper, `Layout.astro must define ${name} (the Astro continuation resolves a course rather than /dashboard)`);
+    return helper[0];
+  });
   const context = vm.createContext({ courseHomeFor, subscriptionStatus, isLevelFree, levelsForProduct });
-  vm.runInContext(helper[0], context);
-  return { source, href: context.continueCourseHref };
+  vm.runInContext(helpers.join('\n'), context);
+  return { source, href: context.continueCourseHref, upgrade: context.showsUpgrade };
 }
 
 test('Astro continue links use the SPA course-entry rule and free fallback', () => {
@@ -201,7 +204,10 @@ test('Astro continue links use the SPA course-entry rule and free fallback', () 
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
   assert.ok(product, 'select the product from the canonical pricing data');
   assert.equal(href({ profile: expired, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a2.1');
-  assert.equal(href({ profile: { ...expired, current_level: 'B1.1' }, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a1.1');
+  // A placement with no course home no longer sends a buyer to the free course:
+  // they continue the course they bought (cross-check 2026-10-25, SHL-17).
+  assert.equal(href({ profile: { ...expired, current_level: 'B1.1' }, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a2.1');
+  assert.equal(href({ profile: { ...expired, current_level: null }, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a2.1', 'a buyer who never took the placement test');
   assert.equal(href({ profile: { ...expired, is_subscribed: true } }, now), '/course/a1.1', 'an old profile flag is not a live paid period');
   for (const path of [source, home]) {
     const links = path.match(/<a\s[^>]*data-continue-course[^>]*>/g) || [];
@@ -226,22 +232,28 @@ test('Astro continuation rejects inactive future periods and includes active cou
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
   const purchase = { product_key: product.key, status: 'active', access_until: '2026-11-01' };
   assert.equal(href({ profile, purchases: [purchase] }, now), '/course/a2.2', 'included Pro also opens a placed level outside the bought course');
-  assert.equal(href({ profile, purchases: [{ ...purchase, access_until: '2026-10-21' }] }, now), '/course/a1.1');
+  // The Pro window over, the placed A2.2 locks again — and the A2.1 course the
+  // learner owns is where they continue, not the free course (SHL-17).
+  assert.equal(href({ profile, purchases: [{ ...purchase, access_until: '2026-10-21' }] }, now), '/course/a2.1');
   assert.equal(href({ profile, purchases: [{ ...purchase, status: 'refunded' }] }, now), '/course/a1.1');
   assert.match(source, /select\('status, subscription_end'\)/);
-  assert.match(source, /select\('product_key, status, access_until'\)/);
+  // created_at too: the shared resolver resumes the newest course (tests/course-resume-parity.test.mjs).
+  assert.match(source, /select\('product_key, status, access_until, created_at'\)\.eq\('user_id', user\.id\)\.eq\('status', 'active'\)\.order\('created_at', \{ ascending: false \}\)/);
 });
 
 test('Astro continuation reads only the verified account and keeps free links on query errors', async () => {
-  const { source, href } = astroContinuation();
+  const { source, href, upgrade } = astroContinuation();
   const updater = source.match(/ {6}async function updateContinueLinks\(\) \{[\s\S]*?\n {6}\}/)[0].replace("import('../lib/supabase.js')", 'loadSupabase()');
   const links = [{ href: '/course/a1.1' }, { href: '/course/a1.1' }];
+  const upgradeLinks = [{ style: { display: 'none' } }, { style: { display: 'none' } }];
   const filters = [];
+  const tables = [];
   let failed = true;
   const rows = { profiles: { current_level: 'A2.1' }, subscriptions: { status: 'active', subscription_end: '2099-01-01' }, purchases: [] };
   const supabase = {
     auth: { getUser: async () => ({ data: { user: { id: 'verified-user' } } }) },
     from(table) {
+      tables.push(table);
       const query = {
         select() { return this; },
         eq(key, value) { filters.push([table, key, value]); return this; },
@@ -252,10 +264,11 @@ test('Astro continuation reads only the verified account and keeps free links on
     },
   };
   const context = vm.createContext({
-    document: { querySelectorAll: () => links },
+    document: { querySelectorAll: (selector) => (selector === '[data-upgrade]' ? upgradeLinks : links) },
     localStorage: { length: 1, key: () => 'sb-project-auth-token' },
     loadSupabase: async () => ({ supabase }),
     continueCourseHref: href,
+    showsUpgrade: upgrade,
   });
   vm.runInContext(updater, context);
   await context.updateContinueLinks();
@@ -264,7 +277,88 @@ test('Astro continuation reads only the verified account and keeps free links on
     ['profiles', 'id', 'verified-user'], ['subscriptions', 'user_id', 'verified-user'], ['purchases', 'user_id', 'verified-user'],
   ]);
   assert.ok(filters.some(([table, key, value]) => table === 'purchases' && key === 'status' && value === 'active'));
+  assert.deepEqual(upgradeLinks.map((link) => link.style.display), ['none', 'none'], 'no account data, no upgrade offer');
   failed = false;
   await context.updateContinueLinks();
   assert.deepEqual(links.map((link) => link.href), ['/course/a2.1', '/course/a2.1'], 'resolved account access updates every continuation door');
+  assert.deepEqual(upgradeLinks.map((link) => link.style.display), ['none', 'none'], 'a Pro subscriber is offered no upgrade');
+
+  // An expired trial, no Pro, no course: the same rows reveal the Upgrade links.
+  rows.profiles = { current_level: 'A2.1', trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08' };
+  rows.subscriptions = null;
+  await context.updateContinueLinks();
+  assert.deepEqual(upgradeLinks.map((link) => link.style.display), ['', ''], 'desktop bar and menu sheet');
+  assert.deepEqual(tables, Array(3).fill(['profiles', 'subscriptions', 'purchases']).flat(), 'the upgrade rule adds no query');
+});
+
+// Signed-in learners on the static pages had no way to the offer (Pricing is an
+// anonymous-only nav item), unlike the SPA's Upgrade chip (cross-check
+// 2026-10-25, SHL-18).
+test('the Astro Upgrade link shows only without a live trial, a live Pro or a course', () => {
+  const { source, upgrade } = astroContinuation();
+  const now = Date.parse('2026-10-22T12:00:00Z');
+  const expired = { trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08' };
+  const product = Object.values(LEVEL_COURSES).find((course) => !course.comingSoon);
+  assert.equal(upgrade({ profile: expired }, now), true);
+  assert.equal(upgrade({ profile: null }, now), true, 'a profile-less account has nothing live either');
+  assert.equal(upgrade({ profile: { ...expired, trial_ends_at: '2026-10-23' } }, now), false, 'a live trial');
+  assert.equal(upgrade({ profile: expired, subscription: { status: 'active', subscription_end: '2026-11-01' } }, now), false, 'live Pro');
+  assert.equal(upgrade({ profile: expired, subscription: { status: 'cancelled', subscription_end: '2026-10-01' } }, now), true, 'a lapsed subscription');
+  assert.equal(upgrade({ profile: expired, purchases: [{ product_key: product.key, status: 'active', access_until: '2026-10-01' }] }, now), false, 'a course buyer');
+  assert.equal(upgrade({ profile: expired, purchases: [{ product_key: 'telc_b1_komplett', status: 'active' }] }, now), false, 'the telc course is a course too');
+  assert.equal(upgrade({ profile: expired, purchases: [{ product_key: product.key, status: 'refunded' }] }, now), true, 'a refunded course is not owned');
+
+  const doors = source.match(/<a\s[^>]*data-upgrade[^>]*>/g) || [];
+  assert.equal(doors.length, 2, 'desktop bar and menu sheet');
+  for (const door of doors) {
+    assert.match(door, /href="\/pricing\/"/);
+    assert.match(door, /style="display:none"/, 'hidden until the account is known');
+    assert.doesNotMatch(door, /data-auth-only/, 'the session check alone must not reveal it');
+  }
+});
+
+// An admin's premium grant (profiles.subscription_tier = 'premium') has no
+// subscription or purchase row, and the server keeps it through every
+// reconciliation; the static nav offered it Upgrade and resumed the free course
+// (review of the integrated round-2 branch, 2026-10-25).
+test('an admin premium grant is Pro on the static pages: no Upgrade link, the placed course', async () => {
+  const { source, href, upgrade } = astroContinuation();
+  const now = Date.parse('2026-10-22T12:00:00Z');
+  const premium = { current_level: 'A2.1', trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08', is_subscribed: true, subscription_tier: 'premium' };
+  assert.equal(upgrade({ profile: premium }, now), false, 'no Upgrade link');
+  assert.equal(href({ profile: premium }, now), '/course/a2.1', 'the placed course opens');
+  for (const tier of ['pro', 'free', null]) {
+    assert.equal(href({ profile: { ...premium, subscription_tier: tier } }, now), '/course/a1.1', `${tier}: the flag alone is not a paid period`);
+  }
+
+  // Through the page script, against a fake that returns only the selected
+  // columns: the tier has to be one of them.
+  const updater = source.match(/ {6}async function updateContinueLinks\(\) \{[\s\S]*?\n {6}\}/)[0].replace("import('../lib/supabase.js')", 'loadSupabase()');
+  const rows = { profiles: premium, subscriptions: null, purchases: [] };
+  const supabase = {
+    auth: { getUser: async () => ({ data: { user: { id: 'premium-user' } } }) },
+    from(table) {
+      let columns = [];
+      const project = (row) => row && Object.fromEntries(columns.filter((c) => c in row).map((c) => [c, row[c]]));
+      const query = {
+        select(list) { columns = list.split(',').map((c) => c.trim()); return query; },
+        eq() { return query; }, order() { return query; }, limit() { return query; }, maybeSingle() { return query; },
+        then(resolve) { resolve({ data: Array.isArray(rows[table]) ? rows[table].map(project) : project(rows[table]), error: null }); },
+      };
+      return query;
+    },
+  };
+  const links = [{ href: '/course/a1.1' }, { href: '/course/a1.1' }];
+  const upgradeLinks = [{ style: { display: 'none' } }, { style: { display: 'none' } }];
+  const context = vm.createContext({
+    document: { querySelectorAll: (selector) => (selector === '[data-upgrade]' ? upgradeLinks : links) },
+    localStorage: { length: 1, key: () => 'sb-project-auth-token' },
+    loadSupabase: async () => ({ supabase }),
+    continueCourseHref: href,
+    showsUpgrade: upgrade,
+  });
+  vm.runInContext(updater, context);
+  await context.updateContinueLinks();
+  assert.deepEqual(links.map((link) => link.href), ['/course/a2.1', '/course/a2.1']);
+  assert.deepEqual(upgradeLinks.map((link) => link.style.display), ['none', 'none']);
 });

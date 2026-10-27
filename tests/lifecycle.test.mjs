@@ -7,17 +7,23 @@
 //      same day, or a stalled user gets two lifecycle mails in one morning.
 //      The trial days are hardcoded here WITH their source locations — if you
 //      move a trial window, update this table in the same commit or the test
-//      will pin the old reality.
+//      will pin the old reality. Days alone were not enough (review X-097,
+//      2026-10-25): the jobs run at 08:00 and 09:30, and while each measured
+//      from its own run, a trial begun between those times got trial_day3 and
+//      activation_d4 on the same morning. 1b replays both crons, read from the
+//      schedule() literals, through the jobs' own selections.
 //
 //   2. CLAIM DISCIPLINE. Activation copy asserts the reader has not started a
 //      lesson, so the code path that keeps that true (the eligibility re-read
 //      before the claim, the master switch, claim-before-send) is asserted
 //      structurally against the source.
 //
-//   3. COPY BANS. Same bans as everywhere else: no price digits (the function
-//      cannot import src/data, so the safe rule is no figures at all), no
-//      "unlimited", and CTA links to prerendered routes must carry their
-//      trailing slash (CLAUDE.md's three-slash-case rule).
+//   3. COPY BANS. Same bans as everywhere else: no price digits and no minute
+//      figures (the function cannot import src/data, so the safe rule is no
+//      figures at all; "ten minutes" for the level test was allowed here until
+//      2026-10-25, against about 20 in marketing.js), no "unlimited", and CTA
+//      links follow CLAUDE.md's trailing-slash rule: a prerendered route with
+//      its slash, the course (an SPA route) without one.
 //
 //   6. THE AUDIENCE COUNTS EVERY LESSON. The activation mail goes to status
 //      'new' in lifecycle_customer_state. Until 2026-09-28 that view counted
@@ -33,10 +39,12 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { WINDOWS, TEMPLATES } from '../netlify/functions/activation-lifecycle.mjs';
+import { WINDOWS, TEMPLATES, selectCandidates as activationCandidates } from '../netlify/functions/activation-lifecycle.mjs';
+import { TRIAL_KINDS, TRIAL_WINDOWS, selectRecipients as trialRecipients, utcDayStart } from '../netlify/functions/trial-lifecycle.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
+const DAY = 24 * 60 * 60 * 1000;
 
 // ---------------------------------------------------------------------------
 // 1. Windows
@@ -73,6 +81,106 @@ test('activation windows never land on a trial-mail day', () => {
       );
     }
   }
+});
+
+// ---------------------------------------------------------------------------
+// 1b. The real run times (review X-097, 2026-10-25)
+// ---------------------------------------------------------------------------
+
+/** Minutes after 00:00 UTC, in ms, of a daily schedule('M H * * *') literal. */
+const cronAt = (file) => {
+  const [minute, hour] = read(file).match(/schedule\('([^']+)'/)[1].split(' ').map(Number);
+  return (hour * 60 + minute) * 60000;
+};
+const TRIAL_RUN = cronAt('netlify/functions/trial-lifecycle.mjs');
+const ACTIVATION_RUN = cronAt('netlify/functions/activation-lifecycle.mjs');
+
+/**
+ * Signups (7-day trials, confirmed a minute later, no lessons, not opted out,
+ * nothing mailed yet) behind the reads the two selections make.
+ */
+function signupDb(signups) {
+  const iso = (t) => new Date(t).toISOString();
+  const tables = {
+    profiles: signups.map(({ id, at }) => ({ id, email_daily_sentence: true, is_subscribed: false, trial_started_at: iso(at), trial_ends_at: iso(at + 7 * DAY) })),
+    lifecycle_customer_state: signups.map(({ id, at }) => ({ user_id: id, status: 'new', email_opted_out: false, has_lesson_activity: false, registered_at: iso(at) })),
+    lifecycle_emails: [],
+  };
+  const users = signups.map(({ id, at }) => ({ id, email: `${id}@example.test`, email_confirmed_at: iso(at + 60000) }));
+  class Q {
+    constructor(rows) { this.rows = rows; }
+    select() { return this; }
+    gte(k, v) { this.rows = this.rows.filter((r) => r[k] >= v); return this; }
+    lt(k, v) { this.rows = this.rows.filter((r) => r[k] < v); return this; }
+    eq(k, v) { this.rows = this.rows.filter((r) => r[k] === v); return this; }
+    in(k, vs) { this.rows = this.rows.filter((r) => vs.includes(r[k])); return this; }
+    then(res, rej) { return Promise.resolve({ data: this.rows, error: null }).then(res, rej); }
+  }
+  return {
+    from: (t) => new Q([...(tables[t] || [])]),
+    auth: { admin: { listUsers: async ({ page = 1 } = {}) => ({ data: { users: page === 1 ? users : [] }, error: null }) } },
+  };
+}
+
+/** Every mail each signup gets when both jobs run daily at their crons: id → [{ kind, day }]. */
+async function replay(signups, days) {
+  const db = signupDb(signups);
+  const mails = new Map(signups.map((s) => [s.id, []]));
+  for (const day of days) {
+    for (const kind of TRIAL_KINDS) {
+      for (const r of await trialRecipients(kind, { client: db, now: day + TRIAL_RUN })) mails.get(r.id).push({ kind, day });
+    }
+    for (const kind of Object.keys(WINDOWS)) {
+      for (const r of await activationCandidates(kind, { client: db, now: day + ACTIVATION_RUN })) mails.get(r.id).push({ kind, day });
+    }
+  }
+  return mails;
+}
+
+test('replayed at their real cron times, no signup gets two lifecycle mails on one UTC day, and each mail goes out once', async () => {
+  assert.ok(TRIAL_RUN < ACTIVATION_RUN, 'the replay models trial first, activation after it, on the same day');
+  const start = Date.UTC(2026, 9, 1);
+  // Three days of signups, one every 30 minutes, so every time of day is covered.
+  const signups = Array.from({ length: 3 * 48 }, (_, i) => ({ id: `s${i}`, at: start + i * 30 * 60000 }));
+  const days = Array.from({ length: 16 }, (_, i) => start + i * DAY);
+  const mails = await replay(signups, days);
+  const every = [...TRIAL_KINDS, ...Object.keys(WINDOWS)].sort();
+  for (const s of signups) {
+    const got = mails.get(s.id);
+    const when = new Date(s.at).toISOString();
+    assert.deepEqual(got.map((m) => m.kind).sort(), every, `trial begun ${when}: each mail exactly once`);
+    const byDay = new Map();
+    for (const m of got) byDay.set(m.day, [...(byDay.get(m.day) || []), m.kind]);
+    for (const [day, kinds] of byDay) {
+      assert.equal(kinds.length, 1, `trial begun ${when}: ${kinds.join(' + ')} on ${new Date(day).toISOString().slice(0, 10)}`);
+    }
+  }
+  // Review X-097's learner: a trial begun 2026-10-20 09:00 UTC gets day 3 on the
+  // 24th (08:00) and activation day 4 on the 25th (09:30), never both on the 24th.
+  const x = await replay([{ id: 'x097', at: Date.UTC(2026, 9, 20, 9) }], Array.from({ length: 12 }, (_, i) => Date.UTC(2026, 9, 18) + i * DAY));
+  const on = (kind) => new Date(x.get('x097').find((m) => m.kind === kind).day).toISOString().slice(0, 10);
+  assert.equal(on('trial_day3'), '2026-10-24');
+  assert.equal(on('activation_d4'), '2026-10-25');
+});
+
+test('control: measured from each job’s own run (the pre-2026-10-25 arithmetic), the same crons collide', () => {
+  // trial_day3 at D+08:00 took signups in [run-4d, run-3d); activation_d4 at
+  // D+09:30 took [run-5d, run-4d). Their overlap is the 90 minutes between runs.
+  const day = Date.UTC(2026, 9, 24);
+  const trialRun = day + TRIAL_RUN;
+  const activationRun = day + ACTIVATION_RUN;
+  const signup = Date.UTC(2026, 9, 20, 9);
+  const w3 = TRIAL_WINDOWS.trial_day3;
+  const w4 = WINDOWS.activation_d4;
+  const oldTrial = signup >= trialRun + w3.lowerDays * DAY && signup < trialRun + w3.upperDays * DAY;
+  const oldActivation = signup >= activationRun - w4.upperDays * DAY && signup < activationRun - w4.lowerDays * DAY;
+  assert.ok(oldTrial && oldActivation, 'the replay above would not catch the class if the old arithmetic did not collide here');
+  // Measured from 00:00 UTC of the run's day, the two never meet.
+  const ref = utcDayStart(trialRun);
+  assert.equal(ref, utcDayStart(activationRun), 'both jobs of a day share one reference');
+  const newTrial = signup >= ref + w3.lowerDays * DAY && signup < ref + w3.upperDays * DAY;
+  const newActivation = signup >= ref - w4.upperDays * DAY && signup < ref - w4.lowerDays * DAY;
+  assert.ok(!(newTrial && newActivation));
 });
 
 // ---------------------------------------------------------------------------
@@ -193,17 +301,28 @@ test('the nudge migration admits the confirm_nudge kind', () => {
 // 5. Copy bans (activation)
 // ---------------------------------------------------------------------------
 
-test('activation copy carries no figures, no unlimited claims, and slashed CTAs', () => {
+test('activation copy carries no figures, no unlimited claims, and correctly slashed CTAs', () => {
   assert.ok(Object.keys(TEMPLATES).length >= 2, 'templates missing');
   for (const [kind, tpl] of Object.entries(TEMPLATES)) {
     const text = `${tpl.subject} ${tpl.body}`;
-    // No euro amounts or big counts: the function cannot import src/data, so
-    // any figure here would be retyped and would rot. "10 minutes" is time,
-    // not a product claim, and is allowed explicitly.
+    // No euro amounts, big counts or minute figures: the function cannot import
+    // src/data, so any figure here would be retyped and would rot. The level
+    // test was promised here as "ten minutes" (about 20 in marketing.js) until
+    // 2026-10-25, when the allowance for "10 minutes" was dropped.
     assert.ok(!/€\s?\d|\d+[.,]\d\d\s?€/.test(text), `${kind}: price figure in copy`);
+    assert.ok(
+      !/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty)[\s-]+minutes?\b/i.test(text.replace(/<[^>]+>/g, ' ')),
+      `${kind}: a minute figure in copy`,
+    );
     assert.ok(!/\b(unbegrenzt\w*|unlimited)\b/i.test(text), `${kind}: unlimited claim`);
-    // Prerendered SPA routes must be linked with the trailing slash.
-    assert.ok(/\/$/.test(tpl.ctaHref), `${kind}: CTA "${tpl.ctaHref}" missing its trailing slash — 301 on every click`);
+    // CLAUDE.md trailing slashes: a prerendered route is linked with its slash
+    // (a 301 on every click otherwise); the course is an SPA rewrite route and
+    // takes none.
+    const path = new URL(tpl.ctaHref).pathname;
+    assert.ok(
+      /\/$/.test(path) || /^\/course\/[a-z][0-9]\.[0-9](?:\/(?:l|checkpoint)\/\d+)?$/.test(path),
+      `${kind}: CTA "${tpl.ctaHref}" — a prerendered route needs its trailing slash, the course route none`,
+    );
   }
 });
 

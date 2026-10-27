@@ -299,8 +299,12 @@ export const promptWords = (item) =>
  * — i.e. a learner reading `prints` has been handed the answer to `solved`. The
  * accepted variants count too: any form the checker would take is an answer.
  */
-export const leaksAnswer = (solved, prints) => {
-  const printed = [...promptWords(prints)];
+export const leaksAnswer = (solved, prints) =>
+  leaksWith(solved, prints, (item) => [...promptWords(item)], (form) => answerWords({ answer: form }));
+
+/** leaksAnswer with its two word readers handed in: the practice draw passes memoised ones (C-058). */
+function leaksWith(solved, prints, printedList, producedWords) {
+  const printed = printedList(prints);
   if (!printed.length) return false;
   // One word is printed when the prompt shows it or an inflection of it:
   // „[der Chef / brauchen / ein / Telefon]" prints the answer „Ich brauche ein
@@ -311,10 +315,10 @@ export const leaksAnswer = (solved, prints) => {
     printed.some((t) => t === w || (w.length >= 4 && t.startsWith(w)) || (t.length >= 4 && w.startsWith(t)));
   const forms = [solved && solved.answer, ...((solved && solved.accepted) || [])];
   return forms.some((form) => {
-    const words = answerWords({ answer: form });
+    const words = producedWords(form);
     return words.size > 0 && [...words].every(shows);
   });
-};
+}
 
 /** Quotation marks the pool uses around the sentence an item works on. */
 const QUOTED = /[„“”"»]([^„“”"»«]+)[“”"«]/;
@@ -546,6 +550,47 @@ function seededShuffle(list, rng) {
   return out;
 }
 
+// ── THE DRAW'S MEMORY (2026-10-25 review, C-058) ─────────────────────────────
+// The draw asks the same few questions of the same pool items thousands of times — every salt,
+// every ladder stage, every fill pass — and planPractice runs inside the lesson's render: an
+// A1.2 learner opening a finished Lektion (attempt 3) waited about a second on the intro screen
+// while lemmas, task shapes and printed words were recomputed. Each is a pure reading of the
+// item's own text, so the draw keeps it per item object, stored WITH the text it was read from:
+// an item rewritten in place (a test, the pool build) is read again, never served a stale key.
+// Only the draw reads through these; the exported readers stay as they are.
+function memoByItem(read, fields) {
+  const memo = new WeakMap();
+  return (item) => {
+    if (!item || typeof item !== 'object') return read(item);
+    const hit = memo.get(item);
+    if (hit && fields.every((f, i) => hit.inputs[i] === item[f])) return hit.value;
+    const value = read(item);
+    memo.set(item, { inputs: fields.map((f) => item[f]), value });
+    return value;
+  };
+}
+const producedWordsMemo = new Map();
+/** answerWords of one accepted form, by its string — `leaksAnswer` builds a fresh item per form. */
+const memoProducedWords = (form) => {
+  const key = String(form || '');
+  let words = producedWordsMemo.get(key);
+  if (!words) {
+    words = answerWords({ answer: key });
+    producedWordsMemo.set(key, words);
+  }
+  return words;
+};
+const memoPrintedList = memoByItem((item) => [...promptWords(item)], ['questionDe']);
+const DRAW_READERS = {
+  lemmas: memoByItem(itemLemmas, ['questionDe', 'answer']),
+  answerLemmas: memoByItem(answerLemmas, ['answer']),
+  answerKey: memoByItem(answerKey, ['answer']),
+  taskShape: memoByItem(taskShape, ['questionDe', 'type']),
+  leaks: (solved, prints) => leaksWith(solved, prints, memoPrintedList, memoProducedWords),
+};
+/** The same readers without the memory — `{ memo: false }`, which the draw-identity test compares. */
+const PLAIN_READERS = { lemmas: itemLemmas, answerLemmas, answerKey, taskShape, leaks: leaksAnswer };
+
 /**
  * The 7 controlled-practice items for ONE Lektion.
  *
@@ -619,6 +664,22 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   const carriedLemmas = options.previousAnswerLemmas || new Set();
   const priorIds = options.priorAttemptIds || new Set();
 
+  // The per-item readings, memoised unless `memo: false` (see THE DRAW'S MEMORY above). The three
+  // that depend on this call's term sets and slug are kept for this call only.
+  const memo = options.memo !== false;
+  const read = memo ? DRAW_READERS : PLAIN_READERS;
+  const perCall = (fn) => {
+    if (!memo) return fn;
+    const seen = new Map();
+    return (it) => {
+      if (!seen.has(it)) seen.set(it, fn(it));
+      return seen.get(it);
+    };
+  };
+  const relevanceOf = perCall((it) => relevanceScore(it, ownTerms, earlierTerms));
+  const ownRelevanceOf = perCall((it) => relevanceScore(it, ownTerms, new Set()));
+  const drillsHere = perCall((it) => drillsSlug(it, primarySlug));
+
   // Cross-Lektion dedup, per topic: while this topic still has items no earlier
   // Lektion has shown, only those are eligible. A topic that is exhausted falls
   // back to its full slice rather than leaving the block short.
@@ -656,7 +717,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     const ranked = eligible
       .map((it) => ({
         it,
-        score: relevanceScore(it, ownTerms, earlierTerms),
+        score: relevanceOf(it),
         key: jitter(passSeed, it.id),
       }))
       .sort((a, b) => b.score - a.score || a.key - b.key || String(a.it.id).localeCompare(String(b.it.id)))
@@ -671,25 +732,25 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     let carried = 0;
     let relaxUsed = 0;
 
-    const carriesOver = (it) => [...answerLemmas(it)].some((l) => carriedLemmas.has(l));
+    const carriesOver = (it) => [...read.answerLemmas(it)].some((l) => carriedLemmas.has(l));
 
     const fits = (it, relax) => {
       if (chosen.has(it.id) || chosen.size >= PRACTICE_SIZE) return false;
       if (isMultipleChoice(it) && mc >= MAX_MULTIPLE_CHOICE) return false;
       if (!relax.lemma) {
-        for (const l of itemLemmas(it)) if ((lemmaCount.get(l) || 0) >= MAX_SAME_LEMMA) return false;
+        for (const l of read.lemmas(it)) if ((lemmaCount.get(l) || 0) >= MAX_SAME_LEMMA) return false;
       }
       if (!relax.answerKey) {
-        const k = answerKey(it);
+        const k = read.answerKey(it);
         if (k && (answerKeyCount.get(k) || 0) >= MAX_SAME_ANSWER_KEY) return false;
       }
       if (!relax.taskShape) {
-        const shape = taskShape(it);
+        const shape = read.taskShape(it);
         if (shape && (taskShapeCount.get(shape) || 0) >= MAX_SAME_TASK_SHAPE) return false;
       }
       if (!relax.leak) {
         for (const seated of chosen.values()) {
-          if (leaksAnswer(it, seated) || leaksAnswer(seated, it)) return false;
+          if (read.leaks(it, seated) || read.leaks(seated, it)) return false;
         }
       }
       if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
@@ -703,10 +764,10 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       if (isMultipleChoice(it)) mc += 1;
       if (isTypedItem(it)) typed += 1;
       if (carriesOver(it)) carried += 1;
-      for (const l of itemLemmas(it)) lemmaCount.set(l, (lemmaCount.get(l) || 0) + 1);
-      const k = answerKey(it);
+      for (const l of read.lemmas(it)) lemmaCount.set(l, (lemmaCount.get(l) || 0) + 1);
+      const k = read.answerKey(it);
       if (k) answerKeyCount.set(k, (answerKeyCount.get(k) || 0) + 1);
-      const shape = taskShape(it);
+      const shape = read.taskShape(it);
       if (shape) taskShapeCount.set(shape, (taskShapeCount.get(shape) || 0) + 1);
     };
 
@@ -723,7 +784,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     // padded with something off-topic to satisfy it.
     for (const { raw, key } of coverKeys) {
       if (chosen.size >= PRACTICE_SIZE) break;
-      const all = ranked.filter((it) => answerKey(it) === key);
+      const all = ranked.filter((it) => read.answerKey(it) === key);
       const exact = all.filter((it) => String(it.answer || '').trim() === raw);
       const candidates = [...exact, ...all.filter((it) => !exact.includes(it))];
       const preferred = [
@@ -756,7 +817,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     // waited behind a cap (A1.2 DaF review #3, MAJOR 4: L4 drew three negation items of seven).
     // Both targets are capped by what the slice holds, so a short slug stays a pool finding.
     const onTopic = (it) => it.topic === primarySlug;
-    const drills = (it) => onTopic(it) && drillsSlug(it, primarySlug);
+    const drills = (it) => onTopic(it) && drillsHere(it);
     const topicCount = () => [...chosen.values()].filter(onTopic).length;
     const primaryCount = () => [...chosen.values()].filter(drills).length;
     const topicTarget = Math.min(PRIMARY_MIN, PRACTICE_SIZE, ranked.filter(onTopic).length);
@@ -766,7 +827,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     // the Lektion's OWN Wortfeld only — `relevanceScore` with an empty set of
     // earlier terms — because an item that revises Lektion 3's vocabulary is
     // revision, not this Lektion's scene.
-    const isSituational = (it) => relevanceScore(it, ownTerms, new Set()) > 0;
+    const isSituational = (it) => ownRelevanceOf(it) > 0;
     const situationCount = () => [...chosen.values()].filter(isSituational).length;
     const situationTarget = Math.min(
       SITUATION_MIN,
@@ -804,8 +865,8 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       //    PRIMARY_MIN on the second draw although every one of them holds ten
       //    or more real producers on its own slug.
       const primary = ranked.filter((it) => it.topic === primarySlug);
-      const real = primary.filter((it) => drillsSlug(it, primarySlug));
-      const rest = primary.filter((it) => !drillsSlug(it, primarySlug));
+      const real = primary.filter((it) => drillsHere(it));
+      const rest = primary.filter((it) => !drillsHere(it));
       fill(real.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
       fill(real, relax, () => primaryCount() >= primaryTarget, stage);
       fill(rest.filter(isTypedItem), relax, () => topicCount() >= topicTarget, stage);
@@ -933,12 +994,14 @@ export const practiceReport = (plan) => planReports.get(plan) || new Map();
  * single lesson and the whole course always agree.
  *
  * Memoised per (curriculum, pool, attempt): the plan is pure, and the player
- * rebuilds a lesson on every render.
+ * rebuilds a lesson on every render. `{ memo: false }` plans without any of the
+ * memory — neither this cache nor the draw's per-item one — which is how
+ * tests/lesson-engine.test.mjs proves that the memory never changes a draw.
  */
-export function planPractice(curriculum, pool, attempt = 1) {
+export function planPractice(curriculum, pool, attempt = 1, { memo = true } = {}) {
   const level = (curriculum && curriculum.level) || 'a1.1';
-  let byPool = planCache.get(curriculum || {});
-  if (curriculum && !byPool) {
+  let byPool = memo ? planCache.get(curriculum || {}) : null;
+  if (memo && curriculum && !byPool) {
     byPool = new WeakMap();
     planCache.set(curriculum, byPool);
   }
@@ -957,7 +1020,7 @@ export function planPractice(curriculum, pool, attempt = 1) {
   // before it, which `pickPracticeItems` excludes until it has to relax.
   const priorByNr = new Map();
   for (let earlier = 1; earlier < attempt; earlier += 1) {
-    for (const [nr, items] of planPractice(curriculum, pool, earlier)) {
+    for (const [nr, items] of planPractice(curriculum, pool, earlier, { memo })) {
       const seen = priorByNr.get(nr) || new Set();
       for (const it of items) seen.add(it.id);
       priorByNr.set(nr, seen);
@@ -989,6 +1052,7 @@ export function planPractice(curriculum, pool, attempt = 1) {
         previousAnswerLemmas,
         priorAttemptIds: priorByNr.get(lektion.nr) || new Set(),
         report,
+        memo,
       },
     );
     plan.set(lektion.nr, items);

@@ -1,9 +1,15 @@
 import { PLANS, COURSES, LEVEL_COURSES, LEGACY_LEVEL_COURSES, levelsForProduct } from '../data/pricing.js';
 
-export const isRecurringProduct = (key) => Object.hasOwn(PLANS, key || '');
+// hasOwnProperty.call, not Object.hasOwn: the SPA's build target includes
+// Safari 14, which lacks Object.hasOwn, and esbuild does not polyfill it
+// (tests/no-object-hasown.test.mjs). The success page calls these on its
+// first render, so a missing method took the payment confirmation down.
+const owns = (products, key) => Object.prototype.hasOwnProperty.call(products, key || '');
+
+export const isRecurringProduct = (key) => owns(PLANS, key);
 
 export const checkoutProductKey = (key) =>
-  [PLANS, COURSES, LEVEL_COURSES, LEGACY_LEVEL_COURSES].some((products) => Object.hasOwn(products, key || '')) ? key : null;
+  [PLANS, COURSES, LEVEL_COURSES, LEGACY_LEVEL_COURSES].some((products) => owns(products, key)) ? key : null;
 
 // Ownership is permanent, including retired band purchases and the all-level
 // bundle. A live trial or Pro period is not ownership of a course.
@@ -31,3 +37,17 @@ export const hasRecurringBilling = (subscription, now = Date.now()) => {
 
 export const checkoutEntitlementConfirmed = (key, { isSubscribed, purchases = [] }) =>
   isRecurringProduct(key) ? isSubscribed === true : Boolean(key && ownsCheckoutProduct(key, purchases));
+
+// A renewal that failed (Lemon Squeezy past_due, or unpaid once its retries
+// ran out). The fix is a new card in the portal, never a new plan, so
+// /subscription says so instead of "Trial expired" (lib/subscriptionHeading.js).
+// Copy only: whether such a row grants access is checkSubscriptionStatus's call.
+export const hasFailedPayment = (subscription, now = Date.now()) =>
+  hasRecurringBilling(subscription, now) && ['past_due', 'unpaid'].includes(subscription.status);
+
+// The level a guard just refused: LevelSubscriptionGuard and SubscriptionGuard
+// redirect to /subscription with the blocked location in state.from, and
+// /subscription leads with that level's course (tests/subscription-blocked-level.test.mjs).
+const BLOCKED_LEVEL = /^\/(?:course|level|reading|listening)\/([ab][12]\.[12])(?=\/|$)/;
+export const blockedLevelFrom = (pathname) =>
+  BLOCKED_LEVEL.exec(String(pathname || '').toLowerCase())?.[1] ?? null;

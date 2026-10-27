@@ -105,6 +105,22 @@ export async function claimTag(db, ticketId, tag) {
   return (data || []).length === 1;
 }
 
+/**
+ * Undo claimTag when the work it guarded failed, so the next run retries it.
+ * Conditional like the claim: removes the tag only while the ticket carries it.
+ */
+export async function releaseTag(db, ticketId, tag) {
+  const { tags } = await readTicketState(db, ticketId);
+  if (!tags.includes(tag)) return false;
+  const { data, error } = await db.from('support_tickets')
+    .update({ tags: tags.filter((t) => t !== tag) })
+    .eq('id', ticketId)
+    .contains('tags', [tag])
+    .select('id');
+  if (error) throw new Error(error.message);
+  return (data || []).length === 1;
+}
+
 async function addTags(db, ticketId, add) {
   const { tags } = await readTicketState(db, ticketId);
   const next = [...new Set([...tags, ...add])];
@@ -225,10 +241,28 @@ async function storeBlocked(ctx, ticket, reply, problems) {
 }
 
 async function handleMessage(ctx, ticket, analysis, plan) {
+  const { db, dry } = ctx;
+  const seen = TAG.seen(analysis.latestUser.id);
+  if (!dry && !(await claimTag(db, ticket.id, seen))) return;
+  try {
+    await handleClaimedMessage(ctx, ticket, analysis, plan);
+  } catch (e) {
+    // The work the claim guarded did not finish (a read or a write failed):
+    // release it, or needsWork skips this message for ever — no draft and no
+    // owner mail. A draft already stored keeps the next run away on its own
+    // (needsWork skips a ticket with a pending draft).
+    if (!dry) {
+      await releaseTag(db, ticket.id, seen).catch((releaseError) =>
+        console.error(`[support-agent] ${ticket.reference}: claim not released:`, releaseError.message));
+    }
+    throw e;
+  }
+}
+
+async function handleClaimedMessage(ctx, ticket, analysis, plan) {
   const { db, report, dry, gates } = ctx;
   const um = analysis.latestUser;
   const ref = ticket.reference;
-  if (!dry && !(await claimTag(db, ticket.id, TAG.seen(um.id)))) return;
 
   const base = { customerMessage: analysis.unanswered.map((m) => m.body).join('\n\n'), followUp: analysis.isFollowUp };
   const topics = new Set(plan.contentTopics);

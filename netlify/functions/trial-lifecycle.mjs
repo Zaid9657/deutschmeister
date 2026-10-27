@@ -16,16 +16,16 @@
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
-import { createHmac } from 'crypto';
 import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
+import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const FROM_ADDRESS = 'Zaid from DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const UNSUB_SECRET = unsubscribeSecret();
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 const BATCH_SIZE = 100;
 
@@ -34,11 +34,6 @@ try {
   supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 } catch (e) {
   console.error('Supabase init error:', e.message);
-}
-
-function unsubscribeUrl(userId) {
-  const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
-  return `${BASE_URL}/.netlify/functions/unsubscribe?uid=${userId}&token=${token}`;
 }
 
 // ─── copy ────────────────────────────────────────────────────────────────────
@@ -75,7 +70,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
             <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
               DeutschMeister · <a href="${footerHref}" style="color:#94a3b8;">deutsch-meister.de</a>${socialFooterLine('#94a3b8')}<br>
-              <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from these emails</a>
+              <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from DeutschMeister emails</a>
             </p>
           </td>
         </tr>
@@ -136,43 +131,96 @@ export function renderHtml(kind, userId) {
   });
 }
 
+/** One Resend item. The List-Unsubscribe headers carry the footer's own link. */
+export function mailItem(kind, recipient) {
+  return {
+    from: FROM_ADDRESS,
+    to: [recipient.email],
+    reply_to: 'zaid@deutsch-meister.de',
+    subject: TEMPLATES[kind].subject,
+    html: renderHtml(kind, recipient.id),
+    headers: unsubscribeHeaders(unsubscribeUrl(recipient.id)),
+  };
+}
+
 // ─── selection ───────────────────────────────────────────────────────────────
 
 export const TRIAL_KINDS = ['trial_day3', 'trial_day6', 'trial_ended'];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/**
+ * 00:00 UTC of the day `t` (ms) falls on: the ONE reference both signup-day
+ * sequences measure from (activation-lifecycle.mjs imports it).
+ *
+ * Why (2026-10-25, review X-097): this job runs at 08:00 and activation at
+ * 09:30, and each measured its windows from its own run. trial_day3 selected
+ * signups 3-4 days before 08:00 and activation_d4 signups 4-5 days before 09:30,
+ * so everyone whose trial began between 08:00 and 09:30 UTC got both mails on
+ * the same morning; the windows were disjoint only on paper. Measured from the
+ * start of the run's UTC day, both jobs see the same "day N since signup" for
+ * every learner, and windows that are disjoint in days are disjoint in practice.
+ * tests/lifecycle.test.mjs replays the real 08:00 and 09:30 runs.
+ */
+export const utcDayStart = (t) => Math.floor(Number(t) / DAY_MS) * DAY_MS;
+
 // Each window is expressed directly as [lower, upper) offsets in days from the
 // run, because the sign conventions are easy to get backwards: day 6 and the
 // post-trial mail look FORWARD and BACKWARD from the run respectively.
+// `fromDayStart`: the window counts from 00:00 UTC of the run's day (above), not
+// from the run itself. Only the signup-relative window does: day 6 announces an
+// end within 24 hours, and from midnight a trial ending at 07:00 would be told
+// "ends tomorrow" an hour after it ended.
 export const TRIAL_WINDOWS = {
-  // Day 3 of a 7-day trial: it started between 4 and 3 days ago.
-  trial_day3: { col: 'trial_started_at', lowerDays: -4, upperDays: -3 },
+  // Day 3 of a 7-day trial: it started on the UTC day four days before the run's.
+  trial_day3: { col: 'trial_started_at', lowerDays: -4, upperDays: -3, fromDayStart: true },
   // The day before it ends: trial_ends_at falls within the next 24 hours.
   trial_day6: { col: 'trial_ends_at', lowerDays: 0, upperDays: 1 },
   // The day after it ended: trial_ends_at was 1-2 days ago.
   trial_ended: { col: 'trial_ends_at', lowerDays: -2, upperDays: -1 },
 };
 
+/**
+ * The [lower, upper) bounds (ISO) of one kind's window for the run at `now`, or
+ * over a sentinel `span` = { first, last } of run times.
+ */
+export function trialWindowBounds(kind, { span = null, now = Date.now() } = {}) {
+  const w = TRIAL_WINDOWS[kind];
+  const ref = w.fromDayStart ? utcDayStart : (t) => t;
+  return {
+    col: w.col,
+    lower: new Date(ref(span ? span.first : now) + w.lowerDays * DAY_MS).toISOString(),
+    upper: new Date(ref(span ? span.last : now) + w.upperDays * DAY_MS).toISOString(),
+  };
+}
+
+/**
+ * The earliest instant a run can select a row whose window column is `at` (ms):
+ * just after at - upper for a run-relative window, and the first midnight after
+ * that for a day-start window (the run comes later that day). Over a span, an
+ * address confirmed by then was confirmed at the run that selected it.
+ */
+export function trialWindowOpens(kind, at) {
+  const w = TRIAL_WINDOWS[kind];
+  const opens = at - w.upperDays * DAY_MS;
+  return w.fromDayStart ? utcDayStart(opens) + DAY_MS : opens;
+}
+
 // Users whose trial day matches, who haven't already had this message, aren't
 // paying, and haven't opted out.
 //
 // ONE definition of "who is due", read by this job and by the sentinel
 // (sentinel.mjs asks it whether a quiet day was really quiet). The job passes
-// nothing and gets today's run. The sentinel passes `span` = { first, last },
-// the scheduled runs since the job's last ledger row: the window then covers
-// every one of those runs ([first + lower, last + upper)), and a user counts
-// only if their address was confirmed by the time their window opened — so
-// nobody who became due (or confirmed) after a run is counted as missed; the
-// next run mails them.
-export async function selectRecipients(kind, { client = supabase, span = null } = {}) {
-  const now = Date.now();
-  const first = span ? span.first : now;
-  const last = span ? span.last : now;
+// nothing and gets today's run (`now` lets a test replay a run). The sentinel
+// passes `span` = { first, last }, the scheduled runs since the job's last
+// ledger row: the window then covers every one of those runs ([first + lower,
+// last + upper), each end measured the way trialWindowBounds measures it), and
+// a user counts only if their address was confirmed by the time their window
+// opened — so nobody who became due (or confirmed) after a run is counted as
+// missed; the next run mails them.
+export async function selectRecipients(kind, { client = supabase, span = null, now = Date.now() } = {}) {
   const windows = TRIAL_WINDOWS[kind];
-
-  const lower = new Date(first + windows.lowerDays * DAY_MS).toISOString();
-  const upper = new Date(last + windows.upperDays * DAY_MS).toISOString();
+  const { lower, upper } = trialWindowBounds(kind, { span, now });
 
   const { data: profiles, error } = await client
     .from('profiles')
@@ -214,9 +262,10 @@ export async function selectRecipients(kind, { client = supabase, span = null } 
   }
 
   // Over a span, due at a run means confirmed at it: the run that selects a
-  // user comes after their window opens (col − upper), so an address confirmed
-  // by then was confirmed at that run. Without a span (the job) this is moot.
-  const confirmedInTime = (p) => !span || confirmedAt.get(p.id) <= Date.parse(p[windows.col]) - windows.upperDays * DAY_MS;
+  // user comes after their window opens (trialWindowOpens), so an address
+  // confirmed by then was confirmed at that run. Without a span (the job) this
+  // is moot.
+  const confirmedInTime = (p) => !span || confirmedAt.get(p.id) <= trialWindowOpens(kind, Date.parse(p[windows.col]));
 
   return candidates
     .filter((p) => !sentAlready.has(p.id) && emails.has(p.id) && confirmedInTime(p))
@@ -236,7 +285,6 @@ async function sendKind(resendKey, kind) {
   const recipients = await selectRecipients(kind);
   if (recipients.length === 0) return { kind, sent: 0, failed: 0 };
 
-  const tpl = TEMPLATES[kind];
   let sent = 0;
   let failed = 0;
 
@@ -259,13 +307,7 @@ async function sendKind(resendKey, kind) {
     const claimed = slice.filter((r) => claimedIds.has(r.id));
     if (claimed.length === 0) continue;
 
-    const items = claimed.map((r) => ({
-      from: FROM_ADDRESS,
-      to: [r.email],
-      reply_to: 'zaid@deutsch-meister.de',
-      subject: tpl.subject,
-      html: renderHtml(kind, r.id),
-    }));
+    const items = claimed.map((r) => mailItem(kind, r));
 
     try {
       await sendBatch(resendKey, items);
@@ -287,6 +329,15 @@ async function sendKind(resendKey, kind) {
 // subscription — so this daily run sweeps the expired ones. A recurring row
 // can remain while a purchase supplies Pro; those purchase windows need the
 // same expiry check, preserving any other current purchase or paid period.
+//
+// Admin Pro-day grants (admin-actions grant_pro_days) are the other rows no
+// provider event ever ends: a 'monthly' row with no Lemon Squeezy id. Until
+// 2026-10-25 nothing here ended them either, so after subscription_end the
+// profile kept is_subscribed / tier 'pro': speaking, writing and X-Ray kept Pro
+// allowances and Astro opened every level until someone pressed Verify (review
+// X-007). A grant still 'active' past its end is now reconciled with the rest
+// and marked 'expired' only after every reconcile succeeded, so a failed
+// profile write leaves it 'active' and the next run finds it again.
 export async function expireCourseWindows(client = supabase, now = Date.now()) {
   const nowIso = new Date(now).toISOString();
   const { data: expired, error } = await client
@@ -298,11 +349,20 @@ export async function expireCourseWindows(client = supabase, now = Date.now()) {
     .select('user_id');
   if (error) throw new Error(`course-window sweep failed: ${error.message}`);
 
+  // A manual grant past its end: no provider id (a Lemon Squeezy row is the
+  // webhook's to end), not a course window, still 'active'.
+  const lapsedGrants = (query) => query
+    .is('lemonsqueezy_subscription_id', null)
+    .neq('plan_type', 'course')
+    .eq('status', 'active')
+    .lte('subscription_end', nowIso);
+
   const users = new Set((expired || []).map((row) => row.user_id));
   const candidates = [
     () => client.from('purchases').select('user_id').lte('access_until', nowIso).eq('status', 'active').order('id'),
     () => client.from('subscriptions').select('user_id').lte('subscription_end', nowIso).eq('plan_type', 'course').order('id'),
     () => client.from('subscriptions').select('user_id').in('status', ['past_due', 'paused', 'unpaid']).order('id'),
+    () => lapsedGrants(client.from('subscriptions').select('user_id')).order('id'),
   ];
   for (const query of candidates) {
     // Revisit expired rows too: a prior profile write may have failed after
@@ -315,7 +375,14 @@ export async function expireCourseWindows(client = supabase, now = Date.now()) {
     }
   }
   for (const userId of users) await reconcileUserEntitlement(client, userId, now);
-  return { swept: expired?.length || 0, reconciled: users.size };
+
+  // Every owner is reconciled (a reconcile that throws stops the run before
+  // this line); only now may the lapsed grants leave 'active'.
+  const { data: grants, error: grantError } = await lapsedGrants(
+    client.from('subscriptions').update({ status: 'expired', updated_at: nowIso }),
+  ).select('user_id');
+  if (grantError) throw new Error(`manual-grant expiry failed: ${grantError.message}`);
+  return { swept: expired?.length || 0, grantsExpired: grants?.length || 0, reconciled: users.size };
 }
 
 // ─── handler ─────────────────────────────────────────────────────────────────

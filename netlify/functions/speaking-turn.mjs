@@ -3,6 +3,7 @@ import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import {
   AIError,
+  HISTORY_MESSAGES,
   buildTeacherSystemPrompt,
   taskFromSession,
   transcribeAudio,
@@ -12,6 +13,39 @@ import {
 // One grace window for both "turns stop here" and "the session is stale".
 import { SESSION_GRACE_MINUTES } from './_shared/speakingCloseout.mjs';
 import { reserveTurn, settleTurn } from './_shared/speakingCloseout.mjs';
+
+// One tap-to-speak answer, not a recording session: the ceiling score-readaloud
+// applies to a clip, checked on the decoded size before the STT provider is called.
+const MAX_AUDIO_BYTES = 1_500_000;
+
+/**
+ * The conversation so far, as THIS server stored it (both sides of every turn
+ * go to speaking_messages below): the last HISTORY_MESSAGES rows, oldest first.
+ * The request body never supplies it, so a client can neither inflate the
+ * teacher's input nor put earlier instructions in the teacher's mouth. Within
+ * one timestamp the learner's line comes first — a turn saves its two rows
+ * together. A failed read degrades to a reply without context, never to a lost turn.
+ */
+async function storedHistory(sessionToken, userId) {
+  try {
+    const { data, error } = await supabase
+      .from('speaking_messages')
+      .select('role, content, created_at')
+      .eq('session_token', sessionToken)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(HISTORY_MESSAGES);
+    if (error || !Array.isArray(data)) throw new Error(error?.message || 'no rows');
+    const rank = (row) => (row.role === 'user' ? 0 : 1);
+    return data
+      .map((row) => ({ role: row.role, content: row.content, at: Date.parse(row.created_at) || 0 }))
+      .sort((a, b) => a.at - b.at || rank(a) - rank(b))
+      .map(({ role, content }) => ({ role, content }));
+  } catch (err) {
+    console.error('[speaking-turn] history read failed:', err.message);
+    return [];
+  }
+}
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -44,26 +78,17 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
-    const { sessionToken, audioBase64, mimeType, history } = JSON.parse(event.body || '{}');
+    // A `history` field in the body is ignored: the teacher reads the server's own transcript.
+    const { sessionToken, audioBase64, mimeType } = JSON.parse(event.body || '{}');
 
     if (!sessionToken || !audioBase64) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'sessionToken und audioBase64 sind erforderlich', stage: 'input' }) };
     }
 
-    // ~7.5 MB of audio — far above any single tap-to-speak turn, but a hard
-    // ceiling against oversized payloads being fed into the STT provider.
-    if (typeof audioBase64 !== 'string' || audioBase64.length > 10_000_000) {
-      return { statusCode: 413, headers, body: JSON.stringify({ error: 'Audio zu groß', stage: 'input' }) };
+    // base64 carries 3 bytes per 4 characters.
+    if (typeof audioBase64 !== 'string' || Math.floor((audioBase64.length * 3) / 4) > MAX_AUDIO_BYTES) {
+      return { statusCode: 413, headers, body: JSON.stringify({ error: 'Audio zu groß', stage: 'input', code: 'audio_too_large' }) };
     }
-
-    // The conversation history is client-supplied context for the teacher
-    // model; truncate rather than trust it as an unbounded prompt surface.
-    const boundedHistory = (Array.isArray(history) ? history : [])
-      .slice(-40)
-      .map((m) => ({
-        role: m?.role === 'assistant' ? 'assistant' : 'user',
-        content: String(m?.content ?? '').slice(0, 5000),
-      }));
 
     // 1. The session must exist, belong to the caller, and be active.
     const { data: session, error: sessionError } = await supabase
@@ -124,6 +149,8 @@ export const handler = async (event) => {
     let ttsWarning = false;
 
     try {
+      // Read the stored transcript while the audio is being transcribed.
+      const historyRead = storedHistory(sessionToken, user_id);
       userTranscript = await transcribeAudio({ audioBase64, mimeType });
 
       const system = buildTeacherSystemPrompt({ level, mission, isPlacement, courseTask });
@@ -131,7 +158,7 @@ export const handler = async (event) => {
       const userText = userTranscript || '(Der Schüler hat nichts Verständliches gesagt — bitte freundlich um Wiederholung.)';
       replyText = await teacherReply({
         system,
-        history: boundedHistory,
+        history: await historyRead,
         userText,
         maxTokens: 120,
       });
@@ -166,17 +193,22 @@ export const handler = async (event) => {
     await settleTurn(supabase, sessionToken, user_id, turnId, true, reservation.legacy);
 
     // 4. Persist both sides (as the old flow did). Best-effort — a save failure
-    //    must not lose the turn the user already heard.
+    //    must not lose the turn the user already heard — but tried twice with
+    //    the same rows: these rows are what the evaluation grades, and the
+    //    next turn's context.
     const rows = [];
     if (userTranscript) {
       rows.push({ session_token: sessionToken, user_id, role: 'user', content: userTranscript, level, created_at: new Date().toISOString() });
     }
     rows.push({ session_token: sessionToken, user_id, role: 'assistant', content: replyText, level, created_at: new Date().toISOString() });
-    try {
-      const { error: saveError } = await supabase.from('speaking_messages').insert(rows);
-      if (saveError) console.error('[speaking-turn] Failed to save messages:', JSON.stringify(saveError));
-    } catch (err) {
-      console.error('[speaking-turn] message insert threw:', err.message);
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const { error: saveError } = await supabase.from('speaking_messages').insert(rows);
+        if (!saveError) break;
+        console.error(`[speaking-turn] Failed to save messages (attempt ${attempt}):`, JSON.stringify(saveError));
+      } catch (err) {
+        console.error(`[speaking-turn] message insert threw (attempt ${attempt}):`, err.message);
+      }
     }
 
     return {

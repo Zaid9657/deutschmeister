@@ -25,6 +25,10 @@ export const SHARED_FILES = [
   // sell a ticket and the app's checkout/success screens describe the same one.
   ['src/data/courseContents.js', 'astro-site/src/data/courseContents.js'],
   ['src/data/offers.js', 'astro-site/src/data/offers.js'],
+  // Whole answers that are the same answer („Wieso" for „Warum"): the lesson checker and the
+  // grammar pages' fill-in island grade by ONE rule, so a word is never right in the course and
+  // wrong on /grammar/ (round-2 review, 2026-10-25).
+  ['src/data/sameAnswer.js', 'astro-site/src/data/sameAnswer.js'],
   // Writing task bank: the SPA renders tasks, the grading function validates
   // keys and derives the rubric — grading a task the UI doesn't show (or vice
   // versa) is exactly the drift this pair-check exists for.

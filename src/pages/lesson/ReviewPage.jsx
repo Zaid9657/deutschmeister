@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -44,7 +44,27 @@ const formatDue = (iso, lang) => {
   }
 };
 
+/**
+ * The owner boundary of a review session (2026-10-25): the deck, its position and the batch-end counts
+ * belong to ONE account. A grade still being saved when another account signed in (another tab) used to
+ * land on the new account's deck — its late continuation set that deck's index from the old one, so
+ * three unanswered cards showed the finished-batch screen. So the session mounts once auth has settled,
+ * keyed by its owner (as CheckpointPage keys a paper): a new owner is a new session.
+ */
 export default function ReviewPage() {
+  const { user, loading } = useAuth();
+  const [lang] = useLessonLang();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm">{t('review.loading', lang)}</p>
+      </div>
+    );
+  }
+  return <ReviewSession key={user?.id || 'guest'} />;
+}
+
+function ReviewSession() {
   const { level } = useParams();
   const { user } = useAuth();
   const [lang] = useLessonLang();
@@ -63,8 +83,12 @@ export default function ReviewPage() {
 
   const cardIndex = useMemo(() => buildCardIndex(curriculum), [curriculum]);
 
+  // Which deck is on screen: counted up whenever one loads (another level, the next round). A grade or a
+  // batch-end count that resolves after the deck changed belongs to the old deck and is dropped.
+  const deck = useRef(0);
   useEffect(() => {
     if (!curriculum) return;
+    deck.current += 1;
     let cancelled = false;
     if (!user) {
       setCards([]);
@@ -75,6 +99,11 @@ export default function ReviewPage() {
       const due = rows.filter((row) => cardIndex.has(row.card_key));
       setCards(due);
       setIndex(0);
+      // Nothing due: say when the next card comes back — the reason to return. Only grading the last
+      // card of a batch used to fetch it, so an empty deck never named a date.
+      if (!due.length) {
+        fetchNextDueAt(user.id, curriculum.level).then((at) => { if (!cancelled) setNextDueAt(at); });
+      }
       // Word cards reference a words row by id — fetch the real recordings once.
       const ids = due
         .map((row) => parseCardKey(row.card_key))
@@ -124,14 +153,17 @@ export default function ReviewPage() {
 
   const finish = useCallback(() => {
     if (!user || !curriculum) return;
-    fetchNextDueAt(user.id, curriculum.level).then(setNextDueAt);
+    const shown = deck.current;
+    fetchNextDueAt(user.id, curriculum.level).then((at) => { if (deck.current === shown) setNextDueAt(at); });
     // A batch is 12; a learner with 25 due used to read „Done for today" after the first 12.
-    fetchReviewCounts(user.id, curriculum.level).then((c) => setStillDue(c.due || 0));
+    fetchReviewCounts(user.id, curriculum.level).then((c) => { if (deck.current === shown) setStillDue(c.due || 0); });
   }, [user, curriculum]);
 
   const grade = async (correct) => {
     if (!card) return;
+    const shown = deck.current;
     await gradeCard(user?.id, card.card_key, correct);
+    if (deck.current !== shown) return;
     if (index + 1 >= (cards?.length || 0)) {
       setIndex(index + 1);
       finish();
@@ -142,7 +174,11 @@ export default function ReviewPage() {
 
   if (!curriculum) return <Navigate to={`/course/${level || ''}`} replace />;
 
-  const done = cards && index >= cards.length;
+  // Done means a batch was worked through. An empty fetch is the "nothing due" card alone: with
+  // `cards = []`, 0 >= 0 rendered "Done for today" under "Nothing is due today" (and under the
+  // sign-in card for a visitor).
+  const done = cards && cards.length > 0 && index >= cards.length;
+  const nextOn = formatDue(nextDueAt, lang);
 
   const checkTyped = () => {
     const { ok } = gradeTypedReview(card.card_key, content.accepted, typed, { caseSensitive: content.caseSensitive });
@@ -177,6 +213,11 @@ export default function ReviewPage() {
                   — the Sie-register line tests/checkpoint.test.mjs §6 pins; in the string table now. */}
               {t(user ? 'review.nothingDue' : 'review.signIn', lang)}
             </p>
+            {user && (
+              <p className="mt-2 text-sm text-graphite">
+                {nextOn ? t('review.nextOn', lang, { date: nextOn }) : t('review.newCards', lang)}
+              </p>
+            )}
             <Button className="mt-4" variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
           </Card>
         )}
@@ -213,7 +254,7 @@ export default function ReviewPage() {
             )}
             <p className="mt-2 text-sm text-graphite">
               {/* Deutsch-Modus: „Neue Karten kommen, sobald Sie eine Lektion abschließen." (same test). */}
-              {formatDue(nextDueAt, lang) ? t('review.nextOn', lang, { date: formatDue(nextDueAt, lang) }) : t('review.newCards', lang)}
+              {nextOn ? t('review.nextOn', lang, { date: nextOn }) : t('review.newCards', lang)}
             </p>
             <Button className="mt-4" to={`/course/${curriculum.level}`}>
               {t('action.toCoursePlan', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />

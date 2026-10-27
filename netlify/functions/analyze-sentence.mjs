@@ -147,11 +147,82 @@ async function reserveLegacyUsage(args) {
 
 // An outage is not the visitor's fault. The free tier gets ONE analysis a day,
 // so charging it for a 5xx would lock them out of the product's main hook until
-// tomorrow. supabase-js resolves rather than throws, so check `error`.
+// tomorrow. supabase-js resolves rather than throws, so check `error` — and a
+// refund that itself throws must not turn into an unhandled failure.
 async function refundUsage(usageId) {
   if (!supabase || !usageId) return;
-  const { error } = await supabase.from('xray_usage').delete().eq('id', usageId);
-  if (error) console.error('xray_usage refund failed:', error.message);
+  try {
+    const { error } = await supabase.from('xray_usage').delete().eq('id', usageId);
+    if (error) console.error('xray_usage refund failed:', error.message);
+  } catch (error) {
+    console.error('xray_usage refund threw:', error.message);
+  }
+}
+
+// What the results screen can render: a list of word objects, each with its
+// text (SentenceXRay maps result.words). Valid JSON of any other shape is a
+// failed analysis — refunded, never a 200 that crashes the page.
+function validAnalysis(analysis) {
+  return !!analysis && typeof analysis === 'object' && Array.isArray(analysis.words)
+    && analysis.words.every((w) => !!w && typeof w === 'object' && !Array.isArray(w) && typeof w.text === 'string');
+}
+
+// SHARED ANALYSES OF FIXED SENTENCES (cross-check 2026-10-25, AI-21). Most
+// X-Ray traffic is the ~900 grammar-example links (/analyze/?s=…, comment in
+// the handler below): the same sentences analysed again and again, each a
+// Sonnet call with thinking that takes many seconds. A validated analysis of a
+// sentence that arrived from one of those links or from the page's own
+// examples (`entry` 'link' | 'example' — never a learner's typed sentence) is
+// kept under a hash of the normalised sentence, the model and the prompt, and
+// later requests for that sentence are answered from it, instantly. Metering is
+// unchanged: the visit still reserves its analysis first. The table and its
+// insert-only store function come from migrations/2026-10-25-xray-cache.sql;
+// until the owner applies it, lookups and stores fail open (the model answers).
+const CACHED_ENTRIES = new Set(['link', 'example']);
+
+function xrayCacheKey(sentence) {
+  try {
+    const normalised = sentence.trim().replace(/\s+/g, ' ').normalize('NFC');
+    const prompt = createHash('sha256').update(SYSTEM_PROMPT).digest('hex');
+    return createHash('sha256').update(`${normalised}|${CLAUDE_MODEL}|${prompt}`).digest('hex');
+  } catch (error) {
+    console.error('xray cache key failed:', error.message);
+    return null; // no cache, never no analysis
+  }
+}
+
+async function cachedAnalysis(key) {
+  try {
+    const { data, error } = await supabase
+      .from('xray_cache')
+      .select('analysis')
+      .eq('sentence_hash', key)
+      .maybeSingle();
+    if (error) {
+      if (isMissingSchema(error)) logMigrationPending('xray_cache');
+      else console.error('xray cache read failed:', error.message);
+      return null;
+    }
+    return validAnalysis(data?.analysis) ? data.analysis : null;
+  } catch (error) {
+    console.error('xray cache read threw:', error.message);
+    return null;
+  }
+}
+
+async function storeAnalysis(key, analysis) {
+  if (!analysis.words.length) return; // nothing worth sharing
+  try {
+    const { error } = await supabase.rpc('store_xray_cache', {
+      p_sentence_hash: key, p_model: CLAUDE_MODEL, p_analysis: analysis,
+    });
+    if (error) {
+      if (isMissingSchema(error)) logMigrationPending('store_xray_cache');
+      else console.error('xray cache store failed:', error.message);
+    }
+  } catch (error) {
+    console.error('xray cache store threw:', error.message);
+  }
 }
 
 export const handler = async (event) => {
@@ -182,6 +253,12 @@ export const handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
   }
 
+  // Set once a usage row is reserved; `delivered` only as the 200 leaves. Every
+  // exit in between gives the analysis back (cross-check 2026-10-25, AI-19): a
+  // rejected connection, an unreadable or unusable answer, or any throw — not
+  // only an upstream status — so a retry is never "limit reached" until midnight.
+  let usageId = null;
+  let delivered = false;
   try {
     const { sentence, anonymousId, source: rawSource } = JSON.parse(event.body || '{}');
 
@@ -248,40 +325,64 @@ export const handler = async (event) => {
       console.error('xray reservation failed:', error.message);
       return { statusCode: 503, headers, body: JSON.stringify({ error: 'Usage could not be reserved', code: 'usage_unavailable' }) };
     }
-    const { id: usageId, used: usedToday } = reservation;
+    const usedToday = reservation.used;
     if (!reservation.allowed) {
       return {
         statusCode: 429, headers,
         body: JSON.stringify({ error: 'limit_reached', tier, limit, usedToday, remaining: 0 }),
       };
     }
+    usageId = reservation.id;
 
     console.log('[xray] analysis', JSON.stringify({ tier, ...source }));
 
+    const remaining = limit === Infinity ? null : Math.max(0, limit - usedToday - 1);
+    const usage = { tier, limit: limit === Infinity ? null : limit, usedToday: usedToday + 1, remaining };
+
+    // --- Shared analysis of a fixed sentence (AI-21) ---
+    const cacheKey = CACHED_ENTRIES.has(source.entry) ? xrayCacheKey(sentence) : null;
+    const cached = cacheKey ? await cachedAnalysis(cacheKey) : null;
+    if (cached) {
+      delivered = true;
+      return { statusCode: 200, headers, body: JSON.stringify({ ...cached, usage }) };
+    }
+
     // --- Call Claude ---
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': anthropicKey,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CLAUDE_MODEL,
-        // Thinking is on by default on this model, and thinking tokens count
-        // against max_tokens — the old 1024 ceiling would truncate mid-answer.
-        max_tokens: 16000,
-        // Low effort: this is a bounded structured-extraction task, not a
-        // reasoning problem. Lowering effort is the documented way to keep cost
-        // and latency down; disabling thinking outright is not (it can leak
-        // reasoning tags into the visible response).
-        output_config: { effort: 'low' },
-        system: SYSTEM_PROMPT,
-        messages: [
-          { role: 'user', content: `Analyze this German sentence: "${sentence.trim()}"` },
-        ],
-      }),
-    });
+    let claudeResponse;
+    try {
+      claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': anthropicKey,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: CLAUDE_MODEL,
+          // Thinking is on by default on this model, and thinking tokens count
+          // against max_tokens — the old 1024 ceiling would truncate mid-answer.
+          max_tokens: 16000,
+          // Low effort: this is a bounded structured-extraction task, not a
+          // reasoning problem. Lowering effort is the documented way to keep cost
+          // and latency down; disabling thinking outright is not (it can leak
+          // reasoning tags into the visible response).
+          output_config: { effort: 'low' },
+          system: SYSTEM_PROMPT,
+          messages: [
+            { role: 'user', content: `Analyze this German sentence: "${sentence.trim()}"` },
+          ],
+        }),
+      });
+    } catch (error) {
+      // No answer at all (DNS, reset, timeout): ours, like any upstream failure.
+      console.error('Claude API unreachable:', CLAUDE_MODEL, error.message);
+      await refundUsage(usageId);
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({ error: 'Failed to analyze sentence', code: 'upstream_unreachable' }),
+      };
+    }
 
     if (!claudeResponse.ok) {
       const errorText = await claudeResponse.text();
@@ -307,35 +408,41 @@ export const handler = async (event) => {
       };
     }
 
-    const claudeData = await claudeResponse.json();
-    // With thinking enabled the first content block is a thinking block, not
-    // text — indexing [0] would silently yield '' and fail every parse.
-    const responseText = (claudeData.content || [])
-      .filter((b) => b?.type === 'text')
-      .map((b) => b.text || '')
-      .join('\n')
-      .trim();
-
+    let responseText = '';
     let analysis;
     try {
+      // An unreadable body (cut-off stream, not JSON) is a failed analysis too.
+      const claudeData = await claudeResponse.json();
+      // With thinking enabled the first content block is a thinking block, not
+      // text — indexing [0] would silently yield '' and fail every parse.
+      responseText = (claudeData?.content || [])
+        .filter((b) => b?.type === 'text')
+        .map((b) => b.text || '')
+        .join('\n')
+        .trim();
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('No JSON found in response');
       analysis = JSON.parse(jsonMatch[0]);
-    } catch {
-      console.error('Failed to parse Claude response:', responseText);
+      // Valid JSON is not yet an analysis (AI-20): `{"error":"…"}` or a word
+      // list of strings would come back as a "result" that crashes the page.
+      if (!validAnalysis(analysis)) throw new Error('Analysis has no usable word list');
+    } catch (error) {
+      console.error('Failed to parse Claude response:', error.message, responseText);
       await refundUsage(usageId);
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to parse analysis response' }) };
     }
 
-    const remaining = limit === Infinity ? null : Math.max(0, limit - usedToday - 1);
+    if (cacheKey) await storeAnalysis(cacheKey, analysis);
 
+    delivered = true;
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ ...analysis, usage: { tier, limit: limit === Infinity ? null : limit, usedToday: usedToday + 1, remaining } }),
+      body: JSON.stringify({ ...analysis, usage }),
     };
   } catch (error) {
     console.error('analyze-sentence error:', error.message, error.stack);
+    if (usageId && !delivered) await refundUsage(usageId);
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }
 };

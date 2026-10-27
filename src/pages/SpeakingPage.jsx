@@ -12,7 +12,7 @@ import { seoProps } from '../data/seoRoutes.js';
 import { TRIAL_SPEAKING_SESSIONS, PRO_SPEAKING_SESSIONS_PER_MONTH } from '../data/marketing.js';
 import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport, acquireMicrophone, releaseMicrophone, micErrorMessage } from '../components/speaking/mediaSupport';
-import SpeakingSession from '../components/speaking/SpeakingSession';
+import SpeakingSession, { requestSpeakingEvaluation } from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
 import { readCourseContext } from '../lib/courseFlow.js';
@@ -116,9 +116,24 @@ function MissionResultBanner({ passed }) {
   );
 }
 
+/**
+ * What the failed-feedback card says, from the server's answer to the request
+ * the session (or a retry) made. A grade still in progress (409) is not a
+ * failure: the same request returns the grade once it is stored.
+ */
+function evaluationFailureMessage(failure) {
+  if (!failure) return 'The evaluation could not be created.';
+  if (failure.code === 'evaluation_in_progress') return 'Your feedback is still being prepared — try again in a moment.';
+  if (failure.code === 'limit_reached') return "You've reached today's feedback limit. Your session is saved — try again tomorrow.";
+  if (failure.code === 'no_learner_turns') return 'None of your answers reached us, so there is nothing to score for this session.';
+  if (failure.status === 0) return 'No connection — your session is saved. Check your connection and try again.';
+  if (failure.result?.message) return failure.result.message;
+  return 'The feedback could not be loaded just now. Your session is saved — please try again.';
+}
+
 const SpeakingPage = () => {
   const { user } = useAuth();
-  const { profile, purchases, hasAccess, hasActiveSubscription, loading: subLoading } = useSubscription();
+  const { profile, purchases, hasLevelAccess, hasActiveSubscription, loading: subLoading } = useSubscription();
 
   const [phase, setPhase] = useState('setup'); // setup | session | results | eval_failed
   const [selectedLevel, setSelectedLevel] = useState('A1.1');
@@ -136,6 +151,9 @@ const SpeakingPage = () => {
   const [startError, setStartError] = useState(null); // { type:'funds'|'error', ... }
   const [session, setSession] = useState(null);
   const [evaluation, setEvaluation] = useState(null);
+  // A failed feedback request: { status, code, retryable, result } (SpeakingSession).
+  const [evalFailure, setEvalFailure] = useState(null);
+  const [retryingEval, setRetryingEval] = useState(false);
   const pendingStartRef = useRef(null);
 
   useEffect(() => () => pendingStartRef.current?.(), []);
@@ -252,7 +270,12 @@ const SpeakingPage = () => {
   // still matches the lesson the learner came from.
   const courseTaskActive = !!courseTask && !activeMission
     && (!courseTask.level || courseTask.level === selectedLevel);
-  const missionLocked = !!activeMission && !activeMission.is_free && !hasAccess;
+  // A level's missions come with that level (the ticket lists them): the lock
+  // asks hasLevelAccess, like every level lock, so a bought course keeps its
+  // missions after its included Pro window ends. The session itself stays
+  // metered by the allowance or the wallet on the server.
+  const missionLocked = !!activeMission && !activeMission.is_free
+    && !hasLevelAccess(activeMission.level || selectedLevel);
   const canAfford = selectedCost === 0 || walletCents >= selectedCost;
   const startDisabled = starting || metaLoading || missionLocked || !canAfford || !browserSupport.supported;
 
@@ -391,17 +414,49 @@ const SpeakingPage = () => {
   };
 
   const handleComplete = (result) => {
-    if (result?.evaluation_failed) { setEvaluation(result); setPhase('eval_failed'); }
+    setEvalFailure(null);
+    if (result?.evaluation_failed) { setEvaluation(result); setEvalFailure({ status: 200, code: 'evaluation_failed', retryable: true, result }); setPhase('eval_failed'); }
     else if (result) { setEvaluation(result); setPhase('results'); }
     else { setPhase('setup'); }
     loadMeta();
   };
 
-  const backToSetup = () => { setSession(null); setEvaluation(null); setPhase('setup'); };
+  // The feedback request failed (SpeakingSession): `session` stays, so the
+  // same token can be asked again — the server returns a stored grade, says
+  // 409 while one is being made, and lets a failed one be graded again.
+  const handleEvaluationFailed = (failure) => {
+    setEvaluation(failure.result || null);
+    setEvalFailure(failure);
+    setPhase('eval_failed');
+    loadMeta();
+  };
+
+  const retryEvaluation = async () => {
+    if (!session?.sessionToken || retryingEval) return;
+    setRetryingEval(true);
+    const outcome = await requestSpeakingEvaluation(session.sessionToken);
+    setRetryingEval(false);
+    if (outcome.ok) {
+      setEvalFailure(null);
+      setEvaluation(outcome.evaluation);
+      setPhase('results');
+    } else {
+      setEvaluation(outcome.result || null);
+      setEvalFailure(outcome);
+    }
+  };
+
+  const backToSetup = () => { setSession(null); setEvaluation(null); setEvalFailure(null); setPhase('setup'); };
   // A cancelled session with no learner turn gives its allowance back once the
   // server has closed it — refresh the allowance shown on the setup screen then.
   const handleCancel = (ended) => { backToSetup(); Promise.resolve(ended).then(() => loadMeta()); };
   const retrySession = () => { setEvaluation(null); setPhase('setup'); };
+
+  // One head for every branch below. It used to render on the setup screen
+  // only, so a signed-out visitor arriving by an in-app link (the footer's
+  // "AI Speaking Practice") kept the previous page's title and lost this
+  // page's canonical, description and Open Graph tags.
+  const seo = <SEO {...seoProps('/speaking')} />;
 
   // ---- guest gate ----
   // Not just a sign-in wall: this is the page an anonymous visitor (and the
@@ -412,6 +467,7 @@ const SpeakingPage = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-paper text-ink px-4 pt-24 pb-16 relative overflow-hidden">
+        {seo}
         <Aurora />
         <div className="relative max-w-2xl mx-auto text-center">
           <div className="hero-line w-20 h-20 mx-auto mb-6 rounded-clay bg-siegel shadow-raise-siegel flex items-center justify-center" style={{ '--d': '0ms' }}>
@@ -473,30 +529,47 @@ const SpeakingPage = () => {
   // ---- session ----
   if (phase === 'session' && session) {
     return (
-      <SpeakingSession
-        level={session.level}
-        mission={session.mission || session.courseTask}
-        sessionToken={session.sessionToken}
-        plannedMinutes={session.plannedMinutes}
-        opening={session.opening}
-        micStream={session.micStream}
-        onComplete={handleComplete}
-        onCancel={handleCancel}
-      />
+      <>
+        {seo}
+        <SpeakingSession
+          level={session.level}
+          mission={session.mission || session.courseTask}
+          sessionToken={session.sessionToken}
+          plannedMinutes={session.plannedMinutes}
+          opening={session.opening}
+          micStream={session.micStream}
+          onComplete={handleComplete}
+          onEvaluationFailed={handleEvaluationFailed}
+          onCancel={handleCancel}
+        />
+      </>
     );
   }
 
   // ---- evaluation failed ----
+  // The session is kept: "Retry feedback" asks for the same session's grade
+  // again (no new session, nothing spoken is lost).
   if (phase === 'eval_failed') {
+    const canRetry = !!session?.sessionToken && evalFailure?.retryable !== false;
+    const preparing = evalFailure?.code === 'evaluation_in_progress';
     return (
       <div className="min-h-screen bg-paper text-ink flex items-center justify-center px-4 pt-20 pb-12">
+        {seo}
         <Card className="max-w-md w-full p-6 text-center">
           <div className="w-16 h-16 mx-auto mb-5 rounded-clay bg-accent-aprikose-wash flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-accent-aprikose-ink" />
+            {preparing ? <Clock className="w-8 h-8 text-accent-aprikose-ink" /> : <AlertTriangle className="w-8 h-8 text-accent-aprikose-ink" />}
           </div>
-          <h2 className="font-display text-xl font-semibold text-ink mb-2">Evaluation failed</h2>
-          <p className="text-sm text-graphite mb-6">{evaluation?.message || 'The evaluation could not be created.'}</p>
-          <Button onClick={backToSetup} size="lg" className="w-full">
+          <h2 className="font-display text-xl font-semibold text-ink mb-2">
+            {preparing ? 'Feedback on its way' : 'Feedback not ready'}
+          </h2>
+          <p className="text-sm text-graphite mb-6" role="status" aria-live="polite">{evaluationFailureMessage(evalFailure)}</p>
+          {canRetry && (
+            <Button onClick={retryEvaluation} disabled={retryingEval} size="lg" className="w-full mb-3">
+              {retryingEval ? <Loader2 className="w-5 h-5 animate-spin" /> : <RotateCcw className="w-5 h-5" />}
+              Retry feedback
+            </Button>
+          )}
+          <Button onClick={backToSetup} size="lg" variant={canRetry ? 'secondary' : 'primary'} className="w-full">
             Back to overview
           </Button>
         </Card>
@@ -511,6 +584,7 @@ const SpeakingPage = () => {
     const nextLevel = nextSpeakingLevel(resultLevel);
     return (
       <div className="min-h-screen bg-paper text-ink pt-20 pb-12 px-4">
+        {seo}
         {isMissionResult && <MissionResultBanner passed={evaluation.passed} />}
         <SpeakingEvaluationResults
           level={resultLevel}
@@ -535,9 +609,7 @@ const SpeakingPage = () => {
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-16">
-      <SEO
-        {...seoProps('/speaking')}
-      />
+      {seo}
 
       {/* Hero strip */}
       <div className="relative overflow-hidden">
@@ -646,7 +718,7 @@ const SpeakingPage = () => {
                 <span className="block text-sm font-bold text-ink">Free Conversation</span>
               </Card>
               {missions.map((m, i) => {
-                const locked = !m.is_free && !hasAccess;
+                const locked = !m.is_free && !hasLevelAccess(m.level || selectedLevel);
                 const selected = selectedMissionId === m.id;
                 const card = (
                   <Card

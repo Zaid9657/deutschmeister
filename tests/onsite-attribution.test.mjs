@@ -49,6 +49,7 @@ test('every door follows its trailing-slash case', () => {
   assert.equal(DOORS.freeCourse, `/course/${FREE_LEVEL_LABEL.toLowerCase()}`);
   assert.equal(DOORS.levelTest, '/level-test/');
   assert.equal(DOORS.pricing, '/pricing/');
+  assert.equal(DOORS.telcOffer, '/telc-b1-komplettvorbereitung/');
   for (const door of Object.keys(DOORS)) {
     const u = new URL(onsiteHref(door, 'grammar', 'x'), 'https://deutsch-meister.de');
     assert.equal(u.pathname, DOORS[door], `${door} path changed by the query`);
@@ -141,10 +142,18 @@ test('guides offer the free account next to the level test, every door attribute
   const page = read('astro-site/src/pages/leitfaden/[slug].astro');
   for (const door of ['levelTest', 'signup', 'pricing']) {
     assert.match(page, new RegExp(`${door}: onsiteHref\\('${door}', 'leitfaden', guide\\.slug\\)`), door);
-    assert.match(page, new RegExp(`href=\\{doors\\.${door}\\}`), `${door} not rendered`);
   }
+  // Since d2 (2026-10-26) the two CTA buttons are `primary`/`secondary`: a guide
+  // without an offer keeps level test + free account; an exam long-tail guide
+  // leads with its tagged offer door (tests/guides.test.mjs) and keeps the level
+  // test second. Every href rendered is one of these attributed doors.
+  assert.match(page, /: \{ href: doors\.levelTest, label: T\.levelTest \}/, 'levelTest not rendered as primary');
+  assert.match(page, /: \{ href: doors\.signup, label: T\.signup \}/, 'signup not rendered as secondary');
+  assert.match(page, /href=\{primary\.href\}/);
+  assert.match(page, /href=\{secondary\.href\}/);
+  assert.match(page, /href=\{doors\.pricing\}/, 'pricing not rendered');
   assert.match(page, /Kostenloses Konto erstellen/);
-  assert.match(page, /\{TRIAL_DAYS\} Tage Pro inklusive/);
+  assert.match(page, /\$\{TRIAL_DAYS\} Tage Pro inklusive/);
 });
 
 test('the grammar hub and the nav carry the surface', () => {
@@ -156,4 +165,16 @@ test('the grammar hub and the nav carry the surface', () => {
   assert.match(layout, /const navSignupHref = surface \? onsiteHref\('signup', surface, 'nav'\) : '\/signup';/);
   assert.equal((layout.match(/href=\{navSignupHref\}/g) || []).length, 3, 'desktop, mobile and menu trial buttons');
   assert.doesNotMatch(layout, /href="\/signup"/, 'a nav signup button bypasses the surface tag');
+});
+
+test('a campaign label travels with the door and is filed as the touch campaign', () => {
+  // The exam long-tail guides (d2, 2026-10-26) count each waitlist by
+  // utm_campaign on an attributed door, so profiles.acquisition_campaign holds it.
+  const href = onsiteHref('signup', 'leitfaden', 'dtz-brief-vermieter', 'dtz-waitlist');
+  const fresh = land(href);
+  assert.equal(fresh.first.source, 'leitfaden');
+  assert.equal(fresh.first.medium, ONSITE_MEDIUM);
+  assert.equal(fresh.first.campaign, 'dtz-waitlist');
+  assert.equal(fresh.first.content, 'dtz-brief-vermieter');
+  assert.equal(new URL(onsiteHref('signup', 'leitfaden', 'x'), 'https://deutsch-meister.de').searchParams.has('utm_campaign'), false, 'no campaign unless asked');
 });

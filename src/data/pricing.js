@@ -178,6 +178,20 @@ export const courseForProduct = (productKey) => LEVEL_COURSES[productKey] || LEG
 /** Levels a product key unlocks — [] for unknown keys and for the telc course. */
 export const levelsForProduct = (productKey) => courseForProduct(productKey)?.levels || [];
 
+/**
+ * A kept Pro-day grant: when a paid subscription takes the one subscriptions
+ * row, the rest of an admin grant is stored as a purchases row with this
+ * product (netlify/functions/_shared/subscriptionEntitlement.mjs
+ * GRANT_WINDOW_PRODUCT). It is a time-limited Pro window, opened by its
+ * access_until — never a bought course.
+ */
+export const GRANT_WINDOW_PRODUCT = 'pro_days';
+
+/** Active purchases that are things the learner owns: every one except a kept grant window. */
+export const ownedPurchases = (purchases = []) => (purchases || []).filter(
+  (p) => (!p.status || p.status === 'active') && p.product_key !== GRANT_WINDOW_PRODUCT,
+);
+
 /** The buyable-or-coming course for a level (lowercase), or null for the free level. */
 export const courseForLevel = (level) => LEVEL_COURSES[productKeyForLevel(level || '')] || null;
 

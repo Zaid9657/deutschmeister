@@ -8,7 +8,9 @@
 // ends' events meet (the SPA mirrors its own events there, src/lib/analytics.js).
 //
 // Declarative wiring, so a component never needs its own script to be measured:
-//   data-track-view="<surface>"   → offer_viewed once, when ≥50% on screen
+//   data-track-view="<surface>"   → offer_viewed once, when ≥50% on screen (or, for an
+//                                   element taller than two viewports, once it fills half
+//                                   the viewport)
 //   data-track="<event>"          → that event on click (checkout_intent, course_selected…)
 //   data-track-product / -level / -choice / -surface / -plan → copied into the props
 // The registry decides what is allowed; anything else is dropped.
@@ -72,6 +74,35 @@ export function track(name, props = {}) {
   }
 }
 
+/**
+ * Is an observed element "at least half on screen" (events.js offer_viewed)?
+ * An IntersectionObserver entry is `isIntersecting` at ANY ratio — the first
+ * entry after observe() and every hidden-to-visible change arrive that way —
+ * so a one-pixel sliver used to count as a full impression (2026-10-25). Half
+ * of the element must show. Only an element that can NEVER show half of itself
+ * — one taller than two viewports, like the station line — counts once half
+ * the viewport is filled by it; a 1,200 px card in an 800 px viewport can show
+ * 600 px, so it needs its half like any other card.
+ */
+export function halfOnScreen(entry) {
+  if (!entry || !entry.isIntersecting) return false;
+  if (entry.intersectionRatio >= 0.5) return true;
+  const viewport = entry.rootBounds ? entry.rootBounds.height : 0;
+  const height = entry.boundingClientRect ? entry.boundingClientRect.height : 0;
+  if (!(viewport > 0) || height <= 2 * viewport) return false;
+  const visible = entry.intersectionRect ? entry.intersectionRect.height : 0;
+  return visible >= viewport / 2;
+}
+
+/**
+ * Thresholds that re-check an element as it scrolls, not only at 50 %. A
+ * halving ladder: the observer calls back only when the visible ratio crosses
+ * one of them, and an element H tall needs a crossing between V/(2H) and V/H
+ * (V the viewport) to be judged once half a viewport of it shows — every
+ * element up to sixteen viewports tall has one.
+ */
+export const VIEW_THRESHOLDS = [0, 1 / 32, 1 / 16, 1 / 8, 1 / 4, 1 / 2];
+
 const propsFrom = (el) => ({
   surface: el.getAttribute('data-track-surface') || undefined,
   product: el.getAttribute('data-track-product') || el.getAttribute('data-course-key') || undefined,
@@ -91,12 +122,13 @@ export function autoTrack(root = document) {
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
-        if (!e.isIntersecting) continue;
+        // Not yet half on screen: keep observing, a later threshold re-checks it.
+        if (!halfOnScreen(e)) continue;
         io.unobserve(e.target);
         track('offer_viewed', { ...propsFrom(e.target), surface: e.target.getAttribute('data-track-view') });
       }
     },
-    { threshold: 0.5 },
+    { threshold: VIEW_THRESHOLDS },
   );
   views.forEach((el) => {
     el.setAttribute('data-track-wired', '');

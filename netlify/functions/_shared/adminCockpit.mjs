@@ -16,9 +16,13 @@ export function inWindow(iso, from, to) {
   return Number.isFinite(t) && t >= Date.parse(from) && t < Date.parse(to);
 }
 
+/** A finished course lesson. lesson_progress.status is 'started' | 'complete' | 'gold' (migrations/2026-09-12-lesson-engine.sql). */
+export const lessonDone = (status) => status === 'complete' || status === 'gold';
+
 export async function revenueGroup(supabase, w) {
+  // The refund events are read with the payments: each nets out its own order/invoice (adminRevenueLib).
   const rows = await fetchAll(() =>
-    supabase.from('webhook_logs').select('event_type, payload, created_at').in('event_type', ['order_created', 'subscription_payment_success']).order('created_at', { ascending: true }),
+    supabase.from('webhook_logs').select('event_type, payload, created_at').in('event_type', ['order_created', 'subscription_payment_success', 'order_refunded', 'subscription_payment_refunded']).order('created_at', { ascending: true }),
   );
   const payments = paymentsFromWebhookRows(rows, { courseVariantIds: courseVariantIds() });
   return {
@@ -83,7 +87,7 @@ export async function activitySets(supabase, level) {
   };
   for (const g of grammarRows) { started.add(g.user_id); counted.add(g.user_id); push(g.user_id, g.created_at); push(g.user_id, g.last_accessed); }
   for (const s of speaking) { started.add(s.user_id); if (s.status === 'completed') counted.add(s.user_id); push(s.user_id, s.created_at); }
-  for (const l of lessons) { started.add(l.user_id); if (l.status === 'completed') counted.add(l.user_id); push(l.user_id, l.updated_at || l.completed_at); }
+  for (const l of lessons) { started.add(l.user_id); if (lessonDone(l.status)) counted.add(l.user_id); push(l.user_id, l.updated_at || l.completed_at); }
   for (const l of listening) { started.add(l.user_id); push(l.user_id, l.completed_at); }
   for (const r of reading) { started.add(r.user_id); push(r.user_id, r.last_read_at || r.created_at); }
   return { started, counted, activity, grammarRows, speaking, lessons, topicLevel };
@@ -183,7 +187,7 @@ export async function productGroup(supabase, w, level, sets) {
     },
     lessons: {
       rows: lessonsW.length,
-      completed: lessonsW.filter((l) => l.status === 'completed').length,
+      completed: lessonsW.filter((l) => lessonDone(l.status)).length,
       users: new Set(lessonsW.map((l) => l.user_id)).size,
       instrumented: sets.lessons.length > 0,
       reason: sets.lessons.length > 0 ? null : 'lesson_progress hält noch keine Zeilen — der Kurs-Player ist live, hat aber noch keine Lernenden.',

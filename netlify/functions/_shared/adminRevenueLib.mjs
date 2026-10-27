@@ -18,10 +18,32 @@
 //
 // Classify by variant id, never by product name (a rename must not move money
 // between buckets). Money is integer minor units throughout.
+//
+// REFUNDS arrive as their own events, after the payment was logged with
+// refunded_amount 0: order_refunded (data.id = the order id) and
+// subscription_payment_refunded (data.id = the subscription-invoice id). Pass
+// those rows in with the payments; each payment takes the largest refunded
+// total seen for its own id (a later partial refund carries the running total).
+
+const REFUND_EVENTS = { order_refunded: 'order', subscription_payment_refunded: 'invoice' };
+
+function refundTotals(rows) {
+  const totals = { order: new Map(), invoice: new Map() };
+  for (const row of rows) {
+    const p = row?.payload;
+    const space = REFUND_EVENTS[row?.event_type || p?.meta?.event_name];
+    if (!space || p?.meta?.test_mode === true || p?.data?.id == null) continue;
+    const amount = Number(p.data.attributes?.refunded_amount ?? 0) || 0;
+    const id = String(p.data.id);
+    if (amount > (totals[space].get(id) || 0)) totals[space].set(id, amount);
+  }
+  return totals;
+}
 
 export function paymentsFromWebhookRows(rows, { courseVariantIds = new Set() } = {}) {
   const seen = new Set();
   const payments = [];
+  const refunds = refundTotals(rows);
   for (const row of rows) {
     const p = row?.payload;
     const meta = p?.meta || {};
@@ -48,7 +70,10 @@ export function paymentsFromWebhookRows(rows, { courseVariantIds = new Set() } =
     seen.add(key);
     const gross = Number(a.total ?? 0) || 0;
     const tax = Number(a.tax ?? 0) || 0;
-    const refunded = Number(a.refunded_amount ?? 0) || 0;
+    const later = refunds[type === 'order_created' ? 'order' : 'invoice'].get(String(p?.data?.id)) || 0;
+    const refunded = Math.min(gross, Math.max(Number(a.refunded_amount ?? 0) || 0, later));
+    // The refunded share of the VAT goes back to the customer too: a full refund nets 0.
+    const refundedTax = gross > 0 ? Math.round((refunded * tax) / gross) : 0;
     payments.push({
       key,
       kind,
@@ -58,7 +83,8 @@ export function paymentsFromWebhookRows(rows, { courseVariantIds = new Set() } =
       gross,
       tax,
       refunded,
-      net: gross - tax - refunded,
+      refundedTax,
+      net: gross - tax - refunded + refundedTax,
       at: a.created_at || row.created_at,
       orderId: p?.data?.id != null ? String(p.data.id) : null,
       subscriptionId: a.subscription_id != null ? String(a.subscription_id) : null,

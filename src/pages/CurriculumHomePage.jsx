@@ -167,10 +167,19 @@ export default function CurriculumHomePage({ curriculum }) {
     // Merge first when there is something local to merge, and send any finished
     // run still waiting in the sync outbox (syncOutbox.js), so the very first
     // signed-in render already shows the learner's own work as done.
-    (hasLocalProgress(level) ? mergeLocalProgress(user.id) : Promise.resolve())
+    const sync = () => (hasLocalProgress(level) ? mergeLocalProgress(user.id) : Promise.resolve())
       .then(() => flushOutbox(user.id))
       .finally(load);
-    return () => { cancelled = true; };
+    sync();
+    // Back online on this screen: send what is waiting, then show it. The player's own 'online'
+    // listener leaves with the player, so a Lektion finished offline stayed queued — and the next
+    // one locked — until another navigation or a reload (2026-10-25 cross-check, LSN-15).
+    const onOnline = () => { if (!cancelled) sync(); };
+    window.addEventListener('online', onOnline);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('online', onOnline);
+    };
   }, [user, programKey, level, curriculum, path]);
 
   // The recap's save-progress card remembered this page for the sign-up round

@@ -16,6 +16,7 @@ import '../../styles/global.css';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { EXAM_HUBS, examHubUrl } from '../../data/exams/index.js';
 import { FOUNDER_LINE_DE } from '../../data/marketing.js';
+import { stationFor } from '../../data/offers.js';
 
 export function getStaticPaths() {
   return EXAM_HUBS.map((hub) => ({ params: { slug: hub.slug }, props: { hub } }));
@@ -29,6 +30,16 @@ const de = (iso) => {
 };
 
 const others = EXAM_HUBS.filter((h) => h.slug !== hub.slug);
+
+// The 4-week plan is an SPA area gated on the band's TOP sublevel (App.jsx:
+// /start-deutsch-1-kurs needs a1.2, /goethe-a2-kurs a2.2), so the level course
+// of that sublevel includes it. Where that course is on sale, its page is the
+// door: the plan link alone sent a visitor without access to a signup lock or
+// to /subscription, never to the course that opens the plan.
+const planCourse = (() => {
+  const station = stationFor(hub.sublevels?.[hub.sublevels.length - 1]);
+  return station && station.status === 'ticket' ? station : null;
+})();
 
 // Step badges rotate through the accents (energy, never meaning — rule 2);
 // the last step lands on siegel like the homepage's "rehearse" step.
@@ -131,10 +142,22 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
                   <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite" data-atropos-offset="2">
                     Die Komplettvorbereitung ist ein fester 4-Wochen-Plan über genau diese Bibliothek:
                     jeden Tag eine Aufgabe, in der Reihenfolge, die zur Prüfung führt.
+                    {planCourse && ` Der Plan ist im ${planCourse.code}-Kurs enthalten.`}
                   </p>
-                  <a href={hub.courseHref} class={`${BTN_PRIMARY} mt-5`} data-atropos-offset="6">
-                    Zum 4-Wochen-Plan
-                  </a>
+                  {planCourse ? (
+                    <div class="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center" data-atropos-offset="6">
+                      <a href={planCourse.coursePage} class={BTN_PRIMARY}>
+                        Zum {planCourse.code}-Kurs
+                      </a>
+                      <a href={hub.courseHref} class={BTN_SECONDARY}>
+                        Zum 4-Wochen-Plan
+                      </a>
+                    </div>
+                  ) : (
+                    <a href={hub.courseHref} class={`${BTN_PRIMARY} mt-5`} data-atropos-offset="6">
+                      Zum 4-Wochen-Plan
+                    </a>
+                  )}
                 </div>
               </div></div></div>
             </div>

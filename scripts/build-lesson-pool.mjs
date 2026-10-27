@@ -295,7 +295,9 @@ raw.forEach(repairFrontedOrder);
 // `answer`/`accepted` are never touched.
 const openingCued = [];
 function repairOpeningCue(item) {
-  const opening = missingOpeningCue(item);
+  // Live Batch 1 cues every statement/question; X-041's narrower detector
+  // still guards object shapes without treating two constituents as one.
+  const opening = missingOpeningCue(item, { allStatements: true });
   if (!opening) return;
   const prompt = String(item.questionDe);
   const cue = ` (Beginnen Sie mit „${opening}“)`;

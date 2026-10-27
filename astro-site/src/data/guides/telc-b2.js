@@ -225,7 +225,7 @@ export const telcB2 = {
             {
               eyebrow: 'Mündliche Prüfung',
               title: 'KI-Sprechtraining',
-              body: 'Übe Position beziehen und begründen im freien Gespräch, mit sofortigem Feedback zu Grammatik und Ausdruck — täglich, ohne Termin.',
+              body: 'Übe Position beziehen und begründen im freien Gespräch, danach mit einer Auswertung zu Grammatik und Ausdruck — täglich, ohne Termin.',
             },
             {
               eyebrow: 'Hörverstehen',

@@ -18,11 +18,16 @@
 //     through signup, overlay, events); a course with no checkout id has no Buy
 //   - checkout never opens a new tab — overlay, else same-tab navigation
 //   - one <h1>, a canonical, real server-rendered text
+//   - the telc B1 package is offered for sale only while its own page sells it:
+//     the same telcPilotVariant() switch (docs/telc-pilot/README.md); off sale
+//     no price, no "one-time" line and no FAQ sentence for it
+//     (tests/telc-pilot-gate.test.mjs, scripts/check-built-html.mjs)
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import { getTopicsForLevel } from '../lib/grammar.js';
 import { proCta } from '../lib/proCta.js';
 import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.js';
-import { levelCoursesWithVariants } from '../lib/courseVariants.js';
+import { levelCoursesWithVariants, telcPilotVariant } from '../lib/courseVariants.js';
+import { onsiteHref } from '../lib/onsiteLinks.js';
 import Layout from '../layouts/Layout.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import Ticket from '../components/linie/Ticket.astro';
@@ -70,6 +75,13 @@ const showLevelCourses = levelCourses.some((c) => c.variantId);
 const priceList = Object.entries(SUBLEVEL_PRICES_EUR).map(([l, p]) => `${l.toUpperCase()} ${eur(p)}`).join(', ');
 const firstTicket = TICKET_STATIONS[0];
 
+// The telc B1 package, on sale only behind its switch — the one its sales page
+// reads. Until 2026-10-25 this page sold it unconditionally (card, FAQ and the
+// FAQPage JSON-LD) while that page had no Buy button. Off sale, the card says it
+// starts soon and offers the attributed free-account door the telc page uses.
+const telcOnSale = Boolean(telcPilotVariant());
+const telcSignupHref = onsiteHref('signup', 'telc-pilot', 'pricing');
+
 // Pro alone, for the same months a ticket carries — arithmetic on our own
 // prices, shown beside the ticket so "own vs rent" is a sum, not a slogan.
 const proForTicketWindow = PLANS.monthly.price * COURSE_PRO_MONTHS;
@@ -107,11 +119,14 @@ const ROWS = [
   { label: 'Sentence X-Ray', anonymous: `${ANON_DAILY_LIMIT} a day`, trial: `${TRIAL_DAILY_LIMIT} a day`, pro: `${PRO_DAILY_LIMIT} a day` },
   { label: 'AI speaking practice', anonymous: '—', trial: `${TRIAL_SPEAKING_SESSIONS} total`, pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month` },
   { label: 'AI writing feedback', anonymous: '—', trial: `${TRIAL_WRITING_EVALUATIONS} total`, pro: `${PRO_WRITING_EVALUATIONS_PER_MONTH} a month` },
-  // The practice exam opens during the trial (SubscriptionGuard passes trial).
-  { label: 'Timed practice exam', anonymous: '—', trial: 'Included', pro: 'telc B1' },
+  // Every practice exam opens during the trial and with Pro (SubscriptionGuard
+  // passes both, and so does each exam's ExamSubscriptionGuard). The Pro cell
+  // said "telc B1", one exam of the six the /modelltest hub serves.
+  { label: 'Timed practice exam', anonymous: '—', trial: 'Included', pro: 'Included' },
   { label: 'Vocabulary trainer (spaced repetition)', anonymous: '—', trial: 'Included', pro: 'Included' },
   { label: 'Listening & reading', anonymous: FREE_LEVEL_LABEL, trial: 'Every level', pro: 'Every level' },
-  { label: 'Podcasts & video', anonymous: '—', trial: 'Included', pro: 'Included' },
+  // The free level's podcasts play without an account (PodcastsPage: isLevelFree).
+  { label: 'Podcasts & video', anonymous: FREE_LEVEL_LABEL, trial: 'Included', pro: 'Included' },
 ];
 
 // Own vs rent: the decision in five rows. Reference material — flat.
@@ -146,9 +161,12 @@ const FAQS = [
   },
   {
     q: 'Is there a one-time option instead of a subscription?',
+    // The telc sentence exists only while the package is on sale (telcOnSale).
     a: showLevelCourses
-      ? `Yes — that is what a level is. Each sub-level is its own one-time course (${priceList}) and stays yours, with ${COURSE_PRO_MONTHS} months of Pro included. B1 and B2 are being rebuilt and cannot be bought yet. The telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)}) is a separate 4-week plan for one job: your telc B1 date.`
-      : `Yes — the telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)} one-time) is a fixed 4-week exam plan with ${COURSE_PRO_MONTHS} months of full Pro included and permanent access to the course area.`,
+      ? `Yes — that is what a level is. Each sub-level is its own one-time course (${priceList}) and stays yours, with ${COURSE_PRO_MONTHS} months of Pro included. B1 and B2 are being rebuilt and cannot be bought yet.${telcOnSale ? ` The telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)}) is a separate 4-week plan for one job: your telc B1 date.` : ''}`
+      : telcOnSale
+        ? `Yes — the telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)} one-time) is a fixed 4-week exam plan with ${COURSE_PRO_MONTHS} months of full Pro included and permanent access to the course area.`
+        : 'Not on this page right now: no one-time course is on sale here yet. Pro is monthly or yearly, and you can cancel anytime.',
   },
   {
     q: 'Monthly or yearly?',
@@ -413,13 +431,27 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Preparing for telc B1?</p>
             <h2 id="course-h" class="sign-head mt-2 text-[1.625rem]" lang="de">telc B1 Komplettvorbereitung</h2>
             <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-              A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. One-time purchase, {COURSE_PRO_MONTHS} months of full Pro included, the course area stays yours permanently.
+              {telcOnSale
+                ? `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. One-time purchase, ${COURSE_PRO_MONTHS} months of full Pro included, the course area stays yours permanently.`
+                : `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. It is not on sale yet; until it starts, a free account gives you ${TRIAL_DAYS} days of Pro to practise.`}
             </p>
           </div>
           <div class="shrink-0 text-left sm:text-right">
-            <p class="sign-code text-[2rem] leading-none text-ink">{eur(COURSE_TELC_B1_PRICE_EUR)}</p>
-            <p class="mt-1 font-data text-[0.75rem] text-graphite">one-time · no subscription</p>
+            {telcOnSale ? (
+              <Fragment>
+                <p class="sign-code text-[2rem] leading-none text-ink">{eur(COURSE_TELC_B1_PRICE_EUR)}</p>
+                <p class="mt-1 font-data text-[0.75rem] text-graphite">one-time · no subscription</p>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <p class="sign-code text-[2rem] leading-none text-ink">Starts soon</p>
+                <p class="mt-1 font-data text-[0.75rem] text-graphite">not on sale yet</p>
+              </Fragment>
+            )}
             <a href="/telc-b1-komplettvorbereitung/" class="dm-key dm-key-ghost mt-4" hreflang="de">See the 4-week plan · DE</a>
+            {!telcOnSale && (
+              <a href={telcSignupHref} class="mt-3 block text-[0.875rem] font-bold text-siegel transition-colors hover:text-siegel-deep">Create free account →</a>
+            )}
           </div>
         </div>
       </div>

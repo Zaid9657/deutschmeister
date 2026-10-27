@@ -48,8 +48,30 @@ test('review never asks to type a sentence from a rule paragraph, picks the mode
   const page = readFileSync(new URL('../src/pages/lesson/ReviewPage.jsx', import.meta.url), 'utf8');
   assert.match(page, /modeForCard\(card\.kind, card\.step \?\? index\)/, 'the mode follows the card, not the batch');
   assert.match(page, /t\('review\.moreDue', lang, \{ n: stillDue \}\)/, 'the batch end says how many are still due');
+  // The lesson warm-up follows the card's ladder step too (2026-10-25 cross-check, LSN-07). It mapped
+  // the due rows without their `step`, so its mode fell back to the card's seat in today's batch: a
+  // word card due for typed recall was a self-graded flashcard in seat 0 or 3. Run here as the
+  // player's own expression over the rows the warm-up gets, with ReviewCard's own mode table.
   const player = readFileSync(new URL('../src/pages/lesson/LessonPlayerPage.jsx', import.meta.url), 'utf8');
-  assert.match(player, /modeForCard\(warmupCard\.kind, warmupCard\.step \?\? itemIndex\)/);
+  const { default: vm } = await import('node:vm');
+  const { warmupCards, buildCardIndex } = await import('../src/services/reviewService.js');
+  const table = cardSrc.slice(cardSrc.indexOf('export const MODES_BY_KIND'), cardSrc.indexOf('/**', cardSrc.indexOf('export const modeForCard')));
+  const { modeForCard, MODES_BY_KIND } = vm.runInNewContext(`${table.replaceAll('export const', 'const')}\n({ modeForCard, MODES_BY_KIND })`);
+  const expr = player.match(/const warmupMode = warmupCard \? (modeForCard\(warmupCard\.kind, warmupCard\.step \?\? itemIndex\)) : null;/);
+  assert.ok(expr, 'the warm-up picks its mode from the card');
+  const warmupMode = new Function('modeForCard', 'warmupCard', 'itemIndex', `return ${expr[1]};`);
+  assert.match(player, /setDueCards\(warmupCards\(rows, index\)\);/, 'the warm-up maps its rows with warmupCards');
+  const index = buildCardIndex(CURRICULUM_A11);
+  const words = [...index.keys()].filter((k) => index.get(k).kind === 'word').slice(0, 4);
+  const rows = [{ card_key: words[0], step: 2 }, { card_key: 'word:gone', step: 1 }, { card_key: words[1], step: 0 }, { card_key: words[2], step: 1 }, { card_key: words[3], step: 2 }];
+  const cards = warmupCards(rows, index);
+  assert.deepEqual(cards.map((c) => [c.cardKey, c.step]), [[words[0], 2], [words[1], 0], [words[2], 1], [words[3], 2]], 'each card keeps its row\'s step; a key that no longer resolves is skipped');
+  assert.equal(cards[0].front, index.get(words[0]).front, 'the face still comes from the curriculum');
+  const byStep = cards.map((card, seat) => warmupMode(modeForCard, card, seat));
+  assert.deepEqual(byStep, [2, 0, 1, 2].map((step) => MODES_BY_KIND.word[step]), 'the mode follows the ladder step');
+  assert.equal(byStep[0], 'typed', 'a step-2 word card in seat 0 is typed recall…');
+  assert.notEqual(byStep[0], warmupMode(modeForCard, { ...cards[0], step: undefined }, 0), '…not the flashcard its seat would give');
+  assert.equal(warmupMode(modeForCard, { kind: 'word' }, 1), MODES_BY_KIND.word[1], 'a card from an older snapshot (no step) still gets its seat');
   const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
   assert.match(home, /fetchReviewCounts\(user\.id, level\)/, 'the home knows what is due');
   assert.match(home, /reviewDue > 0 &&/, 'and leads with it');
@@ -232,6 +254,7 @@ test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Nex
   assert.match(gw, /setBusy\(true\);\s*onPending\?\.\(true\);/);
   assert.match(gw, /setBusy\(false\);\s*onPending\?\.\(false\);/);
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.match(player, /if \(preview \|\| !introDone \|\| pause \|\| !stage \|\| viewedStages\.current\.has\(stage\.key\)\) return;/);
-  assert.match(player, /\}, \[preview, introDone, pause, stage, curriculum\.level, lektion\.id, runId\]\);/);
+  // LessonStages mounts after the intro (2026-10-25), so "the intro is done" is no longer a condition there.
+  assert.match(player, /if \(preview \|\| pause \|\| !stage \|\| viewedStages\.current\.has\(stage\.key\)\) return;/);
+  assert.match(player, /\}, \[preview, pause, stage, curriculum\.level, lektion\.id, runId\]\);/);
 });

@@ -390,7 +390,7 @@ export const goetheA2 = {
             {
               eyebrow: 'Sprechen',
               title: 'Die Hürde, die man nicht anlesen kann',
-              body: 'Das KI-Sprechtraining übt Fragen zur Person, Erzählen aus dem Alltag und gemeinsames Planen — täglich, ohne Termin und ohne Partner, mit sofortigem Feedback.',
+              body: 'Das KI-Sprechtraining übt Fragen zur Person, Erzählen aus dem Alltag und gemeinsames Planen — täglich, ohne Termin und ohne Partner, mit einer Auswertung nach jedem Gespräch.',
             },
           ],
         },

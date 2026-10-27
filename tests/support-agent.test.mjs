@@ -310,6 +310,7 @@ function fakeDb(seed) {
       this.filters.push((r) => !want.every((x) => (r[k] || []).includes(x)));
       return this;
     }
+    contains(k, values) { this.filters.push((r) => values.every((x) => (r[k] || []).includes(x))); return this; }
     order(k, { ascending = true } = {}) { this.sorts.push({ k, ascending }); return this; }
     limit(n) { this.max = n; return this; }
     range(a, b) { this.from = a; this.to = b; return this; }
@@ -655,6 +656,42 @@ test('at most MAX_DRAFTS_PER_RUN model calls per run; the rest wait for the next
   assert.ok(!db.tables.support_tickets[2].tags.some((t) => t.startsWith('ai:seen')), 'a deferred message is not claimed');
   await run(db, f, { min: 5 });
   assert.equal(f.modelCalls.length, 3);
+});
+
+/** The same fake, except that the first read of `table` fails (a transient database error). */
+function failingOnce(db, table) {
+  let failed = false;
+  return {
+    ...db,
+    from(name) {
+      const q = db.from(name);
+      if (name === table && !failed) {
+        failed = true;
+        q.run = () => ({ data: null, error: { message: `${name} unavailable` } });
+      }
+      return q;
+    },
+  };
+}
+
+test('a failure after the seen claim releases it, so the next run still handles the message', async () => {
+  // X-019: the claim used to survive a failed profile read or draft save, and
+  // needsWork then skipped the message for ever — no draft, no owner mail.
+  const base = fakeDb(world());
+  const db = failingOnce(base, 'profiles');
+  const f = fakeFetch();
+  const r1 = out(await run(db, f, { min: 0 }));
+  assert.equal(r1.errors.length, 1, JSON.stringify(r1));
+  assert.match(r1.errors[0].error, /profiles unavailable/);
+  assert.ok(!ticketOf(base).tags.includes(TAG.seen('msg-u1')), 'the claim is released when the work failed');
+  assert.equal(drafts(base).length, 0);
+  assert.equal(f.owner().length, 0);
+
+  const r2 = out(await run(db, f, { min: 5 }));
+  assert.equal(r2.drafted.length, 1, 'the next run drafts the reply');
+  assert.ok(ticketOf(base).tags.includes(TAG.seen('msg-u1')));
+  assert.equal(f.owner().length, 1, 'and tells the owner once');
+  assert.equal(f.customer().length, 0, 'drafts only — no customer mail');
 });
 
 // ─── 5. one send path ────────────────────────────────────────────────────────

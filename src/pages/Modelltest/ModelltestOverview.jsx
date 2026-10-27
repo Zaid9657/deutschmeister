@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Clock, Play, RotateCcw, History } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { resolveModelltest } from '../../data/modelltest';
 import { describeCourseTest } from '../../data/courseTests/description.js';
+import { FORM_KEY, formNumber, hasForm, mockForm } from '../../data/mockExams/forms.js';
 import { createAttempt, findResumableAttempt, listAttempts } from '../../services/examService';
 import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
@@ -14,32 +15,57 @@ import SectionHeading from '../../components/ui/SectionHeading.jsx';
 import Reveal from '../../components/ui/Reveal.jsx';
 
 // /modelltest/:examSlug — what's in the test, start or resume, past attempts.
+// `?form=2` starts a parallel form of the mock (new items, same shape — the telc
+// route's day-20 retest); the form is stored on the attempt (src/data/mockExams/forms.js).
 const ModelltestOverview = () => {
   const { examSlug } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
+  const userId = user?.id;
 
   const resolved = resolveModelltest(examSlug);
-  const mock = resolved?.mock;
+  // An unknown form number falls back to form 1, never to an empty test.
+  const form = hasForm(resolved?.mock, searchParams.get('form')) ? formNumber(searchParams.get('form')) : 1;
+  const mock = mockForm(resolved?.mock, form);
 
   const [resumable, setResumable] = useState(null);
+  // The resume lookup decides which door is safe: 'pending' | 'none' | 'found' | 'error'.
+  // "Test starten" inserts a NEW attempt and only the newest unfinished one can be resumed, so
+  // Start waits for the lookup, and a failed lookup offers a retry instead of Start.
+  const [lookup, setLookup] = useState('pending');
+  const [lookupRun, setLookupRun] = useState(0);
   const [history, setHistory] = useState([]);
   const [starting, setStarting] = useState(false);
 
   useEffect(() => {
-    if (!user || !resolved) return;
+    if (!userId || !resolved) return;
     let alive = true;
+    setLookup('pending');
     Promise.all([
-      findResumableAttempt(user.id, resolved.key),
-      listAttempts(user.id, resolved.key),
+      findResumableAttempt(userId, resolved.key),
+      listAttempts(userId, resolved.key),
     ]).then(([resume, attempts]) => {
       if (!alive) return;
-      setResumable(resume);
+      setResumable(resume || null);
+      setLookup(resume === undefined ? 'error' : resume ? 'found' : 'none');
       setHistory(attempts.filter((a) => a.status === 'completed'));
+    }).catch(() => {
+      if (alive) setLookup('error');
     });
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, resolved?.key]);
+  }, [userId, resolved?.key, lookupRun]);
+
+  const canStart = lookup === 'none' && !starting;
+
+  const handleStart = async () => {
+    if (!user || !mock || !canStart) return;
+    setStarting(true);
+    const attempt = await createAttempt(user.id, resolved.key, mock.sections[0].minutes, form > 1 ? { [FORM_KEY]: form } : {});
+    setStarting(false);
+    if (attempt) navigate(`/modelltest/${examSlug}/run`, { state: { attemptId: attempt.id } });
+  };
 
   if (!resolved) {
     return (
@@ -51,14 +77,6 @@ const ModelltestOverview = () => {
   }
 
   const totalMinutes = mock.sections.reduce((sum, s) => sum + s.minutes, 0);
-
-  const handleStart = async () => {
-    if (!user || starting) return;
-    setStarting(true);
-    const attempt = await createAttempt(user.id, resolved.key, mock.sections[0].minutes);
-    setStarting(false);
-    if (attempt) navigate(`/modelltest/${examSlug}/run`, { state: { attemptId: attempt.id } });
-  };
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
@@ -85,7 +103,7 @@ const ModelltestOverview = () => {
         </Reveal>
 
         <Reveal delay={260} className="mt-6 flex flex-col sm:flex-row gap-3">
-          {resumable ? (
+          {lookup === 'found' && resumable ? (
             <Button
               size="lg"
               shimmer
@@ -94,9 +112,18 @@ const ModelltestOverview = () => {
             >
               <RotateCcw className="w-4 h-4" /> Angefangenen Test fortsetzen
             </Button>
+          ) : lookup === 'error' ? (
+            <div className="flex-1 space-y-3">
+              <p role="alert" className="text-sm text-graphite">
+                Ob Sie einen angefangenen Test haben, konnte nicht geprüft werden. Bitte prüfen Sie die Verbindung.
+              </p>
+              <Button size="lg" variant="secondary" className="w-full" onClick={() => setLookupRun((n) => n + 1)}>
+                <RotateCcw className="w-4 h-4" /> Erneut prüfen
+              </Button>
+            </div>
           ) : (
-            <Button size="lg" shimmer className="flex-1" onClick={handleStart} disabled={starting}>
-              <Play className="w-4 h-4" /> {starting ? 'Wird gestartet…' : 'Test starten'}
+            <Button size="lg" shimmer className="flex-1" onClick={handleStart} disabled={!canStart}>
+              <Play className="w-4 h-4" /> {lookup === 'pending' ? 'Wird geladen…' : starting ? 'Wird gestartet…' : 'Test starten'}
             </Button>
           )}
         </Reveal>

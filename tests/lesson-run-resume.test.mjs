@@ -144,8 +144,9 @@ test('LessonPlayerPage restores the run on mount, saves it on every change, and 
   assert.ok(src.includes('saveRun(curriculum.level, lektion.id, packRun({'), 'the player saves a packed run');
   assert.match(src, /if \(saved \|\| stage\.kind === 'recap'\) \{ clearRun\(curriculum\.level, lektion\.id, owner\); return; \}/,
     'the recap clears the run, and a run past the recap is never saved again');
-  assert.match(src, /if \(!cancelled && !resumed\) setAttempt/, 'a resumed run keeps its draw');
+  assert.match(src, /if \(!cancelled && !resumed && !started\.current\) setAttempt/, 'a resumed run keeps its draw, and so does a started one');
   assert.match(src, /if \(resumed\) return undefined;/, 'a resumed run keeps its warm-up cards');
+  assert.match(src, /readAloud,\s*\}\), owner\);/, 'the read-aloud results travel with the run');
 });
 
 test('every full-page exit from a lesson stage returns to the Lektion URL the player resumes on', () => {
@@ -168,5 +169,79 @@ test('a run belongs to its account: another learner on the same browser never re
     assert.equal(latestRun('a1.1', ['a1.1-l03', 'a1.1-l04'], NOW, 'user-b').lektionId, 'a1.1-l04', "B is offered the guest run, never A's");
     clearRun('a1.1', 'a1.1-l04', 'user-a');
     assert.equal(readRun('a1.1', 'a1.1-l04', NOW, 'user-a'), null, 'finishing clears the guest copy too');
+  });
+});
+
+// The trip to the speaking coach (2026-10-25 cross-check, LSN-01). "Speak freely" is a full page load,
+// and the read-aloud results lived in SpeakingStage only: back on the Sprechen stage every line was idle,
+// so the learner re-recorded each one (spending scoring allowance) or skipped — and the recap and the
+// lesson_completed event then said speaking was skipped although it had been measured.
+test('read-aloud results travel in the run snapshot as numbers, so the resumed Sprechen stage is not "skipped"', async () => {
+  const { speakingSummary } = await import('../src/lib/lesson/skillStatus.js');
+  const measured = {
+    5: { pct: 0.83, attempts: 1, usedMic: true, transcript: 'ich heiße ana', words: [{ word: 'Ich', hit: true }] },
+    7: { pct: null, attempts: 0, usedMic: false, selfConfirmed: true },
+    junk: { pct: 1, usedMic: true },
+    9: 'scored',
+  };
+  const run = unpackRun(JSON.parse(JSON.stringify(packRun({ stageKey: 'speaking', stageIndex: 9, readAloud: measured }, NOW))), NOW + 1000);
+  assert.deepEqual(run.readAloud, {
+    5: { pct: 0.83, attempts: 1, usedMic: true },
+    7: { pct: null, attempts: 0, usedMic: false, selfConfirmed: true },
+  }, 'per line: what was measured — never a transcript or the words heard');
+  assert.doesNotMatch(JSON.stringify(run), /ich heiße|transcript|"words"/);
+  assert.deepEqual(unpackRun(packRun({ stageKey: 'speaking' }, NOW), NOW).readAloud, {}, 'an older snapshot resumes with nothing measured');
+  // What the recap says after the resume, from the restored results alone:
+  assert.equal(speakingSummary(2, run.readAloud).state, 'recognised', 'measured, not skipped');
+  assert.equal(speakingSummary(2, { 7: run.readAloud[7] }).state, 'self-confirmed');
+  assert.equal(speakingSummary(2, {}).state, 'skipped', 'only a stage with nothing recorded is skipped');
+});
+
+test('the player keeps every read-aloud result as it is recorded, and the Sprechen stage starts from them', () => {
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.match(player, /const \[readAloud, setReadAloud\] = useState\(\(\) => \(resumed \? resumed\.readAloud \|\| \{\} : \{\}\)\);/);
+  assert.match(player, /<SpeakingStage[\s\S]*?initialResults=\{readAloud\}[\s\S]*?onProgress=\{setReadAloud\}[\s\S]*?\/>/);
+  const stage = read('src/components/lesson/SpeakingStage.jsx');
+  assert.match(stage, /const \[results, setResults\] = useState\(\(\) => \(\{ \.\.\.\(initialResults \|\| \{\}\) \}\)\);/, 'the stage starts from the restored results');
+  // Reported on every recorded result, not only on Next — the coach hand-off never reaches Next.
+  assert.match(stage, /useEffect\(\(\) => \{\s*if \(results === reported\.current\) return;\s*reported\.current = results;\s*if \(typeof onProgress === 'function'\) onProgress\(results\);\s*\}, \[results, onProgress\]\);/);
+  const go = stage.slice(stage.indexOf('const goSpeak = () => {'), stage.indexOf('window.location.assign(speakingHref);'));
+  assert.ok(go.length > 0, 'the coach hand-off is still a full page load');
+  // A restored line says what was measured (ReadAloudLine itself starts idle), from the string table.
+  assert.match(stage, /results\[l\.index\] && !recordedNow\.has\(l\.index\) && \(/);
+  assert.match(stage, /t\('speaking\.intelligibility', lang, \{ pct: Math\.round\(results\[l\.index\]\.pct \* 100\) \}\)/);
+  assert.match(stage, /primaryDisabled=\{lines\.length > 0 && !allDone\}/, 'Next opens once every line has a result — restored ones included');
+});
+
+test('signing in resumes the NEWER of the account and guest snapshots (2026-10-25 cross-check, LSN-14)', () => {
+  // A learner stopped at the dialogue while signed in, later reached practice as a guest, then signed
+  // in through the save-progress ask: the older account snapshot used to win outright.
+  const storage = fakeSessionStorage();
+  withWindow(storage, () => {
+    saveRun('a1.1', 'a1.1-l05', packRun({ runId: 'own', stageKey: 'dialog', stageIndex: 2 }, NOW - 3 * 86400000), 'user-a');
+    saveRun('a1.1', 'a1.1-l05', packRun({ runId: 'guest', stageKey: 'practice', stageIndex: 5, attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] }, NOW - 3600000));
+    const resumed = readRun('a1.1', 'a1.1-l05', NOW, 'user-a');
+    assert.equal(resumed.runId, 'guest', 'the newer guest work wins');
+    assert.equal(resumed.stageKey, 'practice');
+    assert.equal(resumed.attempts.length, 1, 'with its answers');
+    // …and the other way round: a newer account snapshot beats an older guest one.
+    saveRun('a1.1', 'a1.1-l06', packRun({ runId: 'guest-old', stageKey: 'dialog' }, NOW - 86400000));
+    saveRun('a1.1', 'a1.1-l06', packRun({ runId: 'own-new', stageKey: 'writing' }, NOW - 60000), 'user-a');
+    assert.equal(readRun('a1.1', 'a1.1-l06', NOW, 'user-a').runId, 'own-new');
+    // A tie goes to the account's own snapshot.
+    saveRun('a1.1', 'a1.1-l07', packRun({ runId: 'guest-tie', stageKey: 'dialog' }, NOW - 60000));
+    saveRun('a1.1', 'a1.1-l07', packRun({ runId: 'own-tie', stageKey: 'dialog' }, NOW - 60000), 'user-a');
+    assert.equal(readRun('a1.1', 'a1.1-l07', NOW, 'user-a').runId, 'own-tie');
+    // Owner-only and guest-only behave as before; a guest never reads an account's snapshot.
+    assert.equal(readRun('a1.1', 'a1.1-l06', NOW, null).runId, 'guest-old');
+    saveRun('a1.1', 'a1.1-l08', packRun({ runId: 'only-own', stageKey: 'notice' }, NOW - 60000), 'user-a');
+    assert.equal(readRun('a1.1', 'a1.1-l08', NOW, 'user-a').runId, 'only-own');
+    assert.equal(readRun('a1.1', 'a1.1-l08', NOW, null), null);
+    // An expired guest snapshot never beats a live account one.
+    saveRun('a1.1', 'a1.1-l09', packRun({ runId: 'stale-guest', stageKey: 'practice' }, NOW - RUN_MAX_AGE_MS - 1));
+    saveRun('a1.1', 'a1.1-l09', packRun({ runId: 'live-own', stageKey: 'dialog' }, NOW - 2 * 86400000), 'user-a');
+    assert.equal(readRun('a1.1', 'a1.1-l09', NOW, 'user-a').runId, 'live-own');
+    // The course home offers the same run the player resumes.
+    assert.equal(latestRun('a1.1', ['a1.1-l05'], NOW, 'user-a').runId, 'guest');
   });
 });

@@ -63,6 +63,51 @@ test('registry: the app fires the registered names for the money path', () => {
   }
 });
 
+// C-138/C-153/X-100: signup_started fired on every /signup view and again on the
+// homepage click, while the registry says "the signup form is submitted".
+test('signup_started has one emitter: the signup form, once per submit that passed its checks', async () => {
+  const src = read('src/pages/SignupPage.jsx');
+  assert.doesNotMatch(src, /useEffect\(\(\) => \{\s*trackSignupStarted\(\);?\s*\}/, 'not on page view');
+  assert.equal((src.match(/trackSignupStarted\(\)/g) || []).length, 1, 'exactly one call');
+  const body = src.match(/ {2}const handleSubmit = async \(e\) => \{([\s\S]*?)\n {2}\};/)[1];
+  const run = async (password) => {
+    const log = [];
+    const set = () => () => {};
+    const handleSubmit = new Function(
+      'trackSignupStarted', 'signUp', 'password', 'email', 'setError', 'setKnownAddress', 'setLoading', 'signupOutcome', 'existingAccount',
+      'navigate', 'trackVerificationPageViewed', 'setSentTo', 'setPassword', 'setResendState', 'setCooldown', 'RESEND_COOLDOWN_SECONDS', 'logFailedSignup',
+      `return async (e) => {${body}\n};`,
+    )(
+      () => log.push('signup_started'), async () => { log.push('signUp'); return { data: { user: { identities: [{}] } }, error: null }; }, password, 'learner@example.test',
+      set(), set(), set(), () => 'check-email', () => false, () => {}, () => {}, set(), set(), set(), set(), 60, () => {},
+    );
+    await handleSubmit({ preventDefault: () => {} });
+    return log;
+  };
+  assert.deepEqual(await run('12345'), [], 'a password the form refuses is not a submitted signup');
+  assert.deepEqual(await run('123456'), ['signup_started', 'signUp'], 'fired once, before the account request');
+});
+
+test('the static site never fires signup_started: it sees a click, never a submitted form', () => {
+  const files = walk('astro-site/src').filter((f) => /\.(astro|js|jsx)$/.test(f));
+  const offenders = files.filter((f) => /data-track="signup_started"|track\('signup_started'/.test(read(f)));
+  assert.deepEqual(offenders, []);
+  // The homepage account door stays attributed by its tagged href instead.
+  assert.match(read('astro-site/src/pages/index.astro'), /<a href=\{HOME_SIGNUP_HREF\} class="dm-key dm-key-ghost-nacht" data-anon-only>Create a free account<\/a>/);
+});
+
+test('the GA mirror keeps the fixed-value props the app sends with registered events', () => {
+  for (const key of ['exit_path', 'slide', 'hit', 'offer', 'reason', 'moment']) assert.ok(ALLOWED_PROPS.includes(key), key);
+  assert.deepEqual(sanitizeProps({ exit_path: 'first-lesson' }), { exit_path: 'first-lesson' });
+  assert.deepEqual(sanitizeProps({ topic: 'a1-1-l1', hit: true }), { topic: 'a1-1-l1', hit: true });
+  const paywall = { feature: 'speaking_limit', offer: 'course', reason: 'buyable', level: 'a1.2', moment: 'sessions_used' };
+  assert.deepEqual(sanitizeProps(paywall), paywall);
+  const ft = read('src/lib/funnelTracking.js');
+  assert.match(ft, /track\('onboarding_completed', \{ exit_path: exitPath \}\)/);
+  assert.match(ft, /track\('lesson_first_sentence', \{ topic, hit \}\)/);
+  assert.match(read('src/components/speaking/SpeakingLimitOffer.jsx'), /trackPaywallShown\('speaking_limit', \{ offer: kind, reason, level, moment \}\)/);
+});
+
 test('sanitizeProps keeps allowed scalars and drops everything personal or unknown', () => {
   const out = sanitizeProps({
     product: 'course_a1_2',

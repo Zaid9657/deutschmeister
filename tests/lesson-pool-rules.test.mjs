@@ -92,7 +92,7 @@ import {
   unconditionedRule, unconditionedRuleSentence, namesCondition,
   frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
   FRONTABLE_ADVERBIAL_RE, genderPairAmbiguity, genderPartners,
-  determinerRepair, missingDeterminerCue, withDeterminerCue, DETERMINER_CUE,
+  determinerRepair, missingDeterminerCue, withDeterminerCue, DETERMINER_CUE, missingOpeningCue,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -1649,4 +1649,37 @@ test('the gender-pair detector reaches the possessive family — REVIEW #14 MAJO
     id: 'gp6', type: 'error_correction',
     questionDe: 'Korrigieren Sie den Possessivartikel: „Das ist mein Chefin.“', answer: 'Das ist meine Chefin.',
   }, { level: 'a1.1' }), null);
+});
+
+test('an object that can open the sentence is cued in the PROMPT, never in the answer key — 2026-10-25 review, X-041', () => {
+  // „Ein Glas Wasser möchte ich." and „Meine Mutter rufe ich an." are the same V2 sentences as the
+  // keys of extra-a11-l09-05 and extra-a11-l11-08, and both came back WRONG because the prompts
+  // named no opening: `objectFronted` wanted a capitalised noun as the LAST word (a separable prefix
+  // closes the second) and nothing capitalised inside the phrase (a measure phrase has two nouns).
+  // The rule, not the ids: every such key of the built pools names its opening — the shape is read
+  // off the UNCUED prompt, so the test holds between a rule change and the next build — and the
+  // answer key keeps exactly the subject-first order (REVIEW #12/#13 keep objects out of it).
+  const uncue = (q) => String(q).replace(/ \(Beginnen Sie mit „[^“]*“(?:;[^)]*)?\)/, '');
+  const shapes = [
+    ['extra-a11-l09-05', 'Ich', 'a measure phrase'],
+    ['extra-a11-l11-08', 'Ich', 'a separable prefix after the object'],
+    ['extra-a11-l11-05', 'Wir', 'a separable prefix after the object'],
+    ['extra-a11-l04-12', 'Die Uhr', 'a price'],
+    ['extra-a11-l12-14', 'Wir', 'an -ern verb'],
+  ];
+  for (const [id, opening, why] of shapes) {
+    const item = POOL.items.find((i) => i.id === id);
+    assert.ok(item, id);
+    assert.equal(missingOpeningCue({ ...item, questionDe: uncue(item.questionDe) }), opening, `${id}: ${why}`);
+    assert.ok(String(item.questionDe).includes(`(Beginnen Sie mit „${opening}“)`), `${id}: the built prompt names its opening`);
+    assert.ok((item.accepted || [item.answer]).every((a) => a.startsWith(opening)), `${id}: the answer key is untouched — subject first only`);
+    assert.deepEqual(frontableOrders({ ...item, questionDe: uncue(item.questionDe) }), [], `${id}: an object is never derived into the key`);
+  }
+  for (const [file, pool] of [['a11', POOL], ['a12', POOL_A12]]) {
+    for (const item of pool.items) {
+      if (item.type !== 'sentence_building') continue;
+      if (!missingOpeningCue({ ...item, questionDe: uncue(item.questionDe) })) continue;
+      assert.match(String(item.questionDe), /\(Beginnen Sie mit „[^“]+“/, `${file} ${item.id}: „${item.answer}" can open with its object and the prompt names no opening`);
+    }
+  }
 });

@@ -4,6 +4,15 @@ import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { calculatePlacement } from '../components/LevelTest/placementResult.js';
+import {
+  drawQuestions,
+  answerFor,
+  placementSnapshot,
+  restorePlacement,
+  PLACEMENT_PROGRESS_KEY,
+  RESUMABLE_STEPS,
+} from '../components/LevelTest/drawQuestions.js';
+import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage';
 import { supabase } from '../utils/supabase';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
 import LevelTestQuestion from '../components/LevelTest/LevelTestQuestion';
@@ -12,9 +21,15 @@ import LevelTestSpeaking from '../components/LevelTest/LevelTestSpeaking';
 import LevelTestResults from '../components/LevelTest/LevelTestResults';
 import questionData from '../data/levelTestQuestions.json';
 
+const BANK = questionData.questions;
+// The run in progress lives in this tab only (sessionStorage, through safeStorage).
+const SESSION = { session: true };
+// Ten questions per band, each with its own option order (drawQuestions.js).
+const newDraw = () => drawQuestions(BANK);
+
 const LevelTest = () => {
-  const { user } = useAuth();
-  const userId = user?.id;
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id ?? null;
   const { refreshSubscription } = useSubscription();
   const refreshSubscriptionRef = useRef(refreshSubscription);
   useEffect(() => { refreshSubscriptionRef.current = refreshSubscription; }, [refreshSubscription]);
@@ -24,6 +39,18 @@ const LevelTest = () => {
   const [listeningScore, setListeningScore] = useState(null);
   const [, setListeningAnswers] = useState([]);
   const [speakingScore, setSpeakingScore] = useState(null);
+  // The draw is state, not a memo: "Retake Test" used to serve the same 40
+  // questions in the same order, because the memo never re-ran.
+  const [questions, setQuestions] = useState(newDraw);
+  // Who this run belongs to: the account signed in when it started, null for a
+  // guest, undefined while there is no run (or auth had not answered yet when
+  // it started — it is bound on the first answer, which is no account change).
+  const [runOwner, setRunOwner] = useState(undefined);
+  // A run this tab left unfinished (a back-swipe, an iOS tab reload), offered
+  // on the landing page to its owner only, while every question still exists
+  // in the bank.
+  const [storedRun, setStoredRun] = useState(() => restorePlacement(BANK, safeGetJSON(PLACEMENT_PROGRESS_KEY, null, SESSION)));
+  const resumable = storedRun && !authLoading && storedRun.owner === userId ? storedRun : null;
   const assessmentRef = useRef(null);
 
   // Route changes in this SPA preserve the previous document scroll position.
@@ -40,30 +67,6 @@ const LevelTest = () => {
     return () => window.cancelAnimationFrame(frameId);
   }, [testState, currentQuestionIndex]);
 
-  // Shuffle questions within each level for variety
-  const questions = useMemo(() => {
-    const shuffleArray = (array) => {
-      const shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    };
-
-    // Get 10 questions per level (40 total)
-    const levels = ['A1', 'A2', 'B1', 'B2'];
-    let selectedQuestions = [];
-
-    levels.forEach(level => {
-      const levelQuestions = questionData.questions.filter(q => q.level === level);
-      const shuffled = shuffleArray(levelQuestions);
-      selectedQuestions = [...selectedQuestions, ...shuffled.slice(0, 10)];
-    });
-
-    return selectedQuestions;
-  }, []);
-
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
 
@@ -71,20 +74,50 @@ const LevelTest = () => {
     [answers, questions, listeningScore, speakingScore]);
   const finalSublevel = placement.sublevel;
 
+  // The run, its snapshot and its result belong to the account that took it.
+  // When that account is replaced on this tab — signed out, or another account
+  // signed in from another tab — the run is dropped, and nothing of it is shown
+  // or written for the next one: an open results page used to write its result
+  // to whichever account signed in next. `view` hides the run already in the
+  // render that changes the account; the reset lands just after. A guest's run
+  // is not dropped by a sign-in: its result reaches an account only through the
+  // explicit guest path (see the results effect below).
+  const accountChanged = typeof runOwner === 'string' && !authLoading && runOwner !== userId;
+  const view = accountChanged ? 'landing' : testState;
+  useEffect(() => {
+    if (!accountChanged) return;
+    safeRemove(PLACEMENT_PROGRESS_KEY, SESSION);
+    setStoredRun(null);
+    setRunOwner(undefined);
+    setQuestions(newDraw());
+    setTestState('landing');
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setListeningScore(null);
+    setListeningAnswers([]);
+    setSpeakingScore(null);
+  }, [accountChanged]);
+
+  // A run started before auth answered belongs to whoever auth then names.
+  useEffect(() => {
+    if (testState !== 'landing' && runOwner === undefined && !authLoading) setRunOwner(userId);
+  }, [testState, runOwner, authLoading, userId]);
+
+  // Keep the run in progress on this tab after every step, under its owner; a
+  // finished run leaves nothing behind. Listening and speaking resume at their
+  // intro screens.
+  useEffect(() => {
+    if (runOwner === undefined || accountChanged) return;
+    if (RESUMABLE_STEPS.includes(testState)) {
+      safeSetJSON(PLACEMENT_PROGRESS_KEY, placementSnapshot({ questions, answers, currentQuestionIndex, testState, listeningScore, owner: runOwner }), SESSION);
+    } else if (testState === 'results') {
+      safeRemove(PLACEMENT_PROGRESS_KEY, SESSION);
+    }
+  }, [questions, answers, currentQuestionIndex, testState, listeningScore, runOwner, accountChanged]);
+
+  // Scored against the shown option order (drawQuestions.js remaps the key).
   const handleAnswer = (selectedIndex) => {
-    const isCorrect = selectedIndex === currentQuestion.correctIndex;
-
-    const newAnswer = {
-      questionId: currentQuestion.id,
-      level: currentQuestion.level,
-      sublevel: currentQuestion.sublevel,
-      type: currentQuestion.type,
-      selectedIndex,
-      isCorrect,
-      points: isCorrect ? currentQuestion.points : 0
-    };
-
-    const updatedAnswers = [...answers, newAnswer];
+    const updatedAnswers = [...answers, answerFor(currentQuestion, selectedIndex)];
     setAnswers(updatedAnswers);
 
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -102,7 +135,13 @@ const LevelTest = () => {
     }
   };
 
+  // A new run, from the landing page or "Retake Test": a new draw for whoever
+  // is signed in now, and the old run's snapshot is gone.
   const startTest = () => {
+    safeRemove(PLACEMENT_PROGRESS_KEY, SESSION);
+    setStoredRun(null);
+    setRunOwner(authLoading ? undefined : userId);
+    setQuestions(newDraw());
     setTestState('testing');
     setCurrentQuestionIndex(0);
     setAnswers([]);
@@ -111,6 +150,23 @@ const LevelTest = () => {
     setSpeakingScore(null);
   };
 
+  const resumeTest = () => {
+    if (!resumable) return;
+    setRunOwner(resumable.owner);
+    setQuestions(resumable.questions);
+    setAnswers(resumable.answers);
+    setCurrentQuestionIndex(resumable.currentQuestionIndex);
+    setListeningScore(resumable.listeningScore);
+    setListeningAnswers([]);
+    setSpeakingScore(null);
+    setTestState(resumable.testState);
+    setStoredRun(null);
+  };
+
+  const resumeAt = !resumable ? null
+    : resumable.testState === 'testing' ? `question ${resumable.currentQuestionIndex + 1} of ${resumable.questions.length}`
+      : `the ${resumable.testState} section`;
+
   // Persist the placement result. Without this the whole test was decorative:
   // profiles.current_level stayed at its 'a1' default for every account, and
   // SpeakingPage — the only reader — coerced that back to A1.1, so a learner
@@ -118,8 +174,19 @@ const LevelTest = () => {
   // here (the landing page promises no account is required); an anonymous
   // tester's result is kept on the browser by LevelTestResults and written at
   // the first profile load after sign-in (src/lib/placement.js).
+  //
+  // Written only for the account that took this run, while it is still the one
+  // signed in. A guest's run is never written here, whoever signs in: the
+  // results screen keeps it on this browser and the explicit guest path
+  // (settlePendingPlacement, at a profile load) gives it to an account with no
+  // placement yet — the reload below asks for that load now.
   useEffect(() => {
     if (testState !== 'results' || !userId) return;
+    if (runOwner === null) {
+      refreshSubscriptionRef.current();
+      return;
+    }
+    if (runOwner !== userId) return;
     let cancelled = false;
     (async () => {
       const { error } = await supabase
@@ -136,7 +203,7 @@ const LevelTest = () => {
       }
     })();
     return () => { cancelled = true; };
-  }, [testState, userId, finalSublevel]);
+  }, [testState, userId, runOwner, finalSublevel]);
 
   return (
     <>
@@ -213,16 +280,16 @@ const LevelTest = () => {
           full-height layout of its own and must not sit in a padded box. */}
       <div
         ref={assessmentRef}
-        tabIndex={testState === 'landing' ? undefined : -1}
+        tabIndex={view === 'landing' ? undefined : -1}
         role="region"
         aria-label="German level test assessment"
         className="min-h-screen bg-paper text-ink outline-none"
       >
-        {testState === 'landing' && (
-          <LevelTestLanding onStart={startTest} />
+        {view === 'landing' && (
+          <LevelTestLanding onStart={startTest} resumeAt={resumeAt} onResume={resumeTest} />
         )}
 
-        {testState === 'testing' && currentQuestion && (
+        {view === 'testing' && currentQuestion && (
           <LevelTestQuestion
             question={currentQuestion}
             questionNumber={currentQuestionIndex + 1}
@@ -233,7 +300,7 @@ const LevelTest = () => {
           />
         )}
 
-        {testState === 'listening' && (
+        {view === 'listening' && (
           <LevelTestListening
             onComplete={(score, details) => {
               setListeningScore(score);
@@ -248,7 +315,7 @@ const LevelTest = () => {
           />
         )}
 
-        {testState === 'speaking' && (
+        {view === 'speaking' && (
           <LevelTestSpeaking
             onComplete={(evaluation) => {
               setSpeakingScore(evaluation);
@@ -261,11 +328,12 @@ const LevelTest = () => {
           />
         )}
 
-        {testState === 'results' && (
+        {view === 'results' && (
           <LevelTestResults
             placement={placement}
             listeningScore={listeningScore}
             speakingScore={speakingScore}
+            guestRun={runOwner === null}
             onRetake={startTest}
           />
         )}

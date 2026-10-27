@@ -9,8 +9,8 @@ import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import confettiBurst from '../lib/confetti.js';
 import { consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { courseHomeFor } from '../lib/courseEntry.js';
-import { ALL_LEVELS, COURSE_PRO_MONTHS, courseForProduct } from '../data/pricing.js';
-import { checkoutEntitlementConfirmed, checkoutProductKey, isRecurringProduct } from '../lib/checkoutAccess.js';
+import { ALL_LEVELS, COURSE_PRO_MONTHS, courseForProduct, ownedPurchases } from '../data/pricing.js';
+import { checkoutEntitlementConfirmed, checkoutProductKey, hasRecurringBilling, isRecurringProduct } from '../lib/checkoutAccess.js';
 import { safeGetJSON } from '../utils/safeStorage';
 
 // "Your ticket is valid" — the confirmation after a checkout (v4 "Die Linie",
@@ -19,10 +19,39 @@ import { safeGetJSON } from '../utils/safeStorage';
 // has, in order: did it work, what do I have now (and until when), and where
 // do I start. It never celebrates before the webhook has recorded the purchase.
 //
-// The Pro window's end is the purchase row's `access_until` (written by
-// netlify/functions/lemonsqueezy-webhook.mjs handleCourseOrder). NULL there
-// means the buyer already had a live paid subscription, so no window was
-// added — say that, never a date that does not exist.
+// The Pro window's end is the purchase row's `access_until`. Every course
+// order stores one (netlify/functions/lemonsqueezy-webhook.mjs
+// handleCourseOrder keeps the original deadline even while a subscription
+// covers Pro), so a missing date no longer means "already subscribed". The Pro
+// line is chosen from the account's live recurring plan instead (proLineFor).
+
+// A plan that renews by itself: a Lemon Squeezy subscription row (not a course
+// row) that is active or on trial, not set to cancel, and inside its period.
+export const renewingPlan = (subscription, now = Date.now()) => Boolean(
+  hasRecurringBilling(subscription, now)
+  && subscription.plan_type !== 'course'
+  && ['active', 'on_trial'].includes(subscription.status)
+  && !subscription.cancel_at_period_end
+  && Date.parse(subscription.subscription_end) > now
+);
+
+/**
+ * The Pro line on a course ticket (ACC-08). A renewing plan already covers the
+ * AI tools. "You are never charged again" is said only to a buyer with no
+ * recurring billing at all: a live subscriber was told it, and a failing or
+ * paused plan can still charge. The course itself never renews.
+ *
+ * @param {{ proUntil: string|null, renewing: boolean, recurringBilling: boolean }} state
+ */
+export const proLineFor = ({ proUntil, renewing, recurringBilling }) => {
+  if (renewing) return 'Your Pro subscription already covers the AI tools and keeps renewing as before.';
+  const open = proUntil
+    ? `AI speaking, writing feedback and every level are open until ${proUntil}.`
+    : 'AI speaking, writing feedback and every level are open for the included Pro months.';
+  return recurringBilling
+    ? `${open} The course itself never renews.`
+    : `${open} After that the AI tools return to the free allowance — you are never charged again.`;
+};
 
 const formatDate = (iso) => {
   try {
@@ -34,10 +63,13 @@ const formatDate = (iso) => {
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
-  const { refreshSubscription, hasActiveSubscription, hasLevelAccess, purchases } = useSubscription();
+  const { refreshSubscription, verifySubscription, hasActiveSubscription, hasLevelAccess, purchases, subscription } = useSubscription();
   const [polling, setPolling] = useState(true);
   const [pendingProduct] = useState(() => checkoutProductKey(safeGetJSON('dm_checkout_pending', null, { session: true })?.plan));
   const celebratedRef = useRef(false);
+  // verify-subscription replays a missed subscription event; it cannot recover
+  // a course order, so a course purchase keeps the plain refresh (ACC-10).
+  const canRecover = !pendingProduct || isRecurringProduct(pendingProduct);
 
   // A one-time course purchase lands here too. The most recent purchase, if it
   // is minutes old, is what was just bought — so the page shows that ticket
@@ -45,7 +77,7 @@ const SubscriptionSuccessPage = () => {
   // the account is not "just bought" and falls through to the Pro copy.
   const RECENT_MS = 30 * 60 * 1000;
   const expectedCourse = pendingProduct && !isRecurringProduct(pendingProduct);
-  const latestPurchase = purchases.filter((p) => !expectedCourse || p.product_key === pendingProduct).sort(
+  const latestPurchase = ownedPurchases(purchases).filter((p) => !expectedCourse || p.product_key === pendingProduct).sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at),
   )[0];
   const justBought =
@@ -56,6 +88,7 @@ const SubscriptionSuccessPage = () => {
   const telcBought = justBought?.product_key === 'telc_b1_komplett';
   const firstLevel = courseBought ? courseBought.levels[0] : null;
   const proUntil = justBought?.access_until ? formatDate(justBought.access_until) : null;
+  const proLine = proLineFor({ proUntil, renewing: renewingPlan(subscription), recurringBilling: hasRecurringBilling(subscription) });
 
   // Derive verification from context state on every render (a [] effect kept
   // reading the mount-time `subscription = null` and every payer fell through
@@ -63,6 +96,10 @@ const SubscriptionSuccessPage = () => {
   const verified = pendingProduct
     ? checkoutEntitlementConfirmed(pendingProduct, { isSubscribed: hasActiveSubscription(), purchases })
     : hasActiveSubscription() || Boolean(justBought);
+  // The polling loop below reads this between refreshes, so it stops the
+  // moment access lands instead of re-reading three tables five times (ACC-11).
+  const verifiedRef = useRef(verified);
+  verifiedRef.current = verified;
 
   // Where the first lesson is: the level's guided course when it has one
   // (A1.1–A2.2), else its level page. courseHomeFor falls back to the free
@@ -92,26 +129,42 @@ const SubscriptionSuccessPage = () => {
   useEffect(() => {
     let cancelled = false;
 
-    const verifySubscription = async () => {
+    const confirmPurchase = async () => {
       // Poll while the Lemon Squeezy webhook lands. `subscription`/`purchases`
-      // updating flips `verified` above, which ends the polling state.
+      // updating flips `verified` above, which ends the polling state and,
+      // through verifiedRef, the loop itself.
       const maxAttempts = 5;
       const delayMs = 3000;
 
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        if (cancelled) return;
+        if (cancelled || verifiedRef.current) return;
         await refreshSubscription();
+        if (cancelled || verifiedRef.current) return;
         await new Promise((resolve) => setTimeout(resolve, delayMs));
       }
 
+      // Still nothing: a subscription webhook that failed once is recoverable
+      // here, before the buyer is told to email us (ACC-10).
+      if (!cancelled && !verifiedRef.current && canRecover) await verifySubscription();
       if (!cancelled) setPolling(false);
     };
 
-    verifySubscription();
+    confirmPurchase();
 
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // "Check again": the same recovery, then a fresh read.
+  const checkAgain = async () => {
+    setPolling(true);
+    try {
+      if (canRecover) await verifySubscription();
+      await refreshSubscription();
+    } finally {
+      setPolling(false);
+    }
+  };
 
   const loading = polling && !verified;
   const seoTitle = courseBought || telcBought ? 'Your ticket is valid' : verified ? 'Welcome to Pro' : 'Confirming your payment';
@@ -166,11 +219,7 @@ const SubscriptionSuccessPage = () => {
                   {(courseBought || telcBought) && (
                     <li>
                       <strong>{COURSE_PRO_MONTHS} months of Pro on board</strong>
-                      <span className="block text-graphite">
-                        {proUntil
-                          ? `AI speaking, writing feedback and every level are open until ${proUntil}. After that the AI tools return to the free allowance — you are never charged again.`
-                          : 'Your Pro subscription already covers the AI tools, so nothing was added on top of it.'}
-                      </span>
+                      <span className="block text-graphite">{proLine}</span>
                     </li>
                   )}
                   {!courseBought && !telcBought && (
@@ -224,11 +273,7 @@ const SubscriptionSuccessPage = () => {
             </p>
 
             <div className="flex flex-col items-center gap-3">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => { setPolling(true); refreshSubscription().finally(() => setPolling(false)); }}
-              >
+              <Button variant="secondary" size="sm" onClick={checkAgain}>
                 Check again
               </Button>
 

@@ -180,10 +180,17 @@ export const FIT_CHOICES = [
   },
 ];
 
-/** The route for visitors already past A2: the B1/B2 stations are Im Bau. */
+/**
+ * The route for visitors already past A2: the B1/B2 stations are Im Bau.
+ * No price for the telc B1 course: this copy renders on the homepage, /courses/,
+ * /pricing/ and the level-test result whatever its sale switch says, and until
+ * 2026-10-25 it quoted the package on all four while it was off sale. Its page
+ * (linked below) states the price and whether it can be bought
+ * (tests/telc-pilot-gate.test.mjs, scripts/check-built-html.mjs).
+ */
 export const EXAM_ROUTE = {
   title: 'Past A2? Ride B1 material today.',
-  body: `The B1 and B2 courses are being rebuilt to the new course standard. Until they open, Pro gives you every level's lessons, AI speaking and writing feedback and the timed practice exams; the telc B1 course is its own ${eur(EXAM_COURSE.price)} programme.`,
+  body: "The B1 and B2 courses are being rebuilt to the new course standard. Until they open, Pro gives you every level's lessons, AI speaking and writing feedback and the timed practice exams; the telc B1 course is a separate programme with its own page.",
   links: [
     { label: 'See Pro', href: '/pricing/#pro' },
     { label: 'Exam routes · DE', href: '/pruefung/', lang: 'de' },

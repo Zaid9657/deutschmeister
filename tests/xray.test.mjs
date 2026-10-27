@@ -20,12 +20,14 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
+import { createHash as realCreateHash } from 'node:crypto';
 
 import {
   ANON_ID_KEY, getOrCreateAnonId, CRAWLER_UA as CLIENT_CRAWLER_UA, isLikelyCrawler,
   referrerLabel, xraySource, XRAY_OFFER,
 } from '../src/lib/xray.js';
 import { reserveUsage, validAnonymousId } from '../netlify/functions/_shared/aiReservation.mjs';
+import { isMissingSchema, logMigrationPending } from '../netlify/functions/_shared/migrationPending.mjs';
 import {
   CRAWLER_UA as SERVER_CRAWLER_UA, isCrawlerUA, uaClass, cleanSource,
 } from '../netlify/functions/_shared/xraySource.mjs';
@@ -213,6 +215,111 @@ test('a browser analysis still runs and logs its coarse source', async () => {
   assert.ok(line, 'no per-analysis source log line');
   const logged = JSON.parse(line.slice('[xray] analysis '.length));
   assert.deepEqual(logged, { tier: 'anonymous', ref: 'site:/grammar', first: 'google', last: null, entry: 'link', ua: 'browser' });
+});
+
+// ---------------------------------------------------------------------------
+// 3c. Every undelivered analysis is given back; only a renderable one is a 200
+//     (cross-check 2026-10-25, AI-19 / X-024 and AI-20 / X-025)
+// ---------------------------------------------------------------------------
+
+/**
+ * One anonymous visitor's day on the real handler: reserve_xray_usage keeps a
+ * row per analysis up to the limit (1 for anonymous), the refund deletes it.
+ * `providers` answer the model calls in turn.
+ */
+function meteredDay(providers, { throwOnLog = false } = {}) {
+  const rows = [];
+  const refunds = [];
+  let ids = 0;
+  const db = {
+    rpc: async (name, args) => {
+      assert.equal(name, 'reserve_xray_usage');
+      if (rows.length >= args.p_limit) return { data: { allowed: false, used: rows.length } };
+      const id = `usage-${++ids}`;
+      rows.push(id);
+      return { data: { allowed: true, id, used: rows.length - 1 } };
+    },
+    from: (table) => ({
+      delete: () => ({
+        eq: async (column, id) => {
+          assert.equal(table, 'xray_usage');
+          assert.equal(column, 'id');
+          refunds.push(id);
+          if (rows.includes(id)) rows.splice(rows.indexOf(id), 1);
+          return { error: null };
+        },
+      }),
+    }),
+  };
+  let calls = 0;
+  const context = vm.createContext({
+    process: { env: { ANTHROPIC_API_KEY: 'test-key', SUPABASE_SERVICE_ROLE_KEY: 'test-service-key' } },
+    createClient: () => db, createHash: realCreateHash,
+    getAuthenticatedUserId: async () => null,
+    uaClass, cleanSource, reserveUsage, validAnonymousId, isMissingSchema, logMigrationPending,
+    console: {
+      log: (line) => { if (throwOnLog && String(line).startsWith('[xray] analysis')) throw new Error('log sink down'); },
+      error: () => {}, warn: () => {},
+    },
+    fetch: async () => providers[Math.min(calls++, providers.length - 1)](),
+  });
+  const source = read('netlify/functions/analyze-sentence.mjs').replace(/^import .*;\n/gm, '').replace('export const handler', 'const handler');
+  const handler = vm.runInContext(`${source}\nhandler;`, context);
+  const request = () => handler({
+    httpMethod: 'POST',
+    headers: { origin: 'https://deutsch-meister.de', 'user-agent': UA.chrome },
+    body: JSON.stringify({ sentence: 'Ich helfe dem Kollegen.', anonymousId: 'browser-anon-id-1', source: { ref: 'none', entry: 'typed' } }),
+  });
+  return { request, rows, refunds, providerCalls: () => calls };
+}
+
+const answer = (text) => async () => ({ ok: true, json: async () => ({ content: [{ type: 'text', text }] }) });
+const GOOD = answer('{"words":[{"text":"Ich","role":"subject","case":"nominative"}],"insight":null,"fullTranslation":"I help the colleague."}');
+
+test('a connection that never answers gives the analysis back, so the retry is not "limit reached"', async () => {
+  const day = meteredDay([async () => { throw new TypeError('fetch failed'); }, GOOD]);
+  const failed = await day.request();
+  assert.equal(failed.statusCode, 502);
+  assert.equal(JSON.parse(failed.body).code, 'upstream_unreachable', 'the page shows "this one is on us"');
+  assert.deepEqual(day.refunds, ['usage-1']);
+  assert.deepEqual(day.rows, [], 'the failed analysis no longer counts');
+  const retry = await day.request();
+  assert.equal(retry.statusCode, 200, `the anonymous visitor's one analysis was spent on a failure: ${retry.body}`);
+  assert.equal(JSON.parse(retry.body).usage.usedToday, 1);
+  assert.equal((await day.request()).statusCode, 429, 'the meter itself still holds');
+});
+
+test('an unreadable body and any later throw give the analysis back too', async () => {
+  const unreadable = meteredDay([async () => ({ ok: true, json: async () => { throw new SyntaxError('Unexpected end of JSON input'); } }), GOOD]);
+  const failed = await unreadable.request();
+  assert.equal(failed.statusCode, 500);
+  assert.equal(JSON.parse(failed.body).error, 'Failed to parse analysis response');
+  assert.deepEqual(unreadable.refunds, ['usage-1']);
+  assert.equal((await unreadable.request()).statusCode, 200);
+
+  // A throw between the reservation and the answer lands in the outer catch.
+  const thrown = meteredDay([GOOD], { throwOnLog: true });
+  assert.equal((await thrown.request()).statusCode, 500);
+  assert.deepEqual(thrown.refunds, ['usage-1']);
+  assert.deepEqual(thrown.rows, []);
+  assert.equal(thrown.providerCalls(), 0);
+});
+
+test('valid JSON without a renderable word list is a failed analysis, refunded — never a 200', async () => {
+  for (const text of ['{"error":"x"}', '{"words":"Ich helfe"}', '{"words":["Ich","helfe"]}', '{"words":[{"role":"subject"}]}', '{"words":[null]}']) {
+    const day = meteredDay([answer(text), GOOD]);
+    const res = await day.request();
+    assert.equal(res.statusCode, 500, `${text} came back as a result`);
+    assert.equal(JSON.parse(res.body).error, 'Failed to parse analysis response');
+    assert.deepEqual(day.refunds, ['usage-1'], text);
+    assert.equal((await day.request()).statusCode, 200, `${text}: the retry was refused`);
+  }
+  // What the page renders, including an empty list, is still a result.
+  for (const text of ['{"words":[],"insight":null,"fullTranslation":"x"}', '{"words":[{"text":"Ich"}]}']) {
+    const day = meteredDay([answer(text)]);
+    assert.equal((await day.request()).statusCode, 200, text);
+    assert.deepEqual(day.refunds, [], `${text} was refunded although it was delivered`);
+  }
 });
 
 test('the usage row carries the source, and the meter survives a database without the column', () => {

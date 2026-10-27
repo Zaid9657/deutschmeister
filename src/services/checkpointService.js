@@ -2,6 +2,7 @@ import { supabase } from '../utils/supabase.js';
 import { setProgramItemDone } from './programProgress.js';
 import { isItemCorrect } from '../lib/checkpoint/buildCheckpoint.js';
 import { tagError } from '../lib/lesson/check.js';
+import { localCheckpointStored, recordLocalCheckpoint } from '../lib/course/localProgress.js';
 
 // Checkpoint persistence (CONTRACT.md "Persistence"; standard §3).
 //
@@ -18,7 +19,10 @@ import { tagError } from '../lib/lesson/check.js';
 //
 // Fail-soft everywhere (programProgress posture): a signed-out learner may take
 // the checkpoint, the attempt is counted in localStorage only, and nothing
-// throws into the middle of a test.
+// throws into the middle of a test. A signed-out PASS is kept too (2026-10-25):
+// in the local course store beside the guest's Lektionen (localProgress.js), so
+// the course home shows it done and the next Lektion open, and the sign-in merge
+// writes it to the account — it used to be stored nowhere and had to be retaken.
 
 export const ATTEMPT_LIMIT = 3;
 export const ATTEMPT_WINDOW_HOURS = 8;
@@ -95,6 +99,13 @@ export async function fetchAttemptState(userId, checkpointId) {
   return attemptState((data || []).map((r) => new Date(r.created_at).getTime()));
 }
 
+/**
+ * Is a signed-out pass of this checkpoint kept on this device, waiting for the sign-in merge? Only
+ * when the browser stored it: a pass it refused lives in this tab's memory and is gone after a reload,
+ * so the result card offers a retry instead of "Saved on this device". `stamp` narrows it to one paper.
+ */
+export const guestPassKept = (level, checkpointId, stamp = null) => localCheckpointStored(level, checkpointId, stamp);
+
 /** Has this checkpoint already been passed? */
 export async function fetchCheckpointStatus(userId, checkpointId) {
   if (!userId) return null;
@@ -120,7 +131,10 @@ export async function fetchCheckpointStatus(userId, checkpointId) {
  */
 export async function recordAttempt(userId, { level, checkpointId, items, answers = {}, result, stamp = null, retry = false }, client = supabase, complete = completeCheckpoint) {
   if (!retry) pushLocalAttempt(checkpointId);
-  if (!userId) return false;
+  if (!userId) {
+    if (result?.passed) recordLocalCheckpoint({ level, checkpointId, accuracy: (Number(result.overall) || 0) / 100, stamp });
+    return false;
+  }
 
   const lvl = String(level || '').toLowerCase();
   // One stamp per finished paper (the page keeps it), so a retry finds the attempt it already

@@ -116,11 +116,12 @@ const hubReview = (id, level, title, minutes) => ({
 
 // The spaced-repetition trainer at the dedicated /vocabulary route
 // (VocabularySectionPage.jsx renders SrsTrainer there) — same factory shape
-// as a22Phase.js's srsReview.
-const srsReview = (id, weekLabel, minutes = 25) => ({
+// as a22Phase.js's srsReview: the title promises the DUE cards, never "cards
+// from week N" (no step of this plan adds words; the trainer has no weeks).
+const srsReview = (id, minutes = 25) => ({
   id,
   type: 'review',
-  title: `Wortschatz-Wiederholung: deine Karteikarten aus ${weekLabel}`,
+  title: 'Wortschatz-Wiederholung: fällige Karteikarten',
   minutes,
   href: '/vocabulary',
 });
@@ -376,7 +377,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 7',
-        items: [srsReview('d7-srs', 'Woche 1'), hubReview('d7-review', 'a2.1', 'Wiederholen: deine A2.1-Grammatik aus Woche 1', 20)],
+        items: [srsReview('d7-srs'), hubReview('d7-review', 'a2.1', 'Wiederholen: deine A2.1-Grammatik aus Woche 1', 20)],
       },
     ],
   },
@@ -421,7 +422,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 14 — Puffertag',
-        items: [srsReview('d14-srs', 'Woche 2', 25), hubReview('d14-review', 'a2.2', 'Wiederholen: deine A2.2-Grammatik aus Woche 2', 15)],
+        items: [srsReview('d14-srs', 25), hubReview('d14-review', 'a2.2', 'Wiederholen: deine A2.2-Grammatik aus Woche 2', 15)],
       },
     ],
   },
@@ -473,7 +474,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 21',
-        items: [srsReview('d21-srs', 'Woche 3'), hubReview('d21-review', 'a2.2', 'Wiederholen: alle Themen aus Woche 1 bis Woche 3', 20)],
+        items: [srsReview('d21-srs'), hubReview('d21-review', 'a2.2', 'Wiederholen: alle Themen aus Woche 1 bis Woche 3', 20)],
       },
     ],
   },
@@ -542,7 +543,7 @@ const WEEKS = [
       'Zwei Tage Reserve für Wiederholung und Pause vor der Prüfung. ' +
       'Am Ende machst du deinen zweiten gewerteten Übungstest.',
     days: [
-      { label: 'Tag 29 — Puffertag', items: [srsReview('d29-srs', 'Woche 4', 25), xray('d29-xray', 15, 'X-Ray: letzte Aufwärmübung vor der Prüfung')] },
+      { label: 'Tag 29 — Puffertag', items: [srsReview('d29-srs', 25), xray('d29-xray', 15, 'X-Ray: letzte Aufwärmübung vor der Prüfung')] },
       { label: 'Tag 30', items: [mockExam('d30-mock-2', 2, 60)] },
     ],
   },

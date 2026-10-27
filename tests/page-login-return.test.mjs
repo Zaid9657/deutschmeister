@@ -7,7 +7,7 @@
 // to postAuthPath(), which is /dashboard. So a returning learner who logged in
 // from /speaking/ landed on /dashboard, not on the speaking practice they had
 // opened. The A1.1 lesson player links anonymous learners to the same screen
-// (SpeakingStage, RecapStage: /speaking?level=…&mission=…), so it is a door on
+// (SpeakingStage, RecapStage: /speaking/?level=…&mission=…), so it is a door on
 // the course path too. SupportPage and the course's SaveProgressCard already
 // hand /login the page; the gates do it with state={{ from: location }}, and
 // conversion's tests/lock-login-return.test.mjs covers the gates and the lock
@@ -108,4 +108,20 @@ test('/speaking/ passes the location it is rendered at, so the course hand-off r
 
 test('LoginPage still reads state.from, the contract every door relies on', () => {
   assert.match(code(read('src/pages/LoginPage.jsx')), /location\.state\?\.from\b/);
+});
+
+// The course's hand-offs to the speaking coach (SpeakingStage's full page load, RecapStage's link)
+// used the slashless `/speaking?level=…`. /speaking is a PRERENDERED route (dist/speaking/index.html,
+// canonical `/speaking/`), so that form paid a canonicalising redirect before the coach loaded
+// (CLAUDE.md trailing-slash rule, case 2). The rule, not the two files: no source links to a
+// prerendered SPA route with a query string and without its slash.
+test('a link with a query to a prerendered SPA route carries the trailing slash (no redirect hop)', () => {
+  const prerendered = [...read('scripts/prerender-spa-routes.mjs').matchAll(/^\s*path:\s*'([^']+)'/gm)].map((m) => m[1]);
+  assert.ok(prerendered.includes('/speaking'), 'the prerender list names /speaking');
+  const slashless = new RegExp(String.raw`["'\x60](${prerendered.map((p) => p.replace(/[/.-]/g, '\\$&')).join('|')})\?`);
+  const offenders = walk(join(ROOT, 'src')).filter((file) => slashless.test(code(read(file))));
+  assert.deepEqual(offenders, [], 'link to `/<route>/?…`, never `/<route>?…`');
+  for (const file of ['src/components/lesson/SpeakingStage.jsx', 'src/components/lesson/RecapStage.jsx']) {
+    assert.match(read(file), /`\/speaking\/\?level=\$\{encodeURIComponent\(level\)\}/, `${file} hands over with the canonical slash form`);
+  }
 });

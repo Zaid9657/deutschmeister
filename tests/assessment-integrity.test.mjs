@@ -211,9 +211,23 @@ test('word order: when an object or a modal adverb could open the sentence, the 
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]', 'Die Firma braucht ein Büro.')), 'Die Firma');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), 'Wir');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / trinken / gern / Kaffee]', 'Ich trinke gern Kaffee.')), 'Ich');
-  // Predicates and pronoun objects can front too: Lehrer bin ich. Dich rufe ich an.
+  // 2026-10-25 review, X-041: three more shapes of the same object, each graded wrong in a drawn
+  // item because the old shape missed it — a separable prefix after the object, the nouns of a
+  // measure phrase inside it, an -ern/-eln verb whose plural ends in a bare -n.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / anrufen / meine Mutter]', 'Ich rufe meine Mutter an.')), 'Ich');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / mitbringen / den Kuchen]', 'Wir bringen den Kuchen mit.')), 'Wir');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / möchten / ein Glas Wasser]', 'Ich möchte ein Glas Wasser.')), 'Ich');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Uhr / kosten / zwanzig Euro]', 'Die Uhr kostet zwanzig Euro.')), 'Die Uhr');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Uhr / kosten / 20 Euro]', 'Die Uhr kostet 20 Euro.')), 'Die Uhr');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / feiern / unser / Fest]', 'Wir feiern unser Fest.')), 'Wir');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / sammeln / die Flaschen]', 'Wir sammeln die Flaschen.')), 'Wir');
+  // Live Batch 1 + #229/X-041: keep 'Ich' cues; „Lehrer bin ich.“ and „Dich rufe ich an.“ are valid German.
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), 'Ich');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), 'Ich');
+  // …nor an imperative (its verb opens it), nor two constituents read as one phrase.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [machen / die Tür / auf]', 'Mach die Tür auf!')), null);
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [Ana / kaufen / den Kuchen / im Geschäft]', 'Ana kauft den Kuchen im Geschäft.')), null);
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / aufstehen / um 7 Uhr]', 'Ich stehe um 7 Uhr auf.')), null, 'an Angabe is the answer-key rule, not a cue');
   // …and a cued prompt is done; the answer-key rule is untouched by any of it.
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), null);
   assert.deepEqual(frontableOrders(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), []);
@@ -221,6 +235,9 @@ test('word order: when an object or a modal adverb could open the sentence, the 
   const items = pool.items || pool;
   assert.match(items.find((i) => i.id === 'extra-a11-l06-15').questionDe, /\(Beginnen Sie mit „Die Firma“\)/);
   assert.match(items.find((i) => i.id === 'extra-a11-l07-05').questionDe, /\(Beginnen Sie mit „Wir“\)/);
+  // The two drawn items of X-041 (L9 attempt 1, L11 attempt 2, the graded checkpoint 3 paper).
+  assert.match(items.find((i) => i.id === 'extra-a11-l09-05').questionDe, /\(Beginnen Sie mit „Ich“\)/);
+  assert.match(items.find((i) => i.id === 'extra-a11-l11-08').questionDe, /\(Beginnen Sie mit „Ich“\)/);
   // The cue is an instruction, not the exercise: the task shape — and so the lesson draw — is
   // the one the uncued prompt had (Codex review 2026-10-08 measured a changed draw without this).
   const { taskShape } = await import('../src/lib/lesson/buildLesson.js');

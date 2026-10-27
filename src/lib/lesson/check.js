@@ -3,8 +3,10 @@
 // ONE typo-class slip (Levenshtein ≤ 1 on a word of ≥ 5 letters, diacritics,
 // capitalisation) and count it as correct-with-warning — but an article or an
 // ending is never a typo: short function words (≤ 4 letters: der/die/das/ein/…)
-// and changed inflection endings are wrong. Recognition items never get typo
-// credit for a selected distractor.
+// and changed inflection endings are wrong, and so are one closed-class word for
+// another, a strong participle or modal on the wrong stem, a letter of a spelled
+// word, and a typo that also drops a capital the task is about (2026-10-25
+// review). Recognition items never get typo credit for a selected distractor.
 //
 // Three things are decided by the ITEM rather than by the call site or the
 // answer string: `isCaseTask(item)` is `item.caseSensitive === true` and
@@ -19,13 +21,12 @@
 // verb topic (REVIEW #6 MAJOR 9) — see the decision table above
 // tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
+import { sameAnswer } from '../../data/sameAnswer.js';
 
 // CORRECTED: the exercise was finished, but only after a wrong try that the
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
 // not a typo — a wrong pair is a vocabulary miss — and not a first-try success.
 export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong', CORRECTED: 'corrected' };
-/** Whole answers that mean the same — a question word for a reason (see checkAnswer). */
-const SAME_ANSWER = [['warum', 'wieso', 'weshalb', 'weswegen', 'aus welchem grund']];
 
 /**
  * The ONE result a matching exercise records, whatever number of taps it took.
@@ -84,18 +85,33 @@ const asciiFold = (w) => w.normalize('NFC').toLowerCase().replace(/ä/g, 'ae').r
 const withAscii = (words) => [...new Set(words.flatMap((w) => [w, asciiFold(w)]))];
 const NUMBER_VALUE = new Map(Object.entries(DICTATION_NUMBERS).map(([w, v]) => [asciiFold(w), v]));
 const UNIT_VALUE = new Map(Object.entries(COMPOUND_UNITS).map(([w, v]) => [asciiFold(w), v]));
+// The hundreds are written as ONE word like every other German number (2026-10-25 review, C-063):
+// A1.2 L2 dictates „vierhundertachtzig Euro" right after its notice teaches „480 ist
+// vierhundertachtzig", and a learner who wrote 480 was marked wrong because only 0–100 were folded.
+// [unit]hundert[und][1–99] is the whole class: hundert, einhundert, zweihundertfünfzig, hundertundeins.
+const UNIT_ALT = withAscii(Object.keys(COMPOUND_UNITS)).join('|');
+const BELOW_HUNDRED = `(?:(?:${UNIT_ALT})und(?:${withAscii(TENS).join('|')})|${withAscii(Object.keys(DICTATION_NUMBERS).filter((w) => w !== 'null' && w !== 'hundert')).join('|')})`;
 const NUMBER_RE = new RegExp(
-  `(?<!\\p{L})(?:(${withAscii(Object.keys(COMPOUND_UNITS)).join('|')})und(${withAscii(TENS).join('|')})|(${withAscii(Object.keys(DICTATION_NUMBERS)).join('|')}))(?!\\p{L})`,
+  `(?<!\\p{L})(?:(?:${UNIT_ALT})?hundert(?:und)?(?:${BELOW_HUNDRED})?|${BELOW_HUNDRED}|null)(?!\\p{L})`,
   'giu',
 );
-export const numberWordsToDigits = (text) => String(text ?? '').normalize('NFC').replace(NUMBER_RE, (m, unit, ten, word) => (
-  word
-    ? String(NUMBER_VALUE.get(asciiFold(word)))
-    : String(UNIT_VALUE.get(asciiFold(unit)) + NUMBER_VALUE.get(asciiFold(ten)))
-));
+/** The value of one number word NUMBER_RE matched (ascii-folded): 480 for „vierhundertachtzig". */
+function numberWordValue(word) {
+  if (NUMBER_VALUE.has(word)) return NUMBER_VALUE.get(word);
+  const hundreds = word.match(/^(.*?)hundert(?:und)?(.*)$/);
+  if (hundreds) return (hundreds[1] ? UNIT_VALUE.get(hundreds[1]) : 1) * 100 + (hundreds[2] ? numberWordValue(hundreds[2]) : 0);
+  const [, unit, ten] = word.match(/^(.+?)und(.+)$/);
+  return UNIT_VALUE.get(unit) + NUMBER_VALUE.get(ten);
+}
+export const numberWordsToDigits = (text) => String(text ?? '').normalize('NFC')
+  .replace(NUMBER_RE, (m) => String(numberWordValue(asciiFold(m))));
 
 export function normalizeDictation(text) {
   return numberWordsToDigits(text)
+    // The currency SIGN is the currency word (C-063): „15 €" and „15 EUR" are what a learner writes
+    // for „fünfzehn Euro", and both sides are folded, so the key line may use either too.
+    .replace(/\s*€\s*/g, ' Euro ')
+    .replace(/(?<!\p{L})EUR(?!\p{L})/giu, 'Euro')
     // A decimal comma is a value, not punctuation: „2,0 Euro" must not become „20 Euro" when the
     // later punctuation strip removes the comma (Codex review). The marker survives stripPunct.
     .replace(/(\d),(?=\d)/g, '$1§')
@@ -143,13 +159,91 @@ function changedWord(given, expected) {
   const e = expected.split(' ');
   if (g.length !== e.length) return null;
   const at = e.findIndex((w, i) => w !== g[i]);
-  return at < 0 ? null : { expected: e[at], given: g[at] };
+  return at < 0 ? null : { expected: e[at], given: g[at], at };
 }
 
-/** `given` is `expected` with exactly one extra character somewhere („bistt" for „bist"). */
-const oneKeyAdded = (given, expected) =>
+/**
+ * `given` is `expected` with one letter typed twice — a key that bounced („bistt" for „bist", „hatt"
+ * for „hat"). Never a letter added in front or inside: „mein" for „ein", „bist" for „ist", „dein" for
+ * „den" and „Der" for „Er" are other words, and the old „one extra character anywhere" let every one
+ * of them through as a typo (2026-10-25 review, C-051/C-061).
+ */
+const oneKeyDoubled = (given, expected) =>
   given.length === expected.length + 1
-  && [...given].some((_, i) => given.slice(0, i) + given.slice(i + 1) === expected);
+  && [...given].some((ch, i) => (ch === given[i - 1] || ch === given[i + 1])
+    && given.slice(0, i) + given.slice(i + 1) === expected);
+
+/**
+ * THE CLOSED CLASSES OF THE LANGUAGE (2026-10-25 review, C-051/C-061): the articles, kein- and the
+ * possessives in every declension, the personal and reflexive pronouns, the finite forms of sein,
+ * haben and the modals, the short prepositions with their contractions, and denn/dass/des. One of
+ * them typed where another belongs is a grammar decision — „Er bist Lehrer.", „dein Markt" for „den
+ * Markt", „Das ist deine Party." for „meine Party", „Ich wohne ein Berlin." — however close the two
+ * spellings are, and an item counted it as „Almost — just a typo", i.e. correct, in the lesson, the
+ * checkpoint and the review. A misspelling that is no word of the class („mene" for „meine") is
+ * still a slip. Folded like a prepared answer (normalizeAnswer: lower case, ä → ae, ß → ss).
+ */
+const declined = (stems) => stems.flatMap((s) => ['', 'e', 'en', 'em', 'er', 'es'].map((e) => `${s}${e}`));
+const CLOSED_CLASS = new Set([
+  'der', 'die', 'das', 'den', 'dem', 'des',
+  ...declined(['ein', 'kein', 'mein', 'dein', 'sein', 'ihr', 'unser']), 'euer', 'eure', 'euren', 'eurem', 'eurer', 'eures',
+  'ich', 'du', 'er', 'sie', 'es', 'wir', 'mich', 'dich', 'sich', 'uns', 'euch', 'mir', 'dir', 'ihm', 'ihn', 'ihnen',
+  'bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'waren', 'wart',
+  'habe', 'hast', 'hat', 'haben', 'habt', 'hatte', 'hattest', 'hatten', 'hattet',
+  'kann', 'kannst', 'koennen', 'koennt', 'muss', 'musst', 'muessen', 'muesst', 'darf', 'darfst', 'duerfen', 'duerft',
+  'soll', 'sollst', 'sollen', 'sollt', 'will', 'willst', 'wollen', 'wollt', 'mag', 'magst', 'moegen', 'moegt',
+  'moechte', 'moechtest', 'moechten', 'moechtet',
+  'in', 'im', 'ins', 'an', 'am', 'ans', 'um', 'zu', 'zum', 'zur', 'von', 'vom', 'bei', 'beim', 'mit', 'aus', 'auf',
+  'nach', 'vor', 'fuer',
+  'denn', 'dass',
+]);
+
+const VOWEL_RE = /^[aeiouy]$/;
+
+/**
+ * The one edit that turns `expected` into `given` — a letter swapped, added or dropped — or null
+ * when they differ in more. `doubled`: the added or dropped letter stands beside its own twin, the
+ * bounce of a key („genomen", „getrunkken"), which changes no form.
+ */
+function oneEdit(given, expected) {
+  if (given.length === expected.length) {
+    const at = [...expected].findIndex((c, i) => c !== given[i]);
+    if (at < 0 || given.slice(at + 1) !== expected.slice(at + 1)) return null;
+    return { kind: 'swap', from: expected[at], to: given[at] };
+  }
+  const [longer, shorter] = given.length > expected.length ? [given, expected] : [expected, given];
+  if (longer.length !== shorter.length + 1) return null;
+  let at = [...shorter].findIndex((c, i) => c !== longer[i]);
+  if (at < 0) at = shorter.length;
+  if (longer.slice(0, at) + longer.slice(at + 1) !== shorter) return null;
+  const ch = longer[at];
+  return { kind: given.length > expected.length ? 'added' : 'dropped', ch, doubled: ch === longer[at - 1] || ch === longer[at + 1] };
+}
+
+/** A vowel changed, added or dropped — the stem vowel is the form („muss"/„müss", „weiß"/„wiss"). */
+const vowelEdit = (e) => Boolean(e) && (e.kind === 'swap' ? VOWEL_RE.test(e.from) && VOWEL_RE.test(e.to) : !e.doubled && VOWEL_RE.test(e.ch));
+
+/**
+ * THE STRONG PARTICIPLE IS ITS STEM (2026-10-25 review, C-053/C-062). „getrinken", „gegingen",
+ * „gesprechen" and „geessen" are getrunken, gegangen, gesprochen and gegessen formed wrongly — the
+ * one thing an A1.2 Perfekt item asks — and each came back as a typo. A strong participle is ge- +
+ * stem + -en, after a separable prefix too („angerufen", „ferngesehen"); a lower-case word, so a
+ * plural noun („Gedanken", „Geschenken") is not one. Inside that stem another vowel, or a letter
+ * dropped or added, is the form; a doubled letter („genomen") stays the slip it is everywhere else.
+ */
+const STRONG_PARTICIPLE_RE = /^((?:ab|an|auf|aus|bei|ein|fern|fest|her|hin|los|mit|nach|vor|weg|zu|zurueck|zusammen)?ge)([a-z]{2,})en$/;
+function participleSlip(given, expected, rawExpected) {
+  const m = STRONG_PARTICIPLE_RE.exec(expected);
+  if (!m || !/^\p{Ll}/u.test(rawExpected || '')) return false;
+  const [, head, stem] = m;
+  if (!given.startsWith(head) || !given.endsWith('en')) return false;
+  const e = oneEdit(given.slice(head.length, -2), stem);
+  return Boolean(e) && (e.kind === 'swap' ? VOWEL_RE.test(e.from) && VOWEL_RE.test(e.to) : !e.doubled);
+}
+
+/** The singular modal forms (and wissen's): their vowel IS the person — „muss" ich/er, „müssen" wir. */
+const MODAL_SINGULAR = new Set(['muss', 'musst', 'kann', 'kannst', 'darf', 'darfst', 'will', 'willst', 'soll', 'sollst', 'mag', 'magst', 'weiss', 'weisst']);
+const modalSlip = (given, expected) => MODAL_SINGULAR.has(expected) && vowelEdit(oneEdit(given, expected));
 
 /**
  * Inflectional endings, longest first. Standard §3: an ending is never a typo. The last-letter test
@@ -179,11 +273,16 @@ const STRONG_STEMS = [
 ];
 
 function otherStrongStem(a, b) {
-  return ['e', 'st', 't', 'en', 'et'].some((ending) => STRONG_STEMS.some(([base, changed]) => {
-    const plain = `${base}${ending}`; const strong = `${changed}${ending}`;
-    return (a.endsWith(plain) && b.endsWith(strong) && a.slice(0, -plain.length) === b.slice(0, -strong.length))
-      || (a.endsWith(strong) && b.endsWith(plain) && a.slice(0, -strong.length) === b.slice(0, -plain.length));
-  }));
+  return STRONG_STEMS.some(([base, changed]) =>
+    // The du-imperative is the bare changed stem („Sprich!", „Vergiss!"), so „Sprech" is the form the
+    // item teaches, not a slip (2026-10-25 review, C-062). Whole words only: a noun that merely ends
+    // like a stem („Gefahr"/„Gefähr", „Vorschlag") keeps its spelling allowance.
+    (a === base && b === changed) || (a === changed && b === base)
+    || ['e', 'st', 't', 'en', 'et'].some((ending) => {
+      const plain = `${base}${ending}`; const strong = `${changed}${ending}`;
+      return (a.endsWith(plain) && b.endsWith(strong) && a.slice(0, -plain.length) === b.slice(0, -strong.length))
+        || (a.endsWith(strong) && b.endsWith(plain) && a.slice(0, -strong.length) === b.slice(0, -plain.length));
+    }));
 }
 
 function endingDiffers(user, expected) {
@@ -226,6 +325,10 @@ export function strictApplies(expected) {
 function caseOnlyDiff(rawUser, rawAccepted) {
   return rawUser !== rawAccepted && rawUser.toLowerCase() === rawAccepted.toLowerCase();
 }
+
+/** normalizeAnswer's umlaut and ß fold WITHOUT its lower-casing: there a capital is a letter of its own. */
+const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue')
+  .replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ß/g, 'ss').replace(/ẞ/g, 'SS');
 
 /**
  * checkAnswer(userInput, expected: string | string[],
@@ -300,12 +403,16 @@ export function checkAnswer(userInput, expected, {
   }
   // Words that ask the same are the same answer, taught or not: a learner who writes „Wieso" where
   // the course taught „Warum" has made no mistake (DaF review #10, A1.2 B1). Here, not in `accepted`,
-  // because an accepted form counts as item lexis and would stamp the item unservable.
+  // because an accepted form counts as item lexis and would stamp the item unservable. The groups
+  // live in src/data/sameAnswer.js, which the grammar pages' island grades by too.
   for (const a of accepted) {
-    const group = SAME_ANSWER.find((g) => g.includes(prepare(a).toLowerCase()));
-    if (group && group.includes(user.toLowerCase())) return { result: RESULT.CORRECT, expected: a };
+    if (sameAnswer(prepare(a), user)) return { result: RESULT.CORRECT, expected: a };
   }
   for (const a of accepted) {
+    // A spelled word is nothing BUT its letters: „H-A-L-O" for „H-A-L-L-O", „Wilkommen" read off
+    // „W-I-L-L-K-O-M-M-E-N" and „CHAIRI" for the dictated „C-H-A-K-I-R-I" drop exactly the letter
+    // the task is about (2026-10-25 review, C-052). The separators are folded above; no letter is.
+    if (spellingMode) continue;
     if (strict && strictApplies(a)) continue;
     const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
@@ -315,11 +422,19 @@ export function checkAnswer(userInput, expected, {
     // So is a changed SHORT word inside a sentence: „ein" for „bin" or „kein", „dem" for „den" are
     // grammar and meaning, and so is any change to a negation (Codex score review, 2026-10-08 — a
     // graded checkpoint accepted „Ich ein von Beruf Lehrer."). The guard above only covers one-word
-    // answers. A short word typed whole plus one stray key („bistt") is still a slip.
+    // answers. A short word typed whole with one key bounced („bistt") is still a slip. So, at any
+    // length, are one closed-class word for another („deine" for „meine") and a strong participle
+    // or a modal formed on the wrong stem (see CLOSED_CLASS, participleSlip, modalSlip).
     const changed = changedWord(user, norm);
     if (changed && (NEGATION_RE.test(changed.expected) || NEGATION_RE.test(changed.given)
-      || (changed.expected.length <= 4 && !oneKeyAdded(changed.given, changed.expected)))) continue;
+      || (CLOSED_CLASS.has(changed.expected) && CLOSED_CLASS.has(changed.given))
+      || (changed.expected.length <= 4 && !oneKeyDoubled(changed.given, changed.expected))
+      || participleSlip(changed.given, changed.expected, raw(a).split(' ')[changed.at])
+      || modalSlip(changed.given, changed.expected))) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
+      // On a case task the capital is one of the letters: a typo PLUS the lost polite capital
+      // („Wie geht es ihnenn?") is two slips, not one, where „ihnen?" alone is wrong (X-042).
+      if (caseSensitive && levenshtein(caseKept(rawUser), caseKept(raw(a))) !== 1) continue;
       return { result: RESULT.TYPO, expected: a };
     }
   }
@@ -378,10 +493,26 @@ export function checkOptionsFor(item) {
     strict: STRICT_TOPIC.test(item?.topic || ''),
     caseSensitive: isCaseTask(item),
     dictation: isDictationTask(item),
-    spelling: spellingApplies(accepted),
+    spelling: spellingApplies(accepted) || spelledPrompt(item),
     choice: isChoiceItem(item),
     ...(item?.type === 'word_order' ? { wordOrder: true } : {}),
   };
+}
+
+/** Capital letters (and ß, which has none) printed one by one: „W-I-L-L-K-O-M-M-E-N", „G-R-U-ß". */
+const PRINTED_SPELLING_RE = /(?<!\p{L})[\p{Lu}ß](?:[-\s][\p{Lu}ß]){2,}(?!\p{L})/u;
+
+/**
+ * True when the item's PROMPT spells its answer out or asks for it spelled — „Lesen Sie die
+ * Buchstaben: W-I-L-L-K-O-M-M-E-N. Schreiben Sie das Wort", „Buchstabieren Sie …" (2026-10-25
+ * review, C-052). The key is the plain word there, so `spellingApplies` cannot see it, and the one
+ * letter the learner dropped („Wilkommen") was forgiven as a typo. Read from the prompt the item
+ * prints (`questionDe` in a pool, `promptDe` in a checkpoint); the verb inside a word bag
+ * („[ich / buchstabieren / Ana]") is content, not the instruction.
+ */
+export function spelledPrompt(item) {
+  const prompt = String(item?.questionDe ?? item?.promptDe ?? '').normalize('NFC');
+  return /\bBuchstabieren Sie\b/.test(prompt) || PRINTED_SPELLING_RE.test(prompt);
 }
 
 /**

@@ -8,6 +8,7 @@ const { topics } = JSON.parse(readFileSync(new URL('../grammar-content-cache.jso
 
 function analysisHarness() {
   const result = [];
+  const errors = [];
   const pending = [];
   const calls = [];
   const source = page.slice(page.indexOf('  const analyze = async'), page.indexOf('  const handleKeyDown ='));
@@ -15,7 +16,7 @@ function analysisHarness() {
   const bindings = {
     sentence: 'Die Mutter gibt dem Kind einen Apfel.',
     analysisInFlight: { current: false },
-    setLoading: () => {}, setError: () => {}, setResult: (value) => result.push(value),
+    setLoading: () => {}, setError: (value) => errors.push(value), setResult: (value) => result.push(value),
     setLimitReached: () => {}, setSelectedWord: () => {}, setSentence: () => {}, setUsage: () => {},
     getAuthHeaders: async () => ({}), user: null, anonId: 'anon-test', document: { referrer: '' },
     xraySource: () => ({}), getAttribution: () => null, withTimeout: (promise) => promise,
@@ -26,8 +27,20 @@ function analysisHarness() {
     },
   };
   const analyze = new Function(...Object.keys(bindings), `${source}\nreturn analyze;`)(...Object.values(bindings));
-  return { analyze, calls, pending, result };
+  return { analyze, calls, pending, result, errors };
 }
+
+test('X-Ray treats a 200 without a word list as a failed analysis, never a result (AI-20)', async () => {
+  for (const body of [{ error: 'x' }, { words: 'Ich helfe' }, {}]) {
+    const h = analysisHarness();
+    const run = h.analyze();
+    await Promise.resolve();
+    h.pending[0].resolve({ status: 200, ok: true, json: async () => body });
+    await run;
+    assert.deepEqual(h.result.filter(Boolean), [], `${JSON.stringify(body)} reached result.words.map`);
+    assert.equal(h.errors.at(-1), 'Analysis failed. Please try again.', 'the learner is told to retry');
+  }
+});
 
 test('X-Ray repeated Enter submissions reserve only one request before React renders', async () => {
   assert.match(page, /const analysisInFlight = useRef\(false\)/);

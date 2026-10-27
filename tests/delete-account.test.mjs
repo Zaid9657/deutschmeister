@@ -39,15 +39,23 @@ function endpoint({ deletionError = null, subs = [], env = {} } = {}) {
 
 const POST = { httpMethod: 'POST', headers: { authorization: 'Bearer valid-jwt' }, body: '{}' };
 
-test('a recurring subscription that still charges blocks deletion with 409; a course or cancelled plan does not', async () => {
+test('a recurring subscription that still charges blocks deletion with 409; a course order or cancelled plan does not', async () => {
   const live = endpoint({ subs: [{ status: 'active', plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }] });
   const res = await live.handler(POST);
   assert.equal(res.statusCode, 409);
   assert.match(JSON.parse(res.body).error, /cancel your subscription/i);
   assert.equal(live.deleted.length, 0);
   assert.match(live.selected[0], /lemonsqueezy_subscription_id/);
+  // ACC-03: a legacy course row that kept a subscription id is billing until
+  // reconciliation clears it, whatever the course window's status says.
+  for (const status of ['active', 'expired']) {
+    const legacy = endpoint({ subs: [{ status, plan_type: 'course', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }] });
+    assert.equal((await legacy.handler(POST)).statusCode, 409, `course row (${status}) with a retained subscription id`);
+    assert.equal(legacy.deleted.length, 0);
+  }
   for (const subs of [
-    [{ status: 'active', plan_type: 'course', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }],
+    [{ status: 'active', plan_type: 'course', cancel_at_period_end: false, lemonsqueezy_subscription_id: null }],
+    [{ status: 'active', plan_type: 'course', cancel_at_period_end: true, lemonsqueezy_subscription_id: 'sub-1' }],
     [{ status: 'active', plan_type: 'monthly', cancel_at_period_end: true, lemonsqueezy_subscription_id: 'sub-1' }],
     [{ status: 'expired', plan_type: 'monthly', cancel_at_period_end: false, lemonsqueezy_subscription_id: 'sub-1' }],
   ]) {

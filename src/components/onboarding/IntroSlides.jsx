@@ -1,9 +1,11 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Rocket, ChevronLeft, ChevronRight, Bug, GraduationCap } from 'lucide-react';
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { useAuth } from '../../contexts/AuthContext';
+import { useSubscription } from '../../contexts/SubscriptionContext';
 import { supabase } from '../../utils/supabase';
+import { withTimeout } from '../../utils/withTimeout';
 import { EXAM_TRACKS } from '../../data/examTracks';
 import { FREE_COURSE_LEVEL } from '../../lib/courseEntry.js';
 import { STARTING_POINT_KEY, STARTING_POINTS } from '../../lib/firstRun.js';
@@ -59,19 +61,37 @@ export default function IntroSlides({ onComplete }) {
   const { currentStep, setCurrentStep, completeOnboarding: completeStandaloneOnboarding, needsOnboarding } = useOnboarding();
   const completeOnboarding = onComplete || completeStandaloneOnboarding;
   const { user } = useAuth();
+  const { refreshSubscription } = useSubscription();
   const [examTrack, setExamTrack] = useState(null);
+  // The exam_track write, kept so every exit can wait for it (true = saved).
+  const examSave = useRef(null);
 
   // Persist the choice immediately (client-writable preference, like
-  // current_level); onboarding completion must never wait on it.
+  // current_level).
   const chooseExam = (key) => {
     setExamTrack(key);
     if (user) {
-      supabase.from('profiles').update({ exam_track: key }).eq('id', user.id)
+      examSave.current = supabase.from('profiles').update({ exam_track: key }).eq('id', user.id)
         .then(({ error }) => {
           if (error) console.error('exam_track save failed:', error.message);
-        });
+          return !error;
+        }, () => false);
     }
     setCurrentStep((s) => s + 1);
+  };
+
+  // Every exit leaves through here, so the exam pick reaches the dashboard in
+  // the same visit. The shared profile (SubscriptionContext) was loaded before
+  // the pick and still said "no exam": no goal strip, and the course card
+  // instead of the exam's first task, until a reload. The exit waits for the
+  // write (never more than 3 s — completion must not hang on a preference),
+  // completes onboarding, which is written before it navigates, and only then
+  // reloads the profile: if that reload re-mounts the guarded route, the
+  // onboarding gate finds its completion already written.
+  const finish = async (exitPath) => {
+    const saved = examSave.current ? await withTimeout(examSave.current, 3000).catch(() => false) : false;
+    await completeOnboarding(exitPath);
+    if (saved) await refreshSubscription();
   };
 
   useEffect(() => {
@@ -94,7 +114,7 @@ export default function IntroSlides({ onComplete }) {
 
   const handleSkip = () => {
     trackOnboardingSkipped();
-    completeOnboarding('dashboard');
+    return finish('dashboard');
   };
 
   // The exit out of the final slide (work order #6). Measured on the
@@ -106,8 +126,9 @@ export default function IntroSlides({ onComplete }) {
   // is remembered (user_metadata.starting_point), so the dashboard's first-run
   // card keeps offering the test until it is done. "new" is not written — it is
   // the default, and not writing it keeps a USER_UPDATED auth event out of the
-  // lesson player's first render.
-  // Pass the local exam choice: its profile write can still be in flight.
+  // lesson player's first render. Each button goes where its label says, also
+  // after an exam pick (src/lib/firstRun.js onboardingExitPath); the exam's
+  // first task waits on the dashboard's first-run card.
   const chooseStart = (point) => {
     if (point === STARTING_POINTS.SOME && user) {
       supabase.auth.updateUser({ data: { [STARTING_POINT_KEY]: point } })
@@ -115,7 +136,7 @@ export default function IntroSlides({ onComplete }) {
           if (error) console.error('starting_point save failed:', error.message);
         });
     }
-    completeOnboarding(point === STARTING_POINTS.SOME ? 'level-test' : 'first-lesson', { examTrack });
+    return finish(point === STARTING_POINTS.SOME ? 'level-test' : 'first-lesson');
   };
 
   const slide = SLIDES[currentStep];

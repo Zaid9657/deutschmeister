@@ -23,8 +23,12 @@ function queueAttemptWrite(attemptId, write) {
 // If it were ever missing, every call here returns its safe default and the
 // UI shows the empty/error state instead of crashing.
 
-/** Start a new attempt. Returns the row (with id + section_deadline anchors) or null. */
-export async function createAttempt(userId, examKey, firstSectionMinutes) {
+/**
+ * Start a new attempt. Returns the row (with id + section_deadline anchors) or null.
+ * `answers` seeds the answers map — the parallel form an attempt runs on is stored there
+ * (src/data/mockExams/forms.js FORM_KEY), so it is fixed from the first write.
+ */
+export async function createAttempt(userId, examKey, firstSectionMinutes, answers = {}) {
   const { data, error } = await supabase
     .from('exam_attempts')
     .insert({
@@ -33,6 +37,7 @@ export async function createAttempt(userId, examKey, firstSectionMinutes) {
       section: 'full',
       status: 'in_progress',
       section_deadline: new Date(Date.now() + firstSectionMinutes * 60000).toISOString(),
+      answers,
     })
     .select()
     .single();
@@ -43,7 +48,12 @@ export async function createAttempt(userId, examKey, firstSectionMinutes) {
   return data;
 }
 
-/** The user's most recent in-progress attempt for an exam (resume target). */
+/**
+ * The user's most recent in-progress attempt for an exam (resume target): the row, null when there
+ * is none, or undefined when the lookup FAILED. A failed read must never look like "no attempt":
+ * the overview would offer "Test starten", and a new attempt hides the unfinished one (only the
+ * newest in-progress row is resumable).
+ */
 export async function findResumableAttempt(userId, examKey) {
   const { data, error } = await supabase
     .from('exam_attempts')
@@ -56,9 +66,9 @@ export async function findResumableAttempt(userId, examKey) {
     .maybeSingle();
   if (error) {
     console.error('[examService] findResumableAttempt:', error.message);
-    return null;
+    return undefined;
   }
-  return data;
+  return data ?? null;
 }
 
 /** Load one attempt by id (RLS scopes to the owner). */

@@ -13,9 +13,14 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+import { onsiteHref, DOORS } from '../astro-site/src/lib/onsiteLinks.js';
 
 import {
   GUIDES,
+  GUIDE_OFFERS,
+  guideLang,
   getGuide,
   guideToc,
   guideReadingMinutes,
@@ -89,6 +94,77 @@ test('every guide leads with a definition-first answer of citable length', () =>
     if (/<[a-z]/i.test(g.answer)) failures.push(`${g.slug}: answer contains markup; it is rendered as text`);
   }
   assert.deepEqual(failures, []);
+});
+
+// Which guide fields the renderer (astro-site/src/pages/leitfaden/[slug].astro)
+// reads as HTML and which as text. Until 2026-10-25 step tasks and card bodies
+// rendered as text, so five authored links (level test, X-Ray, speaking, the
+// letter guide) showed as literal `<a href="…">`. An HTML field may carry only
+// the inline markup the copy uses; a text field none at all.
+const renderer = readFileSync(new URL('../astro-site/src/pages/leitfaden/[slug].astro', import.meta.url), 'utf8');
+const HTML_EXPRESSIONS = ['guide.lead', 'block.text', 'item', 'task', 'card.body'];
+const INLINE = /<\/?(?:a|strong|em)\b[^>]*>/gi;
+
+/** [where, text, asHtml] for every rendered string field of a guide. */
+function* guideFields(g) {
+  yield ['lead', g.lead, true];
+  for (const key of ['title', 'h1', 'description', 'badge', 'answer']) yield [key, g[key], false];
+  for (const s of g.sections) {
+    yield [`${s.id} heading`, s.heading, false];
+    for (const b of s.blocks) {
+      const at = `${s.id} ${b.type}`;
+      if (b.type === 'p') yield [at, b.text, true];
+      if (b.type === 'h3' || b.type === 'callout') yield [at, b.text, false];
+      if (b.type === 'list') for (const item of b.items) yield [at, item, true];
+      if (b.type === 'table') {
+        for (const cell of [...b.head, ...b.rows.flat(), b.caption ?? '']) yield [at, cell, false];
+      }
+      if (b.type === 'steps') {
+        for (const st of b.items) {
+          for (const task of st.tasks) yield [`${at} task`, task, true];
+          for (const value of [st.label, st.title, st.tip ?? '']) yield [at, value, false];
+        }
+      }
+      if (b.type === 'warnings') for (const w of b.items) for (const value of [w.title, w.body]) yield [at, value, false];
+      if (b.type === 'model') for (const value of [b.label ?? '', ...b.lines]) yield [at, value, false];
+      if (b.type === 'cards') {
+        for (const c of b.items) {
+          yield [`${at} body`, c.body, true];
+          for (const value of [c.eyebrow, c.title]) yield [at, value, false];
+        }
+      }
+    }
+  }
+  for (const f of g.faq) for (const value of [f.q, f.a]) yield ['faq', value, false];
+  for (const value of [g.cta.heading, g.cta.body]) yield ['cta', value, false];
+}
+
+test('the renderer reads every markup-carrying field as HTML, never as text', () => {
+  for (const expr of HTML_EXPRESSIONS) {
+    assert.match(renderer, new RegExp(`set:html=\\{${expr.replace('.', '\\.')}\\}`), `${expr} must render with set:html`);
+  }
+  assert.doesNotMatch(renderer, /<span>\{task\}<\/span>|>\{card\.body\}</, 'a step task or card body renders as escaped text again');
+});
+
+test('guide fields carry markup only where it renders: inline links and emphasis in HTML fields, nothing in text fields', () => {
+  const failures = [];
+  let html = 0;
+  for (const g of GUIDES) {
+    for (const [where, text, asHtml] of guideFields(g)) {
+      if (typeof text !== 'string') continue;
+      if (asHtml) {
+        html += 1;
+        // Strip the allowed inline tags; anything tag-like or a bare "&" left over
+        // would be parsed as HTML instead of shown.
+        const rest = text.replace(INLINE, '').replace(/&(?:[a-z]+|#\d+);/gi, '');
+        if (/<[a-z/!]/i.test(rest) || /&/.test(rest)) failures.push(`${g.slug} ${where}: unsupported markup in an HTML field — "${text.slice(0, 80)}"`);
+      } else if (/<[a-z/][^>]*>/i.test(text)) {
+        failures.push(`${g.slug} ${where}: markup in a field rendered as text — "${text.slice(0, 80)}"`);
+      }
+    }
+  }
+  assert.ok(html > 0, 'no HTML fields were read — did the walker break?');
+  assert.deepEqual(failures, [], `guide markup:\n  ${failures.join('\n  ')}`);
 });
 
 test('section ids are unique within a guide and match their TOC anchors', () => {
@@ -213,4 +289,63 @@ test('the JSON-LD builder emits Article, FAQPage and BreadcrumbList', () => {
     // The breadcrumb's last item must be this guide, or the trail lies.
     assert.equal(crumbs.itemListElement.at(-1).item, guideUrl(g));
   }
+});
+
+// ── exam long-tail pages (backlog d2, 2026-10-26) ──────────────────────────
+//
+// Each exam page leads its CTA with a tagged door to the matching offer or
+// waitlist. The rules, not a list of pages: an offer names a door that exists,
+// its link is attributed (ref=leitfaden, onsite, a campaign label, the slug),
+// and a page's chrome, schema and cross-links speak the page's language.
+
+test('every guide offer resolves to an existing, attributed door with a campaign label', () => {
+  const failures = [];
+  for (const [key, spec] of Object.entries(GUIDE_OFFERS)) {
+    if (!DOORS[spec.door]) failures.push(`offer ${key}: unknown door ${spec.door}`);
+    if (!/^[a-z0-9-]+$/.test(spec.campaign || '')) failures.push(`offer ${key}: campaign "${spec.campaign}" is not a clean label`);
+    if (!spec.label) failures.push(`offer ${key}: no button label`);
+  }
+  for (const g of GUIDES.filter((x) => x.offer)) {
+    const spec = GUIDE_OFFERS[g.offer];
+    if (!spec) { failures.push(`${g.slug}: unknown offer "${g.offer}"`); continue; }
+    const url = new URL(onsiteHref(spec.door, 'leitfaden', g.slug, spec.campaign), 'https://deutsch-meister.de');
+    if (url.pathname !== DOORS[spec.door]) failures.push(`${g.slug}: door path changed by the query`);
+    for (const [k, v] of [['ref', 'leitfaden'], ['utm_medium', 'onsite'], ['utm_campaign', spec.campaign], ['utm_content', g.slug]]) {
+      if (url.searchParams.get(k) !== v) failures.push(`${g.slug}: ${k} is "${url.searchParams.get(k)}", want "${v}"`);
+    }
+  }
+  assert.deepEqual(failures, [], `offer doors:\n  ${failures.join('\n  ')}`);
+});
+
+test('the renderer leads with the offer door and never shows the same signup door twice', () => {
+  assert.match(renderer, /onsiteHref\(offerSpec\.door, 'leitfaden', guide\.slug, offerSpec\.campaign\)/, 'the offer door must be built with onsiteHref and its campaign');
+  assert.match(renderer, /href=\{primary\.href\}/);
+  assert.match(renderer, /secondary = offerSpec\s*\?\s*\{ href: doors\.levelTest/, 'with an offer, the second button is the level test');
+});
+
+test('an offer copy promises no notification and quotes no price', () => {
+  // A waitlist door is a free account with a campaign label. Promising to write
+  // to the person would need a consent basis (owner-only), and the telc price
+  // is stated only on its sales page while it can be bought.
+  const PROMISE = /benachrichtig|informieren wir|melden uns|we will (?:email|notify|let you know)|notify you|\bwaitlist\b|warteliste/i;
+  const PRICE = /\d\s?(?:€|euro)\b|€\s?\d/i;
+  const failures = [];
+  for (const g of GUIDES.filter((x) => x.offer)) {
+    const copy = [g.cta.heading, g.cta.body, GUIDE_OFFERS[g.offer].label].join(' ');
+    if (PROMISE.test(copy)) failures.push(`${g.slug}: CTA promises a notification or names a waitlist`);
+    if (PRICE.test(copy)) failures.push(`${g.slug}: CTA quotes a price`);
+  }
+  assert.deepEqual(failures, []);
+});
+
+test('a guide declares a supported language, and the schema and cross-links follow it', () => {
+  const org = { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' };
+  for (const g of GUIDES) {
+    assert.ok(['de', 'en'].includes(guideLang(g)), `${g.slug}: unsupported lang "${g.lang}"`);
+    const [article] = guideJsonLd(g, { organization: org, buildDate: '2026-10-26' });
+    assert.equal(article.inLanguage, guideLang(g), `${g.slug}: Article inLanguage`);
+  }
+  assert.ok(GUIDES.some((g) => guideLang(g) === 'en'), 'expected at least one English guide');
+  assert.match(renderer, /guideLang\(g\) === lang/, 'cross-links stay within the page language');
+  assert.match(renderer, /lang=\{lang\}/, 'the page declares its own language');
 });

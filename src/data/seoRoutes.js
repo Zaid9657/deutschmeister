@@ -28,6 +28,7 @@ import {
   LISTENING_EXERCISE_COUNT,
   LISTENING_DIALOGUE_COUNT,
   READING_LESSON_COUNT,
+  PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 
 export const SITE_TITLE = 'DeutschMeister';
@@ -40,23 +41,36 @@ export const fullTitle = (title) =>
  * Keyed by the slash-less route; every one of these canonicalises to the
  * trailing-slash form (CLAUDE.md trailing-slash case 2). `url` carries the
  * canonical form so neither consumer retypes the rule.
+ *
+ * `updated` is the date the route's prerendered copy last changed — its head
+ * here, its body in scripts/prerender-spa-routes.mjs (the /faq/ answers also in
+ * faqContent.js, FAQ_COPY_UPDATED). public/sitemap-spa.xml carries lastmod by
+ * hand and may never fall behind it (tests/sitemap-lastmod.test.mjs): change a
+ * route's copy, set its `updated`, bump its lastmod.
  */
 export const SEO_ROUTES = {
   '/speaking': {
+    updated: '2026-10-25',
     title: 'German Speaking Practice with AI',
+    // The evaluation comes when the conversation ends ("Finish & get feedback"),
+    // never during it — not "instant" (2026-10-25, tests/claims.test.mjs).
     description:
-      'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
+      'Practice speaking German with an AI conversation partner: guided missions or free conversation, and feedback after each session. Levels A1 to B2.',
     keywords:
       'German speaking practice, speak German with AI, German conversation practice, practice German online',
   },
   '/level-test': {
+    updated: '2026-10-25',
     title: 'Free German Level Test (A1–B2)',
-    description:
-      'Free German level test: find your CEFR level in 15 minutes. Reading, listening and speaking, with instant results and a personalised next step.',
+    // The duration is the claims registry's (it said a retyped "15 minutes"),
+    // and the sections are the test's own: grammar and reading questions,
+    // then listening, then speaking.
+    description: `Free German level test: find your CEFR level in about ${PLACEMENT_TEST_MINUTES} minutes. Grammar and reading, listening and speaking, then a personalised next step.`,
     keywords:
       'German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test',
   },
   '/analyze': {
+    updated: '2026-08-24',
     title: 'Sentence X-Ray — Analyze German Sentences',
     description:
       'Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does.',
@@ -64,12 +78,14 @@ export const SEO_ROUTES = {
       'German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar',
   },
   '/podcasts': {
+    updated: '2026-10-22',
     title: 'German Podcasts for Learners A1–B2',
     description: `German podcasts for learners: ${PODCAST_EPISODE_COUNT} episodes of native-speaker audio graded A1 to B2, with A1.1 free. Build listening skills while you commute or relax.`,
     keywords:
       'German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast by CEFR level',
   },
   '/listening': {
+    updated: '2026-08-24',
     // "48 exercises built from 480 dialogue lines", not "480 dialogues" — the
     // flat form overstated the count by an order of magnitude (lines ≠ dialogues).
     description: `Improve your German listening comprehension with ${LISTENING_EXERCISE_COUNT} exercises built from ${LISTENING_DIALOGUE_COUNT} native-speaker dialogue lines, across all CEFR levels. Questions and instant feedback.`,
@@ -78,24 +94,27 @@ export const SEO_ROUTES = {
       'German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues',
   },
   '/reading': {
+    updated: '2026-08-24',
     title: 'German Reading Practice A1–B2',
     description: `Improve your German reading comprehension with ${READING_LESSON_COUNT} leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.`,
     keywords:
       'German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises',
   },
   '/faq': {
+    updated: '2026-10-25',
     title: 'Frequently Asked Questions',
     description:
       'Answers about Deutschmeister pricing, exam preparation, AI speaking practice, Sentence X-Ray, privacy, and learning German from A1 to B2.',
     keywords:
-      'Deutschmeister FAQ, learn German, Goethe exam, telc exam, TestDaF, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
+      'Deutschmeister FAQ, learn German, Goethe exam, telc exam, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
   },
   '/ueber-uns': {
+    updated: '2026-10-25',
     title: 'About Deutschmeister',
     description:
       'Meet the team behind Deutschmeister and learn why doctors in Germany built focused tools for German grammar, speaking, and exam preparation.',
     keywords:
-      'Deutschmeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, TestDaF',
+      'Deutschmeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, DTZ',
   },
 };
 

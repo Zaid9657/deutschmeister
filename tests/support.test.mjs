@@ -167,3 +167,85 @@ test('end to end: the form payload opens a ticket through the real handler, iden
   assert.equal(message.author_type, 'user');
   assert.equal(message.visibility, 'public');
 });
+
+/** An in-memory stand-in that applies the handler's filters (and supports delete). */
+function memorySupabase(supabase, { userId, tables, failMessageInsert = false }) {
+  supabase.auth.getUser = async (token) =>
+    token === 'valid-jwt' ? { data: { user: { id: userId } }, error: null } : { data: {}, error: { message: 'bad jwt' } };
+  supabase.from = (table) => {
+    const rows = (tables[table] ||= []);
+    const filters = [];
+    let removing = false;
+    const hits = () => rows.filter((row) => filters.every((f) => f(row)));
+    const chain = {
+      select: () => chain, order: () => chain, limit: () => chain,
+      eq: (key, value) => { filters.push((row) => row[key] === value); return chain; },
+      in: (key, values) => { filters.push((row) => values.includes(row[key])); return chain; },
+      insert: async (row) => {
+        if (table === 'support_ticket_messages' && failMessageInsert) return { error: { message: 'support_ticket_messages unavailable' } };
+        rows.push({ ...row });
+        return { error: null };
+      },
+      delete: () => { removing = true; return chain; },
+      maybeSingle: async () => ({ data: hits()[0] ?? null, error: null }),
+      then: (ok, fail) => Promise.resolve().then(() => {
+        const matched = hits();
+        if (removing) { for (const row of matched) rows.splice(rows.indexOf(row), 1); return { data: null, error: null }; }
+        return { data: matched, count: matched.length, error: null };
+      }).then(ok, fail),
+    };
+    return chain;
+  };
+}
+
+async function realHandler(options) {
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||= 'test-service-role-key';
+  const { supabase } = await import('../netlify/functions/_shared/supabase.mjs');
+  memorySupabase(supabase, options);
+  const { handler } = await import('../netlify/functions/support-ticket-create.mjs');
+  return (payload) => handler({ httpMethod: 'POST', headers: { authorization: 'Bearer valid-jwt' }, body: JSON.stringify(payload) });
+}
+
+test('a ticket whose first message cannot be saved is removed and the request fails, so the form keeps the text', async () => {
+  const tables = { profiles: [{ id: 'jwt-user', email: 'learner@example.com' }], support_tickets: [], support_ticket_messages: [] };
+  const post = await realHandler({ userId: 'jwt-user', tables, failMessageInsert: true });
+  const res = await post(ticketPayload({ subject: 'Zahlung fehlgeschlagen', category: 'payment', body: 'Meine Zahlung ist nicht durchgegangen.' }));
+  assert.equal(res.statusCode, 500, 'no "Danke — eingegangen" for a lost message');
+  assert.match(JSON.parse(res.body).error, /nicht gespeichert/);
+  assert.deepEqual(tables.support_tickets, [], 'no orphan ticket with a subject and no message');
+  // The form clears subject and text only after call() resolved — call() throws on !ok.
+  const form = read('src/components/SupportRequestForm.jsx');
+  const submit = form.slice(form.indexOf('const submit'), form.indexOf('const inputCls'));
+  assert.ok(submit.indexOf('await call(ticketPayload(') < submit.indexOf("setSubject('')"), 'fields are cleared only after a successful call');
+  assert.match(form, /if \(!res\.ok\) throw new Error/);
+});
+
+test('the in-app thread: only the owner reads it, and only its public messages', async () => {
+  const tables = {
+    support_tickets: [
+      { id: 'tkt-own', user_id: 'jwt-user', reference: 'DM-0000AAAA', subject: 'Frage', status: 'waiting_user', created_at: '2026-10-20T10:00:00Z' },
+      { id: 'tkt-other', user_id: 'someone-else', reference: 'DM-0000BBBB', subject: 'Fremd', status: 'open', created_at: '2026-10-20T10:00:00Z' },
+    ],
+    support_ticket_messages: [
+      { id: 'm1', ticket_id: 'tkt-own', author_type: 'user', visibility: 'public', body: 'Wo finde ich Lektion 3?', created_at: '2026-10-20T10:00:00Z' },
+      { id: 'm2', ticket_id: 'tkt-own', author_type: 'admin', visibility: 'internal', body: 'interne Notiz: Konto prüfen', created_at: '2026-10-20T11:00:00Z' },
+      { id: 'm3', ticket_id: 'tkt-own', author_type: 'admin', visibility: 'public', body: 'Im Kurs unter A1.1.', created_at: '2026-10-20T12:00:00Z' },
+      { id: 'm4', ticket_id: 'tkt-other', author_type: 'user', visibility: 'public', body: 'fremde Nachricht', created_at: '2026-10-20T10:00:00Z' },
+    ],
+  };
+  const post = await realHandler({ userId: 'jwt-user', tables });
+  const own = await post({ action: 'thread', ticketId: 'tkt-own' });
+  assert.equal(own.statusCode, 200, own.body);
+  const thread = JSON.parse(own.body);
+  assert.equal(thread.ticket.reference, 'DM-0000AAAA');
+  assert.deepEqual(thread.messages.map((m) => m.body), ['Wo finde ich Lektion 3?', 'Im Kurs unter A1.1.'], 'internal notes never reach the learner');
+  assert.ok(thread.messages.every((m) => m.author_type && m.created_at));
+  const foreign = await post({ action: 'thread', ticketId: 'tkt-other' });
+  assert.equal(foreign.statusCode, 404, "another learner's ticket does not exist for this user");
+
+  // The form opens a thread lazily through the same action and renders it as text.
+  const form = read('src/components/SupportRequestForm.jsx');
+  assert.match(form, /call\(\{ action: 'thread', ticketId/);
+  assert.doesNotMatch(form, /dangerouslySetInnerHTML/, 'a reply body is text, never HTML');
+  assert.match(form, /author_type === 'user' \? 'Sie' : 'DeutschMeister'/);
+});

@@ -1,10 +1,16 @@
 // Grammar Topics organized by sub-levels (A1.1 - B2.2)
 // Each sub-level has 8 grammar topics following the PPP pedagogical framework
+//
+// `id` is `${level}-gt${order}`: it is the key loadUserGrammarProgress builds
+// from the DB's topic_order (src/services/grammarService.js), so a progress row
+// lands on the topic it belongs to. The A1.1 ids kept their pre-reorder numbers
+// after 2026-09-03, and the dashboard ticked Alphabet for a passed Nouns &
+// Gender. tests/topic-order.test.mjs pins the rule for every topic.
 
 export const grammarTopics = {
   'a1.1': [
     {
-      id: 'a1.1-gt2',
+      id: 'a1.1-gt1',
       order: 1,
       slug: 'nouns-gender',
       titleEn: 'Nouns & Gender',
@@ -15,7 +21,7 @@ export const grammarTopics = {
       estimatedTime: 20,
     },
     {
-      id: 'a1.1-gt3',
+      id: 'a1.1-gt2',
       order: 2,
       slug: 'definite-articles',
       titleEn: 'Definite Articles',
@@ -26,7 +32,7 @@ export const grammarTopics = {
       estimatedTime: 15,
     },
     {
-      id: 'a1.1-gt5',
+      id: 'a1.1-gt3',
       order: 3,
       slug: 'personal-pronouns',
       titleEn: 'Personal Pronouns',
@@ -37,7 +43,7 @@ export const grammarTopics = {
       estimatedTime: 20,
     },
     {
-      id: 'a1.1-gt6',
+      id: 'a1.1-gt4',
       order: 4,
       slug: 'verb-sein',
       titleEn: 'Verb "sein" (to be)',
@@ -48,7 +54,7 @@ export const grammarTopics = {
       estimatedTime: 20,
     },
     {
-      id: 'a1.1-gt1',
+      id: 'a1.1-gt5',
       order: 5,
       slug: 'alphabet-pronunciation',
       titleEn: 'Alphabet & Pronunciation',
@@ -59,7 +65,7 @@ export const grammarTopics = {
       estimatedTime: 15,
     },
     {
-      id: 'a1.1-gt7',
+      id: 'a1.1-gt6',
       order: 6,
       slug: 'verb-haben',
       titleEn: 'Verb "haben" (to have)',
@@ -70,7 +76,7 @@ export const grammarTopics = {
       estimatedTime: 20,
     },
     {
-      id: 'a1.1-gt4',
+      id: 'a1.1-gt7',
       order: 7,
       slug: 'indefinite-articles',
       titleEn: 'Indefinite Articles',

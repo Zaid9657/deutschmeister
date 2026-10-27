@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams, Navigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck, Check, Lock, Flame, Zap, Trophy } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { courseFor } from '../data/courses/index.js';
@@ -11,6 +11,7 @@ import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import FullPageRedirect from '../components/FullPageRedirect.jsx';
 import { curriculumFor } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
 import CurriculumHomePage from './CurriculumHomePage.jsx';
@@ -51,7 +52,7 @@ export default function CourseHomePage() {
     return () => { cancelled = true; };
   }, [user, course]);
 
-  if (!course) return <Navigate to="/courses/" replace />;
+  if (!course) return <FullPageRedirect to="/courses/" />;
   // A rebuilt level (docs/course-standard-2026-09-12.md) renders the
   // Lektionen path instead of the legacy 28-day program.
   const curriculum = curriculumFor(level);

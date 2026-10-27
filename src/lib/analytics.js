@@ -14,6 +14,13 @@ const host = import.meta.env.VITE_POSTHOG_HOST;
 let posthog = null; // resolved module, once consent is given
 let initialized = false;
 let loading = null; // in-flight import, so concurrent callers share one fetch
+// The learner identify() was asked for while no PostHog existed yet: AuthContext
+// identifies on INITIAL_SESSION, usually before the lazy import resolves, and a
+// learner who signs in before accepting the banner is identified while there is
+// no client at all. Dropping that call left both anonymous until the next auth
+// event (about an hour later). Kept in memory only, applied right after init
+// (which itself requires consent), cleared on sign-out and on withdrawal.
+let pendingIdentity = null;
 
 // Same consent flag the cookie banner (public/consent.js) writes for GA.
 function hasConsent() {
@@ -39,7 +46,11 @@ export async function initAnalytics() {
       posthog = mod.default;
       posthog.init(key, {
         api_host: host || 'https://us.i.posthog.com',
-        capture_pageview: true,
+        // 'history_change', not true: posthog-js (1.376) records the SPA's
+        // History-API route changes only for this value. `true` captured the
+        // first page load alone, so the in-app path signup → onboarding →
+        // lesson → /subscription never appeared as pageviews.
+        capture_pageview: 'history_change',
         capture_pageleave: true,
       });
       initialized = true;
@@ -49,6 +60,9 @@ export async function initAnalytics() {
       if (a) {
         posthog.register({ dm_source: a.first.source, dm_medium: a.first.medium || null, dm_campaign: a.first.campaign || null });
       }
+      const identity = pendingIdentity;
+      pendingIdentity = null;
+      if (identity && hasConsent()) posthog.identify(identity.userId, identity.traits);
     })
     .catch((err) => {
       // Analytics must never break the app — a blocked or failed chunk is fine.
@@ -62,7 +76,12 @@ export async function initAnalytics() {
 }
 
 export function identify(userId, traits) {
-  if (!hasConsent() || !initialized || !posthog) return;
+  if (!initialized || !posthog) {
+    // Not sent anywhere: initAnalytics applies it once consent has loaded PostHog.
+    pendingIdentity = { userId, traits };
+    return;
+  }
+  if (!hasConsent()) return;
   posthog.identify(userId, traits);
 }
 
@@ -95,11 +114,13 @@ export function track(event, props) {
 }
 
 export function resetAnalytics() {
+  pendingIdentity = null;
   if (!initialized || !posthog) return;
   posthog.reset();
 }
 
 export function withdrawAnalytics() {
+  pendingIdentity = null;
   if (!initialized || !posthog) return;
   posthog.reset();
   posthog.opt_out_capturing?.();

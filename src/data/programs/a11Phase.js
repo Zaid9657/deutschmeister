@@ -258,11 +258,13 @@ const A11_VOCAB_CATEGORIES = {
 
 // The A1.1 vocabulary tab: LevelPage.jsx's TAB_IDS defaults to 'vocabulary'
 // when no ?tab= is present, so the bare hub link already lands there — no
-// query string needed (case 3, dynamic route, no trailing slash).
+// query string needed (case 3, dynamic route, no trailing slash). Once the
+// words are in, the level page links straight to the trainer ("Jetzt üben"),
+// so the first review happens the day they are added, not on Tag 27.
 const vocab = (id, category, minutes = 15) => ({
   id,
   type: 'reading',
-  title: `Wortschatz: ${category} — in den Trainer`,
+  title: `Wortschatz: ${category} — hinzufügen und gleich üben`,
   minutes,
   href: '/level/a1.1',
 });

@@ -18,6 +18,38 @@ const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em
 const STATUS_CHIP = 'inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1 font-data text-[0.75rem] text-graphite';
 const EQ_BARS = [0, 1, 2, 3, 4, 5, 6];
 
+/**
+ * Ask for a finished session's feedback. The server grades the transcript it
+ * stored itself, so the session token is the whole request — and asking again
+ * is safe: a finished grade comes back as it was stored, a grade in progress
+ * answers 409, a failed one can be graded again (netlify/functions/evaluate-speaking.mjs).
+ * The first request after a session and every "Retry feedback" use this one call.
+ *
+ * Resolves { ok: true, evaluation } or { ok: false, status, code, retryable, result }:
+ * `status` 0 is a network failure, 200 an `evaluation_failed` answer (kept in `result`).
+ */
+export async function requestSpeakingEvaluation(sessionToken) {
+  let res;
+  try {
+    res = await fetch('/api/speaking/evaluate-speaking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+      body: JSON.stringify({ session_token: sessionToken }),
+    });
+  } catch (err) {
+    console.error('Evaluation error:', err);
+    return { ok: false, status: 0, code: 'network', retryable: true, result: null };
+  }
+  const data = await res.json().catch(() => null);
+  if (res.ok && data && !data.evaluation_failed) return { ok: true, evaluation: data };
+  const status = res.ok ? 200 : res.status;
+  const code = data?.error || (data?.evaluation_failed ? 'evaluation_failed' : null);
+  if (!res.ok) console.error('Evaluation failed:', status, code);
+  // Nothing to grade, or not this learner's session: asking again cannot help.
+  const retryable = code !== 'no_learner_turns' && ![400, 401, 403, 404].includes(status);
+  return { ok: false, status, code, retryable, result: data?.evaluation_failed ? data : null };
+}
+
 // Turn-based tap-to-speak session. Started by the caller (speaking-session
 // action 'start'); this component only drives the conversation loop:
 //   tap → record → speaking-turn (STT → teacher → TTS) → play + transcript
@@ -35,7 +67,11 @@ const SpeakingSession = ({
   plannedMinutes = 5,
   opening,               // { text, audioBase64 }
   micStream = null,      // granted before the session was created (acquireMicrophone)
-  onComplete,
+  onComplete,            // (evaluation | null) — null only when the learner said nothing
+  // ({ sessionToken, level, isPlacement, status, code, retryable, result }) — the
+  // feedback request failed; the caller offers "Retry feedback". Without it a
+  // failure falls back to onComplete (null, or the `evaluation_failed` answer).
+  onEvaluationFailed,
   onCancel,              // (ended: Promise) — resolves once the server has closed the session
 }) => {
   const isPlacement = evalMode === 'placement';
@@ -64,11 +100,23 @@ const SpeakingSession = ({
   const startTimeRef = useRef(0);
   const lastRecordingRef = useRef(null); // { audioBase64, mimeType } for retry
   const lastReplyAudioRef = useRef(opening?.audioBase64 || null);
-  const transcriptEndRef = useRef(null);
+  const controlsRef = useRef(null);
   const turnInFlightRef = useRef(null); // the pending speaking-turn request, if any
+  const aliveRef = useRef(false); // false once the learner has left this screen
 
   useEffect(() => { messagesRef.current = messages; }, [messages]);
-  useEffect(() => { transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, recordState]);
+  // A new message brings the newest reply and the record button into view —
+  // the control bar sits right under the transcript, so lining up ITS bottom
+  // edge keeps both on screen ('nearest' does nothing when they already are).
+  // Only on a new message: a tap to record no longer drags away a learner who
+  // scrolled up to read an earlier reply. scroll-margin clears the mobile tab bar.
+  useEffect(() => {
+    controlsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [messages.length]);
+  useEffect(() => {
+    aliveRef.current = true;
+    return () => { aliveRef.current = false; };
+  }, []);
 
   // ---- audio playback ----
   const stopAudio = useCallback(() => {
@@ -152,26 +200,24 @@ const SpeakingSession = ({
     // Log the end (best-effort — must not block evaluation).
     await reportEnd();
 
-    // Nothing said → no evaluation.
+    // Nothing said → no evaluation. The ONLY case that reports null.
     if (userTurns === 0) { onComplete?.(null); return; }
 
+    // A failed request (409 still grading, 429, 5xx, offline, an unusable
+    // grade) used to report null too — the practice page went silently back to
+    // setup and the level test counted speaking as skipped, for a session that
+    // had already used its allowance. Now the caller is told, and can retry.
     setEvaluating(true);
-    try {
-      const res = await fetch('/api/speaking/evaluate-speaking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({
-          session_token: sessionToken,
-          level,
-          messages: currentMessages,
-          ...(isPlacement ? { mode: 'placement' } : {}),
-        }),
+    const outcome = await requestSpeakingEvaluation(sessionToken);
+    setEvaluating(false);
+    if (outcome.ok) onComplete?.(outcome.evaluation);
+    else if (onEvaluationFailed) {
+      onEvaluationFailed({
+        sessionToken, level, isPlacement,
+        status: outcome.status, code: outcome.code, retryable: outcome.retryable, result: outcome.result,
       });
-      if (res.ok) onComplete?.(await res.json());
-      else { console.error('Evaluation failed:', await res.text()); onComplete?.(null); }
-    } catch (err) { console.error('Evaluation error:', err); onComplete?.(null); }
-    finally { setEvaluating(false); }
-  }, [sessionToken, level, isPlacement, onComplete, stopAudio, reportEnd]);
+    } else onComplete?.(outcome.result);
+  }, [sessionToken, level, isPlacement, onComplete, onEvaluationFailed, stopAudio, reportEnd]);
 
   // ---- timer: countdown from planned_minutes, auto-end at 0 ----
   useEffect(() => {
@@ -200,10 +246,12 @@ const SpeakingSession = ({
     setTtsWarning(false);
     setNoSpeech(false);
     try {
+      // The server builds the teacher's context from the transcript it stored;
+      // the conversation is not sent along.
       const res = await fetch('/api/speaking/speaking-turn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ sessionToken, audioBase64, mimeType, history: messagesRef.current }),
+        body: JSON.stringify({ sessionToken, audioBase64, mimeType }),
       });
       const data = await res.json().catch(() => ({}));
 
@@ -212,6 +260,12 @@ const SpeakingSession = ({
         if (data.code === 'session_expired' || data.code === 'session_closed') {
           setRecordState('idle');
           endSession();
+          return;
+        }
+        // Too long to send: the same recording would be refused again.
+        if (res.status === 413) {
+          setTurnError({ message: 'That answer was too long to send. Please record a shorter answer.', stage: 'input', retryable: false });
+          setRecordState('idle');
           return;
         }
         setTurnError({
@@ -236,7 +290,9 @@ const SpeakingSession = ({
         lastReplyAudioRef.current = null;
       } else {
         lastReplyAudioRef.current = replyAudioBase64;
-        if (!endingRef.current) playAudio(replyAudioBase64); // not over the scoring screen
+        // Not over the scoring screen, and not after the learner left: a reply
+        // that lands on another page has nothing there to stop it.
+        if (aliveRef.current && !endingRef.current) playAudio(replyAudioBase64);
       }
       setRecordState('idle');
     } catch (err) {
@@ -330,8 +386,9 @@ const SpeakingSession = ({
 
   return (
     <div className="min-h-screen bg-paper text-ink flex flex-col pt-16">
-      {/* Header: title + countdown */}
-      <div className="flex-shrink-0 border-b border-rule bg-white">
+      {/* Header: title + countdown. Sticky under the navbar, so the timer and
+          the 30-second warning stay in view however long the transcript grows. */}
+      <div className="sticky top-16 z-10 flex-shrink-0 border-b border-rule bg-white">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="min-w-0 flex items-center gap-2">
             <Chip tone="label" className="flex-shrink-0">
@@ -392,7 +449,6 @@ const SpeakingSession = ({
               </Card>
             </div>
           )}
-          <div ref={transcriptEndRef} />
         </div>
       </div>
 
@@ -427,8 +483,8 @@ const SpeakingSession = ({
         )}
       </div>
 
-      {/* Control bar */}
-      <div className="flex-shrink-0 bg-white border-t border-rule pb-[env(safe-area-inset-bottom)]">
+      {/* Control bar — the auto-scroll target (see controlsRef above) */}
+      <div ref={controlsRef} className="flex-shrink-0 bg-white border-t border-rule pb-[env(safe-area-inset-bottom)] scroll-mb-20 lg:scroll-mb-0">
         <div className="max-w-lg mx-auto px-4 py-5 flex flex-col items-center">
           {/* Level meter: live bars while recording, a calm resting row otherwise */}
           <div className="h-8 mb-4 flex items-end justify-center gap-1" aria-hidden="true">

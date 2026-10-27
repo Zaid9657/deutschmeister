@@ -26,7 +26,7 @@ Every Astro event also carries `entry_page`, `signed_in` and the first-touch `dm
 | | `demo_completed` | All three demo items answered correctly | `result` |
 | Choose | `course_selected` | A station, a fit answer or a course card is chosen | `level`, `choice`, `surface` |
 | Want it | `checkout_intent` | Buy or Pro is pressed, before the sign-in check | `product`, `amount`, `surface` |
-| Account | `signup_started` / `signup_completed` | Form submitted / first confirmed sign-in on this browser (`src/lib/signupCompletion.js`) | — |
+| Account | `signup_started` / `signup_completed` | Form submitted (SignupPage's submit, after the client-side checks; the only emitter) / first confirmed sign-in on this browser (`src/lib/signupCompletion.js`) | — |
 | Pay | `checkout_opened` (Astro) / `checkout_started` (SPA) | The Lemon Squeezy checkout opens for a signed-in buyer | `product`, `amount` |
 | Paid (observed) | `checkout_completed` | The app sees the success screen once (`dm_checkout_pending` → `consumeCheckoutSuccess`) | `plan`, `amount` |
 | Paid (real) | — | A `purchases` row exists (webhook) | `weekly_truth_metrics()` |
@@ -34,6 +34,10 @@ Every Astro event also carries `entry_page`, `signed_in` and the first-touch `dm
 | Social | `social_clicked` | A link to YouTube / Instagram / Facebook is clicked (site footer, lesson recap) | `channel`, `surface` |
 
 **The `signup_completed` fix.** It used to fire only within 60 seconds of account creation, and email confirmation usually takes longer. It now also fires when the email was confirmed in the last 30 minutes on an account under 14 days old, once per browser.
+
+**The `signup_started` fix (2026-10-25).** It used to fire on every view of `/signup`, and the homepage's "Create a free account" click fired it again, so the step counted page views, twice for homepage visitors, and no event marked an actual submit. It now fires once per submitted form, after the password check and before the account request. The homepage door is a tagged link (`ref=home`) and carries no event. Readings of `signup_started` before this date are page views, not submits.
+
+**Props the GA mirror kept dropping.** `mirrorToGa()` sends only `ALLOWED_PROPS`. Since 2026-10-25 that list also holds the fixed values the app already sent: `exit_path` (onboarding), `slide`, `hit` (Lektion 1 first sentence), and `offer`, `reason`, `moment` (the speaking-limit `paywall_shown`).
 
 ## The metric
 

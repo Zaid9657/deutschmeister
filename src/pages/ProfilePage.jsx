@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight, GraduationCap, Target } from 'lucide-react';
@@ -21,6 +21,28 @@ import { profilePlanAction } from '../lib/billingPortal.js';
 
 const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
+/** A local date as YYYY-MM-DD — the form a date input reads and writes (as in ExamDatePlan). */
+const dateInput = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const EXAM_DATE_YEARS_AHEAD = 5;
+
+// What a typed exam date may save: null clears it, a date from today to five
+// years ahead is kept, anything else (undefined) is not saved. A date input
+// reports each keystroke of the year as a valid value ('0002-05-12', then
+// '0020-05-12'), and every one of them used to be written to profiles.exam_date,
+// which feeds the dashboard countdown and the course plan.
+const examDateToSave = (value, now = new Date()) => {
+  if (!value) return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+  const day = new Date(`${value}T12:00:00`);
+  if (Number.isNaN(day.getTime()) || dateInput(day) !== value) return undefined; // e.g. 2026-02-31
+  const latest = new Date(now);
+  latest.setFullYear(latest.getFullYear() + EXAM_DATE_YEARS_AHEAD);
+  return value >= dateInput(now) && value <= dateInput(latest) ? value : undefined;
+};
+
+// Keyboard focus may only move between the controls of an open dialog.
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 const ProfilePage = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
@@ -38,6 +60,20 @@ const ProfilePage = () => {
     await refreshSubscription();
     setSavingGoal(false);
   };
+  // The exam date is typed into a draft and saved once — on blur or Enter —
+  // and only when it is a real date (examDateToSave), never per keystroke.
+  const [examDateDraft, setExamDateDraft] = useState(null);
+  const examDateValue = examDateDraft ?? (profile?.exam_date || '');
+  // Only what the learner is typing is judged: a saved date that has since
+  // passed shows as it is.
+  const examDateValid = examDateDraft === null || examDateToSave(examDateDraft) !== undefined;
+  const saveExamDate = () => {
+    if (examDateDraft === null) return;
+    const value = examDateToSave(examDateDraft);
+    if (value === undefined) return; // keep the draft; the field says why
+    setExamDateDraft(null);
+    if (value !== (profile?.exam_date || null)) saveGoalField({ exam_date: value });
+  };
   const isSubscribed = user ? hasActiveSubscription() : false;
   const inTrial = user ? isInFreeTrial() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
@@ -52,7 +88,47 @@ const ProfilePage = () => {
   const [accountDeleted, setAccountDeleted] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const deletionPending = useRef(false);
-  const emailMatches = !!user?.email && deleteEmail.trim() === user.email;
+  // The exact address, or the same address in another case: 'Anna@Gmail.com'
+  // confirms anna@gmail.com (Delete used to stay disabled with no hint).
+  const emailMatches = !!user?.email
+    && (deleteEmail.trim() === user.email || deleteEmail.trim().toLowerCase() === user.email.trim().toLowerCase());
+
+  // The confirmation is a modal dialog (the SessionTimeoutModal pattern): focus
+  // moves into it, Tab stays inside, Escape cancels, and focus returns to the
+  // button that opened it. It was a plain overlay: assistive tech never heard
+  // of the irreversible step and keyboard focus stayed on the page behind it.
+  const deleteTriggerRef = useRef(null);
+  const deleteDialogRef = useRef(null);
+  const deleteInputRef = useRef(null);
+  useEffect(() => {
+    if (!showDeleteConfirm) return undefined;
+    const trigger = deleteTriggerRef.current;
+    deleteInputRef.current?.focus();
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (!deletionPending.current) setShowDeleteConfirm(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusable = [...(deleteDialogRef.current?.querySelectorAll(FOCUSABLE) || [])];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const inside = deleteDialogRef.current.contains(document.activeElement);
+      if (!inside || (e.shiftKey && document.activeElement === first)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      if (trigger instanceof HTMLElement) trigger.focus();
+    };
+  }, [showDeleteConfirm]);
 
   const deleteAccount = async () => {
     if (!emailMatches || deletionPending.current) return;
@@ -298,10 +374,20 @@ const ProfilePage = () => {
                   <span className="block text-xs text-graphite mb-2">Exam date (optional)</span>
                   <input
                     type="date"
-                    value={profile?.exam_date || ''}
-                    onChange={(e) => saveGoalField({ exam_date: e.target.value || null })}
+                    min={dateInput(new Date())}
+                    value={examDateValue}
+                    onChange={(e) => setExamDateDraft(e.target.value)}
+                    onBlur={saveExamDate}
+                    onKeyDown={(e) => { if (e.key === 'Enter') saveExamDate(); }}
+                    aria-invalid={!examDateValid}
+                    aria-describedby={examDateValid ? undefined : 'profile-exam-date-hint'}
                     className={FIELD}
                   />
+                  {!examDateValid && (
+                    <span id="profile-exam-date-hint" role="alert" className="mt-2 block text-xs text-accent-himbeer-ink">
+                      Choose a date from today up to {EXAM_DATE_YEARS_AHEAD} years ahead.
+                    </span>
+                  )}
                 </label>
               </div>
             </div>
@@ -364,6 +450,7 @@ const ProfilePage = () => {
             {/* Delete Account */}
             <div className="pt-4">
               <button
+                ref={deleteTriggerRef}
                 type="button"
                 onClick={() => { setDeleteEmail(''); setDeleteError(null); setShowDeleteConfirm(true); }}
                 className="flex items-center gap-3 font-bold text-accent-himbeer-ink transition-colors hover:opacity-80"
@@ -386,23 +473,30 @@ const ProfilePage = () => {
 
         {/* Delete Confirmation Modal */}
         {showDeleteConfirm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 px-4">
-            <Card raised className="animate-pop-in p-8 max-w-md w-full shadow-overlay">
+          <div ref={deleteDialogRef} className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 px-4">
+            <Card
+              raised
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="delete-account-title"
+              aria-describedby="delete-account-desc"
+              className="animate-pop-in p-8 max-w-md w-full shadow-overlay"
+            >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-pill bg-accent-himbeer-wash flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-accent-himbeer-ink" />
+                  <AlertTriangle className="w-6 h-6 text-accent-himbeer-ink" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-display font-semibold text-ink">Delete Account?</h3>
+                  <h3 id="delete-account-title" className="font-display font-semibold text-ink">Delete Account?</h3>
                   <p className="text-graphite text-sm">This action cannot be undone.</p>
                 </div>
               </div>
-              <p className="text-graphite mb-4">
+              <p id="delete-account-desc" className="text-graphite mb-4">
                 Your account and linked learning progress will be permanently deleted. Support correspondence and payment records may be retained. Deleting your account does not cancel a paid subscription; manage it above first.
               </p>
               <label className="block mb-4">
                 <span className="block text-sm text-graphite mb-2">Type your account email ({user?.email}) to confirm.</span>
-                <input type="email" value={deleteEmail} onChange={(e) => setDeleteEmail(e.target.value)} disabled={deleting} autoComplete="off" className={FIELD} />
+                <input ref={deleteInputRef} type="email" value={deleteEmail} onChange={(e) => setDeleteEmail(e.target.value)} disabled={deleting} autoComplete="off" className={FIELD} />
               </label>
               {deleteError && <p role="alert" className="text-sm text-accent-himbeer-ink mb-4">{deleteError}</p>}
               <div className="flex gap-3">
