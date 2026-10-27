@@ -48,6 +48,20 @@ very sceptical". Each row says what was claimed, what is true, and why.*
 
 Steps not walked: confirmation email → first login → onboarding → dashboard → trial → checkout. They need a test account (owner approval: it creates a real account and sends mail).
 
+## Supabase settings and health (2026-10-27, read-only)
+
+| Check | Finding | Verdict |
+|---|---|---|
+| Plan and health | Org plan **Pro**, project ACTIVE_HEALTHY, Postgres 17, 61 MB, 23 connections. Edge API in the last 24 h: 4,318 responses, **0 × 5xx** | Healthy. The project can no longer be paused for inactivity, so the September pause cannot repeat |
+| Auth providers (`/auth/v1/settings`) | Email only; **Google sign-in disabled**; `mailer_autoconfirm: false` (confirmation required); signups open | **Biggest settings lever.** 93% of accounts are Gmail and 38% never confirm. "Continue with Google" skips the confirmation email entirely |
+| Real daily active signed-in users | Auth audit log, last 24 h: **7 distinct users** refreshed a session, 2 logins, 2 new signups, 1 password reset | Ground truth for signed-in daily use: about 7–9 a day, the owner's own account included |
+| `auth.audit_log_entries` table | Empty; Supabase now keeps the auth audit in the log stream (24 h window) | History of confirmation sends is not queryable in SQL |
+| Privilege escalation via `profiles` | Users may UPDATE their own row (all columns granted), but trigger `protect_profile_privileged_columns` resets `is_subscribed`, `subscription_tier` and `role`, and freezes trial dates once set; no profile has a null or far-future trial end | Safe, verified |
+| RLS | Every public table has RLS on; 19 have RLS with no policy (server-only tables, intended); no anon writes except `signup_attempts` insert | OK |
+| Security advisors | Leaked-password protection **off** (WARN); `pg_net` and `pg_trgm` in the `public` schema (WARN) | Turn on leaked-password protection [owner, 1 click] |
+| Performance advisors | 67 RLS policies re-evaluate `auth.uid()` per row (`auth_rls_initplan`), 54 duplicate permissive policies, 2 duplicate indexes, 33 unindexed FKs, 30 unused indexes | No impact at today's volume (no 5xx, small DB). Clean up before scale |
+| Auth DB connections | Fixed at 30, not a percentage | Fine at this size |
+
 ## What the numbers do support
 
 - **Signups are falling over months, not just weeks:** March 428, April 184, May 363, June 205,
