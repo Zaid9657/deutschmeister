@@ -190,10 +190,20 @@ where p.product_key = 'telc_b1_komplett'
 -- Seen starts are raw starts; seen cycles count distinct slots (fulfilment needs 3).
 -- A duplicate start cannot make up for a missing slot. Overnight is heartbeat-only
 -- and does not need an end. Other starts need a matching end before the next start
--- with the same wake; a later run's end must not close an abandoned earlier start.
--- VERIFY: agent_heartbeats has no phase/run_id columns. This reader assumes note
--- begins with 'start'/'end', or wake ends with ' start'/' end'. Confirm actual note
--- conventions before use. Unmarked role rows are ambiguous, never assumed starts.
+-- in the same slot; a later run's end must not close an abandoned earlier start.
+-- Verified 2026-10-27 against live agent_heartbeats (agent='orchestrator', rows
+-- 2026-10-20..27); the table has no phase/run_id columns, so phase comes from labels:
+-- start = note 'v5 start' (older: 'start'), or wake ending ' start'; end = wake
+-- '<role>-HHMM-end' (any note), or the start's own wake with note 'v5 end...'
+-- (older: 'end...'), or wake ending ' end'. 'overnight 00:50' is a start by itself.
+-- Wake minutes drift (controller-0550/0551, sales-0610/0615): a row belongs to a
+-- slot by role prefix (controller-, sales-, distribution-, fulfilment-) and
+-- created_at within [slot - 10 min, slot + 3 h) on that UTC day, never by exact
+-- wake. A role row that is neither start nor end, or falls outside every slot
+-- window, is ambiguous, never an assumed start. Other wakes (supervisor-*,
+-- support-desk-*, revenue-*, build-wave-*, night-0050 ...) are member/aux runs and
+-- are ignored. A start's end is the first end for that role+slot after it and
+-- before the slot's next start.
 -- VERIFY: Confirm v5/canary activation timestamp and separately attest deliberate
 -- session-loss evidence. Defaults use the documented first v5 fire; false prevents
 -- certification without evidence. Heartbeat gaps are a recovery-time proxy only.
@@ -206,49 +216,64 @@ params as (
          timestamptz '2026-10-19 12:27:00+00' as canary_started_at,
          false as deliberate_loss_verified
 ),
-schedule(role, wake, utc_time, needs_end) as (
-  values ('controller', 'controller-0550', time '05:50', true),
-         ('sales', 'sales-0610', time '06:10', true),
-         ('distribution', 'distribution-0640', time '06:40', true),
-         ('fulfilment', 'fulfilment-0720', time '07:20', true),
-         ('fulfilment', 'fulfilment-1220', time '12:20', true),
-         ('fulfilment', 'fulfilment-1820', time '18:20', true),
-         ('overnight', 'overnight 00:50', time '00:50', false)
+schedule(role, utc_time, needs_end) as (
+  values ('controller', time '05:50', true),
+         ('sales', time '06:10', true),
+         ('distribution', time '06:40', true),
+         ('fulfilment', time '07:20', true),
+         ('fulfilment', time '12:20', true),
+         ('fulfilment', time '18:20', true),
+         ('overnight', time '00:50', false)
 ),
 days as (
   select (p.report_to at time zone 'UTC')::date - n as day
   from params p cross join generate_series(1, 14) n
 ),
 slots as (
-  select d.day, s.role, s.wake, s.needs_end,
+  select d.day, s.role, s.needs_end,
          (d.day + s.utc_time) at time zone 'UTC' as expected_at
   from days d cross join schedule s
 ),
 labels as (
   select h.id, h.created_at,
-    regexp_replace(lower(trim(h.wake)), ' (start|end)$', '') as wake,
-    case when lower(h.wake) ~ ' end$' or lower(coalesce(h.note, '')) ~ '^end([[:space:][:punct:]]|$)' then 'end'
-         when lower(h.wake) ~ ' start$' or lower(coalesce(h.note, '')) ~ '^start([[:space:][:punct:]]|$)' then 'start'
-         when lower(trim(h.wake)) = 'overnight 00:50' then 'start'
-         else 'ambiguous' end as phase
+    lower(trim(h.wake)) as wake,
+    regexp_replace(lower(trim(h.wake)), '[- ](start|end)$', '') as base_wake,
+    lower(trim(coalesce(h.note, ''))) as note
   from public.agent_heartbeats h, params p
   where h.agent = 'orchestrator'
     and h.created_at >= p.report_to - interval '14 days'
     and h.created_at < p.as_of
 ),
+classified as (
+  select l.id, l.created_at,
+    case when l.base_wake = 'overnight 00:50' then 'overnight'
+         else substring(l.base_wake from '^(controller|sales|distribution|fulfilment)-') end as role,
+    case when l.wake ~ '[- ]end$' or l.note ~ '^(v5 )?end([[:space:][:punct:]]|$)' then 'end'
+         when l.wake ~ ' start$' or l.note ~ '^(v5 )?start([[:space:][:punct:]]|$)' then 'start'
+         when l.wake = 'overnight 00:50' then 'start'
+         else 'ambiguous' end as phase
+  from labels l
+),
 heartbeats as (
-  select l.*, s.role, s.needs_end from labels l join schedule s using (wake)
+  select c.id, c.created_at, c.role,
+    case when sl.expected_at is null then 'ambiguous' else c.phase end as phase,
+    sl.expected_at, sl.needs_end
+  from classified c
+  left join slots sl on sl.role = c.role
+    and c.created_at >= sl.expected_at - interval '10 minutes'
+    and c.created_at < sl.expected_at + interval '3 hours'
+  where c.role is not null
 ),
 starts as (
   select h.*,
-    lead(created_at) over (partition by wake order by created_at, id) as next_start
+    lead(created_at) over (partition by role, expected_at order by created_at, id) as next_start
   from heartbeats h where phase = 'start'
 ),
 paired as (
   select s.*,
     (not s.needs_end or exists (
       select 1 from heartbeats e
-      where e.wake = s.wake and e.phase = 'end'
+      where e.role = s.role and e.expected_at = s.expected_at and e.phase = 'end'
         and (e.created_at, e.id) > (s.created_at, s.id)
         and (s.next_start is null or e.created_at < s.next_start)
     )) as has_end
@@ -256,14 +281,16 @@ paired as (
 ),
 daily as (
   select sl.day, sl.role, count(*) as expected_starts,
-    sum((select count(*) from paired s where s.wake = sl.wake
-         and (s.created_at at time zone 'UTC')::date = sl.day)) as seen_starts,
-    count(*) filter (where exists (select 1 from paired s where s.wake = sl.wake
-      and (s.created_at at time zone 'UTC')::date = sl.day)) as seen_cycles,
-    sum((select count(*) from paired s where s.wake = sl.wake and not s.has_end
-         and (s.created_at at time zone 'UTC')::date = sl.day)) as starts_without_end,
-    sum((select count(*) from heartbeats h where h.wake = sl.wake and h.phase = 'ambiguous'
-         and (h.created_at at time zone 'UTC')::date = sl.day)) as ambiguous_rows
+    sum((select count(*) from paired s
+         where s.role = sl.role and s.expected_at = sl.expected_at)) as seen_starts,
+    count(*) filter (where exists (select 1 from paired s
+      where s.role = sl.role and s.expected_at = sl.expected_at)) as seen_cycles,
+    sum((select count(*) from paired s where s.role = sl.role
+         and s.expected_at = sl.expected_at and not s.has_end)) as starts_without_end,
+    sum((select count(*) from heartbeats h where h.role = sl.role and h.phase = 'ambiguous'
+         and h.expected_at = sl.expected_at))
+    + (select count(*) from heartbeats h where h.role = sl.role and h.expected_at is null
+         and (h.created_at at time zone 'UTC')::date = sl.day) as ambiguous_rows
   from slots sl group by sl.day, sl.role
 ),
 windows as (
