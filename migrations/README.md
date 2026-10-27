@@ -107,6 +107,10 @@ Some live objects were created by hand before this folder existed. They are reco
 
 ## Conventions
 
+| Pending migration | Purpose | Status |
+| --- | --- | --- |
+| `2026-10-26-a21-course-abschlusstest.sql` | Adds the separate rebuilt A2.1 final-test attempt key, preserving every legacy exam key. Required before `A21_PROMOTED = true`. | **Not applied**; owner applies before promotion. |
+
 - Name new files `YYYY-MM-DD-short-description.sql`.
 - Make every statement idempotent (`DROP POLICY IF EXISTS`, `CREATE OR REPLACE`,
   `ADD COLUMN IF NOT EXISTS`) so a file can be re-run safely.

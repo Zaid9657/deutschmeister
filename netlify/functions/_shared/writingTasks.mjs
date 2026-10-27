@@ -958,7 +958,7 @@ export const WRITING_TASKS = [
       "Was Sie dort gekocht haben",
       "Wann Sie wieder zu Hause sind"
     ],
-    "sample": "Hallo Lena, ich war bei unserer Oma. Wir haben zusammen Suppe gekocht und Musik gehört. Am Sonntag bin ich wieder zu Hause. Liebe Grüße, Ana"
+    "sample": "Hallo Lena, ich war bei meiner Oma. Wir haben zusammen Suppe gekocht und Musik gehört. Am Sonntag bin ich wieder zu Hause. Liebe Grüße, Ana"
   },
   {
     "examKey": "goethe_a2",
@@ -1117,10 +1117,10 @@ export const WRITING_TASKS = [
     "taskEn": "Your parents are visiting and you would like time off. Email your boss, Mr Krüger.",
     "leitpunkte": [
       "Wann Ihre Eltern kommen",
-      "Wie lange Sie frei brauchen",
+      "Wie lange Sie frei haben möchten",
       "Wer Ihre Arbeit macht"
     ],
-    "sample": "Guten Tag Herr Krüger, meine Eltern kommen in zwei Wochen am Freitag. Ich brauche für drei Tage frei. Meine Kollegin Frau Yilmaz macht meine Arbeit. Geht das? Vielen Dank! Viele Grüße, Ana Chakiri"
+    "sample": "Guten Tag Herr Krüger, meine Eltern kommen in zwei Wochen am Freitag. Ich möchte drei Tage frei haben. Meine Kollegin Frau Yilmaz macht meine Arbeit. Geht das? Vielen Dank! Viele Grüße, Ana Chakiri"
   },
   {
     "examKey": "goethe_a2",

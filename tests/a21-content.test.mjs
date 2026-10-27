@@ -12,7 +12,7 @@ import { planPractice, practiceReport } from '../src/lib/lesson/buildLesson.js';
 import { buildCheckpoint, paperSeed } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { examSurfaceErrors } from '../src/lib/lesson/exam.js';
 import { a21BankAudit } from './helpers/a21-bank-audit.mjs';
-import { abschlusstestA21 as final } from '../src/data/courseTests/abschlusstestA21.js';
+import { abschlusstestA21Course as final } from '../src/data/courseTests/abschlusstestA21Course.js';
 import { scoreObjectiveSections } from '../src/services/examScoring.js';
 
 const words = text => text.trim().split(/\s+/).length;

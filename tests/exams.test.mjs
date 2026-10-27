@@ -321,8 +321,7 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
 
     const mock = ct.mock;
     assert.equal(mock.examKey, ct.key);
-    if (ct.level === 'a2.1') assert.doesNotMatch(mock.title, /Kurzversion/);
-    else assert.match(mock.title, /Kurzversion/, `${ct.key}: shortened sets must say so in the title`);
+    assert.match(mock.title, /Kurzversion/, `${ct.key}: shortened sets must say so in the title`);
     assert.ok(mock.passPercent >= 50 && mock.passPercent <= 100);
 
     const perfect = {};

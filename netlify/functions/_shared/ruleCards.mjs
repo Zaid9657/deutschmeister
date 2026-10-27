@@ -30,12 +30,17 @@ export const RULE_CARDS = {
   },
   "adjective-endings-intro": {
     "titleDe": "Adjektive nach einem Artikel",
-    "content": "Nach der/die/das im Nominativ steht -e; im Plural -en: **die roten Tomaten**. Im Akkusativ maskulin steht -en: **einen frischen Salat**. Nach ein, kein und Possessivwörtern zeigt das Adjektiv das Genus: **ein frisches Brot**, **kein frisches Brot**, **mein frischer Käse**. Vergleichen Sie die Endungen. Dativ folgt in Lektion 11. Ein Produkt fehlt: Das Brot fehlt.",
+    "content": "Nach der/die/das im Nominativ steht -e; nach die/keine/meine im Plural -en: **die roten Tomaten**. Im Akkusativ maskulin steht -en: **einen frischen Salat**. Nach ein/kein/mein ohne Endung trägt das Adjektiv die Endung: **ein frisches Brot**, **kein frisches Brot**, **mein frischer Käse**. Vergleichen Sie die Endungen. Dativ folgt in Lektion 11. Das Brot fehlt.\nEnglish: Adjective endings depend on the article, gender, number and case. Here: nominative and accusative.",
     "commonMistakes": [
       {
-        "wrong": "Ich kaufe einen rote Apfel.",
-        "correct": "Ich kaufe einen roten Apfel.",
+        "wrong": "Ich kaufe einen frische Salat.",
+        "correct": "Ich kaufe einen frischen Salat.",
         "explanationDe": "Nach einen steht das Adjektiv im Akkusativ auf -en."
+      },
+      {
+        "wrong": "Die rote Tomaten sind frisch.",
+        "correct": "Die roten Tomaten sind frisch.",
+        "explanationDe": "Nach die im Plural steht -en: die roten Tomaten."
       }
     ]
   },
@@ -83,12 +88,17 @@ export const RULE_CARDS = {
   },
   "dative-case": {
     "titleDe": "Wem schenken wir etwas?",
-    "content": "Der Empfänger steht im Dativ: Wir schenken **der Oma** die Kette. Fragen Sie wem. Maskulin/neutrum: dem; feminin: der; Plural: den, oft mit -n am Nomen: **den Kindern**. Possessiv: **meinem Bruder**, meiner Oma. Pronomen: **ihr**, **mir**. Das Geschenk steht im Akkusativ. Gratulieren und danken brauchen auch den Dativ.",
+    "content": "Dativ mit schenken: Wir schenken **der Oma** die Kette. Fragen Sie wem. Maskulin/neutrum: dem; feminin: der; Plural: den, oft mit -n am Nomen: **den Kindern**. Possessiv: **meinem Bruder**, meiner Oma. Pronomen: **ihr**, **mir**. Das Geschenk steht im Akkusativ. Gratulieren und danken brauchen auch den Dativ.\nEnglish: With schenken, the recipient takes dative and the gift takes accusative.",
     "commonMistakes": [
       {
         "wrong": "Ich schenke den Mann eine Blume.",
         "correct": "Ich schenke dem Mann eine Blume.",
-        "explanationDe": "Der Empfänger steht im Dativ: dem Mann."
+        "explanationDe": "Schenken braucht hier den Dativ: dem Mann."
+      },
+      {
+        "wrong": "Ich helfe die Oma.",
+        "correct": "Ich helfe der Oma.",
+        "explanationDe": "Helfen braucht Dativ: der Oma."
       }
     ]
   },
@@ -157,12 +167,17 @@ export const RULE_CARDS = {
   },
   "imperative-mood": {
     "titleDe": "Ratschläge und Vorschläge",
-    "content": "Ratschläge im Imperativ: **Komm doch** in meinen Verein! **Nimm** Schuhe und Wasser **mit**! **Mach** eine Pause! Doch und mal machen den Ton freundlich. Für ihr: Kommt mit! Für Sie: Kommen Sie mit! Als Ratschlag: Du **solltest** viel schlafen. Als gemeinsamer Vorschlag: Wir **könnten** zusammen essen. Der Infinitiv steht am Ende.",
+    "content": "Ratschläge im Imperativ: **Komm doch** in meinen Verein! **Nimm** Schuhe und Wasser **mit**! **Mach** eine Pause! Für ihr: Kommt mit! Für Sie: Kommen Sie mit! **solltest** + Infinitiv. Als gemeinsamer Vorschlag: Wir **könnten** zusammen essen. Der Infinitiv steht am Ende.\nEnglish: Use imperatives for advice, sollte for a recommendation and könnte for a suggestion.",
     "commonMistakes": [
       {
-        "wrong": "Du solltest gehst nach Hause.",
-        "correct": "Du solltest nach Hause gehen.",
-        "explanationDe": "Nach solltest steht der Infinitiv am Ende."
+        "wrong": "Wir könnten spielen Volleyball.",
+        "correct": "Wir könnten Volleyball spielen.",
+        "explanationDe": "Nach könnten steht der Infinitiv am Ende."
+      },
+      {
+        "wrong": "Trinkt Sie Wasser!",
+        "correct": "Trinken Sie Wasser!",
+        "explanationDe": "Der Imperativ mit Sie: Trinken Sie!"
       }
     ]
   },
@@ -205,12 +220,17 @@ export const RULE_CARDS = {
   },
   "modal-verbs-past": {
     "titleDe": "Konnte, musste, wollte, durfte — und dass",
-    "content": "Mehrzahl: wir mussten, konnten, durften. Im Präteritum verlieren können, müssen und dürfen den Umlaut: **konnte**, **musste**, **durfte**. Dazu wollte; wir **wollten**. Der Infinitiv steht am Ende: Ich musste arbeiten. Nach Es tut mir leid steht oft dass. Hier kommt dass nach dem Hauptsatz, mit einem finiten Verb am Ende: **dass ich nicht da war**. Vergleichen Sie die Satzenden.",
+    "content": "Mehrzahl: wir mussten, konnten, durften. Präteritum: können, müssen und dürfen verlieren den Umlaut: **konnte**, **musste**, **durfte**. Dazu wollte; wir **wollten**. Im Hauptsatz steht der Infinitiv am Ende: Ich musste arbeiten. Nach einer Entschuldigung steht oft dass. Hier kommt dass nach dem Hauptsatz, mit einem finiten Verb am Ende: **dass ich nicht da war**. Vergleichen Sie die Satzenden.\nEnglish: Past modals precede a final infinitive. Here, dass clauses follow the main clause and end in one finite verb.",
     "commonMistakes": [
       {
-        "wrong": "Ich weiß, dass er musste arbeiten.",
-        "correct": "Ich weiß, dass er arbeitet.",
-        "explanationDe": "Im geübten dass-Satz steht ein finites Verb am Ende."
+        "wrong": "Ich weiß, dass er ist krank.",
+        "correct": "Ich weiß, dass er krank ist.",
+        "explanationDe": "Im dass-Satz steht das finite Verb am Ende."
+      },
+      {
+        "wrong": "Ich musste gestern arbeite.",
+        "correct": "Ich musste gestern arbeiten.",
+        "explanationDe": "Nach musste steht der Infinitiv: arbeiten."
       }
     ]
   },
@@ -300,23 +320,33 @@ export const RULE_CARDS = {
   },
   "perfect-tense-haben": {
     "titleDe": "Perfekt wiederholen; eine Bedingung mit wenn",
-    "content": "Perfekt: haben und Partizip am Ende. Regelmäßig ge-…-t: **gemacht**. Viele unregelmäßige Formen enden auf -en: **gegessen**, **gesprochen**. Ohne ge- bei be-, ver-, er- und -ieren: **besichtigt**, **fotografiert**. Trennbar: **mitgebracht**. Wenn nennt eine Bedingung. Hier folgt der Nebensatz dem Hauptsatz und endet mit einem finiten Verb: Sie kommen wieder, **wenn sie Urlaub haben**.",
+    "content": "Hier Perfekt mit haben; im Hauptsatz steht das Partizip am Ende. Regelmäßig ge-…-t: **gemacht**. Viele unregelmäßige Formen enden auf -en: **gegessen**, gesprochen. Ohne ge- bei be-, ver-, er- und -ieren: **besichtigt**, **fotografiert**. Trennbar: **mitgebracht**. Hier folgt der Nebensatz dem Hauptsatz und endet mit einem finiten Verb: Sie kommen wieder, **wenn sie Urlaub haben**.\nEnglish: Review haben participles. Here, wenn introduces a condition after the main clause, ending in one finite verb.",
     "commonMistakes": [
       {
         "wrong": "Ich komme, wenn ich habe Zeit.",
         "correct": "Ich komme, wenn ich Zeit habe.",
-        "explanationDe": "Im nachgestellten wenn-Satz steht das finite Verb am Ende."
+        "explanationDe": "Im wenn-Satz steht das finite Verb am Ende."
+      },
+      {
+        "wrong": "Wir haben die Stadt gebesichtigt.",
+        "correct": "Wir haben die Stadt besichtigt.",
+        "explanationDe": "Bei be- steht kein ge-: besichtigt."
       }
     ]
   },
   "perfect-tense-sein": {
     "titleDe": "Perfekt mit sein und ein Grund mit weil",
-    "content": "Auch bleiben: ist geblieben. Sein steht bei Bewegung und Zustandswechsel: Ich **bin** vom Fahrrad **gefallen**. Trennbare Verben: **aufgewacht**, **eingeschlafen**, **aufgestanden**. Weil nennt einen Grund. Hier steht der Nebensatz nach dem Hauptsatz, mit einem finiten Verb am Ende: Ich bin vom Fahrrad gefallen, **weil der Weg nass war**. Vergleichen Sie die beiden Verben.",
+    "content": "Sein bei Ortswechsel/Zustandswechsel, auch bei bleiben: ist geblieben. Tätigkeit: haben bei tanzen, auch möglich bei schwimmen. Beispiel: Ich **bin** vom Fahrrad **gefallen**. Trennbare Verben: **aufgewacht**, **eingeschlafen**, **aufgestanden**. Weil nennt einen Grund. Hier steht der Nebensatz nach dem Hauptsatz, mit einem finiten Verb am Ende: Ich bin vom Fahrrad gefallen, **weil der Weg nass war**. Vergleichen Sie.\nEnglish: Sein: changes of place/state, bleiben. Haben: tanzen, also possible for swimming as an activity. Here weil ends in one finite verb.",
     "commonMistakes": [
       {
-        "wrong": "Ich habe zum Arzt gefahren.",
-        "correct": "Ich bin zum Arzt gefahren.",
-        "explanationDe": "Fahren mit Ortswechsel bildet das Perfekt mit sein."
+        "wrong": "Ich habe aufgewacht.",
+        "correct": "Ich bin aufgewacht.",
+        "explanationDe": "Aufwachen bildet das Perfekt mit sein."
+      },
+      {
+        "wrong": "Ich komme nicht, weil ich bin krank.",
+        "correct": "Ich komme nicht, weil ich krank bin.",
+        "explanationDe": "Im weil-Satz steht das finite Verb am Ende."
       }
     ]
   },
@@ -395,12 +425,17 @@ export const RULE_CARDS = {
   },
   "possessive-pronouns": {
     "titleDe": "Unsere Familie, eure Familie",
-    "content": "Für wir steht **unser**, für ihr **euer**: **unsere Oma**, **eure Familie**. Dativ maskulin/neutrum: **meinem, deinem, seinem, ihrem, unserem, eurem**. Dativ feminin: **meiner, deiner, seiner, ihrer, unserer, eurer**. Plural: **meinen, deinen, seinen, ihren, unseren, euren**. Nach bei/zu: **bei unseren Eltern**, **zu unserer Oma**. Namen bekommen -s: **Omas Garten**, Lenas Familie. Alternativ: das Kind **von deinem Bruder**. Vergleichen Sie.",
+    "content": "Possessivformen (mein, dein): Für wir steht **unser**, für ihr **euer**: **unsere Oma**, **eure Familie**. Dativ maskulin/neutrum: **meinem, deinem, seinem, ihrem, unserem, eurem**. Dativ feminin: **meiner, deiner, seiner, ihrer, unserer, eurer**. Plural: **meinen, deinen, seinen, ihren, unseren, euren**. Nach bei/zu: **bei unseren Eltern**, **zu unserer Oma**. Namen ohne s-Laut am Ende bekommen -s: **Omas Garten**, Lenas Familie. Alternativ: das Kind **von deinem Bruder**. Vergleichen Sie.\nEnglish: Possessives follow gender, number and case; names without a final s-sound take -s for possession.",
     "commonMistakes": [
       {
         "wrong": "Wir besuchen euer Oma.",
         "correct": "Wir besuchen eure Oma.",
         "explanationDe": "Vor einer Endung steht eur-: eure Oma."
+      },
+      {
+        "wrong": "Ich fahre zu unsere Oma.",
+        "correct": "Ich fahre zu unserer Oma.",
+        "explanationDe": "Nach zu steht Dativ: zu unserer Oma."
       }
     ]
   },
@@ -427,12 +462,17 @@ export const RULE_CARDS = {
   },
   "prepositions-dative": {
     "titleDe": "Dativpräpositionen und Adjektive",
-    "content": "Aus, bei, mit, nach, seit, von, zu und **gegenüber** brauchen Dativ: **gegenüber dem alten Rathaus**, **mit dem alten Bus**, **bei der kleinen Brücke**. Nach einem Artikel endet das Adjektiv im Dativ auf -en. Das gilt auch für Ordinalzahlen: ab dem dritten Mai. Vergleichen Sie die Kurzformen: zu dem → **zum**, von dem → vom.",
+    "content": "Aus, bei, mit, nach, seit, von, zu und **gegenüber** brauchen Dativ: **gegenüber dem alten Rathaus**, **mit dem alten Bus**, **bei der kleinen Brücke**. Nach einem Artikel endet das Adjektiv im Dativ auf -en. Das gilt auch für Ordinalzahlen: ab dem dritten Mai. Vergleichen Sie die Kurzformen: zu dem → **zum**, von dem → vom.\nEnglish: These prepositions take dative; after an article, dative adjectives and ordinals end in -en.",
     "commonMistakes": [
       {
         "wrong": "Ich fahre mit dem alte Bus.",
         "correct": "Ich fahre mit dem alten Bus.",
         "explanationDe": "Nach dem steht das Adjektiv im Dativ auf -en."
+      },
+      {
+        "wrong": "Der Brunnen ist gegenüber den Rathaus.",
+        "correct": "Der Brunnen ist gegenüber dem Rathaus.",
+        "explanationDe": "Gegenüber braucht Dativ: dem Rathaus."
       }
     ]
   },
@@ -459,12 +499,17 @@ export const RULE_CARDS = {
   },
   "pronouns-accusative-dative": {
     "titleDe": "Zwei Objekte: die Pronomen zuerst",
-    "content": "Bei zwei Nomen steht meist Dativ vor Akkusativ: Ich zeige der Kollegin den Drucker. Ein Akkusativpronomen steht vor dem Dativ: Ich erkläre **ihn Ihnen**. Ich schicke **sie Ihnen**. Sind beide Objekte Pronomen, gilt ebenfalls Akkusativ vor Dativ: **sie mir**, **ihn mir**. Er wird zu ihm: Ich kann sie ihm schicken. Ein Problem: Die Datei ist nicht da.",
+    "content": "Bei zwei Nomen steht meist Dativ vor Akkusativ: Ich zeige der Kollegin den Drucker. Unbetont steht ein Akkusativpronomen normalerweise vor dem Dativ: Ich zeige **ihn Ihnen**. Ich schicke **sie Ihnen**. Auch bei zwei unbetonten Pronomen normalerweise Akkusativ vor Dativ: **sie mir**, **ihn mir**. Er wird zu ihm: Ich kann sie ihm schicken. Die Datei ist nicht da.\nEnglish: With two unstressed object pronouns, the accusative normally precedes the dative.",
     "commonMistakes": [
       {
         "wrong": "Ich schicke er die Datei.",
         "correct": "Ich schicke ihm die Datei.",
-        "explanationDe": "Der Empfänger steht im Dativ: ihm."
+        "explanationDe": "Schicken braucht hier den Dativ: ihm."
+      },
+      {
+        "wrong": "Ich schicke Ihnen sie.",
+        "correct": "Ich schicke sie Ihnen.",
+        "explanationDe": "Zwei unbetonte Pronomen: normalerweise Akkusativ vor Dativ."
       }
     ]
   },
@@ -491,12 +536,17 @@ export const RULE_CARDS = {
   },
   "separable-verbs": {
     "titleDe": "Trennbare Verben im Perfekt",
-    "content": "Bei trennbaren Verben steht ge- zwischen Vorsilbe und Verb: einpacken → **eingepackt**, aufräumen → **aufgeräumt**, anrufen → **angerufen**, abholen → **abgeholt**. Das Partizip steht am Satzende: Ich habe mein Handy **mitgebracht**. Vergleichen Sie das Präsens: Jetzt packe ich ihn ein. Verben mit sein folgen in Lektion 8.",
+    "content": "Bei trennbaren Verben hier steht ge- zwischen Vorsilbe und Verb: einpacken → **eingepackt**, aufräumen → **aufgeräumt**, anrufen → **angerufen**, abholen → **abgeholt**. Im Hauptsatz steht das Partizip am Ende: Ich habe mein Handy **mitgebracht**. Vergleichen Sie das Präsens: Jetzt packe ich ihn ein. Verben mit sein folgen in Lektion 8.\nEnglish: These separable verbs put ge- after the prefix and take haben; the participle ends the main clause.",
     "commonMistakes": [
       {
-        "wrong": "Ich habe die Bücher geeinpackt.",
-        "correct": "Ich habe die Bücher eingepackt.",
+        "wrong": "Ich habe das Handy geeinpackt.",
+        "correct": "Ich habe das Handy eingepackt.",
         "explanationDe": "Bei trennbaren Verben steht ge- zwischen Vorsilbe und Stamm."
+      },
+      {
+        "wrong": "Ich habe den Vermieter geanrufen.",
+        "correct": "Ich habe den Vermieter angerufen.",
+        "explanationDe": "Bei anrufen steht ge- nach an-: angerufen."
       }
     ]
   },
@@ -544,12 +594,17 @@ export const RULE_CARDS = {
   },
   "temporal-prepositions": {
     "titleDe": "Wann? Ab wann? Wie lange?",
-    "content": "**In zwei Wochen**: Zeitpunkt nach heute, in + Dativ. **Für zehn Tage**: Dauer, für + Akkusativ. **Über das Wochenende**: das ganze Wochenende. **Ab Montag**: Anfang. **Bis eins**: Ende. **Zwischen zwei und drei Uhr**: Zeitfenster. Fragen Sie nach Zeitpunkt, Anfang, Ende und Dauer. Ordinalzahlen im Dativ folgen in Lektion 11.",
+    "content": "**In zwei Wochen**: Zeitpunkt nach heute, in + Dativ. **Für zehn Tage**: Dauer, für + Akkusativ. **Über das Wochenende**: ein Aufenthalt am Wochenende, ohne genaue Uhrzeiten. **Ab Montag**: Anfang. **Bis eins**: Ende. **Zwischen zwei und drei Uhr**: Zeitfenster. Ordinalzahlen im Dativ folgen in Lektion 11.\nEnglish: In gives a future time; für gives duration; ab and bis mark the start and end.",
     "commonMistakes": [
       {
-        "wrong": "Ich bleibe seit drei Tage.",
+        "wrong": "Ich bleibe für drei Tagen.",
         "correct": "Ich bleibe für drei Tage.",
-        "explanationDe": "Für nennt hier eine geplante Dauer."
+        "explanationDe": "Für nennt hier die Dauer und braucht den Akkusativ."
+      },
+      {
+        "wrong": "Wir kommen in zwei Woche.",
+        "correct": "Wir kommen in zwei Wochen.",
+        "explanationDe": "In zwei Wochen: Dativ Plural."
       }
     ]
   },
@@ -576,12 +631,17 @@ export const RULE_CARDS = {
   },
   "two-way-prepositions": {
     "titleDe": "Wo? Oder wohin?",
-    "content": "Fragen Sie wo: Dativ, **in der Ecke**, **auf dem Balkon**. Fragen Sie wohin: Akkusativ, **an die Wand**, **neben den Tisch**. Unterscheiden Sie stellen/stehen, legen/liegen, hängen/hängen und setzen/sitzen. Setzen braucht hier ein Objekt: das Kind auf den Stuhl setzen. Sitzen beschreibt den Ort. Keine neue Position: Das Bild **hängt über dem Tisch**.",
+    "content": "Bei Wechselpräpositionen (in, an, auf, über, unter, vor, hinter, neben, zwischen) gilt: wo → Dativ, **in der Ecke**, **auf dem Balkon**. wohin → Akkusativ, **an die Wand**, **neben den Tisch**. Unterscheiden Sie stellen/stehen, legen/liegen, hängen/hängen und setzen/sitzen. Setzen braucht hier ein Objekt: das Kind auf den Stuhl setzen. Sitzen beschreibt den Ort. Keine neue Position: Das Bild **hängt über dem Tisch**.\nEnglish: With two-way prepositions, a location takes dative; a destination takes accusative.",
     "commonMistakes": [
       {
         "wrong": "Das Buch liegt auf den Tisch.",
         "correct": "Das Buch liegt auf dem Tisch.",
         "explanationDe": "Ein fester Ort steht nach auf im Dativ."
+      },
+      {
+        "wrong": "Ich stelle den Stuhl neben dem Tisch.",
+        "correct": "Ich stelle den Stuhl neben den Tisch.",
+        "explanationDe": "Eine neue Position: neben den Tisch, Akkusativ."
       }
     ]
   },

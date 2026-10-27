@@ -988,8 +988,8 @@ const a21Mistakes = [
     "explanationDe": "Vor einer Endung steht eur-: eure Oma."
   },
   {
-    "wrong": "Ich habe die Bücher geeinpackt.",
-    "correct": "Ich habe die Bücher eingepackt.",
+    "wrong": "Ich habe das Handy geeinpackt.",
+    "correct": "Ich habe das Handy eingepackt.",
     "explanationDe": "Bei trennbaren Verben steht ge- zwischen Vorsilbe und Stamm."
   },
   {
@@ -998,39 +998,39 @@ const a21Mistakes = [
     "explanationDe": "Ein fester Ort steht nach auf im Dativ."
   },
   {
-    "wrong": "Ich kaufe einen rote Apfel.",
-    "correct": "Ich kaufe einen roten Apfel.",
+    "wrong": "Ich kaufe einen frische Salat.",
+    "correct": "Ich kaufe einen frischen Salat.",
     "explanationDe": "Nach einen steht das Adjektiv im Akkusativ auf -en."
   },
   {
     "wrong": "Ich schenke den Mann eine Blume.",
     "correct": "Ich schenke dem Mann eine Blume.",
-    "explanationDe": "Der Empfänger steht im Dativ: dem Mann."
+    "explanationDe": "Schenken braucht hier den Dativ: dem Mann."
   },
   {
-    "wrong": "Ich weiß, dass er musste arbeiten.",
-    "correct": "Ich weiß, dass er arbeitet.",
-    "explanationDe": "Im geübten dass-Satz steht ein finites Verb am Ende."
+    "wrong": "Ich weiß, dass er ist krank.",
+    "correct": "Ich weiß, dass er krank ist.",
+    "explanationDe": "Im dass-Satz steht das finite Verb am Ende."
   },
   {
-    "wrong": "Du solltest gehst nach Hause.",
-    "correct": "Du solltest nach Hause gehen.",
-    "explanationDe": "Nach solltest steht der Infinitiv am Ende."
+    "wrong": "Wir könnten spielen Volleyball.",
+    "correct": "Wir könnten Volleyball spielen.",
+    "explanationDe": "Nach könnten steht der Infinitiv am Ende."
   },
   {
-    "wrong": "Ich habe zum Arzt gefahren.",
-    "correct": "Ich bin zum Arzt gefahren.",
-    "explanationDe": "Fahren mit Ortswechsel bildet das Perfekt mit sein."
+    "wrong": "Ich habe aufgewacht.",
+    "correct": "Ich bin aufgewacht.",
+    "explanationDe": "Aufwachen bildet das Perfekt mit sein."
   },
   {
     "wrong": "Ich schicke er die Datei.",
     "correct": "Ich schicke ihm die Datei.",
-    "explanationDe": "Der Empfänger steht im Dativ: ihm."
+    "explanationDe": "Schicken braucht hier den Dativ: ihm."
   },
   {
-    "wrong": "Ich bleibe seit drei Tage.",
+    "wrong": "Ich bleibe für drei Tagen.",
     "correct": "Ich bleibe für drei Tage.",
-    "explanationDe": "Für nennt hier eine geplante Dauer."
+    "explanationDe": "Für nennt hier die Dauer und braucht den Akkusativ."
   },
   {
     "wrong": "Ich fahre mit dem alte Bus.",
@@ -1040,13 +1040,56 @@ const a21Mistakes = [
   {
     "wrong": "Ich komme, wenn ich habe Zeit.",
     "correct": "Ich komme, wenn ich Zeit habe.",
-    "explanationDe": "Im nachgestellten wenn-Satz steht das finite Verb am Ende."
+    "explanationDe": "Im wenn-Satz steht das finite Verb am Ende."
   }
 ];
+const a21SecondMistakes = [
+  ['Ich fahre zu unsere Oma.', 'Ich fahre zu unserer Oma.', 'Nach zu steht Dativ: zu unserer Oma.'],
+  ['Ich habe den Vermieter geanrufen.', 'Ich habe den Vermieter angerufen.', 'Bei anrufen steht ge- nach an-: angerufen.'],
+  ['Ich stelle den Stuhl neben dem Tisch.', 'Ich stelle den Stuhl neben den Tisch.', 'Eine neue Position: neben den Tisch, Akkusativ.'],
+  ['Die rote Tomaten sind frisch.', 'Die roten Tomaten sind frisch.', 'Nach die im Plural steht -en: die roten Tomaten.'],
+  ['Ich helfe die Oma.', 'Ich helfe der Oma.', 'Helfen braucht Dativ: der Oma.'],
+  ['Ich musste gestern arbeite.', 'Ich musste gestern arbeiten.', 'Nach musste steht der Infinitiv: arbeiten.'],
+  ['Trinkt Sie Wasser!', 'Trinken Sie Wasser!', 'Der Imperativ mit Sie: Trinken Sie!'],
+  ['Ich komme nicht, weil ich bin krank.', 'Ich komme nicht, weil ich krank bin.', 'Im weil-Satz steht das finite Verb am Ende.'],
+  ['Ich schicke Ihnen sie.', 'Ich schicke sie Ihnen.', 'Zwei unbetonte Pronomen: normalerweise Akkusativ vor Dativ.'],
+  ['Wir kommen in zwei Woche.', 'Wir kommen in zwei Wochen.', 'In zwei Wochen: Dativ Plural.'],
+  ['Der Brunnen ist gegenüber den Rathaus.', 'Der Brunnen ist gegenüber dem Rathaus.', 'Gegenüber braucht Dativ: dem Rathaus.'],
+  ['Wir haben die Stadt gebesichtigt.', 'Wir haben die Stadt besichtigt.', 'Bei be- steht kein ge-: besichtigt.'],
+];
+const a21English = [
+  'Possessives follow gender, number and case; names without a final s-sound take -s for possession.',
+  'These separable verbs put ge- after the prefix and take haben; the participle ends the main clause.',
+  'With two-way prepositions, a location takes dative; a destination takes accusative.',
+  'Adjective endings depend on the article, gender, number and case. Here: nominative and accusative.',
+  'With schenken, the recipient takes dative and the gift takes accusative.',
+  'Past modals precede a final infinitive. Here, dass clauses follow the main clause and end in one finite verb.',
+  'Use imperatives for advice, sollte for a recommendation and könnte for a suggestion.',
+  'Sein: changes of place/state, bleiben. Haben: tanzen, also possible for swimming as an activity. Here weil ends in one finite verb.',
+  'With two unstressed object pronouns, the accusative normally precedes the dative.',
+  'In gives a future time; für gives duration; ab and bis mark the start and end.',
+  'These prepositions take dative; after an article, dative adjectives and ordinals end in -en.',
+  'Review haben participles. Here, wenn introduces a condition after the main clause, ending in one finite verb.',
+];
 for (const [i, lesson] of CURRICULUM_A21.lektionen.entries()) {
+  // Name the paradigms explicitly; the learner is never addressed as du.
+  const body = lesson.notice.bodyDe
+    .replace('Für wir steht', 'Possessivformen (mein, dein): Für wir steht')
+    .replace('Als Ratschlag: Du **solltest** viel schlafen.', '**solltest** + Infinitiv.')
+    .replace('Possessivwörtern', 'mein')
+    .replace('Ein Produkt fehlt: ', '')
+    .replace('Bei schenken steht der Empfänger im Dativ:', 'Dativ mit schenken:')
+    .replace('Nach Es tut mir leid steht oft dass.', 'Nach einer Entschuldigung steht oft dass.')
+    .replace('Im Präteritum verlieren können, müssen und dürfen den Umlaut:', 'Präteritum: können, müssen und dürfen verlieren den Umlaut:')
+    .replace('Doch und mal können den Ton freundlich machen. ', '')
+    .replace('Sein bei Ortswechsel/Zustandswechsel, auch bei bleiben.', 'Ortswechsel/Zustandswechsel: sein, auch bei bleiben.')
+    .replace('Ein Problem: ', '')
+    .replace('Fragen Sie nach Zeitpunkt, Anfang, Ende und Dauer. ', '')
+    .replace('Wenn nennt eine Bedingung. ', '');
+  const [wrong, correct, explanationDe] = a21SecondMistakes[i];
   RULE_CARD_OVERRIDES[lesson.primarySlug] = {
-    titleDe: lesson.notice.title, content: lesson.notice.bodyDe,
-    commonMistakes: [a21Mistakes[i]],
+    titleDe: lesson.notice.title, content: `${body}\nEnglish: ${a21English[i]}`,
+    commonMistakes: [a21Mistakes[i], { wrong, correct, explanationDe }],
   };
 }
 

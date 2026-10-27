@@ -2,6 +2,81 @@
   "level": "a2.1",
   "keepBankExplanationEn": {},
   "items": {
+    "f6c88bd7-f85b-574b-9a11-84e9a4c02f99": {
+      "explanationDe": "Im Hauptsatz steht das Präfix auf am Ende. Sie konjugieren nur räumen.",
+      "explanationEn": "In a main clause the prefix auf goes at the end. Conjugate only räumen.",
+      "reason": "Instructional explanations address the learner as Sie."
+    },
+    "f22cfc5f-44ea-5699-996f-6a4327f1ba38": {
+      "explanationDe": "Sie konjugieren nur das Grundverb gehen. Das Präfix aus bleibt am Ende.",
+      "explanationEn": "Conjugate only the base verb gehen. The prefix aus stays at the end.",
+      "reason": "Instructional explanations address the learner as Sie."
+    },
+    "2c76f50f-d7a9-43ac-be50-254f90aef782": {
+      "questionDe": "Das Buch gehört ___ Studentin. (unbestimmter Artikel)",
+      "questionEn": "The book belongs to a student. Choose the indefinite article.",
+      "reason": "Both definite and indefinite dative articles are grammatical without this cue."
+    },
+    "193c2e39-6c23-4505-bfc4-40245e500b5e": {
+      "options": ["ins", "im", "in den", "in der"],
+      "reason": "Do not print a contraction and its equivalent full form as competing choices."
+    },
+    "dd76e075-799d-46b3-a3df-c5563e3599c9": {
+      "options": ["zur", "zum", "zu den", "zu das"],
+      "reason": "Do not print a contraction and its equivalent full form as competing choices."
+    },
+    "e0a792eb-01b2-4e41-a847-92196d29567e": {
+      "options": ["zu den", "zu die", "zum", "zur"],
+      "reason": "Do not print a contraction and its equivalent full form as competing choices."
+    },
+    "a0d79b95-0b15-4646-9f8c-38220ca4ec06": {
+      "questionDe": "___ bitte eine Pause! (machen, du-Form)",
+      "questionEn": "Ask one friend to take a break. Use the du imperative of machen.",
+      "reason": "Name the addressee and use a complete idiomatic imperative."
+    },
+    "1da4c8ba-730e-4e22-ad56-edf62919dab0": {
+      "questionDe": "___ bitte eine Pause! (machen, ihr-Form)",
+      "questionEn": "Ask several friends to take a break. Use the ihr imperative of machen.",
+      "reason": "Name the addressee and use a complete idiomatic imperative."
+    },
+    "5d5411e0-244e-4aef-8dc4-1cb137f3ca45": {
+      "questionDe": "___ ___ bitte eine Pause! (machen, Sie-Form)",
+      "questionEn": "Ask someone formally to take a break. Use the Sie imperative of machen.",
+      "reason": "Machen Sie die Tür needs a particle; eine Pause is a complete object."
+    },
+    "bb57f75b-6d8e-4210-942d-bc77005eabdd": {
+      "options": ["gegen", "gegenüber", "zwischen", "durch"],
+      "reason": "Without a map, several dative location prepositions fit. Use form distractors instead."
+    },
+    "c295fc4f-21b1-5f85-bc04-d15eb5bce594": {
+      "questionDe": "Korrigieren Sie das Wort einen: „Seit einen Monat spiele ich jeden Tag Gitarre.“ (Beginnen Sie mit „Seit“)",
+      "questionEn": "Correct the word einen: Seit einen Monat spiele ich jeden Tag Gitarre. Start with Seit.",
+      "explanationDe": "Seit steht mit Dativ: seit einem Monat.",
+      "explanationEn": "Seit takes the dative: seit einem Monat.",
+      "hint": "Seit + Dativ.",
+      "reason": "Perfekt with seit can be valid; repair an actual case error without changing tense."
+    },
+    "a90dbd80-9f76-52ea-9e9c-936f1eff18cb": {
+      "questionDe": "Schreiben Sie den Satz im Präteritum (Beginnen Sie mit „Ich“; „nicht“ steht vor „kommen“): [ich / gestern Abend / nicht kommen / können]",
+      "questionEn": "Write the sentence in the past tense. Start with Ich and place nicht before kommen.",
+      "reason": "An infinitive does not specify the requested tense."
+    },
+    "05fe9c27-acc2-5040-9ec2-5b0bd064422a": {
+      "questionDe": "Schreiben Sie den Satz im Präteritum (Beginnen Sie mit „Wir“): [wir / am Sonntag / ins Kino gehen / wollen]",
+      "questionEn": "Write the sentence in the past tense, starting with Wir.",
+      "reason": "An infinitive does not specify the requested tense."
+    },
+    "b70d8422-014b-5797-ab3b-23dfa79e2b7e": {
+      "questionDe": "___ Mittwoch habe ich einen Termin. (an + dem → Kurzform)",
+      "questionEn": "I have an appointment on Wednesday. Enter the contraction of an + dem.",
+      "reason": "An open weekday gap also allows ab, bis or seit unless the relation is specified."
+    },
+    "ca7cb632-1d77-4bfb-80df-f9c89a03e9aa": {
+      "questionDe": "Sie kommt ___ der Schweiz. (Herkunft)",
+      "questionEn": "She comes from Switzerland. Choose the preposition for her country of origin.",
+      "options": ["nach", "aus", "in", "bei"],
+      "reason": "Specify origin and avoid competing source/destination meanings."
+    },
     "ba7409e1-0c15-5846-9f03-e5686268acf2": {
       "questionDe": "Schreiben Sie die Frage: [wo / sein / euer / Garten] (Beginnen Sie mit „Wo“)",
       "questionEn": "Ask where the garden belonging to several friends is. Start with Wo.",
@@ -32,7 +107,9 @@
         "Das sind keine guten Bilder.",
         "Das sind keine guten Bilder"
       ],
-      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+      "reason": "Keep the German and English rule inside its grammatical scope.",
+      "explanationDe": "Kein hat einen Plural, ein nicht. Nach keine im Plural steht -en.",
+      "explanationEn": "Kein has a plural, ein does not. After keine in the plural use -en."
     },
     "c1da8c4f-ca9f-4f0b-a3cc-64da97337087": {
       "questionDe": "Er schenkt ___ Kindern Geschenke.",
@@ -41,7 +118,9 @@
       "accepted": [
         "den"
       ],
-      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+      "reason": "Keep the German and English rule inside its grammatical scope.",
+      "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+      "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s."
     },
     "e8a171ce-d5d1-548d-bb9a-4b9928ff86ff": {
       "questionDe": "Schreiben Sie den Satz: [ich / schenken / mein Freund / die Bilder] (Beginnen Sie mit „Ich“)",
@@ -75,16 +154,16 @@
       "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
     },
     "547c67c4-a1b3-50ae-8455-d168cc964d4c": {
-      "questionDe": "Schreiben Sie den Satz: [er / schicken / mir / den Schlüssel] (Beginnen Sie mit „Er“)",
-      "questionEn": "Write: He sends me the key. Begin with Er.",
+      "questionDe": "Schreiben Sie den Satz: [er / schicken / mir / den Schlüssel] (unbetonte Pronomen) (Beginnen Sie mit „Er“)",
+      "questionEn": "Write: He sends me the key. Begin with Er; use unstressed objects.",
       "answer": "Er schickt mir den Schlüssel.",
       "accepted": [
         "Er schickt mir den Schlüssel.",
         "Er schickt mir den Schlüssel"
       ],
-      "explanationDe": "Ein Pronomen und ein Nomen: mir steht vor den Schlüssel.",
-      "explanationEn": "With a pronoun and a noun object, mir comes before den Schlüssel.",
-      "reason": "Keep this A2 primary-grammar item within the lexis already taught by its lesson."
+      "explanationDe": "Bei unbetonten Objekten steht das Pronomen normalerweise vor dem Nomen: mir vor den Schlüssel.",
+      "explanationEn": "With unstressed objects, the pronoun normally precedes the noun: mir before den Schlüssel.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
     },
     "1625eef6-b914-541f-9708-19123927b52a": {
       "questionDe": "Ich ___ keine Zeit. Ich musste arbeiten. (haben, Präteritum, ich)",
@@ -96,6 +175,135 @@
       "explanationDe": "Hatte ist die ich-Form von haben im Präteritum.",
       "explanationEn": "Hatte is the past form of haben for ich.",
       "reason": "Review the already taught singular before using the untaught plural form."
+    },
+    "a0a1d907-934e-5dc8-8c48-ccca9cbb2c9d": {
+      "explanationDe": "Nach die im Plural steht -en. Laut steht nach sind und hat keine Endung.",
+      "explanationEn": "After die in the plural use -en. Laut follows sind and has no ending.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "7e6fd0ae-c74f-4fb7-bce6-50a1564ecdbe": {
+      "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+      "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "437d6a0b-bebf-4d09-a6be-f4eb22f508ef": {
+      "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+      "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "671e18d4-4c76-5c50-8bed-9e190233e076": {
+      "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+      "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "485648bc-3987-5288-bf14-d7e6d325f54c": {
+      "explanationDe": "Hier sieht die Imperativform wie der Infinitiv aus, danach steht Sie. Ausnahme: Seien Sie!",
+      "explanationEn": "Here the imperative looks like the infinitive, followed by Sie. Exception: Seien Sie!",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "f5e1b8bf-96fb-4e60-9493-355b554991ec": {
+      "explanationDe": "Ankommen beschreibt einen Ortswechsel: sein + angekommen.",
+      "explanationEn": "Ankommen expresses a change of place: sein + angekommen.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "f4e936d3-7429-5717-9f5f-0ccf643ebe70": {
+      "explanationDe": "Fahren mit Ziel beschreibt einen Ortswechsel: sind gefahren.",
+      "explanationEn": "Fahren with a destination expresses a change of place: sind gefahren.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "3004cab5-8973-51f3-b3d2-e8cc65ec79dd": {
+      "explanationDe": "Kommen beschreibt einen Ortswechsel. Die Pluralform von sein heißt sind.",
+      "explanationEn": "Kommen expresses a change of place. The plural form of sein is sind.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "a235c8d9-1d38-5afb-9f14-37ef548d1b70": {
+      "explanationDe": "Arbeiten bildet das Perfekt mit haben: Ich habe gearbeitet.",
+      "explanationEn": "Arbeiten forms the perfect with haben: Ich habe gearbeitet.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "bc20094e-58cb-5f1d-987c-3ad17b76052d": {
+      "questionDe": "Korrigieren Sie bei unbetonten Pronomen: Ich schicke ihm es. (Beginnen Sie mit „Ich“)",
+      "questionEn": "Correct the order: Ich schicke ihm es. Begin with Ich; use unstressed pronouns.",
+      "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
+      "explanationEn": "With two unstressed object pronouns, accusative normally precedes dative.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "350eca35-50f7-56be-a1db-01b277d2c085": {
+      "questionDe": "[ich / zeigen / es / dem Chef] → Schreiben Sie den Satz. (unbetonte Pronomen) (Beginnen Sie mit „Ich“)",
+      "questionEn": "Write the sentence, starting with Ich. Use unstressed objects.",
+      "explanationDe": "Bei unbetonten Objekten steht das Pronomen normalerweise vor dem Nomen: es vor dem Chef.",
+      "explanationEn": "With unstressed objects, the pronoun normally precedes the noun: es before dem Chef.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "26ef0497-431e-56e3-9dc2-f75363ba9e45": {
+      "explanationDe": "Bei einkaufen steht ge- zwischen Präfix und Stamm: eingekauft.",
+      "explanationEn": "For einkaufen, ge- goes between prefix and stem: eingekauft.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "a01124d0-8bb6-56a9-8c4c-fb99cf4e139f": {
+      "explanationDe": "Bei diesem Verb steht ge- zwischen Präfix und Stamm.",
+      "explanationEn": "For this verb, ge- goes between prefix and stem.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "331020a5-94bf-55a4-85b1-1817ee098729": {
+      "explanationDe": "Von … bis nennt Anfang und Ende: von zehn bis achtzehn Uhr.",
+      "explanationEn": "Von … bis gives the start and end: from ten to eighteen o’clock.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "6b091939-52db-5a74-bf35-fc2f74dafccf": {
+      "explanationDe": "Zwischen steht in dieser Zeitangabe mit Dativ. Uhrzeiten zeigen hier keine Endung.",
+      "explanationEn": "Zwischen takes dative in this time expression. These clock times show no ending.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "16184f1b-c5db-4372-93c7-6f151e619899": {
+      "questionDe": "Ich gehe in ___ Park. (wohin?)",
+      "questionEn": "I am going into the park. Choose the article for the destination.",
+      "explanationDe": "Das Ziel ist im Park. Die Wechselpräposition in steht hier mit Akkusativ: in den Park.",
+      "explanationEn": "The destination is inside the park. The two-way preposition in takes accusative here: in den Park.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "3cdb61ef-1037-40ec-888f-3f1a61f632be": {
+      "explanationDe": "Die Wand ist das Ziel. An ist eine Wechselpräposition und steht hier mit Akkusativ: an die Wand.",
+      "explanationEn": "The wall is the destination. The two-way preposition an takes accusative here: an die Wand.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "f94f6a89-ef96-41aa-8833-092dbb26b7ac": {
+      "explanationDe": "Das Ziel liegt vor der Garage. Die Wechselpräposition vor steht hier mit Akkusativ: vor die Garage.",
+      "explanationEn": "The destination is in front of the garage. The two-way preposition vor takes accusative here: vor die Garage.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "eae9f82c-baac-4cdc-b91b-e018d125b66b": {
+      "options": ["ins", "im", "in den", "in der"],
+      "questionDe": "Ich gehe ___ Kino. (wohin?)",
+      "questionEn": "I am going into the cinema. Choose the expression for the destination.",
+      "explanationDe": "Das Ziel ist im Kino. In ist eine Wechselpräposition: hier Akkusativ. Ins = in das.",
+      "explanationEn": "The destination is inside the cinema. In is a two-way preposition: accusative here. Ins = in das.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "98c23539-f978-5020-9b51-d7a6b4819a92": {
+      "explanationDe": "Liegen beschreibt einen Ort; zwischen steht hier mit Dativ. Bücher bekommt im Dativ Plural -n: Büchern.",
+      "explanationEn": "Liegen describes a location; zwischen takes dative here. Bücher adds -n in the dative plural: Büchern.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "023880fc-3508-513e-bddd-e2187b4b7acc": {
+      "explanationDe": "Das Bild kommt an eine neue Position. Die Wechselpräposition über steht hier mit Akkusativ.",
+      "explanationEn": "The picture is going to a new position. The two-way preposition über takes accusative here.",
+      "reason": "Keep the German and English rule inside its grammatical scope."
+    },
+    "a8a6d962-65dc-4665-b599-9b8d5aa3a11f": {
+      "explanationDe": "Bei Wechselpräpositionen fragt wohin nach dem Ziel: Akkusativ. Bewegung an einem Ort reicht dafür nicht.",
+      "explanationEn": "With two-way prepositions, wohin asks about the destination: accusative. Movement within a location is not enough.",
+      "reason": "Separate destination from movement within a location."
+    },
+    "bd4fc906-aa7f-5eca-94f0-574a1fd2d1e6": {
+      "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Er“): [er / mitnehmen / das Handy] (mit bestimmtem Artikel)",
+      "questionEn": "Write the sentence: He takes the phone with him. Start with Er and use a definite article.",
+      "answer": "Er nimmt das Handy mit.",
+      "accepted": [
+        "Er nimmt das Handy mit.",
+        "Er nimmt das Handy mit"
+      ],
+      "reason": "The separable-verb item belongs to L2; Regenschirm is first taught in L3."
     }
   }
 }

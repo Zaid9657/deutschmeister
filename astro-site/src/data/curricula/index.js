@@ -5,6 +5,8 @@
 import { CURRICULUM_A11 } from './a11.js';
 import { CURRICULUM_A12 } from './a12.js';
 import { CURRICULUM_A21 } from './a21.js';
+import { A21_PROMOTED } from './a21-release.js';
+import { abschlusstestA21Course } from '../courseTests/abschlusstestA21Course.js';
 
 /**
  * LIVE curricula — what the course player, the checkpoint page and the Astro syllabus
@@ -14,10 +16,10 @@ import { CURRICULUM_A21 } from './a21.js';
  * nothing behind it. A1.2 was promoted by owner decision (2026-10-22) after DaF reviews #12–#16;
  * its accepted known issues are listed in docs/course-factory/a12-rebuild/HANDOFF-2026-10-16.md.
  */
-export const CURRICULA = { 'a1.1': CURRICULUM_A11, 'a1.2': CURRICULUM_A12 };
+export const CURRICULA = { 'a1.1': CURRICULUM_A11, 'a1.2': CURRICULUM_A12, ...(A21_PROMOTED ? { 'a2.1': CURRICULUM_A21 } : {}) };
 
 /** Validated but not yet shipped — see the promotion rule above. */
-export const DRAFT_CURRICULA = { 'a2.1': CURRICULUM_A21 };
+export const DRAFT_CURRICULA = A21_PROMOTED ? {} : { 'a2.1': CURRICULUM_A21 };
 
 /** Every curriculum module, live or draft — for the validator and the test suites. */
 export const ALL_CURRICULA = { ...CURRICULA, ...DRAFT_CURRICULA };
@@ -42,6 +44,11 @@ export function curriculumPath(curriculum) {
     const cp = curriculum.checkpoints.find((c) => c.afterLektion === l.nr);
     if (cp) path.push({ kind: 'checkpoint', id: cp.id, nr: cp.nr, title: cp.title, minutes: 12, afterLektion: l.nr });
   }
-  path.push({ kind: 'leveltest', id: levelTestNodeId(curriculum), title: `Abschlusstest ${curriculum.code}`, minutes: 65, testSlug: curriculum.testSlug });
+  // The rebuilt A2.1 course uses the D4 paper in both draft and promoted states.
+  // Keep the live A1 path budgets unchanged.
+  const testMinutes = curriculum.level === 'a2.1'
+    ? abschlusstestA21Course.sections.reduce((sum, section) => sum + section.minutes, 0)
+    : 65;
+  path.push({ kind: 'leveltest', id: levelTestNodeId(curriculum), title: `Abschlusstest ${curriculum.code}`, minutes: testMinutes, testSlug: curriculum.testSlug });
   return path;
 }

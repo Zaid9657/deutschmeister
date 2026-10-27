@@ -1,7 +1,7 @@
 {
  "level": "a2.1",
  "builtFrom": "2026-08-24",
- "count": 353,
+ "count": 436,
  "items": [
   {
    "id": "a43fb668-364e-58f9-a028-c9c618e35fda",
@@ -112,8 +112,8 @@
    "accepted": [
     "kleinen"
    ],
-   "explanationDe": "Die Plural-Spalte hat immer -en. laut steht nach sind und hat keine Endung.",
-   "explanationEn": "The plural column is -en everywhere. laut stands after sind and keeps no ending.",
+   "explanationDe": "Nach die im Plural steht -en. Laut steht nach sind und hat keine Endung.",
+   "explanationEn": "After die in the plural use -en. Laut follows sind and has no ending.",
    "hint": null,
    "minLektion": 4
   },
@@ -276,6 +276,196 @@
    "minLektion": 11
   },
   {
+   "id": "extra-a21-l04-vocab-1",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Die ___ ist frisch. (Anfang: War…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: goods.",
+   "options": null,
+   "answer": "Ware",
+   "accepted": [
+    "Ware"
+   ],
+   "explanationDe": "Die Ware ist frisch.",
+   "explanationEn": "The goods are fresh.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a21-l04-vocab-2",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Das ___ gilt heute. (Anfang: Son…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: special offer.",
+   "options": null,
+   "answer": "Sonderangebot",
+   "accepted": [
+    "Sonderangebot"
+   ],
+   "explanationDe": "Das Sonderangebot gilt heute.",
+   "explanationEn": "The special offer is valid today.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a21-l04-vocab-3",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Der ___ liegt neben der Kasse. (Anfang: Kas…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: receipt.",
+   "options": null,
+   "answer": "Kassenbon",
+   "accepted": [
+    "Kassenbon"
+   ],
+   "explanationDe": "Der Kassenbon liegt neben der Kasse.",
+   "explanationEn": "The receipt is beside the checkout.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l04-vocab-4",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Der ___ steht vor dem Geschäft. (Anfang: Ein…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: shopping trolley.",
+   "options": null,
+   "answer": "Einkaufswagen",
+   "accepted": [
+    "Einkaufswagen"
+   ],
+   "explanationDe": "Der Einkaufswagen steht vor dem Geschäft.",
+   "explanationEn": "The shopping trolley is outside the shop.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l04-vocab-5",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Die ___ kostet einen Euro. (Anfang: Tüt…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: bag.",
+   "options": null,
+   "answer": "Tüte",
+   "accepted": [
+    "Tüte"
+   ],
+   "explanationDe": "Die Tüte kostet einen Euro.",
+   "explanationEn": "The bag costs one euro.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a21-l04-vocab-6",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Die ___ ist in meiner Tasche. (Anfang: Kre…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: credit card.",
+   "options": null,
+   "answer": "Kreditkarte",
+   "accepted": [
+    "Kreditkarte"
+   ],
+   "explanationDe": "Die Kreditkarte ist in meiner Tasche.",
+   "explanationEn": "The credit card is in my bag.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l04-vocab-7",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Die ___ Salat kostet drei Euro. (Anfang: Por…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: portion.",
+   "options": null,
+   "answer": "Portion",
+   "accepted": [
+    "Portion"
+   ],
+   "explanationDe": "Die Portion Salat kostet drei Euro.",
+   "explanationEn": "The portion of salad costs three euros.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a21-l04-vocab-8",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 57,
+   "questionDe": "Ergänzen Sie: Die ___ ist Reis. (Anfang: Bei…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: side dish.",
+   "options": null,
+   "answer": "Beilage",
+   "accepted": [
+    "Beilage"
+   ],
+   "explanationDe": "Die Beilage ist Reis.",
+   "explanationEn": "The side dish is rice.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a21-l04-vocab-9",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 58,
+   "questionDe": "Ergänzen Sie: Obst ist unsere ___. (Anfang: Nac…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: dessert.",
+   "options": null,
+   "answer": "Nachspeise",
+   "accepted": [
+    "Nachspeise"
+   ],
+   "explanationDe": "Obst ist unsere Nachspeise.",
+   "explanationEn": "Fruit is our dessert.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a21-l04-vocab-10",
+   "topic": "adjective-endings-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 59,
+   "questionDe": "Ergänzen Sie: Welche ___ ist das? (Anfang: Mar…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: brand.",
+   "options": null,
+   "answer": "Marke",
+   "accepted": [
+    "Marke"
+   ],
+   "explanationDe": "Welche Marke ist das?",
+   "explanationEn": "Which brand is that?",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
    "id": "428928b8-3f4c-55e1-be89-d83d0c1cbdc3",
    "topic": "adjective-endings-intro",
    "type": "sentence_building",
@@ -290,8 +480,8 @@
     "Das sind keine guten Bilder.",
     "Das sind keine guten Bilder"
    ],
-   "explanationDe": "kein hat einen Plural, ein nicht. Im Plural ist die Endung immer -en.",
-   "explanationEn": "kein has a plural, ein does not. In the plural the ending is always -en.",
+   "explanationDe": "Kein hat einen Plural, ein nicht. Nach keine im Plural steht -en.",
+   "explanationEn": "Kein has a plural, ein does not. After keine in the plural use -en.",
    "hint": null,
    "minLektion": 4
   },
@@ -549,8 +739,8 @@
    "accepted": [
     "den"
    ],
-   "explanationDe": "Plural Dativ: die → den (und Nomen bekommt -n: Kindern).",
-   "explanationEn": "Plural dative: die → den (and noun gets -n: Kindern).",
+   "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+   "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
    "hint": null,
    "minLektion": 5
   },
@@ -623,8 +813,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 6,
-   "questionDe": "Das Buch gehört ___ Studentin.",
-   "questionEn": "The book belongs to ___ student (female).",
+   "questionDe": "Das Buch gehört ___ Studentin. (unbestimmter Artikel)",
+   "questionEn": "The book belongs to a student. Choose the indefinite article.",
    "options": [
     "die",
     "der",
@@ -721,8 +911,8 @@
    "accepted": [
     "Freunden"
    ],
-   "explanationDe": "Dativ Plural: Nomen bekommt -n. Freunde → Freunden.",
-   "explanationEn": "Dative plural: noun adds -n. Freunde → Freunden.",
+   "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+   "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
    "hint": null,
    "minLektion": 1
   },
@@ -879,6 +1069,196 @@
    "minLektion": 5
   },
   {
+   "id": "extra-a21-l05-vocab-1",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Das ___ für Omas Geburtstag ist im Garten. (Anfang: Pic…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: picnic.",
+   "options": null,
+   "answer": "Picknick",
+   "accepted": [
+    "Picknick"
+   ],
+   "explanationDe": "Das Picknick für Omas Geburtstag ist im Garten.",
+   "explanationEn": "The picnic for Grandma’s birthday is in the garden.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-2",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Das ___ ist um sieben. (Anfang: Abe…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: dinner.",
+   "options": null,
+   "answer": "Abendessen",
+   "accepted": [
+    "Abendessen"
+   ],
+   "explanationDe": "Das Abendessen ist um sieben.",
+   "explanationEn": "Dinner is at seven.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-3",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Das ___ ist um zwölf. (Anfang: Mit…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: lunch.",
+   "options": null,
+   "answer": "Mittagessen",
+   "accepted": [
+    "Mittagessen"
+   ],
+   "explanationDe": "Das Mittagessen ist um zwölf.",
+   "explanationEn": "Lunch is at twelve.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-4",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Die ___ liegt auf dem Tisch. (Anfang: Get…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: drinks menu.",
+   "options": null,
+   "answer": "Getränkekarte",
+   "accepted": [
+    "Getränkekarte"
+   ],
+   "explanationDe": "Die Getränkekarte liegt auf dem Tisch.",
+   "explanationEn": "The drinks menu is on the table.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-5",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Die ___ ist ein Salat. (Anfang: Vor…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: starter.",
+   "options": null,
+   "answer": "Vorspeise",
+   "accepted": [
+    "Vorspeise"
+   ],
+   "explanationDe": "Die Vorspeise ist ein Salat.",
+   "explanationEn": "The starter is a salad.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-6",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Das ___ kostet zwölf Euro. (Anfang: Hau…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: main course.",
+   "options": null,
+   "answer": "Hauptgericht",
+   "accepted": [
+    "Hauptgericht"
+   ],
+   "explanationDe": "Das Hauptgericht kostet zwölf Euro.",
+   "explanationEn": "The main course costs twelve euros.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-7",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Das ___ ist heute Fisch mit Reis. (Anfang: Tag…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: dish of the day.",
+   "options": null,
+   "answer": "Tagesgericht",
+   "accepted": [
+    "Tagesgericht"
+   ],
+   "explanationDe": "Das Tagesgericht ist heute Fisch mit Reis.",
+   "explanationEn": "Today’s dish of the day is fish with rice.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-8",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 57,
+   "questionDe": "Ergänzen Sie: Die ___ liegt neben Omas Geschenk. (Anfang: Spe…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: menu.",
+   "options": null,
+   "answer": "Speisekarte",
+   "accepted": [
+    "Speisekarte"
+   ],
+   "explanationDe": "Die Speisekarte liegt neben Omas Geschenk.",
+   "explanationEn": "The menu is beside Grandma’s present.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-9",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 58,
+   "questionDe": "Ergänzen Sie: Die ___ bringt der Oma einen Kaffee. (Anfang: Bed…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: server.",
+   "options": null,
+   "answer": "Bedienung",
+   "accepted": [
+    "Bedienung"
+   ],
+   "explanationDe": "Die Bedienung bringt der Oma einen Kaffee.",
+   "explanationEn": "The server brings Grandma a coffee.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a21-l05-vocab-10",
+   "topic": "dative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 59,
+   "questionDe": "Ergänzen Sie: Das ___ ist für die Bedienung. (Anfang: Tri…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: tip.",
+   "options": null,
+   "answer": "Trinkgeld",
+   "accepted": [
+    "Trinkgeld"
+   ],
+   "explanationDe": "Das Trinkgeld ist für die Bedienung.",
+   "explanationEn": "The tip is for the server.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
    "id": "e63d3dcb-d28d-4c09-96bd-7a740a70249f",
    "topic": "dative-case",
    "type": "multiple_choice",
@@ -979,8 +1359,8 @@
    ],
    "answer": "den Kindern",
    "accepted": [],
-   "explanationDe": "Plural Dativ: die → den UND Nomen bekommt -n.",
-   "explanationEn": "Plural dative: die → den AND noun adds -n.",
+   "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+   "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
    "hint": null,
    "minLektion": 1
   },
@@ -1063,8 +1443,8 @@
     "Wir helfen den Kindern.",
     "Wir helfen den Kindern"
    ],
-   "explanationDe": "Im Dativ Plural wird der Artikel zu den. Das Nomen bekommt auch ein -n.",
-   "explanationEn": "In the dative plural the article becomes den and the noun itself adds -n.",
+   "explanationDe": "Im Dativ Plural steht den. Das Nomen bekommt -n, außer es endet schon auf -n oder -s.",
+   "explanationEn": "The dative plural uses den. Add -n to the noun unless it already ends in -n or -s.",
    "hint": "Der Dativ Plural endet auf -n.",
    "minLektion": 1
   },
@@ -1097,8 +1477,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 1,
-   "questionDe": "___ bitte die Tür!",
-   "questionEn": "___ bitte die Tür! (du, machen)",
+   "questionDe": "___ bitte eine Pause! (machen, du-Form)",
+   "questionEn": "Ask one friend to take a break. Use the du imperative of machen.",
    "options": [
     "Mach",
     "Macht",
@@ -1141,8 +1521,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 2,
-   "questionDe": "___ bitte die Tür!",
-   "questionEn": "___ bitte die Tür! (ihr, machen)",
+   "questionDe": "___ bitte eine Pause! (machen, ihr-Form)",
+   "questionEn": "Ask several friends to take a break. Use the ihr imperative of machen.",
    "options": [
     "Macht",
     "Mach",
@@ -1185,8 +1565,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 3,
-   "questionDe": "___ ___ bitte die Tür!",
-   "questionEn": "___ ___ bitte die Tür! (Sie, machen)",
+   "questionDe": "___ ___ bitte eine Pause! (machen, Sie-Form)",
+   "questionEn": "Ask someone formally to take a break. Use the Sie imperative of machen.",
    "options": [
     "Machen Sie",
     "Mach Sie",
@@ -1372,7 +1752,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Ergänzen Sie: Du ___ eine Pause machen. (sollen, Ratschlag)",
+   "questionDe": "Ergänzen Sie: Du ___ eine Pause machen. (sollen, Konjunktiv II, Ratschlag)",
    "questionEn": "Complete the gap using the German cue.",
    "options": null,
    "answer": "solltest",
@@ -1391,7 +1771,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 10,
-   "questionDe": "Ergänzen Sie: Wir ___ zusammen trainieren. (können, Vorschlag)",
+   "questionDe": "Ergänzen Sie: Wir ___ zusammen trainieren. (können, Konjunktiv II, Vorschlag)",
    "questionEn": "Complete the gap using the German cue.",
    "options": null,
    "answer": "könnten",
@@ -1430,7 +1810,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 11,
-   "questionDe": "Ergänzen Sie: Du ___ viel schlafen. (sollen, Ratschlag)",
+   "questionDe": "Ergänzen Sie: Du ___ viel schlafen. (sollen, Konjunktiv II, Ratschlag)",
    "questionEn": "Complete the gap using the German cue.",
    "options": null,
    "answer": "solltest",
@@ -1471,7 +1851,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 12,
-   "questionDe": "Ergänzen Sie: Wir ___ am Freitag zusammen essen. (können, Vorschlag)",
+   "questionDe": "Ergänzen Sie: Wir ___ am Freitag zusammen essen. (können, Konjunktiv II, Vorschlag)",
    "questionEn": "Complete the gap using the German cue.",
    "options": null,
    "answer": "könnten",
@@ -1566,7 +1946,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 25,
-   "questionDe": "Du bist müde. Du ___ eine Pause machen. (sollen, Ratschlag)",
+   "questionDe": "Du bist müde. Du ___ eine Pause machen. (sollen, Konjunktiv II, Ratschlag)",
    "questionEn": "You are tired. You should take a break.",
    "options": null,
    "answer": "solltest",
@@ -1585,7 +1965,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 26,
-   "questionDe": "Wir ___ zusammen Volleyball spielen. (können, höflicher Vorschlag)",
+   "questionDe": "Wir ___ zusammen Volleyball spielen. (können, Konjunktiv II, höflicher Vorschlag)",
    "questionEn": "We could play volleyball together.",
    "options": null,
    "answer": "könnten",
@@ -1725,6 +2105,63 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a21-l07-vocab-1",
+   "topic": "imperative-mood",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Der ___ braucht Hilfe beim Training. (Anfang: Anf…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: beginner.",
+   "options": null,
+   "answer": "Anfänger",
+   "accepted": [
+    "Anfänger"
+   ],
+   "explanationDe": "Der Anfänger braucht Hilfe beim Training.",
+   "explanationEn": "The beginner needs help with training.",
+   "hint": null,
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a21-l07-vocab-2",
+   "topic": "imperative-mood",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Das ___ ist neben dem Bahnhof. (Anfang: Fit…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: gym.",
+   "options": null,
+   "answer": "Fitnessstudio",
+   "accepted": [
+    "Fitnessstudio"
+   ],
+   "explanationDe": "Das Fitnessstudio ist neben dem Bahnhof.",
+   "explanationEn": "The gym is beside the station.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l07-vocab-3",
+   "topic": "imperative-mood",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Meine ___ ist gut. Ich laufe jeden Tag. (Anfang: Kon…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: fitness.",
+   "options": null,
+   "answer": "Kondition",
+   "accepted": [
+    "Kondition"
+   ],
+   "explanationDe": "Meine Kondition ist gut. Ich laufe jeden Tag.",
+   "explanationEn": "My fitness is good. I run every day.",
+   "hint": null,
+   "minLektion": 7
+  },
+  {
    "id": "71777d16-3fd2-5c3e-baf8-1146303a84c1",
    "topic": "imperative-mood",
    "type": "fill_blank",
@@ -1778,8 +2215,8 @@
     "Buchstabieren",
     "buchstabieren"
    ],
-   "explanationDe": "Die Sie-Form ist immer der Infinitiv plus Sie.",
-   "explanationEn": "The Sie-form is the infinitive plus Sie, however long the verb is - buchstabieren keeps every syllable.",
+   "explanationDe": "Hier sieht die Imperativform wie der Infinitiv aus, danach steht Sie. Ausnahme: Seien Sie!",
+   "explanationEn": "Here the imperative looks like the infinitive, followed by Sie. Exception: Seien Sie!",
    "hint": null,
    "minLektion": 1
   },
@@ -2324,14 +2761,166 @@
    "minLektion": 6
   },
   {
+   "id": "extra-a21-l06-vocab-1",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Die ___ ist für Freitag um acht. (Anfang: Res…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: reservation.",
+   "options": null,
+   "answer": "Reservierung",
+   "accepted": [
+    "Reservierung"
+   ],
+   "explanationDe": "Die Reservierung ist für Freitag um acht.",
+   "explanationEn": "The reservation is for Friday at eight.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-2",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Das ___ funktioniert heute nicht. (Anfang: Int…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: internet.",
+   "options": null,
+   "answer": "Internet",
+   "accepted": [
+    "Internet"
+   ],
+   "explanationDe": "Das Internet funktioniert heute nicht.",
+   "explanationEn": "The internet is not working today.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-3",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Die ___ ist eine Einladung. (Anfang: E-M…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: email.",
+   "options": null,
+   "answer": "E-Mail",
+   "accepted": [
+    "E-Mail"
+   ],
+   "explanationDe": "Die E-Mail ist eine Einladung.",
+   "explanationEn": "The email is an invitation.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-4",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Die ___ zeigt die Uhrzeit der Veranstaltung. (Anfang: Web…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: website.",
+   "options": null,
+   "answer": "Webseite",
+   "accepted": [
+    "Webseite"
+   ],
+   "explanationDe": "Die Webseite zeigt die Uhrzeit der Veranstaltung.",
+   "explanationEn": "The website shows the time of the event.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-5",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Die ___ zeigt meine Termine. (Anfang: App…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: app.",
+   "options": null,
+   "answer": "App",
+   "accepted": [
+    "App"
+   ],
+   "explanationDe": "Die App zeigt meine Termine.",
+   "explanationEn": "The app shows my appointments.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-6",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Der ___ ist im Handy. (Anfang: Akk…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: battery.",
+   "options": null,
+   "answer": "Akku",
+   "accepted": [
+    "Akku"
+   ],
+   "explanationDe": "Der Akku ist im Handy.",
+   "explanationEn": "The battery is in the phone.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-7",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Das ___ funktioniert wieder. (Anfang: WLA…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: Wi-Fi.",
+   "options": null,
+   "answer": "WLAN",
+   "accepted": [
+    "WLAN"
+   ],
+   "explanationDe": "Das WLAN funktioniert wieder.",
+   "explanationEn": "The Wi-Fi is working again.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a21-l06-vocab-8",
+   "topic": "modal-verbs-past",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 57,
+   "questionDe": "Ergänzen Sie: Mein ___ ist heute um acht. (Anfang: Fei…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: end of the working day.",
+   "options": null,
+   "answer": "Feierabend",
+   "accepted": [
+    "Feierabend"
+   ],
+   "explanationDe": "Mein Feierabend ist heute um acht.",
+   "explanationEn": "My working day ends at eight today.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
    "id": "a90dbd80-9f76-52ea-9e9c-936f1eff18cb",
    "topic": "modal-verbs-past",
    "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“; „nicht“ steht vor „kommen“): [ich / gestern Abend / nicht kommen / können]",
-   "questionEn": "Write the sentence in the Präteritum: I couldn't come yesterday evening. (können, ich; start with Ich or Gestern Abend) Begin with “Ich”. Put “nicht” before “kommen”.",
+   "questionDe": "Schreiben Sie den Satz im Präteritum (Beginnen Sie mit „Ich“; „nicht“ steht vor „kommen“): [ich / gestern Abend / nicht kommen / können]",
+   "questionEn": "Write the sentence in the past tense. Start with Ich and place nicht before kommen. Begin with “Ich”. Put “nicht” before “kommen”.",
    "options": null,
    "answer": "Ich konnte gestern Abend nicht kommen.",
    "accepted": [
@@ -2350,8 +2939,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 2,
-   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / am Sonntag / ins Kino gehen / wollen]",
-   "questionEn": "Write the sentence in the Präteritum: We wanted to go to the cinema on Sunday. (wollen, wir) Begin with “Wir”.",
+   "questionDe": "Schreiben Sie den Satz im Präteritum (Beginnen Sie mit „Wir“): [wir / am Sonntag / ins Kino gehen / wollen]",
+   "questionEn": "Write the sentence in the past tense, starting with Wir. Begin with “Wir”.",
    "options": null,
    "answer": "Wir wollten am Sonntag ins Kino gehen.",
    "accepted": [
@@ -2928,6 +3517,120 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a21-l12-vocab-1",
+   "topic": "perfect-tense-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Das ___ ist auf dem Foto blau. (Anfang: Mee…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: sea.",
+   "options": null,
+   "answer": "Meer",
+   "accepted": [
+    "Meer"
+   ],
+   "explanationDe": "Das Meer ist auf dem Foto blau.",
+   "explanationEn": "The sea is blue in the photo.",
+   "hint": null,
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a21-l12-vocab-2",
+   "topic": "perfect-tense-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Der ___ auf dem Foto ist in Marokko. (Anfang: Str…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: beach.",
+   "options": null,
+   "answer": "Strand",
+   "accepted": [
+    "Strand"
+   ],
+   "explanationDe": "Der Strand auf dem Foto ist in Marokko.",
+   "explanationEn": "The beach in the photo is in Morocco.",
+   "hint": null,
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a21-l12-vocab-3",
+   "topic": "perfect-tense-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Die ___ ist klein. Wir haben dort Urlaub gemacht. (Anfang: Ins…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: island.",
+   "options": null,
+   "answer": "Insel",
+   "accepted": [
+    "Insel"
+   ],
+   "explanationDe": "Die Insel ist klein. Wir haben dort Urlaub gemacht.",
+   "explanationEn": "The island is small. We had a holiday there.",
+   "hint": null,
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a21-l12-vocab-4",
+   "topic": "perfect-tense-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Der ___ ist auf dem Foto von meinem Vater. (Anfang: Ber…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: mountain.",
+   "options": null,
+   "answer": "Berg",
+   "accepted": [
+    "Berg"
+   ],
+   "explanationDe": "Der Berg ist auf dem Foto von meinem Vater.",
+   "explanationEn": "The mountain is in my father’s photo.",
+   "hint": null,
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a21-l12-vocab-5",
+   "topic": "perfect-tense-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Der ___ liegt neben dem Wald. (Anfang: See…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: lake.",
+   "options": null,
+   "answer": "See",
+   "accepted": [
+    "See"
+   ],
+   "explanationDe": "Der See liegt neben dem Wald.",
+   "explanationEn": "The lake is beside the forest.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l12-vocab-6",
+   "topic": "perfect-tense-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Der ___ ist auf unseren Fotos. (Anfang: Wal…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: forest.",
+   "options": null,
+   "answer": "Wald",
+   "accepted": [
+    "Wald"
+   ],
+   "explanationDe": "Der Wald ist auf unseren Fotos.",
+   "explanationEn": "The forest is in our photos.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
    "id": "6ddb0a23-23ef-598a-9175-ba359790567b",
    "topic": "perfect-tense-haben",
    "type": "fill_blank",
@@ -3060,7 +3763,7 @@
    "accepted": [
     "gefallen"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3082,8 +3785,8 @@
    ],
    "answer": "ist / angekommen",
    "accepted": [],
-   "explanationDe": "ankommen = Ankunft (Bewegung). sein + angekommen.",
-   "explanationEn": "ankommen = arrival (movement). sein + angekommen.",
+   "explanationDe": "Ankommen beschreibt einen Ortswechsel: sein + angekommen.",
+   "explanationEn": "Ankommen expresses a change of place: sein + angekommen.",
    "hint": null,
    "minLektion": 2
   },
@@ -3101,7 +3804,7 @@
    "accepted": [
     "aufgewacht"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3120,7 +3823,7 @@
    "accepted": [
     "eingeschlafen"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3139,7 +3842,7 @@
    "accepted": [
     "aufgestanden"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3158,7 +3861,7 @@
    "accepted": [
     "ist"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3177,7 +3880,7 @@
    "accepted": [
     "bin"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 1
@@ -3220,7 +3923,7 @@
    "accepted": [
     "sind"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3239,7 +3942,7 @@
    "accepted": [
     "Sind"
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3334,8 +4037,8 @@
    "accepted": [
     "gefahren"
    ],
-   "explanationDe": "fahren ist unregelmäßig und zeigt Bewegung: sind gefahren.",
-   "explanationEn": "fahren is irregular and shows movement, so the Perfekt is sind + gefahren.",
+   "explanationDe": "Fahren mit Ziel beschreibt einen Ortswechsel: sind gefahren.",
+   "explanationEn": "Fahren with a destination expresses a change of place: sind gefahren.",
    "hint": null,
    "minLektion": 1
   },
@@ -3372,7 +4075,7 @@
    "accepted": [
     "eingeschlafen"
    ],
-   "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "A change of location or state takes sein plus the participle.",
    "hint": null,
    "minLektion": 8
@@ -3391,7 +4094,7 @@
    "accepted": [
     "angekommen"
    ],
-   "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "A change of location or state takes sein plus the participle.",
    "hint": null,
    "minLektion": 8
@@ -3410,7 +4113,7 @@
    "accepted": [
     "geblieben"
    ],
-   "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "A change of location or state takes sein plus the participle.",
    "hint": null,
    "minLektion": 8
@@ -3429,7 +4132,7 @@
    "accepted": [
     "gekommen"
    ],
-   "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "A change of location or state takes sein plus the participle.",
    "hint": null,
    "minLektion": 1
@@ -3448,7 +4151,7 @@
    "accepted": [
     "gefallen"
    ],
-   "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "A change of location or state takes sein plus the participle.",
    "hint": null,
    "minLektion": 8
@@ -3467,8 +4170,65 @@
    "accepted": [
     "aufgewacht"
    ],
-   "explanationDe": "Ortswechsel oder Zustandswechsel: sein und das Partizip bilden das Perfekt.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "A change of location or state takes sein plus the participle.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a21-l08-vocab-1",
+   "topic": "perfect-tense-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Der ___ hat heute Sprechstunde. (Anfang: Hau…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: family doctor.",
+   "options": null,
+   "answer": "Hausarzt",
+   "accepted": [
+    "Hausarzt"
+   ],
+   "explanationDe": "Der Hausarzt hat heute Sprechstunde.",
+   "explanationEn": "The family doctor has consulting hours today.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a21-l08-vocab-2",
+   "topic": "perfect-tense-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Die ___ ist für mein Bein. (Anfang: Sal…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: ointment.",
+   "options": null,
+   "answer": "Salbe",
+   "accepted": [
+    "Salbe"
+   ],
+   "explanationDe": "Die Salbe ist für mein Bein.",
+   "explanationEn": "The ointment is for my leg.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a21-l08-vocab-3",
+   "topic": "perfect-tense-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Die ___ ist für meinen Chef. (Anfang: Kra…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: sick note.",
+   "options": null,
+   "answer": "Krankmeldung",
+   "accepted": [
+    "Krankmeldung"
+   ],
+   "explanationDe": "Die Krankmeldung ist für meinen Chef.",
+   "explanationEn": "The sick note is for my boss.",
    "hint": null,
    "minLektion": 8
   },
@@ -3486,7 +4246,7 @@
    "accepted": [
     "Ana ist vom Fahrrad gefallen."
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3505,7 +4265,7 @@
    "accepted": [
     "Wir sind früh aufgewacht."
    ],
-   "explanationDe": "Bei Bewegung und Zustandswechsel steht hier sein mit Partizip.",
+   "explanationDe": "Diese Verben bilden das Perfekt mit sein. Bleiben nimmt ebenfalls sein, ohne Ortswechsel.",
    "explanationEn": "These movement or change-of-state verbs use sein plus a participle.",
    "hint": null,
    "minLektion": 8
@@ -3524,8 +4284,8 @@
    "accepted": [
     "sind"
    ],
-   "explanationDe": "kommen zeigt Bewegung. Die Plural-Form von sein heißt sind.",
-   "explanationEn": "kommen is a movement verb, and the plural form of sein is sind.",
+   "explanationDe": "Kommen beschreibt einen Ortswechsel. Die Pluralform von sein heißt sind.",
+   "explanationEn": "Kommen expresses a change of place. The plural form of sein is sind.",
    "hint": null,
    "minLektion": 1
   },
@@ -3562,8 +4322,8 @@
    "accepted": [
     "gearbeitet"
    ],
-   "explanationDe": "arbeiten ist eine Tätigkeit ohne Bewegung und nimmt haben.",
-   "explanationEn": "arbeiten is an activity without movement, so it takes haben.",
+   "explanationDe": "Arbeiten bildet das Perfekt mit haben: Ich habe gearbeitet.",
+   "explanationEn": "Arbeiten forms the perfect with haben: Ich habe gearbeitet.",
    "hint": null,
    "minLektion": 10
   },
@@ -3797,7 +4557,7 @@
    "accepted": [
     "Omas"
    ],
-   "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+   "explanationDe": "Namen ohne s-Laut am Ende bekommen -s; nach von steht Dativ.",
    "explanationEn": "Names take -s; von takes the dative.",
    "hint": null,
    "minLektion": 1
@@ -3816,7 +4576,7 @@
    "accepted": [
     "meinem"
    ],
-   "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+   "explanationDe": "Namen ohne s-Laut am Ende bekommen -s; nach von steht Dativ.",
    "explanationEn": "Names take -s; von takes the dative.",
    "hint": null,
    "minLektion": 1
@@ -3854,7 +4614,7 @@
    "accepted": [
     "Lenas"
    ],
-   "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+   "explanationDe": "Namen ohne s-Laut am Ende bekommen -s; nach von steht Dativ.",
    "explanationEn": "Names take -s; von takes the dative.",
    "hint": null,
    "minLektion": 1
@@ -3892,10 +4652,200 @@
    "accepted": [
     "meiner"
    ],
-   "explanationDe": "Namen bekommen -s; nach von steht Dativ.",
+   "explanationDe": "Namen ohne s-Laut am Ende bekommen -s; nach von steht Dativ.",
    "explanationEn": "Names take -s; von takes the dative.",
    "hint": null,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-1",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Unser ___ ist schön. (Anfang: All…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: everyday life.",
+   "options": null,
+   "answer": "Alltag",
+   "accepted": [
+    "Alltag"
+   ],
+   "explanationDe": "Unser Alltag ist schön.",
+   "explanationEn": "Our everyday life is pleasant.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-2",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Meine Oma hat viel ___. (Anfang: Fre…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: free time.",
+   "options": null,
+   "answer": "Freizeit",
+   "accepted": [
+    "Freizeit"
+   ],
+   "explanationDe": "Meine Oma hat viel Freizeit.",
+   "explanationEn": "My grandma has a lot of free time.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-3",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Das ist eine ___ von meinem Opa. (Anfang: Gew…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: habit.",
+   "options": null,
+   "answer": "Gewohnheit",
+   "accepted": [
+    "Gewohnheit"
+   ],
+   "explanationDe": "Das ist eine Gewohnheit von meinem Opa.",
+   "explanationEn": "That is a habit of my grandpa’s.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-4",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Musik ist ihre ___. (Anfang: Lei…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: passion.",
+   "options": null,
+   "answer": "Leidenschaft",
+   "accepted": [
+    "Leidenschaft"
+   ],
+   "explanationDe": "Musik ist ihre Leidenschaft.",
+   "explanationEn": "Music is her passion.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-5",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Das ___ gehört meinem Bruder. (Anfang: Spi…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: game.",
+   "options": null,
+   "answer": "Spiel",
+   "accepted": [
+    "Spiel"
+   ],
+   "explanationDe": "Das Spiel gehört meinem Bruder.",
+   "explanationEn": "The game belongs to my brother.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-6",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Das ___ steht bei unseren Eltern. (Anfang: Kla…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: piano.",
+   "options": null,
+   "answer": "Klavier",
+   "accepted": [
+    "Klavier"
+   ],
+   "explanationDe": "Das Klavier steht bei unseren Eltern.",
+   "explanationEn": "The piano is at our parents’ home.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-7",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Die ___ gehört meiner Schwester. (Anfang: Git…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: guitar.",
+   "options": null,
+   "answer": "Gitarre",
+   "accepted": [
+    "Gitarre"
+   ],
+   "explanationDe": "Die Gitarre gehört meiner Schwester.",
+   "explanationEn": "The guitar belongs to my sister.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-8",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 57,
+   "questionDe": "Ergänzen Sie: Welches ___ spielt Ihre Oma? (Anfang: Ins…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: musical instrument.",
+   "options": null,
+   "answer": "Instrument",
+   "accepted": [
+    "Instrument"
+   ],
+   "explanationDe": "Welches Instrument spielt Ihre Oma?",
+   "explanationEn": "Which instrument does your grandma play?",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-9",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 58,
+   "questionDe": "Ergänzen Sie: Unser ___ ist der Mann von unserer Tochter. (Anfang: Sch…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: son-in-law.",
+   "options": null,
+   "answer": "Schwiegersohn",
+   "accepted": [
+    "Schwiegersohn"
+   ],
+   "explanationDe": "Unser Schwiegersohn ist der Mann von unserer Tochter.",
+   "explanationEn": "Our son-in-law is our daughter’s husband.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a21-l01-vocab-10",
+   "topic": "possessive-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 59,
+   "questionDe": "Ergänzen Sie: In unserer Familie haben wir ___. (Anfang: Ver…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: trust.",
+   "options": null,
+   "answer": "Vertrauen",
+   "accepted": [
+    "Vertrauen"
+   ],
+   "explanationDe": "In unserer Familie haben wir Vertrauen.",
+   "explanationEn": "There is trust in our family.",
+   "hint": null,
+   "minLektion": null
   },
   {
    "id": "c3ff3180-bb18-5d74-b38d-b2b09a460162",
@@ -4130,7 +5080,7 @@
     "zur",
     "zum",
     "zu den",
-    "zu dem"
+    "zu das"
    ],
    "answer": "zum",
    "accepted": [],
@@ -4249,8 +5199,8 @@
    "questionDe": "Sie geht ___ Schule.",
    "questionEn": "She goes to school.",
    "options": [
-    "zu dem",
-    "zu der",
+    "zu den",
+    "zu die",
     "zum",
     "zur"
    ],
@@ -4418,6 +5368,82 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a21-l11-vocab-1",
+   "topic": "prepositions-dative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Der ___ steht neben dem Rathaus. (Anfang: Weg…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: signpost.",
+   "options": null,
+   "answer": "Wegweiser",
+   "accepted": [
+    "Wegweiser"
+   ],
+   "explanationDe": "Der Wegweiser steht neben dem Rathaus.",
+   "explanationEn": "The signpost is beside the town hall.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l11-vocab-2",
+   "topic": "prepositions-dative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Der ___ ist vor dem Museum. (Anfang: Zeb…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: pedestrian crossing.",
+   "options": null,
+   "answer": "Zebrastreifen",
+   "accepted": [
+    "Zebrastreifen"
+   ],
+   "explanationDe": "Der Zebrastreifen ist vor dem Museum.",
+   "explanationEn": "The pedestrian crossing is in front of the museum.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l11-vocab-3",
+   "topic": "prepositions-dative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Die ___ ist hinter der Brücke. (Anfang: Kre…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: intersection.",
+   "options": null,
+   "answer": "Kreuzung",
+   "accepted": [
+    "Kreuzung"
+   ],
+   "explanationDe": "Die Kreuzung ist hinter der Brücke.",
+   "explanationEn": "The intersection is behind the bridge.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l11-vocab-4",
+   "topic": "prepositions-dative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Die ___ ist gegenüber dem Museum. (Anfang: Amp…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: traffic light.",
+   "options": null,
+   "answer": "Ampel",
+   "accepted": [
+    "Ampel"
+   ],
+   "explanationDe": "Die Ampel ist gegenüber dem Museum.",
+   "explanationEn": "The traffic light is opposite the museum.",
+   "hint": null,
+   "minLektion": 11
+  },
+  {
    "id": "c24ec4fa-d2e5-4dab-9daf-c50df3e17639",
    "topic": "prepositions-dative",
    "type": "multiple_choice",
@@ -4446,13 +5472,13 @@
    "stage": 5,
    "difficulty": 1,
    "order": 11,
-   "questionDe": "Sie kommt ___ der Schweiz.",
-   "questionEn": "She comes from Switzerland.",
+   "questionDe": "Sie kommt ___ der Schweiz. (Herkunft)",
+   "questionEn": "She comes from Switzerland. Choose the preposition for her country of origin.",
    "options": [
     "nach",
     "aus",
-    "von",
-    "zu"
+    "in",
+    "bei"
    ],
    "answer": "aus",
    "accepted": [],
@@ -4471,10 +5497,10 @@
    "questionDe": "Das Hotel ist ___ dem Bahnhof.",
    "questionEn": "The hotel is ___ the train station.",
    "options": [
-    "neben",
+    "gegen",
     "gegenüber",
     "zwischen",
-    "hinter"
+    "durch"
    ],
    "answer": "gegenüber",
    "accepted": [],
@@ -4544,6 +5570,26 @@
    "minLektion": 1
   },
   {
+   "id": "3a1c5946-5900-5b6b-8745-d197cdf37557",
+   "topic": "prepositions-dative",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 22,
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Nach dem Abendessen“): [nach / das Abendessen / ich / anrufen / meine Freundin] (mit bestimmtem Artikel)",
+   "questionEn": "Write the sentence: After dinner I call my friend (female). Start with 'Nach'; anrufen is separable. Begin with “Nach dem Abendessen”. Use a definite article.",
+   "options": null,
+   "answer": "Nach dem Abendessen rufe ich meine Freundin an.",
+   "accepted": [
+    "Nach dem Abendessen rufe ich meine Freundin an.",
+    "Nach dem Abendessen rufe ich meine Freundin an"
+   ],
+   "explanationDe": "nach + dem Abendessen steht auf Position eins. Das Verb kommt auf Position zwei.",
+   "explanationEn": "nach + dem Abendessen fills position one, so the verb comes second and ich follows it.",
+   "hint": "Das Verb steht auf Position zwei.",
+   "minLektion": 5
+  },
+  {
    "id": "c18e0311-43e1-5874-8423-da9f919b1340",
    "topic": "prepositions-dative",
    "type": "sentence_building",
@@ -4610,6 +5656,26 @@
    "minLektion": 1
   },
   {
+   "id": "c295fc4f-21b1-5f85-bc04-d15eb5bce594",
+   "topic": "prepositions-dative",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 26,
+   "questionDe": "Korrigieren Sie das Wort einen: „Seit einen Monat spiele ich jeden Tag Gitarre.“ (Beginnen Sie mit „Seit“)",
+   "questionEn": "Correct the word einen: Seit einen Monat spiele ich jeden Tag Gitarre. Start with Seit. Begin with “Seit”. Correct only the word “einen”.",
+   "options": null,
+   "answer": "Seit einem Monat spiele ich jeden Tag Gitarre.",
+   "accepted": [
+    "Seit einem Monat spiele ich jeden Tag Gitarre.",
+    "Seit einem Monat spiele ich jeden Tag Gitarre"
+   ],
+   "explanationDe": "Seit steht mit Dativ: seit einem Monat.",
+   "explanationEn": "Seit takes the dative: seit einem Monat.",
+   "hint": "Seit + Dativ.",
+   "minLektion": 4
+  },
+  {
    "id": "extra-a21-l09-01",
    "topic": "pronouns-accusative-dative",
    "type": "fill_blank",
@@ -4623,7 +5689,7 @@
    "accepted": [
     "sie"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4661,7 +5727,7 @@
    "accepted": [
     "ihn"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4699,7 +5765,7 @@
    "accepted": [
     "es"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4737,7 +5803,7 @@
    "accepted": [
     "ihm"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4776,7 +5842,7 @@
    "accepted": [
     "ihr"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4795,7 +5861,7 @@
    "accepted": [
     "mir"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4814,7 +5880,7 @@
    "accepted": [
     "dir"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4857,7 +5923,7 @@
    "accepted": [
     "uns"
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -4956,7 +6022,7 @@
    "accepted": [
     "ihn"
    ],
-   "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+   "explanationDe": "Unbetont steht das Akkusativpronomen normalerweise vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
    "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
    "hint": null,
    "minLektion": 9
@@ -4975,7 +6041,7 @@
    "accepted": [
     "es"
    ],
-   "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+   "explanationDe": "Unbetont steht das Akkusativpronomen normalerweise vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
    "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
    "hint": null,
    "minLektion": 9
@@ -4994,7 +6060,7 @@
    "accepted": [
     "ihr"
    ],
-   "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+   "explanationDe": "Unbetont steht das Akkusativpronomen normalerweise vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
    "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
    "hint": null,
    "minLektion": 9
@@ -5013,7 +6079,7 @@
    "accepted": [
     "ihm"
    ],
-   "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+   "explanationDe": "Unbetont steht das Akkusativpronomen normalerweise vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
    "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
    "hint": null,
    "minLektion": 9
@@ -5032,7 +6098,7 @@
    "accepted": [
     "uns"
    ],
-   "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+   "explanationDe": "Unbetont steht das Akkusativpronomen normalerweise vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
    "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
    "hint": null,
    "minLektion": 9
@@ -5051,7 +6117,7 @@
    "accepted": [
     "ihn"
    ],
-   "explanationDe": "Das Akkusativpronomen steht vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
+   "explanationDe": "Unbetont steht das Akkusativpronomen normalerweise vor dem Dativobjekt. Prüfen Sie das Genus des Nomens.",
    "explanationEn": "The accusative pronoun precedes the dative object. Check the noun’s gender.",
    "hint": null,
    "minLektion": 9
@@ -5124,16 +6190,16 @@
    "stage": 5,
    "difficulty": 3,
    "order": 7,
-   "questionDe": "Schreiben Sie den Satz: [er / schicken / mir / den Schlüssel] (Beginnen Sie mit „Er“)",
-   "questionEn": "Write: He sends me the key. Begin with Er. Begin with “Er”.",
+   "questionDe": "Schreiben Sie den Satz: [er / schicken / mir / den Schlüssel] (unbetonte Pronomen) (Beginnen Sie mit „Er“)",
+   "questionEn": "Write: He sends me the key. Begin with Er; use unstressed objects. Begin with “Er”.",
    "options": null,
    "answer": "Er schickt mir den Schlüssel.",
    "accepted": [
     "Er schickt mir den Schlüssel.",
     "Er schickt mir den Schlüssel"
    ],
-   "explanationDe": "Ein Pronomen und ein Nomen: mir steht vor den Schlüssel.",
-   "explanationEn": "With a pronoun and a noun object, mir comes before den Schlüssel.",
+   "explanationDe": "Bei unbetonten Objekten steht das Pronomen normalerweise vor dem Nomen: mir vor den Schlüssel.",
+   "explanationEn": "With unstressed objects, the pronoun normally precedes the noun: mir before den Schlüssel.",
    "hint": null,
    "minLektion": 9
   },
@@ -5185,14 +6251,14 @@
    "stage": 5,
    "difficulty": 2,
    "order": 9,
-   "questionDe": "Bilden Sie den Satz: [Ich / schicke / sie / Ihnen] (Beginnen Sie mit „Ich“)",
+   "questionDe": "Bilden Sie den Satz: [Ich / schicke / sie / Ihnen] (unbetonte Pronomen) (Beginnen Sie mit „Ich“)",
    "questionEn": "Build the sentence. Begin with “Ich”.",
    "options": null,
    "answer": "Ich schicke sie Ihnen.",
    "accepted": [
     "Ich schicke sie Ihnen."
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "caseSensitive": true,
@@ -5205,8 +6271,8 @@
    "stage": 5,
    "difficulty": 3,
    "order": 10,
-   "questionDe": "Korrigieren Sie: Ich schicke ihm es. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the word order: two pronouns, accusative first. Write the whole sentence. Begin with “Ich”.",
+   "questionDe": "Korrigieren Sie bei unbetonten Pronomen: Ich schicke ihm es. (Beginnen Sie mit „Ich“)",
+   "questionEn": "Correct the order: Ich schicke ihm es. Begin with Ich; use unstressed pronouns. Begin with “Ich”.",
    "options": null,
    "answer": "Ich schicke es ihm.",
    "accepted": [
@@ -5214,8 +6280,8 @@
     "Ich schicke es ihm",
     "ich schicke es ihm."
    ],
-   "explanationDe": "Bei zwei Pronomen steht das Akkusativ-Pronomen vor dem Dativ-Pronomen.",
-   "explanationEn": "With two pronouns the accusative pronoun comes before the dative pronoun.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
+   "explanationEn": "With two unstressed object pronouns, accusative normally precedes dative.",
    "hint": null,
    "minLektion": 9
   },
@@ -5226,14 +6292,14 @@
    "stage": 5,
    "difficulty": 2,
    "order": 10,
-   "questionDe": "Bilden Sie den Satz: [Frau Yilmaz / zeigt / es / ihm] (Beginnen Sie mit „Frau Yilmaz“)",
+   "questionDe": "Bilden Sie den Satz: [Frau Yilmaz / zeigt / es / ihm] (unbetonte Pronomen) (Beginnen Sie mit „Frau Yilmaz“)",
    "questionEn": "Build the sentence. Begin with “Frau Yilmaz”.",
    "options": null,
    "answer": "Frau Yilmaz zeigt es ihm.",
    "accepted": [
     "Frau Yilmaz zeigt es ihm."
    ],
-   "explanationDe": "Ein Akkusativpronomen steht vor dem Dativpronomen.",
+   "explanationDe": "Bei zwei unbetonten Objektpronomen steht normalerweise Akkusativ vor Dativ.",
    "explanationEn": "An accusative pronoun comes before a dative pronoun.",
    "hint": null,
    "minLektion": 9
@@ -5245,16 +6311,16 @@
    "stage": 5,
    "difficulty": 3,
    "order": 11,
-   "questionDe": "[ich / zeigen / es / dem Chef] → Schreiben Sie den Satz. (Beginnen Sie mit „Ich“)",
-   "questionEn": "Write the sentence: I'll show it to the boss. (pronoun + noun object, start with Ich) Begin with “Ich”.",
+   "questionDe": "[ich / zeigen / es / dem Chef] → Schreiben Sie den Satz. (unbetonte Pronomen) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Write the sentence, starting with Ich. Use unstressed objects. Begin with “Ich”.",
    "options": null,
    "answer": "Ich zeige es dem Chef.",
    "accepted": [
     "Ich zeige es dem Chef.",
     "Ich zeige es dem Chef"
    ],
-   "explanationDe": "Ein Pronomen steht vor einem Nomen, egal in welchem Fall.",
-   "explanationEn": "A pronoun stands before a noun object, whatever its case: es (accusative) before dem Chef (dative).",
+   "explanationDe": "Bei unbetonten Objekten steht das Pronomen normalerweise vor dem Nomen: es vor dem Chef.",
+   "explanationEn": "With unstressed objects, the pronoun normally precedes the noun: es before dem Chef.",
    "hint": null,
    "minLektion": 9
   },
@@ -5336,7 +6402,7 @@
    "accepted": [
     "eingepackt"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5377,7 +6443,7 @@
    "accepted": [
     "aufgeräumt"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5396,7 +6462,7 @@
    "accepted": [
     "angerufen"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5437,7 +6503,7 @@
    "accepted": [
     "abgeholt"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5456,7 +6522,7 @@
    "accepted": [
     "mitgebracht"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5499,7 +6565,7 @@
    "accepted": [
     "abgeholt"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5542,7 +6608,7 @@
    "accepted": [
     "eingepackt"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5561,7 +6627,7 @@
    "accepted": [
     "aufgeräumt"
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5580,8 +6646,8 @@
    "accepted": [
     "räume"
    ],
-   "explanationDe": "Im Hauptsatz geht das Präfix auf ans Ende. Du konjugierst nur räumen.",
-   "explanationEn": "In a main clause the prefix auf goes to the end, and you conjugate only räumen.",
+   "explanationDe": "Im Hauptsatz steht das Präfix auf am Ende. Sie konjugieren nur räumen.",
+   "explanationEn": "In a main clause the prefix auf goes at the end. Conjugate only räumen.",
    "hint": null,
    "minLektion": 2
   },
@@ -5618,8 +6684,8 @@
    "accepted": [
     "gehen"
    ],
-   "explanationDe": "Du konjugierst nur das Grundverb gehen. Das Präfix aus bleibt am Ende.",
-   "explanationEn": "You conjugate only the base verb gehen; the prefix aus stays at the end.",
+   "explanationDe": "Sie konjugieren nur das Grundverb gehen. Das Präfix aus bleibt am Ende.",
+   "explanationEn": "Conjugate only the base verb gehen. The prefix aus stays at the end.",
    "hint": null,
    "minLektion": 1
   },
@@ -5738,6 +6804,196 @@
    "minLektion": 2
   },
   {
+   "id": "extra-a21-l02-vocab-1",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Der ___ hat den Schlüssel. (Anfang: Hau…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: caretaker.",
+   "options": null,
+   "answer": "Hausmeister",
+   "accepted": [
+    "Hausmeister"
+   ],
+   "explanationDe": "Der Hausmeister hat den Schlüssel.",
+   "explanationEn": "The caretaker has the key.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-2",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Der ___ heißt Herr Sommer. (Anfang: Mie…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: tenant.",
+   "options": null,
+   "answer": "Mieter",
+   "accepted": [
+    "Mieter"
+   ],
+   "explanationDe": "Der Mieter heißt Herr Sommer.",
+   "explanationEn": "The tenant’s name is Mr Sommer.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-3",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Der ___ ist in meiner Tasche. (Anfang: Mie…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: rental contract.",
+   "options": null,
+   "answer": "Mietvertrag",
+   "accepted": [
+    "Mietvertrag"
+   ],
+   "explanationDe": "Der Mietvertrag ist in meiner Tasche.",
+   "explanationEn": "The rental contract is in my bag.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l02-vocab-4",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Die ___ kostet 1.000 Euro. (Anfang: Kau…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: deposit.",
+   "options": null,
+   "answer": "Kaution",
+   "accepted": [
+    "Kaution"
+   ],
+   "explanationDe": "Die Kaution kostet 1.000 Euro.",
+   "explanationEn": "The deposit costs 1,000 euros.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-5",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Die ___ bezahlen wir jeden Monat. (Anfang: Neb…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: additional housing costs.",
+   "options": null,
+   "answer": "Nebenkosten",
+   "accepted": [
+    "Nebenkosten"
+   ],
+   "explanationDe": "Die Nebenkosten bezahlen wir jeden Monat.",
+   "explanationEn": "We pay the additional housing costs every month.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-6",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Die ___ ist von unserem Vermieter. (Anfang: Woh…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: apartment advertisement.",
+   "options": null,
+   "answer": "Wohnungsanzeige",
+   "accepted": [
+    "Wohnungsanzeige"
+   ],
+   "explanationDe": "Die Wohnungsanzeige ist von unserem Vermieter.",
+   "explanationEn": "The apartment advertisement is from our landlord.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-7",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Die ___ ist am Samstag. (Anfang: Bes…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: viewing.",
+   "options": null,
+   "answer": "Besichtigung",
+   "accepted": [
+    "Besichtigung"
+   ],
+   "explanationDe": "Die Besichtigung ist am Samstag.",
+   "explanationEn": "The viewing is on Saturday.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-8",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 57,
+   "questionDe": "Ergänzen Sie: Die Wohnung hat 50 ___. (Anfang: Qua…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: square metre.",
+   "options": null,
+   "answer": "Quadratmeter",
+   "accepted": [
+    "Quadratmeter"
+   ],
+   "explanationDe": "Die Wohnung hat 50 Quadratmeter.",
+   "explanationEn": "The apartment measures 50 square metres.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-9",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 58,
+   "questionDe": "Ergänzen Sie: Die ___ kommt am Samstag. (Anfang: Lie…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: delivery.",
+   "options": null,
+   "answer": "Lieferung",
+   "accepted": [
+    "Lieferung"
+   ],
+   "explanationDe": "Die Lieferung kommt am Samstag.",
+   "explanationEn": "The delivery arrives on Saturday.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a21-l02-vocab-10",
+   "topic": "separable-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 59,
+   "questionDe": "Ergänzen Sie: Der ___ ist vor dem Haus. (Anfang: Par…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: parking space.",
+   "options": null,
+   "answer": "Parkplatz",
+   "accepted": [
+    "Parkplatz"
+   ],
+   "explanationDe": "Der Parkplatz ist vor dem Haus.",
+   "explanationEn": "The parking space is in front of the house.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
    "id": "extra-a21-l02-09",
    "topic": "separable-verbs",
    "type": "sentence_building",
@@ -5751,7 +7007,7 @@
    "accepted": [
     "Ich habe die Bücher eingepackt."
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5770,7 +7026,7 @@
    "accepted": [
     "Ana hat die Küche aufgeräumt."
    ],
-   "explanationDe": "Im Perfekt steht ge- zwischen Vorsilbe und Verbstamm.",
+   "explanationDe": "Bei den Verben in dieser Aufgabe steht ge- zwischen Vorsilbe und Verbstamm.",
    "explanationEn": "In the perfect tense ge- goes between the separable prefix and stem.",
    "hint": null,
    "minLektion": 2
@@ -5796,6 +7052,26 @@
    "minLektion": 1
   },
   {
+   "id": "bd4fc906-aa7f-5eca-94f0-574a1fd2d1e6",
+   "topic": "separable-verbs",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 21,
+   "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Er“): [er / mitnehmen / das Handy] (mit bestimmtem Artikel)",
+   "questionEn": "Write the sentence: He takes the phone with him. Start with Er and use a definite article. Begin with “Er”. Use a definite article.",
+   "options": null,
+   "answer": "Er nimmt das Handy mit.",
+   "accepted": [
+    "Er nimmt das Handy mit.",
+    "Er nimmt das Handy mit"
+   ],
+   "explanationDe": "Bei mitnehmen steht mit am Ende. Der Stamm nehmen ändert e zu i bei er/sie/es.",
+   "explanationEn": "mitnehmen splits, and the stem nehmen changes e to i in the er/sie/es form.",
+   "hint": "nehmen: er nimmt.",
+   "minLektion": 1
+  },
+  {
    "id": "26ef0497-431e-56e3-9dc2-f75363ba9e45",
    "topic": "separable-verbs",
    "type": "sentence_building",
@@ -5810,8 +7086,8 @@
     "Gestern habe ich eingekauft.",
     "Gestern habe ich eingekauft"
    ],
-   "explanationDe": "Im Partizip steht ge- zwischen Präfix und Stamm: eingekauft.",
-   "explanationEn": "In the participle of a separable verb ge- sits between the prefix and the stem: eingekauft.",
+   "explanationDe": "Bei einkaufen steht ge- zwischen Präfix und Stamm: eingekauft.",
+   "explanationEn": "For einkaufen, ge- goes between prefix and stem: eingekauft.",
    "hint": "ein + ge + kauft.",
    "minLektion": 2
   },
@@ -5832,8 +7108,8 @@
     "Meine Freundin ist spät gestern angekommen.",
     "Meine Freundin ist spät gestern angekommen"
    ],
-   "explanationDe": "Im Partizip steht ge- zwischen Präfix und Stamm.",
-   "explanationEn": "In the participle of a separable verb ge- stands between the prefix and the stem.",
+   "explanationDe": "Bei diesem Verb steht ge- zwischen Präfix und Stamm.",
+   "explanationEn": "For this verb, ge- goes between prefix and stem.",
    "hint": "an + ge + kommen.",
    "minLektion": 2
   },
@@ -5867,7 +7143,7 @@
    "stage": 4,
    "difficulty": 2,
    "order": 1,
-   "questionDe": "Ergänzen Sie: Der Besuch ist ___ zwei Wochen. (in / für)",
+   "questionDe": "Wann ist die Ankunft? Ergänzen Sie: Die Ankunft ist ___ zwei Wochen. (in / für)",
    "questionEn": "Complete the gap using the German cue.",
    "options": null,
    "answer": "in",
@@ -5886,8 +7162,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 2,
-   "questionDe": "___ Mittwoch habe ich einen Termin.",
-   "questionEn": "Fill in the preposition: On Wednesday I have an appointment. (weekday; the answer starts the sentence)",
+   "questionDe": "___ Mittwoch habe ich einen Termin. (an + dem → Kurzform)",
+   "questionEn": "I have an appointment on Wednesday. Enter the contraction of an + dem. Use the contracted form.",
    "options": null,
    "answer": "Am",
    "accepted": [
@@ -6071,8 +7347,8 @@
     "Von",
     "von"
    ],
-   "explanationDe": "Auf Wie lange? antwortest du mit von … bis.",
-   "explanationEn": "Wie lange? is answered with the pair von … bis.",
+   "explanationDe": "Von … bis nennt Anfang und Ende: von zehn bis achtzehn Uhr.",
+   "explanationEn": "Von … bis gives the start and end: from ten to eighteen o’clock.",
    "hint": null,
    "minLektion": 10
   },
@@ -6285,7 +7561,7 @@
    "accepted": [
     "Die Ankunft ist zwischen neun und zehn."
    ],
-   "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+   "explanationDe": "Im Hauptsatz steht das konjugierte Verb auf Position zwei.",
    "explanationEn": "The conjugated verb follows the initial time phrase.",
    "hint": null,
    "minLektion": 10
@@ -6304,7 +7580,7 @@
    "accepted": [
     "Ab Montag haben wir Urlaub."
    ],
-   "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+   "explanationDe": "Im Hauptsatz steht das konjugierte Verb auf Position zwei.",
    "explanationEn": "The conjugated verb follows the initial time phrase.",
    "hint": null,
    "minLektion": 1
@@ -6323,7 +7599,7 @@
    "accepted": [
     "Für drei Tage buchen wir die Reise."
    ],
-   "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+   "explanationDe": "Im Hauptsatz steht das konjugierte Verb auf Position zwei.",
    "explanationEn": "The conjugated verb follows the initial time phrase.",
    "hint": null,
    "minLektion": 10
@@ -6342,7 +7618,7 @@
    "accepted": [
     "Bis Freitag muss ich den Besuch planen."
    ],
-   "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+   "explanationDe": "Im Hauptsatz steht das konjugierte Verb auf Position zwei.",
    "explanationEn": "The conjugated verb follows the initial time phrase.",
    "hint": null,
    "minLektion": 10
@@ -6361,7 +7637,7 @@
    "accepted": [
     "Seit einer Stunde hat der Zug Verspätung."
    ],
-   "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+   "explanationDe": "Im Hauptsatz steht das konjugierte Verb auf Position zwei.",
    "explanationEn": "The conjugated verb follows the initial time phrase.",
    "hint": null,
    "minLektion": 1
@@ -6380,10 +7656,143 @@
    "accepted": [
     "Über das Wochenende besuchen wir unsere Eltern."
    ],
-   "explanationDe": "Nach der Zeitangabe steht das konjugierte Verb.",
+   "explanationDe": "Im Hauptsatz steht das konjugierte Verb auf Position zwei.",
    "explanationEn": "The conjugated verb follows the initial time phrase.",
    "hint": null,
    "minLektion": 10
+  },
+  {
+   "id": "extra-a21-l10-vocab-1",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Unsere ___ ist ein Hotel in Bremen. (Anfang: Unt…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: accommodation.",
+   "options": null,
+   "answer": "Unterkunft",
+   "accepted": [
+    "Unterkunft"
+   ],
+   "explanationDe": "Unsere Unterkunft ist ein Hotel in Bremen.",
+   "explanationEn": "Our accommodation is a hotel in Bremen.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a21-l10-vocab-2",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Das ___ ist für meine Eltern. (Anfang: Dop…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: double room.",
+   "options": null,
+   "answer": "Doppelzimmer",
+   "accepted": [
+    "Doppelzimmer"
+   ],
+   "explanationDe": "Das Doppelzimmer ist für meine Eltern.",
+   "explanationEn": "The double room is for my parents.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a21-l10-vocab-3",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Das ___ ist für meinen Bruder. (Anfang: Ein…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: single room.",
+   "options": null,
+   "answer": "Einzelzimmer",
+   "accepted": [
+    "Einzelzimmer"
+   ],
+   "explanationDe": "Das Einzelzimmer ist für meinen Bruder.",
+   "explanationEn": "The single room is for my brother.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a21-l10-vocab-4",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Die ___ ist ab sieben Uhr geöffnet. (Anfang: Rez…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: reception.",
+   "options": null,
+   "answer": "Rezeption",
+   "accepted": [
+    "Rezeption"
+   ],
+   "explanationDe": "Die Rezeption ist ab sieben Uhr geöffnet.",
+   "explanationEn": "Reception is open from seven o’clock.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a21-l10-vocab-5",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Das ___ ist in meinem Reisepass. (Anfang: Vis…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: visa.",
+   "options": null,
+   "answer": "Visum",
+   "accepted": [
+    "Visum"
+   ],
+   "explanationDe": "Das Visum ist in meinem Reisepass.",
+   "explanationEn": "The visa is in my passport.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l10-vocab-6",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Der ___ steht am Flughafen. (Anfang: Mie…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: rental car.",
+   "options": null,
+   "answer": "Mietwagen",
+   "accepted": [
+    "Mietwagen"
+   ],
+   "explanationDe": "Der Mietwagen steht am Flughafen.",
+   "explanationEn": "The rental car is at the airport.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a21-l10-vocab-7",
+   "topic": "temporal-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Die ___ fährt in einer Stunde ab. (Anfang: Fäh…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: ferry.",
+   "options": null,
+   "answer": "Fähre",
+   "accepted": [
+    "Fähre"
+   ],
+   "explanationDe": "Die Fähre fährt in einer Stunde ab.",
+   "explanationEn": "The ferry leaves in an hour.",
+   "hint": null,
+   "minLektion": null
   },
   {
    "id": "7236aae5-7643-50f3-a605-913505a5a2cb",
@@ -6522,8 +7931,8 @@
     "Wir frühstücken zwischen acht und neun Uhr.",
     "Wir frühstücken zwischen acht und neun Uhr"
    ],
-   "explanationDe": "zwischen verlangt den Dativ. Bei Uhrzeiten siehst du die Endung nicht.",
-   "explanationEn": "zwischen takes the dative; with bare clock times the ending is invisible.",
+   "explanationDe": "Zwischen steht in dieser Zeitangabe mit Dativ. Uhrzeiten zeigen hier keine Endung.",
+   "explanationEn": "Zwischen takes dative in this time expression. These clock times show no ending.",
    "hint": null,
    "minLektion": 10
   },
@@ -6558,8 +7967,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 1,
-   "questionDe": "Ich gehe in ___ Park.",
-   "questionEn": "I go into ___ park.",
+   "questionDe": "Ich gehe in ___ Park. (wohin?)",
+   "questionEn": "I am going into the park. Choose the article for the destination.",
    "options": [
     "dem",
     "das",
@@ -6568,8 +7977,8 @@
    ],
    "answer": "den",
    "accepted": [],
-   "explanationDe": "gehen = Bewegung. WOHIN? Akkusativ. der Park → den Park.",
-   "explanationEn": "gehen = movement. WOHIN? Accusative. der Park → den Park.",
+   "explanationDe": "Das Ziel ist im Park. Die Wechselpräposition in steht hier mit Akkusativ: in den Park.",
+   "explanationEn": "The destination is inside the park. The two-way preposition in takes accusative here: in den Park.",
    "hint": null,
    "minLektion": null
   },
@@ -6587,7 +7996,7 @@
    "accepted": [
     "die"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 3
@@ -6628,8 +8037,30 @@
    "accepted": [
     "dem"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "a8a6d962-65dc-4665-b599-9b8d5aa3a11f",
+   "topic": "two-way-prepositions",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Welche Frage braucht Akkusativ mit Wechselpräpositionen?",
+   "questionEn": "Which question requires accusative with two-way prepositions?",
+   "options": [
+    "Wann?",
+    "Warum?",
+    "Wo?",
+    "Wohin?"
+   ],
+   "answer": "Wohin?",
+   "accepted": [],
+   "explanationDe": "Bei Wechselpräpositionen fragt wohin nach dem Ziel: Akkusativ. Bewegung an einem Ort reicht dafür nicht.",
+   "explanationEn": "With two-way prepositions, wohin asks about the destination: accusative. Movement within a location is not enough.",
    "hint": null,
    "minLektion": 3
   },
@@ -6647,7 +8078,7 @@
    "accepted": [
     "den"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 3
@@ -6669,8 +8100,8 @@
    ],
    "answer": "die",
    "accepted": [],
-   "explanationDe": "hängen (transitiv) = aufhängen. Bewegung = Akkusativ. die Wand bleibt die.",
-   "explanationEn": "hängen (transitive) = putting something. Movement = accusative. die Wand stays die.",
+   "explanationDe": "Die Wand ist das Ziel. An ist eine Wechselpräposition und steht hier mit Akkusativ: an die Wand.",
+   "explanationEn": "The wall is the destination. The two-way preposition an takes accusative here: an die Wand.",
    "hint": null,
    "minLektion": 3
   },
@@ -6688,7 +8119,7 @@
    "accepted": [
     "der"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 1
@@ -6707,7 +8138,7 @@
    "accepted": [
     "das"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 3
@@ -6731,8 +8162,8 @@
    "accepted": [
     "die"
    ],
-   "explanationDe": "stellen = hinstellen (Bewegung). Akkusativ. die Garage bleibt die.",
-   "explanationEn": "stellen = putting (movement). Accusative. die Garage stays die.",
+   "explanationDe": "Das Ziel liegt vor der Garage. Die Wechselpräposition vor steht hier mit Akkusativ: vor die Garage.",
+   "explanationEn": "The destination is in front of the garage. The two-way preposition vor takes accusative here: vor die Garage.",
    "hint": null,
    "minLektion": null
   },
@@ -6750,7 +8181,7 @@
    "accepted": [
     "dem"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": null
@@ -6768,7 +8199,7 @@
     "ins",
     "im",
     "in den",
-    "in dem"
+    "in der"
    ],
    "answer": "im",
    "accepted": [
@@ -6794,7 +8225,7 @@
    "accepted": [
     "den"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 3
@@ -6806,21 +8237,21 @@
    "stage": 4,
    "difficulty": 1,
    "order": 8,
-   "questionDe": "Ich gehe ___ Kino.",
-   "questionEn": "I go to the cinema.",
+   "questionDe": "Ich gehe ___ Kino. (wohin?)",
+   "questionEn": "I am going into the cinema. Choose the expression for the destination.",
    "options": [
     "ins",
     "im",
     "in den",
-    "in dem"
+    "in der"
    ],
    "answer": "ins",
    "accepted": [
     "ins",
     "in das"
    ],
-   "explanationDe": "gehen = Bewegung. WOHIN? Akkusativ. ins = in das.",
-   "explanationEn": "gehen = movement. WOHIN? Accusative. ins = in das.",
+   "explanationDe": "Das Ziel ist im Kino. In ist eine Wechselpräposition: hier Akkusativ. Ins = in das.",
+   "explanationEn": "The destination is inside the cinema. In is a two-way preposition: accusative here. Ins = in das.",
    "hint": null,
    "minLektion": 1
   },
@@ -6838,7 +8269,7 @@
    "accepted": [
     "dem"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": null
@@ -6922,6 +8353,158 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a21-l03-vocab-1",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Ergänzen Sie: Die ___ ist unter dem Fenster. (Anfang: Hei…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: heating.",
+   "options": null,
+   "answer": "Heizung",
+   "accepted": [
+    "Heizung"
+   ],
+   "explanationDe": "Die Heizung ist unter dem Fenster.",
+   "explanationEn": "The heating is below the window.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l03-vocab-2",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 51,
+   "questionDe": "Ergänzen Sie: Das ___ hängt an der Wand. (Anfang: Han…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: towel.",
+   "options": null,
+   "answer": "Handtuch",
+   "accepted": [
+    "Handtuch"
+   ],
+   "explanationDe": "Das Handtuch hängt an der Wand.",
+   "explanationEn": "The towel hangs on the wall.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a21-l03-vocab-3",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Ergänzen Sie: Die ___ ist neben der Seife. (Anfang: Zah…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: toothbrush.",
+   "options": null,
+   "answer": "Zahnbürste",
+   "accepted": [
+    "Zahnbürste"
+   ],
+   "explanationDe": "Die Zahnbürste ist neben der Seife.",
+   "explanationEn": "The toothbrush is beside the soap.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l03-vocab-4",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 53,
+   "questionDe": "Ergänzen Sie: Die ___ liegt neben der Zahnbürste. (Anfang: Sei…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: soap.",
+   "options": null,
+   "answer": "Seife",
+   "accepted": [
+    "Seife"
+   ],
+   "explanationDe": "Die Seife liegt neben der Zahnbürste.",
+   "explanationEn": "The soap is beside the toothbrush.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l03-vocab-5",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 54,
+   "questionDe": "Ergänzen Sie: Die ___ ist neben der Zahnbürste. (Anfang: Zah…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: toothpaste.",
+   "options": null,
+   "answer": "Zahnpasta",
+   "accepted": [
+    "Zahnpasta"
+   ],
+   "explanationDe": "Die Zahnpasta ist neben der Zahnbürste.",
+   "explanationEn": "The toothpaste is beside the toothbrush.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
+   "id": "extra-a21-l03-vocab-6",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 55,
+   "questionDe": "Ergänzen Sie: Der ___ steht in der Ecke. (Anfang: Reg…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: umbrella.",
+   "options": null,
+   "answer": "Regenschirm",
+   "accepted": [
+    "Regenschirm"
+   ],
+   "explanationDe": "Der Regenschirm steht in der Ecke.",
+   "explanationEn": "The umbrella stands in the corner.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a21-l03-vocab-7",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 56,
+   "questionDe": "Ergänzen Sie: Der ___ steht auf dem Tisch. (Anfang: Bil…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: screen.",
+   "options": null,
+   "answer": "Bildschirm",
+   "accepted": [
+    "Bildschirm"
+   ],
+   "explanationDe": "Der Bildschirm steht auf dem Tisch.",
+   "explanationEn": "The screen stands on the table.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a21-l03-vocab-8",
+   "topic": "two-way-prepositions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 57,
+   "questionDe": "Ergänzen Sie: Die ___ liegt neben dem Computer. (Anfang: Mau…)",
+   "questionEn": "Complete the word from this lesson’s vocabulary. Meaning: computer mouse.",
+   "options": null,
+   "answer": "Maus",
+   "accepted": [
+    "Maus"
+   ],
+   "explanationDe": "Die Maus liegt neben dem Computer.",
+   "explanationEn": "The mouse is beside the computer.",
+   "hint": null,
+   "minLektion": null
+  },
+  {
    "id": "extra-a21-l03-09",
    "topic": "two-way-prepositions",
    "type": "sentence_building",
@@ -6937,7 +8520,7 @@
     "Ich stelle an die Wand das Sofa.",
     "Ich stelle an die Wand das Sofa"
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 3
@@ -6956,7 +8539,7 @@
    "accepted": [
     "Die Bücher liegen im Regal."
    ],
-   "explanationDe": "Wohin braucht hier Akkusativ; wo braucht Dativ.",
+   "explanationDe": "Bei Wechselpräpositionen: wohin → Akkusativ, wo → Dativ.",
    "explanationEn": "Here destination takes the accusative; location takes the dative.",
    "hint": null,
    "minLektion": 3
@@ -7018,8 +8601,8 @@
     "Der Schlüssel liegt zwischen den Büchern.",
     "Der Schlüssel liegt zwischen den Büchern"
    ],
-   "explanationDe": "liegen beschreibt eine Position, deshalb steht zwischen mit Dativ. Der Dativ Plural bekommt -n.",
-   "explanationEn": "liegen describes a position, so zwischen takes the dative; the dative plural adds -n.",
+   "explanationDe": "Liegen beschreibt einen Ort; zwischen steht hier mit Dativ. Bücher bekommt im Dativ Plural -n: Büchern.",
+   "explanationEn": "Liegen describes a location; zwischen takes dative here. Bücher adds -n in the dative plural: Büchern.",
    "hint": "Der Dativ Plural endet auf -n.",
    "minLektion": null
   },
@@ -7074,8 +8657,8 @@
     "Hängen Sie über das Sofa das Bild bitte",
     "Hängen Sie über das Sofa bitte das Bild"
    ],
-   "explanationDe": "Mit einem Akkusativobjekt beschreibt hängen eine Bewegung. über steht mit Akkusativ.",
-   "explanationEn": "With a direct object, hängen describes movement, so über takes the accusative.",
+   "explanationDe": "Das Bild kommt an eine neue Position. Die Wechselpräposition über steht hier mit Akkusativ.",
+   "explanationEn": "The picture is going to a new position. The two-way preposition über takes accusative here.",
    "hint": "Es gibt hier ein Akkusativobjekt: das Bild.",
    "minLektion": 3
   },

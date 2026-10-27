@@ -2540,6 +2540,8 @@ function inputSurfaceTokens(l) {
     l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
     l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
     l.pretest?.model, ...(l.pretest?.accepted || []),
+    // A2 word cards display these authored examples before the retrieval stage.
+    ...(l.id?.startsWith('a2.1-') ? (l.wortfeld || []).map(w => w.exampleDe) : []),
   ].filter(Boolean);
   const seen = new Set();
   for (const src of sources) for (const t of tokenise(src)) seen.add(t.toLowerCase());
@@ -3185,7 +3187,17 @@ export function personaConsistency(c) {
     // A recurring person keeps ONE surname at every level: A1.1 named her „Lena Brandt", A1.2's
     // Formulare said „Lena Berg" — the landlord's name in L2 (A2.1 planner, 2026-10-18).
     if (p.nachname && !/\s/.test(name)) {
+      // In A2 narrative input, two adjacent capitals need not be a full name:
+      // „Lena zeigt Ana Fotos“ has a recipient and an object. Require a name
+      // boundary or a following predicate; retain the existing A1 scan verbatim.
       for (const m of s.matchAll(new RegExp(`\\b${name}\\s+([A-ZÄÖÜ][a-zäöüß]+)(?=[\\s,.!?:;/]|$)`, 'g'))) {
+        if (c.level === 'a2.1') {
+          const before = s.slice(0, m.index);
+          const after = s.slice(m.index + m[0].length);
+          const declaration = /(?:^|[.!?:;]\s*|\b(?:heiße|heißt|bin|Name ist|Liebe|Lieber)\s+)$/.test(before);
+          const subject = /^\s+(?:ist|sind|wohnt|kommt|spricht|arbeitet|hat)\b/.test(after);
+          if (!declaration && !subject) continue;
+        }
         if (m[1] !== p.nachname) report(nr, where, name, 'nachname', m[1], p.nachname);
       }
     }
@@ -3233,6 +3245,27 @@ export function personaConsistency(c) {
     const author = signatureName(w.sample);
     if (author && personas[author]) check(l.nr, 'schreiben.sample', author, w.sample, SELF_PATTERNS);
   }
+  // A2 has authored exam stimuli as well as the main dialogue. They inherit
+  // the same A1 facts; a different renderer must not create a different cast.
+  if (c.level === 'a2.1') {
+    const checkStimulus = (nr, where, text) => {
+      if (!text) return;
+      const turns = [...text.matchAll(new RegExp(`(?:^|\\s)(${names.join('|')}):\\s*`, 'g'))];
+      for (const [i, turn] of turns.entries()) {
+        check(nr, where, turn[1], text.slice(turn.index + turn[0].length, turns[i + 1]?.index), SELF_PATTERNS);
+      }
+      for (const name of names) check(nr, where, name, aboutSpan(text, name, names), ABOUT_PATTERNS);
+    };
+    for (const l of c.lektionen || []) {
+      checkStimulus(l.nr, 'situation', l.situation);
+      for (const skill of ['lesen', 'hoeren']) {
+        for (const u of l[skill]?.units || []) checkStimulus(l.nr, skill, u.text || u.audioText);
+      }
+    }
+    for (const cp of c.checkpoints || []) for (const skill of ['lesen', 'hoeren']) {
+      for (const u of cp[skill]?.papers?.flat() || []) checkStimulus(cp.afterLektion, `checkpoint ${cp.nr} ${skill}`, u.text || u.audioText);
+    }
+  }
   return offenders;
 }
 
@@ -3268,6 +3301,23 @@ export function englishTwins(c, spec = null, { poolItems = null } = {}) {
   return { lektionen, pool };
 }
 
+/** RULE 26: an inherited word is review, not a new-vocabulary claim (A2 rollout). */
+export function reviewVocabularyErrors(c, spec = levelSpec(c?.level)) {
+  if (c?.level !== 'a2.1') return [];
+  const key = w => String(w.word || w.de || '').replace(/^(der|die|das)\s+/i, '').normalize('NFC').trim().toLowerCase();
+  const earlier = new Set(priorLevelSpecs(spec, levelSpec).flatMap(s => s.curriculum.lektionen.flatMap(l => l.wortfeld.map(key))));
+  const errors = [];
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) {
+      if (earlier.has(key(w)) && w.review !== true) errors.push(`RULE 26: L${l.nr} ${w.de} was taught at an earlier level and must be marked review`);
+      if (!earlier.has(key(w)) && w.review === true) errors.push(`RULE 26: L${l.nr} ${w.de} has no earlier-level basis for its review label`);
+    }
+    const fresh = (l.wortfeld || []).filter(w => !earlier.has(key(w))).length;
+    if (fresh < 15 || fresh > 25) errors.push(`RULE 26: L${l.nr} has ${fresh} genuinely new words; expected 15–25`);
+  }
+  return errors;
+}
+
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
@@ -3281,6 +3331,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
   // rather than silently serving A1 items for A2.
   errors.push(...surfaceErrors);
   errors.push(...courseMetaErrors(c));
+  errors.push(...reviewVocabularyErrors(c, spec));
   extraItems = extraItems ?? loadExtraItems(spec.level);
   poolItems = poolItems ?? loadPoolItems(spec.level);
 

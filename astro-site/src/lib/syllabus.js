@@ -2,6 +2,7 @@
 // §2.4, docs/course-factory/a11-rebuild/CONTRACT.md). No I/O — everything is
 // derived from a CURRICULUM_A11-shaped object so it can be unit-tested with
 // inline fixtures (tests/syllabus.test.mjs) and reused by the Astro page.
+import { examFormat } from '../data/curricula/examFormats.js';
 
 /** Total Wortliste size to divide the running total against, by half-level band. */
 export const WORTLISTE_TOTAL = { a1: 650, a2: 1300 };
@@ -96,15 +97,16 @@ export function kannBeschreibungenCount(lektionen) {
 }
 
 /** The 11 official Goethe SD1 Prüfungsteile (Sprechen 1-3, Schreiben 1-2, Lesen 1-3, Hören 1-3). */
-export const GOETHE_SD1_TEILE_COUNT = 11;
+export const GOETHE_SD1_TEILE_COUNT = examFormat('goethe_a1').teile.length;
 
-/** Distinct exam Teile trained across every Lektion, out of GOETHE_SD1_TEILE_COUNT. */
-export function pruefungsteileCoverage(lektionen) {
+/** Distinct official Teile, using the exam declared on the lessons (A1 by default). */
+export function pruefungsteileCoverage(lektionen, examKey = lektionen?.[0]?.examKey || 'goethe_a1') {
+  const parts = new Set(examFormat(examKey).teile);
   const seen = new Set();
   for (const l of lektionen ?? []) {
-    for (const teil of l.examTeile ?? []) seen.add(teil);
+    for (const teil of l.examTeile ?? []) if (parts.has(teil)) seen.add(teil);
   }
-  return { covered: seen.size, of: GOETHE_SD1_TEILE_COUNT };
+  return { covered: seen.size, of: parts.size };
 }
 
 /** Checkpoint nr this Lektion sits directly after (or null). Used to insert checkpoint rows in the grid. */

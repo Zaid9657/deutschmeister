@@ -13,9 +13,23 @@
 import { abschlusstestA11 } from './abschlusstestA11.js';
 import { abschlusstestA12 } from './abschlusstestA12.js';
 import { abschlusstestA21 } from './abschlusstestA21.js';
+import { abschlusstestA21Course } from './abschlusstestA21Course.js';
+import { A21_PROMOTED } from '../curricula/a21-release.js';
 import { abschlusstestA22 } from './abschlusstestA22.js';
 
-export const COURSE_TESTS = [
+export const A21_COURSE_TEST = {
+  key: 'a2_1_course_abschluss',
+  slug: 'abschlusstest-a2-1',
+  nameDe: 'Abschlusstest A2.1',
+  level: 'a2.1',
+  formatOf: 'goethe_a2',
+  mock: abschlusstestA21Course,
+};
+
+export const DRAFT_COURSE_TESTS = A21_PROMOTED ? [] : [A21_COURSE_TEST];
+
+export function courseTestsForPromotion(a21Promoted = A21_PROMOTED) {
+  return [
   {
     key: 'a1_1_abschluss',
     slug: 'abschlusstest-a1-1',
@@ -46,6 +60,7 @@ export const COURSE_TESTS = [
     level: 'a2.1',
     formatOf: 'goethe_a2',
     mock: abschlusstestA21,
+    ...(a21Promoted ? A21_COURSE_TEST : {}),
   },
   // A2.2 is the second paid half of the A2 band: gateLevel 'a2.2' is the same
   // gate /level/a2.2 and /a2-2-phase use. Goethe-Zertifikat A2 style
@@ -59,7 +74,10 @@ export const COURSE_TESTS = [
     formatOf: 'goethe_a2',
     mock: abschlusstestA22,
   },
-];
+  ];
+}
+
+export const COURSE_TESTS = courseTestsForPromotion();
 
 export const courseTestBySlug = (slug) => COURSE_TESTS.find((t) => t.slug === slug) || null;
 export const courseTestByKey = (key) => COURSE_TESTS.find((t) => t.key === key) || null;

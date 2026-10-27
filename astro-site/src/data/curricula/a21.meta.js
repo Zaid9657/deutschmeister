@@ -102,7 +102,7 @@ export const A21_META = {
       ]
     },
     "a2.1-l06": {
-      "situationEn": "Ana has to move a planned meeting and explains why.",
+      "situationEn": "Tim missed Lena’s barbecue and plans another meeting with his friend.",
       "canDoEn": [
         "I can apologise.",
         "I can say what I had to do or wanted to do.",
@@ -112,7 +112,7 @@ export const A21_META = {
       ]
     },
     "a2.1-l07": {
-      "situationEn": "Ana asks a trainer about joining a sports club.",
+      "situationEn": "Tim invites his friend Ana to train at his sports club and gives her advice.",
       "canDoEn": [
         "I can give advice.",
         "I can suggest an activity together.",
@@ -142,7 +142,7 @@ export const A21_META = {
       ]
     },
     "a2.1-l10": {
-      "situationEn": "Ana plans her parents’ visit and asks her manager for time off.",
+      "situationEn": "Ana and her friend Lena plan to collect Ana’s parents from Morocco and spend time together.",
       "canDoEn": [
         "I can say when a visit happens and how long it lasts.",
         "I can ask when something starts and ends.",

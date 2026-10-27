@@ -10,6 +10,7 @@ import { wortfeldIconsFor, WORTFELD_ICON_FALLBACK } from '../../lib/course/meta.
 import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from './wortfeldIcons.js';
 import { groupWords, lineFor } from '../../lib/lesson/wortfeldPacing.js';
+import { a21VocabularyPresentation } from '../../lib/lesson/a21Vocabulary.js';
 
 /**
  * Stage 2b — the new words as picture cards: icon, article, plural, English
@@ -65,7 +66,8 @@ function iconFor(word, curriculum) {
   return WORTFELD_ICON_COMPONENTS[name] || WORTFELD_ICON_COMPONENTS[WORTFELD_ICON_FALLBACK];
 }
 
-function WordCard({ w, lang, flipped, onToggle, line, curriculum }) {
+function WordCard({ w, lang, flipped, onToggle, line: dialogueLine, curriculum, vocabularyLabels }) {
+  const line = vocabularyLabels && w.exampleDe ? w.exampleDe : dialogueLine;
   const article = w.article || (w.db && w.db.article) || '';
   const plural = w.plural || (w.db && w.db.plural) || '';
   const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
@@ -112,9 +114,10 @@ function WordCard({ w, lang, flipped, onToggle, line, curriculum }) {
       </button>
 
       {/* Outside the flip button, so the button's name (the word) still matches what it shows. */}
+      {vocabularyLabels && <Chip tone="quiet">{w.review ? vocabularyLabels.review : vocabularyLabels.fresh}</Chip>}
       {line && (
-        <p className="text-[0.8125rem] italic leading-snug text-graphite [overflow-wrap:anywhere]" lang="de">
-          <span className="sr-only">{t('wortfeld.inDialog', lang)}: </span>„{line}“
+        <p className="text-[0.8125rem] italic leading-snug text-graphite [overflow-wrap:anywhere]" lang={flipped && w.exampleEn ? 'en' : 'de'}>
+          <span className="sr-only">{w.exampleDe && vocabularyLabels ? vocabularyLabels.example : t('wortfeld.inDialog', lang)}: </span>„{flipped && w.exampleEn ? w.exampleEn : line}“
         </p>
       )}
 
@@ -167,7 +170,8 @@ export default function WortfeldStage({ stage, lektionId, curriculum, onBack, on
 
   // Index-keyed so the flip state survives paging. Every word stays in a group: each one can come
   // up in the match exercise, the checkpoints and review, so none may be presented as optional.
-  const groups = groupWords(words.map((w, i) => ({ w, i })));
+  const vocabulary = curriculum?.level === 'a2.1' ? a21VocabularyPresentation(words, lang) : null;
+  const groups = vocabulary?.groups || groupWords(words.map((w, i) => ({ w, i })));
   const shown = groups[group] || [];
   const last = group >= groups.length - 1;
   const from = groups.slice(0, group).reduce((n, g) => n + g.length, 0) + 1;
@@ -199,7 +203,7 @@ export default function WortfeldStage({ stage, lektionId, curriculum, onBack, on
     const spoken = w.de || w.word || '';
     return (
       <li key={`${spoken}-${i}`}>
-        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={lineFor(spoken, stage.lines)} curriculum={curriculum} />
+        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={lineFor(spoken, stage.lines)} curriculum={curriculum} vocabularyLabels={vocabulary?.labels} />
       </li>
     );
   };
@@ -207,7 +211,7 @@ export default function WortfeldStage({ stage, lektionId, curriculum, onBack, on
   return (
     <StageShell
       eyebrow={t('stage.wortfeld.eyebrow', lang)}
-      title={t('stage.wortfeld.title', lang, { n: words.length })}
+      title={vocabulary?.title || t('stage.wortfeld.title', lang, { n: words.length })}
       lead={t('stage.wortfeld.lead', lang)}
       onBack={group > 0 ? () => goGroup(group - 1) : onBack}
       primaryLabel={last ? t('action.next', lang) : t('wortfeld.nextGroup', lang)}
@@ -219,6 +223,7 @@ export default function WortfeldStage({ stage, lektionId, curriculum, onBack, on
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h3 ref={headingRef} tabIndex={-1} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite outline-none">
+          {vocabulary && `${vocabulary.groupLabels[group]} · `}
           {t('wortfeld.group', lang, { from, to: from + shown.length - 1, n: words.length })}
         </h3>
         <WortfeldAudioBadge words={words} lang={lang} />

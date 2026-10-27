@@ -43,9 +43,10 @@ export const SHARED_FILES = [
   ['src/data/curricula/a11.lesen.js', 'astro-site/src/data/curricula/a11.lesen.js'],
   ['src/data/curricula/a12.js', 'astro-site/src/data/curricula/a12.js'],
   ['src/data/curricula/a12.lesen.js', 'astro-site/src/data/curricula/a12.lesen.js'],
-  ...['a21.js', 'a21.exams.js', 'a21.meta.js', 'a21.word-ids.js', 'a21-language.js', 'examFormats.js', 'inheritance.js']
+  ...['a21.js', 'a21.exams.js', 'a21.meta.js', 'a21.vocabulary.js', 'a21.word-ids.js', 'a21-language.js', 'a21-release.js', 'examFormats.js', 'inheritance.js']
     .map((name) => [`src/data/curricula/${name}`, `astro-site/src/data/curricula/${name}`]),
   ['src/data/curricula/a11.audio.js', 'astro-site/src/data/curricula/a11.audio.js'],
   ['src/data/curricula/index.js', 'astro-site/src/data/curricula/index.js'],
+  ['src/data/courseTests/abschlusstestA21Course.js', 'astro-site/src/data/courseTests/abschlusstestA21Course.js'],
   ['src/data/curricula/constructions.js', 'astro-site/src/data/curricula/constructions.js'],
 ];
