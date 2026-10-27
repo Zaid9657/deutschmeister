@@ -5,6 +5,8 @@ import { useSubscription } from '../../contexts/SubscriptionContext';
 import { supabase } from '../../utils/supabase';
 import { planFor } from '../../lib/course/plan.js';
 import Button from '../ui/Button.jsx';
+import ExamOutcomeQuestion from './ExamOutcomeQuestion.jsx';
+import { examSlugFor } from '../../lib/examOutcome.js';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The exam-date plan on a rebuilt course home (P4 "completion levers").
@@ -150,7 +152,20 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
         unit: t(plan.weeksLeft === 1 ? 'plan.week' : 'plan.weeks', lang),
       });
 
+  // From exam_date + 7 days, one question about how the exam went
+  // (ExamOutcomeQuestion renders nothing before then, or once answered).
+  const outcomeQuestion = past && (
+    <ExamOutcomeQuestion
+      userId={user.id}
+      exam={examSlugFor({ examTrack: profile?.exam_track, courseExamKey: curriculum?.examKey })}
+      examDate={String(examDate).slice(0, 10)}
+      lang={lang}
+    />
+  );
+
   return (
+    <>
+    {outcomeQuestion}
     <div className="mt-4 rounded-clay border border-rule bg-white p-4 shadow-raise">
       <div className="flex items-start gap-3">
         <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${behind || past ? 'bg-accent-aprikose-wash text-accent-aprikose-ink' : 'bg-siegel-wash text-siegel'}`}>
@@ -180,5 +195,6 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
         </div>
       </div>
     </div>
+    </>
   );
 }

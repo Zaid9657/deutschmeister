@@ -352,6 +352,7 @@ const LESSON_ACTIVITY_SOURCES = {
 // Written by the app or a function, but a row does NOT mean a lesson.
 const NOT_LESSON_ACTIVITY = {
   profiles: 'account and settings',
+  exam_results: 'a self-reported exam outcome after the exam, not teaching content',
   signup_attempts: 'written before the account exists',
   audit_logs: 'logins and other events; a login is not a lesson',
   subscriptions: 'money',

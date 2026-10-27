@@ -334,6 +334,16 @@ export const STRINGS = {
     'plan.week': 'week',
     'plan.weeks': 'weeks',
     'plan.changeDate': 'Change date',
+    // ── exam outcome question (from exam_date + 7 days) ──────────────────────
+    'outcome.question': 'How did your exam go?',
+    'outcome.lead': 'Your exam date was {date}. Your answer helps us improve the course; it changes nothing about your access.',
+    'outcome.passed': 'Passed',
+    'outcome.failed': 'Not passed',
+    'outcome.waiting': 'Result not out yet',
+    'outcome.not_taken': "Didn't take it",
+    'outcome.dismiss': 'Not now',
+    'outcome.thanks': 'Thank you for your answer.',
+    'outcome.saveFailed': "Your answer couldn't be saved. Please try again later.",
     'plan.reset': 'Reset',
 
     // ── player page ──────────────────────────────────────────────────────────
@@ -719,6 +729,16 @@ export const STRINGS = {
     'plan.week': 'Woche',
     'plan.weeks': 'Wochen',
     'plan.changeDate': 'Datum ändern',
+    // ── exam outcome question (from exam_date + 7 days) ──────────────────────
+    'outcome.question': 'Wie ist Ihre Prüfung gelaufen?',
+    'outcome.lead': 'Ihr Prüfungstermin war am {date}. Ihre Antwort hilft uns, den Kurs zu verbessern; an Ihrem Zugang ändert sie nichts.',
+    'outcome.passed': 'Bestanden',
+    'outcome.failed': 'Nicht bestanden',
+    'outcome.waiting': 'Ergebnis steht noch aus',
+    'outcome.not_taken': 'Nicht teilgenommen',
+    'outcome.dismiss': 'Nicht jetzt',
+    'outcome.thanks': 'Danke für Ihre Antwort.',
+    'outcome.saveFailed': 'Die Antwort konnte nicht gespeichert werden. Bitte später noch einmal.',
     'plan.reset': 'Zurücksetzen',
 
     // ── player page ──────────────────────────────────────────────────────────
