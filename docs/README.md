@@ -9,6 +9,7 @@ are defined by [package.json](../package.json) and [the workflow](../.github/wor
 | Area | Authority | How to use it |
 |---|---|---|
 | Agent roles/workflow | [TEAM.md v5](agents/TEAM.md#v5-2026-10-19-read-this-first), [PROTOCOL v5 addendum](agents/PROTOCOL.md#v5-addendum-2026-10-19-this-section-wins-over-everything-below) | Four roles and current reserved owner actions; these supersede earlier team sections. Existing agent entrypoints remain available. |
+| How to think about change | [Clean sheet before increments](agents/clean-sheet-rule.md) | Owner rule 2026-10-26: design the zero-based answer blind before reading what exists, then compare evolve / replace / hybrid. |
 | Approved strategy | [Million plan, 2026-10](strategy/million-plan-2026-10.md) | Current five moves; role memory/backlogs are in the team artifact linked by TEAM. |
 | Course standard | [Course standard](course-standard-2026-09-12.md), [A1.1 remediation](course-factory/a11-rebuild/REMEDIATION-2026-10.md) | Course invariants and later corrections; A1.2 remains paused until owner approval. |
 | Brand/design | [Design tokens](../src/data/design-tokens.js), [October redesign](redesign-2026-10/) | Tokens are canonical; dated design proposals do not override implemented invariants or later owner decisions. |

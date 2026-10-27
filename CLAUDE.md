@@ -9,6 +9,12 @@ no TypeScript additions (Astro's existing Props syntax is normal).
   [PROTOCOL v5 addendum](docs/agents/PROTOCOL.md#v5-addendum-2026-10-19-this-section-wins-over-everything-below); four roles replace the twelve areas, and scorecard goals/playbook counters are retired.
 - Current strategy is [the approved million plan](docs/strategy/million-plan-2026-10.md).
   [The reference](docs/agents/claude-reference.md) preserves every previous bootstrap detail; dated claims and old scorecards are history, not current measurements.
+- **Clean sheet before increments** (owner rule 2026-10-26, [full text](docs/agents/clean-sheet-rule.md)): agents read
+  what exists first, so it frames every option as a fix or extension of itself (a local maximum). Before a non-trivial
+  build, redesign, strategy or evaluation, design the zero-based answer blind — goal, users, evidence, hard constraints
+  only — then read what exists, compare evolve vs replace on impact and cost, and recommend one ("Clean sheet: …").
+  The goal never changes; plans, kill lists, products, designs and code are evidence, not requirements, and may
+  be replaced. "Match surrounding" is style, not direction.
 - Vite/React `src/` becomes `dist/app.html`; Astro `astro-site/` supplies public static pages
   and wins those URLs in merged `dist/`. Supabase stores content; Netlify functions supply services. See [README](README.md#architecture).
 - The SPA deliberately has no `/` route; edit the homepage in `astro-site/` and use full-page

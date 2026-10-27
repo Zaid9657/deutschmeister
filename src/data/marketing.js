@@ -226,9 +226,11 @@ export const FREE_OFFER_LINE_DE = `${FREE_LEVEL_LABEL} komplett kostenlos, ohne 
  * (drafts/eeat-author-identity.md measured it present on 2 of 92 pages);
  * exported here so every guide, exam hub and comparison renders it identically.
  * Owner decision 2026-09-02: stays anonymous — no name, no Person schema.
+ * Owner decision 2026-10-26: "team of doctors" everywhere, matching /ueber-uns/
+ * and organization.js (the homepage said "a doctor", /ueber-uns/ "a team").
  */
 export const FOUNDER_LINE_DE =
-  'Gegründet von einem Arzt in Deutschland — kennt den Lernweg aus eigener Erfahrung.';
+  'Entwickelt von einem Team aus Ärztinnen und Ärzten in Deutschland, die diesen Lernweg selbst gegangen sind.';
 
 /**
  * The same sanctioned line for the English pages (homepage proof section,
@@ -236,7 +238,7 @@ export const FOUNDER_LINE_DE =
  * rules — anonymous, no name, no Person schema; link to /ueber-uns/ for the story.
  */
 export const FOUNDER_LINE_EN =
-  'Founded by a doctor in Germany who knows this learning path from experience.';
+  'Built by a team of doctors in Germany who took this learning path themselves.';
 
 /**
  * Price + what it buys, in one string, so the two can never be separated by a
