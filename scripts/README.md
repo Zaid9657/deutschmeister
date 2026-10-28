@@ -34,6 +34,7 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 | [imperative-variants.mjs](imperative-variants.mjs) | check (imported module) | Imperative item text supplied by the caller | Requested-person imperative alternatives for the determinacy and pool checks; not a standalone CLI. |
 | [checkpoint-feedback-browser.mjs](checkpoint-feedback-browser.mjs) | check (local server) | Real CheckpointPage with stubbed service, audio and AI boundaries | Offline page at `http://127.0.0.1:5174/?level=a1.2`; no network, auth or database. |
 | [check-legal-release.mjs](check-legal-release.mjs) | check | Astro legal facts/review evidence | Nonzero until verified operator/privacy/review facts exist; legal pages stay draft/noindex. |
+| [ls-fees.mjs](ls-fees.mjs) `[--json]` | check (read-only remote) | `LEMONSQUEEZY_API_KEY`; GET-only Lemon Squeezy `/v1/orders` and `/v1/subscription-invoices` | Stdout aggregates for Monday packet line 1: 7d/30d live counts and gross/tax/refund/fee sums per resource and currency, fee-missing counts; "fee not exposed by the API" when no fee attribute exists. No ids/emails, no files; fails closed without the key. |
 | [validate-curriculum.mjs](validate-curriculum.mjs) `[level]` | check | Curriculum, built lesson pool, content contracts (default A1.1) | Structural/DaF rule checks and measured ratchets; run from root, including Windows. |
 
 ## Shared data

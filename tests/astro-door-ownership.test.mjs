@@ -28,7 +28,7 @@ import { buyButton, door, FakeElement, fakeSupabase, loadLevelAccess, runCourseC
 
 const lib = loadLevelAccess({});
 const NOW = Date.parse('2026-10-25T12:00:00Z');
-const TRIAL = { is_subscribed: false, trial_ends_at: '2026-10-28T00:00:00Z' };
+const TRIAL = { is_subscribed: false, trial_ends_at: '2999-01-01T00:00:00Z' };
 const PRO = { is_subscribed: true, trial_ends_at: '2026-01-01T00:00:00Z' };
 const ENDED = { is_subscribed: false, trial_ends_at: '2026-10-01T00:00:00Z' };
 const snap = (profile, purchases = []) => ({ signedIn: true, verified: true, profile, purchases });

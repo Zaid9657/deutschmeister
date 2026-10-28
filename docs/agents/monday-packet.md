@@ -12,6 +12,8 @@ Owner decision 3: {concrete action or NONE} — yes/no; evidence {query/plan ref
 Owner minutes this week: {estimate total}; packet 5 + decisions up to 5 + refunds/approvals 2–5 + partner outreach 5–10 = 17–25 baseline; actual {measured minutes or UNKNOWN}.
 ```
 
+For line 1's LS fees, run `node scripts/ls-fees.mjs` ([script catalogue](../../scripts/README.md#checks)): read-only Lemon Squeezy API aggregates; while it reports "fee not exposed by the API", LS fees stay UNKNOWN.
+
 [monday-packet.sql](monday-packet.sql) supplies line 1 from A, line 2 from B, line 3 from C, line 4 from D, and line 5 from E. For C, sum daily expected/seen cycles and unmatched/ambiguous counts once per role/day; its window totals and gap values repeat across rows, so read them once. For D, sum the three outcome rows, but read the repeated unkeyed-deliveries count once. Lines 6–8 are at most three yes/no decisions drafted by the controller from those results and the [five moves and release gate](../strategy/million-plan-2026-10.md); use NONE for unused slots. Line 9 is a controller estimate using that plan's owner-time budget and separately recorded actual minutes; no query measures owner time.
 
 The packet holds counts and sums only, with fixed labels, status/unknown flags and operational timing; never customer text or personal data. No emails, names, user/order/invoice IDs, heartbeat notes, incident details or raw payloads belong in it. Decisions describe actions without customer details and authorize nothing until the owner answers.
