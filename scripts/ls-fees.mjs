@@ -7,7 +7,7 @@
 // and no database row, and prints AGGREGATES ONLY to stdout. It never prints
 // customer emails, names, ids, card data or raw payloads.
 //
-// Usage: LEMONSQUEEZY_API_KEY=… node scripts/ls-fees.mjs [--json]
+// Usage: LEMONSQUEEZY_API_KEY=… [LEMONSQUEEZY_STORE_ID=309512] node scripts/ls-fees.mjs [--json]
 //
 // Verified 2026-10-28 against the live API: neither resource carries a fee
 // attribute (orders have `setup_fee`, a product setup charge billed to the buyer,
@@ -21,6 +21,9 @@
 import { pathToFileURL } from 'node:url';
 
 const API = 'https://api.lemonsqueezy.com/v1';
+// The API key also reaches other stores on the account: read DeutschMeister's only
+// (same default as src/config/lemonsqueezy.js).
+export const STORE_ID = process.env.LEMONSQUEEZY_STORE_ID || '309512';
 export const RESOURCES = ['orders', 'subscription-invoices'];
 export const WINDOWS = [7, 30];
 // Statuses where money was collected (refunds are reported separately).
@@ -122,7 +125,7 @@ export function formatLines(summary) {
 
 async function fetchAll(resource, key) {
   const rows = [];
-  let url = `${API}/${resource}?page[size]=${PAGE_SIZE}`;
+  let url = `${API}/${resource}?filter[store_id]=${encodeURIComponent(STORE_ID)}&page[size]=${PAGE_SIZE}`;
   for (let page = 1; url; page += 1) {
     if (page > MAX_PAGES) return { rows, incomplete: `${resource} stopped at ${MAX_PAGES} pages` };
     const response = await fetch(url, {
@@ -132,7 +135,12 @@ async function fetchAll(resource, key) {
     });
     if (!response.ok) throw new Error(`GET ${resource} page ${page} failed: HTTP ${response.status}`);
     const body = await response.json();
-    for (const item of body.data || []) rows.push({ resource, attributes: item.attributes || {} });
+    for (const item of body.data || []) {
+      const attributes = item.attributes || {};
+      // Belt and braces: never count another store's rows even if the filter is ignored.
+      if (String(attributes.store_id) !== STORE_ID) continue;
+      rows.push({ resource, attributes });
+    }
     const next = body.links?.next;
     // Only follow pagination on the API host, so the bearer token never leaves it.
     url = typeof next === 'string' && next.startsWith(`${API}/`) ? next : null;
