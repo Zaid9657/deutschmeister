@@ -6,10 +6,13 @@ The team now works the plan in `docs/strategy/million-plan-2026-10.md`, the join
 evaluation of 2026-10-19 that the owner approved. Everything below this section is v4 history,
 kept for its reasoning.
 
-- **Goal.** $1M a year means about 389 package sales a month at €249. That is revenue after VAT
-  and refunds, about €73.1k a month.
-- **North star.** Package revenue after VAT and refunds over the last 30 days. It starts at €0 on
-  2026-10-19.
+- **Goal (founder, 2026-10-31).** 1,000,000 USD in DeutschMeister sales per month, after VAT and
+  refunds (≈ €877k a month at EUR/USD 1.14; ≈ 4,670 package sales a month at €249). It replaces
+  the $1M-a-year target (≈ €73.1k a month), which is now the first big milestone. Every role
+  (controller, sales, distribution, fulfilment) and the overnight heartbeat serve it; see
+  `.claude/GOAL.md` and the plan's top section.
+- **North star.** DeutschMeister sales after VAT and refunds per month (package revenue over the
+  last 30 days is the pilot's line). €59.98 ≈ $68 in the 30 days to 2026-10-31.
 - **Five moves, in order:**
   1. Contain the live risks and clear one release gate.
   2. Make the agent loop survive and honour every reserved action.
