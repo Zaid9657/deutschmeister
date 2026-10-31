@@ -6,8 +6,8 @@ The team now works the plan in `docs/strategy/million-plan-2026-10.md`, the join
 evaluation of 2026-10-19 that the owner approved. Everything below this section is v4 history,
 kept for its reasoning.
 
-- **Goal (founder, 2026-10-31).** 1,000,000 USD in DeutschMeister sales per month, after VAT and
-  refunds (≈ €877k a month at EUR/USD 1.14; ≈ 4,670 package sales a month at €249). It replaces
+- **Goal (founder, 2026-10-31).** 1,000,000 USD in DeutschMeister sales per month by February 2027
+  (the month ending 2027-02-28), after VAT and refunds (≈ €877k a month at EUR/USD 1.14; ≈ 4,670 package sales a month at €249). It replaces
   the $1M-a-year target (≈ €73.1k a month), which is now the first big milestone. Every role
   (controller, sales, distribution, fulfilment) and the overnight heartbeat serve it; see
   `.claude/GOAL.md` and the plan's top section.

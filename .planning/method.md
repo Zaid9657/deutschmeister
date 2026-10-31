@@ -5,7 +5,8 @@ Board" (Claude's memory; the founder does not read it). If Notion is not connect
 [lessons.md](lessons.md) are the memory; say so in the session.*
 
 **North star:** 1,000,000 USD in DeutschMeister sales per month (after VAT and refunds, at EUR/USD
-1.14 ≈ €877k a month). Source: [.claude/GOAL.md](../.claude/GOAL.md).
+1.14 ≈ €877k a month), **by February 2027** (the month ending 2027-02-28; founder, 2026-10-31).
+Source: [.claude/GOAL.md](../.claude/GOAL.md).
 
 ## The three rules of every stage
 
@@ -32,7 +33,7 @@ Board" (Claude's memory; the founder does not read it). If Notion is not connect
 | # | Stage | Research first | Small test | Gate (done when) |
 |---|---|---|---|---|
 | 0 | Reset to the new north star | Plan, charter, last 30 days of sales | — | GOAL.md, hook, board, charter goal line, lessons and method saved (2026-10-31) |
-| 1 | Size the three levers | B2B seats (integration-course schools, nursing recruiters), Goethe B1/B2 abroad, the Germany exam package: sourced volumes, prices, buyers | — | One table with sourced numbers and the cheapest test per lever |
+| 1 | Size the three levers (B2B first: the deadline needs bulk buyers) | B2B seats (integration-course schools, nursing recruiters), Goethe B1/B2 abroad, the Germany exam package: sourced volumes, prices, buyers | — | One table with sourced numbers and the cheapest test per lever |
 | 2 | Open the first sale | The release gate in the million plan, move 1 (owner: counsel, Lemon Squeezy steps) | Test purchase, refund and replay | The first paid package sale |
 | 3 | One small test per lever | Who buys and why, in their own words | 10 drafted school/recruiter approaches (owner sends); one paid abroad offer; one partner batch | A paid order, or a clear "no" with a reason, per lever |
 | 4 | Double down | Retained revenue per owner-minute per lever | Scale the winner one step | Monthly sales rise two months running |

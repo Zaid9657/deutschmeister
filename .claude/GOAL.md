@@ -3,6 +3,8 @@
 **The north star is now 1,000,000 US dollars in DeutschMeister sales per month. Signups, Telegram,
 traffic and course quality are means, not the goal.**
 
+- **Deadline (founder, 2026-10-31): February 2027**, read as the month ending 2027-02-28. February
+  2027 alone must bring $1M, about €220k a week.
 - Counted as: DeutschMeister sales after VAT and refunds, per calendar month, in USD at the plan's
   EUR/USD 1.14. That is about **€877k a month**.
 - Today (last 30 days to 2026-10-31): €64.46 gross, €59.98 after VAT and refunds, about **$68**.

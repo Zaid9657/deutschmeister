@@ -6,6 +6,11 @@
 Signups, Telegram, traffic and course quality are means, not the goal. The approved plan below
 targeted **$1M a year** (≈ €73.1k a month). That figure is now the first big milestone, not the goal.
 
+**Deadline (founder, 2026-10-31): February 2027**, read as the calendar month ending 2027-02-28.
+That leaves four months (November to February), and February alone needs about €220k a week.
+Because of the deadline, stage 1 sizes B2B seats first: only buyers who purchase in bulk can
+reach this volume by February.
+
 **Same revenue basis as below** (VAT-exclusive, after refunds, EUR/USD ≈ 1.14):
 - $1M a month ≈ **€877k a month**, 12× the old target.
 - At €249 (€188 per sale): **≈ 4,670 package sales a month**. At €199 (€150): ≈ 5,850.
