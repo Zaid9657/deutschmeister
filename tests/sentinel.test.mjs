@@ -1088,6 +1088,8 @@ test('end to end: the canary allowlist, the gate, an unreadable queue and weekly
   const canary = ledgerWorld({ due: true });
   const c = body(await run(fakeDb(canary.world, canary.opts), fakeFetch(), { event: dryEvent, env: { ...ENV, LIFECYCLE_TEST_RECIPIENTS: 'owner@example.test' } }));
   assert.deepEqual(c.incidents.map((i) => i.key), [`job-trial:stale:${DAY}`]);
+  const retryCanary = body(await run(fakeDb(canary.world, canary.opts), fakeFetch(), { event: dryEvent, env: { ...ENV, LIFECYCLE_TEST_RECIPIENTS: 'owner@example.test', LIFECYCLE_RETRY_ENABLED: 'true' } }));
+  assert.deepEqual(retryCanary.incidents.map((i) => i.key), [], 'trial retries honour the canary only after the owner enables them');
 
   // Gated off: skipped as before, and its queue is not even read.
   const gated = ledgerWorld({ due: true });

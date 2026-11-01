@@ -122,7 +122,7 @@ const eachKind = async (kinds, read) => Object.fromEntries(await Promise.all(kin
  * is skipped as ambiguous, never judged (tests/sentinel.test.mjs pins the set).
  */
 export const DUE_READERS = Object.freeze({
-  'job-trial': { canary: false, read: (db, span) => eachKind(TRIAL_KINDS, (k) => trialRecipients(k, { client: db, span })) },
+  'job-trial': { canary: true, canaryFlag: 'LIFECYCLE_RETRY_ENABLED', read: (db, span) => eachKind(TRIAL_KINDS, (k) => trialRecipients(k, { client: db, span })) },
   'job-activation': { canary: true, read: (db, span) => eachKind(Object.keys(ACTIVATION_WINDOWS), (k) => activationCandidates(k, { client: db, span })) },
   'job-confirm': { canary: true, read: (db, span) => eachKind(['confirm_nudge'], () => nudgeCandidates(db, { span, limit: Infinity })) },
   'job-course': { canary: true, read: (db, span, now) => eachKind(['course_reminder'], () => courseRecipients({ client: db, span, now: now.getTime() })) },
@@ -143,7 +143,8 @@ async function measureDue(db, job, last, now, env) {
   if (!reader) return { count: null, reason: `no eligibility reader for ${job.fn}` };
   try {
     const byKind = await withTimeout(reader.read(db, { first: span.first, last: span.last }, now), LEDGER_JOB_DUE.timeoutMs, `${job.fn} eligibility read`);
-    return { ...countDue(byKind, { canary: reader.canary ? parseCanary(env.LIFECYCLE_TEST_RECIPIENTS) : null }), ...span };
+    const useCanary = reader.canary && (!reader.canaryFlag || env[reader.canaryFlag] === 'true');
+    return { ...countDue(byKind, { canary: useCanary ? parseCanary(env.LIFECYCLE_TEST_RECIPIENTS) : null }), ...span };
   } catch (e) {
     console.error(`[sentinel] eligibility read for ${job.fn} failed:`, e.message);
     return { count: null, reason: e.message };

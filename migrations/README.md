@@ -11,6 +11,7 @@ status unverified” does not mean pending; verify the live schema/data first.
 
 | File | What it does | Status |
 |---|---|---|
+| `2026-11-01-retryable-lifecycle-mail.sql` | Durable mail claims, service-only claim RPC and 14/30/60-day trial kinds. Requires explicit owner approval of schema/RLS/RPC and mail policy; all new paths default OFF. Rollback is flags OFF, retaining claims. | **DRAFT — NOT YET APPLIED** |
 | `2026-08-16-fix-rls-security.sql` | Closes the self-grant-Pro RLS hole on `subscriptions`/`profiles`, locks down `webhook_logs` and `xray_usage`, narrows anonymous access to paid reading/listening content to the free tier (a1.1). | ✅ **Applied 2026-08-16** |
 | `2026-08-16-enable-rls-on-unprotected-tables.sql` | Enables RLS on 13 tables that had it switched off entirely (the whole course catalogue was publicly deletable via the anon key), and revokes public EXECUTE on `debit_speaking_wallet`. | ✅ **Applied 2026-08-16** |
 | `2026-08-16-content-cleanup.sql` | De-CAPS of 270 shouting `grammar_rules` rows (892 edits, correct German orthography restored); `related_slugs` populated for all 64 topics; documents the dead `grammar_introductions` table (commented DROP, owner's call). | ✅ **Applied 2026-08-16** |

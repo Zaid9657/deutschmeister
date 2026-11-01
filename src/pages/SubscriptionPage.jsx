@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Crown, Check, Clock, Shield, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -11,13 +11,13 @@ import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
 import { blockedLevelFrom, checkoutEntitlementConfirmed, hasFailedPayment, hasRecurringBilling, ownsCheckoutProduct } from '../lib/checkoutAccess.js';
 import { courseHomeFor } from '../lib/courseEntry.js';
-import { FREE_COURSE_HREF } from '../data/offers.js';
+import TrialReturnCard from '../components/TrialReturnCard.jsx';
 import { planStatusCopy } from '../lib/planStatus.js';
 import { proPlanLines } from '../lib/proPlanLines.js';
 import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, productKeyForLevel } from '../data/pricing.js';
-import { FREE_LEVEL_LABEL, LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
+import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
@@ -437,30 +437,11 @@ const SubscriptionPage = () => {
           </Card>
         )}
 
-        {/* Expired notice — only from billing that was read, and with the free
-            course one tap away (ACC-02, ACC-06). */}
         {!inTrial && !isSubscribed && billingVerified && !paymentFailed && (
-          <Card tone="himbeer" className="mb-8 p-4 animate-pop-in">
-            <div className="flex items-center gap-3">
-              <Zap className="w-5 h-5 text-accent-himbeer-ink flex-shrink-0" aria-hidden="true" />
-              <div>
-                <p className="font-bold text-accent-himbeer-ink">
-                  {isGerman ? 'Testphase abgelaufen' : 'Trial Expired'}
-                </p>
-                <p className="text-sm text-accent-himbeer-ink">
-                  {isGerman
-                    ? 'Abonnieren Sie jetzt, um weiter auf alle Inhalte zuzugreifen.'
-                    : 'Subscribe now to continue accessing all content.'}
-                </p>
-                <p className="mt-2 text-sm">
-                  <Link to={FREE_COURSE_HREF} className="font-bold text-siegel transition-colors hover:text-siegel-deep">
-                    {isGerman ? `Oder kostenlos mit dem ${FREE_LEVEL_LABEL}-Kurs weitermachen →` : `Or continue the free ${FREE_LEVEL_LABEL} course →`}
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </Card>
+          <TrialReturnCard key={user?.id} />
         )}
+
+        <div id="return-offers" />
 
         {/* Already paid? Verify button — not for a failed renewal: that row is
             already found, and its fix is the card above. */}

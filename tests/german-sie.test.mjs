@@ -248,7 +248,7 @@ test('the listening results upgrade card speaks Sie and means the trial (conv-b1
 // aufhören“ while the course it reminds of says Sie. The rule, not a list of
 // lines: every function file with a German branch is rendered here (or named
 // with the reason it renders no German text), and no visible string says du.
-const GERMAN_FUNCTION_SURFACES = ['netlify/functions/course-reminder.mjs', 'netlify/functions/unsubscribe.mjs', 'netlify/functions/_shared/socialLinks.mjs'];
+const GERMAN_FUNCTION_SURFACES = ['netlify/functions/_shared/lateTrial.mjs', 'netlify/functions/course-reminder.mjs', 'netlify/functions/unsubscribe.mjs', 'netlify/functions/_shared/socialLinks.mjs'];
 const NO_GERMAN_TEXT = { 'netlify/functions/_shared/unsubscribe.mjs': 'only adds &lang=de to the link; the page renders the German' };
 
 const visibleStrings = (html) => html
@@ -268,6 +268,7 @@ test('German mail and pages from netlify/functions speak Sie, never du', async (
 
   process.env.UNSUB_SECRET = process.env.UNSUB_SECRET || 'test-only-unsub-secret';
   const course = await import('../netlify/functions/course-reminder.mjs');
+  const late = await import('../netlify/functions/_shared/lateTrial.mjs');
   const unsubscribe = await import('../netlify/functions/unsubscribe.mjs');
   const { socialFooterLine } = await import('../netlify/functions/_shared/socialLinks.mjs');
   const { unsubscribeToken } = await import('../netlify/functions/_shared/unsubscribe.mjs');
@@ -275,6 +276,7 @@ test('German mail and pages from netlify/functions speak Sie, never du', async (
   const uid = '00000000-0000-4000-8000-000000000001';
   const learner = { id: uid, email: 'learner@example.test' };
   const html = [
+    ...Object.keys(late.LATE_TRIAL_DAYS).map((kind) => late.lateTrialItem(kind, learner).html),
     ...[{ level: 'a1.1', nextNr: 4 }, { level: 'a1.2', nextNr: 1, vorname: 'Ana' }, { level: 'a1.1', checkpointNr: 2 }, { level: 'a1.2', finalTest: true }, { level: 'b1.1' }]
       .map((shape) => course.reminderItem({ ...learner, ...shape }).html),
     socialFooterLine('#000', 'de'),

@@ -13,6 +13,8 @@
 // UNIQUE(user_id, kind), and the insert happens BEFORE the send, so a crash
 // mid-run can drop a message but can never duplicate one. Opted-out users
 // (profiles.email_daily_sentence = false) are skipped entirely.
+import { runLateTrial, lateTrialEnabled } from './_shared/lateTrial.mjs';
+import { sendRetryableMail, retryableLifecycleUsers } from './_shared/retryableMail.mjs';
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { reconcileUserEntitlement } from './_shared/subscriptionEntitlement.mjs';
@@ -123,7 +125,9 @@ export function renderHtml(kind, userId) {
   const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
   return SHELL({
     heading: tpl.subject,
-    body: tpl.body,
+    body: kind === 'trial_ended' && lateTrialEnabled()
+      ? P('Ihre Testphase ist beendet. Sie können den kostenlosen Einstiegskurs weiterhin nutzen und Ihre gespeicherte Arbeit im Konto öffnen.') + P('Wenn Sie mehr nutzen möchten, können Sie die aktuellen Angebote ansehen. Sie können diese E-Mails jederzeit abbestellen.')
+      : tpl.body,
     ctaHref: tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
     ctaLabel: tpl.ctaLabel,
     footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
@@ -243,6 +247,10 @@ export async function selectRecipients(kind, { client = supabase, span = null, n
     .in('user_id', ids);
   if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const sentAlready = new Set((already || []).map((r) => r.user_id));
+  if (process.env.LIFECYCLE_RETRY_ENABLED === 'true') {
+    const retryable = await retryableLifecycleUsers(client, kind, [...sentAlready], now);
+    for (const id of retryable) sentAlready.delete(id);
+  }
 
   // Resolve addresses, and only mail confirmed ones.
   const emails = new Map();
@@ -281,8 +289,21 @@ async function sendBatch(resendKey, items) {
   if (!res.ok) throw new Error(`Resend batch ${res.status}: ${(await res.text()).slice(0, 300)}`);
 }
 
-async function sendKind(resendKey, kind) {
-  const recipients = await selectRecipients(kind);
+async function sendKind(resendKey, kind, { dry = false, canary = new Set() } = {}) {
+  const retryEnabled = process.env.LIFECYCLE_RETRY_ENABLED === 'true';
+  const recipients = (await selectRecipients(kind)).filter((r) => !retryEnabled || !canary.size || canary.has(r.email));
+  if (dry) return { kind, wouldSend: recipients.length, sent: 0, failed: 0 };
+  if (process.env.LIFECYCLE_RETRY_ENABLED === 'true') {
+    let sent = 0, failed = 0;
+    for (const r of recipients) {
+      const result = await sendRetryableMail({ client: supabase, resendKey,
+        key: `lifecycle:${r.id}:${kind}`, scope: `lifecycle:${r.id}:${kind}`,
+        kind, userId: r.id, message: mailItem(kind, r) });
+      if (result.status === 'accepted') sent++;
+      else if (['retryable', 'needs_review'].includes(result.status)) failed++;
+    }
+    return { kind, sent, failed };
+  }
   if (recipients.length === 0) return { kind, sent: 0, failed: 0 };
 
   let sent = 0;
@@ -405,26 +426,34 @@ const innerHandler = async (event) => {
     return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
+  const dry = qs.dry === '1';
+  const canary = new Set((process.env.LIFECYCLE_TEST_RECIPIENTS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean));
   const results = [];
   for (const kind of TRIAL_KINDS) {
     try {
-      results.push(await sendKind(resendKey, kind));
+      results.push(await sendKind(resendKey, kind, { dry, canary }));
     } catch (err) {
       console.error(`[trial-lifecycle] ${kind} failed:`, err.message);
       results.push({ kind, sent: 0, failed: 0, error: err.message });
     }
   }
 
+  let lateTrial;
+  try {
+    lateTrial = await runLateTrial({ client: supabase, resendKey, dry, canary });
+  } catch (err) {
+    lateTrial = { error: err.message };
+  }
   let courseSweep = null;
   try {
-    courseSweep = await expireCourseWindows();
+    if (!dry) courseSweep = await expireCourseWindows();
   } catch (err) {
     console.error('[trial-lifecycle] course-window sweep failed:', err.message);
     courseSweep = { error: err.message };
   }
 
-  console.log('[trial-lifecycle]', JSON.stringify({ results, courseSweep }));
-  return { statusCode: 200, body: JSON.stringify({ results, courseSweep }) };
+  console.log('[trial-lifecycle]', JSON.stringify({ results, courseSweep, lateTrial, dry }));
+  return { statusCode: 200, body: JSON.stringify({ results, courseSweep, lateTrial, dry }) };
 };
 
 // 08:00 UTC — an hour after the daily sentence, so the two never collide.
