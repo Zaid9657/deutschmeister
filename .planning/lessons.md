@@ -6,6 +6,7 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-01 | All four v5 role sessions (controller, sales, distribution, fulfilment) stalled on a "claude-artifacts — Db Write" permission prompt. No role run has finished since 2026-10-30, team memory stopped updating, and the 14-day canary will show missed cycles | In the daily canary, read each role session's status (blocked / needs input), not only heartbeats: a start without an end means a stuck prompt, and the fix is a standing permission, not a retry |
 | 2026-11-01 | Founder: "you merge". GitHub refused to re-run #237's stale checks from this session (403), so its fix sat unmerged and kept main red | To re-trigger stale CI, port the existing fix into a PR that can push (or push a real change); never wait on a re-run this integration cannot start |
 | 2026-10-31 | Founder set the deadline: $1M a month by February 2027, four months out, from about $68 a month today | Plan against the deadline every week (≈ €220k a week in February); size the levers that can sell in bulk first |
 | 2026-10-31 | The north star in the plan and charter was $1M a **year** (≈ €73k a month). Founder: $1M a **month**. The plan's best evidenced case (the Germany exam package, aggressive) is ≈ $103k a month, about a tenth of it | Every task names the sales number it moves. One segment cannot carry the goal: size B2B seats and abroad with evidence before building more for Germany |
