@@ -1,0 +1,38 @@
+---
+import { RECORDED_CORRECTION as example } from '../../data/recordedCorrection.js';
+import { checkAnswer, checkOptionsFor } from '../../../../src/lib/lesson/check.js';
+import { FREE_COURSE_HREF } from '../../data/offers.js';
+
+// Fail the build if the recorded verdict stops matching the live course rule.
+const check = (text) => checkAnswer(text, example.item.accepted, checkOptionsFor(example.item)).result;
+if (check(example.draft) !== example.beforeResult || check(example.revision) !== example.afterResult) {
+  throw new Error('Recorded correction no longer matches the course checker');
+}
+const explanation = example.explanation.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+---
+
+<section class="border-b border-rule bg-paper" aria-labelledby="recorded-correction-h" data-recorded-correction>
+  <div class="mx-auto max-w-7xl px-5 py-12 sm:py-16">
+    <p class="font-data text-xs font-bold uppercase tracking-[0.13em] text-siegel-deep">Recorded example · A1.1</p>
+    <h2 id="recorded-correction-h" class="sign-head mt-3 text-3xl sm:text-4xl">Write it. Check it. Try again.</h2>
+    <p class="mt-4 max-w-2xl leading-relaxed text-graphite">One short greeting from our own course material. This records the course answer checker’s feedback, followed by the corrected version. It is not a customer text or an AI writing assessment.</p>
+    <ol class="mt-7 grid gap-4 md:grid-cols-3">
+      <li class="rounded-xl border border-rule bg-white p-5">
+        <h3 class="sign-label text-lg">01 · First attempt</h3>
+        <p class="mt-4 text-xl" lang="de">{example.draft}</p>
+      </li>
+      <li class="rounded-xl border border-rule bg-paper-sunk p-5">
+        <h3 class="sign-label text-lg">02 · Course feedback</h3>
+        <p class="mt-4 font-semibold">Not correct yet.</p>
+        <p class="mt-2 leading-relaxed text-graphite" set:html={explanation} />
+      </li>
+      <li class="rounded-xl border border-rule bg-white p-5">
+        <h3 class="sign-label text-lg">03 · Revised version</h3>
+        <p class="mt-4 text-xl" lang="de">{example.revision}</p>
+        <p class="mt-2 font-semibold text-siegel-deep">Correct — checked by the same course rule.</p>
+      </li>
+    </ol>
+    <p class="mt-4 text-sm text-graphite">Recorded on <time datetime={example.recordedOn}>{example.recordedOn}</time> · DeutschMeister’s own exercise</p>
+    <a href={FREE_COURSE_HREF} class="dm-key dm-key-siegel mt-6">Try the free A1.1 course</a>
+  </div>
+</section>

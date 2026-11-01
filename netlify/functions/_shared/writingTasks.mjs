@@ -25,7 +25,8 @@ export const WRITING_TASKS = [
       'Sie haben in einem Online-Shop einen Rucksack bestellt und schon bezahlt. Nach zwei Wochen ist er immer noch nicht angekommen. ' +
       'Schreiben Sie an den Kundenservice.',
     leitpunkte: [
-      'Beschreiben Sie das Problem (was, wann bestellt)',
+      'Beschreiben Sie, was Sie wann bestellt haben',
+      'Erklären Sie das Problem mit der Lieferung',
       'Sagen Sie, was Sie schon versucht haben',
       'Fordern Sie eine Lösung mit einer Frist',
     ],
@@ -44,6 +45,7 @@ export const WRITING_TASKS = [
       'Bedanken Sie sich für die Einladung',
       'Erklären Sie, warum Sie nicht kommen können',
       'Schlagen Sie ein alternatives Treffen vor',
+      'Fragen Sie, ob Sie etwas zum Treffen mitbringen sollen',
     ],
   },
   {
@@ -58,7 +60,8 @@ export const WRITING_TASKS = [
       'Schreiben Sie an die Schule und stellen Sie Fragen.',
     leitpunkte: [
       'Stellen Sie sich kurz vor und nennen Sie Ihr Niveau',
-      'Fragen Sie nach Terminen und Preisen',
+      'Fragen Sie nach den Kursterminen',
+      'Fragen Sie nach dem Kurspreis',
       'Fragen Sie, wie man sich anmelden kann',
     ],
   },

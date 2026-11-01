@@ -160,6 +160,49 @@
   status = 301
   force = true
 
+# Course pages live at /courses/a1-1/ (levelToSlug turns the dot into a dash), but
+# people and posts write the level with its dot: the 2026-11-01 Telegram posts linked
+# /courses/a1.1/ and 404ed. Send every dotted spelling to the real page.
+[[redirects]]
+  from = "/courses/a1.1"
+  to = "/courses/a1-1/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/a1.2"
+  to = "/courses/a1-2/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/a2.1"
+  to = "/courses/a2-1/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/a2.2"
+  to = "/courses/a2-2/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/b1.1"
+  to = "/courses/b1-1/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/b1.2"
+  to = "/courses/b1-2/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/b2.1"
+  to = "/courses/b2-1/"
+  status = 301
+
+[[redirects]]
+  from = "/courses/b2.2"
+  to = "/courses/b2-2/"
+  status = 301
+
 # Force lowercase grammar level URLs
 [[redirects]]
   from = "/grammar/A1.1"
