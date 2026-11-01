@@ -236,5 +236,8 @@ test('LevelTest keeps the snapshot in this tab on every step and clears it on re
   assert.match(page, /<LevelTestLanding onStart=\{startTest\} resumeAt=\{resumeAt\} onResume=\{resumeTest\} \/>/);
   const landing = read('src/components/LevelTest/LevelTestLanding.jsx');
   assert.match(landing, /Continue your test/);
-  assert.match(landing, /\{resumeAt \? \(\s*<Button size="lg" variant="secondary" onClick=\{onStart\}>/, 'one primary action: a fresh start turns secondary');
+  const resumeBranch = landing.split('{resumeAt ? (')[1]?.split(') : (')[0];
+  assert.ok(resumeBranch, 'resume remains a separate branch');
+  assert.match(resumeBranch, /<Button size="lg" shimmer onClick=\{onResume\}>/, 'continuing is primary');
+  assert.match(resumeBranch, /<Button size="sm" variant="secondary" className="mt-3" onClick=\{onStart\}>Start a new test/, 'one primary action: a fresh start turns secondary');
 });

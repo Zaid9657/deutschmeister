@@ -9,6 +9,7 @@
 
 export const telcB1 = {
   slug: 'telc-b1',
+  offer: 'telc',
   title: 'telc B1 Vorbereitung: Leitfaden 2026 | DeutschMeister',
   h1: 'telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung',
   description:
@@ -309,7 +310,7 @@ export const telcB1 = {
   ],
 
   cta: {
-    heading: 'Starte deine telc B1 Vorbereitung',
-    body: 'Mach den Einstufungstest, finde dein Niveau und fang an zu lernen.',
+    heading: 'Ihre nächste telc-B1-Übung steht',
+    body: 'Sehen Sie sich den Übungsplan mit Briefen, Überarbeitungen und Sprechproben an. Der Kurs ist derzeit nicht buchbar; auf der Kursseite finden Sie auch den kostenlosen Pro-Test.',
   },
 };

@@ -94,7 +94,7 @@ import { goetheB1SpeakingEn } from './goethe-b1-speaking-presentation.js';
  * No price either: the sales page states it, and only while it can be bought.
  */
 export const GUIDE_OFFERS = Object.freeze({
-  telc: { door: 'telcOffer', campaign: 'telc-b1-offer', label: 'Zur telc-B1-Komplettvorbereitung' },
+  telc: { door: 'telcOffer', campaign: 'telc-b1-offer', label: 'telc-B1-Übungsplan ansehen' },
   'dtz-waitlist': { door: 'signup', campaign: 'dtz-waitlist', label: 'Kostenloses Konto erstellen' },
   'goethe-waitlist': { door: 'signup', campaign: 'goethe-b1-waitlist', label: 'Create a free account' },
 });

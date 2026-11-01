@@ -37,6 +37,7 @@ import '../styles/global.css';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import LineBoard from '../components/linie/LineBoard.astro';
 import FirstStop from '../components/linie/FirstStop.astro';
+import RecordedCorrection from '../components/linie/RecordedCorrection.astro';
 import FitChooser from '../components/linie/FitChooser.astro';
 import LineSection from '../components/linie/LineSection.astro';
 import Ticket from '../components/linie/Ticket.astro';
@@ -121,6 +122,8 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
       <!-- The line board: the HyperFrames loop (videos/hero-line*), poster-first. -->
       <LineBoard />
     </section>
+
+    <RecordedCorrection />
 
     <FitChooser />
 

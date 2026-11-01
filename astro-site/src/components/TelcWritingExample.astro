@@ -1,0 +1,36 @@
+---
+import { TELC_WRITING_EXAMPLE as example } from '../../../src/data/telcWritingExample.js';
+---
+
+<div class="mt-6 rounded-2xl border border-rule bg-white p-5 sm:p-8" data-telc-writing-example>
+  <p class="font-semibold text-siegel-deep">{example.label}</p>
+  <p class="mt-2 text-sm leading-relaxed text-graphite">{example.provenance}</p>
+  <h3 class="sign-label mt-6 text-xl">Die Aufgabe: {example.task.title}</h3>
+  <p class="mt-3 leading-relaxed text-graphite">{example.task.task}</p>
+  <ol class="mt-3 list-decimal space-y-2 pl-5 text-graphite">
+    {example.task.leitpunkte.map((point) => <li>{point}</li>)}
+  </ol>
+  <div class="mt-8 grid gap-8 lg:grid-cols-2">
+    <section aria-labelledby="letter-draft-h">
+      <h3 id="letter-draft-h" class="sign-label text-xl">01 · Der erste Entwurf</h3>
+      <blockquote class="mt-4 space-y-3 leading-relaxed">{example.draft.map((line) => <p>{line}</p>)}</blockquote>
+    </section>
+    <section class="rounded-xl border border-rule bg-paper-sunk p-5" aria-labelledby="letter-feedback-h">
+      <h3 id="letter-feedback-h" class="sign-label text-xl">02 · So kann ein Hinweis aussehen</h3>
+      <p class="mt-4 leading-relaxed">{example.feedback.strength}</p>
+      <p class="mt-4 font-semibold">Nächster Schritt</p>
+      <p class="mt-2 leading-relaxed">{example.feedback.improvement}</p>
+      {example.feedback.corrections.map((correction) => (
+        <div class="mt-5 border-t border-rule pt-4 leading-relaxed">
+          <p><span class="font-semibold">Vorher:</span> {correction.original}</p>
+          <p class="mt-2"><span class="font-semibold">Überarbeitet:</span> {correction.corrected}</p>
+          <p class="mt-3 text-graphite">{correction.note}</p>
+        </div>
+      ))}
+    </section>
+  </div>
+  <details class="mt-8 border-t border-rule pt-4" open>
+    <summary class="sign-label cursor-pointer py-2 text-xl">03 · Die überarbeitete Version</summary>
+    <blockquote class="mt-4 max-w-prose space-y-3 leading-relaxed">{example.revision.map((line) => <p>{line}</p>)}</blockquote>
+  </details>
+</div>
