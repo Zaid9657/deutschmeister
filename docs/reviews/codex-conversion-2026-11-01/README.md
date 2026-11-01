@@ -53,3 +53,10 @@ Ranked by € per hour at today's traffic, then by what matters once buyers arri
 - **Consent banner copy** (Codex 10): consent wording.
 - **Exam-task return paths** after signup (Codex 5): changes access flow.
 - **Funnel denominator** (Codex 15): a new public endpoint (controller c4).
+
+## Part 2 (same day): leak, onboarding, REA targets, open-source tools
+
+- Founder's words: "make the colours better . and plan ideas to introduce the website to the user in the best way to increase trustworthiness and conversion (videos , onboarding, etc) identify where are we losing the customers and where the leak is hapenning and investigate it . also what are the best apps or websites to use REA repo on to learn from and take inspiration and to copy , etc . Also investigate open source tools that we can implement that are relevant for tutoring , simulation , speaking , language learning , etc" and "work with codex together".
+- Claude measured the 90-day funnel: [FUNNEL-90d.md](FUNNEL-90d.md). Codex (GPT-6-Astra, max) wrote the plan: [plan-leak-onboarding-tools.md](plan-leak-onboarding-tools.md). Claude spot-checked its code citations (trial windows, TrialBanner expiry, firstRun exits, speaking providers, review ladder): all hold.
+- The clickable "$1M-look" preview (home + telc page, v3 colours) lives as a private artifact; its decisions are in [preview-NOTES.md](preview-NOTES.md).
+- Honest arithmetic from the plan: all conversion fixes together are worth about €20/month at today's 62 signups a month, about €200 at 10x. They matter once buyers arrive; the sale and distribution come first.
