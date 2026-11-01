@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { showTrialReturn, hideReturnBanner, savedWork, loadSavedWork, returnOffer, returnDismissed, dismissReturn, RETURN_DISMISS_MS, freeReturnOption } from '../src/lib/trialReturn.js';
+import { showTrialReturn, hideReturnBanner, loadSavedWork, returnOffer, returnDismissed, dismissReturn, RETURN_DISMISS_MS, freeReturnOption } from '../src/lib/trialReturn.js';
+import { savedWork } from '../src/lib/trialSavedWork.js';
 import { PLANS, deEur, LEVEL_COURSES } from '../src/data/pricing.js';
 import { CURRICULA } from '../src/data/curricula/index.js';
 import { FREE_COURSE_HREF } from '../src/data/offers.js';
@@ -60,5 +61,6 @@ test('only a configured live course is offered; prices and free door come from c
   const card = readFileSync(new URL('../src/components/TrialReturnCard.jsx', import.meta.url), 'utf8');
   assert.match(card, /work\?\.userId === userId/);
   assert.match(card, /current = false/);
+  assert.match(card, /href=\{offer.href\}/, 'offer anchor scrolls natively, including on the subscription page');
   assert.doesNotMatch(card, /countdown|setInterval|\bdu\b|\bdein\b/i);
 });

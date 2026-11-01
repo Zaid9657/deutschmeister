@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase } from '../utils/supabase';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
-import { dismissReturn, returnDismissed, showTrialReturn, loadSavedWork, returnOffer, freeReturnOption } from '../lib/trialReturn.js';
+import { dismissReturn, returnDismissed, RETURN_DISMISS_MS, showTrialReturn, loadSavedWork, returnOffer, freeReturnOption } from '../lib/trialReturn.js';
 import Button from './ui/Button.jsx';
 import Card from './ui/Card.jsx';
 
@@ -13,9 +13,9 @@ export default function TrialReturnCard({ banner = false }) {
   const { profile, purchases, subscription, loading, billingVerified, hasActiveSubscription } = useSubscription();
   const userId = user?.id;
   const eligible = showTrialReturn({ userId, profile, purchases, subscription, loading, billingVerified, subscribed: hasActiveSubscription() });
-  const [hiddenFor, setHiddenFor] = useState(null);
+  const [dismissal, setDismissal] = useState(null);
   const [work, setWork] = useState(null);
-  const hidden = hiddenFor === userId || returnDismissed(userId);
+  const hidden = (dismissal?.userId === userId && Date.now() - dismissal.at < RETURN_DISMISS_MS) || returnDismissed(userId);
   useEffect(() => {
     if (!eligible || hidden) return;
     let current = true;
@@ -32,7 +32,7 @@ export default function TrialReturnCard({ banner = false }) {
     <div className={banner ? 'border-b border-rule bg-paper px-4 py-4' : 'mb-8'}>
       <Card className="relative mx-auto max-w-5xl border border-rule p-5 shadow-none" lang="de">
         <button type="button" aria-label="Für sieben Tage ausblenden" className="absolute right-3 top-3 rounded-md p-2 text-siegel hover:bg-siegel-wash"
-          onClick={() => { dismissReturn(userId); setHiddenFor(userId); }}>
+          onClick={() => { dismissReturn(userId); setDismissal({ userId, at: Date.now() }); }}>
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
         <h2 className="pr-10 font-display text-xl text-ink">Willkommen zurück</h2>
@@ -48,7 +48,7 @@ export default function TrialReturnCard({ banner = false }) {
         </p>}
         <div className="mt-3 flex flex-wrap gap-3">
           <Button to={freeReturnOption.href} variant="ghost">{freeReturnOption.label}</Button>
-          <Button to={offer.href} variant="ghost" className="border border-siegel">{offer.label} · Ansehen</Button>
+          <Button href={offer.href} variant="ghost" className="border border-siegel">{offer.label} · Ansehen</Button>
         </div>
       </Card>
     </div>

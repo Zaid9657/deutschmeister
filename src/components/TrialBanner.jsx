@@ -30,6 +30,7 @@ const TrialBanner = () => {
 
   const now = Date.now();
   const endsMs = new Date(trialEndsAt).getTime();
+  if (!Number.isFinite(endsMs)) return null;
   if (endsMs <= now) return <TrialReturnCard key={user.id} banner />;
   if (dismissed) return null;
 

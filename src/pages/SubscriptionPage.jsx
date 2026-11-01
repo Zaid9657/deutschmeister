@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Crown, Check, Clock, Shield, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -437,7 +437,9 @@ const SubscriptionPage = () => {
           </Card>
         )}
 
-        <TrialReturnCard key={user?.id} />
+        {!inTrial && !isSubscribed && billingVerified && !paymentFailed && (
+          <TrialReturnCard key={user?.id} />
+        )}
 
         <div id="return-offers" />
 
