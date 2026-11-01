@@ -1,4 +1,56 @@
-# DeutschMeister to $1M a year, run by AI: the plan
+# DeutschMeister to $1M a month, run by AI: the plan
+
+## North star changed on 2026-10-31: $1M a month (this section wins)
+
+**The founder set the north star to 1,000,000 US dollars in DeutschMeister sales per month.**
+Signups, Telegram, traffic and course quality are means, not the goal. The approved plan below
+targeted **$1M a year** (≈ €73.1k a month). That figure is now the first big milestone, not the goal.
+
+**Deadline (founder, 2026-10-31): February 2027**, read as the calendar month ending 2027-02-28.
+That leaves four months (November to February), and February alone needs about €220k a week.
+Because of the deadline, stage 1 sizes B2B seats first: only buyers who purchase in bulk can
+reach this volume by February.
+
+**Same revenue basis as below** (VAT-exclusive, after refunds, EUR/USD ≈ 1.14):
+- $1M a month ≈ **€877k a month**, 12× the old target.
+- At €249 (€188 per sale): **≈ 4,670 package sales a month**. At €199 (€150): ≈ 5,850.
+- At 1.5–2.6% conversion: **≈ 180,000–310,000 qualified visits a month** at €249.
+
+**Where it stands (read 2026-10-31 22:53 UTC, Supabase, test mode excluded):**
+- Last 30 days: €64.46 gross (2 Pro renewals, €21.08; 1 A1.2 course, €43.38), VAT €4.48,
+  refunds €0, so **€59.98 ≈ $68**. Lemon Squeezy fees are unknown (not exposed).
+- 0 new subscriptions since 2026-08-27; 0 exam packages ever sold; 6 failed payments in 30 days.
+- 62 signups in 30 days (43 confirmed), 37 of them from Google; qualified offer views are not
+  measured yet (no server-side counter).
+- **Gap: ≈ $999,900 a month.**
+
+**What changes, and what does not.**
+- The five moves below keep their order: the release gate and one paid sale still come first,
+  because no lever sells without them.
+- The Germany exam package (S1) is evidenced up to the aggressive case, **≈ €90k ≈ $103k a month**,
+  about a tenth of the goal. The rest must come from segments the plan counted as zero until
+  earned. They now get researched and tested in parallel, each with a small paid test first:
+  - **B2B seats.** Integration-course schools: 1,615 BAMF-approved providers and 363,466 new
+    participants in 2024 (BAMF key figures 2024). Also nursing and Ausbildung recruiters:
+    ~37,000 nursing recognition procedures in 2024 (BMG). **Assumption, untested:** 1 in 10
+    integration learners on a €49 seat (net of VAT) ≈ €148k ≈ **$170k a month**.
+  - **Goethe B1/B2 abroad** (India, Indonesia, nursing): 461,000 Goethe B1 exams in 2025, and
+    Indonesia already sends most signups. **Assumption, untested:** 5% of candidates × €79
+    (≈ €60 after VAT and refunds) ≈ €115k ≈ **$130k a month**.
+  - **Price per buyer.** A human-review tier (the hybrid in PR #234 prices it at €149) and B2B
+    contracts raise revenue per buyer. That is the multiplier once one segment sells.
+- **Honest view, said once:** the three evidenced or assumed levers reach roughly $400k a month
+  together. Closing the rest needs a higher price per buyer, proven on whichever segment sells
+  first.
+- **Kill rules, owner-only limits and the kill list are unchanged.**
+- **Working system:** [.claude/GOAL.md](../../.claude/GOAL.md) (shown on every message),
+  [.planning/method.md](../../.planning/method.md), [.planning/lessons.md](../../.planning/lessons.md)
+  and the Notion board "DeutschMeister — Shared Board". The team artifact's `config/charter`
+  carries the same goal line.
+
+---
+
+## The approved plan of 2026-10-19 (target then: $1M a year)
 
 *Claude + Codex, 2026-10-19. Scope: DeutschMeister only.*
 
