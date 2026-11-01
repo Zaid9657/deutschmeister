@@ -20,6 +20,16 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$CLAUDE_PROJECT_DIR/.claude/GOAL.md\" 2>/dev/null || true"
+          }
+        ]
+      }
     ]
   },
   "env": {
