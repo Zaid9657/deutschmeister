@@ -60,3 +60,7 @@ Ranked by € per hour at today's traffic, then by what matters once buyers arri
 - Claude measured the 90-day funnel: [FUNNEL-90d.md](FUNNEL-90d.md). Codex (GPT-6-Astra, max) wrote the plan: [plan-leak-onboarding-tools.md](plan-leak-onboarding-tools.md). Claude spot-checked its code citations (trial windows, TrialBanner expiry, firstRun exits, speaking providers, review ladder): all hold.
 - The clickable "$1M-look" preview (home + telc page, v3 colours) lives as a private artifact; its decisions are in [preview-NOTES.md](preview-NOTES.md).
 - Honest arithmetic from the plan: all conversion fixes together are worth about €20/month at today's 62 signups a month, about €200 at 10x. They matter once buyers arrive; the sale and distribution come first.
+
+## Part 3 (same day): competitor study
+
+- Founder's words: "what are the best apps or websites to use REA repo on to learn from and take inspiration and to copy". REA's browser provider was unavailable in the session, so Claude captured the first screens with Playwright (mobile 390px + desktop; Babbel, Babbel prices, Speak, Duolingo, Busuu, Praktika, Lingoda (403), Seedlang, ELSA, vhs-Lernportal) and Codex wrote [competitor-study.md](competitor-study.md) with scores, three experiments and a 30-day social-proof list. Screenshots: `competitor-shots/`.
