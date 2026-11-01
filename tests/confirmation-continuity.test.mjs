@@ -121,8 +121,8 @@ test('confirmation copy names the submitted address and the actual mail subject'
     const source = read(`src/pages/${page}.jsx`);
     assert.ok(source.includes(address));
     assert.match(source, /Confirm your DeutschMeister account/);
-    assert.match(source, /Bestätigungslink/);
-    assert.match(source, /Spamordner/);
+    assert.match(source, /confirmation link/);
+    assert.match(source, /spam folder/);
   }
 });
 

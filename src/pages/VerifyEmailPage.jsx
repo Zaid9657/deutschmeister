@@ -103,16 +103,16 @@ const VerifyEmailPage = () => {
           </div>
 
           <h1 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3">
-            Bestätigen Sie Ihre E-Mail-Adresse
+            Confirm your email
           </h1>
 
           <p className="text-graphite mb-2">
-            Der Bestätigungslink wurde an diese Adresse gesendet:
+            We sent the confirmation link to this address:
           </p>
           <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-6">{user.email}</p>
 
           <p className="text-sm text-graphite mb-6">
-            Öffnen Sie die E-Mail mit dem Betreff „Confirm your DeutschMeister account“ und klicken Sie dort auf den Bestätigungslink. Suchen Sie auch im Spamordner. Diese Seite aktualisiert sich automatisch.
+            Open the email with the subject &ldquo;Confirm your DeutschMeister account&rdquo; and click the confirmation link in it. Check your spam folder too. This page updates automatically.
           </p>
 
           <div className="flex items-center justify-center gap-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite mb-6">
@@ -121,7 +121,7 @@ const VerifyEmailPage = () => {
           </div>
 
           {AUTH_CONTINUITY_ENABLED && confirmationDestinationLabel(postAuthPath()) && (
-            <p className="mb-4 text-sm text-graphite">Danach: {confirmationDestinationLabel(postAuthPath())}.</p>
+            <p className="mb-4 text-sm text-graphite">After that: {confirmationDestinationLabel(postAuthPath())}.</p>
           )}
 
           {resent && (

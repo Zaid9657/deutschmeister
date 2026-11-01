@@ -315,19 +315,18 @@ const SignupPage = () => {
                 tabIndex={-1}
                 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3"
               >
-                Bestätigen Sie Ihre E-Mail-Adresse
+                Check your inbox
               </h2>
-              <p className="text-graphite mb-1">Der Bestätigungslink wurde an diese Adresse gesendet:</p>
+              <p className="text-graphite mb-1">We sent the confirmation link to this address:</p>
               <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-5 break-all">{sentTo}</p>
               <p className="text-left text-sm leading-relaxed text-graphite mb-6">
-                Öffnen Sie die E-Mail mit dem Betreff{' '}
-                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> und klicken Sie dort auf den Bestätigungslink.
-                Suchen Sie auch im Spamordner. Falls Sie zusätzlich eine Willkommensmail erhalten,
-                verwenden Sie den Link in der Bestätigungsmail.
+                Open the email with the subject{' '}
+                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click the confirmation link in it.
+                Check your spam folder too. If a welcome email arrives as well, use the link in the confirmation email.
               </p>
 
               {AUTH_CONTINUITY_ENABLED && confirmationDestinationLabel(postAuthPath()) && (
-                <p className="mb-4 text-sm text-graphite">Danach: {confirmationDestinationLabel(postAuthPath())}.</p>
+                <p className="mb-4 text-sm text-graphite">After that: {confirmationDestinationLabel(postAuthPath())}.</p>
               )}
 
               {resendState === 'sent' && (

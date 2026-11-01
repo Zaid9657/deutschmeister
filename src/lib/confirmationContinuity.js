@@ -30,13 +30,13 @@ export const confirmationEmailRedirect = (origin, destination, enabled = AUTH_CO
 
 export function confirmationDestinationLabel(path) {
   for (const track of EXAM_TRACKS) {
-    if (path === `/modelltest/${track.slug}`) return `${track.nameDe} – Kurztest öffnen`;
-    if (path?.startsWith(`/schreiben/${track.slug}?task=`) && isSafeReturnPath(path, true)) return `${track.nameDe} – Schreibaufgabe öffnen`;
+    if (path === `/modelltest/${track.slug}`) return `open the ${track.nameDe} short test`;
+    if (path?.startsWith(`/schreiben/${track.slug}?task=`) && isSafeReturnPath(path, true)) return `open the ${track.nameDe} writing task`;
   }
   if (isSafeReturnPath(path) && path?.startsWith('/course/')) {
     const [, level, lesson] = /^\/course\/([^/?,]+)(?:\/l\/(\d+))?/.exec(path);
-    return `Kurs ${level.toUpperCase()}${lesson ? ` – Lektion ${lesson}` : ''} öffnen`;
+    return `open course ${level.toUpperCase()}${lesson ? `, lesson ${lesson}` : ''}`;
   }
-  if (safeConfirmationDestination(path, true)?.startsWith('/subscription?buy=')) return 'Zur gewählten Kaufoption';
+  if (safeConfirmationDestination(path, true)?.startsWith('/subscription?buy=')) return 'continue to the purchase you chose';
   return null;
 }
