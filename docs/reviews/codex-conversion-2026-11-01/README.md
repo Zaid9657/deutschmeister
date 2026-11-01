@@ -60,3 +60,15 @@ Ranked by € per hour at today's traffic, then by what matters once buyers arri
 - Claude measured the 90-day funnel: [FUNNEL-90d.md](FUNNEL-90d.md). Codex (GPT-6-Astra, max) wrote the plan: [plan-leak-onboarding-tools.md](plan-leak-onboarding-tools.md). Claude spot-checked its code citations (trial windows, TrialBanner expiry, firstRun exits, speaking providers, review ladder): all hold.
 - The clickable "$1M-look" preview (home + telc page, v3 colours) lives as a private artifact; its decisions are in [preview-NOTES.md](preview-NOTES.md).
 - Honest arithmetic from the plan: all conversion fixes together are worth about €20/month at today's 62 signups a month, about €200 at 10x. They matter once buyers arrive; the sale and distribution come first.
+
+## Part 3 (same day): competitor study
+
+- Founder's words: "what are the best apps or websites to use REA repo on to learn from and take inspiration and to copy". REA's browser provider was unavailable in the session, so Claude captured the first screens with Playwright (mobile 390px + desktop; Babbel, Babbel prices, Speak, Duolingo, Busuu, Praktika, Lingoda (403), Seedlang, ELSA, vhs-Lernportal) and Codex wrote [competitor-study.md](competitor-study.md) with scores, three experiments and a 30-day social-proof list. Screenshots: `competitor-shots/`.
+
+## Part 4 (same day): Codex built the plan's three tracks
+
+- Founder's words: "do what i told you above". Three Codex builds (GPT-6-Astra, workspace-write sandboxes, one git worktree each) ran in parallel from [build/COMMON.md](build/COMMON.md) plus one brief per track; Claude imported the commits, re-ran every gate and opened the PRs.
+- **Track A, selling pages** ([brief](build/track-a-brief.md), [report](build/track-a-report.md)): telc B1 page rewrite with a labelled demonstration correction, 4 Leitpunkte in the writing task, guide CTAs, mobile order on pricing, level test and signup. Merged as #246.
+- **Track C, first useful minute** ([brief](build/track-c-brief.md), [report](build/track-c-report.md)): goal-matched onboarding exit, real microphone check, confirmation copy with the exact address and subject, cross-browser continuity behind `VITE_AUTH_CONTINUITY_ENABLED` (default off). PR #247. Claude put the confirmation panels back into English after the merge with #246 showed a mixed-language page.
+- **Track B, post-trial window** ([brief](build/track-b-brief.md), [report](build/track-b-report.md)): saved-work return card after the trial, 14/30/60-day follow-ups and durable dunning retries behind flags (default off), draft migration (not applied), read-only payment-recovery SQL. PR #248. Owner decisions it raises are on the board.
+- Honest expected effect (plan model, not a forecast): all three tracks together about €20–35/month at today's volume. They matter once buyers arrive.
