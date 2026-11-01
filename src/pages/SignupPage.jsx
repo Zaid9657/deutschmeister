@@ -1,3 +1,5 @@
+import { AUTH_CONTINUITY_ENABLED } from '../lib/authContinuityFlag.js';
+import { confirmationEmailRedirect, authEntryPath, confirmationDestinationLabel } from '../lib/confirmationContinuity.js';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -155,6 +157,10 @@ const SignupPage = () => {
         setError(error.message);
         logFailedSignup(email, error);
       } else if (outcome === 'signed-in') {
+        if (AUTH_CONTINUITY_ENABLED) {
+          navigate(authEntryPath('/verify-email', postAuthPath()), { replace: true });
+          return;
+        }
         navigate('/verify-email', { replace: true });
         return;
       } else if (existingAccount({ data, error })) {
@@ -188,7 +194,10 @@ const SignupPage = () => {
     const { error: resendError } = await supabase.auth.resend({
       type: 'signup',
       email: sentTo,
-      options: { emailRedirectTo: `${window.location.origin}/login` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+        ...(AUTH_CONTINUITY_ENABLED ? { emailRedirectTo: confirmationEmailRedirect(window.location.origin, postAuthPath()) } : {}),
+      },
     });
     if (resendError) {
       const refusal = resendRefusal(resendError, untimedRefusals);
@@ -286,7 +295,7 @@ const SignupPage = () => {
                 No new email was sent. Log in with your password, or set a new one if you have forgotten it.
               </p>
               <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-                <Link to="/login" className={TEXT_LINK}>
+                <Link to={authEntryPath('/login', postAuthPath())} className={TEXT_LINK}>
                   Log in
                 </Link>
                 <Link to="/reset-password" className={TEXT_LINK}>
@@ -308,14 +317,17 @@ const SignupPage = () => {
               >
                 Check your inbox
               </h2>
-              <p className="text-graphite mb-1">We sent a confirmation link to:</p>
+              <p className="text-graphite mb-1">We sent the confirmation link to this address:</p>
               <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-5 break-all">{sentTo}</p>
               <p className="text-left text-sm leading-relaxed text-graphite mb-6">
                 Open the email with the subject{' '}
-                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and
-                click its link. It activates your account and signs you in. If a welcome email arrives too, the link
-                you need is still in the confirmation email. Check your spam folder as well.
+                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click the confirmation link in it.
+                Check your spam folder too. If a welcome email arrives as well, use the link in the confirmation email.
               </p>
+
+              {AUTH_CONTINUITY_ENABLED && confirmationDestinationLabel(postAuthPath()) && (
+                <p className="mb-4 text-sm text-graphite">After that: {confirmationDestinationLabel(postAuthPath())}.</p>
+              )}
 
               {resendState === 'sent' && (
                 <p
@@ -360,7 +372,7 @@ const SignupPage = () => {
               </p>
               <p className="mt-2 text-sm text-graphite">
                 Signed up with this address before?{' '}
-                <Link to="/login" className={TEXT_LINK}>
+                <Link to={authEntryPath('/login', postAuthPath())} className={TEXT_LINK}>
                   Log in
                 </Link>
               </p>
@@ -445,7 +457,7 @@ const SignupPage = () => {
           {/* Login link */}
           <p className="mt-5 text-center text-graphite">
             {t('auth.hasAccount')}{' '}
-            <Link to="/login" className={TEXT_LINK}>
+            <Link to={authEntryPath('/login', postAuthPath())} className={TEXT_LINK}>
               {t('auth.login')}
             </Link>
           </p>

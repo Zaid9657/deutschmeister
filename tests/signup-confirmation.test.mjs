@@ -46,7 +46,7 @@ test('a refused resend waits out the per-address limit instead of showing the ra
 test('/signup routes on the outcome and shows the address the link went to', () => {
   const src = read('src/pages/SignupPage.jsx');
   assert.match(src, /const outcome = signupOutcome\(\{ data, error \}\);/);
-  assert.match(src, /outcome === 'signed-in'\) \{\s*navigate\('\/verify-email', \{ replace: true \}\);/);
+  assert.match(src, /outcome === 'signed-in'\) \{\s*if \(AUTH_CONTINUITY_ENABLED\) \{\s*navigate\(authEntryPath\('\/verify-email', postAuthPath\(\)\), \{ replace: true \}\);\s*return;\s*\}\s*navigate\('\/verify-email', \{ replace: true \}\);/);
   assert.equal((src.match(/navigate\('\/verify-email'/g) || []).length, 1, 'no other path to /verify-email');
   assert.match(src, /setSentTo\(email\.trim\(\)\);/);
   assert.match(src, /\{sentTo\}/);

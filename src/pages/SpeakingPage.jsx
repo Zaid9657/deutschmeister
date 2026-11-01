@@ -21,6 +21,8 @@ import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import { isFreeSpeakingCapped, speakingLimitMoment, speakingLimitOffer } from '../lib/speakingOffer.js';
 import SpeakingLimitOffer from '../components/speaking/SpeakingLimitOffer.jsx';
 import Button from '../components/ui/Button.jsx';
+import { createFirstTurnTracker } from '../lib/speakingFirstTurn.js';
+import { track } from '../lib/analytics';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
@@ -303,6 +305,8 @@ const SpeakingPage = () => {
     if (startDisabled || pendingStartRef.current) return;
     setStarting(true);
     setStartError(null);
+    const firstTurnTracker = createFirstTurnTracker(track);
+    firstTurnTracker.mark('permission');
     // Microphone FIRST. The start call reserves the learner's allowance (a
     // trial session, a wallet debit, a free subscriber session); it used to
     // run before the permission prompt, so a denied or missing mic cost a
@@ -314,6 +318,7 @@ const SpeakingPage = () => {
     let closeCreatedSession;
     const cancelStart = () => {
       cancelled = true;
+      firstTurnTracker.stop();
       releaseMicrophone(mic);
       closeCreatedSession?.();
     };
@@ -324,6 +329,8 @@ const SpeakingPage = () => {
     } catch (err) {
       if (cancelled) return;
       pendingStartRef.current = null;
+      firstTurnTracker.mark('permission', 'failed');
+      firstTurnTracker.stop();
       console.error('Mic error:', err);
       setStartError({ type: 'error', message: micErrorMessage(err) });
       setStarting(false);
@@ -342,6 +349,7 @@ const SpeakingPage = () => {
     };
     let handedOver = false;
     try {
+      firstTurnTracker.mark('session');
       authHeaders = await getAuthHeaders();
       if (cancelled) return;
       const res = await fetch('/api/speaking/speaking-session', {
@@ -383,6 +391,7 @@ const SpeakingPage = () => {
       }
       if (!sessionToken) throw new Error('Failed to create speaking session');
       setSession({
+        firstTurnTracker,
         sessionToken: data.session_token,
         plannedMinutes: data.planned_minutes || selectedMinutes,
         level: data.level || selectedLevel,
@@ -406,6 +415,8 @@ const SpeakingPage = () => {
       setStartError({ type: 'error', message: 'Network error — please try again.' });
     } finally {
       if (!handedOver) {
+        firstTurnTracker.mark('session', 'failed');
+        firstTurnTracker.stop();
         releaseMicrophone(mic);
         if (pendingStartRef.current === cancelStart) pendingStartRef.current = null;
       }
@@ -532,6 +543,7 @@ const SpeakingPage = () => {
       <>
         {seo}
         <SpeakingSession
+          firstTurnTracker={session.firstTurnTracker}
           level={session.level}
           mission={session.mission || session.courseTask}
           sessionToken={session.sessionToken}
@@ -800,7 +812,7 @@ const SpeakingPage = () => {
             className="w-full"
           >
             {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
-            {selectedCost > 0 ? `Start · ${euros(selectedCost)}` : 'Start'}
+            {selectedCost > 0 ? `Mikrofon prüfen & starten · ${euros(selectedCost)}` : 'Mikrofon prüfen & starten'}
           </Button>
         )}
         {!limitOffer && (

@@ -344,9 +344,9 @@ test('onboarding exits: the beginner answer lands IN Lektion 1', () => {
 // runs the exits).
 test('every onboarding exit waits for the exam write, completes, then reloads the shared profile', () => {
   const slides = read('src/components/onboarding/IntroSlides.jsx');
-  assert.match(slides, /const \{ refreshSubscription \} = useSubscription\(\);/);
+  assert.match(slides, /const \{ refreshSubscription, profile, hasLevelAccess \} = useSubscription\(\);/);
   assert.match(slides, /examSave\.current = supabase\.from\('profiles'\)\.update\(\{ exam_track: key \}\)/);
-  assert.match(slides, /const saved = examSave\.current \? await withTimeout\(examSave\.current, 3000\)\.catch\(\(\) => false\) : false;\n\s*await completeOnboarding\(exitPath\);\n\s*if \(saved\) await refreshSubscription\(\);/);
+  assert.match(slides, /const saved = examSave\.current \? await withTimeout\(examSave\.current, 3000\)\.catch\(\(\) => false\) : false;\n\s*if \(AUTH_CONTINUITY_ENABLED && exitPath !== 'return-task'\) clearReturnPath\(\);\s*await completeOnboarding\(exitPath, options\);\n\s*if \(saved\) await refreshSubscription\(\);/);
   assert.match(slides, /const handleSkip = \(\) => \{\n\s*trackOnboardingSkipped\(\);\n\s*return finish\('dashboard'\);/);
   assert.equal((slides.match(/\bcompleteOnboarding\(/g) || []).length, 1, 'no exit completes around finish()');
 });
@@ -366,7 +366,7 @@ test('onboarding asks the one question and its primary answer starts Lektion 1',
   assert.match(slides, /return finish\(point === STARTING_POINTS\.SOME \? 'level-test' : 'first-lesson'\);/);
   assert.match(slides, /updateUser\(\{ data: \{ \[STARTING_POINT_KEY\]: point \} \}\)/, 'the "some German" answer must be remembered');
   assert.equal(STARTING_POINT_KEY, 'starting_point');
-  assert.match(read('src/hooks/useOnboarding.js'), /onboardingExitPath\(exitPath, \{ examTrack, currentLevel: profile\?\.current_level, hasLevelAccess \}\)/);
+  assert.match(read('src/hooks/useOnboarding.js'), /onboardingExitPath\(exitPath, \{ examTrack, currentLevel: profile\?\.current_level, hasLevelAccess, startingPoint, returnTo \}\)/);
 });
 
 test('the dashboard renders the first-run card in the hero slot and demotes its other primaries', () => {

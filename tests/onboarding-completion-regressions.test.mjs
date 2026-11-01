@@ -48,6 +48,7 @@ function slides({ onComplete, write = () => Promise.resolve({ error: null }), wi
     trackOnboardingStarted: () => {},
     trackOnboardingSlideViewed: () => {},
     trackOnboardingSkipped: () => { log.push(['skip-event']); },
+    AUTH_CONTINUITY_ENABLED: false,
     STARTING_POINTS: { NEW: 'new', SOME: 'some' },
     STARTING_POINT_KEY: 'starting_point',
     SLIDES: [{}, {}, {}],

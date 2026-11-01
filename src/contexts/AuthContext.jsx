@@ -1,3 +1,6 @@
+import { postAuthPath } from '../lib/buyIntent.js';
+import { AUTH_CONTINUITY_ENABLED } from '../lib/authContinuityFlag.js';
+import { confirmationEmailRedirect } from '../lib/confirmationContinuity.js';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { signupAttributionMetadata } from '../lib/attribution';
@@ -145,6 +148,7 @@ export const AuthProvider = ({ children }) => {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/login`,
+        ...(AUTH_CONTINUITY_ENABLED ? { emailRedirectTo: confirmationEmailRedirect(window.location.origin, postAuthPath()) } : {}),
         // Which link brought them (public/attribution.js); the profiles
         // trigger copies these keys into profiles.acquisition_*.
         data: signupAttributionMetadata(),

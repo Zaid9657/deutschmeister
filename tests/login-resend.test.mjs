@@ -65,6 +65,16 @@ function confirmationMailCalls() {
   return calls;
 }
 
+// Execute the options so the default-off continuity branch is covered too.
+function assertDefaultRedirect(arg, at = 'resend') {
+  const call = vm.runInNewContext(`(${arg})`, {
+    AUTH_CONTINUITY_ENABLED: false,
+    email: 'learner@example.test', sentTo: 'learner@example.test', user: { email: 'learner@example.test' },
+    window: { location: { origin: 'https://deutsch-meister.de' } },
+  });
+  assert.deepEqual(JSON.parse(JSON.stringify(call.options)), { emailRedirectTo: 'https://deutsch-meister.de/login' }, at);
+}
+
 // Lower it when you give one of these calls its redirect; never raise it.
 // 1 on 2026-10-05: the /verify-email resend, product's route (routed to product
 // by the supervisor on 2026-10-03). That page needs a session, which 0 of 40
@@ -100,7 +110,7 @@ test("/login's resend is the /signup panel's call: same type, same redirect", ()
   const signup = resendOf('src/pages/SignupPage.jsx');
   for (const arg of [login, signup]) {
     assert.match(arg, /type: 'signup'/);
-    assert.ok(arg.includes(`options: { ${REDIRECT_TO_LOGIN} }`));
+    assertDefaultRedirect(arg);
   }
 });
 
@@ -150,7 +160,7 @@ test('every resend under src/ is the /signup panel\'s call: same type, same redi
   assert.ok(resends.some((c) => c.at.startsWith('src/pages/VerifyEmailPage.jsx:')), 'the walker sees the /verify-email resend');
   for (const c of resends) {
     assert.match(c.arg, /type: 'signup'/, `${c.at}: a confirmation resend is type 'signup'`);
-    assert.ok(c.arg.includes(`options: { ${REDIRECT_TO_LOGIN} }`), `${c.at}: pass options: { ${REDIRECT_TO_LOGIN} }`);
+    assertDefaultRedirect(c.arg, c.at);
   }
 });
 

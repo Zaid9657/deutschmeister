@@ -6,7 +6,8 @@
 // email round-trip in a fresh tab) and hands every post-auth redirect the
 // destination that resumes it: /subscription?buy=<key>, which opens the
 // checkout once and clears the intent. Only known product keys are honoured.
-import { safeGet, safeSet, safeRemove } from '../utils/safeStorage';
+import { safeGet, safeSet, safeRemove } from '../utils/safeStorage.js';
+import { confirmationReturnFromSearch } from './confirmationContinuity.js';
 import { peekReturnPath } from './returnPath.js';
 
 const KEY = 'dm_buy_intent';
@@ -31,6 +32,8 @@ export const clearBuyIntent = () => safeRemove(KEY);
 
 /** Where to send a user once they are authenticated: the pending checkout, else the course step they left, else the dashboard. */
 export const postAuthPath = () => {
+  const carried = typeof window !== 'undefined' ? confirmationReturnFromSearch(window.location?.search || '') : null;
+  if (carried) return carried;
   const key = peekBuyIntent();
   if (key) return `/subscription?buy=${encodeURIComponent(key)}`;
   return peekReturnPath() || '/dashboard';

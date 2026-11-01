@@ -1,3 +1,6 @@
+import { AUTH_CONTINUITY_ENABLED } from '../../lib/authContinuityFlag.js';
+import { peekReturnPath, clearReturnPath } from '../../lib/returnPath.js';
+import { confirmationDestinationLabel } from '../../lib/confirmationContinuity.js';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Rocket, ChevronLeft, ChevronRight, Bug, GraduationCap } from 'lucide-react';
@@ -8,7 +11,7 @@ import { supabase } from '../../utils/supabase';
 import { withTimeout } from '../../utils/withTimeout';
 import { EXAM_TRACKS } from '../../data/examTracks';
 import { FREE_COURSE_LEVEL } from '../../lib/courseEntry.js';
-import { STARTING_POINT_KEY, STARTING_POINTS } from '../../lib/firstRun.js';
+import { STARTING_POINT_KEY, STARTING_POINTS, onboardingGoalAction } from '../../lib/firstRun.js';
 import {
   trackOnboardingStarted,
   trackOnboardingSlideViewed,
@@ -61,7 +64,7 @@ export default function IntroSlides({ onComplete }) {
   const { currentStep, setCurrentStep, completeOnboarding: completeStandaloneOnboarding, needsOnboarding } = useOnboarding();
   const completeOnboarding = onComplete || completeStandaloneOnboarding;
   const { user } = useAuth();
-  const { refreshSubscription } = useSubscription();
+  const { refreshSubscription, profile, hasLevelAccess } = useSubscription();
   const [examTrack, setExamTrack] = useState(null);
   // The exam_track write, kept so every exit can wait for it (true = saved).
   const examSave = useRef(null);
@@ -88,9 +91,10 @@ export default function IntroSlides({ onComplete }) {
   // completes onboarding, which is written before it navigates, and only then
   // reloads the profile: if that reload re-mounts the guarded route, the
   // onboarding gate finds its completion already written.
-  const finish = async (exitPath) => {
+  const finish = async (exitPath, options) => {
     const saved = examSave.current ? await withTimeout(examSave.current, 3000).catch(() => false) : false;
-    await completeOnboarding(exitPath);
+    if (AUTH_CONTINUITY_ENABLED && exitPath !== 'return-task') clearReturnPath();
+    await completeOnboarding(exitPath, options);
     if (saved) await refreshSubscription();
   };
 
@@ -117,18 +121,7 @@ export default function IntroSlides({ onComplete }) {
     return finish('dashboard');
   };
 
-  // The exit out of the final slide (work order #6). Measured on the
-  // September 2026 cohort: 84 finished these slides, 13 of them ever touched a lesson.
-  // The placement test was the primary button (26 took it, 5 then did a
-  // lesson) and the "first lesson" button sent an exam-B1 picker to a B1.1
-  // grammar page. Now the beginner answer is the primary and lands IN Lektion
-  // 1 of the free course; "I know some German" goes to the placement test and
-  // is remembered (user_metadata.starting_point), so the dashboard's first-run
-  // card keeps offering the test until it is done. "new" is not written — it is
-  // the default, and not writing it keeps a USER_UPDATED auth event out of the
-  // lesson player's first render. Each button goes where its label says, also
-  // after an exam pick (src/lib/firstRun.js onboardingExitPath); the exam's
-  // first task waits on the dashboard's first-run card.
+  // Explicit beginner/placement answers still land where their labels say.
   const chooseStart = (point) => {
     if (point === STARTING_POINTS.SOME && user) {
       supabase.auth.updateUser({ data: { [STARTING_POINT_KEY]: point } })
@@ -140,6 +133,17 @@ export default function IntroSlides({ onComplete }) {
   };
 
   const slide = SLIDES[currentStep];
+  const goalPreferences = {
+    examTrack: examTrack ?? profile?.exam_track,
+    currentLevel: profile?.current_level,
+    startingPoint: user?.user_metadata?.[STARTING_POINT_KEY],
+    hasLevelAccess,
+  };
+  const resumePath = AUTH_CONTINUITY_ENABLED && examTrack === null ? peekReturnPath() : null;
+  const resumeLabel = confirmationDestinationLabel(resumePath);
+  const goalAction = resumePath && resumeLabel
+    ? { href: resumePath, label: resumeLabel, locked: false }
+    : onboardingGoalAction(goalPreferences);
 
   return (
     <div className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center bg-paper px-4 py-12">
@@ -171,11 +175,11 @@ export default function IntroSlides({ onComplete }) {
               </div>
 
               <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-4">
-                {slide.headline}
+                {slide.isFinal && goalAction ? 'Ihr nächster Schritt' : slide.headline}
               </h2>
 
               {slide.body && (
-                <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-6">{slide.body}</p>
+                <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-6">{slide.isFinal && goalAction ? goalAction.href === '/level-test/' ? 'Der Einstufungstest hilft Ihnen, einen passenden Einstieg zu finden.' : 'Öffnen Sie Ihre Aufgabe direkt. Den Einstufungstest können Sie bei Bedarf später machen.' : slide.body}</p>
               )}
 
               {slide.isExamPicker && (
@@ -206,17 +210,30 @@ export default function IntroSlides({ onComplete }) {
 
               {slide.isFinal && (
                 <div className="flex flex-col gap-3 mt-2">
-                  <Button onClick={() => chooseStart(STARTING_POINTS.NEW)} shimmer size="lg" className="w-full">
-                    I&apos;m new to German — start Lektion 1
-                  </Button>
-                  <Button onClick={() => chooseStart(STARTING_POINTS.SOME)} variant="secondary" size="lg" className="w-full">
-                    I know some German — find my level
-                  </Button>
+                  {goalAction ? (
+                    <>
+                      <Button onClick={resumePath && resumeLabel
+                        ? () => finish('return-task', { returnTo: resumePath })
+                        : () => finish('exam-task', goalPreferences)} shimmer size="lg" className="w-full">
+                        {goalAction.label}
+                      </Button>
+                      {goalAction.locked && <p className="text-sm text-graphite">Diese Aufgabe benötigt einen passenden Zugang. Beim Öffnen sehen Sie die Zugangssperre.</p>}
+                    </>
+                  ) : (
+                    <Button onClick={() => chooseStart(STARTING_POINTS.NEW)} shimmer size="lg" className="w-full">
+                      A1.1 Lektion 1 öffnen – ich beginne mit Deutsch
+                    </Button>
+                  )}
+                  {goalAction?.href !== '/level-test/' && (
+                    <Button onClick={() => chooseStart(STARTING_POINTS.SOME)} variant="secondary" size="lg" className="w-full">
+                      Optional: Einstufungstest öffnen (15–20 Minuten)
+                    </Button>
+                  )}
                   <button
                     onClick={handleSkip}
                     className="text-sm font-bold text-graphite transition-colors hover:text-siegel-deep"
                   >
-                    Just show me around first →
+                    Dashboard öffnen →
                   </button>
                 </div>
               )}

@@ -1,3 +1,5 @@
+import { AUTH_CONTINUITY_ENABLED } from '../lib/authContinuityFlag.js';
+import { confirmationEmailRedirect, authEntryPath, confirmationDestinationLabel } from '../lib/confirmationContinuity.js';
 import { useState, useEffect, useCallback } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +28,10 @@ const VerifyEmailPage = () => {
   useEffect(() => { trackVerificationPageViewed(); }, []);
 
   useEffect(() => {
+    if (AUTH_CONTINUITY_ENABLED && !user) {
+      navigate(authEntryPath('/login', postAuthPath()), { replace: true });
+      return;
+    }
     if (!user) {
       navigate('/login', { replace: true });
       return;
@@ -61,7 +67,10 @@ const VerifyEmailPage = () => {
     const { error: resendError } = await supabase.auth.resend({
       type: 'signup',
       email: user.email,
-      options: { emailRedirectTo: `${window.location.origin}/login` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+        ...(AUTH_CONTINUITY_ENABLED ? { emailRedirectTo: confirmationEmailRedirect(window.location.origin, postAuthPath()) } : {}),
+      },
     });
     setResending(false);
     if (resendError) {
@@ -98,18 +107,22 @@ const VerifyEmailPage = () => {
           </h1>
 
           <p className="text-graphite mb-2">
-            We sent a confirmation email to:
+            We sent the confirmation link to this address:
           </p>
           <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-6">{user.email}</p>
 
           <p className="text-sm text-graphite mb-6">
-            Click the link in that email to activate your account. This page updates automatically.
+            Open the email with the subject &ldquo;Confirm your DeutschMeister account&rdquo; and click the confirmation link in it. Check your spam folder too. This page updates automatically.
           </p>
 
           <div className="flex items-center justify-center gap-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite mb-6">
             <Loader2 className="w-3.5 h-3.5 animate-spin text-siegel" aria-hidden="true" />
             Waiting for confirmation…
           </div>
+
+          {AUTH_CONTINUITY_ENABLED && confirmationDestinationLabel(postAuthPath()) && (
+            <p className="mb-4 text-sm text-graphite">After that: {confirmationDestinationLabel(postAuthPath())}.</p>
+          )}
 
           {resent && (
             <motion.div
@@ -118,7 +131,7 @@ const VerifyEmailPage = () => {
               className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm font-semibold text-accent-limette-ink"
             >
               <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-              Email sent again.
+              Erneut gesendet. Verwenden Sie den Link in der neuesten E-Mail.
             </motion.div>
           )}
 
@@ -134,14 +147,14 @@ const VerifyEmailPage = () => {
           )}
 
           <div className="flex flex-col gap-3">
-            {/* Resend is the one primary action on this screen */}
-            <Button onClick={handleResend} shimmer disabled={resending} size="lg" className="w-full">
+            {/* The primary instruction is to open the confirmation link; resend is recovery. */}
+            <Button onClick={handleResend} variant="secondary" disabled={resending} size="lg" className="w-full">
               {resending ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <RefreshCw className="w-5 h-5" />
               )}
-              Resend email
+              Keine E-Mail erhalten? Erneut senden
             </Button>
 
             <Button onClick={handleSignOut} variant="secondary" size="lg" className="w-full">

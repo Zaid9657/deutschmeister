@@ -1,3 +1,6 @@
+import { setReturnPath } from '../lib/returnPath.js';
+import { AUTH_CONTINUITY_ENABLED } from '../lib/authContinuityFlag.js';
+import { confirmationEmailRedirect, authEntryPath } from '../lib/confirmationContinuity.js';
 import { useCallback, useEffect, useState } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
 import { returnPath, nextPath, needsFullLoad, authLinkError, isExpiredLink } from '../lib/loginReturn';
@@ -93,6 +96,7 @@ const LoginPage = () => {
   // explicit sign-out path awaits signOut() before navigating here, so this
   // never bounces a user who just logged out.
   useEffect(() => {
+    if (AUTH_CONTINUITY_ENABLED && !authLoading && user) setReturnPath(from);
     if (!authLoading && user) navigate(from, { replace: true });
   }, [authLoading, user, from, navigate]);
 
@@ -145,7 +149,10 @@ const LoginPage = () => {
     const { error: resendError } = await supabase.auth.resend({
       type: 'signup',
       email,
-      options: { emailRedirectTo: `${window.location.origin}/login` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+        ...(AUTH_CONTINUITY_ENABLED ? { emailRedirectTo: confirmationEmailRedirect(window.location.origin, from) } : {}),
+      },
     });
     if (resendError) {
       const refusal = resendRefusal(resendError, resendRefused?.untimed ?? 0);
@@ -352,7 +359,7 @@ const LoginPage = () => {
           {/* Sign up link */}
           <p className="mt-6 text-center text-graphite">
             {t('auth.noAccount')}{' '}
-            <Link to="/signup" className={TEXT_LINK}>
+            <Link to={authEntryPath('/signup', from)} className={TEXT_LINK}>
               {t('auth.signup')}
             </Link>
           </p>

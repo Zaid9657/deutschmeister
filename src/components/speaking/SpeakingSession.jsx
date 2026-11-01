@@ -4,6 +4,11 @@ import { getConfigForLevel } from '../../constants/speakingPrompts';
 import { getAuthHeaders } from '../../utils/supabase';
 import { pickAudioMimeType, blobToBase64, micErrorMessage, isLiveStream } from './mediaSupport';
 import Button from '../ui/Button.jsx';
+import MicrophoneCheck from './MicrophoneCheck.jsx';
+import { measureMicrophone } from './microphoneLevel.js';
+import { boundedSpeakingRequest } from '../../lib/speakingRequest.js';
+import { createFirstTurnTracker } from '../../lib/speakingFirstTurn.js';
+import { track } from '../../lib/analytics';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import ReportProblemLink from '../ReportProblemLink.jsx';
@@ -16,7 +21,6 @@ function formatTime(seconds) {
 
 const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
 const STATUS_CHIP = 'inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1 font-data text-[0.75rem] text-graphite';
-const EQ_BARS = [0, 1, 2, 3, 4, 5, 6];
 
 /**
  * Ask for a finished session's feedback. The server grades the transcript it
@@ -66,6 +70,7 @@ const SpeakingSession = ({
   sessionToken,
   plannedMinutes = 5,
   opening,               // { text, audioBase64 }
+  firstTurnTracker = null,
   micStream = null,      // granted before the session was created (acquireMicrophone)
   onComplete,            // (evaluation | null) — null only when the learner said nothing
   // ({ sessionToken, level, isPlacement, status, code, retryable, result }) — the
@@ -89,6 +94,10 @@ const SpeakingSession = ({
   const [ttsWarning, setTtsWarning] = useState(false);
   const [noSpeech, setNoSpeech] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
+  const [micChecked, setMicChecked] = useState(false);
+  const [micLevel, setMicLevel] = useState(0);
+  const meterRef = useRef(null);
+  const [tracker] = useState(() => firstTurnTracker || createFirstTurnTracker(track, isPlacement ? 'placement' : 'speaking'));
 
   const streamRef = useRef(micStream);
   const recorderRef = useRef(null);
@@ -149,6 +158,7 @@ const SpeakingSession = ({
   const cleanup = useCallback(() => {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     stopAudio();
+    meterRef.current?.();
     if (recorderRef.current) {
       try { recorderRef.current.ondataavailable = null; recorderRef.current.onstop = null; recorderRef.current.stop(); } catch { /* noop */ }
       recorderRef.current = null;
@@ -164,12 +174,13 @@ const SpeakingSession = ({
   const reportEnd = useCallback(async () => {
     const duration = startTimeRef.current ? Math.max(0, Math.round((Date.now() - startTimeRef.current) / 1000)) : 0;
     try {
-      await fetch('/api/speaking/speaking-session', {
+      await boundedSpeakingRequest(async (signal) => fetch('/api/speaking/speaking-session', {
+        signal,
         method: 'POST',
         keepalive: true,
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({ action: 'end', session_token: sessionToken, duration_seconds: duration }),
-      });
+      }), 8000);
     } catch (err) { console.warn('[speaking] end log failed:', err?.message); }
   }, [sessionToken]);
 
@@ -177,6 +188,7 @@ const SpeakingSession = ({
   const endSession = useCallback(async () => {
     if (endingRef.current) return;
     endingRef.current = true;
+    meterRef.current?.();
 
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     stopAudio();
@@ -196,6 +208,7 @@ const SpeakingSession = ({
 
     const currentMessages = messagesRef.current;
     const userTurns = currentMessages.filter((m) => m.role === 'user').length;
+    tracker.stop();
 
     // Log the end (best-effort — must not block evaluation).
     await reportEnd();
@@ -217,7 +230,7 @@ const SpeakingSession = ({
         status: outcome.status, code: outcome.code, retryable: outcome.retryable, result: outcome.result,
       });
     } else onComplete?.(outcome.result);
-  }, [sessionToken, level, isPlacement, onComplete, onEvaluationFailed, stopAudio, reportEnd]);
+  }, [sessionToken, level, isPlacement, onComplete, onEvaluationFailed, stopAudio, reportEnd, tracker]);
 
   // ---- timer: countdown from planned_minutes, auto-end at 0 ----
   useEffect(() => {
@@ -232,12 +245,17 @@ const SpeakingSession = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Play the opening line once on mount.
+  // The opening line follows the local microphone check, so it cannot leak
+  // into the test recording. Cleanup also runs on route changes.
+  useEffect(() => () => {
+    cleanup();
+    // StrictMode replays mount effects in development. Only a real departure
+    // closes the observation, after the replay has had a chance to remount.
+    queueMicrotask(() => { if (!aliveRef.current) tracker.stop(); });
+  }, [cleanup, tracker]);
   useEffect(() => {
-    if (opening?.audioBase64) playAudio(opening.audioBase64);
-    return () => cleanup();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (micChecked && opening?.audioBase64) playAudio(opening.audioBase64);
+  }, [micChecked, opening?.audioBase64, playAudio]);
 
   // ---- turn: send the recorded audio to speaking-turn ----
   const postTurn = useCallback(async (audioBase64, mimeType) => {
@@ -245,17 +263,24 @@ const SpeakingSession = ({
     setTurnError(null);
     setTtsWarning(false);
     setNoSpeech(false);
+    tracker.mark('request');
     try {
       // The server builds the teacher's context from the transcript it stored;
       // the conversation is not sent along.
-      const res = await fetch('/api/speaking/speaking-turn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ sessionToken, audioBase64, mimeType }),
+      const { res, data } = await boundedSpeakingRequest(async (signal) => {
+        const res = await fetch('/api/speaking/speaking-turn', {
+          signal,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+          body: JSON.stringify({ sessionToken, audioBase64, mimeType }),
+        });
+        const data = await res.json().catch(() => ({}));
+        return { res, data };
       });
-      const data = await res.json().catch(() => ({}));
+      if (!aliveRef.current) return;
 
       if (!res.ok) {
+        tracker.mark('request', 'failed');
         // Session-level problems end the session gracefully.
         if (data.code === 'session_expired' || data.code === 'session_closed') {
           setRecordState('idle');
@@ -278,12 +303,21 @@ const SpeakingSession = ({
       }
 
       const { userTranscript, replyText, replyAudioBase64, warning } = data;
+      if (data.noSpeech !== true && (typeof userTranscript !== 'string' || !userTranscript.trim())) {
+        tracker.mark('request', 'failed');
+        setTurnError({ message: 'Die Antwort konnte nicht geladen werden. Sie können Ihre Aufnahme erneut senden.', stage: 'response', retryable: true });
+        setRecordState('idle');
+        return;
+      }
       const next = [...messagesRef.current];
       if (userTranscript) next.push({ role: 'user', content: userTranscript });
       if (replyText) next.push({ role: 'assistant', content: replyText });
       messagesRef.current = next; // endSession may be waiting on this turn
       setMessages(next);
       setNoSpeech(data.noSpeech === true);
+      if (userTranscript) tracker.mark('reply', 'completed');
+      else tracker.mark('request', 'no_speech');
+      lastRecordingRef.current = null;
 
       if (warning === 'tts_unavailable' || !replyAudioBase64) {
         setTtsWarning(true);
@@ -296,11 +330,14 @@ const SpeakingSession = ({
       }
       setRecordState('idle');
     } catch (err) {
-      console.error('speaking-turn error:', err);
-      setTurnError({ message: 'Network error — please try again.', stage: 'network', retryable: true });
+      if (!aliveRef.current) return;
+      tracker.mark('request', err.name === 'TimeoutError' ? 'timeout' : 'failed');
+      setTurnError({ message: err.name === 'TimeoutError'
+        ? 'Die Antwort dauert zu lange. Sie können dieselbe Aufnahme erneut senden. Eine bereits verarbeitete Antwort könnte dabei wiederholt werden.'
+        : 'Verbindung fehlgeschlagen. Bitte versuchen Sie es erneut.', stage: 'network', retryable: true });
       setRecordState('idle');
     }
-  }, [sessionToken, endSession, playAudio]);
+  }, [sessionToken, endSession, playAudio, tracker]);
 
   // Remember the pending request so endSession can wait for it.
   const sendTurn = useCallback((audioBase64, mimeType) => {
@@ -312,22 +349,46 @@ const SpeakingSession = ({
   }, [postTurn]);
 
   const handleRecordingStopped = useCallback(async () => {
+    meterRef.current?.();
+    setMicLevel(0);
+    setRecordState('processing');
     const mimeType = recorderRef.current?.mimeType || pickAudioMimeType() || 'audio/webm';
     const blob = new Blob(chunksRef.current, { type: mimeType });
     chunksRef.current = [];
     if (!blob.size) { setRecordState('idle'); return; }
-    const audioBase64 = await blobToBase64(blob);
-    lastRecordingRef.current = { audioBase64, mimeType };
-    sendTurn(audioBase64, mimeType);
-  }, [sendTurn]);
+    try {
+      const audioBase64 = await boundedSpeakingRequest(() => blobToBase64(blob), 5000);
+      if (!aliveRef.current || endingRef.current) return;
+      lastRecordingRef.current = { audioBase64, mimeType };
+      sendTurn(audioBase64, mimeType);
+    } catch {
+      tracker.mark('recording', 'failed');
+      if (!aliveRef.current) return;
+      setTurnError({ message: 'Die Aufnahme konnte nicht gelesen werden. Bitte nehmen Sie die Antwort erneut auf.', stage: 'input', retryable: false });
+      setRecordState('idle');
+    }
+  }, [sendTurn, tracker]);
 
   const startRecording = useCallback(async () => {
     setTurnError(null);
     stopAudio();
+    setRecordState('processing');
+    tracker.mark('recording');
     try {
       if (!isLiveStream(streamRef.current)) {
-        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = await boundedSpeakingRequest(async (signal) => {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          if (signal.aborted || !aliveRef.current || endingRef.current) {
+            stream.getTracks().forEach((t) => t.stop());
+            throw new Error('Microphone request cancelled');
+          }
+          return stream;
+        }, 15000);
       }
+      meterRef.current?.();
+      const closeMeter = await measureMicrophone(streamRef.current, setMicLevel);
+      if (!aliveRef.current || endingRef.current) { closeMeter(); return; }
+      meterRef.current = closeMeter;
       const mimeType = pickAudioMimeType();
       const recorder = mimeType
         ? new MediaRecorder(streamRef.current, { mimeType })
@@ -336,14 +397,25 @@ const SpeakingSession = ({
       chunksRef.current = [];
       recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunksRef.current.push(e.data); };
       recorder.onstop = handleRecordingStopped;
+      recorder.onerror = () => {
+        recorder.onstop = null;
+        meterRef.current?.();
+        if (recorder.state !== 'inactive') recorder.stop();
+        tracker.mark('recording', 'failed');
+        if (!aliveRef.current) return;
+        setTurnError({ message: 'Die Aufnahme ist fehlgeschlagen. Bitte nehmen Sie Ihre Antwort erneut auf.', stage: 'input', retryable: false });
+        setRecordState('idle');
+      };
       recorder.start();
       setRecordState('recording');
     } catch (err) {
-      console.error('Mic error:', err);
+      meterRef.current?.();
+      tracker.mark('recording', 'failed');
+      if (!aliveRef.current) return;
       setTurnError({ message: micErrorMessage(err), stage: 'mic', retryable: false });
       setRecordState('idle');
     }
-  }, [handleRecordingStopped, stopAudio]);
+  }, [handleRecordingStopped, stopAudio, tracker]);
 
   const stopRecording = useCallback(() => {
     if (recorderRef.current && recorderRef.current.state !== 'inactive') {
@@ -358,10 +430,18 @@ const SpeakingSession = ({
   };
 
   const retryTurn = () => {
+    if (recordState !== 'idle' || endingRef.current || turnInFlightRef.current) return;
     if (lastRecordingRef.current) {
+      tracker.mark('request', 'retry');
       sendTurn(lastRecordingRef.current.audioBase64, lastRecordingRef.current.mimeType);
     }
   };
+
+  if (!micChecked) {
+    return <MicrophoneCheck stream={streamRef.current} tracker={tracker}
+      onReady={(stream) => { streamRef.current = stream; setMicChecked(true); }}
+      onCancel={() => { endingRef.current = true; tracker.stop(); cleanup(); onCancel?.(reportEnd()); }} />;
+  }
 
   // ---- evaluating screen ----
   if (evaluating) {
@@ -486,17 +566,9 @@ const SpeakingSession = ({
       {/* Control bar — the auto-scroll target (see controlsRef above) */}
       <div ref={controlsRef} className="flex-shrink-0 bg-white border-t border-rule pb-[env(safe-area-inset-bottom)] scroll-mb-20 lg:scroll-mb-0">
         <div className="max-w-lg mx-auto px-4 py-5 flex flex-col items-center">
-          {/* Level meter: live bars while recording, a calm resting row otherwise */}
-          <div className="h-8 mb-4 flex items-end justify-center gap-1" aria-hidden="true">
-            {isRecording ? (
-              <div className="equalizer flex h-full items-end gap-1">
-                {EQ_BARS.map((n) => <span key={n} className="block" />)}
-              </div>
-            ) : (
-              EQ_BARS.map((n) => (
-                <span key={n} className={`block w-[5px] h-1.5 rounded-pill ${isPlaying ? 'bg-siegel/40' : 'bg-edge'}`} />
-              ))
-            )}
+          {/* Measured input only: silence stays still. */}
+          <div className="h-8 mb-4 w-36 overflow-hidden rounded-pill bg-paper-sunk" role="meter" aria-label="Mikrofonpegel" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(1, micLevel * 5) * 100)}>
+            <div className="h-full bg-siegel origin-left" style={{ transform: `scaleX(${Math.min(1, micLevel * 5)})` }} />
           </div>
 
           <button
@@ -542,6 +614,7 @@ const SpeakingSession = ({
             className="mt-3"
             onClick={() => {
               endingRef.current = true;
+              tracker.stop();
               cleanup();
               // Close it server-side too (it used to stay 'active' forever),
               // after any turn already on its way, so that turn is counted.

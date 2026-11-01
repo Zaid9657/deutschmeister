@@ -15,6 +15,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { boundedSpeakingRequest } from '../src/lib/speakingRequest.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const SESSION = read('src/components/speaking/SpeakingSession.jsx');
@@ -91,9 +92,10 @@ test('the evaluation request sends only the session token and classifies every a
 function loadEndSession(script, { userTurns = 1, withFailureProp = true } = {}) {
   const { request } = loadRequest(script);
   const reported = { complete: [], failed: [], evaluating: [] };
-  const inner = cut(SESSION, 'async () => {\n    if (endingRef.current) return;', ', [sessionToken, level, isPlacement, onComplete, onEvaluationFailed, stopAudio, reportEnd]);');
+  const inner = cut(SESSION, 'async () => {\n    if (endingRef.current) return;', ', [sessionToken, level, isPlacement, onComplete, onEvaluationFailed, stopAudio, reportEnd, tracker]);');
   const messages = [{ role: 'assistant', content: 'Hallo!' }, ...Array.from({ length: userTurns }, () => ({ role: 'user', content: 'Hallo.' }))];
   const endSession = vm.runInNewContext(`(${inner})`, {
+    tracker: { stop() {} }, meterRef: { current: null },
     endingRef: { current: false }, timerRef: { current: null }, recorderRef: { current: null }, streamRef: { current: null },
     turnInFlightRef: { current: null }, messagesRef: { current: messages }, clearInterval() {},
     stopAudio() {}, reportEnd: async () => {}, setEvaluating: (v) => reported.evaluating.push(v),
@@ -203,10 +205,11 @@ test('the level test retries inside its speaking step and only then hands the re
 });
 
 test('a reply that arrives after the learner left is never played', async () => {
-  const inner = cut(SESSION, 'async (audioBase64, mimeType) => {', ', [sessionToken, endSession, playAudio]);');
+  const inner = cut(SESSION, 'async (audioBase64, mimeType) => {', ', [sessionToken, endSession, playAudio, tracker]);');
   for (const alive of [true, false]) {
     const played = [];
     const postTurn = vm.runInNewContext(`(${inner})`, {
+      boundedSpeakingRequest, tracker: { mark() {} }, lastRecordingRef: { current: null },
       setRecordState() {}, setTurnError() {}, setTtsWarning() {}, setNoSpeech() {}, setMessages() {},
       getAuthHeaders: async () => ({}), console: quiet, JSON,
       fetch: async () => ({ ok: true, status: 200, json: async () => ({ userTranscript: 'Hallo', replyText: 'Hallo!', replyAudioBase64: 'audio' }) }),
@@ -220,7 +223,7 @@ test('a reply that arrives after the learner left is never played', async () => 
   // alive is set by the mount effect and cleared by its cleanup — never endingRef,
   // which StrictMode's double mount would leave set and so silence every reply.
   assert.match(SESSION, /aliveRef\.current = true;\s*return \(\) => \{ aliveRef\.current = false; \};/);
-  assert.doesNotMatch(cut(SESSION, 'useEffect(() => {\n    if (opening?.audioBase64)', '}, []);'), /endingRef/);
+  assert.doesNotMatch(cut(SESSION, 'useEffect(() => {\n    if (micChecked && opening?.audioBase64)', '}, [micChecked, opening?.audioBase64, playAudio]);'), /endingRef/);
 });
 
 test('/speaking renders its head in every branch, including the signed-out screen', () => {

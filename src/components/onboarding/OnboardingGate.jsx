@@ -1,4 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { useLocation } from 'react-router-dom';
+import { AUTH_CONTINUITY_ENABLED } from '../../lib/authContinuityFlag.js';
+import { peekReturnPath, clearReturnPath } from '../../lib/returnPath.js';
+import { lazy, Suspense, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { Loader2 } from 'lucide-react';
@@ -17,7 +20,16 @@ const Spinner = () => (
 
 const OnboardingGate = ({ children }) => {
   const { user } = useAuth();
+  const location = useLocation();
   const { needsOnboarding, profileLoaded, completeOnboarding } = useOnboarding();
+
+  // Consume an email's task only after its onboarding gate has opened. A
+  // fresh account must retain it throughout the intro; later logins should
+  // not keep returning to a task that already opened.
+  useEffect(() => {
+    if (!AUTH_CONTINUITY_ENABLED || !user || !profileLoaded || needsOnboarding) return;
+    if (peekReturnPath() === `${location.pathname}${location.search}`) clearReturnPath();
+  }, [user, profileLoaded, needsOnboarding, location.pathname, location.search]);
 
   // Anonymous visitors have no profile to load and no onboarding to do. Without
   // this, `profileLoaded` never flips (useOnboarding returns early when there is
