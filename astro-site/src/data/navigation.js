@@ -120,13 +120,15 @@ export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@deutschmeister_de';
 // two accounts the daily post routine publishes to (drafts/instagram-100/
 // ROUTINE.md, both live since 2026-09-28). The page has no vanity name yet, so
 // it is addressed by its numeric id, which Facebook redirects to whatever name
-// it gets later. Telegram is NOT listed until the owner confirms the channel —
-// t.me/deutschmeister exists but is not verified as ours.
+// it gets later. Telegram is the owner's channel t.me/DeutschMeisterde (created and
+// confirmed by the owner 2026-11-01; the shared post bot publishes there daily).
+// Note the handle: t.me/deutschmeister (no "de") is NOT ours.
 // The learner mails' footer reads a synced copy of this list
 // (netlify/functions/_shared/socialLinks.mjs; tests/email-social.test.mjs), so a
 // channel added here must be added there too.
 export const INSTAGRAM_URL = 'https://www.instagram.com/deutschmeisterde/';
 export const FACEBOOK_URL = 'https://www.facebook.com/1232346926638010';
+export const TELEGRAM_URL = 'https://t.me/DeutschMeisterde';
 
 export const SOCIAL_LINKS = [
   {
@@ -148,6 +150,13 @@ export const SOCIAL_LINKS = [
     labelEn: 'Facebook',
     labelDe: 'Facebook',
     href: FACEBOOK_URL,
+    kind: 'external',
+  },
+  {
+    key: 'telegram',
+    labelEn: 'Telegram',
+    labelDe: 'Telegram',
+    href: TELEGRAM_URL,
     kind: 'external',
   },
 ];

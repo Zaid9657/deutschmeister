@@ -19,7 +19,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, ALL_NAV_ITEMS, SOCIAL_LINKS, YOUTUBE_CHANNEL_URL, INSTAGRAM_URL, FACEBOOK_URL } from '../src/data/navigation.js';
+import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, ALL_NAV_ITEMS, SOCIAL_LINKS, YOUTUBE_CHANNEL_URL, INSTAGRAM_URL, FACEBOOK_URL, TELEGRAM_URL } from '../src/data/navigation.js';
 import { ORGANIZATION_FULL } from '../src/data/organization.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -154,6 +154,16 @@ test('Instagram and Facebook are listed, canonical and tracker-free', () => {
     assert.equal(item.kind, 'external');
     assert.ok(item.labelEn && item.labelDe, `${key} link needs both labels`);
   }
+});
+
+test('Telegram is the owner-confirmed channel, canonical and tracker-free', () => {
+  // t.me/deutschmeister (no "de") is someone else's; ours is DeutschMeisterde.
+  assert.equal(TELEGRAM_URL, 'https://t.me/DeutschMeisterde');
+  const item = SOCIAL_LINKS.find((i) => i.key === 'telegram');
+  assert.ok(item, 'SOCIAL_LINKS lost Telegram');
+  assert.equal(item.href, TELEGRAM_URL);
+  assert.equal(item.kind, 'external');
+  assert.ok(item.labelEn && item.labelDe, 'Telegram link needs both labels');
 });
 
 test('every off-site channel has a footer icon on both front ends', () => {
