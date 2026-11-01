@@ -230,7 +230,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
+    <div className="relative min-h-screen overflow-hidden flex items-start justify-center bg-paper px-4 pb-12 pt-20 sm:items-center sm:pt-24 font-body">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <Aurora />
       <motion.div
@@ -239,7 +239,7 @@ const SignupPage = () => {
         className="relative w-full max-w-md"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4 sm:mb-8">
           {purchase && (
             <div className="mb-6 rounded-clay border border-ink bg-linie-wash px-4 py-3 text-left shadow-raise-linie" role="status">
               <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink">Step 1 of 2 · your account</p>
@@ -254,7 +254,7 @@ const SignupPage = () => {
               renders a plain <a>, which matters — "/" is served by the Astro build,
               so a router <Link to="/"> client-routes to a route the SPA does not
               have and lands the user on NotFoundPage. */}
-          <Logo size={64} showWordmark={false} className="mb-6" />
+          <div className="hidden sm:block"><Logo size={64} showWordmark={false} className="mb-6" /></div>
           <h1
             className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
             style={{ '--d': '120ms' }}
@@ -262,33 +262,12 @@ const SignupPage = () => {
             Start your {TRIAL_DAYS}-day Pro trial
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Creating a free account starts your trial. No payment details are requested.
-          </p>
-          {/* Free tier value list */}
-          <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
-            {[
-              `All ${LEVEL_COUNT} levels and ${GRAMMAR_TOPIC_COUNT} grammar topics during the trial`,
-              `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions during the trial`,
-              `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
-              `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-2 text-sm text-graphite">
-                <Check className="w-4 h-4 text-siegel flex-shrink-0" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
-          {/* The free first stop is the guided course (offers.js FREE_COURSE_HREF),
-              not the grammar library: Lektion 1 is where the save-progress ask
-              brings a hesitant visitor back here. tests/free-door.test.mjs. */}
-          <p className="hero-line mt-3 text-sm text-graphite" style={{ '--d': '380ms' }}>
-            Want to look around first?{' '}
-            <Link to={FREE_COURSE_HREF} className={TEXT_LINK}>Start the {FREE_LEVEL_LABEL} course without an account.</Link>
+            Practise German with Pro. No payment details needed.
           </p>
         </div>
 
         {/* Form */}
-        <Card raised className="p-8">
+        <Card raised className="p-5 sm:p-8">
           {placedLevel && (
             <p className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-sm leading-relaxed text-ink">
               Your level test result, <span className="font-bold">{placedLevel}</span>, is saved to your
@@ -486,6 +465,29 @@ const SignupPage = () => {
             </>
           )}
         </Card>
+        <section className="mt-6 text-center" aria-label="Trial allowances">
+          {/* Free tier value list */}
+          <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
+            {[
+              `All ${LEVEL_COUNT} levels and ${GRAMMAR_TOPIC_COUNT} grammar topics during the trial`,
+              `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions during the trial`,
+              `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
+              `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm text-graphite">
+                <Check className="w-4 h-4 text-siegel flex-shrink-0" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          {/* The free first stop is the guided course (offers.js FREE_COURSE_HREF),
+              not the grammar library: Lektion 1 is where the save-progress ask
+              brings a hesitant visitor back here. tests/free-door.test.mjs. */}
+          <p className="hero-line mt-3 text-sm text-graphite" style={{ '--d': '380ms' }}>
+            Want to look around first?{' '}
+            <Link to={FREE_COURSE_HREF} className={TEXT_LINK}>Start the {FREE_LEVEL_LABEL} course without an account.</Link>
+          </p>
+        </section>
       </motion.div>
     </div>
   );

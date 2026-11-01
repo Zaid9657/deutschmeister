@@ -63,7 +63,7 @@ const BENEFITS = [
 // continuing is the one primary action and a fresh start turns secondary.
 const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-16 pb-16 sm:pt-20">
+    <div className="mx-auto max-w-2xl px-4 pt-6 pb-16 sm:pt-20">
       {/* Hero */}
       <section className="relative -mx-2 overflow-hidden rounded-clay px-2 py-8 sm:-mx-4 sm:px-4 sm:py-12">
         <Aurora />
@@ -74,23 +74,27 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
             align="center"
             eyebrow="Free Assessment"
             title="Discover Your German Level"
-            lead="Take our comprehensive placement test and get personalized recommendations for your learning journey"
           />
+          <div className="mt-5 text-center" data-level-test-start>
+            {resumeAt ? (
+              <div data-level-test-resume>
+                <Button size="lg" shimmer onClick={onResume}>
+                  Continue your test
+                  <ChevronRight size={20} />
+                </Button>
+                <p className="mt-3 text-sm text-graphite">You stopped at {resumeAt}. Your answers so far are kept in this tab.</p>
+                <Button size="sm" variant="secondary" className="mt-3" onClick={onStart}>Start a new test</Button>
+              </div>
+            ) : (
+              <Button size="lg" shimmer onClick={onStart}>
+                Start the Test
+                <ChevronRight size={20} />
+              </Button>
+            )}
+            <p className="mt-4 font-data text-[0.75rem] text-graphite">No account required • Results are instant • 100% free</p>
+          </div>
         </div>
       </section>
-
-      {resumeAt && (
-        <Card raised edge="siegel" className="mt-2 p-5 text-center sm:p-6" data-level-test-resume>
-          <p className="font-display text-[1.125rem] font-semibold leading-snug text-ink">Your test is waiting</p>
-          <p className="mx-auto mt-2 max-w-prose text-[0.9375rem] leading-relaxed text-graphite">
-            You stopped at {resumeAt}. Your answers so far are kept in this tab.
-          </p>
-          <Button size="lg" shimmer className="mt-4" onClick={onResume}>
-            Continue your test
-            <ChevronRight size={20} />
-          </Button>
-        </Card>
-      )}
 
       {/* At a glance */}
       <Reveal delay={90} className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -175,23 +179,6 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
             <strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.
           </div>
         </Card>
-      </Reveal>
-
-      {/* The one primary action on the screen (secondary while a run can be continued) */}
-      <Reveal delay={120} className="mt-8 text-center">
-        {resumeAt ? (
-          <Button size="lg" variant="secondary" onClick={onStart}>
-            Start a new test
-          </Button>
-        ) : (
-          <Button size="lg" shimmer onClick={onStart}>
-            Start the Test
-            <ChevronRight size={20} />
-          </Button>
-        )}
-        <p className="mt-4 font-data text-[0.75rem] text-graphite">
-          No account required • Results are instant • 100% free
-        </p>
       </Reveal>
     </div>
   );

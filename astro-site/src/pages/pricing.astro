@@ -78,7 +78,7 @@ const firstTicket = TICKET_STATIONS[0];
 // The telc B1 package, on sale only behind its switch — the one its sales page
 // reads. Until 2026-10-25 this page sold it unconditionally (card, FAQ and the
 // FAQPage JSON-LD) while that page had no Buy button. Off sale, the card says it
-// starts soon and offers the attributed free-account door the telc page uses.
+// is unavailable and offers the attributed free-account door the telc page uses.
 const telcOnSale = Boolean(telcPilotVariant());
 const telcSignupHref = onsiteHref('signup', 'telc-pilot', 'pricing');
 
@@ -215,13 +215,6 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
         </p>
 
         <ol class="mt-10 grid gap-4 lg:grid-cols-3">
-          <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">The first stop</p>
-            <p class="sign-head mt-2 text-[1.75rem]">{FREE_LEVEL_LABEL}, free</p>
-            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">{STATIONS[0].outcome} No account, no card.</p>
-            <p class="mt-4 sign-code text-[2rem] leading-none text-linie">Free</p>
-            <a href="/course/a1.1" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-level="a1.1" data-track-surface="pricing_fork">Start A1.1 free</a>
-          </li>
           <li class="flex flex-col rounded-[1.25rem] border-2 border-linie bg-nacht-raised p-6" data-track-view="pricing_own">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Own a level · one payment</p>
             <p class="sign-head mt-2 text-[1.75rem]">Buy the stop you’re at</p>
@@ -235,6 +228,13 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
             <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">All {LEVEL_COUNT} levels, AI speaking ({PRO_SPEAKING_SESSIONS_PER_MONTH} a month), writing feedback ({PRO_WRITING_EVALUATIONS_PER_MONTH} a month) and the practice exams. Cancel anytime.</p>
             <p class="mt-4 flex items-baseline gap-2"><span class="sign-code text-[2rem] leading-none text-linie">{eur(PLANS.monthly.price)}</span><span class="text-[0.875rem] text-nacht-muted">a month</span></p>
             <a href="#pro" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-surface="pricing_fork" data-track-plan="monthly">Compare Pro</a>
+          </li>
+          <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">The first stop</p>
+            <p class="sign-head mt-2 text-[1.75rem]">{FREE_LEVEL_LABEL}, free</p>
+            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">{STATIONS[0].outcome} No account, no card.</p>
+            <p class="mt-4 sign-code text-[2rem] leading-none text-linie">Free</p>
+            <a href="/course/a1.1" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-level="a1.1" data-track-surface="pricing_fork">Start A1.1 free</a>
           </li>
         </ol>
       </div>
@@ -433,7 +433,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
             <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
               {telcOnSale
                 ? `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. One-time purchase, ${COURSE_PRO_MONTHS} months of full Pro included, the course area stays yours permanently.`
-                : `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. It is not on sale yet; until it starts, a free account gives you ${TRIAL_DAYS} days of Pro to practise.`}
+                : `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. The course is currently unavailable. A free account gives you ${TRIAL_DAYS} days of Pro to practise.`}
             </p>
           </div>
           <div class="shrink-0 text-left sm:text-right">
@@ -444,7 +444,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
               </Fragment>
             ) : (
               <Fragment>
-                <p class="sign-code text-[2rem] leading-none text-ink">Starts soon</p>
+                <p class="sign-code text-[2rem] leading-none text-ink">Currently unavailable</p>
                 <p class="mt-1 font-data text-[0.75rem] text-graphite">not on sale yet</p>
               </Fragment>
             )}

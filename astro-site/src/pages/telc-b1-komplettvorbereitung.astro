@@ -1,87 +1,56 @@
 ---
-// Sales page for the telc B1 Komplettvorbereitung — the one-time course from
-// docs/revenue-plan-2026-08-31.md, Lane 2. Reskinned 2026-09-01 onto the
-// Playful Depth system (docs/design/playbook.md): aurora hero, the four weeks
-// as numbered accent steps, the price as a 3D card with the one shimmer CTA.
-//
-// CLAIMS DISCIPLINE (binding, same as the guides):
-//   - every figure derives from ../data/pricing.js / ../data/marketing.js;
-//     tests/claims.test.mjs bans the price literals from this file
-//   - no outcome promise ("bestehst du garantiert"), no telc exam fee, no
-//     invented learner counts or testimonials — there are none yet, so none
-//     appear. Real specifics only.
-//   - no fabricated scarcity: launch pricing is an expiring Lemon Squeezy
-//     discount code shown at checkout, never a fake struck-through price here.
-//   - the market-anchor sentence ("mehrere hundert Euro") is deliberately
-//     vendor-less and order-of-magnitude only. Basis, checked 2026-08-31:
-//     DeutschAkademie telc-B1 Vorbereitungskurse €89–249, Sprachschule Aktiv
-//     München 4-Wochen-Intensiv €499 (their own public course pages, via
-//     search). Never name a vendor price here — §6-UWG territory and the
-//     vendor domains are unverifiable from agent sessions.
-//
-// CHECKOUT (2026-10-12, telc pilot — docs/telc-pilot/README.md): the Buy
-// buttons render only while telcPilotVariant() returns an id, i.e. the owner
-// has set PUBLIC_TELC_B1_ON_SALE=true AND the product has a checkout id. Both
-// go through components/CourseCheckout.astro like every other course button:
-// a signed-in visitor opens the overlay with the account's e-mail and user id,
-// a signed-out visitor signs up first (dm_buy_intent → /subscription?buy=), so
-// every order carries a user id. The hosted guest link this page used to
-// render is gone: a guest who paid with another e-mail than their account's
-// landed unmatched. Off sale the page sells nothing — no Buy button, no
-// Product/Offer in the JSON-LD — and the CTA is the attributed free-account
-// door (ref=telc-pilot), whose signups are the pilot's first invite list.
+// Course activities are read from the implemented programme, never a second syllabus.
+// Owner-only release: keep telcPilotVariant() as the sole sale gate. Before opening,
+// the owner must reconcile the catalogue price with checkout and approve the release.
 import Layout from '../layouts/Layout.astro';
-import Aurora from '../components/Aurora.astro';
 import LanguageNotice from '../components/LanguageNotice.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
+import TelcWritingExample from '../components/TelcWritingExample.astro';
 import '../styles/global.css';
 import { ORGANIZATION } from '../lib/siteMeta.js';
-import { getTopicsForLevel } from '../lib/grammar.js';
 import { telcPilotVariant } from '../lib/courseVariants.js';
 import { onsiteHref } from '../lib/onsiteLinks.js';
-import { COURSES, CURRENCY, num, deEur } from '../data/pricing.js';
-import { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, TRIAL_DAYS } from '../data/marketing.js';
+import { COURSES, CURRENCY, PLANS, num, deEur } from '../data/pricing.js';
+import { TRIAL_DAYS, TRIAL_WRITING_EVALUATIONS, TRIAL_SPEAKING_SESSIONS, PRO_INCLUDED_SESSION_MINUTES } from '../data/marketing.js';
+import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
+import { PROGRAM, allDays, SHORT_TEST_MINUTES } from '../../../src/data/programs/telcB1Komplett.js';
 
 const course = COURSES.telc_b1_komplett;
-// The plan covers both B1 sub-levels of the library. Counted from the topics
-// actually fetched for each sub-level rather than GRAMMAR_TOPIC_COUNT / LEVEL_COUNT
-// — that average only held while every level had the same topic count, which
-// stopped being true once A1.1 grew past 8 (see marketing.js GRAMMAR_TOPIC_COUNT).
-const [b11Topics, b12Topics] = await Promise.all([getTopicsForLevel('b1.1'), getTopicsForLevel('b1.2')]);
-const B1_TOPIC_COUNT = b11Topics.length + b12Topics.length;
-const PLAN_DAYS = 20; // 4 weeks × 5 study days — mirrors src/data/programs/telcB1Komplett.js
-
-// '' while the pilot is off sale — then nothing on this page can be bought.
+const days = allDays();
+const items = days.flatMap((day) => day.items);
+const count = (type) => items.filter((item) => item.type === type).length;
 const variantId = telcPilotVariant();
 const signupHref = onsiteHref('signup', 'telc-pilot', 'telc-b1');
-
-const title = `telc B1 Komplettvorbereitung: 4-Wochen-Plan | DeutschMeister`;
-const description = `Ein fester ${PLAN_DAYS}-Tage-Plan bis zur telc B1-Prüfung: jeden Tag eine Aufgabe aus Grammatik, Hören, Lesen und KI-Sprechtraining — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`;
+const title = `telc B1 Komplettvorbereitung: ${PROGRAM.weeks.length}-Wochen-Plan | DeutschMeister`;
+const description = `${days.length} Trainingseinheiten: Briefe schreiben und überarbeiten, Gespräche proben und zwei Kurztests bearbeiten. Lernen Sie den telc-B1-Plan kennen und probieren Sie Pro kostenlos aus.`;
 const canonical = 'https://deutsch-meister.de/telc-b1-komplettvorbereitung/';
-
+const preloads = [...signFontPreloads, ...fontPreloads.filter((font) => font.includes('nunito'))];
 const FAQS = [
   {
-    q: 'Was ist der Unterschied zum Pro-Abo?',
-    a: `Pro ist die Bibliothek: alle ${LEVEL_COUNT} Niveaustufen, alle ${GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, Sprechen — plus der telc B1 Übungstest und das KI-Schreibtraining. Der Kurs ist der Plan darüber: eine feste Reihenfolge von ${PLAN_DAYS} Tagesaufgaben, die auf die telc B1-Prüfung zuläuft — und ${course.proMonths} Monate Pro sind schon enthalten.`,
+    q: 'Für wen ist der Plan gedacht?',
+    a: 'Für Lernende mit Deutschkenntnissen ab A2, die gezielt für telc B1 üben möchten. Unter A2 ist der Plan zu früh. Beginnen Sie dann mit dem kostenlosen A1.1-Kurs oder nutzen Sie den Einstufungstest.',
   },
   {
-    q: 'Brauche ich zusätzlich ein Abo?',
-    a: `Nein. Im Kurs stecken ${course.proMonths} Monate voller Pro-Zugang. Danach bleibt dir der Kursbereich mit deinem Plan und deinem Fortschritt dauerhaft erhalten; nur die Pro-Inhalte brauchen dann wieder ein Abo.`,
+    q: 'Was ist der Unterschied zwischen Pro und dem Kurs?',
+    a: `Pro gibt Ihnen Zugang zu Lernmaterialien und KI-Werkzeugen mit den jeweiligen Nutzungslimits. Der Kurs ordnet Übungen in ${days.length} Trainingseinheiten und enthält ${course.proMonths} Monate Pro. Der kostenlose Pro-Test enthält den Kursplan nicht.`,
   },
   {
-    q: 'Wie lange habe ich Zugriff?',
-    a: `Auf den Kursbereich: dauerhaft, ohne Verlängerung und ohne Abo. Der enthaltene Pro-Zugang läuft ${course.proMonths} Monate ab Kauf — genug für den Plan und die Wochen bis zu deinem Prüfungstermin.`,
+    q: 'Wie lange bleibt der Kurs zugänglich?',
+    a: `Nach einem Kauf bleiben Ihnen der Kursbereich, Ihr Plan und Ihr Fortschritt dauerhaft erhalten. Der enthaltene Pro-Zugang läuft ${course.proMonths} Monate ab Kauf. Für Pro-Inhalte benötigen Sie anschließend wieder Pro.`,
   },
   {
-    q: 'Für wen ist der Kurs nichts?',
-    a: `Wenn du noch am Anfang stehst (unter A2), ist der Plan zu früh für dich. Mach zuerst den kostenlosen Einstufungstest — er sagt dir ehrlich, wo du stehst, und A1.1 ist bei uns komplett gratis.`,
+    q: 'Bekomme ich Rückmeldung von einer Lehrkraft?',
+    a: 'Das Schreib- und Sprechtraining arbeitet mit KI. Persönliche Korrekturen durch eine Lehrkraft werden hier nicht angeboten. KI-Bewertungen dienen der Orientierung beim Üben und sind keine offizielle Prüfungsbewertung.',
+  },
+  {
+    q: 'Was passiert nach dem kostenlosen Test?',
+    a: `Der Pro-Test endet nach ${TRIAL_DAYS} Tagen ohne automatische Abbuchung. Sie entscheiden selbst, ob Sie ein Abo abschließen. Pro monatlich kostet ${deEur(PLANS.monthly.price)} pro Monat. Der kostenlose A1.1-Kurs bleibt zugänglich.`,
   },
   {
     q: 'Meldet mich der Kurs zur Prüfung an?',
-    a: 'Nein. Die Anmeldung läuft über ein telc-Prüfungszentrum in deiner Nähe. Was in der Prüfung drankommt, wie sie bewertet wird und wie du dich anmeldest, steht in unserem kostenlosen telc B1-Leitfaden.',
+    a: 'Nein. Sie melden sich selbst bei einem Prüfungszentrum an. DeutschMeister stellt eigene Übungsmaterialien bereit; dies ist kein offizielles telc-Angebot. Ein Übungsergebnis kann Ihr Prüfungsergebnis nicht vorhersagen.',
   },
 ];
-
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
@@ -89,164 +58,118 @@ const productSchema = {
   description,
   brand: { '@type': 'Brand', name: 'DeutschMeister' },
   offers: {
-    '@type': 'Offer',
-    name: course.name,
-    price: num(course.price),
-    priceCurrency: CURRENCY,
-    url: canonical,
-    availability: 'https://schema.org/InStock',
-    seller: ORGANIZATION,
+    '@type': 'Offer', name: course.name, price: num(course.price), priceCurrency: CURRENCY,
+    url: canonical, availability: 'https://schema.org/InStock', seller: ORGANIZATION,
   },
 };
 const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
+  '@context': 'https://schema.org', '@type': 'FAQPage',
   mainEntity: FAQS.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
-// The Offer is published only while it can be bought: an InStock offer with
-// no Buy button behind it is a rich result that lies.
 const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
-
-// The four weeks as numbered steps — accent badges rotate (energy, never
-// meaning: tokens rule 2).
-const WEEKS = [
-  { n: '1', accent: 'bg-accent-himbeer text-ink', name: 'Woche 1', focus: 'Das B1.1-Fundament: ein Grammatikthema pro Tag, dazu Hören und der erste Satz im Satz-Röntgen.' },
-  { n: '2', accent: 'bg-accent-aprikose text-ink', name: 'Woche 2', focus: 'Die schwere Hälfte von B1.1 — und dein erstes Sprechtraining mit der KI, gegen die Sprechangst vor dem Prüfungstag.' },
-  { n: '3', accent: 'bg-accent-limette text-ink', name: 'Woche 3', focus: 'B1.2: die Strukturen, auf die Prüfer achten. Konjunktiv, Nebensätze, Verbindungswörter.' },
-  { n: '4', accent: 'bg-siegel text-white', name: 'Woche 4', focus: 'Prüfungswoche: Format und Bewertung verstehen, unter Zeitdruck sprechen, die schwächsten Themen gezielt schließen.' },
-];
-
-const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-clay text-[0.9375rem] font-bold transition-all duration-100 ease-snap select-none';
-const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
-const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
 ---
 
-<Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="de" ogType="product">
-  <div class="overflow-x-clip bg-paper text-ink">
-    <div class="mx-auto max-w-4xl px-5 pt-6"><LanguageNotice noun="course page" /></div>
-
-    <!-- Hero: the person three weeks out, the pain, the plan -->
-    <section class="relative">
-      <Aurora />
-      <div class="relative mx-auto max-w-3xl px-5 pt-14 pb-12 sm:pt-20">
-        <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">telc B1 · Komplettvorbereitung</p>
-        <h1 class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]" style="--d:80ms">
-          Du weißt, dass du üben musst.<br />Der Plan sagt dir, was.
-        </h1>
-        <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:200ms">
-          Die meisten fallen nicht durch, weil ihnen Grammatik fehlt. Sie fallen durch, weil sie drei
-          Wochen vor der Prüfung irgendwas üben — und am Prüfungstag genau das fehlt, was drankommt.
-          Die Komplettvorbereitung ist ein fester {PLAN_DAYS}-Tage-Plan: jeden Tag eine Aufgabe,
-          in der Reihenfolge, die zur telc B1-Prüfung führt.
+<Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="de" preloads={preloads}>
+  <div class="bg-paper text-ink">
+    <section class="border-b border-rule bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="telc-h">
+      <div class="mx-auto max-w-5xl px-5 py-12 sm:py-20">
+        <p class="font-data text-xs font-bold uppercase tracking-[0.13em] text-siegel-deep">telc B1 · Komplettvorbereitung</p>
+        <h1 id="telc-h" class="sign-display mt-4 text-[clamp(2.5rem,7vw,4.75rem)]">Ihre Prüfung im Blick.<br />Ihre nächste Übung steht.</h1>
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-nacht-muted">
+          Schreiben. Überarbeiten. Sprechen. Wiederholen. Der Plan führt Sie durch {days.length} Trainingseinheiten:
+          mit eigenen Briefen, KI-Rückmeldung, Gesprächsproben und Kurztests.
         </p>
-
-        <div class="hero-line mt-8 flex flex-wrap items-center gap-4" style="--d:320ms">
+        {!variantId && <p class="mt-5 font-bold" data-telc-availability>Der Kurs ist derzeit nicht buchbar</p>}
+        <div class="mt-6 flex flex-wrap gap-3">
           {variantId ? (
-            <button type="button" class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`} data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page">
-              <span class="relative z-10">Ja, ich will den Plan — {deEur(course.price)} einmalig</span>
+            <button type="button" class="dm-key dm-key-siegel" data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page">
+              Kurs buchen — {deEur(course.price)} einmalig
             </button>
           ) : (
-            <a href={signupHref} class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`}>
-              <span class="relative z-10">Kostenloses Konto anlegen</span>
-            </a>
+            <a href={signupHref} class="dm-key dm-key-siegel">{TRIAL_DAYS} Tage Pro kostenlos testen</a>
           )}
-          <a href="/leitfaden/telc-b1/" class={BTN_SECONDARY}>
-            Erst den kostenlosen Leitfaden lesen
-          </a>
+          <a href="#schreibbeispiel" class="dm-key dm-key-ghost-nacht">Ein Schreibbeispiel ansehen</a>
         </div>
-        <p class="hero-line mt-4 font-data text-[0.75rem] text-graphite" style="--d:420ms">
+        <p class="mt-4 text-sm leading-relaxed text-nacht-muted">
           {variantId
-            ? `Einmalzahlung · kein Abo · ${course.proMonths} Monate Pro-Zugang inklusive`
-            : `Der Kurs startet in Kürze. Bis dahin bringt dir ein kostenloses Konto ${TRIAL_DAYS} Tage Pro zum Üben.`}
+            ? `Einmalzahlung · ${course.proMonths} Monate Pro inklusive`
+            : 'Keine Kreditkarte · keine automatische Abbuchung. Der Kursplan ist nicht im Pro-Test enthalten.'}
         </p>
       </div>
     </section>
 
-    <div class="mx-auto max-w-3xl px-5 pb-20">
-
-      <!-- The four weeks -->
-      <section class="border-t border-rule py-12">
-        <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Vier Wochen, ein Weg</h2>
-        <p class="reveal mt-3 leading-relaxed text-graphite" style="--rd:80ms">
-          {PLAN_DAYS} Tagesaufgaben über die komplette DeutschMeister-Bibliothek: {B1_TOPIC_COUNT} Grammatik-Lektionen
-          auf B1-Niveau, Hör- und Lesetraining mit Muttersprachler-Dialogen, Satz-Röntgen und KI-Sprechtraining —
-          jede Aufgabe abhakbar, dein Fortschritt bleibt gespeichert.
-        </p>
-        <ol class="mt-10 grid gap-8 sm:grid-cols-2 sm:gap-5">
-          {WEEKS.map((w, i) => (
-            <li class="reveal relative rounded-clay border border-rule bg-white p-6 shadow-raise" style={`--rd:${i * 100}ms`}>
-              <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${w.accent} font-data text-sm font-bold shadow-raise`} aria-hidden="true">{w.n}</span>
-              <p class="mt-3 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{w.name}</p>
-              <p class="mt-2 leading-relaxed text-ink">{w.focus}</p>
-            </li>
-          ))}
-        </ol>
+    <div class="mx-auto max-w-5xl px-5">
+      <section id="schreibbeispiel" class="scroll-mt-24 py-12 sm:py-16" aria-labelledby="example-h">
+        <p class="font-data text-xs font-bold uppercase tracking-[0.13em] text-siegel-deep">Vom Entwurf zur Überarbeitung</p>
+        <h2 id="example-h" class="sign-head mt-3 text-3xl sm:text-4xl">Ein Brief. Ein Hinweis. Ein klarer nächster Schritt.</h2>
+        <TelcWritingExample />
       </section>
 
-      <!-- Who built it -->
-      <section class="border-t border-rule py-12">
-        <div class="reveal rounded-clay border border-rule bg-paper-sunk p-6 sm:p-8">
-          <h2 class="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Von jemandem, der es selbst musste</h2>
-          <p class="mt-3 leading-relaxed text-graphite">
-            DeutschMeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen
-            musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen
-            müssen. Der Kurs ist die Reihenfolge, die er sich damals selbst gewünscht hätte.
-          </p>
-        </div>
-      </section>
-
-      <!-- Price: the one 3D card on the page, with the one shimmer CTA -->
-      <section class="border-t border-rule py-12">
-        <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Was er kostet</h2>
-        <p class="reveal mt-3 leading-relaxed text-graphite" style="--rd:80ms">
-          Präsenz-Vorbereitungskurse kosten üblicherweise mehrere hundert Euro — und richten sich nach dem
-          Stundenplan der Sprachschule, nicht nach deinem.
-        </p>
-        <div class="reveal mt-8" style="--rd:160ms">
-          <div class="atropos" data-atropos-card>
-            <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
-              <div class="rounded-clay border border-rule bg-white p-6 shadow-raise-siegel sm:p-8">
-                <p class="font-display text-[2.5rem] font-semibold leading-none tracking-[-0.02em]" data-atropos-offset="5">{deEur(course.price)}</p>
-                <p class="mt-2 font-data text-[0.75rem] uppercase tracking-[0.13em] text-graphite" data-atropos-offset="4">einmalig · kein Abo · keine Verlängerung</p>
-                <ul class="mt-5 space-y-2.5 text-[0.9375rem] leading-relaxed" data-atropos-offset="2">
-                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Der komplette {PLAN_DAYS}-Tage-Plan mit Fortschritts-Checkliste — dauerhaft deiner</span></li>
-                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>{course.proMonths} Monate voller Pro-Zugang: alle {GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, KI-Sprechen, Satz-Röntgen</span></li>
-                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Der telc B1 Übungstest mit Zeitlimit und Auswertung — und das KI-Schreibtraining nach den Prüfungskriterien (im Pro-Zugang enthalten)</span></li>
-                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Prüfungswoche mit Format, Bewertung und Selbsttest</span></li>
-                </ul>
-                {variantId && (
-                  <button type="button" class={`${BTN_PRIMARY} mt-7`} data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page_card" data-atropos-offset="6">
-                    Ja, ich will den Plan — {deEur(course.price)}
-                  </button>
-                )}
+      <section class="border-y border-rule py-12 sm:py-16" aria-labelledby="try-h">
+        <div class="grid gap-8 md:grid-cols-2">
+          <div>
+            <p class="font-data text-xs font-bold uppercase tracking-[0.13em] text-siegel-deep">Selbst ausprobieren</p>
+            <h2 id="try-h" class="sign-head mt-3 text-3xl sm:text-4xl">Jetzt sind Sie dran.</h2>
+            <p class="mt-4 leading-relaxed text-graphite">Schreiben Sie einen eigenen Text oder proben Sie ein Gespräch. Im kostenlosen Pro-Test lernen Sie die KI-Werkzeuge kennen.</p>
+            <p class="mt-4 leading-relaxed text-graphite">Der Kurs verbindet {count('writing')} Briefe mit je einer Überarbeitung, {count('speaking')} Sprechproben und {count('exam')} Kurztests. Hinzu kommen gezielte Übungen zu Ihren Lücken und Satz-Röntgen.</p>
+            {variantId ? (
+              <div class="mt-6 border-t border-rule pt-5">
+                <p class="mt-2 text-sm text-graphite">Einmalig · {course.proMonths} Monate Pro inklusive</p>
+                <button type="button" class="dm-key dm-key-siegel mt-4" data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page_card">Kurs buchen — {deEur(course.price)}</button>
               </div>
-            </div></div></div>
+            ) : (
+              <p class="mt-6 border-t border-rule pt-5 font-semibold">Der Kurs ist derzeit nicht buchbar. Sehen Sie sich unten den Plan an.</p>
+            )}
+          </div>
+          <div class="rounded-2xl border border-rule bg-white p-6 sm:p-8">
+            <h3 class="sign-head text-2xl">{TRIAL_DAYS} Tage Pro kostenlos testen</h3>
+            <ul class="mt-5 space-y-3 leading-relaxed text-graphite">
+              <li><strong class="text-ink">{TRIAL_WRITING_EVALUATIONS} KI-Schreibbewertungen</strong> insgesamt im Test</li>
+              <li><strong class="text-ink">{TRIAL_SPEAKING_SESSIONS} KI-Sprechübungen à {PRO_INCLUDED_SESSION_MINUTES} Minuten</strong> insgesamt im Test</li>
+              <li>Keine Kreditkarte. Keine automatische Abbuchung.</li>
+            </ul>
+            <a href={signupHref} class="dm-key dm-key-siegel mt-6 w-full">Pro kostenlos ausprobieren</a>
+            <p class="mt-4 text-sm leading-relaxed text-graphite">Der telc-B1-Kursplan ist nicht im Test enthalten. Danach entscheiden Sie selbst: Pro monatlich kostet {deEur(PLANS.monthly.price)} pro Monat, wenn Sie ein Abo abschließen.</p>
           </div>
         </div>
-        <p class="reveal mt-5 text-[0.875rem] leading-relaxed text-graphite" style="--rd:220ms">
-          Noch unsicher, wo du stehst? Der <a href="/level-test/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Einstufungstest ist kostenlos</a> —
-          und ein Konto bringt dir {TRIAL_DAYS} Tage Pro zum Ausprobieren, bevor du irgendetwas kaufst.
-        </p>
       </section>
 
-      <!-- FAQ -->
-      <section class="border-t border-rule py-12">
-        <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Ehrliche Antworten</h2>
-        <dl class="mt-6 space-y-4">
-          {FAQS.map(({ q, a }, i) => (
-            <div class="reveal rounded-clay border border-rule bg-white p-5" style={`--rd:${i * 70}ms`}>
-              <dt class="font-semibold text-ink">{q}</dt>
-              <dd class="mt-2 leading-relaxed text-graphite">{a}</dd>
-            </div>
+      <section id="plan" class="scroll-mt-24 py-12 sm:py-16" aria-labelledby="plan-h">
+        <p class="font-data text-xs font-bold uppercase tracking-[0.13em] text-siegel-deep">Der Kurs im Detail</p>
+        <h2 id="plan-h" class="sign-head mt-3 text-3xl sm:text-4xl">{PROGRAM.weeks.length} Wochen. {days.length} Trainingseinheiten. Ihr Tempo.</h2>
+        <p class="mt-4 max-w-2xl leading-relaxed text-graphite">Die Wochen geben die Reihenfolge vor. Die Kurztests benötigen jeweils {SHORT_TEST_MINUTES} Minuten am Stück; die übrigen Zeitangaben dienen Ihrer Planung.</p>
+        <div class="mt-8 divide-y divide-rule border-y border-rule">
+          {PROGRAM.weeks.map((week, index) => (
+            <details class="py-5" open={index === 0}>
+              <summary class="cursor-pointer py-2 sign-label text-xl">{week.title}</summary>
+              <p class="mt-3 leading-relaxed text-graphite">{week.intro}</p>
+              <ol class="mt-5 space-y-4">
+                {week.days.map((day) => (
+                  <li class="grid gap-2 rounded-xl border border-rule bg-white p-4 sm:grid-cols-[4rem_1fr_auto]" data-program-day={day.id}>
+                    <span class="font-data text-sm font-bold text-siegel-deep">{day.label}</span>
+                    <div>{day.items.map((item) => <p class="leading-relaxed">{item.title}</p>)}</div>
+                    <span class="font-data text-sm text-graphite">{day.items.reduce((sum, item) => sum + item.minutes, 0)} Min.</span>
+                  </li>
+                ))}
+              </ol>
+            </details>
           ))}
-        </dl>
-        <p class="reveal mt-8 text-[0.875rem] leading-relaxed text-graphite">
-          Alles zur Prüfung selbst — Teile, Dauer, Bewertung, Anmeldung — steht im kostenlosen
-          <a href="/leitfaden/telc-b1/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">telc B1-Leitfaden</a>.
-        </p>
+        </div>
       </section>
 
+      <section class="border-t border-rule py-12 sm:py-16" aria-labelledby="faq-h">
+        <h2 id="faq-h" class="sign-head text-3xl sm:text-4xl">Fragen vor dem Start.</h2>
+        <div class="mt-6 divide-y divide-rule">
+          {FAQS.map(({ q, a }) => (
+            <details class="py-4">
+              <summary class="cursor-pointer py-2 font-semibold">{q}</summary>
+              <p class="mt-2 max-w-prose leading-relaxed text-graphite">{a}</p>
+            </details>
+          ))}
+        </div>
+        <a href="/leitfaden/telc-b1/" class="dm-link mt-6 inline-block">Den kostenlosen telc-B1-Leitfaden lesen →</a>
+        <div class="mt-8"><LanguageNotice noun="course page" /></div>
+      </section>
     </div>
   </div>
   <CourseCheckout />
