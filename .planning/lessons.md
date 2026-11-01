@@ -6,6 +6,8 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-01 | Tracks A and C both edited SignupPage; A merged first and its new test failed on C's CI, which tests the merge with main while local runs test the branch alone | Before pushing a parallel-build PR, merge `origin/main` into it and run the full suite on the merged tree; give parallel tracks disjoint files where possible |
+| 2026-11-01 | Codex switched the confirmation panels to German inside the English signup and verify pages, reading "Sie" as "write German" | Brief Codex that "Sie" governs German copy only; a page keeps the UI language it already has |
 | 2026-11-01 | Three parallel Codex builds all died at the same minute on a dropped OpenAI websocket, leaving uncommitted work; only the finished track had a report | Run Codex builds as tracked background jobs (not detached `&`), have them commit after each item, and resume with `codex exec resume <session id>` instead of restarting |
 | 2026-11-01 | Funnel measured: 60% never confirm email, 54% of confirmed never use a tool, 1 in 75 signups pays; 9 of 12 payers bought 20–129 days after the 7-day trial | The first 10 minutes and the post-trial window are the product leaks; fix them when buyers arrive, not before the sale exists |
 | 2026-11-01 | Codex framed its concept as making the site feel "serious"; the founder never said that and read it as his words being twisted | Quote the founder only verbatim; label every interpretation as ours ("my proposal: …"); brief Codex with his exact words, never a paraphrase |
