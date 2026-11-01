@@ -52,10 +52,10 @@ export function useOnboarding() {
     // `href` is for full-load destinations outside the SPA (the grammar
     // lessons are served by the Astro build) — the completion is persisted
     // FIRST, so the page unload cannot lose it. The in-app exits are mapped
-    // by src/lib/firstRun.js: learning exits prefer the chosen exam's task;
-    // without an accessible exam task they keep their existing destinations.
-    async (exitPath = 'dashboard', { href, examTrack = profile?.exam_track } = {}) => {
-      const dest = onboardingExitPath(exitPath, { examTrack, currentLevel: profile?.current_level, hasLevelAccess });
+    // by src/lib/firstRun.js: the named exam exit keeps its task and access
+    // guard; explicit beginner and placement exits keep their destinations.
+    async (exitPath = 'dashboard', { href, examTrack = profile?.exam_track, startingPoint = user?.user_metadata?.starting_point, returnTo } = {}) => {
+      const dest = onboardingExitPath(exitPath, { examTrack, currentLevel: profile?.current_level, hasLevelAccess, startingPoint, returnTo });
 
       if (user) {
         const { error } = await supabase

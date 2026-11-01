@@ -58,6 +58,7 @@ export const EVENTS = {
     when: 'A finished Lektion could not be written to the account; it is kept on the device and retried (step = attempts | progress | cards).',
     once: false,
   },
+  speaking_first_turn: { when: 'A first speaking turn changes stage or stops; fixed stage/result labels only, no audio or transcript.', once: false },
   paywall_shown: { when: 'A lock, paywall or speaking-limit offer is rendered.', once: false },
   social_clicked: {
     when: 'A link to one of our social channels (SOCIAL_LINKS in navigation.js) is clicked; `surface` says where, `channel` which.',

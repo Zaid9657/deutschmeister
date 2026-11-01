@@ -1,3 +1,5 @@
+import { AUTH_CONTINUITY_ENABLED } from './authContinuityFlag.js';
+import { isSafeReturnPath } from './returnPath.js';
 // The first-run decision (work order #6, docs/SCORECARD.md §3): what ONE thing
 // a signed-in learner with no lesson activity is asked to do. Pure, so
 // tests/first-run.test.mjs pins it without React; the dashboard's first-run
@@ -164,17 +166,39 @@ function courseFirstRunAction({ hasLessonActivity, startingPoint, currentLevel, 
   return { ...placement(), alternative: null };
 }
 
-/**
- * Where the onboarding exits go (useOnboarding.completeOnboarding): each one
- * where its label says. "I'm new to German — start Lektion 1" opens Lektion 1
- * and "I know some German — find my level" the placement test, whatever exam
- * was picked on the slide before (an exam pick used to send both to a B1/B2
- * writing task). The exam's first task waits on the dashboard's first-run card,
- * where it is the primary action with the course as its alternative.
- * Skipping goes straight to the dashboard.
+/** Explicit beginner and placement buttons keep their named destinations.
+ * The goal button uses the local exam selection, including while its profile
+ * write is pending or failed. Skipping still opens the dashboard.
  */
-export const onboardingExitPath = (exitPath) => {
+export const onboardingExitPath = (exitPath, preferences = {}) => {
+  if (exitPath === 'return-task' && AUTH_CONTINUITY_ENABLED && isSafeReturnPath(preferences.returnTo)) return preferences.returnTo;
+  if (exitPath === 'exam-task') return onboardingGoalAction(preferences)?.href || '/dashboard';
   if (exitPath === 'first-lesson') return FIRST_LESSON_HREF;
   if (exitPath === 'level-test') return '/level-test';
   return '/dashboard';
 };
+
+/** A named goal destination, never an entitlement. The destination's existing
+ * guard still decides access; a locked exam must not become a beginner course.
+ * telc B1 starts with the same Kurztest as unit 1 of its training route.
+ */
+export function onboardingGoalAction({ examTrack, currentLevel, startingPoint, hasLevelAccess } = {}) {
+  const track = examTrackByKey(examTrack);
+  if (track) {
+    const task = track.key === 'telc_b1' ? null : writingTasksForExam(track.key)[0];
+    if (!task && !track.hasMock) return null;
+    const gateLevel = track.sublevels[track.sublevels.length - 1];
+    return {
+      href: task ? `/schreiben/${track.slug}?task=${encodeURIComponent(task.taskKey)}` : `/modelltest/${track.slug}`,
+      label: `${track.nameDe} – ${track.key === 'telc_b1' ? 'Einheit 1: Kurztest' : task ? 'erste Schreibaufgabe' : 'Kurztest'} öffnen`,
+      locked: typeof hasLevelAccess !== 'function' || !hasLevelAccess(gateLevel),
+    };
+  }
+  // An experienced learner without an exam choice is offered placement, never
+  // silently sent to A1.1. Beginners retain the explicit Lektion 1 button.
+  const placed = placedSublevel(currentLevel);
+  if (startingPoint === STARTING_POINTS.SOME || (placed && placed !== FREE_COURSE_LEVEL)) {
+    return { href: PLACEMENT_HREF, label: 'Einstufungstest öffnen (15–20 Minuten)', locked: false };
+  }
+  return null;
+}

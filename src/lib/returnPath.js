@@ -1,3 +1,6 @@
+import { AUTH_CONTINUITY_ENABLED } from './authContinuityFlag.js';
+import { EXAM_TRACKS } from '../data/examTracks.js';
+import { writingTasksForExam } from '../data/writingTasks.js';
 import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage.js';
 
 // Where a signed-out learner was when the course sent them to sign in or up (course v2's
@@ -18,13 +21,25 @@ const RETURN_PATH = /^\/course\/[a-z][0-9]\.[0-9](\/(v2|u\/[0-9]{1,2}|p\/[0-9]|a
 
 export const isCourseReturnPath = (path) => RETURN_PATH.test(String(path || ''));
 
-export const setReturnPath = (path, now = Date.now()) => {
-  if (isCourseReturnPath(path)) safeSetJSON(RETURN_KEY, { path, at: now });
+// Exact route/task identities from the content registries, never a prefix or
+// arbitrary query. The expanded auth return contract is owner-gated.
+export const isExamReturnPath = (path) => {
+  if (typeof path !== 'string') return false;
+  return EXAM_TRACKS.some((track) => (
+    (track.hasMock && path === `/modelltest/${track.slug}`)
+    || writingTasksForExam(track.key).some((task) => path === `/schreiben/${track.slug}?task=${encodeURIComponent(task.taskKey)}`)
+  ));
+};
+export const isSafeReturnPath = (path, enabled = AUTH_CONTINUITY_ENABLED) =>
+  isCourseReturnPath(path) || (enabled && isExamReturnPath(path));
+
+export const setReturnPath = (path, now = Date.now(), enabled = AUTH_CONTINUITY_ENABLED) => {
+  if (isSafeReturnPath(path, enabled)) safeSetJSON(RETURN_KEY, { path, at: now });
 };
 
-export const peekReturnPath = (now = Date.now()) => {
+export const peekReturnPath = (now = Date.now(), enabled = AUTH_CONTINUITY_ENABLED) => {
   const v = safeGetJSON(RETURN_KEY, null);
-  if (!v || !isCourseReturnPath(v.path) || !(Number(v.at) > 0) || now - Number(v.at) > RETURN_TTL_MS) return null;
+  if (!v || !isSafeReturnPath(v.path, enabled) || !(Number(v.at) > 0) || now - Number(v.at) > RETURN_TTL_MS) return null;
   return v.path;
 };
 

@@ -117,7 +117,7 @@ test('the notice names the address, says no mail was sent, and offers log in and
   const notice = src.slice(start, src.indexOf('{sentTo ? (', start));
   assert.match(notice, /\{knownAddress\}/);
   assert.match(notice, /No new email was sent\./);
-  assert.match(notice, /<Link to="\/login"/);
+  assert.match(notice, /<Link to=\{authEntryPath\('\/login', postAuthPath\(\)\)\}/);
   assert.match(notice, /<Link to="\/reset-password"/);
   assert.doesNotMatch(notice, /sent a confirmation|check your inbox/i);
   // Focus moves to it, as it does to the panel's heading.

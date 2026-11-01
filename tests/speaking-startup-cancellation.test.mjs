@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { createFirstTurnTracker } from '../src/lib/speakingFirstTurn.js';
 import { releaseMicrophone } from '../src/components/speaking/mediaSupport.js';
 
 const entries = [
@@ -30,6 +31,7 @@ function startup(path, name, { delayMic = false, delayAuth = false } = {}) {
   const calls = [];
   const updates = [];
   const context = {
+    createFirstTurnTracker, track() {},
     startDisabled: false, pendingStartRef, user: { id: 'user' },
     selectedLevel: 'A1.1', selectedMinutes: 5, selectedMissionId: null,
     courseTaskActive: false, activeMission: null, walletCents: 0, selectedCost: 0,
