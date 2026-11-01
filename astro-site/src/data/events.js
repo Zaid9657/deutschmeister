@@ -88,7 +88,7 @@ export const ALLOWED_PROPS = [
   'practice_pct', // lesson_completed: first-try practice score, 0–100
   'listening', 'speaking', 'writing', // lesson_completed: skillStatus.js states (heard, recognised, assessed, skipped …)
   'entry_page', // first path of this page view
-  'channel', // a SOCIAL_LINKS key: youtube | instagram | facebook
+  'channel', // a SOCIAL_LINKS key: youtube | instagram | facebook | telegram
   'dm_source', 'dm_medium', 'dm_campaign', // first-touch attribution labels (public/attribution.js)
   // Fixed values the app already sends; until 2026-10-25 the GA mirror dropped them.
   'exit_path', // onboarding_completed: first-lesson | level-test | dashboard
