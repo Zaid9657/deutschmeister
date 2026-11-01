@@ -115,6 +115,11 @@ const doors = {
 // second button, so no page shows the same signup door twice.
 const offerSpec = guide.offer ? GUIDE_OFFERS[guide.offer] : null;
 if (guide.offer && !offerSpec) throw new Error(`guide ${guide.slug}: unknown offer "${guide.offer}"`);
+// An offer for telc B1 belongs only to a telc-B1 guide, never to DTZ/Goethe
+// or a cross-exam overview. Catch an accidental data assignment at build time.
+if (offerSpec?.door === 'telcOffer' && !/^telc-b1(?:-|$)/.test(guide.slug)) {
+  throw new Error(`guide ${guide.slug}: a telc-B1 offer requires a telc-B1 guide`);
+}
 const primary = offerSpec
   ? { href: onsiteHref(offerSpec.door, 'leitfaden', guide.slug, offerSpec.campaign), label: offerSpec.label }
   : { href: doors.levelTest, label: T.levelTest };
