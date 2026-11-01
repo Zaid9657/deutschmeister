@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { safeGet, safeSet } from '../utils/safeStorage';
 import Button from './ui/Button.jsx';
+import TrialReturnCard from './TrialReturnCard.jsx';
+import { hideReturnBanner } from '../lib/trialReturn.js';
 import { FREE_LEVEL_LABEL } from '../data/marketing.js';
 
 const DISMISS_KEY = 'dm_trial_banner_dismissed';
@@ -17,8 +19,7 @@ const TrialBanner = () => {
     () => safeGet(DISMISS_KEY, { session: true }) === '1'
   );
 
-  if (loading || !user || dismissed) return null;
-  if (location.pathname === '/pricing') return null;
+  if (loading || !user || hideReturnBanner(location.pathname)) return null;
 
   // Only show for free-tier users (not subscribed)
   if (profile?.subscription_tier !== 'free' && profile?.subscription_tier != null) return null;
@@ -29,7 +30,8 @@ const TrialBanner = () => {
 
   const now = Date.now();
   const endsMs = new Date(trialEndsAt).getTime();
-  if (endsMs <= now) return null;
+  if (endsMs <= now) return <TrialReturnCard key={user.id} banner />;
+  if (dismissed) return null;
 
   const msRemaining = endsMs - now;
   const daysRemaining = Math.ceil(msRemaining / (1000 * 60 * 60 * 24));

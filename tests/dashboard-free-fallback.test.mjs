@@ -134,12 +134,8 @@ test("the confirmation nudge's link lands on /login, which runs postAuthPath()",
   assert.match(read('src/pages/LoginPage.jsx'), /const from = returnPath\(location\.state\?\.from\) \|\| nextPath\(searchParams\.get\('next'\)\) \|\| postAuthPath\(\);/);
 });
 
-test('/subscription\'s "Trial expired" card links the free course', () => {
-  const page = read('src/pages/SubscriptionPage.jsx');
-  const card = page.slice(page.indexOf("{isGerman ? 'Testphase abgelaufen' : 'Trial Expired'}"));
-  const end = card.indexOf('</Card>');
-  assert.ok(end > 0);
-  // The one named free door (offers.js FREE_COURSE_HREF, tests/free-door.test.mjs).
-  assert.match(card.slice(0, end), /<Link to=\{FREE_COURSE_HREF\}/);
-  assert.match(page, /import \{ FREE_COURSE_HREF \} from '\.\.\/data\/offers\.js';/);
+test('/subscription return card keeps the named free course door', () => {
+  assert.match(read('src/pages/SubscriptionPage.jsx'), /<TrialReturnCard/);
+  assert.match(read('src/components/TrialReturnCard.jsx'), /to=\{freeReturnOption.href\}/);
+  assert.match(read('src/lib/trialReturn.js'), /href: FREE_COURSE_HREF/);
 });
