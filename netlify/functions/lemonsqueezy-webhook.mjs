@@ -1,3 +1,4 @@
+import { sendRetryableMail } from './_shared/retryableMail.mjs';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { BILLING_PORTAL_URL, SIGNED_URL_MAX_AGE_MS, pickUpdatePaymentUrl } from './_shared/dunningLink.mjs';
@@ -688,7 +689,7 @@ async function handlePaymentFailed(data, meta, payload) {
 
   console.log(`Payment failed — user: ${userId} sub: ${subscriptionId}`);
 
-  // Dunning rate limit: one DELIVERED email per subscription per 7 days.
+  // Dunning rate limit: one API-ACCEPTED email per subscription per 7 days.
   // Lemon Squeezy retries failed renewals several times; the customer needs one
   // nudge, not one per retry. A send that failed (Resend down, a refused
   // address) must not count, so the gate reads the dunning_sent_at stamp a
@@ -748,7 +749,34 @@ async function handlePaymentFailed(data, meta, payload) {
 
   // 1) Dunning email to the customer. Its outcome goes into the owner alert.
   let dunning = 'not attempted';
-  if (customerEmail && customerEmail.includes('@')) {
+  if (process.env.PAYMENT_RECOVERY_RETRY_ENABLED === 'true') {
+    // Owner-only release: durable per-invoice claim plus serialized subscription
+    // quiet period. Same failed-payment event, recipient and seven-day gate.
+    if (error) return; // no send without the failure record
+    if (customerEmail && customerEmail.includes('@')) {
+      try {
+        const result = await sendRetryableMail({ client: supabase, resendKey,
+          key: `dunning:${eventId}`, scope: `dunning:${subscriptionId}`, kind: 'dunning',
+          userId: userId || null, cooldownSeconds: 7 * 24 * 60 * 60,
+          message: {
+            from: 'Zaid from DeutschMeister <zaid@deutsch-meister.de>', to: [customerEmail],
+            subject: 'Your DeutschMeister payment didn’t go through', html: DUNNING_HTML(updateUrl, BILLING_PORTAL_URL),
+          } });
+        if (['skipped', 'already_accepted', 'closed'].includes(result.status)) return;
+        dunning = result.status === 'accepted' ? 'accepted' : `${result.status}: ${result.error || 'reconcile provider outcome before retry'}`;
+        // A retry can finish an older invoice's pending claim. Keep its receipt
+        // on THAT invoice; never mark the new failure as mailed instead.
+        if (result.status === 'accepted') {
+          const claimedInvoice = result.key.slice('dunning:'.length);
+          const { data: original, error: readError } = await supabase.from('payment_failures')
+            .select('raw_payload').eq('lemonsqueezy_event_id', claimedInvoice).maybeSingle();
+          if (!readError && original) await stampDunningSent(claimedInvoice, original.raw_payload, result.providerId);
+        }
+      } catch (e) {
+        dunning = `claim/send failed: ${e.message}`;
+      }
+    } else dunning = 'no customer email';
+  } else if (customerEmail && customerEmail.includes('@')) {
     try {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -778,22 +806,26 @@ async function handlePaymentFailed(data, meta, payload) {
   if (dunning === 'sent') await stampDunningSent(eventId, payload);
 
   // 2) One-line alert to the owner.
-  const outcome = dunning === 'sent'
-    ? 'The customer was sent a dunning email'
-    : `The dunning email to the customer was NOT sent: ${dunning}. Forward the update-payment link below by hand; the next failed retry tries the mail again`;
+  const outcome = process.env.PAYMENT_RECOVERY_RETRY_ENABLED === 'true'
+    ? (dunning === 'accepted'
+      ? 'Resend accepted the dunning email; delivery is not yet verified'
+      : `Dunning requires reconciliation: ${dunning}. Check the retained claim and provider outcome before any manual resend`)
+    : dunning === 'sent'
+      ? 'The customer was sent a dunning email'
+      : `The dunning email to the customer was NOT sent: ${dunning}. Forward the update-payment link below by hand; the next failed retry tries the mail again`;
   await sendOwnerAlert(
     `Payment failed — subscription ${subscriptionId}`,
     `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\n${outcome} (one delivered dunning email per subscription per 7 days).\nUpdate-payment link: ${updateUrl}\nLink source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
   );
 }
 
-// Record a DELIVERED dunning mail on this event's payment_failures row — the
+// Record an API-ACCEPTED dunning mail on this event's payment_failures row — the
 // stamp the 7-day gate reads. Fail-open: an unrecorded send only means a later
 // retry may mail the customer again.
-async function stampDunningSent(eventId, payload) {
+async function stampDunningSent(eventId, payload, providerId = null) {
   try {
     const { error } = await supabase.from('payment_failures')
-      .update({ raw_payload: { ...payload, dunning_tracked: true, dunning_sent_at: new Date().toISOString() } })
+      .update({ raw_payload: { ...payload, dunning_tracked: true, dunning_sent_at: new Date().toISOString(), ...(providerId ? { dunning_provider_id: providerId } : {}) } })
       .eq('lemonsqueezy_event_id', String(eventId));
     if (error) console.error('payment_failed: dunning send not recorded:', JSON.stringify(error));
   } catch (e) {

@@ -73,6 +73,11 @@
   },
   "pendingApply": {
     "why": "Tables a written migration CREATES but the owner has not applied yet. tests/db-columns.test.mjs lets queries name them, and only while the migration file exists, its CREATE TABLE declares exactly these columns, migrations/README.md marks it not yet applied, and the table is absent from \"tables\" above. Once applied: refresh \"tables\" from the live DB (the table then appears there) and delete its entry here.",
-    "tables": {}
+    "tables": {
+      "mail_delivery_claims": {
+        "migration": "2026-11-01-retryable-lifecycle-mail.sql",
+        "columns": ["accepted_at","closed_at","first_attempt_at","kind","last_error","message","message_key","provider_id","scope_key","user_id"]
+      }
+    }
   }
 }

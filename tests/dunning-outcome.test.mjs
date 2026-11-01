@@ -26,6 +26,9 @@ let failures;
 let mails;
 let customerStatus;
 let customerThrows;
+let claims;
+let providerKeys;
+let failReceipt;
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 const field = (row, path) => path.split(/->>?/).reduce((value, key) => value?.[key], row);
@@ -54,13 +57,32 @@ globalThis.fetch = async (url, init = {}) => {
   const method = (init.method || 'GET').toUpperCase();
   if (href.startsWith('https://api.resend.com')) {
     const mail = JSON.parse(init.body);
-    mails.push(mail);
+    const key = new Headers(init.headers).get('Idempotency-Key');
+    if (!key || !providerKeys.has(key)) mails.push(mail);
+    if (key && customerStatus === 200 && !customerThrows) providerKeys.add(key);
     if (mail.to[0] === OWNER) return json({ id: 'owner' });
     if (customerThrows) throw new Error('socket hang up');
     return json(customerStatus === 200 ? { id: 'customer' } : { message: 'unavailable' }, customerStatus);
   }
   const u = new URL(href);
   assert.equal(u.host, 'supabase.dunning.stub', 'the harness contacts nothing else');
+  if (u.pathname === '/rest/v1/rpc/claim_retryable_mail') {
+    const p = JSON.parse(init.body);
+    let row = claims.find((r) => r.message_key === p.p_key);
+    if (!row) row = claims.find((r) => r.scope_key === p.p_scope && !r.accepted_at);
+    if (!row && claims.some((r) => r.scope_key === p.p_scope && r.accepted_at)) return json([]);
+    if (!row) {
+      row = { message_key: p.p_key, scope_key: p.p_scope, message: p.p_message, first_attempt_at: new Date().toISOString() };
+      claims.push(row);
+    }
+    return json([row]);
+  }
+  if (u.pathname === '/rest/v1/mail_delivery_claims' && method === 'PATCH') {
+    const patch = JSON.parse(init.body);
+    if (failReceipt && patch.accepted_at) return json({ message: 'receipt unavailable' }, 500);
+    for (const row of claims.filter((r) => matches(r, u.searchParams))) Object.assign(row, patch);
+    return new Response(null, { status: 204 });
+  }
   if (u.pathname === '/rest/v1/payment_failures') {
     if (method === 'GET') {
       const rows = failures.filter((row) => matches(row, u.searchParams)).slice(0, Number(u.searchParams.get('limit') || 1e9));
@@ -83,6 +105,8 @@ globalThis.fetch = async (url, init = {}) => {
 const { handler } = await import('../netlify/functions/lemonsqueezy-webhook.mjs');
 
 beforeEach(() => {
+  delete process.env.PAYMENT_RECOVERY_RETRY_ENABLED;
+  claims = []; providerKeys = new Set(); failReceipt = false;
   failures = [];
   mails = [];
   customerStatus = 200;
@@ -161,4 +185,36 @@ test('a throwing send or a missing address is reported as NOT sent, never as sen
   await handler(paymentFailed('inv-2', { email: '' }));
   assert.match(ownerAlerts()[1].text, /NOT sent: no customer email/);
   assert.equal(customerMails().length, 1, 'no mail can be sent without an address');
+});
+
+
+test('owner-gated retry: failed acceptance keeps one claim across invoice retries and concurrent events', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  customerStatus = 503;
+  await handler(paymentFailed('inv-1'));
+  assert.equal(claims.length, 1);
+  assert.equal(claims[0].accepted_at, undefined);
+  customerStatus = 200;
+  await Promise.all([handler(paymentFailed('inv-2')), handler(paymentFailed('inv-3'))]);
+  assert.equal(claims.length, 1, 'next invoices retry the original pending message');
+  assert.equal(providerKeys.size, 1, 'one provider message for the subscription');
+  assert.ok(claims[0].accepted_at);
+  assert.match(ownerAlerts().at(-1).text, /accepted.*delivery is not yet verified/);
+  await handler(paymentFailed('inv-4'));
+  assert.equal(providerKeys.size, 1);
+});
+
+test('owner-gated retry: acceptance followed by a lost ledger stamp reuses the provider key', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  failReceipt = true;
+  await handler(paymentFailed('inv-1'));
+  assert.equal(providerKeys.size, 1);
+  assert.equal(claims[0].accepted_at, undefined);
+  assert.match(ownerAlerts()[0].text, /requires reconciliation/);
+  assert.doesNotMatch(ownerAlerts()[0].text, /NOT sent|Forward.*by hand/);
+  failReceipt = false;
+  await handler(paymentFailed('inv-1'));
+  assert.equal(providerKeys.size, 1);
+  assert.equal(customerMails().length, 1);
+  assert.ok(claims[0].accepted_at);
 });

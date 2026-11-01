@@ -361,6 +361,7 @@ const NOT_LESSON_ACTIVITY = {
   coupons: 'admin: discount governance',
   coupon_redemptions: 'money',
   lifecycle_emails: 'our own mail ledger',
+  mail_delivery_claims: 'durable outbound mail claims, not learner activity',
   weekly_metrics: 'our own metrics',
   agent_incidents: 'the hourly sentinel’s incident ledger (ops, no learner row)',
   support_tickets: 'support',
