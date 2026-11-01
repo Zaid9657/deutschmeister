@@ -11,6 +11,13 @@ traffic and course quality are means, not the goal.**
 - The plan, with the math: [docs/strategy/million-plan-2026-10.md](../docs/strategy/million-plan-2026-10.md).
   The charter is `config/charter` in the team artifact.
 
+## How we talk with the founder (founder's rule, 2026-11-01)
+
+**Big picture first. Never drown the founder in details.** Details matter, but they have their time.
+Bring him only big-picture choices: where we stand against the goal, the few levers, the one decision.
+Details (PRs, CI, page fixes, tool runs, agent backlogs) are Claude's to decide, do and report in
+one line, and they come up only when he asks or when their time comes.
+
 ## Rules that follow from this
 
 1. **Every task states, in one line, which sales number it should move** (and by roughly how much).

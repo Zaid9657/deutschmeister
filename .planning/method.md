@@ -8,6 +8,12 @@ Board" (Claude's memory; the founder does not read it). If Notion is not connect
 1.14 ≈ €877k a month), **by February 2027** (the month ending 2027-02-28; founder, 2026-10-31).
 Source: [.claude/GOAL.md](../.claude/GOAL.md).
 
+## How we talk with the founder (his rule, 2026-11-01)
+
+**Big picture first; never drown him in details.** Details are important but have their time. Every
+message to him starts with where we stand against the goal and the one choice that matters; the
+details are Claude's to handle and report in one line.
+
 ## The three rules of every stage
 
 1. **Every stage starts with research and evidence and ends with a recorded lesson.** Evidence means
