@@ -23,6 +23,11 @@
 //     failures (lemonsqueezy-webhook emails the owner) are recorded with
 //     mailed_elsewhere = true and left out of the digest. The weekly-truth
 //     numbers are never re-sent; only a missed weekly-truth RUN is an incident.
+//   - One open row per problem. A state-like key carries the UTC day, so a
+//     problem that persists is mailed once a day — by RE-KEYING its open row
+//     onto the day's key (a conditional UPDATE, the day's claim), never by
+//     opening a second row. A new row opens only once the old one resolved.
+//     (2026-11-02: one unanswered ticket had become 12 open rows.)
 //   - Resolve only what was re-checked: an open incident is closed when its
 //     check ran this hour and passed. A check whose reads failed passes nothing.
 //   - Every list read is paged past PostgREST's 1,000-row cap (fetchAll), and
@@ -54,7 +59,7 @@ import {
   checkPage, checkWebhooks, checkPaymentFailures, checkSignups, checkJobs,
   needsDueCheck, dueSpan, countDue, parseCanary,
   checkSpeakingCloseout, checkSupportSla, checkSpeakingFlows, checkDatabase,
-  shouldResolve, parseMute, isMuted, selectForMail, renderDigest, renderDbDownAlert, DB_DOWN_CHECK_ID,
+  shouldResolve, planRecording, claimedKeysOf, CLAIMED_KEYS_KEPT, parseMute, isMuted, selectForMail, renderDigest, renderDbDownAlert, DB_DOWN_CHECK_ID,
   checkHeartbeat, isMissingRelation,
 } from './_shared/sentinelLib.mjs';
 import { selectRecipients as trialRecipients, TRIAL_KINDS } from './trial-lifecycle.mjs';
@@ -290,19 +295,24 @@ export async function runChecks({ db, fetchImpl, env, now }) {
 export async function recordIncidents(db, incidents, passing, now) {
   const nowIso = now.toISOString();
   const keys = incidents.map((i) => i.key);
+  const checkIds = [...new Set(incidents.map((i) => i.check_id).filter(Boolean))];
 
   // Rows that already exist for this run's keys (open or resolved earlier today).
   const existing = keys.length
-    ? await fetchAll(() => db.from('agent_incidents').select('id, key, seen_count').in('key', keys).order('key', { ascending: true }))
+    ? await fetchAll(() => db.from('agent_incidents').select('id, key, check_id, seen_count, detail').in('key', keys).order('key', { ascending: true }))
     : [];
-  const known = new Map(existing.map((r) => [r.key, r]));
+  // Open rows for this run's check_ids, newest first: a new day's key moves onto one of these
+  // instead of opening a second row for the same problem (planRecording).
+  const openForChecks = checkIds.length
+    ? await fetchAll(() => db.from('agent_incidents').select('id, key, check_id, seen_count, detail, last_seen_at').in('check_id', checkIds).is('resolved_at', null).order('last_seen_at', { ascending: false }))
+    : [];
+  const plan = planRecording(incidents, existing, openForChecks);
 
   // Claim: INSERT … ON CONFLICT (key) DO NOTHING RETURNING id, key.
-  let claimedKeys = new Set();
-  const fresh = incidents.filter((i) => !known.has(i.key));
-  if (fresh.length) {
+  const claimedKeys = new Set();
+  if (plan.fresh.length) {
     const { data, error } = await db.from('agent_incidents')
-      .upsert(fresh.map((i) => ({
+      .upsert(plan.fresh.map((i) => ({
         key: i.key,
         check_id: i.check_id,
         owner_agent: i.owner_agent,
@@ -316,12 +326,31 @@ export async function recordIncidents(db, incidents, passing, now) {
       })), { onConflict: 'key', ignoreDuplicates: true })
       .select('id, key');
     if (error) throw new Error(`claim failed (migration applied?): ${error.message}`);
-    claimedKeys = new Set((data || []).map((r) => r.key));
+    for (const r of data || []) claimedKeys.add(r.key);
+  }
+
+  // Re-key: the problem is still open under an earlier key (an earlier UTC day). Moving the row
+  // onto today's key is the day's claim — conditional on the row still holding its old key, so of
+  // two concurrent runs only one lands it, and the UNIQUE key keeps any other row off it.
+  let touched = 0;
+  for (const { row, incident: i } of plan.rekey) {
+    const { data, error } = await db.from('agent_incidents')
+      .update({
+        key: i.key,
+        severity: i.severity,
+        title: i.title,
+        detail: { ...i.detail, what_to_check: i.hint, claimed_keys: [...claimedKeysOf(row), i.key].slice(-CLAIMED_KEYS_KEPT) },
+        last_seen_at: nowIso,
+        seen_count: Number(row.seen_count || 0) + 1,
+      })
+      .eq('id', row.id).eq('key', row.key).is('resolved_at', null)
+      .select('id, key');
+    if (error) console.error('[sentinel] re-key failed:', row.key, '→', i.key, error.message);
+    else if ((data || []).length) { claimedKeys.add(i.key); touched += 1; }
   }
 
   // Repeats: seen again this hour — bump the counters, reopen if it had been resolved.
-  let touched = 0;
-  for (const row of existing) {
+  for (const row of plan.touch) {
     const { error } = await db.from('agent_incidents')
       .update({ last_seen_at: nowIso, seen_count: Number(row.seen_count || 0) + 1, resolved_at: null })
       .eq('id', row.id);

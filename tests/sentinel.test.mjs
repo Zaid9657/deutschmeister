@@ -30,6 +30,7 @@ import {
   inspectHtml, checkPage, checkWebhooks, checkPaymentFailures, checkSignups, checkJobs,
   checkSpeakingCloseout, checkSupportSla, checkSpeakingFlows, checkDatabase,
   shouldResolve, parseMute, selectForMail, renderDigest,
+  planRecording, claimedKeysOf, CLAIMED_KEYS_KEPT,
 } from '../netlify/functions/_shared/sentinelLib.mjs';
 import { SCHEDULED_JOBS, isJobKind, jobStaleness } from '../netlify/functions/_shared/adminStatusLib.mjs';
 import { runSentinel } from '../netlify/functions/sentinel.mjs';
@@ -401,7 +402,7 @@ function fakeDb(seed, { fail = [], failMessage = null, authUsers = [], rpc = {} 
         const matched = rows.filter(hit);
         matched.forEach((r) => Object.assign(r, this.patch));
         writes.push({ table: this.name, op: 'update', n: matched.length, patch: this.patch });
-        return { data: null, error: null };
+        return { data: this.returning ? matched.map((r) => ({ ...r })) : null, error: null };
       }
       let out = rows.filter(hit);
       if (this.head) return { data: null, count: out.length, error: null };
@@ -572,6 +573,96 @@ test('a fixed page resolves its incident; a check that could not run resolves no
   const healthy = fakeDb({ ...world, agent_incidents: flaky.tables.agent_incidents });
   await run(healthy, fakeFetch(), { now: new Date(NOW.getTime() + 2 * 3600000) });
   assert.ok(healthy.tables.agent_incidents.find((r) => r.key === `support-sla:t-9:${DAY}`).resolved_at);
+});
+
+// c7 (2026-11-02): one unanswered ticket had become 12 open rows, one per UTC day, because each
+// day's key opened a new row while the old one stayed open. One open problem is one open row.
+test('planRecording: the same check failing on two different days is one open incident, re-keyed', () => {
+  const ticket = { id: 't-7', reference: 'DM-T7', status: 'open', priority: 'normal', sla_due_at: ago(30), first_response_at: null, created_at: ago(40) };
+  const [day1] = checkSupportSla([ticket], NOW).incidents;
+  const tomorrow = new Date(NOW.getTime() + 24 * 3600000);
+  const [day2] = checkSupportSla([ticket], tomorrow).incidents;
+  assert.notEqual(day1.key, day2.key, 'state-like keys still carry the day (the daily mail)');
+  assert.equal(day1.check_id, day2.check_id);
+
+  const row = { id: 'r1', key: day1.key, check_id: day1.check_id, seen_count: 24, detail: {} };
+  // Same day: a repeat.
+  assert.deepEqual(planRecording([day1], [row], [row]), { touch: [row], rekey: [], fresh: [] });
+  // Next day, row still open: re-key it, never a second row.
+  assert.deepEqual(planRecording([day2], [], [row]), { touch: [], rekey: [{ row, incident: day2 }], fresh: [] });
+  // Next day, previous row resolved (not in `open`): a new row.
+  assert.deepEqual(planRecording([day2], [], []), { touch: [], rekey: [], fresh: [day2] });
+  // Legacy duplicates: only the newest open row (first in `open`) moves; nothing new is inserted.
+  const older = { ...row, id: 'r0', key: `support-sla:t-7:2026-09-27` };
+  const plan = planRecording([day2], [], [row, older]);
+  assert.equal(plan.rekey.length, 1);
+  assert.equal(plan.rekey[0].row.id, 'r1');
+  assert.equal(plan.fresh.length, 0);
+});
+
+test('planRecording: a key already mailed today is a repeat, not a second claim (signups zero → drop → zero)', () => {
+  const zero = checkSignups({ last24: 0, prior7: 70 }, NOW).incidents[0];
+  const drop = checkSignups({ last24: 1, prior7: 70 }, NOW).incidents[0];
+  assert.equal(zero.check_id, drop.check_id);
+  const row = { id: 'r1', key: drop.key, check_id: 'signups', seen_count: 3, detail: { claimed_keys: [zero.key, drop.key] } };
+  assert.deepEqual(planRecording([zero], [], [row]), { touch: [row], rekey: [], fresh: [] });
+  // A row written before this change carries no claimed_keys: its own key counts.
+  assert.deepEqual(claimedKeysOf({ key: 'k', detail: {} }), ['k']);
+  assert.ok(CLAIMED_KEYS_KEPT >= 1);
+});
+
+test('end to end: a ticket breached for three days is one open row, mailed once a day, resolved once answered', async () => {
+  const world = healthyWorld();
+  world.support_tickets.push({ id: 't-5', reference: 'DM-T5', status: 'open', priority: 'normal', sla_due_at: ago(2), first_response_at: null, created_at: ago(30) });
+  const db = fakeDb(world);
+  const f = fakeFetch();
+  const at = (h) => new Date(NOW.getTime() + h * 3600000);
+  const all = () => db.tables.agent_incidents.filter((r) => r.check_id === 'support-sla:t-5');
+  const open = () => all().filter((r) => !r.resolved_at);
+  // Other checks (jobs, heartbeat) go stale over the simulated days; only this ticket is judged here.
+  const t5Mails = () => f.mails.filter((m) => m.text.includes('DM-T5')).length;
+
+  await run(db, f);
+  assert.equal(t5Mails(), 1);
+  await run(db, f, { now: at(1) });
+  assert.equal(t5Mails(), 1, 'next hour: a repeat, not mailed');
+
+  for (const [h, day, n] of [[24, '2026-09-30', 2], [48, '2026-10-01', 3]]) {
+    await run(db, f, { now: at(h) });
+    assert.equal(t5Mails(), n, `${day}: the day's claim (re-key) is mailed once`);
+    assert.equal(open().length, 1, `${day}: still ONE open row`);
+    assert.equal(open()[0].key, `support-sla:t-5:${day}`);
+    assert.ok(open()[0].notified_at.startsWith(day), 'the re-keyed row is stamped');
+    await run(db, f, { now: at(h + 1) });
+    assert.equal(t5Mails(), n, `${day}: the next hour mails nothing`);
+  }
+  assert.equal(all().length, 1, 'no row per day');
+  assert.equal(open()[0].seen_count, 6);
+  assert.deepEqual(open()[0].detail.claimed_keys, [`support-sla:t-5:${DAY}`, 'support-sla:t-5:2026-09-30', 'support-sla:t-5:2026-10-01']);
+
+  db.tables.support_tickets.find((t) => t.id === 't-5').first_response_at = at(49).toISOString();
+  await run(db, f, { now: at(50) });
+  assert.equal(open().length, 0, 'answered → resolved');
+
+  // It breaches again later (reopened ticket, new SLA): only now does a new row open.
+  Object.assign(db.tables.support_tickets.find((t) => t.id === 't-5'), { first_response_at: null, sla_due_at: at(70).toISOString() });
+  await run(db, f, { now: at(72) });
+  assert.equal(all().length, 2, 'a new row only after the previous one resolved');
+  assert.equal(open().length, 1);
+  assert.equal(t5Mails(), 4);
+});
+
+test('end to end: legacy day-keyed duplicates stop growing — the newest is re-keyed, no new row', async () => {
+  const world = healthyWorld();
+  world.support_tickets.push({ id: 't-6', reference: 'DM-T6', status: 'open', priority: 'normal', sla_due_at: ago(60), first_response_at: null, created_at: ago(80) });
+  const legacy = (day, h) => ({ id: `old-${day}`, key: `support-sla:t-6:${day}`, check_id: 'support-sla:t-6', owner_agent: 'support', severity: 'medium', title: 'x', detail: {}, first_seen_at: ago(h), last_seen_at: ago(h - 23), seen_count: 24, notified_at: ago(h), resolved_at: null, mailed_elsewhere: false });
+  world.agent_incidents = [legacy('2026-09-27', 58), legacy('2026-09-28', 34)];
+  const db = fakeDb(world);
+  const b = body(await run(db, fakeFetch()));
+  assert.equal(b.claimed, 1);
+  assert.equal(db.tables.agent_incidents.length, 2, 'no third row');
+  assert.equal(db.tables.agent_incidents.find((r) => r.id === 'old-2026-09-28').key, `support-sla:t-6:${DAY}`);
+  assert.equal(db.tables.agent_incidents.find((r) => r.id === 'old-2026-09-27').key, 'support-sla:t-6:2026-09-27');
 });
 
 test('kill switch: anything but SENTINEL_ENABLED=true is a no-op that touches nothing', async () => {
