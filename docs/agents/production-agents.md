@@ -79,7 +79,12 @@ Webhook processing failures are reported once, by the webhook check under **reve
 flow group does not repeat them.
 
 State-like keys carry the UTC day, so a problem that persists is mailed **once a day**, never once
-an hour. Event-like keys (a webhook row, a payment event) are mailed once, ever.
+an hour. Event-like keys (a webhook row, a payment event) are mailed once, ever. A persisting problem
+is still **one open row**: when a new day's key fires for a `check_id` that already has an open row,
+that row is re-keyed onto the new key (a conditional update — the day's claim, mailed like a new
+row) and its `seen_count`/`last_seen_at` keep counting; a new row opens only after the previous one
+was resolved (2026-11-02, c7 — before, one unanswered ticket had become 12 open rows).
+`detail.claimed_keys` lists the keys a row was mailed under.
 
 ### What gets mailed
 

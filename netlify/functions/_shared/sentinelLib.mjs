@@ -5,9 +5,10 @@
 // own. Each returns { incidents, passing }:
 //
 //   incidents  what is wrong now. Every incident carries a stable `key` (the
-//              claim: one row, one mail, per problem — per day where the
-//              problem is a state, per row where it is an event), a `check_id`
-//              naming the problem without the day, an `owner_agent` from
+//              claim: one mail per problem — per day where the problem is a
+//              state, per row where it is an event), a `check_id` naming the
+//              problem without the day (one OPEN row per check_id: a new day's
+//              key re-keys the open row, see planRecording), an `owner_agent` from
 //              OWNER_AGENTS, a severity, a title, a detail object and a one-line
 //              `hint` — what to check first.
 //   passing    check_ids this run EVALUATED and found healthy. Only these may
@@ -603,6 +604,59 @@ export function checkHeartbeat(latest, now, thresholdHours = HEARTBEAT_THRESHOLD
 export function shouldResolve(row, passing, firingCheckIds) {
   if (!row?.check_id || firingCheckIds.has(row.check_id)) return false;
   return passing.some((p) => (p.endsWith(':') ? row.check_id.startsWith(p) : row.check_id === p));
+}
+
+/** How many claimed keys an open row remembers (one per UTC day it was re-mailed, plus same-day severity changes). */
+export const CLAIMED_KEYS_KEPT = 31;
+
+/** The keys an open row has already been mailed under. Rows written before 2026-11-02 carry only their own key. */
+export const claimedKeysOf = (row) => {
+  const kept = Array.isArray(row?.detail?.claimed_keys) ? row.detail.claimed_keys.filter((k) => typeof k === 'string') : [];
+  return kept.includes(row?.key) ? kept : [...kept, row?.key].filter(Boolean);
+};
+
+/**
+ * One open row per open problem (2026-11-02, c7). State-like keys carry the UTC
+ * day, so a problem that persists across midnight fires a NEW key every day.
+ * Before this, each new key became a new row while the old one stayed open
+ * (the resolve pass skips a check that is still firing): one unanswered ticket
+ * was 12 open rows after 12 days. Now a new key whose check_id already has an
+ * open row RE-KEYS that row — the row's key becomes the day's claim, so the
+ * once-a-day mail is unchanged — and a new row opens only when no row for the
+ * check_id is open, i.e. after the previous one was resolved.
+ *
+ * incidents: this run's incidents. byKey: existing rows (any state) whose key
+ * is one of this run's keys. open: open rows for this run's check_ids, newest
+ * last_seen_at first. Returns
+ *   touch  rows seen again under a key they were already mailed under (counters only, reopened);
+ *   rekey  [{ row, incident }] open rows to move onto the incident's new key — a claim, mailed if it lands;
+ *   fresh  incidents with no row at all — inserted with ON CONFLICT (key) DO NOTHING, as before.
+ */
+export function planRecording(incidents, byKey, open) {
+  const keyed = new Map(byKey.map((r) => [r.key, r]));
+  const openByCheck = new Map();
+  for (const r of open) if (r.check_id && !openByCheck.has(r.check_id)) openByCheck.set(r.check_id, r);
+  const used = new Set();
+  const touch = [];
+  const rekey = [];
+  const fresh = [];
+  for (const inc of incidents) {
+    const same = keyed.get(inc.key);
+    if (same) {
+      if (!used.has(same.id)) { used.add(same.id); touch.push(same); }
+      continue;
+    }
+    const row = openByCheck.get(inc.check_id);
+    if (row && !used.has(row.id)) {
+      used.add(row.id);
+      // Already mailed under this key today (e.g. signups zero → drop → zero): a repeat, not a claim.
+      if (claimedKeysOf(row).includes(inc.key)) touch.push(row);
+      else rekey.push({ row, incident: inc });
+      continue;
+    }
+    fresh.push(inc);
+  }
+  return { touch, rekey, fresh };
 }
 
 /** SENTINEL_MUTE="signups,page:/faq/" — comma-separated check_id prefixes that are recorded but never mailed. */
