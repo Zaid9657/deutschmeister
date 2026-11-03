@@ -16,7 +16,7 @@ import {
   WRITING_PASS_PCT,
   paperSeed,
 } from '../../lib/checkpoint/buildCheckpoint.js';
-import { checkpointFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
+import { checkpointFeedback, defersFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
@@ -101,7 +101,7 @@ function finishedPaperItems({ curriculum, checkpoint, pool }, entry) {
  * it instead, and that item then leaves the score (`onReadInstead`): reading is not listening, and
  * missing audio is not the learner's failure (Codex score review, 2026-10-08).
  */
-function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false }) {
+export function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [feedback, setFeedback] = useState(null);
@@ -152,7 +152,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
       <Card className="p-5 sm:p-6">
         {header}
         <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
-        {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
+        {lang !== 'de' && item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
         <div className="mt-4">
           <ReadAloudLine
             lektionId={item.lektionId}
@@ -193,7 +193,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
       <Card className="p-5 sm:p-6">
         {header}
         <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
-        {item.task?.taskEn && <p className="mt-1 text-sm text-graphite">{item.task.taskEn}</p>}
+        {lang !== 'de' && item.task?.taskEn && <p className="mt-1 text-sm text-graphite">{item.task.taskEn}</p>}
         <div className="mt-4">
           <GradedWriting task={item.task} lektionId={item.lektionId} onResult={setPending} />
         </div>
@@ -216,7 +216,7 @@ function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded = false
       {header}
 
       <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
-      {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
+      {lang !== 'de' && item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
 
       {isAudio && (
         <div className="mt-4">
@@ -416,14 +416,14 @@ function CheckpointRun() {
     if (!curriculum || !checkpoint || !pool) return [];
     // Every attempt is a NEW paper drawn under the same rules (Codex review, 2026-10-07): "Nochmal"
     // used to reshuffle the same 20 items right after the result had shown them, which measured
-    // memory of the answers. `round` is the paper number — this window's attempt count at Start,
+    // memory of the answers. `round` is the lifetime paper count, separate from the attempt limit,
     // +1 per retake — so a reload after a failed attempt does not serve that paper again either.
     return buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, round) });
   }, [curriculum, checkpoint, pool, round]);
 
   // RESUME (2026-10-25): a paper in progress comes back after a reload, a tab the phone discarded, the
   // idle sign-out or a guard remount (runState.js, checkpoint runs) — this owner's snapshot, once the
-  // paper can be rebuilt (pool). A snapshot is checked against this window's attempt count, so with
+  // paper can be rebuilt (pool). A snapshot is checked against the lifetime paper count, so with
   // one stored the decision also waits for that count: a snapshot from before a finished attempt, or
   // of a paper that has changed, starts at the intro. Until the decision is made (`restoreDone`) Start
   // stays disabled and nothing is saved — a fast Start used to save a fresh paper at index 0 over the
@@ -475,7 +475,7 @@ function CheckpointRun() {
     }
     if (!attempts) return;
     const paper = buildCheckpoint({ curriculum, checkpoint, pool, seed: paperSeed(checkpoint, run.round) });
-    if (checkpointRunFits(run, paper, attempts.used)) {
+    if (checkpointRunFits(run, paper, attempts.paperRound ?? attempts.used)) {
       setRound(run.round);
       setAnswers(run.answers);
       setNotHeard(new Set(run.notHeard));
@@ -590,7 +590,7 @@ function CheckpointRun() {
       const stamp = new Date().toISOString();
       setPhase('result');
       saveRef.current = {
-        args: { level, checkpointId: checkpoint.id, items: scoredItems, answers: finalAnswers, result: scored },
+        args: { level, checkpointId: checkpoint.id, items: scoredItems, answers: finalAnswers, result: scored, round },
         stamp,
         // What a reload needs to show this result again and send it (runState.js, finished papers).
         finished: packFinishedPaper({ stamp, paper, round, answers: finalAnswers, notHeard: [...notHeard], result: scored }),
@@ -609,7 +609,7 @@ function CheckpointRun() {
   const onAnswer = (item, answer) => {
     const next = { ...answers, [item.id]: answer };
     setAnswers(next);
-    if (item.section === 'lesen' && sectionComplete(items, next, 'lesen')) setPhase('sectionFeedback');
+    if (defersFeedback(item.section) && sectionComplete(items, next, item.section)) setPhase('sectionFeedback');
     else if (index + 1 >= items.length) finish(next);
     else setIndex(index + 1);
   };
@@ -663,7 +663,7 @@ function CheckpointRun() {
                 : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
-              <Button disabled={!items.length || !restoreDone || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
+              <Button disabled={!items.length || !restoreDone || !attempts || Boolean(attempts.blocked)} onClick={() => { setRound(attempts?.paperRound ?? attempts?.used ?? 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
                 {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
               {(!items.length || !restoreDone) && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
@@ -673,12 +673,12 @@ function CheckpointRun() {
 
         {phase === 'run' && current && <PracticeItem key={current.id} item={current} graded onAnswer={onAnswer} onReadInstead={(id) => setNotHeard((prev) => new Set(prev).add(id))} />}
 
-        {phase === 'sectionFeedback' && sectionComplete(items, answers, 'lesen') && (
+        {phase === 'sectionFeedback' && current && sectionComplete(items, answers, current.section) && (
           <Card className="p-5 sm:p-6">
-            <h2 className="font-display text-xl text-ink" tabIndex={-1} ref={(node) => node?.focus()}>{t('checkpoint.readingFeedback', lang)}</h2>
+            <h2 className="font-display text-xl text-ink" tabIndex={-1} ref={(node) => node?.focus()}>{t(current.section === 'hoeren' ? 'checkpoint.listeningFeedback' : 'checkpoint.readingFeedback', lang)}</h2>
             <ol className="mt-4 divide-y divide-rule">
-              {items.filter((item) => item.section === 'lesen').map((item) => {
-                const feedback = checkpointFeedback(item, answers[item.id], { graded: true, complete: sectionComplete(items, answers, 'lesen') });
+              {items.filter((item) => item.section === current.section).map((item) => {
+                const feedback = checkpointFeedback(item, answers[item.id], { graded: true, complete: sectionComplete(items, answers, item.section) });
                 return (
                   <li key={item.id} className="py-4">
                     <p className="font-bold" lang="de">{item.promptDe}</p>
@@ -755,7 +755,7 @@ function CheckpointRun() {
                 ) : (
                   <Button
                     disabled={Boolean(attempts?.blocked)}
-                    onClick={() => { saveRef.current = null; setRound(Math.max(round + 1, attempts?.used || 0)); setAnswers({}); setNotHeard(new Set()); setIndex(0); setRemediation([]); setSaveState(null); setPhase('run'); }}
+                    onClick={() => { saveRef.current = null; setRound(Math.max(round + 1, attempts?.paperRound ?? attempts?.used ?? 0)); setAnswers({}); setNotHeard(new Set()); setIndex(0); setRemediation([]); setSaveState(null); setPhase('run'); }}
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('action.again', lang)}
                   </Button>

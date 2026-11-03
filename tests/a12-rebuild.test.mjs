@@ -588,7 +588,7 @@ test('DaF review #4 MAJOR 6: every A1.2 dialogue question names the sentence tha
       ['Was kostet die Wohnung?', 3, 'Die Miete ist vierhundertachtzig Euro.', 'menge'],
       ['Wie ist die Miete?', 3, 'Die Miete ist vierhundertachtzig Euro.', 'art'],
       ['Und die Wohnung?', null, null, 'thema'],
-      ['Wie viele Zimmer hat sie?', 5, 'Vier: Küche, Badezimmer, Wohnzimmer und Schlafzimmer.', 'menge'],
+      ['Wie viele Zimmer hat sie?', 5, 'Zwei: Wohnzimmer und Schlafzimmer.', 'menge'],
       ['Hat die Wohnung auch einen Balkon?', 7, 'Ja, der Balkon ist da.', 'ja'],
       ['Ist die Treppe da?', 9, 'Ja, die Treppe ist da.', 'ja'],
     ],
@@ -2216,47 +2216,10 @@ test('DaF review #11 B1: every servable preposition gap is read in German alone 
     for (const a of excluded) assert.notEqual(verdict(it, a), RESULT.CORRECT, `${it.id}: „${a}" is ruled out (${why})`);
   }
   // The old Flugzeug prompt, without its reference point, would allow both: the cue is load-bearing.
-  assert.match(poolItems(POOL_A12).find((it) => it.id === 'extra-a12-l09-11').questionDe, /Montag ist der erste Tag/);
+  assert.match(poolItems(POOL_A12).find((it) => it.id === 'extra-a12-l09-11').questionDe, /\(der erste Tag; ab, um oder bis\?\)/);
 });
 
-// Explicit German meaning selectors only. Tense, contrast, adverbs and a present/past reference
-// point NEVER choose the requested meaning. The lexical validator separately checks selectors at
-// the item's teaching horizon. Spatial von/nach/etc. are outside the temporal contrast.
-function undecidedTimePrepositionGaps(items) {
-  const cues = {
-    ab: /\b(?:Beginn|Anfang|der erste Tag|erste Uhrzeit)\b/iu,
-    von: /\b(?:Beginn|Anfang|erste Uhrzeit)\b/iu,
-    bis: /\b(?:Ende|Schluss|der letzte Tag|letzte Uhrzeit)\b/iu,
-    seit: /\bDauer bis (?:heute|jetzt|damals)\b/iu,
-    vor: /\bZeitpunkt\b(?!\s+in der Zukunft)|\bZeit: [^;()!?]*früher, keine Dauer\b/iu,
-    um: /\b(?:genaue Uhrzeit|genauer Zeitpunkt)\b/iu,
-    gegen: /\b(?:ungefähre Uhrzeit|ungefährer Zeitpunkt)\b/iu,
-    nach: /\b(?:nach diesem Zeitpunkt|späterer Zeitpunkt)\b/iu,
-    in: /\b(?:Zeitpunkt in der Zukunft|Zeit ab heute)\b/iu,
-  };
-  return items.filter((it) => it.minLektion != null && (it.type === 'fill_blank' || /_{2,}/u.test(it.questionDe || ''))).flatMap((it) => {
-    const accepted = new Set((it.accepted?.length ? it.accepted : [it.answer]).map((a) => String(a).trim().toLowerCase()));
-    const q = it.questionDe || '';
-    const temporal = /\b(?:Uhr|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Tag|Tagen|Woche|Wochen|Monat|Monaten|Jahr|Jahren|heute|morgen|gestern)\b/iu.test(q);
-    const pairs = [['ab', 'bis'], ['seit', 'vor'], ['um', 'gegen'], ['von', 'bis'], ['vor', 'nach'], ['vor', 'in']];
-    const offeredPairs = pairs.filter((pair) => pair.every((p) => new RegExp(`\\b${p}\\b`, 'iu').test(q)));
-    const defaults = { ab: ['ab', 'bis'], bis: ['ab', 'bis'], vor: ['seit', 'vor'], seit: ['seit', 'vor'],
-      um: ['um', 'gegen'], gegen: ['um', 'gegen'], von: ['von', 'bis'], nach: ['vor', 'nach'], in: ['vor', 'in'] };
-    const relevant = offeredPairs.length ? offeredPairs : [...new Set([...accepted].map((p) => defaults[p]).filter(Boolean))];
-    return relevant.flatMap((pair) => {
-      // ab/bis and vor/seit are the course's standard temporal contrasts; other families require
-      // time language or both alternatives explicitly printed, so spatial „von der Arbeit" is safe.
-      const offered = pair.every((p) => new RegExp(`\\b${p}\\b`, 'iu').test(q));
-      if (!temporal && !offered && !['ab', 'seit'].includes(pair[0])) return [];
-      const only = pair.filter((p) => accepted.has(p));
-      if (only.length !== 1) return [];
-      const chosen = only[0];
-      const other = pair.find((p) => p !== chosen);
-      return cues[chosen].test(q) && !cues[other].test(q)
-        ? [] : [`${it.id}: only „${chosen}“ accepted without a deciding German cue`];
-    });
-  });
-}
+import { undecidedTimePrepositionGaps } from '../scripts/lib/time-preposition-cues.mjs';
 
 test('DaF review #13 B1: every single-key time-preposition gap has an explicit German meaning selector, with open/cued contrasts', async () => {
   const gap = (questionDe, accepted) => ({ id: 'contrast', type: 'fill_blank', minLektion: 9, questionDe, accepted });
@@ -2308,7 +2271,7 @@ test('DaF review #13 B1: every single-key time-preposition gap has an explicit G
   const stripped = { ...original, questionDe: original.questionDe.replace('erste Uhrzeit zum Einsteigen; ', '') };
   assert.equal(undecidedTimePrepositionGaps(all.map((it) => it === original ? stripped : it)).length, 1);
   // Strip every selector family from every passing temporal gap; tense and contrasts are left intact.
-  const selector = /Zeit: [^;()!?]*früher, keine Dauer|Dauer bis (?:heute|jetzt)|Montag ist der erste Tag\.|erste Uhrzeit zum Einsteigen|\(Ende\)/gu;
+  const selector = /Zeit: [^;()!?]*früher, keine Dauer|Dauer bis (?:heute|jetzt)|Montag ist der erste Tag\.|der erste Tag|erste Uhrzeit zum Einsteigen|\(Ende\)/gu;
   const cued = all.filter((it) => it.minLektion != null && it.type === 'fill_blank' && ['ab', 'bis', 'vor', 'seit'].includes(it.answer.toLowerCase()));
   assert.ok(cued.length >= 6, 'the complete current temporal contrast class is exercised');
   for (const it of cued) {

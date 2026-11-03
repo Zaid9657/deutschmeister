@@ -25,6 +25,8 @@ import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import { useLessonLang } from '../lib/lesson/strings.js';
+import LangToggle from '../components/lesson/LangToggle.jsx';
 import SituationScene from '../components/illustrations/SituationScene.jsx';
 
 // Course home for a REBUILT level (docs/course-standard-2026-09-12.md): the
@@ -100,6 +102,8 @@ const SWAY = [0, 0.6, 1, 0.6, 0, -0.6, -1, -0.6];
 
 export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
+  const [lang] = useLessonLang();
+  const de = lang === 'de';
   const { profile } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
@@ -211,13 +215,14 @@ export default function CurriculumHomePage({ curriculum }) {
 
   let nodeCounter = 0;
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
+    <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
       <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+        <div className="mb-4 flex justify-end"><LangToggle /></div>
         <header className="relative mb-8 overflow-hidden rounded-clay">
           <Aurora />
           <div className="relative px-2 py-4">
             <Reveal className="flex flex-wrap items-center justify-between gap-2">
-              <Chip tone="label">{curriculum.code} · Course</Chip>
+              <Chip tone="label">{curriculum.code} · {de ? 'Kurs' : 'Course'}</Chip>
               {meta && !fresh && (
                 <button
                   type="button"
@@ -226,15 +231,15 @@ export default function CurriculumHomePage({ curriculum }) {
                   aria-controls="dm-course-welcome-panel"
                   className="inline-flex items-center gap-1 rounded-pill bg-white/70 px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep ring-1 ring-rule hover:bg-siegel-wash"
                 >
-                  <Compass className="h-3.5 w-3.5" aria-hidden="true" /> How this course works
+                  <Compass className="h-3.5 w-3.5" aria-hidden="true" /> {de ? 'So funktioniert der Kurs' : 'How this course works'}
                 </button>
               )}
             </Reveal>
             <Reveal as="h1" delay={60} className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
-              German {curriculum.code}
+              {de ? 'Deutsch' : 'German'} {curriculum.code}
             </Reveal>
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
-              {curriculum.lektionen.length} Lektionen · {curriculum.checkpoints.length} checkpoints · {wordsTotal} words · ends with a shortened practice test in the {curriculum.examName} format
+              {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · zum Abschluss ein verkürzter Übungstest im Format ${curriculum.examName}` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · ends with a shortened practice test in the ${curriculum.examName} format`}
             </Reveal>
 
             {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
@@ -251,45 +256,45 @@ export default function CurriculumHomePage({ curriculum }) {
             {loaded && <MilestoneCard streak={streak} />}
 
             <Reveal delay={180} className="mt-4">
-              <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label="Course progress" aria-valuetext={`${doneCount} of ${path.length} done`} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+              <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label={de ? 'Kursfortschritt' : 'Course progress'} aria-valuetext={de ? `${doneCount} von ${path.length} abgeschlossen` : `${doneCount} of ${path.length} done`} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
               </div>
               {endowed && (
                 <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-white/80 px-3 py-1 font-data text-[0.6875rem] font-bold text-siegel-deep ring-1 ring-rule" data-endowed>
                   <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  Your test suggests a level above {curriculum.code} — everything here is open; start where you like.
+                  {de ? `Ihr Test deutet auf ein Niveau über ${curriculum.code} hin. Alle Schritte sind offen. Wählen Sie Ihren Einstieg.` : `Your test suggests a level above ${curriculum.code} — everything here is open; start where you like.`}
                 </p>
               )}
               {reviewDue > 0 && !complete && (
                 <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-[0.9375rem] text-ink">
-                    <span className="font-bold">{reviewDue} {reviewDue === 1 ? 'card' : 'cards'} to review first</span>
-                    <span className="text-graphite"> — about {Math.max(1, Math.round(reviewDue / 6))} min, then your next step.</span>
+                    <span className="font-bold">{de ? `${reviewDue} Karten zum Wiederholen` : `${reviewDue} ${reviewDue === 1 ? 'card' : 'cards'} to review first`}</span>
+                    <span className="text-graphite">{de ? ` — etwa ${Math.max(1, Math.round(reviewDue / 6))} Min., dann der nächste Schritt.` : ` — about ${Math.max(1, Math.round(reviewDue / 6))} min, then your next step.`}</span>
                   </p>
-                  <Button to={`/course/${level}/review`} variant="secondary" className="shrink-0">Review →</Button>
+                  <Button to={`/course/${level}/review`} variant="secondary" className="shrink-0">{de ? 'Wiederholen' : 'Review'} →</Button>
                 </div>
               )}
               {complete ? (
-                <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
+                <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">{de ? 'Kurs abgeschlossen · zum Ergebnis' : 'Course complete · see your result'} →</Button></div>
               ) : current ? (
                 <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3">
                     {(() => { const I = KIND_ICON[current.kind]; return <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel"><I className="h-5 w-5" /></span>; })()}
                     <div className="min-w-0">
-                      <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{doneCount === 0 ? 'Start here' : 'Up next'} · {firstOpenIndex + 1} of {path.length}</p>
+                      <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{doneCount === 0 ? (de ? 'Hier starten' : 'Start here') : (de ? 'Als Nächstes' : 'Up next')} · {firstOpenIndex + 1} {de ? 'von' : 'of'} {path.length}</p>
                       <p className="truncate font-bold text-ink">{current.title}</p>
                       <p className="font-data text-[0.6875rem] text-graphite">{KIND_LABEL[current.kind]}{timeOf(current)}</p>
                     </div>
                   </div>
                   <Button to={hrefFor(level, current)} variant="primary" size="lg" shimmer disabled={!loaded && !!user} className="shrink-0">
-                    {doneCount === 0 ? 'Start' : 'Continue'} →
+                    {doneCount === 0 ? 'Start' : (de ? 'Weiter' : 'Continue')} →
                   </Button>
                 </div>
               ) : null}
               {unfinished && !done.has(unfinished.id) && (
                 <p className="mt-3 text-[0.875rem] text-graphite">
                   <Link to={`/course/${level}/l/${unfinished.nr}`} className="inline-flex min-h-11 items-center font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
-                    Lektion {unfinished.nr} is half-done — pick up where you stopped →
+                    {de ? `Lektion ${unfinished.nr} ist noch offen — setzen Sie dort fort` : `Lektion ${unfinished.nr} is half-done — pick up where you stopped`} →
                   </Link>
                 </p>
               )}
@@ -312,8 +317,8 @@ export default function CurriculumHomePage({ curriculum }) {
           const isFinal = nodes.find((n) => n.kind === 'leveltest') && lektionen.length === 0;
           const chapterMeta = !isFinal && meta ? meta.chapters[ci] : null;
           const title = isFinal
-            ? 'Final test'
-            : chapterMeta?.titleEn ?? `Lektion ${lektionen[0]?.nr}–${lektionen[lektionen.length - 1]?.nr}`;
+            ? (de ? 'Abschlusstest' : 'Final test')
+            : (de ? chapterMeta?.titleDe : chapterMeta?.titleEn) ?? `Lektion ${lektionen[0]?.nr}–${lektionen[lektionen.length - 1]?.nr}`;
           const canDos = lektionen.flatMap((l) => l.canDo || []);
           const teile = [...new Set(lektionen.flatMap((l) => l.examTeile || []))];
           const words = lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0);
@@ -327,17 +332,17 @@ export default function CurriculumHomePage({ curriculum }) {
                     className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
                   />
                 )}
-                <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white">Chapter {ci + 1}</p>
+                <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white">{de ? 'Kapitel' : 'Chapter'} {ci + 1}</p>
                 <h2 className="mt-1 font-display text-[1.25rem] font-semibold leading-tight">{title}</h2>
                 {chapterMeta && (
                   <p className="font-data text-[0.75rem] text-white" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
                 )}
                 {chapterMeta ? (
-                  <p className="mt-2 text-[0.8125rem] leading-snug text-white">{chapterMeta.storyEn}</p>
+                  <p className="mt-2 text-[0.8125rem] leading-snug text-white">{de ? lektionen.map((l) => l.situation).join(' · ') : chapterMeta.storyEn}</p>
                 ) : (
                   <p className="mt-1 text-[0.8125rem] text-white">{lektionen.map((l) => l.title).join(' · ')}</p>
                 )}
-                <p className="mt-2 font-data text-[0.75rem] text-white">{chapterDone}/{nodes.length} done{words ? ` · ${words} words` : ''}</p>
+                <p className="mt-2 font-data text-[0.75rem] text-white">{chapterDone}/{nodes.length} {de ? 'abgeschlossen' : 'done'}{words ? ` · ${words} ${de ? 'Wörter' : 'words'}` : ''}</p>
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
                     className="mt-3 inline-flex min-h-11 items-center gap-1 rounded-pill bg-siegel-deep px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white ring-1 ring-white/40 hover:bg-siegel-edge">
@@ -370,7 +375,7 @@ export default function CurriculumHomePage({ curriculum }) {
                         <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>
                       )}
                       <LessonRing state={state} size={node.kind !== 'lektion' ? 112 : 96}>
-                        <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                        <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} lang={lang} big={node.kind !== 'lektion'} />
                       </LessonRing>
                       <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
                       <p className="max-w-[14rem] text-center font-data text-[0.6875rem] text-graphite">
@@ -386,12 +391,12 @@ export default function CurriculumHomePage({ curriculum }) {
         </div>
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
-          {endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.'}
-          {user ? ' On any device.' : ' Your progress saves on this device until you sign in.'}{' '}
+          {de ? (endowed ? 'Alle Lektionen sind für Sie offen. Ihr Fortschritt wird nach jedem Schritt gespeichert.' : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.')}
+          {de ? (user ? ' Auf jedem Gerät.' : ' Bis zur Anmeldung bleibt Ihr Fortschritt auf diesem Gerät.') : (user ? ' On any device.' : ' Your progress saves on this device until you sign in.')}{' '}
           <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">Wiederholen</Link> ·{' '}
           <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level)}</Link> ·{' '}
           <Link to={`/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>Lehrplan</Link> ·{' '}
-          <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>All courses</Link> ·{' '}
+          <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>{de ? 'Alle Kurse' : 'All courses'}</Link> ·{' '}
           {/* The course home drops the site footer (src/lib/chrome.js), so the
               way to reach a human has to live in this one-line footer too. */}
           <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{SUPPORT_LINK.labelDe}</Link>
@@ -402,7 +407,8 @@ export default function CurriculumHomePage({ curriculum }) {
 }
 
 
-function Node({ to, state, Icon, label, big }) {
+function Node({ to, state, Icon, label, big, lang }) {
+  const de = lang === 'de';
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';
   const base = `relative flex ${size} items-center justify-center rounded-full transition-all duration-100 ease-snap motion-reduce:transition-none`;
   const styles = {
@@ -414,8 +420,8 @@ function Node({ to, state, Icon, label, big }) {
   const inner = state === 'done' ? <Check className="h-7 w-7" aria-hidden="true" /> : state === 'locked' ? <Lock className="h-6 w-6" aria-hidden="true" /> : <Icon className="h-7 w-7" aria-hidden="true" />;
   // The name says the state in words (never by colour or icon alone). A role-less <span> may not
   // carry aria-label (aria-prohibited-attr), so a locked node's words are sr-only text.
-  if (!to) return <span className={styles.locked}>{inner}<span className="sr-only">{`${label} (locked)`}</span></span>;
-  const stateWord = state === 'done' ? ' (done)' : state === 'current' ? ' (next)' : '';
+  if (!to) return <span className={styles.locked}>{inner}<span className="sr-only">{`${label} (${de ? 'gesperrt' : 'locked'})`}</span></span>;
+  const stateWord = state === 'done' ? (de ? ' (abgeschlossen)' : ' (done)') : state === 'current' ? (de ? ' (als Nächstes)' : ' (next)') : '';
   return (
     <Link to={to} className={styles[state]} aria-label={`${label}${stateWord}`}>
       {state === 'current' && <span aria-hidden="true" className="absolute inset-0 -m-2 animate-ping rounded-full bg-siegel/20 motion-reduce:animate-none" />}

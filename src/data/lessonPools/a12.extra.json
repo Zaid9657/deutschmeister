@@ -1914,7 +1914,7 @@
       "stage": 4,
       "difficulty": 1,
       "order": 11,
-      "questionDe": "Das Flugzeug fliegt ___ Montag wieder. Montag ist der erste Tag. (ab, um oder bis?)",
+      "questionDe": "Das Flugzeug fliegt ___ Montag wieder. (der erste Tag; ab, um oder bis?)",
       "questionEn": "The plane flies again from Monday.",
       "options": null,
       "answer": "ab",

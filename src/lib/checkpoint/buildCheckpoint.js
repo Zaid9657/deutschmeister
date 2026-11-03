@@ -664,7 +664,8 @@ function buildHoerenDictation(ctx) {
       // not the first word of its sentence — one predicate, every surface
       // (lineIsCaseTask; DaF review #8, MAJOR 5).
       caseSensitive: lineIsCaseTask(line.de),
-      explanationDe: line.en ? `${line.de} — ${line.en}` : null,
+      explanationDe: line.de,
+      explanationEn: line.en || null,
       hint: `Lektion ${line.lektionNr}`,
       poolItemId: null,
       type: 'dictation',
@@ -684,7 +685,7 @@ function buildHoerenWords(ctx) {
   const { checkpoint, rng, chapter } = ctx;
   const items = [];
 
-  const words = shuffle(wortfeldWords(chapter), rng);
+  const words = shuffle(wortfeldWords(chapter), rng).filter((word, i, all) => all.findIndex((w) => w.de === word.de) === i);
   const probe = (w) => ({
     section: 'hoeren', kind: 'wordChoice', promptDe: 'Welches Wort hören Sie?', answer: w.de, accepted: [w.de],
   });
@@ -698,11 +699,11 @@ function buildHoerenWords(ctx) {
     }
     targets.push(remaining.splice(at, 1)[0]);
   }
+  // Disjoint option sets: neither a later target nor an earlier distractor may
+  // identify the other answer without listening. Reserve both targets first.
+  const distractors = words.filter((w) => !targets.some((target) => target.de === w.de));
   targets.forEach((word, i) => {
-    const others = words.filter((w) => w.de !== word.de);
-    const distractors = take(others.slice(i * 3), 3);
-    while (distractors.length < 3 && others.length) distractors.push(others[distractors.length % others.length]);
-    const options = shuffle([word.de, ...new Set(distractors.map((d) => d.de))], rng);
+    const options = shuffle([word.de, ...distractors.splice(0, 3).map((d) => d.de)], rng);
     items.push({
       id: `${checkpoint.id}-hoeren-${i + 4}`,
       section: 'hoeren',
@@ -724,7 +725,8 @@ function buildHoerenWords(ctx) {
       options,
       answer: word.de,
       accepted: [word.de],
-      explanationDe: word.en ? `${word.de} — ${word.en}` : null,
+      explanationDe: word.de,
+      explanationEn: word.en || null,
       hint: `Lektion ${word.lektionNr}`,
       poolItemId: null,
       type: 'multiple_choice',
@@ -2510,7 +2512,8 @@ function buildSprechen(ctx) {
       // deliberately set anyway: the flag belongs to the line, not to the section
       // that quotes it (DaF review #8, MAJOR 5).
       caseSensitive: lineIsCaseTask(line.de),
-      explanationDe: line.en || null,
+      explanationDe: line.de,
+      explanationEn: line.en || null,
       hint: `Lektion ${line.lektionNr}`,
       poolItemId: null,
       type: 'read_aloud',
@@ -2560,7 +2563,14 @@ function poolIdsBefore(curriculum, checkpoint, pool) {
 export const PAPERS_PER_WINDOW = 3;
 
 /** The seed of paper `round` of a checkpoint — CheckpointPage draws every attempt with it. */
-export const paperSeed = (checkpoint, round) => (round ? `${checkpoint.id}-round-${round}` : undefined);
+export const paperSeed = (checkpoint, round) => {
+  // An authored bank cycles only after every paper has been used, independently
+  // of the attempt window. Generated banks keep their distinct retake seeds.
+  const count = Math.max(0, Math.floor(Number(round) || 0));
+  const bankSize = checkpoint.lesen?.papers?.length;
+  const paper = bankSize ? count % bankSize : count;
+  return paper ? `${checkpoint.id}-round-${paper}` : undefined;
+};
 
 /** The round a seed is the paper of — paperSeed read backwards; any other seed is round 0. */
 const roundOf = (checkpoint, seed) => {
@@ -2665,7 +2675,9 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   // items in drawPool, the reported lines in the Lesen ladder. A preference, never a filter: a
   // thin chapter still fills its paper. Round 0 has no earlier paper and is drawn as before.
   ctx.round = roundOf(checkpoint, seed);
-  const earlierRounds = Array.from({ length: ctx.round }, (_, k) => earlierPaper(curriculum, checkpoint, pool, k)).flat();
+  // Bound the comparison set: a lifetime count must not recursively rebuild
+  // thousands of papers. The first three (or the authored bank) remain reserved.
+  const earlierRounds = Array.from({ length: Math.min(ctx.round, checkpoint.lesen?.papers?.length || PAPERS_PER_WINDOW) }, (_, k) => earlierPaper(curriculum, checkpoint, pool, k)).flat();
   ctx.spentPool = new Set(earlierRounds.map((i) => i.poolItemId).filter(Boolean));
   ctx.spentLesen = new Set(earlierRounds.filter((i) => i.section === 'lesen').map((i) => normaliseStatement(i.trueStatement)));
   ctx.graded = gradedWritingItem(checkpoint, chapter, curriculum.level);

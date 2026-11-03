@@ -40,7 +40,8 @@ test('an empty or blank typed answer is never checked, so it is never locked as 
     const { submit, set } = submitFor(item);
     submit(item.answer);
     assert.equal(set.length, 1, `${item.id}: a real answer is checked`);
-    assert.equal(set[0].correct, true);
+    assert.equal(set[0].answer, item.answer);
+    assert.equal(set[0].correct, item.section === 'hoeren' ? undefined : true, 'listening feedback waits for the section');
   }
 });
 

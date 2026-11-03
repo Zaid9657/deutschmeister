@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { undecidedTimePrepositionGaps } from './lib/time-preposition-cues.mjs';
 // Validator for the situational curricula (docs/course-factory/a11-rebuild/CONTRACT.md).
 //
 // The curriculum module is the single source for the lesson player, the checkpoint builder and
@@ -1109,9 +1110,9 @@ export const LEVELS = {
       // there (the level is frozen by owner decision, 2026-09-13). Seven of 201 against A1.1's 63 of
       // 263 is not a better draft — A1.2's Wortfelder are simply shorter. RE-MEASURED 2026-10-15
       // (DaF review #4 minor „Inputdeckung“): **4** — L4 `die Toilette` and L11 `die Sonne`, `warm`
-      // now stand in a dialogue line; L3 `das Kaufhaus`, `das Geschäft`, `die Bibliothek` and L7
-      // `der Körper` remain, each a line rewrite that would cost another word its input.
-      wortfeldWithoutInput: 4,
+      // now stand in a dialogue line. Finish audit 2026-11-03: L3 `das Kaufhaus`, `das Geschäft`,
+      // `die Bibliothek` and L7 `der Körper` gain word-card examples, lowering the ratchet to zero.
+      wortfeldWithoutInput: 0,
       // RULE 23b, measured on the paused A1.2 draft 2026-09-13 (round 18): **1** — L4 `die Toilette`,
       // a word the L4 task asks for („Ihre Frage“ … the field of the Formular) that reaches no
       // input surface of L4. Paused; re-measured only, and no A1.2 content was touched to get
@@ -3165,12 +3166,61 @@ const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
  * reported separately (a Lektion string is authored in `a11.js`, a pool string in the bank, the
  * sidecar or a template) and counted together against the level's ratchet.
  */
+// A form-presence check cannot detect an instruction reversed in translation.
+// Compare the explicit imperative pronoun actions in both languages. This is a
+// bounded semantic guard, not a claim to validate arbitrary translations.
+export function imperativePronounMismatch(notice) {
+  if (notice?.ruleSlug !== 'imperative') return [];
+  const de = String(notice.bodyDe || '').replace(/\*/g, '');
+  const en = String(notice.bodyEn || '').replace(/\*/g, '');
+  const mismatches = [];
+  for (const pronoun of ['ihr', 'Sie']) {
+    const german = de.match(new RegExp(`Bei ${pronoun} ([^.!:]+)`))?.[1] || '';
+    const english = en.match(new RegExp(`With ${pronoun} ([^.!:]+)`))?.[1] || '';
+    const deAction = /fällt.*weg|ohne Pronomen/.test(german) ? 'omit' : /bleibt/.test(german) ? 'keep' : null;
+    const enAction = /drop|omit|remov|leave out/.test(english) ? 'omit' : /keep|kept|stay|retain/.test(english) ? 'keep' : null;
+    if (deAction && enAction !== deAction) mismatches.push(pronoun);
+  }
+  return mismatches;
+}
+
+export function readingIntroductions(c) {
+  const errors = [];
+  const examples = (c.lektionen || []).flatMap((l) => l.notice?.readingExample ? [{ nr: l.nr, ...l.notice.readingExample }] : []);
+  for (const example of examples) {
+    if (['type', 'title', 'text', 'questionDe', 'questionEn', 'answer', 'explanationDe', 'explanationEn'].some((field) => !String(example[field] || '').trim())
+      || !example.text.includes(example.answer.replace(/[.!?]$/, ''))) errors.push(`L${example.nr}: incomplete worked reading example`);
+  }
+  for (const cp of c.checkpoints || []) {
+    const types = new Set((cp.lesen?.papers || []).flat().map((u) => u.type));
+    for (const type of ['ad', 'notice'].filter((type) => types.has(type))) {
+      if (!examples.some((ex) => ex.type === type && ex.nr <= cp.afterLektion)) errors.push(`${cp.id}: ${type} assessed before a worked introduction`);
+    }
+  }
+  return errors;
+}
+
+// In a housing listing, Zimmer counts living/bedrooms; kitchen and bathroom
+// are listed separately. A numbered enumeration must teach the same meaning.
+export function housingRoomCounts(c) {
+  const numbers = { ein: 1, eins: 1, eine: 1, zwei: 2, drei: 3, vier: 4, fünf: 5 };
+  return (c.lektionen || []).flatMap((l) => (l.dialog?.lines || []).flatMap((line) => {
+    const m = line.de.match(/^(Ein(?:s|e)?|Zwei|Drei|Vier|Fünf|\d+): ([^.?!]+)[.?!]/i);
+    if (!m) return [];
+    const rooms = m[2].match(/\b(?:Wohnzimmer|Schlafzimmer|Kinderzimmer|Arbeitszimmer|Esszimmer|Küche|Badezimmer)\b/g) || [];
+    if (!rooms.length) return [];
+    const count = rooms.filter((room) => !['Küche', 'Badezimmer'].includes(room)).length;
+    return (numbers[m[1].toLowerCase()] ?? Number(m[1])) === count ? [] : [`L${l.nr}: kitchen/bathroom included in Zimmer count`];
+  }));
+}
+
 export function englishTwins(c, spec = null, { poolItems = null } = {}) {
   const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
   poolItems = poolItems ?? loadPoolItems(s.level);
   const nonEmpty = (v) => typeof v === 'string' && v.trim().length > 0;
   const lektionen = [];
   for (const l of c?.lektionen || []) {
+    for (const pronoun of imperativePronounMismatch(l.notice)) lektionen.push({ nr: l.nr, field: 'notice.bodyEn', why: `${pronoun}: pronoun instruction contradicts German` });
     const body = l.notice?.bodyEn;
     if (!nonEmpty(body)) lektionen.push({ nr: l.nr, field: 'notice.bodyEn', why: 'fehlt' });
     else {
@@ -3196,6 +3246,12 @@ export function validateCurriculum(c, extraItems, poolItems) {
   if (!spec) return [`level "${c?.level}" is not registered in LEVELS — add its row before validating`];
   extraItems = extraItems ?? loadExtraItems(spec.level);
   poolItems = poolItems ?? loadPoolItems(spec.level);
+
+  if (spec.level === 'a1.2') {
+    for (const finding of undecidedTimePrepositionGaps(poolItems)) fail(`RULE 26: ${finding}`);
+  }
+  for (const finding of readingIntroductions(c)) fail(`RULE 27: ${finding}`);
+  for (const finding of housingRoomCounts(c)) fail(`RULE 28: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
