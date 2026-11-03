@@ -434,7 +434,7 @@ export const RULE_CARDS = {
   },
   "time-and-dates": {
     "titleDe": "um, am – die Uhrzeit sagen",
-    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.",
+    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag bin ich abends frei.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.",
     "commonMistakes": [
       {
         "wrong": "halb neun ist 9:30.",

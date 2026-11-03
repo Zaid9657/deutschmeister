@@ -108,7 +108,7 @@ test('help an A0 learner can read: L1 translations start open, every sound focus
   assert.equal(dialogOf(1).glossOpen, true, 'L1 opens with translations shown');
   assert.equal(dialogOf(2).glossOpen, false, 'later Lektionen start with German only; the toggle stays');
   const stage = readFileSync(new URL('../src/components/lesson/DialogStage.jsx', import.meta.url), 'utf8');
-  assert.match(stage, /useState\(\(\) => stage\.glossOpen === true\)/);
+  assert.match(stage, /useState\(\(\) => \(\{ en: stage\.glossOpen === true, de: false \}\)\)/);
   for (const l of CURRICULUM_A11.lektionen) assert.ok(l.phonetik.focusEn && l.phonetik.focusEn.length > 8, `L${l.nr} has an English sound focus`);
   const { buildWritingPrompt } = await import('../netlify/functions/evaluate-writing.mjs');
   const { writingTaskByKey } = await import('../src/data/writingTasks.js');

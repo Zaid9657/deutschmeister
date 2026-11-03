@@ -363,7 +363,7 @@ const RULE_CARD_OVERRIDES = {
       'Die Uhrzeit halb neun ist 8.30 und nicht 9.30.',
       'Offiziell lautet die Uhrzeit acht Uhr dreißig.',
       'Die Frage lautet: Wie spät ist es?',
-      'Feste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.',
+      'Feste Wendung: Hast du Zeit? Am Dienstag bin ich abends frei.',
       'im steht vor Monaten: im Mai.',
       'Die Ordnungszahl für das Datum lernt man erst in A1.2.',
       'English: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.',

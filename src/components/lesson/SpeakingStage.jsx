@@ -150,7 +150,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
             ))}
           </div>
           <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de">{open.promptDe}</p>
-          {open.promptEn && <p className="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{open.promptEn}</p>}
+          {lang !== 'de' && open.promptEn && <p className="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{open.promptEn}</p>}
           <p className="mt-2 text-[0.875rem] text-graphite">
             {t('speaking.coachLead', lang)}
           </p>

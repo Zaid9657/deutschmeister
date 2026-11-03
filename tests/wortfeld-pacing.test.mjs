@@ -35,6 +35,6 @@ test('a word card shows the dialogue line the word was met in — and nothing wh
   assert.ok(stage.lines.length > 0 && stage.lines.every((x) => typeof x === 'string'), 'the stage carries the dialogue lines');
   const src = readFileSync(new URL('../src/components/lesson/WortfeldStage.jsx', import.meta.url), 'utf8');
   assert.match(src, /groupWords\(words\.map/, 'the stage pages through groupWords');
-  assert.match(src, /line=\{lineFor\(spoken, stage\.lines\)\}/);
+  assert.match(src, /line=\{w\.exampleDe \|\| lineFor\(spoken, stage\.lines\)\}/);
   assert.doesNotMatch(src, /wortfeld.optional|<details/, 'no word is presented as optional — every one can be asked in match, checkpoint and review');
 });

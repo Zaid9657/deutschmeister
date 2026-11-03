@@ -824,6 +824,8 @@ test('every sentence-building item with a time or place Angabe accepts both word
   }
   // REVIEW #13 BLOCKER 1 „Viertens": a count can only ever report what the rule
   // FINDS, so it can never report what it stopped finding. The set is named.
+  // 2026-11-03: L8's taught-form repair reseats CP3 to a haben gap, not a frontable sentence.
+  // Both-order acceptance is still required above for EVERY pool and drawn checkpoint item.
   assert.deepEqual([...gradedIds].sort(), [
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
@@ -871,7 +873,6 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // The seats move; three frontable sentences are drawn, each asserted above to accept both orders.
     // RE-MEASURED, not relaxed.
     'a1.1-cp1-schreiben-2',
-    'a1.1-cp3-bausteine-4',
     'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });

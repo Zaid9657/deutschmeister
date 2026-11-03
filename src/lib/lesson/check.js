@@ -132,14 +132,14 @@ export function normalizeDictation(text) {
 export function normalizeSpelling(text) {
   return String(text ?? '')
     .normalize('NFC')
-    .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
+    .replace(/[\u2010-\u2015\u2212\uFF0D.,/:·-]/g, ' ')
     .replace(/\s+/g, ' ')
     .replace(/(?<=(^|\s)\p{L})\s+(?=\p{L}(\s|$))/gu, '')
     .trim();
 }
 
 /** An expected answer that is a spelled-out word: "H-A-L-L-O", "T S C H Ü S S". */
-export const SPELLED_OUT_RE = /^\p{L}([-\s]\p{L})+$/u;
+export const SPELLED_OUT_RE = /^\p{L}([\s\u2010-\u2015\u2212\uFF0D.,/:·-]+\p{L})+$/u;
 
 /** True when any accepted answer is a spelled-out letter sequence. */
 export function spellingApplies(expected) {

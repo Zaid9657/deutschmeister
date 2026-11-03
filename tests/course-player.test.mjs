@@ -442,7 +442,7 @@ test('PracticeItem and DictationItem render feedback through FeedbackSheet, not 
     const src = read(f);
     assert.ok(src.includes("import FeedbackSheet from './FeedbackSheet.jsx';"), `${f} must import FeedbackSheet`);
     assert.ok(src.includes('<FeedbackSheet'), `${f} must render <FeedbackSheet>`);
-    assert.ok(src.includes('onContinue={onNext}'), `${f} must wire Continue to onNext`);
+    assert.ok(src.includes('onContinue={canRetryTypo ? retryTypo : onNext}'), `${f} must wire Continue to onNext after at most one typo retry`);
   }
 });
 
