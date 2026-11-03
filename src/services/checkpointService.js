@@ -28,6 +28,29 @@ export const ATTEMPT_LIMIT = 3;
 export const ATTEMPT_WINDOW_HOURS = 8;
 const WINDOW_MS = ATTEMPT_WINDOW_HOURS * 60 * 60 * 1000;
 const LOCAL_KEY = 'dm_checkpoint_attempts';
+const PAPER_KEY = 'dm_checkpoint_papers';
+
+// Exposure is a lifetime cursor, separate from the unchanged eight-hour limit.
+// Scope it to the account (or guest); a different learner starts their own bank.
+function paperHistory(userId, checkpointId, update = null) {
+  try {
+    const all = JSON.parse(window.localStorage.getItem(PAPER_KEY) || '{}');
+    const key = JSON.stringify([userId || 'guest', checkpointId]);
+    const previous = all[key] || { count: 0, stamp: null };
+    if (!update) return previous;
+    all[key] = update(previous);
+    window.localStorage.setItem(PAPER_KEY, JSON.stringify(all));
+    return all[key];
+  } catch { return { count: 0, stamp: null }; }
+}
+
+function countPaper(userId, checkpointId, round, stamp) {
+  paperHistory(userId, checkpointId, (previous) => ({
+    count: stamp && stamp === previous.stamp ? previous.count
+      : Math.max(previous.count + 1, Number.isInteger(round) ? round + 1 : 0),
+    stamp,
+  }));
+}
 
 /** `a1.1` → `a11_course` — the program key the course home already reads. */
 export const programKeyFor = (level) => `${String(level || '').toLowerCase().replace(/\./g, '')}_course`;
@@ -80,10 +103,12 @@ function attemptState(timestamps) {
 // ── reads ───────────────────────────────────────────────────────────────────
 
 /** How many attempts are left in the current 8-hour window? */
-export async function fetchAttemptState(userId, checkpointId) {
-  if (!userId) return attemptState(localAttempts(checkpointId));
+export async function fetchAttemptState(userId, checkpointId, client = supabase) {
+  const local = () => ({ ...attemptState(localAttempts(checkpointId)),
+    paperRound: Math.max(paperHistory(userId, checkpointId).count, localAttempts(checkpointId).length) });
+  if (!userId) return local();
   const since = new Date(Date.now() - WINDOW_MS).toISOString();
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('lesson_attempts')
     .select('created_at')
     .eq('user_id', userId)
@@ -94,9 +119,14 @@ export async function fetchAttemptState(userId, checkpointId) {
     .order('created_at', { ascending: true });
   if (error) {
     console.error('[checkpointService] fetchAttemptState:', error.message);
-    return attemptState(localAttempts(checkpointId));
+    return local();
   }
-  return attemptState((data || []).map((r) => new Date(r.created_at).getTime()));
+  const history = await client.from('lesson_attempts').select('created_at', { count: 'exact', head: true })
+    .eq('user_id', userId).eq('lektion_id', checkpointId).eq('item_id', checkpointId).eq('stage', 'checkpoint');
+  const remoteCount = history.error ? 0 : (history.count ?? history.data?.length ?? 0);
+  const paperRound = Math.max(remoteCount, local().paperRound);
+  paperHistory(userId, checkpointId, (previous) => ({ ...previous, count: paperRound }));
+  return { ...attemptState((data || []).map((r) => new Date(r.created_at).getTime())), paperRound };
 }
 
 /**
@@ -129,8 +159,11 @@ export async function fetchCheckpointStatus(userId, checkpointId) {
  * limit counts, and — when it passed — completion in lesson_progress and
  * program_progress. Returns true when the remote write succeeded.
  */
-export async function recordAttempt(userId, { level, checkpointId, items, answers = {}, result, stamp = null, retry = false }, client = supabase, complete = completeCheckpoint) {
-  if (!retry) pushLocalAttempt(checkpointId);
+export async function recordAttempt(userId, { level, checkpointId, items, answers = {}, result, stamp = null, round = null, retry = false }, client = supabase, complete = completeCheckpoint) {
+  if (!retry) {
+    pushLocalAttempt(checkpointId);
+    countPaper(userId, checkpointId, round, stamp);
+  }
   if (!userId) {
     if (result?.passed) recordLocalCheckpoint({ level, checkpointId, accuracy: (Number(result.overall) || 0) / 100, stamp });
     return false;

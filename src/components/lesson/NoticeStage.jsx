@@ -64,6 +64,18 @@ export default function NoticeStage({ stage, onBack, onDone }) {
   return (
     <StageShell eyebrow={t('stage.notice.eyebrow', lang)} title={notice.title} onBack={onBack} primaryLabel={t('action.understood', lang)} onPrimary={onDone}>
       <Card className="p-5 sm:p-6">
+        {notice.readingExample && (
+          <section className="mb-5 border-b border-rule pb-5" aria-label={notice.readingExample.title}>
+            <h2 className="font-bold text-ink" lang="de">{notice.readingExample.title}</h2>
+            <p className="mt-2 text-sm text-graphite">{lang === 'de' ? notice.readingExample.questionDe : notice.readingExample.questionEn}</p>
+            <blockquote className="mt-3 whitespace-pre-line border-l-2 border-siegel pl-4 text-ink" lang="de">{notice.readingExample.text}</blockquote>
+            <details className="mt-3 text-sm">
+              <summary className="cursor-pointer font-bold text-siegel">{lang === 'de' ? 'Antwort und Erklärung' : 'Answer and explanation'}</summary>
+              <p className="mt-2 font-bold" lang="de">{notice.readingExample.answer}</p>
+              <p className="mt-1 text-graphite">{lang === 'de' ? notice.readingExample.explanationDe : notice.readingExample.explanationEn}</p>
+            </details>
+          </section>
+        )}
         <p className="text-[1rem] leading-relaxed text-graphite" lang={english ? 'en' : 'de'}>{inline(main)}</p>
         <OtherLanguage text={other} lang={lang} className="mt-3" />
         {(notice.examples || []).length > 0 && (

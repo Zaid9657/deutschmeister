@@ -194,7 +194,7 @@ test('checkpoint retake: a new paper under the same rules, never the same 20 ite
   const cp1 = CURRICULUM_A11.checkpoints[0];
   assert.equal(paperSeed(cp1, 0), undefined);
   assert.equal(paperSeed(cp1, 2), `${cp1.id}-round-2`);
-  assert.match(page, /setRound\(attempts\?\.used \|\| 0\)/, 'a reload starts at this window\'s next paper');
+  assert.match(page, /setRound\(attempts\?\.paperRound \?\? attempts\?\.used \?\? 0\)/, 'a reload starts at the next lifetime paper');
   assert.doesNotMatch(page, /shuffle\(built/, 'no reshuffle of the old paper');
 });
 
@@ -501,7 +501,7 @@ test('the course says what its final test is and what an account is for', async 
   const { readFileSync } = await import('node:fs');
   const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
   assert.doesNotMatch(home, /ends with the \{curriculum\.examName\} final test/);
-  assert.match(home, /ends with a shortened practice test in the \{curriculum\.examName\} format/);
+  assert.match(home, /ends with a shortened practice test in the \$\{curriculum\.examName\} format/);
   const { A11_META } = await import('../src/data/curricula/a11.meta.js');
   assert.match(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
   assert.match(A11_META.aboutEn, /not an official exam/);

@@ -92,7 +92,7 @@ const exercise = async function () {
         await wait(); await click('Check');
       }
       answers[item.id] = answer;
-      if (item.section === 'lesen') {
+      if (['lesen', 'hoeren'].includes(item.section)) {
         assert(app.textContent.includes('Answer recorded.'), 'No neutral receipt');
         assert(!app.querySelector('[data-icon="Check"], [data-icon="X"], [class*="limette"], [class*="himbeer"]'), 'Correctness colour or icon leaked');
         assert(!app.textContent.includes('The answer is:') && !app.textContent.includes('Not right'), 'Correctness text leaked');
@@ -100,15 +100,16 @@ const exercise = async function () {
         if (reading === 1) await pause('Observed: wrong Lesen response; neutral receipt; no correctness, key marking or explanation.');
       }
       await click('Continue');
-      if (item.section === 'lesen' && reading === 4) {
-        assert(app.textContent.includes('Lesen — feedback'), 'Section review missing');
-        assert(app.querySelectorAll('ol > li').length === 4, 'Incomplete feedback');
-        for (const row of window.fixture.items.filter((it) => it.section === 'lesen')) {
+      const group = window.fixture.items.filter((it) => it.section === item.section);
+      if (['lesen', 'hoeren'].includes(item.section) && item.id === group.at(-1).id) {
+        assert(app.textContent.includes(`${item.section === 'lesen' ? 'Lesen' : 'Hören'} — feedback`), 'Section review missing');
+        assert(app.querySelectorAll('ol > li').length === group.length, 'Incomplete feedback');
+        for (const row of group) {
           assert(app.textContent.includes(row.answer), 'Released key missing');
           assert(!row.explanationEn || app.textContent.includes(row.explanationEn), 'Released explanation missing');
         }
         assert(!window.saved.length, 'Section review saved an attempt');
-        await pause('Observed: all four Lesen items complete; full feedback released.');
+        await pause(`Observed: all ${group.length} ${item.section} items complete; full feedback released.`);
         await click('Continue');
       }
     }
@@ -118,7 +119,7 @@ const exercise = async function () {
     assert(JSON.stringify(window.saved[0].result) === JSON.stringify(expected), 'Saved score changed');
     assert(window.saved[0].stamp && window.saved[0].level === window.fixture.curriculum.level, 'Attempt identity missing');
     assert(app.textContent.includes(`${expected.overall} %`), 'Result score missing');
-    status.textContent = `PASS browser ${window.fixture.curriculum.level}: 20 items; Lesen text unchanged; 4 neutral receipts; full section feedback; 1 stamped attempt; answers, scoring and result preserved.`;
+    status.textContent = `PASS browser ${window.fixture.curriculum.level}: 20 items; Lesen text unchanged; 9 neutral receipts; full listening and reading feedback; 1 stamped attempt; answers, scoring and result preserved.`;
   } catch (error) { status.textContent = `FAIL browser: ${error.message}`; console.error(error); }
 };
 

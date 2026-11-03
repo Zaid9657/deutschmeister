@@ -155,7 +155,7 @@ test('nothing is saved before the restore decision, so a fast Start can never ov
   assert.deepEqual(runSave({ restoreDone: true, phase: 'result' }).map((w) => w.op), ['clear'], 'the result clears it');
   assert.deepEqual(runSave({ restoreDone: true, phase: 'intro' }), [], 'the intro saves nothing');
   // Start itself waits for the decision.
-  assert.match(PAGE, /<Button disabled=\{!items\.length \|\| !restoreDone \|\| Boolean\(attempts\?\.blocked\)\} onClick=\{\(\) => \{ setRound\(attempts\?\.used \|\| 0\);/);
+  assert.match(PAGE, /<Button disabled=\{!items\.length \|\| !restoreDone \|\| !attempts \|\| Boolean\(attempts\.blocked\)\} onClick=\{\(\) => \{ setRound\(attempts\?\.paperRound \?\? attempts\?\.used \?\? 0\);/);
   assert.match(PAGE, /\{\(!items\.length \|\| !restoreDone\) && <p className="mt-2 text-sm text-graphite">\{t\('checkpoint\.loadingItems', lang\)\}<\/p>\}/);
 });
 
@@ -182,5 +182,5 @@ test('a paper belongs to one owner: it mounts after auth settles, keyed by the o
     assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), null), null, 'a guest reload resumes nothing');
     assert.equal(readCheckpointRun('a1.1', CP.id, Date.now(), 'user-b'), null, 'nor does the next account');
   });
-  assert.match(PAGE, /setRound\(attempts\?\.used \|\| 0\)/, 'a fresh Start still draws this window\'s next paper');
+  assert.match(PAGE, /setRound\(attempts\?\.paperRound \?\? attempts\?\.used \?\? 0\)/, 'a fresh Start draws the next lifetime paper');
 });
