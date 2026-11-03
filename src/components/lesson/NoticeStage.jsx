@@ -67,7 +67,9 @@ export default function NoticeStage({ stage, onBack, onDone }) {
         <p className="text-[1rem] leading-relaxed text-graphite" lang={english ? 'en' : 'de'}>{inline(main)}</p>
         <OtherLanguage text={other} lang={lang} className="mt-3" />
         {(notice.examples || []).length > 0 && (
-          <ul className="mt-5 space-y-2 border-t border-rule pt-4" lang="de">
+          <div className="mt-5 border-t border-rule pt-4">
+          <p className="mb-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('stage.notice.examples', lang)}</p>
+          <ul className="space-y-2" lang="de">
             {notice.examples.map((ex) => (
               <li key={ex} className="text-[1.0625rem] leading-relaxed text-ink">
                 <span aria-hidden="true" className="mr-2 text-siegel">›</span>
@@ -75,11 +77,17 @@ export default function NoticeStage({ stage, onBack, onDone }) {
               </li>
             ))}
           </ul>
+          </div>
+        )}
+        {(notice.formExamples || []).length > 0 && (
+          <div className="mt-5 border-t border-rule pt-4">
+            <p className="font-bold text-ink">{t('stage.notice.moreExamples', lang)}</p>
+            <ul className="mt-2 space-y-2 text-ink" lang="de">
+              {notice.formExamples.map((ex) => <li key={ex}>{ex}</li>)}
+            </ul>
+          </div>
         )}
       </Card>
-      <p className="mt-3 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">
-        {t('stage.notice.examples', lang)}
-      </p>
     </StageShell>
   );
 }

@@ -260,7 +260,7 @@ export function formsOf(entry, irregulars = IRREGULAR_FORMS) {
  * and the ratchet moves with it — `node scripts/validate-curriculum.mjs a1.1` is the source of truth
  * from here on, not this comment.
  */
-export const MAX_UNCOVERED_WORTFELD = 14;          // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNCOVERED_WORTFELD = 0; // a1.1; closed 2026-11-03
 
 /**
  * RULE 12 — every can-do line is rehearsed somewhere in its own Lektion. Was a ratchet through DaF
@@ -281,7 +281,7 @@ export const MAX_UNCOVERED_WORTFELD = 14;          // a1.1; per level in LEVELS 
  * level. Four Lektionen (7, 10, 11, 12) are in that state; the UI agent is making the prompt itself
  * travel with `saveCourseContext`, and when it does this ratchet goes to 0 (DaF review #4, MAJOR 4).
  */
-export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS below
+export const MAX_MISSIONLESS_LEKTIONEN = 0;        // a1.1; handoff measured 2026-11-03
 
 /**
  * RULE 11 ratchet — how many (item, token) pairs in the pool the learner is served may still use a
@@ -418,7 +418,7 @@ export const PRIMARY_ORDER_A12 = [
  */
 // 26 → **23** on 2026-09-13 (round 13): the six rewritten Beispieltexte are Lektion input too,
 // and three forms their Notice cards bold now have a Beleg in their own Lektion.
-export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 23;  // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 0; // a1.1; closed 2026-11-03
 
 /**
  * RULE 15 ratchet — how many grammatical forms a level's PRODUCTION lines may still use before the
@@ -433,7 +433,7 @@ export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 23;  // a1.1; per level in LEVELS 
  * in L6 (`time-and-dates`, L8) and `Hast`/`habe` in L8 (`verb-haben`, L9) — both in windows whose
  * dialogue has no alternative line free of them, i.e. a content repair, not a window move.
  */
-export const MAX_UNTAUGHT_IN_PRODUCTION = 3;       // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_IN_PRODUCTION = 0; // a1.1; closed 2026-11-03
 
 /**
  * RULE 15b ratchet — how many DEFERRED CONSTRUCTIONS a level still puts in the learner's own mouth.
@@ -621,7 +621,7 @@ export const MAX_UNANSWERABLE_LEITPUNKTE = 0;      // a1.1; per level in LEVELS 
  * and nothing joined. `L4 der Flohmarkt` and `L6 die Nummer` still stand only in their model text
  * and are the head of the work order.
  */
-export const MAX_WORTFELD_WITHOUT_INPUT = 57;      // a1.1; per level in LEVELS below — measured 2026-09-13 (round 18)
+export const MAX_WORTFELD_WITHOUT_INPUT = 0;      // a1.1; closed 2026-11-03 with contextual word-card examples
 
 /**
  * RULE 22 ratchet — how many sentences of a level's Mitteilung model texts are a FORM read out.
@@ -1036,7 +1036,7 @@ export const LEVELS = {
       // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
       untaughtDrawnTokens: 0,
       // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
-      missionlessLektionen: 1,
+      missionlessLektionen: 0,
       unexemplifiedNoticeForms: 0,
       untaughtInProduction: 0,
       // RULE 15b, measured on the paused A1.2 draft 2026-09-13 (round 12): **0**. The level's
@@ -1159,6 +1159,7 @@ function functionWordsUsedIn(l, spec) {
     l.dialog?.title, l.dialog?.setting,
     ...(l.dialog?.lines || []).map((x) => x.de),
     l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+    ...(l.notice?.formExamples || []), ...(l.wortfeld || []).map((w) => w.exampleDe),
   ];
   for (const text of sources) {
     for (const t of tokenise(text || '')) {
@@ -1289,6 +1290,7 @@ export function wortfeldCoverage(c, extraItems, poolItems) {
       l.dialog?.title, l.dialog?.setting,
       ...(l.dialog?.lines || []).map((x) => x.de),
       l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+      ...(l.notice?.formExamples || []), ...(l.wortfeld || []).map((w) => w.exampleDe),
       l.sprechen?.open?.promptDe, ...(l.sprechen?.open?.hintWords || []),
       l.phonetik?.focus, ...(l.phonetik?.items || []),
       l.pretest?.promptDe, l.pretest?.model, ...(l.pretest?.accepted || []),
@@ -1823,14 +1825,19 @@ export function canDoRehearsal(c, extraItems) {
 }
 
 /**
- * RULE 13: a `sprechen.open` task whose `missionOrder` is null. `SpeakingStage.jsx` appends
- * `&mission=` only when the order is set, so those four Lektionen show a prompt and then send the
- * learner to the generic /speaking page, which never receives it. Listed, ratcheted, and 0 once the
- * prompt itself travels in `saveCourseContext` (DaF review #4, MAJOR 4).
+ * RULE 13: every open speaking task has a destination: a numbered mission or
+ * a complete course task. SpeakingStage saves the latter in course context and
+ * SpeakingPage sends it to the coach. A missing mission ID alone is not debt.
+ * Blank prompts, missing exam parts, missing hints or informal task address
+ * cannot replace a mission. The handoff is exercised in speaking-course-task.
  */
 export function missionlessLektionen(c) {
   return (c.lektionen || [])
-    .filter((l) => l.sprechen?.open && (l.sprechen.open.missionOrder === null || l.sprechen.open.missionOrder === undefined))
+    .filter((l) => {
+      const task = l.sprechen?.open;
+      return task && !(Number.isInteger(task.missionOrder) && task.missionOrder > 0)
+        && !(task.promptDe?.trim() && task.teil?.trim() && task.anrede === 'Sie' && Array.isArray(task.hintWords) && task.hintWords.some((w) => typeof w === 'string' && w.trim()));
+    })
     .map((l) => l.nr);
 }
 
@@ -1853,7 +1860,7 @@ export function noticeFormsInInput(l) {
   const input = new Set(tokenise([
     ...(l.dialog?.lines || []).map((x) => x.de),
     l.pretest?.model, l.schreiben?.sample, l.schreiben?.taskDe,
-    ...(l.notice?.examples || []),
+    ...(l.notice?.examples || []), ...(l.notice?.formExamples || []),
   ].filter(Boolean).join(' ')).map((t) => t.toLowerCase()));
   const body = String(l.notice?.bodyDe || '');
   const missing = [];
@@ -2457,6 +2464,7 @@ function inputSurfaceTokens(l) {
   const sources = [
     l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
     l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+    ...(l.notice?.formExamples || []), ...(l.wortfeld || []).map((w) => w.exampleDe),
     l.pretest?.model, ...(l.pretest?.accepted || []),
   ].filter(Boolean);
   const seen = new Set();
@@ -3436,6 +3444,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
   const germanFields = (l) => [
     l.title, l.situation, l.handlungsfeld, ...(l.canDo || []),
     l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+    ...(l.notice?.formExamples || []), ...(l.wortfeld || []).map((w) => w.exampleDe),
     l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
     l.pretest?.promptDe, l.pretest?.model, l.phonetik?.focus,
     l.sprechen?.open?.promptDe, ...(l.sprechen?.open?.hintWords || []),

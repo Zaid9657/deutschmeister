@@ -56,7 +56,7 @@ function ModelFirstPretest({ pretest, id, onBack, onDone }) {
     <StageShell
       eyebrow={t('pretest.first.eyebrow', lang)}
       title={pretest.promptDe}
-      lead={pretest.promptEn}
+      lead={lang === 'de' ? null : pretest.promptEn}
       onBack={onBack}
       primaryLabel={checked ? t('action.next', lang) : t('action.check', lang)}
       primaryDisabled={!checked && !value.trim()}
@@ -128,7 +128,7 @@ function RetrievalPretest({ pretest, id, onBack, onDone }) {
     <StageShell
       eyebrow={t('stage.pretest.eyebrow', lang)}
       title={pretest.promptDe}
-      lead={pretest.promptEn}
+      lead={lang === 'de' ? null : pretest.promptEn}
       onBack={onBack}
       primaryLabel={revealed ? t('action.next', lang) : t('action.showAnswer', lang)}
       onPrimary={revealed ? onDone : () => setRevealed(true)}

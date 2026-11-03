@@ -114,7 +114,7 @@ function WordCard({ w, lang, flipped, onToggle, line }) {
       {/* Outside the flip button, so the button's name (the word) still matches what it shows. */}
       {line && (
         <p className="text-[0.8125rem] italic leading-snug text-graphite [overflow-wrap:anywhere]" lang="de">
-          <span className="sr-only">{t('wortfeld.inDialog', lang)}: </span>„{line}“
+          <span className="sr-only">{t('wortfeld.example', lang)}: </span>„{line}“
         </p>
       )}
 
@@ -199,7 +199,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
     const spoken = w.de || w.word || '';
     return (
       <li key={`${spoken}-${i}`}>
-        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={lineFor(spoken, stage.lines)} />
+        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={w.exampleDe || lineFor(spoken, stage.lines)} />
       </li>
     );
   };

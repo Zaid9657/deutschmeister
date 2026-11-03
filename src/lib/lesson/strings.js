@@ -35,6 +35,8 @@ export const LESSON_LANGS = ['en', 'de'];
 
 export const STRINGS = {
   en: {
+    'wortfeld.example': 'Example',
+    'stage.notice.moreExamples': 'More examples',
     // ── shell / actions ──────────────────────────────────────────────────────
     'shell.back': 'Back',
     'action.next': 'Continue',
@@ -424,6 +426,8 @@ export const STRINGS = {
   },
 
   de: {
+    'wortfeld.example': 'Beispiel',
+    'stage.notice.moreExamples': 'Weitere Beispiele',
     // ── shell / actions ──────────────────────────────────────────────────────
     'shell.back': 'Zurück',
     'action.next': 'Weiter',

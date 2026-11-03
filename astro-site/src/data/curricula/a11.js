@@ -190,19 +190,19 @@ export const CURRICULUM_A11 = {
         { de: 'Guten Morgen', word: 'Guten Morgen', article: null, plural: null, en: 'Good morning', wordId: 'e85312e9-0f63-454d-98cf-b1ea207c1a6e' },
         { de: 'Guten Tag', word: 'Guten Tag', article: null, plural: null, en: 'Good day / Good afternoon', wordId: '92c9c069-cc21-451d-a893-b18316e72381' },
         { de: 'Guten Abend', word: 'Guten Abend', article: null, plural: null, en: 'Good evening', wordId: '3b01f942-7e88-4838-82b4-186eb42d9521' },
-        { de: 'Gute Nacht', word: 'Gute Nacht', article: null, plural: null, en: 'Good night', wordId: '5f4171f4-0b78-4999-893c-dc4b11886b40' },
+        { de: 'Gute Nacht', exampleDe: 'Gute Nacht, Ana!', word: 'Gute Nacht', article: null, plural: null, en: 'Good night', wordId: '5f4171f4-0b78-4999-893c-dc4b11886b40' },
         { de: 'Tschüss', word: 'Tschüss', article: null, plural: null, en: 'Bye', wordId: '55ba3391-5b13-486d-ab68-3beb023c70df' },
         { de: 'Auf Wiedersehen', word: 'Auf Wiedersehen', article: null, plural: null, en: 'Goodbye', wordId: 'f1f59c8b-8842-49da-b10a-9e154f6de7e2' },
         { de: 'Bis morgen', word: 'Bis morgen', article: null, plural: null, en: 'See you tomorrow', wordId: '28a1c448-c9c1-4796-aab1-9f417c26df94' },
         { de: 'Danke', word: 'Danke', article: null, plural: null, en: 'Thank you', wordId: 'ec26881d-ea91-41dc-8da4-6efc3dc04222' },
         { de: 'Bitte', word: 'Bitte', article: null, plural: null, en: 'Please / You\'re welcome', wordId: '501d7595-03fc-4696-a141-677e345df16d' },
-        { de: 'Entschuldigung', word: 'Entschuldigung', article: null, plural: null, en: 'Excuse me / Sorry', wordId: '8db3b3da-db54-4372-970e-bff5e8111b5f' },
-        { de: 'Freut mich', word: 'Freut mich', article: null, plural: null, en: 'Nice to meet you', wordId: '9e09ab43-124d-42df-8b7d-38db7d8692d7' },
+        { de: 'Entschuldigung', exampleDe: 'Entschuldigung, wie heißen Sie?', word: 'Entschuldigung', article: null, plural: null, en: 'Excuse me / Sorry', wordId: '8db3b3da-db54-4372-970e-bff5e8111b5f' },
+        { de: 'Freut mich', exampleDe: 'Ich heiße Ana. – Freut mich!', word: 'Freut mich', article: null, plural: null, en: 'Nice to meet you', wordId: '9e09ab43-124d-42df-8b7d-38db7d8692d7' },
         { de: 'Willkommen', word: 'Willkommen', article: null, plural: null, en: 'Welcome', wordId: 'aae696c2-6d27-4aa7-8832-f618e2d160b1' },
         { de: 'Wie geht es dir?', word: 'Wie geht es dir?', article: null, plural: null, en: 'How are you? (informal)', wordId: '41dd2800-884a-440c-91b4-e771ebb03a35' },
         { de: 'Wie geht es Ihnen?', word: 'Wie geht es Ihnen?', article: null, plural: null, en: 'How are you? (formal)', wordId: '079b8258-5044-42cd-85d6-9b51e12b55c7' },
         { de: 'Mir geht es gut', word: 'Mir geht es gut', article: null, plural: null, en: 'I\'m fine', wordId: '2b299a38-0052-4469-aaeb-d19292f4679b' },
-        { de: 'der Gruß', word: 'Gruß', article: 'der', plural: 'Grüße', en: 'greeting', wordId: 'e3b63654-5c07-412f-b209-1ea0ec0d140a' },
+        { de: 'der Gruß', exampleDe: '„Guten Tag“ ist ein Gruß.', word: 'Gruß', article: 'der', plural: 'Grüße', en: 'greeting', wordId: 'e3b63654-5c07-412f-b209-1ea0ec0d140a' },
         { de: 'heißen', word: 'heißen', article: null, plural: null, en: 'to be called', wordId: '7422ba1e-b9a8-4559-892a-a1104fc980d0' },
         { de: 'buchstabieren', word: 'buchstabieren', article: null, plural: null, en: 'to spell', wordId: 'c32af826-0d23-45a0-8e21-5f5687937153' },
         { de: 'der Buchstabe', word: 'Buchstabe', article: 'der', plural: 'Buchstaben', en: 'letter', wordId: '9d002506-cae1-4a26-8e93-b2c9523c80c1' },
@@ -313,10 +313,10 @@ export const CURRICULUM_A11 = {
         { de: 'der Wohnort', word: 'Wohnort', article: 'der', plural: 'Wohnorte', en: 'place of residence', field: true, wordId: '67d01c31-7fcd-4662-b115-750547b1c7bf' },
         { de: 'ledig', word: 'ledig', article: null, plural: null, en: 'single, unmarried', wordId: 'e8bd092c-07b9-4b09-a80b-d1f22e5ad9e5' },
         { de: 'verheiratet', word: 'verheiratet', article: null, plural: null, en: 'married', wordId: '2d10cc55-fb90-4081-8484-51fad5923591' },
-        { de: 'der Student', word: 'Student', article: 'der', plural: 'Studenten', en: 'student (m)', wordId: '7604734b-aab8-45da-ab00-da87605a9d20' },
+        { de: 'der Student', exampleDe: 'Ali ist Student.', word: 'Student', article: 'der', plural: 'Studenten', en: 'student (m)', wordId: '7604734b-aab8-45da-ab00-da87605a9d20' },
         { de: 'die Studentin', word: 'Studentin', article: 'die', plural: 'Studentinnen', en: 'student (f)', wordId: '7d778f1a-5ddb-4b60-b46d-0ca2fdb03652' },
         { de: 'der Lehrer', word: 'Lehrer', article: 'der', plural: 'Lehrer', en: 'teacher (m)', wordId: '401b018a-1c7a-48c4-b06b-88cce32fcdcd' },
-        { de: 'die Lehrerin', word: 'Lehrerin', article: 'die', plural: 'Lehrerinnen', en: 'teacher (f)', wordId: '1e7ad6c2-37b5-4063-971c-4b2090cafa9e' },
+        { de: 'die Lehrerin', exampleDe: 'Die Frau ist Lehrerin.', word: 'Lehrerin', article: 'die', plural: 'Lehrerinnen', en: 'teacher (f)', wordId: '1e7ad6c2-37b5-4063-971c-4b2090cafa9e' },
         // The digits 0–10 are ONE Wortfeld entry, not ten (DaF review: ten of 25 slots were digits,
         // which inflated the word count and crowded out the Personalien lexis the Handlungsfeld needs).
         { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', meta: true, wordId: '1087cf2f-d531-45d9-b04c-803440a7563a' },
@@ -422,6 +422,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Ich bin', 'Ich arbeite als', 'Von Beruf bin ich'],
       },
       notice: {
+        formExamples: ['sein: Ich bin Studentin.', 'Du bist Student. Ihr seid Studenten.'],
         title: 'sein: ich bin, du bist, Sie sind',
         // THE LAST CLAUSE IS THE ROUND-17 REPAIR (DaF review #16, BLOCKER). It used to read „Auch
         // die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.“ — a rule that is not a
@@ -563,8 +564,8 @@ export const CURRICULUM_A11 = {
       wortfeld: [
         { de: 'die Familie', word: 'Familie', article: 'die', plural: 'Familien', en: 'family', wordId: '30dfaef4-181f-45d7-b8c7-d16145d1bd5f' },
         { de: 'die Eltern', word: 'Eltern', article: 'die', plural: 'Eltern', en: 'parents', wordId: '5c95d494-eaca-49bc-b8d5-7007c5e068fa' },
-        { de: 'der Vater', word: 'Vater', article: 'der', plural: 'Väter', en: 'father', wordId: 'cb74f1e9-0592-4b56-b9b0-27e360e49024' },
-        { de: 'die Mutter', word: 'Mutter', article: 'die', plural: 'Mütter', en: 'mother', wordId: '5965edfd-4846-4df4-9eb0-bc7f22953204' },
+        { de: 'der Vater', exampleDe: 'Das ist der Vater. Er spricht Deutsch.', word: 'Vater', article: 'der', plural: 'Väter', en: 'father', wordId: 'cb74f1e9-0592-4b56-b9b0-27e360e49024' },
+        { de: 'die Mutter', exampleDe: 'Das ist die Mutter. Sie spricht Deutsch.', word: 'Mutter', article: 'die', plural: 'Mütter', en: 'mother', wordId: '5965edfd-4846-4df4-9eb0-bc7f22953204' },
         { de: 'der Bruder', word: 'Bruder', article: 'der', plural: 'Brüder', en: 'brother', wordId: '297b72b1-88b7-48c7-9aba-f5ffd87ae46d' },
         { de: 'die Schwester', word: 'Schwester', article: 'die', plural: 'Schwestern', en: 'sister', wordId: 'd450b2e5-7d92-4b87-88a0-611ed280fc65' },
         { de: 'die Geschwister', word: 'Geschwister', article: 'die', plural: 'Geschwister', en: 'siblings', wordId: 'a7571ed6-9ce8-4bc8-b6e3-1c9b55517f5c' },
@@ -572,12 +573,12 @@ export const CURRICULUM_A11 = {
         { de: 'die Tochter', word: 'Tochter', article: 'die', plural: 'Töchter', en: 'daughter', wordId: '4b9c7830-8179-4dfe-900c-5d20300045c5' },
         { de: 'das Kind', word: 'Kind', article: 'das', plural: 'Kinder', en: 'child', wordId: '20a50d1e-4b71-4d3a-8bf1-1b0278d3d445' },
         { de: 'der Mann', word: 'Mann', article: 'der', plural: 'Männer', en: 'man; husband', wordId: '9551becf-a28b-4e81-bfb0-ad2e25f0d4b4' },
-        { de: 'die Frau', word: 'Frau', article: 'die', plural: 'Frauen', en: 'woman; wife; Mrs/Ms (Anrede)', wordId: '14664846-bff1-4940-b390-e7486006eed1' },
+        { de: 'die Frau', exampleDe: 'Die Frau spricht Deutsch.', word: 'Frau', article: 'die', plural: 'Frauen', en: 'woman; wife; Mrs/Ms (Anrede)', wordId: '14664846-bff1-4940-b390-e7486006eed1' },
         { de: 'das Baby', word: 'Baby', article: 'das', plural: 'Babys', en: 'baby', wordId: 'a8ad826c-2216-4527-b344-1cd35778fae7' },
-        { de: 'das Einzelkind', word: 'Einzelkind', article: 'das', plural: 'Einzelkinder', en: 'only child', wordId: '4130e54e-fe3d-4e50-b059-d6e1c45777bb' },
+        { de: 'das Einzelkind', exampleDe: 'Ich bin Einzelkind.', word: 'Einzelkind', article: 'das', plural: 'Einzelkinder', en: 'only child', wordId: '4130e54e-fe3d-4e50-b059-d6e1c45777bb' },
         { de: 'jung', word: 'jung', article: null, plural: null, en: 'young', wordId: '84422f10-4718-4f70-a51b-c9e586a0a38b' },
         { de: 'alt', word: 'alt', article: null, plural: null, en: 'old', wordId: 'cf1c85f6-8089-46af-b6b8-59ff7b8d9fdd' },
-        { de: 'zusammen', word: 'zusammen', article: null, plural: null, en: 'together', wordId: 'ab3ffe19-9288-42ed-9d01-09e3f561e748' },
+        { de: 'zusammen', exampleDe: 'Wir sprechen zusammen Deutsch.', word: 'zusammen', article: null, plural: null, en: 'together', wordId: 'ab3ffe19-9288-42ed-9d01-09e3f561e748' },
         { de: 'die Sprache', word: 'Sprache', article: 'die', plural: 'Sprachen', en: 'language', wordId: '5c6e3969-d15a-4f5c-bc7f-e8629801c2da' },
         { de: 'Deutsch', word: 'Deutsch', article: null, plural: null, en: 'German (language)', wordId: '2fd09a1f-cf75-4094-8296-3dc81e4967ab' },
         { de: 'Englisch', word: 'Englisch', article: null, plural: null, en: 'English (language)', wordId: '1104bcc7-93f1-432f-ae84-64850c0c5d7c' },
@@ -622,6 +623,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist', 'Der Bruder', 'Die Schwester', 'Ich habe'],
       },
       notice: {
+        formExamples: ['Das Kind ist jung. Es spricht Deutsch.', 'Wir sprechen Deutsch. Sprecht ihr auch Deutsch?'],
         title: 'er, sie, es – die Personalpronomen',
         bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form. Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
         bodyEn: 'A pronoun follows the article of the noun it stands for: **der** Bruder → **er**, **die** Schwester → **sie**, **das** Kind → **es**. For more than one person use **wir** (we), **ihr** (you, several people, informal) and **sie** (they). **Sie** with a capital S is the polite "you" – for one person or several. One verb to watch: **sprechen** changes its vowel – er **spricht**. Lektion 7 explains the pattern.',
@@ -681,23 +683,23 @@ export const CURRICULUM_A11 = {
         { de: 'der Tisch', word: 'Tisch', article: 'der', plural: 'Tische', en: 'table', wordId: 'c03b1f60-d02b-47ef-85cd-3cd1cdab0b1f' },
         { de: 'der Stuhl', word: 'Stuhl', article: 'der', plural: 'Stühle', en: 'chair', wordId: 'cee7d733-2f10-4eec-947c-e79c0318ed23' },
         { de: 'die Lampe', word: 'Lampe', article: 'die', plural: 'Lampen', en: 'lamp', wordId: 'e120babd-b682-48ba-9ee4-47b5ad07bc71' },
-        { de: 'die Uhr', word: 'Uhr', article: 'die', plural: 'Uhren', en: 'clock', wordId: 'e7525cfc-bf0a-4d96-ad93-eef3e71c187f' },
-        { de: 'die Tasche', word: 'Tasche', article: 'die', plural: 'Taschen', en: 'bag', wordId: '9e111e31-1e2f-47b3-a670-f18d2fd0faff' },
-        { de: 'der Rucksack', word: 'Rucksack', article: 'der', plural: 'Rucksäcke', en: 'backpack', wordId: 'ba072910-dfb9-444b-a0de-ba29f90edadf' },
+        { de: 'die Uhr', exampleDe: 'Die Uhr kostet zehn Euro.', word: 'Uhr', article: 'die', plural: 'Uhren', en: 'clock', wordId: 'e7525cfc-bf0a-4d96-ad93-eef3e71c187f' },
+        { de: 'die Tasche', exampleDe: 'Die Tasche kostet fünf Euro.', word: 'Tasche', article: 'die', plural: 'Taschen', en: 'bag', wordId: '9e111e31-1e2f-47b3-a670-f18d2fd0faff' },
+        { de: 'der Rucksack', exampleDe: 'Der Rucksack kostet zwanzig Euro.', word: 'Rucksack', article: 'der', plural: 'Rucksäcke', en: 'backpack', wordId: 'ba072910-dfb9-444b-a0de-ba29f90edadf' },
         // Ten numerals plus zählen filled 11 of 25 slots and none of them appeared in the Lektion
         // (the dialogue says acht, zwölf, fünfzehn, zwanzig, dreißig — all FUNCTION_WORDS anyway).
         // They are ONE entry now, exactly like L2's Zahlen 0–10, and the freed slots carry the
         // Flohmarkt lexis the situation actually needs (DaF review #2, L4).
         { de: 'die Zahlen 11–100', word: 'Zahlen 11–100', article: 'die', plural: '—', en: 'the numbers 11–100 (elf, zwölf … hundert)', meta: true, wordId: '112eb634-135f-4372-a74a-c60da86d1423' },
         { de: 'wie viel', word: 'wie viel', article: null, plural: null, en: 'how much', wordId: '80e786f9-8a29-45bd-862b-a498bc184c69' },
-        { de: 'wie viele', word: 'wie viele', article: null, plural: null, en: 'how many', wordId: 'c4fad330-3515-46b0-ad99-aa883e0ea764' },
-        { de: 'der Flohmarkt', word: 'Flohmarkt', article: 'der', plural: 'Flohmärkte', en: 'flea market', wordId: '245c8937-50c0-491e-a297-5008748e085d' },
+        { de: 'wie viele', exampleDe: 'Wie viele Stühle sind das? – Drei.', word: 'wie viele', article: null, plural: null, en: 'how many', wordId: 'c4fad330-3515-46b0-ad99-aa883e0ea764' },
+        { de: 'der Flohmarkt', exampleDe: 'Das ist ein Flohmarkt. Ein Tisch kostet zehn Euro.', word: 'Flohmarkt', article: 'der', plural: 'Flohmärkte', en: 'flea market', wordId: '245c8937-50c0-491e-a297-5008748e085d' },
         { de: 'verkaufen', word: 'verkaufen', article: null, plural: null, en: 'to sell', wordId: 'b37ad662-f4b9-46c0-a53a-bc269a9e30a8' },
         // L4 teaches Genus and had NO neuter noun of its own, so the card reached forward to L5's
         // „das Buch“; das Regal is A1-Wortliste Flohmarkt lexis and carries the neuter (review #2, L4).
         { de: 'das Regal', word: 'Regal', article: 'das', plural: 'Regale', en: 'shelf', wordId: 'eea6452e-f5b9-40aa-b321-01377f8a0a76' },
         { de: 'der Euro', word: 'Euro', article: 'der', plural: 'Euro', en: 'euro', wordId: '34ee3fee-c37c-4ea0-8bb4-0732575da17b' },
-        { de: 'der Preis', word: 'Preis', article: 'der', plural: 'Preise', en: 'price', wordId: '34254aab-98aa-438b-a0e5-210c77d82596' },
+        { de: 'der Preis', exampleDe: 'Der Preis ist zehn Euro.', word: 'Preis', article: 'der', plural: 'Preise', en: 'price', wordId: '34254aab-98aa-438b-a0e5-210c77d82596' },
         { de: 'kosten', word: 'kosten', article: null, plural: null, en: 'to cost', wordId: 'be28d780-b0e6-42c3-ae0f-ce0ff66d4501' },
         { de: 'kaufen', word: 'kaufen', article: null, plural: null, en: 'to buy', wordId: '40d30139-d09e-418e-bdab-6ddaa59b3e39' },
         { de: 'teuer', word: 'teuer', article: null, plural: null, en: 'expensive', wordId: 'b544de5a-1302-4af7-bee5-7eff09dadb02' },
@@ -791,18 +793,18 @@ export const CURRICULUM_A11 = {
         { de: 'das Heft', word: 'Heft', article: 'das', plural: 'Hefte', en: 'notebook', wordId: 'b1e6ebea-f728-41ae-82b5-74630aa2d463' },
         { de: 'der Stift', word: 'Stift', article: 'der', plural: 'Stifte', en: 'pen', wordId: 'de4bcb35-dabf-4017-84c9-c6910a82e774' },
         { de: 'der Bleistift', word: 'Bleistift', article: 'der', plural: 'Bleistifte', en: 'pencil', wordId: '857849c9-5da7-411c-bc9c-0b5766694014' },
-        { de: 'der Kugelschreiber', word: 'Kugelschreiber', article: 'der', plural: 'Kugelschreiber', en: 'ballpoint pen', wordId: 'd862aa1f-12c2-4ea1-9479-529b82466b82' },
+        { de: 'der Kugelschreiber', exampleDe: 'Der Kugelschreiber ist blau.', word: 'Kugelschreiber', article: 'der', plural: 'Kugelschreiber', en: 'ballpoint pen', wordId: 'd862aa1f-12c2-4ea1-9479-529b82466b82' },
         { de: 'das Lineal', word: 'Lineal', article: 'das', plural: 'Lineale', en: 'ruler', wordId: 'bf76aa3d-3725-45de-992a-3a4ec47ef22e' },
         { de: 'die Schere', word: 'Schere', article: 'die', plural: 'Scheren', en: 'scissors', wordId: 'ea766d6a-4335-437e-96fe-7be94fcbbc0b' },
-        { de: 'das Papier', word: 'Papier', article: 'das', plural: 'Papiere', en: 'paper', wordId: '1824e1ce-6c7e-4835-b429-744e5190e427' },
-        { de: 'die Tafel', word: 'Tafel', article: 'die', plural: 'Tafeln', en: 'blackboard', wordId: 'dac0b162-56bd-430c-aeba-61638d7f5b5c' },
-        { de: 'die Tür', word: 'Tür', article: 'die', plural: 'Türen', en: 'door', wordId: '3230fcc5-e7b4-4725-8ad0-82a8b07f513f' },
-        { de: 'das Fenster', word: 'Fenster', article: 'das', plural: 'Fenster', en: 'window', wordId: '4ab2f19d-9398-4738-ab8c-0521d9eb9b42' },
+        { de: 'das Papier', exampleDe: 'Das Papier ist weiß.', word: 'Papier', article: 'das', plural: 'Papiere', en: 'paper', wordId: '1824e1ce-6c7e-4835-b429-744e5190e427' },
+        { de: 'die Tafel', exampleDe: 'Die Tafel ist grün.', word: 'Tafel', article: 'die', plural: 'Tafeln', en: 'blackboard', wordId: 'dac0b162-56bd-430c-aeba-61638d7f5b5c' },
+        { de: 'die Tür', exampleDe: 'Die Tür ist braun.', word: 'Tür', article: 'die', plural: 'Türen', en: 'door', wordId: '3230fcc5-e7b4-4725-8ad0-82a8b07f513f' },
+        { de: 'das Fenster', exampleDe: 'Das Fenster ist weiß.', word: 'Fenster', article: 'das', plural: 'Fenster', en: 'window', wordId: '4ab2f19d-9398-4738-ab8c-0521d9eb9b42' },
         { de: 'das Wörterbuch', word: 'Wörterbuch', article: 'das', plural: 'Wörterbücher', en: 'dictionary', wordId: 'abc566d0-3ab7-4aec-bbc5-8f6b77ad484b' },
         // Grundschulwortschatz (Mäppchen, Spitzer, Radiergummi, Kreide) replaced by the Wohnen lexis
         // the Goethe A1 Wortliste and SD1 Lesen Teil 2 actually use (DaF review, L5).
         { de: 'das Zimmer', word: 'Zimmer', article: 'das', plural: 'Zimmer', en: 'room', wordId: '7c015007-2252-43ae-9c30-9ac8a82c9831' },
-        { de: 'die Wohnung', word: 'Wohnung', article: 'die', plural: 'Wohnungen', en: 'flat, apartment', wordId: 'd46d546b-f0f1-4cab-818e-0e99a09b355d' },
+        { de: 'die Wohnung', exampleDe: 'Die Wohnung ist hier.', word: 'Wohnung', article: 'die', plural: 'Wohnungen', en: 'flat, apartment', wordId: 'd46d546b-f0f1-4cab-818e-0e99a09b355d' },
         { de: 'der Schlüssel', word: 'Schlüssel', article: 'der', plural: 'Schlüssel', en: 'key', wordId: '1b3689de-3eee-4947-8ddd-c1b4fcada95b' },
         { de: 'das Bild', word: 'Bild', article: 'das', plural: 'Bilder', en: 'picture', wordId: '358ec9f0-c571-453a-a5c5-7e88ef81d1b8' },
         { de: 'die Farbe', word: 'Farbe', article: 'die', plural: 'Farben', en: 'color', field: true, wordId: '9a35fe92-fc2d-42af-a718-7c6cf48a9984' },
@@ -811,8 +813,8 @@ export const CURRICULUM_A11 = {
         { de: 'grün', word: 'grün', article: null, plural: null, en: 'green', wordId: 'a86cb4d8-541f-4335-bff1-150dac102f32' },
         { de: 'gelb', word: 'gelb', article: null, plural: null, en: 'yellow', wordId: 'ff86b605-e582-4f04-b5c4-27d5e494bb4f' },
         { de: 'schwarz', word: 'schwarz', article: null, plural: null, en: 'black', wordId: 'fc5c8341-a794-4c0a-a81b-7bd4a0082470' },
-        { de: 'weiß', word: 'weiß', article: null, plural: null, en: 'white', wordId: 'aaf238a5-d301-4ba3-953c-436fb603f6dc' },
-        { de: 'braun', word: 'braun', article: null, plural: null, en: 'brown', wordId: '81f06668-01d2-4e8d-aff7-5d8fc0f6b9b1' },
+        { de: 'weiß', exampleDe: 'Das Heft ist weiß.', word: 'weiß', article: null, plural: null, en: 'white', wordId: 'aaf238a5-d301-4ba3-953c-436fb603f6dc' },
+        { de: 'braun', exampleDe: 'Der Tisch ist braun.', word: 'braun', article: null, plural: null, en: 'brown', wordId: '81f06668-01d2-4e8d-aff7-5d8fc0f6b9b1' },
       ],
       dialog: {
         title: 'Vor dem Kurs',
@@ -911,21 +913,21 @@ export const CURRICULUM_A11 = {
       minutes: 15,
       wortfeld: [
         { de: 'das Büro', word: 'Büro', article: 'das', plural: 'Büros', en: 'office', wordId: '8fbe2c10-b65b-4c50-b60a-14d92b931783' },
-        { de: 'die Firma', word: 'Firma', article: 'die', plural: 'Firmen', en: 'company', wordId: '241df305-fc58-4232-bb0a-df8ce4cc9d01' },
-        { de: 'der Chef', word: 'Chef', article: 'der', plural: 'Chefs', en: 'boss (m)', wordId: '40ac179d-e47c-4c64-8eb3-9e1017da46a0' },
-        { de: 'die Chefin', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
+        { de: 'die Firma', exampleDe: 'Das ist eine Firma. Das Büro ist hier.', word: 'Firma', article: 'die', plural: 'Firmen', en: 'company', wordId: '241df305-fc58-4232-bb0a-df8ce4cc9d01' },
+        { de: 'der Chef', exampleDe: 'Herr Weber ist der Chef.', word: 'Chef', article: 'der', plural: 'Chefs', en: 'boss (m)', wordId: '40ac179d-e47c-4c64-8eb3-9e1017da46a0' },
+        { de: 'die Chefin', exampleDe: 'Frau Kaya ist die Chefin.', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
         { de: 'der Kollege', word: 'Kollege', article: 'der', plural: 'Kollegen', en: 'colleague (m)', wordId: '81abf8c3-ae9f-4e61-9fa9-b4a10e0b0ae8' },
-        { de: 'die Kollegin', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
-        { de: 'die Arbeit', word: 'Arbeit', article: 'die', plural: '—', en: 'work', wordId: '89ff21bb-79ad-470a-a29b-ff6bbeef344a' },
+        { de: 'die Kollegin', exampleDe: 'Die Kollegin heißt Lena.', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
+        { de: 'die Arbeit', exampleDe: 'Die Arbeit ist im Büro.', word: 'Arbeit', article: 'die', plural: '—', en: 'work', wordId: '89ff21bb-79ad-470a-a29b-ff6bbeef344a' },
         { de: 'der Computer', word: 'Computer', article: 'der', plural: 'Computer', en: 'computer', wordId: 'b75584fd-ce50-433c-9deb-dc2c35906c15' },
-        { de: 'die Handynummer', word: 'Handynummer', article: 'die', plural: 'Handynummern', en: 'mobile number', field: true, wordId: '58fdee72-2812-4256-8f4b-7e6142c10b12' },
-        { de: 'die E-Mail-Adresse', word: 'E-Mail-Adresse', article: 'die', plural: 'E-Mail-Adressen', en: 'email address', field: true, wordId: '7a4581a1-0411-425b-b230-95840777b557' },
+        { de: 'die Handynummer', exampleDe: 'Die Handynummer ist 0176 234567.', word: 'Handynummer', article: 'die', plural: 'Handynummern', en: 'mobile number', field: true, wordId: '58fdee72-2812-4256-8f4b-7e6142c10b12' },
+        { de: 'die E-Mail-Adresse', exampleDe: 'Wie ist die E-Mail-Adresse?', word: 'E-Mail-Adresse', article: 'die', plural: 'E-Mail-Adressen', en: 'email address', field: true, wordId: '7a4581a1-0411-425b-b230-95840777b557' },
         { de: 'der Ingenieur', word: 'Ingenieur', article: 'der', plural: 'Ingenieure', en: 'engineer (m)', wordId: 'a358f9d4-ef56-451c-8139-8a210b7a122f' },
-        { de: 'die Ingenieurin', word: 'Ingenieurin', article: 'die', plural: 'Ingenieurinnen', en: 'engineer (f)', wordId: '19f79c25-b6b5-4ec9-b9b7-c56515c68da8' },
-        { de: 'der Verkäufer', word: 'Verkäufer', article: 'der', plural: 'Verkäufer', en: 'salesperson (m)', wordId: '497a6825-36c3-4af5-aaf5-5e70dafdbb4f' },
-        { de: 'die Verkäuferin', word: 'Verkäuferin', article: 'die', plural: 'Verkäuferinnen', en: 'salesperson (f)', wordId: '1b7e9803-1125-4b4a-a392-79b59fa69dfa' },
+        { de: 'die Ingenieurin', exampleDe: 'Die Kollegin ist Ingenieurin.', word: 'Ingenieurin', article: 'die', plural: 'Ingenieurinnen', en: 'engineer (f)', wordId: '19f79c25-b6b5-4ec9-b9b7-c56515c68da8' },
+        { de: 'der Verkäufer', exampleDe: 'Der Mann ist Verkäufer.', word: 'Verkäufer', article: 'der', plural: 'Verkäufer', en: 'salesperson (m)', wordId: '497a6825-36c3-4af5-aaf5-5e70dafdbb4f' },
+        { de: 'die Verkäuferin', exampleDe: 'Die Frau ist Verkäuferin.', word: 'Verkäuferin', article: 'die', plural: 'Verkäuferinnen', en: 'salesperson (f)', wordId: '1b7e9803-1125-4b4a-a392-79b59fa69dfa' },
         { de: 'die Pause', word: 'Pause', article: 'die', plural: 'Pausen', en: 'break', wordId: 'c1c71f2f-1cea-437b-b2ae-5cce152ee9a4' },
-        { de: 'die Nummer', word: 'Nummer', article: 'die', plural: 'Nummern', en: 'number', field: true, wordId: '83a14b7b-33f9-4972-9001-72c42442f14d' },
+        { de: 'die Nummer', exampleDe: 'Die Nummer ist 123.', word: 'Nummer', article: 'die', plural: 'Nummern', en: 'number', field: true, wordId: '83a14b7b-33f9-4972-9001-72c42442f14d' },
         { de: 'brauchen', word: 'brauchen', article: null, plural: null, en: 'to need', wordId: '0bca1725-1790-4ec6-a1cb-362cda69fefb' },
         { de: 'das Handy', word: 'Handy', article: 'das', plural: 'Handys', en: 'mobile phone', wordId: '5facc4fc-da80-494c-ae4a-4bf2a2384fb5' },
         { de: 'das Telefon', word: 'Telefon', article: 'das', plural: 'Telefone', en: 'telephone', wordId: '45918530-54aa-40f0-8f51-b0193953fdd8' },
@@ -956,6 +958,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Ich brauche', 'Wir brauchen', 'Haben Sie'],
       },
       notice: {
+        formExamples: ['kaufen: Ich kaufe ein Handy.'],
         title: 'ein, eine – der unbestimmte Artikel',
         bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
         bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lektion 8.',
@@ -963,9 +966,9 @@ export const CURRICULUM_A11 = {
         ruleSlug: 'indefinite-articles',
       },
       phonetik: { focus: 'Lange Vokale: vier, Telefon, Büro', focusEn: 'Long vowels: vier, Telefon, Büro', items: ['VIER', 'Te-le-FON', 'Bü-RO'] },
-      // NOT line 7: the split telephone number carries an en dash, so „042 3381“ and „Null vier
-      // zwei - drei …“ would both be marked wrong. Line 9 has no punctuation trap (DaF review #2, L6).
-      hoeren: { kind: 'dictation', lines: [2, 9] },
+      // Dictate the phone number: the shared checker folds digit grouping and spoken numbers.
+      // The clock-time line waits until L8, where its form is taught.
+      hoeren: { kind: 'dictation', lines: [2, 7] },
       sprechen: {
         // Zeile 2 war bis Runde 12 zugleich Diktatzeile — Diktat und Vorlesen arbeiteten am
         // selben Satz (RULE 18). Zeile 4 („Und ein Handy?“) ist frei: der unbestimmte Artikel
@@ -1082,6 +1085,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Ich höre gern', 'Ich spiele gern', 'Ich mache gern', 'Ich lese gern', 'Ich koche gern', 'Ich schwimme gern', 'Ich tanze gern', 'Ich gehe gern', 'Mein Hobby ist', 'Meine Hobbys sind'],
       },
       notice: {
+        formExamples: ['Lena spricht Deutsch.'],
         title: 'Präsens: regelmäßige Verben',
         bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. Endet der Stamm auf **-t**, kommt ein **e** dazu: du arbeit**e**st, er arbeit**e**t. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
         bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If it ends in -s or -z, du adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
@@ -1160,7 +1164,7 @@ export const CURRICULUM_A11 = {
         // the pool asks for „die Ankunft am Abend“ in L10; der Vormittag and der Nachmittag appeared
         // nowhere in the Lektion and gave up their slots. die Verabredung doubled der Termin without
         // the Lektion ever naming the difference, and aufwachen doubled aufstehen (review #2, L8).
-        { de: 'der Abend', word: 'Abend', article: 'der', plural: 'Abende', en: 'evening', wordId: '2f8b57f8-3935-4b4b-8072-2ee700aeec18' },
+        { de: 'der Abend', exampleDe: 'Der Abend ist frei. Der Termin ist am Morgen.', word: 'Abend', article: 'der', plural: 'Abende', en: 'evening', wordId: '2f8b57f8-3935-4b4b-8072-2ee700aeec18' },
         { de: 'der Montag', word: 'Montag', article: 'der', plural: 'Montage', en: 'Monday', wordId: '74232a41-8578-4826-af22-5c1235360cd9' },
         { de: 'der Dienstag', word: 'Dienstag', article: 'der', plural: 'Dienstage', en: 'Tuesday', wordId: '34b1bf45-b514-4590-ba20-4a83f93f47f9' },
         { de: 'der Mittwoch', word: 'Mittwoch', article: 'der', plural: 'Mittwoche', en: 'Wednesday', wordId: '683072dd-e46c-4a9e-bae7-e2bbc67678ad' },
@@ -1172,7 +1176,7 @@ export const CURRICULUM_A11 = {
         { de: 'heute', word: 'heute', article: null, plural: null, en: 'today', wordId: '30eb2fd7-5167-4a2b-9482-b7c57f3d7efe' },
         // The Handlungsfeld is „Gesundheit und Ämter“ and carried no health word at all; krank came
         // over from L11, where it was unused (DaF review #2, L8 and L11).
-        { de: 'krank', word: 'krank', article: null, plural: null, en: 'sick, ill', wordId: '609580f6-24f7-47c7-b777-2aecc41027ca' },
+        { de: 'krank', exampleDe: 'Ich bin krank. Der Termin beim Arzt ist am Montag.', word: 'krank', article: null, plural: null, en: 'sick, ill', wordId: '609580f6-24f7-47c7-b777-2aecc41027ca' },
         { de: 'der Arzt', word: 'Arzt', article: 'der', plural: 'Ärzte', en: 'doctor', wordId: '5785df40-c89c-472f-a65e-72c449a6c634' },
       ],
       dialog: {
@@ -1188,8 +1192,8 @@ export const CURRICULUM_A11 = {
           // NOT „Ich habe einen guten Wecker“: that is Adjektivdeklination im Akkusativ, a fifth
           // Vorgriff the course never names, in the Lektion whose exam part is Hören Teil 1.
           { speaker: 'Lena', de: 'Ich bin immer pünktlich. Mein Wecker ist gut.', en: 'I am always on time. My alarm clock is good.' },
-          { speaker: 'Ana', de: 'Und am Dienstag? Hast du nachmittags Zeit?', en: 'And on Tuesday? Do you have time in the afternoon?' },
-          { speaker: 'Lena', de: 'Am Dienstag habe ich abends Zeit.', en: 'On Tuesday I have time in the evening.' },
+          { speaker: 'Ana', de: 'Und am Dienstag? Bist du nachmittags frei?', en: 'And on Tuesday? Are you free in the afternoon?' },
+          { speaker: 'Lena', de: 'Am Dienstag bin ich abends frei.', en: 'On Tuesday I am free in the evening.' },
           // Mittwoch, Donnerstag and Freitag were in the Wortfeld and in no line (DaF review #2, §A).
           { speaker: 'Ana', de: 'Und am Mittwoch, am Donnerstag oder am Freitag?', en: 'And on Wednesday, Thursday or Friday?' },
           // Samstag and Sonntag came over from L7 with the rest of the week but appeared in no line,
@@ -1199,6 +1203,7 @@ export const CURRICULUM_A11 = {
       },
       pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann', 'Um wie viel Uhr', 'Entschuldigung, wie spät'] },
       notice: {
+        formExamples: ['Der Termin ist um Viertel nach acht.', 'Es ist acht Uhr dreißig.'],
         title: 'um, am – die Uhrzeit sagen',
         bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Aber: Es ist acht Uhr (ohne um). Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio) lautet die Uhrzeit Stunde + Uhr + Minuten, bis 24: **acht Uhr dreißig**, vierzehn Uhr dreißig. **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
         bodyEn: 'For when, a clock time takes **um**: **um acht Uhr**. To say the time, no um: Es ist acht Uhr. A weekday takes **am**: **am Montag**. Everyday speech: **Viertel nach** acht (8.15), **Viertel vor** neun (8.45), **halb** neun (8.30, not 9.30!). Timetables and the radio count to 24, hour + Uhr + minutes: **acht Uhr dreißig**, vierzehn Uhr dreißig (14.30). To ask: Wie spät ist es? **Hast du Zeit?** is a set phrase for now; haben comes in Lektion 9.',
@@ -1318,6 +1323,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Ich möchte', 'Ich nehme', 'Ein'],
       },
       notice: {
+        formExamples: ['Du hast Hunger. Er hat Durst. Habt ihr Zeit?'],
         title: 'haben und der Chunk „Ich möchte …“',
         bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Mit haben sagt man Hunger, Durst oder Zeit. **Ich möchte …** steht hier als fester Chunk; die Form gehört zu den Modalverben in A1.2.',
         bodyEn: '**haben** (to have) is the second verb to learn as a set: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Where English says "I am hungry", German uses haben: **Ich habe Hunger**, **Ich habe Durst** (I am thirsty) – and **Zeit** (time) works the same way. To order or ask for something politely, use **Ich möchte …** (I would like …) as a fixed phrase; its grammar belongs to the modal verbs in A1.2.',
@@ -1369,9 +1375,9 @@ export const CURRICULUM_A11 = {
       primarySlug: 'yes-no-questions',
       minutes: 15,
       wortfeld: [
-        { de: 'der Fahrer', word: 'Fahrer', article: 'der', plural: 'Fahrer', en: 'driver (m)', wordId: 'd5e2f5d9-28b2-4aa3-9669-cab0e96953ee' },
-        { de: 'die Fahrerin', word: 'Fahrerin', article: 'die', plural: 'Fahrerinnen', en: 'driver (f)', wordId: '85aa0d16-8e22-481e-9e9c-67ceae66751e' },
-        { de: 'Deutschland', word: 'Deutschland', article: null, plural: null, en: 'Germany', wordId: 'f59e9ed6-4c90-4792-a69d-921a73b8c103' },
+        { de: 'der Fahrer', exampleDe: 'Der Fahrer fährt den Bus.', word: 'Fahrer', article: 'der', plural: 'Fahrer', en: 'driver (m)', wordId: 'd5e2f5d9-28b2-4aa3-9669-cab0e96953ee' },
+        { de: 'die Fahrerin', exampleDe: 'Die Fahrerin fährt das Auto.', word: 'Fahrerin', article: 'die', plural: 'Fahrerinnen', en: 'driver (f)', wordId: '85aa0d16-8e22-481e-9e9c-67ceae66751e' },
+        { de: 'Deutschland', exampleDe: 'Der Zug fährt nach Deutschland.', word: 'Deutschland', article: null, plural: null, en: 'Germany', wordId: 'f59e9ed6-4c90-4792-a69d-921a73b8c103' },
         { de: 'Österreich', word: 'Österreich', article: null, plural: null, en: 'Austria', wordId: '21edee4f-dacc-4a7a-b1ea-2e8f312f7907' },
         { de: 'die Schweiz', word: 'Schweiz', article: 'die', plural: '—', en: 'Switzerland', wordId: 'c3646999-1ca7-4b5e-903a-22a68642ef26' },
         // Four more country names did not cover a Lektion called „Am Bahnhof“; the station lexis of the
@@ -1380,14 +1386,14 @@ export const CURRICULUM_A11 = {
         { de: 'die Abfahrt', word: 'Abfahrt', article: 'die', plural: 'Abfahrten', en: 'departure', wordId: 'cc687805-201f-4cda-b4b4-48a20fad82cd' },
         { de: 'die Ankunft', word: 'Ankunft', article: 'die', plural: 'Ankünfte', en: 'arrival', wordId: '7374721b-f929-4b81-943a-93dc6ba2b9a1' },
         { de: 'das Gleis', word: 'Gleis', article: 'das', plural: 'Gleise', en: 'platform, track', wordId: 'e9a722a3-d2c7-46ae-8421-d8a213451e57' },
-        { de: 'das Land', word: 'Land', article: 'das', plural: 'Länder', en: 'country', field: true, wordId: 'b8ff9106-be72-426f-8be3-c0687cf75641' },
-        { de: 'morgen', word: 'morgen', article: null, plural: null, en: 'tomorrow', wordId: '79c868e5-5478-4d52-a85a-653c7acf078f' },
+        { de: 'das Land', exampleDe: 'Deutschland ist ein Land.', word: 'Land', article: 'das', plural: 'Länder', en: 'country', field: true, wordId: 'b8ff9106-be72-426f-8be3-c0687cf75641' },
+        { de: 'morgen', exampleDe: 'Fährt der Zug morgen?', word: 'morgen', article: null, plural: null, en: 'tomorrow', wordId: '79c868e5-5478-4d52-a85a-653c7acf078f' },
         { de: 'umsteigen', word: 'umsteigen', article: null, plural: null, en: 'to change (trains)', wordId: '7cf99ee9-b106-4db9-954f-cb6f17eab4e9' },
-        { de: 'nächste Woche', word: 'nächste Woche', article: null, plural: null, en: 'next week', wordId: 'ebad6993-2d67-4891-8abe-5b0e74091495' },
+        { de: 'nächste Woche', exampleDe: 'Fahren Sie nächste Woche nach Österreich?', word: 'nächste Woche', article: null, plural: null, en: 'next week', wordId: 'ebad6993-2d67-4891-8abe-5b0e74091495' },
         { de: 'leider', word: 'leider', article: null, plural: null, en: 'unfortunately', wordId: 'c76140c6-0461-47e2-98da-567540a79b9c' },
         { de: 'der Zug', word: 'Zug', article: 'der', plural: 'Züge', en: 'train', wordId: '5289f923-0edf-4d16-83ae-e010a14ecad8' },
         { de: 'der Bus', word: 'Bus', article: 'der', plural: 'Busse', en: 'bus', wordId: '879f1d1d-1a84-427b-8c5d-fb15eeb67436' },
-        { de: 'das Auto', word: 'Auto', article: 'das', plural: 'Autos', en: 'car', wordId: '564227da-5f73-4b01-8130-650983c5c578' },
+        { de: 'das Auto', exampleDe: 'Das Auto ist blau.', word: 'Auto', article: 'das', plural: 'Autos', en: 'car', wordId: '564227da-5f73-4b01-8130-650983c5c578' },
         { de: 'die Fahrkarte', word: 'Fahrkarte', article: 'die', plural: 'Fahrkarten', en: 'ticket', wordId: 'f5fbb306-2e4a-416f-88df-30317db028f1' },
         { de: 'fahren', word: 'fahren', article: null, plural: null, en: 'to go (by vehicle), to drive', wordId: 'ed0d6e08-7781-474d-93ab-c7113738a3af' },
         // weit stood in no Wortfeld although the pool asks „___ der Bahnhof weit?“, and the
@@ -1422,6 +1428,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Fährt', 'Geht', 'Kommt'],
       },
       notice: {
+        formExamples: ['fahren: Wir fahren nach Österreich.', 'Fährst du morgen?'],
         title: 'Ja/Nein-Fragen: das Verb steht vorn',
         bodyDe: 'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → **Fährt** der Zug? Die Antwort ist **ja** oder **nein**. Die Satzmelodie steigt am Ende. **fahren** ist unregelmäßig: du **fährst**, er **fährt**.',
         bodyEn: 'A yes/no question needs no helper word like the English "do". Just move the verb to the front: **Der Zug fährt.** (The train is leaving.) → **Fährt der Zug?** (Is the train leaving?). The answer is **ja** or **nein**, and your voice goes up at the end of the question. The verb **fahren** (to go by train, bus or car) changes its vowel in two forms: du **fährst**, er **fährt**.',
@@ -1490,9 +1497,9 @@ export const CURRICULUM_A11 = {
       minutes: 15,
       wortfeld: [
         { de: 'gestern', word: 'gestern', article: null, plural: null, en: 'yesterday', wordId: '12fba7c9-bdd2-46e9-90d9-02c2ddd0bba5' },
-        { de: 'letzte Woche', word: 'letzte Woche', article: null, plural: null, en: 'last week', wordId: '1f732f26-b03d-44cc-848f-368727f687d9' },
+        { de: 'letzte Woche', exampleDe: 'Letzte Woche habe ich gearbeitet.', word: 'letzte Woche', article: null, plural: null, en: 'last week', wordId: '1f732f26-b03d-44cc-848f-368727f687d9' },
         { de: 'der Tag', word: 'Tag', article: 'der', plural: 'Tage', en: 'day', wordId: '4442348b-1623-4a81-947e-04361d4a6c1e' },
-        { de: 'der Wochentag', word: 'Wochentag', article: 'der', plural: 'Wochentage', en: 'weekday', wordId: '2df94b7e-3050-431d-af30-d7617a5868ee' },
+        { de: 'der Wochentag', exampleDe: 'Montag ist ein Wochentag.', word: 'Wochentag', article: 'der', plural: 'Wochentage', en: 'weekday', wordId: '2df94b7e-3050-431d-af30-d7617a5868ee' },
         { de: 'müde', word: 'müde', article: null, plural: null, en: 'tired', wordId: 'f1ba5ef3-a420-4d34-8598-5819dc7ffe2a' },
         { de: 'schon', word: 'schon', article: null, plural: null, en: 'already', wordId: '142081df-56c7-46ff-8e14-844d38e05201' },
         { de: 'noch nicht', word: 'noch nicht', article: null, plural: null, en: 'not yet', wordId: '177cfeb3-1b9b-4bb7-afb9-9a20c4892506' },
@@ -1505,8 +1512,8 @@ export const CURRICULUM_A11 = {
         // schlafen is a Vokalwechsel verb and was taken in without the marking the course gives
         // sprechen (L3) and fahren (L7, L10); the card front carries the change (review #2, L11).
         { de: 'schlafen (er schläft)', word: 'schlafen', article: null, plural: null, en: 'to sleep (er schläft)', wordId: '70c4d24c-b501-46d9-91ab-79c4d018b786' },
-        { de: 'nach Hause', word: 'nach Hause', article: null, plural: null, en: 'home (direction)', wordId: '4998446b-cfe0-4b28-8a1c-816e83aac793' },
-        { de: 'abholen', word: 'abholen', article: null, plural: null, en: 'to pick up, to collect', wordId: 'b26d75f6-1c2e-4749-a6fb-d10515ed285c' },
+        { de: 'nach Hause', exampleDe: 'Ich gehe nach Hause.', word: 'nach Hause', article: null, plural: null, en: 'home (direction)', wordId: '4998446b-cfe0-4b28-8a1c-816e83aac793' },
+        { de: 'abholen', exampleDe: 'Ich hole Sie am Bahnhof ab.', word: 'abholen', article: null, plural: null, en: 'to pick up, to collect', wordId: 'b26d75f6-1c2e-4749-a6fb-d10515ed285c' },
         { de: 'mitbringen', word: 'mitbringen', article: null, plural: null, en: 'to bring along', wordId: '75574213-060f-4f93-80a9-e6764e9fdd5a' },
         { de: 'einkaufen', word: 'einkaufen', article: null, plural: null, en: 'to go shopping', wordId: '1e4c6cff-59b8-42eb-8de3-b8142d10a6d3' },
         // anrufen came over from L6, where it appeared in no line: this is the Lektion whose dialogue
@@ -1540,6 +1547,7 @@ export const CURRICULUM_A11 = {
       },
       pretest: { promptDe: 'Sagen Sie, was Sie gestern gemacht haben.', promptEn: 'Say what you did yesterday.', model: 'Ich habe gearbeitet.', accepted: ['Ich habe', 'Gestern habe ich'] },
       notice: {
+        formExamples: ['schlafen: Wir schlafen bis neun.'],
         title: 'Trennbare Verben: die Satzklammer',
         bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an** ist eine feste Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** stehen hier als Ganzes — das Muster (Perfekt) kommt in A1.2.',
         bodyEn: 'Some verbs have two parts: **ein|kaufen** (to shop). In a sentence the verb stays in second position (first in a yes/no question) and the prefix goes to the end: **Ich kaufe am Freitag ein.** Same with **auf|stehen** (get up), **an|rufen** (call), **mit|bringen** (bring along). **Ich rufe dich an** is a set phrase. **schlafen** changes its vowel: er **schläft**. **Gemacht** and **gearbeitet** are learned whole; the pattern (Perfekt) comes in A1.2.',
@@ -1598,8 +1606,8 @@ export const CURRICULUM_A11 = {
       minutes: 15,
       wortfeld: [
         { de: 'der Geburtstag', word: 'Geburtstag', article: 'der', plural: 'Geburtstage', en: 'birthday', wordId: 'c34d4cef-643f-42e3-9d9a-8c3bfcc45f36' },
-        { de: 'das Datum', word: 'Datum', article: 'das', plural: 'Daten', en: 'date', field: true, wordId: '3efd1d54-db2c-4bf9-beb9-eb4d8a6decd1' },
-        { de: 'das Alter', word: 'Alter', article: 'das', plural: '—', en: 'age', field: true, wordId: '6276c62c-9009-4716-880a-410bdb5c9102' },
+        { de: 'das Datum', exampleDe: 'Das Datum: 5. Mai.', word: 'Datum', article: 'das', plural: 'Daten', en: 'date', field: true, wordId: '3efd1d54-db2c-4bf9-beb9-eb4d8a6decd1' },
+        { de: 'das Alter', exampleDe: 'Mein Alter: 25.', word: 'Alter', article: 'das', plural: '—', en: 'age', field: true, wordId: '6276c62c-9009-4716-880a-410bdb5c9102' },
         { de: 'die Mama', word: 'Mama', article: 'die', plural: 'Mamas', en: 'mom', wordId: '1b7ca804-8c61-43cd-b9cf-7f54ff536ff1' },
         { de: 'der Papa', word: 'Papa', article: 'der', plural: 'Papas', en: 'dad', wordId: 'd4facfd1-4d57-4414-a526-a67b2b4a3c43' },
         // Ehefrau/Ehemann doubled Mann/Frau from L3 and Zwilling is not in the A1 Wortliste. The months
@@ -1615,16 +1623,16 @@ export const CURRICULUM_A11 = {
         // The plural lives in a CHUNK, which is what the can-do and the Leitpunkt actually say —
         // „die Gäste“ alone was a form, not a word (review #2, L12).
         { de: 'Gäste einladen', word: 'Gäste einladen', article: null, plural: null, en: 'to invite the guests', wordId: '42bcadbd-1fd1-499a-9e29-a4e6678ec7b6' },
-        { de: 'die Karte', word: 'Karte', article: 'die', plural: 'Karten', en: 'card', wordId: '824eaef7-c358-42e7-b369-1d4ed5697e31' },
+        { de: 'die Karte', exampleDe: 'Die Karte ist für Ana.', word: 'Karte', article: 'die', plural: 'Karten', en: 'card', wordId: '824eaef7-c358-42e7-b369-1d4ed5697e31' },
         { de: 'schön', word: 'schön', article: null, plural: null, en: 'beautiful, nice', wordId: '312cc6ce-56a2-4d77-b23c-509dbabfcf02' },
         // bestimmt moved here from L7, where it appeared in no line; line 8 of this dialogue uses it.
         { de: 'bestimmt', word: 'bestimmt', article: null, plural: null, en: 'definitely, surely', wordId: 'b57550d1-a0f3-43a2-a257-2c4f3fa972d7' },
-        { de: 'das Zuhause', word: 'Zuhause', article: 'das', plural: '—', en: 'home', wordId: 'b09adebf-9767-4079-b1ee-b639aec4a733' },
-        { de: 'lieben', word: 'lieben', article: null, plural: null, en: 'to love', wordId: 'efd42d40-ceaa-4105-92cb-7b0896a39892' },
-        { de: 'grüßen', word: 'grüßen', article: null, plural: null, en: 'to greet', wordId: '2b0cba13-bfdd-4f08-82d7-f9b2ea8b6488' },
+        { de: 'das Zuhause', exampleDe: 'Mein Zuhause ist in Bremen.', word: 'Zuhause', article: 'das', plural: '—', en: 'home', wordId: 'b09adebf-9767-4079-b1ee-b639aec4a733' },
+        { de: 'lieben', exampleDe: 'Ich liebe meine Familie.', word: 'lieben', article: null, plural: null, en: 'to love', wordId: 'efd42d40-ceaa-4105-92cb-7b0896a39892' },
+        { de: 'grüßen', exampleDe: 'Ich grüße Sie. Schönen Tag noch!', word: 'grüßen', article: null, plural: null, en: 'to greet', wordId: '2b0cba13-bfdd-4f08-82d7-f9b2ea8b6488' },
         { de: 'Bis bald', word: 'Bis bald', article: null, plural: null, en: 'See you soon', wordId: '3c54e79d-d20b-40c5-bdc4-9929ba9521c6' },
-        { de: 'Bis später', word: 'Bis später', article: null, plural: null, en: 'See you later', wordId: 'ce5e11f5-b263-4d6f-b381-a190493db09a' },
-        { de: 'Schönen Tag noch', word: 'Schönen Tag noch', article: null, plural: null, en: 'Have a nice day', wordId: 'efd72cd3-8751-42d1-abc4-be324bbbebd3' },
+        { de: 'Bis später', exampleDe: 'Bis später, Lena!', word: 'Bis später', article: null, plural: null, en: 'See you later', wordId: 'ce5e11f5-b263-4d6f-b381-a190493db09a' },
+        { de: 'Schönen Tag noch', exampleDe: 'Auf Wiedersehen! Schönen Tag noch!', word: 'Schönen Tag noch', article: null, plural: null, en: 'Have a nice day', wordId: 'efd72cd3-8751-42d1-abc4-be324bbbebd3' },
         { de: 'Mach\'s gut', word: 'Mach\'s gut', article: null, plural: null, en: 'Take care', wordId: '8751ef96-cac1-43ae-9e11-1dfba1e32d41' },
         { de: 'das Fest', word: 'Fest', article: 'das', plural: 'Feste', en: 'celebration, festival', wordId: 'cd714bdb-4432-4c0c-b417-08824885c3c8' },
         { de: 'die Party', word: 'Party', article: 'die', plural: 'Partys', en: 'party', wordId: '4d67daf5-8c9f-4931-bdbd-857d09e925f4' },
@@ -1663,6 +1671,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Mein Geburtstag ist im', 'Ich habe im', 'Im'],
       },
       notice: {
+        formExamples: ['Das ist sein Geschenk. Das ist ihr Buch.', 'Ist das Ihr Büro, Frau Kaya?', 'Unser Fest ist am Freitag. Wann ist euer Fest?', 'Unsere Gäste kommen. Kommen eure Gäste auch?'],
         title: 'mein, dein, sein, ihr – Possessivartikel',
         bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie: eine Frau oder mehrere), **Ihr** Büro (Sie, immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
         bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book, or their book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',

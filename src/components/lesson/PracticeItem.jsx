@@ -56,11 +56,13 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
+  const [retried, setRetried] = useState(false);
+  const recorded = useRef(false);
   const [explain, setExplain] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setValue(''); setPicked(null); setState(null); setExplain(false);
+    setValue(''); setRetried(false); recorded.current = false; setPicked(null); setState(null); setExplain(false);
     if (inputRef.current) inputRef.current.focus();
   }, [item.id]);
 
@@ -83,11 +85,12 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       expected: expected || item.answer,
       hint: reason === 'case' ? caseHint(lang) : null,
     });
-    onResult(item, {
+    if (!recorded.current) onResult(item, {
       result,
       correct,
       errorTag: correct ? null : tagError(item, answer, item.answer),
     });
+    recorded.current = true;
   };
 
   const reveal = () => {
@@ -98,13 +101,20 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       hint: null,
       revealed: true,
     });
-    onResult(item, {
+    if (!recorded.current) onResult(item, {
       result: RESULT.WRONG,
       correct: false,
       errorTag: tagError(item, answer, item.answer),
       revealed: true,
     });
+    recorded.current = true;
   };
+
+  const canRetryTypo = state?.result === RESULT.TYPO && !retried;
+  const retryTypo = () => { setRetried(true); setState(null); setExplain(false); };
+  useEffect(() => {
+    if (retried && !state) inputRef.current?.focus();
+  }, [retried, state]);
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
@@ -113,7 +123,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p id={`question-${item.id}`} className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
-        {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
+        {lang !== 'de' && item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
 
         {chips ? (
           // Full-width, stacked options on mobile (one thumb-width tap target
@@ -198,7 +208,8 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
         otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
         onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
-        onContinue={onNext}
+        primaryLabel={canRetryTypo ? t('action.again', lang) : undefined}
+        onContinue={canRetryTypo ? retryTypo : onNext}
       />
     </div>
   );

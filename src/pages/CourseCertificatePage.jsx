@@ -5,7 +5,7 @@ import { courseFor } from '../data/courses/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
 import { programKeyFor } from '../services/lessonService.js';
 import { getProgramProgress } from '../services/programProgress';
-import { flattenCourse, isComplete, courseComplete } from '../lib/courseFlow.js';
+import { flattenCourse, isComplete, courseComplete, courseHome } from '../lib/courseFlow.js';
 import Button from '../components/ui/Button.jsx';
 import FullPageRedirect from '../components/FullPageRedirect.jsx';
 
@@ -31,14 +31,21 @@ export default function CourseCertificatePage() {
   const { user } = useAuth();
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const programKey = curriculum ? programKeyFor(level) : course?.programKey;
   const path = useMemo(() => (curriculum ? curriculumPath(curriculum) : []), [curriculum]);
   const items = useMemo(() => (!curriculum && course ? flattenCourse(course) : []), [curriculum, course]);
 
   useEffect(() => {
-    if (!user || !programKey) return;
-    getProgramProgress(user.id, programKey).then((set) => { setDone(set); setLoaded(true); });
+    if (!user || !programKey) return undefined;
+    let cancelled = false;
+    setLoaded(false);
+    setFailed(false);
+    getProgramProgress(user.id, programKey)
+      .then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } })
+      .catch(() => { if (!cancelled) setFailed(true); });
+    return () => { cancelled = true; };
   }, [user, programKey]);
 
   if (!curriculum && !course) return <FullPageRedirect to="/courses/" />;
@@ -47,6 +54,15 @@ export default function CourseCertificatePage() {
     ? path.length > 0 && path.every((n) => done.has(n.id))
     : isComplete(items, done);
 
+  // Never render or print a completion claim before its progress has loaded.
+  if (!loaded || failed) return (
+    <div className="min-h-screen bg-paper px-4 py-12 text-ink" lang="de">
+      <div className="mx-auto max-w-2xl">
+        <p role="status">{failed ? 'Der Fortschritt konnte nicht geladen werden. Bitte versuchen Sie es über den Lernpfad erneut.' : 'Ihr Kursfortschritt wird geprüft …'}</p>
+        <Link to={courseHome(level)} className="mt-4 inline-block font-bold text-siegel hover:text-siegel-deep">Zurück zum Lernpfad</Link>
+      </div>
+    </div>
+  );
   if (loaded && !complete) return <Navigate to={courseComplete(level)} replace />;
 
   const name = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || '';

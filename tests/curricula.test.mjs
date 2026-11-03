@@ -144,6 +144,7 @@ function dropMissions(c, n) {
     if (dropped >= n) break;
     if (l.sprechen?.open?.missionOrder === null || l.sprechen?.open?.missionOrder === undefined) continue;
     l.sprechen.open.missionOrder = null;
+    l.sprechen.open.promptDe = '';
     dropped += 1;
   }
   return dropped;
@@ -619,17 +620,15 @@ test('every masculine named in a Wortfeld gloss „(m: …)“ stands on an inpu
   assert.match(item.questionDe, /Nomen/, 'the cue names the word class, or „Er ist ___.“ is answered by Student or verheiratet');
 });
 
-test('rule 13: a speaking task without a mission is a prompt the speaking page never receives', () => {
-  // SpeakingStage.jsx appends `&mission=` only when missionOrder is set; without it the learner
-  // lands on the generic /speaking page with some other mission of the level. The UI agent is
-  // making the prompt itself travel in saveCourseContext — then this ratchet goes to 0.
+test('rule 13: every speaking task reaches a mission or carries its own course context', () => {
+  // The course prompt travels through saveCourseContext when there is no mission ID.
   assert.ok(MAX_MISSIONLESS_LEKTIONEN <= 4, 'the ratchet may only ever be lowered');
   const missionless = missionlessLektionen(CURRICULUM_A11);
   assert.ok(
     missionless.length <= MAX_MISSIONLESS_LEKTIONEN,
     `Lektionen without a speaking mission: ${missionless.join(', ')}`,
   );
-  assert.deepEqual(missionless, [7, 10, 11, 12]);
+  assert.deepEqual(missionless, [], 'every task reaches a mission or carries its own complete course prompt');
 });
 
 test('A1.1: every ratchet equals its measurement — a ratchet with slack is not a rule', () => {
@@ -1385,8 +1384,12 @@ test('rule 23: a Wortfeld entry reaches an input surface of its own Lektion, not
   l2.dialog.lines = [...l2.dialog.lines, { speaker: l2.dialog.lines[0].speaker, de: 'Die Giraffe ist hier.', en: 'The giraffe is here.' }];
   assert.ok(!wortfeldInputCoverage(c, levelSpec('a1.1')).some((o) => o.de === 'die Giraffe'));
   // An ITEM is not an input surface — that is the whole difference to RULE 10, which counts both.
-  assert.ok(wortfeldCoverage(CURRICULUM_A11).length < uncovered.length,
-    'RULE 23 must be stricter than RULE 10, or it measures the same thing twice');
+  const exerciseOnly = cloneOf(CURRICULUM_A11);
+  exerciseOnly.lektionen[1].wortfeld.push({ de: 'die Giraffe', word: 'Giraffe', article: 'die' });
+  const extra = [{ id: 'extra-a11-l02-99', questionDe: 'Die Giraffe ist hier.', answer: 'Giraffe' }];
+  assert.ok(!wortfeldCoverage(exerciseOnly, extra, []).some((o) => o.de === 'die Giraffe'));
+  assert.ok(wortfeldInputCoverage(exerciseOnly).some((o) => o.de === 'die Giraffe'),
+    'RULE 23 remains stricter even when both real-course debts are zero');
 });
 
 test('rule 24: no person is an adjective — a nationality is a NOUN in a sentence', () => {
@@ -2117,7 +2120,7 @@ test('A1.2 ratchets are the measured numbers, and RULE 10–12 are already at ze
   // directly against 0 rather than against a per-level constant.
   assert.equal(canDoRehearsal(CURRICULUM_A12).length, 0, 'RULE 12 (hard rule, no ratchet)');
   assert.ok(r.missionlessLektionen <= 3, 'the ratchet may only ever be lowered');
-  assert.deepEqual(missionlessLektionen(CURRICULUM_A12), [11]);
+  assert.deepEqual(missionlessLektionen(CURRICULUM_A12), [], 'the course-task handoff applies to both levels');
   // RULE 11 stood at 0 while `src/data/lessonPools/a12.json` did not exist, i.e. while it measured
   // nothing. With the built pool on disk (354 items) it measures the LEGACY generated bank: every
   // offending pair sits in a generated item, none in the hand-written `a12.extra.json`. So the

@@ -18,6 +18,9 @@ import Card from '../components/ui/Card.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import FullPageRedirect from '../components/FullPageRedirect.jsx';
+import { localDoneIds } from '../lib/course/localProgress.js';
+import { useLessonLang } from '../lib/lesson/strings.js';
+import LangToggle from '../components/lesson/LangToggle.jsx';
 
 // The end of the path: the one screen that may celebrate (design rule 2 —
 // himbeer only for a completed goal). Hands the learner to the final test if
@@ -66,18 +69,27 @@ export default function CourseCompletePage() {
   const curriculum = curriculumFor(level);
   const course = courseFor(level);
   const { user } = useAuth();
+  const [lang] = useLessonLang();
+  const de = lang === 'de';
   const { hasLevelAccess, loading: subLoading } = useSubscription() || {};
-  const [done, setDone] = useState(() => new Set());
-  const [loaded, setLoaded] = useState(false);
+  const [done, setDone] = useState(() => user ? new Set() : localDoneIds(level));
+  const [loaded, setLoaded] = useState(() => !user);
 
   const programKey = curriculum ? programKeyFor(level) : course?.programKey;
   const path = useMemo(() => (curriculum ? curriculumPath(curriculum) : []), [curriculum]);
   const items = useMemo(() => (!curriculum && course ? flattenCourse(course) : []), [curriculum, course]);
 
   useEffect(() => {
-    if (!user || !programKey) return;
-    getProgramProgress(user.id, programKey).then((set) => { setDone(set); setLoaded(true); });
-  }, [user, programKey]);
+    if (!user) { setDone(localDoneIds(level)); setLoaded(true); return undefined; }
+    if (!programKey) return undefined;
+    let cancelled = false;
+    setLoaded(false);
+    getProgramProgress(user.id, programKey)
+      .then((set) => { if (!cancelled) setDone(set); })
+      .catch(() => { if (!cancelled) setDone(new Set()); })
+      .finally(() => { if (!cancelled) setLoaded(true); });
+    return () => { cancelled = true; };
+  }, [user, programKey, level]);
 
   if (!curriculum && !course) return <FullPageRedirect to="/courses/" />;
 
@@ -88,9 +100,6 @@ export default function CourseCompletePage() {
   const pct = curriculum
     ? (path.length ? Math.round((path.filter((n) => done.has(n.id)).length / path.length) * 100) : 0)
     : percentDone(items, done);
-  const xp = curriculum
-    ? path.filter((n) => done.has(n.id)).reduce((n, it) => n + (it.minutes || 10), 0)
-    : items.filter((it) => done.has(it.id)).reduce((n, it) => n + (it.minutes || 10), 0);
   const lektionenDone = curriculum ? path.filter((n) => n.kind === 'lektion' && done.has(n.id)).length : 0;
   const lektionenTotal = curriculum ? curriculum.lektionen.length : 0;
   const checkpointsDone = curriculum ? path.filter((n) => n.kind === 'checkpoint' && done.has(n.id)).length : 0;
@@ -110,23 +119,24 @@ export default function CourseCompletePage() {
   const testFormat = curriculum ? curriculum.examName : course.testFormat;
 
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
+    <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
       <div className="mx-auto max-w-2xl px-4 py-10">
+        <div className="mb-4 flex justify-end"><LangToggle /></div>
         <div className="relative overflow-hidden rounded-clay">
           <Aurora />
           <div className="relative px-2 py-6 text-center">
-            <Reveal><span className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full ${complete ? 'bg-accent-himbeer text-ink shadow-raise-himbeer' : 'bg-siegel-wash text-siegel'}`}><Trophy className="h-12 w-12" /></span></Reveal>
+            <Reveal><span className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full ${complete ? 'bg-siegel text-white' : 'bg-siegel-wash text-siegel'}`}><Trophy className="h-12 w-12" /></span></Reveal>
             <Reveal as="h1" delay={80} className="mt-6 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
-              {complete ? `German ${code}: complete.` : `German ${code}: ${pct}% done`}
+              {!loaded ? (de ? 'Fortschritt wird geladen …' : 'Loading progress…') : complete ? (de ? `Deutsch ${code}: abgeschlossen.` : `German ${code}: complete.`) : (de ? `Deutsch ${code}: ${pct} % abgeschlossen` : `German ${code}: ${pct}% done`)}
             </Reveal>
             <Reveal as="p" delay={120} className="mt-3 text-[0.9375rem] text-graphite sm:text-base">
               {complete
-                ? `Every lesson on the path is done — ${xp} XP earned. Two things are left: prove it, and keep going.`
-                : loaded ? 'A few lessons on the path are still open. Finish them and this page turns into your certificate.' : 'Loading…'}
+                ? (de ? 'Sie haben alle Lektionen, Checkpoints und den Abschlusstest abgeschlossen. Mit Wiederholungen bleibt das Gelernte frisch.' : 'You have finished every lesson, checkpoint and the course test. Keep what you have learned fresh with review.')
+                : loaded ? (de ? 'Auf Ihrem Lernpfad sind noch Schritte offen. Setzen Sie dort fort.' : 'Some steps on your path are still open. Continue where you left off.') : (de ? 'Wird geladen …' : 'Loading…')}
             </Reveal>
             {curriculum && (
               <Reveal as="p" delay={140} className="mt-2 font-data text-[0.75rem] text-graphite">
-                {lektionenDone}/{lektionenTotal} Lektionen · {checkpointsDone}/{checkpointsTotal} checkpoints · {wordsTotal} words met
+                {lektionenDone}/{lektionenTotal} Lektionen · {checkpointsDone}/{checkpointsTotal} Checkpoints · {de ? `${wordsTotal} Wörter im Kurs` : `${wordsTotal} words in the course`}
               </Reveal>
             )}
           </div>
@@ -135,42 +145,45 @@ export default function CourseCompletePage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Reveal>
             <Card raised className="flex h-full flex-col p-5">
-              <h2 className="font-bold text-ink">Final test · {testFormat} format</h2>
-              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">Timed, half exam length, scored against the real pass threshold.</p>
-              <Button to={`/modelltest/${testSlug}`} variant="primary" size="md" className="mt-4">Take the final test <ArrowRight className="ml-1 h-4 w-4" /></Button>
+              <h2 className="font-bold text-ink">{de ? 'Abschlusstest' : 'Final test'} · {testFormat}</h2>
+              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{de ? 'Ein Übungstest zum Kurs. Das Ergebnis ist kein Goethe-/telc-Ergebnis.' : 'A practice test for this course. The result is not a Goethe or telc exam result.'}</p>
+              <Button to={`/modelltest/${testSlug}`} variant="primary" size="md" className="mt-4">{complete ? (de ? 'Test wiederholen' : 'Repeat the test') : (de ? 'Zum Abschlusstest' : 'Take the final test')} <ArrowRight className="ml-1 h-4 w-4" /></Button>
             </Card>
           </Reveal>
           <Reveal delay={60}>
             <Card raised className="flex h-full flex-col p-5">
-              <h2 className="font-bold text-ink">Certificate of completion</h2>
-              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{complete ? 'Your name, the level and today’s date. Print it or save it as PDF.' : 'Unlocks when the path is complete.'}</p>
+              <h2 className="font-bold text-ink">{de ? 'Teilnahmebescheinigung' : 'Certificate of completion'}</h2>
+              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{complete ? (de ? 'Ihre Teilnahme am Kurs, zum Drucken oder als PDF.' : 'Your course participation, ready to print or save as PDF.') : (de ? 'Verfügbar nach Abschluss des Lernpfads.' : 'Available when the path is complete.')}</p>
               {complete ? (
-                <Button to={courseCertificate(level)} variant="celebrate" size="md" className="mt-4"><Award className="mr-1 h-4 w-4" /> Open certificate</Button>
+                <Button to={courseCertificate(level)} variant="primary" size="md" className="mt-4"><Award className="mr-1 h-4 w-4" /> {de ? 'Bescheinigung öffnen' : 'Open certificate'}</Button>
               ) : (
-                <Button to={courseHome(level)} variant="secondary" size="md" className="mt-4">Back to the path</Button>
+                <Button to={courseHome(level)} variant="secondary" size="md" className="mt-4">{de ? 'Zurück zum Lernpfad' : 'Back to the path'}</Button>
               )}
             </Card>
           </Reveal>
         </div>
 
+        {curriculum && <div className="mt-6">
+          <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">{de ? 'Gelerntes wiederholen' : 'Review what you have learned'} →</Link>
+        </div>}
         <Reveal delay={120} className="mt-6">
           <Card className="p-5" data-next-step={step?.kind || 'loading'}>
             {step?.kind === 'draft' ? (
               <>
-                <h2 className="font-bold text-ink">What's next</h2>
-                <p className="mt-1 text-[0.875rem] text-graphite">The next level is a paused draft, not a guided course yet — the full course library is open today.</p>
+                <h2 className="font-bold text-ink">{de ? 'Wie es weitergeht' : "What's next"}</h2>
+                <p className="mt-1 text-[0.875rem] text-graphite">{de ? 'Der nächste geführte Kurs ist noch in Vorbereitung. Die Kursbibliothek ist verfügbar.' : 'The next level is a paused draft, not a guided course yet — the full course library is open today.'}</p>
                 <div className="mt-3">
-                  <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>All courses →</Link>
+                  <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>{de ? 'Alle Kurse' : 'All courses'} →</Link>
                 </div>
               </>
             ) : (
               <>
-                <h2 className="font-bold text-ink">Next: German {nextCode}</h2>
+                <h2 className="font-bold text-ink">{de ? 'Weiter mit Deutsch' : 'Next: German'} {nextCode}</h2>
                 {step?.kind === 'continue' && (
                   <>
-                    <p className="mt-1 text-[0.875rem] text-graphite">The next course continues the same path.</p>
+                    <p className="mt-1 text-[0.875rem] text-graphite">{de ? 'Der nächste Kurs baut auf dem Gelernten auf.' : 'The next course builds on what you have learned.'}</p>
                     <div className="mt-3">
-                      <Link to={step.to} className="font-bold text-siegel hover:text-siegel-deep">Go to {nextCode} →</Link>
+                      <Link to={step.to} className="font-bold text-siegel hover:text-siegel-deep">{de ? 'Weiter zu' : 'Go to'} {nextCode} →</Link>
                     </div>
                   </>
                 )}
@@ -178,19 +191,19 @@ export default function CourseCompletePage() {
                   <>
                     {step.ticket && (
                       <>
-                        <p className="mt-2 text-[0.9375rem] font-bold text-ink">{step.ticket.title}</p>
-                        <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{step.ticket.body}</p>
+                        <p className="mt-2 text-[0.9375rem] font-bold text-ink">{de ? `Deutsch ${nextCode} · ${step.station.priceLabel}` : step.ticket.title}</p>
+                        <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{de ? 'Lernen Sie mit dem nächsten Kurs weiter. Inhalte und Kaufbedingungen finden Sie auf der Kursseite.' : step.ticket.body}</p>
                       </>
                     )}
-                    {step.station && <p className="mt-2 font-data text-[0.75rem] text-graphite">{stationStatusLine(step.station)}</p>}
+                    {step.station && <p className="mt-2 font-data text-[0.75rem] text-graphite">{de ? `${nextCode} ist verfügbar.` : stationStatusLine(step.station)}</p>}
                     <div className="mt-4 flex flex-wrap items-center gap-4">
                       {checkoutReady && (
                         <Button to={`/subscription?buy=${step.productKey}`} onClick={buyNext} variant="primary" size="md">
-                          Buy {nextCode} · {step.station.priceLabel}
+                          {de ? 'Kaufen:' : 'Buy'} {nextCode} · {step.station.priceLabel}
                         </Button>
                       )}
                       {step.coursePage && (
-                        <a href={step.coursePage} className="font-bold text-siegel hover:text-siegel-deep">See {nextCode} →</a>
+                        <a href={step.coursePage} className="font-bold text-siegel hover:text-siegel-deep">{de ? 'Kurs ansehen:' : 'See'} {nextCode} →</a>
                       )}
                     </div>
                   </>

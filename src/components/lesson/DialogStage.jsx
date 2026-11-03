@@ -108,12 +108,13 @@ function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGloss }) 
 export default function DialogStage({ stage, lektionId, onBack, onDone }) {
   const lines = (stage.dialog && stage.dialog.lines) || [];
   const id = lektionId || stage.lektionId || null;
+  const [lang] = useLessonLang();
   const [shown, setShown] = useState(1);
   // L1 opens with the English shown (buildLesson glossOpen): a first encounter needs the meaning.
-  const [gloss, setGloss] = useState(() => stage.glossOpen === true);
+  const [glossByLang, setGlossByLang] = useState(() => ({ en: stage.glossOpen === true, de: false }));
+  const gloss = glossByLang[lang] === true;
   const [played, setPlayed] = useState(() => new Set());
   const [openGloss, setOpenGloss] = useState(null);
-  const [lang] = useLessonLang();
   const allShown = shown >= lines.length;
 
   const parsed = useMemo(() => parseLektionId(id), [id]);
@@ -154,7 +155,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
       secondary={
         <button
           type="button"
-          onClick={() => setGloss((g) => !g)}
+          onClick={() => setGlossByLang((prev) => ({ ...prev, [lang]: !prev[lang] }))}
           aria-pressed={gloss}
           className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
         >

@@ -22,6 +22,8 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 export default function DictationItem({ line, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.dictation.eyebrow' }) {
   const [value, setValue] = useState('');
   const [state, setState] = useState(null);
+  const [retried, setRetried] = useState(false);
+  const recorded = useRef(false);
   // The learner chose to READ the line (the audio failed, or they asked for the text): the answer
   // is still checked, but it is recorded as read, not heard — never as listening evidence.
   const [readInstead, setReadInstead] = useState(false);
@@ -34,7 +36,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   const [lang] = useLessonLang();
 
   useEffect(() => {
-    setValue(''); setState(null); setReadInstead(false); setHeard(false);
+    setValue(''); setRetried(false); recorded.current = false; setState(null); setReadInstead(false); setHeard(false);
     if (ref.current) ref.current.focus();
   }, [line.index]);
 
@@ -56,8 +58,15 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
     const { result, expected } = checkAnswer(value, item.accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de), listened: heard && !readInstead });
+    if (!recorded.current) onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de), listened: heard && !readInstead });
+    recorded.current = true;
   };
+
+  const canRetryTypo = state?.result === RESULT.TYPO && !retried;
+  const retryTypo = () => { setRetried(true); setState(null); };
+  useEffect(() => {
+    if (retried && !state) ref.current?.focus();
+  }, [retried, state]);
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
@@ -103,8 +112,9 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
       <FeedbackSheet
         result={state && state.result}
         expected={state && state.expected}
-        explanation={state ? line.en : null}
-        onContinue={onNext}
+        explanation={state && lang !== 'de' ? line.en : null}
+        primaryLabel={canRetryTypo ? t('action.again', lang) : undefined}
+        onContinue={canRetryTypo ? retryTypo : onNext}
       />
     </div>
   );
