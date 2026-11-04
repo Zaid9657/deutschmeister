@@ -1,7 +1,7 @@
 {
  "level": "a1.2",
  "builtFrom": "2026-08-24",
- "count": 295,
+ "count": 425,
  "items": [
   {
    "id": "61b02e29-d65b-4d7b-8138-c50e5fcf9366",
@@ -336,6 +336,306 @@
    "explanationEn": "In a comparison **gut** becomes **besser** (better): besser als."
   },
   {
+   "id": "extra-a12-l03-assessment-1-1-3",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Kugelschreiber für das Formular. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Kugelschreiber. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich brauche den Kugelschreiber für das Formular.",
+   "accepted": [
+    "Ich brauche den Kugelschreiber für das Formular."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-1-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir kaufen ___ Tisch für die Küche. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the indefinite article for Tisch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir kaufen einen Tisch für die Küche.",
+   "accepted": [
+    "Wir kaufen einen Tisch für die Küche."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-2-1-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich kaufe ___ Computer. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Computer. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich kaufe den Computer.",
+   "accepted": [
+    "Ich kaufe den Computer."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-2-3",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Schreiben Sie den ganzen Satz: Lena kauft ___ Rucksack im Kaufhaus. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Rucksack. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Lena kauft den Rucksack im Kaufhaus.",
+   "accepted": [
+    "Lena kauft den Rucksack im Kaufhaus."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-2-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Schreiben Sie den ganzen Satz: Tim braucht ___ Stuhl für das Wohnzimmer. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the indefinite article for Stuhl. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Tim braucht einen Stuhl für das Wohnzimmer.",
+   "accepted": [
+    "Tim braucht einen Stuhl für das Wohnzimmer."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-2-2-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Tisch. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the indefinite article for Tisch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich brauche einen Tisch.",
+   "accepted": [
+    "Ich brauche einen Tisch."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-3-3",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Schreiben Sie den ganzen Satz: Paul braucht ___ Kugelschreiber im Büro. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Kugelschreiber. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Paul braucht den Kugelschreiber im Büro.",
+   "accepted": [
+    "Paul braucht den Kugelschreiber im Büro."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-3-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ana kauft ___ Kuchen im Geschäft. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the indefinite article for Kuchen. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ana kauft einen Kuchen im Geschäft.",
+   "accepted": [
+    "Ana kauft einen Kuchen im Geschäft."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-2-3-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Schreiben Sie den ganzen Satz: Paul braucht ___ Bahnhof. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Bahnhof. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Paul braucht den Bahnhof.",
+   "accepted": [
+    "Paul braucht den Bahnhof."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-4-3",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir brauchen ___ Schlüssel für die Wohnung. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Schlüssel. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir brauchen den Schlüssel für die Wohnung.",
+   "accepted": [
+    "Wir brauchen den Schlüssel für die Wohnung."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-4-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich kaufe ___ Stuhl in Berlin. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the indefinite article for Stuhl. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich kaufe einen Stuhl in Berlin.",
+   "accepted": [
+    "Ich kaufe einen Stuhl in Berlin."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-2-4-6",
+   "topic": "accusative-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ana kauft ___ Rucksack. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the indefinite article for Rucksack. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ana kauft einen Rucksack.",
+   "accepted": [
+    "Ana kauft einen Rucksack."
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 3
+  },
+  {
    "id": "extra-a12-l03-08",
    "topic": "accusative-intro",
    "type": "sentence_building",
@@ -557,6 +857,114 @@
    "explanationEn": "Lampe is feminine, so the accusative article stays die, unlike masculine der → den.",
    "hint": null,
    "minLektion": 6
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-1-8",
+   "topic": "accusative-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz: [ich / bezahlen / den Kaffee / an der Kasse] (Präsens) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”.",
+   "options": null,
+   "answer": "Ich bezahle den Kaffee an der Kasse.",
+   "accepted": [
+    "Ich bezahle den Kaffee an der Kasse.",
+    "Ich bezahle an der Kasse den Kaffee.",
+    "Ich bezahle an der Kasse den Kaffee"
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-2-8",
+   "topic": "accusative-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz: [wir / brauchen / den Rucksack / am Samstag] (Präsens) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”.",
+   "options": null,
+   "answer": "Wir brauchen den Rucksack am Samstag.",
+   "accepted": [
+    "Wir brauchen den Rucksack am Samstag.",
+    "Wir brauchen am Samstag den Rucksack.",
+    "Wir brauchen am Samstag den Rucksack"
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-3-8",
+   "topic": "accusative-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz: [Lena / brauchen / das Geld / an der Kasse] (Präsens) (Beginnen Sie mit „Lena“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”.",
+   "options": null,
+   "answer": "Lena braucht das Geld an der Kasse.",
+   "accepted": [
+    "Lena braucht das Geld an der Kasse.",
+    "Lena braucht an der Kasse das Geld.",
+    "Lena braucht an der Kasse das Geld"
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a12-l03-assessment-1-4-8",
+   "topic": "accusative-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz: [Paul / kaufen / den Kuchen / am Markt] (Präsens) (Beginnen Sie mit „Paul“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”.",
+   "options": null,
+   "answer": "Paul kauft den Kuchen am Markt.",
+   "accepted": [
+    "Paul kauft den Kuchen am Markt.",
+    "Paul kauft am Markt den Kuchen.",
+    "Paul kauft am Markt den Kuchen"
+   ],
+   "explanationDe": "Präsens: Das Objekt steht im Akkusativ: der wird den, ein wird einen.",
+   "explanationEn": "Präsens: The object takes the accusative: masculine der becomes den and ein becomes einen.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 3
   },
   {
    "id": "b3a0ddfa-93c1-4fbb-a853-baed75243483",
@@ -1016,6 +1424,256 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a12-l01-assessment-1-1-1",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Bilden Sie den Satz: [heute / wir / gehen / geradeaus] (Präsens) (Beginnen Sie mit „Heute“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”.",
+   "options": null,
+   "answer": "Heute gehen wir geradeaus.",
+   "accepted": [
+    "Heute gehen wir geradeaus."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-1-4",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Bilden Sie den Satz: [an der Ecke / ich / wohnen] (Präsens) (Beginnen Sie mit „An der Ecke“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “An der Ecke”.",
+   "options": null,
+   "answer": "An der Ecke wohne ich.",
+   "accepted": [
+    "An der Ecke wohne ich."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-1-7",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie den Satz: [am Montag / die Straßenbahn / kommen] (Präsens) (Beginnen Sie mit „Am Montag“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Montag”.",
+   "options": null,
+   "answer": "Am Montag kommt die Straßenbahn.",
+   "accepted": [
+    "Am Montag kommt die Straßenbahn."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-2-1",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Bilden Sie den Satz: [am Abend / der Bus / kommen] (Präsens) (Beginnen Sie mit „Am Abend“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Abend”.",
+   "options": null,
+   "answer": "Am Abend kommt der Bus.",
+   "accepted": [
+    "Am Abend kommt der Bus."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-2-4",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Bilden Sie den Satz: [am Montag / wir / gehen / links] (Präsens) (Beginnen Sie mit „Am Montag“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Montag”.",
+   "options": null,
+   "answer": "Am Montag gehen wir links.",
+   "accepted": [
+    "Am Montag gehen wir links."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-3-1",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Bilden Sie den Satz: [am Sonntag / wir / gehen / zur Kirche] (Präsens) (Beginnen Sie mit „Am Sonntag“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Sonntag”.",
+   "options": null,
+   "answer": "Am Sonntag gehen wir zur Kirche.",
+   "accepted": [
+    "Am Sonntag gehen wir zur Kirche."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-3-4",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Bilden Sie den Satz: [heute / die U-Bahn / kommen / um fünf Uhr] (Präsens) (Beginnen Sie mit „Heute“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”.",
+   "options": null,
+   "answer": "Heute kommt die U-Bahn um fünf Uhr.",
+   "accepted": [
+    "Heute kommt die U-Bahn um fünf Uhr."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-3-7",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz: [um acht Uhr / ich / gehen / rechts] (Präsens) (Beginnen Sie mit „Um acht Uhr“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Um acht Uhr”.",
+   "options": null,
+   "answer": "Um acht Uhr gehe ich rechts.",
+   "accepted": [
+    "Um acht Uhr gehe ich rechts."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-4-1",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Bilden Sie den Satz: [heute / ich / gehen / links] (Präsens) (Beginnen Sie mit „Heute“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”.",
+   "options": null,
+   "answer": "Heute gehe ich links.",
+   "accepted": [
+    "Heute gehe ich links."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l01-assessment-1-4-4",
+   "topic": "basic-sentence-structure",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Bilden Sie den Satz: [am Morgen / wir / gehen / rechts] (Präsens) (Beginnen Sie mit „Am Morgen“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Morgen”.",
+   "options": null,
+   "answer": "Am Morgen gehen wir rechts.",
+   "accepted": [
+    "Am Morgen gehen wir rechts."
+   ],
+   "explanationDe": "Präsens: Das Verb steht auf Position zwei; das Subjekt steht direkt davor oder danach.",
+   "explanationEn": "Präsens: The finite verb occupies position two, next to the subject.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
    "id": "c411f711-2a22-5b8b-8688-5b1219f44600",
    "topic": "dative-prepositions-intro",
    "type": "fill_blank",
@@ -1408,6 +2066,106 @@
    "minLektion": 11
   },
   {
+   "id": "extra-a12-l11-assessment-4-1-2",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Schreiben Sie den ganzen Satz: Bei ___ Regen bin ich zu Hause. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after bei. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Bei dem Regen bin ich zu Hause.",
+   "accepted": [
+    "Bei dem Regen bin ich zu Hause."
+   ],
+   "explanationDe": "Präsens: Mit, bei und aus stehen mit Dativ.",
+   "explanationEn": "Präsens: Mit, bei and aus take the dative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a12-l11-assessment-4-2-2",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich fahre mit ___ Straßenbahn. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after mit. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich fahre mit der Straßenbahn.",
+   "accepted": [
+    "Ich fahre mit der Straßenbahn."
+   ],
+   "explanationDe": "Präsens: Mit, bei und aus stehen mit Dativ.",
+   "explanationEn": "Präsens: Mit, bei and aus take the dative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a12-l11-assessment-4-3-2",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Schreiben Sie den ganzen Satz: Paul ist bei ___ Tante. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after bei. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Paul ist bei der Tante.",
+   "accepted": [
+    "Paul ist bei der Tante."
+   ],
+   "explanationDe": "Präsens: Mit, bei und aus stehen mit Dativ.",
+   "explanationEn": "Präsens: Mit, bei and aus take the dative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a12-l11-assessment-4-4-2",
+   "topic": "dative-prepositions-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Schreiben Sie den ganzen Satz: Lena kommt aus ___ Haus. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after aus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Lena kommt aus dem Haus.",
+   "accepted": [
+    "Lena kommt aus dem Haus."
+   ],
+   "explanationDe": "Präsens: Mit, bei und aus stehen mit Dativ.",
+   "explanationEn": "Präsens: Mit, bei and aus take the dative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 11
+  },
+  {
    "id": "ee2c444a-6f1f-5166-85e7-a801dbcd5590",
    "topic": "dative-prepositions-intro",
    "type": "sentence_building",
@@ -1566,6 +2324,58 @@
    "explanationDe": "zu benutzt man für die Richtung zu einer Person.",
    "explanationEn": "zu is used for direction toward a person or place, not a country.",
    "hint": null,
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a12-l11-assessment-4-2-7",
+   "topic": "dative-prepositions-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie den Satz: [ich / kommen / mit dem Bus] (Präsens) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”.",
+   "options": null,
+   "answer": "Ich komme mit dem Bus.",
+   "accepted": [
+    "Ich komme mit dem Bus."
+   ],
+   "explanationDe": "Präsens: Mit, bei und aus stehen mit Dativ.",
+   "explanationEn": "Präsens: Mit, bei and aus take the dative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a12-l11-assessment-4-4-7",
+   "topic": "dative-prepositions-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie den Satz: [wir / fahren / mit dem Zug / nach Berlin] (Präsens) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”.",
+   "options": null,
+   "answer": "Wir fahren mit dem Zug nach Berlin.",
+   "accepted": [
+    "Wir fahren mit dem Zug nach Berlin.",
+    "Wir fahren nach Berlin mit dem Zug.",
+    "Wir fahren nach Berlin mit dem Zug"
+   ],
+   "explanationDe": "Präsens: Mit, bei und aus stehen mit Dativ.",
+   "explanationEn": "Präsens: Mit, bei and aus take the dative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
    "minLektion": 11
   },
   {
@@ -1791,6 +2601,106 @@
    "explanationEn": "Sie-imperative = infinitive + Sie, verb first.",
    "hint": null,
    "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l08-assessment-3-1-2",
+   "topic": "imperative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ bitte die Tasche! (nehmen, Sie)",
+   "questionEn": "Use the formal Sie imperative of nehmen. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Nehmen Sie bitte die Tasche!",
+   "accepted": [
+    "Nehmen Sie bitte die Tasche!"
+   ],
+   "explanationDe": "Beim Sie-Imperativ steht das Verb vor Sie.",
+   "explanationEn": "The formal imperative places the verb before Sie.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l08-assessment-3-2-2",
+   "topic": "imperative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ bitte den Teppich! (holen, Sie)",
+   "questionEn": "Use the formal Sie imperative of holen. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Holen Sie bitte den Teppich!",
+   "accepted": [
+    "Holen Sie bitte den Teppich!"
+   ],
+   "explanationDe": "Beim Sie-Imperativ steht das Verb vor Sie.",
+   "explanationEn": "The formal imperative places the verb before Sie.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l08-assessment-3-3-2",
+   "topic": "imperative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ bitte ins Kinderzimmer! (gehen, Sie)",
+   "questionEn": "Use the formal Sie imperative of gehen. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Gehen Sie bitte ins Kinderzimmer!",
+   "accepted": [
+    "Gehen Sie bitte ins Kinderzimmer!"
+   ],
+   "explanationDe": "Beim Sie-Imperativ steht das Verb vor Sie.",
+   "explanationEn": "The formal imperative places the verb before Sie.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l08-assessment-3-4-2",
+   "topic": "imperative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ Sie bitte den Koffer! (holen, Sie) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Use the formal Sie imperative of holen; Sie is already printed. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Holen Sie bitte den Koffer!",
+   "accepted": [
+    "Holen Sie bitte den Koffer!"
+   ],
+   "explanationDe": "Beim Sie-Imperativ steht das Verb vor Sie.",
+   "explanationEn": "The formal imperative places the verb before Sie.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
   },
   {
    "id": "e1716cd7-ccbe-544a-a65d-796cda3e0fe7",
@@ -2117,6 +3027,78 @@
    "minLektion": 6
   },
   {
+   "id": "extra-a12-l08-assessment-3-2-7",
+   "topic": "imperative",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie den Satz: [Sie / warten / im Wohnzimmer] (Imperativ) (Beginnen Sie mit „Warten“)",
+   "questionEn": "Build the sentence in the imperative tense (Imperativ). Start with “Warten”.",
+   "options": null,
+   "answer": "Warten Sie im Wohnzimmer!",
+   "accepted": [
+    "Warten Sie im Wohnzimmer!"
+   ],
+   "explanationDe": "Beim Sie-Imperativ steht das Verb vor Sie.",
+   "explanationEn": "The formal imperative places the verb before Sie.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l08-assessment-3-4-7",
+   "topic": "imperative",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie den Satz: [Sie / warten / in der Garage] (Imperativ) (Beginnen Sie mit „Warten“)",
+   "questionEn": "Build the sentence in the imperative tense (Imperativ). Start with “Warten”.",
+   "options": null,
+   "answer": "Warten Sie in der Garage!",
+   "accepted": [
+    "Warten Sie in der Garage!"
+   ],
+   "explanationDe": "Beim Sie-Imperativ steht das Verb vor Sie.",
+   "explanationEn": "The formal imperative places the verb before Sie.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "76e16958-035d-4ab4-9808-316a1369c24e",
+   "topic": "modal-verbs-intro",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Ich ___ Deutsch sprechen.",
+   "questionEn": "I ___ speak German.",
+   "options": [
+    "könne",
+    "kann",
+    "kannst",
+    "können"
+   ],
+   "answer": "kann",
+   "accepted": [],
+   "explanationDe": "ich-Form von können = kann (keine Endung).",
+   "explanationEn": "ich form of können = kann (no ending).",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
    "id": "extra-a12-l09-01",
    "topic": "modal-verbs-intro",
    "type": "fill_blank",
@@ -2211,7 +3193,7 @@
    ],
    "explanationDe": "Die man-Form heißt kann; fahren steht am Ende.",
    "hint": null,
-   "minLektion": null,
+   "minLektion": 11,
    "explanationEn": "The man-form is like the er-form: man **kann**. The infinitive fahren goes to the end."
   },
   {
@@ -2355,6 +3337,206 @@
    "explanationEn": "**ab** names the start of boarding: **ab acht Uhr** (from eight o'clock)."
   },
   {
+   "id": "extra-a12-l09-assessment-3-1-3",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Schreiben Sie den ganzen Satz: Oma ___ heute fahren. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Oma kann heute fahren.",
+   "accepted": [
+    "Oma kann heute fahren."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-1-4",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ umsteigen. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir müssen umsteigen.",
+   "accepted": [
+    "Wir müssen umsteigen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-2-3",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ihr ___ hier einsteigen. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ihr könnt hier einsteigen.",
+   "accepted": [
+    "Ihr könnt hier einsteigen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-2-4",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Schreiben Sie den ganzen Satz: Lena ___ den Koffer holen. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Lena muss den Koffer holen.",
+   "accepted": [
+    "Lena muss den Koffer holen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-3-3",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Schreiben Sie den ganzen Satz: Tim ___ das Fahrrad nehmen. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Tim kann das Fahrrad nehmen.",
+   "accepted": [
+    "Tim kann das Fahrrad nehmen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-3-4",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ihr ___ am Bahnhof aussteigen. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ihr müsst am Bahnhof aussteigen.",
+   "accepted": [
+    "Ihr müsst am Bahnhof aussteigen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-4-3",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ den Bus nehmen. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir können den Bus nehmen.",
+   "accepted": [
+    "Wir können den Bus nehmen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-4-4",
+   "topic": "modal-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich ___ jetzt abfahren. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich muss jetzt abfahren.",
+   "accepted": [
+    "Ich muss jetzt abfahren."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
    "id": "extra-a12-l09-06",
    "topic": "modal-verbs-intro",
    "type": "sentence_building",
@@ -2413,7 +3595,7 @@
    ],
    "explanationDe": "Der Infinitiv fliegen steht ganz am Ende.",
    "hint": null,
-   "minLektion": null,
+   "minLektion": 9,
    "explanationEn": "With a modal verb, the infinitive goes to the very end: **Ich kann um neun Uhr fliegen.**"
   },
   {
@@ -2435,6 +3617,26 @@
    "accepted": [],
    "explanationDe": "müssen = Notwendigkeit. Mit ich: ich muss.",
    "explanationEn": "müssen = necessity. With ich the form is **muss**.",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "07cfcdf8-bdb8-5a5b-a3a4-6f54226b8982",
+   "topic": "modal-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 16,
+   "questionDe": "Schreiben Sie den Satz: [ich / heute / nicht / können / arbeiten] (Beginnen Sie mit „Ich“; „nicht“ steht vor „arbeiten“)",
+   "questionEn": "Write the sentence: I can't work today. (modal kann in position 2, infinitive at the end)",
+   "options": null,
+   "answer": "Ich kann heute nicht arbeiten.",
+   "accepted": [
+    "Ich kann heute nicht arbeiten.",
+    "Ich kann heute nicht arbeiten"
+   ],
+   "explanationDe": "kann ist das konjugierte Modalverb auf Position 2; arbeiten (Infinitiv) steht am Ende.",
+   "explanationEn": "kann is the conjugated modal in position 2; arbeiten (infinitive) goes to the end.",
    "hint": null,
    "minLektion": 9
   },
@@ -2477,6 +3679,106 @@
    "explanationDe": "müssen wird für ich zu muss.",
    "explanationEn": "müssen conjugates to muss for ich.",
    "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-1-8",
+   "topic": "modal-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz: [wir / müssen / am Flughafen / warten] (Präsens) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”.",
+   "options": null,
+   "answer": "Wir müssen am Flughafen warten.",
+   "accepted": [
+    "Wir müssen am Flughafen warten."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-2-8",
+   "topic": "modal-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz: [ich / können / am Freitag / fliegen] (Präsens) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”.",
+   "options": null,
+   "answer": "Ich kann am Freitag fliegen.",
+   "accepted": [
+    "Ich kann am Freitag fliegen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-3-8",
+   "topic": "modal-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz: [Paul / müssen / ein Ticket / kaufen] (Präsens) (Beginnen Sie mit „Paul“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”.",
+   "options": null,
+   "answer": "Paul muss ein Ticket kaufen.",
+   "accepted": [
+    "Paul muss ein Ticket kaufen."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l09-assessment-3-4-8",
+   "topic": "modal-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz: [Lena / können / nach Köln / fahren] (Präsens) (Beginnen Sie mit „Lena“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”.",
+   "options": null,
+   "answer": "Lena kann nach Köln fahren.",
+   "accepted": [
+    "Lena kann nach Köln fahren."
+   ],
+   "explanationDe": "Präsens: Das Modalverb ist konjugiert; der Infinitiv steht am Satzende.",
+   "explanationEn": "Präsens: Conjugate the modal verb; place the infinitive at the end.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
    "minLektion": 9
   },
   {
@@ -2651,6 +3953,406 @@
    "explanationEn": "**nicht** goes in front of the adjective it negates: Das Angebot ist **nicht gut**."
   },
   {
+   "id": "extra-a12-l04-assessment-2-1-1",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Computer funktioniert ___. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the statement about the computer. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Computer funktioniert nicht.",
+   "accepted": [
+    "Der Computer funktioniert nicht."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-1-4",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Kissen. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the need for a pillow. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich brauche kein Kissen.",
+   "accepted": [
+    "Ich brauche kein Kissen."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-3-1-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Lampe ist ___ teuer. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the price of the lamp. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Lampe ist nicht teuer.",
+   "accepted": [
+    "Die Lampe ist nicht teuer."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l04-assessment-4-1-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 105,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Schrank ist ___ neu. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the statement that the cupboard is new. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Schrank ist nicht neu.",
+   "accepted": [
+    "Der Schrank ist nicht neu."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-2-1",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das ist ___ Badezimmer. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the statement that this is a bathroom. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das ist kein Badezimmer.",
+   "accepted": [
+    "Das ist kein Badezimmer."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-2-4",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Spiegel ist ___ im Flur. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the location of the mirror. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Spiegel ist nicht im Flur.",
+   "accepted": [
+    "Der Spiegel ist nicht im Flur."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-3-2-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich habe ___ Zeit am Dienstag. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate having time on Tuesday. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich habe keine Zeit am Dienstag.",
+   "accepted": [
+    "Ich habe keine Zeit am Dienstag."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-4-2-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 113,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Rechnung. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the need for a bill. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich brauche keine Rechnung.",
+   "accepted": [
+    "Ich brauche keine Rechnung."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-3-1",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ich habe ___ Rabatt. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate having a discount. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ich habe keinen Rabatt.",
+   "accepted": [
+    "Ich habe keinen Rabatt."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-3-4",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Vorhang ist ___ blau. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the colour of the curtain. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Vorhang ist nicht blau.",
+   "accepted": [
+    "Der Vorhang ist nicht blau."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-3-3-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Bus kommt ___. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the arrival of the bus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Bus kommt nicht.",
+   "accepted": [
+    "Der Bus kommt nicht."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l04-assessment-4-3-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Kaffee ist ___ kalt. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the statement that the coffee is cold. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Kaffee ist nicht kalt.",
+   "accepted": [
+    "Der Kaffee ist nicht kalt."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 11
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-4-1",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Zimmer hat ___ Spiegel. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate having a mirror in the room. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Zimmer hat keinen Spiegel.",
+   "accepted": [
+    "Das Zimmer hat keinen Spiegel."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-4-4",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Eingang ist ___ hier. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate the location of the entrance. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Eingang ist nicht hier.",
+   "accepted": [
+    "Der Eingang ist nicht hier."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-3-4-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir haben ___ Auto. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate having a car. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir haben kein Auto.",
+   "accepted": [
+    "Wir haben kein Auto."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l04-assessment-4-4-6",
+   "topic": "negation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 129,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Zimmer hat ___ Balkon. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Negate having a balcony. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Zimmer hat keinen Balkon.",
+   "accepted": [
+    "Das Zimmer hat keinen Balkon."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 4
+  },
+  {
    "id": "d58b99cd-91ae-543c-9b59-ccf080542e9f",
    "topic": "negation",
    "type": "fill_blank",
@@ -2810,6 +4512,81 @@
    "explanationEn": "Requested present tense (Präsens): nicht negates the whole action and goes after the definite object das Auto, at the end.",
    "hint": null,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-1-7",
+   "topic": "negation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie den Satz: [die Bettdecke / sein / nicht / im Zimmer] (Präsens) (Beginnen Sie mit „Die Bettdecke“; „nicht“ steht vor „im“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Bettdecke”.",
+   "options": null,
+   "answer": "Die Bettdecke ist nicht im Zimmer.",
+   "accepted": [
+    "Die Bettdecke ist nicht im Zimmer."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-2-7",
+   "topic": "negation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie den Satz: [wir / haben / keinen Schlüssel] (Präsens) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”.",
+   "options": null,
+   "answer": "Wir haben keinen Schlüssel.",
+   "accepted": [
+    "Wir haben keinen Schlüssel."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a12-l04-assessment-2-3-7",
+   "topic": "negation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz: [das Kissen / sein / nicht / im Zimmer] (Präsens) (Beginnen Sie mit „Das Kissen“; „nicht“ steht vor „im“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Das Kissen”.",
+   "options": null,
+   "answer": "Das Kissen ist nicht im Zimmer.",
+   "accepted": [
+    "Das Kissen ist nicht im Zimmer."
+   ],
+   "explanationDe": "Präsens: Kein verneint ein Nomen ohne bestimmten Artikel; nicht verneint eine Eigenschaft oder Aussage.",
+   "explanationEn": "Präsens: Use kein with a noun without a definite article; nicht negates a property or statement.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 4
   },
   {
    "id": "extra-a12-l07-01",
@@ -3054,6 +4831,106 @@
    "hint": null,
    "minLektion": 7,
    "explanationEn": "Requested simple past (Präteritum): **haben** in the past: er **hatte** (he had)."
+  },
+  {
+   "id": "extra-a12-l07-assessment-3-1-1",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ Arm tut weh. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Arm as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Arm tut weh.",
+   "accepted": [
+    "Der Arm tut weh."
+   ],
+   "explanationDe": "Präsens: Das Subjekt steht im Nominativ: der, die oder das.",
+   "explanationEn": "Präsens: The subject takes the nominative case: der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a12-l07-assessment-3-2-1",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ Gesicht ist klein. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Gesicht as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Gesicht ist klein.",
+   "accepted": [
+    "Das Gesicht ist klein."
+   ],
+   "explanationDe": "Präsens: Das Subjekt steht im Nominativ: der, die oder das.",
+   "explanationEn": "Präsens: The subject takes the nominative case: der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a12-l07-assessment-3-3-1",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ Nase ist lang. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Nase as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Nase ist lang.",
+   "accepted": [
+    "Die Nase ist lang."
+   ],
+   "explanationDe": "Präsens: Das Subjekt steht im Nominativ: der, die oder das.",
+   "explanationEn": "Präsens: The subject takes the nominative case: der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a12-l07-assessment-3-4-1",
+   "topic": "nominative-case",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ Körper ist gesund. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article for Körper as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Körper ist gesund.",
+   "accepted": [
+    "Der Körper ist gesund."
+   ],
+   "explanationDe": "Präsens: Das Subjekt steht im Nominativ: der, die oder das.",
+   "explanationEn": "Präsens: The subject takes the nominative case: der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 7
   },
   {
    "id": "extra-a12-l07-06",
@@ -3312,6 +5189,56 @@
    "explanationEn": "After sein, the noun stays nominative; masculine mein has no ending here.",
    "hint": null,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l07-assessment-3-1-7",
+   "topic": "nominative-case",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie den Satz: [der Onkel / sein / heute / traurig] (Präsens) (Beginnen Sie mit „Der Onkel“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Onkel”.",
+   "options": null,
+   "answer": "Der Onkel ist heute traurig.",
+   "accepted": [
+    "Der Onkel ist heute traurig."
+   ],
+   "explanationDe": "Präsens: Das Subjekt steht im Nominativ: der, die oder das.",
+   "explanationEn": "Präsens: The subject takes the nominative case: der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 7
+  },
+  {
+   "id": "extra-a12-l07-assessment-3-3-7",
+   "topic": "nominative-case",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz: [meine Tante / sein / heute / glücklich] (Präsens) (Beginnen Sie mit „Meine Tante“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Meine Tante”.",
+   "options": null,
+   "answer": "Meine Tante ist heute glücklich.",
+   "accepted": [
+    "Meine Tante ist heute glücklich."
+   ],
+   "explanationDe": "Präsens: Das Subjekt steht im Nominativ: der, die oder das.",
+   "explanationEn": "Präsens: The subject takes the nominative case: der, die or das.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 7
   },
   {
    "id": "71cd7363-af10-433f-aeeb-c49bc0ecc974",
@@ -3641,6 +5568,506 @@
    "minLektion": 2
   },
   {
+   "id": "extra-a12-l02-assessment-1-1-2",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Miete kostet ___ Euro. (480; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 480 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Miete kostet vierhundertachtzig Euro.",
+   "accepted": [
+    "Die Miete kostet vierhundertachtzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-1-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Haus hat ___ Fenster. (21; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 21 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Haus hat einundzwanzig Fenster.",
+   "accepted": [
+    "Das Haus hat einundzwanzig Fenster."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-2-1-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Lampe kostet ___ Euro. (40; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 40 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Lampe kostet vierzig Euro.",
+   "accepted": [
+    "Die Lampe kostet vierzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-3-1-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Tasche kostet ___ Euro. (50; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 50 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Tasche kostet fünfzig Euro.",
+   "accepted": [
+    "Die Tasche kostet fünfzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-4-1-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 104,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Mantel kostet ___ Euro. (90; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 90 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Mantel kostet neunzig Euro.",
+   "accepted": [
+    "Der Mantel kostet neunzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-2-2",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Wohnung kostet ___ Euro. (100; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 100 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Wohnung kostet hundert Euro.",
+   "accepted": [
+    "Die Wohnung kostet hundert Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-2-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Garten kostet ___ Euro. (80; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Garten kostet achtzig Euro.",
+   "accepted": [
+    "Der Garten kostet achtzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-2-2-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Stuhl kostet ___ Euro. (20; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 20 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Stuhl kostet zwanzig Euro.",
+   "accepted": [
+    "Der Stuhl kostet zwanzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-3-2-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Rucksack kostet ___ Euro. (60; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 60 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Rucksack kostet sechzig Euro.",
+   "accepted": [
+    "Der Rucksack kostet sechzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-4-2-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 112,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Jacke kostet ___ Euro. (80; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Jacke kostet achtzig Euro.",
+   "accepted": [
+    "Die Jacke kostet achtzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-3-2",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Wohnung kostet ___ Euro. (480; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 480 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Wohnung kostet vierhundertachtzig Euro.",
+   "accepted": [
+    "Die Wohnung kostet vierhundertachtzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-3-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Küche kostet ___ Euro. (70; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 70 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Küche kostet siebzig Euro.",
+   "accepted": [
+    "Die Küche kostet siebzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-2-3-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Tasche kostet ___ Euro. (60; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 60 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Tasche kostet sechzig Euro.",
+   "accepted": [
+    "Die Tasche kostet sechzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-3-3-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Buch kostet ___ Euro. (18; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 18 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Buch kostet achtzehn Euro.",
+   "accepted": [
+    "Das Buch kostet achtzehn Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-4-3-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Mütze kostet ___ Euro. (21; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 21 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Mütze kostet einundzwanzig Euro.",
+   "accepted": [
+    "Die Mütze kostet einundzwanzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-4-2",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Miete ist ___ Euro. (100; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 100 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Miete ist hundert Euro.",
+   "accepted": [
+    "Die Miete ist hundert Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-4-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Haus hat ___ Fenster. (48; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 48 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Haus hat achtundvierzig Fenster.",
+   "accepted": [
+    "Das Haus hat achtundvierzig Fenster."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-2-4-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Handy kostet ___ Euro. (90; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 90 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Handy kostet neunzig Euro.",
+   "accepted": [
+    "Das Handy kostet neunzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-3-4-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Schreiben Sie den ganzen Satz: Das Fahrrad kostet ___ Euro. (80; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Das Fahrrad kostet achtzig Euro.",
+   "accepted": [
+    "Das Fahrrad kostet achtzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp3",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a12-l02-assessment-4-4-5",
+   "topic": "numbers-counting",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 128,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Rock kostet ___ Euro. (70; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Write 70 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Rock kostet siebzig Euro.",
+   "accepted": [
+    "Der Rock kostet siebzig Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "earlier"
+   },
+   "minLektion": 10
+  },
+  {
    "id": "fbdca573-c715-59fb-bc45-d93d44186dd5",
    "topic": "numbers-counting",
    "type": "fill_blank",
@@ -3700,6 +6127,56 @@
    "explanationEn": "Phone numbers are read one digit at a time.",
    "hint": null,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-2-7",
+   "topic": "numbers-counting",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 114,
+   "questionDe": "Bilden Sie den Satz: [die Miete / kosten / hundert Euro] (Präsens) (Beginnen Sie mit „Die Miete“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Miete”.",
+   "options": null,
+   "answer": "Die Miete kostet hundert Euro.",
+   "accepted": [
+    "Die Miete kostet hundert Euro."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a12-l02-assessment-1-4-7",
+   "topic": "numbers-counting",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie den Satz: [die Küche / haben / drei Fenster] (Präsens) (Beginnen Sie mit „Die Küche“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Küche”.",
+   "options": null,
+   "answer": "Die Küche hat drei Fenster.",
+   "accepted": [
+    "Die Küche hat drei Fenster."
+   ],
+   "explanationDe": "Präsens: Die Zahl wird als ein Wort geschrieben.",
+   "explanationEn": "Präsens: Write the number as one word; units come before tens with und.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp1",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 2
   },
   {
    "id": "3785402b-4a69-5b54-bd16-d56371555910",
@@ -4127,6 +6604,206 @@
    "explanationEn": "**bezahlen** takes no ge- in the participle: **bezahlt**."
   },
   {
+   "id": "extra-a12-l12-assessment-4-1-3",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Schreiben Sie den ganzen Satz: Lena hat Gemüse ___. (kaufen) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the perfect participle of kaufen. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Lena hat Gemüse gekauft.",
+   "accepted": [
+    "Lena hat Gemüse gekauft."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-1-4",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 103,
+   "questionDe": "Schreiben Sie den ganzen Satz: Paul ___ nach Bremen gefahren. (sein) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete sein as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Paul ist nach Bremen gefahren.",
+   "accepted": [
+    "Paul ist nach Bremen gefahren."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-2-3",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Schreiben Sie den ganzen Satz: Ana hat Tee ___. (trinken) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the perfect participle of trinken. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Ana hat Tee getrunken.",
+   "accepted": [
+    "Ana hat Tee getrunken."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-2-4",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Schreiben Sie den ganzen Satz: Tim ___ das Obst bezahlt. (haben) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete haben as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Tim hat das Obst bezahlt.",
+   "accepted": [
+    "Tim hat das Obst bezahlt."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-3-3",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Schreiben Sie den ganzen Satz: Lena ist nach Köln ___. (fahren) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the perfect participle of fahren. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Lena ist nach Köln gefahren.",
+   "accepted": [
+    "Lena ist nach Köln gefahren."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-3-4",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ Milch gekauft. (haben) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete haben as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir haben Milch gekauft.",
+   "accepted": [
+    "Wir haben Milch gekauft."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-4-3",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Schreiben Sie den ganzen Satz: Paul hat Brot ___. (essen) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the perfect participle of essen. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Paul hat Brot gegessen.",
+   "accepted": [
+    "Paul hat Brot gegessen."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-4-4",
+   "topic": "perfekt-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 127,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ nach Hause gegangen. (sein) (Perfekt) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete sein as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir sind nach Hause gegangen.",
+   "accepted": [
+    "Wir sind nach Hause gegangen."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
    "id": "4681b233-26bd-599d-910a-c76ad0222f80",
    "topic": "perfekt-intro",
    "type": "sentence_building",
@@ -4326,6 +7003,108 @@
    "hint": null,
    "minLektion": 12,
    "explanationEn": "The Perfekt needs the participle, not the infinitive: kaufen → **gekauft**: **Wir haben das Fleisch gekauft.**"
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-1-8",
+   "topic": "perfekt-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz: [ich / haben / gestern / Reis / kochen] (Perfekt) (Beginnen Sie mit „Ich“)",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Ich”.",
+   "options": null,
+   "answer": "Ich habe gestern Reis gekocht.",
+   "accepted": [
+    "Ich habe gestern Reis gekocht.",
+    "Ich habe Reis gestern gekocht.",
+    "Ich habe Reis gestern gekocht"
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-2-8",
+   "topic": "perfekt-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz: [wir / haben / das Gemüse / essen] (Perfekt) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Wir”.",
+   "options": null,
+   "answer": "Wir haben das Gemüse gegessen.",
+   "accepted": [
+    "Wir haben das Gemüse gegessen."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-3-8",
+   "topic": "perfekt-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz: [Ana / haben / das Ei / kochen] (Perfekt) (Beginnen Sie mit „Ana“)",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Ana”.",
+   "options": null,
+   "answer": "Ana hat das Ei gekocht.",
+   "accepted": [
+    "Ana hat das Ei gekocht."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 12
+  },
+  {
+   "id": "extra-a12-l12-assessment-4-4-8",
+   "topic": "perfekt-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz: [Tim / haben / die Schokolade / kaufen] (Perfekt) (Beginnen Sie mit „Tim“)",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Tim”.",
+   "options": null,
+   "answer": "Tim hat die Schokolade gekauft.",
+   "accepted": [
+    "Tim hat die Schokolade gekauft."
+   ],
+   "explanationDe": "Perfekt: Haben oder sein mit dem Partizip II; gehen und fahren hier mit sein.",
+   "explanationEn": "Perfekt: Use haben or sein plus the past participle; travel with gehen/fahren uses sein here.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 12
   },
   {
    "id": "b055a395-e5f2-46be-887c-aa62a81fc1ee",
@@ -4629,6 +7408,106 @@
    "explanationEn": "**gehören** (belong) takes the dative: Die Mütze **gehört** dir."
   },
   {
+   "id": "extra-a12-l10-assessment-4-1-1",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 100,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Schal ist für ___ Bruder. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after für. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Schal ist für den Bruder.",
+   "accepted": [
+    "Der Schal ist für den Bruder."
+   ],
+   "explanationDe": "Präsens: Für, ohne und durch stehen mit Akkusativ.",
+   "explanationEn": "Präsens: Für, ohne and durch take the accusative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l10-assessment-4-2-1",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 108,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir gehen ohne ___ Nachbarn. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after ohne. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir gehen ohne den Nachbarn.",
+   "accepted": [
+    "Wir gehen ohne den Nachbarn."
+   ],
+   "explanationDe": "Präsens: Für, ohne und durch stehen mit Akkusativ.",
+   "explanationEn": "Präsens: Für, ohne and durch take the accusative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a12-l10-assessment-4-3-1",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 116,
+   "questionDe": "Schreiben Sie den ganzen Satz: Die Jacke ist für ___ Vater. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after für. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Die Jacke ist für den Vater.",
+   "accepted": [
+    "Die Jacke ist für den Vater."
+   ],
+   "explanationDe": "Präsens: Für, ohne und durch stehen mit Akkusativ.",
+   "explanationEn": "Präsens: Für, ohne and durch take the accusative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l10-assessment-4-4-1",
+   "topic": "prepositions-accusative",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 124,
+   "questionDe": "Schreiben Sie den ganzen Satz: Wir gehen durch ___ Park. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete the definite article after durch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wir gehen durch den Park.",
+   "accepted": [
+    "Wir gehen durch den Park."
+   ],
+   "explanationDe": "Präsens: Für, ohne und durch stehen mit Akkusativ.",
+   "explanationEn": "Präsens: Für, ohne and durch take the accusative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
    "id": "extra-a12-l10-05",
    "topic": "prepositions-accusative",
    "type": "sentence_building",
@@ -4891,6 +7770,58 @@
    "explanationDe": "Präsens: ohne verlangt immer Akkusativ; Bruder ist maskulin, deshalb muss das gegebene mein zu meinen werden.",
    "explanationEn": "Requested present tense (Präsens): ohne always triggers accusative; Bruder is masculine, so the given mein must become meinen.",
    "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l10-assessment-4-1-7",
+   "topic": "prepositions-accusative",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 106,
+   "questionDe": "Bilden Sie den Satz: [der Pullover / sein / für meine Oma] (Präsens) (Beginnen Sie mit „Der Pullover“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Pullover”.",
+   "options": null,
+   "answer": "Der Pullover ist für meine Oma.",
+   "accepted": [
+    "Der Pullover ist für meine Oma."
+   ],
+   "explanationDe": "Präsens: Für, ohne und durch stehen mit Akkusativ.",
+   "explanationEn": "Präsens: Für, ohne and durch take the accusative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a12-l10-assessment-4-3-7",
+   "topic": "prepositions-accusative",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "Bilden Sie den Satz: [wir / kaufen / die Mütze / für den Opa] (Präsens) (Beginnen Sie mit „Wir“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”.",
+   "options": null,
+   "answer": "Wir kaufen die Mütze für den Opa.",
+   "accepted": [
+    "Wir kaufen die Mütze für den Opa.",
+    "Wir kaufen für den Opa die Mütze.",
+    "Wir kaufen für den Opa die Mütze"
+   ],
+   "explanationDe": "Präsens: Für, ohne und durch stehen mit Akkusativ.",
+   "explanationEn": "Präsens: Für, ohne and durch take the accusative.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp4",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
    "minLektion": 10
   },
   {
@@ -5212,6 +8143,106 @@
    "explanationEn": "A polite wish: **Ich würde gern** mitkommen."
   },
   {
+   "id": "extra-a12-l05-assessment-2-1-2",
+   "topic": "question-words",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ ist der Ausflug? — Um sieben Uhr. (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Ask about the time of the excursion. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wann ist der Ausflug?",
+   "accepted": [
+    "Wann ist der Ausflug?"
+   ],
+   "explanationDe": "Präsens: Das Fragewort passt zur Antwort: Person, Ort, Ziel oder Zeit.",
+   "explanationEn": "Präsens: Choose the question word for the answer: person, location, destination or time.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a12-l05-assessment-2-2-2",
+   "topic": "question-words",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 109,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ ist der Film am Freitag? — Im Kino. (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Ask about the location of the film on Friday. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wo ist der Film am Freitag?",
+   "accepted": [
+    "Wo ist der Film am Freitag?"
+   ],
+   "explanationDe": "Präsens: Das Fragewort passt zur Antwort: Person, Ort, Ziel oder Zeit.",
+   "explanationEn": "Präsens: Choose the question word for the answer: person, location, destination or time.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a12-l05-assessment-2-3-2",
+   "topic": "question-words",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ fährt der Bus? — Nach Köln. (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Ask about the destination of the bus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wohin fährt der Bus?",
+   "accepted": [
+    "Wohin fährt der Bus?"
+   ],
+   "explanationDe": "Präsens: Das Fragewort passt zur Antwort: Person, Ort, Ziel oder Zeit.",
+   "explanationEn": "Präsens: Choose the question word for the answer: person, location, destination or time.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l05-assessment-2-4-2",
+   "topic": "question-words",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 125,
+   "questionDe": "Schreiben Sie den ganzen Satz: ___ kommt heute? — Frau Kaya kommt. (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Ask which person is coming. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Wer kommt heute?",
+   "accepted": [
+    "Wer kommt heute?"
+   ],
+   "explanationDe": "Präsens: Das Fragewort passt zur Antwort: Person, Ort, Ziel oder Zeit.",
+   "explanationEn": "Präsens: Choose the question word for the answer: person, location, destination or time.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 1
+  },
+  {
    "id": "extra-a12-l05-07",
    "topic": "question-words",
    "type": "sentence_building",
@@ -5470,6 +8501,56 @@
    "explanationEn": "The cue puts wann first, so kommt (verb) is position 2 and ihr follows; an goes to the end.",
    "hint": null,
    "minLektion": 1
+  },
+  {
+   "id": "extra-a12-l05-assessment-2-2-8",
+   "topic": "question-words",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 115,
+   "questionDe": "Bilden Sie den Satz: [der Film / sein / um neun Uhr] (Präsens) (Beginnen Sie mit „Der Film“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Film”.",
+   "options": null,
+   "answer": "Der Film ist um neun Uhr.",
+   "accepted": [
+    "Der Film ist um neun Uhr."
+   ],
+   "explanationDe": "Präsens: Das Fragewort passt zur Antwort: Person, Ort, Ziel oder Zeit.",
+   "explanationEn": "Präsens: Choose the question word for the answer: person, location, destination or time.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a12-l05-assessment-2-4-7",
+   "topic": "question-words",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 130,
+   "questionDe": "Bilden Sie den Satz: [der Ausflug / sein / am Morgen] (Präsens) (Beginnen Sie mit „Der Ausflug“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Ausflug”.",
+   "options": null,
+   "answer": "Der Ausflug ist am Morgen.",
+   "accepted": [
+    "Der Ausflug ist am Morgen."
+   ],
+   "explanationDe": "Präsens: Das Fragewort passt zur Antwort: Person, Ort, Ziel oder Zeit.",
+   "explanationEn": "Präsens: Choose the question word for the answer: person, location, destination or time.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 5
   },
   {
    "id": "b3ce6582-023c-5c9c-b5c9-ee9e998b8296",
@@ -5892,6 +8973,106 @@
    "explanationEn": "**denn** joins two sentences; in both the verb is in position 2."
   },
   {
+   "id": "extra-a12-l06-assessment-2-1-3",
+   "topic": "stem-changing-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 102,
+   "questionDe": "Schreiben Sie den ganzen Satz: Der Arzt ___ meine Hand. (sehen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete sehen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Der Arzt sieht meine Hand.",
+   "accepted": [
+    "Der Arzt sieht meine Hand."
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a12-l06-assessment-2-2-3",
+   "topic": "stem-changing-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 110,
+   "questionDe": "Schreiben Sie den ganzen Satz: Lena ___ eine Tablette. (nehmen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete nehmen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Lena nimmt eine Tablette.",
+   "accepted": [
+    "Lena nimmt eine Tablette."
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 1,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a12-l06-assessment-2-3-3",
+   "topic": "stem-changing-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "Schreiben Sie den ganzen Satz: Tim ___ mir in der Praxis. (helfen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete helfen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Tim hilft mir in der Praxis.",
+   "accepted": [
+    "Tim hilft mir in der Praxis."
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a12-l06-assessment-2-4-3",
+   "topic": "stem-changing-verbs",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 126,
+   "questionDe": "Schreiben Sie den ganzen Satz: Paul ___ heute die Tabletten. (nehmen) (Präsens) (Ergänzen Sie mit einem Wort)",
+   "questionEn": "Complete nehmen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
+   "options": null,
+   "answer": "Paul nimmt heute die Tabletten.",
+   "accepted": [
+    "Paul nimmt heute die Tabletten."
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "bausteine",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
    "id": "294e446d-7b8d-57d0-babe-c3e2bb5790a7",
    "topic": "stem-changing-verbs",
    "type": "fill_blank",
@@ -6048,6 +9229,83 @@
    "hint": null,
    "minLektion": 6,
    "explanationEn": "**helfen** changes e to i in the sie-form: **Die Tablette hilft gegen Fieber.**"
+  },
+  {
+   "id": "extra-a12-l06-assessment-2-1-8",
+   "topic": "stem-changing-verbs",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 107,
+   "questionDe": "Bilden Sie den Satz: [Paul / nehmen / die Versichertenkarte] (Präsens) (Beginnen Sie mit „Paul“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”.",
+   "options": null,
+   "answer": "Paul nimmt die Versichertenkarte.",
+   "accepted": [
+    "Paul nimmt die Versichertenkarte."
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 0,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a12-l06-assessment-2-3-8",
+   "topic": "stem-changing-verbs",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 123,
+   "questionDe": "Bilden Sie den Satz: [Ana / sehen / den Arzt / am Freitag] (Präsens) (Beginnen Sie mit „Ana“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ana”.",
+   "options": null,
+   "answer": "Ana sieht den Arzt am Freitag.",
+   "accepted": [
+    "Ana sieht den Arzt am Freitag.",
+    "Ana sieht am Freitag den Arzt.",
+    "Ana sieht am Freitag den Arzt"
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 2,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a12-l06-assessment-2-4-8",
+   "topic": "stem-changing-verbs",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 131,
+   "questionDe": "Bilden Sie den Satz: [Lena / helfen / mir] (Präsens) (Beginnen Sie mit „Lena“)",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”.",
+   "options": null,
+   "answer": "Lena hilft mir.",
+   "accepted": [
+    "Lena hilft mir."
+   ],
+   "explanationDe": "Präsens: Bei er oder sie wechselt hier der Stammvokal.",
+   "explanationEn": "Präsens: In the third-person singular, these verbs change their stem vowel.",
+   "hint": null,
+   "assessment": {
+    "checkpoint": "a1.2-cp2",
+    "paper": 3,
+    "section": "schreiben",
+    "source": "chapter"
+   },
+   "minLektion": 6
   }
  ],
  "lineHorizon": {

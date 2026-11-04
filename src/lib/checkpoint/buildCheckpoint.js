@@ -144,10 +144,10 @@ export const printedSurface = (item) => {
  * every prompt containing „richtig" a leak.
  */
 const VERDICT_KINDS = new Set(['trueFalse', 'gradedWriting']);
-// An authored Lesen unit SELECTS between two options its own text prints („Ana" or „Tim"): its answer
-// is no production another item could give away — but its text still prints answers, and the other
-// direction of leaksAcross keeps every later draw clear of them.
-export const leakable = (item) => Boolean(item) && !VERDICT_KINDS.has(item.kind) && !(item.section === 'lesen' && item.kind === 'choice');
+// Authored Lesen extracts a fact its own text prints, through a short answer or a legacy choice.
+// Finding that fact is the reading task; it is not a separate production to conceal. Its text still
+// prints answers, and the other direction of leaksAcross keeps later productions clear of them.
+export const leakable = (item) => Boolean(item) && !VERDICT_KINDS.has(item.kind) && !(item.section === 'lesen' && ['choice', 'readingGap'].includes(item.kind));
 
 /** True when either item's whole production is already printed by the other. */
 export const leaksAcross = (a, b) =>
@@ -451,7 +451,7 @@ export const servableBy = (item, afterLektion) =>
 const byTopics = (pool, topics, afterLektion) => {
   const wanted = new Set(topics);
   return poolItems(pool)
-    .filter((i) => wanted.has(i.topic) && !isNextLevelPreview(i) && servableBy(i, afterLektion))
+    .filter((i) => !i.assessment && wanted.has(i.topic) && !isNextLevelPreview(i) && servableBy(i, afterLektion))
     .sort((a, b) => (a.topic === b.topic ? (a.order || 0) - (b.order || 0) : a.topic < b.topic ? -1 : 1));
 };
 
@@ -579,6 +579,7 @@ function fromPoolItem(poolItem, { id, section, source, register = null }) {
     // does for the same pool item in the lesson (REVIEW #4 BLOCKER 3).
     caseSensitive: poolItem.caseSensitive === true,
     explanationDe: poolItem.explanationDe || null,
+    explanationEn: poolItem.explanationEn || null,
     hint: poolItem.hint || null,
     poolItemId: poolItem.id,
     type: poolItem.type,
@@ -2030,13 +2031,14 @@ function authoredLesen(ctx, { papers } = {}) {
   return paper.map((unit, i) => ctx.seat(lesenUnitItem(ctx.checkpoint, i, unit)));
 }
 
-/** One authored unit as a checkpoint item: its own text, its question, the two options in approved order. */
+/** An authored text with a short answer, or the legacy approved choices for saved papers. */
 function lesenUnitItem(checkpoint, i, unit) {
+  const shortAnswer = unit.kind === 'reading_gap';
   return {
     id: `${checkpoint.id}-lesen-${i + 1}`,
     section: 'lesen',
-    kind: 'choice',
-    mode: 'options',
+    kind: shortAnswer ? 'readingGap' : 'choice',
+    mode: shortAnswer ? 'typed' : 'options',
     topic: 'lesen',
     lektionNr: checkpoint.afterLektion,
     source: 'authored',
@@ -2046,14 +2048,15 @@ function lesenUnitItem(checkpoint, i, unit) {
     promptEn: unit.questionEn,
     audioText: null,
     text: unit.text,
-    options: [...unit.options],
+    options: shortAnswer ? null : [...unit.options],
     answer: unit.answer,
     accepted: [unit.answer],
+    readingAnswer: shortAnswer,
     explanationDe: unit.explanationDe,
     explanationEn: unit.explanationEn,
     hint: null,
     poolItemId: null,
-    type: 'multiple_choice',
+    type: shortAnswer ? 'reading_gap' : 'multiple_choice',
     unitId: unit.id,
     textType: unit.type,
     evidence: unit.evidence,
@@ -2217,7 +2220,24 @@ function lesenAttempt(ctx, rng) {
 // (the standard asks for ≥ 4 typed) — and this is where the 30 % interleave
 // from earlier chapters lands, because grammar is the thing that has to keep
 // coming back.
+// Reserved papers have reviewed content for every seat. Never fall back to a practised item:
+// a missing or premature row is a content-build error, not a weaker assessment for the learner.
+function reservedAssessment(ctx, section, count) {
+  const rows = poolItems(ctx.pool).filter((row) => row.assessment?.checkpoint === ctx.checkpoint.id
+    && row.assessment.paper === ctx.round % ctx.checkpoint.assessmentPapers && row.assessment.section === section)
+    .sort((a, b) => a.order - b.order);
+  if (rows.length !== count || rows.some((row) => !servableBy(row, ctx.checkpoint.afterLektion))) {
+    throw new Error(`${ctx.checkpoint.id}: incomplete or untaught reserved ${section} paper`);
+  }
+  return rows.map((row, i) => {
+    const item = fromPoolItem(row, { id: `${ctx.checkpoint.id}-${section}-${i + 1}`, section, source: row.assessment.source });
+    if (ctx.leaks(item)) ctx.relax(section, row.id);
+    return ctx.seat(item);
+  });
+}
+
 function buildBausteine(ctx) {
+  if (ctx.checkpoint.assessmentPapers) return reservedAssessment(ctx, 'bausteine', SECTION_COUNTS.bausteine);
   const { checkpoint, rng, chapter, earlier, pool, usedPoolIds, untaught, afterLektion } = ctx;
   const chapterTopics = topicsOf(chapter);
   // The interleave visits the earlier topics that still have something the learner has not
@@ -2282,6 +2302,7 @@ function buildBausteine(ctx) {
 //     name is taken: evaluate-writing derives its character floor from it. The
 //     only item with a register is the real task, whose register is real.
 function buildSchreiben(ctx) {
+  if (ctx.checkpoint.assessmentPapers) return [...reservedAssessment(ctx, 'schreiben', 2), ctx.graded].filter(Boolean);
   const { checkpoint, rng, chapter, pool, usedPoolIds, untaught, afterLektion } = ctx;
   // Seated (so every other section can dodge its prompt) before any draw: the
   // chapter's own task is not a choice, so it is the one item the leak cap has to

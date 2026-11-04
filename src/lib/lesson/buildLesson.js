@@ -653,7 +653,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));
   // The quality rules at the course's own level: without it the A1.1 syllabus rules (no accusative,
   // no ordinals …) dropped 57 of A1.2's 254 items, and its accusative Lektion drew 3 of 7 (2026-10-15).
-  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it, { level: options.level }) && servableHere(it));
+  const usable = poolItems(pool).filter((it) => !it.assessment && topics.has(it.topic) && isUsableItem(it, { level: options.level }) && servableHere(it));
   if (!usable.length) return [];
 
   const primarySlug = options.primarySlug || topicList[0];

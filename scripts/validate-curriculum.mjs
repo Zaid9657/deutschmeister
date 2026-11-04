@@ -74,6 +74,8 @@ import { COUNTRY_STEMS } from '../src/lib/lesson/countries.js';
 import { planPractice } from '../src/lib/lesson/buildLesson.js';
 import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { ITEM_FORMULAS } from '../src/lib/checkpoint/lexis.js';
+import { shortReadingFindings, reservedAssessmentFindings, finalTestContentFindings } from './lib/assessment-content.mjs';
+import { abschlusstestA12 } from '../src/data/courseTests/abschlusstestA12.js';
 
 export const GRAMMAR_SLUGS = [
   'nouns-gender', 'definite-articles', 'personal-pronouns', 'verb-sein', 'alphabet-pronunciation',
@@ -1009,7 +1011,7 @@ export const LEVELS = {
       // DRAFT nobody may rebuild. The number is a work order for whoever resumes the level.
       // RESUMED 2026-10-15 (owner: "start now"): the pool rebuilt with every repair since September,
       // the level-scoped draw, the construction horizon and DaF review #3's fixes — re-measured.
-      untaughtItemTokens: 26,
+      untaughtItemTokens: 24, // Pass 2: explicit können/müssen input closes two previously deferred pairs.
       // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 3
       // („fliegen“/„fliege“ in L2, taught in L7; „Onkel“ in L3) — re-measured after the round-8
       // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
@@ -1340,7 +1342,9 @@ function lektionAssignment(c) {
   for (const l of c.lektionen || []) {
     for (const t of l.practiceRule?.topics || []) if (!earliest.has(t)) earliest.set(t, l.nr);
   }
-  return (it) => lektionOfItem(it.id) ?? earliest.get(it.topic) ?? null;
+  return (it) => (it.assessment
+    ? c.checkpoints?.find((cp) => cp.id === it.assessment.checkpoint)?.afterLektion
+    : null) ?? lektionOfItem(it.id) ?? earliest.get(it.topic) ?? null;
 }
 
 /**
@@ -1965,6 +1969,7 @@ function producedTexts(l) {
  */
 export function constructionsBeforeTaught(c, pool = null) {
   const spec = levelSpec(c?.level);
+  pool = pool ?? loadPoolItems(c?.level);
   const wechsel = spec?.constructionHorizon ? wechselInventory(c.level) : null;
   const adjectives = spec?.constructionHorizon ? adjectiveLexicon(c.level) : null;
   const deferred = (nr, text) => [
@@ -1988,7 +1993,7 @@ export function constructionsBeforeTaught(c, pool = null) {
   // `afterLektion`, not the Lektion the line comes from. `a1.1-cp1-hoeren-3` was „Bitte füllen Sie
   // das Formular aus.“, three Lektionen before the course mentions the Satzklammer.
   for (const cp of c.checkpoints || []) {
-    for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool: pool || [] })) {
+    for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool })) {
       if (item.type !== 'dictation' && item.type !== 'read_aloud') continue;
       const text = item.audioText || item.answer || item.text;
       for (const h of deferred(cp.afterLektion, text)) {
@@ -3238,6 +3243,21 @@ export function englishTwins(c, spec = null, { poolItems = null } = {}) {
   return { lektionen, pool };
 }
 
+export function a12ReadingFindings(c, pool = loadPoolItems('a1.2')) {
+  const spec = levelSpec('a1.2'), known = taughtUpTo(c, spec), horizon = constructionHorizonIndex('a1.2');
+  const practice = c.lektionen.flatMap((l) => (l.dialog?.lines || []).flatMap((line) => line.de.split(/(?<=[.!?])\s+/)));
+  practice.push(...pool.flatMap((it) => [it.questionDe, it.answer]).filter(Boolean));
+  return shortReadingFindings(c, {
+    unknown: (text, nr) => untaughtTokens({ questionDe: String(text || '').replace(/\n/g, ' ') }, known.get(nr), spec),
+    horizon: (text) => horizon({ questionDe: text, answer: '' }), practice,
+  });
+}
+
+export function a12FinalTestFindings(mock = abschlusstestA12, c = CURRICULUM_A12) {
+  const spec = levelSpec('a1.2'), known = taughtUpTo(c, spec).get(12);
+  return finalTestContentFindings(mock, { unknown: (text) => untaughtTokens({ questionDe: text }, known, spec) });
+}
+
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
@@ -3249,6 +3269,13 @@ export function validateCurriculum(c, extraItems, poolItems) {
 
   if (spec.level === 'a1.2') {
     for (const finding of undecidedTimePrepositionGaps(poolItems)) fail(`RULE 26: ${finding}`);
+    for (const finding of a12ReadingFindings(c, poolItems)) fail(`RULE 29: ${finding}`);
+    const reserved = reservedAssessmentFindings(c, poolItems);
+    for (const finding of reserved) fail(`RULE 30: ${finding}`);
+    for (const finding of a12FinalTestFindings(abschlusstestA12, c)) fail(`RULE 31: ${finding}`);
+    // The normal draw intentionally fails closed for an incomplete reserved paper. Report
+    // the actionable authoring errors before reaching that draw in the vocabulary scan.
+    if (reserved.length) return errors;
   }
   for (const finding of readingIntroductions(c)) fail(`RULE 27: ${finding}`);
   for (const finding of housingRoomCounts(c)) fail(`RULE 28: ${finding}`);

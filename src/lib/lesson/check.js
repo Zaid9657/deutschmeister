@@ -356,13 +356,16 @@ const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
   const fold = (s) => {
     let t = String(s ?? '').normalize('NFC');
     if (dictation) t = normalizeDictation(t);
+    // A reading gap asks for a fact, so 10 and zehn express the same value.
+    // Do not apply dictation's digit-group joining: 4 50 is not the price 450.
+    if (readingAnswer) t = numberWordsToDigits(t);
     if (spellingMode) t = normalizeSpelling(t.trim().replace(/[.!?]+$/, ''));
     return t;
   };
@@ -488,6 +491,7 @@ export function checkOptionsFor(item) {
     dictation: isDictationTask(item),
     spelling: spellingApplies(accepted) || spelledPrompt(item),
     choice: isChoiceItem(item),
+    ...(item?.readingAnswer === true ? { readingAnswer: true } : {}),
   };
 }
 

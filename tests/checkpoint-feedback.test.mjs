@@ -53,8 +53,10 @@ function sequentialScore(items, release) {
   return scoreCheckpoint(items, answers).sections.lesen.correct;
 }
 
-test('16 A1.2 papers: deferred sequential strategy equals static 42/64; premature-feedback mutation reaches 53/64', () => {
-  const curriculum = anyCurriculumFor('a1.2');
+test('16 legacy A1.2 binary papers: deferred strategy stays 42/64; premature-feedback mutation reaches 53/64', () => {
+  const current = anyCurriculumFor('a1.2');
+  const legacy = JSON.parse(readFileSync(new URL('./fixtures/a12-lesen-legacy.json', import.meta.url), 'utf8'));
+  const curriculum = { ...current, checkpoints: current.checkpoints.map((cp) => ({ ...cp, assessmentPapers: null, lesen: legacy[cp.id] })) };
   const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a12.json', import.meta.url), 'utf8'));
   const totals = { static: 0, deferred: 0, premature: 0 };
   let papers = 0;

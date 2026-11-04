@@ -425,7 +425,7 @@ const SENTENCE_ARTICLE_CUE_RE = Object.freeze({
  * deliberately NOT in here: it asks for a whole sentence containing one.
  */
 export const ARTICLE_TASK_CUE_RE =
-  /\(\s*(?:un)?bestimmter\s+artikel\s*\)|\(\s*der,\s*die\s+oder\s+das\s*\?\s*\)/i;
+  /\(\s*(?:un)?bestimmter\s+artikel\s*\)|\(\s*der,\s*die\s+oder\s+das\s*\?\s*\)|\(\s*ein,\s*eine\s+oder\s+einen\s*\?\s*\)/i;
 
 /**
  * "(arbeiten)", "(einkaufen, nur die Vorsilbe)" — an infinitive cue in the
@@ -622,7 +622,23 @@ export function missingSentenceArticle(item) {
 export function cueAnswerMismatch(item) {
   if (!item) return false;
   const q = String(item.questionDe || '');
-  const expected = [item.answer, ...(item.accepted || [])].map((a) => flat(bare(a))).filter(Boolean);
+  let expected = [item.answer, ...(item.accepted || [])].map((a) => flat(bare(a))).filter(Boolean);
+  // A task explicitly requesting the WHOLE completed sentence still has to put an article
+  // in its gap. Match the unchanged frame on both sides; an unrelated sentence cannot bypass
+  // the cue check merely by containing an article somewhere.
+  if (/^Schreiben Sie den ganzen Satz:/.test(q) && q.split('___').length === 2) {
+    const frame = q.replace(/^Schreiben Sie den ganzen Satz:\s*/, '').split(' — ')[0].replace(/\s*\([^)]*\)/g, '');
+    const [before, after] = frame.split('___').map((s) => flat(bare(s)));
+    expected = expected.map((answer) => {
+      if (before && !answer.startsWith(`${before} `)) return '';
+      if (after && !answer.endsWith(` ${after}`)) return '';
+      return answer.slice(before ? before.length + 1 : 0, after ? -(after.length + 1) : undefined).trim();
+    });
+    if (ARTICLE_TASK_CUE_RE.test(q)) {
+      const allowed = /\bunbestimmter Artikel\b|\(ein, eine oder einen\?\)/i.test(q) ? INDEFINITE_ARTICLE_ANSWERS : DEFINITE_ARTICLE_ANSWERS;
+      return expected.some((answer) => !allowed.includes(answer));
+    }
+  }
   if (!expected.length) return false;
   const isBareArticle = (a) =>
     DEFINITE_ARTICLE_ANSWERS.includes(a) || INDEFINITE_ARTICLE_ANSWERS.includes(a);

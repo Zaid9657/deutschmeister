@@ -5,6 +5,7 @@ import { auditTenses, missingTenseSelector, tenseRequirement, PERFECT_FORMS } fr
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
 import { knownUpTo } from '../src/lib/checkpoint/lexis.js';
 import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
+import { ASSESSMENT_A12 } from '../src/data/lessonPools/a12.assessment.js';
 
 const read = (file) => JSON.parse(readFileSync(new URL(`../src/data/lessonPools/${file}`, import.meta.url), 'utf8'));
 const pool = read('a12.json');
@@ -66,7 +67,7 @@ test('M15-2 includes other taught present/perfect verbs and distinguishes fixed 
 
 test('M15-2 scans every servable pool item, both practice draws and checkpoint rounds 0–3', () => {
   const audit = auditTenses(pool);
-  assert.equal(audit.servable, 282, 'no item removed from service to hide the ambiguity');
+  assert.equal(audit.servable, 414, '282 existing + 128 reserved + four modal items now explicitly taught');
   assert.equal(audit.served, 481, 'selectors change task-shape diversity in the two practice draws; all 16 papers remain covered');
   assert.deepEqual(audit.findings, []);
   console.log(`M15-2 audit: ${audit.servable} servable pool items; ${audit.served} served items; ${audit.findings.length} missing tense selectors`);
@@ -74,7 +75,7 @@ test('M15-2 scans every servable pool item, both practice draws and checkpoint r
 
 test('M15-2 all selected tenses survive the build with English twins; removing any selector is caught', () => {
   assert.ok(knownUpTo(CURRICULUM_A12, 7).has('präteritum'), 'the L7 notice introduces the selector before any past-tense item');
-  const extras = read('a12.extra.json').items;
+  const extras = [...read('a12.extra.json').items, ...ASSESSMENT_A12];
   const corrections = read('a12.corrections.json').items;
   const english = read('a12.explanationsEn.json');
   let mutations = 0;
