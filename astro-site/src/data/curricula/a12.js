@@ -993,6 +993,7 @@ export const CURRICULUM_A12 = {
         bodyDe: 'Das Modalverb steht auf Position 2, das zweite Verb im Infinitiv ganz am Ende: Hier **dürfen** Sie nicht **fahren**. dürfen heißt Erlaubnis, **müssen** Notwendigkeit, wollen Absicht, sollen Auftrag, können Fähigkeit. In der ich-Form und in der er-Form fehlt die Endung: ich **will**, ich **muss**, sie **darf**. Zeiten: **von sieben bis zehn Uhr**, **ab acht Uhr**.',
         bodyEn: 'The modal verb takes position 2 and the second verb goes to the very end as an infinitive: Hier **dürfen** Sie nicht **fahren**. dürfen means permission, **müssen** necessity, wollen intention, sollen an instruction, können ability. The ich- and er-forms have no ending: ich **will**, ich **muss**, sie **darf**. Times: **von sieben bis zehn Uhr** (from seven to ten), **ab acht Uhr** (from eight on).',
         examples: ['Guten Tag. Hier dürfen Sie nicht mit dem Fahrrad fahren.', 'Am Platz. Den Müll müssen Sie nach Hause nehmen.'],
+        formExamples: ['Ich kann fahren. Oma kann auch fahren.', 'Ihr könnt hier einsteigen. Ihr müsst am Bahnhof aussteigen.'],
         ruleSlug: 'modal-verbs-intro',
       },
       phonetik: { focus: 'Kurze Vokale in kann, muss, darf', items: ['ich KANN', 'ich MUSS', 'ich DARF'] },
@@ -1319,9 +1320,9 @@ export const CURRICULUM_A12 = {
   checkpoints: [
     // Each checkpoint writes its own task (`a12-cpN`, src/data/writingTasks.js), not the chapter's
     // last Lektion's again (DaF review #3, MAJOR 3).
-    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, writingTaskKey: 'a12-cp1', title: 'Checkpoint 1: Lektion 1–3', lesen: LESEN_A12['a1.2-cp1'] },
-    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, writingTaskKey: 'a12-cp2', title: 'Checkpoint 2: Lektion 4–6', lesen: LESEN_A12['a1.2-cp2'] },
-    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, writingTaskKey: 'a12-cp3', title: 'Checkpoint 3: Lektion 7–9', lesen: LESEN_A12['a1.2-cp3'] },
-    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, writingTaskKey: 'a12-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A12['a1.2-cp4'] },
+    { nr: 1, id: 'a1.2-cp1', afterLektion: 3, writingTaskKey: 'a12-cp1', title: 'Checkpoint 1: Lektion 1–3', assessmentPapers: 4, lesen: LESEN_A12['a1.2-cp1'] },
+    { nr: 2, id: 'a1.2-cp2', afterLektion: 6, writingTaskKey: 'a12-cp2', title: 'Checkpoint 2: Lektion 4–6', assessmentPapers: 4, lesen: LESEN_A12['a1.2-cp2'] },
+    { nr: 3, id: 'a1.2-cp3', afterLektion: 9, writingTaskKey: 'a12-cp3', title: 'Checkpoint 3: Lektion 7–9', assessmentPapers: 4, lesen: LESEN_A12['a1.2-cp3'] },
+    { nr: 4, id: 'a1.2-cp4', afterLektion: 12, writingTaskKey: 'a12-cp4', title: 'Checkpoint 4: Lektion 10–12', assessmentPapers: 4, lesen: LESEN_A12['a1.2-cp4'] },
   ],
 };

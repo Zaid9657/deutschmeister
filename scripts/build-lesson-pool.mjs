@@ -859,6 +859,10 @@ let extra = [];
 if (existsSync(extraUrl)) {
   const parsed = JSON.parse(readFileSync(extraUrl, 'utf8'));
   extra = Array.isArray(parsed) ? parsed : parsed.items || [];
+  if (level === 'a1.2') {
+    const { ASSESSMENT_A12 } = await import('../src/data/lessonPools/a12.assessment.js');
+    extra.push(...ASSESSMENT_A12.map((item) => structuredClone(item)));
+  }
   // REVIEW #4 BLOCKER 2: the extras go through the same gate, so they get the
   // same repair — and because the repair skips any prompt that already carries
   // a bracket, an item whose author wrote the cue by hand is untouched.

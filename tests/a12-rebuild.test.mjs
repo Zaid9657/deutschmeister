@@ -11,6 +11,11 @@ import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
+// Historical binary-bank evidence stays executable. Production short-answer guards live in
+// a12-finish-pass2.test.mjs; applying A/B metrics to an input field would test the wrong surface.
+const legacyLesen = JSON.parse(read('tests/fixtures/a12-lesen-legacy.json'));
+const LEGACY_CURRICULUM_A12 = { ...CURRICULUM_A12, checkpoints: CURRICULUM_A12.checkpoints.map((cp) =>
+  ({ ...cp, assessmentPapers: null, lesen: legacyLesen[cp.id] })) };
 
 test('DaF review #14: every servable ihr-imperative accepts emphasis, including all four checkpoint rounds', async () => {
   const { servedItems, alternatives } = await import('../scripts/a12-determinacy.mjs');
@@ -1268,7 +1273,7 @@ test('A1.2 transfer: what a default paper draws that the learner already answere
   // seven numbers-counting items no lesson asks instead of five, and checkpoint 2 — whose ONLY earlier topic that
   // is — falls back on a second seen one: round 8's structural value; round 11b's 1 was the stream's luck.
   // Lower is the only direction this ratchet takes; any further raise needs the owner again.
-  assert.deepEqual(measured, [1, 2, 0, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
+  assert.deepEqual(measured, [0, 0, 0, 0], `A1.2 default papers draw ${measured.join(' / ')} lesson items — lower the ratchet in the same commit, never raise it`);
 });
 
 test('DaF review #6 BLOCKER 1: a correct answer a task rejects is excluded by a German task condition — annotated variants, both ways', () => {
@@ -1448,7 +1453,7 @@ test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „vo
   assert.deepEqual(solved.a11, [], 'A1.1: no regular paper is solved by spotting a negation');
 });
 
-test('DaF review #7 MAJOR 8: Richtig and Falsch carry the same negation pairs on every A1.2 paper, and a time bound gives no Falsch', async () => {
+test('DaF review #7 MAJOR 8: legacy binary reading preserves its negation gates, and a time bound gives no Falsch', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   // Balancing the statement count and the text count APART left Falsch {text only, statement only}
@@ -1479,7 +1484,7 @@ test('DaF review #7 MAJOR 8: Richtig and Falsch carry the same negation pairs on
     }
     return [...keysAt.values()].reduce((sum, [a, b]) => sum + Math.max(a, b), 0);
   };
-  const a12 = papers(CURRICULUM_A12, POOL_A12, 4);
+  const a12 = papers(LEGACY_CURRICULUM_A12, POOL_A12, 4);
   for (const { id, lesen } of a12) {
     assert.ok(lesen.length === 4 && lesen.every((it) => it.kind === 'choice'), `${id}: four two-option items`);
     assert.equal(bestPlace(lesen), 2, `${id}: a negation strategy scores ${bestPlace(lesen)} of 4`);
@@ -1534,7 +1539,7 @@ test('DaF review #7 BLOCKER 2: a word the course knows does not license a meanin
     'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn', 'zwanzig', 'einundzwanzig',
     'zweiundzwanzig', 'dreiundzwanzig', 'vierundzwanzig', 'eins', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'hundert'];
   const isNumber = (w) => NUMBER_WORDS.includes(String(w).toLowerCase()) || /^\d{1,2}(?:[.:]\d{2})?$/.test(String(w));
-  const walk = (t) => String(t).split(/\s+/).filter(Boolean).map((raw) => ({ raw, w: raw.replace(/^[„“"(]+|[.,!?;:„“")]+$/g, '') }));
+  const walk = (t) => String(t).split(/\s+/).filter(Boolean).map((raw) => ({ raw, w: raw.replace(/^[[„“"(]+|[\].,!?;:„“")]+$/g, '') }));
   const afterTimeWords = (tok, k) => {
     // „halb …", „kurz nach …", „Viertel vor …" lead into the number
     if (/^halb$/i.test(tok[k]?.w)) return k + 1;
@@ -1670,12 +1675,13 @@ test('DaF review #7 BLOCKER 1: a rejected correct answer is excluded by a German
   // 4. A cue in brackets is German. „(approximately)" alone decided „gegen" over „um", and a list of
   //    English words missed „(= Where?)" (review #8) — so every word of a cue is either German the
   //    course has taught by L12 or one of the task words below, each judged once; a new word fails here.
-  const { knownUpTo } = await import('../src/lib/checkpoint/lexis.js');
+  const { knownUpTo, ITEM_FORMULAS } = await import('../src/lib/checkpoint/lexis.js');
   const known = knownUpTo(CURRICULUM_A12, 12);
   const TASK_WORDS = new Set(['Beginnen', 'Kurzform', 'Startort', 'Bewegung', 'Heimat', 'verstehen', 'aufmachen', 'U']);
   for (const it of POOL_A12.items.filter((x) => x.minLektion != null)) {
     for (const [, cue] of String(it.questionDe).matchAll(/\(([^)]*)\)/g)) {
-      for (const word of cue.split(/[^A-Za-zÄÖÜäöüß]+/).filter(Boolean)) {
+      const contentCue = ITEM_FORMULAS.reduce((text, formula) => text.replaceAll(formula, ''), cue);
+      for (const word of contentCue.split(/[^A-Za-zÄÖÜäöüß]+/).filter(Boolean)) {
         // a verb in -ieren is known when its -iert participle is taught: that is the L12 rule itself
         // („Ohne ge- bei … -ieren: telefoniert"), and „(telefonieren, Perfekt)" asks for exactly that form
         const ierenKnown = /ieren$/.test(word) && known.has(word.replace(/ieren$/, 'iert'));
@@ -1987,7 +1993,7 @@ test('DaF review #11 M8 (round 12): A1.2 reads authored units — four disjoint 
   // Review #11 measured a sentence-overlap strategy solving 64/64 generated two-option items; Codex's design
   // verdicts (docs/course-factory/a12-rebuild/DESIGN-m8-lesen-2026-10-19.md) replaced them with new texts
   // written for each checkpoint. The authoring check is the bank's own gate — taught words and constructions
-  // in the meaning the course used, no practised sentence, the mirrored pairs, the surface gate per paper —
+  // in the meaning the course used, no practised sentence, independent extraction frames, evidence and rejected rivals —
   // and it runs on the committed bank, not on a copy.
   // Inherit output so the authoring check also runs where Windows blocks child-process pipes (EPERM).
   const run = spawnSync(process.execPath, ['scripts/a12-lesen-check.mjs'], { cwd: new URL('..', import.meta.url), encoding: 'utf8', stdio: 'inherit' });
@@ -2006,8 +2012,9 @@ test('DaF review #11 M8 (round 12): A1.2 reads authored units — four disjoint 
       assert.deepEqual(lesen.map((it) => it.unitId), bank.papers[round % 4].map((u) => u.id), `${checkpoint.id}/${round}: paper ${(round % 4) + 1} as approved`);
       for (const it of lesen) {
         assert.equal(it.source, 'authored');
-        assert.equal(it.kind, 'choice');
-        assert.ok(it.options.length === 2 && it.options.includes(it.answer), `${it.unitId}: the key is one of two options`);
+        assert.equal(it.kind, 'readingGap');
+        assert.equal(it.mode, 'typed');
+        assert.equal(it.options, null, `${it.unitId}: no printed option code`);
       }
     }
   }
@@ -2017,15 +2024,15 @@ test('DaF review #11 M8 (round 12): A1.2 reads authored units — four disjoint 
   assert.throws(() => B.buildCheckpoint({ curriculum: broken, checkpoint: broken.checkpoints[0], pool: POOL_A12 }), /authored Lesen bank/);
 });
 
-test('DaF review #11 M8 (round 12): no declared surface strategy beats half of any A1.2 paper — the frozen gate, on the papers as delivered', async () => {
+test('Legacy binary bank (before pass 2): DaF review #11 M8 (round 12): no declared surface strategy beats half of any A1.2 paper — the frozen gate, on the papers as delivered', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { auditPapers } = await import('./helpers/lesenGate.mjs');
   // The gate Codex froze before a unit was written (DESIGN-m8-lesen-2026-10-19.md, verdicts 1 and 2), read
   // off what the learner SEES — the delivered items in their delivered order, not the bank — so a builder
   // that reordered the options would fail here. Per paper no strategy and no one-condition switch above 2 of
   // 4 (a tie ½, ties also broken to A and to B); over the 16 papers no strategy above 32 of 64.
-  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
-    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+  const papers = LEGACY_CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: LEGACY_CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
       .filter((it) => it.section === 'lesen')
       .map((it) => ({ at: `${checkpoint.id}/${round}`, text: it.text, question: it.promptDe, options: it.options, answer: it.answer }))));
   assert.equal(papers.length, 16);
@@ -2103,8 +2110,8 @@ test('DaF review #11 M8 (round 12): the gate sees every planted leak family, and
   }
 });
 
-test('DaF review #11 M8 (round 12): every authored unit passed the independent semantic review, solved blind before the key', async () => {
-  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+test('Legacy binary bank (before pass 2): DaF review #11 M8 (round 12): every authored unit passed the independent semantic review, solved blind before the key', async () => {
+  const LESEN_A12 = legacyLesen;
   // Verdict 2: the reviewer solves each unit BEFORE seeing the key, then records the evidence and whether the
   // unit has one supported answer, natural German, taught meanings and a plausible competitor. The fixture
   // keeps what was reviewed, so a unit changed afterwards fails here until it is reviewed again.
@@ -2281,11 +2288,11 @@ test('DaF review #13 B1: every single-key time-preposition gap has an explicit G
   }
 });
 
-test('DaF review #12 M8: delivered positions and question-type ranks balance; every order strategy scores at most half', async () => {
+test('Legacy binary bank (before pass 2): DaF review #12 M8: delivered positions and question-type ranks balance; every order strategy scores at most half', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { auditBankOrder } = await import('./helpers/lesenGate.mjs');
-  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
-    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+  const papers = LEGACY_CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: LEGACY_CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
       .filter((it) => it.section === 'lesen').map((it) => ({ question: it.promptDe, options: it.options, answer: it.answer }))));
   const bank = auditBankOrder(papers);
   assert.equal(bank.total, 64);
@@ -2299,8 +2306,8 @@ test('DaF review #12 M8: delivered positions and question-type ranks balance; ev
   }
 });
 
-test('DaF review #12 M8: key-A-first mirrored pairs fail the bank gate; an independent counterbalanced control passes', async () => {
-  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+test('Legacy binary bank (before pass 2): DaF review #12 M8: key-A-first mirrored pairs fail the bank gate; an independent counterbalanced control passes', async () => {
+  const LESEN_A12 = legacyLesen;
   const { auditPapers, auditBankOrder } = await import('./helpers/lesenGate.mjs');
   const aligned = structuredClone(Object.values(LESEN_A12).flatMap((b) => b.papers));
   for (const paper of aligned) for (const pair of [1, 2]) {
@@ -2327,11 +2334,11 @@ test('DaF review #12 M8: key-A-first mirrored pairs fail the bank gate; an indep
   assert.ok([...balanced.fixed.values(), ...balanced.typeRank.values()].every((score) => score === 4));
 });
 
-test('DaF review #13 M8: every delivered surface feature × order rule and its inverse score at most 36/64', async () => {
+test('Legacy binary bank (before pass 2): DaF review #13 M8: every delivered surface feature × order rule and its inverse score at most 36/64', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { auditBankFeatures } = await import('./helpers/lesenGate.mjs');
-  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
-    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+  const papers = LEGACY_CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: LEGACY_CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
       .filter((it) => it.section === 'lesen')
       .map((it) => ({ text: it.text, question: it.promptDe, options: it.options, answer: it.answer }))));
   const bank = auditBankFeatures(papers);
@@ -2349,11 +2356,11 @@ test('DaF review #13 M8: every delivered surface feature × order rule and its i
   }
 });
 
-test('DaF review #14 M8: delivered feature-pair maxima equal the measured ratchet', async () => {
+test('Legacy binary bank (before pass 2): DaF review #14 M8: delivered feature-pair maxima equal the measured ratchet', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
   const { auditBankFeaturePairs } = await import('./helpers/lesenGate.mjs');
-  const papers = CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
-    B.buildCheckpoint({ curriculum: CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
+  const papers = LEGACY_CURRICULUM_A12.checkpoints.flatMap((checkpoint) => [0, 1, 2, 3].map((round) =>
+    B.buildCheckpoint({ curriculum: LEGACY_CURRICULUM_A12, checkpoint, pool: POOL_A12, seed: B.paperSeed(checkpoint, round) })
       .filter((it) => it.section === 'lesen')
       .map((it) => ({ text: it.text, question: it.promptDe, options: it.options, answer: it.answer }))));
   const bank = auditBankFeaturePairs(papers);
@@ -2389,8 +2396,8 @@ test('DaF review #14 M8: audit measures the planted rule at 42/64; all sixteen i
   assert.ok(balanced.families.every((f) => f.score === 32 && f.inverseScore === 32 && f.perfect === 1));
 });
 
-test('DaF review #14 M8 feasibility proof: the allowed moves cannot reach a three-whole-paper ceiling', async () => {
-  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+test('Legacy binary bank (before pass 2): DaF review #14 M8 feasibility proof: the allowed moves cannot reach a three-whole-paper ceiling', async () => {
+  const LESEN_A12 = legacyLesen;
   const papers = Object.values(LESEN_A12).flatMap((b) => b.papers);
   const permutations = (a) => a.length ? a.flatMap((v, i) => permutations(a.filter((_, j) => j !== i)).map((p) => [v, ...p])) : [[]];
   const whole = [0, 0, 0, 0];
@@ -2421,8 +2428,8 @@ test('DaF review #14 M8 feasibility proof: the allowed moves cannot reach a thre
   assert.ok(Math.max(...whole) >= 4, 'pigeonhole lower bound: 16 papers / four rules = at least four whole papers');
 });
 
-test('DaF review #13 M8: alphabetical type-rank and aligned-pair mutations fail, even with unchanged semantic content', async () => {
-  const { LESEN_A12 } = await import('../src/data/curricula/a12.lesen.js');
+test('Legacy binary bank (before pass 2): DaF review #13 M8: alphabetical type-rank and aligned-pair mutations fail, even with unchanged semantic content', async () => {
+  const LESEN_A12 = legacyLesen;
   const { auditBankFeatures, auditBankOrder, auditPapers } = await import('./helpers/lesenGate.mjs');
   const papers = Object.values(LESEN_A12).flatMap((b) => b.papers);
   const alphabetical = papers.map((paper, pi) => {

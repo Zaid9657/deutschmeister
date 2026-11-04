@@ -191,6 +191,8 @@ const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
 // The ONE list: scripts/validate-curriculum.mjs imports it (RULE 5/11/11b and the minLektion stamps),
 // the checkpoint draw reads it here. Two copies had drifted by nine formulas (DaF review #7).
 export const ITEM_FORMULAS = [
+  'Ergänzen Sie mit einem Wort',
+  'Schreiben Sie den ganzen Satz',
   // Longest first: the alternation is tried in order at each position.
   'Finden Sie den Fehler und schreiben Sie den Satz richtig',
   'Schreiben Sie die Frage in der normalen Wortfolge', 'Schreiben Sie die Frage richtig',

@@ -41,8 +41,8 @@ export const REQUEUE_CAP = 4;
  * tests/requeue-lektion.test.mjs holds both predicates to the same verdicts.
  */
 export const servableIn = (item, lektionNr) =>
-  !Object.prototype.hasOwnProperty.call(item, 'minLektion')
-  || (Number.isInteger(item.minLektion) && (!Number.isInteger(lektionNr) || item.minLektion <= lektionNr));
+  !item.assessment && (!Object.prototype.hasOwnProperty.call(item, 'minLektion')
+  || (Number.isInteger(item.minLektion) && (!Number.isInteger(lektionNr) || item.minLektion <= lektionNr)));
 
 /** The ids of the pool items Lektion `lektionNr` may not serve: a retry there skips them like seen ones. */
 export const unservableIds = (pool, lektionNr) =>
@@ -82,7 +82,7 @@ const isWriting = (it) => it.stage === 'writing' || String(it.id).startsWith('sc
 export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds, level } = {}) {
   // At the course's own level, like the practice draw (`pickPracticeItems`): without it every level
   // was filtered by A1.1's syllabus rules.
-  const items = poolItems(pool).filter((it) => isUsableItem(it, { level }));
+  const items = poolItems(pool).filter((it) => !it.assessment && isUsableItem(it, { level }));
   const used = new Set(usedIds);
   const avoid = avoidIds instanceof Set ? avoidIds : new Set(avoidIds || []);
   const out = [];
