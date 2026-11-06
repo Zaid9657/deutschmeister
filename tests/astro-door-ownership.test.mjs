@@ -31,6 +31,9 @@ const NOW = Date.parse('2026-10-25T12:00:00Z');
 const TRIAL = { is_subscribed: false, trial_ends_at: '2999-01-01T00:00:00Z' };
 const PRO = { is_subscribed: true, trial_ends_at: '2026-01-01T00:00:00Z' };
 const ENDED = { is_subscribed: false, trial_ends_at: '2026-10-01T00:00:00Z' };
+// The door tests run CourseCheckout, which reads the real clock: their trial must end after today
+// whenever the suite runs. TRIAL's fixed end (2026-10-28) turned this suite red on that date.
+const LIVE_TRIAL = { is_subscribed: false, trial_ends_at: new Date(Date.now() + 3 * 864e5).toISOString() };
 const snap = (profile, purchases = []) => ({ signedIn: true, verified: true, profile, purchases });
 
 test('levelOpen: a trial or Pro opens a level without owning it; a bought course owns it', () => {
@@ -72,7 +75,7 @@ const page = () => {
 const continueLink = (d) => d.children.find((c) => typeof c === 'object' && c.getAttribute('data-course-continue') !== null);
 const buyIn = (d) => d.querySelector('[data-course-variant]');
 
-for (const [name, profile] of [['trial', TRIAL], ['Pro', PRO]]) {
+for (const [name, profile] of [['trial', LIVE_TRIAL], ['Pro', PRO]]) {
   test(`a ${name} learner without a purchase keeps every Buy button, with a way in beside it`, async () => {
     const { body, lineA12, pricingA21, barA12, soonB11 } = page();
     const run = runCourseCheckout({ body, snapshot: snap(profile) });
