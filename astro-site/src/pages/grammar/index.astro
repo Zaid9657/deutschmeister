@@ -62,7 +62,7 @@ const BTN =
   'inline-flex items-center justify-center gap-2 rounded-xl text-base font-bold transition-transform duration-feedback ease-out-strong select-none';
 const BTN_PRIMARY = `${BTN} bg-siegel px-7 py-3.5 text-white hover:bg-siegel-lift active:translate-y-px active:shadow-none`;
 const LEVEL_CHIP =
-  'rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
+  'rounded-lg bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
 const CARD_INTERACTIVE =
   'rounded-xl border border-rule bg-white transition-transform duration-feedback ease-out-strong active:translate-y-px active:shadow-none';
 const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
@@ -80,9 +80,9 @@ const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
     <!-- ═══ HERO ═══ -->
     <section class="dm-editorial-hero relative" aria-labelledby="grammar-h">
       <div class="relative mx-auto max-w-6xl px-5 pt-14 pb-12 sm:pt-20">
-        <div class="text-left">
+        <div class="dm-reference-opening"><div class="text-left">
           <h1 id="grammar-h" class="hero-line font-display text-[2.375rem] font-semibold leading-[1.02] tracking-[-0.025em] sm:text-[3.5rem]" style="--d:60ms">
-            German grammar. Now it makes sense.
+            Make sense of the sentence.
           </h1>
           <p class="hero-line mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:200ms">
             {totalTopics} topics from A1.1 to B2.2, each with clear English explanations, German examples, and interactive exercises.
@@ -94,7 +94,8 @@ const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
           )}
         </div>
 
-        <form class="mt-7 grid gap-4 rounded-xl border border-rule bg-white p-5 sm:grid-cols-[1fr_auto]" role="search" onsubmit="return false">
+        <aside class="dm-library-specimen" aria-label="Examples from the grammar library"><p class="dm-kicker">Open the grammar library</p>{byLevel.slice(0,3).map(({level,meta,topics}) => topics[0] && <a href={`/grammar/${level}/${topics[0].slug}/`}><span>{meta.label}</span><strong>{topics[0].title_en}</strong><small lang="de">{topics[0].title_de}</small><span aria-hidden="true">↗</span></a>)}</aside></div>
+        <form class="dm-library-search mt-7 grid gap-4 rounded-window border border-rule bg-white p-5 sm:grid-cols-[1fr_auto]" role="search" onsubmit="return false">
           <div>
             <label for="grammar-search" class="block text-sm font-bold">Find a grammar topic</label>
             <input id="grammar-search" type="search" placeholder="Try articles, Akkusativ or word order" class="mt-2 min-h-11 w-full rounded-lg border border-rule bg-paper px-3 py-2" aria-controls="grammar-topics" />
@@ -109,7 +110,7 @@ const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
           <p class="text-sm text-graphite sm:col-span-2" aria-live="polite" data-search-status>Browse all topics below, or type to filter.</p>
         </form>
         <nav class="mt-5 flex flex-wrap gap-2" aria-label="CEFR levels">
-          {byLevel.map(({level, meta}) => <a href={`#topics-${level}`} class="rounded-pill border border-rule px-3 py-2 text-sm font-bold text-siegel-deep">{meta.label}</a>)}
+          {byLevel.map(({level, meta}) => <a href={`#topics-${level}`} class="rounded-lg border border-rule px-3 py-2 text-sm font-bold text-siegel-deep">{meta.label}</a>)}
         </nav>
 
         <!-- Continue / start hero. Server-rendered in the logged-out "start" state
@@ -157,7 +158,7 @@ const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
     </section>
 
     <!-- ═══ Level sections ═══ -->
-    <div id="grammar-topics" class="mx-auto max-w-6xl space-y-14 px-5 py-10">
+    <div id="grammar-topics" class="dm-grammar-catalogue mx-auto max-w-6xl space-y-14 px-5 py-10">
       {byLevel.map(({ level, meta, topics }) => (
         <section id={`topics-${level}`} class="scroll-mt-24" data-level-section={level}>
           <div class="reveal mb-5 flex flex-wrap items-center gap-3">
@@ -169,8 +170,8 @@ const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
             </a>
             <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
             <div data-level-bar={level} class="mt-2 hidden w-full items-center gap-2 sm:ml-auto sm:mt-0 sm:w-auto">
-              <div class="h-2 flex-1 overflow-hidden rounded-pill bg-paper-sunk sm:w-32">
-                <div data-level-bar-fill class="h-full rounded-pill bg-siegel transition-transform duration-control" style="width:0%"></div>
+              <div class="h-2 flex-1 overflow-hidden rounded-lg bg-paper-sunk sm:w-32">
+                <div data-level-bar-fill class="h-full rounded-lg bg-siegel transition-transform duration-control" style="width:0%"></div>
               </div>
               <span data-level-bar-text class="whitespace-nowrap font-data text-[0.75rem] font-semibold text-graphite">0/{topics.length}</span>
             </div>
@@ -189,7 +190,7 @@ const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
               >
                 <span class="mb-1.5 flex items-center gap-1.5">
                   <span data-topic-num class="font-data text-[0.75rem] font-semibold text-graphite">#{i + 1}</span>
-                  <span data-topic-check class="hidden h-4 w-4 items-center justify-center rounded-pill bg-accent-limette text-[10px] font-bold text-ink" aria-label="Completed">✓</span>
+                  <span data-topic-check class="hidden h-4 w-4 items-center justify-center rounded-lg bg-accent-limette text-[10px] font-bold text-ink" aria-label="Completed">✓</span>
                 </span>
                 <p class="text-[0.9375rem] font-bold leading-snug text-ink transition-colors group-hover:text-siegel-deep" lang="en">
                   {topic.title_en}

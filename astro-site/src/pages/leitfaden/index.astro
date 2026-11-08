@@ -64,25 +64,25 @@ const CARD_INTERACTIVE =
 
     <!-- ═══ Hero ═══ -->
     <section class="dm-editorial-hero relative" aria-labelledby="hero-h">
-      <div class="relative mx-auto max-w-6xl px-5 pb-10 pt-14 sm:pt-20">
+      <div class="dm-reference-opening relative mx-auto max-w-7xl px-5 pb-10 pt-14 sm:pt-20">
         <header>
           <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">Leitfäden</p>
           <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
-            Erst verstehen. Dann gezielt vorbereiten.
+            Gut informiert. Klar vorbereitet.
           </h1>
           <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
             Jede deutsche Sprachprüfung hat ihre eigene Logik — welche Teile einzeln zählen, wo die Punkte liegen,
             was zuerst geübt werden sollte. Diese Leitfäden erklären den Aufbau, geben einen Lernplan und benennen
             die Fehler, die am häufigsten Punkte kosten. Kostenlos und ohne Anmeldung.
           </p>
-        </header>
+        </header><aside class="dm-guide-covers" aria-label="Aus der Leitfadenbibliothek">{GUIDES.slice(0, 3).map((guide) => <a href={`/leitfaden/${guide.slug}/`}><small>Leitfaden</small><strong>{guide.h1}</strong><span aria-hidden="true">↗</span></a>)}</aside>
       </div>
     </section>
 
     <div class="mx-auto max-w-6xl px-5 pb-20">
 
       <nav class="mb-6 flex flex-wrap gap-2" aria-label="Prüfung wählen">
-        {GUIDES.filter((g) => ['telc-b1','goethe-b1','dtz','telc-b2','start-deutsch-1','goethe-a2'].includes(g.slug)).map((g) => <a href={`#guide-${g.slug}`} class="rounded-pill border border-rule px-3 py-2 text-sm font-bold text-siegel-deep">{g.badge} · {g.slug.toUpperCase()}</a>)}
+        {GUIDES.filter((g) => ['telc-b1','goethe-b1','dtz','telc-b2','start-deutsch-1','goethe-a2'].includes(g.slug)).map((g) => <a href={`#guide-${g.slug}`} class="rounded-lg border border-rule px-3 py-2 text-sm font-bold text-siegel-deep">{g.badge} · {g.slug.toUpperCase()}</a>)}
       </nav>
       <!-- ═══ The guides: clickable clay cards ═══ -->
       <ul class="grid gap-5 md:grid-cols-2">
@@ -90,7 +90,7 @@ const CARD_INTERACTIVE =
           <li id={`guide-${guide.slug}`} class="scroll-mt-24" style={`--rd:${i * 90}ms`}>
             <a href={`/leitfaden/${guide.slug}/`} class={CARD_INTERACTIVE}>
               <p class="flex flex-wrap items-center gap-2.5">
-                <span class="rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{guide.badge}</span>
+                <span class="rounded-lg bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{guide.badge}</span>
                 <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">· ca. {guideReadingMinutes(guide)} Min.</span>
               </p>
               <h2 class="mt-3 font-display text-[1.25rem] font-semibold leading-snug text-ink transition-colors group-hover:text-siegel-deep">

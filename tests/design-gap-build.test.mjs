@@ -5,7 +5,9 @@ const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 
 test('money pages expose choices before decoration and a single course catalogue', () => {
   const home = read('astro-site/src/pages/index.astro');
-  assert.ok(home.indexOf('Choose your learning route') < home.indexOf('<LineBoard />'));
+  assert.ok(home.indexOf('Choose your learning route') < home.indexOf('<FirstStop />'));
+  assert.doesNotMatch(home, /<LineBoard|<LineSection|<Progression|<Ticket/);
+  assert.match(home, /<ProductWindow level="a1.1"/);
   const courses = read('astro-site/src/pages/courses/index.astro');
   assert.doesNotMatch(courses, /<LineSection/);
   assert.match(courses, /rungs.filter\(\(r\) => r.showSyllabus\)/);
@@ -32,15 +34,15 @@ test('a denied or unavailable analytics call cannot consume a once-event', async
   } finally { delete globalThis.window; }
 });
 
-test('shared presentation uses flat surfaces, token timings and no animation visibility gate', async () => {
+test('shared presentation uses token elevation, timings and no animation visibility gate', async () => {
   const { shadow, motion, tailwindLinieShadow } = await import('../src/data/design-tokens.js');
-  for (const [name, value] of Object.entries(shadow)) if (name.startsWith('raise')) assert.equal(value, 'none', name);
-  for (const value of Object.values(tailwindLinieShadow)) assert.equal(value, 'none');
-  assert.deepEqual(Object.values(motion.duration), ['140ms', '220ms', '420ms']);
-  for (const name of ['Button', 'Card', 'Chip']) assert.doesNotMatch(read(`src/components/ui/${name}.jsx`), /transition-all|shadow-raise/);
+  for (const [name, value] of Object.entries(shadow)) assert.match(value, /rgba\(/, name);
+  for (const value of Object.values(tailwindLinieShadow)) assert.ok(Object.values(shadow).includes(value));
+  assert.deepEqual(Object.values(motion.duration), ['120ms', '200ms', '480ms']);
+  for (const name of ['Button', 'Card', 'Chip']) assert.doesNotMatch(read(`src/components/ui/${name}.jsx`), /transition-all/);
   for (const config of ['tailwind.config.js', 'astro-site/tailwind.config.mjs']) {
     assert.doesNotMatch(read(config), /#[\da-f]{3,8}\b/i);
-    assert.match(read(config), /borderRadius: \{ pill: radius.pill \}/);
+    assert.match(read(config), /borderRadius: \{ pill: radius.pill, clay: radius.clay, control: radius.control, window: radius.window \}/);
     assert.match(read(config), /fontSize: \{ ...tailwindTypeSizes \}/);
   }
   for (const css of ['src/index.css', 'astro-site/src/styles/showtime.css']) {

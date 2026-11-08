@@ -8,7 +8,6 @@ import Layout from '../../layouts/Layout.astro';
 import ProductWindow from '../../components/proof/ProductWindow.astro';
 import '../../styles/global.css';
 import CourseCheckout from '../../components/CourseCheckout.astro';
-import StationArt from '../../components/linie/StationArt.astro';
 import { fontPreloads, signFontPreloads } from '../../data/design-tokens.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { getTopicsForLevel } from '../../lib/grammar.js';
@@ -22,7 +21,7 @@ import { hasSyllabus } from '../../lib/syllabus.js';
 // v4 "Die Linie" keys (styles/linie.css).
 const BTN_PRIMARY = 'dm-key dm-key-siegel';
 const BTN_SECONDARY = 'dm-key dm-key-ghost';
-const preloads = [...signFontPreloads, ...fontPreloads];
+const preloads = [...new Set([...signFontPreloads, ...fontPreloads])];
 
 const courses = levelCoursesWithVariants();
 const byKey = Object.fromEntries(courses.map((c) => [c.key, c]));
@@ -32,7 +31,7 @@ const rungs = await Promise.all(ALL_LEVELS.map(async (level) => {
   const c = byKey[productKeyForLevel(level)] || null; // null for the free level
   const content = COURSE_CONTENTS[level];
   const showSyllabus = hasSyllabus(curriculumFor(level));
-  return { level, code: level.toUpperCase(), slug: levelToSlug(level), course: c, topics: topics.length, content, showSyllabus };
+  return { lesson: curriculumFor(level)?.lektionen?.[0], level, code: level.toUpperCase(), slug: levelToSlug(level), course: c, topics: topics.length, content, showSyllabus };
 }));
 
 const title = 'German Courses A1–B2, one level at a time | DeutschMeister';
@@ -49,13 +48,13 @@ const jsonLd = {
 };
 ---
 
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en" preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
     <section class="dm-hero text-ink" data-ground="nacht" aria-labelledby="hero-h">
       <div class="dm-hero-grid">
         <div>
         <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Courses · A1.1 → B2.2</p>
-        <h1 id="hero-h" class="dm-hero-title mt-4">Small steps.<br/><em>Real-life German.</em></h1>
+        <h1 id="hero-h" class="dm-hero-title mt-4">Find your German.<br/><em>Start your chapter.</em></h1>
         <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
           Start with {FREE_LEVEL_LABEL}, free. A1.2 is the next guided course. Later levels have practice materials; complete guided courses follow in order. Exam preparation comes at the end of each full level.
           Not sure where you stand? The <a href="/level-test/" class="dm-link-nacht font-semibold">level test is free</a> and takes about 20 minutes.
@@ -70,20 +69,20 @@ const jsonLd = {
     </section>
 
 
-    <section class="mx-auto max-w-7xl px-5 pb-20 pt-12" aria-labelledby="inside-h">
+    <section class="dm-course-catalogue mx-auto max-w-7xl px-5 pb-20 pt-12" aria-labelledby="inside-h">
       <h2 id="inside-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Choose your next level</h2>
       <ol class="mt-8 grid gap-5 sm:grid-cols-2">
         {rungs.filter((r) => r.showSyllabus).map((r, i) => (
           <li class="" style={`--rd:${i * 70}ms`}>
             <article class={`relative flex h-full flex-col rounded-clay border border-rule bg-white p-6 ${r.course?.comingSoon ? 'opacity-85' : ''}`}>
               {r.course?.comingSoon && (
-                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Coming soon</span>
+                <span class="absolute -top-3 left-6 inline-flex items-center rounded-lg bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Coming soon</span>
               )}
               {!r.course && (
-                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
+                <span class="absolute -top-3 left-6 inline-flex items-center rounded-lg bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
               )}
-              <StationArt level={r.level} class="-mx-6 -mt-6 mb-5 h-48 w-[calc(100%+3rem)] rounded-t-clay border-b border-rule" />
-              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Stop {i + 1} · {r.code}</p>
+              <div class="dm-catalogue-cover"><strong>{r.code}</strong><span><small>Example · first lesson</small><span lang="de">{r.lesson?.title}</span></span></div>
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Course {i + 1} · {r.code}</p>
               <h3 class="mt-2 sign-head text-[1.5rem] text-ink">
                 <a href={`/courses/${r.slug}/`} class="transition-colors hover:text-siegel-deep">German {r.code} Course</a>
               </h3>
@@ -121,7 +120,7 @@ const jsonLd = {
       </ol>
 
       <section class="mt-10 border-t border-rule pt-8" aria-labelledby="next-levels-h">
-        <h2 id="next-levels-h" class="sign-head text-2xl">Next on the line</h2>
+        <h2 id="next-levels-h" class="sign-head text-2xl">Still taking shape</h2>
         <p class="mt-3 max-w-2xl text-graphite">These levels have practice libraries. Their complete guided courses are still being built; a library is not a finished course.</p>
         <ul class="mt-5 grid gap-3 sm:grid-cols-2">
           {rungs.filter((r) => !r.showSyllabus).map((r) => (

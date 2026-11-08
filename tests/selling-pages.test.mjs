@@ -72,16 +72,16 @@ test('the recorded homepage correction reproduces actual feedback and a correcte
 
 test('pricing shows both paid choices before the free card in reading and keyboard order', () => {
   const page = read('astro-site/src/pages/pricing.astro');
-  const fork = page.slice(page.indexOf('<ol class="mt-6 grid'), page.indexOf('</ol>'));
+  const fork = page.slice(page.indexOf('<ol class="dm-price-options'), page.indexOf('</ol>'));
   assert.ok(fork.indexOf('pricing_own') >= 0);
   assert.ok(fork.indexOf('pricing_own') < fork.indexOf('pricing_rent'));
-  assert.ok(fork.indexOf('pricing_rent') < fork.indexOf('The first stop'));
+  assert.ok(fork.indexOf('pricing_rent') < fork.indexOf('Start for free'));
   assert.doesNotMatch(fork, /\b(?:order-|flex-col-reverse)/, 'visual order agrees with DOM order');
 });
 
 test('placement start is directly under its heading, before facts and test structure', () => {
   const page = read('src/components/LevelTest/LevelTestLanding.jsx');
-  assert.match(page, /title="Find your next German step\."\s*\/>\s*<div[^>]*data-level-test-start/);
+  assert.match(page, /title="Where does your German begin\?"\s*\/>\s*<div[^>]*data-level-test-start/);
   assert.ok(page.indexOf('Start the Test') < page.indexOf('{FACTS.map'));
   assert.ok(page.indexOf('Continue your test') < page.indexOf('{FACTS.map'));
   assert.equal((page.match(/Start the Test/g) || []).length, 1);

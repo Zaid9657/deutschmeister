@@ -117,7 +117,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-md ${tone('bg-paper/90 border-rule text-ink', 'bg-nacht/90 border-nacht-rule text-nacht-text')}`}
+      className={`dm-site-nav fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-md ${tone('bg-paper/90 border-rule text-ink', 'bg-nacht/90 border-nacht-rule text-nacht-text')}`}
       data-ground={night ? 'nacht' : 'paper'}
       aria-label="Main"
     >
@@ -138,14 +138,14 @@ const Navbar = () => {
                 <NavItem
                   key={item.key}
                   item={item}
-                  className={`${LABEL} flex min-h-11 items-center whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors ${tone('text-ink hover:bg-paper-sunk', 'text-nacht-text hover:bg-nacht-raised')}`}
+                  className={`${LABEL} flex min-h-11 items-center whitespace-nowrap rounded-lg px-3.5 py-2 text-[0.9375rem] transition-colors ${tone('text-ink hover:bg-paper-sunk', 'text-nacht-text hover:bg-nacht-raised')}`}
                 >
                   {label(item)}
                 </NavItem>
               ))}
               {visibleGroups.map((group) => (
                 <details key={group.key} className="group relative">
-                  <summary className={`${LABEL} flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors [&::-webkit-details-marker]:hidden ${tone('text-graphite hover:bg-paper-sunk hover:text-ink', 'text-nacht-muted hover:bg-nacht-raised hover:text-nacht-text')}`}>
+                  <summary className={`${LABEL} flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-2 text-[0.9375rem] transition-colors [&::-webkit-details-marker]:hidden ${tone('text-graphite hover:bg-paper-sunk hover:text-ink', 'text-nacht-muted hover:bg-nacht-raised hover:text-nacht-text')}`}>
                     {isGerman ? group.labelDe : group.labelEn}
                     <ChevronDown size={14} className="transition-transform group-open:rotate-180" aria-hidden="true" />
                   </summary>
@@ -167,7 +167,7 @@ const Navbar = () => {
 
               {/* Subscription Status */}
               {user && isSubscribed && (
-                <span className={`flex items-center gap-1 px-2.5 py-1 rounded-pill text-xs font-semibold ${tone('bg-ink text-paper', 'bg-nacht-raised text-nacht-text')}`}>
+                <span className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${tone('bg-ink text-paper', 'bg-nacht-raised text-nacht-text')}`}>
                   <Crown size={12} className="text-gold" />
                   Pro
                 </span>
@@ -175,7 +175,7 @@ const Navbar = () => {
               {user && inTrial && !isSubscribed && (
                 <a
                   href="/pricing/"
-                  className={`relative flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-pill px-3 py-1.5 text-xs font-bold transition-colors ${chip}`}
+                  className={`relative flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${chip}`}
                 >
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold animate-ping opacity-75" />
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold" />
@@ -186,7 +186,7 @@ const Navbar = () => {
               {user && !inTrial && !isSubscribed && (
                 <a
                   href="/pricing/"
-                  className={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-pill px-3 py-1.5 text-xs font-bold transition-colors ${chip}`}
+                  className={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${chip}`}
                 >
                   <Crown size={12} />
                   Upgrade
@@ -196,7 +196,7 @@ const Navbar = () => {
               {/* Language Toggle — icon only */}
               <button
                 onClick={toggleLanguage}
-                className={`flex items-center justify-center w-11 h-11 rounded-pill transition-colors ${tone('text-graphite hover:bg-paper-sunk hover:text-ink', 'text-nacht-muted hover:bg-nacht-raised hover:text-nacht-text')}`}
+                className={`flex items-center justify-center w-11 h-11 rounded-lg transition-colors ${tone('text-graphite hover:bg-paper-sunk hover:text-ink', 'text-nacht-muted hover:bg-nacht-raised hover:text-nacht-text')}`}
                 title={i18n.language === 'en' ? 'Deutsch' : 'English'}
                 aria-label={i18n.language === 'en' ? 'Switch to German' : 'Switch to English'}
               >
@@ -208,7 +208,7 @@ const Navbar = () => {
                 <div className="relative" ref={userMenuRef}>
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className={`flex min-h-11 items-center gap-1.5 rounded-pill px-2.5 py-2 transition-colors ${tone('text-graphite hover:bg-paper-sunk', 'text-nacht-muted hover:bg-nacht-raised')}`}
+                    className={`flex min-h-11 items-center gap-1.5 rounded-lg px-2.5 py-2 transition-colors ${tone('text-graphite hover:bg-paper-sunk', 'text-nacht-muted hover:bg-nacht-raised')}`}
                     aria-label={isGerman ? 'Konto' : 'Account'}
                     aria-expanded={userMenuOpen}
                   >
@@ -307,7 +307,7 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`lg:hidden flex h-11 w-11 items-center justify-center rounded-pill transition-colors ${tone('hover:bg-paper-sunk', 'hover:bg-nacht-raised')}`}
+              className={`lg:hidden flex h-11 w-11 items-center justify-center rounded-lg transition-colors ${tone('hover:bg-paper-sunk', 'hover:bg-nacht-raised')}`}
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
             >

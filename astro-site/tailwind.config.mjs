@@ -27,7 +27,7 @@ export default {
       // astro-site/src/pages/pricing.astro was already calling `rounded-pill`
       // against a config that never defined it, so its billing toggle rendered
       // square since it shipped.
-      borderRadius: { pill: radius.pill },
+      borderRadius: { pill: radius.pill, clay: radius.clay, control: radius.control, window: radius.window },
       fontSize: { ...tailwindTypeSizes },
       boxShadow: { ...tailwindBoxShadow, ...tailwindLinieShadow },
       transitionTimingFunction: { ...tailwindEasing, ...tailwindLinieEasing },

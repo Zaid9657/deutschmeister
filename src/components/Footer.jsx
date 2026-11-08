@@ -40,26 +40,10 @@ const Footer = () => {
   const flush = groundFor(pathname) === 'nacht';
 
   return (
-    <footer className={`bg-nacht text-nacht-muted ${flush ? '' : 'mt-20'}`} data-ground="nacht">
+    <footer className={`dm-site-footer bg-nacht text-nacht-muted ${flush ? '' : 'mt-20'}`} data-ground="nacht">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        {/* The line, flat: eight stations, each a link to its course page (Astro-served). */}
-        <nav aria-label={isGerman ? 'Kurse nach Niveau' : 'Courses by level'} className="relative pb-10">
-          <div className="absolute left-0 right-0 top-[1.0625rem] h-1.5 rounded-pill bg-linie" aria-hidden="true" />
-          <ol className="relative grid grid-cols-4 gap-y-6 sm:grid-cols-8">
-            {STATIONS.map((st) => (
-              <li key={st.level} className="flex flex-col items-start sm:items-center">
-                <a href={st.coursePage} className="group flex flex-col items-start gap-2 sm:items-center">
-                  <span
-                    className={`block h-[2.375rem] w-[2.375rem] rounded-full border-[5px] bg-nacht ${st.status === 'building' ? 'border-nacht-rule' : 'border-linie'}`}
-                    aria-hidden="true"
-                  />
-                  <span className="font-body text-[1.125rem] font-extrabold tabular-nums text-nacht-text">{st.code}</span>
-                  <span className="font-data text-[0.6875rem]">{stationNote(st, isGerman)}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
+        <div className="dm-footer-invitation"><p>{isGerman ? <>Machen Sie Deutsch<br/>zu <em>Ihrer Sprache.</em></> : <>Make yourself at home<br/>in <em>German.</em></>}</p><a href="/course/a1.1" className="dm-footer-button">{isGerman ? 'A1.1 kostenlos starten ↗' : 'Start A1.1 free ↗'}</a></div>
+        <nav aria-label={isGerman ? 'Kurse nach Niveau' : 'Courses by level'} className="dm-footer-levels"><span>{isGerman ? 'Ihr Niveau' : 'Find your level'}</span>{STATIONS.map((st) => <a key={st.level} href={st.coursePage}><strong>{st.code}</strong><small>{stationNote(st, isGerman)}</small></a>)}</nav>
 
         <div className="grid gap-10 border-t border-nacht-rule py-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -68,8 +52,8 @@ const Footer = () => {
             </div>
             <p className="text-sm leading-relaxed">
               {isGerman
-                ? 'Deutsch von A1.1 bis B2.2, Halt für Halt: geführte Kurse, Grammatik, Hören, Lesen und KI-Sprechtraining.'
-                : 'German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.'}
+                ? 'Deutsch für Ihren Alltag, von A1.1 bis B2.2: geführte Kurse, Grammatik, Hören, Lesen und KI-Sprechtraining.'
+                : 'German for everyday life, from A1.1 to B2.2: guided courses, grammar, listening, reading and AI speaking practice.'}
             </p>
             {!user && (
               <p className="mt-4">

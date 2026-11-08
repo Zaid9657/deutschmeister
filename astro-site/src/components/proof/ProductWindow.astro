@@ -1,34 +1,31 @@
 ---
 import { courseProof } from '../../data/productProof.js';
+import LifeScene from './LifeScene.astro';
 const { level = 'a1.1', compact = false } = Astro.props;
 const proof = courseProof(level);
 ---
 {proof && <figure class:list={['dm-product-window', compact && 'dm-product-window-compact']} data-course-preview={level}>
   <figcaption class="dm-window-bar">
-    <span class="dm-window-mark" aria-hidden="true">dm.</span>
-    <span>Course preview · real content</span>
-    <span class="font-data">{level.toUpperCase()}</span>
+    <span class="dm-window-mark" aria-hidden="true">dm</span>
+    <span>Example from the course</span>
+    <span class="dm-window-level">{level.toUpperCase()}</span>
   </figcaption>
+  <div class="dm-window-scene"><LifeScene compact /><span>German for everyday life</span></div>
   <div class="dm-window-body">
-    <aside class="dm-window-path" aria-label="Example lesson sequence">
-      <p class="dm-kicker">The course</p>
-      <ol>{proof.curriculum.lektionen.slice(0, 3).map((lesson, i) => <li aria-current={i === 0 ? 'step' : undefined}>
-        <span class="font-data">{String(lesson.nr).padStart(2, '0')}</span>
-        <span lang="de">{lesson.title}</span>
-      </li>)}</ol>
-      <p class="mt-5 text-xs leading-relaxed text-graphite">Example sequence, not your saved progress.</p>
-    </aside>
     <div class="dm-window-task">
-      <p class="dm-kicker">Lesson {String(proof.lesson.nr).padStart(2, '0')} · Your first situation</p>
-      <h2 lang="de" class="mt-3 font-display text-2xl sm:text-3xl">{proof.lesson.title}</h2>
-      <p class="mt-4 text-sm leading-relaxed text-graphite">{proof.lesson.pretest.promptEn}</p>
+      <p class="dm-kicker">Lesson {String(proof.lesson.nr).padStart(2, '0')} · real course content</p>
+      <h2 lang="de" class="mt-3 font-display text-3xl">{proof.lesson.title}</h2>
+      <p class="mt-3 text-base leading-relaxed text-graphite">{proof.lesson.pretest.promptEn}</p>
       <blockquote class="dm-window-answer" lang="de">{proof.lesson.pretest.model}</blockquote>
-      <p class="mt-4 text-xs font-bold text-siegel-deep">Model answer · try your own in the course</p>
-      <div class="mt-5 border-t border-rule pt-4">
-        <p class="dm-kicker">What you work towards</p>
-        <p class="mt-2 text-sm leading-relaxed" lang="de">{proof.lesson.canDo[0]}</p>
-      </div>
+      <p class="mt-3 text-xs text-graphite">Model answer · an example, not your saved progress</p>
     </div>
+    <aside class="dm-window-path" aria-label="Example lesson sequence">
+      <p class="dm-kicker">Then put it into practice</p>
+      <p class="mt-2 text-sm" lang="de">{proof.lesson.canDo[0]}</p>
+      <ol>{proof.curriculum.lektionen.slice(0, 3).map((lesson, i) => <li aria-current={i === 0 ? 'step' : undefined}>
+        <span>{String(lesson.nr).padStart(2, '0')}</span><span lang="de">{lesson.title}</span>
+      </li>)}</ol>
+    </aside>
   </div>
-  <div class="dm-window-footer"><span>Learn in a situation. Then use it.</span><a href={`/course/${level}`} class="dm-link">{level === 'a1.1' ? 'Try the free course' : 'Open the course'} →</a></div>
+  <div class="dm-window-footer"><span>Read it. Try it. Make it yours.</span><a href={`/course/${level}`} class="dm-link">{level === 'a1.1' ? 'Try the free course' : 'Open the course'} →</a></div>
 </figure>}

@@ -64,8 +64,8 @@ const UeberUnsPage = () => {
           <div>
           <p className="mb-4 font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">Our reason to build</p>
           <h1 className="hero-line font-display text-dm-editorial sm:text-dm-editorial-wide text-ink mb-6">
-            More German.{' '}
-            <span className="text-siegel-deep">More possibility.</span>
+            A language opens doors.{' '}
+            <span className="text-siegel-deep">Let’s open yours.</span>
           </h1>
           <p
             className="hero-line text-[1.0625rem] leading-relaxed text-graphite max-w-2xl mx-auto mb-10 sm:text-[1.1875rem]"

@@ -270,3 +270,142 @@ Additional verification: rebuilt the A1.1 lesson pool, then ran the full curricu
 3. Measure the existing consent-gated offer-to-checkout journey and verified orders after release. Add an AI-feedback capture only after a real approved run exists; current examples accurately remain curriculum/model content and deterministic checks.
 
 Browser limitation was confirmed again, not assumed: the installed Chrome launched through Puppeteer failed before opening a page with `setsockopt: Operation not permitted` (`/tmp/pass2-browser.log`). Therefore no new viewport screenshot, live overflow, zoom, pointer or hydration result is claimed. All 286 supplied MedMeister desktop/mobile steps were inspected in contact sheets for the reference review. Prices, product keys, claim limits, sale gates, checkout/payment/auth/redirect/entitlement logic, functions, migrations, legal pages and email templates were not changed.
+
+## Pass 3: complete redesign
+
+### Result and authority
+
+Implemented `BUILD-BRIEF-3.md` as a replacement public visual system, **Open House**, with new page compositions, typography, palette, artwork, logo, chrome, controls and product frames. No git commit or staging command was attempted. The expected effect is to make the learning product and the distinction between free study, a bought course and Pro easier to inspect; no conversion or learning-outcome uplift is claimed.
+
+Reviewed the supplied before/Pass 2 comparison and all 286 MedMeister desktop/mobile steps in six contact sheets. Used the supplied competitor study for clear free-course entry, consistent actions, explicit payment terms and inspectable exercises. The design borrows those principles, with original code, copy and art for German learners.
+
+### New design system and reasoning
+
+| Role | New system | Reason |
+| --- | --- | --- |
+| Ground | Warm cream `paper`, `#FFF9F0`; recessed oat `#F3EBDD`; white product surfaces | A warm learning environment, with distinct reading and product stages. Replaces the mint wash. |
+| Ink / footer | Deep plum `#2D2034`; muted plum `#615165` | Strong editorial contrast and a substantial closing scene. Muted text still meets the retained 7:1 white-card guard. |
+| Action | Plum `#653C73`, hover `#512D5E`, deep `#4D285A` | A recognisable, accessible action family across the static site and app. White primary-button text retains AA contrast. |
+| Energy | Orange `#E8915B`, peach `#FCE5CF`, dark orange ink `#85401E` | Everyday warmth in illustration and heading punctuation. Orange is not used as low-contrast white-text body copy. |
+| Product stages | Lilac `#D9C6EE`, pale lilac `#F3EDF9`, selected wash `#EDE3F2` | Separates examples from sales prose and gives the page an alternating scene rhythm. |
+| Display type | **Meister Serif**, the renamed European subset of Caladea, regular display weight | Broad, warm editorial headings instead of Archivo signs or Fraunces. |
+| Reading / controls | **Meister Sans**, the renamed European subset of Carlito, regular and bold | A humanist body and interface face, with a visibly different rhythm from Nunito Sans. `sign` is a compatibility alias of this face, not a third font. |
+| Shape / depth | 12px control corners; 24px product/card windows; book-like course covers; token surface, floating and overlay shadows | Replaces pill actions, flat ticket cards and station rings with a distinct control and product language. Reference disclosures can remain flat. |
+| Space / motion | New spacing/type roles, generous scene gutters and responsive compositions; feedback/control/section/signature tiers 120/200/480/720ms | A calmer reading pace with brief feedback. Animation never gates sales content, and reduced motion removes movement. |
+
+`src/data/design-tokens.js` was rewritten and its Astro twin remains byte-identical. The public composition stylesheet is also a registered byte-identical pair: canonical `src/styles/public-system.css` → `astro-site/src/styles/public-design.css`. Both Tailwind adapters expose the new radius, type, colour, elevation and motion roles. The old CSS compatibility layer resolves its timings through the new tokens.
+
+Font files are self-hosted WOFF assets, with unique token-derived preloads in both renderers. The three preloaded files total **120,132 bytes**; all four packaged files total **141,684 bytes**. `scripts/package-public-fonts.py` preserves copyright/OFL notices, renames modified families (Carlito has a reserved name), subsets European glyphs and validates the OpenType/WOFF checksums through the regression suite. Fallback advances were calibrated against Liberation Serif/Sans using the new public copy, with separate regular/bold metrics. A FreeType specimen rendered all four files, including German umlauts, ß, punctuation and the euro glyph. [Font provenance and licences](font-licenses.txt) are retained. Browser font swapping and CLS have not been measured here.
+
+The new mark is an original speech window with drawn letterforms, shared by the Astro/React chrome. `scripts/build-public-brand.mjs` derives favicon and app icons from tokens during the normal SPA build. The café/person/tree and speech-window drawings are original inline SVG; there are no stock assets, external image requests or generated image dependencies in the new compositions.
+
+**Deliberate compatibility choices:** case colours and their labels retain their pedagogical meaning; existing exercise-level colour aliases retain their values. Internal names such as `siegel`, `linie`, `nacht` and the existing checkout/tracking identifiers remain compatibility names, while their public styling changes. Transactional templates and functions were explicitly excluded: their existing palette is frozen separately as `transactionalColor`, and the email drift guard still compares every field. The old train animation and station-art assets remain archived, but are no longer rendered by the rebuilt home or course pages.
+
+### Per-page implementation
+
+| Surface | New composition and behavior |
+| --- | --- |
+| Home `/` | New editorial opening beside an illustrated, labelled first-lesson window. Anonymous free-course start, attributed account door and authenticated continuation remain. Two compact learning/exam entrances lead into alternating peach, cream and lilac scenes: try a real first-lesson task; inspect a real writing checklist and revision; inspect simulated-transcript word matching; inspect the recorded course correction; choose a course chapter; understand ownership; read native FAQ answers; begin the free course. No line board, train map, ticket widget or progression graphic. |
+| Pricing `/pricing/` | Editorial introduction beside two paid access choices and a distinct free-course row, followed by the real A1.2 example and learning sequence. New course/Pro presentation, comparison surfaces and billing controls; payment frequency, total prices, renewal/cancellation wording, allowances, checkout attributes, Pro CTA helper and off-sale telc branch remain. Tables retain readable overflow regions, with keyboard access on the Pro comparison. |
+| Catalogue `/courses/` | New chapter-led opening, real A1.2 lesson window and typographic course covers containing actual first-lesson titles. A single available-curriculum catalogue is followed by a separate practice-material/future-course group. All counts, prices, availability and actions retain their sources. |
+| All eight `/courses/<level>/` pages | New two-column level opening. Price or honest status and the action precede the example in DOM, reading and keyboard order. A1.1/A1.2 show real lesson windows; other levels show a labelled, sourced grammar-library example, explicitly separate from a guided lesson. B1/B2 say Im Bau and remain unavailable. New level navigation, evidence scenes, contents rail and a quiet mobile purchase bar replace the train/ticket/stamping visuals. The existing conditional purchase doors, bottom-bar/return-bar exclusion, disclosed syllabus, source counts and lesson anatomy survive. |
+| Exam index and all `/pruefung/<slug>/` pages | New editorial type and warm ground. Each track opens beside a framed task from the actual writing bank, with example/non-official/assessment-limit labels. The preparation path becomes a spacious two-column set of numbered scenes, with a wider format/source section and retained relevant practice, course, guide and placement actions. German address stays Sie. |
+| telc package | Matching public chrome, typography and real task frame. Existing off-sale branch remains: no Buy button, no package Offer, no fabricated completed package. |
+| Grammar index | A reading-room opening beside real library titles; a separate labelled search/filter surface; grouped catalogue sections and first-topic/continuation entrance. Search, empty state, level filters and all no-JS topic links remain. |
+| Grammar level / every topic | New public type/shape system and level navigation. Every topic pairs its opening with an actual sourced example and translation. The article retains its summary, rules, worked examples, practice, canonicals, schema, public text and account-aware exercise doors. |
+| Guide index / every guide | The index pairs its introduction with book-like guide covers derived from the registry. Articles use the new editorial system, framed contents preview, sticky desktop navigation and native mobile disclosure. Existing source facts, dates, links, languages and guide headings remain. |
+| Comparison pages | Inherit the new public system, editorial scale, navigation, controls and spacing. No vendor facts, prices or verification dates were advanced. |
+| FAQ `/faq/` | New question-and-speech-art opening; native, flat rule-separated answers beside a category rail. Static first paint uses the same original speech paths as React, so the illustration is already present before replacement. All answer content and category counts retain their source. |
+| About `/ueber-uns/` | New opening statement, founder context and a real course sample in the warm editorial composition. Measured evidence, sanctioned anonymous founder copy, factual-claims policy and level-order roadmap remain. Static first paint mirrors the heading and example. |
+| Level test `/level-test/` | New opening question in a warm assessment stage, with Start/Resume directly below and an actual-bank sample beside it on desktop. Designed mobile spacing and sample treatment. Static first paint mirrors the headline and opening structure; test drawing, scoring, resume and result behavior are unchanged. |
+| Signup / login | New plum/cream type and form surfaces, compact-corner controls, elevated form frame and original speech art around a real A1.1 example. Forms remain first on mobile. Trial headline, purchase context, handlers, validation, confirmation/resend, auth and redirect behavior are retained. |
+| Shared app chrome | Same speech mark, inset header, new controls, redesigned mobile menu surfaces, chapter-style footer level links and plum closing/footer across React and Astro. All registry links, auth visibility, upgrade/continue logic, support/social destinations and bottom-nav state remain. |
+
+The presentation primitives were rebuilt around token buttons, cards, chips, section roles, product windows, example panels and shared scene scaffolds. A real lesson preview is never manufactured for an unfinished curriculum: grammar-library windows use `getTopicFull()` and state what they are.
+
+### Every headline
+
+The complete rendered inventory is [pass-3-headlines.md](pass-3-headlines.md): **2183 headings across 145 public pages**, including unchanged source-derived titles. It also records shared chrome/account labels that are outside static main content. The major authored replacements/additions are below; unchanged login/signup and source-derived exam, guide, grammar and lesson titles are retained in the inventory.
+
+| Surface | Pass 3 headline / prominent label |
+| --- | --- |
+| Home eyebrow | German, for the life you’re building. |
+| Home H1 | Life happens. Learn the German for it. |
+| Home practice scene | Your German starts with a hello. |
+| Working exercise | Say hello. Try it here. |
+| Writing scene | A real message. Your own words. |
+| Speaking scene | Give your German a voice. |
+| Sequence scene | A clear plan. A real situation. |
+| German proof equivalents | Eine Nachricht. Ihre eigenen Worte. / Laut wird daraus Ihre Sprache. / Ein klarer Plan. Eine echte Situation. |
+| Recorded checker scene | Write it. Check it. Try again. |
+| Course chapter scene | A new language. A place to begin. |
+| Ownership scene | Keep a level. Make it yours. |
+| Home FAQ | A few questions before you begin. |
+| Home closing | Your next conversation starts with one lesson. |
+| Pricing H1 | A little German. A clear choice. |
+| Pricing offer labels | Your course. Yours to keep. / Keep practising with Pro / A1.1, free |
+| Pricing evidence | See what you’re choosing. |
+| Pricing comparison | One payment or a subscription? |
+| Catalogue H1 | Find your German. Start your chapter. |
+| Future-course group | Still taking shape |
+| Level contents | Inside your [level] course / Course at a glance |
+| Grammar H1 | Make sense of the sentence. |
+| Guide index H1 | Gut informiert. Klar vorbereitet. |
+| FAQ H1 | Good questions. Clear answers. |
+| About H1 | A language opens doors. Let’s open yours. |
+| Placement H1 | Where does your German begin? |
+| Account example | Your German has a home here. |
+| Footer, English / German | Make yourself at home in German. / Machen Sie Deutsch zu Ihrer Sprache. |
+
+The confident “best” line is explicitly aspirational: “Our ambition: your best place to learn German. Try it for yourself.” No unprovable ranking, testimonial, learner count or promised exam outcome was introduced.
+
+### Tests rewritten, with reasons
+
+| Suite | Replacement contract; retained safeguards |
+| --- | --- |
+| `brand.test.mjs` | Compare the excluded email implementation to the frozen transactional token palette instead of forcing this public redesign into untouched functions/templates. The whole BRAND object is now compared. Retired-brand bans and both zero-debt ratchets remain. |
+| `design-gap-build.test.mjs` | Replace required train-board order and no-shadow/pill-only pins with route-before-practice order, no retired composition, new token elevation/radius/motion and authentic opening preview. Retain availability grouping, disclosed syllabus, consent/once-events, proof accuracy, undecidable-check labels and readable/no-animation-gate assertions. |
+| `fahrschein.test.mjs` | Reframe stamps as real contents links; pin the new rail width and keyboard-scroll region, and reject old stamp-dot markup. Retain conditional availability, matching section targets, safe syllabus width and return-bar exclusion. |
+| `funnel-events.test.mjs` | Change only the attributed account door’s visual class assertion. Keep the no-false-`signup_started` scan and exact tagged account destination. |
+| `language-strategy.test.mjs` | Pin the new English grammar headline. English document/navigation labels, Sie register, literal learner dialogue and source-language rules remain. |
+| `linie-design.test.mjs` | Pin the new palette/curves, common chrome, original SVG/product scenes and removal of transit/station art from the rebuilt pages. All original contrast thresholds remain, including 7:1 secondary text and 12:1 ink/wash checks. Keep focus, reduced motion, fine-pointer movement, promoted links, safe mobile padding and archived-art hygiene. |
+| `selling-pages.test.mjs` | Use the new pricing-composition selector/free-card label and placement headline. Retain paid-before-free DOM/keyboard order, Start/Resume priority, short signup promise, auth form constraints, trial allowances and confirmation behavior. |
+| `seo-performance-release.test.mjs` | Replace the obsolete minimum number of deferred transit components with visible, static product-scene assertions. Keep no blur, no deferred visibility/containment, visible headings and the long-grammar checks. |
+| `site-audit-regressions.test.mjs` | Update the pricing headline and Pro category label. Keep one-time/recurring explanations, correct Pro CTA, derived figures and contrast guards. |
+| `web-performance.test.mjs` | Pin the renamed self-hosted families and WOFF preload type, deduplicated token lists and current template declarations. Keep all-files-accounted-for, local/metric fallback, immutable caching, tree-shaking, visible first paint and stable-main checks. |
+
+Added `public-redesign.test.mjs` for shared system equality, retirement of old families/compositions, token controls/reduced motion/focus, all font table and reconstructed OpenType checksums, drawable German/punctuation glyphs, a 125,000-byte preload budget, shared mark paths, sourced lesson/grammar/exam examples and purchase-action-before-preview order. No suite is skipped. Money, claims, availability, accessibility, head-tag, route and entitlement guards were not weakened. The script-catalogue guard was satisfied by documenting the new generator, not by changing its test.
+
+### New rules for a later owner update to `CLAUDE.md`
+
+`CLAUDE.md` itself is unchanged. Suggested replacements for its retired Design section:
+
+1. Open House is the public system: cream/oat reading grounds, plum ink/actions, lilac product stages, orange/peach illustration and punctuation. Case colours keep their teaching labels and meaning. Never use white body text on the warm accents.
+2. Canonical colour/font values stay in the identical token modules. Keep the new public stylesheet pair registered in `shared-files.mjs`; regenerate public mark assets from tokens.
+3. Use Meister Serif display and Meister Sans body/interface roles. `sign` is a body alias. Self-host the renamed OFL subsets, preserve licences and use unique token preloads; keep the font integrity/preload budget guards.
+4. Use compact-corner primary/secondary buttons, rounded product windows, deliberate token elevation and an explicitly flat reference option. Pills, station rings, trains and ticket styling are retired for public composition.
+5. Pair promises with labelled examples from canonical curriculum, task or grammar data. Show example/model/simulated/recorded status and assessment limits. Existing practice material must never impersonate a finished guided course.
+6. Use responsive scene grids and mobile-specific composition rules. Keep actions and availability before optional detail in reading and keyboard order. Reference navigation/search/disclosures remain usable without JS.
+7. Use the new 120/200/480/720ms token motion tiers and curves, with transform/opacity-only movement, fine-pointer hover movement and reduced-motion overrides. Sales content and H1s remain visible without observer/animation completion.
+8. Use the same speech-window mark and public chrome across Astro/React. The canonical navigation, auth/continue/upgrade decisions, routing, tracking and checkout attributes remain functional contracts.
+9. Transactional email/function styling is a deliberate frozen exception under this brief; keep its drift guard until separately authorised. No price, access, availability, claims or legal exception follows from changing public visual rules.
+
+### Gate results
+
+| Gate | Final result |
+| --- | --- |
+| `npm run lint` | Pass · zero ESLint warnings |
+| `node scripts/check-duplicates.mjs` | Pass · 20/20 registered pairs byte-identical |
+| `npm test` | Pass · 296/296 test files, 0 failures, 0 skipped; final 10-file focused verification also passes |
+| Clean SPA build and `index.html` → `app.html` | Pass · fresh output, normal production build |
+| Offline Astro build with the required cache | Pass · 140 static pages |
+| Merge + one prerender | Pass · full merged output and eight prerendered SPA pages |
+| `node scripts/check-built-html.mjs dist` | Pass · 148 pages, 0 failures, 0 warnings; 143 sitemap URLs valid; telc off sale, 0 Buy buttons and no Offer |
+| Additional function syntax / whitespace | 83 function files pass syntax checks; `git diff --check` passes |
+| Font integrity / output provenance | WOFF/OpenType checksums and German glyphs pass; built font bytes match source assets |
+
+Final output is the merged `dist/`. The gate sequence uses the same sandbox-only capture adapter as prior passes (`NODE_OPTIONS="--use-openssl-ca --require=/tmp/sandbox-stdio.cjs"`) and disables Astro telemetry outside writable roots. Clean output was obtained by moving the previous `dist/` into a unique `/tmp/` backup: the command wrapper rejects `rm -rf`, and no old output was merged into the new build. Logs are `/tmp/pass3-{lint,duplicates,tests,vite,astro,merge,prerender,html}-complete.log`; the additional built audit is `/tmp/pass3-built-audit.json`.
+
+The required viewport review remains a **verification limitation**, not a passed gate: Chrome was actually launched with a writable profile, headless mode and `--no-sandbox`, then exited before opening the page with `setsockopt: Operation not permitted` (`/tmp/pass3-browser.log`). No 390/1440 screenshot, zoom/overflow, live pointer/keyboard, head reconciliation or measured Lighthouse/CLS result is claimed. Claude should review the merged build at the requested viewport sizes against MedMeister. Source checks and static HTML cannot substitute for that visual review.
+
+Checkout/payment code, auth/redirect/entitlement implementations, Netlify functions, migrations, legal-page sources, email templates, lesson player and exercise/checker logic are unchanged. Pricing and marketing data are unchanged. No new page route, service write, deployment or git commit was attempted.

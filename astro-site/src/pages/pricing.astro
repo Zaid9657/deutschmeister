@@ -195,53 +195,53 @@ const KASUS_CLASS = {
   dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
   akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
 };
-const preloads = [...signFontPreloads, ...fontPreloads];
+const preloads = [...new Set([...signFontPreloads, ...fontPreloads])];
 ---
 
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd} tone="nacht" preloads={preloads}>
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd} preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
 
     <!-- ═══ The fork: three ways to ride ═══ -->
     <section class="dm-price-hero relative text-ink" data-ground="nacht" aria-labelledby="pricing-h">
       <div class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12 lg:px-8 lg:pb-20">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Preise · Pricing</p>
+        <div class="dm-price-opening"><div><p class="dm-kicker">Straightforward access. Room to grow.</p>
         <h1 id="pricing-h" class="dm-hero-title mt-4 !text-[clamp(2.5rem,6vw,5rem)]">
-          <span class="block">Your German.</span>
-          <em class="block">Your way to learn.</em>
+          <span class="block">A little German.</span>
+          <em class="block">A clear choice.</em>
         </h1>
         <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
           {FREE_LEVEL_LABEL} is free. Buy a level once, or subscribe to Pro for the practice library and AI tools. Your course stays open after its {COURSE_PRO_MONTHS} included Pro months end.
         </p>
 
-        <ol class="mt-6 grid gap-4 lg:grid-cols-3">
+        </div><ol class="dm-price-options">
           <li class="flex flex-col rounded-[1.25rem] border-2 border-linie bg-nacht-raised p-6" data-track-view="pricing_own">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Own a level · one payment</p>
-            <p class="sign-head mt-2 text-[1.75rem]">One level. Yours to keep.</p>
+            <p class="sign-head mt-2 text-[1.75rem]">Your course. Yours to keep.</p>
             <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">Your chosen level stays yours. {COURSE_PRO_MONTHS} months of Pro included. No renewal.</p>
             <p class="mt-4 flex items-baseline gap-2"><span class="text-[0.875rem] text-nacht-muted">from</span><span class="sign-code text-[2rem] leading-none text-linie">{eur(COURSE_FROM_PRICE_EUR)}</span><span class="text-[0.875rem] text-nacht-muted">once</span></p>
             <a href="/courses/" class="dm-key dm-key-linie mt-5" data-track="course_selected" data-track-surface="pricing_fork">Choose your level</a>
           </li>
           <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6" data-track-view="pricing_rent">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Rent the line · Pro</p>
-            <p class="sign-head mt-2 text-[1.75rem]">Your practice, on Pro</p>
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Ongoing practice · Pro</p>
+            <p class="sign-head mt-2 text-[1.75rem]">Keep practising with Pro</p>
             <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">All {LEVEL_COUNT} levels, AI speaking ({PRO_SPEAKING_SESSIONS_PER_MONTH} a month), writing feedback ({PRO_WRITING_EVALUATIONS_PER_MONTH} a month) and the practice exams. Cancel anytime.</p>
             <p class="mt-4 flex items-baseline gap-2"><span class="sign-code text-[2rem] leading-none text-linie">{eur(PLANS.monthly.price)}</span><span class="text-[0.875rem] text-nacht-muted">a month</span></p>
             <a href="#pro" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-surface="pricing_fork" data-track-plan="monthly">Compare Pro</a>
           </li>
           <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">The first stop</p>
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Start for free</p>
             <p class="sign-head mt-2 text-[1.75rem]">{FREE_LEVEL_LABEL}, free</p>
             <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">{STATIONS[0].outcome} No account, no card.</p>
             <p class="mt-4 sign-code text-[2rem] leading-none text-linie">Free</p>
             <a href="/course/a1.1" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-level="a1.1" data-track-surface="pricing_fork">Start A1.1 free</a>
           </li>
-        </ol>
+        </ol></div>
       </div>
     </section>
 
     <section class="bg-paper-sunk border-b border-rule" aria-labelledby="pricing-proof-h">
       <div class="dm-section-grid">
-        <div><p class="dm-kicker">Look inside before you choose</p><h2 id="pricing-proof-h" class="dm-section-title mt-4">A plan for the moments that matter.</h2><p class="dm-hero-lead mt-5">Here is a real A1.2 lesson. A course gives your learning a sequence; Pro opens the practice library and AI tools. Choose the access that fits how you want to learn.</p></div>
+        <div><p class="dm-kicker">Look inside before you choose</p><h2 id="pricing-proof-h" class="dm-section-title mt-4">See what you’re choosing.</h2><p class="dm-hero-lead mt-5">Here is a real A1.2 lesson. A course gives your learning a sequence; Pro opens the practice library and AI tools. Choose the access that fits how you want to learn.</p></div>
         <ProductWindow level="a1.2" />
       </div>
     </section>
@@ -300,7 +300,7 @@ const preloads = [...signFontPreloads, ...fontPreloads];
     <!-- ═══ OWN vs RENT: the decision, flat ═══ -->
     <section class="border-y border-rule bg-paper-sunk" aria-labelledby="own-rent-h">
       <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 id="own-rent-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Own or rent — side by side</h2>
+        <h2 id="own-rent-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">One payment or a subscription?</h2>
         <!-- A scrolling region on narrow screens: focusable so a keyboard user can scroll it. -->
         <div class="mt-8 overflow-x-auto" tabindex="0" role="region" aria-labelledby="own-rent-h">
           <table class="w-full min-w-[36rem] border-collapse text-left">
@@ -308,7 +308,7 @@ const preloads = [...signFontPreloads, ...fontPreloads];
               <tr class="border-b border-ink">
                 <th scope="col" class="w-1/4 py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">&nbsp;</th>
                 <th scope="col" class="px-4 py-3 sign-label text-[1.125rem]">Own a level</th>
-                <th scope="col" class="px-4 py-3 sign-label text-[1.125rem]">Rent the line (Pro)</th>
+                <th scope="col" class="px-4 py-3 sign-label text-[1.125rem]">Subscribe to Pro</th>
               </tr>
             </thead>
             <tbody>
@@ -331,22 +331,22 @@ const preloads = [...signFontPreloads, ...fontPreloads];
     <!-- ═══ RENT: Pro, compared with the free options ═══ -->
     <section id="pro" class="scroll-mt-24 bg-paper" aria-labelledby="compare-h">
       <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:py-24">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Rent the line</p>
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Ongoing practice</p>
         <h2 id="compare-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">No account, free trial, or Pro</h2>
 
         <!-- Billing toggle: pressable -->
         <div class="mt-6 flex items-center gap-3">
           <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Billing</span>
-          <div class="inline-flex rounded-pill border border-rule bg-white p-1 shadow-raise" role="group" aria-label="Billing period">
-            <button id="toggle-monthly" type="button" aria-pressed="true" class="rounded-pill bg-ink px-4 py-1.5 text-sm font-bold text-paper transition-colors">Monthly</button>
-            <button id="toggle-yearly" type="button" aria-pressed="false" class="rounded-pill px-4 py-1.5 text-sm font-bold text-graphite transition-colors hover:text-ink">
+          <div class="inline-flex rounded-lg border border-rule bg-white p-1 shadow-raise" role="group" aria-label="Billing period">
+            <button id="toggle-monthly" type="button" aria-pressed="true" class="rounded-lg bg-ink px-4 py-1.5 text-sm font-bold text-paper transition-colors">Monthly</button>
+            <button id="toggle-yearly" type="button" aria-pressed="false" class="rounded-lg px-4 py-1.5 text-sm font-bold text-graphite transition-colors hover:text-ink">
               Yearly <span class="font-data text-[0.6875rem] tracking-[0.02em]">−{PLANS.yearly.savingPercent}%</span>
             </button>
           </div>
         </div>
 
         <!-- The comparison, as a declension table — flat, reference material -->
-        <div class="mt-6 overflow-x-auto">
+        <div class="mt-6 overflow-x-auto" tabindex="0" role="region" aria-labelledby="compare-h">
           <table class="w-full min-w-[48rem] border-collapse text-left">
             <thead>
               <tr class="border-b border-ink">
@@ -541,8 +541,8 @@ const preloads = [...signFontPreloads, ...fontPreloads];
     $('pro-btn-label').textContent = cta.label;
     $('plan-note').textContent = cta.note;
 
-    const on = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors bg-ink text-paper';
-    const off = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors text-graphite hover:text-ink';
+    const on = 'rounded-lg px-4 py-1.5 text-sm font-bold transition-colors bg-ink text-paper';
+    const off = 'rounded-lg px-4 py-1.5 text-sm font-bold transition-colors text-graphite hover:text-ink';
     $('toggle-monthly').className = cycle === 'monthly' ? on : off;
     $('toggle-yearly').className = cycle === 'yearly' ? on : off;
     $('toggle-monthly').setAttribute('aria-pressed', String(cycle === 'monthly'));

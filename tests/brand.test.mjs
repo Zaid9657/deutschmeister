@@ -26,21 +26,14 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { color } from '../src/data/design-tokens.js';
+import { transactionalColor } from '../src/data/design-tokens.js';
 import { BRAND } from '../netlify/functions/_shared/brand.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 
-test('the email brand copy matches the design tokens', () => {
-  assert.equal(BRAND.siegel, color.siegel);
-  assert.equal(BRAND.siegelLift, color.siegelLift);
-  assert.equal(BRAND.siegelWash, color.siegelWash);
-  assert.equal(BRAND.gold, color.gold);
-  assert.equal(BRAND.ink, color.ink);
-  assert.equal(BRAND.graphite, color.graphite);
-  assert.equal(BRAND.rule, color.rule);
-  assert.equal(BRAND.paper, color.paper);
+test('the explicitly excluded transactional brand retains its frozen token contract', () => {
+  assert.deepEqual(BRAND, transactionalColor);
 });
 
 /** Surfaces a customer or visitor sees, which must all carry the current brand. */

@@ -13,7 +13,7 @@ test('English discovery routes declare English and use English headings', () => 
   const seo = read('src/data/seoRoutes.js');
 
   assert.match(grammar, /lang="en"/);
-  assert.match(grammar, />\s*German grammar\. Now it makes sense\.\s*</);
+  assert.match(grammar, />\s*Make sense of the sentence\.\s*</);
   assert.match(level, /lang="en"/);
   assert.match(level, /German Grammar/);
   assert.match(seo, /'\/faq':\s*{[\s\S]*?title: 'Frequently Asked Questions'/);

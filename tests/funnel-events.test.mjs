@@ -93,7 +93,7 @@ test('the static site never fires signup_started: it sees a click, never a submi
   const offenders = files.filter((f) => /data-track="signup_started"|track\('signup_started'/.test(read(f)));
   assert.deepEqual(offenders, []);
   // The homepage account door stays attributed by its tagged href instead.
-  assert.match(read('astro-site/src/pages/index.astro'), /<a href=\{HOME_SIGNUP_HREF\} class="dm-key dm-key-ghost-nacht" data-anon-only>Create a free account<\/a>/);
+  assert.match(read('astro-site/src/pages/index.astro'), /<a href=\{HOME_SIGNUP_HREF\} class="dm-key dm-key-ghost" data-anon-only>Create a free account<\/a>/);
 });
 
 test('the GA mirror keeps the fixed-value props the app sends with registered events', () => {

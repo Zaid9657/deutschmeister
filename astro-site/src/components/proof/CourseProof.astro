@@ -26,72 +26,43 @@ const t = de ? {
 const id = `course-proof-${level.replace('.', '-')}-${mode}`;
 ---
 {proof && (
-<section id={id} class="dm-proof-section scroll-mt-24 border-y border-rule bg-paper" aria-labelledby={`${id}-h`} data-product-proof={level}>
-  <div class="mx-auto max-w-7xl px-5 py-10 sm:py-16">
-    <p class="font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">{t.label} · {level.toUpperCase()}</p>
-    <h2 id={`${id}-h`} class="mt-3 font-display text-dm-section sm:text-dm-section-wide">{t.heading}</h2>
-    {(mode === 'all' || mode === 'journey') && (
-      <div class="mt-7 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-        <aside class="rounded-xl border border-rule bg-white p-5">
-          <h3 class="font-bold">{t.journey}</h3>
-          <ol class="mt-4 space-y-0">
-            {proof.path.map((step, i) => <li class="flex gap-3 border-t border-rule py-3"><span class="font-data text-sm text-siegel-deep">{String(i + 1).padStart(2, '0')}</span><span>{step.title}</span></li>)}
-          </ol>
-        </aside>
-        <div class="rounded-xl border border-rule bg-white p-5 sm:p-7">
-          <p class="font-data text-xs text-graphite">{proof.lesson.title}</p>
-          <h3 class="mt-3 font-bold">{t.task}</h3>
-          <p class="mt-2 text-lg" lang="de">{proof.lesson.pretest.promptDe}</p>
-          {!de && <p class="mt-1 text-sm text-graphite">{proof.lesson.pretest.promptEn}</p>}
-          <blockquote class="mt-4 rounded-xl border border-rule bg-siegel-wash p-4 text-xl" lang="de">{proof.lesson.pretest.model}</blockquote>
-          <p class="mt-4 text-sm leading-relaxed text-graphite">{(de ? proof.lesson.notice.bodyDe : proof.lesson.notice.bodyEn).replace(/\*\*/g, '')}</p>
-          <p class="mt-4 border-t border-rule pt-3 text-sm"><strong>{t.next}:</strong> {proof.curriculum.lektionen[1].title}</p>
-        </div>
-      </div>
-    )}
-    {(mode === 'all' || mode === 'writing') && (
-      <article class="mt-8 rounded-xl border border-rule bg-white p-5 sm:p-7" data-proof-writing>
-        <h3 class="font-display text-2xl">{t.writing}</h3>
-        <p class="mt-2 text-sm text-graphite">{proof.writing.lesson.title} · {proof.writing.task.taskKey}</p>
+<section id={id} class="dm-proof-section scroll-mt-24" aria-labelledby={`${id}-h`} data-product-proof={level} data-proof-mode={mode}>
+  <div>
+    <div class="dm-proof-scene">
+      <header class="dm-proof-caption">
+        <p class="dm-kicker">{t.label} · {level.toUpperCase()}</p>
+        <h2 id={`${id}-h`}>{mode === 'writing' ? (de ? 'Eine Nachricht. Ihre eigenen Worte.' : 'A real message. Your own words.') : mode === 'speaking' ? (de ? 'Laut wird daraus Ihre Sprache.' : 'Give your German a voice.') : (de ? 'Ein klarer Plan. Eine echte Situation.' : 'A clear plan. A real situation.')}</h2>
+        <p class="dm-hero-lead mt-5">{mode === 'writing' ? (de ? 'Schreiben Sie eine Nachricht aus dem Alltag. Prüfen Sie die formalen Punkte und überarbeiten Sie Ihren Text.' : 'Write for an everyday situation. Check the formal requirements, then make a new version. Here is exactly what the course’s checklist can check.') : mode === 'speaking' ? (de ? 'Erst nachsprechen, dann frei antworten. Das Beispiel zeigt, welche Wörter der Abgleich erkennt.' : 'Read aloud, then answer freely. Inspect how the course matches words in a transcript, before you try it yourself.') : (de ? 'Die Lektion beginnt mit einer Aufgabe, nicht mit einer Themenliste.' : 'Start with something you want to say. Each lesson gives the situation, practice and review a place in your plan.')}</p>
+        <a href={`/courses/${level.replace('.', '-')}/`} class="dm-key dm-key-siegel mt-6">{t.door} ↗</a>
+      </header>
+      <div class="min-w-0 space-y-6">
+      {(mode === 'all' || mode === 'journey') && <article class="dm-proof-panel">
+        <p class="dm-kicker">{t.journey} · {proof.lesson.title}</p>
+        <ol class="mt-4 space-y-0">{proof.path.map((step, i) => <li class="flex gap-3 border-t border-rule py-3"><span class="font-data text-sm text-siegel-deep">{String(i + 1).padStart(2, '0')}</span><span>{step.title}</span></li>)}</ol>
+        <h3 class="mt-6 font-bold">{t.task}</h3><p class="mt-2 text-lg" lang="de">{proof.lesson.pretest.promptDe}</p>
+        {!de && <p class="mt-1 text-sm text-graphite">{proof.lesson.pretest.promptEn}</p>}
+        <blockquote class="dm-window-answer" lang="de">{proof.lesson.pretest.model}</blockquote>
+        <p class="mt-4 text-sm leading-relaxed text-graphite">{(de ? proof.lesson.notice.bodyDe : proof.lesson.notice.bodyEn).replace(/\*\*/g, '')}</p>
+        <p class="mt-4 border-t border-rule pt-3 text-sm"><strong>{t.next}:</strong> {proof.curriculum.lektionen[1].title}</p>
+      </article>}
+      {(mode === 'all' || mode === 'writing') && <article class="dm-proof-panel" data-proof-writing>
+        <p class="dm-kicker">{t.writing} · {proof.writing.lesson.title}</p>
+        <p class="mt-3 text-xs text-graphite">{proof.writing.task.taskKey}</p>
         <p class="mt-4 leading-relaxed" lang="de">{proof.writing.task.task}</p>
-        <div class="mt-5 grid gap-5 lg:grid-cols-2">
-          <div>
-            <h4 class="font-bold">{t.draft}</h4>
-            <blockquote class="mt-3 border-l-2 border-rule pl-4 leading-relaxed" lang="de">{proof.writing.draft}</blockquote>
-            <h4 class="mt-5 font-bold">{t.revision}</h4>
-            <blockquote class="mt-3 rounded-xl bg-siegel-wash p-4 leading-relaxed" lang="de">{proof.writing.revision}</blockquote>
-          </div>
-          <div class="rounded-xl border border-rule bg-paper p-5">
-            <h4 class="font-bold">{t.feedback}</h4>
-            <ul class="mt-3 space-y-3">
-              {proof.writing.before.checks.map((c) => <li class="border-b border-rule pb-2 text-sm"><span lang="de">{c.label}</span><span class="mt-1 block font-semibold text-siegel-deep">{c.ai ? t.ai : `${c.ok ? t.yes : t.no} → ${proof.writing.after.checks.find((a) => a.key === c.key)?.ok ? t.yes : t.no}`}</span></li>)}
-            </ul>
-          </div>
-        </div>
-        <p class="mt-5 text-sm leading-relaxed text-graphite">{t.writingLimit}</p>
-      </article>
-    )}
-    {(mode === 'all' || mode === 'speaking') && (
-      <article class="mt-8 grid gap-6 rounded-xl border border-rule bg-white p-5 sm:p-7 lg:grid-cols-2" data-proof-speaking>
-        <div>
-          <h3 class="font-display text-2xl">{t.speaking}</h3>
-          <p class="mt-4 text-sm font-bold">{t.model}</p>
-          <p class="mt-2 text-lg" lang="de">{proof.speaking.expected}</p>
-          <p class="mt-4 text-sm font-bold">{t.transcript}</p>
-          <p class="mt-2 text-graphite" lang="de">{proof.speaking.transcript}</p>
-          <p class="mt-4 text-sm leading-relaxed text-graphite">{t.speakingLimit}</p>
-        </div>
-        <div class="rounded-xl border border-rule bg-paper p-5">
-          <ul class="flex flex-wrap gap-2" aria-label={de ? 'Worterkennung' : 'Word recognition'}>
-            {proof.speaking.alignment.words.map((w) => <li class:list={['rounded-lg border p-2', w.hit ? 'border-rule bg-siegel-wash' : 'border-ink bg-white']}><span lang="de">{w.word}</span><span class="mt-1 block text-xs text-graphite">{w.hit ? t.heard : t.missing}</span></li>)}
-          </ul>
-          <h4 class="mt-5 font-bold">{t.open}</h4>
-          <p class="mt-2 leading-relaxed" lang="de">{proof.speaking.prompt.promptDe}</p>
-          {!de && <p class="mt-2 text-sm text-graphite">{proof.speaking.prompt.promptEn}</p>}
-        </div>
-      </article>
-    )}
-    <a href={`/courses/${level.replace('.', '-')}/`} class="dm-key dm-key-siegel mt-6">{t.door}</a>
+        <div class="mt-5" data-proof-writing-grid>
+          <div><h3 class="font-bold">{t.draft}</h3><blockquote class="mt-3 border-l-2 border-rule pl-4 leading-relaxed" lang="de">{proof.writing.draft}</blockquote></div>
+          <div class="dm-proof-checklist"><h3 class="font-bold">{t.feedback}</h3><ul class="mt-3 space-y-3">{proof.writing.before.checks.map((c) => <li class="border-b border-rule pb-2 text-sm"><span lang="de">{c.label}</span><span class="mt-1 block font-semibold text-siegel-deep">{c.ai ? t.ai : `${c.ok ? t.yes : t.no} → ${proof.writing.after.checks.find((a) => a.key === c.key)?.ok ? t.yes : t.no}`}</span></li>)}</ul></div>
+          <div><h3 class="font-bold">{t.revision}</h3><blockquote class="dm-window-answer" lang="de">{proof.writing.revision}</blockquote></div>
+        </div><p class="mt-5 text-sm leading-relaxed text-graphite">{t.writingLimit}</p>
+      </article>}
+      {(mode === 'all' || mode === 'speaking') && <article class="dm-proof-panel" data-proof-speaking>
+        <p class="dm-kicker">{t.speaking}</p><h3 class="mt-4 font-bold">{t.model}</h3><p class="dm-window-answer" lang="de">{proof.speaking.expected}</p>
+        <h3 class="mt-5 font-bold">{t.transcript}</h3><p class="mt-2 text-lg" lang="de">{proof.speaking.transcript}</p>
+        <ul class="mt-5 flex flex-wrap gap-2" aria-label={t.speaking}>{proof.speaking.alignment.words.map((w) => <li class:list={['rounded-lg border px-3 py-2', w.hit ? 'border-siegel bg-siegel-wash' : 'border-rule bg-paper-sunk']}><span lang="de">{w.word}</span><span class="block text-xs text-graphite">{w.hit ? t.heard : t.missing}</span></li>)}</ul>
+        <p class="mt-5 text-sm leading-relaxed text-graphite">{t.speakingLimit}</p><h3 class="mt-5 font-bold">{t.open}</h3><p class="mt-2 leading-relaxed" lang="de">{proof.speaking.prompt.promptDe}</p>{!de && <p class="mt-2 text-sm text-graphite">{proof.speaking.prompt.promptEn}</p>}
+      </article>}
+      </div>
+    </div>
   </div>
 </section>
 )}

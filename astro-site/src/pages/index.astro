@@ -9,17 +9,12 @@ import Layout from '../layouts/Layout.astro';
 const HOME_SIGNUP_HREF = '/signup?ref=home&utm_medium=onsite&utm_content=hero';
 import '../styles/global.css';
 import CourseCheckout from '../components/CourseCheckout.astro';
-import LineBoard from '../components/linie/LineBoard.astro';
 import FirstStop from '../components/linie/FirstStop.astro';
 import ProductWindow from '../components/proof/ProductWindow.astro';
 import CourseProof from '../components/proof/CourseProof.astro';
 import RecordedCorrection from '../components/linie/RecordedCorrection.astro';
-import FitChooser from '../components/linie/FitChooser.astro';
-import LineSection from '../components/linie/LineSection.astro';
-import Ticket from '../components/linie/Ticket.astro';
-import Progression from '../components/linie/Progression.astro';
-import Proof from '../components/linie/Proof.astro';
 import OfferFaq from '../components/linie/OfferFaq.astro';
+import { curriculumFor } from '../data/curricula/index.js';
 import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
 import { COURSE_PRO_MONTHS, COURSE_FROM_PRICE_EUR, eur } from '../data/pricing.js';
 import { OFFER_FAQ, STATIONS, FREE_COURSE_HREF } from '../data/offers.js';
@@ -29,8 +24,8 @@ const hero = HERO_VARIANTS[ACTIVE_HERO];
 const lead = hero.lead.replace('{proMonths}', String(COURSE_PRO_MONTHS));
 
 // 55 chars — the built-HTML check warns above 60 (Google truncates).
-const title = 'Learn German A1–B2, One Stop at a Time | DeutschMeister';
-const description = `German from A1.1 to B2.2 on one line: start A1.1 free with no account, then buy the level you’re at once (from ${eur(COURSE_FROM_PRICE_EUR)}) and keep it. Exam routes for telc, Goethe and DTZ.`;
+const title = 'German for Your Everyday Life | DeutschMeister';
+const description = `German for everyday life: start A1.1 free with no account, then buy the level you’re at once (from ${eur(COURSE_FROM_PRICE_EUR)}) and keep it. Exam routes for telc, Goethe and DTZ.`;
 
 const jsonLd = [
   {
@@ -38,7 +33,7 @@ const jsonLd = [
     '@type': 'WebSite',
     name: 'DeutschMeister',
     url: 'https://deutsch-meister.de/',
-    description: `German courses for English speakers on the CEFR ladder, A1.1 to B2.2: a free first level, then one-time level courses with guided plans, AI speaking and writing practice, and exam routes for telc, Goethe and DTZ.`,
+    description: `German courses for English speakers across CEFR levels, A1.1 to B2.2: a free first level, then one-time level courses with guided plans, AI speaking and writing practice, and exam routes for telc, Goethe and DTZ.`,
     inLanguage: ['en', 'de'],
   },
   { '@context': 'https://schema.org', ...ORGANIZATION_FULL },
@@ -50,126 +45,55 @@ const jsonLd = [
 ];
 
 // The preview uses the editorial face too; preload all three visible faces.
-const preloads = [...signFontPreloads, ...fontPreloads];
-const firstTicket = STATIONS.find((s) => s.status === 'ticket');
+const preloads = [...new Set([...signFontPreloads, ...fontPreloads])];
+
 ---
 
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd} tone="nacht" preloads={preloads}>
-  <div class="overflow-x-clip bg-paper text-ink">
-
-    <!-- ═══ HERO: the line, and the first stop you can ride right now ═══ -->
-    <section class="dm-hero relative isolate overflow-hidden text-ink" data-ground="nacht" aria-labelledby="hero-h" data-hero-variant={hero.id}>
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd} preloads={preloads}>
+  <div class="dm-home overflow-x-clip bg-paper text-ink">
+    <section class="dm-hero dm-home-hero" aria-labelledby="hero-h" data-hero-variant={hero.id}>
       <div class="dm-hero-grid">
-        <div class="min-w-0">
-          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{hero.eyebrow}</p>
-          <h1 id="hero-h" class="dm-hero-title mt-5">
-            {hero.lines.map((line) => <span class="block">{line.map((part) => part.mark ? <em>{part.t}</em> : part.t)}</span>)}
-          </h1>
+        <div class="dm-hero-copy">
+          <p class="dm-kicker">{hero.eyebrow}</p>
+          <h1 id="hero-h" class="dm-hero-title mt-5">{hero.lines.map((line) => <span class="block">{line.map((part) => part.mark ? <em>{part.t}</em> : part.t)}</span>)}</h1>
           <p class="dm-hero-lead mt-6">{lead}</p>
-          <div class="mt-8 flex flex-wrap items-center gap-3">
-            <a href="/course/a1.1" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="hero">Start A1.1 free</a>
-            <a href={FREE_COURSE_HREF} class="dm-key dm-key-linie" data-auth-only data-continue-course style="display:none">Continue learning →</a>
-            <!-- The account door. Die Linie (PRs 181 and 184) left the first screen with
-                 no signup link, and untagged homepage signups fell 22 → 1
-                 (10.6 d before vs 6.9 d after, measured 2026-10-11). Tagged so the
-                 door is countable as acquisition_last_source = 'home'. No
-                 data-track: signup_started means a submitted signup form, and
-                 SignupPage fires it on submit; firing it here as well counted a
-                 click, then the page view, as two signups started. -->
-            <a href={HOME_SIGNUP_HREF} class="dm-key dm-key-ghost-nacht" data-anon-only>Create a free account</a>
-            <a href="/courses/" class="dm-link text-sm" data-track="course_selected" data-track-surface="hero_line">Explore the courses →</a>
+          <div class="dm-hero-actions mt-7 flex flex-wrap items-center gap-3">
+            <a href="/course/a1.1" class="dm-key dm-key-siegel" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="hero">Start A1.1 free <span aria-hidden="true">↗</span></a>
+            <a href={FREE_COURSE_HREF} class="dm-key dm-key-siegel" data-auth-only data-continue-course style="display:none">Continue learning →</a>
+            <a href={HOME_SIGNUP_HREF} class="dm-key dm-key-ghost" data-anon-only>Create a free account</a>
           </div>
-          <p class="mt-5 text-[0.875rem] leading-relaxed text-nacht-muted">
-            A1.1 needs no account.
-            Not sure where you are? <a href="#fit" class="dm-link-nacht font-semibold">Find your stop</a> or take the <a href="/level-test/" class="dm-link-nacht font-semibold">20-minute level test</a>.
-          </p>
+          <p class="dm-hero-reassurance mt-4">No account. No card. Just your first German lesson.</p>
+          <a href="/level-test/" class="dm-link mt-6 inline-block text-sm">Already know some German? Find your level →</a>
         </div>
-        <ProductWindow />
+        <div class="dm-hero-product"><span class="dm-example-note">A little preview of what you’ll do <span aria-hidden="true">↘</span></span><ProductWindow level="a1.1" /></div>
       </div>
-      <!-- The line board: the HyperFrames loop (videos/hero-line*), poster-first. -->
-
-    </section>
-
-    <section class="border-b border-rule bg-paper" aria-label="Choose your learning route">
-      <div class="dm-route-strip">
-        <a href="/courses/" class="dm-link">
-          <span class="sign-label block text-xl">Build your German, level by level →</span>
-          <span class="mt-2 block text-graphite">A1.1 is free. A1.2 comes next. See what is ready and what follows.</span>
-        </a>
-        <a href="/pruefung/" class="dm-link">
-          <span class="sign-label block text-xl">Already working towards an exam? →</span>
-          <span class="mt-2 block text-graphite">Choose your exam for relevant practice and a sourced guide. The separate telc package is not on sale.</span>
-        </a>
+      <div class="dm-route-strip" aria-label="Choose your learning route">
+        <a href="/courses/"><span class="dm-route-number">01</span><span><strong>Build your everyday German</strong><small>Browse courses and see what’s available.</small></span><span aria-hidden="true">↗</span></a>
+        <a href="/pruefung/"><span class="dm-route-number">02</span><span><strong>Work towards your exam</strong><small>Find relevant practice and a sourced exam guide.</small></span><span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
-    <section class="bg-siegel-wash border-b border-rule" aria-labelledby="try-h">
+    <section class="dm-scene dm-scene-peach" aria-labelledby="try-h" id="try">
       <div class="dm-section-grid">
-        <div>
-          <p class="dm-kicker">Less wondering. More trying.</p>
-          <h2 id="try-h" class="dm-section-title mt-4">Your first German moment starts here.</h2>
-          <p class="dm-hero-lead mt-5">A greeting. A name. A sentence you can actually use. Try a real task from the free first lesson, then carry on in the course.</p>
-        </div>
+        <div><p class="dm-kicker">01 / From reading to doing</p><h2 id="try-h" class="dm-section-title mt-4">Your German starts<br/>with a <em>hello.</em></h2><p class="dm-hero-lead mt-5">No long introduction. Try a real task from the free first lesson. Write an answer, check it, and see why it works.</p><a href="/course/a1.1" class="dm-link mt-6 inline-block">Keep going in the free course →</a></div>
         <FirstStop />
       </div>
     </section>
 
-    <CourseProof mode="writing" />
-
+    <CourseProof level="a1.2" mode="writing" />
+    <CourseProof level="a1.1" mode="speaking" />
     <RecordedCorrection />
 
-    <FitChooser />
-
-    <LineSection />
-
-    <LineBoard />
-
-    <!-- ═══ THE TICKET: what one payment carries ═══ -->
-    <section id="ticket" class="bg-paper" aria-labelledby="ticket-h">
-      <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div class="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
-          <div class="lg:sticky lg:top-28 lg:self-start">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">One ticket, one payment</p>
-            <h2 id="ticket-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
-              <span class="block">Pay once.</span>
-              <span class="block">Keep the level.</span>
-            </h2>
-            <p class="mt-5 max-w-md text-[1.0625rem] leading-relaxed text-graphite">
-              A level ticket is the whole stop: a guided plan from day one to the final test, the practice that goes with it, and {COURSE_PRO_MONTHS} months of Pro so you can speak and write from the start. Nothing renews.
-            </p>
-            <p class="mt-4 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
-              Would you rather rent the whole line month by month? <a href="/pricing/#pro" class="dm-link">See Pro</a>.
-            </p>
-          </div>
-          <Ticket surface="ticket" defaultLevel={firstTicket ? firstTicket.level : 'a1.2'} headingLevel={3} />
-        </div>
+    <section class="dm-scene dm-course-story" id="fit" aria-labelledby="course-story-h">
+      <div class="dm-section-grid">
+        <div><p class="dm-kicker">04 / A plan you can follow</p><h2 id="course-story-h" class="dm-section-title mt-4">A new language.<br/><em>A place to begin.</em></h2><p class="dm-hero-lead mt-5">Start with A1.1, then explore A1.2. Learn in everyday situations, with practice and review along the way. Complete guided courses follow in level order.</p><a class="dm-key dm-key-siegel mt-7" href="/courses/">Explore the courses ↗</a></div>
+        <div class="dm-course-pair">{STATIONS.filter((s) => ['a1.1', 'a1.2'].includes(s.level)).map((s) => <a href={s.coursePage} class="dm-course-book"><span class="dm-kicker">{s.status === 'free' ? 'Your free beginning' : 'Your next chapter'}</span><span class="dm-book-code">{s.code}</span><strong lang="de">{curriculumFor(s.level).lektionen[0].title}</strong><span>{s.status === 'free' ? 'Free · no account' : `${s.priceLabel} · one payment`} <span aria-hidden="true">↗</span></span></a>)}<p class="text-sm text-graphite">B1 and B2 guided courses are Im Bau. The separate telc package is not on sale.</p></div>
       </div>
     </section>
 
-    <Progression />
-
-    <Proof />
-
+    <section class="dm-scene dm-scene-lilac" aria-labelledby="own-h"><div class="dm-section-grid"><div><p class="dm-kicker">Your learning, your choice</p><h2 id="own-h" class="dm-section-title mt-4">Keep a level.<br/><em>Make it yours.</em></h2><p class="dm-hero-lead mt-5">Buy an available level once, from {eur(COURSE_FROM_PRICE_EUR)}. That level stays open, with {COURSE_PRO_MONTHS} months of Pro included. Or choose Pro for ongoing access to the practice library and AI tools.</p><a class="dm-link mt-6 inline-block" href="/pricing/">See prices and exactly what’s included →</a></div><ProductWindow level="a1.2" compact /></div></section>
     <OfferFaq />
-
-    <!-- ═══ FINAL CALL: one more door, no pressure ═══ -->
-    <section class="relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="close-h">
-      <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <h2 id="close-h" class="sign-display text-[clamp(2.5rem,8vw,5rem)]">
-          <span class="block">Make a little room for</span>
-          <span class="block text-linie">a lot more German.</span>
-        </h2>
-        <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted">
-          Start with the free first stop, or go straight to the stop you’re at. Either way, your progress is saved from the first answer.
-        </p>
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a href="/course/a1.1" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="close">Start A1.1 free</a>
-          <a href={FREE_COURSE_HREF} class="dm-key dm-key-linie" data-auth-only data-continue-course style="display:none">Continue learning →</a>
-          <a href="#line" class="dm-key dm-key-ghost-nacht">Choose my stop</a>
-        </div>
-      </div>
-    </section>
-
+    <section class="dm-closing" aria-labelledby="close-h"><div class="dm-closing-inner"><p class="dm-kicker">Make room for German</p><h2 id="close-h">Your next conversation<br/>starts with <em>one lesson.</em></h2><div class="mt-7 flex flex-wrap gap-3"><a href="/course/a1.1" class="dm-key dm-key-siegel" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="close">Start A1.1 free ↗</a><a href={FREE_COURSE_HREF} class="dm-key dm-key-siegel" data-auth-only data-continue-course style="display:none">Continue learning →</a><a href="/courses/" class="dm-key dm-key-ghost">Find your course</a></div><p class="mt-4 text-sm text-graphite">Our ambition: your best place to learn German. Try it for yourself.</p></div></section>
   </div>
   <CourseCheckout />
 </Layout>

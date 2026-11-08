@@ -6,6 +6,7 @@ import App from './App';
 import { initAnalytics, withdrawAnalytics } from './lib/analytics';
 import './utils/i18n';
 import './index.css';
+import './styles/public-system.css';
 
 // No-op until the visitor accepts analytics cookies; consent.js fires
 // dm-consent-accepted when they do (possibly long after page load).

@@ -38,6 +38,7 @@ import {
 // genuinely per-surface: the JSON-LD (deliberately diverged from the client
 // blocks) and the static #root copy.
 import { curriculumFor } from '../src/data/curricula/index.js';
+import { SPEECH_ART_PATHS } from '../src/data/speechArt.js';
 import { PLACEMENT_PREVIEW } from '../src/data/placementPreview.js';
 import { SEO_ROUTES, fullTitle } from '../src/data/seoRoutes.js';
 import { ORG_REF, ORGANIZATION_FULL } from '../src/data/organization.js';
@@ -124,6 +125,7 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g
 // No JS runs on this markup — React replaces it on hydrate — so nothing here
 // may use `reveal`/`hero-line` (their resting state is hidden until a script
 // lifts it) or Atropos scaffolding. Static, styled, immediately visible.
+const speechArt = `<svg class="dm-speech-art" viewBox="0 0 380 220" fill="none" aria-hidden="true">${SPEECH_ART_PATHS.map((path) => `<path ${Object.entries(path).map(([key, value]) => `${({ className: 'class', strokeWidth: 'stroke-width', strokeLinecap: 'stroke-linecap' })[key] || key}="${esc(String(value))}"`).join(' ')}></path>`).join('')}</svg>`;
 const firstLesson = curriculumFor('a1.1').lektionen[0];
 const courseMoment = `<figure class="mt-6 overflow-hidden rounded-xl border border-rule bg-white text-ink" data-course-moment><figcaption class="border-b border-rule px-5 py-3 font-data text-xs text-siegel-deep">A1.1 · Course preview · real content</figcaption><div class="p-5"><p class="font-display text-2xl" lang="de">${esc(firstLesson.title)}</p><p class="mt-3 text-sm leading-relaxed text-graphite">${esc(firstLesson.pretest.promptEn)}</p><blockquote class="mt-4 rounded-lg border-l-2 border-siegel bg-siegel-wash p-4 text-xl" lang="de">${esc(firstLesson.pretest.model)}</blockquote><p class="mt-3 text-xs text-graphite">Model answer · try your own in the free course.</p></div></figure>`;
 const H_PAGE = 'font-display text-dm-editorial sm:text-dm-editorial-wide text-ink';
@@ -322,17 +324,16 @@ const ROUTES = [
     // well as colour), minus everything that needs JS to become visible.
     content: `
 <div class="min-h-screen bg-paper"><div class="dm-placement-page mx-auto max-w-6xl px-5 pt-24 pb-16">
-  <div class="dm-placement-grid"><div>
+  <div class="dm-placement-grid"><section class="relative overflow-hidden rounded-clay py-8 sm:py-12">
   <div>
     <div class="${CHIP_LABEL}">Free Assessment</div>
-    <h1 class="mt-3 ${H_PAGE}">Find your next German step.</h1>
-    <p class="mx-auto mt-4 max-w-prose ${LEAD}">Get a suggested starting point for practice, with a breakdown of the skills you tried.</p>
+    <h1 class="mt-3 ${H_PAGE}">Where does your German begin?</h1>
   </div>
-  <div class="mt-8">
+  <div class="mt-5">
     <p class="${BTN_PRIMARY}">Start the Test</p>
     <p class="mt-4 font-data text-[0.75rem] text-graphite">No account required • Results are instant • 100% free</p>
   </div>
-  </div><aside class="mt-7 rounded-xl border border-rule bg-white p-5" aria-label="Placement question demonstration" data-placement-preview>
+  </section><aside class="mt-7 rounded-xl border border-rule bg-white p-5" aria-label="Placement question demonstration" data-placement-preview>
     <p class="font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">Sample question · from the real test bank</p>
     <p class="mt-3 font-display text-2xl" lang="de">${PLACEMENT_PREVIEW.question}</p>
     <ul class="mt-4 flex flex-wrap gap-2" aria-label="Example options">${PLACEMENT_PREVIEW.options.map((option) => `<li class="rounded-lg border border-rule bg-paper px-3 py-2" lang="de">${option}</li>`).join('')}</ul>
@@ -566,11 +567,11 @@ ${faqSection(PODCAST_FAQS)}
     ],
     content: `
 <div class="min-h-screen bg-paper"><div class="mx-auto max-w-6xl px-4 pt-24 pb-20 sm:px-6">
-  <div class="dm-public-heading mb-8 rounded-clay p-6 sm:p-10"><p class="${EYEBROW} text-siegel-deep">Frequently asked questions</p>
-    <h1 class="mt-3 ${H_HERO}">A clear answer. A confident next step.</h1>
+  <div class="dm-public-heading mb-8 rounded-clay p-6 sm:p-10"><div class="dm-faq-hero"><div><p class="${EYEBROW} text-siegel-deep">Frequently asked questions</p>
+    <h1 class="mt-3 ${H_HERO}">Good questions. Clear answers.</h1>
     <p class="mx-auto mt-4 max-w-xl ${LEAD}">Clear answers about learning, speaking practice, exams, pricing, and privacy.</p>
-  </div>
-  <div class="dm-faq-layout"><div class="self-start lg:sticky lg:top-24"><nav class="mb-6 flex flex-wrap gap-2 lg:flex-col" aria-label="Question categories">${FAQ_CATEGORIES.map((cat, i) => `<a href="#faq-category-${i}" class="rounded-pill border border-rule px-4 py-2 text-sm font-bold text-siegel-deep">${cat.title} (${cat.items.length})</a>`).join('')}</nav>
+  </div>${speechArt}</div></div>
+  <div class="dm-faq-layout"><div class="self-start lg:sticky lg:top-24"><nav class="mb-6 flex flex-wrap gap-2 lg:flex-col" aria-label="Question categories">${FAQ_CATEGORIES.map((cat, i) => `<a href="#faq-category-${i}" class="rounded-lg border border-rule px-4 py-2 text-sm font-bold text-siegel-deep">${cat.title} (${cat.items.length})</a>`).join('')}</nav>
   <p class="mb-8 ${SMALL}">Choosing a course? <a href="/courses/" class="font-bold text-siegel-deep underline">See the levels and what is available.</a></p>
   </div><div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat, catIdx) => `
     <section id="faq-category-${catIdx}" class="scroll-mt-24">
@@ -611,7 +612,7 @@ ${faqSection(PODCAST_FAQS)}
     content: `
 <div class="min-h-screen bg-paper">
   <section class="dm-public-heading pt-24 pb-12"><div class="dm-about-grid mx-auto max-w-6xl px-5"><div><p class="${EYEBROW} text-siegel-deep">Our reason to build</p>
-    <h1 class="mt-4 ${H_HERO}">More German. <span class="text-siegel-deep">More possibility.</span></h1>
+    <h1 class="mt-4 ${H_HERO}">A language opens doors. <span class="text-siegel-deep">Let’s open yours.</span></h1>
     <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">${FOUNDER_LINE_EN}</p>
     <p class="my-6 flex flex-wrap justify-center gap-3"><a href="/course/a1.1" class="${BTN_PRIMARY}">Start A1.1 free</a><a href="/courses/a1-2/" class="${BTN_PRIMARY}">Inspect the A1.2 course</a></p>
     <ul class="flex list-none flex-wrap justify-center gap-3">

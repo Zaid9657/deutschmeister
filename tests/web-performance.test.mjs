@@ -74,7 +74,7 @@ test('every named face in the display and body stacks is declared', () => {
   for (const role of ['display', 'body', 'sign']) {
     const stack = stacks[role];
     assert.ok(stack, `${role} stack exists`);
-    for (const family of stack.filter((f) => /^(Fraunces|Nunito Sans|Archivo)/.test(f))) {
+    for (const family of stack.filter((f) => /^Meister (Serif|Sans)/.test(f))) {
       assert.ok(declared.has(family), `${role} stack names "${family}" but no @font-face declares it`);
     }
     // The metric-matched fallback must come straight after the brand face.
@@ -91,7 +91,7 @@ test('both heads preload exactly the token fontPreloads, and nothing points at G
   assert.ok(fontPreloads.length > 0 && fontPreloads.every((href) => faceFiles.includes(href)));
   assert.ok(signFontPreloads.length > 0 && signFontPreloads.every((href) => faceFiles.includes(href)));
   const shell = read('index.html');
-  const preloaded = [...shell.matchAll(/<link rel="preload" href="([^"]+)" as="font" type="font\/woff2" crossorigin>/g)].map((m) => m[1]);
+  const preloaded = [...shell.matchAll(/<link rel="preload" href="([^"]+)" as="font" type="font\/woff" crossorigin>/g)].map((m) => m[1]);
   assert.deepEqual(preloaded.sort(), [...fontPreloads].sort());
 
   const layout = read('astro-site/src/layouts/Layout.astro');
@@ -99,7 +99,7 @@ test('both heads preload exactly the token fontPreloads, and nothing points at G
   // v4: a page may pass its own `preloads` (the homepage sets signs above the
   // fold); every other page gets the token list, rendered by the same map.
   assert.match(layout, /preloads = fontPreloads,/);
-  assert.match(layout, /preloads\.map\(\(href\) => \(\s*<link rel="preload" href=\{href\} as="font" type="font\/woff2" crossorigin \/>/);
+  assert.match(layout, /preloads\.map\(\(href\) => \(\s*<link rel="preload" href=\{href\} as="font" type="font\/woff" crossorigin \/>/);
   // A page that passes preloads builds them only from the token lists.
   const pagesDir = join(root, 'astro-site/src/pages');
   const pageFiles = [];
@@ -113,19 +113,8 @@ test('both heads preload exactly the token fontPreloads, and nothing points at G
   for (const file of pageFiles) {
     const src = readFileSync(file, 'utf8');
     if (!/preloads=\{/.test(src)) continue;
-    // Pass 2 previews put Fraunces beside Archivo above the fold. Only these
-    // three compositions preload both token lists in full; reference pages
-    // retain their smaller default and unfinished courses keep selective fonts.
-    const previewPages = ['index.astro', 'pricing.astro', 'courses/index.astro'].map((name) => join(pagesDir, name));
-    if (previewPages.includes(file)) {
-      assert.match(src, /<ProductWindow/);
-      assert.match(src, /const preloads = \[\.\.\.signFontPreloads, \.\.\.fontPreloads\];/);
-    } else {
-      assert.match(src, /const preloads = \[\.\.\.signFontPreloads, \.\.\.fontPreloads\.filter/, `${file}: preloads must come from the token lists`);
-    }
-    if (file === join(pagesDir, 'courses/[level].astro')) {
-      assert.match(src, /fontPreloads\.filter\(\(f\) => showSyllabus \|\| f\.includes\('nunito'\)\)/);
-    }
+    assert.match(src, /const preloads = \[\.\.\.new Set\(\[\.\.\.signFontPreloads, \.\.\.fontPreloads\]\)\];/, `${file}: unique preloads come from the token lists`);
+
   }
 
   for (const file of ['index.html', 'astro-site/src/layouts/Layout.astro', 'netlify.toml']) {

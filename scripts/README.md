@@ -14,6 +14,7 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 
 | Command (`node scripts/…`) | Effect | Inputs | Outputs / behavior |
 |---|---|---|---|
+| [build-public-brand.mjs](build-public-brand.mjs) | local generator | Canonical design tokens and original speech-window SVG paths | `public/favicon.svg` and 192/512 PNG/WebP app icons; invoked by `npm run build`, no service writes. |
 | [optimize-images.cjs](optimize-images.cjs) | local generator | PNG/JPG images in `public/` except social assets | WebP siblings; also invoked by `npm run build`. |
 | [merge-site-builds.mjs](merge-site-builds.mjs) | local generator | Fresh `dist/` and `astro-site/dist/` | Carves `app.html` if needed; copies every Astro directory/file into `dist/`. |
 | [prerender-spa-routes.mjs](prerender-spa-routes.mjs) | local generator | Fresh `dist/app.html`, the Vite build manifest `dist/.vite/manifest.json` (required for a built shell), route metadata/data registries | Static public SPA route HTML (each with its page chunk's `modulepreload`) and shell edits in `dist/`; then deletes `dist/.vite/`, so a second run fails: not idempotent, rebuild first. |
@@ -104,3 +105,7 @@ The single-URL Lighthouse CLI retains `--output=directory` and `lighthouse-repor
 | [lib/evaluation-output.mjs](lib/evaluation-output.mjs) | check (pure shared module) | Tool name, CLI arguments, optional report filename/time | Consistent run directory/report paths and flags; no writes or browser startup. |
 | [lib/time-preposition-cues.mjs](lib/time-preposition-cues.mjs) | check (pure shared module) | Servable pool items and their German gap prompts | Findings for single-key temporal gaps without an attached, affirmative meaning selector; imported by the curriculum validator and regression suites. No writes. |
 | [lib/assessment-content.mjs](lib/assessment-content.mjs) | check (pure shared module) | Curriculum reading tasks, reserved assessment rows and final-test content | Findings for reading evidence, independent papers, practice exposure, taught language and honest score scope. No writes. |
+
+## Public font packaging
+
+`python scripts/package-public-fonts.py` packages the locally installed OFL Caladea and Carlito families from `/usr/share/fonts/truetype/crosextra/` as renamed Meister Serif / Meister Sans European WOFF subsets in `public/fonts/`. It replaces only that generated font directory and refreshes the provenance/license file in `docs/reviews/codex-design-gap-2026-11-08/`. It uses Python’s standard library; it makes no network requests. The font-integrity regression checks table checksums, German/punctuation glyphs and the preload budget. Run it from the repository root only when deliberately regenerating the public font set.
