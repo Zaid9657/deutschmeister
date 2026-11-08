@@ -13,6 +13,13 @@
 // baseline.md); the fit chooser still sends B1-bound visitors to their stop.
 
 export const HERO_VARIANTS = {
+  // Pass 2: founder-authorised learner-first message; no outcome superlative.
+  realLife: {
+    id: 'realLife',
+    eyebrow: 'Learn it. Use it. Make it yours.',
+    lines: [[{ t: 'Your German.' }], [{ t: 'In real life.', de: false, mark: true }]],
+    lead: 'Your first conversation. Your next everyday win. Build German you can use, with situation-led courses and a clear next step. Start A1.1 free — no account, no card.',
+  },
   // Outcome + mechanism: the destination most visitors named, and the line.
   route: {
     id: 'route',
@@ -42,4 +49,4 @@ export const HERO_VARIANTS = {
 };
 
 /** The live hero. Change this line to run the next sequential test; log it in measurement.md. */
-export const ACTIVE_HERO = 'route';
+export const ACTIVE_HERO = 'realLife';

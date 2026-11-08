@@ -81,7 +81,7 @@ const HUB_COPY = {
     description:
       'DTZ (Deutsch-Test für Zuwanderer) online vorbereiten: Alltagsdeutsch A2–B1, Hörtraining mit Dialogen, Brieftraining und KI-Sprechen — Einstufungstest kostenlos.',
     intro:
-      'Der DTZ prüft Alltagsdeutsch auf zwei Niveaus gleichzeitig (A2–B1) — Ihr Ergebnis hängt davon ab, wie sicher Sie auf B1 antwortest. Dieser Weg durch DeutschMeister zielt genau darauf.',
+      'Der DTZ prüft Alltagsdeutsch auf zwei Niveaus gleichzeitig (A2–B1) — Ihr Ergebnis hängt davon ab, wie sicher Sie auf B1 antworten. Dieser Weg durch DeutschMeister zielt genau darauf.',
     focus:
       'Der DTZ belohnt Alltagsroutine: Ansagen verstehen, Briefe schreiben, über den eigenen Alltag sprechen. Genau diese Situationen enthalten die Hör-Dialoge und Sprechmissionen.',
   },

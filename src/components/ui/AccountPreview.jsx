@@ -1,12 +1,14 @@
 import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { COURSE_PRO_MONTHS } from '../../data/pricing.js';
+import CourseMoment from './CourseMoment.jsx';
 
 /** Presentation only: no session, purchase-intent or entitlement dependencies. */
 export default function AccountPreview() {
   return (
-    <aside className="hidden w-full max-w-sm self-start rounded-xl border border-rule bg-nacht p-7 text-nacht-text lg:block" data-ground="nacht" aria-label="Your learning route">
+    <aside className="dm-account-preview w-full self-start rounded-xl border border-rule bg-nacht p-6 text-nacht-text sm:p-8" data-ground="nacht" aria-label="Your learning route">
       <p className="font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">Deutsch, in Bewegung</p>
-      <h2 className="mt-4 font-display text-dm-section">Your next step has a place.</h2>
+      <h2 className="mt-4 font-display text-3xl sm:text-4xl">A little German. Every time you return.</h2>
+      <CourseMoment />
       <ol className="mt-6 space-y-5 border-l border-nacht-rule pl-5">
         <li><strong>{FREE_LEVEL_LABEL} · the free first course</strong><p className="mt-1 text-sm text-nacht-muted">Try the whole course without an account. An account lets you return to your progress.</p></li>
         <li><strong>A1.2 · continue the journey</strong><p className="mt-1 text-sm text-nacht-muted">A separate course purchase keeps that level open, with {COURSE_PRO_MONTHS} months of Pro included.</p></li>

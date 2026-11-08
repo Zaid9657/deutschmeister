@@ -89,8 +89,8 @@ const competitorComparisons = {
     displayName: 'Babbel',
     positioning: 'Strukturiertes Vokabel- und Grammatik-Training auf Abo-Basis.',
     priceRange: '€6,99 – €12,99/Monat (Stand: Mai 2026)',
-    heroHeadline: 'Babbel lehrt dich Deutsch. Bei Deutschmeister sprichst du es frei.',
-    heroSubheadline: `Beide Plattformen haben gute Grammatik, und beide bieten KI-Gespräche. Bei Deutschmeister sprichst du frei auf jedem Niveau und bekommst nach dem Gespräch ${EVALUATION}.`,
+    heroHeadline: 'Babbel lehrt Sie Deutsch. Bei Deutschmeister sprechen Sie es frei.',
+    heroSubheadline: `Beide Plattformen haben gute Grammatik, und beide bieten KI-Gespräche. Bei Deutschmeister sprechen Sie frei auf jedem Niveau und bekommen nach dem Gespräch ${EVALUATION}.`,
     comparisonTable: [
       { feature: 'KI-Sprechtraining', us: `✓ Mit Pro ${PRO_SPEAKING}, frei auf jedem Niveau — danach ${EVALUATION}`, them: '○ Babbel Speak (seit 2025): KI-Gespräche in vorgegebenen Szenarien, Beta, nur in der App' },
       { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Jeder deutsche Satz wird zerlegt — Fälle, Satzglieder, Wortarten, farbcodiert', them: '✗ Nicht verfügbar' },
@@ -108,7 +108,7 @@ const competitorComparisons = {
       {
         icon: 'Mic',
         title: 'Frei sprechen, auf jedem Niveau',
-        body: `Babbel hat mit Babbel Speak ein KI-Sprechtraining in vorgegebenen Szenarien (Beta, nur App). Bei Deutschmeister führst du mit Pro ${PRO_SPEAKING} frei auf jedem Niveau — und bekommst nach jedem Gespräch ${EVALUATION}. Der Unterschied liegt im freien Gespräch und in der Auswertung, nicht im Ob.`,
+        body: `Babbel hat mit Babbel Speak ein KI-Sprechtraining in vorgegebenen Szenarien (Beta, nur App). Bei Deutschmeister führen Sie mit Pro ${PRO_SPEAKING} frei auf jedem Niveau — und bekommen nach jedem Gespräch ${EVALUATION}. Der Unterschied liegt im freien Gespräch und in der Auswertung, nicht im Ob.`,
       },
       {
         icon: 'ScanSearch',
@@ -124,7 +124,7 @@ const competitorComparisons = {
     faq: [
       {
         q: 'Soll ich von Babbel zu Deutschmeister wechseln?',
-        a: 'Wenn dir freies Sprechtraining und Prüfungsvorbereitung wichtig sind — ja. Babbel ist gut für strukturiertes Vokabellernen. Aber wenn du frei sprechen willst und dich auf eine Prüfung vorbereitest, bietet Deutschmeister mehr.',
+        a: 'Wenn Ihnen freies Sprechtraining und Prüfungsvorbereitung wichtig sind — ja. Babbel ist gut für strukturiertes Vokabellernen. Aber wenn Sie frei sprechen wollen und sich auf eine Prüfung vorbereiten, bietet Deutschmeister mehr.',
       },
       {
         q: 'Kann ich Babbel und Deutschmeister zusammen nutzen?',
@@ -136,14 +136,14 @@ const competitorComparisons = {
       },
       {
         q: 'Hat Babbel auch KI-Sprechtraining?',
-        a: `Ja — Babbel hat seit 2025 „Babbel Speak", ein KI-Sprechtraining in vorgegebenen Szenarien (derzeit Beta, nur in der App). Bei Deutschmeister führst du mit Pro ${PRO_SPEAKING}, frei auf jedem Niveau, und bekommst nach jedem Gespräch ${EVALUATION}.`,
+        a: `Ja — Babbel hat seit 2025 „Babbel Speak", ein KI-Sprechtraining in vorgegebenen Szenarien (derzeit Beta, nur in der App). Bei Deutschmeister führen Sie mit Pro ${PRO_SPEAKING}, frei auf jedem Niveau, und bekommen nach jedem Gespräch ${EVALUATION}.`,
       },
       {
         q: 'Welche Plattform ist besser für Anfänger?',
-        a: 'Beide sind für Anfänger geeignet. Babbel hat eine starke App mit Offline-Modus. Deutschmeister erklärt Grammatik auf Englisch und hat einen kostenlosen Einstufungstest, der dein Niveau sofort findet.',
+        a: 'Beide sind für Anfänger geeignet. Babbel hat eine starke App mit Offline-Modus. Deutschmeister erklärt Grammatik auf Englisch und hat einen kostenlosen Einstufungstest, der Ihr Niveau sofort findet.',
       },
     ],
-    ctaHeadline: 'Teste Deutschmeister kostenlos — und entscheide selbst.',
+    ctaHeadline: 'Testen Sie Deutschmeister kostenlos — und entscheiden Sie selbst.',
     ctaSubtext: `A1.1 komplett kostenlos. ${TRIAL_DAYS} Tage Pro-Testphase. Kein Risiko.`,
   },
 
@@ -154,9 +154,9 @@ const competitorComparisons = {
     positioning: 'Gamifiziertes Sprachlern-Spiel mit kostenloser Stufe.',
     priceRange: 'Kostenlos / Super: ab €6,99/Monat im Jahresabo (Stand: Mai 2026)',
     heroHeadline: 'Duolingo macht Spaß. Deutschmeister bereitet gezielt auf Goethe, telc und DTZ vor.',
-    heroSubheadline: 'Duolingo motiviert mit Streaks und Punkten. Aber wenn du Deutsch für Prüfungen, Arbeit oder das echte Leben brauchst — reicht das?',
+    heroSubheadline: 'Duolingo motiviert mit Streaks und Punkten. Aber wenn Sie Deutsch für Prüfungen, Arbeit oder das echte Leben brauchen — reicht das?',
     comparisonTable: [
-      { feature: 'KI-Sprechtraining', us: `✓ Mit Pro ${PRO_SPEAKING}, freie Gespräche auf deinem Niveau — danach ${EVALUATION}`, them: '○ Roleplay (seit 2026 kostenlos): GPT-basierte Gespräche in Alltagsszenarien, spielerisch, kein Prüfungsfokus' },
+      { feature: 'KI-Sprechtraining', us: `✓ Mit Pro ${PRO_SPEAKING}, freie Gespräche auf Ihrem Niveau — danach ${EVALUATION}`, them: '○ Roleplay (seit 2026 kostenlos): GPT-basierte Gespräche in Alltagsszenarien, spielerisch, kein Prüfungsfokus' },
       { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Jeder Satz zerlegt in Fälle, Satzglieder, Wortarten', them: '✗ Nicht verfügbar' },
       { feature: 'Prüfungsvorbereitung (Goethe/telc/DTZ)', us: '✓ Inhalte auf Goethe-, telc- und DTZ-Prüfungen abgestimmt, A1–B2', them: '✗ Kein Prüfungsfokus — allgemeines Sprachtraining' },
       { feature: 'Kostenlose Version', us: `✓ A1.1 kostenlos, ${TRIAL_DAYS} Tage Pro-Testphase`, them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
@@ -170,42 +170,42 @@ const competitorComparisons = {
       {
         icon: 'Brain',
         title: 'Tiefe statt Spielereien',
-        body: 'Duolingo belohnt dich für richtige Antworten mit Punkten und Streaks. Deutschmeister erklärt dir, WARUM die Antwort richtig ist. Wenn du Deutsch wirklich verstehen willst — nicht nur Übungen abhaken — ist das der entscheidende Unterschied.',
+        body: 'Duolingo belohnt Sie für richtige Antworten mit Punkten und Streaks. Deutschmeister erklärt Ihnen, WARUM die Antwort richtig ist. Wenn Sie Deutsch wirklich verstehen wollen — nicht nur Übungen abhaken — ist das der entscheidende Unterschied.',
       },
       {
         icon: 'Mic',
         title: 'Frei sprechen, mit Auswertung danach',
-        body: `Bei Deutschmeister sprichst du frei auf deinem Niveau, mit Pro ${PRO_SPEAKING}. Nach jedem Gespräch bekommst du ${EVALUATION}: was gut war und was du verbessern kannst. Sprechkompetenz baut man durch Sprechen auf.`,
+        body: `Bei Deutschmeister sprechen Sie frei auf Ihrem Niveau, mit Pro ${PRO_SPEAKING}. Nach jedem Gespräch bekommen Sie ${EVALUATION}: was gut war und was Sie verbessern können. Sprechkompetenz baut man durch Sprechen auf.`,
       },
       {
         icon: 'GraduationCap',
         title: 'Gezielt auf die Prüfung vorbereiten, nicht nur Streak halten',
-        body: 'Deutschmeister ist auf Goethe, telc und DTZ abgestimmt. Wenn du eine Prüfung vor dir hast, brauchst du gezielte Vorbereitung — kein Spiel, das dich für 50 XP lobt.',
+        body: 'Deutschmeister ist auf Goethe, telc und DTZ abgestimmt. Wenn Sie eine Prüfung vor Ihnen haben, brauchen Sie gezielte Vorbereitung — kein Spiel, das Sie für 50 XP lobt.',
       },
     ],
     faq: [
       {
         q: 'Reicht Duolingo, um eine Deutschprüfung zu bestehen?',
-        a: 'Das kann dir keine App versprechen. Entscheidend ist, dass du das Format deiner Prüfung kennst und übst: mit den offiziellen Modellsätzen des Prüfungsanbieters und, bei Deutschmeister, mit Leitfäden und Übungstests für Goethe, telc und DTZ.',
+        a: 'Das kann Ihnen keine App versprechen. Entscheidend ist, dass Sie das Format Ihrer Prüfung kennen und üben: mit den offiziellen Modellsätzen des Prüfungsanbieters und, bei Deutschmeister, mit Leitfäden und Übungstests für Goethe, telc und DTZ.',
       },
       {
         q: 'Ist Deutschmeister besser als Duolingo?',
-        a: 'Kommt drauf an, was du brauchst. Für tägliche Motivation und Vokabelaufbau ist Duolingo stark. Für freies Sprechen mit Auswertung, Grammatik-Verständnis und Prüfungsvorbereitung ist Deutschmeister gebaut.',
+        a: 'Kommt drauf an, was Sie brauchen. Für tägliche Motivation und Vokabelaufbau ist Duolingo stark. Für freies Sprechen mit Auswertung, Grammatik-Verständnis und Prüfungsvorbereitung ist Deutschmeister gebaut.',
       },
       {
         q: 'Warum ist Deutschmeister nicht kostenlos wie Duolingo?',
-        a: 'Duolingo finanziert sich durch Werbung und Premium-Upsells. Deutschmeister hat keine Werbung. Die KI-Funktionen haben feste Nutzungslimits. A1.1 ist kostenlos, danach kosten die Inhalte — dafür bekommst du KI-Sprechtraining, Sentence X-Ray und prüfungsrelevante Tiefe.',
+        a: 'Duolingo finanziert sich durch Werbung und Premium-Upsells. Deutschmeister hat keine Werbung. Die KI-Funktionen haben feste Nutzungslimits. A1.1 ist kostenlos, danach kosten die Inhalte — dafür bekommen Sie KI-Sprechtraining, Sentence X-Ray und prüfungsrelevante Tiefe.',
       },
       {
         q: 'Kann ich von Duolingo zu Deutschmeister wechseln?',
-        a: `Ja. Mach den kostenlosen Einstufungstest — er zeigt dir in etwa ${PLACEMENT_TEST_MINUTES} Minuten, wo du stehst. Du musst nicht bei Null anfangen.`,
+        a: `Ja. Machen Sie den kostenlosen Einstufungstest — er zeigt Ihnen in etwa ${PLACEMENT_TEST_MINUTES} Minuten, wo Sie stehen. Sie müssen nicht bei Null anfangen.`,
       },
       {
         q: 'Hat Duolingo auch KI-Sprechtraining?',
-        a: `Ja — Duolingos „Roleplay" ist seit Anfang 2026 für alle kostenlos und bietet GPT-basierte Gespräche in Alltagsszenarien. Es ist spielerisch angelegt, nicht auf Prüfungen ausgerichtet. Bei Deutschmeister sprichst du frei auf jedem Niveau und bekommst nach jedem Gespräch ${EVALUATION} — mit Pro ${PRO_SPEAKING}.`,
+        a: `Ja — Duolingos „Roleplay" ist seit Anfang 2026 für alle kostenlos und bietet GPT-basierte Gespräche in Alltagsszenarien. Es ist spielerisch angelegt, nicht auf Prüfungen ausgerichtet. Bei Deutschmeister sprechen Sie frei auf jedem Niveau und bekommen nach jedem Gespräch ${EVALUATION} — mit Pro ${PRO_SPEAKING}.`,
       },
     ],
-    ctaHeadline: 'Vom Spielen zum Sprechen — teste Deutschmeister kostenlos.',
+    ctaHeadline: 'Vom Spielen zum Sprechen — testen Sie Deutschmeister kostenlos.',
     ctaSubtext: `A1.1 kostenlos. ${TRIAL_DAYS} Tage Pro. Kein Streak nötig.`,
   },
 
@@ -216,11 +216,11 @@ const competitorComparisons = {
     positioning: 'Live-Online-Unterricht mit echten Lehrern in Gruppen.',
     // The Sprint row below is the one Lingoda price basis on these pages.
     priceRange: 'Sprint: €310 / 2 Monate mit 15 Std./Monat (Stand: Mai 2026)',
-    heroHeadline: 'Lingoda gibt dir Lehrer. Deutschmeister gibt dir Freiheit.',
-    heroSubheadline: 'Live-Unterricht ist wertvoll. Aber was, wenn du um 23 Uhr üben willst — ohne auf einen Termin zu warten?',
+    heroHeadline: 'Lingoda gibt Ihnen Lehrer. Deutschmeister gibt Ihnen Freiheit.',
+    heroSubheadline: 'Live-Unterricht ist wertvoll. Aber was, wenn Sie um 23 Uhr üben wollen — ohne auf einen Termin zu warten?',
     comparisonTable: [
-      { feature: 'Verfügbarkeit', us: '✓ 24/7 — lerne wann du willst, keine Terminbuchung nötig', them: '○ Stundenplan nötig, Kurse zu festen Zeiten' },
-      { feature: 'KI-Sprechtraining', us: `✓ Sofort verfügbar, mit Pro ${PRO_SPEAKING}, auf deinem Niveau`, them: '✗ Kein KI-Training — nur Live-Unterricht mit Lehrern' },
+      { feature: 'Verfügbarkeit', us: '✓ 24/7 — lernen Sie, wann Sie wollen, keine Terminbuchung nötig', them: '○ Stundenplan nötig, Kurse zu festen Zeiten' },
+      { feature: 'KI-Sprechtraining', us: `✓ Sofort verfügbar, mit Pro ${PRO_SPEAKING}, auf Ihrem Niveau`, them: '✗ Kein KI-Training — nur Live-Unterricht mit Lehrern' },
       { feature: 'Echte Lehrer', us: '✗ KI-basiert, keine menschlichen Lehrer', them: '✓ Zertifizierte Muttersprachler als Lehrer' },
       { feature: 'Sentence X-Ray (Satzanalyse)', us: `✓ Jeder Satz zerlegt und erklärt — mit Pro ${PRO_DAILY_LIMIT} Analysen pro Tag`, them: '✗ Nicht verfügbar' },
       { feature: 'Gruppenunterricht', us: '✗ Einzellernen mit KI', them: '✓ Kleine Gruppen (3–5 Teilnehmer) oder Einzelstunden' },
@@ -234,18 +234,18 @@ const competitorComparisons = {
     whyUsBlocks: [
       {
         icon: 'Clock',
-        title: 'Lernen, wann DU willst — nicht wann der Kalender es sagt',
-        body: 'Bei Lingoda buchst du Stunden Tage im Voraus. Bei Deutschmeister öffnest du die App und lernst — um 6 Uhr morgens oder um Mitternacht. Kein Stundenplan, keine Wartezeit.',
+        title: 'Lernen, wann Sie wollen — nicht wann der Kalender es sagt',
+        body: 'Bei Lingoda buchen Sie Stunden Tage im Voraus. Bei Deutschmeister öffnen Sie die App und lernen — um 6 Uhr morgens oder um Mitternacht. Kein Stundenplan, keine Wartezeit.',
       },
       {
         icon: 'Mic',
         title: '24/7 Sprechpartner statt Terminstunde',
-        body: `Bei Lingoda sprichst du im Live-Unterricht zu festen Zeiten. Deutschmeister gibt dir einen KI-Sprechpartner, der immer da ist — mit Pro ${PRO_SPEAKING}, wann immer du willst. Kein Buchen, kein Warten.`,
+        body: `Bei Lingoda sprechen Sie im Live-Unterricht zu festen Zeiten. Deutschmeister gibt Ihnen einen KI-Sprechpartner, der immer da ist — mit Pro ${PRO_SPEAKING}, wann immer Sie wollen. Kein Buchen, kein Warten.`,
       },
       {
         icon: 'Wallet',
         title: `Bruchteil der Kosten, voller Zugang zu allen ${LEVEL_COUNT} Leveln`,
-        body: `Deutschmeister Pro kostet ${PRO_MONTHLY} — mit Zugang zu allen ${LEVEL_COUNT} Leveln und ${PRO_SPEAKING}. Den Lingoda-Preis findest du im Vergleich oben.`,
+        body: `Deutschmeister Pro kostet ${PRO_MONTHLY} — mit Zugang zu allen ${LEVEL_COUNT} Leveln und ${PRO_SPEAKING}. Den Lingoda-Preis finden Sie im Vergleich oben.`,
       },
     ],
     faq: [
@@ -259,7 +259,7 @@ const competitorComparisons = {
       },
       {
         q: 'Kann ich beides kombinieren?',
-        a: 'Ja — eine sinnvolle Kombination. Deutschmeister für tägliches Training (Grammatik, Hören, Sprechen mit KI), Lingoda für gelegentliche Live-Stunden mit einem Lehrer. So sparst du Geld und lernst trotzdem intensiv.',
+        a: 'Ja — eine sinnvolle Kombination. Deutschmeister für tägliches Training (Grammatik, Hören, Sprechen mit KI), Lingoda für gelegentliche Live-Stunden mit einem Lehrer. So sparen Sie Geld und lernen trotzdem intensiv.',
       },
       {
         q: 'Bekomme ich bei Deutschmeister ein Zertifikat?',
@@ -271,7 +271,7 @@ const competitorComparisons = {
       },
     ],
     ctaHeadline: 'Flexibel lernen, ohne auf einen Termin zu warten.',
-    ctaSubtext: 'Starte jetzt kostenlos — 24/7 verfügbar, kein Kalender nötig.',
+    ctaSubtext: 'Starten Sie jetzt kostenlos — 24/7 verfügbar, kein Kalender nötig.',
   },
 };
 

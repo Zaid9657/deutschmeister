@@ -149,8 +149,8 @@ const CARD_INTERACTIVE =
     {lang === 'de' && <div class="mx-auto max-w-3xl px-5 pt-6"><LanguageNotice noun="exam guide" /></div>}
 
     <!-- ═══ Header: aurora + hero-line entrance ═══ -->
-    <section class="relative" aria-labelledby="hero-h">
-      <div class="relative mx-auto max-w-3xl px-5 pt-14 sm:pt-20">
+    <section class="dm-editorial-hero relative" aria-labelledby="hero-h">
+      <div class="dm-exam-grid relative mx-auto max-w-6xl px-5 py-10 sm:py-14">
         <header class="border-b border-rule pb-8">
           <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">{guide.badge}</p>
           <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
@@ -165,6 +165,11 @@ const CARD_INTERACTIVE =
             {T.readingLine(minutes, T.date(guide.factsCheckedOn))}
           </p>
         </header>
+        <nav class="dm-reading-note" aria-label={lang === 'en' ? 'Start reading' : 'Direkt zum Thema'}>
+          <p class="dm-kicker">{lang === 'en' ? 'Understand. Plan. Practise.' : 'Verstehen. Planen. Üben.'}</p>
+          <ol class="mt-5 space-y-4">{toc.slice(0, 4).map((item, i) => <li class="flex gap-3 border-t border-rule pt-3"><span class="font-data text-sm text-siegel-deep">{String(i + 1).padStart(2, '0')}</span><a class="dm-link text-sm" href={item.href}>{item.label}</a></li>)}</ol>
+          <a href="#guide-contents" class="dm-link mt-5 inline-block text-sm">{T.contents} →</a>
+        </nav>
       </div>
     </section>
 

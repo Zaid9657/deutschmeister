@@ -43,23 +43,27 @@ const FAQPage = () => {
     <div className="min-h-screen bg-paper font-body text-ink">
       <SEO {...seoProps('/faq')} structuredData={faqPageJsonLd()} />
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-20">
-        <div className="relative overflow-hidden rounded-clay text-center mb-6 py-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-20">
+        <div className="dm-public-heading relative overflow-hidden rounded-clay mb-8 p-6 sm:p-10">
           <div className="relative">
             <SectionHeading
               size="page"
               level={1}
-              align="center"
-              title="Frequently asked questions"
+              align="left"
+              eyebrow="Frequently asked questions"
+              title="A clear answer. A confident next step."
               lead="Clear answers about learning, speaking practice, exams, pricing, and privacy."
             />
           </div>
         </div>
 
-        <nav className="mb-8 flex flex-wrap gap-2" aria-label="Question categories">
+        <div className="dm-faq-layout">
+        <div className="self-start lg:sticky lg:top-24">
+        <nav className="mb-6 flex flex-wrap gap-2 lg:flex-col" aria-label="Question categories">
           {FAQ_CATEGORIES.map((category, i) => <a key={category.title} href={`#faq-category-${i}`} className="rounded-pill border border-rule bg-white px-4 py-2 text-sm font-bold text-siegel-deep">{category.title} <span className="text-graphite">({category.items.length})</span></a>)}
         </nav>
         <p className="mb-8 text-sm text-graphite">Choosing a course? <a href="/courses/" className="font-bold text-siegel-deep underline">See the levels and what is available.</a></p>
+        </div>
         <div className="space-y-12">
           {FAQ_CATEGORIES.map((category, catIdx) => {
             const Icon = CATEGORY_ICONS[category.title] ?? BookOpen;
@@ -83,6 +87,7 @@ const FAQPage = () => {
           })}
         </div>
 
+        </div>
         <Reveal delay={120} className="mt-16 text-center">
           <p className="text-graphite mb-4">Still have questions? Start with A1.1—it is completely free.</p>
           {/* The one primary action on this screen — the only shimmer. */}

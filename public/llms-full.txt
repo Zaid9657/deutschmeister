@@ -107,12 +107,12 @@ Das Goethe-Zertifikat B1 besteht aus vier Modulen: Lesen, Hören, Schreiben und 
 ### telc Deutsch B2: Aufbau, Punkte und Vorbereitung
 https://deutsch-meister.de/leitfaden/telc-b2/ (facts checked 2026-08-22; sources: telc gGmbH)
 
-Die telc Deutsch B2 Prüfung besteht aus einem schriftlichen Teil (maximal 225 Punkte) und einer mündlichen Paarprüfung (maximal 75 Punkte). Zum Bestehen brauchst du mindestens 60 % in beiden Teilen getrennt: 135 der 225 Punkte schriftlich und 45 der 75 mündlich. Lesen und Hören bringen zusammen 150 der 225 schriftlichen Punkte, die Sprachbausteine nur 30 — der kleinste Posten der Prüfung.
+Die telc Deutsch B2 Prüfung besteht aus einem schriftlichen Teil (maximal 225 Punkte) und einer mündlichen Paarprüfung (maximal 75 Punkte). Zum Bestehen brauchen Sie mindestens 60 % in beiden Teilen getrennt: 135 der 225 Punkte schriftlich und 45 der 75 mündlich. Lesen und Hören bringen zusammen 150 der 225 schriftlichen Punkte, die Sprachbausteine nur 30 — der kleinste Posten der Prüfung.
 
 ### Deutsch-Test für Zuwanderer (DTZ): Ablauf und Vorbereitung
 https://deutsch-meister.de/leitfaden/dtz/ (facts checked 2026-08-22; sources: BAMF — Integrationskurse, g.a.s.t. / telc — DTZ)
 
-Der Deutsch-Test für Zuwanderer (DTZ) ist skaliert: Er prüft A2 und B1 gleichzeitig und weist für jeden Prüfungsteil einzeln aus, welches Niveau du erreicht hast. Ein Bestehen oder Durchfallen im üblichen Sinn gibt es deshalb nicht. Der schriftliche Teil dauert insgesamt rund 100 Minuten, die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten.
+Der Deutsch-Test für Zuwanderer (DTZ) ist skaliert: Er prüft A2 und B1 gleichzeitig und weist für jeden Prüfungsteil einzeln aus, welches Niveau Sie erreicht haben. Ein Bestehen oder Durchfallen im üblichen Sinn gibt es deshalb nicht. Der schriftliche Teil dauert insgesamt rund 100 Minuten, die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten.
 
 ### Start Deutsch 1 / Goethe-Zertifikat A1: Ablauf, Punkte und Vorbereitung
 https://deutsch-meister.de/leitfaden/start-deutsch-1/ (facts checked 2026-09-03; sources: Goethe-Institut — Start Deutsch 1, Goethe-Institut — Durchführungsbestimmungen A1, Goethe-Institut — Prüfungsziele/Testbeschreibung A1, Goethe-Institut — Wortliste A1, Goethe-Institut — Modellsätze und Übungsmaterial, Bundestag — Drucksache 21/175 (Ehegattennachzug, SD1-Zahlen))
@@ -122,7 +122,7 @@ Start Deutsch 1 ist die A1-Prüfung von Goethe-Institut und telc und besteht aus
 ### Goethe-Zertifikat A2: Ablauf, Punkte und Vorbereitung
 https://deutsch-meister.de/leitfaden/goethe-a2/ (facts checked 2026-09-05; sources: Goethe-Institut — Durchführungsbestimmungen Goethe-Zertifikat A2 (PDF, deutsch), Goethe-Institut — Modellsatz Erwachsene, Goethe-Zertifikat A2 (PDF), Goethe-Institut — Übungssatz 01 Erwachsene, Goethe-Zertifikat A2 (PDF), Goethe-Institut — Wortliste Goethe-Zertifikat A2 (PDF), Goethe-Institut — Weitere Informationen zum Goethe-Zertifikat A2, Hochschulrektorenkonferenz — Sprachnachweis Deutsch für das Studium (DSH-2 / TestDaF), § 25b AufenthG (A2 als mündliche Voraussetzung), gesetze-im-internet.de, § 25a AufenthG (A2 als mündliche Voraussetzung), gesetze-im-internet.de)
 
-Das Goethe-Zertifikat A2 ist die A2-Deutschprüfung des Goethe-Instituts für Erwachsene; empfohlen wird sie ab 16 Jahren, ein Mindestalter gibt es nicht. Sie besteht aus vier Teilen: Lesen (30 Minuten), Hören (ca. 30 Minuten), Schreiben (30 Minuten) und Sprechen (ca. 15 Minuten, als Paarprüfung zu zweit). Jeder Teil zählt 25 Punkte, zusammen also 100. Bestanden ist die Prüfung ab 60 Punkten insgesamt — dabei brauchst du mindestens 45 von 75 Punkten in den drei schriftlichen Teilen und mindestens 15 von 25 Punkten im Sprechen. Wer eine dieser beiden Grenzen verfehlt, hat die gesamte Prüfung nicht bestanden, auch bei 60 Punkten in der Summe.
+Das Goethe-Zertifikat A2 ist die A2-Deutschprüfung des Goethe-Instituts für Erwachsene; empfohlen wird sie ab 16 Jahren, ein Mindestalter gibt es nicht. Sie besteht aus vier Teilen: Lesen (30 Minuten), Hören (ca. 30 Minuten), Schreiben (30 Minuten) und Sprechen (ca. 15 Minuten, als Paarprüfung zu zweit). Jeder Teil zählt 25 Punkte, zusammen also 100. Bestanden ist die Prüfung ab 60 Punkten insgesamt — dabei brauchen Sie mindestens 45 von 75 Punkten in den drei schriftlichen Teilen und mindestens 15 von 25 Punkten im Sprechen. Wer eine dieser beiden Grenzen verfehlt, hat die gesamte Prüfung nicht bestanden, auch bei 60 Punkten in der Summe.
 
 ### Brief schreiben auf B1: der Aufbau, der in jeder Prüfung funktioniert
 https://deutsch-meister.de/leitfaden/brief-schreiben-b1/ (facts checked 2026-08-22; sources: telc gGmbH, Goethe-Institut, BAMF (DTZ))

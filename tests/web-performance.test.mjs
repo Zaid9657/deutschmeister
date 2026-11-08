@@ -113,7 +113,19 @@ test('both heads preload exactly the token fontPreloads, and nothing points at G
   for (const file of pageFiles) {
     const src = readFileSync(file, 'utf8');
     if (!/preloads=\{/.test(src)) continue;
-    assert.match(src, /const preloads = \[\.\.\.signFontPreloads, \.\.\.fontPreloads\.filter/, `${file}: preloads must come from the token lists`);
+    // Pass 2 previews put Fraunces beside Archivo above the fold. Only these
+    // three compositions preload both token lists in full; reference pages
+    // retain their smaller default and unfinished courses keep selective fonts.
+    const previewPages = ['index.astro', 'pricing.astro', 'courses/index.astro'].map((name) => join(pagesDir, name));
+    if (previewPages.includes(file)) {
+      assert.match(src, /<ProductWindow/);
+      assert.match(src, /const preloads = \[\.\.\.signFontPreloads, \.\.\.fontPreloads\];/);
+    } else {
+      assert.match(src, /const preloads = \[\.\.\.signFontPreloads, \.\.\.fontPreloads\.filter/, `${file}: preloads must come from the token lists`);
+    }
+    if (file === join(pagesDir, 'courses/[level].astro')) {
+      assert.match(src, /fontPreloads\.filter\(\(f\) => showSyllabus \|\| f\.includes\('nunito'\)\)/);
+    }
   }
 
   for (const file of ['index.html', 'astro-site/src/layouts/Layout.astro', 'netlify.toml']) {

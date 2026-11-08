@@ -168,7 +168,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative mx-auto flex min-h-screen max-w-6xl items-start justify-center gap-12 bg-paper px-4 pb-12 pt-20 font-body sm:px-6 sm:pt-24 lg:pt-28">
+    <div className="dm-account-shell relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center gap-10 bg-paper px-4 pb-12 pt-20 font-body sm:px-6 sm:pt-24 lg:flex-row lg:items-start lg:pt-28">
       <SEO title="Log In" description="Log in to your DeutschMeister account to continue learning German grammar from A1 to B2." path="/login" />
       <motion.div
         initial={false}
@@ -176,7 +176,7 @@ const LoginPage = () => {
         className="relative w-full max-w-md"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-left mb-6">
           {/* The Meister-Siegel, not a "D" tile: the D was the retired identity, and
               a second mark beside the seal in the nav reads as two products. Logo
               renders a plain <a>, which matters — "/" is served by the Astro build,
@@ -184,7 +184,7 @@ const LoginPage = () => {
               have and lands the user on NotFoundPage. */}
           <div className="hidden sm:block"><Logo size={64} showWordmark={false} className="mb-6" /></div>
           <h1
-            className="hero-line font-display text-dm-hero text-ink mb-2"
+            className="hero-line font-display text-dm-editorial text-ink mb-3"
             style={{ '--d': '120ms' }}
           >
             Welcome Back
