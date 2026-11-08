@@ -4,7 +4,7 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import SectionHeading from '../ui/SectionHeading.jsx';
 import Reveal from '../ui/Reveal.jsx';
-import Aurora from '../ui/Aurora.jsx';
+import PlacementPreview from './PlacementPreview.jsx';
 
 // The front door of the free funnel — the first screen a stranger meets, so it
 // carries the same aurora hero and clay depth as the homepage rather than the
@@ -26,8 +26,8 @@ const STEPS = [
   {
     n: 1,
     icon: PenTool,
-    edge: 'limette',
-    badge: 'bg-accent-limette-wash text-accent-limette-ink',
+    edge: 'siegel',
+    badge: 'bg-siegel-wash text-siegel-deep',
     title: 'Written Test',
     body: '40 multiple choice questions on grammar, vocabulary & reading',
     time: '~12 min',
@@ -35,8 +35,8 @@ const STEPS = [
   {
     n: 2,
     icon: Headphones,
-    edge: 'aprikose',
-    badge: 'bg-accent-aprikose-wash text-accent-aprikose-ink',
+    edge: 'siegel',
+    badge: 'bg-siegel-wash text-siegel-deep',
     title: 'Listening',
     body: 'Audio exercises with comprehension questions at your level',
     time: '~5 min',
@@ -44,8 +44,8 @@ const STEPS = [
   {
     n: 3,
     icon: Mic,
-    edge: 'himbeer',
-    badge: 'bg-accent-himbeer-wash text-accent-himbeer-ink',
+    edge: 'siegel',
+    badge: 'bg-siegel-wash text-siegel-deep',
     title: 'Speaking',
     body: 'Short AI conversation to assess your speaking skills',
     time: '~3 min',
@@ -53,7 +53,7 @@ const STEPS = [
 ];
 
 const BENEFITS = [
-  { icon: Award, title: 'Your CEFR Level', body: 'Precise placement from A1.1 to B2.2' },
+  { icon: Award, title: 'Your CEFR Level', body: 'A suggested starting point from A1.1 to B2.2' },
   { icon: BarChart3, title: 'Skill Breakdown', body: 'See strengths & weaknesses' },
   { icon: Target, title: 'Personalized Path', body: 'Topics to focus on first' },
 ];
@@ -66,7 +66,6 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
     <div className="mx-auto max-w-2xl px-4 pt-6 pb-16 sm:pt-20">
       {/* Hero */}
       <section className="relative -mx-2 overflow-hidden rounded-clay px-2 py-8 sm:-mx-4 sm:px-4 sm:py-12">
-        <Aurora />
         <div className="hero-line relative">
           <SectionHeading
             size="page"
@@ -95,6 +94,8 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
           </div>
         </div>
       </section>
+
+      <PlacementPreview />
 
       {/* At a glance */}
       <Reveal delay={90} className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -173,9 +174,9 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
 
       {/* Pro tip — a caution, named in words as well as colour */}
       <Reveal delay={60} className="mt-8">
-        <Card tone="aprikose" className="flex items-start gap-3 border-l-4 border-l-accent-aprikose p-4">
-          <Lightbulb size={20} className="mt-0.5 flex-shrink-0 text-accent-aprikose-ink" aria-hidden="true" />
-          <div className="text-[0.9375rem] leading-relaxed text-accent-aprikose-ink">
+        <Card tone="sunk" className="flex items-start gap-3 border-l-4 border-l-rule p-4">
+          <Lightbulb size={20} className="mt-0.5 flex-shrink-0 text-graphite" aria-hidden="true" />
+          <div className="text-[0.9375rem] leading-relaxed text-graphite">
             <strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.
           </div>
         </Card>

@@ -1,50 +1,25 @@
 import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
-/**
- * The one button in the app.
- *
- * WHY THIS EXISTS. Before it, the primary CTA was a left-to-right amber-to-rose
- * gradient copy-pasted into twenty-odd files — the retired brand, unreachable
- * by any single edit. (The class name is spelled out nowhere in this file on
- * purpose: Tailwind's scanner does not parse comments, so quoting it here was
- * enough to keep emitting the rule into the built CSS.) v2 ("Playful Depth", design-tokens.js rule 3)
- * makes it PHYSICAL: the face rests on a hard 4px edge (`shadow-raise-*`) and
- * pressing translates it down onto that edge, like a key on a keyboard. The
- * press is a direct response to the pointer, not an animation, so it is not
- * gated behind prefers-reduced-motion.
- *
- * Rules it enforces (src/data/design-tokens.js):
- *   - `siegel` is the only interactive colour (rule 2). The one exception rule
- *     2 itself grants: `celebrate`, for the single moment a completed goal has
- *     earned — never for an ordinary CTA.
- *   - Depth means "you can press this" (rule 3): every solid variant rests
- *     raised and depresses on :active. `ghost` stays flat because it reads as
- *     a link, and links do not extrude.
- *
- * Renders whichever element the props imply:
- *   <Button to="/signup">      → react-router <Link>
- *   <Button href="https://…">  → <a>
- *   <Button onClick={…}>       → <button type="button">
- */
+/** Shared action control. Flat surfaces, explicit borders, and transform-only press feedback. */
 
 const BASE =
   'inline-flex items-center justify-center gap-2 rounded-clay min-h-11 px-5 py-2.5 text-sm font-bold ' +
-  'transition-all duration-100 ease-snap select-none ' +
+  'transition-transform duration-feedback ease-out-strong select-none ' +
   'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:translate-y-0';
 
-const PRESS = 'active:translate-y-1 active:shadow-none';
+const PRESS = 'active:translate-y-px';
 
 const VARIANTS = {
-  primary: `bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift ${PRESS}`,
-  secondary: `border border-rule bg-white text-ink shadow-raise hover:border-siegel hover:text-siegel-deep ${PRESS}`,
+  primary: `border border-transparent bg-siegel text-white hover:bg-siegel-lift ${PRESS}`,
+  secondary: `border border-rule bg-white text-ink hover:border-siegel hover:text-siegel-deep ${PRESS}`,
   ghost: 'text-graphite hover:bg-siegel-wash hover:text-siegel-deep',
-  celebrate: `bg-accent-himbeer text-ink shadow-raise-himbeer hover:brightness-105 ${PRESS}`,
+  celebrate: `bg-siegel text-white hover:brightness-105 ${PRESS}`,
   // "Die Linie" keys (design-tokens.js, the section at the end). Since the v4
   // türkis palette `linie` and `primary` are the same colour family (one action
   // colour again); `ink` stays for the rare dark key.
-  ink: `bg-ink text-white shadow-raise-linie hover:bg-graphite ${PRESS}`,
-  linie: `bg-linie text-linie-ink shadow-raise-linie hover:bg-linie-deep ${PRESS}`,
+  ink: `bg-ink text-white hover:bg-graphite ${PRESS}`,
+  linie: `bg-linie text-linie-ink hover:bg-linie-deep ${PRESS}`,
   // The secondary key on a nacht ground (Layout.astro `dm-key-ghost-nacht`):
   // an outline, flat like `ghost`, whose rule lights up in the line's yellow.
   ghostNacht: 'border-[1.5px] border-nacht-rule bg-transparent text-nacht-text hover:border-linie',
@@ -57,7 +32,7 @@ const VARIANTS = {
 // pill happens to be emitted after clay, so an appended class worked by luck of
 // ordering; the same trap is why `size="sm"` loses its padding to BASE's px-5
 // py-2.5 (checked against dist/ on 2026-10-04).
-const SHAPES = { clay: 'rounded-clay', pill: 'rounded-pill' };
+const SHAPES = { clay: 'rounded-xl', pill: 'rounded-pill' };
 
 const SIZES = {
   sm: 'px-3.5 py-1.5 text-[0.8125rem]',

@@ -23,6 +23,8 @@ import { join } from 'node:path';
 // Counts come from the claims data layer, never retyped here. The ramp that used
 // to live in this file was invented — see rule 2 in src/data/marketing.js.
 import {
+  FOUNDER_LINE_EN,
+  GRAMMAR_TOPIC_COUNT,
   READING_LESSON_COUNT,
   READING_LESSON_COUNTS_BY_LEVEL,
   LEVEL_COUNT,
@@ -35,6 +37,7 @@ import {
 // consume — src/data/seoRoutes.js. The route objects below carry only what is
 // genuinely per-surface: the JSON-LD (deliberately diverged from the client
 // blocks) and the static #root copy.
+import { PLACEMENT_PREVIEW } from '../src/data/placementPreview.js';
 import { SEO_ROUTES, fullTitle } from '../src/data/seoRoutes.js';
 import { ORG_REF, ORGANIZATION_FULL } from '../src/data/organization.js';
 import { FAQ_CATEGORIES, faqPageJsonLd } from '../src/data/faqContent.js';
@@ -319,8 +322,19 @@ const ROUTES = [
   <div class="text-center">
     <div class="${CHIP_LABEL}">Free Assessment</div>
     <h1 class="mt-3 ${H_PAGE}">Discover Your German Level</h1>
-    <p class="mx-auto mt-4 max-w-prose ${LEAD}">Take our comprehensive placement test and get personalized recommendations for your learning journey</p>
+    <p class="mx-auto mt-4 max-w-prose ${LEAD}">Get a suggested starting point for practice, with a breakdown of the skills you tried.</p>
   </div>
+  <div class="mt-8 text-center">
+    <p class="${BTN_PRIMARY}">Start the Test</p>
+    <p class="mt-4 font-data text-[0.75rem] text-graphite">No account required • Results are instant • 100% free</p>
+  </div>
+  <aside class="mt-7 rounded-xl border border-rule bg-white p-5" aria-label="Placement question demonstration" data-placement-preview>
+    <p class="font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">Sample question · from the real test bank</p>
+    <p class="mt-3 font-display text-2xl" lang="de">${PLACEMENT_PREVIEW.question}</p>
+    <ul class="mt-4 flex flex-wrap gap-2" aria-label="Example options">${PLACEMENT_PREVIEW.options.map((option) => `<li class="rounded-lg border border-rule bg-paper px-3 py-2" lang="de">${option}</li>`).join('')}</ul>
+    <details class="mt-4 border-t border-rule pt-3"><summary class="cursor-pointer py-2 font-bold text-siegel-deep">Show the answer and explanation</summary><p class="mt-2 ${SMALL}"><strong lang="de">${PLACEMENT_PREVIEW.answer}</strong> — ${PLACEMENT_PREVIEW.explanation}</p></details>
+    <p class="mt-3 ${SMALL}">Demonstration only. Your test draws its own questions. The suggested level is a starting point for practice, not a certificate.</p>
+  </aside>
   <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
     <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">15-20</span> <span class="block ${EYEBROW} text-graphite">Minutes</span></div></div>
     <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">3</span> <span class="block ${EYEBROW} text-graphite">Sections</span></div></div>
@@ -329,24 +343,21 @@ const ROUTES = [
   <div class="mt-12">
     <h2 class="text-center ${H_SECTION}">How it works</h2>
     <div class="mt-5 flex flex-col gap-3">
-      <div class="rounded-clay border border-rule bg-white p-4 shadow-raise-limette flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.8125rem] font-bold text-accent-limette-ink">1</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Written Test</h3><p class="mt-1 ${SMALL}">40 multiple choice questions on grammar, vocabulary &amp; reading</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~12 min</div></div>
-      <div class="rounded-clay border border-rule bg-white p-4 shadow-raise-aprikose flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-aprikose-wash font-data text-[0.8125rem] font-bold text-accent-aprikose-ink">2</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Listening</h3><p class="mt-1 ${SMALL}">Audio exercises with comprehension questions at your level</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~5 min</div></div>
-      <div class="rounded-clay border border-rule bg-white p-4 shadow-raise-himbeer flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-himbeer-wash font-data text-[0.8125rem] font-bold text-accent-himbeer-ink">3</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Speaking</h3><p class="mt-1 ${SMALL}">Short AI conversation to assess your speaking skills</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~3 min</div></div>
+      <div class="rounded-clay border border-rule bg-white p-4  flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.8125rem] font-bold text-accent-limette-ink">1</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Written Test</h3><p class="mt-1 ${SMALL}">40 multiple choice questions on grammar, vocabulary &amp; reading</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~12 min</div></div>
+      <div class="rounded-clay border border-rule bg-white p-4  flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-aprikose-wash font-data text-[0.8125rem] font-bold text-accent-aprikose-ink">2</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Listening</h3><p class="mt-1 ${SMALL}">Audio exercises with comprehension questions at your level</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~5 min</div></div>
+      <div class="rounded-clay border border-rule bg-white p-4  flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-himbeer-wash font-data text-[0.8125rem] font-bold text-accent-himbeer-ink">3</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Speaking</h3><p class="mt-1 ${SMALL}">Short AI conversation to assess your speaking skills</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~3 min</div></div>
     </div>
   </div>
   <div class="mt-12">
     <h2 class="text-center ${H_SECTION}">What you'll receive</h2>
     <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Your CEFR Level</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">Precise placement from A1.1 to B2.2</span></div></div>
+      <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Your CEFR Level</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">A suggested starting point from A1.1 to B2.2</span></div></div>
       <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Skill Breakdown</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">See strengths &amp; weaknesses</span></div></div>
       <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Personalized Path</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">Topics to focus on first</span></div></div>
     </div>
   </div>
   <div class="mt-8 rounded-clay border border-rule border-l-4 border-l-accent-aprikose bg-accent-aprikose-wash p-4"><div class="text-[0.9375rem] leading-relaxed text-accent-aprikose-ink"><strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.</div></div>
-  <div class="mt-8 text-center">
-    <p class="${BTN_PRIMARY}">Start the Test</p>
-    <p class="mt-4 font-data text-[0.75rem] text-graphite">No account required • Results are instant • 100% free</p>
-  </div>
+
 ${faqSection(LEVEL_TEST_FAQS)}
 </div></div>`,
   },
@@ -555,8 +566,10 @@ ${faqSection(PODCAST_FAQS)}
     <h1 class="${H_HERO}">Frequently asked questions</h1>
     <p class="mx-auto mt-4 max-w-xl ${LEAD}">Clear answers about learning, speaking practice, exams, pricing, and privacy.</p>
   </div>
-  <div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat) => `
-    <section>
+  <nav class="mb-8 flex flex-wrap gap-2" aria-label="Question categories">${FAQ_CATEGORIES.map((cat, i) => `<a href="#faq-category-${i}" class="rounded-pill border border-rule px-4 py-2 text-sm font-bold text-siegel-deep">${cat.title} (${cat.items.length})</a>`).join('')}</nav>
+  <p class="mb-8 ${SMALL}">Choosing a course? <a href="/courses/" class="font-bold text-siegel-deep underline">See the levels and what is available.</a></p>
+  <div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat, catIdx) => `
+    <section id="faq-category-${catIdx}" class="scroll-mt-24">
       <h2 class="${H_SUB}">${cat.title}</h2>
       <div class="mt-5 flex flex-col gap-3">${cat.items.map((item) => `
         <div class="${CARD_FLAT} px-5 py-4">
@@ -596,23 +609,27 @@ ${faqSection(PODCAST_FAQS)}
     ],
     content: `
 <div class="min-h-screen bg-paper">
-  <section class="pt-28 pb-20"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+  <section class="pt-24 pb-10"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
     <h1 class="${H_HERO}">Learning German should not feel like a nightmare.</h1>
-    <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">Many language apps make learning playful but avoid the difficult parts: speaking freely, understanding grammar, and preparing for a real exam. Deutschmeister focuses on those parts.</p>
+    <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">${FOUNDER_LINE_EN}</p>
+    <p class="my-6 flex flex-wrap justify-center gap-3"><a href="/course/a1.1" class="${BTN_PRIMARY}">Start A1.1 free</a><a href="/courses/a1-2/" class="${BTN_PRIMARY}">Inspect the A1.2 course</a></p>
     <ul class="flex list-none flex-wrap justify-center gap-3">
-      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Developed by doctors in Germany</li>
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Built from experience</li>
       <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Built for serious learners</li>
       <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Optional analytics only with consent</li>
     </ul>
   </div></section>
+  <dl class="mx-auto grid max-w-4xl gap-3 px-5 py-8 sm:grid-cols-3" aria-label="Inspect the product">
+    <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${GRAMMAR_TOPIC_COUNT}</dt><dd>Public grammar topics to inspect</dd></div>
+    <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${LEVEL_COUNT}</dt><dd>Practice levels, with guided courses built in order</dd></div>
+    <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${FREE_LEVEL_LABEL}</dt><dd>The free first course · no account needed</dd></div>
+  </dl>
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
     <h2 class="${H_SECTION}">Who is behind Deutschmeister</h2>
     <div class="mt-6 flex flex-col gap-4 ${BODY}">
-      <p>I am Zaid, a doctor living in Germany on an EU Blue Card. I arrived from abroad and worked through the language barrier—through daily life, exams, and conversations where the right words were missing.</p>
-      <p>I watched capable colleagues struggle, not because they lacked professional knowledge, but because their German was not yet strong enough for the medical language exam. That problem stayed with me.</p>
-      <p>I first built MedMeister for doctors preparing for the medical knowledge exam. Then I realised that the same challenge affects many people learning German under pressure: nurses, engineers, students, and families—not only doctors.</p>
-      <p>Today, Deutschmeister is developed by a team of doctors in Germany who have taken the path through German language exams themselves.</p>
-      <p class="font-bold text-ink">Deutschmeister opens that idea to every serious German learner.</p>
+      <p>The learning path begins with the free A1.1 course. A1.2 is the next guided course; later courses follow level by level.</p>
+      <p>Inspect a real task before creating an account. Course demonstrations show their source and distinguish automatic form checks from AI feedback.</p>
+      <p class="font-bold text-ink">DeutschMeister brings that learning path to everyday conversations, work and exams.</p>
     </div>
   </div></section>
   <section class="bg-paper-sunk py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
@@ -628,7 +645,7 @@ ${faqSection(PODCAST_FAQS)}
     <div class="mt-12 grid gap-6 sm:grid-cols-3">
       <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Real speaking, not just clicking</h3><p class="mt-2 ${SMALL}">Practice complete responses and receive AI feedback on grammar, vocabulary and clarity—not only multiple-choice drills.</p></div>
       <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Grammar that makes sense</h3><p class="mt-2 ${SMALL}">Sentence X-Ray breaks down real sentences so you can understand why the language works, not only what the answer is.</p></div>
-      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Built by people who faced the same barrier</h3><p class="mt-2 ${SMALL}">Deutschmeister is developed by a team of doctors in Germany who know what it means when language stands between you and your work or daily life.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Built from experience</h3><p class="mt-2 ${SMALL}">${FOUNDER_LINE_EN}</p></div>
     </div>
   </div></section>
   <section class="bg-ink py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
@@ -638,10 +655,9 @@ ${faqSection(PODCAST_FAQS)}
   <section class="py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
     <h2 class="text-center ${H_SECTION}">What comes next</h2>
     <ul class="mt-8 flex list-none flex-col gap-4">
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">More levels, including C1 and beyond</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Live exam simulations for Goethe and telc</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Specialist modules for nursing and business German</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">A learning community for practising with others</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">More guided courses in level order</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Exam preparation after each complete level</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Clear availability information as each course is ready</li>
     </ul>
   </div></section>
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">

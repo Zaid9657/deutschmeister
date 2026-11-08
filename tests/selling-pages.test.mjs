@@ -72,7 +72,7 @@ test('the recorded homepage correction reproduces actual feedback and a correcte
 
 test('pricing shows both paid choices before the free card in reading and keyboard order', () => {
   const page = read('astro-site/src/pages/pricing.astro');
-  const fork = page.slice(page.indexOf('<ol class="mt-10 grid'), page.indexOf('</ol>'));
+  const fork = page.slice(page.indexOf('<ol class="mt-6 grid'), page.indexOf('</ol>'));
   assert.ok(fork.indexOf('pricing_own') >= 0);
   assert.ok(fork.indexOf('pricing_own') < fork.indexOf('pricing_rent'));
   assert.ok(fork.indexOf('pricing_rent') < fork.indexOf('The first stop'));
@@ -95,7 +95,7 @@ test('mobile signup leads with a short promise and form, with allowances below',
   assert.ok(page.indexOf('Start your {TRIAL_DAYS}-day Pro trial') < form);
   assert.ok(form > 0 && endForm > form && allowances > endForm);
   assert.match(page, /<div className="hidden sm:block"><Logo/, 'the logo link also leaves the mobile tab order');
-  assert.match(page, /<Card raised className="p-5 sm:p-8">/);
+  assert.match(page, /<Card className="p-5 sm:p-8">/);
   assert.match(page, /type="password"|type=\{showPassword \? 'text' : 'password'\}/);
   assert.match(page, /minLength=\{6\}/, 'auth constraints unchanged');
   assert.match(page, /Check your inbox/, 'confirmation remains on-page');

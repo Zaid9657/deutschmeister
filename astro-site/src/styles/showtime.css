@@ -12,7 +12,7 @@
    The text is readable from the first frame and still arrives with the
    stagger. Same rule in src/index.css; tests/web-performance.test.mjs pins it. */
 .hero-line {
-  animation: dmRise 0.7s cubic-bezier(0.2, 1, 0.36, 1) both;
+  animation: dmRise 420ms cubic-bezier(0.23, 1, 0.32, 1) both;
   animation-delay: var(--d, 0ms);
 }
 @keyframes dmRise {
@@ -22,21 +22,12 @@
 .underline-swash path {
   stroke-dasharray: 230;
   stroke-dashoffset: 230;
-  animation: dmDraw 0.7s ease-out 0.9s forwards;
+  animation: dmDraw 800ms ease-out 800ms forwards;
 }
 @keyframes dmDraw { to { stroke-dashoffset: 0; } }
 
 /* Aurora background */
-.aurora-blob {
-  position: absolute;
-  width: 34rem;
-  height: 34rem;
-  border-radius: 9999px;
-  filter: blur(70px);
-  opacity: 0.55;
-  will-change: transform;
-  animation: dmDrift 18s ease-in-out infinite alternate;
-}
+.aurora-blob { display: none; }
 .aurora-a { left: -10%; top: -20%; background: theme('colors.siegel.wash'); }
 .aurora-b { right: -12%; top: -10%; background: theme('colors.accent.himbeer.wash'); animation-delay: -6s; }
 .aurora-c { left: 35%; bottom: -55%; background: theme('colors.accent.aprikose.wash'); animation-delay: -12s; }
@@ -49,11 +40,8 @@
    exists ONLY once JS has stamped html.js — no-JS visitors and crawlers see
    everything; reduced-motion gets the same escape hatch. */
 html.js .reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition:
-    opacity 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms),
-    transform 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms);
+  opacity: 1;
+  transform: none;
 }
 html.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
@@ -63,12 +51,10 @@ html.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
 /* Skip style, layout, and paint work for full homepage sections until they
    approach the viewport. The intrinsic size keeps the scroll range stable. */
 .dm-defer {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 720px;
+  content-visibility: visible;
 }
 .dm-defer-card {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 360px;
+  content-visibility: visible;
 }
 
 /* Marquee */
@@ -92,7 +78,7 @@ html.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
 }
 
 /* Step connector draws in */
-.path-connector path { stroke-dashoffset: 100; transition: stroke-dashoffset 1.4s ease-out 0.3s; }
+.path-connector path { stroke-dashoffset: 100; transition: none; }
 .path-connector.is-visible path { stroke-dashoffset: 0; }
 
 /* Listening equalizer */
@@ -117,4 +103,4 @@ html.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
   from { opacity: 0; transform: scale(0.7) translateY(6px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
-#xr-gloss { transition: opacity 0.3s ease; }
+#xr-gloss { transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1); }

@@ -173,9 +173,9 @@ const SubscriptionSuccessPage = () => {
   return (
     <div className="min-h-screen bg-nacht px-4 pb-16 pt-24 font-body text-nacht-text sm:pb-20 sm:pt-28" data-ground="nacht">
       <SEO title={seoTitle} description="Your DeutschMeister purchase." path="/subscription/success" noindex />
-      <div className="mx-auto w-full max-w-xl">
+      <div className="mx-auto w-full max-w-2xl">
         {loading ? (
-          <Card raised className="p-8 text-center">
+          <Card className="p-6 text-center sm:p-8">
             <Loader2 className="mx-auto mb-4 h-14 w-14 animate-spin text-ink" aria-hidden="true" />
             <h1 className="font-sign text-[1.75rem] font-extrabold leading-tight text-ink [font-stretch:82%]">
               Confirming your payment…
@@ -190,7 +190,7 @@ const SubscriptionSuccessPage = () => {
             </h1>
 
             {/* The ticket: what was bought, what it carries, until when. */}
-            <div className="mt-8 grid overflow-hidden rounded-[1.5rem] border border-ink bg-white text-ink sm:grid-cols-[11rem_1fr]">
+            <div className="mt-8 grid overflow-hidden rounded-xl border border-rule bg-white text-ink sm:grid-cols-[11rem_1fr]">
               <div className="flex flex-col justify-between gap-4 bg-linie p-6 text-linie-ink sm:border-r-[3px] sm:border-dashed sm:border-linie-ink/30">
                 <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">
                   {courseBought || telcBought ? 'Einzelfahrschein' : 'Pro'}
@@ -250,7 +250,7 @@ const SubscriptionSuccessPage = () => {
             </div>
           </>
         ) : (
-          <Card raised className="p-8 text-center">
+          <Card className="p-6 text-center sm:p-8">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-accent-aprikose-wash">
               <AlertCircle className="h-12 w-12 text-accent-aprikose-ink" aria-hidden="true" />
             </div>

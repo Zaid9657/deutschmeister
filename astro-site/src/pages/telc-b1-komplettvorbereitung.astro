@@ -2,6 +2,7 @@
 // Course activities are read from the implemented programme, never a second syllabus.
 // Owner-only release: keep telcPilotVariant() as the sole sale gate. Before opening,
 // the owner must reconcile the catalogue price with checkout and approve the release.
+import ExamTaskPreview from '../components/proof/ExamTaskPreview.astro';
 import Layout from '../layouts/Layout.astro';
 import LanguageNotice from '../components/LanguageNotice.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
@@ -96,6 +97,7 @@ const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
             : 'Keine Kreditkarte · keine automatische Abbuchung. Der Kursplan ist nicht im Pro-Test enthalten.'}
         </p>
       </div>
+    <div class="mx-auto max-w-3xl px-5 pb-8"><ExamTaskPreview examKey="telc_b1" /></div>
     </section>
 
     <div class="mx-auto max-w-5xl px-5">

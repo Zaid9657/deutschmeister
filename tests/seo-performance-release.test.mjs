@@ -33,7 +33,7 @@ test('long grammar source titles receive a compact SEO-only fallback', async () 
   assert.match(topicPage, /replace\(\/\\s\*\\\(\[\^\)\]\*\\\)\/g/);
 });
 
-test('the homepage defers below-fold rendering without blur filters', async () => {
+test('the homepage keeps below-fold sales content visible without blur filters', async () => {
   const [home, motion, showtime] = await Promise.all([
     read('astro-site/src/pages/index.astro'),
     read('astro-site/src/styles/showtime.css'),
@@ -49,8 +49,8 @@ test('the homepage defers below-fold rendering without blur filters', async () =
     .map((f) => read(`astro-site/src/components/linie/${f}`)));
   const deferred = [home, ...parts].reduce((n, src) => n + (src.match(/class="dm-defer/g) ?? []).length, 0);
   assert.ok(deferred >= 5, `homepage defers ${deferred} below-fold sections`);
-  assert.match(motion, /content-visibility:\s*auto/);
-  assert.match(motion, /contain-intrinsic-size:\s*auto 720px/);
+  assert.match(motion, /content-visibility:\s*visible/);
+  assert.doesNotMatch(motion, /contain-intrinsic-size:/);
   assert.doesNotMatch(motion, /filter:\s*blur\((4|5)px\)/);
   assert.doesNotMatch(home, /class="hero-line/);
   assert.match(showtime, /\(hover: hover\) and \(pointer: fine\)/);

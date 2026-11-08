@@ -6,6 +6,8 @@ import { Play, X } from 'lucide-react';
 const DISMISS_KEY = 'dm_intro_dismissed';
 const DISMISS_DAYS = 7;
 const SUPPRESSED_ROUTES = [
+  '/faq',
+  '/ueber-uns',
   '/intro',
   '/signup',
   '/login',
@@ -75,13 +77,13 @@ const FloatingIntroButton = () => {
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
           className="fixed bottom-24 left-4 z-50 sm:bottom-6 sm:left-6"
         >
           <div className="relative">
             <button
               onClick={handleClick}
-              className="flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-pill bg-siegel text-white font-bold shadow-raise-siegel hover:bg-siegel-lift transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none"
+              className="flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-pill bg-siegel text-white font-bold hover:bg-siegel-lift transition-transform duration-feedback ease-out-strong active:translate-y-1 active:shadow-none"
             >
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Play size={16} className="ml-0.5" fill="white" />

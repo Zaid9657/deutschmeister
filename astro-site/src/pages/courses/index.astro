@@ -7,7 +7,6 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
 import CourseCheckout from '../../components/CourseCheckout.astro';
-import LineSection from '../../components/linie/LineSection.astro';
 import StationArt from '../../components/linie/StationArt.astro';
 import { fontPreloads, signFontPreloads } from '../../data/design-tokens.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
@@ -52,31 +51,33 @@ const jsonLd = {
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
     <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
-      <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Courses · A1.1 → B2.2</p>
         <h1 id="hero-h" class="sign-display mt-4 text-[clamp(2.5rem,9vw,5rem)]">
           <span class="block whitespace-nowrap">One level.</span>
-          <span class="block whitespace-nowrap">One payment.</span>
-          <span class="block whitespace-nowrap text-linie">Yours for good.</span>
+          <span class="inline whitespace-nowrap">One payment. </span>
+          <span class="inline text-linie">Yours for good.</span>
         </h1>
         <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
-          Each sub-level is a complete course: grammar with typed practice, reading texts with checks, listening with
-          dictation, the vocabulary list, a final test in the exam format and a 28-day plan. {FREE_LEVEL_LABEL} is free.
+          Start with {FREE_LEVEL_LABEL}, free. A1.2 is the next guided course. Later levels have practice materials; complete guided courses follow in order. Exam preparation comes at the end of each full level.
           Not sure where you stand? The <a href="/level-test/" class="dm-link-nacht font-semibold">level test is free</a> and takes about 20 minutes.
         </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href="/course/a1.1" class="dm-key dm-key-siegel">Start A1.1 free</a>
+          <a href="/courses/a1-2/" class="dm-key dm-key-ghost-nacht">Explore A1.2 →</a>
+        </div>
       </div>
     </section>
 
-    <LineSection />
 
-    <section class="mx-auto max-w-5xl px-5 pb-20 pt-16" aria-labelledby="inside-h">
-      <h2 id="inside-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">What each stop contains</h2>
+    <section class="mx-auto max-w-5xl px-5 pb-20 pt-8" aria-labelledby="inside-h">
+      <h2 id="inside-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Choose your next level</h2>
       <ol class="mt-8 grid gap-5 sm:grid-cols-2">
-        {rungs.map((r, i) => (
-          <li class="reveal" style={`--rd:${i * 70}ms`}>
-            <article class={`relative flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise ${r.course?.comingSoon ? 'opacity-85' : ''}`}>
+        {rungs.filter((r) => r.showSyllabus).map((r, i) => (
+          <li class="" style={`--rd:${i * 70}ms`}>
+            <article class={`relative flex h-full flex-col rounded-clay border border-rule bg-white p-6 ${r.course?.comingSoon ? 'opacity-85' : ''}`}>
               {r.course?.comingSoon && (
-                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">Coming soon</span>
+                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Coming soon</span>
               )}
               {!r.course && (
                 <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
@@ -101,7 +102,7 @@ const jsonLd = {
                 <a href={`/courses/${r.slug}/`} class="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">What's inside →</a>
               </div>
               {r.showSyllabus && (
-                <a href={`/courses/${r.slug}/#lehrplan-h`} class="mt-2 text-xs font-bold text-siegel transition-colors hover:text-siegel-deep">Lehrplan mit 12 Lektionen ansehen →</a>
+                <a href={`/courses/${r.slug}/#lehrplan-h`} class="mt-2 text-xs font-bold text-siegel transition-colors hover:text-siegel-deep">View the lesson plan →</a>
               )}
               <div data-course-door={r.level} data-course-code={r.code} data-course-open-class={`${BTN_PRIMARY} mt-4 w-full`}>
               {r.course ? (
@@ -118,6 +119,16 @@ const jsonLd = {
           </li>
         ))}
       </ol>
+
+      <section class="mt-10 border-t border-rule pt-8" aria-labelledby="next-levels-h">
+        <h2 id="next-levels-h" class="sign-head text-2xl">Next on the line</h2>
+        <p class="mt-3 max-w-2xl text-graphite">These levels have practice libraries. Their complete guided courses are still being built; a library is not a finished course.</p>
+        <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+          {rungs.filter((r) => !r.showSyllabus).map((r) => (
+            <li><a class="flex items-center justify-between gap-4 rounded-xl border border-rule p-4 dm-link" href={`/courses/${r.slug}/`}><strong>{r.code}</strong><span>Explore materials and availability →</span></a></li>
+          ))}
+        </ul>
+      </section>
 
       <p class="mt-10 border-t border-rule pt-6 text-[0.9375rem] leading-relaxed text-graphite" style="--rd:200ms">
         Every paid course includes {COURSE_PRO_MONTHS} months of Pro (AI speaking coach, writing feedback,

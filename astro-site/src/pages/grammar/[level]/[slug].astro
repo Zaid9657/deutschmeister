@@ -3,7 +3,6 @@ import Layout from '../../../layouts/Layout.astro';
 import ExercisePlayer from '../../../components/ExercisePlayer.jsx';
 import RuleContent from '../../../components/RuleContent.astro';
 import RichText from '../../../components/RichText.astro';
-import Aurora from '../../../components/Aurora.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
@@ -202,18 +201,18 @@ if (seoExtra?.faqs?.length) {
 // the lesson — rules, tables, examples — is reference material and stays FLAT
 // (hairline `border-rule`, no shadow); only things you can press are raised.
 // The level code is data → `label` chip, never a level colour (rule 1).
-const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]';
+const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
 const LEVEL_CHIP =
   'rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
-const CARD_FLAT = 'rounded-clay border border-rule bg-white';
+const CARD_FLAT = 'rounded-xl border border-rule bg-white';
 const CARD_INTERACTIVE =
-  'rounded-clay border border-rule bg-white shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none';
+  'rounded-xl border border-rule bg-white transition-transform duration-feedback ease-out-strong active:translate-y-px active:shadow-none';
 const BTN_PRIMARY =
-  'btn-shimmer relative inline-flex select-none items-center justify-center gap-2 overflow-hidden rounded-clay bg-siegel px-7 py-3.5 text-base font-bold text-white shadow-raise-siegel transition-all duration-100 ease-snap hover:bg-siegel-lift active:translate-y-1 active:shadow-none';
+  'btn-shimmer relative inline-flex select-none items-center justify-center gap-2 overflow-hidden rounded-xl bg-siegel px-7 py-3.5 text-base font-bold text-white transition-transform duration-feedback ease-out-strong hover:bg-siegel-lift active:translate-y-px active:shadow-none';
 const BTN_LEARNING =
-  'inline-flex min-h-11 select-none items-center justify-center rounded-clay bg-ink px-5 py-3 text-sm font-bold text-paper shadow-raise transition-all duration-100 ease-snap hover:bg-siegel-deep active:translate-y-1 active:shadow-none';
+  'inline-flex min-h-11 select-none items-center justify-center rounded-xl bg-ink px-5 py-3 text-sm font-bold text-paper transition-transform duration-feedback ease-out-strong hover:bg-siegel-deep active:translate-y-px active:shadow-none';
 const BTN_SECONDARY =
-  'inline-flex min-h-11 select-none items-center justify-center rounded-clay border border-rule bg-white px-5 py-3 text-sm font-bold text-ink shadow-raise transition-all duration-100 ease-snap hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none';
+  'inline-flex min-h-11 select-none items-center justify-center rounded-xl border border-rule bg-white px-5 py-3 text-sm font-bold text-ink transition-transform duration-feedback ease-out-strong hover:border-siegel hover:text-siegel-deep active:translate-y-px active:shadow-none';
 const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
 
 // The signup doors carry the lesson with them (src/lib/onsiteLinks.js): a
@@ -253,7 +252,6 @@ const courseOffer = station?.status === 'ticket'
 
     <!-- ═══ Lesson header ═══ -->
     <header class="relative">
-      <Aurora />
       <div class="relative mx-auto max-w-3xl px-5 pt-10 pb-8 sm:pt-14">
         <!-- Breadcrumb -->
         <nav class="mb-8 flex flex-wrap items-center gap-2 font-data text-[0.8125rem] text-graphite" aria-label="Breadcrumb">
@@ -285,18 +283,17 @@ const courseOffer = station?.status === 'ticket'
           </p>
         )}
 
-        {topic?.description_en && (
-          <p class="mt-5 border-l-4 border-siegel pl-4 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
-            {topic.description_en}
-          </p>
-        )}
+        <nav class="mt-5 flex flex-wrap gap-3" aria-label="Use this lesson">
+          <a href="#practice" class="dm-key dm-key-siegel">Practise this topic</a>
+          <a href={xrayHref} class="dm-key dm-key-ghost">Explore a sentence in X-Ray</a>
+        </nav>
       </div>
     </header>
 
     <div class="mx-auto max-w-3xl px-5 pb-10">
 
     <!-- Concise orientation before the long-form lesson. -->
-    <section id="summary" class="reveal scroll-mt-24 rounded-clay border border-rule bg-white p-5 sm:p-6" aria-labelledby="summary-h">
+    <section id="summary" class="reveal scroll-mt-24 rounded-xl border border-rule bg-white p-5 sm:p-6" aria-labelledby="summary-h">
       <p class={`${CALLOUT_LABEL} text-siegel`}>Lesson at a glance</p>
       <h2 id="summary-h" class="sr-only">Summary</h2>
       <p class="mt-2 text-[1rem] leading-relaxed text-ink">{quickSummary}</p>
@@ -582,7 +579,7 @@ const courseOffer = station?.status === 'ticket'
     <section class="dm-defer mb-12">
       <!-- Score recap (revealed once the exercises are completed; the script adds
            the limette pass tone or the aprikose "keep going" tone — never colour alone) -->
-      <div id="momentum-score" class="mb-4 hidden rounded-clay border border-rule bg-paper-sunk px-5 py-4 text-center">
+      <div id="momentum-score" class="mb-4 hidden rounded-xl border border-rule bg-paper-sunk px-5 py-4 text-center">
         <p class="text-sm font-semibold">
           You got <span id="momentum-score-val" class="font-data font-bold"></span> on this topic's exercises.
         </p>
@@ -610,7 +607,7 @@ const courseOffer = station?.status === 'ticket'
                       {(LEVEL_META[nextGlobal.sub_level] ?? meta).label}
                     </span>
                   </div>
-                  <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-pill bg-siegel text-xl text-white shadow-raise-siegel transition-all group-hover:bg-siegel-lift group-hover:translate-x-0.5" data-atropos-offset="9" aria-hidden="true">
+                  <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-pill bg-siegel text-xl text-white transition-transform duration-control group-hover:bg-siegel-lift group-hover:translate-x-0.5" data-atropos-offset="9" aria-hidden="true">
                     →
                   </span>
                 </div>
@@ -619,7 +616,7 @@ const courseOffer = station?.status === 'ticket'
           </div>
         </div>
       ) : (
-        <div class="reveal rounded-clay border border-rule bg-accent-limette-wash p-6 text-center">
+        <div class="reveal rounded-xl border border-rule bg-accent-limette-wash p-6 text-center">
           <p class="font-display text-xl font-semibold text-ink">🏆 That's the last topic — you've reached the end of the path.</p>
           <p class="mt-1 text-sm text-graphite">Revisit any topic to keep it sharp.</p>
         </div>
@@ -651,8 +648,7 @@ const courseOffer = station?.status === 'ticket'
     )}
 
     <!-- Upgrade CTA — the page's promotional shimmer action -->
-    <section class="dm-defer reveal relative mb-12 overflow-hidden rounded-clay border border-rule bg-paper-sunk p-6 text-center sm:p-8">
-      <Aurora variant="close" />
+    <section class="dm-defer reveal relative mb-12 overflow-hidden rounded-xl border border-rule bg-paper-sunk p-6 text-center sm:p-8">
       <div class="relative">
         <p class="font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[1.75rem]">
           Grammar is just the beginning

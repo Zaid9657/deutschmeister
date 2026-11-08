@@ -1,0 +1,12 @@
+---
+import { examTask } from '../../data/productProof.js';
+const { examKey } = Astro.props;
+const task = examTask(examKey);
+---
+{task && <aside class="mt-6 rounded-xl border border-rule bg-white p-5" aria-label="Beispielaufgabe Schreiben" data-exam-task={task.taskKey}>
+  <p class="font-data text-xs uppercase tracking-widest text-siegel-deep">Beispiel · eigene Übungsaufgabe</p>
+  <h2 class="mt-2 font-display text-xl">{task.title}</h2>
+  <p class="mt-3 text-sm leading-relaxed">{task.task}</p>
+  <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-graphite">{task.leitpunkte.map((point) => <li>{point}</li>)}</ul>
+  <p class="mt-3 text-xs text-graphite">Keine offizielle Prüfungsaufgabe. KI-Rückmeldungen im Training dienen der Orientierung; hier wird keine Bewertung eines Lernenden gezeigt.</p>
+</aside>}

@@ -548,7 +548,7 @@ const authAttrs = (item) =>
           var sitePath = function (p) { return typeof p === 'string' && /^\/(?![\/\\])/.test(p) ? p : null; };
           var home = sitePath(ctx.homeHref) || '/course/' + ctx.level;
           var returnTo = sitePath(ctx.returnTo);
-          var KEY = 'background:var(--dm-siegel);color:white;font-weight:700;font-size:.875rem;padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;box-shadow:0 4px 0 0 var(--dm-siegel-edge);white-space:nowrap';
+          var KEY = 'background:var(--dm-siegel);color:white;font-weight:700;font-size:.875rem;padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;border:1px solid transparent;white-space:nowrap';
           var action = returnTo
             ? '<a href="' + esc(returnTo) + '" style="' + KEY + '">' + esc(ctx.returnLabel || 'Zurück zur Lektion') + ' &#8594;</a>'
             : '<a href="/course/' + esc(ctx.level) + '/' + encodeURIComponent(ctx.itemId) + '?done=1" style="' + KEY + '">&#10003; Done &#8594; next</a>';

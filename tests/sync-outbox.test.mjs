@@ -211,7 +211,7 @@ test('storage that refuses the write does not lose the run: it is still sent, an
 
 test('a run finished while another flush is running is sent before its caller hears "synced"', async () => {
   reset();
-  enqueueRun(run({ lektionId: 'a1.1-l01', createdAt: '2026-10-07T10:00:00.000Z' }));
+  enqueueRun(run({ lektionId: 'a1.1-l01', createdAt: STAMP }));
   let release;
   const gate = new Promise((r) => { release = r; });
   const sent = [];
@@ -221,7 +221,7 @@ test('a run finished while another flush is running is sent before its caller he
     seedCards: async () => true,
   };
   const first = flushOutbox('u1', deps);
-  enqueueRun(run({ lektionId: 'a1.1-l02', createdAt: '2026-10-07T10:05:00.000Z' }));
+  enqueueRun(run({ lektionId: 'a1.1-l02', createdAt: new Date(Date.parse(STAMP) + 1000).toISOString() }));
   const second = flushOutbox('u1', deps);
   release();
   const [a, b] = await Promise.all([first, second]);

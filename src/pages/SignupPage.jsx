@@ -15,7 +15,7 @@ import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
-import Aurora from '../components/ui/Aurora.jsx';
+import AccountPreview from '../components/ui/AccountPreview.jsx';
 import Logo from '../components/Logo';
 import {
   FREE_LEVEL_LABEL,
@@ -230,11 +230,10 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-start justify-center bg-paper px-4 pb-12 pt-20 sm:items-center sm:pt-24 font-body">
+    <div className="relative mx-auto flex min-h-screen max-w-6xl items-start justify-center gap-12 bg-paper px-4 pb-12 pt-20 font-body sm:px-6 sm:pt-24 lg:pt-28">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
-      <Aurora />
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         className="relative w-full max-w-md"
       >
@@ -256,7 +255,7 @@ const SignupPage = () => {
               have and lands the user on NotFoundPage. */}
           <div className="hidden sm:block"><Logo size={64} showWordmark={false} className="mb-6" /></div>
           <h1
-            className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
+            className="hero-line font-display text-dm-hero text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
             Start your {TRIAL_DAYS}-day Pro trial
@@ -267,7 +266,7 @@ const SignupPage = () => {
         </div>
 
         {/* Form */}
-        <Card raised className="p-5 sm:p-8">
+        <Card className="p-5 sm:p-8">
           {placedLevel && (
             <p className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-sm leading-relaxed text-ink">
               Your level test result, <span className="font-bold">{placedLevel}</span>, is saved to your
@@ -488,6 +487,7 @@ const SignupPage = () => {
           </p>
         </section>
       </motion.div>
+      <AccountPreview />
     </div>
   );
 };

@@ -159,7 +159,7 @@ const LevelTestResults = ({
             <Trophy size={34} />
           </span>
           <h1 className="mt-4 font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[1.75rem]">
-            Your German Level
+            Your suggested German level
           </h1>
         </div>
       </section>
@@ -203,6 +203,105 @@ const LevelTestResults = ({
       )}
 
       {/* Section Summary — reference rows, flat */}
+      {/* Recommendations */}
+      <Reveal delay={140} className="mt-6">
+        <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Choose your next step</h2>
+        <div className="mt-3 flex flex-col gap-3">
+          {placedTicket && (
+            <Card raised edge="siegel" className="p-4" data-placement-station={station.level}>
+              <Link to={placedTicket.to} className="flex items-center gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
+                  <BookOpen className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[0.9375rem] font-bold text-ink">{placedTicket.label}</span>
+                  <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{placedTicket.detail}</span>
+                </span>
+              </Link>
+              <a href={placedTicket.ticketHref} className="mt-3 block text-sm font-bold text-siegel transition-colors hover:text-siegel-deep sm:ml-[3.75rem]">
+                {placedTicket.ticketLine} →
+              </a>
+            </Card>
+          )}
+
+          {proHref && (
+            <Card interactive as="a" href={proHref} className="flex items-center gap-4 p-4" data-placement-pro>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
+                <Crown className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">{EXAM_ROUTE.title}</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{EXAM_ROUTE.body}</span>
+              </span>
+            </Card>
+          )}
+
+          <Card interactive as={Link} to={courseHref} className="flex items-center gap-4 p-4" data-placement-course>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
+              <BookOpen className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[0.9375rem] font-bold text-ink">{courseLabel}</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{courseDetail}</span>
+            </span>
+          </Card>
+
+          <details className="rounded-xl border border-rule bg-white p-4">
+            <summary className="cursor-pointer py-2 font-bold text-siegel-deep">Other ways to practise</summary>
+            <div className="mt-3 space-y-3">
+          <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
+            <span className="text-2xl" aria-hidden="true">🗣️</span>
+            <span className="min-w-0">
+              <span className="block text-[0.9375rem] font-bold text-ink">Practice Speaking with AI</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">
+                Have a real conversation at your {finalSublevel} level, then get feedback on grammar, vocabulary and how clearly you got your meaning across.
+              </span>
+            </span>
+          </Card>
+
+          <Card interactive as="a" href={`/grammar/${finalSublevel.toLowerCase()}/`} className="flex items-center gap-4 p-4">
+            <span className="text-2xl" aria-hidden="true">📚</span>
+            <span className="min-w-0">
+              <span className="block text-[0.9375rem] font-bold text-ink">Start {finalSublevel} Grammar</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Begin with grammar topics at your level</span>
+            </span>
+          </Card>
+
+          {listeningScore != null && listeningScore < 70 && (
+            <Card interactive as={Link} to="/listening/" className="flex items-center gap-4 p-4">
+              <span className="text-2xl" aria-hidden="true">🎧</span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">Practice Listening</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Improve your comprehension skills</span>
+              </span>
+            </Card>
+          )}
+
+          {speakingPercentage != null && speakingPercentage < 70 && (
+            <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
+              <span className="text-2xl" aria-hidden="true">🗣️</span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">More Speaking Practice</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Build confidence with AI conversations</span>
+              </span>
+            </Card>
+          )}
+
+          {topWeakTopics[0] && (
+            <Card interactive as="a" href={topWeakTopics[0].url} className="flex items-center gap-4 p-4">
+              <span className="text-2xl" aria-hidden="true">🎯</span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">Review {topWeakTopics[0].topic}</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Strengthen your weakest area</span>
+              </span>
+            </Card>
+          )}
+            </div>
+          </details>
+        </div>
+      </Reveal>
+
+
       <Reveal delay={180} className="mt-8">
         <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Test Summary</h2>
         <Card className="mt-3 overflow-hidden">
@@ -369,7 +468,7 @@ const LevelTestResults = ({
               <a
                 key={index}
                 href={topic.url}
-                className="inline-flex items-center rounded-pill bg-accent-aprikose-wash px-3.5 py-1.5 text-sm font-bold text-accent-aprikose-ink shadow-raise-aprikose transition-all duration-100 ease-snap select-none active:translate-y-1 active:shadow-none"
+                className="inline-flex items-center rounded-pill bg-accent-aprikose-wash px-3.5 py-1.5 text-sm font-bold text-accent-aprikose-ink shadow-raise-aprikose transition-transform duration-feedback ease-out-strong select-none active:translate-y-1 active:shadow-none"
               >
                 {topic.topic}
               </a>
@@ -377,99 +476,6 @@ const LevelTestResults = ({
           </div>
         </Reveal>
       )}
-
-      {/* Recommendations */}
-      <Reveal delay={380} className="mt-8">
-        <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Recommended Next Steps</h2>
-        <div className="mt-3 flex flex-col gap-3">
-          {placedTicket && (
-            <Card raised edge="siegel" className="p-4" data-placement-station={station.level}>
-              <Link to={placedTicket.to} className="flex items-center gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
-                  <BookOpen className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[0.9375rem] font-bold text-ink">{placedTicket.label}</span>
-                  <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{placedTicket.detail}</span>
-                </span>
-              </Link>
-              <a href={placedTicket.ticketHref} className="mt-3 block text-sm font-bold text-siegel transition-colors hover:text-siegel-deep sm:ml-[3.75rem]">
-                {placedTicket.ticketLine} →
-              </a>
-            </Card>
-          )}
-
-          {proHref && (
-            <Card interactive as="a" href={proHref} className="flex items-center gap-4 p-4" data-placement-pro>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
-                <Crown className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-[0.9375rem] font-bold text-ink">{EXAM_ROUTE.title}</span>
-                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{EXAM_ROUTE.body}</span>
-              </span>
-            </Card>
-          )}
-
-          <Card interactive as={Link} to={courseHref} className="flex items-center gap-4 p-4" data-placement-course>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
-              <BookOpen className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[0.9375rem] font-bold text-ink">{courseLabel}</span>
-              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{courseDetail}</span>
-            </span>
-          </Card>
-
-          <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
-            <span className="text-2xl" aria-hidden="true">🗣️</span>
-            <span className="min-w-0">
-              <span className="block text-[0.9375rem] font-bold text-ink">Practice Speaking with AI</span>
-              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">
-                Have a real conversation at your {finalSublevel} level, then get feedback on grammar, vocabulary and how clearly you got your meaning across.
-              </span>
-            </span>
-          </Card>
-
-          <Card interactive as="a" href={`/grammar/${finalSublevel.toLowerCase()}/`} className="flex items-center gap-4 p-4">
-            <span className="text-2xl" aria-hidden="true">📚</span>
-            <span className="min-w-0">
-              <span className="block text-[0.9375rem] font-bold text-ink">Start {finalSublevel} Grammar</span>
-              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Begin with grammar topics at your level</span>
-            </span>
-          </Card>
-
-          {listeningScore != null && listeningScore < 70 && (
-            <Card interactive as={Link} to="/listening/" className="flex items-center gap-4 p-4">
-              <span className="text-2xl" aria-hidden="true">🎧</span>
-              <span className="min-w-0">
-                <span className="block text-[0.9375rem] font-bold text-ink">Practice Listening</span>
-                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Improve your comprehension skills</span>
-              </span>
-            </Card>
-          )}
-
-          {speakingPercentage != null && speakingPercentage < 70 && (
-            <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
-              <span className="text-2xl" aria-hidden="true">🗣️</span>
-              <span className="min-w-0">
-                <span className="block text-[0.9375rem] font-bold text-ink">More Speaking Practice</span>
-                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Build confidence with AI conversations</span>
-              </span>
-            </Card>
-          )}
-
-          {topWeakTopics[0] && (
-            <Card interactive as="a" href={topWeakTopics[0].url} className="flex items-center gap-4 p-4">
-              <span className="text-2xl" aria-hidden="true">🎯</span>
-              <span className="min-w-0">
-                <span className="block text-[0.9375rem] font-bold text-ink">Review {topWeakTopics[0].topic}</span>
-                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Strengthen your weakest area</span>
-              </span>
-            </Card>
-          )}
-        </div>
-      </Reveal>
 
       {/* Actions — the primary CTA lands the learner in their actual first
           lesson, not a hub. 85% of signups never opened a lesson while this

@@ -7,15 +7,10 @@
 // Both tailwind configs import this file, so a token added here reaches every
 // surface on both sides.
 //
-// WHERE THIS CAME FROM. v1 (2026-08) unified four unrelated colour stories
-// into one flat, hairline-ruled system. v2 (2026-09, the "Playful Depth"
-// renovation, docs/design-renovation-2026-09-01.md) keeps that system's colour
-// discipline and rebuilds its PHYSICALITY: the site read as a beautiful
-// reference book, and the person it serves — someone with an exam date and
-// visa/job stakes — needs it to feel like a coach, not a card catalogue.
-// Buttons are now chunky and physically press down, cards are soft extruded
-// clay, progress celebrates. The depth grammar lives here so it stays one
-// grammar.
+// Current contract (2026-11-08): paper and turquoise, hairline surfaces, no
+// resting shadows. Legacy aliases below preserve callers without preserving
+// extrusions. Commerce uses Archivo, editorial uses Fraunces. Motion tiers
+// are 140/220/420/800 ms; only transform, opacity and clip-path animate.
 //
 // ---------------------------------------------------------------------------
 // THE THREE RULES. These are load-bearing, not taste. Breaking one makes the
@@ -41,15 +36,9 @@
 //    candy-coloured CTA is out of system (exception: one celebration moment
 //    may use `himbeer`, because a completed goal has earned it).
 //
-// 3. DEPTH MEANS "YOU CAN PRESS THIS". v1 said "no resting shadows" and it
-//    made the site honest but inert; v2 overturns it DELIBERATELY. The new
-//    rule: elevation is an affordance. Interactive things (buttons, clickable
-//    cards) rest raised — a hard bottom edge plus a soft ambient shadow, like
-//    a key on a keyboard — and physically depress when pressed. Reference
-//    material (tables, prose, rules of grammar) stays FLAT: hairlines and
-//    aligned columns, the declension table's native form. A shadow on
-//    something that cannot be pressed is a lie; a flat button is a missed
-//    invitation. Both are bugs now.
+// 3. HAIRLINES, NOT RESTING SHADOWS. Reference and interactive surfaces are
+//    flat; borders, focus rings and a small press translation show affordance.
+//    Overlay shadows are reserved for floating menus and dialogs.
 //
 // Type note: the display face is Fraunces (optical-size axis, enough spine for
 // long German compounds); the data face is a system mono stack for level codes
@@ -279,7 +268,8 @@ export const layout = { maxWidth: '68rem', prose: '38rem', gutter: '1.25rem' };
 export const radius = { none: '0', sm: '0.375rem', md: '0.625rem', lg: '1rem', clay: '1.25rem', pill: '999px' };
 
 /**
- * Rule 3: depth is an affordance. The raised states pair a HARD bottom edge
+ * Legacy aliases are kept for existing consumers; resting surfaces are flat.
+ * Historical rule: depth is an affordance. The raised states pair a HARD bottom edge
  * (the extrusion — reads as "this has a side, you can push it") with a SOFT
  * ambient shadow (reads as "it floats a little"). Pressing removes the edge
  * and translates the face down by the same distance — the press travel below
@@ -295,12 +285,12 @@ export const depth = {
 
 /** Shadows. hover/overlay are v1's lift pair; raise/raiseLg are v2's resting extrusions. */
 export const shadow = {
-  raise: `0 4px 0 0 ${color.edge}, 0 10px 22px -12px rgba(20, 32, 29, 0.16)`,
-  raiseLg: `0 6px 0 0 ${color.edge}, 0 20px 44px -18px rgba(20, 32, 29, 0.2)`,
-  raiseSiegel: `0 4px 0 0 ${color.siegelEdge}`,
-  raiseHimbeer: `0 4px 0 0 ${accent.himbeer.edge}`,
-  raiseAprikose: `0 4px 0 0 ${accent.aprikose.edge}`,
-  raiseLimette: `0 4px 0 0 ${accent.limette.edge}`,
+  raise: 'none',
+  raiseLg: 'none',
+  raiseSiegel: 'none',
+  raiseHimbeer: 'none',
+  raiseAprikose: 'none',
+  raiseLimette: 'none',
   hover: '0 6px 20px -8px rgba(20, 32, 29, 0.18)',
   overlay: '0 16px 48px -12px rgba(20, 32, 29, 0.26)',
 };
@@ -314,7 +304,7 @@ export const shadow = {
 export const motion = {
   spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)', // overshoots: pops, badges, cards arriving
   snap: 'cubic-bezier(0.2, 0, 0, 1)', // decisive settle: presses, toggles
-  duration: { press: '90ms', pop: '260ms', enter: '420ms' },
+  duration: { press: '140ms', pop: '220ms', enter: '420ms' },
 };
 
 /**
@@ -344,7 +334,7 @@ export const tailwindColors = {
 
 /** Both configs spread this into theme.extend.boxShadow. */
 export const tailwindBoxShadow = {
-  raise: shadow.raise,
+  raise: 'none',
   'raise-lg': shadow.raiseLg,
   'raise-siegel': shadow.raiseSiegel,
   'raise-himbeer': shadow.raiseHimbeer,
@@ -504,9 +494,9 @@ export const tailwindLinieColors = {
 
 /** Spread into both tailwind configs' boxShadow: the linie key's extrusion and the ticket's lift. */
 export const tailwindLinieShadow = {
-  'raise-linie': `0 4px 0 0 ${linie.edge}`,
-  'raise-nacht': `0 4px 0 0 ${nacht.sunk}`,
-  ticket: `0 2px 0 0 ${color.edge}, 0 30px 60px -30px rgba(14, 21, 19, 0.45)`,
+  'raise-linie': 'none',
+  'raise-nacht': 'none',
+  ticket: 'none',
 };
 
 /** Spread into both tailwind configs: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. */
@@ -518,3 +508,21 @@ export const tailwindLinieEasing = {
 
 /** Spread into both tailwind configs' transitionDuration: `duration-feedback` … `duration-signature`. */
 export const tailwindLinieDuration = { ...motionLinie.duration };
+
+/** Legacy course aliases, retained for existing exercise surfaces only. */
+export const legacyLevelColors = {
+'a1-1': { primary: '#F4B99A', secondary: '#D9A8B4', accent: '#41B3A3', background: '#FDF8F5', surface: '#FFFFFF', text: '#2D3436', muted: '#636E72' },
+'a1-2': { primary: '#E8A87C', secondary: '#C38D9E', accent: '#41B3A3', background: '#FDF6F0', surface: '#FFFFFF', text: '#2D3436', muted: '#636E72' },
+'a2-1': { primary: '#7BAF8E', secondary: '#A8D4AC', accent: '#D4A574', background: '#F7FAF8', surface: '#FFFFFF', text: '#1E3A2F', muted: '#4A6B5D' },
+'a2-2': { primary: '#5B8A72', secondary: '#8FB996', accent: '#D4A574', background: '#F5F9F6', surface: '#FFFFFF', text: '#1E3A2F', muted: '#4A6B5D' },
+'b1-1': { primary: '#5A7A9A', secondary: '#B0D4E8', accent: '#EE6C4D', background: '#F2F6F9', surface: '#FFFFFF', text: '#1B2838', muted: '#5C7A99' },
+'b1-2': { primary: '#3D5A80', secondary: '#98C1D9', accent: '#EE6C4D', background: '#F0F4F8', surface: '#FFFFFF', text: '#1B2838', muted: '#5C7A99' },
+'b2-1': { primary: '#8A7AAF', secondary: '#BDB0D9', accent: '#E8B4BC', background: '#F9F7FB', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
+'b2-2': { primary: '#6B5B95', secondary: '#9D8EC1', accent: '#E8B4BC', background: '#F8F6FA', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
+};
+
+/** Shared size roles for thin Astro/React adapters; font assignments stay local. */
+export const tailwindTypeSizes = Object.fromEntries(Object.entries(type).flatMap(([name, role]) => [
+  [`dm-${name}`, [role.mobile, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
+  [`dm-${name}-wide`, [role.size, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
+]));

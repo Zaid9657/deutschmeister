@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ChevronDown, ArrowRight, BookOpen, MessageSquare, CreditCard, GraduationCap, Monitor } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackFAQViewed } from '../lib/funnelTracking';
@@ -10,7 +9,6 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
-import Aurora from '../components/ui/Aurora.jsx';
 import { SUPPORT_LINK } from '../data/navigation';
 
 // Content lives in src/data/faqContent.js so the prerender renders the same 21
@@ -28,28 +26,12 @@ const CATEGORY_ICONS = {
 // An answer is reference material, so the entry is a FLAT card (tokens rule 3):
 // hairline border, no resting shadow — nothing here pretends to be a key.
 function AccordionItem({ q, a }) {
-  const [open, setOpen] = useState(false);
   return (
-    <Card className="overflow-hidden">
-      <button
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-siegel-wash transition-colors"
-      >
-        <span className="font-medium text-ink pr-4">{q}</span>
-        <ChevronDown
-          className={`w-5 h-5 text-graphite flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-        />
-      </button>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="px-5 pb-5 text-graphite text-sm leading-relaxed border-t border-rule pt-4"
-        >
-          {a}
-        </motion.div>
-      )}
+    <Card as="details" className="overflow-hidden">
+      <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium text-ink">
+        {q}<ChevronDown className="h-5 w-5 shrink-0" aria-hidden="true" />
+      </summary>
+      <p className="border-t border-rule px-5 py-4 text-sm leading-relaxed text-graphite">{a}</p>
     </Card>
   );
 }
@@ -62,8 +44,7 @@ const FAQPage = () => {
       <SEO {...seoProps('/faq')} structuredData={faqPageJsonLd()} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-20">
-        <div className="relative overflow-hidden rounded-clay text-center mb-16 py-4">
-          <Aurora />
+        <div className="relative overflow-hidden rounded-clay text-center mb-6 py-4">
           <div className="relative">
             <SectionHeading
               size="page"
@@ -75,11 +56,15 @@ const FAQPage = () => {
           </div>
         </div>
 
+        <nav className="mb-8 flex flex-wrap gap-2" aria-label="Question categories">
+          {FAQ_CATEGORIES.map((category, i) => <a key={category.title} href={`#faq-category-${i}`} className="rounded-pill border border-rule bg-white px-4 py-2 text-sm font-bold text-siegel-deep">{category.title} <span className="text-graphite">({category.items.length})</span></a>)}
+        </nav>
+        <p className="mb-8 text-sm text-graphite">Choosing a course? <a href="/courses/" className="font-bold text-siegel-deep underline">See the levels and what is available.</a></p>
         <div className="space-y-12">
           {FAQ_CATEGORIES.map((category, catIdx) => {
             const Icon = CATEGORY_ICONS[category.title] ?? BookOpen;
             return (
-            <Reveal as="section" key={category.title} delay={Math.min(catIdx, 8) * 90}>
+            <Reveal as="section" id={`faq-category-${catIdx}`} className="scroll-mt-24" key={category.title} delay={Math.min(catIdx, 8) * 90}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 rounded-clay bg-siegel flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5 text-white" />

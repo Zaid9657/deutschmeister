@@ -37,6 +37,7 @@ import '../styles/global.css';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import LineBoard from '../components/linie/LineBoard.astro';
 import FirstStop from '../components/linie/FirstStop.astro';
+import CourseProof from '../components/proof/CourseProof.astro';
 import RecordedCorrection from '../components/linie/RecordedCorrection.astro';
 import FitChooser from '../components/linie/FitChooser.astro';
 import LineSection from '../components/linie/LineSection.astro';
@@ -120,8 +121,23 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
         <FirstStop />
       </div>
       <!-- The line board: the HyperFrames loop (videos/hero-line*), poster-first. -->
-      <LineBoard />
+
     </section>
+
+    <section class="border-b border-rule bg-paper" aria-label="Choose your learning route">
+      <div class="mx-auto grid max-w-7xl gap-4 px-5 py-8 md:grid-cols-2">
+        <a href="/courses/" class="rounded-xl border border-rule bg-white p-6 dm-link">
+          <span class="sign-label block text-xl">Build your German, level by level →</span>
+          <span class="mt-2 block text-graphite">A1.1 is free. A1.2 comes next. See what is ready and what follows.</span>
+        </a>
+        <a href="/pruefung/" class="rounded-xl border border-rule p-6 dm-link">
+          <span class="sign-label block text-xl">Already working towards an exam? →</span>
+          <span class="mt-2 block text-graphite">Choose your exam for relevant practice and a sourced guide. The separate telc package is not on sale.</span>
+        </a>
+      </div>
+    </section>
+
+    <CourseProof />
 
     <RecordedCorrection />
 
@@ -129,8 +145,10 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
 
     <LineSection />
 
+    <LineBoard />
+
     <!-- ═══ THE TICKET: what one payment carries ═══ -->
-    <section id="ticket" class="dm-defer bg-paper" aria-labelledby="ticket-h">
+    <section id="ticket" class="bg-paper" aria-labelledby="ticket-h">
       <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div class="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
           <div class="lg:sticky lg:top-28 lg:self-start">
@@ -158,7 +176,7 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
     <OfferFaq />
 
     <!-- ═══ FINAL CALL: one more door, no pressure ═══ -->
-    <section class="dm-defer relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="close-h">
+    <section class="relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="close-h">
       <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <h2 id="close-h" class="sign-display text-[clamp(2.5rem,8vw,5rem)]">
           <span class="block">Your next stop is</span>

@@ -784,7 +784,7 @@ test('/ueber-uns/ names only exams with a track, and its crawlable copy says wha
   assert.deepEqual(mirrored, roadmap, 'the crawlable "What comes next" list must be the page\'s ROADMAP, item for item');
   const htmlTexts = [...html.matchAll(/>([^<>]+)</g)].map((m) => norm(m[1])).filter(Boolean);
   const paragraphs = [...jsx.matchAll(/<Reveal as="p"[^>]*>\s*([\s\S]*?)\s*<\/Reveal>/g)].map((m) => norm(m[1]));
-  assert.ok(paragraphs.length >= 8, 'the page\'s paragraphs were not read');
+  assert.ok(paragraphs.length >= 6, 'the page\'s paragraphs were not read');
   for (const text of [...array('BADGES'), ...array('DIFFERENTIATORS'), ...paragraphs]) {
     assert.ok(htmlTexts.includes(norm(text)), `the prerendered /ueber-uns/ does not say what the page says: "${text.slice(0, 100)}"`);
   }

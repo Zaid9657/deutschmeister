@@ -78,9 +78,9 @@ test('the full Astro navigation starts at the large breakpoint', () => {
 test('pricing distinguishes recurring access from one-time courses in its headline and CTA', () => {
   // v4 (2026-10-04): the headline IS the fork — own a level (one-time) or rent
   // the line (recurring) — and the lead names both payment shapes.
-  assert.match(pricing, /Own a level,<\/span>[\s\S]*?whole line\./);
-  assert.match(pricing, /one payment you keep/);
-  assert.match(pricing, /by the month or the year/);
+  assert.match(pricing, /Own a level,<\/span>[\s\S]*?or choose Pro\./);
+  assert.match(pricing, /Buy a level once/);
+  assert.match(pricing, /subscribe to Pro/);
   // The Pro CTA's words live in astro-site/src/lib/proCta.js since 2026-09-30
   // (signed out: the trial; signed in: "Go Pro — <price>"), pinned in
   // tests/pro-cta.test.mjs. The page must render them from there.
@@ -117,7 +117,6 @@ test('bright accent chips use dark ink instead of low-contrast white glyphs', ()
   for (const source of [examHub, completePrep]) {
     assert.doesNotMatch(source, /\$\{(?:s\.accent|w\.accent|ACCENTS\[[^}]+\])\}[^"`]*text-white/);
   }
-  for (const accent of ['himbeer', 'aprikose', 'limette']) {
-    assert.match(examHub, new RegExp(`bg-accent-${accent} text-ink`));
-  }
+  assert.match(examHub, /bg-siegel-wash text-siegel-deep/);
+  assert.doesNotMatch(examHub, /bg-accent-(?:himbeer|aprikose|limette)[^"`]*text-white/);
 });

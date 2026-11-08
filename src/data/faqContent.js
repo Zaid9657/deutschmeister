@@ -17,6 +17,7 @@ import {
   TRIAL_DAYS,
   FREE_LEVEL_LABEL,
   GRAMMAR_TOPIC_COUNT,
+  FOUNDER_LINE_EN,
 } from './marketing.js';
 import { EXAM_TRACKS } from './examTracks.js';
 import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
@@ -28,7 +29,7 @@ import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
  * that lastmod is older than this date. Bumping it is part of any FAQ copy
  * change; the check needs no repository history, so a shallow CI clone runs it.
  */
-export const FAQ_COPY_UPDATED = '2026-10-25';
+export const FAQ_COPY_UPDATED = '2026-11-08';
 
 // The exams the product prepares for, from the exam-track registry — the only
 // list (2026-10-25: the answers named TestDaF, which has no track, while the
@@ -57,7 +58,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Who is behind Deutschmeister?',
-        a: 'Deutschmeister was founded by Zaid, a doctor in Germany who experienced the challenge of learning a new language while everyday life continued. A team of doctors in Germany now develops the platform further.',
+        a: FOUNDER_LINE_EN,
       },
       {
         q: 'Which levels are covered?',

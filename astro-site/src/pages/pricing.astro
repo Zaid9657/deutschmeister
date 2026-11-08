@@ -28,9 +28,9 @@ import { proCta } from '../lib/proCta.js';
 import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.js';
 import { levelCoursesWithVariants, telcPilotVariant } from '../lib/courseVariants.js';
 import { onsiteHref } from '../lib/onsiteLinks.js';
+import CourseProof from '../components/proof/CourseProof.astro';
 import Layout from '../layouts/Layout.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
-import Ticket from '../components/linie/Ticket.astro';
 import '../styles/global.css';
 import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
 import {
@@ -59,7 +59,7 @@ import {
   PRO_WRITING_EVALUATIONS_PER_MONTH,
   FREE_LEVEL_LABEL,
 } from '../data/marketing.js';
-import { STATIONS, TICKET_STATIONS, PRO_OFFER, EXAM_ROUTE } from '../data/offers.js';
+import { STATIONS, PRO_OFFER, EXAM_ROUTE } from '../data/offers.js';
 
 const title = 'Pricing — Own a Level or Rent All 8 | DeutschMeister';
 const description = `${FREE_LEVEL_LABEL} is free. Buy a German level once from ${eur(COURSE_FROM_PRICE_EUR)} and keep it, with ${COURSE_PRO_MONTHS} months of Pro included — or rent all ${LEVEL_COUNT} levels with Pro, monthly or yearly.`;
@@ -73,7 +73,6 @@ const FREE_RUNGS = 1; // FREE_LEVEL_LABEL is the first rung of the ladder.
 const levelCourses = levelCoursesWithVariants();
 const showLevelCourses = levelCourses.some((c) => c.variantId);
 const priceList = Object.entries(SUBLEVEL_PRICES_EUR).map(([l, p]) => `${l.toUpperCase()} ${eur(p)}`).join(', ');
-const firstTicket = TICKET_STATIONS[0];
 
 // The telc B1 package, on sale only behind its switch — the one its sales page
 // reads. Until 2026-10-25 this page sold it unconditionally (card, FAQ and the
@@ -203,24 +202,23 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
 
     <!-- ═══ The fork: three ways to ride ═══ -->
     <section class="relative bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="pricing-h">
-      <div class="mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pb-20">
+      <div class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12 lg:px-8 lg:pb-20">
         <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Preise · Pricing</p>
-        <h1 id="pricing-h" class="sign-display mt-4 text-[clamp(2.5rem,9vw,5rem)]">
+        <h1 id="pricing-h" class="sign-display mt-4 text-[clamp(2.25rem,7vw,4rem)]">
           <span class="block whitespace-nowrap">Own a level,</span>
-          <span class="block whitespace-nowrap">or rent the</span>
-          <span class="block whitespace-nowrap">whole line.</span>
+          <span class="block">or choose Pro.</span>
         </h1>
         <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
-          {FREE_LEVEL_LABEL} is free. Each next level is one payment you keep, with {COURSE_PRO_MONTHS} months of Pro on board. Or rent every level and the full AI allowance with Pro, by the month or the year. One-time or recurring: you choose, and the button always says which.
+          {FREE_LEVEL_LABEL} is free. Buy a level once, or subscribe to Pro for the practice library and AI tools. Your course stays open after its {COURSE_PRO_MONTHS} included Pro months end.
         </p>
 
-        <ol class="mt-10 grid gap-4 lg:grid-cols-3">
+        <ol class="mt-6 grid gap-4 lg:grid-cols-3">
           <li class="flex flex-col rounded-[1.25rem] border-2 border-linie bg-nacht-raised p-6" data-track-view="pricing_own">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Own a level · one payment</p>
             <p class="sign-head mt-2 text-[1.75rem]">Buy the stop you’re at</p>
-            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">A guided plan from day one to the final test, yours for good, with {COURSE_PRO_MONTHS} months of Pro included. Nothing renews.</p>
+            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">Your chosen level stays yours. {COURSE_PRO_MONTHS} months of Pro included. No renewal.</p>
             <p class="mt-4 flex items-baseline gap-2"><span class="text-[0.875rem] text-nacht-muted">from</span><span class="sign-code text-[2rem] leading-none text-linie">{eur(COURSE_FROM_PRICE_EUR)}</span><span class="text-[0.875rem] text-nacht-muted">once</span></p>
-            <a href="#levels" class="dm-key dm-key-linie mt-5" data-track="course_selected" data-track-surface="pricing_fork">Choose your level</a>
+            <a href="/courses/" class="dm-key dm-key-linie mt-5" data-track="course_selected" data-track-surface="pricing_fork">Choose your level</a>
           </li>
           <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6" data-track-view="pricing_rent">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Rent the line · Pro</p>
@@ -239,6 +237,8 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
         </ol>
       </div>
     </section>
+
+    <CourseProof mode="journey" />
 
     <!-- ═══ OWN: the level tickets ═══ -->
     <section id="levels" class="scroll-mt-24 bg-paper" aria-labelledby="levels-h">
@@ -277,7 +277,11 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
             </ul>
           </div>
           <div>
-            <Ticket surface="pricing_ticket" defaultLevel={firstTicket ? firstTicket.level : 'a1.2'} headingLevel={3} />
+            <div class="rounded-xl border border-rule bg-white p-6">
+              <p class="sign-label text-2xl">Your level, after Pro</p>
+              <p class="mt-4 leading-relaxed text-graphite">The purchased level remains open. AI speaking and writing use Pro allowances during the included period, then return to the free allowances. No course renewal and no automatic charge.</p>
+              <a href="/courses/a1-2/" class="dm-key dm-key-siegel mt-5">See the A1.2 course</a>
+            </div>
             <p class="mt-6 rounded-clay border border-dashed border-rule p-5 text-[0.9375rem] leading-relaxed text-graphite">
               <strong class="text-ink">{EXAM_ROUTE.title}</strong> {EXAM_ROUTE.body}
             </p>
@@ -526,7 +530,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
     $('pro-price').textContent = EUR(plan.price);
     $('pro-period').textContent = plan.interval;
     let cta = proCta({ signedIn: Boolean(currentUser()), cycle });
-    if (billing?.userId === currentUser()?.id) cta = proCta({ signedIn: true, cycle, subscription: billing.subscription });
+    if (billing && currentUser() && billing.userId === currentUser().id) cta = proCta({ signedIn: true, cycle, subscription: billing.subscription });
     $('pro-btn-label').textContent = cta.label;
     $('plan-note').textContent = cta.note;
 

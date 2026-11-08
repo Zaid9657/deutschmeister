@@ -45,7 +45,7 @@ const HUB_COPY = {
     description:
       'Start Deutsch 1 / Goethe-Zertifikat A1 online vorbereiten: Formular und Mitteilung schreiben, Grundwortschatz, KI-Sprechtraining — Einstufungstest kostenlos.',
     intro:
-      'Start Deutsch 1 prüft vier feste Aufgabentypen, keine freie Deutschkonversation — wer Formular, Mitteilung, Wortkarten und Bildkarten im Original geübt hat, verliert dort keine Punkte durch Überraschung. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
+      'Start Deutsch 1 prüft vier feste Aufgabentypen, keine freie Deutschkonversation — wer Formular, Mitteilung, Wortkarten und Bildkarten im Original geübt hat, verliert dort keine Punkte durch Überraschung. Hier finden Sie passende Übungen und den Leitfaden zum Format.',
     focus:
       'Es gibt keine Module, aber auch keine Mindestpunktzahl pro Teil: 60 von 100 Punkten insgesamt entscheiden. Schreiben lohnt sich besonders, weil dort Anrede, Leitpunkte und Register über mehr Punkte entscheiden als einzelne Grammatikfehler.',
   },
@@ -54,16 +54,16 @@ const HUB_COPY = {
     description:
       'Goethe-Zertifikat A2 online vorbereiten: A2.1- und A2.2-Grammatik, Hör- und Lesetraining, SMS und E-Mail üben, KI-Sprechtraining — Einstufungstest kostenlos.',
     intro:
-      'Auf A2 reicht es nicht mehr, schriftlich gut zu sein: Zwei getrennte Hürden statt einer, und die zweite ist das Sprechen. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
+      'Auf A2 reicht es nicht mehr, schriftlich gut zu sein: Zwei getrennte Hürden statt einer, und die zweite ist das Sprechen. Hier finden Sie passende Übungen und den Leitfaden zum Format.',
     focus:
       'Auf A2 entscheidet der Sprung von einzelnen Sätzen zu zusammenhängendem Alltagsdeutsch: Dativ, Wechselpräpositionen, Perfekt und Objektpronomen müssen sitzen, nicht nur wiedererkannt werden. Den Rest entscheidet freies Sprechen — der Teil, den man nicht anlesen kann.',
   },
   telc_b1: {
     title: 'telc B1 Vorbereitung online | DeutschMeister',
     description:
-      'Bereite dich online auf telc Deutsch B1 vor: Grammatik B1.1–B1.2, Hörtraining, Lesetexte, KI-Sprechtraining für die Paarprüfung — und ein kostenloser Einstufungstest.',
+      'Bereiten Sie sich online auf telc Deutsch B1 vor: Grammatik B1.1–B1.2, Hörtraining, Lesetexte, KI-Sprechtraining für die Paarprüfung — und ein kostenloser Einstufungstest.',
     intro:
-      'Die telc B1 Prüfung testet vier Fertigkeiten — und die meisten fallen nicht durch, weil ihnen Deutsch fehlt, sondern weil sie die falschen Dinge geübt haben. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
+      'Die telc B1 Prüfung testet Lesen, Hören, Schreiben und Sprechen. Üben Sie die Aufgaben im passenden Format. Hier finden Sie passende Übungen und den Leitfaden zum Format.',
     focus:
       'Das Format entscheidet: Die Sprachbausteine testen Grammatik im Kontext (genau das, was das Sentence X-Ray sichtbar macht), und die mündliche Prüfung ist eine Paarprüfung — freies Sprechen lässt sich nicht anlesen, nur üben.',
   },
@@ -72,16 +72,16 @@ const HUB_COPY = {
     description:
       'Goethe-Zertifikat B1 online vorbereiten: modulweises Training für Lesen, Hören, Schreiben und Sprechen mit der DeutschMeister-Bibliothek — Einstufungstest kostenlos.',
     intro:
-      'Das Goethe-Zertifikat B1 besteht aus vier einzeln ablegbaren Modulen — du kannst also gezielt das Modul trainieren, das dir fehlt. So deckst du jedes Modul mit DeutschMeister ab.',
+      'Das Goethe-Zertifikat B1 besteht aus vier einzeln ablegbaren Modulen — Sie können also gezielt das Modul trainieren, das Ihnen fehlt. So decken Sie jedes Modul mit DeutschMeister ab.',
     focus:
-      `Die Modulstruktur ist deine Chance: Wer weiß, welches Modul wackelt, übt effizienter. Der Einstufungstest zeigt dir in etwa ${PLACEMENT_TEST_MINUTES} Minuten, wo du wirklich stehst.`,
+      `Die Modulstruktur ist Ihre Chance: Wer weiß, welches Modul wackelt, übt effizienter. Der Einstufungstest zeigt Ihnen in etwa ${PLACEMENT_TEST_MINUTES} Minuten, wo Sie ungefähr stehen.`,
   },
   dtz: {
     title: 'DTZ Vorbereitung online | DeutschMeister',
     description:
       'DTZ (Deutsch-Test für Zuwanderer) online vorbereiten: Alltagsdeutsch A2–B1, Hörtraining mit Dialogen, Brieftraining und KI-Sprechen — Einstufungstest kostenlos.',
     intro:
-      'Der DTZ prüft Alltagsdeutsch auf zwei Niveaus gleichzeitig (A2–B1) — dein Ergebnis hängt davon ab, wie stabil du auf B1 antwortest. Dieser Weg durch DeutschMeister zielt genau darauf.',
+      'Der DTZ prüft Alltagsdeutsch auf zwei Niveaus gleichzeitig (A2–B1) — Ihr Ergebnis hängt davon ab, wie sicher Sie auf B1 antwortest. Dieser Weg durch DeutschMeister zielt genau darauf.',
     focus:
       'Der DTZ belohnt Alltagsroutine: Ansagen verstehen, Briefe schreiben, über den eigenen Alltag sprechen. Genau diese Situationen enthalten die Hör-Dialoge und Sprechmissionen.',
   },
@@ -90,7 +90,7 @@ const HUB_COPY = {
     description:
       'telc Deutsch B2 online vorbereiten: B2-Grammatik, anspruchsvolle Hör- und Lesetexte und KI-Sprechtraining auf B2-Niveau — Einstufungstest kostenlos.',
     intro:
-      'B2 ist der Sprung von „verständigen" zu „argumentieren". Die telc B2 Prüfung erwartet, dass du Positionen begründest und komplexe Texte verarbeitest — dieser Weg baut genau das auf.',
+      'B2 ist der Sprung von „verständigen" zu „argumentieren". Die telc B2 Prüfung erwartet, dass Sie Positionen begründen und komplexe Texte verarbeiten — dieser Weg baut genau das auf.',
     focus:
       'Auf B2 entscheidet Präzision: Konnektoren, Nominalisierung, indirekte Rede. Die B2.1/B2.2-Grammatikthemen decken die Strukturen ab, auf die die Prüfer achten.',
   },
@@ -110,8 +110,8 @@ function buildPath(track) {
   return [
     {
       eyebrow: 'Schritt 1 · Einstufung',
-      title: 'Wo stehst du wirklich?',
-      body: `Der kostenlose Einstufungstest (Schriftlich, Hören, Sprechen) zeigt dir dein Niveau in etwa ${PLACEMENT_TEST_MINUTES} Minuten — bevor du auch nur eine Lektion lernst.`,
+      title: 'Wo stehen Sie gerade?',
+      body: `Der kostenlose Einstufungstest (Schriftlich, Hören, Sprechen) zeigt Ihnen Ihr ungefähres Niveau in etwa ${PLACEMENT_TEST_MINUTES} Minuten — als Orientierung für Ihren nächsten Schritt.`,
       href: '/level-test/',
       linkLabel: 'Einstufungstest starten',
     },
@@ -132,7 +132,7 @@ function buildPath(track) {
     {
       eyebrow: 'Schritt 4 · Sprechen',
       title: 'Frei sprechen, bevor es zählt',
-      body: 'Das KI-Sprechtraining simuliert Gesprächssituationen auf deinem Niveau und wertet nach dem Gespräch Grammatik, Wortschatz und Verständlichkeit aus — der Teil, den die meisten zu spät üben.',
+      body: 'Das KI-Sprechtraining simuliert Gesprächssituationen auf Ihrem Niveau und wertet nach dem Gespräch Grammatik, Wortschatz und Verständlichkeit aus — der Teil, den die meisten zu spät üben.',
       href: '/speaking/',
       linkLabel: 'Sprechtraining öffnen',
     },
@@ -149,7 +149,7 @@ function buildPath(track) {
       ? [{
           eyebrow: 'Ernstfall-Check',
           title: 'Der Ernstfall vor dem Ernstfall',
-          body: 'Ein Übungstest im Stil der Prüfung, mit Zeitlimit und automatischer Auswertung gegen die dokumentierte Bestehensgrenze — damit dein erster Testlauf nicht der Prüfungstag ist.',
+          body: 'Ein Übungstest im Stil der Prüfung, mit Zeitlimit und automatischer Auswertung gegen die dokumentierte Bestehensgrenze — damit Ihr erster Testlauf nicht der Prüfungstag ist.',
           href: `/modelltest/${track.slug}`,
           linkLabel: 'Übungstest starten',
         }]
@@ -171,7 +171,7 @@ export const EXAM_HUBS = EXAM_TRACKS.map((track) => {
     ...track,
     title: copy.title,
     description: copy.description,
-    h1: `${track.nameDe}: Deine Vorbereitung mit DeutschMeister`,
+    h1: `${track.nameDe}: Ihre Vorbereitung mit DeutschMeister`,
     intro: copy.intro,
     focus: copy.focus,
     // Exam facts, from the guide — one source of truth.
