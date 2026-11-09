@@ -1,7 +1,7 @@
 ---
 interface Props { name: string; alt: string; hero?: boolean; sizes?: string; class?: string; }
 const { name, alt, hero = false, sizes = '(max-width: 640px) 100vw, 50vw', class: className = '' } = Astro.props;
-const wide = ['hero', 'pricing-hero', 'a12-reception', 'offer-exam', 'offer-complete'].includes(name);
+const wide = ['hero', 'hero-group', 'pricing-hero', 'a12-reception', 'offer-exam', 'offer-complete'].includes(name);
 const route = name === 'tram-route';
 const pass = name === 'offer-pass';
 const width = wide ? 1168 : route || pass ? 1344 : 1024;
