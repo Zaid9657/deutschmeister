@@ -3,6 +3,7 @@
 // Copy, links, structured data and the competitor figures are untouched; the
 // three comparison cards are the grid a visitor CHOOSES from, so they tilt.
 import Layout from '../../layouts/Layout.astro';
+import Aurora from '../../components/Aurora.astro';
 import LanguageNotice from '../../components/LanguageNotice.astro';
 import competitorComparisons, { COMPARISON_DATA_DATE } from '../../data/competitorComparisons.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
@@ -11,7 +12,7 @@ import '../../styles/global.css';
 const competitors = Object.values(competitorComparisons);
 
 const title = 'Deutschmeister vs Babbel, Duolingo & Lingoda | Vergleich';
-const description = 'Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Sie entscheiden.';
+const description = 'Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.';
 const keywords = 'Deutschmeister Vergleich, Babbel Alternative, Duolingo Alternative, Lingoda Alternative, Deutsch lernen Vergleich';
 
 const jsonLd = {
@@ -62,7 +63,8 @@ const TILE = {
     <div class="mx-auto max-w-4xl px-5 pt-6"><LanguageNotice noun="comparison collection" /></div>
 
     <!-- Hero -->
-    <section class="dm-editorial-hero relative overflow-hidden" aria-labelledby="vgl-h">
+    <section class="relative overflow-hidden" aria-labelledby="vgl-h">
+      <Aurora />
       <div class="relative mx-auto max-w-4xl px-5 pt-14 pb-10 text-center sm:pt-20">
         <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">
           Vergleich
@@ -71,7 +73,7 @@ const TILE = {
           Wie schneidet Deutschmeister im Vergleich ab?
         </h1>
         <p class="hero-line mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
-          Wir vergleichen uns fair mit den größten Namen. Sie entscheiden.
+          Wir vergleichen uns fair mit den größten Namen. Du entscheidest.
         </p>
       </div>
     </section>

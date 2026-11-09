@@ -240,8 +240,6 @@ export const fontPreloads = ['/fonts/fraunces-v38-latin.woff2', '/fonts/nunito-s
  * Sizes are rem strings so they compose with Tailwind's arbitrary values.
  */
 export const type = {
-  masthead: { size: '5.75rem', mobile: '3.5rem', weight: 800, tracking: '-0.055em', leading: 1, family: 'sign' },
-  editorial: { size: '4.25rem', mobile: '2.5rem', weight: 640, tracking: '-0.035em', leading: 1.06, family: 'display' },
   hero: { size: '3.5rem', mobile: '2.25rem', weight: 640, tracking: '-0.025em', leading: 1.02, family: 'display' },
   section: { size: '2.125rem', mobile: '1.5625rem', weight: 620, tracking: '-0.018em', leading: 1.12, family: 'display' },
   cardTitle: { size: '1.125rem', mobile: '1.0625rem', weight: 700, tracking: '-0.005em', leading: 1.3, family: 'body' },

@@ -63,19 +63,18 @@ const BENEFITS = [
 // continuing is the one primary action and a fresh start turns secondary.
 const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
   return (
-    <div className="dm-placement-page mx-auto max-w-6xl px-5 pt-6 pb-16 sm:pt-12">
-      <div className="dm-placement-grid">
+    <div className="mx-auto max-w-2xl px-4 pt-6 pb-16 sm:pt-20">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-clay py-8 sm:py-12">
+      <section className="relative -mx-2 overflow-hidden rounded-clay px-2 py-8 sm:-mx-4 sm:px-4 sm:py-12">
         <div className="hero-line relative">
           <SectionHeading
             size="page"
             level={1}
-            align="left"
+            align="center"
             eyebrow="Free Assessment"
-            title="Find your next German step."
+            title="Discover Your German Level"
           />
-          <div className="mt-5" data-level-test-start>
+          <div className="mt-5 text-center" data-level-test-start>
             {resumeAt ? (
               <div data-level-test-resume>
                 <Button size="lg" shimmer onClick={onResume}>
@@ -97,7 +96,6 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
       </section>
 
       <PlacementPreview />
-      </div>
 
       {/* At a glance */}
       <Reveal delay={90} className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">

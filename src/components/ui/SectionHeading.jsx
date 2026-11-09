@@ -29,7 +29,7 @@ export default function SectionHeading({
   const Part = size === 'page' ? Shown : Reveal;
   const titleClass =
     size === 'page'
-      ? 'font-display text-dm-editorial sm:text-dm-editorial-wide'
+      ? 'font-display text-dm-hero sm:text-dm-hero-wide'
       : 'font-display text-dm-section sm:text-dm-section-wide';
   return (
     <div className={`${align === 'center' ? 'text-center' : ''} ${className}`.trim()}>

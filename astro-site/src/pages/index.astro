@@ -1,7 +1,33 @@
 ---
-// Pass 2 · real-life German. The hero uses an explicitly labelled curriculum
-// preview; the working FirstStop exercise follows in its own section. Prices,
-// account doors, checkout attributes and anonymous access retain their sources.
+// Homepage v4 — "Die Linie · Deutsch, in Bewegung" (2026-10-04).
+// docs/redesign-2026-10/ holds the strategy, the three art directions, the copy
+// deck, the event map and the review guide.
+//
+// WHAT CHANGED AND WHY. v3 sold an exam ("Your exam has a date") with the level
+// test as its main button and Pro in its closing line — but the owner decided
+// on 2026-09-03 that one-time level courses are the product, and the exam
+// levels most visitors name (B1) are not buyable yet. v4 sells what exists:
+// the CEFR ladder as a transit line, A1.1 the free first stop, each buyable
+// level a one-time ticket, B1/B2 honestly "Im Bau" with a route to what exists
+// today. The visitor who knows their level buys in one click from the line; the
+// unsure one answers one question; nobody has to take a test to buy.
+//
+// SECTION ORDER (question → belief → evidence → action):
+//   hero        "What is this, is it for me?" → the line + a free first stop
+//   first stop  "Does it work?" → three real Lektion 1 items, real checker
+//   fit         "Which one is mine?" → one answer, one stop (CSS-only)
+//   the line    "What does it cost?" → every station, price, Buy / Start free
+//   ticket      "What exactly do I get?" → each line removes an obstacle
+//   the ride    "What happens after I pay?" → checkout → access → day 1 → test
+//   proof       "Why believe it?" → counted content, checker rules, sources
+//   FAQ         "What could go wrong?" → access, Pro window, limits, cancel
+//   final call  one more door, no pressure
+//
+// CLAIMS. Every figure derives from ../data/*.js (pricing, marketing, offers,
+// courseContents). No testimonials, learner counts, scarcity or countdowns.
+// Colour means case (rule 1) — this page names no case, so it shows none.
+// INVARIANTS: one <h1>; canonical; real server-rendered text; prerendered SPA
+// routes linked with a trailing slash, /signup and /course/* without.
 import { ORGANIZATION_FULL } from '../data/organization.js';
 import Layout from '../layouts/Layout.astro';
 // The hero's account door, attributed like the other on-site doors
@@ -11,7 +37,6 @@ import '../styles/global.css';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import LineBoard from '../components/linie/LineBoard.astro';
 import FirstStop from '../components/linie/FirstStop.astro';
-import ProductWindow from '../components/proof/ProductWindow.astro';
 import CourseProof from '../components/proof/CourseProof.astro';
 import RecordedCorrection from '../components/linie/RecordedCorrection.astro';
 import FitChooser from '../components/linie/FitChooser.astro';
@@ -49,8 +74,9 @@ const jsonLd = [
   },
 ];
 
-// The preview uses the editorial face too; preload all three visible faces.
-const preloads = [...signFontPreloads, ...fontPreloads];
+// The hero is the page's largest paint: the sign face (Archivo) and the body
+// face (Nunito Sans) are preloaded; Fraunces is not used above the fold here.
+const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 const firstTicket = STATIONS.find((s) => s.status === 'ticket');
 ---
 
@@ -58,14 +84,22 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
   <div class="overflow-x-clip bg-paper text-ink">
 
     <!-- ═══ HERO: the line, and the first stop you can ride right now ═══ -->
-    <section class="dm-hero relative isolate overflow-hidden text-ink" data-ground="nacht" aria-labelledby="hero-h" data-hero-variant={hero.id}>
-      <div class="dm-hero-grid">
+    <section class="relative isolate overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h" data-hero-variant={hero.id}>
+      <div class="relative mx-auto grid max-w-7xl items-start gap-12 px-4 pb-12 pt-10 sm:px-6 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-8 lg:pt-16">
         <div class="min-w-0">
           <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{hero.eyebrow}</p>
-          <h1 id="hero-h" class="dm-hero-title mt-5">
-            {hero.lines.map((line) => <span class="block">{line.map((part) => part.mark ? <em>{part.t}</em> : part.t)}</span>)}
+          <h1 id="hero-h" class="sign-display mt-5 text-[clamp(2.75rem,11.4vw,5.75rem)]">
+            {hero.lines.map((line) => (
+              <span class="block whitespace-nowrap">
+                {line.map((part) => (
+                  part.de
+                    ? <span lang="de" class:list={[part.mark && 'text-linie']}>{part.t}</span>
+                    : part.t
+                ))}
+              </span>
+            ))}
           </h1>
-          <p class="dm-hero-lead mt-6">{lead}</p>
+          <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">{lead}</p>
           <div class="mt-8 flex flex-wrap items-center gap-3">
             <a href="/course/a1.1" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="hero">Start A1.1 free</a>
             <a href={FREE_COURSE_HREF} class="dm-key dm-key-linie" data-auth-only data-continue-course style="display:none">Continue learning →</a>
@@ -77,44 +111,33 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
                  SignupPage fires it on submit; firing it here as well counted a
                  click, then the page view, as two signups started. -->
             <a href={HOME_SIGNUP_HREF} class="dm-key dm-key-ghost-nacht" data-anon-only>Create a free account</a>
-            <a href="/courses/" class="dm-link text-sm" data-track="course_selected" data-track-surface="hero_line">Explore the courses →</a>
+            <a href="#line" class="dm-key dm-key-ghost-nacht" data-track="course_selected" data-track-surface="hero_line">I know my level</a>
           </div>
           <p class="mt-5 text-[0.875rem] leading-relaxed text-nacht-muted">
             A1.1 needs no account.
             Not sure where you are? <a href="#fit" class="dm-link-nacht font-semibold">Find your stop</a> or take the <a href="/level-test/" class="dm-link-nacht font-semibold">20-minute level test</a>.
           </p>
         </div>
-        <ProductWindow />
+        <FirstStop />
       </div>
       <!-- The line board: the HyperFrames loop (videos/hero-line*), poster-first. -->
 
     </section>
 
     <section class="border-b border-rule bg-paper" aria-label="Choose your learning route">
-      <div class="dm-route-strip">
-        <a href="/courses/" class="dm-link">
+      <div class="mx-auto grid max-w-7xl gap-4 px-5 py-8 md:grid-cols-2">
+        <a href="/courses/" class="rounded-xl border border-rule bg-white p-6 dm-link">
           <span class="sign-label block text-xl">Build your German, level by level →</span>
           <span class="mt-2 block text-graphite">A1.1 is free. A1.2 comes next. See what is ready and what follows.</span>
         </a>
-        <a href="/pruefung/" class="dm-link">
+        <a href="/pruefung/" class="rounded-xl border border-rule p-6 dm-link">
           <span class="sign-label block text-xl">Already working towards an exam? →</span>
           <span class="mt-2 block text-graphite">Choose your exam for relevant practice and a sourced guide. The separate telc package is not on sale.</span>
         </a>
       </div>
     </section>
 
-    <section class="bg-siegel-wash border-b border-rule" aria-labelledby="try-h">
-      <div class="dm-section-grid">
-        <div>
-          <p class="dm-kicker">Less wondering. More trying.</p>
-          <h2 id="try-h" class="dm-section-title mt-4">Your first German moment starts here.</h2>
-          <p class="dm-hero-lead mt-5">A greeting. A name. A sentence you can actually use. Try a real task from the free first lesson, then carry on in the course.</p>
-        </div>
-        <FirstStop />
-      </div>
-    </section>
-
-    <CourseProof mode="writing" />
+    <CourseProof />
 
     <RecordedCorrection />
 
@@ -156,8 +179,8 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
     <section class="relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="close-h">
       <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <h2 id="close-h" class="sign-display text-[clamp(2.5rem,8vw,5rem)]">
-          <span class="block">Make a little room for</span>
-          <span class="block text-linie">a lot more German.</span>
+          <span class="block">Your next stop is</span>
+          <span class="block text-linie">one click away.</span>
         </h2>
         <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted">
           Start with the free first stop, or go straight to the stop you’re at. Either way, your progress is saved from the first answer.

@@ -127,16 +127,3 @@ test('pricing never treats a missing billing record as the signed-out visitor\'s
   assert.doesNotMatch(pricing, /billing\?\.userId === currentUser\(\)\?\.id/);
   assert.match(pricing, /billing && currentUser\(\) && billing\.userId === currentUser\(\)\.id/);
 });
-
-
-test('the lightweight account example stays identical to the actual first lesson', async () => {
-  const { COURSE_MOMENT } = await import('../src/data/courseMoment.js');
-  const { curriculumFor } = await import('../src/data/curricula/index.js');
-  const lesson = curriculumFor(COURSE_MOMENT.level).lektionen[0];
-  assert.deepEqual(COURSE_MOMENT, {
-    level: 'a1.1', title: lesson.title, promptEn: lesson.pretest.promptEn, model: lesson.pretest.model,
-  });
-  const preview = read('src/components/ui/CourseMoment.jsx');
-  assert.match(preview, /Course preview · real content/);
-  assert.doesNotMatch(preview, /from ['"][^'"]*(?:curricula|lessonPools)/, 'account entry must not import entire course banks');
-});

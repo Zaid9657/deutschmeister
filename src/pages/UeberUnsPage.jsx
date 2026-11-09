@@ -9,7 +9,6 @@ import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
-import CourseMoment from '../components/ui/CourseMoment.jsx';
 import { FOUNDER_LINE_EN, GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, FREE_LEVEL_LABEL } from '../data/marketing.js';
 
 const BADGES = [
@@ -57,15 +56,13 @@ const UeberUnsPage = () => {
       />
 
       {/* HERO */}
-      <section className="dm-public-heading relative pt-24 pb-12 overflow-hidden">
+      <section className="relative pt-24 pb-10 overflow-hidden">
 
 
-        <div className="relative z-10 max-w-6xl mx-auto px-5 dm-about-grid">
-          <div>
-          <p className="mb-4 font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">Our reason to build</p>
-          <h1 className="hero-line font-display text-dm-editorial sm:text-dm-editorial-wide text-ink mb-6">
-            More German.{' '}
-            <span className="text-siegel-deep">More possibility.</span>
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h1 className="hero-line font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink mb-6 sm:text-[3rem] lg:text-[3.5rem]">
+            Learning German should not feel like{' '}
+            <span className="text-siegel">a nightmare.</span>
           </h1>
           <p
             className="hero-line text-[1.0625rem] leading-relaxed text-graphite max-w-2xl mx-auto mb-10 sm:text-[1.1875rem]"
@@ -74,11 +71,11 @@ const UeberUnsPage = () => {
             {FOUNDER_LINE_EN}
           </p>
 
-          <div className="mb-6 flex flex-wrap gap-3">
+          <div className="mb-6 flex flex-wrap justify-center gap-3">
             <Button href="/course/a1.1">Start A1.1 free</Button>
             <Button href="/courses/a1-2/" variant="secondary">Inspect the A1.2 course</Button>
           </div>
-          <div className="hero-line flex flex-wrap gap-3" style={{ '--d': '240ms' }}>
+          <div className="hero-line flex flex-wrap justify-center gap-3" style={{ '--d': '240ms' }}>
             {BADGES.map((badge) => (
               <Chip key={badge.label} tone="quiet" size="md">
                 <badge.icon className="w-4 h-4 text-siegel flex-shrink-0" />
@@ -86,8 +83,6 @@ const UeberUnsPage = () => {
               </Chip>
             ))}
           </div>
-          </div>
-          <div className="self-center"><CourseMoment /><a className="mt-4 inline-block font-bold text-siegel-deep underline underline-offset-4" href="/course/a1.1">Explore the free first course →</a></div>
         </div>
       </section>
 

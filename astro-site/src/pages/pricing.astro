@@ -29,7 +29,6 @@ import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.j
 import { levelCoursesWithVariants, telcPilotVariant } from '../lib/courseVariants.js';
 import { onsiteHref } from '../lib/onsiteLinks.js';
 import CourseProof from '../components/proof/CourseProof.astro';
-import ProductWindow from '../components/proof/ProductWindow.astro';
 import Layout from '../layouts/Layout.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import '../styles/global.css';
@@ -195,19 +194,19 @@ const KASUS_CLASS = {
   dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
   akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
 };
-const preloads = [...signFontPreloads, ...fontPreloads];
+const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 ---
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd} tone="nacht" preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
 
     <!-- ═══ The fork: three ways to ride ═══ -->
-    <section class="dm-price-hero relative text-ink" data-ground="nacht" aria-labelledby="pricing-h">
+    <section class="relative bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="pricing-h">
       <div class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12 lg:px-8 lg:pb-20">
         <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Preise · Pricing</p>
-        <h1 id="pricing-h" class="dm-hero-title mt-4 !text-[clamp(2.5rem,6vw,5rem)]">
-          <span class="block">Your German.</span>
-          <em class="block">Your way to learn.</em>
+        <h1 id="pricing-h" class="sign-display mt-4 text-[clamp(2.25rem,7vw,4rem)]">
+          <span class="block whitespace-nowrap">Own a level,</span>
+          <span class="block">or choose Pro.</span>
         </h1>
         <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
           {FREE_LEVEL_LABEL} is free. Buy a level once, or subscribe to Pro for the practice library and AI tools. Your course stays open after its {COURSE_PRO_MONTHS} included Pro months end.
@@ -216,14 +215,14 @@ const preloads = [...signFontPreloads, ...fontPreloads];
         <ol class="mt-6 grid gap-4 lg:grid-cols-3">
           <li class="flex flex-col rounded-[1.25rem] border-2 border-linie bg-nacht-raised p-6" data-track-view="pricing_own">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Own a level · one payment</p>
-            <p class="sign-head mt-2 text-[1.75rem]">One level. Yours to keep.</p>
+            <p class="sign-head mt-2 text-[1.75rem]">Buy the stop you’re at</p>
             <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">Your chosen level stays yours. {COURSE_PRO_MONTHS} months of Pro included. No renewal.</p>
             <p class="mt-4 flex items-baseline gap-2"><span class="text-[0.875rem] text-nacht-muted">from</span><span class="sign-code text-[2rem] leading-none text-linie">{eur(COURSE_FROM_PRICE_EUR)}</span><span class="text-[0.875rem] text-nacht-muted">once</span></p>
             <a href="/courses/" class="dm-key dm-key-linie mt-5" data-track="course_selected" data-track-surface="pricing_fork">Choose your level</a>
           </li>
           <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6" data-track-view="pricing_rent">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Rent the line · Pro</p>
-            <p class="sign-head mt-2 text-[1.75rem]">Your practice, on Pro</p>
+            <p class="sign-head mt-2 text-[1.75rem]">Every level, monthly</p>
             <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">All {LEVEL_COUNT} levels, AI speaking ({PRO_SPEAKING_SESSIONS_PER_MONTH} a month), writing feedback ({PRO_WRITING_EVALUATIONS_PER_MONTH} a month) and the practice exams. Cancel anytime.</p>
             <p class="mt-4 flex items-baseline gap-2"><span class="sign-code text-[2rem] leading-none text-linie">{eur(PLANS.monthly.price)}</span><span class="text-[0.875rem] text-nacht-muted">a month</span></p>
             <a href="#pro" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-surface="pricing_fork" data-track-plan="monthly">Compare Pro</a>
@@ -239,12 +238,6 @@ const preloads = [...signFontPreloads, ...fontPreloads];
       </div>
     </section>
 
-    <section class="bg-paper-sunk border-b border-rule" aria-labelledby="pricing-proof-h">
-      <div class="dm-section-grid">
-        <div><p class="dm-kicker">Look inside before you choose</p><h2 id="pricing-proof-h" class="dm-section-title mt-4">A plan for the moments that matter.</h2><p class="dm-hero-lead mt-5">Here is a real A1.2 lesson. A course gives your learning a sequence; Pro opens the practice library and AI tools. Choose the access that fits how you want to learn.</p></div>
-        <ProductWindow level="a1.2" />
-      </div>
-    </section>
     <CourseProof mode="journey" />
 
     <!-- ═══ OWN: the level tickets ═══ -->

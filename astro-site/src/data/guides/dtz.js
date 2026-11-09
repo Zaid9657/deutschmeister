@@ -1,5 +1,3 @@
-import { FOUNDER_LINE_DE } from '../marketing.js';
-
 // Deutsch-Test für Zuwanderer (DTZ) — written 2026-08-22.
 //
 // FACT SOURCING: the durations below (Hören ca. 25, Lesen 45, Schreiben 30, in
@@ -20,15 +18,15 @@ export const dtz = {
   title: 'DTZ Prüfung: Ablauf & Vorbereitung | DeutschMeister',
   h1: 'Deutsch-Test für Zuwanderer (DTZ): Ablauf und Vorbereitung',
   description:
-    'DTZ verstehen: skalierte Prüfung auf A2 und B1 gleichzeitig, Ablauf der vier Teile, Lernplan und was das Ergebnis für Sie bedeutet.',
+    'DTZ verstehen: skalierte Prüfung auf A2 und B1 gleichzeitig, Ablauf der vier Teile, Lernplan und was das Ergebnis für dich bedeutet.',
   keywords:
     'DTZ Prüfung, Deutsch-Test für Zuwanderer, DTZ A2 B1, DTZ Ablauf, DTZ Vorbereitung, Integrationskurs Abschlussprüfung',
   badge: 'Leitfaden',
   lead:
-    'Der <strong>Deutsch-Test für Zuwanderer</strong> ist die Abschlussprüfung des Integrationskurses — und funktioniert anders als telc oder Goethe. Er ist <strong>skaliert</strong>: Sie bestehen ihn nicht einfach oder fallen durch, sondern bekommen pro Prüfungsteil ein Ergebnis auf A2- oder B1-Niveau. Dieser Leitfaden erklärt, was das praktisch heißt, wie die Prüfung abläuft und wie Sie sich gezielt vorbereiten.',
+    'Der <strong>Deutsch-Test für Zuwanderer</strong> ist die Abschlussprüfung des Integrationskurses — und funktioniert anders als telc oder Goethe. Er ist <strong>skaliert</strong>: Du bestehst ihn nicht einfach oder fällst durch, sondern bekommst pro Prüfungsteil ein Ergebnis auf A2- oder B1-Niveau. Dieser Leitfaden erklärt, was das praktisch heißt, wie die Prüfung abläuft und wie du dich gezielt vorbereitest.',
   datePublished: '2026-08-22',
   answer:
-    'Der Deutsch-Test für Zuwanderer (DTZ) ist skaliert: Er prüft A2 und B1 gleichzeitig und weist für jeden Prüfungsteil einzeln aus, welches Niveau Sie erreicht haben. Ein Bestehen oder Durchfallen im üblichen Sinn gibt es deshalb nicht. Der schriftliche Teil dauert insgesamt rund 100 Minuten, die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten.',
+    'Der Deutsch-Test für Zuwanderer (DTZ) ist skaliert: Er prüft A2 und B1 gleichzeitig und weist für jeden Prüfungsteil einzeln aus, welches Niveau du erreicht hast. Ein Bestehen oder Durchfallen im üblichen Sinn gibt es deshalb nicht. Der schriftliche Teil dauert insgesamt rund 100 Minuten, die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten.',
   factsCheckedOn: '2026-08-22',
   sources: [
     { label: 'BAMF — Integrationskurse', url: 'https://www.bamf.de/' },
@@ -60,19 +58,19 @@ export const dtz = {
       blocks: [
         {
           type: 'p',
-          text: 'Bei <a href="/leitfaden/telc-b1/">telc B1</a> oder dem <a href="/leitfaden/goethe-b1/">Goethe-Zertifikat B1</a> gibt es eine Grenze: 60 % erreicht — bestanden. Der DTZ funktioniert anders. Er prüft <strong>A2 und B1 gleichzeitig</strong> und bewertet jeden Bereich auf der Skala. Im Zeugnis steht dann pro Bereich, welches Niveau Sie erreicht haben.',
+          text: 'Bei <a href="/leitfaden/telc-b1/">telc B1</a> oder dem <a href="/leitfaden/goethe-b1/">Goethe-Zertifikat B1</a> gibt es eine Grenze: 60 % erreicht — bestanden. Der DTZ funktioniert anders. Er prüft <strong>A2 und B1 gleichzeitig</strong> und bewertet jeden Bereich auf der Skala. Im Zeugnis steht dann pro Bereich, welches Niveau du erreicht hast.',
         },
         {
           type: 'p',
-          text: 'Praktisch heißt das: Sie können im Hören B1 erreichen und im Schreiben A2. Beides steht im Ergebnis. Es gibt kein „durchgefallen" im üblichen Sinn — es gibt ein Ergebnis, das für manche Zwecke ausreicht und für andere nicht.',
+          text: 'Praktisch heißt das: Du kannst im Hören B1 erreichen und im Schreiben A2. Beides steht im Ergebnis. Es gibt kein „durchgefallen" im üblichen Sinn — es gibt ein Ergebnis, das für manche Zwecke ausreicht und für andere nicht.',
         },
         {
           type: 'p',
-          text: 'Welches Gesamtergebnis für Ihren Zweck nötig ist — Einbürgerung, Aufenthaltstitel, Kursabschluss — hängt vom Einzelfall ab, und die Regeln dazu ändern sich. <strong>Klären Sie das vor der Prüfung mit Ihrem Prüfungszentrum, Ihrem Kursträger oder der zuständigen Behörde</strong>, nicht danach.',
+          text: 'Welches Gesamtergebnis für deinen Zweck nötig ist — Einbürgerung, Aufenthaltstitel, Kursabschluss — hängt vom Einzelfall ab, und die Regeln dazu ändern sich. <strong>Kläre das vor der Prüfung mit deinem Prüfungszentrum, deinem Kursträger oder der zuständigen Behörde</strong>, nicht danach.',
         },
         {
           type: 'callout',
-          text: 'Weil das Ergebnis pro Bereich ausgewiesen wird, lohnt sich die Vorbereitung dort am meisten, wo Sie knapp unter B1 liegen. Ein Bereich, der sicher auf B1 ist, bringt durch weiteres Üben nichts Zusätzliches.',
+          text: 'Weil das Ergebnis pro Bereich ausgewiesen wird, lohnt sich die Vorbereitung dort am meisten, wo du knapp unter B1 liegst. Ein Bereich, der sicher auf B1 ist, bringt durch weiteres Üben nichts Zusätzliches.',
         },
       ],
     },
@@ -96,16 +94,16 @@ export const dtz = {
         },
         {
           type: 'p',
-          text: 'Die Zeiten sind Richtwerte des üblichen Prüfungsformats; die verbindlichen Angaben bekommen Sie von Ihrem Prüfungszentrum.',
+          text: 'Die Zeiten sind Richtwerte des üblichen Prüfungsformats; die verbindlichen Angaben bekommst du von deinem Prüfungszentrum.',
         },
         { type: 'h3', text: 'Der mündliche Teil im Detail' },
         {
           type: 'p',
-          text: 'Die mündliche Prüfung hat drei Abschnitte: Sie stellen sich vor und beantworten Fragen zur Person. Danach sprechen Sie über ein Thema anhand eines Bildes oder einer Situation. Zum Schluss planen Sie zu zweit etwas gemeinsam — einen Ausflug, ein Fest, einen Termin.',
+          text: 'Die mündliche Prüfung hat drei Abschnitte: Du stellst dich vor und beantwortest Fragen zur Person. Danach sprichst du über ein Thema anhand eines Bildes oder einer Situation. Zum Schluss plant ihr zu zweit etwas gemeinsam — einen Ausflug, ein Fest, einen Termin.',
         },
         {
           type: 'p',
-          text: 'Bewertet wird, ob Sie verständlich kommunizieren und auf Ihren Partner eingehen — nicht, ob jeder Satz fehlerfrei ist. Das <a href="/speaking/">KI-Sprechtraining</a> hilft, genau diese Situationen zu üben, wenn im Alltag die Gelegenheit zum Sprechen fehlt.',
+          text: 'Bewertet wird, ob du verständlich kommunizierst und auf deinen Partner eingehst — nicht, ob jeder Satz fehlerfrei ist. Das <a href="/speaking/">KI-Sprechtraining</a> hilft, genau diese Situationen zu üben, wenn im Alltag die Gelegenheit zum Sprechen fehlt.',
         },
       ],
     },
@@ -119,7 +117,7 @@ export const dtz = {
         },
         {
           type: 'p',
-          text: 'Vorab: Der <a href="/level-test/">kostenlose Einstufungstest</a> zeigt Ihnen, wo Sie stehen — hilfreich, weil beim DTZ jeder Bereich einzeln zählt.',
+          text: 'Vorab: Der <a href="/level-test/">kostenlose Einstufungstest</a> zeigt dir, wo du stehst — hilfreich, weil beim DTZ jeder Bereich einzeln zählt.',
         },
         {
           type: 'steps',
@@ -219,7 +217,7 @@ export const dtz = {
             },
             {
               title: 'Beim Schreiben zu kompliziert werden',
-              body: 'Manche versuchen, mit langen Nebensatzketten Niveau zu zeigen, und produzieren dabei Fehler. Bewertet wird, ob Ihr Anliegen klar ankommt. Einfache, korrekte Sätze mit passender Anrede schneiden besser ab.',
+              body: 'Manche versuchen, mit langen Nebensatzketten Niveau zu zeigen, und produzieren dabei Fehler. Bewertet wird, ob dein Anliegen klar ankommt. Einfache, korrekte Sätze mit passender Anrede schneiden besser ab.',
             },
           ],
         },
@@ -231,7 +229,7 @@ export const dtz = {
       blocks: [
         {
           type: 'p',
-          text: `${FOUNDER_LINE_DE} Die folgenden Werkzeuge unterstützen Ihre Vorbereitung:`,
+          text: 'Der DTZ prüft Alltagssprache in vier Bereichen, die einzeln bewertet werden. Genau dafür lässt sich gezielt üben — mit einer Plattform, die von einem Team von Ärzten in Deutschland gebaut wurde, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',
@@ -249,7 +247,7 @@ export const dtz = {
             {
               eyebrow: 'Schreiben',
               title: 'Grammatik + Sentence X-Ray',
-              body: 'Grammatik auf Englisch erklärt, plus ein Werkzeug, das Ihre eigenen Sätze zerlegt und zeigt, wo der Fehler steckt.',
+              body: 'Grammatik auf Englisch erklärt, plus ein Werkzeug, das deine eigenen Sätze zerlegt und zeigt, wo der Fehler steckt.',
             },
             {
               eyebrow: 'Lesen',
@@ -260,7 +258,7 @@ export const dtz = {
         },
         {
           type: 'p',
-          text: 'Für den Sprung auf sicheres B1 lohnt sich zusätzlich die <a href="/grammar/b1.1/">B1-Grammatik</a>. Wenn Sie nach dem DTZ gezielt ein B1-Zertifikat brauchen, finden Sie im <a href="/leitfaden/telc-b1/">telc-B1-Leitfaden</a> den nächsten Schritt.',
+          text: 'Für den Sprung auf sicheres B1 lohnt sich zusätzlich die <a href="/grammar/b1.1/">B1-Grammatik</a>. Wenn du nach dem DTZ gezielt ein B1-Zertifikat brauchst, findest du im <a href="/leitfaden/telc-b1/">telc-B1-Leitfaden</a> den nächsten Schritt.',
         },
       ],
     },
@@ -273,23 +271,23 @@ export const dtz = {
     },
     {
       q: 'Kann man beim DTZ durchfallen?',
-      a: 'Der DTZ ist skaliert: Statt bestanden oder nicht bestanden bekommen Sie ein Ergebnis auf A2- oder B1-Niveau je Bereich. Ob dieses Ergebnis für Ihren Zweck ausreicht — Einbürgerung, Aufenthalt, Kursabschluss —, entscheidet die zuständige Stelle. Klären Sie das vorher.',
+      a: 'Der DTZ ist skaliert: Statt bestanden oder nicht bestanden bekommst du ein Ergebnis auf A2- oder B1-Niveau je Bereich. Ob dieses Ergebnis für deinen Zweck ausreicht — Einbürgerung, Aufenthalt, Kursabschluss —, entscheidet die zuständige Stelle. Kläre das vorher.',
     },
     {
       q: 'Wie lange dauert die DTZ Prüfung?',
-      a: 'Der schriftliche Teil dauert insgesamt rund 100 Minuten (Hören ca. 25, Lesen ca. 45, Schreiben ca. 30 Minuten). Die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten. Verbindliche Angaben bekommen Sie von Ihrem Prüfungszentrum.',
+      a: 'Der schriftliche Teil dauert insgesamt rund 100 Minuten (Hören ca. 25, Lesen ca. 45, Schreiben ca. 30 Minuten). Die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten. Verbindliche Angaben bekommst du von deinem Prüfungszentrum.',
     },
     {
       q: 'Ist der DTZ leichter als telc B1?',
-      a: 'Er ist anders. Der DTZ prüft A2 und B1 gleichzeitig, sodass ein Ergebnis unterhalb von B1 nicht automatisch ein Scheitern ist. telc B1 und Goethe B1 prüfen ausschließlich auf B1 mit einer festen Bestehensgrenze. Wenn Sie gezielt einen B1-Nachweis brauchen, ist eine reine B1-Prüfung der direktere Weg.',
+      a: 'Er ist anders. Der DTZ prüft A2 und B1 gleichzeitig, sodass ein Ergebnis unterhalb von B1 nicht automatisch ein Scheitern ist. telc B1 und Goethe B1 prüfen ausschließlich auf B1 mit einer festen Bestehensgrenze. Wenn du gezielt einen B1-Nachweis brauchst, ist eine reine B1-Prüfung der direktere Weg.',
     },
     {
       q: 'Kann ich den DTZ ohne Integrationskurs machen?',
-      a: 'Ja, eine Anmeldung ist auch ohne Kursteilnahme über ein Prüfungszentrum möglich. Ob und wie oft eine Wiederholung gefördert wird, hängt von Ihrer Kursberechtigung ab — das klärt Ihr Kursträger oder das BAMF.',
+      a: 'Ja, eine Anmeldung ist auch ohne Kursteilnahme über ein Prüfungszentrum möglich. Ob und wie oft eine Wiederholung gefördert wird, hängt von deiner Kursberechtigung ab — das klärt dein Kursträger oder das BAMF.',
     },
     {
       q: 'Wie oft kann man den DTZ wiederholen?',
-      a: 'Eine Wiederholung ist möglich; bei geförderten Integrationskursen gelten dafür eigene Regeln, die sich ändern können. Die für Sie gültigen Bedingungen nennt Ihnen Ihr Kursträger oder das BAMF.',
+      a: 'Eine Wiederholung ist möglich; bei geförderten Integrationskursen gelten dafür eigene Regeln, die sich ändern können. Die für dich gültigen Bedingungen nennt dir dein Kursträger oder das BAMF.',
     },
     {
       q: 'Welche Themen kommen im DTZ vor?',
@@ -297,12 +295,12 @@ export const dtz = {
     },
     {
       q: 'Was kostet der DTZ?',
-      a: 'Für Teilnehmende an geförderten Integrationskursen ist die Prüfung in der Regel Teil des Kurses. Bei separater Anmeldung setzt das Prüfungszentrum die Gebühr fest — fragen Sie dort nach dem aktuellen Preis.',
+      a: 'Für Teilnehmende an geförderten Integrationskursen ist die Prüfung in der Regel Teil des Kurses. Bei separater Anmeldung setzt das Prüfungszentrum die Gebühr fest — frag dort nach dem aktuellen Preis.',
     },
   ],
 
   cta: {
-    heading: 'Finden Sie heraus, wo Sie stehen',
-    body: 'Der Einstufungstest zeigt Ihnen Ihr Niveau pro Fertigkeit — beim DTZ zählt genau das.',
+    heading: 'Finde heraus, wo du stehst',
+    body: 'Der Einstufungstest zeigt dir dein Niveau pro Fertigkeit — beim DTZ zählt genau das.',
   },
 };

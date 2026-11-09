@@ -84,10 +84,10 @@ export const goetheA2 = {
     'Goethe-Zertifikat A2, Goethe A2 Prüfung, Goethe A2 Punkte, Goethe A2 bestanden, A2 Prüfung Vorbereitung, Goethe A2 Modellsatz, A2 Schreiben SMS E-Mail',
   badge: 'Leitfaden',
   lead:
-    'Das <strong>Goethe-Zertifikat A2</strong> ist die erste Prüfung, bei der zwei Grenzen gleichzeitig gelten: Sie brauchen genug Punkte <strong>im schriftlichen Teil</strong> und genug Punkte <strong>im Sprechen</strong>. Eine starke Lesenote rettet eine schwache mündliche Prüfung hier nicht mehr — anders als noch auf A1. Dieser Leitfaden zeigt Ihnen den Aufbau der vier Teile, die genaue Punkterechnung, wie Sie sich anmelden und einen realistischen Lernplan für 8 bis 12 Wochen.',
+    'Das <strong>Goethe-Zertifikat A2</strong> ist die erste Prüfung, bei der zwei Grenzen gleichzeitig gelten: Du brauchst genug Punkte <strong>im schriftlichen Teil</strong> und genug Punkte <strong>im Sprechen</strong>. Eine starke Lesenote rettet eine schwache mündliche Prüfung hier nicht mehr — anders als noch auf A1. Dieser Leitfaden zeigt dir den Aufbau der vier Teile, die genaue Punkterechnung, wie du dich anmeldest und einen realistischen Lernplan für 8 bis 12 Wochen.',
   datePublished: '2026-09-06',
   answer:
-    'Das Goethe-Zertifikat A2 ist die A2-Deutschprüfung des Goethe-Instituts für Erwachsene; empfohlen wird sie ab 16 Jahren, ein Mindestalter gibt es nicht. Sie besteht aus vier Teilen: Lesen (30 Minuten), Hören (ca. 30 Minuten), Schreiben (30 Minuten) und Sprechen (ca. 15 Minuten, als Paarprüfung zu zweit). Jeder Teil zählt 25 Punkte, zusammen also 100. Bestanden ist die Prüfung ab 60 Punkten insgesamt — dabei brauchen Sie mindestens 45 von 75 Punkten in den drei schriftlichen Teilen und mindestens 15 von 25 Punkten im Sprechen. Wer eine dieser beiden Grenzen verfehlt, hat die gesamte Prüfung nicht bestanden, auch bei 60 Punkten in der Summe.',
+    'Das Goethe-Zertifikat A2 ist die A2-Deutschprüfung des Goethe-Instituts für Erwachsene; empfohlen wird sie ab 16 Jahren, ein Mindestalter gibt es nicht. Sie besteht aus vier Teilen: Lesen (30 Minuten), Hören (ca. 30 Minuten), Schreiben (30 Minuten) und Sprechen (ca. 15 Minuten, als Paarprüfung zu zweit). Jeder Teil zählt 25 Punkte, zusammen also 100. Bestanden ist die Prüfung ab 60 Punkten insgesamt — dabei brauchst du mindestens 45 von 75 Punkten in den drei schriftlichen Teilen und mindestens 15 von 25 Punkten im Sprechen. Wer eine dieser beiden Grenzen verfehlt, hat die gesamte Prüfung nicht bestanden, auch bei 60 Punkten in der Summe.',
   factsCheckedOn: '2026-09-05',
   sources: [
     {
@@ -131,11 +131,11 @@ export const goetheA2 = {
       blocks: [
         {
           type: 'p',
-          text: 'Das <strong>Goethe-Zertifikat A2</strong> ist die A2-Deutschprüfung des Goethe-Instituts und weist die zweite Stufe des Gemeinsamen Europäischen Referenzrahmens (GER) nach: Sie verstehen Sätze und häufige Ausdrücke aus dem eigenen Alltag — Arbeit, Wohnung, Einkaufen, Familie, Termine — und können sich in einfachen Routinesituationen verständigen.',
+          text: 'Das <strong>Goethe-Zertifikat A2</strong> ist die A2-Deutschprüfung des Goethe-Instituts und weist die zweite Stufe des Gemeinsamen Europäischen Referenzrahmens (GER) nach: Du verstehst Sätze und häufige Ausdrücke aus dem eigenen Alltag — Arbeit, Wohnung, Einkaufen, Familie, Termine — und kannst dich in einfachen Routinesituationen verständigen.',
         },
         {
           type: 'p',
-          text: 'Es gibt zwei Fassungen der Prüfung. Für die hier beschriebene Erwachsenenfassung wird ein Alter <strong>ab 16 Jahren empfohlen</strong> — eine Altersgrenze ist das nicht: Die Prüfungen des Goethe-Instituts können unabhängig vom Erreichen eines Mindestalters abgelegt werden. Für Jugendliche gibt es die inhaltlich passend zugeschnittene Variante <strong>Goethe-Zertifikat A2: Fit in Deutsch</strong>. Format, Punkte und Bestehensregel sind bei beiden gleich aufgebaut, die Themen und Textsorten unterscheiden sich. Die Erwachsenenprüfung hat die ältere Prüfung „Start Deutsch 2“ abgelöst — wenn Ihnen dieser Name in älteren Kursbüchern begegnet, ist dieselbe Stufe gemeint.',
+          text: 'Es gibt zwei Fassungen der Prüfung. Für die hier beschriebene Erwachsenenfassung wird ein Alter <strong>ab 16 Jahren empfohlen</strong> — eine Altersgrenze ist das nicht: Die Prüfungen des Goethe-Instituts können unabhängig vom Erreichen eines Mindestalters abgelegt werden. Für Jugendliche gibt es die inhaltlich passend zugeschnittene Variante <strong>Goethe-Zertifikat A2: Fit in Deutsch</strong>. Format, Punkte und Bestehensregel sind bei beiden gleich aufgebaut, die Themen und Textsorten unterscheiden sich. Die Erwachsenenprüfung hat die ältere Prüfung „Start Deutsch 2“ abgelöst — wenn dir dieser Name in älteren Kursbüchern begegnet, ist dieselbe Stufe gemeint.',
         },
         {
           type: 'p',
@@ -143,11 +143,11 @@ export const goetheA2 = {
         },
         {
           type: 'callout',
-          text: 'Ob Ihr Antrag mit einem A2-Zeugnis vollständig ist, entscheidet immer die zuständige Ausländerbehörde oder Auslandsvertretung — nicht diese Seite und nicht ein Sprachkursanbieter. Fragen Sie dort nach, welches Niveau und welche Form des Nachweises in Ihrem Fall verlangt werden, bevor Sie einen Prüfungstermin buchen.',
+          text: 'Ob dein Antrag mit einem A2-Zeugnis vollständig ist, entscheidet immer die zuständige Ausländerbehörde oder Auslandsvertretung — nicht diese Seite und nicht ein Sprachkursanbieter. Frag dort nach, welches Niveau und welche Form des Nachweises in deinem Fall verlangt werden, bevor du einen Prüfungstermin buchst.',
         },
         {
           type: 'p',
-          text: 'Daneben legen viele Menschen A2 ohne rechtlichen Anlass ab: als Zwischenzielen Sie auf dem Weg zu B1, als Nachweis für Arbeitgeber und Sprachschulen oder einfach, um nach einem Jahr Lernen einen belastbaren Beleg in der Hand zu haben. Für ein <strong>Studium</strong> reicht A2 nicht: Für die Zulassung verlangen deutsche Hochschulen nach der Rahmenordnung der Hochschulrektorenkonferenz einen Nachweis wie DSH-2 oder TestDaF mit 4×TDN 4 — also ein deutlich höheres Niveau. Welches Niveau ein <strong>Ausbildungsbetrieb</strong> erwartet, legt der Betrieb beziehungsweise die zuständige Kammer fest; fragen Sie dort nach, statt sich auf eine allgemeine Angabe zu verlassen.',
+          text: 'Daneben legen viele Menschen A2 ohne rechtlichen Anlass ab: als Zwischenziel auf dem Weg zu B1, als Nachweis für Arbeitgeber und Sprachschulen oder einfach, um nach einem Jahr Lernen einen belastbaren Beleg in der Hand zu haben. Für ein <strong>Studium</strong> reicht A2 nicht: Für die Zulassung verlangen deutsche Hochschulen nach der Rahmenordnung der Hochschulrektorenkonferenz einen Nachweis wie DSH-2 oder TestDaF mit 4×TDN 4 — also ein deutlich höheres Niveau. Welches Niveau ein <strong>Ausbildungsbetrieb</strong> erwartet, legt der Betrieb beziehungsweise die zuständige Kammer fest; frag dort nach, statt dich auf eine allgemeine Angabe zu verlassen.',
         },
       ],
     },
@@ -163,7 +163,7 @@ export const goetheA2 = {
           type: 'table',
           head: ['Teil', 'Dauer', 'Aufgaben', 'Punkte'],
           rows: [
-            ['Lesen', '30 Min.', '4 Teile, 20 Aufgaben: kurze Mitteilungen und E-Mails, Anzeigen, Zeitungs- und Internettexte. In den Teilen 1–3 kreuzen Sie an, in Teil 4 ordnen Sie zu.', '25'],
+            ['Lesen', '30 Min.', '4 Teile, 20 Aufgaben: kurze Mitteilungen und E-Mails, Anzeigen, Zeitungs- und Internettexte. In den Teilen 1–3 kreuzt du an, in Teil 4 ordnest du zu.', '25'],
             ['Hören', 'ca. 30 Min.', '4 Teile, 20 Aufgaben: Ansagen, Gespräche, Nachrichten auf dem Anrufbeantworter, Radiobeiträge und ein Interview.', '25'],
             ['Schreiben', '30 Min.', '2 Teile: eine kurze persönliche Nachricht (SMS) und eine halbformelle E-Mail, jeweils mit 3 Leitpunkten.', '25'],
             ['Sprechen', 'ca. 15 Min. zu zweit', '3 Teile: Fragen zur Person stellen und beantworten, über das eigene Leben erzählen, gemeinsam etwas planen.', '25'],
@@ -171,15 +171,15 @@ export const goetheA2 = {
         },
         {
           type: 'p',
-          text: 'Im Hören gibt es eine Falle, die man vorher kennen sollte: Nicht jeder Text läuft zweimal. In den <strong>Teilen 1, 3 und 4</strong> hören Sie zweimal, im <strong>Teil 2 nur einmal</strong>. Genau dort verlieren viele Punkte, weil sie an einem unbekannten Wort hängen bleiben und den Rest der Aufnahme verpassen. Wer weiß, dass dieser Teil nur einmal läuft, liest die Aufgaben vorher und hört gezielt.',
+          text: 'Im Hören gibt es eine Falle, die man vorher kennen sollte: Nicht jeder Text läuft zweimal. In den <strong>Teilen 1, 3 und 4</strong> hörst du zweimal, im <strong>Teil 2 nur einmal</strong>. Genau dort verlieren viele Punkte, weil sie an einem unbekannten Wort hängen bleiben und den Rest der Aufnahme verpassen. Wer weiß, dass dieser Teil nur einmal läuft, liest die Aufgaben vorher und hört gezielt.',
         },
         {
           type: 'p',
-          text: 'Das Sprechen ist eine <strong>Paarprüfung</strong> ohne Vorbereitungszeit: Sie sprechen mit einer zweiten teilnehmenden Person, nicht nur mit der Prüferin oder dem Prüfer. Zuerst stellen Sie sich gegenseitig Fragen zur Person, dann erzählen Sie etwas aus Ihrem Alltag, und zum Schluss planen Sie gemeinsam etwas — zum Beispiel einen Ausflug oder ein Treffen. Der dritte Teil ist der, den man am wenigsten allein üben kann, und deshalb der, den die meisten unterschätzen.',
+          text: 'Das Sprechen ist eine <strong>Paarprüfung</strong> ohne Vorbereitungszeit: Du sprichst mit einer zweiten teilnehmenden Person, nicht nur mit der Prüferin oder dem Prüfer. Zuerst stellt ihr euch gegenseitig Fragen zur Person, dann erzählst du etwas aus deinem Alltag, und zum Schluss plant ihr gemeinsam etwas — zum Beispiel einen Ausflug oder ein Treffen. Der dritte Teil ist der, den man am wenigsten allein üben kann, und deshalb der, den die meisten unterschätzen.',
         },
         {
           type: 'callout',
-          text: 'Der kostenlose Modellsatz zeigt Ihnen alle vier Teile im Original-Layout, inklusive Antwortbogen. Ein einziger Durchgang damit erspart Ihnen am Prüfungstag die Frage „Was soll ich hier eigentlich machen?“ — und die kostet mehr Zeit als jede Vokabellücke.',
+          text: 'Der kostenlose Modellsatz zeigt dir alle vier Teile im Original-Layout, inklusive Antwortbogen. Ein einziger Durchgang damit erspart dir am Prüfungstag die Frage „Was soll ich hier eigentlich machen?“ — und die kostet mehr Zeit als jede Vokabellücke.',
         },
       ],
     },
@@ -193,7 +193,7 @@ export const goetheA2 = {
         },
         {
           type: 'p',
-          text: 'Bestanden ist die Prüfung, wenn Sie insgesamt mindestens <strong>60 von 100 Punkten</strong> erreichen <strong>und</strong> dabei mindestens <strong>45 von 75 Punkten in der schriftlichen Prüfung</strong> sowie mindestens <strong>15 von 25 Punkten in der mündlichen Prüfung</strong>. Außerdem müssen alle Prüfungsteile abgelegt worden sein.',
+          text: 'Bestanden ist die Prüfung, wenn du insgesamt mindestens <strong>60 von 100 Punkten</strong> erreichst <strong>und</strong> dabei mindestens <strong>45 von 75 Punkten in der schriftlichen Prüfung</strong> sowie mindestens <strong>15 von 25 Punkten in der mündlichen Prüfung</strong>. Außerdem müssen alle Prüfungsteile abgelegt worden sein.',
         },
         {
           type: 'p',
@@ -201,11 +201,11 @@ export const goetheA2 = {
         },
         {
           type: 'callout',
-          text: 'Rechnen Sie rückwärts, nicht vorwärts: 15 von 25 Punkten im Sprechen sind 60 % einer Prüfung, in der Sie unter Zeitdruck und mit einer fremden Partnerin sprechen. Wer das Sprechen bis zwei Wochen vor dem Termin aufschiebt, plant genau die Hürde ein, die am schwersten kurzfristig zu heben ist.',
+          text: 'Rechne rückwärts, nicht vorwärts: 15 von 25 Punkten im Sprechen sind 60 % einer Prüfung, in der du unter Zeitdruck und mit einer fremden Partnerin sprichst. Wer das Sprechen bis zwei Wochen vor dem Termin aufschiebt, plant genau die Hürde ein, die am schwersten kurzfristig zu heben ist.',
         },
         {
           type: 'p',
-          text: 'Wie oft und in welcher Form Sie die Prüfung wiederholen können, regeln die Durchführungsbestimmungen. Wiederholen lässt sich dort entweder die <strong>mündliche</strong> oder die <strong>gesamte schriftliche</strong> Prüfung — nie ein einzelner Prüfungsteil, also zum Beispiel nicht Lesen allein. Und auch das nur in Ausnahmefällen und nur, wenn die organisatorischen Bedingungen am Prüfungszentrum es zulassen; verlassen Sie sich also nicht darauf. Fragen Sie Ihr Prüfungszentrum, bevor Sie sich zum zweiten Mal anmelden.',
+          text: 'Wie oft und in welcher Form du die Prüfung wiederholen kannst, regeln die Durchführungsbestimmungen. Wiederholen lässt sich dort entweder die <strong>mündliche</strong> oder die <strong>gesamte schriftliche</strong> Prüfung — nie ein einzelner Prüfungsteil, also zum Beispiel nicht Lesen allein. Und auch das nur in Ausnahmefällen und nur, wenn die organisatorischen Bedingungen am Prüfungszentrum es zulassen; verlass dich also nicht darauf. Frag dein Prüfungszentrum, bevor du dich zum zweiten Mal anmeldest.',
         },
       ],
     },
@@ -215,7 +215,7 @@ export const goetheA2 = {
       blocks: [
         {
           type: 'p',
-          text: 'Die Prüfung legen Sie an einem Goethe-Institut oder an einem lizenzierten Prüfungszentrum ab. Welche Zentren das in Ihrer Stadt oder Ihrem Land sind, steht auf goethe.de; Termine, Anmeldeweg und Fristen stehen auf der Seite des jeweiligen Zentrums. Planen Sie den Vorlauf großzügig: In Städten mit wenigen Zentren sind A2-Termine oft Wochen im Voraus belegt.',
+          text: 'Die Prüfung legst du an einem Goethe-Institut oder an einem lizenzierten Prüfungszentrum ab. Welche Zentren das in deiner Stadt oder deinem Land sind, steht auf goethe.de; Termine, Anmeldeweg und Fristen stehen auf der Seite des jeweiligen Zentrums. Plane den Vorlauf großzügig: In Städten mit wenigen Zentren sind A2-Termine oft Wochen im Voraus belegt.',
         },
         {
           type: 'p',
@@ -231,7 +231,7 @@ export const goetheA2 = {
             'Modellsatz und Übungssatz Erwachsene, mit Lösungen und Audios — kostenlos beim Goethe-Institut',
             'Wortliste A2 mit rund 1.300 Einträgen, thematisch und alphabetisch geordnet',
             'Die Durchführungsbestimmungen: dort stehen Punkte, Bestehensgrenzen und die Regeln zum Prüfungsablauf',
-            'Die Terminliste Ihres Prüfungszentrums — der Engpass ist oft der Termin, nicht die Vorbereitung',
+            'Die Terminliste deines Prüfungszentrums — der Engpass ist oft der Termin, nicht die Vorbereitung',
           ],
         },
       ],
@@ -242,11 +242,11 @@ export const goetheA2 = {
       blocks: [
         {
           type: 'p',
-          text: 'Das Goethe-Institut rechnet je nach Vorkenntnissen und Lernbedingungen mit <strong>200 bis 350 Unterrichtseinheiten à 45 Minuten</strong> bis zum Niveau A2 — das ist der Weg von null, nicht der Weg von A1. Dieser Plan setzt ein <strong>abgeschlossenes A1-Niveau</strong> voraus und deckt nur die letzte Etappe ab. Bei 45 bis 60 Minuten Lernzeit am Tag sind dafür 8 bis 12 Wochen realistisch. Wenn Sie weniger als vier Tage pro Woche lernen, planen Sie eher am oberen Ende — und wenn Sie bei null anfangen, ist A1 der richtige Startpunkt, nicht dieser Plan.',
+          text: 'Das Goethe-Institut rechnet je nach Vorkenntnissen und Lernbedingungen mit <strong>200 bis 350 Unterrichtseinheiten à 45 Minuten</strong> bis zum Niveau A2 — das ist der Weg von null, nicht der Weg von A1. Dieser Plan setzt ein <strong>abgeschlossenes A1-Niveau</strong> voraus und deckt nur die letzte Etappe ab. Bei 45 bis 60 Minuten Lernzeit am Tag sind dafür 8 bis 12 Wochen realistisch. Wenn du weniger als vier Tage pro Woche lernst, plane eher am oberen Ende — und wenn du bei null anfängst, ist A1 der richtige Startpunkt, nicht dieser Plan.',
         },
         {
           type: 'p',
-          text: 'Bevor Sie loslegen: Machen Sie den <a href="/level-test/">kostenlosen Einstufungstest</a>. Er zeigt Ihnen in etwa 20 Minuten, ob Sie wirklich auf A1-Niveau stehen oder ob unten noch Lücken sind, die Sie später Punkte kosten.',
+          text: 'Bevor du loslegst: Mach den <a href="/level-test/">kostenlosen Einstufungstest</a>. Er zeigt dir in etwa 20 Minuten, ob du wirklich auf A1-Niveau stehst oder ob unten noch Lücken sind, die dich später Punkte kosten.',
         },
         {
           type: 'steps',
@@ -260,7 +260,7 @@ export const goetheA2 = {
                 'Wechselpräpositionen: wo? mit Dativ, wohin? mit Akkusativ — an, auf, in, neben, über, unter, vor',
                 'Jeden Tag zehn Minuten laut sprechen, nicht nur ankreuzen',
               ],
-              tip: 'Dativ und Akkusativ sind auf A2 kein Grammatikthema unter vielen — sie stecken in fast jedem Satz, den Sie in Schreiben und Sprechen produzieren. Wer sie hier sauber sortiert, spart in Woche 8 die Fehlersuche.',
+              tip: 'Dativ und Akkusativ sind auf A2 kein Grammatikthema unter vielen — sie stecken in fast jedem Satz, den du in Schreiben und Sprechen produzierst. Wer sie hier sauber sortiert, spart in Woche 8 die Fehlersuche.',
             },
             {
               label: 'Woche 3–4',
@@ -271,7 +271,7 @@ export const goetheA2 = {
                 'Präteritum der Modalverben plus war und hatte: „Ich konnte gestern nicht kommen.“',
                 'Eine kurze Wochenrückschau schreiben — fünf Sätze, jeden Tag',
               ],
-              tip: 'Im Sprechen Teil 2 erzählen Sie aus Ihrem Leben. Ohne sicheres Perfekt bleibt dieser Teil bei Aufzählungen im Präsens stecken, und genau dafür gibt es weniger Punkte.',
+              tip: 'Im Sprechen Teil 2 erzählst du aus deinem Leben. Ohne sicheres Perfekt bleibt dieser Teil bei Aufzählungen im Präsens stecken, und genau dafür gibt es weniger Punkte.',
             },
             {
               label: 'Woche 5–6',
@@ -304,7 +304,7 @@ export const goetheA2 = {
                 'Den schwächsten Teil identifizieren und in den Rest der Vorbereitung priorisieren',
                 'Das Sprechen ab jetzt täglich laut üben, nicht nur im Kopf',
               ],
-              tip: 'Ein erstes Ergebnis unter 60 Punkten ist an dieser Stelle normal. Der Test ist eine Messung, keine Note — dafür machen Sie ihn zwei Wochen vorher und nicht am Vorabend.',
+              tip: 'Ein erstes Ergebnis unter 60 Punkten ist an dieser Stelle normal. Der Test ist eine Messung, keine Note — dafür machst du ihn zwei Wochen vorher und nicht am Vorabend.',
             },
             {
               label: 'Woche 11–12',
@@ -385,7 +385,7 @@ export const goetheA2 = {
             {
               eyebrow: 'Schreiben',
               title: 'SMS und E-Mail mit Leitpunkten',
-              body: 'Schreiben Sie die Aufgabenform der Prüfung — kurze Nachricht und halbformelle E-Mail — und bekommen Sie sofort Rückmeldung zu Leitpunkten, Anrede, Gruß und Verbstellung an Ihren eigenen Sätzen.',
+              body: 'Schreib die Aufgabenform der Prüfung — kurze Nachricht und halbformelle E-Mail — und bekomm sofort Rückmeldung zu Leitpunkten, Anrede, Gruß und Verbstellung an deinen eigenen Sätzen.',
             },
             {
               eyebrow: 'Sprechen',
@@ -396,7 +396,7 @@ export const goetheA2 = {
         },
         {
           type: 'p',
-          text: 'Der geführte Weg dorthin ist der A2.1-Kurs: <a href="/level/a2.1">A2.1 im Kursbereich öffnen</a>. Die Regeln zum Nachschlagen stehen in der <a href="/grammar/a2.1/">A2.1-Grammatikbibliothek</a>, und wie sich das gegen andere Anbieter schlägt, steht im <a href="/vergleich/">Vergleich</a>. Wenn Sie noch nicht wissen, wo Sie stehen, beginnen Sie mit dem <a href="/level-test/">Einstufungstest</a>.',
+          text: 'Der geführte Weg dorthin ist der A2.1-Kurs: <a href="/level/a2.1">A2.1 im Kursbereich öffnen</a>. Die Regeln zum Nachschlagen stehen in der <a href="/grammar/a2.1/">A2.1-Grammatikbibliothek</a>, und wie sich das gegen andere Anbieter schlägt, steht im <a href="/vergleich/">Vergleich</a>. Wenn du noch nicht weißt, wo du stehst, beginn mit dem <a href="/level-test/">Einstufungstest</a>.',
         },
       ],
     },
@@ -417,11 +417,11 @@ export const goetheA2 = {
     },
     {
       q: 'Was muss man beim Goethe-Zertifikat A2 schreiben?',
-      a: 'Der Prüfungsteil Schreiben hat zwei Aufgaben und dauert 30 Minuten. In Teil 1 schreiben Sie eine kurze persönliche Nachricht, etwa eine SMS an eine Freundin oder einen Freund, mit rund 20 bis 30 Wörtern. In Teil 2 folgt eine halbformelle E-Mail mit rund 30 bis 40 Wörtern. Beide Aufgaben geben drei Leitpunkte vor, und alle drei müssen bearbeitet werden.',
+      a: 'Der Prüfungsteil Schreiben hat zwei Aufgaben und dauert 30 Minuten. In Teil 1 schreibst du eine kurze persönliche Nachricht, etwa eine SMS an eine Freundin oder einen Freund, mit rund 20 bis 30 Wörtern. In Teil 2 folgt eine halbformelle E-Mail mit rund 30 bis 40 Wörtern. Beide Aufgaben geben drei Leitpunkte vor, und alle drei müssen bearbeitet werden.',
     },
     {
       q: 'Wie viele Aufgaben haben Lesen und Hören?',
-      a: 'Lesen und Hören haben je vier Teile mit zusammen 20 Aufgaben. Im Lesen kreuzen Sie in den Teilen 1 bis 3 an und ordnen in Teil 4 zu. Im Hören hören Sie die Teile 1, 3 und 4 zweimal, Teil 2 dagegen nur einmal — das ist die Stelle, an der ein unbekanntes Wort am meisten kostet.',
+      a: 'Lesen und Hören haben je vier Teile mit zusammen 20 Aufgaben. Im Lesen kreuzt du in den Teilen 1 bis 3 an und ordnest in Teil 4 zu. Im Hören hörst du die Teile 1, 3 und 4 zweimal, Teil 2 dagegen nur einmal — das ist die Stelle, an der ein unbekanntes Wort am meisten kostet.',
     },
     {
       q: 'Wo finde ich kostenloses Übungsmaterial für A2?',
@@ -433,16 +433,16 @@ export const goetheA2 = {
     },
     {
       q: 'Reicht ein A2-Zeugnis für meinen Aufenthaltstitel?',
-      a: 'Das hängt vom Aufenthaltstitel ab und entscheidet die zuständige Behörde. Im Aufenthaltsgesetz wird A2 unter anderem in § 25a und § 25b ausdrücklich genannt, dort jeweils als „hinreichende mündliche Deutschkenntnisse im Sinne des Niveaus A2“. Für die Chancenkarte verlangt § 20a nur mindestens einfache Deutschkenntnisse oder Englisch auf B2; A2 bringt einen zusätzlichen Punkt in der Punktetabelle. Klären Sie Ihren Fall vor der Anmeldung mit der Ausländerbehörde oder der Auslandsvertretung.',
+      a: 'Das hängt vom Aufenthaltstitel ab und entscheidet die zuständige Behörde. Im Aufenthaltsgesetz wird A2 unter anderem in § 25a und § 25b ausdrücklich genannt, dort jeweils als „hinreichende mündliche Deutschkenntnisse im Sinne des Niveaus A2“. Für die Chancenkarte verlangt § 20a nur mindestens einfache Deutschkenntnisse oder Englisch auf B2; A2 bringt einen zusätzlichen Punkt in der Punktetabelle. Kläre deinen Fall vor der Anmeldung mit der Ausländerbehörde oder der Auslandsvertretung.',
     },
     {
       q: 'Wie lange dauert die Vorbereitung von A1 auf A2?',
-      a: 'Das Goethe-Institut rechnet mit 200 bis 350 Unterrichtseinheiten à 45 Minuten bis zum Niveau A2 — von null gerechnet. Mit abgeschlossenem A1 und 45 bis 60 Minuten Lernzeit am Tag sind für die letzte Etappe 8 bis 12 Wochen realistisch, davon die letzten zwei bis vier Wochen als reine Prüfungsphase mit Modellsatz und Übungssatz. Wer seltener als viermal pro Woche lernt, sollte eher mit dem oberen Ende planen. Der Einstufungstest zeigt Ihnen vorher, ob A1 wirklich sitzt.',
+      a: 'Das Goethe-Institut rechnet mit 200 bis 350 Unterrichtseinheiten à 45 Minuten bis zum Niveau A2 — von null gerechnet. Mit abgeschlossenem A1 und 45 bis 60 Minuten Lernzeit am Tag sind für die letzte Etappe 8 bis 12 Wochen realistisch, davon die letzten zwei bis vier Wochen als reine Prüfungsphase mit Modellsatz und Übungssatz. Wer seltener als viermal pro Woche lernt, sollte eher mit dem oberen Ende planen. Der Einstufungstest zeigt dir vorher, ob A1 wirklich sitzt.',
     },
   ],
 
   cta: {
-    heading: 'Finden Sie heraus, wo Sie vor dem Goethe-Zertifikat A2 stehen',
-    body: 'Der Einstufungstest zeigt Ihnen in etwa 20 Minuten, ob Ihr A1 trägt und welche A2-Themen noch fehlen — danach wissen Sie, wie viel der 8 bis 12 Wochen Sie wirklich brauchen.',
+    heading: 'Finde heraus, wo du vor dem Goethe-Zertifikat A2 stehst',
+    body: 'Der Einstufungstest zeigt dir in etwa 20 Minuten, ob dein A1 trägt und welche A2-Themen noch fehlen — danach weißt du, wie viel der 8 bis 12 Wochen du wirklich brauchst.',
   },
 };

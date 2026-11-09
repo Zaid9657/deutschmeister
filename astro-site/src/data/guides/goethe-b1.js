@@ -1,5 +1,3 @@
-import { FOUNDER_LINE_DE } from '../marketing.js';
-
 // Goethe-Zertifikat B1 — written 2026-08-22.
 //
 // FACT SOURCING. goethe.de is blocked by this environment's egress proxy, so
@@ -24,7 +22,7 @@ export const goetheB1 = {
     'Goethe Zertifikat B1, Goethe B1 Prüfung, Goethe B1 Module, Goethe B1 bestehen, Goethe B1 Vorbereitung, Deutsch B1 Prüfung',
   badge: 'Leitfaden',
   lead:
-    'Das <strong>Goethe-Zertifikat B1</strong> hat eine Eigenschaft, die keine andere große B1-Prüfung so bietet: Sie können die vier Module einzeln ablegen und einzeln wiederholen. Das ändert die Vorbereitung grundlegend — richtig genutzt, ist es der größte strategische Vorteil dieser Prüfung. Dieser Leitfaden zeigt Ihnen den Aufbau, die Punktegrenzen und einen Lernplan, der die Modulstruktur ausnutzt.',
+    'Das <strong>Goethe-Zertifikat B1</strong> hat eine Eigenschaft, die keine andere große B1-Prüfung so bietet: Du kannst die vier Module einzeln ablegen und einzeln wiederholen. Das ändert die Vorbereitung grundlegend — richtig genutzt, ist es der größte strategische Vorteil dieser Prüfung. Dieser Leitfaden zeigt dir den Aufbau, die Punktegrenzen und einen Lernplan, der die Modulstruktur ausnutzt.',
   datePublished: '2026-08-22',
   answer:
     'Das Goethe-Zertifikat B1 besteht aus vier Modulen: Lesen, Hören, Schreiben und Sprechen. In jedem Modul sind maximal 100 Punkte erreichbar, bestanden ist ein Modul ab 60 Punkten, also 60 %. Die Module lassen sich einzeln ablegen und einzeln wiederholen, und zwischen ihnen wird nicht verrechnet: 95 Punkte im Lesen retten kein Schreiben mit 55 Punkten.',
@@ -42,11 +40,11 @@ export const goetheB1 = {
         },
         {
           type: 'p',
-          text: 'B1 heißt: Sie kommen in vertrauten Alltagssituationen zurecht, verstehen die Hauptpunkte, wenn klar und in Standardsprache gesprochen wird, können über Erlebnisse berichten und Ihre Meinung begründen. Für Aufenthaltstitel und Einbürgerung ist B1 die übliche Mindestanforderung.',
+          text: 'B1 heißt: Du kommst in vertrauten Alltagssituationen zurecht, verstehst die Hauptpunkte, wenn klar und in Standardsprache gesprochen wird, kannst über Erlebnisse berichten und deine Meinung begründen. Für Aufenthaltstitel und Einbürgerung ist B1 die übliche Mindestanforderung.',
         },
         {
           type: 'p',
-          text: 'Das Zertifikat ist zeitlich unbegrenzt gültig. Ob eine Behörde oder ein Arbeitgeber einen Nachweis akzeptiert, der älter als ein oder zwei Jahre ist, entscheidet allerdings die jeweilige Stelle — fragen Sie dort nach, bevor Sie sich auf ein altes Zertifikat verlassen.',
+          text: 'Das Zertifikat ist zeitlich unbegrenzt gültig. Ob eine Behörde oder ein Arbeitgeber einen Nachweis akzeptiert, der älter als ein oder zwei Jahre ist, entscheidet allerdings die jeweilige Stelle — frag dort nach, bevor du dich auf ein altes Zertifikat verlässt.',
         },
       ],
     },
@@ -56,7 +54,7 @@ export const goetheB1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Das Goethe-Zertifikat B1 besteht aus vier Modulen: Lesen, Hören, Schreiben und Sprechen. Sie können sie <strong>alle an einem Termin ablegen oder einzeln</strong>. Jedes Modul wird separat bewertet und separat bescheinigt.',
+          text: 'Das Goethe-Zertifikat B1 besteht aus vier Modulen: Lesen, Hören, Schreiben und Sprechen. Du kannst sie <strong>alle an einem Termin ablegen oder einzeln</strong>. Jedes Modul wird separat bewertet und separat bescheinigt.',
         },
         {
           type: 'table',
@@ -74,7 +72,7 @@ export const goetheB1 = {
         },
         {
           type: 'callout',
-          text: 'Nutzen Sie die Module strategisch: Wenn ein Fertigkeitsbereich klar schwächer ist, legen Sie die drei starken Module zuerst ab und nehmen Sie sich für das vierte mehr Zeit. Sie wiederholen dann nur dieses eine — nicht die ganze Prüfung.',
+          text: 'Nutze die Module strategisch: Wenn ein Fertigkeitsbereich klar schwächer ist, leg die drei starken Module zuerst ab und nimm dir für das vierte mehr Zeit. Du wiederholst dann nur dieses eine — nicht die ganze Prüfung.',
         },
       ],
     },
@@ -84,7 +82,7 @@ export const goetheB1 = {
       blocks: [
         {
           type: 'p',
-          text: 'In jedem Modul können Sie maximal <strong>100 Punkte</strong> erreichen. Bestanden ist ein Modul ab <strong>60 Punkten</strong>, also 60 %. Diese Grenze gilt für jedes Modul einzeln.',
+          text: 'In jedem Modul kannst du maximal <strong>100 Punkte</strong> erreichen. Bestanden ist ein Modul ab <strong>60 Punkten</strong>, also 60 %. Diese Grenze gilt für jedes Modul einzeln.',
         },
         {
           type: 'p',
@@ -92,11 +90,11 @@ export const goetheB1 = {
         },
         {
           type: 'p',
-          text: 'Praktisch bedeutet das für die Vorbereitung: Es lohnt sich nicht, Ihr stärkstes Modul von 85 auf 95 Punkte zu polieren. Diese zehn Punkte helfen Ihnen nirgends. Die gleiche Lernzeit im schwächsten Modul entscheidet dagegen über Bestehen oder Nichtbestehen.',
+          text: 'Praktisch bedeutet das für die Vorbereitung: Es lohnt sich nicht, dein stärkstes Modul von 85 auf 95 Punkte zu polieren. Diese zehn Punkte helfen dir nirgends. Die gleiche Lernzeit im schwächsten Modul entscheidet dagegen über Bestehen oder Nichtbestehen.',
         },
         {
           type: 'callout',
-          text: 'Planen Sie mit 70–75 Punkten pro Modul, nicht mit 60. Am Prüfungstag kostet Nervosität Punkte, und beim Schreiben und Sprechen hängt die Bewertung stärker vom Gesamteindruck ab als beim Ankreuzen.',
+          text: 'Plane mit 70–75 Punkten pro Modul, nicht mit 60. Am Prüfungstag kostet Nervosität Punkte, und beim Schreiben und Sprechen hängt die Bewertung stärker vom Gesamteindruck ab als beim Ankreuzen.',
         },
       ],
     },
@@ -110,7 +108,7 @@ export const goetheB1 = {
         },
         {
           type: 'p',
-          text: 'Starten Sie mit dem <a href="/level-test/">kostenlosen Einstufungstest</a>, damit Sie Ihre Ausgangslage kennen statt sie zu schätzen.',
+          text: 'Starte mit dem <a href="/level-test/">kostenlosen Einstufungstest</a>, damit du deine Ausgangslage kennst statt sie zu schätzen.',
         },
         {
           type: 'steps',
@@ -124,7 +122,7 @@ export const goetheB1 = {
                 'Die vier Ergebnisse vergleichen: Welches Modul ist am schwächsten?',
                 'Lernzeit danach aufteilen — das schwächste Modul bekommt den größten Anteil',
               ],
-              tip: 'Diese Woche fühlt sich unproduktiv an und ist die wichtigste. Ohne Messung optimieren Sie acht Wochen lang das, was Sie ohnehin schon können.',
+              tip: 'Diese Woche fühlt sich unproduktiv an und ist die wichtigste. Ohne Messung optimierst du acht Wochen lang das, was du ohnehin schon kannst.',
             },
             {
               label: 'Woche 2–3',
@@ -136,7 +134,7 @@ export const goetheB1 = {
                 'Konnektoren: obwohl, trotzdem, deshalb, während',
                 'Täglich eine Hörübung auf B1-Niveau',
               ],
-              tip: 'Die Grammatik-Lektionen erklären auf Englisch, warum eine Struktur so funktioniert. Das Sentence X-Ray zeigt Ihnen an Ihren eigenen Sätzen, was passiert.',
+              tip: 'Die Grammatik-Lektionen erklären auf Englisch, warum eine Struktur so funktioniert. Das Sentence X-Ray zeigt dir an deinen eigenen Sätzen, was passiert.',
             },
             {
               label: 'Woche 4–5',
@@ -167,9 +165,9 @@ export const goetheB1 = {
                 'Die Messung aus Woche 1 wiederholen — was hat sich bewegt?',
                 'Die verbleibende Lernzeit fast vollständig ins schwächste Modul stecken',
                 'Eigene Fehler durchgehen statt neue Themen anzufangen',
-                'Falls Sie modular antreten: Termine für die starken Module fest buchen',
+                'Falls du modular antrittst: Termine für die starken Module fest buchen',
               ],
-              tip: 'Nutzen Sie das Sentence X-Ray für Sätze, die Ihnen korrigiert wurden. Es zeigt Kasus, Wortstellung und Verbform an Ihrem eigenen Fehler.',
+              tip: 'Nutze das Sentence X-Ray für Sätze, die dir korrigiert wurden. Es zeigt Kasus, Wortstellung und Verbform an deinem eigenen Fehler.',
             },
             {
               label: 'Woche 8',
@@ -195,11 +193,11 @@ export const goetheB1 = {
           items: [
             {
               title: 'Die Modulstruktur nicht nutzen',
-              body: 'Alle vier Module an einem Tag abzulegen ist bequem, aber selten optimal. Wenn ein Modul deutlich schwächer ist, verschenken Sie den größten Vorteil dieser Prüfung: Sie könnten die starken Module früher abhaken und sich für das schwache Wochen mehr Zeit nehmen.',
+              body: 'Alle vier Module an einem Tag abzulegen ist bequem, aber selten optimal. Wenn ein Modul deutlich schwächer ist, verschenkst du den größten Vorteil dieser Prüfung: Du könntest die starken Module früher abhaken und dir für das schwache Wochen mehr Zeit nehmen.',
             },
             {
               title: 'Das starke Modul weiter polieren',
-              body: 'Weil es sich gut anfühlt. Da zwischen den Modulen nicht verrechnet wird, sind Punkte oberhalb von 60 in einem Modul für das Bestehen wertlos. Lernzeit gehört dorthin, wo Sie unter der Grenze liegen.',
+              body: 'Weil es sich gut anfühlt. Da zwischen den Modulen nicht verrechnet wird, sind Punkte oberhalb von 60 in einem Modul für das Bestehen wertlos. Lernzeit gehört dorthin, wo du unter der Grenze liegst.',
             },
             {
               title: 'Sprechen nur im Kopf üben',
@@ -211,7 +209,7 @@ export const goetheB1 = {
             },
             {
               title: 'In der Paarprüfung den Partner ignorieren',
-              body: 'Im gemeinsamen Planungsteil wird bewertet, ob Sie miteinander sprechen. Wer seinen vorbereiteten Text abspult, ohne auf Vorschläge einzugehen, wirkt wie ein Monolog neben einem zweiten Monolog. Rückfragen und Zustimmung sind Teil der Leistung.',
+              body: 'Im gemeinsamen Planungsteil wird bewertet, ob ihr miteinander sprecht. Wer seinen vorbereiteten Text abspult, ohne auf Vorschläge einzugehen, wirkt wie ein Monolog neben einem zweiten Monolog. Rückfragen und Zustimmung sind Teil der Leistung.',
             },
           ],
         },
@@ -223,7 +221,7 @@ export const goetheB1 = {
       blocks: [
         {
           type: 'p',
-          text: `${FOUNDER_LINE_DE} Die folgenden Werkzeuge unterstützen Ihre Vorbereitung:`,
+          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist Deutschmeister aufgebaut — von einem Team von Ärzten in Deutschland, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',
@@ -246,7 +244,7 @@ export const goetheB1 = {
             {
               eyebrow: 'Modul Schreiben',
               title: 'Grammatik + Sentence X-Ray',
-              body: 'Grammatik auf Englisch erklärt, plus ein Werkzeug, das Ihre eigenen Sätze in Fälle und Satzglieder zerlegt — dort entstehen die Fehler, die im Schreiben Punkte kosten.',
+              body: 'Grammatik auf Englisch erklärt, plus ein Werkzeug, das deine eigenen Sätze in Fälle und Satzglieder zerlegt — dort entstehen die Fehler, die im Schreiben Punkte kosten.',
             },
           ],
         },
@@ -261,7 +259,7 @@ export const goetheB1 = {
   faq: [
     {
       q: 'Kann ich die Module des Goethe-Zertifikats B1 einzeln ablegen?',
-      a: 'Ja. Lesen, Hören, Schreiben und Sprechen können einzeln oder gemeinsam an einem Termin abgelegt werden, und jedes Modul wird separat bewertet. Bis wann einzeln bestandene Module zu einem Gesamtzertifikat kombiniert werden können, regelt Ihr Prüfungszentrum — fragen Sie dort nach, bevor Sie die Prüfung aufteilen.',
+      a: 'Ja. Lesen, Hören, Schreiben und Sprechen können einzeln oder gemeinsam an einem Termin abgelegt werden, und jedes Modul wird separat bewertet. Bis wann einzeln bestandene Module zu einem Gesamtzertifikat kombiniert werden können, regelt dein Prüfungszentrum — frag dort nach, bevor du die Prüfung aufteilst.',
     },
     {
       q: 'Wie viele Punkte braucht man beim Goethe-Zertifikat B1?',
@@ -269,11 +267,11 @@ export const goetheB1 = {
     },
     {
       q: 'Muss ich bei nicht bestandenem Modul die ganze Prüfung wiederholen?',
-      a: 'Nein. Sie wiederholen nur das Modul, das Sie nicht bestanden haben. Das ist der wesentliche Vorteil der Modulstruktur gegenüber Prüfungen, die schriftlich und mündlich als Blöcke bewerten.',
+      a: 'Nein. Du wiederholst nur das Modul, das du nicht bestanden hast. Das ist der wesentliche Vorteil der Modulstruktur gegenüber Prüfungen, die schriftlich und mündlich als Blöcke bewerten.',
     },
     {
       q: 'Goethe B1 oder telc B1 — was ist besser?',
-      a: 'Beide weisen dasselbe GER-Niveau nach und werden für Aufenthalt und Einbürgerung anerkannt. Goethe ist modular, telc prüft in zwei Blöcken und hat zusätzlich Sprachbausteine als eigenen Teil. Wenn ein Fertigkeitsbereich bei Ihnen deutlich schwächer ist, spricht die Modulstruktur für Goethe. Ansonsten entscheidet meist, welche Prüfung in Ihrer Nähe angeboten wird.',
+      a: 'Beide weisen dasselbe GER-Niveau nach und werden für Aufenthalt und Einbürgerung anerkannt. Goethe ist modular, telc prüft in zwei Blöcken und hat zusätzlich Sprachbausteine als eigenen Teil. Wenn ein Fertigkeitsbereich bei dir deutlich schwächer ist, spricht die Modulstruktur für Goethe. Ansonsten entscheidet meist, welche Prüfung in deiner Nähe angeboten wird.',
     },
     {
       q: 'Wie lange dauert die Vorbereitung auf B1?',
@@ -281,7 +279,7 @@ export const goetheB1 = {
     },
     {
       q: 'Was kostet das Goethe-Zertifikat B1?',
-      a: 'Die Gebühr setzt das jeweilige Prüfungszentrum fest und unterscheidet sich je nach Land und Ort; bei modularer Ablegung wird meist pro Modul abgerechnet. Die aktuellen Preise stehen beim Goethe-Institut oder Prüfungszentrum in Ihrer Nähe.',
+      a: 'Die Gebühr setzt das jeweilige Prüfungszentrum fest und unterscheidet sich je nach Land und Ort; bei modularer Ablegung wird meist pro Modul abgerechnet. Die aktuellen Preise stehen beim Goethe-Institut oder Prüfungszentrum in deiner Nähe.',
     },
     {
       q: 'Ist das Goethe-Zertifikat B1 unbegrenzt gültig?',
@@ -289,12 +287,12 @@ export const goetheB1 = {
     },
     {
       q: 'Wie läuft die mündliche Prüfung ab?',
-      a: 'Sprechen wird in der Regel als Paarprüfung abgenommen und dauert etwa 15 Minuten, mit rund 15 Minuten Vorbereitungszeit davor. Sie planen gemeinsam etwas und präsentieren jeweils ein Thema. Bewertet wird auch, wie Sie aufeinander eingehen.',
+      a: 'Sprechen wird in der Regel als Paarprüfung abgenommen und dauert etwa 15 Minuten, mit rund 15 Minuten Vorbereitungszeit davor. Ihr plant gemeinsam etwas und präsentiert jeweils ein Thema. Bewertet wird auch, wie ihr aufeinander eingeht.',
     },
   ],
 
   cta: {
-    heading: 'Finden Sie heraus, welches Modul Sie aufhält',
-    body: 'Der Einstufungstest zeigt Ihnen in wenigen Minuten, wo Sie stehen — danach wissen Sie, wohin Ihre Lernzeit gehört.',
+    heading: 'Finde heraus, welches Modul dich aufhält',
+    body: 'Der Einstufungstest zeigt dir in wenigen Minuten, wo du stehst — danach weißt du, wohin deine Lernzeit gehört.',
   },
 };

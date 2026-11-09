@@ -37,7 +37,6 @@ import {
 // consume — src/data/seoRoutes.js. The route objects below carry only what is
 // genuinely per-surface: the JSON-LD (deliberately diverged from the client
 // blocks) and the static #root copy.
-import { curriculumFor } from '../src/data/curricula/index.js';
 import { PLACEMENT_PREVIEW } from '../src/data/placementPreview.js';
 import { SEO_ROUTES, fullTitle } from '../src/data/seoRoutes.js';
 import { ORG_REF, ORGANIZATION_FULL } from '../src/data/organization.js';
@@ -124,10 +123,8 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g
 // No JS runs on this markup — React replaces it on hydrate — so nothing here
 // may use `reveal`/`hero-line` (their resting state is hidden until a script
 // lifts it) or Atropos scaffolding. Static, styled, immediately visible.
-const firstLesson = curriculumFor('a1.1').lektionen[0];
-const courseMoment = `<figure class="mt-6 overflow-hidden rounded-xl border border-rule bg-white text-ink" data-course-moment><figcaption class="border-b border-rule px-5 py-3 font-data text-xs text-siegel-deep">A1.1 · Course preview · real content</figcaption><div class="p-5"><p class="font-display text-2xl" lang="de">${esc(firstLesson.title)}</p><p class="mt-3 text-sm leading-relaxed text-graphite">${esc(firstLesson.pretest.promptEn)}</p><blockquote class="mt-4 rounded-lg border-l-2 border-siegel bg-siegel-wash p-4 text-xl" lang="de">${esc(firstLesson.pretest.model)}</blockquote><p class="mt-3 text-xs text-graphite">Model answer · try your own in the free course.</p></div></figure>`;
-const H_PAGE = 'font-display text-dm-editorial sm:text-dm-editorial-wide text-ink';
-const H_HERO = 'font-display text-dm-editorial sm:text-dm-editorial-wide text-ink';
+const H_PAGE = 'font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[3rem]';
+const H_HERO = 'font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink sm:text-[3.5rem]';
 const H_SECTION = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.125rem]';
 // The section role at its mobile step — for sub-sections inside a page.
 const H_SUB = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink';
@@ -321,25 +318,24 @@ const ROUTES = [
     // material and stays flat; the pro tip is a caution and says so in words as
     // well as colour), minus everything that needs JS to become visible.
     content: `
-<div class="min-h-screen bg-paper"><div class="dm-placement-page mx-auto max-w-6xl px-5 pt-24 pb-16">
-  <div class="dm-placement-grid"><div>
-  <div>
+<div class="min-h-screen bg-paper"><div class="mx-auto max-w-2xl px-4 pt-24 pb-16">
+  <div class="text-center">
     <div class="${CHIP_LABEL}">Free Assessment</div>
-    <h1 class="mt-3 ${H_PAGE}">Find your next German step.</h1>
+    <h1 class="mt-3 ${H_PAGE}">Discover Your German Level</h1>
     <p class="mx-auto mt-4 max-w-prose ${LEAD}">Get a suggested starting point for practice, with a breakdown of the skills you tried.</p>
   </div>
-  <div class="mt-8">
+  <div class="mt-8 text-center">
     <p class="${BTN_PRIMARY}">Start the Test</p>
     <p class="mt-4 font-data text-[0.75rem] text-graphite">No account required • Results are instant • 100% free</p>
   </div>
-  </div><aside class="mt-7 rounded-xl border border-rule bg-white p-5" aria-label="Placement question demonstration" data-placement-preview>
+  <aside class="mt-7 rounded-xl border border-rule bg-white p-5" aria-label="Placement question demonstration" data-placement-preview>
     <p class="font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">Sample question · from the real test bank</p>
     <p class="mt-3 font-display text-2xl" lang="de">${PLACEMENT_PREVIEW.question}</p>
     <ul class="mt-4 flex flex-wrap gap-2" aria-label="Example options">${PLACEMENT_PREVIEW.options.map((option) => `<li class="rounded-lg border border-rule bg-paper px-3 py-2" lang="de">${option}</li>`).join('')}</ul>
     <details class="mt-4 border-t border-rule pt-3"><summary class="cursor-pointer py-2 font-bold text-siegel-deep">Show the answer and explanation</summary><p class="mt-2 ${SMALL}"><strong lang="de">${PLACEMENT_PREVIEW.answer}</strong> — ${PLACEMENT_PREVIEW.explanation}</p></details>
     <p class="mt-3 ${SMALL}">Demonstration only. Your test draws its own questions. The suggested level is a starting point for practice, not a certificate.</p>
   </aside>
-  </div><div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+  <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
     <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">15-20</span> <span class="block ${EYEBROW} text-graphite">Minutes</span></div></div>
     <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">3</span> <span class="block ${EYEBROW} text-graphite">Sections</span></div></div>
     <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">A1-B2</span> <span class="block ${EYEBROW} text-graphite">Levels</span></div></div>
@@ -565,22 +561,25 @@ ${faqSection(PODCAST_FAQS)}
       },
     ],
     content: `
-<div class="min-h-screen bg-paper"><div class="mx-auto max-w-6xl px-4 pt-24 pb-20 sm:px-6">
-  <div class="dm-public-heading mb-8 rounded-clay p-6 sm:p-10"><p class="${EYEBROW} text-siegel-deep">Frequently asked questions</p>
-    <h1 class="mt-3 ${H_HERO}">A clear answer. A confident next step.</h1>
+<div class="min-h-screen bg-paper"><div class="mx-auto max-w-3xl px-4 pt-24 pb-20 sm:px-6">
+  <div class="mb-16 text-center">
+    <h1 class="${H_HERO}">Frequently asked questions</h1>
     <p class="mx-auto mt-4 max-w-xl ${LEAD}">Clear answers about learning, speaking practice, exams, pricing, and privacy.</p>
   </div>
-  <div class="dm-faq-layout"><div class="self-start lg:sticky lg:top-24"><nav class="mb-6 flex flex-wrap gap-2 lg:flex-col" aria-label="Question categories">${FAQ_CATEGORIES.map((cat, i) => `<a href="#faq-category-${i}" class="rounded-pill border border-rule px-4 py-2 text-sm font-bold text-siegel-deep">${cat.title} (${cat.items.length})</a>`).join('')}</nav>
+  <nav class="mb-8 flex flex-wrap gap-2" aria-label="Question categories">${FAQ_CATEGORIES.map((cat, i) => `<a href="#faq-category-${i}" class="rounded-pill border border-rule px-4 py-2 text-sm font-bold text-siegel-deep">${cat.title} (${cat.items.length})</a>`).join('')}</nav>
   <p class="mb-8 ${SMALL}">Choosing a course? <a href="/courses/" class="font-bold text-siegel-deep underline">See the levels and what is available.</a></p>
-  </div><div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat, catIdx) => `
+  <div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat, catIdx) => `
     <section id="faq-category-${catIdx}" class="scroll-mt-24">
       <h2 class="${H_SUB}">${cat.title}</h2>
       <div class="mt-5 flex flex-col gap-3">${cat.items.map((item) => `
-        <details class="${CARD_FLAT}"><summary class="min-h-14 cursor-pointer px-5 py-4 font-medium text-ink">${item.q}</summary><p class="border-t border-rule px-5 py-4 ${SMALL}">${item.a}</p></details>`).join('')}
+        <div class="${CARD_FLAT} px-5 py-4">
+          <h3 class="${H_CARD}">${item.q}</h3>
+          <p class="mt-2 ${SMALL}">${item.a}</p>
+        </div>`).join('')}
       </div>
     </section>`).join('')}
   </div>
-  </div><div class="mt-16 text-center">
+  <div class="mt-16 text-center">
     <p class="mb-6 ${BODY}">Still have questions? Start with A1.1—it is completely free.</p>
     <a href="/signup" class="${BTN_PRIMARY}">Start for free</a>
   </div>
@@ -610,8 +609,8 @@ ${faqSection(PODCAST_FAQS)}
     ],
     content: `
 <div class="min-h-screen bg-paper">
-  <section class="dm-public-heading pt-24 pb-12"><div class="dm-about-grid mx-auto max-w-6xl px-5"><div><p class="${EYEBROW} text-siegel-deep">Our reason to build</p>
-    <h1 class="mt-4 ${H_HERO}">More German. <span class="text-siegel-deep">More possibility.</span></h1>
+  <section class="pt-24 pb-10"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+    <h1 class="${H_HERO}">Learning German should not feel like a nightmare.</h1>
     <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">${FOUNDER_LINE_EN}</p>
     <p class="my-6 flex flex-wrap justify-center gap-3"><a href="/course/a1.1" class="${BTN_PRIMARY}">Start A1.1 free</a><a href="/courses/a1-2/" class="${BTN_PRIMARY}">Inspect the A1.2 course</a></p>
     <ul class="flex list-none flex-wrap justify-center gap-3">
@@ -619,7 +618,7 @@ ${faqSection(PODCAST_FAQS)}
       <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Built for serious learners</li>
       <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Optional analytics only with consent</li>
     </ul>
-  </div><div class="self-center">${courseMoment}<a href="/course/a1.1" class="mt-4 inline-block font-bold text-siegel-deep underline underline-offset-4">Explore the free first course →</a></div></div></section>
+  </div></section>
   <dl class="mx-auto grid max-w-4xl gap-3 px-5 py-8 sm:grid-cols-3" aria-label="Inspect the product">
     <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${GRAMMAR_TOPIC_COUNT}</dt><dd>Public grammar topics to inspect</dd></div>
     <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${LEVEL_COUNT}</dt><dd>Practice levels, with guided courses built in order</dd></div>

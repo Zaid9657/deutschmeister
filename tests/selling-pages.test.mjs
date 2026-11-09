@@ -81,7 +81,7 @@ test('pricing shows both paid choices before the free card in reading and keyboa
 
 test('placement start is directly under its heading, before facts and test structure', () => {
   const page = read('src/components/LevelTest/LevelTestLanding.jsx');
-  assert.match(page, /title="Find your next German step\."\s*\/>\s*<div[^>]*data-level-test-start/);
+  assert.match(page, /title="Discover Your German Level"\s*\/>\s*<div[^>]*data-level-test-start/);
   assert.ok(page.indexOf('Start the Test') < page.indexOf('{FACTS.map'));
   assert.ok(page.indexOf('Continue your test') < page.indexOf('{FACTS.map'));
   assert.equal((page.match(/Start the Test/g) || []).length, 1);

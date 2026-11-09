@@ -5,7 +5,6 @@
 // B1/B2 listed as coming soon. Every figure derives: prices from pricing.js,
 // grammar counts from the content cache, the rest from data/courseContents.js.
 import Layout from '../../layouts/Layout.astro';
-import ProductWindow from '../../components/proof/ProductWindow.astro';
 import '../../styles/global.css';
 import CourseCheckout from '../../components/CourseCheckout.astro';
 import StationArt from '../../components/linie/StationArt.astro';
@@ -22,7 +21,7 @@ import { hasSyllabus } from '../../lib/syllabus.js';
 // v4 "Die Linie" keys (styles/linie.css).
 const BTN_PRIMARY = 'dm-key dm-key-siegel';
 const BTN_SECONDARY = 'dm-key dm-key-ghost';
-const preloads = [...signFontPreloads, ...fontPreloads];
+const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 
 const courses = levelCoursesWithVariants();
 const byKey = Object.fromEntries(courses.map((c) => [c.key, c]));
@@ -51,11 +50,14 @@ const jsonLd = {
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
-    <section class="dm-hero text-ink" data-ground="nacht" aria-labelledby="hero-h">
-      <div class="dm-hero-grid">
-        <div>
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Courses · A1.1 → B2.2</p>
-        <h1 id="hero-h" class="dm-hero-title mt-4">Small steps.<br/><em>Real-life German.</em></h1>
+        <h1 id="hero-h" class="sign-display mt-4 text-[clamp(2.5rem,9vw,5rem)]">
+          <span class="block whitespace-nowrap">One level.</span>
+          <span class="inline whitespace-nowrap">One payment. </span>
+          <span class="inline text-linie">Yours for good.</span>
+        </h1>
         <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
           Start with {FREE_LEVEL_LABEL}, free. A1.2 is the next guided course. Later levels have practice materials; complete guided courses follow in order. Exam preparation comes at the end of each full level.
           Not sure where you stand? The <a href="/level-test/" class="dm-link-nacht font-semibold">level test is free</a> and takes about 20 minutes.
@@ -64,13 +66,11 @@ const jsonLd = {
           <a href="/course/a1.1" class="dm-key dm-key-siegel">Start A1.1 free</a>
           <a href="/courses/a1-2/" class="dm-key dm-key-ghost-nacht">Explore A1.2 →</a>
         </div>
-        </div>
-        <ProductWindow level="a1.2" />
       </div>
     </section>
 
 
-    <section class="mx-auto max-w-7xl px-5 pb-20 pt-12" aria-labelledby="inside-h">
+    <section class="mx-auto max-w-5xl px-5 pb-20 pt-8" aria-labelledby="inside-h">
       <h2 id="inside-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Choose your next level</h2>
       <ol class="mt-8 grid gap-5 sm:grid-cols-2">
         {rungs.filter((r) => r.showSyllabus).map((r, i) => (

@@ -329,7 +329,7 @@ const DashboardPage = () => {
             The dashboard used to render its own logo/avatar bar UNDER the
             global Navbar — two logos, two avatars on one screen. The global
             nav is the one header; the streak and goal live here now. */}
-        <Reveal className="dm-public-heading relative overflow-hidden rounded-clay mb-7 -mx-2 px-2 py-4 sm:-mx-4 sm:px-4">
+        <Reveal className="relative overflow-hidden rounded-clay mb-7 -mx-2 px-2 py-4 sm:-mx-4 sm:px-4">
           <Aurora />
           <div className="relative flex flex-col md:flex-row md:items-start md:justify-between gap-5">
             <div>

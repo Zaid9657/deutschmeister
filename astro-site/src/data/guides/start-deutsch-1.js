@@ -1,5 +1,3 @@
-import { FOUNDER_LINE_DE } from '../marketing.js';
-
 // Start Deutsch 1 / Goethe-Zertifikat A1 — written 2026-09-04.
 //
 // AUDIENCE: primarily spouse-visa candidates (Ehegattennachzug — Aufenthaltsgesetz
@@ -50,7 +48,7 @@ export const startDeutsch1 = {
     'Start Deutsch 1, Goethe Zertifikat A1, Goethe A1 Prüfung, A1 Ehegattennachzug, Start Deutsch 1 Vorbereitung, Goethe A1 Modelltest',
   badge: 'Leitfaden',
   lead:
-    'Für die meisten, die diese Seite lesen, ist <strong>Start Deutsch 1</strong> keine akademische Übung, sondern ein Termin mit einem festen Datum davor — meist der <strong>Ehegattennachzug</strong>. Diese Prüfung unterscheidet sich von B1-Prüfungen in einem wichtigen Punkt: Es gibt <strong>keine Module und keine Mindestpunktzahl pro Teil</strong> — wer insgesamt durchfällt, wiederholt alles. Dieser Leitfaden zeigt Ihnen den genauen Ablauf, die Punkteregel, wie Sie sich anmelden und einen ehrlichen Lernplan.',
+    'Für die meisten, die diese Seite lesen, ist <strong>Start Deutsch 1</strong> keine akademische Übung, sondern ein Termin mit einem festen Datum davor — meist der <strong>Ehegattennachzug</strong>. Diese Prüfung unterscheidet sich von B1-Prüfungen in einem wichtigen Punkt: Es gibt <strong>keine Module und keine Mindestpunktzahl pro Teil</strong> — wer insgesamt durchfällt, wiederholt alles. Dieser Leitfaden zeigt dir den genauen Ablauf, die Punkteregel, wie du dich anmeldest und einen ehrlichen Lernplan.',
   datePublished: '2026-09-04',
   answer:
     'Start Deutsch 1 ist die A1-Prüfung von Goethe-Institut und telc und besteht aus vier Teilen: Hören (ca. 20 Min.), Lesen (25 Min.), Schreiben (20 Min.) und Sprechen (15 Min., in der Gruppe). Insgesamt sind 100 Punkte erreichbar, bestanden ist die Prüfung ab 60 Punkten. Es gibt keine Mindestpunktzahl pro Teil, aber auch keine Module: Wer insgesamt unter 60 bleibt, muss die komplette Prüfung wiederholen. Für den Ehegattennachzug ist dieses A1-Zeugnis eines Goethe-Instituts, von telc oder ÖSD die anerkannte Nachweisform — nicht ein Kursabschluss oder eine App.',
@@ -83,7 +81,7 @@ export const startDeutsch1 = {
         },
         {
           type: 'callout',
-          text: 'Wichtig für die Visumstelle: Nur ein Zertifikat von Goethe-Institut, telc oder ÖSD zählt als offizieller A1-Nachweis für den Ehegattennachzug. Ein Kursabschluss, eine App-Zertifizierung oder ein Zertifikat von Deutschmeister ersetzt das nicht — wir bereiten Sie auf genau diese Prüfung vor, stellen sie aber nicht aus.',
+          text: 'Wichtig für die Visumstelle: Nur ein Zertifikat von Goethe-Institut, telc oder ÖSD zählt als offizieller A1-Nachweis für den Ehegattennachzug. Ein Kursabschluss, eine App-Zertifizierung oder ein Zertifikat von Deutschmeister ersetzt das nicht — wir bereiten dich auf genau diese Prüfung vor, stellen sie aber nicht aus.',
         },
       ],
     },
@@ -93,7 +91,7 @@ export const startDeutsch1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Start Deutsch 1 hat vier Teile — Hören, Lesen, Schreiben, Sprechen — die an einem Termin nacheinander geprüft werden. Anders als beim Goethe-Zertifikat B1 gibt es <strong>keine Module</strong>: Sie können die Teile nicht einzeln ablegen oder einzeln wiederholen.',
+          text: 'Start Deutsch 1 hat vier Teile — Hören, Lesen, Schreiben, Sprechen — die an einem Termin nacheinander geprüft werden. Anders als beim Goethe-Zertifikat B1 gibt es <strong>keine Module</strong>: Du kannst die Teile nicht einzeln ablegen oder einzeln wiederholen.',
         },
         {
           type: 'table',
@@ -111,7 +109,7 @@ export const startDeutsch1 = {
         },
         {
           type: 'p',
-          text: 'Im Sprechteil laufen die drei Aufgaben in fester Reihenfolge ab: Zuerst stellen Sie sich vor — Name, Alter, Land, Wohnort, Sprachen, Beruf, Hobby — und buchstabieren dabei einen Namen sowie eine Telefonnummer — genau das üben Sie am besten separat und laut, bis es automatisch sitzt. Danach erfragen und geben Sie in der Gruppe Informationen anhand von Wortkarten, und zum Schluss formulieren und reagieren Sie auf Bitten anhand von Bildkarten (zum Beispiel: „Kannst du bitte das Fenster schließen?“).',
+          text: 'Im Sprechteil laufen die drei Aufgaben in fester Reihenfolge ab: Zuerst stellst du dich vor — Name, Alter, Land, Wohnort, Sprachen, Beruf, Hobby — und buchstabierst dabei einen Namen sowie eine Telefonnummer — genau das übst du am besten separat und laut, bis es automatisch sitzt. Danach erfragt und gibt ihr in der Gruppe Informationen anhand von Wortkarten, und zum Schluss formuliert und reagiert ihr auf Bitten anhand von Bildkarten (zum Beispiel: „Kannst du bitte das Fenster schließen?“).',
         },
       ],
     },
@@ -129,11 +127,11 @@ export const startDeutsch1 = {
         },
         {
           type: 'p',
-          text: 'Die Prüfung kann beliebig oft wiederholt werden. Bei einer erneuten Anmeldung nach einem nicht bestandenen Versuch lohnt es sich, gezielt die Teile zu stärken, in denen die letzte Auswertung die wenigsten Punkte zeigte — die Auswertung, die Sie nach der Prüfung erhalten, zeigt das Ergebnis pro Teil, auch wenn am Ende nur die Gesamtsumme über Bestehen entscheidet.',
+          text: 'Die Prüfung kann beliebig oft wiederholt werden. Bei einer erneuten Anmeldung nach einem nicht bestandenen Versuch lohnt es sich, gezielt die Teile zu stärken, in denen die letzte Auswertung die wenigsten Punkte zeigte — die Auswertung, die du nach der Prüfung erhältst, zeigt das Ergebnis pro Teil, auch wenn am Ende nur die Gesamtsumme über Bestehen entscheidet.',
         },
         {
           type: 'callout',
-          text: 'Planen Sie mit einem Sicherheitsabstand über 60 Punkten statt genau auf der Grenze. Nervosität am Prüfungstag kostet Punkte, besonders im Sprechen und Schreiben, wo mehr vom Gesamteindruck abhängt als beim Ankreuzen.',
+          text: 'Plane mit einem Sicherheitsabstand über 60 Punkten statt genau auf der Grenze. Nervosität am Prüfungstag kostet Punkte, besonders im Sprechen und Schreiben, wo mehr vom Gesamteindruck abhängt als beim Ankreuzen.',
         },
       ],
     },
@@ -147,7 +145,7 @@ export const startDeutsch1 = {
         },
         {
           type: 'p',
-          text: 'Auf der Website Ihres zuständigen Goethe-Instituts finden Sie die genauen Termine, den Anmeldeweg und — kostenlos zum Download — offizielle <strong>Modellsätze</strong> mit Audiodateien und einem Beispielvideo zum Sprechteil. Diese Modellsätze sind das zuverlässigste Übungsmaterial, weil sie exakt Format und Schwierigkeitsgrad der echten Prüfung zeigen.',
+          text: 'Auf der Website deines zuständigen Goethe-Instituts findest du die genauen Termine, den Anmeldeweg und — kostenlos zum Download — offizielle <strong>Modellsätze</strong> mit Audiodateien und einem Beispielvideo zum Sprechteil. Diese Modellsätze sind das zuverlässigste Übungsmaterial, weil sie exakt Format und Schwierigkeitsgrad der echten Prüfung zeigen.',
         },
         {
           type: 'p',
@@ -161,11 +159,11 @@ export const startDeutsch1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Von null Vorkenntnissen rechnen Sprachschulen und das Goethe-Institut selbst mit insgesamt etwa <strong>60–80 Lernstunden à 60 Minuten</strong> bis A1. Bei täglich 45–60 Minuten Lernzeit sind das realistisch <strong>8 bis 12 Wochen</strong> — davon fließen die letzten <strong>rund 25–30 Stunden</strong> in die reine Prüfungsphase: Modelltests, gezieltes Schließen von Lücken, Generalprobe (Woche 8–12 im Plan unten). Wenn Ihre Muttersprache nicht das lateinische Alphabet verwendet (zum Beispiel Arabisch, Urdu, Persisch oder Kyrillisch), planen Sie für dieselbe Stundenzahl <strong>etwa die doppelte Zeit</strong> ein — nicht weil Deutsch schwerer wird, sondern weil Lesen und Schreiben selbst noch automatisiert werden müssen.',
+          text: 'Von null Vorkenntnissen rechnen Sprachschulen und das Goethe-Institut selbst mit insgesamt etwa <strong>60–80 Lernstunden à 60 Minuten</strong> bis A1. Bei täglich 45–60 Minuten Lernzeit sind das realistisch <strong>8 bis 12 Wochen</strong> — davon fließen die letzten <strong>rund 25–30 Stunden</strong> in die reine Prüfungsphase: Modelltests, gezieltes Schließen von Lücken, Generalprobe (Woche 8–12 im Plan unten). Wenn deine Muttersprache nicht das lateinische Alphabet verwendet (zum Beispiel Arabisch, Urdu, Persisch oder Kyrillisch), plane für dieselbe Stundenzahl <strong>etwa die doppelte Zeit</strong> ein — nicht weil Deutsch schwerer wird, sondern weil Lesen und Schreiben selbst noch automatisiert werden müssen.',
         },
         {
           type: 'p',
-          text: 'Starten Sie mit dem <a href="/level-test/">kostenlosen Einstufungstest</a>, damit Sie wirklich bei null beginnen und keine Zeit mit bereits Bekanntem verlieren.',
+          text: 'Starte mit dem <a href="/level-test/">kostenlosen Einstufungstest</a>, damit du wirklich bei null beginnst und keine Zeit mit bereits Bekanntem verlierst.',
         },
         {
           type: 'steps',
@@ -276,7 +274,7 @@ export const startDeutsch1 = {
       blocks: [
         {
           type: 'p',
-          text: `${FOUNDER_LINE_DE} Die folgenden Werkzeuge unterstützen Ihre Vorbereitung:`,
+          text: 'Start Deutsch 1 prüft vier konkrete Fertigkeiten mit festen Aufgabentypen. Genau dafür lässt sich gezielt üben — mit einer Plattform, die von einem Team von Ärzten in Deutschland gebaut wurde, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',
@@ -342,12 +340,12 @@ export const startDeutsch1 = {
     },
     {
       q: 'Zählt ein Deutschmeister-Zertifikat für die Botschaft?',
-      a: 'Nein. Für Visumzwecke zählt ausschließlich ein Zeugnis von Goethe-Institut, telc oder ÖSD. Deutschmeister bereitet gezielt auf genau diese Prüfung vor, ersetzt sie aber nicht — den offiziellen Termin buchen Sie direkt beim Prüfungszentrum.',
+      a: 'Nein. Für Visumzwecke zählt ausschließlich ein Zeugnis von Goethe-Institut, telc oder ÖSD. Deutschmeister bereitet gezielt auf genau diese Prüfung vor, ersetzt sie aber nicht — den offiziellen Termin buchst du direkt beim Prüfungszentrum.',
     },
   ],
 
   cta: {
-    heading: 'Finden Sie heraus, wo Sie vor Start Deutsch 1 stehen',
-    body: 'Der Einstufungstest zeigt Ihnen in wenigen Minuten Ihren Ausgangspunkt — danach wissen Sie, wie viel der 8–12 Wochen Sie wirklich brauchen.',
+    heading: 'Finde heraus, wo du vor Start Deutsch 1 stehst',
+    body: 'Der Einstufungstest zeigt dir in wenigen Minuten deinen Ausgangspunkt — danach weißt du, wie viel der 8–12 Wochen du wirklich brauchst.',
   },
 };

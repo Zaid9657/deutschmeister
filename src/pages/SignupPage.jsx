@@ -230,7 +230,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="dm-account-shell relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center gap-10 bg-paper px-4 pb-12 pt-20 font-body sm:px-6 sm:pt-24 lg:flex-row lg:items-start lg:pt-28">
+    <div className="relative mx-auto flex min-h-screen max-w-6xl items-start justify-center gap-12 bg-paper px-4 pb-12 pt-20 font-body sm:px-6 sm:pt-24 lg:pt-28">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <motion.div
         initial={false}
@@ -255,7 +255,7 @@ const SignupPage = () => {
               have and lands the user on NotFoundPage. */}
           <div className="hidden sm:block"><Logo size={64} showWordmark={false} className="mb-6" /></div>
           <h1
-            className="hero-line font-display text-dm-editorial text-ink mb-3"
+            className="hero-line font-display text-dm-hero text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
             Start your {TRIAL_DAYS}-day Pro trial

@@ -13,7 +13,7 @@ test('English discovery routes declare English and use English headings', () => 
   const seo = read('src/data/seoRoutes.js');
 
   assert.match(grammar, /lang="en"/);
-  assert.match(grammar, />\s*German grammar\. Now it makes sense\.\s*</);
+  assert.match(grammar, />\s*German Grammar\s*</);
   assert.match(level, /lang="en"/);
   assert.match(level, /German Grammar/);
   assert.match(seo, /'\/faq':\s*{[\s\S]*?title: 'Frequently Asked Questions'/);
@@ -84,20 +84,4 @@ test('a guide is German unless it says otherwise', async () => {
   const { GUIDES, guideLang } = await import('../astro-site/src/data/guides/index.js');
   assert.equal(guideLang({}), 'de');
   for (const g of GUIDES) if (!g.lang) assert.equal(guideLang(g), 'de', g.slug);
-});
-
-test('German format-guide and comparison reader copy uses Sie while quoted dialogue keeps its register', async () => {
-  const { GUIDES } = await import('../astro-site/src/data/guides/index.js');
-  const slugs = ['dtz', 'goethe-b1', 'telc-b2', 'goethe-a2', 'telc-b1', 'start-deutsch-1'];
-  const dialogue = 'Kannst du bitte das Fenster schließen?';
-  for (const slug of slugs) {
-    const guide = GUIDES.find((g) => g.slug === slug);
-    assert.ok(guide, slug);
-    const copy = JSON.stringify(guide).replaceAll(dialogue, '');
-    assert.doesNotMatch(copy, /\b(?:du|Du|DU|dein(?:e[mnrs]?|s)?|Dein(?:e[mnrs]?|s)?|dir|Dir|dich|Dich|euch)\b/, slug);
-    assert.doesNotMatch(copy, /Team von Ärzten/, 'the founder claim stays singular');
-  }
-  assert.match(JSON.stringify(GUIDES.find((g) => g.slug === 'start-deutsch-1')), /Kannst du bitte das Fenster schließen/);
-  const comparison = read('src/data/competitorComparisons.js').split('\n').filter((line) => !line.trim().startsWith('//')).join('\n');
-  assert.doesNotMatch(comparison, /\b(?:du|Du|DU|dein(?:e[mnrs]?|s)?|dir|dich)\b/);
 });

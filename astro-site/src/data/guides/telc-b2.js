@@ -1,5 +1,3 @@
-import { FOUNDER_LINE_DE } from '../marketing.js';
-
 // telc Deutsch B2 — written 2026-08-22. Companion to the B1 guide.
 //
 // FACT SOURCING: telc.net could not be fetched from this environment. The
@@ -19,10 +17,10 @@ export const telcB2 = {
     'telc B2 Prüfung, telc Deutsch B2, telc B2 Vorbereitung, telc B2 bestehen, telc B2 Sprachbausteine, Deutsch B2 Prüfung',
   badge: 'Leitfaden',
   lead:
-    'B2 ist kein größeres B1. Auf B1 zeigen Sie, dass Sie sich verständigen können; auf B2 sollen Sie <strong>argumentieren, abwägen und zusammenhängend darstellen</strong> — und das unter deutlich mehr Zeitdruck. Dieser Leitfaden zeigt den Aufbau der telc Deutsch B2 Prüfung, wo die Punkte liegen und wie sich der Sprung von B1 planen lässt.',
+    'B2 ist kein größeres B1. Auf B1 zeigst du, dass du dich verständigen kannst; auf B2 sollst du <strong>argumentieren, abwägen und zusammenhängend darstellen</strong> — und das unter deutlich mehr Zeitdruck. Dieser Leitfaden zeigt den Aufbau der telc Deutsch B2 Prüfung, wo die Punkte liegen und wie sich der Sprung von B1 planen lässt.',
   datePublished: '2026-08-22',
   answer:
-    'Die telc Deutsch B2 Prüfung besteht aus einem schriftlichen Teil (maximal 225 Punkte) und einer mündlichen Paarprüfung (maximal 75 Punkte). Zum Bestehen brauchen Sie mindestens 60 % in beiden Teilen getrennt: 135 der 225 Punkte schriftlich und 45 der 75 mündlich. Lesen und Hören bringen zusammen 150 der 225 schriftlichen Punkte, die Sprachbausteine nur 30 — der kleinste Posten der Prüfung.',
+    'Die telc Deutsch B2 Prüfung besteht aus einem schriftlichen Teil (maximal 225 Punkte) und einer mündlichen Paarprüfung (maximal 75 Punkte). Zum Bestehen brauchst du mindestens 60 % in beiden Teilen getrennt: 135 der 225 Punkte schriftlich und 45 der 75 mündlich. Lesen und Hören bringen zusammen 150 der 225 schriftlichen Punkte, die Sprachbausteine nur 30 — der kleinste Posten der Prüfung.',
   factsCheckedOn: '2026-08-22',
   sources: [{ label: 'telc gGmbH', url: 'https://www.telc.net/' }],
 
@@ -33,15 +31,15 @@ export const telcB2 = {
       blocks: [
         {
           type: 'p',
-          text: 'B2 ist die vierte Stufe des Gemeinsamen Europäischen Referenzrahmens. Sie verstehen die Hauptinhalte komplexer Texte, können sich spontan und fließend verständigen und einen Standpunkt zu einer aktuellen Frage erklären — mit Vor- und Nachteilen.',
+          text: 'B2 ist die vierte Stufe des Gemeinsamen Europäischen Referenzrahmens. Du verstehst die Hauptinhalte komplexer Texte, kannst dich spontan und fließend verständigen und einen Standpunkt zu einer aktuellen Frage erklären — mit Vor- und Nachteilen.',
         },
         {
           type: 'p',
-          text: 'Der praktische Unterschied zu <a href="/leitfaden/telc-b1/">B1</a> ist weniger der Wortschatz als die <strong>Textsorte im Kopf</strong>. Auf B1 reicht es, zu berichten: was passiert ist, was Sie wollen. Auf B2 müssen Sie eine Position aufbauen, sie begründen, Gegenargumente einräumen und zu einem Schluss kommen. Genau daran scheitern Kandidaten, deren Grammatik längst gut genug ist.',
+          text: 'Der praktische Unterschied zu <a href="/leitfaden/telc-b1/">B1</a> ist weniger der Wortschatz als die <strong>Textsorte im Kopf</strong>. Auf B1 reicht es, zu berichten: was passiert ist, was du willst. Auf B2 musst du eine Position aufbauen, sie begründen, Gegenargumente einräumen und zu einem Schluss kommen. Genau daran scheitern Kandidaten, deren Grammatik längst gut genug ist.',
         },
         {
           type: 'p',
-          text: 'telc Deutsch B2 wird von Arbeitgebern und Hochschulen häufig verlangt. In vielen Berufen — besonders im Gesundheitswesen — ist B2 die Schwelle für die Anerkennung. Welcher Nachweis für Ihren Fall gilt, sagt Ihnen die zuständige Stelle.',
+          text: 'telc Deutsch B2 wird von Arbeitgebern und Hochschulen häufig verlangt. In vielen Berufen — besonders im Gesundheitswesen — ist B2 die Schwelle für die Anerkennung. Welcher Nachweis für deinen Fall gilt, sagt dir die zuständige Stelle.',
         },
       ],
     },
@@ -66,7 +64,7 @@ export const telcB2 = {
         },
         {
           type: 'p',
-          text: 'Die mündliche Prüfung findet meist als Paarprüfung statt und dauert etwa 15 Minuten pro Paar; davor bekommen Sie eine getrennte Vorbereitungszeit von rund 20 Minuten. Die genauen Zeiten können je nach Prüfungsversion abweichen — Ihr Prüfungszentrum sagt Ihnen, welche Fassung geprüft wird.',
+          text: 'Die mündliche Prüfung findet meist als Paarprüfung statt und dauert etwa 15 Minuten pro Paar; davor bekommst du eine getrennte Vorbereitungszeit von rund 20 Minuten. Die genauen Zeiten können je nach Prüfungsversion abweichen — dein Prüfungszentrum sagt dir, welche Fassung geprüft wird.',
         },
         { type: 'h3', text: 'Wo die Punkte wirklich liegen' },
         {
@@ -85,11 +83,11 @@ export const telcB2 = {
       blocks: [
         {
           type: 'p',
-          text: 'Sie brauchen mindestens <strong>60 % in beiden Teilen getrennt</strong>: 135 der 225 Punkte im schriftlichen Teil und 45 der 75 Punkte im mündlichen. Ein sehr gutes Ergebnis in einem Teil gleicht ein schwaches im anderen nicht aus.',
+          text: 'Du brauchst mindestens <strong>60 % in beiden Teilen getrennt</strong>: 135 der 225 Punkte im schriftlichen Teil und 45 der 75 Punkte im mündlichen. Ein sehr gutes Ergebnis in einem Teil gleicht ein schwaches im anderen nicht aus.',
         },
         {
           type: 'p',
-          text: 'Wie auf B1 lassen sich die beiden Teile in der Regel getrennt wiederholen. Die Bedingungen und Fristen legt Ihr Prüfungszentrum fest.',
+          text: 'Wie auf B1 lassen sich die beiden Teile in der Regel getrennt wiederholen. Die Bedingungen und Fristen legt dein Prüfungszentrum fest.',
         },
         {
           type: 'callout',
@@ -107,7 +105,7 @@ export const telcB2 = {
         },
         {
           type: 'p',
-          text: 'Wenn Sie nicht sicher sind, ob Ihr B1 wirklich sitzt: <a href="/level-test/">Einstufungstest</a> zuerst.',
+          text: 'Wenn du nicht sicher bist, ob dein B1 wirklich sitzt: <a href="/level-test/">Einstufungstest</a> zuerst.',
         },
         {
           type: 'steps',
@@ -154,7 +152,7 @@ export const telcB2 = {
                 'Schreiben mit Zeitlimit und fester Struktur',
                 'Mündliche Prüfung simulieren: darstellen, diskutieren, planen',
               ],
-              tip: 'Das Sentence X-Ray hilft bei den Sprachbausteinen: Es zeigt an Ihren eigenen Sätzen, welcher Fall und welche Struktur verlangt ist.',
+              tip: 'Das Sentence X-Ray hilft bei den Sprachbausteinen: Es zeigt an deinen eigenen Sätzen, welcher Fall und welche Struktur verlangt ist.',
             },
             {
               label: 'Woche 9',
@@ -203,7 +201,7 @@ export const telcB2 = {
             },
             {
               title: 'Im Mündlichen nur den eigenen Beitrag vorbereiten',
-              body: 'Im Diskussionsteil wird bewertet, ob Sie auf Argumente eingehen — zustimmen, einschränken, widersprechen. Ein auswendig gelernter Vortrag neben einem zweiten Vortrag erfüllt die Aufgabe nicht.',
+              body: 'Im Diskussionsteil wird bewertet, ob du auf Argumente eingehst — zustimmst, einschränkst, widersprichst. Ein auswendig gelernter Vortrag neben einem zweiten Vortrag erfüllt die Aufgabe nicht.',
             },
             {
               title: 'Beim Schreiben keine Struktur setzen',
@@ -219,7 +217,7 @@ export const telcB2 = {
       blocks: [
         {
           type: 'p',
-          text: `${FOUNDER_LINE_DE} Die folgenden Werkzeuge unterstützen Ihre Vorbereitung:`,
+          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind — und dafür ist die Plattform gebaut:',
         },
         {
           type: 'cards',
@@ -227,7 +225,7 @@ export const telcB2 = {
             {
               eyebrow: 'Mündliche Prüfung',
               title: 'KI-Sprechtraining',
-              body: 'Üben Sie Position beziehen und begründen im freien Gespräch, danach mit einer Auswertung zu Grammatik und Ausdruck — täglich, ohne Termin.',
+              body: 'Übe Position beziehen und begründen im freien Gespräch, danach mit einer Auswertung zu Grammatik und Ausdruck — täglich, ohne Termin.',
             },
             {
               eyebrow: 'Hörverstehen',
@@ -248,7 +246,7 @@ export const telcB2 = {
         },
         {
           type: 'p',
-          text: 'Die <a href="/grammar/b2.1/">B2-Grammatik</a> deckt die Strukturen ab, die den Unterschied zwischen B1- und B2-Ausdruck ausmachen. Wenn Sie noch nicht sicher auf B1 sind, beginnen Sie mit dem <a href="/leitfaden/telc-b1/">telc-B1-Leitfaden</a>.',
+          text: 'Die <a href="/grammar/b2.1/">B2-Grammatik</a> deckt die Strukturen ab, die den Unterschied zwischen B1- und B2-Ausdruck ausmachen. Wenn du noch nicht sicher auf B1 bist, fang beim <a href="/leitfaden/telc-b1/">telc-B1-Leitfaden</a> an.',
         },
       ],
     },
@@ -257,7 +255,7 @@ export const telcB2 = {
   faq: [
     {
       q: 'Wie unterscheidet sich telc B2 von telc B1?',
-      a: 'Der Aufbau ist ähnlich — schriftlicher und mündlicher Teil, Sprachbausteine als eigener Bereich — aber die Anforderung ist eine andere. Auf B1 berichten Sie, auf B2 argumentieren Sie: Position beziehen, begründen, Gegenargumente einräumen. Texte und Hörbeiträge sind außerdem länger und dichter.',
+      a: 'Der Aufbau ist ähnlich — schriftlicher und mündlicher Teil, Sprachbausteine als eigener Bereich — aber die Anforderung ist eine andere. Auf B1 berichtest du, auf B2 argumentierst du: Position beziehen, begründen, Gegenargumente einräumen. Texte und Hörbeiträge sind außerdem länger und dichter.',
     },
     {
       q: 'Wie viele Punkte braucht man für telc B2?',
@@ -273,24 +271,24 @@ export const telcB2 = {
     },
     {
       q: 'Kann ich einen Teil der telc B2 Prüfung wiederholen?',
-      a: 'In der Regel lassen sich schriftlicher und mündlicher Teil getrennt wiederholen, sodass nicht die gesamte Prüfung noch einmal abgelegt werden muss. Die genauen Bedingungen und Fristen legt Ihr Prüfungszentrum fest.',
+      a: 'In der Regel lassen sich schriftlicher und mündlicher Teil getrennt wiederholen, sodass nicht die gesamte Prüfung noch einmal abgelegt werden muss. Die genauen Bedingungen und Fristen legt dein Prüfungszentrum fest.',
     },
     {
       q: 'Brauche ich B2 für die Arbeit in Deutschland?',
-      a: 'Das hängt vom Beruf ab. In vielen reglementierten Berufen, besonders im Gesundheitswesen, ist B2 die übliche Schwelle, teils zusätzlich eine Fachsprachprüfung. Welcher Nachweis in Ihrem Fall verlangt wird, entscheidet die zuständige Anerkennungsstelle.',
+      a: 'Das hängt vom Beruf ab. In vielen reglementierten Berufen, besonders im Gesundheitswesen, ist B2 die übliche Schwelle, teils zusätzlich eine Fachsprachprüfung. Welcher Nachweis in deinem Fall verlangt wird, entscheidet die zuständige Anerkennungsstelle.',
     },
     {
       q: 'Was kostet die telc B2 Prüfung?',
-      a: 'Die Gebühren setzt jedes Prüfungszentrum selbst fest und sie ändern sich regelmäßig. Fragen Sie bei einer Volkshochschule oder einem telc-Prüfungszentrum in Ihrer Nähe nach dem aktuellen Preis.',
+      a: 'Die Gebühren setzt jedes Prüfungszentrum selbst fest und sie ändern sich regelmäßig. Frag bei einer Volkshochschule oder einem telc-Prüfungszentrum in deiner Nähe nach dem aktuellen Preis.',
     },
     {
       q: 'Ist telc B2 oder Goethe B2 leichter?',
-      a: 'Beide prüfen dasselbe GER-Niveau. telc hat Sprachbausteine als eigenen Teil und bewertet schriftlich und mündlich als Blöcke; das Goethe-Zertifikat ist modular aufgebaut. Welche Prüfung besser passt, hängt davon ab, ob Sie gleichmäßig stark sind oder einen Bereich einzeln angehen wollen.',
+      a: 'Beide prüfen dasselbe GER-Niveau. telc hat Sprachbausteine als eigenen Teil und bewertet schriftlich und mündlich als Blöcke; das Goethe-Zertifikat ist modular aufgebaut. Welche Prüfung besser passt, hängt davon ab, ob du gleichmäßig stark bist oder einen Bereich einzeln angehen willst.',
     },
   ],
 
   cta: {
     heading: 'Bereit für den Sprung auf B2?',
-    body: 'Prüfen Sie zuerst, ob Ihr B1 wirklich sitzt — danach wissen Sie, ob Sie absichern oder schon argumentieren üben sollten.',
+    body: 'Prüf zuerst, ob dein B1 wirklich sitzt — danach weißt du, ob du absichern oder schon argumentieren üben solltest.',
   },
 };
