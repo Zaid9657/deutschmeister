@@ -16,9 +16,9 @@ export const HERO_VARIANTS = {
   // Pass 2: founder-authorised learner-first message; no outcome superlative.
   realLife: {
     id: 'realLife',
-    eyebrow: 'German, for the life you’re building.',
-    lines: [[{ t: 'Life happens.' }], [{ t: 'Learn the German' }], [{ t: 'for it.', mark: true }]],
-    lead: 'At the café. At work. In your next conversation. Learn German through everyday situations, with a course that gives you somewhere to start.',
+    eyebrow: 'Learn it. Use it. Make it yours.',
+    lines: [[{ t: 'Your German.' }], [{ t: 'In real life.', de: false, mark: true }]],
+    lead: 'Your first conversation. Your next everyday win. Build German you can use, with situation-led courses and a clear next step. Start A1.1 free — no account, no card.',
   },
   // Outcome + mechanism: the destination most visitors named, and the line.
   route: {

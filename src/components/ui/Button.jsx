@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
-/** Shared action control: plum face, compact corners, token elevation and press feedback. */
+/** Shared action control. Flat surfaces, explicit borders, and transform-only press feedback. */
 
 const BASE =
   'inline-flex items-center justify-center gap-2 rounded-clay min-h-11 px-5 py-2.5 text-sm font-bold ' +
@@ -11,7 +11,7 @@ const BASE =
 const PRESS = 'active:translate-y-px';
 
 const VARIANTS = {
-  primary: `border border-transparent bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift ${PRESS}`,
+  primary: `border border-transparent bg-siegel text-white hover:bg-siegel-lift ${PRESS}`,
   secondary: `border border-rule bg-white text-ink hover:border-siegel hover:text-siegel-deep ${PRESS}`,
   ghost: 'text-graphite hover:bg-siegel-wash hover:text-siegel-deep',
   celebrate: `bg-siegel text-white hover:brightness-105 ${PRESS}`,
@@ -32,7 +32,7 @@ const VARIANTS = {
 // pill happens to be emitted after clay, so an appended class worked by luck of
 // ordering; the same trap is why `size="sm"` loses its padding to BASE's px-5
 // py-2.5 (checked against dist/ on 2026-10-04).
-const SHAPES = { clay: 'rounded-control', pill: 'rounded-control' };
+const SHAPES = { clay: 'rounded-xl', pill: 'rounded-pill' };
 
 const SIZES = {
   sm: 'px-3.5 py-1.5 text-[0.8125rem]',

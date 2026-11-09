@@ -48,7 +48,7 @@ const hue = (hex) => {
   return (h * 60 + 360) % 360;
 };
 
-test('Open House palette stays legible on paper, lilac and white', () => {
+test('the Türkis palette is legible where the rules use it (v4, owner pick 2026-10-04)', () => {
   assert.ok(contrast(linie.ink, linie.DEFAULT) >= 4.5, 'white text on a türkis key (AA)');
   assert.ok(contrast(linie.DEFAULT, nacht.raised) >= 4.5, 'türkis text on a white card (AA)');
   assert.ok(contrast(linie.DEFAULT, color.paper) >= 4.5, 'türkis text on paper (AA)');
@@ -72,8 +72,8 @@ test('one action colour: the line is the siegel family, and never a case colour 
 });
 
 test('motion tokens are the strong curves, and nothing eases in', () => {
-  assert.equal(motionLinie.ease.out, 'cubic-bezier(0.22, 1, 0.36, 1)');
-  assert.equal(motionLinie.ease.inOut, 'cubic-bezier(0.65, 0, 0.35, 1)');
+  assert.equal(motionLinie.ease.out, 'cubic-bezier(0.23, 1, 0.32, 1)');
+  assert.equal(motionLinie.ease.inOut, 'cubic-bezier(0.77, 0, 0.175, 1)');
   for (const ms of Object.values(motionLinie.duration)) assert.match(ms, /^\d+ms$/);
   assert.ok(parseInt(motionLinie.duration.feedback, 10) <= 160 && parseInt(motionLinie.duration.control, 10) < 300);
 });
@@ -138,18 +138,15 @@ test('the SPA bar promotes the same two doors as the Astro bar', () => {
   assert.match(chromeSrc.navbar, /groundFor\(pathname\) === 'nacht'/, 'the bar must follow the route ground');
 });
 
-test('both front ends share the new chrome, accessible level links and safe mobile space', () => {
-  const layout = read('astro-site/src/layouts/Layout.astro');
-  for (const source of [chromeSrc.footer, layout]) {
-    assert.match(source, /dm-site-footer/);
-    assert.match(source, /dm-footer-levels/);
-    assert.match(source, /STATIONS.map/);
-    assert.doesNotMatch(source, /top-\[1\.0625rem\]|border-\[5px\]/, 'no transit track or station rings');
-  }
-  for (const source of [chromeSrc.navbar, layout]) assert.match(source, /dm-site-nav/);
-  assert.match(chromeSrc.navbar, /user \? 'pb-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\)\)\]'/);
-  assert.match(chromeSrc.bottomNav, /bg-nacht\/95/);
-  assert.match(chromeSrc.bottomNav, /active \? 'text-siegel-deep'/);
+test('the SPA footer and phone menu draw the stations; footer and tab bar stand on night', () => {
+  assert.match(chromeSrc.footer, /className=\{`bg-nacht /, 'footer ground');
+  assert.match(chromeSrc.footer, /STATIONS\.map/, 'footer stations');
+  assert.match(chromeSrc.footer, /rounded-pill bg-linie/, 'the line under the stations');
+  assert.match(chromeSrc.navbar, /bg-nacht px-4[\s\S]*?STATIONS\.map/, 'the phone menu opens on the stations, on night');
+  assert.match(chromeSrc.navbar, /user \? 'pb-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\)\)\]'/, 'signed in, the sheet must scroll clear of BottomNav');
+  assert.match(chromeSrc.bottomNav, /bg-nacht\/95/, 'tab bar ground');
+  assert.match(chromeSrc.bottomNav, /active \? 'text-siegel-deep'/, 'the current tab is the lit stop (AA label)');
+  assert.match(chromeSrc.bottomNav, /bg-linie" aria-hidden="true"/, 'and carries the türkis bar');
 });
 
 test('the app chrome never sets the sign face (the app does not load Archivo)', () => {
@@ -200,19 +197,25 @@ test('türkis text is for large type only; small labels on the tint use siegel-d
 });
 
 // ── The line board: the hero's HyperFrames loop (owner, 2026-10-04) ──
-test('the home uses authentic product scenes and original art with no video dependency', () => {
+test('the homepage carries the line board, poster-first and motion-safe', async () => {
   const home = read('astro-site/src/pages/index.astro');
-  assert.match(home, /<ProductWindow level="a1.1"/);
-  assert.match(home, /<FirstStop \/>/);
-  assert.match(home, /<RecordedCorrection \/>/);
-  assert.doesNotMatch(home, /<LineBoard|<LineSection|<Progression|<Ticket/);
-  const window = read('astro-site/src/components/proof/ProductWindow.astro');
-  assert.match(window, /<LifeScene/);
-  assert.match(window, /Model answer/);
-  assert.match(window, /courseProof\(level\)/);
-  const art = read('astro-site/src/components/proof/LifeScene.astro');
-  assert.match(art, /aria-hidden="true"/);
-  assert.doesNotMatch(art, /<image|<script|https?:|#[a-f0-9]{6}/i);
+  assert.match(home, /<LineBoard \/>/, 'the hero shows the line board');
+  const board = read('astro-site/src/components/linie/LineBoard.astro');
+  for (const f of ['hero-line.mp4', 'hero-line.webm', 'hero-line-poster.webp', 'hero-line-mobile.mp4', 'hero-line-mobile.webm', 'hero-line-mobile-poster.webp']) {
+    assert.ok(existsSync(join(ROOT, 'public/motion', f)), `public/motion/${f} is missing — run videos/encode-web.sh`);
+    assert.match(board, new RegExp(f.replace('.', '\\.')), `LineBoard references ${f}`);
+  }
+  assert.match(board, /preload="none"/, 'no video bytes before it is on screen');
+  assert.match(board, /prefers-reduced-motion: reduce/, 'reduced motion keeps the poster');
+  assert.match(board, /data-src=/, 'the src is attached only when visible');
+  const { STATIONS } = await import('../src/data/offers.js');
+  const sentences = board.match(/const LINE_SENTENCES = \[([\s\S]*?)\];/)[1].match(/'[^']+'/g);
+  assert.equal(sentences.length, STATIONS.length, 'one sentence per station');
+  // The two compositions speak the same sentences as the page's screen-reader list.
+  for (const p of ['videos/hero-line/shot-plan.json', 'videos/hero-line-mobile/shot-plan.json']) {
+    const plan = read(p);
+    for (const s of sentences) assert.ok(plan.includes(s.slice(1, -1)), `${p} lacks ${s}`);
+  }
 });
 
 // ── Station artwork: Higgsfield scenes, placed only as a full set (2026-10-04) ──
@@ -234,10 +237,8 @@ test('station art ships whole or not at all, from clean files', async () => {
     if (ART_COMPLETE) assert.match(artFor(level).src, /^\/art\/stations\/[a-z0-9-]+\.svg$/);
     else assert.equal(artFor(level), null, 'no scene renders until all eight exist');
   }
-  // Archived scenes retain their hygiene contract. Public courses now use
-  // real lesson windows and typographic book covers rather than this old set.
-  for (const p of ['astro-site/src/pages/courses/index.astro', 'astro-site/src/pages/courses/[level].astro']) {
-    assert.doesNotMatch(read(p), /<StationArt/);
-    assert.match(read(p), /<ProductWindow/);
+  // Every course surface places it, so finishing the set needs no template edit.
+  for (const p of ['astro-site/src/pages/courses/index.astro', 'astro-site/src/pages/courses/[level].astro', 'astro-site/src/components/linie/LineSection.astro']) {
+    assert.match(read(p), /<StationArt level=/, `${p} places the station art`);
   }
 });

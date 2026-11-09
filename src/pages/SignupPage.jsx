@@ -238,7 +238,7 @@ const SignupPage = () => {
         className="relative w-full max-w-md"
       >
         {/* Header */}
-        <div className="text-left mb-4 sm:mb-8">
+        <div className="text-center mb-4 sm:mb-8">
           {purchase && (
             <div className="mb-6 rounded-clay border border-ink bg-linie-wash px-4 py-3 text-left shadow-raise-linie" role="status">
               <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink">Step 1 of 2 · your account</p>

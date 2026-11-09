@@ -10,7 +10,6 @@ export const SHARED_FILES = [
   // The design system. Both tailwind configs import this, so a drift here puts
   // two different palettes on the two halves of the same site.
   ['src/data/design-tokens.js', 'astro-site/src/data/design-tokens.js'],
-  ['src/styles/public-system.css', 'astro-site/src/styles/public-design.css'],
   // One Organization entity, one @id — both trees must agree on who publishes.
   ['src/data/organization.js', 'astro-site/src/data/organization.js'],
   // THE navigation registry — every nav/footer link on both front ends. A

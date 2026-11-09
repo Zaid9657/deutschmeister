@@ -20,22 +20,19 @@ test('only a level with a door rides: Im Bau levels carry no ticket', () => {
   assert.match(page, /data-fahrschein-root=\{rides \? '' : undefined\}/);
 });
 
-test('every course-contents link has its matching section', () => {
+test('every stamp has the part of the page it stamps', () => {
   const ids = [...page.matchAll(/\{ id: '([a-z]+)', de: '/g)].map((m) => m[1]);
-  assert.ok(ids.length >= 6, `the contents list is read (${ids.length})`);
-  assert.match(page, /href=\{`#stamp-\$\{s.id\}`\}/);
-  assert.doesNotMatch(page, /class="dm-stamp |data-stamp-dot=/);
+  assert.ok(ids.length >= 6, `the stamps list is read (${ids.length})`);
   for (const id of ids) {
     assert.match(page, new RegExp(`id="stamp-${id}"[^>]*data-stamp="${id}"`), `stamp ${id} has no target`);
   }
 });
 
-test('the syllabus fits the new contents rail and retains a keyboard scroll region', () => {
+test('the syllabus table fits the column beside the ticket', () => {
   const minW = Number(page.match(/<table class="[^"]*min-w-\[(\d+)px\]/)[1]);
-  assert.match(page, /xl:grid-cols-\[minmax\(0,1fr\)_17rem\] xl:gap-10/, 'the column math below assumes this grid');
-  // max-w-7xl (1280) - px-5 (40) - contents rail (272) - gap (40) = 928
-  assert.match(page, /overflow-x-auto[^>]*tabindex="0" role="region" aria-label="Lehrplan"/);
-  assert.ok(minW <= 928, `table min-width ${minW}px is wider than the 928px column`);
+  assert.match(page, /xl:grid-cols-\[minmax\(0,1fr\)_15rem\] xl:gap-10/, 'the column math below assumes this grid');
+  // max-w-5xl (1024) - px-5 (2 x 20) - the ticket (240) - the gap (40) = 704
+  assert.ok(minW <= 704, `table min-width ${minW}px is wider than the 704px column`);
 });
 
 test('the bottom bar steps aside for the course return bar', () => {

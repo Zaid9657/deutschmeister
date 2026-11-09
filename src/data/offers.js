@@ -225,11 +225,11 @@ export const OFFER_FAQ = [
   },
   {
     q: 'Should I buy a level or Pro?',
-    a: `Buy a level once and work through it at your pace. Pro is a subscription: every level and the full AI allowance while you pay. A level already includes ${COURSE_PRO_MONTHS} months of Pro.`,
+    a: `Buy a level to own one stop of the line and work through it at your pace. Pro rents the whole line by the month: every level and the full AI allowance while you pay. A level already includes ${COURSE_PRO_MONTHS} months of Pro.`,
   },
   {
     q: 'How much AI practice do I get?',
-    a: `The AI tools are metered so they stay fast: on Pro, and during a course’s ${COURSE_PRO_MONTHS} included months, ${PRO_SPEAKING_SESSIONS_PER_MONTH} speaking sessions and ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing corrections a month and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day.`,
+    a: `The AI tools are metered so they stay fast: on Pro, and during a ticket’s ${COURSE_PRO_MONTHS} months, ${PRO_SPEAKING_SESSIONS_PER_MONTH} speaking sessions and ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing corrections a month and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day.`,
   },
   {
     q: 'I’m nervous about speaking.',

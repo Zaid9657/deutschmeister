@@ -6,9 +6,6 @@
     <script src="/consent.js" defer></script>
     <!-- Which link brought this visitor (utm_* / ?ref= / social referrer) — see /attribution.js -->
     <script src="/attribution.js" defer></script>
-    <link rel="preload" href="/fonts/meister-serif-v1-regular.woff" as="font" type="font/woff" crossorigin>
-    <link rel="preload" href="/fonts/meister-sans-v1-regular.woff" as="font" type="font/woff" crossorigin>
-    <link rel="preload" href="/fonts/meister-sans-v1-bold.woff" as="font" type="font/woff" crossorigin>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- PWA manifest — deliberately UNstamped (no data-rh): SEO.jsx does not
          render a manifest link, and stamping a tag Helmet doesn't re-render
@@ -92,11 +89,13 @@
       }
     }
     </script>
-    <!-- Meister Serif (display) + Meister Sans (body) are self-hosted from /fonts/;
+    <!-- Fraunces (display) + Nunito Sans (body) are self-hosted from /fonts/;
          the @font-face rules ship in the app stylesheet (design-tokens.js
          `fontFaces`, via tailwind.config.js). Preload exactly the token's
          `fontPreloads` so both are in flight before the CSS is parsed —
          tests/web-performance.test.mjs pins this list to the token. -->
+    <link rel="preload" href="/fonts/fraunces-v38-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/nunito-sans-v19-latin.woff2" as="font" type="font/woff2" crossorigin>
   </head>
   <body>
     <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Learn German with DeutschMeister</h1>

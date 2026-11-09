@@ -100,7 +100,7 @@ html[data-sign='off'] :is(.sign-display, .sign-head, .sign-label, .sign-code, .d
   text-decoration: none;
   white-space: normal;
   text-align: center;
-  transition: transform theme('transitionDuration.feedback') theme('transitionTimingFunction.out-strong');
+  transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .dm-key:active {
   transform: translateY(1px);
@@ -162,7 +162,7 @@ html[data-sign='off'] :is(.sign-display, .sign-head, .sign-label, .sign-code, .d
   transform-origin: top center;
 }
 details[open] > .dm-sheet {
-  animation: dmSheetIn theme('transitionDuration.control') cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: dmSheetIn 220ms cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 @keyframes dmSheetIn {
   from {
@@ -203,22 +203,22 @@ html.js .dm-track-draw.is-armed.is-drawn {
 }
 .dm-pillar {
   transform-style: preserve-3d;
-  transition: transform theme('transitionDuration.section') theme('transitionTimingFunction.out-strong');
+  transition: transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* The train: a capsule that moves between stations (signature, 800ms). */
 .dm-train {
-  transition: transform theme('transitionDuration.signature') theme('transitionTimingFunction.in-out-strong');
+  transition: transform 800ms cubic-bezier(0.77, 0, 0.175, 1);
   will-change: transform;
 }
 .dm-station-dot {
-  transition: transform theme('transitionDuration.control') theme('transitionTimingFunction.out-strong');
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .dm-station-dot.is-reached {
   transform: scale(1.12);
 }
 .dm-pulse {
-  animation: dmPulse 2.4s theme('transitionTimingFunction.out-strong') infinite;
+  animation: dmPulse 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 @keyframes dmPulse {
   0% {
@@ -283,7 +283,7 @@ html.js .dm-track-draw.is-armed.is-drawn {
   color: transparent;
 }
 [data-fahrschein='on'] [data-stamp-slot].is-stamped .dm-stamp {
-  animation: dmStampIn theme('transitionDuration.control') theme('transitionTimingFunction.out-strong');
+  animation: dmStampIn 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 @keyframes dmStampIn {
   from {
@@ -307,12 +307,12 @@ html.js .dm-track-draw.is-armed.is-drawn {
 .dm-fahrschein-bar {
   visibility: hidden;
   transform: translateY(110%);
-  transition: transform theme('transitionDuration.control') theme('transitionTimingFunction.out-strong');
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .dm-fahrschein-bar.is-shown {
   visibility: visible;
   transform: none;
-  transition: transform theme('transitionDuration.control') theme('transitionTimingFunction.out-strong');
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   .dm-fahrschein-bar,
@@ -345,7 +345,7 @@ html.js .fs-item:not(.is-current) {
   display: none;
 }
 html.js .fs-item.is-current {
-  animation: dmItemIn theme('transitionDuration.control') theme('transitionTimingFunction.out-strong') both;
+  animation: dmItemIn 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 @keyframes dmItemIn {
   from {
@@ -367,7 +367,7 @@ html.js .fs-item.is-current {
   border-color: theme('colors.accent.limette.DEFAULT');
 }
 .fs-input.is-wrong {
-  animation: dmNudge theme('transitionDuration.control') theme('transitionTimingFunction.out-strong');
+  animation: dmNudge 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 @keyframes dmNudge {
   25% {
@@ -381,7 +381,7 @@ html.js .fs-item.is-current {
   transform-origin: 50% 0%;
 }
 .fs-done.is-shown {
-  animation: dmTicketIn theme('transitionDuration.signature') theme('transitionTimingFunction.out-strong') both;
+  animation: dmTicketIn 800ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 @keyframes dmTicketIn {
   from {
@@ -397,7 +397,7 @@ html.js .fs-item.is-current {
 /* ── Choice cards (fit chooser, ticket tabs): real radios ──────────────── */
 .dm-choice {
   cursor: pointer;
-  transition: transform theme('transitionDuration.feedback') theme('transitionTimingFunction.out-strong');
+  transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .dm-choice:active {
   transform: translateY(2px);
@@ -425,7 +425,7 @@ html.js .fs-item.is-current {
 .fit:has(input[value='a21-done']:checked) .fit-result[data-fit='a21-done'],
 .fit:has(input[value='b1-route']:checked) .fit-result[data-fit='b1-route'] {
   display: block;
-  animation: dmItemIn theme('transitionDuration.control') theme('transitionTimingFunction.out-strong') both;
+  animation: dmItemIn 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 .fit:has(input:checked) .fit-default {
   display: none;
@@ -439,7 +439,7 @@ html.js .fs-item.is-current {
 .tickets:has(input[value='a2.1']:checked) .ticket-panel[data-level='a2.1'],
 .tickets:has(input[value='a2.2']:checked) .ticket-panel[data-level='a2.2'] {
   display: block;
-  animation: dmItemIn theme('transitionDuration.control') theme('transitionTimingFunction.out-strong') both;
+  animation: dmItemIn 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
 /* The ticket stub: perforation between the stub and the body. */
@@ -484,7 +484,7 @@ html.js .fs-item.is-current {
 
 .dm-lift,
 .dm-ticket-tilt {
-  transition: transform theme('transitionDuration.section') theme('transitionTimingFunction.out-strong');
+  transition: transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* ── Reduced motion: keep opacity and colour, drop movement ───────────── */

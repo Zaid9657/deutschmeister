@@ -78,9 +78,9 @@ test('the full Astro navigation starts at the large breakpoint', () => {
 test('pricing distinguishes recurring access from one-time courses in its headline and CTA', () => {
   // Pass 2 authorises the learner-first headline; the lead and offer cards
   // must still explain both payment shapes and retain the correct Pro CTA.
-  assert.match(pricing, /A little German\.<\/span>[\s\S]*?A clear choice\./);
+  assert.match(pricing, /Your German\.<\/span>[\s\S]*?Your way to learn\./);
   assert.match(pricing, /Own a level · one payment/);
-  assert.match(pricing, /Ongoing practice · Pro/);
+  assert.match(pricing, /Rent the line · Pro/);
   assert.match(pricing, /Buy a level once/);
   assert.match(pricing, /subscribe to Pro/);
   // The Pro CTA's words live in astro-site/src/lib/proCta.js since 2026-09-30

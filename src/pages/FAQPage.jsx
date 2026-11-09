@@ -8,7 +8,6 @@ import { seoProps } from '../data/seoRoutes.js';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
-import SpeechArt from '../components/ui/SpeechArt.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import { SUPPORT_LINK } from '../data/navigation';
 
@@ -46,22 +45,22 @@ const FAQPage = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-20">
         <div className="dm-public-heading relative overflow-hidden rounded-clay mb-8 p-6 sm:p-10">
-          <div className="dm-faq-hero">
-            <div><SectionHeading
+          <div className="relative">
+            <SectionHeading
               size="page"
               level={1}
               align="left"
               eyebrow="Frequently asked questions"
-              title="Good questions. Clear answers."
+              title="A clear answer. A confident next step."
               lead="Clear answers about learning, speaking practice, exams, pricing, and privacy."
-            /></div><SpeechArt />
+            />
           </div>
         </div>
 
         <div className="dm-faq-layout">
         <div className="self-start lg:sticky lg:top-24">
         <nav className="mb-6 flex flex-wrap gap-2 lg:flex-col" aria-label="Question categories">
-          {FAQ_CATEGORIES.map((category, i) => <a key={category.title} href={`#faq-category-${i}`} className="rounded-lg border border-rule bg-white px-4 py-2 text-sm font-bold text-siegel-deep">{category.title} <span className="text-graphite">({category.items.length})</span></a>)}
+          {FAQ_CATEGORIES.map((category, i) => <a key={category.title} href={`#faq-category-${i}`} className="rounded-pill border border-rule bg-white px-4 py-2 text-sm font-bold text-siegel-deep">{category.title} <span className="text-graphite">({category.items.length})</span></a>)}
         </nav>
         <p className="mb-8 text-sm text-graphite">Choosing a course? <a href="/courses/" className="font-bold text-siegel-deep underline">See the levels and what is available.</a></p>
         </div>

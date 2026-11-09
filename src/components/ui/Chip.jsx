@@ -36,7 +36,7 @@ export default function Chip({
 }) {
   const isKasus = tone in KASUS_ABBR;
   const classes = [
-    'inline-flex items-center gap-1.5 rounded-lg font-bold select-none',
+    'inline-flex items-center gap-1.5 rounded-pill font-bold select-none',
     size === 'sm' ? 'px-2.5 py-1 font-data text-[0.6875rem] uppercase tracking-[0.13em]' : 'px-3.5 py-1.5 text-sm',
     TONES[tone] ?? TONES.label,
     raised

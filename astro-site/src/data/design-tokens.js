@@ -1,112 +1,517 @@
-// DeutschMeister · OPEN HOUSE · 2026-11-08
-// Canonical visual system, shared byte-for-byte with Astro. Compatibility names
-// (siegel / linie / nacht / clay) keep existing consumers on the same system.
-// Warm editorial space, plum actions, orange punctuation, lilac product stages.
-// Case colours and legacy exercise themes retain their pedagogical meaning.
+// DeutschMeister design tokens — the single source for colour, type, spacing,
+// DEPTH and MOTION.
+//
+// DUPLICATED between the SPA and the Astro site (byte-identical, enforced by
+// scripts/check-duplicates.mjs), for the same reason as pricing.js and
+// marketing.js: two packages, two node_modules trees, no safe cross-import.
+// Both tailwind configs import this file, so a token added here reaches every
+// surface on both sides.
+//
+// Current contract (2026-11-08): paper and turquoise, hairline surfaces, no
+// resting shadows. Legacy aliases below preserve callers without preserving
+// extrusions. Commerce uses Archivo, editorial uses Fraunces. Motion tiers
+// are 140/220/420/800 ms; only transform, opacity and clip-path animate.
+//
+// ---------------------------------------------------------------------------
+// THE THREE RULES. These are load-bearing, not taste. Breaking one makes the
+// system decorative again, which is what it replaced.
+// ---------------------------------------------------------------------------
+//
+// 1. COLOUR MEANS CASE. The four `kasus` colours below are the ones Sentence
+//    X-Ray already uses to mark Nominativ, Akkusativ, Dativ and Genitiv
+//    (src/pages/SentenceXRay.jsx, CASE_STYLES). They may appear ONLY where a
+//    grammatical case is named or demonstrated. Never as a section fill, never
+//    on a CTA, never because a card needed livening up. The payoff is that a
+//    learner meets the same colour language on the pricing page and inside the
+//    analyser, and learns it twice. The `accent` candy palette exists so this
+//    rule survives a playful design: when a surface needs energy, it takes an
+//    accent, never a case colour. (Accent hues are chosen to be UNCONFUSABLE
+//    with the four case hues — no blue, no red-orange, no true green, no
+//    blue-purple.)
+//
+// 2. ONE PRIMARY. `siegel` teal is the only interactive colour — buttons,
+//    links, focus rings, selected states. `gold` belongs to the seal itself and
+//    to at most one "recommended" marker per page. The accents are ENERGY, not
+//    interaction: chips, badges, streak flames, progress fills, confetti — a
+//    candy-coloured CTA is out of system (exception: one celebration moment
+//    may use `himbeer`, because a completed goal has earned it).
+//
+// 3. HAIRLINES, NOT RESTING SHADOWS. Reference and interactive surfaces are
+//    flat; borders, focus rings and a small press translation show affordance.
+//    Overlay shadows are reserved for floating menus and dialogs.
+//
+// Type note: the display face is Fraunces (optical-size axis, enough spine for
+// long German compounds); the data face is a system mono stack for level codes
+// (A2.1), case labels (AKK) and prices — figures are data, not prose.
+
+/** The ground and the ink. Cool near-white, and a near-black with a faint teal cast. */
 export const color = {
-  paper: '#FFF9F0', paperSunk: '#F3EBDD', ink: '#2D2034', graphite: '#615165',
-  rule: '#DDD2DE', edge: '#CDBDCE', white: '#FFFFFF',
-  siegel: '#653C73', siegelLift: '#512D5E', siegelDeep: '#4D285A',
-  siegelWash: '#EDE3F2', siegelEdge: '#3D2047', gold: '#F8BC63',
-  orange: '#E8915B', orangeWash: '#FCE5CF', orangeInk: '#85401E',
-  lilac: '#D9C6EE', lilacWash: '#F3EDF9', plum: '#2D2034',
+  paper: '#FCFCFA',
+  paperSunk: '#F4F6F5', // recessed panels, table header rows
+  ink: '#14201D',
+  graphite: '#5A6360', // secondary text — AA on paper at body sizes
+  rule: '#E2E7E5', // hairlines, table rules, card borders
+  edge: '#D8DFDB', // the hard bottom edge of a resting white/paper surface
+  white: '#FFFFFF',
+
+  // Primary. Sampled from the Meister-Siegel gradient in src/components/Logo.jsx.
+  // v4 (owner pick 2026-10-04, "A · Türkis"): the brightest türkis that still
+  // carries white button text at AA (4.7:1). Was #0F766E.
+  siegel: '#0A8276',
+  siegelLift: '#0A7468', // hover (darkens, keeps AA); the seal gradient's far stop
+  siegelDeep: '#0A6B61', // press, and text-on-paper when the link must darken
+  siegelWash: '#E3F6F3', // selected rows, quiet fills — the course palette's wash
+  siegelEdge: '#075A51', // the bottom edge under a siegel button face
+
+  // The seal's dot. Rule 2: the seal, and at most one marker per page.
+  gold: '#FBBF24',
 };
+
+/**
+ * The four German cases, as already taught by Sentence X-Ray. Rule 1 governs
+ * every use. `ink` is the accessible text colour on that case's `wash`.
+ */
 export const kasus = {
   nominativ: { line: '#378ADD', wash: '#E6F1FB', ink: '#0C447C', abbr: 'NOM' },
   akkusativ: { line: '#D85A30', wash: '#FAECE7', ink: '#712B13', abbr: 'AKK' },
   dativ: { line: '#1D9E75', wash: '#E1F5EE', ink: '#085041', abbr: 'DAT' },
   genitiv: { line: '#7F77DD', wash: '#EEEDFE', ink: '#3C3489', abbr: 'GEN' },
 };
+
+/**
+ * The candy accents — v2's energy palette. Rule 2: energy, never interaction;
+ * rule 1: never where a case is named. German names on purpose: they can never
+ * collide with a Tailwind palette name (the brand suite bans `amber-`, `rose-`
+ * and friends as substrings in the chrome, and `bg-accent-himbeer` contains
+ * none of them), and they read as brand, not as stock.
+ *
+ * Hue discipline: pink, peach and lime — deliberately distant from the four
+ * kasus hues (blue / red-orange / green / blue-purple), from siegel teal and
+ * from gold. `ink` is the accessible text colour on that accent's `wash`;
+ * `edge` sits under a raised chip of that accent (rule 3).
+ */
 export const accent = {
-  himbeer: { bright: '#C65C83', wash: '#FAE8EF', ink: '#812C4D', edge: '#A74065' },
-  aprikose: { bright: color.orange, wash: color.orangeWash, ink: color.orangeInk, edge: '#C97543' },
-  limette: { bright: '#BCCB83', wash: '#EFF1DD', ink: '#4A562B', edge: '#8D9D57' },
+  himbeer: { bright: '#EC4E88', wash: '#FDECF3', ink: '#8C1D4C', edge: '#C22B63' },
+  aprikose: { bright: '#FF9E57', wash: '#FFF0E4', ink: '#8A4516', edge: '#E07B2E' },
+  limette: { bright: '#7BC943', wash: '#F1FAE6', ink: '#3E6B15', edge: '#5DA52A' },
 };
-export const viz = { pos: '#009E73', neg: '#D55E00', series1: '#0072B2', series2: '#E69F00', warn: '#B7791F', error: '#C0362C' };
+
+/**
+ * The data-visualisation palette — the admin panel's chart, delta and status
+ * colours (docs/admin-panel.md). Wong's colourblind-safe set, NOT plain
+ * red/green: red-green is the most common colour vision deficiency, so a tile
+ * whose only signal is its colour is blank for part of the audience. Colour
+ * here only ever REINFORCES the arrow and the sign a delta already carries —
+ * it never carries meaning alone. `error` is the one true red in the admin
+ * area and is reserved for system faults, so "revenue fell" (`neg`) and "the
+ * webhook broke" (`error`) never look the same. Rule 1 still holds: none of
+ * these may mark a grammatical case, and none may appear on a learner-facing
+ * surface — they are for operators reading numbers.
+ */
+export const viz = {
+  pos: '#009E73', // growth / positive
+  neg: '#D55E00', // decline / negative — vermillion, not red
+  series1: '#0072B2', // primary data series
+  series2: '#E69F00', // secondary data series
+  warn: '#B7791F', // needs attention (past due, desync)
+  error: '#C0362C', // system fault ONLY
+};
+
+/**
+ * Font stacks. The two brand faces are self-hosted (`fontFaces` below); each
+ * is followed by its metric-matched fallback, so the swap from fallback to
+ * brand face does not reflow the page.
+ */
 export const font = {
-  display: "'Meister Serif', 'Meister Serif Fallback', Georgia, serif",
-  body: "'Meister Sans', 'Meister Sans Fallback', Arial, sans-serif",
-  data: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+  display: "'Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'Iowan Old Style', Georgia, serif",
+  body: "'Nunito Sans', 'Nunito Sans Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  data: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
 };
-const face = (family, file, weight) => ({ '@font-face': {
-  fontFamily: `'${family}'`, fontStyle: 'normal', fontWeight: weight,
-  fontDisplay: 'swap', src: `url('/fonts/${file}.woff') format('woff')`,
-} });
-const fallback = (family, locals, adjust, ascent, descent, weight = '100 500') => ({ '@font-face': {
-  fontFamily: `'${family} Fallback'`, src: locals.map((local) => `local('${local}')`).join(', '), fontWeight: weight,
-  sizeAdjust: adjust, ascentOverride: ascent, descentOverride: descent, lineGapOverride: '0%',
-} });
-// Locally packaged OFL European subsets: Meister Serif from Caladea,
-// Meister Sans from Carlito; modified fonts use new names (Carlito is reserved). Carlito is
-// metrically compatible with Calibri; Caladea with Cambria. Arial/Georgia
-// fallbacks are calibrated over the new public copy using Pillow font advances
-// against Liberation Serif/Sans (metric twins of Times New Roman/Arial), with
-// source hhea metrics. Browser CLS still requires viewport verification.
+
+// ---------------------------------------------------------------------------
+// SELF-HOSTED FACES. Both front ends used to fetch these from
+// fonts.googleapis.com: two extra origins (DNS + TLS each) before the first
+// font byte, ~98 KB of each static page's ~144 KB, and a late swap from an
+// unmatched fallback that shifted the hero (CLS 0.11–0.18 on the pricing,
+// guide and grammar pages; docs/SCORECARD.md work order #9, 2026-09-27).
+//
+// The woff2 files in public/fonts/ are byte-for-byte what Google served for
+// the old css2 URLs (Fraunces v38 variable opsz+wght, Nunito Sans v19
+// variable wght, Nunito Sans italic 400), cut to the `latin` and `latin-ext`
+// subsets — nothing on either site uses Cyrillic or Vietnamese. SIL OFL 1.1:
+// the copyright and licence URL travel in each file's name table. A new
+// version gets a new filename (the version is in it), which is what lets
+// netlify.toml cache /fonts/* as immutable.
+//
+// Both tailwind configs add `fontFaces` to their base layer, so the @font-face
+// rules ship inside each front end's own stylesheet; the SPA adds
+// `fontFacesItalic` too (it always loaded the true italic, the Astro pages
+// never did). `fontPreloads` are the files every page needs above the fold —
+// index.html and Layout.astro preload exactly these (tests/web-performance).
+//
+// The fallbacks are the other half of the fix. Each names local fonts that
+// share one set of metrics and scales them to the brand face, so the text
+// wraps the same before and after the swap. size-adjust was MEASURED on the
+// site's own headings and paragraphs (Chromium, 2026-09-27), not taken from a
+// metrics table — Fraunces is variable, and a table's default instance is not
+// the weight the site sets: Fraunces 600 vs Georgia Bold (via its metric twin
+// Gelasio) 0.917–0.919, vs Noto Serif Bold 0.919–0.920, vs Times New Roman
+// Bold (via Liberation Serif) 1.09–1.11; Nunito Sans 400 vs Arial/Roboto
+// 1.01–1.02, 600–700 vs Arial Bold 0.99–1.02. The overrides are the brand
+// face's own vertical metrics (Fraunces ascent 0.978 / descent 0.255, Nunito
+// Sans 1.011 / 0.353, no line gap) divided by that size-adjust.
+// ---------------------------------------------------------------------------
+
+const UNICODE_LATIN =
+  'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD';
+const UNICODE_LATIN_EXT =
+  'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF';
+
+const webFace = (family, file, weight, unicodeRange, fontStyle = 'normal') => ({
+  '@font-face': {
+    fontFamily: `'${family}'`,
+    fontStyle,
+    // Fraunces 500–700 and Nunito Sans 300–700 are the ranges the old css2
+    // URLs declared, so a weight outside them clamps exactly as it did.
+    fontWeight: weight,
+    fontDisplay: 'swap',
+    src: `url('/fonts/${file}.woff2') format('woff2')`,
+    unicodeRange,
+  },
+});
+
+const fallbackFace = (family, weight, locals, sizeAdjust, ascent, descent) => ({
+  '@font-face': {
+    fontFamily: `'${family}'`,
+    fontWeight: weight,
+    src: locals.map((name) => `local('${name}')`).join(', '),
+    sizeAdjust,
+    ascentOverride: ascent,
+    descentOverride: descent,
+    lineGapOverride: '0%',
+  },
+});
+
 export const fontFaces = [
-  face('Meister Serif', 'meister-serif-v1-regular', '400 500'), face('Meister Serif', 'meister-serif-v1-bold', '600 900'),
-  face('Meister Sans', 'meister-sans-v1-regular', '100 500'), face('Meister Sans', 'meister-sans-v1-bold', '600 900'),
-  fallback('Meister Serif', ['Times New Roman', 'Liberation Serif'], '99.6%', '90.36%', '25.1%'),
-  fallback('Meister Serif', ['Times New Roman Bold', 'Liberation Serif Bold'], '103.18%', '87.23%', '24.23%', '600 900'),
-  fallback('Meister Sans', ['Arial', 'Liberation Sans'], '91.08%', '104.54%', '29.49%'),
-  fallback('Meister Sans', ['Arial Bold', 'Liberation Sans Bold'], '86.88%', '109.6%', '30.92%', '600 900'),
+  webFace('Fraunces', 'fraunces-v38-latin', '500 700', UNICODE_LATIN),
+  webFace('Fraunces', 'fraunces-v38-latin-ext', '500 700', UNICODE_LATIN_EXT),
+  webFace('Nunito Sans', 'nunito-sans-v19-latin', '300 700', UNICODE_LATIN),
+  webFace('Nunito Sans', 'nunito-sans-v19-latin-ext', '300 700', UNICODE_LATIN_EXT),
+  // The site sets Fraunces at 500–700 only, so its fallbacks are the BOLD
+  // cuts at every weight — closer to 600 than a regular, and never synthetic.
+  fallbackFace(
+    'Fraunces Fallback',
+    '100 900',
+    ['Georgia Bold', 'Georgia-Bold', 'Noto Serif Bold', 'NotoSerif-Bold'],
+    '91.8%', '106.54%', '27.78%',
+  ),
+  fallbackFace(
+    'Fraunces Fallback Times',
+    '100 900',
+    ['Times New Roman Bold', 'TimesNewRomanPS-BoldMT', 'Liberation Serif Bold', 'LiberationSerif-Bold', 'Tinos Bold', 'Tinos-Bold'],
+    '109.5%', '89.32%', '23.29%',
+  ),
+  fallbackFace(
+    'Nunito Sans Fallback',
+    '100 500',
+    ['Arial', 'ArialMT', 'Liberation Sans', 'LiberationSans', 'Arimo', 'Arimo-Regular', 'Roboto', 'Roboto-Regular'],
+    '101.5%', '99.61%', '34.78%',
+  ),
+  fallbackFace(
+    'Nunito Sans Fallback',
+    '600 900',
+    ['Arial Bold', 'Arial-BoldMT', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Roboto Bold', 'Roboto-Bold'],
+    '100%', '101.1%', '35.3%',
+  ),
 ];
-export const fontFacesItalic = [];
-export const fontPreloads = ['/fonts/meister-serif-v1-regular.woff', '/fonts/meister-sans-v1-regular.woff', '/fonts/meister-sans-v1-bold.woff'];
-// Sign now uses the same body face: no third family or extra font request.
-export const signFontFaces = [];
-export const signFontPreloads = ['/fonts/meister-sans-v1-bold.woff'];
+
+export const fontFacesItalic = [
+  webFace('Nunito Sans', 'nunito-sans-v19-italic-latin', '400', UNICODE_LATIN, 'italic'),
+  webFace('Nunito Sans', 'nunito-sans-v19-italic-latin-ext', '400', UNICODE_LATIN_EXT, 'italic'),
+];
+
+/** Above-the-fold on every page: the display face and the upright body face, latin subset. */
+export const fontPreloads = ['/fonts/fraunces-v38-latin.woff2', '/fonts/nunito-sans-v19-latin.woff2'];
+
+/**
+ * Named type roles, each with its mobile step-down. Roles, not a raw scale:
+ * a caller picks "this is a section heading", not "this is 30px", so the
+ * mobile behaviour travels with the decision instead of being re-guessed.
+ * Sizes are rem strings so they compose with Tailwind's arbitrary values.
+ */
 export const type = {
-  masthead: { size: '6rem', mobile: '3.5rem', weight: 400, tracking: '-0.045em', leading: .99, family: 'display' },
-  editorial: { size: '4.75rem', mobile: '3rem', weight: 400, tracking: '-0.035em', leading: 1.03, family: 'display' },
-  hero: { size: '4rem', mobile: '2.75rem', weight: 400, tracking: '-0.035em', leading: 1.06, family: 'display' },
-  section: { size: '3rem', mobile: '2.125rem', weight: 400, tracking: '-0.025em', leading: 1.1, family: 'display' },
-  cardTitle: { size: '1.5rem', mobile: '1.25rem', weight: 700, tracking: '-0.015em', leading: 1.25, family: 'body' },
-  lead: { size: '1.25rem', mobile: '1.125rem', weight: 400, tracking: '0', leading: 1.55, family: 'body' },
-  body: { size: '1.0625rem', mobile: '1rem', weight: 400, tracking: '0', leading: 1.6, family: 'body' },
-  small: { size: '.875rem', mobile: '.875rem', weight: 400, tracking: '0', leading: 1.5, family: 'body' },
-  label: { size: '.75rem', mobile: '.75rem', weight: 700, tracking: '.08em', leading: 1.3, family: 'body' },
-  data: { size: '.8125rem', mobile: '.8125rem', weight: 500, tracking: '0', leading: 1.4, family: 'data' },
+  masthead: { size: '5.75rem', mobile: '3.5rem', weight: 800, tracking: '-0.055em', leading: 1, family: 'sign' },
+  editorial: { size: '4.25rem', mobile: '2.5rem', weight: 640, tracking: '-0.035em', leading: 1.06, family: 'display' },
+  hero: { size: '3.5rem', mobile: '2.25rem', weight: 640, tracking: '-0.025em', leading: 1.02, family: 'display' },
+  section: { size: '2.125rem', mobile: '1.5625rem', weight: 620, tracking: '-0.018em', leading: 1.12, family: 'display' },
+  cardTitle: { size: '1.125rem', mobile: '1.0625rem', weight: 700, tracking: '-0.005em', leading: 1.3, family: 'body' },
+  lead: { size: '1.1875rem', mobile: '1.0625rem', weight: 400, tracking: '0', leading: 1.6, family: 'body' },
+  body: { size: '1rem', mobile: '0.9375rem', weight: 400, tracking: '0', leading: 1.65, family: 'body' },
+  small: { size: '0.875rem', mobile: '0.875rem', weight: 400, tracking: '0', leading: 1.5, family: 'body' },
+  // Uppercase + letterspacing is permitted HERE AND NOWHERE ELSE. If a heading
+  // wants to shout, it is a label or it is not shouting.
+  label: { size: '0.6875rem', mobile: '0.6875rem', weight: 700, tracking: '0.13em', leading: 1.2, family: 'data' },
+  // Figures: prices, level codes, counts. Tabular so columns align.
+  data: { size: '0.8125rem', mobile: '0.8125rem', weight: 500, tracking: '0.02em', leading: 1.4, family: 'data' },
 };
-export const space = { xs: '.375rem', sm: '.75rem', md: '1.25rem', lg: '2rem', xl: '3.5rem', xxl: '6rem' };
-export const layout = { maxWidth: '76rem', prose: '42rem', gutter: '1.5rem' };
-export const radius = { none: '0', sm: '.375rem', md: '.75rem', lg: '1.5rem', clay: '1.5rem', control: '.75rem', window: '1.5rem', pill: '999px' };
-export const depth = { press: '2px', pressSm: '1px' };
+
+/** 4px grid. Named so spacing decisions are legible in review. */
+export const space = { xs: '0.25rem', sm: '0.5rem', md: '1rem', lg: '1.5rem', xl: '2.5rem', xxl: '4rem' };
+
+export const layout = { maxWidth: '68rem', prose: '38rem', gutter: '1.25rem' };
+
+/**
+ * Radius: generous on things you press, square on things you read.
+ * `clay` is v2's chunky card/button radius — a NEW name, because wiring the
+ * token sm/md/lg/xl values into Tailwind would collide with its own defaults
+ * and silently reshape every `rounded-lg` in the app (see the borderRadius
+ * comment in either tailwind config). `pill` has no default to collide with.
+ */
+export const radius = { none: '0', sm: '0.375rem', md: '0.625rem', lg: '1rem', clay: '1.25rem', pill: '999px' };
+
+/**
+ * Legacy aliases are kept for existing consumers; resting surfaces are flat.
+ * Historical rule: depth is an affordance. The raised states pair a HARD bottom edge
+ * (the extrusion — reads as "this has a side, you can push it") with a SOFT
+ * ambient shadow (reads as "it floats a little"). Pressing removes the edge
+ * and translates the face down by the same distance — the press travel below
+ * — so the button physically depresses instead of just tinting.
+ *
+ * Edge colours: `color.edge` under white/paper faces, `color.siegelEdge`
+ * under siegel faces, `accent.*.edge` under accent chips.
+ */
+export const depth = {
+  press: '4px', // how far a pressed surface travels down; matches the edge height
+  pressSm: '2px',
+};
+
+/** Shadows. hover/overlay are v1's lift pair; raise/raiseLg are v2's resting extrusions. */
 export const shadow = {
-  raise: '0 8px 24px -16px rgba(48,35,55,.22)',
-  raiseLg: '0 24px 64px -32px rgba(48,35,55,.3)',
-  raiseSiegel: '0 6px 16px -8px rgba(48,35,55,.32)',
-  raiseHimbeer: '0 8px 24px -16px rgba(48,35,55,.22)',
-  raiseAprikose: '0 8px 24px -16px rgba(48,35,55,.22)',
-  raiseLimette: '0 8px 24px -16px rgba(48,35,55,.22)',
-  hover: '0 12px 32px -16px rgba(48,35,55,.25)',
-  overlay: '0 24px 64px -24px rgba(48,35,55,.3)',
+  raise: 'none',
+  raiseLg: 'none',
+  raiseSiegel: 'none',
+  raiseHimbeer: 'none',
+  raiseAprikose: 'none',
+  raiseLimette: 'none',
+  hover: '0 6px 20px -8px rgba(20, 32, 29, 0.18)',
+  overlay: '0 16px 48px -12px rgba(20, 32, 29, 0.26)',
 };
-export const motion = { spring: 'cubic-bezier(0.22, 1, 0.36, 1)', snap: 'cubic-bezier(0.2, 0, 0, 1)', duration: { press: '120ms', pop: '200ms', enter: '480ms' } };
-export const linie = { DEFAULT: color.siegel, deep: color.siegelLift, edge: color.siegelEdge, wash: color.siegelWash, ink: color.white };
-// Compatibility ground stays light; the new footer explicitly uses plum.
-export const nacht = { DEFAULT: color.lilacWash, raised: color.white, sunk: color.lilac, rule: color.rule, text: color.ink, muted: color.graphite };
-export const motionLinie = { ease: { out: motion.spring, inOut: 'cubic-bezier(0.65, 0, 0.35, 1)', drawer: 'cubic-bezier(0.32, 0.72, 0, 1)' }, duration: { feedback: '120ms', control: '200ms', section: '480ms', signature: '720ms' }, stagger: '50ms' };
-export const qaWidths = [360, 390, 768, 1280, 1440];
+
+/**
+ * Motion: bouncy springs, tiny durations, and ALWAYS behind
+ * `prefers-reduced-motion` (both global stylesheets carry the gate — an
+ * exam-stressed learner gets to turn the bounce off at the OS level and the
+ * whole system respects it).
+ */
+export const motion = {
+  spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)', // overshoots: pops, badges, cards arriving
+  snap: 'cubic-bezier(0.2, 0, 0, 1)', // decisive settle: presses, toggles
+  duration: { press: '140ms', pop: '220ms', enter: '420ms' },
+};
+
+/**
+ * Flattened for Tailwind's `theme.extend.colors`. Both tailwind configs spread
+ * this, so `bg-paper`, `text-ink`, `border-rule`, `bg-kasus-dativ-wash`,
+ * `bg-accent-himbeer` and friends exist on the SPA and the Astro site without
+ * either config restating a hex value.
+ */
 export const tailwindColors = {
-  paper: color.paper, 'paper-sunk': color.paperSunk, ink: color.ink, graphite: color.graphite,
-  rule: color.rule, edge: color.edge, plum: color.plum, lilac: color.lilac, 'lilac-wash': color.lilacWash,
-  orange: color.orange, 'orange-wash': color.orangeWash, 'orange-ink': color.orangeInk,
-  siegel: { DEFAULT: color.siegel, lift: color.siegelLift, deep: color.siegelDeep, wash: color.siegelWash, edge: color.siegelEdge }, gold: color.gold,
-  kasus: Object.fromEntries(Object.entries(kasus).map(([n,v]) => [n, { DEFAULT: v.line, wash: v.wash, ink: v.ink }])),
-  accent: Object.fromEntries(Object.entries(accent).map(([n,v]) => [n, { DEFAULT: v.bright, wash: v.wash, ink: v.ink, edge: v.edge }])), viz: { ...viz },
+  paper: color.paper,
+  'paper-sunk': color.paperSunk,
+  ink: color.ink,
+  graphite: color.graphite,
+  rule: color.rule,
+  edge: color.edge,
+  siegel: { DEFAULT: color.siegel, lift: color.siegelLift, deep: color.siegelDeep, wash: color.siegelWash, edge: color.siegelEdge },
+  gold: color.gold,
+  kasus: Object.fromEntries(
+    Object.entries(kasus).map(([name, v]) => [name, { DEFAULT: v.line, wash: v.wash, ink: v.ink }]),
+  ),
+  accent: Object.fromEntries(
+    Object.entries(accent).map(([name, v]) => [name, { DEFAULT: v.bright, wash: v.wash, ink: v.ink, edge: v.edge }]),
+  ),
+  // `bg-viz-pos`, `text-viz-error` … — the admin panel's data colours.
+  viz: { ...viz },
 };
-export const tailwindBoxShadow = { raise: shadow.raise, 'raise-lg': shadow.raiseLg, 'raise-siegel': shadow.raiseSiegel, 'raise-himbeer': shadow.raiseHimbeer, 'raise-aprikose': shadow.raiseAprikose, 'raise-limette': shadow.raiseLimette, hover: shadow.hover, overlay: shadow.overlay };
-export const tailwindEasing = { spring: motion.spring, snap: motion.snap };
+
+/** Both configs spread this into theme.extend.boxShadow. */
+export const tailwindBoxShadow = {
+  raise: 'none',
+  'raise-lg': shadow.raiseLg,
+  'raise-siegel': shadow.raiseSiegel,
+  'raise-himbeer': shadow.raiseHimbeer,
+  'raise-aprikose': shadow.raiseAprikose,
+  'raise-limette': shadow.raiseLimette,
+  hover: shadow.hover,
+  overlay: shadow.overlay,
+};
+
+/** Both configs spread this into theme.extend.transitionTimingFunction. */
+export const tailwindEasing = {
+  spring: motion.spring,
+  snap: motion.snap,
+};
+
 export const tailwindFontFamily = {
-  display: ['Meister Serif', 'Meister Serif Fallback', 'Georgia', 'serif'],
-  body: ['Meister Sans', 'Meister Sans Fallback', 'Arial', 'sans-serif'],
-  data: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+  display: ['Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'Iowan Old Style', 'Georgia', 'serif'],
+  body: ['Nunito Sans', 'Nunito Sans Fallback', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+  data: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
 };
-export const tailwindSignFont = { sign: tailwindFontFamily.body };
-export const tailwindLinieColors = { linie: { ...linie }, nacht: { ...nacht } };
-export const tailwindLinieShadow = { 'raise-linie': shadow.raiseSiegel, 'raise-nacht': shadow.raise, ticket: shadow.raiseLg };
-export const tailwindLinieEasing = { 'out-strong': motionLinie.ease.out, 'in-out-strong': motionLinie.ease.inOut, drawer: motionLinie.ease.drawer };
+
+// ===========================================================================
+// v3 — "DIE LINIE · DEUTSCH, IN BEWEGUNG" (2026-10-04), v4 colours: TÜRKIS
+// docs/redesign-2026-10/art-direction.md holds the why; this holds the values.
+//
+// The marketing site and the commerce screens become a German transit line:
+// the CEFR ladder is a line of eight stations, A1.1 the free first stop, each
+// paid level a one-time ticket. The section is ADDITIVE on purpose — nothing
+// above changes value, so every existing screen, the lesson player and the
+// course theme keep rendering exactly as before; a surface opts in by using
+// these classes. Placed at the end of the file so it never shares a hunk with
+// the course theme's edits.
+//
+// v4 COLOURS (owner pick 2026-10-04: "A · Türkis", over night + signal yellow;
+// docs/redesign-2026-10/screenshots/palette-compare.jpg). The owner had already
+// chosen türkis for the Course v2 player, so site, app and course now share one
+// palette. The token NAMES stay (`nacht`, `linie`) so no component changed:
+//   `nacht` is now the line's light türkis ground (hero, line section, footer,
+//           tab bar) — read it as "the feature ground", not as night;
+//   `linie` is türkis, the same family as `siegel`: the line, its stations and
+//           the keys on that ground, with white text (4.7:1 AA).
+// RULE 2 is whole again: ONE action colour, türkis, on every ground.
+// RULE 1 still binds: türkis sits ~13° of hue from the Dativ green — as siegel
+// teal always has — so the line is never used to mark a case, and a case colour
+// never appears without its NOM/AKK/DAT/GEN label.
+// ===========================================================================
+
+/** The line itself: türkis (v4). Same family as `siegel`. */
+export const linie = {
+  DEFAULT: '#0A8276', // the line, station rings, keys (white text 4.7:1)
+  deep: '#0A7468', // hover/press; the line's shadow side
+  edge: '#075A51', // the hard bottom edge under a linie face (rule 3)
+  wash: '#E3F6F3', // a quiet highlight behind ink text
+  ink: '#FFFFFF', // text on a linie face
+};
+
+/** The feature ground (v4: light türkis, was night): hero, the line section, footer, tab bar. */
+export const nacht = {
+  DEFAULT: '#E3F6F3', // the türkis tint
+  raised: '#FFFFFF', // cards and the ticket on the tint
+  sunk: '#BFEAE3', // the track bed under the line
+  rule: '#BFE3DB', // hairlines on the tint
+  text: '#10302C', // body text on the tint (12.6:1)
+  muted: '#3F5A55', // secondary text on the tint (6.7:1) and on white (7.5:1)
+};
+
+/**
+ * Motion v3 — three tiers, strong curves (adopted from emilkowalski/skills
+ * `emil-design-eng`): feedback answers a press, a control transition changes a
+ * state, a signature moment explains something (the train advancing, the line
+ * drawing). Only transform, opacity and clip-path move. Never ease-in on UI.
+ * Reduced motion keeps opacity/colour and drops movement.
+ */
+export const motionLinie = {
+  ease: {
+    out: 'cubic-bezier(0.23, 1, 0.32, 1)', // enter/exit, presses
+    inOut: 'cubic-bezier(0.77, 0, 0.175, 1)', // on-screen movement (the train)
+    drawer: 'cubic-bezier(0.32, 0.72, 0, 1)', // the mobile menu sheet
+  },
+  duration: { feedback: '140ms', control: '220ms', section: '420ms', signature: '800ms' },
+  stagger: '60ms',
+};
+
+/**
+ * Breakpoints the redesign is checked at (360, 390, 768, 1280, 1440 px). They
+ * DOCUMENT the QA matrix; Tailwind's own screens (sm 640, md 768, lg 1024,
+ * xl 1280, 2xl 1536) stay unchanged so no existing layout moves.
+ */
+export const qaWidths = [360, 390, 768, 1280, 1440];
+
+/**
+ * The SIGN face: Archivo (Omnibus-Type, SIL OFL 1.1), variable wght 400–900 ×
+ * wdth 62–100 — subset to latin/latin-ext and instanced to that axis range
+ * from @fontsource-variable/archivo 5.3.0 (Google Fonts v25). The copyright and
+ * OFL notice travel in each file's name table; the build recipe (fontTools
+ * subset + instancer) is in docs/redesign-2026-10/art-direction.md. Signs are set in Archivo (marketing
+ * pages, the station line, buttons, the commerce screens); the LIBRARY stays in
+ * Fraunces/Nunito (grammar, guides, the lesson player).
+ *
+ * Fallbacks were MEASURED in Chromium 141 (2026-10-04) against Liberation Sans
+ * (Arial's metric twin) over six of the site's own lines: Archivo 400 = 0.986×,
+ * 500 = 1.001×, 600 vs Arial Bold = 0.954×, 700 = 0.985×, 800 = 1.032×; the
+ * condensed display (wdth 72–80, wght 700–850) = 0.796–0.817× Arial Bold. The
+ * fallback faces are split by font-stretch, so a condensed headline swaps from
+ * a narrowed Arial Bold and a normal-width label from a full-width one. Archivo's
+ * vertical metrics: ascent 0.878, descent 0.210, no line gap (UPM 1000).
+ */
+const archivoFace = (file, unicodeRange) => ({
+  '@font-face': {
+    fontFamily: "'Archivo'",
+    fontStyle: 'normal',
+    fontWeight: '400 900',
+    fontStretch: '62% 100%',
+    fontDisplay: 'swap',
+    src: `url('/fonts/${file}.woff2') format('woff2')`,
+    unicodeRange,
+  },
+});
+const archivoFallback = (weight, stretch, locals, sizeAdjust, ascent, descent) => ({
+  '@font-face': {
+    fontFamily: "'Archivo Fallback'",
+    fontWeight: weight,
+    fontStretch: stretch,
+    src: locals.map((name) => `local('${name}')`).join(', '),
+    sizeAdjust,
+    ascentOverride: ascent,
+    descentOverride: descent,
+    lineGapOverride: '0%',
+  },
+});
+const ARIAL = ['Arial', 'ArialMT', 'Liberation Sans', 'LiberationSans', 'Arimo', 'Arimo-Regular', 'Roboto', 'Roboto-Regular'];
+const ARIAL_BOLD = ['Arial Bold', 'Arial-BoldMT', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Roboto Bold', 'Roboto-Bold'];
+
+export const signFontFaces = [
+  archivoFace('archivo-v25-latin', UNICODE_LATIN),
+  archivoFace('archivo-v25-latin-ext', UNICODE_LATIN_EXT),
+  // Normal width: 0.986–1.001× Arial (400–500), 0.954–1.032× Arial Bold (600–900).
+  archivoFallback('100 500', '88% 100%', ARIAL, '99%', '88.69%', '21.21%'),
+  archivoFallback('600 900', '88% 100%', ARIAL_BOLD, '99%', '88.69%', '21.21%'),
+  // Condensed display: 0.796–0.817× Arial Bold.
+  archivoFallback('100 900', '62% 87%', ARIAL_BOLD, '80%', '109.75%', '26.25%'),
+];
+
+/** The sign face's above-the-fold file — preloaded only on the pages that set signs in the first screen. */
+export const signFontPreloads = ['/fonts/archivo-v25-latin.woff2'];
+
+/** Spread into both tailwind configs: `font-sign`. */
+export const tailwindSignFont = {
+  sign: ['Archivo', 'Archivo Fallback', 'Arial', 'Helvetica Neue', 'sans-serif'],
+};
+
+/** Spread into both tailwind configs: `bg-linie`, `text-linie-ink`, `bg-nacht-raised`, `text-nacht-muted` … */
+export const tailwindLinieColors = {
+  linie: { ...linie },
+  nacht: { ...nacht },
+};
+
+/** Spread into both tailwind configs' boxShadow: the linie key's extrusion and the ticket's lift. */
+export const tailwindLinieShadow = {
+  'raise-linie': 'none',
+  'raise-nacht': 'none',
+  ticket: 'none',
+};
+
+/** Spread into both tailwind configs: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. */
+export const tailwindLinieEasing = {
+  'out-strong': motionLinie.ease.out,
+  'in-out-strong': motionLinie.ease.inOut,
+  drawer: motionLinie.ease.drawer,
+};
+
+/** Spread into both tailwind configs' transitionDuration: `duration-feedback` … `duration-signature`. */
 export const tailwindLinieDuration = { ...motionLinie.duration };
+
+/** Legacy course aliases, retained for existing exercise surfaces only. */
 export const legacyLevelColors = {
 'a1-1': { primary: '#F4B99A', secondary: '#D9A8B4', accent: '#41B3A3', background: '#FDF8F5', surface: '#FFFFFF', text: '#2D3436', muted: '#636E72' },
 'a1-2': { primary: '#E8A87C', secondary: '#C38D9E', accent: '#41B3A3', background: '#FDF6F0', surface: '#FFFFFF', text: '#2D3436', muted: '#636E72' },
@@ -118,15 +523,8 @@ export const legacyLevelColors = {
 'b2-2': { primary: '#6B5B95', secondary: '#9D8EC1', accent: '#E8B4BC', background: '#F8F6FA', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
 };
 
-
+/** Shared size roles for thin Astro/React adapters; font assignments stay local. */
 export const tailwindTypeSizes = Object.fromEntries(Object.entries(type).flatMap(([name, role]) => [
   [`dm-${name}`, [role.mobile, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
   [`dm-${name}-wide`, [role.size, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
 ]));
-
-// Pass 3 explicitly excludes email templates/functions. Their existing visual
-// contract remains pinned until a separate authorised transactional redesign.
-export const transactionalColor = {
-  siegel: '#0A8276', siegelLift: '#0A7468', siegelWash: '#E3F6F3', gold: '#FBBF24',
-  ink: '#14201D', graphite: '#5A6360', rule: '#E2E7E5', paper: '#FCFCFA', white: '#FFFFFF',
-};

@@ -203,7 +203,7 @@ if (seoExtra?.faqs?.length) {
 // The level code is data → `label` chip, never a level colour (rule 1).
 const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
 const LEVEL_CHIP =
-  'rounded-lg bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
+  'rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
 const CARD_FLAT = 'rounded-xl border border-rule bg-white';
 const CARD_INTERACTIVE =
   'rounded-xl border border-rule bg-white transition-transform duration-feedback ease-out-strong active:translate-y-px active:shadow-none';
@@ -252,7 +252,7 @@ const courseOffer = station?.status === 'ticket'
 
     <!-- ═══ Lesson header ═══ -->
     <header class="dm-editorial-hero relative">
-      <div class="dm-reference-opening relative mx-auto max-w-7xl px-5 pt-10 pb-8 sm:pt-14"><div>
+      <div class="relative mx-auto max-w-3xl px-5 pt-10 pb-8 sm:pt-14">
         <!-- Breadcrumb -->
         <nav class="mb-8 flex flex-wrap items-center gap-2 font-data text-[0.8125rem] text-graphite" aria-label="Breadcrumb">
           <a href="https://deutsch-meister.de/" class="transition-colors hover:text-siegel-deep">Home</a>
@@ -287,11 +287,10 @@ const courseOffer = station?.status === 'ticket'
           <a href="#practice" class="dm-key dm-key-siegel">Practise this topic</a>
           <a href={xrayHref} class="dm-key dm-key-ghost">Explore a sentence in X-Ray</a>
         </nav>
-      </div>{examples[0] && <aside class="dm-grammar-example" aria-label="Example from this lesson"><p class="dm-kicker">Example · {meta.label} grammar</p><blockquote lang="de">{examples[0].sentence_de}</blockquote><p>{examples[0].sentence_en}</p>{examples[0].grammar_highlight && <small>{examples[0].grammar_highlight}</small>}<a href="#examples" class="dm-link">Explore the examples →</a></aside>}
       </div>
     </header>
 
-    <div class="dm-grammar-article mx-auto max-w-3xl px-5 pb-10">
+    <div class="mx-auto max-w-3xl px-5 pb-10">
 
     <!-- Concise orientation before the long-form lesson. -->
     <section id="summary" class="reveal scroll-mt-24 rounded-xl border border-rule bg-white p-5 sm:p-6" aria-labelledby="summary-h">
@@ -313,7 +312,7 @@ const courseOffer = station?.status === 'ticket'
       <p id="contents-h" class={`${CALLOUT_LABEL} text-graphite`}>On this page</p>
       <ul class="mt-2 flex flex-wrap gap-2">
         {tocItems.map((item) => (
-          <li><a href={item.href} class="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-bold text-siegel transition-colors hover:bg-siegel-wash hover:text-siegel-deep">{item.label}</a></li>
+          <li><a href={item.href} class="inline-flex min-h-11 items-center rounded-pill px-3 py-2 text-sm font-bold text-siegel transition-colors hover:bg-siegel-wash hover:text-siegel-deep">{item.label}</a></li>
         ))}
       </ul>
     </nav>
@@ -608,7 +607,7 @@ const courseOffer = station?.status === 'ticket'
                       {(LEVEL_META[nextGlobal.sub_level] ?? meta).label}
                     </span>
                   </div>
-                  <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-siegel text-xl text-white transition-transform duration-control group-hover:bg-siegel-lift group-hover:translate-x-0.5" data-atropos-offset="9" aria-hidden="true">
+                  <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-pill bg-siegel text-xl text-white transition-transform duration-control group-hover:bg-siegel-lift group-hover:translate-x-0.5" data-atropos-offset="9" aria-hidden="true">
                     →
                   </span>
                 </div>

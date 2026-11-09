@@ -73,7 +73,7 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
             level={1}
             align="left"
             eyebrow="Free Assessment"
-            title="Where does your German begin?"
+            title="Find your next German step."
           />
           <div className="mt-5" data-level-test-start>
             {resumeAt ? (

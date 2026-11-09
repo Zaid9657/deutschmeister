@@ -25,7 +25,7 @@ const signupHref = onsiteHref('signup', 'telc-pilot', 'telc-b1');
 const title = `telc B1 Komplettvorbereitung: ${PROGRAM.weeks.length}-Wochen-Plan | DeutschMeister`;
 const description = `${days.length} Trainingseinheiten: Briefe schreiben und überarbeiten, Gespräche proben und zwei Kurztests bearbeiten. Lernen Sie den telc-B1-Plan kennen und probieren Sie Pro kostenlos aus.`;
 const canonical = 'https://deutsch-meister.de/telc-b1-komplettvorbereitung/';
-const preloads = [...new Set([...signFontPreloads, ...fontPreloads])];
+const preloads = [...signFontPreloads, ...fontPreloads.filter((font) => font.includes('nunito'))];
 const FAQS = [
   {
     q: 'Für wen ist der Plan gedacht?',

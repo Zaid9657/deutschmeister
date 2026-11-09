@@ -1,8 +1,19 @@
 ---
-// A homepage demonstration of three real first-lesson tasks. The existing
-// course checker, accepted answers, verdicts and analytics stay unchanged.
-// The redesigned progress indicator shows completion without a train metaphor.
-// Every task and its answer remain readable without JavaScript.
+// "Der erste Halt" — the homepage's signature interaction: three real items
+// from A1.1 Lektion 1, graded by the course's own checker
+// (src/lib/lesson/check.js, loaded on the first answer — never copied, so the
+// demo can never grade differently from the course). Each right answer moves
+// the train one segment; the third ends at the station and opens the ticket to
+// the free course.
+//
+// The items come from the built pool at BUILD time (only these three reach the
+// page). tests/first-stop.test.mjs pins the ids, checks every verdict the demo
+// promises against the real checker, and fails when the A1.1 course is
+// replaced (Course v2, COURSE_V2_LIVE) so the demo is re-pointed in the same PR.
+//
+// No JavaScript: every item renders with its answer behind a <details>, so the
+// sample is still readable and checkable by eye. Reduced motion: the train
+// jumps instead of gliding.
 import pool from '../../../../src/data/lessonPools/a11.extra.json';
 import explanationsEn from '../../../../src/data/lessonPools/a11.explanationsEn.json';
 import { FREE_COURSE_HREF } from '../../data/offers.js';
@@ -31,23 +42,32 @@ const items = DEMO_ITEM_IDS.map((id) => {
 ---
 
 <article
-  class="firststop dm-task-window relative rounded-[1.75rem] border border-nacht-rule bg-nacht-raised p-5 text-nacht-text shadow-overlay sm:p-7"
+  class="firststop relative rounded-[1.75rem] border border-nacht-rule bg-nacht-raised p-5 text-nacht-text shadow-overlay sm:p-7"
   aria-labelledby="fs-h"
   data-ground="nacht"
   data-track-view="demo"
   data-first-stop
 >
   <header>
-    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Example · A1.1 · Lektion 1</p>
-    <h2 id="fs-h" class="sign-head mt-2 text-[1.75rem] sm:text-[2rem]">Say hello. Try it here.</h2>
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Halt 1 · A1.1 · Lektion 1</p>
+    <h2 id="fs-h" class="sign-head mt-2 text-[1.75rem] sm:text-[2rem]">Try the first stop</h2>
     <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-nacht-muted">
       Three real exercises from Lektion 1, <span lang="de">An der Rezeption</span> — checked exactly the way the course checks them.
     </p>
   </header>
 
-  <div class="dm-task-progress mt-6" aria-hidden="true">
-    <div class="fs-progress" style="transform:scaleX(0)"></div>
-    {[0, 1, 2, 3].map((n) => <span data-fs-dot={n}></span>)}
+  <!-- The track: three segments, three stations, one train. -->
+  <div class="relative mt-6 h-10" aria-hidden="true">
+    <div class="absolute inset-x-[0.6875rem] top-1/2 h-2 -translate-y-1/2 rounded-pill bg-nacht-sunk"></div>
+    <div class="fs-progress dm-train absolute inset-x-[0.6875rem] top-1/2 -mt-1 h-2 origin-left rounded-pill bg-linie" style="transform:scaleX(0)"></div>
+    <ol class="absolute inset-0 flex items-center justify-between">
+      {[0, 1, 2, 3].map((n) => (
+        <li class="dm-station-dot h-[1.375rem] w-[1.375rem] rounded-full border-4 border-nacht-rule bg-nacht" data-fs-dot={n}></li>
+      ))}
+    </ol>
+    <div class="dm-train fs-train absolute left-0 top-1/2 -mt-[0.875rem] flex h-7 w-11 items-center justify-center rounded-pill bg-linie text-linie-ink shadow-raise-linie">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="9" rx="3" fill="currentColor" opacity=".9" /><circle cx="5.5" cy="12" r="1.6" fill="currentColor" /><circle cx="14.5" cy="12" r="1.6" fill="currentColor" /></svg>
+    </div>
   </div>
   <p class="sr-only" role="status" aria-live="polite" data-fs-status></p>
 
@@ -93,9 +113,9 @@ const items = DEMO_ITEM_IDS.map((id) => {
     <button type="button" class="dm-key dm-key-ghost-nacht" data-fs-next>Next exercise →</button>
   </div>
 
-  <!-- Continue into the free course after trying the sample. -->
+  <!-- Arrival: the ticket to the rest of the course. -->
   <div class="fs-done mt-6 rounded-[1.25rem] bg-linie p-5 text-linie-ink" hidden data-fs-done>
-    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Example complete</p>
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Halt 1 erreicht</p>
     <p class="sign-head mt-1 text-[1.5rem]">That was Lektion 1, three answers in.</p>
     <p class="mt-1.5 text-[0.9375rem] leading-relaxed">
       The free A1.1 course continues from here: the dialogue at the reception, the words, the grammar, speaking and a short writing task.
@@ -110,6 +130,8 @@ const items = DEMO_ITEM_IDS.map((id) => {
   const root = document.querySelector('[data-first-stop]');
   if (root) {
     const items = [...root.querySelectorAll('[data-fs-item]')];
+    const dots = [...root.querySelectorAll('[data-fs-dot]')];
+    const train = root.querySelector('.fs-train');
     const progress = root.querySelector('.fs-progress');
     const status = root.querySelector('[data-fs-status]');
     const nav = root.querySelector('[data-fs-nav]');
@@ -124,8 +146,22 @@ const items = DEMO_ITEM_IDS.map((id) => {
 
     const loadChecker = () => (checker ||= import('../../../../src/lib/lesson/check.js'));
 
+    // Move the train to station n (0..total). Signature tier: 800 ms in-out.
+    // Transform only: the train translates, the filled track scales.
     const moveTo = (n) => {
+      const first = dots[0].getBoundingClientRect();
+      const last = dots[dots.length - 1].getBoundingClientRect();
+      const span = Math.max(0, last.left - first.left);
+      train.style.transform = `translateX(${(span * n) / total}px)`;
       progress.style.transform = `scaleX(${n / total})`;
+      dots.forEach((dot, i) => {
+        const on = i <= n;
+        dot.classList.toggle('is-reached', on);
+        dot.classList.toggle('bg-linie', on);
+        dot.classList.toggle('border-linie', on);
+        dot.classList.toggle('bg-nacht', !on);
+        dot.classList.toggle('border-nacht-rule', !on);
+      });
     };
     moveTo(0);
     window.addEventListener('resize', () => moveTo(reached), { passive: true });
