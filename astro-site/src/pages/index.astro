@@ -6,6 +6,7 @@ import Benefits from '../components/concept/Benefits.astro';
 import ProofCounts from '../components/concept/ProofCounts.astro';
 import RouteBand from '../components/concept/RouteBand.astro';
 import Offers from '../components/concept/Offers.astro';
+import { PROMISE_LINE, PROMISE_REASON } from '../data/marketing.js';
 import FirstStop from '../components/linie/FirstStop.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import '../styles/global.css';
@@ -28,7 +29,7 @@ const jsonLd = [
       <div class="c4-home-art" data-c4-parallax><Scene name="hero" alt="A woman learning German at her laptop with a view of Berlin" hero sizes="(max-width: 640px) 100vw, 850px" /></div>
       <div class="c4-home-copy">
         <h1 id="hero-h">You want to learn German.<br /><span class="c4-underline">Where do you start?</span></h1>
-        <p>Practical, real-life German for everyday situations — from your first conversation to work, health, and life in Germany.</p>
+        <p class="c4-promise-line"><strong>{PROMISE_LINE}</strong> {PROMISE_REASON}</p>
         <a href="/course/a1.1" class="c4-button c4-button-coral" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="hero">Start A1.1 free <span aria-hidden="true">→</span></a>
         <a href="/course/a1.1" class="c4-button c4-button-coral" data-auth-only data-continue-course style="display:none">Continue learning →</a>
       </div>

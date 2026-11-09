@@ -4,6 +4,7 @@ import Scene from '../components/concept/Scene.astro';
 import RouteBand from '../components/concept/RouteBand.astro';
 import Icon from '../components/concept/Icon.astro';
 import Ladder from '../components/concept/Ladder.astro';
+import PromiseBand from '../components/concept/PromiseBand.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import { PLANS, COURSE_PRO_MONTHS, courseForLevel, COMING_SOON_LEVELS, num, eur, CURRENCY } from '../data/pricing.js';
 import { PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH } from '../data/marketing.js';
@@ -37,6 +38,7 @@ const jsonLd = [
     <Scene name="pricing-hero" alt="A learner with a notebook and coffee beside the River Spree in Berlin" hero sizes="(max-width: 640px) 100vw, 550px" />
     <div><h1 id="pricing-h">Pay once for your course.<br /><span class="c4-underline">Practise more if you want.</span></h1><p>A1.1 is free. Each next level is a one-time purchase you keep.</p></div>
   </section>
+  <PromiseBand />
   <div class="c4-wrap">
     <section class="c4-free-banner" aria-label="Start free"><Icon name="gift" size={44} /><p>New to German? Start A1.1 free, no account needed.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></section>
     <section class="c4-offers c4-offers-illustrated c4-pricing-offers" aria-label="Your learning options" data-track-view="offer">

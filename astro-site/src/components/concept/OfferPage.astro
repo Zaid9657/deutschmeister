@@ -5,6 +5,7 @@ import Icon from './Icon.astro';
 import ProductDoor from './ProductDoor.astro';
 import BetterTogether from './BetterTogether.astro';
 import Ladder from './Ladder.astro';
+import PromiseBand from './PromiseBand.astro';
 import RouteBand from './RouteBand.astro';
 import CourseCheckout from '../CourseCheckout.astro';
 import { OFFER_PRODUCTS, ALL_LEVELS, courseForLevel, eur, CURRENCY } from '../../data/pricing.js';
@@ -61,6 +62,7 @@ const jsonLd = [
         {[['hero', 'Every level course', 'From A1.1 to B2.2, as released.'], ['offer-exam', 'Every exam pack', 'A1 ready today. Future exam packs included as released.'], ['scene-work', `${p.proMonths} months of AI Practice`, 'AI writing feedback, speaking practice and Sentence X-Ray, with usage allowances.'], ['offer-complete', 'Yours to keep', 'Your course and exam-pack access stays after the AI Practice window ends.']].map(([image, title, body]) => <article><Scene name={image} alt={title} sizes="(max-width: 640px) 45vw, 290px" /><h3>{title}</h3><p>{body}</p></article>)}
       </div></section>
       <section class="c4-wrap c4-pass-status" aria-label="Release status"><h2>Your route, as released</h2><ul>{ALL_LEVELS.map((level) => <li><strong>{level.toUpperCase()}</strong> · {level === 'a1.1' ? 'Free · ready' : level === 'a1.2' ? 'Ready' : 'Coming next, included when released'}</li>)}</ul><p>A1 Exam Pack: ready. Other exam packs: coming next, included when released.</p><p class="c4-small">No release date is promised for future courses or exam packs.</p></section>
+      <PromiseBand />
       <section class="c4-wrap c4-product-options"><h2>Three ways to learn</h2><Ladder /></section>
     </> : <>
       <section class="c4-wrap c4-complete-parts" aria-label="Your A1 bundle">

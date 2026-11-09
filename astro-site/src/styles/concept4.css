@@ -589,3 +589,9 @@ html:not(.js) .fs-form { display: none; }
   .c4-offer-table th, .c4-offer-table td { padding: .6rem; }
   .c4-bundle-value { font-size: 1rem; }
 }
+
+/* The founder's promise band (PromiseBand.astro) and the hero promise line. */
+.c4-promise { background: theme('colors.siegel.wash'); padding-block: 2.75rem; margin-block: 2.5rem; text-align: center; }
+.c4-promise h2 { margin-inline: auto; max-width: 46rem; }
+.c4-promise p:not(.c4-eyebrow) { margin: .9rem auto 0; max-width: 40rem; color: theme('colors.graphite'); }
+.c4-promise-line strong { display: block; font-size: 1.15rem; margin-bottom: .4rem; }

@@ -247,3 +247,16 @@ export const monthlyPriceLine = () => `${eur(MONTHLY_PRICE_EUR)}/month — ${UNL
 export const monthlyPriceLineDe = () =>
   `${deEur(MONTHLY_PRICE_EUR)}/Monat — ${UNLIMITED_CONTENT_LINE_DE}, ${SPEAKING_LINE_DE}`;
 export const yearlyPriceLine = () => `${eur(YEARLY_PRICE_EUR)}/year — ${UNLIMITED_CONTENT_LINE}, ${SPEAKING_LINE}`;
+
+/**
+ * THE PROMISE. Founder's words, 2026-11-09: "we offer the best online courses for learning German that
+ * people will profit 10x from it and learn 10x faster and 10x better than anyone else", refined the same
+ * day to "10 times more efficient". It is stated as OUR PROMISE (never as a measured comparison) and always
+ * with its reason beside it. Founder's rule, same day: the promise never comes with a repayment pledge of
+ * any kind (tests/refund-claims.test.mjs guards that). Only this sanctioned wording may render;
+ * tests/promise.test.mjs pins it.
+ */
+export const PROMISE_LABEL = 'Our promise';
+export const PROMISE_LINE = 'The best online German courses. 10 times more efficient.';
+export const PROMISE_REASON =
+  'In a group class you wait for your turn. Here every minute is yours: you write and speak, and each answer is checked in seconds.';
