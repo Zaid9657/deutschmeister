@@ -143,7 +143,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, audioUrl,
                 : 'Subscribe to keep learning after your trial ends.'}
             </p>
             <Button href="/pricing/" size="sm">
-              {isGerman ? 'Jetzt upgraden' : 'Upgrade to Pro'}
+              {isGerman ? 'Jetzt upgraden' : 'Upgrade to AI Practice'}
             </Button>
           </Card>
         </Reveal>

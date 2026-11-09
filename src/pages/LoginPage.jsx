@@ -15,7 +15,7 @@ import { resendRefusal } from '../lib/signupConfirmation.js';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
-import Aurora from '../components/ui/Aurora.jsx';
+import AccountPreview from '../components/ui/AccountPreview.jsx';
 import Logo from '../components/Logo';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
@@ -168,11 +168,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
+    <div className="relative mx-auto flex min-h-screen max-w-6xl items-start justify-center gap-12 bg-paper px-4 pb-12 pt-20 font-body sm:px-6 sm:pt-24 lg:pt-28">
       <SEO title="Log In" description="Log in to your DeutschMeister account to continue learning German grammar from A1 to B2." path="/login" />
-      <Aurora />
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         className="relative w-full max-w-md"
       >
@@ -183,9 +182,9 @@ const LoginPage = () => {
               renders a plain <a>, which matters — "/" is served by the Astro build,
               so a router <Link to="/"> client-routes to a route the SPA does not
               have and lands the user on NotFoundPage. */}
-          <Logo size={64} showWordmark={false} className="mb-6" />
+          <div className="hidden sm:block"><Logo size={64} showWordmark={false} className="mb-6" /></div>
           <h1
-            className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
+            className="hero-line font-display text-dm-hero text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
             Welcome Back
@@ -196,7 +195,7 @@ const LoginPage = () => {
         </div>
 
         {/* Form */}
-        <Card raised className="p-8">
+        <Card className="p-5 sm:p-8">
           {timedOut && (
             <div className="mb-6 flex items-center gap-3 rounded-clay bg-siegel-wash px-4 py-3 text-sm text-siegel-deep">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
@@ -365,6 +364,7 @@ const LoginPage = () => {
           </p>
         </Card>
       </motion.div>
+      <AccountPreview />
     </div>
   );
 };

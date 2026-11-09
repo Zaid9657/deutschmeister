@@ -17,7 +17,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 // per-item checkbox persisted to program_progress (generic by program_key),
 // same layout; see StartDeutsch1KursPage's header for the rationale, not
 // repeated here. Reached via LevelSubscriptionGuard (level="a2.2") — A2.2 is
-// a paid level, so this plan opens only with Pro/trial or the A2 course
+// a paid level, so this plan opens only with AI Practice/trial or the A2 course
 // purchase (hasLevelAccess('a2.2')), the same gate the A2.2 level page and
 // the Abschlusstest A2.2 use.
 
@@ -160,7 +160,7 @@ const A22PhasePage = () => {
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
             Arbeite in deinem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
-            Dein Pro-Zugang bzw. dein A2-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
+            Dein AI Practice-Zugang bzw. dein A2-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
             <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">deiner Abo-Seite</Link>.
           </p>
         </footer>

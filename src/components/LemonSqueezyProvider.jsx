@@ -29,7 +29,7 @@ const LemonSqueezyProvider = ({ children }) => {
     const script = document.createElement('script');
     script.src = 'https://app.lemonsqueezy.com/js/lemon.js';
     script.defer = true;
-    // The success page waits for the purchased product to land. Existing Pro
+    // The success page waits for the purchased product to land. Existing AI Practice
     // must not make a newly bought course look confirmed before its refresh.
     script.onload = () => {
       try {

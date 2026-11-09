@@ -1,0 +1,14 @@
+---
+import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+import { eur } from '../../data/pricing.js';
+const { level = 'a1.2', surface = 'course', coral = false } = Astro.props;
+const course = levelCoursesWithVariants().find((c) => c.levels.includes(level));
+const isFree = level === 'a1.1';
+const buttonClass = `c4-button ${coral ? 'c4-button-coral' : ''}`;
+---
+<div data-course-door={level} data-course-code={level.toUpperCase()} data-course-open-class={buttonClass}>
+  {isFree ? <a href={`/course/${level}`} class={buttonClass}>Start A1.1 free <span aria-hidden="true">→</span></a>
+    : course?.comingSoon ? <span class="c4-coming">Coming next</span>
+    : course?.variantId ? <button type="button" class={buttonClass} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface={surface}>Get the {course.code} course <span aria-hidden="true">→</span><span class="sr-only">{eur(course.price)} once</span></button>
+    : <span class="c4-coming">Purchase currently unavailable</span>}
+</div>

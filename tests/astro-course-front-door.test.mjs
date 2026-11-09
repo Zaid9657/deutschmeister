@@ -71,7 +71,7 @@ function startFreeAnchors(source) {
 // The v4 homepage renders most of its doors from components (2026-10-04); they
 // are held to the same rule as the pages.
 const COMPONENTS = join(root, 'astro-site', 'src', 'components', 'linie');
-const pages = [...walk(PAGES), ...walk(COMPONENTS)];
+const pages = [...walk(PAGES), ...walk(COMPONENTS), ...walk(join(root, 'astro-site/src/components/concept'))];
 const byPage = new Map(pages.map((p) => [relative(root, p), startFreeAnchors(readFileSync(p, 'utf8'))]));
 
 test('every "start free" CTA on the Astro site opens the course, never the grammar index', () => {
@@ -96,8 +96,10 @@ test('the known front-door CTAs still exist (the scan is not vacuous)', () => {
     'astro-site/src/pages/index.astro': 1,
     'astro-site/src/pages/pricing.astro': 1,
     'astro-site/src/pages/courses/index.astro': 1,
-    'astro-site/src/pages/courses/[level].astro': 2,
+    'astro-site/src/pages/courses/[level].astro': 1,
   };
+  const template = readFileSync(join(PAGES, 'courses', '[level].astro'), 'utf8');
+  assert.equal((template.match(/<PurchaseDoor level=\{level\}/g) || []).length, 2, 'hero and closing free doors share the checked PurchaseDoor');
   for (const [page, count] of Object.entries(expected)) {
     const anchors = byPage.get(page) ?? [];
     assert.ok(anchors.length >= count, `${page}: expected ≥${count} "start free" CTA(s), found ${anchors.length}`);

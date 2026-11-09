@@ -140,7 +140,7 @@ export const goetheB1 = {
               label: 'Woche 4–5',
               title: 'Schreiben und Sprechen — die teuren Module',
               tasks: [
-                'Pro Woche zwei vollständige Schreibaufgaben unter Zeitlimit',
+                'AI Practice Woche zwei vollständige Schreibaufgaben unter Zeitlimit',
                 'Textsorten trennen üben: kurze Mitteilung vs. längerer Meinungstext',
                 'Täglich 10 Minuten frei sprechen, ohne Skript',
                 'Die Präsentationsform üben: Thema vorstellen, Meinung begründen, Beispiel geben',
@@ -263,7 +263,7 @@ export const goetheB1 = {
     },
     {
       q: 'Wie viele Punkte braucht man beim Goethe-Zertifikat B1?',
-      a: 'Pro Modul sind maximal 100 Punkte erreichbar, bestanden ist ab 60 Punkten, also 60 %. Diese Grenze gilt für jedes Modul einzeln, und zwischen den Modulen wird nicht verrechnet.',
+      a: 'AI Practice Modul sind maximal 100 Punkte erreichbar, bestanden ist ab 60 Punkten, also 60 %. Diese Grenze gilt für jedes Modul einzeln, und zwischen den Modulen wird nicht verrechnet.',
     },
     {
       q: 'Muss ich bei nicht bestandenem Modul die ganze Prüfung wiederholen?',

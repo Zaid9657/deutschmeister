@@ -10,7 +10,7 @@
 // pattern); the course card is the one 3D scene; siegel is the single
 // interactive colour, no kasus colours (no case is named here).
 import Layout from '../../layouts/Layout.astro';
-import Aurora from '../../components/Aurora.astro';
+import ExamTaskPreview from '../../components/proof/ExamTaskPreview.astro';
 import LanguageNotice from '../../components/LanguageNotice.astro';
 import '../../styles/global.css';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
@@ -43,7 +43,8 @@ const planCourse = (() => {
 
 // Step badges rotate through the accents (energy, never meaning — rule 2);
 // the last step lands on siegel like the homepage's "rehearse" step.
-const ACCENTS = ['bg-accent-himbeer text-ink', 'bg-accent-aprikose text-ink', 'bg-accent-limette text-ink', 'bg-siegel text-white'];
+const ACCENTS = ['bg-siegel-wash text-siegel-deep'];
+const firstPractice = hub.path.find((step) => step.href.startsWith('/schreiben/')) || hub.path.find((step) => step.href.startsWith('/modelltest/')) || hub.path.find((step) => step.href.startsWith('/listening/'));
 
 const jsonLd = [
   {
@@ -67,9 +68,9 @@ const jsonLd = [
 ];
 
 const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
-const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
-const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+  'dm-key';
+const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3.5 text-white hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
 ---
 
 <Layout
@@ -85,26 +86,32 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
 
       <!-- Header -->
       <header class="relative">
-        <Aurora />
+
         <div class="relative mx-auto max-w-3xl px-5 pb-10 pt-12 sm:pt-16">
-          <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">
+          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">
             Prüfungsvorbereitung · {hub.level}
           </p>
-          <h1 class="hero-line mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]" style="--d:80ms">
+          <h1 class="mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]" style="--d:80ms">
             {hub.h1}
           </h1>
-          <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]" style="--d:200ms">{hub.intro}</p>
-          <!-- The exam in one paragraph — imported from the guide (one source of truth). Reference material: flat. -->
-          <div class="hero-line mt-6 rounded-clay border border-rule bg-white p-5" style="--d:320ms">
-            <p class="text-[1.0625rem] leading-relaxed text-ink">{hub.answer}</p>
+          <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]" style="--d:200ms">{hub.intro}</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href={firstPractice.href} class={BTN_PRIMARY}>{firstPractice.linkLabel}</a>
+            <a href="#exam-reference" class={BTN_SECONDARY}>Format und Quellen</a>
           </div>
+          <ExamTaskPreview examKey={hub.key} />
+          <p class="mt-3 text-sm text-graphite">Übung mit Konto · Prüfungsleitfaden frei lesbar · keine offizielle Prüfung</p>
         </div>
       </header>
 
       <div class="mx-auto max-w-3xl px-5 pb-20">
 
+        <section id="exam-reference" class="scroll-mt-24 rounded-xl border border-rule bg-white p-5" aria-label="Prüfungsformat">
+          <p class="leading-relaxed">{hub.answer}</p>
+        </section>
+
         <!-- What decides this exam -->
-        <section class="reveal mt-2">
+        <section class="mt-2">
           <p class="rounded-clay border-l-4 border-siegel bg-siegel-wash px-5 py-4 text-[0.9375rem] leading-relaxed text-ink">
             {hub.focus}
           </p>
@@ -112,13 +119,13 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
 
         <!-- The path -->
         <section class="mt-14">
-          <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">
-            Dein Weg zur Prüfung
+          <h2 class="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">
+            Ihr Weg zur Prüfung
           </h2>
           <ol class="mt-10 space-y-8">
             {hub.path.map((step, i) => (
-              <li class="reveal relative rounded-clay border border-rule bg-white p-6 shadow-raise" style={`--rd:${Math.min(i, 3) * 90}ms`}>
-                <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${ACCENTS[i % ACCENTS.length]} font-data text-sm font-bold shadow-raise`} aria-hidden="true">{i + 1}</span>
+              <li class="relative rounded-clay border border-rule bg-white p-6" style={`--rd:${Math.min(i, 3) * 90}ms`}>
+                <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${ACCENTS[i % ACCENTS.length]} font-data text-sm font-bold`} aria-hidden="true">{i + 1}</span>
                 <p class="mt-3 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{step.eyebrow}</p>
                 <h3 class="mt-1 font-display text-[1.125rem] font-semibold text-ink">{step.title}</h3>
                 <p class="mt-2 text-[0.9375rem] leading-[1.7] text-graphite [&>a]:font-bold [&>a]:text-siegel hover:[&>a]:text-siegel-deep" set:html={step.body} />
@@ -131,10 +138,10 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
         </section>
 
         {hub.courseHref && (
-          <section class="reveal mt-14">
+          <section class="mt-14">
             <div class="atropos" data-atropos-card>
               <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
-                <div class="rounded-clay border border-rule bg-white p-7 shadow-raise-siegel sm:p-8">
+                <div class="rounded-clay border border-rule bg-white p-7 sm:p-8">
                   <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" data-atropos-offset="4">Kompletter Fahrplan</p>
                   <h2 class="mt-2 font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]" data-atropos-offset="3">
                     Lieber einen fertigen Plan statt eigener Planung?
@@ -165,9 +172,9 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
         )}
 
         <!-- CTA -->
-        <section class="reveal mt-14 rounded-clay border border-rule bg-paper-sunk p-8 text-center">
+        <section class="mt-14 rounded-clay border border-rule bg-paper-sunk p-8 text-center">
           <h2 class="font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">
-            Fang dort an, wo du stehst
+            Beginnen Sie dort, wo Sie stehen
           </h2>
           <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
             Der Einstufungstest ist kostenlos — und A1.1 bleibt es für immer.
@@ -183,12 +190,12 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
         </section>
 
         <!-- Other exams -->
-        <nav class="reveal mt-14 border-t border-rule pt-8" aria-labelledby="more-exams-h">
+        <nav class="mt-14 border-t border-rule pt-8" aria-labelledby="more-exams-h">
           <p id="more-exams-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Andere Prüfungen</p>
           <ul class="mt-4 flex flex-wrap gap-3">
             {others.map((h) => (
               <li>
-                <a href={`/pruefung/${h.slug}/`} class="inline-flex items-center gap-2 rounded-pill border border-rule bg-white px-4 py-2 text-[0.9375rem] font-semibold text-ink shadow-raise transition-all duration-100 ease-snap hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none">
+                <a href={`/pruefung/${h.slug}/`} class="inline-flex items-center gap-2 rounded-pill border border-rule bg-white px-4 py-2 text-[0.9375rem] font-semibold text-ink transition-transform duration-feedback ease-out-strong hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none">
                   <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{h.level}</span>
                   {h.nameDe}
                 </a>
@@ -211,7 +218,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
           <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
             DeutschMeister bereitet auf diese Prüfung vor, ist aber kein Prüfungsanbieter.
             Formate, Gebühren und Anmeldung regeln die Prüfungszentren; verbindliche Auskünfte
-            bekommst du direkt beim Anbieter.
+            erhalten Sie direkt beim Anbieter.
           </p>
           <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
             {FOUNDER_LINE_DE}{' '}

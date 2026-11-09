@@ -1,0 +1,15 @@
+---
+const { name = 'target', size = 32 } = Astro.props;
+const paths = {
+  target: ['M21 11a9 9 0 1 1-8-8', 'M17 3h4v4', 'm21 3-9 9', 'M16 12a4 4 0 1 1-4-4'],
+  layers: ['m12 2 10 5-10 5L2 7l10-5Z', 'm2 12 10 5 10-5', 'm2 17 10 5 10-5'],
+  sparkles: ['m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z'],
+  chat: ['M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2v-9.5A8.5 8.5 0 1 1 21 11.5Z'],
+  flag: ['M4 22V3', 'M4 3c5-4 11 4 16 0v10c-5 4-11-4-16 0'],
+  gift: ['M3 8h18v4H3z', 'M5 12v10h14V12', 'M12 8v14', 'M12 8C3 8 4 0 8 2c3 0 4 6 4 6Zm0 0s1-6 4-6c4-2 5 6-4 6Z'],
+  headphones: ['M3 14v-3a9 9 0 0 1 18 0v3', 'M3 12h4v9H3z', 'M17 12h4v9h-4z'],
+  book: ['M12 5v16', 'M12 5C8 2 4 3 2 4v15c4-2 7-1 10 2 3-3 6-4 10-2V4c-2-1-6-2-10 1Z'],
+  repeat: ['m18 2 4 4-4 4', 'M22 6H7a5 5 0 0 0-5 5', 'm6 22-4-4 4-4', 'M2 18h15a5 5 0 0 0 5-5'],
+};
+---
+<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{(paths[name] || paths.target).map((d) => <path d={d} />)}</svg>

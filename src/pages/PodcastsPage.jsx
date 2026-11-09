@@ -98,7 +98,7 @@ const PodcastsPage = () => {
             "@context": "https://schema.org",
             "@type": "PodcastSeries",
             "name": "DeutschMeister German Learning Podcast",
-            "description": `German language learning podcast with ${PODCAST_EPISODE_COUNT} episodes covering levels A1 to B2. Each episode features native speaker conversations at a defined CEFR level. ${FREE_LEVEL_LABEL} is free; higher levels require trial, Pro or a course covering the level.`,
+            "description": `German language learning podcast with ${PODCAST_EPISODE_COUNT} episodes covering levels A1 to B2. Each episode features native speaker conversations at a defined CEFR level. ${FREE_LEVEL_LABEL} is free; higher levels require a live trial, a purchased course or a qualifying existing subscription.`,
             "webFeed": "https://deutsch-meister.de/podcast-feed.xml",
             "inLanguage": ["de", "en"],
             "numberOfEpisodes": PODCAST_EPISODE_COUNT,
@@ -128,7 +128,7 @@ const PodcastsPage = () => {
                 "name": "Are the German podcasts free?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": `${FREE_LEVEL_LABEL} podcasts are free without an account. Higher levels are available during the ${TRIAL_DAYS}-day trial, with Pro, or with a purchased course covering that level.`
+                  "text": `${FREE_LEVEL_LABEL} podcasts are free without an account. Higher levels are available during the ${TRIAL_DAYS}-day trial, with a purchased course covering that level, or with a qualifying existing subscription.`
                 }
               },
               {
@@ -212,7 +212,7 @@ const PodcastsPage = () => {
                             {!accessible && (
                               <Chip tone="quiet">
                                 <Lock className="w-3 h-3" />
-                                Pro
+                                AI Practice
                               </Chip>
                             )}
                           </div>

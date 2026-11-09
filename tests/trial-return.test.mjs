@@ -56,7 +56,7 @@ test('saved work reads are user scoped, bounded, and a failed read is not an emp
 test('only a configured live course is offered; prices and free door come from canonical data', () => {
   assert.ok(returnOffer('b1.1').label.includes(deEur(PLANS.monthly.price)));
   assert.ok(returnOffer('a1.2', { course_a1_2: { variantId: 'configured' } }).label.includes(deEur(LEVEL_COURSES.course_a1_2.price)));
-  assert.ok(returnOffer('b1.1', { course_b1_1: { variantId: 'configured' } }).label.startsWith('Pro'));
+  assert.ok(returnOffer('b1.1', { course_b1_1: { variantId: 'configured' } }).label.startsWith('AI Practice'));
   assert.equal(freeReturnOption.href, FREE_COURSE_HREF);
   const card = readFileSync(new URL('../src/components/TrialReturnCard.jsx', import.meta.url), 'utf8');
   assert.match(card, /work\?\.userId === userId/);

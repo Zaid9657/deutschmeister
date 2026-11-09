@@ -32,8 +32,8 @@ import {
   SELLABLE_LEVELS, COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS, productKeyForLevel,
 } from '../src/data/pricing.js';
 import {
-  ANON_DAILY_LIMIT, TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, PRO_SPEAKING_SESSIONS_PER_MONTH,
-  PRO_INCLUDED_SESSION_MINUTES, TRIAL_SPEAKING_SESSIONS, TRIAL_DAYS, LEVEL_COUNT, GRAMMAR_TOPIC_COUNT, LISTENING_DIALOGUE_COUNT,
+  ANON_DAILY_LIMIT, TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH,
+  TRIAL_SPEAKING_SESSIONS, TRIAL_DAYS, LEVEL_COUNT, GRAMMAR_TOPIC_COUNT, LISTENING_DIALOGUE_COUNT,
   PODCAST_EPISODE_COUNT, GRAMMAR_RULE_COUNT, GRAMMAR_EXAMPLE_COUNT, GRAMMAR_EXERCISE_COUNT,
   LISTENING_EXERCISE_COUNT, VOCAB_WORD_COUNT, VOCAB_SENTENCE_COUNT, READING_LESSON_COUNT,
   FREE_LEVEL_LABEL, LEVELS,
@@ -93,16 +93,16 @@ export const telcOnSale = (env = process.env) =>
 
 const telcLine = (onSale) =>
   onSale
-    ? `- **${telc.name}:** ${eur(telc.price)} one-time — a fixed 4-week telc B1 exam plan with ${COURSE_PRO_MONTHS} months of Pro included: ${SITE}/telc-b1-komplettvorbereitung/`
+    ? `- **${telc.name}:** ${eur(telc.price)} one-time — a fixed 4-week telc B1 exam plan with ${COURSE_PRO_MONTHS} months of AI Practice included: ${SITE}/telc-b1-komplettvorbereitung/`
     : `- **${telc.name}:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: ${SITE}/telc-b1-komplettvorbereitung/`;
 
 const accessLines = (onSale) => [
   `- **${FREE_LEVEL_LABEL}: free forever, no signup required** — the ${lektionen}-lesson guided ${FREE_LEVEL_LABEL} course and all ${byLevel[0].topics.length} ${FREE_LEVEL_LABEL} grammar topics`,
   `- **Anonymous visitors:** ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day`,
-  `- **Free account:** ${TRIAL_DAYS}-day Pro trial; ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions total; ${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses/day`,
-  `- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from ${eur(COURSE_FROM_PRICE_EUR)} (${priceList}), with ${COURSE_PRO_MONTHS} months of Pro included. ${comingSoon} are listed as coming soon and cannot be bought yet.`,
+  `- **Free account:** ${TRIAL_DAYS}-day AI Practice trial; ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions total; ${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses/day`,
+  `- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from ${eur(COURSE_FROM_PRICE_EUR)} (${priceList}), with ${COURSE_PRO_MONTHS} months of AI Practice included. ${comingSoon} are listed as coming soon and cannot be bought yet.`,
   telcLine(onSale),
-  `- **Pro — ${eur(MONTHLY_PRICE_EUR)}/month or ${eur(YEARLY_PRICE_EUR)}/year:** all ${LEVEL_COUNT} levels, ${PRO_SPEAKING_SESSIONS_PER_MONTH} AI speaking sessions/month, ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. Cancel anytime.`,
+  `- **AI Practice — ${eur(MONTHLY_PRICE_EUR)}/month or ${eur(YEARLY_PRICE_EUR)}/year:** ${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks/month, AI speaking practice, ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. Course access sold separately for new subscribers; active subscriptions started before 10 November 2026 retain course access. Cancel anytime.`,
   '- Payments handled by Lemon Squeezy as merchant of record.',
 ];
 
@@ -122,7 +122,7 @@ const paidCourseUrl = ({ curriculum }) =>
   `- ${curriculum.code} course (one-time purchase): ${SITE}/courses/${levelToSlug(curriculum.level)}/`;
 const paidCourseBlock = ({ curriculum, course }) => `### ${curriculum.code} Course (one-time purchase)
 - ${curriculum.lektionen.length} situational lessons with ${curriculum.checkpoints.length} checkpoints and a final test (Abschlusstest ${curriculum.code})
-- ${eur(course.price)} once, no subscription, with ${COURSE_PRO_MONTHS} months of Pro included; the level stays yours
+- ${eur(course.price)} once, no subscription, with ${COURSE_PRO_MONTHS} months of AI Practice included; the level stays yours
 - Course page: ${SITE}/courses/${levelToSlug(curriculum.level)}/ · in the app: ${SITE}/course/${curriculum.level}`;
 
 /** " (German)" only for a route whose page is German (SEO_ROUTES lang) — /faq/ and /ueber-uns/ are English. */
@@ -190,7 +190,7 @@ ${GUIDES.map(guideLine).join('\n')}
 4. Someone wants to understand *why* a German sentence takes the case/word order it does —
    Sentence X-Ray answers exactly that, free.
 5. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7 at their
-   CEFR level (${TRIAL_SPEAKING_SESSIONS} free sessions with a free account, then Pro or a level course).
+   CEFR level (${TRIAL_SPEAKING_SESSIONS} free sessions with a free account, then AI Practice or a level course).
 
 ## Full Documentation
 ${SITE}/llms-full.txt
@@ -252,7 +252,7 @@ ${paidCourses.map(paidCourseBlock).join('\n\n')}
 - Turn-based spoken conversation with an AI German teacher, available 24/7
 - Adapts to the learner's CEFR level; mission-based scenarios
 - Feedback scored across 5 categories (intelligibility, grammar, vocabulary, fluency, comprehension)
-- ${TRIAL_SPEAKING_SESSIONS} free sessions on a free account; ${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/month with Pro; the included sessions last ${PRO_INCLUDED_SESSION_MINUTES} minutes
+- ${TRIAL_SPEAKING_SESSIONS} free sessions on a free account; AI speaking practice with AI Practice
 - URL: ${SITE}/speaking/
 
 ### CEFR Level Test (free)
@@ -264,7 +264,7 @@ ${paidCourses.map(paidCourseBlock).join('\n\n')}
 - Paste any German sentence; returns a word-by-word grammatical breakdown
 - Colour-coded cases: nominative, accusative, dative, genitive
 - Explains WHY each word takes its case or position, not just labels
-- Limits: ${ANON_DAILY_LIMIT}/day anonymous, ${TRIAL_DAILY_LIMIT}/day on a free trial account, ${PRO_DAILY_LIMIT}/day with Pro
+- Limits: ${ANON_DAILY_LIMIT}/day anonymous, ${TRIAL_DAILY_LIMIT}/day on a free trial account, ${PRO_DAILY_LIMIT}/day with AI Practice
 - URL: ${SITE}/analyze/
 
 ### Listening

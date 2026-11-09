@@ -3,7 +3,7 @@
 // from A1.1 Lektion 1, graded by the course's own checker
 // (src/lib/lesson/check.js, loaded on the first answer — never copied, so the
 // demo can never grade differently from the course). Each right answer moves
-// the train one segment; the third ends at the station and opens the ticket to
+// the progress one segment; the third ends at the station and opens the ticket to
 // the free course.
 //
 // The items come from the built pool at BUILD time (only these three reach the
@@ -12,7 +12,7 @@
 // replaced (Course v2, COURSE_V2_LIVE) so the demo is re-pointed in the same PR.
 //
 // No JavaScript: every item renders with its answer behind a <details>, so the
-// sample is still readable and checkable by eye. Reduced motion: the train
+// sample is still readable and checkable by eye. Reduced motion: the progress
 // jumps instead of gliding.
 import pool from '../../../../src/data/lessonPools/a11.extra.json';
 import explanationsEn from '../../../../src/data/lessonPools/a11.explanationsEn.json';
@@ -41,48 +41,21 @@ const items = DEMO_ITEM_IDS.map((id) => {
 });
 ---
 
-<article
-  class="firststop relative rounded-[1.75rem] border border-nacht-rule bg-nacht-raised p-5 text-nacht-text shadow-overlay sm:p-7"
-  aria-labelledby="fs-h"
-  data-ground="nacht"
-  data-track-view="demo"
-  data-first-stop
->
-  <header>
-    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Halt 1 · A1.1 · Lektion 1</p>
-    <h2 id="fs-h" class="sign-head mt-2 text-[1.75rem] sm:text-[2rem]">Try the first stop</h2>
-    <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-nacht-muted">
-      Three real exercises from Lektion 1, <span lang="de">An der Rezeption</span> — checked exactly the way the course checks them.
-    </p>
-  </header>
-
-  <!-- The track: three segments, three stations, one train. -->
-  <div class="relative mt-6 h-10" aria-hidden="true">
-    <div class="absolute inset-x-[0.6875rem] top-1/2 h-2 -translate-y-1/2 rounded-pill bg-nacht-sunk"></div>
-    <div class="fs-progress dm-train absolute inset-x-[0.6875rem] top-1/2 -mt-1 h-2 origin-left rounded-pill bg-linie" style="transform:scaleX(0)"></div>
-    <ol class="absolute inset-0 flex items-center justify-between">
-      {[0, 1, 2, 3].map((n) => (
-        <li class="dm-station-dot h-[1.375rem] w-[1.375rem] rounded-full border-4 border-nacht-rule bg-nacht" data-fs-dot={n}></li>
-      ))}
-    </ol>
-    <div class="dm-train fs-train absolute left-0 top-1/2 -mt-[0.875rem] flex h-7 w-11 items-center justify-center rounded-pill bg-linie text-linie-ink shadow-raise-linie">
-      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="9" rx="3" fill="currentColor" opacity=".9" /><circle cx="5.5" cy="12" r="1.6" fill="currentColor" /><circle cx="14.5" cy="12" r="1.6" fill="currentColor" /></svg>
-    </div>
-  </div>
+<article class="firststop c4-exercise" aria-labelledby="fs-h" data-track-view="demo" data-first-stop>
+  <header><p class="c4-eyebrow">Quick exercise</p><h2 id="fs-h">Say your name <br />in German</h2></header>
   <p class="sr-only" role="status" aria-live="polite" data-fs-status></p>
-
-  <ol class="mt-5 space-y-6" data-fs-items>
+  <ol class="c4-exercise-items" data-fs-items>
     {items.map((it, i) => (
       <li class:list={['fs-item', i === 0 && 'is-current']} data-fs-item={i} data-grade={JSON.stringify(it.grade)}>
         <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">
           {i + 1} / {items.length} · {labels[i]}
         </p>
-        <p class="sign-label mt-2 text-[1.375rem] leading-snug sm:text-[1.5rem]" lang="de">
-          {it.type === 'error_correction' ? it.questionDe : (<>{it.before}<span class="mx-1 inline-block w-[4.5rem] border-b-[3px] border-linie align-baseline" aria-hidden="true">&nbsp;</span><span class="sr-only">(blank)</span>{it.after}</>)}
+        <p class="c4-exercise-question" lang="de">
+          {!it.questionDe.includes('___') ? it.questionDe : (<>{it.before}<span class="mx-1 inline-block w-[4.5rem] border-b-[3px] border-linie align-baseline" aria-hidden="true">&nbsp;</span><span class="sr-only">(blank)</span>{it.after}</>)}
         </p>
         <p class="mt-1 text-[0.875rem] text-nacht-muted">{it.questionEn}</p>
 
-        <form class="fs-form mt-4 flex gap-2" data-fs-form>
+        <form class="fs-form c4-exercise-form" data-fs-form>
           <label class="sr-only" for={`fs-input-${i}`}>Your answer</label>
           <input
             id={`fs-input-${i}`}
@@ -97,7 +70,7 @@ const items = DEMO_ITEM_IDS.map((id) => {
             value={it.prefill}
             placeholder={it.type === 'error_correction' ? '' : 'Type your answer'}
           />
-          <button type="submit" class="dm-key dm-key-linie shrink-0">Check</button>
+          <button type="submit" class="c4-exercise-check" aria-label="Check your answer">Check</button>
         </form>
         <p class="fs-feedback mt-3 rounded-xl px-4 py-3 text-[0.9375rem] leading-relaxed" data-fs-feedback></p>
 
@@ -110,34 +83,34 @@ const items = DEMO_ITEM_IDS.map((id) => {
   </ol>
 
   <div class="fs-nav mt-5 flex items-center justify-between gap-3" hidden data-fs-nav>
-    <button type="button" class="dm-key dm-key-ghost-nacht" data-fs-next>Next exercise →</button>
+    <button type="button" class="c4-text-link" data-fs-next>Next exercise →</button>
   </div>
 
   <!-- Arrival: the ticket to the rest of the course. -->
   <div class="fs-done mt-6 rounded-[1.25rem] bg-linie p-5 text-linie-ink" hidden data-fs-done>
-    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Halt 1 erreicht</p>
-    <p class="sign-head mt-1 text-[1.5rem]">That was Lektion 1, three answers in.</p>
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Well done</p>
+    <p class="sign-head mt-1 text-[1.5rem]">Your first German sentences.</p>
     <p class="mt-1.5 text-[0.9375rem] leading-relaxed">
       The free A1.1 course continues from here: the dialogue at the reception, the words, the grammar, speaking and a short writing task.
     </p>
-    <a href={FREE_COURSE_HREF} class="dm-key dm-key-siegel mt-4" data-track="course_selected" data-track-level="a1.1" data-track-surface="demo_done">Start A1.1 free — no account</a>
+    <a href={FREE_COURSE_HREF} class="c4-button" data-track="course_selected" data-track-level="a1.1" data-track-surface="demo_done">Start A1.1 free — no account</a>
   </div>
 </article>
 
 <script>
   import { track } from '../../lib/track.js';
+  import { DEMO_ITEM_LABELS } from '../../data/firstStop.js';
+  import { motionLinie } from '../../data/design-tokens.js';
 
   const root = document.querySelector('[data-first-stop]');
   if (root) {
     const items = [...root.querySelectorAll('[data-fs-item]')];
-    const dots = [...root.querySelectorAll('[data-fs-dot]')];
-    const train = root.querySelector('.fs-train');
-    const progress = root.querySelector('.fs-progress');
     const status = root.querySelector('[data-fs-status]');
     const nav = root.querySelector('[data-fs-nav]');
     const next = root.querySelector('[data-fs-next]');
     const done = root.querySelector('[data-fs-done]');
     const total = items.length;
+    root.setAttribute('data-fs-ready', '');
     let current = 0;
     let reached = 0;
     let checker = null; // src/lib/lesson/check.js, loaded on the first answer
@@ -146,27 +119,21 @@ const items = DEMO_ITEM_IDS.map((id) => {
 
     const loadChecker = () => (checker ||= import('../../../../src/lib/lesson/check.js'));
 
-    // Move the train to station n (0..total). Signature tier: 800 ms in-out.
-    // Transform only: the train translates, the filled track scales.
-    const moveTo = (n) => {
-      const first = dots[0].getBoundingClientRect();
-      const last = dots[dots.length - 1].getBoundingClientRect();
-      const span = Math.max(0, last.left - first.left);
-      train.style.transform = `translateX(${(span * n) / total}px)`;
-      progress.style.transform = `scaleX(${n / total})`;
-      dots.forEach((dot, i) => {
-        const on = i <= n;
-        dot.classList.toggle('is-reached', on);
-        dot.classList.toggle('bg-linie', on);
-        dot.classList.toggle('border-linie', on);
-        dot.classList.toggle('bg-nacht', !on);
-        dot.classList.toggle('border-nacht-rule', !on);
-      });
+    const moveTo = (n, correct = true) => {
+      root.setAttribute('data-progress', String(n));
+      const check = items[Math.min(n, total) - 1]?.querySelector('.c4-exercise-check');
+      if (check && correct) {
+        check.textContent = '✓';
+        check.setAttribute('aria-label', 'Exercise completed');
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) check.animate(
+          [{ transform: 'scale(.85)', opacity: .5 }, { transform: 'scale(1)', opacity: 1 }],
+          { duration: parseInt(motionLinie.duration.control), easing: motionLinie.ease.out }
+        );
+      }
     };
-    moveTo(0);
-    window.addEventListener('resize', () => moveTo(reached), { passive: true });
 
     const show = (i) => {
+      root.querySelector('#fs-h').textContent = DEMO_ITEM_LABELS[i];
       items.forEach((el, k) => el.classList.toggle('is-current', k === i));
       nav.hidden = true;
       const input = items[i].querySelector('input');
@@ -212,7 +179,10 @@ const items = DEMO_ITEM_IDS.map((id) => {
           const { checkAnswer, checkOptionsFor } = await loadChecker();
           verdict = checkAnswer(value, grade.accepted, checkOptionsFor(grade)).result;
         } catch {
-          verdict = grade.accepted.includes(value) ? 'correct' : 'wrong';
+          attempts -= 1;
+          checker = null;
+          feedback(el, 'wrong', 'The checker could not load. Please try again.');
+          return;
         }
         input.classList.remove('is-correct', 'is-wrong');
         void input.offsetWidth;
@@ -227,7 +197,7 @@ const items = DEMO_ITEM_IDS.map((id) => {
           } else {
             finish();
           }
-        } else if (verdict === 'typo' && attempts < 3) {
+        } else if (verdict === 'typo' && attempts < 2) {
           input.classList.add('is-wrong');
           feedback(el, 'typo', grade.caseSensitive
             ? '<strong>Almost.</strong> Look at the capital letters — here they are the point.'
@@ -237,7 +207,7 @@ const items = DEMO_ITEM_IDS.map((id) => {
           input.classList.add('is-wrong');
           feedback(el, 'wrong', `<strong>Not quite.</strong> The answer is <strong lang="de">${grade.answer}</strong>. ${explanation}`);
           reached = Math.max(reached, i + 1);
-          moveTo(reached);
+          moveTo(reached, false);
           if (i + 1 < total) nav.hidden = false;
           else finish();
         }

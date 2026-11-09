@@ -1,0 +1,8 @@
+2026-11-09 — local browser validation
+
+Preview server: listen EPERM: operation not permitted 0.0.0.0:4173.
+Puppeteer (headless Chrome, DevTools pipe): TargetCloseError / Target.setDiscoverTargets: Target closed.
+Direct headless Chrome CLI (file URL, single-process, no zygote):
+[3:3:1109/192543.178561:ERROR:third_party/crashpad/crashpad/util/linux/socket.cc:45] setsockopt: Operation not permitted (1)
+
+No screenshots were produced. Founder brief assigns the 390/1440 screenshot comparison to Claude; that comparison remains to be performed in a browser-capable environment.

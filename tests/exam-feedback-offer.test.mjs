@@ -23,13 +23,13 @@ const paidAccess = ({ subscribed = false, purchases = [] } = {}) =>
 const WRITING_TRACKS = EXAM_TRACKS.filter((t) => t.hasWriting);
 const trial = { hasPaidAccess: paidAccess() };
 
-test('a trial learner sees the matching offer; Pro, a covering course and loading hide it', () => {
+test('a trial learner sees the matching offer; AI Practice, a covering course and loading hide it', () => {
   for (const track of WRITING_TRACKS) {
     const args = { examKey: track.key, telcVariantId: 'checkout-id' };
     const level = track.sublevels[track.sublevels.length - 1];
     assert.ok(examFeedbackOffer({ ...args, ...trial }), `${track.key}: a trial learner is who the offer is for`);
     assert.equal(examFeedbackOffer({ ...args, loading: true }), null);
-    assert.equal(examFeedbackOffer({ ...args, hasPaidAccess: paidAccess({ subscribed: true }) }), null, `${track.key}: Pro`);
+    assert.equal(examFeedbackOffer({ ...args, hasPaidAccess: paidAccess({ subscribed: true }) }), null, `${track.key}: AI Practice`);
     const key = track.key === 'telc_b1' ? EXAM_COURSE.key : stationFor(level).productKey;
     assert.equal(examFeedbackOffer({ ...args, ...trial, hasProduct: (k) => k === key }), null, `${track.key}: owner`);
     if (track.key !== 'telc_b1') {
@@ -55,10 +55,10 @@ test('off-sale feedback uses the existing pilot course door, never checkout', ()
   assert.equal(examFeedbackOffer({ examKey: 'telc_b1', ...trial }).href, '/telc-b1-komplettvorbereitung/');
 });
 
-test('other writing exams receive the matching existing station or Pro offer', () => {
+test('other writing exams receive the matching existing station or AI Practice offer', () => {
   for (const examKey of ['goethe_a1', 'goethe_a2']) {
     const track = EXAM_TRACKS.find((t) => t.key === examKey);
-    assert.equal(examFeedbackOffer({ examKey, ...trial }).href, stationFor(track.sublevels[1]).coursePage);
+    assert.equal(examFeedbackOffer({ examKey, ...trial }).href, stationFor(track.sublevels[1]).status === 'building' ? proFeedbackDoor().href : stationFor(track.sublevels[1]).coursePage);
   }
   const b2 = examFeedbackOffer({ examKey: 'telc_b2', ...trial });
   assert.deepEqual(b2, proFeedbackDoor());
@@ -66,17 +66,17 @@ test('other writing exams receive the matching existing station or Pro offer', (
   assert.equal(b2.href, '/pricing/#pro');
 });
 
-test('the moment decides: trial result → offer, trial limit → Pro door, trial over → offer, paid → nothing', () => {
+test('the moment decides: trial result → offer, trial limit → AI Practice door, trial over → offer, paid → nothing', () => {
   const offer = examFeedbackOffer({ examKey: 'goethe_a1', ...trial });
   // After feedback on the trial.
   assert.deepEqual(writingOfferMoment({ result: { tier: 'free_trial', total_score: 12 }, offer }), { kind: 'after_feedback', offer });
-  // The trial's 429: Pro is what adds evaluations.
+  // The trial's 429: AI Practice is what adds evaluations.
   assert.deepEqual(writingOfferMoment({ error: { error: 'limit_reached', tier: 'free_trial', used: 2, limit: 2 }, offer }),
     { kind: 'trial_limit', offer: proFeedbackDoor() });
-  // The trial is over (403): the matching offer — or the Pro door when the learner already owns the course.
+  // The trial is over (403): the matching offer — or the AI Practice door when the learner already owns the course.
   assert.deepEqual(writingOfferMoment({ error: { error: 'subscription_required', tier: 'free_expired' }, offer }), { kind: 'trial_over', offer });
   assert.deepEqual(writingOfferMoment({ error: { error: 'subscription_required' }, offer: null }), { kind: 'trial_over', offer: proFeedbackDoor() });
-  // Paid learners: no offer after feedback, and none at Pro's monthly cap.
+  // Paid learners: no offer after feedback, and none at AI Practice's monthly cap.
   assert.equal(writingOfferMoment({ result: { tier: 'pro' }, offer: null }), null);
   assert.equal(writingOfferMoment({ result: { tier: 'pro' }, offer }), null, 'the server tier wins over a stale client view');
   assert.equal(writingOfferMoment({ error: { error: 'limit_reached', tier: 'pro' }, offer }), null);
@@ -98,5 +98,5 @@ test('the writing page renders each moment with the shared card and reports the 
   assert.match(page, /trackPaywallShown\('writing_limit', \{ moment: paywallKind, offer: paywallOffer \}\)/);
   // The alert names the offer the card shows; Sie throughout.
   assert.match(page, /weitere Bewertungen gibt es mit „\$\{shown\.title\}“/);
-  assert.match(page, /Mit Pro bekommen Sie mehr Bewertungen pro Monat\./);
+  assert.match(page, /Mit AI Practice bekommen Sie mehr Bewertungen pro Monat\./);
 });

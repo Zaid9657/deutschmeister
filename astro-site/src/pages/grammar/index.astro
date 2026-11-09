@@ -1,6 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Aurora from '../../components/Aurora.astro';
 import { getAllTopics, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { onsiteHref } from '../../lib/onsiteLinks.js';
@@ -60,13 +59,13 @@ const jsonLd = [
 // Playful Depth vocabulary (docs/design/playbook.md). Level codes are data, so
 // they wear the `label` chip — never a level colour (rule 1: colour means case).
 const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-clay text-base font-bold transition-all duration-100 ease-snap select-none';
-const BTN_PRIMARY = `${BTN} bg-siegel px-7 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+  'inline-flex items-center justify-center gap-2 rounded-xl text-base font-bold transition-transform duration-feedback ease-out-strong select-none';
+const BTN_PRIMARY = `${BTN} bg-siegel px-7 py-3.5 text-white hover:bg-siegel-lift active:translate-y-px active:shadow-none`;
 const LEVEL_CHIP =
   'rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
 const CARD_INTERACTIVE =
-  'rounded-clay border border-rule bg-white shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none';
-const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]';
+  'rounded-xl border border-rule bg-white transition-transform duration-feedback ease-out-strong active:translate-y-px active:shadow-none';
+const H2 = 'font-display text-dm-section sm:text-dm-section-wide';
 ---
 
 <Layout
@@ -80,7 +79,6 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
 
     <!-- ═══ HERO ═══ -->
     <section class="relative" aria-labelledby="grammar-h">
-      <Aurora />
       <div class="relative mx-auto max-w-6xl px-5 pt-14 pb-12 sm:pt-20">
         <div class="text-center">
           <h1 id="grammar-h" class="hero-line font-display text-[2.375rem] font-semibold leading-[1.02] tracking-[-0.025em] sm:text-[3.5rem]" style="--d:60ms">
@@ -96,21 +94,23 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
           )}
         </div>
 
-        <!-- Level picker: the grid a visitor chooses from — clay, tilting -->
-        <ul class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4" aria-label="CEFR levels">
-          {byLevel.map(({ level, meta }, i) => (
-            <li class="hero-line" style={`--d:${400 + i * 60}ms`}>
-              <div class="atropos h-full" data-atropos-card>
-                <div class="atropos-scale h-full"><div class="atropos-rotate h-full"><div class="atropos-inner h-full !overflow-visible">
-                  <a href={`/grammar/${level}/`} class={`flex h-full flex-col gap-2 p-5 ${CARD_INTERACTIVE}`}>
-                    <span class={`self-start ${LEVEL_CHIP}`} data-atropos-offset="8">{meta.label}</span>
-                    <span class="font-display text-[1.0625rem] font-semibold leading-snug" data-atropos-offset="4" lang="en">{meta.name}</span>
-                  </a>
-                </div></div></div>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <form class="mt-7 grid gap-4 rounded-xl border border-rule bg-white p-5 sm:grid-cols-[1fr_auto]" role="search" onsubmit="return false">
+          <div>
+            <label for="grammar-search" class="block text-sm font-bold">Find a grammar topic</label>
+            <input id="grammar-search" type="search" placeholder="Try articles, Akkusativ or word order" class="mt-2 min-h-11 w-full rounded-lg border border-rule bg-paper px-3 py-2" aria-controls="grammar-topics" />
+          </div>
+          <div>
+            <label for="grammar-level" class="block text-sm font-bold">Level</label>
+            <select id="grammar-level" class="mt-2 min-h-11 w-full rounded-lg border border-rule bg-paper px-3 py-2">
+              <option value="">All levels</option>
+              {byLevel.map(({level, meta}) => <option value={level}>{meta.label}</option>)}
+            </select>
+          </div>
+          <p class="text-sm text-graphite sm:col-span-2" aria-live="polite" data-search-status>Browse all topics below, or type to filter.</p>
+        </form>
+        <nav class="mt-5 flex flex-wrap gap-2" aria-label="CEFR levels">
+          {byLevel.map(({level, meta}) => <a href={`#topics-${level}`} class="rounded-pill border border-rule px-3 py-2 text-sm font-bold text-siegel-deep">{meta.label}</a>)}
+        </nav>
 
         <!-- Continue / start hero. Server-rendered in the logged-out "start" state
              (SEO-safe, no JS); the client upgrades it to a resume card when a
@@ -122,10 +122,10 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
                 <a
                   id="gm-hero"
                   href={`/grammar/${firstTopic.level}/${firstTopic.slug}/`}
-                  class={`group block p-6 sm:p-7 ${CARD_INTERACTIVE} shadow-raise-lg`}
+                  class={`group block p-6 sm:p-7 ${CARD_INTERACTIVE}`}
                 >
                   <div class="flex items-center gap-5">
-                    <div class="hidden h-14 w-14 flex-shrink-0 items-center justify-center rounded-clay border border-rule bg-paper-sunk sm:flex" data-atropos-offset="6">
+                    <div class="hidden h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl border border-rule bg-paper-sunk sm:flex" data-atropos-offset="6">
                       <span id="gm-hero-icon" class="text-2xl">📖</span>
                     </div>
                     <div class="min-w-0 flex-1">
@@ -141,7 +141,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
                     </div>
                     <span
                       id="gm-hero-btn"
-                      class="btn-shimmer relative hidden flex-shrink-0 select-none items-center justify-center gap-2 overflow-hidden rounded-clay bg-siegel px-7 py-3.5 text-base font-bold text-white shadow-raise-siegel transition-all duration-100 ease-snap group-hover:bg-siegel-lift group-active:translate-y-1 group-active:shadow-none sm:inline-flex"
+                      class="btn-shimmer relative hidden flex-shrink-0 select-none items-center justify-center gap-2 overflow-hidden rounded-xl bg-siegel px-7 py-3.5 text-base font-bold text-white transition-transform duration-feedback ease-out-strong group-hover:bg-siegel-lift group-active:translate-y-px group-active:shadow-none sm:inline-flex"
                       data-atropos-offset="8"
                     >
                       <span id="gm-hero-btn-label" class="relative z-10">Start learning</span>
@@ -157,9 +157,9 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
     </section>
 
     <!-- ═══ Level sections ═══ -->
-    <div class="mx-auto max-w-6xl space-y-14 px-5 py-14">
+    <div id="grammar-topics" class="mx-auto max-w-6xl space-y-14 px-5 py-10">
       {byLevel.map(({ level, meta, topics }) => (
-        <section>
+        <section id={`topics-${level}`} class="scroll-mt-24" data-level-section={level}>
           <div class="reveal mb-5 flex flex-wrap items-center gap-3">
             <a href={`/grammar/${level}/`} class="group flex items-center gap-3">
               <span class={LEVEL_CHIP}>{meta.label}</span>
@@ -170,7 +170,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
             <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
             <div data-level-bar={level} class="mt-2 hidden w-full items-center gap-2 sm:ml-auto sm:mt-0 sm:w-auto">
               <div class="h-2 flex-1 overflow-hidden rounded-pill bg-paper-sunk sm:w-32">
-                <div data-level-bar-fill class="h-full rounded-pill bg-siegel transition-all" style="width:0%"></div>
+                <div data-level-bar-fill class="h-full rounded-pill bg-siegel transition-transform duration-control" style="width:0%"></div>
               </div>
               <span data-level-bar-text class="whitespace-nowrap font-data text-[0.75rem] font-semibold text-graphite">0/{topics.length}</span>
             </div>
@@ -181,6 +181,8 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
               <a
                 href={`/grammar/${level}/${topic.slug}/`}
                 data-topic-card
+                data-search-text={`${topic.title_en} ${topic.title_de} ${topic.description_en || ''}`}
+                data-search-level={level}
                 data-topic-id={topic.id}
                 class={`reveal group relative block p-5 ${CARD_INTERACTIVE}`}
                 style={`--rd:${(i % 4) * 80}ms`}
@@ -206,9 +208,10 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
       ))}
     </div>
 
+    <p class="dm-page pb-10 text-graphite" data-search-empty hidden>No matching topics. Try a shorter term or choose all levels.</p>
+
     <!-- ═══ Close ═══ -->
     <section class="relative overflow-hidden border-t border-rule bg-paper-sunk">
-      <Aurora variant="close" />
       <div class="relative mx-auto max-w-6xl px-5 py-16 text-center">
         <h2 class={`reveal ${H2}`}>Grammar is only the beginning</h2>
         <p class="reveal mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style="--rd:80ms">
@@ -216,7 +219,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
         </p>
         <div class="reveal mt-8" style="--rd:160ms">
           <a href={onsiteHref('signup', 'grammar', 'index')} class={BTN_PRIMARY}>
-            Start free — includes {TRIAL_DAYS} days of Pro
+            Start free — includes {TRIAL_DAYS} days of AI Practice
           </a>
         </div>
       </div>
@@ -320,3 +323,29 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
     })();
   </script>
 </Layout>
+
+<style>
+  [data-topic-card][hidden], [data-level-section][hidden] { display: none !important; }
+</style>
+<script>
+  import { matchesGrammarTopic } from '../../lib/grammarSearch.js';
+  const search = document.querySelector('#grammar-search');
+  const level = document.querySelector('#grammar-level');
+  const cards = [...document.querySelectorAll('[data-topic-card]')];
+  const status = document.querySelector('[data-search-status]');
+  const empty = document.querySelector('[data-search-empty]');
+  const filter = () => {
+    let count = 0;
+    for (const card of cards) {
+      card.hidden = !matchesGrammarTopic(card.dataset.searchText, card.dataset.searchLevel, search.value, level.value);
+      if (!card.hidden) count++;
+    }
+    document.querySelectorAll('[data-level-section]').forEach((section) => {
+      section.hidden = !section.querySelector('[data-topic-card]:not([hidden])');
+    });
+    status.textContent = `${count} matching topics`;
+    empty.hidden = count > 0;
+  };
+  search.addEventListener('input', filter);
+  level.addEventListener('change', filter);
+</script>

@@ -34,7 +34,7 @@ function checkAccessClaim(text) {
   assert.ok(text.includes(FREE_LEVEL_LABEL), 'identify the permanently free level');
   assert.match(text, /free.*without (?:an )?(?:account|signup)/i);
   assert.ok(text.includes(`${TRIAL_DAYS}-day trial`), 'derive the trial period from marketing.js');
-  assert.match(text, /Pro/);
+  assert.match(text, /qualifying existing subscription/);
   assert.match(text, /course covering (?:that|the) level/);
   assert.doesNotMatch(text, /all podcasts are free|other levels require a free account/i);
 }
@@ -48,7 +48,7 @@ test('podcast FAQ and metadata explain free and entitled access on both render p
     assert.equal(series.isAccessibleForFree, false, 'the whole catalogue is not free');
     assert.equal(series.numberOfEpisodes, PODCAST_EPISODE_COUNT);
     assert.ok(series.description.includes(`${FREE_LEVEL_LABEL} is free`));
-    assert.match(series.description, /higher levels require trial, Pro or a course covering the level/);
+    assert.match(series.description, /higher levels require a live trial, a purchased course or a qualifying existing subscription/);
   }
   const accessAnswer = prerenderSchemas.find((schema) => schema['@type'] === 'FAQPage')
     .mainEntity.find((entry) => entry.name === 'Are the German podcasts free?').acceptedAnswer.text;

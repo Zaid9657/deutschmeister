@@ -96,7 +96,7 @@ export const briefSchreibenB1 = {
               title: 'Hauptteil — ein Absatz pro Leitpunkt',
               tasks: [
                 'Nimm die Leitpunkte in der Reihenfolge der Aufgabe',
-                'Pro Leitpunkt zwei bis drei Sätze — mehr braucht niemand',
+                'AI Practice Leitpunkt zwei bis drei Sätze — mehr braucht niemand',
                 'Verbinde die Absätze mit Konnektoren: weil, deshalb, trotzdem, außerdem',
               ],
               tip: 'Hak nach jedem Absatz die Aufgabenstellung ab. Am Ende müssen alle Leitpunkte einen Haken haben.',

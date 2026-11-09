@@ -56,10 +56,10 @@ const leadFor = ({ pathname, purchases = [], levelCourses = LEVEL_COURSES, varia
 const ON_SALE = { course_a1_2: 'v-a12', course_a2_1: 'v-a21', course_a2_2: 'v-a22' };
 
 test('the refused level\'s course leads when it is on sale and not owned', () => {
-  const { leadCourse, orderedLevelCourses } = leadFor({ pathname: '/course/a2.1/l/2', variants: ON_SALE });
-  assert.equal(leadCourse.key, 'course_a2_1');
-  assert.equal(orderedLevelCourses[0].key, 'course_a2_1', 'its card comes first');
-  assert.equal(orderedLevelCourses.filter((c) => c.key === 'course_a2_1').length, 1, 'and only once');
+  const { leadCourse, orderedLevelCourses } = leadFor({ pathname: '/course/a1.2/l/2', variants: ON_SALE });
+  assert.equal(leadCourse.key, 'course_a1_2');
+  assert.equal(orderedLevelCourses[0].key, 'course_a1_2', 'its card comes first');
+  assert.equal(orderedLevelCourses.filter((c) => c.key === 'course_a1_2').length, 1, 'and only once');
   assert.equal(orderedLevelCourses.length, leadFor({ variants: ON_SALE }).orderedLevelCourses.length);
 });
 

@@ -70,7 +70,7 @@
 // (src/config/freeTier.js lists only 'a1.1'), and courseForLevel('a2.2')
 // resolves to LEVEL_COURSES.course_a2_2 (a retired course_a2 row still
 // unlocks it via levelsForProduct) — so access
-// needs Pro/trial OR the A2 course purchase, the SAME gate as
+// needs AI Practice/trial OR the A2 course purchase, the SAME gate as
 // abschlusstestA21 and the A2.2 level pages themselves.
 //
 // FIVE INTEGRATION DEPENDENCIES, none satisfiable from this file:

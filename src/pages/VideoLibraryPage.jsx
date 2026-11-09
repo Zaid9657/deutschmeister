@@ -139,7 +139,7 @@ const VideoLibraryPage = () => {
     <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
       <SEO
         title="German Video Library"
-        description="Watch free German learning videos with downloadable slides. Grammar explanations, vocabulary lessons, and topic summaries for all CEFR levels."
+        description="Watch free German learning videos with grammar explanations. Grammar explanations, vocabulary lessons, and topic summaries for all CEFR levels."
         path="/video-library"
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

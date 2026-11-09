@@ -2,8 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef } f
 import { useAuth } from './AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { withTimeout } from '../utils/withTimeout';
-import { isLevelFree } from '../config/freeTier';
-import { levelsForProduct } from '../data/pricing.js';
+import { courseAccessReason } from '../lib/levelEntitlement.js';
 import {
   getSubscription,
   getUserProfile,
@@ -205,7 +204,7 @@ export const SubscriptionProvider = ({ children }) => {
   }, [user, revalidate]);
 
   // Access changes at known times: the subscription's paid-through date, the
-  // trial end, a course's included-Pro end. Shortly after the nearest one still
+  // trial end, a course's included-AI Practice end. Shortly after the nearest one still
   // ahead, re-read in the background, so a tab left open sees a renewal the
   // webhook recorded (and an ended trial ends) without waiting for a tab return.
   // Re-armed on every load; a deadline beyond setTimeout's range re-reads at
@@ -236,7 +235,7 @@ export const SubscriptionProvider = ({ children }) => {
     return trialStatus.daysRemaining;
   };
 
-  // Pro comes from a confirmed subscription period, an included course window,
+  // AI Practice comes from a confirmed subscription period, an included course window,
   // or the owner's explicit premium grant (profiles.subscription_tier
   // 'premium', the admin set_tier action). Server reconciliation preserves that
   // grant and every server tool counts it as paid; with no subscription or
@@ -250,21 +249,16 @@ export const SubscriptionProvider = ({ children }) => {
   const hasAccess = isInFreeTrial() || hasActiveSubscription();
 
   // One-time product entitlements (course areas). Distinct from hasAccess on
-  // purpose: a course is lifetime while its included Pro window can expire, so
+  // purpose: a course is lifetime while its included AI Practice window can expire, so
   // PurchaseGuard reads this and the level guards keep reading hasAccess.
   const hasProduct = (productKey) => purchases.some((p) => p.product_key === productKey);
 
   // Level entitlement — the one question every level surface asks. A level is
   // open if it is free, if the trial/subscription is live, or if a bought
-  // level course covers it (lifetime, independent of the Pro window). Guards
+  // level course covers it (lifetime, independent of the AI Practice window). Guards
   // and lock badges read THIS, never hasAccess alone, or a paid-for course
-  // shows a lock the day its included Pro expires.
-  const hasLevelAccess = (level) => {
-    if (isLevelFree(level)) return true;
-    if (hasAccess) return true;
-    const l = (level || '').toLowerCase();
-    return purchases.some((p) => levelsForProduct(p.product_key).includes(l));
-  };
+  // shows a lock the day its included AI Practice expires.
+  const hasLevelAccess = (level) => Boolean(courseAccessReason({ profile, subscription, purchases }, level));
 
   // NOTE: there is deliberately no client-side createSubscription here.
   // Paid access is granted server-side only, by the Lemon Squeezy webhook

@@ -17,21 +17,15 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf
 // Tailwind's spacing scale: n → n × 0.25 rem.
 const rem = (n) => Number(n) / 4;
 
-test('the band is stuck below the navbar height and stacks under the bar', () => {
-  const nav = read('src/components/Navbar.jsx');
-  const navClass = nav.match(/<nav\s+className=\{`([^`]*)`\}/)[1];
-  assert.match(navClass, /\bfixed top-0\b/, 'premise: the navbar is fixed at the top');
-  const navZ = Number(navClass.match(/\bz-(\d+)\b/)[1]);
-  const barHeight = rem(nav.match(/<div className="flex items-center justify-between h-(\d+)">/)[1]);
-
+test('the band sits below the fixed navbar and the menus remain above it', () => {
+  const css = read('astro-site/src/styles/concept4.css');
+  assert.match(css, /\.c4-site-nav \{[^}]*position: fixed;[^}]*z-index: 50/);
+  const barHeight = Number(css.match(/\.c4-nav-inner \{[^}]*height: (\d+)px/)[1]) / 16;
   const banner = read('src/components/TrialBanner.jsx');
   const bandClass = banner.match(/<div className=\{`(sticky [^`]*)`\} data-urgency=\{urgency\}>/);
-  assert.ok(bandClass, 'the band is a sticky element');
-  const top = bandClass[1].match(/\btop-(\d+)\b/);
-  assert.ok(top, 'the band names its sticky offset');
-  assert.ok(rem(top[1]) >= barHeight, `sticky top ${rem(top[1])}rem is above the ${barHeight}rem navbar`);
-  const bandZ = Number(bandClass[1].match(/\bz-(\d+)\b/)[1]);
-  assert.ok(bandZ < navZ, 'the nav menus still open over the band');
+  assert.ok(bandClass);
+  assert.ok(rem(bandClass[1].match(/\btop-(\d+)\b/)[1]) >= barHeight);
+  assert.ok(Number(bandClass[1].match(/\bz-(\d+)\b/)[1]) < 50);
 });
 
 test('the band is still the next element after the navbar in the shell', () => {

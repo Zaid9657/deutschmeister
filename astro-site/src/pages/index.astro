@@ -1,180 +1,55 @@
 ---
-// Homepage v4 — "Die Linie · Deutsch, in Bewegung" (2026-10-04).
-// docs/redesign-2026-10/ holds the strategy, the three art directions, the copy
-// deck, the event map and the review guide.
-//
-// WHAT CHANGED AND WHY. v3 sold an exam ("Your exam has a date") with the level
-// test as its main button and Pro in its closing line — but the owner decided
-// on 2026-09-03 that one-time level courses are the product, and the exam
-// levels most visitors name (B1) are not buyable yet. v4 sells what exists:
-// the CEFR ladder as a transit line, A1.1 the free first stop, each buyable
-// level a one-time ticket, B1/B2 honestly "Im Bau" with a route to what exists
-// today. The visitor who knows their level buys in one click from the line; the
-// unsure one answers one question; nobody has to take a test to buy.
-//
-// SECTION ORDER (question → belief → evidence → action):
-//   hero        "What is this, is it for me?" → the line + a free first stop
-//   first stop  "Does it work?" → three real Lektion 1 items, real checker
-//   fit         "Which one is mine?" → one answer, one stop (CSS-only)
-//   the line    "What does it cost?" → every station, price, Buy / Start free
-//   ticket      "What exactly do I get?" → each line removes an obstacle
-//   the ride    "What happens after I pay?" → checkout → access → day 1 → test
-//   proof       "Why believe it?" → counted content, checker rules, sources
-//   FAQ         "What could go wrong?" → access, Pro window, limits, cancel
-//   final call  one more door, no pressure
-//
-// CLAIMS. Every figure derives from ../data/*.js (pricing, marketing, offers,
-// courseContents). No testimonials, learner counts, scarcity or countdowns.
-// Colour means case (rule 1) — this page names no case, so it shows none.
-// INVARIANTS: one <h1>; canonical; real server-rendered text; prerendered SPA
-// routes linked with a trailing slash, /signup and /course/* without.
-import { ORGANIZATION_FULL } from '../data/organization.js';
 import Layout from '../layouts/Layout.astro';
-// The hero's account door, attributed like the other on-site doors
-// (lib/onsiteLinks.js): ref = the surface, utm_medium = onsite.
-const HOME_SIGNUP_HREF = '/signup?ref=home&utm_medium=onsite&utm_content=hero';
-import '../styles/global.css';
-import CourseCheckout from '../components/CourseCheckout.astro';
-import LineBoard from '../components/linie/LineBoard.astro';
+import { ORGANIZATION_FULL } from '../data/organization.js';
+import Scene from '../components/concept/Scene.astro';
+import Benefits from '../components/concept/Benefits.astro';
+import ProofCounts from '../components/concept/ProofCounts.astro';
+import RouteBand from '../components/concept/RouteBand.astro';
+import Offers from '../components/concept/Offers.astro';
 import FirstStop from '../components/linie/FirstStop.astro';
-import RecordedCorrection from '../components/linie/RecordedCorrection.astro';
-import FitChooser from '../components/linie/FitChooser.astro';
-import LineSection from '../components/linie/LineSection.astro';
-import Ticket from '../components/linie/Ticket.astro';
-import Progression from '../components/linie/Progression.astro';
-import Proof from '../components/linie/Proof.astro';
-import OfferFaq from '../components/linie/OfferFaq.astro';
-import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
-import { COURSE_PRO_MONTHS, COURSE_FROM_PRICE_EUR, eur } from '../data/pricing.js';
-import { OFFER_FAQ, STATIONS, FREE_COURSE_HREF } from '../data/offers.js';
-import { HERO_VARIANTS, ACTIVE_HERO } from '../data/homepage.js';
-
-const hero = HERO_VARIANTS[ACTIVE_HERO];
-const lead = hero.lead.replace('{proMonths}', String(COURSE_PRO_MONTHS));
-
-// 55 chars — the built-HTML check warns above 60 (Google truncates).
-const title = 'Learn German A1–B2, One Stop at a Time | DeutschMeister';
-const description = `German from A1.1 to B2.2 on one line: start A1.1 free with no account, then buy the level you’re at once (from ${eur(COURSE_FROM_PRICE_EUR)}) and keep it. Exam routes for telc, Goethe and DTZ.`;
-
-const jsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'DeutschMeister',
-    url: 'https://deutsch-meister.de/',
-    description: `German courses for English speakers on the CEFR ladder, A1.1 to B2.2: a free first level, then one-time level courses with guided plans, AI speaking and writing practice, and exam routes for telc, Goethe and DTZ.`,
-    inLanguage: ['en', 'de'],
-  },
-  { '@context': 'https://schema.org', ...ORGANIZATION_FULL },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: OFFER_FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
-  },
+import CourseCheckout from '../components/CourseCheckout.astro';
+import '../styles/global.css';
+const HOME_SIGNUP_HREF = '/signup?ref=home&utm_medium=onsite&utm_content=hero';
+const title = 'Learn German for Real Life | DeutschMeister';
+const description = 'You want to learn German. Where do you start? Try the free A1.1 course, then build your German with practical lessons for everyday life in Germany.';
+const scenes = [
+  { name: 'scene-cafe', category: 'Everyday life', title: 'Order a coffee in German', body: 'Learn the key phrases to order drinks, ask about options, and pay with confidence.', href: '/course/a1.1', alt: 'A learner ordering a coffee from a barista' },
+  { name: 'scene-work', category: 'At work', title: 'Ask for something at work', body: 'Learn to make polite requests, clarify details, and communicate in a professional setting.', href: '/courses/a1-2/', alt: 'A learner talking with a colleague at work' },
+  { name: 'scene-doctor', category: 'Health & wellbeing', title: 'Explain what hurts at the doctor', body: 'Learn the essential phrases to describe your symptoms, answer questions, and understand what’s next.', href: '/courses/a1-2/#lesson-preview', alt: 'A learner explaining her symptoms to a doctor' },
 ];
-
-// The hero is the page's largest paint: the sign face (Archivo) and the body
-// face (Nunito Sans) are preloaded; Fraunces is not used above the fold here.
-const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
-const firstTicket = STATIONS.find((s) => s.status === 'ticket');
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'DeutschMeister', url: 'https://deutsch-meister.de/', description, inLanguage: ['en', 'de'] },
+  { '@context': 'https://schema.org', ...ORGANIZATION_FULL },
+];
 ---
-
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd} tone="nacht" preloads={preloads}>
-  <div class="overflow-x-clip bg-paper text-ink">
-
-    <!-- ═══ HERO: the line, and the first stop you can ride right now ═══ -->
-    <section class="relative isolate overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h" data-hero-variant={hero.id}>
-      <div class="relative mx-auto grid max-w-7xl items-start gap-12 px-4 pb-12 pt-10 sm:px-6 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-8 lg:pt-16">
-        <div class="min-w-0">
-          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{hero.eyebrow}</p>
-          <h1 id="hero-h" class="sign-display mt-5 text-[clamp(2.75rem,11.4vw,5.75rem)]">
-            {hero.lines.map((line) => (
-              <span class="block whitespace-nowrap">
-                {line.map((part) => (
-                  part.de
-                    ? <span lang="de" class:list={[part.mark && 'text-linie']}>{part.t}</span>
-                    : part.t
-                ))}
-              </span>
-            ))}
-          </h1>
-          <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">{lead}</p>
-          <div class="mt-8 flex flex-wrap items-center gap-3">
-            <a href="/course/a1.1" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="hero">Start A1.1 free</a>
-            <a href={FREE_COURSE_HREF} class="dm-key dm-key-linie" data-auth-only data-continue-course style="display:none">Continue learning →</a>
-            <!-- The account door. Die Linie (PRs 181 and 184) left the first screen with
-                 no signup link, and untagged homepage signups fell 22 → 1
-                 (10.6 d before vs 6.9 d after, measured 2026-10-11). Tagged so the
-                 door is countable as acquisition_last_source = 'home'. No
-                 data-track: signup_started means a submitted signup form, and
-                 SignupPage fires it on submit; firing it here as well counted a
-                 click, then the page view, as two signups started. -->
-            <a href={HOME_SIGNUP_HREF} class="dm-key dm-key-ghost-nacht" data-anon-only>Create a free account</a>
-            <a href="#line" class="dm-key dm-key-ghost-nacht" data-track="course_selected" data-track-surface="hero_line">I know my level</a>
-          </div>
-          <p class="mt-5 text-[0.875rem] leading-relaxed text-nacht-muted">
-            A1.1 needs no account.
-            Not sure where you are? <a href="#fit" class="dm-link-nacht font-semibold">Find your stop</a> or take the <a href="/level-test/" class="dm-link-nacht font-semibold">20-minute level test</a>.
-          </p>
-        </div>
-        <FirstStop />
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd}>
+  <div class="c4-home">
+    <section class="c4-home-hero c4-wrap" aria-labelledby="hero-h">
+      <div class="c4-home-art" data-c4-parallax><Scene name="hero" alt="A woman learning German at her laptop with a view of Berlin" hero sizes="(max-width: 640px) 100vw, 850px" /></div>
+      <div class="c4-home-copy">
+        <h1 id="hero-h">You want to learn German.<br /><span class="c4-underline">Where do you start?</span></h1>
+        <p>Practical, real-life German for everyday situations — from your first conversation to work, health, and life in Germany.</p>
+        <a href="/course/a1.1" class="c4-button c4-button-coral" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="hero">Start A1.1 free <span aria-hidden="true">→</span></a>
+        <a href="/course/a1.1" class="c4-button c4-button-coral" data-auth-only data-continue-course style="display:none">Continue learning →</a>
       </div>
-      <!-- The line board: the HyperFrames loop (videos/hero-line*), poster-first. -->
-      <LineBoard />
+      <FirstStop />
     </section>
-
-    <RecordedCorrection />
-
-    <FitChooser />
-
-    <LineSection />
-
-    <!-- ═══ THE TICKET: what one payment carries ═══ -->
-    <section id="ticket" class="dm-defer bg-paper" aria-labelledby="ticket-h">
-      <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div class="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
-          <div class="lg:sticky lg:top-28 lg:self-start">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">One ticket, one payment</p>
-            <h2 id="ticket-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
-              <span class="block">Pay once.</span>
-              <span class="block">Keep the level.</span>
-            </h2>
-            <p class="mt-5 max-w-md text-[1.0625rem] leading-relaxed text-graphite">
-              A level ticket is the whole stop: a guided plan from day one to the final test, the practice that goes with it, and {COURSE_PRO_MONTHS} months of Pro so you can speak and write from the start. Nothing renews.
-            </p>
-            <p class="mt-4 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
-              Would you rather rent the whole line month by month? <a href="/pricing/#pro" class="dm-link">See Pro</a>.
-            </p>
-          </div>
-          <Ticket surface="ticket" defaultLevel={firstTicket ? firstTicket.level : 'a1.2'} headingLevel={3} />
-        </div>
-      </div>
+    <Benefits />
+    <section class="c4-wrap c4-scenes" id="how-it-works" aria-label="German for the situations you live" data-track-view="offer">
+      {scenes.map((scene) => <article class="c4-scene-row" data-c4-reveal>
+        <Scene name={scene.name} alt={scene.alt} sizes="(max-width: 640px) 48vw, 680px" />
+        <div><p class="c4-eyebrow">{scene.category}</p><h2>{scene.title}</h2><p>{scene.body}</p><a href={scene.href} class="c4-text-link"><span class="c4-play" aria-hidden="true">▷</span> {scene.name === 'scene-cafe' ? 'Try the lesson' : 'Explore the lesson'} <span aria-hidden="true">→</span></a></div>
+      </article>)}
     </section>
-
-    <Progression />
-
-    <Proof />
-
-    <OfferFaq />
-
-    <!-- ═══ FINAL CALL: one more door, no pressure ═══ -->
-    <section class="dm-defer relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="close-h">
-      <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <h2 id="close-h" class="sign-display text-[clamp(2.5rem,8vw,5rem)]">
-          <span class="block">Your next stop is</span>
-          <span class="block text-linie">one click away.</span>
-        </h2>
-        <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted">
-          Start with the free first stop, or go straight to the stop you’re at. Either way, your progress is saved from the first answer.
-        </p>
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a href="/course/a1.1" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="close">Start A1.1 free</a>
-          <a href={FREE_COURSE_HREF} class="dm-key dm-key-linie" data-auth-only data-continue-course style="display:none">Continue learning →</a>
-          <a href="#line" class="dm-key dm-key-ghost-nacht">Choose my stop</a>
-        </div>
-      </div>
+    <section class="c4-wrap c4-home-path" aria-labelledby="path-h">
+      <div><h2 id="path-h">A clear path from<br /><span>A1.1 to B2.2</span></h2><p>Build your German step by step — from your first words (A1.1) to confident communication in everyday life, work, and study (B2.2).</p></div>
+      <RouteBand />
     </section>
-
+    <div class="c4-wrap"><ProofCounts /></div>
+    <section class="c4-wrap c4-home-offers" aria-labelledby="goals-h">
+      <div><h2 id="goals-h">Choose what<br />fits your goals</h2><p>High-quality German learning, with a simple and flexible setup.</p><a href={HOME_SIGNUP_HREF} class="c4-text-link" data-anon-only>Create a free account →</a></div>
+      <Offers />
+    </section>
+    <CourseCheckout />
   </div>
-  <CourseCheckout />
 </Layout>

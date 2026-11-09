@@ -3,7 +3,7 @@
 // pool (src/data/lessonPools/a11.extra.json), all from Lektion 1 "An der
 // Rezeption". tests/first-stop.test.mjs checks each one against the real
 // checker and fails when the A1.1 course is replaced by Course v2.
-export const DEMO_ITEM_IDS = ['extra-a11-l01-06', 'extra-a11-l01-04', 'extra-a11-l01-08'];
+export const DEMO_ITEM_IDS = ['extra-a11-l01-07', 'extra-a11-l01-06', 'extra-a11-l01-04'];
 
 /** One short label per item, shown above the sentence. */
-export const DEMO_ITEM_LABELS = ['Formal hello', 'Spell it', 'Fix the greeting'];
+export const DEMO_ITEM_LABELS = ['Say your name in German', 'Formal hello', 'Spell it'];

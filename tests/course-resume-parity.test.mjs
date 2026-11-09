@@ -1,3 +1,4 @@
+import { courseAccessReason } from '../src/lib/levelEntitlement.js';
 // The SPA and the static site resume the same course for a learner who bought
 // more than one (src/lib/courseEntry.js courseHomeFor, its two callers).
 //
@@ -81,7 +82,7 @@ async function astroCourse(db) {
     .replace("import('../lib/supabase.js')", 'loadSupabase()');
   const links = [{ href: '/course/a1.1' }];
   const context = vm.createContext({
-    courseHomeFor, subscriptionStatus, isLevelFree, levelsForProduct,
+    courseHomeFor, subscriptionStatus, isLevelFree, levelsForProduct, courseAccessReason,
     document: { querySelectorAll: (selector) => (selector === '[data-continue-course]' ? links : []) },
     localStorage: { length: 1, key: () => 'sb-project-auth-token' },
     loadSupabase: async () => ({ supabase: db }),

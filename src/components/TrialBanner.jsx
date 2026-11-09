@@ -88,7 +88,7 @@ const TrialBanner = () => {
         <div className="flex items-center gap-3 flex-shrink-0">
           <Button href="/pricing/" size="sm" className="whitespace-nowrap">
             <Zap className="w-3 h-3" aria-hidden="true" />
-            Upgrade to Pro
+            Upgrade to AI Practice
           </Button>
           <button
             onClick={handleDismiss}

@@ -4,13 +4,13 @@
 // titled every row with paid access "Active Subscription" and named the plan
 // with one test, plan_type 'yearly' or else "Monthly Plan". A course purchase
 // writes a plan_type 'course' row (lemonsqueezy-webhook.mjs handleCourseOrder):
-// Pro included for a fixed window, bought once, never renewed. The card told
+// AI Practice included for a fixed window, bought once, never renewed. The card told
 // that buyer they held a monthly subscription.
 //
 // The rule, not a list of rows:
 //   1. One decision, src/lib/planStatus.js planStatusCopy(), names the row.
 //      It names a billing cadence only for a row that carries one (monthly,
-//      yearly: the PLANS in src/data/pricing.js), calls a course row Pro
+//      yearly: the PLANS in src/data/pricing.js), calls a course row AI Practice
 //      included with the course, and names no cadence for a value it does not
 //      know.
 //   2. The page renders that decision and types no plan label of its own.
@@ -54,14 +54,14 @@ const MONTHLY = { plan_type: 'monthly', status: 'active', lemonsqueezy_subscript
 const YEARLY = { plan_type: 'yearly', status: 'active', lemonsqueezy_subscription_id: '2468532' };
 const COURSE_ROW = { plan_type: 'course', status: 'active', lemonsqueezy_order_id: '9001' };
 
-test('a course row is called Pro included with the course, never a subscription or a cadence', async () => {
+test('a course row is called AI Practice included with the course, never a subscription or a cadence', async () => {
   const { planStatusCopy } = await loadLib();
   for (const isGerman of [false, true]) {
     const { title, plan } = planStatusCopy(COURSE_ROW, isGerman);
     const text = `${title} ${plan}`;
     assert.doesNotMatch(text, CADENCE_WORD, `course row names a cadence (isGerman=${isGerman}): ${text}`);
     assert.doesNotMatch(text, SUBSCRIPTION_WORD, `course row is called a subscription (isGerman=${isGerman}): ${text}`);
-    assert.match(title, /\bPro\b/, 'the title says what the row grants');
+    assert.match(title, /AI Practice/, 'the title says what the row grants');
     assert.match(plan, isGerman ? /Kurs/ : /course/, 'the plan line says where it came from');
   }
 });

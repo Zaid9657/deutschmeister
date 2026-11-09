@@ -21,8 +21,8 @@ import {
   COURSES as EXAM_COURSES, eur, productKeyForLevel,
 } from './pricing.js';
 import {
-  LEVELS, LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_WRITING_EVALUATIONS_PER_MONTH,
-  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, READING_LESSON_COUNTS_BY_LEVEL, UNLIMITED_CONTENT_LINE, PLACEMENT_TEST_MINUTES,
+  LEVELS, LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH,
+  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, READING_LESSON_COUNTS_BY_LEVEL, PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 import { COURSE_CONTENTS, GUIDED_PLANS, LEVEL_OUTCOME_EN, levelToSlug } from './courseContents.js';
 
@@ -71,7 +71,7 @@ export const TICKET_STATIONS = STATIONS.filter((s) => s.status === 'ticket');
 /** Short status line under a station's code — what it costs and how. */
 export const stationStatusLine = (station) => {
   if (station.status === 'free') return 'Free · no account';
-  if (station.status === 'building') return 'Im Bau · coming soon';
+  if (station.status === 'building') return 'Coming next';
   return `${station.priceLabel} once · yours to keep`;
 };
 
@@ -102,14 +102,14 @@ export const ticketLines = (level) => {
     },
     {
       key: 'pro',
-      title: `${COURSE_PRO_MONTHS} months of Pro on board`,
-      body: `Every level opens while it runs, with ${PRO_SPEAKING_SESSIONS_PER_MONTH} AI speaking sessions and ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing corrections a month and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day.`,
+      title: `${COURSE_PRO_MONTHS} months of AI Practice on board`,
+      body: `AI speaking practice, ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing feedbacks a month and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day.`,
       removes: 'practising speaking and writing with no one to correct you.',
     },
     {
       key: 'terms',
       title: 'One payment. No subscription.',
-      body: `Nothing renews and nothing is charged again. When the ${COURSE_PRO_MONTHS} months end, ${s.code} stays yours and the AI tools return to the free allowance — unless you choose Pro.`,
+      body: `Nothing renews and nothing is charged again. When the ${COURSE_PRO_MONTHS} months end, ${s.code} stays yours and the AI tools return to the free allowance — unless you choose AI Practice.`,
       removes: 'paying every month for a level you finish once.',
     },
     {
@@ -121,23 +121,22 @@ export const ticketLines = (level) => {
   ];
 };
 
-/** Pro, framed against the ticket: rent the whole line instead of owning one stop. */
+/** AI Practice, framed against the ticket: optional practice alongside a course. */
 export const PRO_OFFER = {
   monthly: PLANS.monthly,
   yearly: PLANS.yearly,
   lines: [
-    `${UNLIMITED_CONTENT_LINE}, while you pay`,
-    `${PRO_SPEAKING_SESSIONS_PER_MONTH} AI speaking sessions a month`,
-    `${PRO_WRITING_EVALUATIONS_PER_MONTH} writing corrections a month`,
+    'Optional add-on · course access sold separately',
+    `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month`,
+    'AI speaking practice',
     `${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day`,
-    'The timed practice exams',
     'Cancel anytime in the billing portal',
   ],
   monthlyLabel: `${eur(MONTHLY_PRICE_EUR)} a month`,
 };
 
-/** A one-line, derived comparison the ticket may carry: Pro alone, per month. */
-export const proAloneLine = () => `For comparison: Pro on its own is ${eur(MONTHLY_PRICE_EUR)} a month.`;
+/** A one-line, derived comparison the ticket may carry: AI Practice alone, per month. */
+export const proAloneLine = () => `For comparison: AI Practice on its own is ${eur(MONTHLY_PRICE_EUR)} a month.`;
 
 /** The separate telc B1 exam course (its own page). */
 export const EXAM_COURSE = EXAM_COURSES.telc_b1_komplett;
@@ -164,13 +163,13 @@ export const FIT_CHOICES = [
     id: 'a12-done',
     label: 'I can talk about my day',
     detail: LEVEL_OUTCOME_EN['a1.2'],
-    level: 'a2.1',
+    level: null,
   },
   {
     id: 'a21-done',
     label: 'I handle everyday errands',
     detail: LEVEL_OUTCOME_EN['a2.1'],
-    level: 'a2.2',
+    level: null,
   },
   {
     id: 'b1-route',
@@ -189,10 +188,10 @@ export const FIT_CHOICES = [
  * (tests/telc-pilot-gate.test.mjs, scripts/check-built-html.mjs).
  */
 export const EXAM_ROUTE = {
-  title: 'Past A2? Ride B1 material today.',
-  body: "The B1 and B2 courses are being rebuilt to the new course standard. Until they open, Pro gives you every level's lessons, AI speaking and writing feedback and the timed practice exams; the telc B1 course is a separate programme with its own page.",
+  title: 'Looking ahead to B1 or B2?',
+  body: "The A2, B1 and B2 guided courses are coming next. Start the free A1.1 course or continue with A1.2. AI Practice is optional and does not include course access for new subscribers. The separate telc B1 package is not on sale.",
   links: [
-    { label: 'See Pro', href: '/pricing/#pro' },
+    { label: 'See AI Practice', href: '/pricing/#pro' },
     { label: 'Exam routes · DE', href: '/pruefung/', lang: 'de' },
     { label: 'telc B1 course · DE', href: '/telc-b1-komplettvorbereitung/', lang: 'de' },
   ],
@@ -213,23 +212,23 @@ export const FREE_STOP_LINES = [
 export const OFFER_FAQ = [
   {
     q: 'I don’t know my level. Where should I start?',
-    a: `Use “Where do you get on?” above: pick what you can already do. Or take the free ${PLACEMENT_TEST_MINUTES}-minute level test. You can also start the free A1.1 course and move up when the Lektionen feel easy.`,
+    a: `Start with A1.1 if you are a beginner, or take the free ${PLACEMENT_TEST_MINUTES}-minute level test. You can also start the free A1.1 course and move up when the Lektionen feel easy.`,
   },
   {
     q: 'What does buying a level give me, exactly?',
-    a: `That level for good, with its guided plan, exercises, reading, listening, vocabulary and final test, plus ${COURSE_PRO_MONTHS} months of Pro. One payment, nothing renews.`,
+    a: `That level for good, with its guided plan, exercises, reading, listening, vocabulary and final test, plus ${COURSE_PRO_MONTHS} months of AI Practice. One payment, nothing renews.`,
   },
   {
-    q: `What happens when the ${COURSE_PRO_MONTHS} months of Pro end?`,
-    a: `The level you bought stays open. The AI tools go back to the free allowance (Sentence X-Ray: ${FREE_DAILY_LIMIT} a day). You are never charged unless you choose Pro yourself.`,
+    q: `What happens when the ${COURSE_PRO_MONTHS} months of AI Practice end?`,
+    a: `The level you bought stays open. The AI tools go back to the free allowance (Sentence X-Ray: ${FREE_DAILY_LIMIT} a day). You are never charged unless you choose AI Practice yourself.`,
   },
   {
-    q: 'Should I buy a level or Pro?',
-    a: `Buy a level to own one stop of the line and work through it at your pace. Pro rents the whole line by the month: every level and the full AI allowance while you pay. A level already includes ${COURSE_PRO_MONTHS} months of Pro.`,
+    q: 'Should I buy a level or AI Practice?',
+    a: `Buy a level to keep the course and work through it at your pace. AI Practice is an optional subscription for AI writing feedback, speaking practice and Sentence X-Ray. Course access is sold separately for new subscribers. A level already includes ${COURSE_PRO_MONTHS} months of AI Practice.`,
   },
   {
     q: 'How much AI practice do I get?',
-    a: `The AI tools are metered so they stay fast: on Pro, and during a ticket’s ${COURSE_PRO_MONTHS} months, ${PRO_SPEAKING_SESSIONS_PER_MONTH} speaking sessions and ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing corrections a month and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day.`,
+    a: `The AI tools are metered so they stay fast: on AI Practice, and during a ticket’s ${COURSE_PRO_MONTHS} months, AI speaking practice, ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing feedbacks a month and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day.`,
   },
   {
     q: 'I’m nervous about speaking.',

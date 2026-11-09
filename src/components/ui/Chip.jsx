@@ -25,12 +25,6 @@ const TONES = {
 
 const KASUS_ABBR = { nominativ: 'NOM', akkusativ: 'AKK', dativ: 'DAT', genitiv: 'GEN' };
 
-const RAISED_EDGE = {
-  himbeer: 'shadow-raise-himbeer',
-  aprikose: 'shadow-raise-aprikose',
-  limette: 'shadow-raise-limette',
-};
-
 export default function Chip({
   tone = 'label',
   size = 'sm',
@@ -46,7 +40,7 @@ export default function Chip({
     size === 'sm' ? 'px-2.5 py-1 font-data text-[0.6875rem] uppercase tracking-[0.13em]' : 'px-3.5 py-1.5 text-sm',
     TONES[tone] ?? TONES.label,
     raised
-      ? `${RAISED_EDGE[tone] ?? 'shadow-raise'} transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none`
+      ? 'border border-rule transition-transform duration-feedback ease-out-strong active:translate-y-px'
       : '',
     onClick ? 'cursor-pointer' : '',
     className,

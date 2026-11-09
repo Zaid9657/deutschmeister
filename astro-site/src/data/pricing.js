@@ -74,14 +74,14 @@ export const YEARLY_SAVING_PERCENT = Math.floor(
  * One-time exam-prep courses. Same discipline as the subscription prices:
  * these are what the Lemon Squeezy checkout charges (store 309512), every
  * user-facing figure derives, and tests/claims.test.mjs bans the literals
- * from page sources. `proDays` mirrors the included Pro window the webhook
+ * from page sources. `proDays` mirrors the included AI Practice window the webhook
  * grants (netlify/functions/lemonsqueezy-webhook.mjs courseForVariant) —
  * change both together or the copy claims a window the server doesn't grant.
  */
 export const COURSE_TELC_B1_PRICE_EUR = 89;
 export const COURSE_PRO_DAYS = 90;
 
-/** The included-Pro-window claim in months — "3 Monate Pro-Zugang inklusive". */
+/** The included-AI Practice-window claim in months — "3 Monate AI Practice-Zugang inklusive". */
 export const COURSE_PRO_MONTHS = Math.floor(COURSE_PRO_DAYS / DAYS_PER_MONTH);
 
 export const COURSES = {
@@ -98,7 +98,7 @@ export const COURSES = {
  * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md),
  * re-cut per SUB-LEVEL on 2026-09-08 (owner decision, see the addendum there):
  * A1.1 stays free, every other sub-level is its own one-time, lifetime product
- * with its own price, plus the same included Pro window as the telc course.
+ * with its own price, plus the same included AI Practice window as the telc course.
  * B1 and B2 are listed but not yet buyable — they render as "Coming soon"
  * until the Course Factory has rebuilt them (Wave 7 B–D and Waves 8–10); a
  * coming-soon course has no checkout id and never opens one. The A1–B2 bundle
@@ -122,7 +122,7 @@ export const SUBLEVEL_PRICES_EUR = {
 };
 
 /** Listed, priced, not yet buyable — rendered as "Coming soon" with no checkout. */
-export const COMING_SOON_LEVELS = ['b1.1', 'b1.2', 'b2.1', 'b2.2'];
+export const COMING_SOON_LEVELS = ['a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
 
 /** Sub-levels a visitor can buy today (priced and not coming soon). */
 export const SELLABLE_LEVELS = Object.keys(SUBLEVEL_PRICES_EUR).filter((l) => !COMING_SOON_LEVELS.includes(l));
@@ -179,10 +179,10 @@ export const courseForProduct = (productKey) => LEVEL_COURSES[productKey] || LEG
 export const levelsForProduct = (productKey) => courseForProduct(productKey)?.levels || [];
 
 /**
- * A kept Pro-day grant: when a paid subscription takes the one subscriptions
+ * A kept AI Practice-day grant: when a paid subscription takes the one subscriptions
  * row, the rest of an admin grant is stored as a purchases row with this
  * product (netlify/functions/_shared/subscriptionEntitlement.mjs
- * GRANT_WINDOW_PRODUCT). It is a time-limited Pro window, opened by its
+ * GRANT_WINDOW_PRODUCT). It is a time-limited AI Practice window, opened by its
  * access_until — never a bought course.
  */
 export const GRANT_WINDOW_PRODUCT = 'pro_days';
@@ -201,8 +201,8 @@ export const bandCourseForLevel = courseForLevel;
 export const PLANS = {
   monthly: {
     key: 'monthly',
-    name: 'Pro Monthly',
-    nameDe: 'Pro Monatlich',
+    name: 'AI Practice Monthly',
+    nameDe: 'AI Practice Monatlich',
     price: MONTHLY_PRICE_EUR,
     interval: 'month',
     intervalDe: 'Monat',
@@ -210,8 +210,8 @@ export const PLANS = {
   },
   yearly: {
     key: 'yearly',
-    name: 'Pro Yearly',
-    nameDe: 'Pro Jährlich',
+    name: 'AI Practice Yearly',
+    nameDe: 'AI Practice Jährlich',
     price: YEARLY_PRICE_EUR,
     interval: 'year',
     intervalDe: 'Jahr',

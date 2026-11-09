@@ -30,7 +30,7 @@ export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/bill
  *     (lib/checkoutAccess.js hasRecurringBilling): a row that still carries a
  *     Lemon Squeezy subscription id until reconciliation clears it, with or
  *     without paid access right now. A failed renewal past its paid period, a
- *     paused plan or a legacy course row whose included Pro expired can still
+ *     paused plan or a legacy course row whose included AI Practice expired can still
  *     charge; "Upgrade" would sell them a second plan. "Manage plan" opens the
  *     portal.
  *   - 'upgrade': no paid access and no recurring billing (a trial, an ended
@@ -61,7 +61,7 @@ export function profilePlanAction(isSubscribed, subscription) {
   if (!isSubscribed) return { kind: 'upgrade', href: '/pricing/', label: 'Upgrade', hint: null };
   const support = { kind: 'support', href: `${SUPPORT_LINK.href}?topic=payment`, label: 'Contact support' };
   if (subscription?.plan_type === 'course') {
-    return { ...support, hint: 'Your Pro access comes with your course purchase and does not renew, so there is nothing to manage.' };
+    return { ...support, hint: 'Your AI Practice access comes with your course purchase and does not renew, so there is nothing to manage.' };
   }
   return { ...support, hint: 'Your plan is managed by our team.' };
 }

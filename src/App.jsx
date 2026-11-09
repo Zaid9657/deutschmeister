@@ -206,7 +206,7 @@ function Shell() {
                     <Route path="/level-test" element={<LevelTest />} />
                     {/* Course areas — one-time product entitlements, gated by
                         PurchaseGuard (purchases table), not the subscription:
-                        a bought course stays reachable after its included Pro
+                        a bought course stays reachable after its included AI Practice
                         window expires. Also in netlify.toml's SPA allow-list. */}
                     <Route
                       path="/telc-b1-kurs"
@@ -220,7 +220,7 @@ function Shell() {
                     />
                     {/* Same course-area posture, but the A1 band has no
                         standalone one-time product — the plan is included
-                        with Pro/trial or the A1 course, so this gates on
+                        with AI Practice/trial or the A1 course, so this gates on
                         LevelSubscriptionGuard's band-top-sublevel access
                         (a1.2), not PurchaseGuard. */}
                     <Route
@@ -235,7 +235,7 @@ function Shell() {
                     />
                     {/* The A2 band's twin of /start-deutsch-1-kurs: the
                         Goethe-A2 30-day exam plan (Course Factory Wave 6
-                        PR B), included with Pro/trial or the A2 course, so
+                        PR B), included with AI Practice/trial or the A2 course, so
                         gated on the band's top sublevel (a2.2). */}
                     <Route
                       path="/goethe-a2-kurs"
@@ -265,7 +265,7 @@ function Shell() {
                     />
                     {/* The A1.2-Phase 28-day plan (Course Factory Wave 3 PR D) —
                         a1.2 is NOT free, so LevelSubscriptionGuard here is the
-                        real paid gate (Pro/trial or the A1 course), the same
+                        real paid gate (AI Practice/trial or the A1 course), the same
                         one /level/a1.2 and the Abschlusstest A1.2 sit behind. */}
                     <Route
                       path="/a1-2-phase"
@@ -279,7 +279,7 @@ function Shell() {
                     />
                     {/* The A2.1-Phase 28-day plan (Course Factory Wave 4 PR D2) —
                         a2.1 is a paid level, so LevelSubscriptionGuard is the
-                        real gate (Pro/trial or the A2 course), the same one
+                        real gate (AI Practice/trial or the A2 course), the same one
                         /level/a2.1 and the Abschlusstest A2.1 sit behind. */}
                     <Route
                       path="/a2-1-phase"
@@ -452,7 +452,7 @@ function Shell() {
 
                     {/* Mock exams — timed practice tests behind the subscription
                         (part of the paid value; A1.1-free stays free elsewhere).
-                        The hub stays Pro/trial-only (SubscriptionGuard, unchanged);
+                        The hub stays AI Practice/trial-only (SubscriptionGuard, unchanged);
                         the three exam-specific routes below use
                         ExamSubscriptionGuard, which additionally admits a
                         band-course buyer for their own band's mock (gated on

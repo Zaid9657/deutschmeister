@@ -19,10 +19,10 @@ import { safeGetJSON } from '../utils/safeStorage';
 // has, in order: did it work, what do I have now (and until when), and where
 // do I start. It never celebrates before the webhook has recorded the purchase.
 //
-// The Pro window's end is the purchase row's `access_until`. Every course
+// The AI Practice window's end is the purchase row's `access_until`. Every course
 // order stores one (netlify/functions/lemonsqueezy-webhook.mjs
 // handleCourseOrder keeps the original deadline even while a subscription
-// covers Pro), so a missing date no longer means "already subscribed". The Pro
+// covers AI Practice), so a missing date no longer means "already subscribed". The AI Practice
 // line is chosen from the account's live recurring plan instead (proLineFor).
 
 // A plan that renews by itself: a Lemon Squeezy subscription row (not a course
@@ -36,7 +36,7 @@ export const renewingPlan = (subscription, now = Date.now()) => Boolean(
 );
 
 /**
- * The Pro line on a course ticket (ACC-08). A renewing plan already covers the
+ * The AI Practice line on a course ticket (ACC-08). A renewing plan already covers the
  * AI tools. "You are never charged again" is said only to a buyer with no
  * recurring billing at all: a live subscriber was told it, and a failing or
  * paused plan can still charge. The course itself never renews.
@@ -44,10 +44,10 @@ export const renewingPlan = (subscription, now = Date.now()) => Boolean(
  * @param {{ proUntil: string|null, renewing: boolean, recurringBilling: boolean }} state
  */
 export const proLineFor = ({ proUntil, renewing, recurringBilling }) => {
-  if (renewing) return 'Your Pro subscription already covers the AI tools and keeps renewing as before.';
+  if (renewing) return 'Your AI Practice subscription already covers the AI tools and keeps renewing as before.';
   const open = proUntil
     ? `AI speaking, writing feedback and every level are open until ${proUntil}.`
-    : 'AI speaking, writing feedback and every level are open for the included Pro months.';
+    : 'AI speaking, writing feedback and every level are open for the included AI Practice months.';
   return recurringBilling
     ? `${open} The course itself never renews.`
     : `${open} After that the AI tools return to the free allowance — you are never charged again.`;
@@ -74,7 +74,7 @@ const SubscriptionSuccessPage = () => {
   // A one-time course purchase lands here too. The most recent purchase, if it
   // is minutes old, is what was just bought — so the page shows that ticket
   // rather than a subscription the buyer may not have. An older purchase on
-  // the account is not "just bought" and falls through to the Pro copy.
+  // the account is not "just bought" and falls through to the AI Practice copy.
   const RECENT_MS = 30 * 60 * 1000;
   const expectedCourse = pendingProduct && !isRecurringProduct(pendingProduct);
   const latestPurchase = ownedPurchases(purchases).filter((p) => !expectedCourse || p.product_key === pendingProduct).sort(
@@ -167,15 +167,15 @@ const SubscriptionSuccessPage = () => {
   };
 
   const loading = polling && !verified;
-  const seoTitle = courseBought || telcBought ? 'Your ticket is valid' : verified ? 'Welcome to Pro' : 'Confirming your payment';
+  const seoTitle = courseBought || telcBought ? 'Your ticket is valid' : verified ? 'Welcome to AI Practice' : 'Confirming your payment';
   const stopIndex = firstLevel ? ALL_LEVELS.indexOf(firstLevel) : -1;
 
   return (
     <div className="min-h-screen bg-nacht px-4 pb-16 pt-24 font-body text-nacht-text sm:pb-20 sm:pt-28" data-ground="nacht">
       <SEO title={seoTitle} description="Your DeutschMeister purchase." path="/subscription/success" noindex />
-      <div className="mx-auto w-full max-w-xl">
+      <div className="mx-auto w-full max-w-2xl">
         {loading ? (
-          <Card raised className="p-8 text-center">
+          <Card className="p-6 text-center sm:p-8">
             <Loader2 className="mx-auto mb-4 h-14 w-14 animate-spin text-ink" aria-hidden="true" />
             <h1 className="font-sign text-[1.75rem] font-extrabold leading-tight text-ink [font-stretch:82%]">
               Confirming your payment…
@@ -186,17 +186,17 @@ const SubscriptionSuccessPage = () => {
           <>
             <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Payment confirmed</p>
             <h1 className="mt-3 font-sign text-[clamp(2.25rem,8vw,3.5rem)] font-extrabold leading-[0.95] [font-stretch:78%]">
-              {courseBought || telcBought ? 'Your ticket is valid.' : 'Welcome to Pro.'}
+              {courseBought || telcBought ? 'Your ticket is valid.' : 'Welcome to AI Practice.'}
             </h1>
 
             {/* The ticket: what was bought, what it carries, until when. */}
-            <div className="mt-8 grid overflow-hidden rounded-[1.5rem] border border-ink bg-white text-ink sm:grid-cols-[11rem_1fr]">
+            <div className="mt-8 grid overflow-hidden rounded-xl border border-rule bg-white text-ink sm:grid-cols-[11rem_1fr]">
               <div className="flex flex-col justify-between gap-4 bg-linie p-6 text-linie-ink sm:border-r-[3px] sm:border-dashed sm:border-linie-ink/30">
                 <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">
-                  {courseBought || telcBought ? 'Einzelfahrschein' : 'Pro'}
+                  {courseBought || telcBought ? 'Einzelfahrschein' : 'AI Practice'}
                 </p>
                 <p className="font-sign text-[2.75rem] font-extrabold leading-none [font-stretch:75%]">
-                  {courseBought ? courseBought.code : telcBought ? 'telc B1' : 'Pro'}
+                  {courseBought ? courseBought.code : telcBought ? 'telc B1' : 'AI Practice'}
                 </p>
                 {stopIndex >= 0 && (
                   <p className="font-data text-[0.75rem] font-bold">Stop {stopIndex + 1} of {ALL_LEVELS.length}</p>
@@ -218,7 +218,7 @@ const SubscriptionSuccessPage = () => {
                   )}
                   {(courseBought || telcBought) && (
                     <li>
-                      <strong>{COURSE_PRO_MONTHS} months of Pro on board</strong>
+                      <strong>{COURSE_PRO_MONTHS} months of AI Practice on board</strong>
                       <span className="block text-graphite">{proLine}</span>
                     </li>
                   )}
@@ -250,7 +250,7 @@ const SubscriptionSuccessPage = () => {
             </div>
           </>
         ) : (
-          <Card raised className="p-8 text-center">
+          <Card className="p-6 text-center sm:p-8">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-accent-aprikose-wash">
               <AlertCircle className="h-12 w-12 text-accent-aprikose-ink" aria-hidden="true" />
             </div>

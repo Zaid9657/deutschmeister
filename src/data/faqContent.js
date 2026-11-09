@@ -17,6 +17,7 @@ import {
   TRIAL_DAYS,
   FREE_LEVEL_LABEL,
   GRAMMAR_TOPIC_COUNT,
+  FOUNDER_LINE_EN,
 } from './marketing.js';
 import { EXAM_TRACKS } from './examTracks.js';
 import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
@@ -28,7 +29,7 @@ import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
  * that lastmod is older than this date. Bumping it is part of any FAQ copy
  * change; the check needs no repository history, so a shallow CI clone runs it.
  */
-export const FAQ_COPY_UPDATED = '2026-10-25';
+export const FAQ_COPY_UPDATED = '2026-11-08';
 
 // The exams the product prepares for, from the exam-track registry — the only
 // list (2026-10-25: the answers named TestDaF, which has no track, while the
@@ -57,7 +58,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Who is behind Deutschmeister?',
-        a: 'Deutschmeister was founded by Zaid, a doctor in Germany who experienced the challenge of learning a new language while everyday life continued. A team of doctors in Germany now develops the platform further.',
+        a: FOUNDER_LINE_EN,
       },
       {
         q: 'Which levels are covered?',
@@ -105,17 +106,17 @@ export const FAQ_CATEGORIES = [
     items: [
       {
         q: 'How much does Deutschmeister cost?',
-        a: `Monthly Pro costs ${deEur(PLANS.monthly.price)} per month. Annual Pro costs ${deEur(PLANS.yearly.price)} per year, equivalent to ${deEur(PLANS.yearly.asMonthly)} per month or less than ${deEur(PLANS.yearly.perDay)} per day.`,
+        a: `Monthly AI Practice costs ${deEur(PLANS.monthly.price)} per month. Annual AI Practice costs ${deEur(PLANS.yearly.price)} per year, equivalent to ${deEur(PLANS.yearly.asMonthly)} per month or less than ${deEur(PLANS.yearly.perDay)} per day.`,
       },
       {
         q: 'Is there a free version?',
         // The speaking sessions belong to the account trial (speaking needs a
         // signed-in user), never to the no-account tier (2026-10-25).
-        a: `Yes. ${FREE_LEVEL_LABEL} is free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day Pro trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
+        a: `Yes. ${FREE_LEVEL_LABEL} is free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day AI Practice trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
       },
       {
         q: 'Can I cancel at any time?',
-        a: `Yes. You cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}), where you sign in with the email address you subscribed with. You keep Pro until the end of the period you have already paid for, and the subscription does not renew.`,
+        a: `Yes. You cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}), where you sign in with the email address you subscribed with. You keep AI Practice until the end of the period you have already paid for, and the subscription does not renew.`,
       },
       {
         q: 'Can I request a refund?',
@@ -144,7 +145,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Are mock exams available?',
-        a: 'Yes. Logged-in Pro or trial learners can access exam-style mock tests and review their results. We still recommend completing the latest official sample papers from the relevant exam provider.',
+        a: 'Yes. Logged-in AI Practice or trial learners can access exam-style mock tests and review their results. We still recommend completing the latest official sample papers from the relevant exam provider.',
       },
     ],
   },

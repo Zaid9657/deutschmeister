@@ -7,36 +7,30 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => readFileSync(join(root, path), 'utf8');
 
-test('desktop navigation uses grouped disclosures in both renderers', () => {
-  const spa = read('src/components/Navbar.jsx');
-  const astro = read('astro-site/src/layouts/Layout.astro');
-
-  assert.match(spa, /visibleGroups[\s\S]*?<details/);
-  assert.match(astro, /NAV_GROUPS\.map[\s\S]*?<details/);
-  // The free first stop's key, same words as the Astro bar (copy.md CTA vocabulary).
-  assert.match(spa, /Start A1\.1 free/);
-  assert.match(astro, /Start A1\.1 free/);
-  assert.match(spa, /Start \$\{TRIAL_DAYS\}-day trial/);
-  assert.match(astro, /Start \{TRIAL_DAYS\}-day trial/);
+test('desktop navigation uses accessible native disclosures in both renderers', () => {
+  const spa = read('src/components/Navbar.jsx'); const astro = read('astro-site/src/layouts/Layout.astro');
+  for (const source of [spa, astro]) {
+    assert.match(source, /c4-nav-dropdown/); assert.match(source, /<summary>/);
+    assert.match(source, /Start A1\.1 free/); assert.match(source, /NAV_GROUPS/);
+  }
+  assert.match(spa, /aria-expanded=\{isOpen\}/); assert.match(astro, /<details class="c4-mobile-menu"/);
 });
 
-test('pricing separates no-account exploration, account trial, and paid Pro', () => {
+test('pricing separates the no-account course, account trial and paid AI Practice', () => {
   const pricing = read('astro-site/src/pages/pricing.astro');
-
-  assert.match(pricing, />Explore</);
-  assert.match(pricing, />Free trial</);
-  assert.match(pricing, />Pro</);
-  assert.match(pricing, /Forever · no account/);
-  assert.match(pricing, /days · account required/);
-  assert.match(pricing, /No signup · no card/);
-  assert.match(pricing, /Starts \{TRIAL_DAYS\}-day trial · no card/);
-  assert.doesNotMatch(pricing, /row\.free/);
+  assert.match(pricing, /A1.1 free, no account needed/);
+  assert.match(pricing, /href="\/course\/a1\.1"/);
+  assert.match(pricing, /course access sold separately/);
+  assert.match(pricing, /\{proCta\(\)\.label\}/); assert.match(pricing, /\{proCta\(\)\.note\}/);
+  const cta = read('astro-site/src/lib/proCta.js');
+  assert.match(cta, /Start \$\{TRIAL_DAYS\}-day AI Practice trial/);
+  assert.match(cta, /No card · no automatic charge/);
 });
 
 test('signup describes the trial without presenting A1.1 as account-gated', () => {
   const signup = read('src/pages/SignupPage.jsx');
 
-  assert.match(signup, /Start your \{TRIAL_DAYS\}-day Pro trial/);
+  assert.match(signup, /Start your \{TRIAL_DAYS\}-day AI Practice trial/);
   // The way out opens the free course itself (tests/free-door.test.mjs).
   assert.match(signup, /Start the \{FREE_LEVEL_LABEL\} course without an account/);
   assert.match(signup, /no automatic charge when the trial ends/);

@@ -12,7 +12,8 @@ const SURFACES = [
   'src/data/offers.js',
   'astro-site/src/data/offers.js',
   'astro-site/src/pages/courses/[level].astro',
-  'astro-site/src/components/linie/Progression.astro',
+  'astro-site/src/components/concept/Offers.astro',
+  'astro-site/src/components/concept/PurchaseDoor.astro',
   'src/pages/SubscriptionSuccessPage.jsx',
 ];
 

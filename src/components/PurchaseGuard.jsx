@@ -7,7 +7,7 @@ import { trackPaywallShown } from '../lib/funnelTracking';
 
 // SubscriptionGuard's sibling for one-time product entitlements: same loading
 // and redirect skeleton, but the gate is hasProduct(productKey) — a purchased
-// course stays reachable for life even after its included Pro window expires.
+// course stays reachable for life even after its included AI Practice window expires.
 const PurchaseGuard = ({ productKey, redirectTo = '/subscription', children }) => {
   const { user, loading: authLoading } = useAuth();
   const { hasProduct, loading: subLoading } = useSubscription();

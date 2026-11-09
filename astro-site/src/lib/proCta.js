@@ -1,9 +1,9 @@
-// The /pricing/ Pro button: its label names what the click does
+// The /pricing/ AI Practice button: its label names what the click does
 // (conversion agent, 2026-09-30).
 //
-// WHY THIS FILE EXISTS. From 2026-09-14 the button read "Start 7-day Pro trial"
+// WHY THIS FILE EXISTS. From 2026-09-14 the button read "Start 7-day AI Practice trial"
 // for every visitor, and no click on it started a trial:
-//   - signed in, it opened the Lemon Squeezy Pro checkout. That checkout charges
+//   - signed in, it opened the Lemon Squeezy AI Practice checkout. That checkout charges
 //     at once: all 12 `subscription_created` webhooks on record (2026-03-10 to
 //     2026-08-27) arrived with status "active" and no trial_ends_at;
 //   - signed out, it stored a `monthly` buy intent and sent the visitor to
@@ -14,9 +14,9 @@
 // highest.
 //
 // THE RULE:
-//   signed out -> "Start 7-day Pro trial" -> /signup, with NO buy intent. The
+//   signed out -> "Start 7-day AI Practice trial" -> /signup, with NO buy intent. The
 //                 account trial is the trial, and nothing is charged.
-//   signed in  -> "Go Pro — €9.99/month" (or the yearly price) -> the checkout.
+//   signed in  -> "Add AI Practice — €9.99/month" (or the yearly price) -> the checkout.
 // Figures derive from pricing.js and marketing.js, never retyped
 // (tests/claims.test.mjs). Pure, so tests/pro-cta.test.mjs pins it under
 // node --test; the page renders it at build time and its script re-renders it
@@ -30,7 +30,7 @@ import { BILLING_PORTAL_URL } from '../../../src/lib/billingPortal.js';
 export const SIGNUP_URL = 'https://deutsch-meister.de/signup';
 
 /**
- * What the Pro button says and does.
+ * What the AI Practice button says and does.
  * @param {{ signedIn?: boolean, cycle?: 'monthly'|'yearly', subscription?: object|null }} [p]
  * @returns {{ action: 'signup'|'checkout'|'portal', label: string, note: string, href: string|null, plan: string|null }}
  */
@@ -38,7 +38,7 @@ export function proCta({ signedIn = false, cycle = 'monthly', subscription = nul
   if (!signedIn) {
     return {
       action: 'signup',
-      label: `Start ${TRIAL_DAYS}-day Pro trial`,
+      label: `Start ${TRIAL_DAYS}-day AI Practice trial`,
       note: 'No card · no automatic charge',
       href: SIGNUP_URL,
       plan: null,
@@ -56,7 +56,7 @@ export function proCta({ signedIn = false, cycle = 'monthly', subscription = nul
   const plan = PLANS[cycle] || PLANS.monthly;
   return {
     action: 'checkout',
-    label: `Go Pro — ${eur(plan.price)}/${plan.interval}`,
+    label: `Add AI Practice — ${eur(plan.price)}/${plan.interval}`,
     note: plan.key === 'yearly'
       ? `${eur(plan.asMonthly)} a month, billed yearly · cancel anytime`
       : `${eur(plan.perDay)} a day · cancel anytime`,

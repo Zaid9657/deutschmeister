@@ -19,7 +19,7 @@ import { chromeFor } from '../lib/chrome.js';
 //     level when it has a course they may open, else the free /course/a1.1);
 //   * Home → /dashboard only when the subscription/trial opens it; a free
 //     learner's Home IS the course, so for them the two tabs collapse into one
-//     (five tabs), and a Pro/trial learner gets six.
+//     (five tabs), and a AI Practice/trial learner gets six.
 //
 // v3 "Die Linie": the bar stands on the night ground, like the footer it sits
 // under and the Astro menu sheet. The current tab is the lit stop: a türkis bar
@@ -74,7 +74,7 @@ const BottomNav = () => {
   const tabs = buildTabs({ hasAccess, courseHome: courseHomeFor({ level: profile?.current_level, hasLevelAccess, purchases }) });
 
   // chromeFor 'full' is exactly the routes App.jsx gives the (night) Footer.
-  const spacer = chromeFor(pathname) === 'full' ? 'bg-nacht' : '';
+  const spacer = chromeFor(pathname) === 'full' ? 'bg-footer' : '';
 
   return (
     <>
@@ -82,8 +82,8 @@ const BottomNav = () => {
     <div className={`h-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden ${spacer}`} aria-hidden="true" />
     <nav
       ref={navRef}
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-nacht-rule bg-nacht/95 pb-[env(safe-area-inset-bottom)] text-nacht-muted backdrop-blur-md"
-      data-ground="nacht"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-rule bg-white/95 pb-[env(safe-area-inset-bottom)] text-graphite backdrop-blur-md"
+      data-ground="paper"
       aria-label="App navigation"
     >
       <div className={tabs.length === 6 ? 'grid grid-cols-6' : 'grid grid-cols-5'}>

@@ -104,13 +104,13 @@ test('coming-soon levels, the free level and owned levels fall back to Pro', () 
   const free = speakingLimitOffer({ profileLevel: 'A1.1', checkoutIdFor: allConfigured });
   assert.deepEqual([free.kind, free.reason, free.course], ['pro', 'free_level', null]);
 
-  const owned = speakingLimitOffer({ profileLevel: 'A2.1', checkoutIdFor: allConfigured, ownedLevels: ['a2.1'] });
+  const owned = speakingLimitOffer({ profileLevel: 'A1.2', checkoutIdFor: allConfigured, ownedLevels: ['a1.2'] });
   assert.deepEqual([owned.kind, owned.reason], ['pro', 'owned']);
   // A retired band purchase (course_a2) owns both halves; the caller expands it.
   const band = speakingLimitOffer({ profileLevel: 'A2.2', checkoutIdFor: allConfigured, ownedLevels: ['a2.1', 'a2.2'] });
-  assert.equal(band.reason, 'owned');
+  assert.equal(band.reason, 'coming_soon');
   // Owning a different level does not hide this one.
-  const other = speakingLimitOffer({ profileLevel: 'A2.2', checkoutIdFor: allConfigured, ownedLevels: ['a1.2'] });
+  const other = speakingLimitOffer({ profileLevel: 'A1.2', checkoutIdFor: allConfigured, ownedLevels: ['a2.2'] });
   assert.equal(other.kind, 'course');
 
   const none = speakingLimitOffer({ checkoutIdFor: allConfigured });

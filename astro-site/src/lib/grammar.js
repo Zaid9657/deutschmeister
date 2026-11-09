@@ -102,14 +102,14 @@ async function withFallback(label, fromNetwork, fromCache) {
 const byOrder = (key) => (a, b) => (a[key] ?? 0) - (b[key] ?? 0);
 
 export const LEVEL_META = {
-  'a1.1': { label: 'A1.1', name: 'Sunrise Warmth I' },
-  'a1.2': { label: 'A1.2', name: 'Sunrise Warmth II'   },
-  'a2.1': { label: 'A2.1', name: 'Forest Calm I' },
-  'a2.2': { label: 'A2.2', name: 'Forest Calm II' },
-  'b1.1': { label: 'B1.1', name: 'Ocean Depth I'   },
-  'b1.2': { label: 'B1.2', name: 'Ocean Depth II'},
-  'b2.1': { label: 'B2.1', name: 'Twilight Elegance I'},
-  'b2.2': { label: 'B2.2', name: 'Twilight Elegance II'},
+  'a1.1': { label: 'A1.1', name: 'First words and sentences' },
+  'a1.2': { label: 'A1.2', name: 'Everyday exchanges'   },
+  'a2.1': { label: 'A2.1', name: 'Connect your ideas' },
+  'a2.2': { label: 'A2.2', name: 'Talk about experience' },
+  'b1.1': { label: 'B1.1', name: 'Independent everyday German'   },
+  'b1.2': { label: 'B1.2', name: 'Explain and discuss'},
+  'b2.1': { label: 'B2.1', name: 'Develop an argument'},
+  'b2.2': { label: 'B2.2', name: 'Express nuance'},
 };
 
 // Supabase stores sub_level as "A1.1" (uppercase). All our routing and

@@ -267,6 +267,6 @@ export const dtzBriefVermieter = {
 
   cta: {
     heading: 'DTZ-Briefe und Modelltest üben',
-    body: 'Mit einem kostenlosen Konto üben Sie Briefe mit Leitpunkten und, solange Pro läuft, den zeitgesteuerten DTZ-Modelltest. Der Einstufungstest zeigt Ihnen vorher, wo Sie stehen.',
+    body: 'Mit einem kostenlosen Konto üben Sie Briefe mit Leitpunkten und, solange AI Practice läuft, den zeitgesteuerten DTZ-Modelltest. Der Einstufungstest zeigt Ihnen vorher, wo Sie stehen.',
   },
 };

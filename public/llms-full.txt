@@ -16,10 +16,10 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 
 - **A1.1: free forever, no signup required** — the 12-lesson guided A1.1 course and all 12 A1.1 grammar topics
 - **Anonymous visitors:** 1 Sentence X-Ray analysis per day
-- **Free account:** 7-day Pro trial; 2 AI speaking sessions total; 10 Sentence X-Ray analyses/day
-- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from €40.00 (A1.2 €40.00, A2.1 €50.00, A2.2 €50.00), with 3 months of Pro included. B1.1, B1.2, B2.1, B2.2 are listed as coming soon and cannot be bought yet.
+- **Free account:** 7-day AI Practice trial; 2 AI speaking sessions total; 10 Sentence X-Ray analyses/day
+- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from €40.00 (A1.2 €40.00), with 3 months of AI Practice included. A2.1, A2.2, B1.1, B1.2, B2.1, B2.2 are listed as coming soon and cannot be bought yet.
 - **telc B1 Komplettvorbereitung:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: https://deutsch-meister.de/telc-b1-komplettvorbereitung/
-- **Pro — €9.99/month or €79.99/year:** all 8 levels, 30 AI speaking sessions/month, 50 Sentence X-Ray analyses/day. Cancel anytime.
+- **AI Practice — €9.99/month or €79.99/year:** 20 AI writing feedbacks/month, AI speaking practice, 50 Sentence X-Ray analyses/day. Course access sold separately for new subscribers; active subscriptions started before 10 November 2026 retain course access. Cancel anytime.
 - Payments handled by Lemon Squeezy as merchant of record.
 
 ## Features
@@ -32,7 +32,7 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 
 ### A1.2 Course (one-time purchase)
 - 12 situational lessons with 4 checkpoints and a final test (Abschlusstest A1.2)
-- €40.00 once, no subscription, with 3 months of Pro included; the level stays yours
+- €40.00 once, no subscription, with 3 months of AI Practice included; the level stays yours
 - Course page: https://deutsch-meister.de/courses/a1-2/ · in the app: https://deutsch-meister.de/course/a1.2
 
 ### Grammar (84 topics)
@@ -47,7 +47,7 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 - Turn-based spoken conversation with an AI German teacher, available 24/7
 - Adapts to the learner's CEFR level; mission-based scenarios
 - Feedback scored across 5 categories (intelligibility, grammar, vocabulary, fluency, comprehension)
-- 2 free sessions on a free account; 30 sessions/month with Pro; the included sessions last 5 minutes
+- 2 free sessions on a free account; AI speaking practice with AI Practice
 - URL: https://deutsch-meister.de/speaking/
 
 ### CEFR Level Test (free)
@@ -59,7 +59,7 @@ vocabulary, reading lessons, and a free sentence analyzer (Sentence X-Ray).
 - Paste any German sentence; returns a word-by-word grammatical breakdown
 - Colour-coded cases: nominative, accusative, dative, genitive
 - Explains WHY each word takes its case or position, not just labels
-- Limits: 1/day anonymous, 10/day on a free trial account, 50/day with Pro
+- Limits: 1/day anonymous, 10/day on a free trial account, 50/day with AI Practice
 - URL: https://deutsch-meister.de/analyze/
 
 ### Listening

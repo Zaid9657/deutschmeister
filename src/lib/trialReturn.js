@@ -33,7 +33,7 @@ export function returnOffer(level, levelCourses = {}) {
   if (course && !course.comingSoon && levelCourses[course.key]?.variantId) {
     return { label: `${course.nameDe} · ${deEur(course.price)} einmalig`, href: '/subscription#return-offers' };
   }
-  return { label: `Pro · ${deEur(PLANS.monthly.price)} / ${PLANS.monthly.intervalDe}`, href: '/subscription#return-offers' };
+  return { label: `AI Practice · ${deEur(PLANS.monthly.price)} / ${PLANS.monthly.intervalDe}`, href: '/subscription#return-offers' };
 }
 
 export const freeReturnOption = { href: FREE_COURSE_HREF, label: `${FREE_LEVEL_LABEL} bleibt kostenlos` };

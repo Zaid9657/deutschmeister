@@ -12,8 +12,8 @@ export default function Tilt({ className = '', overflowVisible = true, children,
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current;
-    if (!el) return undefined;
-    const inst = Atropos({ el, activeOffset: 30, rotateXMax: 9, rotateYMax: 9, shadow: false, highlight: true, duration: 250 });
+    if (!el || !window.matchMedia('(hover: hover) and (pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const inst = Atropos({ el, activeOffset: 30, rotateXMax: 9, rotateYMax: 9, shadow: false, highlight: true, duration: 220 });
     return () => inst.destroy();
   }, []);
   return (

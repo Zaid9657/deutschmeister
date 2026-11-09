@@ -1,0 +1,11 @@
+---
+import Icon from './Icon.astro';
+const { course = false } = Astro.props;
+---
+<div class="c4-benefits" aria-label="How learning works">
+  <div class="c4-wrap c4-benefit-grid">
+    <div><Icon name="target" /><p><strong>Real-life situations</strong><span>{course ? 'Appointments, housing, shopping, and more' : 'Cafe, work, doctor, and more'}</span></p></div>
+    <div><Icon name="layers" /><p><strong>Structured courses</strong><span>{course ? 'Build on A1.1, one lesson at a time' : 'A clear path from A1.1 to B2.2'}</span></p></div>
+    <div><Icon name="sparkles" /><p><strong>Practice that works</strong><span>Interactive lessons and AI conversation</span></p></div>
+  </div>
+</div>

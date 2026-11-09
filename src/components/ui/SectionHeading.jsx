@@ -29,8 +29,8 @@ export default function SectionHeading({
   const Part = size === 'page' ? Shown : Reveal;
   const titleClass =
     size === 'page'
-      ? 'font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]'
-      : 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]';
+      ? 'font-display text-dm-hero sm:text-dm-hero-wide'
+      : 'font-display text-dm-section sm:text-dm-section-wide';
   return (
     <div className={`${align === 'center' ? 'text-center' : ''} ${className}`.trim()}>
       {eyebrow && (

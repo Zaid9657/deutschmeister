@@ -15,7 +15,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 // same table, same service, no migration). Structurally identical to
 // GoetheA2KursPage.jsx (the A1 twin); see TelcB1KursPage.jsx for the
 // rationale. Reached via LevelSubscriptionGuard (level="a2.2") rather than
-// PurchaseGuard — this plan belongs to the A2 band (Pro/trial OR the A2
+// PurchaseGuard — this plan belongs to the A2 band (AI Practice/trial OR the A2
 // course), not a standalone one-time product. The header CTA points at the
 // Goethe-A2 Übungstest the plan builds toward (gewertet on Tag 26 and Tag 30).
 
@@ -158,7 +158,7 @@ const GoetheA2KursPage = () => {
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
             Arbeite in deinem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
-            Dein Pro-Zugang bzw. dein A2-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
+            Dein AI Practice-Zugang bzw. dein A2-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
             <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">deiner Abo-Seite</Link>.
           </p>
         </footer>

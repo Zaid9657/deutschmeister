@@ -4,7 +4,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import { eur, PLANS } from '../../data/pricing.js';
-import { FREE_LEVEL_LABEL, LEVEL_COUNT, SPEAKING_LINE, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
+import { FREE_LEVEL_LABEL, SPEAKING_LINE, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
 import { trackPaywallShown } from '../../lib/funnelTracking';
 
 // The offer at the free-speaking limit (docs/SCORECARD.md work order #7b).
@@ -19,27 +19,27 @@ import { trackPaywallShown } from '../../lib/funnelTracking';
 const HEADLINES = {
   sessions_used: 'Your free speaking sessions are used up',
   trial_over: 'Your free trial has ended',
-  mission_locked: 'This mission is part of Pro',
+  mission_locked: 'This mission belongs to a level course',
 };
 
 const LEADS = {
   sessions_used: `A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions.`,
-  trial_over: 'AI speaking practice continues with Pro.',
-  mission_locked: 'Guided missions come with Pro.',
+  trial_over: 'AI speaking practice continues with AI Practice.',
+  mission_locked: 'Guided missions require access to their level course. AI Practice adds AI tools separately.',
 };
 
 const levelCode = (level) => String(level || '').toUpperCase();
 
-/** Why the offer is Pro, when the learner's level has no course to buy. */
+/** Why the offer is AI Practice, when the learner's level has no course to buy. */
 function fallbackNote(offer) {
   const code = levelCode(offer.level);
   switch (offer.reason) {
     case 'coming_soon':
-      return `The ${code} course is coming soon. Pro covers ${code} today.`;
+      return `The ${code} course is coming next. AI Practice is an optional add-on without course access.`;
     case 'free_level':
-      return `Your ${FREE_LEVEL_LABEL} lessons stay free. Pro adds AI speaking practice.`;
+      return `Your ${FREE_LEVEL_LABEL} lessons stay free. AI Practice adds AI speaking practice.`;
     case 'owned':
-      return `Your ${code} course stays yours. Pro adds AI speaking practice.`;
+      return `Your ${code} course stays yours. AI Practice adds AI speaking practice.`;
     default:
       return null;
   }
@@ -78,14 +78,14 @@ export default function SpeakingLimitOffer({ offer, moment = 'sessions_used' }) 
             </div>
             <ul className="mt-2 space-y-1 text-sm text-graphite">
               <li>One payment of {eur(course.price)}, and the course is yours to keep</li>
-              <li>{course.proMonths} months of Pro included, with {SPEAKING_LINE}</li>
+              <li>{course.proMonths} months of AI Practice included, with {SPEAKING_LINE}</li>
             </ul>
           </Card>
           <Button to={offer.courseHref} size="lg" shimmer className="mt-4 w-full text-center">
             Get the {course.code} course — {eur(course.price)} once
           </Button>
           <Button to={offer.pro.href} variant="secondary" className="mt-3 w-full text-center">
-            <Crown className="w-4 h-4" /> Or go Pro — {proPrice}
+            <Crown className="w-4 h-4" /> Or add AI Practice — {proPrice}
           </Button>
         </>
       ) : (
@@ -93,10 +93,10 @@ export default function SpeakingLimitOffer({ offer, moment = 'sessions_used' }) 
           {note && <p className="mt-3 text-sm leading-relaxed text-ink">{note}</p>}
           <ul className="mt-3 space-y-1 text-sm text-graphite">
             <li>{SPEAKING_LINE}</li>
-            <li>All {LEVEL_COUNT} levels, A1.1 to B2.2</li>
+            <li>Course access sold separately for new subscribers</li>
           </ul>
           <Button to={offer.pro.href} size="lg" shimmer className="mt-4 w-full text-center">
-            <Crown className="w-5 h-5" /> Go Pro — {proPrice}
+            <Crown className="w-5 h-5" /> Add AI Practice — {proPrice}
           </Button>
           <Button to={offer.pro.plansHref} variant="secondary" className="mt-3 w-full text-center">
             See all plans

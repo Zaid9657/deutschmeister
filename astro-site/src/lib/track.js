@@ -54,12 +54,11 @@ function signedIn() {
  */
 export function track(name, props = {}) {
   if (typeof window === 'undefined' || !isFunnelEvent(name)) return false;
+  if (!consented() || typeof window.gtag !== 'function') return false;
   if (EVENTS[name].once) {
     const key = onceKey(name, props);
     if (sent.has(key)) return false;
-    sent.add(key);
   }
-  if (!consented() || typeof window.gtag !== 'function') return false;
   const payload = sanitizeProps({
     ...attributionProps(),
     entry_page: window.location.pathname,
@@ -68,6 +67,7 @@ export function track(name, props = {}) {
   });
   try {
     window.gtag('event', name, payload);
+    if (EVENTS[name].once) sent.add(onceKey(name, props));
     return true;
   } catch {
     return false;

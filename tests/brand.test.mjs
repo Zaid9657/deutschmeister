@@ -26,13 +26,13 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { color } from '../src/data/design-tokens.js';
+import { emailBrand as color } from '../src/data/design-tokens.js';
 import { BRAND } from '../netlify/functions/_shared/brand.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 
-test('the email brand copy matches the design tokens', () => {
+test('the unchanged email brand matches its frozen transactional tokens', () => {
   assert.equal(BRAND.siegel, color.siegel);
   assert.equal(BRAND.siegelLift, color.siegelLift);
   assert.equal(BRAND.siegelWash, color.siegelWash);

@@ -12,7 +12,7 @@ export const checkoutProductKey = (key) =>
   [PLANS, COURSES, LEVEL_COURSES, LEGACY_LEVEL_COURSES].some((products) => owns(products, key)) ? key : null;
 
 // Ownership is permanent, including retired band purchases and the all-level
-// bundle. A live trial or Pro period is not ownership of a course.
+// bundle. A live trial or AI Practice period is not ownership of a course.
 export const ownsCheckoutProduct = (key, purchases = []) => {
   const active = purchases.filter((p) => !p.status || p.status === 'active');
   if (active.some((p) => p.product_key === key)) return true;

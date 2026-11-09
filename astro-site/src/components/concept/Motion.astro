@@ -1,0 +1,30 @@
+<script>
+  import { motionLinie } from '../../data/design-tokens.js';
+  // Every element starts readable. Web Animations are enhancements only and
+  // reduced motion cancels active animations, including after an OS change.
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const animations = new Set();
+  const play = (element, frames, options = {}) => {
+    if (media.matches || !element.animate) return;
+    const animation = element.animate(frames, { duration: parseInt(motionLinie.duration.section), easing: motionLinie.ease.out, ...options });
+    animations.add(animation);
+    animation.finished.catch(() => {}).finally(() => animations.delete(animation));
+  };
+  const observer = new IntersectionObserver((entries) => {
+    entries.filter((entry) => entry.isIntersecting).forEach((entry, i) => {
+      if (entry.target.matches('[data-c4-route]')) {
+        play(entry.target.querySelector('.c4-route-track span'), [{ transform: 'scaleX(0)', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }], { duration: parseInt(motionLinie.duration.signature) });
+      } else play(entry.target, [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'translateY(0)' }], { delay: Math.min(i, 4) * parseInt(motionLinie.stagger) });
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('[data-c4-reveal], [data-c4-route]').forEach((el) => observer.observe(el));
+  const hero = document.querySelector('[data-c4-parallax]');
+  let frame = 0;
+  const update = () => {
+    frame = 0;
+    if (hero) hero.style.transform = media.matches ? 'none' : `translateY(${Math.min(window.scrollY * 0.045, 20)}px)`;
+  };
+  window.addEventListener('scroll', () => { if (!frame && !media.matches) frame = requestAnimationFrame(update); }, { passive: true });
+  media.addEventListener('change', () => { animations.forEach((a) => a.cancel()); update(); });
+</script>

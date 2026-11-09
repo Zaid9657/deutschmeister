@@ -41,3 +41,7 @@
 ::selection {
   @apply bg-siegel-wash text-ink;
 }
+
+/* Public layout adapters share the same gutters and readable measure. */
+.dm-page { max-width: 68rem; margin-inline: auto; padding-inline: 1.25rem; }
+.dm-prose { max-width: 38rem; }

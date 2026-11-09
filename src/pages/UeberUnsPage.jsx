@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, Users, BookOpen, Briefcase } from 'lucide-react';
+import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, BookOpen, Briefcase } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackAboutViewed } from '../lib/funnelTracking';
 import { seoProps } from '../data/seoRoutes.js';
@@ -9,10 +9,10 @@ import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
-import Aurora from '../components/ui/Aurora.jsx';
+import { FOUNDER_LINE_EN, GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, FREE_LEVEL_LABEL } from '../data/marketing.js';
 
 const BADGES = [
-  { icon: Stethoscope, label: 'Developed by doctors in Germany' },
+  { icon: Stethoscope, label: 'Built from experience' },
   { icon: Target, label: 'Built for serious learners' },
   { icon: ShieldCheck, label: 'Optional analytics only with consent' },
 ];
@@ -30,18 +30,15 @@ const DIFFERENTIATORS = [
   },
   {
     icon: Heart,
-    title: 'Built by people who faced the same barrier',
-    body: 'Deutschmeister is developed by a team of doctors in Germany who know what it means when language stands between you and your work or daily life.',
+    title: 'Built from experience',
+    body: FOUNDER_LINE_EN,
   },
 ];
 
 const ROADMAP = [
-  { icon: BookOpen, text: 'More levels, including C1 and beyond' },
-  // Only exams with a track (examTracks.js): TestDaF was listed here until
-  // 2026-10-25, while the FAQ and the support agent say it is not offered.
-  { icon: Target, text: 'Live exam simulations for Goethe and telc' },
-  { icon: Briefcase, text: 'Specialist modules for nursing and business German' },
-  { icon: Users, text: 'A learning community for practising with others' },
+  { icon: BookOpen, text: 'More guided courses in level order' },
+  { icon: Target, text: 'Exam preparation after each complete level' },
+  { icon: Briefcase, text: 'Clear availability information as each course is ready' },
 ];
 
 const UeberUnsPage = () => {
@@ -59,8 +56,8 @@ const UeberUnsPage = () => {
       />
 
       {/* HERO */}
-      <section className="relative pt-28 pb-20 overflow-hidden">
-        <Aurora />
+      <section className="relative pt-24 pb-10 overflow-hidden">
+
 
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h1 className="hero-line font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink mb-6 sm:text-[3rem] lg:text-[3.5rem]">
@@ -71,9 +68,13 @@ const UeberUnsPage = () => {
             className="hero-line text-[1.0625rem] leading-relaxed text-graphite max-w-2xl mx-auto mb-10 sm:text-[1.1875rem]"
             style={{ '--d': '120ms' }}
           >
-            Many language apps make learning playful but avoid the difficult parts: speaking freely, understanding grammar, and preparing for a real exam. Deutschmeister focuses on those parts.
+            {FOUNDER_LINE_EN}
           </p>
 
+          <div className="mb-6 flex flex-wrap justify-center gap-3">
+            <Button href="/course/a1.1">Start A1.1 free</Button>
+            <Button href="/courses/a1-2/" variant="secondary">Inspect the A1.2 course</Button>
+          </div>
           <div className="hero-line flex flex-wrap justify-center gap-3" style={{ '--d': '240ms' }}>
             {BADGES.map((badge) => (
               <Chip key={badge.label} tone="quiet" size="md">
@@ -85,25 +86,27 @@ const UeberUnsPage = () => {
         </div>
       </section>
 
+      <div className="mx-auto max-w-4xl px-5 pb-8">
+        <dl className="grid gap-px overflow-hidden rounded-xl border border-rule bg-rule sm:grid-cols-3" aria-label="Inspect the product">
+          <div className="bg-white p-5"><dt className="font-data text-2xl">{GRAMMAR_TOPIC_COUNT}</dt><dd className="mt-2 text-sm text-graphite">Public grammar topics to inspect</dd></div>
+          <div className="bg-white p-5"><dt className="font-data text-2xl">{LEVEL_COUNT}</dt><dd className="mt-2 text-sm text-graphite">Practice levels, with guided courses built in order</dd></div>
+          <div className="bg-white p-5"><dt className="font-data text-2xl">{FREE_LEVEL_LABEL}</dt><dd className="mt-2 text-sm text-graphite">The free first course · no account needed</dd></div>
+        </dl>
+      </div>
+
       {/* FOUNDER */}
-      <section className="py-20 bg-white border-y border-rule">
+      <section className="py-12 bg-white border-y border-rule">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <SectionHeading title="Who is behind Deutschmeister" className="mb-6" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
             <Reveal as="p" delay={80}>
-              I am Zaid, a doctor living in Germany on an EU Blue Card. I arrived from abroad and worked through the language barrier—through daily life, exams, and conversations where the right words were missing.
+              The learning path begins with the free A1.1 course. A1.2 is the next guided course; later courses follow level by level.
             </Reveal>
             <Reveal as="p" delay={160}>
-              I watched capable colleagues struggle, not because they lacked professional knowledge, but because their German was not yet strong enough for the medical language exam. That problem stayed with me.
-            </Reveal>
-            <Reveal as="p" delay={240}>
-              I first built MedMeister for doctors preparing for the medical knowledge exam. Then I realised that the same challenge affects many people learning German under pressure: nurses, engineers, students, and families—not only doctors.
-            </Reveal>
-            <Reveal as="p" delay={320}>
-              Today, Deutschmeister is developed by a team of doctors in Germany who have taken the path through German language exams themselves.
+              Inspect a real task before creating an account. Course demonstrations show their source and distinguish automatic form checks from AI feedback.
             </Reveal>
             <Reveal as="p" delay={400} className="font-medium text-ink">
-              Deutschmeister opens that idea to every serious German learner.
+              DeutschMeister brings that learning path to everyday conversations, work and exams.
             </Reveal>
           </div>
         </div>
@@ -113,7 +116,7 @@ const UeberUnsPage = () => {
           provenance renders on every guide, counts are measured, and there
           are no reviews on this site until real learners write them.
           Mirrored in scripts/prerender-spa-routes.mjs — keep in sync. */}
-      <section className="py-20 bg-paper-sunk">
+      <section className="py-12 bg-paper-sunk">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <SectionHeading title="How we handle factual claims" className="mb-6" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
@@ -134,7 +137,7 @@ const UeberUnsPage = () => {
       </section>
 
       {/* DIFFERENTIATORS */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <SectionHeading
             title="What makes Deutschmeister different"
@@ -159,7 +162,7 @@ const UeberUnsPage = () => {
       </section>
 
       {/* MISSION */}
-      <section className="py-20 bg-ink">
+      <section className="py-12 bg-ink">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
           <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-white mb-6 sm:text-[2.125rem]">
             Our mission
@@ -171,7 +174,7 @@ const UeberUnsPage = () => {
       </section>
 
       {/* ROADMAP */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <SectionHeading
             title="What comes next"
@@ -195,7 +198,7 @@ const UeberUnsPage = () => {
       </section>
 
       {/* TESTIMONIAL CAPTURE — feedback is reviewed and permissioned before publication. */}
-      <section className="border-y border-rule bg-white py-20">
+      <section className="border-y border-rule bg-white py-12">
         <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
           <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.125rem]">
             Real stories start with permission

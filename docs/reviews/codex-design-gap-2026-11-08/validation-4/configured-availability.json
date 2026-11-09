@@ -1,0 +1,32 @@
+[
+  {
+    "page": "index.html",
+    "purchase_buttons": 1,
+    "only_a12_sellable": true
+  },
+  {
+    "page": "pricing/index.html",
+    "purchase_buttons": 1,
+    "only_a12_sellable": true
+  },
+  {
+    "page": "courses/a1-2/index.html",
+    "purchase_buttons": 2,
+    "only_a12_sellable": true
+  },
+  {
+    "page": "courses/a2-1/index.html",
+    "purchase_buttons": 0,
+    "only_a12_sellable": true
+  },
+  {
+    "page": "courses/a2-2/index.html",
+    "purchase_buttons": 0,
+    "only_a12_sellable": true
+  },
+  {
+    "page": "courses/b2-2/index.html",
+    "purchase_buttons": 0,
+    "only_a12_sellable": true
+  }
+]

@@ -1,3 +1,4 @@
+import { courseAccessReason } from '../src/lib/levelEntitlement.js';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -188,7 +189,7 @@ function astroContinuation() {
     assert.ok(helper, `Layout.astro must define ${name} (the Astro continuation resolves a course rather than /dashboard)`);
     return helper[0];
   });
-  const context = vm.createContext({ courseHomeFor, subscriptionStatus, isLevelFree, levelsForProduct });
+  const context = vm.createContext({ courseHomeFor, subscriptionStatus, isLevelFree, levelsForProduct, courseAccessReason });
   vm.runInContext(helpers.join('\n'), context);
   return { source, href: context.continueCourseHref, upgrade: context.showsUpgrade };
 }
@@ -200,7 +201,7 @@ test('Astro continue links use the SPA course-entry rule and free fallback', () 
   const expired = { current_level: 'A2.1', trial_started_at: '2026-01-01', trial_ends_at: '2026-01-08' };
   assert.equal(href({ profile: expired }, now), '/course/a1.1');
   assert.equal(href({ profile: { ...expired, trial_ends_at: '2026-10-23' } }, now), '/course/a2.1');
-  assert.equal(href({ profile: expired, subscription: { status: 'active', subscription_end: '2026-10-23' } }, now), '/course/a2.1');
+  assert.equal(href({ profile: expired, subscription: { status: 'active', plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-10-23' } }, now), '/course/a2.1');
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
   assert.ok(product, 'select the product from the canonical pricing data');
   assert.equal(href({ profile: expired, purchases: [{ product_key: product.key, status: 'active' }] }, now), '/course/a2.1');
@@ -211,8 +212,8 @@ test('Astro continue links use the SPA course-entry rule and free fallback', () 
   assert.equal(href({ profile: { ...expired, is_subscribed: true } }, now), '/course/a1.1', 'an old profile flag is not a live paid period');
   for (const path of [source, home]) {
     const links = path.match(/<a\s[^>]*data-continue-course[^>]*>/g) || [];
-    assert.equal(links.length, 2, 'desktop/mobile nav and both homepage continuation doors are marked');
-    links.forEach((link) => assert.match(link, /href=\{FREE_COURSE_HREF\}/));
+    assert.equal(links.length, path === source ? 2 : 1, 'both nav doors and the homepage hero continuation are marked');
+    links.forEach((link) => assert.match(link, /href=(?:\{FREE_COURSE_HREF\}|"\/course\/a1\.1")/));
     assert.doesNotMatch(path, /href="\/dashboard"[^>]*data-auth-only/);
   }
   assert.match(source, /import \{ courseHomeFor \} from '\.\.\/\.\.\/\.\.\/src\/lib\/courseEntry\.js'/);
@@ -223,11 +224,11 @@ test('Astro continuation rejects inactive future periods and includes active cou
   const now = Date.parse('2026-10-22T12:00:00Z');
   const profile = { current_level: 'A2.2' };
   for (const status of ['expired', 'unpaid', 'subscription_superseded', undefined]) {
-    assert.equal(href({ profile, subscription: { status, subscription_end: '2026-11-01' } }, now), '/course/a1.1', String(status));
+    assert.equal(href({ profile, subscription: { status, plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-11-01' } }, now), '/course/a1.1', String(status));
   }
   for (const status of ['active', 'on_trial', 'cancelled', 'past_due', 'paused']) {
-    assert.equal(href({ profile, subscription: { status, subscription_end: '2026-11-01' } }, now), '/course/a2.2', status);
-    assert.equal(href({ profile, subscription: { status, subscription_end: '2026-10-21' } }, now), '/course/a1.1', status);
+    assert.equal(href({ profile, subscription: { status, plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-11-01' } }, now), '/course/a2.2', status);
+    assert.equal(href({ profile, subscription: { status, plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-10-21' } }, now), '/course/a1.1', status);
   }
   const product = Object.values(LEVEL_COURSES).find((course) => levelsForProduct(course.key).includes('a2.1'));
   const purchase = { product_key: product.key, status: 'active', access_until: '2026-11-01' };
@@ -236,7 +237,7 @@ test('Astro continuation rejects inactive future periods and includes active cou
   // learner owns is where they continue, not the free course (SHL-17).
   assert.equal(href({ profile, purchases: [{ ...purchase, access_until: '2026-10-21' }] }, now), '/course/a2.1');
   assert.equal(href({ profile, purchases: [{ ...purchase, status: 'refunded' }] }, now), '/course/a1.1');
-  assert.match(source, /select\('status, subscription_end'\)/);
+  assert.match(source, /select\('status, plan_type, subscription_start, created_at, subscription_end'\)/);
   // created_at too: the shared resolver resumes the newest course (tests/course-resume-parity.test.mjs).
   assert.match(source, /select\('product_key, status, access_until, created_at'\)\.eq\('user_id', user\.id\)\.eq\('status', 'active'\)\.order\('created_at', \{ ascending: false \}\)/);
 });
@@ -249,7 +250,7 @@ test('Astro continuation reads only the verified account and keeps free links on
   const filters = [];
   const tables = [];
   let failed = true;
-  const rows = { profiles: { current_level: 'A2.1' }, subscriptions: { status: 'active', subscription_end: '2099-01-01' }, purchases: [] };
+  const rows = { profiles: { current_level: 'A2.1' }, subscriptions: { status: 'active', plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2099-01-01' }, purchases: [] };
   const supabase = {
     auth: { getUser: async () => ({ data: { user: { id: 'verified-user' } } }) },
     from(table) {
@@ -302,7 +303,7 @@ test('the Astro Upgrade link shows only without a live trial, a live Pro or a co
   assert.equal(upgrade({ profile: expired }, now), true);
   assert.equal(upgrade({ profile: null }, now), true, 'a profile-less account has nothing live either');
   assert.equal(upgrade({ profile: { ...expired, trial_ends_at: '2026-10-23' } }, now), false, 'a live trial');
-  assert.equal(upgrade({ profile: expired, subscription: { status: 'active', subscription_end: '2026-11-01' } }, now), false, 'live Pro');
+  assert.equal(upgrade({ profile: expired, subscription: { status: 'active', plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2026-11-01' } }, now), false, 'live Pro');
   assert.equal(upgrade({ profile: expired, subscription: { status: 'cancelled', subscription_end: '2026-10-01' } }, now), true, 'a lapsed subscription');
   assert.equal(upgrade({ profile: expired, purchases: [{ product_key: product.key, status: 'active', access_until: '2026-10-01' }] }, now), false, 'a course buyer');
   assert.equal(upgrade({ profile: expired, purchases: [{ product_key: 'telc_b1_komplett', status: 'active' }] }, now), false, 'the telc course is a course too');

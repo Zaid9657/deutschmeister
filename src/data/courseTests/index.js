@@ -25,7 +25,7 @@ export const COURSE_TESTS = [
     mock: abschlusstestA11,
   },
   // A1.2 is NOT a free level (src/config/freeTier.js), so resolveModelltest's
-  // gateLevel = 'a1.2' makes ExamSubscriptionGuard require Pro/trial or the
+  // gateLevel = 'a1.2' makes ExamSubscriptionGuard require AI Practice/trial or the
   // A1 course purchase — the same gate the A1.2 level and /a1-2-phase use.
   {
     key: 'a1_2_abschluss',
@@ -36,7 +36,7 @@ export const COURSE_TESTS = [
     mock: abschlusstestA12,
   },
   // A2.1 is a paid level (the A2 band course): gateLevel 'a2.1' makes
-  // ExamSubscriptionGuard require Pro/trial or the A2 course — the same gate
+  // ExamSubscriptionGuard require AI Practice/trial or the A2 course — the same gate
   // /level/a2.1 and /a2-1-phase use. Written in the Goethe-Zertifikat A2
   // style (formatOf goethe_a2; the A2 mock itself landed in Wave 5 PR D1).
   {

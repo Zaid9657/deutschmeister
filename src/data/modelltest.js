@@ -5,13 +5,13 @@
 //
 //   EXAM_TRACKS + src/data/mockExams — practice for a REAL external exam
 //     (Goethe, telc, DTZ). Gate = the exam's band-top sublevel (unchanged
-//     access rule: Pro/trial, or that band's course).
+//     access rule: AI Practice/trial, or that band's course).
 //   COURSE_TESTS (src/data/courseTests) — our OWN end-of-course checkpoint,
 //     written in an exam's style but not that exam. Gate = the course's own
 //     level. a1.1 is a free level (src/config/freeTier.js), so the A1.1
 //     Abschlusstest opens to every logged-in user — a recorded decision,
 //     not an oversight; see ExamSubscriptionGuard.jsx. a1.2 is not free,
-//     so the A1.2 Abschlusstest needs Pro/trial or the A1 course.
+//     so the A1.2 Abschlusstest needs AI Practice/trial or the A1 course.
 //
 // A slug matching neither registry resolves to null; every caller already
 // renders the same "kein Übungstest" fallback for that case.

@@ -105,7 +105,7 @@ const SURFACE_PAGES = [
 // followed by a query.
 const BARE_DOOR = /href=["{`']*(?:https:\/\/deutsch-meister\.de)?\/(signup|level-test\/|pricing\/|course\/a1\.1)["'`}]/g;
 // The exercise island renders /pricing/ only to SIGNED-IN visitors (buy the
-// level, go Pro), whose acquisition was recorded at signup — so there the rule
+// level, go AI Practice), whose acquisition was recorded at signup — so there the rule
 // covers the doors a signed-out visitor sees. Its '/signup' prop default is a
 // fallback value, not an href.
 const BARE_SIGNUP = /href=["{`']*(?:https:\/\/deutsch-meister\.de)?\/(signup|course\/a1\.1)["'`}]/g;
@@ -125,7 +125,7 @@ test('the grammar lesson threads one attributed door through the page and its is
   assert.match(page, /const signupHref = onsiteHref\('signup', 'grammar', slug\);/);
   assert.match(page, /onsiteHref\('freeCourse', 'grammar', slug\)/);
   assert.match(page, /signupHref=\{signupHref\}\s*\n\s*client:visible/, 'the ExercisePlayer island must get the door');
-  assert.match(page, /\{TRIAL_DAYS\} days of Pro included/);
+  assert.match(page, /\{TRIAL_DAYS\} days of AI Practice included/);
   assert.doesNotMatch(page, /\b7 days\b/, 'retyped trial length');
 
   const island = read('astro-site/src/components/ExercisePlayer.jsx');
@@ -153,17 +153,17 @@ test('guides offer the free account next to the level test, every door attribute
   assert.match(page, /href=\{secondary\.href\}/);
   assert.match(page, /href=\{doors\.pricing\}/, 'pricing not rendered');
   assert.match(page, /Kostenloses Konto erstellen/);
-  assert.match(page, /\$\{TRIAL_DAYS\} Tage Pro inklusive/);
+  assert.match(page, /\$\{TRIAL_DAYS\} Tage AI Practice inklusive/);
 });
 
 test('the grammar hub and the nav carry the surface', () => {
   const hub = read('astro-site/src/pages/grammar/index.astro');
   assert.match(hub, /onsiteHref\('signup', 'grammar', 'index'\)/);
-  assert.match(hub, /includes \{TRIAL_DAYS\} days of Pro/);
+  assert.match(hub, /includes \{TRIAL_DAYS\} days of AI Practice/);
 
   const layout = read('astro-site/src/layouts/Layout.astro');
   assert.match(layout, /const navSignupHref = surface \? onsiteHref\('signup', surface, 'nav'\) : '\/signup';/);
-  assert.equal((layout.match(/href=\{navSignupHref\}/g) || []).length, 3, 'desktop, mobile and menu trial buttons');
+  assert.equal((layout.match(/href=\{navSignupHref\}/g) || []).length, 1, 'the menu signup door carries the current page attribution');
   assert.doesNotMatch(layout, /href="\/signup"/, 'a nav signup button bypasses the surface tag');
 });
 

@@ -6,6 +6,7 @@
 
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { courseAccessReason } from '../../src/lib/levelEntitlement.js';
 import { levelsForProduct } from '../../astro-site/src/data/pricing.js';
 
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
@@ -17,19 +18,19 @@ export function loadLevelAccess(supabase = {}) {
     .replace(/^export (const|async function|function) /gm, '$1 ');
   return vm.runInNewContext(
     `${source}\n({ GUIDED_LEVELS, levelHref, loadEntitlementSnapshot, levelOpen, ownedProductHome, getLevelAccess });`,
-    { supabase, levelsForProduct, Date, Promise },
+    { supabase, levelsForProduct, courseAccessReason, Date, Promise },
   );
 }
 
 /** A Supabase client that answers like PostgREST and counts the reads. */
-export function fakeSupabase({ user = { id: 'learner' }, profile = null, purchases = [], profileError = null, purchasesError = null } = {}) {
+export function fakeSupabase({ user = { id: 'learner' }, profile = null, purchases = [], subscription = null, profileError = null, purchasesError = null, subscriptionError = null } = {}) {
   const reads = [];
   const chain = (table) => {
     const result = table === 'profiles'
       ? { data: profile, error: profileError }
-      : { data: purchases, error: purchasesError };
+      : table === 'purchases' ? { data: purchases, error: purchasesError } : { data: subscription, error: subscriptionError };
     const q = {
-      select: () => q, eq: () => q,
+      select: () => q, eq: () => q, order: () => q, limit: () => q,
       maybeSingle: async () => result,
       then: (resolve, reject) => Promise.resolve(result).then(resolve, reject),
     };

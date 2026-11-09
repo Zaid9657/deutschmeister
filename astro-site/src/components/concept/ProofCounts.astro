@@ -1,0 +1,11 @@
+---
+import { LISTENING_DIALOGUE_COUNT, GRAMMAR_TOPIC_COUNT, VOCAB_WORD_COUNT, READING_LESSON_COUNT } from '../../data/marketing.js';
+import Icon from './Icon.astro';
+const counts = [
+  { value: LISTENING_DIALOGUE_COUNT, label: 'listening dialogue lines', icon: 'headphones' },
+  { value: GRAMMAR_TOPIC_COUNT, label: 'grammar topics', icon: 'layers' },
+  { value: VOCAB_WORD_COUNT, label: 'words', icon: 'book' },
+  { value: READING_LESSON_COUNT, label: 'reading lessons', icon: 'book' },
+];
+---
+<div class="c4-counts" aria-label="Across the learning library">{counts.map((c) => <div><Icon name={c.icon} size={28} /><p><strong>{c.value.toLocaleString('en-GB')}</strong><span>{c.label}</span></p></div>)}</div>

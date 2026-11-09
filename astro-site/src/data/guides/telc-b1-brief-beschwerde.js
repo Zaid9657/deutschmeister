@@ -89,7 +89,7 @@ export const telcB1BriefBeschwerde = {
               title: 'Ein Absatz pro Leitpunkt',
               tasks: [
                 'Die Leitpunkte in einer sinnvollen Reihenfolge abarbeiten',
-                'Pro Leitpunkt zwei bis drei Sätze',
+                'AI Practice Leitpunkt zwei bis drei Sätze',
                 'Mit Konnektoren verbinden: leider, außerdem, deshalb, trotzdem',
               ],
               tip: 'Nummerieren Sie die Leitpunkte auf dem Aufgabenblatt und haken Sie jeden ab, sobald er im Text steht.',

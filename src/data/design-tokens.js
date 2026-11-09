@@ -7,73 +7,35 @@
 // Both tailwind configs import this file, so a token added here reaches every
 // surface on both sides.
 //
-// WHERE THIS CAME FROM. v1 (2026-08) unified four unrelated colour stories
-// into one flat, hairline-ruled system. v2 (2026-09, the "Playful Depth"
-// renovation, docs/design-renovation-2026-09-01.md) keeps that system's colour
-// discipline and rebuilds its PHYSICALITY: the site read as a beautiful
-// reference book, and the person it serves — someone with an exam date and
-// visa/job stakes — needs it to feel like a coach, not a card catalogue.
-// Buttons are now chunky and physically press down, cards are soft extruded
-// clay, progress celebrates. The depth grammar lives here so it stays one
-// grammar.
-//
-// ---------------------------------------------------------------------------
-// THE THREE RULES. These are load-bearing, not taste. Breaking one makes the
-// system decorative again, which is what it replaced.
-// ---------------------------------------------------------------------------
-//
-// 1. COLOUR MEANS CASE. The four `kasus` colours below are the ones Sentence
-//    X-Ray already uses to mark Nominativ, Akkusativ, Dativ and Genitiv
-//    (src/pages/SentenceXRay.jsx, CASE_STYLES). They may appear ONLY where a
-//    grammatical case is named or demonstrated. Never as a section fill, never
-//    on a CTA, never because a card needed livening up. The payoff is that a
-//    learner meets the same colour language on the pricing page and inside the
-//    analyser, and learns it twice. The `accent` candy palette exists so this
-//    rule survives a playful design: when a surface needs energy, it takes an
-//    accent, never a case colour. (Accent hues are chosen to be UNCONFUSABLE
-//    with the four case hues — no blue, no red-orange, no true green, no
-//    blue-purple.)
-//
-// 2. ONE PRIMARY. `siegel` teal is the only interactive colour — buttons,
-//    links, focus rings, selected states. `gold` belongs to the seal itself and
-//    to at most one "recommended" marker per page. The accents are ENERGY, not
-//    interaction: chips, badges, streak flames, progress fills, confetti — a
-//    candy-coloured CTA is out of system (exception: one celebration moment
-//    may use `himbeer`, because a completed goal has earned it).
-//
-// 3. DEPTH MEANS "YOU CAN PRESS THIS". v1 said "no resting shadows" and it
-//    made the site honest but inert; v2 overturns it DELIBERATELY. The new
-//    rule: elevation is an affordance. Interactive things (buttons, clickable
-//    cards) rest raised — a hard bottom edge plus a soft ambient shadow, like
-//    a key on a keyboard — and physically depress when pressed. Reference
-//    material (tables, prose, rules of grammar) stays FLAT: hairlines and
-//    aligned columns, the declension table's native form. A shadow on
-//    something that cannot be pressed is a lie; a flat button is a missed
-//    invitation. Both are bugs now.
-//
-// Type note: the display face is Fraunces (optical-size axis, enough spine for
-// long German compounds); the data face is a system mono stack for level codes
-// (A2.1), case labels (AKK) and prices — figures are data, not prose.
+// Concept 4 (founder approved, 2026-11-09): white and soft mint grounds,
+// deep teal identity, coral entry CTA, Fraunces headlines and clean sans body.
+// Palette sampled from the approved concept-4.png (not inferred from old tokens).
+// Grammatical case colours remain reserved for labelled grammar examples.
+// Calm motion uses 140/220/420/800ms; only transform and opacity animate.
 
 /** The ground and the ink. Cool near-white, and a near-black with a faint teal cast. */
 export const color = {
-  paper: '#FCFCFA',
-  paperSunk: '#F4F6F5', // recessed panels, table header rows
-  ink: '#14201D',
-  graphite: '#5A6360', // secondary text — AA on paper at body sizes
-  rule: '#E2E7E5', // hairlines, table rules, card borders
+  paper: '#FFFFFF',
+  paperSunk: '#F4F9F6', // recessed panels, table header rows
+  ink: '#090A0A',
+  graphite: '#43534E', // secondary text — AA on paper at body sizes
+  rule: '#DCE7E2', // hairlines, table rules, card borders
   edge: '#D8DFDB', // the hard bottom edge of a resting white/paper surface
   white: '#FFFFFF',
 
   // Primary. Sampled from the Meister-Siegel gradient in src/components/Logo.jsx.
   // v4 (owner pick 2026-10-04, "A · Türkis"): the brightest türkis that still
   // carries white button text at AA (4.7:1). Was #0F766E.
-  siegel: '#0A8276',
-  siegelLift: '#0A7468', // hover (darkens, keeps AA); the seal gradient's far stop
-  siegelDeep: '#0A6B61', // press, and text-on-paper when the link must darken
-  siegelWash: '#E3F6F3', // selected rows, quiet fills — the course palette's wash
+  siegel: '#035E53',
+  siegelLift: '#054D45', // hover (darkens, keeps AA); the seal gradient's far stop
+  siegelDeep: '#05453E', // press, and text-on-paper when the link must darken
+  siegelWash: '#EDF8F3', // selected rows, quiet fills — the course palette's wash
   siegelEdge: '#075A51', // the bottom edge under a siegel button face
 
+  coral: '#F95841', // sampled at (80, 198), home CTA
+  coralInk: '#FFFFFF',
+  coralAccessible: '#BC3524', // AA white text variant for smaller controls
+  footer: '#05463F', // sampled at (300, 980)
   // The seal's dot. Rule 2: the seal, and at most one marker per page.
   gold: '#FBBF24',
 };
@@ -279,7 +241,8 @@ export const layout = { maxWidth: '68rem', prose: '38rem', gutter: '1.25rem' };
 export const radius = { none: '0', sm: '0.375rem', md: '0.625rem', lg: '1rem', clay: '1.25rem', pill: '999px' };
 
 /**
- * Rule 3: depth is an affordance. The raised states pair a HARD bottom edge
+ * Legacy aliases are kept for existing consumers; resting surfaces are flat.
+ * Historical rule: depth is an affordance. The raised states pair a HARD bottom edge
  * (the extrusion — reads as "this has a side, you can push it") with a SOFT
  * ambient shadow (reads as "it floats a little"). Pressing removes the edge
  * and translates the face down by the same distance — the press travel below
@@ -295,12 +258,12 @@ export const depth = {
 
 /** Shadows. hover/overlay are v1's lift pair; raise/raiseLg are v2's resting extrusions. */
 export const shadow = {
-  raise: `0 4px 0 0 ${color.edge}, 0 10px 22px -12px rgba(20, 32, 29, 0.16)`,
-  raiseLg: `0 6px 0 0 ${color.edge}, 0 20px 44px -18px rgba(20, 32, 29, 0.2)`,
-  raiseSiegel: `0 4px 0 0 ${color.siegelEdge}`,
-  raiseHimbeer: `0 4px 0 0 ${accent.himbeer.edge}`,
-  raiseAprikose: `0 4px 0 0 ${accent.aprikose.edge}`,
-  raiseLimette: `0 4px 0 0 ${accent.limette.edge}`,
+  raise: '0 2px 6px rgba(5, 69, 62, 0.10)',
+  raiseLg: 'none',
+  raiseSiegel: 'none',
+  raiseHimbeer: 'none',
+  raiseAprikose: 'none',
+  raiseLimette: 'none',
   hover: '0 6px 20px -8px rgba(20, 32, 29, 0.18)',
   overlay: '0 16px 48px -12px rgba(20, 32, 29, 0.26)',
 };
@@ -314,7 +277,7 @@ export const shadow = {
 export const motion = {
   spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)', // overshoots: pops, badges, cards arriving
   snap: 'cubic-bezier(0.2, 0, 0, 1)', // decisive settle: presses, toggles
-  duration: { press: '90ms', pop: '260ms', enter: '420ms' },
+  duration: { press: '140ms', pop: '220ms', enter: '420ms' },
 };
 
 /**
@@ -332,6 +295,9 @@ export const tailwindColors = {
   edge: color.edge,
   siegel: { DEFAULT: color.siegel, lift: color.siegelLift, deep: color.siegelDeep, wash: color.siegelWash, edge: color.siegelEdge },
   gold: color.gold,
+  coral: color.coral,
+  'coral-accessible': color.coralAccessible,
+  footer: color.footer,
   kasus: Object.fromEntries(
     Object.entries(kasus).map(([name, v]) => [name, { DEFAULT: v.line, wash: v.wash, ink: v.ink }]),
   ),
@@ -394,16 +360,16 @@ export const tailwindFontFamily = {
 
 /** The line itself: türkis (v4). Same family as `siegel`. */
 export const linie = {
-  DEFAULT: '#0A8276', // the line, station rings, keys (white text 4.7:1)
-  deep: '#0A7468', // hover/press; the line's shadow side
+  DEFAULT: '#035E53', // the line, station rings, keys (white text 4.7:1)
+  deep: '#054D45', // hover/press; the line's shadow side
   edge: '#075A51', // the hard bottom edge under a linie face (rule 3)
-  wash: '#E3F6F3', // a quiet highlight behind ink text
+  wash: '#EDF8F3', // a quiet highlight behind ink text
   ink: '#FFFFFF', // text on a linie face
 };
 
 /** The feature ground (v4: light türkis, was night): hero, the line section, footer, tab bar. */
 export const nacht = {
-  DEFAULT: '#E3F6F3', // the türkis tint
+  DEFAULT: '#EDF8F3', // the türkis tint
   raised: '#FFFFFF', // cards and the ticket on the tint
   sunk: '#BFEAE3', // the track bed under the line
   rule: '#BFE3DB', // hairlines on the tint
@@ -504,9 +470,9 @@ export const tailwindLinieColors = {
 
 /** Spread into both tailwind configs' boxShadow: the linie key's extrusion and the ticket's lift. */
 export const tailwindLinieShadow = {
-  'raise-linie': `0 4px 0 0 ${linie.edge}`,
-  'raise-nacht': `0 4px 0 0 ${nacht.sunk}`,
-  ticket: `0 2px 0 0 ${color.edge}, 0 30px 60px -30px rgba(14, 21, 19, 0.45)`,
+  'raise-linie': 'none',
+  'raise-nacht': 'none',
+  ticket: 'none',
 };
 
 /** Spread into both tailwind configs: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. */
@@ -518,3 +484,27 @@ export const tailwindLinieEasing = {
 
 /** Spread into both tailwind configs' transitionDuration: `duration-feedback` … `duration-signature`. */
 export const tailwindLinieDuration = { ...motionLinie.duration };
+
+/** Legacy course aliases, retained for existing exercise surfaces only. */
+export const legacyLevelColors = {
+'a1-1': { primary: '#F4B99A', secondary: '#D9A8B4', accent: '#41B3A3', background: '#FDF8F5', surface: '#FFFFFF', text: '#2D3436', muted: '#636E72' },
+'a1-2': { primary: '#E8A87C', secondary: '#C38D9E', accent: '#41B3A3', background: '#FDF6F0', surface: '#FFFFFF', text: '#2D3436', muted: '#636E72' },
+'a2-1': { primary: '#7BAF8E', secondary: '#A8D4AC', accent: '#D4A574', background: '#F7FAF8', surface: '#FFFFFF', text: '#1E3A2F', muted: '#4A6B5D' },
+'a2-2': { primary: '#5B8A72', secondary: '#8FB996', accent: '#D4A574', background: '#F5F9F6', surface: '#FFFFFF', text: '#1E3A2F', muted: '#4A6B5D' },
+'b1-1': { primary: '#5A7A9A', secondary: '#B0D4E8', accent: '#EE6C4D', background: '#F2F6F9', surface: '#FFFFFF', text: '#1B2838', muted: '#5C7A99' },
+'b1-2': { primary: '#3D5A80', secondary: '#98C1D9', accent: '#EE6C4D', background: '#F0F4F8', surface: '#FFFFFF', text: '#1B2838', muted: '#5C7A99' },
+'b2-1': { primary: '#8A7AAF', secondary: '#BDB0D9', accent: '#E8B4BC', background: '#F9F7FB', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
+'b2-2': { primary: '#6B5B95', secondary: '#9D8EC1', accent: '#E8B4BC', background: '#F8F6FA', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
+};
+
+/** Shared size roles for thin Astro/React adapters; font assignments stay local. */
+export const tailwindTypeSizes = Object.fromEntries(Object.entries(type).flatMap(([name, role]) => [
+  [`dm-${name}`, [role.mobile, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
+  [`dm-${name}-wide`, [role.size, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
+]));
+
+/** Frozen transactional palette: functions are outside the Concept 4 brief. */
+export const emailBrand = {
+  siegel: '#0A8276', siegelLift: '#0A7468', siegelWash: '#E3F6F3',
+  gold: '#FBBF24', ink: '#14201D', graphite: '#5A6360', rule: '#E2E7E5', paper: '#FCFCFA', white: '#FFFFFF',
+};

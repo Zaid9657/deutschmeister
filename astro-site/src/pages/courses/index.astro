@@ -1,130 +1,32 @@
 ---
-// The Courses hub — the level courses as a product with their own front door
-// (decision 2026-09-08: the courses used to exist only as price cards). Eight
-// rungs A1.1 → B2.2; A1.1 free, each paid sub-level its own one-time course,
-// B1/B2 listed as coming soon. Every figure derives: prices from pricing.js,
-// grammar counts from the content cache, the rest from data/courseContents.js.
 import Layout from '../../layouts/Layout.astro';
+import Scene from '../../components/concept/Scene.astro';
+import RouteBand from '../../components/concept/RouteBand.astro';
+import ProofCounts from '../../components/concept/ProofCounts.astro';
+import Icon from '../../components/concept/Icon.astro';
+import { ALL_LEVELS, courseForLevel, eur } from '../../data/pricing.js';
+import { levelToSlug } from '../../data/courseContents.js';
 import '../../styles/global.css';
-import CourseCheckout from '../../components/CourseCheckout.astro';
-import LineSection from '../../components/linie/LineSection.astro';
-import StationArt from '../../components/linie/StationArt.astro';
-import { fontPreloads, signFontPreloads } from '../../data/design-tokens.js';
-import { ORGANIZATION } from '../../lib/siteMeta.js';
-import { getTopicsForLevel } from '../../lib/grammar.js';
-import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
-import { ALL_LEVELS, COURSE_PRO_MONTHS, COURSE_FROM_PRICE_EUR, eur, productKeyForLevel } from '../../data/pricing.js';
-import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
-import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
-import { curriculumFor } from '../../data/curricula/index.js';
-import { hasSyllabus } from '../../lib/syllabus.js';
-
-// v4 "Die Linie" keys (styles/linie.css).
-const BTN_PRIMARY = 'dm-key dm-key-siegel';
-const BTN_SECONDARY = 'dm-key dm-key-ghost';
-const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
-
-const courses = levelCoursesWithVariants();
-const byKey = Object.fromEntries(courses.map((c) => [c.key, c]));
-
-const rungs = await Promise.all(ALL_LEVELS.map(async (level) => {
-  const topics = await getTopicsForLevel(level);
-  const c = byKey[productKeyForLevel(level)] || null; // null for the free level
-  const content = COURSE_CONTENTS[level];
-  const showSyllabus = hasSyllabus(curriculumFor(level));
-  return { level, code: level.toUpperCase(), slug: levelToSlug(level), course: c, topics: topics.length, content, showSyllabus };
-}));
-
-const title = 'German Courses A1–B2, one level at a time | DeutschMeister';
-const description = `Buy one German level and keep it for life. ${FREE_LEVEL_LABEL} is free; every paid sub-level from ${eur(COURSE_FROM_PRICE_EUR)} once, with ${COURSE_PRO_MONTHS} months of Pro included. B1 and B2 coming soon.`;
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'German Courses',
-  description,
-  url: 'https://deutsch-meister.de/courses/',
-  inLanguage: 'en',
-  publisher: ORGANIZATION,
-};
+const title = 'German Courses from A1.1 to B2.2 | DeutschMeister';
+const description = 'One clear path from your first word to B2. Start A1.1 free, explore the A1.2 course, and see which German courses are coming next.';
+const images = ['scene-cafe', 'scene-work', 'cando-market', 'hero', 'cando-chat', 'scene-work', 'cando-flat', 'pricing-hero'];
+const levels = ALL_LEVELS.map((level, i) => ({ level, code: level.toUpperCase(), course: courseForLevel(level), image: images[i], href: `/courses/${levelToSlug(level)}/` }));
+const jsonLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'German courses', itemListElement: levels.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: `German ${r.code} Course`, url: `https://deutsch-meister.de${r.href}` })) };
 ---
-
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
-  <div class="overflow-x-clip bg-paper text-ink">
-    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
-      <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Courses · A1.1 → B2.2</p>
-        <h1 id="hero-h" class="sign-display mt-4 text-[clamp(2.5rem,9vw,5rem)]">
-          <span class="block whitespace-nowrap">One level.</span>
-          <span class="block whitespace-nowrap">One payment.</span>
-          <span class="block whitespace-nowrap text-linie">Yours for good.</span>
-        </h1>
-        <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
-          Each sub-level is a complete course: grammar with typed practice, reading texts with checks, listening with
-          dictation, the vocabulary list, a final test in the exam format and a 28-day plan. {FREE_LEVEL_LABEL} is free.
-          Not sure where you stand? The <a href="/level-test/" class="dm-link-nacht font-semibold">level test is free</a> and takes about 20 minutes.
-        </p>
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd}>
+  <section class="c4-wrap c4-courses-hero" aria-labelledby="courses-h"><div><h1 id="courses-h">One clear path from<br /><span class="c4-underline">your first word to B2.</span></h1><p>Learn German step by step with structured courses — from your first words and everyday situations to confident communication at B2.</p></div><RouteBand hero /></section>
+  <section class="c4-wrap" aria-label="Choose your next course">
+    <ol class="c4-course-grid">{levels.map((r) => <li><article class:list={['c4-course-card', r.course?.comingSoon && 'is-coming']} data-c4-reveal>
+      <Scene name={r.image} alt={`${r.code}: German for everyday situations`} sizes="(max-width: 640px) 46vw, 300px" />
+      <div class="c4-course-card-body"><p class="c4-course-code">{r.code}{!r.course && <span>Free</span>}</p>
+        <h2>{r.course?.comingSoon ? 'Coming next' : !r.course ? 'Introduce yourself' : 'Everyday situations'}</h2>
+        {!r.course ? <><p>Say your name, talk about yourself, and start simple conversations.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></>
+          : r.course.comingSoon ? <a href={r.href} class="c4-coming" aria-label={`${r.code} — coming next`}>Coming next</a>
+          : <><p>Find your way, look for a flat, make plans, and handle typical daily life in German.</p><p class="c4-card-price"><strong>{eur(r.course.price).replace('.00', '')}</strong> once</p><a href={r.href} class="c4-button c4-button-outline">See the course →</a></>}
       </div>
-    </section>
-
-    <LineSection />
-
-    <section class="mx-auto max-w-5xl px-5 pb-20 pt-16" aria-labelledby="inside-h">
-      <h2 id="inside-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">What each stop contains</h2>
-      <ol class="mt-8 grid gap-5 sm:grid-cols-2">
-        {rungs.map((r, i) => (
-          <li class="reveal" style={`--rd:${i * 70}ms`}>
-            <article class={`relative flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise ${r.course?.comingSoon ? 'opacity-85' : ''}`}>
-              {r.course?.comingSoon && (
-                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">Coming soon</span>
-              )}
-              {!r.course && (
-                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
-              )}
-              <StationArt level={r.level} class="-mx-6 -mt-6 mb-5 h-48 w-[calc(100%+3rem)] rounded-t-clay border-b border-rule" />
-              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Stop {i + 1} · {r.code}</p>
-              <h3 class="mt-2 sign-head text-[1.5rem] text-ink">
-                <a href={`/courses/${r.slug}/`} class="transition-colors hover:text-siegel-deep">German {r.code} Course</a>
-              </h3>
-              <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite">{LEVEL_OUTCOME_EN[r.level]}</p>
-              <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 font-data text-[0.75rem] text-graphite">
-                <li>{r.topics} grammar topics</li>
-                <li>{r.content.reading.length} reading texts</li>
-                <li>{r.content.listening.length} listening exercises</li>
-                <li>{r.content.words} words</li>
-              </ul>
-              <div class="mt-5 flex items-end justify-between gap-3">
-                <p class="sign-code text-[1.75rem] leading-none text-ink">
-                  {r.course ? eur(r.course.price) : 'Free'}
-                  {r.course && <span class="ml-1 font-body text-xs font-normal tracking-normal text-graphite">one time</span>}
-                </p>
-                <a href={`/courses/${r.slug}/`} class="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">What's inside →</a>
-              </div>
-              {r.showSyllabus && (
-                <a href={`/courses/${r.slug}/#lehrplan-h`} class="mt-2 text-xs font-bold text-siegel transition-colors hover:text-siegel-deep">Lehrplan mit 12 Lektionen ansehen →</a>
-              )}
-              <div data-course-door={r.level} data-course-code={r.code} data-course-open-class={`${BTN_PRIMARY} mt-4 w-full`}>
-              {r.course ? (
-                r.course.variantId ? (
-                  <button type="button" class={`${BTN_PRIMARY} mt-4 w-full`} data-course-variant={r.course.variantId} data-course-key={r.course.key} data-course-price={r.course.price} data-track-surface="courses_hub">Buy {r.code}</button>
-                ) : (
-                  <span class={`${BTN_SECONDARY} mt-4 w-full cursor-not-allowed opacity-60`} aria-disabled="true">{r.course.comingSoon ? 'Im Bau · coming soon' : 'Checkout not open here'}</span>
-                )
-              ) : (
-                <a href={`/course/${r.level}`} class={`${BTN_SECONDARY} mt-4 w-full`}>Start the free course</a>
-              )}
-              </div>
-            </article>
-          </li>
-        ))}
-      </ol>
-
-      <p class="mt-10 border-t border-rule pt-6 text-[0.9375rem] leading-relaxed text-graphite" style="--rd:200ms">
-        Every paid course includes {COURSE_PRO_MONTHS} months of Pro (AI speaking coach, writing feedback,
-        Sentence X-Ray). Prefer everything at once? <a href="/pricing/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Pro opens all eight levels</a> for a monthly fee.
-        Preparing for a specific exam? <a href="/pruefung/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">See the exam tracks</a>.
-      </p>
-    </section>
-  </div>
-  <CourseCheckout />
+    </article></li>)}</ol>
+    <section class="c4-course-benefits" aria-labelledby="every-h"><h2 id="every-h"><span class="c4-underline">What every course gives you</span></h2><div>{[{ icon: 'target', text: 'Situations from real life' }, { icon: 'layers', text: 'A checker that explains your mistakes' }, { icon: 'chat', text: 'Writing and speaking tasks' }, { icon: 'flag', text: 'Checkpoints you can pass' }].map((b) => <div><Icon name={b.icon} size={44} /><h3>{b.text}</h3></div>)}</div></section>
+    <ProofCounts />
+    <p class="c4-catalogue-note">A1.1 and A1.2 are ready. The rest of the guided path is coming next. <a href="/level-test/" class="c4-text-link">Not sure of your level? Take the free level test →</a></p>
+  </section>
 </Layout>

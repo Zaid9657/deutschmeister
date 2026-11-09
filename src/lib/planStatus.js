@@ -4,7 +4,7 @@
 // WHY THIS FILE EXISTS. The card titled every row with paid access "Active
 // Subscription" and named the plan with a single test: plan_type 'yearly' read
 // "Yearly Plan" and every other value read "Monthly Plan". A course purchase
-// writes a 'course' row (lemonsqueezy-webhook.mjs handleCourseOrder): Pro
+// writes a 'course' row (lemonsqueezy-webhook.mjs handleCourseOrder): AI Practice
 // included for a fixed window, bought once, renewed by nothing. That buyer was
 // told they hold a monthly subscription. (0 'course' rows on 2026-10-03, so
 // nobody has seen it yet; the first course sale would.)
@@ -33,8 +33,8 @@ export function planStatusCopy(subscription, isGerman) {
   const planType = subscription?.plan_type;
   if (planType === 'course') {
     return isGerman
-      ? { title: 'Pro-Zugang', plan: 'Im Kurskauf enthalten' }
-      : { title: 'Pro access', plan: 'Included with your course purchase' };
+      ? { title: 'AI Practice-Zugang', plan: 'Im Kurskauf enthalten' }
+      : { title: 'AI Practice access', plan: 'Included with your course purchase' };
   }
   // hasOwnProperty.call, not Object.hasOwn: the SPA's build target includes
   // Safari 14, which lacks Object.hasOwn, and esbuild does not polyfill it.
@@ -44,6 +44,6 @@ export function planStatusCopy(subscription, isGerman) {
   return {
     title: isGerman ? 'Aktives Abonnement' : 'Active Subscription',
     // A plan_type the card does not know names no cadence rather than a wrong one.
-    plan: cadence ? (isGerman ? cadence.de : cadence.en) : 'Pro',
+    plan: cadence ? (isGerman ? cadence.de : cadence.en) : 'AI Practice',
   };
 }

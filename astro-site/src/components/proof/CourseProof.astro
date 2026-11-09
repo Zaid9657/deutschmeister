@@ -1,0 +1,97 @@
+---
+import { courseProof } from '../../data/productProof.js';
+interface Props { level?: string; lang?: string; mode?: string; }
+const { level = 'a1.2', lang = 'en', mode = 'all' } = Astro.props;
+const proof = courseProof(level);
+const de = lang === 'de';
+const t = de ? {
+  label: 'Demonstration · echte Kursinhalte', heading: 'So wird aus einer Situation Ihr nächster Schritt.',
+  journey: 'Ihr Lernweg', task: 'Ihre Aufgabe', next: 'Danach',
+  writing: 'Schreiben, prüfen, überarbeiten', draft: 'Entwurf ohne Gruß', feedback: 'Formale Selbstkontrolle', revision: 'Überarbeitete Musterantwort',
+  ai: 'ohne KI nicht prüfbar', yes: 'erfüllt', no: 'noch offen',
+  writingLimit: 'Dies ist die formale Selbstkontrolle aus dem Kurs, keine KI-Bewertung. Sie prüft keine sprachliche Qualität und vergibt keine Prüfungsnote.',
+  speaking: 'Sprechen: Wort für Wort sichtbar', transcript: 'Simuliertes Transkript', model: 'Zum Nachsprechen',
+  heard: 'erkannt', missing: 'nicht erkannt', speakingLimit: 'Demonstration mit einem simulierten Transkript und der echten Abgleichfunktion. Worterkennung ist keine Aussprachebewertung und keine Bewertung eines freien Gesprächs.',
+  open: 'Danach frei sprechen', door: `Zum ${level.toUpperCase()}-Kurs`,
+} : {
+  label: 'Demonstration · real course content', heading: 'One situation. A clear next step.',
+  journey: 'Your learning path', task: 'Your task', next: 'Next',
+  writing: 'Write, check, revise', draft: 'Draft without a sign-off', feedback: 'Course form check', revision: 'Revised model answer',
+  ai: 'needs an AI assessment', yes: 'present', no: 'still missing',
+  writingLimit: 'This is the course’s form checklist, not AI writing feedback. It does not assess language quality or award an exam grade.',
+  speaking: 'Speaking, made visible word by word', transcript: 'Simulated transcript', model: 'Read aloud',
+  heard: 'recognised', missing: 'not recognised', speakingLimit: 'Demonstration using a simulated transcript and the actual alignment function. Word recognition is not a pronunciation score or a free-conversation assessment.',
+  open: 'Then speak freely', door: `Explore the ${level.toUpperCase()} course`,
+};
+const id = `course-proof-${level.replace('.', '-')}-${mode}`;
+---
+{proof && (
+<section id={id} class="scroll-mt-24 border-y border-rule bg-paper" aria-labelledby={`${id}-h`} data-product-proof={level}>
+  <div class="mx-auto max-w-7xl px-5 py-10 sm:py-16">
+    <p class="font-data text-xs font-bold uppercase tracking-widest text-siegel-deep">{t.label} · {level.toUpperCase()}</p>
+    <h2 id={`${id}-h`} class="mt-3 font-display text-dm-section sm:text-dm-section-wide">{t.heading}</h2>
+    {(mode === 'all' || mode === 'journey') && (
+      <div class="mt-7 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+        <aside class="rounded-xl border border-rule bg-white p-5">
+          <h3 class="font-bold">{t.journey}</h3>
+          <ol class="mt-4 space-y-0">
+            {proof.path.map((step, i) => <li class="flex gap-3 border-t border-rule py-3"><span class="font-data text-sm text-siegel-deep">{String(i + 1).padStart(2, '0')}</span><span>{step.title}</span></li>)}
+          </ol>
+        </aside>
+        <div class="rounded-xl border border-rule bg-white p-5 sm:p-7">
+          <p class="font-data text-xs text-graphite">{proof.lesson.title}</p>
+          <h3 class="mt-3 font-bold">{t.task}</h3>
+          <p class="mt-2 text-lg" lang="de">{proof.lesson.pretest.promptDe}</p>
+          {!de && <p class="mt-1 text-sm text-graphite">{proof.lesson.pretest.promptEn}</p>}
+          <blockquote class="mt-4 rounded-xl border border-rule bg-siegel-wash p-4 text-xl" lang="de">{proof.lesson.pretest.model}</blockquote>
+          <p class="mt-4 text-sm leading-relaxed text-graphite">{(de ? proof.lesson.notice.bodyDe : proof.lesson.notice.bodyEn).replace(/\*\*/g, '')}</p>
+          <p class="mt-4 border-t border-rule pt-3 text-sm"><strong>{t.next}:</strong> {proof.curriculum.lektionen[1].title}</p>
+        </div>
+      </div>
+    )}
+    {(mode === 'all' || mode === 'writing') && (
+      <article class="mt-8 rounded-xl border border-rule bg-white p-5 sm:p-7" data-proof-writing>
+        <h3 class="font-display text-2xl">{t.writing}</h3>
+        <p class="mt-2 text-sm text-graphite">{proof.writing.lesson.title} · {proof.writing.task.taskKey}</p>
+        <p class="mt-4 leading-relaxed" lang="de">{proof.writing.task.task}</p>
+        <div class="mt-5 grid gap-5 lg:grid-cols-2">
+          <div>
+            <h4 class="font-bold">{t.draft}</h4>
+            <blockquote class="mt-3 border-l-2 border-rule pl-4 leading-relaxed" lang="de">{proof.writing.draft}</blockquote>
+            <h4 class="mt-5 font-bold">{t.revision}</h4>
+            <blockquote class="mt-3 rounded-xl bg-siegel-wash p-4 leading-relaxed" lang="de">{proof.writing.revision}</blockquote>
+          </div>
+          <div class="rounded-xl border border-rule bg-paper p-5">
+            <h4 class="font-bold">{t.feedback}</h4>
+            <ul class="mt-3 space-y-3">
+              {proof.writing.before.checks.map((c) => <li class="border-b border-rule pb-2 text-sm"><span lang="de">{c.label}</span><span class="mt-1 block font-semibold text-siegel-deep">{c.ai ? t.ai : `${c.ok ? t.yes : t.no} → ${proof.writing.after.checks.find((a) => a.key === c.key)?.ok ? t.yes : t.no}`}</span></li>)}
+            </ul>
+          </div>
+        </div>
+        <p class="mt-5 text-sm leading-relaxed text-graphite">{t.writingLimit}</p>
+      </article>
+    )}
+    {(mode === 'all' || mode === 'speaking') && (
+      <article class="mt-8 grid gap-6 rounded-xl border border-rule bg-white p-5 sm:p-7 lg:grid-cols-2" data-proof-speaking>
+        <div>
+          <h3 class="font-display text-2xl">{t.speaking}</h3>
+          <p class="mt-4 text-sm font-bold">{t.model}</p>
+          <p class="mt-2 text-lg" lang="de">{proof.speaking.expected}</p>
+          <p class="mt-4 text-sm font-bold">{t.transcript}</p>
+          <p class="mt-2 text-graphite" lang="de">{proof.speaking.transcript}</p>
+          <p class="mt-4 text-sm leading-relaxed text-graphite">{t.speakingLimit}</p>
+        </div>
+        <div class="rounded-xl border border-rule bg-paper p-5">
+          <ul class="flex flex-wrap gap-2" aria-label={de ? 'Worterkennung' : 'Word recognition'}>
+            {proof.speaking.alignment.words.map((w) => <li class:list={['rounded-lg border p-2', w.hit ? 'border-rule bg-siegel-wash' : 'border-ink bg-white']}><span lang="de">{w.word}</span><span class="mt-1 block text-xs text-graphite">{w.hit ? t.heard : t.missing}</span></li>)}
+          </ul>
+          <h4 class="mt-5 font-bold">{t.open}</h4>
+          <p class="mt-2 leading-relaxed" lang="de">{proof.speaking.prompt.promptDe}</p>
+          {!de && <p class="mt-2 text-sm text-graphite">{proof.speaking.prompt.promptEn}</p>}
+        </div>
+      </article>
+    )}
+    <a href={`/courses/${level.replace('.', '-')}/`} class="dm-key dm-key-siegel mt-6">{t.door}</a>
+  </div>
+</section>
+)}

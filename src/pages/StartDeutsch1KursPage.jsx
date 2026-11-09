@@ -15,7 +15,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 // service, no migration). Structurally identical to TelcB1KursPage.jsx; see
 // that file's header for the rationale. Reached via LevelSubscriptionGuard
 // (level="a1.2") rather than PurchaseGuard — this plan belongs to the A1
-// band (Pro/trial OR the A1 course), not a standalone one-time product.
+// band (AI Practice/trial OR the A1 course), not a standalone one-time product.
 
 const TYPE_ICON = {
   lesson: BookOpen,
@@ -147,7 +147,7 @@ const StartDeutsch1KursPage = () => {
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
             Arbeite in deinem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
-            Dein Pro-Zugang bzw. dein A1-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
+            Dein AI Practice-Zugang bzw. dein A1-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
             <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">deiner Abo-Seite</Link>.
           </p>
         </footer>
