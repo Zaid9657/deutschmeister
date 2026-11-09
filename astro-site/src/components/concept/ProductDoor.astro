@@ -1,0 +1,11 @@
+---
+import { offerProductsWithVariants } from '../../lib/courseVariants.js';
+const { productKey, surface = 'offer', coral = false } = Astro.props;
+const product = offerProductsWithVariants().find((p) => p.key === productKey);
+if (!product) throw new Error(`Unknown offer: ${productKey}`);
+const buttonClass = `c4-button ${coral ? 'c4-button-coral' : ''}`;
+---
+<div data-course-door={product.key} data-course-product={product.key} data-course-open-class={buttonClass}>
+  {product.variantId ? <button type="button" class={buttonClass} data-course-variant={product.variantId} data-course-key={product.key} data-course-price={product.price} data-track-surface={surface}>Get {product.name} <span aria-hidden="true">→</span></button>
+    : <span class="c4-coming">Not on sale yet</span>}
+</div>

@@ -1,3 +1,4 @@
+import { hasExamPracticeAccess } from '../data/pricing.js';
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import {
@@ -277,7 +278,7 @@ const SpeakingPage = () => {
   // missions after its included AI Practice window ends. The session itself stays
   // metered by the allowance or the wallet on the server.
   const missionLocked = !!activeMission && !activeMission.is_free
-    && !hasLevelAccess(activeMission.level || selectedLevel);
+    && !hasLevelAccess(activeMission.level || selectedLevel) && !hasExamPracticeAccess(purchases, activeMission.level || selectedLevel);
   const canAfford = selectedCost === 0 || walletCents >= selectedCost;
   const startDisabled = starting || metaLoading || missionLocked || !canAfford || !browserSupport.supported;
 
@@ -730,7 +731,7 @@ const SpeakingPage = () => {
                 <span className="block text-sm font-bold text-ink">Free Conversation</span>
               </Card>
               {missions.map((m, i) => {
-                const locked = !m.is_free && !hasLevelAccess(m.level || selectedLevel);
+                const locked = !m.is_free && !hasLevelAccess(m.level || selectedLevel) && !hasExamPracticeAccess(purchases, m.level || selectedLevel);
                 const selected = selectedMissionId === m.id;
                 const card = (
                   <Card

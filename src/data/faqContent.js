@@ -106,7 +106,7 @@ export const FAQ_CATEGORIES = [
     items: [
       {
         q: 'How much does Deutschmeister cost?',
-        a: `Monthly AI Practice costs ${deEur(PLANS.monthly.price)} per month. Annual AI Practice costs ${deEur(PLANS.yearly.price)} per year, equivalent to ${deEur(PLANS.yearly.asMonthly)} per month or less than ${deEur(PLANS.yearly.perDay)} per day.`,
+        a: `Annual AI Practice costs ${deEur(PLANS.yearly.price)} per year, equivalent to ${deEur(PLANS.yearly.asMonthly)} per month or less than ${deEur(PLANS.yearly.perDay)} per day. Monthly AI Practice costs ${deEur(PLANS.monthly.price)} per month.`,
       },
       {
         q: 'Is there a free version?',

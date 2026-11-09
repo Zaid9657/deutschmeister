@@ -129,9 +129,9 @@ test('a speaking mission is locked by its level entitlement, so a bought course 
   // Cross-check AI-07 / C-140: an A1.2 buyer whose included Pro window ended saw
   // "This mission is part of Pro" on the missions the ticket says they own.
   const page = read('src/pages/SpeakingPage.jsx');
-  assert.match(page, /const missionLocked = !!activeMission && !activeMission\.is_free\s*&& !hasLevelAccess\(activeMission\.level \|\| selectedLevel\);/,
+  assert.match(page, /const missionLocked = !!activeMission && !activeMission\.is_free\s*&& !hasLevelAccess\(activeMission\.level \|\| selectedLevel\) && !hasExamPracticeAccess\(purchases, activeMission\.level \|\| selectedLevel\);/,
     'the selected mission\'s lock');
-  assert.match(page, /const locked = !m\.is_free && !hasLevelAccess\(m\.level \|\| selectedLevel\);/, 'each mission card\'s lock icon');
+  assert.match(page, /const locked = !m\.is_free && !hasLevelAccess\(m\.level \|\| selectedLevel\) && !hasExamPracticeAccess\(purchases, m\.level \|\| selectedLevel\);/, 'each mission card\'s lock icon');
   // The rule, run: a purchase of the mission's level opens it without any subscription.
   const purchases = [{ product_key: 'course_a1_2' }];
   const hasLevelAccess = (level) => FREE_LEVELS.includes(level.toLowerCase())

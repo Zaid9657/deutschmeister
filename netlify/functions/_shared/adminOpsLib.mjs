@@ -118,6 +118,7 @@ export function findDiscrepancies({ profile, subscriptions = [], purchases = [],
  * against both sources.
  */
 export const PRODUCT_KEYS = Object.freeze([
+  'a1_exam_pack', 'a1_complete', 'all_access',
   'telc_b1_komplett',
   'course_a1_2', 'course_a2_1', 'course_a2_2', 'course_b1_1', 'course_b1_2', 'course_b2_1', 'course_b2_2',
   'course_a1', 'course_a2', 'course_b1', 'course_b2', 'course_alle',

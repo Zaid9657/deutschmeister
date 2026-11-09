@@ -88,6 +88,9 @@ const LEGACY_PRODUCTS = Object.freeze({
  */
 export function productInfo(productKey) {
   const key = String(productKey || '');
+  if (key === 'a1_exam_pack') return { key, name: 'A1 Exam Pack', levels: [] };
+  if (key === 'a1_complete') return { key, name: 'A1 Complete', levels: ['a1.2'] };
+  if (key === 'all_access') return { key, name: 'All-Access Pass', levels: [...ALL_LEVELS] };
   if (key === 'telc_b1_komplett') return { key, name: 'telc B1 Komplettvorbereitung', levels: [] };
   const level = Object.keys(SUBLEVEL_PRICES_EUR).find((l) => productKeyForLevel(l) === key);
   if (level) return { key, name: `Deutsch ${level.toUpperCase()} Kurs`, levels: [level] };

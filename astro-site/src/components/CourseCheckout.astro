@@ -164,7 +164,19 @@
       .then((loaded) => {
         const viewer = currentUser();
         if (!loaded || !loaded.snapshot || !loaded.snapshot.signedIn || !viewer || loaded.snapshot.userId !== viewer.id) return;
-        doors.forEach((d) => applyDoor(d, loaded.lib.levelOpen(loaded.snapshot, d.getAttribute('data-course-door')), loaded.lib));
+        doors.forEach((d) => {
+          const productKey = d.getAttribute('data-course-product');
+          if (productKey) {
+            const home = loaded.lib.ownedProductHome(loaded.snapshot, productKey);
+            if (home) {
+              const link = document.createElement('a');
+              link.href = home;
+              link.className = d.getAttribute('data-course-open-class') || 'c4-button';
+              link.textContent = 'Owned · open →';
+              d.replaceChildren(link);
+            }
+          } else applyDoor(d, loaded.lib.levelOpen(loaded.snapshot, d.getAttribute('data-course-door')), loaded.lib);
+        });
       })
       .catch(() => { /* door optional */ })
       .finally(() => waiting.forEach((btn) => { btn.disabled = false; btn.removeAttribute('aria-busy'); }));

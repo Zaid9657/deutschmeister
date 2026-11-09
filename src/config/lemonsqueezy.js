@@ -10,7 +10,7 @@
 // support" and "Early access to new content", which nothing delivers; it is
 // the list /subscription's cards had been copied from. What Pro includes is
 // src/lib/proPlanLines.js (tests/subscription-plan-lines.test.mjs).
-import { PLANS, COURSES, LEVEL_COURSES, CURRENCY } from '../data/pricing.js';
+import { PLANS, COURSES, LEVEL_COURSES, OFFER_PRODUCTS, CURRENCY } from '../data/pricing.js';
 
 export const LEMONSQUEEZY_CONFIG = {
   storeId: import.meta.env.VITE_LEMONSQUEEZY_STORE_ID || '309512',
@@ -60,6 +60,11 @@ export const LEMONSQUEEZY_CONFIG = {
   // an unset variant hides the buy button (a coming-soon course has none by
   // design). Vite only inlines statically-named env reads, so each one is
   // spelled out rather than looked up by key.
+  offerProducts: {
+    a1_exam_pack: { ...OFFER_PRODUCTS.a1_exam_pack, variantId: import.meta.env.VITE_LEMONSQUEEZY_A1_EXAM_PACK_VARIANT_ID || '' },
+    a1_complete: { ...OFFER_PRODUCTS.a1_complete, variantId: import.meta.env.VITE_LEMONSQUEEZY_A1_COMPLETE_VARIANT_ID || '' },
+    all_access: { ...OFFER_PRODUCTS.all_access, variantId: import.meta.env.VITE_LEMONSQUEEZY_ALL_ACCESS_VARIANT_ID || '' },
+  },
   levelCourses: {
     course_a1_2: { ...LEVEL_COURSES.course_a1_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID || '' },
     course_a2_1: { ...LEVEL_COURSES.course_a2_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID || '' },

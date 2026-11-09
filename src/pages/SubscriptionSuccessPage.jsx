@@ -105,9 +105,9 @@ const SubscriptionSuccessPage = () => {
   // (A1.1–A2.2), else its level page. courseHomeFor falls back to the free
   // course, so a missing entitlement can never send a buyer to a lock.
   const courseHome = firstLevel ? courseHomeFor({ level: firstLevel, hasLevelAccess }) : null;
-  const startHref = courseBought
+  const startHref = courseBought?.home || (courseBought
     ? (courseHome === `/course/${firstLevel}` ? courseHome : `/level/${firstLevel}`)
-    : telcBought ? '/telc-b1-kurs' : '/dashboard';
+    : telcBought ? '/telc-b1-kurs' : '/dashboard');
 
   useEffect(() => {
     if (verified) setPolling(false);
@@ -206,8 +206,8 @@ const SubscriptionSuccessPage = () => {
                 <ul className="space-y-3 text-[0.9375rem] leading-relaxed">
                   {courseBought && (
                     <li>
-                      <strong>{courseBought.levels.map((l) => l.toUpperCase()).join(' and ')}, yours to keep</strong>
-                      <span className="block text-graphite">The guided plan, exercises, reading, listening and vocabulary — no expiry, nothing renews.</span>
+                      <strong>{courseBought.name}, yours to keep{courseBought.allExamPacks ? ' — courses and exam packs as released' : ''}</strong>
+                      <span className="block text-graphite">{courseBought.key === 'a1_exam_pack' ? 'Your A1 exam plan, short practice test and practice tasks — no expiry, nothing renews.' : courseBought.allExamPacks ? 'A1.1, A1.2 and the A1 Exam Pack are ready. Everything else is coming next, included when released.' : 'The guided course and its practice material stay in your account. Nothing renews.'}</span>
                     </li>
                   )}
                   {telcBought && (
@@ -218,13 +218,13 @@ const SubscriptionSuccessPage = () => {
                   )}
                   {(courseBought || telcBought) && (
                     <li>
-                      <strong>{COURSE_PRO_MONTHS} months of AI Practice on board</strong>
+                      <strong>{courseBought?.proMonths || COURSE_PRO_MONTHS} months of AI Practice on board</strong>
                       <span className="block text-graphite">{proLine}</span>
                     </li>
                   )}
                   {!courseBought && !telcBought && (
                     <li>
-                      <strong>Every level, and the full AI allowance</strong>
+                      <strong>Your AI Practice tools</strong>
                       <span className="block text-graphite">Your subscription is active. Cancel anytime in the billing portal.</span>
                     </li>
                   )}
@@ -239,7 +239,7 @@ const SubscriptionSuccessPage = () => {
             {/* The one `celebrate` moment is the confetti; the door is the line's key. */}
             <div className="mt-8 flex flex-col items-start gap-4">
               <Button variant="linie" size="lg" to={startHref}>
-                {courseBought ? `Start ${firstLevel.toUpperCase()} — day 1` : telcBought ? 'Open the plan' : 'Start learning'}
+                {courseBought ? (firstLevel ? `Start ${firstLevel.toUpperCase()} — day 1` : 'Open the exam plan') : telcBought ? 'Open the plan' : 'Start learning'}
                 <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Button>
               <p className="text-[0.875rem] text-nacht-muted">Your place is saved after every finished step, on any device you sign in on.</p>

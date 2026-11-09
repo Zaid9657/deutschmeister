@@ -294,7 +294,7 @@ test('ACC-02: a resumed ?buy= waits for verified billing and keeps the intent un
 
 test('ACC-02: the Buy and Subscribe controls are disabled until billing is read, with a notice and a retry', () => {
   assert.match(page, /disabled=\{subLoading \|\| verifying \|\| !billingVerified \|\| \(isSubscribed && !recurringBilling\)\}/);
-  assert.equal((page.match(/disabled=\{verifying \|\| !billingVerified\}/g) || []).length, 2, 'level-course and telc Buy');
+  assert.equal((page.match(/disabled=\{verifying \|\| !billingVerified\}/g) || []).length, 3, 'level-course, telc and offer-ladder Buy');
   assert.match(page, /\{!subLoading && !billingVerified && \(/, 'the notice shows once loading is over');
   assert.match(page, /Ihr Abo-Status konnte gerade nicht geladen werden\. Bitte versuchen Sie es gleich noch einmal\./);
   assert.match(page, /onClick=\{reloadBilling\}/);

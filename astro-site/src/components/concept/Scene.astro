@@ -1,9 +1,10 @@
 ---
 interface Props { name: string; alt: string; hero?: boolean; sizes?: string; class?: string; }
 const { name, alt, hero = false, sizes = '(max-width: 640px) 100vw, 50vw', class: className = '' } = Astro.props;
-const wide = ['hero', 'pricing-hero', 'a12-reception'].includes(name);
+const wide = ['hero', 'pricing-hero', 'a12-reception', 'offer-exam', 'offer-complete'].includes(name);
 const route = name === 'tram-route';
-const width = wide ? 1168 : route ? 1344 : 1024;
-const height = wide ? 880 : route ? 576 : name.startsWith('cando') ? 1024 : 688;
+const pass = name === 'offer-pass';
+const width = wide ? 1168 : route || pass ? 1344 : 1024;
+const height = wide ? 880 : route || pass ? 576 : name.startsWith('cando') ? 1024 : 688;
 ---
 <img class={className} src={`/art/scenes/${name}-800.webp`} srcset={`/art/scenes/${name}-800.webp 800w, /art/scenes/${name}-${width}.webp ${width}w`} sizes={sizes} width={width} height={height} alt={alt} loading={hero ? 'eager' : 'lazy'} decoding="async" fetchpriority={hero ? 'high' : undefined} />

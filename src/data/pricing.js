@@ -172,8 +172,22 @@ export const LEGACY_LEVEL_COURSES = {
   course_alle: legacyBand('course_alle', 'A1–B2', 'German Complete Course (A1–B2)', 'Deutsch Komplettkurs (A1–B2)', ALL_LEVELS, LEGACY_BUNDLE_PRICE_EUR),
 };
 
+/** Owner-approved offer ladder (2026-11-09). AI windows match webhook fulfilment. */
+export const OFFER_PRODUCTS = {
+  a1_exam_pack: { key: 'a1_exam_pack', code: 'A1 Exam Pack', name: 'A1 Exam Pack', price: 59, proDays: 60, proMonths: 2, levels: [], exams: ['start-deutsch-1'], home: '/start-deutsch-1-kurs', slug: 'a1-exam-pack' },
+  a1_complete: { key: 'a1_complete', code: 'A1 Complete', name: 'A1 Complete', price: 89, proDays: 180, proMonths: 6, levels: ['a1.2'], exams: ['start-deutsch-1'], home: '/course/a1.2', slug: 'a1-complete' },
+  all_access: { key: 'all_access', code: 'All-Access Pass', name: 'All-Access Pass', price: 199, proDays: 365, proMonths: 12, levels: ALL_LEVELS, allExamPacks: true, home: '/course/a1.1', slug: 'all-access' },
+};
+
+/** Expand this registry when an exam programme goes on sale; the Pass follows automatically. */
+export const SELLABLE_EXAM_PROGRAMMES = ['start-deutsch-1'];
+export const examsForProduct = (key) => OFFER_PRODUCTS[key]?.allExamPacks
+  ? SELLABLE_EXAM_PROGRAMMES : OFFER_PRODUCTS[key]?.exams || [];
+export const ownsExamProgramme = (purchases = [], slug) => purchases.some((p) =>
+  (!p.status || p.status === 'active') && examsForProduct(p.product_key).includes(slug));
+
 /** A course (current or legacy) by product key, or null — what a purchases row means. */
-export const courseForProduct = (productKey) => LEVEL_COURSES[productKey] || LEGACY_LEVEL_COURSES[productKey] || null;
+export const courseForProduct = (productKey) => OFFER_PRODUCTS[productKey] || LEVEL_COURSES[productKey] || LEGACY_LEVEL_COURSES[productKey] || null;
 
 /** Levels a product key unlocks — [] for unknown keys and for the telc course. */
 export const levelsForProduct = (productKey) => courseForProduct(productKey)?.levels || [];
@@ -197,6 +211,23 @@ export const courseForLevel = (level) => LEVEL_COURSES[productKeyForLevel(level 
 
 /** @deprecated name from the band era — now resolves to the sub-level course. */
 export const bandCourseForLevel = courseForLevel;
+
+/** Exam material stays open; AI sessions/feedback keep their server allowance. */
+export const hasExamPracticeAccess = (purchases, level) =>
+  String(level || '').toLowerCase().startsWith('a1.') && ownsExamProgramme(purchases, 'start-deutsch-1');
+
+/** Permanent ownership, independent of included AI expiry. */
+export const ownsProduct = (key, purchases = []) => {
+  const active = purchases.filter((p) => !p.status || p.status === 'active');
+  if (active.some((p) => p.product_key === key)) return true;
+  if (key === 'all_access') return false;
+  if (OFFER_PRODUCTS[key] && active.some((p) => p.product_key === 'all_access')) return true;
+  const levels = levelsForProduct(key);
+  const exams = examsForProduct(key);
+  return levels.length + exams.length > 0
+    && levels.every((level) => active.some((p) => levelsForProduct(p.product_key).includes(level)))
+    && exams.every((slug) => ownsExamProgramme(active, slug));
+};
 
 export const PLANS = {
   monthly: {

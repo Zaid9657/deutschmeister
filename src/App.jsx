@@ -226,7 +226,7 @@ function Shell() {
                     <Route
                       path="/start-deutsch-1-kurs"
                       element={
-                        <LevelSubscriptionGuard level="a1.2">
+                        <LevelSubscriptionGuard level="a1.2" programme="start-deutsch-1">
                           <EmailVerificationGate>
                             <StartDeutsch1KursPage />
                           </EmailVerificationGate>

@@ -30,7 +30,9 @@ test('pricing separates the no-account course, account trial and paid AI Practic
 test('signup describes the trial without presenting A1.1 as account-gated', () => {
   const signup = read('src/pages/SignupPage.jsx');
 
-  assert.match(signup, /Start your \{TRIAL_DAYS\}-day AI Practice trial/);
+  assert.match(signup, /Start A1\.1 free\. Try AI Practice for \{TRIAL_DAYS\} days/);
+  assert.doesNotMatch(signup, /All \$\{LEVEL_COUNT\} levels/);
+  assert.match(signup, /Courses beyond A1\.1 are purchased separately/);
   // The way out opens the free course itself (tests/free-door.test.mjs).
   assert.match(signup, /Start the \{FREE_LEVEL_LABEL\} course without an account/);
   assert.match(signup, /no automatic charge when the trial ends/);
