@@ -6,6 +6,7 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-09 | The 10 exam long-tail pages (d2, live 2026-10-26, in the sitemap, HTTP 200) brought 0 first-touch signups and 0 tagged-door signups in 14 days (33 signups in all); indexing is unreadable without Search Console | New SEO pages pay back in months, not weeks: no more page batches before the 90-day read, and the February deadline needs buyers reached directly (partners, communities) |
 | 2026-11-01 | Tracks A and C both edited SignupPage; A merged first and its new test failed on C's CI, which tests the merge with main while local runs test the branch alone | Before pushing a parallel-build PR, merge `origin/main` into it and run the full suite on the merged tree; give parallel tracks disjoint files where possible |
 | 2026-11-01 | Codex switched the confirmation panels to German inside the English signup and verify pages, reading "Sie" as "write German" | Brief Codex that "Sie" governs German copy only; a page keeps the UI language it already has |
 | 2026-11-01 | Three parallel Codex builds all died at the same minute on a dropped OpenAI websocket, leaving uncommitted work; only the finished track had a report | Run Codex builds as tracked background jobs (not detached `&`), have them commit after each item, and resume with `codex exec resume <session id>` instead of restarting |
