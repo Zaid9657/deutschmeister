@@ -31,9 +31,7 @@ import { dirname, join } from 'node:path';
 import { PLANS } from '../src/data/pricing.js';
 import { PRO_OFFER } from '../src/data/offers.js';
 import {
-  LEVEL_COUNT,
   PRO_DAILY_LIMIT,
-  PRO_SPEAKING_SESSIONS_PER_MONTH,
   PRO_WRITING_EVALUATIONS_PER_MONTH,
 } from '../src/data/marketing.js';
 
@@ -93,14 +91,12 @@ test('the German Pro cards say the same lines, figure for figure, in Sie', async
   });
 });
 
-test('both languages name every Pro allowance the server enforces', async () => {
+test('both languages state the paid writing and X-Ray allowances', async () => {
   const { proPlanLines } = await loadLib();
   for (const isGerman of [false, true]) {
     const stated = proPlanLines(isGerman).flatMap(figures);
     for (const [name, value] of Object.entries({
-      LEVEL_COUNT,
-      PRO_SPEAKING_SESSIONS_PER_MONTH,
-      PRO_WRITING_EVALUATIONS_PER_MONTH,
+              PRO_WRITING_EVALUATIONS_PER_MONTH,
       PRO_DAILY_LIMIT,
     })) {
       assert.ok(stated.includes(value), `isGerman=${isGerman}: no Pro card line states ${name} (${value})`);

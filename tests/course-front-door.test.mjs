@@ -75,7 +75,8 @@ test('the free finish line: the last node of every live curriculum links to a co
   const guard = read('src/components/ExamSubscriptionGuard.jsx');
   assert.match(guard, /hasLevelAccess\(resolved\.gateLevel\)/, 'the exam guard must gate course tests on their level');
   const ctx = read('src/contexts/SubscriptionContext.jsx');
-  assert.match(ctx, /if \(isLevelFree\(level\)\) return true;/, 'hasLevelAccess must short-circuit on free levels');
+  assert.match(ctx, /courseAccessReason/);
+  assert.match(read('src/lib/levelEntitlement.js'), /if \(isLevelFree\(level\)\) return 'free';/);
 });
 
 test('the course home labels the free finish line as free, on the node and in the footer', () => {

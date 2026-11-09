@@ -1,8 +1,8 @@
 import { examTrackByKey } from '../data/examTracks.js';
 import { EXAM_COURSE, PRO_OFFER, stationFor } from '../data/offers.js';
 
-// The Pro door: Pro is what adds exam-writing evaluations (offers.js PRO_OFFER).
-export const proFeedbackDoor = () => ({ title: PRO_OFFER.monthly.name, href: '/pricing/#pro', cta: 'Pro ansehen' });
+// The AI Practice door: AI Practice is what adds exam-writing evaluations (offers.js PRO_OFFER).
+export const proFeedbackDoor = () => ({ title: PRO_OFFER.monthly.name, href: '/pricing/#pro', cta: 'AI Practice ansehen' });
 
 // Pure offer selection. The client passes the already sale-gated checkout id
 // from lemonsqueezy.js; this module never reads or duplicates the sale switch.
@@ -11,8 +11,8 @@ export const proFeedbackDoor = () => ({ title: PRO_OFFER.monthly.name, href: '/p
 // exam's level. The offer used to hide behind hasLevelAccess(level), which the
 // 7-day trial makes true — and exam feedback exists only for trial and paid
 // tiers, so no reachable state ever showed it. `hasPaidAccess(level)` is true
-// for a running subscription or included Pro window, or a bought course that
-// covers the level: the trial learner sees the offer, Pro and owners do not.
+// for a running subscription or included AI Practice window, or a bought course that
+// covers the level: the trial learner sees the offer, AI Practice and owners do not.
 export function examFeedbackOffer({ examKey, hasPaidAccess, hasProduct, telcVariantId = '', loading = false } = {}) {
   const track = examTrackByKey(examKey);
   if (loading || !track) return null;
@@ -43,10 +43,10 @@ export function examFeedbackOffer({ examKey, hasPaidAccess, hasProduct, telcVari
  * The moments a learner actually reaches (the server's tiers decide them):
  *   - a trial result      → the matching offer: the trial's evaluations are few
  *   - 403 subscription_required (the trial is over)
- *                         → the matching offer, else the Pro door (a lapsed
+ *                         → the matching offer, else the AI Practice door (a lapsed
  *                           course window owns its course but not exam feedback)
- *   - 429 limit_reached on the trial → the Pro door: Pro adds evaluations
- *   - a paid result, Pro at its monthly cap, any other error → nothing
+ *   - 429 limit_reached on the trial → the AI Practice door: AI Practice adds evaluations
+ *   - a paid result, AI Practice at its monthly cap, any other error → nothing
  * `result` is the 200 body, `error` a non-OK body, `offer` examFeedbackOffer's answer.
  */
 export function writingOfferMoment({ result = null, error = null, offer = null } = {}) {

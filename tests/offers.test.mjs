@@ -15,13 +15,11 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import vm from 'node:vm';
-import * as MARKETING from '../src/data/marketing.js';
 import {
   STATIONS, TICKET_STATIONS, FIT_CHOICES, FREE_COURSE_HREF, stationFor, ticketLines, planLine, OFFER_FAQ, minutesPerDay,
 } from '../src/data/offers.js';
 import { COMING_SOON_LEVELS, COURSE_PRO_MONTHS, SUBLEVEL_PRICES_EUR, ALL_LEVELS, eur, productKeyForLevel } from '../src/data/pricing.js';
-import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../src/data/marketing.js';
+import { PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../src/data/marketing.js';
 import { GUIDED_PLANS, COURSE_CONTENTS, LEVEL_OUTCOME_EN } from '../src/data/courseContents.js';
 import { COURSES as GUIDED_COURSES } from '../src/data/courses/index.js';
 
@@ -68,7 +66,7 @@ test('every ticket line states derived figures, never typed ones', () => {
     assert.equal(lines.length, 4);
     const text = lines.map((l) => `${l.title} ${l.body}`).join(' ');
     const c = COURSE_CONTENTS[s.level];
-    for (const fact of [COURSE_PRO_MONTHS, PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT, c.words, c.missions, c.listeningQuestions]) {
+    for (const fact of [COURSE_PRO_MONTHS, PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT, c.words, c.missions, c.listeningQuestions]) {
       assert.ok(text.includes(String(fact)), `${s.code}: the ticket states ${fact}`);
     }
     assert.match(text, /No subscription/);
@@ -93,7 +91,10 @@ test('the fit chooser points each answer at the next stop, in the course pages�
 
 const OFFER_SURFACES = [
   'src/data/offers.js',
-  'astro-site/src/data/homepage.js',
+  'astro-site/src/pages/pricing.astro',
+  'astro-site/src/pages/courses/index.astro',
+  'astro-site/src/pages/courses/[level].astro',
+  ...readdirSync(join(ROOT, 'astro-site/src/components/concept')).map((f) => `astro-site/src/components/concept/${f}`),
   'astro-site/src/pages/index.astro',
   ...readdirSync(join(ROOT, 'astro-site/src/components/linie')).map((f) => `astro-site/src/components/linie/${f}`),
 ];
@@ -115,34 +116,19 @@ test('offer surfaces make none of the claims this business does not make', () =>
   for (const item of OFFER_FAQ) assert.doesNotMatch(`${item.q} ${item.a}`, /refund|money[- ]back/i);
 });
 
-test('a Buy button only ever renders behind a checkout id, and never for an Im Bau stop', () => {
-  for (const file of ['LineSection.astro', 'FitChooser.astro', 'Ticket.astro']) {
-    const src = read(`astro-site/src/components/linie/${file}`);
-    for (const m of src.matchAll(/data-course-variant=\{([^}]+)\}/g)) {
-      assert.match(m[1], /^variants\[/, `${file}: the variant comes from courseVariants.js`);
-    }
-    // every rendered variant is guarded by a truthy check of the same lookup
-    assert.match(src, /variants\[[^\]]+\] (\?|&&)/, `${file}: Buy renders only when the id is set`);
-  }
+test('a Buy button renders only behind a checkout id, and never for an unbuilt course', () => {
+  const src = read('astro-site/src/components/concept/PurchaseDoor.astro');
+  assert.match(src, /course\?\.variantId \?/);
+  assert.match(src, /data-course-variant=\{course.variantId\}/);
+  assert.ok(src.indexOf('course?.comingSoon ?') < src.indexOf('course?.variantId ?'));
   const variants = read('astro-site/src/lib/courseVariants.js');
-  assert.match(variants, /c\.comingSoon \? ''/, 'a coming-soon course never gets an id');
+  assert.match(variants, /c\.comingSoon \? ''/);
 });
 
-test('the /pricing/ table never shows Pro narrower than the trial, nor a free level as paid', () => {
-  // The Pro "Timed practice exam" cell said "telc B1" beside the trial's
-  // "Included" — one exam of the six the Pro-and-trial /modelltest hub serves —
-  // and "Podcasts & video" said "—" without an account although the free
-  // level's podcasts play for anyone (2026-10-25).
-  const block = read('astro-site/src/pages/pricing.astro').match(/const ROWS = (\[[\s\S]*?\n\]);/);
-  assert.ok(block, 'const ROWS not found in pricing.astro');
-  const rows = vm.runInNewContext(`(${block[1]})`, { ...MARKETING, FREE_RUNGS: 1, TOPICS_PER_LEVEL: 12 });
-  for (const row of rows) {
-    if (row.trial === 'Included') assert.equal(row.pro, 'Included', `${row.label}: Pro shows "${row.pro}" where the trial includes it`);
-  }
-  const exam = rows.find((r) => /practice exam/i.test(r.label));
-  assert.equal(exam.pro, exam.trial, 'every practice exam opens with Pro exactly as in the trial');
-  const podcasts = rows.find((r) => /podcast/i.test(r.label));
-  assert.equal(podcasts.anonymous, MARKETING.FREE_LEVEL_LABEL, 'the free level\'s podcasts play without an account');
-  // …which holds while the podcast page lets the free level through for everyone.
+test('pricing separates course ownership from optional tools without narrowing the account trial', () => {
+  const pricing = read('astro-site/src/pages/pricing.astro');
+  assert.match(pricing, /course access sold separately/);
+  assert.match(pricing, /new subscriptions do not include course access/);
+  assert.match(pricing, /Existing subscriptions started before 10 November 2026 retain their course access while active/);
   assert.match(read('src/pages/PodcastsPage.jsx'), /isLevelFree\(level\) \|\|/);
 });

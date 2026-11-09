@@ -35,6 +35,8 @@ export const NAV_GROUPS = [
     labelEn: 'Learn',
     labelDe: 'Lernen',
     items: [
+      { key: 'ai-practice', labelEn: 'AI Practice', labelDe: 'AI Practice', href: '/pricing/', kind: 'static', auth: 'any' },
+      { key: 'how-it-works', labelEn: 'How It Works', labelDe: 'So funktioniert es', href: '/faq/', kind: 'spa', auth: 'any' },
       { key: 'courses', labelEn: 'Courses', labelDe: 'Kurse', href: '/courses/', kind: 'static', auth: 'any' },
       { key: 'grammar', labelEn: 'Grammar', labelDe: 'Grammatik', href: '/grammar/', kind: 'static', auth: 'any' },
       { key: 'videos', labelEn: 'Videos', labelDe: 'Videos', href: '/video-library', kind: 'spa', auth: 'any' },
@@ -52,13 +54,13 @@ export const NAV_GROUPS = [
     items: [
       { key: 'level-test', labelEn: 'Level Test', labelDe: 'Einstufungstest', href: '/level-test/', kind: 'spa', auth: 'any' },
       { key: 'xray', labelEn: 'X-Ray', labelDe: 'Satz-Analyse', href: '/analyze/', kind: 'spa', auth: 'any' },
-      { key: 'pricing', labelEn: 'Pricing', labelDe: 'Preise', href: '/pricing/', kind: 'static', auth: 'anon' },
+      { key: 'pricing', labelEn: 'Pricing', labelDe: 'Preise', href: '/pricing/', kind: 'static', auth: 'any' },
       { key: 'dashboard', labelEn: 'Dashboard', labelDe: 'Dashboard', href: '/dashboard', kind: 'spa', auth: 'authed' },
     ],
   },
 ];
 
-export const FOOTER_GROUPS = [
+const LIBRARY_FOOTER_GROUPS = [
   {
     key: 'grammar',
     titleEn: 'Grammar',
@@ -104,6 +106,14 @@ export const FOOTER_GROUPS = [
       { labelEn: 'Share your story', labelDe: 'Erfahrung teilen', href: '/share-your-story/', kind: 'static' },
     ],
   },
+];
+
+const footerItems = LIBRARY_FOOTER_GROUPS.flatMap((g) => g.items);
+const navItem = (key) => NAV_GROUPS.flatMap((g) => g.items).find((i) => i.key === key);
+export const FOOTER_GROUPS = [
+  { key: 'learn', titleEn: 'Learn', titleDe: 'Lernen', items: [navItem('courses'), navItem('ai-practice'), navItem('how-it-works'), navItem('pricing'), ...LIBRARY_FOOTER_GROUPS.find((g) => g.key === 'learn').items] },
+  { key: 'about', titleEn: 'About', titleDe: 'Über uns', items: footerItems.filter((i) => ['/ueber-uns/', '/faq/', '/share-your-story/'].includes(i.href)) },
+  { key: 'resources', titleEn: 'Resources', titleDe: 'Ressourcen', items: footerItems.filter((i) => !['/ueber-uns/', '/faq/', '/share-your-story/'].includes(i.href) && !LIBRARY_FOOTER_GROUPS.find((g) => g.key === 'learn').items.includes(i)) },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

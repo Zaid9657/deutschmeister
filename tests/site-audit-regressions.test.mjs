@@ -57,35 +57,28 @@ test('Sentence X-Ray explains that example chips consume the daily allowance', (
   assert.match(sentenceXray, /Trying an example uses one of your daily Sentence X-Ray analyses\./);
 });
 
-test('the SPA navigation switches at the large breakpoint and exposes 44px controls', () => {
-  assert.match(navbar, /2xl:max-w-\[1536px\]/);
-  assert.match(navbar, /className="hidden lg:flex items-center gap-1"/);
-  assert.match(navbar, /className=\{?[`"]lg:hidden flex h-11 w-11/);
-  // The phone menu scrolls inside the viewport under the bar (v3: on the night ground).
-  assert.match(navbar, /className=\{?[`"]lg:hidden max-h-\[calc\(100svh-4rem\)\] overflow-y-auto border-t border-nacht-rule bg-nacht/);
-  assert.match(navbar, /aria-label=\{i18n\.language === 'en' \? 'Switch to German' : 'Switch to English'\}/);
-  assert.match(navbar, /w-11 h-11/);
+test('the SPA navigation exposes 44px controls and a scrollable mobile menu', () => {
+  const css = read('astro-site/src/styles/concept4.css');
+  assert.match(navbar, /aria-expanded=\{isOpen\}/);
+  assert.match(navbar, /aria-controls="app-mobile-menu"/);
+  assert.match(navbar, /aria-label=\{isGerman \? 'Switch to English' : 'Switch to German'\}/);
+  assert.match(css, /\.c4-language-button, \.c4-menu-toggle \{[^}]*min-width: 44px; min-height: 44px/);
+  assert.match(css, /max-height: calc\(100svh - 64px\); overflow: auto/);
   assert.match(button, /rounded-clay min-h-11/);
 });
 
-test('the full Astro navigation starts at the large breakpoint', () => {
-  assert.match(astroLayout, /2xl:max-w-\[1536px\]/);
-  assert.match(astroLayout, /class="hidden lg:flex items-center gap-1"/);
-  assert.match(astroLayout, /class="lg:hidden flex items-center gap-2"/);
-  assert.match(astroLayout, /<summary class="flex min-h-11 cursor-pointer/);
+test('the full Astro navigation has a keyboard-operable mobile disclosure', () => {
+  assert.match(astroLayout, /<details class="c4-mobile-menu"><summary aria-label="Menu">/);
+  const css = read('astro-site/src/styles/concept4.css');
+  assert.match(css, /@media \(max-width: 900px\)/);
+  assert.match(css, /\.c4-mobile-menu > summary \{[^}]*width: 44px; height: 44px/);
 });
 
-test('pricing distinguishes recurring access from one-time courses in its headline and CTA', () => {
-  // v4 (2026-10-04): the headline IS the fork — own a level (one-time) or rent
-  // the line (recurring) — and the lead names both payment shapes.
-  assert.match(pricing, /Own a level,<\/span>[\s\S]*?or choose Pro\./);
-  assert.match(pricing, /Buy a level once/);
-  assert.match(pricing, /subscribe to Pro/);
-  // The Pro CTA's words live in astro-site/src/lib/proCta.js since 2026-09-30
-  // (signed out: the trial; signed in: "Go Pro — <price>"), pinned in
-  // tests/pro-cta.test.mjs. The page must render them from there.
+test('pricing distinguishes course ownership and recurring AI tools with an honest CTA', () => {
+  assert.match(pricing, /Pay once for your course/);
+  assert.match(pricing, /course access sold separately/);
   assert.match(pricing, /\{proCta\(\)\.label\}/);
-  assert.match(read('astro-site/src/lib/proCta.js'), /label: `Start \$\{TRIAL_DAYS\}-day Pro trial`/);
+  assert.match(read('astro-site/src/lib/proCta.js'), /label: `Start \$\{TRIAL_DAYS\}-day AI Practice trial`/);
 });
 
 test('AI-facing platform facts use the current measured counts and level-test duration', () => {

@@ -255,6 +255,6 @@ export const goetheB1SpeakingEn = {
 
   cta: {
     heading: 'Get ready for Goethe B1 Speaking',
-    body: 'A free account comes with Pro days: practise speaking with the AI conversation partner and sit the timed Goethe B1 practice exam while they run. Take the placement test first to see where you stand.',
+    body: 'A free account comes with AI Practice days: practise speaking with the AI conversation partner and sit the timed Goethe B1 practice exam while they run. Take the placement test first to see where you stand.',
   },
 };

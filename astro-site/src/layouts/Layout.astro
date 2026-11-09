@@ -1,9 +1,10 @@
 ---
 import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation.js';
-import { fontPreloads, signFontPreloads, color, nacht, linie } from '../data/design-tokens.js';
+import { fontPreloads, color, nacht, linie } from '../data/design-tokens.js';
 import Showtime from '../components/Showtime.astro';
+import Motion from '../components/concept/Motion.astro';
+import '../styles/concept4.css';
 import { onsiteHref, surfaceForPath } from '../lib/onsiteLinks.js';
-import { TRIAL_DAYS } from '../data/marketing.js';
 import { STATIONS, FREE_COURSE_HREF } from '../data/offers.js';
 import 'atropos/css';
 import '../styles/showtime.css';
@@ -35,14 +36,13 @@ const {
   noindex = false,
   keywords,
   lang = 'en',
-  tone = 'paper',
   preloads = fontPreloads,
 } = Astro.props;
 // The sign face (Archivo) is for the pages that preload it — the marketing and
 // commerce pages. Everywhere else (grammar, guides, exams …) the chrome sets its
 // labels in the body face, so a library page never fetches a 55 KB font for its
 // nav alone (it cost ~450 ms of lab FCP there; linie.css `data-sign="off"`).
-const signOn = signFontPreloads.every((href) => preloads.includes(href));
+const signOn = false;
 
 // `canonical={null}` means emit none. Only 404.html uses it: the page is served
 // at /404.html and as the fallback body for arbitrary unknown paths, so there is
@@ -70,10 +70,10 @@ const surface = surfaceForPath(Astro.url.pathname);
 const navSignupHref = surface ? onsiteHref('signup', surface, 'nav') : '/signup';
 // v3 chrome ("Die Linie"): Courses and Pricing sit in the bar itself — the two
 // doors a buyer looks for — and leave their groups so no link appears twice.
-const PROMOTED = ['courses', 'pricing'];
+const PROMOTED = ['ai-practice', 'how-it-works', 'pricing'];
 const promoted = PROMOTED.map((key) => navItems.find((i) => i.key === key)).filter(Boolean);
 const navGroups = NAV_GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => !PROMOTED.includes(i.key)) })).filter((g) => g.items.length);
-const night = tone === 'nacht';
+const night = false;
 // theme-color matches the top of the page (mobile-native: status bar = header).
 const themeColor = night ? nacht.DEFAULT : color.paper;
 // Token values for the two inline scripts below (they cannot import modules):
@@ -156,166 +156,27 @@ const authAttrs = (item) =>
     >
       Skip to content
     </a>
-    <!-- Navbar — v3 "Die Linie": the bar is a station sign. Paper by default;
-         night (`tone="nacht"`) on pages whose first screen is a nacht ground,
-         so the top of the page reads as one surface. -->
-    <nav
-      class:list={[
-        'fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-md pt-[env(safe-area-inset-top)]',
-        night ? 'bg-nacht/90 border-nacht-rule text-nacht-text' : 'bg-paper/90 border-rule text-ink',
-      ]}
-      data-ground={night ? 'nacht' : 'paper'}
-      aria-label="Main"
-    >
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[1536px]">
-        <div class="flex items-center justify-between h-16">
-          <!-- Logo — the Meister-Siegel seal, same mark as the app (src/components/Logo.jsx); colours from the tokens -->
-          <a href="/" class="flex items-center gap-2.5">
-            <svg width="38" height="38" viewBox="0 0 64 64" role="img" aria-label="DeutschMeister">
-              <defs>
-                <linearGradient id="dmSealNav" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color={color.siegel} />
-                  <stop offset="1" stop-color={color.siegelLift} />
-                </linearGradient>
-              </defs>
-              <circle cx="32" cy="32" r="30" fill="url(#dmSealNav)" />
-              <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-dasharray="1.5 4" />
-              <circle cx="32" cy="8.5" r="3.4" fill={color.gold} />
-              <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill={color.white}>M</text>
-            </svg>
-            {night ? (
-              <span class="sign-label hidden text-[1.1875rem] text-nacht-text sm:block">Deutsch<span class="text-linie">Meister</span></span>
-            ) : (
-              <span class="sign-label hidden text-[1.1875rem] text-ink sm:block">Deutsch<span class="text-siegel-deep">Meister</span></span>
-            )}
-          </a>
-
-          <!-- Desktop nav — rendered from the shared navigation registry -->
-          <div class="hidden lg:flex items-center gap-1">
-            {promoted.map((item) => (
-              <a
-                href={item.href}
-                {...authAttrs(item)}
-                class:list={['sign-label flex min-h-11 items-center whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-text hover:bg-nacht-raised' : 'text-ink hover:bg-paper-sunk']}
-              >
-                {item.labelEn}
-              </a>
-            ))}
-            {NAV_GROUPS.map((group) => navGroups.some((g) => g.key === group.key) && (
-              <details class="group relative">
-                <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] sign-label text-graphite transition-colors hover:bg-paper-sunk hover:text-ink [&::-webkit-details-marker]:hidden [[data-ground=nacht]_&]:text-nacht-muted [[data-ground=nacht]_&]:hover:bg-nacht-raised [[data-ground=nacht]_&]:hover:text-nacht-text">
-                  {group.labelEn}
-                  <svg class="h-3.5 w-3.5 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
-                </summary>
-                <div class="dm-sheet absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 text-ink shadow-overlay">
-                  {navGroups.find((g) => g.key === group.key).items.map((item) => (
-                    <a
-                      href={item.href}
-                      {...authAttrs(item)}
-                      class="flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-siegel-deep"
-                    >
-                      {item.labelEn}
-                    </a>
-                  ))}
-                </div>
-              </details>
-            ))}
-            <div class:list={['mx-2 h-5 w-px', night ? 'bg-nacht-rule' : 'bg-rule']}></div>
-            <a
-              href="/login"
-              data-anon-only
-              data-login-next
-              class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-muted hover:text-nacht-text' : 'text-graphite hover:text-ink']}
-            >
-              Log in
-            </a>
-            <a
-              href={navSignupHref}
-              data-anon-only
-              class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] underline decoration-2 underline-offset-4 transition-colors', night ? 'text-nacht-text decoration-nacht-rule hover:decoration-linie' : 'text-ink decoration-rule hover:decoration-siegel']}
-            >
-              Start {TRIAL_DAYS}-day trial
-            </a>
-            <a
-              href={FREE_COURSE_HREF}
-              data-anon-only
-              data-track="course_selected"
-              data-track-level="a1.1"
-              data-track-surface="nav"
-              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
-            >
-              Start A1.1 free
-            </a>
-            <!-- The SPA's Upgrade chip: Pricing is an anonymous-only item, so a
-                 signed-in learner with no live trial, no live Pro and no course
-                 had no way to the offer here. updateContinueLinks reveals it. -->
-            <a
-              href="/pricing/"
-              data-upgrade
-              style="display:none"
-              class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-muted hover:text-nacht-text' : 'text-graphite hover:text-ink']}
-            >
-              Upgrade
-            </a>
-            <a
-              href={FREE_COURSE_HREF}
-              data-auth-only
-              data-continue-course
-              style="display:none"
-              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
-            >
-              Continue learning
-            </a>
-          </div>
-
-          <!-- Mobile: the free first stop + the full menu (pure HTML disclosure, no client JS) -->
-          <div class="lg:hidden flex items-center gap-2">
-            <a href={FREE_COURSE_HREF} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
-              Start A1.1 free
-            </a>
-            <a href={FREE_COURSE_HREF} data-auth-only data-continue-course style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
-              Continue learning
-            </a>
-            <details class="relative">
-              <summary class:list={['flex min-h-11 cursor-pointer list-none items-center justify-center rounded-pill p-2.5 [&::-webkit-details-marker]:hidden', night ? 'hover:bg-nacht-raised' : 'hover:bg-paper-sunk']} aria-label="Menu">
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h10" />
-                </svg>
-              </summary>
-              <!-- The sheet: a timetable of every door, on the night ground. -->
-              <div class="dm-sheet fixed inset-x-0 top-16 z-50 max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-nacht-rule bg-nacht px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-4 text-nacht-text shadow-overlay" data-ground="nacht">
-                <ol class="mb-4 grid grid-cols-4 gap-2" aria-label="Courses by level">
-                  {STATIONS.map((st) => (
-                    <li>
-                      <a href={st.coursePage} class="flex min-h-11 flex-col items-center justify-center rounded-xl border border-nacht-rule bg-nacht-raised px-1 py-2 text-center">
-                        <span class="sign-code text-[1rem]">{st.code}</span>
-                        <span class:list={['mt-0.5 font-data text-[0.625rem]', st.status === 'free' ? 'text-linie' : 'text-nacht-muted']}>{st.status === 'free' ? 'free' : st.status === 'building' ? 'Im Bau' : st.priceLabel}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ol>
-                {promoted.map((item) => (
-                  <a href={item.href} {...authAttrs(item)} class="sign-label flex min-h-11 items-center border-b border-nacht-rule text-[1.0625rem]">{item.labelEn}</a>
-                ))}
-                {navItems.filter((item) => !PROMOTED.includes(item.key)).map((item) => (
-                  <a
-                    href={item.href}
-                    {...authAttrs(item)}
-                    class="flex min-h-11 items-center border-b border-nacht-rule text-[0.9375rem] font-semibold text-nacht-muted"
-                  >
-                    {item.labelEn}
-                  </a>
-                ))}
-                <div class="mt-5 grid gap-3">
-                  <a href={FREE_COURSE_HREF} data-anon-only class="dm-key dm-key-linie w-full">Start A1.1 free — no account</a>
-                  <a href={navSignupHref} data-anon-only class="dm-key dm-key-ghost-nacht w-full">Start {TRIAL_DAYS}-day trial</a>
-                  <a href="/login" data-anon-only data-login-next class="dm-link-nacht py-2 text-center text-sm font-semibold">Log in</a>
-                  <a href="/pricing/" data-upgrade style="display:none" class="dm-key dm-key-ghost-nacht w-full">Upgrade</a>
-                </div>
-              </div>
-            </details>
-          </div>
+    <nav class="c4-site-nav" aria-label="Main" data-ground="paper">
+      <div class="c4-wrap c4-nav-inner">
+        <a href="/" class="c4-brand" aria-label="DeutschMeister home"><span class="c4-brand-mark" aria-hidden="true">DM</span><span>DeutschMeister</span></a>
+        <div class="c4-desktop-nav">
+          <details class="c4-nav-dropdown"><summary>Courses <span aria-hidden="true">⌄</span></summary><div class="c4-dropdown-panel"><a href="/courses/">All courses →</a>{navGroups.map((group) => <div><p>{group.labelEn}</p>{group.items.filter((i) => i.key !== 'courses').map((item) => <a href={item.href} {...authAttrs(item)}>{item.labelEn}</a>)}</div>)}</div></details>
+          {promoted.map((item) => <a href={item.href} {...authAttrs(item)} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>{item.labelEn}</a>)}
         </div>
+        <div class="c4-nav-account">
+          <a href="/login" data-anon-only data-login-next>Log in</a>
+          <a href={FREE_COURSE_HREF} data-anon-only class="c4-button" data-track="course_selected" data-track-level="a1.1" data-track-surface="nav">Start Learning</a>
+          <a href={FREE_COURSE_HREF} data-auth-only data-continue-course style="display:none" class="c4-button">Continue learning</a>
+          <a href="/pricing/" data-upgrade style="display:none">Upgrade</a>
+        </div>
+        <details class="c4-mobile-menu"><summary aria-label="Menu"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg></summary><div class="c4-mobile-panel">
+          <a href="/courses/" class="c4-menu-heading">Courses</a>
+          <ol class="c4-mobile-levels" aria-label="Courses by level">{STATIONS.map((st) => <li><a href={st.coursePage}><strong>{st.code}</strong><span>{st.status === 'free' ? 'Free' : st.status === 'building' ? 'Coming next' : st.priceLabel}</span></a></li>)}</ol>
+          {promoted.map((item) => <a href={item.href} {...authAttrs(item)}>{item.labelEn}</a>)}
+          <details><summary>More ways to learn</summary>{navItems.filter((item) => !PROMOTED.includes(item.key) && item.key !== 'courses').map((item) => <a href={item.href} {...authAttrs(item)}>{item.labelEn}</a>)}</details>
+          <a href={FREE_COURSE_HREF} data-anon-only class="c4-button c4-button-coral">Start A1.1 free →</a><a href={FREE_COURSE_HREF} data-auth-only data-continue-course style="display:none" class="c4-button">Continue learning →</a>
+          <a href={navSignupHref} data-anon-only>Create a free account</a><a href="/pricing/" data-upgrade style="display:none">Upgrade</a><a href="/login" data-anon-only data-login-next>Log in</a><a href={SUPPORT_LINK.href}>{SUPPORT_LINK.labelEn}</a>
+        </div></details>
       </div>
     </nav>
 
@@ -324,125 +185,18 @@ const authAttrs = (item) =>
       <slot />
     </main>
 
-    <!-- Footer — the end of the line: every station, then every door. -->
-    <footer class="mt-20 bg-nacht text-nacht-muted" data-ground="nacht">
-      <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-        <!-- The line, flat: eight stations, each a link to its course page. -->
-        <nav aria-label="Courses by level" class="relative pb-10">
-          <div class="absolute left-0 right-0 top-[1.0625rem] h-1.5 rounded-pill bg-linie" aria-hidden="true"></div>
-          <ol class="relative grid grid-cols-4 gap-y-6 sm:grid-cols-8">
-            {STATIONS.map((st) => (
-              <li class="flex flex-col items-start sm:items-center">
-                <a href={st.coursePage} class="group flex flex-col items-start gap-2 sm:items-center">
-                  <span class:list={['dm-station-dot block h-[2.375rem] w-[2.375rem] rounded-full border-[5px]', st.status === 'building' ? 'border-nacht-rule bg-nacht' : 'border-linie bg-nacht']} aria-hidden="true"></span>
-                  <span class="sign-code text-[1.125rem] text-nacht-text">{st.code}</span>
-                  <span class="font-data text-[0.6875rem]">{st.status === 'free' ? 'Free' : st.status === 'building' ? 'Im Bau' : st.priceLabel}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        <div class="grid gap-10 border-t border-nacht-rule py-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <div class="mb-3 flex items-center gap-2">
-              <svg width="32" height="32" viewBox="0 0 64 64" role="img" aria-label="DeutschMeister">
-                <defs>
-                  <linearGradient id="dmSealFoot" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stop-color={color.siegel} />
-                    <stop offset="1" stop-color={color.siegelLift} />
-                  </linearGradient>
-                </defs>
-                <circle cx="32" cy="32" r="30" fill="url(#dmSealFoot)" />
-                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-dasharray="1.5 4" />
-                <circle cx="32" cy="8.5" r="3.4" fill={color.gold} />
-                <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill={color.white}>M</text>
-              </svg>
-              <span class="sign-label text-[1.0625rem] text-nacht-text">Deutsch<span class="text-siegel-deep">Meister</span></span>
-            </div>
-            <p class="text-sm leading-relaxed">
-              German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.
-            </p>
-            <p class="mt-4">
-              <a href={navSignupHref} data-anon-only class="dm-link-nacht text-sm font-semibold">Create a free account</a>
-            </p>
-            <!-- Off-site channels. Same registry and the same (lucide) glyphs as
-                 the SPA footer, so both front ends draw one icon set. -->
-            <ul class="mt-4 flex flex-wrap items-center gap-x-4 text-sm">
-              {SOCIAL_LINKS.map((item) => (
-                <li>
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-nacht-text"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      {item.key === 'youtube' && (
-                        <>
-                          <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-                          <path d="m10 15 5-3-5-3z" />
-                        </>
-                      )}
-                      {item.key === 'instagram' && (
-                        <>
-                          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                        </>
-                      )}
-                      {item.key === 'facebook' && (
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                      )}
-                      {item.key === 'telegram' && (
-                        <>
-                          <path d="m22 2-7 20-4-9-9-4Z" />
-                          <path d="M22 2 11 13" />
-                        </>
-                      )}
-                    </svg>
-                    {item.labelEn}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <!-- The one way to reach a human (same registry entry as the SPA
-                 footer). /support is an SPA route: signed in it opens the
-                 ticket form, signed out it offers sign-in or the contact
-                 address — so a static-page visitor is never a dead end. -->
-            <p class="mt-1 text-sm">
-              <a href={SUPPORT_LINK.href} class="inline-flex min-h-11 items-center gap-2 font-semibold text-nacht-text transition-colors hover:text-siegel-deep">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" />
-                  <path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24" />
-                </svg>
-                {SUPPORT_LINK.labelEn}
-              </a>
-            </p>
-          </div>
-          {FOOTER_GROUPS.map((group) => (
-            <div>
-              <h2 class="text-nacht-text font-semibold sign-label mb-3 text-sm">{group.titleEn}</h2>
-              <ul class="space-y-1 text-sm">
-                {group.items.map((item) => (
-                  <li><a href={item.href} class="inline-flex min-h-9 items-center transition-colors hover:text-nacht-text">{item.labelEn}</a></li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div class="border-t border-nacht-rule py-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] text-center text-xs">
-          <p class="mb-2">
-            {LEGAL_LINKS.map((item, i) => (
-              <>
-                {i > 0 && <span class="mx-2">·</span>}
-                <a href={item.href} class="transition-colors hover:text-nacht-text">{item.labelEn}</a>
-              </>
-            ))}
-          </p>
-          © {new Date().getFullYear()} DeutschMeister · All rights reserved
-        </div>
+    <footer class="c4-site-footer">
+      <div class="c4-wrap c4-footer-grid">
+        <div class="c4-footer-brand"><a href="/" class="c4-brand"><span class="c4-brand-mark" aria-hidden="true">DM</span><span>DeutschMeister</span></a><p>Practical German for real life in Germany.</p><a href={SUPPORT_LINK.href}>{SUPPORT_LINK.labelEn}</a></div>
+        {FOOTER_GROUPS.map((group) => <div class="c4-footer-group"><h2>{group.titleEn}</h2><ul>{group.items.slice(0, 4).map((item) => <li><a href={item.href}>{item.labelEn}</a></li>)}</ul>{group.items.length > 4 && <details><summary>More resources</summary><ul>{group.items.slice(4).map((item) => <li><a href={item.href}>{item.labelEn}</a></li>)}</ul></details>}</div>)}
+        <ul class="c4-footer-socials">{SOCIAL_LINKS.map((item) => <li><a href={item.href} target="_blank" rel="noopener noreferrer" aria-label={item.labelEn}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          {item.key === 'youtube' && <><rect x="2" y="5" width="20" height="14" rx="4" /><path d="m10 9 5 3-5 3z" /></>}
+          {item.key === 'instagram' && <><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><path d="M17 7h.01" /></>}
+          {item.key === 'facebook' && <path d="M14 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H7v4h3v9" />}
+          {item.key === 'telegram' && <><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></>}
+        </svg></a></li>)}</ul>
       </div>
+      <div class="c4-wrap c4-footer-legal">{LEGAL_LINKS.map((item) => <a href={item.href}>{item.labelEn}</a>)}<span>© {new Date().getFullYear()} DeutschMeister</span></div>
     </footer>
     <!-- Language: the SPA navbar's EN/DE toggle stores `dm_lang`, but these
          static pages are prerendered in German and used to ignore it entirely,
@@ -567,24 +321,24 @@ const authAttrs = (item) =>
       })();
     </script>
     <Showtime />
+    <Motion />
     <script>
       // Funnel events for the static pages (src/data/events.js). Consent-gated
       // inside track(); before Accept every call is a no-op.
       import { autoTrack } from '../lib/track.js';
       import { courseHomeFor } from '../../../src/lib/courseEntry.js';
       import { subscriptionStatus } from '../../../src/lib/subscriptionStatus.js';
-      import { isLevelFree } from '../../../src/config/freeTier.js';
-      import { levelsForProduct } from '../data/pricing.js';
+      import { courseAccessReason } from '../../../src/lib/levelEntitlement.js';
 
       // What the account opens, from the three rows updateContinueLinks reads.
-      // An admin's premium grant (profiles.subscription_tier 'premium') is Pro
+      // An admin's premium grant (profiles.subscription_tier 'premium') is AI Practice
       // with no subscription or purchase row behind it, and the server keeps it
       // through every reconciliation (netlify/functions/_shared/
       // subscriptionEntitlement.mjs); is_subscribed alone can be stale.
       function accountAccess({ profile, subscription, purchases = [] }, now = Date.now()) {
         const trialOpen = Boolean(profile?.trial_started_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > now);
-        // Owned products only: a kept Pro-day grant window ('pro_days', pricing.js
-        // GRANT_WINDOW_PRODUCT) opens Pro while its access_until is ahead and is
+        // Owned products only: a kept AI Practice-day grant window ('pro_days', pricing.js
+        // GRANT_WINDOW_PRODUCT) opens AI Practice while its access_until is ahead and is
         // never a bought course. Spelled out: these helpers also run in tests
         // that inject only the imports above.
         const activePurchases = purchases.filter((purchase) => purchase.status === 'active' && purchase.product_key !== 'pro_days');
@@ -595,15 +349,15 @@ const authAttrs = (item) =>
 
       // A bought course beats a missing or lower placement (courseHomeFor).
       function continueCourseHref(account, now = Date.now()) {
-        const { trialOpen, proOpen, activePurchases } = accountAccess(account, now);
+        const { activePurchases } = accountAccess(account, now);
         return courseHomeFor({
           level: account.profile?.current_level,
           purchases: activePurchases,
-          hasLevelAccess: (level) => isLevelFree(level) || trialOpen || proOpen || activePurchases.some((p) => levelsForProduct(p.product_key).includes(level)),
+          hasLevelAccess: (level) => Boolean(courseAccessReason(account, level, now)),
         });
       }
 
-      // The SPA navbar's Upgrade chip: no live trial, no live Pro, no course.
+      // The SPA navbar's Upgrade chip: no live trial, no live AI Practice, no course.
       function showsUpgrade(account, now = Date.now()) {
         const { trialOpen, proOpen, activePurchases } = accountAccess(account, now);
         return !trialOpen && !proOpen && activePurchases.length === 0;
@@ -619,7 +373,7 @@ const authAttrs = (item) =>
         if (!user) return;
         const [profile, subscription, purchases] = await Promise.all([
           supabase.from('profiles').select('current_level, is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
-          supabase.from('subscriptions').select('status, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
+          supabase.from('subscriptions').select('status, plan_type, subscription_start, created_at, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
           // created_at: courseHomeFor resumes the NEWEST course, as the SPA does
           // (getPurchases selects the same column); without it the two front
           // ends sent a two-course buyer to different courses.

@@ -111,8 +111,8 @@ test('an A1.1 result starts Lektion 1 of the free course (a router link), with n
   assert.match(read(RESULTS), /<Button variant="celebrate" size="lg" \{\.\.\.firstLesson\} className="flex-1">/);
 });
 
-test('A1.2 and A2.1 results lead with their own course and their ticket, priced from pricing.js', () => {
-  for (const [level, start] of [['A1.2', '/course/a1.2/l/1'], ['A2.1', '/course/a2.1'], ['A2.2', '/course/a2.2']]) {
+test('A1.2 results lead with their own course and their ticket, priced from pricing.js', () => {
+  for (const [level, start] of [['A1.2', '/course/a1.2/l/1']]) {
     const d = destinations(level);
     const lower = level.toLowerCase();
     assert.deepEqual(d.firstLesson, { to: start }, `${level}: the course, not a grammar slug`);
@@ -131,11 +131,11 @@ test('A1.2 and A2.1 results lead with their own course and their ticket, priced 
 });
 
 test('a B1/B2 result keeps its grammar start and gets the Pro route offers.js names', () => {
-  for (const level of ['B1.1', 'B2.2']) {
+  for (const level of ['A2.1', 'A2.2', 'B1.1', 'B2.2']) {
     const d = destinations(level);
     const lower = level.toLowerCase();
     assert.equal(d.placedTicket, null, 'no course to sell yet (Im Bau)');
-    assert.deepEqual(d.firstLesson, { href: `/grammar/${lower}/${getTopicsForLevel(lower)[0].slug}/` });
+    assert.deepEqual(d.firstLesson, lower.startsWith('a2') ? { to: `/course/${lower}` } : { href: `/grammar/${lower}/${getTopicsForLevel(lower)[0].slug}/` });
     const u = new URL(d.proHref, 'https://deutsch-meister.de');
     assert.equal(`${u.pathname}${u.hash}`, EXAM_ROUTE.links.find((l) => l.href.startsWith('/pricing/')).href);
     assert.equal(u.searchParams.get('ref'), PLACEMENT_REF);

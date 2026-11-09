@@ -172,12 +172,12 @@ const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
         </Reveal>
       </section>
 
-      {/* Pro tip — a caution, named in words as well as colour */}
+      {/* AI Practice tip — a caution, named in words as well as colour */}
       <Reveal delay={60} className="mt-8">
         <Card tone="sunk" className="flex items-start gap-3 border-l-4 border-l-rule p-4">
           <Lightbulb size={20} className="mt-0.5 flex-shrink-0 text-graphite" aria-hidden="true" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite">
-            <strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.
+            <strong>AI Practice tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.
           </div>
         </Card>
       </Reveal>

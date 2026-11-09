@@ -274,7 +274,7 @@ const SpeakingPage = () => {
     && (!courseTask.level || courseTask.level === selectedLevel);
   // A level's missions come with that level (the ticket lists them): the lock
   // asks hasLevelAccess, like every level lock, so a bought course keeps its
-  // missions after its included Pro window ends. The session itself stays
+  // missions after its included AI Practice window ends. The session itself stays
   // metered by the allowance or the wallet on the server.
   const missionLocked = !!activeMission && !activeMission.is_free
     && !hasLevelAccess(activeMission.level || selectedLevel);
@@ -285,7 +285,7 @@ const SpeakingPage = () => {
   // A non-subscriber with no free session left and no credit to pay with, or
   // a locked mission, used to meet a disabled Start, "top-ups are coming soon"
   // or a generic /pricing/ link. Now they see one concrete offer: the buyable
-  // course for their level with its included Pro months, else Pro. The
+  // course for their level with its included AI Practice months, else AI Practice. The
   // decision is src/lib/speakingOffer.js; a course whose checkout id is unset
   // is never offered.
   const capped = isFreeSpeakingCapped({ subscriber, usage });

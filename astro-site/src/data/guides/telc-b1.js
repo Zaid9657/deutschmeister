@@ -311,6 +311,6 @@ export const telcB1 = {
 
   cta: {
     heading: 'Ihre nächste telc-B1-Übung steht',
-    body: 'Sehen Sie sich den Übungsplan mit Briefen, Überarbeitungen und Sprechproben an. Der Kurs ist derzeit nicht buchbar; auf der Kursseite finden Sie auch den kostenlosen Pro-Test.',
+    body: 'Sehen Sie sich den Übungsplan mit Briefen, Überarbeitungen und Sprechproben an. Der Kurs ist derzeit nicht buchbar; auf der Kursseite finden Sie auch den kostenlosen AI Practice-Test.',
   },
 };

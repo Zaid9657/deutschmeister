@@ -8,8 +8,8 @@
 // disabled Start and said "top-ups are coming soon". There was no offer at
 // all, and a locked mission sent the learner to the generic /pricing/. This
 // module decides the concrete offer: the one buyable course for the learner's
-// level, with its included Pro months, and Pro as the alternative. When that
-// level has no buyable course, the offer is Pro alone.
+// level, with its included AI Practice months, and AI Practice as the alternative. When that
+// level has no buyable course, the offer is AI Practice alone.
 //
 // Pure: no React, explicit .js imports. tests/speaking-offer.test.mjs pins it
 // under node --test. Prices never appear here. The component derives them from
@@ -19,7 +19,7 @@ import { SELLABLE_LEVELS, courseForLevel } from '../data/pricing.js';
 /** The route that opens a checkout for a product key: SubscriptionPage's ?buy= resume path. */
 export const checkoutHref = (productKey) => `/subscription?buy=${encodeURIComponent(productKey)}`;
 
-/** Pro is always the alternative. Monthly is the one-click plan; the plan page lists yearly. */
+/** AI Practice is always the alternative. Monthly is the one-click plan; the plan page lists yearly. */
 export const PRO_OFFER = Object.freeze({ key: 'monthly', href: checkoutHref('monthly'), plansHref: '/subscription' });
 
 const SUBLEVEL = /^([ab][12])\.([12])$/;
@@ -83,7 +83,7 @@ export function speakingLimitMoment({ usage = null, missionLocked = false } = {}
  * @param {string[]} [p.ownedLevels]   levels the learner already owns (levelsForProduct over purchases)
  * @returns {{ kind: 'course'|'pro', level: string|null, reason: string,
  *             course: object|null, courseHref: string|null, pro: typeof PRO_OFFER }}
- *   reason is 'buyable', or why the offer fell back to Pro: 'no_level' | 'free_level' |
+ *   reason is 'buyable', or why the offer fell back to AI Practice: 'no_level' | 'free_level' |
  *   'coming_soon' | 'owned' | 'no_checkout'.
  */
 export function speakingLimitOffer({ profileLevel, practiceLevel, checkoutIdFor, ownedLevels = [] } = {}) {

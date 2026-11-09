@@ -23,7 +23,7 @@ const count = (type) => items.filter((item) => item.type === type).length;
 const variantId = telcPilotVariant();
 const signupHref = onsiteHref('signup', 'telc-pilot', 'telc-b1');
 const title = `telc B1 Komplettvorbereitung: ${PROGRAM.weeks.length}-Wochen-Plan | DeutschMeister`;
-const description = `${days.length} Trainingseinheiten: Briefe schreiben und überarbeiten, Gespräche proben und zwei Kurztests bearbeiten. Lernen Sie den telc-B1-Plan kennen und probieren Sie Pro kostenlos aus.`;
+const description = `${days.length} Trainingseinheiten: Briefe schreiben und überarbeiten, Gespräche proben und zwei Kurztests bearbeiten. Lernen Sie den telc-B1-Plan kennen und probieren Sie AI Practice kostenlos aus.`;
 const canonical = 'https://deutsch-meister.de/telc-b1-komplettvorbereitung/';
 const preloads = [...signFontPreloads, ...fontPreloads.filter((font) => font.includes('nunito'))];
 const FAQS = [
@@ -32,12 +32,12 @@ const FAQS = [
     a: 'Für Lernende mit Deutschkenntnissen ab A2, die gezielt für telc B1 üben möchten. Unter A2 ist der Plan zu früh. Beginnen Sie dann mit dem kostenlosen A1.1-Kurs oder nutzen Sie den Einstufungstest.',
   },
   {
-    q: 'Was ist der Unterschied zwischen Pro und dem Kurs?',
-    a: `Pro gibt Ihnen Zugang zu Lernmaterialien und KI-Werkzeugen mit den jeweiligen Nutzungslimits. Der Kurs ordnet Übungen in ${days.length} Trainingseinheiten und enthält ${course.proMonths} Monate Pro. Der kostenlose Pro-Test enthält den Kursplan nicht.`,
+    q: 'Was ist der Unterschied zwischen AI Practice und dem Kurs?',
+    a: `AI Practice gibt Ihnen Zugang zu Lernmaterialien und KI-Werkzeugen mit den jeweiligen Nutzungslimits. Der Kurs ordnet Übungen in ${days.length} Trainingseinheiten und enthält ${course.proMonths} Monate AI Practice. Der kostenlose AI Practice-Test enthält den Kursplan nicht.`,
   },
   {
     q: 'Wie lange bleibt der Kurs zugänglich?',
-    a: `Nach einem Kauf bleiben Ihnen der Kursbereich, Ihr Plan und Ihr Fortschritt dauerhaft erhalten. Der enthaltene Pro-Zugang läuft ${course.proMonths} Monate ab Kauf. Für Pro-Inhalte benötigen Sie anschließend wieder Pro.`,
+    a: `Nach einem Kauf bleiben Ihnen der Kursbereich, Ihr Plan und Ihr Fortschritt dauerhaft erhalten. Der enthaltene AI Practice-Zugang läuft ${course.proMonths} Monate ab Kauf. Für AI Practice-Inhalte benötigen Sie anschließend wieder AI Practice.`,
   },
   {
     q: 'Bekomme ich Rückmeldung von einer Lehrkraft?',
@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: 'Was passiert nach dem kostenlosen Test?',
-    a: `Der Pro-Test endet nach ${TRIAL_DAYS} Tagen ohne automatische Abbuchung. Sie entscheiden selbst, ob Sie ein Abo abschließen. Pro monatlich kostet ${deEur(PLANS.monthly.price)} pro Monat. Der kostenlose A1.1-Kurs bleibt zugänglich.`,
+    a: `Der AI Practice-Test endet nach ${TRIAL_DAYS} Tagen ohne automatische Abbuchung. Sie entscheiden selbst, ob Sie ein Abo abschließen. AI Practice monatlich kostet ${deEur(PLANS.monthly.price)} pro Monat. Der kostenlose A1.1-Kurs bleibt zugänglich.`,
   },
   {
     q: 'Meldet mich der Kurs zur Prüfung an?',
@@ -87,14 +87,14 @@ const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
               Kurs buchen — {deEur(course.price)} einmalig
             </button>
           ) : (
-            <a href={signupHref} class="dm-key dm-key-siegel">{TRIAL_DAYS} Tage Pro kostenlos testen</a>
+            <a href={signupHref} class="dm-key dm-key-siegel">{TRIAL_DAYS} Tage AI Practice kostenlos testen</a>
           )}
           <a href="#schreibbeispiel" class="dm-key dm-key-ghost-nacht">Ein Schreibbeispiel ansehen</a>
         </div>
         <p class="mt-4 text-sm leading-relaxed text-nacht-muted">
           {variantId
-            ? `Einmalzahlung · ${course.proMonths} Monate Pro inklusive`
-            : 'Keine Kreditkarte · keine automatische Abbuchung. Der Kursplan ist nicht im Pro-Test enthalten.'}
+            ? `Einmalzahlung · ${course.proMonths} Monate AI Practice inklusive`
+            : 'Keine Kreditkarte · keine automatische Abbuchung. Der Kursplan ist nicht im AI Practice-Test enthalten.'}
         </p>
       </div>
     <div class="mx-auto max-w-3xl px-5 pb-8"><ExamTaskPreview examKey="telc_b1" /></div>
@@ -112,11 +112,11 @@ const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
           <div>
             <p class="font-data text-xs font-bold uppercase tracking-[0.13em] text-siegel-deep">Selbst ausprobieren</p>
             <h2 id="try-h" class="sign-head mt-3 text-3xl sm:text-4xl">Jetzt sind Sie dran.</h2>
-            <p class="mt-4 leading-relaxed text-graphite">Schreiben Sie einen eigenen Text oder proben Sie ein Gespräch. Im kostenlosen Pro-Test lernen Sie die KI-Werkzeuge kennen.</p>
+            <p class="mt-4 leading-relaxed text-graphite">Schreiben Sie einen eigenen Text oder proben Sie ein Gespräch. Im kostenlosen AI Practice-Test lernen Sie die KI-Werkzeuge kennen.</p>
             <p class="mt-4 leading-relaxed text-graphite">Der Kurs verbindet {count('writing')} Briefe mit je einer Überarbeitung, {count('speaking')} Sprechproben und {count('exam')} Kurztests. Hinzu kommen gezielte Übungen zu Ihren Lücken und Satz-Röntgen.</p>
             {variantId ? (
               <div class="mt-6 border-t border-rule pt-5">
-                <p class="mt-2 text-sm text-graphite">Einmalig · {course.proMonths} Monate Pro inklusive</p>
+                <p class="mt-2 text-sm text-graphite">Einmalig · {course.proMonths} Monate AI Practice inklusive</p>
                 <button type="button" class="dm-key dm-key-siegel mt-4" data-course-variant={variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="telc_page_card">Kurs buchen — {deEur(course.price)}</button>
               </div>
             ) : (
@@ -124,14 +124,14 @@ const jsonLd = variantId ? [productSchema, faqSchema] : [faqSchema];
             )}
           </div>
           <div class="rounded-2xl border border-rule bg-white p-6 sm:p-8">
-            <h3 class="sign-head text-2xl">{TRIAL_DAYS} Tage Pro kostenlos testen</h3>
+            <h3 class="sign-head text-2xl">{TRIAL_DAYS} Tage AI Practice kostenlos testen</h3>
             <ul class="mt-5 space-y-3 leading-relaxed text-graphite">
               <li><strong class="text-ink">{TRIAL_WRITING_EVALUATIONS} KI-Schreibbewertungen</strong> insgesamt im Test</li>
               <li><strong class="text-ink">{TRIAL_SPEAKING_SESSIONS} KI-Sprechübungen à {PRO_INCLUDED_SESSION_MINUTES} Minuten</strong> insgesamt im Test</li>
               <li>Keine Kreditkarte. Keine automatische Abbuchung.</li>
             </ul>
-            <a href={signupHref} class="dm-key dm-key-siegel mt-6 w-full">Pro kostenlos ausprobieren</a>
-            <p class="mt-4 text-sm leading-relaxed text-graphite">Der telc-B1-Kursplan ist nicht im Test enthalten. Danach entscheiden Sie selbst: Pro monatlich kostet {deEur(PLANS.monthly.price)} pro Monat, wenn Sie ein Abo abschließen.</p>
+            <a href={signupHref} class="dm-key dm-key-siegel mt-6 w-full">AI Practice kostenlos ausprobieren</a>
+            <p class="mt-4 text-sm leading-relaxed text-graphite">Der telc-B1-Kursplan ist nicht im Test enthalten. Danach entscheiden Sie selbst: AI Practice monatlich kostet {deEur(PLANS.monthly.price)} pro Monat, wenn Sie ein Abo abschließen.</p>
           </div>
         </div>
       </section>

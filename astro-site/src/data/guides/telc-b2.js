@@ -125,7 +125,7 @@ export const telcB2 = {
               label: 'Woche 3–4',
               title: 'Argumentieren lernen',
               tasks: [
-                'Pro-und-Contra-Struktur üben: These, Begründung, Gegenargument, Fazit',
+                'AI Practice-und-Contra-Struktur üben: These, Begründung, Gegenargument, Fazit',
                 'Redemittel sammeln: einerseits/andererseits, dagegen spricht, letztlich halte ich',
                 'Zu einer Frage täglich fünf Minuten frei sprechen — mit Position, nicht nur Beschreibung',
                 'Zwei Meinungstexte pro Woche schreiben',

@@ -18,7 +18,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
+import { PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../src/data/marketing.js';
+import { spawnWithFiles as spawnSync } from './helpers/spawnWithFiles.mjs';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -128,7 +129,7 @@ function pricingFaqs({ onSale, levelCourses }) {
   return vm.runInNewContext(`(${block[1]})`, {
     FREE_LEVEL_LABEL: 'A1.1', TOPICS_PER_LEVEL: 12, TRIAL_DAYS: 7, FREE_DAILY_LIMIT: 1,
     BILLING_PORTAL_LABEL: 'portal.example', BILLING_PORTAL_URL: 'https://portal.example',
-    COURSE_PRO_MONTHS, COURSE_TELC_B1_PRICE_EUR, PLANS, eur,
+    COURSE_PRO_MONTHS, COURSE_TELC_B1_PRICE_EUR, PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT, PLANS, eur,
     showLevelCourses: levelCourses, priceList: 'A1.2 €40.00', telcOnSale: onSale,
   });
 }

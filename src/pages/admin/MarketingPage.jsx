@@ -28,7 +28,7 @@ function CouponForm({ initial = EMPTY, locked = [], onSubmit, busy, error, submi
         <Field label="Gültig ab" hint="TT.MM.JJJJ oder ISO; leer = jetzt"><Input value={f.starts_at} onChange={set('starts_at')} /></Field>
         <Field label="Gültig bis" hint="leer = unbegrenzt"><Input value={f.ends_at} onChange={set('ends_at')} /></Field>
         <Field label="Gesamtlimit" hint="leer = unbegrenzt (braucht finance/admin zum Freischalten)"><Input type="number" value={f.total_limit} onChange={set('total_limit')} /></Field>
-        <Field label="Pro Nutzer"><Input type="number" value={f.per_user_limit} onChange={set('per_user_limit')} /></Field>
+        <Field label="AI Practice Nutzer"><Input type="number" value={f.per_user_limit} onChange={set('per_user_limit')} /></Field>
         <Field label="Mindestbestellwert (Cent)"><Input type="number" value={f.minimum_order_amount} onChange={set('minimum_order_amount')} disabled={dis('minimum_order_amount')} /></Field>
         <label className="flex items-center gap-2 self-end text-xs text-ink"><input type="checkbox" checked={Boolean(f.new_customer_only)} onChange={set('new_customer_only')} disabled={dis('new_customer_only')} /> Nur Neukunden (= ohne frühere Einlösung)</label>
         <div className="sm:col-span-3"><ReasonField value={reason} onChange={setReason} /></div>
@@ -55,7 +55,7 @@ function CouponDetail({ id, onChanged, onClose }) {
   if (!c) return null;
   return (
     <Section title={`${c.code} · ${c.internal_name}`} note={c.provider.note} right={<><Badge label={c.effectiveStatus} tone={ST_TONE[c.effectiveStatus]} />{c.elevated ? <Badge label="hoher Rabatt / unbegrenzt" tone="warn" /> : null}<SecondaryButton onClick={onClose}>Schließen</SecondaryButton></>}>
-      <KeyValues items={[['Rabatt', c.discount_type === 'percent' ? `${c.discount_value} %` : money(c.discount_value, c.currency)], ['Gültig', `${dmy(c.starts_at)} – ${c.ends_at ? dmy(c.ends_at) : 'unbegrenzt'}`], ['Eingelöst / Rest', `${num(c.redemptions)} / ${c.remaining === null ? 'unbegrenzt' : num(c.remaining)}`], ['Pro Nutzer', c.per_user_limit ?? 'unbegrenzt'], ['Nur Neukunden', c.new_customer_only ? 'ja (= ohne frühere Einlösung)' : 'nein'], ['Produkte', c.applicable_variant_ids.length ? c.applicable_variant_ids.join(', ') : 'alle'], ['Status gespeichert', c.status], ['Gesperrte Felder', data.lockedFields.length ? data.lockedFields.join(', ') : 'keine (noch nicht eingelöst)']]} />
+      <KeyValues items={[['Rabatt', c.discount_type === 'percent' ? `${c.discount_value} %` : money(c.discount_value, c.currency)], ['Gültig', `${dmy(c.starts_at)} – ${c.ends_at ? dmy(c.ends_at) : 'unbegrenzt'}`], ['Eingelöst / Rest', `${num(c.redemptions)} / ${c.remaining === null ? 'unbegrenzt' : num(c.remaining)}`], ['AI Practice Nutzer', c.per_user_limit ?? 'unbegrenzt'], ['Nur Neukunden', c.new_customer_only ? 'ja (= ohne frühere Einlösung)' : 'nein'], ['Produkte', c.applicable_variant_ids.length ? c.applicable_variant_ids.join(', ') : 'alle'], ['Status gespeichert', c.status], ['Gesperrte Felder', data.lockedFields.length ? data.lockedFields.join(', ') : 'keine (noch nicht eingelöst)']]} />
       <div className="mt-3"><ReasonField value={reason} onChange={setReason} /></div>
       <div className="mt-2 flex flex-wrap gap-2">
         {data.allowedTransitions.includes('active') ? <PrimaryButton disabled={m.busy || reason.trim().length < 3} onClick={() => run('activate')}>Live schalten</PrimaryButton> : null}

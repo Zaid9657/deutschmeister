@@ -12,9 +12,9 @@
 //
 // Two rules learned the hard way here:
 //
-//   1. NEVER STATE A PRICE WITH A BLANKET "UNLIMITED" BESIDE IT. Pro is
+//   1. NEVER STATE A PRICE WITH A BLANKET "UNLIMITED" BESIDE IT. AI Practice is
 //      unlimited in *content* (all 8 levels, every lesson) and metered in *AI*
-//      (X-Ray 50/day, speaking 30/month). "9,99 €/Monat (Pro) — unbegrenzt"
+//      (X-Ray 50/day, speaking 30/month). "9,99 €/Monat (AI Practice) — unbegrenzt"
 //      shipped on the Lingoda comparison and was false about the AI features
 //      the page was selling. Use UNLIMITED_CONTENT_LINE, which says what is
 //      actually unlimited, or name the metered figure.
@@ -47,10 +47,10 @@ export const TRIAL_DAILY_LIMIT = 10;
 /** Signed-up account after the trial ends, per UTC day. Source: DAILY_LIMITS.free_expired (2026-08-22). */
 export const FREE_DAILY_LIMIT = 1;
 
-/** Pro subscriber, per UTC day. Source: DAILY_LIMITS.pro (2026-08-22). */
+/** AI Practice subscriber, per UTC day. Source: DAILY_LIMITS.pro (2026-08-22). */
 export const PRO_DAILY_LIMIT = 50;
 
-/** Speaking sessions included with Pro, per month. Source: PRO_MONTHLY_LIMIT, netlify/functions/_shared/speakingUsage.mjs:8 (2026-08-22). */
+/** Speaking sessions included with AI Practice, per month. Source: PRO_MONTHLY_LIMIT, netlify/functions/_shared/speakingUsage.mjs:8 (2026-08-22). */
 export const PRO_SPEAKING_SESSIONS_PER_MONTH = 30;
 
 /** Free speaking sessions during the trial, in TOTAL (not per month). Source: TRIAL_TOTAL_LIMIT, speakingUsage.mjs:9 (2026-08-22). */
@@ -66,7 +66,7 @@ export const TRIAL_SPEAKING_SESSIONS = 2;
  */
 export const PRO_INCLUDED_SESSION_MINUTES = 5;
 
-/** AI writing evaluations included with Pro, per month. Source: WRITING_LIMITS.pro, netlify/functions/evaluate-writing.mjs (2026-08-31). */
+/** AI writing evaluations included with AI Practice, per month. Source: WRITING_LIMITS.pro, netlify/functions/evaluate-writing.mjs (2026-08-31). */
 export const PRO_WRITING_EVALUATIONS_PER_MONTH = 20;
 
 /** Free writing evaluations during the trial, in TOTAL (not per month). Source: WRITING_LIMITS.free_trial, evaluate-writing.mjs (2026-08-31). */
@@ -77,7 +77,7 @@ export const TRIAL_WRITING_EVALUATIONS = 2;
  * learners who are not paying — the twelve `a11-…` course tasks, one per Lektion.
  * This is a SEPARATE allowance from TRIAL_WRITING_EVALUATIONS above: the course
  * is advertised as free, so its writing may not be gated behind the two trial
- * evaluations. Pro learners' course tasks count inside PRO_WRITING_EVALUATIONS_PER_MONTH.
+ * evaluations. AI Practice learners' course tasks count inside PRO_WRITING_EVALUATIONS_PER_MONTH.
  * Owner decision 2026-09-12 (docs plan P2). One per Lektion, verified against
  * evaluate-writing.mjs COURSE_WRITING_FREE_LIFETIME on 2026-09-13.
  */
@@ -201,16 +201,16 @@ export const LEVELS = [
 // ---------------------------------------------------------------------------
 
 /** The only sanctioned blanket-access claim. Says what is actually unlimited. */
-export const UNLIMITED_CONTENT_LINE = `Unlimited access to all ${LEVEL_COUNT} levels`;
+export const UNLIMITED_CONTENT_LINE = 'AI writing feedback, AI speaking practice and Sentence X-Ray';
 
 /** German equivalent. Compounds take the singular: "8-Level-Zugang", not "8-Levels". */
-export const UNLIMITED_CONTENT_LINE_DE = `Unbegrenzter Zugang zu allen ${LEVEL_COUNT} Leveln`;
+export const UNLIMITED_CONTENT_LINE_DE = 'KI-Schreibfeedback, KI-Sprechtraining und Satz-Röntgen';
 
-/** Pro's AI speaking allowance, stated with its period. Never as "unlimited". */
-export const SPEAKING_LINE = `${PRO_SPEAKING_SESSIONS_PER_MONTH} AI speaking sessions per month`;
-export const SPEAKING_LINE_DE = `${PRO_SPEAKING_SESSIONS_PER_MONTH} KI-Sprechübungen pro Monat`;
+/** AI Practice's AI speaking allowance, stated with its period. Never as "unlimited". */
+export const SPEAKING_LINE = 'AI speaking practice';
+export const SPEAKING_LINE_DE = 'KI-Sprechtraining';
 
-/** Pro's X-Ray allowance, stated with its period. */
+/** AI Practice's X-Ray allowance, stated with its period. */
 export const XRAY_LINE = `${PRO_DAILY_LIMIT} Sentence X-Ray analyses per day`;
 export const XRAY_LINE_DE = `${PRO_DAILY_LIMIT} Satz-Röntgen-Analysen pro Tag`;
 

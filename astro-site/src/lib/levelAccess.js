@@ -3,8 +3,8 @@
 // grammar exercise player (components/ExercisePlayer.jsx).
 //
 // Mirrors SubscriptionContext.hasLevelAccess in the SPA, with the same three
-// doors: the level is free, the account has a live trial or Pro
-// (profiles.is_subscribed / trial_ends_at — the included Pro window of a course
+// doors: the level is free, the account has a live trial or AI Practice
+// (profiles.is_subscribed / trial_ends_at — the included AI Practice window of a course
 // purchase sets is_subscribed too), or a bought level course covers the level
 // (purchases → levelsForProduct). Loaded lazily and only when a session exists,
 // so the logged-out majority never fetches the Supabase chunk.
@@ -14,11 +14,12 @@
 // and per product (ownedProductHome). The doors used to re-read all three for
 // every level on the page (ACC-18).
 //
-// `open` and `owned` are different questions (ACC-17). A live trial or Pro
+// `open` and `owned` are different questions (ACC-17). A live trial or AI Practice
 // opens a level for a while; only a bought course owns it (the SPA's rule,
-// src/lib/checkoutAccess.js ownsCheckoutProduct: "A live trial or Pro period is
+// src/lib/checkoutAccess.js ownsCheckoutProduct: "A live trial or AI Practice period is
 // not ownership of a course"). The doors swap Buy for Open only for an owner,
 // so the lifetime course stays on sale to the visitors most likely to buy it.
+import { courseAccessReason } from '../../../src/lib/levelEntitlement.js';
 import { supabase } from './supabase.js';
 import { levelsForProduct } from '../data/pricing.js';
 
@@ -45,22 +46,24 @@ export async function loadEntitlementSnapshot() {
   const { data: { user } = {} } = await supabase.auth.getUser();
   if (!user) return { signedIn: false, userId: null, verified: false, profile: null, purchases: [] };
 
-  const [profileRead, purchasesRead] = await Promise.all([
-    supabase.from('profiles').select('is_subscribed, trial_ends_at').eq('id', user.id).maybeSingle(),
-    supabase.from('purchases').select('product_key').eq('user_id', user.id).eq('status', 'active'),
+  const [profileRead, purchasesRead, subscriptionRead] = await Promise.all([
+    supabase.from('profiles').select('is_subscribed, trial_started_at, trial_ends_at, subscription_tier').eq('id', user.id).maybeSingle(),
+    supabase.from('purchases').select('product_key, status, access_until').eq('user_id', user.id).eq('status', 'active'),
+    supabase.from('subscriptions').select('status, plan_type, subscription_start, created_at, subscription_end').eq('user_id', user.id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
   ]);
   return {
     signedIn: true,
     userId: user.id,
-    verified: !profileRead.error && !purchasesRead.error,
+    verified: !profileRead.error && !purchasesRead.error && !subscriptionRead.error,
     profile: profileRead.data || null,
     purchases: purchasesRead.data || [],
+    subscription: subscriptionRead.data || null,
   };
 }
 
 /**
  * Is a level open to this visitor, and why. `open` is unchanged from before
- * (owned, Pro or a live trial); `owned` is a bought course covering the level.
+ * (owned, AI Practice or a live trial); `owned` is a bought course covering the level.
  *
  * @param {{ signedIn: boolean, profile: object|null, purchases: object[] }|null} snapshot
  * @param {string} level lowercase sub-level, e.g. 'b1.1'
@@ -70,11 +73,7 @@ export function levelOpen(snapshot, level, now = Date.now()) {
   const l = (level || '').toLowerCase();
   if (!snapshot?.signedIn) return { signedIn: false, open: false, owned: false, reason: null };
   const owned = activePurchases(snapshot).some((p) => levelsForProduct(p.product_key).includes(l));
-  const endsAt = snapshot.profile?.trial_ends_at ? new Date(snapshot.profile.trial_ends_at) : null;
-  const reason = owned ? 'owned'
-    : snapshot.profile?.is_subscribed ? 'pro'
-      : endsAt && endsAt.getTime() > now ? 'trial'
-        : null;
+  const reason = courseAccessReason(snapshot, l, now);
   return { signedIn: true, open: reason !== null, owned, reason };
 }
 

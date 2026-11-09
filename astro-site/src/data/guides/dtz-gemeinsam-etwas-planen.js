@@ -234,6 +234,6 @@ export const dtzGemeinsamPlanen = {
 
   cta: {
     heading: 'Für den DTZ üben — mit Modelltest',
-    body: 'Mit einem kostenlosen Konto üben Sie Alltagsgespräche mit dem KI-Gesprächspartner und testen, solange Pro läuft, den zeitgesteuerten DTZ-Modelltest. Der Einstufungstest zeigt Ihnen vorher, wo Sie stehen.',
+    body: 'Mit einem kostenlosen Konto üben Sie Alltagsgespräche mit dem KI-Gesprächspartner und testen, solange AI Practice läuft, den zeitgesteuerten DTZ-Modelltest. Der Einstufungstest zeigt Ihnen vorher, wo Sie stehen.',
   },
 };

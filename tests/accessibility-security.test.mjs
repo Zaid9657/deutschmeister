@@ -4,21 +4,12 @@ import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-test('brand wordmarks use contrast-safe colors on light and dark surfaces', async () => {
-  const [logo, footer, layout] = await Promise.all([
-    read('src/components/Logo.jsx'),
-    read('src/components/Footer.jsx'),
-    read('astro-site/src/layouts/Layout.astro'),
-  ]);
-
-  assert.match(logo, /wordmarkTone === 'inverse'/);
-  assert.match(logo, /text-siegel-deep/);
-  assert.doesNotMatch(logo, /color:\s*'#0D9488'/);
-  // v4 (türkis): both footers stand on the light tint, so the wordmark takes the
-  // light-surface tones — ink with siegel-deep — in the app and on the site.
-  assert.match(footer, /<Logo size=\{32\} face="chrome" \/>/);
-  assert.doesNotMatch(footer, /wordmarkTone="inverse"/);
-  assert.equal((layout.match(/Deutsch<span class="text-siegel-deep">Meister<\/span>/g) || []).length, 2, 'nav + footer wordmark');
+test('brand wordmarks carry contrasting ink on white and white on teal', async () => {
+  const logo = await read('src/components/Logo.jsx');
+  assert.match(logo, /wordmarkTone === 'inverse' \? 'text-white' : 'text-ink'/);
+  const css = await read('astro-site/src/styles/concept4.css');
+  assert.match(css, /\.c4-site-footer \{[^}]*color: theme\('colors.white'\)/);
+  assert.match(css, /\.c4-brand-mark \{[^}]*color: theme\('colors.white'\)/);
 });
 
 test('footer navigation headings do not skip from the page heading to h3', async () => {
@@ -27,9 +18,9 @@ test('footer navigation headings do not skip from the page heading to h3', async
     read('astro-site/src/layouts/Layout.astro'),
   ]);
 
-  assert.match(footer, /<h2 className=/);
-  assert.doesNotMatch(footer, /<h3 className=/);
-  assert.match(layout, /<h2 class="text-nacht-text font-semibold/);
+  assert.match(footer, /<h2(?: className=|>)/);
+  assert.doesNotMatch(footer, /<h3(?: className=|>)/);
+  assert.match(layout, /<h2>\{group.titleEn\}/);
   assert.doesNotMatch(layout, /<h3 class="text-white font-semibold/);
 });
 

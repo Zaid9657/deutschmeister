@@ -126,7 +126,7 @@ test('level courses cover every paid sub-level exactly once, at its own price', 
     assert.equal(c.key, productKeyForLevel(c.levels[0]));
     assert.equal(c.price, SUBLEVEL_PRICES_EUR[c.levels[0]]);
     assert.equal(c.comingSoon, COMING_SOON_LEVELS.includes(c.levels[0]));
-    assert.equal(c.proDays, COURSE_PRO_DAYS, 'every course grants the Pro window the webhook grants');
+    assert.equal(c.proDays, COURSE_PRO_DAYS, 'every course grants the AI Practice window the webhook grants');
   }
   // Prices rise up the ladder, never fall (the owner's 40 / 50 / 60 / 65 map).
   const prices = paid.map((l) => SUBLEVEL_PRICES_EUR[l]);
@@ -211,15 +211,15 @@ const PRICE_FREE_SURFACES = [
   // else.
   'astro-site/src/pages/telc-b1-komplettvorbereitung.astro',
   'src/pages/TelcB1KursPage.jsx',
-  // The exercise paywall quotes the course and Pro prices on every gated lesson.
+  // The exercise paywall quotes the course and AI Practice prices on every gated lesson.
   'astro-site/src/components/ExercisePlayer.jsx',
-  // Sentence X-Ray carries the signed-out conversion offer and the Pro upsell
+  // Sentence X-Ray carries the signed-out conversion offer and the AI Practice upsell
   // at the daily limit (docs/SCORECARD.md work order #3, 2026-09-27).
   'src/pages/SentenceXRay.jsx',
-  // The offer at the free-speaking limit quotes the level course and Pro
+  // The offer at the free-speaking limit quotes the level course and AI Practice
   // (docs/SCORECARD.md work order #7b, 2026-09-28).
   'src/components/speaking/SpeakingLimitOffer.jsx',
-  // The /pricing/ Pro button's label and note (conversion agent, 2026-09-30).
+  // The /pricing/ AI Practice button's label and note (conversion agent, 2026-09-30).
   'astro-site/src/lib/proCta.js',
   // The support agent quotes prices to customers: only through the synced
   // pricing copy (_shared/pricing.mjs), never typed (2026-09-30).
@@ -230,11 +230,11 @@ const PRICE_FREE_SURFACES = [
   'src/data/offers.js',
   'astro-site/src/data/offers.js',
   'astro-site/src/data/homepage.js',
-  'astro-site/src/components/linie/LineSection.astro',
-  'astro-site/src/components/linie/FitChooser.astro',
-  'astro-site/src/components/linie/Ticket.astro',
-  'astro-site/src/components/linie/Progression.astro',
-  'astro-site/src/components/linie/OfferFaq.astro',
+  'astro-site/src/components/concept/Offers.astro',
+  'astro-site/src/components/concept/PurchaseDoor.astro',
+  'astro-site/src/components/concept/ProofCounts.astro',
+  'astro-site/src/components/concept/RouteBand.astro',
+  'astro-site/src/components/concept/Benefits.astro',
 ];
 
 test('no page source retypes a price literal', () => {
@@ -275,7 +275,7 @@ test('no page source retypes a price literal', () => {
 });
 
 test('no surface claims unlimited AI usage', () => {
-  // Pro is unlimited in CONTENT and metered in AI. A blanket "unlimited" beside
+  // AI Practice is unlimited in CONTENT and metered in AI. A blanket "unlimited" beside
   // a price was live on the Lingoda comparison for months while speaking was
   // capped at 30/month. The sanctioned phrasings live in src/data/marketing.js
   // (UNLIMITED_CONTENT_LINE names what is actually unlimited).
@@ -411,7 +411,7 @@ test('no paywall retypes the trial length', () => {
 /**
  * Files anywhere that still type the trial length into trial copy. May only go
  * down. 2026-10-01: 4. 2026-10-02: 0 — the nav's trial button in both front
- * ends (Navbar.jsx, Layout.astro, #177) and the "Pro-Testphase" rows in both
+ * ends (Navbar.jsx, Layout.astro, #177) and the "AI Practice-Testphase" rows in both
  * twins of competitorComparisons.js now derive the length from TRIAL_DAYS.
  * At 0 any retyped trial length anywhere fails the suite.
  */
@@ -458,8 +458,8 @@ test('speaking limits match the server that enforces them', () => {
   );
 });
 
-test('the course copy claims the Pro window the webhook actually grants', () => {
-  // "X Monate Pro-Zugang inklusive" derives from COURSE_PRO_DAYS; the webhook
+test('the course copy claims the AI Practice window the webhook actually grants', () => {
+  // "X Monate AI Practice-Zugang inklusive" derives from COURSE_PRO_DAYS; the webhook
   // grants proDays from its own courseForVariant map. If they diverge, the
   // sales page promises a window the server does not grant.
   const webhook = read('netlify/functions/lemonsqueezy-webhook.mjs');
@@ -468,7 +468,7 @@ test('the course copy claims the Pro window the webhook actually grants', () => 
   assert.equal(
     Number(granted[1]),
     COURSE_PRO_DAYS,
-    'the webhook grants a different Pro window than the pricing data claims',
+    'the webhook grants a different AI Practice window than the pricing data claims',
   );
   assert.equal(COURSES.telc_b1_komplett.proMonths, Math.floor(COURSE_PRO_DAYS / 30));
 });
@@ -486,7 +486,10 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   assert.equal(shared.COURSE_TELC_B1_PRICE_EUR, COURSE_TELC_B1_PRICE_EUR);
   assert.equal(shared.COURSE_PRO_DAYS, COURSE_PRO_DAYS);
   assert.deepEqual({ ...shared.SUBLEVEL_PRICES_EUR }, SUBLEVEL_PRICES_EUR);
-  assert.deepEqual([...shared.COMING_SOON_LEVELS], COMING_SOON_LEVELS);
+  // The approved brief parks A2 on the client without changing functions.
+  // Preserve the server catalogue and assert that the client is strictly more restrictive.
+  assert.deepEqual([...shared.COMING_SOON_LEVELS], ['b1.1', 'b1.2', 'b2.1', 'b2.2']);
+  assert.deepEqual(COMING_SOON_LEVELS, ['a2.1', 'a2.2', ...shared.COMING_SOON_LEVELS]);
   assert.deepEqual([...shared.ALL_LEVELS], ALL_LEVELS);
   assert.equal(shared.YEARLY_AS_MONTHLY_EUR, YEARLY_AS_MONTHLY_EUR);
   assert.equal(shared.MONTHLY_PER_DAY_EUR, MONTHLY_PER_DAY_EUR);
@@ -601,8 +604,8 @@ test('llms.txt files quote the current prices and allowances', () => {
     assert.ok(body.includes(eur(MONTHLY_PRICE_EUR)), `${file} does not quote ${eur(MONTHLY_PRICE_EUR)}`);
     assert.ok(body.includes(eur(YEARLY_PRICE_EUR)), `${file} does not quote ${eur(YEARLY_PRICE_EUR)}`);
     assert.ok(
-      body.includes(String(PRO_SPEAKING_SESSIONS_PER_MONTH)),
-      `${file} does not quote the ${PRO_SPEAKING_SESSIONS_PER_MONTH}-session monthly allowance`,
+      body.includes(String(PRO_WRITING_EVALUATIONS_PER_MONTH)),
+      `${file} does not quote the ${PRO_WRITING_EVALUATIONS_PER_MONTH} writing feedbacks per month`,
     );
     assert.ok(
       body.includes(String(PRO_DAILY_LIMIT)),
@@ -874,7 +877,7 @@ test('speaking is described as the code runs it: evaluated after the conversatio
   assert.deepEqual(failures, [], `speaking claims the code does not back:\n  ${failures.join('\n  ')}`);
 });
 
-test('the included speaking-session length matches the server, and every comparison states it', async () => {
+test('the included session length matches the server; marketing offers speaking without a count', async () => {
   // Only a 5-minute session is free inside the allowance; 10 and 15 minutes are
   // paid from credit (speaking-session.mjs). The Lingoda page weighed "30
   // Gespräche im Monat" against hour-long lessons without saying so.
@@ -884,16 +887,14 @@ test('the included speaking-session length matches the server, and every compari
   assert.equal(PRO_INCLUDED_SESSION_MINUTES, Number(rule[1]), 'marketing.js states a different included session length than the server charges for');
 
   const ALLOWANCE = new RegExp(`\\b${PRO_SPEAKING_SESSIONS_PER_MONTH}\\b[^.]{0,40}(Gespräch|Sprech)`);
-  const LENGTH = new RegExp(`à ${PRO_INCLUDED_SESSION_MINUTES} Minuten`);
   for (const [root, data] of await comparisonTwins()) {
     let seen = 0;
     for (const text of stringsIn(data)) {
-      assert.doesNotMatch(text, /eine Stunde Sprechtraining/, `${root}: weighs the allowance against an hour of teaching`);
-      if (!ALLOWANCE.test(text)) continue;
-      seen += 1;
-      assert.match(text, LENGTH, `${root}: the monthly allowance without its session length — "${text.slice(0, 110)}"`);
+      assert.doesNotMatch(text, /eine Stunde Sprechtraining/, `${root}: weighs speaking against an hour of teaching`);
+      assert.doesNotMatch(text, ALLOWANCE, `${root}: paid speaking is described without a session count`);
+      if (/KI-Sprechtraining/.test(text)) seen += 1;
     }
-    assert.ok(seen >= 5, `${root}: expected the allowance on every comparison, found ${seen}`);
+    assert.ok(seen >= 5, `${root}: every comparison still describes the speaking feature`);
   }
 });
 
@@ -911,7 +912,7 @@ test('the FAQ never puts the trial\'s allowances in the no-account tier', () => 
   }
   const free = FAQ_ITEMS.find((i) => /free version/i.test(i.q));
   assert.ok(free.a.includes(`${ANON_DAILY_LIMIT} Sentence X-Ray analysis`), 'the no-account X-Ray allowance');
-  assert.ok(free.a.includes(`${TRIAL_DAYS}-day Pro trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions`), 'the trial speaking allowance, inside the trial');
+  assert.ok(free.a.includes(`${TRIAL_DAYS}-day AI Practice trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions`), 'the trial speaking allowance, inside the trial');
   assert.ok(free.a.includes(`${TRIAL_DAILY_LIMIT} X-Ray analyses a day`), 'the trial X-Ray allowance (it said 1)');
 });
 

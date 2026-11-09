@@ -262,6 +262,6 @@ export const dtzSprechenBild = {
 
   cta: {
     heading: 'Für den DTZ üben — Sprechen, Schreiben, Modelltest',
-    body: 'Mit einem kostenlosen Konto sprechen Sie mit dem KI-Gesprächspartner über Alltagsthemen und testen, solange Pro läuft, den zeitgesteuerten DTZ-Modelltest. Der Einstufungstest zeigt Ihnen vorher, wo Sie stehen.',
+    body: 'Mit einem kostenlosen Konto sprechen Sie mit dem KI-Gesprächspartner über Alltagsthemen und testen, solange AI Practice läuft, den zeitgesteuerten DTZ-Modelltest. Der Einstufungstest zeigt Ihnen vorher, wo Sie stehen.',
   },
 };

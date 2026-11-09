@@ -6,7 +6,7 @@
 // English-only (17f4f91b, 2026-09-03) on a page whose cards and buttons all
 // switch with isGerman. A learner who had set the app to German read "Pick up
 // where you left off" above German plan cards. The same lines carried two
-// claims: "keep learning without limits" (Pro meters every AI feature) and an
+// claims: "keep learning without limits" (AI Practice meters every AI feature) and an
 // offer to "Buy the level you need once" shown whether or not the course
 // section below had a Buy button.
 //
@@ -190,7 +190,7 @@ test('every SectionHeading on a bilingual screen switches language with it', () 
 });
 
 const STATES = [
-  { name: 'Pro', isSubscribed: true, inTrial: false, daysLeft: 0 },
+  { name: 'AI Practice', isSubscribed: true, inTrial: false, daysLeft: 0 },
   { name: 'trial, 1 day', isSubscribed: false, inTrial: true, daysLeft: 1 },
   { name: 'trial, 5 days', isSubscribed: false, inTrial: true, daysLeft: 5 },
   { name: 'trial over', isSubscribed: false, inTrial: false, daysLeft: 0 },
@@ -231,7 +231,7 @@ test('the heading offers a level only when the page shows a Buy button for one',
 });
 
 test('the heading makes no "without limits" claim and counts the trial days right', () => {
-  // Pro is unlimited in content and metered in AI (tests/unlimited-claims.test.mjs);
+  // AI Practice is unlimited in content and metered in AI (tests/unlimited-claims.test.mjs);
   // a blanket "without limits" beside a plan choice covers the AI too.
   const NO_LIMITS = /\b(?:unlimited|unbegrenzt\w*|limitless|no\s+limits?|without\s+(?:any\s+)?limits?|ohne\s+(?:jedes\s+)?(?:limit|grenzen|begrenzung))\b/i;
   each((state) => {

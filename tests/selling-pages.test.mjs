@@ -11,11 +11,11 @@ const telc = read('astro-site/src/pages/telc-b1-komplettvorbereitung.astro');
 
 test('telc offers an honest off-sale next step, with trial limits from the shared source', () => {
   assert.match(telc, /!variantId && <p[^>]*data-telc-availability>Der Kurs ist derzeit nicht buchbar/);
-  assert.match(telc, /\) : \(\s*<a href=\{signupHref\}[^>]*>\{TRIAL_DAYS\} Tage Pro kostenlos testen/);
+  assert.match(telc, /\) : \(\s*<a href=\{signupHref\}[^>]*>\{TRIAL_DAYS\} Tage AI Practice kostenlos testen/);
   for (const name of ['TRIAL_WRITING_EVALUATIONS', 'TRIAL_SPEAKING_SESSIONS', 'PRO_INCLUDED_SESSION_MINUTES']) {
     assert.match(telc, new RegExp(`\\{${name}\\}`));
   }
-  assert.match(telc, /Kursplan ist nicht im (?:Pro-)?Test enthalten/);
+  assert.match(telc, /Kursplan ist nicht im (?:AI Practice-)?Test enthalten/);
   assert.doesNotMatch(telc, /startet in Kürze|Die meisten fallen|Muttersprachler-Dialogen|mehrere hundert Euro/);
   assert.doesNotMatch(telc.split('---')[2], /\b(du|dein\w*|dir|dich)\b/i);
   const faq = telc.slice(telc.indexOf('const FAQS'), telc.indexOf('const productSchema'));
@@ -55,28 +55,21 @@ test('only telc B1 guides offer the telc plan, after useful content and FAQ', ()
   assert.match(page, /offerSpec\?\.door === 'telcOffer'/, 'build fails on an inappropriate telc offer');
 });
 
-test('the recorded homepage correction reproduces actual feedback and a corrected answer', () => {
+test('the homepage quick exercise is a real course task graded by the lesson checker', () => {
   const check = (text) => checkAnswer(text, recording.item.accepted, checkOptionsFor(recording.item)).result;
   assert.equal(check(recording.draft), recording.beforeResult);
   assert.equal(check(recording.revision), recording.afterResult);
-  assert.equal(recording.beforeResult, 'wrong');
-  assert.equal(recording.afterResult, 'correct');
-  assert.ok(recording.explanation.includes('Guten Tag'));
-  const component = read('astro-site/src/components/linie/RecordedCorrection.astro');
-  assert.match(component, /Recorded example/);
-  assert.match(component, /not a customer text or an AI writing assessment/);
-  assert.match(component, /check\(example.draft\) !== example.beforeResult/);
-  assert.match(component, /check\(example.revision\) !== example.afterResult/);
-  assert.match(read('astro-site/src/pages/index.astro'), /<RecordedCorrection \/>/);
+  const component = read('astro-site/src/components/linie/FirstStop.astro');
+  assert.match(component, /src\/lib\/lesson\/check.js/);
+  assert.match(component, /checkAnswer\(value, grade.accepted, checkOptionsFor\(grade\)\)/);
+  assert.match(read('astro-site/src/pages/index.astro'), /<FirstStop \/>/);
 });
 
-test('pricing shows both paid choices before the free card in reading and keyboard order', () => {
+test('pricing presents the free entry and both paid options in matching reading and visual order', () => {
   const page = read('astro-site/src/pages/pricing.astro');
-  const fork = page.slice(page.indexOf('<ol class="mt-6 grid'), page.indexOf('</ol>'));
-  assert.ok(fork.indexOf('pricing_own') >= 0);
-  assert.ok(fork.indexOf('pricing_own') < fork.indexOf('pricing_rent'));
-  assert.ok(fork.indexOf('pricing_rent') < fork.indexOf('The first stop'));
-  assert.doesNotMatch(fork, /\b(?:order-|flex-col-reverse)/, 'visual order agrees with DOM order');
+  assert.ok(page.indexOf('class="c4-free-banner"') < page.indexOf('class="c4-offers '));
+  assert.ok(page.indexOf('<h2>A1.2 course</h2>') < page.indexOf('<h2>AI Practice</h2>'));
+  assert.doesNotMatch(page, /\b(?:order-|flex-col-reverse)/);
 });
 
 test('placement start is directly under its heading, before facts and test structure', () => {
@@ -92,7 +85,7 @@ test('mobile signup leads with a short promise and form, with allowances below',
   const form = page.indexOf('<form onSubmit={handleSubmit}');
   const endForm = page.indexOf('</form>', form);
   const allowances = page.indexOf('aria-label="Trial allowances"');
-  assert.ok(page.indexOf('Start your {TRIAL_DAYS}-day Pro trial') < form);
+  assert.ok(page.indexOf('Start your {TRIAL_DAYS}-day AI Practice trial') < form);
   assert.ok(form > 0 && endForm > form && allowances > endForm);
   assert.match(page, /<div className="hidden sm:block"><Logo/, 'the logo link also leaves the mobile tab order');
   assert.match(page, /<Card className="p-5 sm:p-8">/);

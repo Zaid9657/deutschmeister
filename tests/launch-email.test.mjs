@@ -58,7 +58,8 @@ test('the audience excludes subscribers and every product that owns a level the 
     ...SELLABLE_LEVELS.map(productKeyForLevel),
     ...Object.values(LEGACY_LEVEL_COURSES).filter((c) => c.levels.some((l) => sold.has(l))).map((c) => c.key),
   ];
-  for (const key of ['course_a1_2', 'course_a2_1', 'course_a2_2']) assert.ok(mustExclude.includes(key), key);
+  for (const key of ['course_a1_2']) assert.ok(mustExclude.includes(key), key);
+  for (const level of COMING_SOON_LEVELS) assert.ok(!email.body.includes(`${level.toUpperCase()} &mdash;`), `${level} is not sold by this audience`);
   for (const key of mustExclude) assert.ok(email.exclude.includes(`purchased:${key}`), `exclude purchased:${key}`);
 });
 

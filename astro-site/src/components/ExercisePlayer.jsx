@@ -234,9 +234,9 @@ function FillBlank({ exercise, onAnswer, answered }) {
 
 // The paywall, decided 2026-09-03 (docs/HANDOFF-2026-09-03.md §11): the rule
 // text of every lesson stays public (the SEO asset), the EXERCISES above the
-// free level need a live trial, Pro, or a bought level course — the same
+// free level need a live trial, AI Practice, or a bought level course — the same
 // three doors as the SPA's hasLevelAccess. Signed-out visitors see the
-// signup door first (7 days of Pro), signed-in ones the course they are
+// signup door first (7 days of AI Practice), signed-in ones the course they are
 // missing. Prices derive from pricing.js; nothing here is retyped.
 function LockedExercises({ level, signedIn, count, signupHref }) {
   const course = courseForLevel(level);
@@ -266,9 +266,9 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
       <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
         {signedIn
           ? buyable
-            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or go Pro for every level and the AI tools.`
-            : `Your account does not include ${code} yet. The ${code} course is coming soon — Pro opens every level and the AI tools today.`
-          : `${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of Pro — every level, every exercise — before you decide.`}
+            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or use AI Practice for extra AI tools (course access sold separately).`
+            : `Your account does not include ${code} yet. The ${code} course is coming next and is not on sale. AI Practice is an optional add-on without course access.`
+          : `${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of AI Practice — every level, every exercise — before you decide.`}
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         {signedIn ? (
@@ -279,13 +279,13 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
               </a>
             )}
             <a href="/pricing/#pro" className={buyable ? secondary : primary}>
-              Go Pro — {eur(PLANS.monthly.price)}/month
+              Go AI Practice — {eur(PLANS.monthly.price)}/month
             </a>
           </>
         ) : (
           <>
             <a href={signupHref} className={primary}>
-              Start free — {TRIAL_DAYS} days of Pro included
+              Start free — {TRIAL_DAYS} days of AI Practice included
             </a>
             <a href={loginHref} className={secondary}>
               Log in
@@ -463,7 +463,7 @@ function ExerciseRun({ exercises, topicId, nextHref, nextTitle, signupHref }) {
             <a href={signupHref} className="font-bold text-siegel hover:text-siegel-deep">
               Create a free account
             </a>{' '}
-            to keep your progress — {TRIAL_DAYS} days of Pro included.
+            to keep your progress — {TRIAL_DAYS} days of AI Practice included.
           </p>
         )}
       </div>

@@ -75,7 +75,7 @@ const SubscriptionPage = () => {
   // Card, invoices, cancelling: the Lemon Squeezy portal, for a live LS
   // subscription only (lib/billingPortal.js, tests/subscription-portal-link.test.mjs).
   const portal = subscriptionPortalAction(isSubscribed, subscription, isGerman);
-  // What the status card calls the row: a course row is Pro included with the
+  // What the status card calls the row: a course row is AI Practice included with the
   // course, not a monthly plan (lib/planStatus.js, tests/plan-status.test.mjs).
   const planStatus = planStatusCopy(subscription, isGerman);
 
@@ -89,8 +89,8 @@ const SubscriptionPage = () => {
     return d.toLocaleDateString(isGerman ? 'de-DE' : 'en-US');
   })();
 
-  // Pro may already be active when a course is bought. Wait for the product
-  // being purchased, rather than mistaking existing Pro for a new payment.
+  // AI Practice may already be active when a course is bought. Wait for the product
+  // being purchased, rather than mistaking existing AI Practice for a new payment.
   useEffect(() => {
     if (verifying && checkoutEntitlementConfirmed(pendingProduct, { isSubscribed, purchases })) {
       setVerifying(false);
@@ -272,7 +272,7 @@ const SubscriptionPage = () => {
       name: isGerman ? PLANS.monthly.nameDe : PLANS.monthly.name,
       price: num(PLANS.monthly.price),
       period: isGerman ? '/Monat' : '/month',
-      // One Pro, two billings: both cards render the same lines, built from
+      // One AI Practice, two billings: both cards render the same lines, built from
       // the marketing.js claims (lib/proPlanLines.js, tests/subscription-plan-lines.test.mjs).
       features: proPlanLines(isGerman),
       highlight: false,
@@ -471,7 +471,7 @@ const SubscriptionPage = () => {
         )}
 
         {/* Level courses — own a level (v4 "Die Linie": the product comes first,
-            Pro second). Rendered only when the LS products exist (variant
+            AI Practice second). Rendered only when the LS products exist (variant
             configured) or the buyer already owns one. */}
         {visibleLevelCourses.length > 0 && (
           <Reveal className="mb-12">
@@ -480,15 +480,15 @@ const SubscriptionPage = () => {
               align="center"
               title={isGerman ? 'Eine Stufe besitzen: einmal zahlen, behalten' : 'Own a level: pay once, keep it'}
               lead={isGerman
-                ? `Eine Teilstufe für immer, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive. Danach bleibt die Stufe Ihre, und nichts verlängert sich.`
-                : `One sub-level for good, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included. After that the level stays yours, and nothing renews.`}
+                ? `Eine Teilstufe für immer, plus ${course.proMonths} Monate AI Practice (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive. Danach bleibt die Stufe Ihre, und nichts verlängert sich.`
+                : `One sub-level for good, plus ${course.proMonths} months of AI Practice (AI speaking, writing feedback, Sentence X-Ray) included. After that the level stays yours, and nothing renews.`}
             />
             {/* The level the learner was just refused leads, with its card first. */}
             {leadCourse && (
               <p className="mt-6 text-center text-[0.9375rem] font-bold text-ink">
                 {isGerman
-                  ? `Sie wollten gerade ${leadCourse.code} öffnen. Behalten Sie die Stufe dauerhaft: €${num(leadCourse.price)} einmalig, ${leadCourse.proMonths} Monate Pro inklusive.`
-                  : `You were about to open ${leadCourse.code}. Keep it for good: €${num(leadCourse.price)} once, ${leadCourse.proMonths} months of Pro included.`}
+                  ? `Sie wollten gerade ${leadCourse.code} öffnen. Behalten Sie die Stufe dauerhaft: €${num(leadCourse.price)} einmalig, ${leadCourse.proMonths} Monate AI Practice inklusive.`
+                  : `You were about to open ${leadCourse.code}. Keep it for good: €${num(leadCourse.price)} once, ${leadCourse.proMonths} months of AI Practice included.`}
               </p>
             )}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -505,28 +505,28 @@ const SubscriptionPage = () => {
                     {c.comingSoon && (
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                         <span className="inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
-                          {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                          {isGerman ? 'Bald verfügbar' : 'Coming next'}
                         </span>
                       </div>
                     )}
                     <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
                     <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
-                    <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                    {!c.comingSoon && <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
                       €{num(c.price)}
                       <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
                         {isGerman ? 'einmalig' : 'one time'}
                       </span>
-                    </p>
-                    <p className="mt-2 text-xs text-graphite">
+                    </p>}
+                    {!c.comingSoon && <p className="mt-2 text-xs text-graphite">
                       {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
-                    </p>
+                    </p>}
                     {owned ? (
                       <Button to={ownedLevelHref(firstLevel, hasLevelAccess)} variant="secondary" size="md" className="mt-4 w-full">
                         {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
                       </Button>
                     ) : c.comingSoon || !c.variantId ? (
                       <Button variant="secondary" size="md" className="mt-4 w-full" disabled aria-disabled="true">
-                        {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                        {isGerman ? 'Bald verfügbar' : 'Coming next'}
                       </Button>
                     ) : (
                       <Button
@@ -546,12 +546,12 @@ const SubscriptionPage = () => {
           </Reveal>
         )}
 
-        {/* Pro — rent the whole line. */}
+        {/* AI Practice — rent the whole line. */}
         <SectionHeading
           level={2}
           align="center"
-          title={isGerman ? 'Oder die ganze Linie mieten: Pro' : 'Or rent the whole line: Pro'}
-          lead={isGerman ? 'Jede Stufe und das volle KI-Kontingent, solange Sie zahlen. Jederzeit kündbar.' : 'Every level and the full AI allowance while you pay. Cancel anytime.'}
+          title={isGerman ? 'Optional dazu: AI Practice' : 'Optional: add AI Practice'}
+          lead={isGerman ? 'KI-Schreibfeedback, Sprechtraining und Satz-Röntgen. Neue Abonnements enthalten keinen Kurszugang. Jederzeit kündbar.' : 'AI writing feedback, speaking practice and Sentence X-Ray. New subscriptions do not include course access. Cancel anytime.'}
         />
         {/* Plan Cards — the grid a learner chooses from, so they tilt. The
             featured plan rests on a siegel edge and carries the page's one
@@ -662,8 +662,8 @@ const SubscriptionPage = () => {
                 <>
                   <p className="text-sm text-graphite mt-2">
                     {isGerman
-                      ? `Der feste 4-Wochen-Plan zur telc B1-Prüfung — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`
-                      : `The fixed 4-week plan for the telc B1 exam — with ${course.proMonths} months of Pro access included.`}
+                      ? `Der feste 4-Wochen-Plan zur telc B1-Prüfung — mit ${course.proMonths} Monaten AI Practice-Zugang inklusive.`
+                      : `The fixed 4-week plan for the telc B1 exam — with ${course.proMonths} months of AI Practice access included.`}
                   </p>
                   <p className="mt-3 font-display text-[2rem] font-semibold leading-none tracking-[-0.02em] text-ink">
                     €{num(course.price)}

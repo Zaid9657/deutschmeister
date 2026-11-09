@@ -10,7 +10,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawnWithFiles as spawnSync } from './helpers/spawnWithFiles.mjs';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';

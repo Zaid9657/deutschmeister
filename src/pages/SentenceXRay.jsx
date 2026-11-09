@@ -320,7 +320,7 @@ function LimitReachedBanner({ limit }) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
           <Button href="/pricing/">
             <Crown size={14} />
-            {`Upgrade to Pro — ${PRO_DAILY_LIMIT} analyses a day`}
+            {`Upgrade to AI Practice — ${PRO_DAILY_LIMIT} analyses a day`}
           </Button>
         </div>
       </Card>

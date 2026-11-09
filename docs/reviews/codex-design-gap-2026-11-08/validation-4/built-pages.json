@@ -1,0 +1,68 @@
+[
+  {
+    "page": "index.html",
+    "h1": 1,
+    "scene_images": 5,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "pricing/index.html",
+    "h1": 1,
+    "scene_images": 4,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/index.html",
+    "h1": 1,
+    "scene_images": 9,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/a1-1/index.html",
+    "h1": 1,
+    "scene_images": 10,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/a1-2/index.html",
+    "h1": 1,
+    "scene_images": 10,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/a2-1/index.html",
+    "h1": 1,
+    "scene_images": 1,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/a2-2/index.html",
+    "h1": 1,
+    "scene_images": 1,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/b1-1/index.html",
+    "h1": 1,
+    "scene_images": 1,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/b1-2/index.html",
+    "h1": 1,
+    "scene_images": 1,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/b2-1/index.html",
+    "h1": 1,
+    "scene_images": 1,
+    "purchase_buttons_in_main": 0
+  },
+  {
+    "page": "courses/b2-2/index.html",
+    "h1": 1,
+    "scene_images": 1,
+    "purchase_buttons_in_main": 0
+  }
+]

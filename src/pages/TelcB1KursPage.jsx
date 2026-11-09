@@ -353,7 +353,7 @@ const TelcB1KursPage = () => {
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
             Der Plan bleibt dauerhaft in Ihrem Konto. KI-Korrekturen und Sprechproben laufen über den
-            enthaltenen Pro-Zugang; seinen Stand sehen Sie unter{' '}
+            enthaltenen AI Practice-Zugang; seinen Stand sehen Sie unter{' '}
             <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">Abo</Link>.
           </p>
         </footer>

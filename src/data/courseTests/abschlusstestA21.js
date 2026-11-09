@@ -64,7 +64,7 @@
 // the course test's own level, so ExamSubscriptionGuard gates this on
 // 'a2.1'. a2.1 is NOT in FREE_LEVELS (src/config/freeTier.js, which lists
 // only 'a1.1'), and LEVEL_COURSES.course_a2 (src/data/pricing.js) is the
-// band course whose levels are ['a2.1','a2.2'] — so access needs Pro/trial
+// band course whose levels are ['a2.1','a2.2'] — so access needs AI Practice/trial
 // OR the A2 course purchase, exactly like the A2.1 level pages themselves.
 //
 // THREE INTEGRATION DEPENDENCIES, none of them satisfiable from this file:

@@ -36,7 +36,7 @@ export const EVENTS = {
   demo_started: { when: 'The visitor checks their first answer in the "Der erste Halt" demo.', once: true },
   demo_completed: { when: 'All items of the "Der erste Halt" demo are answered correctly.', once: true },
   course_selected: { when: 'A station, a fit-chooser answer or a course card is chosen.', once: false },
-  checkout_intent: { when: 'A Buy or Pro button is pressed, before the sign-in check.', once: false },
+  checkout_intent: { when: 'A Buy or AI Practice button is pressed, before the sign-in check.', once: false },
   checkout_opened: { when: 'The Lemon Squeezy checkout is opened for a signed-in buyer (overlay or same tab).', once: false },
 
   // --- App (SPA) — names already in use since 2026-08 ---------------------------

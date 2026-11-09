@@ -35,7 +35,7 @@ import { COURSES, PLANS, courseForProduct, eur } from '../data/pricing.js';
 // A signed-out Buy click (/pricing/, /courses/, the homepage line) stored what
 // the visitor wanted before sending them here (lib/buyIntent.js). Say so: the
 // account is step one of two, and the checkout resumes on its own afterwards —
-// otherwise a buyer reads "Start your Pro trial" and thinks the purchase was lost.
+// otherwise a buyer reads "Start your AI Practice trial" and thinks the purchase was lost.
 const pendingPurchase = () => {
   const key = peekBuyIntent();
   if (!key) return null;
@@ -258,10 +258,10 @@ const SignupPage = () => {
             className="hero-line font-display text-dm-hero text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
-            Start your {TRIAL_DAYS}-day Pro trial
+            Start your {TRIAL_DAYS}-day AI Practice trial
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Practise German with Pro. No payment details needed.
+            Practise German with AI Practice. No payment details needed.
           </p>
         </div>
 

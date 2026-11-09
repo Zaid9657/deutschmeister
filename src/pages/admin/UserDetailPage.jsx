@@ -32,7 +32,7 @@ function Actions({ userId, state, onDone }) {
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Aktion">
           <Select value={action} onChange={(e) => setAction(e.target.value)}>
-            <option value="grant_pro_days">Pro-Tage gutschreiben (manuelle Abo-Zeile)</option>
+            <option value="grant_pro_days">AI Practice-Tage gutschreiben (manuelle Abo-Zeile)</option>
             <option value="revoke_manual_access">Manuellen Zugang beenden</option>
             <option value="grant_course">Kurs freischalten</option>
             <option value="revoke_course">Kursfreischaltung zurücknehmen (nur manuelle)</option>

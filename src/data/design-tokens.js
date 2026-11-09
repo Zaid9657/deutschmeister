@@ -7,62 +7,35 @@
 // Both tailwind configs import this file, so a token added here reaches every
 // surface on both sides.
 //
-// Current contract (2026-11-08): paper and turquoise, hairline surfaces, no
-// resting shadows. Legacy aliases below preserve callers without preserving
-// extrusions. Commerce uses Archivo, editorial uses Fraunces. Motion tiers
-// are 140/220/420/800 ms; only transform, opacity and clip-path animate.
-//
-// ---------------------------------------------------------------------------
-// THE THREE RULES. These are load-bearing, not taste. Breaking one makes the
-// system decorative again, which is what it replaced.
-// ---------------------------------------------------------------------------
-//
-// 1. COLOUR MEANS CASE. The four `kasus` colours below are the ones Sentence
-//    X-Ray already uses to mark Nominativ, Akkusativ, Dativ and Genitiv
-//    (src/pages/SentenceXRay.jsx, CASE_STYLES). They may appear ONLY where a
-//    grammatical case is named or demonstrated. Never as a section fill, never
-//    on a CTA, never because a card needed livening up. The payoff is that a
-//    learner meets the same colour language on the pricing page and inside the
-//    analyser, and learns it twice. The `accent` candy palette exists so this
-//    rule survives a playful design: when a surface needs energy, it takes an
-//    accent, never a case colour. (Accent hues are chosen to be UNCONFUSABLE
-//    with the four case hues — no blue, no red-orange, no true green, no
-//    blue-purple.)
-//
-// 2. ONE PRIMARY. `siegel` teal is the only interactive colour — buttons,
-//    links, focus rings, selected states. `gold` belongs to the seal itself and
-//    to at most one "recommended" marker per page. The accents are ENERGY, not
-//    interaction: chips, badges, streak flames, progress fills, confetti — a
-//    candy-coloured CTA is out of system (exception: one celebration moment
-//    may use `himbeer`, because a completed goal has earned it).
-//
-// 3. HAIRLINES, NOT RESTING SHADOWS. Reference and interactive surfaces are
-//    flat; borders, focus rings and a small press translation show affordance.
-//    Overlay shadows are reserved for floating menus and dialogs.
-//
-// Type note: the display face is Fraunces (optical-size axis, enough spine for
-// long German compounds); the data face is a system mono stack for level codes
-// (A2.1), case labels (AKK) and prices — figures are data, not prose.
+// Concept 4 (founder approved, 2026-11-09): white and soft mint grounds,
+// deep teal identity, coral entry CTA, Fraunces headlines and clean sans body.
+// Palette sampled from the approved concept-4.png (not inferred from old tokens).
+// Grammatical case colours remain reserved for labelled grammar examples.
+// Calm motion uses 140/220/420/800ms; only transform and opacity animate.
 
 /** The ground and the ink. Cool near-white, and a near-black with a faint teal cast. */
 export const color = {
-  paper: '#FCFCFA',
-  paperSunk: '#F4F6F5', // recessed panels, table header rows
-  ink: '#14201D',
-  graphite: '#5A6360', // secondary text — AA on paper at body sizes
-  rule: '#E2E7E5', // hairlines, table rules, card borders
+  paper: '#FFFFFF',
+  paperSunk: '#F4F9F6', // recessed panels, table header rows
+  ink: '#090A0A',
+  graphite: '#43534E', // secondary text — AA on paper at body sizes
+  rule: '#DCE7E2', // hairlines, table rules, card borders
   edge: '#D8DFDB', // the hard bottom edge of a resting white/paper surface
   white: '#FFFFFF',
 
   // Primary. Sampled from the Meister-Siegel gradient in src/components/Logo.jsx.
   // v4 (owner pick 2026-10-04, "A · Türkis"): the brightest türkis that still
   // carries white button text at AA (4.7:1). Was #0F766E.
-  siegel: '#0A8276',
-  siegelLift: '#0A7468', // hover (darkens, keeps AA); the seal gradient's far stop
-  siegelDeep: '#0A6B61', // press, and text-on-paper when the link must darken
-  siegelWash: '#E3F6F3', // selected rows, quiet fills — the course palette's wash
+  siegel: '#035E53',
+  siegelLift: '#054D45', // hover (darkens, keeps AA); the seal gradient's far stop
+  siegelDeep: '#05453E', // press, and text-on-paper when the link must darken
+  siegelWash: '#EDF8F3', // selected rows, quiet fills — the course palette's wash
   siegelEdge: '#075A51', // the bottom edge under a siegel button face
 
+  coral: '#F95841', // sampled at (80, 198), home CTA
+  coralInk: '#FFFFFF',
+  coralAccessible: '#BC3524', // AA white text variant for smaller controls
+  footer: '#05463F', // sampled at (300, 980)
   // The seal's dot. Rule 2: the seal, and at most one marker per page.
   gold: '#FBBF24',
 };
@@ -285,7 +258,7 @@ export const depth = {
 
 /** Shadows. hover/overlay are v1's lift pair; raise/raiseLg are v2's resting extrusions. */
 export const shadow = {
-  raise: 'none',
+  raise: '0 2px 6px rgba(5, 69, 62, 0.10)',
   raiseLg: 'none',
   raiseSiegel: 'none',
   raiseHimbeer: 'none',
@@ -322,6 +295,9 @@ export const tailwindColors = {
   edge: color.edge,
   siegel: { DEFAULT: color.siegel, lift: color.siegelLift, deep: color.siegelDeep, wash: color.siegelWash, edge: color.siegelEdge },
   gold: color.gold,
+  coral: color.coral,
+  'coral-accessible': color.coralAccessible,
+  footer: color.footer,
   kasus: Object.fromEntries(
     Object.entries(kasus).map(([name, v]) => [name, { DEFAULT: v.line, wash: v.wash, ink: v.ink }]),
   ),
@@ -334,7 +310,7 @@ export const tailwindColors = {
 
 /** Both configs spread this into theme.extend.boxShadow. */
 export const tailwindBoxShadow = {
-  raise: 'none',
+  raise: shadow.raise,
   'raise-lg': shadow.raiseLg,
   'raise-siegel': shadow.raiseSiegel,
   'raise-himbeer': shadow.raiseHimbeer,
@@ -384,16 +360,16 @@ export const tailwindFontFamily = {
 
 /** The line itself: türkis (v4). Same family as `siegel`. */
 export const linie = {
-  DEFAULT: '#0A8276', // the line, station rings, keys (white text 4.7:1)
-  deep: '#0A7468', // hover/press; the line's shadow side
+  DEFAULT: '#035E53', // the line, station rings, keys (white text 4.7:1)
+  deep: '#054D45', // hover/press; the line's shadow side
   edge: '#075A51', // the hard bottom edge under a linie face (rule 3)
-  wash: '#E3F6F3', // a quiet highlight behind ink text
+  wash: '#EDF8F3', // a quiet highlight behind ink text
   ink: '#FFFFFF', // text on a linie face
 };
 
 /** The feature ground (v4: light türkis, was night): hero, the line section, footer, tab bar. */
 export const nacht = {
-  DEFAULT: '#E3F6F3', // the türkis tint
+  DEFAULT: '#EDF8F3', // the türkis tint
   raised: '#FFFFFF', // cards and the ticket on the tint
   sunk: '#BFEAE3', // the track bed under the line
   rule: '#BFE3DB', // hairlines on the tint
@@ -526,3 +502,9 @@ export const tailwindTypeSizes = Object.fromEntries(Object.entries(type).flatMap
   [`dm-${name}`, [role.mobile, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
   [`dm-${name}-wide`, [role.size, { lineHeight: String(role.leading), letterSpacing: role.tracking, fontWeight: String(role.weight) }]],
 ]));
+
+/** Frozen transactional palette: functions are outside the Concept 4 brief. */
+export const emailBrand = {
+  siegel: '#0A8276', siegelLift: '#0A7468', siegelWash: '#E3F6F3',
+  gold: '#FBBF24', ink: '#14201D', graphite: '#5A6360', rule: '#E2E7E5', paper: '#FCFCFA', white: '#FFFFFF',
+};

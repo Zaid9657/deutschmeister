@@ -7,17 +7,17 @@
 // the app to German read "Pick up where you left off" above German plan cards.
 // Two claims rode in the same lines:
 //   - the trial-over lead said "Choose a plan and keep learning without
-//     limits", while Pro meters every AI feature (speaking sessions per month,
+//     limits", while AI Practice meters every AI feature (speaking sessions per month,
 //     writing and X-Ray allowances; marketing.js, compared by
 //     tests/claims.test.mjs with the functions that enforce them);
-//   - the Pro and trial leads offered "add a level course" / "Buy the level you
+//   - the AI Practice and trial leads offered "add a level course" / "Buy the level you
 //     need once" to everyone, while the course section below shows a Buy button
 //     only for a live course (checkout id set, not "coming soon") the learner
 //     does not own yet. With no such card the lead offered a purchase the page
 //     could not sell.
 // So the copy lives here, in both languages, and the lead offers a level only
-// when the page shows a Buy button for one. Pro is described in the words of
-// the Pro section on the same page ("every level and the full AI allowance").
+// when the page shows a Buy button for one. AI Practice is described in the words of
+// the AI Practice section on the same page ("every level and the full AI allowance").
 // Copy only: nothing here reads or changes entitlement.
 // tests/subscription-heading.test.mjs.
 //
@@ -43,30 +43,30 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
       ? {
           title: 'Ihr Plan',
           lead: canBuyLevel
-            ? 'Pro ist aktiv. Sie können zusätzlich einen Kurs für eine Stufe kaufen – er bleibt Ihnen dauerhaft erhalten.'
-            : 'Pro ist aktiv.',
+            ? 'AI Practice ist aktiv. Sie können zusätzlich einen Kurs für eine Stufe kaufen – er bleibt Ihnen dauerhaft erhalten.'
+            : 'AI Practice ist aktiv.',
         }
       : {
           title: 'Your plan',
           lead: canBuyLevel
-            ? 'Pro is active. You can also add a level course — it stays yours for life.'
-            : 'Pro is active.',
+            ? 'AI Practice is active. You can also add a level course — it stays yours for life.'
+            : 'AI Practice is active.',
         };
   }
 
-  // A failed renewal (past_due, unpaid) lost Pro to a card problem, not to an
+  // A failed renewal (past_due, unpaid) lost AI Practice to a card problem, not to an
   // ended trial: the heading said "Your trial is over" above a "Subscribe now"
   // a subscriber cannot use. The fix is a new card in the billing portal (ACC-04).
   if (paymentFailed) {
     return isGerman
       ? {
           title: 'Ihre letzte Zahlung ist nicht durchgegangen',
-          lead: 'Aktualisieren Sie Ihre Karte im Kundenportal, dann läuft Pro weiter. Ihr Fortschritt bleibt erhalten.'
+          lead: 'Aktualisieren Sie Ihre Karte im Kundenportal, dann läuft AI Practice weiter. Ihr Fortschritt bleibt erhalten.'
             + (canBuyLevel ? ' Oder kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft.' : ''),
         }
       : {
           title: 'Your last payment didn’t go through',
-          lead: 'Update your card in the customer portal and Pro carries on. Your progress stays.'
+          lead: 'Update your card in the customer portal and AI Practice carries on. Your progress stays.'
             + (canBuyLevel ? ' Or buy the level you need once and keep it.' : ''),
         };
   }
@@ -77,15 +77,15 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
           title: 'Wählen Sie, wie es weitergeht',
           lead: `Ihre kostenlose Testphase läuft (noch ${daysLeft} ${daysLeft === 1 ? 'Tag' : 'Tage'}). `
             + (canBuyLevel
-              ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie Pro für jede Stufe und das volle KI-Kontingent.'
-              : 'Danach haben Sie mit Pro jede Stufe und das volle KI-Kontingent.'),
+              ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie AI Practice für die KI-Übungen, ohne Kurszugang.'
+              : 'Danach haben Sie mit AI Practice KI-Übungen, ohne Kurszugang.'),
         }
       : {
           title: 'Choose how you want to keep going',
           lead: `Your free trial is running (${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left). `
             + (canBuyLevel
-              ? 'Buy the level you need once and keep it, or go Pro for every level and the full AI allowance.'
-              : 'After it ends, Pro gives you every level and the full AI allowance.'),
+              ? 'Buy the level you need once and keep it, or go AI Practice for AI tools, with course access sold separately.'
+              : 'After it ends, AI Practice gives you AI tools. Course access is sold separately.'),
         };
   }
 
@@ -94,14 +94,14 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
         title: 'Machen Sie dort weiter, wo Sie aufgehört haben',
         lead: 'Ihre Testphase ist vorbei, Ihr Fortschritt bleibt. '
           + (canBuyLevel
-            ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie Pro für jede Stufe und das volle KI-Kontingent.'
-            : 'Mit Pro haben Sie jede Stufe und das volle KI-Kontingent.'),
+            ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie AI Practice für die KI-Übungen, ohne Kurszugang.'
+            : 'AI Practice ergänzt Ihre Kurse um KI-Übungen. Neue Abonnements enthalten keinen Kurszugang.'),
       }
     : {
         title: 'Pick up where you left off',
         lead: 'Your trial is over, but your progress stays. '
           + (canBuyLevel
-            ? 'Buy the level you need once and keep it, or go Pro for every level and the full AI allowance.'
-            : 'Go Pro for every level and the full AI allowance.'),
+            ? 'Buy the level you need once and keep it, or go AI Practice for AI tools, with course access sold separately.'
+            : 'Go AI Practice for AI tools, with course access sold separately.'),
       };
 }

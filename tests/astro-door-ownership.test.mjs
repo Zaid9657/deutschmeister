@@ -28,10 +28,10 @@ import { buyButton, door, FakeElement, fakeSupabase, loadLevelAccess, runCourseC
 
 const lib = loadLevelAccess({});
 const NOW = Date.parse('2026-10-25T12:00:00Z');
-const TRIAL = { is_subscribed: false, trial_ends_at: '2999-01-01T00:00:00Z' };
+const TRIAL = { trial_started_at: '2026-10-24', is_subscribed: false, trial_ends_at: '2999-01-01T00:00:00Z' };
 const PRO = { is_subscribed: true, trial_ends_at: '2026-01-01T00:00:00Z' };
 const ENDED = { is_subscribed: false, trial_ends_at: '2026-10-01T00:00:00Z' };
-const snap = (profile, purchases = []) => ({ signedIn: true, verified: true, profile, purchases });
+const snap = (profile, purchases = []) => ({ signedIn: true, verified: true, profile, purchases, subscription: profile === PRO ? { status: 'active', plan_type: 'monthly', subscription_start: '2026-10-01', subscription_end: '2999-01-01' } : null });
 
 test('levelOpen: a trial or Pro opens a level without owning it; a bought course owns it', () => {
   assert.deepEqual({ ...lib.levelOpen(snap(TRIAL), 'a1.2', NOW) }, { signedIn: true, open: true, owned: false, reason: 'trial' });
@@ -126,7 +126,7 @@ test('ACC-18: one snapshot serves every door on the page', async () => {
 test('ACC-18: the snapshot is one auth read, one profile read and one purchases read; a failed read is not "nothing bought"', async () => {
   const ok = fakeSupabase({ profile: TRIAL, purchases: [{ product_key: 'course_a1_2' }] });
   const snapshot = await loadLevelAccess(ok.client).loadEntitlementSnapshot();
-  assert.deepEqual([...ok.reads], ['auth', 'profiles', 'purchases']);
+  assert.deepEqual([...ok.reads], ['auth', 'profiles', 'purchases', 'subscriptions']);
   assert.equal(snapshot.signedIn, true);
   assert.equal(snapshot.userId, 'learner', 'a snapshot names the account it answers for');
   assert.equal(snapshot.verified, true);

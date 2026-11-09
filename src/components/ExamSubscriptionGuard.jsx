@@ -13,14 +13,14 @@ import LockedContentOverlay from './LockedContentOverlay';
 const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 
 // Guards the /modelltest/:examSlug* routes for BOTH registries the resolver
-// covers. For an exam track, Pro/trial keeps the exact access
+// covers. For an exam track, AI Practice/trial keeps the exact access
 // SubscriptionGuard already gave it; on top of that, a band-course buyer
 // unlocks their own band's mock — the €49 course is sold on including it
 // (docs/course-research-2026-09-03.md §4). gateLevel there is the band's TOP
 // sublevel (EXAM_TRACKS[].sublevels, last entry), never the first:
 // hasLevelAccess() treats FREE_LEVELS (a1.1) as always-open, so gating on
 // a1.1 would make the A1 mock free for everyone — a1.2 is never free, so it
-// opens only via Pro/trial or an actual course purchase.
+// opens only via AI Practice/trial or an actual course purchase.
 //
 // For a COURSE test, gateLevel is the course's own level. a1.1 is a free
 // level, so hasLevelAccess('a1.1') is always true — the Abschlusstest A1.1
@@ -31,7 +31,8 @@ const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 // exam pages are where the exam-bound visitors arrive, and a login form is a
 // dead end for someone with no account yet (business review 2026-10-11).
 // The Abschlusstest A1.2 (Wave 3 PR D) gates on 'a1.2' — NOT free — so it
-// opens only via Pro/trial or the A1 course, exactly like /level/a1.2.
+// opens through the course entitlement, exactly like /level/a1.2.
+// New AI Practice subscriptions do not bypass a course or its final test.
 const ExamSubscriptionGuard = ({ children }) => {
   const { examSlug } = useParams();
   const { user, loading: authLoading } = useAuth();
@@ -42,7 +43,7 @@ const ExamSubscriptionGuard = ({ children }) => {
   const retriedRef = useRef(false);
 
   const resolved = resolveModelltestGate(examSlug);
-  const examAccess = hasAccess || (resolved?.gateLevel ? hasLevelAccess(resolved.gateLevel) : false);
+  const examAccess = resolved?.gateLevel ? hasLevelAccess(resolved.gateLevel) : hasAccess;
 
   const isBrandNew =
     user?.created_at && Date.now() - new Date(user.created_at).getTime() < NEW_USER_WINDOW_MS;

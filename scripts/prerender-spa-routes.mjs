@@ -195,7 +195,7 @@ const LEVEL_TEST_FAQS = [
 
 const PODCAST_FAQS = [
   { q: 'What level are the German podcasts?', a: `We have ${PODCAST_EPISODE_COUNT} podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.` },
-  { q: 'Are the German podcasts free?', a: `${FREE_LEVEL_LABEL} podcasts are free without an account. Higher levels are available during the ${TRIAL_DAYS}-day trial, with Pro, or with a purchased course covering that level.` },
+  { q: 'Are the German podcasts free?', a: `${FREE_LEVEL_LABEL} podcasts are free without an account. Higher levels are available during the ${TRIAL_DAYS}-day trial, with a purchased course covering that level, or with a qualifying existing subscription.` },
   // NOTE: do not reinstate a transcript claim here. All 24 episodes in the
   // database have empty transcripts. The 2026-08-16 audit (B-04) removed this
   // claim from src/pages/PodcastsPage.jsx but missed this second, hardcoded
@@ -356,7 +356,7 @@ const ROUTES = [
       <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Personalized Path</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">Topics to focus on first</span></div></div>
     </div>
   </div>
-  <div class="mt-8 rounded-clay border border-rule border-l-4 border-l-accent-aprikose bg-accent-aprikose-wash p-4"><div class="text-[0.9375rem] leading-relaxed text-accent-aprikose-ink"><strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.</div></div>
+  <div class="mt-8 rounded-clay border border-rule border-l-4 border-l-accent-aprikose bg-accent-aprikose-wash p-4"><div class="text-[0.9375rem] leading-relaxed text-accent-aprikose-ink"><strong>Tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.</div></div>
 
 ${faqSection(LEVEL_TEST_FAQS)}
 </div></div>`,
@@ -435,7 +435,7 @@ ${faqSection(LEVEL_TEST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'PodcastSeries',
         name: 'DeutschMeister German Learning Podcast',
-        description: `German learning podcast: ${PODCAST_EPISODE_COUNT} episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level. ${FREE_LEVEL_LABEL} is free; higher levels require trial, Pro or a course covering the level.`,
+        description: `German learning podcast: ${PODCAST_EPISODE_COUNT} episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level. ${FREE_LEVEL_LABEL} is free; higher levels require a live trial, a purchased course or a qualifying existing subscription.`,
         url: 'https://deutsch-meister.de/podcasts/',
         // webFeed must be an RSS/Atom feed, not the HTML page. The feed is served
         // by netlify/functions/podcast-feed.js via the netlify.toml rewrite.

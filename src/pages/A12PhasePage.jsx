@@ -17,7 +17,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 // (generic by program_key), same layout; see StartDeutsch1KursPage's header
 // for the rationale, not repeated here. Reached via LevelSubscriptionGuard
 // (level="a1.2") — unlike a1.1, A1.2 is NOT a free level, so this plan opens
-// only with Pro/trial or the A1 course purchase (hasLevelAccess('a1.2')),
+// only with AI Practice/trial or the A1 course purchase (hasLevelAccess('a1.2')),
 // the same gate the A1.2 level page and the Abschlusstest A1.2 use.
 
 const TYPE_ICON = {
@@ -159,7 +159,7 @@ const A12PhasePage = () => {
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
             Arbeite in deinem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
-            Dein Pro-Zugang bzw. dein A1-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
+            Dein AI Practice-Zugang bzw. dein A1-Kurs deckt jede verlinkte Übung ab; den Status siehst du auf{' '}
             <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">deiner Abo-Seite</Link>.
           </p>
         </footer>

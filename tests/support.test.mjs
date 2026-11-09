@@ -63,7 +63,8 @@ test('both footers, the account menu and both course-home footers render SUPPORT
   assert.match(read('src/components/Footer.jsx'), /<FooterLink item=\{SUPPORT_LINK\}/, 'SPA footer');
   assert.match(read('astro-site/src/layouts/Layout.astro'), /href=\{SUPPORT_LINK\.href\}/, 'Astro footer');
   const navbar = read('src/components/Navbar.jsx');
-  assert.equal((navbar.match(/to=\{SUPPORT_LINK\.href\}/g) || []).length, 2, 'account menu: desktop + mobile');
+  assert.equal((navbar.match(/to=\{SUPPORT_LINK\.href\}/g) || []).length, 1, 'one shared account menu');
+  assert.equal((navbar.match(/\{account\}/g) || []).length, 2, 'shared account menu in desktop and mobile chrome');
   for (const f of ['src/pages/CurriculumHomePage.jsx', 'src/pages/CourseHomePage.jsx']) {
     assert.match(read(f), /to=\{SUPPORT_LINK\.href\}/, `${f}: the course home has no site footer, so its own footer must carry support`);
   }

@@ -85,7 +85,7 @@ const LevelTestResults = ({
   // from pricing.js, never retyped). A ticket station (A1.2–A2.2) gets the first
   // card: its course, where LevelSubscriptionGuard serves the trial or signup
   // door or the offer, and one line to its ticket page. B1/B2 have no course
-  // yet: the route offers.js names for them, Pro. Both links are page loads
+  // yet: the route offers.js names for them, AI Practice. Both links are page loads
   // tagged as level-test doors (public/attribution.js reads a tag only on a
   // load). The A1.1 card below stays for every result.
   const station = stationFor(finalSublevel);

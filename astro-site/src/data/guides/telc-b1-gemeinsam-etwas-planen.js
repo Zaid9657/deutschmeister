@@ -215,7 +215,7 @@ export const telcB1GemeinsamPlanen = {
       blocks: [
         {
           type: 'p',
-          text: 'Üben Sie mit Alltagsanlässen: Geburtstagsfeier für eine Kollegin, Ausflug am Wochenende, Flohmarkt im Haus, Besuch eines Konzerts, Grillfest im Park. Pro Anlass: fünf Stichwörter aufschreiben, zu jedem einen Vorschlag, dann sechs Minuten laut planen.',
+          text: 'Üben Sie mit Alltagsanlässen: Geburtstagsfeier für eine Kollegin, Ausflug am Wochenende, Flohmarkt im Haus, Besuch eines Konzerts, Grillfest im Park. AI Practice Anlass: fünf Stichwörter aufschreiben, zu jedem einen Vorschlag, dann sechs Minuten laut planen.',
         },
         {
           type: 'p',

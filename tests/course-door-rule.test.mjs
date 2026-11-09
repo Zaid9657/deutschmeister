@@ -87,7 +87,7 @@ test('every level-course Buy on a static page sits inside a data-course-door', (
       if (!insideDoor(src, m.index)) offenders.push(`${file}:${src.slice(0, m.index).split('\n').length}`);
     }
   }
-  for (const surface of ['LineSection.astro', 'FitChooser.astro', 'Ticket.astro', 'courses/[level].astro', 'courses/index.astro', 'pricing.astro']) {
+  for (const surface of ['concept/PurchaseDoor.astro']) {
     assert.ok(checked.some((f) => f.endsWith(surface)), `no Buy found on ${surface}: the scan is not reading it`);
   }
   assert.deepEqual(offenders, [], `level-course Buy buttons without an owner door:\n  ${offenders.join('\n  ')}`);

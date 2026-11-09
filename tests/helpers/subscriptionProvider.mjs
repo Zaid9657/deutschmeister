@@ -1,3 +1,4 @@
+import { courseAccessReason } from '../../src/lib/levelEntitlement.js';
 // The real SubscriptionProvider (src/contexts/SubscriptionContext.jsx) under
 // node:vm. Its hooks and async callbacks run as shipped; only its JSX return is
 // replaced, so a test can read the context value without a browser.
@@ -83,7 +84,7 @@ export function providerHarness(services = {}) {
     settlePendingPlacement: async (_id, profile) => profile,
     getAuthHeaders: async () => ({}),
     fetch: async () => ({ json: async () => ({ status: 'none' }) }),
-    isLevelFree, levelsForProduct, ...statusChecks,
+    isLevelFree, levelsForProduct, courseAccessReason, ...statusChecks,
     setTimeout: (fn, ms) => { const timer = setTimeout(fn, ms); timer.unref?.(); return timer; },
     clearTimeout,
     console: { error() {}, warn() {}, log() {} }, Date, Promise,

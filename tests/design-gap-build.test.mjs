@@ -3,16 +3,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 
-test('money pages expose choices before decoration and a single course catalogue', () => {
+test('money pages expose the real checker, one catalogue and live curriculum previews', () => {
   const home = read('astro-site/src/pages/index.astro');
-  assert.ok(home.indexOf('Choose your learning route') < home.indexOf('<LineBoard />'));
+  assert.match(home, /<FirstStop/); assert.match(home, /<Offers/); assert.doesNotMatch(home, /<LineBoard/);
   const courses = read('astro-site/src/pages/courses/index.astro');
-  assert.doesNotMatch(courses, /<LineSection/);
-  assert.match(courses, /rungs.filter\(\(r\) => r.showSyllabus\)/);
-  assert.match(courses, /rungs.filter\(\(r\) => !r.showSyllabus\)/);
+  assert.match(courses, /ALL_LEVELS.map/); assert.match(courses, /r.course.comingSoon/);
   const level = read('astro-site/src/pages/courses/[level].astro');
   assert.match(level, /<summary[^>]*>View all lessons/);
-  assert.ok(level.indexOf('<CourseProof level={level}') < level.indexOf('id="stamp-lehrplan"'));
+  assert.ok(level.indexOf('id="lesson-preview"') < level.indexOf('class="c4-wrap c4-syllabus"'));
 });
 
 test('a denied or unavailable analytics call cannot consume a once-event', async () => {
@@ -32,9 +30,9 @@ test('a denied or unavailable analytics call cannot consume a once-event', async
   } finally { delete globalThis.window; }
 });
 
-test('shared presentation uses flat surfaces, token timings and no animation visibility gate', async () => {
+test('shared presentation uses soft surfaces, token timings and no animation visibility gate', async () => {
   const { shadow, motion, tailwindLinieShadow } = await import('../src/data/design-tokens.js');
-  for (const [name, value] of Object.entries(shadow)) if (name.startsWith('raise')) assert.equal(value, 'none', name);
+  assert.match(shadow.raise, /rgba/); // Concept 4 permits a restrained card shadow.
   for (const value of Object.values(tailwindLinieShadow)) assert.equal(value, 'none');
   assert.deepEqual(Object.values(motion.duration), ['140ms', '220ms', '420ms']);
   for (const name of ['Button', 'Card', 'Chip']) assert.doesNotMatch(read(`src/components/ui/${name}.jsx`), /transition-all|shadow-raise/);

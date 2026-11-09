@@ -33,27 +33,14 @@ test('long grammar source titles receive a compact SEO-only fallback', async () 
   assert.match(topicPage, /replace\(\/\\s\*\\\(\[\^\)\]\*\\\)\/g/);
 });
 
-test('the homepage keeps below-fold sales content visible without blur filters', async () => {
-  const [home, motion, showtime] = await Promise.all([
-    read('astro-site/src/pages/index.astro'),
-    read('astro-site/src/styles/showtime.css'),
-    read('astro-site/src/components/Showtime.astro'),
-  ]);
-
-  // v4 ("Die Linie", 2026-10-04): the homepage's below-fold sections are
-  // components; count the deferred sections across the page and the ones it renders.
-  const { readdirSync } = await import('node:fs');
-  const used = [...home.matchAll(/from '\.\.\/components\/linie\/(\w+)\.astro'/g)].map((m) => m[1]);
-  const parts = await Promise.all(readdirSync(new URL('../astro-site/src/components/linie/', import.meta.url))
-    .filter((f) => used.includes(f.replace('.astro', '')))
-    .map((f) => read(`astro-site/src/components/linie/${f}`)));
-  const deferred = [home, ...parts].reduce((n, src) => n + (src.match(/class="dm-defer/g) ?? []).length, 0);
-  assert.ok(deferred >= 5, `homepage defers ${deferred} below-fold sections`);
-  assert.match(motion, /content-visibility:\s*visible/);
-  assert.doesNotMatch(motion, /contain-intrinsic-size:/);
-  assert.doesNotMatch(motion, /filter:\s*blur\((4|5)px\)/);
-  assert.doesNotMatch(home, /class="hero-line/);
-  assert.match(showtime, /\(hover: hover\) and \(pointer: fine\)/);
+test('the homepage keeps its sales content readable at rest and lazy-loads below-fold art', async () => {
+  const home = await read('astro-site/src/pages/index.astro');
+  const scene = await read('astro-site/src/components/concept/Scene.astro');
+  const css = await read('astro-site/src/styles/concept4.css');
+  assert.match(home, /data-c4-reveal/);
+  assert.match(scene, /loading=\{hero \? 'eager' : 'lazy'\}/);
+  assert.doesNotMatch(css, /\[data-c4-reveal\][^{]*\{[^}]*opacity:\s*0/);
+  assert.doesNotMatch(css, /filter:\s*blur/);
 });
 
 test('long grammar lessons defer their below-fold sections', async () => {

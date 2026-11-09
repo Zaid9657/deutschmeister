@@ -11,7 +11,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
+import { spawnWithFiles as spawnSync } from './helpers/spawnWithFiles.mjs';
 import { LADDER_DAYS, nextDue } from '../src/lib/review/ladder.js';
 import {
   endOfLocalDay, fetchDueCards, fetchNextDueAt, fetchReviewCounts, firstDueAt, seedCardsForLektion,

@@ -77,7 +77,7 @@ test('the /pricing/ cancel answer sends people to the portal, derived and not ty
   assert.match(pricing, /from '\.\.\/lib\/billingPortal\.js'/);
 
   const page = rendered(pricing);
-  const entry = page.match(/q: 'Can I cancel anytime\?'[\s\S]*?\n\s*\},/);
+  const entry = page.match(/q: 'Can I cancel AI Practice anytime\?'[\s\S]*?link: \{[^}]+\} \},/);
   assert.ok(entry, 'the cancel question is still on /pricing/');
   assert.match(entry[0], /\$\{BILLING_PORTAL_LABEL\}/, 'the answer names the portal address');
   assert.match(entry[0], /href: BILLING_PORTAL_URL/, 'the answer links the portal');
@@ -86,8 +86,8 @@ test('the /pricing/ cancel answer sends people to the portal, derived and not ty
   // The address is typed once, in lib/billingPortal.js, never on the page.
   assert.doesNotMatch(page, /lemonsqueezy\.com\/billing/);
   // The FAQ list renders the link, so the answer is one click from the portal.
-  assert.match(page, /\{item\.link && \(/);
-  assert.match(page, /href=\{item\.link\.href\}/);
+  assert.match(page, /\{f\.link &&/);
+  assert.match(page, /href=\{f\.link\.href\}/);
 });
 
 test('the /faq/ cancel answer names the portal, derived and not typed', () => {
@@ -110,7 +110,7 @@ test('the /faq/ cancel answer names the portal, derived and not typed', () => {
   assert.ok(a.includes(`(${portalLabel})`), 'the answer names the portal address');
   assert.match(a, /Lemon Squeezy customer portal/);
   assert.match(a, /email address you subscribed with/, 'the answer says how to sign in to the portal');
-  assert.match(a, /keep Pro until the end of the period you have already paid for/, 'the answer keeps the paid-period promise of /pricing/');
+  assert.match(a, /keep AI Practice until the end of the period you have already paid for/, 'the answer keeps the paid-period promise of /pricing/');
   assert.doesNotMatch(a, CANCEL_VIA_ACCOUNT);
   // HTML-safe: the prerender writes the answer into #root unescaped.
   assert.doesNotMatch(a, /[<>&"]/);
@@ -131,10 +131,10 @@ test('the /faq/ cancel answer names the portal, derived and not typed', () => {
 });
 
 test('the rule recognises the claim it was written for (the scan is not vacuous)', () => {
-  assert.match("{ q: 'Can I cancel anytime?', a: 'Yes, from your account page.", CANCEL_VIA_ACCOUNT);
+  assert.match("{ q: 'Can I cancel AI Practice anytime?', a: 'Yes, from your account page.", CANCEL_VIA_ACCOUNT);
   assert.match('Sie können Ihr Abo jederzeit auf der Kontoseite kündigen.', CANCEL_VIA_ACCOUNT);
   assert.match('Kündigen Sie jederzeit in Ihrem Konto.', CANCEL_VIA_ACCOUNT);
-  assert.doesNotMatch('A1.1 free, no account · 7-day Pro trial · cancel anytime', CANCEL_VIA_ACCOUNT);
+  assert.doesNotMatch('A1.1 free, no account · 7-day AI Practice trial · cancel anytime', CANCEL_VIA_ACCOUNT);
   assert.doesNotMatch('Yes. You cancel in the Lemon Squeezy customer portal.', CANCEL_VIA_ACCOUNT);
 });
 

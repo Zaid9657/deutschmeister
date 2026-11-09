@@ -1,515 +1,86 @@
 ---
-// Pricing — v4 "Die Linie" (2026-10-04; docs/redesign-2026-10/).
-//
-// THE THESIS. There are exactly two ways to pay, and a visitor should see the
-// fork before anything else: OWN a level (one payment, yours for good, with
-// the Pro tools on board for the first months) or RENT the whole line (Pro,
-// monthly or yearly). A1.1 costs nothing. Until v4 the page led with a
-// three-column Pro table and put the one-time courses — the product, by the
-// owner's decision of 2026-09-03 — below the fold.
-//
-// INVARIANTS CARRIED OVER (do not regress):
-//   - every figure derives from ../data/pricing.js, marketing.js and offers.js;
-//     tests/claims.test.mjs fails if a price literal reappears here
-//   - the Pro button's words come from lib/proCta.js: signed out it starts the
-//     account trial and leaves no buy intent; signed in it is the checkout it
-//     names (tests/pro-cta.test.mjs)
-//   - level-course buttons go through components/CourseCheckout.astro (intent
-//     through signup, overlay, events); a course with no checkout id has no Buy
-//   - checkout never opens a new tab — overlay, else same-tab navigation
-//   - one <h1>, a canonical, real server-rendered text
-//   - the telc B1 package is offered for sale only while its own page sells it:
-//     the same telcPilotVariant() switch (docs/telc-pilot/README.md); off sale
-//     no price, no "one-time" line and no FAQ sentence for it
-//     (tests/telc-pilot-gate.test.mjs, scripts/check-built-html.mjs)
-import { ORGANIZATION } from '../lib/siteMeta.js';
-import { getTopicsForLevel } from '../lib/grammar.js';
+import Layout from '../layouts/Layout.astro';
+import Scene from '../components/concept/Scene.astro';
+import RouteBand from '../components/concept/RouteBand.astro';
+import Icon from '../components/concept/Icon.astro';
+import PurchaseDoor from '../components/concept/PurchaseDoor.astro';
+import CourseCheckout from '../components/CourseCheckout.astro';
+import { PLANS, COURSE_PRO_MONTHS, courseForLevel, COMING_SOON_LEVELS, num, eur, CURRENCY } from '../data/pricing.js';
+import { PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH } from '../data/marketing.js';
 import { proCta } from '../lib/proCta.js';
 import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.js';
-import { levelCoursesWithVariants, telcPilotVariant } from '../lib/courseVariants.js';
+import { telcPilotVariant } from '../lib/courseVariants.js';
 import { onsiteHref } from '../lib/onsiteLinks.js';
-import CourseProof from '../components/proof/CourseProof.astro';
-import Layout from '../layouts/Layout.astro';
-import CourseCheckout from '../components/CourseCheckout.astro';
+import { EXAM_ROUTE } from '../data/offers.js';
+import { COURSE_TELC_B1_PRICE_EUR } from '../data/pricing.js';
+import { PRO_OFFER } from '../data/offers.js';
 import '../styles/global.css';
-import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
-import {
-  PLANS,
-  CURRENCY,
-  num,
-  eur,
-  COURSE_TELC_B1_PRICE_EUR,
-  COURSE_PRO_MONTHS,
-  COURSE_FROM_PRICE_EUR,
-  SUBLEVEL_PRICES_EUR,
-} from '../data/pricing.js';
-import {
-  GRAMMAR_TOPIC_COUNT,
-  LEVEL_COUNT,
-  LEVELS,
-  XRAY_LINE,
-  TRIAL_DAYS,
-  TRIAL_SPEAKING_SESSIONS,
-  TRIAL_DAILY_LIMIT,
-  ANON_DAILY_LIMIT,
-  FREE_DAILY_LIMIT,
-  PRO_DAILY_LIMIT,
-  PRO_SPEAKING_SESSIONS_PER_MONTH,
-  TRIAL_WRITING_EVALUATIONS,
-  PRO_WRITING_EVALUATIONS_PER_MONTH,
-  FREE_LEVEL_LABEL,
-} from '../data/marketing.js';
-import { STATIONS, PRO_OFFER, EXAM_ROUTE } from '../data/offers.js';
-
-const title = 'Pricing — Own a Level or Rent All 8 | DeutschMeister';
-const description = `${FREE_LEVEL_LABEL} is free. Buy a German level once from ${eur(COURSE_FROM_PRICE_EUR)} and keep it, with ${COURSE_PRO_MONTHS} months of Pro included — or rent all ${LEVEL_COUNT} levels with Pro, monthly or yearly.`;
-
-// Counted from the topics actually fetched for the free level rather than
-// GRAMMAR_TOPIC_COUNT / LEVEL_COUNT (A1.1 has more topics than most levels).
-const TOPICS_PER_LEVEL = (await getTopicsForLevel(FREE_LEVEL_LABEL.toLowerCase())).length;
-const FREE_RUNGS = 1; // FREE_LEVEL_LABEL is the first rung of the ladder.
-
-// Level courses with their build-time checkout ids ('' = not buyable here).
-const levelCourses = levelCoursesWithVariants();
-const showLevelCourses = levelCourses.some((c) => c.variantId);
-const priceList = Object.entries(SUBLEVEL_PRICES_EUR).map(([l, p]) => `${l.toUpperCase()} ${eur(p)}`).join(', ');
-
-// The telc B1 package, on sale only behind its switch — the one its sales page
-// reads. Until 2026-10-25 this page sold it unconditionally (card, FAQ and the
-// FAQPage JSON-LD) while that page had no Buy button. Off sale, the card says it
-// is unavailable and offers the attributed free-account door the telc page uses.
+const course = courseForLevel('a1.2');
+const title = 'Course Pricing & Optional AI Practice | DeutschMeister';
+const description = `Start A1.1 free. Own A1.2 for ${eur(course.price)} once, with ${COURSE_PRO_MONTHS} months of AI Practice included. Optional AI Practice renews monthly or yearly.`;
 const telcOnSale = Boolean(telcPilotVariant());
 const telcSignupHref = onsiteHref('signup', 'telc-pilot', 'pricing');
-
-// Pro alone, for the same months a ticket carries — arithmetic on our own
-// prices, shown beside the ticket so "own vs rent" is a sum, not a slogan.
-const proForTicketWindow = PLANS.monthly.price * COURSE_PRO_MONTHS;
-
-const productSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: 'DeutschMeister Pro',
-  description: `Full access to all ${GRAMMAR_TOPIC_COUNT} German grammar topics across ${LEVEL_COUNT} CEFR levels, AI speaking practice, native-speaker listening exercises, podcasts, and ${XRAY_LINE}.`,
-  brand: { '@type': 'Brand', name: 'DeutschMeister' },
-  // UnitPriceSpecification says the price RECURS (per month / per year).
-  // The one-time level courses carry their own Course + Offer on
-  // /courses/<level>/ — not nested under Pro, which they are not.
-  offers: [PLANS.monthly, PLANS.yearly].map((plan) => ({
-    '@type': 'Offer',
-    name: plan.name,
-    price: num(plan.price),
-    priceCurrency: CURRENCY,
-    url: 'https://deutsch-meister.de/pricing/',
-    availability: 'https://schema.org/InStock',
-    seller: ORGANIZATION,
-    priceSpecification: {
-      '@type': 'UnitPriceSpecification',
-      price: num(plan.price),
-      priceCurrency: CURRENCY,
-      referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: plan.interval === 'year' ? 'ANN' : 'MON' },
-    },
-  })),
-};
-
-// The Pro comparison, as a table. `ladder` marks the one row that renders rungs.
-const ROWS = [
-  { label: 'Levels', ladder: true, anonymous: `${FREE_RUNGS} of ${LEVEL_COUNT}`, trial: `${LEVEL_COUNT} of ${LEVEL_COUNT}`, pro: `${LEVEL_COUNT} of ${LEVEL_COUNT}` },
-  { label: 'Grammar topics', anonymous: String(TOPICS_PER_LEVEL), trial: String(GRAMMAR_TOPIC_COUNT), pro: String(GRAMMAR_TOPIC_COUNT) },
-  { label: 'Sentence X-Ray', anonymous: `${ANON_DAILY_LIMIT} a day`, trial: `${TRIAL_DAILY_LIMIT} a day`, pro: `${PRO_DAILY_LIMIT} a day` },
-  { label: 'AI speaking practice', anonymous: '—', trial: `${TRIAL_SPEAKING_SESSIONS} total`, pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month` },
-  { label: 'AI writing feedback', anonymous: '—', trial: `${TRIAL_WRITING_EVALUATIONS} total`, pro: `${PRO_WRITING_EVALUATIONS_PER_MONTH} a month` },
-  // Every practice exam opens during the trial and with Pro (SubscriptionGuard
-  // passes both, and so does each exam's ExamSubscriptionGuard). The Pro cell
-  // said "telc B1", one exam of the six the /modelltest hub serves.
-  { label: 'Timed practice exam', anonymous: '—', trial: 'Included', pro: 'Included' },
-  { label: 'Vocabulary trainer (spaced repetition)', anonymous: '—', trial: 'Included', pro: 'Included' },
-  { label: 'Listening & reading', anonymous: FREE_LEVEL_LABEL, trial: 'Every level', pro: 'Every level' },
-  // The free level's podcasts play without an account (PodcastsPage: isLevelFree).
-  { label: 'Podcasts & video', anonymous: FREE_LEVEL_LABEL, trial: 'Included', pro: 'Included' },
-];
-
-// Own vs rent: the decision in five rows. Reference material — flat.
-const OWN_RENT = [
-  { label: 'You pay', own: `Once, from ${eur(COURSE_FROM_PRICE_EUR)}`, rent: `${eur(PLANS.monthly.price)} a month or ${eur(PLANS.yearly.price)} a year` },
-  { label: 'You keep', own: 'That level, for good', rent: 'Every level, while you pay' },
-  { label: 'AI speaking & writing', own: `Included for ${COURSE_PRO_MONTHS} months`, rent: 'Included while you pay' },
-  { label: 'Renews', own: 'Never', rent: 'Until you cancel' },
-  { label: 'Best when', own: 'You work through one level at your pace', rent: 'You move fast across levels or want the AI every month' },
-];
-
 const FAQS = [
-  {
-    q: 'What do I get without paying?',
-    a: `${FREE_LEVEL_LABEL} in full — the course, ${TOPICS_PER_LEVEL} grammar topics with exercises, its listening and reading, and the level test. No account needed. Creating an account adds ${TRIAL_DAYS} days of Pro on top.`,
-  },
-  {
-    q: 'What happens when the trial ends?',
-    a: `You keep ${FREE_LEVEL_LABEL} and everything else that is free. Nothing is deleted, and your progress is still there if you buy a level or subscribe later.`,
-  },
-  {
-    q: `What happens when a level's ${COURSE_PRO_MONTHS} months of Pro end?`,
-    a: `The level stays open for good. The AI tools return to the free allowance (Sentence X-Ray: ${FREE_DAILY_LIMIT} a day). Nothing renews and nothing is charged.`,
-  },
-  // No account page can cancel: the subscription lives with Lemon Squeezy, and
-  // its customer portal is where a subscriber cancels (lib/billingPortal.js,
-  // tests/cancel-path.test.mjs). `link` renders under the answer.
-  {
-    q: 'Can I cancel anytime?',
-    a: `Yes. You cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}), where you sign in with the email address you subscribed with. You keep Pro until the end of the period you have already paid for.`,
-    link: { href: BILLING_PORTAL_URL, text: 'Open the customer portal' },
-  },
-  {
-    q: 'Is there a one-time option instead of a subscription?',
-    // The telc sentence exists only while the package is on sale (telcOnSale).
-    a: showLevelCourses
-      ? `Yes — that is what a level is. Each sub-level is its own one-time course (${priceList}) and stays yours, with ${COURSE_PRO_MONTHS} months of Pro included. B1 and B2 are being rebuilt and cannot be bought yet.${telcOnSale ? ` The telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)}) is a separate 4-week plan for one job: your telc B1 date.` : ''}`
-      : telcOnSale
-        ? `Yes — the telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)} one-time) is a fixed 4-week exam plan with ${COURSE_PRO_MONTHS} months of full Pro included and permanent access to the course area.`
-        : 'Not on this page right now: no one-time course is on sale here yet. Pro is monthly or yearly, and you can cancel anytime.',
-  },
-  {
-    q: 'Monthly or yearly?',
-    a: `Yearly works out ${PLANS.yearly.savingPercent}% cheaper. Monthly is the right choice if you expect to be done inside a few months.`,
-  },
+  { q: 'How does the course purchase work?', a: `Buy A1.2 once and keep access to that course. ${COURSE_PRO_MONTHS} months of AI Practice are included. The course does not renew, and you keep it after the included practice window ends.` },
+  { q: 'What’s included in AI Practice?', a: `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month, AI speaking practice, and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day. AI Practice is optional; new subscriptions do not include course access. Existing subscriptions started before 10 November 2026 retain their course access while active.` },
+  { q: 'Can I cancel AI Practice anytime?', a: `Yes. Cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}). Access continues until the end of the period you have already paid for, and the subscription does not renew.`, link: { href: BILLING_PORTAL_URL, text: 'Open the customer portal' } },
+  ...(telcOnSale ? [{ q: 'Is there a separate telc B1 programme?', a: `The separate telc B1 programme costs ${eur(COURSE_TELC_B1_PRICE_EUR)} once. Its sales page has the full details.` }] : []),
+  { q: 'Do I need an account to start A1.1?', a: 'No. Start the free A1.1 course without an account. Create a free account when you want to save your progress across devices.' },
 ];
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQS.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
-};
-const jsonLd = [productSchema, faqSchema];
-
-// Rule 1 in the tokens file: the case colours appear only where a case is
-// named. This is that place — one worked sentence, marked exactly as Sentence
-// X-Ray marks it.
-const DEMO = [
-  { text: 'Ich', kasus: 'nominativ', abbr: 'NOM', gloss: 'I' },
-  { text: 'gebe', kasus: null, abbr: 'VERB', gloss: 'give' },
-  { text: 'dir', kasus: 'dativ', abbr: 'DAT', gloss: 'to you' },
-  { text: 'das Buch', kasus: 'akkusativ', abbr: 'AKK', gloss: 'the book' },
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Product', name: 'DeutschMeister AI Practice', description: 'Optional AI writing feedback, speaking practice and Sentence X-Ray. Course access sold separately for new subscribers.', brand: { '@type': 'Brand', name: 'DeutschMeister' }, offers: Object.values(PLANS).map((plan) => ({ '@type': 'Offer', name: plan.name, price: num(plan.price), priceCurrency: CURRENCY, priceSpecification: { '@type': 'UnitPriceSpecification', price: num(plan.price), priceCurrency: CURRENCY, unitText: plan.interval }, url: 'https://deutsch-meister.de/pricing/' })) },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
-const KASUS_CLASS = {
-  nominativ: 'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
-  dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
-  akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
-};
-const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 ---
-
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd} tone="nacht" preloads={preloads}>
-  <div class="overflow-x-clip bg-paper text-ink">
-
-    <!-- ═══ The fork: three ways to ride ═══ -->
-    <section class="relative bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="pricing-h">
-      <div class="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12 lg:px-8 lg:pb-20">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Preise · Pricing</p>
-        <h1 id="pricing-h" class="sign-display mt-4 text-[clamp(2.25rem,7vw,4rem)]">
-          <span class="block whitespace-nowrap">Own a level,</span>
-          <span class="block">or choose Pro.</span>
-        </h1>
-        <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
-          {FREE_LEVEL_LABEL} is free. Buy a level once, or subscribe to Pro for the practice library and AI tools. Your course stays open after its {COURSE_PRO_MONTHS} included Pro months end.
-        </p>
-
-        <ol class="mt-6 grid gap-4 lg:grid-cols-3">
-          <li class="flex flex-col rounded-[1.25rem] border-2 border-linie bg-nacht-raised p-6" data-track-view="pricing_own">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Own a level · one payment</p>
-            <p class="sign-head mt-2 text-[1.75rem]">Buy the stop you’re at</p>
-            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">Your chosen level stays yours. {COURSE_PRO_MONTHS} months of Pro included. No renewal.</p>
-            <p class="mt-4 flex items-baseline gap-2"><span class="text-[0.875rem] text-nacht-muted">from</span><span class="sign-code text-[2rem] leading-none text-linie">{eur(COURSE_FROM_PRICE_EUR)}</span><span class="text-[0.875rem] text-nacht-muted">once</span></p>
-            <a href="/courses/" class="dm-key dm-key-linie mt-5" data-track="course_selected" data-track-surface="pricing_fork">Choose your level</a>
-          </li>
-          <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6" data-track-view="pricing_rent">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Rent the line · Pro</p>
-            <p class="sign-head mt-2 text-[1.75rem]">Every level, monthly</p>
-            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">All {LEVEL_COUNT} levels, AI speaking ({PRO_SPEAKING_SESSIONS_PER_MONTH} a month), writing feedback ({PRO_WRITING_EVALUATIONS_PER_MONTH} a month) and the practice exams. Cancel anytime.</p>
-            <p class="mt-4 flex items-baseline gap-2"><span class="sign-code text-[2rem] leading-none text-linie">{eur(PLANS.monthly.price)}</span><span class="text-[0.875rem] text-nacht-muted">a month</span></p>
-            <a href="#pro" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-surface="pricing_fork" data-track-plan="monthly">Compare Pro</a>
-          </li>
-          <li class="flex flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">The first stop</p>
-            <p class="sign-head mt-2 text-[1.75rem]">{FREE_LEVEL_LABEL}, free</p>
-            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">{STATIONS[0].outcome} No account, no card.</p>
-            <p class="mt-4 sign-code text-[2rem] leading-none text-linie">Free</p>
-            <a href="/course/a1.1" class="dm-key dm-key-ghost-nacht mt-5" data-track="course_selected" data-track-level="a1.1" data-track-surface="pricing_fork">Start A1.1 free</a>
-          </li>
-        </ol>
-      </div>
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>
+  <section class="c4-pricing-hero c4-wrap" aria-labelledby="pricing-h">
+    <Scene name="pricing-hero" alt="A learner with a notebook and coffee beside the River Spree in Berlin" hero sizes="(max-width: 640px) 100vw, 550px" />
+    <div><h1 id="pricing-h">Pay once for your course.<br /><span class="c4-underline">Practise more if you want.</span></h1><p>A1.1 is free. Each next level is a one-time purchase you keep.</p></div>
+  </section>
+  <div class="c4-wrap">
+    <section class="c4-free-banner" aria-label="Start free"><Icon name="gift" size={44} /><p>New to German? Start A1.1 free, no account needed.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></section>
+    <section class="c4-offers c4-offers-illustrated c4-pricing-offers" aria-label="Your learning options" data-track-view="offer">
+      <article class="c4-offer c4-offer-course" data-c4-reveal>
+        <Scene name="hero" alt="German practice at a laptop" sizes="350px" />
+        <h2>A1.2 course</h2><p class="c4-price"><strong>{eur(course.price).replace('.00', '')}</strong> <span>pay once</span></p>
+        <ul class="c4-checks"><li>Yours to keep</li><li>{COURSE_PRO_MONTHS} months of AI Practice included</li><li>Conversations, explanations, writing<br />and speaking tasks</li></ul>
+        <PurchaseDoor surface="pricing_a12" />
+      </article>
+      <article class="c4-offer" id="ai-practice" data-c4-reveal>
+        <span id="pro" class="c4-anchor" aria-hidden="true"></span>
+        <Scene name="scene-work" alt="Practising a conversation at work" sizes="350px" />
+        <h2>AI Practice</h2><p class="c4-small">Optional add-on · course access sold separately</p>
+        <p class="c4-price"><strong id="pro-price">{eur(PLANS.monthly.price)}</strong><span> / <span id="pro-period">month</span></span></p>
+        <p class="c4-yearly">or <strong>{eur(PLANS.yearly.price)}</strong> / year</p>
+        <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>
+        <div class="c4-billing-toggle" aria-label="AI Practice billing period"><button type="button" id="toggle-monthly" aria-pressed="true">Monthly</button><button type="button" id="toggle-yearly" aria-pressed="false">Yearly</button></div>
+        <button type="button" id="pro-btn" class="c4-button c4-button-outline"><span id="pro-btn-label">{proCta().label}</span><span aria-hidden="true">→</span></button>
+        <p id="plan-note" class="c4-small c4-plan-note">{proCta().note}</p>
+      </article>
     </section>
-
-    <CourseProof mode="journey" />
-
-    <!-- ═══ OWN: the level tickets ═══ -->
-    <section id="levels" class="scroll-mt-24 bg-paper" aria-labelledby="levels-h">
-      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div class="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
-          <div class="lg:sticky lg:top-28 lg:self-start">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Own a level</p>
-            <h2 id="levels-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
-              <span class="block">Pay once.</span>
-              <span class="block">Keep the level.</span>
-            </h2>
-            <p class="mt-5 max-w-md text-[1.0625rem] leading-relaxed text-graphite">
-              One payment, no renewal. A level opens one sub-level for good and carries {COURSE_PRO_MONTHS} months of Pro, so the speaking coach, writing feedback and Sentence X-Ray run while you work through it.
-            </p>
-            <p class="mt-3 text-[0.9375rem] text-graphite"><a href="/courses/" class="dm-link">See what each course contains</a></p>
-
-            <!-- Every paid level, one line each — Buy where a checkout id is set. -->
-            <ul class="mt-8 border-t border-ink">
-              {levelCourses.map((c) => (
-                <li class="flex min-h-14 items-center justify-between gap-3 border-b border-rule py-2">
-                  <span class="flex items-baseline gap-2">
-                    <span class="sign-code text-[1.25rem] text-ink">{c.code}</span>
-                    <span class="font-data text-[0.8125rem] text-graphite">{eur(c.price)} · one time</span>
-                  </span>
-                  {c.variantId ? (
-                    <span data-course-door={c.levels[0]} data-course-code={c.code} data-course-open-class="dm-key dm-key-ghost !min-h-10 !px-4 !py-2 !text-[0.875rem]">
-                      <button type="button" class="dm-key dm-key-siegel !min-h-10 !px-4 !py-2 !text-[0.875rem]" data-course-variant={c.variantId} data-course-key={c.key} data-course-price={c.price} data-track-surface="pricing_list">
-                        Buy {c.code}
-                      </button>
-                    </span>
-                  ) : (
-                    <span class="font-data text-[0.75rem] text-graphite">{c.comingSoon ? 'Im Bau · coming soon' : 'Not on sale here yet'}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div class="rounded-xl border border-rule bg-white p-6">
-              <p class="sign-label text-2xl">Your level, after Pro</p>
-              <p class="mt-4 leading-relaxed text-graphite">The purchased level remains open. AI speaking and writing use Pro allowances during the included period, then return to the free allowances. No course renewal and no automatic charge.</p>
-              <a href="/courses/a1-2/" class="dm-key dm-key-siegel mt-5">See the A1.2 course</a>
-            </div>
-            <p class="mt-6 rounded-clay border border-dashed border-rule p-5 text-[0.9375rem] leading-relaxed text-graphite">
-              <strong class="text-ink">{EXAM_ROUTE.title}</strong> {EXAM_ROUTE.body}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ OWN vs RENT: the decision, flat ═══ -->
-    <section class="border-y border-rule bg-paper-sunk" aria-labelledby="own-rent-h">
-      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 id="own-rent-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Own or rent — side by side</h2>
-        <!-- A scrolling region on narrow screens: focusable so a keyboard user can scroll it. -->
-        <div class="mt-8 overflow-x-auto" tabindex="0" role="region" aria-labelledby="own-rent-h">
-          <table class="w-full min-w-[36rem] border-collapse text-left">
-            <thead>
-              <tr class="border-b border-ink">
-                <th scope="col" class="w-1/4 py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">&nbsp;</th>
-                <th scope="col" class="px-4 py-3 sign-label text-[1.125rem]">Own a level</th>
-                <th scope="col" class="px-4 py-3 sign-label text-[1.125rem]">Rent the line (Pro)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {OWN_RENT.map((row) => (
-                <tr class="border-b border-rule align-top">
-                  <th scope="row" class="py-3.5 pr-4 text-sm font-normal text-graphite">{row.label}</th>
-                  <td class="px-4 py-3.5 text-[0.9375rem] font-semibold text-ink">{row.own}</td>
-                  <td class="px-4 py-3.5 text-[0.9375rem] text-ink">{row.rent}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p class="mt-4 font-data text-[0.8125rem] text-graphite">
-          Pro alone for {COURSE_PRO_MONTHS} months: {eur(proForTicketWindow)}. A level costs from {eur(COURSE_FROM_PRICE_EUR)}, carries the same {COURSE_PRO_MONTHS} months, and stays yours after them.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══ RENT: Pro, compared with the free options ═══ -->
-    <section id="pro" class="scroll-mt-24 bg-paper" aria-labelledby="compare-h">
-      <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:py-24">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Rent the line</p>
-        <h2 id="compare-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">No account, free trial, or Pro</h2>
-
-        <!-- Billing toggle: pressable -->
-        <div class="mt-6 flex items-center gap-3">
-          <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Billing</span>
-          <div class="inline-flex rounded-pill border border-rule bg-white p-1 shadow-raise" role="group" aria-label="Billing period">
-            <button id="toggle-monthly" type="button" aria-pressed="true" class="rounded-pill bg-ink px-4 py-1.5 text-sm font-bold text-paper transition-colors">Monthly</button>
-            <button id="toggle-yearly" type="button" aria-pressed="false" class="rounded-pill px-4 py-1.5 text-sm font-bold text-graphite transition-colors hover:text-ink">
-              Yearly <span class="font-data text-[0.6875rem] tracking-[0.02em]">−{PLANS.yearly.savingPercent}%</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- The comparison, as a declension table — flat, reference material -->
-        <div class="mt-6 overflow-x-auto">
-          <table class="w-full min-w-[48rem] border-collapse text-left">
-            <thead>
-              <tr class="border-b border-ink">
-                <th scope="col" class="w-1/4 py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">What you get</th>
-                <th scope="col" class="w-1/4 px-4 py-3 align-bottom">
-                  <span class="block sign-label text-lg">Explore</span>
-                  <span class="mt-1 block font-data text-[0.8125rem] text-graphite">Forever · no account</span>
-                </th>
-                <th scope="col" class="w-1/4 px-4 py-3 align-bottom">
-                  <span class="block sign-label text-lg">Free trial</span>
-                  <span class="mt-1 block font-data text-[0.8125rem] text-graphite">{TRIAL_DAYS} days · account required</span>
-                </th>
-                <th scope="col" class="w-1/4 bg-linie-wash py-3 pl-4 align-bottom">
-                  <span class="block sign-label text-lg">Pro</span>
-                  <span class="mt-1 block font-data text-[0.8125rem] text-graphite">
-                    <span id="pro-price">{eur(PLANS.monthly.price)}</span> · per <span id="pro-period">{PLANS.monthly.interval}</span>
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((row) => (
-                <tr class="border-b border-rule align-top">
-                  <th scope="row" class="py-3.5 pr-4 text-sm font-normal text-graphite">{row.label}</th>
-                  <td class="px-4 py-3.5">
-                    {row.ladder && (
-                      <span class="flex items-center gap-1" aria-hidden="true">
-                        {LEVELS.map((_, i) => (
-                          <span class={`h-1.5 w-3 rounded-sm ${i < FREE_RUNGS ? 'bg-ink' : 'bg-rule'}`}></span>
-                        ))}
-                      </span>
-                    )}
-                    <span class={`font-data text-[0.8125rem] text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.anonymous}</span>
-                  </td>
-                  <td class="px-4 py-3.5">
-                    {row.ladder && (
-                      <span class="flex items-center gap-1" aria-hidden="true">
-                        {LEVELS.map(() => (<span class="h-1.5 w-3 rounded-sm bg-ink"></span>))}
-                      </span>
-                    )}
-                    <span class={`font-data text-[0.8125rem] font-semibold text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.trial}</span>
-                  </td>
-                  <td class="bg-linie-wash py-3.5 pl-4">
-                    {row.ladder && (
-                      <span class="flex items-center gap-1" aria-hidden="true">
-                        {LEVELS.map(() => (<span class="h-1.5 w-3 rounded-sm bg-ink"></span>))}
-                      </span>
-                    )}
-                    <span class={`font-data text-[0.8125rem] font-semibold text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.pro}</span>
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <td class="py-5 pr-4"></td>
-                <td class="px-4 py-5">
-                  <a href="/course/a1.1" class="dm-key dm-key-ghost w-full !text-[0.875rem]">
-                    Start the free A1.1 course
-                  </a>
-                  <span class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">No signup · no card</span>
-                </td>
-                <td class="px-4 py-5">
-                  <a href="https://deutsch-meister.de/signup" class="dm-key dm-key-ghost w-full !text-[0.875rem]">
-                    Create free account
-                  </a>
-                  <span class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">Starts {TRIAL_DAYS}-day trial · no card</span>
-                </td>
-                <td class="bg-linie-wash py-5 pl-4 pr-3">
-                  <!-- Label and note come from lib/proCta.js: signed out it starts the
-                       account trial (no card); the script switches a signed-in
-                       visitor to "Go Pro — <price>" and the checkout. -->
-                  <button id="pro-btn" type="button" class="dm-key dm-key-siegel w-full !text-[0.875rem]" data-track-surface="pricing_pro">
-                    <span id="pro-btn-label">{proCta().label}</span>
-                  </button>
-                  <span id="plan-note" class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">
-                    {proCta().note}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <ul class="mt-6 grid gap-2 text-[0.9375rem] text-graphite sm:grid-cols-2">
-          {PRO_OFFER.lines.map((l) => <li class="flex gap-2"><span class="text-ink" aria-hidden="true">—</span>{l}</li>)}
-        </ul>
-      </div>
-    </section>
-
-    <!-- ═══ The exam course ═══ -->
-    <section class="border-t border-rule bg-paper" aria-labelledby="course-h">
-      <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
-        <div class="dm-lift flex flex-col gap-6 rounded-[1.25rem] border border-ink bg-white p-6 shadow-raise sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div class="max-w-xl">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Preparing for telc B1?</p>
-            <h2 id="course-h" class="sign-head mt-2 text-[1.625rem]" lang="de">telc B1 Komplettvorbereitung</h2>
-            <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-              {telcOnSale
-                ? `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. One-time purchase, ${COURSE_PRO_MONTHS} months of full Pro included, the course area stays yours permanently.`
-                : `A fixed 4-week exam plan over the whole library — one task a day, in the order that leads to the exam. The course is currently unavailable. A free account gives you ${TRIAL_DAYS} days of Pro to practise.`}
-            </p>
-          </div>
-          <div class="shrink-0 text-left sm:text-right">
-            {telcOnSale ? (
-              <Fragment>
-                <p class="sign-code text-[2rem] leading-none text-ink">{eur(COURSE_TELC_B1_PRICE_EUR)}</p>
-                <p class="mt-1 font-data text-[0.75rem] text-graphite">one-time · no subscription</p>
-              </Fragment>
-            ) : (
-              <Fragment>
-                <p class="sign-code text-[2rem] leading-none text-ink">Currently unavailable</p>
-                <p class="mt-1 font-data text-[0.75rem] text-graphite">not on sale yet</p>
-              </Fragment>
-            )}
-            <a href="/telc-b1-komplettvorbereitung/" class="dm-key dm-key-ghost mt-4" hreflang="de">See the 4-week plan · DE</a>
-            {!telcOnSale && (
-              <a href={telcSignupHref} class="mt-3 block text-[0.875rem] font-bold text-siegel transition-colors hover:text-siegel-deep">Create free account →</a>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ What Pro and every level carry, in the product's own notation.
-         The only place on this page where the case colours are allowed. ═══ -->
-    <section class="border-t border-rule bg-paper" aria-labelledby="demo-h">
-      <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
-        <h2 id="demo-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Grammar you can see</h2>
-        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-          Sentence X-Ray takes a German sentence apart and colours each piece by its case, so the pattern becomes visible instead of memorised. The same colours run through every lesson.
-        </p>
-        <div class="mt-6 flex flex-wrap items-stretch gap-2" lang="de">
-          {DEMO.map((w) => (
-            <span class={`rounded-md border px-3 py-2 ${w.kasus ? KASUS_CLASS[w.kasus] : 'border-rule bg-paper-sunk text-graphite'}`}>
-              <span class="block text-base font-semibold">{w.text}</span>
-              <span class="mt-0.5 block font-data text-[0.6875rem] font-bold tracking-[0.13em]">{w.abbr}</span>
-              <span class="mt-0.5 block text-[0.75rem]" lang="en">{w.gloss}</span>
-            </span>
-          ))}
-        </div>
-        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
-          Free: {ANON_DAILY_LIMIT} sentence a day. Pro: {PRO_DAILY_LIMIT}.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══ FAQ ═══ -->
-    <section class="border-t border-rule bg-paper" aria-labelledby="faq-h">
-      <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
-        <h2 id="faq-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">Before you decide</h2>
-        <dl class="mt-6 max-w-prose">
-          {FAQS.map((item) => (
-            <div class="border-b border-rule py-5">
-              <dt class="sign-label text-[1.0625rem]">{item.q}</dt>
-              <dd class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-                {item.a}
-                {item.link && (
-                  <a href={item.link.href} class="dm-link mt-2 block">{item.link.text} →</a>
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </section>
-
+    <section class="c4-coming-route" aria-labelledby="next-h"><h2 id="next-h">{COMING_SOON_LEVELS.map((l) => l.toUpperCase()).join(' · ')} <em>— coming next</em></h2><RouteBand comingOnly /></section>
+    <section class="c4-comparison" aria-labelledby="compare-h"><h2 id="compare-h">What you <span>pay once</span> vs what <span>renews</span></h2><div>
+      <article><Icon name="layers" /><div><h3>You pay once (course)</h3><ul class="c4-checks"><li>A complete level (e.g., A1.2)</li><li>Yours to keep</li><li>Includes {COURSE_PRO_MONTHS} months of AI Practice</li><li>No renewal, no hidden fees</li></ul></div></article>
+      <article><Icon name="repeat" /><div><h3>What renews (AI Practice)</h3><ul class="c4-checks">{PRO_OFFER.lines.map((line) => <li>{line}</li>)}</ul></div></article>
+    </div></section>
+    <section class="c4-faq" aria-labelledby="faq-h"><h2 id="faq-h">FAQ</h2><div>{FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p>{f.link && <a href={f.link.href} class="c4-text-link">{f.link.text} →</a>}</details>)}</div></section>
+    <aside class="c4-off-sale"><p><strong>{EXAM_ROUTE.title}</strong> {EXAM_ROUTE.body}</p>
+      {telcOnSale ? (
+        <div><p>{eur(COURSE_TELC_B1_PRICE_EUR)}</p><p>one-time · no subscription</p></div>
+      ) : (
+        <p>Separate telc B1 package: currently unavailable, not on sale.</p>
+      )}
+      <a href="/telc-b1-komplettvorbereitung/" class="c4-text-link">See the separate telc B1 programme →</a>
+      {!telcOnSale && (
+        <a href={telcSignupHref} class="c4-text-link">Create a free account →</a>
+      )}
+    </aside>
   </div>
   <CourseCheckout />
 </Layout>
 
 <script>
-  // Billing toggle + the auth-aware Pro checkout. Level-course buttons are
+  // Billing toggle + the auth-aware AI Practice checkout. Level-course buttons are
   // handled by components/CourseCheckout.astro (intent, overlay, events).
   //
   // Prices derive from ../data/pricing.js — the same module the server-rendered
@@ -581,7 +152,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
     // Never a new tab: iOS Safari blocks the popup and in-app browsers
     // swallow it, so the customer sees nothing happen. Prefer the
     // LemonSqueezy overlay, fall back to same-tab navigation. A signed-out
-    // visitor never reaches this for Pro (the Pro button starts the trial
+    // visitor never reaches this for AI Practice (the AI Practice button starts the trial
     // instead, below); the intent branch stays for any caller that sells.
     function open(variant, intentKey) {
       const u = currentUser();

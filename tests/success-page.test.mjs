@@ -1,8 +1,8 @@
 // Guard suite for /subscription/success (ACC-08, ACC-10, ACC-11, cross-check
 // 2026-10-25).
 //
-// ACC-08: the course ticket chose its Pro line from `access_until` being null.
-// Every course order now stores its included-Pro deadline (lemonsqueezy-
+// ACC-08: the course ticket chose its AI Practice line from `access_until` being null.
+// Every course order now stores its included-AI Practice deadline (lemonsqueezy-
 // webhook.mjs handleCourseOrder), so a live monthly subscriber who bought A1.2
 // read "…open until <date>. After that the AI tools return to the free
 // allowance — you are never charged again" while the plan kept renewing. The
@@ -53,7 +53,7 @@ test('ACC-08: only a plan that renews by itself counts as "already covered"', ()
     ['payment failed', { ...LIVE, status: 'past_due' }],
     ['paused', { ...LIVE, status: 'paused' }],
     ['period over', { ...LIVE, subscription_end: '2000-01-01T00:00:00Z' }],
-    ['a course row (its Pro is the included window)', { plan_type: 'course', status: 'active', subscription_end: FUTURE, lemonsqueezy_subscription_id: null }],
+    ['a course row (its AI Practice is the included window)', { plan_type: 'course', status: 'active', subscription_end: FUTURE, lemonsqueezy_subscription_id: null }],
     ['a legacy course row that kept an id', { plan_type: 'course', status: 'active', subscription_end: FUTURE, lemonsqueezy_subscription_id: 'sub-9' }],
     ['a comped row', { ...LIVE, lemonsqueezy_subscription_id: null }],
   ]) assert.equal(renewingPlan(row), false, why);
@@ -61,7 +61,7 @@ test('ACC-08: only a plan that renews by itself counts as "already covered"', ()
 
 test('ACC-08: a live subscriber who buys a course is never told "never charged again"', () => {
   const line = proLineFor({ proUntil: '20 January 2027', renewing: true, recurringBilling: true });
-  assert.match(line, /Pro subscription already covers the AI tools/);
+  assert.match(line, /AI Practice subscription already covers the AI tools/);
   assert.doesNotMatch(line, /never charged again|free allowance/);
 });
 
@@ -82,7 +82,7 @@ test('ACC-08: a legacy purchase without a stored deadline invents no date', () =
   for (const recurringBilling of [false, true]) {
     const line = proLineFor({ proUntil: null, renewing: false, recurringBilling });
     assert.doesNotMatch(line, /until|null|undefined/);
-    assert.match(line, /included Pro months/);
+    assert.match(line, /included AI Practice months/);
   }
   assert.match(proLineFor({ proUntil: null, renewing: true, recurringBilling: true }), /already covers/);
 });

@@ -247,7 +247,7 @@ export const goetheB1WritingEn = {
         },
         {
           type: 'p',
-          text: 'Our <a href="/schreiben">AI writing trainer</a> does not have Goethe B1 tasks yet; its telc B1 tasks train the same informal and semi-formal e-mail skills and rate your text for task completion, structure, accuracy and vocabulary. With Pro you can also sit a timed Goethe B1 practice exam. For speaking, read the companion guide <a href="/leitfaden/goethe-b1-speaking-presentation/">Goethe B1 Speaking: the presentation</a>.',
+          text: 'Our <a href="/schreiben">AI writing trainer</a> does not have Goethe B1 tasks yet; its telc B1 tasks train the same informal and semi-formal e-mail skills and rate your text for task completion, structure, accuracy and vocabulary. With AI Practice you can also sit a timed Goethe B1 practice exam. For speaking, read the companion guide <a href="/leitfaden/goethe-b1-speaking-presentation/">Goethe B1 Speaking: the presentation</a>.',
         },
       ],
     },
@@ -278,6 +278,6 @@ export const goetheB1WritingEn = {
 
   cta: {
     heading: 'Practise German for Goethe B1',
-    body: 'A free account comes with Pro days: practise writing and speaking with AI feedback and sit the timed Goethe B1 practice exam while they run. Take the placement test first to see where you stand.',
+    body: 'A free account comes with AI Practice days: practise writing and speaking with AI feedback and sit the timed Goethe B1 practice exam while they run. Take the placement test first to see where you stand.',
   },
 };

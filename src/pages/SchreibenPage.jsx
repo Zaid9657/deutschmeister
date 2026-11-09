@@ -57,7 +57,7 @@ const SchreibenPage = () => {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const { profile, purchases, hasProduct, hasActiveSubscription, loading: subscriptionLoading } = useSubscription();
-  // Paid access to a level — a running subscription or included Pro window, or a bought course
+  // Paid access to a level — a running subscription or included AI Practice window, or a bought course
   // covering it (retired band keys too). Not the trial: a trial learner is who the offer is for.
   const hasPaidAccess = (level) => (typeof hasActiveSubscription === 'function' && hasActiveSubscription())
     || (purchases || []).some((p) => levelsForProduct(p.product_key).includes(level));
@@ -178,7 +178,7 @@ const SchreibenPage = () => {
         const shown = writingOfferMoment({ error: data, offer: feedbackOffer })?.offer;
         setErrorMsg(
           data.error === 'limit_reached'
-            ? `Limit erreicht (${data.used}/${data.limit}). ${data.tier === 'free_trial' ? 'Mit Pro bekommen Sie mehr Bewertungen pro Monat.' : 'Nächsten Monat geht es weiter.'}`
+            ? `Limit erreicht (${data.used}/${data.limit}). ${data.tier === 'free_trial' ? 'Mit AI Practice bekommen Sie mehr Bewertungen pro Monat.' : 'Nächsten Monat geht es weiter.'}`
             : data.error === 'subscription_required'
               ? `Ihre Testphase ist abgelaufen – weitere Bewertungen gibt es mit „${shown.title}“.`
               : 'Die Bewertung ist fehlgeschlagen. Bitte versuchen Sie es noch einmal.'
