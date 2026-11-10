@@ -6,6 +6,7 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-10 | One cast of three learners was reused across every scene; the founder: "dont use the same charachters multiple times" | Every illustration gets its own people; the hero's three learners appear only in the hero. Check a contact sheet for repeated faces, side characters included, before shipping |
 | 2026-11-09 | Five Codex design rounds were rejected ("polishing", "stupid"); 4 image-model concepts got a pick on the first try. Codex designed in code under dozens of repo rules and through a relay | Design in pictures first (an image model with only the vision and the true content), let the founder pick, then code that exact picture; apply business rules at build time |
 | 2026-11-09 | The mock copied the live pricing: Pro at €9.99/month for "all 8 levels" undercut the €40–50 course, A2 was sold without a built course, and free got a "€0" card | Every price shown must make business sense and be true today; check that a price table sells before showing it |
 | 2026-11-08 | Claude asked the founder, mid-design, whether to switch to bringing in buyers; he: "never do that again , we are working on the design , dont distract us" | While the founder works on something, never propose switching to another lever; questions stay on the current work |
