@@ -7,6 +7,7 @@ import { trackPaywallShown } from '../lib/funnelTracking';
 // Only the gate: the full resolver (src/data/modelltest.js) imports every mock
 // body, and this guard is in the SPA entry chunk.
 import { resolveModelltestGate } from '../data/modelltestGate';
+import { ownsExamProgramme } from '../data/pricing.js';
 import LockedContentOverlay from './LockedContentOverlay';
 
 // Same brand-new-user race as SubscriptionGuard (see there for the full note).
@@ -36,7 +37,7 @@ const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 const ExamSubscriptionGuard = ({ children }) => {
   const { examSlug } = useParams();
   const { user, loading: authLoading } = useAuth();
-  const { hasAccess, hasLevelAccess, loading: subLoading, refreshSubscription } = useSubscription();
+  const { hasAccess, hasLevelAccess, purchases, loading: subLoading, refreshSubscription } = useSubscription();
   const location = useLocation();
   const { t } = useTranslation();
   const [retrying, setRetrying] = useState(false);
@@ -44,12 +45,13 @@ const ExamSubscriptionGuard = ({ children }) => {
 
   const resolved = resolveModelltestGate(examSlug);
   const examAccess = resolved?.gateLevel ? hasLevelAccess(resolved.gateLevel) : hasAccess;
+  const canOpen = examAccess || ownsExamProgramme(purchases, examSlug);
 
   const isBrandNew =
     user?.created_at && Date.now() - new Date(user.created_at).getTime() < NEW_USER_WINDOW_MS;
 
   useEffect(() => {
-    if (authLoading || subLoading || !user || examAccess) return;
+    if (authLoading || subLoading || !user || canOpen) return;
     if (isBrandNew && !retriedRef.current) {
       retriedRef.current = true;
       setRetrying(true);
@@ -60,7 +62,7 @@ const ExamSubscriptionGuard = ({ children }) => {
     // refreshSubscription is not memoised in the provider; the effect's real
     // inputs are the loading/access flags.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, subLoading, user, examAccess, isBrandNew, location.pathname]);
+  }, [authLoading, subLoading, user, canOpen, isBrandNew, location.pathname]);
 
   if (authLoading || subLoading || retrying) {
     return (
@@ -77,7 +79,7 @@ const ExamSubscriptionGuard = ({ children }) => {
     return <LockedContentOverlay level={resolved?.gateLevel} />;
   }
 
-  if (!examAccess) {
+  if (!canOpen) {
     // Hold the redirect until the one brand-new-user retry has actually run.
     if (isBrandNew && !retriedRef.current) {
       return (

@@ -1,0 +1,24 @@
+---
+import { courseForLevel, OFFER_PRODUCTS, eur } from '../../data/pricing.js';
+import PurchaseDoor from './PurchaseDoor.astro';
+import ProductDoor from './ProductDoor.astro';
+import Scene from './Scene.astro';
+const { illustrated = false } = Astro.props;
+const level = courseForLevel('a1.2');
+---
+<div class="c4-offers c4-ladder" aria-label="Three ways to learn">
+  <article class="c4-offer" data-c4-reveal>
+    {illustrated && <Scene name="scene-cafe" alt="An everyday German conversation in a cafe" sizes="350px" />}
+    <h2>One level</h2><p class="c4-price"><strong>{eur(level.price).replace('.00', '')}</strong><span>pay once · A1.2</span></p>
+    <ul class="c4-checks"><li>One course, yours to keep</li><li>Everyday conversations, writing and speaking tasks</li><li>{level.proMonths} months of AI Practice included</li></ul>
+    <PurchaseDoor surface="ladder_level" /><a href="/courses/a1-2/" class="c4-text-link">Explore A1.2 →</a>
+  </article>
+  {[OFFER_PRODUCTS.a1_complete, OFFER_PRODUCTS.all_access].map((p) => <article class:list={['c4-offer', p.key === 'a1_complete' && 'c4-offer-course']} data-c4-reveal>
+    {illustrated && <Scene name={p.key === 'a1_complete' ? 'offer-complete' : 'offer-pass'} alt={p.key === 'a1_complete' ? 'A learner ready for the next step in Berlin' : 'A Berlin tram on the journey through German'} sizes="350px" />}
+    {p.key === 'a1_complete' && <p class="c4-eyebrow">Course + exam preparation</p>}
+    <h2>{p.name}</h2><p class="c4-price"><strong>{eur(p.price).replace('.00', '')}</strong><span>pay once</span></p>
+    <ul class="c4-checks">{p.key === 'a1_complete' ? <><li>A1.2 course + A1 Exam Pack</li><li>A1.1 is already free</li><li>Course and exam plan yours to keep</li></> : <><li>Every level course as released</li><li>Every exam pack as released</li><li>A1.1, A1.2 and the A1 Exam Pack ready today</li><li>Everything else: coming next, included when released</li></>}<li>{p.proMonths} months of AI Practice included</li></ul>
+    <ProductDoor productKey={p.key} surface="ladder" /><a href={`/courses/${p.slug}/`} class="c4-text-link">Explore {p.name} →</a>
+  </article>)}
+</div>
+<p class="c4-small c4-exam-link">Already know A1? <a class="c4-text-link" href="/courses/a1-exam-pack/">Explore the A1 Exam Pack · {eur(OFFER_PRODUCTS.a1_exam_pack.price).replace('.00', '')} once →</a></p>

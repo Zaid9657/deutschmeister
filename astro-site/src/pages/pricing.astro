@@ -3,7 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Scene from '../components/concept/Scene.astro';
 import RouteBand from '../components/concept/RouteBand.astro';
 import Icon from '../components/concept/Icon.astro';
-import PurchaseDoor from '../components/concept/PurchaseDoor.astro';
+import Ladder from '../components/concept/Ladder.astro';
+import PromiseBand from '../components/concept/PromiseBand.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
 import { PLANS, COURSE_PRO_MONTHS, courseForLevel, COMING_SOON_LEVELS, num, eur, CURRENCY } from '../data/pricing.js';
 import { PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH } from '../data/marketing.js';
@@ -37,23 +38,21 @@ const jsonLd = [
     <Scene name="pricing-hero" alt="A learner with a notebook and coffee beside the River Spree in Berlin" hero sizes="(max-width: 640px) 100vw, 550px" />
     <div><h1 id="pricing-h">Pay once for your course.<br /><span class="c4-underline">Practise more if you want.</span></h1><p>A1.1 is free. Each next level is a one-time purchase you keep.</p></div>
   </section>
+  <PromiseBand />
   <div class="c4-wrap">
     <section class="c4-free-banner" aria-label="Start free"><Icon name="gift" size={44} /><p>New to German? Start A1.1 free, no account needed.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></section>
     <section class="c4-offers c4-offers-illustrated c4-pricing-offers" aria-label="Your learning options" data-track-view="offer">
-      <article class="c4-offer c4-offer-course" data-c4-reveal>
-        <Scene name="hero" alt="German practice at a laptop" sizes="350px" />
-        <h2>A1.2 course</h2><p class="c4-price"><strong>{eur(course.price).replace('.00', '')}</strong> <span>pay once</span></p>
-        <ul class="c4-checks"><li>Yours to keep</li><li>{COURSE_PRO_MONTHS} months of AI Practice included</li><li>Conversations, explanations, writing<br />and speaking tasks</li></ul>
-        <PurchaseDoor surface="pricing_a12" />
-      </article>
+      <Ladder illustrated />
+    </section>
+    <section class="c4-addon" aria-label="Optional AI Practice">
       <article class="c4-offer" id="ai-practice" data-c4-reveal>
         <span id="pro" class="c4-anchor" aria-hidden="true"></span>
         <Scene name="scene-work" alt="Practising a conversation at work" sizes="350px" />
         <h2>AI Practice</h2><p class="c4-small">Optional add-on · course access sold separately</p>
-        <p class="c4-price"><strong id="pro-price">{eur(PLANS.monthly.price)}</strong><span> / <span id="pro-period">month</span></span></p>
-        <p class="c4-yearly">or <strong>{eur(PLANS.yearly.price)}</strong> / year</p>
+        <p class="c4-price"><strong id="pro-price">{eur(PLANS.yearly.price)}</strong><span> / <span id="pro-period">year</span></span></p>
+        <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month</p>
         <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>
-        <div class="c4-billing-toggle" aria-label="AI Practice billing period"><button type="button" id="toggle-monthly" aria-pressed="true">Monthly</button><button type="button" id="toggle-yearly" aria-pressed="false">Yearly</button></div>
+        <div class="c4-billing-toggle" aria-label="AI Practice billing period"><button type="button" id="toggle-yearly" aria-pressed="true">Yearly</button><button type="button" id="toggle-monthly" aria-pressed="false">Monthly</button></div>
         <button type="button" id="pro-btn" class="c4-button c4-button-outline"><span id="pro-btn-label">{proCta().label}</span><span aria-hidden="true">→</span></button>
         <p id="plan-note" class="c4-small c4-plan-note">{proCta().note}</p>
       </article>
@@ -92,7 +91,7 @@ const jsonLd = [
   import { PRO_VARIANTS as VARIANTS } from '../lib/proVariants.js';
   import { track } from '../lib/track.js';
 
-  let cycle = 'monthly';
+  let cycle = 'yearly';
   let billing = null;
   const $ = (id) => document.getElementById(id);
 

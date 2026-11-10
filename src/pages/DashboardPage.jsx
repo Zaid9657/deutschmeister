@@ -556,7 +556,7 @@ const DashboardPage = () => {
 
         {ownedLevelCourses.map((c) => (
           <Reveal key={c.key} className="mb-4">
-            <Card interactive as={Link} to={courseFor(c.levels[0]) ? `/course/${c.levels[0]}` : `/level/${c.levels[0]}`} className="flex items-center justify-between gap-3 px-5 py-4">
+            <Card interactive as={Link} to={c.home || (courseFor(c.levels[0]) ? `/course/${c.levels[0]}` : `/level/${c.levels[0]}`)} className="flex items-center justify-between gap-3 px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-clay bg-siegel text-white flex items-center justify-center">
                   <BookOpen className="w-5 h-5" />
@@ -564,7 +564,7 @@ const DashboardPage = () => {
                 <div>
                   <p className="font-bold text-[0.875rem] text-ink">{c.name}</p>
                   <p className="text-[0.75rem] text-graphite">
-                    Yours for life · {c.key === 'course_alle' ? `all ${c.levels.length} levels` : c.levels.map((l) => l.toUpperCase()).join(' + ')}
+                    Yours to keep · {c.allExamPacks ? 'courses and exam packs as released' : c.key === 'a1_exam_pack' ? 'A1 exam plan and short practice test' : c.key === 'course_alle' ? `all ${c.levels.length} levels` : c.levels.map((l) => l.toUpperCase()).join(' + ')}
                   </p>
                 </div>
               </div>

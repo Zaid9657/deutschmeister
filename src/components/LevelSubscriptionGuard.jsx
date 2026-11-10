@@ -3,16 +3,17 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import { useTranslation } from 'react-i18next';
+import { ownsExamProgramme, hasExamPracticeAccess } from '../data/pricing.js';
 import LockedContentOverlay from './LockedContentOverlay';
 
-const LevelSubscriptionGuard = ({ children, level: levelProp }) => {
+const LevelSubscriptionGuard = ({ children, level: levelProp, programme }) => {
   const { level: levelParam } = useParams();
   // `level` is normally a route param (/level/:level, /reading/:level, …); a
   // route with no such param (e.g. /start-deutsch-1-kurs, gated on the A1
   // band's top sublevel) passes it as a prop instead.
   const level = levelProp || levelParam;
   const { user, loading: authLoading } = useAuth();
-  const { hasLevelAccess, loading: subLoading } = useSubscription();
+  const { hasLevelAccess, purchases, loading: subLoading } = useSubscription();
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -39,7 +40,8 @@ const LevelSubscriptionGuard = ({ children, level: levelProp }) => {
   }
 
   // Logged in but neither subscription/trial nor a level course covering it
-  if (!hasLevelAccess(level)) {
+  if (!hasLevelAccess(level) && !ownsExamProgramme(purchases, programme)
+    && !(/^\/(?:reading|listening)\//.test(location.pathname) && hasExamPracticeAccess(purchases, level))) {
     return <Navigate to="/subscription" state={{ from: location }} replace />;
   }
 

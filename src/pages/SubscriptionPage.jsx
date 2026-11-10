@@ -116,7 +116,7 @@ const SubscriptionPage = () => {
 
   // A validated coupon is bound to the selected product; null = none.
   const [coupon, setCoupon] = useState(null);
-  const [couponProduct, setCouponProduct] = useState('monthly');
+  const [couponProduct, setCouponProduct] = useState('yearly');
 
   const handleSubscribe = (planType) => {
     // Nothing is sold from billing that failed to load: an unread row is not
@@ -234,7 +234,7 @@ const SubscriptionPage = () => {
       if (recurringBilling || !isSubscribed) handleSubscribe(key);
       return;
     }
-    const target = key === 'telc_b1_komplett' ? course : LEMONSQUEEZY_CONFIG.levelCourses[key];
+    const target = key === 'telc_b1_komplett' ? course : LEMONSQUEEZY_CONFIG.levelCourses[key] || LEMONSQUEEZY_CONFIG.offerProducts[key];
     if (target?.comingSoon || ownsCheckoutProduct(key, purchases)) return;
     if (target?.variantId && !hasProduct(key)) startPurchase(key, target.variantId, target.price);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -289,7 +289,7 @@ const SubscriptionPage = () => {
       features: proPlanLines(isGerman),
       highlight: true,
     },
-  ];
+  ].sort((a) => a.id === 'yearly' ? -1 : 1);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4 font-body">
@@ -473,6 +473,19 @@ const SubscriptionPage = () => {
         {/* Level courses — own a level (v4 "Die Linie": the product comes first,
             AI Practice second). Rendered only when the LS products exist (variant
             configured) or the buyer already owns one. */}
+        <section className="mb-12" aria-label="Course and exam bundles">
+          <div className="grid gap-4 sm:grid-cols-3">
+            {Object.values(LEMONSQUEEZY_CONFIG.offerProducts).map((p) => <Card key={p.key} className="p-5" edge={p.key === 'a1_complete' ? 'siegel' : 'paper'}>
+              <h2 className="font-display text-xl">{p.name}</h2>
+              <p className="my-3 text-xl">€{num(p.price)} · pay once</p>
+              <p>{p.key === 'a1_exam_pack' ? 'A1 exam plan, short practice test, writing and speaking tasks.' : p.key === 'a1_complete' ? 'A1.2 course + A1 Exam Pack, yours to keep.' : 'Every level course and exam pack as released. A1.1, A1.2 and the A1 Exam Pack are ready; everything else is coming next, included when released.'}</p>
+              <p className="my-3">{p.proMonths} months of AI Practice included. Nothing renews automatically.</p>
+              {ownsCheckoutProduct(p.key, purchases) ? <Button to={p.home} variant="secondary">Owned · open →</Button>
+                : p.variantId ? <Button onClick={() => startPurchase(p.key, p.variantId, p.price)} disabled={verifying || !billingVerified}>Buy {p.name}</Button>
+                : <p className="text-graphite">Not on sale yet</p>}
+            </Card>)}
+          </div>
+        </section>
         {visibleLevelCourses.length > 0 && (
           <Reveal className="mb-12">
             <SectionHeading

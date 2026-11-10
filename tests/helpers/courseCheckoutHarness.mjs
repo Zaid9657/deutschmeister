@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { courseAccessReason } from '../../src/lib/levelEntitlement.js';
-import { levelsForProduct } from '../../astro-site/src/data/pricing.js';
+import { levelsForProduct, ownsProduct, OFFER_PRODUCTS } from '../../astro-site/src/data/pricing.js';
 
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 
@@ -18,7 +18,7 @@ export function loadLevelAccess(supabase = {}) {
     .replace(/^export (const|async function|function) /gm, '$1 ');
   return vm.runInNewContext(
     `${source}\n({ GUIDED_LEVELS, levelHref, loadEntitlementSnapshot, levelOpen, ownedProductHome, getLevelAccess });`,
-    { supabase, levelsForProduct, courseAccessReason, Date, Promise },
+    { supabase, levelsForProduct, ownsProduct, OFFER_PRODUCTS, courseAccessReason, Date, Promise },
   );
 }
 
@@ -81,6 +81,7 @@ export class FakeElement {
   }
   set innerHTML(html) { this.html = html; this.children = []; }
   get innerHTML() { return this.html; }
+  replaceChildren(...nodes) { this.children = []; this.html = null; this.append(...nodes); }
   append(...nodes) {
     for (const node of nodes) {
       if (typeof node === 'object') node.parent = this;

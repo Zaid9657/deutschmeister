@@ -1,0 +1,12 @@
+---
+import Scene from './Scene.astro';
+import ProductDoor from './ProductDoor.astro';
+import { OFFER_PRODUCTS, courseForLevel, eur } from '../../data/pricing.js';
+const bundle = OFFER_PRODUCTS.a1_complete;
+const separately = courseForLevel('a1.2').price + OFFER_PRODUCTS.a1_exam_pack.price;
+---
+<section class="c4-wrap c4-better" aria-labelledby="together-h">
+  <div><h2 id="together-h">Better together</h2><p>Keep the course and the exam plan in one bundle. Save {eur(separately - bundle.price).replace('.00', '')} compared with buying the two products separately.</p></div>
+  <Scene name="offer-complete" alt="A learner leaving a Berlin language school" sizes="(max-width: 640px) 100vw, 300px" />
+  <div><h3>A1 Complete</h3><p class="c4-price"><strong>{eur(bundle.price).replace('.00', '')}</strong><span>pay once</span></p><p>A1.2 course + A1 Exam Pack + {bundle.proMonths} months of AI Practice.</p><ProductDoor productKey={bundle.key} surface="better_together" /><a href="/courses/a1-complete/" class="c4-text-link">See what is included →</a></div>
+</section>

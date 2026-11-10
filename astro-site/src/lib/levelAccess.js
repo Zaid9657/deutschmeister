@@ -21,7 +21,7 @@
 // so the lifetime course stays on sale to the visitors most likely to buy it.
 import { courseAccessReason } from '../../../src/lib/levelEntitlement.js';
 import { supabase } from './supabase.js';
-import { levelsForProduct } from '../data/pricing.js';
+import { levelsForProduct, ownsProduct, OFFER_PRODUCTS } from '../data/pricing.js';
 
 const SITE = 'https://deutsch-meister.de';
 
@@ -86,9 +86,8 @@ export function ownedProductHome(snapshot, productKey) {
   if (!snapshot?.signedIn) return null;
   const active = activePurchases(snapshot);
   const levels = levelsForProduct(productKey);
-  const owned = active.some((p) => p.product_key === productKey)
-    || (levels.length > 0 && levels.every((level) => active.some((p) => levelsForProduct(p.product_key).includes(level))));
-  if (!owned) return null;
+  if (!ownsProduct(productKey, active)) return null;
+  if (OFFER_PRODUCTS[productKey]) return `${SITE}${OFFER_PRODUCTS[productKey].home}`;
   if (productKey === 'telc_b1_komplett') return `${SITE}/telc-b1-kurs`;
   return levels.length ? levelHref(levels[0]) : `${SITE}/dashboard`;
 }

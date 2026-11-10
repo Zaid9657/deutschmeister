@@ -1,24 +1,17 @@
 ---
-import { courseForLevel, COURSE_PRO_MONTHS, eur, PLANS } from '../../data/pricing.js';
+import { eur, PLANS } from '../../data/pricing.js';
 import { PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../../data/marketing.js';
 import Scene from './Scene.astro';
-import PurchaseDoor from './PurchaseDoor.astro';
+import Ladder from './Ladder.astro';
 const { illustrated = false } = Astro.props;
-const course = courseForLevel('a1.2');
 ---
-<div class:list={['c4-offers', illustrated && 'c4-offers-illustrated']}>
-  <article class="c4-offer c4-offer-course" data-c4-reveal>
-    {illustrated && <Scene name="hero" alt="A learner practising German at her laptop" sizes="320px" />}
-    <h2>A1.2 course</h2>
-    <p class="c4-price"><strong>{eur(course.price).replace('.00', '')}</strong> <span>pay once</span></p>
-    <ul class="c4-checks"><li>Yours to keep</li><li>{COURSE_PRO_MONTHS} months of AI Practice included</li><li>Conversations, explanations, writing and speaking tasks</li></ul>
-    <PurchaseDoor surface="offer_a12" />
-  </article>
+<Ladder illustrated={illustrated} />
+<div class="c4-addon">
   <article class="c4-offer" data-c4-reveal>
     {illustrated && <Scene name="scene-work" alt="Two people having a conversation at work" sizes="320px" />}
     <h2>AI Practice</h2><p class="c4-small">Optional add-on · course access sold separately</p>
-    <p class="c4-price"><strong>{eur(PLANS.monthly.price)}</strong><span> / month</span></p>
-    {illustrated && <p class="c4-yearly">or <strong>{eur(PLANS.yearly.price)}</strong> / year</p>}
+    <p class="c4-price"><strong>{eur(PLANS.yearly.price)}</strong><span> / year</span></p>
+    <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month</p>
     <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>
     <a href="/pricing/#ai-practice" class="c4-button c4-button-outline">Add AI Practice <span aria-hidden="true">→</span></a>
   </article>

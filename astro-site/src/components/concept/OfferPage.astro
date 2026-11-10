@@ -1,0 +1,80 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Scene from './Scene.astro';
+import Icon from './Icon.astro';
+import ProductDoor from './ProductDoor.astro';
+import BetterTogether from './BetterTogether.astro';
+import Ladder from './Ladder.astro';
+import PromiseBand from './PromiseBand.astro';
+import RouteBand from './RouteBand.astro';
+import CourseCheckout from '../CourseCheckout.astro';
+import { OFFER_PRODUCTS, ALL_LEVELS, courseForLevel, eur, CURRENCY } from '../../data/pricing.js';
+import { offerProductsWithVariants } from '../../lib/courseVariants.js';
+import { examCounts, examDays, examWeeks } from '../../data/examPack.js';
+import { PROGRAM } from '../../../../src/data/programs/startDeutsch1.js';
+import { goetheA1Mock as GOETHE_A1 } from '../../../../src/data/mockExams/goetheA1.js';
+import { courseProof } from '../../data/productProof.js';
+import '../../styles/global.css';
+const { productKey } = Astro.props;
+const p = OFFER_PRODUCTS[productKey];
+const exam = productKey === 'a1_exam_pack';
+const pass = productKey === 'all_access';
+const course = courseForLevel('a1.2');
+const pack = OFFER_PRODUCTS.a1_exam_pack;
+const scene = exam ? 'offer-exam' : pass ? 'offer-pass' : 'offer-complete';
+const headline = exam ? 'Your A1 exam has a date. Do you have a plan?' : pass ? 'One payment. Every level, from your first word to B2.' : 'Finish A1 properly: the course, the exam plan and the practice.';
+const description = exam ? `A ${examDays.length}-day Start Deutsch 1 exam plan, a short practice test, writing and speaking tasks, and ${p.proMonths} months of AI Practice. ${eur(p.price).replace('.00', '')} once.` : pass ? `Every level course and every exam pack as released, plus ${p.proMonths} months of AI Practice. A1.1, A1.2 and the A1 Exam Pack are ready. ${eur(p.price).replace('.00', '')} once.` : `Keep the A1.2 course and A1 Exam Pack, with ${p.proMonths} months of AI Practice included. ${eur(p.price).replace('.00', '')} once.`;
+const ready = Boolean(offerProductsWithVariants().find((v) => v.key === productKey)?.variantId);
+const writingTask = GOETHE_A1.sections.find((s) => s.key === 'schreiben').parts[1];
+const preview = courseProof('a1.2');
+const FAQS = [
+  { q: `What is ${p.name}?`, a: description },
+  { q: exam ? 'How does the plan work?' : pass ? 'What if a level is not released yet?' : 'Do I need to finish A1.1 before starting?', a: exam ? `The ${examDays.length}-day plan organises grammar, listening, reading, writing and speaking, followed by review and the short practice test. It assumes you already have A1.1 and A1.2 foundations; it is not a beginner course.` : pass ? 'A1.1, A1.2 and the A1 Exam Pack are ready today. Everything else is coming next, included when released. There is no promised release date.' : 'Start with the free A1.1 course if you are new to German. A1 Complete includes the paid A1.2 course and the exam preparation that follows it.' },
+  { q: 'Is the practice test the real exam?', a: 'No. It is our independently written A1 practice test, a short version. Writing uses a self-check; AI writing feedback and speaking sessions are separate tools with usage allowances. It is independent practice material, not an official Goethe-Institut examination or a certificate.' },
+  { q: 'How long do I have access?', a: `Your purchased ${exam ? 'exam plan and practice material stay' : pass ? 'courses and exam packs stay' : 'course and exam pack stay'} in your account. AI Practice is included for ${p.proMonths} months (${p.proDays} days), starting with the purchase. Nothing renews automatically. After that window, AI tools return to the free allowance unless you choose a separate subscription.` },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Product', name: p.name, description, offers: { '@type': 'Offer', price: String(p.price), priceCurrency: CURRENCY, availability: `https://schema.org/${ready ? 'InStock' : 'OutOfStock'}`, url: `https://deutsch-meister.de/courses/${p.slug}/` } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<Layout title={`${p.name} — ${exam ? 'Your Exam Plan' : pass ? 'Every Level as Released' : 'Course + Exam Plan'} | DeutschMeister`} description={description} canonical={`https://deutsch-meister.de/courses/${p.slug}/`} jsonLd={jsonLd}>
+  <div class:list={['c4-product', pass && 'c4-product-pass']}>
+    <section class="c4-wrap c4-product-hero" aria-labelledby="product-h">
+      <Scene name={scene} alt={exam ? 'A learner preparing for Start Deutsch 1 at a desk overlooking Berlin' : pass ? 'A learner on a Berlin tram with the journey ahead' : 'A learner leaving a language school with her German notebook'} hero sizes="(max-width: 640px) 100vw, 65vw" />
+      <div class="c4-product-copy"><p class="c4-level-badge">{p.name}{exam && ' · Start Deutsch 1'}</p><h1 id="product-h">{headline}</h1><p>{exam ? `A ${examDays.length}-day plan that takes you through listening, reading, writing and speaking, then a short practice test.` : pass ? 'Every course as it is released, plus every exam pack as it is released.' : 'The everyday German course, the exam plan and more time to practise — together in one purchase.'}</p>
+        <div class="c4-product-price"><p class="c4-price"><strong>{eur(p.price).replace('.00', '')}</strong><span>pay once<br />yours to keep</span></p><ProductDoor productKey={p.key} surface="product_hero" coral /></div>
+      </div>
+    </section>
+    <div class="c4-benefits"><div class="c4-wrap c4-benefit-grid">
+      {pass ? <><div><strong>A1.1 · free · ready</strong></div><div><strong>A1.2 + A1 Exam Pack · ready</strong></div><div><p><strong>A2.1 to B2.2 and other exam packs</strong><span>Coming next, included when released</span></p></div></> : <><div><Icon name="target" /><p><strong>Your next step, clearly planned</strong><span>{exam ? `A clear ${examDays.length}-day plan to follow` : 'Everyday German, then exam preparation'}</span></p></div><div><Icon name="layers" /><p><strong>All exam skills</strong><span>Listening, reading, writing and speaking</span></p></div><div><Icon name="sparkles" /><p><strong>{p.proMonths} months of AI Practice</strong><span>Writing feedback and speaking practice</span></p></div></>}
+    </div></div>
+
+    {exam ? <>
+      <section class="c4-wrap c4-product-section" aria-labelledby="days-h"><div><h2 id="days-h">Your {examDays.length} days</h2><p>A clear plan that builds your skills step by step. Start with A1 foundations already in place.</p></div><div class="c4-week-grid">{examWeeks.map((week, i) => <article><p class="c4-level-badge">Week {i + 1}</p><Scene name={week.image} alt={week.title} sizes="(max-width: 640px) 45vw, 230px" /><h3>{week.title}</h3><p>{week.body}</p><details><summary>See the actual week</summary><ul lang="de">{PROGRAM.weeks[i].days.map((day) => <li><strong>{day.label}:</strong> {day.items.map((item) => item.title).join(' · ')}</li>)}</ul></details></article>)}</div></section>
+      <section class="c4-wrap c4-product-section" aria-labelledby="inside-h"><div><h2 id="inside-h">What is inside</h2><p>Focused A1 practice. Counts below describe scheduled items in your plan.</p></div><div class="c4-included-grid">
+        {[['layers', `${examCounts.lesson} grammar topics`, 'Revisit the foundations before the exam.'], ['target', `${examCounts.listening} listening exercises`, 'Train with A1-style audio.'], ['layers', `${examCounts.reading} reading practice slots`, 'Short texts scheduled across the plan.'], ['sparkles', `${examCounts.speaking} speaking practice sessions`, 'Use the A1 speaking missions.'], ['layers', 'Writing tasks', `Forms and short messages; ${p.proMonths} months of AI feedback included, within the AI Practice allowance.`], ['target', 'A1 practice test (short version)', 'Practise the task formats, then review with the self-check.']].map(([icon, title, body]) => <article><Icon name={icon} /><div><h3>{title}</h3><p>{body}</p></div></article>)}
+      </div></section>
+      <section class="c4-wrap c4-exam-preview" aria-labelledby="write-h"><Scene name="hero" alt="A learner writing a German message at her laptop" sizes="(max-width: 640px) 100vw, 350px" /><div><p class="c4-eyebrow">Preview · real writing task</p><h2 id="write-h">Write a short message of about 30 words.</h2><blockquote lang="de">{writingTask.task}</blockquote><p class="c4-small">The practice test uses a self-check. For separate AI feedback, use the writing tool during your included AI Practice window.</p><a href="/schreiben/start-deutsch-1" class="c4-text-link">Explore the writing tasks →</a></div></section>
+      <BetterTogether />
+    </> : pass ? <>
+      <section class="c4-wrap c4-product-section c4-pass-includes" aria-labelledby="includes-h"><h2 id="includes-h">What the pass includes</h2><div class="c4-week-grid">
+        {[['hero', 'Every level course', 'From A1.1 to B2.2, as released.'], ['offer-exam', 'Every exam pack', 'A1 ready today. Future exam packs included as released.'], ['scene-work', `${p.proMonths} months of AI Practice`, 'AI writing feedback, speaking practice and Sentence X-Ray, with usage allowances.'], ['offer-complete', 'Yours to keep', 'Your course and exam-pack access stays after the AI Practice window ends.']].map(([image, title, body]) => <article><Scene name={image} alt={title} sizes="(max-width: 640px) 45vw, 290px" /><h3>{title}</h3><p>{body}</p></article>)}
+      </div></section>
+      <section class="c4-wrap c4-pass-status" aria-label="Release status"><h2>Your route, as released</h2><ul>{ALL_LEVELS.map((level) => <li><strong>{level.toUpperCase()}</strong> · {level === 'a1.1' ? 'Free · ready' : level === 'a1.2' ? 'Ready' : 'Coming next, included when released'}</li>)}</ul><p>A1 Exam Pack: ready. Other exam packs: coming next, included when released.</p><p class="c4-small">No release date is promised for future courses or exam packs.</p></section>
+      <PromiseBand />
+      <section class="c4-wrap c4-product-options"><h2>Three ways to learn</h2><Ladder /></section>
+    </> : <>
+      <section class="c4-wrap c4-complete-parts" aria-label="Your A1 bundle">
+        {[['scene-cafe', `A1.2 course (${eur(course.price).replace('.00', '')})`, 'Continue A1 with structured lessons for everyday life, work and study.', '/courses/a1-2/'], ['offer-exam', `A1 Exam Pack (${eur(pack.price).replace('.00', '')})`, `A clear ${examDays.length}-day plan, focused practice and an A1 practice test (short version).`, '/courses/a1-exam-pack/'], ['hero', `${p.proMonths} months of AI Practice`, 'Practise speaking and get feedback on your writing within the included allowances.', '/pricing/#ai-practice']].map(([image, title, body, href]) => <article><Scene name={image} alt={title} sizes="(max-width: 640px) 100vw, 400px" /><div><h2>{title}</h2><p>{body}</p><a href={href} class="c4-text-link">Explore →</a></div></article>)}
+      </section>
+      <p class="c4-wrap c4-bundle-value">Course + exam pack bought separately: <strong>{eur(course.price + pack.price).replace('.00', '')}</strong>. Together: <strong>{eur(p.price).replace('.00', '')}</strong>, with {p.proMonths} months of AI Practice.</p>
+      <section class="c4-wrap c4-complete-path"><h2>Your path through A1</h2><div><p><strong>1. Learn the everyday situations.</strong> Start A1.1 free, then continue with your A1.2 course.</p><p><strong>2. Follow the {examDays.length}-day exam plan.</strong> Bring listening, reading, writing and speaking together.</p><p><strong>3. Take the practice test.</strong> Use the short version to spot what needs more practice.</p></div><RouteBand /></section>
+      <section class="c4-wrap c4-exam-preview"><div><h2>Lesson preview</h2><p>A real conversation from the A1.2 course.</p><a href="/courses/a1-2/#lesson-preview" class="c4-text-link">Explore the lesson →</a></div><div class="c4-dialogue">{preview.lesson.dialog.lines.slice(0, 2).map((line) => <blockquote><p lang="de">{line.de}</p><p>{line.en}</p></blockquote>)}</div></section>
+      <section class="c4-wrap c4-product-section"><div><h2>Choose the option that fits you</h2><p>Keep one course, focus on the exam, or bring both together.</p></div><div class="c4-table-scroll"><table class="c4-offer-table"><thead><tr><th>What is included</th><th>A1.2 course<br />{eur(course.price).replace('.00', '')}</th><th>A1 Exam Pack<br />{eur(pack.price).replace('.00', '')}</th><th>A1 Complete<br />{eur(p.price).replace('.00', '')}</th></tr></thead><tbody><tr><th>A1.2 course, yours to keep</th><td>Included</td><td>—</td><td>Included</td></tr><tr><th>{examDays.length}-day A1 exam plan + short practice test</th><td>Existing course access retained</td><td>Included</td><td>Included</td></tr><tr><th>Included AI Practice</th><td>{course.proMonths} months</td><td>{pack.proMonths} months</td><td>{p.proMonths} months</td></tr></tbody></table></div></section>
+    </>}
+    <section class="c4-wrap c4-faq" aria-labelledby="product-faq"><h2 id="product-faq">FAQ</h2><div>{FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}</div></section>
+    <section class="c4-wrap c4-product-close"><h2>{p.name}, yours to keep.</h2><p>{eur(p.price).replace('.00', '')} once · {p.proMonths} months of AI Practice included{pass && ' · courses and exam packs as released'}</p><ProductDoor productKey={p.key} surface="product_close" /><a href="/pricing/" class="c4-text-link">Compare all options →</a></section>
+  </div>
+  <CourseCheckout />
+</Layout>

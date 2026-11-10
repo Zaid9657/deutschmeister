@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Scene from '../../components/concept/Scene.astro';
+import BetterTogether from '../../components/concept/BetterTogether.astro';
 import Benefits from '../../components/concept/Benefits.astro';
 import Icon from '../../components/concept/Icon.astro';
 import RouteBand from '../../components/concept/RouteBand.astro';
@@ -61,6 +62,7 @@ const jsonLd = {
     <section class="c4-wrap c4-faq" aria-labelledby="faq-h"><div><h2 id="faq-h"><span class="c4-underline">FAQ</span></h2><p>Common questions about the {code} course.</p></div><div>{FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}</div></section>
     <section class="c4-wrap c4-level-close" aria-label="Start your course"><div><h2>Take the next step:<br /><span class="c4-underline">Start {code} today.</span></h2></div><p>Build on your German, gain more independence in everyday life, and get closer to your next level.</p><PurchaseDoor level={level} surface="level_close" coral /><Scene name="tram-route" alt="A Berlin tram on the route ahead" sizes="400px" /></section>
     <section class="c4-wrap c4-course-grammar" aria-labelledby="grammar-h"><details><summary id="grammar-h">Explore the grammar in {code}</summary><ul>{topics.map((t) => <li><a href={`/grammar/${level}/${t.slug}/`}>{t.title_en}</a></li>)}</ul></details><a href="/courses/" class="c4-text-link">← All courses</a></section>
+    {!isFree && <BetterTogether />}
     <CourseCheckout />
   </>}
 </Layout>

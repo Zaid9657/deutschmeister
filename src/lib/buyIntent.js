@@ -17,7 +17,7 @@ const KEY = 'dm_buy_intent';
 // sale, so a signed-out Buy click on /pricing/ or /courses/ landed on
 // /dashboard after signup with no checkout. tests/speaking-offer.test.mjs runs
 // every product key through this exact pattern.
-const VALID = /^(monthly|yearly|telc_b1_komplett|course_[a-z0-9]+(?:_[0-9])?)$/;
+const VALID = /^(monthly|yearly|telc_b1_komplett|a1_exam_pack|a1_complete|all_access|course_[a-z0-9]+(?:_[0-9])?)$/;
 
 export const setBuyIntent = (productKey) => {
   if (VALID.test(productKey || '')) safeSet(KEY, productKey);

@@ -694,3 +694,35 @@ test('a manual course grant without a deadline stays deadline-free and grants no
   assert.equal(tables.purchases[0].access_until, null);
   assert.equal(profile().is_subscribed, false);
 });
+
+// The offer ladder uses the exact same order-id upsert and reconciliation lane.
+for (const [key, variantId, days, price] of [
+  ['a1_exam_pack', 951, 60, 59], ['a1_complete', 952, 180, 89], ['all_access', 953, 365, 199],
+]) {
+  process.env[`LEMONSQUEEZY_${key.toUpperCase()}_VARIANT_ID`] = String(variantId);
+  test(`${key}: paid order grants its exact AI window, retries keep the deadline, refund revokes it`, async () => {
+    const createdAt = new Date().toISOString();
+    const payload = event('order_created', `offer-${key}`, { status: 'paid', created_at: createdAt, total: price * 100, first_order_item: { variant_id: variantId, product_name: key } });
+    await deliver(payload);
+    assert.equal(tables.purchases.length, 1);
+    const purchase = tables.purchases[0];
+    assert.equal(purchase.product_key, key);
+    assert.equal(purchase.price_paid, price);
+    const deadline = new Date(Date.parse(createdAt) + days * 86400000).toISOString();
+    assert.equal(purchase.access_until, deadline);
+    assert.equal(profile().is_subscribed, true);
+    advance(2); await deliver(payload);
+    assert.equal(tables.purchases.length, 1, 'same LS order never creates another purchase');
+    assert.equal(purchase.access_until, deadline, 'delivery retry cannot extend included practice');
+    await deliver(event('order_refunded', `offer-${key}`, { status: 'refunded' }));
+    assert.equal(purchase.status, 'refunded');
+    assert.equal(profile().is_subscribed, false);
+    await deliver(payload);
+    assert.equal(purchase.status, 'refunded', 'a late retry cannot restore a refunded purchase');
+  });
+  test(`${key}: a failed order cannot provision anything`, async () => {
+    await deliver(event('order_created', `failed-${key}`, { status: 'failed', total: price * 100, first_order_item: { variant_id: variantId, product_name: key } }));
+    assert.equal(tables.purchases.length, 0);
+    assert.equal(Boolean(profile()?.is_subscribed), false);
+  });
+}

@@ -23,9 +23,9 @@ test('Concept 4 uses the sampled palette, self-hosted serif, and accessible acti
   assert.notEqual(emailBrand.siegel, color.siegel, 'transactional functions are explicitly outside this build');
 });
 test('all approved scenes exist as responsive WebP pairs with explicit layout and loading hints', () => {
-  const names = ['hero', 'pricing-hero', 'a12-reception', 'scene-cafe', 'scene-work', 'scene-doctor', 'tram-route', 'cando-appointment', 'cando-flat', 'cando-chat', 'cando-market'];
+  const names = ['hero', 'hero-group', 'pricing-hero', 'a12-reception', 'scene-cafe', 'scene-work', 'scene-doctor', 'tram-route', 'cando-appointment', 'cando-flat', 'cando-chat', 'cando-market'];
   for (const name of names) {
-    const pair = readdirSync(new URL('../public/art/scenes/', import.meta.url)).filter((f) => f.startsWith(`${name}-`));
+    const pair = readdirSync(new URL('../public/art/scenes/', import.meta.url)).filter((f) => new RegExp(`^${name}-\\d+\\.webp$`).test(f));
     assert.equal(pair.length, 2, name); assert.ok(pair.some((f) => f.endsWith('-800.webp')), name);
   }
   const scene = read('astro-site/src/components/concept/Scene.astro');
@@ -35,7 +35,8 @@ test('all approved scenes exist as responsive WebP pairs with explicit layout an
 test('the money pages use the approved compositions and no replaced train board or station art', () => {
   const home = read('astro-site/src/pages/index.astro');
   assert.match(home, /You want to learn German/); assert.match(home, /Where do you start/);
-  for (const scene of ['hero', 'scene-cafe', 'scene-work', 'scene-doctor']) assert.ok(home.includes(`'${scene}'`) || home.includes(`"${scene}"`));
+  // Founder's pick 2026-11-09 ("3"): the home hero shows adult learners together, not the single character.
+  for (const scene of ['hero-group', 'scene-cafe', 'scene-work', 'scene-doctor']) assert.ok(home.includes(`'${scene}'`) || home.includes(`"${scene}"`));
   assert.match(home, /<FirstStop/); assert.match(home, /<RouteBand/); assert.match(home, /<Offers/);
   const pricing = read('astro-site/src/pages/pricing.astro');
   assert.match(pricing, /Pay once for your course/); assert.match(pricing, /Practise more if you want/);

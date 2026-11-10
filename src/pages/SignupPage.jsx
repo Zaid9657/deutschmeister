@@ -19,11 +19,10 @@ import AccountPreview from '../components/ui/AccountPreview.jsx';
 import Logo from '../components/Logo';
 import {
   FREE_LEVEL_LABEL,
-  GRAMMAR_TOPIC_COUNT,
-  LEVEL_COUNT,
   TRIAL_DAILY_LIMIT,
   TRIAL_DAYS,
   TRIAL_SPEAKING_SESSIONS,
+  PRO_INCLUDED_SESSION_MINUTES,
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
 import { FREE_COURSE_HREF } from '../data/offers.js';
@@ -40,7 +39,7 @@ const pendingPurchase = () => {
   const key = peekBuyIntent();
   if (!key) return null;
   const course = courseForProduct(key);
-  if (course) return { label: `Deutsch ${course.code}`, price: course.price, once: true };
+  if (course) return { label: course.name, price: course.price, once: true };
   if (key === 'telc_b1_komplett') return { label: COURSES.telc_b1_komplett.name, price: COURSES.telc_b1_komplett.price, once: true };
   const plan = PLANS[key];
   if (plan) return { label: plan.name, price: plan.price, once: false, interval: plan.interval };
@@ -258,10 +257,10 @@ const SignupPage = () => {
             className="hero-line font-display text-dm-hero text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
-            Start your {TRIAL_DAYS}-day AI Practice trial
+            Start A1.1 free. Try AI Practice for {TRIAL_DAYS} days.
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Practise German with AI Practice. No payment details needed.
+            Keep learning with the free A1.1 course. Your account also includes a limited AI Practice trial. Courses beyond A1.1 are purchased separately. No payment details needed.
           </p>
         </div>
 
@@ -467,8 +466,8 @@ const SignupPage = () => {
           {/* Free tier value list */}
           <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
             {[
-              `All ${LEVEL_COUNT} levels and ${GRAMMAR_TOPIC_COUNT} grammar topics during the trial`,
-              `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions during the trial`,
+              `${FREE_LEVEL_LABEL} course stays free after the trial`,
+              `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions of ${PRO_INCLUDED_SESSION_MINUTES} minutes during the trial`,
               `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
               `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,
             ].map((item) => (

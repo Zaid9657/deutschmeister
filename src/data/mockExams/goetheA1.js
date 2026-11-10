@@ -276,8 +276,8 @@ export const goetheA1Mock = {
       title: 'Schreiben',
       minutes: 20,
       instructions:
-        'Teil 1 (Formular): 5 P. — trag deine Angaben in die fünf Felder ein. Teil 2 (Mitteilung): 10 P. — schreib ' +
-        'ca. 30 Wörter zu allen drei Leitpunkten. Beide Teile werden nicht automatisch bewertet — nutze den ' +
+        'Teil 1 (Formular): 5 P. — tragen Sie Ihre Angaben in die fünf Felder ein. Teil 2 (Mitteilung): 10 P. — schreiben Sie ' +
+        'ca. 30 Wörter zu allen drei Leitpunkten. Beide Teile werden nicht automatisch bewertet — nutzen Sie den ' +
         'Selbstcheck.',
       parts: [
         {
@@ -285,8 +285,8 @@ export const goetheA1Mock = {
           type: 'writing',
           label: 'Teil 1 · Formular',
           task:
-            'Du möchtest dich für einen Deutschkurs an der Volkshochschule anmelden. Füll das Anmeldeformular mit ' +
-            'deinen Angaben aus: Name, Straße und Hausnummer, Postleitzahl und Wohnort, Geburtsdatum und ' +
+            'Sie möchten sich für einen Deutschkurs an der Volkshochschule anmelden. Füllen Sie das Anmeldeformular mit ' +
+            'Ihren Angaben aus: Name, Straße und Hausnummer, Postleitzahl und Wohnort, Geburtsdatum und ' +
             'Telefonnummer.',
           criteria: [
             'Feld „Name“ ausgefüllt',
@@ -301,8 +301,8 @@ export const goetheA1Mock = {
           type: 'writing',
           label: 'Teil 2 · Mitteilung',
           task:
-            'Du kannst morgen nicht zum Deutschkurs kommen. Schreib eine kurze Mitteilung (ca. 30 Wörter) an deine ' +
-            'Lehrerin: Sag, warum du nicht kommen kannst, wann du wiederkommst, und bitte um die Hausaufgabe.',
+            'Sie können morgen nicht zum Deutschkurs kommen. Schreiben Sie eine kurze Mitteilung (ca. 30 Wörter) an Ihre ' +
+            'Lehrerin: Sagen Sie, warum Sie nicht kommen können, wann Sie wiederkommen, und bitten Sie um die Hausaufgabe.',
           criteria: [
             'Passende Anrede und Gruß',
             'Leitpunkt 1: Grund genannt',
