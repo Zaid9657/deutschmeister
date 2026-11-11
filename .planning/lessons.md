@@ -6,6 +6,7 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-11 | Claude opened a docs-only PR to "trigger the build" that picks up new Netlify env values; Netlify cancelled the preview because `netlify.toml` ignores docs-only diffs, so the merge would not have rebuilt production | After an env-only change, production needs "Clear cache and deploy site" in Netlify (or a real code change); read `netlify.toml` `ignore` before promising that a merge deploys |
 | 2026-11-10 | One cast of three learners was reused across every scene; the founder: "dont use the same charachters multiple times" | Every illustration gets its own people; the hero's three learners appear only in the hero. Check a contact sheet for repeated faces, side characters included, before shipping |
 | 2026-11-09 | Five Codex design rounds were rejected ("polishing", "stupid"); 4 image-model concepts got a pick on the first try. Codex designed in code under dozens of repo rules and through a relay | Design in pictures first (an image model with only the vision and the true content), let the founder pick, then code that exact picture; apply business rules at build time |
 | 2026-11-09 | The mock copied the live pricing: Pro at €9.99/month for "all 8 levels" undercut the €40–50 course, A2 was sold without a built course, and free got a "€0" card | Every price shown must make business sense and be true today; check that a price table sells before showing it |

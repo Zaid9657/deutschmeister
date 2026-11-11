@@ -42,6 +42,15 @@ product. Return a table: product name | numeric variant id | checkout share-link
 Lemon Squeezy has no field named "Redirect after purchase"; the confirmation pop-up's
 "Button link" is what it stores as `redirect_url`.
 
+**Rebuild production after an env-only change** (needed 2026-11-11). Netlify reads build-scope
+values only during a build, and `netlify.toml`'s `ignore` rule cancels every build whose diff is
+docs-only, so merging a docs PR does not rebuild. A plain "Deploy site" is cancelled too (same
+commit, empty diff); clearing the cache removes `CACHED_COMMIT_REF`, which forces the build:
+```
+In Netlify open the project deutschmeister-zaid → Deploys → "Trigger deploy" →
+"Clear cache and deploy site". Wait until the new production deploy says "Published".
+```
+
 **Set the post-purchase redirect** (so buyers land on our success page, not LS's receipt):
 ```
 In store 309512, set product <id>'s "Redirect after purchase" URL to

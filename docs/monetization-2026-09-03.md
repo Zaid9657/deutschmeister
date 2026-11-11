@@ -154,5 +154,8 @@ The founder created the products on 2026-11-11 with Claude in Chrome (prompt in
   `pending`), the same shape as A1.2's 2088893, which has taken a paid order.
 - Post-purchase: the confirmation "Button link" (`redirect_url`) points at
   `https://deutsch-meister.de/subscription/success` on all three.
+- The Buy buttons appear only after a production build that follows the env change. A docs-only
+  merge does not build (`netlify.toml` `ignore`); use "Clear cache and deploy site"
+  (`docs/owner-prompts.md`).
 - Still open: the store charges VAT on top (`tax_inclusive=false` on every order so far), so a
   "€59" pack costs an EU buyer more at checkout. The toggle prompt is in `docs/owner-prompts.md`.
