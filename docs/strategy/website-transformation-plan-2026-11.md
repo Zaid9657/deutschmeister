@@ -31,7 +31,26 @@ a site that keeps 1 visitor in 10 is wasted.
 - Signups fell about 85% from March to October.
 - In the last 90 days, Google brought 83 tracked signups, ChatGPT 8, and our own social accounts 0.
 - Instagram has 65 followers and Telegram 4 (board, 2026-11-07). The reels get views and no signups.
-- We cannot see why search fell: this session has no Search Console access.
+
+**Search Console, read on 2026-11-11 (added after the plan was first written):**
+
+| Month (2026) | Mar (from 6th) | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov (1–9) |
+|---|---|---|---|---|---|---|---|---|---|
+| Search clicks | 222 | 384 | 1,417 | 1,041 | 916 | 721 | 784 | 532 | 163 |
+| Impressions | 525 | 1,416 | 4,379 | 6,101 | 5,193 | 7,198 | 5,551 | 5,952 | 3,156 |
+
+- **Search did not cause the fall.** March had 428 signups on only 222 search clicks, so most early
+  signups came from somewhere else, and that source has stopped. Which source is not recorded:
+  tracking began in September. The founder knows.
+- **Search is almost only our own name.** The top query is "deutschmeister"; people who already heard
+  of us type it in. Clicks peaked in May and have fallen each month since.
+- **Google shows us more and clicks less.** Impressions grew twelvefold while the click rate fell
+  from 42% to 9%: we now appear for learning topics, but too low on the page to be chosen.
+- **Only 33 of 184 known pages are indexed.** 96 are "discovered, not indexed" and 27 "crawled, not
+  indexed". Google does not yet think the site is worth crawling fully; that is fixed by links and
+  by pages people search for, not by a setting. No manual action, no security issue.
+- Of October's 532 search clicks, about 41 became tracked Google signups (8%). The page converts
+  visitors to signups well; there are too few visitors.
 
 ### The product does not hold people
 
@@ -149,7 +168,7 @@ Moves: the three new offers become buyable.
 | One real test purchase, check access and the success page | Founder buys, Claude verifies |
 | Switch the store to VAT-inclusive prices | Founder, 2 minutes (prompt in `docs/owner-prompts.md`) |
 | Deactivate discount code G2MZI2MA (100% off, no limit, no expiry) | Founder, 1 minute |
-| Give this session Search Console access | Founder, 10 minutes |
+| Search Console numbers for this session | Done 2026-11-11 (read through Claude in Chrome) |
 | Book the lawyer and tax adviser (operator, FernUSG, side business) | Founder; open since Oct 31 |
 
 Done when: one paid order runs end to end, and prices at checkout match the page.
@@ -218,7 +237,8 @@ Own-account reels brought 0 signups, so they stay on autopilot and get no new wo
 
 | Channel | First step | Scale-up rule |
 |---|---|---|
-| Search: find and repair the fall | Read Search Console; fix what dropped since March | Standing weekly check |
+| Restart the early source | Find what brought 428 signups in March and 363 in May (founder), and repeat it | Scale while it brings signups |
+| Search: get indexed | Only 33 of 184 pages are indexed: request indexing for the selling pages, add links between pages | Standing weekly check |
 | Search: exam pages | 10 pages on real exam questions ("telc B1 Brief Beispiel"), each with the free graded task | 30 pages once 10 bring 300 non-brand clicks a month |
 | Teachers and schools | Founder sends 20 short messages to B1 teachers with a free class code | Affiliate link at up to €40 a sale once 3 partners send buyers |
 | Communities | One helpful, tagged post in each of 5 migrant and exam groups | Repeat only where buyers came from |
