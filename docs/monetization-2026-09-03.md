@@ -132,3 +132,27 @@ finished. Catalogue re-cut in `src/data/pricing.js` (`SUBLEVEL_PRICES_EUR`, `COM
   vars BEFORE merging the code PR to avoid a window with nothing buyable.
 - Old variants 2088862/2088867/2088868/2088869/2088871 should be archived in the LS dashboard
   after the new ids are live (owner), so an old share link cannot sell a €49 band.
+
+
+## Addendum 2026-11-11 — the offer ladder is on sale (three one-time products)
+
+Founder decisions 2026-11-09/10 (`docs/strategy/pricing-offer-evaluation-2026-11-09.md`, PR #256).
+The founder created the products on 2026-11-11 with Claude in Chrome (prompt in
+`docs/owner-prompts.md`); the agent verified each variant against the Lemon Squeezy API
+(store 309512, one-time, EUR, published) and set the nine Netlify values the same day.
+
+| Product | Price | Product key | Numeric variant id | Checkout UUID |
+|---|---|---|---|---|
+| DeutschMeister — A1 Exam Pack | €59 | `a1_exam_pack` | 2363823 | 675b9982-5e0d-4ac0-9e72-0d9409b8551e |
+| DeutschMeister — A1 Complete | €89 | `a1_complete` | 2363831 | 2552d543-896a-4f38-b5e1-60df469b0e2b |
+| DeutschMeister — All-Access Pass | €199 | `all_access` | 2363838 | 324cd369-01fa-49db-abd6-30c7ec559ed8 |
+
+- Env vars: `LEMONSQUEEZY_<KEY>_VARIANT_ID` (functions scope, numeric) and the
+  `PUBLIC_`/`VITE_LEMONSQUEEZY_<KEY>_VARIANT_ID` twins (builds scope, UUID), with `<KEY>` =
+  `A1_EXAM_PACK`, `A1_COMPLETE`, `ALL_ACCESS`.
+- Each is a single-variant product: the id above is Lemon Squeezy's default variant (API status
+  `pending`), the same shape as A1.2's 2088893, which has taken a paid order.
+- Post-purchase: the confirmation "Button link" (`redirect_url`) points at
+  `https://deutsch-meister.de/subscription/success` on all three.
+- Still open: the store charges VAT on top (`tax_inclusive=false` on every order so far), so a
+  "€59" pack costs an EU buyer more at checkout. The toggle prompt is in `docs/owner-prompts.md`.
