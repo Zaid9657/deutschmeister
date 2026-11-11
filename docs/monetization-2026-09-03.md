@@ -162,5 +162,10 @@ The founder created the products on 2026-11-11 with Claude in Chrome (prompt in
   `a1_exam_pack`, the `purchases` row is `active` with a 60-day `access_until`, and the buyer landed
   on `/subscription/success`. Not covered: the unlock on a plain (non-admin, non-subscriber)
   account, and a refund (a €0 order cannot be refunded).
-- Still open: the store charges VAT on top (`tax_inclusive=false` on every order so far), so a
-  "€59" pack costs an EU buyer more at checkout. The toggle prompt is in `docs/owner-prompts.md`.
+- Tax-inclusive pricing is ON since 2026-11-11 (owner, store 309512 → Settings → General). Before
+  that every order had `tax_inclusive=false` and VAT was added on top (the October "€40" course cost
+  €43.38). Checked after the switch: the A1 Exam Pack checkout for Germany (10115) shows €59.00 with
+  "VAT (19% included in total) €9.42". The setting is store-wide, so it covers the subscriptions too.
+  The site says so through `PRICE_TAX_NOTE` in `src/data/pricing.js`.
+- Discount G2MZI2MA (100 %, all products, no limit, no expiry; 5 redemptions) was unpublished the
+  same day; the API shows it as `draft`.

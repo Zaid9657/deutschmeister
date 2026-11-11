@@ -1,5 +1,5 @@
 ---
-import { courseForLevel, OFFER_PRODUCTS, eur } from '../../data/pricing.js';
+import { courseForLevel, OFFER_PRODUCTS, eur, PRICE_TAX_NOTE } from '../../data/pricing.js';
 import PurchaseDoor from './PurchaseDoor.astro';
 import ProductDoor from './ProductDoor.astro';
 import Scene from './Scene.astro';
@@ -22,3 +22,4 @@ const level = courseForLevel('a1.2');
   </article>)}
 </div>
 <p class="c4-small c4-exam-link">Already know A1? <a class="c4-text-link" href="/courses/a1-exam-pack/">Explore the A1 Exam Pack · {eur(OFFER_PRODUCTS.a1_exam_pack.price).replace('.00', '')} once →</a></p>
+<p class="c4-small c4-tax-note">{PRICE_TAX_NOTE}</p>

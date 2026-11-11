@@ -16,7 +16,7 @@ import { planStatusCopy } from '../lib/planStatus.js';
 import { proPlanLines } from '../lib/proPlanLines.js';
 import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
-import { PLANS, num, productKeyForLevel } from '../data/pricing.js';
+import { PLANS, num, productKeyForLevel, PRICE_TAX_NOTE, PRICE_TAX_NOTE_DE } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
@@ -474,6 +474,7 @@ const SubscriptionPage = () => {
             AI Practice second). Rendered only when the LS products exist (variant
             configured) or the buyer already owns one. */}
         <section className="mb-12" aria-label="Course and exam bundles">
+          <p className="mb-3 text-[0.8125rem] text-graphite" data-price-tax-note>{isGerman ? PRICE_TAX_NOTE_DE : PRICE_TAX_NOTE}</p>
           <div className="grid gap-4 sm:grid-cols-3">
             {Object.values(LEMONSQUEEZY_CONFIG.offerProducts).map((p) => <Card key={p.key} className="p-5" edge={p.key === 'a1_complete' ? 'siegel' : 'paper'}>
               <h2 className="font-display text-xl">{p.name}</h2>

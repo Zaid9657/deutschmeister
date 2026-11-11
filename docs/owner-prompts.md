@@ -73,7 +73,8 @@ apply <CODE>, confirm €0.00, complete checkout. Then open /subscription and
 Note: a €0 order cannot be refunded in LS, so the refund → re-lock path is not covered
 by this test.
 
-**Switch the store to VAT-inclusive prices** (found 2026-10-11, business review). Every
+**Switch the store to VAT-inclusive prices** (found 2026-10-11, business review; **done
+2026-11-11**, and the site now shows `PRICE_TAX_NOTE`). Every
 order so far has `tax_inclusive=false`: the site shows €9.99 / €40 / €89, and Lemon Squeezy
 adds VAT on top at checkout, so a German buyer is charged €11.89 for the "€9.99" plan. That
 surprise sits on the last step before payment, and German price law (PAngV) requires

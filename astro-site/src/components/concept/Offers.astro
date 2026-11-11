@@ -1,5 +1,5 @@
 ---
-import { eur, PLANS } from '../../data/pricing.js';
+import { eur, PLANS, PRICE_TAX_NOTE } from '../../data/pricing.js';
 import { PRO_WRITING_EVALUATIONS_PER_MONTH, PRO_DAILY_LIMIT } from '../../data/marketing.js';
 import Scene from './Scene.astro';
 import Ladder from './Ladder.astro';
@@ -11,7 +11,7 @@ const { illustrated = false } = Astro.props;
     {illustrated && <Scene name="scene-work" alt="Two people having a conversation at work" sizes="320px" />}
     <h2>AI Practice</h2><p class="c4-small">Optional add-on · course access sold separately</p>
     <p class="c4-price"><strong>{eur(PLANS.yearly.price)}</strong><span> / year</span></p>
-    <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month</p>
+    <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month · {PRICE_TAX_NOTE}</p>
     <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>
     <a href="/pricing/#ai-practice" class="c4-button c4-button-outline">Add AI Practice <span aria-hidden="true">→</span></a>
   </article>

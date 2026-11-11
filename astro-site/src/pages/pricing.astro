@@ -6,7 +6,7 @@ import Icon from '../components/concept/Icon.astro';
 import Ladder from '../components/concept/Ladder.astro';
 import PromiseBand from '../components/concept/PromiseBand.astro';
 import CourseCheckout from '../components/CourseCheckout.astro';
-import { PLANS, COURSE_PRO_MONTHS, courseForLevel, COMING_SOON_LEVELS, num, eur, CURRENCY } from '../data/pricing.js';
+import { PLANS, COURSE_PRO_MONTHS, courseForLevel, COMING_SOON_LEVELS, num, eur, CURRENCY, PRICE_TAX_NOTE } from '../data/pricing.js';
 import { PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH } from '../data/marketing.js';
 import { proCta } from '../lib/proCta.js';
 import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.js';
@@ -50,7 +50,7 @@ const jsonLd = [
         <Scene name="scene-work" alt="Practising a conversation at work" sizes="350px" />
         <h2>AI Practice</h2><p class="c4-small">Optional add-on · course access sold separately</p>
         <p class="c4-price"><strong id="pro-price">{eur(PLANS.yearly.price)}</strong><span> / <span id="pro-period">year</span></span></p>
-        <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month</p>
+        <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month · {PRICE_TAX_NOTE}</p>
         <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>
         <div class="c4-billing-toggle" aria-label="AI Practice billing period"><button type="button" id="toggle-yearly" aria-pressed="true">Yearly</button><button type="button" id="toggle-monthly" aria-pressed="false">Monthly</button></div>
         <button type="button" id="pro-btn" class="c4-button c4-button-outline"><span id="pro-btn-label">{proCta().label}</span><span aria-hidden="true">→</span></button>
