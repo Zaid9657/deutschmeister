@@ -157,5 +157,10 @@ The founder created the products on 2026-11-11 with Claude in Chrome (prompt in
 - The Buy buttons appear only after a production build that follows the env change. A docs-only
   merge does not build (`netlify.toml` `ignore`); use "Clear cache and deploy site"
   (`docs/owner-prompts.md`).
+- Test order 2026-11-11 (Lemon Squeezy #30951218, A1 Exam Pack, €0 with a 100 % code, founder's
+  admin account): `order_created` was processed without error, variant 2363823 resolved to
+  `a1_exam_pack`, the `purchases` row is `active` with a 60-day `access_until`, and the buyer landed
+  on `/subscription/success`. Not covered: the unlock on a plain (non-admin, non-subscriber)
+  account, and a refund (a €0 order cannot be refunded).
 - Still open: the store charges VAT on top (`tax_inclusive=false` on every order so far), so a
   "€59" pack costs an EU buyer more at checkout. The toggle prompt is in `docs/owner-prompts.md`.
