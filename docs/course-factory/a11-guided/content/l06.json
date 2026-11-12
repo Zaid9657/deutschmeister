@@ -1,0 +1,139 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Eine Nachricht von der Chefin",
+      "titleEn": "A note from the boss",
+      "instructionDe": "Ana findet im Büro eine Nachricht. Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Ana finds a note in the office. Read the note. Tap a word for its meaning.",
+      "text": "Guten Morgen, Ana! Willkommen im Büro!\nIch bin Frau Berg, Ihre Chefin. Der Chef vom Amt kommt um zehn.\nIhr Kollege ist Ingenieur. Ihre Kollegin ist auch Ingenieurin.\nSie haben noch kein Handy. Die Firma Thomas verkauft Handys.\nUm elf kommt ein Verkäufer oder eine Verkäuferin von der Firma.\nDann brauche ich Ihre Handynummer und Ihre E-Mail-Adresse.\nUnd die Arbeit? Das machen wir zusammen.\nBis dann!",
+      "questions": [
+        {
+          "promptDe": "Wer kommt um elf ins Büro? Wählen Sie die richtige Antwort.",
+          "promptEn": "Who comes to the office at eleven? Choose the right answer.",
+          "options": [
+            "The head of the public office.",
+            "A salesperson from a company.",
+            "A colleague who is an engineer."
+          ],
+          "answer": "A salesperson from a company.",
+          "explanationDe": "Frau Berg schreibt: Um elf kommt ein Verkäufer oder eine Verkäuferin von der Firma. Der Chef vom Amt kommt um zehn.",
+          "explanationEn": "Frau Berg writes that a salesman or saleswoman from the company comes at eleven. The head of the office comes at ten."
+        },
+        {
+          "promptDe": "Was braucht Frau Berg von Ana? Wählen Sie die richtige Antwort.",
+          "promptEn": "What does Frau Berg need from Ana? Choose the right answer.",
+          "options": [
+            "Her mobile number and her email address.",
+            "Her home address and her date of birth.",
+            "Her computer and her office telephone."
+          ],
+          "answer": "Her mobile number and her email address.",
+          "explanationDe": "Frau Berg schreibt: Dann brauche ich Ihre Handynummer und Ihre E-Mail-Adresse.",
+          "explanationEn": "Frau Berg writes that she then needs Ana’s mobile number and her email address."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was macht Herr Weber? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Herr Weber do? Choose the meaning.",
+          "options": [
+            "He greets Ana and asks for her name.",
+            "He greets Ana and gives her a form.",
+            "He greets Ana and shows her the office."
+          ],
+          "answer": "He greets Ana and shows her the office."
+        },
+        "say": {
+          "line": 0
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was braucht Ana im Büro? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana need in the office? Choose the meaning.",
+          "options": [
+            "A computer and a telephone.",
+            "A table and a mobile phone.",
+            "A form and a key."
+          ],
+          "answer": "A computer and a telephone."
+        },
+        "say": {
+          "line": 2
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was sagt Herr Weber über ein Handy? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Herr Weber say about a mobile phone? Choose the meaning.",
+          "options": [
+            "Ana gets a mobile phone tomorrow.",
+            "The office has no mobile phone.",
+            "The mobile phone is too expensive."
+          ],
+          "answer": "The office has no mobile phone."
+        },
+        "say": {
+          "line": 4
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was möchte Ana wissen? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana want to know? Choose the meaning.",
+          "options": [
+            "The name of her colleague.",
+            "The address of the office.",
+            "The office telephone number."
+          ],
+          "answer": "The office telephone number."
+        },
+        "say": {
+          "line": 6
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt Herr Weber über die Pause? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Herr Weber say about the break? Choose the meaning.",
+          "options": [
+            "The break is at one o’clock.",
+            "The break lasts one hour.",
+            "There is no break today."
+          ],
+          "answer": "The break is at one o’clock."
+        },
+        "say": {
+          "line": 8
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Nach der Arbeit kommt das Wochenende. Was machen Lena und Tim gern – und was machen Sie gern?",
+    "en": "After work comes the weekend. What do Lena and Tim like doing – and what do you like doing?"
+  },
+  "notes": [
+    "Chunks: five pairs. Ana speaks every even line and Herr Weber every odd one, so each pair has exactly one learner line and the learner says Ana's whole part (lines 0, 2, 4, 6, 8). A three-line first chunk [0,3) was the alternative; it would have separated Ana's request (line 2) from its answer (line 3).",
+    "Read text is a note from Frau Berg to Ana. Frau Berg is the boss in this Lektion's writing task, and the note keeps the dialogue's facts (no mobile phone yet, the colleague is an engineer, first name with Sie).",
+    "Ten Wortfeld entries are missing from the dialogue, and six of them are three masculine/feminine pairs. Hardest: `der Verkäufer`/`die Verkäuferin` and `die Firma`, because the story's workplace is an Amt. They come in through the missing mobile phone („Die Firma Thomas verkauft Handys. Um elf kommt ein Verkäufer oder eine Verkäuferin von der Firma.“). `der Chef` is carried as „der Chef vom Amt“ next to Frau Berg as Chefin.",
+    "The note invents three things the course does not state: a female colleague who is an engineer, a „Firma Thomas“ (Thomas and Ali are the only names in DIALOG_NAMES that belong to no story person; A1.2 uses Thomas as a first name), and a head of the office who is not named.",
+    "The times „um zehn“ and „um elf“ follow the dialogue's „um eins“; the form is taught in Lektion 8, as the notice says.",
+    "No e-mail address is written out: RULE 34 reads „de“ of any „….de“ address as an untaught word, so the note asks for the address instead.",
+    "Existing data: three Wortfeld examples give story people roles the course states nowhere else. „Herr Weber ist der Chef.“ and „Frau Kaya ist die Chefin.“ (Frau Kaya is the hostel receptionist of Lektion 1, and the writing task of this Lektion makes Frau Berg the Chefin); „Die Kollegin heißt Lena.“ (Lena is a course participant).",
+    "Existing data: the can-do „Ich kann am Telefon meinen Namen nennen“ has no dialogue line, so no chunk can rehearse it.",
+    "Phonetik: „VIER“ has one syllable and the focus is long vowels, not word stress, so the sound stage stays pending."
+  ]
+}
