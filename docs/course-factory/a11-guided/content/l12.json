@@ -1,0 +1,139 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Eine Nachricht von Mama und Papa",
+      "titleEn": "A message from Mum and Dad",
+      "instructionDe": "Lesen Sie die Nachricht von Anas Eltern. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the message from Ana's parents. Tap a word for its meaning.",
+      "text": "Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer noch ein Kind!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa",
+      "questions": [
+        {
+          "promptDe": "Kommen Anas Eltern zum Fest? Wählen Sie die Antwort.",
+          "promptEn": "Are Ana's parents coming to the party? Choose the answer.",
+          "options": [
+            "No, they have to work on Friday.",
+            "They do not know yet; the date is bad.",
+            "Yes, they have Friday off and are glad to come."
+          ],
+          "answer": "Yes, they have Friday off and are glad to come.",
+          "explanationDe": "In der Nachricht steht: Wir kommen gern zum Fest. Am Freitag haben wir frei.",
+          "explanationEn": "The message says: we are glad to come to the party. We have Friday off."
+        },
+        {
+          "promptDe": "Was möchten Mama und Papa am Samstag machen? Wählen Sie die Antwort.",
+          "promptEn": "What do Mum and Dad want to do on Saturday? Choose the answer.",
+          "options": [
+            "Invite Ana to the café as their guest.",
+            "Buy a present for Ana's brother.",
+            "Celebrate again at Ana's home."
+          ],
+          "answer": "Invite Ana to the café as their guest.",
+          "explanationDe": "In der Nachricht steht: Am Samstag möchten wir dich einladen. Du bist unser Gast im Café.",
+          "explanationEn": "The message says: on Saturday we would like to invite you. You are our guest at the café."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was sagt Ana über ihren Geburtstag? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say about her birthday? Choose the meaning.",
+          "options": [
+            "It is today, and the party is tonight.",
+            "It is in May, and the party is on Friday.",
+            "It was last week, and there was no party."
+          ],
+          "answer": "It is in May, and the party is on Friday."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Wer kommt zum Fest? Wählen Sie die Bedeutung.",
+          "promptEn": "Who is coming to the party? Choose the meaning.",
+          "options": [
+            "Only Ana's mum is coming.",
+            "Ana's parents cannot come.",
+            "Ana's mum and dad are coming."
+          ],
+          "answer": "Ana's mum and dad are coming."
+        },
+        "say": {
+          "line": 3
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was sagt Ana über die Gäste? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say about the guests? Choose the meaning.",
+          "options": [
+            "Her colleague is invited too, and the guests bring cake.",
+            "Her brother is coming alone, and Ana buys the cake.",
+            "Her colleague cannot come, and nobody brings cake."
+          ],
+          "answer": "Her colleague is invited too, and the guests bring cake."
+        },
+        "say": {
+          "line": 5
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was möchte Ana zum Geburtstag? Wählen Sie die Bedeutung.",
+          "promptEn": "What would Ana like for her birthday? Choose the meaning.",
+          "options": [
+            "Maybe a bag; Lena is buying the present.",
+            "Maybe a book; her brother is buying the present.",
+            "Nothing at all; she does not want a present."
+          ],
+          "answer": "Maybe a book; her brother is buying the present."
+        },
+        "say": {
+          "line": 7
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say as they part? Choose the meaning.",
+          "options": [
+            "Good night, Lena. See you tomorrow!",
+            "Thank you, Lena. See you on Friday!",
+            "Take care, Lena. See you soon!"
+          ],
+          "answer": "Take care, Lena. See you soon!"
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "In A1.2 geht es weiter: Ana sucht das Rathaus. Findet sie den Weg?",
+    "en": "The story continues in A1.2: Ana is looking for the town hall. Will she find the way?"
+  },
+  "notes": [
+    "Chunks are five question–answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Lines 2–5 are all about who is coming; I cut at 4 because line 4 turns from the parents to the brother, his wife and the other guests.",
+    "say: Ana's five lines (1, 3, 5, 7, 9); every chunk has exactly one. Lines 1 and 3 are also the dictation lines, line 9 is also a readAloud line. No ownName anywhere (no „Ich heiße …“ line, no spelled name).",
+    "Read text is the parents' reply to Ana's invitation, not an invitation: the Schreiben task of this Lektion is an invitation, and a reading text of the same kind could be copied into it. 12 Wortfeld entries had to go in (Datum, Alter, Gast, Gäste einladen, Karte, Zuhause, lieben, grüßen, Bis später, Schönen Tag noch, Fest, einladen), so the text is at the upper limit: 9 lines.",
+    "Hard to fit: „das Alter“ (a form-field word; here as „Dein Alter? Für uns bist du immer noch ein Kind!“), „das Zuhause“ („Dein Zuhause in Bremen ist bestimmt schön“), and „einladen“ next to „Gäste einladen“: the gloss finder matches the phrase first, so the verb needed a second sentence of its own (the parents invite Ana to the café on Saturday). „lieben“ and „grüßen“ need the exact infinitive/plural form, hence „Wir lieben dich“ and „… grüßen dich“.",
+    "Read text adds facts no dialogue states: Ana sent a card, the parents have Friday off, they invite her to the café on Saturday, they phone later. It agrees with the dialogues: parents come, party on Friday, brother has a wife, Ana lives in Bremen. No date or age number is given on purpose: Ana is born on 3.5.1998 (Lektion 2), so any age or weekday-date pair would be tied to one calendar year.",
+    "nextHook is grounded in a12.js Lektion 1 (setting „Ana sucht das Rathaus“, first line „Wie komme ich zum Rathaus?“). The checker does not require a hook for Lektion 12; drop it if the recap should not point across levels.",
+    "Phonetik: MEIN, DEIN, ZWEI train the diphthong ei, not word stress (one syllable each), so the checker prints „sound stage pending“. Data left untouched.",
+    "Words outside the taught vocabulary appear only in unchecked fields: „Nachricht“ (title, instruction, explanations). The read questions say „Wählen Sie die Antwort“ instead of the model's „Wählen Sie die Bedeutung“, because they ask about content.",
+    "Existing data: „der Gast“ and „einladen“ count as missing from the dialogue although it says „Die Gäste“ and „Ich lade … ein“ (lineFor() sees neither the umlaut plural nor the split verb). Lektion 2 gives Ana's birth date as 3.5.1998, which fits „im Mai“."
+  ]
+}

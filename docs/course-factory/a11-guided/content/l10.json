@@ -1,0 +1,138 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Der Bus am Bahnhof",
+      "titleEn": "The bus at the station",
+      "instructionDe": "Lesen Sie die Information am Bahnhof. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the notice at the station. Tap a word for its meaning.",
+      "text": "Bus am Bahnhof Bremen\nSie haben kein Auto? Fahren Sie mit dem Bus!\nIn welches Land fahren Sie?\nDeutschland: Der Bus fährt heute und morgen nach Berlin und Köln.\nÖsterreich: Der Bus fährt nächste Woche am Montag und am Freitag.\nIn die Schweiz fährt der Bus leider nicht.\nAbfahrt: immer um 8 Uhr, hier am Bahnhof.\nDie Fahrkarte kaufen Sie beim Fahrer oder bei der Fahrerin.",
+      "questions": [
+        {
+          "promptDe": "Wann fährt der Bus nach Österreich? Wählen Sie die Antwort.",
+          "promptEn": "When does the bus go to Austria? Choose the answer.",
+          "options": [
+            "Today and tomorrow, at eight o’clock.",
+            "Next week, on Monday and on Friday.",
+            "Next week, on Saturday and on Sunday."
+          ],
+          "answer": "Next week, on Monday and on Friday.",
+          "explanationDe": "In der Information steht: Österreich – der Bus fährt nächste Woche am Montag und am Freitag. Heute und morgen fährt er in Deutschland.",
+          "explanationEn": "The notice says the bus to Austria runs next week, on Monday and on Friday. Today and tomorrow it runs within Germany."
+        },
+        {
+          "promptDe": "Wo kaufen Sie die Fahrkarte für den Bus? Wählen Sie die Antwort.",
+          "promptEn": "Where do you buy the ticket for the bus? Choose the answer.",
+          "options": [
+            "At the counter in the station.",
+            "From a machine at the platform.",
+            "From the driver of the bus."
+          ],
+          "answer": "From the driver of the bus.",
+          "explanationDe": "In der Information steht: Die Fahrkarte kaufen Sie beim Fahrer oder bei der Fahrerin.",
+          "explanationEn": "The notice says you buy the ticket from the driver: a man (Fahrer) or a woman (Fahrerin)."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Wann und wo fährt der Zug nach Österreich? Wählen Sie die Antwort.",
+          "promptEn": "When and where does the train to Austria leave? Choose the answer.",
+          "options": [
+            "At four o’clock from platform nine.",
+            "At nine o’clock from platform five.",
+            "At nine o’clock from platform four."
+          ],
+          "answer": "At nine o’clock from platform four."
+        },
+        "say": {
+          "line": 0
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was sagt Herr Schmidt über den Zug? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Herr Schmidt say about the train? Choose the meaning.",
+          "options": [
+            "The train is on time.",
+            "The train is delayed.",
+            "The train is full."
+          ],
+          "answer": "The train is on time."
+        },
+        "say": {
+          "line": 2
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was kostet die Fahrkarte? Wählen Sie die Antwort.",
+          "promptEn": "How much is the ticket? Choose the answer.",
+          "options": [
+            "Twenty euros.",
+            "Fifteen euros.",
+            "Fifty euros."
+          ],
+          "answer": "Fifteen euros."
+        },
+        "say": {
+          "line": 4
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Ist das Gleis weit? Wählen Sie die Bedeutung.",
+          "promptEn": "Is the platform far? Choose the meaning.",
+          "options": [
+            "No, the train leaves right here, from platform four.",
+            "Yes, platform four is at the other end of the station.",
+            "No, but Ana has to take the bus to get there."
+          ],
+          "answer": "No, the train leaves right here, from platform four."
+        },
+        "say": {
+          "line": 6
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt die Durchsage? Wählen Sie die Bedeutung.",
+          "promptEn": "What does the announcement say? Choose the meaning.",
+          "options": [
+            "The train is on time; please board at platform four.",
+            "The train is cancelled; please take the bus.",
+            "The train is delayed; please change at platform five."
+          ],
+          "answer": "The train is delayed; please change at platform five."
+        },
+        "say": {
+          "line": 8
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Im Kurs fragt Lena Tim: Was hast du gestern gemacht? Und für Freitag haben die beiden einen Plan.",
+    "en": "In class, Lena asks Tim what he did yesterday. And the two of them have a plan for Friday."
+  },
+  "notes": [
+    "Chunks are the five question-answer pairs (Ana asks, Herr Schmidt answers). Ana opens every pair, so each say line (0, 2, 4, 6, 8) is the first line of its chunk and the say screen has no cue line before it (SceneStage only takes a cue from an earlier line of the same chunk). The alternative, 3-line chunks that end on Ana's next question, would cut every exchange in the middle; I did not do that. None of the say lines is a dictation line (1, 9).",
+    "Read text: a bus line's notice at Bremen station. It carries all eight Wortfeld entries the dialogue lacks (Fahrer, Fahrerin, Deutschland, Bahnhof, Land, morgen, nächste Woche, Auto) and agrees with the dialogue: the bus does not go to Switzerland (line 7 of the dialogue), and the train facts (nine o'clock, platform four) are not touched.",
+    "Hard to fit: das Land (a station notice has little use for the bare word; it stands in the heading question „In welches Land fahren Sie?“, with Deutschland and Österreich as the two answers below it) and the pair Fahrer/Fahrerin (carried by the real bus-sign phrase „Fahrkarte beim Fahrer“, here „beim Fahrer oder bei der Fahrerin“). das Auto stands in the notice's opening pitch.",
+    "The gloss finder needs „Fahrer“ and „Fahrerin“ as separate whitespace tokens, so the usual form-style „Fahrer/Fahrerin“ would not count; hence „beim Fahrer oder bei der Fahrerin“.",
+    "Existing data, dialogue lines 6–7: Ana asks two unrelated questions in one line („Fährt der Bus auch in die Schweiz? Ist das Gleis weit?“) and Herr Schmidt's „Nein, leider nicht.“ can be read as the answer to either. My meaning question for that chunk asks only about the platform, which the second sentence answers unambiguously.",
+    "Existing data, dialogue lines 8–9: Ana's question „Und wann ist die Ankunft?“ is never answered; the next line is the announcement. And line 3 says the train is on time while line 9 announces a delay. As a plot turn that works, but nothing marks it as one.",
+    "Existing data, dialogue line 9: „Bitte an Gleis fünf umsteigen!“ is not what a station announces; umsteigen means changing trains, and a platform change is announced as „Der Zug fährt heute von Gleis fünf“. The meaning option follows the course's own English („please change at platform five“).",
+    "Phonetik: all three items are sentence-melody items (Ja/Nein-Frage, rising, with an arrow), not word-stress items, so the sound stage is pending for L10. Not changed."
+  ]
+}

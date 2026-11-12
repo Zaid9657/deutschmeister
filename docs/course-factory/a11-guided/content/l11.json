@@ -1,0 +1,137 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Tims Zettel für Freitag",
+      "titleEn": "Tim's note for Friday",
+      "instructionDe": "Lesen Sie Tims Zettel. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read Tim's note. Tap a word for its meaning.",
+      "text": "Wochentag: Freitag\nUm sechs Uhr aufstehen, duschen, frühstücken\nLena anrufen – noch nicht gemacht!\nUm vier Uhr Lena abholen: Sie möchte mitkommen.\nDas Wörterbuch für Lena mitbringen!\nDann einkaufen: Brot, Kaffee und Wasser. Tee habe ich schon.\nUm sieben Uhr nach Hause. Abends bin ich müde.\nLetzte Woche: jeden Tag gearbeitet. Am Sonntag: bis neun schlafen!",
+      "questions": [
+        {
+          "promptDe": "Was macht Tim um vier Uhr? Wählen Sie die Antwort.",
+          "promptEn": "What does Tim do at four o'clock? Choose the answer.",
+          "options": [
+            "He calls Lena, and then they have breakfast.",
+            "He picks Lena up, and then they go shopping.",
+            "He goes home, and then he sleeps until nine."
+          ],
+          "answer": "He picks Lena up, and then they go shopping.",
+          "explanationDe": "Auf dem Zettel steht: Um vier Uhr Lena abholen. Dann einkaufen.",
+          "explanationEn": "The note says: pick Lena up at four o'clock, then go shopping."
+        },
+        {
+          "promptDe": "Was kauft Tim nicht? Wählen Sie die Antwort.",
+          "promptEn": "What does Tim not buy? Choose the answer.",
+          "options": [
+            "Tea, because he already has some.",
+            "Bread, because he already has some.",
+            "Coffee, because he does not drink it."
+          ],
+          "answer": "Tea, because he already has some.",
+          "explanationDe": "Auf dem Zettel steht: Tee habe ich schon. Tim kauft Brot, Kaffee und Wasser.",
+          "explanationEn": "The note says: I already have tea. Tim buys bread, coffee and water."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was hat Tim gestern gemacht? Wählen Sie die Bedeutung.",
+          "promptEn": "What did Tim do yesterday? Choose the meaning.",
+          "options": [
+            "He studied German.",
+            "He was working.",
+            "He went shopping."
+          ],
+          "answer": "He was working."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was sagt Tim über den Morgen? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim say about his mornings? Choose the meaning.",
+          "options": [
+            "He gets up at six and is tired.",
+            "He gets up at seven and is tired.",
+            "He gets up at six and feels fine."
+          ],
+          "answer": "He gets up at six and is tired."
+        },
+        "say": {
+          "line": 3
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was macht Tim am Freitag? Wählen Sie die Bedeutung.",
+          "promptEn": "What is Tim doing on Friday? Choose the meaning.",
+          "options": [
+            "He is working and cannot go shopping.",
+            "He is staying at home and sleeping in.",
+            "He is going shopping and asks Lena to come."
+          ],
+          "answer": "He is going shopping and asks Lena to come."
+        },
+        "say": {
+          "line": 5
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was sagt Lena? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Lena say? Choose the meaning.",
+          "options": [
+            "She is coming along and asks Tim to call her.",
+            "She cannot come and will call Tim next week.",
+            "She is coming along and will pick Tim up at six."
+          ],
+          "answer": "She is coming along and asks Tim to call her."
+        },
+        "say": {
+          "line": 7
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was macht Tim am Sonntag? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim do on Sunday? Choose the meaning.",
+          "options": [
+            "He gets up at six.",
+            "He sleeps until nine.",
+            "He works until nine."
+          ],
+          "answer": "He sleeps until nine."
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?",
+    "en": "Ana's birthday is coming up and she is planning a party. Who will she invite?"
+  },
+  "notes": [
+    "Chunks are five question–answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Lines 5–7 are one arrangement (shopping, coming along, the call); I cut after line 5 because line 6 both answers and asks, so 4–6 / 6–8 keeps each chunk to one exchange. A 3-line chunk 4–7 would leave line 7 with 8–9, which is a different topic.",
+    "say: all five lines are Tim's (1, 3, 5, 7, 9) so the learner keeps one role through the scene; both speakers are in LEARNER_CAST. Alternatives with slightly more can-do weight: line 6 (accepting and asking for the call) in chunk 4 and line 8 (duschen, frühstücken, jeden Tag) in chunk 5. Lines 3 and 7 are also the dictation lines (hoeren) and line 5 is also a readAloud line, so those are produced twice.",
+    "Read text is a to-do note on purpose: 11 Wortfeld entries count as not in the dialogue (letzte Woche, Wochentag, schon, noch nicht, schlafen, nach Hause, abholen, mitbringen, einkaufen, anrufen, mitkommen), and the gloss finder needs the dictionary form. A note is the one real text where bare infinitives are natural. Four of these are in the dialogue in split form (kaufe … ein, rufe … an, komme mit, bringe … mit) and schlafen is there as schlafe/schläft; lineFor() does not see split separable verbs, and the entry text „schlafen (er schläft)“ defeats its stem match.",
+    "Read text invents two small facts that no dialogue states: Tim brings Lena a dictionary and already has tea. Nothing contradicts the dialogues (up at six, shopping on Friday with Lena, the call still to make, Sunday until nine). „Um vier Uhr“ / „Um sieben Uhr“ are my times; the dialogue gives none for the shopping.",
+    "Words outside the taught vocabulary appear only in unchecked fields: „Zettel“ (title, instruction, explanations), as the model does with „Karte“ in Lektion 1. The read questions say „Wählen Sie die Antwort“ instead of the model's „Wählen Sie die Bedeutung“, because they ask about content, not a word.",
+    "Existing data: „Kurs“ and „früh“ are untaught for RULE 34 (in no A1.1 Wortfeld), yet this Lektion's Schreiben task says „steht jeden Tag früh auf“ and „Sein Kurs ist am Donnerstag“, and the dialogue setting says „im Kurs“. Can-do 2 promises two fixed expressions for yesterday; the dialogue has „Ich habe gearbeitet“ as a statement and „gemacht“ only inside Lena's question.",
+    "Phonetik items (AUF-stehen, EIN-kaufen, AN-rufen) are word-stress items; the checker reports no pending sound stage."
+  ]
+}

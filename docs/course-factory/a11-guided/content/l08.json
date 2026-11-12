@@ -1,0 +1,139 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Eine Nachricht von Lena",
+      "titleEn": "A message from Lena",
+      "instructionDe": "Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the message. Tap a word for its meaning.",
+      "text": "Hallo Ana!\nHeute ist Mittwoch und ich bin krank.\nUm sechs Uhr aufstehen? Heute nicht!\nMein Termin beim Arzt ist um halb zehn.\nHast du am Donnerstag Zeit?\nNachmittags um Viertel nach vier bin ich frei.\nIst die Uhrzeit gut für dich?\nIch komme nicht zu spät: Mein Wecker ist gut!\nViele Grüße, Lena",
+      "questions": [
+        {
+          "promptDe": "Wann ist Lenas Termin beim Arzt? Wählen Sie die Antwort.",
+          "promptEn": "When is Lena’s appointment at the doctor’s? Choose the answer.",
+          "options": [
+            "At half past ten.",
+            "At half past nine.",
+            "At a quarter past nine."
+          ],
+          "answer": "At half past nine.",
+          "explanationDe": "In der Nachricht steht: Der Termin beim Arzt ist um halb zehn. Halb zehn ist 9.30 Uhr.",
+          "explanationEn": "The message says the appointment is at “halb zehn”. That is 9.30: half an hour before ten."
+        },
+        {
+          "promptDe": "Wann hat Lena am Donnerstag Zeit? Wählen Sie die Antwort.",
+          "promptEn": "When does Lena have time on Thursday? Choose the answer.",
+          "options": [
+            "In the afternoon, at a quarter past four.",
+            "In the afternoon, at a quarter to four.",
+            "In the evening, at a quarter past eight."
+          ],
+          "answer": "In the afternoon, at a quarter past four.",
+          "explanationDe": "In der Nachricht steht: Nachmittags um Viertel nach vier ist Lena frei. Das ist 16.15 Uhr.",
+          "explanationEn": "The message says Lena is free in the afternoon at “Viertel nach vier”: a quarter past four."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was macht Lena um sechs Uhr? Wählen Sie die Antwort.",
+          "promptEn": "What does Lena do at six o’clock? Choose the answer.",
+          "options": [
+            "She gets up.",
+            "She has breakfast.",
+            "She goes to work."
+          ],
+          "answer": "She gets up."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Wann ist der Termin von Lena? Wählen Sie die Antwort.",
+          "promptEn": "When is Lena’s appointment? Choose the answer.",
+          "options": [
+            "On Monday at a quarter past eight.",
+            "On Tuesday at a quarter to eight.",
+            "On Monday at a quarter to eight."
+          ],
+          "answer": "On Monday at a quarter to eight."
+        },
+        "say": {
+          "line": 2
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Kommt Lena heute pünktlich? Wählen Sie die Bedeutung.",
+          "promptEn": "Will Lena be on time today? Choose the meaning.",
+          "options": [
+            "No, she is running late today.",
+            "Yes, she is always on time.",
+            "She does not know yet."
+          ],
+          "answer": "Yes, she is always on time."
+        },
+        "say": {
+          "line": 5
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Wann ist Lena am Dienstag frei? Wählen Sie die Antwort.",
+          "promptEn": "When is Lena free on Tuesday? Choose the answer.",
+          "options": [
+            "In the morning.",
+            "In the afternoon.",
+            "In the evening."
+          ],
+          "answer": "In the evening."
+        },
+        "say": {
+          "line": 6
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Lena say about Wednesday? Choose the meaning.",
+          "options": [
+            "She is at the doctor’s.",
+            "She is free all day.",
+            "She is at work."
+          ],
+          "answer": "She is at the doctor’s."
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Ana hat Durst und geht ins Café. Kann sie auf Deutsch bestellen?",
+    "en": "Ana is thirsty and goes to a café. Can she order in German?"
+  },
+  "notes": [
+    "Chunks are the five question-answer pairs of the dialogue; no boundary was in doubt.",
+    "Both speakers (Ana, Lena) are learner roles here, so every line is eligible for say. I kept say off the two dictation lines (hoeren.lines 3 and 7): chunks 2 and 4 therefore say Ana's question (lines 2 and 6), which is the first line of its chunk and so has no cue line on the say screen (SceneStage shows a cue only if an earlier line of the same chunk exists). If a cue matters more than keeping the dictation unrehearsed, switch them to lines 3 and 7; the validator accepts both.",
+    "Read text: a message from Lena, written on the Wednesday of her doctor's appointment (dialogue line 9: „Am Mittwoch beim Arzt“). It continues the dialogue: Ana asked about Thursday and got no answer; the message offers Thursday afternoon. It carries all seven Wortfeld entries the dialogue lacks (Uhrzeit, Zeit, zu spät, halb, Viertel nach, aufstehen, krank).",
+    "aufstehen was the hard one: the gloss finder needs the infinitive, and without modal verbs (A1.2) an infinitive has few natural homes. It stands in the elliptical „Um sechs Uhr aufstehen? Heute nicht!“, which is ordinary chat German and picks up dialogue line 1.",
+    "„Ist die Uhrzeit gut für dich?“ is correct but plainer than what a native would text („Passt dir die Uhrzeit?“); passen is not taught.",
+    "The first read question tests the Lektion's own trap (halb zehn = 9.30, not 10.30).",
+    "Existing data: der Abend is in the Wortfeld but in no dialogue line as a noun; the checker counts it as covered only because lineFor() finds the substring „abend“ inside „abends“ (line 7). I did not add it to the read text because the checker does not ask for it; say if you want it in.",
+    "Existing data: the dialogue is titled „Wann hast du Zeit?“ but neither Zeit nor Uhrzeit occurs in any line; both now occur in the read text only.",
+    "Phonetik: all three items are sentence-melody items (W-Frage, falling), not word-stress items, so the sound stage is pending for L8. Not changed."
+  ]
+}

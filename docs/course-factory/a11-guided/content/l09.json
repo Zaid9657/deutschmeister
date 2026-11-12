@@ -1,0 +1,138 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Die Karte im Café",
+      "titleEn": "The café menu",
+      "instructionDe": "Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the menu. Tap a word for its meaning.",
+      "text": "Café Bremen\nBei uns essen und trinken Sie gut!\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro",
+      "questions": [
+        {
+          "promptDe": "Sie möchten Suppe und eine Tasse Tee. Was kostet das zusammen? Wählen Sie die Antwort.",
+          "promptEn": "You would like soup and a cup of tea. How much is that together? Choose the answer.",
+          "options": [
+            "5 euros.",
+            "7 euros.",
+            "8 euros."
+          ],
+          "answer": "7 euros.",
+          "explanationDe": "Auf der Karte steht: Suppe kostet 5 Euro, eine Tasse Tee kostet 2 Euro. Zusammen sind das 7 Euro.",
+          "explanationEn": "The menu says soup is 5 euros and a cup of tea is 2 euros. Together that is 7 euros."
+        },
+        {
+          "promptDe": "Wann gibt es im Café Frühstück? Wählen Sie die Antwort.",
+          "promptEn": "When does the café serve breakfast? Choose the answer.",
+          "options": [
+            "Monday to Saturday, from 7 to 11.",
+            "Monday to Friday, from 7 to 11.",
+            "Every day, from 7 to 11."
+          ],
+          "answer": "Monday to Saturday, from 7 to 11.",
+          "explanationDe": "Auf der Karte steht: Frühstück von Montag bis Samstag, 7 bis 11 Uhr. Am Sonntag ist kein Frühstück.",
+          "explanationEn": "The menu says breakfast is Monday to Saturday, 7 to 11. There is no breakfast on Sunday."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was möchte Ana? Wählen Sie die Bedeutung.",
+          "promptEn": "What would Ana like? Choose the meaning.",
+          "options": [
+            "She is hungry and orders a soup.",
+            "She is thirsty and orders a coffee.",
+            "She is tired and orders a tea."
+          ],
+          "answer": "She is thirsty and orders a coffee."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Hat Ana auch Hunger? Wählen Sie die Bedeutung.",
+          "promptEn": "Is Ana hungry too? Choose the meaning.",
+          "options": [
+            "Yes, and she orders cake.",
+            "Yes, and she orders soup.",
+            "No, she only wants a drink."
+          ],
+          "answer": "Yes, and she orders cake."
+        },
+        "say": {
+          "line": 3
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was bestellt Ana noch? Wählen Sie die Antwort.",
+          "promptEn": "What else does Ana order? Choose the answer.",
+          "options": [
+            "A cup of tea and a mineral water.",
+            "A glass of orange juice and a beer.",
+            "A glass of mineral water and an orange juice."
+          ],
+          "answer": "A glass of mineral water and an orange juice."
+        },
+        "say": {
+          "line": 5
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.",
+          "promptEn": "Paul also has tea, beer and wine. What does Ana say? Choose the meaning.",
+          "options": [
+            "Yes, please: she orders a glass of wine.",
+            "No, thank you: she will eat bread with salad.",
+            "No, thank you: she would like the bill."
+          ],
+          "answer": "No, thank you: she will eat bread with salad."
+        },
+        "say": {
+          "line": 7
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt Paul? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Paul say? Choose the meaning.",
+          "options": [
+            "The waitress is coming right away with the bread.",
+            "The waitress is sorry: there is no bread today.",
+            "The bread will take another twenty minutes."
+          ],
+          "answer": "The waitress is coming right away with the bread."
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Ana steht am Bahnhof und hat viele Fragen: Fährt der Zug nach Österreich? Und was kostet die Fahrkarte?",
+    "en": "Ana is at the station with a lot of questions: does the train go to Austria? And what does the ticket cost?"
+  },
+  "notes": [
+    "Chunks are the five offer-and-answer pairs (Paul asks or offers, Ana answers); no boundary was in doubt. Each chunk has exactly one learner line, so the say lines (1, 3, 5, 7, 9) were not a choice. None of them is a dictation line (0, 4).",
+    "Read text: the café's menu with a price list and breakfast hours. Only Café and essen were missing from the dialogue; Café is the menu's heading and essen stands in the slogan „Bei uns essen und trinken Sie gut!“.",
+    "The café has no name anywhere in the course; I called it „Café Bremen“ (Bremen is on DIALOG_NAMES and is Ana's city). Rename it if the story has a name for it.",
+    "The prices are mine; the dialogue names none, so nothing can contradict them. The first read question makes the learner add two lines of the menu (5 + 2 euros).",
+    "Menu lines drop the article and „ein/eine“ („Tasse Kaffee oder Tee: 2 Euro“), as a printed menu does.",
+    "Existing data, dialogue line 7: „Ich esse ein Brot mit Salat.“ is glossed in English as „I’ll have a sandwich with salad.“ My meaning option says „bread with salad“ to stay with the German the learner hears; „ein Brot mit Salat“ is itself slightly odd German for what a café sells („ein belegtes Brot“ / „ein Sandwich“), though not wrong.",
+    "Existing data, dialogue line 9: Ana closes with „Zum Frühstück trinke ich immer eine Tasse Kaffee.“ after ordering in the afternoon-style scene; it reads as a line written to carry Frühstück and Tasse. It is the only learner line of the last chunk, so it is the say line.",
+    "Phonetik: MÖCH-te and HÖ-ren are word-stress items; SCHÖN is a one-syllable word and fails the item shape (needs at least two syllables), so the sound stage is pending for L9. Not changed."
+  ]
+}
