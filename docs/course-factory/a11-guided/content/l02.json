@@ -1,0 +1,139 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Das Formular vom Amt",
+      "titleEn": "The form from the public office",
+      "instructionDe": "Lesen Sie das Blatt vom Amt. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the sheet from the public office. Tap a word for its meaning.",
+      "text": "Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen (0–10), keine Buchstaben.",
+      "questions": [
+        {
+          "promptDe": "Sie kommen aus Marokko. Was steht dann im Formular bei „Staatsangehörigkeit“? Wählen Sie.",
+          "promptEn": "You come from Morocco. What goes on the form under “Staatsangehörigkeit”? Choose.",
+          "options": [
+            "The noun “Marokkanerin”.",
+            "The country name “Marokko”.",
+            "The adjective “marokkanisch”."
+          ],
+          "answer": "The adjective “marokkanisch”.",
+          "explanationDe": "Auf dem Blatt steht: Dann bitte „marokkanisch“, nicht „Marokkanerin“.",
+          "explanationEn": "The sheet says: then “marokkanisch”, please, not “Marokkanerin”."
+        },
+        {
+          "promptDe": "Was fragt das Amt bei „Geburtsdatum“? Wählen Sie.",
+          "promptEn": "What does the office ask under “Geburtsdatum”? Choose.",
+          "options": [
+            "When you were born.",
+            "Where you live now.",
+            "What your job is."
+          ],
+          "answer": "When you were born.",
+          "explanationDe": "Auf dem Blatt steht: Geburtsdatum: Wann sind Sie geboren?",
+          "explanationEn": "The sheet says under “Geburtsdatum”: when were you born?"
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Wer ist Herr Weber? Wählen Sie die Bedeutung.",
+          "promptEn": "Who is Herr Weber? Choose the meaning.",
+          "options": [
+            "He is a teacher from Bremen.",
+            "He is from the public office.",
+            "He is from the post office."
+          ],
+          "answer": "He is from the public office."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was möchte Herr Weber wissen? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Herr Weber want to know? Choose the meaning.",
+          "options": [
+            "Whether Ana is single or married.",
+            "Whether Ana is a student or a teacher.",
+            "Whether Ana lives in Bremen or Berlin."
+          ],
+          "answer": "Whether Ana is single or married."
+        },
+        "say": {
+          "line": 3
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was sagt Ana? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say? Choose the meaning.",
+          "options": [
+            "She comes from Bremen and lives in Morocco.",
+            "She comes from Spain and lives in Berlin.",
+            "She comes from Morocco and lives in Bremen."
+          ],
+          "answer": "She comes from Morocco and lives in Bremen."
+        },
+        "say": {
+          "line": 5
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was fragt Herr Weber? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Herr Weber ask? Choose the meaning.",
+          "options": [
+            "He asks what Ana’s job is.",
+            "He asks where Ana lives.",
+            "He asks how old Ana is."
+          ],
+          "answer": "He asks what Ana’s job is."
+        },
+        "say": {
+          "line": 7
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.",
+          "promptEn": "What is Ana’s phone number? Choose the numbers.",
+          "options": [
+            "0167",
+            "0176",
+            "1076"
+          ],
+          "answer": "0176"
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Lena sieht ein Foto auf Anas Handy. Wer sind die Leute auf dem Foto?",
+    "en": "Lena sees a photo on Ana’s phone. Who are the people in the photo?"
+  },
+  "notes": [
+    "Chunks: five question-and-answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Each pair has exactly one Ana line, so say.line had no real choice. No boundary was in doubt.",
+    "Chunk 5 meaning has digits as options (0167 / 0176 / 1076), not English sentences: the can-do is „Zahlen von null bis zehn verstehen“, and this is the only place in the Lektion where the learner hears digits. If options must be English prose, the fallback is „Was möchte Herr Weber wissen?“ with Ana’s phone number / date of birth / address.",
+    "Chunk 1 say line is „Freut mich! Ich bin Ana.“ The validator allows ownName only on an „Ich heiße …“ line or a spelled name, so the learner says Ana’s name here, not their own. I did not work around it.",
+    "Read text is an Ausfüllhilfe (the office’s help sheet for the form), not Ana’s filled-in form: ten Wortfeld entries are missing from the dialogue (ausfüllen, Lehrer, Lehrerin, Zahlen 0–10, Geburtsdatum, Staatsangehörigkeit, Marokkanerin, marokkanisch, kommen aus, geboren), and a filled-in form has no natural place for the sentence forms (geboren, kommen aus, Marokkanerin).",
+    "HARD TO FIT: „die Zahlen 0–10“ (meta entry). The gloss finder only recognises the literal tokens „Zahlen“ + „0–10“, so the text has to print the entry’s own name: „Telefonnummer: Bitte nur Zahlen (0–10), keine Buchstaben.“ „nur Zahlen, keine Buchstaben“ is real form language; the „(0–10)“ is there for the rule (a phone number has the digits 0–9). Suggest exempting `meta: true` entries from the read-coverage rule, as RULE 10 already does.",
+    "Lehrer / Lehrerin stand as examples after „Was sind Sie von Beruf?“ – an example list, but one a help sheet really prints. „Marokkanerin“ stands in the hint „bitte ‚marokkanisch‘, nicht ‚Marokkanerin‘“, which is the Lektion’s own notice point (noun in the sentence, adjective in the form field).",
+    "RULE 34 does not know „Marokkaner“ (masculine): formsOf() reads only de/word/plural of the Wortfeld row, and the masculine lives in the English gloss and the notice. I avoided the word; if a later read text needs it, the rule will report it as untaught although the notice teaches it.",
+    "Phonetik items („wie – Sie“, „bin – sind“, „Sie sind“) train long/short i, not word stress: sound stage pending, data untouched.",
+    "nextHook is grounded in the L3 dialog setting („Lena sieht ein Foto auf Anas Handy.“)."
+  ]
+}
