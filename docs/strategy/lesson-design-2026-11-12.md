@@ -25,17 +25,29 @@ Decisions he has locked:
 
 | The teacher | Candidate A from `docs/strategy/lesson-look-2026-11-12/teacher-candidates.jpg`: a woman in her early forties, chestnut hair, round glasses, teal cardigan |
 
-Still open with him: the teacher's name, the subscription price, and what happens to the one-time
-offers launched on 2026-11-11.
+| The teacher's name | Frau Hoffmann (2026-11-12). "Frau Weber" was dropped because the story already has a Herr Weber, the official in Lektion 2 |
 
-**Next actions now that the plan and the teacher are approved**
+Still open with him: the subscription price, and what happens to the one-time offers launched on
+2026-11-11.
 
-1. Write the Codex build brief for step 0 (measurement) and step 1 (the scene in short chunks with
-   say-it scoring), with the two lesson screens in `docs/strategy/lesson-look-2026-11-12/` as the
-   look to match, and run Codex at effort "high".
-2. With the remaining Higgsfield credits (about 4): a reference sheet of teacher A and of Ana, so
-   every later picture keeps the same faces. The full scene set and video wait for credits.
-3. Check each Codex step on a phone-sized browser against the pictures before anything ships.
+**Status (2026-11-12, late)**
+
+- Steps 0 and 1 are built by Codex, checked (2,968 tests, 151 pages, played on a phone-sized
+  browser up to the first "Now you say it") and pushed to the PR #257 branch. Not live.
+- Art in the repo: the Lektion 1 scene and the teacher portrait under `public/art/a11/`.
+
+**Next actions**
+
+1. Codex brief 2 (`docs/course-factory/a11-guided/BUILD-BRIEF-2.md`), effort "high": hint-first
+   correction (a hint and a second try before the answer), the sound slot (hear two, tell apart,
+   repeat), the short read, the fluency round, and the recap's story hook. Also fix one thing from
+   the walk-through: the say step asks for the learner's name again although they typed it in the
+   first-sentence step; reuse it.
+2. Record "Frau Hoffmann" where the teacher is defined (art manifest entry and strings), ready
+   for the "Ask the teacher" step.
+3. Re-run every gate myself, play the lesson on a phone-sized browser, send the founder pictures.
+4. Founder: merge PR #257 when he has seen it; apply the two-column database change (or allow
+   me to); Higgsfield plan or credits for the full scene set and video.
 
 This plan holds (1) what the research says, (2) what our course already has, (3) the lesson design
 that follows, and (4) how to build it first for A1.1 Lektion 1, measure it, then roll it out.
