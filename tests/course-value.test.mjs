@@ -104,7 +104,7 @@ test('help an A0 learner can read: L1 translations start open, every sound focus
   const { buildLesson } = await import('../src/lib/lesson/buildLesson.js');
   const { readFileSync } = await import('node:fs');
   const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
-  const dialogOf = (nr) => buildLesson({ curriculum: CURRICULUM_A11, lektion: CURRICULUM_A11.lektionen[nr - 1], pool }).stages.find((s) => s.kind === 'dialog');
+  const dialogOf = (nr) => buildLesson({ curriculum: CURRICULUM_A11, lektion: CURRICULUM_A11.lektionen[nr - 1], pool }).stages.find((s) => s.kind === 'dialog' || s.kind === 'scene');
   assert.equal(dialogOf(1).glossOpen, true, 'L1 opens with translations shown');
   assert.equal(dialogOf(2).glossOpen, false, 'later Lektionen start with German only; the toggle stays');
   const stage = readFileSync(new URL('../src/components/lesson/DialogStage.jsx', import.meta.url), 'utf8');
@@ -255,6 +255,6 @@ test('Codex review of Wave 1 (2026-10-15): a revision is free on every tier, Nex
   assert.match(gw, /setBusy\(false\);\s*onPending\?\.\(false\);/);
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
   // LessonStages mounts after the intro (2026-10-25), so "the intro is done" is no longer a condition there.
-  assert.match(player, /if \(preview \|\| pause \|\| !stage \|\| viewedStages\.current\.has\(stage\.key\)\) return;/);
-  assert.match(player, /\}, \[preview, pause, stage, curriculum\.level, lektion\.id, runId\]\);/);
+  assert.match(player, /if \(preview \|\| pause \|\| !stage \|\| viewedStages\.current\.has\(reachStep\)\) return;/);
+  assert.match(player, /\}, \[preview, pause, stage, curriculum\.level, lektion\.id, runId, reachStep, reachSteps, user, startWrite\]\);/);
 });

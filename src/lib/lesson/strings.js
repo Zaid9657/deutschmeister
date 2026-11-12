@@ -35,6 +35,17 @@ export const LESSON_LANGS = ['en', 'de'];
 
 export const STRINGS = {
   en: {
+    'scene.part': 'Lesson {nr} · Part {part} of {total}',
+    'scene.chunk': 'Scene {n} of {total}',
+    'scene.hear': 'Hear and read',
+    'scene.meaning': 'Check the meaning',
+    'scene.say': 'Now you say it',
+    'scene.name': 'Your name (first name and surname)',
+    'scene.surname': 'Your surname (say each letter)',
+    'scene.enterName': 'Enter your name to make this line yours.',
+    'scene.correct': 'Yes, that is the meaning.',
+    'scene.correction': 'The meaning is: {answer}',
+
     'wortfeld.example': 'Example',
     'stage.notice.moreExamples': 'More examples',
     // ── shell / actions ──────────────────────────────────────────────────────
@@ -427,6 +438,17 @@ export const STRINGS = {
   },
 
   de: {
+    'scene.part': 'Lektion {nr} · Teil {part} von {total}',
+    'scene.chunk': 'Szene {n} von {total}',
+    'scene.hear': 'Hören und lesen Sie',
+    'scene.meaning': 'Prüfen Sie die Bedeutung',
+    'scene.say': 'Jetzt sprechen Sie',
+    'scene.name': 'Ihr Name (Vorname und Nachname)',
+    'scene.surname': 'Ihr Nachname (sagen Sie jeden Buchstaben)',
+    'scene.enterName': 'Geben Sie Ihren Namen für diese Zeile ein.',
+    'scene.correct': 'Ja, das ist die Bedeutung.',
+    'scene.correction': 'Die Bedeutung ist: {answer}',
+
     'wortfeld.example': 'Beispiel',
     'stage.notice.moreExamples': 'Weitere Beispiele',
     // ── shell / actions ──────────────────────────────────────────────────────

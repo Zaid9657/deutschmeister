@@ -218,3 +218,14 @@ test('the app mirrors only registered, sanitised, consented events to GA4', () =
   assert.match(a, /window\.gtag\('event', event, sanitizeProps\(/);
   assert.match(read('astro-site/src/layouts/Layout.astro'), /import \{ autoTrack \} from '\.\.\/lib\/track\.js';/);
 });
+
+test('guided scene telemetry carries only fixed item labels and the run id', async () => {
+  const { sanitizeProps, EVENTS } = await import('../src/data/events.js');
+  const { sceneStep } = await import('../src/lib/lesson/buildGuided.js');
+  for (let i = 0; i < 12; i++) {
+    const step = sceneStep(i);
+    assert.deepEqual(sanitizeProps({ step, run_id: 'run123', name: 'A learner', transcript: 'Ich heiße …' }), { step, run_id: 'run123' });
+  }
+  assert.match(EVENTS.lesson_started.when, /Start is pressed/);
+  assert.match(EVENTS.lesson_stage_viewed.when, /scene:<chunk>/);
+});

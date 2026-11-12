@@ -71,8 +71,10 @@ function asReadAloud(v) {
 }
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ flow = 'legacy', sceneReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
   return {
+    flow: flow === 'guided' ? 'guided' : 'legacy',
+    sceneReadAloud: asReadAloud(sceneReadAloud),
     v: RUN_VERSION,
     savedAt: now,
     // Joins lesson_started → lesson_stage_viewed → lesson_completed of one run in analytics.
@@ -96,7 +98,8 @@ export function packRun({ runId = '', stageKey, stageIndex = 0, itemIndex = 0, a
 }
 
 /** A stored snapshot, shape-checked and aged; null when it should not be resumed. */
-export function unpackRun(raw, now = Date.now()) {
+export function unpackRun(raw, now = Date.now(), flow = null) {
+  if (flow && (raw?.flow || 'legacy') !== flow) return null;
   if (!raw || typeof raw !== 'object' || raw.v !== RUN_VERSION) return null;
   if (typeof raw.stageKey !== 'string' || !raw.stageKey || raw.stageKey === 'recap') return null;
   const savedAt = Number(raw.savedAt);
@@ -128,8 +131,8 @@ export const saveRun = (level, lektionId, run, owner = null) => safeSetJSON(runK
  * in through the save-progress ask was put back on the dialogue — the newer guest answers dropped.
  * The next saveRun writes the winner under the owner key; clearRun removes both.
  */
-export const readRun = (level, lektionId, now = Date.now(), owner = null) =>
-  newerRun(owner, () => unpackRun(safeGetJSON(runKey(level, lektionId, owner), null), now), () => unpackRun(safeGetJSON(runKey(level, lektionId), null), now));
+export const readRun = (level, lektionId, now = Date.now(), owner = null, flow = null) =>
+  newerRun(owner, () => unpackRun(safeGetJSON(runKey(level, lektionId, owner), null), now, flow), () => unpackRun(safeGetJSON(runKey(level, lektionId), null), now, flow));
 
 /** A guest reads the guest snapshot; an owner gets whichever of theirs and the guest's was saved last. */
 function newerRun(owner, readOwn, readGuest) {
@@ -145,10 +148,10 @@ export const clearRun = (level, lektionId, owner = null) => {
 };
 
 /** The most recently saved unfinished run among `lektionIds` — what the course home offers to continue. */
-export function latestRun(level, lektionIds = [], now = Date.now(), owner = null) {
+export function latestRun(level, lektionIds = [], now = Date.now(), owner = null, flows = {}) {
   let best = null;
   for (const lektionId of lektionIds) {
-    const run = readRun(level, lektionId, now, owner);
+    const run = readRun(level, lektionId, now, owner, flows[lektionId]);
     if (run && (!best || run.savedAt > best.savedAt)) best = { lektionId, ...run };
   }
   return best;

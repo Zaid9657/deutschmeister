@@ -157,3 +157,23 @@ test('CharacterAvatar and SituationScene both branch on a manifest src before dr
   assert.match(AVATAR_SRC, /art\?\.src/, 'CharacterAvatar should check A11_ART.characters[name].src before falling back to SVG');
   assert.match(SCENE_SRC, /entry\?\.srcSmall \|\| entry\?\.src|entry\?\.src/, 'SituationScene should check the manifest src before falling back to SVG');
 });
+
+test('L1 ships the supplied painted reception with honest mixed provenance and responsive sizes', async () => {
+  assert.equal(A11_ART.generatedWith.status, 'mixed-painted-svg');
+  assert.match(A11_ART.generatedWith.tool, /Higgsfield.*inline SVG/);
+  assert.equal(A11_ART.generatedWith.model, null, 'the supplied asset does not establish a model name');
+  const scene = A11_ART.situations['a1.1-l01'];
+  assert.equal(scene.alt, 'Ana arrives at a hostel reception in Bremen and Frau Kaya welcomes her');
+  const { default: sharp } = await import('sharp');
+  for (const [field, width] of [['srcSmall', 640], ['srcMedium', 800], ['src', 1168]]) {
+    assert.equal(scene[field], `/art/a11/l01-rezeption-${width}.webp`);
+    const actual = await sharp(join(ROOT, 'public', scene[field])).metadata();
+    assert.equal(actual.width, width);
+  }
+  const actual = await sharp(join(ROOT, 'public', scene.src)).metadata();
+  assert.equal(scene.width, actual.width);
+  assert.equal(scene.height, actual.height);
+  for (const [id, entry] of Object.entries(A11_ART.situations)) if (id !== 'a1.1-l01') assert.equal(entry.src, null);
+  assert.match(SCENE_SRC, /srcSet=\{entry.srcMedium/);
+  assert.match(read('src/components/lesson/SceneStage.jsx'), /<SituationScene lektionId=\{lektionId\}/);
+});

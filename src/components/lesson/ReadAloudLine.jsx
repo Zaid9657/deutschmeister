@@ -32,7 +32,7 @@ import {
 const MAX_ATTEMPTS = 3;
 const MAX_RECORD_MS = 8000;
 
-export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult }) {
+export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const [support] = useState(() => checkSpeakingSupport());
@@ -184,7 +184,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   const pctLabel = result ? Math.round(result.pct * 100) : 0;
 
   return (
-    <Card className="p-4">
+    <Card className={guided ? 'p-5 text-center' : 'p-4'}>
       {speaker && (
         <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{speaker}</p>
       )}
@@ -206,7 +206,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
           ))}
         </p>
       ) : (
-        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">{text}</p>
+        <p className={guided ? 'mt-1 font-display text-2xl font-semibold leading-snug text-siegel' : 'mt-1 text-[1.0625rem] leading-relaxed text-ink'} lang="de">{text}</p>
       )}
 
       {result && (
@@ -219,12 +219,12 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
         </p>
       )}
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className={`mt-3 flex flex-wrap items-center gap-2 ${guided ? 'justify-center' : ''}`}>
         <PlayButton lektionId={lektionId} audioKey={lineKey} text={text} rate={0.85} label={t('speaking.model', lang)} />
 
         {scoringPossible && phase === 'idle' && attempts === 0 && !micError && (
-          <Button size="sm" onClick={startRecording}>
-            <Mic className="h-4 w-4" aria-hidden="true" /> {t('speaking.record', lang)}
+          <Button size="sm" variant={guided ? 'coral' : 'primary'} shape={guided ? 'circle' : 'clay'} className={guided ? 'h-24 w-24' : ''} onClick={startRecording}>
+            <Mic className={guided ? 'h-10 w-10' : 'h-4 w-4'} aria-hidden="true" /> <span className={guided ? 'sr-only' : ''}>{t('speaking.record', lang)}</span>
           </Button>
         )}
         {scoringPossible && phase === 'recording' && (

@@ -207,7 +207,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   return (
     <StageShell
       eyebrow={t('stage.wortfeld.eyebrow', lang)}
-      title={t('stage.wortfeld.title', lang, { n: words.length })}
+      title={stage.titleEn ? (lang === 'de' ? stage.title : stage.titleEn) : t('stage.wortfeld.title', lang, { n: words.length })}
       lead={t('stage.wortfeld.lead', lang)}
       onBack={group > 0 ? () => goGroup(group - 1) : onBack}
       primaryLabel={last ? t('action.next', lang) : t('wortfeld.nextGroup', lang)}

@@ -11,6 +11,7 @@ const BASE =
 const PRESS = 'active:translate-y-px';
 
 const VARIANTS = {
+  coral: `border border-transparent bg-coral-accessible text-white hover:brightness-105 ${PRESS}`,
   primary: `border border-transparent bg-siegel text-white hover:bg-siegel-lift ${PRESS}`,
   secondary: `border border-rule bg-white text-ink hover:border-siegel hover:text-siegel-deep ${PRESS}`,
   ghost: 'text-graphite hover:bg-siegel-wash hover:text-siegel-deep',
@@ -32,7 +33,7 @@ const VARIANTS = {
 // pill happens to be emitted after clay, so an appended class worked by luck of
 // ordering; the same trap is why `size="sm"` loses its padding to BASE's px-5
 // py-2.5 (checked against dist/ on 2026-10-04).
-const SHAPES = { clay: 'rounded-xl', pill: 'rounded-pill' };
+const SHAPES = { circle: 'rounded-full', clay: 'rounded-xl', pill: 'rounded-pill' };
 
 const SIZES = {
   sm: 'px-3.5 py-1.5 text-[0.8125rem]',

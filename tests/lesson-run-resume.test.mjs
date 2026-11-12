@@ -134,7 +134,7 @@ test('storage that throws costs the resume, never the lesson', () => {
 
 test('LessonPlayerPage restores the run on mount, saves it on every change, and the recap clears it', () => {
   const src = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.match(src, /useState\(\(\) => \(preview \? null : readRun\(curriculum\.level, lektion\.id, Date\.now\(\), owner\)\)\)/, 'the run is read once, on mount, as its owner');
+  assert.match(src, /useState\(\(\) => \(preview \? null : readRun\(curriculum\.level, lektion\.id, Date\.now\(\), owner, lektion\.flow \|\| 'legacy'\)\)\)/, 'the run is read once, on mount, as its owner and current flow');
   assert.match(src, /useState\(preview \|\| !!resumed\)/, 'a resumed run skips the intro');
   assert.match(src, /resumeStageIndex\(buildLesson\(\{ curriculum, lektion, pool, dueCards: resumed\.dueCards, attempt: resumed\.attempt \}\)\.stages, resumed\)/,
     'the stage is restored against the stage list rebuilt from the snapshot');

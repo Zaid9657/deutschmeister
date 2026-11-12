@@ -161,6 +161,52 @@ export const CURRICULUM_A11 = {
       nr: 1,
       id: 'a1.1-l01',
       slug: 'hallo-ich-bin',
+      flow: 'guided',
+      guided: {
+        // Half-open boundaries: every original line appears once, in order.
+        chunks: [
+          {
+            from: 0, to: 2,
+            meaning: {
+              promptDe: 'Was sagt Ana? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say? Choose the meaning.',
+              options: ['She greets Frau Kaya and gives her name.', 'She asks for a room.', 'She says goodbye.'],
+              answer: 'She greets Frau Kaya and gives her name.',
+            },
+            say: { line: 1, ownName: 'full' },
+          },
+          {
+            from: 2, to: 5,
+            meaning: {
+              promptDe: 'Was möchte Frau Kaya? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Frau Kaya want? Choose the meaning.',
+              options: ['She wants to know where Ana lives.', 'She asks Ana to spell her name.', 'She asks how Ana feels.'],
+              answer: 'She asks Ana to spell her name.',
+            },
+            say: { line: 3, ownName: 'surname' },
+          },
+          {
+            from: 5, to: 8,
+            meaning: {
+              promptDe: 'Wie geht es Ana? Wählen Sie die Bedeutung.',
+              promptEn: 'How does Ana feel? Choose the meaning.',
+              options: ['She is tired.', 'She is leaving tomorrow.', 'She is fine and says thank you.'],
+              answer: 'She is fine and says thank you.',
+            },
+            say: { line: 7 },
+          },
+          {
+            from: 8, to: 10,
+            meaning: {
+              promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say as she leaves? Choose the meaning.',
+              options: ['Bye! See you tomorrow.', 'Good morning!', 'Nice to meet you.'],
+              answer: 'Bye! See you tomorrow.',
+            },
+            say: { line: 9 },
+          },
+        ],
+      },
       title: 'Hallo, ich bin …',
       situation: 'Begrüßung, Vorstellen und das Alphabet',
       handlungsfeld: 'Kontakte knüpfen: sich begrüßen und vorstellen',

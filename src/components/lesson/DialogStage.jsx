@@ -55,7 +55,7 @@ export function AudioSourceBadge({ recorded, className = '' }) {
  * so a tap on line 3 closes line 1's popover); Escape and a tap outside close
  * it, both wired once in the parent via a document listener.
  */
-function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGloss }) {
+export function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGloss }) {
   const segments = useMemo(() => glossTokens(line, lexicon), [line, lexicon]);
   return (
     <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">

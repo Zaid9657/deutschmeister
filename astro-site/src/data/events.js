@@ -46,14 +46,14 @@ export const EVENTS = {
   signup_completed: { when: 'A new account is confirmed and signed in for the first time on this browser.', once: true },
   email_verified: { when: 'The verify-email screen sees the address confirmed.', once: true },
   onboarding_completed: { when: 'The onboarding slides are finished or left.', once: true },
-  lesson_started: { when: 'A course Lektion is opened in the lesson player.', once: false },
+  lesson_started: { when: 'Start is pressed in the course lesson player; opening the intro or resuming does not start a new run.', once: false },
   lesson_completed: {
     when: 'A course Lektion reaches its recap (practice_pct = first-try practice score; listening, speaking, writing = what the run measured, as the recap states it).',
     once: false,
   },
   lesson_first_sentence: { when: 'In the model-first pretest of Lektion 1, the learner writes their own introduction with the model hidden (hit = it was an introduction).', once: false },
   lesson_resumed: { when: 'The lesson player reopens a saved, unfinished run of a Lektion (same run_id as its lesson_started).', once: false },
-  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key).', once: false },
+  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key, or scene:<chunk>:hear|meaning|say for each guided scene item).', once: false },
   lesson_sync_failed: {
     when: 'A finished Lektion could not be written to the account; it is kept on the device and retried (step = attempts | progress | cards).',
     once: false,

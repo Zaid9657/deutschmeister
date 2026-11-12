@@ -130,7 +130,7 @@ export default function CurriculumHomePage({ curriculum }) {
   };
   // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.
   const [unfinished] = useState(() => {
-    const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id), Date.now(), user ? user.id : null);
+    const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id), Date.now(), user ? user.id : null, Object.fromEntries(curriculum.lektionen.map((l) => [l.id, l.flow || 'legacy'])));
     return run ? curriculum.lektionen.find((l) => l.id === run.lektionId) || null : null;
   });
 

@@ -86,8 +86,8 @@ test('every word reaches contextual input; bare lemmas and writing answers canno
   const surface = read('src/components/lesson/WortfeldStage.jsx');
   assert.match(surface, /line=\{w\.exampleDe \|\| lineFor/);
   for (const l of curriculum.lektionen) {
-    const stage = buildLesson({ curriculum, lektion: l, pool }).stages.find((s) => s.kind === 'wortfeld');
-    for (const w of l.wortfeld.filter((w) => w.exampleDe)) assert.equal(stage.words.find((x) => x.wordId === w.wordId).exampleDe, w.exampleDe);
+    const words = buildLesson({ curriculum, lektion: l, pool }).stages.filter((s) => s.kind === 'wortfeld').flatMap((s) => s.words);
+    for (const w of l.wortfeld.filter((w) => w.exampleDe)) assert.equal(words.find((x) => x.wordId === w.wordId).exampleDe, w.exampleDe);
   }
 });
 

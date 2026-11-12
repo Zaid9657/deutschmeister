@@ -52,9 +52,11 @@ const SNAPSHOT = JSON.parse(readFileSync(path.join(ROOT, 'tests/fixtures/db-sche
 // snapshot does not have the table yet. Same shape as PENDING_APPLY in
 // tests/rls-update-check.test.mjs: the list only shrinks.
 const PENDING = SNAPSHOT.pendingApply?.tables ?? {};
+const PENDING_COLUMNS = SNAPSHOT.pendingApply?.columns ?? {};
 const TABLES = {
   ...SNAPSHOT.tables,
   ...Object.fromEntries(Object.entries(PENDING).map(([t, p]) => [t, p.columns])),
+  ...Object.fromEntries(Object.entries(PENDING_COLUMNS).map(([t, p]) => [t, [...(SNAPSHOT.tables[t] || []), ...p.columns].sort()])),
 };
 
 const scanRepo = () => scanFiles(listSourceFiles(['src', 'netlify/functions'], ROOT), ROOT);
@@ -87,6 +89,23 @@ test('every pending table comes from an unapplied migration that creates exactly
     const row = readme.find((l) => l.includes(`\`${migration}\``));
     assert.ok(row, `migrations/README.md lists ${migration}`);
     assert.match(row, /not yet applied/i, `${migration} is in pendingApply, so the README must say it is not applied`);
+  }
+});
+
+test('pending additive columns are absent live and match exactly an owner-applied migration', () => {
+  const ledger = readFileSync(path.join(ROOT, 'migrations/README.md'), 'utf8');
+  for (const [table, { migration, columns }] of Object.entries(PENDING_COLUMNS)) {
+    assert.ok(SNAPSHOT.tables[table], `${table}: ADD COLUMN requires an existing table`);
+    assert.ok(columns.length > 0);
+    assert.deepEqual([...new Set(columns)].sort(), columns);
+    for (const column of columns) assert.ok(!SNAPSHOT.tables[table].includes(column), `${table}.${column} is live: refresh the snapshot and remove its pending entry`);
+    const sql = readFileSync(path.join(ROOT, 'migrations', migration), 'utf8').replace(/--[^\n]*/g, ' ');
+    const alters = [...sql.matchAll(/ALTER TABLE public\.(\w+)\s+([^;]+);/g)].filter((m) => m[1] === table);
+    const declared = alters.flatMap((m) => [...m[2].matchAll(/ADD COLUMN IF NOT EXISTS (\w+)\s+/g)].map((c) => c[1])).sort();
+    assert.deepEqual(declared, columns, `${migration}: pending columns must match SQL exactly`);
+    const row = ledger.split('\n').find((l) => l.startsWith(`| \`${migration}\``));
+    assert.ok(row);
+    assert.match(row, /NOT YET APPLIED/i);
   }
 });
 

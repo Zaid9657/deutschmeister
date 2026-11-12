@@ -72,7 +72,13 @@
     "xray_usage": ["anonymous_id","id","ip_hash","sentence","source","used_at","user_id"]
   },
   "pendingApply": {
-    "why": "Tables a written migration CREATES but the owner has not applied yet. tests/db-columns.test.mjs lets queries name them, and only while the migration file exists, its CREATE TABLE declares exactly these columns, migrations/README.md marks it not yet applied, and the table is absent from \"tables\" above. Once applied: refresh \"tables\" from the live DB (the table then appears there) and delete its entry here.",
+    "why": "Tables or additive columns a written migration declares but the owner has not applied yet. Pending columns remain separate from the live table snapshot and must match their ADD COLUMN declarations. tests/db-columns.test.mjs lets queries name them, and only while the migration file exists, its CREATE TABLE declares exactly these columns, migrations/README.md marks it not yet applied, and the table is absent from \"tables\" above. Once applied: refresh \"tables\" from the live DB (the table then appears there) and delete its entry here.",
+    "columns": {
+      "lesson_progress": {
+        "migration": "2026-11-12-lesson-furthest-stage.sql",
+        "columns": ["furthest_at", "furthest_stage"]
+      }
+    },
     "tables": {
       "mail_delivery_claims": {
         "migration": "2026-11-01-retryable-lifecycle-mail.sql",

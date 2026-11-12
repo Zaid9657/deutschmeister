@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { guidedFindings } from './lib/guided-content.mjs';
 import { undecidedTimePrepositionGaps } from './lib/time-preposition-cues.mjs';
 // Validator for the situational curricula (docs/course-factory/a11-rebuild/CONTRACT.md).
 //
@@ -3279,6 +3280,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
   }
   for (const finding of readingIntroductions(c)) fail(`RULE 27: ${finding}`);
   for (const finding of housingRoomCounts(c)) fail(`RULE 28: ${finding}`);
+
+  for (const finding of guidedFindings(c)) fail(`RULE 32: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);

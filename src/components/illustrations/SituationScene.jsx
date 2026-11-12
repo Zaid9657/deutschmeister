@@ -186,9 +186,11 @@ export default function SituationScene({ lektionId, className = '' }) {
     return (
       <img
         src={entry.srcSmall || entry.src}
+        srcSet={entry.srcMedium ? `${entry.srcSmall} 640w, ${entry.srcMedium} 800w, ${entry.src} 1168w` : undefined}
+        sizes={entry.srcMedium ? '(max-width: 672px) calc(100vw - 32px), 640px' : undefined}
         loading="lazy"
-        width={640}
-        height={400}
+        width={entry.width || 640}
+        height={entry.height || 400}
         alt={alt}
         className={className}
       />
