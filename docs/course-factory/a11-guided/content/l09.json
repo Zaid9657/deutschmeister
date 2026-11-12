@@ -131,8 +131,8 @@
     "The café has no name anywhere in the course; I called it „Café Bremen“ (Bremen is on DIALOG_NAMES and is Ana's city). Rename it if the story has a name for it.",
     "The prices are mine; the dialogue names none, so nothing can contradict them. The first read question makes the learner add two lines of the menu (5 + 2 euros).",
     "Menu lines drop the article and „ein/eine“ („Tasse Kaffee oder Tee: 2 Euro“), as a printed menu does.",
-    "Existing data, dialogue line 7: „Ich esse ein Brot mit Salat.“ is glossed in English as „I’ll have a sandwich with salad.“ My meaning option says „bread with salad“ to stay with the German the learner hears; „ein Brot mit Salat“ is itself slightly odd German for what a café sells („ein belegtes Brot“ / „ein Sandwich“), though not wrong.",
-    "Existing data, dialogue line 9: Ana closes with „Zum Frühstück trinke ich immer eine Tasse Kaffee.“ after ordering in the afternoon-style scene; it reads as a line written to carry Frühstück and Tasse. It is the only learner line of the last chunk, so it is the say line.",
+    "Existing data, dialogue line 7 (zero-based): „Ich esse ein Brot mit Salat.“ is given in English as „I’ll have a sandwich with salad.“ My meaning option says „bread with salad“ to stay with the German the learner hears.",
+    "Existing data, dialogue line 9 (zero-based): Ana closes with „Zum Frühstück trinke ich immer eine Tasse Kaffee.“, which does not follow from Paul's line before it; it reads as a line written to carry Frühstück and Tasse. It is the only learner line of the last chunk, so it is the say line, and my meaning question for that chunk asks about Paul's line instead.",
     "Phonetik: MÖCH-te and HÖ-ren are word-stress items; SCHÖN is a one-syllable word and fails the item shape (needs at least two syllables), so the sound stage is pending for L9. Not changed."
   ]
 }

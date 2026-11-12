@@ -77,7 +77,7 @@
           "options": [
             "No, she is running late today.",
             "Yes, she is always on time.",
-            "She does not know yet."
+            "No, her alarm clock is broken."
           ],
           "answer": "Yes, she is always on time."
         },
