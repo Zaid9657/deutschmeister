@@ -18,6 +18,12 @@ export const A11_ART = {
     status: 'mixed-painted-svg',
   },
 
+  teacher: {
+    name: 'Frau Hoffmann', isAI: true,
+    src: '/art/a11/teacher-512.webp', srcSmall: '/art/a11/teacher-160.webp',
+    alt: 'Frau Hoffmann, an AI teacher with chestnut hair, round glasses and a teal cardigan',
+  },
+
   characters: {
     Ana: { alt: 'Ana, a student from Morocco newly arrived in Bremen', component: 'CharacterAvatar', src: null, srcSmall: null },
     'Frau Kaya': { alt: 'Frau Kaya, who works at the hostel reception', component: 'CharacterAvatar', src: null, srcSmall: null },

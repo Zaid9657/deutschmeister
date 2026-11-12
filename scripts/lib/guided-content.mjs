@@ -1,10 +1,15 @@
 import { checkAnswer, checkOptionsFor, RESULT } from '../../src/lib/lesson/check.js';
+import { readLexicon } from '../../src/lib/lesson/guidedRead.js';
+import { glossTokens } from '../../src/lib/lesson/gloss.js';
+import { lineFor } from '../../src/lib/lesson/wortfeldPacing.js';
 import { LEARNER_CAST } from '../../src/data/curricula/a11.js';
 
 /** Validate every guided field by class, so later guided lessons inherit the same contract. */
 export function guidedFindings(curriculum) {
   const findings = [];
   for (const lesson of curriculum.lektionen || []) {
+    if (lesson.nextHook !== undefined && (!lesson.nextHook || typeof lesson.nextHook !== 'object'
+      || ['de', 'en'].some((key) => typeof lesson.nextHook[key] !== 'string' || !lesson.nextHook[key].trim()))) findings.push(`L${lesson.nr}: nextHook needs nonempty German and English twins`);
     if (lesson.flow === undefined && lesson.guided === undefined) continue;
     const fail = (message) => findings.push(`L${lesson.nr}: ${message}`);
     if (lesson.flow !== 'guided' || !lesson.guided || typeof lesson.guided !== 'object') {
@@ -13,6 +18,24 @@ export function guidedFindings(curriculum) {
     const chunks = lesson.guided.chunks;
     const lines = lesson.dialog?.lines || [];
     if (!Array.isArray(chunks) || !chunks.length) { fail('guided.chunks must not be empty'); continue; }
+    const read = lesson.guided.read;
+    for (const key of ['titleDe', 'titleEn', 'instructionDe', 'instructionEn', 'text']) {
+      if (typeof read?.[key] !== 'string' || !read[key].trim()) fail(`guided.read.${key} is required`);
+    }
+    if (!/\bSie\b/.test(read?.instructionDe || '')) fail('guided.read instruction must address Sie');
+    if (!Array.isArray(read?.questions) || read.questions.length !== 2) fail('guided.read needs two questions');
+    for (const [i, q] of (Array.isArray(read?.questions) ? read.questions : []).entries()) {
+      if (['promptDe', 'promptEn', 'explanationDe', 'explanationEn'].some((k) => typeof q?.[k] !== 'string' || !q[k].trim()) || !/\bSie\b/.test(q?.promptDe || '')) fail(`guided.read question ${i + 1} needs bilingual Sie prompts and reasons`);
+      if (!Array.isArray(q?.options) || q.options.length < 2 || q.options.length > 4 || new Set(q.options).size !== q.options.length || q.options.some((v) => typeof v !== 'string' || !v.trim()) || q.options.filter((v) => checkAnswer(v, [q.answer], checkOptionsFor({ type: 'multiple_choice' })).result !== RESULT.WRONG).length !== 1 || !q.options.includes(q.answer)) fail(`guided.read question ${i + 1} needs distinct choices and exactly one checked answer`);
+    }
+    const dialogue = lines.map((l) => l.de);
+    const readGlosses = new Set(glossTokens(read?.text || '', readLexicon(lesson.wortfeld || [])).filter((s) => s.type === 'gloss').map((s) => s.entry.de));
+    for (const w of lesson.wortfeld || []) {
+      if (!lineFor(w.de || w.word, dialogue) && !readGlosses.has(w.de)) fail(`guided.read must cover remaining Wortfeld entry ${w.de}`);
+    }
+    for (const marked of lesson.phonetik?.items || []) {
+      if (typeof marked !== 'string' || marked.split('-').length < 2 || marked.split('-').some((s) => !/^\p{L}+$/u.test(s)) || marked.split('-').filter((s) => s === s.toLocaleUpperCase('de')).length !== 1) fail('guided sound items need syllables and exactly one capitalised stress');
+    }
     let end = 0;
     for (const [i, chunk] of chunks.entries()) {
       if (!chunk || typeof chunk !== 'object') { fail(`chunk ${i + 1} must be an object`); continue; }

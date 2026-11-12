@@ -22,7 +22,7 @@ const legacyOrder = ['pretest', 'dialog', 'wortfeld', 'notice', 'phonetik', 'pra
 test('only A1.1 L1 is guided; both other curricula keep their exact legacy order', () => {
   assert.deepEqual(CURRICULUM_A11.lektionen.filter((l) => l.flow).map((l) => l.nr), [1]);
   assert.ok(CURRICULUM_A12.lektionen.every((l) => !l.flow));
-  assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'notice', 'phonetik', 'wortfeld-more', 'practice', 'derived', 'dictation', 'speaking', 'writing', 'requeue', 'recap']);
+  assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'recap']);
   assert.deepEqual(build(CURRICULUM_A11.lektionen[1]).stages.map((s) => s.key), legacyOrder);
   const a12 = buildLesson({ curriculum: CURRICULUM_A12, lektion: CURRICULUM_A12.lektionen[0], pool: JSON.parse(read('src/data/lessonPools/a12.json')) });
   assert.deepEqual(a12.stages.map((s) => s.key), legacyOrder);
@@ -32,15 +32,15 @@ test('guided pacing preserves every word, both pauses, all unchanged stages and 
   for (const attempt of [1, 2, 3]) {
     const guided = build(lektion, attempt);
     const legacy = build({ ...lektion, flow: undefined }, attempt);
-    const rest = (lesson) => lesson.stages.filter((s) => !['scene', 'dialog', 'wortfeld'].includes(s.kind));
+    const rest = (lesson) => Object.fromEntries(lesson.stages.filter((s) => !['scene', 'dialog', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
     assert.deepEqual(rest(guided), rest(legacy));
-    const words = guided.stages.filter((s) => s.kind === 'wortfeld');
+    const words = guided.stages.filter((s) => ['wortfeld', 'read'].includes(s.kind));
     assert.equal(words.length, 2);
     assert.equal(new Set(words.flatMap((s) => s.words)).size, lektion.wortfeld.length);
     assert.ok(words[0].words.length < lektion.wortfeld.length);
     assert.deepEqual(words.flatMap((s) => s.words).sort((a, b) => a.de.localeCompare(b.de)), [...lektion.wortfeld].sort((a, b) => a.de.localeCompare(b.de)));
     assert.deepEqual(guided.stages.slice(1).map((s, i) => sessionCompleted(guided.stages[i], s)).filter(Boolean), [1, 2]);
-    assert.deepEqual(guided.stages.map(sessionOf), [1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3]);
+    assert.deepEqual(guided.stages.map(sessionOf), [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]);
     assert.equal(guided.stages.find((s) => s.kind === 'practice').items.length, 7);
     assert.equal(guided.stages.find((s) => s.kind === 'derived').items.length, 3);
   }
@@ -55,7 +55,7 @@ test('every scene line is original and meaning recognition goes through the comm
     const item = chunk.meaning;
     for (const option of item.options) assert.equal(checkAnswer(option, item.accepted, checkOptionsFor(item)).result, option === item.answer ? RESULT.CORRECT : RESULT.WRONG);
   }
-  assert.match(read('src/components/lesson/SceneStage.jsx'), /checkAnswer\(answer, item.accepted, checkOptionsFor\(item\)\)/);
+  assert.match(read('src/components/lesson/CheckedChoice.jsx'), /checkAnswer\(answer, item.accepted, checkOptionsFor\(item\)\)/);
   const score = practiceScore([{ stage: 'scene', itemId: 'meaning', correct: true }, { stage: 'practice', itemId: 'p', correct: false }]);
   assert.equal(score.accuracy, 0, 'scene never raises practice gold');
 });
@@ -183,13 +183,13 @@ async function sceneHarness() {
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' }, './DialogStage.jsx': { GlossLine: 'GlossLine' },
     './PlayButton.jsx': { default: 'PlayButton' }, './ReadAloudLine.jsx': { default: 'ReadAloudLine' }, './LangToggle.jsx': { default: 'LangToggle' },
     '../../lib/lesson/gloss.js': { parseLektionId: () => null },
-    '../../lib/lesson/check.js': { checkAnswer, checkOptionsFor, RESULT },
+    './CheckedChoice.jsx': { default: (await loadJsxModule('src/components/lesson/CheckedChoice.jsx', { react: hooks.react, '../ui/Button.jsx': { default: 'Button' }, '../../lib/lesson/check.js': { checkAnswer, checkOptionsFor, RESULT }, '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'), '../../lib/lesson/strings.js': { t: (key) => key } })).default },
     '../../lib/lesson/buildGuided.js': { SCENE_PHASES: ['hear', 'meaning', 'say'] },
     '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/strings.js': { useLessonLang: () => ['en'], t: (key) => key },
   });
   const stage = build().stages.find((s) => s.kind === 'scene');
   const outcomes = []; let finished = 0;
-  const props = { stage, lektionId: lektion.id, itemIndex: 0, results: {}, onItemChange: (i) => { props.itemIndex = i; }, onSayResult: (i, r) => { props.results = { ...props.results, [i]: r }; }, onResult: (...args) => outcomes.push(args), onDone: () => finished++ };
+  const props = { names: {}, onNamesChange: (names) => { props.names = names; }, stage, lektionId: lektion.id, itemIndex: 0, results: {}, onItemChange: (i) => { props.itemIndex = i; }, onSayResult: (i, r) => { props.results = { ...props.results, [i]: r }; }, onResult: (...args) => outcomes.push(args), onDone: () => finished++ };
   return { hooks, props, outcomes, render: () => hooks.render(SceneStage, props), finished: () => finished };
 }
 
@@ -214,6 +214,14 @@ test('scene hear → checked meaning → personalised, measured say → next chu
   meaningTree = state.render(meaning.type, meaning.props);
   assert.ok(sceneElements(meaningTree, 'p').some((p) => p.props.role === 'status'));
   sceneElements(meaningTree, 'Button')[0].props.onClick();
+  assert.equal(h.props.itemIndex, 1, 'first miss opens a hint retry');
+  meaningTree = state.render(meaning.type, meaning.props);
+  sceneElements(meaningTree, 'input').find((input) => input.props.value === meaning.props.item.answer).props.onChange();
+  meaningTree = state.render(meaning.type, meaning.props);
+  sceneElements(meaningTree, 'Button')[0].props.onClick();
+  meaningTree = state.render(meaning.type, meaning.props);
+  sceneElements(meaningTree, 'Button')[0].props.onClick();
+  assert.equal(h.outcomes.length, 1, 'repair does not replace the first response');
   assert.equal(h.props.itemIndex, 2);
   state.clear();
   tree = h.render();

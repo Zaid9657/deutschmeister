@@ -163,6 +163,29 @@ export const CURRICULUM_A11 = {
       slug: 'hallo-ich-bin',
       flow: 'guided',
       guided: {
+        read: {
+          titleDe: 'Willkommen!', titleEn: 'Welcome!',
+          instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the card. Tap a word for its meaning.',
+          // A welcome card at reception: greetings for the day and useful phrases.
+          text: 'Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.',
+          questions: [
+            {
+              promptDe: 'Was ist „Guten Tag“? Wählen Sie die Bedeutung.',
+              promptEn: 'What is “Guten Tag”? Choose the meaning.',
+              options: ['A greeting.', 'A letter.', 'A name.'], answer: 'A greeting.',
+              explanationDe: 'Auf der Karte steht: „Guten Tag“ ist ein Gruß.',
+              explanationEn: 'The card says that “Guten Tag” is a greeting.',
+            },
+            {
+              promptDe: 'Was ist A? Wählen Sie die Bedeutung.',
+              promptEn: 'What is A? Choose the meaning.',
+              options: ['A farewell.', 'A letter.', 'A greeting.'], answer: 'A letter.',
+              explanationDe: 'Auf der Karte steht: A ist ein Buchstabe.',
+              explanationEn: 'The card says that A is a letter.',
+            },
+          ],
+        },
         // Half-open boundaries: every original line appears once, in order.
         chunks: [
           {
@@ -206,6 +229,10 @@ export const CURRICULUM_A11 = {
             say: { line: 9 },
           },
         ],
+      },
+      nextHook: {
+        de: 'Morgen muss Ana sich im Bürgerbüro anmelden. Kann sie das Formular ausfüllen?',
+        en: 'Tomorrow Ana has to register at the public office. Can she fill in the form?',
       },
       title: 'Hallo, ich bin …',
       situation: 'Begrüßung, Vorstellen und das Alphabet',

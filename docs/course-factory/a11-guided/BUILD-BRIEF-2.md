@@ -33,8 +33,12 @@ the protected test files stay unedited, and every existing Lektion 1 field stays
 | Part | Stages |
 |---|---|
 | 1 Understand and say | `pretest`, `scene`, `wortfeld` (scene words), `sound` (new), `read` (new) |
-| 2 Learn and practise | `notice`, `practice`, `derived`, `dictation`, `requeue`, `fluency` (new) |
-| 3 Use it | `speaking`, `writing`, `recap` (with the story hook) |
+| 2 Learn and practise | `notice`, `practice`, `derived`, `dictation`, `fluency` (new) |
+| 3 Use it | `speaking`, `writing`, `requeue`, `recap` (with the story hook) |
+
+Correction (2026-11-12, late): an earlier version of this table moved `requeue` into Part 2. That
+contradicts the protected `tests/lesson-back-skip.test.mjs` (the requeue stage sits right before the
+recap in every A1.1 Lektion). The protected test wins: `requeue` stays directly before `recap`.
 
 Both saved pauses stay, and the guest save-ask still replaces the first pause.
 
@@ -54,7 +58,7 @@ Evidence: prompting the learner to repair an error works better than giving the 
   and for gold (`src/lib/lesson/mastery.js`). The second try is a retry.
 - The existing TYPO rule in `src/lib/lesson/check.js` stays as it is: a case-only or typo-class
   miss already gets its one retry; do not stack a second hint retry on top of it.
-- A miss still returns later through `requeue`, which moves into Part 2 for the guided flow.
+- A miss still returns later through `requeue`, which stays directly before the recap.
 - German hints speak **Sie**; every hint has its English twin.
 
 ## 2. The sound slot (`sound`, new stage)

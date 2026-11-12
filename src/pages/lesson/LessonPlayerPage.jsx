@@ -48,6 +48,9 @@ import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
 
 const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
+const SoundStage = lazy(() => import('../../components/lesson/SoundStage.jsx'));
+const ReadStage = lazy(() => import('../../components/lesson/ReadStage.jsx'));
+const FluencyStage = lazy(() => import('../../components/lesson/FluencyStage.jsx'));
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -77,7 +80,7 @@ const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
 // content (dialogue, questions, answers) is German in both.
 
 /** The multi-item stages the player pages through one item at a time. */
-const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup']);
+const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup', 'sound', 'fluency']);
 
 /** "Loading the lesson …" — while auth settles, or while a resumed run waits for its pool. */
 function PlayerLoading() {
@@ -245,6 +248,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [lang] = useLessonLang();
+  // Personalisation exists only while this run is mounted; never passed to packRun.
+  const [names, setNames] = useState({});
+  const [soundReadAloud, setSoundReadAloud] = useState(() => resumed?.soundReadAloud || {});
+  const [fluencyReadAloud, setFluencyReadAloud] = useState(() => resumed?.fluencyReadAloud || {});
   const owner = user ? user.id : null;
   const [stageIndex, setStageIndex] = useState(() => (resumed
     ? resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed)
@@ -360,7 +367,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
         ...(revealed ? { revealed: true } : {}),
         ...(listened === false ? { listened: false } : {}),
       }]));
-    if (!correct && stageKind !== 'requeue' && stageKind !== 'scene') {
+    if (!correct && !['requeue', 'scene', 'sound', 'read', 'fluency'].includes(stageKind)) {
       setMisses((prev) => (prev.some((m) => m.id === item.id) ? prev : [...prev, confused && confused.length ? { ...item, confused } : item]));
     }
     if (stageKind === 'practice' || stageKind === 'dictation') setCombo((c) => nextCombo(c, correct));
@@ -422,10 +429,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     if (preview || !stage) return;
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
-      flow: lektion.flow || 'legacy', sceneReadAloud,
+      flow: lektion.flow || 'legacy', sceneReadAloud, soundReadAloud, fluencyReadAloud,
       runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
     }), owner);
-  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, runId, owner]);
+  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -525,18 +532,33 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       ) : null;
       break;
     case 'pretest':
-      body = <PretestStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
+      body = <PretestStage onName={lektion.flow === 'guided' ? (full) => setNames((prev) => ({ ...prev, full })) : undefined} stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'scene':
       body = (
         <Suspense fallback={<PlayerLoading />}>
           <SceneStage
+            names={names} onNamesChange={setNames}
             stage={stage} lektionId={lektion.id} itemIndex={itemIndex}
             results={sceneReadAloud} onSayResult={(index, result) => setSceneReadAloud((prev) => ({ ...prev, [index]: result }))}
             onResult={resultFor('scene')} onItemChange={setItemIndex} onBack={back} onDone={advance}
           />
         </Suspense>
       );
+      break;
+    case 'sound':
+      body = <Suspense fallback={<PlayerLoading />}><SoundStage key={itemIndex} stage={stage} lektionId={lektion.id} itemIndex={itemIndex}
+        results={soundReadAloud} onSayResult={(i, r) => setSoundReadAloud((prev) => ({ ...prev, [i]: r }))}
+        onResult={resultFor('sound')} onNext={onItemNext} onBack={back} /></Suspense>;
+      break;
+    case 'read':
+      body = <Suspense fallback={<PlayerLoading />}><ReadStage stage={stage} lektionId={lektion.id} itemIndex={itemIndex}
+        onItemChange={setItemIndex} onResult={resultFor('read')} onBack={back} onDone={advance} /></Suspense>;
+      break;
+    case 'fluency':
+      body = <Suspense fallback={<PlayerLoading />}><FluencyStage key={itemIndex} stage={stage} lektionId={lektion.id} itemIndex={itemIndex}
+        names={names} onNamesChange={setNames} results={fluencyReadAloud} onSayResult={(i, r) => setFluencyReadAloud((prev) => ({ ...prev, [i]: r }))}
+        onNext={onItemNext} onBack={back} /></Suspense>;
       break;
     case 'dialog':
       body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
@@ -560,6 +582,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       // a pool item as a practice card, a match/word order/listen item and a
       // dictation line as themselves.
       const derivedProps = {
+        hintFirst: lektion.flow === 'guided' && !retry,
         item,
         index: itemIndex,
         total: items.length,
@@ -583,6 +606,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
             index={itemIndex}
             total={items.length}
             eyebrowKey={retry ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}
+            hintFirst={lektion.flow === 'guided' && !retry}
             allowReveal={retry}
             onResult={resultFor(stage.kind)}
             onNext={onItemNext}
@@ -594,7 +618,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     case 'dictation': {
       const line = items[itemIndex];
       body = line ? (
-        <DictationItem key={line.index} line={line} index={itemIndex} total={items.length} lektionId={lektion.id} onResult={resultFor('dictation')} onNext={onItemNext} />
+        <DictationItem hintFirst={lektion.flow === 'guided'} key={line.index} line={line} index={itemIndex} total={items.length} lektionId={lektion.id} onResult={resultFor('dictation')} onNext={onItemNext} />
       ) : null;
       break;
     }

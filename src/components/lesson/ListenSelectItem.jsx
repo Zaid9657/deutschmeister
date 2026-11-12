@@ -1,3 +1,4 @@
+import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import Button from '../ui/Button.jsx';
@@ -15,10 +16,11 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * hand-builds the check options (tests/course-player.test.mjs GRADING_SITES).
  * A miss here is always tagged 'Hören' (check.js `tagError`).
  */
-export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
+export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', hintFirst = false }) {
   const [lang] = useLessonLang();
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
+  const [retried, setRetried] = useState(false);
   // A choice made without the line ever playing is a guess between written lines, not listening:
   // it is recorded `listened: false` and left out of the practice score (mastery.isFirstPass).
   const [heard, setHeard] = useState(false);
@@ -26,7 +28,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
 
   useEffect(() => {
     setPicked(null);
-    setState(null);
+    setState(null); setRetried(false);
     setHeard(false);
   }, [item.id]);
 
@@ -37,8 +39,8 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
     const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
     const { result, expected } = checkAnswer(picked, accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
-    setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, picked, item.answer), listened: heard });
+    setState(hintFirst ? guidedFeedback(item, { result, expected }, retried, lang) : { result, expected });
+    if (!retried) onResult(item, { result, correct, errorTag: correct ? null : tagError(item, picked, item.answer), listened: heard });
   };
 
   return (
@@ -84,9 +86,14 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
       )}
 
       <FeedbackSheet
+        hintOnly={state?.hintOnly}
+        hint={state?.hint}
+        showAnswer={state?.showAnswer}
+        explanation={hintFirst && state ? feedbackReason(item, lang) : null}
+        primaryLabel={state?.hintOnly ? t('action.again', lang) : undefined}
         result={state && state.result}
         expected={state && state.expected}
-        onContinue={onNext}
+        onContinue={state?.hintOnly ? () => { setRetried(true); setState(null); } : onNext}
       />
     </div>
   );

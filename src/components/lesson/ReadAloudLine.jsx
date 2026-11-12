@@ -32,7 +32,7 @@ import {
 const MAX_ATTEMPTS = 3;
 const MAX_RECORD_MS = 8000;
 
-export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false }) {
+export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false, hideModel = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const [support] = useState(() => checkSpeakingSupport());
@@ -190,7 +190,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       )}
 
       {/* Before an attempt the plain line; afterwards the same line, word by word. */}
-      {result ? (
+      {!hideModel && (result ? (
         <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">
           {result.words.map((w, i) => (
             <span
@@ -207,7 +207,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
         </p>
       ) : (
         <p className={guided ? 'mt-1 font-display text-2xl font-semibold leading-snug text-siegel' : 'mt-1 text-[1.0625rem] leading-relaxed text-ink'} lang="de">{text}</p>
-      )}
+      ))}
 
       {result && (
         <p className="mt-2 text-sm font-bold text-ink">
@@ -220,7 +220,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       )}
 
       <div className={`mt-3 flex flex-wrap items-center gap-2 ${guided ? 'justify-center' : ''}`}>
-        <PlayButton lektionId={lektionId} audioKey={lineKey} text={text} rate={0.85} label={t('speaking.model', lang)} />
+        {!hideModel && <PlayButton lektionId={lektionId} audioKey={lineKey} text={text} rate={0.85} label={t('speaking.model', lang)} />}
 
         {scoringPossible && phase === 'idle' && attempts === 0 && !micError && (
           <Button size="sm" variant={guided ? 'coral' : 'primary'} shape={guided ? 'circle' : 'clay'} className={guided ? 'h-24 w-24' : ''} onClick={startRecording}>

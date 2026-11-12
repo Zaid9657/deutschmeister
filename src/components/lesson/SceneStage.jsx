@@ -7,42 +7,14 @@ import PlayButton from './PlayButton.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import LangToggle from './LangToggle.jsx';
 import { buildLexicon, parseLektionId } from '../../lib/lesson/gloss.js';
-import { checkAnswer, checkOptionsFor, RESULT } from '../../lib/lesson/check.js';
+import CheckedChoice from './CheckedChoice.jsx';
 import { SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { sayText } from '../../lib/lesson/scene.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
-function MeaningCheck({ item, lang, onResult, onNext }) {
-  const [answer, setAnswer] = useState(null);
-  const [verdict, setVerdict] = useState(null);
-  const check = () => {
-    if (!answer || verdict) return;
-    const checked = checkAnswer(answer, item.accepted, checkOptionsFor(item));
-    setVerdict(checked);
-    onResult(item, { result: checked.result, correct: checked.result !== RESULT.WRONG, errorTag: checked.result === RESULT.WRONG ? 'Wortschatz' : null });
-  };
-  return (
-    <div>
-      <h1 className="font-display text-2xl font-semibold text-siegel">{lang === 'de' ? item.promptDe : item.promptEn}</h1>
-      <fieldset className="mt-4 space-y-3" disabled={!!verdict}>
-        <legend className="sr-only">{lang === 'de' ? item.promptDe : item.promptEn}</legend>
-        {item.options.map((option) => (
-          <label key={option} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-rule bg-white p-4 text-sm">
-            <input type="radio" name={item.id} value={option} checked={answer === option} onChange={() => setAnswer(option)} className="h-4 w-4 accent-coral-accessible" />
-            <span lang="en">{option}</span>
-          </label>
-        ))}
-      </fieldset>
-      {verdict && <p role="status" className="mt-4 font-semibold text-ink">{t(verdict.result === RESULT.WRONG ? 'scene.correction' : 'scene.correct', lang, { answer: item.answer })}</p>}
-      <Button variant="coral" className="mt-5 w-full" disabled={!answer} onClick={verdict ? onNext : check}>{t(verdict ? 'action.next' : 'action.check', lang)}</Button>
-    </div>
-  );
-}
-
 /** A checked response between every 2–3 lines. Position is owned/saved by the player. */
-export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, results, onSayResult, onResult, onBack, onDone }) {
+export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, results, onSayResult, onResult, onBack, onDone, names = {}, onNamesChange }) {
   const [lang] = useLessonLang();
-  const [names, setNames] = useState({});
   const [openGloss, setOpenGloss] = useState(null);
   const index = Math.min(Math.floor(itemIndex / SCENE_PHASES.length), stage.chunks.length - 1);
   const phase = SCENE_PHASES[itemIndex % SCENE_PHASES.length];
@@ -82,12 +54,12 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
           </Card>
         </li>)}
       </ol>}
-      {phase === 'meaning' && <MeaningCheck key={chunk.meaning.id} item={chunk.meaning} lang={lang} onResult={onResult} onNext={next} />}
+      {phase === 'meaning' && <CheckedChoice hintFirst key={chunk.meaning.id} item={chunk.meaning} lang={lang} onResult={onResult} onNext={next} />}
       {phase === 'say' && <div className="mt-5">
         <h1 className="mb-4 font-display text-3xl font-semibold text-siegel">{t('scene.say', lang)}</h1>
         {chunk.say.ownName && <label className="mb-4 block text-sm font-semibold text-nacht-text">
           {t(chunk.say.ownName === 'surname' ? 'scene.surname' : 'scene.name', lang)}
-          <input value={ownName} maxLength={80} autoComplete="off" onChange={(e) => { setNames((prev) => ({ ...prev, [chunk.say.ownName]: e.target.value })); onSayResult(index, null); }} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white px-3 py-2 text-ink" />
+          <input value={ownName} maxLength={80} autoComplete="off" onChange={(e) => { onNamesChange?.({ ...names, [chunk.say.ownName]: e.target.value }); onSayResult(index, null); }} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white px-3 py-2 text-ink" />
         </label>}
         {spoken ? <ReadAloudLine key={`${index}:${spoken}`} guided lektionId={lektionId} lineKey={`scene-${index + 1}-say`} text={spoken} onResult={(r) => onSayResult(index, r)} /> : <Card className="p-5"><p>{t('scene.enterName', lang)}</p></Card>}
         {done && <p className="mt-3 text-sm font-bold" role="status">{results[index].usedMic && typeof results[index].pct === 'number' ? t('speaking.intelligibility', lang, { pct: Math.round(results[index].pct * 100) }) : t('speaking.said', lang)}</p>}

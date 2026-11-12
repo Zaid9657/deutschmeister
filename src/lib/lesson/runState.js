@@ -71,10 +71,12 @@ function asReadAloud(v) {
 }
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ flow = 'legacy', sceneReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ flow = 'legacy', sceneReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
   return {
     flow: flow === 'guided' ? 'guided' : 'legacy',
     sceneReadAloud: asReadAloud(sceneReadAloud),
+    soundReadAloud: asReadAloud(soundReadAloud),
+    fluencyReadAloud: asReadAloud(fluencyReadAloud),
     v: RUN_VERSION,
     savedAt: now,
     // Joins lesson_started → lesson_stage_viewed → lesson_completed of one run in analytics.

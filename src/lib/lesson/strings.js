@@ -35,6 +35,18 @@ export const LESSON_LANGS = ['en', 'de'];
 
 export const STRINGS = {
   en: {
+    "sound.title": "Listen, notice the stress, then say it",
+    "sound.lead": "Listen to the word. Decide which syllable is stressed before you repeat it.",
+    "sound.syllables": "Syllables: {syllables}",
+    "sound.say": "Now say the word aloud.",
+    "read.title": "A card at reception",
+    "fluency.title": "Say it again, from memory",
+    "fluency.lead": "Use the familiar line for this situation. Take your time; this round has no practice score.",
+    "fluency.cue": "Scene {n} of {total}",
+    "fluency.show": "Show the line",
+    "fluency.progress": "{n} of {total} said",
+    "fluency.name": "Enter your name to reuse your introduction. The name stays only in this run.",
+
     'scene.part': 'Lesson {nr} · Part {part} of {total}',
     'scene.chunk': 'Scene {n} of {total}',
     'scene.hear': 'Hear and read',
@@ -438,6 +450,18 @@ export const STRINGS = {
   },
 
   de: {
+    "sound.title": "Hören, Wortakzent erkennen, nachsprechen",
+    "sound.lead": "Hören Sie das Wort. Wählen Sie die betonte Silbe, dann sprechen Sie nach.",
+    "sound.syllables": "Silben: {syllables}",
+    "sound.say": "Sprechen Sie das Wort jetzt laut aus.",
+    "read.title": "Eine Karte an der Rezeption",
+    "fluency.title": "Noch einmal aus dem Gedächtnis",
+    "fluency.lead": "Sagen Sie die bekannte Zeile für diese Situation. Lassen Sie sich Zeit; diese Runde zählt nicht zum Übungsergebnis.",
+    "fluency.cue": "Szene {n} von {total}",
+    "fluency.show": "Zeile anzeigen",
+    "fluency.progress": "{n} von {total} gesprochen",
+    "fluency.name": "Geben Sie Ihren Namen für Ihre Vorstellung ein. Der Name bleibt nur in dieser Sitzung.",
+
     'scene.part': 'Lektion {nr} · Teil {part} von {total}',
     'scene.chunk': 'Szene {n} von {total}',
     'scene.hear': 'Hören und lesen Sie',

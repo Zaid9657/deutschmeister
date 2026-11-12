@@ -6,3 +6,10 @@ export function sayText(say, ownName) {
   if (say.ownName === 'full') return say.de.replace(/(Ich heiße ).*?(?=[.!?]|$)/u, (_, lead) => `${lead}${name}`);
   return `${Array.from(name.toLocaleUpperCase('de')).filter((c) => /\p{L}/u.test(c)).join('-')}.`;
 }
+
+/** Extract only a recognised first-sentence opening; never guess from arbitrary input. */
+export function nameFromIntroduction(value, openings = []) {
+  const text = String(value || '').normalize('NFC').trim();
+  const opening = openings.find((o) => text.toLocaleLowerCase('de').startsWith(`${o.toLocaleLowerCase('de')} `));
+  return opening ? text.slice(opening.length).trim().replace(/[.!?]+$/u, '').trim().slice(0, 80) : '';
+}
