@@ -25,6 +25,7 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 | Command (`node scripts/…`) | Effect | Inputs | Outputs / behavior |
 |---|---|---|---|
 | [check-built-html.mjs](check-built-html.mjs) `[dist] [--spa-only]` | check | Built HTML, manifest, crawl rules | Reports missing/wrong heads, copy, indexability and links, and holds every page (and, on Netlify builds, `llms*.txt`) to the telc B1 sale switch; full CI omits `--spa-only`. |
+| [check-guided-draft.mjs](check-guided-draft.mjs) `<Lektion> [more]` | check | Guided-lesson drafts in `docs/course-factory/a11-guided/content/lNN.json`, the A1.1 curriculum | Puts a draft's `guided` block and `nextHook` on an in-memory copy of its Lektion and reports RULE 32 and RULE 34 findings; a Phonetik item the sound stage cannot play yet is reported without failing. No writes. |
 | [crawl-guard.mjs](crawl-guard.mjs) | check (imported module) | Built-page HTML and route/link metadata supplied by caller | Crawlability/link findings; used by built-HTML checks, not a standalone CLI. |
 | [check-duplicates.mjs](check-duplicates.mjs) | check | Every source/destination in `shared-files.mjs` | Nonzero on any byte drift; `npm run check:duplicates`. |
 | [check-grammar-json.mjs](check-grammar-json.mjs) `<file>... [--cache cache.json]` | check | CREATE/EXTEND grammar JSON; optional current cache | Shape and, with cache, collision/continuation errors; no files written. |

@@ -1,0 +1,113 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Willkommen!",
+      "titleEn": "Welcome!",
+      "instructionDe": "Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the card. Tap a word for its meaning.",
+      "text": "Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.",
+      "questions": [
+        {
+          "promptDe": "Was ist „Guten Tag“? Wählen Sie die Bedeutung.",
+          "promptEn": "What is “Guten Tag”? Choose the meaning.",
+          "options": [
+            "A greeting.",
+            "A letter.",
+            "A name."
+          ],
+          "answer": "A greeting.",
+          "explanationDe": "Auf der Karte steht: „Guten Tag“ ist ein Gruß.",
+          "explanationEn": "The card says that “Guten Tag” is a greeting."
+        },
+        {
+          "promptDe": "Was ist A? Wählen Sie die Bedeutung.",
+          "promptEn": "What is A? Choose the meaning.",
+          "options": [
+            "A farewell.",
+            "A letter.",
+            "A greeting."
+          ],
+          "answer": "A letter.",
+          "explanationDe": "Auf der Karte steht: A ist ein Buchstabe.",
+          "explanationEn": "The card says that A is a letter."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was sagt Ana? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say? Choose the meaning.",
+          "options": [
+            "She greets Frau Kaya and gives her name.",
+            "She asks for a room.",
+            "She says goodbye."
+          ],
+          "answer": "She greets Frau Kaya and gives her name."
+        },
+        "say": {
+          "line": 1,
+          "ownName": "full"
+        }
+      },
+      {
+        "from": 2,
+        "to": 5,
+        "meaning": {
+          "promptDe": "Was möchte Frau Kaya? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Frau Kaya want? Choose the meaning.",
+          "options": [
+            "She wants to know where Ana lives.",
+            "She asks Ana to spell her name.",
+            "She asks how Ana feels."
+          ],
+          "answer": "She asks Ana to spell her name."
+        },
+        "say": {
+          "line": 3,
+          "ownName": "surname"
+        }
+      },
+      {
+        "from": 5,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Wie geht es Ana? Wählen Sie die Bedeutung.",
+          "promptEn": "How does Ana feel? Choose the meaning.",
+          "options": [
+            "She is tired.",
+            "She is leaving tomorrow.",
+            "She is fine and says thank you."
+          ],
+          "answer": "She is fine and says thank you."
+        },
+        "say": {
+          "line": 7
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say as she leaves? Choose the meaning.",
+          "options": [
+            "Bye! See you tomorrow.",
+            "Good morning!",
+            "Nice to meet you."
+          ],
+          "answer": "Bye! See you tomorrow."
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Morgen muss Ana sich im Bürgerbüro anmelden. Kann sie das Formular ausfüllen?",
+    "en": "Tomorrow Ana has to register at the public office. Can she fill in the form?"
+  }
+}

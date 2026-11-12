@@ -30,11 +30,57 @@ Decisions he has locked:
 Still open with him: the subscription price, and what happens to the one-time offers launched on
 2026-11-11.
 
+## Now (2026-11-12, 22:20 UTC): what I do on approval
+
+The founder asked two things: why the Higgsfield unlimited plan cannot be used, and to "deploy
+agents if you find it suitable to create the whole course and other courses".
+
+**Higgsfield, clarified.** He set it up correctly. Higgsfield's own help page says: "Every
+generation through a connected agent deducts credits, regardless of your plan. Unlimited access
+and free generations apply only on higgsfield.ai." The account's history confirms it: about 80
+pictures and voice-overs ran tonight at 0 credits on the website, while every picture I made
+through the connection cost credits. The account has only ever received the 10 sign-up credits
+(0.45 left); no monthly plan credits have arrived.
+Route that costs nothing: I write the prompts and reference pictures, a Claude-in-Chrome prompt
+runs them on higgsfield.ai under unlimited, and I collect the finished files from the account
+through the connection (reading is free).
+
+**Agents: yes, in this order.** It moves the one thing the subscription will sell: a complete
+A1.1 a learner can finish without a teacher. Today course sales are 0.
+
+1. **Finish Lektion 1, step 2 (me, tonight).** Codex finished building and writing its report but
+   was killed by a restart during the final test run. I run every gate myself, correct what
+   fails, play the lesson on a phone-sized browser, commit and push. No third Codex resume.
+2. **Wave 1, agents write Lektionen 2–12 (parallel).** One agent per Lektion writes that
+   Lektion's guided block (scene chunks, meaning checks, say-lines, sound questions, short read,
+   story hook) into its **own file**, so agents never edit the same file; I merge each into
+   `src/data/curricula/a11.js` only after the validator and tests pass for it. A second agent
+   reviews each Lektion against the taught-words rule and the course standard. Nothing goes live:
+   it stays on the PR branch.
+3. **Engine steps 3–5 (Codex, one after the other):** the proof and the locked path, "Ask the
+   teacher", the scripted conversation. Built once, they apply to all twelve Lektionen.
+4. **Pictures:** Chrome prompt per batch on higgsfield.ai (four scenes per Lektion).
+5. **Wave 2:** A1.2 with the same agents once A1.1 passes its gates; then A2.
+
+Risk named once: nobody outside has played the new Lektion 1 yet, so a flaw in the pattern would
+be copied eleven times. It stays cheap to correct because each Lektion switches to the new flow
+with one flag, and nothing is live until the PR is merged.
+
+Background jobs keep dying when this session restarts, so long work is cut into pieces that each
+finish and get committed within minutes.
+
 **Status (2026-11-12, late)**
 
 - Steps 0 and 1 are built by Codex, checked (2,968 tests, 151 pages, played on a phone-sized
   browser up to the first "Now you say it") and pushed to the PR #257 branch. Not live.
 - Art in the repo: the Lektion 1 scene and the teacher portrait under `public/art/a11/`.
+
+**Interrupted (2026-11-12, about 21:30 UTC):** the session restarted while Codex was building
+brief 2. Codex had changed 33 files (new sound, read and fluency stages, hint-first feedback, tests)
+but had not finished, run the gates or written its report, and its process is gone. Nothing was
+committed or pushed from that half-done work. **On approval I resume the same Codex session**
+(`01a1d19c-e251-7010-a0ac-88b86d31b9af`) so it finishes brief 2 from where it stopped, then I re-run
+every gate and play the lesson before committing.
 
 **Next actions**
 
@@ -191,7 +237,14 @@ Pictures first, then code, as with the site redesign that worked:
 5. For each Lektion: one short animated clip of the scene. The German audio comes from the
    course's own voice files, never from the video model, so every word is exactly right.
 
-Higgsfield status (checked 2026-11-12, evening): the connected account is now on the Ultra plan, with
+Higgsfield status (re-checked 2026-11-12, about 22:00 UTC): the account is on Ultra with **0.45
+credits** left. Everything I made was paid from credits (`gpt_image_2_6`); the connector reports
+the unlimited allowance as **not available** to me for every image model. The account's history
+shows twelve "GPT Image 2.5 Flare" pictures at 0 credits that I did not start, so unlimited works
+inside the Higgsfield app but not through this connection. Until that changes, new course
+pictures wait; the code work (brief 2) does not need them and goes ahead.
+
+Earlier status (2026-11-12, evening): the connected account is now on the Ultra plan, with
 10 credits. Its only credit entry is the 10 sign-up credits; no plan credits have arrived yet. That
 pays for the first concept pictures (1.5 credits each at high quality, 0.5 at medium) but not for
 video (an 8-second clip costs 56 credits). First run on approval: the teacher casting sheet, the
