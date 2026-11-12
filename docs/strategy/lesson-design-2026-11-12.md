@@ -154,6 +154,25 @@ Built so Lektionen 2–12 and A1.2 keep working unchanged, and can adopt the pat
 | 6 | Painted art and generated audio for L1 | Run the audio job |
 | 7 | Recap hook, Arabic fixed texts, checklist to roll out to L2–12 | Have the Arabic checked by a native speaker |
 
+**Visuals with Higgsfield** (founder, 2026-11-12: "use higgsfield to build the best and most beautiful
+courses, hold no limits")
+
+Pictures first, then code, as with the site redesign that worked:
+
+1. A casting sheet of three teacher candidates; the founder picks one.
+2. Character sheets for the story cast (Ana, Frau Kaya, then Lena, Tim, Paul), so each looks the same
+   in every scene.
+3. For each Lektion: four painted key moments of its scene, in the home page's style.
+4. Two concept pictures of the lesson screen (the scene step and the end-of-lesson screen); the
+   founder approves the look before Codex builds it.
+5. For each Lektion: one short animated clip of the scene. The German audio comes from the
+   course's own voice files, never from the video model, so every word is exactly right.
+
+Blocker today: the Higgsfield account connected to this session is a new free account with 10
+credits. The image model used for the site answers "Requires basic plan or higher", and an 8-second
+clip costs 56 credits. Nothing was generated. The founder reconnects the paid Higgsfield account at
+claude.ai → Customize → Connectors (a new session picks it up), or upgrades this one.
+
 **The subscription switch is a separate piece of work after the model lesson.** It changes prices,
 access rules and the pages built yesterday, and it needs the founder's price decision and the
 legal check first. Existing buyers keep what they bought.
