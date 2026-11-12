@@ -23,8 +23,19 @@ Decisions he has locked:
 | Explanation languages at A1 | English (exists) and Arabic |
 | Access | All courses, A1.1 included, behind one paid subscription; only lesson 1 is free, after a free sign-up |
 
-Still open with him: who the teacher is (my recommendation: one named AI teacher plus animated story
-scenes), the subscription price, and what happens to the one-time offers launched on 2026-11-11.
+| The teacher | Candidate A from `docs/strategy/lesson-look-2026-11-12/teacher-candidates.jpg`: a woman in her early forties, chestnut hair, round glasses, teal cardigan |
+
+Still open with him: the teacher's name, the subscription price, and what happens to the one-time
+offers launched on 2026-11-11.
+
+**Next actions now that the plan and the teacher are approved**
+
+1. Write the Codex build brief for step 0 (measurement) and step 1 (the scene in short chunks with
+   say-it scoring), with the two lesson screens in `docs/strategy/lesson-look-2026-11-12/` as the
+   look to match, and run Codex at effort "high".
+2. With the remaining Higgsfield credits (about 4): a reference sheet of teacher A and of Ana, so
+   every later picture keeps the same faces. The full scene set and video wait for credits.
+3. Check each Codex step on a phone-sized browser against the pictures before anything ships.
 
 This plan holds (1) what the research says, (2) what our course already has, (3) the lesson design
 that follows, and (4) how to build it first for A1.1 Lektion 1, measure it, then roll it out.
@@ -168,10 +179,12 @@ Pictures first, then code, as with the site redesign that worked:
 5. For each Lektion: one short animated clip of the scene. The German audio comes from the
    course's own voice files, never from the video model, so every word is exactly right.
 
-Blocker today: the Higgsfield account connected to this session is a new free account with 10
-credits. The image model used for the site answers "Requires basic plan or higher", and an 8-second
-clip costs 56 credits. Nothing was generated. The founder reconnects the paid Higgsfield account at
-claude.ai → Customize → Connectors (a new session picks it up), or upgrades this one.
+Higgsfield status (checked 2026-11-12, evening): the connected account is now on the Ultra plan, with
+10 credits. Its only credit entry is the 10 sign-up credits; no plan credits have arrived yet. That
+pays for the first concept pictures (1.5 credits each at high quality, 0.5 at medium) but not for
+video (an 8-second clip costs 56 credits). First run on approval: the teacher casting sheet, the
+lesson-1 reception scene and two lesson-screen concepts (about 5 credits). Video and the full set
+of scenes wait for credits.
 
 **The subscription switch is a separate piece of work after the model lesson.** It changes prices,
 access rules and the pages built yesterday, and it needs the founder's price decision and the
