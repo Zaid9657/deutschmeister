@@ -12,7 +12,7 @@ import { A11_ART } from '../src/data/curricula/a11.art.js';
 import * as tokens from '../src/data/design-tokens.js';
 import { loadJsxModule } from './helpers/renderJsx.mjs';
 import { sayText } from '../src/lib/lesson/scene.js';
-import { classifySound, buildSoundItems } from '../src/lib/lesson/guidedSound.js';
+import { classifySound, buildSoundItems, nounsOf } from '../src/lib/lesson/guidedSound.js';
 import { guidedFindings } from '../scripts/lib/guided-content.mjs';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
 
@@ -43,7 +43,7 @@ test('one shared sound classifier accepts every original shape and rejects ambig
 test('all 36 original sound items derive unique checked answers and fair bilingual questions from marking or real audio', () => {
   let count = 0;
   for (const lesson of c.lektionen) {
-    const items = buildSoundItems(lesson);
+    const items = buildSoundItems(lesson, nounsOf(c.lektionen));
     assert.deepEqual(items.map((i) => i.marked), lesson.phonetik.items);
     for (const item of items) {
       count++;
@@ -58,7 +58,7 @@ test('all 36 original sound items derive unique checked answers and fair bilingu
         assert.equal(item.answer, [...shape.prefix, shape.syllables.map((s, i) => i === shape.stress ? s.toLocaleUpperCase('de') : s.toLocaleLowerCase('de')).join('-')].join(' '));
         assert.ok(item.options.every((o) => /\p{Lu}/u.test(o) && o.includes('-')));
       } else if (shape.kind === 'sentence-stress') {
-        assert.equal(item.answer, shape.stress.toLocaleLowerCase('de'));
+        assert.equal(item.answer.toLocaleLowerCase('de'), shape.stress.toLocaleLowerCase('de'));
         assert.match(item.modelEn, /computer voice may stress it differently/);
       } else if (shape.kind === 'melody') {
         assert.equal(item.answer, shape.direction);
@@ -70,7 +70,7 @@ test('all 36 original sound items derive unique checked answers and fair bilingu
     }
   }
   assert.equal(count, 36);
-  assert.match(read('src/lib/lesson/buildGuided.js'), /buildSoundItems\(lektion\)/);
+  assert.match(read('src/lib/lesson/buildGuided.js'), /buildSoundItems\(lektion, nounsOf\(/);
   assert.match(read('scripts/lib/guided-content.mjs'), /classifySound\(marked\)/);
 });
 
@@ -220,4 +220,25 @@ test('L2–12 scenes use complete inline illustrations and L12’s cross-level s
   assert.match(c12.lektionen[0].dialog.setting, /Ana.*Rathaus/);
   assert.match(c12.lektionen[0].dialog.lines[0].de, /Rathaus/);
   assert.match(read('src/data/curricula/index.js'), /['"]a1.2['"]:\s*CURRICULUM_A12/);
+});
+
+test('a stress mark never costs a German noun its capital letter, and unmarked words keep their spelling', () => {
+  const nouns = nounsOf(c.lektionen);
+  const shown = (nr) => buildSoundItems(c.lektionen[nr - 1], nouns);
+  assert.deepEqual(shown(10).map((i) => i.text), ['Fährt der Zug?', 'Hast du Zeit?', 'Kommst du mit?']);
+  assert.deepEqual(shown(3).map((i) => i.text), ['der Bruder', 'die Brüder', 'die Mütter']);
+  assert.equal(shown(8)[2].text, 'Wie viel Uhr ist es?');
+  assert.equal(shown(8)[2].answer, 'Uhr');
+  assert.ok(shown(8)[2].options.includes('Uhr') && !shown(8)[2].options.includes('uhr'));
+  assert.equal(shown(2)[2].text, 'Sie sind');
+  assert.equal(shown(7)[0].text, 'ich höre');
+  // By class: no word shown to the learner is a course noun written small.
+  for (const lesson of c.lektionen) for (const item of shown(lesson.nr)) {
+    for (const text of [item.text, ...(item.soundKind === 'sentence-stress' ? item.options : [])]) {
+      for (const token of text.split(/[^\p{L}]+/u).filter(Boolean)) {
+        const noun = token.charAt(0).toLocaleUpperCase('de') + token.slice(1);
+        assert.ok(token === noun || !nouns.has(noun), `L${lesson.nr} „${text}“: ${token} is a noun`);
+      }
+    }
+  }
 });

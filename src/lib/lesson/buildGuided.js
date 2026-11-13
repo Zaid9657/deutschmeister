@@ -1,4 +1,4 @@
-import { buildSoundItems } from './guidedSound.js';
+import { buildSoundItems, nounsOf } from './guidedSound.js';
 import { lineFor } from './wortfeldPacing.js';
 
 export const SCENE_PHASES = ['hear', 'meaning', 'say'];
@@ -26,7 +26,7 @@ export function buildGuided(options, buildLegacy) {
   });
   const byKind = (kind) => legacy.stages.find((s) => s.kind === kind);
   const part = (kind, n) => ({ ...byKind(kind), part: n });
-  const soundItems = buildSoundItems(lektion);
+  const soundItems = buildSoundItems(lektion, nounsOf(options.curriculum?.lektionen || [lektion]));
   const read = lektion.guided.read;
   const stages = [
     ...legacy.stages.filter((s) => s.kind === 'warmup'),

@@ -6,6 +6,8 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-13 | Codex reported every gate green on the twelve-lesson rollout; playing three lessons in a browser still showed German nouns written small on the new sound screens ("Fährt der zug?"), which no test covered | Green tests are not a played lesson: Claude plays what a builder ships and turns each flaw into a rule with a test |
+| 2026-11-12 | Four agents delivered eleven lesson drafts that all passed, in about twelve minutes, because they could run the same rules the validator runs on their own draft files | Before fanning work out to agents, give them a checker they can run themselves and one file each |
 | 2026-11-12 | The founder paid for Higgsfield Ultra for its unlimited pictures; through the Claude connection every picture still cost credits. Higgsfield's help page: unlimited and free generations apply only on higgsfield.ai, never through a connected agent | Before the founder pays for a tool, read the vendor's own page on what the plan covers through the route we will use (website, connector, API) |
 | 2026-11-12 | Session restarts killed the Codex build three times in one evening, once mid test run; each time the files survived but the run did not | Long builds are cut into pieces that finish and are committed within minutes; when a builder dies near the end, Claude runs the gates itself instead of restarting it |
 | 2026-11-12 | Build brief 2 moved a lesson stage to a place a protected test forbids; the builder stopped to ask | Check a brief's stage order against the protected tests before sending it; a protected test wins over the brief |

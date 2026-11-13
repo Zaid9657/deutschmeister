@@ -162,3 +162,32 @@ Added tests/guided-rollout.test.mjs (8 cases); expanded guided-step2.test.mjs wi
 4 behavioral cases; updated the rollout/hook witnesses in guided-lesson.test.mjs,
 guided-step2.test.mjs and course-value.test.mjs. Every protected test file,
 CLAUDE.md and astro-site/package-lock.json is unchanged. No commit was made.
+
+## Claude's check (2026-11-13)
+
+Every gate re-run by Claude on the finished tree from a clean `dist/`: pool build, validator, sync,
+all twelve draft checks, lint, duplicates, function syntax, `npm test` (2,994 of 2,994), SPA and
+offline Astro builds, merge, prerender, built HTML (151 pages, 0 failures, 0 warnings). Protected
+tests, `CLAUDE.md` and `astro-site/package-lock.json` unchanged.
+
+Played as a guest in a phone-sized browser: Lektionen 2, 8 and 10 from the intro through the try-first
+step, all five scene chunks, the word cards, the three sound items, the short read, the saved pause,
+the grammar card and into practice. No page errors, no horizontal overflow.
+
+Found and corrected by Claude: a stress mark capitalises a whole word, and the sound stage wrote the
+word back in small letters, so marked nouns appeared as "Fährt der zug?", "der bruder", "Wie viel
+uhr ist es?" and the unmarked phrase "Sie sind" as "sie sind". `guidedSound.js` now restores a
+noun's capital from the course's own Wortfeld nouns and leaves unmarked words as written;
+`tests/guided-rollout.test.mjs` holds the rule by class for all 36 items (2,995 tests pass).
+
+Still open, for a later brief:
+
+- For sentence stress and question melody the question can only ask about the marking on screen,
+  because the browser voice does not reliably produce either. These two kinds become real
+  listening exercises only with generated audio.
+- The sound prompts are long ("What do you hear? Choose the line you heard. Without audio, read
+  the model."); shorten them.
+- The writers' notes on the existing course (Lektion 10's unanswered question and on-time/delayed
+  contradiction, "Mein Freund und meine Freundin" in Lektion 7, Wortfeld examples that give story
+  people other jobs, "Kurs" used but never taught, prices that differ between word cards and
+  exercises in Lektion 4) are in the draft files' `notes` and are not corrected yet.
