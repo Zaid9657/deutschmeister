@@ -35,11 +35,13 @@ export const LESSON_LANGS = ['en', 'de'];
 
 export const STRINGS = {
   en: {
-    "sound.title": "Listen, notice the stress, then say it",
-    "sound.lead": "Listen to the word. Decide which syllable is stressed before you repeat it.",
+    'sound.correct': 'Yes, that matches the sound model.',
+    'sound.correction': 'The sound model is: {answer}',
+    "sound.title": "Listen, notice, then say it",
+    "sound.lead": "Listen, check the sound model, then say the line aloud.",
     "sound.syllables": "Syllables: {syllables}",
-    "sound.say": "Now say the word aloud.",
-    "read.title": "A card at reception",
+    "sound.say": "Now say the line aloud.",
+    "read.title": "Read a short text",
     "fluency.title": "Say it again, from memory",
     "fluency.lead": "Use the familiar line for this situation. Take your time; this round has no practice score.",
     "fluency.cue": "Scene {n} of {total}",
@@ -450,11 +452,13 @@ export const STRINGS = {
   },
 
   de: {
-    "sound.title": "Hören, Wortakzent erkennen, nachsprechen",
-    "sound.lead": "Hören Sie das Wort. Wählen Sie die betonte Silbe, dann sprechen Sie nach.",
+    'sound.correct': 'Ja, das passt zur Lautvorlage.',
+    'sound.correction': 'Die Lautvorlage ist: {answer}',
+    "sound.title": "Hören, erkennen, nachsprechen",
+    "sound.lead": "Hören Sie zu, prüfen Sie die Vorlage und sprechen Sie die Zeile nach.",
     "sound.syllables": "Silben: {syllables}",
-    "sound.say": "Sprechen Sie das Wort jetzt laut aus.",
-    "read.title": "Eine Karte an der Rezeption",
+    "sound.say": "Sprechen Sie die Zeile jetzt laut aus.",
+    "read.title": "Lesen Sie einen kurzen Text",
     "fluency.title": "Noch einmal aus dem Gedächtnis",
     "fluency.lead": "Sagen Sie die bekannte Zeile für diese Situation. Lassen Sie sich Zeit; diese Runde zählt nicht zum Übungsergebnis.",
     "fluency.cue": "Szene {n} von {total}",

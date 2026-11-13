@@ -5,7 +5,7 @@
       "titleEn": "Prices at the flea market",
       "instructionDe": "Lesen Sie das Schild. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the sign. Tap a word for its meaning.",
-      "text": "Flohmarkt: Tische mit den Zahlen 11–100\nTisch 12, Frau Wolf: Wir verkaufen Uhren, Taschen, Rucksäcke, Stühle …\nWie viel kostet das? Der Preis in Euro:\nUhr: 10\nTasche: 5\nRucksack: 20\nWie viele Stühle kaufen Sie? Vier Stühle kosten zusammen nur 40 Euro!",
+      "text": "Flohmarkt\nFrau Wolf: Wir verkaufen Uhren, Taschen, Rucksäcke, Stühle …\nWie viel kostet das? Der Preis in Euro:\nUhr: 10\nTasche: 5\nRucksack: 20\nWie viele Stühle kaufen Sie? Vier Stühle kosten zusammen nur 40 Euro!",
       "questions": [
         {
           "promptDe": "Was kostet bei Frau Wolf fünf Euro? Wählen Sie.",
@@ -134,6 +134,7 @@
     "The gloss finder matches the exact Wortfeld token only: „Preise“ does not cover „der Preis“ and „verkauft“ does not cover „verkaufen“ (the checker rejected „Frau Wolf verkauft hier.“). So the header says „Der Preis in Euro:“ over a list of three, and the stall line says „Wir verkaufen …“. Both are things a sign says; the constraint is worth knowing for the other Lektionen.",
     "Existing data: the pool prices the same goods differently from the Wortfeld examples (extra-a11-l04-03/-12 „Die Uhr kostet zwanzig Euro.“, extra-a11-l04-06 „Die Tasche kostet dreizehn Euro.“ against „Die Uhr kostet zehn Euro.“ / „Die Tasche kostet fünf Euro.“). Harmless as isolated items, but the sign now sides with the Wortfeld examples.",
     "Phonetik item „NEUN“ has one syllable, so the word-stress shape check does not accept it (focus is the diphthong eu): sound stage pending, data untouched.",
-    "nextHook is grounded in the L5 dialog (title „Vor dem Kurs“, setting „Lena und Tim packen ihre Taschen aus.“, line 0 „Tim, wo ist das Wörterbuch?“)."
+    "nextHook is grounded in the L5 dialog (title „Vor dem Kurs“, setting „Lena und Tim packen ihre Taschen aus.“, line 0 „Tim, wo ist das Wörterbuch?“).",
+    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history."
   ]
 }

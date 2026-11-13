@@ -5,7 +5,7 @@
       "titleEn": "The form from the public office",
       "instructionDe": "Lesen Sie das Blatt vom Amt. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the sheet from the public office. Tap a word for its meaning.",
-      "text": "Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen (0–10), keine Buchstaben.",
+      "text": "Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.",
       "questions": [
         {
           "promptDe": "Sie kommen aus Marokko. Was steht dann im Formular bei „Staatsangehörigkeit“? Wählen Sie.",
@@ -134,6 +134,7 @@
     "Lehrer / Lehrerin stand as examples after „Was sind Sie von Beruf?“ – an example list, but one a help sheet really prints. „Marokkanerin“ stands in the hint „bitte ‚marokkanisch‘, nicht ‚Marokkanerin‘“, which is the Lektion’s own notice point (noun in the sentence, adjective in the form field).",
     "RULE 34 does not know „Marokkaner“ (masculine): formsOf() reads only de/word/plural of the Wortfeld row, and the masculine lives in the English gloss and the notice. I avoided the word; if a later read text needs it, the rule will report it as untaught although the notice teaches it.",
     "Phonetik items („wie – Sie“, „bin – sind“, „Sie sind“) train long/short i, not word stress: sound stage pending, data untouched.",
-    "nextHook is grounded in the L3 dialog setting („Lena sieht ein Foto auf Anas Handy.“)."
+    "nextHook is grounded in the L3 dialog setting („Lena sieht ein Foto auf Anas Handy.“).",
+    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history."
   ]
 }

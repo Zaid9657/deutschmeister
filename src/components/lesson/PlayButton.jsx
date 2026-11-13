@@ -73,11 +73,10 @@ export default function PlayButton({ lektionId, audioKey, text, rate = 0.92, lab
         </button>
         <AudioSourceBadge recorded={recorded} />
       </div>
-      <p className="sr-only" aria-live="polite">{state === 'failed' ? t(`audio.failed.${reason || 'error'}`, lang) : ''}</p>
+      <p aria-live="polite" className={state === 'failed' ? 'rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink' : 'sr-only'}>{state === 'failed' ? t(`audio.failed.${reason || 'error'}`, lang) : ''}</p>
       {state === 'failed' && (
-        // No role here: the persistent live region above already says it once (twice was measured in the browser).
+        // The persistent visible live region above owns the single failure message.
         <div className="rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-[0.875rem] text-accent-aprikose-ink">
-          <p className="font-bold">{t(`audio.failed.${reason || 'error'}`, lang)}</p>
           <div className="mt-2 flex flex-wrap gap-2">
             <button type="button" onClick={() => play(false)} className="min-h-11 rounded-pill border border-current bg-white/70 px-3 font-bold">
               {t('audio.retry', lang)}

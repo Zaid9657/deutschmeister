@@ -1,3 +1,4 @@
+import { classifySound } from '../../src/lib/lesson/guidedSound.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../../src/lib/lesson/check.js';
 import { readLexicon } from '../../src/lib/lesson/guidedRead.js';
 import { glossTokens } from '../../src/lib/lesson/gloss.js';
@@ -31,10 +32,11 @@ export function guidedFindings(curriculum) {
     const dialogue = lines.map((l) => l.de);
     const readGlosses = new Set(glossTokens(read?.text || '', readLexicon(lesson.wortfeld || [])).filter((s) => s.type === 'gloss').map((s) => s.entry.de));
     for (const w of lesson.wortfeld || []) {
+      if (w.meta === true) continue; // A number-set heading is not a word in a natural text.
       if (!lineFor(w.de || w.word, dialogue) && !readGlosses.has(w.de)) fail(`guided.read must cover remaining Wortfeld entry ${w.de}`);
     }
     for (const marked of lesson.phonetik?.items || []) {
-      if (typeof marked !== 'string' || marked.split('-').length < 2 || marked.split('-').some((s) => !/^\p{L}+$/u.test(s)) || marked.split('-').filter((s) => s === s.toLocaleUpperCase('de')).length !== 1) fail('guided sound items need syllables and exactly one capitalised stress');
+      if (!classifySound(marked)) fail(`guided sound items have an unsupported marking: ${marked}`);
     }
     let end = 0;
     for (const [i, chunk] of chunks.entries()) {

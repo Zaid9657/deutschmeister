@@ -1,4 +1,4 @@
-import { RESULT } from './check.js';
+import { spelledPrompt, spellingApplies, RESULT } from './check.js';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
 const HINTS = {
@@ -7,6 +7,8 @@ const HINTS = {
   listen_select: { de: 'Hören Sie noch einmal und vergleichen Sie die Zeilen.', en: 'Listen again and compare the lines.' },
   match: { de: 'Vergleichen Sie die Bedeutungen noch einmal.', en: 'Compare the meanings again.' },
   fill_blank: { de: 'Lesen Sie den Satz vor und nach der Lücke.', en: 'Read the sentence before and after the gap.' },
+  spelling: { de: 'Prüfen Sie jeden Buchstaben und seine Reihenfolge.', en: 'Check each letter and its order.' },
+  sentence_building: { de: 'Prüfen Sie die Reihenfolge der Wörter und die Verbform.', en: 'Check the word order and the verb form.' },
   error_correction: { de: 'Prüfen Sie die Schreibweise und die Satzzeichen.', en: 'Check the spelling and punctuation.' },
 };
 const NEUTRAL = [
@@ -27,7 +29,8 @@ export function hintContainsAnswer(hint, item) {
 
 /** Never copy an unreviewed pool hint/rule card: those often contain the solution. */
 export function hintFor(item) {
-  const candidates = [HINTS[item.type || item.kind], ...NEUTRAL].filter(Boolean);
+  const kind = spelledPrompt(item) || spellingApplies(acceptedFor(item)) ? 'spelling' : item.type || item.kind;
+  const candidates = [HINTS[kind], ...NEUTRAL].filter(Boolean);
   const hint = candidates.find((h) => !hintContainsAnswer(h.de, item) && !hintContainsAnswer(h.en, item));
   if (!hint) throw new Error('No answer-free bilingual hint for item');
   return hint;

@@ -1,3 +1,4 @@
+import { buildSoundItems } from './guidedSound.js';
 import { lineFor } from './wortfeldPacing.js';
 
 export const SCENE_PHASES = ['hear', 'meaning', 'say'];
@@ -11,9 +12,10 @@ export function buildGuided(options, buildLegacy) {
   const met = (word) => !!lineFor(word.de || word.word, lines);
   const sceneWords = lektion.wortfeld.filter(met);
   const chunks = lektion.guided.chunks.map((chunk, index) => {
-    const sourceLines = lektion.dialog.lines.slice(chunk.from, chunk.say.line + 1);
+    const sourceLines = lektion.dialog.lines.slice(chunk.from, chunk.to);
     return {
       ...chunk,
+      cue: chunk.say.line > 0 ? { ...lektion.dialog.lines[chunk.say.line - 1], index: chunk.say.line - 1 } : undefined,
       lines: lektion.dialog.lines.slice(chunk.from, chunk.to).map((l, i) => ({ ...l, index: chunk.from + i })),
       meaning: { ...chunk.meaning, id: `scene-${lektion.id}-${index + 1}`, type: 'multiple_choice', accepted: [chunk.meaning.answer],
         explanationDe: sourceLines.map((l) => `${l.speaker}: „${l.de}“`).join(' '),
@@ -24,20 +26,7 @@ export function buildGuided(options, buildLegacy) {
   });
   const byKind = (kind) => legacy.stages.find((s) => s.kind === kind);
   const part = (kind, n) => ({ ...byKind(kind), part: n });
-  const soundItems = lektion.phonetik.items.map((marked, index) => {
-    const syllables = marked.split('-');
-    const stress = syllables.findIndex((s) => s === s.toLocaleUpperCase('de'));
-    const options = syllables.map((_, i) => String(i + 1));
-    return {
-      id: `sound-${lektion.id}-${index + 1}`, type: 'multiple_choice',
-      text: syllables.join('').slice(0, 1).toLocaleUpperCase('de') + syllables.join('').slice(1).toLocaleLowerCase('de'), marked,
-      promptDe: 'Welche Silbe ist betont? Wählen Sie die Nummer.',
-      promptEn: 'Which syllable is stressed? Choose its number.',
-      options, answer: options[stress], accepted: [options[stress]],
-      explanationDe: `Die Großbuchstaben zeigen die betonte Silbe: ${marked}.`,
-      explanationEn: `The capitals show the stressed syllable: ${marked}.`,
-    };
-  });
+  const soundItems = buildSoundItems(lektion);
   const read = lektion.guided.read;
   const stages = [
     ...legacy.stages.filter((s) => s.kind === 'warmup'),
@@ -48,7 +37,7 @@ export function buildGuided(options, buildLegacy) {
     { nr: 3, key: 'read', kind: 'read', part: 1, ...read, glossary: lektion.wortfeld, words: lektion.wortfeld.filter((w) => !met(w)),
       items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', accepted: [q.answer] })) },
     ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
-    { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.lines.filter((l) => l.index < c.say.line && l.speaker !== c.say.speaker).at(-1) })) },
+    { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue })) },
     part('speaking', 3), part('writing', 3), part('requeue', 3), { ...part('recap', 3), nextHook: lektion.nextHook },
   ];
   return { ...legacy, flow: 'guided', stages };

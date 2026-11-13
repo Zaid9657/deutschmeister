@@ -7,8 +7,6 @@
 // on a copy of that Lektion in memory, and runs the same rules the curriculum validator runs
 // (RULE 32 guidedFindings, RULE 34 guidedReadVocabulary). Nothing is written.
 //
-// The sound-item shape finding is reported but does not fail the draft: the sound stage only
-// knows word stress today, and Lektionen whose Phonetik items train something else wait for it.
 import { readFileSync, existsSync } from 'node:fs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { guidedFindings } from './lib/guided-content.mjs';
@@ -33,11 +31,9 @@ for (const nr of numbers) {
   if (draft.nextHook !== undefined) lesson.nextHook = draft.nextHook;
   const mine = (s) => s.startsWith(`L${nr}:`);
   const all = [...guidedFindings(curriculum), ...guidedReadVocabulary(curriculum)].filter(mine);
-  const soundOnly = all.filter((s) => s.includes('guided sound items'));
-  const blocking = all.filter((s) => !s.includes('guided sound items'));
+  const blocking = all;
   if (nr < 12 && !draft.nextHook) blocking.push(`L${nr}: nextHook is missing (German and English)`);
   for (const s of blocking) console.error(`✗ ${s}`);
-  if (soundOnly.length) console.log(`  L${nr}: sound stage pending (${soundOnly.length} Phonetik item(s) are not word-stress items)`);
   if (blocking.length) failed = true; else console.log(`✓ L${nr}: draft passes RULE 32 and RULE 34`);
 }
 process.exit(failed ? 1 : 0);

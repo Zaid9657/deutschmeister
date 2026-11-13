@@ -19,11 +19,11 @@ const lektion = CURRICULUM_A11.lektionen[0];
 const build = (l = lektion, attempt = 1) => buildLesson({ curriculum: CURRICULUM_A11, lektion: l, pool, attempt });
 const legacyOrder = ['pretest', 'dialog', 'wortfeld', 'notice', 'phonetik', 'practice', 'derived', 'dictation', 'speaking', 'writing', 'requeue', 'recap'];
 
-test('only A1.1 L1 is guided; both other curricula keep their exact legacy order', () => {
-  assert.deepEqual(CURRICULUM_A11.lektionen.filter((l) => l.flow).map((l) => l.nr), [1]);
+test('all A1.1 lessons are guided; A1.2 and a synthetic lesson without flow keep the legacy order', () => {
+  assert.deepEqual(CURRICULUM_A11.lektionen.filter((l) => l.flow).map((l) => l.nr), Array.from({ length: 12 }, (_, i) => i + 1));
   assert.ok(CURRICULUM_A12.lektionen.every((l) => !l.flow));
   assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'recap']);
-  assert.deepEqual(build(CURRICULUM_A11.lektionen[1]).stages.map((s) => s.key), legacyOrder);
+  assert.deepEqual(build({ ...CURRICULUM_A11.lektionen[1], flow: undefined }).stages.map((s) => s.key), legacyOrder);
   const a12 = buildLesson({ curriculum: CURRICULUM_A12, lektion: CURRICULUM_A12.lektionen[0], pool: JSON.parse(read('src/data/lessonPools/a12.json')) });
   assert.deepEqual(a12.stages.map((s) => s.key), legacyOrder);
 });

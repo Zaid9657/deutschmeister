@@ -349,6 +349,105 @@ export const CURRICULUM_A11 = {
       nr: 2,
       id: 'a1.1-l02',
       slug: 'ich-bin-studentin',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Das Formular vom Amt',
+          titleEn: 'The form from the public office',
+          instructionDe: 'Lesen Sie das Blatt vom Amt. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the sheet from the public office. Tap a word for its meaning.',
+          text: 'Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.',
+          questions: [
+            {
+              promptDe: 'Sie kommen aus Marokko. Was steht dann im Formular bei „Staatsangehörigkeit“? Wählen Sie.',
+              promptEn: 'You come from Morocco. What goes on the form under “Staatsangehörigkeit”? Choose.',
+              options: ['The noun “Marokkanerin”.', 'The country name “Marokko”.', 'The adjective “marokkanisch”.'],
+              answer: 'The adjective “marokkanisch”.',
+              explanationDe: 'Auf dem Blatt steht: Dann bitte „marokkanisch“, nicht „Marokkanerin“.',
+              explanationEn: 'The sheet says: then “marokkanisch”, please, not “Marokkanerin”.',
+            },
+            {
+              promptDe: 'Was fragt das Amt bei „Geburtsdatum“? Wählen Sie.',
+              promptEn: 'What does the office ask under “Geburtsdatum”? Choose.',
+              options: ['When you were born.', 'Where you live now.', 'What your job is.'],
+              answer: 'When you were born.',
+              explanationDe: 'Auf dem Blatt steht: Geburtsdatum: Wann sind Sie geboren?',
+              explanationEn: 'The sheet says under “Geburtsdatum”: when were you born?',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Wer ist Herr Weber? Wählen Sie die Bedeutung.',
+              promptEn: 'Who is Herr Weber? Choose the meaning.',
+              options: ['He is a teacher from Bremen.', 'He is from the public office.', 'He is from the post office.'],
+              answer: 'He is from the public office.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was möchte Herr Weber wissen? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Herr Weber want to know? Choose the meaning.',
+              options: ['Whether Ana is single or married.', 'Whether Ana is a student or a teacher.', 'Whether Ana lives in Bremen or Berlin.'],
+              answer: 'Whether Ana is single or married.',
+            },
+            say: {
+              line: 3,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was sagt Ana? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say? Choose the meaning.',
+              options: ['She comes from Bremen and lives in Morocco.', 'She comes from Spain and lives in Berlin.', 'She comes from Morocco and lives in Bremen.'],
+              answer: 'She comes from Morocco and lives in Bremen.',
+            },
+            say: {
+              line: 5,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was fragt Herr Weber? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Herr Weber ask? Choose the meaning.',
+              options: ['He asks what Ana’s job is.', 'He asks where Ana lives.', 'He asks how old Ana is.'],
+              answer: 'He asks what Ana’s job is.',
+            },
+            say: {
+              line: 7,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.',
+              promptEn: 'What is Ana’s phone number? Choose the numbers.',
+              options: ['0167', '0176', '1076'],
+              answer: '0176',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Lena sieht ein Foto auf Anas Handy. Wer sind die Leute auf dem Foto?',
+        en: 'Lena sees a photo on Ana’s phone. Who are the people in the photo?',
+      },
       title: 'Ich bin Studentin',
       situation: 'Angaben zur Person, Beruf und Zahlen',
       handlungsfeld: 'Ämter und Behörden: Angaben zur Person machen',
@@ -621,6 +720,105 @@ export const CURRICULUM_A11 = {
       nr: 3,
       id: 'a1.1-l03',
       slug: 'meine-familie',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Eine Nachricht mit Foto',
+          titleEn: 'A message with a photo',
+          instructionDe: 'Lesen Sie die Nachricht von Ana. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the message from Ana. Tap a word for its meaning.',
+          text: 'Hallo Tim!\nDas ist meine Familie.\nMein Vater und meine Mutter kommen aus Marokko.\nMein Bruder ist zwanzig, seine Frau ist auch jung.\nSie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.\nMeine Schwester ist schon verheiratet.\nWir sprechen zusammen Arabisch und Deutsch.\nUnd du? Hast du Geschwister oder bist du Einzelkind?\nBis morgen! Ana',
+          questions: [
+            {
+              promptDe: 'Was schreibt Ana über ihren Bruder? Wählen Sie.',
+              promptEn: 'What does Ana write about her brother? Choose.',
+              options: ['He and his wife have a young son.', 'He and his wife have a baby daughter.', 'He is single and has no children.'],
+              answer: 'He and his wife have a baby daughter.',
+              explanationDe: 'In der Nachricht steht: Sie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.',
+              explanationEn: 'The message says they already have a child: a daughter. She is still a baby.',
+            },
+            {
+              promptDe: 'Was möchte Ana von Tim wissen? Wählen Sie.',
+              promptEn: 'What does Ana want to know from Tim? Choose.',
+              options: ['Whether he is married or still single.', 'Whether he speaks Arabic or English.', 'Whether he has siblings or is an only child.'],
+              answer: 'Whether he has siblings or is an only child.',
+              explanationDe: 'In der Nachricht steht: Hast du Geschwister oder bist du Einzelkind?',
+              explanationEn: 'The message asks: do you have siblings or are you an only child?',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Wer ist auf dem Foto? Wählen Sie die Bedeutung.',
+              promptEn: 'Who is in the photo? Choose the meaning.',
+              options: ['Her parents, a brother and a sister.', 'Her husband, a son and a daughter.', 'Her parents and her two brothers.'],
+              answer: 'Her parents, a brother and a sister.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was sagt Ana über ihre Schwester? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say about her sister? Choose the meaning.',
+              options: ['She is twenty.', 'She is still young.', 'She is a baby.'],
+              answer: 'She is still young.',
+            },
+            say: {
+              line: 2,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Welche Sprachen sprechen Anas Eltern? Wählen Sie die Bedeutung.',
+              promptEn: 'Which languages do Ana’s parents speak? Choose the meaning.',
+              options: ['English and German.', 'Arabic and English.', 'Arabic and German.'],
+              answer: 'Arabic and German.',
+            },
+            say: {
+              line: 5,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was fragt Lena? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Lena ask? Choose the meaning.',
+              options: ['Whether Ana’s brother also speaks English.', 'Whether Ana’s brother lives in Germany.', 'Whether Ana’s parents also speak English.'],
+              answer: 'Whether Ana’s brother also speaks English.',
+            },
+            say: {
+              line: 6,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was hat Anas Bruder? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana’s brother have? Choose the meaning.',
+              options: ['A son and a daughter.', 'A baby daughter.', 'A young son.'],
+              answer: 'A baby daughter.',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Tim sucht Möbel für sein Zimmer. Ist der Flohmarkt teuer?',
+        en: 'Tim is looking for furniture for his room. Is the flea market expensive?',
+      },
       title: 'Meine Familie',
       situation: 'Familie und Sprachen',
       handlungsfeld: 'Familie und Erziehung: über die eigene Familie sprechen',
@@ -735,6 +933,105 @@ export const CURRICULUM_A11 = {
       nr: 4,
       id: 'a1.1-l04',
       slug: 'auf-dem-flohmarkt',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Preise auf dem Flohmarkt',
+          titleEn: 'Prices at the flea market',
+          instructionDe: 'Lesen Sie das Schild. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the sign. Tap a word for its meaning.',
+          text: 'Flohmarkt\nFrau Wolf: Wir verkaufen Uhren, Taschen, Rucksäcke, Stühle …\nWie viel kostet das? Der Preis in Euro:\nUhr: 10\nTasche: 5\nRucksack: 20\nWie viele Stühle kaufen Sie? Vier Stühle kosten zusammen nur 40 Euro!',
+          questions: [
+            {
+              promptDe: 'Was kostet bei Frau Wolf fünf Euro? Wählen Sie.',
+              promptEn: 'What costs five euros at Frau Wolf’s table? Choose.',
+              options: ['The clock.', 'The backpack.', 'The bag.'],
+              answer: 'The bag.',
+              explanationDe: 'Auf dem Schild steht: Tasche: 5. Der Preis ist in Euro.',
+              explanationEn: 'The sign says: Tasche (bag): 5. The price is in euros.',
+            },
+            {
+              promptDe: 'Was kosten vier Stühle zusammen? Wählen Sie.',
+              promptEn: 'What do four chairs cost altogether? Choose.',
+              options: ['Twelve euros.', 'Forty euros.', 'Twenty euros.'],
+              answer: 'Forty euros.',
+              explanationDe: 'Auf dem Schild steht: Vier Stühle kosten zusammen nur 40 Euro.',
+              explanationEn: 'The sign says that four chairs together cost only 40 euros.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was sagt Frau Wolf? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Frau Wolf say? Choose the meaning.',
+              options: ['It is a clock and costs eight euros.', 'It is a lamp and costs eighteen euros.', 'It is a lamp and costs eight euros.'],
+              answer: 'It is a lamp and costs eight euros.',
+            },
+            say: {
+              line: 0,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was kostet der Tisch? Wählen Sie die Bedeutung.',
+              promptEn: 'What does the table cost? Choose the meaning.',
+              options: ['Fifty euros.', 'Fifteen euros.', 'Five euros.'],
+              answer: 'Fifteen euros.',
+            },
+            say: {
+              line: 2,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was sagt Tim über den Tisch? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim say about the table? Choose the meaning.',
+              options: ['He thinks it is expensive.', 'He wants to buy it now.', 'He thinks it is too old.'],
+              answer: 'He thinks it is expensive.',
+            },
+            say: {
+              line: 4,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was kauft Tim? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim buy? Choose the meaning.',
+              options: ['The table and the chair.', 'The chair and the lamp.', 'The lamp and the shelf.'],
+              answer: 'The chair and the lamp.',
+            },
+            say: {
+              line: 6,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was kostet das Regal? Wählen Sie die Bedeutung.',
+              promptEn: 'What does the shelf cost? Choose the meaning.',
+              options: ['Fifty euros.', 'Thirteen euros.', 'Thirty euros.'],
+              answer: 'Thirty euros.',
+            },
+            say: {
+              line: 8,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Vor dem Kurs packen Lena und Tim ihre Taschen aus. Aber wo ist das Wörterbuch?',
+        en: 'Before class, Lena and Tim unpack their bags. But where is the dictionary?',
+      },
       title: 'Auf dem Flohmarkt',
       situation: 'Einkaufen, Möbel und Preise',
       handlungsfeld: 'Einkaufen: nach Gegenständen und Preisen fragen',
@@ -848,6 +1145,105 @@ export const CURRICULUM_A11 = {
       nr: 5,
       id: 'a1.1-l05',
       slug: 'im-klassenzimmer',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Tims Zimmer',
+          titleEn: 'Tim’s room',
+          instructionDe: 'Tim schickt Lena ein Foto und schreibt. Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Tim sends Lena a photo and writes to her. Read the message. Tap a word for its meaning.',
+          text: 'Hallo Lena!\nDas ist mein Zimmer. Die Wohnung ist alt, aber das Zimmer ist gut.\nDie Tür ist braun und das Fenster ist weiß.\nDer Stuhl ist auch braun. Das Bild ist da: Es ist blau.\nIch habe eine Tafel für Deutsch. Sie ist grün.\nPapier und ein Kugelschreiber sind auch da.\nKommst du morgen? Dann sprechen wir zusammen Deutsch.\nTschüss, Tim',
+          questions: [
+            {
+              promptDe: 'Welche Farbe hat die Tür in Tims Zimmer? Wählen Sie die richtige Antwort.',
+              promptEn: 'What colour is the door in Tim’s room? Choose the right answer.',
+              options: ['It is white.', 'It is green.', 'It is brown.'],
+              answer: 'It is brown.',
+              explanationDe: 'Tim schreibt: Die Tür ist braun. Weiß ist das Fenster, grün ist die Tafel.',
+              explanationEn: 'Tim writes that the door is brown. The window is white and the board is green.',
+            },
+            {
+              promptDe: 'Was möchte Tim morgen mit Lena machen? Wählen Sie die richtige Antwort.',
+              promptEn: 'What would Tim like to do with Lena tomorrow? Choose the right answer.',
+              options: ['Speak German together.', 'Buy a picture together.', 'Sell his old chair.'],
+              answer: 'Speak German together.',
+              explanationDe: 'Tim schreibt: Kommst du morgen? Dann sprechen wir zusammen Deutsch.',
+              explanationEn: 'Tim asks whether Lena is coming tomorrow, and says they will then speak German together.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was möchte Lena wissen? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Lena want to know? Choose the meaning.',
+              options: ['What the dictionary costs.', 'Where the dictionary is.', 'Whose dictionary it is.'],
+              answer: 'Where the dictionary is.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was sagt Tim über die Schere und das Lineal? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim say about the scissors and the ruler? Choose the meaning.',
+              options: ['The scissors are here, and so is the ruler.', 'The scissors are here, but the ruler is not.', 'Lena has the scissors, and Tim has the ruler.'],
+              answer: 'The scissors are here, and so is the ruler.',
+            },
+            say: {
+              line: 2,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Welche Farben nennt Tim? Wählen Sie die Bedeutung.',
+              promptEn: 'Which colours does Tim name? Choose the meaning.',
+              options: ['The pen is black and the pencil is blue.', 'The pen is yellow and the pencil is black.', 'The pen is blue and the pencil is yellow.'],
+              answer: 'The pen is blue and the pencil is yellow.',
+            },
+            say: {
+              line: 4,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was sagt Tim über das Heft? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim say about the notebook? Choose the meaning.',
+              options: ['It is red, just as Lena thinks.', 'It is not red but green.', 'It is not his notebook at all.'],
+              answer: 'It is not red but green.',
+            },
+            say: {
+              line: 7,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was sagt Tim über das Bild? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim say about the picture? Choose the meaning.',
+              options: ['It is blue, and it is for his room.', 'It is green, and it is for Lena.', 'It is black, and it is for the course.'],
+              answer: 'It is blue, and it is for his room.',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Ana hat Arbeit! Morgen ist ihr erster Tag im Büro. Was braucht sie dort?',
+        en: 'Ana has a job! Tomorrow is her first day at the office. What does she need there?',
+      },
       title: 'Im Klassenzimmer',
       situation: 'Gegenstände und Farben',
       handlungsfeld: 'Lernen und Bildung: Gegenstände im Kurs benennen',
@@ -966,6 +1362,105 @@ export const CURRICULUM_A11 = {
       nr: 6,
       id: 'a1.1-l06',
       slug: 'der-erste-tag-im-buero',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Eine Nachricht von der Chefin',
+          titleEn: 'A note from the boss',
+          instructionDe: 'Ana findet im Büro eine Nachricht. Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Ana finds a note in the office. Read the note. Tap a word for its meaning.',
+          text: 'Guten Morgen, Ana! Willkommen im Büro!\nIch bin Frau Berg, Ihre Chefin. Der Chef vom Amt kommt um zehn.\nIhr Kollege ist Ingenieur. Ihre Kollegin ist auch Ingenieurin.\nSie haben noch kein Handy. Die Firma Thomas verkauft Handys.\nUm elf kommt ein Verkäufer oder eine Verkäuferin von der Firma.\nDann brauche ich Ihre Handynummer und Ihre E-Mail-Adresse.\nUnd die Arbeit? Das machen wir zusammen.\nBis dann!',
+          questions: [
+            {
+              promptDe: 'Wer kommt um elf ins Büro? Wählen Sie die richtige Antwort.',
+              promptEn: 'Who comes to the office at eleven? Choose the right answer.',
+              options: ['The head of the public office.', 'A salesperson from a company.', 'A colleague who is an engineer.'],
+              answer: 'A salesperson from a company.',
+              explanationDe: 'Frau Berg schreibt: Um elf kommt ein Verkäufer oder eine Verkäuferin von der Firma. Der Chef vom Amt kommt um zehn.',
+              explanationEn: 'Frau Berg writes that a salesman or saleswoman from the company comes at eleven. The head of the office comes at ten.',
+            },
+            {
+              promptDe: 'Was braucht Frau Berg von Ana? Wählen Sie die richtige Antwort.',
+              promptEn: 'What does Frau Berg need from Ana? Choose the right answer.',
+              options: ['Her mobile number and her email address.', 'Her home address and her date of birth.', 'Her computer and her office telephone.'],
+              answer: 'Her mobile number and her email address.',
+              explanationDe: 'Frau Berg schreibt: Dann brauche ich Ihre Handynummer und Ihre E-Mail-Adresse.',
+              explanationEn: 'Frau Berg writes that she then needs Ana’s mobile number and her email address.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was macht Herr Weber? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Herr Weber do? Choose the meaning.',
+              options: ['He greets Ana and asks for her name.', 'He greets Ana and gives her a form.', 'He greets Ana and shows her the office.'],
+              answer: 'He greets Ana and shows her the office.',
+            },
+            say: {
+              line: 0,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was braucht Ana im Büro? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana need in the office? Choose the meaning.',
+              options: ['A computer and a telephone.', 'A table and a mobile phone.', 'A form and a key.'],
+              answer: 'A computer and a telephone.',
+            },
+            say: {
+              line: 2,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was sagt Herr Weber über ein Handy? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Herr Weber say about a mobile phone? Choose the meaning.',
+              options: ['Ana gets a mobile phone tomorrow.', 'The office has no mobile phone.', 'The mobile phone is too expensive.'],
+              answer: 'The office has no mobile phone.',
+            },
+            say: {
+              line: 4,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was möchte Ana wissen? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana want to know? Choose the meaning.',
+              options: ['The name of her colleague.', 'The address of the office.', 'The office telephone number.'],
+              answer: 'The office telephone number.',
+            },
+            say: {
+              line: 6,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was sagt Herr Weber über die Pause? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Herr Weber say about the break? Choose the meaning.',
+              options: ['The break is at one o’clock.', 'The break lasts one hour.', 'There is no break today.'],
+              answer: 'The break is at one o’clock.',
+            },
+            say: {
+              line: 8,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Nach der Arbeit kommt das Wochenende. Was machen Lena und Tim gern – und was machen Sie gern?',
+        en: 'After work comes the weekend. What do Lena and Tim like doing – and what do you like doing?',
+      },
       title: 'Der erste Tag im Büro',
       situation: 'Büro, Technik und Telefon',
       handlungsfeld: 'Arbeit und Beruf: am Arbeitsplatz zurechtkommen',
@@ -1083,6 +1578,92 @@ export const CURRICULUM_A11 = {
       nr: 7,
       id: 'a1.1-l07',
       slug: 'freizeit-und-hobbys',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Frei am Wochenende?',
+          titleEn: 'Free at the weekend?',
+          instructionDe: 'Lesen Sie den Aushang. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the notice. Tap a word for its meaning.',
+          text: 'Sind Sie am Wochenende frei? Dann kommen Sie!\nWir sind Freunde und machen jede Woche zusammen Sport.\nWir spielen Fußball und wir schwimmen.\nWir kochen auch zusammen und hören Musik.\nLesen Sie gern? Wir lesen Bücher auf Deutsch.\nAm Wochenende gehen wir immer ins Kino.\nDas Kino kostet acht Euro.\nIhr Freund oder Ihre Freundin ist auch willkommen!',
+          questions: [
+            {
+              promptDe: 'Was kostet acht Euro? Wählen Sie die richtige Antwort.',
+              promptEn: 'What costs eight euros? Choose the right answer.',
+              options: ['Playing football.', 'Cooking together.', 'Going to the cinema.'],
+              answer: 'Going to the cinema.',
+              explanationDe: 'Im Aushang steht: Das Kino kostet acht Euro.',
+              explanationEn: 'The notice says that the cinema costs eight euros. It names no price for anything else.',
+            },
+            {
+              promptDe: 'Wer ist auch willkommen? Wählen Sie die richtige Antwort.',
+              promptEn: 'Who is welcome too? Choose the right answer.',
+              options: ['A friend of yours.', 'A child of yours.', 'A colleague of yours.'],
+              answer: 'A friend of yours.',
+              explanationDe: 'Im Aushang steht: Ihr Freund oder Ihre Freundin ist auch willkommen.',
+              explanationEn: 'The notice says that your friend, a man or a woman, is welcome too.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 3,
+            meaning: {
+              promptDe: 'Was machen Tim und Lena gern? Wählen Sie die Bedeutung.',
+              promptEn: 'What do Tim and Lena like doing? Choose the meaning.',
+              options: ['Tim plays football; Lena likes listening to music.', 'Tim likes listening to music; Lena plays football.', 'Tim likes cooking; Lena likes going to the cinema.'],
+              answer: 'Tim likes listening to music; Lena plays football.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 3,
+            to: 5,
+            meaning: {
+              promptDe: 'Was sagt Lena über das Wochenende? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Lena say about the weekend? Choose the meaning.',
+              options: ['She does not work then; she is free.', 'She works then and has no time.', 'She is free only every second week.'],
+              answer: 'She does not work then; she is free.',
+            },
+            say: {
+              line: 4,
+            },
+          },
+          {
+            from: 5,
+            to: 7,
+            meaning: {
+              promptDe: 'Was möchte Lena von Tim wissen? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Lena want to know from Tim? Choose the meaning.',
+              options: ['Whether he swims every week.', 'Whether he likes cooking for friends.', 'Whether he likes going to the cinema.'],
+              answer: 'Whether he likes going to the cinema.',
+            },
+            say: {
+              line: 6,
+            },
+          },
+          {
+            from: 7,
+            to: 10,
+            meaning: {
+              promptDe: 'Was möchte Tim am Wochenende machen? Wählen Sie die Bedeutung.',
+              promptEn: 'What would Tim like to do at the weekend? Choose the meaning.',
+              options: ['Play football together with Lena.', 'Listen to music together with Lena.', 'Go dancing together with Lena.'],
+              answer: 'Listen to music together with Lena.',
+            },
+            say: {
+              line: 7,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Ana und Lena suchen einen Termin. Aber wann hat Lena Zeit – und um wie viel Uhr?',
+        en: 'Ana and Lena are looking for a time to meet. But when is Lena free – and at what time?',
+      },
       title: 'Freizeit und Hobbys',
       situation: 'Freizeit und Hobbys',
       handlungsfeld: 'Freizeit und soziale Kontakte: über Hobbys sprechen',
@@ -1203,6 +1784,105 @@ export const CURRICULUM_A11 = {
       nr: 8,
       id: 'a1.1-l08',
       slug: 'termine-und-uhrzeit',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Eine Nachricht von Lena',
+          titleEn: 'A message from Lena',
+          instructionDe: 'Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the message. Tap a word for its meaning.',
+          text: 'Hallo Ana!\nHeute ist Mittwoch und ich bin krank.\nUm sechs Uhr aufstehen? Heute nicht!\nMein Termin beim Arzt ist um halb zehn.\nHast du am Donnerstag Zeit?\nNachmittags um Viertel nach vier bin ich frei.\nIst die Uhrzeit gut für dich?\nIch komme nicht zu spät: Mein Wecker ist gut!\nViele Grüße, Lena',
+          questions: [
+            {
+              promptDe: 'Wann ist Lenas Termin beim Arzt? Wählen Sie die Antwort.',
+              promptEn: 'When is Lena’s appointment at the doctor’s? Choose the answer.',
+              options: ['At half past ten.', 'At half past nine.', 'At a quarter past nine.'],
+              answer: 'At half past nine.',
+              explanationDe: 'In der Nachricht steht: Der Termin beim Arzt ist um halb zehn. Halb zehn ist 9.30 Uhr.',
+              explanationEn: 'The message says the appointment is at “halb zehn”. That is 9.30: half an hour before ten.',
+            },
+            {
+              promptDe: 'Wann hat Lena am Donnerstag Zeit? Wählen Sie die Antwort.',
+              promptEn: 'When does Lena have time on Thursday? Choose the answer.',
+              options: ['In the afternoon, at a quarter past four.', 'In the afternoon, at a quarter to four.', 'In the evening, at a quarter past eight.'],
+              answer: 'In the afternoon, at a quarter past four.',
+              explanationDe: 'In der Nachricht steht: Nachmittags um Viertel nach vier ist Lena frei. Das ist 16.15 Uhr.',
+              explanationEn: 'The message says Lena is free in the afternoon at “Viertel nach vier”: a quarter past four.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was macht Lena um sechs Uhr? Wählen Sie die Antwort.',
+              promptEn: 'What does Lena do at six o’clock? Choose the answer.',
+              options: ['She gets up.', 'She has breakfast.', 'She goes to work.'],
+              answer: 'She gets up.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Wann ist der Termin von Lena? Wählen Sie die Antwort.',
+              promptEn: 'When is Lena’s appointment? Choose the answer.',
+              options: ['On Monday at a quarter past eight.', 'On Tuesday at a quarter to eight.', 'On Monday at a quarter to eight.'],
+              answer: 'On Monday at a quarter to eight.',
+            },
+            say: {
+              line: 2,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Kommt Lena heute pünktlich? Wählen Sie die Bedeutung.',
+              promptEn: 'Will Lena be on time today? Choose the meaning.',
+              options: ['No, she is running late today.', 'Yes, she is always on time.', 'No, her alarm clock is broken.'],
+              answer: 'Yes, she is always on time.',
+            },
+            say: {
+              line: 5,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Wann ist Lena am Dienstag frei? Wählen Sie die Antwort.',
+              promptEn: 'When is Lena free on Tuesday? Choose the answer.',
+              options: ['In the morning.', 'In the afternoon.', 'In the evening.'],
+              answer: 'In the evening.',
+            },
+            say: {
+              line: 6,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Lena say about Wednesday? Choose the meaning.',
+              options: ['She is at the doctor’s.', 'She is free all day.', 'She is at work.'],
+              answer: 'She is at the doctor’s.',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Ana hat Durst und geht ins Café. Kann sie auf Deutsch bestellen?',
+        en: 'Ana is thirsty and goes to a café. Can she order in German?',
+      },
       title: 'Termine und Uhrzeit',
       situation: 'Verabredungen, Uhrzeit und Tagesablauf',
       handlungsfeld: 'Gesundheit und Ämter: Termine vereinbaren',
@@ -1327,6 +2007,105 @@ export const CURRICULUM_A11 = {
       nr: 9,
       id: 'a1.1-l09',
       slug: 'im-cafe',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Die Karte im Café',
+          titleEn: 'The café menu',
+          instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the menu. Tap a word for its meaning.',
+          text: 'Café Bremen\nBei uns essen und trinken Sie gut!\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro',
+          questions: [
+            {
+              promptDe: 'Sie möchten Suppe und eine Tasse Tee. Was kostet das zusammen? Wählen Sie die Antwort.',
+              promptEn: 'You would like soup and a cup of tea. How much is that together? Choose the answer.',
+              options: ['5 euros.', '7 euros.', '8 euros.'],
+              answer: '7 euros.',
+              explanationDe: 'Auf der Karte steht: Suppe kostet 5 Euro, eine Tasse Tee kostet 2 Euro. Zusammen sind das 7 Euro.',
+              explanationEn: 'The menu says soup is 5 euros and a cup of tea is 2 euros. Together that is 7 euros.',
+            },
+            {
+              promptDe: 'Wann gibt es im Café Frühstück? Wählen Sie die Antwort.',
+              promptEn: 'When does the café serve breakfast? Choose the answer.',
+              options: ['Monday to Saturday, from 7 to 11.', 'Monday to Friday, from 7 to 11.', 'Every day, from 7 to 11.'],
+              answer: 'Monday to Saturday, from 7 to 11.',
+              explanationDe: 'Auf der Karte steht: Frühstück von Montag bis Samstag, 7 bis 11 Uhr. Am Sonntag ist kein Frühstück.',
+              explanationEn: 'The menu says breakfast is Monday to Saturday, 7 to 11. There is no breakfast on Sunday.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was möchte Ana? Wählen Sie die Bedeutung.',
+              promptEn: 'What would Ana like? Choose the meaning.',
+              options: ['She is hungry and orders a soup.', 'She is thirsty and orders a coffee.', 'She is tired and orders a tea.'],
+              answer: 'She is thirsty and orders a coffee.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Hat Ana auch Hunger? Wählen Sie die Bedeutung.',
+              promptEn: 'Is Ana hungry too? Choose the meaning.',
+              options: ['Yes, and she orders cake.', 'Yes, and she orders soup.', 'No, she only wants a drink.'],
+              answer: 'Yes, and she orders cake.',
+            },
+            say: {
+              line: 3,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was bestellt Ana noch? Wählen Sie die Antwort.',
+              promptEn: 'What else does Ana order? Choose the answer.',
+              options: ['A cup of tea and a mineral water.', 'A glass of orange juice and a beer.', 'A glass of mineral water and an orange juice.'],
+              answer: 'A glass of mineral water and an orange juice.',
+            },
+            say: {
+              line: 5,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.',
+              promptEn: 'Paul also has tea, beer and wine. What does Ana say? Choose the meaning.',
+              options: ['Yes, please: she orders a glass of wine.', 'No, thank you: she will eat bread with salad.', 'No, thank you: she would like the bill.'],
+              answer: 'No, thank you: she will eat bread with salad.',
+            },
+            say: {
+              line: 7,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was sagt Paul? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Paul say? Choose the meaning.',
+              options: ['The waitress is coming right away with the bread.', 'The waitress is sorry: there is no bread today.', 'The bread will take another twenty minutes.'],
+              answer: 'The waitress is coming right away with the bread.',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Ana steht am Bahnhof und hat viele Fragen: Fährt der Zug nach Österreich? Und was kostet die Fahrkarte?',
+        en: 'Ana is at the station with a lot of questions: does the train go to Austria? And what does the ticket cost?',
+      },
       title: 'Im Café',
       // The Lektion teaches declining an OFFER, not an invitation — inviting is L12 (review #2, L9).
       // The standard's §2.2 keyword „Einladung“ stays in the string, with the forward pointer.
@@ -1434,6 +2213,105 @@ export const CURRICULUM_A11 = {
       nr: 10,
       id: 'a1.1-l10',
       slug: 'am-bahnhof',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Der Bus am Bahnhof',
+          titleEn: 'The bus at the station',
+          instructionDe: 'Lesen Sie die Information am Bahnhof. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the notice at the station. Tap a word for its meaning.',
+          text: 'Bus am Bahnhof Bremen\nSie haben kein Auto? Fahren Sie mit dem Bus!\nIn welches Land fahren Sie?\nDeutschland: Der Bus fährt heute und morgen nach Berlin.\nÖsterreich: Der Bus fährt nächste Woche am Montag.\nIn die Schweiz fährt der Bus leider nicht.\nAbfahrt: immer um 8 Uhr, hier am Bahnhof.\nDie Fahrkarte kaufen Sie beim Fahrer oder bei der Fahrerin.',
+          questions: [
+            {
+              promptDe: 'Wann fährt der Bus nach Österreich? Wählen Sie die Antwort.',
+              promptEn: 'When does the bus go to Austria? Choose the answer.',
+              options: ['Today and tomorrow.', 'Next week, on Monday.', 'Next week, on Friday.'],
+              answer: 'Next week, on Monday.',
+              explanationDe: 'In der Information steht: Österreich – der Bus fährt nächste Woche am Montag. Heute und morgen fährt er nach Berlin.',
+              explanationEn: 'The notice says the bus to Austria runs next week, on Monday. Today and tomorrow it goes to Berlin.',
+            },
+            {
+              promptDe: 'Wo kaufen Sie die Fahrkarte für den Bus? Wählen Sie die Antwort.',
+              promptEn: 'Where do you buy the ticket for the bus? Choose the answer.',
+              options: ['At the counter in the station.', 'From a machine at the platform.', 'From the driver of the bus.'],
+              answer: 'From the driver of the bus.',
+              explanationDe: 'In der Information steht: Die Fahrkarte kaufen Sie beim Fahrer oder bei der Fahrerin.',
+              explanationEn: 'The notice says you buy the ticket from the driver: a man (Fahrer) or a woman (Fahrerin).',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Wann und wo fährt der Zug nach Österreich? Wählen Sie die Antwort.',
+              promptEn: 'When and where does the train to Austria leave? Choose the answer.',
+              options: ['At four o’clock from platform nine.', 'At nine o’clock from platform five.', 'At nine o’clock from platform four.'],
+              answer: 'At nine o’clock from platform four.',
+            },
+            say: {
+              line: 0,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was sagt Herr Schmidt über den Zug? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Herr Schmidt say about the train? Choose the meaning.',
+              options: ['The train is on time.', 'The train is delayed.', 'The train is full.'],
+              answer: 'The train is on time.',
+            },
+            say: {
+              line: 2,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was kostet die Fahrkarte? Wählen Sie die Antwort.',
+              promptEn: 'How much is the ticket? Choose the answer.',
+              options: ['Twenty euros.', 'Fifteen euros.', 'Fifty euros.'],
+              answer: 'Fifteen euros.',
+            },
+            say: {
+              line: 4,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Ist das Gleis weit? Wählen Sie die Bedeutung.',
+              promptEn: 'Is the platform far? Choose the meaning.',
+              options: ['No, the train leaves right here, from platform four.', 'Yes, platform four is at the other end of the station.', 'No, but Ana has to take the bus to get there.'],
+              answer: 'No, the train leaves right here, from platform four.',
+            },
+            say: {
+              line: 6,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was sagt die Durchsage? Wählen Sie die Bedeutung.',
+              promptEn: 'What does the announcement say? Choose the meaning.',
+              options: ['The train is on time; please board at platform four.', 'The train is cancelled; please take the bus.', 'The train is delayed; please change at platform five.'],
+              answer: 'The train is delayed; please change at platform five.',
+            },
+            say: {
+              line: 8,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Im Kurs fragt Lena Tim: Was hast du gestern gemacht? Und für Freitag haben die beiden einen Plan.',
+        en: 'In class, Lena asks Tim what he did yesterday. And the two of them have a plan for Friday.',
+      },
       title: 'Am Bahnhof',
       situation: 'Verkehrsmittel und Reisen',
       handlungsfeld: 'Mobilität und Verkehrsmittel: eine Fahrt planen',
@@ -1553,6 +2431,105 @@ export const CURRICULUM_A11 = {
       nr: 11,
       id: 'a1.1-l11',
       slug: 'gestern-und-heute',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Tims Zettel für Freitag',
+          titleEn: 'Tim\'s note for Friday',
+          instructionDe: 'Lesen Sie Tims Zettel. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read Tim\'s note. Tap a word for its meaning.',
+          text: 'Wochentag: Freitag\nUm sechs Uhr aufstehen, duschen, frühstücken\nLena anrufen – noch nicht gemacht!\nUm vier Uhr Lena abholen: Sie möchte mitkommen.\nDas Wörterbuch für Lena mitbringen!\nDann einkaufen: Brot, Kaffee und Wasser. Tee habe ich schon.\nUm sieben Uhr nach Hause. Abends bin ich müde.\nLetzte Woche: jeden Tag gearbeitet. Am Sonntag: bis neun schlafen!',
+          questions: [
+            {
+              promptDe: 'Was macht Tim um vier Uhr? Wählen Sie die Antwort.',
+              promptEn: 'What does Tim do at four o\'clock? Choose the answer.',
+              options: ['He calls Lena, and then they have breakfast.', 'He picks Lena up, and then they go shopping.', 'He goes home, and then he sleeps until nine.'],
+              answer: 'He picks Lena up, and then they go shopping.',
+              explanationDe: 'Auf dem Zettel steht: Um vier Uhr Lena abholen. Dann einkaufen.',
+              explanationEn: 'The note says: pick Lena up at four o\'clock, then go shopping.',
+            },
+            {
+              promptDe: 'Was kauft Tim nicht? Wählen Sie die Antwort.',
+              promptEn: 'What does Tim not buy? Choose the answer.',
+              options: ['Tea, because he already has some.', 'Bread, because he already has some.', 'Coffee, because he does not drink it.'],
+              answer: 'Tea, because he already has some.',
+              explanationDe: 'Auf dem Zettel steht: Tee habe ich schon. Tim kauft Brot, Kaffee und Wasser.',
+              explanationEn: 'The note says: I already have tea. Tim buys bread, coffee and water.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was hat Tim gestern gemacht? Wählen Sie die Bedeutung.',
+              promptEn: 'What did Tim do yesterday? Choose the meaning.',
+              options: ['He studied German.', 'He was working.', 'He went shopping.'],
+              answer: 'He was working.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Was sagt Tim über den Morgen? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim say about his mornings? Choose the meaning.',
+              options: ['He gets up at six and is tired.', 'He gets up at seven and is tired.', 'He gets up at six and feels fine.'],
+              answer: 'He gets up at six and is tired.',
+            },
+            say: {
+              line: 3,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was macht Tim am Freitag? Wählen Sie die Bedeutung.',
+              promptEn: 'What is Tim doing on Friday? Choose the meaning.',
+              options: ['He is working and cannot go shopping.', 'He is staying at home and sleeping in.', 'He is going shopping and asks Lena to come.'],
+              answer: 'He is going shopping and asks Lena to come.',
+            },
+            say: {
+              line: 5,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was sagt Lena? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Lena say? Choose the meaning.',
+              options: ['She is coming along and asks Tim to call her.', 'She cannot come and will call Tim next week.', 'She is coming along and will pick Tim up at six.'],
+              answer: 'She is coming along and asks Tim to call her.',
+            },
+            say: {
+              line: 7,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was macht Tim am Sonntag? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Tim do on Sunday? Choose the meaning.',
+              options: ['He gets up at six.', 'He sleeps until nine.', 'He works until nine.'],
+              answer: 'He sleeps until nine.',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?',
+        en: 'Ana\'s birthday is coming up and she is planning a party. Who will she invite?',
+      },
       // NOT „Gestern und heute“: the title and can-do 2 promised the Perfekt, which this Lektion
       // defers to A1.2 and teaches as two fixed expressions. The Lektion is the day (review #2, L11).
       title: 'Mein Tag',
@@ -1660,6 +2637,105 @@ export const CURRICULUM_A11 = {
       nr: 12,
       id: 'a1.1-l12',
       slug: 'feste-feiern',
+      flow: 'guided',
+      guided: {
+        read: {
+          titleDe: 'Eine Nachricht von Mama und Papa',
+          titleEn: 'A message from Mum and Dad',
+          instructionDe: 'Lesen Sie die Nachricht von Anas Eltern. Tippen Sie auf ein Wort für seine Bedeutung.',
+          instructionEn: 'Read the message from Ana\'s parents. Tap a word for its meaning.',
+          text: 'Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer noch ein Kind!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa',
+          questions: [
+            {
+              promptDe: 'Kommen Anas Eltern zum Fest? Wählen Sie die Antwort.',
+              promptEn: 'Are Ana\'s parents coming to the party? Choose the answer.',
+              options: ['No, they have to work on Friday.', 'They do not know yet; the date is bad.', 'Yes, they have Friday off and are glad to come.'],
+              answer: 'Yes, they have Friday off and are glad to come.',
+              explanationDe: 'In der Nachricht steht: Wir kommen gern zum Fest. Am Freitag haben wir frei.',
+              explanationEn: 'The message says: we are glad to come to the party. We have Friday off.',
+            },
+            {
+              promptDe: 'Was möchten Mama und Papa am Samstag machen? Wählen Sie die Antwort.',
+              promptEn: 'What do Mum and Dad want to do on Saturday? Choose the answer.',
+              options: ['Invite Ana to the café as their guest.', 'Buy a present for Ana\'s brother.', 'Celebrate again at Ana\'s home.'],
+              answer: 'Invite Ana to the café as their guest.',
+              explanationDe: 'In der Nachricht steht: Am Samstag möchten wir dich einladen. Du bist unser Gast im Café.',
+              explanationEn: 'The message says: on Saturday we would like to invite you. You are our guest at the café.',
+            },
+          ],
+        },
+        chunks: [
+          {
+            from: 0,
+            to: 2,
+            meaning: {
+              promptDe: 'Was sagt Ana über ihren Geburtstag? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say about her birthday? Choose the meaning.',
+              options: ['It is today, and the party is tonight.', 'It is in May, and the party is on Friday.', 'It was last week, and there was no party.'],
+              answer: 'It is in May, and the party is on Friday.',
+            },
+            say: {
+              line: 1,
+            },
+          },
+          {
+            from: 2,
+            to: 4,
+            meaning: {
+              promptDe: 'Wer kommt zum Fest? Wählen Sie die Bedeutung.',
+              promptEn: 'Who is coming to the party? Choose the meaning.',
+              options: ['Only Ana\'s mum is coming.', 'Ana\'s parents cannot come.', 'Ana\'s mum and dad are coming.'],
+              answer: 'Ana\'s mum and dad are coming.',
+            },
+            say: {
+              line: 3,
+            },
+          },
+          {
+            from: 4,
+            to: 6,
+            meaning: {
+              promptDe: 'Was sagt Ana über die Gäste? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say about the guests? Choose the meaning.',
+              options: ['Her colleague is invited too, and the guests bring cake.', 'Her brother is coming alone, and Ana buys the cake.', 'Her colleague cannot come, and nobody brings cake.'],
+              answer: 'Her colleague is invited too, and the guests bring cake.',
+            },
+            say: {
+              line: 5,
+            },
+          },
+          {
+            from: 6,
+            to: 8,
+            meaning: {
+              promptDe: 'Was möchte Ana zum Geburtstag? Wählen Sie die Bedeutung.',
+              promptEn: 'What would Ana like for her birthday? Choose the meaning.',
+              options: ['Maybe a bag; Lena is buying the present.', 'Maybe a book; her brother is buying the present.', 'Nothing at all; she does not want a present.'],
+              answer: 'Maybe a book; her brother is buying the present.',
+            },
+            say: {
+              line: 7,
+            },
+          },
+          {
+            from: 8,
+            to: 10,
+            meaning: {
+              promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
+              promptEn: 'What does Ana say as they part? Choose the meaning.',
+              options: ['Good night, Lena. See you tomorrow!', 'Thank you, Lena. See you on Friday!', 'Take care, Lena. See you soon!'],
+              answer: 'Take care, Lena. See you soon!',
+            },
+            say: {
+              line: 9,
+            },
+          },
+        ],
+      },
+      nextHook: {
+        de: 'In A1.2 geht es weiter: Ana sucht das Rathaus. Findet sie den Weg?',
+        en: 'The story continues in A1.2: Ana is looking for the town hall. Will she find the way?',
+      },
       title: 'Feste feiern',
       situation: 'Feste und Vergangenes (Chunks) und Wiederholung',
       handlungsfeld: 'Freizeit und soziale Kontakte: einladen und feiern',

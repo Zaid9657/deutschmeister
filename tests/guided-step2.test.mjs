@@ -173,9 +173,10 @@ test('intro name is reused only in memory; new speech results save numbers and f
   assert.equal(snapshot.soundReadAloud[0].pct, 0.8); assert.equal(snapshot.fluencyReadAloud[0].usedMic, true);
 });
 
-test('L1 alone has the story hook, after can-dos; it continues into the actual public-office lesson', () => {
+test('guided recaps carry their story hooks after can-dos; legacy A1.2 has none', () => {
   assert.equal(stage('recap').nextHook, lesson.nextHook);
-  for (const curriculum of [c, c12]) for (const l of curriculum.lektionen) if (l !== lesson) assert.equal(l.nextHook, undefined);
+  for (const l of c.lektionen) assert.deepEqual(buildLesson({ curriculum: c, lektion: l, pool }).stages.at(-1).nextHook, l.nextHook);
+  for (const l of c12.lektionen) assert.equal(l.nextHook, undefined);
   assert.match(lesson.nextHook.de, /Bürgerbüro.*Formular/); assert.match(c.lektionen[1].dialog.setting, /Bürgerbüro/);
   const recap = read('src/components/lesson/RecapStage.jsx'); assert.ok(recap.indexOf('canDo.map') < recap.indexOf('stage.nextHook')); assert.ok(recap.indexOf('stage.nextHook') < recap.indexOf('<details className'));
 });
@@ -236,4 +237,72 @@ test('guided matching retains confused first pair responses and submits one corr
   }
   assert.equal(outcomes.length, 1); assert.equal(outcomes[0].correct, false); assert.equal(outcomes[0].result, 'corrected');
   assert.equal(outcomes[0].confused.length, 1); assert.equal(outcomes[0].confused[0], item.pairs[0]); assert.equal(next, 1);
+});
+
+test('sound has one primary action per phase and its own checked confirmation in both languages', async () => {
+  const props = { stage: stage('sound'), itemIndex: 0, results: {}, onResult: () => {}, onSayResult: () => {}, onNext: () => {} };
+  const sound = await mount('SoundStage', props);
+  assert.equal(elements(sound.render(), 'StageShell')[0].props.onPrimary, undefined);
+  assert.ok(textOf(sound.render()).includes(props.stage.items[0].modelEn), 'marking is available before the question');
+  elements(sound.render(), 'PlayButton')[0].props.onPlayed();
+  assert.equal(elements(sound.render(), 'StageShell')[0].props.onPrimary, undefined);
+  assert.equal(elements(sound.render(), 'CheckedChoice').length, 1);
+  elements(sound.render(), 'CheckedChoice')[0].props.onNext();
+  assert.equal(elements(sound.render(), 'CheckedChoice').length, 0);
+  assert.equal(elements(sound.render(), 'StageShell')[0].props.onPrimary, props.onNext);
+  assert.equal(elements(sound.render(), 'StageShell')[0].props.primaryDisabled, true);
+  props.results[0] = { selfConfirmed: true };
+  assert.equal(elements(sound.render(), 'StageShell')[0].props.primaryDisabled, false);
+  const { t } = await import('../src/lib/lesson/strings.js');
+  for (const lang of ['de', 'en']) for (const correct of [true, false]) {
+    const h = await mount('CheckedChoice', { item: props.stage.items[0], lang, onResult: () => {}, onNext: () => {} }, { '../../lib/lesson/strings.js': { t } });
+    const item = props.stage.items[0];
+    elements(h.render(), 'input').find((i) => correct ? i.props.value === item.answer : i.props.value !== item.answer).props.onChange();
+    elements(h.render(), 'Button')[0].props.onClick();
+    const status = textOf(elements(h.render(), 'p').find((p) => p.props.role === 'status'));
+    assert.equal(status, t(correct ? 'sound.correct' : 'sound.correction', lang, { answer: item.answer }));
+    assert.doesNotMatch(status, /meaning|Bedeutung/);
+  }
+});
+
+test('spelling and sentence-building hints fit their task class and remain answer-free', () => {
+  for (const item of [
+    { type: 'fill_blank', questionDe: 'Lesen Sie die Buchstaben: H-A-L-L-O. Schreiben Sie das Wort: ___', accepted: ['Hallo'] },
+    { type: 'fill_blank', questionDe: 'Buchstabieren Sie den Gruß.', accepted: ['H-A-L-L-O'] },
+    { type: 'error_correction', accepted: ['T-I-M'] },
+  ]) {
+    assert.match(feedback.hintFor(item).de, /Buchstaben/);
+    assert.match(feedback.hintFor(item).en, /letter/);
+    for (const lang of ['de', 'en']) assert.equal(feedback.hintContainsAnswer(feedback.hintFor(item)[lang], item), false);
+  }
+  assert.match(feedback.hintFor({ type: 'sentence_building', accepted: ['Ich bin hier.'] }).en, /word order.*verb form/);
+  const answerCollision = { type: 'fill_blank', questionDe: 'Buchstabieren Sie.', accepted: ['Sie'] };
+  assert.equal(feedback.hintContainsAnswer(feedback.hintFor(answerCollision).de, answerCollision), false);
+});
+
+test('a choice prompt appears once with an accessible fieldset name in either view, including identical twins', async () => {
+  for (const lang of ['en', 'de']) for (const identical of [true, false]) {
+    const item = { id: 'prompt', promptDe: identical ? 'Choose a line.' : 'Wählen Sie eine Zeile.', promptEn: 'Choose a line.', options: ['one', 'two'], accepted: ['one'], answer: 'one' };
+    const h = await mount('CheckedChoice', { item, lang });
+    const heading = elements(h.render(), 'h2')[0];
+    assert.equal(textOf(h.render()).split(textOf(heading)).length - 1, 1);
+    assert.equal(elements(h.render(), 'fieldset')[0].props['aria-labelledby'], heading.props.id);
+    assert.equal(elements(h.render(), 'legend').length, 0);
+  }
+});
+
+test('audio failure text is present once, in a persistent live region, with a working text fallback', async () => {
+  let fallback = 0;
+  const h = await mount('PlayButton', { text: 'Hallo', onFallback: () => fallback++ }, {
+    '../../lib/lesson/speech.js': { audioFor: () => null, playChecked: async () => ({ ok: false, reason: 'no-german-voice' }) },
+    './DialogStage.jsx': { AudioSourceBadge: 'AudioSourceBadge' },
+  });
+  const initialLive = elements(h.render(), 'p').find((p) => p.props['aria-live'] === 'polite');
+  assert.ok(initialLive); assert.equal(textOf(initialLive), '');
+  await elements(h.render(), 'button')[0].props.onClick();
+  assert.equal(textOf(h.render()).split('audio.failed.no-german-voice').length - 1, 1);
+  const live = elements(h.render(), 'p').find((p) => p.props['aria-live'] === 'polite');
+  assert.doesNotMatch(live.props.className, /sr-only/);
+  elements(h.render(), 'button').find((b) => textOf(b) === 'audio.showText').props.onClick();
+  assert.equal(fallback, 1);
 });

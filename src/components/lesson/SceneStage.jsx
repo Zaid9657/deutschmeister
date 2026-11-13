@@ -26,8 +26,8 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
   const done = !!results[index];
   const next = () => itemIndex + 1 < stage.chunks.length * SCENE_PHASES.length ? onItemChange(itemIndex + 1) : onDone();
   const back = itemIndex > 0 ? () => onItemChange(itemIndex - 1) : onBack;
-  // The original staff line provides the cue on the say screen. All original lines remain on hear.
-  const cue = chunk.lines.filter((l) => l.index < chunk.say.line && l.speaker !== chunk.say.speaker).at(-1);
+  // The preceding original dialogue line is the cue, including across a chunk boundary.
+  const cue = chunk.cue;
   const shown = phase === 'hear' ? chunk.lines : phase === 'say' && cue ? [cue] : [];
 
   useEffect(() => {

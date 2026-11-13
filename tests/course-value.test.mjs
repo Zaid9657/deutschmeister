@@ -106,7 +106,12 @@ test('help an A0 learner can read: L1 translations start open, every sound focus
   const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
   const dialogOf = (nr) => buildLesson({ curriculum: CURRICULUM_A11, lektion: CURRICULUM_A11.lektionen[nr - 1], pool }).stages.find((s) => s.kind === 'dialog' || s.kind === 'scene');
   assert.equal(dialogOf(1).glossOpen, true, 'L1 opens with translations shown');
-  assert.equal(dialogOf(2).glossOpen, false, 'later Lektionen start with German only; the toggle stays');
+  assert.equal(dialogOf(2).glossOpen, true, 'guided scenes keep the bilingual first-encounter model');
+  const legacyL2 = buildLesson({ curriculum: CURRICULUM_A11, lektion: { ...CURRICULUM_A11.lektionen[1], flow: undefined }, pool });
+  assert.equal(legacyL2.stages.find((s) => s.kind === 'dialog').glossOpen, false, 'a synthetic later legacy Lektion still starts with German only; the toggle stays');
+  const { CURRICULUM_A12 } = await import('../src/data/curricula/a12.js');
+  const a12 = buildLesson({ curriculum: CURRICULUM_A12, lektion: CURRICULUM_A12.lektionen[1], pool: JSON.parse(readFileSync(new URL('../src/data/lessonPools/a12.json', import.meta.url), 'utf8')) });
+  assert.equal(a12.stages.find((s) => s.kind === 'dialog').glossOpen, false, 'a real later A1.2 Lektion keeps the same legacy translation default');
   const stage = readFileSync(new URL('../src/components/lesson/DialogStage.jsx', import.meta.url), 'utf8');
   assert.match(stage, /useState\(\(\) => \(\{ en: stage\.glossOpen === true, de: false \}\)\)/);
   for (const l of CURRICULUM_A11.lektionen) assert.ok(l.phonetik.focusEn && l.phonetik.focusEn.length > 8, `L${l.nr} has an English sound focus`);
