@@ -6,6 +6,7 @@ artifact (`agents/*`) and the 30-day sales read.*
 
 | Date | What happened | The rule we keep |
 |---|---|---|
+| 2026-11-14 | The first proof build passed 3,012 tests, but playing it showed the gate marked correct German wrong ("Guten Tag, Frau Kaya. Auf Wiedersehen, Frau Kaya." and "Gut, danke."), because each task held one frozen answer sentence | A check that decides whether a learner may go on is tested with a table of right answers a real learner would give, not only with its own model answer |
 | 2026-11-14 | Founder decision on the lesson proof: he took Claude's recommendation ("your recommendation") | The pass rule: the learner shows every goal of the Lektion once; a missed goal is taught again and asked again at once, as often as needed. No percentage mark, no failing out |
 | 2026-11-13 | Codex reported every gate green on the twelve-lesson rollout; playing three lessons in a browser still showed German nouns written small on the new sound screens ("Fährt der zug?"), which no test covered | Green tests are not a played lesson: Claude plays what a builder ships and turns each flaw into a rule with a test |
 | 2026-11-12 | Four agents delivered eleven lesson drafts that all passed, in about twelve minutes, because they could run the same rules the validator runs on their own draft files | Before fanning work out to agents, give them a checker they can run themselves and one file each |
