@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
@@ -43,7 +43,6 @@ import { clearReturnPath } from '../../lib/returnPath.js';
 import SessionBreak from '../../components/lesson/SessionBreak.jsx';
 import CoursePathGuard from '../../components/course/CoursePathGuard.jsx';
 import { placementSuffix } from '../../lib/course/lock.js';
-import { useLocation } from 'react-router-dom';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
 
@@ -260,9 +259,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   const [soundReadAloud, setSoundReadAloud] = useState(() => resumed?.soundReadAloud || {});
   const [fluencyReadAloud, setFluencyReadAloud] = useState(() => resumed?.fluencyReadAloud || {});
   const owner = user ? user.id : null;
-  const [stageIndex, setStageIndex] = useState(() => (resumed
-    ? proofResumeIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed), resumed.proof)
-    : 0));
+  const [stageIndex, setStageIndex] = useState(() => {
+    if (!resumed) return 0;
+    const stages = buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages;
+    return proofResumeIndex(stages, resumeStageIndex(stages, resumed), resumed.proof);
+  });
   const [itemIndex, setItemIndex] = useState(() => (resumed ? resumed.itemIndex : 0));
   const [attempts, setAttempts] = useState(() => (resumed ? resumed.attempts : []));
   const [misses, setMisses] = useState(() => (resumed ? resumed.misses : []));

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, RotateCcw, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
@@ -19,7 +19,6 @@ import {
 import { checkpointFeedback, defersFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
 import CoursePathGuard from '../../components/course/CoursePathGuard.jsx';
 import { placementSuffix } from '../../lib/course/lock.js';
-import { useLocation } from 'react-router-dom';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
@@ -756,7 +755,7 @@ function CheckpointRun() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {result.passed ? (
-                  <Button to={`${nextHref}${placementSuffix(search)}` }>
+                  <Button to={`${nextHref}${placementSuffix(search)}`}>
                     {nextLektion ? t('checkpoint.nextLesson', lang, { nr: nextLektion.nr }) : t('action.backToCourse', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 ) : (
