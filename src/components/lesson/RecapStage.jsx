@@ -1,3 +1,4 @@
+import DayDone from '../course/DayDone.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
@@ -115,6 +116,7 @@ export default function RecapStage({ stage, proofShown = false, sceneSupport = {
 
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
+  const daily = level === 'a1.1' && lektion?.flow === 'guided';
   const canDo = lektion ? canDoLines(lektion, lang) : [];
 
   return (
@@ -126,7 +128,7 @@ export default function RecapStage({ stage, proofShown = false, sceneSupport = {
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
-        {canDo.length > 0 && (
+        {!daily && canDo.length > 0 && (
           <>
             <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
             <ul className="mt-3 space-y-2">
@@ -138,7 +140,8 @@ export default function RecapStage({ stage, proofShown = false, sceneSupport = {
             </ul>
           </>
         )}
-        {stage.nextHook && <p className="mt-4 border-t border-rule pt-4 font-display text-lg text-siegel-deep">{lang === 'de' ? stage.nextHook.de : stage.nextHook.en}</p>}
+        <DayDone curriculum={curriculum} lesson={lektion} lang={lang} completed={proofShown} />
+        {!daily && stage.nextHook && <p className="mt-4 border-t border-rule pt-4 font-display text-lg text-siegel-deep">{lang === 'de' ? stage.nextHook.de : stage.nextHook.en}</p>}
         <p className={`${canDo.length ? 'mt-4 border-t border-rule pt-4 ' : ''}flex items-start gap-2 text-[0.875rem] leading-relaxed text-graphite`}>
           <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t(`recap.canDo.${review.state}`, lang, { date: review.date ? date.format(review.date) : '' })}
         </p>

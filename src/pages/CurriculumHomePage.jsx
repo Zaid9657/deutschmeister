@@ -16,6 +16,8 @@ import { flushOutbox, pendingRuns } from '../lib/course/syncOutbox.js';
 import { latestRun } from '../lib/lesson/runState.js';
 import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestReconcile.js';
 import { clearReturnPath } from '../lib/returnPath.js';
+import TodayCard from '../components/course/TodayCard.jsx';
+import { loadDailyCourse } from '../services/dailyCourse.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import KannIch from '../components/course/KannIch.jsx';
@@ -102,6 +104,13 @@ export default function CurriculumHomePage({ curriculum }) {
   const { profile } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
+  const daily = level === A11_META.level;
+  const [dailyEvidence, setDailyEvidence] = useState({ rows: [], attempts: [] });
+  useEffect(() => {
+    let cancelled = false;
+    if (daily) loadDailyCourse(user?.id, level).then((data) => { if (!cancelled) setDailyEvidence(data); });
+    return () => { cancelled = true; };
+  }, [daily, user?.id, level]);
   const hrefFor = (level, node) => `${nodeHref(level, node)}${placementSuffix(searchParams)}`;
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
@@ -125,10 +134,12 @@ export default function CurriculumHomePage({ curriculum }) {
     return node.minutes ? ` · ${node.minutes} min` : '';
   };
   // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.
-  const [unfinished] = useState(() => {
+  const savedRun = useMemo(() => {
     const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id), Date.now(), user ? user.id : null, Object.fromEntries(curriculum.lektionen.map((l) => [l.id, l.flow || 'legacy'])));
-    return run ? curriculum.lektionen.find((l) => l.id === run.lektionId) || null : null;
-  });
+    return run;
+  }, [curriculum, user]);
+
+  const unfinished = savedRun ? curriculum.lektionen.find((l) => l.id === savedRun.lektionId) : null;
 
   useEffect(() => {
     // Signed out: the only progress that can exist is local (a free Lektion
@@ -215,11 +226,11 @@ export default function CurriculumHomePage({ curriculum }) {
   let nodeCounter = 0;
   return (
     <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
-        <div className="mb-4 flex justify-end"><LangToggle /></div>
-        <header className="relative mb-8 overflow-hidden rounded-clay">
+      <div className={`mx-auto max-w-2xl px-4 ${daily ? 'py-3' : 'py-8 sm:py-12'}`}>
+        <div className={`flex justify-end ${daily ? 'mb-1' : 'mb-4'}`}><LangToggle /></div>
+        <header className={`relative overflow-hidden rounded-clay ${daily ? 'mb-3' : 'mb-8'}`}>
           <Aurora />
-          <div className="relative px-2 py-4">
+          <div className={`relative px-2 ${daily ? 'py-1' : 'py-4'}`}>
             <Reveal className="flex flex-wrap items-center justify-between gap-2">
               <Chip tone="label">{curriculum.code} · {de ? 'Kurs' : 'Course'}</Chip>
               {meta && !fresh && (
@@ -237,11 +248,11 @@ export default function CurriculumHomePage({ curriculum }) {
             <Reveal as="h1" delay={60} className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
               {de ? 'Deutsch' : 'German'} {curriculum.code}
             </Reveal>
-            <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
+            {!daily && <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
               {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · zum Abschluss ein verkürzter Übungstest im Format ${curriculum.examName}` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · ends with a shortened practice test in the ${curriculum.examName} format`}
-            </Reveal>
+            </Reveal>}
 
-            {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
+            {!daily && loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
               <Reveal delay={140} className="mt-5">
                 <KannIch
                   items={canDoList(curriculum, done)}
@@ -252,9 +263,10 @@ export default function CurriculumHomePage({ curriculum }) {
               </Reveal>
             )}
 
-            {loaded && <MilestoneCard streak={streak} />}
+            {!daily && <>{loaded && <MilestoneCard streak={streak} />}</>}
 
-            <Reveal delay={180} className="mt-4">
+            {daily && loaded && <TodayCard lang={lang} curriculum={curriculum} path={path} done={done} {...dailyEvidence} run={savedRun} profile={{ ...profile, full_name: profile?.full_name || profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name }} signedIn={!!user} due={reviewDue} suffix={placementSuffix(searchParams)} />}
+            {!daily && <Reveal delay={180} className="mt-4">
               <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label={de ? 'Kursfortschritt' : 'Course progress'} aria-valuetext={de ? `${doneCount} von ${path.length} abgeschlossen` : `${doneCount} of ${path.length} done`} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
               </div>
@@ -298,11 +310,11 @@ export default function CurriculumHomePage({ curriculum }) {
                 </p>
               )}
               <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
-            </Reveal>
+            </Reveal>}
           </div>
         </header>
 
-        {meta && welcomeOpen && (
+        {!daily && meta && welcomeOpen && (
           <div id="dm-course-welcome-panel" className="mb-10">
             <CourseWelcome curriculum={curriculum} meta={meta} className="!px-0" />
             <hr className="mt-10 border-rule" />
@@ -325,7 +337,7 @@ export default function CurriculumHomePage({ curriculum }) {
           return (
             <Reveal as="section" key={ci} delay={Math.min(ci, 6) * 60} className="mb-6">
               <div className="rounded-clay bg-siegel px-5 py-4 text-white shadow-raise-siegel">
-                {!isFinal && lektionen[0] && (
+                {!daily && !isFinal && lektionen[0] && (
                   <SituationScene
                     lektionId={lektionen[0].id}
                     className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
@@ -336,11 +348,11 @@ export default function CurriculumHomePage({ curriculum }) {
                 {chapterMeta && (
                   <p className="font-data text-[0.75rem] text-white" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
                 )}
-                {chapterMeta ? (
+                {!daily && (chapterMeta ? (
                   <p className="mt-2 text-[0.8125rem] leading-snug text-white">{de ? lektionen.map((l) => l.situation).join(' · ') : chapterMeta.storyEn}</p>
                 ) : (
                   <p className="mt-1 text-[0.8125rem] text-white">{lektionen.map((l) => l.title).join(' · ')}</p>
-                )}
+                ))}
                 <p className="mt-2 font-data text-[0.75rem] text-white">{chapterDone}/{nodes.length} {de ? 'abgeschlossen' : 'done'}{words ? ` · ${words} ${de ? 'Wörter' : 'words'}` : ''}</p>
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
@@ -388,6 +400,15 @@ export default function CurriculumHomePage({ curriculum }) {
           );
         })}
         </div>
+
+        {daily && meta && welcomeOpen && (
+          <div id="dm-course-welcome-panel" className="mb-10">
+            <CourseWelcome curriculum={curriculum} meta={meta} className="!px-0" />
+            <hr className="mt-10 border-rule" />
+          </div>
+        )}
+
+        {daily && loaded && <MilestoneCard streak={streak} />}
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           {de ? (endowed ? 'Alle Lektionen sind für Sie offen. Ihr Fortschritt wird nach jedem Schritt gespeichert.' : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.')}

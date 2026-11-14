@@ -1,3 +1,7 @@
+import DayDone from '../../components/course/DayDone.jsx';
+import { dailyT } from '../../lib/course/dailyLoop.js';
+import { needsDailyWarmup } from '../../lib/course/dailyWarmup.js';
+import { fetchDailyWarmup } from '../../services/dailyCourse.js';
 import { sceneSupportSummary } from '../../lib/lesson/sceneSupport.js';
 import SetReference from '../../components/lesson/SetReference.jsx';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -12,7 +16,7 @@ import { skillLines, skillProps } from '../../lib/lesson/skillStatus.js';
 import { countCompletedRuns, fetchWordsByIds, getLessonProgress, recordStageReach, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson, retryLocalProgressSave } from '../../lib/course/localProgress.js';
-import { buildCardIndex, fetchDueCards, warmupCards } from '../../services/reviewService.js';
+import { buildCardIndex, fetchDueCards as fetchReviewDueCards, warmupCards } from '../../services/reviewService.js';
 import { enqueueRun, flushOutbox, outboxIsDurable, pendingRuns } from '../../lib/course/syncOutbox.js';
 import { clearRun, packRun, readRun, resumeStageIndex, resumeItemIndex, saveRun } from '../../lib/lesson/runState.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
@@ -140,6 +144,9 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
   const [attemptSettled, setAttemptSettled] = useState(() => preview || !!resumed);
   // null = not loaded yet. A resumed run keeps the cards it was built with, so
   // a late fetch cannot insert or drop the warm-up and shift every stage.
+  const [openingCards, setOpeningCards] = useState(null);
+  const openingResolved = useRef(false);
+  const returningDay = (curriculum.level === 'a1.1' && lektion.flow === 'guided') && needsDailyWarmup(resumed);
   const [dueCards, setDueCards] = useState(() => (resumed ? resumed.dueCards : null));
   // One id per run, kept across a resume: joins its start, stages and completion in analytics.
   const [runId] = useState(() => (resumed && resumed.runId) || `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`);
@@ -151,21 +158,52 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
   const started = useRef(introDone);
   const startWrite = useRef(Promise.resolve());
 
+  // Selection changes before the protected loading/freeze effect, never inside a started run.
+  const fetchDueCards = useCallback(async (userId, level, limit) => {
+    const rows = await fetchReviewDueCards(userId, level, curriculum.level === 'a1.1' && lektion.flow === 'guided' ? 24 : limit);
+    return curriculum.level === 'a1.1' && lektion.flow === 'guided'
+      ? fetchDailyWarmup(userId, curriculum, lektion, buildCardIndex(curriculum), rows)
+      : rows;
+  }, [curriculum, lektion]);
+
   // Stage 0 warm-up: up to four cards due from the review ladder.
   useEffect(() => {
     if (resumed) return undefined;
-    if (preview || !user) { setDueCards([]); return undefined; }
+    if (preview) { setDueCards([]); return undefined; }
     let cancelled = false;
     const index = buildCardIndex(curriculum);
-    fetchDueCards(user.id, curriculum.level, 4)
+    fetchDueCards(user?.id, curriculum.level, 4)
       .then((rows) => {
         if (cancelled || started.current) return;
-        // Rows carry the key and the ladder step; the card's face comes from the curriculum.
         setDueCards(warmupCards(rows, index));
       })
       .catch(() => { if (!cancelled && !started.current) setDueCards([]); });
     return () => { cancelled = true; };
+    // The route keys this run by Lektion. The protected effect owns the original freeze boundary.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview, user, curriculum, resumed]);
+
+  // A later-day resume uses the same warm-up without changing the saved run's inputs.
+  useEffect(() => {
+    if (!returningDay || preview) return undefined;
+    let cancelled = false;
+    const index = buildCardIndex(curriculum);
+    fetchReviewDueCards(user?.id, curriculum.level, 12)
+      .then((rows) => fetchDailyWarmup(user?.id, curriculum, lektion, index, rows, resumed))
+      .then((rows) => {
+        if (cancelled || openingResolved.current) return;
+        openingResolved.current = true;
+        setOpeningCards(warmupCards(rows, index));
+      })
+      .catch(() => { if (!cancelled && !openingResolved.current) { openingResolved.current = true; setOpeningCards([]); } });
+    return () => { cancelled = true; };
+  }, [preview, user?.id, curriculum, lektion, resumed, returningDay]);
+
+  useEffect(() => {
+    if (!returningDay || openingCards !== null) return undefined;
+    const timer = setTimeout(() => { openingResolved.current = true; setOpeningCards((cards) => cards || []); }, START_WAIT_MS);
+    return () => clearTimeout(timer);
+  }, [returningDay, openingCards]);
 
   useEffect(() => {
     if (preview) return undefined;
@@ -232,6 +270,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
   // A resumed run (or a preview) rebuilds its stage list from the pool, so it waits for it; a fresh
   // run cannot get here without one — Start waits.
   if (!pool) return <PlayerLoading />;
+  if (returningDay && openingCards === null) return <PlayerLoading />;
   return (
     <LessonStages
       curriculum={curriculum}
@@ -242,6 +281,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
       runId={runId}
       attempt={attempt}
       dueCards={dueCards || []}
+      openingCards={openingCards || []}
       startWrite={startWrite.current}
     />
   );
@@ -252,7 +292,7 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
  * the draw attempt and the warm-up cards, as LessonRun settled them — so nothing that arrives later
  * can rebuild the stages under the learner.
  */
-function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, attempt, dueCards, startWrite }) {
+function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, attempt, dueCards, openingCards = [], startWrite }) {
   const navigate = useNavigate();
   const { search } = useLocation();
   const { user, loading: authLoading } = useAuth();
@@ -308,8 +348,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     [curriculum, lektion, pool, attempt, dueCards],
   );
   const stages = lesson.stages;
-  const stage = stages[stageIndex] || null;
-  const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
+  const [openingIndex, setOpeningIndex] = useState(0);
+  const opening = openingIndex < openingCards.length;
+  const stage = useMemo(() => opening ? { key: 'warmup', kind: 'warmup', cards: openingCards, part: sessionOf(stages[stageIndex]) } : stages[stageIndex] || null, [opening, openingCards, stages, stageIndex]);
+  const warmupIndex = opening ? openingIndex : itemIndex;
+  const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[warmupIndex] || null : null;
   const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
   const playWarmupCard = useCallback(
     (content) => speakGermanChecked((content && (content.speak || content.front)) || ''),
@@ -449,13 +492,13 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // recap must not leave a snapshot whose resume would write the completion a
   // second time (one attempt batch is one finished run, lessonService.js).
   useEffect(() => {
-    if (preview || !stage) return;
+    if (preview || opening || !stage) return;
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
       proof, flow: lektion.flow || 'legacy', sceneTranslations, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud,
       runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
     }), owner);
-  }, [proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneTranslations, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
+  }, [opening, proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneTranslations, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -524,11 +567,12 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
 
   const items = stage.kind === 'requeue' ? requeued : stage.kind === 'warmup' ? stage.cards || [] : stage.items || stage.lines || [];
   const onItemNext = () => {
+    if (opening) { setOpeningIndex((i) => i + 1); return; }
     if (ITEM_STAGES.has(stage.kind) && itemIndex + 1 < items.length) setItemIndex(itemIndex + 1);
     else advance();
   };
   const gradeWarmupCard = (correct) => {
-    if (user && warmupCard) gradeCard(user.id, warmupCard.cardKey, correct).catch(() => {});
+    if (user && warmupCard && !warmupCard.practiceOnly) gradeCard(user.id, warmupCard.cardKey, correct).catch(() => {});
     onItemNext();
   };
 
@@ -538,7 +582,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   switch (stage.kind) {
     case 'warmup':
       body = warmupCard ? (
-        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} title={t('stage.warmup.title', lang)} onBack={back}>
+        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} title={(curriculum.level === 'a1.1' && lektion.flow === 'guided') ? dailyT('quick', lang) : t('stage.warmup.title', lang)} lead={(curriculum.level === 'a1.1' && lektion.flow === 'guided') ? dailyT('quickLead', lang) : undefined} onBack={opening ? null : back}>
           <ReviewCard
             content={warmupCard}
             mode={warmupMode}
@@ -715,10 +759,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
   // level while it loads, so `!user` alone would flash the ask at a member.
   if (pause) {
-    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
+    body = <SessionBreak curriculum={curriculum} lektion={lektion} attempts={attempts} proof={proof} done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
   }
   if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, partDone: pause?.done, stageKind: stage.kind })) {
     body = <SaveProgressAsk level={curriculum.level} lektion={lektion} done={pause.done} total={SESSION_COUNT} onContinue={() => { setAskSettled(true); setPause(null); }} />;
+    body = <>{body}<DayDone curriculum={curriculum} lesson={lektion} lang={lang} part={pause.done} attempts={attempts} proof={proof} /></>;
   }
 
   const guidedScene = stage.kind === 'scene' || stage.kind === 'proof';
