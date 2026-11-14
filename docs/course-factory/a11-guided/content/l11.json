@@ -130,7 +130,7 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Eine Kollegin: „Was machen Sie jeden Tag?“ – Sie (duschen): … Eine Kollegin: „Und am Sonntag?“ – Sie (schlafen, bis 9 Uhr): …",
+        "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Was machen Sie jeden Tag?“ – Sie (duschen): … Eine Kollegin: „Und am Sonntag?“ – Sie (schlafen, bis 9 Uhr): …",
         "promptEn": "A colleague asks what you do every day. Tell her that you shower. Then she asks about Sunday: tell her that you sleep until nine.",
         "answer": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun.",
         "parts": [
@@ -176,12 +176,14 @@
             8,
             9
           ]
-        }
+        },
+        "micOff": true,
+        "allowModelContext": true
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Sie (gestern?): „Tim, …?“ – Tim: „Ich? Nicht viel!“ – Sie (gestern: Arbeit): …",
+        "promptDe": "Sagen Sie die Antwort. Sie (gestern?): „Tim, …?“ – Tim: „Ich? Nicht viel!“ – Sie (gestern: Arbeit): …",
         "promptEn": "Ask your friend Tim what he did yesterday. He did not do much. Then say what you did yesterday: you worked.",
         "answer": "Was hast du gestern gemacht? Ich habe gearbeitet.",
         "parts": [
@@ -191,8 +193,7 @@
               "en": "the question"
             },
             "forms": [
-              "Was hast du gestern gemacht?",
-              "Tim, was hast du gestern gemacht?"
+              "Was hast du gestern gemacht?"
             ]
           },
           {
@@ -213,12 +214,15 @@
             0,
             1
           ]
-        }
+        },
+        "micOff": true,
+        "register": "informal",
+        "allowModelContext": true
       },
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Eine Freundin: „Am Freitag habe ich frei.“ – Sie (einkaufen, Freitag): … Sie (mitkommen?): …?",
+        "promptDe": "Sagen Sie die Antwort. Eine Freundin: „Am Freitag habe ich frei.“ – Sie (einkaufen, Freitag): … Sie (mitkommen?): …?",
         "promptEn": "A friend tells you she is free on Friday. Tell her that you are going shopping on Friday. Then ask her whether she is coming along.",
         "answer": "Ich kaufe am Freitag ein. Kommst du mit?",
         "parts": [
@@ -253,12 +257,14 @@
           "indices": [
             5
           ]
-        }
+        },
+        "micOff": true,
+        "register": "informal"
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Ein Kollege: „Und Ihr Tag?“ – Sie (aufstehen, 6 Uhr): … Sie (arbeiten, Montag): …",
+        "promptDe": "Sagen Sie die Antwort. Ein Kollege: „Und Ihr Tag?“ – Sie (aufstehen, 6 Uhr): … Sie (arbeiten, Montag): …",
         "promptEn": "A colleague asks about your day. Tell him when you get up: at six. Then tell him when you work: on Monday. Use one full sentence for each.",
         "answer": "Ich stehe um sechs auf. Ich arbeite am Montag.",
         "parts": [
@@ -300,7 +306,8 @@
               "Am Montag arbeite ich.",
               "Und ich arbeite am Montag.",
               "Und am Montag arbeite ich."
-            ]
+            ],
+            "ellipsisOpening": "Ich"
           }
         ],
         "reteach": {
@@ -309,7 +316,10 @@
             3,
             9
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any",
+        "allowModelContext": true
       }
     ]
   },

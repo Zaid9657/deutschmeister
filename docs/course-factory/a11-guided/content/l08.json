@@ -131,7 +131,7 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "1. Sie haben keine Uhr. Sie: …? 2. Eine Frau hat keine Uhr. Sie haben eine Uhr: 10:30. Sie: … (ohne Zahlen)",
+        "promptDe": "Sagen Sie die Antwort. 1. Sie haben keine Uhr. Sie: …? 2. Eine Frau hat keine Uhr. Sie haben eine Uhr: 10:30. Sie: … (ohne Zahlen)",
         "promptEn": "1. You have no watch: ask what time it is. 2. Then a woman has no watch, and yours says 10:30: tell her the time in words, without digits.",
         "answer": "Wie spät ist es? Es ist halb elf.",
         "parts": [
@@ -168,12 +168,13 @@
         "reteach": {
           "kind": "wortfeld",
           "index": 6
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Sie und Ihre Freundin machen einen Termin für Sport. Ihre Zeit: Freitag, 9 Uhr. Ihre Freundin: „Und wann ist der Termin?“ Sie: …",
+        "promptDe": "Antworten Sie mit einem Satz. Sie und Ihre Freundin machen einen Termin für Sport. Ihre Zeit: Freitag, 9 Uhr. Ihre Freundin: „Und wann ist der Termin?“ Sie: …",
         "promptEn": "You and a friend are fixing a time for sport. You can do Friday, 9 o’clock. She asks when the appointment is: tell her the day and the time.",
         "answer": "Der Termin ist am Freitag um neun Uhr.",
         "parts": [
@@ -242,12 +243,13 @@
           "indices": [
             3
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Ihr Morgen: aufstehen – wann? Ihr Wecker: 7 Uhr. Sie: Ich …",
+        "promptDe": "Antworten Sie mit einem Satz. Ihr Morgen: aufstehen – wann? Ihr Wecker: 7 Uhr. Sie: Ich …",
         "promptEn": "Talk about your day: your alarm clock goes at 7 and you get up. Say in one full sentence when you get up.",
         "answer": "Ich stehe um sieben Uhr auf.",
         "parts": [
@@ -293,12 +295,13 @@
           "indices": [
             1
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Wann haben Sie Zeit für Ihre Freundin? Ihre Woche: Montag bis Freitag Arbeit. Aber Donnerstag: abends frei! Sie: …",
+        "promptDe": "Antworten Sie mit einem Satz. Wann haben Sie Zeit für Ihre Freundin? Ihre Woche: Montag bis Freitag Arbeit. Aber Donnerstag: abends frei! Sie: …",
         "promptEn": "Your friend wants to meet. Your week: work from Monday to Friday, but you are free on Thursday evening. Tell her when you have time.",
         "answer": "Am Donnerstag bin ich abends frei.",
         "parts": [
@@ -346,7 +349,8 @@
           "indices": [
             7
           ]
-        }
+        },
+        "micOff": true
       }
     ]
   },

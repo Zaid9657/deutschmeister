@@ -1,3 +1,4 @@
+import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
 /** One hear/see/say board per small group, then checked retrieval. */
 export const SET_GROUP_SIZE = 5;
 export function spellWithSet(word, alphabet) {
@@ -61,12 +62,14 @@ export function setStageEstimate(stage) {
 }
 
 /** Inspect task content, not lesson ids: letter/number help follows the question everywhere. */
-export function referenceKinds(item, sets) {
+export function referenceKinds(item, sets, lektionId) {
   const text = [item?.de, item?.text, item?.questionDe, item?.promptDe, item?.promptEn, item?.topic, item?.answer, item?.audioText, ...(item?.accepted || []), ...(item?.options || []), ...(item?.pairs || []).map((p) => p.de), ...(item?.words || [])].filter((s) => typeof s === 'string').join(' ');
   const kinds = [];
   if (item?.listenSpelling || ['surname', 'first'].includes(item?.ownName) || /buchstab|spell|alphabet|\p{L}(?:-\p{L}){2,}/iu.test(text)) kinds.push('letters');
   const words = text.toLocaleLowerCase('de').match(/\p{L}+/gu) || [];
   if (/\d|zahl|number|preis|price|telefon|phone|uhr|clock/iu.test(text) || words.some((w) => sets.filter((s) => s.kind === 'numbers').some((s) => s.members.some((m) => m.said === w))) || words.some((w) => /und(?:zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig)$/u.test(w))) kinds.push('numbers');
-  if (/uhr|\d{1,2}:\d{2}/iu.test(text)) kinds.push('clock');
+  const nr = CURRICULUM_A11.lektionen.find((l) => l.id === lektionId)?.nr;
+  const clockTaught = !lektionId || CURRICULUM_A11.lektionen.some((l) => l.nr <= nr && l.guided?.sets?.some((s) => s.kind === 'clock'));
+  if (clockTaught && /uhr|\d{1,2}:\d{2}/iu.test(text)) kinds.push('clock');
   return kinds;
 }

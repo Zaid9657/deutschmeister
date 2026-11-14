@@ -163,19 +163,10 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Herr Weber: „Das ist Ihr Büro.“ Kein Computer, kein Telefon! – Sie: … …",
+        "promptDe": "Sagen Sie die Antwort. Herr Weber: „Das ist Ihr Büro.“ Kein Computer, kein Telefon! – Sie: … …",
         "promptEn": "Herr Weber shows you your office, but there is no computer and no telephone. Thank him, then say in one sentence that you need both.",
-        "answer": "Danke. Ich brauche einen Computer und ein Telefon.",
+        "answer": "Ich brauche einen Computer und ein Telefon.",
         "parts": [
-          {
-            "label": {
-              "de": "der Dank",
-              "en": "the thanks"
-            },
-            "forms": [
-              "Danke."
-            ]
-          },
           {
             "label": {
               "de": "was Sie brauchen",
@@ -189,8 +180,11 @@
               "Ich brauche noch einen Computer und ein Telefon.",
               "Ich brauche noch ein Telefon und einen Computer.",
               "Aber ich brauche einen Computer und ein Telefon.",
-              "Aber ich brauche ein Telefon und einen Computer."
-            ]
+              "Aber ich brauche ein Telefon und einen Computer.",
+              "Ich brauche einen Computer. Ich brauche ein Telefon.",
+              "Ich brauche ein Telefon. Ich brauche einen Computer."
+            ],
+            "maxSentences": 2
           }
         ],
         "reteach": {
@@ -198,7 +192,9 @@
           "indices": [
             2
           ]
-        }
+        },
+        "micOff": true,
+        "firstContact": true
       },
       {
         "canDo": 1,
@@ -207,7 +203,7 @@
         "openings": [
           "Ich heiße"
         ],
-        "promptDe": "Das Telefon im Büro. Ein Kollege: „Entschuldigung, wie heißen Sie?“ – Sie: …",
+        "promptDe": "Antworten Sie mit einem Satz. Das Telefon im Büro. Ein Kollege: „Entschuldigung, wie heißen Sie?“ – Sie: …",
         "promptEn": "The office telephone rings. A colleague you do not know asks for your name. Answer in a full sentence with your own name, as you learned in Lektion 1.",
         "answer": "Ich heiße Ana Chakiri.",
         "parts": [
@@ -224,36 +220,59 @@
         "reteach": {
           "kind": "wortfeld",
           "index": 18
-        }
+        },
+        "micOff": true,
+        "firstContact": true
       },
       {
         "canDo": 2,
-        "type": "multiple_choice",
-        "promptDe": "Frau Berg am Telefon: „Die Telefonnummer vom Büro ist null vier zwei – drei drei acht eins. Meine Handynummer ist null eins sieben sechs – zwei drei vier fünf sechs sieben.“ – Welche Nummern? Sie: …",
-        "promptEn": "Your boss, Frau Berg, gives you two numbers on the phone. Choose the note that has both numbers right.",
-        "options": [
-          "Büro: 042 3318, Handy: 0176 234567",
-          "Büro: 042 3381, Handy: 0167 234567",
-          "Büro: 042 3381, Handy: 0176 234567",
-          "Büro: 024 3381, Handy: 0176 234576"
-        ],
+        "type": "listening",
+        "promptDe": "Hören Sie die Telefonnummer vom Büro und die Handynummer. Wählen Sie.",
+        "promptEn": "Listen to both phone numbers. Choose the note with both right.",
         "answer": "Büro: 042 3381, Handy: 0176 234567",
-        "accepted": [
-          "Büro: 042 3381, Handy: 0176 234567"
-        ],
         "reteach": {
           "kind": "dialog",
           "indices": [
             6,
             7
           ]
-        }
+        },
+        "micOff": true,
+        "mode": "choice",
+        "instances": [
+          {
+            "answer": "Büro: 042 3381, Handy: 0176 234567",
+            "accepted": [
+              "Büro: 042 3381, Handy: 0176 234567"
+            ],
+            "options": [
+              "Büro: 042 3318, Handy: 0176 234567",
+              "Büro: 042 3381, Handy: 0167 234567",
+              "Büro: 042 3381, Handy: 0176 234567",
+              "Büro: 024 3381, Handy: 0176 234576"
+            ],
+            "audioText": "Die Telefonnummer vom Büro ist null vier zwei, drei drei acht eins. Meine Handynummer ist null eins sieben sechs, zwei drei vier fünf sechs sieben."
+          },
+          {
+            "audioText": "Die Telefonnummer vom Büro ist null vier zwei, drei drei eins acht. Meine Handynummer ist null eins sechs sieben, zwei drei vier fünf sechs sieben.",
+            "answer": "Büro: 042 3318, Handy: 0167 234567",
+            "accepted": [
+              "Büro: 042 3318, Handy: 0167 234567"
+            ],
+            "options": [
+              "Büro: 042 3381, Handy: 0167 234567",
+              "Büro: 042 3318, Handy: 0176 234567",
+              "Büro: 042 3318, Handy: 0167 234567",
+              "Büro: 024 3318, Handy: 0167 234576"
+            ]
+          }
+        ]
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Sie: …? – Herr Weber: „Die Nummer vom Büro ist null vier zwei – drei drei acht eins.“ – Sie: …! …? – Herr Weber: „Die Pause ist um eins.“",
-        "promptEn": "It is your first day at the office. Ask Herr Weber for the office telephone number. He tells you: thank him, then ask when the break is.",
+        "promptDe": "Sagen Sie die Antwort. Sie: …? – Herr Weber: „Die Nummer vom Büro ist null vier zwei – drei drei acht eins.“ – Sie: …! …? – Herr Weber: „Die Pause ist um eins.“",
+        "promptEn": "It is your day at the office. Ask Herr Weber for the office telephone number. He tells you: thank him ask when the break is.",
         "answer": "Wie ist die Telefonnummer? Danke! Wann ist die Pause?",
         "parts": [
           {
@@ -274,15 +293,6 @@
               "Entschuldigung, wie ist die Telefonnummer vom Büro?",
               "Wie ist Ihre Telefonnummer?",
               "Wie ist meine Telefonnummer?"
-            ]
-          },
-          {
-            "label": {
-              "de": "der Dank",
-              "en": "the thanks"
-            },
-            "forms": [
-              "Danke."
             ]
           },
           {
@@ -310,7 +320,9 @@
             6,
             8
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any"
       }
     ]
   },

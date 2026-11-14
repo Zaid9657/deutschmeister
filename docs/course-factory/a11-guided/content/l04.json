@@ -298,7 +298,7 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Auf dem Flohmarkt. Sie: …? Frau Wolf: „Das ist eine Lampe.“ – Sie: …? Frau Wolf: „Sie kostet acht Euro.“",
+        "promptDe": "Sagen Sie die Antwort. Auf dem Flohmarkt. Sie: …? Frau Wolf: „Das ist eine Lampe.“ – Sie: …? Frau Wolf: „Sie kostet acht Euro.“",
         "promptEn": "At the flea market you see a thing on Ms Wolf’s table. Ask two questions so that her answers fit: first what the thing is, then what it costs.",
         "answer": "Was ist das? Was kostet sie?",
         "parts": [
@@ -345,12 +345,13 @@
             0,
             2
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Frau Wolf: „Die Lampe kostet acht Euro.“ – Sie: Und der Rucksack? …? Frau Wolf: „Er kostet zwanzig Euro.“",
+        "promptDe": "Sagen Sie die Antwort. Frau Wolf: „Die Lampe kostet acht Euro.“ – Sie: Und der Rucksack? …? Frau Wolf: „Er kostet zwanzig Euro.“",
         "promptEn": "Now you point at the backpack: “Und der Rucksack?” Go on and ask Ms Wolf for its price, so that her answer fits. Write only your question.",
         "answer": "Was kostet er?",
         "parts": [
@@ -374,8 +375,10 @@
               "Wie teuer ist der Rucksack?",
               "Wie ist der Preis?",
               "Was ist der Preis?",
-              "Und der Rucksack, was kostet er?"
-            ]
+              "Und der Rucksack, was kostet er?",
+              "Und der Rucksack? Was kostet er?"
+            ],
+            "maxSentences": 2
           }
         ],
         "reteach": {
@@ -383,32 +386,54 @@
           "indices": [
             2
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 2,
-        "type": "multiple_choice",
-        "promptDe": "Sie sind auf dem Flohmarkt. Ein Mann: „Der Tisch kostet vierzig Euro und das Regal sechzehn Euro.“ Was kostet der Tisch, was kostet das Regal?",
-        "promptEn": "You are at the flea market. A man tells you two prices. What does the table cost, and what does the shelf cost? Choose.",
-        "options": [
-          "Tisch 14 Euro, Regal 16 Euro",
-          "Tisch 40 Euro, Regal 60 Euro",
-          "Tisch 40 Euro, Regal 16 Euro",
-          "Tisch 14 Euro, Regal 60 Euro"
-        ],
+        "type": "listening",
+        "promptDe": "Hören Sie die Preise. Was kostet der Tisch, was kostet das Regal? Wählen Sie.",
+        "promptEn": "Listen to the two prices. Choose the note with both prices right.",
         "answer": "Tisch 40 Euro, Regal 16 Euro",
-        "accepted": [
-          "Tisch 40 Euro, Regal 16 Euro"
-        ],
         "reteach": {
           "kind": "wortfeld",
           "index": 6
-        }
+        },
+        "micOff": true,
+        "mode": "choice",
+        "instances": [
+          {
+            "answer": "Tisch 40 Euro, Regal 16 Euro",
+            "accepted": [
+              "Tisch 40 Euro, Regal 16 Euro"
+            ],
+            "options": [
+              "Tisch 14 Euro, Regal 16 Euro",
+              "Tisch 40 Euro, Regal 60 Euro",
+              "Tisch 40 Euro, Regal 16 Euro",
+              "Tisch 14 Euro, Regal 60 Euro"
+            ],
+            "audioText": "Der Tisch kostet vierzig Euro und das Regal sechzehn Euro."
+          },
+          {
+            "audioText": "Der Tisch kostet fünfunddreißig Euro und das Regal dreiundzwanzig Euro.",
+            "answer": "Tisch 35 Euro, Regal 23 Euro",
+            "accepted": [
+              "Tisch 35 Euro, Regal 23 Euro"
+            ],
+            "options": [
+              "Tisch 53 Euro, Regal 23 Euro",
+              "Tisch 35 Euro, Regal 32 Euro",
+              "Tisch 35 Euro, Regal 23 Euro",
+              "Tisch 53 Euro, Regal 32 Euro"
+            ]
+          }
+        ]
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Frau Wolf: „Was kaufen Sie?“ – Sie (Stuhl + Tasche): …",
+        "promptDe": "Sagen Sie die Antwort. Frau Wolf: „Was kaufen Sie?“ – Sie (Stuhl + Tasche): …",
         "promptEn": "You want the chair and the bag. Ms Wolf asks what you are buying. Tell her, with the articles.",
         "answer": "Ich kaufe den Stuhl und die Tasche.",
         "parts": [
@@ -426,8 +451,11 @@
               "Den Stuhl und die Tasche.",
               "Die Tasche und den Stuhl.",
               "Einen Stuhl und eine Tasche.",
-              "Eine Tasche und einen Stuhl."
-            ]
+              "Eine Tasche und einen Stuhl.",
+              "Ich kaufe den Stuhl. Ich kaufe die Tasche.",
+              "Ich kaufe die Tasche. Ich kaufe den Stuhl."
+            ],
+            "maxSentences": 2
           }
         ],
         "reteach": {
@@ -435,7 +463,8 @@
           "indices": [
             6
           ]
-        }
+        },
+        "micOff": true
       }
     ]
   },

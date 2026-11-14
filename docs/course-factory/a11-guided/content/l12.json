@@ -131,7 +131,7 @@
         "canDo": 0,
         "type": "production",
         "register": "formal",
-        "promptDe": "Eine Kollegin: „Sie feiern am Freitag Geburtstag. Und ich habe am Freitag frei!“ – Sie (einladen): …",
+        "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Sie feiern am Freitag Geburtstag. Und ich habe am Freitag frei!“ – Sie (einladen): …",
         "promptEn": "A colleague knows that you are celebrating your birthday on Friday, and she tells you she is free that day. Invite her in one sentence. Speak formally.",
         "answer": "Ich lade Sie ein.",
         "parts": [
@@ -188,12 +188,17 @@
           "indices": [
             5
           ]
-        }
+        },
+        "micOff": true,
+        "context": [
+          "Ja.",
+          "Ich feiere am Freitag."
+        ]
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Eine Kollegin: „Wann haben Sie Geburtstag?“ – Sie (Monat: 05): …",
+        "promptDe": "Antworten Sie mit einem Satz. Eine Kollegin: „Wann haben Sie Geburtstag?“ – Sie (Monat: 05): …",
         "promptEn": "A colleague asks when your birthday is. For this task it is in month 05 of the year. Tell her the month.",
         "answer": "Mein Geburtstag ist im Mai.",
         "parts": [
@@ -217,12 +222,14 @@
           "indices": [
             1
           ]
-        }
+        },
+        "micOff": true,
+        "allowModelContext": true
       },
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Eine Kollegin: „Wann feiern Sie? Und wer kommt?“ – Sie (Freitag): … Sie (Mama, Papa): …",
+        "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Wann feiern Sie? Und wer kommt?“ – Sie (Freitag): … Sie (Mama, Papa): …",
         "promptEn": "A colleague asks when you are celebrating and who is coming. Tell her that the party is on Friday. Then tell her that your mum and your dad are coming.",
         "answer": "Wir feiern am Freitag. Meine Mama und mein Papa kommen.",
         "parts": [
@@ -269,8 +276,11 @@
               "Ja, meine Mama und mein Papa kommen.",
               "Meine Mama kommt und mein Papa kommt.",
               "Meine Eltern kommen.",
-              "Meine Eltern."
-            ]
+              "Meine Eltern.",
+              "Meine Mama kommt. Mein Papa kommt.",
+              "Mein Papa kommt. Meine Mama kommt."
+            ],
+            "maxSentences": 2
           }
         ],
         "reteach": {
@@ -279,33 +289,35 @@
             1,
             3
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any"
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Lena geht nach Hause. Am Freitag kommt sie zum Fest. Sie: „…, Lena. …!“",
-        "promptEn": "Your friend Lena is going home. You will see her again soon: on Friday she is coming to your party. Say goodbye in two short phrases: first wish her well, then tell her that you will see her soon.",
+        "promptDe": "Sagen Sie die Antwort. Lena geht nach Hause. Am Freitag kommt sie zum Fest. Sie: „…, Lena. …!“",
+        "promptEn": "Your friend Lena is going home. You will see her again soon: on Friday she is coming to your party. Say goodbye in two short phrases: wish her well tell her that you will see her soon.",
         "answer": "Mach's gut. Bis bald.",
         "parts": [
           {
             "label": {
-              "de": "zuerst ein guter Wunsch",
-              "en": "first a good wish"
+              "de": "ein guter Wunsch",
+              "en": "a good wish"
             },
             "forms": [
               "Mach's gut.",
-              "Mach's gut, Lena.",
               "Mach es gut.",
               "Schönen Tag noch.",
-              "Schönen Tag noch, Lena.",
-              "Mach's gut und schönen Tag noch."
-            ]
+              "Mach's gut und schönen Tag noch.",
+              "Mach's gut! Schönen Tag noch!"
+            ],
+            "maxSentences": 2
           },
           {
             "label": {
-              "de": "dann der Abschied (bis wann?)",
-              "en": "then the goodbye (until when?)"
+              "de": "der Abschied (bis wann?)",
+              "en": "the goodbye (until when?)"
             },
             "forms": [
               "Bis bald.",
@@ -319,7 +331,13 @@
           "indices": [
             9
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any",
+        "allowModelContext": true,
+        "context": [
+          "Tschüss."
+        ]
       }
     ]
   },

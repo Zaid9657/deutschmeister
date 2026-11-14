@@ -130,8 +130,8 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Lena: „Was ist hier?“ – Sie: Der … Die … Das …",
-        "promptEn": "Lena asks what is here in the classroom. Name three things you know from the course: first one with der, then one with die, then one with das.",
+        "promptDe": "Sagen Sie die Antwort. Lena: „Was ist hier?“ – Sie: Der … Die … Das …",
+        "promptEn": "Lena asks what is here in the classroom. Name three things you know from the course: one with der one with die one with das.",
         "answer": "Der Stift. Die Schere. Das Wörterbuch.",
         "parts": [
           {
@@ -139,42 +139,38 @@
               "de": "ein Gegenstand mit der",
               "en": "a thing with der"
             },
-            "forms": [
-              "Der Stift.",
-              "Der Stift ist hier.",
-              "Der Stift ist da.",
-              "Das ist der Stift.",
-              "Hier ist der Stift.",
-              "Der Bleistift.",
-              "Der Bleistift ist hier.",
-              "Der Bleistift ist da.",
-              "Das ist der Bleistift.",
-              "Hier ist der Bleistift.",
-              "Der Kugelschreiber.",
-              "Der Kugelschreiber ist hier.",
-              "Der Kugelschreiber ist da.",
-              "Das ist der Kugelschreiber.",
-              "Hier ist der Kugelschreiber.",
-              "Der Schlüssel.",
-              "Der Schlüssel ist hier.",
-              "Der Schlüssel ist da.",
-              "Das ist der Schlüssel.",
-              "Hier ist der Schlüssel.",
-              "Der Tisch.",
-              "Der Tisch ist hier.",
-              "Der Tisch ist da.",
-              "Das ist der Tisch.",
-              "Hier ist der Tisch.",
-              "Der Stuhl.",
-              "Der Stuhl ist hier.",
-              "Der Stuhl ist da.",
-              "Das ist der Stuhl.",
-              "Hier ist der Stuhl.",
-              "Der Rucksack.",
-              "Der Rucksack ist hier.",
-              "Der Rucksack ist da.",
-              "Das ist der Rucksack.",
-              "Hier ist der Rucksack."
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Der {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Der {value} ist hier.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Der {value} ist da.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Das ist der {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Hier ist der {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              }
             ]
           },
           {
@@ -182,131 +178,62 @@
               "de": "ein Gegenstand mit die",
               "en": "a thing with die"
             },
-            "forms": [
-              "Die Schere.",
-              "Die Schere ist hier.",
-              "Die Schere ist da.",
-              "Das ist die Schere.",
-              "Hier ist die Schere.",
-              "Die Schere auch.",
-              "Und die Schere.",
-              "Die Tafel.",
-              "Die Tafel ist hier.",
-              "Die Tafel ist da.",
-              "Das ist die Tafel.",
-              "Hier ist die Tafel.",
-              "Die Tafel auch.",
-              "Und die Tafel.",
-              "Die Tür.",
-              "Die Tür ist hier.",
-              "Die Tür ist da.",
-              "Das ist die Tür.",
-              "Hier ist die Tür.",
-              "Die Tür auch.",
-              "Und die Tür.",
-              "Die Lampe.",
-              "Die Lampe ist hier.",
-              "Die Lampe ist da.",
-              "Das ist die Lampe.",
-              "Hier ist die Lampe.",
-              "Die Lampe auch.",
-              "Und die Lampe.",
-              "Die Uhr.",
-              "Die Uhr ist hier.",
-              "Die Uhr ist da.",
-              "Das ist die Uhr.",
-              "Hier ist die Uhr.",
-              "Die Uhr auch.",
-              "Und die Uhr.",
-              "Die Tasche.",
-              "Die Tasche ist hier.",
-              "Die Tasche ist da.",
-              "Das ist die Tasche.",
-              "Hier ist die Tasche.",
-              "Die Tasche auch.",
-              "Und die Tasche.",
-              "Die Stifte.",
-              "Und die Stifte.",
-              "Die Stifte sind hier.",
-              "Die Stifte sind da.",
-              "Die Bleistifte.",
-              "Und die Bleistifte.",
-              "Die Bleistifte sind hier.",
-              "Die Bleistifte sind da.",
-              "Die Kugelschreiber sind hier.",
-              "Die Kugelschreiber sind da.",
-              "Die Schlüssel sind hier.",
-              "Die Schlüssel sind da.",
-              "Die Tische.",
-              "Und die Tische.",
-              "Die Tische sind hier.",
-              "Die Tische sind da.",
-              "Die Stühle.",
-              "Und die Stühle.",
-              "Die Stühle sind hier.",
-              "Die Stühle sind da.",
-              "Die Rucksäcke.",
-              "Und die Rucksäcke.",
-              "Die Rucksäcke sind hier.",
-              "Die Rucksäcke sind da.",
-              "Die Scheren.",
-              "Und die Scheren.",
-              "Die Scheren sind hier.",
-              "Die Scheren sind da.",
-              "Die Tafeln.",
-              "Und die Tafeln.",
-              "Die Tafeln sind hier.",
-              "Die Tafeln sind da.",
-              "Die Türen.",
-              "Und die Türen.",
-              "Die Türen sind hier.",
-              "Die Türen sind da.",
-              "Die Lampen.",
-              "Und die Lampen.",
-              "Die Lampen sind hier.",
-              "Die Lampen sind da.",
-              "Die Uhren.",
-              "Und die Uhren.",
-              "Die Uhren sind hier.",
-              "Die Uhren sind da.",
-              "Die Taschen.",
-              "Und die Taschen.",
-              "Die Taschen sind hier.",
-              "Die Taschen sind da.",
-              "Die Bücher.",
-              "Und die Bücher.",
-              "Die Bücher sind hier.",
-              "Die Bücher sind da.",
-              "Die Hefte.",
-              "Und die Hefte.",
-              "Die Hefte sind hier.",
-              "Die Hefte sind da.",
-              "Die Lineale.",
-              "Und die Lineale.",
-              "Die Lineale sind hier.",
-              "Die Lineale sind da.",
-              "Die Papiere.",
-              "Und die Papiere.",
-              "Die Papiere sind hier.",
-              "Die Papiere sind da.",
-              "Die Fenster sind hier.",
-              "Die Fenster sind da.",
-              "Die Wörterbücher.",
-              "Und die Wörterbücher.",
-              "Die Wörterbücher sind hier.",
-              "Die Wörterbücher sind da.",
-              "Die Bilder.",
-              "Und die Bilder.",
-              "Die Bilder sind hier.",
-              "Die Bilder sind da.",
-              "Die Regale.",
-              "Und die Regale.",
-              "Die Regale sind hier.",
-              "Die Regale sind da.",
-              "Die Formulare.",
-              "Und die Formulare.",
-              "Die Formulare sind hier.",
-              "Die Formulare sind da."
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Die {value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Und die {value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Die {value} sind hier.",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Die {value} sind da.",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Die {value} ist hier.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Die {value} ist da.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Das ist die {value}.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Hier ist die {value}.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Die {value} auch.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              }
             ]
           },
           {
@@ -314,70 +241,50 @@
               "de": "ein Gegenstand mit das",
               "en": "a thing with das"
             },
-            "forms": [
-              "Das Buch.",
-              "Das Buch ist hier.",
-              "Das Buch ist da.",
-              "Das ist das Buch.",
-              "Hier ist das Buch.",
-              "Das Buch auch.",
-              "Und das Buch.",
-              "Das Heft.",
-              "Das Heft ist hier.",
-              "Das Heft ist da.",
-              "Das ist das Heft.",
-              "Hier ist das Heft.",
-              "Das Heft auch.",
-              "Und das Heft.",
-              "Das Lineal.",
-              "Das Lineal ist hier.",
-              "Das Lineal ist da.",
-              "Das ist das Lineal.",
-              "Hier ist das Lineal.",
-              "Das Lineal auch.",
-              "Und das Lineal.",
-              "Das Papier.",
-              "Das Papier ist hier.",
-              "Das Papier ist da.",
-              "Das ist das Papier.",
-              "Hier ist das Papier.",
-              "Das Papier auch.",
-              "Und das Papier.",
-              "Das Fenster.",
-              "Das Fenster ist hier.",
-              "Das Fenster ist da.",
-              "Das ist das Fenster.",
-              "Hier ist das Fenster.",
-              "Das Fenster auch.",
-              "Und das Fenster.",
-              "Das Wörterbuch.",
-              "Das Wörterbuch ist hier.",
-              "Das Wörterbuch ist da.",
-              "Das ist das Wörterbuch.",
-              "Hier ist das Wörterbuch.",
-              "Das Wörterbuch auch.",
-              "Und das Wörterbuch.",
-              "Das Bild.",
-              "Das Bild ist hier.",
-              "Das Bild ist da.",
-              "Das ist das Bild.",
-              "Hier ist das Bild.",
-              "Das Bild auch.",
-              "Und das Bild.",
-              "Das Regal.",
-              "Das Regal ist hier.",
-              "Das Regal ist da.",
-              "Das ist das Regal.",
-              "Hier ist das Regal.",
-              "Das Regal auch.",
-              "Und das Regal.",
-              "Das Formular.",
-              "Das Formular ist hier.",
-              "Das Formular ist da.",
-              "Das ist das Formular.",
-              "Hier ist das Formular.",
-              "Das Formular auch.",
-              "Und das Formular."
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das {value} ist hier.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das {value} ist da.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das ist das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Hier ist das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das {value} auch.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Und das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              }
             ]
           }
         ],
@@ -387,12 +294,96 @@
             1,
             3
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any",
+        "sets": {
+          "taughtValues1": [
+            "Stift",
+            "Bleistift",
+            "Kugelschreiber",
+            "Schlüssel",
+            "Tisch",
+            "Stuhl",
+            "Rucksack"
+          ],
+          "taughtValues2": [
+            "Schere",
+            "Tafel",
+            "Tür",
+            "Lampe",
+            "Uhr",
+            "Tasche",
+            "Stifte",
+            "Bleistifte",
+            "Tische",
+            "Stühle",
+            "Rucksäcke",
+            "Scheren",
+            "Tafeln",
+            "Türen",
+            "Lampen",
+            "Uhren",
+            "Taschen",
+            "Bücher",
+            "Hefte",
+            "Lineale",
+            "Papiere",
+            "Wörterbücher",
+            "Bilder",
+            "Regale",
+            "Formulare"
+          ],
+          "taughtValues3": [
+            "Stifte",
+            "Bleistifte",
+            "Kugelschreiber",
+            "Schlüssel",
+            "Tische",
+            "Stühle",
+            "Rucksäcke",
+            "Scheren",
+            "Tafeln",
+            "Türen",
+            "Lampen",
+            "Uhren",
+            "Taschen",
+            "Bücher",
+            "Hefte",
+            "Lineale",
+            "Papiere",
+            "Fenster",
+            "Wörterbücher",
+            "Bilder",
+            "Regale",
+            "Formulare"
+          ],
+          "taughtValues4": [
+            "Schere",
+            "Tafel",
+            "Tür",
+            "Lampe",
+            "Uhr",
+            "Tasche"
+          ],
+          "taughtValues5": [
+            "Buch",
+            "Heft",
+            "Lineal",
+            "Papier",
+            "Fenster",
+            "Wörterbuch",
+            "Bild",
+            "Regal",
+            "Formular"
+          ]
+        },
+        "allowModelContext": true
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Sie: … das Wörterbuch? – Die Lehrerin: „Ich habe es. Und Ihr Stift?“ – Sie: …",
+        "promptDe": "Sagen Sie die Antwort. Sie: … das Wörterbuch? – Die Lehrerin: „Ich habe es. Und Ihr Stift?“ – Sie: …",
         "promptEn": "You cannot find the dictionary: ask where it is. The teacher has it and asks about your pen: tell her it is here, or that it is there.",
         "answer": "Wo ist das Wörterbuch? Der Stift ist hier.",
         "parts": [
@@ -403,7 +394,6 @@
             },
             "forms": [
               "Wo ist das Wörterbuch?",
-              "Tim, wo ist das Wörterbuch?",
               "Und wo ist das Wörterbuch?",
               "Entschuldigung, wo ist das Wörterbuch?",
               "Wo ist das Wörterbuch, bitte?",
@@ -417,20 +407,34 @@
               "en": "where your pen is"
             },
             "forms": [
-              "Der Stift ist hier.",
-              "Der Stift ist da.",
-              "Mein Stift ist hier.",
-              "Mein Stift ist da.",
-              "Er ist hier.",
-              "Er ist da.",
-              "Hier ist der Stift.",
-              "Da ist der Stift.",
-              "Hier ist mein Stift.",
-              "Da ist mein Stift.",
-              "Hier ist er.",
-              "Da ist er.",
               "Hier.",
               "Da."
+            ],
+            "frames": [
+              {
+                "pattern": "{value} ist hier.",
+                "slots": {
+                  "value": "taughtPhrases1"
+                }
+              },
+              {
+                "pattern": "Hier ist {value}.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "{value} ist da.",
+                "slots": {
+                  "value": "taughtPhrases1"
+                }
+              },
+              {
+                "pattern": "Da ist {value}.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              }
             ]
           }
         ],
@@ -440,13 +444,27 @@
             0,
             1
           ]
-        }
+        },
+        "micOff": true,
+        "sets": {
+          "taughtPhrases1": [
+            "Der Stift",
+            "Mein Stift",
+            "Er"
+          ],
+          "taughtPhrases2": [
+            "der Stift",
+            "mein Stift",
+            "er"
+          ]
+        },
+        "allowModelContext": true
       },
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Die Lehrerin: „Ihr Stift und Ihr Bleistift: die Farben, bitte!“ – Sie: … …",
-        "promptEn": "The teacher asks for the colours of your pen and of your pencil. Say the colour of the pen first, then the colour of the pencil. Use colours from this Lektion.",
+        "promptDe": "Sagen Sie die Antwort. Die Lehrerin: „Ihr Stift und Ihr Bleistift: die Farben, bitte!“ – Sie: … …",
+        "promptEn": "The teacher asks for the colours of your pen and of your pencil. Say the colour of the pen the colour of the pencil. Use colours from this Lektion.",
         "answer": "Der Stift ist blau. Der Bleistift ist gelb.",
         "parts": [
           {
@@ -454,35 +472,32 @@
               "de": "die Farbe von Ihrem Stift",
               "en": "the colour of your pen"
             },
-            "forms": [
-              "Der Stift ist rot.",
-              "Mein Stift ist rot.",
-              "Er ist rot.",
-              "Rot.",
-              "Der Stift ist blau.",
-              "Mein Stift ist blau.",
-              "Er ist blau.",
-              "Blau.",
-              "Der Stift ist grün.",
-              "Mein Stift ist grün.",
-              "Er ist grün.",
-              "Grün.",
-              "Der Stift ist gelb.",
-              "Mein Stift ist gelb.",
-              "Er ist gelb.",
-              "Gelb.",
-              "Der Stift ist schwarz.",
-              "Mein Stift ist schwarz.",
-              "Er ist schwarz.",
-              "Schwarz.",
-              "Der Stift ist weiß.",
-              "Mein Stift ist weiß.",
-              "Er ist weiß.",
-              "Weiß.",
-              "Der Stift ist braun.",
-              "Mein Stift ist braun.",
-              "Er ist braun.",
-              "Braun."
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Der Stift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Mein Stift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Er ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              }
             ]
           },
           {
@@ -490,77 +505,68 @@
               "de": "die Farbe von Ihrem Bleistift",
               "en": "the colour of your pencil"
             },
-            "forms": [
-              "Der Bleistift ist rot.",
-              "Mein Bleistift ist rot.",
-              "Er ist rot.",
-              "Und der Bleistift ist rot.",
-              "Und mein Bleistift ist rot.",
-              "Rot.",
-              "Der Bleistift ist auch rot.",
-              "Mein Bleistift ist auch rot.",
-              "Er ist auch rot.",
-              "Auch rot.",
-              "Der Bleistift ist blau.",
-              "Mein Bleistift ist blau.",
-              "Er ist blau.",
-              "Und der Bleistift ist blau.",
-              "Und mein Bleistift ist blau.",
-              "Blau.",
-              "Der Bleistift ist auch blau.",
-              "Mein Bleistift ist auch blau.",
-              "Er ist auch blau.",
-              "Auch blau.",
-              "Der Bleistift ist grün.",
-              "Mein Bleistift ist grün.",
-              "Er ist grün.",
-              "Und der Bleistift ist grün.",
-              "Und mein Bleistift ist grün.",
-              "Grün.",
-              "Der Bleistift ist auch grün.",
-              "Mein Bleistift ist auch grün.",
-              "Er ist auch grün.",
-              "Auch grün.",
-              "Der Bleistift ist gelb.",
-              "Mein Bleistift ist gelb.",
-              "Er ist gelb.",
-              "Und der Bleistift ist gelb.",
-              "Und mein Bleistift ist gelb.",
-              "Gelb.",
-              "Der Bleistift ist auch gelb.",
-              "Mein Bleistift ist auch gelb.",
-              "Er ist auch gelb.",
-              "Auch gelb.",
-              "Der Bleistift ist schwarz.",
-              "Mein Bleistift ist schwarz.",
-              "Er ist schwarz.",
-              "Und der Bleistift ist schwarz.",
-              "Und mein Bleistift ist schwarz.",
-              "Schwarz.",
-              "Der Bleistift ist auch schwarz.",
-              "Mein Bleistift ist auch schwarz.",
-              "Er ist auch schwarz.",
-              "Auch schwarz.",
-              "Der Bleistift ist weiß.",
-              "Mein Bleistift ist weiß.",
-              "Er ist weiß.",
-              "Und der Bleistift ist weiß.",
-              "Und mein Bleistift ist weiß.",
-              "Weiß.",
-              "Der Bleistift ist auch weiß.",
-              "Mein Bleistift ist auch weiß.",
-              "Er ist auch weiß.",
-              "Auch weiß.",
-              "Der Bleistift ist braun.",
-              "Mein Bleistift ist braun.",
-              "Er ist braun.",
-              "Und der Bleistift ist braun.",
-              "Und mein Bleistift ist braun.",
-              "Braun.",
-              "Der Bleistift ist auch braun.",
-              "Mein Bleistift ist auch braun.",
-              "Er ist auch braun.",
-              "Auch braun."
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Der Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Mein Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Er ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und der Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und mein Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Der Bleistift ist auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Mein Bleistift ist auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Er ist auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              }
             ]
           }
         ],
@@ -569,12 +575,34 @@
           "indices": [
             5
           ]
+        },
+        "micOff": true,
+        "order": "any",
+        "sets": {
+          "taughtValues1": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues2": [
+            "Rot",
+            "Blau",
+            "Grün",
+            "Gelb",
+            "Schwarz",
+            "Weiß",
+            "Braun"
+          ]
         }
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Die Lehrerin: „Ich habe hier einen Stift.“ – Sie: …? – Die Lehrerin: „Er ist blau.“",
+        "promptDe": "Antworten Sie mit einem Satz. Die Lehrerin: „Ich habe hier einen Stift.“ – Sie: …? – Die Lehrerin: „Er ist blau.“",
         "promptEn": "The teacher has a pen that you cannot see. Ask her one question about its colour.",
         "answer": "Ist der Stift blau oder schwarz?",
         "parts": [
@@ -585,105 +613,105 @@
             },
             "forms": [
               "Welche Farbe hat der Stift?",
-              "Ist der Stift rot?",
-              "Ist der Stift blau?",
-              "Ist der Stift grün?",
-              "Ist der Stift gelb?",
-              "Ist der Stift schwarz?",
-              "Ist der Stift weiß?",
-              "Ist der Stift braun?",
-              "Ist der Stift rot oder blau?",
-              "Ist der Stift rot oder grün?",
-              "Ist der Stift rot oder gelb?",
-              "Ist der Stift rot oder schwarz?",
-              "Ist der Stift rot oder weiß?",
-              "Ist der Stift rot oder braun?",
-              "Ist der Stift blau oder rot?",
-              "Ist der Stift blau oder grün?",
-              "Ist der Stift blau oder gelb?",
-              "Ist der Stift blau oder schwarz?",
-              "Ist der Stift blau oder weiß?",
-              "Ist der Stift blau oder braun?",
-              "Ist der Stift grün oder rot?",
-              "Ist der Stift grün oder blau?",
-              "Ist der Stift grün oder gelb?",
-              "Ist der Stift grün oder schwarz?",
-              "Ist der Stift grün oder weiß?",
-              "Ist der Stift grün oder braun?",
-              "Ist der Stift gelb oder rot?",
-              "Ist der Stift gelb oder blau?",
-              "Ist der Stift gelb oder grün?",
-              "Ist der Stift gelb oder schwarz?",
-              "Ist der Stift gelb oder weiß?",
-              "Ist der Stift gelb oder braun?",
-              "Ist der Stift schwarz oder rot?",
-              "Ist der Stift schwarz oder blau?",
-              "Ist der Stift schwarz oder grün?",
-              "Ist der Stift schwarz oder gelb?",
-              "Ist der Stift schwarz oder weiß?",
-              "Ist der Stift schwarz oder braun?",
-              "Ist der Stift weiß oder rot?",
-              "Ist der Stift weiß oder blau?",
-              "Ist der Stift weiß oder grün?",
-              "Ist der Stift weiß oder gelb?",
-              "Ist der Stift weiß oder schwarz?",
-              "Ist der Stift weiß oder braun?",
-              "Ist der Stift braun oder rot?",
-              "Ist der Stift braun oder blau?",
-              "Ist der Stift braun oder grün?",
-              "Ist der Stift braun oder gelb?",
-              "Ist der Stift braun oder schwarz?",
-              "Ist der Stift braun oder weiß?",
-              "Welche Farbe hat er?",
-              "Ist er rot?",
-              "Ist er blau?",
-              "Ist er grün?",
-              "Ist er gelb?",
-              "Ist er schwarz?",
-              "Ist er weiß?",
-              "Ist er braun?",
-              "Ist er rot oder blau?",
-              "Ist er rot oder grün?",
-              "Ist er rot oder gelb?",
-              "Ist er rot oder schwarz?",
-              "Ist er rot oder weiß?",
-              "Ist er rot oder braun?",
-              "Ist er blau oder rot?",
-              "Ist er blau oder grün?",
-              "Ist er blau oder gelb?",
-              "Ist er blau oder schwarz?",
-              "Ist er blau oder weiß?",
-              "Ist er blau oder braun?",
-              "Ist er grün oder rot?",
-              "Ist er grün oder blau?",
-              "Ist er grün oder gelb?",
-              "Ist er grün oder schwarz?",
-              "Ist er grün oder weiß?",
-              "Ist er grün oder braun?",
-              "Ist er gelb oder rot?",
-              "Ist er gelb oder blau?",
-              "Ist er gelb oder grün?",
-              "Ist er gelb oder schwarz?",
-              "Ist er gelb oder weiß?",
-              "Ist er gelb oder braun?",
-              "Ist er schwarz oder rot?",
-              "Ist er schwarz oder blau?",
-              "Ist er schwarz oder grün?",
-              "Ist er schwarz oder gelb?",
-              "Ist er schwarz oder weiß?",
-              "Ist er schwarz oder braun?",
-              "Ist er weiß oder rot?",
-              "Ist er weiß oder blau?",
-              "Ist er weiß oder grün?",
-              "Ist er weiß oder gelb?",
-              "Ist er weiß oder schwarz?",
-              "Ist er weiß oder braun?",
-              "Ist er braun oder rot?",
-              "Ist er braun oder blau?",
-              "Ist er braun oder grün?",
-              "Ist er braun oder gelb?",
-              "Ist er braun oder schwarz?",
-              "Ist er braun oder weiß?"
+              "Welche Farbe hat er?"
+            ],
+            "frames": [
+              {
+                "pattern": "Ist der Stift {value}?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ist er {value}?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder blau?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder grün?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder gelb?",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder schwarz?",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder weiß?",
+                "slots": {
+                  "value": "taughtValues6"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder braun?",
+                "slots": {
+                  "value": "taughtValues7"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder rot?",
+                "slots": {
+                  "value": "taughtValues8"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder blau?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder grün?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder gelb?",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder schwarz?",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder weiß?",
+                "slots": {
+                  "value": "taughtValues6"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder braun?",
+                "slots": {
+                  "value": "taughtValues7"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder rot?",
+                "slots": {
+                  "value": "taughtValues8"
+                }
+              }
             ]
           }
         ],
@@ -691,6 +719,74 @@
           "kind": "dialog",
           "indices": [
             4
+          ]
+        },
+        "micOff": true,
+        "sets": {
+          "taughtValues1": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues2": [
+            "rot",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues3": [
+            "rot",
+            "blau",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues4": [
+            "rot",
+            "blau",
+            "grün",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues5": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues6": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "braun"
+          ],
+          "taughtValues7": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß"
+          ],
+          "taughtValues8": [
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
           ]
         }
       }

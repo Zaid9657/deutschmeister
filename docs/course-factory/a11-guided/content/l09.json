@@ -130,7 +130,7 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Im Café. Der Kellner: „Was möchten Sie trinken?“ Sie: … (Durst!) … (Tee)",
+        "promptDe": "Sagen Sie die Antwort. Im Café. Der Kellner: „Was möchten Sie trinken?“ Sie: … (Durst!) … (Tee)",
         "promptEn": "In the café, the waiter asks what you would like to drink. Say two sentences: first that you are thirsty, then order tea politely.",
         "answer": "Ich habe Durst. Ich möchte einen Tee, bitte.",
         "parts": [
@@ -197,12 +197,14 @@
           "indices": [
             1
           ]
-        }
+        },
+        "micOff": true,
+        "firstContact": true
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Der Kellner: „Wir haben auch Suppe, Salat und Kuchen.“ Sie: … (Hunger!) … (Suppe)",
+        "promptDe": "Sagen Sie die Antwort. Der Kellner: „Wir haben auch Suppe, Salat und Kuchen.“ Sie: … (Hunger!) … (Suppe)",
         "promptEn": "The waiter tells you what there is to eat. Say two sentences: first that you are hungry, then order soup politely.",
         "answer": "Ich habe Hunger. Ich möchte Suppe, bitte.",
         "parts": [
@@ -262,12 +264,13 @@
           "indices": [
             3
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Sie möchten Salat. Der Kellner: „Wir haben Suppe und Kuchen.“ Sie: …?",
+        "promptDe": "Antworten Sie mit einem Satz. Sie möchten Salat. Der Kellner: „Wir haben Suppe und Kuchen.“ Sie: …?",
         "promptEn": "You would like salad, but the waiter only mentions soup and cake. Ask him politely whether they have salad too.",
         "answer": "Haben Sie auch Salat?",
         "register": "formal",
@@ -310,12 +313,14 @@
           "indices": [
             2
           ]
-        }
+        },
+        "micOff": true,
+        "firstContact": true
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Der Kellner: „Möchten Sie auch Wasser?“ Sie: … (ja!) Der Kellner: „Wir haben auch Wein.“ Sie: … (nein!)",
+        "promptDe": "Sagen Sie die Antwort. Der Kellner: „Möchten Sie auch Wasser?“ Sie: … (ja!) Der Kellner: „Wir haben auch Wein.“ Sie: … (nein!)",
         "promptEn": "The waiter offers you water: accept politely. Then he offers wine: decline politely.",
         "answer": "Ja, bitte. Nein, danke.",
         "register": "formal",
@@ -370,7 +375,9 @@
             6,
             7
           ]
-        }
+        },
+        "micOff": true,
+        "allowModelContext": true
       }
     ]
   },

@@ -184,8 +184,8 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Ihr Formular: Ana Chakiri, Marokko, Studentin. Herr Weber: „Woher kommen Sie? Und was sind Sie von Beruf?“ – Sie: …",
-        "promptEn": "You are Ana at the public office. Your form says: Ana Chakiri, Morocco, student. Mr Weber asks where you come from and what your job is. Answer both questions, in that order.",
+        "promptDe": "Sagen Sie die Antwort. Ihr Formular: Ana Chakiri, Marokko, Studentin. Herr Weber: „Woher kommen Sie? Und was sind Sie von Beruf?“ – Sie: …",
+        "promptEn": "You are Ana at the public office. Your form says: Ana Chakiri, Morocco, student. Mr Weber asks where you come from and what your job is. Answer both questions.",
         "answer": "Ich komme aus Marokko. Ich bin Studentin.",
         "parts": [
           {
@@ -223,12 +223,18 @@
             5,
             7
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any",
+        "context": [
+          "Ich heiße Ana.",
+          "Mein Nachname ist Chakiri."
+        ]
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Im Amt. Eine Frau: „Ich komme auch aus Marokko und wohne in Bremen.“ – Sie: …? Die Frau: „Ich bin Lehrerin.“",
+        "promptDe": "Antworten Sie mit einem Satz. Im Amt. Eine Frau: „Ich komme auch aus Marokko und wohne in Bremen.“ – Sie: …? Die Frau: „Ich bin Lehrerin.“",
         "promptEn": "At the public office you talk to a woman you do not know. She tells you that she is from Morocco too and lives in Bremen. Ask her formally what her job is, so that her answer fits.",
         "answer": "Was sind Sie von Beruf?",
         "register": "formal",
@@ -253,14 +259,83 @@
           "indices": [
             6
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 2,
-        "type": "production",
-        "promptDe": "Ihr Formular: Telefonnummer 4 9 2 3 5 8. Herr Weber: „Ist Ihre Telefonnummer vier neun zwei drei acht fünf?“ – Sie: …",
-        "promptEn": "Your form says: phone number 4 9 2 3 5 8. Mr Weber reads the number back to you. Is he right? Answer yes or no, then say your whole number, with every number written as a word.",
+        "type": "listening",
+        "promptDe": "Ihr Formular: Telefonnummer 4 9 2 3 5 8. Herr Weber: …? Hören Sie. Antworten Sie. Schreiben Sie die Telefonnummer: Zahl für Zahl, ein Wort.",
+        "promptEn": "Your form says 4 9 2 3 5 8. Listen to Mr Weber. Is his number right? Answer yes or no, then give the whole correct number, every digit as a German word.",
         "answer": "Nein. Vier neun zwei drei fünf acht.",
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            9
+          ]
+        },
+        "micOff": true,
+        "mode": "parts",
+        "instances": [
+          {
+            "audioText": "Ist Ihre Telefonnummer vier neun zwei drei acht fünf?",
+            "answer": "Nein. Vier neun zwei drei fünf acht.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Antwort auf die Frage von Herrn Weber",
+                  "en": "your answer to Mr Weber’s question"
+                },
+                "forms": [
+                  "Nein."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die ganze Telefonnummer, jede Zahl als Wort",
+                  "en": "the whole phone number, every number as a word"
+                },
+                "forms": [
+                  "Vier neun zwei drei fünf acht.",
+                  "Vier-neun-zwei-drei-fünf-acht.",
+                  "Meine Telefonnummer ist vier neun zwei drei fünf acht.",
+                  "Meine Telefonnummer ist vier-neun-zwei-drei-fünf-acht.",
+                  "Die Telefonnummer ist vier neun zwei drei fünf acht.",
+                  "Sie ist vier neun zwei drei fünf acht."
+                ]
+              }
+            ]
+          },
+          {
+            "audioText": "Ist Ihre Telefonnummer vier neun zwei drei fünf acht?",
+            "answer": "Ja. Vier neun zwei drei fünf acht.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Antwort auf die Frage von Herrn Weber",
+                  "en": "your answer to Mr Weber’s question"
+                },
+                "forms": [
+                  "Ja."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die ganze Telefonnummer, jede Zahl als Wort",
+                  "en": "the whole phone number, every number as a word"
+                },
+                "forms": [
+                  "Vier neun zwei drei fünf acht.",
+                  "Vier-neun-zwei-drei-fünf-acht.",
+                  "Meine Telefonnummer ist vier neun zwei drei fünf acht.",
+                  "Meine Telefonnummer ist vier-neun-zwei-drei-fünf-acht.",
+                  "Die Telefonnummer ist vier neun zwei drei fünf acht.",
+                  "Sie ist vier neun zwei drei fünf acht."
+                ]
+              }
+            ]
+          }
+        ],
         "parts": [
           {
             "label": {
@@ -285,19 +360,13 @@
               "Sie ist vier neun zwei drei fünf acht."
             ]
           }
-        ],
-        "reteach": {
-          "kind": "dialog",
-          "indices": [
-            9
-          ]
-        }
+        ]
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Ihr Formular: Telefonnummer 0 1 7 6, Wohnort Bremen. Herr Weber: „Wie ist Ihre Telefonnummer? Und wo wohnen Sie?“ – Sie: …",
-        "promptEn": "Your form says: phone number 0 1 7 6, place of residence Bremen. Mr Weber asks for your phone number and where you live. Answer both questions, in that order.",
+        "promptDe": "Sagen Sie die Antwort. Ihr Formular: Telefonnummer 0 1 7 6, Wohnort Bremen. Herr Weber: „Wie ist Ihre Telefonnummer? Und wo wohnen Sie?“ – Sie: …",
+        "promptEn": "Your form says: phone number 0 1 7 6, place of residence Bremen. Mr Weber asks for your phone number and where you live. Answer both questions.",
         "answer": "Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.",
         "parts": [
           {
@@ -335,13 +404,15 @@
             9,
             5
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any"
       },
       {
         "canDo": 4,
         "type": "production",
-        "promptDe": "An das Amt: „Guten Tag, ich heiße Ana Chakiri. … Danke! Ana Chakiri“ – Sie (Marokko; ledig): …",
-        "promptEn": "You are Ana and you write a short message to the public office. The greeting, your name and the closing are already there. Write only the two missing sentences about yourself: first where you come from (Morocco), then your marital status (single).",
+        "promptDe": "Sagen Sie die Antwort. An das Amt: „Guten Tag, ich heiße Ana Chakiri. … Danke! Ana Chakiri“ – Sie (Marokko; ledig): …",
+        "promptEn": "You are Ana and you write a short message to the public office. The greeting, your name and the closing are already there. Write only the two missing sentences about yourself: where you come from (Morocco) your marital status (single).",
         "answer": "Ich komme aus Marokko. Ich bin ledig.",
         "parts": [
           {
@@ -368,7 +439,8 @@
               "Mein Familienstand ist ledig.",
               "und bin ledig.",
               "und ich bin ledig."
-            ]
+            ],
+            "ellipsisOpening": "Ich bin"
           }
         ],
         "reteach": {
@@ -377,7 +449,14 @@
             5,
             3
           ]
-        }
+        },
+        "micOff": true,
+        "order": "any",
+        "firstContact": true,
+        "context": [
+          "Ich heiße Ana Chakiri.",
+          "Ana Chakiri."
+        ]
       }
     ]
   },

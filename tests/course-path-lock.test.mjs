@@ -84,8 +84,9 @@ test('actual recap effect withholds guest and account writes until proof, writes
     context.proof = passed;
     finish(); finish(); assert.equal(writes.length, 1);
     context.completionStarted.current = false;
-    context.lektion = CURRICULUM_A11.lektionen[1]; context.proof = {};
-    finish(); assert.equal(writes.length, 2, 'L2 has no proof and completes as before');
+    // A Lektion without a proof completes as before. Lektion 2 has its own proof now, so the witness is Lektion 2 with the proof taken off.
+    context.lektion = { ...CURRICULUM_A11.lektionen[1], proof: undefined }; context.proof = {};
+    finish(); assert.equal(writes.length, 2, 'a Lektion without a proof completes as before');
   }
 });
 

@@ -4,6 +4,8 @@ import { wordCardFindings } from './lib/word-card-quality.mjs';
 import { distractorFindings } from './lib/distractor-quality.mjs';
 import { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
 export { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
+import { germanNumberWord } from '../src/lib/lesson/readaloud.js';
+import { instructionVocabulary } from './lib/instruction-vocabulary.mjs';
 import { proofShapeFindings, proofGermanTexts } from './lib/proof-content.mjs';
 import { hintFor, hintContainsAnswer } from '../src/lib/lesson/guidedFeedback.js';
 import { guidedFindings } from './lib/guided-content.mjs';
@@ -3267,13 +3269,21 @@ export function a12FinalTestFindings(mock = abschlusstestA12, c = CURRICULUM_A12
 }
 
 /** Shared taught-word horizon for guided reading and proof. No new instruction-word exemptions. */
-function guidedVocabularyFindings(c, textsFor, label, spec = levelSpec(c?.level)) {
+function guidedVocabularyFindings(c, textsFor, label, spec = levelSpec(c?.level), instructions = false) {
   const known = seedVocabulary(spec);
   const findings = [];
   for (const l of c.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    if (label === 'proof') {
+      for (const set of l.guided?.sets || []) {
+        for (const m of [...(set.members || []), ...(set.rule?.examples || []), ...(set.rule?.transfer || [])]) for (const t of tokenise(m.said)) known.add(t.toLowerCase());
+        if (set.rule?.id === 'unit-before-ten') {
+          for (let n = 21; n <= 99; n++) known.add(germanNumberWord(n).replace(/ae/g, 'ä').replace(/oe/g, 'ö').replace(/ue/g, 'ü').replace(/ss/g, 'ß'));
+        }
+      }
+    }
     for (const text of textsFor(l)) for (const token of tokenise(text || '')) {
-      if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: ${label} uses untaught word "${token}"`);
+      if (!known.has(token.toLowerCase()) && !(instructions && instructionVocabulary.has(token.toLowerCase()))) findings.push(`L${l.nr}: ${label} uses untaught word "${token}"`);
     }
   }
   return findings;
@@ -3286,6 +3296,7 @@ export const guidedReadVocabulary = (c, spec = levelSpec(c?.level)) =>
 /** RULE 35: ordered parts or heard spelled-name transcription; scored own-name speech only, safe hints and taught vocabulary. */
 export const proofFindings = (c, spec = levelSpec(c?.level)) => [
   ...proofShapeFindings(c), ...guidedVocabularyFindings(c, proofGermanTexts, 'proof', spec),
+  ...guidedVocabularyFindings(c, (l) => (l.proof?.tasks || []).map((t) => t?.promptDe), 'proof', spec, true),
 ];
 
 export function validateCurriculum(c, extraItems, poolItems) {

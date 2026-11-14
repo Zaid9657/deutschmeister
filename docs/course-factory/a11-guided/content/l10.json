@@ -130,7 +130,7 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Am Bahnhof. Sie fahren mit dem Zug nach Österreich. Auf Ihrer Fahrkarte ist keine Uhrzeit. Ein Mann arbeitet am Bahnhof. Sie: …?",
+        "promptDe": "Antworten Sie mit einem Satz. Am Bahnhof. Sie fahren mit dem Zug nach Österreich. Auf Ihrer Fahrkarte ist keine Uhrzeit. Ein Mann arbeitet am Bahnhof. Sie: …?",
         "promptEn": "At the station: you are taking the train to Austria, but your ticket shows no time. Ask a man who works there when the train leaves.",
         "answer": "Wann fährt der Zug nach Österreich?",
         "parts": [
@@ -194,12 +194,13 @@
             0,
             8
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Sie fahren nach Österreich und kaufen eine Fahrkarte. Sie haben zwanzig Euro. Sie: …?",
+        "promptDe": "Antworten Sie mit einem Satz. Sie fahren nach Österreich und kaufen eine Fahrkarte. Sie haben zwanzig Euro. Sie: …?",
         "promptEn": "You are going to Austria and are buying your ticket. You have twenty euros on you. Ask about the price of the ticket.",
         "answer": "Was kostet die Fahrkarte?",
         "parts": [
@@ -277,23 +278,15 @@
           "indices": [
             4
           ]
-        }
+        },
+        "micOff": true
       },
       {
         "canDo": 2,
-        "type": "multiple_choice",
-        "promptDe": "Am Bahnhof hören Sie die Durchsage: „Der Zug nach Österreich hat heute Verspätung. Die Abfahrt ist um zehn Uhr an Gleis fünf.“ Was ist mit dem Zug?",
-        "promptEn": "At the station you hear this announcement. What does it tell you about the train? Choose.",
-        "options": [
-          "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
-          "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
-          "Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.",
-          "Der Zug ist pünktlich. Er fährt von Gleis zehn."
-        ],
+        "type": "listening",
+        "promptDe": "Am Bahnhof hören Sie die Durchsage. Was ist mit dem Zug? Wählen Sie.",
+        "promptEn": "Listen to the announcement. Choose what it tells you about the train.",
         "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
-        "accepted": [
-          "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
-        ],
         "reteach": {
           "kind": "dialog",
           "indices": [
@@ -302,12 +295,42 @@
             7,
             9
           ]
-        }
+        },
+        "micOff": true,
+        "mode": "choice",
+        "instances": [
+          {
+            "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+            "accepted": [
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+            ],
+            "options": [
+              "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.",
+              "Der Zug ist pünktlich. Er fährt von Gleis zehn."
+            ],
+            "audioText": "Der Zug nach Österreich hat heute Verspätung. Die Abfahrt ist um zehn Uhr an Gleis fünf."
+          },
+          {
+            "audioText": "Der Zug nach Österreich ist heute pünktlich. Die Abfahrt ist um zehn Uhr an Gleis vier.",
+            "answer": "Der Zug ist pünktlich. Er fährt von Gleis vier.",
+            "accepted": [
+              "Der Zug ist pünktlich. Er fährt von Gleis vier."
+            ],
+            "options": [
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis vier.",
+              "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+              "Der Zug ist pünktlich. Er fährt von Gleis vier.",
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+            ]
+          }
+        ]
       },
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Am Bus. Ihre Fahrkarte: Bremen – Berlin. Der Fahrer: „Wohin fahren Sie?“ Sie: …",
+        "promptDe": "Antworten Sie mit einem Satz. Am Bus. Ihre Fahrkarte: Bremen – Berlin. Der Fahrer: „Wohin fahren Sie?“ Sie: …",
         "promptEn": "At the bus: your ticket says Bremen – Berlin. The driver asks where you are going. Tell him.",
         "answer": "Ich fahre nach Berlin.",
         "parts": [
@@ -332,7 +355,8 @@
           "indices": [
             0
           ]
-        }
+        },
+        "micOff": true
       }
     ]
   },

@@ -7,7 +7,7 @@ const sets = [ALPHABET, DIGITS, PRICES, FULL_HOUR];
 /** Native details keeps the reference one tap away, with keyboard and close support. */
 export default function SetReference({ item, lektionId }) {
   const [lang] = useLessonLang();
-  const kinds = referenceKinds(item, sets);
+  const kinds = referenceKinds(item, sets, lektionId);
   if (!kinds.length || !String(lektionId || '').startsWith('a1.1-')) return null;
   return <details className="my-3 rounded-xl border border-rule bg-white p-3">
     <summary className="min-h-11 cursor-pointer text-sm font-bold text-siegel">{t('set.reference', lang)}</summary>

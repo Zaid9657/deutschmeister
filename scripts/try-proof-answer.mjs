@@ -10,7 +10,7 @@
 // every wrong one fails. Nothing is written.
 import { readFileSync, existsSync } from 'node:fs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
-import { proofTasks, judgeProof, proofHint } from '../src/lib/lesson/proof.js';
+import { proofTasks, judgeProof, proofHint, proofTaskFor } from '../src/lib/lesson/proof.js';
 
 const [nrArg, goalArg, ...answers] = process.argv.slice(2);
 const nr = Number(nrArg), goal = Number(goalArg);
@@ -25,7 +25,8 @@ if (!draft.proof) { console.error(`L${nr}: the draft has no proof block`); proce
 const lesson = structuredClone(CURRICULUM_A11.lektionen.find((l) => l.nr === nr));
 if (draft.guided) lesson.guided = draft.guided;
 lesson.proof = draft.proof;
-const task = proofTasks(lesson)[goal];
+const baseTask = proofTasks(lesson)[goal];
+const task = baseTask ? proofTaskFor(baseTask) : null;
 if (!task) { console.error(`L${nr}: no proof task for goal ${goal}`); process.exit(2); }
 console.log(`L${nr} goal ${goal}: ${lesson.canDo[goal]}`);
 console.log(`  task: ${task.promptDe}`);
@@ -33,6 +34,6 @@ console.log(`  task: ${task.promptDe}`);
 const names = { full: 'Sam Miller', first: 'Sam', surname: 'Miller' };
 for (const answer of answers) {
   const verdict = judgeProof(task, answer, names);
-  const hint = verdict.result === 'wrong' ? `  hint: ${proofHint(task, verdict.part).en}` : '';
+  const hint = verdict.result === 'wrong' ? `  hint: ${proofHint(task, verdict.part, verdict.registerMiss).en}` : '';
   console.log(`  ${verdict.result.toUpperCase().padEnd(7)} ${JSON.stringify(answer)}${hint}`);
 }

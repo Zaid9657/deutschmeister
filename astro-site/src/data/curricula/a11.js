@@ -395,6 +395,287 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l02',
       slug: 'ich-bin-studentin',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Ihr Formular: Ana Chakiri, Marokko, Studentin. Herr Weber: „Woher kommen Sie? Und was sind Sie von Beruf?“ – Sie: …",
+            "promptEn": "You are Ana at the public office. Your form says: Ana Chakiri, Morocco, student. Mr Weber asks where you come from and what your job is. Answer both questions.",
+            "answer": "Ich komme aus Marokko. Ich bin Studentin.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Herkunft (nicht nur das Wort aus dem Formular)",
+                  "en": "where you come from (not just the word from the form)"
+                },
+                "forms": [
+                  "Ich komme aus Marokko.",
+                  "Ich bin aus Marokko.",
+                  "Aus Marokko.",
+                  "Ich komme aus Marokko und wohne in Bremen.",
+                  "Ich komme aus Marokko und bin Marokkanerin.",
+                  "Ich bin Marokkanerin."
+                ]
+              },
+              {
+                "label": {
+                  "de": "der Beruf (ganzer Satz)",
+                  "en": "your job (a full sentence)"
+                },
+                "forms": [
+                  "Ich bin Studentin.",
+                  "Ich bin von Beruf Studentin.",
+                  "Ich bin Studentin von Beruf.",
+                  "Von Beruf bin ich Studentin.",
+                  "und bin Studentin.",
+                  "und ich bin Studentin."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                5,
+                7
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "context": [
+              "Ich heiße Ana.",
+              "Mein Nachname ist Chakiri."
+            ]
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Im Amt. Eine Frau: „Ich komme auch aus Marokko und wohne in Bremen.“ – Sie: …? Die Frau: „Ich bin Lehrerin.“",
+            "promptEn": "At the public office you talk to a woman you do not know. She tells you that she is from Morocco too and lives in Bremen. Ask her formally what her job is, so that her answer fits.",
+            "answer": "Was sind Sie von Beruf?",
+            "register": "formal",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage nach dem Beruf",
+                  "en": "the question about her job"
+                },
+                "forms": [
+                  "Was sind Sie von Beruf?",
+                  "Und was sind Sie von Beruf?",
+                  "Entschuldigung, was sind Sie von Beruf?",
+                  "Was ist Ihr Beruf?",
+                  "Und was ist Ihr Beruf?",
+                  "Entschuldigung, was ist Ihr Beruf?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                6
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 2,
+            "type": "listening",
+            "promptDe": "Ihr Formular: Telefonnummer 4 9 2 3 5 8. Herr Weber: …? Hören Sie. Antworten Sie. Schreiben Sie die Telefonnummer: Zahl für Zahl, ein Wort.",
+            "promptEn": "Your form says 4 9 2 3 5 8. Listen to Mr Weber. Is his number right? Answer yes or no, then give the whole correct number, every digit as a German word.",
+            "answer": "Nein. Vier neun zwei drei fünf acht.",
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                9
+              ]
+            },
+            "micOff": true,
+            "mode": "parts",
+            "instances": [
+              {
+                "audioText": "Ist Ihre Telefonnummer vier neun zwei drei acht fünf?",
+                "answer": "Nein. Vier neun zwei drei fünf acht.",
+                "parts": [
+                  {
+                    "label": {
+                      "de": "die Antwort auf die Frage von Herrn Weber",
+                      "en": "your answer to Mr Weber’s question"
+                    },
+                    "forms": [
+                      "Nein."
+                    ]
+                  },
+                  {
+                    "label": {
+                      "de": "die ganze Telefonnummer, jede Zahl als Wort",
+                      "en": "the whole phone number, every number as a word"
+                    },
+                    "forms": [
+                      "Vier neun zwei drei fünf acht.",
+                      "Vier-neun-zwei-drei-fünf-acht.",
+                      "Meine Telefonnummer ist vier neun zwei drei fünf acht.",
+                      "Meine Telefonnummer ist vier-neun-zwei-drei-fünf-acht.",
+                      "Die Telefonnummer ist vier neun zwei drei fünf acht.",
+                      "Sie ist vier neun zwei drei fünf acht."
+                    ]
+                  }
+                ]
+              },
+              {
+                "audioText": "Ist Ihre Telefonnummer vier neun zwei drei fünf acht?",
+                "answer": "Ja. Vier neun zwei drei fünf acht.",
+                "parts": [
+                  {
+                    "label": {
+                      "de": "die Antwort auf die Frage von Herrn Weber",
+                      "en": "your answer to Mr Weber’s question"
+                    },
+                    "forms": [
+                      "Ja."
+                    ]
+                  },
+                  {
+                    "label": {
+                      "de": "die ganze Telefonnummer, jede Zahl als Wort",
+                      "en": "the whole phone number, every number as a word"
+                    },
+                    "forms": [
+                      "Vier neun zwei drei fünf acht.",
+                      "Vier-neun-zwei-drei-fünf-acht.",
+                      "Meine Telefonnummer ist vier neun zwei drei fünf acht.",
+                      "Meine Telefonnummer ist vier-neun-zwei-drei-fünf-acht.",
+                      "Die Telefonnummer ist vier neun zwei drei fünf acht.",
+                      "Sie ist vier neun zwei drei fünf acht."
+                    ]
+                  }
+                ]
+              }
+            ],
+            "parts": [
+              {
+                "label": {
+                  "de": "die Antwort auf die Frage von Herrn Weber",
+                  "en": "your answer to Mr Weber’s question"
+                },
+                "forms": [
+                  "Nein."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die ganze Telefonnummer, jede Zahl als Wort",
+                  "en": "the whole phone number, every number as a word"
+                },
+                "forms": [
+                  "Vier neun zwei drei fünf acht.",
+                  "Vier-neun-zwei-drei-fünf-acht.",
+                  "Meine Telefonnummer ist vier neun zwei drei fünf acht.",
+                  "Meine Telefonnummer ist vier-neun-zwei-drei-fünf-acht.",
+                  "Die Telefonnummer ist vier neun zwei drei fünf acht.",
+                  "Sie ist vier neun zwei drei fünf acht."
+                ]
+              }
+            ]
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Ihr Formular: Telefonnummer 0 1 7 6, Wohnort Bremen. Herr Weber: „Wie ist Ihre Telefonnummer? Und wo wohnen Sie?“ – Sie: …",
+            "promptEn": "Your form says: phone number 0 1 7 6, place of residence Bremen. Mr Weber asks for your phone number and where you live. Answer both questions.",
+            "answer": "Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Telefonnummer (ganzer Satz oder jede Zahl als Wort)",
+                  "en": "your phone number (a full sentence, or every number as a word)"
+                },
+                "forms": [
+                  "Meine Telefonnummer ist null eins sieben sechs.",
+                  "Null eins sieben sechs.",
+                  "Meine Telefonnummer ist 0176.",
+                  "Meine Telefonnummer ist 0 1 7 6.",
+                  "Die Telefonnummer ist null eins sieben sechs.",
+                  "Die Telefonnummer ist 0176."
+                ]
+              },
+              {
+                "label": {
+                  "de": "der Wohnort (nicht nur das Wort aus dem Formular)",
+                  "en": "where you live (not just the word from the form)"
+                },
+                "forms": [
+                  "Ich wohne in Bremen.",
+                  "In Bremen.",
+                  "Mein Wohnort ist Bremen.",
+                  "und ich wohne in Bremen.",
+                  "und mein Wohnort ist Bremen.",
+                  "Ich komme aus Marokko und wohne in Bremen."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                9,
+                5
+              ]
+            },
+            "micOff": true,
+            "order": "any"
+          },
+          {
+            "canDo": 4,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. An das Amt: „Guten Tag, ich heiße Ana Chakiri. … Danke! Ana Chakiri“ – Sie (Marokko; ledig): …",
+            "promptEn": "You are Ana and you write a short message to the public office. The greeting, your name and the closing are already there. Write only the two missing sentences about yourself: where you come from (Morocco) your marital status (single).",
+            "answer": "Ich komme aus Marokko. Ich bin ledig.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Herkunft (ganzer Satz)",
+                  "en": "where you come from (a full sentence)"
+                },
+                "forms": [
+                  "Ich komme aus Marokko.",
+                  "Ich bin aus Marokko.",
+                  "Ich komme aus Marokko und bin Marokkanerin.",
+                  "Ich bin Marokkanerin.",
+                  "Ich komme aus Marokko und wohne in Bremen."
+                ]
+              },
+              {
+                "label": {
+                  "de": "der Familienstand (ganzer Satz)",
+                  "en": "your marital status (a full sentence)"
+                },
+                "forms": [
+                  "Ich bin ledig.",
+                  "Ich bin nicht verheiratet.",
+                  "Mein Familienstand ist ledig.",
+                  "und bin ledig.",
+                  "und ich bin ledig."
+                ],
+                "ellipsisOpening": "Ich bin"
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                5,
+                3
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "firstContact": true,
+            "context": [
+              "Ich heiße Ana Chakiri.",
+              "Ana Chakiri."
+            ]
+          }
+        ]
+      },
       guided: {
         sets: [DIGITS],
         read: {
@@ -767,6 +1048,171 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l03',
       slug: 'meine-familie',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Sie sind Ana. Lena: „Wer ist das?“ – Sie (Bruder): … Lena: „Wie alt ist er?“ – Sie (20): …",
+            "promptEn": "You are Ana and show Lena a photo of your brother. He is 20. Lena asks who that is, then how old he is. Answer both questions, in that order.",
+            "answer": "Das ist mein Bruder. Er ist zwanzig.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Person (nicht nur das eine Wort)",
+                  "en": "who it is (not just the one word)"
+                },
+                "forms": [
+                  "Das ist mein Bruder.",
+                  "Mein Bruder.",
+                  "Er ist mein Bruder.",
+                  "Das ist der Bruder."
+                ]
+              },
+              {
+                "label": {
+                  "de": "das Alter (die Zahl als Wort oder ein ganzer Satz)",
+                  "en": "his age (the number as a word, or a full sentence)"
+                },
+                "forms": [
+                  "Er ist zwanzig.",
+                  "Zwanzig.",
+                  "Er ist 20.",
+                  "Mein Bruder ist zwanzig.",
+                  "Mein Bruder ist 20."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                1,
+                3
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Ein Mann: „Welche Sprachen sprechen Sie?“ – Sie (Arabisch + Deutsch): …",
+            "promptEn": "You speak Arabic and German. A man you have just met asks which languages you speak. Answer in one full sentence.",
+            "answer": "Ich spreche Arabisch und Deutsch.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Sprachen (ein ganzer Satz)",
+                  "en": "your languages (one full sentence)"
+                },
+                "forms": [
+                  "Ich spreche Arabisch und Deutsch.",
+                  "Ich spreche Deutsch und Arabisch.",
+                  "Ich spreche Arabisch und auch Deutsch.",
+                  "Ich spreche Deutsch und auch Arabisch.",
+                  "Ich spreche Arabisch. Ich spreche Deutsch.",
+                  "Ich spreche Deutsch. Ich spreche Arabisch."
+                ],
+                "maxSentences": 2
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                4,
+                5
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Frau: „Das ist mein Bruder.“ – Sie: …? Die Frau: „Er ist zwanzig. Und das sind meine Eltern.“ – Sie: …? Die Frau: „Sie sprechen Arabisch und Deutsch.“",
+            "promptEn": "A woman shows you a photo of her family. Ask two questions so that her answers fit: first about her brother, then about her parents.",
+            "answer": "Wie alt ist er? Welche Sprachen sprechen sie?",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage nach dem Alter",
+                  "en": "the question about his age"
+                },
+                "forms": [
+                  "Wie alt ist er?",
+                  "Und wie alt ist er?",
+                  "Wie alt ist dein Bruder?",
+                  "Und wie alt ist dein Bruder?",
+                  "Wie alt ist Ihr Bruder?",
+                  "Und wie alt ist Ihr Bruder?",
+                  "Wie alt ist der Bruder?"
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Frage nach den Sprachen",
+                  "en": "the question about their languages"
+                },
+                "forms": [
+                  "Welche Sprachen sprechen sie?",
+                  "Und welche Sprachen sprechen sie?",
+                  "Welche Sprachen sprechen deine Eltern?",
+                  "Und welche Sprachen sprechen deine Eltern?",
+                  "Welche Sprachen sprechen Ihre Eltern?",
+                  "Und welche Sprachen sprechen Ihre Eltern?",
+                  "Welche Sprachen sprechen die Eltern?",
+                  "Welche Sprache sprechen sie?",
+                  "Welche Sprache sprechen deine Eltern?",
+                  "Welche Sprache sprechen Ihre Eltern?",
+                  "Was sprechen sie?",
+                  "Was sprechen deine Eltern?",
+                  "Was sprechen Ihre Eltern?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                2,
+                4
+              ]
+            },
+            "micOff": true,
+            "register": "informal"
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Eine Frau: „Woher kommt Ihre Familie?“ – Sie (Marokko): …",
+            "promptEn": "Your family is from Morocco. A woman you have just met asks where your family comes from. Answer her.",
+            "answer": "Meine Familie kommt aus Marokko.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Herkunft der Familie (nicht nur das eine Wort)",
+                  "en": "where your family comes from (not just the one word)"
+                },
+                "forms": [
+                  "Meine Familie kommt aus Marokko.",
+                  "Sie kommt aus Marokko.",
+                  "Aus Marokko.",
+                  "Wir kommen aus Marokko.",
+                  "Meine Familie ist aus Marokko.",
+                  "Wir sind aus Marokko.",
+                  "Die Familie kommt aus Marokko.",
+                  "Meine Eltern kommen aus Marokko.",
+                  "Sie kommen aus Marokko."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                9
+              ]
+            },
+            "micOff": true
+          }
+        ]
+      },
       guided: {
         sets: [AGE_TWENTY],
         read: {
@@ -981,6 +1427,181 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l04',
       slug: 'auf-dem-flohmarkt',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Auf dem Flohmarkt. Sie: …? Frau Wolf: „Das ist eine Lampe.“ – Sie: …? Frau Wolf: „Sie kostet acht Euro.“",
+            "promptEn": "At the flea market you see a thing on Ms Wolf’s table. Ask two questions so that her answers fit: first what the thing is, then what it costs.",
+            "answer": "Was ist das? Was kostet sie?",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage nach der Sache",
+                  "en": "the question about what the thing is"
+                },
+                "forms": [
+                  "Was ist das?",
+                  "Entschuldigung, was ist das?",
+                  "Und was ist das?"
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Frage nach dem Preis",
+                  "en": "the question about the price"
+                },
+                "forms": [
+                  "Was kostet sie?",
+                  "Und was kostet sie?",
+                  "Was kostet die Lampe?",
+                  "Und was kostet die Lampe?",
+                  "Wie viel kostet sie?",
+                  "Und wie viel kostet sie?",
+                  "Wie viel kostet die Lampe?",
+                  "Und wie viel kostet die Lampe?",
+                  "Was kostet das?",
+                  "Und was kostet das?",
+                  "Wie viel kostet das?",
+                  "Und wie viel kostet das?",
+                  "Wie teuer ist sie?",
+                  "Wie teuer ist die Lampe?",
+                  "Wie teuer ist das?",
+                  "Wie ist der Preis?",
+                  "Was ist der Preis?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                0,
+                2
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Frau Wolf: „Die Lampe kostet acht Euro.“ – Sie: Und der Rucksack? …? Frau Wolf: „Er kostet zwanzig Euro.“",
+            "promptEn": "Now you point at the backpack: “Und der Rucksack?” Go on and ask Ms Wolf for its price, so that her answer fits. Write only your question.",
+            "answer": "Was kostet er?",
+            "parts": [
+              {
+                "label": {
+                  "de": "nur die Frage nach dem Preis",
+                  "en": "only the question about the price"
+                },
+                "forms": [
+                  "Was kostet er?",
+                  "Und was kostet er?",
+                  "Was kostet der Rucksack?",
+                  "Und was kostet der Rucksack?",
+                  "Wie viel kostet er?",
+                  "Und wie viel kostet er?",
+                  "Wie viel kostet der Rucksack?",
+                  "Und wie viel kostet der Rucksack?",
+                  "Was kostet das?",
+                  "Wie viel kostet das?",
+                  "Wie teuer ist er?",
+                  "Wie teuer ist der Rucksack?",
+                  "Wie ist der Preis?",
+                  "Was ist der Preis?",
+                  "Und der Rucksack, was kostet er?",
+                  "Und der Rucksack? Was kostet er?"
+                ],
+                "maxSentences": 2
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                2
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 2,
+            "type": "listening",
+            "promptDe": "Hören Sie die Preise. Was kostet der Tisch, was kostet das Regal? Wählen Sie.",
+            "promptEn": "Listen to the two prices. Choose the note with both prices right.",
+            "answer": "Tisch 40 Euro, Regal 16 Euro",
+            "reteach": {
+              "kind": "wortfeld",
+              "index": 6
+            },
+            "micOff": true,
+            "mode": "choice",
+            "instances": [
+              {
+                "answer": "Tisch 40 Euro, Regal 16 Euro",
+                "accepted": [
+                  "Tisch 40 Euro, Regal 16 Euro"
+                ],
+                "options": [
+                  "Tisch 14 Euro, Regal 16 Euro",
+                  "Tisch 40 Euro, Regal 60 Euro",
+                  "Tisch 40 Euro, Regal 16 Euro",
+                  "Tisch 14 Euro, Regal 60 Euro"
+                ],
+                "audioText": "Der Tisch kostet vierzig Euro und das Regal sechzehn Euro."
+              },
+              {
+                "audioText": "Der Tisch kostet fünfunddreißig Euro und das Regal dreiundzwanzig Euro.",
+                "answer": "Tisch 35 Euro, Regal 23 Euro",
+                "accepted": [
+                  "Tisch 35 Euro, Regal 23 Euro"
+                ],
+                "options": [
+                  "Tisch 53 Euro, Regal 23 Euro",
+                  "Tisch 35 Euro, Regal 32 Euro",
+                  "Tisch 35 Euro, Regal 23 Euro",
+                  "Tisch 53 Euro, Regal 32 Euro"
+                ]
+              }
+            ]
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Frau Wolf: „Was kaufen Sie?“ – Sie (Stuhl + Tasche): …",
+            "promptEn": "You want the chair and the bag. Ms Wolf asks what you are buying. Tell her, with the articles.",
+            "answer": "Ich kaufe den Stuhl und die Tasche.",
+            "parts": [
+              {
+                "label": {
+                  "de": "was Sie kaufen (mit den Artikeln)",
+                  "en": "what you are buying (with the articles)"
+                },
+                "forms": [
+                  "Ich kaufe den Stuhl und die Tasche.",
+                  "Ich kaufe die Tasche und den Stuhl.",
+                  "Ich kaufe den Stuhl und auch die Tasche.",
+                  "Ich kaufe einen Stuhl und eine Tasche.",
+                  "Ich kaufe eine Tasche und einen Stuhl.",
+                  "Den Stuhl und die Tasche.",
+                  "Die Tasche und den Stuhl.",
+                  "Einen Stuhl und eine Tasche.",
+                  "Eine Tasche und einen Stuhl.",
+                  "Ich kaufe den Stuhl. Ich kaufe die Tasche.",
+                  "Ich kaufe die Tasche. Ich kaufe den Stuhl."
+                ],
+                "maxSentences": 2
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                6
+              ]
+            },
+            "micOff": true
+          }
+        ]
+      },
       guided: {
         sets: [PRICE_FOUNDATIONS, PRICE_COMPOUNDS],
         read: {
@@ -1194,6 +1815,673 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l05',
       slug: 'im-klassenzimmer',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Lena: „Was ist hier?“ – Sie: Der … Die … Das …",
+            "promptEn": "Lena asks what is here in the classroom. Name three things you know from the course: one with der one with die one with das.",
+            "answer": "Der Stift. Die Schere. Das Wörterbuch.",
+            "parts": [
+              {
+                "label": {
+                  "de": "ein Gegenstand mit der",
+                  "en": "a thing with der"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Der {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Der {value} ist hier.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Der {value} ist da.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Das ist der {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Hier ist der {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": {
+                  "de": "ein Gegenstand mit die",
+                  "en": "a thing with die"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Die {value}.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Und die {value}.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Die {value} sind hier.",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Die {value} sind da.",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Die {value} ist hier.",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Die {value} ist da.",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Das ist die {value}.",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Hier ist die {value}.",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Die {value} auch.",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": {
+                  "de": "ein Gegenstand mit das",
+                  "en": "a thing with das"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Das {value}.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Das {value} ist hier.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Das {value} ist da.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Das ist das {value}.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Hier ist das {value}.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Das {value} auch.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Und das {value}.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                1,
+                3
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "sets": {
+              "taughtValues1": [
+                "Stift",
+                "Bleistift",
+                "Kugelschreiber",
+                "Schlüssel",
+                "Tisch",
+                "Stuhl",
+                "Rucksack"
+              ],
+              "taughtValues2": [
+                "Schere",
+                "Tafel",
+                "Tür",
+                "Lampe",
+                "Uhr",
+                "Tasche",
+                "Stifte",
+                "Bleistifte",
+                "Tische",
+                "Stühle",
+                "Rucksäcke",
+                "Scheren",
+                "Tafeln",
+                "Türen",
+                "Lampen",
+                "Uhren",
+                "Taschen",
+                "Bücher",
+                "Hefte",
+                "Lineale",
+                "Papiere",
+                "Wörterbücher",
+                "Bilder",
+                "Regale",
+                "Formulare"
+              ],
+              "taughtValues3": [
+                "Stifte",
+                "Bleistifte",
+                "Kugelschreiber",
+                "Schlüssel",
+                "Tische",
+                "Stühle",
+                "Rucksäcke",
+                "Scheren",
+                "Tafeln",
+                "Türen",
+                "Lampen",
+                "Uhren",
+                "Taschen",
+                "Bücher",
+                "Hefte",
+                "Lineale",
+                "Papiere",
+                "Fenster",
+                "Wörterbücher",
+                "Bilder",
+                "Regale",
+                "Formulare"
+              ],
+              "taughtValues4": [
+                "Schere",
+                "Tafel",
+                "Tür",
+                "Lampe",
+                "Uhr",
+                "Tasche"
+              ],
+              "taughtValues5": [
+                "Buch",
+                "Heft",
+                "Lineal",
+                "Papier",
+                "Fenster",
+                "Wörterbuch",
+                "Bild",
+                "Regal",
+                "Formular"
+              ]
+            },
+            "allowModelContext": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Sie: … das Wörterbuch? – Die Lehrerin: „Ich habe es. Und Ihr Stift?“ – Sie: …",
+            "promptEn": "You cannot find the dictionary: ask where it is. The teacher has it and asks about your pen: tell her it is here, or that it is there.",
+            "answer": "Wo ist das Wörterbuch? Der Stift ist hier.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage nach dem Wörterbuch",
+                  "en": "the question about the dictionary"
+                },
+                "forms": [
+                  "Wo ist das Wörterbuch?",
+                  "Und wo ist das Wörterbuch?",
+                  "Entschuldigung, wo ist das Wörterbuch?",
+                  "Wo ist das Wörterbuch, bitte?",
+                  "Wo ist mein Wörterbuch?",
+                  "Entschuldigung, wo ist mein Wörterbuch?"
+                ]
+              },
+              {
+                "label": {
+                  "de": "wo Ihr Stift ist",
+                  "en": "where your pen is"
+                },
+                "forms": [
+                  "Hier.",
+                  "Da."
+                ],
+                "frames": [
+                  {
+                    "pattern": "{value} ist hier.",
+                    "slots": {
+                      "value": "taughtPhrases1"
+                    }
+                  },
+                  {
+                    "pattern": "Hier ist {value}.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} ist da.",
+                    "slots": {
+                      "value": "taughtPhrases1"
+                    }
+                  },
+                  {
+                    "pattern": "Da ist {value}.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                0,
+                1
+              ]
+            },
+            "micOff": true,
+            "sets": {
+              "taughtPhrases1": [
+                "Der Stift",
+                "Mein Stift",
+                "Er"
+              ],
+              "taughtPhrases2": [
+                "der Stift",
+                "mein Stift",
+                "er"
+              ]
+            },
+            "allowModelContext": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Die Lehrerin: „Ihr Stift und Ihr Bleistift: die Farben, bitte!“ – Sie: … …",
+            "promptEn": "The teacher asks for the colours of your pen and of your pencil. Say the colour of the pen the colour of the pencil. Use colours from this Lektion.",
+            "answer": "Der Stift ist blau. Der Bleistift ist gelb.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Farbe von Ihrem Stift",
+                  "en": "the colour of your pen"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Der Stift ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Mein Stift ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Er ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "{value}.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Farbe von Ihrem Bleistift",
+                  "en": "the colour of your pencil"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Der Bleistift ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Mein Bleistift ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Er ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und der Bleistift ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und mein Bleistift ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "{value}.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Der Bleistift ist auch {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Mein Bleistift ist auch {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Er ist auch {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Auch {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                5
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "sets": {
+              "taughtValues1": [
+                "rot",
+                "blau",
+                "grün",
+                "gelb",
+                "schwarz",
+                "weiß",
+                "braun"
+              ],
+              "taughtValues2": [
+                "Rot",
+                "Blau",
+                "Grün",
+                "Gelb",
+                "Schwarz",
+                "Weiß",
+                "Braun"
+              ]
+            }
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Die Lehrerin: „Ich habe hier einen Stift.“ – Sie: …? – Die Lehrerin: „Er ist blau.“",
+            "promptEn": "The teacher has a pen that you cannot see. Ask her one question about its colour.",
+            "answer": "Ist der Stift blau oder schwarz?",
+            "parts": [
+              {
+                "label": {
+                  "de": "Ihre Frage nach der Farbe",
+                  "en": "your question about the colour"
+                },
+                "forms": [
+                  "Welche Farbe hat der Stift?",
+                  "Welche Farbe hat er?"
+                ],
+                "frames": [
+                  {
+                    "pattern": "Ist der Stift {value}?",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value}?",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder blau?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder grün?",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder gelb?",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder schwarz?",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder weiß?",
+                    "slots": {
+                      "value": "taughtValues6"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder braun?",
+                    "slots": {
+                      "value": "taughtValues7"
+                    }
+                  },
+                  {
+                    "pattern": "Ist der Stift {value} oder rot?",
+                    "slots": {
+                      "value": "taughtValues8"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder blau?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder grün?",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder gelb?",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder schwarz?",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder weiß?",
+                    "slots": {
+                      "value": "taughtValues6"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder braun?",
+                    "slots": {
+                      "value": "taughtValues7"
+                    }
+                  },
+                  {
+                    "pattern": "Ist er {value} oder rot?",
+                    "slots": {
+                      "value": "taughtValues8"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                4
+              ]
+            },
+            "micOff": true,
+            "sets": {
+              "taughtValues1": [
+                "rot",
+                "blau",
+                "grün",
+                "gelb",
+                "schwarz",
+                "weiß",
+                "braun"
+              ],
+              "taughtValues2": [
+                "rot",
+                "grün",
+                "gelb",
+                "schwarz",
+                "weiß",
+                "braun"
+              ],
+              "taughtValues3": [
+                "rot",
+                "blau",
+                "gelb",
+                "schwarz",
+                "weiß",
+                "braun"
+              ],
+              "taughtValues4": [
+                "rot",
+                "blau",
+                "grün",
+                "schwarz",
+                "weiß",
+                "braun"
+              ],
+              "taughtValues5": [
+                "rot",
+                "blau",
+                "grün",
+                "gelb",
+                "weiß",
+                "braun"
+              ],
+              "taughtValues6": [
+                "rot",
+                "blau",
+                "grün",
+                "gelb",
+                "schwarz",
+                "braun"
+              ],
+              "taughtValues7": [
+                "rot",
+                "blau",
+                "grün",
+                "gelb",
+                "schwarz",
+                "weiß"
+              ],
+              "taughtValues8": [
+                "blau",
+                "grün",
+                "gelb",
+                "schwarz",
+                "weiß",
+                "braun"
+              ]
+            }
+          }
+        ]
+      },
       guided: {
         read: {
           titleDe: 'Tims Zimmer',
@@ -1411,6 +2699,174 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l06',
       slug: 'der-erste-tag-im-buero',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Herr Weber: „Das ist Ihr Büro.“ Kein Computer, kein Telefon! – Sie: … …",
+            "promptEn": "Herr Weber shows you your office, but there is no computer and no telephone. Thank him, then say in one sentence that you need both.",
+            "answer": "Ich brauche einen Computer und ein Telefon.",
+            "parts": [
+              {
+                "label": {
+                  "de": "was Sie brauchen",
+                  "en": "what you need"
+                },
+                "forms": [
+                  "Ich brauche einen Computer und ein Telefon.",
+                  "Ich brauche ein Telefon und einen Computer.",
+                  "Wir brauchen einen Computer und ein Telefon.",
+                  "Wir brauchen ein Telefon und einen Computer.",
+                  "Ich brauche noch einen Computer und ein Telefon.",
+                  "Ich brauche noch ein Telefon und einen Computer.",
+                  "Aber ich brauche einen Computer und ein Telefon.",
+                  "Aber ich brauche ein Telefon und einen Computer.",
+                  "Ich brauche einen Computer. Ich brauche ein Telefon.",
+                  "Ich brauche ein Telefon. Ich brauche einen Computer."
+                ],
+                "maxSentences": 2
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                2
+              ]
+            },
+            "micOff": true,
+            "firstContact": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "ownName": "full",
+            "openings": [
+              "Ich heiße"
+            ],
+            "promptDe": "Antworten Sie mit einem Satz. Das Telefon im Büro. Ein Kollege: „Entschuldigung, wie heißen Sie?“ – Sie: …",
+            "promptEn": "The office telephone rings. A colleague you do not know asks for your name. Answer in a full sentence with your own name, as you learned in Lektion 1.",
+            "answer": "Ich heiße Ana Chakiri.",
+            "parts": [
+              {
+                "label": {
+                  "de": "Ihr Name im ganzen Satz (mit heißen)",
+                  "en": "your name in a full sentence (with heißen)"
+                },
+                "forms": [
+                  "Ich heiße Ana Chakiri."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "wortfeld",
+              "index": 18
+            },
+            "micOff": true,
+            "firstContact": true
+          },
+          {
+            "canDo": 2,
+            "type": "listening",
+            "promptDe": "Hören Sie die Telefonnummer vom Büro und die Handynummer. Wählen Sie.",
+            "promptEn": "Listen to both phone numbers. Choose the note with both right.",
+            "answer": "Büro: 042 3381, Handy: 0176 234567",
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                6,
+                7
+              ]
+            },
+            "micOff": true,
+            "mode": "choice",
+            "instances": [
+              {
+                "answer": "Büro: 042 3381, Handy: 0176 234567",
+                "accepted": [
+                  "Büro: 042 3381, Handy: 0176 234567"
+                ],
+                "options": [
+                  "Büro: 042 3318, Handy: 0176 234567",
+                  "Büro: 042 3381, Handy: 0167 234567",
+                  "Büro: 042 3381, Handy: 0176 234567",
+                  "Büro: 024 3381, Handy: 0176 234576"
+                ],
+                "audioText": "Die Telefonnummer vom Büro ist null vier zwei, drei drei acht eins. Meine Handynummer ist null eins sieben sechs, zwei drei vier fünf sechs sieben."
+              },
+              {
+                "audioText": "Die Telefonnummer vom Büro ist null vier zwei, drei drei eins acht. Meine Handynummer ist null eins sechs sieben, zwei drei vier fünf sechs sieben.",
+                "answer": "Büro: 042 3318, Handy: 0167 234567",
+                "accepted": [
+                  "Büro: 042 3318, Handy: 0167 234567"
+                ],
+                "options": [
+                  "Büro: 042 3381, Handy: 0167 234567",
+                  "Büro: 042 3318, Handy: 0176 234567",
+                  "Büro: 042 3318, Handy: 0167 234567",
+                  "Büro: 024 3318, Handy: 0167 234576"
+                ]
+              }
+            ]
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Sie: …? – Herr Weber: „Die Nummer vom Büro ist null vier zwei – drei drei acht eins.“ – Sie: …! …? – Herr Weber: „Die Pause ist um eins.“",
+            "promptEn": "It is your day at the office. Ask Herr Weber for the office telephone number. He tells you: thank him ask when the break is.",
+            "answer": "Wie ist die Telefonnummer? Danke! Wann ist die Pause?",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage nach der Nummer vom Büro",
+                  "en": "the question about the office number"
+                },
+                "forms": [
+                  "Wie ist die Telefonnummer?",
+                  "Und wie ist die Telefonnummer?",
+                  "Wie ist die Telefonnummer vom Büro?",
+                  "Und wie ist die Telefonnummer vom Büro?",
+                  "Wie ist die Telefonnummer im Büro?",
+                  "Wie ist die Nummer?",
+                  "Wie ist die Nummer vom Büro?",
+                  "Wie ist die Telefonnummer, bitte?",
+                  "Entschuldigung, wie ist die Telefonnummer?",
+                  "Entschuldigung, wie ist die Telefonnummer vom Büro?",
+                  "Wie ist Ihre Telefonnummer?",
+                  "Wie ist meine Telefonnummer?"
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Frage nach der Pause",
+                  "en": "the question about the break"
+                },
+                "forms": [
+                  "Wann ist die Pause?",
+                  "Und wann ist die Pause?",
+                  "Wann ist Pause?",
+                  "Und wann ist Pause?",
+                  "Wann ist die Pause, bitte?",
+                  "Wann ist meine Pause?",
+                  "Wann machen wir Pause?",
+                  "Wann machen wir eine Pause?",
+                  "Wann haben wir Pause?",
+                  "Wann habe ich Pause?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                6,
+                8
+              ]
+            },
+            "micOff": true,
+            "order": "any"
+          }
+        ]
+      },
       guided: {
         sets: [FULL_HOUR],
         read: {
@@ -1628,6 +3084,1130 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l07',
       slug: 'freizeit-und-hobbys',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Was ist Ihr Hobby?“ – Sie: … Ich …",
+            "promptEn": "A colleague asks about your hobby. Name your hobby add one sentence about what you do, for example when or how often. Use the hobbies and activities of this Lektion.",
+            "answer": "Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.",
+            "parts": [
+              {
+                "label": {
+                  "de": "Ihr Hobby",
+                  "en": "your hobby"
+                },
+                "forms": [
+                  "Mein Hobby ist Musik hören.",
+                  "Mein Hobby ist Fußball spielen."
+                ],
+                "frames": [
+                  {
+                    "pattern": "Mein Hobby ist {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "{value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Musik.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Fußball.",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Kino.",
+                    "slots": {
+                      "value": "taughtValues4"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Lesen.",
+                    "slots": {
+                      "value": "taughtValues5"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Schwimmen.",
+                    "slots": {
+                      "value": "taughtValues6"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Kochen.",
+                    "slots": {
+                      "value": "taughtValues7"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Tanzen.",
+                    "slots": {
+                      "value": "taughtValues8"
+                    }
+                  },
+                  {
+                    "pattern": "Meine Hobbys sind {value} und Sport.",
+                    "slots": {
+                      "value": "taughtValues9"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": {
+                  "de": "was Sie machen (ein Satz mit Verb)",
+                  "en": "what you do (one sentence with a verb)"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Ich {value} am Wochenende.",
+                    "slots": {
+                      "value": "taughtValues10"
+                    }
+                  },
+                  {
+                    "pattern": "Am Wochenende {value} ich.",
+                    "slots": {
+                      "value": "taughtValues10"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} jede Woche.",
+                    "slots": {
+                      "value": "taughtValues10"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value}.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} gern.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} gerne.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} am Wochenende gern.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Am Wochenende {value} ich gern.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Jede Woche {value} ich.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} immer.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value}.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} gern.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} am Wochenende.",
+                    "slots": {
+                      "value": "taughtValues11"
+                    }
+                  },
+                  {
+                    "pattern": "Ich höre {value} Musik.",
+                    "slots": {
+                      "value": "taughtValues12"
+                    }
+                  },
+                  {
+                    "pattern": "Ich spiele {value} Fußball.",
+                    "slots": {
+                      "value": "taughtValues12"
+                    }
+                  },
+                  {
+                    "pattern": "Ich lese {value} Bücher.",
+                    "slots": {
+                      "value": "taughtValues12"
+                    }
+                  },
+                  {
+                    "pattern": "Ich gehe {value} ins Kino.",
+                    "slots": {
+                      "value": "taughtValues12"
+                    }
+                  },
+                  {
+                    "pattern": "Ich mache {value} Sport.",
+                    "slots": {
+                      "value": "taughtValues12"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} am Wochenende.",
+                    "slots": {
+                      "value": "taughtPhrases13"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value}.",
+                    "slots": {
+                      "value": "taughtPhrases14"
+                    }
+                  },
+                  {
+                    "pattern": "Am Wochenende {value}.",
+                    "slots": {
+                      "value": "taughtPhrases15"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} jede Woche.",
+                    "slots": {
+                      "value": "taughtPhrases16"
+                    }
+                  },
+                  {
+                    "pattern": "Jede Woche {value}.",
+                    "slots": {
+                      "value": "taughtPhrases17"
+                    }
+                  },
+                  {
+                    "pattern": "Ich spiele {value}.",
+                    "slots": {
+                      "value": "taughtPhrases18"
+                    }
+                  },
+                  {
+                    "pattern": "Ich mache {value}.",
+                    "slots": {
+                      "value": "taughtPhrases19"
+                    }
+                  },
+                  {
+                    "pattern": "Ich gehe {value} Kino.",
+                    "slots": {
+                      "value": "taughtPhrases20"
+                    }
+                  },
+                  {
+                    "pattern": "Ich höre {value}.",
+                    "slots": {
+                      "value": "taughtPhrases21"
+                    }
+                  },
+                  {
+                    "pattern": "Ich lese {value}.",
+                    "slots": {
+                      "value": "taughtPhrases22"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                2
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "sets": {
+              "taughtValues1": [
+                "Sport",
+                "Musik",
+                "Fußball",
+                "Kino",
+                "Lesen",
+                "Schwimmen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues2": [
+                "Sport",
+                "Fußball",
+                "Kino",
+                "Lesen",
+                "Schwimmen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues3": [
+                "Sport",
+                "Musik",
+                "Kino",
+                "Lesen",
+                "Schwimmen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues4": [
+                "Sport",
+                "Musik",
+                "Fußball",
+                "Lesen",
+                "Schwimmen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues5": [
+                "Sport",
+                "Musik",
+                "Fußball",
+                "Kino",
+                "Schwimmen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues6": [
+                "Sport",
+                "Musik",
+                "Fußball",
+                "Kino",
+                "Lesen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues7": [
+                "Sport",
+                "Musik",
+                "Fußball",
+                "Kino",
+                "Lesen",
+                "Schwimmen",
+                "Tanzen"
+              ],
+              "taughtValues8": [
+                "Sport",
+                "Musik",
+                "Fußball",
+                "Kino",
+                "Lesen",
+                "Schwimmen",
+                "Kochen"
+              ],
+              "taughtValues9": [
+                "Musik",
+                "Fußball",
+                "Kino",
+                "Lesen",
+                "Schwimmen",
+                "Kochen",
+                "Tanzen"
+              ],
+              "taughtValues10": [
+                "lese",
+                "koche",
+                "schwimme",
+                "tanze",
+                "spiele"
+              ],
+              "taughtValues11": [
+                "lese",
+                "koche",
+                "schwimme",
+                "tanze"
+              ],
+              "taughtValues12": [
+                "gern",
+                "gerne",
+                "immer"
+              ],
+              "taughtPhrases13": [
+                "höre Musik",
+                "höre gern Musik",
+                "spiele Fußball",
+                "spiele gern Fußball",
+                "lese Bücher",
+                "lese gern Bücher",
+                "gehe ins Kino",
+                "gehe gern ins Kino",
+                "mache Sport",
+                "mache gern Sport"
+              ],
+              "taughtPhrases14": [
+                "höre Musik",
+                "höre gern Musik",
+                "höre am Wochenende Musik",
+                "spiele Fußball",
+                "spiele gern Fußball",
+                "spiele am Wochenende Fußball",
+                "lese Bücher",
+                "lese gern Bücher",
+                "lese am Wochenende Bücher",
+                "gehe ins Kino",
+                "gehe gern ins Kino",
+                "gehe am Wochenende ins Kino",
+                "mache Sport",
+                "mache gern Sport",
+                "mache am Wochenende Sport"
+              ],
+              "taughtPhrases15": [
+                "höre ich Musik",
+                "höre ich gern Musik",
+                "spiele ich Fußball",
+                "spiele ich gern Fußball",
+                "lese ich Bücher",
+                "lese ich gern Bücher",
+                "gehe ich ins Kino",
+                "gehe ich gern ins Kino",
+                "mache ich Sport",
+                "mache ich gern Sport"
+              ],
+              "taughtPhrases16": [
+                "höre Musik",
+                "spiele Fußball",
+                "lese Bücher",
+                "gehe ins Kino",
+                "mache Sport"
+              ],
+              "taughtPhrases17": [
+                "höre ich Musik",
+                "spiele ich Fußball",
+                "lese ich Bücher",
+                "gehe ich ins Kino",
+                "mache ich Sport"
+              ],
+              "taughtPhrases18": [
+                "Fußball",
+                "am Wochenende Fußball",
+                "am Wochenende gern Fußball",
+                "jede Woche Fußball",
+                "Fußball gern"
+              ],
+              "taughtPhrases19": [
+                "Sport",
+                "am Wochenende Sport",
+                "am Wochenende gern Sport",
+                "jede Woche Sport",
+                "Sport gern"
+              ],
+              "taughtPhrases20": [
+                "ins",
+                "am Wochenende ins",
+                "am Wochenende gern ins",
+                "jede Woche ins"
+              ],
+              "taughtPhrases21": [
+                "Musik",
+                "am Wochenende Musik",
+                "am Wochenende gern Musik",
+                "jede Woche Musik",
+                "Musik gern"
+              ],
+              "taughtPhrases22": [
+                "Bücher",
+                "am Wochenende Bücher",
+                "am Wochenende gern Bücher",
+                "jede Woche Bücher",
+                "Bücher gern"
+              ]
+            }
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Was machen Sie gern?“ – Sie: … …",
+            "promptEn": "A colleague asks what you like doing. Tell her two things you like doing, each in a short sentence. Use the activities of this Lektion.",
+            "answer": "Ich höre gern Musik. Ich lese gern.",
+            "parts": [
+              {
+                "label": {
+                  "de": "was Sie gern machen (1)",
+                  "en": "what you like doing (1)"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Ich {value} gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} sehr gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} sehr gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} auch gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} auch gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich spiele {value} Fußball.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich gehe {value} ins Kino.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich lese {value} Bücher.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich mache {value} Sport.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich höre {value} Musik.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} gern.",
+                    "slots": {
+                      "value": "taughtPhrases3"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": {
+                  "de": "was Sie gern machen (2)",
+                  "en": "what you like doing (2)"
+                },
+                "forms": [
+                  "Und höre gern Musik.",
+                  "Und höre auch gern Musik.",
+                  "Und spiele gern Fußball.",
+                  "Und spiele auch gern Fußball.",
+                  "Und lese gern Bücher.",
+                  "Und lese auch gern Bücher.",
+                  "Und gehe gern ins Kino.",
+                  "Und gehe auch gern ins Kino.",
+                  "Und mache gern Sport.",
+                  "Und mache auch gern Sport."
+                ],
+                "frames": [
+                  {
+                    "pattern": "Ich {value} gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} sehr gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} sehr gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} sehr gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} sehr gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} auch gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} auch gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} auch gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value} auch gerne.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und {value} gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und {value} auch gern.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Und ich {value}.",
+                    "slots": {
+                      "value": "taughtPhrases4"
+                    }
+                  },
+                  {
+                    "pattern": "Ich spiele {value} Fußball.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich gehe {value} ins Kino.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich lese {value} Bücher.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich mache {value} Sport.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich höre {value} Musik.",
+                    "slots": {
+                      "value": "taughtPhrases2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} gern.",
+                    "slots": {
+                      "value": "taughtPhrases3"
+                    }
+                  }
+                ],
+                "ellipsisOpening": "Ich"
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                5
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "sets": {
+              "taughtValues1": [
+                "lese",
+                "koche",
+                "schwimme",
+                "tanze"
+              ],
+              "taughtPhrases2": [
+                "gern",
+                "gerne",
+                "sehr gern",
+                "sehr gerne",
+                "auch gern",
+                "auch gerne"
+              ],
+              "taughtPhrases3": [
+                "höre Musik",
+                "spiele Fußball",
+                "lese Bücher",
+                "mache Sport"
+              ],
+              "taughtPhrases4": [
+                "höre gern Musik",
+                "höre gerne Musik",
+                "höre sehr gern Musik",
+                "höre sehr gerne Musik",
+                "höre auch gern Musik",
+                "höre auch gerne Musik",
+                "höre Musik gern",
+                "spiele gern Fußball",
+                "spiele gerne Fußball",
+                "spiele sehr gern Fußball",
+                "spiele sehr gerne Fußball",
+                "spiele auch gern Fußball",
+                "spiele auch gerne Fußball",
+                "spiele Fußball gern",
+                "lese gern Bücher",
+                "lese gerne Bücher",
+                "lese sehr gern Bücher",
+                "lese sehr gerne Bücher",
+                "lese auch gern Bücher",
+                "lese auch gerne Bücher",
+                "lese Bücher gern",
+                "gehe gern ins Kino",
+                "gehe gerne ins Kino",
+                "gehe sehr gern ins Kino",
+                "gehe sehr gerne ins Kino",
+                "gehe auch gern ins Kino",
+                "gehe auch gerne ins Kino",
+                "mache gern Sport",
+                "mache gerne Sport",
+                "mache sehr gern Sport",
+                "mache sehr gerne Sport",
+                "mache auch gern Sport",
+                "mache auch gerne Sport",
+                "mache Sport gern"
+              ]
+            },
+            "sharedTail": "gern",
+            "distinctActions": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Sie und Tim. Sie: …? – Tim: „Ich höre gern Musik.“ – Sie: …? – Tim: „Ja, sehr gern!“",
+            "promptEn": "You talk to Tim, a learner in your course: say du to him. First ask him what his hobby is. Then ask him a yes/no question about one activity from this Lektion.",
+            "answer": "Was ist dein Hobby? Gehst du gern ins Kino?",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage nach dem Hobby (mit du)",
+                  "en": "the question about his hobby (with du)"
+                },
+                "forms": [
+                  "Was ist dein Hobby?",
+                  "Und was ist dein Hobby?",
+                  "Was sind deine Hobbys?",
+                  "Hast du ein Hobby?",
+                  "Hast du Hobbys?"
+                ],
+                "frames": [
+                  {
+                    "pattern": "Was machst du {value}?",
+                    "slots": {
+                      "value": "taughtPhrases4"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": {
+                  "de": "eine Ja/Nein-Frage (mit du)",
+                  "en": "a yes/no question (with du)"
+                },
+                "forms": [],
+                "frames": [
+                  {
+                    "pattern": "Hörst du {value} Musik?",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Spielst du {value} Fußball?",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du gern?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du gerne?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du auch?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du auch gern?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du jede Woche?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "{value} du am Wochenende?",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Und {value} du?",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Und {value} du gern?",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Und {value} du auch?",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Und {value} du auch gern?",
+                    "slots": {
+                      "value": "taughtValues3"
+                    }
+                  },
+                  {
+                    "pattern": "Gehst du {value} ins Kino?",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Machst du {value} Sport?",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "{value} ins Kino?",
+                    "slots": {
+                      "value": "taughtPhrases5"
+                    }
+                  },
+                  {
+                    "pattern": "Und spielst {value} Fußball?",
+                    "slots": {
+                      "value": "taughtPhrases6"
+                    }
+                  },
+                  {
+                    "pattern": "Und machst {value} Sport?",
+                    "slots": {
+                      "value": "taughtPhrases6"
+                    }
+                  },
+                  {
+                    "pattern": "Und hörst {value} Musik?",
+                    "slots": {
+                      "value": "taughtPhrases6"
+                    }
+                  },
+                  {
+                    "pattern": "Spielst {value} Fußball?",
+                    "slots": {
+                      "value": "taughtPhrases7"
+                    }
+                  },
+                  {
+                    "pattern": "Machst {value} Sport?",
+                    "slots": {
+                      "value": "taughtPhrases7"
+                    }
+                  },
+                  {
+                    "pattern": "Hörst {value} Musik?",
+                    "slots": {
+                      "value": "taughtPhrases7"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                0,
+                3
+              ]
+            },
+            "micOff": true,
+            "register": "informal",
+            "sets": {
+              "taughtValues1": [
+                "gern",
+                "gerne",
+                "auch"
+              ],
+              "taughtValues2": [
+                "Kochst",
+                "Schwimmst",
+                "Tanzt"
+              ],
+              "taughtValues3": [
+                "kochst",
+                "schwimmst",
+                "tanzt"
+              ],
+              "taughtPhrases4": [
+                "gern",
+                "gerne",
+                "am Wochenende",
+                "am Wochenende gern",
+                "gern am Wochenende"
+              ],
+              "taughtPhrases5": [
+                "Gehst du",
+                "Gehst du auch gern",
+                "Gehst du jede Woche",
+                "Gehst du am Wochenende",
+                "Und gehst du",
+                "Und gehst du gern",
+                "Und gehst du auch",
+                "Und gehst du auch gern"
+              ],
+              "taughtPhrases6": [
+                "du",
+                "du gern",
+                "du auch",
+                "du auch gern"
+              ],
+              "taughtPhrases7": [
+                "du",
+                "du auch gern",
+                "du jede Woche",
+                "du am Wochenende"
+              ]
+            }
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Wann sind Sie frei?“ – Sie: …",
+            "promptEn": "A colleague wants to meet you and asks when you are free. Tell her in one sentence, with a time you know from the course.",
+            "answer": "Ich bin am Wochenende frei.",
+            "parts": [
+              {
+                "label": {
+                  "de": "wann Sie frei sind",
+                  "en": "when you are free"
+                },
+                "forms": [
+                  "Am Wochenende.",
+                  "Ich bin frei am Wochenende.",
+                  "Ich arbeite am Wochenende nicht.",
+                  "Am Wochenende arbeite ich nicht, ich bin frei.",
+                  "Am Wochenende arbeite ich nicht und ich bin frei.",
+                  "Morgen habe ich frei.",
+                  "Morgen bin ich frei.",
+                  "Morgen.",
+                  "Am Wochenende arbeite ich nicht. Ich bin frei."
+                ],
+                "maxSentences": 2,
+                "frames": [
+                  {
+                    "pattern": "Ich bin um {value} frei.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Um {value} bin ich frei.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Um {value}.",
+                    "slots": {
+                      "value": "taughtValues1"
+                    }
+                  },
+                  {
+                    "pattern": "Ich bin um {value} Uhr frei.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Um {value} Uhr bin ich frei.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Um {value} Uhr.",
+                    "slots": {
+                      "value": "taughtValues2"
+                    }
+                  },
+                  {
+                    "pattern": "Ich {value} frei.",
+                    "slots": {
+                      "value": "taughtPhrases3"
+                    }
+                  },
+                  {
+                    "pattern": "Am Wochenende {value}.",
+                    "slots": {
+                      "value": "taughtPhrases4"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                4
+              ]
+            },
+            "micOff": true,
+            "sets": {
+              "taughtValues1": [
+                "eins",
+                "zwei",
+                "drei",
+                "vier",
+                "fünf",
+                "sechs",
+                "sieben",
+                "acht",
+                "neun",
+                "zehn",
+                "elf",
+                "zwölf"
+              ],
+              "taughtValues2": [
+                "ein",
+                "zwei",
+                "drei",
+                "vier",
+                "fünf",
+                "sechs",
+                "sieben",
+                "acht",
+                "neun",
+                "zehn",
+                "elf",
+                "zwölf"
+              ],
+              "taughtPhrases3": [
+                "bin am Wochenende",
+                "bin am Wochenende immer",
+                "bin immer am Wochenende",
+                "bin immer",
+                "habe am Wochenende",
+                "habe am Wochenende immer",
+                "habe morgen",
+                "bin morgen"
+              ],
+              "taughtPhrases4": [
+                "bin ich frei",
+                "bin ich immer frei",
+                "arbeite ich nicht",
+                "habe ich frei",
+                "habe ich immer frei"
+              ]
+            },
+            "allowModelContext": true
+          }
+        ]
+      },
       guided: {
         read: {
           titleDe: 'Frei am Wochenende?',
@@ -1834,6 +4414,234 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l08',
       slug: 'termine-und-uhrzeit',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. 1. Sie haben keine Uhr. Sie: …? 2. Eine Frau hat keine Uhr. Sie haben eine Uhr: 10:30. Sie: … (ohne Zahlen)",
+            "promptEn": "1. You have no watch: ask what time it is. 2. Then a woman has no watch, and yours says 10:30: tell her the time in words, without digits.",
+            "answer": "Wie spät ist es? Es ist halb elf.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage",
+                  "en": "the question"
+                },
+                "forms": [
+                  "Wie spät ist es?",
+                  "Wie spät ist es, bitte?",
+                  "Wie viel Uhr ist es?",
+                  "Wie viel Uhr ist es, bitte?",
+                  "Entschuldigung, wie spät ist es?",
+                  "Entschuldigung, wie spät ist es, bitte?",
+                  "Entschuldigung, wie viel Uhr ist es?",
+                  "Entschuldigung, wie viel Uhr ist es, bitte?"
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Uhrzeit",
+                  "en": "the time"
+                },
+                "forms": [
+                  "Es ist halb elf.",
+                  "Halb elf.",
+                  "Es ist zehn Uhr dreißig.",
+                  "Zehn Uhr dreißig.",
+                  "Es ist zehn dreißig."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "wortfeld",
+              "index": 6
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Sie und Ihre Freundin machen einen Termin für Sport. Ihre Zeit: Freitag, 9 Uhr. Ihre Freundin: „Und wann ist der Termin?“ Sie: …",
+            "promptEn": "You and a friend are fixing a time for sport. You can do Friday, 9 o’clock. She asks when the appointment is: tell her the day and the time.",
+            "answer": "Der Termin ist am Freitag um neun Uhr.",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Termin",
+                  "en": "the appointment"
+                },
+                "forms": [
+                  "Der Termin ist am Freitag um neun Uhr.",
+                  "Der Termin ist am Freitag um neun.",
+                  "Der Termin ist am Freitag um 9 Uhr.",
+                  "Der Termin ist am Freitag um 9.",
+                  "Unser Termin ist am Freitag um neun Uhr.",
+                  "Unser Termin ist am Freitag um neun.",
+                  "Unser Termin ist am Freitag um 9 Uhr.",
+                  "Unser Termin ist am Freitag um 9.",
+                  "Er ist am Freitag um neun Uhr.",
+                  "Er ist am Freitag um neun.",
+                  "Er ist am Freitag um 9 Uhr.",
+                  "Er ist am Freitag um 9.",
+                  "Am Freitag um neun Uhr.",
+                  "Am Freitag um neun.",
+                  "Am Freitag um 9 Uhr.",
+                  "Am Freitag um 9.",
+                  "Der Termin ist um neun Uhr am Freitag.",
+                  "Der Termin ist um neun am Freitag.",
+                  "Der Termin ist um 9 Uhr am Freitag.",
+                  "Der Termin ist um 9 am Freitag.",
+                  "Unser Termin ist um neun Uhr am Freitag.",
+                  "Unser Termin ist um neun am Freitag.",
+                  "Unser Termin ist um 9 Uhr am Freitag.",
+                  "Unser Termin ist um 9 am Freitag.",
+                  "Er ist um neun Uhr am Freitag.",
+                  "Er ist um neun am Freitag.",
+                  "Er ist um 9 Uhr am Freitag.",
+                  "Er ist um 9 am Freitag.",
+                  "Um neun Uhr am Freitag.",
+                  "Um neun am Freitag.",
+                  "Um 9 Uhr am Freitag.",
+                  "Um 9 am Freitag.",
+                  "Am Freitag ist der Termin um neun Uhr.",
+                  "Um neun Uhr ist der Termin am Freitag.",
+                  "Am Freitag um neun Uhr ist der Termin.",
+                  "Am Freitag um neun Uhr habe ich Zeit.",
+                  "Am Freitag um neun Uhr bin ich frei.",
+                  "Am Freitag um neun habe ich Zeit.",
+                  "Am Freitag um neun bin ich frei.",
+                  "Am Freitag um 9 Uhr habe ich Zeit.",
+                  "Am Freitag um 9 Uhr bin ich frei.",
+                  "Am Freitag um 9 habe ich Zeit.",
+                  "Am Freitag um 9 bin ich frei.",
+                  "Ich habe am Freitag um neun Uhr Zeit.",
+                  "Ich habe am Freitag um neun Zeit.",
+                  "Ich habe am Freitag um 9 Uhr Zeit.",
+                  "Ich habe am Freitag um 9 Zeit.",
+                  "Ich bin am Freitag um neun Uhr frei.",
+                  "Ich bin am Freitag um neun frei.",
+                  "Ich bin am Freitag um 9 Uhr frei.",
+                  "Ich bin am Freitag um 9 frei."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                3
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Ihr Morgen: aufstehen – wann? Ihr Wecker: 7 Uhr. Sie: Ich …",
+            "promptEn": "Talk about your day: your alarm clock goes at 7 and you get up. Say in one full sentence when you get up.",
+            "answer": "Ich stehe um sieben Uhr auf.",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Morgen",
+                  "en": "your morning"
+                },
+                "forms": [
+                  "Ich stehe um sieben Uhr auf.",
+                  "Ich stehe um sieben auf.",
+                  "Ich stehe um 7 Uhr auf.",
+                  "Ich stehe um 7 auf.",
+                  "Ich stehe morgens um sieben Uhr auf.",
+                  "Ich stehe morgens um sieben auf.",
+                  "Ich stehe morgens um 7 Uhr auf.",
+                  "Ich stehe morgens um 7 auf.",
+                  "Ich stehe immer um sieben Uhr auf.",
+                  "Ich stehe immer um sieben auf.",
+                  "Ich stehe immer um 7 Uhr auf.",
+                  "Ich stehe immer um 7 auf.",
+                  "Ich stehe morgens immer um sieben Uhr auf.",
+                  "Ich stehe morgens immer um sieben auf.",
+                  "Ich stehe morgens immer um 7 Uhr auf.",
+                  "Ich stehe morgens immer um 7 auf.",
+                  "Ich stehe um sieben Uhr morgens auf.",
+                  "Ich stehe um sieben morgens auf.",
+                  "Ich stehe um 7 Uhr morgens auf.",
+                  "Ich stehe um 7 morgens auf.",
+                  "Um sieben Uhr stehe ich auf.",
+                  "Um sieben stehe ich auf.",
+                  "Um 7 Uhr stehe ich auf.",
+                  "Um 7 stehe ich auf.",
+                  "Morgens stehe ich um sieben Uhr auf.",
+                  "Morgens stehe ich um sieben auf.",
+                  "Morgens stehe ich um 7 Uhr auf.",
+                  "Morgens stehe ich um 7 auf."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                1
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Wann haben Sie Zeit für Ihre Freundin? Ihre Woche: Montag bis Freitag Arbeit. Aber Donnerstag: abends frei! Sie: …",
+            "promptEn": "Your friend wants to meet. Your week: work from Monday to Friday, but you are free on Thursday evening. Tell her when you have time.",
+            "answer": "Am Donnerstag bin ich abends frei.",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Tag",
+                  "en": "the day"
+                },
+                "forms": [
+                  "Am Donnerstag bin ich abends frei.",
+                  "Am Donnerstag habe ich abends Zeit.",
+                  "Am Donnerstag habe ich abends frei.",
+                  "Ich bin am Donnerstag abends frei.",
+                  "Ich habe am Donnerstag abends Zeit.",
+                  "Ich habe am Donnerstag abends frei.",
+                  "Am Donnerstag abends bin ich frei.",
+                  "Am Donnerstag abends habe ich Zeit.",
+                  "Am Donnerstag abends habe ich frei.",
+                  "Am Donnerstag abends.",
+                  "Am Donnerstag bin ich am Abend frei.",
+                  "Am Donnerstag habe ich am Abend Zeit.",
+                  "Am Donnerstag habe ich am Abend frei.",
+                  "Ich bin am Donnerstag am Abend frei.",
+                  "Ich habe am Donnerstag am Abend Zeit.",
+                  "Ich habe am Donnerstag am Abend frei.",
+                  "Am Donnerstag am Abend bin ich frei.",
+                  "Am Donnerstag am Abend habe ich Zeit.",
+                  "Am Donnerstag am Abend habe ich frei.",
+                  "Am Donnerstag am Abend.",
+                  "Am Donnerstag bin ich frei.",
+                  "Am Donnerstag habe ich Zeit.",
+                  "Am Donnerstag habe ich frei.",
+                  "Ich bin am Donnerstag frei.",
+                  "Ich habe am Donnerstag Zeit.",
+                  "Ich habe am Donnerstag frei.",
+                  "Am Donnerstag.",
+                  "Ich habe Zeit am Donnerstag.",
+                  "Ich bin frei am Donnerstag.",
+                  "Ich habe frei am Donnerstag."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                7
+              ]
+            },
+            "micOff": true
+          }
+        ]
+      },
       guided: {
         noticeBeforeScene: true,
         read: {
@@ -2058,6 +4866,262 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l09',
       slug: 'im-cafe',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Im Café. Der Kellner: „Was möchten Sie trinken?“ Sie: … (Durst!) … (Tee)",
+            "promptEn": "In the café, the waiter asks what you would like to drink. Say two sentences: first that you are thirsty, then order tea politely.",
+            "answer": "Ich habe Durst. Ich möchte einen Tee, bitte.",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Durst",
+                  "en": "being thirsty"
+                },
+                "forms": [
+                  "Ich habe Durst."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Bestellung",
+                  "en": "the order"
+                },
+                "forms": [
+                  "Ich möchte einen Tee, bitte.",
+                  "Ich möchte einen Tee.",
+                  "Ich möchte Tee, bitte.",
+                  "Ich möchte Tee.",
+                  "Ich möchte eine Tasse Tee, bitte.",
+                  "Ich möchte eine Tasse Tee.",
+                  "Ich möchte ein Glas Tee, bitte.",
+                  "Ich möchte ein Glas Tee.",
+                  "Und ich möchte einen Tee, bitte.",
+                  "Und ich möchte einen Tee.",
+                  "Und ich möchte Tee, bitte.",
+                  "Und ich möchte Tee.",
+                  "Und ich möchte eine Tasse Tee, bitte.",
+                  "Und ich möchte eine Tasse Tee.",
+                  "Und ich möchte ein Glas Tee, bitte.",
+                  "Und ich möchte ein Glas Tee.",
+                  "Ich möchte bitte einen Tee.",
+                  "Ich möchte bitte Tee.",
+                  "Ich möchte bitte eine Tasse Tee.",
+                  "Ich möchte bitte ein Glas Tee.",
+                  "Einen Tee, bitte.",
+                  "Tee, bitte.",
+                  "Eine Tasse Tee, bitte.",
+                  "Ein Glas Tee, bitte.",
+                  "Bitte einen Tee.",
+                  "Bitte Tee.",
+                  "Bitte eine Tasse Tee.",
+                  "Bitte ein Glas Tee.",
+                  "Ich möchte einen Tee trinken.",
+                  "Ich möchte einen Tee trinken, bitte.",
+                  "Ich möchte Tee trinken.",
+                  "Ich möchte Tee trinken, bitte.",
+                  "Ich möchte eine Tasse Tee trinken.",
+                  "Ich möchte eine Tasse Tee trinken, bitte.",
+                  "Ich möchte ein Glas Tee trinken.",
+                  "Ich möchte ein Glas Tee trinken, bitte.",
+                  "Ich trinke einen Tee.",
+                  "Ich trinke Tee.",
+                  "Ich trinke eine Tasse Tee.",
+                  "Ich trinke ein Glas Tee."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                1
+              ]
+            },
+            "micOff": true,
+            "firstContact": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Der Kellner: „Wir haben auch Suppe, Salat und Kuchen.“ Sie: … (Hunger!) … (Suppe)",
+            "promptEn": "The waiter tells you what there is to eat. Say two sentences: first that you are hungry, then order soup politely.",
+            "answer": "Ich habe Hunger. Ich möchte Suppe, bitte.",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Hunger",
+                  "en": "being hungry"
+                },
+                "forms": [
+                  "Ich habe Hunger.",
+                  "Ja, ich habe Hunger.",
+                  "Ich habe auch Hunger.",
+                  "Ja, ich habe auch Hunger."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Bestellung",
+                  "en": "the order"
+                },
+                "forms": [
+                  "Ich möchte Suppe, bitte.",
+                  "Ich möchte Suppe.",
+                  "Ich möchte eine Suppe, bitte.",
+                  "Ich möchte eine Suppe.",
+                  "Ich möchte die Suppe, bitte.",
+                  "Ich möchte die Suppe.",
+                  "Und ich möchte Suppe, bitte.",
+                  "Und ich möchte Suppe.",
+                  "Und ich möchte eine Suppe, bitte.",
+                  "Und ich möchte eine Suppe.",
+                  "Und ich möchte die Suppe, bitte.",
+                  "Und ich möchte die Suppe.",
+                  "Ich möchte bitte Suppe.",
+                  "Ich möchte bitte eine Suppe.",
+                  "Ich möchte bitte die Suppe.",
+                  "Suppe, bitte.",
+                  "Eine Suppe, bitte.",
+                  "Die Suppe, bitte.",
+                  "Bitte Suppe.",
+                  "Bitte eine Suppe.",
+                  "Bitte die Suppe.",
+                  "Ich möchte Suppe essen.",
+                  "Ich möchte Suppe essen, bitte.",
+                  "Ich möchte eine Suppe essen.",
+                  "Ich möchte eine Suppe essen, bitte.",
+                  "Ich möchte die Suppe essen.",
+                  "Ich möchte die Suppe essen, bitte.",
+                  "Ich esse Suppe.",
+                  "Ich esse eine Suppe.",
+                  "Ich esse die Suppe."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                3
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Sie möchten Salat. Der Kellner: „Wir haben Suppe und Kuchen.“ Sie: …?",
+            "promptEn": "You would like salad, but the waiter only mentions soup and cake. Ask him politely whether they have salad too.",
+            "answer": "Haben Sie auch Salat?",
+            "register": "formal",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage",
+                  "en": "the question"
+                },
+                "forms": [
+                  "Haben Sie auch Salat?",
+                  "Haben Sie auch Salat, bitte?",
+                  "Haben Sie auch einen Salat?",
+                  "Haben Sie auch einen Salat, bitte?",
+                  "Haben Sie Salat?",
+                  "Haben Sie Salat, bitte?",
+                  "Haben Sie einen Salat?",
+                  "Haben Sie einen Salat, bitte?",
+                  "Und haben Sie auch Salat?",
+                  "Und haben Sie auch Salat, bitte?",
+                  "Und haben Sie auch einen Salat?",
+                  "Und haben Sie auch einen Salat, bitte?",
+                  "Und haben Sie Salat?",
+                  "Und haben Sie Salat, bitte?",
+                  "Und haben Sie einen Salat?",
+                  "Und haben Sie einen Salat, bitte?",
+                  "Entschuldigung, haben Sie auch Salat?",
+                  "Entschuldigung, haben Sie auch Salat, bitte?",
+                  "Entschuldigung, haben Sie auch einen Salat?",
+                  "Entschuldigung, haben Sie auch einen Salat, bitte?",
+                  "Entschuldigung, haben Sie Salat?",
+                  "Entschuldigung, haben Sie Salat, bitte?",
+                  "Entschuldigung, haben Sie einen Salat?",
+                  "Entschuldigung, haben Sie einen Salat, bitte?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                2
+              ]
+            },
+            "micOff": true,
+            "firstContact": true
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Der Kellner: „Möchten Sie auch Wasser?“ Sie: … (ja!) Der Kellner: „Wir haben auch Wein.“ Sie: … (nein!)",
+            "promptEn": "The waiter offers you water: accept politely. Then he offers wine: decline politely.",
+            "answer": "Ja, bitte. Nein, danke.",
+            "register": "formal",
+            "parts": [
+              {
+                "label": {
+                  "de": "annehmen",
+                  "en": "accepting"
+                },
+                "forms": [
+                  "Ja, bitte.",
+                  "Ja, gern.",
+                  "Ja, gerne.",
+                  "Ja, sehr gern.",
+                  "Ja, sehr gerne.",
+                  "Gern.",
+                  "Gerne.",
+                  "Sehr gern.",
+                  "Sehr gerne.",
+                  "Ja, danke.",
+                  "Ja, ein Glas Wasser, bitte.",
+                  "Ja, ein Wasser, bitte.",
+                  "Ja, Wasser, bitte.",
+                  "Ja, ein Glas Mineralwasser, bitte.",
+                  "Ja, ich möchte Wasser.",
+                  "Ja, ich möchte Wasser, bitte.",
+                  "Ja, ich möchte ein Glas Wasser.",
+                  "Ja, ich möchte ein Glas Wasser, bitte.",
+                  "Ja, ich möchte auch Wasser.",
+                  "Ja, ich möchte auch Wasser, bitte.",
+                  "Ja, ich möchte auch ein Glas Wasser.",
+                  "Ja, ich möchte auch ein Glas Wasser, bitte."
+                ]
+              },
+              {
+                "label": {
+                  "de": "höflich ablehnen",
+                  "en": "declining politely"
+                },
+                "forms": [
+                  "Nein, danke.",
+                  "Danke, nein.",
+                  "Nein, danke, ich möchte keinen Wein."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                4,
+                5,
+                6,
+                7
+              ]
+            },
+            "micOff": true,
+            "allowModelContext": true
+          }
+        ]
+      },
       guided: {
         read: {
           titleDe: 'Die Karte im Café',
@@ -2264,6 +5328,241 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l10',
       slug: 'am-bahnhof',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Am Bahnhof. Sie fahren mit dem Zug nach Österreich. Auf Ihrer Fahrkarte ist keine Uhrzeit. Ein Mann arbeitet am Bahnhof. Sie: …?",
+            "promptEn": "At the station: you are taking the train to Austria, but your ticket shows no time. Ask a man who works there when the train leaves.",
+            "answer": "Wann fährt der Zug nach Österreich?",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage",
+                  "en": "the question"
+                },
+                "forms": [
+                  "Wann fährt der Zug?",
+                  "Entschuldigung, wann fährt der Zug?",
+                  "Wann fährt der Zug, bitte?",
+                  "Wann fährt der Zug nach Österreich?",
+                  "Entschuldigung, wann fährt der Zug nach Österreich?",
+                  "Wann fährt der Zug nach Österreich, bitte?",
+                  "Wann geht der Zug?",
+                  "Entschuldigung, wann geht der Zug?",
+                  "Wann geht der Zug, bitte?",
+                  "Wann geht der Zug nach Österreich?",
+                  "Entschuldigung, wann geht der Zug nach Österreich?",
+                  "Wann geht der Zug nach Österreich, bitte?",
+                  "Wann kommt der Zug?",
+                  "Entschuldigung, wann kommt der Zug?",
+                  "Wann kommt der Zug, bitte?",
+                  "Wann kommt der Zug nach Österreich?",
+                  "Entschuldigung, wann kommt der Zug nach Österreich?",
+                  "Wann kommt der Zug nach Österreich, bitte?",
+                  "Wann ist die Abfahrt?",
+                  "Entschuldigung, wann ist die Abfahrt?",
+                  "Wann ist die Abfahrt, bitte?",
+                  "Um wie viel Uhr fährt der Zug?",
+                  "Entschuldigung, um wie viel Uhr fährt der Zug?",
+                  "Um wie viel Uhr fährt der Zug, bitte?",
+                  "Um wie viel Uhr fährt der Zug nach Österreich?",
+                  "Entschuldigung, um wie viel Uhr fährt der Zug nach Österreich?",
+                  "Um wie viel Uhr fährt der Zug nach Österreich, bitte?",
+                  "Um wie viel Uhr geht der Zug?",
+                  "Entschuldigung, um wie viel Uhr geht der Zug?",
+                  "Um wie viel Uhr geht der Zug, bitte?",
+                  "Um wie viel Uhr geht der Zug nach Österreich?",
+                  "Entschuldigung, um wie viel Uhr geht der Zug nach Österreich?",
+                  "Um wie viel Uhr geht der Zug nach Österreich, bitte?",
+                  "Um wie viel Uhr kommt der Zug?",
+                  "Entschuldigung, um wie viel Uhr kommt der Zug?",
+                  "Um wie viel Uhr kommt der Zug, bitte?",
+                  "Um wie viel Uhr kommt der Zug nach Österreich?",
+                  "Entschuldigung, um wie viel Uhr kommt der Zug nach Österreich?",
+                  "Um wie viel Uhr kommt der Zug nach Österreich, bitte?",
+                  "Um wie viel Uhr ist die Abfahrt?",
+                  "Entschuldigung, um wie viel Uhr ist die Abfahrt?",
+                  "Um wie viel Uhr ist die Abfahrt, bitte?",
+                  "Und wann fährt der Zug?",
+                  "Und wann fährt der Zug nach Österreich?",
+                  "Und wann ist die Abfahrt?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                0,
+                8
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Sie fahren nach Österreich und kaufen eine Fahrkarte. Sie haben zwanzig Euro. Sie: …?",
+            "promptEn": "You are going to Austria and are buying your ticket. You have twenty euros on you. Ask about the price of the ticket.",
+            "answer": "Was kostet die Fahrkarte?",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage",
+                  "en": "the question"
+                },
+                "forms": [
+                  "Was kostet die Fahrkarte?",
+                  "Entschuldigung, was kostet die Fahrkarte?",
+                  "Was kostet die Fahrkarte, bitte?",
+                  "Was kostet die Fahrkarte nach Österreich?",
+                  "Entschuldigung, was kostet die Fahrkarte nach Österreich?",
+                  "Was kostet die Fahrkarte nach Österreich, bitte?",
+                  "Was kostet eine Fahrkarte?",
+                  "Entschuldigung, was kostet eine Fahrkarte?",
+                  "Was kostet eine Fahrkarte, bitte?",
+                  "Was kostet eine Fahrkarte nach Österreich?",
+                  "Entschuldigung, was kostet eine Fahrkarte nach Österreich?",
+                  "Was kostet eine Fahrkarte nach Österreich, bitte?",
+                  "Wie viel kostet die Fahrkarte?",
+                  "Entschuldigung, wie viel kostet die Fahrkarte?",
+                  "Wie viel kostet die Fahrkarte, bitte?",
+                  "Wie viel kostet die Fahrkarte nach Österreich?",
+                  "Entschuldigung, wie viel kostet die Fahrkarte nach Österreich?",
+                  "Wie viel kostet die Fahrkarte nach Österreich, bitte?",
+                  "Wie viel kostet eine Fahrkarte?",
+                  "Entschuldigung, wie viel kostet eine Fahrkarte?",
+                  "Wie viel kostet eine Fahrkarte, bitte?",
+                  "Wie viel kostet eine Fahrkarte nach Österreich?",
+                  "Entschuldigung, wie viel kostet eine Fahrkarte nach Österreich?",
+                  "Wie viel kostet eine Fahrkarte nach Österreich, bitte?",
+                  "Wie teuer ist die Fahrkarte?",
+                  "Entschuldigung, wie teuer ist die Fahrkarte?",
+                  "Wie teuer ist die Fahrkarte, bitte?",
+                  "Wie teuer ist die Fahrkarte nach Österreich?",
+                  "Entschuldigung, wie teuer ist die Fahrkarte nach Österreich?",
+                  "Wie teuer ist die Fahrkarte nach Österreich, bitte?",
+                  "Wie teuer ist eine Fahrkarte?",
+                  "Entschuldigung, wie teuer ist eine Fahrkarte?",
+                  "Wie teuer ist eine Fahrkarte, bitte?",
+                  "Wie teuer ist eine Fahrkarte nach Österreich?",
+                  "Entschuldigung, wie teuer ist eine Fahrkarte nach Österreich?",
+                  "Wie teuer ist eine Fahrkarte nach Österreich, bitte?",
+                  "Kostet die Fahrkarte zwanzig Euro?",
+                  "Kostet die Fahrkarte 20 Euro?",
+                  "Kostet die Fahrkarte 20 €?",
+                  "Kostet die Fahrkarte nach Österreich zwanzig Euro?",
+                  "Kostet die Fahrkarte nach Österreich 20 Euro?",
+                  "Kostet die Fahrkarte nach Österreich 20 €?",
+                  "Kostet eine Fahrkarte zwanzig Euro?",
+                  "Kostet eine Fahrkarte 20 Euro?",
+                  "Kostet eine Fahrkarte 20 €?",
+                  "Kostet eine Fahrkarte nach Österreich zwanzig Euro?",
+                  "Kostet eine Fahrkarte nach Österreich 20 Euro?",
+                  "Kostet eine Fahrkarte nach Österreich 20 €?",
+                  "Entschuldigung, kostet die Fahrkarte zwanzig Euro?",
+                  "Entschuldigung, kostet die Fahrkarte 20 Euro?",
+                  "Entschuldigung, kostet die Fahrkarte 20 €?",
+                  "Entschuldigung, kostet die Fahrkarte nach Österreich zwanzig Euro?",
+                  "Entschuldigung, kostet die Fahrkarte nach Österreich 20 Euro?",
+                  "Entschuldigung, kostet die Fahrkarte nach Österreich 20 €?",
+                  "Entschuldigung, kostet eine Fahrkarte zwanzig Euro?",
+                  "Entschuldigung, kostet eine Fahrkarte 20 Euro?",
+                  "Entschuldigung, kostet eine Fahrkarte 20 €?",
+                  "Entschuldigung, kostet eine Fahrkarte nach Österreich zwanzig Euro?",
+                  "Entschuldigung, kostet eine Fahrkarte nach Österreich 20 Euro?",
+                  "Entschuldigung, kostet eine Fahrkarte nach Österreich 20 €?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                4
+              ]
+            },
+            "micOff": true
+          },
+          {
+            "canDo": 2,
+            "type": "listening",
+            "promptDe": "Am Bahnhof hören Sie die Durchsage. Was ist mit dem Zug? Wählen Sie.",
+            "promptEn": "Listen to the announcement. Choose what it tells you about the train.",
+            "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                2,
+                3,
+                7,
+                9
+              ]
+            },
+            "micOff": true,
+            "mode": "choice",
+            "instances": [
+              {
+                "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+                "accepted": [
+                  "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+                ],
+                "options": [
+                  "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+                  "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+                  "Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.",
+                  "Der Zug ist pünktlich. Er fährt von Gleis zehn."
+                ],
+                "audioText": "Der Zug nach Österreich hat heute Verspätung. Die Abfahrt ist um zehn Uhr an Gleis fünf."
+              },
+              {
+                "audioText": "Der Zug nach Österreich ist heute pünktlich. Die Abfahrt ist um zehn Uhr an Gleis vier.",
+                "answer": "Der Zug ist pünktlich. Er fährt von Gleis vier.",
+                "accepted": [
+                  "Der Zug ist pünktlich. Er fährt von Gleis vier."
+                ],
+                "options": [
+                  "Der Zug ist nicht pünktlich. Er fährt von Gleis vier.",
+                  "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+                  "Der Zug ist pünktlich. Er fährt von Gleis vier.",
+                  "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+                ]
+              }
+            ]
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Am Bus. Ihre Fahrkarte: Bremen – Berlin. Der Fahrer: „Wohin fahren Sie?“ Sie: …",
+            "promptEn": "At the bus: your ticket says Bremen – Berlin. The driver asks where you are going. Tell him.",
+            "answer": "Ich fahre nach Berlin.",
+            "parts": [
+              {
+                "label": {
+                  "de": "das Ziel",
+                  "en": "where you are going"
+                },
+                "forms": [
+                  "Ich fahre nach Berlin.",
+                  "Nach Berlin.",
+                  "Ich fahre mit dem Bus nach Berlin.",
+                  "Ich fahre nach Berlin mit dem Bus.",
+                  "Ich fahre heute nach Berlin.",
+                  "Ich fahre von Bremen nach Berlin.",
+                  "Von Bremen nach Berlin."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                0
+              ]
+            },
+            "micOff": true
+          }
+        ]
+      },
       guided: {
         read: {
           titleDe: 'Der Bus am Bahnhof',
@@ -2482,6 +5781,204 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l11',
       slug: 'gestern-und-heute',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Was machen Sie jeden Tag?“ – Sie (duschen): … Eine Kollegin: „Und am Sonntag?“ – Sie (schlafen, bis 9 Uhr): …",
+            "promptEn": "A colleague asks what you do every day. Tell her that you shower. Then she asks about Sunday: tell her that you sleep until nine.",
+            "answer": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun.",
+            "parts": [
+              {
+                "label": {
+                  "de": "jeden Tag",
+                  "en": "every day"
+                },
+                "forms": [
+                  "Ich dusche jeden Tag.",
+                  "Ich dusche.",
+                  "Jeden Tag dusche ich.",
+                  "Ich dusche und frühstücke jeden Tag.",
+                  "Ich dusche und frühstücke.",
+                  "Ich frühstücke und dusche jeden Tag.",
+                  "Ich frühstücke und dusche."
+                ]
+              },
+              {
+                "label": {
+                  "de": "der Sonntag",
+                  "en": "Sunday"
+                },
+                "forms": [
+                  "Ich schlafe am Sonntag bis neun.",
+                  "Am Sonntag schlafe ich bis neun.",
+                  "Ich schlafe bis neun.",
+                  "Ich schlafe am Sonntag bis neun Uhr.",
+                  "Am Sonntag schlafe ich bis neun Uhr.",
+                  "Ich schlafe bis neun Uhr.",
+                  "Ich schlafe am Sonntag bis 9.",
+                  "Am Sonntag schlafe ich bis 9.",
+                  "Ich schlafe bis 9.",
+                  "Ich schlafe am Sonntag bis 9 Uhr.",
+                  "Am Sonntag schlafe ich bis 9 Uhr.",
+                  "Ich schlafe bis 9 Uhr."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                8,
+                9
+              ]
+            },
+            "micOff": true,
+            "allowModelContext": true
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Sie (gestern?): „Tim, …?“ – Tim: „Ich? Nicht viel!“ – Sie (gestern: Arbeit): …",
+            "promptEn": "Ask your friend Tim what he did yesterday. He did not do much. Then say what you did yesterday: you worked.",
+            "answer": "Was hast du gestern gemacht? Ich habe gearbeitet.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Frage",
+                  "en": "the question"
+                },
+                "forms": [
+                  "Was hast du gestern gemacht?"
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Antwort",
+                  "en": "the answer"
+                },
+                "forms": [
+                  "Ich habe gearbeitet.",
+                  "Ich habe gestern gearbeitet.",
+                  "Gestern habe ich gearbeitet."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                0,
+                1
+              ]
+            },
+            "micOff": true,
+            "register": "informal",
+            "allowModelContext": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Freundin: „Am Freitag habe ich frei.“ – Sie (einkaufen, Freitag): … Sie (mitkommen?): …?",
+            "promptEn": "A friend tells you she is free on Friday. Tell her that you are going shopping on Friday. Then ask her whether she is coming along.",
+            "answer": "Ich kaufe am Freitag ein. Kommst du mit?",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Plan",
+                  "en": "the plan"
+                },
+                "forms": [
+                  "Ich kaufe am Freitag ein.",
+                  "Am Freitag kaufe ich ein.",
+                  "Ja, ich kaufe am Freitag ein.",
+                  "Ich gehe am Freitag einkaufen.",
+                  "Am Freitag gehe ich einkaufen."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Frage",
+                  "en": "the question"
+                },
+                "forms": [
+                  "Kommst du mit?",
+                  "Kommst du am Freitag mit?",
+                  "Kommst du auch mit?",
+                  "Möchtest du mitkommen?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                5
+              ]
+            },
+            "micOff": true,
+            "register": "informal"
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Ein Kollege: „Und Ihr Tag?“ – Sie (aufstehen, 6 Uhr): … Sie (arbeiten, Montag): …",
+            "promptEn": "A colleague asks about your day. Tell him when you get up: at six. Then tell him when you work: on Monday. Use one full sentence for each.",
+            "answer": "Ich stehe um sechs auf. Ich arbeite am Montag.",
+            "parts": [
+              {
+                "label": {
+                  "de": "aufstehen (ein ganzer Satz)",
+                  "en": "getting up (one full sentence)"
+                },
+                "forms": [
+                  "Ich stehe um sechs auf.",
+                  "Ich stehe morgens um sechs auf.",
+                  "Ich stehe jeden Tag um sechs auf.",
+                  "Um sechs stehe ich auf.",
+                  "Morgens stehe ich um sechs auf.",
+                  "Ich stehe um sechs Uhr auf.",
+                  "Ich stehe morgens um sechs Uhr auf.",
+                  "Ich stehe jeden Tag um sechs Uhr auf.",
+                  "Um sechs Uhr stehe ich auf.",
+                  "Morgens stehe ich um sechs Uhr auf.",
+                  "Ich stehe um 6 auf.",
+                  "Ich stehe morgens um 6 auf.",
+                  "Ich stehe jeden Tag um 6 auf.",
+                  "Um 6 stehe ich auf.",
+                  "Morgens stehe ich um 6 auf.",
+                  "Ich stehe um 6 Uhr auf.",
+                  "Ich stehe morgens um 6 Uhr auf.",
+                  "Ich stehe jeden Tag um 6 Uhr auf.",
+                  "Um 6 Uhr stehe ich auf.",
+                  "Morgens stehe ich um 6 Uhr auf."
+                ]
+              },
+              {
+                "label": {
+                  "de": "arbeiten (ein ganzer Satz)",
+                  "en": "working (one full sentence)"
+                },
+                "forms": [
+                  "Ich arbeite am Montag.",
+                  "Am Montag arbeite ich.",
+                  "Und ich arbeite am Montag.",
+                  "Und am Montag arbeite ich."
+                ],
+                "ellipsisOpening": "Ich"
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                3,
+                9
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "allowModelContext": true
+          }
+        ]
+      },
       guided: {
         read: {
           titleDe: 'Tims Zettel für Freitag',
@@ -2688,6 +6185,222 @@ export const CURRICULUM_A11 = {
       id: 'a1.1-l12',
       slug: 'feste-feiern',
       flow: 'guided',
+      proof: {
+        "tasks": [
+          {
+            "canDo": 0,
+            "type": "production",
+            "register": "formal",
+            "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Sie feiern am Freitag Geburtstag. Und ich habe am Freitag frei!“ – Sie (einladen): …",
+            "promptEn": "A colleague knows that you are celebrating your birthday on Friday, and she tells you she is free that day. Invite her in one sentence. Speak formally.",
+            "answer": "Ich lade Sie ein.",
+            "parts": [
+              {
+                "label": {
+                  "de": "die Einladung",
+                  "en": "the invitation"
+                },
+                "forms": [
+                  "Ich lade Sie ein.",
+                  "Ich lade Sie zum Fest ein.",
+                  "Ich lade Sie zum Geburtstag ein.",
+                  "Ich lade Sie zu meinem Fest ein.",
+                  "Ich lade Sie zu meinem Geburtstag ein.",
+                  "Ich lade Sie zur Party ein.",
+                  "Ich lade Sie zu meiner Party ein.",
+                  "Ich lade Sie auch ein.",
+                  "Ich lade Sie auch zum Fest ein.",
+                  "Ich lade Sie auch zum Geburtstag ein.",
+                  "Ich lade auch Sie ein.",
+                  "Ich lade Sie am Freitag ein.",
+                  "Ich möchte Sie einladen.",
+                  "Ich möchte Sie zum Fest einladen.",
+                  "Ich möchte Sie zum Geburtstag einladen.",
+                  "Ich möchte Sie zu meinem Fest einladen.",
+                  "Ich möchte Sie zu meinem Geburtstag einladen.",
+                  "Ich möchte Sie zur Party einladen.",
+                  "Ich möchte Sie zu meiner Party einladen.",
+                  "Ich möchte Sie auch einladen.",
+                  "Kommen Sie?",
+                  "Kommen Sie zum Fest?",
+                  "Kommen Sie zum Geburtstag?",
+                  "Kommen Sie zu meinem Fest?",
+                  "Kommen Sie zu meinem Geburtstag?",
+                  "Kommen Sie zur Party?",
+                  "Kommen Sie zu meiner Party?",
+                  "Kommen Sie auch?",
+                  "Kommen Sie auch zum Fest?",
+                  "Kommen Sie auch zum Geburtstag?",
+                  "Kommen Sie am Freitag?",
+                  "Kommen Sie am Freitag auch?",
+                  "Kommen Sie auch am Freitag?",
+                  "Möchten Sie kommen?",
+                  "Möchten Sie auch kommen?",
+                  "Möchten Sie zum Fest kommen?",
+                  "Möchten Sie auch zum Fest kommen?",
+                  "Möchten Sie zum Geburtstag kommen?",
+                  "Möchten Sie auch zum Geburtstag kommen?"
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                5
+              ]
+            },
+            "micOff": true,
+            "context": [
+              "Ja.",
+              "Ich feiere am Freitag."
+            ]
+          },
+          {
+            "canDo": 1,
+            "type": "production",
+            "promptDe": "Antworten Sie mit einem Satz. Eine Kollegin: „Wann haben Sie Geburtstag?“ – Sie (Monat: 05): …",
+            "promptEn": "A colleague asks when your birthday is. For this task it is in month 05 of the year. Tell her the month.",
+            "answer": "Mein Geburtstag ist im Mai.",
+            "parts": [
+              {
+                "label": {
+                  "de": "der Monat",
+                  "en": "the month"
+                },
+                "forms": [
+                  "Mein Geburtstag ist im Mai.",
+                  "Ich habe im Mai Geburtstag.",
+                  "Im Mai.",
+                  "Im Mai ist mein Geburtstag.",
+                  "Im Mai habe ich Geburtstag.",
+                  "Ich habe Geburtstag im Mai."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                1
+              ]
+            },
+            "micOff": true,
+            "allowModelContext": true
+          },
+          {
+            "canDo": 2,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Wann feiern Sie? Und wer kommt?“ – Sie (Freitag): … Sie (Mama, Papa): …",
+            "promptEn": "A colleague asks when you are celebrating and who is coming. Tell her that the party is on Friday. Then tell her that your mum and your dad are coming.",
+            "answer": "Wir feiern am Freitag. Meine Mama und mein Papa kommen.",
+            "parts": [
+              {
+                "label": {
+                  "de": "das Fest",
+                  "en": "the party"
+                },
+                "forms": [
+                  "Wir feiern am Freitag.",
+                  "Ich feiere am Freitag.",
+                  "Am Freitag feiern wir.",
+                  "Am Freitag feiere ich.",
+                  "Am Freitag.",
+                  "Mein Fest ist am Freitag.",
+                  "Das Fest ist am Freitag.",
+                  "Unser Fest ist am Freitag.",
+                  "Meine Party ist am Freitag.",
+                  "Die Party ist am Freitag."
+                ]
+              },
+              {
+                "label": {
+                  "de": "die Gäste (mit mein/meine)",
+                  "en": "the guests (with mein/meine)"
+                },
+                "forms": [
+                  "Meine Mama und mein Papa kommen.",
+                  "Meine Mama und mein Papa.",
+                  "Meine Mama und mein Papa kommen zum Fest.",
+                  "Meine Mama und mein Papa kommen auch.",
+                  "Mein Papa und meine Mama kommen.",
+                  "Mein Papa und meine Mama.",
+                  "Mein Papa und meine Mama kommen zum Fest.",
+                  "Mein Papa und meine Mama kommen auch.",
+                  "Meine Mutter und mein Vater kommen.",
+                  "Meine Mutter und mein Vater.",
+                  "Meine Mutter und mein Vater kommen zum Fest.",
+                  "Meine Mutter und mein Vater kommen auch.",
+                  "Mein Vater und meine Mutter kommen.",
+                  "Mein Vater und meine Mutter.",
+                  "Mein Vater und meine Mutter kommen zum Fest.",
+                  "Mein Vater und meine Mutter kommen auch.",
+                  "Ja, meine Mama und mein Papa kommen.",
+                  "Meine Mama kommt und mein Papa kommt.",
+                  "Meine Eltern kommen.",
+                  "Meine Eltern.",
+                  "Meine Mama kommt. Mein Papa kommt.",
+                  "Mein Papa kommt. Meine Mama kommt."
+                ],
+                "maxSentences": 2
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                1,
+                3
+              ]
+            },
+            "micOff": true,
+            "order": "any"
+          },
+          {
+            "canDo": 3,
+            "type": "production",
+            "promptDe": "Sagen Sie die Antwort. Lena geht nach Hause. Am Freitag kommt sie zum Fest. Sie: „…, Lena. …!“",
+            "promptEn": "Your friend Lena is going home. You will see her again soon: on Friday she is coming to your party. Say goodbye in two short phrases: wish her well tell her that you will see her soon.",
+            "answer": "Mach's gut. Bis bald.",
+            "parts": [
+              {
+                "label": {
+                  "de": "ein guter Wunsch",
+                  "en": "a good wish"
+                },
+                "forms": [
+                  "Mach's gut.",
+                  "Mach es gut.",
+                  "Schönen Tag noch.",
+                  "Mach's gut und schönen Tag noch.",
+                  "Mach's gut! Schönen Tag noch!"
+                ],
+                "maxSentences": 2
+              },
+              {
+                "label": {
+                  "de": "der Abschied (bis wann?)",
+                  "en": "the goodbye (until when?)"
+                },
+                "forms": [
+                  "Bis bald.",
+                  "Bis Freitag.",
+                  "Und bis bald."
+                ]
+              }
+            ],
+            "reteach": {
+              "kind": "dialog",
+              "indices": [
+                9
+              ]
+            },
+            "micOff": true,
+            "order": "any",
+            "allowModelContext": true,
+            "context": [
+              "Tschüss."
+            ]
+          }
+        ]
+      },
       guided: {
         read: {
           titleDe: 'Eine Nachricht von Mama und Papa',
