@@ -1,3 +1,4 @@
+import DayDone from '../course/DayDone.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
@@ -43,7 +44,7 @@ function skillText(line, lang) {
   return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
 }
 
-export default function RecapStage({ stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ stage, proofShown = false, sceneSupport = { unaided: 0, supported: 0 }, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -115,6 +116,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
 
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
+  const daily = level === 'a1.1' && lektion?.flow === 'guided';
   const canDo = lektion ? canDoLines(lektion, lang) : [];
 
   return (
@@ -126,19 +128,20 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
-        {canDo.length > 0 && (
+        {!daily && canDo.length > 0 && (
           <>
             <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
             <ul className="mt-3 space-y-2">
               {canDo.map((line) => (
                 <li key={line} className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> {line}
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> <span>{line}{proofShown && <span className="ml-2 text-xs text-graphite">{t('proof.shown', lang)}</span>}</span>
                 </li>
               ))}
             </ul>
           </>
         )}
-        {stage.nextHook && <p className="mt-4 border-t border-rule pt-4 font-display text-lg text-siegel-deep">{lang === 'de' ? stage.nextHook.de : stage.nextHook.en}</p>}
+        <DayDone curriculum={curriculum} lesson={lektion} lang={lang} completed={proofShown} />
+        {!daily && stage.nextHook && <p className="mt-4 border-t border-rule pt-4 font-display text-lg text-siegel-deep">{lang === 'de' ? stage.nextHook.de : stage.nextHook.en}</p>}
         <p className={`${canDo.length ? 'mt-4 border-t border-rule pt-4 ' : ''}flex items-start gap-2 text-[0.875rem] leading-relaxed text-graphite`}>
           <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t(`recap.canDo.${review.state}`, lang, { date: review.date ? date.format(review.date) : '' })}
         </p>
@@ -161,6 +164,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
           {t('recap.details', lang)}
         </summary>
         <div className="border-t border-rule p-5 sm:p-6">
+          {(sceneSupport.unaided + sceneSupport.supported > 0) && <p className="mt-4 text-sm text-graphite">{t('recap.sceneSupport', lang, sceneSupport)}</p>}
           <div className="flex flex-wrap items-center gap-2">
             <Chip tone={status === 'gold' ? 'himbeer' : 'label'}>
               <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> {t(`recap.mastery.${status === 'gold' || status === 'complete' ? status : 'started'}`, lang)}

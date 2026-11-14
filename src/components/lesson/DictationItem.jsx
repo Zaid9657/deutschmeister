@@ -1,3 +1,4 @@
+import SetReference from './SetReference.jsx';
 import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useRef, useState } from 'react';
 import Button from '../ui/Button.jsx';
@@ -86,6 +87,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
           </p>
         )}
 
+        <SetReference item={line} lektionId={id} />
         <label htmlFor={itemId} className="mt-5 block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
           {t('dictation.whatDoYouHear', lang)}
         </label>

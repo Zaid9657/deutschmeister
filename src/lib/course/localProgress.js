@@ -176,6 +176,7 @@ export function recordLocalLesson({ level, lektionId, status = 'complete', accur
       stage: String(a.stage || ''),
       correct: !!a.correct,
       errorTag: a.errorTag || null,
+      ...(a.stage === 'scene' && typeof a.translationShown === 'boolean' ? { translationOpened: a.translationOpened === true, translationShown: a.translationShown } : {}),
     })),
   ]);
   return writeLocalProgress(store);
@@ -267,7 +268,7 @@ export function planLocalMerge(store) {
       if (a.lektionId !== lektionId) continue;
       const run = Math.min(runs, runOf(a));
       if (!groups.has(run)) groups.set(run, []);
-      groups.get(run).push({ itemId: a.itemId, stage: a.stage, correct: !!a.correct, errorTag: a.errorTag || null });
+      groups.get(run).push({ itemId: a.itemId, stage: a.stage, correct: !!a.correct, errorTag: a.errorTag || null, ...(a.stage === 'scene' && typeof a.translationShown === 'boolean' ? { translationOpened: a.translationOpened === true, translationShown: a.translationShown } : {}) });
     }
     const batches = [];
     for (let run = 1; run <= runs; run += 1) {

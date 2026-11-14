@@ -5,8 +5,8 @@
 export const GROUP_MAX = 6;
 
 /** Balanced groups of ≤ GROUP_MAX, sizes differing by at most one: 20 → 5·5·5·5, 21 → 6·5·5·5. */
-export function groupWords(list) {
-  const count = Math.ceil(list.length / GROUP_MAX);
+export function groupWords(list, max = GROUP_MAX) {
+  const count = Math.ceil(list.length / max);
   const base = Math.floor(list.length / Math.max(count, 1));
   const out = [];
   for (let g = 0, at = 0; g < count; g += 1) {

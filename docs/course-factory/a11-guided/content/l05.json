@@ -125,6 +125,673 @@
     "de": "Ana hat Arbeit! Morgen ist ihr erster Tag im Büro. Was braucht sie dort?",
     "en": "Ana has a job! Tomorrow is her first day at the office. What does she need there?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Lena: „Was ist hier?“ – Sie: Der … Die … Das …",
+        "promptEn": "Lena asks what is here in the classroom. Name three things you know from the course: one with der one with die one with das.",
+        "answer": "Der Stift. Die Schere. Das Wörterbuch.",
+        "parts": [
+          {
+            "label": {
+              "de": "ein Gegenstand mit der",
+              "en": "a thing with der"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Der {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Der {value} ist hier.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Der {value} ist da.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Das ist der {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Hier ist der {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              }
+            ]
+          },
+          {
+            "label": {
+              "de": "ein Gegenstand mit die",
+              "en": "a thing with die"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Die {value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Und die {value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Die {value} sind hier.",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Die {value} sind da.",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Die {value} ist hier.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Die {value} ist da.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Das ist die {value}.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Hier ist die {value}.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Die {value} auch.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              }
+            ]
+          },
+          {
+            "label": {
+              "de": "ein Gegenstand mit das",
+              "en": "a thing with das"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das {value} ist hier.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das {value} ist da.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das ist das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Hier ist das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Das {value} auch.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Und das {value}.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1,
+            3
+          ]
+        },
+        "micOff": true,
+        "order": "any",
+        "sets": {
+          "taughtValues1": [
+            "Stift",
+            "Bleistift",
+            "Kugelschreiber",
+            "Schlüssel",
+            "Tisch",
+            "Stuhl",
+            "Rucksack"
+          ],
+          "taughtValues2": [
+            "Schere",
+            "Tafel",
+            "Tür",
+            "Lampe",
+            "Uhr",
+            "Tasche",
+            "Stifte",
+            "Bleistifte",
+            "Tische",
+            "Stühle",
+            "Rucksäcke",
+            "Scheren",
+            "Tafeln",
+            "Türen",
+            "Lampen",
+            "Uhren",
+            "Taschen",
+            "Bücher",
+            "Hefte",
+            "Lineale",
+            "Papiere",
+            "Wörterbücher",
+            "Bilder",
+            "Regale",
+            "Formulare"
+          ],
+          "taughtValues3": [
+            "Stifte",
+            "Bleistifte",
+            "Kugelschreiber",
+            "Schlüssel",
+            "Tische",
+            "Stühle",
+            "Rucksäcke",
+            "Scheren",
+            "Tafeln",
+            "Türen",
+            "Lampen",
+            "Uhren",
+            "Taschen",
+            "Bücher",
+            "Hefte",
+            "Lineale",
+            "Papiere",
+            "Fenster",
+            "Wörterbücher",
+            "Bilder",
+            "Regale",
+            "Formulare"
+          ],
+          "taughtValues4": [
+            "Schere",
+            "Tafel",
+            "Tür",
+            "Lampe",
+            "Uhr",
+            "Tasche"
+          ],
+          "taughtValues5": [
+            "Buch",
+            "Heft",
+            "Lineal",
+            "Papier",
+            "Fenster",
+            "Wörterbuch",
+            "Bild",
+            "Regal",
+            "Formular"
+          ]
+        },
+        "allowModelContext": true
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Sie: … das Wörterbuch? – Die Lehrerin: „Ich habe es. Und Ihr Stift?“ – Sie: …",
+        "promptEn": "You cannot find the dictionary: ask where it is. The teacher has it and asks about your pen: tell her it is here, or that it is there.",
+        "answer": "Wo ist das Wörterbuch? Der Stift ist hier.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach dem Wörterbuch",
+              "en": "the question about the dictionary"
+            },
+            "forms": [
+              "Wo ist das Wörterbuch?",
+              "Und wo ist das Wörterbuch?",
+              "Entschuldigung, wo ist das Wörterbuch?",
+              "Wo ist das Wörterbuch, bitte?",
+              "Wo ist mein Wörterbuch?",
+              "Entschuldigung, wo ist mein Wörterbuch?"
+            ]
+          },
+          {
+            "label": {
+              "de": "wo Ihr Stift ist",
+              "en": "where your pen is"
+            },
+            "forms": [
+              "Hier.",
+              "Da."
+            ],
+            "frames": [
+              {
+                "pattern": "{value} ist hier.",
+                "slots": {
+                  "value": "taughtPhrases1"
+                }
+              },
+              {
+                "pattern": "Hier ist {value}.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "{value} ist da.",
+                "slots": {
+                  "value": "taughtPhrases1"
+                }
+              },
+              {
+                "pattern": "Da ist {value}.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            1
+          ]
+        },
+        "micOff": true,
+        "sets": {
+          "taughtPhrases1": [
+            "Der Stift",
+            "Mein Stift",
+            "Er"
+          ],
+          "taughtPhrases2": [
+            "der Stift",
+            "mein Stift",
+            "er"
+          ]
+        },
+        "allowModelContext": true
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Die Lehrerin: „Ihr Stift und Ihr Bleistift: die Farben, bitte!“ – Sie: … …",
+        "promptEn": "The teacher asks for the colours of your pen and of your pencil. Say the colour of the pen the colour of the pencil. Use colours from this Lektion.",
+        "answer": "Der Stift ist blau. Der Bleistift ist gelb.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Farbe von Ihrem Stift",
+              "en": "the colour of your pen"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Der Stift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Mein Stift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Er ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              }
+            ]
+          },
+          {
+            "label": {
+              "de": "die Farbe von Ihrem Bleistift",
+              "en": "the colour of your pencil"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Der Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Mein Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Er ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und der Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und mein Bleistift ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value}.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Der Bleistift ist auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Mein Bleistift ist auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Er ist auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Auch {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            5
+          ]
+        },
+        "micOff": true,
+        "order": "any",
+        "sets": {
+          "taughtValues1": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues2": [
+            "Rot",
+            "Blau",
+            "Grün",
+            "Gelb",
+            "Schwarz",
+            "Weiß",
+            "Braun"
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Antworten Sie mit einem Satz. Die Lehrerin: „Ich habe hier einen Stift.“ – Sie: …? – Die Lehrerin: „Er ist blau.“",
+        "promptEn": "The teacher has a pen that you cannot see. Ask her one question about its colour.",
+        "answer": "Ist der Stift blau oder schwarz?",
+        "parts": [
+          {
+            "label": {
+              "de": "Ihre Frage nach der Farbe",
+              "en": "your question about the colour"
+            },
+            "forms": [
+              "Welche Farbe hat der Stift?",
+              "Welche Farbe hat er?"
+            ],
+            "frames": [
+              {
+                "pattern": "Ist der Stift {value}?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ist er {value}?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder blau?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder grün?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder gelb?",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder schwarz?",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder weiß?",
+                "slots": {
+                  "value": "taughtValues6"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder braun?",
+                "slots": {
+                  "value": "taughtValues7"
+                }
+              },
+              {
+                "pattern": "Ist der Stift {value} oder rot?",
+                "slots": {
+                  "value": "taughtValues8"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder blau?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder grün?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder gelb?",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder schwarz?",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder weiß?",
+                "slots": {
+                  "value": "taughtValues6"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder braun?",
+                "slots": {
+                  "value": "taughtValues7"
+                }
+              },
+              {
+                "pattern": "Ist er {value} oder rot?",
+                "slots": {
+                  "value": "taughtValues8"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4
+          ]
+        },
+        "micOff": true,
+        "sets": {
+          "taughtValues1": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues2": [
+            "rot",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues3": [
+            "rot",
+            "blau",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues4": [
+            "rot",
+            "blau",
+            "grün",
+            "schwarz",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues5": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "weiß",
+            "braun"
+          ],
+          "taughtValues6": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "braun"
+          ],
+          "taughtValues7": [
+            "rot",
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß"
+          ],
+          "taughtValues8": [
+            "blau",
+            "grün",
+            "gelb",
+            "schwarz",
+            "weiß",
+            "braun"
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks: five pairs (question + answer); no boundary was in doubt. Both speakers are learner roles, so every line was eligible for say.",
     "say in the last chunk is line 9, not line 8: the source comment on line 8 says `hat` („Welche Farbe hat das Bild?“) is input, not production, in this Lektion.",
@@ -133,6 +800,16 @@
     "The text has no Dativ phrase (no „an der Tafel“, „auf dem Tisch“), because the notice of this Lektion defers that pattern to A1.2.",
     "`Kurs` is in no Wortfeld of Lektion 1–5, although the writing task of this Lektion uses it as a field („Kurs: A1“). RULE 34 therefore rejects it in a read text; the message avoids the word.",
     "Existing data: the Wortfeld example for `weiß` is „Das Heft ist weiß.“, while the dialogue of the same Lektion says „Nein, das Heft ist grün.“",
-    "Phonetik: „SECHS“ and „ZEHN“ are one-syllable items (the focus is sch – s – z, not word stress), so the sound stage stays pending."
+    "Phonetik: „SECHS“ and „ZEHN“ are one-syllable items (the focus is sch – s – z, not word stress), so the sound stage stays pending.",
+    "Proof (2026-11-14): four tasks, one per can-do. The checker compares whole sentences, so every accepted sentence is listed (441 forms). The lists are generated, not typed: 22 nouns of the Wortfelder of L2, L4 and L5 with article and plural, and the 7 colours. A new noun or colour needs new forms.",
+    "Proof task 0 (name things): free choice, but one thing with der, one with die, one with das, in that order. The skeleton shows only the three articles, so three different nouns and their gender are needed. Not accepted as classroom objects: das Zimmer, die Wohnung, persons. A plural in the die slot counts (the notice teaches „die Bücher“); where plural and singular look alike (Fenster, Schlüssel, Kugelschreiber) only the sentence with the plural verb counts, so „die Fenster“ as a gender mistake fails. Tried, passed: „Der Stift. Die Schere. Das Wörterbuch.“ / „der stift, die schere, das buch“ / „Der Stift ist da. Die Schere ist hier. Das Lineal auch.“ / „Der Kugelschreiber, die Tafel und das Fenster“ / „Das ist der Tisch. Das ist die Lampe. Das ist das Regal.“ / „Der Stift. Die Bücher. Das Heft.“ Tried, WRONG as intended: „Der Schere. Die Stift. Das Buch.“ / „Der Stift. Die Schere.“ / „Das Buch. Der Stift. Die Schere.“ / „Stift. Schere. Buch.“ / „Der Stift. Die Fenster. Das Buch.“ / „Ein Stift. Eine Schere. Ein Buch.“ Separators: full stops, commas, semicolons, line breaks or none pass; dashes do not („Der Stift - die Schere - das Buch“ WRONG).",
+    "Proof task 1 (ask where, answer with hier or da): the noun of the question is shown with its article, the learner supplies „Wo ist …?“; the teacher's reply shows neither hier nor da. Tried, passed: „Wo ist das Wörterbuch? Der Stift ist hier.“ / „wo ist das wörterbuch? hier“ / „Tim, wo ist das Wörterbuch? Der Stift ist da.“ / „Entschuldigung, wo ist das Wörterbuch? Mein Stift ist hier.“ / „Wo ist das Wörterbuch der Stift ist da“. Tried, WRONG as intended: „Was ist das Wörterbuch? Der Stift ist hier.“ / „Wo ist der Wörterbuch? Der Stift ist hier.“ / „Wo ist das Wörterbuch?“ / „Wo ist das Wörterbuch? Der Stift ist blau.“ / „Wo ist das Wörterbuch? Sie ist hier.“ / „Wo das Wörterbuch ist? Hier.“ The form „Tim, wo ist das Wörterbuch?“ is listed because it is dialogue line 0 word for word and the re-teach shows it; no other address variant is listed.",
+    "Proof task 2 (colours): the learner's own pen and pencil, any of the 7 colours; the prompt shows no question pattern and no colour. Tried, passed: „Der Stift ist blau. Der Bleistift ist gelb.“ / „Der Stift ist blau, der Bleistift ist gelb.“ (dialogue line 5) / „blau. gelb.“ / „Mein Stift ist schwarz und mein Bleistift ist rot“ / „Er ist grün. Er ist auch grün.“ / „Der Stift ist weiss. Der Bleistift ist gruen.“ Tried, WRONG as intended: „Der Stift ist blau.“ / „Es ist blau. Es ist gelb.“ / „Das Stift ist blau. Der Bleistift ist gelb.“ / „Der Stift ist blue. Der Bleistift ist yellow.“ / „Der Stift ist hier. Der Bleistift ist da.“ / „Der Bleistift ist gelb. Der Stift ist blau.“",
+    "Proof task 3 (simple question in class): one question about the colour of a pen the learner cannot see; accepted are „Ist der Stift/er [Farbe]?“, „Ist der Stift/er [Farbe] oder [Farbe]?“ for all colours and „Welche Farbe hat der Stift/er?“. The last one is accepted although the source comment on line 8 calls `hat` input and not production; the model answer and the re-teach are line 4. Tried, passed: „Ist der Stift blau oder schwarz?“ / „ist der stift blau“ / „Welche Farbe hat der Stift?“ / „Ist er rot oder blau?“ Tried, WRONG as intended: „Der Stift ist blau oder schwarz?“ / „Ist die Stift blau?“ / „Ist es blau?“ / „Wo ist der Stift?“ / „Was Farbe hat der Stift?“ / „Welche Farbe ist der Stift?“",
+    "Proof limit, own data: the tool cannot see the learner's things. Task 2 passes with one colour word used twice („Er ist grün. Er ist auch grün.“), which may be true. A colour the course has not taught (orange, grau) cannot be answered; the English prompt asks for colours from this Lektion.",
+    "Proof limit, re-teach: no line of this dialogue is a clean model for tasks 0 and 1. The pointers [1,3] and [0,1] show four and three sentences; typed back whole they fail as extra sentences („Das Wörterbuch ist hier. Der Stift ist da. Die Schere ist hier. Das Lineal auch.“ WRONG, „Tim, wo ist das Wörterbuch? Das Wörterbuch ist hier. Der Stift ist da.“ WRONG). The learner has to pick from the model: „Der Stift ist da. Die Schere ist hier. Das Lineal auch.“ and „Tim, wo ist das Wörterbuch? Der Stift ist da.“ pass.",
+    "Proof limit, courtesy words: proof.js takes Danke/Bitte/Entschuldigung only from the Wortfeld of the same Lektion, and they are L1 words. So „Entschuldigung! Wo ist das Wörterbuch? Der Stift ist hier.“ is WRONG (extra sentence), while „Entschuldigung, wo ist das Wörterbuch? …“ with a comma passes because that form is listed. The prompts avoid situations that invite a separate thank-you.",
+    "Proof limit, spelling: the common checker refuses an umlaut written without dots in a short word: „Der Stift. Die Tur. Das Buch.“ WRONG and „… Der Bleistift ist grun.“ WRONG, while „Tuer“, „gruen“ and „Worterbuch“ pass. The proof screen has no umlaut keys.",
+    "Proof limit, microphone: the spoken path scores only the model `answer` (ProofStage gives ReadAloudLine `item.answer`). In tasks 0, 2 and 3 a learner who says other correct things, colours or another accepted question is scored against the model sentence. Typing is the only path that accepts the listed forms."
   ]
 }

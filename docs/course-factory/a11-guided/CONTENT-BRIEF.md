@@ -42,6 +42,21 @@ One file `docs/course-factory/a11-guided/content/lNN.json` (two digits) with:
   a spelled-out name → `"first"` or `"surname"`). If a chunk has no learner-role line, move the
   boundary; if that is impossible, say so in `notes` and do not invent a workaround.
 
+### `guided.sets`
+
+Sets use the canonical mappings in `src/data/curricula/a11.sets.js`. `said` is the readable
+German letter/number name; optional `audio` is the voice aid and must never be displayed as
+the letter name. A group is one tappable board and one group read-aloud, followed by its
+2–3 checked tasks; confusable pairs keep both directions.
+
+`placement` is `"before-scene"` (also the default), `{ "afterChunk": n }` (one-based), or
+`"part2"` (before practice). The builder splits scene stages at these boundaries. Use the
+point of need: L1’s alphabet follows its first greeting/name chunk; L4’s compound rule waits
+until Part 2. `ownName: true` adds the alphabet’s in-memory surname spelling card.
+RULE 36 checks the resulting order for all three seeded draws; RULE 37 uses real delivered
+board/member/check counts and rejects an upper estimate above six minutes per stage or
+above six minutes summed before the first scene. These estimates are not measured times.
+
 ### `guided.read`
 
 - A short real-life text for the Lektion's situation (a form, a note, a sign, a message, a price
@@ -85,3 +100,94 @@ write, does the text sound like the real thing?
 ## Report back
 
 Per Lektion: the file path, the checker's final output, and your notes. No file dumps.
+
+## Proof
+
+An optional top-level `proof` block finishes a guided Lektion. Copy the shape from `content/l01.json`:
+`{ "proof": { "tasks": [ … ] } }`. Write exactly one task per can-do, in order, with zero-based
+`canDo` indices. Ask the learner to act in a small situation using what they learned, without
+printing the answer or asking for a literal translation. If a can-do has two acts, ask for both in
+one response. Production can be typed or checked by microphone; self-confirmation never passes.
+A can-do about understanding may use `type: "multiple_choice"` with 2–4 distinct German options
+and exactly one answer recognized by the common checker. A short-message can-do can use typed
+`type: "production"`; do not replace production goals with recognition choices.
+
+Each task needs `promptDe` (Sie), `promptEn`, a canonical `answer` for microphone scoring, and a
+`reteach` pointer as below. Production tasks use ordered `parts`, each with a bilingual `label`
+(`{ "de": "der Gruß", "en": "the greeting" }`) and nonempty `forms`. List **every form the
+Lektion taught for that part**, never one frozen whole-response sentence. A single-act task has
+one part; two acts need two parts. Do not put `accepted` on production tasks. A choice task keeps
+its `answer` and `accepted` array including that answer. Declare `register: "formal"` when the
+can-do or situation requires formal speech; all forms must respect it. For example:
+
+```json
+"parts": [
+  { "label": { "de": "die Frage", "en": "the question" }, "forms": ["Wie geht es Ihnen?"] },
+  { "label": { "de": "die Antwort", "en": "the answer" }, "forms": ["Mir geht es gut, danke.", "Gut, danke.", "Mir geht es gut."] }
+]
+```
+
+The response is split at `.`, `!` and `?`; each sentence fulfils the next part through the common
+checker, including its TYPO rules. Taught standalone courtesies (`Danke`, `Bitte`,
+`Entschuldigung`, when in the Wortfeld) may appear anywhere without consuming a part. Other
+extra sentences, wrong order and missing/substituted parts fail. Introductions keep the existing own-name adapter and are checked as one response, preserving separators.
+
+For a spelling can-do, use `type: "listen_spelling"`, `listenSpelling: true`,
+`listenFrom: { "kind": "dialog", "index": 3 }` (the actual spelled-name line), and
+`ownName: "surname"` for the optional scored microphone path. Keep one bilingual labelled part
+with the original spelled model as `answer`/`forms`, plus a normal re-teach pointer. The source
+must resolve to a spelled name also present in this lesson’s dialogue/cast, and the lesson must
+deliver an alphabet set. The builder derives the name and its spoken German letter names; never
+retype a listening answer or put `accepted` on this task. The screen asks the learner to hear the
+spelled name and write it, and requires successful playback before checking. Typing their own
+surname is not evidence. With scored speech they may instead spell their own surname; the
+expected speech is German letter names, with no visible or playable answer model. Self-confirmation
+never passes either path. If listening is unavailable, retry playback or use scored speech;
+showing the written answer must not pass the listening proof.
+A comma-delimited final address may use the exact title and name of a titled speaker in this
+Lektion's dialogue (e.g. `Frau Kaya`); the rest of the sentence is still checked. Never enumerate
+address variants in forms or accept a different/incorrect name.
+
+Use a `reteach` pointer: `{ "kind": "dialog", "indices": [n] }`, `{ "kind": "wortfeld", "index": n }`,
+or `{ "kind": "notice" }`. Indices are zero-based; dialogue pointers may name several lines.
+The pointer supplies the original German, English and audio for re-teaching. Use only taught
+words, including the prompt, accepted forms, choices and model. RULE 35 uses the same vocabulary
+horizon as guided reading. Do not add forms merely to bypass the checker. A first-miss hint
+names the missing/wrong part by its bilingual label, adds formal-register guidance where needed,
+and must contain **no form of any part**. Labels are short task guidance, not model answers.
+On reload, a hint names all parts rather than persisting the learner's text or a new state field.
+
+Lektion 1's four tasks are the model:
+
+| Can-do index | Situation | Production | Re-teach dialogue lines |
+| --- | --- | --- | --- |
+| 0 | Frau Kaya greets you and then says goodbye | Formal greeting (all taught formal greetings), then `Auf Wiedersehen.` | 0, 8 |
+| 1 | Frau Kaya asks your name | `Ich heiße …` with your own name | 1 |
+| 2 | Frau Kaya needs to write your surname | Your own surname, spelled letter by letter | 2, 3 |
+| 3 | Ask Frau Kaya how she is, then answer her question about you | `Wie geht es Ihnen?`, then a taught answer (see parts above) | 6, 7 |
+
+The introduction uses `ownName: "full"` and `openings: ["Ich heiße"]`; spelling uses
+`ownName: "surname"` (or `"first"` when the task asks for the first name). These reuse the scene
+and pretest adapters. Do not invent name matching. The canonical answer is a model; the learner's
+own name replaces it during checking. Names remain in memory and are not written to the run.
+
+A wrong answer gets an answer-free hint and a second try. A second miss opens the bilingual
+model with audio; the model is hidden before the same task is asked again. The loop continues
+until every goal has been shown. There is no skip, attempt limit, percentage pass mark or gold
+credit. Run `node scripts/check-guided-draft.mjs <numbers>`; it checks optional proofs with the
+same RULE 35 used by the curriculum validator. Leaving proof out preserves the earlier flow.
+
+### Test your proof with real answers
+
+A proof decides whether a learner may go on, so it must accept every correct answer a learner
+could reasonably give and refuse the wrong ones. For every task run
+
+```bash
+node scripts/try-proof-answer.mjs <Lektion> <goal index from 0> "<answer>" "<answer>" …
+```
+
+with at least: the model answer; two other correct answers a learner who studied this Lektion
+might give (another taught form, the person's name added, no full stops, small letters); and three
+wrong ones (the wrong register, a missing part, a plausible confusion from this Lektion). If a
+correct answer comes back WRONG, add the taught form to the part; if a wrong one passes, tighten
+the part. Put the answers you tried and their verdicts in `notes`.

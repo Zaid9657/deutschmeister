@@ -16,7 +16,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * hand-builds the check options (tests/course-player.test.mjs GRADING_SITES).
  * A miss here is always tagged 'Hören' (check.js `tagError`).
  */
-export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', hintFirst = false }) {
+export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', hintFirst = false, allowTextFallback = false }) {
   const [lang] = useLessonLang();
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
@@ -24,12 +24,14 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
   // A choice made without the line ever playing is a guess between written lines, not listening:
   // it is recorded `listened: false` and left out of the practice score (mastery.isFirstPass).
   const [heard, setHeard] = useState(false);
-  const key = `line-${item.lineIndex}`;
+  const [textFallback, setTextFallback] = useState(false);
+  const key = item.audioKey || `line-${item.lineIndex}`;
+  const audioProps = { lektionId, audioKey: key, text: item.answer, rate: 0.9, label: t('action.listen', lang) };
 
   useEffect(() => {
     setPicked(null);
     setState(null); setRetried(false);
-    setHeard(false);
+    setHeard(false); setTextFallback(false);
   }, [item.id]);
 
   const canSubmit = !!picked;
@@ -53,9 +55,11 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
         {/* No sound, no item: showing the text would hand over the answer, so a learner who cannot
             hear the line skips it — nothing is recorded, it is neither right nor wrong. */}
         <div className="mt-4">
-          <PlayButton lektionId={lektionId} audioKey={key} text={item.answer} rate={0.9} label={t('action.listen', lang)} onFallback={onNext} fallbackLabel={t('audio.skipItem', lang)} onPlayed={() => setHeard(true)} />
+          {allowTextFallback ? <PlayButton {...audioProps} onPlayed={() => setHeard(true)} onFallback={() => setTextFallback(true)} fallbackLabel={t('audio.showText', lang)} />
+            : <PlayButton {...audioProps} onFallback={onNext} onPlayed={() => setHeard(true)} fallbackLabel={t('audio.skipItem', lang)} />}
         </div>
 
+        {textFallback && <p className="mt-3 text-sm text-ink" lang="de">{item.answer}</p>}
         <div className="mt-5 flex flex-col gap-2">
           {(item.options || []).map((opt) => {
             const on = picked === opt;

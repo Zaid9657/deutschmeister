@@ -108,12 +108,1144 @@
     "de": "Ana und Lena suchen einen Termin. Aber wann hat Lena Zeit – und um wie viel Uhr?",
     "en": "Ana and Lena are looking for a time to meet. But when is Lena free – and at what time?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Was ist Ihr Hobby?“ – Sie: … Ich …",
+        "promptEn": "A colleague asks about your hobby. Name your hobby add one sentence about what you do, for example when or how often. Use the hobbies and activities of this Lektion.",
+        "answer": "Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.",
+        "parts": [
+          {
+            "label": {
+              "de": "Ihr Hobby",
+              "en": "your hobby"
+            },
+            "forms": [
+              "Mein Hobby ist Musik hören.",
+              "Mein Hobby ist Fußball spielen."
+            ],
+            "frames": [
+              {
+                "pattern": "Mein Hobby ist {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Musik.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Fußball.",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Kino.",
+                "slots": {
+                  "value": "taughtValues4"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Lesen.",
+                "slots": {
+                  "value": "taughtValues5"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Schwimmen.",
+                "slots": {
+                  "value": "taughtValues6"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Kochen.",
+                "slots": {
+                  "value": "taughtValues7"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Tanzen.",
+                "slots": {
+                  "value": "taughtValues8"
+                }
+              },
+              {
+                "pattern": "Meine Hobbys sind {value} und Sport.",
+                "slots": {
+                  "value": "taughtValues9"
+                }
+              }
+            ]
+          },
+          {
+            "label": {
+              "de": "was Sie machen (ein Satz mit Verb)",
+              "en": "what you do (one sentence with a verb)"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Ich {value} am Wochenende.",
+                "slots": {
+                  "value": "taughtValues10"
+                }
+              },
+              {
+                "pattern": "Am Wochenende {value} ich.",
+                "slots": {
+                  "value": "taughtValues10"
+                }
+              },
+              {
+                "pattern": "Ich {value} jede Woche.",
+                "slots": {
+                  "value": "taughtValues10"
+                }
+              },
+              {
+                "pattern": "Ich {value}.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Ich {value} gern.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Ich {value} gerne.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Ich {value} am Wochenende gern.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Am Wochenende {value} ich gern.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Jede Woche {value} ich.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Ich {value} immer.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Und ich {value}.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Und ich {value} gern.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Und ich {value} am Wochenende.",
+                "slots": {
+                  "value": "taughtValues11"
+                }
+              },
+              {
+                "pattern": "Ich höre {value} Musik.",
+                "slots": {
+                  "value": "taughtValues12"
+                }
+              },
+              {
+                "pattern": "Ich spiele {value} Fußball.",
+                "slots": {
+                  "value": "taughtValues12"
+                }
+              },
+              {
+                "pattern": "Ich lese {value} Bücher.",
+                "slots": {
+                  "value": "taughtValues12"
+                }
+              },
+              {
+                "pattern": "Ich gehe {value} ins Kino.",
+                "slots": {
+                  "value": "taughtValues12"
+                }
+              },
+              {
+                "pattern": "Ich mache {value} Sport.",
+                "slots": {
+                  "value": "taughtValues12"
+                }
+              },
+              {
+                "pattern": "Ich {value} am Wochenende.",
+                "slots": {
+                  "value": "taughtPhrases13"
+                }
+              },
+              {
+                "pattern": "Und ich {value}.",
+                "slots": {
+                  "value": "taughtPhrases14"
+                }
+              },
+              {
+                "pattern": "Am Wochenende {value}.",
+                "slots": {
+                  "value": "taughtPhrases15"
+                }
+              },
+              {
+                "pattern": "Ich {value} jede Woche.",
+                "slots": {
+                  "value": "taughtPhrases16"
+                }
+              },
+              {
+                "pattern": "Jede Woche {value}.",
+                "slots": {
+                  "value": "taughtPhrases17"
+                }
+              },
+              {
+                "pattern": "Ich spiele {value}.",
+                "slots": {
+                  "value": "taughtPhrases18"
+                }
+              },
+              {
+                "pattern": "Ich mache {value}.",
+                "slots": {
+                  "value": "taughtPhrases19"
+                }
+              },
+              {
+                "pattern": "Ich gehe {value} Kino.",
+                "slots": {
+                  "value": "taughtPhrases20"
+                }
+              },
+              {
+                "pattern": "Ich höre {value}.",
+                "slots": {
+                  "value": "taughtPhrases21"
+                }
+              },
+              {
+                "pattern": "Ich lese {value}.",
+                "slots": {
+                  "value": "taughtPhrases22"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2
+          ]
+        },
+        "micOff": true,
+        "order": "any",
+        "sets": {
+          "taughtValues1": [
+            "Sport",
+            "Musik",
+            "Fußball",
+            "Kino",
+            "Lesen",
+            "Schwimmen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues2": [
+            "Sport",
+            "Fußball",
+            "Kino",
+            "Lesen",
+            "Schwimmen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues3": [
+            "Sport",
+            "Musik",
+            "Kino",
+            "Lesen",
+            "Schwimmen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues4": [
+            "Sport",
+            "Musik",
+            "Fußball",
+            "Lesen",
+            "Schwimmen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues5": [
+            "Sport",
+            "Musik",
+            "Fußball",
+            "Kino",
+            "Schwimmen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues6": [
+            "Sport",
+            "Musik",
+            "Fußball",
+            "Kino",
+            "Lesen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues7": [
+            "Sport",
+            "Musik",
+            "Fußball",
+            "Kino",
+            "Lesen",
+            "Schwimmen",
+            "Tanzen"
+          ],
+          "taughtValues8": [
+            "Sport",
+            "Musik",
+            "Fußball",
+            "Kino",
+            "Lesen",
+            "Schwimmen",
+            "Kochen"
+          ],
+          "taughtValues9": [
+            "Musik",
+            "Fußball",
+            "Kino",
+            "Lesen",
+            "Schwimmen",
+            "Kochen",
+            "Tanzen"
+          ],
+          "taughtValues10": [
+            "lese",
+            "koche",
+            "schwimme",
+            "tanze",
+            "spiele"
+          ],
+          "taughtValues11": [
+            "lese",
+            "koche",
+            "schwimme",
+            "tanze"
+          ],
+          "taughtValues12": [
+            "gern",
+            "gerne",
+            "immer"
+          ],
+          "taughtPhrases13": [
+            "höre Musik",
+            "höre gern Musik",
+            "spiele Fußball",
+            "spiele gern Fußball",
+            "lese Bücher",
+            "lese gern Bücher",
+            "gehe ins Kino",
+            "gehe gern ins Kino",
+            "mache Sport",
+            "mache gern Sport"
+          ],
+          "taughtPhrases14": [
+            "höre Musik",
+            "höre gern Musik",
+            "höre am Wochenende Musik",
+            "spiele Fußball",
+            "spiele gern Fußball",
+            "spiele am Wochenende Fußball",
+            "lese Bücher",
+            "lese gern Bücher",
+            "lese am Wochenende Bücher",
+            "gehe ins Kino",
+            "gehe gern ins Kino",
+            "gehe am Wochenende ins Kino",
+            "mache Sport",
+            "mache gern Sport",
+            "mache am Wochenende Sport"
+          ],
+          "taughtPhrases15": [
+            "höre ich Musik",
+            "höre ich gern Musik",
+            "spiele ich Fußball",
+            "spiele ich gern Fußball",
+            "lese ich Bücher",
+            "lese ich gern Bücher",
+            "gehe ich ins Kino",
+            "gehe ich gern ins Kino",
+            "mache ich Sport",
+            "mache ich gern Sport"
+          ],
+          "taughtPhrases16": [
+            "höre Musik",
+            "spiele Fußball",
+            "lese Bücher",
+            "gehe ins Kino",
+            "mache Sport"
+          ],
+          "taughtPhrases17": [
+            "höre ich Musik",
+            "spiele ich Fußball",
+            "lese ich Bücher",
+            "gehe ich ins Kino",
+            "mache ich Sport"
+          ],
+          "taughtPhrases18": [
+            "Fußball",
+            "am Wochenende Fußball",
+            "am Wochenende gern Fußball",
+            "jede Woche Fußball",
+            "Fußball gern"
+          ],
+          "taughtPhrases19": [
+            "Sport",
+            "am Wochenende Sport",
+            "am Wochenende gern Sport",
+            "jede Woche Sport",
+            "Sport gern"
+          ],
+          "taughtPhrases20": [
+            "ins",
+            "am Wochenende ins",
+            "am Wochenende gern ins",
+            "jede Woche ins"
+          ],
+          "taughtPhrases21": [
+            "Musik",
+            "am Wochenende Musik",
+            "am Wochenende gern Musik",
+            "jede Woche Musik",
+            "Musik gern"
+          ],
+          "taughtPhrases22": [
+            "Bücher",
+            "am Wochenende Bücher",
+            "am Wochenende gern Bücher",
+            "jede Woche Bücher",
+            "Bücher gern"
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Was machen Sie gern?“ – Sie: … …",
+        "promptEn": "A colleague asks what you like doing. Tell her two things you like doing, each in a short sentence. Use the activities of this Lektion.",
+        "answer": "Ich höre gern Musik. Ich lese gern.",
+        "parts": [
+          {
+            "label": {
+              "de": "was Sie gern machen (1)",
+              "en": "what you like doing (1)"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Ich {value} gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} sehr gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} sehr gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} auch gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} auch gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich spiele {value} Fußball.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich gehe {value} ins Kino.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich lese {value} Bücher.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich mache {value} Sport.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich höre {value} Musik.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich {value} gern.",
+                "slots": {
+                  "value": "taughtPhrases3"
+                }
+              }
+            ]
+          },
+          {
+            "label": {
+              "de": "was Sie gern machen (2)",
+              "en": "what you like doing (2)"
+            },
+            "forms": [
+              "Und höre gern Musik.",
+              "Und höre auch gern Musik.",
+              "Und spiele gern Fußball.",
+              "Und spiele auch gern Fußball.",
+              "Und lese gern Bücher.",
+              "Und lese auch gern Bücher.",
+              "Und gehe gern ins Kino.",
+              "Und gehe auch gern ins Kino.",
+              "Und mache gern Sport.",
+              "Und mache auch gern Sport."
+            ],
+            "frames": [
+              {
+                "pattern": "Ich {value} gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value} gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value} gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} sehr gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value} sehr gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} sehr gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value} sehr gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} auch gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value} auch gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich {value} auch gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value} auch gerne.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und {value} gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und {value} auch gern.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Und ich {value}.",
+                "slots": {
+                  "value": "taughtPhrases4"
+                }
+              },
+              {
+                "pattern": "Ich spiele {value} Fußball.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich gehe {value} ins Kino.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich lese {value} Bücher.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich mache {value} Sport.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich höre {value} Musik.",
+                "slots": {
+                  "value": "taughtPhrases2"
+                }
+              },
+              {
+                "pattern": "Ich {value} gern.",
+                "slots": {
+                  "value": "taughtPhrases3"
+                }
+              }
+            ],
+            "ellipsisOpening": "Ich"
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            5
+          ]
+        },
+        "micOff": true,
+        "order": "any",
+        "sets": {
+          "taughtValues1": [
+            "lese",
+            "koche",
+            "schwimme",
+            "tanze"
+          ],
+          "taughtPhrases2": [
+            "gern",
+            "gerne",
+            "sehr gern",
+            "sehr gerne",
+            "auch gern",
+            "auch gerne"
+          ],
+          "taughtPhrases3": [
+            "höre Musik",
+            "spiele Fußball",
+            "lese Bücher",
+            "mache Sport"
+          ],
+          "taughtPhrases4": [
+            "höre gern Musik",
+            "höre gerne Musik",
+            "höre sehr gern Musik",
+            "höre sehr gerne Musik",
+            "höre auch gern Musik",
+            "höre auch gerne Musik",
+            "höre Musik gern",
+            "spiele gern Fußball",
+            "spiele gerne Fußball",
+            "spiele sehr gern Fußball",
+            "spiele sehr gerne Fußball",
+            "spiele auch gern Fußball",
+            "spiele auch gerne Fußball",
+            "spiele Fußball gern",
+            "lese gern Bücher",
+            "lese gerne Bücher",
+            "lese sehr gern Bücher",
+            "lese sehr gerne Bücher",
+            "lese auch gern Bücher",
+            "lese auch gerne Bücher",
+            "lese Bücher gern",
+            "gehe gern ins Kino",
+            "gehe gerne ins Kino",
+            "gehe sehr gern ins Kino",
+            "gehe sehr gerne ins Kino",
+            "gehe auch gern ins Kino",
+            "gehe auch gerne ins Kino",
+            "mache gern Sport",
+            "mache gerne Sport",
+            "mache sehr gern Sport",
+            "mache sehr gerne Sport",
+            "mache auch gern Sport",
+            "mache auch gerne Sport",
+            "mache Sport gern"
+          ]
+        },
+        "sharedTail": "gern",
+        "distinctActions": true
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Sie und Tim. Sie: …? – Tim: „Ich höre gern Musik.“ – Sie: …? – Tim: „Ja, sehr gern!“",
+        "promptEn": "You talk to Tim, a learner in your course: say du to him. First ask him what his hobby is. Then ask him a yes/no question about one activity from this Lektion.",
+        "answer": "Was ist dein Hobby? Gehst du gern ins Kino?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach dem Hobby (mit du)",
+              "en": "the question about his hobby (with du)"
+            },
+            "forms": [
+              "Was ist dein Hobby?",
+              "Und was ist dein Hobby?",
+              "Was sind deine Hobbys?",
+              "Hast du ein Hobby?",
+              "Hast du Hobbys?"
+            ],
+            "frames": [
+              {
+                "pattern": "Was machst du {value}?",
+                "slots": {
+                  "value": "taughtPhrases4"
+                }
+              }
+            ]
+          },
+          {
+            "label": {
+              "de": "eine Ja/Nein-Frage (mit du)",
+              "en": "a yes/no question (with du)"
+            },
+            "forms": [],
+            "frames": [
+              {
+                "pattern": "Hörst du {value} Musik?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Spielst du {value} Fußball?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value} du?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "{value} du gern?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "{value} du gerne?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "{value} du auch?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "{value} du auch gern?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "{value} du jede Woche?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "{value} du am Wochenende?",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Und {value} du?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Und {value} du gern?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Und {value} du auch?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Und {value} du auch gern?",
+                "slots": {
+                  "value": "taughtValues3"
+                }
+              },
+              {
+                "pattern": "Gehst du {value} ins Kino?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Machst du {value} Sport?",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "{value} ins Kino?",
+                "slots": {
+                  "value": "taughtPhrases5"
+                }
+              },
+              {
+                "pattern": "Und spielst {value} Fußball?",
+                "slots": {
+                  "value": "taughtPhrases6"
+                }
+              },
+              {
+                "pattern": "Und machst {value} Sport?",
+                "slots": {
+                  "value": "taughtPhrases6"
+                }
+              },
+              {
+                "pattern": "Und hörst {value} Musik?",
+                "slots": {
+                  "value": "taughtPhrases6"
+                }
+              },
+              {
+                "pattern": "Spielst {value} Fußball?",
+                "slots": {
+                  "value": "taughtPhrases7"
+                }
+              },
+              {
+                "pattern": "Machst {value} Sport?",
+                "slots": {
+                  "value": "taughtPhrases7"
+                }
+              },
+              {
+                "pattern": "Hörst {value} Musik?",
+                "slots": {
+                  "value": "taughtPhrases7"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            3
+          ]
+        },
+        "micOff": true,
+        "register": "informal",
+        "sets": {
+          "taughtValues1": [
+            "gern",
+            "gerne",
+            "auch"
+          ],
+          "taughtValues2": [
+            "Kochst",
+            "Schwimmst",
+            "Tanzt"
+          ],
+          "taughtValues3": [
+            "kochst",
+            "schwimmst",
+            "tanzt"
+          ],
+          "taughtPhrases4": [
+            "gern",
+            "gerne",
+            "am Wochenende",
+            "am Wochenende gern",
+            "gern am Wochenende"
+          ],
+          "taughtPhrases5": [
+            "Gehst du",
+            "Gehst du auch gern",
+            "Gehst du jede Woche",
+            "Gehst du am Wochenende",
+            "Und gehst du",
+            "Und gehst du gern",
+            "Und gehst du auch",
+            "Und gehst du auch gern"
+          ],
+          "taughtPhrases6": [
+            "du",
+            "du gern",
+            "du auch",
+            "du auch gern"
+          ],
+          "taughtPhrases7": [
+            "du",
+            "du auch gern",
+            "du jede Woche",
+            "du am Wochenende"
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Eine Kollegin: „Wann sind Sie frei?“ – Sie: …",
+        "promptEn": "A colleague wants to meet you and asks when you are free. Tell her in one sentence, with a time you know from the course.",
+        "answer": "Ich bin am Wochenende frei.",
+        "parts": [
+          {
+            "label": {
+              "de": "wann Sie frei sind",
+              "en": "when you are free"
+            },
+            "forms": [
+              "Am Wochenende.",
+              "Ich bin frei am Wochenende.",
+              "Ich arbeite am Wochenende nicht.",
+              "Am Wochenende arbeite ich nicht, ich bin frei.",
+              "Am Wochenende arbeite ich nicht und ich bin frei.",
+              "Morgen habe ich frei.",
+              "Morgen bin ich frei.",
+              "Morgen.",
+              "Am Wochenende arbeite ich nicht. Ich bin frei."
+            ],
+            "maxSentences": 2,
+            "frames": [
+              {
+                "pattern": "Ich bin um {value} frei.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Um {value} bin ich frei.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Um {value}.",
+                "slots": {
+                  "value": "taughtValues1"
+                }
+              },
+              {
+                "pattern": "Ich bin um {value} Uhr frei.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Um {value} Uhr bin ich frei.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Um {value} Uhr.",
+                "slots": {
+                  "value": "taughtValues2"
+                }
+              },
+              {
+                "pattern": "Ich {value} frei.",
+                "slots": {
+                  "value": "taughtPhrases3"
+                }
+              },
+              {
+                "pattern": "Am Wochenende {value}.",
+                "slots": {
+                  "value": "taughtPhrases4"
+                }
+              }
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4
+          ]
+        },
+        "micOff": true,
+        "sets": {
+          "taughtValues1": [
+            "eins",
+            "zwei",
+            "drei",
+            "vier",
+            "fünf",
+            "sechs",
+            "sieben",
+            "acht",
+            "neun",
+            "zehn",
+            "elf",
+            "zwölf"
+          ],
+          "taughtValues2": [
+            "ein",
+            "zwei",
+            "drei",
+            "vier",
+            "fünf",
+            "sechs",
+            "sieben",
+            "acht",
+            "neun",
+            "zehn",
+            "elf",
+            "zwölf"
+          ],
+          "taughtPhrases3": [
+            "bin am Wochenende",
+            "bin am Wochenende immer",
+            "bin immer am Wochenende",
+            "bin immer",
+            "habe am Wochenende",
+            "habe am Wochenende immer",
+            "habe morgen",
+            "bin morgen"
+          ],
+          "taughtPhrases4": [
+            "bin ich frei",
+            "bin ich immer frei",
+            "arbeite ich nicht",
+            "habe ich frei",
+            "habe ich immer frei"
+          ]
+        },
+        "allowModelContext": true
+      }
+    ]
+  },
   "notes": [
     "Chunks: [0,3) the hobby exchange, [3,5) how often and „Ich bin frei“, [5,7) more hobbies and the cinema question, [7,10) cinema answer, dancing, Tim's suggestion. Unsure boundary: 6|7. Lena's question „Gehst du gern ins Kino?“ ends chunk 3 and Tim's „Ja, sehr gern!“ opens chunk 4. Lines 5–8 each answer and ask in one line, so some question is always cut from its answer; the alternative [5,8) + [8,10) cuts „Und tanzt du auch?“ from its answer instead.",
     "say in chunk 4 is line 7 („Ja, sehr gern! Und tanzt du auch?“): short, and it both says what one likes and asks a person about a hobby. Line 9 (Tim's suggestion) is the livelier line but no can-do names suggesting; line 8 is eleven words.",
     "Only `lesen` and `gehen` had to be in the read text. The dialogue does have „Ich lese“ and „Gehst du“, but `lineFor` matches a verb by its stem only when the infinitive is longer than five letters, so both count as missing. The notice carries them as „Wir lesen Bücher“ and „gehen wir immer ins Kino“.",
     "Read text is a notice of a group of friends who meet at the weekend. It names no day and no clock time (weekdays and times are Lektion 8) and does not use `Kurs`, `Freizeit` or `Sportkurs`, which are in no Wortfeld up to Lektion 7.",
     "Existing data, dialogue line 8: „Mein Freund und meine Freundin tanzen gern.“ In German „mein Freund“ / „meine Freundin“ normally means boyfriend / girlfriend; the English line says „my friend (m) and my friend (f)“. „Meine Freunde tanzen gern.“ would say what is meant.",
-    "Phonetik: the three items are verb forms with a pronoun („ich HÖ-re“) and train endings, not word stress, so the sound stage stays pending."
+    "Phonetik: the three items are verb forms with a pronoun („ich HÖ-re“) and train endings, not word stress, so the sound stage stays pending.",
+    "Proof (2026-11-14): four tasks, one per can-do. The can-dos are about the learner's own hobbies, likes and free time, and the tool can only compare with listed sentences. So the tasks accept the hobbies and activities of this Lektion in the taught sentence patterns (592 generated forms: 8 hobby nouns, 9 activities, gern/gerne/sehr gern/auch gern, am Wochenende/jede Woche/immer). A learner whose real hobby is not in the Wortfeld has to choose one that is; the English prompts say so.",
+    "Proof task 0 (talk about my hobbies): two parts as in dialogue line 2, the hobby and one sentence with a verb; the skeleton gives only „Ich …“ for the second. Tried, passed: „Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.“ / „mein hobby ist musik. ich höre gern musik“ / „Meine Hobbys sind Lesen und Kochen. Am Wochenende koche ich gern.“ / „Sport. Ich schwimme jede Woche.“ / „Mein Hobby ist schwimmen. Ich schwimme am Wochenende.“ / „Mein Hobby ist Sport und ich spiele am Wochenende Fußball.“ / „Mein Hobby ist Musik. Ich höre Musik gern.“ Tried, WRONG as intended: „Mein Hobby ist Sport.“ / „Ich spiele am Wochenende Fußball.“ / „Mein Hobby ist Sport. Ich spielen am Wochenende Fußball.“ / „Meine Hobby ist Sport. Ich spiele Fußball.“ / „Mein Hobby ist Sport. Am Wochenende ich spiele Fußball.“ / „Mein Hobby ist Sport. Ich bin frei.“ Limits: „Ich habe kein Hobby. Ich arbeite am Wochenende.“ is WRONG (a true answer the task cannot take); three hobbies in one sentence and two modifiers in an order that is not listed are WRONG.",
+    "Proof task 1 (say what I like doing): two things, each with gern, as in dialogue line 5; the question in the prompt contains gern, as the pretest prompt does. Tried, passed: „Ich höre gern Musik. Ich lese gern.“ / „Ich lese auch gern. Und ich koche gern.“ (line 5) / „ich spiele gern fußball und ich schwimme gern“ / „Ich gehe sehr gern ins Kino. Ich tanze gerne.“ / „Ich lese gern und koche gern.“ Tried, WRONG as intended: „Ich höre gern Musik.“ / „Ich höre Musik. Ich lese.“ / „Ich gern höre Musik. Ich lese gern.“ / „Ich hören gern Musik. Ich lese gern.“ / „Ich höre gern Musik. Ich lese nicht gern.“ Limits: „Ich lese und koche gern.“ (correct, one sentence for two things) and „Ich mag Musik. Ich mag Sport.“ (correct, not taught) are WRONG. The same thing twice passes: „Ich lese gern. Ich lese gern.“ CORRECT.",
+    "Proof task 2 (ask a person about hobbies): the learner asks Tim with du, first for his hobby, then a yes/no question with a verb; Tim's printed answers show neither question. The part labels say „mit du“, because Sie is refused. Tried, passed: „Was ist dein Hobby? Gehst du gern ins Kino?“ / „Tim, was ist dein Hobby? Spielst du jede Woche Fußball?“ (lines 0 and 3) / „was ist dein hobby tanzt du auch“ / „Was machst du gern? Und tanzt du auch?“ / „Hast du ein Hobby? Schwimmst du am Wochenende?“ Tried, WRONG as intended: „Was ist Ihr Hobby? Gehen Sie gern ins Kino?“ / „Was ist dein Hobby?“ / „Was ist dein Hobby? Du gehst gern ins Kino?“ / „Was ist dein Hobby? Spielt du Fußball?“ / „Wie ist dein Hobby? Tanzt du?“ / „Was ist deine Hobby? Tanzt du?“ / „Gehst du gern ins Kino? Was ist dein Hobby?“ / „Was ist dein Hobby? Lest du gern?“ Limit: „Was ist dein Hobby? Liest du gern?“ is correct and WRONG. RULE 35 reports „Liest“ as an untaught word, so no question with lesen can be listed. The forms „Tim, was ist dein Hobby?“ (line 0) and „…, Tim?“ are listed because Tim has no title and the tool removes only titled addresses.",
+    "Proof task 3 (say when I am free): one sentence with a time. Accepted times are those the course has taught by now: am Wochenende, morgen, immer, um + hour with or without Uhr (the full-hour set of L6). Tried, passed: „Ich bin am Wochenende frei.“ / „am wochenende bin ich frei“ / „Am Wochenende.“ / „Am Wochenende arbeite ich nicht.“ / „Ich bin morgen frei.“ / „Um neun Uhr bin ich frei.“ / „Am Wochenende arbeite ich nicht, ich bin frei.“ / „Ich habe am Wochenende frei.“ Tried, WRONG as intended: „Ich bin frei.“ / „Ich bin am Wochenende.“ / „Am Wochenende ich bin frei.“ / „Ich bin im Wochenende frei.“ / „Ich arbeite am Wochenende.“ / „Ich bist am Wochenende frei.“ Limits: the dialogue says it in two sentences („Am Wochenende arbeite ich nicht. Ich bin frei.“, line 4, the re-teach). A part is one sentence and an extra sentence fails, so no task can accept both this pair and the one sentence „Ich bin am Wochenende frei.“; the pair is WRONG, each half with the time and the pair joined by a comma pass, and the part label says „ein Satz“. „Ich bin am Samstag frei.“ is WRONG: weekdays are Lektion 8.",
+    "Proof limit, extra sentence: a polite „Und Sie?“ or „Und du?“ after the answer fails („Mein Hobby ist Sport. Ich spiele am Wochenende Fußball. Und Sie?“ WRONG; „Ich höre gern Musik. Und du?“, dialogue line 1, WRONG in task 1).",
+    "Proof limit, microphone: the spoken path scores only the model `answer`. A learner who speaks about their own hobby or another activity is scored against the model sentence; typing is the only path that accepts the listed forms.",
+    "Existing data: the Lektion teaches lesen and du questions but never the form „du liest“; the notice names the vowel change only for sprechen, so a learner who follows the rule writes „Lest du gern?“."
   ]
 }

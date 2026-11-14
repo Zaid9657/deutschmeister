@@ -309,7 +309,7 @@ export function buildCardIndex(curriculum) {
  */
 export function warmupCards(rows, index) {
   return (rows || [])
-    .map((r) => ({ cardKey: r.card_key, step: r.step, ...(index.get(r.card_key) || {}) }))
+    .map((r) => ({ cardKey: r.card_key, step: r.step, ...(r.practiceOnly ? { practiceOnly: true } : {}), ...(index.get(r.card_key) || {}) }))
     .filter((c) => c.front);
 }
 

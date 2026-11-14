@@ -104,10 +104,336 @@
           "line": 9
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "alphabet",
+        "kind": "letters",
+        "titleDe": "Das Alphabet",
+        "titleEn": "The alphabet",
+        "placement": {
+          "afterChunk": 1
+        },
+        "ownName": true,
+        "members": [
+          {
+            "written": "A",
+            "said": "A",
+            "audio": "Ah"
+          },
+          {
+            "written": "B",
+            "said": "Be",
+            "audio": "Beh"
+          },
+          {
+            "written": "C",
+            "said": "Ce",
+            "audio": "Zeh"
+          },
+          {
+            "written": "D",
+            "said": "De",
+            "audio": "Deh"
+          },
+          {
+            "written": "E",
+            "said": "E",
+            "audio": "Eh"
+          },
+          {
+            "written": "F",
+            "said": "Ef",
+            "audio": "Eff"
+          },
+          {
+            "written": "G",
+            "said": "Ge",
+            "audio": "Geh"
+          },
+          {
+            "written": "H",
+            "said": "Ha",
+            "audio": "Hah"
+          },
+          {
+            "written": "I",
+            "said": "I",
+            "audio": "Ih"
+          },
+          {
+            "written": "J",
+            "said": "Jot",
+            "audio": "Jot"
+          },
+          {
+            "written": "K",
+            "said": "Ka",
+            "audio": "Kah"
+          },
+          {
+            "written": "L",
+            "said": "El",
+            "audio": "Ell"
+          },
+          {
+            "written": "M",
+            "said": "Em",
+            "audio": "Emm"
+          },
+          {
+            "written": "N",
+            "said": "En",
+            "audio": "Enn"
+          },
+          {
+            "written": "O",
+            "said": "O",
+            "audio": "Oh"
+          },
+          {
+            "written": "P",
+            "said": "Pe",
+            "audio": "Peh"
+          },
+          {
+            "written": "Q",
+            "said": "Ku",
+            "audio": "Kuh"
+          },
+          {
+            "written": "R",
+            "said": "Er",
+            "audio": "Err"
+          },
+          {
+            "written": "S",
+            "said": "Es",
+            "audio": "Ess"
+          },
+          {
+            "written": "T",
+            "said": "Te",
+            "audio": "Teh"
+          },
+          {
+            "written": "U",
+            "said": "U",
+            "audio": "Uh"
+          },
+          {
+            "written": "V",
+            "said": "Vau",
+            "audio": "Vau"
+          },
+          {
+            "written": "W",
+            "said": "We",
+            "audio": "Weh"
+          },
+          {
+            "written": "X",
+            "said": "Iks",
+            "audio": "Iks"
+          },
+          {
+            "written": "Y",
+            "said": "Ypsilon",
+            "audio": "Ypsilon"
+          },
+          {
+            "written": "Z",
+            "said": "Zett",
+            "audio": "Zett"
+          },
+          {
+            "written": "Ä",
+            "said": "Ä",
+            "audio": "Äh"
+          },
+          {
+            "written": "Ö",
+            "said": "Ö",
+            "audio": "Öh"
+          },
+          {
+            "written": "Ü",
+            "said": "Ü",
+            "audio": "Üh"
+          },
+          {
+            "written": "ß",
+            "said": "Eszett",
+            "noteDe": "Auch: scharfes S. Groß: ẞ; ohne ß auf der Tastatur: ss.",
+            "noteEn": "Also called scharfes S. Capital: ẞ; on keyboards without ß: ss.",
+            "audio": "Eszett"
+          }
+        ],
+        "spellings": [
+          "Ada",
+          "Ehe",
+          "Mai",
+          "Post",
+          "Wut",
+          "süß"
+        ],
+        "contrasts": [
+          [
+            "E",
+            "I"
+          ],
+          [
+            "G",
+            "J"
+          ],
+          [
+            "V",
+            "W"
+          ]
+        ]
+      }
     ]
   },
   "nextHook": {
     "de": "Morgen muss Ana sich im Bürgerbüro anmelden. Kann sie das Formular ausfüllen?",
     "en": "Tomorrow Ana has to register at the public office. Can she fill in the form?"
+  },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Frau Kaya: „Hallo!“ – Sie: … Frau Kaya: „Tschüss!“ – Sie: …",
+        "promptEn": "Ms Kaya greets you, then says goodbye. Greet her and say goodbye formally, in that order.",
+        "answer": "Guten Tag. Auf Wiedersehen.",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "der Gruß",
+              "en": "the greeting"
+            },
+            "forms": [
+              "Guten Tag.",
+              "Guten Morgen.",
+              "Guten Abend.",
+              "Guten Tag und willkommen!"
+            ]
+          },
+          {
+            "label": {
+              "de": "der Abschied",
+              "en": "the goodbye"
+            },
+            "forms": [
+              "Auf Wiedersehen."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            8
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "ownName": "full",
+        "openings": [
+          "Ich heiße"
+        ],
+        "promptDe": "Frau Kaya: „Wie heißen Sie?“",
+        "promptEn": "Ms Kaya asks your name. Introduce yourself with your own name.",
+        "answer": "Ich heiße Ana Chakiri.",
+        "parts": [
+          {
+            "label": {
+              "de": "der Name",
+              "en": "the name"
+            },
+            "forms": [
+              "Ich heiße Ana Chakiri."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "listen_spelling",
+        "listenSpelling": true,
+        "listenFrom": {
+          "kind": "dialog",
+          "index": 3
+        },
+        "ownName": "surname",
+        "promptDe": "Frau Kaya: „Wie buchstabiert man das?“ – Sie: …",
+        "promptEn": "Listen to the name spelled letter by letter and write the name. With a scored microphone, you may instead spell your own surname aloud.",
+        "answer": "C-H-A-K-I-R-I.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Buchstaben",
+              "en": "the letters"
+            },
+            "forms": [
+              "C-H-A-K-I-R-I."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Frau Kaya: „Guten Tag!“ – Sie: …? Frau Kaya: „Gut, danke. Und Ihnen?“ – Sie: …",
+        "promptEn": "Ask Ms Kaya how she is. She says she is well and asks about you. Tell her you are well, with thanks.",
+        "answer": "Wie geht es Ihnen? Mir geht es gut, danke.",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Wie geht es Ihnen?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Antwort",
+              "en": "the answer"
+            },
+            "forms": [
+              "Mir geht es gut, danke.",
+              "Gut, danke.",
+              "Mir geht es gut."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6,
+            7
+          ]
+        }
+      }
+    ]
   }
 }

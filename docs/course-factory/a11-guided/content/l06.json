@@ -119,11 +119,212 @@
           "line": 8
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "full-hour",
+        "kind": "clock",
+        "titleDe": "Um wie viel Uhr?",
+        "titleEn": "At what time?",
+        "rule": {
+          "id": "full-hour",
+          "de": "Wann? Sagen Sie um + Zahl (+ Uhr): um neun Uhr, kurz: um neun. Bei 1 heißt es ein Uhr, aber um eins ohne Uhr. Wie spät ist es? Es ist neun Uhr, ohne um.",
+          "en": "When? Use um + number (+ Uhr): um neun Uhr, or um neun. For 1, use ein Uhr, but um eins without Uhr. To tell the time, say Es ist neun Uhr, without um."
+        },
+        "members": [
+          {
+            "written": "09:00",
+            "said": "um neun Uhr"
+          },
+          {
+            "written": "10:00",
+            "said": "um zehn Uhr"
+          },
+          {
+            "written": "11:00",
+            "said": "um elf Uhr"
+          },
+          {
+            "written": "01:00",
+            "said": "um ein Uhr",
+            "noteDe": "Ohne Uhr: um eins.",
+            "noteEn": "Without Uhr: um eins."
+          }
+        ]
+      }
     ]
   },
   "nextHook": {
     "de": "Nach der Arbeit kommt das Wochenende. Was machen Lena und Tim gern – und was machen Sie gern?",
     "en": "After work comes the weekend. What do Lena and Tim like doing – and what do you like doing?"
+  },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Herr Weber: „Das ist Ihr Büro.“ Kein Computer, kein Telefon! – Sie: … …",
+        "promptEn": "Herr Weber shows you your office, but there is no computer and no telephone. Thank him, then say in one sentence that you need both.",
+        "answer": "Ich brauche einen Computer und ein Telefon.",
+        "parts": [
+          {
+            "label": {
+              "de": "was Sie brauchen",
+              "en": "what you need"
+            },
+            "forms": [
+              "Ich brauche einen Computer und ein Telefon.",
+              "Ich brauche ein Telefon und einen Computer.",
+              "Wir brauchen einen Computer und ein Telefon.",
+              "Wir brauchen ein Telefon und einen Computer.",
+              "Ich brauche noch einen Computer und ein Telefon.",
+              "Ich brauche noch ein Telefon und einen Computer.",
+              "Aber ich brauche einen Computer und ein Telefon.",
+              "Aber ich brauche ein Telefon und einen Computer.",
+              "Ich brauche einen Computer. Ich brauche ein Telefon.",
+              "Ich brauche ein Telefon. Ich brauche einen Computer."
+            ],
+            "maxSentences": 2
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2
+          ]
+        },
+        "micOff": true,
+        "firstContact": true
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "ownName": "full",
+        "openings": [
+          "Ich heiße"
+        ],
+        "promptDe": "Antworten Sie mit einem Satz. Das Telefon im Büro. Ein Kollege: „Entschuldigung, wie heißen Sie?“ – Sie: …",
+        "promptEn": "The office telephone rings. A colleague you do not know asks for your name. Answer in a full sentence with your own name, as you learned in Lektion 1.",
+        "answer": "Ich heiße Ana Chakiri.",
+        "parts": [
+          {
+            "label": {
+              "de": "Ihr Name im ganzen Satz (mit heißen)",
+              "en": "your name in a full sentence (with heißen)"
+            },
+            "forms": [
+              "Ich heiße Ana Chakiri."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "wortfeld",
+          "index": 18
+        },
+        "micOff": true,
+        "firstContact": true
+      },
+      {
+        "canDo": 2,
+        "type": "listening",
+        "promptDe": "Hören Sie die Telefonnummer vom Büro und die Handynummer. Wählen Sie.",
+        "promptEn": "Listen to both phone numbers. Choose the note with both right.",
+        "answer": "Büro: 042 3381, Handy: 0176 234567",
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6,
+            7
+          ]
+        },
+        "micOff": true,
+        "mode": "choice",
+        "instances": [
+          {
+            "answer": "Büro: 042 3381, Handy: 0176 234567",
+            "accepted": [
+              "Büro: 042 3381, Handy: 0176 234567"
+            ],
+            "options": [
+              "Büro: 042 3318, Handy: 0176 234567",
+              "Büro: 042 3381, Handy: 0167 234567",
+              "Büro: 042 3381, Handy: 0176 234567",
+              "Büro: 024 3381, Handy: 0176 234576"
+            ],
+            "audioText": "Die Telefonnummer vom Büro ist null vier zwei, drei drei acht eins. Meine Handynummer ist null eins sieben sechs, zwei drei vier fünf sechs sieben."
+          },
+          {
+            "audioText": "Die Telefonnummer vom Büro ist null vier zwei, drei drei eins acht. Meine Handynummer ist null eins sechs sieben, zwei drei vier fünf sechs sieben.",
+            "answer": "Büro: 042 3318, Handy: 0167 234567",
+            "accepted": [
+              "Büro: 042 3318, Handy: 0167 234567"
+            ],
+            "options": [
+              "Büro: 042 3381, Handy: 0167 234567",
+              "Büro: 042 3318, Handy: 0176 234567",
+              "Büro: 042 3318, Handy: 0167 234567",
+              "Büro: 024 3318, Handy: 0167 234576"
+            ]
+          }
+        ]
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Sie: …? – Herr Weber: „Die Nummer vom Büro ist null vier zwei – drei drei acht eins.“ – Sie: …! …? – Herr Weber: „Die Pause ist um eins.“",
+        "promptEn": "It is your day at the office. Ask Herr Weber for the office telephone number. He tells you: thank him ask when the break is.",
+        "answer": "Wie ist die Telefonnummer? Danke! Wann ist die Pause?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach der Nummer vom Büro",
+              "en": "the question about the office number"
+            },
+            "forms": [
+              "Wie ist die Telefonnummer?",
+              "Und wie ist die Telefonnummer?",
+              "Wie ist die Telefonnummer vom Büro?",
+              "Und wie ist die Telefonnummer vom Büro?",
+              "Wie ist die Telefonnummer im Büro?",
+              "Wie ist die Nummer?",
+              "Wie ist die Nummer vom Büro?",
+              "Wie ist die Telefonnummer, bitte?",
+              "Entschuldigung, wie ist die Telefonnummer?",
+              "Entschuldigung, wie ist die Telefonnummer vom Büro?",
+              "Wie ist Ihre Telefonnummer?",
+              "Wie ist meine Telefonnummer?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage nach der Pause",
+              "en": "the question about the break"
+            },
+            "forms": [
+              "Wann ist die Pause?",
+              "Und wann ist die Pause?",
+              "Wann ist Pause?",
+              "Und wann ist Pause?",
+              "Wann ist die Pause, bitte?",
+              "Wann ist meine Pause?",
+              "Wann machen wir Pause?",
+              "Wann machen wir eine Pause?",
+              "Wann haben wir Pause?",
+              "Wann habe ich Pause?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6,
+            8
+          ]
+        },
+        "micOff": true,
+        "order": "any"
+      }
+    ]
   },
   "notes": [
     "Chunks: five pairs. Ana speaks every even line and Herr Weber every odd one, so each pair has exactly one learner line and the learner says Ana's whole part (lines 0, 2, 4, 6, 8). A three-line first chunk [0,3) was the alternative; it would have separated Ana's request (line 2) from its answer (line 3).",
@@ -134,6 +335,13 @@
     "No e-mail address is written out: RULE 34 reads „de“ of any „….de“ address as an untaught word, so the note asks for the address instead.",
     "Existing data: three Wortfeld examples give story people roles the course states nowhere else. „Herr Weber ist der Chef.“ and „Frau Kaya ist die Chefin.“ (Frau Kaya is the hostel receptionist of Lektion 1, and the writing task of this Lektion makes Frau Berg the Chefin); „Die Kollegin heißt Lena.“ (Lena is a course participant).",
     "Existing data: the can-do „Ich kann am Telefon meinen Namen nennen“ has no dialogue line, so no chunk can rehearse it.",
-    "Phonetik: „VIER“ has one syllable and the focus is long vowels, not word stress, so the sound stage stays pending."
+    "Phonetik: „VIER“ has one syllable and the focus is long vowels, not word stress, so the sound stage stays pending.",
+    "Proof (2026-11-14): four tasks, one per can-do, 33 forms. Titled address is left to the tool: „…, Herr Weber“ at the end of a sentence passes without being listed.",
+    "Proof task 0 (say what I need): the scene is given in German („Kein Computer, kein Telefon!“), so the learner has to know einen Computer / ein Telefon. The task asks for the thanks as its own part. Reason: dialogue line 2, the only model and the re-teach, is „Danke. Ich brauche einen Computer und ein Telefon.“, and proof.js accepts a separate „Danke.“ only where Danke is in the Wortfeld of the same Lektion (it is an L1 word). Without a thanks part the taught line itself would be refused as an extra sentence; with it, a learner who leaves the thanks out gets the hint „Der Dank“ and a second try. If courtesies become course-wide in proof.js, the first part should be removed. Tried, passed: „Danke. Ich brauche einen Computer und ein Telefon.“ / „danke, ich brauche einen computer und ein telefon“ / „Danke, Herr Weber. Ich brauche ein Telefon und einen Computer.“ / „Danke! Wir brauchen einen Computer und ein Telefon.“ / „Danke. Ich brauche einen Computer und ein Telefon, Herr Weber.“ Tried, WRONG as intended: „Ich brauche einen Computer und ein Telefon.“ (no thanks) / „Danke. Ich brauche ein Computer und ein Telefon.“ / „Danke. Ich brauche einen Computer und einen Telefon.“ / „Danke. Ich brauche einen Computer.“ / „Danke. Ich habe einen Computer und ein Telefon.“ / „Danke. Ich brauchen einen Computer und ein Telefon.“ Limit: the need must be one sentence; „Danke. Ich brauche einen Computer. Ich brauche ein Telefon.“ is correct German and WRONG (extra sentence), and so is a greeting in front („Guten Morgen, Herr Weber! Danke. …“).",
+    "Proof task 1 (my name on the phone): this can-do is taught nowhere in Lektion 6 (no dialogue line, Wortfeld entry, notice sentence or pool item gives a name on the phone). The task therefore uses the documented own-name adapter with „Ich heiße …“ from Lektion 1, in a phone situation where a colleague asks „wie heißen Sie?“. Limits: (a) the re-teach pointer must lie in this Lektion and nothing here teaches the sentence, so it points at Wortfeld 18 (das Telefon) and re-teaches nothing; the part label says „mit heißen“ instead, so the hint names the verb. (b) The adapter accepts only a response that starts with „Ich heiße“: „Ich bin Sam Miller.“ (taught in L2), „Hier ist Sam Miller.“, „Sam Miller“ and „Guten Tag! Ich heiße Sam Miller.“ are WRONG. (c) „Ich heisse Sam Miller.“ is WRONG: nameFromIntroduction in src/lib/lesson/scene.js does not fold ß to ss, although the alphabet set of L1 teaches ss for keyboards without ß; the same answer is WRONG in the Lektion 1 proof. (d) Anything after the opening passes: „Ich heiße nicht.“ is CORRECT. Tried with the stand-in name, passed: „Ich heiße Sam Miller.“ / „ich heiße sam miller“ / „Ich heiße Sam.“ WRONG as intended: „Sam Miller“ / „Ich heiße“ / „Guten Morgen, Herr Weber!“",
+    "Proof task 2 (understand a telephone and a mobile number): multiple choice, because the proof has no audio for a number. The learner reads both numbers in words (the office number of line 7 and the mobile number of the Wortfeld example) and picks the note with both right; two wrong notes have the right office number and two have the right mobile number, so both must be read. Tried: „Büro: 042 3381, Handy: 0176 234567“ CORRECT; „Büro: 042 3318, Handy: 0176 234567“ / „Büro: 042 3381, Handy: 0167 234567“ / „Büro: 024 3381, Handy: 0176 234576“ WRONG. Limits: it is read, not heard; with four options and no attempt limit it can be passed by trying each option; the options are shown in the written order.",
+    "Proof task 3 (ask about the break and the office): the dialogue never asks about the office itself. Ana's two questions are the office telephone number (line 6) and the break (line 8), so the task asks for these two, with the thanks of line 8 between them as its own part (same reason as task 0: line 8 is „Danke! Wann ist die Pause?“). The re-teach lines 6 and 8 typed back word for word pass. Tried, passed: „Wie ist die Telefonnummer? Danke! Wann ist die Pause?“ / „Und wie ist die Telefonnummer? Danke! Wann ist die Pause?“ / „wie ist die telefonnummer danke wann ist die pause“ / „Wie ist die Nummer vom Büro? Danke, Herr Weber! Und wann ist die Pause?“ / „Entschuldigung, wie ist die Telefonnummer? Danke. Wann machen wir Pause?“ Tried, WRONG as intended: „Wie ist die Telefonnummer? Wann ist die Pause?“ (no thanks) / „Was ist die Telefonnummer? Danke! Wann ist die Pause?“ / „Wie ist die Telefonnummer? Danke! Wo ist die Pause?“ / „Wann ist die Pause? Danke! Wie ist die Telefonnummer?“ / „Wie ist die Telefonnummer? Danke! Wann die Pause ist?“ / „Wie ist die Telefonnummer? Danke!“ Limits: „Wo ist das Büro? Danke! Wann ist die Pause?“ is WRONG, although „Wo ist das Büro?“ is the plainest way to ask about the office; it is an L5 pattern and no L6 line could re-teach it. „Herr Weber, wie ist die Telefonnummer? …“ is WRONG: the tool removes a titled address only at the end of a sentence, and the brief forbids listing address variants. „Wie ist die Telefonnummer? Danke, wann ist die Pause?“ is WRONG too: the tool splits a response into parts by words only when it is one sentence, and here the thanks and the question share a sentence in a response of two; the skeleton therefore shows „…! …?“.",
+    "Proof limit, microphone: the spoken path scores only the model `answer`. In tasks 0 and 3 another accepted wording is scored against the model sentence; task 2 has no spoken path.",
+    "Existing data: can-do „Ich kann nach der Pause und nach dem Büro fragen“ names a question about the office that the Lektion never models; „Ich kann am Telefon meinen Namen nennen“ has no model at all (see task 1)."
   ]
 }

@@ -362,6 +362,7 @@ test('the course home sends what is waiting when the connection comes back, and 
     mergeLocalProgress: async () => 0,
     flushOutbox: async (userId) => { flushed.push(userId); return { state: 'synced', failed: [] }; },
     getProgramProgress: async () => new Set(['a1.1-l01']),
+    pendingRuns: () => [],
     onlyFinalTestOpen: () => false,
     reconcileLevelTest: async () => false,
     levelTestNodeId: () => 'x',

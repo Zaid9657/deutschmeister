@@ -1,4 +1,12 @@
 #!/usr/bin/env node
+import { hintFindings } from './lib/hint-quality.mjs';
+import { wordCardFindings } from './lib/word-card-quality.mjs';
+import { distractorFindings } from './lib/distractor-quality.mjs';
+import { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
+export { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
+import { germanNumberWord } from '../src/lib/lesson/readaloud.js';
+import { instructionVocabulary } from './lib/instruction-vocabulary.mjs';
+import { proofShapeFindings, proofGermanTexts } from './lib/proof-content.mjs';
 import { hintFor, hintContainsAnswer } from '../src/lib/lesson/guidedFeedback.js';
 import { guidedFindings } from './lib/guided-content.mjs';
 import { undecidedTimePrepositionGaps } from './lib/time-preposition-cues.mjs';
@@ -3260,18 +3268,36 @@ export function a12FinalTestFindings(mock = abschlusstestA12, c = CURRICULUM_A12
   return finalTestContentFindings(mock, { unknown: (text) => untaughtTokens({ questionDe: text }, known, spec) });
 }
 
-/** RULE 5's lexicon and tokenizer also bind the guided read; notice words do not license it. */
-export function guidedReadVocabulary(c, spec = levelSpec(c?.level)) {
+/** Shared taught-word horizon for guided reading and proof. No new instruction-word exemptions. */
+function guidedVocabularyFindings(c, textsFor, label, spec = levelSpec(c?.level), instructions = false) {
   const known = seedVocabulary(spec);
   const findings = [];
   for (const l of c.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
-    for (const token of tokenise(l.guided?.read?.text || '')) {
-      if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: guided read uses untaught word "${token}"`);
+    if (label === 'proof') {
+      for (const set of l.guided?.sets || []) {
+        for (const m of [...(set.members || []), ...(set.rule?.examples || []), ...(set.rule?.transfer || [])]) for (const t of tokenise(m.said)) known.add(t.toLowerCase());
+        if (set.rule?.id === 'unit-before-ten') {
+          for (let n = 21; n <= 99; n++) known.add(germanNumberWord(n).replace(/ae/g, 'ä').replace(/oe/g, 'ö').replace(/ue/g, 'ü').replace(/ss/g, 'ß'));
+        }
+      }
+    }
+    for (const text of textsFor(l)) for (const token of tokenise(text || '')) {
+      if (!known.has(token.toLowerCase()) && !(instructions && instructionVocabulary.has(token.toLowerCase()))) findings.push(`L${l.nr}: ${label} uses untaught word "${token}"`);
     }
   }
   return findings;
 }
+
+/** RULE 5's lexicon and tokenizer also bind the guided read; notice words do not license it. */
+export const guidedReadVocabulary = (c, spec = levelSpec(c?.level)) =>
+  guidedVocabularyFindings(c, (l) => [l.guided?.read?.text || ''], 'guided read', spec);
+
+/** RULE 35: ordered parts or heard spelled-name transcription; scored own-name speech only, safe hints and taught vocabulary. */
+export const proofFindings = (c, spec = levelSpec(c?.level)) => [
+  ...proofShapeFindings(c), ...guidedVocabularyFindings(c, proofGermanTexts, 'proof', spec),
+  ...guidedVocabularyFindings(c, (l) => (l.proof?.tasks || []).map((t) => t?.promptDe), 'proof', spec, true),
+];
 
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
@@ -3303,6 +3329,11 @@ export function validateCurriculum(c, extraItems, poolItems) {
     } catch { fail(`RULE 33: no safe bilingual hint (${item.id})`); }
   }
   for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
+  for (const finding of proofFindings(c, spec)) fail(`RULE 35: ${finding}`);
+  for (const finding of taughtOrderFindings(c, poolItems)) fail(`RULE 36: ${finding}`);
+  for (const finding of setTimeFindings(c, poolItems)) fail(`RULE 37: ${finding}`);
+  for (const finding of wordCardFindings(c, poolItems)) fail(`RULE 39: ${finding}`);
+  for (const finding of hintFindings(c, poolItems)) fail(`RULE 40: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
@@ -3719,6 +3750,7 @@ if (isMain) {
   const drawnUntaught = drawnLexis(c);
   console.log(`  RULE 11b gezogene Item-Lexik: ${drawnUntaught.length} ungelehrte Tokens (Ratchet ${r.untaughtDrawnTokens})`);
   for (const o of drawnUntaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
+  for (const finding of distractorFindings(c)) console.log(`  RULE 38 [authoring advisory]: L${finding.nr} ${finding.where}: ${finding.reason}; option word counts ${finding.lengths.join('/')}`);
   const unrehearsed = canDoRehearsal(c);
   console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (harte Regel, kein Ratchet)`);
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);

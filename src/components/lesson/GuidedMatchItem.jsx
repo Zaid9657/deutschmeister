@@ -1,3 +1,4 @@
+import { meaningChoice } from '../../lib/lesson/derivedChoices.js';
 import { useState } from 'react';
 import CheckedChoice from './CheckedChoice.jsx';
 import { matchOutcome } from '../../lib/lesson/check.js';
@@ -9,14 +10,7 @@ export default function GuidedMatchItem({ item, index, total, onResult, onNext }
   const [pairIndex, setPairIndex] = useState(0);
   const [confused, setConfused] = useState([]);
   const pair = item.pairs[pairIndex];
-  const question = {
-    id: `${item.id}:${pairIndex}`, type: 'multiple_choice',
-    promptDe: `Was bedeutet „${pair.de}“? Wählen Sie die Bedeutung.`,
-    promptEn: `What does “${pair.de}” mean? Choose the meaning.`,
-    options: item.pairs.map((p) => p.en), answer: pair.en, accepted: [pair.en],
-    explanationDe: `Das Wortpaar ist: ${pair.de} – ${pair.en}.`,
-    explanationEn: `The word pair is: ${pair.de} – ${pair.en}.`,
-  };
+  const question = meaningChoice(pair, item.pairs, `${item.id}:${pairIndex}`);
   return <div>
     <h2 className="mb-4 font-data text-xs text-siegel-deep">{t('stage.derived.eyebrow', lang, { n: index + 1, total })}</h2>
     <CheckedChoice key={question.id} item={question} lang={lang} hintFirst

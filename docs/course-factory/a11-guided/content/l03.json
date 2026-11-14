@@ -119,11 +119,194 @@
           "line": 9
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "age-twenty",
+        "kind": "numbers",
+        "titleDe": "Zehn und zwanzig",
+        "titleEn": "Ten and twenty",
+        "members": [
+          {
+            "written": "10",
+            "said": "zehn"
+          },
+          {
+            "written": "20",
+            "said": "zwanzig"
+          }
+        ]
+      }
     ]
   },
   "nextHook": {
     "de": "Tim sucht Möbel für sein Zimmer. Ist der Flohmarkt teuer?",
     "en": "Tim is looking for furniture for his room. Is the flea market expensive?"
+  },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Sie sind Ana. Lena: „Wer ist das?“ – Sie (Bruder): … Lena: „Wie alt ist er?“ – Sie (20): …",
+        "promptEn": "You are Ana and show Lena a photo of your brother. He is 20. Lena asks who that is, then how old he is. Answer both questions, in that order.",
+        "answer": "Das ist mein Bruder. Er ist zwanzig.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Person (nicht nur das eine Wort)",
+              "en": "who it is (not just the one word)"
+            },
+            "forms": [
+              "Das ist mein Bruder.",
+              "Mein Bruder.",
+              "Er ist mein Bruder.",
+              "Das ist der Bruder."
+            ]
+          },
+          {
+            "label": {
+              "de": "das Alter (die Zahl als Wort oder ein ganzer Satz)",
+              "en": "his age (the number as a word, or a full sentence)"
+            },
+            "forms": [
+              "Er ist zwanzig.",
+              "Zwanzig.",
+              "Er ist 20.",
+              "Mein Bruder ist zwanzig.",
+              "Mein Bruder ist 20."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1,
+            3
+          ]
+        },
+        "micOff": true
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Ein Mann: „Welche Sprachen sprechen Sie?“ – Sie (Arabisch + Deutsch): …",
+        "promptEn": "You speak Arabic and German. A man you have just met asks which languages you speak. Answer in one full sentence.",
+        "answer": "Ich spreche Arabisch und Deutsch.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Sprachen (ein ganzer Satz)",
+              "en": "your languages (one full sentence)"
+            },
+            "forms": [
+              "Ich spreche Arabisch und Deutsch.",
+              "Ich spreche Deutsch und Arabisch.",
+              "Ich spreche Arabisch und auch Deutsch.",
+              "Ich spreche Deutsch und auch Arabisch.",
+              "Ich spreche Arabisch. Ich spreche Deutsch.",
+              "Ich spreche Deutsch. Ich spreche Arabisch."
+            ],
+            "maxSentences": 2
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4,
+            5
+          ]
+        },
+        "micOff": true
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Eine Frau: „Das ist mein Bruder.“ – Sie: …? Die Frau: „Er ist zwanzig. Und das sind meine Eltern.“ – Sie: …? Die Frau: „Sie sprechen Arabisch und Deutsch.“",
+        "promptEn": "A woman shows you a photo of her family. Ask two questions so that her answers fit: first about her brother, then about her parents.",
+        "answer": "Wie alt ist er? Welche Sprachen sprechen sie?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach dem Alter",
+              "en": "the question about his age"
+            },
+            "forms": [
+              "Wie alt ist er?",
+              "Und wie alt ist er?",
+              "Wie alt ist dein Bruder?",
+              "Und wie alt ist dein Bruder?",
+              "Wie alt ist Ihr Bruder?",
+              "Und wie alt ist Ihr Bruder?",
+              "Wie alt ist der Bruder?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage nach den Sprachen",
+              "en": "the question about their languages"
+            },
+            "forms": [
+              "Welche Sprachen sprechen sie?",
+              "Und welche Sprachen sprechen sie?",
+              "Welche Sprachen sprechen deine Eltern?",
+              "Und welche Sprachen sprechen deine Eltern?",
+              "Welche Sprachen sprechen Ihre Eltern?",
+              "Und welche Sprachen sprechen Ihre Eltern?",
+              "Welche Sprachen sprechen die Eltern?",
+              "Welche Sprache sprechen sie?",
+              "Welche Sprache sprechen deine Eltern?",
+              "Welche Sprache sprechen Ihre Eltern?",
+              "Was sprechen sie?",
+              "Was sprechen deine Eltern?",
+              "Was sprechen Ihre Eltern?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2,
+            4
+          ]
+        },
+        "micOff": true,
+        "register": "informal"
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Antworten Sie mit einem Satz. Eine Frau: „Woher kommt Ihre Familie?“ – Sie (Marokko): …",
+        "promptEn": "Your family is from Morocco. A woman you have just met asks where your family comes from. Answer her.",
+        "answer": "Meine Familie kommt aus Marokko.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Herkunft der Familie (nicht nur das eine Wort)",
+              "en": "where your family comes from (not just the one word)"
+            },
+            "forms": [
+              "Meine Familie kommt aus Marokko.",
+              "Sie kommt aus Marokko.",
+              "Aus Marokko.",
+              "Wir kommen aus Marokko.",
+              "Meine Familie ist aus Marokko.",
+              "Wir sind aus Marokko.",
+              "Die Familie kommt aus Marokko.",
+              "Meine Eltern kommen aus Marokko.",
+              "Sie kommen aus Marokko."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            9
+          ]
+        },
+        "micOff": true
+      }
+    ]
   },
   "notes": [
     "Chunks: five question-and-answer pairs. Both speakers (Lena, Ana) are learner roles, so say.line was a real choice: 1 (the family sentence, can-do 1), 2 („Wie alt ist er?“, asking, can-do 3), 5 (languages, can-do 2), 6 („Spricht dein Bruder auch Englisch?“, asking), 9 (where the family comes from, can-do 4). Lines 1 and 9 are twelve words each: long to say aloud, but they carry can-dos 1 and 4 and no shorter line does.",
@@ -134,6 +317,14 @@
     "„Hast du Geschwister oder bist du Einzelkind?“ states nothing about Tim (his persona row is empty) and carries Einzelkind in a real question.",
     "Existing data, looks odd: pool item extra-a11-l03-15 says „Das Kind von meiner Schwester ist ein Baby.“ In the dialogue the baby is the BROTHER’s daughter (line 8 asks about „dein Bruder“). Not a hard contradiction (the item names no speaker), but next to this Lektion’s dialogue it reads like one.",
     "Phonetik items carry an article („der BRU-der“), so the word-stress shape check does not accept them: sound stage pending, data untouched.",
-    "nextHook is grounded in the L4 dialog setting („Tim sucht Möbel für sein Zimmer.“) and Tim’s line „Das ist teuer.“"
+    "nextHook is grounded in the L4 dialog setting („Tim sucht Möbel für sein Zimmer.“) and Tim’s line „Das ist teuer.“",
+    "PROOF (2026-11-14): four tasks, one per can-do, all checked with scripts/try-proof-answer.mjs (verdicts below; TYPO counts as passed). Same rule as Lektion 2: taught sentence, correct variants and the natural short reply pass when they contain German the learner had to supply; a bare copy of the value in the prompt („Bruder“, „20“, „Marokko“, „Arabisch und Deutsch“) is refused and the hint label says what is missing. Own data (own family, own languages) cannot be checked, so the learner speaks as Ana: Bruder, 20, Arabisch und Deutsch, Marokko – all facts of the dialogue and the Schreiben task.",
+    "PROOF LIMIT, du and names: RULE 35 forbids du/dein in the prompt, and proof.js only accepts a name address for a titled speaker of this Lektion’s dialogue. Lektion 3 has none (Lena, Ana), so „…, Frau Kaya“ or „…, Ana“ can never pass here (tried with a first draft: „Ich spreche Arabisch und Deutsch, Frau Kaya.“ was WRONG). Goals 1–3 therefore use partners without a name („Ein Mann“, „Eine Frau“); questions to them pass with dein and with Ihr. „Foto“ is untaught for RULE 35 although it is the dialogue’s setting, so the prompts cannot name the photo.",
+    "Proof goal 0 (über meine Familie sprechen): „Sie sind Ana.“ Lena asks „Wer ist das?“ (Bruder) and „Wie alt ist er?“ (20). CORRECT: „Das ist mein Bruder. Er ist zwanzig.“ | „Mein Bruder. Zwanzig.“ | „Das ist mein Bruder. Er ist 20.“ | „Er ist mein Bruder. Mein Bruder ist zwanzig.“ | „Das ist der Bruder. Er ist zwanzig.“ TYPO: „das ist mein bruder er ist zwanzig“ | „Das ist mein Bruder, er ist zwanzig.“ | „Mein Bruder zwanzig“. WRONG as intended: „Bruder. 20.“ | „Mein Bruder. 20.“ | „Bruder. Zwanzig.“ | „Das ist mein Bruder.“ | „Das ist meine Bruder. …“ | „… Sie ist zwanzig.“ | „… Es ist zwanzig.“ | „… Er ist zwölf.“ | „Das ist mein Vater. …“ | „… Er bin zwanzig.“ | „… Er hat zwanzig.“ | „Mein Bruder ist zwanzig.“ (one sentence for two questions). WRONG although right: „Das ist mein Bruder. Er ist zwanzig Jahre alt.“ – „Jahre“ is untaught at Lektion 3, RULE 35 forbids the form.",
+    "Proof goal 1 (welche Sprachen ich spreche): a man asks „Welche Sprachen sprechen Sie?“ (Arabisch + Deutsch); one part. CORRECT: „Ich spreche Arabisch und Deutsch.“ | „Ich spreche Deutsch und Arabisch.“ | „Ich spreche Arabisch und auch Deutsch.“ TYPO: „ich spreche arabisch und deutsch“. WRONG as intended: „Arabisch und Deutsch.“ | „Arabisch, Deutsch“ (copies of the prompt) | „Ich sprechen …“ | „Ich spricht …“ | „Ich spreche Arabisch und Englisch.“ | „Ich spreche Arabisch.“ | „Ich bin Arabisch und Deutsch.“ | „Wir sprechen …“ WRONG although right: „Ich spreche Arabisch. Ich spreche Deutsch.“ (two sentences for one part; listing two parts instead would pass „Ich spreche Deutsch und Deutsch“).",
+    "EXISTING DATA, goal 1: no dialogue line, no Wortfeld row and not the notice of Lektion 3 says „ich spreche“; the first person only occurs in pool items. The can-do is „… welche Sprachen ich spreche“, and a re-teach pointer can only name dialogue, Wortfeld or notice. The pointer shows lines 4 + 5 („Welche Sprachen sprechen deine Eltern?“ – „Sie sprechen Arabisch und Deutsch.“); a learner who copies line 5 is WRONG again („Sie sprechen Arabisch und Deutsch.“ tried). A dialogue line with „Ich spreche …“ would close this.",
+    "Proof goal 2 (nach der Familie fragen): a woman shows her family; two gaps, each followed by her reply („Er ist zwanzig.“, „Sie sprechen Arabisch und Deutsch.“), so only the age question and the open language question fit. CORRECT: „Wie alt ist er? Welche Sprachen sprechen sie?“ | „Wie alt ist dein Bruder? Welche Sprachen sprechen deine Eltern?“ | the same with „Und …“ | „Wie alt ist Ihr Bruder? Welche Sprachen sprechen Ihre Eltern?“ | „Wie alt ist er? Was sprechen sie?“ | „… Welche Sprache sprechen sie?“ TYPO: no capitals and marks | „… Welche Sprachen sprechen Sie?“ (capital S is a case-only slip for the checker). WRONG as intended: „Wie alt ist sie? …“ | „… Welche Sprachen spricht sie?“ | only one question | „Wie alt er ist? …“ | „Wie alt bist du? …“ | „… Sprechen sie Arabisch und Deutsch?“ | „… Welche Sprachen sprecht ihr?“ | „Ist er zwanzig? …“ | „… sprechen dein Eltern?“ | „… Woher kommen sie?“ WRONG although right German: the two questions in the other order (ordered parts; her replies fix the order).",
+    "Proof goal 3 (woher meine Familie kommt): a woman asks „Woher kommt Ihre Familie?“ (Marokko); one part. CORRECT: „Meine Familie kommt aus Marokko.“ | „Sie kommt aus Marokko.“ | „Aus Marokko.“ | „Wir kommen aus Marokko.“ | „Meine Familie ist aus Marokko.“ | „Meine Eltern kommen aus Marokko.“ | „Sie kommen aus Marokko.“ (listed on purpose: said of the people of a family it is what speakers say; „Meine Familie kommen …“ stays WRONG). TYPO: no capitals. WRONG as intended: „Marokko.“ | „Meine Familie kommen aus Marokko.“ | „Meine Familie komme …“ | „Ich komme aus Marokko.“ | „Mein Familie kommt …“ | „… kommt von Marokko.“ | „… kommt in Marokko.“ | „Er kommt aus Marokko.“ | „… aus Bremen.“ | „Meine Familie wohnt in Marokko.“ | „In Marokko.“",
+    "Proof re-teach pointers: goal 0 → dialogue 1 + 3, goal 1 → 4 + 5 (see EXISTING DATA above), goal 2 → 2 + 4 (both lines pass as typed), goal 3 → 9 („Der Mann von meiner Schwester kommt aus Marokko.“ – the only „kommt aus“ line; the learner has to change the subject)."
   ]
 }

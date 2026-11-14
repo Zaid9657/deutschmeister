@@ -405,7 +405,7 @@ test('the guided estimate adds one checked meaning and say-it turn per chunk, re
   const guided = lektionMinutesEstimate(l);
   assert.ok(guided.lo >= legacy.lo && guided.hi > legacy.hi, 'five-minute rounding may keep the low end in its original bucket');
   assert.deepEqual(lektionMinutesEstimate({ ...l, guided: undefined, flow: undefined }), legacy);
-  const more = lektionMinutesEstimate({ ...l, guided: { chunks: [...l.guided.chunks, ...l.guided.chunks] } });
+  const more = lektionMinutesEstimate({ ...l, guided: { ...l.guided, chunks: [...l.guided.chunks, ...l.guided.chunks] } });
   assert.ok(more.lo > guided.lo && more.hi > guided.hi, 'the estimate follows the data count');
   assert.equal(l.minutes, 15, 'the validator target is unchanged');
 });
