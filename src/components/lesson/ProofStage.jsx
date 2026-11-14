@@ -14,6 +14,7 @@ export default function ProofStage({ stage, lesson, state, onAnswer, onHideModel
   const [lang] = useLessonLang();
   const { user } = useAuth();
   const [value, setValue] = useState('');
+  const [listenHeard, setListenHeard] = useState(false);
   const [mic, setMic] = useState(false);
   const [missed, setMissed] = useState(null);
   const passed = proofPassed(stage.tasks, state);
@@ -23,7 +24,7 @@ export default function ProofStage({ stage, lesson, state, onAnswer, onHideModel
   const reteach = state.phase === 'reteach';
   const submit = (response) => {
     setMissed({ at, part: response.kind === 'typed' ? judgeProof(task, response.value, names).part : null });
-    setValue(''); setMic(false); onAnswer(response);
+    setValue(''); setMic(false); setListenHeard(false); onAnswer(response);
   };
   const label = reteach ? 'proof.again' : passed ? 'action.next' : 'action.check';
   return <section className="text-nacht-text">
@@ -39,20 +40,23 @@ export default function ProofStage({ stage, lesson, state, onAnswer, onHideModel
       {reteach ? <Card className="mt-4 p-5">
         {(task.model.lines || [task.model]).map((line, i) => <div key={i} className="mb-3"><p lang="de" className="text-lg text-ink">{line.de}</p><p lang="en" className="mt-2 text-sm text-graphite">{line.en}</p><div className="mt-3"><PlayButton lektionId={lesson.id} audioKey={line.audioKey} text={line.de} /></div></div>)}
       </Card> : <>
-        {task.ownName && (task.ownName !== 'full' || mic) && <label className="mt-4 block text-sm font-semibold">
+        {task.ownName && (!task.listenSpelling || mic) && (task.ownName !== 'full' || mic) && <label className="mt-4 block text-sm font-semibold">
           {t(task.ownName === 'surname' ? 'scene.surname' : 'scene.name', lang)}
           <input maxLength={80} autoComplete="off" value={names[task.ownName] || ''} onChange={(e) => onNamesChange({ ...names, [task.ownName]: e.target.value })} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white px-3 py-2 text-ink" />
         </label>}
+        {task.listenSpelling && !mic && <div className="mt-4"><p className="mb-3 text-sm text-ink">{t('proof.spellingListen', lang)}</p><PlayButton lektionId={lesson.id} audioKey={task.listening.audioKey} text={task.listening.text} onPlayed={() => setListenHeard(true)} /></div>}
         {!mic && <label className="mt-4 block text-sm font-semibold" htmlFor="proof-answer">{t('proof.answer', lang)}
           {task.options ? <select id="proof-answer" value={value} onChange={(e) => setValue(e.target.value)} className="mt-2 min-h-11 w-full rounded-xl border border-rule bg-white p-3"><option value="" />{task.options.map((option) => <option key={option}>{option}</option>)}</select>
             : <textarea id="proof-answer" lang="de" rows={3} value={value} onChange={(e) => setValue(e.target.value)} className="mt-2 block w-full rounded-xl border border-rule bg-white p-3 text-ink" />}
         </label>}
-        {mic && item.answer && <div className="mt-4"><ReadAloudLine key={`${at}:${state.goals[at]?.tries || 0}:${item.answer}`} proof hideModel guided lektionId={lesson.id} lineKey={`proof-${at}`} text={item.answer} onResult={(result) => submit({ kind: 'mic', result })} /></div>}
+        {mic && task.listenSpelling && <p className="mt-3 text-sm text-ink">{t('proof.spellingMic', lang)}</p>}
+        {mic && task.listenSpelling && !item.spokenAnswer && <p className="mt-3 text-sm text-graphite">{t('proof.spellingName', lang)}</p>}
+        {mic && (task.listenSpelling ? item.spokenAnswer : item.answer) && <div className="mt-4"><ReadAloudLine key={`${at}:${state.goals[at]?.tries || 0}:${item.answer}`} proof hideModel guided lektionId={lesson.id} lineKey={`proof-${at}`} text={item.spokenAnswer || item.answer} onResult={(result) => submit({ kind: 'mic', result })} /></div>}
         {state.phase === 'hint' && <p role="status" className="mt-4 font-semibold text-siegel-deep">{proofHint(task, missed?.at === at ? missed.part : null)[lang]}</p>}
         {user && !task.options && <button type="button" className="mt-3 min-h-11 text-sm font-bold text-graphite" onClick={() => setMic(!mic)}>{t(mic ? 'proof.type' : 'proof.mic', lang)}</button>}
       </>}
     </>}
-    {(!mic || reteach || passed) && <Button className="mt-5 w-full" disabled={!passed && !reteach && (!value.trim() || (task.ownName === 'surname' && !names.surname?.trim()))} onClick={passed ? onDone : reteach ? () => { setValue(''); onHideModel(); } : () => submit({ kind: 'typed', value })}>{t(label, lang)}</Button>}
+    {(!mic || reteach || passed) && <Button className="mt-5 w-full" disabled={!passed && !reteach && (!value.trim() || (task.listenSpelling ? !listenHeard : task.ownName === 'surname' && !names.surname?.trim()))} onClick={passed ? onDone : reteach ? () => { setValue(''); onHideModel(); } : () => submit({ kind: 'typed', value, ...(task.listenSpelling ? { listened: listenHeard } : {}) })}>{t(label, lang)}</Button>}
     {onBack && <button type="button" onClick={onBack} className="mt-4 min-h-11 text-sm font-bold text-graphite">{t('shell.back', lang)}</button>}
   </section>;
 }

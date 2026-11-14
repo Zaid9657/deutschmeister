@@ -83,3 +83,19 @@ test('hints cannot contain any accepted form in either language; draft checker r
   draft.proof.tasks[0].reteach = { kind: 'dialog', indices: [-1] };
   assert.ok(guidedDraftFindings(1, draft).some((f) => /pointer/.test(f)));
 });
+
+test('RULE 35 validates spelled-name source and keeps the draft task form in step', () => {
+  const mutations = [
+    (t) => { delete t.listenFrom; },
+    (t) => { t.listenFrom.index = 1; },
+    (t) => { t.listenFrom.index = 999; },
+    (t) => { t.type = 'production'; },
+    (t) => { t.listenSpelling = false; },
+    (t) => { t.accepted = ['Noor']; },
+    (t) => { t.answer = 'N-O-O-R.'; t.parts[0].forms = ['N-O-O-R.']; },
+  ];
+  for (const mutate of mutations) {
+    const c = structuredClone(CURRICULUM_A11); mutate(c.lektionen[0].proof.tasks[2]);
+    assert.ok(proofFindings(c).length, String(mutate));
+  }
+});

@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { guidedFindings } from './lib/guided-content.mjs';
-import { guidedReadVocabulary, proofFindings } from './validate-curriculum.mjs';
+import { guidedReadVocabulary, proofFindings, taughtOrderFindings, loadPoolItems } from './validate-curriculum.mjs';
 
 /** Use the draft's optional proof, never accidentally inherit the live lesson's proof. */
 export function guidedDraftFindings(nr, draft) {
@@ -19,7 +19,7 @@ export function guidedDraftFindings(nr, draft) {
   if (draft.proof !== undefined) lesson.proof = draft.proof;
   else delete lesson.proof;
   if (draft.nextHook !== undefined) lesson.nextHook = draft.nextHook;
-  const findings = [...guidedFindings(curriculum), ...guidedReadVocabulary(curriculum), ...proofFindings(curriculum)].filter((s) => s.startsWith(`L${nr}:`));
+  const findings = [...guidedFindings(curriculum), ...guidedReadVocabulary(curriculum), ...proofFindings(curriculum), ...taughtOrderFindings(curriculum, loadPoolItems())].filter((s) => s.startsWith(`L${nr}:`));
   if (nr < 12 && !draft.nextHook) findings.push(`L${nr}: nextHook is missing (German and English)`);
   return findings;
 }
@@ -38,7 +38,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     try { draft = JSON.parse(readFileSync(file, 'utf8')); } catch (e) { console.error(`L${nr}: draft is not valid JSON (${e.message})`); failed = true; continue; }
     const findings = guidedDraftFindings(nr, draft);
     for (const s of findings) console.error(`✗ ${s}`);
-    if (findings.length) failed = true; else console.log(`✓ L${nr}: draft passes RULE 32, RULE 34 and RULE 35`);
+    if (findings.length) failed = true; else console.log(`✓ L${nr}: draft passes RULE 32, RULE 34, RULE 35 and RULE 36`);
   }
   process.exit(failed ? 1 : 0);
 }

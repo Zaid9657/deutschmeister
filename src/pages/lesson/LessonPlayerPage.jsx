@@ -50,6 +50,7 @@ import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { answerProof, canCompleteProofLesson, hideProofModel, packProof, proofAttempts, proofPassed, proofResumeIndex } from '../../lib/lesson/proof.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
 
+const TaughtSetStage = lazy(() => import('../../components/lesson/TaughtSetStage.jsx'));
 const ProofStage = lazy(() => import('../../components/lesson/ProofStage.jsx'));
 const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
 const SoundStage = lazy(() => import('../../components/lesson/SoundStage.jsx'));
@@ -282,6 +283,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // snapshot: the "speak freely" hand-off to the coach is a full page load, and on the way back every
   // line used to be idle again — re-recorded (allowance spent) or reported "skipped" (LSN-01).
   const [readAloud, setReadAloud] = useState(() => (resumed ? resumed.readAloud || {} : {}));
+  const [taughtSetReadAloud, setTaughtSetReadAloud] = useState(() => resumed?.taughtSetReadAloud || {});
   const [sceneReadAloud, setSceneReadAloud] = useState(() => resumed?.sceneReadAloud || {});
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
@@ -375,7 +377,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
         ...(revealed ? { revealed: true } : {}),
         ...(listened === false ? { listened: false } : {}),
       }]));
-    if (!correct && !['requeue', 'scene', 'sound', 'read', 'fluency'].includes(stageKind)) {
+    if (!correct && !['requeue', 'scene', 'sound', 'read', 'fluency', 'taught-set'].includes(stageKind)) {
       setMisses((prev) => (prev.some((m) => m.id === item.id) ? prev : [...prev, confused && confused.length ? { ...item, confused } : item]));
     }
     if (stageKind === 'practice' || stageKind === 'dictation') setCombo((c) => nextCombo(c, correct));
@@ -438,10 +440,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     if (preview || !stage) return;
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
-      proof, flow: lektion.flow || 'legacy', sceneReadAloud, soundReadAloud, fluencyReadAloud,
+      proof, flow: lektion.flow || 'legacy', taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud,
       runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
     }), owner);
-  }, [proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
+  }, [proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -544,6 +546,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       break;
     case 'pretest':
       body = <PretestStage onName={lektion.flow === 'guided' ? (full) => setNames((prev) => ({ ...prev, full })) : undefined} stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
+      break;
+    case 'taught-set':
+      body = <Suspense fallback={<PlayerLoading />}><TaughtSetStage key={`${stage.key}:${itemIndex}`} stage={stage} itemIndex={itemIndex} lektionId={lektion.id}
+        results={taughtSetReadAloud[stage.set.id] || {}} onSayResult={(i, r) => setTaughtSetReadAloud((prev) => ({ ...prev, [stage.set.id]: { ...prev[stage.set.id], [i]: r } }))}
+        onItemChange={setItemIndex} onResult={resultFor('taught-set')} onDone={advance} onBack={back} /></Suspense>;
       break;
     case 'scene':
       body = (

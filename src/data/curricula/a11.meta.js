@@ -21,6 +21,7 @@
 // below may repeat a stated fact or the setting, never add one — "Lena is a nurse" would be a
 // fact the course could later contradict.
 
+import { buildSetStage } from '../../lib/lesson/taughtSet.js';
 import { CURRICULUM_A11 } from './a11.js';
 import { A11_ART } from './a11.art.js';
 import { SESSION_COUNT } from '../../lib/lesson/sessions.js';
@@ -332,6 +333,7 @@ export function weeklyEstimate(curriculum = CURRICULUM_A11, perWeek = SUSTAINABL
 export const STEP_SECONDS = {
   pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
   practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
+  setMember: [10, 20], setCheck: [20, 40],
   sceneMeaning: [20, 40], sceneSay: [40, 80],
   soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40],
   speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
@@ -348,6 +350,9 @@ export function lektionMinutesEstimate(l) {
     speakingOpen: l?.sprechen?.open ? 1 : 0, writing: l?.schreiben ? 1 : 0, recap: 1,
   };
   if (l?.flow === 'guided') {
+    const setSteps = (l.guided.sets || []).flatMap((set) => buildSetStage(set).steps);
+    n.setMember = setSteps.filter((s) => s.kind === 'member').length;
+    n.setCheck = setSteps.filter((s) => s.kind === 'check').length;
     n.phonetikItem = 0;
     n.soundItem = l.phonetik?.items?.length || 0;
     n.readText = l.guided.read ? 1 : 0;

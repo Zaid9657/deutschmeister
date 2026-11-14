@@ -70,7 +70,7 @@ test('actual recap effect withholds guest and account writes until proof, writes
   const effect = source.slice(start + 'useEffect('.length, end) + '\n}';
   const lesson = CURRICULUM_A11.lektionen[0];
   let passed = packProof();
-  for (const value of ['Guten Tag. Auf Wiedersehen.', 'Ich heiße Jo Lee.', 'LEE', 'Wie geht es Ihnen? Mir geht es gut, danke.']) passed = answerProof(proofTasks(lesson), passed, { kind: 'typed', value }, { surname: 'Lee' });
+  for (const value of ['Guten Tag. Auf Wiedersehen.', 'Ich heiße Jo Lee.', 'Chakiri', 'Wie geht es Ihnen? Mir geht es gut, danke.']) passed = answerProof(proofTasks(lesson), passed, { kind: 'typed', value, listened: true }, { surname: 'Lee' });
   for (const user of [null, { id: 'u1' }]) {
     const writes = [];
     const context = vm.createContext({

@@ -119,6 +119,24 @@
           "line": 9
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "age-twenty",
+        "kind": "numbers",
+        "titleDe": "Zehn und zwanzig",
+        "titleEn": "Ten and twenty",
+        "members": [
+          {
+            "written": "10",
+            "said": "zehn"
+          },
+          {
+            "written": "20",
+            "said": "zwanzig"
+          }
+        ]
+      }
     ]
   },
   "nextHook": {

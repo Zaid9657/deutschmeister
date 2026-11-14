@@ -1,4 +1,5 @@
-import { checkAnswer, checkOptionsFor, RESULT } from './check.js';
+import { checkAnswer, checkOptionsFor, RESULT, normalizeSpelling, spellingApplies } from './check.js';
+import { spellWithSet } from './taughtSet.js';
 import { introductionHit } from './pretest.js';
 import { nameFromIntroduction, sayText } from './scene.js';
 import { READALOUD_PASS_PCT } from './readaloud.js';
@@ -20,7 +21,19 @@ export function proofModel(lesson, pointer) {
   return null;
 }
 
-export const proofTasks = (lesson) => (lesson.proof?.tasks || []).map((task, i) => ({ ...task, id: `proof-${lesson.id}-${i}`, model: proofModel(lesson, task.reteach),
+/** Only a spelled name from taught dialogue/cast, never a second handwritten answer key. */
+export function proofSpelling(lesson, pointer) {
+  if (pointer?.kind !== 'dialog' || !Number.isInteger(pointer.index)) return null;
+  const line = lesson.dialog?.lines?.[pointer.index]?.de;
+  const alphabet = lesson.guided?.sets?.find((set) => set.kind === 'letters');
+  if (!line || !alphabet || !spellingApplies([line])) return null;
+  const answer = normalizeSpelling(line.replace(/[.!?]+$/, ''));
+  const known = [...(lesson.dialog?.lines || []).map((l) => l.de), ...(lesson.dialog?.lines || []).map((l) => l.speaker)];
+  if (!known.some((text) => text.toLocaleLowerCase('de').includes(answer.toLocaleLowerCase('de')))) return null;
+  return { answer, accepted: [answer], text: spellWithSet(answer, alphabet), alphabet, audioKey: `proof-spelling-${pointer.index}` };
+}
+
+export const proofTasks = (lesson) => (lesson.proof?.tasks || []).map((task, i) => ({ ...task, ...(task.listenSpelling ? { listening: proofSpelling(lesson, task.listenFrom) } : {}), id: `proof-${lesson.id}-${i}`, model: proofModel(lesson, task.reteach),
   addresses: [...new Set((lesson.dialog?.lines || []).map((l) => l.speaker).filter((s) => /^(?:Frau|Herr)\s+\p{L}/u.test(s || '')))],
   courtesies: (lesson.wortfeld || []).map((w) => w.de).filter((s) => ['Danke', 'Bitte', 'Entschuldigung'].includes(s)),
 }));
@@ -59,7 +72,7 @@ function runsForParts(text, parts, fulfils) {
 /** Sentences consume parts in order. Only taught courtesy sentences may consume no part. */
 export function judgeProof(task, value, names = {}) {
   const item = proofItem(task, names, value);
-  if (task.ownName || task.type === 'multiple_choice') {
+  if (task.listenSpelling || task.ownName || task.type === 'multiple_choice') {
     const checked = checkAnswer(value, item.accepted || [], checkOptionsFor(item));
     return { ...checked, part: checked.result === RESULT.WRONG ? 0 : null };
   }
@@ -102,6 +115,14 @@ export function proofHint(task, part) {
 
 /** Names are adapted exactly as in the scene; an introduction also reuses the pretest helper. */
 export function proofItem(task, names = {}, value) {
+  if (task.listenSpelling) {
+    const own = String(names.surname || '').trim();
+    const alphabet = task.listening?.alphabet;
+    const letters = [...own.normalize('NFC')].filter((c) => /\p{L}/u.test(c));
+    const supported = alphabet && letters.length && letters.every((c) => alphabet.members.some((m) => m.written.toLocaleLowerCase('de') === c.toLocaleLowerCase('de')));
+    return { ...task, answer: task.listening?.answer, accepted: task.listening?.accepted || [],
+      spokenAnswer: supported ? spellWithSet(own, alphabet) : null };
+  }
   let own = names[task.ownName];
   if (task.ownName === 'full' && value !== undefined) {
     const openings = task.openings || ['Ich heiße'];
@@ -115,12 +136,14 @@ export function proofItem(task, names = {}, value) {
 export function packProof(raw = {}) {
   const goals = Array.isArray(raw?.goals) ? raw.goals.map((g) => {
     const tries = Number.isInteger(g?.tries) && g.tries > 0 ? g.tries : 0;
-    return { tries, passed: tries > 0 && g?.passed === true, firstTry: tries === 1 && g?.passed === true && g?.firstTry === true };
+    return { tries, passed: tries > 0 && g?.passed === true, firstTry: tries === 1 && g?.passed === true && g?.firstTry === true,
+      ...(['heard-spelling', 'spoken-spelling'].includes(g?.evidence) ? { evidence: g.evidence } : {}) };
   }) : [];
   return { goals, phase: ['hint', 'reteach'].includes(raw?.phase) ? raw.phase : 'ask' };
 }
-export const proofPassed = (tasks, state) => tasks.length > 0 && tasks.every((_, i) => packProof(state).goals[i]?.passed === true);
-export const proofPosition = (tasks, state) => tasks.findIndex((_, i) => !packProof(state).goals[i]?.passed);
+const goalPassed = (task, goal) => goal?.passed === true && (!task.listenSpelling || ['heard-spelling', 'spoken-spelling'].includes(goal.evidence));
+export const proofPassed = (tasks, state) => tasks.length > 0 && tasks.every((task, i) => goalPassed(task, packProof(state).goals[i]));
+export const proofPosition = (tasks, state) => tasks.findIndex((task, i) => !goalPassed(task, packProof(state).goals[i]));
 export const canCompleteProofLesson = (lesson, state) => !lesson.proof || proofPassed(lesson.proof.tasks || [], state);
 
 /** Wrong → answer-free hint → second try → model → hidden model and same task. No skip event. */
@@ -131,16 +154,19 @@ export function answerProof(tasks, raw, response, names = {}) {
   const task = proofItem(tasks[at], names, response?.value);
   let right = false;
   if (response?.kind === 'typed') {
+    if (task.listenSpelling && response.listened !== true) return state;
     right = judgeProof(tasks[at], response.value, names).result !== RESULT.WRONG;
-  } else if (response?.kind === 'mic' && task.answer && !tasks[at].options) {
+  } else if (response?.kind === 'mic' && (task.listenSpelling ? task.spokenAnswer : task.answer) && !tasks[at].options) {
     const r = response.result;
     right = !!r && r.usedMic === true && r.selfConfirmed !== true && Number.isFinite(r.pct) && r.pct >= READALOUD_PASS_PCT && r.pct <= 1;
     // An unavailable/unsure scorer is not an answer: type instead, without spending a try.
     if (!r || r.selfConfirmed || r.unsure === true || !r.usedMic || !Number.isFinite(r.pct)) return state;
   } else return state;
-  const prev = state.goals[at] || { tries: 0 };
+  // A pre-change typed-name pass is not evidence for the new spelling task.
+  const prev = task.listenSpelling && !state.goals[at]?.evidence ? { tries: 0 } : state.goals[at] || { tries: 0 };
   const tries = prev.tries + 1;
-  state.goals[at] = { tries, passed: right, firstTry: right && tries === 1 };
+  state.goals[at] = { tries, passed: right, firstTry: right && tries === 1,
+    ...(task.listenSpelling ? { evidence: response.kind === 'typed' ? 'heard-spelling' : 'spoken-spelling' } : {}) };
   state.phase = right ? 'ask' : state.phase === 'hint' ? 'reteach' : 'hint';
   return state;
 }

@@ -119,7 +119,8 @@
           "line": 9
         }
       }
-    ]
+    ],
+    "noticeBeforeScene": true
   },
   "nextHook": {
     "de": "Ana hat Durst und geht ins Café. Kann sie auf Deutsch bestellen?",

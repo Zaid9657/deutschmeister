@@ -119,6 +119,60 @@
           "line": 9
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "numbers-0-10",
+        "kind": "numbers",
+        "titleDe": "Die Zahlen 0–10",
+        "titleEn": "Numbers 0–10",
+        "members": [
+          {
+            "written": "0",
+            "said": "null"
+          },
+          {
+            "written": "1",
+            "said": "eins"
+          },
+          {
+            "written": "2",
+            "said": "zwei"
+          },
+          {
+            "written": "3",
+            "said": "drei"
+          },
+          {
+            "written": "4",
+            "said": "vier"
+          },
+          {
+            "written": "5",
+            "said": "fünf"
+          },
+          {
+            "written": "6",
+            "said": "sechs"
+          },
+          {
+            "written": "7",
+            "said": "sieben"
+          },
+          {
+            "written": "8",
+            "said": "acht"
+          },
+          {
+            "written": "9",
+            "said": "neun"
+          },
+          {
+            "written": "10",
+            "said": "zehn"
+          }
+        ]
+      }
     ]
   },
   "nextHook": {

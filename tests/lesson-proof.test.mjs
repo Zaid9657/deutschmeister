@@ -11,8 +11,8 @@ const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const lesson = CURRICULUM_A11.lektionen[0];
 const tasks = proofTasks(lesson);
 const names = { surname: 'Noor', full: 'Sam Noor' };
-const solutions = ['Guten Tag. Auf Wiedersehen.', 'Ich heiße Sam Noor.', 'N O O R', 'Wie geht es Ihnen? Mir geht es gut, danke.'];
-const answer = (state, value) => answerProof(tasks, state, { kind: 'typed', value }, names);
+const solutions = ['Guten Tag. Auf Wiedersehen.', 'Ich heiße Sam Noor.', 'Chakiri', 'Wie geht es Ihnen? Mir geht es gut, danke.'];
+const answer = (state, value) => answerProof(tasks, state, { kind: 'typed', value, listened: true }, names);
 
 test('proof is optional, ordered in part 3, and preserves legacy and later lessons', () => {
   for (const c of [CURRICULUM_A11, CURRICULUM_A12]) {
@@ -65,7 +65,8 @@ test('microphone pass uses the shared threshold; self-confirmation and unsure re
 test('own-name answers reuse introduction and scene adapters and the common checker', () => {
   assert.equal(proofItem(tasks[1], names, 'Hallo').answer, null);
   assert.equal(proofItem(tasks[1], names, 'Ich heiße Jo Lee.').answer, 'Ich heiße Jo Lee.');
-  assert.equal(proofItem(tasks[2], names).answer, 'N-O-O-R.');
+  assert.equal(proofItem(tasks[2], names).answer, 'CHAKIRI');
+  assert.equal(proofItem(tasks[2], names).spokenAnswer, 'Enn. Oh. Oh. Err');
   let state = answer(packProof(), solutions[0]);
   assert.equal(answer(state, 'Ich heiße').goals[1].passed, false);
   state = answer(state, solutions[1]);
@@ -106,7 +107,7 @@ test('rendered proof loop hides solutions, restores reteach, and enables complet
   const nodes = (n) => !n || typeof n !== 'object' ? [] : [n, ...(n.props?.children || []).flat(Infinity).flatMap(nodes)];
   const render = () => { cursor = 0; return ProofStage({ stage: { tasks }, lesson, state, names, onNamesChange: () => {}, onAnswer: (r) => { state = answerProof(tasks, state, r, names); }, onHideModel: () => { state = hideProofModel(state); }, onDone: () => { ended++; } }); };
   const button = () => nodes(render()).find((n) => n.type === 'Button');
-  const enter = (value) => { nodes(render()).find((n) => n.type === 'textarea').props.onChange({ target: { value } }); button().props.onClick(); };
+  const enter = (value) => { nodes(render()).find((n) => n.type === 'PlayButton' && n.props.onPlayed)?.props.onPlayed(); nodes(render()).find((n) => n.type === 'textarea').props.onChange({ target: { value } }); button().props.onClick(); };
   assert.equal(button().props.disabled, true);
   assert.doesNotMatch(JSON.stringify(render()), /Guten Tag|Auf Wiedersehen/);
   enter('Guten Tag. Tschüss.'); assert.equal(state.phase, 'hint'); assert.equal(ended, 0);
@@ -124,4 +125,33 @@ test('rendered proof loop hides solutions, restores reteach, and enables complet
   assert.equal(proofPassed(tasks, state), true);
   assert.equal(ended, 0);
   button().props.onClick(); assert.equal(ended, 1);
+});
+
+test('spelling proof requires played letter names and transcription, or measured own-name speech', () => {
+  let state = answer(packProof(), solutions[0]); state = answer(state, solutions[1]);
+  assert.equal(tasks[2].type, 'listen_spelling');
+  assert.equal(tasks[2].listening.text, 'Zeh. Hah. Ah. Kah. Ih. Err. Ih');
+  assert.deepEqual(answerProof(tasks, state, { kind: 'typed', value: 'Chakiri' }, names), state, 'no playback is not a listening attempt');
+  assert.equal(answerProof(tasks, state, { kind: 'typed', value: names.surname, listened: true }, names).goals[2].passed, false);
+  assert.equal(answerProof(tasks, state, { kind: 'typed', value: 'Chakiri', listened: true }, names).goals[2].passed, true);
+  for (const result of [{ usedMic: true, selfConfirmed: true, pct: 1 }, { usedMic: false, pct: 1 }, { usedMic: true, unsure: true, pct: 1 }]) {
+    assert.deepEqual(answerProof(tasks, state, { kind: 'mic', result }, names), state);
+  }
+  assert.equal(answerProof(tasks, state, { kind: 'mic', result: { usedMic: true, pct: 0.8 } }, names).goals[2].passed, true);
+  assert.deepEqual(answerProof(tasks, state, { kind: 'mic', result: { usedMic: true, pct: 1 } }, {}), state, 'empty own name cannot be scored');
+  assert.equal(proofItem(tasks[2], { surname: '李' }).spokenAnswer, null, 'unsupported characters use the listening route');
+  const run = packRun({ stageKey: 'proof', proof: state });
+  assert.doesNotMatch(JSON.stringify(run), /Chakiri|Noor|Zeh|transcript|listened/);
+});
+
+test('an old typed-own-name proof pass cannot carry over as heard-spelling evidence on resume', () => {
+  const old = { goals: tasks.map(() => ({ tries: 1, passed: true, firstTry: true })), phase: 'ask' };
+  assert.equal(proofPassed(tasks, old), false);
+  assert.equal(proofPosition(tasks, old), 2);
+  const stages = [{ kind: 'proof', tasks }, { kind: 'recap' }];
+  assert.equal(proofResumeIndex(stages, 1, old), 0);
+  const fresh = answerProof(tasks, packProof(old), { kind: 'typed', value: 'Chakiri', listened: true }, names);
+  assert.equal(proofPassed(tasks, fresh), true);
+  assert.equal(fresh.goals[2].tries, 1);
+  assert.equal(unpackRun(packRun({ stageKey: 'proof', proof: fresh })).proof.goals[2].evidence, 'heard-spelling');
 });

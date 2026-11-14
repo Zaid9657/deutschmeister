@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { taughtOrderFindings } from './lib/taught-order.mjs';
+export { taughtOrderFindings } from './lib/taught-order.mjs';
 import { proofShapeFindings, proofGermanTexts } from './lib/proof-content.mjs';
 import { hintFor, hintContainsAnswer } from '../src/lib/lesson/guidedFeedback.js';
 import { guidedFindings } from './lib/guided-content.mjs';
@@ -3278,7 +3280,7 @@ function guidedVocabularyFindings(c, textsFor, label, spec = levelSpec(c?.level)
 export const guidedReadVocabulary = (c, spec = levelSpec(c?.level)) =>
   guidedVocabularyFindings(c, (l) => [l.guided?.read?.text || ''], 'guided read', spec);
 
-/** RULE 35: optional proof, ordered labelled parts/forms + safe part hints + the reading word horizon. */
+/** RULE 35: ordered parts or heard spelled-name transcription; scored own-name speech only, safe hints and taught vocabulary. */
 export const proofFindings = (c, spec = levelSpec(c?.level)) => [
   ...proofShapeFindings(c), ...guidedVocabularyFindings(c, proofGermanTexts, 'proof', spec),
 ];
@@ -3314,6 +3316,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
   }
   for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
   for (const finding of proofFindings(c, spec)) fail(`RULE 35: ${finding}`);
+  for (const finding of taughtOrderFindings(c, poolItems)) fail(`RULE 36: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);

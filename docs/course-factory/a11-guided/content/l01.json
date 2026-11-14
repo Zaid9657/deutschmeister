@@ -104,6 +104,160 @@
           "line": 9
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "alphabet",
+        "kind": "letters",
+        "titleDe": "Das Alphabet",
+        "titleEn": "The alphabet",
+        "members": [
+          {
+            "written": "A",
+            "said": "Ah"
+          },
+          {
+            "written": "B",
+            "said": "Beh"
+          },
+          {
+            "written": "C",
+            "said": "Zeh"
+          },
+          {
+            "written": "D",
+            "said": "Deh"
+          },
+          {
+            "written": "E",
+            "said": "Eh"
+          },
+          {
+            "written": "F",
+            "said": "Eff"
+          },
+          {
+            "written": "G",
+            "said": "Geh"
+          },
+          {
+            "written": "H",
+            "said": "Hah"
+          },
+          {
+            "written": "I",
+            "said": "Ih"
+          },
+          {
+            "written": "J",
+            "said": "Jot"
+          },
+          {
+            "written": "K",
+            "said": "Kah"
+          },
+          {
+            "written": "L",
+            "said": "Ell"
+          },
+          {
+            "written": "M",
+            "said": "Emm"
+          },
+          {
+            "written": "N",
+            "said": "Enn"
+          },
+          {
+            "written": "O",
+            "said": "Oh"
+          },
+          {
+            "written": "P",
+            "said": "Peh"
+          },
+          {
+            "written": "Q",
+            "said": "Kuh"
+          },
+          {
+            "written": "R",
+            "said": "Err"
+          },
+          {
+            "written": "S",
+            "said": "Ess"
+          },
+          {
+            "written": "T",
+            "said": "Teh"
+          },
+          {
+            "written": "U",
+            "said": "Uh"
+          },
+          {
+            "written": "V",
+            "said": "Vau"
+          },
+          {
+            "written": "W",
+            "said": "Weh"
+          },
+          {
+            "written": "X",
+            "said": "Iks"
+          },
+          {
+            "written": "Y",
+            "said": "Ypsilon"
+          },
+          {
+            "written": "Z",
+            "said": "Zett"
+          },
+          {
+            "written": "Ä",
+            "said": "Äh"
+          },
+          {
+            "written": "Ö",
+            "said": "Öh"
+          },
+          {
+            "written": "Ü",
+            "said": "Üh"
+          },
+          {
+            "written": "ß",
+            "said": "Eszett",
+            "noteDe": "Auch: scharfes S. Groß: ẞ; ohne ß auf der Tastatur: ss.",
+            "noteEn": "Also called scharfes S. Capital: ẞ; on keyboards without ß: ss."
+          }
+        ],
+        "spellings": [
+          "Ada",
+          "Ehe",
+          "Mai",
+          "Post",
+          "Wut",
+          "süß"
+        ],
+        "contrasts": [
+          [
+            "E",
+            "I"
+          ],
+          [
+            "G",
+            "J"
+          ],
+          [
+            "V",
+            "W"
+          ]
+        ]
+      }
     ]
   },
   "nextHook": {
@@ -180,10 +334,15 @@
       },
       {
         "canDo": 2,
-        "type": "production",
+        "type": "listen_spelling",
+        "listenSpelling": true,
+        "listenFrom": {
+          "kind": "dialog",
+          "index": 3
+        },
         "ownName": "surname",
-        "promptDe": "Frau Kaya: „Buchstabieren Sie bitte.“",
-        "promptEn": "Ms Kaya needs to write down your surname. Spell your own surname.",
+        "promptDe": "Frau Kaya: „Wie buchstabiert man das?“ – Sie: …",
+        "promptEn": "Listen to the name spelled letter by letter and write the name. With a scored microphone, you may instead spell your own surname aloud.",
         "answer": "C-H-A-K-I-R-I.",
         "parts": [
           {

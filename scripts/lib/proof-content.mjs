@@ -1,6 +1,6 @@
 import { checkAnswer, checkOptionsFor, RESULT, spellingApplies } from '../../src/lib/lesson/check.js';
 import { hintFor, hintContainsAnswer } from '../../src/lib/lesson/guidedFeedback.js';
-import { judgeProof, proofHint, proofModel, proofTasks } from '../../src/lib/lesson/proof.js';
+import { judgeProof, proofHint, proofModel, proofTasks, proofSpelling } from '../../src/lib/lesson/proof.js';
 
 const nonempty = (v) => typeof v === 'string' && !!v.trim();
 const list = (v) => Array.isArray(v) ? v : [];
@@ -19,13 +19,19 @@ export function proofShapeFindings(curriculum) {
       const bad = (message) => fail(`task ${i + 1}: ${message}`);
       if (!task || typeof task !== 'object' || Array.isArray(task)) { bad('must be an object'); continue; }
       if (task.canDo !== i) bad('canDo indices must be in can-do order, starting at zero');
-      if (!['production', 'multiple_choice'].includes(task.type)) bad('type must be production or multiple_choice');
+      if (!['production', 'multiple_choice', 'listen_spelling'].includes(task.type)) bad('type must be production, multiple_choice or listen_spelling');
       if (!nonempty(task.promptDe) || !nonempty(task.promptEn)) bad('needs bilingual prompts');
       if (!/\bSie\b/.test(task.promptDe || '') || /\b(?:du|dich|dein|deine|euch)\b/i.test(task.promptDe || '')) bad('prompt must address Sie');
       if (!nonempty(task.answer)) bad('needs a model answer');
       if (task.register !== undefined && !['formal', 'neutral'].includes(task.register)) bad('register must be formal or neutral');
       const parts = list(task.parts);
       const validParts = parts.length > 0 && parts.every((p) => p && typeof p === 'object' && nonempty(p.label?.de) && nonempty(p.label?.en) && Array.isArray(p.forms) && p.forms.length && p.forms.every(nonempty));
+      if (task.type === 'listen_spelling') {
+        if (task.listenSpelling !== true || !proofSpelling(lesson, task.listenFrom)) bad('listen_spelling needs a valid taught spelled-name pointer and alphabet');
+        if (!validParts || task.ownName !== 'surname' || parts.length !== 1 || !list(parts[0]?.forms).includes(task.answer)) bad('listen_spelling needs its own-surname microphone adapter and one spelled model part');
+        if (proofSpelling(lesson, task.listenFrom) && lesson.dialog.lines[task.listenFrom.index].de !== task.answer) bad('listen_spelling model must match its dialogue pointer');
+        if (task.accepted !== undefined) bad('listen_spelling derives its typed answer from the dialogue');
+      } else if (task.listenSpelling !== undefined || task.listenFrom !== undefined) bad('spelling listening requires type listen_spelling');
       if (task.type === 'production') {
         if (!validParts) bad('needs ordered parts, each with bilingual label and nonempty forms');
         if (task.accepted !== undefined) bad('production uses part forms, not whole-answer accepted strings');
@@ -36,7 +42,7 @@ export function proofShapeFindings(curriculum) {
           }
           if (!task.ownName && nonempty(task.answer) && judgeProof(proofTasks({ ...lesson, proof: { tasks: [task] } })[0], task.answer).result === RESULT.WRONG) bad('model answer must fulfil every part in order');
         }
-      } else if (!Array.isArray(task.accepted) || !task.accepted.length || !task.accepted.every(nonempty) || !task.accepted.includes(task.answer)) bad('needs nonempty accepted forms including the answer');
+      } else if (task.type !== 'listen_spelling' && (!Array.isArray(task.accepted) || !task.accepted.length || !task.accepted.every(nonempty) || !task.accepted.includes(task.answer))) bad('needs nonempty accepted forms including the answer');
       const pointer = task.reteach;
       if (!proofModel(lesson, pointer)) bad('re-teach pointer must resolve to bilingual taught input');
       if (pointer?.kind === 'dialog' && (new Set(list(pointer.indices)).size !== list(pointer.indices).length || list(pointer.indices).some((n) => !Number.isInteger(n) || n < 0))) bad('dialogue pointer needs distinct nonnegative line indices');

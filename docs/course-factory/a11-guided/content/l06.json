@@ -119,6 +119,39 @@
           "line": 8
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "full-hour",
+        "kind": "clock",
+        "titleDe": "Um wie viel Uhr?",
+        "titleEn": "At what time?",
+        "rule": {
+          "id": "full-hour",
+          "de": "Wann? Sagen Sie um + Zahl (+ Uhr): um neun Uhr, kurz: um neun. Bei 1 heißt es ein Uhr, aber um eins ohne Uhr. Wie spät ist es? Es ist neun Uhr, ohne um.",
+          "en": "When? Use um + number (+ Uhr): um neun Uhr, or um neun. For 1, use ein Uhr, but um eins without Uhr. To tell the time, say Es ist neun Uhr, without um."
+        },
+        "members": [
+          {
+            "written": "09:00",
+            "said": "um neun Uhr"
+          },
+          {
+            "written": "10:00",
+            "said": "um zehn Uhr"
+          },
+          {
+            "written": "11:00",
+            "said": "um elf Uhr"
+          },
+          {
+            "written": "01:00",
+            "said": "um ein Uhr",
+            "noteDe": "Ohne Uhr: um eins.",
+            "noteEn": "Without Uhr: um eins."
+          }
+        ]
+      }
     ]
   },
   "nextHook": {

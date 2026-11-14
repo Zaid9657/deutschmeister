@@ -1,5 +1,6 @@
 import { buildSoundItems, nounsOf } from './guidedSound.js';
 import { proofTasks } from './proof.js';
+import { buildSetStage } from './taughtSet.js';
 import { lineFor } from './wortfeldPacing.js';
 
 export const SCENE_PHASES = ['hear', 'meaning', 'say'];
@@ -32,12 +33,14 @@ export function buildGuided(options, buildLegacy) {
   const stages = [
     ...legacy.stages.filter((s) => s.kind === 'warmup'),
     part('pretest', 1),
+    ...(lektion.guided.sets || []).map(buildSetStage),
+    ...(lektion.guided.noticeBeforeScene ? [part('notice', 1)] : []),
     { nr: 1, key: 'scene', kind: 'scene', part: 1, chunks, title: lektion.dialog.title, glossOpen: true },
     { ...part('wortfeld', 1), words: sceneWords },
     { nr: 3, key: 'sound', kind: 'sound', part: 1, items: soundItems },
     { nr: 3, key: 'read', kind: 'read', part: 1, ...read, glossary: lektion.wortfeld, words: lektion.wortfeld.filter((w) => !met(w)),
       items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', accepted: [q.answer] })) },
-    ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
+    ...['notice', 'practice', 'derived', 'dictation'].filter((kind) => kind !== 'notice' || !lektion.guided.noticeBeforeScene).map((kind) => part(kind, 2)),
     { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue })) },
     part('speaking', 3), part('writing', 3),
     ...(lektion.proof ? [{ nr: 6, key: 'proof', kind: 'proof', part: 3, tasks: proofTasks(lektion), canDo: lektion.canDo }] : []),

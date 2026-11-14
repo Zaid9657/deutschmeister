@@ -115,8 +115,20 @@ can-do or situation requires formal speech; all forms must respect it. For examp
 The response is split at `.`, `!` and `?`; each sentence fulfils the next part through the common
 checker, including its TYPO rules. Taught standalone courtesies (`Danke`, `Bitte`,
 `Entschuldigung`, when in the Wortfeld) may appear anywhere without consuming a part. Other
-extra sentences, wrong order and missing/substituted parts fail. Spelling and introductions
-keep the existing own-name adapters and are checked as one response, preserving separators.
+extra sentences, wrong order and missing/substituted parts fail. Introductions keep the existing own-name adapter and are checked as one response, preserving separators.
+
+For a spelling can-do, use `type: "listen_spelling"`, `listenSpelling: true`,
+`listenFrom: { "kind": "dialog", "index": 3 }` (the actual spelled-name line), and
+`ownName: "surname"` for the optional scored microphone path. Keep one bilingual labelled part
+with the original spelled model as `answer`/`forms`, plus a normal re-teach pointer. The source
+must resolve to a spelled name also present in this lesson’s dialogue/cast, and the lesson must
+deliver an alphabet set. The builder derives the name and its spoken German letter names; never
+retype a listening answer or put `accepted` on this task. The screen asks the learner to hear the
+spelled name and write it, and requires successful playback before checking. Typing their own
+surname is not evidence. With scored speech they may instead spell their own surname; the
+expected speech is German letter names, with no visible or playable answer model. Self-confirmation
+never passes either path. If listening is unavailable, retry playback or use scored speech;
+showing the written answer must not pass the listening proof.
 A comma-delimited final address may use the exact title and name of a titled speaker in this
 Lektion's dialogue (e.g. `Frau Kaya`); the rest of the sentence is still checked. Never enumerate
 address variants in forms or accept a different/incorrect name.

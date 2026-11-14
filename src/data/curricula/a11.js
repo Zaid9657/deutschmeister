@@ -1,3 +1,5 @@
+import { ALPHABET, DIGITS, PRICES, FULL_HOUR, AGE_TWENTY } from './a11.sets.js';
+
 // A1.1 — 12 situational Lektionen (docs/course-factory/a11-rebuild/CONTRACT.md,
 // docs/course-standard-2026-09-12.md §2). The unit is the situation; the grammar is one step
 // inside it. This module is the single source: the lesson player, the checkpoint builder and the
@@ -163,6 +165,7 @@ export const CURRICULUM_A11 = {
       slug: 'hallo-ich-bin',
       flow: 'guided',
       guided: {
+        sets: [ALPHABET],
         read: {
           titleDe: 'Willkommen!', titleEn: 'Welcome!',
           instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
@@ -318,9 +321,9 @@ export const CURRICULUM_A11 = {
             reteach: { kind: 'dialog', indices: [1] },
           },
           {
-            canDo: 2, type: 'production', ownName: 'surname',
-            promptDe: 'Frau Kaya: „Buchstabieren Sie bitte.“',
-            promptEn: 'Ms Kaya needs to write down your surname. Spell your own surname.',
+            canDo: 2, type: 'listen_spelling', listenSpelling: true, listenFrom: { kind: 'dialog', index: 3 }, ownName: 'surname',
+            promptDe: 'Frau Kaya: „Wie buchstabiert man das?“ – Sie: …',
+            promptEn: 'Listen to the name spelled letter by letter and write the name. With a scored microphone, you may instead spell your own surname aloud.',
             answer: 'C-H-A-K-I-R-I.',
             parts: [{ label: { de: 'die Buchstaben', en: 'the letters' }, forms: ['C-H-A-K-I-R-I.'] }],
             reteach: { kind: 'dialog', indices: [2, 3] },
@@ -393,6 +396,7 @@ export const CURRICULUM_A11 = {
       slug: 'ich-bin-studentin',
       flow: 'guided',
       guided: {
+        sets: [DIGITS],
         read: {
           titleDe: 'Das Formular vom Amt',
           titleEn: 'The form from the public office',
@@ -533,7 +537,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Lehrerin', exampleDe: 'Die Frau ist Lehrerin.', word: 'Lehrerin', article: 'die', plural: 'Lehrerinnen', en: 'teacher (f)', wordId: '1e7ad6c2-37b5-4063-971c-4b2090cafa9e' },
         // The digits 0–10 are ONE Wortfeld entry, not ten (DaF review: ten of 25 slots were digits,
         // which inflated the word count and crowded out the Personalien lexis the Handlungsfeld needs).
-        { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', meta: true, wordId: '1087cf2f-d531-45d9-b04c-803440a7563a' },
+        { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', meta: true, set: 'numbers-0-10', wordId: '1087cf2f-d531-45d9-b04c-803440a7563a' },
         { de: 'wohnen', word: 'wohnen', article: null, plural: null, en: 'to live, to reside', wordId: 'fb025b05-6aa5-4a9e-91a2-52a903032000' },
         { de: 'das Geburtsdatum', word: 'Geburtsdatum', article: 'das', plural: 'Geburtsdaten', en: 'date of birth', field: true, wordId: '4b61db71-3720-4bf4-a936-d75495ebf91a' },
         { de: 'die Staatsangehörigkeit', word: 'Staatsangehörigkeit', article: 'die', plural: 'Staatsangehörigkeiten', en: 'nationality', field: true, wordId: '25aca43e-8b73-4f68-8d8f-aaf629150fb4' },
@@ -764,6 +768,7 @@ export const CURRICULUM_A11 = {
       slug: 'meine-familie',
       flow: 'guided',
       guided: {
+        sets: [AGE_TWENTY],
         read: {
           titleDe: 'Eine Nachricht mit Foto',
           titleEn: 'A message with a photo',
@@ -977,6 +982,7 @@ export const CURRICULUM_A11 = {
       slug: 'auf-dem-flohmarkt',
       flow: 'guided',
       guided: {
+        sets: [PRICES],
         read: {
           titleDe: 'Preise auf dem Flohmarkt',
           titleEn: 'Prices at the flea market',
@@ -1102,7 +1108,7 @@ export const CURRICULUM_A11 = {
         // (the dialogue says acht, zwölf, fünfzehn, zwanzig, dreißig — all FUNCTION_WORDS anyway).
         // They are ONE entry now, exactly like L2's Zahlen 0–10, and the freed slots carry the
         // Flohmarkt lexis the situation actually needs (DaF review #2, L4).
-        { de: 'die Zahlen 11–100', word: 'Zahlen 11–100', article: 'die', plural: '—', en: 'the numbers 11–100 (elf, zwölf … hundert)', meta: true, wordId: '112eb634-135f-4372-a74a-c60da86d1423' },
+        { de: 'die Zahlen 11–100', word: 'Zahlen 11–100', article: 'die', plural: '—', en: 'the numbers 11–100 (elf, zwölf … hundert)', meta: true, set: 'numbers-11-100', wordId: '112eb634-135f-4372-a74a-c60da86d1423' },
         { de: 'wie viel', word: 'wie viel', article: null, plural: null, en: 'how much', wordId: '80e786f9-8a29-45bd-862b-a498bc184c69' },
         { de: 'wie viele', exampleDe: 'Wie viele Stühle sind das? – Drei.', word: 'wie viele', article: null, plural: null, en: 'how many', wordId: 'c4fad330-3515-46b0-ad99-aa883e0ea764' },
         { de: 'der Flohmarkt', exampleDe: 'Das ist ein Flohmarkt. Ein Tisch kostet zehn Euro.', word: 'Flohmarkt', article: 'der', plural: 'Flohmärkte', en: 'flea market', wordId: '245c8937-50c0-491e-a297-5008748e085d' },
@@ -1406,6 +1412,7 @@ export const CURRICULUM_A11 = {
       slug: 'der-erste-tag-im-buero',
       flow: 'guided',
       guided: {
+        sets: [FULL_HOUR],
         read: {
           titleDe: 'Eine Nachricht von der Chefin',
           titleEn: 'A note from the boss',
@@ -1570,8 +1577,8 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['kaufen: Ich kaufe ein Handy.'],
         title: 'ein, eine – der unbestimmte Artikel',
-        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
-        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lektion 8.',
+        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** kennen Sie schon.',
+        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** means at one.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
@@ -1828,6 +1835,7 @@ export const CURRICULUM_A11 = {
       slug: 'termine-und-uhrzeit',
       flow: 'guided',
       guided: {
+        noticeBeforeScene: true,
         read: {
           titleDe: 'Eine Nachricht von Lena',
           titleEn: 'A message from Lena',

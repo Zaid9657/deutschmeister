@@ -15,7 +15,7 @@ const tasks = proofTasks(lesson);
 test('proof sentences pass and fail by class, including formal register and exact speaker address', () => {
   for (const [goal, value, expected] of proofCases) {
     assert.equal(judgeProof(tasks[goal], value).result, expected, `goal ${goal + 1}: ${value}`);
-    const before = packProof({ goals: tasks.slice(0, goal).map(() => ({ tries: 1, passed: true, firstTry: true })) });
+    const before = packProof({ goals: tasks.slice(0, goal).map((task) => ({ tries: 1, passed: true, firstTry: true, ...(task.listenSpelling ? { evidence: 'heard-spelling' } : {}) })) });
     const after = answerProof(tasks, before, { kind: 'typed', value });
     assert.equal(after.goals[goal].passed, expected !== RESULT.WRONG, value);
   }
@@ -50,8 +50,9 @@ test('each part delegates typo and case decisions to the common checker; names k
     assert.equal(judgeProof(task, value).result, checked.result);
   }
   assert.equal(judgeProof({ ...tasks[0], parts: [{ ...tasks[0].parts[0], caseSensitive: true }] }, 'guten tag').result, RESULT.WRONG);
+  assert.equal(judgeProof(tasks[2], 'Lee', { surname: 'Lee' }).result, RESULT.WRONG, 'heard-name proof does not accept own-name typing');
   for (const value of ['L-E-E.', 'L E E', 'LEE', 'L.E.E.', 'L/E/E']) {
-    assert.equal(judgeProof(tasks[2], value, { surname: 'Lee' }).result, RESULT.CORRECT, value);
+    assert.equal(judgeProof({ ...tasks[2], type: 'production', listenSpelling: undefined }, value, { surname: 'Lee' }).result, RESULT.CORRECT, value);
   }
 });
 

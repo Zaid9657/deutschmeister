@@ -71,12 +71,19 @@ function asReadAloud(v) {
   return out;
 }
 
+/** Stable set ids keep recordings separate when a lesson declares more than one set. */
+function asSetReadAloud(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  return Object.fromEntries(Object.entries(value).filter(([id]) => /^[a-z0-9-]+$/.test(id)).map(([id, results]) => [id, asReadAloud(results)]));
+}
+
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ proof = {}, flow = 'legacy', sceneReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ proof = {}, flow = 'legacy', sceneReadAloud = {}, taughtSetReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
   return {
     proof: packProof(proof),
     flow: flow === 'guided' ? 'guided' : 'legacy',
     sceneReadAloud: asReadAloud(sceneReadAloud),
+    taughtSetReadAloud: asSetReadAloud(taughtSetReadAloud),
     soundReadAloud: asReadAloud(soundReadAloud),
     fluencyReadAloud: asReadAloud(fluencyReadAloud),
     v: RUN_VERSION,
