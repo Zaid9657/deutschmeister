@@ -1,0 +1,138 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Tims Zimmer",
+      "titleEn": "Tim’s room",
+      "instructionDe": "Tim schickt Lena ein Foto und schreibt. Lesen Sie die Nachricht. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Tim sends Lena a photo and writes to her. Read the message. Tap a word for its meaning.",
+      "text": "Hallo Lena!\nDas ist mein Zimmer. Die Wohnung ist alt, aber das Zimmer ist gut.\nDie Tür ist braun und das Fenster ist weiß.\nDer Stuhl ist auch braun. Das Bild ist da: Es ist blau.\nIch habe eine Tafel für Deutsch. Sie ist grün.\nPapier und ein Kugelschreiber sind auch da.\nKommst du morgen? Dann sprechen wir zusammen Deutsch.\nTschüss, Tim",
+      "questions": [
+        {
+          "promptDe": "Welche Farbe hat die Tür in Tims Zimmer? Wählen Sie die richtige Antwort.",
+          "promptEn": "What colour is the door in Tim’s room? Choose the right answer.",
+          "options": [
+            "It is white.",
+            "It is green.",
+            "It is brown."
+          ],
+          "answer": "It is brown.",
+          "explanationDe": "Tim schreibt: Die Tür ist braun. Weiß ist das Fenster, grün ist die Tafel.",
+          "explanationEn": "Tim writes that the door is brown. The window is white and the board is green."
+        },
+        {
+          "promptDe": "Was möchte Tim morgen mit Lena machen? Wählen Sie die richtige Antwort.",
+          "promptEn": "What would Tim like to do with Lena tomorrow? Choose the right answer.",
+          "options": [
+            "Speak German together.",
+            "Buy a picture together.",
+            "Sell his old chair."
+          ],
+          "answer": "Speak German together.",
+          "explanationDe": "Tim schreibt: Kommst du morgen? Dann sprechen wir zusammen Deutsch.",
+          "explanationEn": "Tim asks whether Lena is coming tomorrow, and says they will then speak German together."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was möchte Lena wissen? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Lena want to know? Choose the meaning.",
+          "options": [
+            "What the dictionary costs.",
+            "Where the dictionary is.",
+            "Whose dictionary it is."
+          ],
+          "answer": "Where the dictionary is."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was sagt Tim über die Schere und das Lineal? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim say about the scissors and the ruler? Choose the meaning.",
+          "options": [
+            "The scissors are here, and so is the ruler.",
+            "The scissors are here, but the ruler is not.",
+            "Lena has the scissors, and Tim has the ruler."
+          ],
+          "answer": "The scissors are here, and so is the ruler."
+        },
+        "say": {
+          "line": 2
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Welche Farben nennt Tim? Wählen Sie die Bedeutung.",
+          "promptEn": "Which colours does Tim name? Choose the meaning.",
+          "options": [
+            "The pen is black and the pencil is blue.",
+            "The pen is yellow and the pencil is black.",
+            "The pen is blue and the pencil is yellow."
+          ],
+          "answer": "The pen is blue and the pencil is yellow."
+        },
+        "say": {
+          "line": 4
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was sagt Tim über das Heft? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim say about the notebook? Choose the meaning.",
+          "options": [
+            "It is red, just as Lena thinks.",
+            "It is not red but green.",
+            "It is not his notebook at all."
+          ],
+          "answer": "It is not red but green."
+        },
+        "say": {
+          "line": 7
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was sagt Tim über das Bild? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim say about the picture? Choose the meaning.",
+          "options": [
+            "It is blue, and it is for his room.",
+            "It is green, and it is for Lena.",
+            "It is black, and it is for the course."
+          ],
+          "answer": "It is blue, and it is for his room."
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Ana hat Arbeit! Morgen ist ihr erster Tag im Büro. Was braucht sie dort?",
+    "en": "Ana has a job! Tomorrow is her first day at the office. What does she need there?"
+  },
+  "notes": [
+    "Chunks: five pairs (question + answer); no boundary was in doubt. Both speakers are learner roles, so every line was eligible for say.",
+    "say in the last chunk is line 9, not line 8: the source comment on line 8 says `hat` („Welche Farbe hat das Bild?“) is input, not production, in this Lektion.",
+    "Read text is a message from Tim with a photo of his room; it continues the dialogue (the blue picture is for his room) and Lektion 4 (the chair Tim bought there). Tim's city is never stated in the course, so the text names none.",
+    "Hard to fit: `die Tafel` (classroom) and `die Wohnung` (housing) come from two different fields. The text carries the board as „eine Tafel für Deutsch“ in Tim's room. It is correct German and plausible, but it is the least natural line; a second option would be to say the word in a dialogue line instead.",
+    "The text has no Dativ phrase (no „an der Tafel“, „auf dem Tisch“), because the notice of this Lektion defers that pattern to A1.2.",
+    "`Kurs` is in no Wortfeld of Lektion 1–5, although the writing task of this Lektion uses it as a field („Kurs: A1“). RULE 34 therefore rejects it in a read text; the message avoids the word.",
+    "Existing data: the Wortfeld example for `weiß` is „Das Heft ist weiß.“, while the dialogue of the same Lektion says „Nein, das Heft ist grün.“",
+    "Phonetik: „SECHS“ and „ZEHN“ are one-syllable items (the focus is sch – s – z, not word stress), so the sound stage stays pending."
+  ]
+}

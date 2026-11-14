@@ -1,0 +1,140 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Preise auf dem Flohmarkt",
+      "titleEn": "Prices at the flea market",
+      "instructionDe": "Lesen Sie das Schild. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the sign. Tap a word for its meaning.",
+      "text": "Flohmarkt\nFrau Wolf: Wir verkaufen Uhren, Taschen, Rucksäcke, Stühle …\nWie viel kostet das? Der Preis in Euro:\nUhr: 10\nTasche: 5\nRucksack: 20\nWie viele Stühle kaufen Sie? Vier Stühle kosten zusammen nur 40 Euro!",
+      "questions": [
+        {
+          "promptDe": "Was kostet bei Frau Wolf fünf Euro? Wählen Sie.",
+          "promptEn": "What costs five euros at Frau Wolf’s table? Choose.",
+          "options": [
+            "The clock.",
+            "The backpack.",
+            "The bag."
+          ],
+          "answer": "The bag.",
+          "explanationDe": "Auf dem Schild steht: Tasche: 5. Der Preis ist in Euro.",
+          "explanationEn": "The sign says: Tasche (bag): 5. The price is in euros."
+        },
+        {
+          "promptDe": "Was kosten vier Stühle zusammen? Wählen Sie.",
+          "promptEn": "What do four chairs cost altogether? Choose.",
+          "options": [
+            "Twelve euros.",
+            "Forty euros.",
+            "Twenty euros."
+          ],
+          "answer": "Forty euros.",
+          "explanationDe": "Auf dem Schild steht: Vier Stühle kosten zusammen nur 40 Euro.",
+          "explanationEn": "The sign says that four chairs together cost only 40 euros."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Was sagt Frau Wolf? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Frau Wolf say? Choose the meaning.",
+          "options": [
+            "It is a clock and costs eight euros.",
+            "It is a lamp and costs eighteen euros.",
+            "It is a lamp and costs eight euros."
+          ],
+          "answer": "It is a lamp and costs eight euros."
+        },
+        "say": {
+          "line": 0
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was kostet der Tisch? Wählen Sie die Bedeutung.",
+          "promptEn": "What does the table cost? Choose the meaning.",
+          "options": [
+            "Fifty euros.",
+            "Fifteen euros.",
+            "Five euros."
+          ],
+          "answer": "Fifteen euros."
+        },
+        "say": {
+          "line": 2
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Was sagt Tim über den Tisch? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim say about the table? Choose the meaning.",
+          "options": [
+            "He thinks it is expensive.",
+            "He wants to buy it now.",
+            "He thinks it is too old."
+          ],
+          "answer": "He thinks it is expensive."
+        },
+        "say": {
+          "line": 4
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was kauft Tim? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Tim buy? Choose the meaning.",
+          "options": [
+            "The table and the chair.",
+            "The chair and the lamp.",
+            "The lamp and the shelf."
+          ],
+          "answer": "The chair and the lamp."
+        },
+        "say": {
+          "line": 6
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was kostet das Regal? Wählen Sie die Bedeutung.",
+          "promptEn": "What does the shelf cost? Choose the meaning.",
+          "options": [
+            "Fifty euros.",
+            "Thirteen euros.",
+            "Thirty euros."
+          ],
+          "answer": "Thirty euros."
+        },
+        "say": {
+          "line": 8
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Vor dem Kurs packen Lena und Tim ihre Taschen aus. Aber wo ist das Wörterbuch?",
+    "en": "Before class, Lena and Tim unpack their bags. But where is the dictionary?"
+  },
+  "notes": [
+    "Chunks: five question-and-answer pairs; Tim has exactly one line in each (0, 2, 4, 6, 8), so say.line had no real choice. No boundary was in doubt.",
+    "Meaning questions 2 and 5 turn on fünfzehn/fünfzig and dreißig/fünfzig/dreizehn on purpose: the can-do is „Preise bis hundert Euro verstehen“, and -zehn against -zig is the listening contrast that matters. No two options are one edit apart (checkAnswer would grade a neighbour as TYPO).",
+    "Read text is the sign at Frau Wolf’s table. Nine Wortfeld entries were missing from the dialogue: Uhr, Tasche, Rucksack, Zahlen 11–100, wie viel, wie viele, Flohmarkt, verkaufen, Preis. The sign lists only goods Tim does not ask about, so it does not make his questions in the dialogue pointless; the chair offer (4 for 40) agrees with the dialogue price of 12 Euro each. Uhr 10, Tasche 5, Rucksack 20 are the prices of the Wortfeld example sentences.",
+    "HARD TO FIT: „die Zahlen 11–100“ (meta entry), same problem as „Zahlen 0–10“ in Lektion 2: only the literal tokens „Zahlen“ + „11–100“ count. It stands as the table numbers of the market („Tische mit den Zahlen 11–100“, then „Tisch 12“). Grammatical and understandable, but a real sign would say „Tische 11–100“. Suggest exempting `meta: true` entries from the read-coverage rule.",
+    "Side effect of that line: „Tisch“ is the seller’s table on the sign and a piece of furniture in the dialogue. Both are the same word and the same thing; I left it, but it is the first candidate to go if the meta entry is exempted.",
+    "The gloss finder matches the exact Wortfeld token only: „Preise“ does not cover „der Preis“ and „verkauft“ does not cover „verkaufen“ (the checker rejected „Frau Wolf verkauft hier.“). So the header says „Der Preis in Euro:“ over a list of three, and the stall line says „Wir verkaufen …“. Both are things a sign says; the constraint is worth knowing for the other Lektionen.",
+    "Existing data: the pool prices the same goods differently from the Wortfeld examples (extra-a11-l04-03/-12 „Die Uhr kostet zwanzig Euro.“, extra-a11-l04-06 „Die Tasche kostet dreizehn Euro.“ against „Die Uhr kostet zehn Euro.“ / „Die Tasche kostet fünf Euro.“). Harmless as isolated items, but the sign now sides with the Wortfeld examples.",
+    "Phonetik item „NEUN“ has one syllable, so the word-stress shape check does not accept it (focus is the diphthong eu): sound stage pending, data untouched.",
+    "nextHook is grounded in the L5 dialog (title „Vor dem Kurs“, setting „Lena und Tim packen ihre Taschen aus.“, line 0 „Tim, wo ist das Wörterbuch?“).",
+    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history."
+  ]
+}

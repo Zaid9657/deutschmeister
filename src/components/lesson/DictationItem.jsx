@@ -1,3 +1,4 @@
+import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useRef, useState } from 'react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -19,7 +20,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * key the dialogue screen uses — a dictation line IS a dialogue line) and
  * browser speech otherwise; the badge says which.
  */
-export default function DictationItem({ line, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.dictation.eyebrow' }) {
+export default function DictationItem({ line, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.dictation.eyebrow', hintFirst = false }) {
   const [value, setValue] = useState('');
   const [state, setState] = useState(null);
   const [retried, setRetried] = useState(false);
@@ -57,12 +58,12 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
     if (!value.trim() || state) return;
     const { result, expected } = checkAnswer(value, item.accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
-    setState({ result, expected });
+    setState(hintFirst ? guidedFeedback(item, { result, expected }, retried, lang) : { result, expected });
     if (!recorded.current) onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de), listened: heard && !readInstead });
     recorded.current = true;
   };
 
-  const canRetryTypo = state?.result === RESULT.TYPO && !retried;
+  const canRetryTypo = (state?.result === RESULT.TYPO || state?.hintOnly) && !retried;
   const retryTypo = () => { setRetried(true); setState(null); };
   useEffect(() => {
     if (retried && !state) ref.current?.focus();
@@ -110,9 +111,12 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
       )}
 
       <FeedbackSheet
+        hintOnly={state?.hintOnly}
+        showAnswer={state?.showAnswer}
         result={state && state.result}
         expected={state && state.expected}
-        explanation={state && lang !== 'de' ? line.en : null}
+        hint={state?.hint}
+        explanation={hintFirst && state ? feedbackReason({ type: 'dictation', explanationDe: 'Die Lösung gibt die gehörte Zeile wieder.', explanationEn: 'The answer reproduces the line you heard.' }, lang) : state && lang !== 'de' ? line.en : null}
         primaryLabel={canRetryTypo ? t('action.again', lang) : undefined}
         onContinue={canRetryTypo ? retryTypo : onNext}
       />

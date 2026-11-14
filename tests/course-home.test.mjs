@@ -134,7 +134,7 @@ test('Start fires lesson_started and the recap write fires lesson_completed', ()
   assert.match(player, /import \{ trackLessonCompleted, [^}]*trackLessonStarted[^}]* \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
   // One run id (runState.js) joins start and completion, so time-to-complete is measurable. Start is
   // a no-op until the run's inputs are in (tests/lesson-late-load.test.mjs), and freezes them.
-  assert.match(player, /const start = \(\) => \{\s*if \(!ready\) return;\s*started\.current = true;\s*trackLessonStarted\(curriculum\.level, lektion\.id, runId\);\s*setIntroDone\(true\);\s*\};/);
+  assert.match(player, /const start = \(\) => \{\s*if \(!ready \|\| started.current\) return;\s*started\.current = true;\s*if \(!preview && user\) startWrite.current = startLesson\(user.id, curriculum.level, lektion.id\).catch\(\(\) => false\);\s*trackLessonStarted\(curriculum\.level, lektion\.id, runId\);\s*setIntroDone\(true\);\s*\};/);
   assert.match(player, /return <IntroStage curriculum=\{curriculum\} lektion=\{lektion\} ready=\{ready\} onStart=\{start\} \/>;/);
   assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id, runId, skillProps\(skillLines\(\{ score, attempts, skills \}\)\)\);/, 'completed is tracked exactly where the lesson is persisted, with what the run measured');
   const funnel = read('src/lib/funnelTracking.js');

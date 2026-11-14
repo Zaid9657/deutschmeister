@@ -138,6 +138,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
             </ul>
           </>
         )}
+        {stage.nextHook && <p className="mt-4 border-t border-rule pt-4 font-display text-lg text-siegel-deep">{lang === 'de' ? stage.nextHook.de : stage.nextHook.en}</p>}
         <p className={`${canDo.length ? 'mt-4 border-t border-rule pt-4 ' : ''}flex items-start gap-2 text-[0.875rem] leading-relaxed text-graphite`}>
           <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {t(`recap.canDo.${review.state}`, lang, { date: review.date ? date.format(review.date) : '' })}
         </p>

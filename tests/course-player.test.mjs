@@ -120,6 +120,7 @@ const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]
 // options object at any of these four sites is that bug coming back.
 // ---------------------------------------------------------------------------
 const GRADING_SITES = [
+  'src/components/lesson/CheckedChoice.jsx',
   'src/components/lesson/PracticeItem.jsx',
   'src/components/lesson/DictationItem.jsx',
   'src/components/lesson/WordOrderItem.jsx',

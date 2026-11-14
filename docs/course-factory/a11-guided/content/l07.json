@@ -1,0 +1,119 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Frei am Wochenende?",
+      "titleEn": "Free at the weekend?",
+      "instructionDe": "Lesen Sie den Aushang. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the notice. Tap a word for its meaning.",
+      "text": "Sind Sie am Wochenende frei? Dann kommen Sie!\nWir sind Freunde und machen jede Woche zusammen Sport.\nWir spielen Fußball und wir schwimmen.\nWir kochen auch zusammen und hören Musik.\nLesen Sie gern? Wir lesen Bücher auf Deutsch.\nAm Wochenende gehen wir immer ins Kino.\nDas Kino kostet acht Euro.\nIhr Freund oder Ihre Freundin ist auch willkommen!",
+      "questions": [
+        {
+          "promptDe": "Was kostet acht Euro? Wählen Sie die richtige Antwort.",
+          "promptEn": "What costs eight euros? Choose the right answer.",
+          "options": [
+            "Playing football.",
+            "Cooking together.",
+            "Going to the cinema."
+          ],
+          "answer": "Going to the cinema.",
+          "explanationDe": "Im Aushang steht: Das Kino kostet acht Euro.",
+          "explanationEn": "The notice says that the cinema costs eight euros. It names no price for anything else."
+        },
+        {
+          "promptDe": "Wer ist auch willkommen? Wählen Sie die richtige Antwort.",
+          "promptEn": "Who is welcome too? Choose the right answer.",
+          "options": [
+            "A friend of yours.",
+            "A child of yours.",
+            "A colleague of yours."
+          ],
+          "answer": "A friend of yours.",
+          "explanationDe": "Im Aushang steht: Ihr Freund oder Ihre Freundin ist auch willkommen.",
+          "explanationEn": "The notice says that your friend, a man or a woman, is welcome too."
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 3,
+        "meaning": {
+          "promptDe": "Was machen Tim und Lena gern? Wählen Sie die Bedeutung.",
+          "promptEn": "What do Tim and Lena like doing? Choose the meaning.",
+          "options": [
+            "Tim plays football; Lena likes listening to music.",
+            "Tim likes listening to music; Lena plays football.",
+            "Tim likes cooking; Lena likes going to the cinema."
+          ],
+          "answer": "Tim likes listening to music; Lena plays football."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 3,
+        "to": 5,
+        "meaning": {
+          "promptDe": "Was sagt Lena über das Wochenende? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Lena say about the weekend? Choose the meaning.",
+          "options": [
+            "She does not work then; she is free.",
+            "She works then and has no time.",
+            "She is free only every second week."
+          ],
+          "answer": "She does not work then; she is free."
+        },
+        "say": {
+          "line": 4
+        }
+      },
+      {
+        "from": 5,
+        "to": 7,
+        "meaning": {
+          "promptDe": "Was möchte Lena von Tim wissen? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Lena want to know from Tim? Choose the meaning.",
+          "options": [
+            "Whether he swims every week.",
+            "Whether he likes cooking for friends.",
+            "Whether he likes going to the cinema."
+          ],
+          "answer": "Whether he likes going to the cinema."
+        },
+        "say": {
+          "line": 6
+        }
+      },
+      {
+        "from": 7,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was möchte Tim am Wochenende machen? Wählen Sie die Bedeutung.",
+          "promptEn": "What would Tim like to do at the weekend? Choose the meaning.",
+          "options": [
+            "Play football together with Lena.",
+            "Listen to music together with Lena.",
+            "Go dancing together with Lena."
+          ],
+          "answer": "Listen to music together with Lena."
+        },
+        "say": {
+          "line": 7
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Ana und Lena suchen einen Termin. Aber wann hat Lena Zeit – und um wie viel Uhr?",
+    "en": "Ana and Lena are looking for a time to meet. But when is Lena free – and at what time?"
+  },
+  "notes": [
+    "Chunks: [0,3) the hobby exchange, [3,5) how often and „Ich bin frei“, [5,7) more hobbies and the cinema question, [7,10) cinema answer, dancing, Tim's suggestion. Unsure boundary: 6|7. Lena's question „Gehst du gern ins Kino?“ ends chunk 3 and Tim's „Ja, sehr gern!“ opens chunk 4. Lines 5–8 each answer and ask in one line, so some question is always cut from its answer; the alternative [5,8) + [8,10) cuts „Und tanzt du auch?“ from its answer instead.",
+    "say in chunk 4 is line 7 („Ja, sehr gern! Und tanzt du auch?“): short, and it both says what one likes and asks a person about a hobby. Line 9 (Tim's suggestion) is the livelier line but no can-do names suggesting; line 8 is eleven words.",
+    "Only `lesen` and `gehen` had to be in the read text. The dialogue does have „Ich lese“ and „Gehst du“, but `lineFor` matches a verb by its stem only when the infinitive is longer than five letters, so both count as missing. The notice carries them as „Wir lesen Bücher“ and „gehen wir immer ins Kino“.",
+    "Read text is a notice of a group of friends who meet at the weekend. It names no day and no clock time (weekdays and times are Lektion 8) and does not use `Kurs`, `Freizeit` or `Sportkurs`, which are in no Wortfeld up to Lektion 7.",
+    "Existing data, dialogue line 8: „Mein Freund und meine Freundin tanzen gern.“ In German „mein Freund“ / „meine Freundin“ normally means boyfriend / girlfriend; the English line says „my friend (m) and my friend (f)“. „Meine Freunde tanzen gern.“ would say what is meant.",
+    "Phonetik: the three items are verb forms with a pronoun („ich HÖ-re“) and train endings, not word stress, so the sound stage stays pending."
+  ]
+}

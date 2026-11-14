@@ -66,7 +66,7 @@ const TONE = {
  * `@media (prefers-reduced-motion: reduce)` gate and the `motion-reduce:`
  * class here as a second line of defence (src/lib/motion.js's own pattern).
  */
-export default function FeedbackSheet({ result, expected, hint, explanation, otherExplanation, onExplain, onContinue, primaryLabel, revealed }) {
+export default function FeedbackSheet({ result, expected, hint, explanation, otherExplanation, onExplain, onContinue, primaryLabel, revealed, hintOnly = false, showAnswer = false }) {
   const [lang] = useLessonLang();
   const continueRef = useRef(null);
   // The Check button unmounts the moment it is pressed, which dropped keyboard focus to <body>.
@@ -78,7 +78,7 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
   }, [result]);
   const tone = result ? (revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG])) : null;
   const announcement = tone
-    ? [t(tone.key, lang), result !== RESULT.CORRECT && expected ? `${t('feedback.correctIs', lang)} ${expected}` : '', hint || ''].filter(Boolean).join(' ')
+    ? [t(tone.key, lang), !hintOnly && (result !== RESULT.CORRECT || showAnswer) && expected ? `${t('feedback.correctIs', lang)} ${expected}` : '', hint || ''].filter(Boolean).join(' ')
     : '';
   return (
     <>
@@ -100,16 +100,16 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
               <tone.Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
               {t(tone.key, lang)}
             </p>
-            {result !== RESULT.CORRECT && expected && (
+            {!hintOnly && (result !== RESULT.CORRECT || showAnswer) && expected && (
               <p className="mt-2 text-[0.9375rem]">
                 {t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{expected}</strong>
               </p>
             )}
             {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
-            {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed">{inline(explanation)}</p>}
-            {otherExplanation && <OtherLanguage text={otherExplanation} lang={lang} className="mt-2" />}
+            {!hintOnly && explanation && <p className="mt-2 text-[0.875rem] leading-relaxed">{inline(explanation)}</p>}
+            {!hintOnly && otherExplanation && <OtherLanguage text={otherExplanation} lang={lang} className="mt-2" />}
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              {onExplain && (
+              {!hintOnly && onExplain && (
                 <button
                   type="button"
                   onClick={onExplain}

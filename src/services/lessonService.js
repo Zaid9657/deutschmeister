@@ -1,3 +1,4 @@
+import { createStageReachWriter } from '../lib/lesson/stageReach.js';
 import { supabase } from '../utils/supabase.js';
 import { setProgramItemDone } from './programProgress.js';
 import { betterRun } from '../lib/lesson/mastery.js';
@@ -37,7 +38,9 @@ export const completeLevelTest = (userId, level, nodeId) => (
   userId ? setProgramItemDone(userId, programKeyFor(level), nodeId, true) : Promise.resolve(false)
 );
 
-/** Mark a Lektion as opened. Never overwrites a finished row back to 'started'. */
+export const recordStageReach = createStageReachWriter(supabase);
+
+/** Mark a Lektion as started. Never overwrites a finished row back to 'started'. */
 export const startLesson = async (userId, level, lektionId) => {
   if (!userId || !lektionId) return false;
   const { error } = await supabase

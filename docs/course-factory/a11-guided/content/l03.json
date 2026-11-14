@@ -1,0 +1,139 @@
+{
+  "guided": {
+    "read": {
+      "titleDe": "Eine Nachricht mit Foto",
+      "titleEn": "A message with a photo",
+      "instructionDe": "Lesen Sie die Nachricht von Ana. Tippen Sie auf ein Wort für seine Bedeutung.",
+      "instructionEn": "Read the message from Ana. Tap a word for its meaning.",
+      "text": "Hallo Tim!\nDas ist meine Familie.\nMein Vater und meine Mutter kommen aus Marokko.\nMein Bruder ist zwanzig, seine Frau ist auch jung.\nSie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.\nMeine Schwester ist schon verheiratet.\nWir sprechen zusammen Arabisch und Deutsch.\nUnd du? Hast du Geschwister oder bist du Einzelkind?\nBis morgen! Ana",
+      "questions": [
+        {
+          "promptDe": "Was schreibt Ana über ihren Bruder? Wählen Sie.",
+          "promptEn": "What does Ana write about her brother? Choose.",
+          "options": [
+            "He and his wife have a young son.",
+            "He and his wife have a baby daughter.",
+            "He is single and has no children."
+          ],
+          "answer": "He and his wife have a baby daughter.",
+          "explanationDe": "In der Nachricht steht: Sie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.",
+          "explanationEn": "The message says they already have a child: a daughter. She is still a baby."
+        },
+        {
+          "promptDe": "Was möchte Ana von Tim wissen? Wählen Sie.",
+          "promptEn": "What does Ana want to know from Tim? Choose.",
+          "options": [
+            "Whether he is married or still single.",
+            "Whether he speaks Arabic or English.",
+            "Whether he has siblings or is an only child."
+          ],
+          "answer": "Whether he has siblings or is an only child.",
+          "explanationDe": "In der Nachricht steht: Hast du Geschwister oder bist du Einzelkind?",
+          "explanationEn": "The message asks: do you have siblings or are you an only child?"
+        }
+      ]
+    },
+    "chunks": [
+      {
+        "from": 0,
+        "to": 2,
+        "meaning": {
+          "promptDe": "Wer ist auf dem Foto? Wählen Sie die Bedeutung.",
+          "promptEn": "Who is in the photo? Choose the meaning.",
+          "options": [
+            "Her parents, a brother and a sister.",
+            "Her husband, a son and a daughter.",
+            "Her parents and her two brothers."
+          ],
+          "answer": "Her parents, a brother and a sister."
+        },
+        "say": {
+          "line": 1
+        }
+      },
+      {
+        "from": 2,
+        "to": 4,
+        "meaning": {
+          "promptDe": "Was sagt Ana über ihre Schwester? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana say about her sister? Choose the meaning.",
+          "options": [
+            "She is twenty.",
+            "She is still young.",
+            "She is a baby."
+          ],
+          "answer": "She is still young."
+        },
+        "say": {
+          "line": 2
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "meaning": {
+          "promptDe": "Welche Sprachen sprechen Anas Eltern? Wählen Sie die Bedeutung.",
+          "promptEn": "Which languages do Ana’s parents speak? Choose the meaning.",
+          "options": [
+            "English and German.",
+            "Arabic and English.",
+            "Arabic and German."
+          ],
+          "answer": "Arabic and German."
+        },
+        "say": {
+          "line": 5
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "meaning": {
+          "promptDe": "Was fragt Lena? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Lena ask? Choose the meaning.",
+          "options": [
+            "Whether Ana’s brother also speaks English.",
+            "Whether Ana’s brother lives in Germany.",
+            "Whether Ana’s parents also speak English."
+          ],
+          "answer": "Whether Ana’s brother also speaks English."
+        },
+        "say": {
+          "line": 6
+        }
+      },
+      {
+        "from": 8,
+        "to": 10,
+        "meaning": {
+          "promptDe": "Was hat Anas Bruder? Wählen Sie die Bedeutung.",
+          "promptEn": "What does Ana’s brother have? Choose the meaning.",
+          "options": [
+            "A son and a daughter.",
+            "A baby daughter.",
+            "A young son."
+          ],
+          "answer": "A baby daughter."
+        },
+        "say": {
+          "line": 9
+        }
+      }
+    ]
+  },
+  "nextHook": {
+    "de": "Tim sucht Möbel für sein Zimmer. Ist der Flohmarkt teuer?",
+    "en": "Tim is looking for furniture for his room. Is the flea market expensive?"
+  },
+  "notes": [
+    "Chunks: five question-and-answer pairs. Both speakers (Lena, Ana) are learner roles, so say.line was a real choice: 1 (the family sentence, can-do 1), 2 („Wie alt ist er?“, asking, can-do 3), 5 (languages, can-do 2), 6 („Spricht dein Bruder auch Englisch?“, asking), 9 (where the family comes from, can-do 4). Lines 1 and 9 are twelve words each: long to say aloud, but they carry can-dos 1 and 4 and no shorter line does.",
+    "Uncertain: chunk 2 could say line 3 („Er ist zwanzig. Sie ist noch jung.“) instead of line 2; chunk 4 could say line 7 (the notice example with „spricht“) instead of line 6. I chose the two questions so that the learner asks as well as answers; lines 5 and 7 are also the dictation lines.",
+    "Chunk 2 meaning asks about the sister on purpose: „zwanzig“ is heard here but the numbers 11–100 are Lektion 4, so a question that turns on the number would not be fair. The distractor „She is twenty.“ tests er/sie, the Lektion’s grammar.",
+    "Read text is a message from Ana to Tim with the photo (Tim has not seen it; Lena has). Six Wortfeld entries were missing from the dialogue: Vater, Mutter, Kind, Frau, Einzelkind, zusammen. All six stand in sentences a person would write.",
+    "NEW FACT, please confirm: „seine Frau ist auch jung“ gives Ana’s brother a wife. The dialogue only gives him a baby daughter. Nothing in a11.js or the pool contradicts it. „die Frau“ had no other natural carrier in a family message. „Meine Schwester ist schon verheiratet.“ is not new: the dialogue has „Der Mann von meiner Schwester“.",
+    "„Hast du Geschwister oder bist du Einzelkind?“ states nothing about Tim (his persona row is empty) and carries Einzelkind in a real question.",
+    "Existing data, looks odd: pool item extra-a11-l03-15 says „Das Kind von meiner Schwester ist ein Baby.“ In the dialogue the baby is the BROTHER’s daughter (line 8 asks about „dein Bruder“). Not a hard contradiction (the item names no speaker), but next to this Lektion’s dialogue it reads like one.",
+    "Phonetik items carry an article („der BRU-der“), so the word-stress shape check does not accept them: sound stage pending, data untouched.",
+    "nextHook is grounded in the L4 dialog setting („Tim sucht Möbel für sein Zimmer.“) and Tim’s line „Das ist teuer.“"
+  ]
+}

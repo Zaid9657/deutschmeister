@@ -35,6 +35,31 @@ export const LESSON_LANGS = ['en', 'de'];
 
 export const STRINGS = {
   en: {
+    'sound.correct': 'Yes, that matches the sound model.',
+    'sound.correction': 'The sound model is: {answer}',
+    "sound.title": "Listen, notice, then say it",
+    "sound.lead": "Listen, check the sound model, then say the line aloud.",
+    "sound.syllables": "Syllables: {syllables}",
+    "sound.say": "Now say the line aloud.",
+    "read.title": "Read a short text",
+    "fluency.title": "Say it again, from memory",
+    "fluency.lead": "Use the familiar line for this situation. Take your time; this round has no practice score.",
+    "fluency.cue": "Scene {n} of {total}",
+    "fluency.show": "Show the line",
+    "fluency.progress": "{n} of {total} said",
+    "fluency.name": "Enter your name to reuse your introduction. The name stays only in this run.",
+
+    'scene.part': 'Lesson {nr} · Part {part} of {total}',
+    'scene.chunk': 'Scene {n} of {total}',
+    'scene.hear': 'Hear and read',
+    'scene.meaning': 'Check the meaning',
+    'scene.say': 'Now you say it',
+    'scene.name': 'Your name (first name and surname)',
+    'scene.surname': 'Your surname (say each letter)',
+    'scene.enterName': 'Enter your name to make this line yours.',
+    'scene.correct': 'Yes, that is the meaning.',
+    'scene.correction': 'The meaning is: {answer}',
+
     'wortfeld.example': 'Example',
     'stage.notice.moreExamples': 'More examples',
     // ── shell / actions ──────────────────────────────────────────────────────
@@ -427,6 +452,31 @@ export const STRINGS = {
   },
 
   de: {
+    'sound.correct': 'Ja, das passt zur Lautvorlage.',
+    'sound.correction': 'Die Lautvorlage ist: {answer}',
+    "sound.title": "Hören, erkennen, nachsprechen",
+    "sound.lead": "Hören Sie zu, prüfen Sie die Vorlage und sprechen Sie die Zeile nach.",
+    "sound.syllables": "Silben: {syllables}",
+    "sound.say": "Sprechen Sie die Zeile jetzt laut aus.",
+    "read.title": "Lesen Sie einen kurzen Text",
+    "fluency.title": "Noch einmal aus dem Gedächtnis",
+    "fluency.lead": "Sagen Sie die bekannte Zeile für diese Situation. Lassen Sie sich Zeit; diese Runde zählt nicht zum Übungsergebnis.",
+    "fluency.cue": "Szene {n} von {total}",
+    "fluency.show": "Zeile anzeigen",
+    "fluency.progress": "{n} von {total} gesprochen",
+    "fluency.name": "Geben Sie Ihren Namen für Ihre Vorstellung ein. Der Name bleibt nur in dieser Sitzung.",
+
+    'scene.part': 'Lektion {nr} · Teil {part} von {total}',
+    'scene.chunk': 'Szene {n} von {total}',
+    'scene.hear': 'Hören und lesen Sie',
+    'scene.meaning': 'Prüfen Sie die Bedeutung',
+    'scene.say': 'Jetzt sprechen Sie',
+    'scene.name': 'Ihr Name (Vorname und Nachname)',
+    'scene.surname': 'Ihr Nachname (sagen Sie jeden Buchstaben)',
+    'scene.enterName': 'Geben Sie Ihren Namen für diese Zeile ein.',
+    'scene.correct': 'Ja, das ist die Bedeutung.',
+    'scene.correction': 'Die Bedeutung ist: {answer}',
+
     'wortfeld.example': 'Beispiel',
     'stage.notice.moreExamples': 'Weitere Beispiele',
     // ── shell / actions ──────────────────────────────────────────────────────

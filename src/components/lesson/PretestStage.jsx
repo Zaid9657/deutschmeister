@@ -1,3 +1,4 @@
+import { nameFromIntroduction } from '../../lib/lesson/scene.js';
 import { useState } from 'react';
 import { Check, Play } from 'lucide-react';
 import Card from '../ui/Card.jsx';
@@ -31,7 +32,7 @@ import { trackFirstSentence } from '../../lib/funnelTracking.js';
  * order is reversed — see and hear the model, write it with your own name while it is in view,
  * then once more with it hidden. Never blocking: a miss shows how to start and lets them go on.
  */
-function ModelFirstPretest({ pretest, id, onBack, onDone }) {
+function ModelFirstPretest({ pretest, id, onBack, onDone, onName }) {
   const recorded = !!audioFor(id, 'pretest');
   const [step, setStep] = useState('supported'); // supported → recall
   const [values, setValues] = useState({ supported: '', recall: '' });
@@ -45,6 +46,8 @@ function ModelFirstPretest({ pretest, id, onBack, onDone }) {
     if (!checked) {
       const hit = introductionHit(value, openings);
       setChecked({ hit });
+      const name = nameFromIntroduction(value, openings);
+      if (name) onName?.(name);
       if (step === 'recall') trackFirstSentence(id, hit);
       return;
     }
@@ -104,10 +107,10 @@ function ModelFirstPretest({ pretest, id, onBack, onDone }) {
   );
 }
 
-export default function PretestStage({ stage, lektionId, onBack, onDone }) {
+export default function PretestStage({ stage, lektionId, onBack, onDone, onName }) {
   const pretest = stage.pretest || {};
   const id = lektionId || stage.lektionId || null;
-  if (pretest.modelFirst) return <ModelFirstPretest pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
+  if (pretest.modelFirst) return <ModelFirstPretest onName={onName} pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
   return <RetrievalPretest pretest={pretest} id={id} onBack={onBack} onDone={onDone} />;
 }
 

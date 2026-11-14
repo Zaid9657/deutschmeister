@@ -121,7 +121,7 @@ test('a draw count that arrives after Start never swaps the practice seven', asy
 test('Start waits for the pool, the cards and the count — at most START_WAIT_MS for the fetches — and then freezes them', () => {
   assert.match(PLAYER, /const START_WAIT_MS = \d{4};/);
   assert.match(PLAYER, /const ready = Boolean\(pool\) && dueCards !== null && attemptSettled;/);
-  assert.match(PLAYER, /const start = \(\) => \{\s*if \(!ready\) return;\s*started\.current = true;/, 'Start flips the freeze before anything else');
+  assert.match(PLAYER, /const start = \(\) => \{\s*if \(!ready \|\| started.current\) return;\s*started\.current = true;/, 'Start flips the freeze before anything else');
   assert.match(PLAYER, /return <IntroStage curriculum=\{curriculum\} lektion=\{lektion\} ready=\{ready\} onStart=\{start\} \/>;/);
   const fallback = PLAYER.slice(PLAYER.indexOf('// A slow network does not hold Start for long'), PLAYER.indexOf('}, [introDone]);'));
   assert.match(fallback, /setTimeout\(\(\) => \{\s*setDueCards\(\(cards\) => cards \|\| \[\]\);\s*setAttemptSettled\(true\);\s*\}, START_WAIT_MS\);/, 'a slow network costs the warm-up, never the lesson');

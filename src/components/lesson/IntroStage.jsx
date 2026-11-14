@@ -4,7 +4,7 @@ import StageShell from './StageShell.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
 import { useLessonLang } from '../../lib/lesson/strings.js';
-import { A11_META, lektionMinutesEstimate } from '../../data/curricula/a11.meta.js';
+import { A11_META, lektionMinutesEstimate, lektionPartEstimate } from '../../data/curricula/a11.meta.js';
 import { courseHome } from '../../lib/courseFlow.js';
 
 // The Lektion intro screen (Wave 1, 2026-09-19): the one screen a first-time
@@ -48,6 +48,7 @@ export const INTRO_STRINGS = {
     'intro.lektion': 'Lektion {nr} · {title}',
     'intro.byTheEnd': 'By the end you can …',
     'intro.people': 'Who speaks in this Lektion',
+    'intro.parts': '{parts} parts · about {lo}–{hi} min each (estimate; saved at each pause)',
     'intro.minutes': 'about {lo}–{hi} min (estimate)',
     'intro.start': 'Start',
     'intro.loading': 'Loading …',
@@ -59,6 +60,7 @@ export const INTRO_STRINGS = {
     'intro.lektion': 'Lektion {nr} · {title}',
     'intro.byTheEnd': 'Am Ende können Sie …',
     'intro.people': 'Wer in dieser Lektion spricht',
+    'intro.parts': '{parts} Teile · etwa {lo}–{hi} Min. je Teil (Schätzung; an jeder Pause gespeichert)',
     'intro.minutes': 'etwa {lo}–{hi} Min. (Schätzung)',
     'intro.start': 'Starten',
     'intro.loading': 'Wird geladen …',
@@ -108,7 +110,7 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
             {/* The name CONTAINS the visible text (WCAG 2.5.3): a speech user says "A1.1" and it works. */}
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> <span className="sr-only">{ti('intro.backToCourse', lang)}: </span>{curriculum.code}
           </Link>
-          {estimate.hi ? (
+          {estimate.hi && lektion.flow !== 'guided' ? (
             <span className="inline-flex items-center gap-1 rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
               <Clock3 className="h-3.5 w-3.5" aria-hidden="true" /> {ti('intro.minutes', lang, estimate)}
             </span>
@@ -146,6 +148,10 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
               </ul>
             </section>
           )}
+
+          {lektion.flow === 'guided' && <p className="mt-5 flex items-start gap-2 text-sm text-graphite">
+            <Clock3 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> {ti('intro.parts', lang, lektionPartEstimate(lektion))}
+          </p>}
 
           {cast.length > 0 && (
             <section aria-labelledby="dm-intro-cast" className="mt-5">

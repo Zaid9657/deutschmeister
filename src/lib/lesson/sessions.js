@@ -12,7 +12,7 @@ const SESSION_OF = {
 export const SESSION_COUNT = 3;
 
 /** The part (1–3) a stage belongs to, or null for a kind this table does not know. */
-export const sessionOf = (stage) => SESSION_OF[stage?.kind] ?? null;
+export const sessionOf = (stage) => stage?.part ?? SESSION_OF[stage?.kind] ?? null;
 
 /** The part a move from `from` to `to` completes, or null when the move stays inside one part. */
 export function sessionCompleted(from, to) {

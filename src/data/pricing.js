@@ -49,6 +49,15 @@ export const deNum = (n) => num(n).replace('.', ',');
 /** 9.99 -> "€9.99". English form: symbol first, no space. */
 export const eur = (n) => `€${num(n)}`;
 
+/**
+ * The store charges tax-inclusive prices: the buyer pays the number on the page.
+ * Provenance: Lemon Squeezy store 309512, "Enable tax-inclusive pricing" switched on by the
+ * owner on 2026-11-11; the A1 Exam Pack checkout for Germany then showed €59.00 with
+ * "VAT (19% included in total)". Remove these notes if that setting is ever switched off.
+ */
+export const PRICE_TAX_NOTE = 'Prices include VAT.';
+export const PRICE_TAX_NOTE_DE = 'Alle Preise inkl. MwSt.';
+
 /** 9.99 -> "9,99 €". German form: symbol last, regular space (not U+00A0). */
 export const deEur = (n) => `${deNum(n)} €`;
 

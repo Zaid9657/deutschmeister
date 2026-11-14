@@ -22,6 +22,8 @@
 // fact the course could later contradict.
 
 import { CURRICULUM_A11 } from './a11.js';
+import { A11_ART } from './a11.art.js';
+import { SESSION_COUNT } from '../../lib/lesson/sessions.js';
 import { curriculumPath } from './index.js';
 import { SUSTAINABLE_PER_WEEK } from '../../lib/course/plan.js';
 
@@ -330,6 +332,8 @@ export function weeklyEstimate(curriculum = CURRICULUM_A11, perWeek = SUSTAINABL
 export const STEP_SECONDS = {
   pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
   practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
+  sceneMeaning: [20, 40], sceneSay: [40, 80],
+  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40],
   speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
 };
 /** The player's fixed stage sizes (buildLesson.js PRACTICE_SIZE and the three derived exercises); a test pins them. */
@@ -343,9 +347,24 @@ export function lektionMinutesEstimate(l) {
     dictationLine: l?.hoeren?.lines?.length || 0, readAloudLine: l?.sprechen?.readAloud?.length || 0,
     speakingOpen: l?.sprechen?.open ? 1 : 0, writing: l?.schreiben ? 1 : 0, recap: 1,
   };
+  if (l?.flow === 'guided') {
+    n.phonetikItem = 0;
+    n.soundItem = l.phonetik?.items?.length || 0;
+    n.readText = l.guided.read ? 1 : 0;
+    n.readQuestion = l.guided.read?.questions?.length || 0;
+    n.fluencyLine = l.guided.chunks.length;
+    n.sceneMeaning = l.guided.chunks.length;
+    n.sceneSay = l.guided.chunks.length;
+  }
   const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
   const hi = total(1) + ESTIMATE_COUNTS.retriesHigh * STEP_SECONDS.practiceItem[1];
   return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(hi / 300) * 5 };
+}
+
+/** Same count-based range, divided across the saved parts; rounded outwards. */
+export function lektionPartEstimate(l) {
+  const { lo, hi } = lektionMinutesEstimate(l);
+  return { parts: SESSION_COUNT, lo: Math.floor(lo / SESSION_COUNT), hi: Math.ceil(hi / SESSION_COUNT) };
 }
 
 /** The course-wide range: the quickest Lektion's low end to the longest one's high end. */
@@ -397,6 +416,7 @@ const aboutEn =
   `one to save your progress and for the AI feedback on your writing and speaking.`;
 
 export const A11_META = {
+  teacher: A11_ART.teacher,
   level: CURRICULUM_A11.level,
   code: CURRICULUM_A11.code,
   aboutEn,

@@ -19,6 +19,7 @@
 // Wortfeld other than by accident. None of that is visible from inside a single
 // Lektion, so the plan walks the Lektionen in order and carries what has been
 // used — see planPractice for the five rules it enforces.
+import { buildGuided } from './buildGuided.js';
 import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
 
 /** Tiny seeded PRNG (mulberry32, public domain). 32-bit state, uniform [0,1). */
@@ -1186,6 +1187,7 @@ export function derivedItems(lektion, attempt = 1) {
  * entirely rather than rendered empty.
  */
 export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt = 1 }) {
+  if (lektion?.flow === 'guided') return buildGuided({ curriculum, lektion, pool, dueCards, attempt }, buildLesson);
   if (!lektion) return { stages: [], seed: 0, attempt };
   const level = (curriculum && curriculum.level) || 'a1.1';
   const seed = seedFor(level, lektion.nr, attempt);

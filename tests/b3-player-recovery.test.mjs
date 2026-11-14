@@ -17,7 +17,7 @@ test('player waits for restored authentication and remounts the snapshot state w
   assert.doesNotMatch(wrapper, /readRun\(/, 'snapshot state only mounts inside the authenticated owner boundary');
   const run = player.slice(player.indexOf('function LessonRun('));
   assert.match(run, /const owner = user \? user\.id : null/);
-  assert.match(run, /readRun\(curriculum\.level, lektion\.id, Date\.now\(\), owner\)/);
+  assert.match(run, /readRun\(curriculum\.level, lektion\.id, Date\.now\(\), owner, lektion\.flow \|\| 'legacy'\)/);
 });
 
 test('checkpoint capture errors expose an unassessed confirmation and keep the recording retry', () => {

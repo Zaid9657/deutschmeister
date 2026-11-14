@@ -52,6 +52,7 @@ const strings = (lang) => ({ useLessonLang: () => [lang], t: (key) => key });
 async function exercise(name, lang = 'de') {
   const state = hooks(); const results = []; let continued = 0;
   const stubs = {
+    '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'),
     react: state.react, 'lucide-react': icons,
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     './FeedbackSheet.jsx': { default: 'FeedbackSheet' }, './ExplainAnswer.jsx': { default: 'ExplainAnswer' },
@@ -86,8 +87,8 @@ test('every word reaches contextual input; bare lemmas and writing answers canno
   const surface = read('src/components/lesson/WortfeldStage.jsx');
   assert.match(surface, /line=\{w\.exampleDe \|\| lineFor/);
   for (const l of curriculum.lektionen) {
-    const stage = buildLesson({ curriculum, lektion: l, pool }).stages.find((s) => s.kind === 'wortfeld');
-    for (const w of l.wortfeld.filter((w) => w.exampleDe)) assert.equal(stage.words.find((x) => x.wordId === w.wordId).exampleDe, w.exampleDe);
+    const words = buildLesson({ curriculum, lektion: l, pool }).stages.filter((s) => ['wortfeld', 'read'].includes(s.kind)).flatMap((s) => s.words);
+    for (const w of l.wortfeld.filter((w) => w.exampleDe)) assert.equal(words.find((x) => x.wordId === w.wordId).exampleDe, w.exampleDe);
   }
 });
 

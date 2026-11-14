@@ -1,3 +1,4 @@
+import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
@@ -15,16 +16,17 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * grader's decision, never this component's (tests/course-player.test.mjs
  * GRADING_SITES).
  */
-export default function WordOrderItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
+export default function WordOrderItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', hintFirst = false }) {
   const [lang] = useLessonLang();
   const [bank, setBank] = useState(() => item.tokens.map((tok, i) => ({ tok, key: i })));
   const [built, setBuilt] = useState([]);
   const [state, setState] = useState(null);
+  const [retried, setRetried] = useState(false);
 
   useEffect(() => {
     setBank(item.tokens.map((tok, i) => ({ tok, key: i })));
     setBuilt([]);
-    setState(null);
+    setState(null); setRetried(false);
   }, [item.id, item.tokens]);
 
   // A tapped tile moves to the other list and unmounts, which dropped keyboard focus to <body>
@@ -65,8 +67,8 @@ export default function WordOrderItem({ item, index, total, onResult, onNext, ey
     const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
     const { result, expected } = checkAnswer(joined, accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
-    setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, joined, item.answer) });
+    setState(hintFirst ? guidedFeedback(item, { result, expected }, retried, lang) : { result, expected });
+    if (!retried) onResult(item, { result, correct, errorTag: correct ? null : tagError(item, joined, item.answer) });
   };
 
   const tileBase =
@@ -132,9 +134,14 @@ export default function WordOrderItem({ item, index, total, onResult, onNext, ey
       )}
 
       <FeedbackSheet
+        hintOnly={state?.hintOnly}
+        hint={state?.hint}
+        showAnswer={state?.showAnswer}
+        explanation={hintFirst && state ? feedbackReason(item, lang) : null}
+        primaryLabel={state?.hintOnly ? t('action.again', lang) : undefined}
         result={state && state.result}
         expected={state && state.expected}
-        onContinue={onNext}
+        onContinue={state?.hintOnly ? () => { setRetried(true); setState(null); } : onNext}
       />
     </div>
   );

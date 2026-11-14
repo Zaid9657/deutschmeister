@@ -132,3 +132,40 @@ finished. Catalogue re-cut in `src/data/pricing.js` (`SUBLEVEL_PRICES_EUR`, `COM
   vars BEFORE merging the code PR to avoid a window with nothing buyable.
 - Old variants 2088862/2088867/2088868/2088869/2088871 should be archived in the LS dashboard
   after the new ids are live (owner), so an old share link cannot sell a €49 band.
+
+
+## Addendum 2026-11-11 — the offer ladder is on sale (three one-time products)
+
+Founder decisions 2026-11-09/10 (`docs/strategy/pricing-offer-evaluation-2026-11-09.md`, PR #256).
+The founder created the products on 2026-11-11 with Claude in Chrome (prompt in
+`docs/owner-prompts.md`); the agent verified each variant against the Lemon Squeezy API
+(store 309512, one-time, EUR, published) and set the nine Netlify values the same day.
+
+| Product | Price | Product key | Numeric variant id | Checkout UUID |
+|---|---|---|---|---|
+| DeutschMeister — A1 Exam Pack | €59 | `a1_exam_pack` | 2363823 | 675b9982-5e0d-4ac0-9e72-0d9409b8551e |
+| DeutschMeister — A1 Complete | €89 | `a1_complete` | 2363831 | 2552d543-896a-4f38-b5e1-60df469b0e2b |
+| DeutschMeister — All-Access Pass | €199 | `all_access` | 2363838 | 324cd369-01fa-49db-abd6-30c7ec559ed8 |
+
+- Env vars: `LEMONSQUEEZY_<KEY>_VARIANT_ID` (functions scope, numeric) and the
+  `PUBLIC_`/`VITE_LEMONSQUEEZY_<KEY>_VARIANT_ID` twins (builds scope, UUID), with `<KEY>` =
+  `A1_EXAM_PACK`, `A1_COMPLETE`, `ALL_ACCESS`.
+- Each is a single-variant product: the id above is Lemon Squeezy's default variant (API status
+  `pending`), the same shape as A1.2's 2088893, which has taken a paid order.
+- Post-purchase: the confirmation "Button link" (`redirect_url`) points at
+  `https://deutsch-meister.de/subscription/success` on all three.
+- The Buy buttons appear only after a production build that follows the env change. A docs-only
+  merge does not build (`netlify.toml` `ignore`); use "Clear cache and deploy site"
+  (`docs/owner-prompts.md`).
+- Test order 2026-11-11 (Lemon Squeezy #30951218, A1 Exam Pack, €0 with a 100 % code, founder's
+  admin account): `order_created` was processed without error, variant 2363823 resolved to
+  `a1_exam_pack`, the `purchases` row is `active` with a 60-day `access_until`, and the buyer landed
+  on `/subscription/success`. Not covered: the unlock on a plain (non-admin, non-subscriber)
+  account, and a refund (a €0 order cannot be refunded).
+- Tax-inclusive pricing is ON since 2026-11-11 (owner, store 309512 → Settings → General). Before
+  that every order had `tax_inclusive=false` and VAT was added on top (the October "€40" course cost
+  €43.38). Checked after the switch: the A1 Exam Pack checkout for Germany (10115) shows €59.00 with
+  "VAT (19% included in total) €9.42". The setting is store-wide, so it covers the subscriptions too.
+  The site says so through `PRICE_TAX_NOTE` in `src/data/pricing.js`.
+- Discount G2MZI2MA (100 %, all products, no limit, no expiry; 5 redemptions) was unpublished the
+  same day; the API shows it as `draft`.

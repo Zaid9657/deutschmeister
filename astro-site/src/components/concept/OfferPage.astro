@@ -8,7 +8,7 @@ import Ladder from './Ladder.astro';
 import PromiseBand from './PromiseBand.astro';
 import RouteBand from './RouteBand.astro';
 import CourseCheckout from '../CourseCheckout.astro';
-import { OFFER_PRODUCTS, ALL_LEVELS, courseForLevel, eur, CURRENCY } from '../../data/pricing.js';
+import { OFFER_PRODUCTS, ALL_LEVELS, courseForLevel, eur, CURRENCY, PRICE_TAX_NOTE } from '../../data/pricing.js';
 import { offerProductsWithVariants } from '../../lib/courseVariants.js';
 import { examCounts, examDays, examWeeks } from '../../data/examPack.js';
 import { PROGRAM } from '../../../../src/data/programs/startDeutsch1.js';
@@ -43,7 +43,7 @@ const jsonLd = [
     <section class="c4-wrap c4-product-hero" aria-labelledby="product-h">
       <Scene name={scene} alt={exam ? 'A learner preparing for Start Deutsch 1 at a desk overlooking Berlin' : pass ? 'A learner on a Berlin tram with the journey ahead' : 'A learner leaving a language school with her German notebook'} hero sizes="(max-width: 640px) 100vw, 65vw" />
       <div class="c4-product-copy"><p class="c4-level-badge">{p.name}{exam && ' · Start Deutsch 1'}</p><h1 id="product-h">{headline}</h1><p>{exam ? `A ${examDays.length}-day plan that takes you through listening, reading, writing and speaking, then a short practice test.` : pass ? 'Every course as it is released, plus every exam pack as it is released.' : 'The everyday German course, the exam plan and more time to practise — together in one purchase.'}</p>
-        <div class="c4-product-price"><p class="c4-price"><strong>{eur(p.price).replace('.00', '')}</strong><span>pay once<br />yours to keep</span></p><ProductDoor productKey={p.key} surface="product_hero" coral /></div>
+        <div class="c4-product-price"><p class="c4-price"><strong>{eur(p.price).replace('.00', '')}</strong><span>pay once<br />yours to keep</span></p><ProductDoor productKey={p.key} surface="product_hero" coral /><p class="c4-small c4-tax-note">{PRICE_TAX_NOTE}</p></div>
       </div>
     </section>
     <div class="c4-benefits"><div class="c4-wrap c4-benefit-grid">

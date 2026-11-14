@@ -1,3 +1,4 @@
+import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, Eye } from 'lucide-react';
 import Button from '../ui/Button.jsx';
@@ -51,7 +52,7 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  * revealed item is not re-collected into `misses` after the requeue stage,
  * so it simply ends there).
  */
-export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', allowReveal = false }) {
+export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', allowReveal = false, hintFirst = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
@@ -80,11 +81,8 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
     const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
     const { result, expected, reason } = checkAnswer(answer, accepted, checkOpts);
     const correct = result !== RESULT.WRONG;
-    setState({
-      result,
-      expected: expected || item.answer,
-      hint: reason === 'case' ? caseHint(lang) : null,
-    });
+    const feedback = { result, expected: expected || item.answer, hint: reason === 'case' ? caseHint(lang) : null };
+    setState(hintFirst ? guidedFeedback(item, feedback, retried, lang) : feedback);
     if (!recorded.current) onResult(item, {
       result,
       correct,
@@ -110,7 +108,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
     recorded.current = true;
   };
 
-  const canRetryTypo = state?.result === RESULT.TYPO && !retried;
+  const canRetryTypo = (state?.result === RESULT.TYPO || state?.hintOnly) && !retried;
   const retryTypo = () => { setRetried(true); setState(null); setExplain(false); };
   useEffect(() => {
     if (retried && !state) inputRef.current?.focus();
@@ -156,7 +154,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
             </label>
             <input
               id={`answer-${item.id}`}
-              aria-describedby={[`question-${item.id}`, item.hint && !state ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
+              aria-describedby={[`question-${item.id}`, !hintFirst && item.hint && !state ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
               ref={inputRef}
               type="text"
               value={value}
@@ -169,7 +167,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
               placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
             />
-            {item.hint && !state && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
+            {!hintFirst && item.hint && !state && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
           </div>
         )}
 
@@ -201,11 +199,13 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       )}
 
       <FeedbackSheet
+        hintOnly={state?.hintOnly}
+        showAnswer={state?.showAnswer}
         result={state && state.result}
         expected={state && state.expected}
         hint={state && state.hint}
         revealed={!!(state && state.revealed)}
-        explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
+        explanation={hintFirst && state ? feedbackReason(item, lang) : state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
         otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
         onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
         primaryLabel={canRetryTypo ? t('action.again', lang) : undefined}

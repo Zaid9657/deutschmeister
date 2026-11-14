@@ -30,6 +30,27 @@ Then paste the three id pairs to the agent: it sets `LEMONSQUEEZY_COURSE_A1_2_VA
 scope) via the Netlify connector, merges the catalogue PR and redeploys. Afterwards archive the
 five 2026-09-03 variants (2088862, 2088867, 2088868, 2088869, 2088871).
 
+**Create the offer-ladder products** (used 2026-11-11: variants 2363823, 2363831, 2363838):
+```
+In Lemon Squeezy store 309512 (DeutschMeister, NOT MedMeister), create THREE new one-time
+products, currency EUR, tax category "SaaS – personal use", and publish each:
+"DeutschMeister — A1 Exam Pack" €59, "DeutschMeister — A1 Complete" €89,
+"DeutschMeister — All-Access Pass" €199. For each, set the confirmation "Button link" to
+https://deutsch-meister.de/subscription/success. Do not create discounts or touch any other
+product. Return a table: product name | numeric variant id | checkout share-link UUID.
+```
+Lemon Squeezy has no field named "Redirect after purchase"; the confirmation pop-up's
+"Button link" is what it stores as `redirect_url`.
+
+**Rebuild production after an env-only change** (needed 2026-11-11). Netlify reads build-scope
+values only during a build, and `netlify.toml`'s `ignore` rule cancels every build whose diff is
+docs-only, so merging a docs PR does not rebuild. A plain "Deploy site" is cancelled too (same
+commit, empty diff); clearing the cache removes `CACHED_COMMIT_REF`, which forces the build:
+```
+In Netlify open the project deutschmeister-zaid → Deploys → "Trigger deploy" →
+"Clear cache and deploy site". Wait until the new production deploy says "Published".
+```
+
 **Set the post-purchase redirect** (so buyers land on our success page, not LS's receipt):
 ```
 In store 309512, set product <id>'s "Redirect after purchase" URL to
@@ -52,7 +73,8 @@ apply <CODE>, confirm €0.00, complete checkout. Then open /subscription and
 Note: a €0 order cannot be refunded in LS, so the refund → re-lock path is not covered
 by this test.
 
-**Switch the store to VAT-inclusive prices** (found 2026-10-11, business review). Every
+**Switch the store to VAT-inclusive prices** (found 2026-10-11, business review; **done
+2026-11-11**, and the site now shows `PRICE_TAX_NOTE`). Every
 order so far has `tax_inclusive=false`: the site shows €9.99 / €40 / €89, and Lemon Squeezy
 adds VAT on top at checkout, so a German buyer is charged €11.89 for the "€9.99" plan. That
 surprise sits on the last step before payment, and German price law (PAngV) requires

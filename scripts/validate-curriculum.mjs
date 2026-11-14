@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { hintFor, hintContainsAnswer } from '../src/lib/lesson/guidedFeedback.js';
+import { guidedFindings } from './lib/guided-content.mjs';
 import { undecidedTimePrepositionGaps } from './lib/time-preposition-cues.mjs';
 // Validator for the situational curricula (docs/course-factory/a11-rebuild/CONTRACT.md).
 //
@@ -2471,7 +2473,7 @@ function inputSurfaceTokens(l) {
     l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
     l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
     ...(l.notice?.formExamples || []), ...(l.wortfeld || []).map((w) => w.exampleDe),
-    l.pretest?.model, ...(l.pretest?.accepted || []),
+    l.pretest?.model, ...(l.pretest?.accepted || []), l.guided?.read?.text,
   ].filter(Boolean);
   const seen = new Set();
   for (const src of sources) for (const t of tokenise(src)) seen.add(t.toLowerCase());
@@ -3258,6 +3260,19 @@ export function a12FinalTestFindings(mock = abschlusstestA12, c = CURRICULUM_A12
   return finalTestContentFindings(mock, { unknown: (text) => untaughtTokens({ questionDe: text }, known, spec) });
 }
 
+/** RULE 5's lexicon and tokenizer also bind the guided read; notice words do not license it. */
+export function guidedReadVocabulary(c, spec = levelSpec(c?.level)) {
+  const known = seedVocabulary(spec);
+  const findings = [];
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const token of tokenise(l.guided?.read?.text || '')) {
+      if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: guided read uses untaught word "${token}"`);
+    }
+  }
+  return findings;
+}
+
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
@@ -3279,6 +3294,15 @@ export function validateCurriculum(c, extraItems, poolItems) {
   }
   for (const finding of readingIntroductions(c)) fail(`RULE 27: ${finding}`);
   for (const finding of housingRoomCounts(c)) fail(`RULE 28: ${finding}`);
+
+  for (const finding of guidedFindings(c)) fail(`RULE 32: ${finding}`);
+  if (L.some((l) => l.flow === 'guided')) for (const item of poolItems) {
+    try {
+      const hint = hintFor(item);
+      if (hintContainsAnswer(hint.de, item) || hintContainsAnswer(hint.en, item)) fail(`RULE 33: hint contains an accepted answer (${item.id})`);
+    } catch { fail(`RULE 33: no safe bilingual hint (${item.id})`); }
+  }
+  for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);

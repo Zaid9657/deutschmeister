@@ -501,6 +501,8 @@ html:not(.js) .fs-form { display: none; }
 .c4-ladder .c4-offer-course { border-color: theme('colors.siegel.DEFAULT'); background: theme('colors.siegel.wash'); }
 .c4-pricing-offers { display: block; }
 .c4-exam-link { margin-block: .7rem 1.5rem; }
+.c4-tax-note { margin-block: .5rem 0; }
+.c4-product-price .c4-tax-note, .c4-level-price .c4-tax-note { flex-basis: 100%; grid-column: 1 / -1; margin: 0; }
 .c4-addon { max-width: 48rem; margin: 1.5rem auto 3rem; }
 .c4-product-hero { min-height: 470px; position: relative; display: grid; grid-template-columns: 43% 57%; align-items: center; }
 .c4-product-hero > img { position: absolute; right: -2.5rem; width: 65%; height: 100%; object-fit: cover; }

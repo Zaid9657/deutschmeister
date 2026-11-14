@@ -1,3 +1,4 @@
+import GuidedMatchItem from './GuidedMatchItem.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
@@ -41,7 +42,11 @@ function shuffledColumn(values) {
  * each selection, pair and miss. A matched tile stays focusable
  * (aria-disabled), and focus moves on to the next unmatched German word.
  */
-export default function MatchItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
+export default function MatchItem(props) {
+  return props.hintFirst ? <GuidedMatchItem {...props} /> : <LegacyMatchItem {...props} />;
+}
+
+function LegacyMatchItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
   const [lang] = useLessonLang();
   const [deCol, setDeCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.de)));
   const [enCol, setEnCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.en)));
