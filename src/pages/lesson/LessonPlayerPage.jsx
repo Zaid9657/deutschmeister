@@ -699,7 +699,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       {guidedScene && (
         <header className="bg-siegel text-white">
           <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
-            <Link to={courseHome(curriculum.level)} className="flex min-h-11 min-w-11 items-center justify-center">
+            <Link to={`${courseHome(curriculum.level)}${placementSuffix(search)}`} className="flex min-h-11 min-w-11 items-center justify-center">
               <ArrowLeft className="h-5 w-5" aria-hidden="true" /><span className="sr-only">{t('player.backToCourse', lang)}</span>
             </Link>
             <p className="flex-1 font-display text-sm sm:text-lg">{t('scene.part', lang, { nr: lektion.nr, part: sessionOf(stage), total: SESSION_COUNT })}</p>
@@ -712,7 +712,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       <div className={`mx-auto max-w-2xl px-4 pb-6 sm:pb-10 ${guidedScene ? 'pt-4' : 'pt-6 sm:pt-10'}`}>
         {!guidedScene && <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2">
           <Link
-            to={courseHome(curriculum.level)}
+            to={`${courseHome(curriculum.level)}${placementSuffix(search)}`}
             className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> <span className="sr-only">{t('player.backToCourse', lang)}: </span>{curriculum.code}

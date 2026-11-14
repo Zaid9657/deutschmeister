@@ -57,7 +57,7 @@ export function answerProof(tasks, raw, response, names = {}) {
     const r = response.result;
     right = !!r && r.usedMic === true && r.selfConfirmed !== true && Number.isFinite(r.pct) && r.pct >= READALOUD_PASS_PCT && r.pct <= 1;
     // An unavailable/unsure scorer is not an answer: type instead, without spending a try.
-    if (!r || r.selfConfirmed || !r.usedMic || !Number.isFinite(r.pct)) return state;
+    if (!r || r.selfConfirmed || r.unsure === true || !r.usedMic || !Number.isFinite(r.pct)) return state;
   } else return state;
   const prev = state.goals[at] || { tries: 0 };
   const tries = prev.tries + 1;

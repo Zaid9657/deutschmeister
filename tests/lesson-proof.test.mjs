@@ -51,7 +51,7 @@ test('a wrong response never passes; hint, second try, reteach and hidden retry 
 
 test('microphone pass uses the shared threshold; self-confirmation and unsure results never pass', () => {
   const start = packProof();
-  for (const result of [{ selfConfirmed: true, pct: 1, usedMic: true }, { usedMic: false, pct: 1 }, { usedMic: true, pct: null }]) {
+  for (const result of [{ selfConfirmed: true, pct: 1, usedMic: true }, { usedMic: false, pct: 1 }, { usedMic: true, pct: null }, { usedMic: true, pct: 1, unsure: true }]) {
     assert.deepEqual(answerProof(tasks, start, { kind: 'mic', result }, names), start);
   }
   assert.equal(answerProof(tasks, start, { kind: 'self-confirm' }, names).goals.length, 0);

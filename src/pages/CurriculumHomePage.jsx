@@ -292,7 +292,7 @@ export default function CurriculumHomePage({ curriculum }) {
               ) : null}
               {unfinished && !done.has(unfinished.id) && (
                 <p className="mt-3 text-[0.875rem] text-graphite">
-                  <Link to={`/course/${level}/l/${unfinished.nr}`} className="inline-flex min-h-11 items-center font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
+                  <Link to={hrefFor(level, { ...unfinished, kind: 'lektion' })} className="inline-flex min-h-11 items-center font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
                     {de ? `Lektion ${unfinished.nr} ist noch offen — setzen Sie dort fort` : `Lektion ${unfinished.nr} is half-done — pick up where you stopped`} →
                   </Link>
                 </p>
