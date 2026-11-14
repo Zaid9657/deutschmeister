@@ -61,6 +61,7 @@ test('the actual set screen gates input on hearing and saying, grades choices, a
   let values = [], cursor = 0;
   const react = { useState(initial) { const i = cursor++; if (!(i in values)) values[i] = initial; return [values[i], (v) => { values[i] = v; }]; } };
   const { default: Screen } = await loadJsxModule('src/components/lesson/TaughtSetStage.jsx', {
+    './SetBoard.jsx': { default: 'SetBoard' }, '../../lib/lesson/taughtSet.js': await import('../src/lib/lesson/taughtSet.js'),
     react, './StageShell.jsx': { default: 'StageShell' }, '../ui/Button.jsx': { default: 'Button' },
     './PlayButton.jsx': { default: 'PlayButton' }, './ReadAloudLine.jsx': { default: 'ReadAloudLine' },
     '../../lib/lesson/check.js': { checkAnswer, checkOptionsFor, RESULT },
@@ -80,6 +81,8 @@ test('the actual set screen gates input on hearing and saying, grades choices, a
   assert.equal(find('StageShell').props.primaryDisabled, false);
   find('StageShell').props.onPrimary();
   assert.equal(props.itemIndex, 1);
+  assert.equal(stage.steps[0].kind, 'board');
+  assert.equal(stage.steps[1].kind, 'check');
   props.itemIndex = stage.steps.findIndex((s) => s.kind === 'check'); values = [];
   assert.equal(find('select'), undefined, 'no recognition choices before play/fallback');
   find('PlayButton').props.onFallback();

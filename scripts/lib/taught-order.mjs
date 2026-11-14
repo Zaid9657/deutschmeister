@@ -1,3 +1,4 @@
+import { setStageEstimate, SET_STAGE_MAX_SECONDS } from '../../src/lib/lesson/taughtSet.js';
 import buildLesson from '../../src/lib/lesson/buildLesson.js';
 import { ALPHABET } from '../../src/data/curricula/a11.sets.js';
 import { germanNumberWord } from '../../src/lib/lesson/readaloud.js';
@@ -45,6 +46,8 @@ export function setShapeFindings(lesson) {
     if (!set || !/^[a-z0-9-]+$/.test(set.id || '') || ids.has(set.id)) { fail('set needs a distinct stable id'); continue; }
     ids.add(set.id);
     if (!['letters', 'numbers', 'clock'].includes(set.kind) || !set.titleDe?.trim() || !set.titleEn?.trim()) fail(`set ${set.id} needs kind and bilingual titles`);
+    const placement = set.placement;
+    if (placement !== undefined && placement !== 'before-scene' && placement !== 'part2' && !(Number.isInteger(placement?.afterChunk) && placement.afterChunk >= 1 && placement.afterChunk <= lesson.guided.chunks.length)) fail(`set ${set.id} has an invalid placement`);
     const members = set.members;
     if (!Array.isArray(members) || members.length < 2 || members.some((m) => !m?.written?.trim() || !m?.said?.trim() || (!!m.noteDe !== !!m.noteEn)) || new Set(members.map((m) => m?.written)).size !== members.length) fail(`set ${set.id} needs distinct written/spoken members and bilingual notes`);
     if (set.kind === 'numbers' && Array.isArray(members)) for (const m of [...members, ...(set.rule?.examples || []), ...(set.rule?.transfer || [])]) {
@@ -82,7 +85,7 @@ export function taughtOrderFindings(curriculum, pool, { attempts = [1, 2, 3] } =
       for (const stage of built.stages) {
         if (stage.kind === 'taught-set') {
           // Only what is actually delivered counts. A heading or notice name does not teach letters.
-          const members = stage.steps.filter((s) => s.kind === 'member').map((s) => s.member);
+          const members = stage.steps.filter((s) => s.kind === 'board').flatMap((s) => s.members);
           for (const m of members) {
             if (stage.set.kind === 'letters') taught.add(`letter:${m.written}`);
             if (stage.set.kind === 'numbers') taught.add(`number:${m.written}`);
@@ -110,6 +113,27 @@ export function taughtOrderFindings(curriculum, pool, { attempts = [1, 2, 3] } =
           if (missing.length) findings.push(`L${lesson.nr}: draw ${attempt}: ${stage.kind} ${item.id} before teaching ${[...new Set(missing)].join(', ')}`);
         }
       }
+    }
+  }
+  return findings;
+}
+
+/** RULE 37: actual delivered counts, individually and summed before the first scene. */
+export function setTimeFindings(curriculum, pool, { attempts = [1, 2, 3] } = {}) {
+  const findings = [];
+  for (const lesson of curriculum.lektionen || []) {
+    if (lesson.flow !== 'guided' || setShapeFindings(lesson).length) continue;
+    for (const attempt of attempts) {
+      const { stages } = buildLesson({ curriculum, lektion: lesson, pool, attempt });
+      let beforeScene = 0, seenScene = false;
+      for (const stage of stages) {
+        if (stage.kind === 'scene') seenScene = true;
+        if (stage.kind !== 'taught-set') continue;
+        const time = setStageEstimate(stage);
+        if (!seenScene) beforeScene += time.hi;
+        if (time.hi > SET_STAGE_MAX_SECONDS) findings.push(`L${lesson.nr}: draw ${attempt}: ${stage.key} upper estimate ${time.hi}s exceeds 6 minutes`);
+      }
+      if (beforeScene > SET_STAGE_MAX_SECONDS) findings.push(`L${lesson.nr}: draw ${attempt}: sets before first scene upper estimate ${beforeScene}s exceeds 6 minutes`);
     }
   }
   return findings;

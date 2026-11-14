@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { taughtOrderFindings } from './lib/taught-order.mjs';
-export { taughtOrderFindings } from './lib/taught-order.mjs';
+import { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
+export { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
 import { proofShapeFindings, proofGermanTexts } from './lib/proof-content.mjs';
 import { hintFor, hintContainsAnswer } from '../src/lib/lesson/guidedFeedback.js';
 import { guidedFindings } from './lib/guided-content.mjs';
@@ -3317,6 +3317,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
   for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
   for (const finding of proofFindings(c, spec)) fail(`RULE 35: ${finding}`);
   for (const finding of taughtOrderFindings(c, poolItems)) fail(`RULE 36: ${finding}`);
+  for (const finding of setTimeFindings(c, poolItems)) fail(`RULE 37: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);

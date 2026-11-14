@@ -30,7 +30,7 @@ export function AudioFailureNotice({ reason }) {
   );
 }
 
-export default function PlayButton({ lektionId, audioKey, text, rate = 0.92, label, onFallback, fallbackLabel, onPlayed }) {
+export default function PlayButton({ lektionId, audioKey, text, rate = 0.92, label, compact = false, onFallback, fallbackLabel, onPlayed }) {
   const [lang] = useLessonLang();
   const [state, setState] = useState('idle'); // idle | loading | playing | failed
   const [reason, setReason] = useState(null);
@@ -63,14 +63,14 @@ export default function PlayButton({ lektionId, audioKey, text, rate = 0.92, lab
           {busy ? <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
           {state === 'playing' ? t('audio.playing', lang) : label || t('action.play', lang)}
         </button>
-        <button
+        {!compact && <button
           type="button"
           onClick={() => play(true)}
           disabled={busy}
           className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-2 text-[0.8125rem] font-bold text-graphite [touch-action:manipulation] hover:border-siegel"
         >
           <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('audio.slower', lang)}
-        </button>
+        </button>}
         <AudioSourceBadge recorded={recorded} />
       </div>
       <p aria-live="polite" className={state === 'failed' ? 'rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink' : 'sr-only'}>{state === 'failed' ? t(`audio.failed.${reason || 'error'}`, lang) : ''}</p>

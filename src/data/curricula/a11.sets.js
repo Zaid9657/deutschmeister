@@ -2,6 +2,7 @@
 const members = (rows) => rows.map(([written, said, noteDe, noteEn]) => ({ written, said, ...(noteDe ? { noteDe, noteEn } : {}) }));
 export const ALPHABET = {
   id: 'alphabet', kind: 'letters', titleDe: 'Das Alphabet', titleEn: 'The alphabet',
+  placement: { afterChunk: 1 }, ownName: true,
   members: members([
     ['A', 'Ah'], ['B', 'Beh'], ['C', 'Zeh'], ['D', 'Deh'], ['E', 'Eh'],
     ['F', 'Eff'], ['G', 'Geh'], ['H', 'Hah'], ['I', 'Ih'], ['J', 'Jot'],
@@ -10,7 +11,7 @@ export const ALPHABET = {
     ['U', 'Uh'], ['V', 'Vau'], ['W', 'Weh'], ['X', 'Iks'], ['Y', 'Ypsilon'],
     ['Z', 'Zett'], ['Ä', 'Äh'], ['Ö', 'Öh'], ['Ü', 'Üh'],
     ['ß', 'Eszett', 'Auch: scharfes S. Groß: ẞ; ohne ß auf der Tastatur: ss.', 'Also called scharfes S. Capital: ẞ; on keyboards without ß: ss.'],
-  ]),
+  ]).map((m) => ({ ...m, audio: m.said, said: ({ A: 'A', B: 'Be', C: 'Ce', D: 'De', E: 'E', F: 'Ef', G: 'Ge', H: 'Ha', I: 'I', K: 'Ka', L: 'El', M: 'Em', N: 'En', O: 'O', P: 'Pe', Q: 'Ku', R: 'Er', S: 'Es', T: 'Te', U: 'U', W: 'We', Ä: 'Ä', Ö: 'Ö', Ü: 'Ü' })[m.written] || m.said })),
   // A real word/name, using only letters already introduced by the end of each group.
   spellings: ['Ada', 'Ehe', 'Mai', 'Post', 'Wut', 'süß'],
   contrasts: [['E', 'I'], ['G', 'J'], ['V', 'W']],
@@ -48,3 +49,12 @@ export const AGE_TWENTY = {
   id: 'age-twenty', kind: 'numbers', titleDe: 'Zehn und zwanzig', titleEn: 'Ten and twenty',
   members: [DIGITS.members.find((m) => m.written === '10'), PRICES.members.find((m) => m.written === '20')],
 };
+
+// L4 keeps the complete canonical inventory; only delivery is divided.
+const { rule: compoundRule, ...priceMembers } = PRICES;
+export const PRICE_FOUNDATIONS = { ...priceMembers, placement: 'before-scene' };
+export const PRICE_COMPOUNDS = {
+  id: 'numbers-21-99', kind: PRICES.kind, titleDe: 'Zahlen mit und', titleEn: 'Compound numbers',
+  members: compoundRule.examples, rule: compoundRule, ruleOnly: true, placement: 'part2',
+};
+export const letterName = (letter) => ALPHABET.members.find((m) => m.written === letter).said;

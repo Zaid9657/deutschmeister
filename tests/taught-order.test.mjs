@@ -26,7 +26,7 @@ test('meta references, missing individual members, compound rules, ages, and clo
     [2, (l) => { delete l.wortfeld.find((w) => w.meta).set; }, /meta heading/],
     [2, (l) => { l.guided.sets[0].members = l.guided.sets[0].members.filter((m) => m.written !== '0'); }, /number:0/],
     [3, (l) => { delete l.guided.sets; }, /scene.*number:20/],
-    [4, (l) => { delete l.guided.sets[0].rule; l.guided.read.text += ' Der Preis ist vierunddreißig Euro.'; }, /read.*number:compounds/],
+    [4, (l) => { delete l.guided.sets[1].rule; l.schreiben.taskDe += ' vierunddreißig'; }, /writing.*number:compounds/],
     [6, (l) => { delete l.guided.sets; }, /clock:full-hour/],
     [8, (l) => { l.guided.noticeBeforeScene = false; }, /read.*clock:half-hour/],
   ];
@@ -54,7 +54,9 @@ test('real placements precede first uses with both pauses and unchanged diagnost
     const l = CURRICULUM_A11.lektionen[nr - 1];
     const { stages } = buildLesson({ curriculum: CURRICULUM_A11, lektion: l, pool });
     assert.equal(stages[0].kind, 'pretest');
-    assert.ok(stages.findIndex((s) => s.key === `set:${id}`) < stages.findIndex((s) => s.kind === 'scene'));
+    const firstUse = stages.findIndex((s) => s.kind === 'scene' && (nr !== 1 || s.chunkOffset === 1));
+    assert.ok(stages.findIndex((s) => s.key === `set:${id}`) < firstUse);
+    if (nr === 1) assert.ok(stages.findIndex((s) => s.kind === 'scene') < stages.findIndex((s) => s.key === `set:${id}`));
     assert.deepEqual(stages.slice(-2).map((s) => s.kind), ['requeue', 'recap']);
   }
   const { stages } = buildLesson({ curriculum: CURRICULUM_A11, lektion: CURRICULUM_A11.lektionen[7], pool });

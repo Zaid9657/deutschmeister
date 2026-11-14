@@ -22,7 +22,7 @@ const legacyOrder = ['pretest', 'dialog', 'wortfeld', 'notice', 'phonetik', 'pra
 test('all A1.1 lessons are guided; A1.2 and a synthetic lesson without flow keep the legacy order', () => {
   assert.deepEqual(CURRICULUM_A11.lektionen.filter((l) => l.flow).map((l) => l.nr), Array.from({ length: 12 }, (_, i) => i + 1));
   assert.ok(CURRICULUM_A12.lektionen.every((l) => !l.flow));
-  assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'set:alphabet', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'proof', 'requeue', 'recap']);
+  assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'scene', 'set:alphabet', 'scene:2', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'proof', 'requeue', 'recap']);
   assert.deepEqual(build({ ...CURRICULUM_A11.lektionen[1], flow: undefined }).stages.map((s) => s.key), legacyOrder);
   const a12 = buildLesson({ curriculum: CURRICULUM_A12, lektion: CURRICULUM_A12.lektionen[0], pool: JSON.parse(read('src/data/lessonPools/a12.json')) });
   assert.deepEqual(a12.stages.map((s) => s.key), legacyOrder);
@@ -40,14 +40,14 @@ test('guided pacing preserves every word, both pauses, all unchanged stages and 
     assert.ok(words[0].words.length < lektion.wortfeld.length);
     assert.deepEqual(words.flatMap((s) => s.words).sort((a, b) => a.de.localeCompare(b.de)), [...lektion.wortfeld].sort((a, b) => a.de.localeCompare(b.de)));
     assert.deepEqual(guided.stages.slice(1).map((s, i) => sessionCompleted(guided.stages[i], s)).filter(Boolean), [1, 2]);
-    assert.deepEqual(guided.stages.map(sessionOf), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3]);
+    assert.deepEqual(guided.stages.map(sessionOf), [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3]);
     assert.equal(guided.stages.find((s) => s.kind === 'practice').items.length, 7);
     assert.equal(guided.stages.find((s) => s.kind === 'derived').items.length, 3);
   }
 });
 
 test('every scene line is original and meaning recognition goes through the common checker', () => {
-  const scene = build().stages.find((s) => s.kind === 'scene');
+  const scene = { chunks: build().stages.filter((s) => s.kind === 'scene').flatMap((s) => s.chunks) };
   assert.deepEqual(scene.chunks.flatMap((c) => c.lines).map(({ index: _index, ...line }) => line), lektion.dialog.lines);
   for (const chunk of scene.chunks) {
     assert.ok(chunk.lines.length >= 2 && chunk.lines.length <= 3);
@@ -61,7 +61,7 @@ test('every scene line is original and meaning recognition goes through the comm
 });
 
 test('the learner says their own name; no scene answer text is persisted', () => {
-  const scene = build().stages.find((s) => s.kind === 'scene');
+  const scene = { chunks: build().stages.filter((s) => s.kind === 'scene').flatMap((s) => s.chunks) };
   assert.equal(sayText(scene.chunks[0].say, '  Sam   Noor '), 'Guten Tag. Ich heiße Sam Noor.');
   assert.equal(sayText(scene.chunks[1].say, 'Noor'), 'N-O-O-R.');
   assert.equal(sayText(scene.chunks[0].say, ''), null);
@@ -149,7 +149,7 @@ test('Start writes started; intro mount and resume do not; reach waits for start
   assert.equal(player.match(/startLesson\(user.id/g).length, 1, 'only the Start handler writes started');
   assert.match(player, /if \(preview \|\| pause \|\| !stage \|\| viewedStages.current.has\(reachStep\)\) return/);
   assert.match(player, /startWrite.then\(\(\) => recordStageReach/);
-  assert.match(player, /sceneStep\(itemIndex\)/);
+  assert.match(player, /sceneStep\(itemIndex, stage.chunkOffset \|\| 0\)/);
   assert.match(player, /lazy\(\(\) => import\('.*SceneStage.jsx'\)\)/);
   const sql = read('migrations/2026-11-12-lesson-furthest-stage.sql');
   assert.match(sql, /ADD COLUMN IF NOT EXISTS furthest_stage text/);
@@ -178,6 +178,7 @@ async function sceneHarness() {
   const { loadJsxModule } = await import('./helpers/renderJsx.mjs');
   const hooks = sceneHooks();
   const { default: SceneStage } = await loadJsxModule('src/components/lesson/SceneStage.jsx', {
+    './SetReference.jsx': { default: 'SetReference' },
     react: hooks.react,
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' }, './DialogStage.jsx': { GlossLine: 'GlossLine' },
@@ -187,10 +188,11 @@ async function sceneHarness() {
     '../../lib/lesson/buildGuided.js': { SCENE_PHASES: ['hear', 'meaning', 'say'] },
     '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/strings.js': { useLessonLang: () => ['en'], t: (key) => key },
   });
-  const stage = build().stages.find((s) => s.kind === 'scene');
+  const scenes = build().stages.filter((s) => s.kind === 'scene');
+  const stage = scenes[0];
   const outcomes = []; let finished = 0;
-  const props = { names: {}, onNamesChange: (names) => { props.names = names; }, stage, lektionId: lektion.id, itemIndex: 0, results: {}, onItemChange: (i) => { props.itemIndex = i; }, onSayResult: (i, r) => { props.results = { ...props.results, [i]: r }; }, onResult: (...args) => outcomes.push(args), onDone: () => finished++ };
-  return { hooks, props, outcomes, render: () => hooks.render(SceneStage, props), finished: () => finished };
+  const props = { names: {}, onNamesChange: (names) => { props.names = names; }, stage, lektionId: lektion.id, itemIndex: 0, results: {}, onItemChange: (i) => { props.itemIndex = i; }, onSayResult: (i, r) => { props.results = { ...props.results, [i]: r }; }, onResult: (...args) => outcomes.push(args), onDone: () => { if (props.stage === scenes[0]) props.itemIndex = 3; else finished++; } };
+  return { hooks, props, outcomes, render: () => { const global = props.itemIndex; const selected = global < 3 ? scenes[0] : scenes[1]; return hooks.render(SceneStage, { ...props, stage: selected, itemIndex: global - selected.chunkOffset * 3, onItemChange: (n) => { props.itemIndex = n + selected.chunkOffset * 3; }, onDone: () => { if (selected === scenes[0]) props.itemIndex = 3; else finished++; } }); }, finished: () => finished };
 }
 
 test('scene hear → checked meaning → personalised, measured say → next chunk, with resumable confirmation', async () => {
@@ -237,6 +239,7 @@ test('scene hear → checked meaning → personalised, measured say → next chu
   assert.equal(sceneElements(tree, 'Button')[0].props.disabled, false);
   sceneElements(tree, 'Button')[0].props.onClick();
   assert.equal(h.props.itemIndex, 3, 'hear of chunk 2 follows say of chunk 1');
+  h.props.names.surname = 'Noor';
   h.props.itemIndex = 5;
   tree = h.render();
   assert.equal(sceneElements(tree, 'GlossLine')[0].props.line, 'Buchstabieren Sie bitte Chakiri.', 'the cue precedes the chosen Ana line, even when the chunk ends in another staff question');

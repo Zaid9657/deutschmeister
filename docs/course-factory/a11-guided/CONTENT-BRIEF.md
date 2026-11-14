@@ -42,6 +42,21 @@ One file `docs/course-factory/a11-guided/content/lNN.json` (two digits) with:
   a spelled-out name → `"first"` or `"surname"`). If a chunk has no learner-role line, move the
   boundary; if that is impossible, say so in `notes` and do not invent a workaround.
 
+### `guided.sets`
+
+Sets use the canonical mappings in `src/data/curricula/a11.sets.js`. `said` is the readable
+German letter/number name; optional `audio` is the voice aid and must never be displayed as
+the letter name. A group is one tappable board and one group read-aloud, followed by its
+2–3 checked tasks; confusable pairs keep both directions.
+
+`placement` is `"before-scene"` (also the default), `{ "afterChunk": n }` (one-based), or
+`"part2"` (before practice). The builder splits scene stages at these boundaries. Use the
+point of need: L1’s alphabet follows its first greeting/name chunk; L4’s compound rule waits
+until Part 2. `ownName: true` adds the alphabet’s in-memory surname spelling card.
+RULE 36 checks the resulting order for all three seeded draws; RULE 37 uses real delivered
+board/member/check counts and rejects an upper estimate above six minutes per stage or
+above six minutes summed before the first scene. These estimates are not measured times.
+
 ### `guided.read`
 
 - A short real-life text for the Lektion's situation (a form, a note, a sign, a message, a price

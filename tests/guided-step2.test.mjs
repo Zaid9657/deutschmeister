@@ -47,7 +47,7 @@ async function mount(name, props, extra = {}) {
   const stubs = {
     react: state.react, 'lucide-react': new Proxy({}, { get: (_, key) => key }),
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
-    './StageShell.jsx': { default: 'StageShell' }, './PlayButton.jsx': { default: 'PlayButton' },
+    './SetReference.jsx': { default: 'SetReference' }, './StageShell.jsx': { default: 'StageShell' }, './PlayButton.jsx': { default: 'PlayButton' },
     './ReadAloudLine.jsx': { default: 'ReadAloudLine' }, './CheckedChoice.jsx': { default: 'CheckedChoice' },
     './FeedbackSheet.jsx': { default: 'FeedbackSheet' }, './ExplainAnswer.jsx': { default: 'ExplainAnswer' },
     '../../lib/lesson/check.js': checker, '../../lib/lesson/guidedFeedback.js': feedback,

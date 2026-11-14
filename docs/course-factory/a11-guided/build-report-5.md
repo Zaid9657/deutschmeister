@@ -70,3 +70,122 @@ Unprotected tests updated: guided-lesson/guided-rollout assert the new exact sta
 Environment adaptations: the stock Astro CLI could not refresh its default node_modules/.vite cache (EROFS on the supplied symlink). The same installed Astro build API, original astro.config.mjs and committed grammar cache passed with only vite.cacheDir redirected to /tmp/dm-brief5-astro-vite. No dependencies or symlinks were changed. The explicit shell rm command was unavailable; Vite's standard build cleared its output directory before the fresh build/prerender, as configured by its default emptyOutDir behavior.
 
 A browser walkthrough/screenshot remains unverified: the local dev server was denied listen (EPERM), and a server-free Playwright attempt also failed when Chrome was denied its socket operation (SIGTRAP). Real JSX callback tests cover hear/say/check gates, typed/choice grading, resume and proof evidence, but do not establish installed voice quality, real microphone/STT behavior, actual two-minute durations or beginner learning outcomes. Those still require human listening/learner evidence. No release, commit or SQL was performed.
+
+## Brief 5b
+
+Completed, 2026-11-14. Baseline captured from the built set steps before edits.
+The change replaces member screens with group boards while retaining every checked task
+and contrast direction. Set placement, split-scene navigation, in-memory own-name spelling,
+reference boards and a shared count-based six-minute gate are implemented.
+Protected suites, dependencies, A1.2, SQL, CLAUDE.md and the Astro lockfile remain untouched.
+
+Implemented group boards (five base members at most, plus the existing pair boards), one group
+playback/read-aloud, and the original 2–3 checks per group. L1 now opens its scene before
+the alphabet; its own-surname card derives displayed names and voice input from the alphabet.
+Names remain component memory only. Readable letter names now use A/Be/Ce/…/We, while
+voice aids remain Ah/Beh/Zeh/…/Weh. Both notice languages interpolate the canonical names.
+References use the same boards on spelling/number tasks, and only the re-teach card in proof.
+
+Set times below are modeled first-pass minutes, not observed learner times. Before: 10–20 seconds
+per individual member screen and 20–40 seconds/check. After: 4–6 seconds of shared board controls
+plus 1–2 seconds/member for the group listen/say, 6–10 seconds for each short letter/digit/time
+retrieval, and 20–40 seconds for the own-name card. Optional replays, recognition delays and
+learner retries can take longer. One shared estimator supplies the lesson estimate and RULE 37;
+the rule rejects a stage above 360 seconds and sums all sets before the first scene line.
+
+| Lesson / set | Before members / checks | Before min | After boards / members / checks | After min | Placement |
+| --- | ---: | ---: | ---: | ---: | --- |
+| L1 / alphabet | 36 / 18 | 12.00–24.00 | 9 / 36 / 18 + own name | 3.33–5.77 | {"afterChunk":1} |
+| L2 / numbers-0-10 | 11 / 6 | 3.83–7.67 | 3 / 11 / 6 | 0.98–1.67 | "before-scene" |
+| L3 / age-twenty | 2 / 2 | 1.00–2.00 | 1 / 2 / 2 | 0.30–0.50 | "before-scene" |
+| L4 / numbers-11-100 | 35 / 25 | 14.17–28.33 | 11 / 32 / 22 | 3.47–5.83 | "before-scene" |
+| L4 / numbers-21-99 | part of L4 above | included above | 1 / 3 / 3 | 0.42–0.70 | "part2" |
+| L6 / full-hour | 4 / 2 | 1.33–2.67 | 1 / 4 / 2 | 0.33–0.57 | "before-scene" |
+
+L4’s previous 35 member turns / 25 checks are divided into 32 member presentations / 22 checks
+in Part 1 and 3 presentations / 3 transfer checks in Part 2. No contrast direction was removed.
+
+Built orders (identical at draws 1/2/3; normal run without optional warm-up):
+
+- L1: pretest → scene → set:alphabet → scene:2 → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → proof → requeue → recap.
+- L2: pretest → set:numbers-0-10 → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L3: pretest → set:age-twenty → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L4: pretest → set:numbers-11-100 → scene → wortfeld → sound → read → notice → set:numbers-21-99 → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L5: pretest → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L6: pretest → set:full-hour → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L7: pretest → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L8: pretest → notice → scene → wortfeld → sound → read → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L9: pretest → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L10: pretest → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L11: pretest → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+- L12: pretest → scene → wortfeld → sound → read → notice → practice → derived → dictation → fluency → speaking → writing → requeue → recap.
+
+L4: none of the current scene/read/sound/practice/derived/dictation checks in draws 1–3
+needs a compound number. The 21–99 rule and all three unseen transfer checks still run in
+Part 2 immediately before practice, because understanding prices to a hundred remains a can-do.
+
+Resume uses stable split-stage keys and global chunk offsets for speech evidence and funnel names.
+An old unsplit scene cursor maps to the correct split stage/local item. Old member-era set
+recordings cannot unlock a group board: those sets restart safely at their first board. Back
+returns to the final screen of the previous scene/set, preserving the existing empty-requeue rule.
+Both part boundaries and the guest save-ask stay in place.
+
+The pre-scene set upper estimates are L1 0s, L2 100s, L3 30s, L4 350s, L6 34s;
+all other lessons have 0s of set stages there. L8 retains its original pre-scene notice.
+Readable letter names were also cross-checked against the [PONS alphabet overview](https://de.pons.com/p/wissensecke/grammatik-to-go/deutsches-alphabet); voice aids stay separate, including in audio-failure text, and the read-aloud control does not display those aids.
+
+The stock Astro command again attempted to write the read-only node_modules/.vite cache and
+failed with EROFS. The installed Astro build API passed with the original config and
+committed content cache, redirecting only vite.cacheDir to /tmp/dm-brief5b-astro-vite.
+A fresh Chrome launch was attempted for browser evidence and failed before any page opened
+(setsockopt EPERM, SIGTRAP). No screenshot or real voice/microphone validation is claimed.
+
+For the two L4 placements individually, the old model’s foundation portion was 12.67–25.33
+minutes (32 turns, 22 checks), and its compound portion was 1.50–3.00 minutes (3 turns,
+3 checks). The corresponding new stages are 3.47–5.83 and 0.42–0.70 minutes.
+
+Final verification for Brief 5b:
+
+- Pool rebuilt, curriculum validator and all twelve draft checks passed. RULE 36 remains at
+  zero findings across all 36 builds; RULE 37 passes, with mutations verified through both
+  the full curriculum validator and the draft checker. Adding one alphabet member fails it;
+  four individually valid digit stages fail the summed pre-scene budget.
+- Seven new board regression cases passed: whole-group rendering and recording, own-name
+  mapping/privacy, individual/summed time budgets, all seeded split-scene orders and resume/Back,
+  L4 placements and preserved checks, readable/voice name separation, and task references with
+  proof ask/hint exclusions. Existing tests retain their scoring, equality and fallback assertions.
+- Final full `npm test`: **308 test files passed, 0 failed**, 119.99 seconds. Unprotected guided
+  order assertions now cover both split scenes; the a11-finish/guided-step2/lesson-proof harnesses
+  gained only the new reference child stub. No protected test was edited, no assertion was
+  weakened, and no protected test forced an exception to the brief.
+- ESLint (zero warnings), all 20 shared-file duplicate checks, every requested Netlify
+  function/shared-module syntax check, and `git diff --check` passed.
+- Explicitly removed generated dist/ before the final SPA build. Fresh SPA → app.html, offline
+  Astro (143 pages, confirmed committed cache), merge and prerender passed. Full built HTML
+  checked **151 pages and 146 sitemap URLs: 0 failures, 0 warnings**.
+
+Open evidence: Chrome cannot launch in this sandbox, so visual layout, installed voice quality,
+real microphone/STT behavior and real learner completion times remain unverified. The six-minute
+rule enforces the documented count model; it is not a measured duration guarantee. No open code
+or protected-test conflict remains. No commit, release, SQL, dependency change, A1.2 change,
+CLAUDE.md edit or Astro lockfile edit was made; both node_modules symlinks are unchanged.
+
+## Claude's check (2026-11-14)
+
+Gates re-run by Claude on the final tree: pool build, validator (RULE 36 and RULE 37 at zero), sync,
+all twelve draft checks, lint, duplicates, `npm test` (3,039 of 3,039), SPA build. Protected tests,
+`CLAUDE.md` and `astro-site/package-lock.json` unchanged. Every letter name, number word and clock
+form in `a11.sets.js` was read by Claude against standard German: no error found.
+
+Played as a guest in a phone-sized browser: Lektion 1 now runs first sentence → scene 1 (hear,
+meaning, say your name) → the alphabet as boards of five letters with their names (A · A, B · Be,
+C · Ce …), one Play for the group, then "Which letter do you hear?" → the rest of the scene. No page
+errors, no horizontal overflow. The headless browser has no German voice, so the listening checks
+were only seen through their text fallback; they were not heard.
+
+Open:
+
+- Each letter tile repeats the "Computer voice" badge; one badge per board is enough.
+- The modeled times after the change (3 to 6 minutes for the alphabet) rest on new, optimistic
+  per-member assumptions. They are estimates until real beginners are timed.
+- Lektionen 2, 4 and 6 were not played by hand after this change; the tests cover their order.

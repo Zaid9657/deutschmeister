@@ -1,3 +1,4 @@
+import SetReference from './SetReference.jsx';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { canDoLines } from '../../lib/course/canDo.js';
@@ -38,6 +39,7 @@ export default function ProofStage({ stage, lesson, state, onAnswer, onHideModel
         {lang !== 'de' && <p className="mt-2 text-sm text-graphite" lang="en">{task.promptEn}</p>}
       </Card>
       {reteach ? <Card className="mt-4 p-5">
+        <SetReference item={task} lektionId={lesson.id} />
         {(task.model.lines || [task.model]).map((line, i) => <div key={i} className="mb-3"><p lang="de" className="text-lg text-ink">{line.de}</p><p lang="en" className="mt-2 text-sm text-graphite">{line.en}</p><div className="mt-3"><PlayButton lektionId={lesson.id} audioKey={line.audioKey} text={line.de} /></div></div>)}
       </Card> : <>
         {task.ownName && (!task.listenSpelling || mic) && (task.ownName !== 'full' || mic) && <label className="mt-4 block text-sm font-semibold">

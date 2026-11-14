@@ -78,8 +78,9 @@ function asSetReadAloud(value) {
 }
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ proof = {}, flow = 'legacy', sceneReadAloud = {}, taughtSetReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ setBoardVersion = 2, proof = {}, flow = 'legacy', sceneReadAloud = {}, taughtSetReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
   return {
+    ...(flow === 'guided' ? { setBoardVersion: setBoardVersion === 2 ? 2 : 1 } : {}),
     proof: packProof(proof),
     flow: flow === 'guided' ? 'guided' : 'legacy',
     sceneReadAloud: asReadAloud(sceneReadAloud),
@@ -115,7 +116,7 @@ export function unpackRun(raw, now = Date.now(), flow = null) {
   if (typeof raw.stageKey !== 'string' || !raw.stageKey || raw.stageKey === 'recap') return null;
   const savedAt = Number(raw.savedAt);
   if (!Number.isFinite(savedAt) || now - savedAt > RUN_MAX_AGE_MS || savedAt - now > 60 * 1000) return null;
-  return packRun(raw, savedAt);
+  return packRun({ ...raw, setBoardVersion: raw.setBoardVersion || 1 }, savedAt);
 }
 
 /**
@@ -127,10 +128,24 @@ export function unpackRun(raw, now = Date.now(), flow = null) {
 export function resumeStageIndex(stages, run) {
   const list = asList(stages);
   if (!run || !run.stageKey || run.stageKey === 'recap') return 0;
+  if (run.stageKey === 'scene') {
+    const scenes = list.filter((s) => s.kind === 'scene');
+    const scene = scenes.find((s) => run.itemIndex >= (s.chunkOffset || 0) * 3 && run.itemIndex < ((s.chunkOffset || 0) + s.chunks.length) * 3);
+    if (scene) return list.indexOf(scene);
+  }
   const at = list[run.stageIndex];
   if (at && at.key === run.stageKey) return run.stageIndex;
   const found = list.findIndex((s) => s && s.key === run.stageKey);
   return found > 0 ? found : 0;
+}
+
+/** Local item offsets for split scenes; member-era sets safely restart at the first board. */
+export function resumeItemIndex(stages, run) {
+  if (!run) return 0;
+  if (run.stageKey.startsWith('set:') && run.setBoardVersion !== 2) return 0;
+  const stage = stages[resumeStageIndex(stages, run)];
+  if (run.stageKey === 'scene' && stage?.kind === 'scene') return run.itemIndex - (stage.chunkOffset || 0) * 3;
+  return run.itemIndex;
 }
 
 export const saveRun = (level, lektionId, run, owner = null) => safeSetJSON(runKey(level, lektionId, owner), run);

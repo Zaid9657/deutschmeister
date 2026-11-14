@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import SetBoard from './SetBoard.jsx';
+import { spellingMembers } from '../../lib/lesson/taughtSet.js';
 import StageShell from './StageShell.jsx';
 import Button from '../ui/Button.jsx';
 import PlayButton from './PlayButton.jsx';
@@ -6,8 +8,8 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { checkAnswer, checkOptionsFor, RESULT } from '../../lib/lesson/check.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
-/** The saved itemIndex identifies each member/check, including turns inside a group. */
-export default function TaughtSetStage({ stage, itemIndex, lektionId, results = {}, onSayResult, onItemChange, onResult, onDone, onBack }) {
+/** The saved itemIndex identifies each board/check; learner names exist only in memory. */
+export default function TaughtSetStage({ stage, itemIndex, lektionId, results = {}, onSayResult, onItemChange, onResult, onDone, onBack, names = {}, onNamesChange }) {
   const [lang] = useLessonLang();
   const [heard, setHeard] = useState(!!results[itemIndex]);
   const [said, setSaid] = useState(!!results[itemIndex]);
@@ -23,23 +25,33 @@ export default function TaughtSetStage({ stage, itemIndex, lektionId, results = 
     setVerdict(result);
     onResult(item, { result: result.result, correct: result.result !== RESULT.WRONG, listened: !fallback });
   };
-  const member = step.member;
-  const ready = member ? heard && said : !!verdict;
-  return <StageShell title={stage.set[lang === 'de' ? 'titleDe' : 'titleEn']} onBack={onBack}
+  const own = step.kind === 'own-name';
+  const surname = names.surname ?? (names.full || '').trim().split(/\s+/).at(-1) ?? '';
+  const members = own ? spellingMembers(surname, stage.set) : step.members;
+  const supported = !own || (members.length > 0 && members.every((m) => m.supported));
+  const speech = members?.map((m) => m.audio || m.said).join('. ');
+  const ready = members ? supported && heard && said : !!verdict;
+  const back = itemIndex > 0 ? () => onItemChange(itemIndex - 1) : onBack;
+  return <StageShell title={stage.set[lang === 'de' ? 'titleDe' : 'titleEn']} onBack={back}
     primaryLabel={t('action.next', lang)} primaryDisabled={!ready} onPrimary={next}>
-    <p className="mb-4 text-sm text-graphite">{t('set.group', lang, { n: step.group + 1 })}</p>
-    {member ? <>
+    {!own && <p className="mb-4 text-sm text-graphite">{t('set.group', lang, { n: step.group + 1 })}</p>}
+    {members ? <>
       {step.rule && <p className="mb-4 text-sm text-ink" lang={lang}>{step.rule[lang]}</p>}
-      <p className="font-display text-4xl text-siegel" lang="de">{member.written}</p>
-      <p className="my-3 text-xl text-ink" lang="de">{member.said}</p>
-      {member.noteDe && <p className="mb-3 text-sm text-graphite">{lang === 'de' ? member.noteDe : member.noteEn}</p>}
-      <PlayButton lektionId={lektionId} audioKey={`${stage.key}-${itemIndex}`} text={member.said} onPlayed={() => setHeard(true)} onFallback={() => setHeard(true)} />
-      {heard && <ReadAloudLine lektionId={lektionId} lineKey={`${stage.key}-${itemIndex}`} text={member.said} onResult={(r) => { setSaid(true); onSayResult?.(itemIndex, r); }} />}
+      {own && <>
+        <h2 className="font-display text-2xl text-siegel">{t('set.ownName', lang)}</h2>
+        <label className="mt-3 block text-sm font-semibold">{t('scene.surname', lang)}
+          <input value={surname} maxLength={80} autoComplete="off" onChange={(e) => { onNamesChange?.({ ...names, surname: e.target.value }); setHeard(false); setSaid(false); }} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white p-3" />
+        </label>
+        {!supported && <p className="mt-3 text-sm text-graphite">{t('set.nameLetters', lang)}</p>}
+      </>}
+      <SetBoard members={members} lektionId={lektionId} boardKey={`${stage.key}-${itemIndex}`} lang={lang} />
+      {supported && <PlayButton lektionId={lektionId} audioKey={`${stage.key}-${itemIndex}`} text={speech} onPlayed={() => setHeard(true)} onFallback={() => setHeard(true)} />}
+      {supported && heard && <ReadAloudLine hideModel key={speech} lektionId={lektionId} lineKey={`${stage.key}-${itemIndex}`} text={speech} onResult={(r) => { setSaid(true); if (own) onNamesChange?.({ ...names, surname }); else onSayResult?.(itemIndex, r); }} />}
     </> : <>
       <h2 className="mb-3 text-xl font-semibold text-ink" lang="de">{item.promptDe}</h2>
       {lang !== 'de' && <p className="mb-4 text-sm text-graphite" lang="en">{item.promptEn}</p>}
       <PlayButton lektionId={lektionId} audioKey={item.id} text={item.audioText} onPlayed={() => setHeard(true)} onFallback={() => { setHeard(true); setFallback(true); }} />
-      {fallback && <p className="mt-3 text-sm text-ink" lang="de">{item.audioText}</p>}
+      {fallback && <p className="mt-3 text-sm text-ink" lang="de">{item.audioDisplayText || item.audioText}</p>}
       {heard && <>
         <label className="mt-4 block text-sm font-semibold">{t('proof.answer', lang)}
           {item.options ? <select value={value} disabled={!!verdict} onChange={(e) => setValue(e.target.value)} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white p-3"><option value="" />{item.options.map((o) => <option key={o}>{o}</option>)}</select>

@@ -111,128 +111,162 @@
         "kind": "letters",
         "titleDe": "Das Alphabet",
         "titleEn": "The alphabet",
+        "placement": {
+          "afterChunk": 1
+        },
+        "ownName": true,
         "members": [
           {
             "written": "A",
-            "said": "Ah"
+            "said": "A",
+            "audio": "Ah"
           },
           {
             "written": "B",
-            "said": "Beh"
+            "said": "Be",
+            "audio": "Beh"
           },
           {
             "written": "C",
-            "said": "Zeh"
+            "said": "Ce",
+            "audio": "Zeh"
           },
           {
             "written": "D",
-            "said": "Deh"
+            "said": "De",
+            "audio": "Deh"
           },
           {
             "written": "E",
-            "said": "Eh"
+            "said": "E",
+            "audio": "Eh"
           },
           {
             "written": "F",
-            "said": "Eff"
+            "said": "Ef",
+            "audio": "Eff"
           },
           {
             "written": "G",
-            "said": "Geh"
+            "said": "Ge",
+            "audio": "Geh"
           },
           {
             "written": "H",
-            "said": "Hah"
+            "said": "Ha",
+            "audio": "Hah"
           },
           {
             "written": "I",
-            "said": "Ih"
+            "said": "I",
+            "audio": "Ih"
           },
           {
             "written": "J",
-            "said": "Jot"
+            "said": "Jot",
+            "audio": "Jot"
           },
           {
             "written": "K",
-            "said": "Kah"
+            "said": "Ka",
+            "audio": "Kah"
           },
           {
             "written": "L",
-            "said": "Ell"
+            "said": "El",
+            "audio": "Ell"
           },
           {
             "written": "M",
-            "said": "Emm"
+            "said": "Em",
+            "audio": "Emm"
           },
           {
             "written": "N",
-            "said": "Enn"
+            "said": "En",
+            "audio": "Enn"
           },
           {
             "written": "O",
-            "said": "Oh"
+            "said": "O",
+            "audio": "Oh"
           },
           {
             "written": "P",
-            "said": "Peh"
+            "said": "Pe",
+            "audio": "Peh"
           },
           {
             "written": "Q",
-            "said": "Kuh"
+            "said": "Ku",
+            "audio": "Kuh"
           },
           {
             "written": "R",
-            "said": "Err"
+            "said": "Er",
+            "audio": "Err"
           },
           {
             "written": "S",
-            "said": "Ess"
+            "said": "Es",
+            "audio": "Ess"
           },
           {
             "written": "T",
-            "said": "Teh"
+            "said": "Te",
+            "audio": "Teh"
           },
           {
             "written": "U",
-            "said": "Uh"
+            "said": "U",
+            "audio": "Uh"
           },
           {
             "written": "V",
-            "said": "Vau"
+            "said": "Vau",
+            "audio": "Vau"
           },
           {
             "written": "W",
-            "said": "Weh"
+            "said": "We",
+            "audio": "Weh"
           },
           {
             "written": "X",
-            "said": "Iks"
+            "said": "Iks",
+            "audio": "Iks"
           },
           {
             "written": "Y",
-            "said": "Ypsilon"
+            "said": "Ypsilon",
+            "audio": "Ypsilon"
           },
           {
             "written": "Z",
-            "said": "Zett"
+            "said": "Zett",
+            "audio": "Zett"
           },
           {
             "written": "Ä",
-            "said": "Äh"
+            "said": "Ä",
+            "audio": "Äh"
           },
           {
             "written": "Ö",
-            "said": "Öh"
+            "said": "Ö",
+            "audio": "Öh"
           },
           {
             "written": "Ü",
-            "said": "Üh"
+            "said": "Ü",
+            "audio": "Üh"
           },
           {
             "written": "ß",
             "said": "Eszett",
             "noteDe": "Auch: scharfes S. Groß: ẞ; ohne ß auf der Tastatur: ss.",
-            "noteEn": "Also called scharfes S. Capital: ẞ; on keyboards without ß: ss."
+            "noteEn": "Also called scharfes S. Capital: ẞ; on keyboards without ß: ss.",
+            "audio": "Eszett"
           }
         ],
         "spellings": [

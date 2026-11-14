@@ -1,3 +1,4 @@
+import SetReference from '../../components/lesson/SetReference.jsx';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
@@ -12,7 +13,7 @@ import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson, retryLocalProgressSave } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards, warmupCards } from '../../services/reviewService.js';
 import { enqueueRun, flushOutbox, outboxIsDurable, pendingRuns } from '../../lib/course/syncOutbox.js';
-import { clearRun, packRun, readRun, resumeStageIndex, saveRun } from '../../lib/lesson/runState.js';
+import { clearRun, packRun, readRun, resumeStageIndex, resumeItemIndex, saveRun } from '../../lib/lesson/runState.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import ComboChip, { nextCombo } from '../../components/lesson/ComboChip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
@@ -46,7 +47,7 @@ import { placementSuffix } from '../../lib/course/lock.js';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
 
-import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
+import { sceneStep, SCENE_PHASES, stageLastItem } from '../../lib/lesson/buildGuided.js';
 import { answerProof, canCompleteProofLesson, hideProofModel, packProof, proofAttempts, proofPassed, proofResumeIndex } from '../../lib/lesson/proof.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
 
@@ -265,7 +266,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     const stages = buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages;
     return proofResumeIndex(stages, resumeStageIndex(stages, resumed), resumed.proof);
   });
-  const [itemIndex, setItemIndex] = useState(() => (resumed ? resumed.itemIndex : 0));
+  const [itemIndex, setItemIndex] = useState(() => resumeItemIndex(buildLesson({ curriculum, lektion, pool, dueCards, attempt }).stages, resumed));
   const [attempts, setAttempts] = useState(() => (resumed ? resumed.attempts : []));
   const [misses, setMisses] = useState(() => (resumed ? resumed.misses : []));
   // Consecutive first-try corrects across practice + dictation items, reset on
@@ -283,7 +284,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // snapshot: the "speak freely" hand-off to the coach is a full page load, and on the way back every
   // line used to be idle again — re-recorded (allowance spent) or reported "skipped" (LSN-01).
   const [readAloud, setReadAloud] = useState(() => (resumed ? resumed.readAloud || {} : {}));
-  const [taughtSetReadAloud, setTaughtSetReadAloud] = useState(() => resumed?.taughtSetReadAloud || {});
+  const [taughtSetReadAloud, setTaughtSetReadAloud] = useState(() => (resumed?.setBoardVersion === 2 ? resumed.taughtSetReadAloud : {}) || {});
   const [sceneReadAloud, setSceneReadAloud] = useState(() => resumed?.sceneReadAloud || {});
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
@@ -399,9 +400,9 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     heading.focus(); // scrolls it into view: after a long item the next one starts on screen
   }, [stageIndex, itemIndex, pause]);
 
-  const goStage = useCallback((next) => {
+  const goStage = useCallback((next, item = 0) => {
     setStageIndex(next);
-    setItemIndex(0);
+    setItemIndex(item);
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
@@ -429,7 +430,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);
-  const back = backTo >= 0 ? () => goStage(backTo) : null;
+  const back = backTo >= 0 ? () => {
+    const previous = stages[backTo];
+    goStage(backTo, stageLastItem(previous));
+  } : null;
 
   // Save the run on every stage or item change, so any full page load resumes
   // it (src/lib/lesson/runState.js). The recap ends the run and clears it, and
@@ -449,7 +453,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
   // for today never saw the next stage (Codex review, 2026-10-15).
   const viewedStages = useRef(new Set());
-  const reachStep = stage?.kind === 'scene' ? sceneStep(itemIndex) : stage?.key;
+  const reachStep = stage?.kind === 'scene' ? sceneStep(itemIndex, stage.chunkOffset || 0) : stage?.key;
   const reachSteps = useMemo(() => stageSteps(stages), [stages]);
   useEffect(() => {
     if (preview || pause || !stage || viewedStages.current.has(reachStep)) return;
@@ -548,14 +552,14 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       body = <PretestStage onName={lektion.flow === 'guided' ? (full) => setNames((prev) => ({ ...prev, full })) : undefined} stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'taught-set':
-      body = <Suspense fallback={<PlayerLoading />}><TaughtSetStage key={`${stage.key}:${itemIndex}`} stage={stage} itemIndex={itemIndex} lektionId={lektion.id}
+      body = <Suspense fallback={<PlayerLoading />}><TaughtSetStage key={`${stage.key}:${itemIndex}`} stage={stage} itemIndex={itemIndex} lektionId={lektion.id} names={names} onNamesChange={setNames}
         results={taughtSetReadAloud[stage.set.id] || {}} onSayResult={(i, r) => setTaughtSetReadAloud((prev) => ({ ...prev, [stage.set.id]: { ...prev[stage.set.id], [i]: r } }))}
         onItemChange={setItemIndex} onResult={resultFor('taught-set')} onDone={advance} onBack={back} /></Suspense>;
       break;
     case 'scene':
       body = (
         <Suspense fallback={<PlayerLoading />}>
-          <SceneStage
+          <SceneStage key={stage.key}
             names={names} onNamesChange={setNames}
             stage={stage} lektionId={lektion.id} itemIndex={itemIndex}
             results={sceneReadAloud} onSayResult={(index, result) => setSceneReadAloud((prev) => ({ ...prev, [index]: result }))}
@@ -688,6 +692,14 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     default:
       body = null;
   }
+  // Less common checked surfaces use the same task-derived reference as practice/dictation.
+  const referenceItem = ['derived', 'requeue'].includes(stage.kind) && ['match', 'word_order', 'listen_select'].includes(items[itemIndex]?.type) ? items[itemIndex]
+    : stage.kind === 'read' && itemIndex > 0 ? { ...stage.items[itemIndex - 1], de: stage.text }
+    : stage.kind === 'sound' ? stage.items[itemIndex]
+    : stage.kind === 'scene' && itemIndex % SCENE_PHASES.length === 1 ? stage.chunks[Math.floor(itemIndex / SCENE_PHASES.length)].meaning
+    : stage.kind === 'taught-set' && stage.steps[itemIndex]?.kind === 'check' ? stage.steps[itemIndex].item
+    : null;
+  if (referenceItem) body = <><SetReference item={referenceItem} lektionId={lektion.id} />{body}</>;
   // Signed out means the session has LOADED and there is none: getSession can
   // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
   // level while it loads, so `!user` alone would flash the ask at a member.

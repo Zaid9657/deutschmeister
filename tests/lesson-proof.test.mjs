@@ -95,6 +95,7 @@ test('rendered proof loop hides solutions, restores reteach, and enables complet
   let state = packProof(), cursor = 0, ended = 0;
   const values = [];
   const { default: ProofStage } = await loadJsxModule('src/components/lesson/ProofStage.jsx', {
+    './SetReference.jsx': { default: 'SetReference' },
     react: { useState: (initial) => { const at = cursor++; if (!(at in values)) values[at] = initial; return [values[at], (v) => { values[at] = v; }]; } },
     '../../contexts/AuthContext': { useAuth: () => ({ user: null }) },
     '../../lib/course/canDo.js': { canDoLines: () => lesson.canDo },

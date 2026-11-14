@@ -230,6 +230,27 @@
             "90"
           ]
         ],
+        "placement": "before-scene"
+      },
+      {
+        "id": "numbers-21-99",
+        "kind": "numbers",
+        "titleDe": "Zahlen mit und",
+        "titleEn": "Compound numbers",
+        "members": [
+          {
+            "written": "21",
+            "said": "einundzwanzig"
+          },
+          {
+            "written": "27",
+            "said": "siebenundzwanzig"
+          },
+          {
+            "written": "72",
+            "said": "zweiundsiebzig"
+          }
+        ],
         "rule": {
           "id": "unit-before-ten",
           "de": "21–99: Sagen Sie zuerst den Einer, dann und, dann den Zehner. Schreiben Sie alles als ein Wort. Vor und heißt eins nur ein: einundzwanzig = eins + und + zwanzig.",
@@ -262,7 +283,9 @@
               "said": "achtundneunzig"
             }
           ]
-        }
+        },
+        "ruleOnly": true,
+        "placement": "part2"
       }
     ]
   },
