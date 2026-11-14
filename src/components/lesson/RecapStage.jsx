@@ -43,7 +43,7 @@ function skillText(line, lang) {
   return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
 }
 
-export default function RecapStage({ stage, proofShown = false, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ stage, proofShown = false, sceneSupport = { unaided: 0, supported: 0 }, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -161,6 +161,7 @@ export default function RecapStage({ stage, proofShown = false, accuracy, status
           {t('recap.details', lang)}
         </summary>
         <div className="border-t border-rule p-5 sm:p-6">
+          {(sceneSupport.unaided + sceneSupport.supported > 0) && <p className="mt-4 text-sm text-graphite">{t('recap.sceneSupport', lang, sceneSupport)}</p>}
           <div className="flex flex-wrap items-center gap-2">
             <Chip tone={status === 'gold' ? 'himbeer' : 'label'}>
               <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> {t(`recap.mastery.${status === 'gold' || status === 'complete' ? status : 'started'}`, lang)}

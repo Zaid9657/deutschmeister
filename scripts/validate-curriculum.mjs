@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { hintFindings } from './lib/hint-quality.mjs';
+import { wordCardFindings } from './lib/word-card-quality.mjs';
+import { distractorFindings } from './lib/distractor-quality.mjs';
 import { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
 export { taughtOrderFindings, setTimeFindings } from './lib/taught-order.mjs';
 import { proofShapeFindings, proofGermanTexts } from './lib/proof-content.mjs';
@@ -3318,6 +3321,8 @@ export function validateCurriculum(c, extraItems, poolItems) {
   for (const finding of proofFindings(c, spec)) fail(`RULE 35: ${finding}`);
   for (const finding of taughtOrderFindings(c, poolItems)) fail(`RULE 36: ${finding}`);
   for (const finding of setTimeFindings(c, poolItems)) fail(`RULE 37: ${finding}`);
+  for (const finding of wordCardFindings(c, poolItems)) fail(`RULE 39: ${finding}`);
+  for (const finding of hintFindings(c, poolItems)) fail(`RULE 40: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
@@ -3734,6 +3739,7 @@ if (isMain) {
   const drawnUntaught = drawnLexis(c);
   console.log(`  RULE 11b gezogene Item-Lexik: ${drawnUntaught.length} ungelehrte Tokens (Ratchet ${r.untaughtDrawnTokens})`);
   for (const o of drawnUntaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
+  for (const finding of distractorFindings(c)) console.log(`  RULE 38 [authoring advisory]: L${finding.nr} ${finding.where}: ${finding.reason}; option word counts ${finding.lengths.join('/')}`);
   const unrehearsed = canDoRehearsal(c);
   console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (harte Regel, kein Ratchet)`);
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);

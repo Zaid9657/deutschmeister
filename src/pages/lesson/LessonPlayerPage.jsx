@@ -1,3 +1,4 @@
+import { sceneSupportSummary } from '../../lib/lesson/sceneSupport.js';
 import SetReference from '../../components/lesson/SetReference.jsx';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -37,7 +38,7 @@ import SpeakingStage from '../../components/lesson/SpeakingStage.jsx';
 import WritingStage from '../../components/lesson/WritingStage.jsx';
 import RecapStage from '../../components/lesson/RecapStage.jsx';
 import IntroStage from '../../components/lesson/IntroStage.jsx';
-import { trackLessonCompleted, trackLessonResumed, trackLessonStageViewed, trackLessonStarted, trackLessonSyncFailed } from '../../lib/funnelTracking.js';
+import { trackLessonCompleted, trackLessonResumed, trackLessonStageViewed, trackLessonStarted, trackLessonSyncFailed, trackLessonSceneAnswered } from '../../lib/funnelTracking.js';
 import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
@@ -51,6 +52,7 @@ import { sceneStep, SCENE_PHASES, stageLastItem } from '../../lib/lesson/buildGu
 import { answerProof, canCompleteProofLesson, hideProofModel, packProof, proofAttempts, proofPassed, proofResumeIndex } from '../../lib/lesson/proof.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
 
+const WordRetrievalStage = lazy(() => import('../../components/lesson/WordRetrievalStage.jsx'));
 const TaughtSetStage = lazy(() => import('../../components/lesson/TaughtSetStage.jsx'));
 const ProofStage = lazy(() => import('../../components/lesson/ProofStage.jsx'));
 const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
@@ -285,6 +287,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // line used to be idle again — re-recorded (allowance spent) or reported "skipped" (LSN-01).
   const [readAloud, setReadAloud] = useState(() => (resumed ? resumed.readAloud || {} : {}));
   const [taughtSetReadAloud, setTaughtSetReadAloud] = useState(() => (resumed?.setBoardVersion === 2 ? resumed.taughtSetReadAloud : {}) || {});
+  const [sceneTranslations, setSceneTranslations] = useState(() => resumed?.sceneTranslations || {});
   const [sceneReadAloud, setSceneReadAloud] = useState(() => resumed?.sceneReadAloud || {});
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
@@ -364,8 +367,12 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // pass or a retry; mastery.js counts first-pass practice/derived/dictation
   // only. A second answer to the same (stage, item) — a reload that shows an
   // answered item again — is not logged twice.
-  const recordResult = useCallback((item, { correct, errorTag, result, revealed, listened, confused }, kind) => {
+  const recordResult = useCallback((item, { correct, errorTag, result, revealed, listened, confused, translationOpened, translationShown }, kind) => {
     const stageKind = kind || item.stage || 'practice';
+    if (stageKind === 'scene' && !preview && !attempts.some((a) => a.itemId === item.id && a.stage === 'scene')) {
+      const chunk = Number(item.id.split('-').at(-1));
+      trackLessonSceneAnswered(curriculum.level, lektion.id, runId, `scene:${chunk}:meaning`, { translationOpened, translationShown, correct });
+    }
     setAttempts((prev) => (prev.some((a) => a.itemId === item.id && a.stage === stageKind)
       ? prev
       : [...prev, {
@@ -374,15 +381,16 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
         pass: stageKind === 'requeue' ? 'retry' : 'first',
         correct,
         errorTag,
+        ...(stageKind === 'scene' ? { translationOpened: translationOpened === true, translationShown: translationShown === true } : {}),
         result: typeof result === 'string' ? result : undefined,
         ...(revealed ? { revealed: true } : {}),
         ...(listened === false ? { listened: false } : {}),
       }]));
-    if (!correct && !['requeue', 'scene', 'sound', 'read', 'fluency', 'taught-set'].includes(stageKind)) {
+    if (!correct && !['requeue', 'scene', 'sound', 'read', 'fluency', 'taught-set', 'word-retrieval'].includes(stageKind)) {
       setMisses((prev) => (prev.some((m) => m.id === item.id) ? prev : [...prev, confused && confused.length ? { ...item, confused } : item]));
     }
     if (stageKind === 'practice' || stageKind === 'dictation') setCombo((c) => nextCombo(c, correct));
-  }, []);
+  }, [attempts, preview, curriculum.level, lektion.id, runId]);
   const resultFor = (kind) => (item, outcome) => recordResult(item, outcome, kind);
 
   // FOCUS ON EVERY NEW SCREEN (2026-10 review): a new item or stage moves keyboard and screen-reader
@@ -444,10 +452,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     if (preview || !stage) return;
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
-      proof, flow: lektion.flow || 'legacy', taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud,
+      proof, flow: lektion.flow || 'legacy', sceneTranslations, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud,
       runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
     }), owner);
-  }, [proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
+  }, [proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneTranslations, taughtSetReadAloud, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -562,6 +570,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
           <SceneStage key={stage.key}
             names={names} onNamesChange={setNames}
             stage={stage} lektionId={lektion.id} itemIndex={itemIndex}
+            translations={sceneTranslations} onTranslationOpen={(index) => setSceneTranslations((prev) => ({ ...prev, [index]: true }))}
             results={sceneReadAloud} onSayResult={(index, result) => setSceneReadAloud((prev) => ({ ...prev, [index]: result }))}
             onResult={resultFor('scene')} onItemChange={setItemIndex} onBack={back} onDone={advance}
           />
@@ -586,7 +595,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'wortfeld':
-      body = <WortfeldStage key={stage.key} lektionId={lektion.flow === 'guided' ? lektion.id : undefined} stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
+      body = stage.steps ? <Suspense fallback={<PlayerLoading />}><WordRetrievalStage key={stage.key} stage={{ ...stage, steps: stage.steps.map((step) => step.kind === 'cards' ? { ...step, words: step.words.map((w) => wortfeld.find((row) => row.de === w.de) || w) } : step) }} itemIndex={itemIndex} lektionId={lektion.id} onItemChange={setItemIndex} onResult={resultFor('word-retrieval')} onBack={back} onDone={advance} /></Suspense>
+        : <WortfeldStage key={stage.key} stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
       break;
     case 'notice':
       body = <NoticeStage stage={stage} onBack={back} onDone={advance} />;
@@ -675,6 +685,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       body = (
         <RecapStage
           stage={stage}
+          sceneSupport={sceneSupportSummary(attempts)}
           proofShown={!!lektion.proof && canCompleteProofLesson(lektion, proof)}
           level={curriculum.level}
           accuracy={accuracy}

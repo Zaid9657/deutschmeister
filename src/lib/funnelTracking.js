@@ -23,6 +23,7 @@ export const trackLessonCompleted = (level, topic, runId, skills = {}) => track(
 export const trackFirstSentence = (topic, hit) => track('lesson_first_sentence', { topic, hit });
 export const trackLessonResumed = (level, topic, runId) => track('lesson_resumed', { level, topic, run_id: runId });
 export const trackLessonStageViewed = (level, topic, runId, step) => track('lesson_stage_viewed', { level, topic, run_id: runId, step });
+export const trackLessonSceneAnswered = (level, topic, runId, step, evidence) => track('lesson_scene_answered', { level, topic, run_id: runId, step, translation_opened: evidence.translationOpened === true, translation_shown: evidence.translationShown === true, hit: evidence.correct === true });
 export const trackLessonSyncFailed = (level, topic, step) => track('lesson_sync_failed', { level, topic, step });
 
 export const trackSpeakingSessionStarted = () => track('speaking_session_started');

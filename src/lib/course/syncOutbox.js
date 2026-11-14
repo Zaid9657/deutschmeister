@@ -58,7 +58,7 @@ export function enqueueRun({ userId, level, lektionId, createdAt, attempts = [],
   if (existing) return existing;
   const entry = {
     key, userId, level: String(level || '').toLowerCase(), lektionId, createdAt, accuracy, status,
-    attempts: attempts.map((a) => ({ itemId: a.itemId, stage: a.stage, correct: !!a.correct, errorTag: a.errorTag || null })),
+    attempts: attempts.map((a) => ({ ...(a.stage === 'scene' && typeof a.translationShown === 'boolean' ? { translationOpened: a.translationOpened === true, translationShown: a.translationShown } : {}), itemId: a.itemId, stage: a.stage, correct: !!a.correct, errorTag: a.errorTag || null })),
     done: { attempts: false, progress: false, cards: false },
   };
   writeAll([...list, entry]);

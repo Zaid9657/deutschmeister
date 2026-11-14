@@ -5,7 +5,7 @@ import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.
 import { t } from '../../lib/lesson/strings.js';
 
 /** Scene, sound and reading share the same choice grader and optional repair turn. */
-export default function CheckedChoice({ item, lang, onResult, onNext, hintFirst = false }) {
+export default function CheckedChoice({ item, lang, onResult, onNext, hintFirst = false, hintHelp }) {
   const [answer, setAnswer] = useState(null);
   const [verdict, setVerdict] = useState(null);
   const [retried, setRetried] = useState(false);
@@ -30,7 +30,9 @@ export default function CheckedChoice({ item, lang, onResult, onNext, hintFirst 
       <p role="status" className="mt-4 font-semibold text-ink">
         {verdict && (verdict.hintOnly ? verdict.hint : t(`${item.feedbackKey || 'scene'}.${verdict.result === RESULT.WRONG ? 'correction' : 'correct'}`, lang, { answer: item.answer }))}
       </p>
+      {verdict?.hintOnly && hintHelp}
       {verdict && !verdict.hintOnly && <p className="mt-2 text-sm text-graphite">{item.answer} · {feedbackReason(item, lang)}</p>}
+      {verdict && !verdict.hintOnly && lang === 'de' && item.hintSource?.kind === 'scene' && <p className="mt-2 text-sm text-graphite" lang="en">{item.explanationEn}</p>}
       <Button variant="coral" className="mt-5 w-full" disabled={!answer} onClick={verdict?.hintOnly ? retry : verdict ? onNext : check}>{t(verdict?.hintOnly ? 'action.again' : verdict ? 'action.next' : 'action.check', lang)}</Button>
     </div>
   );

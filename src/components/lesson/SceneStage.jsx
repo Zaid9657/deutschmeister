@@ -1,3 +1,4 @@
+import { sceneSupport } from '../../lib/lesson/sceneSupport.js';
 import SetReference from './SetReference.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import Button from '../ui/Button.jsx';
@@ -14,9 +15,10 @@ import { sayText } from '../../lib/lesson/scene.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /** A checked response between every 2–3 lines. Position is owned/saved by the player. */
-export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, results, onSayResult, onResult, onBack, onDone, names = {}, onNamesChange }) {
+export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, results, onSayResult, onResult, onBack, onDone, names = {}, onNamesChange, translations = {}, onTranslationOpen }) {
   const [lang] = useLessonLang();
   const [openGloss, setOpenGloss] = useState(null);
+  const [expanded, setExpanded] = useState(() => ({ ...translations }));
   const index = Math.min(Math.floor(itemIndex / SCENE_PHASES.length), stage.chunks.length - 1);
   const phase = SCENE_PHASES[itemIndex % SCENE_PHASES.length];
   const chunk = stage.chunks[index];
@@ -51,12 +53,21 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
           <Card className="rounded-3xl border border-nacht-rule p-4">
             <p className="font-data text-xs text-nacht-muted">{line.speaker}</p>
             <GlossLine line={line.de} lineIndex={line.index} lexicon={lexicon} lang={lang} openGloss={openGloss} setOpenGloss={setOpenGloss} />
-            {lang !== 'de' && <p className="mt-1 mb-3 text-sm text-graphite" lang="en">{line.en}</p>}
+            {phase === 'hear' && <>
+              <button type="button" aria-expanded={expanded[line.index] ?? chunk.translationDefault} aria-controls={`scene-english-${line.index}`} className="block min-h-11 text-sm font-bold text-siegel-deep" onClick={() => {
+                const show = !(expanded[line.index] ?? chunk.translationDefault);
+                setExpanded((prev) => ({ ...prev, [line.index]: show }));
+                if (show) onTranslationOpen?.(line.index);
+              }}>{t((expanded[line.index] ?? chunk.translationDefault) ? 'scene.hideEnglish' : 'scene.showEnglish', lang, { n: line.index + 1 })}</button>
+              {(expanded[line.index] ?? chunk.translationDefault) && <p id={`scene-english-${line.index}`} className="mt-1 mb-3 text-sm text-graphite" lang="en">{line.en}</p>}
+            </>}
             <PlayButton lektionId={lektionId} audioKey={`line-${line.index}`} text={line.de} />
           </Card>
         </li>)}
       </ol>}
-      {phase === 'meaning' && <CheckedChoice hintFirst key={chunk.meaning.id} item={chunk.meaning} lang={lang} onResult={onResult} onNext={next} />}
+      {phase === 'meaning' && <CheckedChoice hintFirst key={chunk.meaning.id} item={chunk.meaning} lang={lang} hintHelp={<div className="mt-3 space-y-3">
+        {chunk.lines.map((line) => <div key={line.index}><p className="text-sm text-graphite">{t('scene.replayLine', lang, { n: line.index + 1 })}</p><PlayButton lektionId={lektionId} audioKey={`line-${line.index}`} text={line.de} /></div>)}
+      </div>} onResult={(item, outcome) => onResult(item, { ...outcome, ...sceneSupport(chunk, translations) })} onNext={next} />}
       {phase === 'say' && <div className="mt-5">
         <h1 className="mb-4 font-display text-3xl font-semibold text-siegel">{t('scene.say', lang)}</h1>
         {chunk.say.ownName && <label className="mb-4 block text-sm font-semibold text-nacht-text">

@@ -30,6 +30,7 @@
 // stage is found by its key, so a stage list that did shift still lands on
 // the right screen. Fail-soft like the rest of the engine: storage that throws
 // or a malformed snapshot means a fresh run, never a broken screen.
+import { packSceneTranslations } from './sceneSupport.js';
 import { packProof } from './proof.js';
 import { safeGetJSON, safeRemove, safeSetJSON } from '../../utils/safeStorage.js';
 
@@ -78,9 +79,10 @@ function asSetReadAloud(value) {
 }
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ setBoardVersion = 2, proof = {}, flow = 'legacy', sceneReadAloud = {}, taughtSetReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ sceneTranslations = {}, setBoardVersion = 2, proof = {}, flow = 'legacy', sceneReadAloud = {}, taughtSetReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
   return {
     ...(flow === 'guided' ? { setBoardVersion: setBoardVersion === 2 ? 2 : 1 } : {}),
+    ...(flow === 'guided' ? { sceneTranslations: packSceneTranslations(sceneTranslations) } : {}),
     proof: packProof(proof),
     flow: flow === 'guided' ? 'guided' : 'legacy',
     sceneReadAloud: asReadAloud(sceneReadAloud),

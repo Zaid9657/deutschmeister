@@ -19,6 +19,7 @@
 // Wortfeld other than by accident. None of that is visible from inside a single
 // Lektion, so the plan walks the Lektionen in order and carries what has been
 // used — see planPractice for the five rules it enforces.
+import { listeningChoice } from './derivedChoices.js';
 import { buildGuided } from './buildGuided.js';
 import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
 
@@ -1150,15 +1151,7 @@ function buildListenSelectItem(lektion, attempt, rng) {
   const [correct, ...restShuffled] = seededShuffle(withIndex, rng);
   const distractors = restShuffled.slice(0, DERIVED_LISTEN_SELECT_OPTIONS - 1);
   const options = seededShuffle([correct, ...distractors], rng).map((o) => o.de);
-  return {
-    id: `derived-${lektion.id}-listen_select-${attempt}`,
-    type: 'listen_select',
-    topic: lektion.primarySlug || null,
-    lineIndex: correct.index,
-    options,
-    answer: correct.de,
-    accepted: [correct.de],
-  };
+  return { ...listeningChoice(correct, options.map((de) => ({ de })), `derived-${lektion.id}-listen_select-${attempt}`), topic: lektion.primarySlug || null };
 }
 
 /**

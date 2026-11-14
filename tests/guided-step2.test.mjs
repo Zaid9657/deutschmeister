@@ -50,6 +50,7 @@ async function mount(name, props, extra = {}) {
     './SetReference.jsx': { default: 'SetReference' }, './StageShell.jsx': { default: 'StageShell' }, './PlayButton.jsx': { default: 'PlayButton' },
     './ReadAloudLine.jsx': { default: 'ReadAloudLine' }, './CheckedChoice.jsx': { default: 'CheckedChoice' },
     './FeedbackSheet.jsx': { default: 'FeedbackSheet' }, './ExplainAnswer.jsx': { default: 'ExplainAnswer' },
+    '../../lib/lesson/derivedChoices.js': await import('../src/lib/lesson/derivedChoices.js'),
     '../../lib/lesson/check.js': checker, '../../lib/lesson/guidedFeedback.js': feedback,
     '../../lib/lesson/strings.js': strings, '../../lib/lesson/scene.js': { sayText },
     '../../lib/lesson/buildLesson.js': { isTypedItem }, '../../data/lessonPools/quality.js': { politeCaseItem },
@@ -87,7 +88,7 @@ test('read uses RULE 5 lexis, covers all remaining words as actual tappable glos
   const glossed = stage('read').text.split('\n').flatMap((line) => glossTokens(line, readLexicon(lesson.wortfeld))).filter((s) => s.type === 'gloss').map((s) => s.entry.de);
   for (const word of stage('read').words) assert.ok(glossed.includes(word.de), word.de);
   assert.equal(stage('read').items.length, 2);
-  assert.equal(stages.some((s) => s.key === 'wortfeld-more'), false);
+  assert.deepEqual(stages.find((s) => s.key === 'wortfeld-read').words, stage('read').words);
   const mutated = structuredClone(c); mutated.lektionen[0].guided.read.text += ' Quantencomputer.';
   assert.ok(guidedReadVocabulary(mutated).some((s) => s.includes('Quantencomputer')));
   for (const mutate of [
