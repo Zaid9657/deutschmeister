@@ -143,6 +143,150 @@
     "de": "Tim sucht Möbel für sein Zimmer. Ist der Flohmarkt teuer?",
     "en": "Tim is looking for furniture for his room. Is the flea market expensive?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Sie sind Ana. Lena: „Wer ist das?“ – Sie (Bruder): … Lena: „Wie alt ist er?“ – Sie (20): …",
+        "promptEn": "You are Ana and show Lena a photo of your brother. He is 20. Lena asks who that is, then how old he is. Answer both questions in that order, each in a full sentence.",
+        "answer": "Das ist mein Bruder. Er ist zwanzig.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Person (ganzer Satz)",
+              "en": "who it is (a full sentence)"
+            },
+            "forms": [
+              "Das ist mein Bruder.",
+              "Er ist mein Bruder.",
+              "Das ist der Bruder."
+            ]
+          },
+          {
+            "label": {
+              "de": "das Alter (ganzer Satz)",
+              "en": "his age (a full sentence)"
+            },
+            "forms": [
+              "Er ist zwanzig.",
+              "Er ist 20.",
+              "Mein Bruder ist zwanzig.",
+              "Mein Bruder ist 20."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1,
+            3
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Frau Kaya: „Welche Sprachen sprechen Sie?“ – Sie (Arabisch + Deutsch): …",
+        "promptEn": "You are Ana. You speak Arabic and German. Ms Kaya asks which languages you speak. Answer in one full sentence.",
+        "answer": "Ich spreche Arabisch und Deutsch.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Sprachen (ein ganzer Satz)",
+              "en": "your languages (one full sentence)"
+            },
+            "forms": [
+              "Ich spreche Arabisch und Deutsch.",
+              "Ich spreche Deutsch und Arabisch."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4,
+            5
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Ana: „Das ist mein Bruder.“ – Sie: …? Ana: „Er ist zwanzig. Und das sind meine Eltern.“ – Sie: …? Ana: „Sie sprechen Arabisch und Deutsch.“",
+        "promptEn": "Ana shows you her family photo. Ask two questions so that her answers fit: first about her brother, then about her parents.",
+        "answer": "Wie alt ist er? Welche Sprachen sprechen sie?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach dem Alter",
+              "en": "the question about his age"
+            },
+            "forms": [
+              "Wie alt ist er?",
+              "Und wie alt ist er?",
+              "Wie alt ist dein Bruder?",
+              "Und wie alt ist dein Bruder?",
+              "Wie alt ist Ihr Bruder?",
+              "Wie alt ist der Bruder?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage nach den Sprachen",
+              "en": "the question about their languages"
+            },
+            "forms": [
+              "Welche Sprachen sprechen sie?",
+              "Und welche Sprachen sprechen sie?",
+              "Welche Sprachen sprechen deine Eltern?",
+              "Und welche Sprachen sprechen deine Eltern?",
+              "Welche Sprachen sprechen Ihre Eltern?",
+              "Welche Sprachen sprechen die Eltern?",
+              "Was sprechen sie?",
+              "Was sprechen deine Eltern?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2,
+            4
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Frau Kaya: „Woher kommt Ihre Familie?“ – Sie (Marokko): …",
+        "promptEn": "You are Ana. Your family is from Morocco. Ms Kaya asks where your family comes from. Answer in one full sentence.",
+        "answer": "Meine Familie kommt aus Marokko.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Herkunft der Familie (ein ganzer Satz)",
+              "en": "where your family comes from (one full sentence)"
+            },
+            "forms": [
+              "Meine Familie kommt aus Marokko.",
+              "Sie kommt aus Marokko.",
+              "Wir kommen aus Marokko.",
+              "Meine Familie ist aus Marokko.",
+              "Wir sind aus Marokko.",
+              "Meine Eltern kommen aus Marokko."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            9
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks: five question-and-answer pairs. Both speakers (Lena, Ana) are learner roles, so say.line was a real choice: 1 (the family sentence, can-do 1), 2 („Wie alt ist er?“, asking, can-do 3), 5 (languages, can-do 2), 6 („Spricht dein Bruder auch Englisch?“, asking), 9 (where the family comes from, can-do 4). Lines 1 and 9 are twelve words each: long to say aloud, but they carry can-dos 1 and 4 and no shorter line does.",
     "Uncertain: chunk 2 could say line 3 („Er ist zwanzig. Sie ist noch jung.“) instead of line 2; chunk 4 could say line 7 (the notice example with „spricht“) instead of line 6. I chose the two questions so that the learner asks as well as answers; lines 5 and 7 are also the dictation lines.",

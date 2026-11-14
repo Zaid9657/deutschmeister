@@ -125,6 +125,155 @@
     "de": "Im Kurs fragt Lena Tim: Was hast du gestern gemacht? Und für Freitag haben die beiden einen Plan.",
     "en": "In class, Lena asks Tim what he did yesterday. And the two of them have a plan for Friday."
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Am Bahnhof. Sie fahren mit dem Zug nach Österreich. Die Uhrzeit für die Abfahrt haben Sie nicht. Herr Schmidt arbeitet am Bahnhof. Sie: …?",
+        "promptEn": "At the station: you are taking the train to Austria but do not know the departure time. Ask Herr Schmidt when the train leaves.",
+        "answer": "Wann fährt der Zug nach Österreich?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Wann fährt der Zug?",
+              "Wann fährt der Zug nach Österreich?",
+              "Wann ist die Abfahrt?",
+              "Um wie viel Uhr fährt der Zug?",
+              "Um wie viel Uhr fährt der Zug nach Österreich?",
+              "Um wie viel Uhr ist die Abfahrt?",
+              "Und wann fährt der Zug?",
+              "Und wann fährt der Zug nach Österreich?",
+              "Und wann ist die Abfahrt?",
+              "Und um wie viel Uhr fährt der Zug?",
+              "Und um wie viel Uhr fährt der Zug nach Österreich?",
+              "Und um wie viel Uhr ist die Abfahrt?",
+              "Entschuldigung, wann fährt der Zug?",
+              "Entschuldigung, wann fährt der Zug nach Österreich?",
+              "Entschuldigung, wann ist die Abfahrt?",
+              "Entschuldigung, um wie viel Uhr fährt der Zug?",
+              "Entschuldigung, um wie viel Uhr fährt der Zug nach Österreich?",
+              "Entschuldigung, um wie viel Uhr ist die Abfahrt?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            8
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sie kaufen eine Fahrkarte. Sie haben zwanzig Euro. Sie: …?",
+        "promptEn": "You are buying a ticket and have twenty euros on you. Ask Herr Schmidt about the price of the ticket.",
+        "answer": "Was kostet die Fahrkarte?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Was kostet die Fahrkarte?",
+              "Was kostet eine Fahrkarte?",
+              "Wie viel kostet die Fahrkarte?",
+              "Wie viel kostet eine Fahrkarte?",
+              "Wie teuer ist die Fahrkarte?",
+              "Wie teuer ist eine Fahrkarte?",
+              "Und was kostet die Fahrkarte?",
+              "Und was kostet eine Fahrkarte?",
+              "Und wie viel kostet die Fahrkarte?",
+              "Und wie viel kostet eine Fahrkarte?",
+              "Und wie teuer ist die Fahrkarte?",
+              "Und wie teuer ist eine Fahrkarte?",
+              "Entschuldigung, was kostet die Fahrkarte?",
+              "Entschuldigung, was kostet eine Fahrkarte?",
+              "Entschuldigung, wie viel kostet die Fahrkarte?",
+              "Entschuldigung, wie viel kostet eine Fahrkarte?",
+              "Entschuldigung, wie teuer ist die Fahrkarte?",
+              "Entschuldigung, wie teuer ist eine Fahrkarte?",
+              "Kostet die Fahrkarte zwanzig Euro?",
+              "Kostet die Fahrkarte 20 Euro?",
+              "Kostet eine Fahrkarte zwanzig Euro?",
+              "Kostet eine Fahrkarte 20 Euro?",
+              "Entschuldigung, kostet die Fahrkarte zwanzig Euro?",
+              "Entschuldigung, kostet die Fahrkarte 20 Euro?",
+              "Entschuldigung, kostet eine Fahrkarte zwanzig Euro?",
+              "Entschuldigung, kostet eine Fahrkarte 20 Euro?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "multiple_choice",
+        "promptDe": "Am Bahnhof hören Sie die Durchsage: „Der Zug nach Österreich hat heute Verspätung. Die Abfahrt ist um zehn Uhr an Gleis fünf.“ Was ist mit dem Zug?",
+        "promptEn": "At the station you hear this announcement. What does it tell you about the train? Choose.",
+        "options": [
+          "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+          "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+          "Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.",
+          "Der Zug ist pünktlich. Er fährt von Gleis zehn."
+        ],
+        "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+        "accepted": [
+          "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2,
+            3,
+            7,
+            9
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Ihre Fahrkarte: Bremen – Berlin. Herr Schmidt: „Wohin fahren Sie?“ Sie: …",
+        "promptEn": "Your ticket says Bremen – Berlin. Herr Schmidt asks where you are going. Tell him.",
+        "answer": "Ich fahre nach Berlin.",
+        "parts": [
+          {
+            "label": {
+              "de": "das Ziel",
+              "en": "where you are going"
+            },
+            "forms": [
+              "Ich fahre nach Berlin.",
+              "Nach Berlin.",
+              "Ich fahre mit dem Zug nach Berlin.",
+              "Ich fahre heute nach Berlin.",
+              "Ich fahre von Bremen nach Berlin.",
+              "Von Bremen nach Berlin."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks are the five question-answer pairs (Ana asks, Herr Schmidt answers). Ana opens every pair, so each say line (0, 2, 4, 6, 8) is the first line of its chunk and the say screen has no cue line before it (SceneStage only takes a cue from an earlier line of the same chunk). The alternative, 3-line chunks that end on Ana's next question, would cut every exchange in the middle; I did not do that. None of the say lines is a dictation line (1, 9).",
     "Read text: a bus line's notice at Bremen station. It carries all eight Wortfeld entries the dialogue lacks (Fahrer, Fahrerin, Deutschland, Bahnhof, Land, morgen, nächste Woche, Auto) and agrees with the dialogue: the bus does not go to Switzerland (dialogue lines 6–7, zero-based), and the train facts (nine o'clock, platform four) are not touched.",

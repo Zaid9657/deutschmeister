@@ -158,6 +158,162 @@
     "de": "Nach der Arbeit kommt das Wochenende. Was machen Lena und Tim gern – und was machen Sie gern?",
     "en": "After work comes the weekend. What do Lena and Tim like doing – and what do you like doing?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Herr Weber: „Das ist Ihr Büro.“ Kein Computer, kein Telefon! – Sie: … …",
+        "promptEn": "Herr Weber shows you your office, but there is no computer and no telephone. Thank him, then say in one sentence that you need both.",
+        "answer": "Danke. Ich brauche einen Computer und ein Telefon.",
+        "parts": [
+          {
+            "label": {
+              "de": "der Dank",
+              "en": "the thanks"
+            },
+            "forms": [
+              "Danke."
+            ]
+          },
+          {
+            "label": {
+              "de": "was Sie brauchen",
+              "en": "what you need"
+            },
+            "forms": [
+              "Ich brauche einen Computer und ein Telefon.",
+              "Ich brauche ein Telefon und einen Computer.",
+              "Wir brauchen einen Computer und ein Telefon.",
+              "Wir brauchen ein Telefon und einen Computer.",
+              "Ich brauche noch einen Computer und ein Telefon.",
+              "Ich brauche noch ein Telefon und einen Computer.",
+              "Aber ich brauche einen Computer und ein Telefon.",
+              "Aber ich brauche ein Telefon und einen Computer."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "ownName": "full",
+        "openings": [
+          "Ich heiße"
+        ],
+        "promptDe": "Das Telefon im Büro. Ein Kollege: „Guten Tag! Wie heißen Sie, bitte?“ – Sie: …",
+        "promptEn": "The office telephone rings. A colleague you do not know asks for your name. Answer in a full sentence with your own name, as you learned in Lektion 1.",
+        "answer": "Ich heiße Ana Chakiri.",
+        "parts": [
+          {
+            "label": {
+              "de": "Ihr Name im ganzen Satz (mit heißen)",
+              "en": "your name in a full sentence (with heißen)"
+            },
+            "forms": [
+              "Ich heiße Ana Chakiri."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "wortfeld",
+          "index": 18
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "multiple_choice",
+        "promptDe": "Frau Berg am Telefon: „Die Telefonnummer vom Büro ist null vier zwei – drei drei acht eins. Meine Handynummer ist null eins sieben sechs – zwei drei vier fünf sechs sieben.“ – Welche Nummern? Sie: …",
+        "promptEn": "Your boss, Frau Berg, gives you two numbers on the phone. Choose the note that has both numbers right.",
+        "options": [
+          "Büro: 042 3318, Handy: 0176 234567",
+          "Büro: 042 3381, Handy: 0167 234567",
+          "Büro: 042 3381, Handy: 0176 234567",
+          "Büro: 024 3381, Handy: 0176 234576"
+        ],
+        "answer": "Büro: 042 3381, Handy: 0176 234567",
+        "accepted": [
+          "Büro: 042 3381, Handy: 0176 234567"
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6,
+            7
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Sie: …? – Herr Weber: „Die Nummer vom Büro ist null vier zwei – drei drei acht eins.“ – Sie: …! …? – Herr Weber: „Die Pause ist um eins.“",
+        "promptEn": "It is your first day at the office. Ask Herr Weber for the office telephone number. He tells you: thank him, then ask when the break is.",
+        "answer": "Wie ist die Telefonnummer? Danke! Wann ist die Pause?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach der Nummer vom Büro",
+              "en": "the question about the office number"
+            },
+            "forms": [
+              "Wie ist die Telefonnummer?",
+              "Und wie ist die Telefonnummer?",
+              "Wie ist die Telefonnummer vom Büro?",
+              "Und wie ist die Telefonnummer vom Büro?",
+              "Wie ist die Telefonnummer im Büro?",
+              "Wie ist die Nummer?",
+              "Wie ist die Nummer vom Büro?",
+              "Wie ist die Telefonnummer, bitte?",
+              "Entschuldigung, wie ist die Telefonnummer?",
+              "Entschuldigung, wie ist die Telefonnummer vom Büro?",
+              "Wie ist Ihre Telefonnummer?",
+              "Wie ist meine Telefonnummer?"
+            ]
+          },
+          {
+            "label": {
+              "de": "der Dank",
+              "en": "the thanks"
+            },
+            "forms": [
+              "Danke."
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage nach der Pause",
+              "en": "the question about the break"
+            },
+            "forms": [
+              "Wann ist die Pause?",
+              "Und wann ist die Pause?",
+              "Wann ist Pause?",
+              "Und wann ist Pause?",
+              "Wann ist die Pause, bitte?",
+              "Wann ist meine Pause?",
+              "Wann machen wir Pause?",
+              "Wann machen wir eine Pause?",
+              "Wann haben wir Pause?",
+              "Wann habe ich Pause?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6,
+            8
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks: five pairs. Ana speaks every even line and Herr Weber every odd one, so each pair has exactly one learner line and the learner says Ana's whole part (lines 0, 2, 4, 6, 8). A three-line first chunk [0,3) was the alternative; it would have separated Ana's request (line 2) from its answer (line 3).",
     "Read text is a note from Frau Berg to Ana. Frau Berg is the boss in this Lektion's writing task, and the note keeps the dialogue's facts (no mobile phone yet, the colleague is an engineer, first name with Sie).",

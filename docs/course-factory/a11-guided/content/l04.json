@@ -293,6 +293,148 @@
     "de": "Vor dem Kurs packen Lena und Tim ihre Taschen aus. Aber wo ist das Wörterbuch?",
     "en": "Before class, Lena and Tim unpack their bags. But where is the dictionary?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Auf dem Flohmarkt. Sie: …? Frau Wolf: „Das ist eine Lampe.“ – Sie: …? Frau Wolf: „Sie kostet acht Euro.“",
+        "promptEn": "At the flea market you see a thing on Ms Wolf’s table. Ask two questions so that her answers fit: first what the thing is, then what it costs.",
+        "answer": "Was ist das? Was kostet sie?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach der Sache",
+              "en": "the question about what the thing is"
+            },
+            "forms": [
+              "Was ist das?",
+              "Entschuldigung, was ist das?",
+              "Und was ist das?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage nach dem Preis",
+              "en": "the question about the price"
+            },
+            "forms": [
+              "Was kostet sie?",
+              "Und was kostet sie?",
+              "Was kostet die Lampe?",
+              "Und was kostet die Lampe?",
+              "Wie viel kostet sie?",
+              "Und wie viel kostet sie?",
+              "Wie viel kostet die Lampe?",
+              "Und wie viel kostet die Lampe?",
+              "Was kostet das?",
+              "Und was kostet das?",
+              "Wie viel kostet das?",
+              "Wie teuer ist sie?",
+              "Wie teuer ist die Lampe?",
+              "Wie teuer ist das?",
+              "Wie ist der Preis?",
+              "Was ist der Preis?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            2
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Frau Wolf: „Der Tisch ist nicht teuer!“ – Sie: …? Frau Wolf: „Er kostet fünfzehn Euro.“",
+        "promptEn": "Ms Wolf says the table is not expensive. Ask her for the price, so that her answer fits.",
+        "answer": "Was kostet er?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach dem Preis",
+              "en": "the question about the price"
+            },
+            "forms": [
+              "Was kostet er?",
+              "Und was kostet er?",
+              "Was kostet der Tisch?",
+              "Und was kostet der Tisch?",
+              "Wie viel kostet er?",
+              "Und wie viel kostet er?",
+              "Wie viel kostet der Tisch?",
+              "Und wie viel kostet der Tisch?",
+              "Was kostet das?",
+              "Wie viel kostet das?",
+              "Wie teuer ist er?",
+              "Wie teuer ist der Tisch?",
+              "Wie ist der Preis?",
+              "Was ist der Preis?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "multiple_choice",
+        "promptDe": "Sie sind auf dem Flohmarkt. Ein Mann: „Die Tasche kostet vierzig Euro und der Rucksack sechzehn Euro.“ Was kostet die Tasche, was kostet der Rucksack?",
+        "promptEn": "You are at the flea market. A man tells you two prices. What does the bag cost, and what does the backpack cost? Choose.",
+        "options": [
+          "Tasche 14 Euro, Rucksack 16 Euro",
+          "Tasche 40 Euro, Rucksack 60 Euro",
+          "Tasche 40 Euro, Rucksack 16 Euro",
+          "Tasche 14 Euro, Rucksack 60 Euro"
+        ],
+        "answer": "Tasche 40 Euro, Rucksack 16 Euro",
+        "accepted": [
+          "Tasche 40 Euro, Rucksack 16 Euro"
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            3,
+            9
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Frau Wolf: „Was kaufen Sie?“ – Sie (Stuhl + Tasche): …",
+        "promptEn": "You want the chair and the bag. Ms Wolf asks what you are buying. Answer in one full sentence, with the articles.",
+        "answer": "Ich kaufe den Stuhl und die Tasche.",
+        "parts": [
+          {
+            "label": {
+              "de": "was Sie kaufen (ein ganzer Satz mit Artikeln)",
+              "en": "what you are buying (one full sentence with the articles)"
+            },
+            "forms": [
+              "Ich kaufe den Stuhl und die Tasche.",
+              "Ich kaufe die Tasche und den Stuhl.",
+              "Ich kaufe einen Stuhl und eine Tasche.",
+              "Ich kaufe eine Tasche und einen Stuhl."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks: five question-and-answer pairs; Tim has exactly one line in each (0, 2, 4, 6, 8), so say.line had no real choice. No boundary was in doubt.",
     "Meaning questions 2 and 5 turn on fünfzehn/fünfzig and dreißig/fünfzig/dreizehn on purpose: the can-do is „Preise bis hundert Euro verstehen“, and -zehn against -zig is the listening contrast that matters. No two options are one edit apart (checkAnswer would grade a neighbour as TYPO).",

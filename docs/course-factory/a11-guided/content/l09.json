@@ -125,6 +125,238 @@
     "de": "Ana steht am Bahnhof und hat viele Fragen: Fährt der Zug nach Österreich? Und was kostet die Fahrkarte?",
     "en": "Ana is at the station with a lot of questions: does the train go to Austria? And what does the ticket cost?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Im Café. Paul: „Guten Tag! Was möchten Sie trinken?“ Sie: … (Durst!) … (Tee)",
+        "promptEn": "In the café, Paul asks what you would like to drink. Say two sentences: first that you are thirsty, then order tea politely.",
+        "answer": "Ich habe Durst. Ich möchte einen Tee, bitte.",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "der Durst",
+              "en": "being thirsty"
+            },
+            "forms": [
+              "Ich habe Durst."
+            ]
+          },
+          {
+            "label": {
+              "de": "die Bestellung",
+              "en": "the order"
+            },
+            "forms": [
+              "Ich möchte einen Tee, bitte.",
+              "Ich möchte einen Tee.",
+              "Ich möchte Tee, bitte.",
+              "Ich möchte Tee.",
+              "Ich möchte eine Tasse Tee, bitte.",
+              "Ich möchte eine Tasse Tee.",
+              "Und ich möchte einen Tee, bitte.",
+              "Und ich möchte einen Tee.",
+              "Und ich möchte Tee, bitte.",
+              "Und ich möchte Tee.",
+              "Und ich möchte eine Tasse Tee, bitte.",
+              "Und ich möchte eine Tasse Tee.",
+              "Ich möchte bitte einen Tee.",
+              "Ich möchte bitte Tee.",
+              "Ich möchte bitte eine Tasse Tee.",
+              "Einen Tee, bitte.",
+              "Tee, bitte.",
+              "Eine Tasse Tee, bitte.",
+              "Ich möchte einen Tee trinken.",
+              "Ich möchte einen Tee trinken, bitte.",
+              "Ich möchte Tee trinken.",
+              "Ich möchte Tee trinken, bitte.",
+              "Ich möchte eine Tasse Tee trinken.",
+              "Ich möchte eine Tasse Tee trinken, bitte."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Paul: „Wir haben auch Suppe, Salat und Kuchen.“ Sie: … (Hunger!) … (Suppe)",
+        "promptEn": "Paul tells you what there is to eat. Say two sentences: first that you are hungry, then order soup politely.",
+        "answer": "Ich habe Hunger. Ich möchte Suppe, bitte.",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "der Hunger",
+              "en": "being hungry"
+            },
+            "forms": [
+              "Ich habe Hunger.",
+              "Ja, ich habe Hunger.",
+              "Ich habe auch Hunger.",
+              "Ja, ich habe auch Hunger."
+            ]
+          },
+          {
+            "label": {
+              "de": "die Bestellung",
+              "en": "the order"
+            },
+            "forms": [
+              "Ich möchte Suppe, bitte.",
+              "Ich möchte Suppe.",
+              "Ich möchte eine Suppe, bitte.",
+              "Ich möchte eine Suppe.",
+              "Ich möchte die Suppe, bitte.",
+              "Ich möchte die Suppe.",
+              "Und ich möchte Suppe, bitte.",
+              "Und ich möchte Suppe.",
+              "Und ich möchte eine Suppe, bitte.",
+              "Und ich möchte eine Suppe.",
+              "Und ich möchte die Suppe, bitte.",
+              "Und ich möchte die Suppe.",
+              "Ich möchte bitte Suppe.",
+              "Ich möchte bitte eine Suppe.",
+              "Ich möchte bitte die Suppe.",
+              "Suppe, bitte.",
+              "Eine Suppe, bitte.",
+              "Die Suppe, bitte.",
+              "Ich möchte Suppe essen.",
+              "Ich möchte Suppe essen, bitte.",
+              "Ich möchte eine Suppe essen.",
+              "Ich möchte eine Suppe essen, bitte.",
+              "Ich möchte die Suppe essen.",
+              "Ich möchte die Suppe essen, bitte.",
+              "Ich esse Suppe.",
+              "Ich esse eine Suppe.",
+              "Ich esse die Suppe."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            3
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Sie möchten Salat. Paul: „Wir haben Suppe und Kuchen.“ Sie: …?",
+        "promptEn": "You would like salad, but Paul only mentions soup and cake. Ask him politely whether they have salad too.",
+        "answer": "Haben Sie auch Salat?",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Haben Sie auch Salat?",
+              "Haben Sie auch Salat, bitte?",
+              "Haben Sie auch einen Salat?",
+              "Haben Sie auch einen Salat, bitte?",
+              "Haben Sie Salat?",
+              "Haben Sie Salat, bitte?",
+              "Haben Sie einen Salat?",
+              "Haben Sie einen Salat, bitte?",
+              "Und haben Sie auch Salat?",
+              "Und haben Sie auch Salat, bitte?",
+              "Und haben Sie auch einen Salat?",
+              "Und haben Sie auch einen Salat, bitte?",
+              "Und haben Sie Salat?",
+              "Und haben Sie Salat, bitte?",
+              "Und haben Sie einen Salat?",
+              "Und haben Sie einen Salat, bitte?",
+              "Entschuldigung, haben Sie auch Salat?",
+              "Entschuldigung, haben Sie auch Salat, bitte?",
+              "Entschuldigung, haben Sie auch einen Salat?",
+              "Entschuldigung, haben Sie auch einen Salat, bitte?",
+              "Entschuldigung, haben Sie Salat?",
+              "Entschuldigung, haben Sie Salat, bitte?",
+              "Entschuldigung, haben Sie einen Salat?",
+              "Entschuldigung, haben Sie einen Salat, bitte?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Paul: „Möchten Sie auch Wasser?“ Sie möchten Wasser: … Paul: „Wir haben auch Wein.“ Sie möchten keinen Wein: …",
+        "promptEn": "Paul offers you water: accept. Then he offers wine: decline politely.",
+        "answer": "Ja, bitte. Nein, danke.",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "annehmen",
+              "en": "accepting"
+            },
+            "forms": [
+              "Ja, bitte.",
+              "Ja, gern.",
+              "Ja, gerne.",
+              "Ja, sehr gern.",
+              "Ja, sehr gerne.",
+              "Gern.",
+              "Gerne.",
+              "Sehr gern.",
+              "Sehr gerne.",
+              "Ja, danke.",
+              "Ja, ein Glas Wasser, bitte.",
+              "Ja, ein Wasser, bitte.",
+              "Ja, Wasser, bitte.",
+              "Ja, ein Glas Mineralwasser, bitte.",
+              "Ja, ich möchte Wasser.",
+              "Ja, ich möchte Wasser, bitte.",
+              "Ja, ich möchte ein Glas Wasser.",
+              "Ja, ich möchte ein Glas Wasser, bitte.",
+              "Ja, ich möchte auch Wasser.",
+              "Ja, ich möchte auch Wasser, bitte.",
+              "Ja, ich möchte auch ein Glas Wasser.",
+              "Ja, ich möchte auch ein Glas Wasser, bitte."
+            ]
+          },
+          {
+            "label": {
+              "de": "höflich ablehnen",
+              "en": "declining politely"
+            },
+            "forms": [
+              "Nein, danke.",
+              "Danke, nein.",
+              "Nein, danke, ich möchte keinen Wein."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks are the five offer-and-answer pairs (Paul asks or offers, Ana answers); no boundary was in doubt. Each chunk has exactly one learner line, so the say lines (1, 3, 5, 7, 9) were not a choice. None of them is a dictation line (0, 4).",
     "Read text: the café's menu with a price list and breakfast hours. Only Café and essen were missing from the dialogue; Café is the menu's heading and essen stands in the slogan „Bei uns essen und trinken Sie gut!“.",

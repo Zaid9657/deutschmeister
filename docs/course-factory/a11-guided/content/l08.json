@@ -126,6 +126,158 @@
     "de": "Ana hat Durst und geht ins Café. Kann sie auf Deutsch bestellen?",
     "en": "Ana is thirsty and goes to a café. Can she order in German?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "1. Sie haben keine Uhr. Sie: …? 2. Eine Frau hat keine Uhr. Ihre Uhr: 10:30. Sie: … (ohne Zahlen)",
+        "promptEn": "1. You have no watch: ask what time it is. 2. Then a woman has no watch, and yours says 10:30: tell her the time in words, without digits.",
+        "answer": "Wie spät ist es? Es ist halb elf.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Wie spät ist es?",
+              "Wie spät ist es, bitte?",
+              "Wie viel Uhr ist es?",
+              "Wie viel Uhr ist es, bitte?",
+              "Entschuldigung, wie spät ist es?",
+              "Entschuldigung, wie spät ist es, bitte?",
+              "Entschuldigung, wie viel Uhr ist es?",
+              "Entschuldigung, wie viel Uhr ist es, bitte?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Uhrzeit",
+              "en": "the time"
+            },
+            "forms": [
+              "Es ist halb elf.",
+              "Halb elf.",
+              "Es ist zehn Uhr dreißig.",
+              "Zehn Uhr dreißig.",
+              "Es ist zehn dreißig."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "wortfeld",
+          "index": 6
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sie und Ihre Freundin machen einen Termin für Sport. Ihre Zeit: Freitag, 9 Uhr. Ihre Freundin: „Gut. Und wann ist der Termin?“ Sie: …",
+        "promptEn": "You and a friend are fixing a time for sport. You can do Friday, 9 o’clock. She asks when the appointment is: tell her the day and the time.",
+        "answer": "Der Termin ist am Freitag um neun Uhr.",
+        "parts": [
+          {
+            "label": {
+              "de": "der Termin",
+              "en": "the appointment"
+            },
+            "forms": [
+              "Der Termin ist am Freitag um neun Uhr.",
+              "Der Termin ist am Freitag um neun.",
+              "Der Termin ist am Freitag um 9 Uhr.",
+              "Unser Termin ist am Freitag um neun Uhr.",
+              "Unser Termin ist am Freitag um neun.",
+              "Unser Termin ist am Freitag um 9 Uhr.",
+              "Er ist am Freitag um neun Uhr.",
+              "Er ist am Freitag um neun.",
+              "Er ist am Freitag um 9 Uhr.",
+              "Am Freitag um neun Uhr.",
+              "Am Freitag um neun.",
+              "Am Freitag um 9 Uhr.",
+              "Am Freitag ist der Termin um neun Uhr.",
+              "Um neun Uhr ist der Termin am Freitag.",
+              "Am Freitag um neun Uhr ist der Termin."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            3
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Ihr Morgen: Wecker 7 Uhr, dann aufstehen. Sie: Ich …",
+        "promptEn": "Talk about your day: your alarm clock goes at 7 and you get up. Say in one full sentence when you get up.",
+        "answer": "Ich stehe um sieben Uhr auf.",
+        "parts": [
+          {
+            "label": {
+              "de": "der Morgen",
+              "en": "your morning"
+            },
+            "forms": [
+              "Ich stehe um sieben Uhr auf.",
+              "Ich stehe um sieben auf.",
+              "Ich stehe um 7 Uhr auf.",
+              "Ich stehe morgens um sieben Uhr auf.",
+              "Ich stehe morgens um sieben auf.",
+              "Ich stehe morgens um 7 Uhr auf.",
+              "Ich stehe um sieben Uhr morgens auf.",
+              "Ich stehe um 7 Uhr morgens auf.",
+              "Um sieben Uhr stehe ich auf.",
+              "Um sieben stehe ich auf.",
+              "Um 7 Uhr stehe ich auf.",
+              "Morgens stehe ich um sieben Uhr auf.",
+              "Morgens stehe ich um sieben auf.",
+              "Morgens stehe ich um 7 Uhr auf."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Wann haben Sie Zeit für Ihre Freundin? Ihre Woche: Montag, Dienstag, Mittwoch und Freitag Arbeit. Donnerstag: frei! Sie: …",
+        "promptEn": "Your friend wants to meet. Your week: work on Monday, Tuesday, Wednesday and Friday; Thursday is free. Tell her when you have time.",
+        "answer": "Am Donnerstag habe ich Zeit.",
+        "parts": [
+          {
+            "label": {
+              "de": "der Tag",
+              "en": "the day"
+            },
+            "forms": [
+              "Am Donnerstag habe ich Zeit.",
+              "Am Donnerstag bin ich frei.",
+              "Am Donnerstag habe ich frei.",
+              "Ich habe am Donnerstag Zeit.",
+              "Ich bin am Donnerstag frei.",
+              "Ich habe am Donnerstag frei.",
+              "Ich habe Zeit am Donnerstag.",
+              "Am Donnerstag."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            7
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks are the five question-answer pairs of the dialogue; no boundary was in doubt.",
     "Both speakers (Ana, Lena) are learner roles here, so every line is eligible for say. I kept say off the two dictation lines (hoeren.lines 3 and 7): chunks 2 and 4 therefore say Ana's question (lines 2 and 6), which is the first line of its chunk and so has no cue line on the say screen (SceneStage shows a cue only if an earlier line of the same chunk exists). If a cue matters more than keeping the dictation unrehearsed, switch them to lines 3 and 7; the validator accepts both.",

@@ -179,6 +179,194 @@
     "de": "Lena sieht ein Foto auf Anas Handy. Wer sind die Leute auf dem Foto?",
     "en": "Lena sees a photo on Ana’s phone. Who are the people in the photo?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Ihr Formular: Ana Chakiri, Marokko, Studentin. Herr Weber: „Woher kommen Sie? Und was sind Sie von Beruf?“ – Sie: …",
+        "promptEn": "You are Ana at the public office. Your form says: Ana Chakiri, Morocco, student. Mr Weber asks where you come from and what your job is. Answer both questions in that order, each in a full sentence.",
+        "answer": "Ich komme aus Marokko. Ich bin Studentin.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Herkunft (ganzer Satz)",
+              "en": "where you come from (a full sentence)"
+            },
+            "forms": [
+              "Ich komme aus Marokko.",
+              "Ich bin aus Marokko."
+            ]
+          },
+          {
+            "label": {
+              "de": "der Beruf (ganzer Satz)",
+              "en": "your job (a full sentence)"
+            },
+            "forms": [
+              "Ich bin Studentin.",
+              "Ich bin von Beruf Studentin.",
+              "Ich bin Studentin von Beruf.",
+              "Von Beruf bin ich Studentin.",
+              "und bin Studentin.",
+              "und ich bin Studentin."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            5,
+            7
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Im Amt. Eine Frau: „Ich komme aus Spanien und wohne auch in Bremen.“ – Sie: …? Die Frau: „Ich bin Lehrerin.“",
+        "promptEn": "At the public office you talk to a woman you do not know. She tells you where she is from. Ask her formally what her job is, so that her answer fits.",
+        "answer": "Was sind Sie von Beruf?",
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach dem Beruf",
+              "en": "the question about her job"
+            },
+            "forms": [
+              "Was sind Sie von Beruf?",
+              "Und was sind Sie von Beruf?",
+              "Was ist Ihr Beruf?",
+              "Und was ist Ihr Beruf?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Ihr Formular: Telefonnummer 4 9 2 5 8. Herr Weber: „Ist Ihre Telefonnummer vier neun zwei acht fünf?“ – Sie: …",
+        "promptEn": "Your form says: phone number 4 9 2 5 8. Mr Weber reads the number back to you. Is he right? Answer yes or no, then say your whole number, with every number written as a word.",
+        "answer": "Nein. Vier neun zwei fünf acht.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Antwort auf die Frage",
+              "en": "the answer to his question: is he right?"
+            },
+            "forms": [
+              "Nein."
+            ]
+          },
+          {
+            "label": {
+              "de": "die Telefonnummer, jede Zahl als Wort",
+              "en": "the phone number, every number as a word"
+            },
+            "forms": [
+              "Vier neun zwei fünf acht.",
+              "Meine Telefonnummer ist vier neun zwei fünf acht.",
+              "Die Telefonnummer ist vier neun zwei fünf acht.",
+              "Sie ist vier neun zwei fünf acht."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            8,
+            9
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Ihr Formular: Telefonnummer 0176, Wohnort Bremen. Herr Weber: „Wie ist Ihre Telefonnummer? Und wo wohnen Sie?“ – Sie: …",
+        "promptEn": "You are Ana. Your form says: phone number 0176, place of residence Bremen. Mr Weber asks for your phone number and where you live. Answer both questions in that order, each in a full sentence.",
+        "answer": "Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Telefonnummer (ganzer Satz)",
+              "en": "your phone number (a full sentence)"
+            },
+            "forms": [
+              "Meine Telefonnummer ist null eins sieben sechs.",
+              "Meine Telefonnummer ist 0176.",
+              "Meine Telefonnummer ist 0 1 7 6.",
+              "Die Telefonnummer ist null eins sieben sechs.",
+              "Die Telefonnummer ist 0176."
+            ]
+          },
+          {
+            "label": {
+              "de": "der Wohnort (ganzer Satz)",
+              "en": "where you live (a full sentence)"
+            },
+            "forms": [
+              "Ich wohne in Bremen.",
+              "Mein Wohnort ist Bremen.",
+              "und ich wohne in Bremen.",
+              "und mein Wohnort ist Bremen."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            9,
+            5
+          ]
+        }
+      },
+      {
+        "canDo": 4,
+        "type": "production",
+        "promptDe": "An das Amt: „Guten Tag, ich heiße Ana Chakiri und komme aus Marokko. … Danke! Ana Chakiri“ – Sie (Staatsangehörigkeit: marokkanisch; Familienstand: ledig): …",
+        "promptEn": "You are Ana and you write a short message to the public office. The greeting, your name and the closing are already there. Write the two missing sentences about yourself: first your nationality (the form says “marokkanisch”), then your marital status (the form says “ledig”).",
+        "answer": "Ich bin Marokkanerin. Ich bin ledig.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Staatsangehörigkeit (ganzer Satz mit dem Nomen)",
+              "en": "your nationality (a full sentence with the noun)"
+            },
+            "forms": [
+              "Ich bin Marokkanerin.",
+              "Ich komme aus Marokko und bin Marokkanerin.",
+              "Meine Staatsangehörigkeit ist marokkanisch."
+            ]
+          },
+          {
+            "label": {
+              "de": "der Familienstand (ganzer Satz)",
+              "en": "your marital status (a full sentence)"
+            },
+            "forms": [
+              "Ich bin ledig.",
+              "Ich bin nicht verheiratet.",
+              "Mein Familienstand ist ledig.",
+              "und ledig.",
+              "und bin ledig.",
+              "und ich bin ledig."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "wortfeld",
+          "index": 18
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks: five question-and-answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Each pair has exactly one Ana line, so say.line had no real choice. No boundary was in doubt.",
     "Chunk 5 meaning has digits as options (0167 / 0176 / 1076), not English sentences: the can-do is „Zahlen von null bis zehn verstehen“, and this is the only place in the Lektion where the learner hears digits. If options must be English prose, the fallback is „Was möchte Herr Weber wissen?“ with Ana’s phone number / date of birth / address.",
