@@ -125,6 +125,204 @@
     "de": "In A1.2 geht es weiter: Ana sucht das Rathaus. Findet sie den Weg?",
     "en": "The story continues in A1.2: Ana is looking for the town hall. Will she find the way?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "register": "formal",
+        "promptDe": "Eine Kollegin: „Sie feiern am Freitag Geburtstag. Und ich habe am Freitag frei!“ – Sie (einladen): …",
+        "promptEn": "A colleague knows that you are celebrating your birthday on Friday, and she tells you she is free that day. Invite her in one sentence. Speak formally.",
+        "answer": "Ich lade Sie ein.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Einladung",
+              "en": "the invitation"
+            },
+            "forms": [
+              "Ich lade Sie ein.",
+              "Ich lade Sie zum Fest ein.",
+              "Ich lade Sie zum Geburtstag ein.",
+              "Ich lade Sie zu meinem Fest ein.",
+              "Ich lade Sie zu meinem Geburtstag ein.",
+              "Ich lade Sie zur Party ein.",
+              "Ich lade Sie zu meiner Party ein.",
+              "Ich lade Sie auch ein.",
+              "Ich lade Sie auch zum Fest ein.",
+              "Ich lade Sie auch zum Geburtstag ein.",
+              "Ich lade auch Sie ein.",
+              "Ich lade Sie am Freitag ein.",
+              "Ich möchte Sie einladen.",
+              "Ich möchte Sie zum Fest einladen.",
+              "Ich möchte Sie zum Geburtstag einladen.",
+              "Ich möchte Sie zu meinem Fest einladen.",
+              "Ich möchte Sie zu meinem Geburtstag einladen.",
+              "Ich möchte Sie zur Party einladen.",
+              "Ich möchte Sie zu meiner Party einladen.",
+              "Ich möchte Sie auch einladen.",
+              "Kommen Sie?",
+              "Kommen Sie zum Fest?",
+              "Kommen Sie zum Geburtstag?",
+              "Kommen Sie zu meinem Fest?",
+              "Kommen Sie zu meinem Geburtstag?",
+              "Kommen Sie zur Party?",
+              "Kommen Sie zu meiner Party?",
+              "Kommen Sie auch?",
+              "Kommen Sie auch zum Fest?",
+              "Kommen Sie auch zum Geburtstag?",
+              "Kommen Sie am Freitag?",
+              "Kommen Sie am Freitag auch?",
+              "Kommen Sie auch am Freitag?",
+              "Möchten Sie kommen?",
+              "Möchten Sie auch kommen?",
+              "Möchten Sie zum Fest kommen?",
+              "Möchten Sie auch zum Fest kommen?",
+              "Möchten Sie zum Geburtstag kommen?",
+              "Möchten Sie auch zum Geburtstag kommen?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            5
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Eine Kollegin: „Wann haben Sie Geburtstag?“ – Sie (Monat: 05): …",
+        "promptEn": "A colleague asks when your birthday is. For this task it is in month 05 of the year. Tell her the month.",
+        "answer": "Mein Geburtstag ist im Mai.",
+        "parts": [
+          {
+            "label": {
+              "de": "der Monat",
+              "en": "the month"
+            },
+            "forms": [
+              "Mein Geburtstag ist im Mai.",
+              "Ich habe im Mai Geburtstag.",
+              "Im Mai.",
+              "Im Mai ist mein Geburtstag.",
+              "Im Mai habe ich Geburtstag.",
+              "Ich habe Geburtstag im Mai."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Eine Kollegin: „Wann feiern Sie? Und wer kommt?“ – Sie (Freitag): … Sie (Mama, Papa): …",
+        "promptEn": "A colleague asks when you are celebrating and who is coming. Tell her that the party is on Friday. Then tell her that your mum and your dad are coming.",
+        "answer": "Wir feiern am Freitag. Meine Mama und mein Papa kommen.",
+        "parts": [
+          {
+            "label": {
+              "de": "das Fest",
+              "en": "the party"
+            },
+            "forms": [
+              "Wir feiern am Freitag.",
+              "Ich feiere am Freitag.",
+              "Am Freitag feiern wir.",
+              "Am Freitag feiere ich.",
+              "Am Freitag.",
+              "Mein Fest ist am Freitag.",
+              "Das Fest ist am Freitag.",
+              "Unser Fest ist am Freitag.",
+              "Meine Party ist am Freitag.",
+              "Die Party ist am Freitag."
+            ]
+          },
+          {
+            "label": {
+              "de": "die Gäste (mit mein/meine)",
+              "en": "the guests (with mein/meine)"
+            },
+            "forms": [
+              "Meine Mama und mein Papa kommen.",
+              "Meine Mama und mein Papa.",
+              "Meine Mama und mein Papa kommen zum Fest.",
+              "Meine Mama und mein Papa kommen auch.",
+              "Mein Papa und meine Mama kommen.",
+              "Mein Papa und meine Mama.",
+              "Mein Papa und meine Mama kommen zum Fest.",
+              "Mein Papa und meine Mama kommen auch.",
+              "Meine Mutter und mein Vater kommen.",
+              "Meine Mutter und mein Vater.",
+              "Meine Mutter und mein Vater kommen zum Fest.",
+              "Meine Mutter und mein Vater kommen auch.",
+              "Mein Vater und meine Mutter kommen.",
+              "Mein Vater und meine Mutter.",
+              "Mein Vater und meine Mutter kommen zum Fest.",
+              "Mein Vater und meine Mutter kommen auch.",
+              "Ja, meine Mama und mein Papa kommen.",
+              "Meine Mama kommt und mein Papa kommt.",
+              "Meine Eltern kommen.",
+              "Meine Eltern."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            1,
+            3
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Lena geht nach Hause. Am Freitag kommt sie zum Fest. Sie: „…, Lena. …!“",
+        "promptEn": "Your friend Lena is going home. You will see her again soon: on Friday she is coming to your party. Say goodbye in two short phrases: first wish her well, then tell her that you will see her soon.",
+        "answer": "Mach's gut. Bis bald.",
+        "parts": [
+          {
+            "label": {
+              "de": "zuerst ein guter Wunsch",
+              "en": "first a good wish"
+            },
+            "forms": [
+              "Mach's gut.",
+              "Mach's gut, Lena.",
+              "Mach es gut.",
+              "Schönen Tag noch.",
+              "Schönen Tag noch, Lena.",
+              "Mach's gut und schönen Tag noch."
+            ]
+          },
+          {
+            "label": {
+              "de": "dann der Abschied (bis wann?)",
+              "en": "then the goodbye (until when?)"
+            },
+            "forms": [
+              "Bis bald.",
+              "Bis Freitag.",
+              "Und bis bald."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            9
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks are five question–answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Lines 2–5 are all about who is coming; I cut at 4 because line 4 turns from the parents to the brother, his wife and the other guests.",
     "say: Ana's five lines (1, 3, 5, 7, 9); every chunk has exactly one. Lines 1 and 3 are also the dictation lines, line 9 is also a readAloud line. No ownName anywhere (no „Ich heiße …“ line, no spelled name).",
@@ -134,6 +332,17 @@
     "nextHook is grounded in a12.js Lektion 1 (setting „Ana sucht das Rathaus“, first line „Wie komme ich zum Rathaus?“). The checker does not require a hook for Lektion 12; drop it if the recap should not point across levels.",
     "Phonetik: MEIN, DEIN, ZWEI train the diphthong ei, not word stress (one syllable each), so the checker prints „sound stage pending“. Data left untouched.",
     "Words outside the taught vocabulary appear only in unchecked fields: „Nachricht“ (title, instruction, explanations). The read questions say „Wählen Sie die Antwort“ instead of the model's „Wählen Sie die Bedeutung“, because they ask about content.",
-    "Existing data: „der Gast“ and „einladen“ count as missing from the dialogue although it says „Die Gäste“ and „Ich lade … ein“ (lineFor() sees neither the umlaut plural nor the split verb). Lektion 2 gives Ana's birth date as 3.5.1998, which fits „im Mai“."
+    "Existing data: „der Gast“ and „einladen“ count as missing from the dialogue although it says „Die Gäste“ and „Ich lade … ein“ (lineFor() sees neither the umlaut plural nor the split verb). Lektion 2 gives Ana's birth date as 3.5.1998, which fits „im Mai“.",
+    "PROOF. Four tasks, one per can-do. promptDe is a partner line plus a cue in brackets, as in Lektion 11: instruction words are untaught for RULE 35 („welchem“ too, although the pretest prompt says „in welchem Monat“, so the colleague asks „Wann haben Sie Geburtstag?“), and the prompt may not contain „du/dein“. Tasks 0–2 therefore have a colleague who says Sie; task 3 has Lena, whose line is only described.",
+    "Proof goal 0 (einladen), register formal: a colleague knows about the birthday party on Friday and says she is free; the learner invites her in one sentence. Accepted: „Ich lade Sie ein.“ (also with „auch“, „auch Sie“, „am Freitag“, and with „zum Fest“, „zum Geburtstag“, „zu meinem Fest“, „zu meinem Geburtstag“, „zur Party“, „zu meiner Party“), „Ich möchte Sie … einladen.“, „Kommen Sie (auch) …?“, „Kommen Sie am Freitag?“, „Möchten Sie (auch) … kommen?“. The dative forms („zu meinem“, „zur“) are not taught here (the Sprechen task has „zu Ihrem Fest“); they are listed because they are correct, not because the Lektion taught them. Refused: du forms (hint „Say it formally“), „Ich einlade Sie“, „Ich lade Sie“, „Ich lade Ihnen ein“, and the taught line „Ich lade auch meine Kollegin ein“ itself.",
+    "Proof goal 1 (Monat): the colleague asks „Wann haben Sie Geburtstag?“, cue „Monat: 05“. Accepted: „Mein Geburtstag ist im Mai.“, „Ich habe im Mai Geburtstag.“, „Im Mai.“ (the pretest accepts the bare „Im …“ too), „Im Mai ist mein Geburtstag.“, „Im Mai habe ich Geburtstag.“, „Ich habe Geburtstag im Mai.“. LIMIT: the learner cannot say the month of their own birthday. „im Mai“ is the only month the course teaches; RULE 35 refuses every other month name as untaught (tried: Januar … Dezember), and a proof part cannot take „Im + any word“ the way the pretest's prefix list does. The task therefore fixes May by the cue; it proves „im + Monat“ and the sentence, not the learner's own date.",
+    "Proof goal 2 (Fest und Gäste): the colleague asks „Wann feiern Sie? Und wer kommt?“, cues „Freitag“ and „Mama, Papa“. Part 1: „Wir feiern am Freitag.“, „Ich feiere am Freitag.“, both fronted, „Am Freitag.“, and „Mein/Das/Unser Fest ist am Freitag.“, „Meine/Die Party ist am Freitag.“. Part 2: „Meine Mama und mein Papa kommen.“ in both orders, short without „kommen“, with „zum Fest“ or „auch“, the same with „Mutter/Vater“, „Meine Eltern (kommen).“, „Meine Mama kommt und mein Papa kommt.“ and the taught „Ja, meine Mama und mein Papa kommen.“. Short answers pass here because the colleague asks W-questions and the short answer still carries „am“ and „meine/mein“. „Mama und Papa kommen.“ without the possessive is refused on purpose (the Lektion's grammar; the hint label says „mit mein/meine“); every wrong possessive ending is refused.",
+    "Proof goal 3 (Abschied und Wunsch): Lena goes home and comes to the party on Friday; the prompt prints the frame „…, Lena. …!“ of line 9. Part 1 (the wish): „Mach's gut.“, „Mach's gut, Lena.“, „Mach es gut.“, „Schönen Tag noch.“ (also with „, Lena“), „Mach's gut und schönen Tag noch.“ (pool item 17). Part 2: „Bis bald.“, „Bis Freitag.“ („Bis morgen“ pattern of Lektion 1), „Und bis bald.“ (so „Mach's gut und bis bald!“ passes). „Bis später“ is refused: she comes on Friday, not later today. DECISION TO CHECK: „Schönen Tag noch. Bis bald.“ passes although the can-do names „Mach's gut“; it is this Lektion's other taught good wish, and refusing it would refuse a correct farewell. Delete the two „Schönen Tag noch“ forms of part 1 if the proof must insist on „Mach's gut“.",
+    "Proof goal 0, tried with scripts/try-proof-answer.mjs. PASS: „Ich lade Sie ein.“ · „Ich lade Sie zum Geburtstag ein.“ · „ich möchte sie einladen“ (TYPO, passes) · „Kommen Sie auch?“ · „Ich lade auch Sie ein!“ · „Ich lade Sie zu meinem Fest ein“ · „Kommen Sie am Freitag?“ · „Möchten Sie kommen?“ · „Kommen Sie zu meinem Geburtstag?“. WRONG: „Ich lade dich ein.“ · „Kommst du auch?“ · „Ich einlade Sie.“ · „Ich lade Sie.“ · „Ich lade ein Sie.“ · „Ich lade auch meine Kollegin ein.“ · „Ich lade Ihnen ein.“ · „Ich lade Sie zum Party ein.“ · „Ich lade Sie zu mein Fest ein.“ · „Kommen Sie mit?“ · „Wir feiern am Freitag.“ · „Ja. Ich lade Sie ein.“ · „Danke. Ich lade Sie ein.“ · „Ich feiere am Freitag. Kommen Sie auch?“.",
+    "Proof goal 1, tried with scripts/try-proof-answer.mjs. PASS: „Mein Geburtstag ist im Mai.“ · „Ich habe im Mai Geburtstag.“ · „im mai“ (TYPO, passes) · „Im Mai ist mein Geburtstag“ · „Im Mai habe ich Geburtstag!“ · „Ich habe Geburtstag im Mai.“. WRONG: „Mein Geburtstag ist in Mai.“ · „Mein Geburtstag ist am Mai.“ · „Mai.“ · „Mein Geburtstag ist am Freitag.“ · „Meine Geburtstag ist im Mai.“ · „Ich bin im Mai Geburtstag.“ · „Ich habe im Mai.“ · „Mein Geburtstag ist im Juni.“ · „Mein Geburtstag ist im Mai. Wir feiern am Freitag.“.",
+    "Proof goal 2, tried with scripts/try-proof-answer.mjs. PASS: „Wir feiern am Freitag. Meine Mama und mein Papa kommen.“ · „Am Freitag. Meine Mama und mein Papa.“ · „ich feiere am freitag meine eltern kommen“ (TYPO, passes) · „Mein Fest ist am Freitag. Mein Papa und meine Mama kommen.“ · „Am Freitag feiern wir, meine Mutter und mein Vater kommen“ (TYPO, passes) · „Wir feiern am Freitag. Ja, meine Mama und mein Papa kommen.“ · „Das Fest ist am Freitag. Meine Mama kommt und mein Papa kommt.“. WRONG: „Wir feiern am Freitag. Mein Mama und meine Papa kommen.“ · „Wir feiern am Freitag. Mein Mama und mein Papa kommen.“ · „Wir feiern am Freitag. Meine Mama und meine Papa kommen.“ · „Wir feiern am Freitag. Meine Mama und mein Papa kommt.“ · „Wir feiern am Freitag. Mama und Papa kommen.“ · „Wir feiern im Freitag. Meine Mama und mein Papa kommen.“ · „Wir feiern am Samstag. Meine Mama und mein Papa kommen.“ · „Wir feiern am Freitag.“ · „Meine Mama und mein Papa kommen.“ · „Wir feiern am Freitag. Deine Mama und dein Papa kommen.“ · „Freitag. Mama und Papa.“ · „Wir feiern am Freitag. Meine Mama kommt. Mein Papa kommt.“ · „Mein Geburtstag ist im Mai. Wir feiern am Freitag. Ja, meine Mama und mein Papa kommen.“.",
+    "Proof goal 3, tried with scripts/try-proof-answer.mjs. PASS: „Mach's gut. Bis bald.“ · „Mach's gut, Lena. Bis bald!“ · „machs gut bis bald“ (TYPO, passes) · „Mach’s gut! Bis Freitag!“ · „Schönen Tag noch, Lena. Bis bald!“ · „Mach's gut und bis bald!“ (TYPO, passes) · „Mach's gut und schönen Tag noch! Bis bald!“. WRONG: „Mach's gut. Bis später.“ · „Auf Wiedersehen. Bis bald.“ · „Tschüss. Bis bald.“ · „Mach's gut.“ · „Bis bald.“ · „Mach gut. Bis bald.“ · „Mach's gut. Bis morgen.“ · „Schönen Tag. Bis bald.“ · „Schöner Tag noch. Bis bald.“ · „Mach's gut. Bis balt.“ · „Bis bald! Mach's gut!“ · „Ja! Mach's gut, Lena. Bis bald!“ · „Mach's gut! Bis bald, Lena!“ · „Tschüss, Lena! Mach's gut! Bis bald!“ · „Mach's gut! Schönen Tag noch! Bis bald!“.",
+    "Proof limits of the tool (correct German that is refused; none could be closed with the documented task forms). (a) „Ja.“ or „Danke.“ as a sentence of its own always fails: this Lektion's Wortfeld has no courtesy word, and „Ja“ is never one. So „Ja. Ich lade Sie ein.“ fails, and so does the re-taught line 9 copied whole („Ja! Mach's gut, Lena. Bis bald!“); the partner lines were written so that they invite neither. (b) Extra sentences: „Ich feiere am Freitag. Kommen Sie auch?“ (goal 0 has one part), „Mein Geburtstag ist im Mai. Wir feiern am Freitag.“ (re-taught line 1 copied whole for goal 1), „Meine Mama kommt. Mein Papa kommt.“ (two sentences for one part) and three farewell chunks („Mach's gut! Schönen Tag noch! Bis bald!“) are refused. (c) Order: parts are ordered, so „Bis bald! Mach's gut!“ is refused; the frame, the English prompt and the hint labels („zuerst …“, „dann …“) give the order. (d) Names: the dialogue has no titled speaker, so the final-address adapter never applies. Goal 3 lists „Mach's gut, Lena.“ (verbatim line 9) and „Schönen Tag noch, Lena.“ because the printed frame puts the name there; „Bis bald, Lena!“ is refused. Goals 0–2 use an unnamed colleague.",
+    "Existing course data, seen while writing the proof. Can-do 0 („jemanden einladen“): no line invites the person spoken to. The dialogue has „Ich lade auch meine Kollegin ein“ (about a third person), the Schreiben sample invites without the verb, and „dich einladen“ stands only in the guided read text. The proof asks for the direct, formal invitation that this Lektion's own Sprechen task asks for („Sie“ as object is in the Wortfeld example „Ich grüße Sie.“); its re-teach line 5 shows the Satzklammer but is itself not a passing answer, so a learner who misses twice must still replace „meine Kollegin“ by „Sie“. A dialogue line such as „Ich lade dich ein.“ would close this. Can-do 1: only one month is taught (see goal 1). Can-do 3 names two chunks, which the proof screen hides; „gute Wünsche“ is otherwise only „Schönen Tag noch“ (Wortfeld, read text, pool item 17), never said in the dialogue."
   ]
 }

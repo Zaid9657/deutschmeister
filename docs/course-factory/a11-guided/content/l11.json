@@ -125,6 +125,194 @@
     "de": "Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?",
     "en": "Ana's birthday is coming up and she is planning a party. Who will she invite?"
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Eine Kollegin: „Was machen Sie jeden Tag?“ – Sie (duschen): … Eine Kollegin: „Und am Sonntag?“ – Sie (schlafen, bis 9 Uhr): …",
+        "promptEn": "A colleague asks what you do every day. Tell her that you shower. Then she asks about Sunday: tell her that you sleep until nine.",
+        "answer": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun.",
+        "parts": [
+          {
+            "label": {
+              "de": "jeden Tag",
+              "en": "every day"
+            },
+            "forms": [
+              "Ich dusche jeden Tag.",
+              "Ich dusche.",
+              "Jeden Tag dusche ich.",
+              "Ich dusche und frühstücke jeden Tag.",
+              "Ich dusche und frühstücke.",
+              "Ich frühstücke und dusche jeden Tag.",
+              "Ich frühstücke und dusche."
+            ]
+          },
+          {
+            "label": {
+              "de": "der Sonntag",
+              "en": "Sunday"
+            },
+            "forms": [
+              "Ich schlafe am Sonntag bis neun.",
+              "Am Sonntag schlafe ich bis neun.",
+              "Ich schlafe bis neun.",
+              "Ich schlafe am Sonntag bis neun Uhr.",
+              "Am Sonntag schlafe ich bis neun Uhr.",
+              "Ich schlafe bis neun Uhr.",
+              "Ich schlafe am Sonntag bis 9.",
+              "Am Sonntag schlafe ich bis 9.",
+              "Ich schlafe bis 9.",
+              "Ich schlafe am Sonntag bis 9 Uhr.",
+              "Am Sonntag schlafe ich bis 9 Uhr.",
+              "Ich schlafe bis 9 Uhr."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            8,
+            9
+          ]
+        }
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sie (gestern?): „Tim, …?“ – Tim: „Ich? Nicht viel!“ – Sie (gestern: Arbeit): …",
+        "promptEn": "Ask your friend Tim what he did yesterday. He did not do much. Then say what you did yesterday: you worked.",
+        "answer": "Was hast du gestern gemacht? Ich habe gearbeitet.",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Was hast du gestern gemacht?",
+              "Tim, was hast du gestern gemacht?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Antwort",
+              "en": "the answer"
+            },
+            "forms": [
+              "Ich habe gearbeitet.",
+              "Ich habe gestern gearbeitet.",
+              "Gestern habe ich gearbeitet."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            1
+          ]
+        }
+      },
+      {
+        "canDo": 2,
+        "type": "production",
+        "promptDe": "Eine Freundin: „Am Freitag habe ich frei.“ – Sie (einkaufen, Freitag): … Sie (mitkommen?): …?",
+        "promptEn": "A friend tells you she is free on Friday. Tell her that you are going shopping on Friday. Then ask her whether she is coming along.",
+        "answer": "Ich kaufe am Freitag ein. Kommst du mit?",
+        "parts": [
+          {
+            "label": {
+              "de": "der Plan",
+              "en": "the plan"
+            },
+            "forms": [
+              "Ich kaufe am Freitag ein.",
+              "Am Freitag kaufe ich ein.",
+              "Ja, ich kaufe am Freitag ein.",
+              "Ich gehe am Freitag einkaufen.",
+              "Am Freitag gehe ich einkaufen."
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Kommst du mit?",
+              "Kommst du am Freitag mit?",
+              "Kommst du auch mit?",
+              "Möchtest du mitkommen?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            5
+          ]
+        }
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Ein Kollege: „Und Ihr Tag?“ – Sie (aufstehen, 6 Uhr): … Sie (arbeiten, Montag): …",
+        "promptEn": "A colleague asks about your day. Tell him when you get up: at six. Then tell him when you work: on Monday. Use one full sentence for each.",
+        "answer": "Ich stehe um sechs auf. Ich arbeite am Montag.",
+        "parts": [
+          {
+            "label": {
+              "de": "aufstehen (ein ganzer Satz)",
+              "en": "getting up (one full sentence)"
+            },
+            "forms": [
+              "Ich stehe um sechs auf.",
+              "Ich stehe morgens um sechs auf.",
+              "Ich stehe jeden Tag um sechs auf.",
+              "Um sechs stehe ich auf.",
+              "Morgens stehe ich um sechs auf.",
+              "Ich stehe um sechs Uhr auf.",
+              "Ich stehe morgens um sechs Uhr auf.",
+              "Ich stehe jeden Tag um sechs Uhr auf.",
+              "Um sechs Uhr stehe ich auf.",
+              "Morgens stehe ich um sechs Uhr auf.",
+              "Ich stehe um 6 auf.",
+              "Ich stehe morgens um 6 auf.",
+              "Ich stehe jeden Tag um 6 auf.",
+              "Um 6 stehe ich auf.",
+              "Morgens stehe ich um 6 auf.",
+              "Ich stehe um 6 Uhr auf.",
+              "Ich stehe morgens um 6 Uhr auf.",
+              "Ich stehe jeden Tag um 6 Uhr auf.",
+              "Um 6 Uhr stehe ich auf.",
+              "Morgens stehe ich um 6 Uhr auf."
+            ]
+          },
+          {
+            "label": {
+              "de": "arbeiten (ein ganzer Satz)",
+              "en": "working (one full sentence)"
+            },
+            "forms": [
+              "Ich arbeite am Montag.",
+              "Am Montag arbeite ich.",
+              "Und ich arbeite am Montag.",
+              "Und am Montag arbeite ich."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            3,
+            9
+          ]
+        }
+      }
+    ]
+  },
   "notes": [
     "Chunks are five question–answer pairs (0–2, 2–4, 4–6, 6–8, 8–10). Lines 5–7 are one arrangement (shopping, coming along, the call); I cut after line 5 because line 6 both answers and asks, so 4–6 / 6–8 keeps each chunk to one exchange. A 3-line chunk 4–7 would leave line 7 with 8–9, which is a different topic.",
     "say: all five lines are Tim's (1, 3, 5, 7, 9) so the learner keeps one role through the scene; both speakers are in LEARNER_CAST. Alternatives with slightly more can-do weight: line 6 (accepting and asking for the call) in chunk 4 and line 8 (duschen, frühstücken, jeden Tag) in chunk 5. Lines 3 and 7 are also the dictation lines (hoeren) and line 5 is also a readAloud line, so those are produced twice.",
@@ -132,6 +320,17 @@
     "Read text invents two small facts that no dialogue states: Tim brings Lena a dictionary and already has tea. Nothing contradicts the dialogues (up at six, shopping on Friday with Lena, the call still to make, Sunday until nine). „Um vier Uhr“ / „Um sieben Uhr“ are my times; the dialogue gives none for the shopping.",
     "Words outside the taught vocabulary appear only in unchecked fields: „Zettel“ (title, instruction, explanations), as the model does with „Karte“ in Lektion 1. The read questions say „Wählen Sie die Antwort“ instead of the model's „Wählen Sie die Bedeutung“, because they ask about content, not a word.",
     "Existing data: „Kurs“ and „früh“ are untaught for RULE 34 (in no A1.1 Wortfeld), yet this Lektion's Schreiben task says „steht jeden Tag früh auf“ and „Sein Kurs ist am Donnerstag“, and the dialogue setting says „im Kurs“. Can-do 2 promises two fixed expressions for yesterday; the dialogue has „Ich habe gearbeitet“ as a statement and „gemacht“ only inside Lena's question.",
-    "Phonetik items (AUF-stehen, EIN-kaufen, AN-rufen) are word-stress items; the checker reports no pending sound stage."
+    "Phonetik items (AUF-stehen, EIN-kaufen, AN-rufen) are word-stress items; the checker reports no pending sound stage.",
+    "PROOF. Four tasks, one per can-do. promptDe is a partner line plus a cue in brackets (an infinitive, digits, a weekday), because RULE 35 refuses the instruction words a situation would need („fragt“, „sagt“, „Sagen Sie“ are untaught) and RULE 35's Sie rule forbids „du/dich/dein“ in the prompt although this Lektion is spoken in the du form; promptEn says the same in words. No cue is an accepted form. A learner who reads German only can still do every task from promptDe.",
+    "Proof goal 0 (Tagesablauf): colleague asks „Was machen Sie jeden Tag?“ (cue duschen), then „Und am Sonntag?“ (cue schlafen, bis 9 Uhr). Part 1 takes „Ich dusche (jeden Tag).“, the fronted form and the taught line „Ich dusche und frühstücke jeden Tag.“; part 2 takes „Ich schlafe (am Sonntag) bis neun“ with/without „Uhr“, with „9“, and fronted. The cue is one verb on purpose: with „duschen, frühstücken“ a learner who writes two sentences („Ich dusche. Ich frühstücke.“) is refused, because one part is one sentence; and „frühstücke“ typed without both umlauts („fruhstucke“) is two slips for the common checker and fails.",
+    "Proof goal 1 (zwei feste Ausdrücke): the learner asks Tim „Was hast du gestern gemacht?“ and then says „Ich habe gearbeitet.“ (also „Ich habe gestern gearbeitet.“, „Gestern habe ich gearbeitet.“ from the pool). The question needs „gestern“. The partner is Tim, not a colleague, because the taught expression is the du form; „Was haben Sie gestern gemacht?“ is refused.",
+    "Proof goal 2 (Verabredung): a friend is free on Friday; the learner says the plan („Ich kaufe am Freitag ein.“, fronted, or the taught „Ja, ich kaufe am Freitag ein.“) and asks („Kommst du mit?“, „Kommst du am Freitag mit?“, „Kommst du auch mit?“, „Möchtest du mitkommen?“). Also accepted, although the construction is not taught: „Ich gehe am Freitag einkaufen.“ / „Am Freitag gehe ich einkaufen.“, because it is correct and makes the arrangement; delete these two forms if only taught forms may pass. „Kommst du?“ (no prefix) and „Kommen Sie mit?“ (a friend) are refused.",
+    "Proof goal 3 (wann ich aufstehe / arbeite): cue cards „aufstehen, 6 Uhr“ and „arbeiten, Montag“, no W-question, so a full sentence is the natural answer; „Um sechs. Am Montag.“ is refused on purpose, because the can-do is carried by the verb and its Satzklammer (the hint label says „ein ganzer Satz“). Part 1 takes „Ich stehe um sechs auf“ with/without „Uhr“, with „6“, with „morgens“ or „jeden Tag“, and fronted; part 2 takes „Ich arbeite am Montag.“, „Am Montag arbeite ich.“ and both with a leading „Und“ (so „… auf und ich arbeite am Montag“ in one sentence passes).",
+    "Proof goal 0, tried with scripts/try-proof-answer.mjs. PASS: „Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun.“ · „Ich dusche. Am Sonntag schlafe ich bis 9 Uhr.“ · „ich dusche jeden tag ich schlafe bis neun uhr“ (TYPO, passes) · „Ich dusche und frühstücke jeden Tag. Ich schlafe am Sonntag bis neun.“ · „Jeden Tag dusche ich, am Sonntag schlafe ich bis neun“ (TYPO, passes). WRONG: „Ich duschen jeden Tag. Ich schlafe am Sonntag bis neun.“ · „Ich dusche jeden Tag. Ich schlafe am Sonntag um neun.“ · „Ich dusche jeden Tag. Ich schläft am Sonntag bis neun.“ · „Ich dusche jeden Tag. Am Sonntag ich schlafe bis neun.“ · „Ich dusche jeden Tag. Sonntag schlafe ich bis neun.“ · „Ich dusche jeden Tag. Ich schlafe am Sonntag bis zehn.“ · „Ich dusche jeden Tag.“ · „Ich schlafe am Sonntag bis neun. Ich dusche jeden Tag.“ · „Ich dusche. Ich frühstücke. Ich schlafe am Sonntag bis neun.“ · „Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.“.",
+    "Proof goal 1, tried with scripts/try-proof-answer.mjs. PASS: „Was hast du gestern gemacht? Ich habe gearbeitet.“ · „Tim, was hast du gestern gemacht? Ich habe gestern gearbeitet.“ · „was hast du gestern gemacht gestern habe ich gearbeitet“ (TYPO, passes) · „Tim, was hast du gestern gemacht? Ich habe gearbeitet!“. WRONG: „Was haben Sie gestern gemacht? Ich habe gearbeitet.“ · „Was machst du gestern? Ich habe gearbeitet.“ · „Was hast du gestern gemacht? Ich arbeite gestern.“ · „Was hast du gestern gemacht? Ich habe arbeiten.“ · „Was hast du gestern gemacht? Ich habe gearbeiten.“ · „Was hast du gestern gemacht? Ich bin gearbeitet.“ · „Was hast du gemacht? Ich habe gearbeitet.“ · „Ich habe gearbeitet.“ · „Was hast du gestern gemacht?“ · „Was hast du gestern gemacht, Tim? Ich habe gearbeitet.“ · „Tim, was hast du gestern gemacht? Ich habe gearbeitet. Heute lerne ich Deutsch.“.",
+    "Proof goal 2, tried with scripts/try-proof-answer.mjs. PASS: „Ich kaufe am Freitag ein. Kommst du mit?“ · „Am Freitag kaufe ich ein. Kommst du am Freitag mit?“ · „ich kaufe am freitag ein kommst du mit“ (TYPO, passes) · „Ja, ich kaufe am Freitag ein. Kommst du mit?“ · „Ich kaufe am Freitag ein, möchtest du mitkommen?“ (TYPO, passes) · „Ich gehe am Freitag einkaufen. Kommst du auch mit?“. WRONG: „Ich kaufe am Freitag ein. Kommen Sie mit?“ · „Ich einkaufe am Freitag. Kommst du mit?“ · „Ich kaufe ein am Freitag. Kommst du mit?“ · „Ich kaufe am Freitag ein. Mitkommst du?“ · „Ich kaufe am Freitag ein. Kommst du?“ · „Ich kaufe am Freitag. Kommst du mit?“ · „Ich kaufe am Samstag ein. Kommst du mit?“ · „Ich kaufe am Freitag ein.“ · „Ich kaufe im Freitag ein. Kommst du mit?“ · „Ich kaufe am Freitag ein. Rufst du mich an?“.",
+    "Proof goal 3, tried with scripts/try-proof-answer.mjs. PASS: „Ich stehe um sechs auf. Ich arbeite am Montag.“ · „Ich stehe um 6 Uhr auf. Am Montag arbeite ich.“ · „ich stehe morgens um sechs uhr auf ich arbeite am montag“ (TYPO, passes) · „Um sechs stehe ich auf, am Montag arbeite ich“ (TYPO, passes) · „Ich stehe um sechs Uhr auf und ich arbeite am Montag.“ (TYPO, passes). WRONG: „Ich aufstehe um sechs. Ich arbeite am Montag.“ · „Ich stehe auf um sechs. Ich arbeite am Montag.“ · „Ich stehe um sechs. Ich arbeite am Montag.“ · „Um sechs. Am Montag.“ · „Ich stehe um sechs auf. Ich arbeite im Montag.“ · „Ich stehe um sieben auf. Ich arbeite am Montag.“ · „Ich stehe um sechs auf. Ich arbeite am Dienstag.“ · „Ich stehe um sechs auf.“ · „Ich stehe um sechs auf. Ich habe am Montag gearbeitet.“ · „Ich stehen um sechs auf. Ich arbeite am Montag.“ · „Ich stehe um sechs auf und arbeite am Montag.“ · „Ich stehe um sechs auf. Ich bin müde. Ich arbeite am Montag.“.",
+    "Proof limits of the tool (correct German that is refused; none could be closed with the documented task forms). (a) Own data: a part is a list of whole sentences, so goals 0 and 3 fix the time and day by cue; the learner's own getting-up time or working day cannot be accepted. „6:00 Uhr“ is not listed. (b) Extra sentences: this Lektion's Wortfeld has no Danke/Bitte, so every extra sentence fails, including the second sentence of a re-taught line (line 1 „Heute lerne ich Deutsch.“, line 3 „Ich bin müde.“, line 9 „Mein Bruder schläft auch.“): a learner who copies a whole re-taught line is refused. (c) Names: the dialogue has no titled speaker, so the final-address adapter never applies. Goal 1 prints the frame „Tim, …?“ and lists the taught line „Tim, was hast du gestern gemacht?“ as a form (verbatim line 0, not an invented address variant); „Was hast du gestern gemacht, Tim?“ is refused. Goals 0, 2 and 3 use an unnamed partner so that there is no name to add. (d) One sentence for two parts only passes when each part is a complete listed sentence: „Ich stehe um sechs auf und arbeite am Montag.“ (subject left out) is refused. (e) An informal task has no register hint („register“ knows formal and neutral only): after „Kommen Sie mit?“ the learner reads only „Check this part again“.",
+    "Existing course data, seen while writing the proof. Can-do 3 („wann ich arbeite“): no line of this Lektion says when somebody works in the present tense; „arbeiten“ occurs only as „Ich habe gearbeitet“ (line 1) and, in Lektion 7, as „Am Wochenende arbeite ich nicht“. The proof asks „Ich arbeite am Montag.“ (am + Wochentag, as in „Ich kaufe am Freitag ein“); its re-teach lines 3 and 9 show the pattern, not this sentence. Can-do 1 („zwei feste Ausdrücke“): the learner only ever says one of them („Ich habe gearbeitet“); „gemacht“ occurs only in Lena's question, so the proof takes question and answer as the two expressions. Can-dos 0 and 3 overlap (and Lektion 8 already has „Ich kann über meinen Tag sprechen“ with the same line „Ich stehe um sechs Uhr auf“), so tasks 0 and 3 had to be kept apart by content (duschen/schlafen against aufstehen/arbeiten)."
   ]
 }
