@@ -176,3 +176,18 @@ model with audio; the model is hidden before the same task is asked again. The l
 until every goal has been shown. There is no skip, attempt limit, percentage pass mark or gold
 credit. Run `node scripts/check-guided-draft.mjs <numbers>`; it checks optional proofs with the
 same RULE 35 used by the curriculum validator. Leaving proof out preserves the earlier flow.
+
+### Test your proof with real answers
+
+A proof decides whether a learner may go on, so it must accept every correct answer a learner
+could reasonably give and refuse the wrong ones. For every task run
+
+```bash
+node scripts/try-proof-answer.mjs <Lektion> <goal index from 0> "<answer>" "<answer>" …
+```
+
+with at least: the model answer; two other correct answers a learner who studied this Lektion
+might give (another taught form, the person's name added, no full stops, small letters); and three
+wrong ones (the wrong register, a missing part, a plausible confusion from this Lektion). If a
+correct answer comes back WRONG, add the taught form to the part; if a wrong one passes, tighten
+the part. Put the answers you tried and their verdicts in `notes`.
