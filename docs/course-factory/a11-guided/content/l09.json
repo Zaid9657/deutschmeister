@@ -130,10 +130,9 @@
       {
         "canDo": 0,
         "type": "production",
-        "promptDe": "Im Café. Paul: „Guten Tag! Was möchten Sie trinken?“ Sie: … (Durst!) … (Tee)",
-        "promptEn": "In the café, Paul asks what you would like to drink. Say two sentences: first that you are thirsty, then order tea politely.",
+        "promptDe": "Im Café. Der Kellner: „Was möchten Sie trinken?“ Sie: … (Durst!) … (Tee)",
+        "promptEn": "In the café, the waiter asks what you would like to drink. Say two sentences: first that you are thirsty, then order tea politely.",
         "answer": "Ich habe Durst. Ich möchte einen Tee, bitte.",
-        "register": "formal",
         "parts": [
           {
             "label": {
@@ -156,24 +155,40 @@
               "Ich möchte Tee.",
               "Ich möchte eine Tasse Tee, bitte.",
               "Ich möchte eine Tasse Tee.",
+              "Ich möchte ein Glas Tee, bitte.",
+              "Ich möchte ein Glas Tee.",
               "Und ich möchte einen Tee, bitte.",
               "Und ich möchte einen Tee.",
               "Und ich möchte Tee, bitte.",
               "Und ich möchte Tee.",
               "Und ich möchte eine Tasse Tee, bitte.",
               "Und ich möchte eine Tasse Tee.",
+              "Und ich möchte ein Glas Tee, bitte.",
+              "Und ich möchte ein Glas Tee.",
               "Ich möchte bitte einen Tee.",
               "Ich möchte bitte Tee.",
               "Ich möchte bitte eine Tasse Tee.",
+              "Ich möchte bitte ein Glas Tee.",
               "Einen Tee, bitte.",
               "Tee, bitte.",
               "Eine Tasse Tee, bitte.",
+              "Ein Glas Tee, bitte.",
+              "Bitte einen Tee.",
+              "Bitte Tee.",
+              "Bitte eine Tasse Tee.",
+              "Bitte ein Glas Tee.",
               "Ich möchte einen Tee trinken.",
               "Ich möchte einen Tee trinken, bitte.",
               "Ich möchte Tee trinken.",
               "Ich möchte Tee trinken, bitte.",
               "Ich möchte eine Tasse Tee trinken.",
-              "Ich möchte eine Tasse Tee trinken, bitte."
+              "Ich möchte eine Tasse Tee trinken, bitte.",
+              "Ich möchte ein Glas Tee trinken.",
+              "Ich möchte ein Glas Tee trinken, bitte.",
+              "Ich trinke einen Tee.",
+              "Ich trinke Tee.",
+              "Ich trinke eine Tasse Tee.",
+              "Ich trinke ein Glas Tee."
             ]
           }
         ],
@@ -187,10 +202,9 @@
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Paul: „Wir haben auch Suppe, Salat und Kuchen.“ Sie: … (Hunger!) … (Suppe)",
-        "promptEn": "Paul tells you what there is to eat. Say two sentences: first that you are hungry, then order soup politely.",
+        "promptDe": "Der Kellner: „Wir haben auch Suppe, Salat und Kuchen.“ Sie: … (Hunger!) … (Suppe)",
+        "promptEn": "The waiter tells you what there is to eat. Say two sentences: first that you are hungry, then order soup politely.",
         "answer": "Ich habe Hunger. Ich möchte Suppe, bitte.",
-        "register": "formal",
         "parts": [
           {
             "label": {
@@ -228,6 +242,9 @@
               "Suppe, bitte.",
               "Eine Suppe, bitte.",
               "Die Suppe, bitte.",
+              "Bitte Suppe.",
+              "Bitte eine Suppe.",
+              "Bitte die Suppe.",
               "Ich möchte Suppe essen.",
               "Ich möchte Suppe essen, bitte.",
               "Ich möchte eine Suppe essen.",
@@ -250,8 +267,8 @@
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Sie möchten Salat. Paul: „Wir haben Suppe und Kuchen.“ Sie: …?",
-        "promptEn": "You would like salad, but Paul only mentions soup and cake. Ask him politely whether they have salad too.",
+        "promptDe": "Sie möchten Salat. Der Kellner: „Wir haben Suppe und Kuchen.“ Sie: …?",
+        "promptEn": "You would like salad, but the waiter only mentions soup and cake. Ask him politely whether they have salad too.",
         "answer": "Haben Sie auch Salat?",
         "register": "formal",
         "parts": [
@@ -298,8 +315,8 @@
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Paul: „Möchten Sie auch Wasser?“ Sie möchten Wasser: … Paul: „Wir haben auch Wein.“ Sie möchten keinen Wein: …",
-        "promptEn": "Paul offers you water: accept. Then he offers wine: decline politely.",
+        "promptDe": "Der Kellner: „Möchten Sie auch Wasser?“ Sie: … (ja!) Der Kellner: „Wir haben auch Wein.“ Sie: … (nein!)",
+        "promptEn": "The waiter offers you water: accept politely. Then he offers wine: decline politely.",
         "answer": "Ja, bitte. Nein, danke.",
         "register": "formal",
         "parts": [
@@ -365,6 +382,14 @@
     "Menu lines drop the article and „ein/eine“ („Tasse Kaffee oder Tee: 2 Euro“), as a printed menu does.",
     "Existing data, dialogue line 7 (zero-based): „Ich esse ein Brot mit Salat.“ is given in English as „I’ll have a sandwich with salad.“ My meaning option says „bread with salad“ to stay with the German the learner hears.",
     "Existing data, dialogue line 9 (zero-based): Ana closes with „Zum Frühstück trinke ich immer eine Tasse Kaffee.“, which does not follow from Paul's line before it; it reads as a line written to carry Frühstück and Tasse. It is the only learner line of the last chunk, so it is the say line, and my meaning question for that chunk asks about Paul's line instead.",
-    "Phonetik: MÖCH-te and HÖ-ren are word-stress items; SCHÖN is a one-syllable word and fails the item shape (needs at least two syllables), so the sound stage is pending for L9. Not changed."
+    "Phonetik: MÖCH-te and HÖ-ren are word-stress items; SCHÖN is a one-syllable word and fails the item shape (needs at least two syllables), so the sound stage is pending for L9. Not changed.",
+    "PROOF (added 2026-11-14): four tasks, one per can-do, in can-do order. The German prompts are cue dialogues („Sie: …“) without an instruction verb, because RULE 35 holds promptDe to the taught-word horizon; the English twin carries the instruction. The waiter is „Der Kellner“, not „Paul“: a first name invites „…, Paul?“, which the engine does not remove (engine limit 3).",
+    "Proof goal 0 (order in the café): two parts, as dialogue line 1 (zero-based): first „Ich habe Durst.“, then the order. Every learner line of this dialogue has two sentences, and a one-part order task would refuse the Lektion’s own line „Ich habe Durst. Ich möchte einen Kaffee, bitte.“ as an extra sentence. So the cue asks for both: „… (Durst!) … (Tee)“. Order: „Ich möchte einen Tee / Tee / eine Tasse Tee / ein Glas Tee“ with or without „, bitte“, also „Und ich möchte …“, „Ich möchte bitte …“, „Ich möchte … trinken“ (the waiter’s question carries the infinitive), the short „Einen Tee, bitte.“ / „Bitte einen Tee.“ and „Ich trinke …“ (Ana orders with „Ich esse …“ in line 7). „ein Tee“ fails (the pool drills einen: extra-a11-l09-07) and a bare „Tee.“ fails. Tea, not the dialogue’s coffee, so the re-teach line 1 has to be adapted.",
+    "Proof goal 1 (say that I am hungry or thirsty): two parts, as dialogue line 3: „(Ja,) ich habe (auch) Hunger.“, then the order of soup („Suppe“, „eine Suppe“, „die Suppe“; the same frames, and „Ich esse …“). It proves Hunger; Durst is proven in goal 0. „Ich bin Hunger.“ fails as it should. „Ich bin hungrig.“ cannot be accepted: hungrig is untaught (RULE 35).",
+    "Proof goal 2 (ask politely whether there is something): one part, formal. The waiter names soup and cake, the learner would like salad: „Haben Sie (auch) Salat / einen Salat?“, also after „Und “ or „Entschuldigung, “ and before „, bitte“. LIMIT: Ana never asks whether there is something. The form is modelled only by the waiter’s own question in line 2 („Haben Sie auch Hunger?“, the re-teach pointer) and by pool item extra-a11-l09-09 („___ Sie auch Kuchen?“). „Gibt es auch Salat?“ cannot be accepted: RULE 35 reports „Gibt“ as untaught, although the can-do itself and the guided read question („Wann gibt es im Café Frühstück?“) use the word.",
+    "Proof goal 3 (accept an offer or decline politely): two parts, formal: accept the water, then decline the wine. Accept: „Ja, bitte.“, „Ja, gern(e).“, „(Ja,) sehr gern(e).“, „Gern(e).“, „Ja, danke.“, „Ja, ein Glas Wasser / ein Wasser / Wasser / ein Glas Mineralwasser, bitte.“, „Ja, ich möchte (auch) (ein Glas) Wasser(, bitte).“ Decline: „Nein, danke.“, „Danke, nein.“, „Nein, danke, ich möchte keinen Wein.“ A bare „Ja.“ or „Nein.“ fails, with the hint „Sagen Sie es höflich.“ Re-teach: dialogue lines 4–7. LIMIT: Ana’s lines 5 and 7 copied whole fail, because each has a second sentence („Und einen Orangensaft.“, „Ich esse ein Brot mit Salat.“); the learner has to keep the first sentence of each.",
+    "Proof, register: `register: \"formal\"` is declared on goals 2 and 3 only. In goals 0 and 1 no form has an address pronoun, and the formal hint („Sagen Sie es höflich.“) would mislead after a miss such as „Ich bin Durst.“",
+    "Proof, limits of the engine that hold for every task of this Lektion: (1) A standalone „Entschuldigung!“, „Danke!“ or „Guten Tag!“ before or after the answer counts as an extra sentence and fails. proofTasks() takes the free courtesies from this Lektion’s Wortfeld only (src/lib/lesson/proof.js, `courtesies`), and Danke, Bitte and Entschuldigung are Lektion 1 entries, so here none is free. (2) Any other extra sentence fails as well, also a correct one. (3) A name added to the answer fails („Lena, …“, „…, Paul?“, „Herr Schmidt, …“); the engine removes only a final „, Herr/Frau X“ of a titled speaker of this dialogue. So the prompts use partners without a name. (4) A dot inside a clock time („9.00 Uhr“) splits the answer into two sentences. (5) The notice cannot be a re-teach pointer: its bodyDe fails RULE 35’s word horizon. (6) By microphone the engine scores against the one canonical `answer`, so another accepted form may score low when spoken (read from ProofStage.jsx and answerProof(), not tested).",
+    "Proof, answers tried with scripts/try-proof-answer.mjs (CORRECT and TYPO pass, WRONG fails; TYPO here is a missing capital). Goal 0: CORRECT „Ich habe Durst. Ich möchte einen Tee, bitte.“ · „Ich habe Durst. Ich möchte Tee.“ · „Ich habe Durst. Ich trinke einen Tee.“; TYPO „ich habe durst und ich möchte eine tasse tee bitte“; WRONG „Ich möchte einen Tee, bitte.“ · „Ich bin Durst. Ich möchte einen Tee, bitte.“ · „Ich habe Durst. Ich möchte ein Tee, bitte.“ · „Ich habe Durst. Ich möchte einen Kaffee, bitte.“ · „Ich habe Durst. Tee.“ · „Ich habe Durst. Ich möchte einen Tee, bitte. Danke!“ · „Guten Tag! Ich habe Durst. Ich möchte einen Tee, bitte.“. Goal 1: CORRECT „Ich habe Hunger. Ich möchte Suppe, bitte.“ · „Ja, ich habe Hunger. Ich möchte eine Suppe, bitte.“ · „Ich habe Hunger. Die Suppe, bitte.“; TYPO „ich habe auch hunger ich esse suppe“; WRONG „Ja, ich habe Hunger. Ich möchte Kuchen, bitte.“ · „Ich bin Hunger. Ich möchte Suppe, bitte.“ · „Ich möchte Suppe, bitte.“ · „Ich habe Hunger. Ich möchte einen Suppe, bitte.“ · „Ich habe Durst. Ich möchte Suppe, bitte.“ · „Ich bin hungrig. Ich möchte Suppe, bitte.“. Goal 2: CORRECT „Haben Sie auch Salat?“ · „Haben Sie Salat?“ · „Und haben Sie auch Salat?“; TYPO „entschuldigung haben sie auch einen salat bitte“; WRONG „Hast du auch Salat?“ · „Ich möchte Salat, bitte.“ · „Haben Sie auch ein Salat?“ · „Sie haben auch Salat?“ · „Und Salat?“ · „Gibt es auch Salat?“ · „Entschuldigung! Haben Sie auch Salat?“. Goal 3: CORRECT „Ja, bitte. Nein, danke.“ · „Ja, gern. Nein, danke.“ · „Ja, ein Glas Mineralwasser, bitte. Nein, danke.“; TYPO „ja gerne nein danke“; WRONG „Ja! Nein!“ · „Ja, bitte. Nein.“ · „Nein, danke. Ja, bitte.“ · „Ja, bitte. Nein, bitte.“ · „Ja, bitte.“ · „Ja, bitte. Nein, danke. Ich möchte keinen Wein.“ · „Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft. Nein, danke. Ich esse ein Brot mit Salat.“."
   ]
 }

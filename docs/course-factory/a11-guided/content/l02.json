@@ -185,17 +185,21 @@
         "canDo": 0,
         "type": "production",
         "promptDe": "Ihr Formular: Ana Chakiri, Marokko, Studentin. Herr Weber: „Woher kommen Sie? Und was sind Sie von Beruf?“ – Sie: …",
-        "promptEn": "You are Ana at the public office. Your form says: Ana Chakiri, Morocco, student. Mr Weber asks where you come from and what your job is. Answer both questions in that order, each in a full sentence.",
+        "promptEn": "You are Ana at the public office. Your form says: Ana Chakiri, Morocco, student. Mr Weber asks where you come from and what your job is. Answer both questions, in that order.",
         "answer": "Ich komme aus Marokko. Ich bin Studentin.",
         "parts": [
           {
             "label": {
-              "de": "die Herkunft (ganzer Satz)",
-              "en": "where you come from (a full sentence)"
+              "de": "die Herkunft (nicht nur das Wort aus dem Formular)",
+              "en": "where you come from (not just the word from the form)"
             },
             "forms": [
               "Ich komme aus Marokko.",
-              "Ich bin aus Marokko."
+              "Ich bin aus Marokko.",
+              "Aus Marokko.",
+              "Ich komme aus Marokko und wohne in Bremen.",
+              "Ich komme aus Marokko und bin Marokkanerin.",
+              "Ich bin Marokkanerin."
             ]
           },
           {
@@ -224,8 +228,8 @@
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Im Amt. Eine Frau: „Ich komme aus Spanien und wohne auch in Bremen.“ – Sie: …? Die Frau: „Ich bin Lehrerin.“",
-        "promptEn": "At the public office you talk to a woman you do not know. She tells you where she is from. Ask her formally what her job is, so that her answer fits.",
+        "promptDe": "Im Amt. Eine Frau: „Ich komme auch aus Marokko und wohne in Bremen.“ – Sie: …? Die Frau: „Ich bin Lehrerin.“",
+        "promptEn": "At the public office you talk to a woman you do not know. She tells you that she is from Morocco too and lives in Bremen. Ask her formally what her job is, so that her answer fits.",
         "answer": "Was sind Sie von Beruf?",
         "register": "formal",
         "parts": [
@@ -237,8 +241,10 @@
             "forms": [
               "Was sind Sie von Beruf?",
               "Und was sind Sie von Beruf?",
+              "Entschuldigung, was sind Sie von Beruf?",
               "Was ist Ihr Beruf?",
-              "Und was ist Ihr Beruf?"
+              "Und was ist Ihr Beruf?",
+              "Entschuldigung, was ist Ihr Beruf?"
             ]
           }
         ],
@@ -252,14 +258,14 @@
       {
         "canDo": 2,
         "type": "production",
-        "promptDe": "Ihr Formular: Telefonnummer 4 9 2 5 8. Herr Weber: „Ist Ihre Telefonnummer vier neun zwei acht fünf?“ – Sie: …",
-        "promptEn": "Your form says: phone number 4 9 2 5 8. Mr Weber reads the number back to you. Is he right? Answer yes or no, then say your whole number, with every number written as a word.",
-        "answer": "Nein. Vier neun zwei fünf acht.",
+        "promptDe": "Ihr Formular: Telefonnummer 4 9 2 3 5 8. Herr Weber: „Ist Ihre Telefonnummer vier neun zwei drei acht fünf?“ – Sie: …",
+        "promptEn": "Your form says: phone number 4 9 2 3 5 8. Mr Weber reads the number back to you. Is he right? Answer yes or no, then say your whole number, with every number written as a word.",
+        "answer": "Nein. Vier neun zwei drei fünf acht.",
         "parts": [
           {
             "label": {
-              "de": "die Antwort auf die Frage",
-              "en": "the answer to his question: is he right?"
+              "de": "die Antwort auf die Frage von Herrn Weber",
+              "en": "your answer to Mr Weber’s question"
             },
             "forms": [
               "Nein."
@@ -267,21 +273,22 @@
           },
           {
             "label": {
-              "de": "die Telefonnummer, jede Zahl als Wort",
-              "en": "the phone number, every number as a word"
+              "de": "die ganze Telefonnummer, jede Zahl als Wort",
+              "en": "the whole phone number, every number as a word"
             },
             "forms": [
-              "Vier neun zwei fünf acht.",
-              "Meine Telefonnummer ist vier neun zwei fünf acht.",
-              "Die Telefonnummer ist vier neun zwei fünf acht.",
-              "Sie ist vier neun zwei fünf acht."
+              "Vier neun zwei drei fünf acht.",
+              "Vier-neun-zwei-drei-fünf-acht.",
+              "Meine Telefonnummer ist vier neun zwei drei fünf acht.",
+              "Meine Telefonnummer ist vier-neun-zwei-drei-fünf-acht.",
+              "Die Telefonnummer ist vier neun zwei drei fünf acht.",
+              "Sie ist vier neun zwei drei fünf acht."
             ]
           }
         ],
         "reteach": {
           "kind": "dialog",
           "indices": [
-            8,
             9
           ]
         }
@@ -289,17 +296,18 @@
       {
         "canDo": 3,
         "type": "production",
-        "promptDe": "Ihr Formular: Telefonnummer 0176, Wohnort Bremen. Herr Weber: „Wie ist Ihre Telefonnummer? Und wo wohnen Sie?“ – Sie: …",
-        "promptEn": "You are Ana. Your form says: phone number 0176, place of residence Bremen. Mr Weber asks for your phone number and where you live. Answer both questions in that order, each in a full sentence.",
+        "promptDe": "Ihr Formular: Telefonnummer 0 1 7 6, Wohnort Bremen. Herr Weber: „Wie ist Ihre Telefonnummer? Und wo wohnen Sie?“ – Sie: …",
+        "promptEn": "Your form says: phone number 0 1 7 6, place of residence Bremen. Mr Weber asks for your phone number and where you live. Answer both questions, in that order.",
         "answer": "Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.",
         "parts": [
           {
             "label": {
-              "de": "die Telefonnummer (ganzer Satz)",
-              "en": "your phone number (a full sentence)"
+              "de": "die Telefonnummer (ganzer Satz oder jede Zahl als Wort)",
+              "en": "your phone number (a full sentence, or every number as a word)"
             },
             "forms": [
               "Meine Telefonnummer ist null eins sieben sechs.",
+              "Null eins sieben sechs.",
               "Meine Telefonnummer ist 0176.",
               "Meine Telefonnummer ist 0 1 7 6.",
               "Die Telefonnummer ist null eins sieben sechs.",
@@ -308,14 +316,16 @@
           },
           {
             "label": {
-              "de": "der Wohnort (ganzer Satz)",
-              "en": "where you live (a full sentence)"
+              "de": "der Wohnort (nicht nur das Wort aus dem Formular)",
+              "en": "where you live (not just the word from the form)"
             },
             "forms": [
               "Ich wohne in Bremen.",
+              "In Bremen.",
               "Mein Wohnort ist Bremen.",
               "und ich wohne in Bremen.",
-              "und mein Wohnort ist Bremen."
+              "und mein Wohnort ist Bremen.",
+              "Ich komme aus Marokko und wohne in Bremen."
             ]
           }
         ],
@@ -330,19 +340,21 @@
       {
         "canDo": 4,
         "type": "production",
-        "promptDe": "An das Amt: „Guten Tag, ich heiße Ana Chakiri und komme aus Marokko. … Danke! Ana Chakiri“ – Sie (Staatsangehörigkeit: marokkanisch; Familienstand: ledig): …",
-        "promptEn": "You are Ana and you write a short message to the public office. The greeting, your name and the closing are already there. Write the two missing sentences about yourself: first your nationality (the form says “marokkanisch”), then your marital status (the form says “ledig”).",
-        "answer": "Ich bin Marokkanerin. Ich bin ledig.",
+        "promptDe": "An das Amt: „Guten Tag, ich heiße Ana Chakiri. … Danke! Ana Chakiri“ – Sie (Marokko; ledig): …",
+        "promptEn": "You are Ana and you write a short message to the public office. The greeting, your name and the closing are already there. Write only the two missing sentences about yourself: first where you come from (Morocco), then your marital status (single).",
+        "answer": "Ich komme aus Marokko. Ich bin ledig.",
         "parts": [
           {
             "label": {
-              "de": "die Staatsangehörigkeit (ganzer Satz mit dem Nomen)",
-              "en": "your nationality (a full sentence with the noun)"
+              "de": "die Herkunft (ganzer Satz)",
+              "en": "where you come from (a full sentence)"
             },
             "forms": [
-              "Ich bin Marokkanerin.",
+              "Ich komme aus Marokko.",
+              "Ich bin aus Marokko.",
               "Ich komme aus Marokko und bin Marokkanerin.",
-              "Meine Staatsangehörigkeit ist marokkanisch."
+              "Ich bin Marokkanerin.",
+              "Ich komme aus Marokko und wohne in Bremen."
             ]
           },
           {
@@ -354,15 +366,17 @@
               "Ich bin ledig.",
               "Ich bin nicht verheiratet.",
               "Mein Familienstand ist ledig.",
-              "und ledig.",
               "und bin ledig.",
               "und ich bin ledig."
             ]
           }
         ],
         "reteach": {
-          "kind": "wortfeld",
-          "index": 18
+          "kind": "dialog",
+          "indices": [
+            5,
+            3
+          ]
         }
       }
     ]
@@ -377,6 +391,17 @@
     "RULE 34 does not know „Marokkaner“ (masculine): formsOf() reads only de/word/plural of the Wortfeld row, and the masculine lives in the English gloss and the notice. I avoided the word; if a later read text needs it, the rule will report it as untaught although the notice teaches it.",
     "Phonetik items („wie – Sie“, „bin – sind“, „Sie sind“) train long/short i, not word stress: sound stage pending, data untouched.",
     "nextHook is grounded in the L3 dialog setting („Lena sieht ein Foto auf Anas Handy.“).",
-    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history."
+    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history.",
+    "PROOF (2026-11-14): five tasks, one per can-do, all checked with scripts/try-proof-answer.mjs (verdicts below; TYPO counts as passed). Rule used in Lektionen 2–4: a part accepts the taught sentence, correct sentence variants, and the natural short reply when it contains German the learner had to supply (aus/in, an article, number words). A bare copy of a value printed in the prompt (Marokko, Studentin, 0176, Bremen) is refused; the hint label then says what is missing. The joined taught sentence passes through „und …“ forms in the second part (e.g. „und bin Studentin.“); they exist for that reading only.",
+    "PROOF LIMIT, own data: can-dos 0, 3 and 4 say „ich / meine“, but the checker only compares with listed forms, so the learner answers with the data on Ana’s form (Marokko, Studentin, 0 1 7 6, Bremen, ledig), as this Lektion’s Schreiben task already does. An answer with the learner’s own country, job, number or city is WRONG. Not solvable with the documented fields.",
+    "PROOF LIMIT, prompt language: RULE 35 knows no instruction words (Satz, antworten, fragen, Land, Name and Nachricht are all untaught at Lektion 2), and ProofStage hides promptEn when the lesson language is German. So the German prompt is a form card plus a dialogue cue and has to carry the task alone; „full sentence“, „in that order“ and „numbers as words“ can only stand in promptEn and in the hint labels.",
+    "Proof goal 0 (woher / Beruf): form card „Ana Chakiri, Marokko, Studentin“, Herr Weber asks both questions; two parts in that order. CORRECT: „Ich komme aus Marokko. Ich bin Studentin.“ | „Ich komme aus Marokko und bin Studentin.“ | „Ich komme aus Marokko und ich bin Studentin“ | „Ich bin aus Marokko. Ich bin Studentin von Beruf.“ | „Aus Marokko. Ich bin Studentin.“ | „Ich komme aus Marokko. Von Beruf bin ich Studentin.“ | „… Ich bin Studentin, Herr Weber.“ | „Ich komme aus Marokko und wohne in Bremen. Ich bin Studentin.“ (the dialogue line) | „Ich komme aus Marokko und bin Marokkanerin. Ich bin Studentin.“ TYPO: „ich komme aus marokko ich bin studentin“ | „Ich kome aus Marokko. …“ WRONG as intended: „Marokko. Studentin.“ | „Aus Marokko. Studentin.“ (job copied from the card) | „Ich komme aus Marokko.“ | „Ich komme von Marokko. …“ | „Ich bin Marokko. …“ | „… Ich bin eine Studentin.“ | „… Ich bin Student.“ (Ana’s card says Studentin) | „Ich kommen aus Marokko. …“ | „Ich komme aus Marokko und Studentin.“ | „… Ich bist Studentin.“ WRONG although the German is right (checker limits): „Ich bin Studentin. Ich komme aus Marokko.“ (parts are ordered) | „Ich heiße Ana. Ich komme aus Marokko. Ich bin Studentin.“ and „Mein Nachname ist Chakiri. …“ (an extra sentence fails).",
+    "Proof goal 1 (nach dem Beruf fragen): an unknown woman at the office speaks, the learner’s question is the gap, her reply „Ich bin Lehrerin.“ follows, so only the open question fits; register formal. No name in the prompt on purpose: an address is only accepted for a titled speaker of this Lektion’s dialogue. CORRECT: „Was sind Sie von Beruf?“ | „Und was sind Sie von Beruf?“ | „Entschuldigung, was sind Sie von Beruf?“ | „Was ist Ihr Beruf?“ TYPO: „was sind sie von beruf“. WRONG as intended: „Was bist du von Beruf?“ | „Was ist dein Beruf?“ | „Was ist Sie von Beruf?“ | „Wie ist Ihr Beruf?“ | „Was sind Sie Beruf?“ | „Sind Sie Lehrerin?“ | „Was sind Sie?“ | „Wo wohnen Sie?“ WRONG although right: „Und Sie? Was sind Sie von Beruf?“ (extra sentence) | „Was machen Sie beruflich?“ (machen is Lektion 4, beruflich untaught: RULE 35 forbids the form). The formal hint says „Sagen Sie es höflich.“ after every miss, also after a formal but wrong question such as „Wie ist Ihr Beruf?“.",
+    "Proof goal 2 (Zahlen verstehen und sagen): the form shows 4 9 2 3 5 8, Herr Weber reads it back in words with the last two numbers swapped; the learner has to notice it („Nein.“) and say the whole number in words. CORRECT: „Nein. Vier neun zwei drei fünf acht.“ | „Nein, vier neun zwei drei fuenf acht“ | „Nein! Vier, neun, zwei, drei, fünf, acht.“ | „Nein. Vier-neun-zwei-drei-fünf-acht.“ TYPO: „nein vier neun zwei drei fünf acht“ | „Nein, meine Telefonnummer ist vier neun zwei drei fünf acht.“ | „Nein, vier neun zwei drei fünf acht, Herr Weber.“ WRONG as intended: „Ja.“ | „Ja. Vier neun zwei drei fünf acht.“ | „Nein.“ | „Vier neun zwei drei fünf acht.“ (no reaction to his question) | „Nein. Vier neun zwei drei acht fünf.“ (his wrong version) | „Nein, 4 9 2 3 5 8.“ | „Nein, 492358“ (digits show nothing) | „… drei fünf sieben.“ | „… neun zwei zwei fünf acht.“ | „Nein, fünf acht.“ | „Nein. Hier neun zwei drei fünf acht.“ WRONG although right: „Nein. Vier neun zwo drei fünf acht.“ (zwo is untaught) | „Nein. Vier neun zwei drei fünf acht. Danke.“ (Danke is a Lektion-1 word; proof.js only lets courtesies of this Lektion’s own Wortfeld stand alone).",
+    "PROOF LIMIT, goal 2: „verstehen“ is tested by reading Herr Weber’s number words, not by hearing them. No documented task form plays a number (listen_spelling needs a spelled name from the dialogue), so the listening half of this can-do is not proven. Goal 2 asks for 2, 3, 4, 5, 8 and 9 in words; 0, 1, 6 and 7 are in goal 3, where digits inside a full sentence also pass. „zehn“ does not occur, because no phone number contains it.",
+    "Proof goal 3 (Telefonnummer und Wohnort nennen): form card „Telefonnummer 0 1 7 6, Wohnort Bremen“, Herr Weber asks both; two parts in that order. CORRECT: „Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.“ | „Null eins sieben sechs. In Bremen.“ | „Meine Telefonnummer ist 0176. Ich wohne in Bremen.“ | „Meine Telefonnummer ist 0 1 7 6. In Bremen.“ | „Meine Telefonnummer ist null eins sieben sechs und ich wohne in Bremen.“ | „Die Telefonnummer ist null eins sieben sechs. Mein Wohnort ist Bremen.“ | „Null eins sieben sechs. Ich wohne in Bremen, Herr Weber.“ | „… Ich komme aus Marokko und wohne in Bremen.“ (the dialogue line). TYPO: the model without capitals and full stops. WRONG as intended: „0176. Bremen.“ | „Null eins sieben sechs. Bremen.“ | „0176. In Bremen.“ (bare copies) | only one part | „… null eins sechs sieben. …“ | „… 0167. …“ | „… 0177. …“ | „Mein Telefonnummer ist …“ | „Ich wohne aus Bremen.“ | „Ich wohnen in Bremen.“ | „Ich wohne in Berlin.“ | „Ich komme aus Bremen.“ WRONG although right: Wohnort first, then the number (ordered parts) | „Meine Telefonnummer ist 01 76. …“ (RULE 36 reads 76 as a compound number that Lektion 2 has not taught, so the form cannot be listed). Digits inside the sentence are accepted here because goal 2 already proves the number words.",
+    "Proof goal 4 (kurze Nachricht): the message to the office is printed with greeting, name and closing; the learner writes the two missing sentences (Herkunft, then Familienstand) from „Marokko; ledig“. CORRECT: „Ich komme aus Marokko. Ich bin ledig.“ | „Ich bin aus Marokko. Ich bin nicht verheiratet.“ | „Ich komme aus Marokko und bin ledig.“ | „Ich komme aus Marokko und ich bin ledig“ | „Ich bin Marokkanerin. Ich bin ledig.“ | „Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig.“ | „Ich komme aus Marokko und wohne in Bremen. Ich bin ledig.“ | the two sentences on two lines | „Ich komme aus Marokko. Mein Familienstand ist ledig.“ TYPO: the model without capitals and full stops. WRONG as intended: „Marokko; ledig“ | „Aus Marokko. Ledig.“ | „Ich bin marokkanisch. Ich bin ledig.“ (the notice’s point) | „Ich komme aus Marokko.“ | „Ich komme aus Marokko und ledig.“ | „… Ich bin verheiratet.“ | „Ich bin Marokko. …“ | „Ich komme von Marokko. …“ | „Ich bin Marokkaner. …“ (Ana) WRONG although right: Familienstand first (ordered parts) | the whole message typed again with greeting and closing | „Ich bin Marokkanerin und ledig.“ (I did not list „und ledig.“, because it would also pass „Ich komme aus Marokko und ledig.“).",
+    "PROOF LIMIT, goal 4: Anrede and Gruß are printed, not written by the learner. A greeting ends in a comma or stands on its own line; the checker splits at . ! ? and line breaks and gives every sentence to exactly one part, so „Guten Tag, ich komme …“ on one line and the same text on two lines cannot both pass. A date („am 3.5.1998 geboren“) is impossible for the same reason: its dots are sentence ends. „Sehr geehrte Damen und Herren“ and „Viele Grüße“ (this Lektion’s Schreiben starters) are untaught for RULE 35, so the printed frame uses „Guten Tag, …“ and „Danke!“. The nationality is accepted (noun in a sentence) but not required; a first draft that required it had no re-teach line: the only input sentence with „bin Marokkanerin“ is the notice body, and ProofStage would print that body with its ** marks.",
+    "Proof re-teach pointers: goal 0 → dialogue 5 + 7, goal 1 → 6, goal 2 → 9, goal 3 → 9 + 5, goal 4 → 5 + 3. The joined dialogue line 5 („Ich komme aus Marokko und wohne in Bremen.“) is a listed form in goals 0, 3 and 4, so a learner who repeats the re-teach lines is not refused for it."
   ]
 }

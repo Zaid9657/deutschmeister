@@ -330,6 +330,7 @@
               "Was kostet das?",
               "Und was kostet das?",
               "Wie viel kostet das?",
+              "Und wie viel kostet das?",
               "Wie teuer ist sie?",
               "Wie teuer ist die Lampe?",
               "Wie teuer ist das?",
@@ -349,30 +350,31 @@
       {
         "canDo": 1,
         "type": "production",
-        "promptDe": "Frau Wolf: „Der Tisch ist nicht teuer!“ – Sie: …? Frau Wolf: „Er kostet fünfzehn Euro.“",
-        "promptEn": "Ms Wolf says the table is not expensive. Ask her for the price, so that her answer fits.",
+        "promptDe": "Frau Wolf: „Die Lampe kostet acht Euro.“ – Sie: Und der Rucksack? …? Frau Wolf: „Er kostet zwanzig Euro.“",
+        "promptEn": "Now you point at the backpack: “Und der Rucksack?” Go on and ask Ms Wolf for its price, so that her answer fits. Write only your question.",
         "answer": "Was kostet er?",
         "parts": [
           {
             "label": {
-              "de": "die Frage nach dem Preis",
-              "en": "the question about the price"
+              "de": "nur die Frage nach dem Preis",
+              "en": "only the question about the price"
             },
             "forms": [
               "Was kostet er?",
               "Und was kostet er?",
-              "Was kostet der Tisch?",
-              "Und was kostet der Tisch?",
+              "Was kostet der Rucksack?",
+              "Und was kostet der Rucksack?",
               "Wie viel kostet er?",
               "Und wie viel kostet er?",
-              "Wie viel kostet der Tisch?",
-              "Und wie viel kostet der Tisch?",
+              "Wie viel kostet der Rucksack?",
+              "Und wie viel kostet der Rucksack?",
               "Was kostet das?",
               "Wie viel kostet das?",
               "Wie teuer ist er?",
-              "Wie teuer ist der Tisch?",
+              "Wie teuer ist der Rucksack?",
               "Wie ist der Preis?",
-              "Was ist der Preis?"
+              "Was ist der Preis?",
+              "Und der Rucksack, was kostet er?"
             ]
           }
         ],
@@ -386,43 +388,45 @@
       {
         "canDo": 2,
         "type": "multiple_choice",
-        "promptDe": "Sie sind auf dem Flohmarkt. Ein Mann: „Die Tasche kostet vierzig Euro und der Rucksack sechzehn Euro.“ Was kostet die Tasche, was kostet der Rucksack?",
-        "promptEn": "You are at the flea market. A man tells you two prices. What does the bag cost, and what does the backpack cost? Choose.",
+        "promptDe": "Sie sind auf dem Flohmarkt. Ein Mann: „Der Tisch kostet vierzig Euro und das Regal sechzehn Euro.“ Was kostet der Tisch, was kostet das Regal?",
+        "promptEn": "You are at the flea market. A man tells you two prices. What does the table cost, and what does the shelf cost? Choose.",
         "options": [
-          "Tasche 14 Euro, Rucksack 16 Euro",
-          "Tasche 40 Euro, Rucksack 60 Euro",
-          "Tasche 40 Euro, Rucksack 16 Euro",
-          "Tasche 14 Euro, Rucksack 60 Euro"
+          "Tisch 14 Euro, Regal 16 Euro",
+          "Tisch 40 Euro, Regal 60 Euro",
+          "Tisch 40 Euro, Regal 16 Euro",
+          "Tisch 14 Euro, Regal 60 Euro"
         ],
-        "answer": "Tasche 40 Euro, Rucksack 16 Euro",
+        "answer": "Tisch 40 Euro, Regal 16 Euro",
         "accepted": [
-          "Tasche 40 Euro, Rucksack 16 Euro"
+          "Tisch 40 Euro, Regal 16 Euro"
         ],
         "reteach": {
-          "kind": "dialog",
-          "indices": [
-            3,
-            9
-          ]
+          "kind": "wortfeld",
+          "index": 6
         }
       },
       {
         "canDo": 3,
         "type": "production",
         "promptDe": "Frau Wolf: „Was kaufen Sie?“ – Sie (Stuhl + Tasche): …",
-        "promptEn": "You want the chair and the bag. Ms Wolf asks what you are buying. Answer in one full sentence, with the articles.",
+        "promptEn": "You want the chair and the bag. Ms Wolf asks what you are buying. Tell her, with the articles.",
         "answer": "Ich kaufe den Stuhl und die Tasche.",
         "parts": [
           {
             "label": {
-              "de": "was Sie kaufen (ein ganzer Satz mit Artikeln)",
-              "en": "what you are buying (one full sentence with the articles)"
+              "de": "was Sie kaufen (mit den Artikeln)",
+              "en": "what you are buying (with the articles)"
             },
             "forms": [
               "Ich kaufe den Stuhl und die Tasche.",
               "Ich kaufe die Tasche und den Stuhl.",
+              "Ich kaufe den Stuhl und auch die Tasche.",
               "Ich kaufe einen Stuhl und eine Tasche.",
-              "Ich kaufe eine Tasche und einen Stuhl."
+              "Ich kaufe eine Tasche und einen Stuhl.",
+              "Den Stuhl und die Tasche.",
+              "Die Tasche und den Stuhl.",
+              "Einen Stuhl und eine Tasche.",
+              "Eine Tasche und einen Stuhl."
             ]
           }
         ],
@@ -445,6 +449,12 @@
     "Existing data: the pool prices the same goods differently from the Wortfeld examples (extra-a11-l04-03/-12 „Die Uhr kostet zwanzig Euro.“, extra-a11-l04-06 „Die Tasche kostet dreizehn Euro.“ against „Die Uhr kostet zehn Euro.“ / „Die Tasche kostet fünf Euro.“). Harmless as isolated items, but the sign now sides with the Wortfeld examples.",
     "Phonetik item „NEUN“ has one syllable, so the word-stress shape check does not accept it (focus is the diphthong eu): sound stage pending, data untouched.",
     "nextHook is grounded in the L5 dialog (title „Vor dem Kurs“, setting „Lena und Tim packen ihre Taschen aus.“, line 0 „Tim, wo ist das Wörterbuch?“).",
-    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history."
+    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history.",
+    "PROOF (2026-11-14): four tasks, one per can-do, all checked with scripts/try-proof-answer.mjs (verdicts below; TYPO counts as passed). Questions are asked as gaps in a short exchange with Frau Wolf whose printed reply follows the gap, so only the right kind of question fits. „…, Frau Wolf“ is accepted (titled speaker of this dialogue).",
+    "Proof goal 0 (was etwas ist und was es kostet): two gaps; Frau Wolf answers „Das ist eine Lampe.“ and „Sie kostet acht Euro.“ CORRECT: „Was ist das? Was kostet sie?“ | „Entschuldigung, was ist das? Was kostet die Lampe?“ | „Was ist das? Und was kostet sie?“ | „… Wie viel kostet sie?“ | „Was ist das, Frau Wolf? Was kostet sie?“ | „… Was kostet das?“ | „… Wie teuer ist sie?“ TYPO: no capitals and marks | „… Was kostet Sie?“ WRONG as intended: „… Was kostet es?“ | „… Was kostet er?“ (the pronoun follows die Lampe) | only one question | the two in the other order | „… Was kosten sie?“ | „Wer ist das? …“ | „Was das ist? …“ | „… Wie kostet sie?“ | „Ist das eine Lampe? …“ | „… Kostet sie acht Euro?“ | „… Was kostet der Lampe?“ | „… Wie viele kostet sie?“ WRONG although right: „Entschuldigung! Was ist das? Was kostet sie?“ – proof.js lets Danke/Bitte/Entschuldigung stand alone only when they are in THIS Lektion’s Wortfeld; Entschuldigung is a Lektion-1 word, yet dialogue line 0 here begins with it (with the comma it passes) | „… Wieviel kostet sie?“ (one word, old spelling: neither a typo for the checker nor a taught word for RULE 35).",
+    "Proof goal 1 (nach dem Preis fragen): the Lektion teaches this question only as two sentences („Und der Tisch? Was kostet er?“, dialogue 2, said aloud in the scene). A one-part task cannot accept two sentences and a two-part task cannot accept „Was kostet der Rucksack?“, so the prompt prints the learner’s own first sentence („Sie: Und der Rucksack? …?“) and the price question is the gap; Frau Wolf’s reply „Er kostet zwanzig Euro.“ (the price on her sign) follows. CORRECT: „Was kostet er?“ | „Was kostet der Rucksack?“ | „Wie viel kostet er?“ | „Und was kostet er?“ | „Was kostet er, Frau Wolf?“ | „Wie teuer ist er?“ | „Und der Rucksack, was kostet er?“ TYPO: „was kostet er“. WRONG as intended: „Was kostet sie?“ | „Was kostet es?“ | „Was kostet die Rucksack?“ | „Was kostet das Rucksack?“ | „Was kosten er?“ | „Kostet er zwanzig Euro?“ | „Wie kostet er?“ | „Was ist er?“ | „Was kostet der Tisch?“ | „Wie viele kostet er?“ | „Was kostet den Rucksack?“ | „Und der Rucksack?“ (the printed part only). WRONG although right: „Und der Rucksack? Was kostet er?“ – a learner who types the printed sentence again with its question mark fails (two sentences, one part); promptEn says „only your question“ and the hint label „nur die Frage nach dem Preis“ | „Was kostet der?“ (untaught).",
+    "Proof goal 2 (Preise bis hundert verstehen): multiple_choice, as the brief allows for understanding. A man at another table says two prices in words (vierzig, sechzehn); the four options pair 40/14 with 16/60, so each wrong option is one -zehn/-zig confusion. CORRECT: „Tisch 40 Euro, Regal 16 Euro“. WRONG: the three other options. LIMITS: (1) the prices are read, not heard – no documented task form plays a price; (2) compound numbers (einundzwanzig, fünfunddreißig …) are untaught words for RULE 35 although this Lektion delivers the rule set „Zahlen mit und“, so a price like 35 against 53 cannot be asked; (3) one choice out of four can be guessed, and after re-teaching the same four options come back. Re-teach pointer: Wortfeld 6 (die Zahlen 11–100); the number board opens with it. The goods are Tisch and Regal on purpose: the word „Uhr“ in any task text makes SetReference add the clock board of a later Lektion (referenceKinds matches /uhr/).",
+    "Proof goal 3 (was ich kaufe): Frau Wolf asks „Was kaufen Sie?“, the prompt names „Stuhl + Tasche“ without articles; the learner supplies them. „den Stuhl“ is the fixed expression of the notice and of dialogue line 6. CORRECT: „Ich kaufe den Stuhl und die Tasche.“ | „Ich kaufe die Tasche und den Stuhl.“ | „Ich kaufe einen Stuhl und eine Tasche.“ | „Den Stuhl und die Tasche.“ | „Ich kaufe den Stuhl und die Tasche, Frau Wolf.“ | „Ich kaufe den Stuhl und auch die Tasche.“ TYPO: no capitals. WRONG as intended: „Stuhl und Tasche.“ | „Stuhl + Tasche“ | „Ich kaufe Stuhl und Tasche.“ | „Ich kaufe der Stuhl und die Tasche.“ | „Der Stuhl und die Tasche.“ | „Ich kaufe den Stuhl.“ | „Ich kaufen …“ | „… und das Tasche.“ | „… und die Lampe.“ | „Ich kaufe das Stuhl …“ | „Ich kaufe ein Stuhl und eine Tasche.“ | „Wir kaufen …“ WRONG although right: „Ich kaufe den Stuhl. Ich kaufe die Tasche.“ (two sentences, one part).",
+    "Proof re-teach pointers: goal 0 → dialogue 0 + 2, goal 1 → 2, goal 2 → Wortfeld 6, goal 3 → 6."
   ]
 }
