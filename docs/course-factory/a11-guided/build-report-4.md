@@ -180,3 +180,33 @@ These final results supersede the pending notes above. Logs are under `/tmp/a11-
 | Protected/excluded files, A1.2, whitespace | PASS; unchanged from session-start revision; diff check clean | `protected.log`, `git diff --check` |
 
 Open/unverified: browser layout/screenshot and live authenticated microphone service could not be exercised in this sandbox. Chromium failed at launch; no screenshot exists (`browser-probe.log`). Astro still emits the six existing unresolved-at-build-time font URL warnings; merged HTML verification is warning-free. All requested scripted gates are green. No protected-test conflict, dependency change, commit, deployment or external write.
+
+## Claude's check (2026-11-14)
+
+Every gate re-run by Claude from a clean `dist/` on the final tree: pool build, validator, sync, all
+twelve draft checks, lint, duplicates, function syntax, `npm test` (3,017 of 3,017), SPA and offline
+Astro builds, merge, prerender, built HTML (151 pages, 0 failures). Protected tests, `CLAUDE.md` and
+`astro-site/package-lock.json` unchanged.
+
+Played as a guest in a phone-sized browser against the built site:
+
+- Lektion 3 and checkpoint 1 opened by link show the locked screen with one button back to the course.
+- Lektion 1's proof: an informal greeting gets the hint "The greeting: this is not right yet. Say it
+  formally."; a second miss shows the model lines again; "Now without the model" asks again with the
+  model hidden; „Guten Tag, Frau Kaya. Auf Wiedersehen“ passes goal 1; own name, spelled surname and
+  goal 4 typed without sentence marks pass; the recap says "Lesson complete" and marks each can-do
+  "Shown in the final check"; Lektion 2 then opens by link and Lektion 3 stays locked.
+- Reaching the proof was done by moving the saved run to the proof stage; the stages before it were
+  played in the earlier rounds.
+
+Added by Claude after brief 4b: an answer typed without sentence marks (phone typing, speech
+transcripts) is read as word runs that fulfil the parts in order, and the hint names the first part
+the words did not reach. Twelve cases added to `tests/helpers/proofCases.mjs`.
+
+Open:
+
+- Goal 3 ("I can spell my name") passes when the learner simply types the surname, because typing
+  cannot show spelling. The task needs another form (hear a spelled name and write it, or speak the
+  letters with scoring). It goes into the next brief together with teaching the alphabet.
+- Real microphone scoring in the proof was not tried (needs a signed-in account).
+- Lektionen 2–12 have no proof yet.
