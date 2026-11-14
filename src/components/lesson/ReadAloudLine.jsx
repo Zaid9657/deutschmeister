@@ -32,7 +32,7 @@ import {
 const MAX_ATTEMPTS = 3;
 const MAX_RECORD_MS = 8000;
 
-export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false, hideModel = false }) {
+export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false, hideModel = false, proof = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const [support] = useState(() => checkSpeakingSupport());
@@ -99,6 +99,8 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       if (res.status === 401) { setFallbackReason('signed_out'); setPhase('idle'); return; }
       if (!res.ok) { setFallbackReason('server'); setPhase('idle'); return; }
 
+      if (proof && (!Number.isFinite(data.pct) || data.pct < 0 || data.pct > 1 || data.unsure === true)) { setFallbackReason('server'); setPhase('idle'); return; }
+
       // The server is the score of record; aligning locally is only the
       // safety net for a response that arrived without the word list.
       const words = Array.isArray(data.words) && data.words.length
@@ -119,7 +121,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       setFallbackReason('server');
       setPhase('idle');
     }
-  }, [attempts, lektionId, lineKey, text]);
+  }, [attempts, lektionId, lineKey, text, proof]);
 
   const handleStopped = useCallback(async () => {
     if (!mountedRef.current) return;
@@ -237,13 +239,13 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> {t('speaking.scoring', lang)}
           </span>
         )}
-        {canRetry && (
+        {!proof && canRetry && (
           <Button size="sm" variant="secondary" onClick={startRecording}>
             <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('speaking.retry', lang, { n: MAX_ATTEMPTS - attempts })}
           </Button>
         )}
 
-        {canSelfConfirmReadAloud({ scoringPossible, phase, canRetry, micError }) && !confirmed && (
+        {!proof && canSelfConfirmReadAloud({ scoringPossible, phase, canRetry, micError }) && !confirmed && (
           <button
             type="button"
             onClick={selfConfirm}
@@ -262,7 +264,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       {phase === 'recording' && (
         <p className="mt-2 text-xs text-graphite">{t('speaking.recording', lang, { s: MAX_RECORD_MS / 1000 })}</p>
       )}
-      {reason && <p className="mt-2 text-xs text-graphite">{t(`speaking.fallback.${reason}`, lang)}</p>}
+      {reason && <p className="mt-2 text-xs text-graphite">{t(proof ? 'proof.typeInstead' : `speaking.fallback.${reason}`, lang)}</p>}
       {micError && <p className="mt-2 text-xs text-accent-himbeer-ink">{micError}</p>}
     </Card>
   );

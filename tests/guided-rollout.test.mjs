@@ -95,7 +95,7 @@ test('only explicit meta headings are exempt from guided read coverage; other gu
 
 test('all twelve guided lessons preserve the original dialogue, draws, scoring stages and pauses', () => {
   assert.equal(c.lektionen.length, 12);
-  const unchanged = (run) => Object.fromEntries(run.stages.filter((s) => !['dialog', 'scene', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
+  const unchanged = (run) => Object.fromEntries(run.stages.filter((s) => !['dialog', 'scene', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency', 'proof'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
   for (const lesson of c.lektionen) {
     assert.equal(lesson.flow, 'guided');
     if (lesson.nr > 1) {
@@ -107,7 +107,7 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
       const run = build(lesson, attempt), legacy = build({ ...lesson, flow: undefined }, attempt);
       assert.deepEqual(unchanged(run), unchanged(legacy), `${lesson.id} draw ${attempt}`);
       assert.equal(run.flow, 'guided');
-      assert.deepEqual(run.stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'recap']);
+      assert.deepEqual(run.stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', ...(lesson.proof ? ['proof'] : []), 'requeue', 'recap']);
       const scene = run.stages.find((s) => s.kind === 'scene');
       assert.deepEqual(scene.chunks.flatMap((chunk) => chunk.lines).map(({ index: _i, ...line }) => line), lesson.dialog.lines);
       assert.deepEqual(run.stages.slice(1).map((s, i) => sessionCompleted(run.stages[i], s)).filter(Boolean), [1, 2]);

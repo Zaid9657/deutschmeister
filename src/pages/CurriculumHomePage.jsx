@@ -3,7 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
-import { LEVEL_ORDER } from '../config/levels.js';
+import { pathNodeUnlocked, placedAbove, placementSuffix } from '../lib/course/lock.js';
+export { placedAbove } from '../lib/course/lock.js';
 import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
@@ -11,7 +12,7 @@ import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
 import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
-import { flushOutbox } from '../lib/course/syncOutbox.js';
+import { flushOutbox, pendingRuns } from '../lib/course/syncOutbox.js';
 import { latestRun } from '../lib/lesson/runState.js';
 import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestReconcile.js';
 import { clearReturnPath } from '../lib/returnPath.js';
@@ -72,15 +73,9 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
 
 /** Is `placed` (profiles.current_level, either case) strictly above `level` on the ladder? */
-export const placedAbove = (placed, level) => {
-  const a = LEVEL_ORDER.indexOf(String(placed || '').toUpperCase());
-  const b = LEVEL_ORDER.indexOf(String(level || '').toUpperCase());
-  return a >= 0 && b >= 0 && a > b;
-};
-
 export const programKeyFor = (level) => `${String(level).toLowerCase().replace('.', '')}_course`;
 
-const hrefFor = (level, node) => {
+const nodeHref = (level, node) => {
   if (node.kind === 'lektion') return `/course/${level}/l/${node.nr}`;
   if (node.kind === 'checkpoint') return `/course/${level}/checkpoint/${node.nr}`;
   return `/modelltest/${node.testSlug}`;
@@ -107,6 +102,7 @@ export default function CurriculumHomePage({ curriculum }) {
   const { profile } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
+  const hrefFor = (level, node) => `${nodeHref(level, node)}${placementSuffix(searchParams)}`;
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
   const KIND_LABEL = kindLabelFor(level);
@@ -157,7 +153,10 @@ export default function CurriculumHomePage({ curriculum }) {
           const fixed = await reconcileCheckpoints(user.id, curriculum, set);
           return fixed.length ? new Set([...set, ...fixed]) : set;
         })
-        .then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
+        .then((set) => {
+          for (const run of pendingRuns(user.id)) if (run.level === level) set.add(run.lektionId);
+          if (!cancelled) { setDone(set); setLoaded(true); }
+        });
       loadDashboardStats(user.id)
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
         .catch(() => {});
@@ -362,12 +361,12 @@ export default function CurriculumHomePage({ curriculum }) {
                 {nodes.map((node) => {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
-                  const unlocked = (!user || loaded) && (endowed || node.index === 0 || done.has(path[node.index - 1].id));
+                  const unlocked = pathNodeUnlocked({ user, loaded, endowed, index: node.index, path, done });
                   const isCurrent = current && current.id === node.id;
                   const Icon = KIND_ICON[node.kind];
                   const sway = SWAY[idx % SWAY.length];
                   const lektion = node.kind === 'lektion' ? curriculum.lektionen.find((l) => l.id === node.id) : null;
-                  const state = isDone ? 'done' : isCurrent ? 'current' : unlocked ? 'open' : 'locked';
+                  const state = user && !loaded ? 'loading' : isDone ? 'done' : isCurrent ? 'current' : unlocked ? 'open' : 'locked';
                   return (
                     <li key={node.id} className="relative flex max-w-full flex-col items-center pt-3" style={{ transform: `translateX(calc(var(--sway-amp) * ${sway}))` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
@@ -412,6 +411,7 @@ function Node({ to, state, Icon, label, big, lang }) {
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';
   const base = `relative flex ${size} items-center justify-center rounded-full transition-all duration-100 ease-snap motion-reduce:transition-none`;
   const styles = {
+    loading: `${base} bg-paper-sunk text-graphite ring-1 ring-rule`,
     done: `${base} bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`,
     current: `${base} bg-white text-siegel ring-4 ring-siegel shadow-raise-lg hover:-translate-y-0.5 active:translate-y-1 active:shadow-none`,
     open: `${base} bg-white text-siegel ring-2 ring-siegel shadow-raise hover:-translate-y-0.5 active:translate-y-1 active:shadow-none`,

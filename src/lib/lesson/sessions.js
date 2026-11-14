@@ -6,7 +6,7 @@
 const SESSION_OF = {
   warmup: 1, pretest: 1, dialog: 1, wortfeld: 1, notice: 1, phonetik: 1,
   practice: 2, derived: 2, dictation: 2,
-  speaking: 3, writing: 3, requeue: 3, recap: 3,
+  speaking: 3, writing: 3, proof: 3, requeue: 3, recap: 3,
 };
 
 export const SESSION_COUNT = 3;

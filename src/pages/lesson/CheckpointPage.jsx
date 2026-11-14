@@ -17,6 +17,9 @@ import {
   paperSeed,
 } from '../../lib/checkpoint/buildCheckpoint.js';
 import { checkpointFeedback, defersFeedback, sectionComplete } from '../../lib/checkpoint/feedback.js';
+import CoursePathGuard from '../../components/course/CoursePathGuard.jsx';
+import { placementSuffix } from '../../lib/course/lock.js';
+import { useLocation } from 'react-router-dom';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import PlayButton from '../../components/lesson/PlayButton.jsx';
@@ -347,6 +350,9 @@ function SectionRow({ name, section }) {
  * the intro, with that owner's own snapshot — nothing of the old paper is written under the new key.
  */
 export default function CheckpointPage() {
+  const { level, nr } = useParams();
+  const curriculum = curriculumFor(level);
+  const node = curriculum?.checkpoints.find((cp) => cp.nr === Number(nr));
   const { user, loading } = useAuth();
   const [lang] = useLessonLang();
   if (loading) {
@@ -356,10 +362,11 @@ export default function CheckpointPage() {
       </div>
     );
   }
-  return <CheckpointRun key={user?.id || 'guest'} />;
+  return <CoursePathGuard curriculum={curriculum} node={node ? { ...node, kind: 'checkpoint' } : null}><CheckpointRun key={user?.id || 'guest'} /></CoursePathGuard>;
 }
 
 function CheckpointRun() {
+  const { search } = useLocation();
   const { level, nr } = useParams();
   const { user } = useAuth();
   // Fixed for this mount: CheckpointPage remounts the paper when the owner changes.
@@ -749,7 +756,7 @@ function CheckpointRun() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {result.passed ? (
-                  <Button to={nextHref}>
+                  <Button to={`${nextHref}${placementSuffix(search)}` }>
                     {nextLektion ? t('checkpoint.nextLesson', lang, { nr: nextLektion.nr }) : t('action.backToCourse', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 ) : (

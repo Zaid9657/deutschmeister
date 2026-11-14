@@ -1,4 +1,5 @@
 import { buildSoundItems, nounsOf } from './guidedSound.js';
+import { proofTasks } from './proof.js';
 import { lineFor } from './wortfeldPacing.js';
 
 export const SCENE_PHASES = ['hear', 'meaning', 'say'];
@@ -38,7 +39,9 @@ export function buildGuided(options, buildLegacy) {
       items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', accepted: [q.answer] })) },
     ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
     { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue })) },
-    part('speaking', 3), part('writing', 3), part('requeue', 3), { ...part('recap', 3), nextHook: lektion.nextHook },
+    part('speaking', 3), part('writing', 3),
+    ...(lektion.proof ? [{ nr: 6, key: 'proof', kind: 'proof', part: 3, tasks: proofTasks(lektion), canDo: lektion.canDo }] : []),
+    part('requeue', 3), { ...part('recap', 3), nextHook: lektion.nextHook },
   ];
   return { ...legacy, flow: 'guided', stages };
 }

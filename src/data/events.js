@@ -53,7 +53,7 @@ export const EVENTS = {
   },
   lesson_first_sentence: { when: 'In the model-first pretest of Lektion 1, the learner writes their own introduction with the model hidden (hit = it was an introduction).', once: false },
   lesson_resumed: { when: 'The lesson player reopens a saved, unfinished run of a Lektion (same run_id as its lesson_started).', once: false },
-  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key, or scene:<chunk>:hear|meaning|say for each guided scene item).', once: false },
+  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key, proof for the final goal check, or scene:<chunk>:hear|meaning|say for each guided scene item).', once: false },
   lesson_sync_failed: {
     when: 'A finished Lektion could not be written to the account; it is kept on the device and retried (step = attempts | progress | cards).',
     once: false,

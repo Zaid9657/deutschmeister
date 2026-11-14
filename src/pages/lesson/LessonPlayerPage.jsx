@@ -41,12 +41,17 @@ import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
 import SessionBreak from '../../components/lesson/SessionBreak.jsx';
+import CoursePathGuard from '../../components/course/CoursePathGuard.jsx';
+import { placementSuffix } from '../../lib/course/lock.js';
+import { useLocation } from 'react-router-dom';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
 
 import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
+import { answerProof, canCompleteProofLesson, hideProofModel, packProof, proofAttempts, proofPassed, proofResumeIndex } from '../../lib/lesson/proof.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
 
+const ProofStage = lazy(() => import('../../components/lesson/ProofStage.jsx'));
 const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
 const SoundStage = lazy(() => import('../../components/lesson/SoundStage.jsx'));
 const ReadStage = lazy(() => import('../../components/lesson/ReadStage.jsx'));
@@ -246,15 +251,17 @@ function LessonRun({ curriculum, lektion, pool, preview = false }) {
  */
 function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, attempt, dueCards, startWrite }) {
   const navigate = useNavigate();
+  const { search } = useLocation();
   const { user, loading: authLoading } = useAuth();
   const [lang] = useLessonLang();
   // Personalisation exists only while this run is mounted; never passed to packRun.
   const [names, setNames] = useState({});
+  const [proof, setProof] = useState(() => packProof(resumed?.proof));
   const [soundReadAloud, setSoundReadAloud] = useState(() => resumed?.soundReadAloud || {});
   const [fluencyReadAloud, setFluencyReadAloud] = useState(() => resumed?.fluencyReadAloud || {});
   const owner = user ? user.id : null;
   const [stageIndex, setStageIndex] = useState(() => (resumed
-    ? resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed)
+    ? proofResumeIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed), resumed.proof)
     : 0));
   const [itemIndex, setItemIndex] = useState(() => (resumed ? resumed.itemIndex : 0));
   const [attempts, setAttempts] = useState(() => (resumed ? resumed.attempts : []));
@@ -396,6 +403,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   }, []);
 
   const advance = useCallback(() => {
+    if (stage?.kind === 'proof' && !proofPassed(stage.tasks, proof)) return;
     const target = stageIndex + 1;
     const nextStage = stages[target];
     let landing = target;
@@ -414,7 +422,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     const done = stages[landing] ? sessionCompleted(stage, stages[landing]) : null;
     if (done) setPause({ done });
     goStage(landing);
-  }, [stageIndex, stages, stage, attempts, misses, pool, goStage, curriculum.level, lektion.nr]);
+  }, [stageIndex, stages, stage, attempts, misses, pool, goStage, curriculum.level, lektion.nr, proof]);
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);
@@ -429,10 +437,10 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     if (preview || !stage) return;
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
-      flow: lektion.flow || 'legacy', sceneReadAloud, soundReadAloud, fluencyReadAloud,
+      proof, flow: lektion.flow || 'legacy', sceneReadAloud, soundReadAloud, fluencyReadAloud,
       runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud,
     }), owner);
-  }, [preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
+  }, [proof, preview, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, readAloud, curriculum.level, lektion.id, lektion.flow, sceneReadAloud, soundReadAloud, fluencyReadAloud, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   // Not while a part's pause screen (or the save ask in its place) covers it: a learner who stops
@@ -455,6 +463,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // A queue that storage refused lives in memory: then the learner is told to keep the page open,
   // not that the lesson is kept on this device (Codex review, 2026-10-07).
   const runEntryKey = useRef(null);
+  const completionStarted = useRef(false);
   const flush = useCallback(() => {
     if (!user) {
       setSync(retryLocalProgressSave() ? 'local' : 'localFailed');
@@ -469,7 +478,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   }, [user, curriculum.level, lektion.id]);
 
   useEffect(() => {
-    if (preview || saved || !stage || stage.kind !== 'recap') return;
+    if (preview || saved || completionStarted.current || !stage || stage.kind !== 'recap' || !canCompleteProofLesson(lektion, proof)) return;
+    completionStarted.current = true;
     setSaved(true);
     trackLessonCompleted(curriculum.level, lektion.id, runId, skillProps(skillLines({ score, attempts, skills })));
     if (!user) {
@@ -480,7 +490,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     const entry = enqueueRun({ userId: user.id, level: curriculum.level, lektionId: lektion.id, createdAt: new Date().toISOString(), attempts, accuracy, status });
     runEntryKey.current = entry ? entry.key : null;
     flush();
-  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush, score, skills]);
+  }, [proof, preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush, score, skills]);
 
   // Back online after a failed save: send it again without asking.
   useEffect(() => {
@@ -640,10 +650,20 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     case 'writing':
       body = <WritingStage stage={stage} lektionId={lektion.id} onResult={resultFor('writing')} onReport={reportSkill('writing')} onBack={back} onDone={advance} />;
       break;
+    case 'proof':
+      body = <Suspense fallback={<PlayerLoading />}><ProofStage stage={stage} lesson={lektion} state={proof} names={names} onNamesChange={setNames} onBack={back}
+        onAnswer={(response) => {
+          const next = answerProof(stage.tasks, proof, response, names);
+          setProof(next);
+          if (proofPassed(stage.tasks, next)) setAttempts((prev) => [...prev.filter((a) => a.stage !== 'proof'), ...proofAttempts(stage.tasks, next)]);
+        }}
+        onHideModel={() => setProof(hideProofModel(proof))} onDone={advance} /></Suspense>;
+      break;
     case 'recap':
       body = (
         <RecapStage
           stage={stage}
+          proofShown={!!lektion.proof && canCompleteProofLesson(lektion, proof)}
           level={curriculum.level}
           accuracy={accuracy}
           status={status}
@@ -653,7 +673,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
           onRetrySync={flush}
           nextLabel={nextTarget.label}
           onBack={back}
-          onNext={() => navigate(nextTarget.to)}
+          onNext={() => navigate(`${nextTarget.to}${placementSuffix(search)}`)}
         />
       );
       break;
@@ -670,8 +690,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     body = <SaveProgressAsk level={curriculum.level} lektion={lektion} done={pause.done} total={SESSION_COUNT} onContinue={() => { setAskSettled(true); setPause(null); }} />;
   }
 
-  const guidedScene = stage.kind === 'scene';
-  const step = stageIndex + (guidedScene ? itemIndex / (stage.chunks.length * SCENE_PHASES.length) : ITEM_STAGES.has(stage.kind) ? itemIndex / Math.max(items.length, 1) : 0) + 1;
+  const guidedScene = stage.kind === 'scene' || stage.kind === 'proof';
+  const step = stageIndex + (stage.kind === 'scene' ? itemIndex / (stage.chunks.length * SCENE_PHASES.length) : ITEM_STAGES.has(stage.kind) ? itemIndex / Math.max(items.length, 1) : 0) + 1;
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
@@ -762,5 +782,7 @@ export default function LessonPlayerPage() {
   // same index is the next Lektion's recap. Every piece of player state, the
   // save-progress ask included, is per Lektion.
   // `pool` is null while it downloads: the intro shows meanwhile, and Start waits for it (LessonRun).
-  return <LessonPlayer key={`${curriculum.level}:${lektion.id}`} curriculum={curriculum} lektion={lektion} pool={pool} />;
+  return <CoursePathGuard curriculum={curriculum} node={{ ...lektion, kind: 'lektion' }}>
+    <LessonPlayer key={`${curriculum.level}:${lektion.id}`} curriculum={curriculum} lektion={lektion} pool={pool} />
+  </CoursePathGuard>;
 }

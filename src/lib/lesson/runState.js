@@ -30,6 +30,7 @@
 // stage is found by its key, so a stage list that did shift still lands on
 // the right screen. Fail-soft like the rest of the engine: storage that throws
 // or a malformed snapshot means a fresh run, never a broken screen.
+import { packProof } from './proof.js';
 import { safeGetJSON, safeRemove, safeSetJSON } from '../../utils/safeStorage.js';
 
 export const RUN_KEY_PREFIX = 'dm_lesson_run:';
@@ -71,8 +72,9 @@ function asReadAloud(v) {
 }
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ flow = 'legacy', sceneReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
+export function packRun({ proof = {}, flow = 'legacy', sceneReadAloud = {}, soundReadAloud = {}, fluencyReadAloud = {}, runId = '', stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], skills = {}, readAloud = {} } = {}, now = Date.now()) {
   return {
+    proof: packProof(proof),
     flow: flow === 'guided' ? 'guided' : 'legacy',
     sceneReadAloud: asReadAloud(sceneReadAloud),
     soundReadAloud: asReadAloud(soundReadAloud),

@@ -43,7 +43,7 @@ function skillText(line, lang) {
   return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
 }
 
-export default function RecapStage({ stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ stage, proofShown = false, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -132,7 +132,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
             <ul className="mt-3 space-y-2">
               {canDo.map((line) => (
                 <li key={line} className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> {line}
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> <span>{line}{proofShown && <span className="ml-2 text-xs text-graphite">{t('proof.shown', lang)}</span>}</span>
                 </li>
               ))}
             </ul>

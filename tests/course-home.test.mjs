@@ -73,7 +73,7 @@ test('the unlock rule carries an endowed clause, and endowed never marks a node 
   const src = read(HOME);
   assert.match(
     src,
-    /const unlocked = \(!user \|\| loaded\) && \(endowed \|\| node\.index === 0 \|\| done\.has\(path\[node\.index - 1\]\.id\)\);/,
+    /const unlocked = pathNodeUnlocked\(\{ user, loaded, endowed, index: node.index, path, done \}\);/,
     'unlocked must be: loaded && (endowed || first || previous done)',
   );
   assert.match(src, /placedAbove\(profile\?\.current_level, level\)/, 'endowed reads the placement from the profile');
@@ -85,7 +85,7 @@ test('the unlock rule carries an endowed clause, and endowed never marks a node 
 });
 
 test('placedAbove compares on the level ladder in either case and never promises a level', async () => {
-  const { placedAbove } = await import('../src/pages/CurriculumHomePage.jsx').catch(() => ({}));
+  const { placedAbove } = await import('../src/lib/course/lock.js');
   if (placedAbove) {
     assert.equal(placedAbove('A2.1', 'a1.1'), true);
     assert.equal(placedAbove('a1.2', 'a1.1'), true);
@@ -95,7 +95,7 @@ test('placedAbove compares on the level ladder in either case and never promises
   }
   // Whether or not the JSX module can load under node, the rule text is pinned.
   const src = read(HOME);
-  assert.match(src, /LEVEL_ORDER\.indexOf\(String\(placed \|\| ''\)\.toUpperCase\(\)\)/, 'DB level is UPPERCASE; normalise before comparing');
+  assert.match(read('src/lib/course/lock.js'), /LEVEL_ORDER\.indexOf\(String\(placed \|\| ''\)\.toUpperCase\(\)\)/, 'DB level is UPPERCASE; normalise before comparing');
   assert.ok(LEVEL_ORDER[0] === 'A1.1', 'the ladder starts at A1.1');
   assert.match(src, /Your test suggests a level above/, 'the endowed label says "your test suggests"');
   assert.doesNotMatch(src, /you will pass|guaranteed|you are (now )?[AB][12]\.[12]/i, 'no pass or level promise');

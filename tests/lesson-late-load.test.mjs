@@ -139,7 +139,7 @@ test('Start waits for the pool, the cards and the count — at most START_WAIT_M
 test('the intro shows while the pool downloads: the page no longer waits for it before rendering the player', () => {
   const page = PLAYER.slice(PLAYER.indexOf('export default function LessonPlayerPage'));
   assert.doesNotMatch(page, /if \(!pool[^)]*\)\s*\{?\s*return/, 'no "Loading…" gate on the pool before the intro');
-  assert.match(page, /return <LessonPlayer key=\{`\$\{curriculum\.level\}:\$\{lektion\.id\}`\} curriculum=\{curriculum\} lektion=\{lektion\} pool=\{pool\} \/>;/);
+  assert.match(page, /<LessonPlayer key=\{`\$\{curriculum\.level\}:\$\{lektion\.id\}`\} curriculum=\{curriculum\} lektion=\{lektion\} pool=\{pool\} \/>/);
   const gate = PLAYER.slice(PLAYER.indexOf('function LessonRun('), PLAYER.indexOf('function LessonStages('));
   assert.ok(gate.indexOf('if (!introDone) {') < gate.indexOf('if (!pool) return <PlayerLoading />;'), 'the intro comes before the wait for the pool');
   assert.match(gate, /trackLessonStarted\(curriculum\.level, lektion\.id, runId\);/, 'lesson_started fires when the run really starts');

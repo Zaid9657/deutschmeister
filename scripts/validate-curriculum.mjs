@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { proofShapeFindings, proofGermanTexts } from './lib/proof-content.mjs';
 import { hintFor, hintContainsAnswer } from '../src/lib/lesson/guidedFeedback.js';
 import { guidedFindings } from './lib/guided-content.mjs';
 import { undecidedTimePrepositionGaps } from './lib/time-preposition-cues.mjs';
@@ -3260,18 +3261,27 @@ export function a12FinalTestFindings(mock = abschlusstestA12, c = CURRICULUM_A12
   return finalTestContentFindings(mock, { unknown: (text) => untaughtTokens({ questionDe: text }, known, spec) });
 }
 
-/** RULE 5's lexicon and tokenizer also bind the guided read; notice words do not license it. */
-export function guidedReadVocabulary(c, spec = levelSpec(c?.level)) {
+/** Shared taught-word horizon for guided reading and proof. No new instruction-word exemptions. */
+function guidedVocabularyFindings(c, textsFor, label, spec = levelSpec(c?.level)) {
   const known = seedVocabulary(spec);
   const findings = [];
   for (const l of c.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
-    for (const token of tokenise(l.guided?.read?.text || '')) {
-      if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: guided read uses untaught word "${token}"`);
+    for (const text of textsFor(l)) for (const token of tokenise(text || '')) {
+      if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: ${label} uses untaught word "${token}"`);
     }
   }
   return findings;
 }
+
+/** RULE 5's lexicon and tokenizer also bind the guided read; notice words do not license it. */
+export const guidedReadVocabulary = (c, spec = levelSpec(c?.level)) =>
+  guidedVocabularyFindings(c, (l) => [l.guided?.read?.text || ''], 'guided read', spec);
+
+/** RULE 35: optional proof, shape + safe hints + the identical taught-word horizon. */
+export const proofFindings = (c, spec = levelSpec(c?.level)) => [
+  ...proofShapeFindings(c), ...guidedVocabularyFindings(c, proofGermanTexts, 'proof', spec),
+];
 
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
@@ -3303,6 +3313,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
     } catch { fail(`RULE 33: no safe bilingual hint (${item.id})`); }
   }
   for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
+  for (const finding of proofFindings(c, spec)) fail(`RULE 35: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);

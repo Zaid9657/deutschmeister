@@ -55,7 +55,7 @@ function readAloud({ delayMic = false, delayBlob = false, delayAuth = false, del
     console: { error() {} },
   };
   const component = vm.runInNewContext(`
-    function ReadAloudLine({ lektionId, lineKey, text, onResult }) {
+    function ReadAloudLine({ lektionId, lineKey, text, onResult, proof = false }) {
       ${source.slice(start, end)}
       return { startRecording, stopRecording, handleStopped };
     }

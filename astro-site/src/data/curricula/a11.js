@@ -296,6 +296,38 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Tschüss! Bis morgen.', en: 'Bye! See you tomorrow.' },
         ],
       },
+      proof: {
+        tasks: [
+          {
+            canDo: 0, type: 'production',
+            promptDe: 'Frau Kaya: „Hallo!“ – Sie: … Frau Kaya: „Tschüss!“ – Sie: …',
+            promptEn: 'Ms Kaya greets you, then says goodbye. Greet her and say goodbye formally, in that order.',
+            answer: 'Guten Tag. Auf Wiedersehen.', accepted: ['Guten Tag. Auf Wiedersehen.'],
+            reteach: { kind: 'dialog', indices: [0, 8] },
+          },
+          {
+            canDo: 1, type: 'production', ownName: 'full', openings: ['Ich heiße'],
+            promptDe: 'Frau Kaya: „Wie heißen Sie?“',
+            promptEn: 'Ms Kaya asks your name. Introduce yourself with your own name.',
+            answer: 'Ich heiße Ana Chakiri.', accepted: ['Ich heiße Ana Chakiri.'],
+            reteach: { kind: 'dialog', indices: [1] },
+          },
+          {
+            canDo: 2, type: 'production', ownName: 'surname',
+            promptDe: 'Frau Kaya: „Buchstabieren Sie bitte.“',
+            promptEn: 'Ms Kaya needs to write down your surname. Spell your own surname.',
+            answer: 'C-H-A-K-I-R-I.', accepted: ['C-H-A-K-I-R-I.'],
+            reteach: { kind: 'dialog', indices: [2, 3] },
+          },
+          {
+            canDo: 3, type: 'production',
+            promptDe: 'Frau Kaya: „Guten Tag!“ – Sie: …? Frau Kaya: „Gut, danke. Und Ihnen?“ – Sie: …',
+            promptEn: 'Ask Ms Kaya how she is. She says she is well and asks about you. Tell her you are well, with thanks.',
+            answer: 'Wie geht es Ihnen? Mir geht es gut, danke.', accepted: ['Wie geht es Ihnen? Mir geht es gut, danke.'],
+            reteach: { kind: 'dialog', indices: [6, 7] },
+          },
+        ],
+      },
       pretest: {
         promptDe: 'Wie heißen Sie? Antworten Sie mit einem Satz.',
         promptEn: 'Say your name in one sentence.',
