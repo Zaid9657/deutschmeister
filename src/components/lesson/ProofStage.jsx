@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { canDoLines } from '../../lib/course/canDo.js';
-import { hintFor } from '../../lib/lesson/guidedFeedback.js';
-import { proofItem, proofPassed, proofPosition } from '../../lib/lesson/proof.js';
+import { judgeProof, proofHint, proofItem, proofPassed, proofPosition } from '../../lib/lesson/proof.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -16,12 +15,16 @@ export default function ProofStage({ stage, lesson, state, onAnswer, onHideModel
   const { user } = useAuth();
   const [value, setValue] = useState('');
   const [mic, setMic] = useState(false);
+  const [missed, setMissed] = useState(null);
   const passed = proofPassed(stage.tasks, state);
   const at = proofPosition(stage.tasks, state);
   const task = stage.tasks[at];
   const item = task ? proofItem(task, names) : null;
   const reteach = state.phase === 'reteach';
-  const submit = (response) => { setValue(''); setMic(false); onAnswer(response); };
+  const submit = (response) => {
+    setMissed({ at, part: response.kind === 'typed' ? judgeProof(task, response.value, names).part : null });
+    setValue(''); setMic(false); onAnswer(response);
+  };
   const label = reteach ? 'proof.again' : passed ? 'action.next' : 'action.check';
   return <section className="text-nacht-text">
     <div className="mb-3 flex items-center justify-between gap-3"><p className="font-data text-xs text-nacht-muted">{passed ? t('proof.shown', lang) : t('proof.goal', lang, { n: at + 1, total: stage.tasks.length })}</p><LangToggle /></div>
@@ -45,7 +48,7 @@ export default function ProofStage({ stage, lesson, state, onAnswer, onHideModel
             : <textarea id="proof-answer" lang="de" rows={3} value={value} onChange={(e) => setValue(e.target.value)} className="mt-2 block w-full rounded-xl border border-rule bg-white p-3 text-ink" />}
         </label>}
         {mic && item.answer && <div className="mt-4"><ReadAloudLine key={`${at}:${state.goals[at]?.tries || 0}:${item.answer}`} proof hideModel guided lektionId={lesson.id} lineKey={`proof-${at}`} text={item.answer} onResult={(result) => submit({ kind: 'mic', result })} /></div>}
-        {state.phase === 'hint' && <p role="status" className="mt-4 font-semibold text-siegel-deep">{hintFor(task)[lang]}</p>}
+        {state.phase === 'hint' && <p role="status" className="mt-4 font-semibold text-siegel-deep">{proofHint(task, missed?.at === at ? missed.part : null)[lang]}</p>}
         {user && !task.options && <button type="button" className="mt-3 min-h-11 text-sm font-bold text-graphite" onClick={() => setMic(!mic)}>{t(mic ? 'proof.type' : 'proof.mic', lang)}</button>}
       </>}
     </>}

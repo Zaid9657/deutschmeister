@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Check guided drafts with the same curriculum rules (32, 34 and optional proof 35).
+// Check guided drafts with the same curriculum rules (32, 34 and optional ordered-part proof 35).
 // node scripts/check-guided-draft.mjs 1 2 3
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';

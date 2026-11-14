@@ -2,6 +2,7 @@ import { checkAnswer, checkOptionsFor, RESULT } from './check.js';
 import { introductionHit } from './pretest.js';
 import { nameFromIntroduction, sayText } from './scene.js';
 import { READALOUD_PASS_PCT } from './readaloud.js';
+import { hintFor } from './guidedFeedback.js';
 
 /** One resolver for rendering and validation. No copied model text in proof data. */
 export function proofModel(lesson, pointer) {
@@ -19,7 +20,85 @@ export function proofModel(lesson, pointer) {
   return null;
 }
 
-export const proofTasks = (lesson) => (lesson.proof?.tasks || []).map((task, i) => ({ ...task, id: `proof-${lesson.id}-${i}`, model: proofModel(lesson, task.reteach) }));
+export const proofTasks = (lesson) => (lesson.proof?.tasks || []).map((task, i) => ({ ...task, id: `proof-${lesson.id}-${i}`, model: proofModel(lesson, task.reteach),
+  addresses: [...new Set((lesson.dialog?.lines || []).map((l) => l.speaker).filter((s) => /^(?:Frau|Herr)\s+\p{L}/u.test(s || '')))],
+  courtesies: (lesson.wortfeld || []).map((w) => w.de).filter((s) => ['Danke', 'Bitte', 'Entschuldigung'].includes(s)),
+}));
+
+/** Only a complete, comma-delimited titled speaker address can be removed. No fuzzy name match. */
+function withoutAddress(sentence, addresses = []) {
+  const text = sentence.trim().replace(/[.!?]+$/, '').trim();
+  const comma = text.lastIndexOf(',');
+  if (comma < 0) return text;
+  const address = text.slice(comma + 1).trim().normalize('NFC').toLowerCase();
+  return addresses.some((s) => s.normalize('NFC').toLowerCase() === address) ? text.slice(0, comma).trim() : text;
+}
+
+/**
+ * Phone typing and speech transcripts often carry no sentence marks („Guten Tag auf Wiedersehen“).
+ * Then consecutive runs of words may fulfil the parts in order, with every word used; each run is
+ * still judged by the common checker, so register and spelling count exactly as with marks.
+ */
+function runsForParts(text, parts, fulfils) {
+  const words = text.split(/\s+/u).filter(Boolean);
+  let reached = 0;
+  const walk = (from, at) => {
+    reached = Math.max(reached, at);
+    if (at === parts.length) return from === words.length ? [] : null;
+    for (let to = from + 1; to <= words.length; to++) {
+      const run = words.slice(from, to).join(' ').replace(/[,;:]+$/u, '');
+      if (!fulfils(run, parts[at])) continue;
+      const rest = walk(to, at + 1);
+      if (rest) return [run, ...rest];
+    }
+    return null;
+  };
+  return { runs: walk(0, 0), reached: Math.min(reached, parts.length - 1) };
+}
+
+/** Sentences consume parts in order. Only taught courtesy sentences may consume no part. */
+export function judgeProof(task, value, names = {}) {
+  const item = proofItem(task, names, value);
+  if (task.ownName || task.type === 'multiple_choice') {
+    const checked = checkAnswer(value, item.accepted || [], checkOptionsFor(item));
+    return { ...checked, part: checked.result === RESULT.WRONG ? 0 : null };
+  }
+  const parts = task.parts || [];
+  // The common checker folds quotation marks; they must not become an extra sentence here.
+  let sentences = String(value || '').normalize('NFC').replace(/[“”„‟«»‹›"]/g, '').split(/[.!?\n]+/u).map((s) => s.trim()).filter(Boolean);
+  if (parts.length > 1 && sentences.length === 1) {
+    const fulfils = (run, part) => checkAnswer(withoutAddress(run, task.addresses), part.forms, checkOptionsFor({ ...task, ...part, accepted: part.forms, answer: part.forms[0] })).result !== RESULT.WRONG;
+    const { runs, reached } = runsForParts(sentences[0], parts, fulfils);
+    // No full reading: name the first part the words did not reach, so the hint points at it.
+    if (!runs) return { result: RESULT.WRONG, part: reached };
+    sentences = runs;
+  }
+  let at = 0, result = RESULT.CORRECT;
+  for (const sentence of sentences) {
+    const text = withoutAddress(sentence, task.addresses);
+    const part = parts[at];
+    const checked = part && checkAnswer(text, part.forms, checkOptionsFor({ ...task, ...part, accepted: part.forms, answer: part.forms[0] }));
+    if (checked && checked.result !== RESULT.WRONG) {
+      at++;
+      if (checked.result === RESULT.TYPO) result = RESULT.TYPO;
+    } else if (checkAnswer(text, task.courtesies || [], { choice: true }).result === RESULT.WRONG) {
+      return { result: RESULT.WRONG, part: Math.min(at, parts.length - 1) };
+    }
+  }
+  return at === parts.length && at > 0 ? { result, part: null } : { result: RESULT.WRONG, part: at };
+}
+
+/** Labels are authored, answers are not. A resumed hint can name all parts without saving text. */
+export function proofHint(task, part) {
+  if (!task.parts?.length) return hintFor(task);
+  const labels = Number.isInteger(part) ? [task.parts[part]] : task.parts;
+  const de = labels.filter(Boolean).map((p) => p.label.de).join(' / ');
+  const en = labels.filter(Boolean).map((p) => p.label.en).join(' / ');
+  return {
+    de: `${de.charAt(0).toUpperCase() + de.slice(1)}: Das stimmt noch nicht. ${task.register === 'formal' ? 'Sagen Sie es höflich.' : 'Prüfen Sie diesen Teil noch einmal.'}`,
+    en: `${en.charAt(0).toUpperCase() + en.slice(1)}: this is not right yet. ${task.register === 'formal' ? 'Say it formally.' : 'Check this part again.'}`,
+  };
+}
 
 /** Names are adapted exactly as in the scene; an introduction also reuses the pretest helper. */
 export function proofItem(task, names = {}, value) {
@@ -52,7 +131,7 @@ export function answerProof(tasks, raw, response, names = {}) {
   const task = proofItem(tasks[at], names, response?.value);
   let right = false;
   if (response?.kind === 'typed') {
-    right = !!task.accepted?.length && checkAnswer(response.value, task.accepted, checkOptionsFor(task)).result !== RESULT.WRONG;
+    right = judgeProof(tasks[at], response.value, names).result !== RESULT.WRONG;
   } else if (response?.kind === 'mic' && task.answer && !tasks[at].options) {
     const r = response.result;
     right = !!r && r.usedMic === true && r.selfConfirmed !== true && Number.isFinite(r.pct) && r.pct >= READALOUD_PASS_PCT && r.pct <= 1;

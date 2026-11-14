@@ -118,8 +118,29 @@
         "promptDe": "Frau Kaya: „Hallo!“ – Sie: … Frau Kaya: „Tschüss!“ – Sie: …",
         "promptEn": "Ms Kaya greets you, then says goodbye. Greet her and say goodbye formally, in that order.",
         "answer": "Guten Tag. Auf Wiedersehen.",
-        "accepted": [
-          "Guten Tag. Auf Wiedersehen."
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "der Gruß",
+              "en": "the greeting"
+            },
+            "forms": [
+              "Guten Tag.",
+              "Guten Morgen.",
+              "Guten Abend.",
+              "Guten Tag und willkommen!"
+            ]
+          },
+          {
+            "label": {
+              "de": "der Abschied",
+              "en": "the goodbye"
+            },
+            "forms": [
+              "Auf Wiedersehen."
+            ]
+          }
         ],
         "reteach": {
           "kind": "dialog",
@@ -139,8 +160,16 @@
         "promptDe": "Frau Kaya: „Wie heißen Sie?“",
         "promptEn": "Ms Kaya asks your name. Introduce yourself with your own name.",
         "answer": "Ich heiße Ana Chakiri.",
-        "accepted": [
-          "Ich heiße Ana Chakiri."
+        "parts": [
+          {
+            "label": {
+              "de": "der Name",
+              "en": "the name"
+            },
+            "forms": [
+              "Ich heiße Ana Chakiri."
+            ]
+          }
         ],
         "reteach": {
           "kind": "dialog",
@@ -156,8 +185,16 @@
         "promptDe": "Frau Kaya: „Buchstabieren Sie bitte.“",
         "promptEn": "Ms Kaya needs to write down your surname. Spell your own surname.",
         "answer": "C-H-A-K-I-R-I.",
-        "accepted": [
-          "C-H-A-K-I-R-I."
+        "parts": [
+          {
+            "label": {
+              "de": "die Buchstaben",
+              "en": "the letters"
+            },
+            "forms": [
+              "C-H-A-K-I-R-I."
+            ]
+          }
         ],
         "reteach": {
           "kind": "dialog",
@@ -173,8 +210,28 @@
         "promptDe": "Frau Kaya: „Guten Tag!“ – Sie: …? Frau Kaya: „Gut, danke. Und Ihnen?“ – Sie: …",
         "promptEn": "Ask Ms Kaya how she is. She says she is well and asks about you. Tell her you are well, with thanks.",
         "answer": "Wie geht es Ihnen? Mir geht es gut, danke.",
-        "accepted": [
-          "Wie geht es Ihnen? Mir geht es gut, danke."
+        "register": "formal",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Wie geht es Ihnen?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Antwort",
+              "en": "the answer"
+            },
+            "forms": [
+              "Mir geht es gut, danke.",
+              "Gut, danke.",
+              "Mir geht es gut."
+            ]
+          }
         ],
         "reteach": {
           "kind": "dialog",

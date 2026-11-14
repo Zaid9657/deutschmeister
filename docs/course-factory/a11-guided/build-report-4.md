@@ -90,3 +90,93 @@ Parts A, B and C are complete. Final logs below supersede intermediate failures 
 | Whitespace and protected/excluded files | PASS; no protected-file differences from starting revision | `git diff --check` and comparison with `d975ec5` |
 
 Astro emits six unresolved-at-build-time font URL warnings; the complete merged HTML check is green. Browser screenshots/layout and the live authenticated microphone scorer remain unverified for the sandbox reasons above. No server checks, migrations, deployment, mail or other external writes were made. Lektionen 2–12 and A1.2 have no proof blocks and retain their earlier engine/completion behavior; their path entry points now use the shared sequencing guard as requested.
+
+## Brief 4b
+
+Implementation underway (2026-11-14). Read BUILD-BRIEF-4B, CLAUDE.md, Team/Protocol v5 and steward gates. Scope: ordered production parts, shared optional dialogue-speaker address rule, part-specific answer-free hints, and the matching RULE 35/draft/content contract. Scoring, persisted proof flags/counts, stage order and locks remain unchanged. Protected tests, CLAUDE.md and astro-site/package-lock.json will stay unedited; no commit or dependency installation.
+
+Judging decision: only taught courtesy sentences (`Danke`, `Bitte`, `Entschuldigung`) may occur between/before/after required sentences without consuming a part. Every other sentence must fulfil the next required part; missing, substituted, reversed or arbitrary extra sentences fail. An optional comma-delimited address must exactly name a titled dialogue speaker; removing it never bypasses checking the remaining sentence. Formal tasks declare `register: 'formal'`; their part forms contain only the taught formal alternatives. Names continue through the existing introduction/spelling adapters.
+
+Implemented shape: every production task now has `parts: [{ label: { de, en }, forms: [...] }]`; the canonical `answer` remains for the unchanged microphone scorer, and choices retain their existing `accepted` contract. Goals 2/3 still use the original own-name introduction/spelling checker on the whole response (including dotted/slashed letter separators). Goal 1 lists the taught formal greetings; goal 4 lists the full/short thanks answers and the taught `Mir geht es gut` form. Formal goals use `register: 'formal'`; RULE 35 rejects informal forms in those tasks.
+
+`judgeProof` delegates each sentence/part to `checkAnswer` with `checkOptionsFor`, propagating CORRECT/TYPO/WRONG. The original proof pass treatment of TYPO is unchanged. Addresses/courtesies are derived from the current lesson, not enumerated in task data. Typed first misses identify the wrong/missing part; hints use its bilingual label and formal guidance, checked against the union of all part forms. The missing-part index lives only in screen state. Reload or a microphone miss names all relevant parts, keeping persisted proof flags/counts unchanged and storing no learner text. The existing microphone threshold, evidence, lock and stage order are unchanged.
+
+RULE 35 and the draft checker now validate ordered labelled parts, forms, single-sentence forms, canonical model fulfilment, formal register and hints against every form of every part. Content JSON and CONTENT-BRIEF follow the contract. Added a 30-row response matrix plus by-class part/hint/register/address/lexicon/draft mutation coverage, and a rendered check that a missed goodbye displays `Der Abschied` without a solution. No protected tests edited.
+
+Fast gates PASS: focused proof suites (3 files), pool build, curriculum validation, all 12 draft checks, shared sync, lint (zero warnings) and 19 duplicate pairs. Logs: `/tmp/a11-guided-build4b/`. Full suite, function syntax and clean merged builds follow.
+
+### Brief 4b response matrix — as run
+
+31 cases; all match the expected result. CORRECT and TYPO pass under the existing proof policy. Own-name adapter tests also pass, including separator variants.
+
+| Goal | Answer | Expected | Actual |
+| --- | --- | --- | --- |
+| 1 | Guten Tag, Frau Kaya. Auf Wiedersehen, Frau Kaya. | correct | correct |
+| 1 | Guten Tag. Auf Wiedersehen, Frau Kaya! | correct | correct |
+| 4 | Wie geht es Ihnen? Gut, danke. | correct | correct |
+| 4 | Wie geht es Ihnen, Frau Kaya? Mir geht es gut, danke. | correct | correct |
+| 1 | Guten Tag! Auf Wiedersehen? | correct | correct |
+| 1 | „Guten Tag, Frau Kaya!“ „Auf Wiedersehen.“ | correct | correct |
+| 1 | guten tag! auf wiedersehen! | typo | typo |
+| 4 | wie geht es ihnen?! gut, danke! | typo | typo |
+| 1 | Guten Morgen. Auf Wiedersehen. | correct | correct |
+| 1 | Guten Abend. Auf Wiedersehen. | correct | correct |
+| 1 | Guten Tag und willkommen. Auf Wiedersehen. | correct | correct |
+| 4 | Wie geht es Ihnen? Mir geht es gut. | correct | correct |
+| 1 | Danke. Guten Tag. Bitte. Auf Wiedersehen. Danke. | correct | correct |
+| 1 | Guten Tag. Auf Wiedersehen. Entschuldigung. | correct | correct |
+| 1 | Hallo. Auf Wiedersehen. | wrong | wrong |
+| 1 | Guten Tag. Tschüss. | wrong | wrong |
+| 1 | Guten Tag. | wrong | wrong |
+| 4 | Wie geht es dir? Gut, danke. | wrong | wrong |
+| 1 | Auf Wiedersehen. Guten Tag. | wrong | wrong |
+| 4 | Gut, danke. Wie geht es Ihnen? | wrong | wrong |
+| 1 | Guten Tag, Frau Kaye. Auf Wiedersehen. | wrong | wrong |
+| 1 | Guten Tag, Herr Kaya. Auf Wiedersehen. | wrong | wrong |
+| 1 | Guten Tag, Frau Weber. Auf Wiedersehen. | wrong | wrong |
+| 1 | Guten Tag, Kaya. Auf Wiedersehen. | wrong | wrong |
+| 1 | Hallo, Frau Kaya. Auf Wiedersehen. | wrong | wrong |
+| 4 | Wie geht es dir, Frau Kaya? Gut, danke. | wrong | wrong |
+| 1 | Guten Tag. Danke. | wrong | wrong |
+| 1 | Guten Tag. Nein. Auf Wiedersehen. | wrong | wrong |
+| 1 | Guten Tag. Auf Wiedersehen. Nein. | wrong | wrong |
+| 1 | Guten Tag, Frau Kaya und Herr Weber. Auf Wiedersehen. | wrong | wrong |
+| 1 | (empty) | wrong | wrong |
+
+Verification update: the full initial suite passed 305/305 files. Review added a quotation-mark case (31 rows total) so closing quotes never become a spurious extra sentence, and hardened malformed own-name parts. Focused suites pass again; final lint/full-suite and clean SPA/merge/prerender/HTML checks are running on that final source. Function syntax passed.
+
+The standard Astro CLI build attempted to refresh Vite's cache inside the read-only symlinked `astro-site/node_modules` and failed with EROFS. Re-ran the same Astro build through its installed JavaScript API, preserving the project config and committed offline grammar cache, with only Astro/Vite cache directories redirected to `/tmp/a11-guided-build4b/`; PASS, 143 pages. No dependency directory or lockfile was edited. Browser screenshot attempt through the already installed Playwright/Chromium failed before page creation: sandbox `setsockopt: Operation not permitted` (SIGTRAP). No screenshot or live microphone check is claimed; rendered component tests cover the changed hint and proof loop.
+
+The offline Astro cache workaround is reproducible without editing project configuration or dependencies:
+
+```bash
+GRAMMAR_CONTENT_CACHE="$PWD/grammar-content-cache.json" node --input-type=module <<'JS'
+import { build } from './astro-site/node_modules/astro/dist/index.js';
+process.chdir('astro-site');
+await build({ cacheDir: '/tmp/a11-guided-build4b/astro-cache', vite: { cacheDir: '/tmp/a11-guided-build4b/vite-cache' } });
+JS
+```
+
+Final review: `CLAUDE.md`, `astro-site/package-lock.json`, all named protected tests (including speaking suites), and A1.2 source/twins are unchanged from session-start `e468cbeac4b05ec2424033dfc6829279b3d5f28b`; no protected-test conflict or deviation was needed. Lektionen 2–12 have no edits. No commit command or git write was issued; HEAD is still the starting revision. The 4b course-rule change is limited to judging proof productions as ordered taught parts rather than whole-string equality; microphone scoring, practice scoring, run/attempt storage, locks and stage order keep their earlier rules. Quotation marks are folded before sentence splitting, matching the common checker's punctuation treatment.
+
+### Brief 4b final gates — PASS
+
+These final results supersede the pending notes above. Logs are under `/tmp/a11-guided-build4b/`.
+
+| Gate | Final result | Log |
+| --- | --- | --- |
+| A1.1 pool build | PASS | `pool.log` |
+| Curriculum validation | PASS on final source | `validator-final.log` |
+| All 12 guided drafts | PASS on final source | `drafts-final.log` |
+| Shared sync and duplicates | PASS; all 19 pairs identical | `sync.log`, `duplicates.log` |
+| Lint | PASS; zero warnings | `lint.log` |
+| Focused proof tests | PASS; 3 files, including 31-row matrix and rendered hint | `focused.log`, `cases.md` |
+| Full npm test | PASS; 305 files passed; 0 failures/cancelled/skipped | `tests-final.log` |
+| All function/shared-function syntax | PASS | `functions.log` |
+| Clean SPA build and index-to-app rename | PASS; prior generated dist moved to /tmp | `spa-build-final.log` |
+| Offline Astro build | PASS; 143 pages; caches redirected outside dependencies | `astro-build.log` |
+| Merge and prerender | PASS, once against clean final dist | `merge.log`, `prerender.log` |
+| Full built HTML and crawl checks | PASS; 151 pages, 146 sitemap URLs, 0 failures/warnings | `html.log` |
+| Protected/excluded files, A1.2, whitespace | PASS; unchanged from session-start revision; diff check clean | `protected.log`, `git diff --check` |
+
+Open/unverified: browser layout/screenshot and live authenticated microphone service could not be exercised in this sandbox. Chromium failed at launch; no screenshot exists (`browser-probe.log`). Astro still emits the six existing unresolved-at-build-time font URL warnings; merged HTML verification is warning-free. All requested scripted gates are green. No protected-test conflict, dependency change, commit, deployment or external write.

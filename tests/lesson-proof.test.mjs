@@ -109,7 +109,8 @@ test('rendered proof loop hides solutions, restores reteach, and enables complet
   const enter = (value) => { nodes(render()).find((n) => n.type === 'textarea').props.onChange({ target: { value } }); button().props.onClick(); };
   assert.equal(button().props.disabled, true);
   assert.doesNotMatch(JSON.stringify(render()), /Guten Tag|Auf Wiedersehen/);
-  enter('Nein'); assert.equal(state.phase, 'hint'); assert.equal(ended, 0);
+  enter('Guten Tag. Tschüss.'); assert.equal(state.phase, 'hint'); assert.equal(ended, 0);
+  assert.match(JSON.stringify(render()), /Der Abschied/);
   assert.doesNotMatch(JSON.stringify(render()), /Guten Tag|Auf Wiedersehen/);
   enter('Nein'); assert.equal(state.phase, 'reteach');
   assert.match(JSON.stringify(render()), /Auf Wiedersehen/);

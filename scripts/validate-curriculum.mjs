@@ -3278,7 +3278,7 @@ function guidedVocabularyFindings(c, textsFor, label, spec = levelSpec(c?.level)
 export const guidedReadVocabulary = (c, spec = levelSpec(c?.level)) =>
   guidedVocabularyFindings(c, (l) => [l.guided?.read?.text || ''], 'guided read', spec);
 
-/** RULE 35: optional proof, shape + safe hints + the identical taught-word horizon. */
+/** RULE 35: optional proof, ordered labelled parts/forms + safe part hints + the reading word horizon. */
 export const proofFindings = (c, spec = levelSpec(c?.level)) => [
   ...proofShapeFindings(c), ...guidedVocabularyFindings(c, proofGermanTexts, 'proof', spec),
 ];

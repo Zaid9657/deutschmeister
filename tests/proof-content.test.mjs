@@ -33,7 +33,7 @@ test('RULE 35 rejects shape, goal count/order, language, register and unresolved
     [(l) => { l.proof.tasks[0].type = 'self-confirm'; }, /type/],
     [(l) => { l.proof.tasks[0].promptEn = ''; }, /bilingual prompts/],
     [(l) => { l.proof.tasks[0].promptDe = 'Was sagst du?'; }, /Sie/],
-    [(l) => { l.proof.tasks[0].accepted = []; }, /accepted/],
+    [(l) => { l.proof.tasks[0].parts[0].forms = []; }, /forms/],
     [(l) => { l.proof.tasks[0].reteach.indices = [999]; }, /pointer/],
     [(l) => { l.proof.tasks[0].reteach.indices = [0, 0]; }, /distinct/],
     [(l) => { l.proof.tasks[2].ownName = 'nickname'; }, /ownName/],
@@ -59,10 +59,11 @@ test('pointers resolve dialogue, Wortfeld and notice; all displayed/accepted Ger
   assert.deepEqual(mutate((l) => { l.proof.tasks[0].reteach = { kind: 'wortfeld', index: 2 }; }), []);
   // Notice is a valid pointer; its additional metalanguage still has to satisfy the taught-word rule.
   assert.ok(!mutate((l) => { l.proof.tasks[0].reteach = { kind: 'notice' }; }).some((f) => /pointer/.test(f)));
-  for (const field of ['promptDe', 'answer', 'accepted', 'options']) {
+  for (const field of ['promptDe', 'answer', 'forms', 'options']) {
     assert.ok(mutate((l) => {
       const t = l.proof.tasks[0];
-      if (['accepted', 'options'].includes(field)) t[field] = [...(t[field] || []), 'Quantencomputer'];
+      if (field === 'forms') t.parts[0].forms.push('Quantencomputer');
+      else if (field === 'options') t[field] = [...(t[field] || []), 'Quantencomputer'];
       else t[field] += ' Quantencomputer';
     }).some((f) => /untaught word "Quantencomputer"/.test(f)), field);
   }
