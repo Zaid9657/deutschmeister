@@ -8,7 +8,7 @@ Betreff: Ihr nächster Schritt in Deutsch ist bereit
 
 Guten Tag{{name}},
 
-Ihr Platz ist für Sie bewahrt. Wir machen von hier aus weiter.
+Ihr Platz ist für Sie freigehalten. Wir machen von hier aus weiter.
 
 Heute: {{today_plan}}.
 
