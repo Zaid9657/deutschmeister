@@ -250,3 +250,79 @@ test('the in-app thread: only the owner reads it, and only its public messages',
   assert.doesNotMatch(form, /dangerouslySetInnerHTML/, 'a reply body is text, never HTML');
   assert.match(form, /author_type === 'user' \? 'Sie' : 'DeutschMeister'/);
 });
+
+// ─── The owner alert on every new ticket (plan "Stop the leaks", step 6) ─────
+// A ticket opened 2026-10-20 had no first response because nothing told anyone:
+// the support agent and the sentinel ship off. The handler now mails
+// OWNER_ALERT_EMAIL once the ticket and its first message are written. The alert
+// is best effort: it never fails the ticket, and it is skipped without its env.
+
+const OWNER_INBOX = 'owner@example.test';
+const LEARNER_TEXT = 'Ich kann Lektion 3 nicht öffnen, die Seite bleibt leer.';
+
+/** Runs one ticket through the real handler with a stubbed Resend and env. */
+async function withAlertEnv(env, resend) {
+  const saved = { fetch: globalThis.fetch, OWNER_ALERT_EMAIL: process.env.OWNER_ALERT_EMAIL, RESEND_API_KEY: process.env.RESEND_API_KEY };
+  for (const [k, v] of Object.entries(env)) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+  const tables = { profiles: [{ id: 'jwt-user', email: 'learner@example.com' }], support_tickets: [], support_ticket_messages: [] };
+  globalThis.fetch = async (url, init) => {
+    assert.equal(String(url), 'https://api.resend.com/emails', 'the handler contacts nothing but Resend');
+    return resend(JSON.parse(init.body), tables);
+  };
+  try {
+    const post = await realHandler({ userId: 'jwt-user', tables });
+    const res = await post(ticketPayload({ subject: 'Lektion 3 leer', category: 'technical', body: LEARNER_TEXT }));
+    return { res, tables };
+  } finally {
+    globalThis.fetch = saved.fetch;
+    for (const k of ['OWNER_ALERT_EMAIL', 'RESEND_API_KEY']) { if (saved[k] === undefined) delete process.env[k]; else process.env[k] = saved[k]; }
+  }
+}
+
+test('a new ticket mails the owner once, after the ticket and its first message are written', async () => {
+  const mails = [];
+  let tablesAtSend;
+  const { res, tables } = await withAlertEnv({ OWNER_ALERT_EMAIL: OWNER_INBOX, RESEND_API_KEY: 're_test' }, (mail, live) => {
+    mails.push(mail);
+    tablesAtSend = { tickets: live.support_tickets.length, messages: live.support_ticket_messages.length };
+    return new Response('{"id":"stub"}', { status: 200 });
+  });
+  assert.equal(res.statusCode, 200, res.body);
+  const { reference, ticketId } = JSON.parse(res.body);
+  assert.equal(mails.length, 1, 'exactly one alert per ticket');
+  assert.deepEqual(tablesAtSend, { tickets: 1, messages: 1 }, 'the alert goes out only after both writes');
+  const [mail] = mails;
+  assert.deepEqual(mail.to, [OWNER_INBOX]);
+  assert.ok(mail.subject.includes(reference) && mail.text.includes(reference), 'it carries the ticket reference');
+  assert.match(mail.subject, /\(Technik\)/, 'and the category');
+  assert.ok(mail.text.includes(LEARNER_TEXT), "and the learner's message");
+  assert.ok(mail.text.includes(`https://deutsch-meister.de/admin/support?ticket=${ticketId}`), 'and a link to the admin support screen');
+  assert.equal(tables.support_tickets.length, 1);
+});
+
+test('a failing or throwing owner alert never fails the ticket', async () => {
+  for (const resend of [
+    () => new Response('{"message":"unavailable"}', { status: 503 }),
+    () => { throw new Error('socket hang up'); },
+  ]) {
+    const { res, tables } = await withAlertEnv({ OWNER_ALERT_EMAIL: OWNER_INBOX, RESEND_API_KEY: 're_test' }, resend);
+    assert.equal(res.statusCode, 200, res.body);
+    assert.equal(JSON.parse(res.body).ok, true, 'the learner still sees the ticket confirmed');
+    assert.equal(tables.support_tickets.length, 1, 'the ticket is kept');
+    assert.equal(tables.support_ticket_messages[0]?.body, LEARNER_TEXT, 'with its message');
+  }
+});
+
+test('no owner alert without OWNER_ALERT_EMAIL or RESEND_API_KEY', async () => {
+  for (const env of [
+    { OWNER_ALERT_EMAIL: undefined, RESEND_API_KEY: 're_test' },
+    { OWNER_ALERT_EMAIL: OWNER_INBOX, RESEND_API_KEY: undefined },
+    { OWNER_ALERT_EMAIL: '  ', RESEND_API_KEY: 're_test' },
+  ]) {
+    let calls = 0;
+    const { res, tables } = await withAlertEnv(env, () => { calls += 1; return new Response('{}', { status: 200 }); });
+    assert.equal(res.statusCode, 200, res.body);
+    assert.equal(calls, 0, `no Resend call with ${JSON.stringify(env)}`);
+    assert.equal(tables.support_tickets.length, 1);
+  }
+});
