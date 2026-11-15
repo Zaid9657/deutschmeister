@@ -24,7 +24,7 @@ test('Google sign-in lands on /login, the page that forwards a signed-in visitor
   assert.equal(googleRedirectTo('https://deutsch-meister.de'), 'https://deutsch-meister.de/login');
   const auth = read('src/contexts/AuthContext.jsx');
   assert.match(auth, /signInWithOAuth\(\{\s*provider: 'google',\s*options: \{ redirectTo: googleRedirectTo\(window\.location\.origin\) \}/);
-  assert.match(auth, /\r?\n    signInWithGoogle,\r?\n/);
+  assert.match(auth, /\r?\n {4}signInWithGoogle,\r?\n/);
 });
 
 test('both account doors offer it, above the email form; the signup door counts the click', () => {
