@@ -15,6 +15,8 @@
 // sees on the page. The question was asked by hand on 2026-10-04 after signups
 // went quiet ("did a release add a noindex, change a canonical, break robots.txt
 // or the sitemap?"); the answer was no, and this module makes it a CI answer.
+// (The 125 above is the 2026-10-04 count. The page count is not fixed: the
+// built sitemap-0.xml is the measure, read it from the build, never from here.)
 //
 // The rule it enforces: every URL in every sitemap the robots.txt points at
 // (1) is a built page, (2) carries no robots noindex, (3) names itself as its
@@ -317,25 +319,11 @@ export function fileForUrl(dist, url) {
 }
 
 /**
- * Check a built dist. Returns { fail: string[], checked: number }, where
- * `checked` is the number of sitemap URLs evaluated.
+ * The urlsets of every sitemap robots.txt names, sitemap indexes expanded into
+ * their children, as [{ name, locs }]. A sitemap off-site or missing from the
+ * build is reported through `note(where, msg)`.
  */
-export function checkCrawlability(dist, { tomlText = '' } = {}) {
-  const fail = [];
-  const note = (where, msg) => fail.push(`${where}: ${msg}`);
-
-  const robotsFile = join(dist, 'robots.txt');
-  if (!existsSync(robotsFile)) {
-    note('robots.txt', 'missing from the build');
-    return { fail, checked: 0 };
-  }
-  const robots = parseRobots(readFileSync(robotsFile, 'utf8'));
-  if (robots.sitemaps.length === 0) note('robots.txt', 'names no Sitemap:');
-
-  const headersFile = existsSync(join(dist, '_headers')) ? readFileSync(join(dist, '_headers'), 'utf8') : '';
-  const headerRules = noindexHeaderRules(tomlText, headersFile);
-
-  // Expand sitemap indexes into their child sitemaps; every file must be built.
+export function sitemapUrlsets(dist, robots, note = () => {}) {
   const urlsets = [];
   const queue = robots.sitemaps.map((s) => ({ loc: s, from: 'robots.txt' }));
   const seen = new Set();
@@ -360,6 +348,29 @@ export function checkCrawlability(dist, { tomlText = '' } = {}) {
       urlsets.push({ name, locs: sitemapLocs(xml) });
     }
   }
+  return urlsets;
+}
+
+/**
+ * Check a built dist. Returns { fail: string[], checked: number }, where
+ * `checked` is the number of sitemap URLs evaluated.
+ */
+export function checkCrawlability(dist, { tomlText = '' } = {}) {
+  const fail = [];
+  const note = (where, msg) => fail.push(`${where}: ${msg}`);
+
+  const robotsFile = join(dist, 'robots.txt');
+  if (!existsSync(robotsFile)) {
+    note('robots.txt', 'missing from the build');
+    return { fail, checked: 0 };
+  }
+  const robots = parseRobots(readFileSync(robotsFile, 'utf8'));
+  if (robots.sitemaps.length === 0) note('robots.txt', 'names no Sitemap:');
+
+  const headersFile = existsSync(join(dist, '_headers')) ? readFileSync(join(dist, '_headers'), 'utf8') : '';
+  const headerRules = noindexHeaderRules(tomlText, headersFile);
+
+  const urlsets = sitemapUrlsets(dist, robots, note);
 
   let checked = 0;
   for (const { name, locs } of urlsets) {
@@ -392,4 +403,88 @@ export function checkCrawlability(dist, { tomlText = '' } = {}) {
   // Every same-site link on every built page reaches a page without a hop (above).
   for (const msg of checkInternalLinks(dist, { tomlText }).fail) fail.push(msg);
   return { fail, checked };
+}
+
+// --- index budget (2026-11-15) -----------------------------------------------
+// Search Console (read 2026-11-11): 33 pages indexed, 96 "discovered – currently
+// not indexed", 27 "crawled – currently not indexed". The causes this half pins:
+//   1. parameter copies of real pages: about 800 /analyze/?s=<sentence> links
+//      from the grammar examples, and ?ref=…&utm_* on every on-site door.
+//      robots.txt disallows those shapes; the X-Ray sentence links are nofollow.
+//   2. six thin, near-identical "Coming next" course pages: noindex, and out of
+//      every sitemap (astro-site/src/lib/sitemapFilter.js).
+//   3. grammar exercises that lived only in a React island (client:visible,
+//      locked above A1.1 at build time): the first questions of each set are
+//      plain HTML in the served page, marked data-static-exercise.
+// tests/index-budget.test.mjs pins each case.
+
+/** Path + query shapes our own links emit; robots.txt must disallow every one. */
+export const PARAMETER_SAMPLES = [
+  '/analyze/?s=Ich%20bin%20m%C3%BCde.',
+  '/analyze?s=Hallo',
+  '/signup?ref=grammar&utm_medium=onsite&utm_content=nouns-gender',
+  '/course/a1.1?ref=xray&utm_medium=onsite',
+  '/pricing/?ref=leitfaden&utm_medium=onsite&utm_content=telc-b1',
+  '/?utm_source=telegram&utm_medium=social&utm_campaign=a11-free',
+  '/pricing/?plan=pro&utm_source=email&utm_medium=lifecycle',
+  '/course/a1.1/l/4?next=1&ref=level-lock',
+];
+
+/** The value of attribute `name` in one start tag, or null. */
+function tagAttr(tag, name) {
+  const m = tag.match(new RegExp(`\\s${name}\\s*=\\s*("([^"]*)"|'([^']*)')`, 'i'));
+  return m ? (m[2] ?? m[3]) : null;
+}
+
+const XRAY_SENTENCE_HREF = /^(?:https?:\/\/(?:www\.)?deutsch-meister\.de)?\/analyze\/?\?s=/i;
+const GRAMMAR_TOPIC_PAGE = /^grammar\/[^/]+\/[^/]+\/index\.html$/;
+
+/**
+ * Check a built dist against the three causes above. `comingSoonCoursePaths`
+ * are site paths ("/courses/a2-1/") of the levels in COMING_SOON_LEVELS.
+ * Returns { fail, xrayLinks, grammarPages, previewed }.
+ */
+export function checkIndexBudget(dist, { comingSoonCoursePaths = [] } = {}) {
+  const fail = [];
+  const note = (where, msg) => fail.push(`${where}: ${msg}`);
+
+  const robotsFile = join(dist, 'robots.txt');
+  const robots = existsSync(robotsFile) ? parseRobots(readFileSync(robotsFile, 'utf8')) : null;
+  if (!robots) note('robots.txt', 'missing from the build');
+  for (const sample of robots ? PARAMETER_SAMPLES : []) {
+    for (const crawler of CRAWLERS) {
+      if (!isDisallowed(robots, crawler, sample)) note('robots.txt', `${sample} is crawlable for ${crawler}; parameter copies of real pages must be disallowed`);
+    }
+  }
+
+  let xrayLinks = 0;
+  let grammarPages = 0;
+  let previewed = 0;
+  for (const rel of htmlFiles(dist)) {
+    const html = stripInert(readFileSync(join(dist, rel), 'utf8'));
+    for (const [tag] of html.matchAll(/<a\b[^>]*>/gi)) {
+      const href = (tagAttr(tag, 'href') || '').replace(/&amp;/g, '&');
+      if (!XRAY_SENTENCE_HREF.test(href)) continue;
+      xrayLinks += 1;
+      if (!/(^|\s)nofollow(\s|$)/i.test(tagAttr(tag, 'rel') || '')) note(rel, `links ${href.slice(0, 60)} without rel="nofollow"`);
+    }
+    if (!GRAMMAR_TOPIC_PAGE.test(rel) || !/\sid="practice"/.test(html)) continue;
+    grammarPages += 1;
+    if (/<[a-z]+\b[^>]*\sdata-static-exercise[\s>=]/i.test(html)) previewed += 1;
+    else note(rel, 'has practice exercises but none of them in the static HTML (data-static-exercise)');
+  }
+
+  const listed = new Set();
+  if (robots) for (const { locs } of sitemapUrlsets(dist, robots)) for (const loc of locs) listed.add(loc);
+  for (const path of comingSoonCoursePaths) {
+    const file = fileForUrl(dist, `${SITE}${path}`);
+    if (!existsSync(file)) {
+      note(path, 'coming-soon course page is missing from the build');
+      continue;
+    }
+    const { robots: directives } = headSignals(readFileSync(file, 'utf8'));
+    if (!directives.some((d) => /noindex/i.test(d))) note(path, 'coming-soon course page is indexable; it must be noindex until the level leaves COMING_SOON_LEVELS');
+    if (listed.has(`${SITE}${path}`)) note(path, 'coming-soon course page is listed in a sitemap');
+  }
+  return { fail, xrayLinks, grammarPages, previewed };
 }

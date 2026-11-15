@@ -25,5 +25,18 @@ Disallow: /app.html
 # rendering crawler honours this for the fetches the page makes (2026-09-27:
 # ~98% of anonymous X-Ray analyses were crawler renders of those links).
 Disallow: /.netlify/functions/analyze-sentence
+# Parameter copies of real pages (2026-11-15). Every grammar example links to
+# /analyze/?s=<sentence> (about 800 URLs against about 138 real pages), every
+# on-site door carries ?ref=<surface>&utm_medium=onsite (astro-site/src/lib/
+# onsiteLinks.js, src/lib/lockDoor.js, src/lib/xray.js …) and campaign or mail
+# links carry ?utm_*. Search Console counted 96 pages "discovered – currently
+# not indexed" behind them. No sitemap URL has a query string, and
+# scripts/crawl-guard.mjs fails the build if one of these ever blocks one.
+Disallow: /analyze/?s=
+Disallow: /analyze?s=
+Disallow: /*?ref=
+Disallow: /*&ref=
+Disallow: /*?utm_
+Disallow: /*&utm_
 
 Sitemap: https://deutsch-meister.de/sitemap.xml

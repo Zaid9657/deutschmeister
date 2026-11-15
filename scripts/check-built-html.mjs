@@ -23,7 +23,8 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkCrawlability } from './crawl-guard.mjs';
-import { COURSE_TELC_B1_PRICE_EUR, eur, deEur } from '../src/data/pricing.js';
+import { checkIndexBudget } from './crawl-guard.mjs';
+import { COURSE_TELC_B1_PRICE_EUR, COMING_SOON_LEVELS, eur, deEur } from '../src/data/pricing.js';
 
 const args = process.argv.slice(2);
 const SPA_ONLY = args.includes('--spa-only');
@@ -42,7 +43,7 @@ const MIN_BODY_CHARS = 250; // Below this a page has no reason to be indexed.
  * missing entry is how a page ships unverified, and a missing FILE is how a
  * broken build step ships silently, which is the failure this list catches.
  */
-// The six prerendered SPA routes. Everything else built by Astro is discovered.
+// The prerendered SPA routes. Everything else built by Astro is discovered.
 const SPA_ROUTES = ['speaking', 'level-test', 'analyze', 'podcasts', 'listening', 'reading', 'faq', 'ueber-uns'];
 
 /**
@@ -71,6 +72,8 @@ const REQUIRED = [
   'courses/a1-complete/index.html',
   'courses/all-access/index.html',
   'courses/a1-1/index.html',
+  // Coming-soon levels are still built, as noindex pages outside the sitemap;
+  // checkIndexBudget() below holds every COMING_SOON_LEVELS page to that.
   'courses/a2-1/index.html',
   'courses/b2-2/index.html',
   'grammar/index.html',
@@ -403,6 +406,18 @@ if (!SPA_ONLY) {
   const crawl = checkCrawlability(DIST, { tomlText });
   for (const msg of crawl.fail) fail.push(msg);
   console.log(`crawl guard: ${crawl.checked} sitemap URL(s) checked, ${crawl.fail.length} failure(s)`);
+
+  // --- index budget ---------------------------------------------------------
+  // Parameter URLs disallowed, X-Ray sentence links nofollow, grammar exercises
+  // in the static HTML, coming-soon course pages noindex and unlisted
+  // (scripts/crawl-guard.mjs checkIndexBudget says why).
+  const comingSoonCoursePaths = COMING_SOON_LEVELS.map((level) => `/courses/${level.replace('.', '-')}/`);
+  const budget = checkIndexBudget(DIST, { comingSoonCoursePaths });
+  for (const msg of budget.fail) fail.push(msg);
+  console.log(
+    `index budget: ${budget.xrayLinks} X-Ray sentence link(s), ${budget.previewed}/${budget.grammarPages} grammar page(s) with static exercises, ` +
+      `${comingSoonCoursePaths.length} coming-soon course page(s), ${budget.fail.length} failure(s)`,
+  );
 }
 
 // --- report -----------------------------------------------------------------
