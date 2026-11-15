@@ -120,7 +120,17 @@ export const AuthProvider = ({ children }) => {
             // brought them now. `acquisition_source IS NULL` keeps first touch.
             const backfill = attributionBackfill(session.user, signupAttributionMetadata());
             if (backfill) {
-              supabase.from('profiles').update(backfill).eq('id', session.user.id).is('acquisition_source', null)
+              // Columns named one by one so tests/db-columns.test.mjs can check them.
+              supabase.from('profiles').update({
+                acquisition_source: backfill.acquisition_source,
+                acquisition_medium: backfill.acquisition_medium,
+                acquisition_campaign: backfill.acquisition_campaign,
+                acquisition_content: backfill.acquisition_content,
+                acquisition_referrer: backfill.acquisition_referrer,
+                acquisition_landing: backfill.acquisition_landing,
+                acquisition_at: backfill.acquisition_at,
+                acquisition_last_source: backfill.acquisition_last_source,
+              }).eq('id', session.user.id).is('acquisition_source', null)
                 .then(({ error }) => {
                   if (error) console.error('attribution backfill failed:', error.message);
                 });

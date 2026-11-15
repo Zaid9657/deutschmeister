@@ -48,7 +48,7 @@ test('a Google sign-up writes its attribution once; nothing else does', () => {
   assert.equal(attributionBackfill(null, meta), null);
   // The write never overwrites a first touch, and only follows a fresh signup.
   const auth = read('src/contexts/AuthContext.jsx');
-  assert.match(auth, /\.update\(backfill\)\.eq\('id', session\.user\.id\)\.is\('acquisition_source', null\)/);
+  assert.match(auth, /\}\)\.eq\('id', session\.user\.id\)\.is\('acquisition_source', null\)/);
   assert.ok(auth.indexOf('claimSignupCompletion(session.user)') < auth.indexOf('attributionBackfill(session.user'));
 });
 

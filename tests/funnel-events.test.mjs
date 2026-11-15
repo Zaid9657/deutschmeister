@@ -200,7 +200,8 @@ test('signup_completed: confirmation-aware, once per browser', async () => {
   assert.equal(claimSignupCompletion({ ...user, id: 'u2' }, now, blocked), false, 'blocked storage fails closed');
 
   const auth = read('src/contexts/AuthContext.jsx');
-  assert.match(auth, /claimSignupCompletion\(session\.user\)\) trackSignupCompleted\(\)/);
+  // The claim may open a block: a Google sign-up also writes its attribution there.
+  assert.match(auth, /claimSignupCompletion\(session\.user\)\) \{?\s*trackSignupCompleted\(\)/);
 });
 
 test('a checkout opened on a static page is observable when it finishes in the app', () => {
