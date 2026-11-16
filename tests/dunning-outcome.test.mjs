@@ -29,6 +29,8 @@ let customerThrows;
 let claims;
 let providerKeys;
 let failReceipt;
+let subscriptions;
+let logs;
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 const field = (row, path) => path.split(/->>?/).reduce((value, key) => value?.[key], row);
@@ -48,6 +50,9 @@ function matches(row, params) {
     if (value === 'is.null') return actual == null;
     if (value.startsWith('eq.')) return String(actual) === value.slice(3);
     if (value.startsWith('gte.')) return Date.parse(actual) >= Date.parse(value.slice(4));
+    if (value.startsWith('lte.')) return Date.parse(actual) <= Date.parse(value.slice(4));
+    if (value.startsWith('gt.')) return Date.parse(actual) > Date.parse(value.slice(3));
+    if (value.startsWith('in.(')) return value.slice(4, -1).split(',').includes(String(actual));
     throw new Error(`unhandled filter ${key}=${value}`);
   });
 }
@@ -99,10 +104,14 @@ globalThis.fetch = async (url, init = {}) => {
       return new Response(null, { status: 204 });
     }
   }
+  const table = { '/rest/v1/subscriptions': subscriptions, '/rest/v1/webhook_logs': logs }[u.pathname];
+  if (table && method === 'GET') {
+    return json(table.filter((row) => matches(row, u.searchParams)).slice(0, Number(u.searchParams.get('limit') || 1e9)).map((row) => project(row, u.searchParams.get('select'))));
+  }
   return method === 'GET' ? json([]) : new Response(null, { status: 201 });
 };
 
-const { handler } = await import('../netlify/functions/lemonsqueezy-webhook.mjs');
+const { handler, sendDunningFollowups } = await import('../netlify/functions/lemonsqueezy-webhook.mjs');
 
 beforeEach(() => {
   delete process.env.PAYMENT_RECOVERY_RETRY_ENABLED;
@@ -111,6 +120,8 @@ beforeEach(() => {
   mails = [];
   customerStatus = 200;
   customerThrows = false;
+  subscriptions = [{ lemonsqueezy_subscription_id: SUB, status: 'past_due' }];
+  logs = [];
 });
 
 function paymentFailed(invoiceId, { email = 'learner@example.com' } = {}) {
@@ -217,4 +228,117 @@ test('owner-gated retry: acceptance followed by a lost ledger stamp reuses the p
   assert.equal(providerKeys.size, 1);
   assert.equal(customerMails().length, 1);
   assert.ok(claims[0].accepted_at);
+});
+
+// ─── The 3-day follow-up (plan "Stop the leaks", step 6) ─────────────────────
+// Until now a failed renewal got one dunning mail and nothing more unless Lemon
+// Squeezy fired another failure over 7 days later. sendDunningFollowups (run by
+// the hourly sentinel tick) sends the SAME mail once more when the failure is 3
+// days old and the subscription is still past_due. Owner-gated by
+// PAYMENT_RECOVERY_RETRY_ENABLED; claimed in the retry ledger before the send.
+
+const HOUR = 3600 * 1000;
+const DAY = 24 * HOUR;
+const age = (invoiceId, ms) => { failures.find((r) => r.lemonsqueezy_event_id === invoiceId).failed_at = new Date(Date.now() - ms).toISOString(); };
+const followups = () => claims.filter((c) => c.message_key.startsWith('dunning_followup:'));
+
+test('follow-up ships off: without PAYMENT_RECOVERY_RETRY_ENABLED nothing is read, claimed or sent', async () => {
+  await handler(paymentFailed('inv-1'));
+  age('inv-1', 3 * DAY + HOUR);
+  mails = [];
+  assert.deepEqual(await sendDunningFollowups(), { enabled: false });
+  assert.equal(mails.length, 0);
+  assert.equal(claims.length, 0);
+});
+
+test('one follow-up 3 days after an unrecovered failure: the same dunning mail, claimed first, never twice', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  await handler(paymentFailed('inv-1'));
+  const [first] = customerMails();
+  assert.ok(first, 'the first dunning mail went out');
+
+  age('inv-1', 2 * DAY);
+  await sendDunningFollowups();
+  assert.equal(customerMails().length, 1, 'not before 3 days');
+
+  age('inv-1', 3 * DAY + HOUR);
+  const out = await sendDunningFollowups();
+  assert.equal(out.sent, 1);
+  const second = customerMails()[1];
+  assert.ok(second, 'the follow-up went out');
+  for (const k of ['from', 'to', 'subject', 'html']) assert.deepEqual(second[k], first[k], `the follow-up reuses the dunning ${k}`);
+  assert.deepEqual(followups().map((c) => [c.message_key, c.scope_key]), [['dunning_followup:inv-1', `dunning_followup:${SUB}`]]);
+  assert.ok(followups()[0].accepted_at, 'claimed in the ledger and stamped on acceptance');
+
+  await sendDunningFollowups();
+  await Promise.all([sendDunningFollowups(), sendDunningFollowups()]);
+  assert.equal(customerMails().length, 2, 'repeated and concurrent ticks never send it again');
+  assert.equal(ownerAlerts().length, 1, 'the follow-up adds no owner mail');
+});
+
+test('a failure older than 7 days gets no follow-up (a new failure opens a new round)', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  await handler(paymentFailed('inv-1'));
+  age('inv-1', 8 * DAY);
+  mails = [];
+  await sendDunningFollowups();
+  assert.equal(mails.length, 0);
+  assert.equal(followups().length, 0);
+});
+
+test('no follow-up once the subscription recovered, was cancelled, expired, or its state is unknown', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  await handler(paymentFailed('inv-1'));
+  age('inv-1', 3 * DAY + HOUR);
+  const failedAt = failures[0].failed_at;
+  mails = [];
+  for (const status of ['active', 'cancelled', 'expired', 'unpaid', 'paused', null]) {
+    subscriptions = status ? [{ lemonsqueezy_subscription_id: SUB, status }] : [];
+    await sendDunningFollowups();
+    assert.equal(mails.length, 0, `no mail for status ${status}`);
+  }
+  // Still past_due on our side, but a payment arrived after the failure.
+  subscriptions = [{ lemonsqueezy_subscription_id: SUB, status: 'past_due' }];
+  for (const event_type of ['subscription_payment_success', 'subscription_payment_recovered']) {
+    logs = [{ id: 1, event_type, created_at: new Date(Date.parse(failedAt) + HOUR).toISOString(), payload: { data: { attributes: { subscription_id: Number(SUB) } } } }];
+    await sendDunningFollowups();
+    assert.equal(mails.length, 0, `no mail after ${event_type}`);
+  }
+  assert.equal(followups().length, 0, 'nothing is claimed for a subscription that is not owed a reminder');
+  // Positive control: an older payment (before this failure) does not stop it.
+  logs = [{ id: 2, event_type: 'subscription_payment_success', created_at: new Date(Date.parse(failedAt) - DAY).toISOString(), payload: { data: { attributes: { subscription_id: Number(SUB) } } } }];
+  await sendDunningFollowups();
+  assert.equal(customerMails().length, 1);
+});
+
+test('a refused follow-up keeps its claim; the next tick retries the same message and key, once', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  await handler(paymentFailed('inv-1'));
+  age('inv-1', 3 * DAY + HOUR);
+  customerStatus = 503;
+  const held = await sendDunningFollowups();
+  assert.equal(held.sent, 0);
+  assert.equal(held.held.length, 1, 'the refused send is reported for reconciliation');
+  assert.equal(followups()[0].accepted_at, undefined, 'not stamped as accepted');
+  customerStatus = 200;
+  assert.equal((await sendDunningFollowups()).sent, 1);
+  assert.ok(providerKeys.has('dunning_followup:inv-1'), 'the stored idempotency key was reused');
+  assert.equal(followups().length, 1, 'one claim, never a second one');
+  const before = mails.length;
+  await sendDunningFollowups();
+  assert.equal(mails.length, before);
+});
+
+test('the hourly sentinel tick runs the follow-up for scheduler calls only', async () => {
+  process.env.PAYMENT_RECOVERY_RETRY_ENABLED = 'true';
+  delete process.env.SENTINEL_ENABLED;
+  await handler(paymentFailed('inv-1'));
+  age('inv-1', 3 * DAY + HOUR);
+  mails = [];
+  const { handler: sentinel } = await import('../netlify/functions/sentinel.mjs');
+  await sentinel({ httpMethod: 'POST', headers: {}, queryStringParameters: {}, body: '' });
+  assert.equal(mails.length, 0, 'a manual or unauthenticated call sends nothing');
+  const res = await sentinel({ httpMethod: 'POST', headers: {}, body: JSON.stringify({ next_run: new Date().toISOString() }) });
+  assert.equal(res.statusCode, 200, 'the sentinel result is returned unchanged');
+  assert.equal(customerMails().length, 1, 'the scheduler tick sends the follow-up even with SENTINEL_ENABLED off');
 });

@@ -66,6 +66,7 @@ import { selectRecipients as trialRecipients, TRIAL_KINDS } from './trial-lifecy
 import { selectCandidates as activationCandidates, WINDOWS as ACTIVATION_WINDOWS } from './activation-lifecycle.mjs';
 import { selectCandidates as nudgeCandidates } from './confirmation-nudge.mjs';
 import { selectRecipients as courseRecipients } from './course-reminder.mjs';
+import { sendDunningFollowups } from './lemonsqueezy-webhook.mjs';
 
 const ALLOWED_ORIGINS = ['https://deutsch-meister.de', 'https://www.deutsch-meister.de'];
 const FROM_ADDRESS = 'DeutschMeister Sentinel <zaid@deutsch-meister.de>';
@@ -478,6 +479,20 @@ export async function runSentinel({ event = {}, env = process.env, db = serviceC
   return reply(200, { ...out, emailed: sent ? mail.length : 0 });
 }
 
+/** Only the scheduler's own calls carry next_run (see runSentinel). */
+export function isSchedulerCall(event = {}) {
+  try { return typeof JSON.parse(event.body || '{}')?.next_run === 'string'; } catch { return false; }
+}
+
 // A literal on purpose: Netlify reads the cron out of this call statically.
 // Mirrored in netlify.toml ([functions."sentinel"]); this wrapper is authoritative.
-export const handler = schedule('50 * * * *', (event) => runSentinel({ event }));
+// The same tick sends the 3-day dunning follow-up (sendDunningFollowups in
+// lemonsqueezy-webhook.mjs): its own flag, PAYMENT_RECOVERY_RETRY_ENABLED, not
+// SENTINEL_ENABLED; scheduler calls only; after the checks, never failing them.
+export const handler = schedule('50 * * * *', async (event) => {
+  const result = await runSentinel({ event });
+  if (isSchedulerCall(event)) {
+    try { await sendDunningFollowups(); } catch (e) { console.error('[sentinel] dunning follow-up failed:', e.message); }
+  }
+  return result;
+});
