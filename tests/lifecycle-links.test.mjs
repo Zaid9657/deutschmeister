@@ -15,7 +15,11 @@
 //      its trailing slash, the course route without one) and the footer opens
 //      the homepage. activation_d1's button opens Lektion 1 of the free course
 //      since 2026-10-25 (the level test became a text link), and that path is
-//      pinned to the SPA's own FIRST_LESSON_HREF;
+//      pinned to the SPA's own FIRST_LESSON_HREF. Since 2026-11-15 the buttons
+//      of trial_day3, trial_ended and activation_d4 (they opened /analyze/ and
+//      /pricing/) are signed continue links (continue.mjs): the page one opens
+//      is its `dest`, the learner's next step, and Lektion 1 without one
+//      (tests/continue-link.test.mjs runs the click);
 //   4. the labels follow the naming rule and are fixed strings (no id, address
 //      or date), so the same mail renders the same bytes;
 //   5. public/attribution.js (the one classifier, run as-is under node:vm) reads
@@ -44,17 +48,24 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const SITE = 'https://deutsch-meister.de';
 const USER_ID = '00000000-0000-4000-8000-000000000001';
+const NOW = Date.UTC(2026, 10, 15, 8);
+const CONTINUE = '/.netlify/functions/continue';
+const { verifyContinue } = await import('../netlify/functions/continue.mjs');
 
 // The expected campaign and the page behind each link (by utm_content) per
 // kind, written out rather than derived, so a renamed kind or a moved link fails
-// here instead of passing silently.
+// here instead of passing silently. `next: true`: the button is a signed
+// continue link, and the page it opens is the link's signed destination.
 const EXPECTED = {
-  trial_day3: { render: trial.renderHtml, campaign: 'trial-day3', links: { cta: '/analyze/', footer: '/' } },
+  trial_day3: { render: trial.renderHtml, campaign: 'trial-day3', next: true, links: { cta: '/course/a1.1/l/1', footer: '/' } },
   trial_day6: { render: trial.renderHtml, campaign: 'trial-day6', links: { cta: '/pricing/', footer: '/' } },
-  trial_ended: { render: trial.renderHtml, campaign: 'trial-ended', links: { cta: '/pricing/', footer: '/' } },
+  trial_ended: { render: trial.renderHtml, campaign: 'trial-ended', next: true, links: { cta: '/course/a1.1/l/1', footer: '/' } },
   activation_d1: { render: activation.renderHtml, campaign: 'activation-d1', links: { cta: '/course/a1.1/l/1', 'level-test': '/level-test/', footer: '/' } },
-  activation_d4: { render: activation.renderHtml, campaign: 'activation-d4', links: { cta: '/analyze/', footer: '/' } },
+  activation_d4: { render: activation.renderHtml, campaign: 'activation-d4', next: true, links: { cta: '/course/a1.1/l/1', footer: '/' } },
 };
+
+/** The page a link opens: a continue link's signed destination, else its own path. */
+const opens = (url) => (url.pathname === CONTINUE ? url.searchParams.get('dest') : url.pathname);
 
 // Social-channel links leave the site, so they carry no utm_* tags; they are
 // pinned separately in tests/email-social.test.mjs and skipped here.
@@ -108,11 +119,29 @@ test('every link opens its page: prerendered routes with their slash, the course
     );
     for (const [content, path] of Object.entries(links)) {
       assert.equal(byContent[content].origin, SITE, `${kind} ${content}`);
-      assert.equal(byContent[content].pathname, path, `${kind} ${content}: CLAUDE.md trailing slashes (case 2 prerendered, case 3 SPA)`);
+      assert.equal(opens(byContent[content]), path, `${kind} ${content}: CLAUDE.md trailing slashes (case 2 prerendered, case 3 SPA)`);
     }
     assert.equal(byContent.footer.pathname, '/', kind);
     for (const url of Object.values(byContent)) assert.equal(url.hash, '', kind);
   }
+});
+
+test('the next-step buttons are signed continue links to the learner’s own step; the others are not', () => {
+  for (const [kind, { render, next }] of Object.entries(EXPECTED)) {
+    const cta = new URL(hrefs(render(kind, USER_ID, { nextPath: '/course/a1.2/checkpoint/2', now: NOW })).find((h) => new URL(h).searchParams.get('utm_content') === 'cta'));
+    if (!next) {
+      assert.notEqual(cta.pathname, CONTINUE, `${kind}: its button was not part of the change`);
+      continue;
+    }
+    assert.equal(cta.pathname, CONTINUE, kind);
+    const p = Object.fromEntries(cta.searchParams);
+    assert.equal(p.uid, USER_ID, kind);
+    assert.equal(p.dest, '/course/a1.2/checkpoint/2', `${kind}: the button opens the step it was given`);
+    assert.equal(Number(p.exp), Math.floor(NOW / 1000) + 7 * 24 * 3600, `${kind}: valid seven days`);
+    assert.ok(verifyContinue(p, { now: NOW }), `${kind}: the signature verifies`);
+    assert.ok(!verifyContinue({ ...p, dest: '/course/a1.2/l/1' }, { now: NOW }), `${kind}: the destination is signed`);
+  }
+  assert.deepEqual([...trial.NEXT_STEP_KINDS, ...activation.NEXT_STEP_KINDS].sort(), Object.keys(EXPECTED).filter((k) => EXPECTED[k].next).sort());
 });
 
 test('activation_d1 opens Lektion 1 where the SPA first run opens it (review 2026-10-25)', () => {
@@ -124,8 +153,8 @@ test('activation_d1 opens Lektion 1 where the SPA first run opens it (review 202
 
 test('labels follow the naming rule and are fixed strings, so a mail renders the same bytes', () => {
   for (const [kind, { render }] of Object.entries(EXPECTED)) {
-    const html = render(kind, USER_ID);
-    assert.equal(html, render(kind, USER_ID), `${kind}: deterministic`);
+    const html = render(kind, USER_ID, { now: NOW });
+    assert.equal(html, render(kind, USER_ID, { now: NOW }), `${kind}: deterministic`);
     for (const href of hrefs(html).filter((h) => !isUnsubscribe(h))) {
       for (const [key, value] of new URL(href).searchParams) {
         if (!key.startsWith('utm_')) continue;
@@ -155,7 +184,7 @@ test('labels follow the naming rule and are fixed strings, so a mail renders the
 test('the classifier reads the tags back without losing a label', () => {
   const { parse } = attribution();
   for (const [kind, { render, campaign, links }] of Object.entries(EXPECTED)) {
-    const href = hrefs(render(kind, USER_ID)).find((h) => !isUnsubscribe(h) && new URL(h).pathname === links.cta);
+    const href = hrefs(render(kind, USER_ID)).find((h) => !isUnsubscribe(h) && opens(new URL(h)) === links.cta);
     const url = new URL(href);
     const touch = parse(url.search, '', url.pathname, Date.UTC(2026, 9, 4));
     assert.equal(touch.source, 'email', kind);

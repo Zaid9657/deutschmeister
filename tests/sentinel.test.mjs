@@ -35,7 +35,7 @@ import {
 import { SCHEDULED_JOBS, isJobKind, jobStaleness } from '../netlify/functions/_shared/adminStatusLib.mjs';
 import { runSentinel } from '../netlify/functions/sentinel.mjs';
 // §5: a quiet day is not an outage.
-import { LEDGER_JOB_DUE, dailyRunTimes, dueSpan, needsDueCheck, countDue, parseCanary } from '../netlify/functions/_shared/sentinelLib.mjs';
+import { LEDGER_JOB_DUE, dailyRunTimes, hourlyRunTimes, dueSpan, needsDueCheck, countDue, parseCanary } from '../netlify/functions/_shared/sentinelLib.mjs';
 import { DUE_READERS } from '../netlify/functions/sentinel.mjs';
 import { selectRecipients as trialRecipients, TRIAL_KINDS } from '../netlify/functions/trial-lifecycle.mjs';
 import { selectCandidates as activationCandidates, WINDOWS as ACTIVATION_WINDOWS } from '../netlify/functions/activation-lifecycle.mjs';
@@ -903,7 +903,8 @@ test('admin-status reads the same job list as the sentinel', () => {
 // The world below is NOW = 2026-09-29 10:50 UTC with every ledger job stale:
 //   trial      (08:00) last row 50 h ago → runs 09-28 08:00, 09-29 08:00
 //   activation (09:30) last row 60 h ago → runs 09-27, 09-28, 09-29 09:30
-//   confirm    (10:30) last row 78 h ago → runs 09-26 … 09-29 10:30 (production's case)
+//   confirm    (hourly at :20 since 2026-11-15; daily 10:30 in production's
+//              case) last row 78 h ago → runs 09-26 05:20 … 09-29 10:20
 //   course     (18:00) last row 40 h ago → run 09-28 18:00
 
 const JOB = Object.fromEntries(SCHEDULED_JOBS.map((j) => [j.id, j]));
@@ -935,9 +936,10 @@ function ledgerWorld({ due = false } = {}) {
     { id: 'l4', user_id: 'old-learner', kind: 'course_reminder_2026-09-27', sent_at: ago(40) },
   ];
   const authUsers = [
-    // confirm: already nudged; turned two days old at 10:40, after the 10:30 run; 100 days old.
+    // confirm: already nudged; turned an hour old at 10:30, after the last
+    // judged run (10:20; 10:50 minus the grace); 100 days old.
     authUser('nudged', { createdAt: '2026-08-30T00:00:00Z' }),
-    authUser('fresh', { createdAt: '2026-09-27T10:40:00Z' }),
+    authUser('fresh', { createdAt: '2026-09-29T09:30:00Z' }),
     authUser('ancient', { createdAt: '2026-06-21T00:00:00Z' }),
     // trial: began 09-26, so its day 3 (counted from 00:00 UTC of the run's day,
     // trial-lifecycle.mjs utcDayStart) is the 09-30 run, after the span.
@@ -966,7 +968,7 @@ function ledgerWorld({ due = false } = {}) {
     w.lifecycle_customer_state.push({ user_id: 'a1', registered_at: '2026-09-27T08:00:00.000Z', status: 'new', has_lesson_activity: false, email_opted_out: false, is_subscribed: false });
     // 22 h before the 09-28 18:00 run
     learners.push({ user_id: 'c1', level: 'a1.1', last_activity_at: hoursBefore('2026-09-28T18:00:00Z', 22), next_lektion_nr: 2, email_opted_out: false });
-    // ('unconfirmed' was 2 d 22 h old at the 09-29 10:30 run and was never nudged)
+    // ('unconfirmed' was an hour old at the 09-26 13:20 run and was never nudged)
   }
   return { world: w, opts: { authUsers, rpc: courseRpc(learners) } };
 }
@@ -975,15 +977,22 @@ const LEDGER_IDS = ['job-trial', 'job-activation', 'job-confirm', 'job-course'];
 const dryEvent = { httpMethod: 'GET', queryStringParameters: { secret: ENV.CAMPAIGN_SECRET, dry: '1' } };
 
 test('the runs a stale job answers for: after its last row, within the lookback, past the grace', () => {
-  // production's case: last nudge 78 h before a 10:50 run → four 10:30 runs
-  const s = dueSpan(JOB['job-confirm'], ago(78), NOW);
-  assert.deepEqual({ ...s, first: at(s.first), last: at(s.last) }, { first: '2026-09-26T10:30:00.000Z', last: '2026-09-29T10:30:00.000Z', runs: 4 });
+  // production's case, a daily job: last row 78 h before a 10:50 run → four 09:30 runs
+  const s = dueSpan(JOB['job-activation'], ago(78), NOW);
+  assert.deepEqual({ ...s, first: at(s.first), last: at(s.last) }, { first: '2026-09-26T09:30:00.000Z', last: '2026-09-29T09:30:00.000Z', runs: 4 });
+  // the hourly nudge (since 2026-11-15): every :20 from 05:20 on the 26th to 10:20 today
+  const h = dueSpan(JOB['job-confirm'], ago(78), NOW);
+  assert.deepEqual({ ...h, first: at(h.first), last: at(h.last) }, { first: '2026-09-26T05:20:00.000Z', last: '2026-09-29T10:20:00.000Z', runs: 78 });
   // the run that wrote the last row is not one it has to answer for
   const one = dueSpan(JOB['job-trial'], '2026-09-28T08:00:04Z', NOW);
   assert.equal(at(one.first), '2026-09-29T08:00:00.000Z');
   assert.equal(one.runs, 1);
-  // grace: at 10:40 the 10:30 run is not judged yet
-  assert.equal(at(dueSpan(JOB['job-confirm'], ago(78), new Date('2026-09-29T10:40:00Z')).last), '2026-09-28T10:30:00.000Z');
+  assert.equal(at(dueSpan(JOB['job-confirm'], '2026-09-29T09:20:03Z', NOW).first), '2026-09-29T10:20:00.000Z');
+  // grace: at 09:45 the 09:30 run is not judged yet, nor at 10:35 the 10:20 one
+  assert.equal(at(dueSpan(JOB['job-activation'], ago(78), new Date('2026-09-29T09:45:00Z')).last), '2026-09-28T09:30:00.000Z');
+  assert.equal(at(dueSpan(JOB['job-confirm'], ago(78), new Date('2026-09-29T10:35:00Z')).last), '2026-09-29T09:20:00.000Z');
+  assert.equal(hourlyRunTimes('20 10 * * *', 0, 1e12), null, 'a daily cron is not hourly');
+  assert.equal(hourlyRunTimes('61 * * * *', 0, 1e12), null);
   // lookback: a row 60 days old answers for a week of runs, not sixty
   assert.equal(dueSpan(JOB['job-course'], ago(60 * 24), NOW).runs, LEDGER_JOB_DUE.lookbackDays);
   // weekly and malformed crons are not replayed
@@ -1082,13 +1091,13 @@ test('each job’s own selection, asked about past runs, counts only who was due
   // Each would pick its trap if it ran NOW (the old "due now" reading); none was due at a run.
   assert.deepEqual(await trialRecipients('trial_day3', { client: qdb, span: span('2026-09-28T08:00:00Z', '2026-09-29T08:00:00Z') }), []);
   assert.deepEqual(await activationCandidates('activation_d1', { client: qdb, span: span('2026-09-27T09:30:00Z', '2026-09-29T09:30:00Z') }), [], 'confirmed after the run that would have picked them');
-  assert.deepEqual(await nudgeCandidates(qdb, { span: span('2026-09-26T10:30:00Z', '2026-09-29T10:30:00Z'), limit: Infinity }), [], 'already nudged, too young at the run, or too old');
+  assert.deepEqual(await nudgeCandidates(qdb, { span: span('2026-09-26T05:20:00Z', '2026-09-29T10:20:00Z'), limit: Infinity }), [], 'already nudged, too young at the run, or too old');
 
   const due = ledgerWorld({ due: true });
   const ddb = fakeDb(due.world, due.opts);
   assert.deepEqual(await trialRecipients('trial_day3', { client: ddb, span: span('2026-09-28T08:00:00Z', '2026-09-29T08:00:00Z') }), [{ id: 'd3', email: 'd3@learner.test' }]);
   assert.deepEqual(await activationCandidates('activation_d1', { client: ddb, span: span('2026-09-27T09:30:00Z', '2026-09-29T09:30:00Z') }), [{ id: 'a1', email: 'a1@learner.test' }]);
-  assert.deepEqual((await nudgeCandidates(ddb, { span: span('2026-09-26T10:30:00Z', '2026-09-29T10:30:00Z'), limit: Infinity })).map((r) => r.id), ['unconfirmed']);
+  assert.deepEqual((await nudgeCandidates(ddb, { span: span('2026-09-26T05:20:00Z', '2026-09-29T10:20:00Z'), limit: Infinity })).map((r) => r.id), ['unconfirmed']);
 
   // The course window, rounded inward: no span is today's run exactly.
   assert.deepEqual(windowHoursFor(null), WINDOW_HOURS);

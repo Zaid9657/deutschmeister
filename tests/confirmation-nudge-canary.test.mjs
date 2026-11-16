@@ -16,12 +16,13 @@ import { readFileSync } from 'node:fs';
 process.env.UNSUB_SECRET = 'test-only-unsub-secret';
 delete process.env.SUPABASE_SERVICE_ROLE_KEY; // no live client in tests
 
-const { selectCandidates, PER_RUN, MIN_AGE_DAYS } = await import('../netlify/functions/confirmation-nudge.mjs');
+const { selectCandidates, PER_RUN, MIN_AGE_HOURS } = await import('../netlify/functions/confirmation-nudge.mjs');
 
-const DAY = 24 * 60 * 60 * 1000;
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
 const CANARY = 'Owner.Canary@example.test';
 
-/** `older` unconfirmed accounts 30 days old, then the canary, MIN_AGE_DAYS + 1 days old (the newest). */
+/** `older` unconfirmed accounts 30 days old, then the canary, MIN_AGE_HOURS + 1 hours old (the newest). */
 function world({ older = PER_RUN + 1, claimed = [] } = {}) {
   const base = Date.now() - 30 * DAY;
   const users = Array.from({ length: older }, (_, i) => ({
@@ -31,7 +32,7 @@ function world({ older = PER_RUN + 1, claimed = [] } = {}) {
     created_at: new Date(base + i * 1000).toISOString(),
     app_metadata: { provider: 'email' },
   }));
-  users.push({ id: 'canary-user', email: CANARY, email_confirmed_at: null, created_at: new Date(Date.now() - (MIN_AGE_DAYS + 1) * DAY).toISOString(), app_metadata: { provider: 'email' } });
+  users.push({ id: 'canary-user', email: CANARY, email_confirmed_at: null, created_at: new Date(Date.now() - (MIN_AGE_HOURS + 1) * HOUR).toISOString(), app_metadata: { provider: 'email' } });
   const tables = { profiles: users.map((u) => ({ id: u.id, email_daily_sentence: true })), lifecycle_emails: claimed.map((id) => ({ user_id: id, kind: 'confirm_nudge' })) };
   const reads = [];
   class Q {

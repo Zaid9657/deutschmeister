@@ -22,6 +22,8 @@ import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
 import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
+import { continueUrl } from './continue.mjs';
+import { resolveNextPaths, FIRST_STEP_PATH } from './course-reminder.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -84,10 +86,17 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">${text}</p>`;
 
+// `nextStep: true` (2026-11-15): the button is the learner's signed continue
+// link (continue.mjs) to their own next step, resolved per recipient
+// (course-reminder.mjs resolveNextPaths); `ctaHref` is then the page it opens
+// for a learner with no course progress. Until then day 3 opened /analyze/ and
+// trial_ended /pricing/. Day 6 keeps /pricing/ on purpose. Link targets only:
+// the labels and bodies are owner wording and wait for approval.
 const TEMPLATES = {
   trial_day3: {
     subject: 'Three things in your DeutschMeister trial worth 10 minutes',
-    ctaHref: `${BASE_URL}/analyze/`,
+    ctaHref: `${BASE_URL}${FIRST_STEP_PATH}`,
+    nextStep: true,
     ctaLabel: 'Analyze a sentence →',
     body:
       P('Hey! You\'re three days into your trial, so here\'s the short list of what\'s actually worth your time.') +
@@ -106,7 +115,8 @@ const TEMPLATES = {
   },
   trial_ended: {
     subject: 'Your progress is saved',
-    ctaHref: `${BASE_URL}/pricing/`,
+    ctaHref: `${BASE_URL}${FIRST_STEP_PATH}`,
+    nextStep: true,
     ctaLabel: 'Restore Pro access →',
     body:
       P('Your trial ended yesterday — so this is the last you\'ll hear from me about it.') +
@@ -119,8 +129,11 @@ const TEMPLATES = {
 // dm_attribution as source "email" instead of untracked or a webmail host
 // (docs/tracking-links.md, "Our own email"). The campaign is the kind with
 // hyphens (trial_day6 -> trial-day6); utm_content names the link. The
-// unsubscribe link is never tagged. Exported for tests/lifecycle-links.test.mjs.
-export function renderHtml(kind, userId) {
+// unsubscribe link is never tagged. A `nextStep` button is the signed continue
+// link to `nextPath` (the learner's next step, FIRST_STEP_PATH without one),
+// tagged the same way; `now` fixes its expiry for tests. Exported for
+// tests/lifecycle-links.test.mjs.
+export function renderHtml(kind, userId, { nextPath = FIRST_STEP_PATH, now = Date.now() } = {}) {
   const tpl = TEMPLATES[kind];
   const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
   return SHELL({
@@ -128,7 +141,9 @@ export function renderHtml(kind, userId) {
     body: kind === 'trial_ended' && lateTrialEnabled()
       ? P('Ihre Testphase ist beendet. Sie können den kostenlosen Einstiegskurs weiterhin nutzen und Ihre gespeicherte Arbeit im Konto öffnen.') + P('Wenn Sie mehr nutzen möchten, können Sie die aktuellen Angebote ansehen. Sie können diese E-Mails jederzeit abbestellen.')
       : tpl.body,
-    ctaHref: tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
+    ctaHref: tpl.nextStep
+      ? continueUrl(userId, nextPath, { ...tags, content: 'cta' }, { now })
+      : tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
     ctaLabel: tpl.ctaLabel,
     footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
     unsubUrl: unsubscribeUrl(userId),
@@ -136,15 +151,29 @@ export function renderHtml(kind, userId) {
 }
 
 /** One Resend item. The List-Unsubscribe headers carry the footer's own link. */
-export function mailItem(kind, recipient) {
+export function mailItem(kind, recipient, { now = Date.now() } = {}) {
   return {
     from: FROM_ADDRESS,
     to: [recipient.email],
     reply_to: 'zaid@deutsch-meister.de',
     subject: TEMPLATES[kind].subject,
-    html: renderHtml(kind, recipient.id),
+    html: renderHtml(kind, recipient.id, { nextPath: recipient.nextPath || FIRST_STEP_PATH, now }),
     headers: unsubscribeHeaders(unsubscribeUrl(recipient.id)),
   };
+}
+
+/** The kinds whose button opens the learner's own next step. */
+export const NEXT_STEP_KINDS = Object.freeze(Object.keys(TEMPLATES).filter((kind) => TEMPLATES[kind].nextStep));
+
+/**
+ * `recipients` with each one's next step as `nextPath`, for a next-step kind;
+ * unchanged for the others. Runs BEFORE the claim: a failed read throws, the
+ * kind sends nothing and claims nothing, and the next run tries again.
+ */
+export async function withNextPaths(kind, recipients, client = supabase) {
+  if (!NEXT_STEP_KINDS.includes(kind) || recipients.length === 0) return recipients;
+  const paths = await resolveNextPaths(client, recipients.map((r) => r.id));
+  return recipients.map((r) => ({ ...r, nextPath: paths.get(r.id) || FIRST_STEP_PATH }));
 }
 
 // ─── selection ───────────────────────────────────────────────────────────────
@@ -291,8 +320,9 @@ async function sendBatch(resendKey, items) {
 
 async function sendKind(resendKey, kind, { dry = false, canary = new Set() } = {}) {
   const retryEnabled = process.env.LIFECYCLE_RETRY_ENABLED === 'true';
-  const recipients = (await selectRecipients(kind)).filter((r) => !retryEnabled || !canary.size || canary.has(r.email));
+  let recipients = (await selectRecipients(kind)).filter((r) => !retryEnabled || !canary.size || canary.has(r.email));
   if (dry) return { kind, wouldSend: recipients.length, sent: 0, failed: 0 };
+  recipients = await withNextPaths(kind, recipients);
   if (process.env.LIFECYCLE_RETRY_ENABLED === 'true') {
     let sent = 0, failed = 0;
     for (const r of recipients) {

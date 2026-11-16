@@ -61,6 +61,22 @@ const TRIAL_OCCUPIED = [
   [8, 9],
 ];
 
+// The two mails around the confirmation, in HOURS (2026-11-15, plan "Stop the
+// leaks", step 2). Sources: netlify/functions/confirmation-nudge.mjs —
+//   confirm_nudge  unconfirmed accounts aged [1 h, 90 d), hourly at :20,
+//                  once ever                            → hour 1–2 after signup
+//   welcome        addresses confirmed in the last 72 h, hourly at :20, once
+//                  ever (send-welcome-email.mjs sends it at creation only to an
+//                  address confirmed then, a Google sign-up)
+//                                                       → within the hour after confirmation
+// The nudge mails only unconfirmed accounts and every other lifecycle mail
+// only confirmed ones, so the nudge never shares a day with them by audience,
+// not by arithmetic. The welcome follows the confirmation that ends the nudge.
+const CONFIRMATION_OCCUPIED_HOURS = {
+  confirm_nudge: { from: 'signup', hours: [1, 90 * 24] },
+  welcome: { from: 'confirmation', hours: [0, 72] },
+};
+
 const overlaps = ([a1, a2], [b1, b2]) => a1 < b2 && b1 < a2;
 
 test('activation windows are pinned and sane', () => {
@@ -265,15 +281,39 @@ test('the nudge ships off, claims before sending, and mails only unconfirmed acc
   assert.ok(/PER_RUN\s*=\s*\d+/.test(src), 'per-run send cap missing');
 });
 
+test('the confirmation windows match the table above, and the job runs hourly', async () => {
+  const nudge = await import('../netlify/functions/confirmation-nudge.mjs');
+  assert.deepEqual(
+    { confirm_nudge: [nudge.MIN_AGE_HOURS, nudge.MAX_AGE_DAYS * 24], welcome: [0, nudge.WELCOME_WINDOW_HOURS] },
+    Object.fromEntries(Object.entries(CONFIRMATION_OCCUPIED_HOURS).map(([k, v]) => [k, v.hours])),
+  );
+  // An hour-long window only means "after one hour" if the job runs every hour.
+  assert.equal(read('netlify/functions/confirmation-nudge.mjs').match(/schedule\('([^']+)'/)[1], '20 * * * *');
+  // The welcome is no longer sent at account creation to an unconfirmed address.
+  const welcome = read('netlify/functions/send-welcome-email.mjs');
+  assert.ok(welcome.indexOf('!lookup.user.email_confirmed_at') !== -1, 'the webhook must skip unconfirmed accounts');
+  assert.ok(welcome.indexOf('!lookup.user.email_confirmed_at') < welcome.indexOf("fetchImpl('https://api.resend.com/emails'"), 'the skip comes before the send');
+  // Both welcome paths claim the same kind before sending.
+  for (const file of ['netlify/functions/send-welcome-email.mjs', 'netlify/functions/confirmation-nudge.mjs']) {
+    const src = read(file);
+    assert.ok(/kind: WELCOME_KIND/.test(src), `${file}: the welcome claim is missing`);
+  }
+  assert.ok(read('migrations/2026-11-15-welcome-after-confirmation.sql').includes(`'welcome'`), 'the migration must admit the welcome kind');
+  assert.ok(read('migrations/2026-11-01-retryable-lifecycle-mail.sql').includes(`'welcome'`), 'the draft CHECK must not drop the welcome kind');
+});
+
 test('nudge copy keeps its promises and carries no figures', async () => {
-  const { bodyHtml, MIN_AGE_DAYS, MAX_AGE_DAYS, PER_RUN } = await import('../netlify/functions/confirmation-nudge.mjs');
+  const { bodyHtml, MIN_AGE_HOURS, MAX_AGE_DAYS, PER_RUN } = await import('../netlify/functions/confirmation-nudge.mjs');
   const html = bodyHtml('https://deutsch-meister.de/.netlify/functions/confirm-continue?uid=x&exp=1&token=y');
   // "It's the only reminder we'll send" is made true by the ledger; the copy
   // must keep saying it as long as the ledger enforces it (and vice versa).
   assert.ok(/only reminder/.test(html), 'the one-shot promise left the copy — re-check it against the ledger');
   assert.ok(!/€\s?\d|\d+[.,]\d\d\s?€/.test(html), 'price figure in nudge copy');
   assert.ok(!/\b(unbegrenzt\w*|unlimited)\b/i.test(html), 'unlimited claim in nudge copy');
-  assert.ok(MIN_AGE_DAYS >= 1, 'nudging within a day of signup races the normal confirmation email');
+  // One hour since 2026-11-15 (two days before): enough for the normal
+  // confirmation email to land first, soon enough to reach the learner while
+  // they still want in.
+  assert.ok(MIN_AGE_HOURS >= 1, 'nudging within the first hour races the normal confirmation email');
   assert.ok(MAX_AGE_DAYS <= 90, 'mailing addresses older than 90 days is a deliverability risk');
   assert.ok(PER_RUN <= 100, 'per-run cap too high for a cold-ish list');
 });

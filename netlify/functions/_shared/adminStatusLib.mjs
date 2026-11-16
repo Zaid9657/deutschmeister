@@ -67,7 +67,7 @@ export function notInstrumented(id, label, reason, unblock) {
 export const SCHEDULED_JOBS = Object.freeze([
   { id: 'job-trial', fn: 'trial-lifecycle', label: 'Trial-Lifecycle (08:00 UTC)', cadence: 'daily', cron: '0 8 * * *', ledger: { prefix: 'trial_' }, gate: null, caveat: 'Nur sichtbar, wenn an dem Tag jemand fällig war — ein ruhiger Tag sieht aus wie ein Ausfall.' },
   { id: 'job-activation', fn: 'activation-lifecycle', label: 'Activation-Lifecycle (09:30 UTC)', cadence: 'daily', cron: '30 9 * * *', ledger: { prefix: 'activation_' }, gate: 'LIFECYCLE_ACTIVATION_ENABLED', caveat: 'Wie oben; zusätzlich no-op ohne LIFECYCLE_ACTIVATION_ENABLED=true.' },
-  { id: 'job-confirm', fn: 'confirmation-nudge', label: 'Bestätigungs-Erinnerung (10:30 UTC)', cadence: 'daily', cron: '30 10 * * *', ledger: { eq: 'confirm_nudge' }, gate: 'CONFIRM_NUDGE_ENABLED', caveat: 'Wie oben; no-op ohne CONFIRM_NUDGE_ENABLED=true.' },
+  { id: 'job-confirm', fn: 'confirmation-nudge', label: 'Bestätigungs-Erinnerung (stündlich, :20 UTC)', cadence: 'hourly', cron: '20 * * * *', ledger: { eq: 'confirm_nudge' }, gate: 'CONFIRM_NUDGE_ENABLED', caveat: 'Wie oben; no-op ohne CONFIRM_NUDGE_ENABLED=true.' },
   { id: 'job-course', fn: 'course-reminder', label: 'Kurs-Erinnerung (18:00 UTC)', cadence: 'daily', cron: '0 18 * * *', ledger: { prefix: 'course_reminder_' }, gate: 'COURSE_REMINDER_ENABLED', caveat: 'Wie oben; no-op ohne COURSE_REMINDER_ENABLED=true.' },
   { id: 'job-weekly', fn: 'weekly-truth', label: 'Wöchentliche Messung (Montag 06:00 UTC)', cadence: 'weekly', cron: '0 6 * * 1', ledger: null, gate: null, caveat: 'Schreibt IMMER eine Zeile — ein fehlender Lauf ist ein echter Ausfall.' },
 ]);

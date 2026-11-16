@@ -60,6 +60,11 @@ function loadMailer(name, client, deliveries) {
     selectCandidates: async () => recipients,
     recheckStillNew: async (rows) => rows,
     recheckStillIdle: async (rows) => rows,
+    // The next-step read (trial day 3, trial ended, activation day 4) and the
+    // welcome phase of confirmation-nudge run before or beside these claims;
+    // tests/continue-link.test.mjs and tests/welcome-links.test.mjs cover them.
+    withNextPaths: async (_kind, rows) => rows,
+    sendWelcomes: async () => ({ sent: 0, failed: 0 }),
     renderHtml: () => 'test', bodyHtml: () => 'test', continueUrl: () => 'https://example.test/',
     reminderKindFor: () => 'course_reminder_2026-10-22',
     buildMessage: () => ({ subject: 'Test' }), SHELL: () => 'test', unsubscribeUrl: () => 'https://example.test/',

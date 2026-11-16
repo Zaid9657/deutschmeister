@@ -461,9 +461,10 @@ const groupBy = (rows, key) => {
 /**
  * Each learner's finished Lektionen and passed checkpoints, all time. Ids and
  * status only: when they were done is not this file's question, so nothing
- * here can drift from the SQL's idea of who is warm.
+ * here can drift from the SQL's idea of who is warm. Exported for
+ * resolveNextPaths below, the other mailers' door to the same read.
  */
-async function readProgress(client, ids) {
+export async function readProgress(client, ids) {
   const rows = await readForIds(ids, (chunk) => client
     .from('lesson_progress')
     .select('user_id, lektion_id, status')
@@ -481,7 +482,7 @@ async function readProgress(client, ids) {
  * in exam_attempts, from which the course home completes the node
  * (levelTestReconcile.js). Scores and status only, no timestamps. → Set of ids.
  */
-async function readFinalTestPasses(client, learners) {
+export async function readFinalTestPasses(client, learners) {
   if (learners.length === 0) return new Set();
   const levelOf = new Map(learners.map((r) => [r.user_id, lower(r.level)]));
   const ids = [...levelOf.keys()];
@@ -510,6 +511,73 @@ async function readFinalTestPasses(client, learners) {
     if (test && a.exam_key === test.examKey && passesFinalTest(a, test.passPercent)) passed.add(a.user_id);
   }
   return passed;
+}
+
+// ─── the next step, for the other mailers (2026-11-15) ───────────────────────
+// The trial and activation mails used to send every learner to /analyze/ or
+// /pricing/; only this reminder linked to the learner's own next step, and it
+// was the one mail people came back from (8 of 34 in 30 days, against 17
+// sign-ins after 236 other lifecycle mails). resolveNextPaths() gives those
+// mailers the same answer nextStep() gives this one, as the in-app path their
+// signed continue link opens (continue.mjs). It reads the same two tables
+// through the same readers, so the step can never differ between the mails.
+
+/** Where a learner with no course progress starts: Lektion 1 of the free A1.1 course (src/lib/firstRun.js FIRST_LESSON_HREF). */
+export const FIRST_STEP_PATH = '/course/a1.1/l/1';
+
+/** The live levels in course order (LEKTION_TITLES is keyed a1.1, a1.2, …). */
+const COURSE_LEVELS = Object.keys(LEKTION_TITLES);
+
+/**
+ * The level a learner is in: the last one, in course order, where they finished
+ * a Lektion or passed a checkpoint. null without any such row.
+ */
+export function currentLevel(rows = []) {
+  let current = null;
+  for (const lvl of COURSE_LEVELS) {
+    const own = new RegExp(`^${lvl.replace('.', '\\.')}-(?:l\\d{1,3}|cp\\d{1,2})$`);
+    if ((rows || []).some((row) => DONE.has(row?.status) && own.test(String(row?.lektion_id || '')))) current = lvl;
+  }
+  return current;
+}
+
+/**
+ * The page the continue link opens for a learner's rows: their next Lektion or
+ * open checkpoint; the course home when the Abschlusstest is next (its last
+ * node: /login's ?next= honours only /course/ pages, src/lib/loginReturn.js);
+ * the next level's Lektion 1 once a level is done, or that course home after
+ * the last level; Lektion 1 of A1.1 without any progress. Every result passes
+ * continue.mjs isContinuePath.
+ */
+export function nextStepPath(rows = [], { finalTestPassed = false } = {}) {
+  const lvl = currentLevel(rows);
+  if (!lvl) return FIRST_STEP_PATH;
+  const step = nextStep(lvl, rows, { finalTestPassed });
+  if (step?.kind === 'lektion') return `/course/${lvl}/l/${step.nr}`;
+  if (step?.kind === 'checkpoint') return `/course/${lvl}/checkpoint/${step.nr}`;
+  if (step?.kind === 'complete') {
+    const following = COURSE_LEVELS[COURSE_LEVELS.indexOf(lvl) + 1];
+    if (following) return `/course/${following}/l/1`;
+  }
+  return `/course/${lvl}`;
+}
+
+/**
+ * id → the page the continue link opens, for every id. A failed read throws,
+ * so the caller sends nothing rather than a guess at a step. The final test's
+ * record is read only for learners who have reached it, as selectRecipients does.
+ */
+export async function resolveNextPaths(client, ids = []) {
+  const out = new Map();
+  if (!ids.length) return out;
+  const progress = await readProgress(client, ids);
+  const rowsOf = (id) => progress.get(id) || [];
+  const atFinal = ids
+    .map((id) => ({ user_id: id, level: currentLevel(rowsOf(id)) }))
+    .filter((r) => r.level && nextStep(r.level, rowsOf(r.user_id))?.kind === 'finaltest');
+  const passed = await readFinalTestPasses(client, atFinal);
+  for (const id of ids) out.set(id, nextStepPath(rowsOf(id), { finalTestPassed: passed.has(id) }));
+  return out;
 }
 
 /** The rows canOpenLevel reads, for the learners in a paid level. */

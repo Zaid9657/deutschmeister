@@ -1,5 +1,37 @@
+import { createClient } from '@supabase/supabase-js';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
+
+// AFTER CONFIRMATION (2026-11-15, plan "Stop the leaks", step 2). The database
+// trigger (migrations/2026-08-16-welcome-email-webhook.sql) calls this at
+// account creation, so the welcome raced the confirmation mail and its button,
+// a page that needs no account, was clicked instead of the confirmation link.
+// Now this handler sends only to an address that is already confirmed (a Google
+// sign-up is confirmed at creation) and skips the rest; confirmation-nudge.mjs
+// sends their welcome within the hour after they confirm. Both paths claim the
+// 'welcome' kind in lifecycle_emails BEFORE sending, so one account gets one
+// welcome, whichever path reaches it first.
+//
+// Until migrations/2026-11-15-welcome-after-confirmation.sql admits the kind,
+// the claim fails with a CHECK violation: this handler then sends unclaimed to
+// a confirmed address (what it did before), and the hourly job sends nothing.
+// So until that owner-applied migration lands, an email sign-up gets no welcome.
+const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase;
+try {
+  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+} catch (e) {
+  console.error('Supabase init error:', e.message);
+}
+
+export const WELCOME_KIND = 'welcome';
+export const WELCOME_FROM = 'Zaid from DeutschMeister <zaid@deutsch-meister.de>';
+export const WELCOME_SUBJECT = 'Welcome to DeutschMeister — here\'s where to start';
+
+/** Postgres check_violation: the ledger's CHECK does not admit 'welcome' yet (migration unapplied). */
+export const ledgerLacksWelcome = (error) => error?.code === '23514';
 
 // The site links carry the email tags (docs/tracking-links.md, "Our own
 // email"), so a click from the welcome mail is filed as email/lifecycle/welcome
@@ -96,7 +128,11 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
 
 export { WELCOME_HTML as welcomeHtml };
 
-export const handler = async (event) => {
+/** One Resend item for one address: the bytes both welcome paths send. */
+export const welcomeItem = (email) => ({ from: WELCOME_FROM, to: [email], subject: WELCOME_SUBJECT, html: WELCOME_HTML(email) });
+
+/** The webhook handler with its dependencies injectable (tests/welcome-links.test.mjs). */
+export async function welcomeHandler(event, { client = supabase, fetchImpl = fetch } = {}) {
   const headers = { 'Content-Type': 'application/json' };
 
   if (event.httpMethod !== 'POST') {
@@ -145,21 +181,46 @@ export const handler = async (event) => {
     console.error('send-welcome-email: missing or invalid email, user_id:', user_id);
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Valid email is required' }) };
   }
+  if (!user_id) return { statusCode: 400, headers, body: JSON.stringify({ error: 'user_id is required' }) };
+
+  // --- Confirmed addresses only (see the note at the top) ---
+  if (!client) {
+    console.error('SUPABASE_SERVICE_ROLE_KEY is not set');
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
+  }
+  const { data: lookup, error: lookupError } = await client.auth.admin.getUserById(user_id);
+  if (lookupError || !lookup?.user) {
+    // No guess either way: the hourly job welcomes them once they are confirmed.
+    console.error('send-welcome-email: user lookup failed, user_id:', user_id, lookupError?.message);
+    return { statusCode: 502, headers, body: JSON.stringify({ error: 'User lookup failed' }) };
+  }
+  if (!lookup.user.email_confirmed_at) {
+    console.log(`send-welcome-email: ${user_id} not confirmed yet, welcome follows confirmation`);
+    return { statusCode: 200, headers, body: JSON.stringify({ skipped: 'unconfirmed' }) };
+  }
+
+  // --- Claim BEFORE send: one welcome per account, whichever path is first ---
+  const { data: claims, error: claimError } = await client
+    .from('lifecycle_emails')
+    .upsert([{ user_id, kind: WELCOME_KIND }], { onConflict: 'user_id,kind', ignoreDuplicates: true })
+    .select('user_id');
+  if (claimError && !ledgerLacksWelcome(claimError)) {
+    console.error('send-welcome-email: claim failed, the hourly job retries:', claimError.message);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Claim failed' }) };
+  }
+  if (!claimError && !(claims || []).length) {
+    return { statusCode: 200, headers, body: JSON.stringify({ skipped: 'already_sent' }) };
+  }
 
   // --- Send via Resend ---
   try {
-    const res = await fetch('https://api.resend.com/emails', {
+    const res = await fetchImpl('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${resendKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from:    'Zaid from DeutschMeister <zaid@deutsch-meister.de>',
-        to:      [email],
-        subject: 'Welcome to DeutschMeister — here\'s where to start',
-        html:    WELCOME_HTML(email),
-      }),
+      body: JSON.stringify(welcomeItem(email)),
     });
 
     if (!res.ok) {
@@ -176,4 +237,6 @@ export const handler = async (event) => {
     console.error(`send-welcome-email: unexpected error for ${email}:`, err.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }
-};
+}
+
+export const handler = (event) => welcomeHandler(event);

@@ -129,3 +129,153 @@ test('the classifier reads the tags back without losing a label', () => {
     }
   }
 });
+
+// ---------------------------------------------------------------------------
+// The welcome after confirmation (2026-11-15, plan "Stop the leaks", step 2)
+// ---------------------------------------------------------------------------
+//
+// The database trigger calls send-welcome-email at account creation, so the
+// welcome raced the confirmation mail and its button (a page that needs no
+// account) was clicked instead of the confirmation link. Pinned here: the
+// webhook skips an unconfirmed account; a confirmed one (a Google sign-up) is
+// claimed, then sent; the hourly confirmation-nudge job welcomes the rest after
+// they confirm, with the same claim, so one account gets one welcome.
+
+process.env.WEBHOOK_SECRET = 'test-only-webhook-secret';
+process.env.RESEND_API_KEY = 'test-only-resend-key';
+
+/** auth.admin.getUserById plus the lifecycle_emails claim, recording every call. */
+function welcomeDb({ user = { id: USER_ID, email: ADDRESS, email_confirmed_at: '2026-11-15T09:00:00Z' }, lookupError = null, claimed = [], claimError = null } = {}) {
+  const calls = [];
+  const ledger = new Set(claimed);
+  return {
+    calls,
+    auth: { admin: { getUserById: async (id) => { calls.push(['lookup', id]); return lookupError ? { data: null, error: lookupError } : { data: { user }, error: null }; } } },
+    from(table) {
+      return {
+        upsert(rows, options) {
+          calls.push(['claim', table, rows, options]);
+          return {
+            select: async () => {
+              if (claimError) return { data: null, error: claimError };
+              return { data: rows.filter((r) => !ledger.has(r.user_id) && ledger.add(r.user_id)), error: null };
+            },
+          };
+        },
+      };
+    },
+  };
+}
+
+const webhook = (body = { type: 'INSERT', table: 'users', record: { id: USER_ID, email: ADDRESS } }) => ({
+  httpMethod: 'POST',
+  headers: { authorization: `Bearer ${process.env.WEBHOOK_SECRET}` },
+  body: JSON.stringify(body),
+});
+
+function resend() {
+  const sent = [];
+  const fetchImpl = async (url, init) => { sent.push({ url, body: JSON.parse(init.body) }); return { ok: true, json: async () => ({ id: 'resend-1' }) }; };
+  return { sent, fetchImpl };
+}
+
+test('the webhook skips an unconfirmed account: no claim, no mail', async () => {
+  const db = welcomeDb({ user: { id: USER_ID, email: ADDRESS, email_confirmed_at: null } });
+  const r = resend();
+  const res = await welcome.welcomeHandler(webhook(), { client: db, fetchImpl: r.fetchImpl });
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(JSON.parse(res.body), { skipped: 'unconfirmed' });
+  assert.deepEqual(db.calls, [['lookup', USER_ID]]);
+  assert.equal(r.sent.length, 0);
+});
+
+test('the webhook claims, then sends, a confirmed account’s welcome (a Google sign-up), once', async () => {
+  const db = welcomeDb();
+  const r = resend();
+  const res = await welcome.welcomeHandler(webhook(), { client: db, fetchImpl: r.fetchImpl });
+  assert.equal(res.statusCode, 200);
+  const claim = db.calls.find((c) => c[0] === 'claim');
+  assert.deepEqual(claim.slice(1), ['lifecycle_emails', [{ user_id: USER_ID, kind: 'welcome' }], { onConflict: 'user_id,kind', ignoreDuplicates: true }]);
+  assert.deepEqual(r.sent.map((m) => m.body), [welcome.welcomeItem(ADDRESS)]);
+  // A second call (the trigger fired twice, or the hourly job got there first) sends nothing.
+  const again = await welcome.welcomeHandler(webhook(), { client: db, fetchImpl: r.fetchImpl });
+  assert.deepEqual(JSON.parse(again.body), { skipped: 'already_sent' });
+  assert.equal(r.sent.length, 1);
+});
+
+test('the webhook before the migration sends unclaimed, as before; any other failure sends nothing', async () => {
+  // check_violation: the ledger's CHECK does not admit 'welcome' yet.
+  const pre = resend();
+  const res = await welcome.welcomeHandler(webhook(), { client: welcomeDb({ claimError: { code: '23514', message: 'violates check constraint' } }), fetchImpl: pre.fetchImpl });
+  assert.equal(res.statusCode, 200);
+  assert.equal(pre.sent.length, 1);
+  for (const [name, db, status] of [
+    ['claim error', welcomeDb({ claimError: { code: '08006', message: 'connection failure' } }), 500],
+    ['lookup error', welcomeDb({ lookupError: { message: 'auth down' } }), 502],
+  ]) {
+    const r = resend();
+    assert.equal((await welcome.welcomeHandler(webhook(), { client: db, fetchImpl: r.fetchImpl })).statusCode, status, name);
+    assert.equal(r.sent.length, 0, `${name}: the hourly job sends it once the address is confirmed`);
+  }
+  const r = resend();
+  assert.equal((await welcome.welcomeHandler(webhook(), { client: null, fetchImpl: r.fetchImpl })).statusCode, 500, 'no database: fail closed');
+  assert.equal(r.sent.length, 0);
+  // The shared secret still guards the endpoint.
+  assert.equal((await welcome.welcomeHandler({ ...webhook(), headers: {} }, { client: welcomeDb(), fetchImpl: r.fetchImpl })).statusCode, 401);
+});
+
+/** auth users, lifecycle_emails and profiles, behind the reads selectWelcomeRecipients makes. */
+function sweepDb({ users, claimed = [], optedOut = [], failLedger = false }) {
+  class Q {
+    constructor(name) {
+      this.name = name;
+      this.rows = name === 'lifecycle_emails' ? claimed.map((id) => ({ user_id: id, kind: 'welcome' }))
+        : name === 'profiles' ? users.map((u) => ({ id: u.id, email_daily_sentence: !optedOut.includes(u.id) })) : [];
+      this.lo = 0; this.hi = Infinity;
+    }
+    select() { return this; }
+    eq(k, v) { this.rows = this.rows.filter((r) => r[k] === v); return this; }
+    in(k, vs) { this.rows = this.rows.filter((r) => vs.includes(r[k])); return this; }
+    order() { return this; }
+    range(a, b) { this.lo = a; this.hi = b; return this; }
+    then(res, rej) {
+      const out = failLedger && this.name === 'lifecycle_emails' ? { data: null, error: { message: 'down' } } : { data: this.rows.slice(this.lo, this.hi + 1), error: null };
+      return Promise.resolve(out).then(res, rej);
+    }
+  }
+  return { from: (n) => new Q(n), auth: { admin: { listUsers: async ({ page = 1 } = {}) => ({ data: { users: page === 1 ? users : [] }, error: null }) } } };
+}
+
+test('the hourly job welcomes addresses confirmed in the last 72 hours, once, and nobody created before the change', async () => {
+  const now = Date.parse('2026-11-20T12:20:00Z');
+  const H = 3600000;
+  const iso = (t) => new Date(t).toISOString();
+  const user = (id, { created = now - 5 * H, confirmed = now - 2 * H, email = `${id}@example.test` } = {}) => ({ id, email, created_at: iso(created), email_confirmed_at: confirmed === null ? null : iso(confirmed) });
+  const users = [
+    user('fresh'), // confirmed two hours ago
+    user('earlier', { confirmed: now - 50 * H, created: now - 60 * H }),
+    user('unconfirmed', { confirmed: null }),
+    user('stale', { confirmed: now - 73 * H, created: now - 80 * H }), // past the window
+    user('old-account', { created: Date.parse(nudge.WELCOME_SINCE) - H, confirmed: now - 2 * H }), // welcomed at creation by the old webhook
+    user('welcomed'), // the webhook (or an earlier run) claimed it
+    user('opted-out'),
+    user('throwaway', { email: 'x@mailinator.com' }),
+  ];
+  const db = sweepDb({ users, claimed: ['welcomed'], optedOut: ['opted-out'] });
+  const picked = await nudge.selectWelcomeRecipients(db, { now });
+  assert.deepEqual(picked.map((r) => r.id), ['earlier', 'fresh'], 'earliest confirmation first');
+  assert.equal(nudge.WELCOME_WINDOW_HOURS, 72);
+  assert.deepEqual((await nudge.selectWelcomeRecipients(db, { now, limit: 1 })).map((r) => r.id), ['earlier']);
+  await assert.rejects(nudge.selectWelcomeRecipients(sweepDb({ users, failLedger: true }), { now }), /welcome ledger read failed/, 'a failed ledger read would welcome twice');
+});
+
+test('the hourly job claims before it sends, and its welcome is the webhook’s bytes', () => {
+  const src = read('netlify/functions/confirmation-nudge.mjs');
+  const fn = src.slice(src.indexOf('async function sendWelcomes('), src.indexOf('function continueUrl('));
+  assert.ok(fn.indexOf('.upsert(') !== -1 && fn.indexOf('.upsert(') < fn.indexOf('await sendBatch('), 'claim BEFORE send');
+  assert.match(fn, /kind: WELCOME_KIND/);
+  assert.match(fn, /welcomeItem\(r\.email\)/);
+  // It runs whatever CONFIRM_NUDGE_ENABLED says: it replaces a mail that always went out.
+  const handler = src.slice(src.indexOf('const innerHandler'));
+  assert.ok(handler.indexOf('sendWelcomes(') < handler.indexOf(`process.env.CONFIRM_NUDGE_ENABLED !== 'true'`));
+});

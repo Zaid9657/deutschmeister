@@ -11,6 +11,7 @@ status unverified” does not mean pending; verify the live schema/data first.
 
 | File | What it does | Status |
 |---|---|---|
+| `2026-11-15-welcome-after-confirmation.sql` | Admits the `welcome` kind into the `lifecycle_emails` CHECK, so the welcome mail is claimed before it is sent: `send-welcome-email.mjs` (webhook, confirmed addresses only) and `confirmation-nudge.mjs` (hourly, after confirmation) share the claim. Until applied, email sign-ups get no welcome; Google sign-ups still get it from the webhook. No trigger or data change. | **NOT YET APPLIED — owner action** |
 | `2026-11-12-lesson-furthest-stage.sql` | Adds nullable lesson_progress.furthest_stage and furthest_at for signed-in stage reach; existing status and accuracy are untouched. Client disables only these telemetry writes when columns are absent. | **NOT YET APPLIED — owner action** |
 | `2026-11-01-retryable-lifecycle-mail.sql` | Durable mail claims, service-only claim RPC and 14/30/60-day trial kinds. Requires explicit owner approval of schema/RLS/RPC and mail policy; all new paths default OFF. Rollback is flags OFF, retaining claims. | **DRAFT — NOT YET APPLIED** |
 | `2026-08-16-fix-rls-security.sql` | Closes the self-grant-Pro RLS hole on `subscriptions`/`profiles`, locks down `webhook_logs` and `xray_usage`, narrows anonymous access to paid reading/listening content to the free tier (a1.1). | ✅ **Applied 2026-08-16** |
