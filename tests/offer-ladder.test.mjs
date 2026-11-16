@@ -9,6 +9,7 @@ import { productInfo } from '../netlify/functions/_shared/pricing.mjs';
 import { PROGRAM } from '../src/data/programs/startDeutsch1.js';
 import { goetheA1Mock } from '../src/data/mockExams/goetheA1.js';
 import { examCounts, examDays } from '../astro-site/src/data/examPack.js';
+import { sitemapFilter } from '../astro-site/src/lib/sitemapFilter.js';
 import { buyButton, door, FakeElement, runCourseCheckout, loadLevelAccess } from './helpers/courseCheckoutHarness.mjs';
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const active = (product_key) => ({ product_key, status: 'active', access_until: '2026-01-01T00:00:00Z' });
@@ -113,7 +114,9 @@ test('new offer checkout ids fail closed; public routes enter the manifest and s
   }
   const doorSource = read('astro-site/src/components/concept/ProductDoor.astro');
   assert.match(doorSource, /product.variantId \? <button/); assert.match(doorSource, /Not on sale yet/);
-  assert.match(read('astro-site/astro.config.mjs'), /page.includes\('\/courses\/'\)/);
+  // The sitemap filter lives in its own module since 2026-11-15; the config uses it.
+  assert.match(read('astro-site/src/lib/sitemapFilter.js'), /page.includes\('\/courses\/'\)/);
+  for (const p of Object.values(OFFER_PRODUCTS)) assert.ok(sitemapFilter(`https://deutsch-meister.de/courses/${p.slug}/`), `/courses/${p.slug}/ is listed in the sitemap`);
 });
 
 test('published counts derive from scheduled programme items and all offer copy labels future releases and short tests', () => {
