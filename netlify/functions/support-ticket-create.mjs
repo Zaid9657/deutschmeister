@@ -6,10 +6,39 @@
 import { randomUUID } from 'node:crypto';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
-import { CATEGORIES, slaDueAt, ticketReference } from './_shared/adminSupportLib.mjs';
+import { CATEGORIES, CATEGORY_LABELS, SUPPORT_FROM_ADDRESS, slaDueAt, ticketReference } from './_shared/adminSupportLib.mjs';
 
 const ALLOWED_ORIGINS = ['https://deutsch-meister.de', 'https://www.deutsch-meister.de'];
 const MAX_OPEN_PER_USER = 5;
+
+// The owner hears about every new ticket at once. The support agent and the
+// sentinel ship off, and a ticket from 2026-10-20 sat unanswered for weeks
+// because nothing told anyone. Called only after the ticket AND its first
+// message are written. Best effort: a failed alert is logged and never fails
+// the ticket; without OWNER_ALERT_EMAIL or RESEND_API_KEY it is skipped.
+async function alertOwner({ id, subject, category, text, email }) {
+  const to = String(process.env.OWNER_ALERT_EMAIL || '').trim();
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!to || !resendKey) return;
+  const reference = ticketReference(id);
+  const label = CATEGORY_LABELS[category] || category;
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      signal: AbortSignal.timeout(5000),
+      headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: SUPPORT_FROM_ADDRESS,
+        to: [to],
+        subject: `[DM support] Neues Ticket ${reference} (${label}): ${subject.replace(/\s+/g, ' ')}`,
+        text: `Neues Support-Ticket, noch ohne Antwort.\n\nReferenz: ${reference}\nKategorie: ${label}\nVon: ${email || 'unbekannt'}\nBetreff: ${subject}\n\nNachricht:\n${text}\n\nAntworten im Admin-Bereich: https://deutsch-meister.de/admin/support?ticket=${id}`,
+      }),
+    });
+    if (!res.ok) console.error('[support-ticket-create] owner alert failed:', res.status, reference);
+  } catch (err) {
+    console.error('[support-ticket-create] owner alert failed:', err.message, reference);
+  }
+}
 
 export const handler = async (event) => {
   const origin = event.headers?.origin || '';
@@ -74,5 +103,6 @@ export const handler = async (event) => {
     if (dErr) console.error('[support-ticket-create] orphan ticket not removed:', id, dErr.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Die Anfrage konnte nicht gespeichert werden.' }) };
   }
+  await alertOwner({ id, subject, category, text, email: profile?.email });
   return { statusCode: 200, headers, body: JSON.stringify({ ok: true, reference: ticketReference(id), ticketId: id }) };
 };

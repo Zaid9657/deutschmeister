@@ -276,3 +276,23 @@ if Resend then fails, the mail is lost (logged), never duplicated.
   mail (the customer send is claimed on the message row).
 - The keyword rules are deliberately broad (e.g. any "cancel", "Beschwerde", "scam"): a false
   positive costs a human reply, a false negative could cost a wrong promise.
+
+## New-ticket alert (support-ticket-create)
+
+Every in-app ticket mails `OWNER_ALERT_EMAIL` once, right after the ticket and its first message
+are written: reference, category, the learner's text and the link
+`https://deutsch-meister.de/admin/support?ticket=<id>`. It runs on its own, with no agent flag:
+`SUPPORT_AGENT_MODE` and `SENTINEL_ENABLED` can stay off. A failed alert is logged and never fails
+the ticket; without `OWNER_ALERT_EMAIL` or `RESEND_API_KEY` it is skipped. With the support agent
+on, the owner also gets the agent's own mails for the same ticket.
+
+## Dunning follow-up (sentinel tick, owner-gated)
+
+`sendDunningFollowups` in `lemonsqueezy-webhook.mjs` sends the same dunning mail once more when a
+failed renewal is 3 to 7 days old and the subscription is still `past_due` with no payment logged
+since. The hourly sentinel schedule calls it (scheduler calls only), independent of
+`SENTINEL_ENABLED`. It needs `PAYMENT_RECOVERY_RETRY_ENABLED=true`, which needs the owner-applied
+`migrations/2026-11-01-retryable-lifecycle-mail.sql`. Each follow-up is claimed in
+`mail_delivery_claims` (`dunning_followup:<invoice>`, scope `dunning_followup:<subscription>`, 7-day
+quiet period) before it is sent. An unaccepted claim is retried on the next tick and logged as
+held; an ambiguous one is reconciled by the owner like any dunning claim.

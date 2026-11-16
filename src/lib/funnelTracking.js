@@ -1,5 +1,7 @@
 import { track } from './analytics';
 import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage';
+import { checkoutPrice } from './checkoutAccess.js';
+import { CURRENCY } from '../data/pricing.js';
 
 // Checkout completion is observed from two independent places — the Lemon
 // Squeezy overlay's Checkout.Success event, and the subscription poller seeing
@@ -30,7 +32,14 @@ export const trackSpeakingSessionCompleted = (score) => track('speaking_session_
 
 export const trackPricingViewed = () => track('pricing_viewed');
 export const trackCheckoutStarted = () => track('checkout_started');
-export const trackCheckoutCompleted = (plan, amount) => track('checkout_completed', { plan, amount });
+// value/currency make GA4's purchase twin count revenue. The value is the list
+// price pricing.js gives the bought key (never the stored flag's number); a
+// coupon can make the paid amount lower. No transaction_id: the browser never
+// learns the Lemon Squeezy order id. The webhook's purchases row stays the ledger.
+export const trackCheckoutCompleted = (plan, amount) => {
+  const value = checkoutPrice(plan);
+  track('checkout_completed', value === null ? { plan, amount } : { plan, amount, value, currency: CURRENCY });
+};
 
 /** Call when a checkout is opened: tracks the start and arms the completion flag. */
 export const markCheckoutStarted = (plan, amount) => {

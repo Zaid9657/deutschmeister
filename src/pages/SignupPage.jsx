@@ -14,6 +14,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
+import GoogleButton from '../components/ui/GoogleButton.jsx';
 import Card from '../components/ui/Card.jsx';
 import AccountPreview from '../components/ui/AccountPreview.jsx';
 import Logo from '../components/Logo';
@@ -377,6 +378,7 @@ const SignupPage = () => {
             </div>
           ) : (
             <>
+          <GoogleButton onStart={trackSignupStarted} />
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>

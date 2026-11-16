@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
+import { sitemapFilter } from './src/lib/sitemapFilter.js';
 
 // Pure SSG — no adapter needed. Netlify serves static files natively.
 export default defineConfig({
@@ -12,19 +13,9 @@ export default defineConfig({
     react(),
     tailwind({ applyBaseStyles: false }),
     sitemap({
-      // Emit the statically-rendered public routes into this sitemap
-      // (homepage + pricing + grammar + comparison + guide pages). SPA-only
-      // routes stay in public/sitemap-spa.xml. The 404 page and the noindex
-      // legal drafts are excluded.
-      filter: (page) =>
-        page === 'https://deutsch-meister.de/' ||
-        page === 'https://deutsch-meister.de/pricing/' ||
-        page.includes('/courses/') ||
-        page.includes('/grammar/') ||
-        page.includes('/vergleich') ||
-        page.includes('/leitfaden/') ||
-        page.includes('/pruefung/') ||
-        page.includes('/telc-b1-komplettvorbereitung'),
+      // The statically rendered public routes, without the noindex "Coming
+      // next" course pages — src/lib/sitemapFilter.js says which and why.
+      filter: sitemapFilter,
       // No lastmod, deliberately. This used to stamp the BUILD time on every
       // URL, so each deploy told crawlers all ~85 pages changed — the exact
       // failure public/sitemap-spa.xml's header argues against ("the fastest

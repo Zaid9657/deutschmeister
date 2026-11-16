@@ -14,6 +14,7 @@ import { trackVerificationEmailResent } from '../lib/funnelTracking';
 import { resendRefusal } from '../lib/signupConfirmation.js';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
+import GoogleButton from '../components/ui/GoogleButton.jsx';
 import Card from '../components/ui/Card.jsx';
 import AccountPreview from '../components/ui/AccountPreview.jsx';
 import Logo from '../components/Logo';
@@ -288,6 +289,7 @@ const LoginPage = () => {
             </motion.div>
           )}
 
+          <GoogleButton />
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>

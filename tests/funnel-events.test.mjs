@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
+import vm from 'node:vm';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -200,7 +201,8 @@ test('signup_completed: confirmation-aware, once per browser', async () => {
   assert.equal(claimSignupCompletion({ ...user, id: 'u2' }, now, blocked), false, 'blocked storage fails closed');
 
   const auth = read('src/contexts/AuthContext.jsx');
-  assert.match(auth, /claimSignupCompletion\(session\.user\)\) trackSignupCompleted\(\)/);
+  // The claim may open a block: a Google sign-up also writes its attribution there.
+  assert.match(auth, /claimSignupCompletion\(session\.user\)\) \{?\s*trackSignupCompleted\(\)/);
 });
 
 test('a checkout opened on a static page is observable when it finishes in the app', () => {
@@ -215,7 +217,8 @@ test('a checkout opened on a static page is observable when it finishes in the a
 test('the app mirrors only registered, sanitised, consented events to GA4', () => {
   const a = read('src/lib/analytics.js');
   assert.match(a, /if \(!hasConsent\(\) \|\| !isFunnelEvent\(event\)\) return;/);
-  assert.match(a, /window\.gtag\('event', event, sanitizeProps\(/);
+  assert.match(a, /const payload = sanitizeProps\(/);
+  assert.match(a, /window\.gtag\('event', event, payload\);/);
   assert.match(read('astro-site/src/layouts/Layout.astro'), /import \{ autoTrack \} from '\.\.\/lib\/track\.js';/);
 });
 
@@ -228,4 +231,107 @@ test('guided scene telemetry carries only fixed item labels and the run id', asy
   }
   assert.match(EVENTS.lesson_started.when, /Start is pressed/);
   assert.match(EVENTS.lesson_stage_viewed.when, /scene:<chunk>/);
+});
+
+// --- GA4 conversions (stop-the-leaks step 7, 2026-11-15) ----------------------
+// GA4 showed 0 key events and €0 revenue: it counts them only under its standard
+// names, and value/currency were stripped by sanitizeProps.
+
+const { GA4_STANDARD_EVENTS } = await import(pathToFileURL(join(ROOT, 'src/data/events.js')).href);
+
+/** Run src/lib/analytics.js (the SPA sender) against a fake window with the real registry. */
+function loadAppAnalytics({ consent = 'accepted' } = {}) {
+  const store = new Map(consent ? [['dm_cookie_consent', consent]] : []);
+  const calls = [];
+  const source = read('src/lib/analytics.js')
+    .replace(/^import .*;\r?\n/gm, '')
+    .replaceAll('import.meta.env.VITE_POSTHOG_KEY', "'test-key'")
+    .replaceAll('import.meta.env.VITE_POSTHOG_HOST', "'test-host'")
+    .replace("import('posthog-js')", 'Promise.reject(new Error("no posthog in tests"))')
+    .replace(/^export /gm, '');
+  const context = vm.createContext({
+    window: {
+      localStorage: { getItem: (k) => store.get(k) ?? null },
+      location: { pathname: '/subscription/success' },
+      gtag: (...args) => calls.push(args),
+    },
+    getAttribution: () => null,
+    isFunnelEvent,
+    sanitizeProps,
+    GA4_STANDARD_EVENTS,
+    console,
+  });
+  vm.runInContext(source, context);
+  return { track: context.track, calls };
+}
+
+test('GA4 standard twins: one table in the registry, for registered events only', () => {
+  assert.deepEqual(GA4_STANDARD_EVENTS, {
+    signup_completed: 'sign_up',
+    checkout_opened: 'begin_checkout',
+    checkout_started: 'begin_checkout',
+    checkout_completed: 'purchase',
+  });
+  for (const name of Object.keys(GA4_STANDARD_EVENTS)) assert.ok(isFunnelEvent(name), name);
+  // Both senders read the table from the registry; neither keeps its own copy.
+  for (const file of ['src/lib/analytics.js', 'astro-site/src/lib/track.js']) {
+    const src = read(file);
+    assert.match(src, /import \{[^}]*GA4_STANDARD_EVENTS[^}]*\} from '\.\.\/data\/events(\.js)?';/, file);
+    assert.doesNotMatch(src, /'(sign_up|begin_checkout|purchase)'/, `${file} retypes a standard name`);
+  }
+});
+
+test('GA4 purchase props survive the filter; nothing else new does', () => {
+  for (const key of ['value', 'currency', 'transaction_id']) assert.ok(ALLOWED_PROPS.includes(key), key);
+  const props = { plan: 'course_a1_2', amount: 40, value: 40, currency: 'EUR', transaction_id: '4711001' };
+  assert.deepEqual(sanitizeProps({ ...props, items: [{ id: 'x' }], email: 'a@b.de' }), props);
+});
+
+test('the app sends the GA4 twin with the same props, only after consent', () => {
+  const { track, calls } = loadAppAnalytics();
+  const props = { plan: 'yearly', amount: 79.99, value: 79.99, currency: 'EUR', transaction_id: '4711001' };
+  track('checkout_completed', props);
+  const payload = { entry_page: '/subscription/success', ...props };
+  assert.deepEqual(calls, [['event', 'checkout_completed', payload], ['event', 'purchase', payload]]);
+  calls.length = 0;
+  track('signup_completed');
+  track('checkout_started');
+  track('lesson_completed', { level: 'a1.1' });
+  assert.deepEqual(calls.map((c) => c[1]), ['signup_completed', 'sign_up', 'checkout_started', 'begin_checkout', 'lesson_completed']);
+
+  for (const consent of [null, 'declined']) {
+    const gated = loadAppAnalytics({ consent });
+    for (const name of Object.keys(GA4_STANDARD_EVENTS)) gated.track(name, props);
+    assert.deepEqual(gated.calls, [], `nothing leaves with consent=${consent}`);
+  }
+});
+
+test('the static site sends begin_checkout beside checkout_opened, only after consent', async () => {
+  const { track, calls } = await loadTrack();
+  assert.equal(track('checkout_opened', { product: 'course_a1_2', surface: 'pricing_level', amount: 40 }), true);
+  assert.deepEqual(calls.map((c) => c[1]), ['checkout_opened', 'begin_checkout']);
+  assert.deepEqual(calls[1][2], calls[0][2], 'same sanitised payload');
+  track('checkout_intent', { product: 'course_a1_2' });
+  assert.equal(calls.length, 3, 'events without a standard twin are sent once');
+  for (const consent of [null, 'declined']) {
+    const gated = await loadTrack({ consent });
+    assert.equal(gated.track('checkout_opened', { product: 'course_a1_2' }), false);
+    assert.deepEqual(gated.calls, []);
+  }
+});
+
+test('checkout_completed carries the pricing.js list price in EUR, never a retyped one', async () => {
+  const { checkoutPrice } = await import(pathToFileURL(join(ROOT, 'src/lib/checkoutAccess.js')).href);
+  const pricing = await import(pathToFileURL(join(ROOT, 'src/data/pricing.js')).href);
+  assert.equal(checkoutPrice('monthly'), pricing.MONTHLY_PRICE_EUR);
+  assert.equal(checkoutPrice('yearly'), pricing.YEARLY_PRICE_EUR);
+  assert.equal(checkoutPrice('telc_b1_komplett'), pricing.COURSE_TELC_B1_PRICE_EUR);
+  assert.equal(checkoutPrice('course_a1_2'), pricing.SUBLEVEL_PRICES_EUR['a1.2']);
+  assert.equal(checkoutPrice('all_access'), pricing.OFFER_PRODUCTS.all_access.price);
+  for (const key of ['not-a-product', 'constructor', undefined, null]) assert.equal(checkoutPrice(key), null, String(key));
+  assert.equal(pricing.CURRENCY, 'EUR');
+  const ft = read('src/lib/funnelTracking.js');
+  assert.match(ft, /const value = checkoutPrice\(plan\);/);
+  // The whole call is pinned: no transaction_id, the browser never learns the order id.
+  assert.match(ft, /value === null \? \{ plan, amount \} : \{ plan, amount, value, currency: CURRENCY \}\);/);
 });

@@ -81,14 +81,18 @@ function nextRunOrder(previous, random = Math.random) {
   return order;
 }
 
+// The options of one question in the order this island deals them for `run`.
+// Exported for the grammar page's static question preview, which must show the
+// first run's order: the stored order would give the answer away by position.
+export function dealOptions(exercise, run = 0) {
+  return shuffled(exercise.options ?? [], seededRandom(`${exercise.id}:${run}`));
+}
+
 function MultipleChoice({ exercise, onAnswer, answered, run = 0 }) {
   const [selected, setSelected] = useState(null);
   // Dealt once per question and run; the answer is compared by value, so the
   // order changes nothing else.
-  const options = useMemo(
-    () => shuffled(exercise.options ?? [], seededRandom(`${exercise.id}:${run}`)),
-    [exercise, run],
-  );
+  const options = useMemo(() => dealOptions(exercise, run), [exercise, run]);
 
   const choose = (opt) => {
     if (answered) return;

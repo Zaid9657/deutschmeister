@@ -761,10 +761,7 @@ async function handlePaymentFailed(data, meta, payload) {
         const result = await sendRetryableMail({ client: supabase, resendKey,
           key: `dunning:${eventId}`, scope: `dunning:${subscriptionId}`, kind: 'dunning',
           userId: userId || null, cooldownSeconds: 7 * 24 * 60 * 60,
-          message: {
-            from: 'Zaid from DeutschMeister <zaid@deutsch-meister.de>', to: [customerEmail],
-            subject: 'Your DeutschMeister payment didn’t go through', html: DUNNING_HTML(updateUrl, BILLING_PORTAL_URL),
-          } });
+          message: dunningMessage(customerEmail, updateUrl) });
         if (['skipped', 'already_accepted', 'closed'].includes(result.status)) return;
         dunning = result.status === 'accepted' ? 'accepted' : `${result.status}: ${result.error || 'reconcile provider outcome before retry'}`;
         // A retry can finish an older invoice's pending claim. Keep its receipt
@@ -784,12 +781,7 @@ async function handlePaymentFailed(data, meta, payload) {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from: 'Zaid from DeutschMeister <zaid@deutsch-meister.de>',
-          to: [customerEmail],
-          subject: 'Your DeutschMeister payment didn’t go through',
-          html: DUNNING_HTML(updateUrl, BILLING_PORTAL_URL),
-        }),
+        body: JSON.stringify(dunningMessage(customerEmail, updateUrl)),
       });
       if (!res.ok) {
         dunning = `Resend ${res.status}`;
@@ -820,6 +812,87 @@ async function handlePaymentFailed(data, meta, payload) {
     `Payment failed — subscription ${subscriptionId}`,
     `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\n${outcome} (one delivered dunning email per subscription per 7 days).\nUpdate-payment link: ${updateUrl}\nLink source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
   );
+}
+
+// The one dunning mail. The 3-day follow-up below sends exactly this again.
+const dunningMessage = (customerEmail, updateUrl) => ({
+  from: 'Zaid from DeutschMeister <zaid@deutsch-meister.de>',
+  to: [customerEmail],
+  subject: 'Your DeutschMeister payment didn’t go through',
+  html: DUNNING_HTML(updateUrl, BILLING_PORTAL_URL),
+});
+
+// ─── 3-day follow-up (owner-gated: PAYMENT_RECOVERY_RETRY_ENABLED) ──────────
+// One reminder per unrecovered failed renewal: the same dunning mail, with the
+// update link resolved fresh, once the failure is 3 days old. The hourly
+// sentinel tick calls this (sentinel.mjs), independent of SENTINEL_ENABLED.
+//   - Claimed in the retry ledger BEFORE the send, under a permanent
+//     per-invoice key and a per-subscription scope with the 7-day quiet period:
+//     no run, repeated, concurrent or retried, can send it twice, and a
+//     subscription gets at most one follow-up per 7 days.
+//   - Only a subscription still past_due (Lemon Squeezy is still retrying) is
+//     mailed. Recovered, cancelled, expired, unpaid, paused, a payment logged
+//     after the failure, or state we cannot read: no mail. Never on a guess.
+//   - Failures older than 7 days are left alone: by then Lemon Squeezy's next
+//     failure has opened a new dunning round with its own first mail.
+const DAY_MS = 24 * 60 * 60 * 1000;
+export const FOLLOWUP_AFTER_MS = 3 * DAY_MS;
+const FOLLOWUP_WINDOW_MS = 7 * DAY_MS;
+
+export async function sendDunningFollowups(now = Date.now()) {
+  if (process.env.PAYMENT_RECOVERY_RETRY_ENABLED !== 'true') return { enabled: false };
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!supabase || !resendKey) {
+    console.error('dunning follow-up: SUPABASE_SERVICE_ROLE_KEY or RESEND_API_KEY not set — nothing sent');
+    return { enabled: true, sent: 0 };
+  }
+  const { data: due, error } = await supabase.from('payment_failures')
+    .select('user_id, lemonsqueezy_subscription_id, lemonsqueezy_event_id, failed_at, raw_payload')
+    .gte('failed_at', new Date(now - FOLLOWUP_WINDOW_MS).toISOString())
+    .lte('failed_at', new Date(now - FOLLOWUP_AFTER_MS).toISOString())
+    .order('failed_at', { ascending: true })
+    .limit(50);
+  if (error) throw new Error(`dunning follow-up: payment_failures read failed: ${error.message}`);
+
+  const out = { enabled: true, eligible: 0, sent: 0, held: [] };
+  const seen = new Set();
+  for (const row of due || []) {
+    const subscriptionId = String(row.lemonsqueezy_subscription_id || '');
+    if (!subscriptionId || seen.has(subscriptionId)) continue;
+    seen.add(subscriptionId); // the oldest failure in the window speaks for its subscription
+    const attributes = row.raw_payload?.data?.attributes || {};
+    const customerEmail = String(attributes.user_email || '').trim();
+    if (!customerEmail.includes('@') || !(await stillPastDue(subscriptionId, row.failed_at))) continue;
+    out.eligible += 1;
+    try {
+      const { url } = await updatePaymentLink(attributes, subscriptionId);
+      // One attempt per tick: an unaccepted claim is retried next hour with
+      // its stored message and idempotency key.
+      const result = await sendRetryableMail({ client: supabase, resendKey, maxAttempts: 1,
+        key: `dunning_followup:${row.lemonsqueezy_event_id}`, scope: `dunning_followup:${subscriptionId}`,
+        kind: 'dunning_followup', userId: row.user_id || null, cooldownSeconds: FOLLOWUP_WINDOW_MS / 1000,
+        message: dunningMessage(customerEmail, url) });
+      if (result.status === 'accepted') out.sent += 1;
+      else if (['retryable', 'needs_review'].includes(result.status)) out.held.push(`${subscriptionId}: ${result.status} ${result.key}`);
+    } catch (e) {
+      out.held.push(`${subscriptionId}: ${e.message}`);
+    }
+  }
+  if (out.held.length) console.error('dunning follow-up held (reconcile the claim before any manual resend):', out.held.join('; '));
+  console.log('dunning follow-up:', JSON.stringify({ ...out, held: out.held.length }));
+  return out;
+}
+
+async function stillPastDue(subscriptionId, failedAt) {
+  const { data: subs, error } = await supabase.from('subscriptions').select('status')
+    .eq('lemonsqueezy_subscription_id', subscriptionId).limit(1);
+  if (error || subs?.[0]?.status !== 'past_due') return false;
+  const { data: paid, error: paidError } = await supabase.from('webhook_logs').select('id')
+    .in('event_type', ['subscription_payment_success', 'subscription_payment_recovered'])
+    .eq('payload->data->attributes->>subscription_id', subscriptionId)
+    .gt('created_at', failedAt)
+    .limit(1);
+  return !paidError && (paid || []).length === 0;
 }
 
 // Record an API-ACCEPTED dunning mail on this event's payment_failures row — the

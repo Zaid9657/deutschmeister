@@ -8,8 +8,17 @@ const owns = (products, key) => Object.prototype.hasOwnProperty.call(products, k
 
 export const isRecurringProduct = (key) => owns(PLANS, key);
 
+const CHECKOUT_PRODUCTS = [PLANS, COURSES, LEVEL_COURSES, LEGACY_LEVEL_COURSES, OFFER_PRODUCTS];
+
 export const checkoutProductKey = (key) =>
-  [PLANS, COURSES, LEVEL_COURSES, LEGACY_LEVEL_COURSES, OFFER_PRODUCTS].some((products) => owns(products, key)) ? key : null;
+  CHECKOUT_PRODUCTS.some((products) => owns(products, key)) ? key : null;
+
+/** List price (gross EUR, from pricing.js) of a checkout product key; null when unknown. */
+export const checkoutPrice = (key) => {
+  const products = CHECKOUT_PRODUCTS.find((p) => owns(p, key));
+  const price = products ? products[key].price : null;
+  return typeof price === 'number' ? price : null;
+};
 
 // Ownership is permanent, including retired band purchases and the all-level
 // bundle. A live trial or AI Practice period is not ownership of a course.

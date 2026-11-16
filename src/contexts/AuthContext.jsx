@@ -4,6 +4,7 @@ import { confirmationEmailRedirect } from '../lib/confirmationContinuity.js';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { signupAttributionMetadata } from '../lib/attribution';
+import { attributionBackfill, googleRedirectTo } from '../lib/googleSignIn.js';
 import { identify, resetAnalytics } from '../lib/analytics';
 import { trackSignupCompleted } from '../lib/funnelTracking';
 import { claimSignupCompletion } from '../lib/signupCompletion';
@@ -113,7 +114,28 @@ export const AuthProvider = ({ children }) => {
           // The analytics event follows the confirmation-aware rule in
           // lib/signupCompletion.js (the 60 s window alone missed every
           // confirmed signup). The audit log keeps its original rule.
-          if (claimSignupCompletion(session.user)) trackSignupCompleted();
+          if (claimSignupCompletion(session.user)) {
+            trackSignupCompleted();
+            // A Google sign-up carried no signUp metadata: write which link
+            // brought them now. `acquisition_source IS NULL` keeps first touch.
+            const backfill = attributionBackfill(session.user, signupAttributionMetadata());
+            if (backfill) {
+              // Columns named one by one so tests/db-columns.test.mjs can check them.
+              supabase.from('profiles').update({
+                acquisition_source: backfill.acquisition_source,
+                acquisition_medium: backfill.acquisition_medium,
+                acquisition_campaign: backfill.acquisition_campaign,
+                acquisition_content: backfill.acquisition_content,
+                acquisition_referrer: backfill.acquisition_referrer,
+                acquisition_landing: backfill.acquisition_landing,
+                acquisition_at: backfill.acquisition_at,
+                acquisition_last_source: backfill.acquisition_last_source,
+              }).eq('id', session.user.id).is('acquisition_source', null)
+                .then(({ error }) => {
+                  if (error) console.error('attribution backfill failed:', error.message);
+                });
+            }
+          }
           // supabase-js also emits SIGNED_IN when it recovers the stored session
           // (every tab focus, every hourly refresh, other tabs' broadcasts), and
           // each of those wrote an 'auth.login' row. Only a sign-in that changes
@@ -153,6 +175,16 @@ export const AuthProvider = ({ children }) => {
         // trigger copies these keys into profiles.acquisition_*.
         data: signupAttributionMetadata(),
       },
+    });
+    return { data, error };
+  };
+
+  // No inbox step: Google has verified the address (src/lib/googleSignIn.js).
+  // Lands on /login like the confirmation link, which forwards to postAuthPath().
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: googleRedirectTo(window.location.origin) },
     });
     return { data, error };
   };
@@ -215,6 +247,7 @@ export const AuthProvider = ({ children }) => {
     passwordRecovery,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
     resetPassword,
     updatePassword,
