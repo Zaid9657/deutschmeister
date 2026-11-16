@@ -96,7 +96,24 @@ export const ALLOWED_PROPS = [
   'slide', // onboarding slide number
   'hit', // lesson_first_sentence: boolean
   'offer', 'reason', 'moment', // paywall_shown, speaking limit: course | pro, why, when it showed
+  // GA4 revenue parameters (checkout_completed → purchase). value = the bought
+  // product's list price from pricing.js by product key; currency = CURRENCY.
+  'value', 'currency',
+  'transaction_id', // a Lemon Squeezy order id, only once the browser can know it (today it cannot)
 ];
+
+/**
+ * GA4 counts key events and revenue only under its own standard names, so each
+ * sender also sends this standard twin of an event to GA4 (gtag only, never
+ * PostHog), with the same sanitised props. Our names are kept: reports and
+ * PostHog keep reading them. Mark sign_up and purchase as key events in GA4 Admin.
+ */
+export const GA4_STANDARD_EVENTS = {
+  signup_completed: 'sign_up',
+  checkout_opened: 'begin_checkout',
+  checkout_started: 'begin_checkout',
+  checkout_completed: 'purchase',
+};
 
 const MAX_LEN = 64;
 // An email address, or anything with whitespace runs long enough to be prose.

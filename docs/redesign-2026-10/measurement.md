@@ -33,6 +33,8 @@ Every Astro event also carries `entry_page`, `signed_in` and the first-touch `dm
 | First lesson | `lesson_started` / `lesson_completed` | A course Lektion opens / reaches its recap | `level`, `topic` |
 | Social | `social_clicked` | A link to YouTube / Instagram / Facebook is clicked (site footer, lesson recap) | `channel`, `surface` |
 
+**GA4 standard twins (2026-11-15).** GA4 counts key events and revenue only under its own names, so both senders also send a twin to GA4 (never PostHog) with the same props, from one table in `events.js` (`GA4_STANDARD_EVENTS`): `signup_completed` → `sign_up`, `checkout_opened` / `checkout_started` → `begin_checkout`, `checkout_completed` → `purchase`. `checkout_completed` carries `value` (the bought product's list price from `pricing.js`; a coupon can make the paid amount lower) and `currency` (`EUR`). It carries no `transaction_id`: the browser never learns the Lemon Squeezy order id. Owner step: mark `sign_up`, `lesson_completed` and `purchase` as key events in GA4 Admin.
+
 **The `signup_completed` fix.** It used to fire only within 60 seconds of account creation, and email confirmation usually takes longer. It now also fires when the email was confirmed in the last 30 minutes on an account under 14 days old, once per browser.
 
 **The `signup_started` fix (2026-10-25).** It used to fire on every view of `/signup`, and the homepage's "Create a free account" click fired it again, so the step counted page views, twice for homepage visitors, and no event marked an actual submit. It now fires once per submitted form, after the password check and before the account request. The homepage door is a tagged link (`ref=home`) and carries no event. Readings of `signup_started` before this date are page views, not submits.

@@ -14,7 +14,7 @@
 //   data-track="<event>"          → that event on click (checkout_intent, course_selected…)
 //   data-track-product / -level / -choice / -surface / -plan → copied into the props
 // The registry decides what is allowed; anything else is dropped.
-import { EVENTS, isFunnelEvent, onceKey, sanitizeProps } from '../data/events.js';
+import { EVENTS, GA4_STANDARD_EVENTS, isFunnelEvent, onceKey, sanitizeProps } from '../data/events.js';
 
 const sent = new Set();
 
@@ -67,6 +67,8 @@ export function track(name, props = {}) {
   });
   try {
     window.gtag('event', name, payload);
+    // GA4's own name (begin_checkout here): what key events and revenue count.
+    if (GA4_STANDARD_EVENTS[name]) window.gtag('event', GA4_STANDARD_EVENTS[name], payload);
     if (EVENTS[name].once) sent.add(onceKey(name, props));
     return true;
   } catch {
