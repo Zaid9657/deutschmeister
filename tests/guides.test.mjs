@@ -349,3 +349,17 @@ test('a guide declares a supported language, and the schema and cross-links foll
   assert.match(renderer, /guideLang\(g\) === lang/, 'cross-links stay within the page language');
   assert.match(renderer, /lang=\{lang\}/, 'the page declares its own language');
 });
+
+// The product was renamed from "Pro" to "AI Practice" with a search-and-replace
+// that also hit the German word "pro" (per) and "Pro-und-Contra": six guide
+// texts read "AI Practice Modul", "AI Practice Woche", "AI Practice Leitpunkt",
+// "AI Practice Anlass", "AI Practice-und-Contra-Struktur" for months, one of
+// them inside the FAQ structured data Google can quote (found 2026-11-16).
+// The product name is never followed directly by a German noun of measure.
+test('the product name never stands where the German word "pro" belongs', () => {
+  const broken = /AI Practice(?:-und-Contra| (?:Modul|Woche|Leitpunkt|Anlass|Tag|Monat|Jahr|Person|Stunde|Teil|Aufgabe|Minute|Satz|Abschnitt|Punkt)\b)/;
+  for (const guide of GUIDES) {
+    const hit = JSON.stringify(guide).match(broken);
+    assert.equal(hit, null, `${guide.slug}: "${hit?.[0]}" — the German "pro" was replaced by the product name`);
+  }
+});
