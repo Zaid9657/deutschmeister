@@ -125,6 +125,241 @@
     "de": "Im Kurs fragt Lena Tim: Was hast du gestern gemacht? Und für Freitag haben die beiden einen Plan.",
     "en": "In class, Lena asks Tim what he did yesterday. And the two of them have a plan for Friday."
   },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Antworten Sie mit einem Satz. Am Bahnhof. Sie fahren mit dem Zug nach Österreich. Auf Ihrer Fahrkarte ist keine Uhrzeit. Ein Mann arbeitet am Bahnhof. Sie: …?",
+        "promptEn": "At the station: you are taking the train to Austria, but your ticket shows no time. Ask a man who works there when the train leaves.",
+        "answer": "Wann fährt der Zug nach Österreich?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Wann fährt der Zug?",
+              "Entschuldigung, wann fährt der Zug?",
+              "Wann fährt der Zug, bitte?",
+              "Wann fährt der Zug nach Österreich?",
+              "Entschuldigung, wann fährt der Zug nach Österreich?",
+              "Wann fährt der Zug nach Österreich, bitte?",
+              "Wann geht der Zug?",
+              "Entschuldigung, wann geht der Zug?",
+              "Wann geht der Zug, bitte?",
+              "Wann geht der Zug nach Österreich?",
+              "Entschuldigung, wann geht der Zug nach Österreich?",
+              "Wann geht der Zug nach Österreich, bitte?",
+              "Wann kommt der Zug?",
+              "Entschuldigung, wann kommt der Zug?",
+              "Wann kommt der Zug, bitte?",
+              "Wann kommt der Zug nach Österreich?",
+              "Entschuldigung, wann kommt der Zug nach Österreich?",
+              "Wann kommt der Zug nach Österreich, bitte?",
+              "Wann ist die Abfahrt?",
+              "Entschuldigung, wann ist die Abfahrt?",
+              "Wann ist die Abfahrt, bitte?",
+              "Um wie viel Uhr fährt der Zug?",
+              "Entschuldigung, um wie viel Uhr fährt der Zug?",
+              "Um wie viel Uhr fährt der Zug, bitte?",
+              "Um wie viel Uhr fährt der Zug nach Österreich?",
+              "Entschuldigung, um wie viel Uhr fährt der Zug nach Österreich?",
+              "Um wie viel Uhr fährt der Zug nach Österreich, bitte?",
+              "Um wie viel Uhr geht der Zug?",
+              "Entschuldigung, um wie viel Uhr geht der Zug?",
+              "Um wie viel Uhr geht der Zug, bitte?",
+              "Um wie viel Uhr geht der Zug nach Österreich?",
+              "Entschuldigung, um wie viel Uhr geht der Zug nach Österreich?",
+              "Um wie viel Uhr geht der Zug nach Österreich, bitte?",
+              "Um wie viel Uhr kommt der Zug?",
+              "Entschuldigung, um wie viel Uhr kommt der Zug?",
+              "Um wie viel Uhr kommt der Zug, bitte?",
+              "Um wie viel Uhr kommt der Zug nach Österreich?",
+              "Entschuldigung, um wie viel Uhr kommt der Zug nach Österreich?",
+              "Um wie viel Uhr kommt der Zug nach Österreich, bitte?",
+              "Um wie viel Uhr ist die Abfahrt?",
+              "Entschuldigung, um wie viel Uhr ist die Abfahrt?",
+              "Um wie viel Uhr ist die Abfahrt, bitte?",
+              "Und wann fährt der Zug?",
+              "Und wann fährt der Zug nach Österreich?",
+              "Und wann ist die Abfahrt?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            8
+          ]
+        },
+        "micOff": true
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Antworten Sie mit einem Satz. Sie fahren nach Österreich und kaufen eine Fahrkarte. Sie haben zwanzig Euro. Sie: …?",
+        "promptEn": "You are going to Austria and are buying your ticket. You have twenty euros on you. Ask about the price of the ticket.",
+        "answer": "Was kostet die Fahrkarte?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage",
+              "en": "the question"
+            },
+            "forms": [
+              "Was kostet die Fahrkarte?",
+              "Entschuldigung, was kostet die Fahrkarte?",
+              "Was kostet die Fahrkarte, bitte?",
+              "Was kostet die Fahrkarte nach Österreich?",
+              "Entschuldigung, was kostet die Fahrkarte nach Österreich?",
+              "Was kostet die Fahrkarte nach Österreich, bitte?",
+              "Was kostet eine Fahrkarte?",
+              "Entschuldigung, was kostet eine Fahrkarte?",
+              "Was kostet eine Fahrkarte, bitte?",
+              "Was kostet eine Fahrkarte nach Österreich?",
+              "Entschuldigung, was kostet eine Fahrkarte nach Österreich?",
+              "Was kostet eine Fahrkarte nach Österreich, bitte?",
+              "Wie viel kostet die Fahrkarte?",
+              "Entschuldigung, wie viel kostet die Fahrkarte?",
+              "Wie viel kostet die Fahrkarte, bitte?",
+              "Wie viel kostet die Fahrkarte nach Österreich?",
+              "Entschuldigung, wie viel kostet die Fahrkarte nach Österreich?",
+              "Wie viel kostet die Fahrkarte nach Österreich, bitte?",
+              "Wie viel kostet eine Fahrkarte?",
+              "Entschuldigung, wie viel kostet eine Fahrkarte?",
+              "Wie viel kostet eine Fahrkarte, bitte?",
+              "Wie viel kostet eine Fahrkarte nach Österreich?",
+              "Entschuldigung, wie viel kostet eine Fahrkarte nach Österreich?",
+              "Wie viel kostet eine Fahrkarte nach Österreich, bitte?",
+              "Wie teuer ist die Fahrkarte?",
+              "Entschuldigung, wie teuer ist die Fahrkarte?",
+              "Wie teuer ist die Fahrkarte, bitte?",
+              "Wie teuer ist die Fahrkarte nach Österreich?",
+              "Entschuldigung, wie teuer ist die Fahrkarte nach Österreich?",
+              "Wie teuer ist die Fahrkarte nach Österreich, bitte?",
+              "Wie teuer ist eine Fahrkarte?",
+              "Entschuldigung, wie teuer ist eine Fahrkarte?",
+              "Wie teuer ist eine Fahrkarte, bitte?",
+              "Wie teuer ist eine Fahrkarte nach Österreich?",
+              "Entschuldigung, wie teuer ist eine Fahrkarte nach Österreich?",
+              "Wie teuer ist eine Fahrkarte nach Österreich, bitte?",
+              "Kostet die Fahrkarte zwanzig Euro?",
+              "Kostet die Fahrkarte 20 Euro?",
+              "Kostet die Fahrkarte 20 €?",
+              "Kostet die Fahrkarte nach Österreich zwanzig Euro?",
+              "Kostet die Fahrkarte nach Österreich 20 Euro?",
+              "Kostet die Fahrkarte nach Österreich 20 €?",
+              "Kostet eine Fahrkarte zwanzig Euro?",
+              "Kostet eine Fahrkarte 20 Euro?",
+              "Kostet eine Fahrkarte 20 €?",
+              "Kostet eine Fahrkarte nach Österreich zwanzig Euro?",
+              "Kostet eine Fahrkarte nach Österreich 20 Euro?",
+              "Kostet eine Fahrkarte nach Österreich 20 €?",
+              "Entschuldigung, kostet die Fahrkarte zwanzig Euro?",
+              "Entschuldigung, kostet die Fahrkarte 20 Euro?",
+              "Entschuldigung, kostet die Fahrkarte 20 €?",
+              "Entschuldigung, kostet die Fahrkarte nach Österreich zwanzig Euro?",
+              "Entschuldigung, kostet die Fahrkarte nach Österreich 20 Euro?",
+              "Entschuldigung, kostet die Fahrkarte nach Österreich 20 €?",
+              "Entschuldigung, kostet eine Fahrkarte zwanzig Euro?",
+              "Entschuldigung, kostet eine Fahrkarte 20 Euro?",
+              "Entschuldigung, kostet eine Fahrkarte 20 €?",
+              "Entschuldigung, kostet eine Fahrkarte nach Österreich zwanzig Euro?",
+              "Entschuldigung, kostet eine Fahrkarte nach Österreich 20 Euro?",
+              "Entschuldigung, kostet eine Fahrkarte nach Österreich 20 €?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            4
+          ]
+        },
+        "micOff": true
+      },
+      {
+        "canDo": 2,
+        "type": "listening",
+        "promptDe": "Am Bahnhof hören Sie die Durchsage. Was ist mit dem Zug? Wählen Sie.",
+        "promptEn": "Listen to the announcement. Choose what it tells you about the train.",
+        "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2,
+            3,
+            7,
+            9
+          ]
+        },
+        "micOff": true,
+        "mode": "choice",
+        "instances": [
+          {
+            "answer": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+            "accepted": [
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+            ],
+            "options": [
+              "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.",
+              "Der Zug ist pünktlich. Er fährt von Gleis zehn."
+            ],
+            "audioText": "Der Zug nach Österreich hat heute Verspätung. Die Abfahrt ist um zehn Uhr an Gleis fünf."
+          },
+          {
+            "audioText": "Der Zug nach Österreich ist heute pünktlich. Die Abfahrt ist um zehn Uhr an Gleis vier.",
+            "answer": "Der Zug ist pünktlich. Er fährt von Gleis vier.",
+            "accepted": [
+              "Der Zug ist pünktlich. Er fährt von Gleis vier."
+            ],
+            "options": [
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis vier.",
+              "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+              "Der Zug ist pünktlich. Er fährt von Gleis vier.",
+              "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf."
+            ]
+          }
+        ]
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Antworten Sie mit einem Satz. Am Bus. Ihre Fahrkarte: Bremen – Berlin. Der Fahrer: „Wohin fahren Sie?“ Sie: …",
+        "promptEn": "At the bus: your ticket says Bremen – Berlin. The driver asks where you are going. Tell him.",
+        "answer": "Ich fahre nach Berlin.",
+        "parts": [
+          {
+            "label": {
+              "de": "das Ziel",
+              "en": "where you are going"
+            },
+            "forms": [
+              "Ich fahre nach Berlin.",
+              "Nach Berlin.",
+              "Ich fahre mit dem Bus nach Berlin.",
+              "Ich fahre nach Berlin mit dem Bus.",
+              "Ich fahre heute nach Berlin.",
+              "Ich fahre von Bremen nach Berlin.",
+              "Von Bremen nach Berlin."
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0
+          ]
+        },
+        "micOff": true
+      }
+    ]
+  },
   "notes": [
     "Chunks are the five question-answer pairs (Ana asks, Herr Schmidt answers). Ana opens every pair, so each say line (0, 2, 4, 6, 8) is the first line of its chunk and the say screen has no cue line before it (SceneStage only takes a cue from an earlier line of the same chunk). The alternative, 3-line chunks that end on Ana's next question, would cut every exchange in the middle; I did not do that. None of the say lines is a dictation line (1, 9).",
     "Read text: a bus line's notice at Bremen station. It carries all eight Wortfeld entries the dialogue lacks (Fahrer, Fahrerin, Deutschland, Bahnhof, Land, morgen, nächste Woche, Auto) and agrees with the dialogue: the bus does not go to Switzerland (dialogue lines 6–7, zero-based), and the train facts (nine o'clock, platform four) are not touched.",
@@ -133,6 +368,13 @@
     "Existing data, dialogue lines 6–7 (zero-based): Ana asks two unrelated questions in one line („Fährt der Bus auch in die Schweiz? Ist das Gleis weit?“) and Herr Schmidt's „Nein, leider nicht.“ can be read as the answer to either. My meaning question for that chunk asks only about the platform, which his second sentence answers unambiguously.",
     "Existing data, dialogue lines 8–9 (zero-based): Ana's question „Und wann ist die Ankunft?“ is never answered; the next line is the announcement. And line 3 says the train is on time while line 9 announces a delay. As a plot turn that works, but nothing marks it as one.",
     "Existing data, dialogue line 9: „Bitte an Gleis fünf umsteigen!“ reads oddly to me: umsteigen is changing trains, and a platform change is normally announced as „Der Zug fährt heute von Gleis fünf“. The meaning option follows the course's own English („please change at platform five“). Please have a native reviewer decide.",
-    "Phonetik: all three items are sentence-melody items (Ja/Nein-Frage, rising, with an arrow), not word-stress items, so the sound stage is pending for L10. Not changed."
+    "Phonetik: all three items are sentence-melody items (Ja/Nein-Frage, rising, with an arrow), not word-stress items, so the sound stage is pending for L10. Not changed.",
+    "PROOF (added 2026-11-14): four tasks, one per can-do, in can-do order. The German prompts are cue dialogues („Sie: …“) without an instruction verb, because RULE 35 holds promptDe to the taught-word horizon; the English twin carries the instruction. The partners have no name („Ein Mann arbeitet am Bahnhof“, „Der Fahrer“): the engine removes a final „, Herr Schmidt“ but not a leading „Herr Schmidt, …“ (engine limit 3).",
+    "Proof goal 0 (ask when the train leaves): one part, a when-question: „Wann“ or „Um wie viel Uhr“ + „fährt der Zug (nach Österreich)?“ or „ist die Abfahrt?“; also with geht or kommt (pool item extra-a11-l10-01 and the pretest accept both for the train), after „Entschuldigung, “, before „, bitte“, and with the dialogue’s „Und wann …“. LIMIT: the dialogue never asks when the train leaves. Line 0 (zero-based) asks whether it goes, line 8 asks „wann ist die Ankunft?“; the learner combines wann (Lektion 8) with line 0. Re-teach: lines 0 and 8; line 8 copied with its „Danke!“ fails (engine limit 1). „Wann fährt der Zug ab?“ cannot be accepted: RULE 35 reports „ab“ as untaught. „Wann fahrt der Zug?“ fails: the checker reads fährt/fahrt as conjugation, as the notice does.",
+    "Proof goal 1 (ask for the price of a ticket): one part: „Was kostet / Wie viel kostet / Wie teuer ist + die Fahrkarte / eine Fahrkarte (nach Österreich)?“ (the Lektion 4 forms), or the Lektion’s own yes/no question of line 4 with the money the cue gives: „Kostet die/eine Fahrkarte (nach Österreich) zwanzig Euro / 20 Euro / 20 €?“; also after „Entschuldigung, “ and, for the W-questions, before „, bitte“. Re-teach: dialogue line 4, which passes as it stands. Refused on purpose: another amount („fünfzehn Euro“), another destination, and „Was kostet das?“ (the ticket is not named).",
+    "Proof goal 2 (understand announcements): multiple_choice. LIMIT: this is a listening can-do, but a proof choice task has no audio field, so the announcement is printed in the prompt and read, not heard. It is a new announcement, not dialogue line 9. Four German options, two by two: on time or not, platform five or platform ten (ten is the hour in the announcement). The right option paraphrases instead of repeating: „hat Verspätung“ → „ist nicht pünktlich“, „Die Abfahrt ist … an Gleis fünf“ → „Er fährt von Gleis fünf“. Re-teach: dialogue lines 2, 3, 7 and 9.",
+    "Proof goal 3 (say where I am going): one part. A bus driver asks „Wohin fahren Sie?“ and the ticket (Bremen – Berlin) is data: „Ich fahre nach Berlin.“, also with heute, „mit dem Bus“ or „von Bremen“, and the short „(Von Bremen) nach Berlin.“ „in Berlin“, „zu Berlin“, „Ich gehe nach Berlin.“ and a bare „Berlin.“ fail. LIMIT: nobody says „Ich fahre …“ in the Lektion 10 dialogue, the Wortfeld examples or the pool (only notice.formExamples has „Wir fahren nach Österreich.“). The re-teach pointer is line 0, which models „nach Österreich“ and nothing more; the short answer „Nach Berlin.“ can be built from it.",
+    "Proof, limits of the engine that hold for every task of this Lektion: (1) A standalone „Entschuldigung!“, „Danke!“ or „Guten Tag!“ before or after the answer counts as an extra sentence and fails. proofTasks() takes the free courtesies from this Lektion’s Wortfeld only (src/lib/lesson/proof.js, `courtesies`), and Danke, Bitte and Entschuldigung are Lektion 1 entries, so here none is free. (2) Any other extra sentence fails as well, also a correct one. (3) A name added to the answer fails („Lena, …“, „…, Paul?“, „Herr Schmidt, …“); the engine removes only a final „, Herr/Frau X“ of a titled speaker of this dialogue. So the prompts use partners without a name. (4) A dot inside a clock time („9.00 Uhr“) splits the answer into two sentences. (5) The notice cannot be a re-teach pointer: its bodyDe fails RULE 35’s word horizon. (6) By microphone the engine scores against the one canonical `answer`, so another accepted form may score low when spoken (read from ProofStage.jsx and answerProof(), not tested).",
+    "Proof, answers tried with scripts/try-proof-answer.mjs (CORRECT and TYPO pass, WRONG fails; TYPO here is a missing capital). Goal 0: CORRECT „Wann fährt der Zug nach Österreich?“ · „Wann fährt der Zug?“ · „Wann ist die Abfahrt, bitte?“ · „Wann geht der Zug, Herr Schmidt?“; TYPO „entschuldigung um wie viel uhr fährt der zug“; WRONG „Entschuldigung, fährt der Zug nach Österreich?“ · „Wann fahrt der Zug?“ · „Wann der Zug fährt?“ · „Wann fährt die Zug?“ · „Wann ist die Ankunft?“ · „Wann fährt der Bus?“ · „Wann fährt der Zug ab?“ · „Danke! Und wann ist die Abfahrt?“ · „Herr Schmidt, wann fährt der Zug?“. Goal 1: CORRECT „Was kostet die Fahrkarte?“ · „Wie viel kostet eine Fahrkarte nach Österreich?“ · „Entschuldigung, was kostet die Fahrkarte?“ · „Wie teuer ist die Fahrkarte, Herr Schmidt?“; TYPO „kostet die fahrkarte 20 euro“; WRONG „Was kosten die Fahrkarte?“ · „Die Fahrkarte kostet zwanzig Euro?“ · „Was kostet der Fahrkarte?“ · „Wie viele kostet die Fahrkarte?“ · „Hat der Zug Verspätung?“ · „Kostet die Fahrkarte fünfzehn Euro?“ · „Was kostet das?“. Goal 2: CORRECT „Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.“; WRONG „Der Zug ist pünktlich. Er fährt von Gleis fünf.“ · „Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.“ · „Der Zug ist pünktlich. Er fährt von Gleis zehn.“. Goal 3: CORRECT „Ich fahre nach Berlin.“ · „Nach Berlin.“ · „Ich fahre von Bremen nach Berlin“; TYPO „ich fahre mit dem bus nach berlin“; WRONG „Ich fahre in Berlin.“ · „Ich fahren nach Berlin.“ · „Ich fährt nach Berlin.“ · „Ich gehe nach Berlin.“ · „Berlin.“ · „Ich fahre nach Bremen.“ · „Ich komme aus Berlin.“."
   ]
 }

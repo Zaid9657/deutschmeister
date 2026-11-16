@@ -1,3 +1,4 @@
+import SetReference from './SetReference.jsx';
 import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, Eye } from 'lucide-react';
@@ -123,6 +124,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         <p id={`question-${item.id}`} className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
         {lang !== 'de' && item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
 
+        <SetReference item={item} lektionId={lektionId} />
         {chips ? (
           // Full-width, stacked options on mobile (one thumb-width tap target
           // each); min 44px tall either way. Selected state is never colour

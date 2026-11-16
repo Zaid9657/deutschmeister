@@ -119,11 +119,354 @@
           "line": 8
         }
       }
+    ],
+    "sets": [
+      {
+        "id": "numbers-11-100",
+        "kind": "numbers",
+        "titleDe": "Die Zahlen 11–100",
+        "titleEn": "Numbers 11–100",
+        "members": [
+          {
+            "written": "11",
+            "said": "elf"
+          },
+          {
+            "written": "12",
+            "said": "zwölf"
+          },
+          {
+            "written": "13",
+            "said": "dreizehn"
+          },
+          {
+            "written": "14",
+            "said": "vierzehn"
+          },
+          {
+            "written": "15",
+            "said": "fünfzehn"
+          },
+          {
+            "written": "16",
+            "said": "sechzehn"
+          },
+          {
+            "written": "17",
+            "said": "siebzehn"
+          },
+          {
+            "written": "18",
+            "said": "achtzehn"
+          },
+          {
+            "written": "19",
+            "said": "neunzehn"
+          },
+          {
+            "written": "20",
+            "said": "zwanzig"
+          },
+          {
+            "written": "30",
+            "said": "dreißig"
+          },
+          {
+            "written": "40",
+            "said": "vierzig"
+          },
+          {
+            "written": "50",
+            "said": "fünfzig"
+          },
+          {
+            "written": "60",
+            "said": "sechzig"
+          },
+          {
+            "written": "70",
+            "said": "siebzig"
+          },
+          {
+            "written": "80",
+            "said": "achtzig"
+          },
+          {
+            "written": "90",
+            "said": "neunzig"
+          },
+          {
+            "written": "100",
+            "said": "hundert"
+          }
+        ],
+        "contrasts": [
+          [
+            "13",
+            "30"
+          ],
+          [
+            "14",
+            "40"
+          ],
+          [
+            "15",
+            "50"
+          ],
+          [
+            "16",
+            "60"
+          ],
+          [
+            "17",
+            "70"
+          ],
+          [
+            "18",
+            "80"
+          ],
+          [
+            "19",
+            "90"
+          ]
+        ],
+        "placement": "before-scene"
+      },
+      {
+        "id": "numbers-21-99",
+        "kind": "numbers",
+        "titleDe": "Zahlen mit und",
+        "titleEn": "Compound numbers",
+        "members": [
+          {
+            "written": "21",
+            "said": "einundzwanzig"
+          },
+          {
+            "written": "27",
+            "said": "siebenundzwanzig"
+          },
+          {
+            "written": "72",
+            "said": "zweiundsiebzig"
+          }
+        ],
+        "rule": {
+          "id": "unit-before-ten",
+          "de": "21–99: Sagen Sie zuerst den Einer, dann und, dann den Zehner. Schreiben Sie alles als ein Wort. Vor und heißt eins nur ein: einundzwanzig = eins + und + zwanzig.",
+          "en": "21–99: say the unit first, then und, then the ten. Write one word: einundzwanzig is one-and-twenty. Before und, eins becomes ein. Exact tens keep their own names.",
+          "examples": [
+            {
+              "written": "21",
+              "said": "einundzwanzig"
+            },
+            {
+              "written": "27",
+              "said": "siebenundzwanzig"
+            },
+            {
+              "written": "72",
+              "said": "zweiundsiebzig"
+            }
+          ],
+          "transfer": [
+            {
+              "written": "34",
+              "said": "vierunddreißig"
+            },
+            {
+              "written": "61",
+              "said": "einundsechzig"
+            },
+            {
+              "written": "98",
+              "said": "achtundneunzig"
+            }
+          ]
+        },
+        "ruleOnly": true,
+        "placement": "part2"
+      }
     ]
   },
   "nextHook": {
     "de": "Vor dem Kurs packen Lena und Tim ihre Taschen aus. Aber wo ist das Wörterbuch?",
     "en": "Before class, Lena and Tim unpack their bags. But where is the dictionary?"
+  },
+  "proof": {
+    "tasks": [
+      {
+        "canDo": 0,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Auf dem Flohmarkt. Sie: …? Frau Wolf: „Das ist eine Lampe.“ – Sie: …? Frau Wolf: „Sie kostet acht Euro.“",
+        "promptEn": "At the flea market you see a thing on Ms Wolf’s table. Ask two questions so that her answers fit: first what the thing is, then what it costs.",
+        "answer": "Was ist das? Was kostet sie?",
+        "parts": [
+          {
+            "label": {
+              "de": "die Frage nach der Sache",
+              "en": "the question about what the thing is"
+            },
+            "forms": [
+              "Was ist das?",
+              "Entschuldigung, was ist das?",
+              "Und was ist das?"
+            ]
+          },
+          {
+            "label": {
+              "de": "die Frage nach dem Preis",
+              "en": "the question about the price"
+            },
+            "forms": [
+              "Was kostet sie?",
+              "Und was kostet sie?",
+              "Was kostet die Lampe?",
+              "Und was kostet die Lampe?",
+              "Wie viel kostet sie?",
+              "Und wie viel kostet sie?",
+              "Wie viel kostet die Lampe?",
+              "Und wie viel kostet die Lampe?",
+              "Was kostet das?",
+              "Und was kostet das?",
+              "Wie viel kostet das?",
+              "Und wie viel kostet das?",
+              "Wie teuer ist sie?",
+              "Wie teuer ist die Lampe?",
+              "Wie teuer ist das?",
+              "Wie ist der Preis?",
+              "Was ist der Preis?"
+            ]
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            0,
+            2
+          ]
+        },
+        "micOff": true
+      },
+      {
+        "canDo": 1,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Frau Wolf: „Die Lampe kostet acht Euro.“ – Sie: Und der Rucksack? …? Frau Wolf: „Er kostet zwanzig Euro.“",
+        "promptEn": "Now you point at the backpack: “Und der Rucksack?” Go on and ask Ms Wolf for its price, so that her answer fits. Write only your question.",
+        "answer": "Was kostet er?",
+        "parts": [
+          {
+            "label": {
+              "de": "nur die Frage nach dem Preis",
+              "en": "only the question about the price"
+            },
+            "forms": [
+              "Was kostet er?",
+              "Und was kostet er?",
+              "Was kostet der Rucksack?",
+              "Und was kostet der Rucksack?",
+              "Wie viel kostet er?",
+              "Und wie viel kostet er?",
+              "Wie viel kostet der Rucksack?",
+              "Und wie viel kostet der Rucksack?",
+              "Was kostet das?",
+              "Wie viel kostet das?",
+              "Wie teuer ist er?",
+              "Wie teuer ist der Rucksack?",
+              "Wie ist der Preis?",
+              "Was ist der Preis?",
+              "Und der Rucksack, was kostet er?",
+              "Und der Rucksack? Was kostet er?"
+            ],
+            "maxSentences": 2
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            2
+          ]
+        },
+        "micOff": true
+      },
+      {
+        "canDo": 2,
+        "type": "listening",
+        "promptDe": "Hören Sie die Preise. Was kostet der Tisch, was kostet das Regal? Wählen Sie.",
+        "promptEn": "Listen to the two prices. Choose the note with both prices right.",
+        "answer": "Tisch 40 Euro, Regal 16 Euro",
+        "reteach": {
+          "kind": "wortfeld",
+          "index": 6
+        },
+        "micOff": true,
+        "mode": "choice",
+        "instances": [
+          {
+            "answer": "Tisch 40 Euro, Regal 16 Euro",
+            "accepted": [
+              "Tisch 40 Euro, Regal 16 Euro"
+            ],
+            "options": [
+              "Tisch 14 Euro, Regal 16 Euro",
+              "Tisch 40 Euro, Regal 60 Euro",
+              "Tisch 40 Euro, Regal 16 Euro",
+              "Tisch 14 Euro, Regal 60 Euro"
+            ],
+            "audioText": "Der Tisch kostet vierzig Euro und das Regal sechzehn Euro."
+          },
+          {
+            "audioText": "Der Tisch kostet fünfunddreißig Euro und das Regal dreiundzwanzig Euro.",
+            "answer": "Tisch 35 Euro, Regal 23 Euro",
+            "accepted": [
+              "Tisch 35 Euro, Regal 23 Euro"
+            ],
+            "options": [
+              "Tisch 53 Euro, Regal 23 Euro",
+              "Tisch 35 Euro, Regal 32 Euro",
+              "Tisch 35 Euro, Regal 23 Euro",
+              "Tisch 53 Euro, Regal 32 Euro"
+            ]
+          }
+        ]
+      },
+      {
+        "canDo": 3,
+        "type": "production",
+        "promptDe": "Sagen Sie die Antwort. Frau Wolf: „Was kaufen Sie?“ – Sie (Stuhl + Tasche): …",
+        "promptEn": "You want the chair and the bag. Ms Wolf asks what you are buying. Tell her, with the articles.",
+        "answer": "Ich kaufe den Stuhl und die Tasche.",
+        "parts": [
+          {
+            "label": {
+              "de": "was Sie kaufen (mit den Artikeln)",
+              "en": "what you are buying (with the articles)"
+            },
+            "forms": [
+              "Ich kaufe den Stuhl und die Tasche.",
+              "Ich kaufe die Tasche und den Stuhl.",
+              "Ich kaufe den Stuhl und auch die Tasche.",
+              "Ich kaufe einen Stuhl und eine Tasche.",
+              "Ich kaufe eine Tasche und einen Stuhl.",
+              "Den Stuhl und die Tasche.",
+              "Die Tasche und den Stuhl.",
+              "Einen Stuhl und eine Tasche.",
+              "Eine Tasche und einen Stuhl.",
+              "Ich kaufe den Stuhl. Ich kaufe die Tasche.",
+              "Ich kaufe die Tasche. Ich kaufe den Stuhl."
+            ],
+            "maxSentences": 2
+          }
+        ],
+        "reteach": {
+          "kind": "dialog",
+          "indices": [
+            6
+          ]
+        },
+        "micOff": true
+      }
+    ]
   },
   "notes": [
     "Chunks: five question-and-answer pairs; Tim has exactly one line in each (0, 2, 4, 6, 8), so say.line had no real choice. No boundary was in doubt.",
@@ -135,6 +478,12 @@
     "Existing data: the pool prices the same goods differently from the Wortfeld examples (extra-a11-l04-03/-12 „Die Uhr kostet zwanzig Euro.“, extra-a11-l04-06 „Die Tasche kostet dreizehn Euro.“ against „Die Uhr kostet zehn Euro.“ / „Die Tasche kostet fünf Euro.“). Harmless as isolated items, but the sign now sides with the Wortfeld examples.",
     "Phonetik item „NEUN“ has one syllable, so the word-stress shape check does not accept it (focus is the diphthong eu): sound stage pending, data untouched.",
     "nextHook is grounded in the L5 dialog (title „Vor dem Kurs“, setting „Lena und Tim packen ihre Taschen aus.“, line 0 „Tim, wo ist das Wörterbuch?“).",
-    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history."
+    "BUILD-BRIEF-3 Part C: meta: true number-set headings are exempt only from guided read coverage; removed the artificial range/table-number wording. Original writer notes above are retained as history.",
+    "PROOF (2026-11-14): four tasks, one per can-do, all checked with scripts/try-proof-answer.mjs (verdicts below; TYPO counts as passed). Questions are asked as gaps in a short exchange with Frau Wolf whose printed reply follows the gap, so only the right kind of question fits. „…, Frau Wolf“ is accepted (titled speaker of this dialogue).",
+    "Proof goal 0 (was etwas ist und was es kostet): two gaps; Frau Wolf answers „Das ist eine Lampe.“ and „Sie kostet acht Euro.“ CORRECT: „Was ist das? Was kostet sie?“ | „Entschuldigung, was ist das? Was kostet die Lampe?“ | „Was ist das? Und was kostet sie?“ | „… Wie viel kostet sie?“ | „Was ist das, Frau Wolf? Was kostet sie?“ | „… Was kostet das?“ | „… Wie teuer ist sie?“ TYPO: no capitals and marks | „… Was kostet Sie?“ WRONG as intended: „… Was kostet es?“ | „… Was kostet er?“ (the pronoun follows die Lampe) | only one question | the two in the other order | „… Was kosten sie?“ | „Wer ist das? …“ | „Was das ist? …“ | „… Wie kostet sie?“ | „Ist das eine Lampe? …“ | „… Kostet sie acht Euro?“ | „… Was kostet der Lampe?“ | „… Wie viele kostet sie?“ WRONG although right: „Entschuldigung! Was ist das? Was kostet sie?“ – proof.js lets Danke/Bitte/Entschuldigung stand alone only when they are in THIS Lektion’s Wortfeld; Entschuldigung is a Lektion-1 word, yet dialogue line 0 here begins with it (with the comma it passes) | „… Wieviel kostet sie?“ (one word, old spelling: neither a typo for the checker nor a taught word for RULE 35).",
+    "Proof goal 1 (nach dem Preis fragen): the Lektion teaches this question only as two sentences („Und der Tisch? Was kostet er?“, dialogue 2, said aloud in the scene). A one-part task cannot accept two sentences and a two-part task cannot accept „Was kostet der Rucksack?“, so the prompt prints the learner’s own first sentence („Sie: Und der Rucksack? …?“) and the price question is the gap; Frau Wolf’s reply „Er kostet zwanzig Euro.“ (the price on her sign) follows. CORRECT: „Was kostet er?“ | „Was kostet der Rucksack?“ | „Wie viel kostet er?“ | „Und was kostet er?“ | „Was kostet er, Frau Wolf?“ | „Wie teuer ist er?“ | „Und der Rucksack, was kostet er?“ TYPO: „was kostet er“. WRONG as intended: „Was kostet sie?“ | „Was kostet es?“ | „Was kostet die Rucksack?“ | „Was kostet das Rucksack?“ | „Was kosten er?“ | „Kostet er zwanzig Euro?“ | „Wie kostet er?“ | „Was ist er?“ | „Was kostet der Tisch?“ | „Wie viele kostet er?“ | „Was kostet den Rucksack?“ | „Und der Rucksack?“ (the printed part only). WRONG although right: „Und der Rucksack? Was kostet er?“ – a learner who types the printed sentence again with its question mark fails (two sentences, one part); promptEn says „only your question“ and the hint label „nur die Frage nach dem Preis“ | „Was kostet der?“ (untaught).",
+    "Proof goal 2 (Preise bis hundert verstehen): multiple_choice, as the brief allows for understanding. A man at another table says two prices in words (vierzig, sechzehn); the four options pair 40/14 with 16/60, so each wrong option is one -zehn/-zig confusion. CORRECT: „Tisch 40 Euro, Regal 16 Euro“. WRONG: the three other options. LIMITS: (1) the prices are read, not heard – no documented task form plays a price; (2) compound numbers (einundzwanzig, fünfunddreißig …) are untaught words for RULE 35 although this Lektion delivers the rule set „Zahlen mit und“, so a price like 35 against 53 cannot be asked; (3) one choice out of four can be guessed, and after re-teaching the same four options come back. Re-teach pointer: Wortfeld 6 (die Zahlen 11–100); the number board opens with it. The goods are Tisch and Regal on purpose: the word „Uhr“ in any task text makes SetReference add the clock board of a later Lektion (referenceKinds matches /uhr/).",
+    "Proof goal 3 (was ich kaufe): Frau Wolf asks „Was kaufen Sie?“, the prompt names „Stuhl + Tasche“ without articles; the learner supplies them. „den Stuhl“ is the fixed expression of the notice and of dialogue line 6. CORRECT: „Ich kaufe den Stuhl und die Tasche.“ | „Ich kaufe die Tasche und den Stuhl.“ | „Ich kaufe einen Stuhl und eine Tasche.“ | „Den Stuhl und die Tasche.“ | „Ich kaufe den Stuhl und die Tasche, Frau Wolf.“ | „Ich kaufe den Stuhl und auch die Tasche.“ TYPO: no capitals. WRONG as intended: „Stuhl und Tasche.“ | „Stuhl + Tasche“ | „Ich kaufe Stuhl und Tasche.“ | „Ich kaufe der Stuhl und die Tasche.“ | „Der Stuhl und die Tasche.“ | „Ich kaufe den Stuhl.“ | „Ich kaufen …“ | „… und das Tasche.“ | „… und die Lampe.“ | „Ich kaufe das Stuhl …“ | „Ich kaufe ein Stuhl und eine Tasche.“ | „Wir kaufen …“ WRONG although right: „Ich kaufe den Stuhl. Ich kaufe die Tasche.“ (two sentences, one part).",
+    "Proof re-teach pointers: goal 0 → dialogue 0 + 2, goal 1 → 2, goal 2 → Wortfeld 6, goal 3 → 6."
   ]
 }

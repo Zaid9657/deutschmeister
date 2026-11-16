@@ -53,7 +53,8 @@ export const EVENTS = {
   },
   lesson_first_sentence: { when: 'In the model-first pretest of Lektion 1, the learner writes their own introduction with the model hidden (hit = it was an introduction).', once: false },
   lesson_resumed: { when: 'The lesson player reopens a saved, unfinished run of a Lektion (same run_id as its lesson_started).', once: false },
-  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key, or scene:<chunk>:hear|meaning|say for each guided scene item).', once: false },
+  lesson_scene_answered: { when: 'First response to a guided scene meaning check; fixed translation_opened and translation_shown flags distinguish unaided responses from help, including the first introductory exchange.', once: false },
+  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key (wortfeld and wortfeld-read include saved small card groups and retrieval), proof for the final goal check, set:<set-id> for a taught alphabet/number/time set, or scene:<chunk>:hear|meaning|say for each guided scene item (chunk numbers remain global across split scene stages)).', once: false },
   lesson_sync_failed: {
     when: 'A finished Lektion could not be written to the account; it is kept on the device and retried (step = attempts | progress | cards).',
     once: false,
@@ -73,6 +74,7 @@ export const EVENTS = {
 
 /** The only property keys any event may carry. Anything else is dropped. */
 export const ALLOWED_PROPS = [
+  'translation_opened', 'translation_shown',
   'surface', // which block fired it: hero, line, ticket, fit, pricing_level, pricing_pro, course_page…
   'product', // a pricing.js product key: course_a1_2, monthly, yearly, telc_b1_komplett
   'level', // lowercase sub-level: a1.1 … b2.2

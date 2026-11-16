@@ -57,7 +57,7 @@ test('the lesson page keeps a failed load as an error and builds nothing from it
 
 test('the error goes to the ErrorBoundary, and the run — where completion is written — only exists with a pool', () => {
   const page = PLAYER.slice(PLAYER.indexOf('export default function LessonPlayerPage'));
-  assert.match(page, /if \(poolError\) throw poolError;[\s\S]*return <LessonPlayer /, 'thrown before the player renders');
+  assert.match(page, /if \(poolError\) throw poolError;[\s\S]*return <CoursePathGuard [\s\S]*<LessonPlayer /, 'thrown before the player renders');
   assert.doesNotMatch(PLAYER, /pool \|\| \[\]|poolFailed/, 'never an empty stand-in pool');
   const gate = PLAYER.slice(PLAYER.indexOf('function LessonRun('), PLAYER.indexOf('function LessonStages('));
   assert.match(gate, /const ready = Boolean\(pool\) &&/, 'Start needs the pool');

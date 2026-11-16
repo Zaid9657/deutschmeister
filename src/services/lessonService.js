@@ -1,3 +1,4 @@
+import { sceneAttemptTag } from '../lib/lesson/sceneSupport.js';
 import { createStageReachWriter } from '../lib/lesson/stageReach.js';
 import { supabase } from '../utils/supabase.js';
 import { setProgramItemDone } from './programProgress.js';
@@ -154,7 +155,7 @@ export const logAttempts = async (userId, { level, lektionId, createdAt = null }
     item_id: String(a.itemId || ''),
     stage: String(a.stage || ''),
     correct: !!a.correct,
-    error_tag: a.errorTag || null,
+    error_tag: sceneAttemptTag(a),
   }));
   const rows = createdAt ? base.map((r) => ({ ...r, created_at: createdAt })) : base;
   const { error } = await client.from('lesson_attempts').insert(rows);

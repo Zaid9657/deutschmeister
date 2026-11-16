@@ -95,7 +95,7 @@ test('only explicit meta headings are exempt from guided read coverage; other gu
 
 test('all twelve guided lessons preserve the original dialogue, draws, scoring stages and pauses', () => {
   assert.equal(c.lektionen.length, 12);
-  const unchanged = (run) => Object.fromEntries(run.stages.filter((s) => !['dialog', 'scene', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
+  const unchanged = (run) => Object.fromEntries(run.stages.filter((s) => !['dialog', 'scene', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency', 'proof', 'taught-set'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
   for (const lesson of c.lektionen) {
     assert.equal(lesson.flow, 'guided');
     if (lesson.nr > 1) {
@@ -107,11 +107,11 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
       const run = build(lesson, attempt), legacy = build({ ...lesson, flow: undefined }, attempt);
       assert.deepEqual(unchanged(run), unchanged(legacy), `${lesson.id} draw ${attempt}`);
       assert.equal(run.flow, 'guided');
-      assert.deepEqual(run.stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'recap']);
-      const scene = run.stages.find((s) => s.kind === 'scene');
+      assert.deepEqual(run.stages.map((s) => s.key), ['pretest', ...(lesson.guided.sets || []).filter((s) => !s.placement || s.placement === 'before-scene').map((s) => `set:${s.id}`), ...(lesson.guided.noticeBeforeScene ? ['notice'] : []), 'scene', ...(lesson.nr === 1 ? ['set:alphabet', 'scene:2'] : []), 'wortfeld', 'wortfeld-read', 'sound', 'read', ...(!lesson.guided.noticeBeforeScene ? ['notice'] : []), ...(lesson.guided.sets || []).filter((s) => s.placement === 'part2').map((s) => `set:${s.id}`), 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', ...(lesson.proof ? ['proof'] : []), 'requeue', 'recap']);
+      const scene = { chunks: run.stages.filter((s) => s.kind === 'scene').flatMap((s) => s.chunks) };
       assert.deepEqual(scene.chunks.flatMap((chunk) => chunk.lines).map(({ index: _i, ...line }) => line), lesson.dialog.lines);
       assert.deepEqual(run.stages.slice(1).map((s, i) => sessionCompleted(run.stages[i], s)).filter(Boolean), [1, 2]);
-      assert.deepEqual(run.stages.filter((s) => ['wortfeld', 'read'].includes(s.kind)).flatMap((s) => s.words).map((w) => w.de).sort(), lesson.wortfeld.map((w) => w.de).sort());
+      assert.deepEqual(run.stages.filter((s) => s.kind === 'wortfeld').flatMap((s) => s.words).map((w) => w.de).sort(), lesson.wortfeld.filter((w) => !w.meta).map((w) => w.de).sort());
       for (const chunk of scene.chunks) {
         assert.equal(chunk.say.de, lesson.dialog.lines[chunk.say.line].de);
         for (const line of chunk.lines) {
@@ -126,7 +126,7 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
 
 test('say cues come from the immediately preceding original dialogue line across chunk boundaries', async () => {
   for (const lesson of c.lektionen) {
-    const run = build(lesson), scene = run.stages.find((s) => s.kind === 'scene'), fluency = run.stages.find((s) => s.kind === 'fluency');
+    const run = build(lesson), scene = { chunks: run.stages.filter((s) => s.kind === 'scene').flatMap((s) => s.chunks) }, fluency = run.stages.find((s) => s.kind === 'fluency');
     for (const [i, chunk] of scene.chunks.entries()) {
       const expected = chunk.say.line ? { ...lesson.dialog.lines[chunk.say.line - 1], index: chunk.say.line - 1 } : undefined;
       assert.deepEqual(chunk.cue, expected);
@@ -134,6 +134,8 @@ test('say cues come from the immediately preceding original dialogue line across
     }
   }
   const { default: SceneStage } = await loadJsxModule('src/components/lesson/SceneStage.jsx', {
+    '../../lib/lesson/sceneSupport.js': await import('../src/lib/lesson/sceneSupport.js'),
+    './SetReference.jsx': { default: 'SetReference' },
     react: { useState: (v) => [v, () => {}], useMemo: (fn) => fn(), useEffect() {} },
     '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' }, './DialogStage.jsx': { GlossLine: 'GlossLine' },

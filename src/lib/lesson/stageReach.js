@@ -2,7 +2,7 @@ import { SCENE_PHASES, sceneStep } from './buildGuided.js';
 
 /** Ordered, content-free measurement labels; scene items are visible steps too. */
 export const stageSteps = (stages) => stages.flatMap((s) => s.kind === 'scene'
-  ? s.chunks.flatMap((_, i) => SCENE_PHASES.map((__, phase) => sceneStep(i * SCENE_PHASES.length + phase)))
+  ? s.chunks.flatMap((_, i) => SCENE_PHASES.map((__, phase) => sceneStep(i * SCENE_PHASES.length + phase, s.chunkOffset || 0)))
   : [s.key]);
 
 /** One writer per client. A missing owner-applied column disables only this telemetry until reload. */

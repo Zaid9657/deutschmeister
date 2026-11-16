@@ -136,8 +136,8 @@ test('LessonPlayerPage restores the run on mount, saves it on every change, and 
   const src = read('src/pages/lesson/LessonPlayerPage.jsx');
   assert.match(src, /useState\(\(\) => \(preview \? null : readRun\(curriculum\.level, lektion\.id, Date\.now\(\), owner, lektion\.flow \|\| 'legacy'\)\)\)/, 'the run is read once, on mount, as its owner and current flow');
   assert.match(src, /useState\(preview \|\| !!resumed\)/, 'a resumed run skips the intro');
-  assert.match(src, /resumeStageIndex\(buildLesson\(\{ curriculum, lektion, pool, dueCards: resumed\.dueCards, attempt: resumed\.attempt \}\)\.stages, resumed\)/,
-    'the stage is restored against the stage list rebuilt from the snapshot');
+  assert.match(src, /const stages = buildLesson\(\{ curriculum, lektion, pool, dueCards: resumed\.dueCards, attempt: resumed\.attempt \}\)\.stages;\s*return proofResumeIndex\(stages, resumeStageIndex\(stages, resumed\), resumed\.proof\)/,
+    'the stage is restored against the rebuilt snapshot inputs and cannot bypass an unfinished proof');
   for (const field of ['stageKey: stage.key', 'stageIndex', 'itemIndex', 'attempt', 'attempts', 'misses', 'requeued', 'combo', 'dueCards']) {
     assert.ok(src.includes(field), `the saved run lacks ${field}`);
   }

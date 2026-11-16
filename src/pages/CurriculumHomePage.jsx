@@ -3,7 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
-import { LEVEL_ORDER } from '../config/levels.js';
+import { pathNodeUnlocked, placedAbove, placementSuffix } from '../lib/course/lock.js';
+export { placedAbove } from '../lib/course/lock.js';
 import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
@@ -11,10 +12,12 @@ import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
 import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
-import { flushOutbox } from '../lib/course/syncOutbox.js';
+import { flushOutbox, pendingRuns } from '../lib/course/syncOutbox.js';
 import { latestRun } from '../lib/lesson/runState.js';
 import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestReconcile.js';
 import { clearReturnPath } from '../lib/returnPath.js';
+import TodayCard from '../components/course/TodayCard.jsx';
+import { loadDailyCourse } from '../services/dailyCourse.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import KannIch from '../components/course/KannIch.jsx';
@@ -72,15 +75,9 @@ import SituationScene from '../components/illustrations/SituationScene.jsx';
 const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
 
 /** Is `placed` (profiles.current_level, either case) strictly above `level` on the ladder? */
-export const placedAbove = (placed, level) => {
-  const a = LEVEL_ORDER.indexOf(String(placed || '').toUpperCase());
-  const b = LEVEL_ORDER.indexOf(String(level || '').toUpperCase());
-  return a >= 0 && b >= 0 && a > b;
-};
-
 export const programKeyFor = (level) => `${String(level).toLowerCase().replace('.', '')}_course`;
 
-const hrefFor = (level, node) => {
+const nodeHref = (level, node) => {
   if (node.kind === 'lektion') return `/course/${level}/l/${node.nr}`;
   if (node.kind === 'checkpoint') return `/course/${level}/checkpoint/${node.nr}`;
   return `/modelltest/${node.testSlug}`;
@@ -107,6 +104,14 @@ export default function CurriculumHomePage({ curriculum }) {
   const { profile } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
+  const daily = level === A11_META.level;
+  const [dailyEvidence, setDailyEvidence] = useState({ rows: [], attempts: [] });
+  useEffect(() => {
+    let cancelled = false;
+    if (daily) loadDailyCourse(user?.id, level).then((data) => { if (!cancelled) setDailyEvidence(data); });
+    return () => { cancelled = true; };
+  }, [daily, user?.id, level]);
+  const hrefFor = (level, node) => `${nodeHref(level, node)}${placementSuffix(searchParams)}`;
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
   const KIND_LABEL = kindLabelFor(level);
@@ -129,10 +134,12 @@ export default function CurriculumHomePage({ curriculum }) {
     return node.minutes ? ` · ${node.minutes} min` : '';
   };
   // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.
-  const [unfinished] = useState(() => {
+  const savedRun = useMemo(() => {
     const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id), Date.now(), user ? user.id : null, Object.fromEntries(curriculum.lektionen.map((l) => [l.id, l.flow || 'legacy'])));
-    return run ? curriculum.lektionen.find((l) => l.id === run.lektionId) || null : null;
-  });
+    return run;
+  }, [curriculum, user]);
+
+  const unfinished = savedRun ? curriculum.lektionen.find((l) => l.id === savedRun.lektionId) : null;
 
   useEffect(() => {
     // Signed out: the only progress that can exist is local (a free Lektion
@@ -157,7 +164,10 @@ export default function CurriculumHomePage({ curriculum }) {
           const fixed = await reconcileCheckpoints(user.id, curriculum, set);
           return fixed.length ? new Set([...set, ...fixed]) : set;
         })
-        .then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
+        .then((set) => {
+          for (const run of pendingRuns(user.id)) if (run.level === level) set.add(run.lektionId);
+          if (!cancelled) { setDone(set); setLoaded(true); }
+        });
       loadDashboardStats(user.id)
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
         .catch(() => {});
@@ -216,11 +226,11 @@ export default function CurriculumHomePage({ curriculum }) {
   let nodeCounter = 0;
   return (
     <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
-        <div className="mb-4 flex justify-end"><LangToggle /></div>
-        <header className="relative mb-8 overflow-hidden rounded-clay">
+      <div className={`mx-auto max-w-2xl px-4 ${daily ? 'py-3' : 'py-8 sm:py-12'}`}>
+        <div className={`flex justify-end ${daily ? 'mb-1' : 'mb-4'}`}><LangToggle /></div>
+        <header className={`relative overflow-hidden rounded-clay ${daily ? 'mb-3' : 'mb-8'}`}>
           <Aurora />
-          <div className="relative px-2 py-4">
+          <div className={`relative px-2 ${daily ? 'py-1' : 'py-4'}`}>
             <Reveal className="flex flex-wrap items-center justify-between gap-2">
               <Chip tone="label">{curriculum.code} · {de ? 'Kurs' : 'Course'}</Chip>
               {meta && !fresh && (
@@ -238,11 +248,11 @@ export default function CurriculumHomePage({ curriculum }) {
             <Reveal as="h1" delay={60} className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
               {de ? 'Deutsch' : 'German'} {curriculum.code}
             </Reveal>
-            <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
+            {!daily && <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
               {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · zum Abschluss ein verkürzter Übungstest im Format ${curriculum.examName}` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · ends with a shortened practice test in the ${curriculum.examName} format`}
-            </Reveal>
+            </Reveal>}
 
-            {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
+            {!daily && loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
               <Reveal delay={140} className="mt-5">
                 <KannIch
                   items={canDoList(curriculum, done)}
@@ -253,9 +263,10 @@ export default function CurriculumHomePage({ curriculum }) {
               </Reveal>
             )}
 
-            {loaded && <MilestoneCard streak={streak} />}
+            {!daily && <>{loaded && <MilestoneCard streak={streak} />}</>}
 
-            <Reveal delay={180} className="mt-4">
+            {daily && loaded && <TodayCard lang={lang} curriculum={curriculum} path={path} done={done} {...dailyEvidence} run={savedRun} profile={{ ...profile, full_name: profile?.full_name || profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name }} signedIn={!!user} due={reviewDue} suffix={placementSuffix(searchParams)} />}
+            {!daily && <Reveal delay={180} className="mt-4">
               <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label={de ? 'Kursfortschritt' : 'Course progress'} aria-valuetext={de ? `${doneCount} von ${path.length} abgeschlossen` : `${doneCount} of ${path.length} done`} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
               </div>
@@ -293,17 +304,17 @@ export default function CurriculumHomePage({ curriculum }) {
               ) : null}
               {unfinished && !done.has(unfinished.id) && (
                 <p className="mt-3 text-[0.875rem] text-graphite">
-                  <Link to={`/course/${level}/l/${unfinished.nr}`} className="inline-flex min-h-11 items-center font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
+                  <Link to={hrefFor(level, { ...unfinished, kind: 'lektion' })} className="inline-flex min-h-11 items-center font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
                     {de ? `Lektion ${unfinished.nr} ist noch offen — setzen Sie dort fort` : `Lektion ${unfinished.nr} is half-done — pick up where you stopped`} →
                   </Link>
                 </p>
               )}
               <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
-            </Reveal>
+            </Reveal>}
           </div>
         </header>
 
-        {meta && welcomeOpen && (
+        {!daily && meta && welcomeOpen && (
           <div id="dm-course-welcome-panel" className="mb-10">
             <CourseWelcome curriculum={curriculum} meta={meta} className="!px-0" />
             <hr className="mt-10 border-rule" />
@@ -326,7 +337,7 @@ export default function CurriculumHomePage({ curriculum }) {
           return (
             <Reveal as="section" key={ci} delay={Math.min(ci, 6) * 60} className="mb-6">
               <div className="rounded-clay bg-siegel px-5 py-4 text-white shadow-raise-siegel">
-                {!isFinal && lektionen[0] && (
+                {!daily && !isFinal && lektionen[0] && (
                   <SituationScene
                     lektionId={lektionen[0].id}
                     className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
@@ -337,11 +348,11 @@ export default function CurriculumHomePage({ curriculum }) {
                 {chapterMeta && (
                   <p className="font-data text-[0.75rem] text-white" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
                 )}
-                {chapterMeta ? (
+                {!daily && (chapterMeta ? (
                   <p className="mt-2 text-[0.8125rem] leading-snug text-white">{de ? lektionen.map((l) => l.situation).join(' · ') : chapterMeta.storyEn}</p>
                 ) : (
                   <p className="mt-1 text-[0.8125rem] text-white">{lektionen.map((l) => l.title).join(' · ')}</p>
-                )}
+                ))}
                 <p className="mt-2 font-data text-[0.75rem] text-white">{chapterDone}/{nodes.length} {de ? 'abgeschlossen' : 'done'}{words ? ` · ${words} ${de ? 'Wörter' : 'words'}` : ''}</p>
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
@@ -362,12 +373,12 @@ export default function CurriculumHomePage({ curriculum }) {
                 {nodes.map((node) => {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
-                  const unlocked = (!user || loaded) && (endowed || node.index === 0 || done.has(path[node.index - 1].id));
+                  const unlocked = pathNodeUnlocked({ user, loaded, endowed, index: node.index, path, done });
                   const isCurrent = current && current.id === node.id;
                   const Icon = KIND_ICON[node.kind];
                   const sway = SWAY[idx % SWAY.length];
                   const lektion = node.kind === 'lektion' ? curriculum.lektionen.find((l) => l.id === node.id) : null;
-                  const state = isDone ? 'done' : isCurrent ? 'current' : unlocked ? 'open' : 'locked';
+                  const state = user && !loaded ? 'loading' : isDone ? 'done' : isCurrent ? 'current' : unlocked ? 'open' : 'locked';
                   return (
                     <li key={node.id} className="relative flex max-w-full flex-col items-center pt-3" style={{ transform: `translateX(calc(var(--sway-amp) * ${sway}))` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
@@ -389,6 +400,15 @@ export default function CurriculumHomePage({ curriculum }) {
           );
         })}
         </div>
+
+        {daily && meta && welcomeOpen && (
+          <div id="dm-course-welcome-panel" className="mb-10">
+            <CourseWelcome curriculum={curriculum} meta={meta} className="!px-0" />
+            <hr className="mt-10 border-rule" />
+          </div>
+        )}
+
+        {daily && loaded && <MilestoneCard streak={streak} />}
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           {de ? (endowed ? 'Alle Lektionen sind für Sie offen. Ihr Fortschritt wird nach jedem Schritt gespeichert.' : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.')}
@@ -412,6 +432,7 @@ function Node({ to, state, Icon, label, big, lang }) {
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';
   const base = `relative flex ${size} items-center justify-center rounded-full transition-all duration-100 ease-snap motion-reduce:transition-none`;
   const styles = {
+    loading: `${base} bg-paper-sunk text-graphite ring-1 ring-rule`,
     done: `${base} bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`,
     current: `${base} bg-white text-siegel ring-4 ring-siegel shadow-raise-lg hover:-translate-y-0.5 active:translate-y-1 active:shadow-none`,
     open: `${base} bg-white text-siegel ring-2 ring-siegel shadow-raise hover:-translate-y-0.5 active:translate-y-1 active:shadow-none`,

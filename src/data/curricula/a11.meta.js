@@ -21,6 +21,8 @@
 // below may repeat a stated fact or the setting, never add one — "Lena is a nurse" would be a
 // fact the course could later contradict.
 
+import { cardWordSets, buildWordCardStage, cardStageEstimate, CARD_SECONDS } from '../../lib/lesson/wordCards.js';
+import { buildSetStage, setStageEstimate } from '../../lib/lesson/taughtSet.js';
 import { CURRICULUM_A11 } from './a11.js';
 import { A11_ART } from './a11.art.js';
 import { SESSION_COUNT } from '../../lib/lesson/sessions.js';
@@ -330,9 +332,9 @@ export function weeklyEstimate(curriculum = CURRICULUM_A11, perWeek = SUSTAINABL
  * decision once times are measured, not something to retype from this model.
  */
 export const STEP_SECONDS = {
-  pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
+  pretest: [45, 90], dialogLine: [15, 25], word: CARD_SECONDS.word, notice: [60, 120], phonetikItem: [15, 30],
   practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
-  sceneMeaning: [20, 40], sceneSay: [40, 80],
+  sceneMeaning: CARD_SECONDS.check, sceneSay: [40, 80],
   soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40],
   speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
 };
@@ -348,6 +350,7 @@ export function lektionMinutesEstimate(l) {
     speakingOpen: l?.sprechen?.open ? 1 : 0, writing: l?.schreiben ? 1 : 0, recap: 1,
   };
   if (l?.flow === 'guided') {
+    n.word = 0; // The actual delivered card/check steps are counted below.
     n.phonetikItem = 0;
     n.soundItem = l.phonetik?.items?.length || 0;
     n.readText = l.guided.read ? 1 : 0;
@@ -356,7 +359,9 @@ export function lektionMinutesEstimate(l) {
     n.sceneMeaning = l.guided.chunks.length;
     n.sceneSay = l.guided.chunks.length;
   }
-  const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
+  const setTime = l?.flow === 'guided' ? (l.guided.sets || []).map((set) => setStageEstimate(buildSetStage(set))) : [];
+  const wordTime = l?.flow === 'guided' ? Object.entries(cardWordSets(l)).map(([key, words]) => cardStageEstimate(buildWordCardStage(l, words, key))) : [];
+  const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0) + [...setTime, ...wordTime].reduce((sum, e) => sum + e[side ? 'hi' : 'lo'], 0);
   const hi = total(1) + ESTIMATE_COUNTS.retriesHigh * STEP_SECONDS.practiceItem[1];
   return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(hi / 300) * 5 };
 }

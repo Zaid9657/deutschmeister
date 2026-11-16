@@ -54,7 +54,7 @@ async function exercise(name, lang = 'de') {
   const stubs = {
     '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'),
     react: state.react, 'lucide-react': icons,
-    '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
+    './SetReference.jsx': { default: 'SetReference' }, '../ui/Button.jsx': { default: 'Button' }, '../ui/Card.jsx': { default: 'Card' },
     './FeedbackSheet.jsx': { default: 'FeedbackSheet' }, './ExplainAnswer.jsx': { default: 'ExplainAnswer' },
     './PlayButton.jsx': { default: 'PlayButton' },
     '../../lib/lesson/strings.js': strings(lang), '../../lib/lesson/check.js': checker,

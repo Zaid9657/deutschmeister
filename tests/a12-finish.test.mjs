@@ -212,6 +212,7 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['react-router-dom'] = { Link: 'Link', useSearchParams: () => [new URLSearchParams()] };
     stubs['../data/curricula/a11.meta.js'] = { A11_META: { level: 'a1.1' }, lektionMinutesEstimate: () => ({ lo: 20, hi: 30 }) };
     stubs['../data/curricula/index.js'] = { curriculumPath };
+    stubs['../lib/course/lock.js'] = await import('../src/lib/course/lock.js');
     stubs['../config/levels.js'] = { LEVEL_ORDER: ['A1.1', 'A1.2', 'A2.1'] };
     stubs['../config/freeTier.js'] = { isLevelFree: () => false };
     stubs['../data/navigation.js'] = { SUPPORT_LINK: { href: '/support', labelDe: 'Hilfe' } };

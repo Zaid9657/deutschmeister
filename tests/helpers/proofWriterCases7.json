@@ -1,0 +1,4888 @@
+[
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko. Ich bin Studentin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko und bin Studentin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko und ich bin Studentin",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich bin aus Marokko. Ich bin Studentin von Beruf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Aus Marokko. Ich bin Studentin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko. Von Beruf bin ich Studentin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko und wohne in Bremen. Ich bin Studentin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko und bin Marokkanerin. Ich bin Studentin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "ich komme aus marokko ich bin studentin",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Marokko. Studentin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Aus Marokko. Studentin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko und Studentin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich bin Studentin. Ich komme aus Marokko.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich heiße Ana. Ich komme aus Marokko. Ich bin Studentin.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was sind Sie von Beruf?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Und was sind Sie von Beruf?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Entschuldigung, was sind Sie von Beruf?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was ist Ihr Beruf?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "was sind sie von beruf",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was bist du von Beruf?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was ist dein Beruf?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was ist Sie von Beruf?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Wie ist Ihr Beruf?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was sind Sie Beruf?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Sind Sie Lehrerin?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was sind Sie?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Wo wohnen Sie?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Und Sie? Was sind Sie von Beruf?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein. Vier neun zwei drei fünf acht.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein, vier neun zwei drei fuenf acht",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein! Vier, neun, zwei, drei, fünf, acht.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein. Vier-neun-zwei-drei-fünf-acht.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "nein vier neun zwei drei fünf acht",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein, meine Telefonnummer ist vier neun zwei drei fünf acht.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein, vier neun zwei drei fünf acht, Herr Weber.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Ja. Vier neun zwei drei fünf acht.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Vier neun zwei drei fünf acht.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein. Vier neun zwei drei acht fünf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein, 4 9 2 3 5 8.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein, 492358",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein, fünf acht.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein. Hier neun zwei drei fünf acht.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein. Vier neun zwo drei fünf acht.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 2,
+    "value": "Nein. Vier neun zwei drei fünf acht. Danke.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Null eins sieben sechs. In Bremen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Meine Telefonnummer ist 0176. Ich wohne in Bremen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Meine Telefonnummer ist 0 1 7 6. In Bremen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Meine Telefonnummer ist null eins sieben sechs und ich wohne in Bremen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Die Telefonnummer ist null eins sieben sechs. Mein Wohnort ist Bremen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Null eins sieben sechs. Ich wohne in Bremen, Herr Weber.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "0176. Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Null eins sieben sechs. Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "0176. In Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Ich wohne aus Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Ich wohnen in Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Ich wohne in Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Ich komme aus Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko. Ich bin ledig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich bin aus Marokko. Ich bin nicht verheiratet.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko und bin ledig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko und ich bin ledig",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich bin Marokkanerin. Ich bin ledig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko und wohne in Bremen. Ich bin ledig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko. Mein Familienstand ist ledig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Marokko; ledig",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Aus Marokko. Ledig.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich bin marokkanisch. Ich bin ledig.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko und ledig.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist mein Bruder. Er ist zwanzig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Mein Bruder. Zwanzig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist mein Bruder. Er ist 20.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Er ist mein Bruder. Mein Bruder ist zwanzig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist der Bruder. Er ist zwanzig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "das ist mein bruder er ist zwanzig",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist mein Bruder, er ist zwanzig.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Mein Bruder zwanzig",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Bruder. 20.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Mein Bruder. 20.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Bruder. Zwanzig.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist mein Bruder.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Mein Bruder ist zwanzig.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Arabisch und Deutsch.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Deutsch und Arabisch.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Arabisch und auch Deutsch.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "ich spreche arabisch und deutsch",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Arabisch und Deutsch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Arabisch, Deutsch",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Arabisch und Englisch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Arabisch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich bin Arabisch und Deutsch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Arabisch. Ich spreche Deutsch.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Deutsch und Deutsch",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Wie alt ist er? Welche Sprachen sprechen sie?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Wie alt ist dein Bruder? Welche Sprachen sprechen deine Eltern?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Wie alt ist Ihr Bruder? Welche Sprachen sprechen Ihre Eltern?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Wie alt ist er? Was sprechen sie?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Meine Familie kommt aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Sie kommt aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Wir kommen aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Meine Familie ist aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Meine Eltern kommen aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Sie kommen aus Marokko.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Meine Familie kommen aus Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Ich komme aus Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Er kommt aus Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Meine Familie wohnt in Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "In Marokko.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Was ist das? Was kostet sie?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Entschuldigung, was ist das? Was kostet die Lampe?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Was ist das? Und was kostet sie?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Was ist das, Frau Wolf? Was kostet sie?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet er?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet der Rucksack?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Wie viel kostet er?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Und was kostet er?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet er, Frau Wolf?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Wie teuer ist er?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Und der Rucksack, was kostet er?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "was kostet er",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet sie?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet es?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet die Rucksack?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet das Rucksack?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kosten er?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Kostet er zwanzig Euro?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Wie kostet er?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was ist er?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet der Tisch?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Wie viele kostet er?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet den Rucksack?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Und der Rucksack?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Und der Rucksack? Was kostet er?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet der?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 2,
+    "value": "Tisch 40 Euro, Regal 16 Euro",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 2,
+    "value": "Zahlen mit und",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe den Stuhl und die Tasche.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe die Tasche und den Stuhl.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe einen Stuhl und eine Tasche.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Den Stuhl und die Tasche.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe den Stuhl und die Tasche, Frau Wolf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe den Stuhl und auch die Tasche.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Stuhl und Tasche.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Stuhl + Tasche",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe Stuhl und Tasche.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe der Stuhl und die Tasche.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Der Stuhl und die Tasche.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe den Stuhl.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe ein Stuhl und eine Tasche.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe den Stuhl. Ich kaufe die Tasche.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift. Die Schere. Das Wörterbuch.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "der stift, die schere, das buch",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift ist da. Die Schere ist hier. Das Lineal auch.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Kugelschreiber, die Tafel und das Fenster",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Das ist der Tisch. Das ist die Lampe. Das ist das Regal.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift. Die Bücher. Das Heft.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Schere. Die Stift. Das Buch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift. Die Schere.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Das Buch. Der Stift. Die Schere.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Stift. Schere. Buch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift. Die Fenster. Das Buch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Ein Stift. Eine Schere. Ein Buch.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift - die Schere - das Buch",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist das Wörterbuch? Der Stift ist hier.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "wo ist das wörterbuch? hier",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Tim, wo ist das Wörterbuch? Der Stift ist da.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Entschuldigung, wo ist das Wörterbuch? Mein Stift ist hier.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist das Wörterbuch der Stift ist da",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Was ist das Wörterbuch? Der Stift ist hier.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist der Wörterbuch? Der Stift ist hier.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist das Wörterbuch?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist das Wörterbuch? Der Stift ist blau.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist das Wörterbuch? Sie ist hier.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo das Wörterbuch ist? Hier.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Tim, wo ist das Wörterbuch?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist blau. Der Bleistift ist gelb.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist blau, der Bleistift ist gelb.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "blau. gelb.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Mein Stift ist schwarz und mein Bleistift ist rot",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Er ist grün. Er ist auch grün.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist weiss. Der Bleistift ist gruen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist blau.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Es ist blau. Es ist gelb.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Das Stift ist blau. Der Bleistift ist gelb.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist blue. Der Bleistift ist yellow.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist hier. Der Bleistift ist da.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Bleistift ist gelb. Der Stift ist blau.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Ist der Stift blau oder schwarz?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "ist der stift blau",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Welche Farbe hat der Stift?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Ist er rot oder blau?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Der Stift ist blau oder schwarz?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Ist die Stift blau?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Ist es blau?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Wo ist der Stift?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Was Farbe hat der Stift?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Welche Farbe ist der Stift?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauche einen Computer und ein Telefon.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "danke, ich brauche einen computer und ein telefon",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke, Herr Weber. Ich brauche ein Telefon und einen Computer.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke! Wir brauchen einen Computer und ein Telefon.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauche einen Computer und ein Telefon, Herr Weber.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Ich brauche einen Computer und ein Telefon.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauche ein Computer und ein Telefon.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauche einen Computer und einen Telefon.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauche einen Computer.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich habe einen Computer und ein Telefon.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauchen einen Computer und ein Telefon.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Ich heiße Sam Miller.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "ich heiße sam miller",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Ich heiße Sam.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Sam Miller",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Ich heiße",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Guten Morgen, Herr Weber!",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 2,
+    "value": "Büro: 042 3318, Handy: 0176 234567",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 2,
+    "value": "Büro: 042 3381, Handy: 0167 234567",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 2,
+    "value": "Büro: 024 3381, Handy: 0176 234576",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Telefonnummer? Danke! Wann ist die Pause?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Und wie ist die Telefonnummer? Danke! Wann ist die Pause?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "wie ist die telefonnummer danke wann ist die pause",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Nummer vom Büro? Danke, Herr Weber! Und wann ist die Pause?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Entschuldigung, wie ist die Telefonnummer? Danke. Wann machen wir Pause?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Telefonnummer? Wann ist die Pause?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Was ist die Telefonnummer? Danke! Wann ist die Pause?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Telefonnummer? Danke! Wo ist die Pause?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wann ist die Pause? Danke! Wie ist die Telefonnummer?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Telefonnummer? Danke! Wann die Pause ist?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Telefonnummer? Danke!",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "mein hobby ist musik. ich höre gern musik",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Meine Hobbys sind Lesen und Kochen. Am Wochenende koche ich gern.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Sport. Ich schwimme jede Woche.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist schwimmen. Ich schwimme am Wochenende.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport und ich spiele am Wochenende Fußball.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Musik. Ich höre Musik gern.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Ich spiele am Wochenende Fußball.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport. Ich spielen am Wochenende Fußball.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Meine Hobby ist Sport. Ich spiele Fußball.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport. Am Wochenende ich spiele Fußball.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport. Ich bin frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich höre gern Musik. Ich lese gern.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich lese auch gern. Und ich koche gern.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "ich spiele gern fußball und ich schwimme gern",
+    "writer": "pass",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich gehe sehr gern ins Kino. Ich tanze gerne.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich lese gern und koche gern.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich höre gern Musik.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich höre Musik. Ich lese.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich gern höre Musik. Ich lese gern.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich hören gern Musik. Ich lese gern.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich höre gern Musik. Ich lese nicht gern.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby? Gehst du gern ins Kino?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Tim, was ist dein Hobby? Spielst du jede Woche Fußball?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "was ist dein hobby tanzt du auch",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was machst du gern? Und tanzt du auch?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Hast du ein Hobby? Schwimmst du am Wochenende?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist Ihr Hobby? Gehen Sie gern ins Kino?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby? Du gehst gern ins Kino?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby? Spielt du Fußball?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Wie ist dein Hobby? Tanzt du?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist deine Hobby? Tanzt du?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Gehst du gern ins Kino? Was ist dein Hobby?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby? Lest du gern?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin am Wochenende frei.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "am wochenende bin ich frei",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Am Wochenende.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Am Wochenende arbeite ich nicht.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin morgen frei.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Um neun Uhr bin ich frei.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Am Wochenende arbeite ich nicht, ich bin frei.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich habe am Wochenende frei.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin am Wochenende.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Am Wochenende ich bin frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin im Wochenende frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich arbeite am Wochenende.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bist am Wochenende frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wie spät ist es? Es ist halb elf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Entschuldigung, wie spät ist es? Halb elf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wie spät ist es, bitte? Es ist zehn Uhr dreissig",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "wie viel uhr ist es es ist zehn uhr dreißig",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wie spät ist es? Es ist halb zehn.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wie spät ist es? Es ist um halb elf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wie spät ist es? Es ist 10:30 Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wann ist es? Es ist halb elf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Es ist halb elf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist am Freitag um neun Uhr.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Am Freitag um neun Uhr.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Am Freitag um neun Uhr habe ich Zeit.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "der termin ist um 9 uhr am freitag",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist um Freitag am neun Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist am Freitag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist am Montag um Viertel vor acht.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist am Freitag um zehn Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist Freitag um neun Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe um sieben Uhr auf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe morgens immer um sieben auf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Um sieben Uhr stehe ich auf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "ich stehe um 7 uhr auf",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich aufstehe um sieben Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe um sieben Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe am sieben Uhr auf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe um sechs Uhr auf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Um sieben Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe auf um sieben Uhr.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag bin ich abends frei.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag habe ich Zeit.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag am Abend.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "ich habe am donnerstag abends zeit",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag ich bin abends frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Um Donnerstag bin ich abends frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Dienstag bin ich abends frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag bin ich morgens frei.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag habe ich keine Zeit.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Ich habe Donnerstag Zeit.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstagabend habe ich Zeit.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich möchte einen Tee, bitte.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich möchte Tee.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich trinke einen Tee.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "ich habe durst und ich möchte eine tasse tee bitte",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich möchte einen Tee, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich bin Durst. Ich möchte einen Tee, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich möchte ein Tee, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich möchte einen Kaffee, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Tee.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich möchte einen Tee, bitte. Danke!",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Guten Tag! Ich habe Durst. Ich möchte einen Tee, bitte.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich habe Hunger. Ich möchte Suppe, bitte.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ja, ich habe Hunger. Ich möchte eine Suppe, bitte.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich habe Hunger. Die Suppe, bitte.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "ich habe auch hunger ich esse suppe",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ja, ich habe Hunger. Ich möchte Kuchen, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich bin Hunger. Ich möchte Suppe, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich möchte Suppe, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich habe Hunger. Ich möchte einen Suppe, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich habe Durst. Ich möchte Suppe, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich bin hungrig. Ich möchte Suppe, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Haben Sie auch Salat?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Haben Sie Salat?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Und haben Sie auch Salat?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "entschuldigung haben sie auch einen salat bitte",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Hast du auch Salat?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Ich möchte Salat, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Haben Sie auch ein Salat?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Sie haben auch Salat?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Und Salat?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Gibt es auch Salat?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Entschuldigung! Haben Sie auch Salat?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, bitte. Nein, danke.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, gern. Nein, danke.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, ein Glas Mineralwasser, bitte. Nein, danke.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "ja gerne nein danke",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja! Nein!",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, bitte. Nein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Nein, danke. Ja, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, bitte. Nein, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, bitte.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, bitte. Nein, danke. Ich möchte keinen Wein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft. Nein, danke. Ich esse ein Brot mit Salat.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fährt der Zug nach Österreich?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fährt der Zug?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann ist die Abfahrt, bitte?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann geht der Zug, Herr Schmidt?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "entschuldigung um wie viel uhr fährt der zug",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Entschuldigung, fährt der Zug nach Österreich?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fahrt der Zug?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann der Zug fährt?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fährt die Zug?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann ist die Ankunft?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fährt der Bus?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fährt der Zug ab?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Danke! Und wann ist die Abfahrt?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Herr Schmidt, wann fährt der Zug?",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Was kostet die Fahrkarte?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Wie viel kostet eine Fahrkarte nach Österreich?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Entschuldigung, was kostet die Fahrkarte?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Wie teuer ist die Fahrkarte, Herr Schmidt?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "kostet die fahrkarte 20 euro",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Was kosten die Fahrkarte?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Die Fahrkarte kostet zwanzig Euro?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Was kostet der Fahrkarte?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Wie viele kostet die Fahrkarte?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Hat der Zug Verspätung?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Kostet die Fahrkarte fünfzehn Euro?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Was kostet das?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 2,
+    "value": "Der Zug ist nicht pünktlich. Er fährt von Gleis fünf.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 2,
+    "value": "Der Zug ist pünktlich. Er fährt von Gleis fünf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 2,
+    "value": "Der Zug ist nicht pünktlich. Er fährt von Gleis zehn.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 2,
+    "value": "Der Zug ist pünktlich. Er fährt von Gleis zehn.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fahre nach Berlin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Nach Berlin.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fahre von Bremen nach Berlin",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "ich fahre mit dem bus nach berlin",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fahre in Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fahren nach Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fährt nach Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich gehe nach Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fahre nach Bremen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich komme aus Berlin.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche. Am Sonntag schlafe ich bis 9 Uhr.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "ich dusche jeden tag ich schlafe bis neun uhr",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche und frühstücke jeden Tag. Ich schlafe am Sonntag bis neun.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Jeden Tag dusche ich, am Sonntag schlafe ich bis neun",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich duschen jeden Tag. Ich schlafe am Sonntag bis neun.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Ich schlafe am Sonntag um neun.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Ich schläft am Sonntag bis neun.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Am Sonntag ich schlafe bis neun.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Sonntag schlafe ich bis neun.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis zehn.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich schlafe am Sonntag bis neun. Ich dusche jeden Tag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche. Ich frühstücke. Ich schlafe am Sonntag bis neun.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht? Ich habe gearbeitet.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Tim, was hast du gestern gemacht? Ich habe gestern gearbeitet.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "was hast du gestern gemacht gestern habe ich gearbeitet",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Tim, was hast du gestern gemacht? Ich habe gearbeitet!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was haben Sie gestern gemacht? Ich habe gearbeitet.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was machst du gestern? Ich habe gearbeitet.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht? Ich arbeite gestern.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht? Ich habe arbeiten.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht? Ich habe gearbeiten.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht? Ich bin gearbeitet.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gemacht? Ich habe gearbeitet.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Ich habe gearbeitet.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein. Kommst du mit?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Am Freitag kaufe ich ein. Kommst du am Freitag mit?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "ich kaufe am freitag ein kommst du mit",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ja, ich kaufe am Freitag ein. Kommst du mit?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein, möchtest du mitkommen?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich gehe am Freitag einkaufen. Kommst du auch mit?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein. Kommen Sie mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich einkaufe am Freitag. Kommst du mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe ein am Freitag. Kommst du mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein. Mitkommst du?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein. Kommst du?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag. Kommst du mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Samstag ein. Kommst du mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe im Freitag ein. Kommst du mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein. Rufst du mich an?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf. Ich arbeite am Montag.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um 6 Uhr auf. Am Montag arbeite ich.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "ich stehe morgens um sechs uhr auf ich arbeite am montag",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Um sechs stehe ich auf, am Montag arbeite ich",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs Uhr auf und ich arbeite am Montag.",
+    "writer": "pass",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich aufstehe um sechs. Ich arbeite am Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe auf um sechs. Ich arbeite am Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs. Ich arbeite am Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Um sechs. Am Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf. Ich arbeite im Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sieben auf. Ich arbeite am Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf. Ich arbeite am Dienstag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf. Ich habe am Montag gearbeitet.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehen um sechs auf. Ich arbeite am Montag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf. Ich bin müde. Ich arbeite am Montag.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie ein.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie zum Geburtstag ein.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "ich möchte sie einladen",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Kommen Sie auch?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade auch Sie ein!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie zu meinem Fest ein",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Kommen Sie am Freitag?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Möchten Sie kommen?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Kommen Sie zu meinem Geburtstag?",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade dich ein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Kommst du auch?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich einlade Sie.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade ein Sie.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade auch meine Kollegin ein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Ihnen ein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie zum Party ein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie zu mein Fest ein.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Kommen Sie mit?",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Wir feiern am Freitag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ja. Ich lade Sie ein.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Danke. Ich lade Sie ein.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist im Mai.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Ich habe im Mai Geburtstag.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "im mai",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Im Mai ist mein Geburtstag",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Im Mai habe ich Geburtstag!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Ich habe Geburtstag im Mai.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist in Mai.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist am Mai.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mai.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist am Freitag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Meine Geburtstag ist im Mai.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Ich bin im Mai Geburtstag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Ich habe im Mai.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist im Juni.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Meine Mama und mein Papa kommen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Am Freitag. Meine Mama und mein Papa.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "ich feiere am freitag meine eltern kommen",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Mein Fest ist am Freitag. Mein Papa und meine Mama kommen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Am Freitag feiern wir, meine Mutter und mein Vater kommen",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Ja, meine Mama und mein Papa kommen.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Das Fest ist am Freitag. Meine Mama kommt und mein Papa kommt.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Mein Mama und meine Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Mein Mama und mein Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Meine Mama und meine Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Meine Mama und mein Papa kommt.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Mama und Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern im Freitag. Meine Mama und mein Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Samstag. Meine Mama und mein Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Meine Mama und mein Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Deine Mama und dein Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Freitag. Mama und Papa.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Meine Mama kommt. Mein Papa kommt.",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Mein Geburtstag ist im Mai. Wir feiern am Freitag. Ja, meine Mama und mein Papa kommen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut. Bis bald.",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut, Lena. Bis bald!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "machs gut bis bald",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach’s gut! Bis Freitag!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Schönen Tag noch, Lena. Bis bald!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut und bis bald!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut und schönen Tag noch! Bis bald!",
+    "writer": "pass",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut. Bis später.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Auf Wiedersehen. Bis bald.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Tschüss. Bis bald.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Bis bald.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach gut. Bis bald.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut. Bis morgen.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Schönen Tag. Bis bald.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Schöner Tag noch. Bis bald.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut. Bis balt.",
+    "writer": "wrong",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Bis bald! Mach's gut!",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut! Bis bald, Lena!",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut! Schönen Tag noch! Bis bald!",
+    "writer": "wrong",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Mein Nachname ist Chakiri. Ich komme aus Marokko. Ich bin Studentin.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Ich wohne in Bremen. Meine Telefonnummer ist null eins sieben sechs.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich bin ledig. Ich komme aus Marokko.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich bin Marokkanerin und ledig.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Guten Tag, ich heiße Ana Chakiri. Ich komme aus Marokko. Ich bin ledig. Danke! Ana Chakiri",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was machen Sie beruflich?",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist mein Bruder. Er ist zwanzig Jahre alt.",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Entschuldigung! Was ist das? Was kostet sie?",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Das Wörterbuch ist hier. Der Stift ist da. Die Schere ist hier. Das Lineal auch.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Tim, wo ist das Wörterbuch? Das Wörterbuch ist hier. Der Stift ist da.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Entschuldigung! Wo ist das Wörterbuch? Der Stift ist hier.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift. Die Tur. Das Buch.",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist blau. Der Bleistift ist grun.",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Danke. Ich brauche einen Computer. Ich brauche ein Telefon.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Guten Morgen, Herr Weber! Danke. Ich brauche einen Computer und ein Telefon.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Guten Tag! Ich heisse Sam Miller.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Ich heiße nicht.",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Herr Weber, wie ist die Telefonnummer? Danke, wann ist die Pause?",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport. Ich spiele am Wochenende Fußball. Und Sie?",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich lese und koche gern.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich lese gern. Ich lese gern.",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby? Liest du gern?",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Am Wochenende arbeite ich nicht. Ich bin frei.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin am Samstag frei.",
+    "writer": "engine limit / explicit review",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist am Freitag um 9.00 Uhr.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Entschuldigung! Wie spät ist es? Es ist halb elf.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht, Tim? Ich habe gearbeitet.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um 6:00 Uhr auf. Ich arbeite am Montag.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf und arbeite am Montag.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Tim, was hast du gestern gemacht? Ich habe gearbeitet. Heute lerne ich Deutsch.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich feiere am Freitag. Kommen Sie auch?",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist im Mai. Wir feiern am Freitag.",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Ja! Mach's gut, Lena. Bis bald!",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Tschüss, Lena! Mach's gut! Bis bald!",
+    "writer": "engine limit / explicit review",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Danke. Ich komme aus Marokko. Ich bin Studentin.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Ich komme aus Marokko. Ich bin Studentin. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Danke. Was sind Sie von Beruf?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Was sind Sie von Beruf? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Danke. Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Meine Telefonnummer ist null eins sieben sechs. Ich wohne in Bremen. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Danke. Ich komme aus Marokko. Ich bin ledig.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Ich komme aus Marokko. Ich bin ledig. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 2,
+    "goal": 4,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Danke. Das ist mein Bruder. Er ist zwanzig.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Das ist mein Bruder. Er ist zwanzig. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Danke. Ich spreche Arabisch und Deutsch.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Ich spreche Arabisch und Deutsch. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Danke. Wie alt ist er? Welche Sprachen sprechen sie?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Wie alt ist er? Welche Sprachen sprechen sie? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Danke. Meine Familie kommt aus Marokko.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Meine Familie kommt aus Marokko. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 3,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Danke. Was ist das? Was kostet sie?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Was ist das? Was kostet sie? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Danke. Was kostet er?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Was kostet er? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Danke. Ich kaufe den Stuhl und die Tasche.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Ich kaufe den Stuhl und die Tasche. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 4,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Danke. Der Stift. Die Schere. Das Wörterbuch.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Der Stift. Die Schere. Das Wörterbuch. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Danke. Wo ist das Wörterbuch? Der Stift ist hier.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Wo ist das Wörterbuch? Der Stift ist hier. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Danke. Der Stift ist blau. Der Bleistift ist gelb.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Der Stift ist blau. Der Bleistift ist gelb. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Danke. Ist der Stift blau oder schwarz?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Ist der Stift blau oder schwarz? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 5,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Ich brauche einen Computer und ein Telefon. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Danke. Ich heiße Ana Chakiri.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Ich heiße Ana Chakiri. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Danke. Wie ist die Telefonnummer? Danke! Wann ist die Pause?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Wie ist die Telefonnummer? Danke! Wann ist die Pause? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 6,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Danke. Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Mein Hobby ist Sport. Ich spiele am Wochenende Fußball. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Danke. Ich höre gern Musik. Ich lese gern.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Ich höre gern Musik. Ich lese gern. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Danke. Was ist dein Hobby? Gehst du gern ins Kino?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Was ist dein Hobby? Gehst du gern ins Kino? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Danke. Ich bin am Wochenende frei.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Ich bin am Wochenende frei. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 7,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Danke. Wie spät ist es? Es ist halb elf.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Wie spät ist es? Es ist halb elf. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Danke. Der Termin ist am Freitag um neun Uhr.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Der Termin ist am Freitag um neun Uhr. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Danke. Ich stehe um sieben Uhr auf.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Ich stehe um sieben Uhr auf. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Danke. Am Donnerstag bin ich abends frei.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Am Donnerstag bin ich abends frei. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 8,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Danke. Ich habe Durst. Ich möchte einen Tee, bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Ich habe Durst. Ich möchte einen Tee, bitte. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Danke. Ich habe Hunger. Ich möchte Suppe, bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Ich habe Hunger. Ich möchte Suppe, bitte. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Danke. Haben Sie auch Salat?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Haben Sie auch Salat? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Danke. Ja, bitte. Nein, danke.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Ja, bitte. Nein, danke. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 9,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Danke. Wann fährt der Zug nach Österreich?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Wann fährt der Zug nach Österreich? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Danke. Was kostet die Fahrkarte?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Was kostet die Fahrkarte? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Danke. Ich fahre nach Berlin.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Ich fahre nach Berlin. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 10,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Danke. Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Ich dusche jeden Tag. Ich schlafe am Sonntag bis neun. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Danke. Was hast du gestern gemacht? Ich habe gearbeitet.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Was hast du gestern gemacht? Ich habe gearbeitet. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Danke. Ich kaufe am Freitag ein. Kommst du mit?",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Ich kaufe am Freitag ein. Kommst du mit? Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Danke. Ich stehe um sechs auf. Ich arbeite am Montag.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Ich stehe um sechs auf. Ich arbeite am Montag. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 11,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Ich lade Sie ein. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 0,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Danke. Mein Geburtstag ist im Mai.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Mein Geburtstag ist im Mai. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 1,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Danke. Wir feiern am Freitag. Meine Mama und mein Papa kommen.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Wir feiern am Freitag. Meine Mama und mein Papa kommen. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 2,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Danke. Mach's gut. Bis bald.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Mach's gut. Bis bald. Bitte.",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": true
+  },
+  {
+    "nr": 12,
+    "goal": 3,
+    "value": "Entschuldigung!",
+    "writer": "cumulative courtesy / missing-part regression",
+    "expected": false
+  }
+]

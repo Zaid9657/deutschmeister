@@ -23,3 +23,6 @@ export function milestoneFor(streak, seenSet) {
   if (seen.has(streak)) return null;
   return streak;
 }
+
+/** The existing dashboard rule already allows one rest day in each rolling seven. */
+export { computeStreakForgiving as forgivingStreak } from '../../services/dashboardStats.js';

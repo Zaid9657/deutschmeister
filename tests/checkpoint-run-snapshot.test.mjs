@@ -164,7 +164,7 @@ test('a paper belongs to one owner: it mounts after auth settles, keyed by the o
   const wrapper = PAGE.slice(PAGE.indexOf('export default function CheckpointPage('), PAGE.indexOf('function CheckpointRun('));
   assert.match(wrapper, /const \{ user, loading \} = useAuth\(\);/);
   assert.match(wrapper, /if \(loading\) \{\s*return \(/, 'nothing of the paper renders before the owner is known');
-  assert.match(wrapper, /return <CheckpointRun key=\{user\?\.id \|\| 'guest'\} \/>;/, 'a new owner is a new mount');
+  assert.match(wrapper, /<CoursePathGuard[\s\S]*<CheckpointRun key=\{user\?\.id \|\| 'guest'\} \/><\/CoursePathGuard>;/, 'a new owner is a new mount');
   assert.doesNotMatch(wrapper, /readCheckpointRun\(|saveCheckpointRun\(|clearCheckpointRun\(|useState\(/, 'the wrapper holds no paper state');
   // Inside the boundary the owner is the mount's: every read and write uses it.
   const paperRun = PAGE.slice(PAGE.indexOf('function CheckpointRun('));

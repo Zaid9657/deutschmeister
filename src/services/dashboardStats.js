@@ -217,12 +217,12 @@ export function computeStreak(timestamps) {
  * @returns {number} days of activity in the surviving streak (missed days are
  *          forgiven, never counted — the number is days worked, not elapsed)
  */
-export function computeStreakForgiving(days, { graceDaysPer7 = 1 } = {}) {
+export function computeStreakForgiving(days, { graceDaysPer7 = 1, today = new Date() } = {}) {
   const set = days instanceof Set ? days : new Set(days || []);
   if (set.size === 0) return 0;
 
   const keyFor = (offset) => {
-    const d = new Date();
+    const d = new Date(today);
     d.setDate(d.getDate() - offset);
     return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   };
