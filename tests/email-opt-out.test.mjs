@@ -40,7 +40,7 @@ delete process.env.SUPABASE_SERVICE_ROLE_KEY; // no live client in tests
 const { fetchOptedOutIds, withoutOptedOut, OPT_OUT_PAGE_SIZE } = await import('../netlify/functions/_shared/emailOptOut.mjs');
 const { getRecipients, orderRecipients } = await import('../netlify/functions/daily-sentence.mjs');
 const { fetchAllUserEmails } = await import('../netlify/functions/send-campaign.mjs');
-const { selectCandidates, MIN_AGE_DAYS, MAX_AGE_DAYS, PER_RUN } = await import('../netlify/functions/confirmation-nudge.mjs');
+const { selectCandidates, MIN_AGE_HOURS, MAX_AGE_DAYS, PER_RUN } = await import('../netlify/functions/confirmation-nudge.mjs');
 const { handleUnsubscribe, COPY } = await import('../netlify/functions/unsubscribe.mjs');
 const { unsubscribeToken } = await import('../netlify/functions/_shared/unsubscribe.mjs');
 
@@ -283,7 +283,7 @@ test('send-campaign: a failed opt-out read rejects, and the handler answers 500 
 // ---------------------------------------------------------------------------
 
 test('confirmation nudge leaves out an unconfirmed account that opted out, and a failed read throws', async () => {
-  const age = Math.floor((MIN_AGE_DAYS + MAX_AGE_DAYS) / 2);
+  const age = Math.floor((MIN_AGE_HOURS / 24 + MAX_AGE_DAYS) / 2);
   const shape = accounts(30, { confirmed: () => false, optedOut: (i) => i % 6 === 0, ageDays: age });
   const list = await selectCandidates(fakeDb(shape));
   assert.equal(list.length, Math.min(30 - shape.optedOut.size, PER_RUN));

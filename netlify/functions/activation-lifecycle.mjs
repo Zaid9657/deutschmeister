@@ -50,6 +50,8 @@ import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { socialFooterLine } from './_shared/socialLinks.mjs';
 import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
 import { utcDayStart } from './trial-lifecycle.mjs';
+import { continueUrl } from './continue.mjs';
+import { resolveNextPaths, FIRST_STEP_PATH } from './course-reminder.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -155,9 +157,14 @@ export const TEMPLATES = {
       P(`So here's the smallest useful first step: <strong style="color:${BRAND.ink};">Lektion 1</strong> of the free A1.1 course. It starts with the first Hallo, one short step per screen.`) +
       P(`Already know some German? The <a href="${LEVEL_TEST_HREF}" style="color:${BRAND.siegel};">level test</a> tells you which lesson to start with. The first one you finish is the one that makes the second one easy.`),
   },
+  // `nextStep: true` (2026-11-15): the button is the learner's signed continue
+  // link (continue.mjs) to their next step; with no lesson activity, which this
+  // audience has by construction, that is Lektion 1 (`ctaHref`). Until then it
+  // opened /analyze/. Link target only: the label and body are owner wording.
   activation_d4: {
     subject: 'The three-second trick for German sentences',
-    ctaHref: `${BASE_URL}/analyze/`,
+    ctaHref: `${BASE_URL}${FIRST_STEP_PATH}`,
+    nextStep: true,
     ctaLabel: 'Analyze a sentence →',
     body:
       P('One more nudge from me, and then I\'ll leave you in peace.') +
@@ -172,14 +179,18 @@ export const TEMPLATES = {
 // hyphens (activation_d1 -> activation-d1); utm_content names the link. A CTA
 // to a prerendered route keeps its trailing slash before the query, one to the
 // course (an SPA route) has none (test 5 in tests/lifecycle.test.mjs). The
-// unsubscribe link is never tagged. Exported for tests/lifecycle-links.test.mjs.
-export function renderHtml(kind, userId) {
+// unsubscribe link is never tagged. A `nextStep` button is the signed continue
+// link to `nextPath`, tagged the same way; `now` fixes its expiry for tests.
+// Exported for tests/lifecycle-links.test.mjs.
+export function renderHtml(kind, userId, { nextPath = FIRST_STEP_PATH, now = Date.now() } = {}) {
   const tpl = TEMPLATES[kind];
   const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
   return SHELL({
     heading: tpl.subject,
     body: tpl.body,
-    ctaHref: tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
+    ctaHref: tpl.nextStep
+      ? continueUrl(userId, nextPath, { ...tags, content: 'cta' }, { now })
+      : tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
     ctaLabel: tpl.ctaLabel,
     footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
     unsubUrl: unsubscribeUrl(userId),
@@ -187,15 +198,25 @@ export function renderHtml(kind, userId) {
 }
 
 /** One Resend item. The List-Unsubscribe headers carry the footer's own link. */
-export function mailItem(kind, recipient) {
+export function mailItem(kind, recipient, { now = Date.now() } = {}) {
   return {
     from: FROM_ADDRESS,
     to: [recipient.email],
     reply_to: 'zaid@deutsch-meister.de',
     subject: TEMPLATES[kind].subject,
-    html: renderHtml(kind, recipient.id),
+    html: renderHtml(kind, recipient.id, { nextPath: recipient.nextPath || FIRST_STEP_PATH, now }),
     headers: unsubscribeHeaders(unsubscribeUrl(recipient.id)),
   };
+}
+
+/** The kinds whose button opens the learner's own next step. */
+export const NEXT_STEP_KINDS = Object.freeze(Object.keys(TEMPLATES).filter((kind) => TEMPLATES[kind].nextStep));
+
+/** `recipients` with each one's next step as `nextPath` (trial-lifecycle.mjs withNextPaths). Before the claim; throws on a failed read. */
+export async function withNextPaths(kind, recipients, client = supabase) {
+  if (!NEXT_STEP_KINDS.includes(kind) || recipients.length === 0) return recipients;
+  const paths = await resolveNextPaths(client, recipients.map((r) => r.id));
+  return recipients.map((r) => ({ ...r, nextPath: paths.get(r.id) || FIRST_STEP_PATH }));
 }
 
 // ─── selection ───────────────────────────────────────────────────────────────
@@ -298,6 +319,7 @@ async function sendKind(resendKey, kind, { dry, canary }) {
 
   if (dry) return { kind, wouldSend: recipients.length, sent: 0, failed: 0 };
   if (recipients.length === 0) return { kind, sent: 0, failed: 0 };
+  recipients = await withNextPaths(kind, recipients);
 
   let sent = 0;
   let failed = 0;

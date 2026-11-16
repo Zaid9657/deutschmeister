@@ -15,14 +15,26 @@
 // trial and activation jobs mail ONLY confirmed ones. The audiences are
 // disjoint by construction, so no window arithmetic is needed between them.
 //
-//   - Cohort: email-provider signups aged 2–90 days. Under 2 days the normal
-//     confirmation email is still fresh; over 90 the address is stale and
-//     mailing it is a deliverability risk, not a courtesy.
+//   - Cohort: email-provider signups aged 1 hour to 90 days. Over 90 days the
+//     address is stale and mailing it is a deliverability risk, not a courtesy.
+//     The floor was 2 days until 2026-11-15 (plan "Stop the leaks", step 2):
+//     25–29% of signups never confirm, and two days is long after the moment
+//     they wanted in. An hour leaves the normal confirmation mail time to land
+//     first. The job runs hourly since then, so the nudge comes 1–2 hours after
+//     signup instead of at the next 10:30.
 //   - Hygiene: disposable domains excluded (shared list), opted-out profiles
 //     excluded, ledger kind 'confirm_nudge' claims BEFORE send
 //     (UNIQUE(user_id, kind) — one nudge per account, ever).
-//   - Pacing: at most PER_RUN sends per daily run, so the ~230-account
-//     backlog drains over about a week instead of spiking the send domain.
+//   - Pacing: at most PER_RUN sends per run.
+//
+// WELCOME AFTER CONFIRMATION (2026-11-15). The same hourly run sends the
+// welcome mail to addresses confirmed in the last WELCOME_WINDOW_HOURS that
+// have not had it (send-welcome-email.mjs now skips unconfirmed signups, which
+// it used to mail at account creation, racing the confirmation mail). It claims
+// the 'welcome' kind before sending, as the webhook path does, so one account
+// gets one welcome. It is not behind CONFIRM_NUDGE_ENABLED: it replaces a mail
+// that always went out. Until migrations/2026-11-15-welcome-after-confirmation.sql
+// admits the kind, its claim fails and it sends nothing.
 //
 // SHIPS OFF, twice over (the activation-lifecycle pattern):
 //   1. CONFIRM_NUDGE_ENABLED must be exactly 'true' or the run no-ops.
@@ -38,6 +50,7 @@ import { isBlockedEmail } from './_shared/emailHygiene.mjs';
 import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
 import { continueToken, TOKEN_TTL_DAYS } from './confirm-continue.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { welcomeItem, WELCOME_KIND } from './send-welcome-email.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -46,9 +59,18 @@ const BASE_URL = 'https://deutsch-meister.de';
 const SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 
-export const MIN_AGE_DAYS = 2;
+export const MIN_AGE_HOURS = 1;
 export const MAX_AGE_DAYS = 90;
 export const PER_RUN = 40;
+
+/** How long after confirmation the welcome may still go out. */
+export const WELCOME_WINDOW_HOURS = 72;
+/**
+ * Accounts created before this were welcomed at creation by the old webhook
+ * path, confirmed or not, so the sweep never mails them a second welcome.
+ */
+export const WELCOME_SINCE = '2026-11-16T00:00:00.000Z';
+export const WELCOME_PER_RUN = 100;
 
 let supabase;
 try {
@@ -107,16 +129,16 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
-// Unconfirmed, email-provider, aged [MIN_AGE_DAYS, MAX_AGE_DAYS), address not
-// disposable, profile not opted out, never claimed. Oldest first, so the
+// Unconfirmed, email-provider, aged [MIN_AGE_HOURS, MAX_AGE_DAYS), address not
+// disposable, profile not opted out, never claimed. Oldest first, so a
 // backlog drains from the stale end toward fresh signups.
 //
 // ONE definition of "who is due", read by this job and by the sentinel. The
-// job passes nothing: today's run, at most PER_RUN. The sentinel passes
+// job passes nothing: this run, at most PER_RUN. The sentinel passes
 // `span` = { first, last }, the scheduled runs since the last confirm_nudge
 // row, and `limit: Infinity`: the age window then covers all of those runs
-// (created in [first - MAX_AGE_DAYS, last - MIN_AGE_DAYS)), so an account that
-// turned two days old after the last run — the next run's work — is not
+// (created in [first - MAX_AGE_DAYS, last - MIN_AGE_HOURS)), so an account that
+// turned an hour old after the last run — the next run's work — is not
 // counted as missed.
 //
 // `canary` (the handler's LIFECYCLE_TEST_RECIPIENTS set) narrows the cohort
@@ -126,7 +148,7 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 export async function selectCandidates(client = supabase, { span = null, limit = PER_RUN, canary = null } = {}) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
-  const newest = new Date((span ? span.last : now) - MIN_AGE_DAYS * day).toISOString();
+  const newest = new Date((span ? span.last : now) - MIN_AGE_HOURS * 60 * 60 * 1000).toISOString();
   const oldest = new Date((span ? span.first : now) - MAX_AGE_DAYS * day).toISOString();
 
   const unconfirmed = [];
@@ -176,6 +198,72 @@ export async function selectCandidates(client = supabase, { span = null, limit =
     .slice(0, limit);
 }
 
+// ─── welcome after confirmation ──────────────────────────────────────────────
+
+// Confirmed in the last WELCOME_WINDOW_HOURS, created on or after WELCOME_SINCE,
+// address not disposable, profile not opted out, no 'welcome' row. Any provider:
+// a Google sign-up is welcomed by the webhook at creation and its claim makes it
+// "already welcomed" here. Earliest confirmation first, at most `limit`.
+export async function selectWelcomeRecipients(client = supabase, { now = Date.now(), limit = WELCOME_PER_RUN } = {}) {
+  const confirmedSince = now - WELCOME_WINDOW_HOURS * 60 * 60 * 1000;
+  const createdSince = Date.parse(WELCOME_SINCE);
+  const confirmed = [];
+  let page = 1;
+  while (true) {
+    const { data, error } = await client.auth.admin.listUsers({ page, perPage: 1000 });
+    if (error) throw new Error(`listUsers: ${error.message}`);
+    for (const u of data.users) {
+      const at = Date.parse(u.email_confirmed_at);
+      if (u.email && u.email_confirmed_at && at >= confirmedSince && at <= now && Date.parse(u.created_at) >= createdSince && !isBlockedEmail(u.email)) {
+        confirmed.push({ id: u.id, email: u.email.trim().toLowerCase(), confirmedAt: u.email_confirmed_at });
+      }
+    }
+    if (data.users.length < 1000) break;
+    page++;
+  }
+  if (confirmed.length === 0) return [];
+
+  // A failed ledger read stops the run: read as "nobody welcomed", it would
+  // welcome again everyone the webhook already welcomed.
+  const [{ data: already, error: ledgerError }, out] = await Promise.all([
+    client.from('lifecycle_emails').select('user_id').eq('kind', WELCOME_KIND).in('user_id', confirmed.map((r) => r.id)),
+    fetchOptedOutIds(client),
+  ]);
+  if (ledgerError) throw new Error(`welcome ledger read failed: ${ledgerError.message}`);
+  const welcomed = new Set((already || []).map((r) => r.user_id));
+  return confirmed
+    .filter((r) => !welcomed.has(r.id) && !out.has(r.id))
+    .sort((a, b) => a.confirmedAt.localeCompare(b.confirmedAt))
+    .slice(0, limit);
+}
+
+/** Claim, then send, the welcomes due this run. A failed claim (migration unapplied) sends nothing. */
+async function sendWelcomes(resendKey, { dry = false } = {}) {
+  const recipients = await selectWelcomeRecipients(supabase);
+  if (dry) return { dry: true, wouldSend: recipients.length };
+  if (recipients.length === 0) return { sent: 0, failed: 0 };
+
+  const { data: claims, error: claimError } = await supabase
+    .from('lifecycle_emails')
+    .upsert(recipients.map((r) => ({ user_id: r.id, kind: WELCOME_KIND })), { onConflict: 'user_id,kind', ignoreDuplicates: true })
+    .select('user_id');
+  if (claimError) {
+    console.error('[confirmation-nudge] welcome claim failed (2026-11-15 migration applied?):', claimError.message);
+    return { sent: 0, failed: 0, error: `claim failed: ${claimError.message}` };
+  }
+  const claimedIds = new Set((claims || []).map((r) => r.user_id));
+  const claimed = recipients.filter((r) => claimedIds.has(r.id));
+  if (claimed.length === 0) return { sent: 0, failed: 0 };
+
+  try {
+    await sendBatch(resendKey, claimed.map((r) => welcomeItem(r.email)));
+    return { sent: claimed.length, failed: 0 };
+  } catch (err) {
+    console.error('[confirmation-nudge] welcome batch failed:', err.message);
+    return { sent: 0, failed: claimed.length };
+  }
+}
+
 function continueUrl(userId) {
   const exp = Math.floor(Date.now() / 1000) + TOKEN_TTL_DAYS * 24 * 60 * 60;
   const token = continueToken(SECRET, userId, exp);
@@ -194,15 +282,9 @@ async function sendBatch(resendKey, items) {
 // ─── handler ─────────────────────────────────────────────────────────────────
 
 const innerHandler = async (event) => {
-  if (process.env.CONFIRM_NUDGE_ENABLED !== 'true') {
-    console.log('[confirmation-nudge] CONFIRM_NUDGE_ENABLED is not "true" — doing nothing.');
-    return { statusCode: 200, body: JSON.stringify({ enabled: false, sent: 0 }) };
-  }
-
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return { statusCode: 500, body: 'RESEND_API_KEY not set' };
   if (!supabaseKey) return { statusCode: 500, body: 'SUPABASE_SERVICE_ROLE_KEY not set' };
-  if (!SECRET) return { statusCode: 500, body: 'UNSUB_SECRET / CAMPAIGN_SECRET not set' };
 
   const qs = event.queryStringParameters || {};
   let bodyPayload = {};
@@ -215,6 +297,22 @@ const innerHandler = async (event) => {
   }
 
   const dry = qs.dry === '1';
+
+  // The welcome first, whatever the nudge's switch says (see the note at the top).
+  let welcome;
+  try {
+    welcome = await sendWelcomes(resendKey, { dry });
+  } catch (err) {
+    console.error('[confirmation-nudge] welcome failed:', err.message);
+    welcome = { sent: 0, failed: 0, error: err.message };
+  }
+
+  if (process.env.CONFIRM_NUDGE_ENABLED !== 'true') {
+    console.log('[confirmation-nudge] CONFIRM_NUDGE_ENABLED is not "true" — no nudge.');
+    return { statusCode: 200, body: JSON.stringify({ enabled: false, sent: 0, welcome }) };
+  }
+  if (!SECRET) return { statusCode: 500, body: 'UNSUB_SECRET / CAMPAIGN_SECRET not set' };
+
   const canary = new Set(
     (process.env.LIFECYCLE_TEST_RECIPIENTS || '')
       .split(',')
@@ -228,12 +326,12 @@ const innerHandler = async (event) => {
   const recipients = await selectCandidates(supabase, { canary });
 
   if (dry) {
-    const result = { enabled: true, dry: true, wouldSend: recipients.length };
+    const result = { enabled: true, dry: true, wouldSend: recipients.length, welcome };
     console.log('[confirmation-nudge]', JSON.stringify(result));
     return { statusCode: 200, body: JSON.stringify(result) };
   }
   if (recipients.length === 0) {
-    return { statusCode: 200, body: JSON.stringify({ enabled: true, sent: 0, failed: 0 }) };
+    return { statusCode: 200, body: JSON.stringify({ enabled: true, sent: 0, failed: 0, welcome }) };
   }
 
   // Claim BEFORE send: UNIQUE(user_id, kind) makes re-runs and crashes safe —
@@ -247,13 +345,13 @@ const innerHandler = async (event) => {
     .select('user_id');
   if (claimError) {
     console.error('[confirmation-nudge] claim failed (migration applied?):', claimError.message);
-    return { statusCode: 500, body: JSON.stringify({ error: `claim failed: ${claimError.message}` }) };
+    return { statusCode: 500, body: JSON.stringify({ error: `claim failed: ${claimError.message}`, welcome }) };
   }
 
   const claimedIds = new Set((claims || []).map((r) => r.user_id));
   const claimed = recipients.filter((r) => claimedIds.has(r.id));
   if (claimed.length === 0) {
-    return { statusCode: 200, body: JSON.stringify({ enabled: true, dry: false, sent: 0, failed: 0 }) };
+    return { statusCode: 200, body: JSON.stringify({ enabled: true, dry: false, sent: 0, failed: 0, welcome }) };
   }
 
   const items = claimed.map((r) => ({
@@ -274,12 +372,13 @@ const innerHandler = async (event) => {
     console.error('[confirmation-nudge] batch failed:', err.message);
   }
 
-  const result = { enabled: true, dry: false, sent, failed };
+  const result = { enabled: true, dry: false, sent, failed, welcome };
   console.log('[confirmation-nudge]', JSON.stringify(result));
   return { statusCode: 200, body: JSON.stringify(result) };
 };
 
-// 10:30 UTC — after trial-lifecycle (08:00) and activation-lifecycle (09:30);
-// audiences are disjoint anyway (this job mails only unconfirmed accounts),
-// the spacing just keeps the send domain's daily pattern smooth.
-export const handler = schedule('30 10 * * *', innerHandler);
+// Hourly at :20 since 2026-11-15 (it ran daily at 10:30): the nudge comes an
+// hour or two after signup, the welcome within the hour after confirmation.
+// The nudge's audience (unconfirmed) is disjoint from the trial and activation
+// mails' (confirmed) whatever the hour.
+export const handler = schedule('20 * * * *', innerHandler);

@@ -130,16 +130,22 @@ campaign is the mail kind with hyphens, and the content names the link: `cta`
 | Mail | `utm_campaign` | `cta` lands on | Other links (`utm_content` → page) |
 |---|---|---|---|
 | welcome | `welcome` | `/course/a1.1/l/1` (since 2026-10-25; `/analyze/` before) | `xray` → `/analyze/` |
-| trial day 3 | `trial-day3` | `/analyze/` | |
+| trial day 3 | `trial-day3` | the learner's next step, signed in (continue link, since 2026-11-15; `/analyze/` before) | |
 | trial day 6 | `trial-day6` | `/pricing/` | |
-| trial ended | `trial-ended` | `/pricing/` | |
+| trial ended | `trial-ended` | the learner's next step, signed in (continue link, since 2026-11-15; `/pricing/` before) | |
 | activation day 1 | `activation-d1` | `/course/a1.1/l/1` (since 2026-10-25; `/level-test/` before) | `level-test` → `/level-test/` |
-| activation day 4 | `activation-d4` | `/analyze/` | |
+| activation day 4 | `activation-d4` | the learner's next step, signed in (continue link, since 2026-11-15; `/analyze/` before) | |
 | course reminder | `course-reminder` | the step it names: `/course/<level>/l/<nr>`, `/course/<level>/checkpoint/<nr>`, the final test `/modelltest/<testSlug>`, or `/course/<level>` (since 2026-10-25) | |
 | confirmation nudge | `confirm-nudge` | (a signed function URL, never tagged) | |
 
 Lektion 1, the course pages and `/modelltest/<slug>` are SPA routes, so they carry no trailing slash;
 `/analyze/`, `/pricing/` and `/level-test/` are prerendered and keep theirs.
+
+The continue link (`netlify/functions/continue.mjs`) is the one function URL that
+carries the tags: `tagEmailLink()` puts them on
+`/.netlify/functions/continue?uid=…&dest=<step>&exp=…&token=…`, and the function
+forwards them (valid labels with `utm_source=email` only, never the token) onto the
+page it lands on, `/login?next=<step>`, where `public/attribution.js` reads them.
 
 ```
 https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=cta

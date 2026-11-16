@@ -302,16 +302,33 @@ export function dailyRunTimes(cron, sinceMs, untilMs) {
 }
 
 /**
+ * The run times of an hourly 'M * * * *' cron in (sinceMs, untilMs], ascending.
+ * Any other cron shape → null. (confirmation-nudge runs hourly since 2026-11-15.)
+ */
+export function hourlyRunTimes(cron, sinceMs, untilMs) {
+  const m = /^(\d{1,2}) \* \* \* \*$/.exec(String(cron || '').trim());
+  if (!m || Number(m[1]) > 59 || !Number.isFinite(sinceMs) || !Number.isFinite(untilMs)) return null;
+  const HOUR_MS = 3600000;
+  let t = Math.floor(sinceMs / HOUR_MS) * HOUR_MS + Number(m[1]) * 60000;
+  while (t <= sinceMs) t += HOUR_MS;
+  const runs = [];
+  for (; t <= untilMs; t += HOUR_MS) runs.push(t);
+  return runs;
+}
+
+/**
  * The scheduled runs a quiet ledger job had to answer for: those after its
  * last ledger row (the run that wrote it is not one of them), no further back
  * than the lookback, and at least the grace old. { first, last, runs } in ms,
- * first/last null when there were none; null when the cron is not daily.
+ * first/last null when there were none; null when the cron is neither daily
+ * nor hourly.
  */
 export function dueSpan(job, last, now, D = LEDGER_JOB_DUE) {
   const nowMs = new Date(now).getTime();
   const lastMs = Date.parse(last);
   const since = Math.max(Number.isFinite(lastMs) ? lastMs : -Infinity, nowMs - D.lookbackDays * DAY_MS);
-  const runs = dailyRunTimes(job.cron, since, nowMs - D.runGraceMinutes * 60000);
+  const until = nowMs - D.runGraceMinutes * 60000;
+  const runs = dailyRunTimes(job.cron, since, until) || hourlyRunTimes(job.cron, since, until);
   if (!runs) return null;
   return { first: runs[0] ?? null, last: runs.at(-1) ?? null, runs: runs.length };
 }

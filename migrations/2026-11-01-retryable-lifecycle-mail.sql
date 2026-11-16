@@ -8,6 +8,7 @@ begin;
 alter table public.lifecycle_emails drop constraint if exists lifecycle_emails_kind_check;
 alter table public.lifecycle_emails add constraint lifecycle_emails_kind_check check (
   kind in ('trial_day3', 'trial_day6', 'trial_ended', 'activation_d1', 'activation_d4', 'confirm_nudge',
+    'welcome', -- 2026-11-15-welcome-after-confirmation.sql; kept here so applying this draft never drops it
     'trial_followup_d14', 'trial_followup_d30', 'trial_followup_d60')
   or kind ~ '^course_reminder_[0-9]{4}-[0-9]{2}-[0-9]{2}$'
 );
