@@ -6,7 +6,7 @@
 // was already correct; only the delivery was wrong.
 
 import { getAttribution } from './attribution';
-import { isFunnelEvent, sanitizeProps } from '../data/events';
+import { GA4_STANDARD_EVENTS, isFunnelEvent, sanitizeProps } from '../data/events';
 
 const key = import.meta.env.VITE_POSTHOG_KEY;
 const host = import.meta.env.VITE_POSTHOG_HOST;
@@ -95,13 +95,16 @@ function mirrorToGa(event, props) {
   if (!hasConsent() || !isFunnelEvent(event)) return;
   try {
     const a = getAttribution();
-    window.gtag('event', event, sanitizeProps({
+    const payload = sanitizeProps({
       dm_source: a?.first?.source || undefined,
       dm_medium: a?.first?.medium || undefined,
       dm_campaign: a?.first?.campaign || undefined,
       entry_page: window.location.pathname,
       ...props,
-    }));
+    });
+    window.gtag('event', event, payload);
+    // GA4's own name (sign_up, begin_checkout, purchase): what key events and revenue count.
+    if (GA4_STANDARD_EVENTS[event]) window.gtag('event', GA4_STANDARD_EVENTS[event], payload);
   } catch {
     /* analytics must never break the app */
   }
