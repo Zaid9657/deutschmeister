@@ -21,10 +21,12 @@ import { dirname, join } from 'node:path';
 
 import { EXAM_TRACKS, examTrackByKey, examTrackBySlug, MOCK_DISCLAIMER_DE } from '../src/data/examTracks.js';
 import { levels as ALL_LEVELS } from '../src/data/content.js';
+import { sitemapFilter } from '../astro-site/src/lib/sitemapFilter.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const netlifyToml = readFileSync(join(root, 'netlify.toml'), 'utf8');
-const astroConfig = readFileSync(join(root, 'astro-site/astro.config.mjs'), 'utf8');
+// The sitemap filter lives in its own module since 2026-11-15; the config uses it.
+const astroConfig = readFileSync(join(root, 'astro-site/src/lib/sitemapFilter.js'), 'utf8');
 const checkBuiltHtml = readFileSync(join(root, 'scripts/check-built-html.mjs'), 'utf8');
 const hubsSrc = readFileSync(join(root, 'astro-site/src/data/exams/index.js'), 'utf8');
 const hubRenderer = readFileSync(join(root, 'astro-site/src/pages/pruefung/[slug].astro'), 'utf8');
@@ -154,8 +156,11 @@ test('/pruefung is merged, sitemapped and required in the built-HTML check', () 
   );
   assert.ok(
     astroConfig.includes("page.includes('/pruefung/')"),
-    'astro.config.mjs sitemap filter must whitelist /pruefung/'
+    'the sitemap filter (astro-site/src/lib/sitemapFilter.js) must whitelist /pruefung/'
   );
+  for (const t of EXAM_TRACKS) {
+    assert.ok(sitemapFilter(`https://deutsch-meister.de/pruefung/${t.slug}/`), `/pruefung/${t.slug}/ is listed in the sitemap`);
+  }
   for (const t of EXAM_TRACKS) {
     assert.ok(
       checkBuiltHtml.includes(`pruefung/${t.slug}/index.html`),

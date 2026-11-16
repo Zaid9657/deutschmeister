@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import ExercisePlayer from '../../../components/ExercisePlayer.jsx';
+import ExercisePlayer, { dealOptions } from '../../../components/ExercisePlayer.jsx';
 import RuleContent from '../../../components/RuleContent.astro';
 import RichText from '../../../components/RichText.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
@@ -173,9 +173,28 @@ const quickSummary = topic?.description_en
   ?? seoExtra?.snippetIntro
   ?? `Learn how ${topicTitle} works, then apply it in German examples and practice.`;
 const xraySentence = examples.find((example) => example?.sentence_de)?.sentence_de ?? '';
+// Every /analyze/?s=<sentence> link is rel="nofollow" and its URL shape is
+// disallowed in public/robots.txt (2026-11-15): about 800 such parameter URLs
+// filled Google's crawl queue ahead of the ~138 real pages ("discovered –
+// currently not indexed"). scripts/crawl-guard.mjs checkIndexBudget() holds the
+// built pages to it.
 const xrayHref = xraySentence
   ? `/analyze/?s=${encodeURIComponent(xraySentence)}`
   : '/analyze/';
+// The first questions of the set as plain HTML (2026-11-15). The island is
+// client:visible and, above the free level, renders only its lock at build
+// time, so the served document held one question at most and usually none:
+// Google read less than a learner sees. Questions and options only, never an
+// answer or an explanation, and the options in the island's own first-run
+// order (dealOptions): the stored order puts the answer first a third of the
+// time. The island and its lock are unchanged.
+const PREVIEW_COUNT = 3;
+const previewExercises = exercises.slice(0, PREVIEW_COUNT).map((ex) => ({
+  prompt: ex.question_de || ex.question_en,
+  german: Boolean(ex.question_de),
+  translation: ex.question_de && ex.question_en ? ex.question_en : null,
+  options: ex.exercise_type === 'multiple_choice' ? dealOptions(ex) : [],
+}));
 const tocItems = [
   { href: '#summary', label: 'Summary', show: true },
   { href: '#introduction', label: 'Introduction', show: Boolean(topic?.introduction_en) },
@@ -285,7 +304,7 @@ const courseOffer = station?.status === 'ticket'
 
         <nav class="mt-5 flex flex-wrap gap-3" aria-label="Use this lesson">
           <a href="#practice" class="dm-key dm-key-siegel">Practise this topic</a>
-          <a href={xrayHref} class="dm-key dm-key-ghost">Explore a sentence in X-Ray</a>
+          <a href={xrayHref} rel={xraySentence ? 'nofollow' : undefined} class="dm-key dm-key-ghost">Explore a sentence in X-Ray</a>
         </nav>
       </div>
     </header>
@@ -304,7 +323,7 @@ const courseOffer = station?.status === 'ticket'
       </ul>
       <div class="mt-5 flex flex-wrap gap-3">
         {exercises.length > 0 && <a href="#practice" class={BTN_LEARNING}>Jump to practice</a>}
-        <a href={xrayHref} class={BTN_SECONDARY}>Open {xraySentence ? 'an example' : 'a sentence'} in Sentence X-Ray</a>
+        <a href={xrayHref} rel={xraySentence ? 'nofollow' : undefined} class={BTN_SECONDARY}>Open {xraySentence ? 'an example' : 'a sentence'} in Sentence X-Ray</a>
       </div>
     </section>
 
@@ -515,7 +534,7 @@ const courseOffer = station?.status === 'ticket'
                     <p class="mt-3 text-sm leading-relaxed text-graphite">{ex.explanation_en}</p>
                   )}
 
-                  <a href={`/analyze/?s=${encodeURIComponent(ex.sentence_de)}`} class="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
+                  <a href={`/analyze/?s=${encodeURIComponent(ex.sentence_de)}`} rel="nofollow" class="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
                     Examine this sentence in Sentence X-Ray →
                   </a>
 
@@ -570,6 +589,24 @@ const courseOffer = station?.status === 'ticket'
             client:visible
           />
         </div>
+        {previewExercises.length > 0 && (
+          <details class={`mt-4 px-5 py-4 ${CARD_FLAT}`}>
+            <summary class="cursor-pointer text-sm font-bold text-ink">Read the first {previewExercises.length} {previewExercises.length === 1 ? 'question' : 'questions'}</summary>
+            <ol class="mt-3 space-y-4">
+              {previewExercises.map((q, qi) => (
+                <li data-static-exercise>
+                  <p class="font-display text-[1.0625rem] font-semibold leading-snug text-ink"><span class="font-data text-[0.8125rem] text-graphite">{qi + 1}.</span> <span lang={q.german ? 'de' : undefined}>{q.prompt}</span></p>
+                  {q.translation && <p class="mt-1 text-sm italic text-graphite">{q.translation}</p>}
+                  {q.options.length > 0 && (
+                    <ul class="mt-2 flex flex-wrap gap-2" aria-label="Options">
+                      {q.options.map((opt) => <li class="rounded-pill border border-rule px-3 py-1 text-sm text-ink" lang="de">{opt}</li>)}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
       </section>
     )}
 

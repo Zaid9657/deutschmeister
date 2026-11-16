@@ -23,6 +23,9 @@ const code = level.toUpperCase();
 const slug = levelToSlug(level);
 const course = courseForLevel(level);
 const isFree = level === 'a1.1';
+// A "Coming next" page (COMING_SOON_LEVELS in pricing.js) is thin and near-identical
+// across six levels: noindex and out of the sitemap (src/lib/sitemapFilter.js) until
+// the level leaves that list, when both lift on the next build (2026-11-15).
 const coming = Boolean(course?.comingSoon);
 const curriculum = curriculumFor(level);
 const syllabus = salesCurriculum(level);
@@ -43,7 +46,7 @@ const jsonLd = {
   ...(isFree ? { isAccessibleForFree: true } : coming ? {} : { offers: { '@type': 'Offer', price: String(course.price), priceCurrency: CURRENCY, availability: 'https://schema.org/InStock', url: `https://deutsch-meister.de/courses/${slug}/` } }),
 };
 ---
-<Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd}>
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} noindex={coming}>
   {coming ? <div class="c4-wrap c4-unavailable"><p class="c4-level-badge">{code}</p><h1>More German for real life.<br /><span>Coming next.</span></h1><p>The {code} guided course is still being built. It is not on sale yet.</p><div class="c4-unavailable-actions"><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a><a href="/courses/a1-2/" class="c4-button c4-button-outline">Explore A1.2 →</a></div><RouteBand /><a href="/courses/" class="c4-text-link">← All courses</a></div>
   : <>
     <section class="c4-wrap c4-level-hero" aria-labelledby="level-h">
