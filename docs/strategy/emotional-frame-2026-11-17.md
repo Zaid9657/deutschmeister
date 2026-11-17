@@ -1,6 +1,6 @@
 # The emotional frame of a DeutschMeister course (proposal, 2026-11-17)
 
-**Status: proposed, waiting for the founder.** Nothing here is built. Written by Claude after its own
+**Status: NOT APPROVED. The founder rejected handling this as fixed rules on 2026-11-17** ("this is an emotional frame. We are containing the people and we are setting the emotional tone. So I don't think if it's the right idea to set this as fixed rules."). He gave the emotional tone to Codex. The "five rules" below are not a standard and must not be built from; the evidence table, the findings in today's course and Codex's answer remain as reference. Nothing here is built. Written by Claude after its own
 research pass and an independent consult with Codex (answer in full at the end; Codex had no web
 access, so its research claims are from memory and its repo claims were checked by Claude where
 this document repeats them).
