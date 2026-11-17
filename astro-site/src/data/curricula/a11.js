@@ -163,12 +163,17 @@ export const CURRICULUM_A11 = {
       slug: 'hallo-ich-bin',
       flow: 'guided',
       guided: {
+        // The otter's line on the first screen. Written by Codex (2026-11-17); the founder judges it by playing.
+        opening: {
+          en: 'Welcome to your first conversation in German. Take your time.',
+          de: 'Willkommen zu Ihrem ersten Gespräch auf Deutsch. Nehmen Sie sich Zeit.',
+        },
         read: {
           titleDe: 'Willkommen!', titleEn: 'Welcome!',
           instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the card. Tap a word for its meaning.',
           // A welcome card at reception: greetings for the day and useful phrases.
-          text: 'Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.',
+          text: 'Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\nTschüss! Bis morgen!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.',
           questions: [
             {
               promptDe: 'Was ist „Guten Tag“? Wählen Sie die Bedeutung.',
@@ -223,8 +228,8 @@ export const CURRICULUM_A11 = {
             meaning: {
               promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say as she leaves? Choose the meaning.',
-              options: ['Bye! See you tomorrow.', 'Good morning!', 'Nice to meet you.'],
-              answer: 'Bye! See you tomorrow.',
+              options: ['Goodbye!', 'Good morning!', 'Nice to meet you.'],
+              answer: 'Goodbye!',
             },
             say: { line: 9 },
           },
@@ -291,9 +296,11 @@ export const CURRICULUM_A11 = {
           { speaker: 'Frau Kaya', de: 'Danke. Und wie buchstabiert man Ana?', en: 'Thank you. And how do you spell Ana?' },
           { speaker: 'Ana', de: 'A-N-A.', en: 'A-N-A.' },
           { speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
-          { speaker: 'Ana', de: 'Mir geht es gut, danke.', en: 'I\'m fine, thank you.' },
-          { speaker: 'Frau Kaya', de: 'Auf Wiedersehen, Frau Chakiri.', en: 'Goodbye, Ms Chakiri.' },
-          { speaker: 'Ana', de: 'Tschüss! Bis morgen.', en: 'Bye! See you tomorrow.' },
+          // 2026-11-17 (Codex, tone): Ana asks back and both leave with the farewell the can-do names,
+          // so the learner says the question and „Auf Wiedersehen“ aloud. Tschüss/Bis morgen stay Wortfeld.
+          { speaker: 'Ana', de: 'Mir geht es gut, danke. Und wie geht es Ihnen?', en: 'I\'m fine, thank you. And how are you?' },
+          { speaker: 'Frau Kaya', de: 'Mir geht es gut, danke. Auf Wiedersehen, Frau Chakiri.', en: 'I\'m fine, thank you. Goodbye, Ms Chakiri.' },
+          { speaker: 'Ana', de: 'Auf Wiedersehen!', en: 'Goodbye!' },
         ],
       },
       pretest: {
