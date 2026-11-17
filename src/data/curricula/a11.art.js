@@ -1,8 +1,9 @@
 // A1.1 course art manifest — Wave 2, 2026-09-19.
 //
-// Mixed manifest: L1 reception is the supplied Higgsfield painting (2026-11-12).
+// Mixed manifest: L1 reception is an illustration drawn with the Codex image tool
+// on 2026-11-17 after the founder picked the otter as the course guide.
 // All other scenes and characters retain their inline SVGs. No generated audio.
-// Painting provenance and approved screen: docs/strategy/lesson-look-2026-11-12/.
+// Provenance, brief and approved screens: docs/strategy/lesson-look-2026-11-17/.
 //
 // `alt` here is what ships to a learner (via `role="img"` on the SVG branch,
 // `alt` on the `<img>` branch); `tests/course-art.test.mjs` requires every
@@ -11,22 +12,25 @@
 
 export const A11_ART = {
   generatedWith: {
-    tool: 'Higgsfield painting + inline SVG (src/components/illustrations/)',
+    tool: 'Codex image tool illustration + inline SVG (src/components/illustrations/)',
     model: null,
-    date: '2026-11-12',
+    date: '2026-11-17',
     styleDoc: 'docs/design/a11-art-style.md',
-    status: 'mixed-painted-svg',
+    status: 'mixed-illustrated-svg',
   },
 
-  teacher: {
-    name: 'Frau Hoffmann', isAI: true,
-    src: '/art/a11/teacher-512.webp', srcSmall: '/art/a11/teacher-160.webp',
-    alt: 'Frau Hoffmann, an AI teacher with chestnut hair, round glasses and a teal cardigan',
+  guide: {
+    name: null, // no approved name yet
+    poses: {
+      thinking: { src: '/art/a11/otter-thinking-512.webp', srcSmall: '/art/a11/otter-thinking-160.webp', alt: 'The course otter, thinking' },
+      satisfied: { src: '/art/a11/otter-satisfied-512.webp', srcSmall: '/art/a11/otter-satisfied-160.webp', alt: 'The course otter, quietly pleased' },
+    },
   },
 
   characters: {
-    Ana: { alt: 'Ana, a student from Morocco newly arrived in Bremen', component: 'CharacterAvatar', src: null, srcSmall: null },
-    'Frau Kaya': { alt: 'Frau Kaya, who works at the hostel reception', component: 'CharacterAvatar', src: null, srcSmall: null },
+    // Cut from the L1 scene, so the cast list shows the same two figures the scene does.
+    Ana: { alt: 'Ana, a student from Morocco newly arrived in Bremen, drawn as an otter', component: 'CharacterAvatar', src: '/art/a11/ana-160.webp', srcSmall: '/art/a11/ana-160.webp' },
+    'Frau Kaya': { alt: 'Frau Kaya, who works at the hostel reception, drawn as a bird', component: 'CharacterAvatar', src: '/art/a11/frau-kaya-160.webp', srcSmall: '/art/a11/frau-kaya-160.webp' },
     'Herr Weber': { alt: 'Herr Weber, from the public office (Bürgerbüro)', component: 'CharacterAvatar', src: null, srcSmall: null },
     Lena: { alt: 'Lena, a learner whose hobby is sport', component: 'CharacterAvatar', src: null, srcSmall: null },
     Tim: { alt: 'Tim, a learner furnishing his room', component: 'CharacterAvatar', src: null, srcSmall: null },
@@ -36,7 +40,7 @@ export const A11_ART = {
   },
 
   situations: {
-    'a1.1-l01': { alt: 'Ana arrives at a hostel reception in Bremen and Frau Kaya welcomes her', component: 'SituationScene', src: '/art/a11/l01-rezeption-1168.webp', srcSmall: '/art/a11/l01-rezeption-640.webp', srcMedium: '/art/a11/l01-rezeption-800.webp', width: 1168, height: 880 },
+    'a1.1-l01': { alt: 'Ana, drawn as an otter with a suitcase, arrives at a hostel reception in Bremen; Frau Kaya, drawn as a bird, welcomes her', component: 'SituationScene', src: '/art/a11/l01-rezeption-1168.webp', srcSmall: '/art/a11/l01-rezeption-640.webp', srcMedium: '/art/a11/l01-rezeption-800.webp', width: 1168, height: 880 },
     'a1.1-l02': { alt: 'A public office counter with a form and a pen', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l03': { alt: 'A photo frame on a table', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l04': { alt: 'A flea-market stall with a table and a chair', component: 'SituationScene', src: null, srcSmall: null },

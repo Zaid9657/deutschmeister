@@ -181,12 +181,60 @@ test('guided recaps carry their story hooks after can-dos; legacy A1.2 has none'
   const recap = read('src/components/lesson/RecapStage.jsx'); assert.ok(recap.indexOf('canDo.map') < recap.indexOf('stage.nextHook')); assert.ok(recap.indexOf('stage.nextHook') < recap.indexOf('<details className'));
 });
 
-test('teacher identity is separate from the cast, has real portrait files, and never collides with a story surname', () => {
-  assert.equal(A11_META.teacher, A11_ART.teacher); assert.equal(A11_META.teacher.name, 'Frau Hoffmann'); assert.equal(A11_META.teacher.isAI, true);
-  for (const path of [A11_ART.teacher.src, A11_ART.teacher.srcSmall]) assert.ok(existsSync(new URL(`../public${path}`, import.meta.url)));
-  assert.ok(A11_ART.teacher.alt);
-  for (const curriculum of [c, c12]) for (const l of curriculum.lektionen) for (const line of l.dialog.lines) assert.notEqual(line.speaker.split(' ').at(-1), A11_META.teacher.name.split(' ').at(-1));
-  assert.ok(!Object.hasOwn(A11_ART.characters, A11_META.teacher.name));
+test('the course guide is separate from the cast, has real pose files, and has no name until the owner approves one', () => {
+  assert.equal(A11_META.guide, A11_ART.guide); assert.equal(A11_META.guide.name, null);
+  for (const pose of Object.values(A11_ART.guide.poses)) {
+    for (const path of [pose.src, pose.srcSmall]) assert.ok(existsSync(new URL(`../public${path}`, import.meta.url)), path);
+    assert.ok(pose.alt?.trim());
+    assert.ok(!Object.values(A11_ART.characters).includes(pose));
+  }
+  assert.ok(!A11_META.characters.includes(A11_META.guide));
+  assert.ok(!Object.hasOwn(A11_ART.characters, A11_META.guide.name));
+});
+
+test('the bilingual lesson map appears only for guided lessons and agrees with the engine parts', async () => {
+  const extra = {
+    'react-router-dom': { Link: 'Link' },
+    '../illustrations/CharacterAvatar.jsx': { default: 'CharacterAvatar' },
+    '../illustrations/SituationScene.jsx': { default: 'SituationScene' },
+    '../../data/curricula/a11.meta.js': { A11_META, lektionMinutesEstimate, lektionPartEstimate },
+    '../../data/curricula/a11.art.js': { A11_ART },
+    '../../lib/courseFlow.js': { courseHome: () => '/course/a1.1' },
+  };
+  const expected = {
+    en: ['Your path through this Lektion', 'Listen, say and read', 'The rule and practice', 'Speak and write'],
+    de: ['Ihr Weg durch diese Lektion', 'Hören, sprechen und lesen', 'Die Regel und Übungen', 'Sprechen und schreiben'],
+  };
+  for (const lang of ['en', 'de']) {
+    const { INTRO_STRINGS } = await loadJsxModule('src/components/lesson/IntroStage.jsx', {
+      ...extra, 'lucide-react': new Proxy({}, { get: (_, key) => key }),
+      './StageShell.jsx': { default: 'StageShell' }, '../../lib/lesson/strings.js': { useLessonLang: () => [lang] },
+    });
+    assert.deepEqual(['intro.map', 'intro.part1', 'intro.part2', 'intro.part3'].map((key) => INTRO_STRINGS[lang][key]), expected[lang]);
+    for (const flow of ['guided', undefined]) {
+      const h = await mount('IntroStage', { curriculum: c, lektion: { ...lesson, flow } }, {
+        ...extra, '../../lib/lesson/strings.js': { useLessonLang: () => [lang] },
+      });
+      const map = elements(h.render(), 'section').filter((s) => s.props['aria-labelledby'] === 'dm-intro-map');
+      assert.equal(map.length, flow === 'guided' ? 1 : 0);
+      if (map.length) {
+        assert.equal(textOf(elements(map, 'h2')[0]), expected[lang][0]);
+        const rows = elements(elements(map, 'ol'), 'li');
+        assert.equal(rows.length, 3);
+        rows.forEach((row, i) => {
+          const spans = elements(row, 'span');
+          assert.equal(spans[0].props.children[0], i + 1);
+          assert.equal(textOf(spans[1]), expected[lang][i + 1]);
+        });
+      }
+    }
+  }
+  for (const l of c.lektionen) {
+    const built = buildLesson({ curriculum: c, lektion: l, pool }).stages;
+    for (const [part, kinds] of [[1, ['scene', 'read']], [2, ['notice', 'practice']], [3, ['speaking', 'writing']]]) {
+      for (const kind of kinds) assert.equal(built.find((s) => s.kind === kind)?.part, part, `${l.id}: ${kind}`);
+    }
+  }
 });
 
 test('intro divides the same count-based estimate among the saved parts; new content affects the estimate', () => {

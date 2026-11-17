@@ -1,5 +1,10 @@
 # A1.1 course art — the locked style and every prompt
 
+> Update 2026-11-17: the founder picked the otter from his partner's design as the course guide.
+> Lektion 1 now ships an illustrated scene with animal characters; its brief and provenance are in
+> `docs/strategy/lesson-look-2026-11-17/`. The "no text of any kind" rule below still holds for it.
+> The cast and prompts below describe the earlier human cast and remain for Lektionen 2–12.
+
 The illustrations under `public/art/a11/` (manifest: `src/data/curricula/a11.art.js`) are
 AI-generated flat vector art, owner decision 2026-09-19, produced through the Higgsfield MCP
 (model `nano_banana_2`, Google). This file is the single source for the style: every prompt

@@ -416,7 +416,7 @@ const aboutEn =
   `one to save your progress and for the AI feedback on your writing and speaking.`;
 
 export const A11_META = {
-  teacher: A11_ART.teacher,
+  guide: A11_ART.guide,
   level: CURRICULUM_A11.level,
   code: CURRICULUM_A11.code,
   aboutEn,

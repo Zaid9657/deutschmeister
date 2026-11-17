@@ -4,6 +4,7 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
+import GuideOtter from '../illustrations/GuideOtter.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
@@ -235,6 +236,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {shown.map(card)}
       </ul>
+      <GuideOtter lektionId={id} pose="thinking" size={96} className="mx-auto mt-4 h-24 w-24" />
     </StageShell>
   );
 }

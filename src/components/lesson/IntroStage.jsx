@@ -5,6 +5,7 @@ import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
 import { useLessonLang } from '../../lib/lesson/strings.js';
 import { A11_META, lektionMinutesEstimate, lektionPartEstimate } from '../../data/curricula/a11.meta.js';
+import { A11_ART } from '../../data/curricula/a11.art.js';
 import { courseHome } from '../../lib/courseFlow.js';
 
 // The Lektion intro screen (Wave 1, 2026-09-19): the one screen a first-time
@@ -48,6 +49,10 @@ export const INTRO_STRINGS = {
     'intro.lektion': 'Lektion {nr} · {title}',
     'intro.byTheEnd': 'By the end you can …',
     'intro.people': 'Who speaks in this Lektion',
+    'intro.map': 'Your path through this Lektion',
+    'intro.part1': 'Listen, say and read',
+    'intro.part2': 'The rule and practice',
+    'intro.part3': 'Speak and write',
     'intro.parts': '{parts} parts · about {lo}–{hi} min each (estimate; saved at each pause)',
     'intro.minutes': 'about {lo}–{hi} min (estimate)',
     'intro.start': 'Start',
@@ -60,6 +65,10 @@ export const INTRO_STRINGS = {
     'intro.lektion': 'Lektion {nr} · {title}',
     'intro.byTheEnd': 'Am Ende können Sie …',
     'intro.people': 'Wer in dieser Lektion spricht',
+    'intro.map': 'Ihr Weg durch diese Lektion',
+    'intro.part1': 'Hören, sprechen und lesen',
+    'intro.part2': 'Die Regel und Übungen',
+    'intro.part3': 'Sprechen und schreiben',
     'intro.parts': '{parts} Teile · etwa {lo}–{hi} Min. je Teil (Schätzung; an jeder Pause gespeichert)',
     'intro.minutes': 'etwa {lo}–{hi} Min. (Schätzung)',
     'intro.start': 'Starten',
@@ -117,7 +126,8 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           ) : null}
         </div>
 
-        <SituationScene lektionId={lektion.id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />
+        {/* An illustrated scene gets room for its characters; the flat placeholder keeps its strip. */}
+        <SituationScene lektionId={lektion.id} className={`mb-4 w-full rounded-clay border border-rule object-cover ${A11_ART.situations[lektion.id]?.src ? 'h-48 sm:h-64' : 'h-32 sm:h-40'}`} />
 
         <StageShell
           eyebrow={chapter ? ti('intro.chapter', lang, { nr: chapter.nr, title: chapterTitle }) : ti('intro.eyebrow', lang)}
@@ -146,6 +156,22 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
                   </li>
                 ))}
               </ul>
+            </section>
+          )}
+
+          {lektion.flow === 'guided' && (
+            <section aria-labelledby="dm-intro-map" className="mt-5">
+              <h2 id="dm-intro-map" className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">
+                {ti('intro.map', lang)}
+              </h2>
+              <ol className="mt-3 space-y-2">
+                {[1, 2, 3].map((part) => (
+                  <li key={part} className="flex items-center gap-3 rounded-clay border border-rule bg-white px-4 py-3 text-[0.9375rem] text-ink">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-siegel-wash font-data text-sm font-bold text-siegel-deep">{part}</span>
+                    <span>{ti(`intro.part${part}`, lang)}</span>
+                  </li>
+                ))}
+              </ol>
             </section>
           )}
 

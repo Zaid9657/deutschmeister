@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
 import Card from '../ui/Card.jsx';
+import GuideOtter from '../illustrations/GuideOtter.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import WordsLearnedCards from './WordsLearnedCards.jsx';
@@ -126,6 +127,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
+        <GuideOtter lektionId={lektion?.id} pose="satisfied" size={112} className="mx-auto mb-3 h-28 w-28" />
         {canDo.length > 0 && (
           <>
             <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
