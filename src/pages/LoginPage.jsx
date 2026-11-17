@@ -15,6 +15,7 @@ import { resendRefusal } from '../lib/signupConfirmation.js';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
 import GoogleButton from '../components/ui/GoogleButton.jsx';
+import { signInReturnNotice } from '../lib/googleSignIn.js';
 import Card from '../components/ui/Card.jsx';
 import AccountPreview from '../components/ui/AccountPreview.jsx';
 import Logo from '../components/Logo';
@@ -40,6 +41,8 @@ const LoginPage = () => {
   const { signIn, user, loading: authLoading } = useAuth();
   const [searchParams] = useSearchParams();
   const timedOut = searchParams.get('reason') === 'timeout';
+  // A sign-in that came back with an error (expired, cancelled) says so instead of showing a bare form.
+  const returnNotice = signInReturnNotice(location.search, location.hash);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -201,6 +204,13 @@ const LoginPage = () => {
             <div className="mb-6 flex items-center gap-3 rounded-clay bg-siegel-wash px-4 py-3 text-sm text-siegel-deep">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
               You were signed out because you were inactive.
+            </div>
+          )}
+
+          {returnNotice && (
+            <div role="alert" className="mb-6 flex items-center gap-3 rounded-clay bg-siegel-wash px-4 py-3 text-sm text-siegel-deep">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+              {returnNotice}
             </div>
           )}
 

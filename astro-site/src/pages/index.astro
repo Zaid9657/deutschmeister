@@ -24,6 +24,11 @@ const jsonLd = [
 ];
 ---
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd}>
+  <!-- A sign-in that failed after its state expired comes back to the site root, not to /login.
+       Hand it to the log-in page, which says what happened (src/lib/googleSignIn.js). -->
+  <script is:inline>
+    if (/[?&#]error(_code)?=/.test(location.search + location.hash)) location.replace('/login' + location.search + location.hash);
+  </script>
   <div class="c4-home">
     <section class="c4-home-hero c4-wrap" aria-labelledby="hero-h">
       <div class="c4-home-art" data-c4-parallax><Scene name="hero-group" alt="Three adult learners practising German together at a café table in Berlin" hero sizes="(max-width: 640px) 100vw, 850px" /></div>
