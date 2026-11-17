@@ -8,7 +8,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { GOOGLE_SIGNIN_ENABLED, googleRedirectTo, attributionBackfill } from '../src/lib/googleSignIn.js';
+import { GOOGLE_SIGNIN_ENABLED, googleRedirectTo, attributionBackfill, signInReturnNotice } from '../src/lib/googleSignIn.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
@@ -57,4 +57,34 @@ test('the Google mark is an asset, so no colour literal enters the components', 
   assert.ok(!/#[0-9a-fA-F]{3,8}\b/.test(button));
   assert.match(button, /src="\/google-g\.svg"/);
   assert.match(read('public/google-g.svg'), /^<svg /);
+});
+
+test('a sign-in that comes back with an error is explained, never a silent homepage', () => {
+  // The exact return reproduced on 2026-11-17 (6.5 minutes between start and callback).
+  const expired = '?error=invalid_request&error_code=bad_oauth_state&error_description=OAuth+state+has+expired';
+  assert.match(signInReturnNotice(expired), /took too long/);
+  assert.match(signInReturnNotice('', '#error=access_denied&error_code=otp_expired'), /expired/);
+  assert.match(signInReturnNotice('?error=access_denied'), /cancelled/);
+  assert.match(signInReturnNotice('?error=server_error'), /did not complete/);
+  assert.equal(signInReturnNotice('?next=/course/a1.1', ''), null);
+  assert.equal(signInReturnNotice(), null);
+
+  // The homepage forwards such a return to /login with its parameters intact.
+  const home = read('astro-site/src/pages/index.astro');
+  const script = [...home.matchAll(/<script is:inline>([\s\S]*?)<\/script>/g)].map((m) => m[1]).find((s) => s.includes('error'));
+  assert.ok(script, 'the homepage carries the forwarding script');
+  const run = (search, hash = '') => {
+    let to = null;
+    new Function('location', script)({ search, hash, replace: (u) => { to = u; } });
+    return to;
+  };
+  assert.equal(run(expired), `/login${expired}`);
+  assert.equal(run('', '#error=access_denied'), '/login#error=access_denied');
+  assert.equal(run('?utm_source=telegram'), null);
+  assert.equal(run(''), null);
+
+  // And the log-in page renders the sentence.
+  const login = read('src/pages/LoginPage.jsx');
+  assert.match(login, /signInReturnNotice\(location\.search, location\.hash\)/);
+  assert.match(login, /\{returnNotice && \(/);
 });
