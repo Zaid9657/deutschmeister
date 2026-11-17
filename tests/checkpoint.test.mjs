@@ -229,7 +229,7 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
   assert.deepEqual(dictated, {
     'a1.1-cp1': [
       ['a1.1-cp1-hoeren-1', 'a1.1-l01', 'line-6', 'Gut. Wie geht es Ihnen?'],
-      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Tschüss! Bis morgen.'],
+      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Auf Wiedersehen!'],
       ['a1.1-cp1-hoeren-3', 'a1.1-l01', 'line-3', 'C-H-A-K-I-R-I.'],
     ],
     'a1.1-cp2': [

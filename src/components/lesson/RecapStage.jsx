@@ -128,6 +128,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
         <GuideOtter lektionId={lektion?.id} pose="satisfied" size={112} className="mx-auto mb-3 h-28 w-28" />
+        {lektion && <p className="mb-4 text-center text-[0.9375rem] leading-snug text-ink" data-otter-says>{t('otter.end', lang, { nr: lektion.nr })}</p>}
         {canDo.length > 0 && (
           <>
             <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>

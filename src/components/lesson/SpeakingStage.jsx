@@ -7,7 +7,7 @@ import StageShell from './StageShell.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { saveCourseContext } from '../../lib/courseFlow.js';
 import { speakingSummary } from '../../lib/lesson/skillStatus.js';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { speechLine, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 5 — Sprechen. Two halves:
@@ -133,7 +133,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
               <p className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-bold text-siegel-deep">
                 <Check className="h-4 w-4" aria-hidden="true" />
                 {results[l.index].usedMic && typeof results[l.index].pct === 'number'
-                  ? t('speaking.intelligibility', lang, { pct: Math.round(results[l.index].pct * 100) })
+                  ? speechLine(results[l.index].pct, lang)
                   : t('speaking.said', lang)}
               </p>
             )}

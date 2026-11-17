@@ -197,6 +197,7 @@ test('the bilingual lesson map appears only for guided lessons and agrees with t
     'react-router-dom': { Link: 'Link' },
     '../illustrations/CharacterAvatar.jsx': { default: 'CharacterAvatar' },
     '../illustrations/SituationScene.jsx': { default: 'SituationScene' },
+    '../illustrations/OtterSays.jsx': { default: 'OtterSays' },
     '../../data/curricula/a11.meta.js': { A11_META, lektionMinutesEstimate, lektionPartEstimate },
     '../../data/curricula/a11.art.js': { A11_ART },
     '../../lib/courseFlow.js': { courseHome: () => '/course/a1.1' },
@@ -353,4 +354,26 @@ test('audio failure text is present once, in a persistent live region, with a wo
   assert.doesNotMatch(live.props.className, /sr-only/);
   elements(h.render(), 'button').find((b) => textOf(b) === 'audio.showText').props.onClick();
   assert.equal(fallback, 1);
+});
+
+test('the otter speaks in both languages and a spoken line never shows a percentage', async () => {
+  const { STRINGS, speechLine, t, UNCLEAR_BELOW } = await import('../src/lib/lesson/strings.js');
+  const keys = ['otter.retry', 'otter.unclear', 'otter.pause.1', 'otter.pause.2', 'otter.end', 'otter.back'];
+  for (const lang of ['en', 'de']) {
+    for (const key of keys) assert.ok(STRINGS[lang][key], `${lang} ${key}`);
+    for (const pct of [0, UNCLEAR_BELOW - 0.01, UNCLEAR_BELOW, 1]) assert.doesNotMatch(speechLine(pct, lang), /%|\d/);
+    assert.equal(speechLine(UNCLEAR_BELOW - 0.01, lang), t('otter.unclear', lang));
+    assert.equal(speechLine(UNCLEAR_BELOW, lang), t('speaking.said', lang));
+    assert.match(t('otter.end', lang, { nr: 1 }), /Lektion 1/);
+    assert.ok(c.lektionen[0].guided.opening[lang]);
+  }
+  // German chrome speaks Sie (course rule): no du-forms in the otter's lines.
+  for (const key of keys) assert.doesNotMatch(STRINGS.de[key], /\b(du|dir|dich|dein\w*)\b/i);
+  // The scene ends with the question returned and the farewell the can-do names; no name in the last line.
+  const lines = c.lektionen[0].dialog.lines.map((l) => l.de);
+  assert.match(lines[7], /Und wie geht es Ihnen\?$/);
+  assert.equal(lines[9], 'Auf Wiedersehen!');
+  for (const file of ['ReadAloudLine', 'SceneStage', 'SpeakingStage']) {
+    assert.doesNotMatch(readFileSync(`src/components/lesson/${file}.jsx`, 'utf8'), /speaking\.intelligibility/);
+  }
 });

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Clock3, CheckCircle2 } from 'lucide-react';
 import StageShell from './StageShell.jsx';
+import OtterSays from '../illustrations/OtterSays.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
 import { useLessonLang } from '../../lib/lesson/strings.js';
@@ -137,6 +138,7 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           onPrimary={onStart}
           primaryDisabled={!ready}
         >
+          <OtterSays lektionId={lektion.id} className="mb-5">{lektion.guided?.opening?.[de ? 'de' : 'en']}</OtterSays>
           {chapter && !de && (
             <p className="-mt-2 mb-5 font-data text-[0.75rem] text-graphite">
               {chapter.titleDe} · {chapter.storyEn}

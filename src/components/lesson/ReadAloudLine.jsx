@@ -7,7 +7,7 @@ import PlayButton from './PlayButton.jsx';
 import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
 import { canRetryReadAloud, canSelfConfirmReadAloud } from '../../lib/lesson/readAloudControls.js';
 import { getAuthHeaders } from '../../utils/supabase';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { speechLine, t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
   blobToBase64,
   checkSpeakingSupport,
@@ -181,7 +181,6 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
   };
 
   const canRetry = canRetryReadAloud({ phase, attempts, maxAttempts: MAX_ATTEMPTS, micError });
-  const pctLabel = result ? Math.round(result.pct * 100) : 0;
 
   return (
     <Card className={guided ? 'p-5 text-center' : 'p-4'}>
@@ -211,7 +210,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
 
       {result && (
         <p className="mt-2 text-sm font-bold text-ink">
-          {t('speaking.intelligibility', lang, { pct: pctLabel })}
+          {speechLine(result.pct, lang)}
           <span className="ml-2 font-normal text-graphite">
             {t('speaking.wordsHeard', lang, { hit: result.words.filter((w) => w.hit).length, total: result.words.length })}
             {result.extra > 0 && <> · {t('speaking.extraWords', lang, { n: result.extra })}</>}

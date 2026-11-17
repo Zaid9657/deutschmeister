@@ -41,6 +41,7 @@ import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
 import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
 import { clearReturnPath } from '../../lib/returnPath.js';
 import SessionBreak from '../../components/lesson/SessionBreak.jsx';
+import OtterSays from '../../components/illustrations/OtterSays.jsx';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
 
@@ -257,6 +258,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     ? resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed)
     : 0));
   const [itemIndex, setItemIndex] = useState(() => (resumed ? resumed.itemIndex : 0));
+  // The otter's welcome after two days or more away: shown on the saved place, gone with the first step on.
+  const [awayAt] = useState(() => (resumed && Date.now() - resumed.savedAt >= 2 * 24 * 60 * 60 * 1000 ? `${stageIndex}:${itemIndex}` : null));
   const [attempts, setAttempts] = useState(() => (resumed ? resumed.attempts : []));
   const [misses, setMisses] = useState(() => (resumed ? resumed.misses : []));
   // Consecutive first-try corrects across practice + dictation items, reset on
@@ -664,7 +667,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
   // level while it loads, so `!user` alone would flash the ask at a member.
   if (pause) {
-    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} onContinue={() => setPause(null)} />;
+    body = <SessionBreak done={pause.done} total={SESSION_COUNT} level={curriculum.level} lektionId={lektion.id} onContinue={() => setPause(null)} />;
   }
   if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, partDone: pause?.done, stageKind: stage.kind })) {
     body = <SaveProgressAsk level={curriculum.level} lektion={lektion} done={pause.done} total={SESSION_COUNT} onContinue={() => { setAskSettled(true); setPause(null); }} />;
@@ -705,6 +708,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
           <ComboChip combo={combo} />
           <LangToggle />
         </div>}
+        {awayAt === `${stageIndex}:${itemIndex}` && <OtterSays lektionId={lektion.id} className="mb-4">{t('otter.back', lang)}</OtterSays>}
         <div ref={bodyRef}>{body}</div>
       </div>
     </div>

@@ -38,8 +38,10 @@ export function hintFor(item) {
 
 export function guidedFeedback(item, checked, retryUsed, lang) {
   const hintOnly = checked.result === RESULT.WRONG && !retryUsed;
+  // A filler hint ("Once more.") adds nothing beside the otter's "You have one more try".
+  const hint = hintOnly ? hintFor(item) : null;
   return { ...checked, hintOnly, showAnswer: retryUsed,
-    ...(hintOnly ? { hint: hintFor(item)[lang === 'de' ? 'de' : 'en'] } : {}) };
+    ...(hintOnly ? { hint: NEUTRAL.includes(hint) ? '' : hint[lang === 'de' ? 'de' : 'en'] } : {}) };
 }
 
 export function feedbackReason(item, lang) {

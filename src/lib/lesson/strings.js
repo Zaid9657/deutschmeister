@@ -444,6 +444,13 @@ export const STRINGS = {
     'session.continue': 'Continue with part {next}',
     'session.later': 'Stop for today — continue here next time',
     'session.saved': 'Your place is saved. Short, regular sessions are how this sticks.',
+    // ── the otter's lines (written by Codex, 2026-11-17; the founder judges them by playing) ──
+    'otter.retry': 'Not quite yet. You have one more try.',
+    'otter.unclear': 'You practised saying the line aloud. We couldn’t clearly recognise the words in this recording.',
+    'otter.pause.1': 'You’ve finished the first part. Your place is saved, so you can take a break.',
+    'otter.pause.2': 'You’ve completed two parts already. Take a break if you need one—your place is saved.',
+    'otter.end': 'You made time for German and completed Lektion {nr}. Take a moment to feel proud of what you’ve practised.',
+    'otter.back': 'Welcome back. Your place is saved; take a moment to settle in.',
     'review.roundDone': 'This round is done',
     'review.moreDue': '{n} more cards are due today — a few minutes.',
     'review.nextRound': 'Next round',
@@ -857,6 +864,12 @@ export const STRINGS = {
     'session.continue': 'Weiter mit Teil {next}',
     'session.later': 'Für heute aufhören – nächstes Mal geht es hier weiter',
     'session.saved': 'Ihr Platz ist gespeichert. Kurz und regelmäßig – so bleibt es hängen.',
+    'otter.retry': 'Noch nicht ganz. Sie können es noch einmal versuchen.',
+    'otter.unclear': 'Sie haben den Satz laut gesprochen und geübt. Wir konnten die Wörter in dieser Aufnahme nicht klar erkennen.',
+    'otter.pause.1': 'Sie haben den ersten Teil geschafft. Ihr Platz ist gespeichert, und Sie können eine Pause machen.',
+    'otter.pause.2': 'Sie haben schon zwei Teile geschafft. Machen Sie bei Bedarf eine Pause – Ihr Platz ist gespeichert.',
+    'otter.end': 'Sie haben sich Zeit für Deutsch genommen und Lektion {nr} abgeschlossen. Seien Sie stolz auf das, was Sie geübt haben.',
+    'otter.back': 'Willkommen zurück. Ihr Platz ist gespeichert; kommen Sie in Ruhe wieder an.',
     'review.roundDone': 'Diese Runde ist geschafft',
     'review.moreDue': 'Heute sind noch {n} Karten dran – ein paar Minuten.',
     'review.nextRound': 'Nächste Runde',
@@ -864,6 +877,11 @@ export const STRINGS = {
     'review.newCards': 'Neue Karten kommen, sobald Sie eine Lektion abschließen.',
   },
 };
+
+// ponytail: below half of the words recognised counts as "unclear"; tune once real recordings are reviewed.
+export const UNCLEAR_BELOW = 0.5;
+/** What a mic-scored line shows instead of a percentage: speech recognition is not a pronunciation grade. */
+export const speechLine = (pct, lang) => t(pct < UNCLEAR_BELOW ? 'otter.unclear' : 'speaking.said', lang);
 
 /** 'en' or 'de'; anything else (a stale or tampered flag) is the default. */
 export const normalizeLessonLang = (value) => (LESSON_LANGS.includes(value) ? value : DEFAULT_LESSON_LANG);

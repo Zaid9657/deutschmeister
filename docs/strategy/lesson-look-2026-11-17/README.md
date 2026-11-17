@@ -41,3 +41,23 @@ Codex drew the art and wrote the code from a brief; Claude sized the art, ran th
 played the screens at phone width. Still to build, one piece each: picture word cards with "try
 from memory", Arabic help, the final check with the locked path, and the first and latest
 recording on the end screen.
+
+## Piece 2, the otter's voice (2026-11-17)
+
+The founder gave the course's emotional tone to Codex and said "Yes, finish Lektion 1". Codex
+wrote every line below and the new ending of the scene; Claude checked each line against what the
+course really does, built it and walked Lektion 1 from the first screen to the end at phone width.
+
+| Where the learner meets it | What changed |
+|---|---|
+| The scene | Ana asks back "Und wie geht es Ihnen?" and both leave with "Auf Wiedersehen" |
+| First screen | The otter opens Lektion 1 with one line |
+| A wrong answer with one more try | "Not quite yet. You have one more try." and the task's own hint |
+| A spoken line | No percentage; words say whether the recording was recognised |
+| The pauses | The otter says the place is saved (a guest's first pause is still the save-progress ask) |
+| End screen | One line above the list of abilities |
+| Back after two days or more | One line on the saved place |
+
+The traveller is still Ana Chakiri from Morocco. The partner's curriculum file of the same day
+calls the otter Mika Sommer from Spain; the founder has not chosen. The lines are global strings,
+so every guided Lektion gets them when this merges.
