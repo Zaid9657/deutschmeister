@@ -171,7 +171,7 @@ export const modelltestDeutschB1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Nach der Auswertung weißt du, welcher Teil Punkte kostet. Deutschmeister deckt jeden davon ab:',
+          text: 'Nach der Auswertung weißt du, welcher Teil Punkte kostet. DeutschMeister deckt jeden davon ab:',
         },
         {
           type: 'cards',
@@ -200,7 +200,7 @@ export const modelltestDeutschB1 = {
         },
         {
           type: 'p',
-          text: 'Zusätzlich gibt es auf Deutschmeister einen zeitgesteuerten Übungstest im Stil von telc B1, Goethe B1, DTZ und telc B2 — eine Kurzversion mit automatischer Auswertung, kein Ersatz für den offiziellen Modelltest, aber ein schneller Zwischencheck mit echtem Zeitdruck. Den Einstieg findest du über die Prüfungsseiten, zum Beispiel <a href="/pruefung/telc-b1/">telc B1</a>.',
+          text: 'Zusätzlich gibt es auf DeutschMeister einen zeitgesteuerten Übungstest im Stil von telc B1, Goethe B1, DTZ und telc B2 — eine Kurzversion mit automatischer Auswertung, kein Ersatz für den offiziellen Modelltest, aber ein schneller Zwischencheck mit echtem Zeitdruck. Den Einstieg findest du über die Prüfungsseiten, zum Beispiel <a href="/pruefung/telc-b1/">telc B1</a>.',
         },
       ],
     },
@@ -221,7 +221,7 @@ export const modelltestDeutschB1 = {
     },
     {
       q: 'Wie werte ich den Schreibteil ohne Lehrer aus?',
-      a: 'Die Anbieter veröffentlichen ihre Bewertungskriterien mit dem Modelltest. Geh sie ehrlich Punkt für Punkt durch: alle Leitpunkte behandelt, Register passend, Aufbau klar? Alternativ kann das KI-Schreibtraining von Deutschmeister deinen Brief nach diesen Kriterien bewerten und konkrete Korrekturen zeigen.',
+      a: 'Die Anbieter veröffentlichen ihre Bewertungskriterien mit dem Modelltest. Geh sie ehrlich Punkt für Punkt durch: alle Leitpunkte behandelt, Register passend, Aufbau klar? Alternativ kann das KI-Schreibtraining von DeutschMeister deinen Brief nach diesen Kriterien bewerten und konkrete Korrekturen zeigen.',
     },
     {
       q: 'Ersetzt der DeutschMeister-Übungstest den offiziellen Modelltest?',

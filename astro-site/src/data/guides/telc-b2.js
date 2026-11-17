@@ -213,11 +213,11 @@ export const telcB2 = {
     },
     {
       id: 'deutschmeister',
-      heading: 'Wie Deutschmeister auf B2 vorbereitet',
+      heading: 'Wie DeutschMeister auf B2 vorbereitet',
       blocks: [
         {
           type: 'p',
-          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind — und dafür ist die Plattform gebaut:',
+          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. DeutschMeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind — und dafür ist die Plattform gebaut:',
         },
         {
           type: 'cards',

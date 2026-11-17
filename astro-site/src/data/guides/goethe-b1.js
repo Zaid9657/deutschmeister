@@ -217,11 +217,11 @@ export const goetheB1 = {
     },
     {
       id: 'deutschmeister',
-      heading: 'Wie Deutschmeister zur Modulstruktur passt',
+      heading: 'Wie DeutschMeister zur Modulstruktur passt',
       blocks: [
         {
           type: 'p',
-          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist Deutschmeister aufgebaut — von einem Team von Ärzten in Deutschland, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
+          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist DeutschMeister aufgebaut — von einem Team von Ärzten in Deutschland, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',

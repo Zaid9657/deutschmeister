@@ -104,17 +104,17 @@ export const SEO_ROUTES = {
     updated: '2026-10-25',
     title: 'Frequently Asked Questions',
     description:
-      'Answers about Deutschmeister pricing, exam preparation, AI speaking practice, Sentence X-Ray, privacy, and learning German from A1 to B2.',
+      'Answers about DeutschMeister pricing, exam preparation, AI speaking practice, Sentence X-Ray, privacy, and learning German from A1 to B2.',
     keywords:
-      'Deutschmeister FAQ, learn German, Goethe exam, telc exam, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
+      'DeutschMeister FAQ, learn German, Goethe exam, telc exam, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
   },
   '/ueber-uns': {
     updated: '2026-10-25',
-    title: 'About Deutschmeister',
+    title: 'About DeutschMeister',
     description:
-      'Meet the team behind Deutschmeister and learn why doctors in Germany built focused tools for German grammar, speaking, and exam preparation.',
+      'Meet the team behind DeutschMeister and learn why doctors in Germany built focused tools for German grammar, speaking, and exam preparation.',
     keywords:
-      'Deutschmeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, DTZ',
+      'DeutschMeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, DTZ',
   },
 };
 

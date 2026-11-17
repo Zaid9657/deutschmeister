@@ -63,7 +63,7 @@ const BENEFITS = [
 // continuing is the one primary action and a fresh start turns secondary.
 const LevelTestLanding = ({ onStart, resumeAt = null, onResume }) => {
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-6 pb-16 sm:pt-20">
+    <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
       {/* Hero */}
       <section className="relative -mx-2 overflow-hidden rounded-clay px-2 py-8 sm:-mx-4 sm:px-4 sm:py-12">
         <div className="hero-line relative">
