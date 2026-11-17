@@ -241,7 +241,7 @@ export const briefSchreibenB1 = {
         },
         {
           type: 'p',
-          text: 'Genau dafür gibt es das <a href="/schreiben">KI-Schreibtraining von Deutschmeister</a>: Du bekommst eine Prüfungsaufgabe im Stil deiner Prüfung, schreibst deinen Brief, und die KI bewertet ihn nach den Kriterien, auf die auch Prüfer achten — Aufgabenerfüllung, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen an deinen eigenen Sätzen.',
+          text: 'Genau dafür gibt es das <a href="/schreiben">KI-Schreibtraining von DeutschMeister</a>: Du bekommst eine Prüfungsaufgabe im Stil deiner Prüfung, schreibst deinen Brief, und die KI bewertet ihn nach den Kriterien, auf die auch Prüfer achten — Aufgabenerfüllung, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen an deinen eigenen Sätzen.',
         },
         {
           type: 'cards',
@@ -294,7 +294,7 @@ export const briefSchreibenB1 = {
     },
     {
       q: 'Wie übe ich Briefe schreiben ohne Lehrer?',
-      a: 'Mit Aufgaben im Prüfungsstil, einem Zeitlimit und Feedback. Das KI-Schreibtraining von Deutschmeister bewertet deine Briefe nach den vier Kriterien, auf die auch Prüfer achten, und korrigiert konkrete Sätze — so siehst du deine Fehlermuster, statt sie zu wiederholen.',
+      a: 'Mit Aufgaben im Prüfungsstil, einem Zeitlimit und Feedback. Das KI-Schreibtraining von DeutschMeister bewertet deine Briefe nach den vier Kriterien, auf die auch Prüfer achten, und korrigiert konkrete Sätze — so siehst du deine Fehlermuster, statt sie zu wiederholen.',
     },
   ],
 

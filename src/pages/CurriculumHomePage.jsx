@@ -21,6 +21,7 @@ import KannIch from '../components/course/KannIch.jsx';
 import { canDoList } from '../lib/course/canDo.js';
 import LessonRing from '../components/course/LessonRing.jsx';
 import MilestoneCard from '../components/course/MilestoneCard.jsx';
+import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
@@ -216,7 +217,9 @@ export default function CurriculumHomePage({ curriculum }) {
   let nodeCounter = 0;
   return (
     <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+      <SEO title={`${curriculum.code} ${de ? 'Kurs' : 'Course'}`} path={`/course/${curriculum.code.toLowerCase()}`} />
+      {/* pt-20: the navbar is fixed (h-16); with py-8 it covered the language toggle and the course chip. */}
+      <div className="mx-auto max-w-2xl px-4 pt-20 pb-8 sm:pt-24 sm:pb-12">
         <div className="mb-4 flex justify-end"><LangToggle /></div>
         <header className="relative mb-8 overflow-hidden rounded-clay">
           <Aurora />

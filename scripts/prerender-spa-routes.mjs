@@ -603,7 +603,7 @@ ${faqSection(PODCAST_FAQS)}
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
-          { '@type': 'ListItem', position: 2, name: 'About Deutschmeister', item: 'https://deutsch-meister.de/ueber-uns/' },
+          { '@type': 'ListItem', position: 2, name: 'About DeutschMeister', item: 'https://deutsch-meister.de/ueber-uns/' },
         ],
       },
     ],
@@ -625,7 +625,7 @@ ${faqSection(PODCAST_FAQS)}
     <div class="${CARD_FLAT} p-5"><dt class="font-data text-2xl">${FREE_LEVEL_LABEL}</dt><dd>The free first course · no account needed</dd></div>
   </dl>
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
-    <h2 class="${H_SECTION}">Who is behind Deutschmeister</h2>
+    <h2 class="${H_SECTION}">Who is behind DeutschMeister</h2>
     <div class="mt-6 flex flex-col gap-4 ${BODY}">
       <p>The learning path begins with the free A1.1 course. A1.2 is the next guided course; later courses follow level by level.</p>
       <p>Inspect a real task before creating an account. Course demonstrations show their source and distinguish automatic form checks from AI feedback.</p>
@@ -641,7 +641,7 @@ ${faqSection(PODCAST_FAQS)}
     </div>
   </div></section>
   <section class="py-20"><div class="mx-auto max-w-4xl px-4 sm:px-6">
-    <h2 class="text-center ${H_SECTION}">What makes Deutschmeister different</h2>
+    <h2 class="text-center ${H_SECTION}">What makes DeutschMeister different</h2>
     <div class="mt-12 grid gap-6 sm:grid-cols-3">
       <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Real speaking, not just clicking</h3><p class="mt-2 ${SMALL}">Practice complete responses and receive AI feedback on grammar, vocabulary and clarity—not only multiple-choice drills.</p></div>
       <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Grammar that makes sense</h3><p class="mt-2 ${SMALL}">Sentence X-Ray breaks down real sentences so you can understand why the language works, not only what the answer is.</p></div>
@@ -662,7 +662,7 @@ ${faqSection(PODCAST_FAQS)}
   </div></section>
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
     <h2 class="${H_SECTION}">Real stories start with permission</h2>
-    <p class="mx-auto mt-4 max-w-xl ${BODY}">Used Deutschmeister? Tell us what helped and what should improve. Submissions are reviewed, verified where possible, and never published automatically.</p>
+    <p class="mx-auto mt-4 max-w-xl ${BODY}">Used DeutschMeister? Tell us what helped and what should improve. Submissions are reviewed, verified where possible, and never published automatically.</p>
     <p class="mt-7"><a href="/share-your-story/" class="${BTN} border border-rule bg-white text-ink shadow-raise">Share your experience</a></p>
   </div></section>
   <section class="bg-ink py-24"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">

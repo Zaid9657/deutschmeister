@@ -225,7 +225,7 @@ export const dtz = {
     },
     {
       id: 'deutschmeister',
-      heading: 'Wie Deutschmeister beim DTZ hilft',
+      heading: 'Wie DeutschMeister beim DTZ hilft',
       blocks: [
         {
           type: 'p',
