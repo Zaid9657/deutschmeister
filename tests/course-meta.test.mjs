@@ -329,11 +329,15 @@ test('WortfeldStage renders an icon circle, a flip toggle and a "show all Englis
   assert.match(src, /wortfeld\.showAllEnglish/, 'must reference the show-all-English string key');
   assert.match(src, /wortfeld\.en/, 'a flipped card must render the text "EN" tag, not colour alone');
   assert.match(src, /WortfeldAudioBadge/, 'must keep an audio-source badge (one per stage since W3.4)');
+  // Memory mode: a pressed toggle; the card's German (and the line that spells it) waits for the tap.
+  assert.match(src, /aria-pressed=\{memory\}/);
+  assert.match(src, /const german = memory \? flipped : !flipped;/);
+  assert.match(src, /\{line && german && \(/);
 });
 
 test('the wortfeld string keys (EN tag, show/hide all English) exist in both chrome languages with no empty value', () => {
   const src = readFileSync(new URL('../src/lib/lesson/strings.js', import.meta.url), 'utf8');
-  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish'];
+  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish', 'wortfeld.memory'];
   for (const key of keys) {
     const matches = src.match(new RegExp(`'${key.replace('.', '\\.')}':\\s*'[^']+'`, 'g')) || [];
     assert.equal(matches.length, 2, `"${key}" must appear once in each of the en/de tables with a non-empty value`);
