@@ -30,6 +30,7 @@ const {
   dailyBatchKey,
   orderRecipients,
   utcRunDate,
+  dailySentenceStopped,
 } = await import('../netlify/functions/daily-sentence.mjs');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -235,4 +236,27 @@ test('the auth gate is unchanged: scheduler marker, secret, or bounded test', ()
   assert.match(SRC, /if \(!isTest && !isScheduled && !secretOk\)/);
   assert.match(SRC, /if \(!UNSUB_SECRET\) return \{ statusCode: 500/);
   assert.match(SRC, /schedule\('0 7 \* \* \*', innerHandler\)/);
+});
+
+test('the daily sentence is stopped for everyone unless its own flag says otherwise (owner decision 2026-11-17)', () => {
+  assert.equal(dailySentenceStopped({}), true);
+  assert.equal(dailySentenceStopped({ DAILY_SENTENCE_ENABLED: 'false' }), true);
+  assert.equal(dailySentenceStopped({ DAILY_SENTENCE_ENABLED: '1' }), true);
+  assert.equal(dailySentenceStopped({ DAILY_SENTENCE_ENABLED: 'true' }), false);
+
+  // The stop sits after the auth check and before anything is read or sent,
+  // and it covers the scheduler and a secret-authorised live call alike.
+  const gate = SRC.indexOf('if (!isTest && dailySentenceStopped())');
+  assert.ok(gate > SRC.indexOf("error: 'Unauthorized'"), 'the stop comes after the auth check');
+  assert.ok(gate < SRC.indexOf('const sentence = todaysSentence();'), 'the stop comes before the sentence is picked');
+  assert.ok(gate < SRC.indexOf('await getRecipients('), 'the stop comes before recipients are read');
+
+  // Nothing in the repo switches it back on.
+  assert.ok(!/DAILY_SENTENCE_ENABLED\s*=\s*"?true"?\s*$/m.test(readFileSync(join(ROOT, 'netlify.toml'), 'utf8')));
+
+  // No other mail or page still promises it.
+  const trial = readFileSync(join(ROOT, 'netlify/functions/trial-lifecycle.mjs'), 'utf8');
+  assert.ok(!/daily sentence keep/.test(trial));
+  const unsub = readFileSync(join(ROOT, 'netlify/functions/unsubscribe.mjs'), 'utf8');
+  assert.ok(!/resubscribed: '[^']*(Daily sentences|Satz des Tages)/.test(unsub));
 });

@@ -121,7 +121,7 @@ const TEMPLATES = {
     body:
       P('Your trial ended yesterday — so this is the last you\'ll hear from me about it.') +
       P('Everything you did is still there: your topics, your streak, your history. Nothing was deleted, and one click puts it all back within reach.') +
-      P('And if the timing just isn\'t right, that\'s genuinely fine. The free tier and the daily sentence keep working, and German isn\'t going anywhere.'),
+      P('And if the timing just isn\'t right, that\'s genuinely fine. The free tier keeps working, and German isn\'t going anywhere.'),
   },
 };
 

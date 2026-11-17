@@ -50,7 +50,7 @@ export const COPY = Object.freeze({
     done: 'No more daily sentences, learning reminders or offers; account and payment emails still arrive. Your account and your progress are safe.',
     undoButton: 'Undo',
     resubscribedTitle: 'You\'re subscribed again',
-    resubscribed: 'Daily sentences, learning reminders and offers will reach you again. You can unsubscribe at any time.',
+    resubscribed: 'Learning reminders and offers will reach you again. You can unsubscribe at any time.',
   },
   de: {
     back: 'Zurück zu DeutschMeister',
@@ -65,7 +65,7 @@ export const COPY = Object.freeze({
     done: 'Kein Satz des Tages, keine Lern-Erinnerungen, keine Angebote mehr. E-Mails zu Ihrem Konto und zu Zahlungen bekommen Sie weiter. Ihr Konto und Ihr Fortschritt bleiben erhalten.',
     undoButton: 'Rückgängig machen',
     resubscribedTitle: 'Sie sind wieder angemeldet',
-    resubscribed: 'Sie bekommen wieder den Satz des Tages, Lern-Erinnerungen und Angebote. Sie können jederzeit wieder abbestellen.',
+    resubscribed: 'Sie bekommen wieder Lern-Erinnerungen und Angebote. Sie können jederzeit wieder abbestellen.',
   },
 });
 
