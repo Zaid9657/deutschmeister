@@ -65,7 +65,7 @@ test('the learner says their own name; no scene answer text is persisted', () =>
   assert.equal(sayText(scene.chunks[0].say, '  Sam   Noor '), 'Guten Tag. Ich heiße Sam Noor.');
   assert.equal(sayText(scene.chunks[1].say, 'Noor'), 'N-O-O-R.');
   assert.equal(sayText(scene.chunks[0].say, ''), null);
-  assert.equal(sayText(scene.chunks[2].say, 'Sam Noor'), 'Mir geht es gut, danke.');
+  assert.equal(sayText(scene.chunks[2].say, 'Sam Noor'), 'Mir geht es gut, danke. Und wie geht es Ihnen?');
   const now = Date.now();
   const snapshot = packRun({ flow: 'guided', stageKey: 'scene', itemIndex: 5, sceneReadAloud: { 0: { pct: 0.7, attempts: 2, usedMic: true, text: 'Sam Noor', transcript: 'Sam Noor' } } }, now);
   assert.equal(snapshot.v, RUN_VERSION);
@@ -185,7 +185,7 @@ async function sceneHarness() {
     '../../lib/lesson/gloss.js': { parseLektionId: () => null },
     './CheckedChoice.jsx': { default: (await loadJsxModule('src/components/lesson/CheckedChoice.jsx', { react: hooks.react, '../ui/Button.jsx': { default: 'Button' }, '../../lib/lesson/check.js': { checkAnswer, checkOptionsFor, RESULT }, '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'), '../../lib/lesson/strings.js': { t: (key) => key } })).default },
     '../../lib/lesson/buildGuided.js': { SCENE_PHASES: ['hear', 'meaning', 'say'] },
-    '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/strings.js': { useLessonLang: () => ['en'], t: (key) => key },
+    '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/strings.js': { useLessonLang: () => ['en'], t: (key) => key, speechLine: () => 'speaking.said' },
   });
   const stage = build().stages.find((s) => s.kind === 'scene');
   const outcomes = []; let finished = 0;
