@@ -90,6 +90,7 @@ export const STRINGS = {
     // the German original, so it is named in German — the learner is looking
     // for the German, and „Deutsch" is the one word every learner already has.
     'lang.readOther': 'Auf Deutsch lesen',
+    'lang.explainArabic': 'Explain in Arabic · اشرح بالعربية',
 
     // ── audio source badge ───────────────────────────────────────────────────
     'audio.recorded': 'Recording',
@@ -513,6 +514,7 @@ export const STRINGS = {
     'lang.de': 'Deutsch',
     'lang.en': 'English',
     'lang.readOther': 'Auf Englisch lesen',
+    'lang.explainArabic': 'Auf Arabisch erklären · اشرح بالعربية',
 
     // ── audio source badge ───────────────────────────────────────────────────
     'audio.recorded': 'Aufnahme',

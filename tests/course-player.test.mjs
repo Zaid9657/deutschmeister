@@ -160,6 +160,16 @@ const REGISTER_EXEMPT = [
     line: "anrede: ctx.anrede === 'du' ? 'du' : 'Sie',",
     reason: "normalises a stored anrede VALUE ('du'/'Sie') from the course context into the speaking task sent to the coach — not learner-facing chrome text.",
   },
+  {
+    file: 'src/components/lesson/NoticeStage.jsx',
+    line: `<p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={textLang} dir={textLang === 'ar' ? 'rtl' : undefined}>`,
+    reason: 'the HTML text-direction attribute for the Arabic rule help, not the German pronoun.',
+  },
+  {
+    file: 'src/components/lesson/NoticeStage.jsx',
+    line: 'out.push(<bdi key={m.index} dir="ltr" lang="de" className="whitespace-nowrap">{m[0]}</bdi>);',
+    reason: 'the HTML text-direction attribute that keeps a German run left-to-right inside the Arabic help.',
+  },
 ];
 
 test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {

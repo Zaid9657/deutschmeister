@@ -317,6 +317,8 @@ export const CURRICULUM_A11 = {
         title: 'Das Alphabet: buchstabieren',
         bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We [veː]). Der Name ist nicht der Laut: In *Wasser* hört man [v]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
         bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett**. To ask how a word is written: **Wie buchstabiert man das?**',
+        // Arabic help (2026-11-17): Codex's Modern Standard Arabic from bodyEn; German stays in Latin letters.
+        bodyAr: 'لتهجئة كلمة، انطق أسماء حروفها الألمانية حرفًا حرفًا. يسهل الخلط بين E [eː] وI [iː]؛ وبين G [geː] وJ (Jot)؛ وبين V (Vau) وW (We [veː]). اسم الحرف يختلف عن صوته: اسم W هو We، لكنه في كلمة Wasser يُنطق بالصوت [v]. اسم Y هو Ypsilon، وZ هو Zett، وß هو Eszett. للسؤال عن كيفية كتابة كلمة، يمكنك أن تقول: Wie buchstabiert man das?',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },

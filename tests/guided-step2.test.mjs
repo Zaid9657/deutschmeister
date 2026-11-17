@@ -377,3 +377,15 @@ test('the otter speaks in both languages and a spoken line never shows a percent
     assert.doesNotMatch(readFileSync(`src/components/lesson/${file}.jsx`, 'utf8'), /speaking\.intelligibility/);
   }
 });
+
+test('Lektion 1 explains its rule in Arabic, right to left, with the German kept in Latin letters', () => {
+  const ar = c.lektionen[0].notice.bodyAr;
+  assert.match(ar, /[\u0600-\u06FF]/, 'the Arabic help is Arabic');
+  for (const name of ['Jot', 'Vau', 'We', 'Ypsilon', 'Zett', 'Eszett', 'Wie buchstabiert man das?']) assert.ok(ar.includes(name), name);
+  const stage = readFileSync('src/components/lesson/NoticeStage.jsx', 'utf8');
+  assert.match(stage, /text=\{notice\.bodyAr\}[^>]*textLang="ar"/);
+  assert.match(stage, /dir=\{textLang === 'ar' \? 'rtl' : undefined\}/);
+  // Each German run is isolated left-to-right inside the Arabic, so brackets and "?" stay in place.
+  assert.match(stage, /textLang === 'ar' \? isolateLatin\(text\)/);
+  assert.match(stage, /<bdi key=\{m\.index\} dir="ltr" lang="de"/);
+});
