@@ -47,3 +47,6 @@ artifact (`agents/*`) and the 30-day sales read.*
 | 2026-10-19 | Social packs on our own accounts brought 0 attributed signups ever; signups fell 181 → 83 in 30 days | No new social packs; distribution through partners, exam pages and buyers with a booked exam |
 | 2026-10-07 | 9 of 12 payers ever paid 20–129 days after their trial ended | Put offers where learners are after the trial, not only inside it |
 | 2026-10-07 | September Search Console: 808 clicks, at least 67% brand searches | Exam-intent traffic must be earned with non-brand pages and partners; brand search says nothing about reach |
+| 2026-11-17 | Proposed "Ana becomes Mika" before reading the personas: Ana Chakiri is Moroccan and speaks Arabic by design, and the name sits in 57 files and both live courses | Read the course's personas and count the uses before recommending a change of character |
+| 2026-11-17 | Told the founder the end screen "ticks abilities without evidence" from a state forced through saved data; in normal play every scene line must be said or confirmed first | Say how a finding was produced; a forced state is not a learner's path |
+| 2026-11-17 | Pushed a change to `src/data/curricula/a11.js` without its Astro twin; CI failed at the duplicates check | After any edit to a shared file run `node scripts/sync-shared.mjs` and `npm run check:duplicates` before pushing |
