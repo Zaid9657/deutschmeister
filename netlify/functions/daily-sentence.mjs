@@ -27,6 +27,23 @@ try {
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
+/**
+ * The daily sentence is STOPPED for everyone (owner decision 2026-11-17).
+ *
+ * WHY. The same sentence went to every confirmed account, whatever their level
+ * or goal: about 31,800 mails in 29 days at a 0.39% click rate, to 1,233
+ * accounts of whom 908 had never done anything on the site. The owner's words:
+ * "sending a daily sentence doesn't really reflect any value because the people
+ * can learn any sentence anywhere."
+ *
+ * The scheduled run and a secret-authorised live call now send nothing unless
+ * DAILY_SENTENCE_ENABLED is exactly 'true' (functions scope). Nothing sets it.
+ * `?test=true` still sends the one test mail to the owner's own address.
+ */
+export function dailySentenceStopped(env = process.env) {
+  return env.DAILY_SENTENCE_ENABLED !== 'true';
+}
+
 /** Pick today's sentence by cycling through the array using day-of-year. */
 function todaysSentence() {
   const now = new Date();
@@ -338,6 +355,11 @@ const innerHandler = async (event) => {
   if (!isTest && !isScheduled && !secretOk) {
     console.warn('Rejected unauthenticated live-send attempt');
     return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+  }
+
+  if (!isTest && dailySentenceStopped()) {
+    console.log('[daily-sentence] stopped by owner decision 2026-11-17 (DAILY_SENTENCE_ENABLED is not "true") — nothing sent.');
+    return { statusCode: 200, body: JSON.stringify({ sent: 0, stopped: true }) };
   }
 
   const sentence = todaysSentence();
