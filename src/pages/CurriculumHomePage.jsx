@@ -9,7 +9,7 @@ import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
-import { isLevelFree } from '../config/freeTier.js';
+import { isLevelFree, freeLektionen } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
 import { flushOutbox } from '../lib/course/syncOutbox.js';
 import { latestRun } from '../lib/lesson/runState.js';
@@ -93,7 +93,8 @@ const hrefFor = (level, node) => {
 // FREE_LEVELS. A signed-out visitor is asked to sign in there, never to pay.
 // Say so on the node and in the footer, so the last step of the free course
 // never reads like an unmarked paywall (Wave 0 front door).
-const finalTestLabel = (level) => (isLevelFree(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
+// …unless the course is free only up to its first Lektion (Lektion gate): then the test is part of the paid rest.
+const finalTestLabel = (level) => (isLevelFree(level) && !freeLektionen(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
 const kindLabelFor = (level) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level) });
 const KIND_ICON = { lektion: BookOpen, checkpoint: ClipboardCheck, leveltest: Trophy };
 // The path's sideways sway, as a share of `--sway-amp` (set on the <ol>): 24px on a phone, 72px from
@@ -105,9 +106,12 @@ export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const de = lang === 'de';
-  const { profile } = useSubscription() || {};
+  const { profile, hasFullCourse, loading: subLoading } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
+  // Lektion gate (src/config/freeTier.js): say where the free part ends before the learner walks into it.
+  const freeNr = freeLektionen(level);
+  const payNotice = freeNr > 0 && !subLoading && Boolean(hasFullCourse) && !hasFullCourse(level);
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
   const KIND_LABEL = kindLabelFor(level);
@@ -244,6 +248,20 @@ export default function CurriculumHomePage({ curriculum }) {
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
               {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · zum Abschluss ein verkürzter Übungstest im Format ${curriculum.examName}` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · ends with a shortened practice test in the ${curriculum.examName} format`}
             </Reveal>
+
+            {payNotice && (
+              <Reveal delay={120} data-lektion-gate className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-clay border border-rule bg-white p-4">
+                <p className="text-[0.9375rem] font-bold text-ink">
+                  {de ? `Lektion ${freeNr} ist kostenlos. Ab Lektion ${freeNr + 1} brauchen Sie ein Abo.` : `Lektion ${freeNr} is free. From Lektion ${freeNr + 1} on you need a subscription.`}
+                </p>
+                {/* /subscription sends a visitor to the log-in form, a dead end without an account. */}
+                {user && (
+                  <Button to="/subscription" state={{ from: { pathname: `/course/${level}/l/${freeNr + 1}` } }} variant="secondary" size="sm">
+                    {de ? 'Abo ansehen' : 'See the subscription'}
+                  </Button>
+                )}
+              </Reveal>
+            )}
 
             {loaded && curriculum.lektionen.some((l) => done.has(l.id)) && (
               <Reveal delay={140} className="mt-5">

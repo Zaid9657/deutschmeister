@@ -55,7 +55,7 @@ import { tagEmailLink } from './_shared/emailLinks.mjs';
 import { unsubscribeSecret, unsubscribeUrl, unsubscribeHeaders } from './_shared/unsubscribe.mjs';
 import { productInfo } from './_shared/pricing.mjs';
 import { subscriptionHasPaidAccess, latestCourseWindow } from './_shared/subscriptionEntitlement.mjs';
-import { FREE_LEVELS } from './_shared/supportCatalog.mjs';
+import { FREE_LEVELS, FREE_LEKTIONEN, LEKTION_GATE_FROM } from './_shared/supportCatalog.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -270,9 +270,9 @@ export function nextStep(level, rows = [], { floorNr = 1, finalTestPassed = fals
  * included course window (a purchase with access_until ahead); or an active
  * purchase whose course covers the level, which is lifetime.
  */
-export function canOpenLevel(level, { profile = null, subscription = null, purchases = [] } = {}, now = Date.now()) {
+export function canOpenLevel(level, { profile = null, subscription = null, purchases = [] } = {}, now = Date.now(), freeLevels = FREE_LEVELS) {
   const lvl = lower(level);
-  if (FREE_LEVELS.includes(lvl)) return true;
+  if (freeLevels.includes(lvl)) return true;
   const t = Number(now);
   if (profile?.trial_started_at && profile?.trial_ends_at && !profile.is_subscribed && Date.parse(profile.trial_ends_at) > t) return true;
   const active = (purchases || []).filter((p) => p.status === 'active');
@@ -580,11 +580,28 @@ export async function resolveNextPaths(client, ids = []) {
   return out;
 }
 
+/** A free level whose course is free only up to its first Lektion(en) while the Lektion gate is live. */
+const gatedFree = (level, gateFrom = LEKTION_GATE_FROM) => (gateFrom && FREE_LEKTIONEN[lower(level)]) || 0;
+
+/**
+ * Whether the step a reminder would name opens for this learner. The level
+ * rule, except past the free Lektion(en) of a gated course: there the learner
+ * needs what src/lib/levelEntitlement.js fullCourseReason asks for (an account
+ * older than the gate, a trial, a paid period or window, or anything bought).
+ * A reminder must never name a Lektion that opens the pay screen.
+ */
+export function canOpenStep(level, step, account, now = Date.now(), gateFrom = LEKTION_GATE_FROM) {
+  const free = gatedFree(level, gateFrom);
+  if (!free || (step?.kind === 'lektion' && step.nr <= free)) return canOpenLevel(level, account, now);
+  if (Date.parse(account?.profile?.created_at) < Date.parse(gateFrom)) return true;
+  return canOpenLevel(level, account, now, []) || (account?.purchases || []).some((p) => p.status === 'active' && p.product_key !== 'pro_days');
+}
+
 /** The rows canOpenLevel reads, for the learners in a paid level. */
 async function readAccess(client, ids) {
   if (ids.length === 0) return new Map();
   const [profiles, subscriptions, purchases] = await Promise.all([
-    readForIds(ids, (chunk) => client.from('profiles').select('id, trial_started_at, trial_ends_at, is_subscribed').in('id', chunk).order('id'), 'profile'),
+    readForIds(ids, (chunk) => client.from('profiles').select('id, created_at, trial_started_at, trial_ends_at, is_subscribed').in('id', chunk).order('id'), 'profile'),
     readForIds(ids, (chunk) => client.from('subscriptions').select('user_id, status, subscription_end').in('user_id', chunk).order('user_id'), 'subscription'),
     readForIds(ids, (chunk) => client.from('purchases').select('user_id, product_key, status, access_until').in('user_id', chunk).eq('status', 'active').order('user_id'), 'purchase'),
   ]);
@@ -658,13 +675,13 @@ export async function selectRecipients({ client = supabase, span = null, now = D
   const progress = await readProgress(client, reachable.map((r) => r.user_id));
   const stepOf = (r, finalTestPassed = false) => nextStep(r.level, progress.get(r.user_id) || [], { floorNr: r.next_lektion_nr, finalTestPassed });
   const passedFinal = await readFinalTestPasses(client, reachable.filter((r) => stepOf(r)?.kind === 'finaltest'));
-  const access = await readAccess(client, reachable.filter((r) => !FREE_LEVELS.includes(lower(r.level))).map((r) => r.user_id));
+  const access = await readAccess(client, reachable.filter((r) => !FREE_LEVELS.includes(lower(r.level)) || gatedFree(r.level)).map((r) => r.user_id));
 
   const out = [];
   for (const r of reachable) {
     const step = stepOf(r, passedFinal.has(r.user_id));
     if (step?.kind === 'complete') continue;
-    if (!canOpenLevel(r.level, access.get(r.user_id), now)) continue;
+    if (!canOpenStep(r.level, step, access.get(r.user_id), now)) continue;
     out.push({
       id: r.user_id,
       email: emails.get(r.user_id),

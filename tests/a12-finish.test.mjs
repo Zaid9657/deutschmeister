@@ -213,7 +213,7 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../data/curricula/a11.meta.js'] = { A11_META: { level: 'a1.1' }, lektionMinutesEstimate: () => ({ lo: 20, hi: 30 }) };
     stubs['../data/curricula/index.js'] = { curriculumPath };
     stubs['../config/levels.js'] = { LEVEL_ORDER: ['A1.1', 'A1.2', 'A2.1'] };
-    stubs['../config/freeTier.js'] = { isLevelFree: () => false };
+    stubs['../config/freeTier.js'] = { isLevelFree: () => false, freeLektionen: () => 0 };
     stubs['../data/navigation.js'] = { SUPPORT_LINK: { href: '/support', labelDe: 'Hilfe' } };
     stubs['../lib/course/localProgress.js'] = { localDoneIds: () => new Set(complete ? curriculumPath(curriculum).map((n) => n.id) : []) };
     stubs['../lib/lesson/runState.js'] = { latestRun: () => null };
