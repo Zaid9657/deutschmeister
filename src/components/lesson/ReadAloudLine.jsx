@@ -132,7 +132,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
     if (!blob.size) { setPhase('idle'); return; }
     setPhase('scoring');
     const audioBase64 = await blobToBase64(blob);
-    if (keepVoice && user) keepTake(lektionId, user.id, { text, src: `data:${mimeType};base64,${audioBase64}` });
+    if (keepVoice && user && mountedRef.current) keepTake(lektionId, user.id, { text, src: `data:${mimeType};base64,${audioBase64}` });
     score(audioBase64, mimeType);
   }, [releaseMic, score, keepVoice, user, lektionId, text]);
 
