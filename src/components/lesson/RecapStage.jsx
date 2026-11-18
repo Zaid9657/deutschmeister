@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
+import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check, Circle } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import GuideOtter from '../illustrations/GuideOtter.jsx';
 import Chip from '../ui/Chip.jsx';
@@ -44,7 +44,7 @@ function skillText(line, lang) {
   return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
 }
 
-export default function RecapStage({ stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ checkShown = null, stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -133,9 +133,13 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
           <>
             <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
             <ul className="mt-3 space-y-2">
-              {canDo.map((line) => (
+              {/* After a final check, only what it showed is ticked (2026-11-18); without one, as before. */}
+              {canDo.map((line, i) => (
                 <li key={line} className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> {line}
+                  {!checkShown || checkShown[i]
+                    ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
+                    : <Circle className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />}
+                  <span>{line}{checkShown && !checkShown[i] && <span className="block text-[0.8125rem] text-graphite">{t('recap.canDo.notYet', lang)}</span>}</span>
                 </li>
               ))}
             </ul>

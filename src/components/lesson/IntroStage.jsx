@@ -54,6 +54,7 @@ export const INTRO_STRINGS = {
     'intro.part1': 'Listen, say and read',
     'intro.part2': 'The rule and practice',
     'intro.part3': 'Speak and write',
+    'intro.part3.check': 'Speak, write and the final check',
     'intro.parts': '{parts} parts · about {lo}–{hi} min each (estimate; saved at each pause)',
     'intro.minutes': 'about {lo}–{hi} min (estimate)',
     'intro.start': 'Start',
@@ -70,6 +71,7 @@ export const INTRO_STRINGS = {
     'intro.part1': 'Hören, sprechen und lesen',
     'intro.part2': 'Die Regel und Übungen',
     'intro.part3': 'Sprechen und schreiben',
+    'intro.part3.check': 'Sprechen, schreiben und der Abschlusscheck',
     'intro.parts': '{parts} Teile · etwa {lo}–{hi} Min. je Teil (Schätzung; an jeder Pause gespeichert)',
     'intro.minutes': 'etwa {lo}–{hi} Min. (Schätzung)',
     'intro.start': 'Starten',
@@ -170,7 +172,7 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
                 {[1, 2, 3].map((part) => (
                   <li key={part} className="flex items-center gap-3 rounded-clay border border-rule bg-white px-4 py-3 text-[0.9375rem] text-ink">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-siegel-wash font-data text-sm font-bold text-siegel-deep">{part}</span>
-                    <span>{ti(`intro.part${part}`, lang)}</span>
+                    <span>{ti(`intro.part${part}${part === 3 && lektion.guided?.check ? '.check' : ''}`, lang)}</span>
                   </li>
                 ))}
               </ol>

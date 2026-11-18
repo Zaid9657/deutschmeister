@@ -206,6 +206,8 @@ test('the bilingual lesson map appears only for guided lessons and agrees with t
     en: ['Your path through this Lektion', 'Listen, say and read', 'The rule and practice', 'Speak and write'],
     de: ['Ihr Weg durch diese Lektion', 'Hören, sprechen und lesen', 'Die Regel und Übungen', 'Sprechen und schreiben'],
   };
+  // A Lektion with a final check names it in part 3 (2026-11-18).
+  const withCheck = { en: 'Speak, write and the final check', de: 'Sprechen, schreiben und der Abschlusscheck' };
   for (const lang of ['en', 'de']) {
     const { INTRO_STRINGS } = await loadJsxModule('src/components/lesson/IntroStage.jsx', {
       ...extra, 'lucide-react': new Proxy({}, { get: (_, key) => key }),
@@ -225,7 +227,7 @@ test('the bilingual lesson map appears only for guided lessons and agrees with t
         rows.forEach((row, i) => {
           const spans = elements(row, 'span');
           assert.equal(spans[0].props.children[0], i + 1);
-          assert.equal(textOf(spans[1]), expected[lang][i + 1]);
+          assert.equal(textOf(spans[1]), i === 2 && lesson.guided?.check ? withCheck[lang] : expected[lang][i + 1]);
         });
       }
     }

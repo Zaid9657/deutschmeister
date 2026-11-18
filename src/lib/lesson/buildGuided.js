@@ -38,7 +38,9 @@ export function buildGuided(options, buildLegacy) {
       items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', accepted: [q.answer] })) },
     ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
     { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue })) },
-    part('speaking', 3), part('writing', 3), part('requeue', 3), { ...part('recap', 3), nextHook: lektion.nextHook },
+    part('speaking', 3), part('writing', 3), part('requeue', 3),
+    ...(lektion.guided.check ? [{ nr: 7, key: 'check', kind: 'check', part: 3, check: lektion.guided.check }] : []),
+    { ...part('recap', 3), nextHook: lektion.nextHook },
   ];
   return { ...legacy, flow: 'guided', stages };
 }

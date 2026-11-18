@@ -234,6 +234,26 @@ export const CURRICULUM_A11 = {
             say: { line: 9 },
           },
         ],
+        // The final check (2026-11-18): the same reception, now as the learner themself. One or more
+        // turns per can-do (`canDo` is its index in `canDo` below); spoken, or typed without a
+        // microphone or account. `repeat` names the part to go back to when a can-do is not shown.
+        // Nothing locks: the founder chose a recommendation over a locked path (2026-11-18).
+        check: {
+          turns: [
+            { canDo: 0, cue: { de: 'Guten Tag!', en: 'Good day!' }, taskDe: 'Antworten Sie Frau Kaya.', taskEn: 'Greet her back.', accepted: ['Guten Tag!', 'Guten Tag, Frau Kaya!', 'Hallo!'] },
+            { canDo: 1, cue: { de: 'Wie heißen Sie?', en: 'What is your name?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer with your own name.', ownName: true, accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
+            { canDo: 2, spell: ['Vogel', 'Weigel', 'Jensen'], taskDe: 'Frau Kaya buchstabiert. Schreiben Sie das Wort.', taskEn: 'Frau Kaya spells a guest’s name. Write the name.' },
+            { canDo: 3, cue: { de: 'Wie geht es Ihnen?', en: 'How are you?' }, taskDe: 'Antworten Sie.', taskEn: 'Answer her.', accepted: ['Mir geht es gut, danke.', 'Mir geht es gut.', 'Danke, mir geht es gut.'] },
+            { canDo: 3, taskDe: 'Und Frau Kaya? Fragen Sie.', taskEn: 'Now ask her how she is.', accepted: ['Und wie geht es Ihnen?', 'Wie geht es Ihnen?'] },
+            { canDo: 0, cue: { de: 'Mir geht es gut, danke. Auf Wiedersehen!', en: 'I’m fine, thank you. Goodbye!' }, taskDe: 'Antworten Sie.', taskEn: 'Say goodbye.', accepted: ['Auf Wiedersehen!', 'Auf Wiedersehen, Frau Kaya!'] },
+          ],
+          repeat: [
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 2: the alphabet', de: 'Teil 2: das Alphabet' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Morgen muss Ana sich im Bürgerbüro anmelden. Kann sie das Formular ausfüllen?',

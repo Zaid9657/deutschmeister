@@ -61,3 +61,25 @@ course really does, built it and walked Lektion 1 from the first screen to the e
 The traveller is still Ana Chakiri from Morocco. The partner's curriculum file of the same day
 calls the otter Mika Sommer from Spain; the founder has not chosen. The lines are global strings,
 so every guided Lektion gets them when this merges.
+
+## Piece 5, the final check (2026-11-18)
+
+`final-check-concept.jpg` is the picture drawn first (Codex), then built. The founder decided on
+2026-11-18 that the check recommends and does not lock: "as long as the users have to pay for that
+course, I don't mind it". Payment from Lektion 2 is the business session's piece; the check's end
+leads to Lektion 2 as normal and the pay screen will sit there.
+
+| What | How |
+|---|---|
+| Where | Part 3, after writing and the retry of missed items, before the end screen |
+| Turns | Six, at the same reception as the learner themself: greet, own name, write a name Frau Kaya spells, answer and ask how someone is, say goodbye |
+| Answers | Spoken when signed in with a microphone (scored against the answer, 80 % of words recognised); otherwise typed. Two low spoken scores switch to typing; "I said it" never counts |
+| A miss | One more try; a case slip says "just a typo"; after the second miss the answer is shown |
+| Shown | A can-do is shown only when all its turns are |
+| After | All shown: the otter's line and Continue. Otherwise the part to repeat, "Try the check again" (a new name to spell) or "Go on" |
+| End screen | Ticks only the can-dos the check showed; the others say "Still to practise" |
+
+The otter's five lines are Codex's, from the founder's words. Only Lektion 1 has a check
+(`guided.check` in `src/data/curricula/a11.js`); Lektionen 2–12 keep their end screen as before.
+A reload during the check starts it again. The recordings on the end screen (piece 4 of the
+picture) wait for the founder.

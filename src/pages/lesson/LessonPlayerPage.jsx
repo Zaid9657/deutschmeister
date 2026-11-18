@@ -52,6 +52,7 @@ const SceneStage = lazy(() => import('../../components/lesson/SceneStage.jsx'));
 const SoundStage = lazy(() => import('../../components/lesson/SoundStage.jsx'));
 const ReadStage = lazy(() => import('../../components/lesson/ReadStage.jsx'));
 const FluencyStage = lazy(() => import('../../components/lesson/FluencyStage.jsx'));
+const CheckStage = lazy(() => import('../../components/lesson/CheckStage.jsx'));
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -278,6 +279,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   // line used to be idle again — re-recorded (allowance spent) or reported "skipped" (LSN-01).
   const [readAloud, setReadAloud] = useState(() => (resumed ? resumed.readAloud || {} : {}));
   const [sceneReadAloud, setSceneReadAloud] = useState(() => resumed?.sceneReadAloud || {});
+  // The final check's verdict per can-do (CheckStage); the recap ticks only what it shows.
+  const [checkShown, setCheckShown] = useState(null);
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
   // What the recap tells the learner about saving: 'local' (signed out) · 'syncing' · 'synced' · 'failed'.
@@ -643,9 +646,14 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     case 'writing':
       body = <WritingStage stage={stage} lektionId={lektion.id} onResult={resultFor('writing')} onReport={reportSkill('writing')} onBack={back} onDone={advance} />;
       break;
+    case 'check':
+      body = <Suspense fallback={<PlayerLoading />}><CheckStage stage={stage} lektion={lektion} onBack={back}
+        onDone={(shown) => { setCheckShown(shown); advance(); }} /></Suspense>;
+      break;
     case 'recap':
       body = (
         <RecapStage
+          checkShown={checkShown}
           stage={stage}
           level={curriculum.level}
           accuracy={accuracy}
