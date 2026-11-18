@@ -25,7 +25,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { FREE_COURSE_HREF, FREE_LEVEL } from '../src/data/offers.js';
-import { FREE_LEVELS, isLevelFree } from '../src/config/freeTier.js';
+import { FREE_LEVELS, isLevelFree, beyondFreeLektionen } from '../src/config/freeTier.js';
 import { FREE_LEVEL_LABEL } from '../src/data/marketing.js';
 import { XRAY_OFFER } from '../src/lib/xray.js';
 
@@ -134,7 +134,9 @@ test('the named door is the free level\'s course, open without an account', () =
   // LevelSubscriptionGuard returns the page for a free level before it asks for
   // a user, so the course opens signed out (CLAUDE.md case 3: no slash).
   assert.ok(read('src/App.jsx').includes('path="/course/:level"'));
-  assert.match(read('src/components/LevelSubscriptionGuard.jsx'), /if \(isLevelFree\(level\)\) \{\s*return children;/);
+  // The Lektion gate (tests/lektion-gate.test.mjs) never covers the door itself or Lektion 1.
+  assert.match(read('src/components/LevelSubscriptionGuard.jsx'), /if \(isLevelFree\(level\) && !gated\) \{\s*return children;/);
+  for (const path of [FREE_COURSE_HREF, `${FREE_COURSE_HREF}/l/1`]) assert.equal(beyondFreeLektionen(path, '2026-01-01T00:00:00.000Z'), false, path);
   assert.doesNotMatch(FREE_COURSE_HREF, /\/$/);
 });
 

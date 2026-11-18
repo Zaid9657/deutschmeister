@@ -11,6 +11,7 @@ import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
 import { blockedLevelFrom, checkoutEntitlementConfirmed, hasFailedPayment, hasRecurringBilling, ownsCheckoutProduct } from '../lib/checkoutAccess.js';
 import { courseHomeFor } from '../lib/courseEntry.js';
+import { freeLektionen } from '../config/freeTier.js';
 import TrialReturnCard from '../components/TrialReturnCard.jsx';
 import { planStatusCopy } from '../lib/planStatus.js';
 import { proPlanLines } from '../lib/proPlanLines.js';
@@ -45,6 +46,7 @@ const SubscriptionPage = () => {
     hasActiveSubscription,
     hasProduct,
     hasLevelAccess,
+    hasFullCourse,
     purchases,
     subscription,
     refreshSubscription,
@@ -190,6 +192,10 @@ const SubscriptionPage = () => {
   const orderedLevelCourses = leadCourse
     ? [leadCourse, ...visibleLevelCourses.filter((c) => c.key !== leadCourse.key)]
     : visibleLevelCourses;
+  // Refused at the paid rest of a course whose first Lektion is free (Lektion
+  // gate, src/config/freeTier.js): that level has no course product; a
+  // subscription opens it, so say that instead of leading with nothing.
+  const gateFree = blockedLevel ? freeLektionen(blockedLevel) : 0;
 
   const startPurchase = (productKey, variantId, price) => {
     if (subLoading || verifying || !billingVerified || ownsCheckoutProduct(productKey, purchases)) return;
@@ -308,6 +314,13 @@ const SubscriptionPage = () => {
             title={heading.title}
             lead={heading.lead}
           />
+          {gateFree > 0 && !hasFullCourse(blockedLevel) && (
+            <p data-lektion-gate className="mt-4 text-[0.9375rem] font-bold text-ink">
+              {isGerman
+                ? `Lektion ${gateFree} von ${blockedLevel.toUpperCase()} ist kostenlos. Mit einem Abo öffnen Sie den ganzen Kurs: alle Lektionen, die Checkpoints und den Abschlusstest.`
+                : `Lektion ${gateFree} of ${blockedLevel.toUpperCase()} is free. A subscription opens the whole course: every Lektion, the checkpoints and the final test.`}
+            </p>
+          )}
         </div>
 
         {/* Payment verification */}
