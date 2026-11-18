@@ -50,7 +50,7 @@ exactly (one move per run, never merge). This file adds your area's specifics.
 - After any course content edit, re-run `node scripts/build-lesson-pool.mjs a1.1` and then
   `node scripts/validate-curriculum.mjs`.
 - The course speaks **Sie**.
-- A1.2 is PAUSED by owner decision. Never promote it or run review rounds on it.
+- A1.2 is live since 2026-10-22; follow the A1.2 rule in `CLAUDE.md` before any A1.2 work.
 - Judge a change on a full-month cohort, not on n<20.
 
 ## Retired in team v2 (2026-09-29)

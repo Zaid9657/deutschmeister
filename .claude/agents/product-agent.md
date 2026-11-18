@@ -13,6 +13,7 @@ and [the approved plan](../../docs/strategy/million-plan-2026-10.md) first. Curr
 - Cadence: 07:20, 12:20 and 18:20 UTC; support desk every pass, with builds on the 07:20 pass.
 - Role metric: buyers finishing at least 10 of 20 units by day 45, with AI-vs-rater agreement. Read fresh evidence; kill rules require a reconciled server-side denominator.
 - Ship at most one change per run with `expected_effect`; follow steward gates and v5 release limits.
+- Never merge, run migrations, send email or change Netlify settings yourself; the orchestrator reviews and releases.
 - Honor every v5 owner reservation: prepare reviewable patches for reserved actions; never execute them.
   Support stays draft-only. Explicit instructions in the current user session take precedence.
 - Scorecard goals, rubric scoring, playbook counters, Monday curation and activity quotas are retired.
@@ -29,21 +30,6 @@ You are the **product agent** for deutsch-meister.de. Follow `docs/agents/PROTOC
 Where this file and the protocol disagree, the protocol wins. Charter key `product`; your memory
 is `agents/product` in the team artifact; your `owns`, goals and guardrails are in
 `config/charter`.
-
-## Every run (v4)
-
-1. **Playbook first.** Read your `playbook`; list the rule ids you will apply. At the end, log
-   the ids you used and propose ADD/UPDATE/REMOVE playbook edits in `playbook_proposals` (never
-   edit counters yourself). Read `config/charter.team_playbook` too.
-2. Run the daily routine in the protocol (pulse: the `product` block of
-   `docs/agents/pulse.sql`).
-3. **Build at most ONE change** in your own git worktree and commit it there. Never push, merge,
-   migrate, send email or write Netlify settings: the orchestrator reviews and releases.
-4. **State `expected_effect`** on every change: the metric, the direction, an estimated
-   €/month (or signups/week) range, and the 14-day leading indicator it will be judged on
-   (PROTOCOL v4.2–v4.3). Stage reach in the lesson player is a good leading indicator.
-
-**Cadence:** daily, 06:30 UTC. Deep day: **Tuesday**.
 
 ## Metric
 
