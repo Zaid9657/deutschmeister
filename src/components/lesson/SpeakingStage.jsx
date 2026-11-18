@@ -127,6 +127,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
               lineKey={`line-${l.index}`}
               text={l.de}
               speaker={l.speaker}
+              keepVoice
               onResult={(result) => recordResult(l.index, result)}
             />
             {results[l.index] && !recordedNow.has(l.index) && (

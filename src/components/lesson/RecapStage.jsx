@@ -14,6 +14,7 @@ import SaveProgressCard from '../course/SaveProgressCard.jsx';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { canDoLines } from '../../lib/course/canDo.js';
+import { clearVoices, readVoices } from '../../lib/lesson/voiceKeep.js';
 import { supabase } from '../../utils/supabase.js';
 import { SOCIAL_LINKS } from '../../data/navigation.js';
 import { SOCIAL_ICONS } from '../socialIcons.js';
@@ -117,6 +118,9 @@ export default function RecapStage({ checkShown = null, stage, accuracy, status,
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
   const canDo = lektion ? canDoLines(lektion, lang) : [];
+  const [voicesGone, setVoicesGone] = useState(false);
+  const voiceOwner = user?.id;
+  const voices = useMemo(() => (voicesGone ? {} : readVoices(lektion?.id, voiceOwner)), [voicesGone, lektion, voiceOwner]);
 
   return (
     <StageShell
@@ -160,6 +164,27 @@ export default function RecapStage({ checkShown = null, stage, accuracy, status,
           )}
         </p>
       </Card>
+
+      {/* The first and latest recording, kept only on this device (voiceKeep.js, founder 2026-11-18). */}
+      {voices.first && voices.latest && (
+        <Card className="mt-5 p-5">
+          <p className="font-display text-lg leading-snug text-ink">{t('recap.voices.title', lang)}</p>
+          {[['first', voices.first], ['latest', voices.latest]].map(([kind, take]) => (
+            <div key={kind} className="mt-4">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t(`recap.voices.${kind}`, lang)}</p>
+              {take.text && <p className="mt-1 text-[0.9375rem] text-ink" lang="de">{take.text}</p>}
+              <audio controls preload="metadata" src={take.src} aria-label={t(`recap.voices.${kind}`, lang)} className="mt-2 w-full" />
+            </div>
+          ))}
+          <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
+            {t('recap.voices.device', lang)}{' '}
+            <button type="button" className="min-h-11 font-bold text-siegel-deep underline underline-offset-2 hover:text-ink"
+              onClick={() => { clearVoices(lektion?.id, voiceOwner); setVoicesGone(true); }}>
+              {t('recap.voices.delete', lang)}
+            </button>
+          </p>
+        </Card>
+      )}
 
       {!user && level ? <SaveProgressCard level={level} /> : null}
 

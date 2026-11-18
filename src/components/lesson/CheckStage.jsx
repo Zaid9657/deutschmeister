@@ -68,7 +68,7 @@ function CheckTurn({ turn, n, total, lektion, canSpeak, onBack, onOutcome }) {
 
       {!outcome && mode === 'speak' && (
         <>
-          <ReadAloudLine lektionId={lektion.id} lineKey={`check-${n}`} text={spokenTarget(turn)} guided hideModel onResult={spoken} />
+          <ReadAloudLine lektionId={lektion.id} lineKey={`check-${n}`} text={spokenTarget(turn)} guided hideModel keepVoice onResult={spoken} />
           <button type="button" className="mt-3 min-h-11 text-sm font-bold text-siegel-deep underline" onClick={() => setMode('type')}>{t('check.typeInstead', lang)}</button>
         </>
       )}

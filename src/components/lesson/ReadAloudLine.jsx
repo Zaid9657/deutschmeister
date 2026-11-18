@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import PlayButton from './PlayButton.jsx';
 import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
 import { canRetryReadAloud, canSelfConfirmReadAloud } from '../../lib/lesson/readAloudControls.js';
+import { keepTake } from '../../lib/lesson/voiceKeep.js';
 import { getAuthHeaders } from '../../utils/supabase';
 import { speechLine, t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
@@ -32,7 +33,8 @@ import {
 const MAX_ATTEMPTS = 3;
 const MAX_RECORD_MS = 8000;
 
-export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false, hideModel = false }) {
+// keepVoice: a Lektion's own stages keep the take on this device for the end screen (voiceKeep.js).
+export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult, guided = false, hideModel = false, keepVoice = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const [support] = useState(() => checkSpeakingSupport());
@@ -130,8 +132,9 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
     if (!blob.size) { setPhase('idle'); return; }
     setPhase('scoring');
     const audioBase64 = await blobToBase64(blob);
+    if (keepVoice && user) keepTake(lektionId, user.id, { text, src: `data:${mimeType};base64,${audioBase64}` });
     score(audioBase64, mimeType);
-  }, [releaseMic, score]);
+  }, [releaseMic, score, keepVoice, user, lektionId, text]);
 
   const stopRecording = useCallback(() => {
     if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }

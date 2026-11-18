@@ -61,7 +61,7 @@ export default function SceneStage({ stage, lektionId, itemIndex, onItemChange, 
           {t(chunk.say.ownName === 'surname' ? 'scene.surname' : 'scene.name', lang)}
           <input value={ownName} maxLength={80} autoComplete="off" onChange={(e) => { onNamesChange?.({ ...names, [chunk.say.ownName]: e.target.value }); onSayResult(index, null); }} className="mt-2 block min-h-11 w-full rounded-xl border border-rule bg-white px-3 py-2 text-ink" />
         </label>}
-        {spoken ? <ReadAloudLine key={`${index}:${spoken}`} guided lektionId={lektionId} lineKey={`scene-${index + 1}-say`} text={spoken} onResult={(r) => onSayResult(index, r)} /> : <Card className="p-5"><p>{t('scene.enterName', lang)}</p></Card>}
+        {spoken ? <ReadAloudLine key={`${index}:${spoken}`} guided lektionId={lektionId} lineKey={`scene-${index + 1}-say`} text={spoken} keepVoice onResult={(r) => onSayResult(index, r)} /> : <Card className="p-5"><p>{t('scene.enterName', lang)}</p></Card>}
         {done && <p className="mt-3 text-sm font-bold" role="status">{results[index].usedMic && typeof results[index].pct === 'number' ? speechLine(results[index].pct, lang) : t('speaking.said', lang)}</p>}
         <Button variant="coral" className="mt-5 w-full" disabled={!done} onClick={next}>{t('action.next', lang)}</Button>
       </div>}

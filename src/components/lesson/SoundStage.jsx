@@ -20,7 +20,7 @@ export default function SoundStage({ stage, itemIndex, lektionId, results, onSay
     {heard && !checked && <CheckedChoice item={item} lang={lang} onResult={onResult} onNext={() => setChecked(true)} />}
     {checked && <div className="mt-5">
       <p className="mb-3 text-sm">{t('sound.say', lang)} <strong lang="de">{item.text}</strong></p>
-      <ReadAloudLine lektionId={lektionId} lineKey={`sound-${itemIndex}`} text={item.text} onResult={(r) => onSayResult(itemIndex, r)} />
+      <ReadAloudLine lektionId={lektionId} lineKey={`sound-${itemIndex}`} text={item.text} keepVoice onResult={(r) => onSayResult(itemIndex, r)} />
     </div>}
   </StageShell>;
 }

@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary, { reloadForStaleChunk } from './components/ErrorBoundary';
 import App from './App';
 import { initAnalytics, withdrawAnalytics } from './lib/analytics';
+import { sweepVoices } from './lib/lesson/voiceKeep.js';
 import './utils/i18n';
 import './index.css';
 
@@ -19,6 +20,9 @@ window.addEventListener('dm-consent-declined', withdrawAnalytics);
 // guard; the error still propagates, so the boundary shows "a new version is
 // available" for the moment the reload takes, or for good if it loops.
 window.addEventListener('vite:preloadError', () => { reloadForStaleChunk(); });
+
+// The end screen's kept recordings are deleted 7 days after the first one (voiceKeep.js).
+sweepVoices();
 
 // The shell's visually-hidden identity <h1> (index.html) is for a crawler that
 // never runs this file. Every screen renders its own <h1>, so once the app

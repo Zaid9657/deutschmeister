@@ -81,5 +81,18 @@ leads to Lektion 2 as normal and the pay screen will sit there.
 
 The otter's five lines are Codex's, from the founder's words. Only Lektion 1 has a check
 (`guided.check` in `src/data/curricula/a11.js`); Lektionen 2–12 keep their end screen as before.
-A reload during the check starts it again. The recordings on the end screen (piece 4 of the
-picture) wait for the founder.
+A reload during the check starts it again.
+
+## Piece 4, the first and latest recording (2026-11-18)
+
+The founder answered "Yes, phone only" to keeping the two recordings on the learner's device
+instead of our servers. Today no voice is stored anywhere: `score-readaloud` transcribes each take
+and saves only right or wrong.
+
+| What | How |
+|---|---|
+| Who | Signed-in learners who recorded with a microphone (guests tap "I said it" and record nothing) |
+| Which takes | The first take of the Lektion (in Lektion 1, "Guten Tag. Ich heiße …" with their own name) and the latest one, usually from the final check |
+| Where kept | `localStorage` on the device only, one key per account and Lektion (`src/lib/lesson/voiceKeep.js`); the scene, sound, fluency, speaking and check stages opt in, the checkpoint does not |
+| End screen | Codex's line, both recordings with their sentence, and "These recordings stay only on this device and are deleted after 7 days" with "Delete now" |
+| Deleted | 7 days after the first take, by a sweep on every app load; a learner who never opens the app again keeps them in their own browser until they clear it |
