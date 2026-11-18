@@ -53,7 +53,8 @@ test('live, the whole course opens for older accounts and for anyone who pays', 
   assert.equal(full({ purchases: [examPack] }), 'owned', 'any purchase opens it');
   assert.equal(full({ purchases: [{ ...examPack, status: 'refunded' }] }), null);
   assert.equal(full({ purchases: [{ product_key: 'pro_days', status: 'active', access_until: '2026-11-28T00:00:00.000Z' }] }), null, 'an expired grant window is not a purchase');
-  assert.equal(full({ profile: liveTrial }), 'trial');
+  assert.equal(full({ profile: liveTrial }), null, 'the trial opens Lektion 1 only (owner decision 2026-11-18)');
+  assert.equal(courseAccessReason(account({ profile: liveTrial }), 'a1.2', now), 'trial', 'the trial still opens the other levels');
   // The level itself, and every other level, are untouched.
   assert.equal(courseAccessReason(account(), 'a1.1', now), 'free');
   assert.equal(fullCourseReason(account(), 'a1.2', now, GATE), null);
@@ -69,7 +70,7 @@ test('a reminder never names a step that opens the pay screen', () => {
   assert.equal(can({ profile: fresh }, { kind: 'checkpoint', nr: 1 }), false);
   assert.equal(can({ profile: fresh }, { kind: 'finaltest' }), false);
   assert.equal(can({ profile: old }), true);
-  assert.equal(can({ profile: { ...fresh, ...liveTrial } }), true);
+  assert.equal(can({ profile: { ...fresh, ...liveTrial } }), false, 'a trial does not open Lektion 2');
   assert.equal(can({ profile: fresh, subscription: liveSub }), true);
   assert.equal(can({ profile: fresh, purchases: [examPack] }), true);
   assert.equal(can(undefined), false, 'no access rows read means no reminder');

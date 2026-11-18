@@ -587,14 +587,15 @@ const gatedFree = (level, gateFrom = LEKTION_GATE_FROM) => (gateFrom && FREE_LEK
  * Whether the step a reminder would name opens for this learner. The level
  * rule, except past the free Lektion(en) of a gated course: there the learner
  * needs what src/lib/levelEntitlement.js fullCourseReason asks for (an account
- * older than the gate, a trial, a paid period or window, or anything bought).
+ * older than the gate, a paid period or window, or anything bought; no trial).
  * A reminder must never name a Lektion that opens the pay screen.
  */
 export function canOpenStep(level, step, account, now = Date.now(), gateFrom = LEKTION_GATE_FROM) {
   const free = gatedFree(level, gateFrom);
   if (!free || (step?.kind === 'lektion' && step.nr <= free)) return canOpenLevel(level, account, now);
   if (Date.parse(account?.profile?.created_at) < Date.parse(gateFrom)) return true;
-  return canOpenLevel(level, account, now, []) || (account?.purchases || []).some((p) => p.status === 'active' && p.product_key !== 'pro_days');
+  // profile: null drops the trial, which does not open the gated rest (owner decision 2026-11-18).
+  return canOpenLevel(level, { ...account, profile: null }, now, []) || (account?.purchases || []).some((p) => p.status === 'active' && p.product_key !== 'pro_days');
 }
 
 /** The rows canOpenLevel reads, for the learners in a paid level. */

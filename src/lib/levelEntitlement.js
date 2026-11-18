@@ -39,7 +39,7 @@ export function courseAccessReason(account, level, now = Date.now()) {
  * Lektion gate is live (src/config/freeTier.js): there "free" is not enough.
  * The rest opens for an account older than the gate, for any live subscription
  * (owner decision 2026-11-18 — also one started after COURSE_SUBSCRIPTION_CUTOFF),
- * for anyone who bought anything, and for a live window or trial.
+ * for anyone who bought anything, and for a live AI window. Not for a trial.
  */
 export function fullCourseReason(account = {}, level, now = Date.now(), gateFrom = LEKTION_GATE_FROM) {
   const reason = courseAccessReason(account, level, now);
@@ -48,5 +48,7 @@ export function fullCourseReason(account = {}, level, now = Date.now(), gateFrom
   if (Date.parse(profile?.created_at) < Date.parse(gateFrom)) return 'free';
   if (subscriptionStatus(subscription, now).isActive) return 'pro';
   if (ownedPurchases(purchases).length > 0) return 'owned';
-  return paidAccessReason(account, level, now);
+  // The 7-day trial does NOT open it (owner decision 2026-11-18: "No, Lektion 1 only").
+  const paid = paidAccessReason(account, level, now);
+  return paid === 'trial' ? null : paid;
 }
