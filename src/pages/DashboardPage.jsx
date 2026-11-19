@@ -589,7 +589,7 @@ const DashboardPage = () => {
                       free after the trial, and AI Practice's speaking is metered, never "unlimited"
                       (tests/unlimited-claims.test.mjs). */}
                   <p className="text-[0.75rem] text-accent-aprikose-ink">
-                    After the trial, {FREE_LEVEL_LABEL} stays free. AI Practice adds writing feedback, speaking practice and Sentence X-Ray. New subscriptions do not include course access.
+                    After the trial, your free lessons stay open. AI Practice adds writing feedback, speaking practice and Sentence X-Ray, and opens the full {FREE_LEVEL_LABEL} course.
                   </p>
                 </div>
               </div>

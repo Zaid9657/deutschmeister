@@ -32,7 +32,7 @@ export function lateTrialItem(kind, recipient) {
 <body style="background:${BRAND.paper};color:${BRAND.ink};font-family:Arial,sans-serif">
 <table style="max-width:520px;margin:auto;background:${BRAND.white};border:1px solid ${BRAND.rule}">
 <tr>${emailHeader()}</tr><tr><td style="padding:32px">
-<p>Guten Tag,</p><p>${copy.text}</p><p>Der kostenlose Einstiegskurs steht Ihnen weiterhin offen. Falls Sie bereits Arbeit gespeichert haben, finden Sie diese in Ihrem Konto.</p>
+<p>Guten Tag,</p><p>${copy.text}</p><p>Ihre kostenlosen Lektionen stehen Ihnen weiterhin offen. Falls Sie bereits Arbeit gespeichert haben, finden Sie diese in Ihrem Konto.</p>
 <table><tr>${ctaCell(link('/subscription', 'cta'), 'Lernbereich öffnen')}</tr></table>
 <p><a style="color:${BRAND.siegel}" href="${link('/course/a1.1', 'free-course')}">Kostenlos weiterlernen</a></p>
 <p>Wenn Sie mehr nutzen möchten, können Sie die <a style="color:${BRAND.siegel}" href="${link('/pricing/', 'offers')}">aktuellen Angebote ansehen</a>.</p>

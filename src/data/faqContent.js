@@ -112,7 +112,7 @@ export const FAQ_CATEGORIES = [
         q: 'Is there a free version?',
         // The speaking sessions belong to the account trial (speaking needs a
         // signed-in user), never to the no-account tier (2026-10-25).
-        a: `Yes. ${FREE_LEVEL_LABEL} is free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day AI Practice trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
+        a: `Yes. Lektion 1 of the ${FREE_LEVEL_LABEL} course and the ${FREE_LEVEL_LABEL} grammar topics are free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day AI Practice trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
       },
       {
         q: 'Can I cancel at any time?',

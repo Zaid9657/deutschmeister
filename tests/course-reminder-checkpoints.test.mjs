@@ -175,6 +175,8 @@ test('selection names the step each learner can open, and skips the finished and
       ...['lapsedA12', 'boughtA12', 'legacyA12', 'trialA12', 'proA12', 'grantLapsedA12'].flatMap((id) => rowsFor(id, 'a1.2', ['l01'])),
     ],
     profiles: [
+      // The A1.1 learners are accounts from before the Lektion gate: they keep the whole course.
+      ...['done12', 'finished', 'cp1open', 'returning'].map((id) => ({ id, created_at: PAST })),
       { id: 'lapsedA12', trial_started_at: PAST, trial_ends_at: PAST, is_subscribed: false },
       { id: 'boughtA12', trial_started_at: PAST, trial_ends_at: PAST, is_subscribed: false },
       { id: 'legacyA12', trial_started_at: PAST, trial_ends_at: PAST, is_subscribed: false },
@@ -203,7 +205,7 @@ test('selection names the step each learner can open, and skips the finished and
     trialA12: { nextNr: 2, checkpointNr: null, finalTest: false },
     proA12: { nextNr: 2, checkpointNr: null, finalTest: false },
   });
-  // A1.1 is free, so only the A1.2 learners' access is read.
+  // Since the Lektion gate the A1.1 learners' access is read too.
   assert.ok(db.reads.includes('purchases') && db.reads.includes('subscriptions') && db.reads.includes('profiles'));
 });
 
@@ -228,7 +230,10 @@ test('after Lektion 12 and Checkpoint 4 the reminder names the Abschlusstest unt
       { user_id: 'failed', exam_key: 'a1_1_abschluss', status: 'completed', score: 30, max_score: 60 },
       { user_id: 'otherTest', exam_key: 'goethe_a1', status: 'completed', score: 60, max_score: 60 },
     ],
-    profiles: ['a12open', 'a12passed'].map((id) => ({ id, trial_started_at: PAST, trial_ends_at: FUTURE, is_subscribed: false })),
+    profiles: [
+      ...['a12open', 'a12passed'].map((id) => ({ id, trial_started_at: PAST, trial_ends_at: FUTURE, is_subscribed: false })),
+      ...['open', 'node', 'lostNode', 'failed', 'otherProgram', 'otherTest'].map((id) => ({ id, created_at: PAST })),
+    ],
   });
   const out = await selectRecipients({ client: db, now: NOW });
   assert.deepEqual(out.map((r) => [r.id, r.finalTest, r.nextNr, r.checkpointNr]).sort(), [
@@ -249,10 +254,15 @@ test('after Lektion 12 and Checkpoint 4 the reminder names the Abschlusstest unt
   }
 });
 
-test('an all-A1.1 selection reads no access rows, and a failed step or access read sends nothing', async () => {
-  const freeOnly = reminderDb({ candidates: [candidate('a', 'a1.1', 2)], progress: rowsFor('a', 'a1.1', ['l01']) });
-  assert.deepEqual((await selectRecipients({ client: freeOnly, now: NOW })).map((r) => [r.id, r.nextNr]), [['a', 2]]);
-  assert.ok(!freeOnly.reads.includes('purchases'), 'A1.1 is free: no access read');
+test('an A1.1 selection reads access rows since the Lektion gate, and a failed step or access read sends nothing', async () => {
+  // 'a' signed up before the gate and keeps the course; 'n' signed up after it and Lektion 2 is the pay screen.
+  const gated = reminderDb({
+    candidates: [candidate('a', 'a1.1', 2), candidate('n', 'a1.1', 2)],
+    progress: [...rowsFor('a', 'a1.1', ['l01']), ...rowsFor('n', 'a1.1', ['l01'])],
+    profiles: [{ id: 'a', created_at: PAST }, { id: 'n', created_at: '2026-12-01T00:00:00.000Z' }],
+  });
+  assert.deepEqual((await selectRecipients({ client: gated, now: NOW })).map((r) => [r.id, r.nextNr]), [['a', 2]]);
+  assert.ok(gated.reads.includes('purchases'), 'past Lektion 1 the A1.1 course is no longer free: the access read decides');
   for (const fail of ['lesson_progress', 'purchases']) {
     const db = reminderDb({ candidates: [candidate('b', 'a1.2', 2)], fail });
     await assert.rejects(selectRecipients({ client: db, now: NOW }), /read failed/, `${fail}: a guess at a Lektion or a lock is worse than no mail`);

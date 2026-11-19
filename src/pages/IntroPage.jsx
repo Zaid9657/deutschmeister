@@ -123,7 +123,7 @@ const IntroPage = () => {
               Ready to start your German journey?
             </h2>
             <p className="text-[0.9375rem] leading-relaxed text-graphite mb-8 max-w-lg mx-auto sm:text-base">
-              Structured lessons across 8 CEFR levels, interactive exercises, and AI-powered speaking practice — and A1.1 is free forever.
+              Structured lessons across 8 CEFR levels, interactive exercises, and AI-powered speaking practice — and Lektion 1 is free, with no account.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               {/* The one primary action on this screen — the only shimmer. */}
