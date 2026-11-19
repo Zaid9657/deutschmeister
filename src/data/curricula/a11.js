@@ -149,7 +149,8 @@ export const DIALOG_NAMES = [
 // learner's own (Syrien, Krankenpfleger, Kurdisch). So „Ich bin müde" is no job and „Sie spricht Brot"
 // no language, while every real job, place and language a learner brings still counts.
 // `Essen` is a city as well as a verb this course teaches (blind corpus, 2026-11-19: „Ich wohne in Essen").
-const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Italien', 'Polen', 'Spanien', 'Marokko', 'Essen'];
+// `Schweiz` is taught in Lektion 10 („in der Schweiz", with its article).
+const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Schweiz', 'Italien', 'Polen', 'Spanien', 'Marokko', 'Essen'];
 const CHECK_JOBS = ['Student', 'Studentin', 'Lehrer', 'Lehrerin', 'Ingenieur', 'Ingenieurin', 'Verkäufer', 'Verkäuferin', 'Arzt', 'Kellner', 'Fahrer', 'Fahrerin', 'Chef', 'Chefin'];
 const CHECK_LANGUAGES = ['Deutsch', 'Englisch', 'Arabisch'];
 
@@ -510,7 +511,7 @@ export const CURRICULUM_A11 = {
           },
           turns: [
             { canDo: 0, cue: { de: 'Guten Tag! Woher kommen Sie?', en: 'Good day! Where do you come from?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you come from, in one sentence.', accepted: ['Ich komme aus …', 'Ich bin aus …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich komme aus Marokko.' },
-            { canDo: 3, cue: { de: 'Und wo wohnen Sie?', en: 'And where do you live?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you live, in one sentence.', accepted: ['Ich wohne in …', 'Ich lebe in …', 'Mein Wohnort ist …', 'Jetzt wohne ich in …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich wohne in Bremen.' },
+            { canDo: 3, cue: { de: 'Und wo wohnen Sie?', en: 'And where do you live?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you live, in one sentence.', accepted: ['Ich wohne in …', 'Ich lebe in …', 'Mein Wohnort ist …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich wohne in Bremen.' },
             // The course teaches a job without an article („Ich bin Lehrer", the notice); „Ich bin eine
             // Studentin" is German too and counts (DaF review 2026-11-19). A job the course never teaches is
             // the learner's own and counts.
@@ -523,7 +524,7 @@ export const CURRICULUM_A11 = {
             // two Leitpunkte of this Lektion's own writing task that a learner can make up — a name and a date.
             { canDo: 4, taskDe: 'Herr Weber bittet um eine kurze Nachricht an das Amt. Wie heißen Sie? Wann sind Sie geboren? Schreiben Sie ganze Sätze. Beim Datum brauchen Sie Tag, Monat und Jahr. Sie können ein Datum erfinden.', taskEn: 'Herr Weber asks for a short message to the office. What is your name? When were you born? Write full sentences. For the date, give the day, month and year. You can make up a date.',
               parts: [
-                ['Ich heiße …', 'Mein Name ist …'],
+                [{ frame: 'Ich heiße …', slot: 'name' }, { frame: 'Mein Name ist …', slot: 'name' }, { frame: 'Ich bin …', slot: 'name' }],
                 [{ frame: 'Ich bin am … geboren.', slot: 'date' }, { frame: 'Am … bin ich geboren.', slot: 'date' }, { frame: 'Mein Geburtsdatum ist der …', slot: 'date' }, { frame: 'Mein Geburtsdatum ist …', slot: 'date' }],
               ],
               // More about the learner may stand in the message too, in the forms this check knows.

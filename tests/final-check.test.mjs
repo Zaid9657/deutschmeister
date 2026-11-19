@@ -205,6 +205,37 @@ test('a short message: each part in a sentence of its own, any order, with an op
   assert.equal(modelAnswer(message), 'Guten Tag! Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.');
 });
 
+test('the orchestrator’s spot-check (2026-11-19): correct German that was refused is right, and what was wrong stays wrong', () => {
+  const [origin, home, job, , , number, message] = sitting(l2);
+  const own = sitting(l3)[4];
+  const born = (date) => typedResult(message, `Ich heiße Omar. Ich bin am ${date} geboren.`);
+  // A real calendar date in the forms learners write it; never without its year.
+  for (const date of ['12.03.1990', '12.3.1990', '12.03.90', '12/03/1990', '12-03-1990', '12. März 1990', '1. Januar 1990', '29.02.1992']) assert.equal(born(date), RESULT.CORRECT, date);
+  for (const date of ['12.03.', '31.04.1990', '29.02.1991', '12/13/1990']) assert.equal(born(date), RESULT.WRONG, date);
+  assert.equal(typedResult(message, 'Ich heiße Omar. Ich bin 1990 geboren.'), RESULT.WRONG, 'a year is not a date of birth');
+  // A place keeps the dative article after „aus" and „in", and the article the course teaches it with.
+  assert.equal(typedResult(origin, 'Ich komme aus den USA.'), RESULT.CORRECT);
+  assert.equal(typedResult(home, 'Ich wohne in der Schweiz.'), RESULT.CORRECT);
+  assert.equal(typedResult(home, 'Ich wohne im Irak.'), RESULT.CORRECT);
+  for (const wrong of ['Ich wohne in Schweiz.', 'Ich wohne im Bremen.', 'Ich komme aus die Deutschland.']) assert.equal(typedResult(wrong.includes('komme') ? origin : home, wrong), RESULT.WRONG, wrong);
+  // The verb stays second: a taught adverb in the middle or in front, a fronted place.
+  for (const right of ['Ich wohne jetzt in Köln.', 'Jetzt wohne ich in Köln.', 'Ich wohne hier in Bremen.', 'In Bremen wohne ich.']) assert.equal(typedResult(home, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(origin, 'Aus Syrien komme ich.'), RESULT.CORRECT);
+  assert.equal(typedResult(origin, 'Aus Syrien ich komme.'), RESULT.WRONG, 'the verb must be second');
+  // A name as Lektion 1 takes it; a job is no name.
+  assert.equal(typedResult(message, 'Ich bin Omar. Ich bin am 3.5.1990 geboren.'), RESULT.CORRECT);
+  assert.equal(typedResult(message, 'Ich bin Lehrer. Ich bin am 3.5.1990 geboren.'), RESULT.WRONG);
+  // A second clause after „und" that opens with a taught verb (DaF review); a country is still no language.
+  assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Deutsch.'), RESULT.CORRECT);
+  assert.equal(typedResult(own, 'Ich spreche Arabisch und Marokko.'), RESULT.WRONG);
+  // What was working keeps working.
+  assert.equal(typedResult(origin, 'Ich kommen aus Syrien.'), RESULT.WRONG);
+  assert.equal(typedResult(job, 'Ich bin müde.'), RESULT.WRONG);
+  assert.equal(typedResult(number, '0421 3619'), RESULT.WRONG);
+  assert.equal(typedResult(number, '٠٤٢١٣٦١٨'), RESULT.CORRECT);
+  assert.equal(typedResult(message, 'Ich bin am 3.5.1990 geboren.'), RESULT.WRONG, 'the name part is missing');
+});
+
 test('after the photo, the check talks about the person the learner chose, not the other one', () => {
   const [photo] = sitting(l3);
   assert.equal(chosenWord(photo, 'Das ist meine Schwester.'), 'Schwester');
