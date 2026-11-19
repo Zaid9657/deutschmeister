@@ -9,6 +9,6 @@ const levels = comingOnly ? COMING_SOON_LEVELS : ALL_LEVELS;
   <Scene name="tram-route" alt="A yellow Berlin tram with the Brandenburg Gate and television tower" hero={hero} sizes="(max-width: 640px) 100vw, 1000px" />
   <div class="c4-route-track" aria-hidden="true"><span></span></div>
   <ol aria-label="Your German learning path">
-    {levels.map((level) => <li><a href={`/courses/${levelToSlug(level)}/`} class:list={['c4-route-stop', level === 'a1.1' && 'is-start']}><strong>{level.toUpperCase()}</strong><span class="c4-route-dot" aria-hidden="true"></span><span class="sr-only">{level === 'a1.1' ? 'Free course' : COMING_SOON_LEVELS.includes(level) ? 'Coming next' : 'Available course'}</span></a></li>)}
+    {levels.map((level) => <li><a href={`/courses/${levelToSlug(level)}/`} class:list={['c4-route-stop', level === 'a1.1' && 'is-start']}><strong>{level.toUpperCase()}</strong><span class="c4-route-dot" aria-hidden="true"></span><span class="sr-only">{level === 'a1.1' ? 'First Lektion free' : COMING_SOON_LEVELS.includes(level) ? 'Coming next' : 'Available course'}</span></a></li>)}
   </ol>
 </div>

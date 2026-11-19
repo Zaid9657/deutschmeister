@@ -954,6 +954,8 @@ function ledgerWorld({ due = false } = {}) {
     { user_id: 'lateconfirm', registered_at: '2026-09-27T20:00:00.000Z', status: 'new', has_lesson_activity: false, email_opted_out: false, is_subscribed: false },
   ];
   const learners = [{ user_id: 'yesterday', level: 'a1.1', last_activity_at: '2026-09-28T14:00:00.000Z', next_lektion_nr: 3, email_opted_out: false }];
+  // Accounts from before the Lektion gate: past Lektion 1 the reminder reads who may open the step.
+  for (const id of ['yesterday', 'c1']) w.profiles.push({ id, created_at: '2026-09-01T00:00:00.000Z' });
 
   if (due) {
     authUsers.push(

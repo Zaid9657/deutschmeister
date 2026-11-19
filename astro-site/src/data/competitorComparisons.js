@@ -95,7 +95,7 @@ const competitorComparisons = {
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Jedes Thema auf Englisch erklärt — ideal für Nicht-Muttersprachler', them: '✓ Erklärungen in 14 Ausgangssprachen verfügbar' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert, Internet erforderlich', them: '✓ Lektionen offline in der App verfügbar' },
       { feature: 'Einstufungstest', us: `✓ Kostenloser CEFR-Einstufungstest in etwa ${PLACEMENT_TEST_MINUTES} Minuten`, them: '✓ Einstufungstest beim Kursstart' },
-      { feature: 'Kostenlose Inhalte', us: `✓ A1.1 komplett kostenlos + ${TRIAL_DAYS} Tage AI Practice-Testphase`, them: '○ Erste Lektion kostenlos, danach Abo nötig' },
+      { feature: 'Kostenlose Inhalte', us: `✓ Erste Lektion kostenlos, ohne Konto + ${TRIAL_DAYS} Tage AI Practice-Testphase`, them: '○ Erste Lektion kostenlos, danach Abo nötig' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (AI Practice)`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
       { feature: 'Wer dahintersteht', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
       { feature: 'Hörübungen mit Alltagsdialogen', us: '✓ Hörverständnis auf jedem Niveau mit authentischen Dialogen', them: '✓ Dialoge und Hörübungen in jeder Lektion' },
@@ -129,7 +129,7 @@ const competitorComparisons = {
       },
       {
         q: 'Ist DeutschMeister günstiger als Babbel?',
-        a: `Ja, nach den Babbel-Preisen in diesem Vergleich. DeutschMeister AI Practice kostet ${PRO_MONTHLY} oder ${deEur(PLANS.yearly.asMonthly)}/Monat im Jahresabo. Und bei DeutschMeister gibt es A1.1 komplett kostenlos.`,
+        a: `Ja, nach den Babbel-Preisen in diesem Vergleich. DeutschMeister AI Practice kostet ${PRO_MONTHLY} oder ${deEur(PLANS.yearly.asMonthly)}/Monat im Jahresabo. Und bei DeutschMeister ist die erste Lektion kostenlos, ohne Konto.`,
       },
       {
         q: 'Hat Babbel auch KI-Sprechtraining?',
@@ -141,7 +141,7 @@ const competitorComparisons = {
       },
     ],
     ctaHeadline: 'Teste DeutschMeister kostenlos — und entscheide selbst.',
-    ctaSubtext: `A1.1 komplett kostenlos. ${TRIAL_DAYS} Tage AI Practice-Testphase. Kein Risiko.`,
+    ctaSubtext: `Erste Lektion kostenlos, ohne Konto. ${TRIAL_DAYS} Tage AI Practice-Testphase. Kein Risiko.`,
   },
 
   duolingo: {
@@ -156,7 +156,7 @@ const competitorComparisons = {
       { feature: 'KI-Sprechtraining', us: `✓ Mit AI Practice ${PRO_SPEAKING}, freie Gespräche auf deinem Niveau — danach ${EVALUATION}`, them: '○ Roleplay (seit 2026 kostenlos): GPT-basierte Gespräche in Alltagsszenarien, spielerisch, kein Prüfungsfokus' },
       { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Jeder Satz zerlegt in Fälle, Satzglieder, Wortarten', them: '✗ Nicht verfügbar' },
       { feature: 'Prüfungsvorbereitung (Goethe/telc/DTZ)', us: '✓ Inhalte auf Goethe-, telc- und DTZ-Prüfungen abgestimmt, A1–B2', them: '✗ Kein Prüfungsfokus — allgemeines Sprachtraining' },
-      { feature: 'Kostenlose Version', us: `✓ A1.1 kostenlos, ${TRIAL_DAYS} Tage AI Practice-Testphase`, them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
+      { feature: 'Kostenlose Version', us: `✓ Erste Lektion kostenlos, ${TRIAL_DAYS} Tage AI Practice-Testphase`, them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
       { feature: 'Werbung', us: '✓ Keine Werbung — auch nicht in der Gratisversion', them: 'Werbung in der Gratisversion (entfällt mit Super-Abo)' },
       { feature: 'Gamification (Streaks, XP, Liga)', us: '○ Tages-Streak und Meilensteine, aber keine XP, Ligen oder Punkte', them: '✓ Stark gamifiziert: Streaks, XP, Ligen, Achievements' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (AI Practice)`, them: 'Kostenlos / Super: ab 6,99 €/Monat (im Jahresabo)' },
@@ -191,7 +191,7 @@ const competitorComparisons = {
       },
       {
         q: 'Warum ist DeutschMeister nicht kostenlos wie Duolingo?',
-        a: 'Duolingo finanziert sich durch Werbung und Premium-Upsells. DeutschMeister hat keine Werbung. Die KI-Funktionen haben feste Nutzungslimits. A1.1 ist kostenlos, danach kosten die Inhalte — dafür bekommst du KI-Sprechtraining, Sentence X-Ray und prüfungsrelevante Tiefe.',
+        a: 'Duolingo finanziert sich durch Werbung und Premium-Upsells. DeutschMeister hat keine Werbung. Die KI-Funktionen haben feste Nutzungslimits. Die erste Lektion ist kostenlos, danach kosten die Kurse — dafür bekommst du KI-Sprechtraining, Sentence X-Ray und prüfungsrelevante Tiefe.',
       },
       {
         q: 'Kann ich von Duolingo zu DeutschMeister wechseln?',
@@ -203,7 +203,7 @@ const competitorComparisons = {
       },
     ],
     ctaHeadline: 'Vom Spielen zum Sprechen — teste DeutschMeister kostenlos.',
-    ctaSubtext: `A1.1 kostenlos. ${TRIAL_DAYS} Tage AI Practice. Kein Streak nötig.`,
+    ctaSubtext: `Erste Lektion kostenlos. ${TRIAL_DAYS} Tage AI Practice. Kein Streak nötig.`,
   },
 
   lingoda: {
