@@ -15,7 +15,8 @@
 [functions]
   node_bundler = "esbuild"
 
-# 07:00 UTC daily (09:00 CET / 08:00 GMT)
+# 07:00 UTC daily (09:00 CET / 08:00 GMT). STOPPED by owner decision 2026-11-17:
+# the run sends nothing unless DAILY_SENTENCE_ENABLED=true (see the function).
 [functions."daily-sentence"]
   schedule = "0 7 * * *"
 

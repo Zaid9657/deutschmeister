@@ -2,8 +2,8 @@
 // src/data/mockExams (practice for a real external exam) and from
 // src/data/examTracks.js EXAM_TRACKS (the exams themselves). A course test
 // belongs to one of our own course levels (`level`, lowercase per the level
-// convention) and is written in the style of an exam named by `formatOf`
-// (an EXAM_TRACKS key) — never a new exam track of its own; see
+// convention). `formatOf` identifies a reference exam (an EXAM_TRACKS key),
+// not the delivered format or scoring — never a new exam track of its own; see
 // tests/exams.test.mjs for the guard that `key` never collides with an
 // EXAM_TRACKS key and that `formatOf` always resolves to a real one.
 //
@@ -14,6 +14,7 @@ import { abschlusstestA11 } from './abschlusstestA11.js';
 import { abschlusstestA12 } from './abschlusstestA12.js';
 import { abschlusstestA21 } from './abschlusstestA21.js';
 import { abschlusstestA22 } from './abschlusstestA22.js';
+import { describeCourseTest } from './description.js';
 
 export const COURSE_TESTS = [
   {
@@ -63,3 +64,5 @@ export const COURSE_TESTS = [
 
 export const courseTestBySlug = (slug) => COURSE_TESTS.find((t) => t.slug === slug) || null;
 export const courseTestByKey = (key) => COURSE_TESTS.find((t) => t.key === key) || null;
+
+export const courseTestDescription = (slug, lang = 'de') => describeCourseTest(courseTestBySlug(slug).mock, lang);

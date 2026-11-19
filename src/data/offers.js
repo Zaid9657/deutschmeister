@@ -79,7 +79,7 @@ export const stationStatusLine = (station) => {
 export const planLine = (station) => {
   if (!station.plan) return null;
   const c = station.contents;
-  const test = c && c.finalTest ? `, ending in a final test in ${c.finalTest.format} format` : '';
+  const test = c && c.finalTest ? ', ending in an adapted course assessment (scope and course pass rule on the course page)' : '';
   return `A ${station.plan.days}-day guided plan: ${station.plan.steps} steps, about ${hours(station.plan.minutes)} hours of practice${test}.`;
 };
 

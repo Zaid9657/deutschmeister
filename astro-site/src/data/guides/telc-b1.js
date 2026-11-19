@@ -100,7 +100,7 @@ export const telcB1 = {
         },
         {
           type: 'p',
-          text: 'Das <a href="/speaking/">KI-Sprechtraining von Deutschmeister</a> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst nach dem Gespräch eine Auswertung zu Grammatik und Ausdruck.',
+          text: 'Das <a href="/speaking/">KI-Sprechtraining von DeutschMeister</a> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst nach dem Gespräch eine Auswertung zu Grammatik und Ausdruck.',
         },
       ],
     },
@@ -150,7 +150,7 @@ export const telcB1 = {
                 'Täglich eine Hörübung auf A2-Niveau — das Ohr einstellen',
                 'Einstufungstest machen und Schwächen identifizieren',
               ],
-              tip: 'Nutze die Grammatik-Lektionen auf Deutschmeister — jedes Thema wird auf Englisch erklärt, damit du das WARUM verstehst, nicht nur das WAS.',
+              tip: 'Nutze die Grammatik-Lektionen auf DeutschMeister — jedes Thema wird auf Englisch erklärt, damit du das WARUM verstehst, nicht nur das WAS.',
             },
             {
               label: 'Woche 3–4',
@@ -235,11 +235,11 @@ export const telcB1 = {
     },
     {
       id: 'deutschmeister',
-      heading: 'Wie Deutschmeister dich auf telc B1 vorbereitet',
+      heading: 'Wie DeutschMeister dich auf telc B1 vorbereitet',
       blocks: [
         {
           type: 'p',
-          text: 'Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:',
+          text: 'DeutschMeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:',
         },
         {
           type: 'cards',
@@ -268,7 +268,7 @@ export const telcB1 = {
         },
         {
           type: 'p',
-          text: 'Dazu kommt ein <a href="/level-test/">kostenloser Einstufungstest</a>, der dir zeigt, wo du stehst, sowie <a href="/grammar/b1.2/">Grammatik-Lektionen bis B2</a> mit Erklärungen auf Englisch. Neugierig, wie Deutschmeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <a href="/vergleich/">ehrlichen Vergleich</a> an.',
+          text: 'Dazu kommt ein <a href="/level-test/">kostenloser Einstufungstest</a>, der dir zeigt, wo du stehst, sowie <a href="/grammar/b1.2/">Grammatik-Lektionen bis B2</a> mit Erklärungen auf Englisch. Neugierig, wie DeutschMeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <a href="/vergleich/">ehrlichen Vergleich</a> an.',
         },
       ],
     },

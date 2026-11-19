@@ -222,6 +222,7 @@ test('a certificate cannot render its completion claim or print action while pro
     'react-router-dom': { useParams: () => ({ level: 'a1.1' }), Link: 'Link', Navigate: 'Navigate' },
     '../contexts/AuthContext': { useAuth: () => ({ user: null }) },
     '../data/courses/index.js': { courseFor: () => ({}) },
+    '../data/courseTests/index.js': { courseTestDescription: () => 'Adaptierter Kurstest.' },
     '../data/curricula/index.js': { curriculumFor: () => curriculum, curriculumPath },
     '../services/lessonService.js': { programKeyFor: () => 'a11_course' },
     '../services/programProgress': { getProgramProgress: async () => new Set() },

@@ -16,7 +16,7 @@ import { SUPPORT_LINK } from '../data/navigation';
 // used to leave the FAQPage JSON-LD promising text no crawler could see.
 // Icons stay here: lucide components don't belong in a data module.
 const CATEGORY_ICONS = {
-  'About Deutschmeister': BookOpen,
+  'About DeutschMeister': BookOpen,
   'Learning and content': MessageSquare,
   'Pricing and subscription': CreditCard,
   'Exam preparation': GraduationCap,

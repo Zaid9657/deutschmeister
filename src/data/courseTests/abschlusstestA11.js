@@ -54,13 +54,14 @@ export const abschlusstestA11 = {
   examKey: 'a1_1_abschluss',
   courseLevel: 'a1.1',
   formatOf: 'goethe_a1',
-  title: 'Abschlusstest A1.1 (Kurzversion im Start-Deutsch-1-Format)',
+  title: 'Abschlusstest A1.1 (Kurzversion)',
   intro:
-    'Das ist der Abschlusstest Ihres A1.1-Kurses. Er hat den Aufbau der Prüfung Start Deutsch 1, aber nur ' +
-    'die halbe Länge, damit Sie das Prüfungsformat schon früh kennenlernen. Dieser Test ist eigenes Übungsmaterial ' +
-    'von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. Wie bei der echten Prüfung ' +
-    'bestehen Sie ab 60 % der bewerteten Aufgaben. Sprechen üben Sie im Speaking-Missions-Trainer, nicht hier. Wenn Sie bestehen, geht ' +
-    'es weiter mit A1.2 und später mit der vollständigen Übungsprüfung im Start-Deutsch-1-Format.',
+    'Das ist der Abschlusstest Ihres A1.1-Kurses. Hören und Lesen werden automatisch bewertet; ' +
+    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen. Eine Formularaufgabe zum Schreiben ' +
+    'bearbeiten Sie mit einem Selbstcheck; sie zählt nicht zur Punktzahl. Eine freie Mitteilung und Sprechen sind nicht enthalten. ' +
+    'Dieser Test übt einzelne Aufgabenarten von Start Deutsch 1 und bildet nicht die vollständige Prüfung ab. ' +
+    'Er ist eigenes Übungsmaterial von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. ' +
+    'Danach können Sie mit A1.2 weiterlernen.',
   passPercent: 60,
   // The result page shares its verdict copy with the exam mocks, which duzen; the course says Sie,
   // and names the two parts the score covers (Codex score review, 2026-10-08).

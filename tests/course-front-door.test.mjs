@@ -73,7 +73,7 @@ test('the free finish line: the last node of every live curriculum links to a co
   // The route the node links to is the guarded one (not the Pro-only hub).
   assert.ok(app.includes('path="/modelltest/:examSlug"'));
   const guard = read('src/components/ExamSubscriptionGuard.jsx');
-  assert.match(guard, /hasLevelAccess\(resolved\.gateLevel\)/, 'the exam guard must gate course tests on their level');
+  assert.match(guard, /hasFullCourse\(resolved\.gateLevel\)/,'the exam guard must gate course tests on their level');
   const ctx = read('src/contexts/SubscriptionContext.jsx');
   assert.match(ctx, /courseAccessReason/);
   assert.match(read('src/lib/levelEntitlement.js'), /if \(isLevelFree\(level\)\) return 'free';/);
