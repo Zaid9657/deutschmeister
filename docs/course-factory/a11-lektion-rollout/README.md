@@ -186,3 +186,60 @@ notes for the next batch appended below. The PR link at the start of the final r
 
 (Each batch appends a short section here: what it generalised, the cast's animals, what the next
 batch should reuse, and marking problems it found but did not fix.)
+
+### Batch 1 (Lektionen 2–3), 2026-11-19
+
+**The cast** (`cast-sheet.png`, left to right; every later scene keeps these animals and clothes):
+
+- Herr Weber: a badger, grey and white with the striped face; grey-blue shirt, dark teal tie and waistcoat.
+- Lena: a light brown hare with long ears; coral sports jacket, cream T-shirt, white trainers, teal sports bag.
+- Tim: a red fox; dark teal hoodie and jeans (holds a lamp on the sheet).
+- Frau Wolf: a hedgehog with brown spines; round glasses, coral apron over a grey-blue dress.
+- Paul: a brown bear; cream shirt with rolled sleeves, long dark teal waiter's apron.
+- Herr Schmidt: a brown-and-cream owl; dark teal railway jacket, peaked cap with a plain coral band.
+
+Scenes show only animals, as Lektion 1 does; the founder has not decided whether people may appear.
+
+**What the final check can do now** (`src/lib/lesson/finalCheck.js`, header lists every turn kind;
+`tests/final-check.test.mjs` pins each):
+
+- `partner`, `open`, `passed` per check; the closing line names the real next step on the course
+  path (`nextAfter`: Lektion 3 and 12 lead to a checkpoint, so nothing ever says "Lektion 13").
+- Own answers: `…` in an accepted answer is the learner's own words. Gap kinds `place`, `job`,
+  `language` take the taught words that fit (`slotWords`: `CHECK_PLACES`, `CHECK_JOBS`,
+  `CHECK_LANGUAGES` in `a11.js`) or any word the course never teaches, and reject taught words of
+  another kind ("Ich bin müde" is no job); `number`, `years`, `phone`, `date` (a real calendar
+  date). A choice gap (`slotIn`) takes one of its words, then at most a name; the turns after it
+  follow the learner's choice (`nounFor` + `chosen` in `CheckStage`).
+- `listen` (a heard number, typed; a label or Arabic-Indic digits are fine), `parts` (a short message:
+  each part a sentence or an "und"/comma clause, plus greetings and `extras`), `write`, `variants`
+  (one per retake), `example` (shown as "For example" after two misses).
+- Spoken answers are graded on the transcript like typed ones (this also fixed Lektion 1's spoken
+  own-name answer, which could never pass); the 80 % word measure is only the fallback without a
+  transcript.
+- RULE 35 in `scripts/validate-curriculum.mjs`: cues, heard numbers, model answers and examples use
+  only taught words.
+- `src/lib/lesson/bidi.js`: German runs inside the Arabic help keep digits, slashes, colons and
+  arrows in one left-to-right piece; long German sentences may wrap.
+
+**Reuse for batch 2:** copy the L2/L3 check shape; run the review inputs the way batch 1 did (a
+DaF review that sees the answers, then a corpus written blind, scored against `typedResult`; three
+rounds were needed here). Describe the grading to the reviewer from `finalCheck.js`'s own comments,
+or it reports faults already fixed. Codex must get non-ASCII input on standard input
+(`codex exec ... - < input.txt`); scan its Arabic for control characters (an arrow came back as
+U+001A). Reference images for scenes: the L1 scene, `otter-pose.png`, `cast-sheet.png`.
+
+**Marking problems found, not fixed here** (shared checker `check.js`; for the marking session):
+
+- An adjacent transposition is never a typo ("Eltren", "jugn", "Brduer", "gebroen"); a blind
+  teacher counted each as a mere slip. In the check the learner still gets the second try.
+- A slip in a word of four letters or fewer is never a typo ("at" for "alt").
+- Arabic-Indic digits are folded only inside the final check (`westernDigits`); lesson items and
+  dictations of numbers still reject „٠٤٢١".
+
+**Open, by design or for the founder:** the check cannot know whether a word the course never
+teaches really is a place, a job or a language (it accepts it as the learner's own); a learner who
+types instead of speaking shows numbers by writing them, not by saying them; "zehn" is not heard in
+the Lektion 2 check (phone numbers are digits); no native speaker has read the Arabic of Lektionen
+1–3, and the back-translation flagged „حرف متحرّك" (vowel) in Lektion 3 as a word a native speaker
+should check.

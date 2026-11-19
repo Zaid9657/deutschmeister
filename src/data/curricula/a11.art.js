@@ -1,8 +1,10 @@
 // A1.1 course art manifest — Wave 2, 2026-09-19.
 //
 // Mixed manifest: L1 reception is an illustration drawn with the Codex image tool
-// on 2026-11-17 after the founder picked the otter as the course guide.
-// All other scenes and characters retain their inline SVGs. No generated audio.
+// on 2026-11-17 after the founder picked the otter as the course guide; L2 and L3
+// followed on 2026-11-19 (docs/course-factory/a11-lektion-rollout/, with the cast
+// sheet that fixes every character's animal). The other scenes and characters
+// retain their inline SVGs. No generated audio.
 // Provenance, brief and approved screens: docs/strategy/lesson-look-2026-11-17/.
 //
 // `alt` here is what ships to a learner (via `role="img"` on the SVG branch,
@@ -31,8 +33,10 @@ export const A11_ART = {
     // Cut from the L1 scene, so the cast list shows the same two figures the scene does.
     Ana: { alt: 'Ana, a student from Morocco newly arrived in Bremen, drawn as an otter', component: 'CharacterAvatar', src: '/art/a11/ana-160.webp', srcSmall: '/art/a11/ana-160.webp' },
     'Frau Kaya': { alt: 'Frau Kaya, who works at the hostel reception, drawn as a bird', component: 'CharacterAvatar', src: '/art/a11/frau-kaya-160.webp', srcSmall: '/art/a11/frau-kaya-160.webp' },
-    'Herr Weber': { alt: 'Herr Weber, from the public office (Bürgerbüro)', component: 'CharacterAvatar', src: null, srcSmall: null },
-    Lena: { alt: 'Lena, a learner whose hobby is sport', component: 'CharacterAvatar', src: null, srcSmall: null },
+    // Cut from the L2 scene (2026-11-19); the animal is fixed by docs/course-factory/a11-lektion-rollout/cast-sheet.png.
+    'Herr Weber': { alt: 'Herr Weber, from the public office (Bürgerbüro), drawn as a badger', component: 'CharacterAvatar', src: '/art/a11/herr-weber-160.webp', srcSmall: '/art/a11/herr-weber-160.webp' },
+    // Cut from the L3 scene (2026-11-19).
+    Lena: { alt: 'Lena, a learner whose hobby is sport, drawn as a hare', component: 'CharacterAvatar', src: '/art/a11/lena-160.webp', srcSmall: '/art/a11/lena-160.webp' },
     Tim: { alt: 'Tim, a learner furnishing his room', component: 'CharacterAvatar', src: null, srcSmall: null },
     'Frau Wolf': { alt: 'Frau Wolf, who sells furniture at the flea market', component: 'CharacterAvatar', src: null, srcSmall: null },
     Paul: { alt: 'Paul, the café waiter', component: 'CharacterAvatar', src: null, srcSmall: null },
@@ -41,8 +45,8 @@ export const A11_ART = {
 
   situations: {
     'a1.1-l01': { alt: 'Ana, drawn as an otter with a suitcase, arrives at a hostel reception in Bremen; Frau Kaya, drawn as a bird, welcomes her', component: 'SituationScene', src: '/art/a11/l01-rezeption-1168.webp', srcSmall: '/art/a11/l01-rezeption-640.webp', srcMedium: '/art/a11/l01-rezeption-800.webp', width: 1168, height: 880 },
-    'a1.1-l02': { alt: 'A public office counter with a form and a pen', component: 'SituationScene', src: null, srcSmall: null },
-    'a1.1-l03': { alt: 'A photo frame on a table', component: 'SituationScene', src: null, srcSmall: null },
+    'a1.1-l02': { alt: 'Ana, drawn as an otter, stands at a counter in the public office in Bremen; Herr Weber, drawn as a badger, points to a form', component: 'SituationScene', src: '/art/a11/l02-buergerbuero-1168.webp', srcSmall: '/art/a11/l02-buergerbuero-640.webp', srcMedium: '/art/a11/l02-buergerbuero-800.webp', width: 1168, height: 880 },
+    'a1.1-l03': { alt: 'Ana, drawn as an otter, shows Lena, drawn as a hare, a photo of her otter family on her phone in the common room of the language school', component: 'SituationScene', src: '/art/a11/l03-familienfoto-1168.webp', srcSmall: '/art/a11/l03-familienfoto-640.webp', srcMedium: '/art/a11/l03-familienfoto-800.webp', width: 1168, height: 880 },
     'a1.1-l04': { alt: 'A flea-market stall with a table and a chair', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l05': { alt: 'A classroom board and pencils', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l06': { alt: 'An office desk with a phone and a monitor', component: 'SituationScene', src: null, srcSmall: null },

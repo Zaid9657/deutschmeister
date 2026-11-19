@@ -114,7 +114,9 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       setResult({ words, pct, extra });
       setAttempts(nextAttempts);
       setPhase('scored');
-      onResultRef.current?.({ pct, attempts: nextAttempts, usedMic: true });
+      // `transcript`, `words` and `extra` let the final check grade what was said like a typed answer
+      // (finalCheck.spokenShown); the transcript stays in this browser like the rest of the result.
+      onResultRef.current?.({ pct, attempts: nextAttempts, usedMic: true, words, extra, transcript: data.transcript || '' });
     } catch (err) {
       if (!mountedRef.current) return;
       console.error('[ReadAloudLine] scoring failed:', err);

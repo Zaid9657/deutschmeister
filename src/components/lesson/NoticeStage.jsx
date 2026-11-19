@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { LATIN_RUN } from '../../lib/lesson/bidi.js';
 
 /** **bold** → <strong>, *italic* → <em>. The curriculum's notice body is plain
  * text with at most those two marks, so nothing here needs a markdown parser
@@ -22,16 +23,17 @@ export function inline(text) {
  * in Deutsch-Modus it is inverted. Exported for the practice feedback, which
  * shows `explanationEn` / `explanationDe` the same way.
  */
-// A German run inside Arabic (one letter or more): starts and ends on a letter, bracket, IPA mark or question mark.
-const LATIN_RUN = /[A-Za-zÄÖÜäöüß[(](?:[A-Za-zÄÖÜäöüßː[\]()\s?]*[A-Za-zÄÖÜäöüßː\])?])?/g;
 
-/** Arabic text with each German run isolated left-to-right, so brackets and "?" stay where they belong. */
+/**
+ * Arabic text with each German run isolated left-to-right, so brackets and "?" stay where they belong.
+ * A short run stays on one line („E [eː]"); a whole sentence may wrap, or it runs past a phone's edge.
+ */
 export function isolateLatin(text) {
   const out = [];
   let at = 0;
   for (const m of text.matchAll(LATIN_RUN)) {
     if (m.index > at) out.push(text.slice(at, m.index));
-    out.push(<bdi key={m.index} dir="ltr" lang="de" className="whitespace-nowrap">{m[0]}</bdi>);
+    out.push(<bdi key={m.index} dir="ltr" lang="de" className={m[0].length > 24 ? undefined : 'whitespace-nowrap'}>{m[0]}</bdi>);
     at = m.index + m[0].length;
   }
   if (at < text.length) out.push(text.slice(at));

@@ -100,7 +100,10 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
     assert.equal(lesson.flow, 'guided');
     if (lesson.nr > 1) {
       const draft = draftLesson(lesson);
-      assert.deepEqual(lesson.guided, draft.guided);
+      // The final check arrives Lektion by Lektion with the rollout (docs/course-factory/a11-lektion-rollout/);
+      // final-check.test.mjs holds it. Everything else is the draft.
+      const { check: _check, ...guided } = lesson.guided;
+      assert.deepEqual(guided, draft.guided);
       assert.deepEqual(lesson.nextHook, draft.nextHook);
     }
     for (const attempt of [1, 2, 3]) {
@@ -205,16 +208,22 @@ test('estimates and content-free funnel steps follow every lesson’s actual gui
   }
 });
 
-test('L2–12 scenes use complete inline illustrations and L12’s cross-level story preview is grounded in live A1.2', async () => {
+test('L2–12 scenes use complete illustrations, drawn or inline, and L12’s cross-level story preview is grounded in live A1.2', async () => {
   const { default: Scene } = await loadJsxModule('src/components/illustrations/SituationScene.jsx', {
     '../../data/design-tokens.js': tokens, '../../data/curricula/a11.art.js': { A11_ART },
   });
   for (const lesson of c.lektionen.slice(1)) {
     const tree = Scene({ lektionId: lesson.id, className: 'w-full rounded-3xl border border-rule object-cover' });
+    const art = A11_ART.situations[lesson.id];
+    // The rollout (2026-11-19) draws a Lektion's scene batch by batch; until then it is the inline SVG.
+    if (art.src) {
+      assert.equal(tree.type, 'img', lesson.id);
+      assert.equal(tree.props.alt, art.alt);
+      continue;
+    }
     assert.equal(tree.type, 'svg'); assert.equal(tree.props.viewBox, '0 0 160 100');
     assert.equal(tree.props.role, 'img'); assert.ok(tree.props['aria-label']);
-    assert.equal(A11_ART.situations[lesson.id].src, null);
-    assert.equal(A11_ART.situations[lesson.id].srcSmall, null);
+    assert.equal(art.srcSmall, null);
   }
   assert.match(c.lektionen.at(-1).nextHook.de, /In A1.2.*Ana.*Rathaus/);
   assert.match(c12.lektionen[0].dialog.setting, /Ana.*Rathaus/);

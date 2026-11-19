@@ -9,34 +9,36 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
-import { canDoShown, checkTurns, modelAnswer, spokenShown, spokenTarget, typedResult } from '../../lib/lesson/finalCheck.js';
+import { canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../../lib/lesson/finalCheck.js';
 import { canDoLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 const SPOKEN_TRIES = 2;
 
-/** One turn: Frau Kaya's line, the task, then a spoken or typed answer with one more try. */
-function CheckTurn({ turn, n, total, lektion, canSpeak, onBack, onOutcome }) {
+/** One turn: the partner's line (the check's `partner`), the task, then a spoken or typed answer with one more try. */
+function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack, onOutcome }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
-  const [mode, setMode] = useState(canSpeak && !turn.spell ? 'speak' : 'type');
+  const [mode, setMode] = useState(canSpeak && !writtenOnly(turn) ? 'speak' : 'type');
   const [value, setValue] = useState('');
   const [tries, setTries] = useState(0);
   const [outcome, setOutcome] = useState(null); // 'shown' | 'missed'
   const [retry, setRetry] = useState(null); // null | 'typo' | 'retry'
   const [showLetters, setShowLetters] = useState(false);
+  // What the learner answered (typed, or the transcript), so a later turn can follow their choice.
+  const [answer, setAnswer] = useState('');
 
   const submit = () => {
     const result = typedResult(turn, value);
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
-    if (ok) setOutcome('shown');
+    if (ok) { setOutcome('shown'); setAnswer(value); }
     else if (tries === 0) setRetry(result === RESULT.TYPO ? 'typo' : 'retry');
     else setOutcome('missed');
     setTries(tries + 1);
   };
   const spoken = (r) => {
     if (r.selfConfirmed) { setMode('type'); return; } // not measured: typing is the proof
-    if (spokenShown(r)) setOutcome('shown');
+    if (spokenShown(r, turn)) { setOutcome('shown'); setAnswer(r.transcript || ''); }
     else if (r.attempts >= SPOKEN_TRIES) setMode('type'); // speech recognition may be the problem, not the learner
   };
 
@@ -47,14 +49,21 @@ function CheckTurn({ turn, n, total, lektion, canSpeak, onBack, onOutcome }) {
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
       primaryDisabled={!outcome}
-      onPrimary={() => onOutcome(outcome)}
+      onPrimary={() => onOutcome(outcome, answer)}
     >
-      {n === 1 && <OtterSays lektionId={lektion.id} className="mb-5">{t('otter.check.open', lang)}</OtterSays>}
+      {n === 1 && <OtterSays lektionId={lektion.id} className="mb-5">{opening}</OtterSays>}
       {turn.cue && (
         <Card tone="wash" className="mb-4 p-5">
-          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Frau Kaya</p>
+          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{partner}</p>
           <p className="mt-1 font-display text-xl font-semibold text-ink" lang="de">{turn.cue.de}</p>
           <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-cue-${n}`} text={turn.cue.de} label={t('action.listen', lang)} /></div>
+        </Card>
+      )}
+      {turn.listen && (
+        // A heard number: only the sound, never its text, so the learner writes what they understood.
+        <Card tone="wash" className="mb-4 p-5">
+          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{partner}</p>
+          <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-listen-${n}`} text={turn.spoken} rate={0.8} label={t('action.listen', lang)} /></div>
         </Card>
       )}
       {turn.spell && (
@@ -75,12 +84,21 @@ function CheckTurn({ turn, n, total, lektion, canSpeak, onBack, onOutcome }) {
       {!outcome && mode === 'type' && (
         <Card className="p-5">
           <label htmlFor={`check-${n}`} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('practice.yourAnswer', lang)}</label>
-          <input
-            id={`check-${n}`} lang="de" autoComplete="off" autoCapitalize="off" spellCheck={false} maxLength={120} value={value}
-            onChange={(e) => { setValue(e.target.value); setRetry(null); }}
-            onKeyDown={(e) => { if (e.key === 'Enter' && value.trim()) submit(); }}
-            className="mt-2 min-h-11 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel"
-          />
+          {turn.parts ? (
+            // A short message: room for a greeting and a few sentences; Enter starts a new line here.
+            <textarea
+              id={`check-${n}`} lang="de" autoComplete="off" autoCapitalize="sentences" spellCheck={false} maxLength={400} rows={4} value={value}
+              onChange={(e) => { setValue(e.target.value); setRetry(null); }}
+              className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] leading-relaxed text-ink outline-none focus:border-siegel"
+            />
+          ) : (
+            <input
+              id={`check-${n}`} lang="de" autoComplete="off" autoCapitalize="off" spellCheck={false} maxLength={120} value={value}
+              onChange={(e) => { setValue(e.target.value); setRetry(null); }}
+              onKeyDown={(e) => { if (e.key === 'Enter' && value.trim()) submit(); }}
+              className="mt-2 min-h-11 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel"
+            />
+          )}
           {retry && <p role="status" className="mt-2 text-[0.875rem] text-ink">{t(retry === 'typo' ? 'feedback.typo' : 'otter.retry', lang)}</p>}
           <Button className="mt-3" disabled={!value.trim()} onClick={submit}>{t('action.check', lang)}</Button>
         </Card>
@@ -94,9 +112,9 @@ function CheckTurn({ turn, n, total, lektion, canSpeak, onBack, onOutcome }) {
       {outcome === 'missed' && (
         <Card tone="wash" className="p-5" role="status">
           <OtterSays lektionId={lektion.id} className="mb-3">{t('otter.check.missed', lang)}</OtterSays>
-          <p className="text-sm text-graphite">{t('feedback.correctIs', lang)}</p>
+          <p className="text-sm text-graphite">{t(turn.example ? 'check.example' : 'feedback.correctIs', lang)}</p>
           <p className="mt-1 font-display text-xl font-semibold text-ink" lang="de">{modelAnswer(turn)}</p>
-          {!turn.ownName && <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-answer-${n}`} text={modelAnswer(turn)} label={t('action.listen', lang)} /></div>}
+          {(turn.example || !ownAnswer(turn)) && !turn.listen && <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-answer-${n}`} text={modelAnswer(turn)} label={t('action.listen', lang)} /></div>}
         </Card>
       )}
     </StageShell>
@@ -112,24 +130,35 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
   const [canSpeak] = useState(() => Boolean(user) && checkSpeakingSupport().supported);
   const [retake, setRetake] = useState(0);
   const [outcomes, setOutcomes] = useState([]);
-  const turns = useMemo(() => checkTurns(stage.check, retake), [stage.check, retake]);
+  const [answers, setAnswers] = useState([]);
+  // The person the learner chose in a choice gap („meine Schwester"): the turns after it are about them.
+  const chosen = useMemo(() => {
+    const plain = checkTurns(stage.check, retake);
+    return answers.map((a, j) => chosenWord(plain[j], a)).find(Boolean) || null;
+  }, [stage.check, retake, answers]);
+  const turns = useMemo(() => checkTurns(stage.check, retake, { chosen }), [stage.check, retake, chosen]);
   const canDo = canDoLines(lektion, lang);
   const shown = canDoShown(turns, outcomes, canDo.length);
+  const back = () => { setOutcomes(outcomes.slice(0, -1)); setAnswers(answers.slice(0, -1)); };
 
   if (outcomes.length < turns.length) {
     const n = outcomes.length + 1;
     return <CheckTurn key={`${retake}-${n}`} turn={turns[n - 1]} n={n} total={turns.length} lektion={lektion} canSpeak={canSpeak}
-      onBack={n === 1 ? onBack : () => setOutcomes(outcomes.slice(0, -1))} onOutcome={(o) => setOutcomes([...outcomes, o])} />;
+      partner={stage.check.partner} opening={stage.check.open?.[de ? 'de' : 'en']}
+      onBack={n === 1 ? onBack : back} onOutcome={(o, a) => { setOutcomes([...outcomes, o]); setAnswers([...answers, a || '']); }} />;
   }
 
   const all = shown.every(Boolean);
-  const parts = [...new Set(shown.flatMap((ok, i) => (ok ? [] : [stage.check.repeat?.[i]?.[de ? 'de' : 'en']])).filter(Boolean))];
-  const again = () => { setRetake(retake + 1); setOutcomes([]); };
+  const parts = partsToRepeat(stage.check.repeat, shown, de ? 'de' : 'en');
+  const again = () => { setRetake(retake + 1); setOutcomes([]); setAnswers([]); };
+  // What really comes after this Lektion (buildGuided's `stage.next`): Lektion 3 leads to a checkpoint, Lektion 12 has no Lektion 13.
+  const next = stage.next || { kind: 'lektion', nr: lektion.nr + 1 };
+  const nextName = t(`check.next.${next.kind}`, lang, { nr: next.nr });
   return (
     <StageShell
       eyebrow={t('check.eyebrow.done', lang)}
       title={t('check.title', lang)}
-      onBack={() => setOutcomes(outcomes.slice(0, -1))}
+      onBack={back}
       primaryLabel={all ? t('action.next', lang) : t('check.again', lang)}
       onPrimary={all ? () => onDone(shown) : again}
       secondary={all ? null : (
@@ -138,7 +167,7 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
     >
       <Card raised className="p-6">
         <OtterSays lektionId={lektion.id} pose={all ? 'satisfied' : 'thinking'} className="mb-4">
-          {all ? t('otter.check.passed', lang) : t('otter.check.notYet', lang, { part: parts.join(t('check.and', lang)), next: lektion.nr + 1 })}
+          {all ? stage.check.passed?.[de ? 'de' : 'en'] : t('otter.check.notYet', lang, { part: parts.join(t('check.and', lang)), next: nextName })}
         </OtterSays>
         <ul className="space-y-2">
           {canDo.map((line, i) => (
