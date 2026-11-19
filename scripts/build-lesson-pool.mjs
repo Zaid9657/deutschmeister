@@ -129,7 +129,8 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts, taskConstraintsEn,
+  middleFieldAcceptedForms,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -295,9 +296,15 @@ raw.forEach(repairFrontedOrder);
 // `answer`/`accepted` are never touched.
 const openingCued = [];
 function repairOpeningCue(item) {
-  const opening = missingOpeningCue(item);
+  // Live Batch 1 cues every statement/question; X-041's narrower detector
+  // still guards object shapes without treating two constituents as one.
+  const opening = missingOpeningCue(item, { allStatements: true });
   if (!opening) return;
-  item.questionDe = String(item.questionDe).replace(/:\s*(?=\[)/, ` (Beginnen Sie mit „${opening}“): `);
+  const prompt = String(item.questionDe);
+  const cue = ` (Beginnen Sie mit „${opening}“)`;
+  item.questionDe = /:\s*\[/.test(prompt)
+    ? prompt.replace(/:\s*(?=\[)/, `${cue}: `)
+    : `${prompt}${cue}`;
   openingCued.push({ id: item.id, questionDe: item.questionDe });
 }
 
@@ -1286,6 +1293,9 @@ console.log(
 // none (measured 2026-10-19).
 const namedRepairDropped = [];
 for (const item of items) {
+  if (!namedRepairAccepts(item, item.answer)) {
+    throw new Error(`${item.id}: the model answer does not repair the named element`);
+  }
   if (!Array.isArray(item.accepted)) continue;
   const dropped = item.accepted.filter((a) => !namedRepairAccepts(item, a));
   if (!dropped.length) continue;
@@ -1297,6 +1307,27 @@ for (const item of items) {
   namedRepairDropped.push(`${item.id} (${dropped.join(' | ')})`);
 }
 if (namedRepairDropped.length) console.log(`named repairs: dropped ${namedRepairDropped.length} accepted entr(y/ies) that repair another element: ${namedRepairDropped.join('; ')}`);
+
+// Last: authored corrections and automatic cues have both reached their final
+// German wording. Carry every binding cue into the learner's English hint.
+for (const item of items) {
+  repairOpeningCue(item);
+  const constraints = taskConstraintsEn(item).filter((en) => !String(item.questionEn || '').includes(en));
+  if (constraints.length) item.questionEn = [item.questionEn, ...constraints].filter(Boolean).join(' ');
+}
+
+// 2026-10-25 re-evaluation (re-landed 2026-11-19): with every opening named, the phrases between the
+// finite verb and the final verb part may still stand in another licensed order (quality.js,
+// middleFieldOrders). The key GAINS those readings, never loses one; every order is printed here.
+const middleFieldRepaired = [];
+for (const item of items) {
+  const have = new Set([item.answer, ...(item.accepted || [])]);
+  const added = middleFieldAcceptedForms(item).filter((a) => !have.has(a));
+  if (!added.length) continue;
+  item.accepted = [...new Set([item.answer, ...(item.accepted || []), ...added])];
+  middleFieldRepaired.push(`${item.id}: ${added.filter((a) => /[.?]$/.test(a)).join(' | ')}`);
+}
+if (middleFieldRepaired.length) console.log(`middle field: ${middleFieldRepaired.length} item(s) gained licensed orders:\n  ${middleFieldRepaired.join('\n  ')}`);
 
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 // DaF review #3 (A1.2) BLOCKER 2: the checkpoint's dictation and read-aloud pickers read this map, so

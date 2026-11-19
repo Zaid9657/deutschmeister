@@ -356,7 +356,8 @@ const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false, wordOrder = false,
+  contractions = false, numerals = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -376,6 +377,13 @@ export function checkAnswer(userInput, expected, {
   const user = prepare(userInput);
   const rawUser = raw(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
+
+  // Tiles carry the source line's capitals and punctuation with them. Moving
+  // one cannot be a spelling slip; only an exact, licensed word order passes.
+  if (wordOrder) {
+    const match = accepted.find((a) => prepare(a) === user);
+    return { result: match ? RESULT.CORRECT : RESULT.WRONG, expected: match || accepted[0] || '' };
+  }
 
   if (choice) {
     for (const a of accepted) {
@@ -403,6 +411,25 @@ export function checkAnswer(userInput, expected, {
   // live in src/data/sameAnswer.js, which the grammar pages' island grades by too.
   for (const a of accepted) {
     if (sameAnswer(prepare(a), user)) return { result: RESULT.CORRECT, expected: a };
+  }
+  // Free variants are the same answer, by rule rather than by a widened key (2026-10-25 re-evaluation,
+  // re-landed 2026-11-19): „gerne" is „gern", „geht's" is „geht es", where the task is not about the
+  // short form „zu dem Bahnhof" is „zum Bahnhof", and in a sentence whose task is not about numbers
+  // „12 Euro" is „zwölf Euro" (checkOptionsFor). A dictation is what was heard, and a spelled word is
+  // only its letters, so neither folds.
+  if (!dictation && !spellingMode) {
+    const variant = (s) => {
+      const words = numerals && String(s ?? '').trim().split(/\s+/).length >= 3 ? numberWordsToDigits(s) : s;
+      let t = (caseSensitive ? raw : prepare)(words).replace(/(?<!\p{L})gerne(?!\p{L})/gu, 'gern')
+        .replace(/(?<!\p{L})(geht|gibt)s(?!\p{L})/giu, '$1 es');
+      if (contractions) {
+        t = t.replace(/(?<!\p{L})zu dem(?!\p{L})/gu, 'zum').replace(/(?<!\p{L})zu der(?!\p{L})/gu, 'zur')
+          .replace(/(?<!\p{L})bei dem(?!\p{L})/gu, 'beim').replace(/(?<!\p{L})von dem(?!\p{L})/gu, 'vom');
+      }
+      return t;
+    };
+    const given = variant(userInput);
+    for (const a of accepted) if (variant(a) === given) return { result: RESULT.CORRECT, expected: a };
   }
   for (const a of accepted) {
     // A spelled word is nothing BUT its letters: „H-A-L-O" for „H-A-L-L-O", „Wilkommen" read off
@@ -492,8 +519,26 @@ export function checkOptionsFor(item) {
     spelling: spellingApplies(accepted) || spelledPrompt(item),
     choice: isChoiceItem(item),
     ...(item?.readingAnswer === true ? { readingAnswer: true } : {}),
+    ...(item?.type === 'word_order' ? { wordOrder: true } : {}),
+    // Only where the key can use them, so every other item's options stay what they were.
+    ...(contractionsFree(item) && accepted.some((a) => CONTRACTED_RE.test(String(a || ''))) ? { contractions: true } : {}),
+    ...(numeralsFree(item) && accepted.some((a) => /\d/.test(String(a || '')) || numberWordsToDigits(a) !== String(a || '')) ? { numerals: true } : {}),
   };
 }
+
+const CONTRACTED_RE = /(?<!\p{L})(?:zum|zur|beim|vom|zu dem|zu der|bei dem|von dem)(?!\p{L})/iu;
+
+/** Writing or reading a number or a clock time IS the task in these; everywhere else a sentence may
+ *  carry „12" for „zwölf" (see checkAnswer, which folds only answers of three words or more). */
+const NUMBER_TASK_RE = /Zahl|Ziffer|in Worten|Wie spät|Uhrzeit|offiziell|umgangssprachlich|number|digit|in words|what time|clock/i;
+const numeralsFree = (item) => !isDictationTask(item) && !/number|zahl|count/i.test(item?.topic || '')
+  && !NUMBER_TASK_RE.test(`${item?.questionDe || ''} ${item?.promptDe || ''} ${item?.questionEn || ''}`);
+
+/** A task about the short or the full form, or a correction (only the named repair counts), fixes the
+ *  contraction itself; every other task takes „zu dem" for „zum" (see checkAnswer). */
+const CONTRACTION_TASK_RE = /Kurzform|volle Form|zusammengezogen|Korrigieren|short form|full form|contract/i;
+const contractionsFree = (item) => !isDictationTask(item)
+  && !CONTRACTION_TASK_RE.test(`${item?.questionDe || ''} ${item?.promptDe || ''} ${item?.questionEn || ''} ${item?.topic || ''}`);
 
 /** Capital letters (and ß, which has none) printed one by one: „W-I-L-L-K-O-M-M-E-N", „G-R-U-ß". */
 const PRINTED_SPELLING_RE = /(?<!\p{L})[\p{Lu}ß](?:[-\s][\p{Lu}ß]){2,}(?!\p{L})/u;

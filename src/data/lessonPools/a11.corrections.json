@@ -114,13 +114,20 @@
    "reason": "questionEn repeated the German."
   },
   "8908dc09-b16b-57e4-b056-e0f3060766c8": {
-   "questionDe": "[das / ist / sein / Schwester] → Schreiben Sie den Satz.",
-   "reason": "The prompt handed over the inflected possessive (seine) the item tests."
+   "questionDe": "[das / ist / sein / Schwester] → Schreiben Sie den Satz. (Beginnen Sie mit „Das“)",
+   "reason": "The prompt handed over the inflected possessive (seine) the item tests. Live-fix batch 1 (2026-10-25, re-landed 2026-11-19): the sentence names its opening."
   },
   "19f1aa27-7634-5599-8a61-8f69e259f6d4": {
    "explanationDe": "Das steht mit ist, wenn es um eine Sache geht: Das ist Kaffee. Mit einem Nomen im Plural: Das sind …",
    "explanationEn": "Here das points to one thing (Kaffee), so sein takes **ist**, like er/sie/es: **Das ist Kaffee.** For a plural noun it is **Das sind …**: Das sind Kollegen.",
    "reason": "„das always with ist“ is false (Das sind …)."
+  },
+  "dd1c3d60-8ae7-4c94-8990-19633dcba36f": {
+   "questionDe": "Meine Mutter ist hier. ___ spricht Deutsch.",
+   "questionEn": "My mother is here. ___ speaks German. Refer to meine Mutter.",
+   "explanationDe": "Meine Mutter ist feminin: Das Pronomen ist sie.",
+   "explanationEn": "The antecedent **meine Mutter** is feminine: use **sie**.",
+   "reason": "A pronoun gap names its antecedent; Es ist meine Mutter was also correct in the isolated identification sentence."
   }
  }
 }

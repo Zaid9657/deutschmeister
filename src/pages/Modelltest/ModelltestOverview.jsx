@@ -4,6 +4,7 @@ import { Clock, Play, RotateCcw, History } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { resolveModelltest } from '../../data/modelltest';
+import { describeCourseTest } from '../../data/courseTests/description.js';
 import { FORM_KEY, formNumber, hasForm, mockForm } from '../../data/mockExams/forms.js';
 import { createAttempt, findResumableAttempt, listAttempts } from '../../services/examService';
 import SEO from '../../components/SEO';
@@ -81,7 +82,7 @@ const ModelltestOverview = () => {
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
       <SEO title={mock.title} description="Übungstest mit Zeitlimit und Auswertung." path={`/modelltest/${examSlug}`} noindex />
       <div className="max-w-2xl mx-auto">
-        <SectionHeading size="page" level={1} eyebrow={resolved.nameDe} title={mock.title} lead={mock.intro} />
+        <SectionHeading size="page" level={1} eyebrow={resolved.nameDe} title={mock.title} lead={mock.courseLevel ? describeCourseTest(mock, 'de') : mock.intro} />
 
         {/* Reference material — what is in the test — stays flat. */}
         <Reveal delay={180} className="mt-6">

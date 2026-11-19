@@ -221,9 +221,9 @@ test('word order: when an object or a modal adverb could open the sentence, the 
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Uhr / kosten / 20 Euro]', 'Die Uhr kostet 20 Euro.')), 'Die Uhr');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / feiern / unser / Fest]', 'Wir feiern unser Fest.')), 'Wir');
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / sammeln / die Flaschen]', 'Wir sammeln die Flaschen.')), 'Wir');
-  // Nothing competes for the opening: a copula's predicate, a pronoun object with its prefix.
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), null);
-  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), null);
+  // Live Batch 1 + #229/X-041: keep 'Ich' cues; „Lehrer bin ich.“ and „Dich rufe ich an.“ are valid German.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), 'Ich');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), 'Ich');
   // …nor an imperative (its verb opens it), nor two constituents read as one phrase.
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [machen / die Tür / auf]', 'Mach die Tür auf!')), null);
   assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [Ana / kaufen / den Kuchen / im Geschäft]', 'Ana kauft den Kuchen im Geschäft.')), null);
@@ -496,14 +496,16 @@ test('assessment a11y: a checkpoint verdict takes focus, and the writing coverag
 });
 
 test('the course says what its final test is and what an account is for', async () => {
-  // Codex score review, 2026-10-08: „ends with the Start Deutsch 1 final test" (it is our shortened
-  // practice test in that format), and „sign up only to save your progress" (AI feedback needs it too).
+  // Course assessments describe their actual sections and own scoring rule, not the reference
+  // exam's format. Account disclosure must also include AI feedback, not only saving progress.
   const { readFileSync } = await import('node:fs');
   const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
   assert.doesNotMatch(home, /ends with the \{curriculum\.examName\} final test/);
-  assert.match(home, /ends with a shortened practice test in the \$\{curriculum\.examName\} format/);
+  assert.match(home, /courseTestDescription\(curriculum\.testSlug, lang\)/);
+  assert.doesNotMatch(home, /shortened practice test in the \$?\{curriculum\.examName\} format|im Format \$\{curriculum\.examName\}/);
   const { A11_META } = await import('../src/data/curricula/a11.meta.js');
-  assert.match(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
+  assert.match(A11_META.aboutEn, /Adapted course assessment: Listening \(15 min\), Reading \(15 min\), Writing \(10 min\)/);
+  assert.doesNotMatch(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
   assert.match(A11_META.aboutEn, /not an official exam/);
   assert.match(A11_META.aboutEn, /AI feedback/);
   assert.doesNotMatch(A11_META.aboutEn, /only if you want to save/);

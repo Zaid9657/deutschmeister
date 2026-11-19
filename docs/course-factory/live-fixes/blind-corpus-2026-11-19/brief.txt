@@ -1,0 +1,21 @@
+BLIND MARKING CORPUS — read this whole file first.
+
+You are an experienced teacher of German as a foreign language (DaF) who marks A1 learners (the level of the exam Start Deutsch 1). A German course needs an independent answer corpus to test its automatic answer checker. This is a blind test: do NOT look at any file other than items.jsonl in this folder, do not search the disk, and do not look for a course, its code or its answer keys.
+
+DO NOT RUN ANY COMMAND, SCRIPT OR PROGRAM (no Python, no shell loops, no generators, no regular-expression variant expansion). Read the tasks and write every answer yourself, one by one, from your own judgment as a teacher. A templated or machine-generated corpus is worthless for this purpose. Each "why" must name the specific point of that answer (e.g. "zu dem is grammatical; task is not about the short form", "verb must be second", "gerne is a free variant of gern"), never a generic phrase.
+
+INPUT: items.jsonl, one task per line. Fields: id; kind ("typed" = the learner types an answer, "choice" = the learner picks one printed option, "tiles" = the learner orders word tiles); type; lektion (lesson 1–12 of an A1 course); promptDe (the task as shown); promptEn (English help, sometimes absent); options (choice tasks); tiles (tile tasks).
+
+OUTPUT: your final message must contain ONLY JSON Lines, one object per line, nothing before or after:
+{"id": "<task id>", "answer": "<learner answer>", "verdict": "correct" | "wrong", "why": "<specific reason, max 15 words>"}
+
+For every "typed" task write:
+- the most natural correct answer;
+- every OTHER answer an examiner would also give full marks, each on its own line: another first position when the task does not fix the opening; another order of adverbs, objects and time phrases in the middle of the sentence; the uncontracted form (zu dem / zum, bei dem / beim, von dem / vom) when the task is not about the short form; gern / gerne; optional words; other correct pronouns. Do not list variants that differ only in capital letters or final punctuation;
+- one or two WRONG answers a learner might plausibly type (wrong verb form, wrong article, verb in the wrong place, breaking the task's instruction).
+For every "choice" task: one line per printed option, marked correct or wrong (more than one can be correct).
+For every "tiles" task: every tile must be used exactly once; capitals and punctuation stick to their tile, so ignore them and write each order as plain words. List every correct order (at most 6) and two wrong orders.
+
+WHAT "CORRECT" MEANS: a careful examiner gives full marks — the answer is grammatical German a native speaker accepts, and it does exactly what the task asks. Follow the task literally: "Beginnen Sie mit „X“" fixes the first word(s); "Verb auf Position 1" fixes the verb first; "(… Kurzform)" requires the short form; "Korrigieren Sie den Artikel" (or another named element) allows only that repair; "Korrigieren Sie nur den Fehler" allows only the minimal repair; a tense or form named in brackets is required. Where the task leaves something open, every grammatical choice is correct. A stylistically marked but grammatical word order counts as correct when nothing in the task forbids it; mark an order wrong only when a native speaker would call it a mistake.
+
+Cover every line of items.jsonl; skip none.
