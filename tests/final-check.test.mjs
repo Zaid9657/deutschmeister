@@ -538,7 +538,11 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(guests, 'Meine Freunde kommen zur Party.'), RESULT.CORRECT, 'where it is for, at the end');
   assert.equal(typedResult(present, 'Ich möchte ein Buch.'), RESULT.CORRECT);
   assert.equal(typedResult(bye, 'Tschüss, mach’s gut!'), RESULT.CORRECT);
-  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.CORRECT, 'a taught goodbye (first DaF review of Lektion 12)');
+  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.WRONG, 'the task asks for a goodbye of Lektion 12 (third DaF review)');
+  assert.equal(typedResult(bye, 'Tschüss, bis bald!'), RESULT.CORRECT);
+  assert.equal(typedResult(at(11)[1], 'Was hast du morgen gemacht?'), RESULT.WRONG, 'the question is about yesterday');
+  assert.equal(typedResult(shop, 'Kaufst du am Samstag Brot ein?'), RESULT.CORRECT);
+  assert.equal(typedResult(askMonth, 'Und du, Lena, wann hast du Geburtstag?'), RESULT.CORRECT);
   assert.equal(typedResult(bye, 'Guten Tag!'), RESULT.WRONG);
   assert.equal(typedResult(wish, 'Schönen Tag noch!'), RESULT.CORRECT);
   assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[11]), { kind: 'checkpoint', nr: 4 }, 'Lektion 12 leads to the fourth checkpoint, never a Lektion 13');

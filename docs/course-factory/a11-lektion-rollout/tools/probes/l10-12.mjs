@@ -42,7 +42,7 @@ const cases = [
   [s(11)[5], 'Kaufst du am Samstag?', 0], [s(11)[5], 'Einkaufst du am Samstag?', 0], [s(11)[5], 'Kaufst du am Freitag ein?', 0], [s(11)[5], 'Kauft du am Samstag ein?', 0],
   [s(11, 1)[5], 'Kaufst du am Freitag ein?', 1], [s(11, 2)[5], 'Kaufst du am Montag ein?', 1],
   [s(11)[6], 'Ja, ich komme mit.', 1], [s(11)[6], 'Ja, gern, ich komme mit.', 1], [s(11)[6], 'Ich komme gern mit.', 1], [s(11)[6], 'Super, ich komme mit!', 1],
-  [s(11)[6], 'Ja, gern.', 0], [s(11)[6], 'Ja.', 0], [s(11)[6], 'Ich mitkomme.', 0], [s(11)[6], 'Ich komme.', 0], [s(11)[6], 'Ja, ich kommen mit.', 0],
+  [s(11)[6], 'Ja, gern.', 0], [s(11)[6], 'Ja.', 0], [s(11)[6], 'Ich mitkomme.', 0], [s(11)[6], 'Ich komme.', 1], [s(11)[6], 'Ja, ich kommen mit.', 0],
   // Lektion 12 — inviting
   [s(12)[0], 'Ich lade dich zum Fest ein.', 1], [s(12)[0], 'Ich lade dich zu meiner Party ein.', 1], [s(12)[0], 'Ich lade dich ein.', 1], [s(12)[0], 'Kommst du zu meiner Party?', 1], [s(12)[0], 'Ich möchte dich zu meinem Geburtstag einladen.', 1],
   [s(12)[0], 'Kommst du am Samstag zum Fest?', 1], [s(12)[0], 'Möchtest du zur Party kommen?', 1],
@@ -58,8 +58,8 @@ const cases = [
   [s(12)[4], 'Ich möchte ein Buch.', 1], [s(12)[4], 'Vielleicht eine Tasche.', 1], [s(12)[4], 'Ich möchte einen Kuchen.', 1],
   [s(12)[4], 'Ich möchte ein Tasche.', 0], [s(12)[4], 'Ich möchte schön.', 0], [s(12)[4], 'Ich möchte nichts.', 0],
   // Lektion 12 — goodbye and a wish
-  [s(12)[6], 'Mach’s gut!', 1], [s(12)[6], "Mach's gut, Lena!", 1], [s(12)[6], 'Bis bald!', 1], [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Bis Samstag!', 1], [s(12)[6], 'Machs gut, bis später!', 1],
-  [s(12)[6], 'Tschüss!', 1], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Danke.', 0],
+  [s(12)[6], 'Mach’s gut!', 1], [s(12)[6], "Mach's gut, Lena!", 1], [s(12)[6], 'Bis bald!', 1], [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Bis Samstag!', 0], [s(12)[6], 'Machs gut, bis später!', 1],
+  [s(12)[6], 'Tschüss!', 0], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Danke.', 0],
   [s(12)[5], 'Schönen Tag noch!', 1], [s(12)[5], 'Tschüss, schönen Tag noch!', 1], [s(12)[5], 'Einen schönen Tag noch!', 1],
   [s(12)[5], 'Schöne Tag noch!', 0], [s(12)[5], 'Guten Tag!', 0], [s(12)[5], 'Tschüss!', 0],
 ];

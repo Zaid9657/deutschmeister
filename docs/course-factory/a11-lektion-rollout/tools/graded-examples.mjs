@@ -8,14 +8,14 @@ const lex = f.courseLexicon(c);
 const s = (nr, r = 0) => f.checkTurns({ ...c.lektionen[nr - 1].guided.check, lexicon: lex }, r);
 const [l4, l5, l6] = [s(4), s(5), s(6)];
 const label = new Map();
-for (const nr of [4, 5, 6, 7, 8, 9, 10, 11, 12]) for (let r = 0; r < 3; r += 1) s(nr, r).forEach((t, i) => { const k = t.taskEn + (t.cue?.de || '') + (t.listen || ''); label.set(k, label.has(k) ? `L${nr} turn ${i + 1} (every sitting)` : `L${nr} sitting ${r + 1} turn ${i + 1}`); });
+for (const nr of [4, 5, 6, 7, 8, 9, 10, 11, 12]) for (let r = 0; r < 3; r += 1) s(nr, r).forEach((t, i) => { const k = t.taskEn + (t.cue?.de || '') + (t.listen || '') + JSON.stringify(t.only || t.when || ''); label.set(k, label.has(k) ? `L${nr} turn ${i + 1} (every sitting)` : `L${nr} sitting ${r + 1} turn ${i + 1}`); });
 const rows = new Map();
 for (const file of files) {
   const src = readFileSync(file, 'utf8');
   const body = src.slice(src.indexOf('const cases = [') + 'const cases = '.length, src.indexOf('];\n', src.indexOf('const cases = [')) + 1);
   const cases = new Function('s', 'l4', 'l5', 'l6', `return ${body};`)(s, l4, l5, l6);
   for (const [turn, answer] of cases) {
-    const key = label.get(turn.taskEn + (turn.cue?.de || '') + (turn.listen || '')) || 'L? turn ?';
+    const key = label.get(turn.taskEn + (turn.cue?.de || '') + (turn.listen || '') + JSON.stringify(turn.only || turn.when || '')) || 'L? turn ?';
     const line = `${answer} → ${f.typedResult(turn, answer)}`;
     if (!rows.has(key)) rows.set(key, new Set());
     rows.get(key).add(line);

@@ -357,7 +357,7 @@ function isAdjectiveShape(adj, lexicon) {
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay, thingsAfter }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -444,6 +444,13 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   // When: a day, a part of the day and/or a time („am Montag um zehn", „am Wochenende", „abends"); with
   // `when`, the day and time asked about („Hast du am Freitag um zehn Uhr Zeit?").
   if (slot === 'when') {
+    // `thingsAfter`: what one buys may follow the time („Kaufst du am Samstag Brot ein?“, third corpus of Lektion 11).
+    if (thingsAfter) {
+      const w = words.split(/\s+/);
+      const timeWord = (x) => DAYS.includes(fold(x).replace(/s$/, '')) || ['wochenende', 'woche', 'tag', 'morgen', 'abend', 'nachmittag', 'vormittag', 'uhr'].includes(fold(x));
+      while (w.length > 1 && /^\p{Lu}/u.test(w.at(-1)) && !timeWord(w.at(-1))) { w.pop(); if (fold(w.at(-1)) === 'und') w.pop(); }
+      words = w.join(' ');
+    }
     const at = whenOf(words);
     if (!at || (when && !sameWhen(at, when, { partial: whenPartial }))) return RESULT.WRONG;
     return at.typo ? RESULT.TYPO : RESULT.CORRECT;
@@ -972,7 +979,7 @@ export function typedResult(turn, value) {
   for (const t of [...tries]) {
     // „Und du, was machst du gern?" is „Was machst du gern?": the „Und du" hands the question back.
     const rest = t.trim().replace(/^und(?:\s+du)?[\s,?]+/i, '');
-    if (rest && rest !== t.trim()) add(rest);
+    if (rest && rest !== t.trim()) { add(rest); add(rest.replace(LEAD, '')); }
   }
   // A tag at the end („Du tanzt gern, oder?") asks the same question.
   for (const t of [...tries]) {
@@ -1023,13 +1030,16 @@ export function typedResult(turn, value) {
     const m = t.trim().match(/^(.+?)\s+(frei|zeit)\s+(.+?)([.!?]*)$/iu);
     if (m && whenOf(m[3])) add(`${m[1]} ${m[3]} ${m[2]}${m[4]}`);
   }
+  const timeTurn = (turn.accepted || []).some((a) => /\b(?:gestern|heute|morgen)\b/i.test(frameOf(a)));
   // Small words that do not change the answer: „denn", „vielleicht", „heute", „hier", „noch", „im Café"
   // in a question („Haben Sie vielleicht Tee?"); „auch" anywhere („Hunger habe ich auch"); „sehr"
   // before „gern" (second and third corpora of Lektionen 7-9).
   for (const t of [...tries]) {
     const s = t.trim();
     if (/\?\s*$/.test(s)) {
-      const asked = s.replace(/\s+(?:im|in diesem) Café(?=\s*\?)/i, '').replace(/\b(?:denn|vielleicht|heute|morgen|hier|noch)\s+/gi, '').replace(/\s+(?:denn|vielleicht|heute|morgen|hier|noch)(?=\s*\?)/gi, '');
+      // „heute“ and „morgen“ change the answer where it names a day („Was hast du morgen gemacht?“, third corpus of Lektion 11).
+      const filler = timeTurn ? 'denn|vielleicht|hier|noch' : 'denn|vielleicht|heute|morgen|hier|noch';
+      const asked = s.replace(/\s+(?:im|in diesem) Café(?=\s*\?)/i, '').replace(new RegExp(`\\b(?:${filler})\\s+`, 'gi'), '').replace(new RegExp(`\\s+(?:${filler})(?=\\s*\\?)`, 'gi'), '');
       if (asked !== s) add(asked);
     }
     const plainer = s.replace(/\s+auch\b/gi, '').replace(/^auch\s+/i, '').replace(/\bsehr\s+(?=gerne?\b)/gi, '');
