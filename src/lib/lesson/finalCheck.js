@@ -41,6 +41,12 @@ const OWN_KIND = { place: foldedSet(COUNTRIES, CITIES), job: foldedSet(JOBS), la
 const OWN_ALL = foldedSet(COUNTRIES, CITIES, JOBS, LANGUAGES);
 const JOB_SHAPE_FOLDED = /^\p{L}{3,}(?:er|erin|in|ist|istin|ant|antin|ent|entin|eur|eurin|euse|or|orin|mann|frau|kraft|arzt|ärztin|loge|login|ling|helfer|helferin|ker|kerin|eiter|eiterin)$/u;
 const LANGUAGE_SHAPE_FOLDED = /^\p{L}{3,}isch$/u;
+// Things that are the learner's own in the scenes, so „mein“ names the same thing as „der“ („mein Zug“, „mein Büro“).
+// With their genders, so an untaught one („Ticket“) works too. Never what is for sale („meine Uhr“ at the stall).
+const OWN_THINGS = new Map(Object.entries({ zug: 'der', fahrkarte: 'die', ticket: 'das', bus: 'der', abfahrt: 'die', büro: 'das', arbeitsplatz: 'der',
+  platz: 'der', tisch: 'der', stift: 'der', heft: 'das', tasche: 'die', buch: 'das', wörterbuch: 'das', handy: 'das', termin: 'der', schlüssel: 'der',
+  computer: 'der', rucksack: 'der', nummer: 'die', telefonnummer: 'die', adresse: 'die', geburtstag: 'der', party: 'die', fest: 'das', zimmer: 'das',
+  kurs: 'der', pause: 'die', mittagspause: 'die', arbeit: 'die', chef: 'der', chefin: 'die', kollege: 'der', kollegin: 'die' }));
 // Countries that are never named without their article (folded): die Türkei, die USA …
 const COUNTRY_ARTICLE = { türkei: 'die', schweiz: 'die', ukraine: 'die', slowakei: 'die', mongolei: 'die', usa: 'pl', niederlande: 'pl', philippinen: 'pl', emirate: 'pl' };
 const END = /[.!?]+$/;
@@ -1153,6 +1159,29 @@ export function typedResult(turn, value) {
     // „Und du, was machst du gern?" is „Was machst du gern?": the „Und du" hands the question back.
     const rest = t.trim().replace(/^und(?:\s+du)?[\s,?]+/i, '');
     if (rest && rest !== t.trim()) { add(rest); add(rest.replace(LEAD, '')); }
+  }
+  const partnersThing = (turn.accepted || []).some((a) => /\b(?:dein|deine|deinen|Ihr|Ihre|Ihren)\s+\p{Lu}/u.test(typeof a === 'string' ? a : a.frame));
+  // NATURAL ANSWERS (the independent score, 2026-11-20), three classes for every turn of every check:
+  // a counter-question after a complete answer („Danke, gut. Und Ihnen?“, „Ich bin Lehrer. Und Sie?“) is the
+  // answer; a degree word after a complete answer („Ja, das passt mir gut.“, „Das passt sehr gut.“) is the
+  // answer; „mein“ where it names the same thing as „der“ in the scene („Wann fährt mein Zug ab?“) is „der“.
+  for (const t of [...tries]) {
+    const s = t.trim();
+    const answered = s.replace(/[\s,.!?]*\bund\s+(?:ihnen|sie|du|dir|bei\s+(?:ihnen|dir))(?:\s+auch)?\s*\?\s*$/iu, '');
+    if (answered !== s && wordsOf(answered).length >= 1 && /\p{L}/u.test(answered)) add(/[.!?]$/.test(answered) ? answered : `${answered}.`);
+    const plain = s.replace(/\s+(?:(?:sehr|ganz|wirklich|echt|richtig)\s+)?(?:gut|prima|super)(?=\s*[.!]*$)/iu, '');
+    if (plain !== s && wordsOf(plain).length >= 2) add(plain);
+    const own = s.replace(/\b(mein|meine|meinen|meinem|meiner)\s+(\p{Lu}\p{L}+)/gu, (all, poss, noun) => {
+      // Where the turn asks about the partner's thing („Welche Farbe hat deine Tasche?“), mine is another one.
+      if (!OWN_THINGS.has(fold(noun)) || partnersThing) return all;
+      const g = [OWN_THINGS.get(fold(noun))];
+      const p = fold(poss);
+      const art = p === 'meine' ? (g.includes('die') ? 'die' : g.includes('pl') ? 'die' : null)
+        : p === 'meinen' ? (g.includes('der') ? 'den' : null) : p === 'meinem' ? (g.some((x) => x === 'der' || x === 'das') ? 'dem' : null)
+          : p === 'meiner' ? (g.includes('die') ? 'der' : null) : (g.includes('der') ? 'der' : g.includes('das') ? 'das' : null);
+      return art ? `${all.charAt(0) === 'M' ? art.charAt(0).toUpperCase() + art.slice(1) : art} ${noun}` : all;
+    });
+    if (own !== s) add(own);
   }
   // A tag at the end („Du tanzt gern, oder?") asks the same question.
   for (const t of [...tries]) {

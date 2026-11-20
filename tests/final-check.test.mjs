@@ -662,3 +662,26 @@ test('the own-word policy: closed lists for languages and countries, jobs by lis
   assert.match(T.de['check.unchecked'], /\{word\}/);
   assert.match(readFileSync('src/components/lesson/CheckStage.jsx', 'utf8'), /uncheckedWords\(turn, value\)/);
 });
+
+test('natural answers: a counter-question or a degree word after a complete answer, and „mein“ for the learner’s own thing (2026-11-20)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  // Every fixed statement answer of every check still passes with a counter-question after it.
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((t, i) => {
+        if (t.ownName || t.spell || t.listen || t.parts) return;
+        for (const a of t.accepted.filter((x) => typeof x === 'string' && !x.includes('…') && !/\?\s*$/.test(x))) {
+          const b = `${a.replace(/[.!]?\s*$/, '.')} ${l.guided.check.partner === 'Lena' ? 'Und du?' : 'Und Sie?'}`;
+          assert.notEqual(typedResult(t, b), RESULT.WRONG, `${l.id} sitting ${r + 1} turn ${i + 1}: ${b}`);
+        }
+      });
+    }
+  }
+  for (const right of ['Danke, gut.', 'Danke, gut. Und Ihnen?', 'Gut, danke. Und Ihnen?']) assert.equal(typedResult(at(1)[3], right), RESULT.CORRECT, right);
+  for (const right of ['Und Ihnen?', 'Und Sie?']) assert.equal(typedResult(at(1)[4], right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(8)[4], 'Ja, das passt mir gut.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8)[4], 'Das passt sehr gut.'), RESULT.CORRECT);
+  for (const right of ['Wann fährt mein Zug ab?', 'Wann fährt mein Zug?']) assert.equal(typedResult(at(10)[2], right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(5)[4], 'Welche Farbe hat meine Tasche?'), RESULT.WRONG, 'Lena’s bag is asked about, not mine');
+  assert.equal(typedResult(at(4)[1], 'Was kostet meine Uhr?'), RESULT.WRONG, 'the watch is for sale, not mine');
+});
