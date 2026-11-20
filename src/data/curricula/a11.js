@@ -1212,8 +1212,14 @@ export const CURRICULUM_A11 = {
         // choice and must carry the article „kaufen" asks for (`thing`: „den Stuhl", the notice's chunk).
         check: {
           partner: 'Frau Wolf',
-          open: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
-          passed: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          open: {
+            en: 'It’s your turn to shop at Frau Wolf’s stall. There’s time to think through each answer.',
+            de: 'Jetzt kaufen Sie selbst am Stand von Frau Wolf ein. Sie haben Zeit, sich jede Antwort zu überlegen.',
+          },
+          passed: {
+            en: 'You asked about furniture, understood prices and said what you were buying. You’ve put your German to use at the flea market.',
+            de: 'Sie haben nach Möbeln gefragt, Preise verstanden und gesagt, was Sie kaufen. Sie haben Ihr Deutsch auf dem Flohmarkt angewendet.',
+          },
           turns: [
             { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?'] },
             { canDo: 0, taskDe: 'Fragen Sie nach dem Preis.', taskEn: 'Ask what it costs.',
@@ -1460,8 +1466,14 @@ export const CURRICULUM_A11 = {
         // Lektion; the thing asked about changes on a retake, and with it the pronoun of the answer.
         check: {
           partner: 'Lena',
-          open: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
-          passed: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          open: {
+            en: 'Before class begins, you’ll chat with Lena about your things. A few simple words can get a conversation going.',
+            de: 'Bevor der Kurs beginnt, sprechen Sie mit Lena über Ihre Sachen. Schon ein paar einfache Wörter bringen ein Gespräch in Gang.',
+          },
+          passed: {
+            en: 'You named things and colours and asked and answered questions with Lena. You’ve brought your own German into the classroom.',
+            de: 'Sie haben Dinge und Farben benannt und mit Lena Fragen gestellt und beantwortet. Sie haben sich mit Ihrem Deutsch im Klassenzimmer eingebracht.',
+          },
           turns: [
             { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Lena zeigt auf eine Sache aus Ihrer Tasche. Sagen Sie mit einem Satz, was das ist.', taskEn: 'Lena points at something from your bag. Say what it is, in one sentence.', accepted: ['Das ist …', 'Das sind …'], slot: 'object', example: 'Das ist mein Wörterbuch.' },
             { canDo: 1, taskDe: 'Antworten Sie mit hier oder da.',
@@ -1718,8 +1730,14 @@ export const CURRICULUM_A11 = {
         // „einen Computer", the notice's chunk); the two numbers Herr Weber says change on a retake.
         check: {
           partner: 'Herr Weber',
-          open: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
-          passed: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          open: {
+            en: 'You’ll use your German on your first day at work with Herr Weber. We’ll be here as you work through your answers.',
+            de: 'An Ihrem ersten Arbeitstag mit Herrn Weber setzen Sie Ihr Deutsch ein. Wir begleiten Sie bei Ihren Antworten.',
+          },
+          passed: {
+            en: 'You said what you need, asked about work and handled your name and both numbers on the phone. Before the second checkpoint, give yourself a moment to feel proud of all that.',
+            de: 'Sie haben gesagt, was Sie brauchen, nach der Arbeit gefragt und am Telefon Ihren Namen genannt und beide Nummern verstanden. Gönnen Sie sich vor dem zweiten Checkpoint einen Moment, um darauf stolz zu sein.',
+          },
           turns: [
             { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
             { canDo: 3, taskDe: 'Und Ihr Büro? Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?', 'Ist das mein Büro?', 'Und mein Büro?'] },
