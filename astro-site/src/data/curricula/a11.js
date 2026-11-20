@@ -1991,7 +1991,7 @@ export const CURRICULUM_A11 = {
             { canDo: 1, cue: { de: 'Was machst du gern am Wochenende?', en: 'What do you like doing at the weekend?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you like doing at the weekend, in one sentence.',
               accepted: ['Ich … gern.', 'Ich …'], slot: 'activity', example: 'Am Wochenende spiele ich gern Fußball.' },
             { canDo: 2, taskDe: 'Und Lena? Fragen Sie nach ihrem Hobby.', taskEn: 'Now ask Lena about her hobby.',
-              accepted: ['Was ist dein Hobby?', 'Und du?', 'Und dein Hobby?', 'Und was ist dein Hobby?', 'Was sind deine Hobbys?', 'Hast du ein Hobby?', 'Was machst du gern?', 'Was machst du am Wochenende?', 'Was machst du gern am Wochenende?', 'Was machst du in deiner Freizeit?', 'Welche Hobbys hast du?'] },
+              accepted: ['Was ist dein Hobby?', 'Und du?', 'Und dein Hobby?', 'Und was ist dein Hobby?', 'Was sind deine Hobbys?', 'Hast du ein Hobby?', 'Was machst du gern?', 'Was machst du am Wochenende?', 'Was machst du gern am Wochenende?', 'Was machst du in deiner Freizeit?', 'Welche Hobbys hast du?', { frame: '…?', slot: 'duQuestion' }] },
             // The infinitive is given; the learner makes the du-form (du tanzt: the s/ß/x/z rule of the notice).
             { canDo: 2,
               variants: [
@@ -2267,14 +2267,14 @@ export const CURRICULUM_A11 = {
               ] },
             // Lena says yes; the learner agrees the time (a „bis …" names the same day).
             { canDo: 1, taskDe: 'Lena hat Zeit. Sagen Sie ja zu dem Termin.', taskEn: 'Lena is free then. Agree to the time.', slot: 'when',
-              accepted: ['Ja, gern.', 'Ja, gut.', 'Gut.', 'Sehr gut.', 'Super.', 'Prima.', 'Toll.', 'Schön.', 'Okay.', 'Das ist gut.', 'Ja, das ist gut.', 'Bis dann!', 'Gut, bis dann!', 'Super, bis dann!', 'Prima, bis dann!', 'Ja, gern. Bis dann!',
+              accepted: ['Ja, gern.', 'Ja.', 'Ja, gut.', 'Gut.', 'Sehr gut.', 'Super.', 'Prima.', 'Toll.', 'Schön.', 'Okay.', 'Das ist gut.', 'Ja, das ist gut.', 'Bis dann!', 'Gut, bis dann!', 'Super, bis dann!', 'Prima, bis dann!', 'Ja, gern. Bis dann!',
                 'Bis …!', 'Gut, bis …!', 'Super, bis …!', 'Prima, bis …!', 'Toll, bis …!', 'Okay, bis …!', 'Ja, gern. Bis …!', 'Ja, gern, bis …!', 'Gut, dann bis …!'],
               variants: [
                 { cue: { de: 'Ja, am Freitag um zehn bin ich frei.', en: 'Yes, I am free on Friday at ten.' }, when: 'freitag' },
                 { cue: { de: 'Ja, am Donnerstag um Viertel nach vier bin ich frei.', en: 'Yes, I am free on Thursday at a quarter past four.' }, when: 'donnerstag' },
                 { cue: { de: 'Ja, am Montag um halb zehn bin ich frei.', en: 'Yes, I am free on Monday at half past nine.' }, when: 'montag' },
               ] },
-            { canDo: 3, cue: { de: 'Und wann hast du Zeit?', en: 'And when do you have time?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you have time, in one sentence.',
+            { canDo: 3, cue: { de: 'Wann hast du noch Zeit?', en: 'When else do you have time?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you have time, in one sentence.',
               accepted: ['… habe ich … Zeit.', 'Ich habe … Zeit.', '… bin ich … frei.', 'Ich bin … frei.', '… habe ich … frei.', 'Ich habe … frei.'], slot: 'when', example: 'Am Dienstag habe ich abends Zeit.' },
             { canDo: 1, taskDe: 'Lena sagt, wann ihr Termin ist. Schreiben Sie den Tag und die Uhrzeit.', taskEn: 'Lena says when her appointment is. Write down the day and the time.',
               variants: [
@@ -2535,7 +2535,7 @@ export const CURRICULUM_A11 = {
               variants: [
                 { cue: { de: 'Guten Tag! Haben Sie Hunger?', en: 'Hello! Are you hungry?' }, taskEn: 'You are hungry. Answer in one sentence.', taskDe: 'Sie haben Hunger. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger.', 'Ich habe Hunger.', 'Ja, ich habe großen Hunger.', 'Ja, Hunger habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin hungrig.', 'Ich bin hungrig.'] },
                 { cue: { de: 'Guten Tag! Haben Sie Durst?', en: 'Hello! Are you thirsty?' }, taskEn: 'You are thirsty. Answer in one sentence.', taskDe: 'Sie haben Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Durst.', 'Ich habe Durst.', 'Ja, ich habe großen Durst.', 'Ja, Durst habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin durstig.', 'Ich bin durstig.'] },
-                { cue: { de: 'Guten Tag! Haben Sie Hunger und Durst?', en: 'Hello! Are you hungry and thirsty?' }, taskEn: 'You are hungry and thirsty. Answer in one sentence.', taskDe: 'Sie haben Hunger und Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger und Durst.', 'Ich habe Hunger und Durst.', 'Ja, ich habe Durst und Hunger.', 'Ja, Hunger und Durst habe ich.', 'Ja, ich bin hungrig und durstig.'] },
+                { cue: { de: 'Guten Tag! Haben Sie Hunger und Durst?', en: 'Hello! Are you hungry and thirsty?' }, taskEn: 'You are hungry and thirsty. Answer in one sentence.', taskDe: 'Sie haben Hunger und Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger und Durst.', 'Ich habe Hunger und Durst.', 'Ja, ich habe Durst und Hunger.', 'Ich habe Durst und Hunger.', 'Ja, Hunger und Durst habe ich.', 'Ja, ich bin hungrig und durstig.'] },
               ] },
             { canDo: 0, cue: { de: 'Was möchten Sie trinken?', en: 'What would you like to drink?' }, taskDe: 'Bestellen Sie etwas zu trinken.', taskEn: 'Order something to drink.',
               accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … trinken.', 'Ich nehme …', 'Ich trinke …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', slotNot: ['Kuchen', 'Suppe', 'Salat', 'Brot', 'Frühstück'], example: 'Ich möchte einen Kaffee, bitte.' },
@@ -2560,7 +2560,7 @@ export const CURRICULUM_A11 = {
           repeat: [
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: haben, ich möchte', de: 'Teil 2: haben, ich möchte' }],
             { en: 'Part 2: haben, ich möchte', de: 'Teil 2: haben, ich möchte' },
-            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: haben, ich möchte', de: 'Teil 2: haben, ich möchte' }],
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
           ],
         },

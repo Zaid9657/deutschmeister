@@ -40,7 +40,7 @@ export const A11_ART = {
     // Cut from the L4 scene (2026-11-19).
     Tim: { alt: 'Tim, a learner furnishing his room, drawn as a fox', component: 'CharacterAvatar', src: '/art/a11/tim-160.webp', srcSmall: '/art/a11/tim-160.webp' },
     'Frau Wolf': { alt: 'Frau Wolf, who sells furniture at the flea market, drawn as a hedgehog', component: 'CharacterAvatar', src: '/art/a11/frau-wolf-160.webp', srcSmall: '/art/a11/frau-wolf-160.webp' },
-    Paul: { alt: 'Paul, the café waiter', component: 'CharacterAvatar', src: null, srcSmall: null },
+    Paul: { alt: 'Paul, the café waiter, drawn as a bear', component: 'CharacterAvatar', src: '/art/a11/paul-160.webp', srcSmall: '/art/a11/paul-160.webp' },
     'Herr Schmidt': { alt: 'Herr Schmidt, who gives train information at the station', component: 'CharacterAvatar', src: null, srcSmall: null },
   },
 
@@ -53,7 +53,7 @@ export const A11_ART = {
     'a1.1-l06': { alt: 'Ana, drawn as an otter, on her first day at work; Herr Weber, drawn as a badger, shows her a desk with a computer and a telephone in an office in Bremen', component: 'SituationScene', src: '/art/a11/l06-buero-1168.webp', srcSmall: '/art/a11/l06-buero-640.webp', srcMedium: '/art/a11/l06-buero-800.webp', width: 1168, height: 880 },
     'a1.1-l07': { alt: 'Lena, drawn as a hare with a football and a sports bag, and Tim, drawn as a fox with headphones and a book, talk about their hobbies outside the language school in Bremen', component: 'SituationScene', src: '/art/a11/l07-freizeit-1168.webp', srcSmall: '/art/a11/l07-freizeit-640.webp', srcMedium: '/art/a11/l07-freizeit-800.webp', width: 1168, height: 880 },
     'a1.1-l08': { alt: 'Ana, drawn as an otter with an open diary, and Lena, drawn as a hare with her phone, look for a time to meet in the common room of the language school, under a wall clock', component: 'SituationScene', src: '/art/a11/l08-termin-1168.webp', srcSmall: '/art/a11/l08-termin-640.webp', srcMedium: '/art/a11/l08-termin-800.webp', width: 1168, height: 880 },
-    'a1.1-l09': { alt: 'A cup and a slice of cake on a café table', component: 'SituationScene', src: null, srcSmall: null },
+    'a1.1-l09': { alt: 'Ana, drawn as an otter, sits at a café table in Bremen with a coffee, a glass of water, an orange juice and a slice of cake; Paul, drawn as a bear, the waiter, takes her order on a notepad', component: 'SituationScene', src: '/art/a11/l09-cafe-1168.webp', srcSmall: '/art/a11/l09-cafe-640.webp', srcMedium: '/art/a11/l09-cafe-800.webp', width: 1168, height: 880 },
     'a1.1-l10': { alt: 'A train at a platform with a departure sign', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l11': { alt: 'An alarm clock, a coffee cup and a bag', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l12': { alt: 'A birthday cake with candles and an envelope', component: 'SituationScene', src: null, srcSmall: null },

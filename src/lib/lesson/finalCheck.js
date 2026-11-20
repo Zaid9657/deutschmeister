@@ -438,6 +438,17 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     };
     return listOk(own) && (second === null || (second && listOk(second))) ? RESULT.CORRECT : RESULT.WRONG;
   }
+  // A du-question about an activity, the whole sentence: a verb in its du-form („Spielst", „Kochst",
+  // „Tanzt" after -z), „du", then what the activity names („Spielst du gern Fußball?", „Gehst du gern
+  // ins Kino?"). „Spielt du …" and „Spielen du …" are wrong (second DaF review of Lektion 7, 2026-11-20).
+  if (slot === 'duQuestion') {
+    const v = fold(raw[0] || '');
+    const duForm = /st$/.test(v) || /[sßxz]t$/.test(v);
+    if (!duForm || v.length < 4 || CLOSED.has(v) || lexicon?.genders?.get?.(v) || fold(raw[1] || '') !== 'du') return RESULT.WRONG;
+    const rest = raw.slice(2); // may be empty: „Tanzt du?"
+    const ok = rest.every((w) => /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(fold(w)) || ['gern', 'gerne', 'auch'].includes(fold(w)));
+    return ok ? RESULT.CORRECT : RESULT.WRONG;
+  }
   // Hobbies: each a hobby the course teaches („Sport", „Musik", „Kochen") or a noun of the learner's own
   // („Yoga"), with an optional article, or a noun with its verb („Fußball spielen"); „Mein Hobby ist
   // gut" names none.
