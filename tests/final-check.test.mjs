@@ -378,9 +378,12 @@ test('a colour is one of the colour words, a thing is a noun, and German of the 
   assert.equal(typedResult(need, 'Ich brauche klein.'), RESULT.WRONG);
   assert.equal(typedResult(buy, 'Ich kaufe Bananen.'), RESULT.CORRECT);
   assert.equal(typedResult(buy, 'Ich kaufe eine banane.'), RESULT.TYPO, 'after an article a small letter is a typo');
-  // A colour before the noun takes the ending its article asks for.
+  // An adjective before the noun takes the ending its article asks for.
   for (const right of ['Ich kaufe die rote Lampe.', 'Ich kaufe den roten Stuhl.', 'Ich kaufe ein rotes Regal.', 'Ich kaufe zwei rote Stühle.']) assert.equal(typedResult(buy, right), RESULT.CORRECT, right);
-  for (const wrong of ['Ich kaufe die roten Lampe.', 'Ich kaufe den rote Stuhl.', 'Ich kaufe die große Lampe.']) assert.equal(typedResult(buy, wrong), RESULT.WRONG, wrong);
+  for (const wrong of ['Ich kaufe die roten Lampe.', 'Ich kaufe den rote Stuhl.', 'Ich kaufe die groß Lampe.', 'Ich kaufe große.']) assert.equal(typedResult(buy, wrong), RESULT.WRONG, wrong);
+  // Any adjective written small takes the same endings (third DaF review): „die große Lampe“.
+  for (const right of ['Ich kaufe die große Lampe.', 'Ich kaufe ein neues Regal.']) assert.equal(typedResult(buy, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(need, 'Ich brauche einen neue Computer.'), RESULT.WRONG);
   assert.equal(typedResult(what, 'Das ist ein roter Stift.'), RESULT.CORRECT);
   assert.equal(typedResult(what, 'Das ist ein rote Stift.'), RESULT.WRONG);
   // The same meaning in other taught words.

@@ -1,0 +1,9 @@
+1. **BLOCKER — Lektion 4, turn 6, every sitting:** The grader rejects **„Ich kaufe die große Lampe.“** This correctly answers the task: the sentence frame, article, noun and adjective ending are correct. The adjective is beyond the taught material, but the learner volunteered it; the task does not restrict descriptions to colours. **Fix:** accept correctly formed descriptive noun phrases, including **„die große Lampe“**, while continuing to reject bare adjectives such as **„Ich kaufe groß.“** No additional adjective teaching is needed for this check.
+
+2. **NOTE — Lektion 4, turns 1–5, all sittings:** These are answerable from the course. The listening turns ask learners to record a stated price, including the total; they require no calculation. The cues leave the questions for the learner to produce, and Sie fits Frau Wolf. The can-do coverage and repeat recommendations fit. **Fix:** none.
+
+3. **NOTE — Lektion 5, turns 1–5, all sittings:** The required identification, location and colour answers have been encountered. The German task’s **Sie** addresses the learner; **dein/deine** in questions to Lena correctly reflects their relationship. The explicit instruction to answer with **hier/da** makes the refusal of **„Es ist dort.“** consistent with this particular task. All four can-dos receive a relevant test, and the repeat parts fit. **Fix:** none.
+
+4. **NOTE — Lektion 6, turns 1–6, all sittings:** The required answers are available from the taught material. Naming oneself needs no new telephone formula: **„Ich heiße …“** already suffices. The supplied listening transcripts match the accepted numbers in each sitting; the evidence confirms that spacing and hyphens do not cause rejection, while changed or missing digits do. The situation, Sie register, coverage and repeat recommendations fit. **Fix:** none within this check.
+
+**Overall verdict: Lektion 4 — fix first; Lektion 5 — ship; Lektion 6 — ship.**

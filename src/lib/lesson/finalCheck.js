@@ -186,14 +186,28 @@ const ADJ_ENDING = {
     das: { das: 'e', ein: 'es', kein: 'es', mein: 'es', dein: 'es' }, pl: { die: 'en', keine: 'en', meine: 'en', deine: 'en', '': 'e' },
   },
 };
-/** True when `adj` is a colour with the ending that `det` (or a count, '') and gender `g` ask for. */
-function colourFits(adj, slot, det, g) {
+/**
+ * True when `adj` before a noun has the ending that `det` (or a count, '') and gender `g` ask for: a
+ * colour („die rote Lampe"; „lila" takes none) or any adjective written small („die große Lampe",
+ * third DaF review 2026-11-20), never a word the course teaches as something else.
+ */
+function adjectiveFits(adj, slot, det, g, lexicon) {
   const want = ADJ_ENDING[slot]?.[g]?.[det];
   if (want === undefined) return false;
   const w = fold(adj);
   if (UNDECLINED.has(colourStem(w))) return true;
-  const stem = w.endsWith(want) ? colourStem(w.slice(0, -want.length)) : null;
-  return Boolean(stem) && !UNDECLINED.has(stem);
+  if (!w.endsWith(want)) return false;
+  const stem = w.slice(0, -want.length);
+  if (colourStem(stem)) return !UNDECLINED.has(colourStem(stem));
+  return isAdjectiveShape(adj, lexicon);
+}
+
+/** A word that may stand as an adjective before a noun: written small, and not a word the course teaches as another kind. */
+function isAdjectiveShape(adj, lexicon) {
+  const w = fold(adj);
+  if (!/^\p{Ll}[\p{L}]{2,}$/u.test(adj.normalize('NFC')) || CLOSED.has(w)) return false;
+  if (typeof lexicon?.verbs?.has === 'function' && lexicon.verbs.has(w)) return false;
+  return !(typeof lexicon?.genders?.get === 'function' && lexicon.genders.get(w));
 }
 
 /**
@@ -320,8 +334,9 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     // Bananen", „eine Banane"; „Ich kaufe groß" names no thing (courses session, 2026-11-20). After an
     // article a small first letter is a typo („eine banane").
     let typo = false;
-    // Each item read as one thing or as more; null when it is no thing at all. A colour may stand
-    // before the noun with the ending the article asks for („die rote Lampe", never „die roten Lampe").
+    // Each item read as one thing or as more; null when it is no thing at all. A colour or another
+    // adjective may stand before the noun with the ending the article asks for („die rote Lampe", „die große
+    // Lampe", never „die roten Lampe").
     const itemReading = (item) => {
       const [first, ...more] = item.map(fold);
       const counted = /^\d+$/.test(numberWordsToDigits(first)) && Number(numberWordsToDigits(first)) >= 2;
@@ -332,9 +347,10 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       const noun = adj ? rest[1] : rest[0];
       const nounRaw = adj ? restRaw[1] : restRaw[0];
       if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || rest.length > 2) return null;
-      if (adj && !colourStem(adj.replace(/(e|en|er|es)$/, '')) && !colourStem(adj)) return null;
+      const adjRaw = adj ? restRaw[0] : null;
+      if (adj && !colourStem(adj.replace(/(e|en|er|es)$/, '')) && !colourStem(adj) && !isAdjectiveShape(adjRaw, lexicon)) return null;
       const detKey = counted || !det ? '' : det;
-      const adjOk = (g) => !adj || colourFits(adj, slot, detKey, g);
+      const adjOk = (g) => !adj || adjectiveFits(adjRaw, slot, detKey, g, lexicon);
       const readings = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
       if (readings) {
         const fit = readings.filter((g) => adjOk(g) && (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det))
