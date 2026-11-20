@@ -62,13 +62,14 @@ export function courseLexicon(curriculum) {
   known.names = new Set();
   known.verbs = new Set();
   known.genders = new Map();
+  known.exact = new Set(); // the taught words as written, capitals included
   for (const l of curriculum?.lektionen || []) {
     // The cast's names are course words too: „Ich bin Ana" names no job.
     for (const line of l.dialog?.lines || []) {
       for (const token of String(line.speaker).split(/\s+/)) { known.add(fold(token)); if (!['herr', 'frau'].includes(fold(token))) known.names.add(fold(token)); }
     }
     for (const w of l.wortfeld || []) {
-      for (const text of [w.de, w.word, w.plural]) for (const token of String(text || '').split(/[^\p{L}]+/u)) if (token) known.add(fold(token));
+      for (const text of [w.de, w.word, w.plural]) for (const token of String(text || '').split(/[^\p{L}]+/u)) if (token) { known.add(fold(token)); known.exact.add(token); }
       // A word may be singular and plural at once („der Computer", „die Computer"): every reading counts.
       const gender = (k, g) => known.genders.set(k, [...new Set([...(known.genders.get(k) || []), g])]);
       if (['der', 'die', 'das'].includes(w.article) && w.word && !w.meta) {
@@ -158,6 +159,9 @@ function slip(given, target) {
   return !(/[aeiouäöü]/.test(given[at]) && /[aeiouäöü]/.test(target[at]));
 }
 
+// Mass nouns, folded: they name a thing without an article („Das ist Papier", „Ich kaufe Brot").
+const MASS = new Set(['papier', 'wasser', 'kaffee', 'tee', 'milch', 'brot', 'geld', 'zucker', 'obst', 'kaese', 'käse', 'fleisch', 'reis', 'saft', 'gemuese', 'gemüse']);
+
 /** The same as a listed word, or that word with one slip. */
 const near = (word, list) => list.some((w) => fold(w) === word || slip(word, fold(w)));
 
@@ -169,7 +173,7 @@ const near = (word, list) => list.some((w) => fold(w) === word || slip(word, fol
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -225,11 +229,13 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const listed = job.filter((w) => near(w, slotWords)).length;
     return job.length && job.every(fits) && listed <= 1 && (end < 0 || head.length > end + 1) ? RESULT.CORRECT : RESULT.WRONG;
   }
-  // A second clause may follow the answer after „und", when it opens with a verb the course teaches:
-  // „Ich spreche Arabisch und lerne Deutsch." (decided with the DaF review, 2026-11-19).
+  // A second clause may follow after „und" when it opens with a verb the course teaches AND is itself
+  // a valid answer of the same kind: „Ich spreche Arabisch und lerne Deutsch." — never „… und lerne
+  // Studentin" (DaF review, 2026-11-19: no blanket rule; the whole answer must be valid).
   const verbs = lexicon?.verbs;
   const clause = parts.findIndex((w, i) => w === 'und' && i > 0 && typeof verbs?.has === 'function' && verbs.has(parts[i + 1] || ''));
   const own = clause > 0 ? words.split(' ').filter(Boolean).slice(0, clause).join(' ') : words;
+  const second = clause > 0 ? words.split(' ').filter(Boolean).slice(clause + 2).join(' ') : null;
   // Lists of languages or colours: every item listed is of the kind (or a word like „gut", „ein
   // bisschen", „hell"), and at least one is affirmed, not only „kein Deutsch". „Deutsch und Marokko"
   // lists a country; „blau und Tisch" a thing.
@@ -237,23 +243,34 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const MODIFIERS = new Set(slot === 'language'
       ? ['gut', 'sehr', 'ein', 'bisschen', 'wenig', 'etwas', 'auch', 'nur', 'noch', 'perfekt', 'fliessend', 'kein', 'nicht']
       : ['hell', 'dunkel', 'sehr', 'ganz', 'auch', 'nur', 'nicht']);
-    const groups = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').map(fold).filter(Boolean)).filter((g) => g.length);
-    const ok = groups.every((g) => g.some((w) => !MODIFIERS.has(w)) && g.every((w) => MODIFIERS.has(w) || fits(w)));
-    const affirmed = groups.some((g) => !g.some((w) => ['kein', 'nicht'].includes(w)));
-    return groups.length && ok && affirmed ? RESULT.CORRECT : RESULT.WRONG;
+    const listOk = (text) => {
+      const groups = text.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').map(fold).filter(Boolean)).filter((g) => g.length);
+      const ok = groups.every((g) => g.some((w) => !MODIFIERS.has(w)) && g.every((w) => MODIFIERS.has(w) || fits(w)));
+      return groups.length > 0 && ok && groups.some((g) => !g.some((w) => ['kein', 'nicht'].includes(w)));
+    };
+    return listOk(own) && (second === null || (second && listOk(second))) ? RESULT.CORRECT : RESULT.WRONG;
   }
-  // A name („Ich bin Omar", as Lektion 1's own check takes it): words the course does not teach as
-  // anything but a name.
+  // A name („Ich bin Omar", as Lektion 1's own check takes it): words the course does not teach, or the
+  // cast's names, after an optional „Frau"/„Herr" („Hier ist Frau Chakiri"). After the first name word a
+  // surname may be a word the course teaches only in lower case („Ana Braun", „Frau Braun": the colour braun); the
+  // first word may not, so „Gut" or „Danke" alone is no name.
   if (slot === 'name') {
     const names = lexicon?.names;
-    return parts.length && parts.every((w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (!known(w) || names?.has?.(w))) ? RESULT.CORRECT : RESULT.WRONG;
+    const exact = lexicon?.exact;
+    const from = ['frau', 'herr'].includes(parts[0]) && parts.length > 1 ? 1 : 0;
+    const isName = (written, w, i) => /\p{L}/u.test(w) && !CLOSED.has(w)
+      && (!known(w) || names?.has?.(w) || (i > 0 && /^\p{Lu}/u.test(written) && typeof exact?.has === 'function' && !exact.has(written)));
+    const rest = raw.slice(from);
+    return rest.length && rest.every((r, i) => isName(r, parts[from + i], from + i)) ? RESULT.CORRECT : RESULT.WRONG;
   }
   // `thing`: things one buys or needs, each with the article the verb asks for (the Akkusativ the course copies
   // as a chunk): „den Stuhl", „einen Computer", „die Lampe", „ein Telefon", „zwei Stühle". A noun the
   // course teaches must carry its own article („der Stuhl", „ein Computer" are wrong here); a noun it
   // never teaches is the learner's own and takes any article.
   // `object` is the same with the article of the subject („Das ist ein Buch", „Das ist der Stift",
-  // „Das ist meine Schere"): „Das ist ein Schere" names the wrong gender.
+  // „Das ist meine Schere"): „Das ist ein Schere" names the wrong gender. A frame may say how many it
+  // names (`count`): „Das ist …" one thing, „Das sind …" more (DaF review, 2026-11-19), so „Das sind
+  // ein Stift" is wrong. A mass noun stands without an article („Das ist Papier", „Ich brauche Wasser").
   if (slot === 'thing' || slot === 'object') {
     const genders = lexicon?.genders;
     const ARTICLE = slot === 'thing'
@@ -261,17 +278,27 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       : { der: ['der', 'ein', 'kein', 'mein', 'dein'], die: ['die', 'eine', 'keine', 'meine', 'deine'], das: ['das', 'ein', 'kein', 'mein', 'dein'], pl: ['die', 'keine', 'meine', 'deine'] };
     const ALL = new Set(Object.values(ARTICLE).flat());
     const items = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
-    const itemOk = (item) => {
+    // Each item read as one thing or as more; null when it is no thing at all.
+    const itemReading = (item) => {
       const [first, ...more] = item.map(fold);
       const counted = /^\d+$/.test(numberWordsToDigits(first)) && Number(numberWordsToDigits(first)) >= 2;
       const det = ALL.has(first) || counted ? first : null;
       const noun = det ? more[0] : first;
-      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || (det ? more.length - 1 : item.length - 1) > 0) return false;
+      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || (det ? more.length - 1 : item.length - 1) > 0) return null;
       const readings = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
-      if (readings) return readings.some((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : Boolean(det) && !counted && ARTICLE[g].includes(det)));
-      return !known(noun); // a word the course teaches that is no noun names no thing
+      if (readings) {
+        const fit = readings.filter((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det))
+          : (det ? !counted && ARTICLE[g].includes(det) : MASS.has(noun))));
+        if (!fit.length) return null;
+        return fit.every((g) => g === 'pl') ? 'many' : fit.includes('pl') ? 'either' : 'one';
+      }
+      return known(noun) ? null : (counted ? 'many' : 'either'); // a taught word that is no noun names no thing
     };
-    return items.length && items.every(itemOk) ? RESULT.CORRECT : RESULT.WRONG;
+    const read = items.map(itemReading);
+    if (!items.length || read.some((r) => r === null)) return RESULT.WRONG;
+    if (count === 'one' && (items.length > 1 || read[0] === 'many')) return RESULT.WRONG;
+    if (count === 'many' && items.length === 1 && read[0] === 'one') return RESULT.WRONG;
+    return RESULT.CORRECT;
   }
   const content = parts.filter((w) => /\p{L}/u.test(w) && !CLOSED.has(w));
   return content.length ? RESULT.CORRECT : RESULT.WRONG;
@@ -417,21 +444,14 @@ export function typedResult(turn, value) {
  * A spoken try counts when it was measured (never "I said it") and what was recognised is an answer.
  * The transcript is graded like a typed answer, so speech and typing take the same answers and a
  * spoken „Ich bin verheiratet" is no job; a slip of spelling does not exist in speech, so a typo
- * counts. Only without a transcript does the plain measure decide (80 % of the words of the first
- * answer recognised); an own answer then counts when its opening was recognised and something
- * followed it (by the plain measure „Ich heiße Zaid" is 2 of 3 words of „Ich heiße").
+ * counts; 4 of the 5 words of „Was sind Sie von Beruf?" („Was Sie von Beruf?") is no question.
+ * Without a transcript nothing is marked (DaF review, 2026-11-19): the learner records again, and
+ * after two tries types instead. Only a call without a turn keeps the plain word measure.
  */
 export function spokenShown(result, turn) {
   if (!result || result.selfConfirmed || typeof result.pct !== 'number') return false;
-  // With a transcript, only the transcript decides: 4 of the 5 words of „Was sind Sie von Beruf?"
-  // („Was Sie von Beruf?") is no question (DaF review, 2026-11-19).
-  if (turn && typeof result.transcript === 'string' && result.transcript.trim()) return typedResult(turn, result.transcript) !== RESULT.WRONG;
-  if (turn && ownAnswer(turn)) {
-    if (!Array.isArray(result.words) || !result.words.length) return false;
-    const hits = result.words.filter((w) => w.hit).length;
-    return hits / result.words.length >= READALOUD_PASS_PCT && result.extra >= 1;
-  }
-  return result.pct >= READALOUD_PASS_PCT;
+  if (!turn) return result.pct >= READALOUD_PASS_PCT;
+  return typeof result.transcript === 'string' && Boolean(result.transcript.trim()) && typedResult(turn, result.transcript) !== RESULT.WRONG;
 }
 
 /** What a spoken try is scored against: the answer itself; for an own answer, only its opening. */

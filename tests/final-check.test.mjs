@@ -27,7 +27,7 @@ test('every final check covers each can-do and names a part to repeat for it', (
       assert.ok(parts.length && parts.every((p) => p.en && p.de), `${l.id} can-do ${i + 1} has no part to repeat`);
     });
     for (let r = 0; r < retakes(l.guided.check); r += 1) {
-      assert.ok(sitting(l, r).every((t) => t.taskEn && t.taskDe && t.accepted?.length && typeof t.accepted[0] === 'string'), `${l.id} retake ${r}`);
+      assert.ok(sitting(l, r).every((t) => t.taskEn && t.taskDe && t.accepted?.length && typeof (t.accepted[0]?.frame ?? t.accepted[0]) === 'string' && typeof modelAnswer(t) === 'string'), `${l.id} retake ${r}`);
     }
   }
   const stage = buildLesson({ curriculum: CURRICULUM_A11, lektion: l2, pool: [] }).stages.find((s) => s.kind === 'check');
@@ -273,8 +273,44 @@ test('a spoken answer is graded like a typed one: own words are no extra words, 
   assert.equal(spokenShown(said('Das ist meine Vater', photo), photo), false);
   const greet = checkTurns(l1.guided.check, 0)[0];
   assert.equal(spokenShown(said('Guten Tag', greet), greet), true, 'Lektion 1’s fixed answers count as they did');
+  // Without a transcript nothing is marked, own answer or fixed (DaF review 2026-11-19): the word measure
+  // alone passed „Ich heiße" + any sound, and a fixed answer by 80 % of its words.
   const { transcript: _t, ...noTranscript } = said('Ich heiße Zaid', name);
-  assert.equal(spokenShown(noTranscript, name), true, 'without a transcript an own answer counts by its opening');
+  assert.equal(spokenShown(noTranscript, name), false, 'without a transcript an own answer is not marked');
+  const { transcript: _g, ...greetOnly } = said('Guten Tag', greet);
+  assert.equal(spokenShown(greetOnly, greet), false, 'nor a fixed one');
+});
+
+test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more things, a surname, the whole answer valid', () => {
+  const l4 = sitting(CURRICULUM_A11.lektionen[3]);
+  const l5 = sitting(CURRICULUM_A11.lektionen[4]);
+  const l6 = sitting(CURRICULUM_A11.lektionen[5]);
+  // Lektion 4: the task names the noun alone, so the learner gives it its article; the total comes before buying.
+  assert.doesNotMatch(l4[3].taskDe, /einen|eine/, 'the task does not hand over the article');
+  assert.equal(typedResult(l4[3], 'Wie teuer ist der Stuhl?'), RESULT.CORRECT);
+  assert.equal(typedResult(l4[3], 'Was kostet die Stuhl?'), RESULT.WRONG);
+  assert.equal(typedResult(l4[1], 'Wie teuer ist die Uhr?'), RESULT.CORRECT);
+  assert.ok(l4[4].listen && /Stuhl und die Uhr/.test(l4[4].listen), 'the total is of the two things asked about');
+  assert.equal(l4[5].slot, 'thing');
+  assert.equal(typedResult(l4[5], 'Ich kaufe den Stuhl und die Uhr.'), RESULT.CORRECT);
+  assert.equal(typedResult(l4[5], 'Ich kaufe der Stuhl.'), RESULT.WRONG);
+  // Lektion 5: „Das ist …" names one thing, „Das sind …" more; a mass noun needs no article.
+  const [what, where, , , askColour] = l5;
+  for (const right of ['Das ist ein Heft.', 'Das ist mein Wörterbuch.', 'Das sind zwei Stifte.', 'Das sind meine Bücher.', 'Das ist Papier.', 'Das sind ein Heft und ein Stift.']) assert.equal(typedResult(what, right), RESULT.CORRECT, right);
+  for (const wrong of ['Das sind ein Stift.', 'Das ist meine Bücher.', 'Das ist ein Heft und ein Stift.', 'Das ist Heft.', 'Das ist ein Schere.', 'Das ist blau.']) assert.equal(typedResult(what, wrong), RESULT.WRONG, wrong);
+  assert.equal(typedResult(where, 'Das ist hier.'), RESULT.CORRECT);
+  assert.equal(typedResult(askColour, 'Ist die Tasche rot?'), RESULT.CORRECT);
+  assert.equal(typedResult(askColour, 'Ist der Tasche rot?'), RESULT.WRONG);
+  // Lektion 6: a „wo?" question asks where; a surname may be a taught word; the model answer is Lektion 1's.
+  const [, office, , phoneName] = l6;
+  for (const notWhere of ['Ist das mein Büro?', 'Und mein Büro?']) assert.equal(typedResult(office, notWhere), RESULT.WRONG, notWhere);
+  for (const right of ['Hier ist Frau Braun.', 'Ich heiße Ana Braun.', 'Guten Tag, ich heiße Zaid.', 'Zaid Ahmad.']) assert.equal(typedResult(phoneName, right), RESULT.CORRECT, right);
+  for (const wrong of ['Gut.', 'Danke.', 'Hier ist Lehrer.', 'Hier ist Frau.', 'Guten Morgen.', 'Hier ist Büro.']) assert.equal(typedResult(phoneName, wrong), RESULT.WRONG, wrong);
+  assert.equal(modelAnswer(phoneName), 'Guten Tag, ich heiße Ana Chakiri.');
+  // A second clause after „und" is part of the answer and must be valid too.
+  const own = sitting(l3)[4];
+  assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Deutsch.'), RESULT.CORRECT);
+  assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Studentin.'), RESULT.WRONG);
 });
 
 test('spelling, a heard number and a written message are written, never spoken', () => {
