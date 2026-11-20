@@ -1426,3 +1426,12 @@ for (const [key, n] of [...minLektionHist].sort((a, b) => (a[0] === 'null') - (b
 console.log('items per topic:');
 for (const [topic, n] of [...perTopic].sort()) console.log(`  ${String(n).padStart(3)}  ${topic}`);
 console.log(`→ ${target.pathname}`);
+
+// The checker's list of course words (src/data/courseWords.js) is read from both pools and both
+// courses, so every pool build refreshes it; tests/checker-real-words.test.mjs fails when it is stale.
+{
+  const { courseWords, render } = await import('./build-course-words.mjs');
+  const words = courseWords();
+  writeFileSync(new URL('../src/data/courseWords.js', import.meta.url), render(words));
+  console.log(`→ src/data/courseWords.js (${words.length} course words for the checker)`);
+}

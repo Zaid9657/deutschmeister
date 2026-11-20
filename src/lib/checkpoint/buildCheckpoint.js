@@ -2876,7 +2876,7 @@ export function scoreCheckpoint(items, answers = {}) {
         // and carries the same tag the function writes into lesson_attempts —
         // tagError compares two answer strings and has nothing to compare here.
         const tag = isMicResult(answer) ? 'Aussprache' : isWritingResult(answer) ? 'Schreiben' : tagError(
-          { stage: section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic: item.topic, type: item.type },
+          { stage: section === 'hoeren' ? 'listening' : 'checkpoint', section, kind: item.kind, topic: item.topic, type: item.type },
           answer == null ? '' : String(answer),
           item.answer,
         );
@@ -2950,7 +2950,7 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed, aft
     const topic = item.topic;
     missCounts.set(topic, (missCounts.get(topic) || 0) + 1);
     const tag = tagError(
-      { stage: item.section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic, type: item.type },
+      { stage: item.section === 'hoeren' ? 'listening' : 'checkpoint', section: item.section, kind: item.kind, topic, type: item.type },
       answers[item.id] == null ? '' : String(answers[item.id]),
       item.answer,
     );

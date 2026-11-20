@@ -22,6 +22,7 @@
 // tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { sameAnswer } from '../../data/sameAnswer.js';
+import { COURSE_WORDS } from '../../data/courseWords.js';
 
 // CORRECTED: the exercise was finished, but only after a wrong try that the
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
@@ -272,6 +273,26 @@ function shortSlip(given, expected, rawExpected) {
   return given.length === expected.length && given[0] === expected[0] && given.at(-1) === expected.at(-1) && oneSwap(given, expected);
 }
 
+/**
+ * A NEAR MISS THAT IS ANOTHER WORD IS ANOTHER ANSWER (2026-11-20). A typo counts as correct in the
+ * lesson, the checkpoint and the review, and the slip rules above let through „Er isst Lehrer.“ for
+ * „ist“, „Das ist der Stahl.“ for „Stuhl“ and „Die Mitte kostet …“ for „Miete“: each a word the
+ * learner may well mean. The changed word is a different answer when
+ *   - it is itself a word the course shows (COURSE_WORDS, generated from both courses by
+ *     scripts/build-course-words.mjs): „isst“, „Mitte“, „laufen“ for „kaufen“; or
+ *   - one vowel stands for another: the vowel is the word („Stahl“/„Stuhl“, „Spruch“/„Sprich“,
+ *     „Hund“/„Hand“), whether or not the course teaches the other one.
+ * A missing umlaut stays the slip the standard says it is („schon“ for „schön“, „Bruder“ for
+ * „Brüder“ on a keyboard without umlauts): `givenRaw`/`expectedRaw` are the words as typed and printed.
+ */
+const stripUmlauts = (s) => String(s || '').toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss');
+function realWordSlip(given, expected, givenRaw, expectedRaw) {
+  if (!given || given === expected || stripUmlauts(givenRaw) === stripUmlauts(expectedRaw)) return false;
+  if (COURSE_WORDS.has(given)) return true;
+  const e = oneEdit(given, expected);
+  return Boolean(e) && e.kind === 'swap' && VOWEL_RE.test(e.from) && VOWEL_RE.test(e.to);
+}
+
 /** A vowel changed, added or dropped — the stem vowel is the form („muss"/„müss", „weiß"/„wiss"). */
 const vowelEdit = (e) => Boolean(e) && (e.kind === 'swap' ? VOWEL_RE.test(e.from) && VOWEL_RE.test(e.to) : !e.doubled && VOWEL_RE.test(e.ch));
 
@@ -493,7 +514,8 @@ export function checkAnswer(userInput, expected, {
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
     if (shortFunctionWord) {
       // A one-word answer of three or four letters: only shortSlip's two shapes, in a content word.
-      if (!caseSensitive && !user.includes(' ') && numbersIn(user) === numbersIn(norm) && shortSlip(user, norm, raw(a))) return { result: RESULT.TYPO, expected: a };
+      if (!caseSensitive && !user.includes(' ') && numbersIn(user) === numbersIn(norm) && shortSlip(user, norm, raw(a))
+        && !realWordSlip(user, norm, rawUser, raw(a))) return { result: RESULT.TYPO, expected: a };
       continue;
     }
     // A different number is a different answer, never a typo: „90" for „20" is one character off.
@@ -510,7 +532,8 @@ export function checkAnswer(userInput, expected, {
       || (changed.expected.length <= 4 && !oneKeyDoubled(changed.given, changed.expected)
         && !shortSlip(changed.given, changed.expected, raw(a).split(' ')[changed.at]))
       || participleSlip(changed.given, changed.expected, raw(a).split(' ')[changed.at])
-      || modalSlip(changed.given, changed.expected))) continue;
+      || modalSlip(changed.given, changed.expected)
+      || realWordSlip(changed.given, changed.expected, rawUser.split(' ')[changed.at], raw(a).split(' ')[changed.at]))) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
       // On a case task the capital is one of the letters: a typo PLUS the lost polite capital
       // („Wie geht es ihnenn?") is two slips, not one, where „ihnen?" alone is wrong (X-042).
@@ -637,7 +660,7 @@ export function isChoiceItem(item) {
 }
 
 // Error tags (standard §3): what a miss is about, for remediation and review.
-export const ERROR_TAGS = ['Artikel', 'Kasus', 'Verbstellung', 'Konjugation', 'Plural', 'Rechtschreibung', 'Hören', 'Wortschatz'];
+export const ERROR_TAGS = ['Artikel', 'Kasus', 'Verbstellung', 'Konjugation', 'Plural', 'Rechtschreibung', 'Hören', 'Lesen', 'Wortschatz'];
 
 const ARTICLES = new Set(['der', 'die', 'das', 'ein', 'eine', 'einen', 'einem', 'einer', 'dem', 'den', 'des', 'kein', 'keine', 'keinen', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'unsere', 'euer', 'eure']);
 
@@ -768,6 +791,8 @@ export function tagError(item, userInput, expected) {
   // whatever the item's stage says (the player stamps every derived item with
   // `stage: 'derived'`, never `'listening'`).
   if (item?.stage === 'listening' || item?.kind === 'dictation' || item?.type === 'listen_select') return 'Hören';
+  // A missed checkpoint reading task is a reading miss, not „Wortschatz“ (2026-11-19 browser play).
+  if (item?.section === 'lesen') return 'Lesen';
   // A miss that is only Groß-/Kleinschreibung is spelling, whatever the word is.
   if (exp && usr && exp === usr && stripPunct(String(expected ?? '')) !== stripPunct(String(userInput ?? ''))) return 'Rechtschreibung';
   if (item?.topic && /plural/i.test(item.topic)) return 'Plural';
