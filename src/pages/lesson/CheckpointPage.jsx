@@ -31,6 +31,7 @@ import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
+import { inline } from '../../components/lesson/NoticeStage.jsx';
 import LandeskundeCard from '../../components/course/LandeskundeCard.jsx';
 import { LANDESKUNDE } from '../../data/curricula/a11.meta.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -302,7 +303,7 @@ export function PracticeItem({ item, onAnswer, onReadInstead = () => {}, graded 
           {released && !feedback.correct && item.mode !== 'confirm' && (
             <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{feedback.key}</strong></p>
           )}
-          {(feedback.explanationEn || feedback.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && feedback.explanationEn ? feedback.explanationEn : feedback.explanationDe}</p>}
+          {(feedback.explanationEn || feedback.explanationDe) && <p className="mt-1 text-sm text-graphite">{inline(lang !== 'de' && feedback.explanationEn ? feedback.explanationEn : feedback.explanationDe)}</p>}
           <Button className="mt-4" onClick={advance}>
             {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>
@@ -688,7 +689,7 @@ function CheckpointRun() {
                       {t(feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
                     </p>
                     <p className="mt-1 text-sm">{t('feedback.correctIs', lang)} <strong lang="de">{feedback.key}</strong></p>
-                    {(feedback.explanationEn || feedback.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && feedback.explanationEn ? feedback.explanationEn : feedback.explanationDe}</p>}
+                    {(feedback.explanationEn || feedback.explanationDe) && <p className="mt-1 text-sm text-graphite">{inline(lang !== 'de' && feedback.explanationEn ? feedback.explanationEn : feedback.explanationDe)}</p>}
                   </li>
                 );
               })}

@@ -137,7 +137,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext, ey
         hintOnly={state?.hintOnly}
         hint={state?.hint}
         showAnswer={state?.showAnswer}
-        explanation={hintFirst && state ? feedbackReason(item, lang) : null}
+        explanation={hintFirst && state ? feedbackReason(item, lang, state.result !== RESULT.WRONG ? state.expected : null) : null}
         primaryLabel={state?.hintOnly ? t('action.again', lang) : undefined}
         result={state && state.result}
         expected={state && state.expected}

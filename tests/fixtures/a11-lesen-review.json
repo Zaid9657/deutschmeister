@@ -1,7 +1,7 @@
 {
  "status": "reviewed",
  "reviewedOn": "2026-10-25",
- "method": "Independent blind semantic review (Codex as DaF/SD1 examiner, read-only): each unit solved from text, statement and alphabetically ordered options only — no key, evidence, rival or explanation — and judged for one supported answer, refutation (not silence), referents, natural German, a plausible text purpose and taught meanings. Round 1 reviewed all 64 units (51 OK, 13 FIX, every answer as keyed); the 13 were fixed and round 2 re-reviewed exactly those (7 OK, 6 FIX: phone numbers spelled out in words, one sign wording); the 6 were fixed and round 3 re-reviewed exactly those (5 OK, 1 FIX: a tandem ad offered Arabic its writer does not speak); that unit was rewritten and round 4 re-reviewed it. Every round reviewed only units whose text changed. `solved` and `evidence` are the reviewer's; `round` says which review covers the current text.",
+ "method": "Independent blind semantic review (Codex as DaF/SD1 examiner, read-only): each unit solved from text, statement and alphabetically ordered options only — no key, evidence, rival or explanation — and judged for one supported answer, refutation (not silence), referents, natural German, a plausible text purpose and taught meanings. Round 1 reviewed all 64 units (51 OK, 13 FIX, every answer as keyed); the 13 were fixed and round 2 re-reviewed exactly those (7 OK, 6 FIX: phone numbers spelled out in words, one sign wording); the 6 were fixed and round 3 re-reviewed exactly those (5 OK, 1 FIX: a tandem ad offered Arabic its writer does not speak); that unit was rewritten and round 4 re-reviewed it. Every round reviewed only units whose text changed. `solved` and `evidence` are the reviewer's; `round` says which review covers the current text. Round 6 (2026-11-19): the two units changed after the browser play (a false statement whose words stood in its text; a practised sentence inside a text) were re-reviewed the same way, blind, and solved as keyed.",
  "units": [
   {
    "id": "a11-cp1-p1-u1",
@@ -16,11 +16,11 @@
   {
    "id": "a11-cp1-p1-u2",
    "solved": "Falsch",
-   "evidence": "wohnt in Berlin.",
+   "evidence": "Tim kommt aus Österreich und wohnt in Berlin.",
    "verdict": "ok",
    "note": "",
-   "round": 5,
-   "text": "Frau Kaya, guten Morgen! Tim kommt aus Österreich und wohnt in Berlin. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg",
+   "round": 6,
+   "text": "Frau Kaya, guten Morgen! Tim kommt aus Österreich und wohnt in Berlin. Die Eltern von Tim wohnen in Bremen. Grüße, Herr Berg",
    "question": "Steht das im Text? „Tim wohnt in Bremen.“"
   },
   {
@@ -339,8 +339,8 @@
    "evidence": "Am Montag habe ich frei und arbeite nicht.",
    "verdict": "ok",
    "note": "",
-   "round": 1,
-   "text": "Hallo Lena, der Termin ist am Dienstag. Am Montag habe ich frei und arbeite nicht. Hast du am Montag auch Zeit? Wir gehen ins Kino! Grüße, Tim",
+   "round": 6,
+   "text": "Hallo Lena, am Dienstag habe ich einen Termin. Am Montag habe ich frei und arbeite nicht. Hast du am Montag auch Zeit? Wir gehen ins Kino! Grüße, Tim",
    "question": "Steht das im Text? „Tim hat am Montag frei.“"
   },
   {

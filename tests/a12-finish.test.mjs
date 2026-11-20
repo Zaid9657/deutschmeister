@@ -42,6 +42,9 @@ function stubsFor(path, state, lang) {
   }
   stubs.react = state.react;
   for (const key of Object.keys(stubs)) if (key.endsWith('/lesson/strings.js')) stubs[key] = { useLessonLang: () => [lang], t };
+  // The checkpoint renders explanations through NoticeStage's inline() (bold marks, 2026-11-19); the
+  // text is what this test reads, so the stub passes it through.
+  for (const key of Object.keys(stubs)) if (key.endsWith('/NoticeStage.jsx')) stubs[key] = { ...stubs[key], inline: (text) => text };
   return stubs;
 }
 

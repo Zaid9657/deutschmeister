@@ -559,7 +559,8 @@ test('the four number items of Lektion 2 derive the number from the German promp
   const numberItems = EXTRA.filter((i) => target(i).nr === 2 && NUMBERS.test(i.answer));
   assert.ok(numberItems.length >= 4, `L2 has only ${numberItems.length} number items`);
   for (const item of numberItems) {
-    assert.match(item.questionDe, /\(\s*\d{1,2}\s*\)/, `${item.id}: the digit must stand in the German prompt`);
+    // „(7; Schreiben Sie die Zahl in Worten)“ since 2026-11-19: the cue also says the word is wanted.
+    assert.match(item.questionDe, /\(\s*\d{1,2}\s*[;)]/, `${item.id}: the digit must stand in the German prompt`);
     assert.equal(item.topic, NUMBERS_TOPIC, `${item.id}: a number item is not a sein item`);
     assert.equal(drillsSlug(item, 'verb-sein'), false, `${item.id} claims to drill sein — it drills numbers`);
   }
