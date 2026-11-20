@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
 import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
@@ -246,7 +247,7 @@ export default function CurriculumHomePage({ curriculum }) {
               {de ? 'Deutsch' : 'German'} {curriculum.code}
             </Reveal>
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
-              {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · zum Abschluss ein verkürzter Übungstest im Format ${curriculum.examName}` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · ends with a shortened practice test in the ${curriculum.examName} format`}
+              {de ? `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} Checkpoints · ${wordsTotal} Wörter · ` : `${curriculum.lektionen.length} Lektionen · ${curriculum.checkpoints.length} checkpoints · ${wordsTotal} words · `}{courseTestDescription(curriculum.testSlug, lang)}
             </Reveal>
 
             {payNotice && (

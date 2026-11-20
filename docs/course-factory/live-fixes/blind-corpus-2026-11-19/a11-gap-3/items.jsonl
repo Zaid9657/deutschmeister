@@ -1,0 +1,72 @@
+{"id":"54801fe3-5b02-56dc-9c28-31bb6f620f04","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ du um 7 Uhr auf? (aufstehen)","promptEn":"___ du um 7 Uhr auf? (question, verb: aufstehen, du)"}
+{"id":"9454a0c1-640f-54e9-81db-d63ea1557925","kind":"typed","type":"fill_blank","lektion":11,"promptDe":"___ du meine Mutter an? (anrufen)","promptEn":"___ du meine Mutter an? (question, verb: anrufen, du)"}
+{"id":"8a2be339-3196-5a98-a5e6-e41f4351e703","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ ihr heute ein? (einkaufen)","promptEn":"___ ihr heute ein? (question, verb: einkaufen, ihr)"}
+{"id":"fbe490d9-9b31-5e32-a6f3-dea1394f6863","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ der Zug um 8 Uhr an? (ankommen)","promptEn":"Does the train arrive at 8? (verb: ankommen, er)"}
+{"id":"a31b05ff-9be9-5949-af9d-dcddeef307e2","kind":"typed","type":"fill_blank","lektion":11,"promptDe":"Ich hole dich um 8 Uhr ___. (abholen, nur die Vorsilbe)","promptEn":"Ich hole dich um 8 Uhr ___. (prefix only, verb: abholen, ich)"}
+{"id":"f1deffe2-8d4b-547c-8289-bdeafac5bc2c","kind":"typed","type":"fill_blank","lektion":5,"promptDe":"Er macht die Tür ___. (zumachen, nur die Vorsilbe)","promptEn":"Er macht die Tür ___. (prefix only, verb: zumachen, er)"}
+{"id":"0346934e-7e0a-59f8-a5c3-135fcf18a812","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Wir kaufen heute ___. (einkaufen, nur die Vorsilbe)","promptEn":"Wir kaufen heute ___. (prefix only, verb: einkaufen, wir)"}
+{"id":"a375e841-56f8-5772-90d9-c5a079863bdd","kind":"typed","type":"fill_blank","lektion":6,"promptDe":"Ihr kommt um 8 Uhr ___. (mitkommen, nur die Vorsilbe)","promptEn":"Ihr kommt um 8 Uhr ___. (prefix only, verb: mitkommen, ihr)"}
+{"id":"2e4e344c-3116-5304-9f6e-afbed5d037e9","kind":"typed","type":"fill_blank","lektion":4,"promptDe":"Es ist ___. (14:30, offiziell)","promptEn":"It is 2:30 pm. (official, 24-hour: write the time in words)"}
+{"id":"36f2bd1a-d22a-5c9e-9f7e-a197b992f696","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___. (2:30, umgangssprachlich)","promptEn":"It is 2:30. (colloquial, everyday German)"}
+{"id":"69162961-90a8-5f76-9cad-865fb2c8b9fb","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___. (2:15, umgangssprachlich)","promptEn":"It is 2:15. (colloquial)"}
+{"id":"f12532bf-6089-544f-83ef-8bfcc2940f6b","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___. (2:45, umgangssprachlich)","promptEn":"It is 2:45. (colloquial)"}
+{"id":"2d34c5aa-a512-50b5-a1c5-57dd04acb619","kind":"typed","type":"fill_blank","lektion":4,"promptDe":"Es ist ___. (8:00, offiziell)","promptEn":"It is 8:00. (official: include the word Uhr)"}
+{"id":"8970aaea-186c-58b0-bcf2-fdc7bbc3a632","kind":"typed","type":"fill_blank","lektion":7,"promptDe":"___ Abend höre ich Musik. (Präposition für Tageszeit)","promptEn":"In the evening I listen to music. (preposition for a time of day)"}
+{"id":"extra-a11-l08-01","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Der Termin ist ___ Montag.","promptEn":"The appointment is on Monday."}
+{"id":"extra-a11-l08-02","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Ich stehe morgens ___ sechs Uhr auf.","promptEn":"I get up at six in the morning."}
+{"id":"extra-a11-l08-06","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ Abend habe ich Zeit.","promptEn":"In the evening I have time."}
+{"id":"extra-a11-l08-09","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Der Termin ist ___ acht Uhr.","promptEn":"The appointment is at eight."}
+{"id":"extra-a11-l08-10","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Der Termin ist ___ neun Uhr.","promptEn":"The appointment is at nine."}
+{"id":"extra-a11-l08-11","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Der Termin ist ___ sieben Uhr.","promptEn":"The appointment is at seven."}
+{"id":"extra-a11-l08-12","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Nach Montag kommt ___.","promptEn":"Which weekday follows Monday?"}
+{"id":"extra-a11-l08-13","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Nach Donnerstag kommt ___.","promptEn":"Which weekday follows Thursday?"}
+{"id":"extra-a11-l08-14","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Nach Samstag kommt ___.","promptEn":"Which weekday follows Saturday?"}
+{"id":"extra-a11-l08-15","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ Freitag habe ich Zeit.","promptEn":"On Friday I have time."}
+{"id":"extra-a11-l08-16","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ Dienstag habe ich Zeit.","promptEn":"On Tuesday I have time."}
+{"id":"827c155d-7b87-53a3-b047-d53ab532f296","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___. (18:20, umgangssprachlich)","promptEn":"It is 6:20 pm. (colloquial, 12-hour)"}
+{"id":"ffb96fdf-5140-582a-bc5a-b3d17e131ea3","kind":"typed","type":"fill_blank","lektion":4,"promptDe":"Es ist ___. (0:00, offiziell)","promptEn":"It is midnight (0:00). (official, 24-hour)"}
+{"id":"extra-a11-l08-03","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___ neun. (8.30)","promptEn":"It is half past eight."}
+{"id":"extra-a11-l08-04","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___ acht. (7.45)","promptEn":"It is a quarter to eight."}
+{"id":"extra-a11-l08-05","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Es ist ___ acht. (8.15)","promptEn":"It is a quarter past eight."}
+{"id":"extra-a11-l09-01","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Ich ___ Durst. Ich möchte Wasser. (haben)","promptEn":"I am thirsty. I would like water."}
+{"id":"extra-a11-l09-02","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"___ Sie Zeit für einen Kaffee? (haben)","promptEn":"Do you have time for a coffee? Formal address."}
+{"id":"extra-a11-l09-03","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Wir ___ Hunger. Wir möchten Suppe. (haben)","promptEn":"We are hungry. We would like soup."}
+{"id":"extra-a11-l09-06","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"___ du Durst? (haben)","promptEn":"Are you thirsty?"}
+{"id":"extra-a11-l09-10","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Die Kellnerin ___ Kuchen und Tee. (haben)","promptEn":"The waitress has cake and tea."}
+{"id":"3286c2b6-0c89-5187-ae66-841a73bcc4c4","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"Sie ___ Zeit. (haben, Singular)","promptEn":"She ___ time. (verb: haben, sie = she, singular)"}
+{"id":"e8388d41-3d49-59c8-ac5b-020c596c2649","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ Sie Zeit? (haben, Sie)","promptEn":"Do you (formal) ___ time? (verb: haben, Sie, formal question)"}
+{"id":"7b8f0fd0-cce3-51e8-8430-4a4ecb5c47c3","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ du einen Bruder? (haben)","promptEn":"Do you ___ a brother? (verb: haben, du, question)"}
+{"id":"extra-a11-l09-04","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Paul ___ heute Suppe und Salat. (haben)","promptEn":"Paul has soup and salad today."}
+{"id":"extra-a11-l09-08","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"___ ihr Hunger? (haben)","promptEn":"Are you all hungry?"}
+{"id":"extra-a11-l09-09","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Im Café: ___ Sie auch Kuchen? (haben, höflich)","promptEn":"Ask politely in the café whether they have cake as well."}
+{"id":"extra-a11-l09-11","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Ana, ___ du Hunger oder Durst? (haben)","promptEn":"Ana, are you hungry or thirsty?"}
+{"id":"extra-a11-l09-12","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Der Kellner ___ Zeit. (haben)","promptEn":"The waiter has time."}
+{"id":"extra-a11-l09-13","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Wir ___ Durst. Wir möchten Mineralwasser. (haben)","promptEn":"We are thirsty. We would like mineral water."}
+{"id":"extra-a11-l09-15","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"___ ihr auch Tee? (haben)","promptEn":"Do you all have tea too?"}
+{"id":"extra-a11-l02-01","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Ich ___ Studentin. (sein)","promptEn":"I am a student."}
+{"id":"extra-a11-l02-02","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"___ Sie Lehrerin? (sein)","promptEn":"Are you a teacher? Formal address."}
+{"id":"extra-a11-l02-03","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Mein Wohnort ___ Bremen. (sein)","promptEn":"My place of residence is Bremen."}
+{"id":"extra-a11-l02-04","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Meine Telefonnummer ___ null eins sieben sechs. (sein)","promptEn":"My telephone number is zero one seven six."}
+{"id":"extra-a11-l02-05","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Lena und Tim, ___ ihr verheiratet? (sein)","promptEn":"Lena and Tim, are you married?"}
+{"id":"extra-a11-l02-13","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Ana, ___ du ledig? (sein)","promptEn":"Ana, are you single?"}
+{"id":"1e3a7370-9e9c-55ea-b513-496b45421861","kind":"typed","type":"fill_blank","lektion":6,"promptDe":"Sie ___ Kollegen. (sein, Plural)","promptEn":"They ___ colleagues. (verb: sein, sie = they)"}
+{"id":"19f1aa27-7634-5599-8a61-8f69e259f6d4","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"Das ___ Kaffee. (sein)","promptEn":"That ___ coffee. (verb: sein, das)"}
+{"id":"459b2960-6610-57b4-b4f9-631bf6eeed01","kind":"typed","type":"fill_blank","lektion":3,"promptDe":"Sie ___ meine Schwester. (sein, Singular)","promptEn":"She ___ my sister. (verb: sein, sie = she, singular)"}
+{"id":"extra-a11-l02-06","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Wir ___ verheiratet. (sein)","promptEn":"We are married."}
+{"id":"extra-a11-l02-14","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Lena und Tim, ___ ihr Studenten? (sein)","promptEn":"Lena and Tim, are you students?"}
+{"id":"extra-a11-l02-15","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Die Staatsangehörigkeit im Satz: Ana ___ Marokkanerin. (sein)","promptEn":"Nationality in a sentence: Ana is Moroccan."}
+{"id":"extra-a11-l02-16","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"Ali kommt aus Marokko. Er ist ___. (Staatsangehörigkeit, Nomen)","promptEn":"Ali comes from Morocco. He is Moroccan."}
+{"id":"5c5c272b-ff81-5811-83b6-6e7fde71ba1b","kind":"typed","type":"fill_blank","lektion":11,"promptDe":"___ du müde? (sein)","promptEn":"___ du müde? (verb: sein, person: du)"}
+{"id":"d1777221-6b65-55c3-8ecd-dbaa0583db0c","kind":"typed","type":"fill_blank","lektion":8,"promptDe":"___ du Zeit? (haben)","promptEn":"___ du Zeit? (verb: haben, person: du)"}
+{"id":"426d0034-6957-500d-84d9-4c2844e5338c","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"___ du aus Polen? (kommen)","promptEn":"___ du aus Polen? (verb: kommen, person: du)"}
+{"id":"8c1f7c82-1210-5d1b-8f48-8ad60f3cfa78","kind":"typed","type":"fill_blank","lektion":7,"promptDe":"___ du viel? (arbeiten)","promptEn":"___ du viel? (verb: arbeiten, person: du)"}
+{"id":"14eac77e-603e-51e0-9a53-4e18fa5b9d8f","kind":"typed","type":"fill_blank","lektion":2,"promptDe":"___ Sie in Berlin? (wohnen, Sie)","promptEn":"___ Sie in Berlin? (verb: wohnen, person: Sie – formal)"}
+{"id":"e327c296-1ea8-51db-b3c5-a6409f00534c","kind":"typed","type":"fill_blank","lektion":3,"promptDe":"___ Sie Englisch? (sprechen, Sie)","promptEn":"___ Sie Englisch? (verb: sprechen, person: Sie – formal)"}
+{"id":"d58cff5b-760c-57bc-b030-05d1201f8846","kind":"typed","type":"fill_blank","lektion":9,"promptDe":"___ du gern Kaffee? (trinken)","promptEn":"___ du gern Kaffee? (verb: trinken, person: du)"}
+{"id":"a3ddac97-a8fb-5ddc-8a2d-3c7763e89667","kind":"typed","type":"fill_blank","lektion":7,"promptDe":"___ du gern? (kochen)","promptEn":"___ du gern? (verb: kochen, person: du)"}
+{"id":"extra-a11-l10-01","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ der Zug nach Österreich?","promptEn":"Does the train go to Austria?"}
+{"id":"extra-a11-l10-02","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ die Fahrkarte fünfzehn Euro?","promptEn":"Does the ticket cost fifteen euros?"}
+{"id":"extra-a11-l10-03","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ das Gleis vier? (sein)","promptEn":"Is that platform four?"}
+{"id":"extra-a11-l10-04","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ du eine Fahrkarte für morgen? (haben)","promptEn":"Do you have a ticket for tomorrow?"}
+{"id":"extra-a11-l10-05","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ der Zug heute Verspätung?","promptEn":"Is the train delayed today?"}
+{"id":"extra-a11-l10-06","kind":"typed","type":"fill_blank","lektion":10,"promptDe":"___ du morgen mit dem Bus?","promptEn":"Are you going by bus tomorrow?"}

@@ -165,7 +165,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } }}
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
-              placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
+              placeholder={['sentence_building', 'error_correction'].includes(item.type) ? t('practice.wholeSentence', lang) : '…'}
             />
             {!hintFirst && item.hint && !state && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
           </div>

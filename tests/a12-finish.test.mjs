@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { CURRICULUM_A12 as curriculum } from '../src/data/curricula/a12.js';
 import { anyCurriculumFor, curriculumPath } from '../src/data/curricula/index.js';
+import { courseTestDescription } from '../src/data/courseTests/index.js';
 import { buildLesson, planPractice } from '../src/lib/lesson/buildLesson.js';
 import * as checkpoint from '../src/lib/checkpoint/buildCheckpoint.js';
 import * as feedback from '../src/lib/checkpoint/feedback.js';
@@ -41,6 +42,9 @@ function stubsFor(path, state, lang) {
   }
   stubs.react = state.react;
   for (const key of Object.keys(stubs)) if (key.endsWith('/lesson/strings.js')) stubs[key] = { useLessonLang: () => [lang], t };
+  // The checkpoint renders explanations through NoticeStage's inline() (bold marks, 2026-11-19); the
+  // text is what this test reads, so the stub passes it through.
+  for (const key of Object.keys(stubs)) if (key.endsWith('/NoticeStage.jsx')) stubs[key] = { ...stubs[key], inline: (text) => text };
   return stubs;
 }
 
@@ -218,6 +222,7 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../lib/course/localProgress.js'] = { localDoneIds: () => new Set(complete ? curriculumPath(curriculum).map((n) => n.id) : []) };
     stubs['../lib/lesson/runState.js'] = { latestRun: () => null };
     stubs['../lib/course/canDo.js'] = { canDoList: () => [] };
+    stubs['../data/courseTests/index.js'] = { courseTestDescription };
     const { default: Home } = await loadJsxModule(path, stubs);
     const tree = state.render(Home, { curriculum });
     if (lang === 'de') {
@@ -240,7 +245,8 @@ test('every served A1.2 practice key is accepted and delayed inventory stays out
 });
 
 test('generated checkpoints keep new seeds beyond the first bank without recursive lifetime work', () => {
-  const c = anyCurriculumFor('a1.1'), cp = c.checkpoints[0];
+  // A1.1 reads an authored bank since the re-landed live fixes; its generated stand-in keeps this guard.
+  const c = anyCurriculumFor('a1.1'), cp = { ...c.checkpoints[0], lesen: undefined };
   const p = JSON.parse(read('src/data/lessonPools/a11.json'));
   const first = checkpoint.buildCheckpoint({ curriculum: c, checkpoint: cp, pool: p });
   for (const round of [4, 4003]) {
