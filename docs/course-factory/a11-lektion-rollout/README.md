@@ -305,3 +305,53 @@ kaufen). The spoken path was not played (no microphone in the test browser).
 **For Lektionen 7–9:** Lektion 9 is followed by Checkpoint 3 (`nextAfter`); Paul (bear, café) and
 Herr Schmidt (owl, station) are already on the cast sheet without portraits. Reuse the gap kinds
 above before adding new ones; a new kind needs its own wrong-answer tests and a blind corpus.
+
+### Batch 3 (Lektionen 7–9), 2026-11-20
+
+**The cast is unchanged.** The scenes show Lena and Tim after the course (L7), Ana and Lena in the
+common room (L8), Ana in the café with Paul the bear as waiter (L9); Paul's portrait is now cut from
+the L9 scene; `batch-3-scenes.jpg`. Herr Schmidt (owl) still has no portrait: he comes in Lektion 10.
+
+**What the final check can do now (new in batch 3;** `finalCheck.js` comments, `tests/final-check.test.mjs`**):**
+
+- Gap kinds: `clock` (a clock time as Lektion 8 teaches it or in digits; „halb neun" is 8.30;
+  telling the time takes no „um"; a part of the day may stand with it; `time` pins the time and its
+  half of the day), `when` (a day, a part of the day and/or a time: „am" takes a day, „um" a time,
+  and in a sentence a time needs its „um"; `when` pins the day and time, `whenPartial` lets the day
+  or the time alone agree; a written note of a heard afternoon time must say afternoon), `hobby`,
+  `activity` (an ich-form verb and what it names; „in Kino" is wrong), `duQuestion` (any correctly
+  formed du-question about an activity). Frames may have two gaps („… bin ich … frei.").
+- `thing` takes measures („ein Glas Wasser", „zwei Tassen Kaffee") and „mit/ohne …"; per turn
+  `slotNot` (no food for a drink order), `only` (accepting names the thing offered, never with
+  „kein"), `negative` (a decline names its „kein-" thing).
+- Rewrites around a right answer: a fronted phrase with the verb second („Am Wochenende spiele ich
+  …"), „gern" after the verb before or after what one likes, „Und du, …?", the partner's name at
+  the end without a comma, a question in statement order („Du tanzt gern?"), a tag („…, oder?"), a
+  fronted time picked up by „da", small words that change nothing („vielleicht", „heute", „auch",
+  „sehr gern"), a bare noun picked up by „den/die", the offered thing echoed, a trailing „danke".
+- Typing without umlauts or ß is a typo (`checkLoose`), only when the answer has no umlaut at all,
+  so „Mütter" for „Mutter" stays a different word. This lives in the final check only.
+
+**How the checks were proven:** five DaF rounds with the grader's real verdicts in the prompt from
+round 1 (`tools/graded-examples.mjs` over the probe sets in `tools/probes/`). Lektion 7 said ship
+from round 1; Lektion 9 from round 3; Lektion 8 from round 5. Three blind corpora; first scores
+250/270 (92.6 %, no false pass), 238/270 (88.1 %, told to avoid the obvious, no false pass) and
+248/270 (91.9 %, the most common answers, two false passes); after the fixes 265/270, 270/270,
+270/270 (the five left answer a sitting-2 audio the third review changed). Widening an accepted
+frame created four false passes once (agreeing „Ja, am Freitag um elf."): rescore every corpus after
+each widening. The 1,200 corpus answers of Lektionen 2–6 grade as before every batch 3 commit.
+
+**Marking problems found, not fixed here** (for the marking session): typing without umlauts is a
+typo in the final check only (`checkLoose`); lesson items still refuse „wie spat ist es".
+
+**Open, by design or for the founder:** Lektion 9's scene has no guest asking „Haben Sie …?" (the
+second review asked for one; the scene and its audio are shared by every stage, so the can-do now
+also sends to Part 2). Lena's appointment in sitting 2 of Lektion 8 moved to Friday so it no longer
+clashes with the time she agrees. No native speaker has read the Arabic of Lektionen 7–9; the first
+blind back-translation found a drift in Lektion 8 („Hast du Zeit? for now" read as "about now"),
+fixed and confirmed by a second; Lektion 9 glosses haben as لديه, as Lektion 6 does.
+
+**For Lektionen 10–12:** Lektion 10 is Ana and Herr Schmidt (the owl, cast sheet, portrait still to
+cut) at the station; Lektion 11 Lena and Tim; Lektion 12 Lena and Ana, followed by Checkpoint 4
+(`nextAfter`; there is no Lektion 13). Times and days (`clock`, `when`) carry over to timetables;
+prices to tickets (`listen`, `priceDigits`).

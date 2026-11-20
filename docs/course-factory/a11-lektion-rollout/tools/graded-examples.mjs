@@ -1,4 +1,4 @@
-// node docs/course-factory/a11-lektion-rollout/tools/graded-examples.mjs <repo> <probe files…> → every probe answer of Lektionen 4-6 with the grade the course gives it (for a reviewer).
+// node docs/course-factory/a11-lektion-rollout/tools/graded-examples.mjs <repo> <probe files…> → every probe answer of Lektionen 4-9 with the grade the course gives it (for a reviewer).
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 const [repo, ...files] = process.argv.slice(2);
@@ -8,7 +8,7 @@ const lex = f.courseLexicon(c);
 const s = (nr, r = 0) => f.checkTurns({ ...c.lektionen[nr - 1].guided.check, lexicon: lex }, r);
 const [l4, l5, l6] = [s(4), s(5), s(6)];
 const label = new Map();
-for (const nr of [4, 5, 6]) for (let r = 0; r < 3; r += 1) s(nr, r).forEach((t, i) => { const k = t.taskEn + (t.cue?.de || '') + (t.listen || ''); label.set(k, label.has(k) ? `L${nr} turn ${i + 1} (every sitting)` : `L${nr} sitting ${r + 1} turn ${i + 1}`); });
+for (const nr of [4, 5, 6, 7, 8, 9]) for (let r = 0; r < 3; r += 1) s(nr, r).forEach((t, i) => { const k = t.taskEn + (t.cue?.de || '') + (t.listen || ''); label.set(k, label.has(k) ? `L${nr} turn ${i + 1} (every sitting)` : `L${nr} sitting ${r + 1} turn ${i + 1}`); });
 const rows = new Map();
 for (const file of files) {
   const src = readFileSync(file, 'utf8');
