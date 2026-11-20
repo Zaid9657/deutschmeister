@@ -8,15 +8,16 @@ const withArabic = CURRICULUM_A11.lektionen.filter((l) => l.notice.bodyAr);
 // The German of the English notice: every **bold** span, one sentence at a time, without its closing full stop.
 const germanOf = (en) => [...en.matchAll(/\*\*([^*]+)\*\*/g)].flatMap((m) => m[1].split(/(?<=[.!?])\s+/)).map((s) => s.replace(/[.]$/, '').trim());
 
-test('Lektionen 1–9 explain their rule in Arabic, with every German form of the English kept in Latin letters', () => {
-  assert.deepEqual(withArabic.map((l) => l.nr), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+test('Lektionen 1–12 explain their rule in Arabic, with every German form of the English kept in Latin letters', () => {
+  assert.deepEqual(withArabic.map((l) => l.nr), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   for (const l of withArabic) {
     const ar = l.notice.bodyAr;
     assert.match(ar, /[؀-ۿ]/, `L${l.nr}: Arabic`);
     assert.doesNotMatch(ar, /\*/, `L${l.nr}: no markdown marks`);
     // A character lost in encoding came back once as U+001A where an arrow belonged (2026-11-19).
     assert.ok([...ar].every((ch) => ch.codePointAt(0) >= 0x20), `L${l.nr}: no control characters`);
-    for (const de of germanOf(l.notice.bodyEn)) assert.ok(ar.includes(de), `L${l.nr}: "${de}"`);
+    // A form that opens an English sentence („**Gemacht** and …“) has its capital from the English only.
+    for (const de of germanOf(l.notice.bodyEn)) assert.ok(ar.includes(de) || ar.includes(de.charAt(0).toLowerCase() + de.slice(1)), `L${l.nr}: "${de}"`);
   }
 });
 

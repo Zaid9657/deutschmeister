@@ -66,3 +66,9 @@ export const courseTestBySlug = (slug) => COURSE_TESTS.find((t) => t.slug === sl
 export const courseTestByKey = (key) => COURSE_TESTS.find((t) => t.key === key) || null;
 
 export const courseTestDescription = (slug, lang = 'de') => describeCourseTest(courseTestBySlug(slug).mock, lang);
+
+/** A course test's length in minutes: the sum of its own section budgets, the one source (null when unknown). */
+export const courseTestMinutes = (slug) => {
+  const test = courseTestBySlug(slug);
+  return test ? test.mock.sections.reduce((sum, section) => sum + (Number(section.minutes) || 0), 0) : null;
+};

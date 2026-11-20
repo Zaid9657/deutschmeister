@@ -8,7 +8,7 @@ import { stationFor } from '../../data/offers.js';
 import { courseHome } from '../../lib/courseFlow.js';
 import { resolveModelltest } from '../../data/modelltest';
 import { attemptMock } from '../../data/mockExams/forms.js';
-import { verdictFor } from '../../services/examScoring';
+import { attemptVerdict } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
 import { completeLevelTest } from '../../services/lessonService.js';
@@ -169,8 +169,7 @@ const ModelltestResult = () => {
     if (!attemptIsThisTest) return;
     const curriculum = curriculumForTestSlug(examSlug);
     if (!curriculum) return;
-    const percent = Math.round((attempt.score / attempt.max_score) * 100);
-    if (verdictFor(percent, mock.passPercent) === 'nicht-bereit') return;
+    if (attemptVerdict(attempt, mock) === 'nicht-bereit') return;
     completeLevelTest(user.id, curriculum.level, levelTestNodeId(curriculum));
   }, [user, attempt, mock, examSlug, attemptIsThisTest]);
 
@@ -200,7 +199,7 @@ const ModelltestResult = () => {
   }
 
   const percent = Math.round((attempt.score / attempt.max_score) * 100);
-  const verdict = verdictFor(percent, mock.passPercent);
+  const verdict = attemptVerdict(attempt, mock);
   const passed = verdict !== 'nicht-bereit';
   const copy = mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
   const sections = attempt.section_scores || {};

@@ -296,7 +296,7 @@
    "difficulty": 1,
    "order": 14,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ich gehe gerner in das Museum.“ (Wort gerner) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“ Begin with “Ich”. Correct only the error. Correct only the word “gerner”.",
+   "questionEn": "Correct only the mistake: „Ich gehe gerner in das Museum.“ Begin with “Ich”. Write the whole sentence; change only the error. Write the whole sentence; change only the word “gerner”.",
    "options": null,
    "answer": "Ich gehe lieber in das Museum.",
    "accepted": [
@@ -707,7 +707,7 @@
    "difficulty": 2,
    "order": 10,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche ein Markt im Zentrum.“ (Beginnen Sie mit „Ich“)",
-   "questionEn": "Fix the case. Begin with “Ich”. Correct only the article.",
+   "questionEn": "Fix the case. Begin with “Ich”. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche einen Markt im Zentrum.",
    "accepted": [
@@ -729,7 +729,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Korrigieren Sie den Artikel: „Tim bezahlt der Kuchen an der Kasse.“ (Beginnen Sie mit „Tim“)",
-   "questionEn": "Fix the case. Begin with “Tim”. Correct only the article.",
+   "questionEn": "Fix the case. Begin with “Tim”. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Tim bezahlt den Kuchen an der Kasse.",
    "accepted": [
@@ -1173,7 +1173,7 @@
    "difficulty": 2,
    "order": 3,
    "questionDe": "Korrigieren Sie nur den Fehler: „Danach die Brücke kommt.“ (Verb auf Position 2) (Beginnen Sie mit „Danach“)",
-   "questionEn": "Fix the word order. Begin with “Danach”. Correct only the error. Put the verb in position 2.",
+   "questionEn": "Fix the word order. Begin with “Danach”. Write the whole sentence; change only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Danach kommt die Brücke.",
    "accepted": [
@@ -1193,7 +1193,7 @@
    "difficulty": 2,
    "order": 4,
    "questionDe": "Korrigieren Sie nur den Fehler: „Zuerst Sie gehen bis zur Kirche.“ (Verb auf Position 2) (Beginnen Sie mit „Zuerst“)",
-   "questionEn": "Fix the word order. Begin with “Zuerst”. Correct only the error. Put the verb in position 2.",
+   "questionEn": "Fix the word order. Begin with “Zuerst”. Write the whole sentence; change only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Zuerst gehen Sie bis zur Kirche.",
    "accepted": [
@@ -1273,7 +1273,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie nur den Fehler: „Die Straßenbahn zum Zentrum fährt.“ (Verb auf Position 2) (Beginnen Sie mit „Die Straßenbahn“)",
-   "questionEn": "Fix the word order. Begin with “Die Straßenbahn”. Correct only the error. Put the verb in position 2.",
+   "questionEn": "Fix the word order. Begin with “Die Straßenbahn”. Write the whole sentence; change only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Die Straßenbahn fährt zum Zentrum.",
    "accepted": [
@@ -2294,7 +2294,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Korrigieren Sie den Artikel: „Im Sommer fahren wir mit die Straßenbahn zum Bahnhof.“ (Beginnen Sie mit „Im Sommer“)",
-   "questionEn": "Fix the case after the preposition. Begin with “Im Sommer”. Correct only the article.",
+   "questionEn": "Fix the case after the preposition. Begin with “Im Sommer”. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Im Sommer fahren wir mit der Straßenbahn zum Bahnhof.",
    "accepted": [
@@ -3309,7 +3309,7 @@
    "difficulty": 1,
    "order": 12,
    "questionDe": "Korrigieren Sie nur den Fehler: „Das Taxi fährt von sieben zu zehn Uhr.“ (Wort zu)",
-   "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock. Correct only the error. Correct only the word “zu”.",
+   "questionEn": "Correct the sentence: The taxi runs from seven to ten o'clock. Write the whole sentence; change only the error. Write the whole sentence; change only the word “zu”.",
    "options": null,
    "answer": "Das Taxi fährt von sieben bis zehn Uhr.",
    "accepted": [
@@ -3590,7 +3590,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ich kann fliegen um neun Uhr.“ (Infinitiv am Satzende)",
-   "questionEn": "Fix the word order. Correct only the error. Put the infinitive at the end of the sentence.",
+   "questionEn": "Fix the word order. Write the whole sentence; change only the error. Put the infinitive at the end of the sentence.",
    "options": null,
    "answer": "Ich kann um neun Uhr fliegen.",
    "accepted": [
@@ -4383,7 +4383,7 @@
    "difficulty": 2,
    "order": 10,
    "questionDe": "Korrigieren Sie nur den Fehler: „Im Zimmer ist nicht Kissen.“ (Wort nicht) (Beginnen Sie mit „Im Zimmer“)",
-   "questionEn": "Fix the negation. Begin with “Im Zimmer”. Correct only the error. Correct only the word “nicht”.",
+   "questionEn": "Fix the negation. Begin with “Im Zimmer”. Write the whole sentence; change only the error. Write the whole sentence; change only the word “nicht”.",
    "options": null,
    "answer": "Im Zimmer ist kein Kissen.",
    "accepted": [
@@ -4405,7 +4405,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Korrigieren Sie nur den Fehler: „Der Vorhang ist kein am Fenster.“ (Wort kein) (Beginnen Sie mit „Der Vorhang“)",
-   "questionEn": "Fix the negation. Begin with “Der Vorhang”. Correct only the error. Correct only the word “kein”.",
+   "questionEn": "Fix the negation. Begin with “Der Vorhang”. Write the whole sentence; change only the error. Write the whole sentence; change only the word “kein”.",
    "options": null,
    "answer": "Der Vorhang ist nicht am Fenster.",
    "accepted": [
@@ -4803,7 +4803,7 @@
    "difficulty": 1,
    "order": 13,
    "questionDe": "Korrigieren Sie nur den Fehler: „Gestern ist mein Onkel glücklich.“ (Verb) (Beginnen Sie mit „Gestern“)",
-   "questionEn": "Correct the sentence: Yesterday my uncle was happy. Begin with “Gestern”. Correct only the error. Correct only the verb.",
+   "questionEn": "Correct the sentence: Yesterday my uncle was happy. Begin with “Gestern”. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Gestern war mein Onkel glücklich.",
    "accepted": [
@@ -4984,7 +4984,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Das ist meine Onkel.“ (Beginnen Sie mit „Das“)",
-   "questionEn": "Fix the form. Begin with “Das”. Correct only the possessive determiner.",
+   "questionEn": "Fix the form. Begin with “Das”. Write the whole sentence; change only the possessive determiner.",
    "options": null,
    "answer": "Das ist mein Onkel.",
    "accepted": [
@@ -5004,7 +5004,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Korrigieren Sie den Artikel: „Der Kind ist klein.“",
-   "questionEn": "Fix the article. Correct only the article.",
+   "questionEn": "Fix the article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das Kind ist klein.",
    "accepted": [
@@ -6573,7 +6573,7 @@
    "difficulty": 1,
    "order": 17,
    "questionDe": "Korrigieren Sie nur den Fehler: „Der Fisch war lecker, aber Tim hat früh gegangen.“ (Verb)",
-   "questionEn": "Correct the sentence: The fish was delicious, but Tim left early. Correct only the error. Correct only the verb.",
+   "questionEn": "Correct the sentence: The fish was delicious, but Tim left early. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Der Fisch war lecker, aber Tim ist früh gegangen.",
    "accepted": [
@@ -6593,7 +6593,7 @@
    "difficulty": 1,
    "order": 18,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ich habe die Getränke gebezahlt.“ (Verb) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: I paid for the drinks. Begin with “Ich”. Correct only the error. Correct only the verb.",
+   "questionEn": "Correct the sentence: I paid for the drinks. Begin with “Ich”. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Ich habe die Getränke bezahlt.",
    "accepted": [
@@ -6954,7 +6954,7 @@
    "difficulty": 2,
    "order": 10,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ana hat Milch getrinkt.“ (Verb) (Beginnen Sie mit „Ana“)",
-   "questionEn": "Fix the participle. Begin with “Ana”. Correct only the error. Correct only the verb.",
+   "questionEn": "Fix the participle. Begin with “Ana”. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Ana hat Milch getrunken.",
    "accepted": [
@@ -6996,7 +6996,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Korrigieren Sie nur den Fehler: „Wir haben das Fleisch kaufen.“ (Verb) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Fix the participle. Begin with “Wir”. Correct only the error. Correct only the verb.",
+   "questionEn": "Fix the participle. Begin with “Wir”. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Wir haben das Fleisch gekauft.",
    "accepted": [
@@ -7361,7 +7361,7 @@
    "difficulty": 1,
    "order": 13,
    "questionDe": "Korrigieren Sie nur den Fehler: „Die Hose gefällt mich.“ (Wort mich)",
-   "questionEn": "Correct the sentence: I like the trousers. Correct only the error. Correct only the word “mich”.",
+   "questionEn": "Correct the sentence: I like the trousers. Write the whole sentence; change only the error. Write the whole sentence; change only the word “mich”.",
    "options": null,
    "answer": "Die Hose gefällt mir.",
    "accepted": [
@@ -7561,7 +7561,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Die Hose ist für mein Bruder.“ (Beginnen Sie mit „Die Hose“)",
-   "questionEn": "Fix the case after the preposition. Begin with “Die Hose”. Correct only the possessive determiner.",
+   "questionEn": "Fix the case after the preposition. Begin with “Die Hose”. Write the whole sentence; change only the possessive determiner.",
    "options": null,
    "answer": "Die Hose ist für meinen Bruder.",
    "accepted": [
@@ -7581,7 +7581,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie den Artikel: „Ana geht ohne der Schal ins Kaufhaus.“ (Beginnen Sie mit „Ana“)",
-   "questionEn": "Fix the case after the preposition. Begin with “Ana”. Correct only the article.",
+   "questionEn": "Fix the case after the preposition. Begin with “Ana”. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ana geht ohne den Schal ins Kaufhaus.",
    "accepted": [
@@ -8111,7 +8111,7 @@
    "difficulty": 1,
    "order": 11,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ich würde gern einen Ausflug mache.“ (Verb) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Correct the sentence: I would like to go on a trip. Begin with “Ich”. Correct only the error. Correct only the verb.",
+   "questionEn": "Correct the sentence: I would like to go on a trip. Begin with “Ich”. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Ich würde gern einen Ausflug machen.",
    "accepted": [
@@ -8316,7 +8316,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Korrigieren Sie nur den Fehler in der Frage: „Wann der Film im Kino ist?“ (Verb auf Position 2)",
-   "questionEn": "Fix the question. Correct only the error. Put the verb in position 2.",
+   "questionEn": "Fix the question. Write the whole sentence; change only the error. Put the verb in position 2.",
    "options": null,
    "answer": "Wann ist der Film im Kino?",
    "accepted": [
@@ -8916,7 +8916,7 @@
    "difficulty": 1,
    "order": 12,
    "questionDe": "Korrigieren Sie nur den Fehler: „Ich schlafe nicht gut, denn mein Hals weh tut.“ (Verb auf Position 2 oder Wort denn)",
-   "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts. Correct only the error. Correct the verb position or the word “denn”.",
+   "questionEn": "Correct the sentence: I am not sleeping well, because my throat hurts. Write the whole sentence; change only the error. Correct the verb position or the word “denn”.",
    "options": null,
    "answer": "Ich schlafe nicht gut, denn mein Hals tut weh.",
    "accepted": [
@@ -9184,7 +9184,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie nur den Fehler: „Mein Mann schlaft nicht gut, sein Rücken tut weh.“ (Verb)",
-   "questionEn": "Fix the verb form. Correct only the error. Correct only the verb.",
+   "questionEn": "Fix the verb form. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Mein Mann schläft nicht gut, sein Rücken tut weh.",
    "accepted": [
@@ -9224,7 +9224,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Korrigieren Sie nur den Fehler: „Die Tablette helft gegen Fieber.“ (Verb) (Beginnen Sie mit „Die Tablette“)",
-   "questionEn": "Fix the verb form. Begin with “Die Tablette”. Correct only the error. Correct only the verb.",
+   "questionEn": "Fix the verb form. Begin with “Die Tablette”. Write the whole sentence; change only the error. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Die Tablette hilft gegen Fieber.",
    "accepted": [

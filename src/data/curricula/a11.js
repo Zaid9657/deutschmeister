@@ -142,6 +142,9 @@ export const DIALOG_NAMES = [
   // Wortfeld, the function words and THIS list only — the notice does not count there — and a
   // country name is a proper noun like Italien or Polen two entries up, not lexis to teach.
   'Marokko',
+  // The people of the checkpoint reading bank (a11.lesen.js), who are not the cast of either course: a cast name
+  // names only the cast (the independent score, 2026-11-20; scripts/a11-lesen-check.mjs guards it).
+  'Mia', 'Jonas', 'Sara', 'Ben', 'Novak', 'Becker', 'Meyer', 'Krause', 'Lorenz', 'Seidel', 'Vogt',
 ];
 
 // The taught words that answer a final check's own-answer gap (finalCheck.js `slotWords`, 2026-11-19):
@@ -268,8 +271,8 @@ export const CURRICULUM_A11 = {
             { canDo: 0, cue: { de: 'Guten Tag!', en: 'Good day!' }, taskDe: 'Antworten Sie Frau Kaya.', taskEn: 'Greet her back.', accepted: ['Guten Tag!', 'Guten Tag, Frau Kaya!', 'Hallo!'] },
             { canDo: 1, cue: { de: 'Wie heißen Sie?', en: 'What is your name?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer with your own name.', ownName: true, accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
             { canDo: 2, spell: ['Vogel', 'Weigel', 'Jensen'], taskDe: 'Frau Kaya buchstabiert. Schreiben Sie das Wort.', taskEn: 'Frau Kaya spells a guest’s name. Write the name.' },
-            { canDo: 3, cue: { de: 'Wie geht es Ihnen?', en: 'How are you?' }, taskDe: 'Antworten Sie.', taskEn: 'Answer her.', accepted: ['Mir geht es gut, danke.', 'Mir geht es gut.', 'Danke, mir geht es gut.'] },
-            { canDo: 3, taskDe: 'Und Frau Kaya? Fragen Sie.', taskEn: 'Now ask her how she is.', accepted: ['Und wie geht es Ihnen?', 'Wie geht es Ihnen?'] },
+            { canDo: 3, cue: { de: 'Wie geht es Ihnen?', en: 'How are you?' }, taskDe: 'Antworten Sie.', taskEn: 'Answer her.', accepted: ['Mir geht es gut, danke.', 'Mir geht es gut.', 'Danke, mir geht es gut.', 'Gut, danke.', 'Danke, gut.', 'Sehr gut, danke.', 'Danke, sehr gut.', 'Es geht mir gut.', 'Gut.'] },
+            { canDo: 3, taskDe: 'Und Frau Kaya? Fragen Sie.', taskEn: 'Now ask her how she is.', accepted: ['Und wie geht es Ihnen?', 'Wie geht es Ihnen?', 'Und Ihnen?', 'Und Sie?'] },
             { canDo: 0, cue: { de: 'Mir geht es gut, danke. Auf Wiedersehen!', en: 'I’m fine, thank you. Goodbye!' }, taskDe: 'Antworten Sie.', taskEn: 'Say goodbye.', accepted: ['Auf Wiedersehen!', 'Auf Wiedersehen, Frau Kaya!'] },
           ],
           repeat: [
@@ -2267,7 +2270,7 @@ export const CURRICULUM_A11 = {
               ] },
             // Lena says yes; the learner agrees the time (a „bis …" names the same day).
             { canDo: 1, taskDe: 'Lena hat Zeit. Sagen Sie ja zu dem Termin.', taskEn: 'Lena is free then. Agree to the time.', slot: 'when', whenPartial: true,
-              agree: ['Ja', 'Gern', 'Gerne', 'Gut', 'Sehr gut', 'Super', 'Prima', 'Toll', 'Schön', 'Okay', 'Das ist gut', 'Das passt', 'Das passt gut'],
+              answerWords: ['Ja', 'Gern', 'Gerne', 'Gut', 'Sehr gut', 'Super', 'Prima', 'Toll', 'Schön', 'Okay', 'Das ist gut', 'Das passt', 'Das passt gut'],
               accepted: ['Ja, gern.', 'Bis dann!', 'Bis …!', 'Dann bis …!', 'Dann …', 'Das passt mir.', 'Ich habe dann Zeit.', 'Ich habe Zeit.', 'Das ist gut für mich.',
                 '… ist gut.', '… passt.', '… passt gut.', '… habe ich Zeit.', '… bin ich frei.'],
               variants: [
@@ -2774,6 +2777,52 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // Final check: the learner travels and asks Herr Schmidt (Sie) at the station. Where they go is their
+        // own (`place`); the yes/no question puts the verb first (the rule of this Lektion); the price and two
+        // announcements are heard and written down, and change on a retake.
+        check: {
+          partner: 'Herr Schmidt',
+          open: { en: 'You’ll ask Herr Schmidt about your train journey and listen for important details. You can work through the answers at your own pace.', de: 'Sie fragen Herrn Schmidt nach Ihrer Zugreise und hören auf wichtige Angaben. Gehen Sie die Antworten in Ihrem eigenen Tempo durch.' },
+          passed: { en: 'You said where you were going, asked about departure and ticket prices, and understood the announcements. That can give you more confidence for your next train journey.', de: 'Sie haben Ihr Reiseziel genannt, nach Abfahrt und Fahrpreis gefragt und die Durchsagen verstanden. Das kann Ihnen für Ihre nächste Zugreise mehr Sicherheit geben.' },
+          turns: [
+            { canDo: 3, cue: { de: 'Guten Tag! Wohin fahren Sie?', en: 'Hello! Where are you going?' }, taskDe: 'Nennen Sie Ihr Ziel.', taskEn: 'Say where you are going.',
+              accepted: ['Ich fahre nach …', 'Nach …', 'Ich möchte nach … fahren.', 'Ich fahre nach Hause.', 'Nach Hause.', { frame: 'Ich fahre in die …', slotIn: ['Schweiz', 'Türkei', 'USA'] }, { frame: 'In die …', slotIn: ['Schweiz', 'Türkei', 'USA'] },
+                { frame: 'Ich fahre in den …', slotIn: ['Irak', 'Iran', 'Libanon', 'Sudan', 'Jemen'] }], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich fahre nach Berlin.' },
+            { canDo: 0, taskDe: 'Fragen Sie mit Ja/Nein-Frage.',
+              variants: [
+                { taskDe: 'Jetzt eine andere Reise, Ziel: Berlin. Stellen Sie Herrn Schmidt eine Ja/Nein-Frage zum Zug.', taskEn: 'Now another trip, to Berlin: ask Herr Schmidt a yes/no question: does the train go there?',
+                  accepted: ['Fährt der Zug nach Berlin?', 'Fährt der Zug auch nach Berlin?', 'Fährt dieser Zug nach Berlin?', 'Geht der Zug nach Berlin?', 'Ist das der Zug nach Berlin?', 'Fährt er nach Berlin?', 'Fährt der Zug hier nach Berlin?', 'Fährt ein Zug nach Berlin?'] },
+                { taskDe: 'Jetzt eine andere Reise, Ziel: Österreich. Stellen Sie Herrn Schmidt eine Ja/Nein-Frage zum Zug.', taskEn: 'Now another trip, to Austria (Österreich): ask Herr Schmidt a yes/no question: does the train go there?',
+                  accepted: ['Fährt der Zug nach Österreich?', 'Fährt der Zug auch nach Österreich?', 'Fährt dieser Zug nach Österreich?', 'Geht der Zug nach Österreich?', 'Ist das der Zug nach Österreich?', 'Fährt er nach Österreich?', 'Fährt der Zug hier nach Österreich?', 'Fährt ein Zug nach Österreich?'] },
+                { taskDe: 'Jetzt eine andere Reise, Ziel: Köln. Stellen Sie Herrn Schmidt eine Ja/Nein-Frage zum Zug.', taskEn: 'Now another trip, to Cologne (Köln): ask Herr Schmidt a yes/no question: does the train go there?',
+                  accepted: ['Fährt der Zug nach Köln?', 'Fährt der Zug auch nach Köln?', 'Fährt dieser Zug nach Köln?', 'Geht der Zug nach Köln?', 'Ist das der Zug nach Köln?', 'Fährt er nach Köln?', 'Fährt der Zug hier nach Köln?', 'Fährt ein Zug nach Köln?'] },
+              ] },
+            { canDo: 0, cue: { de: 'Ja, der Zug fährt heute.', en: 'Yes, the train goes today.' }, taskDe: 'Sie brauchen die Uhrzeit für Ihren Zug. Fragen Sie Herrn Schmidt.', taskEn: 'Ask when the train leaves.',
+              accepted: ['Wann fährt der Zug?', 'Um wie viel Uhr fährt der Zug?', 'Wann fährt er?', 'Um wie viel Uhr fährt er?', 'Wann ist die Abfahrt?', 'Wann fährt der Zug ab?', 'Wann fährt der nächste Zug?', 'Wann geht der Zug?', 'Um wie viel Uhr ist die Abfahrt?',
+                { frame: 'Wann fährt der Zug nach …?', slot: 'place' }, { frame: 'Um wie viel Uhr fährt der Zug nach …?', slot: 'place' }, { frame: 'Wann ist die Abfahrt nach …?', slot: 'place' }, { frame: 'Um wie viel Uhr ist die Abfahrt nach …?', slot: 'place' }],
+              slotWords: CHECK_PLACES, variants: [{ only: ['Berlin'] }, { only: ['Österreich'] }, { only: ['Köln'] }] },
+            { canDo: 1, taskDe: 'Sie brauchen den Preis für Ihre Fahrkarte. Fragen Sie Herrn Schmidt.', taskEn: 'Ask what the ticket costs.',
+              accepted: ['Was kostet die Fahrkarte?', 'Wie viel kostet die Fahrkarte?', 'Wie viel Euro kostet die Fahrkarte?', 'Wie teuer ist die Fahrkarte?', 'Was kostet eine Fahrkarte?', 'Wie viel kostet eine Fahrkarte?', 'Wie teuer ist eine Fahrkarte?', 'Was kostet meine Fahrkarte?', 'Wie viel kostet meine Fahrkarte?', 'Was kostet das Ticket?', 'Wie viel kostet das Ticket?', 'Was kostet das?', 'Wie viel kostet das?',
+                { frame: 'Was kostet die Fahrkarte nach …?', slot: 'place' }, { frame: 'Wie viel kostet die Fahrkarte nach …?', slot: 'place' }, { frame: 'Was kostet eine Fahrkarte nach …?', slot: 'place' }, { frame: 'Wie viel kostet eine Fahrkarte nach …?', slot: 'place' },
+                { frame: 'Kostet die Fahrkarte … Euro?', slot: 'number' }], slotWords: CHECK_PLACES, variants: [{ only: ['Berlin'] }, { only: ['Österreich'] }, { only: ['Köln'] }] },
+            { canDo: 1, taskDe: 'Herr Schmidt sagt den Preis. Schreiben Sie ihn auf.', taskEn: 'Herr Schmidt says the price. Write it down.',
+              variants: [{ listen: 'Die Fahrkarte kostet fünfzehn Euro.' }, { listen: 'Die Fahrkarte kostet achtzehn Euro.' }, { listen: 'Die Fahrkarte kostet dreißig Euro.' }] },
+            { canDo: 2, taskDe: 'Eine Durchsage. Schreiben Sie auf, wann der Zug jetzt fährt.', taskEn: 'An announcement. Write down when the train leaves now.',
+              variants: [
+                { listen: 'Durchsage: Der Zug nach Berlin hat Verspätung. Er fährt um neun Uhr dreißig.', time: '9:30', example: '9.30 Uhr' },
+                { listen: 'Durchsage: Der Zug nach Österreich hat leider Verspätung. Er fährt um zehn Uhr fünfzehn.', time: '10:15', example: '10.15 Uhr' },
+                { listen: 'Durchsage: Der Zug nach Köln hat Verspätung. Er fährt um elf Uhr vierzig.', time: '11:40', example: '11.40 Uhr' },
+              ] },
+            { canDo: 2, taskDe: 'Noch eine Durchsage. Schreiben Sie das Gleis auf.', taskEn: 'Another announcement. Write down the platform (Gleis).',
+              variants: [{ listen: 'Durchsage: Der Zug nach Berlin fährt heute von Gleis sieben.' }, { listen: 'Durchsage: Der Zug nach Österreich fährt heute von Gleis drei.' }, { listen: 'Durchsage: Der Zug nach Köln fährt heute von Gleis zwölf.' }] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: yes/no questions (Fährt der Zug …?)', de: 'Teil 2: Ja/Nein-Fragen (Fährt der Zug …?)' }],
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Lektion 8, Part 2: telling the time', de: 'Lektion 8, Teil 2: die Uhrzeit sagen' }],
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
+          ],
+        },
       },
       nextHook: {
         de: 'Im Kurs fragt Lena Tim: Was hast du gestern gemacht? Und für Freitag haben die beiden einen Plan.',
@@ -2850,6 +2899,7 @@ export const CURRICULUM_A11 = {
         title: 'Ja/Nein-Fragen: das Verb steht vorn',
         bodyDe: 'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → **Fährt** der Zug? Die Antwort ist **ja** oder **nein**. Die Satzmelodie steigt am Ende. **fahren** ist unregelmäßig: du **fährst**, er **fährt**.',
         bodyEn: 'A yes/no question needs no helper word like the English "do". Just move the verb to the front: **Der Zug fährt.** (The train is leaving.) → **Fährt der Zug?** (Is the train leaving?). The answer is **ja** or **nein**, and your voice goes up at the end of the question. The verb **fahren** (to go by train, bus or car) changes its vowel in two forms: du **fährst**, er **fährt**.',
+        bodyAr: 'لا يحتاج سؤال نعم/لا إلى كلمة مساعدة مثل do في الإنجليزية. فقط انقل الفعل إلى البداية: «Der Zug fährt» (القطار يغادر) → «Fährt der Zug?» (هل يغادر القطار؟). يكون الجواب ja أو nein، وترتفع نبرة صوتك في نهاية السؤال. يتغيّر حرف العلة في الفعل fahren (الذهاب بالقطار أو الحافلة أو السيارة) في صيغتين: du fährst، er fährt.',
         examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte zwanzig Euro?'],
         ruleSlug: 'yes-no-questions',
       },
@@ -2992,6 +3042,43 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // Final check: before class the learner talks with Lena (du) about their own day. „Ich habe gearbeitet"
+        // and „Was hast du gestern gemacht?" are the two fixed expressions; the verbs of two parts (the rule of
+        // this Lektion) close the sentence; the day Lena shops changes on a retake.
+        check: {
+          partner: 'Lena',
+          open: { en: 'You’ll talk with Lena about your day and arrange to go shopping together. The words you already know are a good place to start.', de: 'Sie sprechen mit Lena über Ihren Tag und verabreden sich zum Einkaufen. Die Wörter, die Sie schon kennen, sind ein guter Anfang.' },
+          passed: { en: 'You and Lena talked about yesterday, and you shared your morning routine and whether and when you work. You also made shopping plans together. You’re learning to share more of your life in German.', de: 'Sie haben sich mit Lena über gestern ausgetauscht, von Ihrem Tagesbeginn erzählt und gesagt, ob und wann Sie arbeiten. Außerdem haben Sie sich zum Einkaufen verabredet. Sie lernen, immer mehr aus Ihrem Leben auf Deutsch zu erzählen.' },
+          turns: [
+            { canDo: 1, cue: { de: 'Hallo! Was hast du gestern gemacht?', en: 'Hi! What did you do yesterday?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer in one sentence.',
+              accepted: ['Ich habe gearbeitet.', 'Ich habe nicht gearbeitet.', 'Ich habe gestern gearbeitet.', 'Ich habe eine Pause gemacht.', { frame: 'Ich habe … gearbeitet.', slot: 'adjunct' }, { frame: 'Ich …', slot: 'past' }] },
+            { canDo: 1, taskDe: 'Jetzt Lena: Fragen Sie nach ihrem Tag gestern.', taskEn: 'Now ask Lena what she did yesterday.',
+              accepted: ['Was hast du gestern gemacht?', 'Was hast du gemacht?', 'Und du?', 'Gestern, was hast du gemacht?'] },
+            { canDo: 0, cue: { de: 'Und was machst du morgens?', en: 'And what do you do in the morning?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you do in the morning, in one sentence.',
+              accepted: ['Ich …'], slot: 'activity', partOfDay: 'morgen', example: 'Ich dusche und frühstücke.' },
+            { canDo: 3, cue: { de: 'Um wie viel Uhr stehst du auf?', en: 'What time do you get up?' }, taskDe: 'Sagen Sie, um wie viel Uhr Sie aufstehen.', taskEn: 'Say what time you get up, in one sentence.',
+              accepted: ['Ich stehe um … auf.', 'Um … stehe ich auf.', 'Ich stehe morgens um … auf.', 'Morgens stehe ich um … auf.', 'Morgens um … stehe ich auf.', { frame: 'Um … stehe ich … auf.', slot: 'when' }, { frame: '… stehe ich um … auf.', slot: 'when' }, { frame: 'Ich stehe … um … auf.', slot: 'when' }],
+              slot: 'clock', example: 'Ich stehe um sechs auf.' },
+            { canDo: 3, cue: { de: 'Und wann arbeitest du?', en: 'And when do you work?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you work, in one sentence.',
+              accepted: ['Ich arbeite …', '… arbeite ich.'], slot: 'when', none: 'job', example: 'Ich arbeite am Dienstag.' },
+            { canDo: 2, taskDe: 'Fragen Sie Lena.',
+              variants: [
+                { taskDe: 'Einkaufen am Samstag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Saturday: ask Lena if she is going shopping then.', when: 'samstag', example: 'Kaufst du am Samstag ein?' },
+                { taskDe: 'Einkaufen am Freitag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Friday: ask Lena if she is going shopping then.', when: 'freitag', example: 'Kaufst du am Freitag ein?' },
+                { taskDe: 'Einkaufen am Montag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Monday: ask Lena if she is going shopping then.', when: 'montag', example: 'Kaufst du am Montag ein?' },
+              ],
+              accepted: ['Kaufst du … ein?', 'Gehst du … einkaufen?'], slot: 'when', thingsAfter: true },
+            { canDo: 2, cue: { de: 'Ja, dann kaufe ich ein. Kommst du mit?', en: 'Yes, I’m going shopping then. Are you coming along?' }, taskDe: 'Sagen Sie, dass Sie mitkommen, mit einem Satz.', taskEn: 'Say that you are coming along, in one sentence.',
+              accepted: ['Ja, ich komme mit.', 'Ich komme mit.', 'Ich komme gern mit.', 'Dann komme ich mit.', 'Ich komme mit dir.', 'Ich komme.', { frame: 'Ich komme … mit.', slot: 'when' }, { frame: '… komme ich mit.', slot: 'when' }], whenPartial: true,
+              leadWords: ['Ja', 'Gern', 'Gerne', 'Gut', 'Super', 'Prima', 'Toll', 'Okay'], variants: [{ when: 'samstag' }, { when: 'freitag' }, { when: 'montag' }] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ich kaufe … ein', de: 'Teil 2: ich kaufe … ein' }],
+            [{ en: 'Part 2: ich stehe … auf', de: 'Teil 2: ich stehe … auf' }, { en: 'Lektion 8, Part 2: um, am', de: 'Lektion 8, Teil 2: um, am' }],
+          ],
+        },
       },
       nextHook: {
         de: 'Ana hat bald Geburtstag und plant eine Party. Wen lädt sie ein?',
@@ -3068,6 +3155,7 @@ export const CURRICULUM_A11 = {
         title: 'Trennbare Verben: die Satzklammer',
         bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an** ist eine feste Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** stehen hier als Ganzes — das Muster (Perfekt) kommt in A1.2.',
         bodyEn: 'Some verbs have two parts: **ein|kaufen** (to shop). In a sentence the verb stays in second position (first in a yes/no question) and the prefix goes to the end: **Ich kaufe am Freitag ein.** Same with **auf|stehen** (get up), **an|rufen** (call), **mit|bringen** (bring along). **Ich rufe dich an** is a set phrase. **schlafen** changes its vowel: er **schläft**. **Gemacht** and **gearbeitet** are learned whole; the pattern (Perfekt) comes in A1.2.',
+        bodyAr: 'بعض الأفعال لها جزءان: ein|kaufen (التسوّق). في الجملة، يبقى الفعل في المرتبة الثانية (وفي الأولى في سؤال نعم/لا)، ويأتي الجزء الأول في نهاية الجملة: «Ich kaufe am Freitag ein». وكذلك مع auf|stehen (النهوض)، an|rufen (الاتصال)، mit|bringen (إحضار شيء معك). «Ich rufe dich an» عبارة ثابتة. يتغيّر حرف العلة في schlafen: er schläft. احفظ gemacht وgearbeitet كلمتين كاملتين؛ وستأتي القاعدة (Perfekt) في A1.2.',
         examples: ['Ich stehe um sechs auf. Ich bin müde.', 'Ja, ich kaufe am Freitag ein. Kommst du mit?'],
         ruleSlug: 'separable-verbs-intro',
       },
@@ -3198,6 +3286,40 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // Final check: the learner invites Lena (du) to their own party. The month of their birthday and who
+        // comes are their own (`month`, `object` with the possessives that are the rule of this Lektion);
+        // goodbye takes „Mach's gut“ or „Bis bald“ (`answerWords`), a wish „Schönen Tag noch“.
+        check: {
+          partner: 'Lena',
+          open: { en: 'A party begins with an invitation. You’ll invite Lena to yours in German and tell her about your celebration.', de: 'Eine Feier beginnt mit einer Einladung. Sie laden Lena auf Deutsch zu Ihrer Feier ein und erzählen ihr davon.' },
+          passed: { en: 'You invited Lena, talked about your birthday and guests, and said goodbye with good wishes. You’re heading into the fourth checkpoint with something to feel proud of.', de: 'Sie haben Lena eingeladen, über Ihren Geburtstag und Ihre Gäste gesprochen und sich mit guten Wünschen verabschiedet. Mit diesem Erfolg können Sie stolz in den vierten Checkpoint gehen.' },
+          turns: [
+            { canDo: 0, cue: { de: 'Hallo! Was machst du am Samstag?', en: 'Hi! What are you doing on Saturday?' }, taskDe: 'Sie feiern am Samstag ein Fest. Laden Sie Lena ein.', taskEn: 'You are having a party on Saturday. Invite Lena.',
+              accepted: ['Ich lade dich … ein.', 'Ich lade dich ein.', 'Ich möchte dich … einladen.', 'Ich möchte dich einladen.', 'Kommst du …?', 'Möchtest du … kommen?', 'Komm …!'],
+              slot: 'invite', when: 'samstag', whenPartial: true, example: 'Ich lade dich zum Fest ein.' },
+            { canDo: 1, cue: { de: 'Ja, ich komme gern! Wann ist dein Geburtstag?', en: 'Yes, I’d love to come! When is your birthday?' }, taskDe: 'Sagen Sie, wann Sie Geburtstag haben. Ein Datum mit Zahlen geht auch.', taskEn: 'Say when your birthday is. A date in numbers is fine.',
+              accepted: ['Mein Geburtstag ist im …', 'Ich habe im … Geburtstag.', 'Im … habe ich Geburtstag.', 'Ich habe Geburtstag im …', 'Im …', { frame: 'Mein Geburtstag ist am …', day: true }, { frame: 'Ich habe am … Geburtstag.', day: true },
+                { frame: 'Am … habe ich Geburtstag.', day: true }, { frame: 'Ich habe Geburtstag am …', day: true }, { frame: 'Am …', day: true }],
+              slot: 'month', example: 'Mein Geburtstag ist im Mai.' },
+            { canDo: 1, taskDe: 'Fragen Sie Lena nach ihrem Geburtstag.', taskEn: 'Now ask Lena when her birthday is.',
+              accepted: ['Wann ist dein Geburtstag?', 'Und wann ist dein Geburtstag?', 'Und dein Geburtstag?', 'Wann hast du Geburtstag?', 'In welchem Monat ist dein Geburtstag?', 'In welchem Monat hast du Geburtstag?', 'An welchem Datum hast du Geburtstag?', 'Und du, wann ist dein Geburtstag?'] },
+            { canDo: 2, cue: { de: 'Wer kommt noch?', en: 'Who else is coming?' }, taskDe: 'Sagen Sie mit einem Satz, wer zu Ihrem Fest kommt.', taskEn: 'Say who is coming to your party, in one sentence.',
+              accepted: [{ frame: '… kommen.', count: 'many' }, { frame: '… kommt.', count: 'one' }], slot: 'object', people: true, example: 'Meine Mama und mein Papa kommen.' },
+            { canDo: 2, cue: { de: 'Und was möchtest du zum Geburtstag?', en: 'And what would you like for your birthday?' }, taskDe: 'Sagen Sie, was Sie sich wünschen.', taskEn: 'Say what you would like as a present.',
+              accepted: ['Ich möchte …', 'Vielleicht …', 'Ich hätte gern …', 'Ich wünsche mir …', '…'], slot: 'thing', example: 'Ich möchte ein Buch.' },
+            { canDo: 3, cue: { de: 'Ich gehe einkaufen.', en: 'I’m going shopping.' }, taskDe: 'Wünschen Sie Lena einen schönen Tag.', taskEn: 'Wish Lena a nice day.',
+              accepted: ['Schönen Tag noch!', 'Einen schönen Tag noch!', 'Schönen Tag!', 'Einen schönen Tag!', 'Ich wünsche dir einen schönen Tag!', 'Hab einen schönen Tag!'], leadWords: ['Tschüss', 'Okay', 'Danke', 'Mach’s gut', 'Mach\'s gut', 'Machs gut', 'Bis bald', 'Bis später', 'Bis dann'] },
+            { canDo: 3, cue: { de: 'Danke! Tschüss!', en: 'Thanks! Bye!' }, taskDe: 'Verabschieden Sie sich von Lena.', taskEn: 'Say goodbye to Lena.',
+              accepted: ['Mach’s gut, bis bald!', 'Bis …!'], slot: 'when', when: 'samstag', whenPartial: true,
+              answerWords: ['Mach’s gut', 'Mach\'s gut', 'Machs gut', 'Bis bald', 'Bis später', 'Bis dann', 'Tschüss', 'Auf Wiedersehen'], leadWords: ['Ja', 'Okay', 'Danke'] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 1: the words', de: 'Teil 1: die Wörter' }],
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: mein, dein, sein, ihr', de: 'Teil 2: mein, dein, sein, ihr' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 1: the message from Mum and Dad', de: 'Teil 1: die Nachricht von Mama und Papa' }],
+          ],
+        },
       },
       nextHook: {
         de: 'In A1.2 geht es weiter: Ana sucht das Rathaus. Findet sie den Weg?',
@@ -3291,6 +3413,7 @@ export const CURRICULUM_A11 = {
         title: 'mein, dein, sein, ihr – Possessivartikel',
         bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie: eine Frau oder mehrere), **Ihr** Büro (Sie, immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
         bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book, or their book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',
+        bodyAr: 'توضّح أداة الملكية لمن يكون الشيء أو الشخص: mein Geschenk (هديتي)، dein Bruder (أخوك، بصيغة غير رسمية)، sein Handy (هاتفه)، ihr Buch (كتابها أو كتابهم)، Ihr Büro (مكتبك، بصيغة مهذبة، وبحرف I كبير دائمًا). قبل الاسم المؤنث وفي الجمع، أضف -e: meine Mama. للمجموعات: unser Fest (حفلتنا، wir)، euer Fest (حفلتكم، لعدة أشخاص، ihr). وقبل الكلمات التي تأخذ die: unsere، eure.',
         examples: ['Ana, wann ist dein Geburtstag?', 'Und dein Bruder? Kommt seine Frau auch?'],
         ruleSlug: 'possessive-articles',
       },

@@ -459,7 +459,7 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
 });
 
 test('one honest-none rule for the whole course; a yes agrees; a time may follow „frei“ (courses session, 2026-11-20)', () => {
-  const NONE = { job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.'], hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'] };
+  const NONE = { job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.', 'Ich bin arbeitslos.'], hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'] };
   const frame = (t) => String(t.accepted[0]?.frame ?? t.accepted[0]);
   let personal = 0;
   for (const l of withCheck) {
@@ -469,10 +469,11 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
         const own = !t.ownName && !writtenOnly(t) && frame(t).includes('…') && !frame(t).trim().endsWith('?');
         if (!own) return;
         // A fact of the learner's life a real person may not have (a job, a hobby): the none passes.
-        if (NONE[t.slot]) { personal += 1; for (const none of NONE[t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
+        if (NONE[t.none || t.slot]) { personal += 1; for (const none of NONE[t.none || t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
         // Everywhere else the turn asks for the can-do itself: „nichts“ in the learner's gap names nothing.
         assert.equal(typedResult(t, frame(t).replaceAll('…', 'nichts')), RESULT.WRONG, `${where}: ${frame(t).replaceAll('…', 'nichts')}`);
-        for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(typedResult(t, none), RESULT.WRONG, `${where}: ${none}`);
+        // A name is open: „Ich bin arbeitslos“ cannot be told from „Ich bin Carlos“ typed small, so name turns are left out.
+        if (t.slot !== 'name') for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(typedResult(t, none), RESULT.WRONG, `${where}: ${none}`);
       });
     }
   }
@@ -493,6 +494,95 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
   for (const right of ['Ich bin frei am Samstag.', 'Ich habe Zeit am Wochenende.']) assert.equal(typedResult(at(7)[4], right), RESULT.CORRECT, right);
   assert.equal(typedResult(at(8)[5], 'Ich habe Zeit am Dienstag abends.'), RESULT.CORRECT);
   assert.equal(typedResult(at(7)[4], 'Ich bin frei am Tisch.'), RESULT.WRONG, 'a place is no time');
+});
+
+test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a month, an invitation, possessives, goodbye (batch 4, 2026-11-20)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  const [where, yesNo, when, price, heardPrice, delay, platform] = at(10);
+  assert.equal(typedResult(where, 'Ich fahre nach Damaskus.'), RESULT.CORRECT, 'a place of the learner’s own');
+  assert.equal(typedResult(where, 'Ich fahre in Berlin.'), RESULT.WRONG);
+  assert.equal(typedResult(yesNo, 'Fährt der Zug nach Berlin?'), RESULT.CORRECT);
+  assert.equal(typedResult(yesNo, 'Der Zug fährt nach Berlin?'), RESULT.CORRECT, 'a question in statement order, as everywhere in the course (first DaF review)');
+  assert.equal(typedResult(heardPrice, 'fünfzehn Uhr'), RESULT.WRONG, 'a price is no clock time');
+  assert.equal(typedResult(platform, 'um sieben Uhr'), RESULT.WRONG);
+  assert.equal(typedResult(when, 'Wann fährt der Zug ab?'), RESULT.CORRECT);
+  assert.equal(typedResult(price, 'Kostet die Fahrkarte zwanzig Euro?'), RESULT.CORRECT);
+  assert.equal(typedResult(heardPrice, '15 Euro'), RESULT.CORRECT);
+  assert.equal(typedResult(delay, 'halb zehn'), RESULT.CORRECT);
+  assert.equal(typedResult(delay, '21.30'), RESULT.WRONG, 'the evening, for a morning train');
+  assert.equal(typedResult(platform, 'Gleis 7'), RESULT.CORRECT);
+  const [yesterday, , morning, , work, shop, along] = at(11);
+  assert.equal(typedResult(yesterday, 'Ich habe nicht gearbeitet.'), RESULT.CORRECT);
+  assert.equal(typedResult(yesterday, 'Ich habe arbeiten.'), RESULT.WRONG);
+  assert.equal(typedResult(morning, 'Ich dusche und frühstücke.'), RESULT.CORRECT, '„frühstücke“ is a verb here, not the plural „Frühstücke“');
+  assert.equal(typedResult(morning, 'Ich stehe um sechs auf und dusche.'), RESULT.CORRECT);
+  assert.equal(typedResult(morning, 'Ich dusche abends.'), RESULT.WRONG, 'the morning was asked about (`partOfDay`)');
+  assert.equal(typedResult(yesterday, 'Ich habe gestern Sport gemacht.'), RESULT.CORRECT, 'the second fixed expression');
+  assert.equal(typedResult(work, 'Ich arbeite von acht bis vier.'), RESULT.CORRECT, 'a span of time');
+  assert.equal(typedResult(work, 'Ich arbeite nicht.'), RESULT.CORRECT, 'the honest none of a job (`none`)');
+  assert.equal(typedResult(shop, 'Kaufst du am Samstag ein?'), RESULT.CORRECT);
+  assert.equal(typedResult(shop, 'Kaufst du am Samstag?'), RESULT.WRONG, 'the prefix closes the sentence');
+  assert.equal(typedResult(along, 'Ja, gern, ich komme mit.'), RESULT.CORRECT);
+  assert.equal(typedResult(along, 'Ja, gern.'), RESULT.WRONG, '`leadWords` open an answer but are none alone');
+  const [invite, month, askMonth, guests, present, wish, bye] = at(12);
+  assert.equal(typedResult(invite, 'Ich lade dich zu meiner Party ein.'), RESULT.CORRECT);
+  assert.equal(typedResult(invite, 'Ich lade dich zum Party ein.'), RESULT.WRONG, '„zur Party“');
+  assert.equal(typedResult(invite, 'Ich lade dich am Sonntag ein.'), RESULT.WRONG, 'the party is on Saturday');
+  assert.equal(typedResult(invite, 'Am Samstag ist meine Party. Kommst du?'), RESULT.CORRECT);
+  for (const right of ['Mein Geburtstag ist im Mai.', 'Mein Geburtstag ist am 3. Mai.', 'Ich habe im März Geburtstag.']) assert.equal(typedResult(month, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(month, 'Mein Geburtstag ist am Mai.'), RESULT.WRONG, 'a month takes „im“');
+  assert.equal(typedResult(askMonth, 'Wann ist deine Geburtstag?'), RESULT.WRONG);
+  assert.equal(typedResult(guests, 'Mein Bruder und seine Frau kommen.'), RESULT.CORRECT);
+  assert.equal(typedResult(guests, 'Lena und Tim kommen.'), RESULT.CORRECT, 'people of the story are guests too');
+  assert.equal(typedResult(guests, 'Meine Eltern kommt.'), RESULT.WRONG, '„die Eltern“ is a plural only');
+  assert.equal(typedResult(guests, 'Mein Mama kommt.'), RESULT.WRONG);
+  assert.equal(typedResult(guests, 'Meine Freunde kommen zur Party.'), RESULT.CORRECT, 'where it is for, at the end');
+  assert.equal(typedResult(present, 'Ich möchte ein Buch.'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Tschüss, mach’s gut!'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.CORRECT, 'any goodbye; a day only the party’s (courses session)');
+  assert.equal(typedResult(bye, 'Bis Samstag!'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Bis Montag!'), RESULT.WRONG);
+  assert.equal(typedResult(morning, 'Ich aufstehe.'), RESULT.WRONG, 'a verb of two parts keeps its prefix at the end');
+  assert.equal(typedResult(morning, 'Ich sehe fern.'), RESULT.CORRECT);
+  for (const right of ['Ich habe Fußball gespielt.', 'Ich bin ins Kino gegangen.', 'Ich war zu Hause.', 'Ich habe eingekauft.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
+  for (const wrong of ['Ich habe arbeiten.', 'Ich bin gearbeitet.', 'Ich habe gearbeiten.', 'Ich habe aufgestanden.']) assert.equal(typedResult(yesterday, wrong), RESULT.WRONG, wrong);
+  assert.equal(typedResult(invite, 'Ich mache ein Fest. Kommst du auch?'), RESULT.CORRECT, 'an invitation in two sentences');
+  assert.equal(typedResult(invite, 'Ich feiere am Sonntag. Kommst du?'), RESULT.WRONG, 'the party is on Saturday');
+  assert.equal(typedResult(guests, 'Ein Stuhl kommt.'), RESULT.WRONG, 'a guest is a person');
+  // Every activity gap of the course refuses a verb of two parts with its prefix still on (courses session).
+  let activityGaps = 0;
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      for (const t of sitting(l, r)) {
+        for (const a of t.accepted) {
+          const frame = String(a.frame ?? a);
+          if ((a.slot ?? t.slot) !== 'activity' || !frame.includes('…')) continue;
+          activityGaps += 1;
+          for (const verb of ['einkaufe', 'aufstehe', 'fernsehe']) assert.equal(typedResult({ ...t, accepted: [a] }, frame.replace('…', verb)), RESULT.WRONG, `${l.id}: ${frame.replace('…', verb)}`);
+          assert.notEqual(typedResult({ ...t, accepted: [a] }, frame.replace('…', 'kaufe ein')), RESULT.WRONG, `${l.id}: ${frame.replace('…', 'kaufe ein')}`);
+        }
+      }
+    }
+  }
+  assert.ok(activityGaps >= 3, 'Lektion 7 and Lektion 11');
+  assert.equal(typedResult(bye, 'Tschüss, bis bald!'), RESULT.CORRECT);
+  assert.equal(typedResult(at(11)[1], 'Was hast du morgen gemacht?'), RESULT.WRONG, 'the question is about yesterday');
+  assert.equal(typedResult(shop, 'Kaufst du am Samstag Brot ein?'), RESULT.CORRECT);
+  assert.equal(typedResult(askMonth, 'Und du, Lena, wann hast du Geburtstag?'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Guten Tag!'), RESULT.WRONG);
+  assert.equal(typedResult(wish, 'Schönen Tag noch!'), RESULT.CORRECT);
+  assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[11]), { kind: 'checkpoint', nr: 4 }, 'Lektion 12 leads to the fourth checkpoint, never a Lektion 13');
+  // The second DaF review and corpus: one journey per sitting, heard numbers that are no price, the fixed expressions.
+  assert.equal(typedResult(at(10, 1)[2], 'Wann fährt der Zug nach Berlin?'), RESULT.WRONG, 'sitting 2 travels to Österreich');
+  assert.equal(typedResult(at(10, 1)[2], 'Wann fährt der Zug nach Österreich?'), RESULT.CORRECT);
+  assert.equal(typedResult(heardPrice, '15 Fahrkarten'), RESULT.WRONG, 'a price counts euros');
+  assert.equal(typedResult(at(10, 1)[4], 'Sie kostet 18 Euro.'), RESULT.CORRECT);
+  assert.equal(typedResult(delay, 'Der Zug fährt um neun Uhr dreißig.'), RESULT.CORRECT, 'the heard time in the heard words');
+  assert.equal(typedResult(yesterday, 'Ich habe Lesen gemacht.'), RESULT.WRONG, '„gemacht“ only where it is German');
+  assert.equal(typedResult(yesterday, 'Gestern habe ich im Büro gearbeitet.'), RESULT.CORRECT);
+  assert.equal(typedResult(month, 'Am dritten Mai.'), RESULT.CORRECT);
+  assert.equal(typedResult(wish, 'Schönen Tag und bis später!'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Mach’s gut und bis bald!'), RESULT.CORRECT);
 });
 
 test('spelling, a heard number and a written message are written, never spoken', () => {
@@ -523,4 +613,75 @@ test('a can-do is shown only when every one of its turns was shown', () => {
   assert.deepEqual(canDoShown(turns, all, 4), [true, true, true, true]);
   const farewellMissed = [...all.slice(0, -1), 'missed'];
   assert.deepEqual(canDoShown(turns, farewellMissed, 4), [false, true, true, true]);
+});
+
+test('one spelling fold: every blind-corpus answer with ä, ö, ü or ß grades the same typed with ae, oe, ue, ss (2026-11-20)', () => {
+  const ascii = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ß/g, 'ss');
+  const dir = new URL('../docs/course-factory/a11-lektion-rollout/corpora/', import.meta.url);
+  let n = 0;
+  for (const batch of ['batch-1', 'batch-2', 'batch-3', 'batch-4']) {
+    for (const name of ['corpus-1.json', 'corpus-2.json', 'corpus-2-avoid-obvious.json', 'corpus-3-most-common.json']) {
+      let raw;
+      try { raw = readFileSync(new URL(`${batch}/${name}`, dir), 'utf8'); } catch { continue; }
+      for (const it of JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)).items) {
+        if (!/[äöüß]/i.test(it.answer)) continue;
+        const turn = sitting(CURRICULUM_A11.lektionen[it.lektion - 1], (it.sitting || 1) - 1)[it.turn - 1];
+        if (!turn) continue;
+        n += 1;
+        const [a, b] = [typedResult(turn, it.answer), typedResult(turn, ascii(it.answer))];
+        assert.equal(b === RESULT.WRONG, a === RESULT.WRONG, `L${it.lektion}: ${it.answer} → ${a}, ${ascii(it.answer)} → ${b}`);
+      }
+    }
+  }
+  assert.ok(n > 300, `${n} answers`);
+  // The paths the independent score found refused: a sign-off, a measure, a choice gap.
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  assert.equal(typedResult(at(2)[6], 'Guten Tag, ich heisse Zaid. Ich bin am 12.03.1995 geboren. Viele Gruesse, Zaid'), RESULT.CORRECT);
+  assert.equal(typedResult(at(9)[2], 'Ich haette gern ein Stueck Kuchen.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(10)[0], 'Ich fahre in die Tuerkei.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(2)[2], 'Ich bin muede.'), RESULT.WRONG, '„müde“ is no job, however it is typed');
+});
+
+test('the own-word policy: closed lists for languages and countries, jobs by list or shape, an unknown word accepted and named (2026-11-20)', async () => {
+  const { uncheckedWords } = await import('../src/lib/lesson/finalCheck.js');
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  const [, live, job] = at(2);
+  const lang = at(3)[3];
+  for (const wrong of ['Sie spricht Limonade.', 'Sie spricht Brötchen.', 'Sie spricht Syrien.']) assert.equal(typedResult(lang, wrong), RESULT.WRONG, wrong);
+  for (const right of ['Sie spricht Tigrinya.', 'Sie spricht Tigrinisch.', 'Sie spricht Kurdisch und Arabisch.']) assert.notEqual(typedResult(lang, right), RESULT.WRONG, right);
+  for (const wrong of ['Ich bin Limonade.', 'Ich bin muede.', 'Ich bin Brötchen.', 'Ich bin Bremen.']) assert.equal(typedResult(job, wrong), RESULT.WRONG, wrong);
+  for (const right of ['Ich bin Tischler.', 'Ich bin Bauingenieur.', 'Ich bin arbeitslos.']) assert.equal(typedResult(job, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(2)[0], 'Ich komme aus Tuerkei.'), RESULT.WRONG, '„aus der Türkei“');
+  assert.equal(typedResult(at(2)[0], 'Ich komme aus der Tuerkei.'), RESULT.CORRECT);
+  // The learner is told when the word itself was not checked, and only then.
+  assert.deepEqual(uncheckedWords(live, 'Ich wohne in Nordenham.'), ['Nordenham']);
+  assert.deepEqual(uncheckedWords(live, 'Ich wohne in Hamburg.'), []);
+  assert.deepEqual(uncheckedWords(job, 'Ich bin Bauingenieur.'), ['Bauingenieur']);
+  assert.deepEqual(uncheckedWords(at(6)[3], 'Hier ist Zaid.'), [], 'a name is no unchecked word');
+  assert.match(T.en['check.unchecked'], /\{word\}/);
+  assert.match(T.de['check.unchecked'], /\{word\}/);
+  assert.match(readFileSync('src/components/lesson/CheckStage.jsx', 'utf8'), /uncheckedWords\(turn, value\)/);
+});
+
+test('natural answers: a counter-question or a degree word after a complete answer, and „mein“ for the learner’s own thing (2026-11-20)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  // Every fixed statement answer of every check still passes with a counter-question after it.
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((t, i) => {
+        if (t.ownName || t.spell || t.listen || t.parts) return;
+        for (const a of t.accepted.filter((x) => typeof x === 'string' && !x.includes('…') && !/\?\s*$/.test(x))) {
+          const b = `${a.replace(/[.!]?\s*$/, '.')} ${l.guided.check.partner === 'Lena' ? 'Und du?' : 'Und Sie?'}`;
+          assert.notEqual(typedResult(t, b), RESULT.WRONG, `${l.id} sitting ${r + 1} turn ${i + 1}: ${b}`);
+        }
+      });
+    }
+  }
+  for (const right of ['Danke, gut.', 'Danke, gut. Und Ihnen?', 'Gut, danke. Und Ihnen?']) assert.equal(typedResult(at(1)[3], right), RESULT.CORRECT, right);
+  for (const right of ['Und Ihnen?', 'Und Sie?']) assert.equal(typedResult(at(1)[4], right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(8)[4], 'Ja, das passt mir gut.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8)[4], 'Das passt sehr gut.'), RESULT.CORRECT);
+  for (const right of ['Wann fährt mein Zug ab?', 'Wann fährt mein Zug?']) assert.equal(typedResult(at(10)[2], right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(5)[4], 'Welche Farbe hat meine Tasche?'), RESULT.WRONG, 'Lena’s bag is asked about, not mine');
+  assert.equal(typedResult(at(4)[1], 'Was kostet meine Uhr?'), RESULT.WRONG, 'the watch is for sale, not mine');
 });

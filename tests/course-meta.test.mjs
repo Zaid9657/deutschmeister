@@ -17,6 +17,7 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
+import { abschlusstestA11 } from '../src/data/courseTests/abschlusstestA11.js';
 
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 const NRS = LEKTIONEN.map((l) => l.nr);
@@ -180,7 +181,10 @@ test('the six outcomes are can-dos the course teaches, not marketing', () => {
 
 test('weeklyEstimate derives from the path minutes and the sustainable pace', () => {
   const est = weeklyEstimate();
-  const path = curriculumPath(CURRICULUM_A11);
+  // The final test's length is its own sections' sum, one value (the independent score, 2026-11-20: 65 vs 40).
+  const testMinutes = abschlusstestA11.sections.reduce((a, s) => a + s.minutes, 0);
+  const path = curriculumPath(CURRICULUM_A11, { testMinutes });
+  assert.equal(curriculumPath(CURRICULUM_A11).at(-1).minutes, null, 'no typed number for the final test');
   const sum = (kind) => path.filter((n) => n.kind === kind).reduce((a, n) => a + n.minutes, 0);
   assert.equal(est.lektionMinutes, LEKTIONEN.reduce((a, l) => a + l.minutes, 0));
   assert.equal(est.checkpointMinutes, sum('checkpoint'));

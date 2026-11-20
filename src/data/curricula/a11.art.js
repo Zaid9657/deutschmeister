@@ -41,7 +41,7 @@ export const A11_ART = {
     Tim: { alt: 'Tim, a learner furnishing his room, drawn as a fox', component: 'CharacterAvatar', src: '/art/a11/tim-160.webp', srcSmall: '/art/a11/tim-160.webp' },
     'Frau Wolf': { alt: 'Frau Wolf, who sells furniture at the flea market, drawn as a hedgehog', component: 'CharacterAvatar', src: '/art/a11/frau-wolf-160.webp', srcSmall: '/art/a11/frau-wolf-160.webp' },
     Paul: { alt: 'Paul, the café waiter, drawn as a bear', component: 'CharacterAvatar', src: '/art/a11/paul-160.webp', srcSmall: '/art/a11/paul-160.webp' },
-    'Herr Schmidt': { alt: 'Herr Schmidt, who gives train information at the station', component: 'CharacterAvatar', src: null, srcSmall: null },
+    'Herr Schmidt': { alt: 'Herr Schmidt, who gives train information at the station, drawn as an owl', component: 'CharacterAvatar', src: '/art/a11/herr-schmidt-160.webp', srcSmall: '/art/a11/herr-schmidt-160.webp' },
   },
 
   situations: {
@@ -54,9 +54,9 @@ export const A11_ART = {
     'a1.1-l07': { alt: 'Lena, drawn as a hare with a football and a sports bag, and Tim, drawn as a fox with headphones and a book, talk about their hobbies outside the language school in Bremen', component: 'SituationScene', src: '/art/a11/l07-freizeit-1168.webp', srcSmall: '/art/a11/l07-freizeit-640.webp', srcMedium: '/art/a11/l07-freizeit-800.webp', width: 1168, height: 880 },
     'a1.1-l08': { alt: 'Ana, drawn as an otter with an open diary, and Lena, drawn as a hare with her phone, look for a time to meet in the common room of the language school, under a wall clock', component: 'SituationScene', src: '/art/a11/l08-termin-1168.webp', srcSmall: '/art/a11/l08-termin-640.webp', srcMedium: '/art/a11/l08-termin-800.webp', width: 1168, height: 880 },
     'a1.1-l09': { alt: 'Ana, drawn as an otter, sits at a café table in Bremen with a coffee, a glass of water, an orange juice and a slice of cake; Paul, drawn as a bear, the waiter, takes her order on a notepad', component: 'SituationScene', src: '/art/a11/l09-cafe-1168.webp', srcSmall: '/art/a11/l09-cafe-640.webp', srcMedium: '/art/a11/l09-cafe-800.webp', width: 1168, height: 880 },
-    'a1.1-l10': { alt: 'A train at a platform with a departure sign', component: 'SituationScene', src: null, srcSmall: null },
-    'a1.1-l11': { alt: 'An alarm clock, a coffee cup and a bag', component: 'SituationScene', src: null, srcSmall: null },
-    'a1.1-l12': { alt: 'A birthday cake with candles and an envelope', component: 'SituationScene', src: null, srcSmall: null },
+    'a1.1-l10': { alt: 'Ana, drawn as an otter with a ticket in her paw, asks Herr Schmidt, drawn as an owl in a railway uniform, about her train on a platform of the station in Bremen', component: 'SituationScene', src: '/art/a11/l10-bahnhof-1168.webp', srcSmall: '/art/a11/l10-bahnhof-640.webp', srcMedium: '/art/a11/l10-bahnhof-800.webp', width: 1168, height: 880 },
+    'a1.1-l11': { alt: 'Before class, Tim, drawn as a fox, sits sleepily with a cup of coffee while Lena, drawn as a hare with a shopping bag, asks him about his day and about shopping together', component: 'SituationScene', src: '/art/a11/l11-tag-1168.webp', srcSmall: '/art/a11/l11-tag-640.webp', srcMedium: '/art/a11/l11-tag-800.webp', width: 1168, height: 880 },
+    'a1.1-l12': { alt: 'In her flat in Bremen, Ana, drawn as an otter, hands Lena, drawn as a hare with a wrapped present, an invitation card; a birthday cake stands on the table between them', component: 'SituationScene', src: '/art/a11/l12-fest-1168.webp', srcSmall: '/art/a11/l12-fest-640.webp', srcMedium: '/art/a11/l12-fest-800.webp', width: 1168, height: 880 },
   },
 };
 

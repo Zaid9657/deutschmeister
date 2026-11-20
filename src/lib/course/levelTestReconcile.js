@@ -10,13 +10,13 @@
 import { levelTestNodeId } from '../../data/curricula/index.js';
 
 const defaultDeps = async () => {
-  const [{ resolveModelltest }, { listAttempts }, { verdictFor }, { completeLevelTest }] = await Promise.all([
+  const [{ resolveModelltest }, { listAttempts }, { verdictFor, attemptVerdict }, { completeLevelTest }] = await Promise.all([
     import('../../data/modelltest.js'),
     import('../../services/examService.js'),
     import('../../services/examScoring.js'),
     import('../../services/lessonService.js'),
   ]);
-  return { resolveModelltest, listAttempts, verdictFor, completeLevelTest };
+  return { resolveModelltest, listAttempts, verdictFor, attemptVerdict, completeLevelTest };
 };
 
 /** The final test is the one open node of the path: every other node is done. */
@@ -35,8 +35,9 @@ export async function reconcileLevelTest(userId, curriculum, deps = null) {
   const resolved = d.resolveModelltest(curriculum.testSlug);
   if (!resolved || !resolved.mock) return false;
   const attempts = (await d.listAttempts(userId, resolved.key)) || [];
-  const passed = attempts.some((a) => a && a.status === 'completed' && a.max_score
-    && d.verdictFor(Math.round((a.score / a.max_score) * 100), resolved.mock.passPercent) !== 'nicht-bereit');
+  // The same rule as the result screen (`attemptVerdict`: no section passed by one constant answer).
+  const verdictOf = (a) => (d.attemptVerdict ? d.attemptVerdict(a, resolved.mock) : d.verdictFor(Math.round((a.score / a.max_score) * 100), resolved.mock.passPercent));
+  const passed = attempts.some((a) => a && a.status === 'completed' && a.max_score && verdictOf(a) !== 'nicht-bereit');
   if (!passed) return false;
   return (await d.completeLevelTest(userId, curriculum.level, levelTestNodeId(curriculum))) === true;
 }
