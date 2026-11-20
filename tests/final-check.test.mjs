@@ -452,6 +452,10 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
   assert.equal(typedResult(decline, 'Keinen Kuchen, danke.'), RESULT.CORRECT);
   assert.equal(typedResult(accept, 'Tee? Ja, gerne.'), RESULT.WRONG, 'water was offered, not tea');
   assert.equal(typedResult(at(9, 1)[4], 'Tee? Ja, gerne.'), RESULT.CORRECT);
+  // The fourth DaF review: a note of a heard afternoon time keeps the afternoon.
+  assert.equal(typedResult(at(8, 1)[6], 'Freitag, 4.15 Uhr'), RESULT.WRONG, '4.15 in a note is morning');
+  assert.equal(typedResult(at(8, 1)[6], 'Freitag, nachmittags um Viertel nach vier'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8, 1)[3], 'Hast du am Donnerstag um Viertel nach vier Zeit?'), RESULT.CORRECT, 'in conversation the afternoon is clear');
 });
 
 test('spelling, a heard number and a written message are written, never spoken', () => {

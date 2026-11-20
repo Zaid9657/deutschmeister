@@ -254,7 +254,7 @@ const halfOf24 = (s) => { const m = String(s || '').match(/(\d{1,2}):\d{2}/); re
  * True when a learner's `when` names the expected day and time („freitag 10:00", or a day alone). A
  * time may leave out morning or afternoon („halb zehn"), but not say the other one („21.30" for 9.30).
  */
-function sameWhen(given, expected, { partial = false } = {}) {
+function sameWhen(given, expected, { partial = false, writtenNote = false } = {}) {
   const e = whenOf(expected);
   if (!given || !e) return false;
   // `partial`: the day or the time alone is enough, but what is named must be the one asked about
@@ -262,6 +262,9 @@ function sameWhen(given, expected, { partial = false } = {}) {
   if (e.day !== null && given.day !== e.day && !(partial && given.day === null && given.time !== null)) return false;
   if (e.time !== null && given.time !== e.time && !(partial && given.time === null)) return false;
   const eh = halfOf24(expected);
+  // A note of a heard afternoon time keeps the afternoon: „Freitag, 4.15 Uhr" reads as 4.15 in the
+  // morning (fourth DaF review of Lektion 8); „16.15" or „nachmittags um Viertel nach vier" keep it.
+  if (writtenNote && e.time !== null && eh === 'pm' && given.half !== 'pm') return false;
   return !(e.time !== null && eh && given.half && given.half !== eh);
 }
 
@@ -816,7 +819,7 @@ export function typedResult(turn, value) {
   if (turn.listen && (turn.when || turn.time)) {
     // A heard day and time („Dienstag, 9.30", „am Dienstag um halb zehn", „Di 9:30") or a heard time.
     const at = whenOf(text);
-    if (turn.when) return sameWhen(at, turn.when) ? (at.typo ? RESULT.TYPO : RESULT.CORRECT) : RESULT.WRONG;
+    if (turn.when) return sameWhen(at, turn.when, { writtenNote: true }) ? (at.typo ? RESULT.TYPO : RESULT.CORRECT) : RESULT.WRONG;
     return at && at.time !== null && at.time === clockOf(turn.time) && !(at.half && at.half !== halfOf24(turn.time)) ? RESULT.CORRECT : RESULT.WRONG;
   }
   if (turn.listen) {
