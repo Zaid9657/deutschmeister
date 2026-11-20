@@ -184,7 +184,7 @@ test('L1 ships the illustrated otter reception with honest mixed provenance and 
 
 // The rollout (2026-11-19, docs/course-factory/a11-lektion-rollout/): Lektionen get their scene one
 // batch at a time. Every illustrated scene ships in the three sizes, and every cast portrait is a file.
-const ILLUSTRATED = ['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-l04', 'a1.1-l05', 'a1.1-l06'];
+const ILLUSTRATED = ['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-l04', 'a1.1-l05', 'a1.1-l06', 'a1.1-l07'];
 
 test('every illustrated scene ships 1168x880 plus 800 and 640 wide, and the rest are still drawn as SVG', async () => {
   const { default: sharp } = await import('sharp');
