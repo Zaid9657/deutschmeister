@@ -307,6 +307,17 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   for (const right of ['Hier ist Frau Braun.', 'Ich heiße Ana Braun.', 'Guten Tag, ich heiße Zaid.', 'Zaid Ahmad.']) assert.equal(typedResult(phoneName, right), RESULT.CORRECT, right);
   for (const wrong of ['Gut.', 'Danke.', 'Hier ist Lehrer.', 'Hier ist Frau.', 'Guten Morgen.', 'Hier ist Büro.']) assert.equal(typedResult(phoneName, wrong), RESULT.WRONG, wrong);
   assert.equal(modelAnswer(phoneName), 'Guten Tag, ich heiße Ana Chakiri.');
+  // The first blind corpus (2026-11-20): a name before the greeting, an inflected colour, a noun typed
+  // without its umlaut, the noun named first.
+  for (const right of ['Samira Haddad, guten Tag.', 'youssef benali, guten tag.']) assert.notEqual(typedResult(phoneName, right), RESULT.WRONG, right);
+  assert.equal(typedResult(phoneName, 'Guten Morgen, guten Tag.'), RESULT.WRONG);
+  const colour = l5[3];
+  assert.equal(typedResult(colour, 'Mein Heft ist rote.'), RESULT.WRONG, 'after „ist" the colour has no ending');
+  assert.equal(typedResult(colour, 'Mein Heft ist rot.'), RESULT.CORRECT);
+  assert.equal(typedResult(where, 'das worterbuch ist hier.'), RESULT.TYPO, 'a missing umlaut is a typo, not a wrong noun');
+  assert.equal(typedResult(askColour, 'Und deine Tasche, welche Farbe hat sie?'), RESULT.CORRECT);
+  assert.equal(typedResult(l4[0], 'Was ist denn das?'), RESULT.CORRECT);
+  assert.equal(typedResult(sitting(l3)[4], 'Ich spreche Deutsche.'), RESULT.WRONG, 'a taught language with an ending is a form, not an own word');
   // A second clause after „und" is part of the answer and must be valid too.
   const own = sitting(l3)[4];
   assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Deutsch.'), RESULT.CORRECT);

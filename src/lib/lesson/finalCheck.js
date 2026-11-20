@@ -177,8 +177,11 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
-  // A word of the kind: one of the taught words that fit, or the learner's own word the course never teaches.
-  const fits = (w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (near(w, slotWords) || !known(w));
+  // A word of the kind: one of the taught words that fit, or the learner's own word the course never
+  // teaches. A taught word of the kind with an ending is a form of it, not an own word: „Mein Heft ist
+  // rote", „Ich spreche Deutsche", „Ich bin Studenten" (blind corpus, 2026-11-20).
+  const formOfTaught = (w) => /(?:e|er|es|en|em)$/.test(w) && slotWords.some((t) => [1, 2].some((n) => fold(t) === w.slice(0, -n)) && fold(t) !== w);
+  const fits = (w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (near(w, slotWords) || (!known(w) && !formOfTaught(w)));
   // A name after a choice („meine Mutter Fatima"): capitalised words the course does not teach.
   const name = (list) => list.every((w) => /^\p{Lu}/u.test(w) && !known(fold(w)) && !CLOSED.has(fold(w)));
   if (slotIn) {
@@ -316,8 +319,10 @@ const worst = (a, b) => (RANK[a] < RANK[b] ? a : b);
 function frameResult(frame, value, turn) {
   const [head, tail = ''] = frame.split(GAP).map((s) => s.trim());
   const given = wordsOf(String(value || '').normalize('NFC').trim().replace(END, ''));
-  const before = wordsOf(head).length;
-  const after = wordsOf(tail.replace(END, '')).length;
+  // A comma right after the gap („…, guten Tag") is no word of the frame.
+  const counted = (s) => wordsOf(s).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+  const before = counted(head);
+  const after = counted(tail.replace(END, ''));
   if (given.length <= before + after) return RESULT.WRONG;
   const own = given.slice(before, given.length - after).join(' ');
   const gap = gapResult(own.replace(/[.,!?]+$/, ''), turn);
@@ -432,12 +437,20 @@ export function typedResult(turn, value) {
   for (const t of [...tries]) if (/\bim\b/i.test(t)) tries.push(t.replace(/\bim\b/gi, 'in dem'));
   // The family noun may stand where the pronoun stands (`nounFor`): „Meine Mutter kommt aus …" is
   // „Sie kommt aus …" with its noun, and the verb after it is graded just the same.
+  // A noun typed without its umlaut („das worterbuch ist hier") still stands for the pronoun, as a typo.
+  const bare = (s) => fold(s).replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
+  const slipped = [];
   for (const t of [...tries]) {
     for (const [pronoun, nouns] of Object.entries(turn.nounFor || {})) {
-      for (const noun of nouns) if (fold(t).startsWith(`${fold(noun)} `)) tries.push(pronoun + t.trim().slice(noun.length));
+      for (const noun of nouns) {
+        if (fold(t).startsWith(`${fold(noun)} `)) tries.push(pronoun + t.trim().slice(noun.length));
+        else if (bare(t).startsWith(`${bare(noun)} `)) slipped.push(pronoun + t.trim().slice(noun.length));
+      }
     }
   }
-  return best(tries.map((t) => sentenceResult(turn.accepted, t, turn)));
+  const results = tries.map((t) => sentenceResult(turn.accepted, t, turn));
+  for (const t of slipped) results.push(worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO));
+  return best(results);
 }
 
 /**
