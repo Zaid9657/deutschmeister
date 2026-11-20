@@ -145,7 +145,7 @@ export function checkLesenA11(bank = LESEN_A11) {
         ids.add(u.id);
         if (texts.has(norm(u.text))) flag(u.id, 'reused text');
         for (const field of ['text', 'statement', 'evidence', 'rival', 'explanationDe', 'explanationEn']) {
-          for (const name of cast) if (new RegExp(`(?<![\p{L}])${name}(?![\p{L}])`, 'u').test(String(u[field] || ''))) flag(u.id, `${field} uses the cast name ${name} for someone else`);
+          for (const name of cast) if (new RegExp(`(?<![\\p{L}])${name}s?(?![\\p{L}])`, 'u').test(String(u[field] || ''))) flag(u.id, `${field} uses the cast name ${name} for someone else`);
         }
         texts.add(norm(u.text));
         if (u.pair != null) flag(u.id, 'independent units cannot declare mirrored pairs');
