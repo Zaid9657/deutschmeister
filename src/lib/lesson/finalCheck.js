@@ -18,7 +18,8 @@
 //   variants   what a retake changes, one entry per sitting, so a retake is not the same paper.
 //   example    a complete answer to show after a miss where the answer is the learner's own.
 //   nounFor    the family nouns that may stand where a pronoun stands („Meine Mutter" for „Sie").
-import { RESULT, checkAnswer, levenshtein, numberWordsToDigits } from './check.js';
+// Arabic-Indic and Persian digits are digits everywhere in the course (`westernDigits`, check.js).
+import { RESULT, checkAnswer, levenshtein, numberWordsToDigits, westernDigits } from './check.js';
 import { READALOUD_PASS_PCT } from './readaloud.js';
 
 // German letter names, so a spelled name is never sound-only (speech.js: every sound has text too).
@@ -40,12 +41,6 @@ const CLOSED = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine',
   'bin', 'bist', 'ist', 'sind', 'seid', 'habe', 'hast', 'hat', 'haben', 'habt',
   'und', 'oder', 'aber', 'auch', 'nicht', 'noch', 'schon', 'sehr', 'nur', 'dann', 'hier', 'da', 'so', 'gern', 'ja', 'nein',
   'in', 'an', 'auf', 'aus', 'bei', 'mit', 'nach', 'von', 'zu', 'für', 'um', 'im', 'am', 'zum', 'zur', 'vom']);
-
-/**
- * Arabic-Indic and Persian digits are digits: an Arabic phone keyboard writes „٠٤٢١" for 0421, and the
- * blind corpus of 2026-11-19 had a teacher mark it right where the check marked it wrong.
- */
-export const westernDigits = (s) => String(s ?? '').replace(/[٠-٩۰-۹]/g, (d) => String((d.charCodeAt(0) & 0xf)));
 
 /** A heard number as the learner writes it: one group of digits per spoken group („null vier zwei eins, sechs drei acht" → „0421 638"). */
 export const digitsOf = (said) => String(said).split(/[,–-]/).map((group) => numberWordsToDigits(group).replace(/\D/g, '')).filter(Boolean).join(' ');
