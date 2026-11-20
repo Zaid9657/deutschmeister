@@ -357,7 +357,8 @@ test('a store full for the paper but not for the counter counts no attempt witho
 
 test('the finished-paper store: once per stamp, per account, shape-checked and aged like the Lektion outbox', () => {
   const values = withStorage();
-  const now = Date.UTC(2026, 9, 21, 9);
+  // keepFinishedPaper re-reads by the real clock, so a fixed date here expires once it is a month old.
+  const now = Date.now();
   const entry = packFinishedPaper({ stamp: 's1', paper: 'abcd', round: 2, answers: { a: 'x' }, notHeard: ['b', 7], result: { passed: 1, overall: '80' } }, now);
   assert.deepEqual([entry.round, entry.notHeard, entry.result], [2, ['b'], { passed: true, overall: 80 }]);
   assert.equal(keepFinishedPaper('A1.1', CP.id, entry, 'u1'), true);
