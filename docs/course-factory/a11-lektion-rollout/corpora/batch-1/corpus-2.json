@@ -1,0 +1,1524 @@
+{
+ "items": [
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich komme aus Syrien.",
+   "verdict": "right",
+   "why": "Vollständiger Satz zur eigenen Herkunft."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich bin aus Marokko.",
+   "verdict": "right",
+   "why": "Die Herkunft wird in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich komme aus der Türkei.",
+   "verdict": "right",
+   "why": "Herkunft und Länderartikel sind korrekt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich komme aus dem irak",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich komme aus Maroko.",
+   "verdict": "right",
+   "why": "Nur ein Tippfehler im Ländernamen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Aus Syrien.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich kommen aus Marokko.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört komme."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich aus Syrien.",
+   "verdict": "wrong",
+   "why": "Das Verb fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich komme in Syrien.",
+   "verdict": "wrong",
+   "why": "Für die Herkunft braucht man hier aus."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich wohne in Bremen.",
+   "verdict": "wrong",
+   "why": "Der Wohnort beantwortet die Frage nach der Herkunft nicht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich wohne in Berlin.",
+   "verdict": "right",
+   "why": "Der Wohnort wird in einem vollständigen Satz genannt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich lebe in Hamburg.",
+   "verdict": "right",
+   "why": "Korrekte alternative Formulierung des Wohnorts."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Jetzt wohne ich in Bremen.",
+   "verdict": "right",
+   "why": "Wohnort und Wortstellung sind korrekt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "ich wohne in essen",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich wohne in Munchen.",
+   "verdict": "right",
+   "why": "Der fehlende Umlaut ist hier ein kleiner Schreibfehler."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "In Berlin.",
+   "verdict": "wrong",
+   "why": "Die ausdrücklich verlangte Satzform fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich wohnen in Bremen.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört wohne."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich wohne aus Hamburg.",
+   "verdict": "wrong",
+   "why": "Vor dem Wohnort braucht man hier in."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich in Berlin wohne.",
+   "verdict": "wrong",
+   "why": "Im Aussagesatz muss das Verb an zweiter Stelle stehen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich komme aus Marokko.",
+   "verdict": "wrong",
+   "why": "Die Herkunft beantwortet die Frage nach dem Wohnort nicht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich bin Lehrer.",
+   "verdict": "right",
+   "why": "Der Beruf wird korrekt in einem Satz genannt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich arbeite als Koch.",
+   "verdict": "right",
+   "why": "Korrekte alternative Berufsangabe."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich bin arbeitslos.",
+   "verdict": "right",
+   "why": "Eine passende vollständige Antwort zur beruflichen Situation."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "ich bin studentin",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich bin ein Student.",
+   "verdict": "right",
+   "why": "Auch mit unbestimmtem Artikel ist der Satz grammatisch möglich."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Student.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich bist Lehrer.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört bin."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich bin eine Lehrer.",
+   "verdict": "wrong",
+   "why": "Eine passt grammatisch nicht zu Lehrer."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich Studentin.",
+   "verdict": "wrong",
+   "why": "Das Verb bin fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich arbeiten als Fahrer.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört arbeite."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was sind Sie von Beruf?",
+   "verdict": "right",
+   "why": "Korrekte Berufsfrage mit höflicher Anrede."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Und was machen Sie beruflich?",
+   "verdict": "right",
+   "why": "Korrekte alternative Berufsfrage mit Sie."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Herr Weber, welchen Beruf haben Sie?",
+   "verdict": "right",
+   "why": "Die Frage richtet sich korrekt und höflich an Herrn Weber."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "was sind sie von beruf?",
+   "verdict": "right",
+   "why": "Im direkten Gespräch ist die höfliche Anrede klar; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was sind Sie von Berf?",
+   "verdict": "right",
+   "why": "Nur ein erkennbarer Tippfehler in Beruf."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was bist du von Beruf?",
+   "verdict": "wrong",
+   "why": "Am Schalter ist hier die Anrede Sie verlangt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was ist Sie von Beruf?",
+   "verdict": "wrong",
+   "why": "Zur höflichen Anrede Sie gehört sind."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was sind Sie von Ihr Beruf?",
+   "verdict": "wrong",
+   "why": "Die Wendung lautet von Beruf, ohne Ihr."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Woher kommen Sie?",
+   "verdict": "wrong",
+   "why": "Die Frage betrifft die Herkunft statt des Berufs."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was von Beruf Sie sind?",
+   "verdict": "wrong",
+   "why": "Die Wortstellung der direkten Frage ist falsch."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Meine Telefonnummer ist 0176 2345089.",
+   "verdict": "right",
+   "why": "Die Nummer wird in einem vollständigen Satz genannt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Meine Nummer ist 0157 6032841.",
+   "verdict": "right",
+   "why": "Nummer ist im Gespräch eine passende Kurzform für Telefonnummer."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich habe die Telefonnummer 030 4817206.",
+   "verdict": "right",
+   "why": "Korrekte alternative Formulierung mit einer Nummer."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "meine telefonnummer ist 0176 9081234",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Meine Telefonnumer ist 0421 508213.",
+   "verdict": "right",
+   "why": "Nur ein Tippfehler in Telefonnummer."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0176 2345089",
+   "verdict": "wrong",
+   "why": "Die Nummer allein erfüllt die verlangte Satzform nicht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Mein Telefonnummer ist 0176 2345089.",
+   "verdict": "wrong",
+   "why": "Zu die Telefonnummer gehört meine."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Meine Telefonnummer 0176 2345089.",
+   "verdict": "wrong",
+   "why": "Das Verb ist fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Meine Telefonnummer sind 0176 2345089.",
+   "verdict": "wrong",
+   "why": "Zum Singular Telefonnummer gehört ist."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ihre Telefonnummer ist 0176 2345089.",
+   "verdict": "wrong",
+   "why": "Ihre bezeichnet die Nummer des Gesprächspartners statt der eigenen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "04213618",
+   "verdict": "right",
+   "why": "Alle gehörten Ziffern sind in der richtigen Reihenfolge vorhanden."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0421 3618",
+   "verdict": "right",
+   "why": "Die Ziffern stimmen; das Leerzeichen ist unproblematisch."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0421-3618",
+   "verdict": "right",
+   "why": "Die Ziffern stimmen; der Bindestrich dient nur der Gliederung."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0 4 2 1 3 6 1 8",
+   "verdict": "right",
+   "why": "Alle Ziffern wurden korrekt einzeln notiert."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "telefonnummer: 0421 3618",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; die Kleinschreibung des Zusatzes ist nebensächlich."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "4213618",
+   "verdict": "wrong",
+   "why": "Die gehörte Null am Anfang fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0421 6318",
+   "verdict": "wrong",
+   "why": "Drei und sechs wurden vertauscht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0421 361",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer acht fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0421 3619",
+   "verdict": "wrong",
+   "why": "Am Ende wurde neun statt acht notiert."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0412 3618",
+   "verdict": "wrong",
+   "why": "Zwei und eins wurden in der Vorwahl vertauscht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich heiße Omar Hassan. Ich bin am 3.5.1998 geboren.",
+   "verdict": "right",
+   "why": "Name und Geburtsdatum werden korrekt mitgeteilt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Mein Name ist Sara Ali. Ich bin am 12.10.2001 geboren.",
+   "verdict": "right",
+   "why": "Beide verlangten Angaben stehen in korrekten Sätzen."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Name: Rania Khalil\nGeburtsdatum: 07.02.1995",
+   "verdict": "right",
+   "why": "Beide Angaben sind klar; vollständige Sätze sind hier nicht vorgeschrieben."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "ich heiße nour ahmad. ich bin am 8.6.1999 geboren.",
+   "verdict": "right",
+   "why": "Beide Angaben sind korrekt; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich heise Youssef Mansour. Ich bin am 21.4.1990 geboren.",
+   "verdict": "right",
+   "why": "Die Aufgabe ist erfüllt; heise ist ein kleiner Schreibfehler."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich heiße Omar Hassan.",
+   "verdict": "wrong",
+   "why": "Das Geburtsdatum fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich bin am 3.5.1998 geboren.",
+   "verdict": "wrong",
+   "why": "Der Name fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich heiße Sara Ali. Ich habe am 12.10.2001 geboren.",
+   "verdict": "wrong",
+   "why": "Die Geburtsangabe braucht bin statt habe."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich Name Rania Khalil. Ich bin am 7.2.1995 geboren.",
+   "verdict": "wrong",
+   "why": "Ich Name ist keine korrekte Namensangabe als Satz."
+  },
+  {
+   "lektion": 2,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich heiße Nour Ahmad. Ich bin in 8.6.1999 geboren.",
+   "verdict": "wrong",
+   "why": "Vor dem vollständigen Geburtsdatum steht am statt in."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "04215092",
+   "verdict": "right",
+   "why": "Alle gehörten Ziffern sind in der richtigen Reihenfolge vorhanden."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0421 5092",
+   "verdict": "right",
+   "why": "Die Ziffern stimmen; das Leerzeichen ist unproblematisch."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0421-5092",
+   "verdict": "right",
+   "why": "Die Ziffern stimmen; der Bindestrich dient nur der Gliederung."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0 4 2 1 5 0 9 2",
+   "verdict": "right",
+   "why": "Alle Ziffern wurden korrekt einzeln notiert."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "telefonnummer: 0421 5092",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; die Kleinschreibung des Zusatzes ist nebensächlich."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "4215092",
+   "verdict": "wrong",
+   "why": "Die gehörte Null am Anfang fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0421 592",
+   "verdict": "wrong",
+   "why": "Die Null zwischen fünf und neun fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0421 5029",
+   "verdict": "wrong",
+   "why": "Die letzten beiden Ziffern wurden vertauscht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0421 6092",
+   "verdict": "wrong",
+   "why": "Sechs wurde statt fünf notiert."
+  },
+  {
+   "lektion": 2,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0421 3618",
+   "verdict": "wrong",
+   "why": "Das ist die Nummer aus dem ersten Versuch, nicht die jetzt gehörte."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "04217834",
+   "verdict": "right",
+   "why": "Alle gehörten Ziffern sind in der richtigen Reihenfolge vorhanden."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0421 7834",
+   "verdict": "right",
+   "why": "Die Ziffern stimmen; das Leerzeichen ist unproblematisch."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0421-7834",
+   "verdict": "right",
+   "why": "Die Ziffern stimmen; der Bindestrich dient nur der Gliederung."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0 4 2 1 7 8 3 4",
+   "verdict": "right",
+   "why": "Alle Ziffern wurden korrekt einzeln notiert."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "telefonnummer: 0421 7834",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; die Kleinschreibung des Zusatzes ist nebensächlich."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "4217834",
+   "verdict": "wrong",
+   "why": "Die gehörte Null am Anfang fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0421 8734",
+   "verdict": "wrong",
+   "why": "Sieben und acht wurden vertauscht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0421 7843",
+   "verdict": "wrong",
+   "why": "Die letzten beiden Ziffern wurden vertauscht."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0421 783",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer vier fehlt."
+  },
+  {
+   "lektion": 2,
+   "sitting": 3,
+   "turn": 6,
+   "answer": "0421 5092",
+   "verdict": "wrong",
+   "why": "Das ist die Nummer aus dem zweiten Versuch, nicht die jetzt gehörte."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist meine Mutter.",
+   "verdict": "right",
+   "why": "Eine der beiden Personen wird korrekt benannt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist meine Schwester.",
+   "verdict": "right",
+   "why": "Die Antwort trifft die Frage und ist grammatisch korrekt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Meine Mutter.",
+   "verdict": "right",
+   "why": "Die natürliche Kurzantwort ist hier erlaubt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "das ist meine schwester",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist meine Muter.",
+   "verdict": "right",
+   "why": "Nur ein Tippfehler in Mutter."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist mein Mutter.",
+   "verdict": "wrong",
+   "why": "Zu Mutter gehört meine."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das sind meine Schwester.",
+   "verdict": "wrong",
+   "why": "Für eine einzelne Person braucht man ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das meine Mutter.",
+   "verdict": "wrong",
+   "why": "Das Verb fehlt; dies ist keine korrekte Kurzantwort."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ja.",
+   "verdict": "wrong",
+   "why": "Die Antwort klärt nicht, ob die Person Mutter oder Schwester ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist deine Schwester.",
+   "verdict": "wrong",
+   "why": "Deine bezeichnet Lenas Schwester statt der eigenen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie ist jung.",
+   "verdict": "right",
+   "why": "Die Frage wird in einem vollständigen Satz beantwortet."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie ist alt.",
+   "verdict": "right",
+   "why": "Eine erlaubte Altersbeschreibung in korrekter Satzform."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie ist noch jung.",
+   "verdict": "right",
+   "why": "Korrekte Altersbeschreibung mit passendem Pronomen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "sie ist schon alt",
+   "verdict": "right",
+   "why": "Nur Satzanfang und Schlusspunkt sind nicht korrekt geschrieben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie ist jugn.",
+   "verdict": "right",
+   "why": "Jug n ist als Buchstabendreher von jung erkennbar."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Jung.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Er ist jung.",
+   "verdict": "wrong",
+   "why": "Für die genannte Mutter oder Schwester braucht man sie."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie sind alt.",
+   "verdict": "wrong",
+   "why": "Für diese einzelne Person braucht man ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie jung.",
+   "verdict": "wrong",
+   "why": "Das Verb ist fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Sie hat jung.",
+   "verdict": "wrong",
+   "why": "Die Altersbeschreibung braucht ist statt hat."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie kommt aus Marokko.",
+   "verdict": "right",
+   "why": "Die Herkunft der genannten Person wird korrekt angegeben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie ist aus Syrien.",
+   "verdict": "right",
+   "why": "Korrekte alternative Herkunftsangabe in Satzform."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie kommt aus der Türkei.",
+   "verdict": "right",
+   "why": "Pronomen, Verb und Länderartikel sind korrekt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "sie kommt aus dem irak",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie kommt aus Maroko.",
+   "verdict": "right",
+   "why": "Nur ein Tippfehler im Ländernamen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Aus Marokko.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie komme aus Syrien.",
+   "verdict": "wrong",
+   "why": "Für die einzelne Person braucht man kommt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Er kommt aus Marokko.",
+   "verdict": "wrong",
+   "why": "Für Mutter oder Schwester braucht man sie."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie aus Syrien.",
+   "verdict": "wrong",
+   "why": "Das Verb fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Sie kommt in Marokko.",
+   "verdict": "wrong",
+   "why": "Für die Herkunft braucht man hier aus."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie spricht Arabisch und Deutsch.",
+   "verdict": "right",
+   "why": "Die Sprachen der genannten Person werden korrekt angegeben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie spricht nur Arabisch.",
+   "verdict": "right",
+   "why": "Auch eine einzige Sprache ist eine passende Antwort."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie spricht Englisch und ein bisschen Deutsch.",
+   "verdict": "right",
+   "why": "Vollständige und korrekte Angabe ihrer Sprachen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "sie spricht arabisch und deutsch",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie spricht Arabish.",
+   "verdict": "right",
+   "why": "Nur ein erkennbarer Schreibfehler im Sprachnamen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Arabisch und Deutsch.",
+   "verdict": "wrong",
+   "why": "Die ausdrücklich verlangte Satzform fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie sprecht Arabisch.",
+   "verdict": "wrong",
+   "why": "Die richtige Verbform ist spricht."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie sprechen Deutsch.",
+   "verdict": "wrong",
+   "why": "Für die einzelne Mutter oder Schwester braucht man spricht."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Er spricht Arabisch.",
+   "verdict": "wrong",
+   "why": "Für die genannte weibliche Person braucht man sie."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Sie ist Arabisch und Deutsch.",
+   "verdict": "wrong",
+   "why": "Für Sprachkenntnisse braucht man hier spricht statt ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich spreche Arabisch und Deutsch.",
+   "verdict": "right",
+   "why": "Die eigenen Sprachen werden korrekt in einem Satz genannt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich spreche Arabisch.",
+   "verdict": "right",
+   "why": "Eine einzelne Sprache reicht als Antwort aus."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich spreche Arabisch, Englisch und ein bisschen Deutsch.",
+   "verdict": "right",
+   "why": "Die eigenen Sprachkenntnisse werden korrekt beschrieben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "ich spreche arabisch und deutsch",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich spreche Deutsh und Arabisch.",
+   "verdict": "right",
+   "why": "Nur ein erkennbarer Schreibfehler in Deutsch."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Arabisch.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich spricht Arabisch.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört spreche."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich sprechen Deutsch und Arabisch.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört spreche statt sprechen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich Arabisch und Deutsch.",
+   "verdict": "wrong",
+   "why": "Das Verb fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Du sprichst Arabisch.",
+   "verdict": "wrong",
+   "why": "Die Antwort nennt Lenas Sprachkenntnisse statt der eigenen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Woher kommen deine Eltern?",
+   "verdict": "right",
+   "why": "Die Herkunft von Lenas Eltern wird korrekt mit du-Anrede erfragt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Und woher kommen deine Eltern, Lena?",
+   "verdict": "right",
+   "why": "Korrekte direkte Frage an Lena."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Aus welchem Land kommen deine Eltern?",
+   "verdict": "right",
+   "why": "Korrekte alternative Frage nach der Herkunft ihrer Eltern."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "woher kommen deine eltern?",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Woher kommen deine Eltren?",
+   "verdict": "right",
+   "why": "Nur ein Buchstabendreher in Eltern."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Woher kommen Ihre Eltern?",
+   "verdict": "wrong",
+   "why": "Im Gespräch mit Lena ist die vertraute Anrede verlangt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Woher kommt deine Eltern?",
+   "verdict": "wrong",
+   "why": "Zum Plural Eltern gehört kommen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Woher kommen dein Eltern?",
+   "verdict": "wrong",
+   "why": "Zum Plural Eltern gehört deine."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Wo wohnen deine Eltern?",
+   "verdict": "wrong",
+   "why": "Die Frage betrifft den Wohnort statt der Herkunft."
+  },
+  {
+   "lektion": 3,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Woher deine Eltern kommen?",
+   "verdict": "wrong",
+   "why": "In dieser direkten Frage muss kommen nach woher stehen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das ist mein Vater.",
+   "verdict": "right",
+   "why": "Eine der beiden Personen wird korrekt benannt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das ist mein Bruder.",
+   "verdict": "right",
+   "why": "Die Antwort trifft die Frage und ist grammatisch korrekt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Mein Bruder.",
+   "verdict": "right",
+   "why": "Die natürliche Kurzantwort ist hier erlaubt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "das ist mein vater",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das ist mein Brduer.",
+   "verdict": "right",
+   "why": "Nur ein Buchstabendreher in Bruder."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das ist meine Vater.",
+   "verdict": "wrong",
+   "why": "Zu Vater gehört mein."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das sind mein Bruder.",
+   "verdict": "wrong",
+   "why": "Für eine einzelne Person braucht man ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das mein Vater.",
+   "verdict": "wrong",
+   "why": "Das Verb fehlt; dies ist keine korrekte Kurzantwort."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ja.",
+   "verdict": "wrong",
+   "why": "Die Antwort klärt nicht, ob die Person Vater oder Bruder ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Das ist dein Bruder.",
+   "verdict": "wrong",
+   "why": "Dein bezeichnet Lenas Bruder statt des eigenen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er ist jung.",
+   "verdict": "right",
+   "why": "Die Frage wird in einem vollständigen Satz beantwortet."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er ist alt.",
+   "verdict": "right",
+   "why": "Eine erlaubte Altersbeschreibung in korrekter Satzform."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er ist noch jung.",
+   "verdict": "right",
+   "why": "Korrekte Altersbeschreibung mit passendem Pronomen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "er ist schon alt",
+   "verdict": "right",
+   "why": "Nur Satzanfang und Schlusspunkt sind nicht korrekt geschrieben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er ist jugn.",
+   "verdict": "right",
+   "why": "Nur ein Buchstabendreher in jung."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Alt.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Sie ist jung.",
+   "verdict": "wrong",
+   "why": "Für den genannten Vater oder Bruder braucht man er."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er sind alt.",
+   "verdict": "wrong",
+   "why": "Zu er gehört ist."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er jung.",
+   "verdict": "wrong",
+   "why": "Das Verb ist fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er hat alt.",
+   "verdict": "wrong",
+   "why": "Die Altersbeschreibung braucht ist statt hat."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er kommt aus Syrien.",
+   "verdict": "right",
+   "why": "Die Herkunft der genannten Person wird korrekt angegeben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er ist aus Marokko.",
+   "verdict": "right",
+   "why": "Korrekte alternative Herkunftsangabe in Satzform."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er kommt aus der Türkei.",
+   "verdict": "right",
+   "why": "Pronomen, Verb und Länderartikel sind korrekt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "er kommt aus dem irak",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er kommt aus Maroko.",
+   "verdict": "right",
+   "why": "Nur ein Tippfehler im Ländernamen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Aus Syrien.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen vollständigen Satz."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er kommen aus Marokko.",
+   "verdict": "wrong",
+   "why": "Zu er gehört kommt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Sie kommt aus Syrien.",
+   "verdict": "wrong",
+   "why": "Für Vater oder Bruder braucht man er."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er aus Marokko.",
+   "verdict": "wrong",
+   "why": "Das Verb fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Er kommt in Syrien.",
+   "verdict": "wrong",
+   "why": "Für die Herkunft braucht man hier aus."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er spricht Arabisch und Deutsch.",
+   "verdict": "right",
+   "why": "Die Sprachen der genannten Person werden korrekt angegeben."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er spricht nur Arabisch.",
+   "verdict": "right",
+   "why": "Auch eine einzige Sprache ist eine passende Antwort."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er spricht Englisch und ein bisschen Deutsch.",
+   "verdict": "right",
+   "why": "Vollständige und korrekte Angabe seiner Sprachen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "er spricht arabisch und deutsch",
+   "verdict": "right",
+   "why": "Nur die Großschreibung und der Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er spricht Arabish.",
+   "verdict": "right",
+   "why": "Nur ein erkennbarer Schreibfehler im Sprachnamen."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Arabisch und Englisch.",
+   "verdict": "wrong",
+   "why": "Die ausdrücklich verlangte Satzform fehlt."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er sprecht Arabisch.",
+   "verdict": "wrong",
+   "why": "Die richtige Verbform ist spricht."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er sprechen Deutsch.",
+   "verdict": "wrong",
+   "why": "Zu er gehört spricht."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Sie spricht Arabisch.",
+   "verdict": "wrong",
+   "why": "Für den genannten Vater oder Bruder braucht man er."
+  },
+  {
+   "lektion": 3,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er ist Arabisch und Deutsch.",
+   "verdict": "wrong",
+   "why": "Für Sprachkenntnisse braucht man hier spricht statt ist."
+  }
+ ]
+}

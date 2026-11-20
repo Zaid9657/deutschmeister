@@ -243,3 +243,59 @@ types instead of speaking shows numbers by writing them, not by saying them; "ze
 the Lektion 2 check (phone numbers are digits); no native speaker has read the Arabic of Lektionen
 1–3, and the back-translation flagged „حرف متحرّك" (vowel) in Lektion 3 as a word a native speaker
 should check.
+
+### Batch 2 (Lektionen 4–6), 2026-11-20
+
+**The cast is unchanged.** The scenes show Tim and Frau Wolf at the flea market (L4), Lena and Tim
+in the classroom (L5), Ana and Herr Weber in the office (L6); `batch-2-scenes.jpg`. Frau Berg, Ana's
+boss in Lektion 6, is only heard on the phone: if a later scene shows her, give her an animal not yet
+used and add her to the cast list above.
+
+**What the final check can do now (new in batch 2;** `finalCheck.js` comments, `tests/final-check.test.mjs`**):**
+
+- Gap kinds `thing` (after „kaufen", „brauchen", „nehmen": „den Stuhl", „einen Computer", „zwei
+  Stühle") and `object` (after „Das ist/sind": „ein Heft", „meine Schere"): a noun the course teaches
+  must carry its own article; a mass noun („Papier", `MASS`) may stand without; a frame may say
+  `count: 'one'` or `'many'` („Das sind ein Stift" is wrong). `color` lists like `language`. `name`:
+  words the course does not teach or the cast's names, after „Frau"/„Herr"; a surname after the
+  first word may be a taught lower-case word („Ana Braun"); never the partner's own name.
+- A taught word of the gap's kind with an ending is a form, not an own word („rote", „Deutsche").
+  A clause after „und" counts only when it is itself a valid answer.
+- Around a right answer: a greeting first, the partner's name (with or without a comma; each turn now
+  carries `partner`), „bitte" anywhere, „Und"; a noun named first and picked up by a fitting pronoun
+  („Der Stuhl, was kostet der?"); the question word last („Der Stuhl kostet wie viel?"); a word in
+  front of „ist" („Rot ist mein Heft", „Ein Lineal ist das"); the noun echoed („Die Schere? Da."); a
+  noun typed without its umlaut stands for its pronoun as a typo. Each is a rewrite that the frame then
+  grades as always, so the wrong verb or article stays wrong.
+- Heard prices: „18,00 €", „18,-", number words without umlauts; „18 Cent" for euros is wrong.
+- Spoken answers: without a transcript nothing is marked any more (the learner records again and types
+  after two tries); the batch 1 note above about the word-measure fallback no longer holds.
+- `finalCheck.js` uses `check.js`'s `westernDigits` since the marking fixes were merged (twice: at the
+  start of the batch and before the PR, PR 273 at d925fdf4).
+
+**How the checks were proven, to reuse:** a DaF review that sees the answers (two rounds), then three
+blind corpora written by separate Codex "teachers" who never saw what is accepted, scored against
+`typedResult` (`tools/` here: `build-review.mjs` writes both prompts from the code's own comments,
+`score-corpus.mjs` scores, `compare-grades.mjs` lists every answer whose grade changes between two
+checkouts; the corpora are in `corpora/batch-2/`). The first corpus is in-sample once you fix from
+it; report each corpus's FIRST score as the measure. Telling the second teacher to avoid the obvious
+answers found five times as many refusals as the first corpus. Batch 2's first scores: 273/280,
+231/270, 262/270; after the fixes 280/280, 268/270, 267/270, and batch 1's corpora 181/190 and 186/190.
+
+**Marking problems found, not fixed here** (shared checker, for the marking session): „hir" for
+„hier" (a slip in a short word) and „veir" for „vier" (swapped letters in a number word) are still
+not typos. `scripts/build-course-words.mjs` read the check's `slot`/`count` values („color", „one")
+as German words; batch 2 added both keys to its skip list.
+
+**Open, by design or for the founder:** „Und der Preis für die Uhr?" and „Wie viel kostet die Lampe
+da?" are refused (rare; the example then shows a taught form). The second DaF review asked for a
+telephone exchange in Lektion 6's scene (can-do 1 sends the learner to Lektion 1's scene, which has
+no phone call) and for the task language („mit einem Satz", „Fragen Sie nach …") to be introduced
+before the checks, for learners who read neither the German nor the English task: both are course
+decisions beyond one batch. No native speaker has read the Arabic of Lektionen 4–6; the blind
+back-translation found no drift, and verbs are glossed in the Arabic dictionary form (يشتري for
+kaufen). The spoken path was not played (no microphone in the test browser).
+
+**For Lektionen 7–9:** Lektion 9 is followed by Checkpoint 3 (`nextAfter`); Paul (bear, café) and
+Herr Schmidt (owl, station) are already on the cast sheet without portraits. Reuse the gap kinds
+above before adding new ones; a new kind needs its own wrong-answer tests and a blind corpus.

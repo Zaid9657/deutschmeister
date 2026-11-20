@@ -1,0 +1,2164 @@
+{
+ "items": [
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was ist das?",
+   "verdict": "right",
+   "why": "Fragt nach dem Gegenstand."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Entschuldigung, was ist das hier?",
+   "verdict": "right",
+   "why": "Höfliche, passende Frage."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Frau Wolf, was ist das?",
+   "verdict": "right",
+   "why": "Fragt Frau Wolf nach dem Gegenstand."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Und das da, was ist das?",
+   "verdict": "right",
+   "why": "Natürliche Frage am Stand."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "was ist das bitte",
+   "verdict": "right",
+   "why": "Passende Frage; Großschreibung und Fragezeichen fehlen nur."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was das ist?",
+   "verdict": "wrong",
+   "why": "In dieser Frage steht das Verb vor „das“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was kostet das?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Preis statt nach dem Gegenstand."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was sein das?",
+   "verdict": "wrong",
+   "why": "Die Verbform muss „ist“ heißen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Wie ist das?",
+   "verdict": "wrong",
+   "why": "Fragt nicht, was der Gegenstand ist."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Was bist das?",
+   "verdict": "wrong",
+   "why": "„Bist“ passt nicht zu „das“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was kostet die Uhr?",
+   "verdict": "right",
+   "why": "Fragt nach dem Preis der Uhr."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viel kostet sie?",
+   "verdict": "right",
+   "why": "„Sie“ bezieht sich richtig auf die Uhr."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was kostet das?",
+   "verdict": "right",
+   "why": "„Das“ kann hier auf den Gegenstand zeigen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viel Euro kostet die Uhr?",
+   "verdict": "right",
+   "why": "Korrekte Preisfrage."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "was kostet die uhr",
+   "verdict": "right",
+   "why": "Korrekte Frage trotz fehlender Großschreibung und Zeichensetzung."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viele kostet die Uhr?",
+   "verdict": "wrong",
+   "why": "Ohne folgendes zählbares Nomen heißt es hier „wie viel“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was kosten die Uhr?",
+   "verdict": "wrong",
+   "why": "Bei einer Uhr heißt es „kostet“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was kostet der Uhr?",
+   "verdict": "wrong",
+   "why": "Der Artikel muss „die“ heißen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viel kostet er?",
+   "verdict": "wrong",
+   "why": "Für „die Uhr“ braucht man hier „sie“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Die Uhr kostet acht Euro.",
+   "verdict": "wrong",
+   "why": "Nennt einen Preis, statt danach zu fragen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18",
+   "verdict": "right",
+   "why": "Der gehörte Preis ist richtig."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18 Euro",
+   "verdict": "right",
+   "why": "Betrag und Währung stimmen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "achtzehn Euro",
+   "verdict": "right",
+   "why": "Der Preis darf auch ausgeschrieben werden."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18,00 €",
+   "verdict": "right",
+   "why": "Korrekte Schreibweise des Preises."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "achtzehn euro",
+   "verdict": "right",
+   "why": "Der Preis stimmt; nur „Euro“ ist kleingeschrieben."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "80 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurde achtzehn, nicht achtzig."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "8 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurde achtzehn, nicht acht."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "81",
+   "verdict": "wrong",
+   "why": "Der Betrag stimmt nicht."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "1,80 Euro",
+   "verdict": "wrong",
+   "why": "Das sind nicht achtzehn Euro."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "18 Cent",
+   "verdict": "wrong",
+   "why": "Die Währungseinheit ist falsch."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet der Stuhl?",
+   "verdict": "right",
+   "why": "Fragt nach dem Preis des Stuhls."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie viel kostet der Stuhl?",
+   "verdict": "right",
+   "why": "Korrekte Preisfrage."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Und der Stuhl, was kostet er?",
+   "verdict": "right",
+   "why": "Gegenstand und Pronomen stimmen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Der Stuhl kostet wie viel?",
+   "verdict": "right",
+   "why": "Natürliche Rückfrage nach dem Preis."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "was kostet der stuhl",
+   "verdict": "right",
+   "why": "Die Frage stimmt; Großschreibung und Fragezeichen fehlen nur."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet die Stuhl?",
+   "verdict": "wrong",
+   "why": "Es heißt „der Stuhl“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet den Stuhl?",
+   "verdict": "wrong",
+   "why": "Der Stuhl ist hier das Subjekt; deshalb „der“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie viele kostet der Stuhl?",
+   "verdict": "wrong",
+   "why": "Hier braucht man „wie viel“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kosten der Stuhl?",
+   "verdict": "wrong",
+   "why": "Das Verb muss „kostet“ heißen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet dein Stuhl?",
+   "verdict": "wrong",
+   "why": "Frau Wolf wird mit Sie angesprochen; „dein“ passt nicht."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "30",
+   "verdict": "right",
+   "why": "Die gehörte Gesamtsumme stimmt."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "30 Euro",
+   "verdict": "right",
+   "why": "Betrag und Währung stimmen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "dreißig Euro",
+   "verdict": "right",
+   "why": "Die Gesamtsumme ist richtig ausgeschrieben."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "30,00 €",
+   "verdict": "right",
+   "why": "Korrekte Preisangabe."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "dreissig euro",
+   "verdict": "right",
+   "why": "Der Betrag ist eindeutig; ss und Kleinschreibung werden toleriert."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "13 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurde dreißig, nicht dreizehn."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "3 Euro",
+   "verdict": "wrong",
+   "why": "Der Betrag ist zu klein."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "18 Euro",
+   "verdict": "wrong",
+   "why": "Das ist der vorherige Einzelpreis, nicht die Gesamtsumme."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "12 Euro",
+   "verdict": "wrong",
+   "why": "Gefragt ist der Gesamtpreis von dreißig Euro."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "300 Euro",
+   "verdict": "wrong",
+   "why": "Der gehörte Betrag ist dreißig Euro."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe den Stuhl und die Uhr.",
+   "verdict": "right",
+   "why": "Sagt in einem korrekten Satz, was gekauft wird."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe die Uhr.",
+   "verdict": "right",
+   "why": "Ein Gegenstand genügt; der Satz ist korrekt."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe einen Tisch.",
+   "verdict": "right",
+   "why": "Eigene Kaufentscheidung mit korrektem Artikel."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe das Regal.",
+   "verdict": "right",
+   "why": "Vollständiger, passender Satz."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "ich kaufe die lampe",
+   "verdict": "right",
+   "why": "Der Satz stimmt; nur Großschreibung und Punkt fehlen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Den Stuhl und die Uhr.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufen die Uhr.",
+   "verdict": "wrong",
+   "why": "Zu „ich“ gehört „kaufe“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe der Stuhl.",
+   "verdict": "wrong",
+   "why": "Nach „kaufe“ heißt es hier „den Stuhl“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich kaufe eine Rucksack.",
+   "verdict": "wrong",
+   "why": "Es heißt „einen Rucksack“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich bin kaufe die Tasche.",
+   "verdict": "wrong",
+   "why": "„Bin“ gehört nicht in diesen Satz."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kostet der Rucksack?",
+   "verdict": "right",
+   "why": "Fragt nach dem Preis des Rucksacks."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie viel kostet er?",
+   "verdict": "right",
+   "why": "„Er“ bezieht sich richtig auf den Rucksack."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kostet das?",
+   "verdict": "right",
+   "why": "Die Frage kann sich auf den gezeigten Gegenstand beziehen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie viel Euro kostet der Rucksack?",
+   "verdict": "right",
+   "why": "Korrekte Preisfrage."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "was kostet der rucksack",
+   "verdict": "right",
+   "why": "Passende Frage trotz fehlender Großschreibung und Zeichensetzung."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kostet die Rucksack?",
+   "verdict": "wrong",
+   "why": "Es heißt „der Rucksack“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Was kosten der Rucksack?",
+   "verdict": "wrong",
+   "why": "Bei einem Rucksack heißt das Verb „kostet“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie viel kostet sie?",
+   "verdict": "wrong",
+   "why": "Für „der Rucksack“ braucht man hier „er“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wie viele kostet der Rucksack?",
+   "verdict": "wrong",
+   "why": "Hier heißt es „wie viel“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Ich kaufe den Rucksack.",
+   "verdict": "wrong",
+   "why": "Sagt eine Kaufentscheidung, fragt aber nicht nach dem Preis."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45",
+   "verdict": "right",
+   "why": "Der gehörte Preis stimmt."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45 Euro",
+   "verdict": "right",
+   "why": "Betrag und Währung stimmen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "fünfundvierzig Euro",
+   "verdict": "right",
+   "why": "Der Preis ist richtig ausgeschrieben."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45,00 €",
+   "verdict": "right",
+   "why": "Korrekte Preisangabe."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "funfundvierzig Euro",
+   "verdict": "right",
+   "why": "Der Betrag ist eindeutig; nur der Umlaut fehlt."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "54 Euro",
+   "verdict": "wrong",
+   "why": "Einer und Zehner wurden vertauscht."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "40 Euro",
+   "verdict": "wrong",
+   "why": "Die fünf fehlen im Betrag."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "15 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurde fünfundvierzig Euro."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "4,50 Euro",
+   "verdict": "wrong",
+   "why": "Das sind nicht fünfundvierzig Euro."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "45 Cent",
+   "verdict": "wrong",
+   "why": "Die Währungseinheit stimmt nicht."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kostet die Lampe?",
+   "verdict": "right",
+   "why": "Fragt nach dem Preis der Lampe."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Wie viel kostet die Lampe?",
+   "verdict": "right",
+   "why": "Korrekte Preisfrage."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Und die Lampe, was kostet sie?",
+   "verdict": "right",
+   "why": "Gegenstand und Pronomen stimmen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Die Lampe kostet wie viel?",
+   "verdict": "right",
+   "why": "Natürliche Rückfrage nach dem Preis."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "was kostet die lampe",
+   "verdict": "right",
+   "why": "Die Frage stimmt; Großschreibung und Fragezeichen fehlen nur."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kostet der Lampe?",
+   "verdict": "wrong",
+   "why": "Es heißt „die Lampe“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kostet den Lampe?",
+   "verdict": "wrong",
+   "why": "Der Artikel muss hier „die“ heißen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kosten die Lampe?",
+   "verdict": "wrong",
+   "why": "Eine Lampe „kostet“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Wie viele kostet die Lampe?",
+   "verdict": "wrong",
+   "why": "Hier braucht man „wie viel“."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Was kostet deine Lampe?",
+   "verdict": "wrong",
+   "why": "„Deine“ passt nicht zur vereinbarten Sie-Anrede."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "57",
+   "verdict": "right",
+   "why": "Die gehörte Gesamtsumme stimmt."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "57 Euro",
+   "verdict": "right",
+   "why": "Betrag und Währung stimmen."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "siebenundfünfzig Euro",
+   "verdict": "right",
+   "why": "Die Gesamtsumme ist richtig ausgeschrieben."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "57,00 €",
+   "verdict": "right",
+   "why": "Korrekte Preisangabe."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "siebenundfunfzig euro",
+   "verdict": "right",
+   "why": "Der Betrag ist eindeutig; Umlaut und Großschreibung fehlen nur."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "75 Euro",
+   "verdict": "wrong",
+   "why": "Einer und Zehner wurden vertauscht."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "50 Euro",
+   "verdict": "wrong",
+   "why": "Die sieben fehlen im Betrag."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "17 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurde siebenundfünfzig Euro."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "45 Euro",
+   "verdict": "wrong",
+   "why": "Das ist der Einzelpreis des Rucksacks."
+  },
+  {
+   "lektion": 4,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "5,70 Euro",
+   "verdict": "wrong",
+   "why": "Das sind nicht siebenundfünfzig Euro."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist ein Buch.",
+   "verdict": "right",
+   "why": "Benennt einen möglichen Tascheninhalt in einem Satz."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist mein Heft.",
+   "verdict": "right",
+   "why": "Vollständiger Satz mit korrektem Possessivartikel."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist eine Schere.",
+   "verdict": "right",
+   "why": "Gegenstand und Artikel passen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das hier ist mein Wörterbuch.",
+   "verdict": "right",
+   "why": "Korrekte Benennung des Gegenstands."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "das ist ein lineal",
+   "verdict": "right",
+   "why": "Der Satz stimmt; Großschreibung und Punkt fehlen nur."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ein Buch.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist eine Stift.",
+   "verdict": "wrong",
+   "why": "Es heißt „ein Stift“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das sind mein Heft.",
+   "verdict": "wrong",
+   "why": "Bei einem Heft heißt es „Das ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das mein Buch.",
+   "verdict": "wrong",
+   "why": "Das Verb „ist“ fehlt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Das ist ein Schere.",
+   "verdict": "wrong",
+   "why": "Es heißt „eine Schere“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Hier.",
+   "verdict": "right",
+   "why": "Die Aufgabe erlaubt diese kurze Ortsangabe."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Da.",
+   "verdict": "right",
+   "why": "Passende kurze Antwort mit „da“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Wörterbuch ist hier.",
+   "verdict": "right",
+   "why": "Beantwortet die Ortsfrage korrekt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Es ist da.",
+   "verdict": "right",
+   "why": "„Es“ passt zu „das Wörterbuch“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "das wörterbuch ist hir",
+   "verdict": "right",
+   "why": "„Hir“ ist als Tippfehler für „hier“ eindeutig; der Satz stimmt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Er ist hier.",
+   "verdict": "wrong",
+   "why": "Das Wörterbuch wird hier mit „es“ bezeichnet."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Wörterbuch sind hier.",
+   "verdict": "wrong",
+   "why": "Zu einem Wörterbuch gehört „ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist dein Wörterbuch?",
+   "verdict": "wrong",
+   "why": "Stellt eine Gegenfrage, statt den Ort zu nennen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Hier ist meine Wörterbuch.",
+   "verdict": "wrong",
+   "why": "Es heißt „mein Wörterbuch“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ja.",
+   "verdict": "wrong",
+   "why": "Nennt keinen Ort und verwendet weder „hier“ noch „da“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist mein Stift?",
+   "verdict": "right",
+   "why": "Fragt nach dem eigenen Stift."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Lena, wo ist mein Stift?",
+   "verdict": "right",
+   "why": "Passende Frage an Lena."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist der Stift?",
+   "verdict": "right",
+   "why": "Der gesuchte Stift ist im Kontext eindeutig."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Mein Stift, wo ist er?",
+   "verdict": "right",
+   "why": "Natürliche Frage mit passendem Pronomen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "wo ist mein stift",
+   "verdict": "right",
+   "why": "Die Frage stimmt; Großschreibung und Fragezeichen fehlen nur."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo mein Stift ist?",
+   "verdict": "wrong",
+   "why": "Das Verb muss in dieser Frage vor „mein Stift“ stehen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist meine Stift?",
+   "verdict": "wrong",
+   "why": "Es heißt „mein Stift“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo sind mein Stift?",
+   "verdict": "wrong",
+   "why": "Ein Stift verlangt die Verbform „ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was ist mein Stift?",
+   "verdict": "wrong",
+   "why": "Fragt nicht nach dem Ort."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist Ihr Stift?",
+   "verdict": "wrong",
+   "why": "Fragt förmlich nach Lenas Stift statt nach dem eigenen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft ist blau.",
+   "verdict": "right",
+   "why": "Nennt die Farbe in einem korrekten Satz."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Es ist grün.",
+   "verdict": "right",
+   "why": "Das Pronomen passt; eine Farbe wird genannt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Das Heft ist rot.",
+   "verdict": "right",
+   "why": "Vollständiger Satz zur Farbe des Hefts."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft ist schwarz und weiß.",
+   "verdict": "right",
+   "why": "Auch zwei Farben sind als eigene Angabe möglich."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "mein heft ist gelb",
+   "verdict": "right",
+   "why": "Der Satz stimmt; Großschreibung und Punkt fehlen nur."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Blau.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Heft ist rot.",
+   "verdict": "wrong",
+   "why": "Es heißt „mein Heft“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft blau.",
+   "verdict": "wrong",
+   "why": "Das Verb „ist“ fehlt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Er ist grün.",
+   "verdict": "wrong",
+   "why": "Für „das Heft“ braucht man hier „es“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Heft sind schwarz.",
+   "verdict": "wrong",
+   "why": "Zu einem Heft gehört die Verbform „ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat deine Tasche?",
+   "verdict": "right",
+   "why": "Fragt Lena mit der passenden du-Form nach der Farbe."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat die Tasche?",
+   "verdict": "right",
+   "why": "Lenas Tasche ist im Kontext gemeint."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat deine Tasche, Lena?",
+   "verdict": "right",
+   "why": "Korrekte Frage an Lena."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Deine Tasche, welche Farbe hat sie?",
+   "verdict": "right",
+   "why": "Natürliche Frage mit passendem Pronomen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "welche farbe hat deine tasche",
+   "verdict": "right",
+   "why": "Die Frage stimmt trotz fehlender Großschreibung und Zeichensetzung."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat dein Tasche?",
+   "verdict": "wrong",
+   "why": "Es heißt „deine Tasche“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe haben deine Tasche?",
+   "verdict": "wrong",
+   "why": "Bei einer Tasche heißt es „hat“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe deine Tasche?",
+   "verdict": "wrong",
+   "why": "Das Verb „hat“ fehlt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Welche Farbe hat Ihre Tasche?",
+   "verdict": "wrong",
+   "why": "Mit Lena wird du verwendet; deshalb „deine“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Wo ist deine Tasche?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Ort statt nach der Farbe."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Hier.",
+   "verdict": "right",
+   "why": "Die kurze Ortsangabe ist ausdrücklich erlaubt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Da.",
+   "verdict": "right",
+   "why": "Passende kurze Antwort."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Meine Schere ist hier.",
+   "verdict": "right",
+   "why": "Nennt den Ort der eigenen Schere."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Sie ist da.",
+   "verdict": "right",
+   "why": "„Sie“ passt zu „die Schere“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "die schere ist hir",
+   "verdict": "right",
+   "why": "„Hir“ ist ein eindeutiger Tippfehler; die Ortsantwort stimmt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Er ist hier.",
+   "verdict": "wrong",
+   "why": "Die Schere wird hier mit „sie“ bezeichnet."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Meine Schere sind da.",
+   "verdict": "wrong",
+   "why": "Eine Schere verlangt „ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Hier ist mein Schere.",
+   "verdict": "wrong",
+   "why": "Es heißt „meine Schere“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Ja, meine Schere.",
+   "verdict": "wrong",
+   "why": "Nennt keinen Ort mit „hier“ oder „da“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Wo ist deine Schere?",
+   "verdict": "wrong",
+   "why": "Fragt zurück, statt Lenas Frage zu beantworten."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist mein Heft?",
+   "verdict": "right",
+   "why": "Fragt nach dem eigenen Heft."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Lena, wo ist mein Heft?",
+   "verdict": "right",
+   "why": "Passende Frage an Lena."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist das Heft?",
+   "verdict": "right",
+   "why": "Das gesuchte Heft ist im Kontext gemeint."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Mein Heft, wo ist es?",
+   "verdict": "right",
+   "why": "Natürliche Frage mit korrektem Pronomen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "wo ist mein heft",
+   "verdict": "right",
+   "why": "Die Frage stimmt; Großschreibung und Fragezeichen fehlen nur."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist meine Heft?",
+   "verdict": "wrong",
+   "why": "Es heißt „mein Heft“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo mein Heft ist?",
+   "verdict": "wrong",
+   "why": "Die Wortstellung der direkten Frage ist falsch."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo sind mein Heft?",
+   "verdict": "wrong",
+   "why": "Bei einem Heft heißt es „ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Was ist mein Heft?",
+   "verdict": "wrong",
+   "why": "Fragt nicht nach dem Ort."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 3,
+   "answer": "Wo ist dein Heft?",
+   "verdict": "wrong",
+   "why": "Fragt nach Lenas Heft statt nach dem eigenen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Meine Tasche ist braun.",
+   "verdict": "right",
+   "why": "Nennt die Farbe in einem vollständigen Satz."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Sie ist rot.",
+   "verdict": "right",
+   "why": "Pronomen und Farbangabe passen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Die Tasche ist schwarz.",
+   "verdict": "right",
+   "why": "Korrekte Antwort auf die Farbfrage."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Meine Tasche ist blau und weiß.",
+   "verdict": "right",
+   "why": "Eine eigene Angabe mit zwei Farben ist möglich."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "meine tasche ist grun",
+   "verdict": "right",
+   "why": "Der Satz stimmt; Umlaut und Großschreibung fehlen nur."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Rot.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Mein Tasche ist blau.",
+   "verdict": "wrong",
+   "why": "Es heißt „meine Tasche“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Meine Tasche grün.",
+   "verdict": "wrong",
+   "why": "Das Verb „ist“ fehlt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Er ist schwarz.",
+   "verdict": "wrong",
+   "why": "Für die Tasche braucht man hier „sie“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Meine Tasche sind gelb.",
+   "verdict": "wrong",
+   "why": "Eine Tasche verlangt die Verbform „ist“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat dein Stift?",
+   "verdict": "right",
+   "why": "Fragt mit passender du-Form nach Lenas Stiftfarbe."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat der Stift?",
+   "verdict": "right",
+   "why": "Lenas Stift ist im Kontext gemeint."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat dein Stift, Lena?",
+   "verdict": "right",
+   "why": "Korrekte Frage an Lena."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Dein Stift, welche Farbe hat er?",
+   "verdict": "right",
+   "why": "Natürliche Frage mit korrektem Pronomen."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "welche farbe hat dein stift",
+   "verdict": "right",
+   "why": "Die Frage stimmt trotz fehlender Großschreibung und Zeichensetzung."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat deine Stift?",
+   "verdict": "wrong",
+   "why": "Es heißt „dein Stift“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe haben dein Stift?",
+   "verdict": "wrong",
+   "why": "Ein Stift verlangt die Verbform „hat“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe dein Stift?",
+   "verdict": "wrong",
+   "why": "Das Verb „hat“ fehlt."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Welche Farbe hat Ihr Stift?",
+   "verdict": "wrong",
+   "why": "Mit Lena wird du verwendet; deshalb „dein“."
+  },
+  {
+   "lektion": 5,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Wo ist dein Stift?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Ort statt nach der Farbe."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche einen Computer.",
+   "verdict": "right",
+   "why": "Nennt den Bedarf mit korrektem Artikel."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche ein Telefon.",
+   "verdict": "right",
+   "why": "Vollständiger, passender Satz."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche einen Stift und Papier.",
+   "verdict": "right",
+   "why": "Nennt benötigte Dinge in einem korrekten Satz."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Guten Morgen, ich brauche ein Handy.",
+   "verdict": "right",
+   "why": "Begrüßung und korrekte Aussage zum Bedarf."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich brauche eine schere",
+   "verdict": "right",
+   "why": "Der Satz stimmt; Großschreibung und Punkt fehlen nur."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Einen Computer.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche ein Computer.",
+   "verdict": "wrong",
+   "why": "Nach „brauche“ heißt es „einen Computer“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauchen ein Telefon.",
+   "verdict": "wrong",
+   "why": "Zu „ich“ gehört „brauche“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe einen Computer.",
+   "verdict": "wrong",
+   "why": "Sagt, was vorhanden ist, statt was gebraucht wird."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich brauche einen Handy.",
+   "verdict": "wrong",
+   "why": "Es heißt „ein Handy“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist mein Büro?",
+   "verdict": "right",
+   "why": "Fragt nach dem eigenen Büro."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Herr Weber, wo ist mein Büro?",
+   "verdict": "right",
+   "why": "Passende Frage an Herrn Weber."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist das Büro?",
+   "verdict": "right",
+   "why": "Das eigene Büro ist im Kontext gemeint."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Entschuldigung, wo ist mein Büro?",
+   "verdict": "right",
+   "why": "Höfliche, korrekte Ortsfrage."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "wo ist mein buero",
+   "verdict": "right",
+   "why": "„Ue“ ersetzt den Umlaut; fehlende Großschreibung ist unerheblich."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo mein Büro ist?",
+   "verdict": "wrong",
+   "why": "Das Verb steht in der direkten Frage an zweiter Stelle."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo sind mein Büro?",
+   "verdict": "wrong",
+   "why": "Ein Büro verlangt die Verbform „ist“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist meine Büro?",
+   "verdict": "wrong",
+   "why": "Es heißt „mein Büro“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wann ist mein Büro?",
+   "verdict": "wrong",
+   "why": "„Wann“ fragt nach einer Zeit, nicht nach dem Ort."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wo ist dein Büro?",
+   "verdict": "wrong",
+   "why": "Fragt informell nach Herrn Webers Büro statt nach dem eigenen."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann ist die Pause?",
+   "verdict": "right",
+   "why": "Fragt korrekt nach dem Zeitpunkt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann machen wir Pause?",
+   "verdict": "right",
+   "why": "Natürliche Frage nach der gemeinsamen Pause."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Um wie viel Uhr ist die Pause?",
+   "verdict": "right",
+   "why": "Fragt ausdrücklich nach der Uhrzeit."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Herr Weber, wann ist die Pause?",
+   "verdict": "right",
+   "why": "Passende Frage mit höflicher Anrede."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "wann ist die pause",
+   "verdict": "right",
+   "why": "Die Frage stimmt; Großschreibung und Fragezeichen fehlen nur."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo ist die Pause?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Ort statt nach dem Zeitpunkt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann die Pause ist?",
+   "verdict": "wrong",
+   "why": "Die Wortstellung der direkten Frage ist falsch."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann sind die Pause?",
+   "verdict": "wrong",
+   "why": "Eine Pause verlangt die Verbform „ist“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann ist der Pause?",
+   "verdict": "wrong",
+   "why": "Es heißt „die Pause“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann hast du Pause?",
+   "verdict": "wrong",
+   "why": "Die du-Anrede passt nicht zu Herrn Weber."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Samira Hassan, guten Tag.",
+   "verdict": "right",
+   "why": "Nennt den eigenen Namen in einer natürlichen Telefonmeldung."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hier ist Omar Ali.",
+   "verdict": "right",
+   "why": "Stellt sich am Telefon mit Namen vor."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich heiße Rania.",
+   "verdict": "right",
+   "why": "Nennt den eigenen Namen; ein Vorname genügt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Youssef Mansour am Telefon.",
+   "verdict": "right",
+   "why": "Passende Telefonmeldung; ein vollständiger Satz ist nicht verlangt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "ich bin ahmed",
+   "verdict": "right",
+   "why": "Nennt den eigenen Namen; nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie heißen Sie?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem anderen Namen, statt den eigenen zu nennen."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Guten Tag.",
+   "verdict": "wrong",
+   "why": "Der eigene Name fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Name ist Karim.",
+   "verdict": "wrong",
+   "why": "Es heißt „Mein Name“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich heißen Fatima.",
+   "verdict": "wrong",
+   "why": "Zu „ich“ gehört „heiße“."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Du bist Nabil.",
+   "verdict": "wrong",
+   "why": "Benennt den Gesprächspartner statt sich selbst."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "04215730",
+   "verdict": "right",
+   "why": "Alle Ziffern einschließlich der Anfangsnull stimmen."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421 5730",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; Leerzeichen sind erlaubt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421-5730",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; der Bindestrich gliedert sie nur."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "(0421) 5730",
+   "verdict": "right",
+   "why": "Korrekte Nummer mit geklammerter Vorwahl."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "null vier zwei eins funf sieben drei null",
+   "verdict": "right",
+   "why": "Die Ziffernfolge stimmt; bei „fünf“ fehlt nur der Umlaut."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "4215730",
+   "verdict": "wrong",
+   "why": "Die Anfangsnull fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421 7530",
+   "verdict": "wrong",
+   "why": "Fünf und sieben wurden vertauscht."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421 5738",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer muss null sein."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0421 573",
+   "verdict": "wrong",
+   "why": "Die letzte Null fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "0423381",
+   "verdict": "wrong",
+   "why": "Das ist die Nummer aus der Szene, nicht die hier gehörte."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "01712345678",
+   "verdict": "right",
+   "why": "Die vollständige gehörte Handynummer stimmt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171 234 5678",
+   "verdict": "right",
+   "why": "Alle Ziffern stehen in der richtigen Reihenfolge."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171-2345678",
+   "verdict": "right",
+   "why": "Der Bindestrich verändert die richtige Nummer nicht."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171 / 234 56 78",
+   "verdict": "right",
+   "why": "Andere Gruppierung, aber dieselbe Ziffernfolge."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "null eins sieben eins zwei drei vier funf sechs sieben acht",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; bei „fünf“ fehlt nur der Umlaut."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "1712345678",
+   "verdict": "wrong",
+   "why": "Die Anfangsnull fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171 243 5678",
+   "verdict": "wrong",
+   "why": "Drei und vier wurden vertauscht."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0171 234 567",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer acht fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0176 234 5678",
+   "verdict": "wrong",
+   "why": "Die vierte Ziffer muss eins sein."
+  },
+  {
+   "lektion": 6,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "0421 5730",
+   "verdict": "wrong",
+   "why": "Das ist die Büronummer, nicht Frau Bergs Handynummer."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "04216214",
+   "verdict": "right",
+   "why": "Die vollständige gehörte Nummer stimmt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421 6214",
+   "verdict": "right",
+   "why": "Die Ziffernfolge ist richtig."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421-6214",
+   "verdict": "right",
+   "why": "Die Nummer stimmt; der Bindestrich ist nur eine Gliederung."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "(0421) 6214",
+   "verdict": "right",
+   "why": "Korrekte Nummer mit geklammerter Vorwahl."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "null vier zwei eins sechs zwei eins veir",
+   "verdict": "right",
+   "why": "„Veir“ ist ein eindeutiger Tippfehler für „vier“; die Nummer stimmt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "4216214",
+   "verdict": "wrong",
+   "why": "Die Anfangsnull fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421 6124",
+   "verdict": "wrong",
+   "why": "Zwei und eins wurden vertauscht."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421 621",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer vier fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421 6215",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer muss vier sein."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "0421 5730",
+   "verdict": "wrong",
+   "why": "Das ist die Nummer der ersten Durchführung."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "01528765432",
+   "verdict": "right",
+   "why": "Die vollständige gehörte Handynummer stimmt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152 876 5432",
+   "verdict": "right",
+   "why": "Alle Ziffern stehen in der richtigen Reihenfolge."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152-8765432",
+   "verdict": "right",
+   "why": "Der Bindestrich gliedert die richtige Nummer."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152 / 876 54 32",
+   "verdict": "right",
+   "why": "Die Gruppierung ist anders, die Nummer bleibt gleich."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "null eins funf zwei acht sieben sechs fünf vier drei zwei",
+   "verdict": "right",
+   "why": "Die Ziffernfolge stimmt; ein Umlaut fehlt nur."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "1528765432",
+   "verdict": "wrong",
+   "why": "Die Anfangsnull fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152 867 5432",
+   "verdict": "wrong",
+   "why": "Sieben und sechs wurden vertauscht."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152 876 543",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer zwei fehlt."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0172 876 5432",
+   "verdict": "wrong",
+   "why": "Die dritte Ziffer muss fünf sein."
+  },
+  {
+   "lektion": 6,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "0152 876 5433",
+   "verdict": "wrong",
+   "why": "Die letzte Ziffer muss zwei sein."
+  }
+ ]
+}
