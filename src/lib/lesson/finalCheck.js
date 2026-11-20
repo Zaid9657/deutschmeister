@@ -50,7 +50,15 @@ export const digitsOf = (said) => String(said).split(/[,–-]/).map((group) => n
  * verbs), folded. A gap word the course teaches must be one of the turn's `slotWords`; a word the
  * course never teaches is the learner's own (Syrien, Krankenpfleger, Kurdisch) and is welcome.
  */
+const LEXICONS = new WeakMap();
 export function courseLexicon(curriculum) {
+  if (curriculum && typeof curriculum === 'object' && LEXICONS.has(curriculum)) return LEXICONS.get(curriculum);
+  const known = buildLexicon(curriculum);
+  if (curriculum && typeof curriculum === 'object') LEXICONS.set(curriculum, known);
+  return known;
+}
+
+function buildLexicon(curriculum) {
   const known = new Set();
   // Alongside the words: the cast's names (a name gap takes them), the verbs' present forms (a clause
   // after „und" starts with one) and every noun's article („den Stuhl", „die Lampe").
@@ -82,7 +90,37 @@ export function courseLexicon(curriculum) {
       for (const t of [turn, ...(turn.variants || [])]) for (const list of lists(t)) for (const w of list) known.add(fold(w));
     }
   }
+  // Every word the course writes with ä, ö, ü or ß, by its spelling with ae, oe, ue and ss (`spelledOut`), and
+  // every word it writes, so a real „ss“ or „ue“ („Wasser“, „neue“) stays as it is.
+  known.umlautOf = new Map();
+  known.plainWords = new Set();
+  // The grader's own word lists count too („Stück“, „Gläser“).
+  for (const w of [JSON.stringify(curriculum || {}), ...MASS, ...Object.keys(MEASURE_GENDER)].join(' ').match(/\p{L}+/gu) || []) {
+    const lower = w.toLocaleLowerCase('de');
+    known.plainWords.add(lower);
+    if (/[äöüß]/.test(lower)) known.umlautOf.set(asciiUmlauts(lower), lower);
+  }
   return known;
+}
+
+const asciiUmlauts = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+
+/**
+ * ONE SPELLING FOLD for the whole final check (courses session, 2026-11-20): a word typed with ae, oe, ue or ss
+ * for ä, ö, ü or ß („heisse“, „Gruesse“, „Stueck“, „Tuerkei“) is the course's word, before anything is graded —
+ * frames, greetings and sign-offs, gap values and lexicon lookups all see „heiße“, „Grüße“, „Stück“,
+ * „Türkei“. It is German spelling, not a slip. A word the course writes with „ss“ or „ue“ stays.
+ */
+export function spelledOut(text, lexicon) {
+  const map = lexicon?.umlautOf;
+  if (!map?.size) return String(text);
+  return String(text).replace(/\p{L}+/gu, (w) => {
+    const lower = w.toLocaleLowerCase('de');
+    if (!/ae|oe|ue|ss/.test(lower) || lexicon.plainWords?.has(lower)) return w;
+    const u = map.get(lower);
+    if (!u) return w;
+    return /^\p{Lu}/u.test(w) ? u.charAt(0).toLocaleUpperCase('de') + u.slice(1) : u;
+  });
 }
 
 /** The choice the learner made in a choice gap („Das ist meine Schwester" → Schwester), or null. */
@@ -1016,7 +1054,7 @@ export function typedResult(turn, value) {
     const ok = turn.accepted.some((o) => new RegExp(`^${fold(o)}\\s+\\p{L}`, 'u').test(fold(value)));
     return ok ? RESULT.CORRECT : RESULT.WRONG;
   }
-  const text = westernDigits(value);
+  const text = spelledOut(westernDigits(value), turn.lexicon);
   if (turn.listen && (turn.when || turn.time)) {
     // A heard day and time („Dienstag, 9.30“, „am Dienstag um halb zehn“, „Di 9:30“) or a heard time, also in the
     // heard sentence's own words („Der Zug fährt um neun Uhr dreißig“, second corpus of Lektion 10).

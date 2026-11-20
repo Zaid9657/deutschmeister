@@ -613,3 +613,30 @@ test('a can-do is shown only when every one of its turns was shown', () => {
   const farewellMissed = [...all.slice(0, -1), 'missed'];
   assert.deepEqual(canDoShown(turns, farewellMissed, 4), [false, true, true, true]);
 });
+
+test('one spelling fold: every blind-corpus answer with ä, ö, ü or ß grades the same typed with ae, oe, ue, ss (2026-11-20)', () => {
+  const ascii = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ß/g, 'ss');
+  const dir = new URL('../docs/course-factory/a11-lektion-rollout/corpora/', import.meta.url);
+  let n = 0;
+  for (const batch of ['batch-1', 'batch-2', 'batch-3', 'batch-4']) {
+    for (const name of ['corpus-1.json', 'corpus-2.json', 'corpus-2-avoid-obvious.json', 'corpus-3-most-common.json']) {
+      let raw;
+      try { raw = readFileSync(new URL(`${batch}/${name}`, dir), 'utf8'); } catch { continue; }
+      for (const it of JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)).items) {
+        if (!/[äöüß]/i.test(it.answer)) continue;
+        const turn = sitting(CURRICULUM_A11.lektionen[it.lektion - 1], (it.sitting || 1) - 1)[it.turn - 1];
+        if (!turn) continue;
+        n += 1;
+        const [a, b] = [typedResult(turn, it.answer), typedResult(turn, ascii(it.answer))];
+        assert.equal(b === RESULT.WRONG, a === RESULT.WRONG, `L${it.lektion}: ${it.answer} → ${a}, ${ascii(it.answer)} → ${b}`);
+      }
+    }
+  }
+  assert.ok(n > 300, `${n} answers`);
+  // The paths the independent score found refused: a sign-off, a measure, a choice gap.
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  assert.equal(typedResult(at(2)[6], 'Guten Tag, ich heisse Zaid. Ich bin am 12.03.1995 geboren. Viele Gruesse, Zaid'), RESULT.CORRECT);
+  assert.equal(typedResult(at(9)[2], 'Ich haette gern ein Stueck Kuchen.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(10)[0], 'Ich fahre in die Tuerkei.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(2)[2], 'Ich bin muede.'), RESULT.WRONG, '„müde“ is no job, however it is typed');
+});
