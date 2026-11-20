@@ -429,6 +429,19 @@ function nounFirst(text, lexicon) {
   return [`${m[2].charAt(0).toLocaleUpperCase('de')}${m[2].slice(1)} ${det.toLocaleLowerCase('de')} ${noun}?`];
 }
 
+/**
+ * A question with its question word last („Der Stuhl kostet wie viel?", „Deine Tasche hat welche
+ * Farbe?") is the question in its taught order („Wie viel kostet der Stuhl?"); the words are then
+ * graded as always, so „Der Stuhl kosten wie viel?" stays wrong (blind corpora, 2026-11-20).
+ */
+function questionWordLast(text) {
+  const m = String(text).trim().match(/^(\p{L}+(?:\s+\p{L}+)?)\s+(\p{L}+)\s+(wie viel euro|wie viel|wie teuer|welche farbe|wo|wann|was|woher)\s*\?$/iu);
+  if (!m) return [];
+  const subject = m[1].split(/\s+/);
+  const first = DETERMINERS.has(fold(subject[0])) || SUBJECTS.has(fold(subject[0])) ? subject[0].toLocaleLowerCase('de') : subject[0];
+  return [`${m[3].charAt(0).toLocaleUpperCase('de')}${m[3].slice(1)} ${m[2]} ${[first, ...subject.slice(1)].join(' ')}?`];
+}
+
 // A price is in euros: „18,00 Euro" and „18,- €" are 18; a heard price in euros is no number of cents.
 const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi, 'fünf').replace(/zw(?:oe|o)lf/gi, 'zwölf'))
   .replace(/(\d),(?:00|-)(?!\d)/g, '$1').replace(/\D/g, '');
@@ -477,6 +490,7 @@ export function typedResult(turn, value) {
     if (rest && rest !== t.trim()) add(rest);
   }
   for (const t of [...tries]) for (const s of nounFirst(t, turn.lexicon)) add(s);
+  for (const t of [...tries]) for (const s of questionWordLast(t)) add(s);
   // The noun asked about, echoed before the answer: „Die Schere? Da." is „Da.".
   for (const t of [...tries]) {
     for (const noun of Object.values(turn.nounFor || {}).flat()) {

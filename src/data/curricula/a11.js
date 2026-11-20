@@ -1224,9 +1224,9 @@ export const CURRICULUM_A11 = {
             { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?', 'Was ist denn das?', 'Was ist das hier?', 'Was ist das da?', 'Das hier, was ist das?'] },
             { canDo: 0, taskDe: 'Fragen Sie nach dem Preis.', taskEn: 'Ask what it costs.',
               variants: [
-                { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie teuer ist sie?', 'Wie teuer ist die Uhr?', 'Wie teuer ist das?'] },
-                { cue: { de: 'Das ist ein Rucksack.', en: 'That is a rucksack.' }, accepted: ['Was kostet er?', 'Was kostet der Rucksack?', 'Wie viel kostet er?', 'Wie viel kostet der Rucksack?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie teuer ist er?', 'Wie teuer ist der Rucksack?', 'Wie teuer ist das?'] },
-                { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie teuer ist es?', 'Wie teuer ist das Regal?', 'Wie teuer ist das?'] },
+                { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel Euro kostet sie?', 'Wie viel kostet die Uhr?', 'Wie viel Euro kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist sie?', 'Wie teuer ist die Uhr?', 'Wie teuer ist das?'] },
+                { cue: { de: 'Das ist ein Rucksack.', en: 'That is a rucksack.' }, accepted: ['Was kostet er?', 'Was kostet der Rucksack?', 'Wie viel kostet er?', 'Wie viel Euro kostet er?', 'Wie viel kostet der Rucksack?', 'Wie viel Euro kostet der Rucksack?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist er?', 'Wie teuer ist der Rucksack?', 'Wie teuer ist das?'] },
+                { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel Euro kostet es?', 'Wie viel kostet das Regal?', 'Wie viel Euro kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist es?', 'Wie teuer ist das Regal?', 'Wie teuer ist das?'] },
               ] },
             { canDo: 2, taskDe: 'Frau Wolf sagt den Preis. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says the price. Write it down.',
               variants: [{ listen: 'Sie kostet 18 Euro.' }, { listen: 'Er kostet 45 Euro.' }, { listen: 'Es kostet 72 Euro.' }] },
@@ -1234,9 +1234,9 @@ export const CURRICULUM_A11 = {
             // die Lampe, der Tisch): the Genus of this Lektion, not a copy of the task (DaF review 2026-11-19).
             { canDo: 1,
               variants: [
-                { taskDe: 'Stuhl: Fragen Sie nach dem Preis.', taskEn: 'Chair (Stuhl): ask what it costs.', accepted: ['Was kostet der Stuhl?', 'Wie viel kostet der Stuhl?', 'Wie teuer ist der Stuhl?', 'Und der Stuhl?', 'Und der Stuhl? Was kostet er?', 'Und was kostet der Stuhl?'] },
-                { taskDe: 'Lampe: Fragen Sie nach dem Preis.', taskEn: 'Lamp (Lampe): ask what it costs.', accepted: ['Was kostet die Lampe?', 'Wie viel kostet die Lampe?', 'Wie teuer ist die Lampe?', 'Und die Lampe?', 'Und die Lampe? Was kostet sie?', 'Und was kostet die Lampe?'] },
-                { taskDe: 'Tisch: Fragen Sie nach dem Preis.', taskEn: 'Table (Tisch): ask what it costs.', accepted: ['Was kostet der Tisch?', 'Wie viel kostet der Tisch?', 'Wie teuer ist der Tisch?', 'Und der Tisch?', 'Und der Tisch? Was kostet er?', 'Und was kostet der Tisch?'] },
+                { taskDe: 'Stuhl: Fragen Sie nach dem Preis.', taskEn: 'Chair (Stuhl): ask what it costs.', accepted: ['Was kostet der Stuhl?', 'Wie viel kostet der Stuhl?', 'Wie viel Euro kostet der Stuhl?', 'Wie teuer ist der Stuhl?', 'Und der Stuhl?', 'Und der Stuhl? Was kostet er?', 'Und was kostet der Stuhl?'] },
+                { taskDe: 'Lampe: Fragen Sie nach dem Preis.', taskEn: 'Lamp (Lampe): ask what it costs.', accepted: ['Was kostet die Lampe?', 'Wie viel kostet die Lampe?', 'Wie viel Euro kostet die Lampe?', 'Wie teuer ist die Lampe?', 'Und die Lampe?', 'Und die Lampe? Was kostet sie?', 'Und was kostet die Lampe?'] },
+                { taskDe: 'Tisch: Fragen Sie nach dem Preis.', taskEn: 'Table (Tisch): ask what it costs.', accepted: ['Was kostet der Tisch?', 'Wie viel kostet der Tisch?', 'Wie viel Euro kostet der Tisch?', 'Wie teuer ist der Tisch?', 'Und der Tisch?', 'Und der Tisch? Was kostet er?', 'Und was kostet der Tisch?'] },
               ] },
             // The total of the two things just asked about, before the learner says what they buy.
             { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
@@ -1751,7 +1751,7 @@ export const CURRICULUM_A11 = {
             // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …", the model answer) or
             // as Germans answer a call („Hier ist …", or the name alone).
             { canDo: 1, cue: { de: 'Weber, guten Tag!', en: 'Weber, good day!' }, taskDe: 'Herr Weber ruft an. Sagen Sie am Telefon Ihren Namen.', taskEn: 'Herr Weber is calling you. Say your name on the phone.',
-              accepted: ['Ich heiße …', 'Guten Tag, ich heiße …', 'Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Mein Name ist …', '…', '…, guten Tag.', '…, hallo.'], slot: 'name',
+              accepted: ['Ich heiße …', 'Guten Tag, ich heiße …', 'Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Mein Name ist …', '…', '…, guten Tag.', '…, hallo.', '… am Telefon.'], slot: 'name',
               example: 'Guten Tag, ich heiße Ana Chakiri.' },
             { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Büro. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
               variants: [{ listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, fünf sieben drei null.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, sechs zwei eins vier.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, neun acht null zwei.' }] },

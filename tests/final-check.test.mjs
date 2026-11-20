@@ -337,6 +337,13 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   assert.equal(typedResult(total, '30,00 €'), RESULT.CORRECT);
   assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], 1)[2], 'funfundvierzig euro'), RESULT.CORRECT);
   assert.ok(askPrice.accepted.length);
+  // The third blind corpus: the question word last, „Wie viel Euro …", a name „am Telefon".
+  assert.equal(typedResult(l4[3], 'Der Stuhl kostet wie viel?'), RESULT.CORRECT);
+  assert.equal(typedResult(l4[3], 'Der Stuhl kosten wie viel?'), RESULT.WRONG, 'the words are graded as always');
+  assert.equal(typedResult(askColour, 'Deine Tasche hat welche Farbe?'), RESULT.CORRECT);
+  assert.equal(typedResult(office, 'Mein Büro ist wo?'), RESULT.CORRECT);
+  assert.equal(typedResult(askPrice, 'Wie viel Euro kostet die Uhr?'), RESULT.CORRECT);
+  assert.equal(typedResult(phoneName, 'Youssef Mansour am Telefon.'), RESULT.CORRECT);
   // A second clause after „und" is part of the answer and must be valid too.
   const own = sitting(l3)[4];
   assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Deutsch.'), RESULT.CORRECT);
