@@ -67,9 +67,9 @@ test('SPA gates and static continuation use the same course policy instead of AI
 
 test('a new AI subscription cannot bypass the course-level gate for final tests', () => {
   const source = readFileSync(new URL('../src/components/ExamSubscriptionGuard.jsx', import.meta.url), 'utf8');
-  assert.match(source, /const examAccess = resolved\?\.gateLevel \? hasLevelAccess\(resolved.gateLevel\) : hasAccess;/);
+  assert.match(source, /const examAccess = resolved\?\.gateLevel \? hasFullCourse\(resolved.gateLevel\) : hasAccess;/);
   const expression = source.match(/const examAccess = ([^;]+);/)[1];
-  const evaluate = new Function('resolved', 'hasLevelAccess', 'hasAccess', `return (${expression});`);
+  const evaluate = new Function('resolved', 'hasFullCourse', 'hasAccess', `return (${expression});`);
   for (const subscription of [old, fresh]) {
     const access = (level) => Boolean(courseAccessReason(snapshot(subscription), level, now));
     assert.equal(evaluate({ gateLevel: 'a1.2' }, access, true), subscription === old);

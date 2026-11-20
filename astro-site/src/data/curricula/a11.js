@@ -67,6 +67,8 @@
  * receptionist's, clerk's, seller's, waiter's and station staff's lines (Codex review, 2026-10-09).
  * tests/course-value.test.mjs holds every Lektion to it.
  */
+import { LESEN_A11 } from './a11.lesen.js';
+
 export const LEARNER_CAST = ['Ana', 'Tim', 'Lena'];
 
 /**
@@ -147,9 +149,11 @@ export const DIALOG_NAMES = [
 // learner's own (Syrien, Krankenpfleger, Kurdisch). So „Ich bin müde" is no job and „Sie spricht Brot"
 // no language, while every real job, place and language a learner brings still counts.
 // `Essen` is a city as well as a verb this course teaches (blind corpus, 2026-11-19: „Ich wohne in Essen").
-const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Italien', 'Polen', 'Spanien', 'Marokko', 'Essen'];
+// `Schweiz` is taught in Lektion 10 („in der Schweiz", with its article).
+const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Schweiz', 'Italien', 'Polen', 'Spanien', 'Marokko', 'Essen'];
 const CHECK_JOBS = ['Student', 'Studentin', 'Lehrer', 'Lehrerin', 'Ingenieur', 'Ingenieurin', 'Verkäufer', 'Verkäuferin', 'Arzt', 'Kellner', 'Fahrer', 'Fahrerin', 'Chef', 'Chefin'];
 const CHECK_LANGUAGES = ['Deutsch', 'Englisch', 'Arabisch'];
+const CHECK_COLORS = ['rot', 'blau', 'grün', 'gelb', 'schwarz', 'weiß', 'braun'];
 
 export const CURRICULUM_A11 = {
   level: 'a1.1',
@@ -356,9 +360,9 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Das Alphabet: buchstabieren',
         bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We [veː]). Der Name ist nicht der Laut: In *Wasser* hört man [v]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
-        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett**. To ask how a word is written: **Wie buchstabiert man das?**',
-        // Arabic help (2026-11-17): Codex's Modern Standard Arabic from bodyEn; German stays in Latin letters.
-        bodyAr: 'لتهجئة كلمة، انطق أسماء حروفها الألمانية حرفًا حرفًا. يسهل الخلط بين E [eː] وI [iː]؛ وبين G [geː] وJ (Jot)؛ وبين V (Vau) وW (We [veː]). اسم الحرف يختلف عن صوته: اسم W هو We، لكنه في كلمة Wasser يُنطق بالصوت [v]. اسم Y هو Ypsilon، وZ هو Zett، وß هو Eszett. للسؤال عن كيفية كتابة كلمة، يمكنك أن تقول: Wie buchstabiert man das?',
+        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett** or scharfes S. To ask how a word is written: **Wie buchstabiert man das?**',
+        // Arabic help: Codex's Modern Standard Arabic from bodyEn, re-derived 2026-11-19 after the marking fixes rewrote the English, checked by a blind back-translation.
+        bodyAr: 'لتهجئة كلمة، انطق أسماء حروفها الألمانية حرفًا حرفًا. يسهل الخلط بين E [eː] وI [iː]؛ وبين G [geː] وJ (Jot)؛ وبين V (Vau) وW (We [veː]). اسم الحرف يختلف عن صوته: اسم W هو We، لكنه في كلمة Wasser يُنطق بالصوت [v]. اسم Y هو Ypsilon، وZ هو Zett، وß هو Eszett أو scharfes S. للسؤال عن كيفية كتابة كلمة، يمكنك أن تقول: Wie buchstabiert man das?',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
@@ -508,7 +512,7 @@ export const CURRICULUM_A11 = {
           },
           turns: [
             { canDo: 0, cue: { de: 'Guten Tag! Woher kommen Sie?', en: 'Good day! Where do you come from?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you come from, in one sentence.', accepted: ['Ich komme aus …', 'Ich bin aus …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich komme aus Marokko.' },
-            { canDo: 3, cue: { de: 'Und wo wohnen Sie?', en: 'And where do you live?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you live, in one sentence.', accepted: ['Ich wohne in …', 'Ich lebe in …', 'Mein Wohnort ist …', 'Jetzt wohne ich in …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich wohne in Bremen.' },
+            { canDo: 3, cue: { de: 'Und wo wohnen Sie?', en: 'And where do you live?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you live, in one sentence.', accepted: ['Ich wohne in …', 'Ich lebe in …', 'Mein Wohnort ist …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich wohne in Bremen.' },
             // The course teaches a job without an article („Ich bin Lehrer", the notice); „Ich bin eine
             // Studentin" is German too and counts (DaF review 2026-11-19). A job the course never teaches is
             // the learner's own and counts.
@@ -521,7 +525,7 @@ export const CURRICULUM_A11 = {
             // two Leitpunkte of this Lektion's own writing task that a learner can make up — a name and a date.
             { canDo: 4, taskDe: 'Herr Weber bittet um eine kurze Nachricht an das Amt. Wie heißen Sie? Wann sind Sie geboren? Schreiben Sie ganze Sätze. Beim Datum brauchen Sie Tag, Monat und Jahr. Sie können ein Datum erfinden.', taskEn: 'Herr Weber asks for a short message to the office. What is your name? When were you born? Write full sentences. For the date, give the day, month and year. You can make up a date.',
               parts: [
-                ['Ich heiße …', 'Mein Name ist …'],
+                [{ frame: 'Ich heiße …', slot: 'name' }, { frame: 'Mein Name ist …', slot: 'name' }, { frame: 'Ich bin …', slot: 'name' }],
                 [{ frame: 'Ich bin am … geboren.', slot: 'date' }, { frame: 'Am … bin ich geboren.', slot: 'date' }, { frame: 'Mein Geburtsdatum ist der …', slot: 'date' }, { frame: 'Mein Geburtsdatum ist …', slot: 'date' }],
               ],
               // More about the learner may stand in the message too, in the forms this check knows.
@@ -725,6 +729,16 @@ export const CURRICULUM_A11 = {
         bodyAr: 'sein (يكون) فعل غير منتظم. احفظ ما يلي: ich bin، du bist، er/sie/es ist، wir sind، ihr seid، sie/Sie sind. بعد ich bin، يأتي اسم المهنة عادةً بلا أداة: «Ich bin Lehrer». لكن: «Das ist ein Lehrer». عند الحديث عن شخص، تكون الجنسية اسمًا: «Ich komme aus Marokko und bin Marokkanerin» و«Ali ist Marokkaner». وفي الاستمارة، تكون صفة: «Staatsangehörigkeit: marokkanisch». تاريخ ميلادك: Ich bin am 3.5.1998 geboren (وُلدتُ في…).',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
+        // RULE 27: Checkpoint 1 reads a notice, so a Lektion before it works one through first.
+        readingExample: {
+          type: 'notice', title: 'Ein Hinweis im Amt',
+          text: 'Amt: Bitte füllen Sie das Formular aus: Vorname, Nachname, Adresse und Telefonnummer. Danke!',
+          questionDe: 'Was steht im Formular? Lesen Sie den Hinweis. Achten Sie auf „Formular“.',
+          questionEn: 'What goes on the form? Read the notice. Look for “Formular” (form).',
+          answer: 'Vorname, Nachname, Adresse und Telefonnummer',
+          explanationDe: 'Im Formular stehen Vorname, Nachname, Adresse und Telefonnummer. Ein Hinweis sagt kurz, was Sie tun.',
+          explanationEn: 'The form asks for first name, surname, address and phone number. A notice says briefly what you do.',
+        },
       },
       // A real long/short contrast from this Lektion's own words: the i of Sie and wie is long [iː],
       // the i of bin and sind is short [ɪ]. „bin – bist – sind“ were three short vowels (2026-10 review).
@@ -1050,12 +1064,22 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['Das Kind ist jung. Es spricht Deutsch.', 'Wir sprechen Deutsch. Sprecht ihr auch Deutsch?'],
         title: 'er, sie, es – die Personalpronomen',
-        bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form. Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
-        bodyEn: 'A pronoun follows the article of the noun it stands for: **der** Bruder → **er**, **die** Schwester → **sie**, **das** Kind → **es**. For more than one person use **wir** (we), **ihr** (you, several people, informal) and **sie** (they). **Sie** with a capital S is the polite "you" – for one person or several. One verb to watch: **sprechen** changes its vowel – er **spricht**. Lektion 7 explains the pattern.',
-        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
-        bodyAr: 'نختار الضمير حسب أداة الاسم الذي يأخذ الضمير مكانه: der Bruder → er، die Schwester → sie، das Kind → es. لأكثر من شخص، استخدم wir (نحن)، وihr (أنتم، لعدة أشخاص بصيغة غير رسمية)، وsie (هم). أما Sie بحرف S كبير، فهي «أنت أو أنتم» بصيغة الاحترام، لشخص واحد أو عدة أشخاص. انتبه إلى الفعل sprechen: يتغيّر فيه حرف متحرّك، فنقول er spricht. يشرح Lektion 7 طريقة هذا التغيير.',
+        bodyDe: 'Pronomen richten sich normalerweise nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Bei bekannten Personen ist auch er oder sie möglich. Das Kind heißt Paul. Er ist zwei. Plural: **wir**, **ihr**, **sie**. Höflich: **Sie** mit großem S (eine/mehrere Personen). Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
+        bodyEn: 'Normally a pronoun follows the noun’s article: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. A known person can also be referred to with er/sie. Example: Das Kind heißt Paul. Er ist zwei. For several people: **wir**, **ihr**, **sie**. Polite **Sie** has a capital S and addresses one person or several. **sprechen** changes its vowel: er **spricht** — more in Lektion 7.',
+        // Arabic help: Codex's Modern Standard Arabic from bodyEn, re-derived 2026-11-19 after the marking fixes rewrote the English, checked by a blind back-translation.
+        bodyAr: 'نختار الضمير عادةً حسب أداة الاسم الذي يأخذ الضمير مكانه: der Bruder → er، die Schwester → sie، das Kind → es. ويمكن أيضًا استخدام er/sie للإشارة إلى شخص معروف. مثال: «Das Kind heißt Paul». «Er ist zwei». لأكثر من شخص، استخدم wir، وihr، وsie. أما Sie بحرف S كبير، فتُستخدم بصيغة الاحترام لمخاطبة شخص واحد أو عدة أشخاص. يتغيّر حرف علة في الفعل sprechen: er spricht. المزيد في Lektion 7.',
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
+        // RULE 27: Checkpoint 1 reads an ad, so a Lektion before it works one through first.
+        readingExample: {
+          type: 'ad', title: 'Eine Anzeige: zusammen sprechen',
+          text: 'Deutsch und Arabisch zusammen sprechen! Wir sind eine Familie aus Marokko. Wir wohnen in Bremen und sprechen Arabisch und Deutsch. Sprechen Sie auch Englisch? Telefonnummer: 0176 2468135.',
+          questionDe: 'Woher kommt die Familie? Lesen Sie die Anzeige. Achten Sie auf „aus“.',
+          questionEn: 'Where does the family come from? Read the ad. Look for “aus” (from).',
+          answer: 'aus Marokko',
+          explanationDe: 'Die Familie kommt aus Marokko und wohnt in Bremen. Die Anzeige nennt auch eine Telefonnummer.',
+          explanationEn: 'The family comes from Morocco and lives in Bremen. The ad also gives a phone number.',
+        },
       },
       phonetik: { focus: 'u und ü: Bruder [uː] – Brüder [yː] (lang), Mütter [ʏ] (kurz)', focusEn: 'u and ü: Bruder [uː] – Brüder [yː] (long), Mütter [ʏ] (short)', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
       hoeren: { kind: 'dictation', lines: [5, 7] },
@@ -1183,6 +1207,50 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): the same flea-market stall, now as the learner themself. The thing
+        // on the stall, its price and the total change on a retake; what the learner buys is their own
+        // choice and must carry the article „kaufen" asks for (`thing`: „den Stuhl", the notice's chunk).
+        check: {
+          partner: 'Frau Wolf',
+          open: {
+            en: 'It’s your turn to shop at Frau Wolf’s stall. There’s time to think through each answer.',
+            de: 'Jetzt kaufen Sie selbst am Stand von Frau Wolf ein. Sie haben Zeit, sich jede Antwort zu überlegen.',
+          },
+          passed: {
+            en: 'You asked about furniture, understood prices and said what you were buying. You’ve put your German to use at the flea market.',
+            de: 'Sie haben nach Möbeln gefragt, Preise verstanden und gesagt, was Sie kaufen. Sie haben Ihr Deutsch auf dem Flohmarkt angewendet.',
+          },
+          turns: [
+            { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?', 'Was ist denn das?', 'Was ist das hier?', 'Was ist das da?', 'Das hier, was ist das?'] },
+            { canDo: 0, taskDe: 'Fragen Sie nach dem Preis.', taskEn: 'Ask what it costs.',
+              variants: [
+                { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel Euro kostet sie?', 'Wie viel kostet die Uhr?', 'Wie viel Euro kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist sie?', 'Wie teuer ist die Uhr?', 'Wie teuer ist das?', 'Wie viel?'] },
+                { cue: { de: 'Das ist ein Rucksack.', en: 'That is a rucksack.' }, accepted: ['Was kostet er?', 'Was kostet der Rucksack?', 'Wie viel kostet er?', 'Wie viel Euro kostet er?', 'Wie viel kostet der Rucksack?', 'Wie viel Euro kostet der Rucksack?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist er?', 'Wie teuer ist der Rucksack?', 'Wie teuer ist das?', 'Wie viel?'] },
+                { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel Euro kostet es?', 'Wie viel kostet das Regal?', 'Wie viel Euro kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist es?', 'Wie teuer ist das Regal?', 'Wie teuer ist das?', 'Wie viel?'] },
+              ] },
+            { canDo: 2, taskDe: 'Frau Wolf sagt den Preis. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says the price. Write it down.',
+              variants: [{ listen: 'Sie kostet 18 Euro.' }, { listen: 'Er kostet 45 Euro.' }, { listen: 'Es kostet 72 Euro.' }] },
+            // The task names the thing by its noun alone, so the learner gives it its own article (der Stuhl,
+            // die Lampe, der Tisch): the Genus of this Lektion, not a copy of the task (DaF review 2026-11-19).
+            { canDo: 1,
+              variants: [
+                { taskDe: 'Stuhl: Fragen Sie nach dem Preis.', taskEn: 'Chair (Stuhl): ask what it costs.', accepted: ['Was kostet der Stuhl?', 'Wie viel kostet der Stuhl?', 'Wie viel Euro kostet der Stuhl?', 'Wie teuer ist der Stuhl?', 'Und der Stuhl?', 'Und der Stuhl? Was kostet er?', 'Und was kostet der Stuhl?', 'Was kostet ein Stuhl?', 'Wie viel kostet ein Stuhl?', 'Wie teuer ist ein Stuhl?'] },
+                { taskDe: 'Lampe: Fragen Sie nach dem Preis.', taskEn: 'Lamp (Lampe): ask what it costs.', accepted: ['Was kostet die Lampe?', 'Wie viel kostet die Lampe?', 'Wie viel Euro kostet die Lampe?', 'Wie teuer ist die Lampe?', 'Und die Lampe?', 'Und die Lampe? Was kostet sie?', 'Und was kostet die Lampe?', 'Was kostet eine Lampe?', 'Wie viel kostet eine Lampe?', 'Wie teuer ist eine Lampe?'] },
+                { taskDe: 'Tisch: Fragen Sie nach dem Preis.', taskEn: 'Table (Tisch): ask what it costs.', accepted: ['Was kostet der Tisch?', 'Wie viel kostet der Tisch?', 'Wie viel Euro kostet der Tisch?', 'Wie teuer ist der Tisch?', 'Und der Tisch?', 'Und der Tisch? Was kostet er?', 'Und was kostet der Tisch?', 'Was kostet ein Tisch?', 'Wie viel kostet ein Tisch?', 'Wie teuer ist ein Tisch?'] },
+              ] },
+            // The total of the two things just asked about, before the learner says what they buy.
+            { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
+              variants: [{ listen: 'Der Stuhl und die Uhr kosten zusammen 30 Euro.' }, { listen: 'Die Lampe und der Rucksack kosten zusammen 57 Euro.' }, { listen: 'Der Tisch und das Regal kosten zusammen 84 Euro.' }] },
+            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …', 'Ich möchte …', 'Ich möchte … kaufen.', 'Ich möchte … nehmen.'], slot: 'thing',
+              variants: [{ example: 'Ich kaufe den Stuhl und die Uhr.' }, { example: 'Ich kaufe den Rucksack und die Lampe.' }, { example: 'Ich kaufe das Regal und den Tisch.' }] },
+          ],
+          repeat: [
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 2: the listening', de: 'Teil 2: das Hören' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: der, die, das', de: 'Teil 2: der, die, das' }],
+          ],
+        },
       },
       nextHook: {
         de: 'Vor dem Kurs packen Lena und Tim ihre Taschen aus. Aber wo ist das Wörterbuch?',
@@ -1256,8 +1324,10 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Jedes Nomen hat ein Genus',
-        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Das Genus ist Teil des Wortes — lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
+        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Die Bedeutung zeigt das Genus nicht sicher. Lernen Sie Nomen mit Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
         bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender of a thing usually cannot be guessed from its meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
+        bodyAr: 'لكل اسم ألماني جنس نحوي، وتُظهره أداته: der Tisch (مذكر)، die Lampe (مؤنث)، das Regal (محايد). عادةً لا يمكن تخمين جنس اسم الشيء من معناه، لذا تعلّم كل اسم مع أداته: ليس «Tisch» وحده، بل «der Tisch». في الجمع، تأتي die مع كل الأسماء. اتبع هذا النموذج الآن: بعد kaufen (يشتري)، تتحول der إلى den: «Ich kaufe den Stuhl». ستتعلّم القاعدة وراء ذلك (Akkusativ) في A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -1395,6 +1465,54 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): before the course, with Lena, as the learner themself. Every thing
+        // is named with its own article (`object`: „Das ist ein Heft", not „eine Heft") — the rule of this
+        // Lektion; the thing asked about changes on a retake, and with it the pronoun of the answer.
+        check: {
+          partner: 'Lena',
+          open: {
+            en: 'Before class begins, you’ll chat with Lena about your things. A few simple words can get a conversation going.',
+            de: 'Bevor der Kurs beginnt, sprechen Sie mit Lena über Ihre Sachen. Schon ein paar einfache Wörter bringen ein Gespräch in Gang.',
+          },
+          passed: {
+            en: 'You named things and colours and asked and answered questions with Lena. You’ve brought your own German into the classroom.',
+            de: 'Sie haben Dinge und Farben benannt und mit Lena Fragen gestellt und beantwortet. Sie haben sich mit Ihrem Deutsch im Klassenzimmer eingebracht.',
+          },
+          turns: [
+            // „Das ist …" names one thing, „Das sind …" more than one (`count`, DaF review 2026-11-19).
+            { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Wählen Sie etwas aus Ihrer Tasche. Lena fragt, was das ist. Antworten Sie mit einem Satz.', taskEn: 'Choose something from your bag, one thing or more. Lena asks what it is. Answer in one sentence.', accepted: [{ frame: 'Das ist …', slot: 'object', count: 'one' }, { frame: 'Das sind …', slot: 'object', count: 'many' }, { frame: 'Das hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier sind …', slot: 'object', count: 'many' }], slot: 'object', example: 'Das ist mein Wörterbuch.' },
+            { canDo: 1, taskDe: 'Antworten Sie mit hier oder da.',
+              variants: [
+                { cue: { de: 'Wo ist dein Wörterbuch?', en: 'Where is your dictionary?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Es ist hier.', 'Es ist da.', 'Das ist hier.', 'Das ist da.', 'Hier.', 'Da.'], nounFor: { Es: ['Mein Wörterbuch', 'Das Wörterbuch'] } },
+                { cue: { de: 'Wo ist deine Schere?', en: 'Where are your scissors?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Sie ist hier.', 'Sie ist da.', 'Die ist hier.', 'Die ist da.', 'Hier.', 'Da.'], nounFor: { Sie: ['Meine Schere', 'Die Schere'] } },
+                { cue: { de: 'Wo ist dein Stift?', en: 'Where is your pen?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Er ist hier.', 'Er ist da.', 'Der ist hier.', 'Der ist da.', 'Hier.', 'Da.'], nounFor: { Er: ['Mein Stift', 'Der Stift'] } },
+              ] },
+            { canDo: 1,
+              variants: [
+                { taskDe: 'Sie suchen Ihren Stift. Fragen Sie Lena: wo?', taskEn: 'You are looking for your pen. Ask Lena where it is.', accepted: ['Wo ist mein Stift?', 'Wo ist der Stift?'] },
+                { taskDe: 'Sie suchen Ihr Heft. Fragen Sie Lena: wo?', taskEn: 'You are looking for your exercise book. Ask Lena where it is.', accepted: ['Wo ist mein Heft?', 'Wo ist das Heft?'] },
+                { taskDe: 'Sie suchen Ihre Schere. Fragen Sie Lena: wo?', taskEn: 'You are looking for your scissors. Ask Lena where they are.', accepted: ['Wo ist meine Schere?', 'Wo ist die Schere?'] },
+              ] },
+            { canDo: 2, taskDe: 'Antworten Sie mit einem Satz.', slot: 'color', slotWords: CHECK_COLORS,
+              variants: [
+                { cue: { de: 'Welche Farbe hat dein Heft?', en: 'What colour is your exercise book?' }, taskEn: 'Say what colour your exercise book is, in one sentence.', accepted: ['Es ist …', 'Das ist …', 'Es hat die Farbe …'], nounFor: { Es: ['Mein Heft', 'Das Heft'] }, example: 'Es ist grün.' },
+                { cue: { de: 'Welche Farbe hat deine Tasche?', en: 'What colour is your bag?' }, taskEn: 'Say what colour your bag is, in one sentence.', accepted: ['Sie ist …', 'Die ist …', 'Sie hat die Farbe …'], nounFor: { Sie: ['Meine Tasche', 'Die Tasche'] }, example: 'Sie ist schwarz.' },
+                { cue: { de: 'Welche Farbe hat dein Stift?', en: 'What colour is your pen?' }, taskEn: 'Say what colour your pen is, in one sentence.', accepted: ['Er ist …', 'Der ist …', 'Er hat die Farbe …'], nounFor: { Er: ['Mein Stift', 'Der Stift'] }, example: 'Er ist blau.' },
+              ] },
+            { canDo: 3, slot: 'color', slotWords: CHECK_COLORS,
+              variants: [
+                { taskDe: 'Und Lenas Tasche? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena about the colour of her bag.', accepted: ['Welche Farbe hat deine Tasche?', 'Welche Farbe hat die Tasche?', 'Ist deine Tasche …?', 'Ist die Tasche …?', 'Deine Tasche? Welche Farbe hat sie?', 'Deine Tasche, welche Farbe hat sie?'] },
+                { taskDe: 'Und Lenas Stift? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena about the colour of her pen.', accepted: ['Welche Farbe hat dein Stift?', 'Welche Farbe hat der Stift?', 'Ist dein Stift …?', 'Ist der Stift …?', 'Dein Stift? Welche Farbe hat er?', 'Dein Stift, welche Farbe hat er?'] },
+                { taskDe: 'Und Lenas Buch? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena about the colour of her book.', accepted: ['Welche Farbe hat dein Buch?', 'Welche Farbe hat das Buch?', 'Ist dein Buch …?', 'Ist das Buch …?', 'Dein Buch? Welche Farbe hat es?', 'Dein Buch, welche Farbe hat es?'] },
+              ] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 2: der, die, das', de: 'Teil 2: der, die, das' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Ana hat Arbeit! Morgen ist ihr erster Tag im Büro. Was braucht sie dort?',
@@ -1484,6 +1602,8 @@ export const CURRICULUM_A11 = {
         title: 'der, die, das – der bestimmte Artikel',
         bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural für alle drei **die**: die Bücher. Zuerst antworten Sie mit **hier** oder **da**. Sätze wie *auf dem Tisch* (Dativ) folgen in A1.2.',
         bodyEn: 'The definite article ("the") means both speakers know which thing is meant: **der** with masculine, **die** with feminine, **das** with neuter nouns – and in the plural always **die**: **die Bücher**. For now, answer **Wo ist …?** with **hier** (here) or **da** (there): **Das Wörterbuch ist hier. Der Stift ist da.** Phrases like *auf dem Tisch* (on the table) change the article again; that pattern (Dativ) is A1.2.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
+        bodyAr: 'أداة التعريف («الـ») تعني أن المتحدثين يعرفان أيّ شيء مقصود: der مع الأسماء المذكرة، die مع المؤنثة، das مع المحايدة، وفي الجمع دائمًا die: «die Bücher». أجب الآن عن «Wo ist …?» بكلمة hier (هنا) أو da (هناك): «Das Wörterbuch ist hier» و«Der Stift ist da». عبارات مثل auf dem Tisch (على الطاولة) تغيّر الأداة مرة أخرى؛ ستتعلّم هذا النمط (Dativ) في A1.2.',
         examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
@@ -1612,6 +1732,40 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): the first day in the office with Herr Weber, as the learner themself.
+        // What the learner needs is their own and carries the article „brauchen" asks for (`thing`:
+        // „einen Computer", the notice's chunk); the two numbers Herr Weber says change on a retake.
+        check: {
+          partner: 'Herr Weber',
+          open: {
+            en: 'You’ll use your German on your first day at work with Herr Weber. We’ll be here as you work through your answers.',
+            de: 'An Ihrem ersten Arbeitstag mit Herrn Weber setzen Sie Ihr Deutsch ein. Wir begleiten Sie bei Ihren Antworten.',
+          },
+          passed: {
+            en: 'You said what you need, asked about work and handled your name and both numbers on the phone. Before the second checkpoint, give yourself a moment to feel proud of all that.',
+            de: 'Sie haben gesagt, was Sie brauchen, nach der Arbeit gefragt und am Telefon Ihren Namen genannt und beide Nummern verstanden. Gönnen Sie sich vor dem zweiten Checkpoint einen Moment, um darauf stolz zu sein.',
+          },
+          turns: [
+            { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
+            { canDo: 3, taskDe: 'Und Ihr Büro? Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?'] },
+            { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Wann haben wir Pause?', 'Um wie viel Uhr ist die Pause?', 'Wann beginnt die Pause?', 'Wann fängt die Pause an?', 'Wann ist meine Pause?', 'Wann ist die Mittagspause?', 'Wann ist Mittagspause?', 'Wann machen wir Mittagspause?', 'Wann haben wir Mittagspause?', 'Wann beginnt die Mittagspause?', 'Wann fängt die Mittagspause an?'] },
+            // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …", the model answer) or
+            // as Germans answer a call („Hier ist …", or the name alone).
+            { canDo: 1, cue: { de: 'Weber, guten Tag!', en: 'Weber, good day!' }, taskDe: 'Herr Weber ruft an. Sagen Sie am Telefon Ihren Namen.', taskEn: 'Herr Weber is calling you. Say your name on the phone.',
+              accepted: ['Ich heiße …', 'Guten Tag, ich heiße …', 'Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Mein Name ist …', '…', '…, guten Tag.', '…, hallo.', '… am Telefon.', 'Hier spricht …'], slot: 'name',
+              example: 'Guten Tag, ich heiße Ana Chakiri.' },
+            { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Büro. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
+              variants: [{ listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, fünf sieben drei null.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, sechs zwei eins vier.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, neun acht null zwei.' }] },
+            { canDo: 2, taskDe: 'Herr Weber sagt die Handynummer von Ihrer Chefin, Frau Berg. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the mobile number of your boss, Frau Berg. Write it down.',
+              variants: [{ listen: 'Die Handynummer von Frau Berg ist null eins sieben eins, zwei drei vier, fünf sechs sieben acht.' }, { listen: 'Die Handynummer von Frau Berg ist null eins fünf zwei, acht sieben sechs, fünf vier drei zwei.' }, { listen: 'Die Handynummer von Frau Berg ist null eins sieben sechs, neun null eins, zwei drei vier fünf.' }] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ein, eine', de: 'Teil 2: ein, eine' }],
+            { en: 'the scene of Lektion 1', de: 'die Szene von Lektion 1' },
+            { en: 'Part 2: the listening', de: 'Teil 2: das Hören' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lektion 5', de: 'die Szene von Lektion 5' }],
+          ],
+        },
       },
       nextHook: {
         de: 'Nach der Arbeit kommt das Wochenende. Was machen Lena und Tim gern – und was machen Sie gern?',
@@ -1686,6 +1840,8 @@ export const CURRICULUM_A11 = {
         title: 'ein, eine – der unbestimmte Artikel',
         bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
         bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lektion 8.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
+        bodyAr: 'لشيء جديد أو غير معروف بعد، استخدم أداة النكرة: ein مع الأسماء التي تأخذ der أو das (ein Computer)، وeine مع الأسماء التي تأخذ die (eine Lampe). بعد أفعال مثل brauchen (يحتاج)، haben (لديه)، kaufen (يشتري)، تتحول ein مع الاسم المذكر إلى einen: «Ich brauche einen Computer». ستتعلّم القاعدة وراء ذلك (Akkusativ) في A1.2؛ اتبع هذه الصيغة الآن. للتعبير عن «لا / ليس»، استخدم kein: «Wir haben kein Handy». ستتعلّم عبارة الوقت um eins (في الساعة الواحدة) في Lektion 8.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
@@ -1897,8 +2053,8 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['Lena spricht Deutsch.'],
         title: 'Präsens: regelmäßige Verben',
-        bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. Endet der Stamm auf **-t**, kommt ein **e** dazu: du arbeit**e**st, er arbeit**e**t. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
-        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If it ends in -s or -z, du adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
+        bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Stamm auf **-t**: ein **e** dazu: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
+        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -3028,9 +3184,9 @@ export const CURRICULUM_A11 = {
     },
   ],
   checkpoints: [
-    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3' },
-    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6' },
-    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9' },
-    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12' },
+    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3', lesen: LESEN_A11['a1.1-cp1'] },
+    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6', lesen: LESEN_A11['a1.1-cp2'] },
+    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9', lesen: LESEN_A11['a1.1-cp3'] },
+    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A11['a1.1-cp4'] },
   ],
 };

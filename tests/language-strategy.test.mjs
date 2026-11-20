@@ -17,7 +17,7 @@ test('English discovery routes declare English and use English headings', () => 
   assert.match(level, /lang="en"/);
   assert.match(level, /German Grammar/);
   assert.match(seo, /'\/faq':\s*{[\s\S]*?title: 'Frequently Asked Questions'/);
-  assert.match(seo, /'\/ueber-uns':\s*{[\s\S]*?title: 'About Deutschmeister'/);
+  assert.match(seo, /'\/ueber-uns':\s*{[\s\S]*?title: 'About DeutschMeister'/);
   assert.doesNotMatch(seo, /'\/(?:faq|ueber-uns)':\s*{[\s\S]*?lang: 'de'/);
 });
 

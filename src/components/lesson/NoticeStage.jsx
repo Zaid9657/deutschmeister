@@ -90,7 +90,7 @@ export default function NoticeStage({ stage, onBack, onDone }) {
             <details className="mt-3 text-sm">
               <summary className="cursor-pointer font-bold text-siegel">{lang === 'de' ? 'Antwort und Erklärung' : 'Answer and explanation'}</summary>
               <p className="mt-2 font-bold" lang="de">{notice.readingExample.answer}</p>
-              <p className="mt-1 text-graphite">{lang === 'de' ? notice.readingExample.explanationDe : notice.readingExample.explanationEn}</p>
+              <p className="mt-1 text-graphite">{inline(lang === 'de' ? notice.readingExample.explanationDe : notice.readingExample.explanationEn)}</p>
             </details>
           </section>
         )}

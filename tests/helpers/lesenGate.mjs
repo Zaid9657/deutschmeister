@@ -83,6 +83,9 @@ const lastAt = (hay, needle) => {
 const prefer = (a, b, more = true) => (a === b || a == null || b == null || Number.isNaN(a) || Number.isNaN(b) ? null : (a > b) === more ? 0 : 1);
 const both = (u, f) => [f(u.options[0], u), f(u.options[1], u)];
 
+const isTrueFalse = (u) => u.options?.length === 2 && ['Richtig', 'Falsch'].every((o) => u.options.includes(o));
+const statementOf = (u) => u.statement || /„(.*)“/s.exec(u.question || '')?.[1] || u.question;
+
 function baseStrategies(names) {
   const S = {};
   const add = (name, f) => { S[name] = f; };
@@ -121,6 +124,22 @@ function baseStrategies(names) {
   add('letzter Sprecher', (u) => { const s = layout(u.text).speakers; const f = s[s.length - 1]?.name; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
   add('Anrede', (u) => { const f = layout(u.text).salutation; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
   add('Unterschrift', (u) => { const f = layout(u.text).signature; return f ? prefer(Number(u.options[0] === f), Number(u.options[1] === f)) : null; });
+  // Richtig/Falsch labels carry no lexical information. Audit the printed statement
+  // itself, including the old A1.1 numeric-falsification shortcut and its inverse.
+  const rfFeatures = {
+    'Aussage enthält Zahl': (u) => tokens(statementOf(u)).some((t) => numberOf(t) !== null),
+    'Aussage verneint': (u) => tokens(statementOf(u)).some((t) => NEGATION.has(t)),
+    'Aussage wörtlich': (u) => tokens(u.text).join(' ').includes(tokens(statementOf(u)).join(' ')),
+    'Aussage Wörter vollständig': (u) => tokens(statementOf(u)).every((t) => tokens(u.text).includes(t)),
+    'Aussage Zahlen vollständig': (u) => tokens(statementOf(u)).filter((t) => numberOf(t) !== null).every((t) => tokens(u.text).includes(t)),
+    'Aussage ein Satz vollständig': (u) => sentencesOf(u.text).some((s) => tokens(statementOf(u)).every((t) => tokens(s).includes(t))),
+    'Aussage lang': (u) => tokens(statementOf(u)).length > 6,
+    'Aussage Negation gleich': (u) => tokens(statementOf(u)).some((t) => NEGATION.has(t)) === tokens(u.text).some((t) => NEGATION.has(t)),
+  };
+  for (const [name, feature] of Object.entries(rfFeatures)) for (const inverse of [false, true]) {
+    add(`${name}${inverse ? '−' : '+'}`, (u) => isTrueFalse(u)
+      ? u.options.indexOf(feature(u) !== inverse ? 'Richtig' : 'Falsch') : null);
+  }
   // ── question-conditioned: the option in the sentence closest (or farthest) to the question ──
   for (const by of ['Zahl', 'Anteil']) {
     for (const extreme of ['nächster', 'fernster']) {
@@ -185,8 +204,9 @@ export const conditionsOf = (u) => Object.fromEntries(Object.entries(CONDITIONS)
 
 /** Order strategies see only the displayed position and question history, never pair metadata or keys. */
 export function auditBankOrder(papers) {
+  const rf = papers.length > 0 && papers.flat().every(isTrueFalse);
   const positions = Array.from({ length: 4 }, () => [0, 0]);
-  const typeRanks = Object.fromEntries(['Wer 1', 'Wer 2', 'W 1', 'W 2'].map((n) => [n, [0, 0]]));
+  const typeRanks = Object.fromEntries((rf ? ['W 1', 'W 2', 'W 3', 'W 4'] : ['Wer 1', 'Wer 2', 'W 1', 'W 2']).map((n) => [n, [0, 0]]));
   const cells = Object.keys(typeRanks);
   const findings = [];
   // Freeze each strategy's inputs before reading any answer. History resets at each paper boundary.
@@ -198,7 +218,7 @@ export function auditBankOrder(papers) {
       const cell = `${type} ${++seen[type]}`;
       return { u, position, cell };
     });
-    if (seen.Wer !== 2 || seen.W !== 2) findings.push(`paper ${pi + 1}: expected two Wer and two other W-questions`);
+    if (!rf && (seen.Wer !== 2 || seen.W !== 2)) findings.push(`paper ${pi + 1}: expected two Wer and two other W-questions`);
     return rows;
   });
   const sequences = Array.from({ length: 16 }, (_, mask) =>
