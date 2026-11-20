@@ -256,9 +256,13 @@ used and add her to the cast list above.
 - Gap kinds `thing` (after „kaufen", „brauchen", „nehmen": „den Stuhl", „einen Computer", „zwei
   Stühle") and `object` (after „Das ist/sind": „ein Heft", „meine Schere"): a noun the course teaches
   must carry its own article; a mass noun („Papier", `MASS`) may stand without; a frame may say
-  `count: 'one'` or `'many'` („Das sind ein Stift" is wrong). `color` lists like `language`. `name`:
-  words the course does not teach or the cast's names, after „Frau"/„Herr"; a surname after the
-  first word may be a taught lower-case word („Ana Braun"); never the partner's own name.
+  `count: 'one'` or `'many'` („Das sind ein Stift" is wrong). A noun the course never teaches must be
+  written as a noun („Ich kaufe Bananen", never „Ich kaufe groß"; after an article a small letter is a
+  typo). An adjective written small may stand before the noun with the ending its article asks for
+  („die große Lampe", „ein rotes Regal"; `ADJ_ENDING`). `color` lists like `language` but is a closed
+  class (`COLOURS`, with hell-/dunkel-): „Es ist groß" is no colour. `name`: words the course does not
+  teach or the cast's names, after „Frau"/„Herr"; a surname after the first word may be a taught
+  lower-case word („Ana Braun"); never the partner's own name.
 - A taught word of the gap's kind with an ending is a form, not an own word („rote", „Deutsche").
   A clause after „und" counts only when it is itself a valid answer.
 - Around a right answer: a greeting first, the partner's name (with or without a comma; each turn now
@@ -273,7 +277,9 @@ used and add her to the cast list above.
 - `finalCheck.js` uses `check.js`'s `westernDigits` since the marking fixes were merged (twice: at the
   start of the batch and before the PR, PR 273 at d925fdf4).
 
-**How the checks were proven, to reuse:** a DaF review that sees the answers (two rounds), then three
+**How the checks were proven, to reuse:** DaF review rounds that see the answers until one says
+"ship" (four here; from round 3 on, give the reviewer the real grade of every probe answer, with
+`graded-examples.mjs` in `tools/`, or it reports behaviour the grader already has), then three
 blind corpora written by separate Codex "teachers" who never saw what is accepted, scored against
 `typedResult` (`tools/` here: `build-review.mjs` writes both prompts from the code's own comments,
 `score-corpus.mjs` scores, `compare-grades.mjs` lists every answer whose grade changes between two
