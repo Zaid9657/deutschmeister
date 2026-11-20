@@ -1977,8 +1977,14 @@ export const CURRICULUM_A11 = {
         // rule of this Lektion, so one question asks it with a verb that changes on a retake.
         check: {
           partner: 'Lena',
-          open: { en: 'TODO', de: 'TODO' },
-          passed: { en: 'TODO', de: 'TODO' },
+          open: {
+            en: 'You’ll chat with Lena about hobbies after the course. There’s no rush to find your own words.',
+            de: 'Nach dem Kurs unterhalten Sie sich mit Lena über Hobbys. Sie können in Ruhe Ihre eigenen Worte finden.',
+          },
+          passed: {
+            en: 'You shared your hobbies and what you enjoy, asked about Lena’s hobbies and said when you’re free. You’ve shared something of yourself in German.',
+            de: 'Sie haben von Ihren Hobbys und Vorlieben erzählt, nach Lenas Hobbys gefragt und gesagt, wann Sie Zeit haben. Sie haben auf Deutsch etwas von sich gezeigt.',
+          },
           turns: [
             { canDo: 0, cue: { de: 'Was ist dein Hobby?', en: 'What is your hobby?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your hobby is, in one sentence.',
               accepted: ['Mein Hobby ist …', 'Meine Hobbys sind …', { frame: 'Ich … gern.', slot: 'activity' }], slot: 'hobby', slotWords: CHECK_HOBBIES, example: 'Mein Hobby ist Musik.' },
@@ -2229,8 +2235,14 @@ export const CURRICULUM_A11 = {
         // appointment to ask about and the appointment heard change on a retake.
         check: {
           partner: 'Lena',
-          open: { en: 'TODO', de: 'TODO' },
-          passed: { en: 'TODO', de: 'TODO' },
+          open: {
+            en: 'You’ll talk with Lena about times, your day and an appointment. Each answer helps you see what you can already do.',
+            de: 'Sie sprechen mit Lena über Uhrzeiten, Ihren Tag und einen Termin. Mit jeder Antwort sehen Sie, was Sie schon können.',
+          },
+          passed: {
+            en: 'You asked and told the time, talked about your day and availability, and arranged an appointment with Lena. These skills can help with your everyday plans.',
+            de: 'Sie haben nach der Uhrzeit gefragt, die Uhrzeit genannt, von Ihrem Tag erzählt und gesagt, wann Sie Zeit haben. Auch einen Termin mit Lena haben Sie vereinbart – das können Sie im Alltag gut gebrauchen.',
+          },
           turns: [
             { canDo: 0, cue: { de: 'Wie spät ist es?', en: 'What time is it?' }, slot: 'clock',
               accepted: ['Es ist …', '…'],
@@ -2499,18 +2511,24 @@ export const CURRICULUM_A11 = {
         // „haben" is the rule of this Lektion; what is asked for and what is offered change on a retake.
         check: {
           partner: 'Paul',
-          open: { en: 'TODO', de: 'TODO' },
-          passed: { en: 'TODO', de: 'TODO' },
+          open: {
+            en: 'You’ll be a guest at the café, ordering from Paul and responding to his offers. If an answer needs another try, there’s time for that.',
+            de: 'Im Café bestellen Sie als Gast bei Paul und reagieren auf seine Angebote. Wenn eine Antwort einen zweiten Versuch braucht, ist dafür Zeit.',
+          },
+          passed: {
+            en: 'You ordered, said whether you were hungry or thirsty, asked politely what was available, and accepted and declined offers. Before the third checkpoint, take a moment to enjoy what you’ve learned.',
+            de: 'Sie haben bestellt, gesagt, ob Sie Hunger oder Durst haben, höflich nachgefragt und Angebote angenommen und abgelehnt. Freuen Sie sich vor dem dritten Checkpoint über das, was Sie gelernt haben.',
+          },
           turns: [
             { canDo: 0, cue: { de: 'Guten Tag! Was möchten Sie trinken?', en: 'Hello! What would you like to drink?' }, taskDe: 'Bestellen Sie etwas zu trinken.', taskEn: 'Order something to drink.',
-              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich nehme …', 'Ich trinke …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', example: 'Ich möchte einen Kaffee, bitte.' },
+              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … trinken.', 'Ich nehme …', 'Ich trinke …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', example: 'Ich möchte einen Kaffee, bitte.' },
             { canDo: 0, cue: { de: 'Und was möchten Sie essen?', en: 'And what would you like to eat?' }, taskDe: 'Bestellen Sie etwas zu essen.', taskEn: 'Order something to eat.',
-              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich nehme …', 'Ich esse …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', example: 'Ich möchte eine Suppe, bitte.' },
+              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … essen.', 'Ich nehme …', 'Ich esse …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', example: 'Ich möchte eine Suppe, bitte.' },
             // „Sie haben Hunger" gives the situation; the learner says it with „ich habe" (the rule of this Lektion).
             { canDo: 1,
               variants: [
-                { cue: { de: 'Haben Sie Hunger?', en: 'Are you hungry?' }, taskDe: 'Sie haben Hunger. Antworten Sie.', taskEn: 'You are hungry. Answer.', accepted: ['Ja, ich habe Hunger.', 'Ich habe Hunger.', 'Ja, ich habe großen Hunger.', 'Ja, Hunger habe ich.', 'Ja, ich habe Hunger und Durst.'] },
-                { cue: { de: 'Haben Sie Durst?', en: 'Are you thirsty?' }, taskDe: 'Sie haben Durst. Antworten Sie.', taskEn: 'You are thirsty. Answer.', accepted: ['Ja, ich habe Durst.', 'Ich habe Durst.', 'Ja, ich habe großen Durst.', 'Ja, Durst habe ich.', 'Ja, ich habe Hunger und Durst.'] },
+                { cue: { de: 'Haben Sie Hunger?', en: 'Are you hungry?' }, taskDe: 'Sie haben Hunger. Antworten Sie.', taskEn: 'You are hungry. Answer.', accepted: ['Ja, ich habe Hunger.', 'Ich habe Hunger.', 'Ja, ich habe großen Hunger.', 'Ja, Hunger habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin hungrig.', 'Ich bin hungrig.'] },
+                { cue: { de: 'Haben Sie Durst?', en: 'Are you thirsty?' }, taskDe: 'Sie haben Durst. Antworten Sie.', taskEn: 'You are thirsty. Answer.', accepted: ['Ja, ich habe Durst.', 'Ich habe Durst.', 'Ja, ich habe großen Durst.', 'Ja, Durst habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin durstig.', 'Ich bin durstig.'] },
                 { cue: { de: 'Haben Sie Hunger?', en: 'Are you hungry?' }, taskDe: 'Sie haben keinen Hunger. Antworten Sie.', taskEn: 'You are not hungry. Answer.', accepted: ['Nein, ich habe keinen Hunger.', 'Ich habe keinen Hunger.', 'Nein, danke. Ich habe keinen Hunger.', 'Nein, danke, ich habe keinen Hunger.', 'Danke, ich habe keinen Hunger.'] },
               ] },
             { canDo: 2,

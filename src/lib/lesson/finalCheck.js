@@ -669,7 +669,8 @@ function verbSecond(text) {
  */
 function gernLast(text) {
   const m = String(text).trim().match(/^(.*?)\s+gerne?\s+(.+?)([.!?]*)$/i);
-  return m ? [`${m[1]} ${m[2]} gern${m[3]}`] : [];
+  // Only a „gern" after the verb moves: „Ich gern spiele Fußball" has it before the verb and stays wrong.
+  return m && wordsOf(m[1]).length >= 2 ? [`${m[1]} ${m[2]} gern${m[3]}`] : [];
 }
 
 const DETERMINERS = new Set(['der', 'die', 'das', 'mein', 'meine', 'dein', 'deine', 'ihr', 'ihre', 'sein', 'seine']);
