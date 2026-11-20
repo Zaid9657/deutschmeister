@@ -5,11 +5,11 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { latinRuns } from '../src/lib/lesson/bidi.js';
 
 const withArabic = CURRICULUM_A11.lektionen.filter((l) => l.notice.bodyAr);
-// The German of the English notice: every **bold** span, without a closing full stop.
-const germanOf = (en) => [...en.matchAll(/\*\*([^*]+)\*\*/g)].map((m) => m[1].replace(/[.]$/, '').trim());
+// The German of the English notice: every **bold** span, one sentence at a time, without its closing full stop.
+const germanOf = (en) => [...en.matchAll(/\*\*([^*]+)\*\*/g)].flatMap((m) => m[1].split(/(?<=[.!?])\s+/)).map((s) => s.replace(/[.]$/, '').trim());
 
-test('Lektionen 1–3 explain their rule in Arabic, with every German form of the English kept in Latin letters', () => {
-  assert.deepEqual(withArabic.map((l) => l.nr), [1, 2, 3]);
+test('Lektionen 1–6 explain their rule in Arabic, with every German form of the English kept in Latin letters', () => {
+  assert.deepEqual(withArabic.map((l) => l.nr), [1, 2, 3, 4, 5, 6]);
   for (const l of withArabic) {
     const ar = l.notice.bodyAr;
     assert.match(ar, /[؀-ۿ]/, `L${l.nr}: Arabic`);
@@ -30,7 +30,11 @@ test('each German run inside the Arabic stays one left-to-right piece, digits, s
   assert.ok(runs2.every((r) => !/^[[(]$/.test(r)), 'a bracket around Arabic stays in the Arabic flow');
   const runs3 = latinRuns(l3.notice.bodyAr);
   for (const pair of ['der Bruder → er', 'die Schwester → sie', 'das Kind → es']) assert.ok(runs3.includes(pair), pair);
-  assert.ok(runs3.includes('Lektion 7'));
+  assert.ok(runs3.some((r) => r.endsWith('Lektion 7')));
+  const [, , , l4, l5, l6] = withArabic;
+  assert.ok(latinRuns(l4.notice.bodyAr).includes('Ich kaufe den Stuhl'));
+  assert.ok(latinRuns(l5.notice.bodyAr).includes('Wo ist …?'), 'a gap inside German keeps its question mark in place');
+  assert.ok(latinRuns(l6.notice.bodyAr).some((r) => r.includes('A1.2')));
 });
 
 test('Lektion 1’s Arabic is split into the same German runs as before the pattern widened', () => {

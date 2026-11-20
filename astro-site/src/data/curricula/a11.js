@@ -1324,6 +1324,8 @@ export const CURRICULUM_A11 = {
         title: 'Jedes Nomen hat ein Genus',
         bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Die Bedeutung zeigt das Genus nicht sicher. Lernen Sie Nomen mit Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
         bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender of a thing usually cannot be guessed from its meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
+        bodyAr: 'لكل اسم ألماني جنس نحوي، وتُظهره أداته: der Tisch (مذكر)، die Lampe (مؤنث)، das Regal (محايد). عادةً لا يمكن تخمين جنس اسم الشيء من معناه، لذا تعلّم كل اسم مع أداته: ليس «Tisch» وحده، بل «der Tisch». في الجمع، تأتي die مع كل الأسماء. اتبع هذا النموذج الآن: بعد kaufen (يشتري)، تتحول der إلى den: «Ich kaufe den Stuhl». ستتعلّم القاعدة وراء ذلك (Akkusativ) في A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -1597,6 +1599,8 @@ export const CURRICULUM_A11 = {
         title: 'der, die, das – der bestimmte Artikel',
         bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural für alle drei **die**: die Bücher. Zuerst antworten Sie mit **hier** oder **da**. Sätze wie *auf dem Tisch* (Dativ) folgen in A1.2.',
         bodyEn: 'The definite article ("the") means both speakers know which thing is meant: **der** with masculine, **die** with feminine, **das** with neuter nouns – and in the plural always **die**: **die Bücher**. For now, answer **Wo ist …?** with **hier** (here) or **da** (there): **Das Wörterbuch ist hier. Der Stift ist da.** Phrases like *auf dem Tisch* (on the table) change the article again; that pattern (Dativ) is A1.2.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
+        bodyAr: 'أداة التعريف («الـ») تعني أن المتحدثين يعرفان أيّ شيء مقصود: der مع الأسماء المذكرة، die مع المؤنثة، das مع المحايدة، وفي الجمع دائمًا die: «die Bücher». أجب الآن عن «Wo ist …?» بكلمة hier (هنا) أو da (هناك): «Das Wörterbuch ist hier» و«Der Stift ist da». عبارات مثل auf dem Tisch (على الطاولة) تغيّر الأداة مرة أخرى؛ ستتعلّم هذا النمط (Dativ) في A1.2.',
         examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
@@ -1833,6 +1837,8 @@ export const CURRICULUM_A11 = {
         title: 'ein, eine – der unbestimmte Artikel',
         bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
         bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lektion 8.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
+        bodyAr: 'لشيء جديد أو غير معروف بعد، استخدم أداة النكرة: ein مع الأسماء التي تأخذ der أو das (ein Computer)، وeine مع الأسماء التي تأخذ die (eine Lampe). بعد أفعال مثل brauchen (يحتاج)، haben (لديه)، kaufen (يشتري)، تتحول ein مع الاسم المذكر إلى einen: «Ich brauche einen Computer». ستتعلّم القاعدة وراء ذلك (Akkusativ) في A1.2؛ اتبع هذه الصيغة الآن. للتعبير عن «لا / ليس»، استخدم kein: «Wir haben kein Handy». ستتعلّم عبارة الوقت um eins (في الساعة الواحدة) في Lektion 8.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
