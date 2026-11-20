@@ -538,7 +538,32 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(guests, 'Meine Freunde kommen zur Party.'), RESULT.CORRECT, 'where it is for, at the end');
   assert.equal(typedResult(present, 'Ich möchte ein Buch.'), RESULT.CORRECT);
   assert.equal(typedResult(bye, 'Tschüss, mach’s gut!'), RESULT.CORRECT);
-  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.WRONG, 'the task asks for a goodbye of Lektion 12 (third DaF review)');
+  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.CORRECT, 'any goodbye; a day only the party’s (courses session)');
+  assert.equal(typedResult(bye, 'Bis Samstag!'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Bis Montag!'), RESULT.WRONG);
+  assert.equal(typedResult(morning, 'Ich aufstehe.'), RESULT.WRONG, 'a verb of two parts keeps its prefix at the end');
+  assert.equal(typedResult(morning, 'Ich sehe fern.'), RESULT.CORRECT);
+  for (const right of ['Ich habe Fußball gespielt.', 'Ich bin ins Kino gegangen.', 'Ich war zu Hause.', 'Ich habe eingekauft.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
+  for (const wrong of ['Ich habe arbeiten.', 'Ich bin gearbeitet.', 'Ich habe gearbeiten.', 'Ich habe aufgestanden.']) assert.equal(typedResult(yesterday, wrong), RESULT.WRONG, wrong);
+  assert.equal(typedResult(invite, 'Ich mache ein Fest. Kommst du auch?'), RESULT.CORRECT, 'an invitation in two sentences');
+  assert.equal(typedResult(invite, 'Ich feiere am Sonntag. Kommst du?'), RESULT.WRONG, 'the party is on Saturday');
+  assert.equal(typedResult(guests, 'Ein Stuhl kommt.'), RESULT.WRONG, 'a guest is a person');
+  // Every activity gap of the course refuses a verb of two parts with its prefix still on (courses session).
+  let activityGaps = 0;
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      for (const t of sitting(l, r)) {
+        for (const a of t.accepted) {
+          const frame = String(a.frame ?? a);
+          if ((a.slot ?? t.slot) !== 'activity' || !frame.includes('…')) continue;
+          activityGaps += 1;
+          for (const verb of ['einkaufe', 'aufstehe', 'fernsehe']) assert.equal(typedResult({ ...t, accepted: [a] }, frame.replace('…', verb)), RESULT.WRONG, `${l.id}: ${frame.replace('…', verb)}`);
+          assert.notEqual(typedResult({ ...t, accepted: [a] }, frame.replace('…', 'kaufe ein')), RESULT.WRONG, `${l.id}: ${frame.replace('…', 'kaufe ein')}`);
+        }
+      }
+    }
+  }
+  assert.ok(activityGaps >= 3, 'Lektion 7 and Lektion 11');
   assert.equal(typedResult(bye, 'Tschüss, bis bald!'), RESULT.CORRECT);
   assert.equal(typedResult(at(11)[1], 'Was hast du morgen gemacht?'), RESULT.WRONG, 'the question is about yesterday');
   assert.equal(typedResult(shop, 'Kaufst du am Samstag Brot ein?'), RESULT.CORRECT);

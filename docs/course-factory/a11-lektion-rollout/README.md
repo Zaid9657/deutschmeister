@@ -397,6 +397,20 @@ what was heard („15 Fahrkarten" is no price; „Der Zug fährt um neun Uhr dre
 grade as before except one Lektion 2 answer that moved from typo to correct („Und Sie, was sind Sie
 von Beruf?“); every probe set as intended (200 for Lektionen 10–12, `tools/probes/l10-12.mjs`).
 
+**After the courses session's check of batch 4 (188 own answers, 179 as it would mark them), one
+rule each:** a verb of two parts with its prefix still on („Ich aufstehe", „Ich einkaufe gern",
+„Einkaufst du …?") is wrong in every activity gap and du-question of the course, and the prefix may
+close the sentence („Ich sehe fern"); a sweep test covers every activity gap. „Was hast du gestern
+gemacht?" takes any well-formed past sentence (`past`: „habe"/„bin" and a participle at the end, or
+„war"; „bin" with verbs of moving or changing; „gearbeiten", „Ich habe aufgestanden", „Ich habe
+Lesen gemacht" stay wrong). An invitation may be two sentences („Ich mache ein Fest. Kommst du
+auch?"), the day only the party's. Guests are people (`people`: „Ein Stuhl kommt" is wrong). „Ich
+wünsche mir …", „Was kostet das Ticket?". The goodbye takes any goodbye again („Tschüss", „Bis
+dann", „Bis Samstag"; not „Bis Montag"): this reverses the third DaF review's narrowing, so the
+check no longer shows „Mach's gut"/„Bis bald" in particular (the can-do wording waits on Zaid).
+Probes for Lektionen 10–12: 247 as intended; corpora 256, 259, 258 of 260; of the 2,790 earlier
+blind answers two moved toward the teacher, none away.
+
 **Marking problems found, not fixed here** (shared checker, for the marking session): a dropped
 final letter („gemach“ for „gemacht“) is a changed ending, never a typo; a slip in a word under five
 letters („balt“) is never a typo. Both are the shared checker's rules; teachers would accept them.

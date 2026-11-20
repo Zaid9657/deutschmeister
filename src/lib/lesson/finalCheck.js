@@ -357,7 +357,7 @@ function isAdjectiveShape(adj, lexicon) {
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay, thingsAfter }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay, thingsAfter, people }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -406,6 +406,27 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       return /^\p{Lu}/u.test(w) && i > 0 && PREP.has(fold(raw[i - 1]));
     });
     return ok ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A sentence about the past („Was hast du gestern gemacht?“, Lektion 11): „habe“ or „bin“, what was done, and a
+  // participle at the end („Ich habe Fußball gespielt“, „Ich bin ins Kino gegangen“, „Ich habe eingekauft“), or
+  // „war“ („Ich war zu Hause“). Verbs of moving or changing take „bin“ („gegangen“, „aufgestanden“); a participle
+  // in -en is one of the strong verbs', a weak one ends in -t („gearbeiten“ is no participle); „gemacht“ takes a
+  // thing, not a verb as a noun („Ich habe Lesen gemacht“). Courses session, 2026-11-20.
+  if (slot === 'past') {
+    const middleOk = (w) => {
+      const f = fold(w);
+      return /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f) || PAST_SMALL.has(f) || clockOf(f) !== null || DAYS.includes(f.replace(/s$/, ''));
+    };
+    // A phrase put in front comes back at the end („Am Sonntag habe ich gekocht“ → „… gekocht am Sonntag“).
+    let end = raw.length;
+    while (end > 2 && (WHEN_GLUE.has(parts[end - 1]) || DAYS.includes(parts[end - 1].replace(/s$/, '')) || ['wochenende', 'abend', 'morgen', 'nachmittag', 'uhr'].includes(parts[end - 1]) || clockOf(parts[end - 1]) !== null) && !participleOf(parts[end - 1])) end -= 1;
+    if (parts[0] === 'war') return raw.length >= 2 && raw.slice(1).every(middleOk) ? RESULT.CORRECT : RESULT.WRONG;
+    if (!['habe', 'bin'].includes(parts[0]) || end < 2) return RESULT.WRONG;
+    const kind = participleOf(parts[end - 1]);
+    if (!kind || (kind === 'sein') !== (parts[0] === 'bin')) return RESULT.WRONG;
+    const middle = raw.slice(1, end - 1);
+    if (parts[end - 1] === 'gemacht' && middle.some((w) => /^\p{Lu}/u.test(w) && lexicon?.verbs?.has?.(fold(w)))) return RESULT.WRONG;
+    return middle.every(middleOk) ? RESULT.CORRECT : RESULT.WRONG;
   }
   // A month („im Mai“); with `day`, a day of it as one writes it („am 3. Mai“, „am 3.5.“). Lektion 12.
   if (slot === 'month') {
@@ -468,6 +489,7 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       return (verbs?.has?.(f) || !known(f)) && !lexicon?.genders?.get?.(f);
     };
     if (!raw.length || !ichForm(raw[0])) return RESULT.WRONG;
+    if (unsplit(raw[0])) return RESULT.WRONG; // „Ich aufstehe“, „Ich einkaufe“ (courses session, 2026-11-20)
     // `partOfDay`: „Was machst du morgens?“ is not answered with „Ich dusche abends“ (first corpus of Lektion 11).
     const MORNING = ['morgen', 'vormittag', 'früh'];
     const named = parts.map((w) => w.replace(/s$/, '')).filter((w) => DAY_PARTS.includes(w) || w === 'abend');
@@ -475,7 +497,7 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     let small = false;
     for (let i = 1; i < raw.length; i += 1) {
       const f = fold(raw[i]);
-      if (['und', 'oder'].includes(fold(raw[i - 1])) && ichForm(raw[i])) continue;
+      if (['und', 'oder'].includes(fold(raw[i - 1])) && ichForm(raw[i])) { if (unsplit(raw[i])) return RESULT.WRONG; continue; }
       // „in" before a der- or das-noun needs its article („ins Kino", „im Park"): „in Kino" is wrong
       // (third corpus of Lektion 7). A place without an article („in Bremen") is fine.
       if (fold(raw[i - 1]) === 'in') {
@@ -484,7 +506,7 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       }
       if (/^\p{Lu}/u.test(raw[i]) || ACTIVITY_GLUE.has(f)) continue;
       // A clock time and the prefix of a verb of two parts („Ich stehe um sechs auf und dusche“, Lektion 11).
-      if (['um', 'uhr', 'halb', 'viertel', 'vor', 'auf', 'ein'].includes(f) || clockOf(f) !== null) continue;
+      if (['um', 'uhr', 'halb', 'viertel'].includes(f) || SEP_PREFIX.includes(f) || clockOf(f) !== null) continue;
       // A noun the course teaches, written small („am wochenende"), is a typo (first corpus of Lektion 7).
       if (lexicon?.genders?.get?.(f)) { small = true; continue; }
       return RESULT.WRONG;
@@ -557,9 +579,9 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   if (slot === 'duQuestion') {
     const v = fold(raw[0] || '');
     const duForm = /st$/.test(v) || /[sßxz]t$/.test(v);
-    if (!duForm || v.length < 4 || CLOSED.has(v) || lexicon?.genders?.get?.(v) || fold(raw[1] || '') !== 'du') return RESULT.WRONG;
+    if (!duForm || v.length < 4 || CLOSED.has(v) || lexicon?.genders?.get?.(v) || fold(raw[1] || '') !== 'du' || unsplit(v)) return RESULT.WRONG;
     const rest = raw.slice(2); // may be empty: „Tanzt du?"
-    const ok = rest.every((w) => /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(fold(w)) || ['gern', 'gerne', 'auch'].includes(fold(w)));
+    const ok = rest.every((w) => /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(fold(w)) || SEP_PREFIX.includes(fold(w)) || ['gern', 'gerne', 'auch'].includes(fold(w)));
     return ok ? RESULT.CORRECT : RESULT.WRONG;
   }
   // Hobbies: each a hobby the course teaches („Sport", „Musik", „Kochen") or a noun of the learner's own
@@ -659,6 +681,7 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       const adjOk = (g) => !adj || adjectiveFits(adjRaw, slot, detKey, g, lexicon);
       const readings = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
       if (readings) {
+        if (people && !PEOPLE.has(noun)) return null;
         const fit = readings.filter((g) => adjOk(g) && (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det))
           : (det ? !counted && ARTICLE[g].includes(det) : MASS.has(noun) && !adj)));
         if (!fit.length) return null;
@@ -897,6 +920,85 @@ function questionWordLast(text) {
   return [`${m[3].charAt(0).toLocaleUpperCase('de')}${m[3].slice(1)} ${m[2]} ${[first, ...subject.slice(1)].join(' ')}?`];
 }
 
+// The prefixes of verbs of two parts (Lektion 11: „ein|kaufen“, „auf|stehen“): in a main clause the prefix goes to the
+// end, so a finite verb that still carries it („Ich aufstehe“, „Ich einkaufe“, „Einkaufst du …?“) is wrong.
+const SEP_PREFIX = ['zurück', 'fern', 'auf', 'aus', 'ein', 'mit', 'weg', 'los', 'vor', 'nach', 'her', 'hin', 'an', 'ab', 'zu'];
+// Verbs that only look as if they had one.
+const NOT_SEPARABLE = /^(?:antwort|angel|analys|zucker|herrsch|hinter)/;
+const unsplit = (w) => { const f = fold(w); return !NOT_SEPARABLE.test(f) && /(?:e|st|t)$/.test(f) && SEP_PREFIX.some((p) => f.startsWith(p) && f.length - p.length >= 4); };
+
+// Participles in -en of the strong verbs a learner may use at A1 (without a separable prefix), and those that take „sein“.
+const STRONG_PARTICIPLES = new Set(['gegangen', 'gefahren', 'gekommen', 'geschlafen', 'gegessen', 'getrunken', 'gelesen', 'gesehen', 'geschrieben',
+  'gesprochen', 'geschwommen', 'gelaufen', 'geflogen', 'geblieben', 'gewesen', 'gestanden', 'getroffen', 'genommen', 'gefunden', 'gesungen', 'gerufen',
+  'gegeben', 'geworden', 'gewaschen', 'geholfen', 'gestorben', 'geboren', 'getragen', 'gehalten', 'gelegen', 'gesessen', 'geschlossen', 'gezogen',
+  'bekommen', 'verstanden', 'vergessen', 'begonnen', 'verloren', 'empfohlen', 'gefallen', 'angefangen', 'gewonnen']);
+const SEIN_PARTICIPLES = new Set(['gegangen', 'gefahren', 'gekommen', 'geflogen', 'gelaufen', 'geschwommen', 'geblieben', 'gewesen', 'geworden',
+  'gestorben', 'gereist', 'gerannt', 'gesprungen', 'aufgestanden', 'eingeschlafen', 'aufgewacht', 'umgezogen']);
+// Stems whose participle ends in -en: „geschlaft“, „gegeht“ are no participles.
+const STRONG_STEMS = /^ge(?:schlaf|ess|trink|les|seh|geh|fahr|komm|schreib|sprech|schwimm|lauf|flieg|bleib|nehm|find|sing|steh|treff|ruf|geb)t$/;
+/** „haben“ or „sein“ for a participle („gespielt“, „eingekauft“, „gegangen“, „telefoniert“), or null when it is none. */
+function participleOf(word) {
+  const f = fold(word);
+  const prefix = SEP_PREFIX.find((p) => f.startsWith(`${p}ge`) && f.length > p.length + 4);
+  const core = prefix ? f.slice(prefix.length) : f;
+  const sein = SEIN_PARTICIPLES.has(f) || SEIN_PARTICIPLES.has(core) ? 'sein' : 'haben';
+  if (/en$/.test(core)) return STRONG_PARTICIPLES.has(core) ? sein : null;
+  if (/^ge\p{L}{3,}t$/u.test(core)) return STRONG_STEMS.test(core) ? null : sein;
+  if (!prefix && /^(?:be|ver|er|ent|emp|zer)\p{L}{3,}t$/u.test(core)) return sein;
+  if (!prefix && /\p{L}{3,}iert$/u.test(core)) return sein;
+  return null;
+}
+// Small words inside a sentence about the past („Ich habe gestern nichts gemacht“, „… zu Hause geblieben“).
+const PAST_SMALL = new Set(['gestern', 'heute', 'viel', 'lange', 'nicht', 'nichts', 'etwas', 'allein', 'hause', 'den', 'dem', 'des', 'der', 'die', 'das',
+  'einen', 'einem', 'einer', 'ein', 'eine', 'meinen', 'meinem', 'meiner', 'meine', 'mein', 'mit', 'für', 'gut', 'schön', 'spät', 'früh', 'dann', 'noch', 'schon']);
+
+// People, for a turn that asks who comes (`people`): „Ein Stuhl kommt“ names no guest.
+const PEOPLE = new Set(['mama', 'papa', 'mutter', 'vater', 'eltern', 'bruder', 'brüder', 'schwester', 'schwestern', 'geschwister', 'familie', 'kollegin',
+  'kolleginnen', 'kollege', 'kollegen', 'freund', 'freundin', 'freunde', 'freundinnen', 'gast', 'gäste', 'kind', 'kinder', 'sohn', 'söhne', 'tochter',
+  'töchter', 'frau', 'frauen', 'mann', 'männer', 'oma', 'opa', 'großeltern', 'onkel', 'tante', 'nachbar', 'nachbarin', 'nachbarn', 'chef', 'chefin',
+  'lehrer', 'lehrerin', 'leute', 'baby', 'partner', 'partnerin', 'cousin', 'cousine', 'herr', 'mitschüler', 'mitschülerin', 'mitschülerinnen']);
+
+// An invitation in two sentences: what is celebrated, then the question or „Ich lade dich ein“ („Ich mache ein Fest.
+// Kommst du auch?“, „Am Samstag feiere ich. Kommst du?“; courses session, 2026-11-20).
+const PARTY = /^(?:fest|party|feier|geburtstag|geburtstagsparty|geburtstagsfeier|grillfest|grillparty)$/;
+function partyNews(sentence, turn) {
+  return [sentence, ...verbSecond(sentence)].some((s) => {
+    const w = wordsOf(String(s).replace(/[.!]+\s*$/, '')).map((x) => x.replace(/[.,!]+$/, ''));
+    const f = w.map(fold);
+    let rest = null;
+    let named = false;
+    if (f[0] === 'ich' && ['feiere', 'mache', 'habe', 'plane', 'gebe'].includes(f[1])) {
+      rest = w.slice(2);
+      named = f[1] === 'feiere';
+    } else {
+      const at = f.indexOf('ist');
+      const poss = (x, n) => (/^(?:meine|unsere)$/.test(x) ? ['party', 'feier', 'geburtstagsparty', 'geburtstagsfeier', 'grillparty'].includes(n) : /^(?:mein|unser)$/.test(x) && ['fest', 'geburtstag', 'grillfest'].includes(n));
+      if (at > 0 && poss(f[at + 1] || '', f[at + 2] || '') && at + 3 === f.length) { rest = w.slice(0, at); named = true; }
+      if (at === 2 && poss(f[0], f[1])) { rest = w.slice(3); named = true; }
+    }
+    if (!rest) return false;
+    const when = [];
+    for (let i = 0; i < rest.length; i += 1) {
+      const x = fold(rest[i]);
+      if (PARTY.test(x) && /^\p{Lu}/u.test(rest[i])) { named = true; continue; }
+      // The article agrees with the party noun („ein Fest“, „eine Party“, „meinen Geburtstag“; never „ein Party“).
+      const next = fold(rest[i + 1] || '');
+      if (PARTY.test(next)) {
+        const g = /party|feier$/.test(next) ? 'die' : /geburtstag$/.test(next) ? 'der' : 'das';
+        const fits = { der: ['einen', 'meinen', 'unseren'], die: ['eine', 'meine', 'unsere'], das: ['ein', 'mein', 'unser'] }[g];
+        if (fits.includes(x)) continue;
+        if (['ein', 'eine', 'einen', 'meinen', 'meine', 'mein', 'unsere', 'unser', 'unseren'].includes(x)) return false;
+      }
+      when.push(rest[i]);
+    }
+    if (!named) return false;
+    if (!when.length) return true;
+    const at = whenOf(when.join(' '));
+    return Boolean(at) && (!turn.when || sameWhen(at, turn.when, { partial: true }));
+  });
+}
+const INVITE_SECOND = /^(?:und\s+)?(?:kommst\s+du(?:\s+auch)?(?:\s+zu\s+mir)?|möchtest\s+du(?:\s+auch)?\s+kommen|ich\s+lade\s+dich(?:\s+auch)?\s+ein|kannst\s+du\s+kommen|hast\s+du\s+zeit)\s*[?.!]*$/iu;
+
 // A number word, also typed without its umlaut („funfzehn", „zwolf").
 const isNumberWord = (w) => /^\d+$/.test(numberWordsToDigits(String(w).replace(/f(?:ue|u)nf/g, 'fünf').replace(/zw(?:oe|o)lf/g, 'zwölf')));
 // A price is in euros: „18,00 Euro" and „18,- €" are 18; a heard price in euros is no number of cents.
@@ -942,6 +1044,17 @@ export function typedResult(turn, value) {
     return checkAnswer(text, turn.accepted, { dictation: true }).result;
   }
   if (turn.parts) return messageResult(turn, text);
+  if (turn.slot === 'invite') {
+    const plain = text.trim().replace(GREETING_FIRST, '');
+    let said = plain.split(/(?<=[.!?])\s+/).filter(Boolean);
+    // Without the full stop between them („am samstag ist mein fest kommst du auch?“) the two sentences are a slip.
+    const joined = said.length === 1;
+    if (joined) said = plain.split(/[,\s]+(?=(?:und\s+)?(?:kommst|möchtest|kannst|hast)\s+du\b|ich\s+lade\s+dich\b)/iu).filter(Boolean);
+    const name = turn.partner ? new RegExp(`[,\\s]+${turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=\\s*[?.!]*$)`, 'i') : /$^/;
+    if (said.length === 2 && partyNews(said[0].replace(name, ''), turn) && (INVITE_SECOND.test(said[1].replace(name, '')) || typedResult(turn, said[1]) !== RESULT.WRONG)) {
+      return joined || /^\p{Ll}/u.test(plain) ? RESULT.TYPO : RESULT.CORRECT;
+    }
+  }
   // A reply may open with a greeting („Guten Tag! Was ist das?") or „Und" („Und woher kommen deine
   // Eltern?") and name the person it is said to („Herr Weber, …", „…, Lena?", „frau wolf was ist das");
   // the rest is the answer. „Hier, Lena." is „Hier." — „Hier," is no name.

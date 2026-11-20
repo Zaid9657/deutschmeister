@@ -58,15 +58,25 @@ const cases = [
   [s(12)[4], 'Ich möchte ein Buch.', 1], [s(12)[4], 'Vielleicht eine Tasche.', 1], [s(12)[4], 'Ich möchte einen Kuchen.', 1],
   [s(12)[4], 'Ich möchte ein Tasche.', 0], [s(12)[4], 'Ich möchte schön.', 0], [s(12)[4], 'Ich möchte nichts.', 0],
   // Lektion 12 — goodbye and a wish
-  [s(12)[6], 'Mach’s gut!', 1], [s(12)[6], "Mach's gut, Lena!", 1], [s(12)[6], 'Bis bald!', 1], [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Bis Samstag!', 0], [s(12)[6], 'Machs gut, bis später!', 1],
-  [s(12)[6], 'Tschüss!', 0], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Danke.', 0],
+  [s(12)[6], 'Mach’s gut!', 1], [s(12)[6], "Mach's gut, Lena!", 1], [s(12)[6], 'Bis bald!', 1], [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Bis Samstag!', 1], [s(12)[6], 'Machs gut, bis später!', 1],
+  [s(12)[6], 'Tschüss!', 1], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Danke.', 0],
   [s(12)[5], 'Schönen Tag noch!', 1], [s(12)[5], 'Tschüss, schönen Tag noch!', 1], [s(12)[5], 'Einen schönen Tag noch!', 1],
   [s(12)[5], 'Schöne Tag noch!', 0], [s(12)[5], 'Guten Tag!', 0], [s(12)[5], 'Tschüss!', 0],
   // One journey per sitting: a destination named is the sitting's (second DaF review).
   [s(10, 1)[2], 'Wann fährt der Zug nach Berlin?', 0], [s(10, 1)[2], 'Wann fährt der Zug nach Österreich?', 1], [s(10, 1)[2], 'Wann fährt der Zug?', 1], [s(10, 2)[2], 'Wann fährt der Zug nach Köln?', 1], [s(10, 2)[2], 'Wann fährt der Zug nach Berlin?', 0],
   [s(10, 1)[3], 'Was kostet die Fahrkarte nach Österreich?', 1], [s(10, 1)[3], 'Was kostet die Fahrkarte nach Berlin?', 0], [s(10, 2)[3], 'Wie viel kostet die Fahrkarte nach Köln?', 1], [s(10, 2)[3], 'Wie viel kostet die Fahrkarte nach Berlin?', 0],
   [s(10)[0], 'Nach Hause.', 1], [s(11)[0], 'Ich habe eine Pause gemacht.', 1], [s(11)[0], 'Ich habe Lesen gemacht.', 0], [s(11)[0], 'Ich habe nichts gemacht.', 1], [s(11)[1], 'Was hast du morgen gemacht?', 0], [s(11)[5], 'Kaufst du am Samstag Brot ein?', 1],
-  [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Auf Wiedersehen!', 0],
+  [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Auf Wiedersehen!', 1],
+  // The courses session's findings (2026-11-20): verbs of two parts, the past, two-sentence invitations, goodbyes, guests.
+  [s(11)[2], 'Ich aufstehe.', 0], [s(11)[2], 'Ich einkaufe.', 0], [s(11)[2], 'Ich fernsehe.', 0], [s(11)[2], 'Ich aufstehe um 7 Uhr.', 0], [s(11)[2], 'Ich sehe fern.', 1], [s(11)[2], 'Ich stehe auf und dusche.', 1], [s(11)[2], 'Ich dusche und aufstehe.', 0],
+  [s(7)[1], 'Ich einkaufe gern.', 0], [s(7)[1], 'Ich sehe gern fern.', 1], [s(7)[0], 'Ich einkaufe gern.', 0], [s(7)[2], 'Einkaufst du gern?', 0], [s(7)[2], 'Kaufst du gern ein?', 1], [s(7)[2], 'Siehst du gern fern?', 1],
+  [s(11)[0], 'Ich habe Fußball gespielt.', 1], [s(11)[0], 'Ich habe gekocht.', 1], [s(11)[0], 'Ich habe eingekauft.', 1], [s(11)[0], 'Ich habe Deutsch gelernt.', 1], [s(11)[0], 'Ich habe Musik gehört.', 1], [s(11)[0], 'Ich habe geschlafen.', 1],
+  [s(11)[0], 'Ich bin ins Kino gegangen.', 1], [s(11)[0], 'Ich war zu Hause.', 1], [s(11)[0], 'Am Sonntag habe ich gekocht.', 1], [s(11)[0], 'Gestern habe ich ferngesehen.', 1], [s(11)[0], 'Ich habe meine Mutter besucht.', 1], [s(11)[0], 'Ich habe telefoniert.', 1],
+  [s(11)[0], 'Ich habe arbeiten.', 0], [s(11)[0], 'Ich bin gearbeitet.', 0], [s(11)[0], 'Ich habe gearbeiten.', 0], [s(11)[0], 'Ich habe aufgestanden.', 0], [s(11)[0], 'Ich habe geschlaft.', 0], [s(11)[0], 'Ich bin gekocht.', 0], [s(11)[0], 'Ich habe gegangen.', 0],
+  [s(12)[0], 'Ich mache ein Fest. Kommst du auch?', 1], [s(12)[0], 'Ich feiere meinen Geburtstag. Ich lade dich ein.', 1], [s(12)[0], 'Am Samstag feiere ich. Kommst du?', 1], [s(12)[0], 'Am Samstag ist meine Party. Kommst du?', 1],
+  [s(12)[0], 'Ich feiere am Sonntag. Kommst du?', 0], [s(12)[0], 'Ich habe Hunger. Kommst du?', 0], [s(12)[0], 'Ich mache ein Party. Kommst du?', 0],
+  [s(12)[6], 'Bis dann!', 1], [s(12)[6], 'Bis Montag!', 0], [s(12)[4], 'Ich wünsche mir ein Buch.', 1], [s(10)[3], 'Was kostet das Ticket?', 1], [s(10)[3], 'Was kostet das?', 1],
+  [s(12)[3], 'Ein Stuhl kommt.', 0], [s(12)[3], 'Meine Nachbarin kommt.', 1], [s(12)[3], 'Lena kommt.', 1],
 ];
 let bad = 0;
 for (const [turn, answer, right] of cases) {
