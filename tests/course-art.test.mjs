@@ -184,13 +184,13 @@ test('L1 ships the illustrated otter reception with honest mixed provenance and 
 
 // The rollout (2026-11-19, docs/course-factory/a11-lektion-rollout/): Lektionen get their scene one
 // batch at a time. Every illustrated scene ships in the three sizes, and every cast portrait is a file.
-const ILLUSTRATED = ['a1.1-l01', 'a1.1-l02', 'a1.1-l03'];
+const ILLUSTRATED = ['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-l04', 'a1.1-l05', 'a1.1-l06'];
 
 test('every illustrated scene ships 1168x880 plus 800 and 640 wide, and the rest are still drawn as SVG', async () => {
   const { default: sharp } = await import('sharp');
   for (const [id, scene] of Object.entries(A11_ART.situations)) {
     if (!ILLUSTRATED.includes(id)) { assert.equal(scene.src, null, id); continue; }
-    assert.match(scene.alt, /drawn as an otter/, `${id}: the alt names the guide's figure`);
+    assert.match(scene.alt, /drawn as an? /, `${id}: the alt says which animal each person is drawn as`);
     const slug = scene.src.match(/^\/art\/a11\/(l\d\d-[a-z]+)-1168\.webp$/)?.[1];
     assert.ok(slug && slug.startsWith(`l${id.slice(-2)}-`), id);
     for (const [field, width] of [['srcSmall', 640], ['srcMedium', 800], ['src', 1168]]) {

@@ -153,6 +153,7 @@ export const DIALOG_NAMES = [
 const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Schweiz', 'Italien', 'Polen', 'Spanien', 'Marokko', 'Essen'];
 const CHECK_JOBS = ['Student', 'Studentin', 'Lehrer', 'Lehrerin', 'Ingenieur', 'Ingenieurin', 'Verkäufer', 'Verkäuferin', 'Arzt', 'Kellner', 'Fahrer', 'Fahrerin', 'Chef', 'Chefin'];
 const CHECK_LANGUAGES = ['Deutsch', 'Englisch', 'Arabisch'];
+const CHECK_COLORS = ['rot', 'blau', 'grün', 'gelb', 'schwarz', 'weiß', 'braun'];
 
 export const CURRICULUM_A11 = {
   level: 'a1.1',
@@ -1206,6 +1207,42 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): the same flea-market stall, now as the learner themself. The thing
+        // on the stall, its price and the total change on a retake; what the learner buys is their own
+        // choice and must carry the article „kaufen" asks for (`thing`: „den Stuhl", the notice's chunk).
+        check: {
+          partner: 'Frau Wolf',
+          open: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          passed: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          turns: [
+            { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?'] },
+            { canDo: 0, taskDe: 'Fragen Sie nach dem Preis.', taskEn: 'Ask what it costs.',
+              variants: [
+                { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?'] },
+                { cue: { de: 'Das ist ein Rucksack.', en: 'That is a rucksack.' }, accepted: ['Was kostet er?', 'Was kostet der Rucksack?', 'Wie viel kostet er?', 'Wie viel kostet der Rucksack?', 'Was kostet das?', 'Wie viel kostet das?'] },
+                { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?'] },
+              ] },
+            { canDo: 2, taskDe: 'Frau Wolf sagt den Preis. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says the price. Write it down.',
+              variants: [{ listen: 'Sie kostet 18 Euro.' }, { listen: 'Er kostet 45 Euro.' }, { listen: 'Es kostet 72 Euro.' }] },
+            // The thing is named in the task with the article „möchten" takes; the learner asks with the
+            // article of the noun itself (der Stuhl, die Lampe, der Tisch): the Genus of this Lektion.
+            { canDo: 1,
+              variants: [
+                { taskDe: 'Sie möchten auch einen Stuhl. Fragen Sie nach dem Preis.', taskEn: 'You would like a chair too. Ask what the chair costs.', accepted: ['Was kostet der Stuhl?', 'Wie viel kostet der Stuhl?', 'Und der Stuhl?', 'Und der Stuhl? Was kostet er?'] },
+                { taskDe: 'Sie möchten auch eine Lampe. Fragen Sie nach dem Preis.', taskEn: 'You would like a lamp too. Ask what the lamp costs.', accepted: ['Was kostet die Lampe?', 'Wie viel kostet die Lampe?', 'Und die Lampe?', 'Und die Lampe? Was kostet sie?'] },
+                { taskDe: 'Sie möchten auch einen Tisch. Fragen Sie nach dem Preis.', taskEn: 'You would like a table too. Ask what the table costs.', accepted: ['Was kostet der Tisch?', 'Wie viel kostet der Tisch?', 'Und der Tisch?', 'Und der Tisch? Was kostet er?'] },
+              ] },
+            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …'], slot: 'thing', example: 'Ich kaufe den Stuhl und die Lampe.' },
+            { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
+              variants: [{ listen: 'Das macht zusammen 30 Euro.' }, { listen: 'Das macht zusammen 57 Euro.' }, { listen: 'Das macht zusammen 84 Euro.' }] },
+          ],
+          repeat: [
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: der, die, das', de: 'Teil 2: der, die, das' }],
+            { en: 'Part 2: the listening', de: 'Teil 2: das Hören' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: der, die, das', de: 'Teil 2: der, die, das' }],
+          ],
+        },
       },
       nextHook: {
         de: 'Vor dem Kurs packen Lena und Tim ihre Taschen aus. Aber wo ist das Wörterbuch?',
@@ -1418,6 +1455,47 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): before the course, with Lena, as the learner themself. Every thing
+        // is named with its own article (`object`: „Das ist ein Heft", not „eine Heft") — the rule of this
+        // Lektion; the thing asked about changes on a retake, and with it the pronoun of the answer.
+        check: {
+          partner: 'Lena',
+          open: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          passed: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          turns: [
+            { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Lena zeigt auf eine Sache aus Ihrer Tasche. Sagen Sie mit einem Satz, was das ist.', taskEn: 'Lena points at something from your bag. Say what it is, in one sentence.', accepted: ['Das ist …', 'Das sind …'], slot: 'object', example: 'Das ist mein Wörterbuch.' },
+            { canDo: 1, taskDe: 'Antworten Sie mit hier oder da.',
+              variants: [
+                { cue: { de: 'Wo ist dein Wörterbuch?', en: 'Where is your dictionary?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Es ist hier.', 'Es ist da.', 'Hier.', 'Da.'], nounFor: { Es: ['Mein Wörterbuch', 'Das Wörterbuch'] } },
+                { cue: { de: 'Wo ist deine Schere?', en: 'Where are your scissors?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Sie ist hier.', 'Sie ist da.', 'Hier.', 'Da.'], nounFor: { Sie: ['Meine Schere', 'Die Schere'] } },
+                { cue: { de: 'Wo ist dein Stift?', en: 'Where is your pen?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Er ist hier.', 'Er ist da.', 'Hier.', 'Da.'], nounFor: { Er: ['Mein Stift', 'Der Stift'] } },
+              ] },
+            { canDo: 1,
+              variants: [
+                { taskDe: 'Sie suchen Ihren Stift. Fragen Sie Lena: wo?', taskEn: 'You are looking for your pen. Ask Lena where it is.', accepted: ['Wo ist mein Stift?', 'Wo ist der Stift?'] },
+                { taskDe: 'Sie suchen Ihr Heft. Fragen Sie Lena: wo?', taskEn: 'You are looking for your exercise book. Ask Lena where it is.', accepted: ['Wo ist mein Heft?', 'Wo ist das Heft?'] },
+                { taskDe: 'Sie suchen Ihre Schere. Fragen Sie Lena: wo?', taskEn: 'You are looking for your scissors. Ask Lena where they are.', accepted: ['Wo ist meine Schere?', 'Wo ist die Schere?'] },
+              ] },
+            { canDo: 2, taskDe: 'Antworten Sie mit einem Satz.', slot: 'color', slotWords: CHECK_COLORS,
+              variants: [
+                { cue: { de: 'Welche Farbe hat dein Heft?', en: 'What colour is your exercise book?' }, taskEn: 'Say what colour your exercise book is, in one sentence.', accepted: ['Es ist …'], nounFor: { Es: ['Mein Heft', 'Das Heft'] }, example: 'Es ist grün.' },
+                { cue: { de: 'Welche Farbe hat deine Tasche?', en: 'What colour is your bag?' }, taskEn: 'Say what colour your bag is, in one sentence.', accepted: ['Sie ist …'], nounFor: { Sie: ['Meine Tasche', 'Die Tasche'] }, example: 'Sie ist schwarz.' },
+                { cue: { de: 'Welche Farbe hat dein Stift?', en: 'What colour is your pen?' }, taskEn: 'Say what colour your pen is, in one sentence.', accepted: ['Er ist …'], nounFor: { Er: ['Mein Stift', 'Der Stift'] }, example: 'Er ist blau.' },
+              ] },
+            { canDo: 3, slot: 'color', slotWords: CHECK_COLORS,
+              variants: [
+                { taskDe: 'Und Lenas Tasche? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena what colour her bag is.', accepted: ['Welche Farbe hat deine Tasche?', 'Welche Farbe hat die Tasche?', 'Ist deine Tasche …?'] },
+                { taskDe: 'Und Lenas Stift? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena what colour her pen is.', accepted: ['Welche Farbe hat dein Stift?', 'Welche Farbe hat der Stift?', 'Ist dein Stift …?'] },
+                { taskDe: 'Und Lenas Buch? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena what colour her book is.', accepted: ['Welche Farbe hat dein Buch?', 'Welche Farbe hat das Buch?', 'Ist dein Buch …?'] },
+              ] },
+          ],
+          repeat: [
+            { en: 'Part 2: der, die, das', de: 'Teil 2: der, die, das' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 1: the words', de: 'Teil 1: die Wörter' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Ana hat Arbeit! Morgen ist ihr erster Tag im Büro. Was braucht sie dort?',
@@ -1635,6 +1713,34 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): the first day in the office with Herr Weber, as the learner themself.
+        // What the learner needs is their own and carries the article „brauchen" asks for (`thing`:
+        // „einen Computer", the notice's chunk); the two numbers Herr Weber says change on a retake.
+        check: {
+          partner: 'Herr Weber',
+          open: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          passed: { en: 'TODO-CODEX', de: 'TODO-CODEX' },
+          turns: [
+            { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
+            { canDo: 3, taskDe: 'Und Ihr Büro? Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?', 'Ist das mein Büro?', 'Und mein Büro?'] },
+            { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Um wie viel Uhr ist die Pause?'] },
+            // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …") or as Germans answer
+            // a call („Hier ist …", or the name alone).
+            { canDo: 1, cue: { de: 'Weber, guten Tag!', en: 'Weber, good day!' }, taskDe: 'Herr Weber ruft an. Sagen Sie am Telefon Ihren Namen.', taskEn: 'Herr Weber is calling you. Say your name on the phone.',
+              accepted: ['Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Ich heiße …', 'Mein Name ist …', '…'], slot: 'name',
+              example: 'Guten Tag, hier ist Ana Chakiri.' },
+            { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Büro. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
+              variants: [{ listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, fünf sieben drei null.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, sechs zwei eins vier.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, neun acht null zwei.' }] },
+            { canDo: 2, taskDe: 'Herr Weber sagt die Handynummer von Ihrer Chefin, Frau Berg. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the mobile number of your boss, Frau Berg. Write it down.',
+              variants: [{ listen: 'Die Handynummer von Frau Berg ist null eins sieben eins, zwei drei vier, fünf sechs sieben acht.' }, { listen: 'Die Handynummer von Frau Berg ist null eins fünf zwei, acht sieben sechs, fünf vier drei zwei.' }, { listen: 'Die Handynummer von Frau Berg ist null eins sieben sechs, neun null eins, zwei drei vier fünf.' }] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ein, eine', de: 'Teil 2: ein, eine' }],
+            { en: 'the scene of Lektion 1', de: 'die Szene von Lektion 1' },
+            { en: 'Part 2: the listening', de: 'Teil 2: das Hören' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Nach der Arbeit kommt das Wochenende. Was machen Lena und Tim gern – und was machen Sie gern?',

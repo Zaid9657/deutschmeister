@@ -37,8 +37,9 @@ export const A11_ART = {
     'Herr Weber': { alt: 'Herr Weber, from the public office (Bürgerbüro), drawn as a badger', component: 'CharacterAvatar', src: '/art/a11/herr-weber-160.webp', srcSmall: '/art/a11/herr-weber-160.webp' },
     // Cut from the L3 scene (2026-11-19).
     Lena: { alt: 'Lena, a learner whose hobby is sport, drawn as a hare', component: 'CharacterAvatar', src: '/art/a11/lena-160.webp', srcSmall: '/art/a11/lena-160.webp' },
-    Tim: { alt: 'Tim, a learner furnishing his room', component: 'CharacterAvatar', src: null, srcSmall: null },
-    'Frau Wolf': { alt: 'Frau Wolf, who sells furniture at the flea market', component: 'CharacterAvatar', src: null, srcSmall: null },
+    // Cut from the L4 scene (2026-11-19).
+    Tim: { alt: 'Tim, a learner furnishing his room, drawn as a fox', component: 'CharacterAvatar', src: '/art/a11/tim-160.webp', srcSmall: '/art/a11/tim-160.webp' },
+    'Frau Wolf': { alt: 'Frau Wolf, who sells furniture at the flea market, drawn as a hedgehog', component: 'CharacterAvatar', src: '/art/a11/frau-wolf-160.webp', srcSmall: '/art/a11/frau-wolf-160.webp' },
     Paul: { alt: 'Paul, the café waiter', component: 'CharacterAvatar', src: null, srcSmall: null },
     'Herr Schmidt': { alt: 'Herr Schmidt, who gives train information at the station', component: 'CharacterAvatar', src: null, srcSmall: null },
   },
@@ -47,8 +48,8 @@ export const A11_ART = {
     'a1.1-l01': { alt: 'Ana, drawn as an otter with a suitcase, arrives at a hostel reception in Bremen; Frau Kaya, drawn as a bird, welcomes her', component: 'SituationScene', src: '/art/a11/l01-rezeption-1168.webp', srcSmall: '/art/a11/l01-rezeption-640.webp', srcMedium: '/art/a11/l01-rezeption-800.webp', width: 1168, height: 880 },
     'a1.1-l02': { alt: 'Ana, drawn as an otter, stands at a counter in the public office in Bremen; Herr Weber, drawn as a badger, points to a form', component: 'SituationScene', src: '/art/a11/l02-buergerbuero-1168.webp', srcSmall: '/art/a11/l02-buergerbuero-640.webp', srcMedium: '/art/a11/l02-buergerbuero-800.webp', width: 1168, height: 880 },
     'a1.1-l03': { alt: 'Ana, drawn as an otter, shows Lena, drawn as a hare, a photo of her otter family on her phone in the common room of the language school', component: 'SituationScene', src: '/art/a11/l03-familienfoto-1168.webp', srcSmall: '/art/a11/l03-familienfoto-640.webp', srcMedium: '/art/a11/l03-familienfoto-800.webp', width: 1168, height: 880 },
-    'a1.1-l04': { alt: 'A flea-market stall with a table and a chair', component: 'SituationScene', src: null, srcSmall: null },
-    'a1.1-l05': { alt: 'A classroom board and pencils', component: 'SituationScene', src: null, srcSmall: null },
+    'a1.1-l04': { alt: 'Tim, drawn as a fox, points at a lamp on Frau Wolf’s flea-market stall in Bremen; Frau Wolf, drawn as a hedgehog, smiles behind the stall with a chair, a table, a shelf and two bags', component: 'SituationScene', src: '/art/a11/l04-flohmarkt-1168.webp', srcSmall: '/art/a11/l04-flohmarkt-640.webp', srcMedium: '/art/a11/l04-flohmarkt-800.webp', width: 1168, height: 880 },
+    'a1.1-l05': { alt: 'Lena, drawn as a hare, and Tim, drawn as a fox, unpack their bags in the classroom before the course; on the desk a dictionary, scissors, a ruler, a pen, a pencil, a green exercise book, a key and a small blue picture', component: 'SituationScene', src: '/art/a11/l05-klassenzimmer-1168.webp', srcSmall: '/art/a11/l05-klassenzimmer-640.webp', srcMedium: '/art/a11/l05-klassenzimmer-800.webp', width: 1168, height: 880 },
     'a1.1-l06': { alt: 'An office desk with a phone and a monitor', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l07': { alt: 'A bicycle and a guitar', component: 'SituationScene', src: null, srcSmall: null },
     'a1.1-l08': { alt: 'A wall clock and a calendar', component: 'SituationScene', src: null, srcSmall: null },

@@ -69,9 +69,11 @@ export function courseLexicon(curriculum) {
     }
     for (const w of l.wortfeld || []) {
       for (const text of [w.de, w.word, w.plural]) for (const token of String(text || '').split(/[^\p{L}]+/u)) if (token) known.add(fold(token));
+      // A word may be singular and plural at once („der Computer", „die Computer"): every reading counts.
+      const gender = (k, g) => known.genders.set(k, [...new Set([...(known.genders.get(k) || []), g])]);
       if (['der', 'die', 'das'].includes(w.article) && w.word && !w.meta) {
-        known.genders.set(fold(w.word), w.article);
-        if (w.plural && !/^[—-]$/.test(w.plural)) known.genders.set(fold(w.plural), 'pl');
+        gender(fold(w.word), w.article);
+        if (w.plural && !/^[—-]$/.test(w.plural)) gender(fold(w.plural), 'pl');
       }
       const verb = !w.article && /^[a-zäöü]+e?n$/.test(w.word || '') ? w.word.replace(/e?n$/, '') : null;
       if (verb) for (const ending of ['e', 'st', 't', 'en', 'et']) { known.add(fold(verb + ending)); known.verbs.add(fold(verb + ending)); }
@@ -104,7 +106,7 @@ export function checkTurns(check, retake = 0, { chosen = null } = {}) {
       const only = Object.fromEntries(Object.entries(picked.nounFor).map(([p, nouns]) => [p, nouns.filter((n) => fold(n).endsWith(` ${fold(chosen)}`))]));
       picked = { ...picked, nounFor: only };
     }
-    const turn = check.lexicon && (picked.slotWords || picked.parts || picked.slotIn) ? { ...picked, lexicon: check.lexicon } : picked;
+    const turn = check.lexicon ? { ...picked, lexicon: check.lexicon } : picked;
     if (turn.listen) return { ...turn, accepted: [digitsOf(turn.listen)], spoken: turn.listen };
     if (turn.parts) return { ...turn, accepted: [turn.example] };
     if (!turn.spell) return turn;
@@ -200,8 +202,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const taughtArticle = (w) => (typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(w) : undefined);
     if (['die', 'das'].includes(parts[0])) return RESULT.WRONG;
     if (DATIVE.includes(parts[0]) && near(parts[1] || '', slotWords)) {
-      const g = taughtArticle(parts[1]);
-      if (!g || DATIVE_OF[g] !== parts[0]) return RESULT.WRONG;
+      const g = taughtArticle(parts[1]) || [];
+      if (!g.some((x) => DATIVE_OF[x] === parts[0])) return RESULT.WRONG;
     }
     if (!DATIVE.includes(parts[0]) && near(parts[0] || '', slotWords) && taughtArticle(parts[0])) return RESULT.WRONG;
     const head = parts.slice(DATIVE.includes(parts[0]) ? 1 : 0);
@@ -246,13 +248,17 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const names = lexicon?.names;
     return parts.length && parts.every((w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (!known(w) || names?.has?.(w))) ? RESULT.CORRECT : RESULT.WRONG;
   }
-  // Things one buys or needs, each with the article the verb asks for (the Akkusativ the course copies
+  // `thing`: things one buys or needs, each with the article the verb asks for (the Akkusativ the course copies
   // as a chunk): „den Stuhl", „einen Computer", „die Lampe", „ein Telefon", „zwei Stühle". A noun the
   // course teaches must carry its own article („der Stuhl", „ein Computer" are wrong here); a noun it
   // never teaches is the learner's own and takes any article.
-  if (slot === 'thing') {
+  // `object` is the same with the article of the subject („Das ist ein Buch", „Das ist der Stift",
+  // „Das ist meine Schere"): „Das ist ein Schere" names the wrong gender.
+  if (slot === 'thing' || slot === 'object') {
     const genders = lexicon?.genders;
-    const ARTICLE = { der: ['den', 'einen', 'keinen'], die: ['die', 'eine', 'keine'], das: ['das', 'ein', 'kein'], pl: ['die', 'keine'] };
+    const ARTICLE = slot === 'thing'
+      ? { der: ['den', 'einen', 'keinen'], die: ['die', 'eine', 'keine'], das: ['das', 'ein', 'kein'], pl: ['die', 'keine'] }
+      : { der: ['der', 'ein', 'kein', 'mein', 'dein'], die: ['die', 'eine', 'keine', 'meine', 'deine'], das: ['das', 'ein', 'kein', 'mein', 'dein'], pl: ['die', 'keine', 'meine', 'deine'] };
     const ALL = new Set(Object.values(ARTICLE).flat());
     const items = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
     const itemOk = (item) => {
@@ -260,9 +266,9 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       const counted = /^\d+$/.test(numberWordsToDigits(first)) && Number(numberWordsToDigits(first)) >= 2;
       const det = ALL.has(first) || counted ? first : null;
       const noun = det ? more[0] : first;
-      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || (det ? more.length : item.length - 1) > 0) return false;
-      const gender = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
-      if (gender) return gender === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : Boolean(det) && !counted && ARTICLE[gender].includes(det);
+      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || (det ? more.length - 1 : item.length - 1) > 0) return false;
+      const readings = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
+      if (readings) return readings.some((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : Boolean(det) && !counted && ARTICLE[g].includes(det)));
       return !known(noun); // a word the course teaches that is no noun names no thing
     };
     return items.length && items.every(itemOk) ? RESULT.CORRECT : RESULT.WRONG;
@@ -385,6 +391,11 @@ export function typedResult(turn, value) {
   const tries = [text];
   const named = text.trim().replace(/^(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*,\s*/u, '').replace(/,\s*(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*(?=\s*[?.!]*$)/u, '');
   if (named && named !== text.trim()) tries.push(cap(named));
+  // „bitte" at the start or the end of a request is politeness, not a different answer.
+  for (const t of [...tries]) {
+    const plain = t.trim().replace(/^bitte[,\s]+/i, '').replace(/[,\s]+bitte(?=\s*[?.!]*$)/i, '');
+    if (plain && plain !== t.trim()) tries.push(cap(plain));
+  }
   for (const t of [...tries]) {
     const rest = t.trim().replace(/^und[\s,]+/i, '');
     if (rest && rest !== t.trim()) tries.push(cap(rest));
