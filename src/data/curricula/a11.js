@@ -154,6 +154,7 @@ const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich',
 const CHECK_JOBS = ['Student', 'Studentin', 'Lehrer', 'Lehrerin', 'Ingenieur', 'Ingenieurin', 'Verkäufer', 'Verkäuferin', 'Arzt', 'Kellner', 'Fahrer', 'Fahrerin', 'Chef', 'Chefin'];
 const CHECK_LANGUAGES = ['Deutsch', 'Englisch', 'Arabisch'];
 const CHECK_COLORS = ['rot', 'blau', 'grün', 'gelb', 'schwarz', 'weiß', 'braun'];
+const CHECK_HOBBIES = ['Sport', 'Musik', 'Fußball', 'Kino', 'Lesen', 'Kochen', 'Schwimmen', 'Tanzen'];
 
 export const CURRICULUM_A11 = {
   level: 'a1.1',
@@ -516,7 +517,7 @@ export const CURRICULUM_A11 = {
             // The course teaches a job without an article („Ich bin Lehrer", the notice); „Ich bin eine
             // Studentin" is German too and counts (DaF review 2026-11-19). A job the course never teaches is
             // the learner's own and counts.
-            { canDo: 0, cue: { de: 'Was sind Sie von Beruf?', en: 'What is your job?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your job is, in one sentence.', accepted: ['Ich bin …', 'Ich bin von Beruf …', 'Von Beruf bin ich …', 'Ich arbeite als …', 'Ich arbeite nicht.', 'Ich habe keine Arbeit.'], slot: 'job', slotWords: CHECK_JOBS, example: 'Ich bin Studentin.' },
+            { canDo: 0, cue: { de: 'Was sind Sie von Beruf?', en: 'What is your job?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your job is, in one sentence.', accepted: ['Ich bin …', 'Ich bin von Beruf …', 'Von Beruf bin ich …', 'Ich arbeite als …'], slot: 'job', slotWords: CHECK_JOBS, example: 'Ich bin Studentin.' },
             { canDo: 1, taskDe: 'Und Herr Weber? Fragen Sie nach seinem Beruf.', taskEn: 'Now ask Herr Weber what his job is.', accepted: ['Was sind Sie von Beruf?', 'Und Sie?', 'Und Sie? Was sind Sie von Beruf?', 'Was ist Ihr Beruf?', 'Was machen Sie beruflich?', 'Welchen Beruf haben Sie?', 'Sind Sie …?'], slot: 'job', slotWords: CHECK_JOBS },
             { canDo: 3, cue: { de: 'Wie ist Ihre Telefonnummer?', en: 'What is your phone number?' }, taskDe: 'Antworten Sie mit einem Satz. Sie können eine Nummer erfinden.', taskEn: 'Give a phone number in one sentence. A made-up number is fine.', accepted: ['Meine Telefonnummer ist …', 'Meine Nummer ist …', 'Ich habe die Telefonnummer …'], slot: 'phone', example: 'Meine Telefonnummer ist 0176 2345678.' },
             { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Amt. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
@@ -1971,6 +1972,43 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-20): after the course with Lena, as the learner themself. The hobby and what
+        // the learner likes doing are their own (`hobby`, `activity`); the du-form of a regular verb is the
+        // rule of this Lektion, so one question asks it with a verb that changes on a retake.
+        check: {
+          partner: 'Lena',
+          open: {
+            en: 'You’ll chat with Lena about hobbies after the course. There’s no rush to find your own words.',
+            de: 'Nach dem Kurs unterhalten Sie sich mit Lena über Hobbys. Sie können in Ruhe Ihre eigenen Worte finden.',
+          },
+          passed: {
+            en: 'You shared your hobbies and what you enjoy, asked about Lena’s hobbies and said when you’re free. You’ve shared something of yourself in German.',
+            de: 'Sie haben von Ihren Hobbys und Vorlieben erzählt, nach Lenas Hobbys gefragt und gesagt, wann Sie Zeit haben. Sie haben auf Deutsch etwas von sich gezeigt.',
+          },
+          turns: [
+            { canDo: 0, cue: { de: 'Was ist dein Hobby?', en: 'What is your hobby?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your hobby is, in one sentence.',
+              accepted: ['Mein Hobby ist …', 'Meine Hobbys sind …', { frame: 'Ich … gern.', slot: 'activity' }, { frame: 'Ich …', slot: 'activity' }], slot: 'hobby', slotWords: CHECK_HOBBIES, example: 'Mein Hobby ist Musik.' },
+            { canDo: 1, cue: { de: 'Was machst du gern am Wochenende?', en: 'What do you like doing at the weekend?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you like doing at the weekend, in one sentence.',
+              accepted: ['Ich … gern.', 'Ich …'], slot: 'activity', example: 'Am Wochenende spiele ich gern Fußball.' },
+            { canDo: 2, taskDe: 'Und Lena? Fragen Sie nach ihrem Hobby.', taskEn: 'Now ask Lena about her hobby.',
+              accepted: ['Was ist dein Hobby?', 'Und du?', 'Und dein Hobby?', 'Und was ist dein Hobby?', 'Was sind deine Hobbys?', 'Hast du ein Hobby?', 'Was machst du gern?', 'Was machst du am Wochenende?', 'Was machst du gern am Wochenende?', 'Was machst du in deiner Freizeit?', 'Welche Hobbys hast du?', { frame: '…?', slot: 'duQuestion' }] },
+            // The infinitive is given; the learner makes the du-form (du tanzt: the s/ß/x/z rule of the notice).
+            { canDo: 2,
+              variants: [
+                { taskDe: 'Tanzen: Fragen Sie Lena, ob sie das gern macht.', taskEn: 'Dancing (tanzen): ask Lena if she likes doing it.', accepted: ['Tanzt du gern?', 'Tanzt du auch gern?', 'Und du, tanzt du gern?', 'Magst du tanzen?', 'Gehst du gern tanzen?'] },
+                { taskDe: 'Kochen: Fragen Sie Lena, ob sie das gern macht.', taskEn: 'Cooking (kochen): ask Lena if she likes doing it.', accepted: ['Kochst du gern?', 'Kochst du auch gern?', 'Und du, kochst du gern?', 'Magst du kochen?'] },
+                { taskDe: 'Schwimmen: Fragen Sie Lena, ob sie das gern macht.', taskEn: 'Swimming (schwimmen): ask Lena if she likes doing it.', accepted: ['Schwimmst du gern?', 'Schwimmst du auch gern?', 'Und du, schwimmst du gern?', 'Magst du schwimmen?', 'Gehst du gern schwimmen?'] },
+              ] },
+            { canDo: 3, cue: { de: 'Wann bist du frei?', en: 'When are you free?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you are free, in one sentence.',
+              accepted: ['… bin ich … frei.', 'Ich bin … frei.', '… habe ich … frei.', 'Ich habe … frei.', '… habe ich … Zeit.', 'Ich habe … Zeit.'], slot: 'when', example: 'Am Wochenende bin ich frei.' },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
+            { en: 'Part 2: ich spiele, du spielst', de: 'Teil 2: ich spiele, du spielst' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ich spiele, du spielst', de: 'Teil 2: ich spiele, du spielst' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Ana und Lena suchen einen Termin. Aber wann hat Lena Zeit – und um wie viel Uhr?',
@@ -2055,6 +2093,8 @@ export const CURRICULUM_A11 = {
         title: 'Präsens: regelmäßige Verben',
         bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Stamm auf **-t**: ein **e** dazu: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
         bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
+        // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
+        bodyAr: 'يتكوّن الفعل المنتظم من جذر ونهاية: spielen → ich spiele، du spielst، er/sie/es spielt، wir spielen، ihr spielt، sie/Sie spielen. لتقول إنك تحبّ القيام بشيء، ضع gern بعد الفعل: «Ich höre gern Musik». إذا انتهى الجذر بـ -t، أضف e: du arbeitest، er arbeitet. إذا انتهى الجذر بـ s/ß/x/z، تُضاف -t فقط في صيغة du: du tanzt. بعض الأفعال تغيّر صوت العلّة فيها: sprechen → er spricht.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -2190,6 +2230,67 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-20): with Lena, as the learner themself. Clock times are read as times
+        // (`clock`: „halb neun" is 8.30, never 9.30), days and times as when (`when`); the time to say, the
+        // appointment to ask about and the appointment heard change on a retake.
+        check: {
+          partner: 'Lena',
+          open: {
+            en: 'You’ll talk with Lena about times, your day and an appointment. Each answer helps you see what you can already do.',
+            de: 'Sie sprechen mit Lena über Uhrzeiten, Ihren Tag und einen Termin. Mit jeder Antwort sehen Sie, was Sie schon können.',
+          },
+          passed: {
+            en: 'You asked and told the time, talked about your day and availability, and arranged an appointment with Lena. These skills can help with your everyday plans.',
+            de: 'Sie haben nach der Uhrzeit gefragt, die Uhrzeit genannt, von Ihrem Tag erzählt und gesagt, wann Sie Zeit haben. Auch einen Termin mit Lena haben Sie vereinbart – das können Sie im Alltag gut gebrauchen.',
+          },
+          turns: [
+            { canDo: 0, cue: { de: 'Wie spät ist es?', en: 'What time is it?' }, slot: 'clock',
+              accepted: ['Es ist …', '…'],
+              variants: [
+                { taskDe: 'Es ist Morgen. Ihre Uhr zeigt 8.30. Sagen Sie Lena die Uhrzeit.', taskEn: 'It is morning. Your watch shows 8.30. Tell Lena the time.', time: '8:30', example: 'Es ist halb neun.' },
+                { taskDe: 'Es ist Morgen. Ihre Uhr zeigt 7.15. Sagen Sie Lena die Uhrzeit.', taskEn: 'It is morning. Your watch shows 7.15. Tell Lena the time.', time: '7:15', example: 'Es ist Viertel nach sieben.' },
+                { taskDe: 'Es ist Morgen. Ihre Uhr zeigt 9.45. Sagen Sie Lena die Uhrzeit.', taskEn: 'It is morning. Your watch shows 9.45. Tell Lena the time.', time: '9:45', example: 'Es ist Viertel vor zehn.' },
+              ] },
+            { canDo: 0, taskDe: 'Später am Tag: Fragen Sie Lena nach der Uhrzeit.', taskEn: 'Later in the day: ask Lena the time.',
+              accepted: ['Wie spät ist es?', 'Wie viel Uhr ist es?', 'Wie spät ist es jetzt?', 'Wie viel Uhr ist es jetzt?', 'Wie spät haben wir es?', 'Entschuldigung, wie spät ist es?', 'Weißt du, wie spät es ist?'] },
+            { canDo: 2, cue: { de: 'Wann stehst du morgens auf?', en: 'When do you get up in the morning?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you get up, in one sentence.', slot: 'clock',
+              accepted: ['Ich stehe um … auf.', 'Um … stehe ich auf.', 'Ich stehe morgens um … auf.', 'Morgens stehe ich um … auf.', { frame: 'Um … stehe ich … auf.', slot: 'when' }, { frame: '… stehe ich um … auf.', slot: 'when' }, { frame: 'Ich stehe … um … auf.', slot: 'when' }], example: 'Ich stehe um sechs Uhr auf.' },
+            // The day and time are given; the learner asks with the set phrase „Hast du … Zeit?" and „am", „um".
+            { canDo: 1, slot: 'when',
+              variants: [
+                { taskDe: 'Freitag, 10 Uhr: Fragen Sie Lena, ob sie dann Zeit hat.', taskEn: 'Friday, 10 o’clock: ask Lena if she has time then.', when: 'freitag 10:00', example: 'Hast du am Freitag um zehn Uhr Zeit?',
+                  accepted: ['Hast du … Zeit?', 'Bist du … frei?', 'Hast du … frei?', 'Hast du Zeit …?', 'Bist du frei …?', 'Hast du frei …?'] },
+                { taskDe: 'Donnerstag, 16.15 Uhr: Fragen Sie Lena, ob sie dann Zeit hat.', taskEn: 'Thursday, 4.15 pm: ask Lena if she has time then.', when: 'donnerstag 16:15', example: 'Hast du am Donnerstag um Viertel nach vier Zeit?',
+                  accepted: ['Hast du … Zeit?', 'Bist du … frei?', 'Hast du … frei?', 'Hast du Zeit …?', 'Bist du frei …?', 'Hast du frei …?'] },
+                { taskDe: 'Montag, 9.30 Uhr: Fragen Sie Lena, ob sie dann Zeit hat.', taskEn: 'Monday, 9.30 am: ask Lena if she has time then.', when: 'montag 9:30', example: 'Hast du am Montag um halb zehn Zeit?',
+                  accepted: ['Hast du … Zeit?', 'Bist du … frei?', 'Hast du … frei?', 'Hast du Zeit …?', 'Bist du frei …?', 'Hast du frei …?'] },
+              ] },
+            // Lena says yes; the learner agrees the time (a „bis …" names the same day).
+            { canDo: 1, taskDe: 'Lena hat Zeit. Sagen Sie ja zu dem Termin.', taskEn: 'Lena is free then. Agree to the time.', slot: 'when', whenPartial: true,
+              agree: ['Ja', 'Gern', 'Gerne', 'Gut', 'Sehr gut', 'Super', 'Prima', 'Toll', 'Schön', 'Okay', 'Das ist gut', 'Das passt', 'Das passt gut'],
+              accepted: ['Ja, gern.', 'Bis dann!', 'Bis …!', 'Dann bis …!', 'Dann …', 'Das passt mir.', 'Ich habe dann Zeit.', 'Ich habe Zeit.', 'Das ist gut für mich.',
+                '… ist gut.', '… passt.', '… passt gut.', '… habe ich Zeit.', '… bin ich frei.'],
+              variants: [
+                { cue: { de: 'Ja, am Freitag um zehn bin ich frei.', en: 'Yes, I am free on Friday at ten.' }, when: 'freitag 10:00' },
+                { cue: { de: 'Ja, am Donnerstag um Viertel nach vier bin ich frei.', en: 'Yes, I am free on Thursday at a quarter past four.' }, when: 'donnerstag 16:15' },
+                { cue: { de: 'Ja, am Montag um halb zehn bin ich frei.', en: 'Yes, I am free on Monday at half past nine.' }, when: 'montag 9:30' },
+              ] },
+            { canDo: 3, cue: { de: 'Wann hast du noch Zeit?', en: 'When else do you have time?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you have time, in one sentence.',
+              accepted: ['… habe ich … Zeit.', 'Ich habe … Zeit.', '… bin ich … frei.', 'Ich bin … frei.', '… habe ich … frei.', 'Ich habe … frei.'], slot: 'when', example: 'Am Dienstag habe ich abends Zeit.' },
+            { canDo: 1, taskDe: 'Lena sagt, wann ihr Termin ist. Schreiben Sie den Tag und die Uhrzeit.', taskEn: 'Lena says when her appointment is. Write down the day and the time.',
+              variants: [
+                { listen: 'Mein Termin beim Arzt ist am Dienstag, morgens um halb zehn.', when: 'dienstag 9:30', example: 'Dienstag, 9.30 Uhr' },
+                { listen: 'Mein Termin beim Arzt ist am Freitag um sechzehn Uhr fünfzehn.', when: 'freitag 16:15', example: 'Freitag, 16.15 Uhr' },
+                { listen: 'Mein Termin beim Arzt ist am Montag, morgens um Viertel vor acht.', when: 'montag 7:45', example: 'Montag, 7.45 Uhr' },
+              ] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 2: telling the time (halb, Viertel)', de: 'Teil 2: die Uhrzeit sagen (halb, Viertel)' }],
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: um, am', de: 'Teil 2: um, am' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Ana hat Durst und geht ins Café. Kann sie auf Deutsch bestellen?',
@@ -2272,6 +2373,8 @@ export const CURRICULUM_A11 = {
         title: 'um, am – die Uhrzeit sagen',
         bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Aber: Es ist acht Uhr (ohne um). Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio) lautet die Uhrzeit Stunde + Uhr + Minuten, bis 24: **acht Uhr dreißig**, vierzehn Uhr dreißig. **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
         bodyEn: 'For when, a clock time takes **um**: **um acht Uhr**. To say the time, no um: Es ist acht Uhr. A weekday takes **am**: **am Montag**. Everyday speech: **Viertel nach** acht (8.15), **Viertel vor** neun (8.45), **halb** neun (8.30, not 9.30!). Timetables and the radio count to 24, hour + Uhr + minutes: **acht Uhr dreißig**, vierzehn Uhr dreißig (14.30). To ask: Wie spät ist es? **Hast du Zeit?** is a set phrase for now; haben comes in Lektion 9.',
+        // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
+        bodyAr: 'لقول متى يحدث شيء، نستخدم um مع الساعة: um acht Uhr. أمّا لقول كم الساعة، فلا نستخدم um: «Es ist acht Uhr». مع يوم من أيام الأسبوع، نستخدم am: am Montag. في الكلام اليومي: Viertel nach acht (8.15)، Viertel vor neun (8.45)، halb neun (8.30)، وليس 9.30!. تستخدم جداول المواعيد والإذاعة نظام 24 ساعة، الساعة + Uhr + الدقائق: acht Uhr dreißig، vierzehn Uhr dreißig (14.30). للسؤال: «Wie spät ist es?». نتعلّم «Hast du Zeit?» في هذه المرحلة كعبارة ثابتة؛ ويأتي haben في Lektion 9.',
         examples: ['Ich stehe um sechs Uhr auf.', 'Der Termin ist am Montag um Viertel vor acht.'],
         ruleSlug: 'time-and-dates',
       },
@@ -2413,6 +2516,56 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-20): in the café with Paul, as the learner themself. What the learner orders
+        // is their own and takes the article „möchten" asks for (`thing`, with a measure: „ein Glas Wasser");
+        // „haben" is the rule of this Lektion; what is asked for and what is offered change on a retake.
+        check: {
+          partner: 'Paul',
+          open: {
+            en: 'You’ll be a guest at the café, ordering from Paul and responding to his offers. If an answer needs another try, there’s time for that.',
+            de: 'Im Café bestellen Sie als Gast bei Paul und reagieren auf seine Angebote. Wenn eine Antwort einen zweiten Versuch braucht, ist dafür Zeit.',
+          },
+          passed: {
+            en: 'You ordered, said whether you were hungry or thirsty, asked politely what was available, and accepted and declined offers. Before the third checkpoint, take a moment to enjoy what you’ve learned.',
+            de: 'Sie haben bestellt, gesagt, ob Sie Hunger oder Durst haben, höflich nachgefragt und Angebote angenommen und abgelehnt. Freuen Sie sich vor dem dritten Checkpoint über das, was Sie gelernt haben.',
+          },
+          turns: [
+            // „Sie haben Hunger" gives the situation; the learner says it with „ich habe" (the rule of this Lektion),
+            // in a sentence, so a bare „Ja" shows nothing (first DaF review, 2026-11-20). It comes before the orders.
+            { canDo: 1, taskDe: 'Antworten Sie mit einem Satz.',
+              variants: [
+                { cue: { de: 'Guten Tag! Haben Sie Hunger?', en: 'Hello! Are you hungry?' }, taskEn: 'You are hungry. Answer in one sentence.', taskDe: 'Sie haben Hunger. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger.', 'Ich habe Hunger.', 'Ja, ich habe großen Hunger.', 'Ja, Hunger habe ich.', 'Hunger habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin hungrig.', 'Ich bin hungrig.', 'Ich habe viel Hunger.', 'Ja, ich habe viel Hunger.'] },
+                { cue: { de: 'Guten Tag! Haben Sie Durst?', en: 'Hello! Are you thirsty?' }, taskEn: 'You are thirsty. Answer in one sentence.', taskDe: 'Sie haben Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Durst.', 'Ich habe Durst.', 'Ja, ich habe großen Durst.', 'Ja, Durst habe ich.', 'Durst habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin durstig.', 'Ich bin durstig.', 'Ich habe viel Durst.', 'Ja, ich habe viel Durst.'] },
+                { cue: { de: 'Guten Tag! Haben Sie Hunger und Durst?', en: 'Hello! Are you hungry and thirsty?' }, taskEn: 'You are hungry and thirsty. Answer in one sentence.', taskDe: 'Sie haben Hunger und Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger und Durst.', 'Ich habe Hunger und Durst.', 'Ja, ich habe Durst und Hunger.', 'Ich habe Durst und Hunger.', 'Ja, Hunger und Durst habe ich.', 'Ja, ich bin hungrig und durstig.'] },
+              ] },
+            { canDo: 0, cue: { de: 'Was möchten Sie trinken?', en: 'What would you like to drink?' }, taskDe: 'Bestellen Sie etwas zu trinken.', taskEn: 'Order something to drink.',
+              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … trinken.', 'Ich nehme …', 'Ich trinke …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', slotNot: ['Kuchen', 'Suppe', 'Salat', 'Brot', 'Frühstück'], example: 'Ich möchte einen Kaffee, bitte.' },
+            { canDo: 0, cue: { de: 'Und was möchten Sie essen?', en: 'And what would you like to eat?' }, taskDe: 'Bestellen Sie etwas zu essen.', taskEn: 'Order something to eat.',
+              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … essen.', 'Ich nehme …', 'Ich esse …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', slotNot: ['Kaffee', 'Tee', 'Wasser', 'Mineralwasser', 'Orangensaft', 'Saft', 'Bier', 'Wein', 'Milch'], example: 'Ich möchte eine Suppe, bitte.' },
+            { canDo: 2,
+              variants: [
+                { taskDe: 'Tee: Fragen Sie Paul höflich, ob es das gibt.', taskEn: 'Tea (Tee): ask Paul politely if they have it.', accepted: ['Haben Sie Tee?', 'Haben Sie auch Tee?', 'Haben Sie einen Tee?', 'Gibt es Tee?', 'Gibt es auch Tee?', 'Gibt es hier Tee?', 'Gibt es einen Tee?', 'Entschuldigung, haben Sie Tee?'] },
+                { taskDe: 'Suppe: Fragen Sie Paul höflich, ob es das gibt.', taskEn: 'Soup (Suppe): ask Paul politely if they have it.', accepted: ['Haben Sie Suppe?', 'Haben Sie auch Suppe?', 'Haben Sie eine Suppe?', 'Gibt es Suppe?', 'Gibt es auch Suppe?', 'Gibt es hier Suppe?', 'Gibt es eine Suppe?', 'Entschuldigung, haben Sie Suppe?'] },
+                { taskDe: 'Orangensaft: Fragen Sie Paul höflich, ob es das gibt.', taskEn: 'Orange juice (Orangensaft): ask Paul politely if they have it.', accepted: ['Haben Sie Orangensaft?', 'Haben Sie auch Orangensaft?', 'Haben Sie einen Orangensaft?', 'Gibt es Orangensaft?', 'Gibt es auch Orangensaft?', 'Gibt es hier Orangensaft?', 'Gibt es einen Orangensaft?', 'Entschuldigung, haben Sie Orangensaft?'] },
+              ] },
+            { canDo: 3, taskDe: 'Nehmen Sie das Angebot an.', taskEn: 'Accept the offer.',
+              accepted: ['Ja, gern.', 'Ja, gerne.', 'Ja, bitte.', 'Ja, danke.', 'Ja, gern, danke.', 'Ja, sehr gern.', 'Gern.', 'Ja.', { frame: 'Ja, …, bitte.', slot: 'thing' }, { frame: 'Ja, ich möchte …', slot: 'thing' }, { frame: 'Ja, gern, …', slot: 'thing' },
+                { frame: '…, bitte.', slot: 'thing' }, { frame: '…', slot: 'thing' }, { frame: 'Ich möchte …', slot: 'thing' }, { frame: 'Ich möchte auch …', slot: 'thing' }, { frame: 'Ja, ich möchte auch …', slot: 'thing' }, { frame: 'Ich nehme …', slot: 'thing' }, { frame: 'Ja, …', slot: 'thing' }, 'Ja, bitte, ich habe Durst.', 'Ja, gern, ich habe Durst.', 'Ja, bitte. Ich habe Durst.'],
+              variants: [{ cue: { de: 'Möchten Sie auch Wasser?', en: 'Would you like some water too?' }, only: ['Wasser', 'Mineralwasser'] }, { cue: { de: 'Möchten Sie auch Tee?', en: 'Would you like some tea too?' }, only: ['Tee'] }, { cue: { de: 'Möchten Sie auch Kaffee?', en: 'Would you like some coffee too?' }, only: ['Kaffee'] }] },
+            { canDo: 3, taskDe: 'Lehnen Sie höflich ab.', taskEn: 'Say no politely.',
+              variants: [
+                { cue: { de: 'Möchten Sie auch Kuchen?', en: 'Would you like some cake too?' }, accepted: ['Nein, danke.', 'Nein danke.', 'Danke, nein.', 'Nein, vielen Dank.', 'Nein, danke. Ich habe keinen Hunger.', 'Nein, danke, ich habe keinen Hunger.', 'Nein, danke, ich möchte keinen Kuchen.', 'Nein, danke. Ich möchte keinen Kuchen.', 'Danke, ich habe keinen Hunger.', { frame: 'Nein, danke, …', slot: 'thing', negative: true }, { frame: 'Nein, danke, …', slot: 'object', negative: true }, { frame: 'Nein, …, danke.', slot: 'thing', negative: true }, { frame: 'Nein, …, danke.', slot: 'object', negative: true }, { frame: 'Ich möchte …', slot: 'thing', negative: true }, { frame: 'Nein, ich möchte …', slot: 'thing', negative: true }, { frame: 'Nein, danke. Ich möchte …', slot: 'thing', negative: true }, { frame: '…, danke.', slot: 'thing', negative: true }, { frame: '…, danke.', slot: 'object', negative: true }, { frame: 'Danke, …', slot: 'thing', negative: true }, { frame: 'Danke, …', slot: 'object', negative: true }, 'Nein, danke schön.', 'Danke schön, nein.', 'Heute nicht, danke.', 'Danke, heute nicht.', 'Nein, heute nicht, danke.', { frame: 'Nein, danke, ich möchte nur …', slot: 'thing' }, { frame: 'Nein, danke. Ich möchte nur …', slot: 'thing' }] },
+                { cue: { de: 'Möchten Sie auch Suppe?', en: 'Would you like some soup too?' }, accepted: ['Nein, danke.', 'Nein danke.', 'Danke, nein.', 'Nein, vielen Dank.', 'Nein, danke. Ich habe keinen Hunger.', 'Nein, danke, ich habe keinen Hunger.', 'Nein, danke, ich möchte keine Suppe.', 'Nein, danke. Ich möchte keine Suppe.', 'Danke, ich habe keinen Hunger.', { frame: 'Nein, danke, …', slot: 'thing', negative: true }, { frame: 'Nein, danke, …', slot: 'object', negative: true }, { frame: 'Nein, …, danke.', slot: 'thing', negative: true }, { frame: 'Nein, …, danke.', slot: 'object', negative: true }, { frame: 'Ich möchte …', slot: 'thing', negative: true }, { frame: 'Nein, ich möchte …', slot: 'thing', negative: true }, { frame: 'Nein, danke. Ich möchte …', slot: 'thing', negative: true }, { frame: '…, danke.', slot: 'thing', negative: true }, { frame: '…, danke.', slot: 'object', negative: true }, { frame: 'Danke, …', slot: 'thing', negative: true }, { frame: 'Danke, …', slot: 'object', negative: true }, 'Nein, danke schön.', 'Danke schön, nein.', 'Heute nicht, danke.', 'Danke, heute nicht.', 'Nein, heute nicht, danke.', { frame: 'Nein, danke, ich möchte nur …', slot: 'thing' }, { frame: 'Nein, danke. Ich möchte nur …', slot: 'thing' }] },
+                { cue: { de: 'Möchten Sie auch Wein?', en: 'Would you like some wine too?' }, accepted: ['Nein, danke.', 'Nein danke.', 'Danke, nein.', 'Nein, vielen Dank.', 'Nein, danke. Ich habe keinen Durst.', 'Nein, danke, ich trinke keinen Wein.', 'Nein, danke, ich möchte keinen Wein.', 'Nein, danke. Ich möchte keinen Wein.', 'Danke, ich trinke keinen Alkohol.', { frame: 'Nein, danke, …', slot: 'thing', negative: true }, { frame: 'Nein, danke, …', slot: 'object', negative: true }, { frame: 'Nein, …, danke.', slot: 'thing', negative: true }, { frame: 'Nein, …, danke.', slot: 'object', negative: true }, { frame: 'Ich möchte …', slot: 'thing', negative: true }, { frame: 'Nein, ich möchte …', slot: 'thing', negative: true }, { frame: 'Nein, danke. Ich möchte …', slot: 'thing', negative: true }, { frame: '…, danke.', slot: 'thing', negative: true }, { frame: '…, danke.', slot: 'object', negative: true }, { frame: 'Danke, …', slot: 'thing', negative: true }, { frame: 'Danke, …', slot: 'object', negative: true }, 'Nein, danke schön.', 'Danke schön, nein.', 'Heute nicht, danke.', 'Danke, heute nicht.', 'Nein, heute nicht, danke.', { frame: 'Nein, danke, ich möchte nur …', slot: 'thing' }, { frame: 'Nein, danke. Ich möchte nur …', slot: 'thing' }] },
+              ] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: haben, ich möchte', de: 'Teil 2: haben, ich möchte' }],
+            { en: 'Part 2: haben, ich möchte', de: 'Teil 2: haben, ich möchte' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: haben, ich möchte', de: 'Teil 2: haben, ich möchte' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Ana steht am Bahnhof und hat viele Fragen: Fährt der Zug nach Österreich? Und was kostet die Fahrkarte?',
@@ -2491,6 +2644,8 @@ export const CURRICULUM_A11 = {
         title: 'haben und der Chunk „Ich möchte …“',
         bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Mit haben sagt man Hunger, Durst oder Zeit. **Ich möchte …** steht hier als fester Chunk; die Form gehört zu den Modalverben in A1.2.',
         bodyEn: '**haben** (to have) is the second verb to learn as a set: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Where English says "I am hungry", German uses haben: **Ich habe Hunger**, **Ich habe Durst** (I am thirsty) – and **Zeit** (time) works the same way. To order or ask for something politely, use **Ich möchte …** (I would like …) as a fixed phrase; its grammar belongs to the modal verbs in A1.2.',
+        // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
+        bodyAr: 'haben (لديه) هو الفعل الثاني الذي تتعلّمه بحفظ تصريفه كاملًا: ich habe، du hast، er/sie/es hat، wir haben، ihr habt، sie/Sie haben. عندما نقول «أنا جائع»، تستخدم الألمانية haben: «Ich habe Hunger»، و«Ich habe Durst» (أنا عطشان). وتُستخدم Zeit (وقت) بالطريقة نفسها. لطلب شيء بأدب، استخدم Ich möchte … (أودّ …) كعبارة ثابتة؛ وستتعلّم قواعدها مع أفعال الرغبة والقدرة ونحوها في A1.2.',
         examples: ['Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.'],
         ruleSlug: 'verb-haben',
       },

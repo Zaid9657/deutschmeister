@@ -1,0 +1,11 @@
+1. **NOTE — Lektion 8, turns 1–2, all sittings:** Both telling and asking the time are taught. The supplied grades distinguish the target times correctly: 8.30, 7.15 and 9.45. Equivalent everyday and official time forms count. The morning cue resolves the 12-hour ambiguity; supplying a watch reading is necessary information. **Fix: none; keep these turns.**
+
+2. **NOTE — Lektion 8, turns 3 and 6, all sittings:** These are answerable from the scene and previously encountered language. The supplied grades accept personal times and valid word orders, while rejecting missing *auf*, incorrect conjugation, incorrect time prepositions and availability without a time. Turn 3 gives a narrow but fair sample of talking about one’s day. Repeating the scene fits both can-dos. **Fix: none.**
+
+3. **NOTE — Lektion 8, turns 4–5, all sittings:** The requested appointments are clear, the peer register fits, and the models use familiar language. The supplied grades reject wrong appointment details and accept natural agreement. Conversational *um Viertel nach vier* is appropriate for the afternoon appointment established by the task. **Fix: none; retain this conversational acceptance.**
+
+4. **NOTE — Lektion 8, turn 7, all sittings:** The listening notes use taught days and time expressions. The supplied evidence shows that the previous blocker is resolved: *Freitag, 4.15 Uhr* and *Freitag Viertel nach vier* are wrong; *Freitag, 16.15 Uhr* and *Freitag, nachmittags um Viertel nach vier* are correct. The morning notes also distinguish the intended times. Understanding appointment details reasonably supports arranging an appointment. **Fix: none; keep the afternoon requirement for written notes.**
+
+5. **MINOR — Lektion 8, turns 1–2, repeat recommendation for can-do [0]:** The label “Part 2: um, am” does not clearly direct learners toward telling and asking the time, particularly *halb* and *Viertel*. **Exact fix:** retain the destination but change this recommendation to “Part 1: the words + Part 2: asking and telling the time (halb, Viertel nach/vor).” The remaining repeat recommendations fit their checks.
+
+Overall verdict: **ship**.
