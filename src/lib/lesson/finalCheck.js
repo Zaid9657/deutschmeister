@@ -295,7 +295,7 @@ function sameWhen(given, expected, { partial = false, writtenNote = false } = {}
 // am Wochenende zusammen Fußball").
 const ACTIVITY_GLUE = new Set(['ins', 'in', 'im', 'am', 'an', 'mit', 'zusammen', 'auch', 'sehr', 'oft', 'immer', 'viel', 'meinem', 'meiner',
   'meinen', 'meine', 'mein', 'der', 'die', 'das', 'den', 'dem', 'einen', 'ein', 'eine', 'zu', 'hause', 'nach', 'jeden', 'jede', 'und', 'oder',
-  'gut', 'zum', 'zur', 'vom', 'beim', 'bei', 'meistens', 'manchmal', 'abends', 'morgens', 'nachmittags']);
+  'gut', 'zum', 'zur', 'vom', 'beim', 'bei', 'meistens', 'manchmal', 'abends', 'morgens', 'nachmittags', 'noch', 'lange', 'gern', 'gerne']);
 
 /** The same as a listed word, or that word with one slip. */
 const near = (word, list) => list.some((w) => fold(w) === word || slip(word, fold(w)));
@@ -396,9 +396,22 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     if (time && half && half !== halfOf24(time)) return RESULT.WRONG;
     return RESULT.CORRECT;
   }
+  // What may stand with a verb of the fixed expressions („Ich habe im Büro gearbeitet“, „… viel …“, „… bis
+  // acht …“): small words, times, and a noun only after a preposition or article. Lektion 11.
+  if (slot === 'adjunct') {
+    const PREP = new Set(['in', 'im', 'am', 'an', 'bei', 'beim', 'zu', 'zum', 'zur', 'mit', 'von', 'vom', 'bis', 'nach', 'der', 'die', 'das', 'dem', 'den', 'meinem', 'meiner']);
+    const ok = raw.length && raw.every((w, i) => {
+      const f = fold(w);
+      if (ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f) || ['viel', 'lange', 'gestern', 'heute', 'nicht', 'uhr'].includes(f) || clockOf(f) !== null || DAYS.includes(f.replace(/s$/, ''))) return true;
+      return /^\p{Lu}/u.test(w) && i > 0 && PREP.has(fold(raw[i - 1]));
+    });
+    return ok ? RESULT.CORRECT : RESULT.WRONG;
+  }
   // A month („im Mai“); with `day`, a day of it as one writes it („am 3. Mai“, „am 3.5.“). Lektion 12.
   if (slot === 'month') {
-    const m = words.trim().match(/^(?:(\d{1,2})\.\s*)?(\p{L}+|\d{1,2}\.?)$/u);
+    // A day as an ordinal word („am dritten Mai“, second corpus of Lektion 12) is a day too.
+    const ORDINAL = /^(?:ersten|zweiten|dritten|vierten|fünften|sechsten|siebten|siebenten|achten|neunten|zehnten|elften|zwölften|\p{L}+zehnten|\p{L}*zwanzigsten|\p{L}*dreißigsten)\s+/iu;
+    const m = words.trim().replace(ORDINAL, '1. ').match(/^(?:(\d{1,2})\.\s*)?(\p{L}+|\d{1,2}\.?)$/u);
     if (!m || Boolean(day) !== Boolean(m[1])) return RESULT.WRONG;
     if (/^\d/.test(m[2])) return Number(m[2].replace('.', '')) >= 1 && Number(m[2].replace('.', '')) <= 12 ? RESULT.CORRECT : RESULT.WRONG;
     const w = fold(m[2]).replace(/ä/g, 'ae');
@@ -490,6 +503,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const head = parts.slice(DATIVE.includes(parts[0]) ? 1 : 0);
     const end = head.findIndex((w) => w === 'und' || w.endsWith(','));
     const place = (end < 0 ? head : head.slice(0, end + (head[end]?.endsWith(',') ? 1 : 0))).map((w) => w.replace(/,$/, ''));
+    // `only`: a place named must be the one of this sitting (Lektion 10's journey; second DaF review).
+    if (only && !only.some((o) => fold(o) === place.join(' '))) return RESULT.WRONG;
     return place.length && place.every(fits) ? RESULT.CORRECT : RESULT.WRONG;
   }
   // A job: an optional article („eine Studentin", German though the course teaches it without), then
@@ -875,6 +890,8 @@ function questionWordLast(text) {
   return [`${m[3].charAt(0).toLocaleUpperCase('de')}${m[3].slice(1)} ${m[2]} ${[first, ...subject.slice(1)].join(' ')}?`];
 }
 
+// A number word, also typed without its umlaut („funfzehn", „zwolf").
+const isNumberWord = (w) => /^\d+$/.test(numberWordsToDigits(String(w).replace(/f(?:ue|u)nf/g, 'fünf').replace(/zw(?:oe|o)lf/g, 'zwölf')));
 // A price is in euros: „18,00 Euro" and „18,- €" are 18; a heard price in euros is no number of cents.
 const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi, 'fünf').replace(/zw(?:oe|o)lf/gi, 'zwölf'))
   .replace(/(\d),(?:00|-)(?!\d)/g, '$1').replace(/\D/g, '');
@@ -882,7 +899,7 @@ const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi
 // „Hallo Herr Weber, hier ist …").
 const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))(?:[\s,]+(?:herr|frau)\s+\p{L}+)?\s*[!,.]\s*/iu;
 // The turn's `answerWords` (words of yes, of goodbye), one or more, each followed by a comma, a stop or a space.
-const answerWordsRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+|$))+`, 'iu');
+const answerWordsRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+und\\s+|\\s+|$))+`, 'iu');
 
 /** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
 export function typedResult(turn, value) {
@@ -892,14 +909,23 @@ export function typedResult(turn, value) {
   }
   const text = westernDigits(value);
   if (turn.listen && (turn.when || turn.time)) {
-    // A heard day and time („Dienstag, 9.30", „am Dienstag um halb zehn", „Di 9:30") or a heard time.
-    const at = whenOf(text);
+    // A heard day and time („Dienstag, 9.30“, „am Dienstag um halb zehn“, „Di 9:30“) or a heard time, also in the
+    // heard sentence's own words („Der Zug fährt um neun Uhr dreißig“, second corpus of Lektion 10).
+    const heard = new Set(wordsOf(fold(turn.listen)).map((w) => w.replace(/[.,!?:]+$/, '')));
+    const keep = (w) => { const f = fold(w).replace(/[.,!?:]+$/, ''); return !heard.has(f) || WHEN_GLUE.has(f) || DAYS.includes(f) || isNumberWord(f) || ['uhr', 'halb', 'viertel', 'nach', 'vor'].includes(f); };
+    const at = whenOf(text) || whenOf(wordsOf(text).filter(keep).join(' '));
     if (turn.when) return sameWhen(at, turn.when, { writtenNote: true }) ? (at.typo ? RESULT.TYPO : RESULT.CORRECT) : RESULT.WRONG;
     return at && at.time !== null && at.time === clockOf(turn.time) && !(at.half && at.half !== halfOf24(turn.time)) ? RESULT.CORRECT : RESULT.WRONG;
   }
   if (turn.listen) {
     // A heard price or platform is no clock time: „fünfzehn Uhr“, „um sieben Uhr“ (first corpus of Lektion 10).
     if (/\b(?:uhr|um)\b/i.test(text) && !/\buhr\b/i.test(turn.listen)) return RESULT.WRONG;
+    // A heard price counts euros: „15 Fahrkarten“ counts tickets (second corpus of Lektion 10). „Preis: 18 Euro“
+    // and „Das macht 30 Euro“ stay right.
+    if (/\beuro\b/i.test(turn.listen)) {
+      const w = wordsOf(fold(text)).map((x) => x.replace(/[.,!?:]+$/, ''));
+      if (w.some((x, i) => (isNumberWord(x) || /^\d/.test(x)) && /\p{L}/u.test(w[i + 1] || '') && !['euro', 'eur'].includes(w[i + 1]))) return RESULT.WRONG;
+    }
     // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label,
     // „18,00 €" the price „18 Euro" (and „funfundvierzig" without its umlaut is 45). A price heard in
     // euros is not written as cents (blind corpus, 2026-11-20).
@@ -925,6 +951,12 @@ export function typedResult(turn, value) {
   const partner = escaped ? new RegExp(`^${escaped}[,!:?]?\\s+`, 'i') : null;
   // The partner's name at the end, with or without a comma („was ist dein hobby lena?").
   const partnerLast = escaped ? new RegExp(`[,\\s]+${escaped}(?=\\s*[?.!]*$)`, 'i') : null;
+  if (escaped) {
+    const greetName = text.trim().replace(new RegExp(`^(?:hallo|guten\\s+(?:morgen|tag|abend))[\\s,]+${escaped}[,!.:]?\\s+`, 'i'), '');
+    if (greetName !== text.trim()) add(greetName);
+    const inside = text.trim().replace(new RegExp(`,\\s*${escaped}(?=\\s*[.!?]\\s*\\S)`, 'gi'), '');
+    if (inside !== text.trim()) add(inside);
+  }
   for (const t of [...tries]) {
     const s = t.trim();
     for (const named of [s.replace(LEAD, ''), s.replace(TRAIL, ''), s.replace(LEAD, '').replace(TRAIL, ''), partner ? s.replace(partner, '') : s, partnerLast ? s.replace(partnerLast, '') : s]) if (named && named !== s) add(named);
@@ -977,6 +1009,14 @@ export function typedResult(turn, value) {
       if (small) smallYes.add(r);
     }
   }
+  // Words of goodbye may also close the answer („Schönen Tag und bis später!“).
+  if (turn.leadWords?.length) {
+    for (const t of [...tries]) {
+      const words = [...turn.leadWords].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+      const r = t.trim().replace(new RegExp(`(?:\\s*,\\s*|\\s+und\\s+)(?:${words})(?=\\s*[.!]*$)`, 'iu'), '');
+      if (r !== t.trim()) add(r.replace(/\s*$/, '!'));
+    }
+  }
   // A time after „frei" or „Zeit" („Ich bin frei am Samstag", „Ich habe Zeit am Wochenende") is ordinary
   // spoken German: the answer with the time before it (courses session, 2026-11-20).
   for (const t of [...tries]) {
@@ -989,10 +1029,10 @@ export function typedResult(turn, value) {
   for (const t of [...tries]) {
     const s = t.trim();
     if (/\?\s*$/.test(s)) {
-      const asked = s.replace(/\s+(?:im|in diesem) Café(?=\s*\?)/i, '').replace(/\b(?:denn|vielleicht|heute|hier|noch)\s+/gi, '').replace(/\s+(?:denn|vielleicht|heute|hier|noch)(?=\s*\?)/gi, '');
+      const asked = s.replace(/\s+(?:im|in diesem) Café(?=\s*\?)/i, '').replace(/\b(?:denn|vielleicht|heute|morgen|hier|noch)\s+/gi, '').replace(/\s+(?:denn|vielleicht|heute|morgen|hier|noch)(?=\s*\?)/gi, '');
       if (asked !== s) add(asked);
     }
-    const plainer = s.replace(/\s+auch\b/gi, '').replace(/\bsehr\s+(?=gerne?\b)/gi, '');
+    const plainer = s.replace(/\s+auch\b/gi, '').replace(/^auch\s+/i, '').replace(/\bsehr\s+(?=gerne?\b)/gi, '');
     if (plainer !== s) add(plainer);
   }
   // The thing offered, echoed before the answer: „Tee? Ja, gerne." is „Ja, gerne.".

@@ -542,6 +542,17 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(bye, 'Guten Tag!'), RESULT.WRONG);
   assert.equal(typedResult(wish, 'Schönen Tag noch!'), RESULT.CORRECT);
   assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[11]), { kind: 'checkpoint', nr: 4 }, 'Lektion 12 leads to the fourth checkpoint, never a Lektion 13');
+  // The second DaF review and corpus: one journey per sitting, heard numbers that are no price, the fixed expressions.
+  assert.equal(typedResult(at(10, 1)[2], 'Wann fährt der Zug nach Berlin?'), RESULT.WRONG, 'sitting 2 travels to Österreich');
+  assert.equal(typedResult(at(10, 1)[2], 'Wann fährt der Zug nach Österreich?'), RESULT.CORRECT);
+  assert.equal(typedResult(heardPrice, '15 Fahrkarten'), RESULT.WRONG, 'a price counts euros');
+  assert.equal(typedResult(at(10, 1)[4], 'Sie kostet 18 Euro.'), RESULT.CORRECT);
+  assert.equal(typedResult(delay, 'Der Zug fährt um neun Uhr dreißig.'), RESULT.CORRECT, 'the heard time in the heard words');
+  assert.equal(typedResult(yesterday, 'Ich habe Lesen gemacht.'), RESULT.WRONG, '„gemacht“ only where it is German');
+  assert.equal(typedResult(yesterday, 'Gestern habe ich im Büro gearbeitet.'), RESULT.CORRECT);
+  assert.equal(typedResult(month, 'Am dritten Mai.'), RESULT.CORRECT);
+  assert.equal(typedResult(wish, 'Schönen Tag und bis später!'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Mach’s gut und bis bald!'), RESULT.CORRECT);
 });
 
 test('spelling, a heard number and a written message are written, never spoken', () => {
