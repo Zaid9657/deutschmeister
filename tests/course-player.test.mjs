@@ -167,7 +167,7 @@ const REGISTER_EXEMPT = [
   },
   {
     file: 'src/components/lesson/NoticeStage.jsx',
-    line: 'out.push(<bdi key={m.index} dir="ltr" lang="de" className="whitespace-nowrap">{m[0]}</bdi>);',
+    line: `out.push(<bdi key={m.index} dir="ltr" lang="de" className={m[0].length > 24 ? undefined : 'whitespace-nowrap'}>{m[0]}</bdi>);`,
     reason: 'the HTML text-direction attribute that keeps a German run left-to-right inside the Arabic help.',
   },
 ];

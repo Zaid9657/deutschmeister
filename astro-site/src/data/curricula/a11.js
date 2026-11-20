@@ -142,6 +142,15 @@ export const DIALOG_NAMES = [
   'Marokko',
 ];
 
+// The taught words that answer a final check's own-answer gap (finalCheck.js `slotWords`, 2026-11-19):
+// a gap word the course teaches must be one of these, and a word the course never teaches is the
+// learner's own (Syrien, Krankenpfleger, Kurdisch). So „Ich bin müde" is no job and „Sie spricht Brot"
+// no language, while every real job, place and language a learner brings still counts.
+// `Essen` is a city as well as a verb this course teaches (blind corpus, 2026-11-19: „Ich wohne in Essen").
+const CHECK_PLACES = ['Bremen', 'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Italien', 'Polen', 'Spanien', 'Marokko', 'Essen'];
+const CHECK_JOBS = ['Student', 'Studentin', 'Lehrer', 'Lehrerin', 'Ingenieur', 'Ingenieurin', 'Verkäufer', 'Verkäuferin', 'Arzt', 'Kellner', 'Fahrer', 'Fahrerin', 'Chef', 'Chefin'];
+const CHECK_LANGUAGES = ['Deutsch', 'Englisch', 'Arabisch'];
+
 export const CURRICULUM_A11 = {
   level: 'a1.1',
   code: 'A1.1',
@@ -238,7 +247,18 @@ export const CURRICULUM_A11 = {
         // turns per can-do (`canDo` is its index in `canDo` below); spoken, or typed without a
         // microphone or account. `repeat` names the part to go back to when a can-do is not shown.
         // Nothing locks: the founder chose a recommendation over a locked path (2026-11-18).
+        // `partner` labels the cues; `open` and `passed` are the otter's lines for this check (Codex,
+        // from the founder's words), so each Lektion says what is true of its own check.
         check: {
+          partner: 'Frau Kaya',
+          open: {
+            en: 'This time, you’ll speak with Frau Kaya using your own name. Take your time.',
+            de: 'Diesmal sprechen Sie mit Frau Kaya unter Ihrem eigenen Namen. Nehmen Sie sich Zeit.',
+          },
+          passed: {
+            en: 'You’ve used all four skills in this conversation. That’s something to be proud of.',
+            de: 'Sie haben in diesem Gespräch alle vier Fähigkeiten gezeigt. Darauf können Sie stolz sein.',
+          },
           turns: [
             { canDo: 0, cue: { de: 'Guten Tag!', en: 'Good day!' }, taskDe: 'Antworten Sie Frau Kaya.', taskEn: 'Greet her back.', accepted: ['Guten Tag!', 'Guten Tag, Frau Kaya!', 'Hallo!'] },
             { canDo: 1, cue: { de: 'Wie heißen Sie?', en: 'What is your name?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer with your own name.', ownName: true, accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
@@ -472,6 +492,50 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): the same counter, now as the learner themself. `…` is the
+        // learner's own words (finalCheck.js); a retake hears another office number. Reviewed by a
+        // read-only Codex DaF pass and proven against a blind corpus of learner answers (rollout README).
+        check: {
+          partner: 'Herr Weber',
+          // Codex's lines (2026-11-19), from the founder's words.
+          open: {
+            en: 'Now you’ll tell Herr Weber about yourself at the counter. We’ll take it step by step.',
+            de: 'Jetzt erzählen Sie Herrn Weber am Schalter von sich. Wir gehen Schritt für Schritt vor.',
+          },
+          passed: {
+            en: 'You told Herr Weber about yourself and asked about his job in German. That’s progress you can use in everyday life.',
+            de: 'Sie haben Herrn Weber auf Deutsch von sich erzählt und nach seinem Beruf gefragt. Dieser Fortschritt hilft Ihnen auch im Alltag.',
+          },
+          turns: [
+            { canDo: 0, cue: { de: 'Guten Tag! Woher kommen Sie?', en: 'Good day! Where do you come from?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you come from, in one sentence.', accepted: ['Ich komme aus …', 'Ich bin aus …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich komme aus Marokko.' },
+            { canDo: 3, cue: { de: 'Und wo wohnen Sie?', en: 'And where do you live?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say where you live, in one sentence.', accepted: ['Ich wohne in …', 'Ich lebe in …', 'Mein Wohnort ist …', 'Jetzt wohne ich in …'], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich wohne in Bremen.' },
+            // The course teaches a job without an article („Ich bin Lehrer", the notice); „Ich bin eine
+            // Studentin" is German too and counts (DaF review 2026-11-19). A job the course never teaches is
+            // the learner's own and counts.
+            { canDo: 0, cue: { de: 'Was sind Sie von Beruf?', en: 'What is your job?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your job is, in one sentence.', accepted: ['Ich bin …', 'Ich bin von Beruf …', 'Von Beruf bin ich …', 'Ich arbeite als …', 'Ich arbeite nicht.', 'Ich habe keine Arbeit.'], slot: 'job', slotWords: CHECK_JOBS, example: 'Ich bin Studentin.' },
+            { canDo: 1, taskDe: 'Und Herr Weber? Fragen Sie nach seinem Beruf.', taskEn: 'Now ask Herr Weber what his job is.', accepted: ['Was sind Sie von Beruf?', 'Und Sie?', 'Und Sie? Was sind Sie von Beruf?', 'Was ist Ihr Beruf?', 'Was machen Sie beruflich?', 'Welchen Beruf haben Sie?', 'Sind Sie …?'], slot: 'job', slotWords: CHECK_JOBS },
+            { canDo: 3, cue: { de: 'Wie ist Ihre Telefonnummer?', en: 'What is your phone number?' }, taskDe: 'Antworten Sie mit einem Satz. Sie können eine Nummer erfinden.', taskEn: 'Give a phone number in one sentence. A made-up number is fine.', accepted: ['Meine Telefonnummer ist …', 'Meine Nummer ist …', 'Ich habe die Telefonnummer …'], slot: 'phone', example: 'Meine Telefonnummer ist 0176 2345678.' },
+            { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Amt. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
+              variants: [{ listen: 'null vier zwei eins, drei sechs eins acht' }, { listen: 'null vier zwei eins, fünf null neun zwei' }, { listen: 'null vier zwei eins, sieben acht drei vier' }] },
+            // The can-do is a short MESSAGE with personal details (DaF review 2026-11-19), so it is one: the
+            // two Leitpunkte of this Lektion's own writing task that a learner can make up — a name and a date.
+            { canDo: 4, taskDe: 'Herr Weber bittet um eine kurze Nachricht an das Amt. Wie heißen Sie? Wann sind Sie geboren? Schreiben Sie ganze Sätze. Beim Datum brauchen Sie Tag, Monat und Jahr. Sie können ein Datum erfinden.', taskEn: 'Herr Weber asks for a short message to the office. What is your name? When were you born? Write full sentences. For the date, give the day, month and year. You can make up a date.',
+              parts: [
+                ['Ich heiße …', 'Mein Name ist …'],
+                [{ frame: 'Ich bin am … geboren.', slot: 'date' }, { frame: 'Am … bin ich geboren.', slot: 'date' }, { frame: 'Mein Geburtsdatum ist der …', slot: 'date' }, { frame: 'Mein Geburtsdatum ist …', slot: 'date' }],
+              ],
+              // More about the learner may stand in the message too, in the forms this check knows.
+              extras: [{ frame: 'Ich komme aus …', slot: 'place', slotWords: CHECK_PLACES }, { frame: 'Ich wohne in …', slot: 'place', slotWords: CHECK_PLACES }, { frame: 'Ich bin …', slot: 'job', slotWords: CHECK_JOBS }, { frame: 'Meine Telefonnummer ist …', slot: 'phone' }, 'Ich bin ledig.', 'Ich bin verheiratet.', 'Ich bin Marokkanerin.', 'Ich bin Marokkaner.'],
+              example: 'Guten Tag! Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.' },
+          ],
+          repeat: [
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 2: the practice', de: 'Teil 2: die Übungen' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 3: writing', de: 'Teil 3: das Schreiben' },
+          ],
+        },
       },
       nextHook: {
         de: 'Lena sieht ein Foto auf Anas Handy. Wer sind die Leute auf dem Foto?',
@@ -657,6 +721,8 @@ export const CURRICULUM_A11 = {
         // 54 words, read aloud.
         bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer. Aber: Das ist ein Lehrer. Bei Personen im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
         bodyEn: '**sein** (to be) is irregular – learn the set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. After **ich bin** a job usually has no article: **Ich bin Lehrer.** But: **Das ist ein Lehrer.** Said of a person, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
+        bodyAr: 'sein (يكون) فعل غير منتظم. احفظ ما يلي: ich bin، du bist، er/sie/es ist، wir sind، ihr seid، sie/Sie sind. بعد ich bin، يأتي اسم المهنة عادةً بلا أداة: «Ich bin Lehrer». لكن: «Das ist ein Lehrer». عند الحديث عن شخص، تكون الجنسية اسمًا: «Ich komme aus Marokko und bin Marokkanerin» و«Ali ist Marokkaner». وفي الاستمارة، تكون صفة: «Staatsangehörigkeit: marokkanisch». تاريخ ميلادك: Ich bin am 3.5.1998 geboren (وُلدتُ في…).',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
@@ -756,7 +822,9 @@ export const CURRICULUM_A11 = {
           titleEn: 'A message with a photo',
           instructionDe: 'Lesen Sie die Nachricht von Ana. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the message from Ana. Tap a word for its meaning.',
-          text: 'Hallo Tim!\nDas ist meine Familie.\nMein Vater und meine Mutter kommen aus Marokko.\nMein Bruder ist zwanzig, seine Frau ist auch jung.\nSie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.\nMeine Schwester ist schon verheiratet.\nWir sprechen zusammen Arabisch und Deutsch.\nUnd du? Hast du Geschwister oder bist du Einzelkind?\nBis morgen! Ana',
+          // „Ich spreche auch Deutsch." and „Welche Sprachen sprichst du?" (2026-11-19, DaF review of the
+          // final check): the can-do „sagen, welche Sprachen ich spreche" had no surface with „ich spreche".
+          text: 'Hallo Tim!\nDas ist meine Familie.\nMein Vater und meine Mutter kommen aus Marokko.\nMein Bruder ist zwanzig, seine Frau ist auch jung.\nSie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.\nMeine Schwester ist schon verheiratet.\nWir sprechen zusammen Arabisch. Ich spreche auch Deutsch.\nUnd du? Welche Sprachen sprichst du? Hast du Geschwister oder bist du Einzelkind?\nBis morgen! Ana',
           questions: [
             {
               promptDe: 'Was schreibt Ana über ihren Bruder? Wählen Sie.',
@@ -843,6 +911,63 @@ export const CURRICULUM_A11 = {
             },
           },
         ],
+        // The final check (2026-11-19): Lena looks at a photo of the learner's own family (real or
+        // imagined). The person in the photo is a choice (a woman, or a man on a retake), so the pronoun
+        // the Lektion teaches follows from the learner's own answer: sie for Mutter/Schwester, er for
+        // Vater/Bruder — or the family noun itself (`nounFor`). Reviewed by a read-only Codex DaF pass and
+        // proven against a blind corpus of learner answers (rollout README).
+        check: {
+          partner: 'Lena',
+          // Codex's lines (2026-11-19), from the founder's words.
+          open: {
+            en: 'Now you’ll talk with Lena about your own family. Give yourself a moment to find the words.',
+            de: 'Jetzt sprechen Sie mit Lena über Ihre eigene Familie. Nehmen Sie sich einen Moment, um die Worte zu finden.',
+          },
+          passed: {
+            en: 'You told Lena about your family and asked about hers in German. You can feel proud of this conversation.',
+            de: 'Sie haben Lena auf Deutsch von Ihrer Familie erzählt und nach ihrer Familie gefragt. Auf dieses Gespräch können Sie stolz sein.',
+          },
+          turns: [
+            // The photo is the learner's to imagine, but the person in it is one of two (DaF review 2026-11-19),
+            // so every turn after it can follow the learner's choice (CheckStage `chosen`).
+            { canDo: 0,
+              variants: [
+                { taskDe: 'Denken Sie an ein Foto: Ihre Mutter oder Ihre Schwester. Lena sieht das Foto. Antworten Sie Lena. Sie können eine Familie erfinden.', taskEn: 'Think of a photo of your mother or your sister. Lena is looking at it. Answer her. You can make up a family.',
+                  cue: { de: 'Ist das deine Mutter oder deine Schwester?', en: 'Is that your mother or your sister?' }, accepted: ['Das ist meine …', 'Meine …', 'Sie ist meine …', 'Ja, das ist meine …'], slotIn: ['Mutter', 'Schwester'], example: 'Das ist meine Mutter.' },
+                { taskDe: 'Denken Sie an ein Foto: Ihr Vater oder Ihr Bruder. Lena sieht das Foto. Antworten Sie Lena. Sie können eine Familie erfinden.', taskEn: 'Think of a photo of your father or your brother. Lena is looking at it. Answer her. You can make up a family.',
+                  cue: { de: 'Ist das dein Vater oder dein Bruder?', en: 'Is that your father or your brother?' }, accepted: ['Das ist mein …', 'Mein …', 'Er ist mein …', 'Ja, das ist mein …'], slotIn: ['Vater', 'Bruder'], example: 'Das ist mein Vater.' },
+              ] },
+            // „Jung oder alt?" (DaF review 2026-11-19): an age above zwanzig is not taught yet, „jung" and „alt" are.
+            // An age in digits is still right; „Jahre alt" is two or more.
+            { canDo: 0, taskDe: 'Antworten Sie mit einem Satz.',
+              variants: [
+                { cue: { de: 'Ist sie jung oder alt?', en: 'Is she young or old?' }, taskEn: 'Say whether she is young or old, in one sentence.', nounFor: { Sie: ['Meine Mutter', 'Meine Schwester'] },
+                  accepted: ['Sie ist jung.', 'Sie ist noch jung.', 'Sie ist alt.', 'Sie ist nicht alt.', 'Sie ist noch nicht alt.', 'Sie ist nicht jung.', 'Sie ist schon alt.', 'Sie ist sehr jung.', 'Sie ist sehr alt.', 'Sie ist noch ein Baby.', 'Sie ist ein Jahr alt.', 'Sie ist 1 Jahr alt.', { frame: 'Sie ist …', slot: 'number' }, { frame: 'Sie ist … Jahre alt.', slot: 'years' }] },
+                { cue: { de: 'Ist er jung oder alt?', en: 'Is he young or old?' }, taskEn: 'Say whether he is young or old, in one sentence.', nounFor: { Er: ['Mein Vater', 'Mein Bruder'] },
+                  accepted: ['Er ist jung.', 'Er ist noch jung.', 'Er ist alt.', 'Er ist nicht alt.', 'Er ist noch nicht alt.', 'Er ist nicht jung.', 'Er ist schon alt.', 'Er ist sehr jung.', 'Er ist sehr alt.', 'Er ist noch ein Baby.', 'Er ist ein Jahr alt.', 'Er ist 1 Jahr alt.', { frame: 'Er ist …', slot: 'number' }, { frame: 'Er ist … Jahre alt.', slot: 'years' }] },
+              ] },
+            { canDo: 3, taskDe: 'Antworten Sie mit einem Satz.', slot: 'place', slotWords: CHECK_PLACES,
+              variants: [
+                { cue: { de: 'Und woher kommt sie?', en: 'And where does she come from?' }, taskEn: 'Say where she comes from, in one sentence.', accepted: ['Sie kommt aus …', 'Sie ist aus …'], nounFor: { Sie: ['Meine Mutter', 'Meine Schwester'] }, example: 'Sie kommt aus Marokko.' },
+                { cue: { de: 'Und woher kommt er?', en: 'And where does he come from?' }, taskEn: 'Say where he comes from, in one sentence.', accepted: ['Er kommt aus …', 'Er ist aus …'], nounFor: { Er: ['Mein Vater', 'Mein Bruder'] }, example: 'Er kommt aus Marokko.' },
+              ] },
+            { canDo: 0, taskDe: 'Antworten Sie mit einem Satz.', slot: 'language', slotWords: CHECK_LANGUAGES,
+              variants: [
+                { cue: { de: 'Welche Sprachen spricht sie?', en: 'Which languages does she speak?' }, taskEn: 'Say which languages she speaks, in one sentence.', accepted: ['Sie spricht …', 'Sie kann …'], nounFor: { Sie: ['Meine Mutter', 'Meine Schwester'] }, example: 'Sie spricht Arabisch und Deutsch.' },
+                { cue: { de: 'Welche Sprachen spricht er?', en: 'Which languages does he speak?' }, taskEn: 'Say which languages he speaks, in one sentence.', accepted: ['Er spricht …', 'Er kann …'], nounFor: { Er: ['Mein Vater', 'Mein Bruder'] }, example: 'Er spricht Arabisch und Deutsch.' },
+              ] },
+            // „Ich spreche" and „sprichst du" stand in Ana's message (guided.read) since the DaF review of 2026-11-19.
+            { canDo: 1, cue: { de: 'Und du? Welche Sprachen sprichst du?', en: 'And you? Which languages do you speak?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say which languages you speak, in one sentence.', accepted: ['Ich spreche …', 'Ich kann …'], slot: 'language', slotWords: CHECK_LANGUAGES, example: 'Ich spreche Arabisch und Deutsch.' },
+            { canDo: 2, taskDe: 'Und Lenas Eltern? Fragen Sie: woher?', taskEn: 'Now ask Lena where her parents come from.', accepted: ['Woher kommen deine Eltern?', 'Woher sind deine Eltern?', 'Und deine Eltern? Woher kommen sie?', 'Und deine Eltern, woher kommen sie?', 'Woher kommen dein Vater und deine Mutter?', 'Woher kommen deine Mutter und dein Vater?', 'Woher sind dein Vater und deine Mutter?', 'Woher sind deine Mutter und dein Vater?', 'Aus welchem Land kommen deine Eltern?'] },
+          ],
+          repeat: [
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: er, sie, es', de: 'Teil 2: er, sie, es' }],
+            { en: 'Part 1: Ana’s message', de: 'Teil 1: Anas Nachricht' },
+            // „Woher …?" is Lektion 2's question; this Lektion gives it „deine Eltern" (DaF review 2026-11-19).
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lektion 2', de: 'die Szene von Lektion 2' }],
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Tim sucht Möbel für sein Zimmer. Ist der Flohmarkt teuer?',
@@ -927,6 +1052,8 @@ export const CURRICULUM_A11 = {
         title: 'er, sie, es – die Personalpronomen',
         bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form. Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
         bodyEn: 'A pronoun follows the article of the noun it stands for: **der** Bruder → **er**, **die** Schwester → **sie**, **das** Kind → **es**. For more than one person use **wir** (we), **ihr** (you, several people, informal) and **sie** (they). **Sie** with a capital S is the polite "you" – for one person or several. One verb to watch: **sprechen** changes its vowel – er **spricht**. Lektion 7 explains the pattern.',
+        // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
+        bodyAr: 'نختار الضمير حسب أداة الاسم الذي يأخذ الضمير مكانه: der Bruder → er، die Schwester → sie، das Kind → es. لأكثر من شخص، استخدم wir (نحن)، وihr (أنتم، لعدة أشخاص بصيغة غير رسمية)، وsie (هم). أما Sie بحرف S كبير، فهي «أنت أو أنتم» بصيغة الاحترام، لشخص واحد أو عدة أشخاص. انتبه إلى الفعل sprechen: يتغيّر فيه حرف متحرّك، فنقول er spricht. يشرح Lektion 7 طريقة هذا التغيير.',
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
       },

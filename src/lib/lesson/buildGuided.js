@@ -1,5 +1,6 @@
 import { buildSoundItems, nounsOf } from './guidedSound.js';
 import { lineFor } from './wortfeldPacing.js';
+import { courseLexicon, nextAfter } from './finalCheck.js';
 
 export const SCENE_PHASES = ['hear', 'meaning', 'say'];
 export const sceneStep = (index) => `scene:${Math.floor(index / SCENE_PHASES.length) + 1}:${SCENE_PHASES[index % SCENE_PHASES.length]}`;
@@ -39,7 +40,8 @@ export function buildGuided(options, buildLegacy) {
     ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
     { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue })) },
     part('speaking', 3), part('writing', 3), part('requeue', 3),
-    ...(lektion.guided.check ? [{ nr: 7, key: 'check', kind: 'check', part: 3, check: lektion.guided.check }] : []),
+    ...(lektion.guided.check ? [{ nr: 7, key: 'check', kind: 'check', part: 3, next: nextAfter(options.curriculum, lektion),
+      check: { ...lektion.guided.check, lexicon: courseLexicon(options.curriculum || { lektionen: [lektion] }) } }] : []),
     { ...part('recap', 3), nextHook: lektion.nextHook },
   ];
   return { ...legacy, flow: 'guided', stages };

@@ -3273,6 +3273,32 @@ export function guidedReadVocabulary(c, spec = levelSpec(c?.level)) {
   return findings;
 }
 
+/**
+ * RULE 35 (2026-11-19): a final check speaks and models only German the learner has met — every
+ * partner line, every heard number, every model answer (`accepted[0]`, the spoken target) and every
+ * example shown after a miss, in every retake variant. The other accepted answers are what a learner may write and are not lexis.
+ * Words only: a form the course has not taught from known words (Lektion 1's first draft asked „Wie
+ * geht es ihr?") is for the DaF review of each check to catch.
+ */
+export function guidedCheckVocabulary(c, spec = levelSpec(c?.level)) {
+  const known = seedVocabulary(spec);
+  const findings = [];
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const turn of l.guided?.check?.turns || []) {
+      for (const t of [turn, ...(turn.variants || [])]) {
+        const model = t.accepted?.[0];
+        for (const text of [t.cue?.de, t.listen, typeof model === 'object' ? model?.frame : model, t.example]) {
+          for (const token of tokenise(String(text || '').replaceAll('…', ' '))) {
+            if (!known.has(token.toLowerCase())) findings.push(`L${l.nr}: final check uses untaught word "${token}"`);
+          }
+        }
+      }
+    }
+  }
+  return findings;
+}
+
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
@@ -3303,6 +3329,7 @@ export function validateCurriculum(c, extraItems, poolItems) {
     } catch { fail(`RULE 33: no safe bilingual hint (${item.id})`); }
   }
   for (const finding of guidedReadVocabulary(c, spec)) fail(`RULE 34: ${finding}`);
+  for (const finding of guidedCheckVocabulary(c, spec)) fail(`RULE 35: ${finding}`);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);

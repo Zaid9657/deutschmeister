@@ -163,6 +163,7 @@ test('CharacterAvatar and SituationScene both branch on a manifest src before dr
 });
 
 test('L1 ships the illustrated otter reception with honest mixed provenance and responsive sizes', async () => {
+  // Kept as it was for Lektion 1; the rollout's scenes are pinned by the class test below.
   assert.equal(A11_ART.generatedWith.status, 'mixed-illustrated-svg');
   assert.match(A11_ART.generatedWith.tool, /Codex image tool.*inline SVG/);
   assert.equal(A11_ART.generatedWith.model, null, 'the supplied asset does not establish a model name');
@@ -177,9 +178,43 @@ test('L1 ships the illustrated otter reception with honest mixed provenance and 
   const actual = await sharp(join(ROOT, 'public', scene.src)).metadata();
   assert.equal(scene.width, actual.width);
   assert.equal(scene.height, actual.height);
-  for (const [id, entry] of Object.entries(A11_ART.situations)) if (id !== 'a1.1-l01') assert.equal(entry.src, null);
   assert.match(SCENE_SRC, /srcSet=\{entry.srcMedium/);
   assert.match(read('src/components/lesson/SceneStage.jsx'), /<SituationScene lektionId=\{lektionId\}/);
+});
+
+// The rollout (2026-11-19, docs/course-factory/a11-lektion-rollout/): Lektionen get their scene one
+// batch at a time. Every illustrated scene ships in the three sizes, and every cast portrait is a file.
+const ILLUSTRATED = ['a1.1-l01', 'a1.1-l02', 'a1.1-l03'];
+
+test('every illustrated scene ships 1168x880 plus 800 and 640 wide, and the rest are still drawn as SVG', async () => {
+  const { default: sharp } = await import('sharp');
+  for (const [id, scene] of Object.entries(A11_ART.situations)) {
+    if (!ILLUSTRATED.includes(id)) { assert.equal(scene.src, null, id); continue; }
+    assert.match(scene.alt, /drawn as an otter/, `${id}: the alt names the guide's figure`);
+    const slug = scene.src.match(/^\/art\/a11\/(l\d\d-[a-z]+)-1168\.webp$/)?.[1];
+    assert.ok(slug && slug.startsWith(`l${id.slice(-2)}-`), id);
+    for (const [field, width] of [['srcSmall', 640], ['srcMedium', 800], ['src', 1168]]) {
+      assert.equal(scene[field], `/art/a11/${slug}-${width}.webp`, `${id} ${field}`);
+      assert.equal((await sharp(join(ROOT, 'public', scene[field])).metadata()).width, width, `${id} ${field}`);
+    }
+    const big = await sharp(join(ROOT, 'public', scene.src)).metadata();
+    assert.deepEqual([scene.width, scene.height], [big.width, big.height], id);
+    assert.deepEqual([big.width, big.height], [1168, 880], id);
+  }
+});
+
+test('every character with a portrait has a 160 px file, and each illustrated scene’s cast has one', async () => {
+  const { default: sharp } = await import('sharp');
+  for (const [name, art] of Object.entries(A11_ART.characters)) {
+    if (!art.src) continue;
+    assert.equal(art.srcSmall, art.src, name);
+    assert.match(art.src, /^\/art\/a11\/[a-z-]+-160\.webp$/, name);
+    assert.equal((await sharp(join(ROOT, 'public', art.src)).metadata()).width, 160, name);
+  }
+  for (const id of ILLUSTRATED) {
+    const lektion = CURRICULUM_A11.lektionen.find((l) => l.id === id);
+    for (const speaker of new Set(lektion.dialog.lines.map((l) => l.speaker))) assert.ok(A11_ART.characters[speaker]?.src, `${id}: ${speaker}`);
+  }
 });
 
 test('both course guide poses have alt text and responsive files at the declared widths', async () => {
