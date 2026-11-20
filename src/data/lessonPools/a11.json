@@ -758,7 +758,7 @@
    "difficulty": 2,
    "order": 144,
    "questionDe": "Korrigieren Sie das Wort Gute: „Gute Morgen, Frau Kaya!“",
-   "questionEn": "Correct the greeting. Correct only the word “Gute”.",
+   "questionEn": "Correct the greeting. Write the whole sentence; change only the word “Gute”.",
    "options": null,
    "answer": "Guten Morgen, Frau Kaya!",
    "accepted": [
@@ -778,7 +778,7 @@
    "difficulty": 2,
    "order": 145,
    "questionDe": "Korrigieren Sie das Wort Gute: „Gute Abend, Frau Kaya!“",
-   "questionEn": "Correct the greeting. Correct only the word “Gute”.",
+   "questionEn": "Correct the greeting. Write the whole sentence; change only the word “Gute”.",
    "options": null,
    "answer": "Guten Abend, Frau Kaya!",
    "accepted": [
@@ -918,7 +918,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Korrigieren Sie das Wort Gute: „Gute Tag, Frau Kaya!“",
-   "questionEn": "Fix the greeting. Correct only the word “Gute”.",
+   "questionEn": "Fix the greeting. Write the whole sentence; change only the word “Gute”.",
    "options": null,
    "answer": "Guten Tag, Frau Kaya!",
    "accepted": [
@@ -1426,7 +1426,7 @@
    "difficulty": 2,
    "order": 59,
    "questionDe": "Korrigieren Sie den Artikel: „Ein Schere ist hier.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Correct only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Schere ist hier.",
    "accepted": [
@@ -1466,7 +1466,7 @@
    "difficulty": 2,
    "order": 62,
    "questionDe": "Korrigieren Sie den Artikel: „Das Wohnung ist hier.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Correct only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Wohnung ist hier.",
    "accepted": [
@@ -1546,7 +1546,7 @@
    "difficulty": 2,
    "order": 202,
    "questionDe": "Korrigieren Sie den Artikel: „Das Tür ist weiß.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Correct only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Tür ist weiß.",
    "accepted": [
@@ -1606,7 +1606,7 @@
    "difficulty": 2,
    "order": 205,
    "questionDe": "Korrigieren Sie den Artikel: „Die Schlüssel ist gelb.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Correct only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Der Schlüssel ist gelb.",
    "accepted": [
@@ -1833,7 +1833,7 @@
    "difficulty": 2,
    "order": 174,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Pause.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche eine Pause.",
    "accepted": [
@@ -1853,7 +1853,7 @@
    "difficulty": 2,
    "order": 175,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Telefon.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche ein Telefon.",
    "accepted": [
@@ -1873,7 +1873,7 @@
    "difficulty": 2,
    "order": 176,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche eine Computer.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche einen Computer.",
    "accepted": [
@@ -1893,7 +1893,7 @@
    "difficulty": 2,
    "order": 181,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Handynummer.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche eine Handynummer.",
    "accepted": [
@@ -1913,7 +1913,7 @@
    "difficulty": 2,
    "order": 183,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Chefin.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Chefin.",
    "accepted": [
@@ -1933,7 +1933,7 @@
    "difficulty": 2,
    "order": 184,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Verkäuferin.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Verkäuferin.",
    "accepted": [
@@ -1953,7 +1953,7 @@
    "difficulty": 2,
    "order": 189,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Firma in Berlin.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Firma in Berlin.",
    "accepted": [
@@ -2165,7 +2165,7 @@
    "difficulty": 2,
    "order": 71,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Kollegin im Büro.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Correct only the article.",
+   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Kollegin im Büro.",
    "accepted": [
@@ -2745,7 +2745,7 @@
    "difficulty": 2,
    "order": 185,
    "questionDe": "Korrigieren Sie den Artikel: „Der Tasche ist teuer.“ (mit bestimmtem Artikel)",
-   "questionEn": "Correct the article. Use a definite article. Correct only the article.",
+   "questionEn": "Correct the article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Tasche ist teuer.",
    "accepted": [
@@ -2765,7 +2765,7 @@
    "difficulty": 2,
    "order": 186,
    "questionDe": "Korrigieren Sie den Artikel: „Die Rucksack ist gut.“ (mit bestimmtem Artikel)",
-   "questionEn": "Correct the article. Use a definite article. Correct only the article.",
+   "questionEn": "Correct the article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Der Rucksack ist gut.",
    "accepted": [
@@ -2785,7 +2785,7 @@
    "difficulty": 2,
    "order": 190,
    "questionDe": "Korrigieren Sie den Artikel: „Das Stuhl ist alt.“ (mit bestimmtem Artikel)",
-   "questionEn": "Correct the article. Use a definite article. Correct only the article.",
+   "questionEn": "Correct the article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Der Stuhl ist alt.",
    "accepted": [
@@ -2805,7 +2805,7 @@
    "difficulty": 2,
    "order": 191,
    "questionDe": "Korrigieren Sie den Artikel: „Die Tisch ist alt.“ (mit bestimmtem Artikel)",
-   "questionEn": "Correct the article. Use a definite article. Correct only the article.",
+   "questionEn": "Correct the article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Der Tisch ist alt.",
    "accepted": [
@@ -2825,7 +2825,7 @@
    "difficulty": 2,
    "order": 192,
    "questionDe": "Korrigieren Sie den Artikel: „Der Uhr ist alt.“ (mit bestimmtem Artikel)",
-   "questionEn": "Correct the article. Use a definite article. Correct only the article.",
+   "questionEn": "Correct the article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Uhr ist alt.",
    "accepted": [
@@ -2963,7 +2963,7 @@
    "difficulty": 2,
    "order": 50,
    "questionDe": "Korrigieren Sie den Artikel: „Das Lampe kostet acht Euro.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Correct only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Lampe kostet acht Euro.",
    "accepted": [
@@ -3023,7 +3023,7 @@
    "difficulty": 2,
    "order": 57,
    "questionDe": "Korrigieren Sie den Artikel: „Der Lampe ist teuer.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Correct only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Lampe ist teuer.",
    "accepted": [
@@ -4177,7 +4177,7 @@
    "difficulty": 2,
    "order": 135,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Das ist mein Party.“",
-   "questionEn": "Fix the possessive. Correct only the possessive determiner.",
+   "questionEn": "Fix the possessive. Write the whole sentence; change only the possessive determiner.",
    "options": null,
    "answer": "Das ist meine Party.",
    "accepted": [
@@ -4197,7 +4197,7 @@
    "difficulty": 2,
    "order": 136,
    "questionDe": "Korrigieren Sie den Possessivartikel: „Ihre Papa kommt auch, Frau Kaya.“",
-   "questionEn": "Fix the possessive. Correct only the possessive determiner.",
+   "questionEn": "Fix the possessive. Write the whole sentence; change only the possessive determiner.",
    "options": null,
    "answer": "Ihr Papa kommt auch, Frau Kaya.",
    "accepted": [
@@ -4795,7 +4795,7 @@
    "difficulty": 2,
    "order": 78,
    "questionDe": "Korrigieren Sie das Verb: „Lena spielen am Wochenende Fußball.“",
-   "questionEn": "Fix the verb form. Correct only the verb.",
+   "questionEn": "Fix the verb form. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Lena spielt am Wochenende Fußball.",
    "accepted": [
@@ -5790,7 +5790,7 @@
    "difficulty": 2,
    "order": 163,
    "questionDe": "Korrigieren Sie das Wort um: „Ich bin um Freitag beim Arzt.“",
-   "questionEn": "Correct the preposition. Correct only the word “um”.",
+   "questionEn": "Correct the preposition. Write the whole sentence; change only the word “um”.",
    "options": null,
    "answer": "Ich bin am Freitag beim Arzt.",
    "accepted": [
@@ -5810,7 +5810,7 @@
    "difficulty": 2,
    "order": 164,
    "questionDe": "Korrigieren Sie das Wort um: „Der Termin ist um Dienstag.“",
-   "questionEn": "Correct the preposition. Correct only the word “um”.",
+   "questionEn": "Correct the preposition. Write the whole sentence; change only the word “um”.",
    "options": null,
    "answer": "Der Termin ist am Dienstag.",
    "accepted": [
@@ -5949,7 +5949,7 @@
    "difficulty": 2,
    "order": 87,
    "questionDe": "Korrigieren Sie das Wort um: „Der Termin ist um Montag.“",
-   "questionEn": "Fix the preposition. Correct only the word “um”.",
+   "questionEn": "Fix the preposition. Write the whole sentence; change only the word “um”.",
    "options": null,
    "answer": "Der Termin ist am Montag.",
    "accepted": [
@@ -6264,7 +6264,7 @@
    "difficulty": 2,
    "order": 97,
    "questionDe": "Korrigieren Sie den Artikel: „Ich habe ein Kaffee.“",
-   "questionEn": "Fix the article. Correct only the article.",
+   "questionEn": "Fix the article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich habe einen Kaffee.",
    "accepted": [
@@ -6382,7 +6382,7 @@
    "difficulty": 2,
    "order": 196,
    "questionDe": "Korrigieren Sie das Verb: „Du habt Durst.“",
-   "questionEn": "Correct the verb form. Correct only the verb.",
+   "questionEn": "Correct the verb form. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Du hast Durst.",
    "accepted": [
@@ -7384,7 +7384,7 @@
    "difficulty": 2,
    "order": 110,
    "questionDe": "Korrigieren Sie das Verb: „Sind die Abfahrt um neun Uhr?“",
-   "questionEn": "Fix the verb form in the question. Correct only the verb.",
+   "questionEn": "Fix the verb form in the question. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Ist die Abfahrt um neun Uhr?",
    "accepted": [
@@ -7404,7 +7404,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Korrigieren Sie das Verb: „Haben der Fahrer Verspätung?“",
-   "questionEn": "Fix the verb form in the question. Correct only the verb.",
+   "questionEn": "Fix the verb form in the question. Write the whole sentence; change only the verb.",
    "options": null,
    "answer": "Hat der Fahrer Verspätung?",
    "accepted": [

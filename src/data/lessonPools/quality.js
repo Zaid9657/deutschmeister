@@ -1292,10 +1292,10 @@ export function taskConstraintsEn(item) {
     [/mit unbestimmtem Artikel/, 'Use an indefinite article.'],
     [/\bKurzform\b/, 'Use the contracted form.'],
     [/\bvolle Form\b/, 'Use the full form.'],
-    [/Korrigieren Sie den Artikel/, 'Correct only the article.'],
-    [/Korrigieren Sie den Possessivartikel/, 'Correct only the possessive determiner.'],
-    [/Korrigieren Sie (?:nur )?das Verb/, 'Correct only the verb.'],
-    [/Korrigieren Sie nur den Fehler/, 'Correct only the error.'],
+    [/Korrigieren Sie den Artikel/, 'Write the whole sentence; change only the article.'],
+    [/Korrigieren Sie den Possessivartikel/, 'Write the whole sentence; change only the possessive determiner.'],
+    [/Korrigieren Sie (?:nur )?das Verb/, 'Write the whole sentence; change only the verb.'],
+    [/Korrigieren Sie nur den Fehler/, 'Write the whole sentence; change only the error.'],
   ];
   if (item?.type === 'sentence_building') directions.push(
     [/\b(?:Frage|Verb auf Position 1|Antwort: ja oder nein)\b/, 'Build a question.'],
@@ -1303,11 +1303,11 @@ export function taskConstraintsEn(item) {
   );
   for (const [pattern, en] of directions) if (pattern.test(q)) constraints.push(en);
   const word = q.match(/Korrigieren Sie das Wort (\p{L}+):/u);
-  if (word) constraints.push(`Correct only the word “${word[1]}”.`);
+  if (word) constraints.push(`Write the whole sentence; change only the word “${word[1]}”.`);
   const repair = NAMED_REPAIR_RE.exec(q)?.[2];
   if (repair) {
-    if (/^Wort /i.test(repair)) constraints.push(`Correct only the word “${repair.slice(5)}”.`);
-    else if (/^Verb$/i.test(repair)) constraints.push('Correct only the verb.');
+    if (/^Wort /i.test(repair)) constraints.push(`Write the whole sentence; change only the word “${repair.slice(5)}”.`);
+    else if (/^Verb$/i.test(repair)) constraints.push('Write the whole sentence; change only the verb.');
     else if (/^Verb auf Position 2 oder Wort denn$/i.test(repair)) constraints.push('Correct the verb position or the word “denn”.');
     else if (/^Verb auf Position 2$/i.test(repair)) constraints.push('Put the verb in position 2.');
     else if (/^Infinitiv am Satzende$/i.test(repair)) constraints.push('Put the infinitive at the end of the sentence.');
