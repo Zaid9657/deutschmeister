@@ -1224,9 +1224,9 @@ export const CURRICULUM_A11 = {
             { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?', 'Was ist denn das?', 'Was ist das hier?', 'Was ist das da?', 'Das hier, was ist das?'] },
             { canDo: 0, taskDe: 'Fragen Sie nach dem Preis.', taskEn: 'Ask what it costs.',
               variants: [
-                { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel Euro kostet sie?', 'Wie viel kostet die Uhr?', 'Wie viel Euro kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist sie?', 'Wie teuer ist die Uhr?', 'Wie teuer ist das?'] },
-                { cue: { de: 'Das ist ein Rucksack.', en: 'That is a rucksack.' }, accepted: ['Was kostet er?', 'Was kostet der Rucksack?', 'Wie viel kostet er?', 'Wie viel Euro kostet er?', 'Wie viel kostet der Rucksack?', 'Wie viel Euro kostet der Rucksack?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist er?', 'Wie teuer ist der Rucksack?', 'Wie teuer ist das?'] },
-                { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel Euro kostet es?', 'Wie viel kostet das Regal?', 'Wie viel Euro kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist es?', 'Wie teuer ist das Regal?', 'Wie teuer ist das?'] },
+                { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel Euro kostet sie?', 'Wie viel kostet die Uhr?', 'Wie viel Euro kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist sie?', 'Wie teuer ist die Uhr?', 'Wie teuer ist das?', 'Wie viel?'] },
+                { cue: { de: 'Das ist ein Rucksack.', en: 'That is a rucksack.' }, accepted: ['Was kostet er?', 'Was kostet der Rucksack?', 'Wie viel kostet er?', 'Wie viel Euro kostet er?', 'Wie viel kostet der Rucksack?', 'Wie viel Euro kostet der Rucksack?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist er?', 'Wie teuer ist der Rucksack?', 'Wie teuer ist das?', 'Wie viel?'] },
+                { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel Euro kostet es?', 'Wie viel kostet das Regal?', 'Wie viel Euro kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist es?', 'Wie teuer ist das Regal?', 'Wie teuer ist das?', 'Wie viel?'] },
               ] },
             { canDo: 2, taskDe: 'Frau Wolf sagt den Preis. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says the price. Write it down.',
               variants: [{ listen: 'Sie kostet 18 Euro.' }, { listen: 'Er kostet 45 Euro.' }, { listen: 'Es kostet 72 Euro.' }] },
@@ -1234,14 +1234,15 @@ export const CURRICULUM_A11 = {
             // die Lampe, der Tisch): the Genus of this Lektion, not a copy of the task (DaF review 2026-11-19).
             { canDo: 1,
               variants: [
-                { taskDe: 'Stuhl: Fragen Sie nach dem Preis.', taskEn: 'Chair (Stuhl): ask what it costs.', accepted: ['Was kostet der Stuhl?', 'Wie viel kostet der Stuhl?', 'Wie viel Euro kostet der Stuhl?', 'Wie teuer ist der Stuhl?', 'Und der Stuhl?', 'Und der Stuhl? Was kostet er?', 'Und was kostet der Stuhl?'] },
-                { taskDe: 'Lampe: Fragen Sie nach dem Preis.', taskEn: 'Lamp (Lampe): ask what it costs.', accepted: ['Was kostet die Lampe?', 'Wie viel kostet die Lampe?', 'Wie viel Euro kostet die Lampe?', 'Wie teuer ist die Lampe?', 'Und die Lampe?', 'Und die Lampe? Was kostet sie?', 'Und was kostet die Lampe?'] },
-                { taskDe: 'Tisch: Fragen Sie nach dem Preis.', taskEn: 'Table (Tisch): ask what it costs.', accepted: ['Was kostet der Tisch?', 'Wie viel kostet der Tisch?', 'Wie viel Euro kostet der Tisch?', 'Wie teuer ist der Tisch?', 'Und der Tisch?', 'Und der Tisch? Was kostet er?', 'Und was kostet der Tisch?'] },
+                { taskDe: 'Stuhl: Fragen Sie nach dem Preis.', taskEn: 'Chair (Stuhl): ask what it costs.', accepted: ['Was kostet der Stuhl?', 'Wie viel kostet der Stuhl?', 'Wie viel Euro kostet der Stuhl?', 'Wie teuer ist der Stuhl?', 'Und der Stuhl?', 'Und der Stuhl? Was kostet er?', 'Und was kostet der Stuhl?', 'Was kostet ein Stuhl?', 'Wie viel kostet ein Stuhl?', 'Wie teuer ist ein Stuhl?'] },
+                { taskDe: 'Lampe: Fragen Sie nach dem Preis.', taskEn: 'Lamp (Lampe): ask what it costs.', accepted: ['Was kostet die Lampe?', 'Wie viel kostet die Lampe?', 'Wie viel Euro kostet die Lampe?', 'Wie teuer ist die Lampe?', 'Und die Lampe?', 'Und die Lampe? Was kostet sie?', 'Und was kostet die Lampe?', 'Was kostet eine Lampe?', 'Wie viel kostet eine Lampe?', 'Wie teuer ist eine Lampe?'] },
+                { taskDe: 'Tisch: Fragen Sie nach dem Preis.', taskEn: 'Table (Tisch): ask what it costs.', accepted: ['Was kostet der Tisch?', 'Wie viel kostet der Tisch?', 'Wie viel Euro kostet der Tisch?', 'Wie teuer ist der Tisch?', 'Und der Tisch?', 'Und der Tisch? Was kostet er?', 'Und was kostet der Tisch?', 'Was kostet ein Tisch?', 'Wie viel kostet ein Tisch?', 'Wie teuer ist ein Tisch?'] },
               ] },
             // The total of the two things just asked about, before the learner says what they buy.
             { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
               variants: [{ listen: 'Der Stuhl und die Uhr kosten zusammen 30 Euro.' }, { listen: 'Die Lampe und der Rucksack kosten zusammen 57 Euro.' }, { listen: 'Der Tisch und das Regal kosten zusammen 84 Euro.' }] },
-            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …'], slot: 'thing', example: 'Ich kaufe den Stuhl und die Uhr.' },
+            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …'], slot: 'thing',
+              variants: [{ example: 'Ich kaufe den Stuhl und die Uhr.' }, { example: 'Ich kaufe den Rucksack und die Lampe.' }, { example: 'Ich kaufe das Regal und den Tisch.' }] },
           ],
           repeat: [
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
@@ -1479,12 +1480,12 @@ export const CURRICULUM_A11 = {
           },
           turns: [
             // „Das ist …" names one thing, „Das sind …" more than one (`count`, DaF review 2026-11-19).
-            { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Lena zeigt auf etwas in Ihrer Tasche. Sagen Sie mit einem Satz, was das ist.', taskEn: 'Lena points at something in your bag. Say what it is, in one sentence.', accepted: [{ frame: 'Das ist …', slot: 'object', count: 'one' }, { frame: 'Das sind …', slot: 'object', count: 'many' }, { frame: 'Das hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier sind …', slot: 'object', count: 'many' }], slot: 'object', example: 'Das ist mein Wörterbuch.' },
+            { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Wählen Sie eine Sache aus Ihrer Tasche. Lena fragt, was das ist. Antworten Sie mit einem Satz.', taskEn: 'Choose something from your bag. Lena asks what it is. Answer in one sentence.', accepted: [{ frame: 'Das ist …', slot: 'object', count: 'one' }, { frame: 'Das sind …', slot: 'object', count: 'many' }, { frame: 'Das hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier sind …', slot: 'object', count: 'many' }], slot: 'object', example: 'Das ist mein Wörterbuch.' },
             { canDo: 1, taskDe: 'Antworten Sie mit hier oder da.',
               variants: [
                 { cue: { de: 'Wo ist dein Wörterbuch?', en: 'Where is your dictionary?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Es ist hier.', 'Es ist da.', 'Das ist hier.', 'Das ist da.', 'Hier.', 'Da.'], nounFor: { Es: ['Mein Wörterbuch', 'Das Wörterbuch'] } },
-                { cue: { de: 'Wo ist deine Schere?', en: 'Where are your scissors?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Sie ist hier.', 'Sie ist da.', 'Das ist hier.', 'Das ist da.', 'Hier.', 'Da.'], nounFor: { Sie: ['Meine Schere', 'Die Schere'] } },
-                { cue: { de: 'Wo ist dein Stift?', en: 'Where is your pen?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Er ist hier.', 'Er ist da.', 'Das ist hier.', 'Das ist da.', 'Hier.', 'Da.'], nounFor: { Er: ['Mein Stift', 'Der Stift'] } },
+                { cue: { de: 'Wo ist deine Schere?', en: 'Where are your scissors?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Sie ist hier.', 'Sie ist da.', 'Die ist hier.', 'Die ist da.', 'Hier.', 'Da.'], nounFor: { Sie: ['Meine Schere', 'Die Schere'] } },
+                { cue: { de: 'Wo ist dein Stift?', en: 'Where is your pen?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Er ist hier.', 'Er ist da.', 'Der ist hier.', 'Der ist da.', 'Hier.', 'Da.'], nounFor: { Er: ['Mein Stift', 'Der Stift'] } },
               ] },
             { canDo: 1,
               variants: [
@@ -1494,21 +1495,21 @@ export const CURRICULUM_A11 = {
               ] },
             { canDo: 2, taskDe: 'Antworten Sie mit einem Satz.', slot: 'color', slotWords: CHECK_COLORS,
               variants: [
-                { cue: { de: 'Welche Farbe hat dein Heft?', en: 'What colour is your exercise book?' }, taskEn: 'Say what colour your exercise book is, in one sentence.', accepted: ['Es ist …'], nounFor: { Es: ['Mein Heft', 'Das Heft'] }, example: 'Es ist grün.' },
-                { cue: { de: 'Welche Farbe hat deine Tasche?', en: 'What colour is your bag?' }, taskEn: 'Say what colour your bag is, in one sentence.', accepted: ['Sie ist …'], nounFor: { Sie: ['Meine Tasche', 'Die Tasche'] }, example: 'Sie ist schwarz.' },
-                { cue: { de: 'Welche Farbe hat dein Stift?', en: 'What colour is your pen?' }, taskEn: 'Say what colour your pen is, in one sentence.', accepted: ['Er ist …'], nounFor: { Er: ['Mein Stift', 'Der Stift'] }, example: 'Er ist blau.' },
+                { cue: { de: 'Welche Farbe hat dein Heft?', en: 'What colour is your exercise book?' }, taskEn: 'Say what colour your exercise book is, in one sentence.', accepted: ['Es ist …', 'Das ist …'], nounFor: { Es: ['Mein Heft', 'Das Heft'] }, example: 'Es ist grün.' },
+                { cue: { de: 'Welche Farbe hat deine Tasche?', en: 'What colour is your bag?' }, taskEn: 'Say what colour your bag is, in one sentence.', accepted: ['Sie ist …', 'Die ist …'], nounFor: { Sie: ['Meine Tasche', 'Die Tasche'] }, example: 'Sie ist schwarz.' },
+                { cue: { de: 'Welche Farbe hat dein Stift?', en: 'What colour is your pen?' }, taskEn: 'Say what colour your pen is, in one sentence.', accepted: ['Er ist …', 'Der ist …'], nounFor: { Er: ['Mein Stift', 'Der Stift'] }, example: 'Er ist blau.' },
               ] },
             { canDo: 3, slot: 'color', slotWords: CHECK_COLORS,
               variants: [
-                { taskDe: 'Und Lenas Tasche? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena what colour her bag is.', accepted: ['Welche Farbe hat deine Tasche?', 'Welche Farbe hat die Tasche?', 'Ist deine Tasche …?', 'Ist die Tasche …?', 'Deine Tasche? Welche Farbe hat sie?', 'Deine Tasche, welche Farbe hat sie?'] },
-                { taskDe: 'Und Lenas Stift? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena what colour her pen is.', accepted: ['Welche Farbe hat dein Stift?', 'Welche Farbe hat der Stift?', 'Ist dein Stift …?', 'Ist der Stift …?', 'Dein Stift? Welche Farbe hat er?', 'Dein Stift, welche Farbe hat er?'] },
-                { taskDe: 'Und Lenas Buch? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena what colour her book is.', accepted: ['Welche Farbe hat dein Buch?', 'Welche Farbe hat das Buch?', 'Ist dein Buch …?', 'Ist das Buch …?', 'Dein Buch? Welche Farbe hat es?', 'Dein Buch, welche Farbe hat es?'] },
+                { taskDe: 'Und Lenas Tasche? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena about the colour of her bag.', accepted: ['Welche Farbe hat deine Tasche?', 'Welche Farbe hat die Tasche?', 'Ist deine Tasche …?', 'Ist die Tasche …?', 'Deine Tasche? Welche Farbe hat sie?', 'Deine Tasche, welche Farbe hat sie?'] },
+                { taskDe: 'Und Lenas Stift? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena about the colour of her pen.', accepted: ['Welche Farbe hat dein Stift?', 'Welche Farbe hat der Stift?', 'Ist dein Stift …?', 'Ist der Stift …?', 'Dein Stift? Welche Farbe hat er?', 'Dein Stift, welche Farbe hat er?'] },
+                { taskDe: 'Und Lenas Buch? Fragen Sie nach der Farbe.', taskEn: 'Now ask Lena about the colour of her book.', accepted: ['Welche Farbe hat dein Buch?', 'Welche Farbe hat das Buch?', 'Ist dein Buch …?', 'Ist das Buch …?', 'Dein Buch? Welche Farbe hat es?', 'Dein Buch, welche Farbe hat es?'] },
               ] },
           ],
           repeat: [
             [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 2: der, die, das', de: 'Teil 2: der, die, das' }],
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
-            { en: 'Part 1: the words', de: 'Teil 1: die Wörter' },
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
           ],
         },
@@ -1762,7 +1763,7 @@ export const CURRICULUM_A11 = {
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: ein, eine', de: 'Teil 2: ein, eine' }],
             { en: 'the scene of Lektion 1', de: 'die Szene von Lektion 1' },
             { en: 'Part 2: the listening', de: 'Teil 2: das Hören' },
-            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'the scene of Lektion 5', de: 'die Szene von Lektion 5' }],
           ],
         },
       },

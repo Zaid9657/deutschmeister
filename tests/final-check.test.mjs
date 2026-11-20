@@ -344,6 +344,21 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   assert.equal(typedResult(office, 'Mein Büro ist wo?'), RESULT.CORRECT);
   assert.equal(typedResult(askPrice, 'Wie viel Euro kostet die Uhr?'), RESULT.CORRECT);
   assert.equal(typedResult(phoneName, 'Youssef Mansour am Telefon.'), RESULT.CORRECT);
+  // The second DaF review (2026-11-20): what was really missing or wrongly accepted.
+  const l4b = sitting(CURRICULUM_A11.lektionen[3], 1);
+  const l5b = sitting(CURRICULUM_A11.lektionen[4], 1);
+  const l5c = sitting(CURRICULUM_A11.lektionen[4], 2);
+  assert.equal(typedResult(askPrice, 'Wie viel?'), RESULT.CORRECT, 'right after Frau Wolf named the thing');
+  assert.equal(typedResult(l4[3], 'Was kostet ein Stuhl?'), RESULT.CORRECT);
+  assert.equal(typedResult(l4[3], 'Was kostet eine Stuhl?'), RESULT.WRONG);
+  assert.notEqual(modelAnswer(l4[5]), modelAnswer(l4b[5]), 'the example follows the sitting’s things');
+  assert.equal(typedResult(l5b[1], 'Das ist hier.'), RESULT.WRONG, '„das" does not pick up die Schere');
+  assert.equal(typedResult(l5b[1], 'Die ist hier.'), RESULT.CORRECT);
+  assert.equal(typedResult(l5c[1], 'Der ist da.'), RESULT.CORRECT);
+  assert.equal(typedResult(colour, 'Das ist grün.'), RESULT.CORRECT, 'about das Heft');
+  assert.equal(typedResult(colour, 'Der ist grün.'), RESULT.WRONG);
+  assert.equal(typedResult(l5c[3], 'Der ist blau.'), RESULT.CORRECT, 'about der Stift');
+  assert.equal(typedResult(l5b[4], 'Ist dein Stift blau oder schwarz?'), RESULT.CORRECT);
   // A second clause after „und" is part of the answer and must be valid too.
   const own = sitting(l3)[4];
   assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Deutsch.'), RESULT.CORRECT);

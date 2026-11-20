@@ -121,17 +121,17 @@ verkaeufer verkaeuferin verkaeuferinnen verkaufe verkaufen verkauft verkehr verk
 verlangt verliert vermieter verneinen verneint verneinung versichertenkarte versichertenkarten
 verspaetung verspaetungen verstanden verstehen veː viel viele vielen vielleicht vier
 vierhundertachtzig viertel vierzehn vierzig vogel vokal vokale vokalwechsel vollen vollstaendig vom
-von vor vorhaenge vorhang vorlieben vorn vorname vornamen vorsicht vorsilbe vorstellen waende wand
-wann war warm warte warten wartet warum was waschmaschine waschmaschinen wasser we weber wechsel
-wechsele wechseln wechselt wecker weg wegbeschreibung wege weh wehtun wehtut weibliche weigel weil
-wein weine weiss weit weiter welche welchem welchen welcher welches wem wen wendung wendungen wenn
-wer werden wetter wg wie wieder wiederholung wiedersehen will willkommen wind windig winter wir wird
-wissen wit wo woche wochen wochenende wochenenden wochenplan wochentag wochentage woerter
-woerterbuch woerterbuecher woertern woher wohin wohn wohne wohnen wohnort wohnorte wohnst wohnt
-wohnung wohnungen wohnungsanzeige wohnungsanzeigen wohnzimmer wolf wolke wolken wolkig wollen wort
-wortakzent worte worten wortende wortkarte wortnegation wuensche wuerde wuerste wunsch wurst ypsilon
-yː zaehlbares zaehlt zaehne zahl zahlen zahn zehn zeigt zeit zeitangabe zeiten zentren zentrum zett
-zettel ziehe ziehen ziel ziffer zig zimmer zimmernummer zu zucker zuege zuerst zug zuges zuhause
-zuhoeren zum zumachen zur zurueck zusammen zusammengesetzten zwan zwanzig zwanzigste zwei zweifel
-zweite zweiten zweitens zweiter zwoelf
+von vor vorhaenge vorhang vorlieben vorn vorname vornamen vorsicht vorsilbe vorstellen waehlen
+waende wand wann war warm warte warten wartet warum was waschmaschine waschmaschinen wasser we weber
+wechsel wechsele wechseln wechselt wecker weg wegbeschreibung wege weh wehtun wehtut weibliche
+weigel weil wein weine weiss weit weiter welche welchem welchen welcher welches wem wen wendung
+wendungen wenn wer werden wetter wg wie wieder wiederholung wiedersehen will willkommen wind windig
+winter wir wird wissen wit wo woche wochen wochenende wochenenden wochenplan wochentag wochentage
+woerter woerterbuch woerterbuecher woertern woher wohin wohn wohne wohnen wohnort wohnorte wohnst
+wohnt wohnung wohnungen wohnungsanzeige wohnungsanzeigen wohnzimmer wolf wolke wolken wolkig wollen
+wort wortakzent worte worten wortende wortkarte wortnegation wuensche wuerde wuerste wunsch wurst
+ypsilon yː zaehlbares zaehlt zaehne zahl zahlen zahn zehn zeigt zeit zeitangabe zeiten zentren
+zentrum zett zettel ziehe ziehen ziel ziffer zig zimmer zimmernummer zu zucker zuege zuerst zug
+zuges zuhause zuhoeren zum zumachen zur zurueck zusammen zusammengesetzten zwan zwanzig zwanzigste
+zwei zweifel zweite zweiten zweitens zweiter zwoelf
 `.split(/\s+/).filter(Boolean));
