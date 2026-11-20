@@ -365,6 +365,33 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Studentin.'), RESULT.WRONG);
 });
 
+test('a colour is one of the colour words, a thing is a noun, and German of the same meaning passes (courses session, 2026-11-20)', () => {
+  const [, askPrice, , , , buy] = sitting(CURRICULUM_A11.lektionen[3]);
+  const [what, , , colour, askColour] = sitting(CURRICULUM_A11.lektionen[4]);
+  const [need, , pause, phoneName] = sitting(CURRICULUM_A11.lektionen[5]);
+  // Colours are a closed class: a word the course does not teach is no colour.
+  for (const notColour of ['Es ist groß.', 'Es ist klein.', 'Es ist neu.', 'Es ist teuer.']) assert.equal(typedResult(colour, notColour), RESULT.WRONG, notColour);
+  assert.equal(typedResult(askColour, 'Ist deine Tasche klein?'), RESULT.WRONG);
+  for (const right of ['Es ist dunkelblau.', 'Es ist hell grün.', 'Es ist lila.', 'Es ist grau.', 'Es ist grun.', 'Mein Heft hat die Farbe Blau.']) assert.notEqual(typedResult(colour, right), RESULT.WRONG, right);
+  // A thing the course never teaches is a noun the learner writes as one.
+  for (const notThing of ['Ich kaufe groß.', 'Ich kaufe neu.']) assert.equal(typedResult(buy, notThing), RESULT.WRONG, notThing);
+  assert.equal(typedResult(need, 'Ich brauche klein.'), RESULT.WRONG);
+  assert.equal(typedResult(buy, 'Ich kaufe Bananen.'), RESULT.CORRECT);
+  assert.equal(typedResult(buy, 'Ich kaufe eine banane.'), RESULT.TYPO, 'after an article a small letter is a typo');
+  // A colour before the noun takes the ending its article asks for.
+  for (const right of ['Ich kaufe die rote Lampe.', 'Ich kaufe den roten Stuhl.', 'Ich kaufe ein rotes Regal.', 'Ich kaufe zwei rote Stühle.']) assert.equal(typedResult(buy, right), RESULT.CORRECT, right);
+  for (const wrong of ['Ich kaufe die roten Lampe.', 'Ich kaufe den rote Stuhl.', 'Ich kaufe die große Lampe.']) assert.equal(typedResult(buy, wrong), RESULT.WRONG, wrong);
+  assert.equal(typedResult(what, 'Das ist ein roter Stift.'), RESULT.CORRECT);
+  assert.equal(typedResult(what, 'Das ist ein rote Stift.'), RESULT.WRONG);
+  // The same meaning in other taught words.
+  assert.equal(typedResult(buy, 'Ich möchte die Uhr kaufen.'), RESULT.CORRECT);
+  assert.equal(typedResult(buy, 'Ich möchte die Uhr.'), RESULT.CORRECT);
+  assert.equal(typedResult(askPrice, 'Wieviel kostet die Uhr?'), RESULT.TYPO, 'the old spelling of „wie viel"');
+  for (const right of ['Wann beginnt die Pause?', 'Wann fängt die Pause an?', 'Wann ist meine Pause?', 'Wann ist die Mittagspause?']) assert.equal(typedResult(pause, right), RESULT.CORRECT, right);
+  for (const right of ['Guten Tag, Herr Weber. Hier ist Omar Haddad.', 'Guten Tag Herr Weber, hier ist Haddad.', 'Hallo Herr Weber, hier ist Omar.', 'Hier spricht Omar Haddad.']) assert.equal(typedResult(phoneName, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(phoneName, 'Guten Tag Herr Weber.'), RESULT.WRONG, 'a greeting names nobody');
+});
+
 test('spelling, a heard number and a written message are written, never spoken', () => {
   for (const l of withCheck) {
     for (const t of sitting(l)) assert.equal(writtenOnly(t), Boolean(t.spell || t.listen || t.write || t.parts), `${l.id}`);

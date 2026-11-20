@@ -161,6 +161,41 @@ const MASS = new Set(['papier', 'wasser', 'kaffee', 'tee', 'milch', 'brot', 'gel
 /** The same as a listed word, or that word with one slip. */
 const near = (word, list) => list.some((w) => fold(w) === word || slip(word, fold(w)));
 
+// Umlauts as a phone keyboard without them types them: „grün" is „grun" or „gruen".
+const bare = (s) => fold(s).replace(/([aou])e/g, '$1').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
+
+/**
+ * Colours are a closed class: the German colour words, also with „hell-"/„dunkel-" („dunkelblau"),
+ * never any word the course does not teach („Es ist groß" names no colour; courses session,
+ * 2026-11-20). „lila", „rosa", „orange" and „beige" take no ending.
+ */
+const COLOURS = new Set(['rot', 'blau', 'grun', 'gelb', 'schwarz', 'weiss', 'braun', 'grau', 'orange', 'lila', 'rosa', 'pink', 'violett', 'beige', 'turkis', 'silber', 'silbern', 'gold', 'golden', 'bunt']);
+const UNDECLINED = new Set(['lila', 'rosa', 'orange', 'beige', 'pink']);
+const colourStem = (w) => {
+  const b = bare(w).replace(/^(hell|dunkel)-?(?=\p{L})/u, '');
+  return COLOURS.has(b) ? b : null;
+};
+const isColour = (w, slotWords = []) => Boolean(colourStem(w)) || slotWords.some((t) => slip(fold(w), fold(t)));
+
+// The ending a colour takes before a noun, by the slot's case, the word before it and the noun's
+// article („den roten Stuhl", „eine rote Lampe", „ein rotes Heft"; „Das ist ein roter Stift").
+const ADJ_ENDING = {
+  thing: { der: { den: 'en', einen: 'en', keinen: 'en' }, die: { die: 'e', eine: 'e', keine: 'e' }, das: { das: 'e', ein: 'es', kein: 'es' }, pl: { die: 'en', keine: 'en', '': 'e' } },
+  object: {
+    der: { der: 'e', ein: 'er', kein: 'er', mein: 'er', dein: 'er' }, die: { die: 'e', eine: 'e', keine: 'e', meine: 'e', deine: 'e' },
+    das: { das: 'e', ein: 'es', kein: 'es', mein: 'es', dein: 'es' }, pl: { die: 'en', keine: 'en', meine: 'en', deine: 'en', '': 'e' },
+  },
+};
+/** True when `adj` is a colour with the ending that `det` (or a count, '') and gender `g` ask for. */
+function colourFits(adj, slot, det, g) {
+  const want = ADJ_ENDING[slot]?.[g]?.[det];
+  if (want === undefined) return false;
+  const w = fold(adj);
+  if (UNDECLINED.has(colourStem(w))) return true;
+  const stem = w.endsWith(want) ? colourStem(w.slice(0, -want.length)) : null;
+  return Boolean(stem) && !UNDECLINED.has(stem);
+}
+
 /**
  * The learner's own words fit the gap. A choice (`slotIn`: „meine Mutter oder meine Schwester") takes
  * one of its words, then at most a name. The kinds: a number, an age of „Jahre", a phone number, a real
@@ -242,9 +277,11 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const MODIFIERS = new Set(slot === 'language'
       ? ['gut', 'sehr', 'ein', 'bisschen', 'wenig', 'etwas', 'auch', 'nur', 'noch', 'perfekt', 'fliessend', 'kein', 'nicht']
       : ['hell', 'dunkel', 'sehr', 'ganz', 'auch', 'nur', 'nicht']);
+    // A language may be the learner's own (Kurdisch); a colour is one of the closed class.
+    const ofKind = slot === 'color' ? (w) => isColour(w, slotWords) : fits;
     const listOk = (text) => {
       const groups = text.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').map(fold).filter(Boolean)).filter((g) => g.length);
-      const ok = groups.every((g) => g.some((w) => !MODIFIERS.has(w)) && g.every((w) => MODIFIERS.has(w) || fits(w)));
+      const ok = groups.every((g) => g.some((w) => !MODIFIERS.has(w)) && g.every((w) => MODIFIERS.has(w) || ofKind(w)));
       return groups.length > 0 && ok && groups.some((g) => !g.some((w) => ['kein', 'nicht'].includes(w)));
     };
     return listOk(own) && (second === null || (second && listOk(second))) ? RESULT.CORRECT : RESULT.WRONG;
@@ -279,27 +316,46 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       : { der: ['der', 'ein', 'kein', 'mein', 'dein'], die: ['die', 'eine', 'keine', 'meine', 'deine'], das: ['das', 'ein', 'kein', 'mein', 'dein'], pl: ['die', 'keine', 'meine', 'deine'] };
     const ALL = new Set(Object.values(ARTICLE).flat());
     const items = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
-    // Each item read as one thing or as more; null when it is no thing at all.
+    // A noun the course never teaches is the learner's own when it is written as a noun: „Ich kaufe
+    // Bananen", „eine Banane"; „Ich kaufe groß" names no thing (courses session, 2026-11-20). After an
+    // article a small first letter is a typo („eine banane").
+    let typo = false;
+    // Each item read as one thing or as more; null when it is no thing at all. A colour may stand
+    // before the noun with the ending the article asks for („die rote Lampe", never „die roten Lampe").
     const itemReading = (item) => {
       const [first, ...more] = item.map(fold);
       const counted = /^\d+$/.test(numberWordsToDigits(first)) && Number(numberWordsToDigits(first)) >= 2;
       const det = ALL.has(first) || counted ? first : null;
-      const noun = det ? more[0] : first;
-      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || (det ? more.length - 1 : item.length - 1) > 0) return null;
+      const rest = det ? more : item.map(fold);
+      const restRaw = det ? item.slice(1) : item;
+      const adj = rest.length === 2 ? rest[0] : null;
+      const noun = adj ? rest[1] : rest[0];
+      const nounRaw = adj ? restRaw[1] : restRaw[0];
+      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || rest.length > 2) return null;
+      if (adj && !colourStem(adj.replace(/(e|en|er|es)$/, '')) && !colourStem(adj)) return null;
+      const detKey = counted || !det ? '' : det;
+      const adjOk = (g) => !adj || colourFits(adj, slot, detKey, g);
       const readings = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
       if (readings) {
-        const fit = readings.filter((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det))
-          : (det ? !counted && ARTICLE[g].includes(det) : MASS.has(noun))));
+        const fit = readings.filter((g) => adjOk(g) && (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det))
+          : (det ? !counted && ARTICLE[g].includes(det) : MASS.has(noun) && !adj)));
         if (!fit.length) return null;
         return fit.every((g) => g === 'pl') ? 'many' : fit.includes('pl') ? 'either' : 'one';
       }
-      return known(noun) ? null : (counted ? 'many' : 'either'); // a taught word that is no noun names no thing
+      if (known(noun)) return null; // a taught word that is no noun names no thing
+      const genderOk = ['der', 'die', 'das', 'pl'].filter((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : det && !counted && ARTICLE[g].includes(det)) && adjOk(g));
+      if (!genderOk.length) return null;
+      if (!/^\p{Lu}/u.test(nounRaw)) {
+        if (!det) return null;
+        typo = true;
+      }
+      return counted ? 'many' : 'either';
     };
     const read = items.map(itemReading);
     if (!items.length || read.some((r) => r === null)) return RESULT.WRONG;
     if (count === 'one' && (items.length > 1 || read[0] === 'many')) return RESULT.WRONG;
     if (count === 'many' && items.length === 1 && read[0] === 'one') return RESULT.WRONG;
-    return RESULT.CORRECT;
+    return typo ? RESULT.TYPO : RESULT.CORRECT;
   }
   const content = parts.filter((w) => /\p{L}/u.test(w) && !CLOSED.has(w));
   return content.length ? RESULT.CORRECT : RESULT.WRONG;
@@ -440,7 +496,9 @@ function questionWordLast(text) {
 // A price is in euros: „18,00 Euro" and „18,- €" are 18; a heard price in euros is no number of cents.
 const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi, 'fünf').replace(/zw(?:oe|o)lf/gi, 'zwölf'))
   .replace(/(\d),(?:00|-)(?!\d)/g, '$1').replace(/\D/g, '');
-const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))\s*[!,.]\s*/i;
+// A greeting before the answer, also to the person by name („Guten Tag, Herr Weber. Hier ist …",
+// „Hallo Herr Weber, hier ist …").
+const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))(?:[\s,]+(?:herr|frau)\s+\p{L}+)?\s*[!,.]\s*/iu;
 
 /** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
 export function typedResult(turn, value) {
@@ -463,7 +521,9 @@ export function typedResult(turn, value) {
   // Eltern?") and name the person it is said to („Herr Weber, …", „…, Lena?", „frau wolf was ist das");
   // the rest is the answer. „Hier, Lena." is „Hier." — „Hier," is no name.
   const cap = (s) => s.charAt(0).toLocaleUpperCase('de') + s.slice(1);
-  const tries = [text];
+  // „wieviel" is the old spelling of „wie viel": the same question, with a spelling slip.
+  const oldSpelling = /\bwieviel\b/i.test(text);
+  const tries = [oldSpelling ? text.replace(/\b(w)ieviel\b/gi, '$1ie viel') : text];
   const add = (t) => { const s = cap(String(t).trim()); if (s && !tries.includes(s)) tries.push(s); };
   const greeted = text.trim().replace(GREETING_FIRST, '');
   if (greeted !== text.trim()) add(greeted);
@@ -500,7 +560,6 @@ export function typedResult(turn, value) {
   // „Sie kommt aus …" with its noun, and the verb after it is graded just the same.
   // A noun typed without its umlaut („das worterbuch ist hier", „das woerterbuch") still stands for
   // the pronoun, as a typo.
-  const bare = (s) => fold(s).replace(/([aou])e/g, '$1').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
   const slipped = [];
   for (const t of [...tries]) {
     const said = wordsOf(t.trim());
@@ -517,7 +576,7 @@ export function typedResult(turn, value) {
   }
   const results = tries.map((t) => sentenceResult(turn.accepted, t, turn));
   for (const t of slipped) results.push(worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO));
-  return best(results);
+  return oldSpelling ? worst(best(results), RESULT.TYPO) : best(results);
 }
 
 /**

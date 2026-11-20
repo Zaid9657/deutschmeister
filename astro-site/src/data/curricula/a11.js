@@ -1241,7 +1241,7 @@ export const CURRICULUM_A11 = {
             // The total of the two things just asked about, before the learner says what they buy.
             { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
               variants: [{ listen: 'Der Stuhl und die Uhr kosten zusammen 30 Euro.' }, { listen: 'Die Lampe und der Rucksack kosten zusammen 57 Euro.' }, { listen: 'Der Tisch und das Regal kosten zusammen 84 Euro.' }] },
-            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …'], slot: 'thing',
+            { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …', 'Ich möchte …', 'Ich möchte … kaufen.', 'Ich möchte … nehmen.'], slot: 'thing',
               variants: [{ example: 'Ich kaufe den Stuhl und die Uhr.' }, { example: 'Ich kaufe den Rucksack und die Lampe.' }, { example: 'Ich kaufe das Regal und den Tisch.' }] },
           ],
           repeat: [
@@ -1495,9 +1495,9 @@ export const CURRICULUM_A11 = {
               ] },
             { canDo: 2, taskDe: 'Antworten Sie mit einem Satz.', slot: 'color', slotWords: CHECK_COLORS,
               variants: [
-                { cue: { de: 'Welche Farbe hat dein Heft?', en: 'What colour is your exercise book?' }, taskEn: 'Say what colour your exercise book is, in one sentence.', accepted: ['Es ist …', 'Das ist …'], nounFor: { Es: ['Mein Heft', 'Das Heft'] }, example: 'Es ist grün.' },
-                { cue: { de: 'Welche Farbe hat deine Tasche?', en: 'What colour is your bag?' }, taskEn: 'Say what colour your bag is, in one sentence.', accepted: ['Sie ist …', 'Die ist …'], nounFor: { Sie: ['Meine Tasche', 'Die Tasche'] }, example: 'Sie ist schwarz.' },
-                { cue: { de: 'Welche Farbe hat dein Stift?', en: 'What colour is your pen?' }, taskEn: 'Say what colour your pen is, in one sentence.', accepted: ['Er ist …', 'Der ist …'], nounFor: { Er: ['Mein Stift', 'Der Stift'] }, example: 'Er ist blau.' },
+                { cue: { de: 'Welche Farbe hat dein Heft?', en: 'What colour is your exercise book?' }, taskEn: 'Say what colour your exercise book is, in one sentence.', accepted: ['Es ist …', 'Das ist …', 'Es hat die Farbe …'], nounFor: { Es: ['Mein Heft', 'Das Heft'] }, example: 'Es ist grün.' },
+                { cue: { de: 'Welche Farbe hat deine Tasche?', en: 'What colour is your bag?' }, taskEn: 'Say what colour your bag is, in one sentence.', accepted: ['Sie ist …', 'Die ist …', 'Sie hat die Farbe …'], nounFor: { Sie: ['Meine Tasche', 'Die Tasche'] }, example: 'Sie ist schwarz.' },
+                { cue: { de: 'Welche Farbe hat dein Stift?', en: 'What colour is your pen?' }, taskEn: 'Say what colour your pen is, in one sentence.', accepted: ['Er ist …', 'Der ist …', 'Er hat die Farbe …'], nounFor: { Er: ['Mein Stift', 'Der Stift'] }, example: 'Er ist blau.' },
               ] },
             { canDo: 3, slot: 'color', slotWords: CHECK_COLORS,
               variants: [
@@ -1748,11 +1748,11 @@ export const CURRICULUM_A11 = {
           turns: [
             { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
             { canDo: 3, taskDe: 'Und Ihr Büro? Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?'] },
-            { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Wann haben wir Pause?', 'Um wie viel Uhr ist die Pause?'] },
+            { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Wann haben wir Pause?', 'Um wie viel Uhr ist die Pause?', 'Wann beginnt die Pause?', 'Wann fängt die Pause an?', 'Wann ist meine Pause?', 'Wann ist die Mittagspause?', 'Wann ist Mittagspause?', 'Wann machen wir Mittagspause?', 'Wann haben wir Mittagspause?', 'Wann beginnt die Mittagspause?', 'Wann fängt die Mittagspause an?'] },
             // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …", the model answer) or
             // as Germans answer a call („Hier ist …", or the name alone).
             { canDo: 1, cue: { de: 'Weber, guten Tag!', en: 'Weber, good day!' }, taskDe: 'Herr Weber ruft an. Sagen Sie am Telefon Ihren Namen.', taskEn: 'Herr Weber is calling you. Say your name on the phone.',
-              accepted: ['Ich heiße …', 'Guten Tag, ich heiße …', 'Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Mein Name ist …', '…', '…, guten Tag.', '…, hallo.', '… am Telefon.'], slot: 'name',
+              accepted: ['Ich heiße …', 'Guten Tag, ich heiße …', 'Hier ist …', 'Guten Tag, hier ist …', 'Hallo, hier ist …', 'Ich bin …', 'Mein Name ist …', '…', '…, guten Tag.', '…, hallo.', '… am Telefon.', 'Hier spricht …'], slot: 'name',
               example: 'Guten Tag, ich heiße Ana Chakiri.' },
             { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Büro. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
               variants: [{ listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, fünf sieben drei null.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, sechs zwei eins vier.' }, { listen: 'Die Telefonnummer vom Büro ist null vier zwei eins, neun acht null zwei.' }] },
