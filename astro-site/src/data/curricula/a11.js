@@ -3057,7 +3057,7 @@ export const CURRICULUM_A11 = {
               accepted: ['Ich stehe um … auf.', 'Um … stehe ich auf.', 'Ich stehe morgens um … auf.', 'Morgens stehe ich um … auf.', 'Morgens um … stehe ich auf.', { frame: 'Um … stehe ich … auf.', slot: 'when' }, { frame: '… stehe ich um … auf.', slot: 'when' }, { frame: 'Ich stehe … um … auf.', slot: 'when' }],
               slot: 'clock', example: 'Ich stehe um sechs auf.' },
             { canDo: 3, cue: { de: 'Und wann arbeitest du?', en: 'And when do you work?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you work, in one sentence.',
-              accepted: ['Ich arbeite …', '… arbeite ich.'], slot: 'when', none: 'job', example: 'Ich arbeite am Montag.' },
+              accepted: ['Ich arbeite …', '… arbeite ich.'], slot: 'when', none: 'job', example: 'Ich arbeite am Dienstag.' },
             { canDo: 2, taskDe: 'Fragen Sie Lena.',
               variants: [
                 { taskDe: 'Einkaufen am Samstag: Stellen Sie Lena eine Ja/Nein-Frage.', taskEn: 'Saturday: ask Lena if she is going shopping then.', when: 'samstag', example: 'Kaufst du am Samstag ein?' },
