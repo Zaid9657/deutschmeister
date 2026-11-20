@@ -2287,7 +2287,7 @@ export const CURRICULUM_A11 = {
               ] },
           ],
           repeat: [
-            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 2: um, am', de: 'Teil 2: um, am' }],
+            [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 2: telling the time (halb, Viertel)', de: 'Teil 2: die Uhrzeit sagen (halb, Viertel)' }],
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: um, am', de: 'Teil 2: um, am' }],
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },

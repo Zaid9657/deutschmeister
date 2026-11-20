@@ -1,0 +1,2164 @@
+{
+ "items": [
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Mein Hobby ist Fußball.",
+   "verdict": "right",
+   "why": "Das Hobby wird in einem Satz genannt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich schwimme gern.",
+   "verdict": "right",
+   "why": "Ein passender Satz über das Hobby."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich lese gern Bücher.",
+   "verdict": "right",
+   "why": "Das Hobby ist klar und korrekt beschrieben."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Meine Hobbys sind Kochen und Tanzen.",
+   "verdict": "right",
+   "why": "Auch mehrere Hobbys sind möglich."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich spiele gern fussball",
+   "verdict": "right",
+   "why": "Nur Großschreibung und ß fehlen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Fußball.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Mein Hobby Fußball.",
+   "verdict": "wrong",
+   "why": "Das Verb ist fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Meine Hobby ist Musik.",
+   "verdict": "wrong",
+   "why": "Es heißt mein Hobby."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich spielen Fußball.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört spiele."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich bin gern schwimmen.",
+   "verdict": "wrong",
+   "why": "Es heißt ich schwimme gern."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Am Wochenende spiele ich gern Fußball.",
+   "verdict": "right",
+   "why": "Aktivität und Wochenende sind korrekt verbunden."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich gehe am Wochenende gern ins Kino.",
+   "verdict": "right",
+   "why": "Ein korrekter Satz über die Freizeit."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich koche gern am Wochenende.",
+   "verdict": "right",
+   "why": "Die Wortstellung ist möglich und korrekt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich höre gern Musik.",
+   "verdict": "right",
+   "why": "Der Wochenendbezug ergibt sich aus der Frage."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "am wochenende schwimme ich gern",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Gern Fußball.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Am Wochenende ich spiele gern Fußball.",
+   "verdict": "wrong",
+   "why": "Nach am Wochenende muss das Verb stehen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich spielt gern Fußball.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört spiele."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich gern Musik hören.",
+   "verdict": "wrong",
+   "why": "Ein konjugiertes Verb fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich gehe gern in Kino.",
+   "verdict": "wrong",
+   "why": "Es heißt ins Kino."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was ist dein Hobby?",
+   "verdict": "right",
+   "why": "Lena wird passend mit du angesprochen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Welche Hobbys hast du?",
+   "verdict": "right",
+   "why": "Eine korrekte Frage nach ihren Hobbys."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was machst du gern?",
+   "verdict": "right",
+   "why": "Die Frage erfragt ihre Freizeitinteressen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Hast du ein Hobby?",
+   "verdict": "right",
+   "why": "Eine passende Frage nach einem Hobby."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "und du, was machst du gern?",
+   "verdict": "right",
+   "why": "Passende Frage; nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was ist Ihr Hobby?",
+   "verdict": "wrong",
+   "why": "Lena soll mit du angesprochen werden."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was ist mein Hobby?",
+   "verdict": "wrong",
+   "why": "Mein fragt nach dem eigenen Hobby."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was dein Hobby?",
+   "verdict": "wrong",
+   "why": "Das Verb ist fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was bist du Hobby?",
+   "verdict": "wrong",
+   "why": "Die Frage ist grammatisch falsch gebaut."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Was machst du Beruf?",
+   "verdict": "wrong",
+   "why": "Das fragt nicht passend nach einem Hobby."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Tanzt du gern?",
+   "verdict": "right",
+   "why": "Die Frage erfragt Freude am Tanzen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Gehst du gern tanzen?",
+   "verdict": "right",
+   "why": "Eine passende alternative Frage."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Du tanzt gern, oder?",
+   "verdict": "right",
+   "why": "Auch eine Rückfrage ist hier möglich."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Lena, tanzt du auch gerne?",
+   "verdict": "right",
+   "why": "Gerne und gern sind beide korrekt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "tanzt du gern",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Fragezeichen fehlen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Tanzen du gern?",
+   "verdict": "wrong",
+   "why": "Zu du gehört tanzt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Tanzst du gern?",
+   "verdict": "wrong",
+   "why": "Die du-Form lautet tanzt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Tanzt sie gern?",
+   "verdict": "wrong",
+   "why": "Lena wird nicht direkt angesprochen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Tanzt du gut?",
+   "verdict": "wrong",
+   "why": "Gefragt wird nach Können statt Vorliebe."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Tanzen Sie gern?",
+   "verdict": "wrong",
+   "why": "Hier ist die Anrede du verlangt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich bin am Wochenende frei.",
+   "verdict": "right",
+   "why": "Ein vollständiger Satz mit einer Zeitangabe."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Am Wochenende habe ich frei.",
+   "verdict": "right",
+   "why": "Eine korrekte alternative Formulierung."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich bin immer frei.",
+   "verdict": "right",
+   "why": "Immer beantwortet die Frage nach dem Wann."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich bin jede Woche am Wochenende frei.",
+   "verdict": "right",
+   "why": "Die regelmäßige freie Zeit wird genannt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "am wochenende bin ich frei",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Am Wochenende.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich frei am Wochenende.",
+   "verdict": "wrong",
+   "why": "Das Verb bin fehlt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich ist am Wochenende frei.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört bin."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Am Wochenende ich bin frei.",
+   "verdict": "wrong",
+   "why": "Das Verb muss an zweiter Stelle stehen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Du bist am Wochenende frei.",
+   "verdict": "wrong",
+   "why": "Die Antwort muss die eigene freie Zeit nennen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Kochst du gern?",
+   "verdict": "right",
+   "why": "Eine korrekte Frage nach der Vorliebe."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Kochst du gerne, Lena?",
+   "verdict": "right",
+   "why": "Die Frage passt zur Aufgabe."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Und du, kochst du auch gern?",
+   "verdict": "right",
+   "why": "Lena wird direkt nach dem Kochen gefragt."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Du kochst gern, oder?",
+   "verdict": "right",
+   "why": "Eine natürliche bestätigende Rückfrage."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "kochst du gern",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Fragezeichen fehlen."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Kochen du gern?",
+   "verdict": "wrong",
+   "why": "Zu du gehört kochst."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Kocht du gern?",
+   "verdict": "wrong",
+   "why": "Die du-Form braucht die Endung -st."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Kochen Sie gern?",
+   "verdict": "wrong",
+   "why": "Lena soll mit du angesprochen werden."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Kochst du gut?",
+   "verdict": "wrong",
+   "why": "Die Frage betrifft Können statt Vorliebe."
+  },
+  {
+   "lektion": 7,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Du gern kochen?",
+   "verdict": "wrong",
+   "why": "Das Verb ist nicht konjugiert."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Es ist halb neun.",
+   "verdict": "right",
+   "why": "Halb neun entspricht 8.30 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Acht Uhr dreißig.",
+   "verdict": "right",
+   "why": "Die richtige Uhrzeit; ein Kurzsatz ist erlaubt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "8:30 Uhr",
+   "verdict": "right",
+   "why": "Die numerische Uhrzeit ist richtig."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Es ist jetzt halb neun.",
+   "verdict": "right",
+   "why": "Die angegebene Uhrzeit stimmt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "es ist acht uhr dreissig",
+   "verdict": "right",
+   "why": "Nur Großschreibung und ß fehlen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Es ist halb acht.",
+   "verdict": "wrong",
+   "why": "Halb acht ist 7.30 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Um halb neun.",
+   "verdict": "wrong",
+   "why": "Um nennt einen Zeitpunkt, nicht die aktuelle Uhrzeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Es ist acht Uhr dreizehn.",
+   "verdict": "wrong",
+   "why": "Dreizehn Minuten sind nicht dreißig Minuten."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Es sind halb neun.",
+   "verdict": "wrong",
+   "why": "Bei dieser Zeitangabe heißt es es ist."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Es ist neun Uhr dreißig.",
+   "verdict": "wrong",
+   "why": "Die Uhr zeigt 8.30 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie spät ist es?",
+   "verdict": "right",
+   "why": "Eine korrekte Frage nach der Uhrzeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viel Uhr ist es?",
+   "verdict": "right",
+   "why": "Eine übliche alternative Zeitfrage."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie spät ist es jetzt?",
+   "verdict": "right",
+   "why": "Die aktuelle Uhrzeit wird erfragt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Entschuldigung, wie viel Uhr ist es?",
+   "verdict": "right",
+   "why": "Eine passende höfliche Zeitfrage."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "wie spaet ist es",
+   "verdict": "right",
+   "why": "Ae ist möglich; Großschreibung und Fragezeichen fehlen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie spät bist du?",
+   "verdict": "wrong",
+   "why": "Die Uhrzeit wird mit es ist erfragt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie viel ist Uhr?",
+   "verdict": "wrong",
+   "why": "Die Wörter sind falsch angeordnet; es fehlt es."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was ist die Zeit?",
+   "verdict": "wrong",
+   "why": "Das ist keine übliche deutsche Zeitfrage."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wann hast du Zeit?",
+   "verdict": "wrong",
+   "why": "Das fragt nach Verfügbarkeit statt Uhrzeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Wie spät es ist?",
+   "verdict": "wrong",
+   "why": "In der direkten Frage steht ist vor es."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich stehe um sechs Uhr auf.",
+   "verdict": "right",
+   "why": "Aufstehzeit und Satzbau sind korrekt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Morgens stehe ich um sieben auf.",
+   "verdict": "right",
+   "why": "Ein korrekter Satz über den Tagesablauf."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich stehe immer um acht Uhr auf.",
+   "verdict": "right",
+   "why": "Eine passende persönliche Aufstehzeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Am Wochenende stehe ich um neun auf.",
+   "verdict": "right",
+   "why": "Eine eigene Aufstehzeit wird im Satz genannt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "ich stehe um 5 uhr auf",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Um sechs Uhr.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich aufstehe um sechs Uhr.",
+   "verdict": "wrong",
+   "why": "Aufstehen muss im Hauptsatz getrennt werden."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich steht um sieben Uhr auf.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört stehe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich stehe am sieben Uhr auf.",
+   "verdict": "wrong",
+   "why": "Vor einer Uhrzeit steht um."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Um sechs Uhr ich stehe auf.",
+   "verdict": "wrong",
+   "why": "Das konjugierte Verb muss an zweiter Stelle stehen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hast du am Freitag um zehn Uhr Zeit?",
+   "verdict": "right",
+   "why": "Tag, Uhrzeit und Anrede passen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Bist du am Freitag um zehn frei?",
+   "verdict": "right",
+   "why": "Frei sein erfragt ebenfalls die Verfügbarkeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hast du Zeit am Freitag um 10 Uhr?",
+   "verdict": "right",
+   "why": "Auch diese Stellung der Zeitangabe ist korrekt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Am Freitag um zehn Uhr, hast du da Zeit?",
+   "verdict": "right",
+   "why": "Eine mögliche gesprochene Frage mit vorangestellter Zeitangabe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "bist du am freitag um 10 uhr frei?",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Haben Sie am Freitag um zehn Uhr Zeit?",
+   "verdict": "wrong",
+   "why": "Lena soll mit du angesprochen werden."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hast du am Donnerstag um zehn Uhr Zeit?",
+   "verdict": "wrong",
+   "why": "Gefragt werden soll nach Freitag."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hast du am Freitag um elf Uhr Zeit?",
+   "verdict": "wrong",
+   "why": "Die vorgegebene Uhrzeit ist zehn Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hast du am Freitag zehn Zeit?",
+   "verdict": "wrong",
+   "why": "Die Uhrzeit braucht hier um zehn."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hat du am Freitag um zehn Zeit?",
+   "verdict": "wrong",
+   "why": "Zu du gehört hast."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, gern.",
+   "verdict": "right",
+   "why": "Eine klare Zustimmung; ein Kurzsatz ist erlaubt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Gut, bis Freitag!",
+   "verdict": "right",
+   "why": "Der Termin wird im Kontext angenommen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, zehn Uhr ist gut.",
+   "verdict": "right",
+   "why": "Die vorgeschlagene Uhrzeit wird bestätigt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Am Freitag um zehn habe ich auch Zeit.",
+   "verdict": "right",
+   "why": "Der gemeinsame Termin wird bestätigt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "ja das ist gut",
+   "verdict": "right",
+   "why": "Die Zustimmung ist klar; nur Schreibzeichen fehlen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Nein, danke.",
+   "verdict": "wrong",
+   "why": "Das lehnt den Termin ab."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Vielleicht.",
+   "verdict": "wrong",
+   "why": "Das ist noch keine Zustimmung."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, am Samstag um zehn.",
+   "verdict": "wrong",
+   "why": "Der vereinbarte Tag ist Freitag."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, am Freitag um neun.",
+   "verdict": "wrong",
+   "why": "Die vereinbarte Uhrzeit ist zehn Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, ich bist frei.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört bin."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich habe am Montag Zeit.",
+   "verdict": "right",
+   "why": "Eine weitere freie Zeit wird im Satz genannt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Am Samstag bin ich frei.",
+   "verdict": "right",
+   "why": "Frei sein beantwortet die Frage passend."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich habe morgen um zehn Uhr Zeit.",
+   "verdict": "right",
+   "why": "Ein vollständiger Satz mit einer Zeitangabe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Abends habe ich immer Zeit.",
+   "verdict": "right",
+   "why": "Auch eine regelmäßige freie Zeit ist möglich."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "ich habe am sonntag zeit",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Am Montag.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich bin am Dienstag Zeit.",
+   "verdict": "wrong",
+   "why": "Es heißt Zeit haben."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich hat am Mittwoch Zeit.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört habe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Am Dienstag ich habe Zeit.",
+   "verdict": "wrong",
+   "why": "Das Verb muss an zweiter Stelle stehen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Wann hast du Zeit?",
+   "verdict": "wrong",
+   "why": "Eine Gegenfrage nennt keine eigene freie Zeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Dienstag, 9:30 Uhr",
+   "verdict": "right",
+   "why": "Tag und morgendliche Uhrzeit stimmen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Am Dienstag um halb zehn.",
+   "verdict": "right",
+   "why": "Beide gehörten Angaben sind richtig."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Dienstag morgens 09.30",
+   "verdict": "right",
+   "why": "Eine vollständige und richtige Terminn notiz."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "dienstag 9:30",
+   "verdict": "right",
+   "why": "Beide Angaben stimmen; nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Di., 9.30 Uhr",
+   "verdict": "right",
+   "why": "Die übliche Abkürzung ist eindeutig."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Dienstag, 10:30 Uhr",
+   "verdict": "wrong",
+   "why": "Halb zehn bedeutet 9.30 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Donnerstag, 9:30 Uhr",
+   "verdict": "wrong",
+   "why": "Der gehörte Tag ist Dienstag."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Dienstag, halb neun",
+   "verdict": "wrong",
+   "why": "Halb neun ist eine Stunde zu früh."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Dienstag",
+   "verdict": "wrong",
+   "why": "Die Uhrzeit fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "9:30 Uhr",
+   "verdict": "wrong",
+   "why": "Der Wochentag fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Viertel nach sieben.",
+   "verdict": "right",
+   "why": "Das entspricht 7.15 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Es ist sieben Uhr fünfzehn.",
+   "verdict": "right",
+   "why": "Die formelle Zeitangabe stimmt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "7:15 Uhr",
+   "verdict": "right",
+   "why": "Eine korrekte numerische Zeitangabe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Es ist morgens Viertel nach sieben.",
+   "verdict": "right",
+   "why": "Uhrzeit und Tageszeit stimmen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "es ist viertel nach sieben",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Viertel vor sieben.",
+   "verdict": "wrong",
+   "why": "Das wäre 6.45 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Viertel nach acht.",
+   "verdict": "wrong",
+   "why": "Das wäre 8.15 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Es ist sieben Uhr fünfzig.",
+   "verdict": "wrong",
+   "why": "Fünfzig und fünfzehn sind verschiedene Minutenangaben."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Es sind sieben Uhr fünfzehn.",
+   "verdict": "wrong",
+   "why": "Bei der Zeitansage heißt es es ist."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Um sieben Uhr fünfzehn.",
+   "verdict": "wrong",
+   "why": "Um passt nicht zur Ansage der aktuellen Uhrzeit."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hast du am Donnerstag um sechzehn Uhr fünfzehn Zeit?",
+   "verdict": "right",
+   "why": "Tag, Uhrzeit und Anrede sind korrekt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Bist du am Donnerstag nachmittags um Viertel nach vier frei?",
+   "verdict": "right",
+   "why": "Die nachmittägliche Uhrzeit ist eindeutig."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hast du Zeit am Donnerstag um 16:15 Uhr?",
+   "verdict": "right",
+   "why": "Eine korrekte Frage nach dem vorgegebenen Termin."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Am Donnerstag um Viertel nach vier, hast du da Zeit?",
+   "verdict": "right",
+   "why": "Die Frage ist im gegebenen Kontext passend."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "hast du am donnerstag um 16.15 uhr zeit",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Fragezeichen fehlen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hast du am Freitag um 16.15 Uhr Zeit?",
+   "verdict": "wrong",
+   "why": "Der vorgegebene Tag ist Donnerstag."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hast du am Donnerstag nachmittags um Viertel vor vier Zeit?",
+   "verdict": "wrong",
+   "why": "Viertel vor vier ist 15.45 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hast du am Donnerstag um vierzehn Uhr fünfzehn Zeit?",
+   "verdict": "wrong",
+   "why": "Gefragt werden soll nach 16.15 Uhr."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Haben Sie am Donnerstag um 16.15 Uhr Zeit?",
+   "verdict": "wrong",
+   "why": "Lena soll mit du angesprochen werden."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Bist du am Donnerstag um 16.15 Uhr Zeit?",
+   "verdict": "wrong",
+   "why": "Es heißt Zeit haben oder frei sein."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, das ist gut.",
+   "verdict": "right",
+   "why": "Der vorgeschlagene Termin wird angenommen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Gern, bis Donnerstag!",
+   "verdict": "right",
+   "why": "Eine passende Bestätigung des Termins."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, um Viertel nach vier habe ich auch Zeit.",
+   "verdict": "right",
+   "why": "Die vereinbarte Uhrzeit wird bestätigt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Gut, am Donnerstag um 16.15 Uhr.",
+   "verdict": "right",
+   "why": "Eine korrekte kurze Terminbestätigung."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "ja gern",
+   "verdict": "right",
+   "why": "Klare Zustimmung; nur Schreibzeichen fehlen."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, am Freitag um Viertel nach vier.",
+   "verdict": "wrong",
+   "why": "Der bestätigte Tag ist falsch."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Gut, Donnerstag um Viertel vor vier.",
+   "verdict": "wrong",
+   "why": "Die bestätigte Uhrzeit ist falsch."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Nein, ich habe keine Zeit.",
+   "verdict": "wrong",
+   "why": "Das lehnt den Termin ab."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Vielleicht am Donnerstag.",
+   "verdict": "wrong",
+   "why": "Eine eindeutige Zustimmung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, ich haben auch Zeit.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört habe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Freitag, 16:15 Uhr",
+   "verdict": "right",
+   "why": "Tag und Uhrzeit stimmen mit dem Gehörten überein."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Am Freitag um sechzehn Uhr fünfzehn.",
+   "verdict": "right",
+   "why": "Beide Angaben wurden richtig notiert."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Freitag nachmittags, Viertel nach vier",
+   "verdict": "right",
+   "why": "Eine gleichwertige alltagssprachliche Zeitangabe."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Fr., 16.15",
+   "verdict": "right",
+   "why": "Die knappe Terminn otiz ist eindeutig."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "freitag 16 uhr 15",
+   "verdict": "right",
+   "why": "Die Angaben stimmen; nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Donnerstag, 16:15 Uhr",
+   "verdict": "wrong",
+   "why": "Der gehörte Wochentag ist Freitag."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Freitag, 6:15 Uhr",
+   "verdict": "wrong",
+   "why": "Sechzehn Uhr bedeutet nicht sechs Uhr morgens."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Freitag, 16:50 Uhr",
+   "verdict": "wrong",
+   "why": "Fünfzehn wurde mit fünfzig verwechselt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Freitag",
+   "verdict": "wrong",
+   "why": "Die Uhrzeit fehlt."
+  },
+  {
+   "lektion": 8,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "16.15 Uhr",
+   "verdict": "wrong",
+   "why": "Der Wochentag fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ja, ich habe Hunger.",
+   "verdict": "right",
+   "why": "Die Frage wird in einem korrekten Satz beantwortet."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe Hunger.",
+   "verdict": "right",
+   "why": "Der verlangte Zustand wird korrekt ausgedrückt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe viel Hunger.",
+   "verdict": "right",
+   "why": "Eine mögliche korrekte Formulierung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Guten Tag, ich habe Hunger.",
+   "verdict": "right",
+   "why": "Begrüßung und vollständige Antwort passen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ja ich habe hunger",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Satzzeichen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich bin Hunger.",
+   "verdict": "wrong",
+   "why": "Hunger steht mit haben."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich hat Hunger.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört habe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe Durst.",
+   "verdict": "wrong",
+   "why": "Die verlangte Aussage über Hunger fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ja.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe hungrig.",
+   "verdict": "wrong",
+   "why": "Es heißt habe Hunger oder bin hungrig."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich möchte einen Tee, bitte.",
+   "verdict": "right",
+   "why": "Eine korrekte höfliche Getränkebestellung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Einen Kaffee, bitte.",
+   "verdict": "right",
+   "why": "Eine kurze Bestellung ist hier erlaubt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ein Glas Wasser, bitte.",
+   "verdict": "right",
+   "why": "Getränk und Mengenangabe sind korrekt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Für mich einen Orangensaft, bitte.",
+   "verdict": "right",
+   "why": "Eine natürliche korrekte Bestellung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "ich möchte eine tasse tee bitte",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Satzzeichen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich möchten einen Kaffee, bitte.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich möchte eine Kaffee, bitte.",
+   "verdict": "wrong",
+   "why": "Es heißt einen Kaffee."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich möchte ein Orangensaft, bitte.",
+   "verdict": "wrong",
+   "why": "Es heißt einen Orangensaft."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich möchte Kuchen, bitte.",
+   "verdict": "wrong",
+   "why": "Kuchen ist kein Getränk."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich möchte trinkt Kaffee.",
+   "verdict": "wrong",
+   "why": "Die Verbformen sind falsch verbunden."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich möchte Suppe, bitte.",
+   "verdict": "right",
+   "why": "Eine korrekte Bestellung von etwas Essbarem."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Einen Salat, bitte.",
+   "verdict": "right",
+   "why": "Eine korrekte kurze Bestellung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ein Stück Kuchen, bitte.",
+   "verdict": "right",
+   "why": "Eine passende Bestellung mit Mengenangabe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich nehme ein Brot, bitte.",
+   "verdict": "right",
+   "why": "Auch mit nehmen kann man bestellen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "kuchen bitte",
+   "verdict": "right",
+   "why": "Kurzantwort erlaubt; nur Schreibzeichen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich möchten Kuchen.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich möchte einen Suppe.",
+   "verdict": "wrong",
+   "why": "Es heißt eine Suppe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich möchte eine Brot.",
+   "verdict": "wrong",
+   "why": "Es heißt ein Brot."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich möchte einen Kaffee.",
+   "verdict": "wrong",
+   "why": "Ein Getränk beantwortet die Frage nach Essen nicht."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich essen ein Brot, bitte.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört esse."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Haben Sie Tee?",
+   "verdict": "right",
+   "why": "Eine höfliche Frage nach der Verfügbarkeit."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Gibt es hier Tee?",
+   "verdict": "right",
+   "why": "Eine passende neutrale Verfügbarkeitsfrage."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Entschuldigung, haben Sie auch Tee?",
+   "verdict": "right",
+   "why": "Getränk, Frage und höfliche Anrede passen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Haben Sie vielleicht Tee?",
+   "verdict": "right",
+   "why": "Vielleicht macht die passende Frage zurückhaltender."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "haben sie tee bitte?",
+   "verdict": "right",
+   "why": "Die höfliche Frage ist klar; Großschreibung fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hast du Tee?",
+   "verdict": "wrong",
+   "why": "Paul soll mit Sie angesprochen werden."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Haben Sie Kaffee?",
+   "verdict": "wrong",
+   "why": "Gefragt werden soll nach Tee."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Hat Sie Tee?",
+   "verdict": "wrong",
+   "why": "Zur höflichen Anrede Sie gehört haben."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich möchte einen Tee, bitte.",
+   "verdict": "wrong",
+   "why": "Das bestellt Tee, fragt aber nicht nach Verfügbarkeit."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Haben Sie eine Tee?",
+   "verdict": "wrong",
+   "why": "Es heißt einen Tee."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, bitte.",
+   "verdict": "right",
+   "why": "Das Wasserangebot wird angenommen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, gern.",
+   "verdict": "right",
+   "why": "Eine klare höfliche Annahme."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Gern, ein Glas Wasser, bitte.",
+   "verdict": "right",
+   "why": "Die Annahme enthält eine passende Mengenangabe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, ich möchte auch Wasser.",
+   "verdict": "right",
+   "why": "Das angebotene Getränk wird ausdrücklich angenommen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "ja danke",
+   "verdict": "right",
+   "why": "Klare Annahme; nur Schreibzeichen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Nein, danke.",
+   "verdict": "wrong",
+   "why": "Das Angebot wird abgelehnt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchte kein Wasser.",
+   "verdict": "wrong",
+   "why": "Die Antwort lehnt Wasser ab."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, einen Kaffee, bitte.",
+   "verdict": "wrong",
+   "why": "Die Antwort bestellt Kaffee statt das Wasser anzunehmen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, ich möchten Wasser.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ja, ich möchte einen Wasser.",
+   "verdict": "wrong",
+   "why": "Wasser ist sächlich; einen ist hier falsch."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Nein, danke.",
+   "verdict": "right",
+   "why": "Eine klare höfliche Ablehnung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Danke, keinen Kuchen.",
+   "verdict": "right",
+   "why": "Eine korrekte kurze Ablehnung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Nein, ich möchte keinen Kuchen, danke.",
+   "verdict": "right",
+   "why": "Das Angebot wird korrekt und höflich abgelehnt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Danke, ich habe keinen Hunger.",
+   "verdict": "right",
+   "why": "Im Kontext eine höfliche indirekte Ablehnung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "nein danke ich moechte nur wasser",
+   "verdict": "right",
+   "why": "Die Ablehnung ist korrekt; Schreibkonventionen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ja, gern.",
+   "verdict": "wrong",
+   "why": "Das nimmt den Kuchen an."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ein Stück Kuchen, bitte.",
+   "verdict": "wrong",
+   "why": "Das bestellt Kuchen statt abzulehnen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Nein, ich möchten keinen Kuchen.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Nein.",
+   "verdict": "wrong",
+   "why": "Die verlangte höfliche Formulierung fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Nein, danke. Ich habe kein Hunger.",
+   "verdict": "wrong",
+   "why": "Es heißt keinen Hunger."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ja, ich habe Durst.",
+   "verdict": "right",
+   "why": "Eine korrekte vollständige Antwort."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ich habe Durst.",
+   "verdict": "right",
+   "why": "Der verlangte Zustand wird korrekt genannt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ich habe viel Durst.",
+   "verdict": "right",
+   "why": "Eine korrekte Aussage über den eigenen Durst."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ja, ich bin durstig.",
+   "verdict": "right",
+   "why": "Auch durstig sein ist korrektes Deutsch."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "ich habe durst",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ich bin Durst.",
+   "verdict": "wrong",
+   "why": "Das Nomen Durst steht mit haben."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ich hast Durst.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört habe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ich habe Hunger.",
+   "verdict": "wrong",
+   "why": "Die verlangte Aussage über Durst fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Durst.",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt einen Satz."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 1,
+   "answer": "Ich habe trinken.",
+   "verdict": "wrong",
+   "why": "Trinken kann hier nicht nach habe stehen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Haben Sie Suppe?",
+   "verdict": "right",
+   "why": "Eine höfliche Frage nach der Suppe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Gibt es heute Suppe?",
+   "verdict": "right",
+   "why": "Eine korrekte Frage nach dem Angebot."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Entschuldigung, haben Sie auch Suppe?",
+   "verdict": "right",
+   "why": "Eine passende höfliche Verfügbarkeitsfrage."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Haben Sie vielleicht Suppe?",
+   "verdict": "right",
+   "why": "Die Frage ist korrekt und höflich formuliert."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "gibt es hier suppe?",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hast du Suppe?",
+   "verdict": "wrong",
+   "why": "Paul soll mit Sie angesprochen werden."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Haben Sie Tee?",
+   "verdict": "wrong",
+   "why": "Die Aufgabe verlangt eine Frage nach Suppe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Hat Sie Suppe?",
+   "verdict": "wrong",
+   "why": "Zur höflichen Anrede Sie gehört haben."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Ich möchte Suppe, bitte.",
+   "verdict": "wrong",
+   "why": "Eine Bestellung ersetzt die verlangte Verfügbarkeitsfrage nicht."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 4,
+   "answer": "Haben Sie ein Suppe?",
+   "verdict": "wrong",
+   "why": "Es heißt eine Suppe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, gern.",
+   "verdict": "right",
+   "why": "Das Teeangebot wird angenommen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, eine Tasse, bitte.",
+   "verdict": "right",
+   "why": "Der angebotene Tee ist aus dem Kontext klar."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Gern, ich möchte Tee.",
+   "verdict": "right",
+   "why": "Eine klare und korrekte Annahme."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, bitte auch einen Tee.",
+   "verdict": "right",
+   "why": "Eine passende kurze Annahme."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "ja danke",
+   "verdict": "right",
+   "why": "Die Annahme ist klar; Schreibzeichen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Nein, danke.",
+   "verdict": "wrong",
+   "why": "Das lehnt das Angebot ab."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ich möchte keinen Tee.",
+   "verdict": "wrong",
+   "why": "Die Antwort lehnt Tee ab."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, ich möchten Tee.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Ja, eine Tee, bitte.",
+   "verdict": "wrong",
+   "why": "Es heißt einen Tee."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "Nur Wasser, bitte.",
+   "verdict": "wrong",
+   "why": "Nur Wasser schließt das Teeangebot aus."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Nein, danke.",
+   "verdict": "right",
+   "why": "Eine klare höfliche Ablehnung der Suppe."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Danke, keine Suppe.",
+   "verdict": "right",
+   "why": "Eine korrekte kurze Ablehnung."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Nein, danke, ich möchte nur Tee.",
+   "verdict": "right",
+   "why": "Die Suppe wird höflich abgelehnt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Danke, ich habe keinen Hunger.",
+   "verdict": "right",
+   "why": "Eine passende indirekte Ablehnung im Kontext."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "nein danke ich möchte keine suppe",
+   "verdict": "right",
+   "why": "Die Ablehnung ist korrekt; Schreibzeichen fehlen."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Ja, bitte.",
+   "verdict": "wrong",
+   "why": "Das nimmt das Angebot an."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Ja, ich möchte Suppe.",
+   "verdict": "wrong",
+   "why": "Die Suppe wird angenommen statt abgelehnt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Nein.",
+   "verdict": "wrong",
+   "why": "Die verlangte höfliche Formulierung fehlt."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Nein, danke, ich möchten keine Suppe.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 9,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Nein, danke, ich möchte kein Suppe.",
+   "verdict": "wrong",
+   "why": "Es heißt keine Suppe."
+  }
+ ]
+}
