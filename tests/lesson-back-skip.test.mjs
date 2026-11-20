@@ -27,12 +27,15 @@ const lessons = curriculum.lektionen.map((lektion) => ({
   stages: buildLesson({ curriculum, lektion, pool, dueCards: [], attempt: 1 }).stages,
 }));
 
-test('Back from the recap skips an empty requeue stage, for every A1.1 Lektion', () => {
+// The stage after the requeue is the recap, or the final check where a Lektion has one (2026-11-18).
+const afterRequeue = (stages) => stages.findIndex((s) => s.kind === 'requeue') + 1;
+
+test('Back from the stage after the requeue skips an empty requeue stage, for every A1.1 Lektion', () => {
   assert.equal(lessons.length, 12, 'A1.1 has 12 Lektionen');
   for (const { nr, stages } of lessons) {
-    const recap = stages.findIndex((s) => s.kind === 'recap');
     const requeue = stages.findIndex((s) => s.kind === 'requeue');
-    assert.equal(requeue, recap - 1, `Lektion ${nr}: the requeue stage sits right before the recap`);
+    const recap = afterRequeue(stages);
+    assert.ok(['check', 'recap'].includes(stages[recap].kind), `Lektion ${nr}: the requeue stage sits right before the check or the recap`);
     const target = prevStageIndex(stages, recap, 0);
     assert.notEqual(stages[target] && stages[target].kind, 'requeue',
       `Lektion ${nr}: Back from the recap with nothing requeued opened the empty requeue stage (a blank screen)`);
@@ -40,10 +43,9 @@ test('Back from the recap skips an empty requeue stage, for every A1.1 Lektion',
   }
 });
 
-test('Back from the recap lands on the requeue stage when something was requeued', () => {
+test('Back from the stage after the requeue lands on it when something was requeued', () => {
   for (const { nr, stages } of lessons) {
-    const recap = stages.findIndex((s) => s.kind === 'recap');
-    assert.equal(stages[prevStageIndex(stages, recap, 2)].kind, 'requeue', `Lektion ${nr}`);
+    assert.equal(stages[prevStageIndex(stages, afterRequeue(stages), 2)].kind, 'requeue', `Lektion ${nr}`);
   }
 });
 

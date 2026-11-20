@@ -90,6 +90,7 @@ export const STRINGS = {
     // the German original, so it is named in German — the learner is looking
     // for the German, and „Deutsch" is the one word every learner already has.
     'lang.readOther': 'Auf Deutsch lesen',
+    'lang.explainArabic': 'Explain in Arabic · اشرح بالعربية',
 
     // ── audio source badge ───────────────────────────────────────────────────
     'audio.recorded': 'Recording',
@@ -165,6 +166,8 @@ export const STRINGS = {
     'wortfeld.en': 'EN',
     'wortfeld.showAllEnglish': 'Show all English',
     'wortfeld.hideAllEnglish': 'Hide all English',
+    'wortfeld.memory': 'Try from memory',
+    'wortfeld.memoryLead': 'Say the German word to yourself, then tap the card to check.',
     'wortfeld.flipHint': '{word}: {en}',
     'wortfeld.audioBadge.computer': 'Audio: computer voice',
     'wortfeld.audioBadge.recordings': 'Audio: recordings',
@@ -444,6 +447,33 @@ export const STRINGS = {
     'session.continue': 'Continue with part {next}',
     'session.later': 'Stop for today — continue here next time',
     'session.saved': 'Your place is saved. Short, regular sessions are how this sticks.',
+    // ── the otter's lines (written by Codex, 2026-11-17; the founder judges them by playing) ──
+    'otter.retry': 'Not quite yet. You have one more try.',
+    'otter.unclear': 'You practised saying the line aloud. We couldn’t clearly recognise the words in this recording.',
+    'otter.pause.1': 'You’ve finished the first part. Your place is saved, so you can take a break.',
+    'otter.pause.2': 'You’ve completed two parts already. Take a break if you need one—your place is saved.',
+    'otter.end': 'You made time for German and completed Lektion {nr}. Take a moment to feel proud of what you’ve practised.',
+    'otter.back': 'Welcome back. Your place is saved; take a moment to settle in.',
+    // The final check (2026-11-18). The otter's lines are Codex's, from the founder's words.
+    'otter.check.open': 'This time, you’ll speak with Frau Kaya using your own name. Take your time.',
+    'otter.check.missed': 'Take a moment to look at the answer. Then we’ll carry on together.',
+    'otter.check.passed': 'You’ve used all four skills in this conversation. That’s something to be proud of.',
+    'otter.check.notYet': 'Revisit {part} when you’re ready. You can try the check again now or go on to Lektion {next}.',
+    'recap.canDo.notYet': 'Still to practise',
+    // The first and latest recording (2026-11-18); title and labels by Codex.
+    'recap.voices.title': 'You spoke German today. Take a moment to listen to yourself.',
+    'recap.voices.first': 'Your first recording',
+    'recap.voices.latest': 'Your latest recording',
+    'recap.voices.device': 'These recordings stay only on this device and are deleted after 7 days.',
+    'recap.voices.delete': 'Delete now',
+    'check.eyebrow': 'Final check · {n} of {total}',
+    'check.eyebrow.done': 'Final check',
+    'check.title': 'What you showed',
+    'check.typeInstead': 'Type instead',
+    'check.letters': 'Show the letters as words',
+    'check.again': 'Try the check again',
+    'check.goOn': 'Go on',
+    'check.and': ' and ',
     'review.roundDone': 'This round is done',
     'review.moreDue': '{n} more cards are due today — a few minutes.',
     'review.nextRound': 'Next round',
@@ -504,6 +534,7 @@ export const STRINGS = {
     'lang.de': 'Deutsch',
     'lang.en': 'English',
     'lang.readOther': 'Auf Englisch lesen',
+    'lang.explainArabic': 'Auf Arabisch erklären · اشرح بالعربية',
 
     // ── audio source badge ───────────────────────────────────────────────────
     'audio.recorded': 'Aufnahme',
@@ -579,6 +610,8 @@ export const STRINGS = {
     'wortfeld.en': 'EN',
     'wortfeld.showAllEnglish': 'Alle Übersetzungen zeigen',
     'wortfeld.hideAllEnglish': 'Alle Übersetzungen verbergen',
+    'wortfeld.memory': 'Aus dem Gedächtnis',
+    'wortfeld.memoryLead': 'Sagen Sie das deutsche Wort leise, dann tippen Sie auf die Karte.',
     'wortfeld.flipHint': '{word}: {en}',
     'wortfeld.audioBadge.computer': 'Audio: Computerstimme',
     'wortfeld.audioBadge.recordings': 'Audio: Aufnahmen',
@@ -857,6 +890,30 @@ export const STRINGS = {
     'session.continue': 'Weiter mit Teil {next}',
     'session.later': 'Für heute aufhören – nächstes Mal geht es hier weiter',
     'session.saved': 'Ihr Platz ist gespeichert. Kurz und regelmäßig – so bleibt es hängen.',
+    'otter.retry': 'Noch nicht ganz. Sie können es noch einmal versuchen.',
+    'otter.unclear': 'Sie haben den Satz laut gesprochen und geübt. Wir konnten die Wörter in dieser Aufnahme nicht klar erkennen.',
+    'otter.pause.1': 'Sie haben den ersten Teil geschafft. Ihr Platz ist gespeichert, und Sie können eine Pause machen.',
+    'otter.pause.2': 'Sie haben schon zwei Teile geschafft. Machen Sie bei Bedarf eine Pause – Ihr Platz ist gespeichert.',
+    'otter.end': 'Sie haben sich Zeit für Deutsch genommen und Lektion {nr} abgeschlossen. Seien Sie stolz auf das, was Sie geübt haben.',
+    'otter.back': 'Willkommen zurück. Ihr Platz ist gespeichert; kommen Sie in Ruhe wieder an.',
+    'otter.check.open': 'Diesmal sprechen Sie mit Frau Kaya unter Ihrem eigenen Namen. Nehmen Sie sich Zeit.',
+    'otter.check.missed': 'Schauen Sie sich die Antwort in Ruhe an. Dann machen wir gemeinsam weiter.',
+    'otter.check.passed': 'Sie haben in diesem Gespräch alle vier Fähigkeiten gezeigt. Darauf können Sie stolz sein.',
+    'otter.check.notYet': 'Wiederholen Sie {part}, wenn Sie so weit sind. Sie können den Abschlusscheck gleich noch einmal versuchen oder mit Lektion {next} weitermachen.',
+    'recap.canDo.notYet': 'Zum Weiterüben',
+    'recap.voices.title': 'Sie haben heute Deutsch gesprochen. Hören Sie sich in Ruhe zu.',
+    'recap.voices.first': 'Ihre erste Aufnahme',
+    'recap.voices.latest': 'Ihre neueste Aufnahme',
+    'recap.voices.device': 'Diese Aufnahmen bleiben nur auf diesem Gerät und werden nach 7 Tagen gelöscht.',
+    'recap.voices.delete': 'Jetzt löschen',
+    'check.eyebrow': 'Abschlusscheck · {n} von {total}',
+    'check.eyebrow.done': 'Abschlusscheck',
+    'check.title': 'Das haben Sie gezeigt',
+    'check.typeInstead': 'Lieber tippen',
+    'check.letters': 'Buchstaben als Wörter zeigen',
+    'check.again': 'Check noch einmal',
+    'check.goOn': 'Weitermachen',
+    'check.and': ' und ',
     'review.roundDone': 'Diese Runde ist geschafft',
     'review.moreDue': 'Heute sind noch {n} Karten dran – ein paar Minuten.',
     'review.nextRound': 'Nächste Runde',
@@ -864,6 +921,11 @@ export const STRINGS = {
     'review.newCards': 'Neue Karten kommen, sobald Sie eine Lektion abschließen.',
   },
 };
+
+// ponytail: below half of the words recognised counts as "unclear"; tune once real recordings are reviewed.
+export const UNCLEAR_BELOW = 0.5;
+/** What a mic-scored line shows instead of a percentage: speech recognition is not a pronunciation grade. */
+export const speechLine = (pct, lang) => t(pct < UNCLEAR_BELOW ? 'otter.unclear' : 'speaking.said', lang);
 
 /** 'en' or 'de'; anything else (a stale or tampered flag) is the default. */
 export const normalizeLessonLang = (value) => (LESSON_LANGS.includes(value) ? value : DEFAULT_LESSON_LANG);

@@ -20,7 +20,7 @@ export default function FluencyStage({ stage, lektionId, itemIndex, names, onNam
     </label>}
     {text && <>
       {!show && <button type="button" className="mb-4 min-h-11 font-bold text-siegel-deep underline" onClick={() => setShow(true)}>{t('fluency.show', lang)}</button>}
-      <ReadAloudLine lektionId={lektionId} lineKey={`fluency-${itemIndex}`} text={text} hideModel={!show} onResult={(r) => { onSayResult(itemIndex, r); setShow(true); }} />
+      <ReadAloudLine lektionId={lektionId} lineKey={`fluency-${itemIndex}`} text={text} hideModel={!show} keepVoice onResult={(r) => { onSayResult(itemIndex, r); setShow(true); }} />
     </>}
   </StageShell>;
 }

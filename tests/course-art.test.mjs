@@ -124,6 +124,9 @@ test('no `kasus` (grammatical-case colour) import in src/components/illustration
 
 test('every manifest entry has a non-empty alt', () => {
   const bad = [];
+  for (const [pose, entry] of Object.entries(A11_ART.guide.poses)) {
+    if (!entry.alt || !entry.alt.trim()) bad.push(`guide.poses.${pose}`);
+  }
   for (const [name, entry] of Object.entries(A11_ART.characters)) {
     if (!entry.alt || !entry.alt.trim()) bad.push(`characters.${name}`);
   }
@@ -138,7 +141,8 @@ test('the five insertion points import the illustration components', () => {
     ['src/components/lesson/IntroStage.jsx', ['CharacterAvatar', 'SituationScene']],
     ['src/components/course/CourseWelcome.jsx', ['CharacterAvatar']],
     ['src/components/lesson/DialogStage.jsx', ['CharacterAvatar']],
-    ['src/components/lesson/WortfeldStage.jsx', ['SituationScene']],
+    ['src/components/lesson/WortfeldStage.jsx', ['SituationScene', 'GuideOtter']],
+    ['src/components/lesson/RecapStage.jsx', ['GuideOtter']],
     ['src/pages/CurriculumHomePage.jsx', ['SituationScene']],
   ];
   for (const [file, names] of pins) {
@@ -158,12 +162,12 @@ test('CharacterAvatar and SituationScene both branch on a manifest src before dr
   assert.match(SCENE_SRC, /entry\?\.srcSmall \|\| entry\?\.src|entry\?\.src/, 'SituationScene should check the manifest src before falling back to SVG');
 });
 
-test('L1 ships the supplied painted reception with honest mixed provenance and responsive sizes', async () => {
-  assert.equal(A11_ART.generatedWith.status, 'mixed-painted-svg');
-  assert.match(A11_ART.generatedWith.tool, /Higgsfield.*inline SVG/);
+test('L1 ships the illustrated otter reception with honest mixed provenance and responsive sizes', async () => {
+  assert.equal(A11_ART.generatedWith.status, 'mixed-illustrated-svg');
+  assert.match(A11_ART.generatedWith.tool, /Codex image tool.*inline SVG/);
   assert.equal(A11_ART.generatedWith.model, null, 'the supplied asset does not establish a model name');
   const scene = A11_ART.situations['a1.1-l01'];
-  assert.equal(scene.alt, 'Ana arrives at a hostel reception in Bremen and Frau Kaya welcomes her');
+  assert.equal(scene.alt, 'Ana, drawn as an otter with a suitcase, arrives at a hostel reception in Bremen; Frau Kaya, drawn as a bird, welcomes her');
   const { default: sharp } = await import('sharp');
   for (const [field, width] of [['srcSmall', 640], ['srcMedium', 800], ['src', 1168]]) {
     assert.equal(scene[field], `/art/a11/l01-rezeption-${width}.webp`);
@@ -176,4 +180,21 @@ test('L1 ships the supplied painted reception with honest mixed provenance and r
   for (const [id, entry] of Object.entries(A11_ART.situations)) if (id !== 'a1.1-l01') assert.equal(entry.src, null);
   assert.match(SCENE_SRC, /srcSet=\{entry.srcMedium/);
   assert.match(read('src/components/lesson/SceneStage.jsx'), /<SituationScene lektionId=\{lektionId\}/);
+});
+
+test('both course guide poses have alt text and responsive files at the declared widths', async () => {
+  assert.deepEqual(Object.keys(A11_ART.guide.poses), ['thinking', 'satisfied']);
+  const { default: sharp } = await import('sharp');
+  for (const [pose, art] of Object.entries(A11_ART.guide.poses)) {
+    assert.ok(art.alt?.trim(), `${pose} needs alt text`);
+    for (const [field, width] of [['src', 512], ['srcSmall', 160]]) {
+      assert.equal(art[field], `/art/a11/otter-${pose}-${width}.webp`);
+      const actual = await sharp(join(ROOT, 'public', art[field])).metadata();
+      assert.equal(actual.width, width);
+    }
+  }
+});
+
+test('GuideOtter returns null when the Lektion scene has no image src', () => {
+  assert.match(read('src/components/illustrations/GuideOtter.jsx'), /if \(!art \|\| !A11_ART\.situations\[lektionId\]\?\.src\) return null/);
 });

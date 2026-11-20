@@ -163,12 +163,17 @@ export const CURRICULUM_A11 = {
       slug: 'hallo-ich-bin',
       flow: 'guided',
       guided: {
+        // The otter's line on the first screen. Written by Codex (2026-11-17); the founder judges it by playing.
+        opening: {
+          en: 'Welcome to your first conversation in German. Take your time.',
+          de: 'Willkommen zu Ihrem ersten Gespräch auf Deutsch. Nehmen Sie sich Zeit.',
+        },
         read: {
           titleDe: 'Willkommen!', titleEn: 'Welcome!',
           instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the card. Tap a word for its meaning.',
           // A welcome card at reception: greetings for the day and useful phrases.
-          text: 'Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.',
+          text: 'Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\nTschüss! Bis morgen!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.',
           questions: [
             {
               promptDe: 'Was ist „Guten Tag“? Wählen Sie die Bedeutung.',
@@ -223,12 +228,32 @@ export const CURRICULUM_A11 = {
             meaning: {
               promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say as she leaves? Choose the meaning.',
-              options: ['Bye! See you tomorrow.', 'Good morning!', 'Nice to meet you.'],
-              answer: 'Bye! See you tomorrow.',
+              options: ['Goodbye!', 'Good morning!', 'Nice to meet you.'],
+              answer: 'Goodbye!',
             },
             say: { line: 9 },
           },
         ],
+        // The final check (2026-11-18): the same reception, now as the learner themself. One or more
+        // turns per can-do (`canDo` is its index in `canDo` below); spoken, or typed without a
+        // microphone or account. `repeat` names the part to go back to when a can-do is not shown.
+        // Nothing locks: the founder chose a recommendation over a locked path (2026-11-18).
+        check: {
+          turns: [
+            { canDo: 0, cue: { de: 'Guten Tag!', en: 'Good day!' }, taskDe: 'Antworten Sie Frau Kaya.', taskEn: 'Greet her back.', accepted: ['Guten Tag!', 'Guten Tag, Frau Kaya!', 'Hallo!'] },
+            { canDo: 1, cue: { de: 'Wie heißen Sie?', en: 'What is your name?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer with your own name.', ownName: true, accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
+            { canDo: 2, spell: ['Vogel', 'Weigel', 'Jensen'], taskDe: 'Frau Kaya buchstabiert. Schreiben Sie das Wort.', taskEn: 'Frau Kaya spells a guest’s name. Write the name.' },
+            { canDo: 3, cue: { de: 'Wie geht es Ihnen?', en: 'How are you?' }, taskDe: 'Antworten Sie.', taskEn: 'Answer her.', accepted: ['Mir geht es gut, danke.', 'Mir geht es gut.', 'Danke, mir geht es gut.'] },
+            { canDo: 3, taskDe: 'Und Frau Kaya? Fragen Sie.', taskEn: 'Now ask her how she is.', accepted: ['Und wie geht es Ihnen?', 'Wie geht es Ihnen?'] },
+            { canDo: 0, cue: { de: 'Mir geht es gut, danke. Auf Wiedersehen!', en: 'I’m fine, thank you. Goodbye!' }, taskDe: 'Antworten Sie.', taskEn: 'Say goodbye.', accepted: ['Auf Wiedersehen!', 'Auf Wiedersehen, Frau Kaya!'] },
+          ],
+          repeat: [
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            { en: 'Part 2: the alphabet', de: 'Teil 2: das Alphabet' },
+            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+          ],
+        },
       },
       nextHook: {
         de: 'Morgen muss Ana sich im Bürgerbüro anmelden. Kann sie das Formular ausfüllen?',
@@ -291,9 +316,11 @@ export const CURRICULUM_A11 = {
           { speaker: 'Frau Kaya', de: 'Danke. Und wie buchstabiert man Ana?', en: 'Thank you. And how do you spell Ana?' },
           { speaker: 'Ana', de: 'A-N-A.', en: 'A-N-A.' },
           { speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
-          { speaker: 'Ana', de: 'Mir geht es gut, danke.', en: 'I\'m fine, thank you.' },
-          { speaker: 'Frau Kaya', de: 'Auf Wiedersehen, Frau Chakiri.', en: 'Goodbye, Ms Chakiri.' },
-          { speaker: 'Ana', de: 'Tschüss! Bis morgen.', en: 'Bye! See you tomorrow.' },
+          // 2026-11-17 (Codex, tone): Ana asks back and both leave with the farewell the can-do names,
+          // so the learner says the question and „Auf Wiedersehen“ aloud. Tschüss/Bis morgen stay Wortfeld.
+          { speaker: 'Ana', de: 'Mir geht es gut, danke. Und wie geht es Ihnen?', en: 'I\'m fine, thank you. And how are you?' },
+          { speaker: 'Frau Kaya', de: 'Mir geht es gut, danke. Auf Wiedersehen, Frau Chakiri.', en: 'I\'m fine, thank you. Goodbye, Ms Chakiri.' },
+          { speaker: 'Ana', de: 'Auf Wiedersehen!', en: 'Goodbye!' },
         ],
       },
       pretest: {
@@ -310,6 +337,8 @@ export const CURRICULUM_A11 = {
         title: 'Das Alphabet: buchstabieren',
         bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We [veː]). Der Name ist nicht der Laut: In *Wasser* hört man [v]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
         bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett**. To ask how a word is written: **Wie buchstabiert man das?**',
+        // Arabic help (2026-11-17): Codex's Modern Standard Arabic from bodyEn; German stays in Latin letters.
+        bodyAr: 'لتهجئة كلمة، انطق أسماء حروفها الألمانية حرفًا حرفًا. يسهل الخلط بين E [eː] وI [iː]؛ وبين G [geː] وJ (Jot)؛ وبين V (Vau) وW (We [veː]). اسم الحرف يختلف عن صوته: اسم W هو We، لكنه في كلمة Wasser يُنطق بالصوت [v]. اسم Y هو Ypsilon، وZ هو Zett، وß هو Eszett. للسؤال عن كيفية كتابة كلمة، يمكنك أن تقول: Wie buchstabiert man das?',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },

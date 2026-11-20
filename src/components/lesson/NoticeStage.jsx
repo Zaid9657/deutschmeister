@@ -22,7 +22,23 @@ export function inline(text) {
  * in Deutsch-Modus it is inverted. Exported for the practice feedback, which
  * shows `explanationEn` / `explanationDe` the same way.
  */
-export function OtherLanguage({ text, lang, className = '' }) {
+// A German run inside Arabic (one letter or more): starts and ends on a letter, bracket, IPA mark or question mark.
+const LATIN_RUN = /[A-Za-zÄÖÜäöüß[(](?:[A-Za-zÄÖÜäöüßː[\]()\s?]*[A-Za-zÄÖÜäöüßː\])?])?/g;
+
+/** Arabic text with each German run isolated left-to-right, so brackets and "?" stay where they belong. */
+export function isolateLatin(text) {
+  const out = [];
+  let at = 0;
+  for (const m of text.matchAll(LATIN_RUN)) {
+    if (m.index > at) out.push(text.slice(at, m.index));
+    out.push(<bdi key={m.index} dir="ltr" lang="de" className="whitespace-nowrap">{m[0]}</bdi>);
+    at = m.index + m[0].length;
+  }
+  if (at < text.length) out.push(text.slice(at));
+  return out;
+}
+
+export function OtherLanguage({ text, lang, className = '', textLang = lang === 'de' ? 'en' : 'de', labelKey = 'lang.readOther' }) {
   const [open, setOpen] = useState(false);
   if (!text) return null;
   return (
@@ -33,11 +49,11 @@ export function OtherLanguage({ text, lang, className = '' }) {
         aria-expanded={open}
         className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel hover:text-siegel-deep"
       >
-        {t('lang.readOther', lang)}
+        {t(labelKey, lang)}
       </button>
       {open && (
-        <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={lang === 'de' ? 'en' : 'de'}>
-          {inline(text)}
+        <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={textLang} dir={textLang === 'ar' ? 'rtl' : undefined}>
+          {textLang === 'ar' ? isolateLatin(text) : inline(text)}
         </p>
       )}
     </div>
@@ -78,6 +94,8 @@ export default function NoticeStage({ stage, onBack, onDone }) {
         )}
         <p className="text-[1rem] leading-relaxed text-graphite" lang={english ? 'en' : 'de'}>{inline(main)}</p>
         <OtherLanguage text={other} lang={lang} className="mt-3" />
+        {/* Arabic help (2026-11-17): the rule once more for learners who read Arabic better. */}
+        <OtherLanguage text={notice.bodyAr} lang={lang} textLang="ar" labelKey="lang.explainArabic" className="mt-2" />
         {(notice.examples || []).length > 0 && (
           <div className="mt-5 border-t border-rule pt-4">
           <p className="mb-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('stage.notice.examples', lang)}</p>

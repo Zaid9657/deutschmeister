@@ -209,7 +209,7 @@ test('the player keeps every read-aloud result as it is recorded, and the Sprech
   assert.ok(go.length > 0, 'the coach hand-off is still a full page load');
   // A restored line says what was measured (ReadAloudLine itself starts idle), from the string table.
   assert.match(stage, /results\[l\.index\] && !recordedNow\.has\(l\.index\) && \(/);
-  assert.match(stage, /t\('speaking\.intelligibility', lang, \{ pct: Math\.round\(results\[l\.index\]\.pct \* 100\) \}\)/);
+  assert.match(stage, /speechLine\(results\[l\.index\]\.pct, lang\)/);
   assert.match(stage, /primaryDisabled=\{lines\.length > 0 && !allDone\}/, 'Next opens once every line has a result — restored ones included');
 });
 

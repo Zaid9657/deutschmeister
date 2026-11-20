@@ -28,7 +28,7 @@ export default function CheckedChoice({ item, lang, onResult, onNext, hintFirst 
         ))}
       </fieldset>
       <p role="status" className="mt-4 font-semibold text-ink">
-        {verdict && (verdict.hintOnly ? verdict.hint : t(`${item.feedbackKey || 'scene'}.${verdict.result === RESULT.WRONG ? 'correction' : 'correct'}`, lang, { answer: item.answer }))}
+        {verdict && (verdict.hintOnly ? `${t('otter.retry', lang)} ${verdict.hint}`.trim() : t(`${item.feedbackKey || 'scene'}.${verdict.result === RESULT.WRONG ? 'correction' : 'correct'}`, lang, { answer: item.answer }))}
       </p>
       {verdict && !verdict.hintOnly && <p className="mt-2 text-sm text-graphite">{item.answer} · {feedbackReason(item, lang)}</p>}
       <Button variant="coral" className="mt-5 w-full" disabled={!answer} onClick={verdict?.hintOnly ? retry : verdict ? onNext : check}>{t(verdict?.hintOnly ? 'action.again' : verdict ? 'action.next' : 'action.check', lang)}</Button>
