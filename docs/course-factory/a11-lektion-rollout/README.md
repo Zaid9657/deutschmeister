@@ -427,13 +427,17 @@ corpora (first scores in each batch's section above); Lektion 1 was finished wit
 
 **Never played or seen:**
 
-- In a browser: Lektionen 7–12 (both browsers stopped taking input while the app window was hidden:
-  the built-in pane does not draw — "Screenshot timed out … Claude's window is minimized or hidden" —
-  and Chrome's renderer froze — `CDP sendCommand "Runtime.evaluate" timed out after 45000ms`; a later
-  try found Chrome's window minimised, 0 px wide, its screenshot timing out after 30000 ms). Their
-  grading runs through the real `typedResult` in tests and probes; their scenes were looked at as
-  files. Lektionen 2–6 were played at 375 px as a guest (batch 1 and 2 sections), not every one in
-  both languages.
+- On screen: Lektionen 7–12. The built-in browser first could not draw („Screenshot timed out …
+  Claude's window is minimized or hidden") and later refused the local server („navigation to
+  http://localhost:5191 was denied or failed"); Chrome's window was minimised, 0 px wide, so no
+  click lands and nothing draws (the „Check" button sat at x = −95, y = −220). In that Chrome tab
+  each of Lektionen 7–12 was then run unseen, as a guest, by pressing the app's own buttons from a
+  script (2026-11-20, on 6401c59c): the real check stage, a refused answer and its second try, every
+  turn to the passed line and the end screen, the „Explain in Arabic" button opening right-to-left
+  text, the scene stage wired to its 640/800/1168 picture (the file served; lazy-loaded, so never
+  drawn at 0 px). English: 7, 9, 11; German: 8, 10, 12. Lektion 9 ends on „Checkpoint 3: Lektion
+  7–9 →", Lektion 12 on „Checkpoint 4: Lektion 10–12 →". Lektionen 2–6 were played on screen at
+  375 px as a guest (batch 1 and 2 sections), not every one in both languages.
 - Anywhere: the spoken path of any check (no microphone in the test browsers); course audio (the
   computer voice was triggered in batches 1–2, never judged by a listener); a signed-in run.
 - By a person: no native speaker has read the Arabic of Lektionen 1–12; no learner has taken a check.
