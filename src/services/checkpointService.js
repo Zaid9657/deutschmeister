@@ -194,7 +194,7 @@ export async function recordAttempt(userId, { level, checkpointId, items, answer
         error_tag: correct
           ? null
           : tagError(
-              { stage: item.section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic: item.topic, type: item.type },
+              { stage: item.section === 'hoeren' ? 'listening' : 'checkpoint', section: item.section, kind: item.kind, topic: item.topic, type: item.type },
               answer == null ? '' : String(answer),
               item.answer,
             ),

@@ -104,6 +104,16 @@ export function auditTemplates(papers) {
   return { findings, maxRepeat: Math.max(0, ...counts.values()), distinct: counts.size };
 }
 
+/** Every German string inside a Lektion's notice or guided data: English, Arabic, titles, slugs,
+ *  tasks and explanations are not text the learner reads as German content. */
+const NOT_SHOWN_GERMAN = /(En|Ar)$|^(title|ruleSlug|slug|id|kind|type|src|alt|explanation\w*|question\w*|cue\w*|hint\w*)$/;
+export function shownGerman(value, key = '') {
+  if (typeof value === 'string') return NOT_SHOWN_GERMAN.test(key) ? [] : [value];
+  if (Array.isArray(value)) return value.flatMap((v) => shownGerman(v, key));
+  if (value && typeof value === 'object') return Object.entries(value).flatMap(([k, v]) => (NOT_SHOWN_GERMAN.test(k) ? [] : shownGerman(v, k)));
+  return [];
+}
+
 export function checkLesenA11(bank = LESEN_A11) {
   const spec = levelSpec('a1.1');
   const known = taughtUpTo(spec.curriculum, spec);
@@ -111,6 +121,10 @@ export function checkLesenA11(bank = LESEN_A11) {
   const norm = (s) => tokens(s).join(' ');
   const practised = new Set([
     ...spec.curriculum.lektionen.flatMap((l) => l.dialog.lines.flatMap((line) => line.de.split(/(?<=[.!?])\s+/))),
+    // Everything else a Lektion shows in German counts as practised too: the notice (its examples
+    // and the worked ad or notice, 2026-11-19 browser play: „Herr Weber ist hier.“ sat in Lektion
+    // 2's worked notice and in a Checkpoint 1 statement) and the guided flow's own texts.
+    ...spec.curriculum.lektionen.flatMap((l) => shownGerman([l.notice, l.guided]).flatMap((s) => s.split(/(?<=[.!?])\s+|\n+/))),
     ...loadPoolItems('a1.1').flatMap((it) => [it.questionDe, it.answer]),
   ].filter(Boolean).map(norm));
   const findings = [];
@@ -132,6 +146,10 @@ export function checkLesenA11(bank = LESEN_A11) {
         if (JSON.stringify(u.options) !== JSON.stringify(['Richtig', 'Falsch']) || !u.options.includes(u.answer)) flag(u.id, 'Richtig/Falsch format/key required');
         if (!u.statement || u.question !== `Steht das im Text? „${u.statement}“`) flag(u.id, 'statement/question mismatch');
         if (!u.evidence || !u.text.includes(u.evidence)) flag(u.id, 'evidence must occur in text');
+        // „Steht das im Text?“ read literally: a FALSE statement whose words stand in the text in
+        // that order („Die Familie von Tim wohnt in Bremen.“ for „Tim wohnt in Bremen.“) is in the
+        // text, so the key contradicts the question (2026-11-19 browser play).
+        if (u.answer === 'Falsch' && ` ${norm(u.text)} `.includes(` ${norm(u.statement)} `)) flag(u.id, 'false statement stands word for word in the text');
         if (!u.questionEn || !u.rival || !u.explanationDe || !u.explanationEn) flag(u.id, 'missing bilingual explanation/exclusion');
         if (tokens(u.text).length < 15 || tokens(u.text).length > 45) flag(u.id, 'text outside 15–45 words');
         for (const [field, value] of [['text', u.text], ['statement', u.statement], ['explanationDe', u.explanationDe]]) {
@@ -143,7 +161,14 @@ export function checkLesenA11(bank = LESEN_A11) {
             for (const hit of deferredConstructionHits(spec.curriculum, cp.afterLektion, sentence)) flag(u.id, `${field} deferred ${hit.slug}: ${hit.hit}`);
           }
         }
-        for (const sentence of u.text.split(/(?<=[.!?])\s+|\n+/)) if (practised.has(norm(sentence))) flag(u.id, `practised sentence: ${sentence}`);
+        // A practised sentence of three words or more, alone or inside a longer one („Amt: Herr
+        // Weber ist hier.“ holds the worked notice's „Herr Weber ist hier.“); a two-word greeting
+        // („Hallo Ana!“) is a formula, not content the statement can be answered from.
+        for (const sentence of u.text.split(/(?<=[.!?])\s+|\n+/)) {
+          const s = ` ${norm(sentence)} `;
+          const hit = [...practised].find((p) => p.split(' ').length >= 3 && (s === ` ${p} ` || (p.split(' ').length >= 4 && s.includes(` ${p} `))));
+          if (hit) flag(u.id, `practised sentence: ${sentence}`);
+        }
       }
     }
   }

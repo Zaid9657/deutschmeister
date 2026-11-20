@@ -737,7 +737,7 @@ export const LANDESKUNDE = {
       'or higher-ranked person’s call, though this is loosening among younger people. When unsure, ' +
       'Sie is the safe default — nobody is offended by too much respect.',
     bodyDe:
-      'Im Deutschen gibt es zwei Formen von „Sie“: die formelle „Sie“-Form und die informelle ' +
+      'Im Deutschen gibt es zwei Formen der Anrede: die formelle „Sie“-Form und die informelle ' +
       '„du“-Form. Erwachsene, die sich nicht kennen, verwenden meist „Sie“ — bei Ämtern, im ' +
       'Geschäft, mit Nachbarn oder neuen Kolleginnen und Kollegen. „Du“ ist für Familie, Freunde, ' +
       'Kinder und für Menschen, die es ausdrücklich anbieten („Wir können du sagen“). Wer den ' +

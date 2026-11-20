@@ -5,7 +5,7 @@
 const papers = [
   [
     ['message', 'Hallo Lena, Ana wohnt in Bremen. Ihre Eltern wohnen auch in Bremen. Ich wohne in Berlin. Kommst du auch nach Berlin? Grüße, Tim', 'Ana wohnt in Bremen.', true, 'Ana wohnt in Bremen.', 'Ana lives in Bremen; Berlin is Tim’s home.'],
-    ['message', 'Frau Kaya, guten Morgen! Tim kommt aus Österreich und wohnt in Berlin. Die Familie von Tim wohnt in Bremen. Grüße, Herr Berg', 'Tim wohnt in Bremen.', false, 'Tim kommt aus Österreich und wohnt in Berlin.', 'Tim lives in Berlin. Bremen is where his family lives.'],
+    ['message', 'Frau Kaya, guten Morgen! Tim kommt aus Österreich und wohnt in Berlin. Die Eltern von Tim wohnen in Bremen. Grüße, Herr Berg', 'Tim wohnt in Bremen.', false, 'Tim kommt aus Österreich und wohnt in Berlin.', 'Tim lives in Berlin. Bremen is where his parents live.'],
     ['sign', 'Amt: Herr Weber ist hier. Frau Kaya ist nicht hier. Formulare bitte hier ausfüllen: Name, Adresse und Familienstand.', 'Herr Weber ist hier.', true, 'Herr Weber ist hier.', 'The notice directs visitors to Weber; Kaya is absent.'],
     ['ad', 'Englisch mit Lena! Lena spricht Englisch, aber nicht Deutsch. Sprichst du Deutsch und auch Englisch? Wir sprechen zusammen! Telefonnummer: 0173 2468501.', 'Lena spricht auch Deutsch.', false, 'Lena spricht Englisch, aber nicht Deutsch.', 'Lena explicitly says she does not speak German.'],
   ],
@@ -53,7 +53,7 @@ const papers = [
   ],
   [
     ['notice', 'Termin bei Frau Kaya: Bitte um elf Uhr kommen. Frau Kaya arbeitet heute bis zehn Uhr bei der Firma Wolf. Sie hat um elf Uhr Zeit.', 'Frau Kaya hat um elf Uhr Zeit.', true, 'Sie hat um elf Uhr Zeit.', 'Kaya is available at eleven, after her work at Wolf.'],
-    ['message', 'Hallo Lena, der Termin ist am Dienstag. Am Montag habe ich frei und arbeite nicht. Hast du am Montag auch Zeit? Wir gehen ins Kino! Grüße, Tim', 'Tim hat am Montag frei.', true, 'Am Montag habe ich frei und arbeite nicht.', 'Tim is free on Monday; his appointment is on Tuesday.'],
+    ['message', 'Hallo Lena, am Dienstag habe ich einen Termin. Am Montag habe ich frei und arbeite nicht. Hast du am Montag auch Zeit? Wir gehen ins Kino! Grüße, Tim', 'Tim hat am Montag frei.', true, 'Am Montag habe ich frei und arbeite nicht.', 'Tim is free on Monday; his appointment is on Tuesday.'],
     ['ad', 'Frühstück bei Frau Wolf: Brot und Kaffee für fünf Euro. Tee kostet zwei Euro. Wir haben morgens Zeit für Sie. Kommen Sie zum Frühstück!', 'Der Tee kostet fünf Euro.', false, 'Tee kostet zwei Euro.', 'Tea costs two euros; five is the breakfast price.'],
     ['message', 'Guten Morgen, Herr Berg! Ich arbeite am Montag. Die Pause ist um zwölf Uhr, nicht um zehn Uhr. Die Kollegin hat am Dienstag frei. Haben Sie dann Zeit? Grüße, Frau Brandt', 'Frau Brandt hat am Montag frei.', false, 'Ich arbeite am Montag.', 'Brandt works on Monday, so she does not have that day off.'],
   ],

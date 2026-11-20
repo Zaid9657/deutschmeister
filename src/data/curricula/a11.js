@@ -732,7 +732,7 @@ export const CURRICULUM_A11 = {
         // RULE 27: Checkpoint 1 reads a notice, so a Lektion before it works one through first.
         readingExample: {
           type: 'notice', title: 'Ein Hinweis im Amt',
-          text: 'Amt: Bitte füllen Sie das Formular aus: Vorname, Nachname, Adresse und Telefonnummer. Herr Weber ist hier.',
+          text: 'Amt: Bitte füllen Sie das Formular aus: Vorname, Nachname, Adresse und Telefonnummer. Danke!',
           questionDe: 'Was steht im Formular? Lesen Sie den Hinweis. Achten Sie auf „Formular“.',
           questionEn: 'What goes on the form? Read the notice. Look for “Formular” (form).',
           answer: 'Vorname, Nachname, Adresse und Telefonnummer',
