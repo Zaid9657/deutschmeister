@@ -458,6 +458,43 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
   assert.equal(typedResult(at(8, 1)[3], 'Hast du am Donnerstag um Viertel nach vier Zeit?'), RESULT.CORRECT, 'in conversation the afternoon is clear');
 });
 
+test('one honest-none rule for the whole course; a yes agrees; a time may follow „frei“ (courses session, 2026-11-20)', () => {
+  const NONE = { job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.'], hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'] };
+  const frame = (t) => String(t.accepted[0]?.frame ?? t.accepted[0]);
+  let personal = 0;
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((t, i) => {
+        const where = `${l.id} sitting ${r + 1} turn ${i + 1}`;
+        const own = !t.ownName && !writtenOnly(t) && frame(t).includes('…') && !frame(t).trim().endsWith('?');
+        if (!own) return;
+        // A fact of the learner's life a real person may not have (a job, a hobby): the none passes.
+        if (NONE[t.slot]) { personal += 1; for (const none of NONE[t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
+        // Everywhere else the turn asks for the can-do itself: „nichts“ in the learner's gap names nothing.
+        assert.equal(typedResult(t, frame(t).replaceAll('…', 'nichts')), RESULT.WRONG, `${where}: ${frame(t).replaceAll('…', 'nichts')}`);
+        for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(typedResult(t, none), RESULT.WRONG, `${where}: ${none}`);
+      });
+    }
+  }
+  assert.ok(personal >= 2, 'the job of Lektion 2 and the hobby of Lektion 7');
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  for (const [nr, ti, wrong] of [[4, 5, 'Ich kaufe keine Uhr.'], [6, 0, 'Ich brauche keinen Computer.'], [9, 1, 'Nichts, danke.'], [3, 3, 'Sie spricht nichts.'], [7, 4, 'Ich habe keine Zeit.'], [8, 5, 'Ich habe keine Zeit.'], [5, 0, 'Das ist kein Buch.']]) {
+    assert.equal(typedResult(at(nr)[ti], wrong), RESULT.WRONG, `L${nr}: ${wrong}`);
+  }
+  assert.equal(typedResult(at(9)[5], 'Nein, danke. Ich möchte keinen Kuchen.'), RESULT.CORRECT, 'a decline names what it does not want');
+  assert.equal(typedResult(at(2)[3], 'Ich arbeite nicht.'), RESULT.WRONG, 'a question turn takes no none');
+  // Agreeing: words of yes, then what may follow them.
+  const agree = at(8)[4];
+  for (const right of ['Prima, dann bis Freitag.', 'Super, bis Freitag!', 'Gern.', 'Ja.', 'Ja, gut, bis dann!', 'Gut, am Freitag.', 'Freitag ist gut.', 'Okay, bis Freitag um zehn!']) assert.equal(typedResult(agree, right), RESULT.CORRECT, right);
+  for (const wrong of ['Nein.', 'Gut, am Montag.', 'Ja, Freitag um elf.', 'Gern, aber ich habe keine Zeit.', 'Prima, dann bis Montag.']) assert.equal(typedResult(agree, wrong), RESULT.WRONG, wrong);
+  assert.equal(typedResult(agree, 'ja gern'), RESULT.TYPO, 'a small first letter stays a case slip');
+  assert.equal(typedResult(at(8, 1)[4], 'Ja, Donnerstag um Viertel nach vier ist gut.'), RESULT.CORRECT);
+  // A time after the predicate.
+  for (const right of ['Ich bin frei am Samstag.', 'Ich habe Zeit am Wochenende.']) assert.equal(typedResult(at(7)[4], right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(8)[5], 'Ich habe Zeit am Dienstag abends.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(7)[4], 'Ich bin frei am Tisch.'), RESULT.WRONG, 'a place is no time');
+});
+
 test('spelling, a heard number and a written message are written, never spoken', () => {
   for (const l of withCheck) {
     for (const t of sitting(l)) assert.equal(writtenOnly(t), Boolean(t.spell || t.listen || t.write || t.parts), `${l.id}`);

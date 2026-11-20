@@ -517,7 +517,7 @@ export const CURRICULUM_A11 = {
             // The course teaches a job without an article („Ich bin Lehrer", the notice); „Ich bin eine
             // Studentin" is German too and counts (DaF review 2026-11-19). A job the course never teaches is
             // the learner's own and counts.
-            { canDo: 0, cue: { de: 'Was sind Sie von Beruf?', en: 'What is your job?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your job is, in one sentence.', accepted: ['Ich bin …', 'Ich bin von Beruf …', 'Von Beruf bin ich …', 'Ich arbeite als …', 'Ich arbeite nicht.', 'Ich habe keine Arbeit.'], slot: 'job', slotWords: CHECK_JOBS, example: 'Ich bin Studentin.' },
+            { canDo: 0, cue: { de: 'Was sind Sie von Beruf?', en: 'What is your job?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your job is, in one sentence.', accepted: ['Ich bin …', 'Ich bin von Beruf …', 'Von Beruf bin ich …', 'Ich arbeite als …'], slot: 'job', slotWords: CHECK_JOBS, example: 'Ich bin Studentin.' },
             { canDo: 1, taskDe: 'Und Herr Weber? Fragen Sie nach seinem Beruf.', taskEn: 'Now ask Herr Weber what his job is.', accepted: ['Was sind Sie von Beruf?', 'Und Sie?', 'Und Sie? Was sind Sie von Beruf?', 'Was ist Ihr Beruf?', 'Was machen Sie beruflich?', 'Welchen Beruf haben Sie?', 'Sind Sie …?'], slot: 'job', slotWords: CHECK_JOBS },
             { canDo: 3, cue: { de: 'Wie ist Ihre Telefonnummer?', en: 'What is your phone number?' }, taskDe: 'Antworten Sie mit einem Satz. Sie können eine Nummer erfinden.', taskEn: 'Give a phone number in one sentence. A made-up number is fine.', accepted: ['Meine Telefonnummer ist …', 'Meine Nummer ist …', 'Ich habe die Telefonnummer …'], slot: 'phone', example: 'Meine Telefonnummer ist 0176 2345678.' },
             { canDo: 2, taskDe: 'Herr Weber sagt die Telefonnummer vom Amt. Schreiben Sie die Nummer.', taskEn: 'Herr Weber says the office’s phone number. Write it down.',
@@ -2267,11 +2267,9 @@ export const CURRICULUM_A11 = {
               ] },
             // Lena says yes; the learner agrees the time (a „bis …" names the same day).
             { canDo: 1, taskDe: 'Lena hat Zeit. Sagen Sie ja zu dem Termin.', taskEn: 'Lena is free then. Agree to the time.', slot: 'when', whenPartial: true,
-              accepted: ['Ja, gern.', 'Ja.', 'Ja, gut.', 'Gut.', 'Sehr gut.', 'Super.', 'Prima.', 'Toll.', 'Schön.', 'Okay.', 'Das ist gut.', 'Ja, das ist gut.', 'Bis dann!', 'Gut, bis dann!', 'Super, bis dann!', 'Prima, bis dann!', 'Ja, gern. Bis dann!',
-                'Bis …!', 'Gut, bis …!', 'Super, bis …!', 'Prima, bis …!', 'Toll, bis …!', 'Okay, bis …!', 'Ja, gern. Bis …!', 'Ja, gern, bis …!', 'Gut, dann bis …!',
-                'Das passt.', 'Ja, das passt.', 'Das passt gut.', 'Gut, das passt.', 'Ja, das passt gut.', 'Gut, …', 'Ja, …', 'Okay, …', 'Super, …', 'Prima, …', 'Ja, gern, …', 'Gut, dann …',
-                'Ja, ich habe dann Zeit.', 'Ich habe dann Zeit.', 'Ja, ich habe Zeit.', 'Das ist gut für mich.', 'Ja, das ist gut für mich.', 'Das passt mir.',
-                'Ja, … ist gut.', '… ist gut.', 'Ja, … passt.', '… passt.', '… passt gut.', '… habe ich Zeit.', 'Ja, … habe ich Zeit.', 'Ja, … bin ich frei.', '… bin ich frei.'],
+              agree: ['Ja', 'Gern', 'Gerne', 'Gut', 'Sehr gut', 'Super', 'Prima', 'Toll', 'Schön', 'Okay', 'Das ist gut', 'Das passt', 'Das passt gut'],
+              accepted: ['Ja, gern.', 'Bis dann!', 'Bis …!', 'Dann bis …!', 'Dann …', 'Das passt mir.', 'Ich habe dann Zeit.', 'Ich habe Zeit.', 'Das ist gut für mich.',
+                '… ist gut.', '… passt.', '… passt gut.', '… habe ich Zeit.', '… bin ich frei.'],
               variants: [
                 { cue: { de: 'Ja, am Freitag um zehn bin ich frei.', en: 'Yes, I am free on Friday at ten.' }, when: 'freitag 10:00' },
                 { cue: { de: 'Ja, am Donnerstag um Viertel nach vier bin ich frei.', en: 'Yes, I am free on Thursday at a quarter past four.' }, when: 'donnerstag 16:15' },

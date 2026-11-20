@@ -341,6 +341,26 @@ from round 1; Lektion 9 from round 3; Lektion 8 from round 5. Three blind corpor
 frame created four false passes once (agreeing „Ja, am Freitag um elf."): rescore every corpus after
 each widening. The 1,200 corpus answers of Lektionen 2–6 grade as before every batch 3 commit.
 
+**After the courses session's check of batch 3 (2026-11-20), one rule each:**
+
+- **An honest "none", decided once for the course:** a turn that asks for a fact of the learner's
+  life a real person may not have (a job, a hobby) takes it as a whole sentence („Ich arbeite
+  nicht.", „Ich habe keine Arbeit.", „Ich habe kein Hobby.", „Ich habe keine Hobbys."; `HONEST_NONE`
+  in `finalCheck.js`, so Lektion 2's two strings left its data). A turn that asks for the can-do in
+  the scene does not: „Ich kaufe nichts", „Ich kaufe keine Uhr", „Ich brauche keinen Computer",
+  „Nichts, danke", „Sie spricht nichts", „Ich habe keine Zeit" are wrong (before, „Nichts, danke"
+  and „Sie spricht nichts" passed, „keine Uhr" too; „Ich kaufe nichts" and „Ich brauche nichts" were
+  already refused). A „kein-" thing passes only in a decline (`negative`). Where a fact may be
+  missing for some learners (a phone number, a family) the task already says it may be made up.
+- **Agreeing:** a turn with `agree` (its words of yes) takes those words in front and grades what
+  follows („Prima, dann bis Freitag.", „Gern.", „Ja, gut, bis dann!", „Gut, am Freitag."); Lektion
+  8's 53 accepted answers are now 14 answers and frames plus the yes words.
+- **A time after „frei"/„Zeit"** („Ich bin frei am Samstag.", „Ich habe Zeit am Wochenende.") is the
+  answer with the time before it.
+
+The test sweeps every own-answer turn of every sitting. The 2,010 blind answers of batches 1–3 and
+all 473 probe answers grade exactly as before.
+
 **Marking problems found, not fixed here** (for the marking session): typing without umlauts is a
 typo in the final check only (`checkLoose`); lesson items still refuse „wie spat ist es".
 

@@ -36,7 +36,7 @@ const END = /[.!?]+$/;
 
 // German's closed classes: a gap made only of these names nothing („Ich wohne in und").
 const CLOSED = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
-  'kein', 'keine', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'unsere',
+  'kein', 'keine', 'keinen', 'keinem', 'keiner', 'keines', 'nichts', 'nie', 'niemand', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'unsere',
   'ich', 'du', 'er', 'sie', 'es', 'wir', 'man', 'mich', 'dich', 'ihn', 'uns', 'euch', 'mir', 'dir', 'ihm', 'ihnen',
   'bin', 'bist', 'ist', 'sind', 'seid', 'habe', 'hast', 'hat', 'haben', 'habt',
   'und', 'oder', 'aber', 'auch', 'nicht', 'noch', 'schon', 'sehr', 'nur', 'dann', 'hier', 'da', 'so', 'gern', 'ja', 'nein',
@@ -91,6 +91,19 @@ export function chosenWord(turn, value) {
 }
 
 /**
+ * An honest „none" (one rule for the whole course, 2026-11-20): a turn that asks for a fact of the
+ * learner's life a real person may not have — a job, a hobby — takes it as a whole sentence. A turn that
+ * asks the learner to do the can-do in the scene (buy, say what the office lacks, order, name a free
+ * time, name languages) does not: „Ich kaufe nichts", „Ich brauche keinen Computer", „Nichts, danke",
+ * „Ich habe keine Zeit" skip the can-do. Where a fact may be missing for some learners (a phone number,
+ * a family), the task says it may be made up instead.
+ */
+const HONEST_NONE = {
+  job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.'],
+  hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'],
+};
+
+/**
  * One sitting's turns. A retake takes each turn's next variant and spells the next name on the list.
  * `chosen` is the learner's choice in an earlier choice gap: the turns after it talk about that person,
  * so their `nounFor` keeps only the noun for that person („Meine Mutter", not „Meine Schwester").
@@ -103,7 +116,8 @@ export function checkTurns(check, retake = 0, { chosen = null } = {}) {
       picked = { ...picked, nounFor: only };
     }
     // In the player the check carries the level's words, and each turn knows who it is said to.
-    const turn = check.lexicon ? { ...picked, lexicon: check.lexicon, partner: check.partner } : picked;
+    let turn = check.lexicon ? { ...picked, lexicon: check.lexicon, partner: check.partner } : picked;
+    if (HONEST_NONE[turn.slot] && turn.accepted && !/\?\s*$/.test(frameOf(turn.accepted[0]))) turn = { ...turn, accepted: [...turn.accepted, ...HONEST_NONE[turn.slot]] };
     // A heard day or time is shown after a miss as its example („Dienstag, 9.30 Uhr"), a heard number as its digits.
     if (turn.listen) return { ...turn, accepted: [turn.when || turn.time ? turn.example : digitsOf(turn.listen)], spoken: turn.listen };
     if (turn.parts) return { ...turn, accepted: [turn.example] };
@@ -550,7 +564,9 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       if (only && !only.some((n) => fold(n) === noun) && MEASURE_GENDER[noun] === undefined) return null;
       // A polite decline names what it does not want („keinen Kuchen", „kein Kuchen"): a „kein-" article.
       if (negative && !/^kein/.test(det || '')) return null;
-      if (only && /^kein/.test(det || '')) return null; // „Ich möchte kein Wasser" declines the water
+      // Elsewhere a „kein-" names nothing bought, needed, taken or shown: „Ich kaufe keine Uhr", „Ich
+      // möchte kein Wasser" for the water offered (the honest-none rule above `checkTurns`).
+      if (!negative && /^kein/.test(det || '')) return null;
       // A measure and its content: the article agrees with the measure („ein Glas Wasser", „eine Tasse
       // Tee", „zwei Tassen Kaffee"), and the content is a noun („ein Glas groß" is none).
       const measure = adj ? MEASURE_GENDER[adj] : undefined;
@@ -808,6 +824,8 @@ const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi
 // A greeting before the answer, also to the person by name („Guten Tag, Herr Weber. Hier ist …",
 // „Hallo Herr Weber, hier ist …").
 const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))(?:[\s,]+(?:herr|frau)\s+\p{L}+)?\s*[!,.]\s*/iu;
+// The turn's words of yes (`agree`), one or more, each followed by a comma, a stop or a space.
+const agreeRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+|$))+`, 'iu');
 
 /** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
 export function typedResult(turn, value) {
@@ -870,6 +888,35 @@ export function typedResult(turn, value) {
     const tagless = t.trim().replace(/,?\s*(?:oder|ne|nicht wahr)\s*\?\s*$/i, '?');
     if (tagless !== t.trim()) add(tagless);
   }
+  // Agreeing (`agree`, the turn's words of yes): those in front are the yes („Gern.", „Prima, dann bis Freitag.", „Ja,
+  // gut, bis dann!"); what follows is graded as the rest, and after a yes the time alone may stand
+  // („Gut, am Freitag."). Courses session, 2026-11-20.
+  // A small first letter stays the case slip it is everywhere („ja gern", „ja, bis Freitag").
+  const afterYes = [];
+  const smallYes = new Set();
+  if (turn.agree?.length) {
+    const yes = agreeRe(turn.agree);
+    for (const t of [...tries]) {
+      const s = t.trim();
+      const rest = s.replace(yes, '').trim();
+      if (rest === s) continue;
+      const small = /^\p{Ll}/u.test(s);
+      if (!rest) return small ? RESULT.TYPO : RESULT.CORRECT;
+      // Only a word that is small inside a sentence gets its capital back („bis", „dann", „am"); a
+      // noun keeps what was typed, so „ja, freitag ist gut" keeps its slip.
+      const first = fold(rest.split(/\s+/)[0]).replace(/[.,!?]+$/, '');
+      const r = CLOSED.has(first) || ADVERBS.has(first) || WHEN_GLUE.has(first) || ['bis', 'dann'].includes(first) ? cap(rest) : rest;
+      if (!tries.includes(r)) tries.push(r);
+      afterYes.push(r);
+      if (small) smallYes.add(r);
+    }
+  }
+  // A time after „frei" or „Zeit" („Ich bin frei am Samstag", „Ich habe Zeit am Wochenende") is ordinary
+  // spoken German: the answer with the time before it (courses session, 2026-11-20).
+  for (const t of [...tries]) {
+    const m = t.trim().match(/^(.+?)\s+(frei|zeit)\s+(.+?)([.!?]*)$/iu);
+    if (m && whenOf(m[3])) add(`${m[1]} ${m[3]} ${m[2]}${m[4]}`);
+  }
   // Small words that do not change the answer: „denn", „vielleicht", „heute", „hier", „noch", „im Café"
   // in a question („Haben Sie vielleicht Tee?"); „auch" anywhere („Hunger habe ich auch"); „sehr"
   // before „gern" (second and third corpora of Lektionen 7-9).
@@ -930,8 +977,9 @@ export function typedResult(turn, value) {
       }
     }
   }
-  const results = tries.map((t) => sentenceResult(turn.accepted, t, turn));
+  const results = tries.map((t) => (smallYes.has(t) ? worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO) : sentenceResult(turn.accepted, t, turn)));
   for (const t of slipped) results.push(worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO));
+  for (const t of afterYes) results.push(smallYes.has(t) ? worst(frameResult('…', t, turn), RESULT.TYPO) : frameResult('…', t, turn));
   return oldSpelling ? worst(best(results), RESULT.TYPO) : best(results);
 }
 
