@@ -24,7 +24,7 @@
 import { CURRICULUM_A11 } from './a11.js';
 import { A11_ART } from './a11.art.js';
 import { SESSION_COUNT } from '../../lib/lesson/sessions.js';
-import { courseTestDescription } from '../courseTests/index.js';
+import { courseTestDescription, courseTestMinutes } from '../courseTests/index.js';
 import { curriculumPath } from './index.js';
 import { SUSTAINABLE_PER_WEEK } from '../../lib/course/plan.js';
 
@@ -289,7 +289,7 @@ const outcomesEn = OUTCOME_SOURCES.map(([id, i]) => {
  * @param {number} [perWeek]      units per week; defaults to SUSTAINABLE_PER_WEEK
  */
 export function weeklyEstimate(curriculum = CURRICULUM_A11, perWeek = SUSTAINABLE_PER_WEEK) {
-  const path = curriculumPath(curriculum);
+  const path = curriculumPath(curriculum, { testMinutes: courseTestMinutes(curriculum.testSlug) });
   const sum = (kind) => path.filter((n) => n.kind === kind).reduce((acc, n) => acc + (Number(n.minutes) || 0), 0);
   const lektionMinutes = sum('lektion');
   const checkpointMinutes = sum('checkpoint');
