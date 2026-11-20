@@ -154,6 +154,8 @@ test('Authoring gate rejects short texts, missing genres, practised sentences an
     ['genre', (u) => { u.type = 'message'; }, /must mix/],
     ['practised', (u) => { u.text += '. Wie geht es Ihnen?'; }, /practised sentence/],
     ['construction', (u) => { u.text += ' Meine Schwester wohnt in Berlin.'; }, /deferred possessive-articles/],
+    // A cast name names only the cast (the independent score, 2026-11-20).
+    ['cast', (u) => { u.text += ' Lena ist schon zehn.'; }, /cast name Lena/],
   ]) {
     const bank = structuredClone(LESEN_A11);
     if (name === 'genre') bank['a1.1-cp1'].papers[0].forEach(edit);

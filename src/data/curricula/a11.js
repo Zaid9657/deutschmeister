@@ -142,6 +142,9 @@ export const DIALOG_NAMES = [
   // Wortfeld, the function words and THIS list only — the notice does not count there — and a
   // country name is a proper noun like Italien or Polen two entries up, not lexis to teach.
   'Marokko',
+  // The people of the checkpoint reading bank (a11.lesen.js), who are not the cast of either course: a cast name
+  // names only the cast (the independent score, 2026-11-20; scripts/a11-lesen-check.mjs guards it).
+  'Mia', 'Jonas', 'Sara', 'Ben', 'Novak', 'Becker', 'Meyer', 'Krause', 'Lorenz', 'Seidel', 'Vogt',
 ];
 
 // The taught words that answer a final check's own-answer gap (finalCheck.js `slotWords`, 2026-11-19):

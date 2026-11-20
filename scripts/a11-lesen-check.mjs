@@ -129,6 +129,10 @@ export function checkLesenA11(bank = LESEN_A11) {
   ].filter(Boolean).map(norm));
   const findings = [];
   const ids = new Set(); const texts = new Set();
+  // A cast name names only the cast (the independent score, 2026-11-20: „Lena ist schon zehn.“ made Lena a child):
+  // the bank's people are others, so no unit may use a name a dialogue of either course gives its cast.
+  const cast = new Set(['a1.1', 'a1.2'].flatMap((lv) => (levelSpec(lv)?.curriculum?.lektionen || [])
+    .flatMap((l) => (l.dialog?.lines || []).flatMap((x) => String(x.speaker).split(/\s+/)))).filter((t) => t && !['Herr', 'Frau'].includes(t)));
   const flag = (id, why) => findings.push(`${id}: ${why}`);
   for (const cp of spec.curriculum.checkpoints) {
     const papers = bank[cp.id]?.papers;
@@ -140,6 +144,9 @@ export function checkLesenA11(bank = LESEN_A11) {
         if (!u.id || ids.has(u.id)) flag(u.id, 'duplicate/missing id');
         ids.add(u.id);
         if (texts.has(norm(u.text))) flag(u.id, 'reused text');
+        for (const field of ['text', 'statement', 'evidence', 'rival', 'explanationDe', 'explanationEn']) {
+          for (const name of cast) if (new RegExp(`(?<![\p{L}])${name}(?![\p{L}])`, 'u').test(String(u[field] || ''))) flag(u.id, `${field} uses the cast name ${name} for someone else`);
+        }
         texts.add(norm(u.text));
         if (u.pair != null) flag(u.id, 'independent units cannot declare mirrored pairs');
         if (!['message', 'notice', 'ad', 'sign'].includes(u.type)) flag(u.id, 'unsupported text type');
