@@ -375,3 +375,68 @@ fixed and confirmed by a second; Lektion 9 glosses haben as لديه, as Lektion
 cut) at the station; Lektion 11 Lena and Tim; Lektion 12 Lena and Ana, followed by Checkpoint 4
 (`nextAfter`; there is no Lektion 13). Times and days (`clock`, `when`) carry over to timetables;
 prices to tickets (`listen`, `priceDigits`).
+
+### Batch 4 (Lektionen 10–12), 2026-11-20
+
+**Cast:** Herr Schmidt (owl) now has his portrait, cut from the Lektion 10 scene; every Lektion
+1–12 has its scene (`l10-bahnhof`, `l11-tag`, `l12-fest`; `batch-4-scenes.jpg`).
+
+**New in the final check** (`finalCheck.js` comments, `tests/final-check.test.mjs`): gap kinds
+`month` (a month, or with `day` a date as one writes it, „am 3.5.") and `invite` („zum Fest", „zu
+meiner Party", a day); a span of time („von acht bis vier"); every possessive as the article of a
+subject („mein Bruder und seine Frau"); a person of the story as a guest; `answerWords` (words that
+are an answer alone: yes, goodbye) and `leadWords` (words that may only open one); `none` names the
+honest-none fact of a turn whose gap is of another kind; `partOfDay`; a question in statement order
+with a noun as subject; a heard price or platform is no clock time; a taught verb form written small
+is the verb („frühstücke"); a die-word whose plural is itself is a plural only („die Eltern"); `adjunct`
+(„Ich habe im Büro gearbeitet"), `thingsAfter` („Kaufst du am Samstag Brot ein?"), `only` for a place
+(one journey per sitting), an ordinal day („am dritten Mai"); heard prices and times are read against
+what was heard („15 Fahrkarten" is no price; „Der Zug fährt um neun Uhr dreißig" is the time).
+
+**Proven by:** four DaF rounds with the grader's real verdicts in the prompt. Lektion 12 said ship from round 2, Lektionen 10 and 11 in round 4 (round 3's Lektion 10 blocker came from the evidence file, which labelled turns that differ only in `only` as "every sitting"; `graded-examples.mjs` now labels them per sitting). Blind corpora: first scores 239/260 (91.9 %, eight false passes), 235/260 (90.4 %, told to avoid the obvious, one false pass: „15 Fahrkarten“ as a price) and 250/260 (96.2 %, the most common answers, one false pass: „Was hast du morgen gemacht?“); now 255/260, 258/260 and 257/260. What is left: verdicts given under tasks the reviews then changed („in one sentence“ removed where a short answer is natural; Lektion 12's goodbye asks for a goodbye of this Lektion), „Ich möchte kein Geschenk.“ (the honest-none rule), and two shared-checker rules (a dropped ending „gemach“, a slip in the short word „balt“). The 2,010 blind answers of batches 1–3
+grade as before except one Lektion 2 answer that moved from typo to correct („Und Sie, was sind Sie
+von Beruf?“); every probe set as intended (200 for Lektionen 10–12, `tools/probes/l10-12.mjs`).
+
+**Marking problems found, not fixed here** (shared checker, for the marking session): a dropped
+final letter („gemach“ for „gemacht“) is a changed ending, never a typo; a slip in a word under five
+letters („balt“) is never a typo. Both are the shared checker's rules; teachers would accept them.
+
+## State of the rollout (2026-11-20)
+
+**What every Lektion 1–12 now has:** a final check in the Lektion's own situation (one or more turns
+per can-do, variants on a retake, a part to repeat per can-do, an opening and a passed line by Codex
+from the founder's words; Lektion 3, 6, 9 and 12 lead to the checkpoints, Lektion 12 to the fourth,
+never to a Lektion 13); the „Explain in Arabic" help (Codex from the English, each batch checked by
+a blind back-translation); the scene in three sizes and a 160 px portrait of every speaker. Each
+check of Lektionen 2–12 was reviewed by a Codex DaF teacher until "ship" and measured by three blind
+corpora (first scores in each batch's section above); Lektion 1 was finished with the founder.
+
+**Never played or seen:**
+
+- In a browser: Lektionen 7–12 (both browsers stopped taking input while the app window was hidden:
+  the built-in pane does not draw — "Screenshot timed out … Claude's window is minimized or hidden" —
+  and Chrome's renderer froze — `CDP sendCommand "Runtime.evaluate" timed out after 45000ms`; a later
+  try found Chrome's window minimised, 0 px wide, its screenshot timing out after 30000 ms). Their
+  grading runs through the real `typedResult` in tests and probes; their scenes were looked at as
+  files. Lektionen 2–6 were played at 375 px as a guest (batch 1 and 2 sections), not every one in
+  both languages.
+- Anywhere: the spoken path of any check (no microphone in the test browsers); course audio (the
+  computer voice was triggered in batches 1–2, never judged by a listener); a signed-in run.
+- By a person: no native speaker has read the Arabic of Lektionen 1–12; no learner has taken a check.
+
+**Waiting on Zaid:**
+
+- A native Arabic reader for the help of Lektionen 1–12.
+- Whether to teach the twelve month names before Lektion 12 (only „im Mai" is taught; the check
+  takes a date in numbers instead), and the other course-content points the reviews raised: a guest
+  asking „Haben Sie …?" in Lektion 9's scene, a phone exchange in Lektion 6's scene, the task
+  language („mit einem Satz", „Fragen Sie nach …") taught before the first check; the departure-time
+  question („Wann fährt der Zug?") and „pünktlich / Verspätung" as their own exchange in Lektion 10.
+- Can-do wording the last reviews flagged (course text, so not changed here): Lektion 11's „mit zwei
+  festen Ausdrücken" (the scene models only „Ich habe gearbeitet"; the check also takes „Ich habe …
+  gemacht"), Lektion 12's goodbye can-do (the check asks for „Mach's gut", „Bis bald" or „Bis
+  später" and a wish).
+- The honest-"none" rule decided in batch 3's follow-up (a job or a hobby may honestly be none; an
+  act in the scene may not): a teacher in Lektion 12's corpus would accept „Ich möchte kein
+  Geschenk."; say if the rule should widen.
+- Merging: the chain #266 → #274 → #275 → #277 → batch 4's PR is unmerged by design.

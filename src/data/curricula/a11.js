@@ -3315,7 +3315,7 @@ export const CURRICULUM_A11 = {
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 1: the words', de: 'Teil 1: die Wörter' }],
             [{ en: 'Part 1: the words', de: 'Teil 1: die Wörter' }, { en: 'Part 1: the scene', de: 'Teil 1: die Szene' }],
             [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 2: mein, dein, sein, ihr', de: 'Teil 2: mein, dein, sein, ihr' }],
-            { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
+            [{ en: 'Part 1: the scene', de: 'Teil 1: die Szene' }, { en: 'Part 1: the message from Mum and Dad', de: 'Teil 1: die Nachricht von Mama und Papa' }],
           ],
         },
       },

@@ -62,6 +62,11 @@ const cases = [
   [s(12)[6], 'Tschüss!', 0], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Danke.', 0],
   [s(12)[5], 'Schönen Tag noch!', 1], [s(12)[5], 'Tschüss, schönen Tag noch!', 1], [s(12)[5], 'Einen schönen Tag noch!', 1],
   [s(12)[5], 'Schöne Tag noch!', 0], [s(12)[5], 'Guten Tag!', 0], [s(12)[5], 'Tschüss!', 0],
+  // One journey per sitting: a destination named is the sitting's (second DaF review).
+  [s(10, 1)[2], 'Wann fährt der Zug nach Berlin?', 0], [s(10, 1)[2], 'Wann fährt der Zug nach Österreich?', 1], [s(10, 1)[2], 'Wann fährt der Zug?', 1], [s(10, 2)[2], 'Wann fährt der Zug nach Köln?', 1], [s(10, 2)[2], 'Wann fährt der Zug nach Berlin?', 0],
+  [s(10, 1)[3], 'Was kostet die Fahrkarte nach Österreich?', 1], [s(10, 1)[3], 'Was kostet die Fahrkarte nach Berlin?', 0], [s(10, 2)[3], 'Wie viel kostet die Fahrkarte nach Köln?', 1], [s(10, 2)[3], 'Wie viel kostet die Fahrkarte nach Berlin?', 0],
+  [s(10)[0], 'Nach Hause.', 1], [s(11)[0], 'Ich habe eine Pause gemacht.', 1], [s(11)[0], 'Ich habe Lesen gemacht.', 0], [s(11)[0], 'Ich habe nichts gemacht.', 1], [s(11)[1], 'Was hast du morgen gemacht?', 0], [s(11)[5], 'Kaufst du am Samstag Brot ein?', 1],
+  [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Auf Wiedersehen!', 0],
 ];
 let bad = 0;
 for (const [turn, answer, right] of cases) {
