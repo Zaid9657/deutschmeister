@@ -29,14 +29,14 @@ dienstag dienstage diesem diesen dieser dieses diesmal dinge diphthong dir direk
 donnerstag donnerstage dort drei dreissig dreizehn drit dritte dritten drittens drittes du duerfen
 durch durchsage durchsagen durst durstig dusche duschen ebenfalls ecke ecken ei eier eigene eigenen
 eigenschaft ein eine einem einen einer einfach einfache einfuegen eingaenge eingang eingebracht
-eingefuegt eingekauft eingeladen einige einkaufen einkauft einladen einladung eins einsteigen
-einundzwanzig einzahl einzelkind einzelkinder einzeln elf eltern en ende endet endung endungen
-englisch entfernen enthaelt entschuldigung er erfinden erfolg ergaenzen erkaeltung erkaeltungen
-erklaeren erlaubnis erlaubt erledigen erledigungen erst erste ersten erster ert erwartet erzaehlen
-erzaehlt es esse essen eszett et etwas eu euer eure euro extra eː faehigkeit faehigkeiten faehr
-faehrst faehrt faellt faengt fahr fahre fahren fahrer fahrerin fahrerinnen fahrkarte fahrkarten
-fahrplaene fahrplan fahrpreis fahrrad fahrraeder fahrt fahrten fallend falsch familie familien
-familienname familienstand farbe farben fe fehlt fei feier feiern feiert feminin femininen feminines
+eingefuegt eingekauft eingeladen einige einkaufen einladen einladung eins einsteigen einundzwanzig
+einzahl einzelkind einzelkinder einzeln elf eltern en ende endet endung endungen englisch entfernen
+enthaelt entschuldigung er erfinden erfolg ergaenzen erkaeltung erkaeltungen erklaeren erlaubnis
+erlaubt erledigen erledigungen erst erste ersten erster ert erwartet erzaehlen erzaehlt es esse
+essen eszett et etwas eu euer eure euro extra eː faehigkeit faehigkeiten faehr faehrst faehrt faellt
+faengt fahr fahre fahren fahrer fahrerin fahrerinnen fahrkarte fahrkarten fahrplaene fahrplan
+fahrpreis fahrrad fahrraeder fahrt fahrten fallend falsch familie familien familienname
+familienstand farbe farben fe fehlt fei feier feiere feiern feiert feminin femininen feminines
 fenster ferien fern fernsehen fernseher fest feste festen fester fieber film filme finden findet
 firma firmen fisch fische fischer fleisch fliege fliegen fliegt flohmaerkte flohmarkt flughaefen
 flughafen flugzeug flugzeuge flur flure foermlich folgen folgt fon form formellen formen formular
@@ -52,8 +52,8 @@ gerne gerner ges gesagt geschaeft geschaefte geschenk geschenke geschrieben gesc
 gesichter gespraech gesprochen gestellt gestern gesund gesundheit getanzt getraenk getraenke
 getrinkt getrunken gewesen gewitter gezahlt gezeigt geː gibt glaeser glas glatter gleich gleis
 gleise gluecklich goennen grad groe groesse groessen gross grossem grossen grosses gruen gruesse
-gruessen gruesst grund gruppe gruppen gruss gut gute guten guter haar haare habe haben habt haelse
-haende haette haeufig haeuser hal halb halbe hallo hals haltestelle haltestellen hand handy
+gruessen gruesst grund gruppe gruppen gruss gut gute guten guter haar haare hab habe haben habt
+haelse haende haette haeufig haeuser hal halb halbe hallo hals haltestelle haltestellen hand handy
 handynummer handynummern handys hast hat hatte haus hause haushalt heft hefte heimat heisse heissen
 heisst helfen hemd hemden her herd herde herr herren herrn heute hier hilf hilfe hilfst hilft hin
 hinten hinter hinweis hinweises hobby hobbys hoe hoeflich hoefliche hoeflicher hoeflichkeitsform

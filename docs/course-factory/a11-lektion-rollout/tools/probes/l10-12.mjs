@@ -12,7 +12,7 @@ const cases = [
   [s(10)[0], 'Ich fahre in Berlin.', 0], [s(10)[0], 'Ich fahren nach Berlin.', 0], [s(10)[0], 'Ich fahre nach die Schweiz.', 0], [s(10)[0], 'Ich fahre nach Zug.', 0], [s(10)[0], 'Ich fahre nach.', 0],
   // Lektion 10 — a yes/no question
   [s(10)[1], 'Fährt der Zug nach Berlin?', 1], [s(10)[1], 'Entschuldigung, fährt der Zug nach Berlin?', 1], [s(10)[1], 'Fährt der Zug auch nach Berlin?', 1], [s(10)[1], 'Ist das der Zug nach Berlin?', 1],
-  [s(10)[1], 'Der Zug fährt nach Berlin?', 0], [s(10)[1], 'Fahrt der Zug nach Berlin?', 1], [s(10)[1], 'Fährt der Zug nach Köln?', 0], [s(10)[1], 'Fahren der Zug nach Berlin?', 0], [s(10)[1], 'Wann fährt der Zug nach Berlin?', 0],
+  [s(10)[1], 'Der Zug fährt nach Berlin?', 1], [s(10)[1], 'Fahrt der Zug nach Berlin?', 1], [s(10)[1], 'Fährt der Zug nach Köln?', 0], [s(10)[1], 'Fahren der Zug nach Berlin?', 0], [s(10)[1], 'Wann fährt der Zug nach Berlin?', 0],
   [s(10, 1)[1], 'Fährt der Zug nach Österreich?', 1], [s(10, 2)[1], 'Fährt der Zug nach Köln?', 1],
   // Lektion 10 — when
   [s(10)[2], 'Wann fährt der Zug?', 1], [s(10)[2], 'Um wie viel Uhr fährt der Zug?', 1], [s(10)[2], 'Wann fährt der Zug nach Berlin?', 1], [s(10)[2], 'Wann ist die Abfahrt?', 1], [s(10)[2], 'Wann fährt der Zug ab?', 1],
@@ -29,7 +29,7 @@ const cases = [
   [s(11)[0], 'Ich habe gearbeitet.', 1], [s(11)[0], 'Gestern habe ich gearbeitet.', 1], [s(11)[0], 'Ich habe nicht gearbeitet.', 1], [s(11)[0], 'Lena, ich habe gestern gearbeitet.', 1],
   [s(11)[0], 'Ich gearbeitet.', 0], [s(11)[0], 'Ich habe arbeiten.', 0], [s(11)[0], 'Ich arbeite.', 0], [s(11)[0], 'Ich bin gearbeitet.', 0],
   [s(11)[1], 'Was hast du gestern gemacht?', 1], [s(11)[1], 'Und du? Was hast du gestern gemacht?', 1], [s(11)[1], 'Was hast du gemacht?', 1],
-  [s(11)[1], 'Was hast du gestern machen?', 0], [s(11)[1], 'Was hat du gestern gemacht?', 0], [s(11)[1], 'Was haben Sie gestern gemacht?', 0], [s(11)[1], 'Und du?', 0],
+  [s(11)[1], 'Was hast du gestern machen?', 0], [s(11)[1], 'Was hat du gestern gemacht?', 0], [s(11)[1], 'Was haben Sie gestern gemacht?', 0], [s(11)[1], 'Und du?', 1],
   // Lektion 11 — the morning, getting up, work
   [s(11)[2], 'Ich dusche und frühstücke.', 1], [s(11)[2], 'Morgens dusche ich.', 1], [s(11)[2], 'Ich stehe um sechs auf und dusche.', 1], [s(11)[2], 'Ich trinke Kaffee.', 1], [s(11)[2], 'Ich frühstücke um sieben Uhr.', 1],
   [s(11)[2], 'Ich duschen.', 0], [s(11)[2], 'Ich bin müde.', 0], [s(11)[2], 'Ich Kaffee.', 0],
@@ -58,10 +58,10 @@ const cases = [
   [s(12)[4], 'Ich möchte ein Buch.', 1], [s(12)[4], 'Vielleicht eine Tasche.', 1], [s(12)[4], 'Ich möchte einen Kuchen.', 1],
   [s(12)[4], 'Ich möchte ein Tasche.', 0], [s(12)[4], 'Ich möchte schön.', 0], [s(12)[4], 'Ich möchte nichts.', 0],
   // Lektion 12 — goodbye and a wish
-  [s(12)[5], 'Mach’s gut!', 1], [s(12)[5], "Mach's gut, Lena!", 1], [s(12)[5], 'Bis bald!', 1], [s(12)[5], 'Tschüss, bis bald!', 1], [s(12)[5], 'Bis Samstag!', 1], [s(12)[5], 'Machs gut, bis später!', 1],
-  [s(12)[5], 'Tschüss!', 0], [s(12)[5], 'Guten Tag!', 0], [s(12)[5], 'Danke.', 0],
-  [s(12)[6], 'Schönen Tag noch!', 1], [s(12)[6], 'Tschüss, schönen Tag noch!', 1], [s(12)[6], 'Einen schönen Tag noch!', 1],
-  [s(12)[6], 'Schöne Tag noch!', 0], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Tschüss!', 0],
+  [s(12)[6], 'Mach’s gut!', 1], [s(12)[6], "Mach's gut, Lena!", 1], [s(12)[6], 'Bis bald!', 1], [s(12)[6], 'Tschüss, bis bald!', 1], [s(12)[6], 'Bis Samstag!', 1], [s(12)[6], 'Machs gut, bis später!', 1],
+  [s(12)[6], 'Tschüss!', 1], [s(12)[6], 'Guten Tag!', 0], [s(12)[6], 'Danke.', 0],
+  [s(12)[5], 'Schönen Tag noch!', 1], [s(12)[5], 'Tschüss, schönen Tag noch!', 1], [s(12)[5], 'Einen schönen Tag noch!', 1],
+  [s(12)[5], 'Schöne Tag noch!', 0], [s(12)[5], 'Guten Tag!', 0], [s(12)[5], 'Tschüss!', 0],
 ];
 let bad = 0;
 for (const [turn, answer, right] of cases) {

@@ -357,7 +357,7 @@ function isAdjectiveShape(adj, lexicon) {
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -425,7 +425,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       rest = [...parts.slice(0, at), ...parts.slice(nounAt + 1)];
     }
     if (!rest.length) return at >= 0 ? RESULT.CORRECT : RESULT.WRONG;
-    return whenOf(rest.join(' ')) ? RESULT.CORRECT : RESULT.WRONG;
+    const named = whenOf(rest.join(' '));
+    return named && (!when || sameWhen(named, when, { partial: whenPartial })) ? RESULT.CORRECT : RESULT.WRONG;
   }
   // When: a day, a part of the day and/or a time („am Montag um zehn", „am Wochenende", „abends"); with
   // `when`, the day and time asked about („Hast du am Freitag um zehn Uhr Zeit?").
@@ -447,6 +448,10 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       return (verbs?.has?.(f) || !known(f)) && !lexicon?.genders?.get?.(f);
     };
     if (!raw.length || !ichForm(raw[0])) return RESULT.WRONG;
+    // `partOfDay`: „Was machst du morgens?“ is not answered with „Ich dusche abends“ (first corpus of Lektion 11).
+    const MORNING = ['morgen', 'vormittag', 'früh'];
+    const named = parts.map((w) => w.replace(/s$/, '')).filter((w) => DAY_PARTS.includes(w) || w === 'abend');
+    if (partOfDay && named.some((w) => (MORNING.includes(partOfDay) ? !MORNING.includes(w) : w !== partOfDay))) return RESULT.WRONG;
     let small = false;
     for (let i = 1; i < raw.length; i += 1) {
       const f = fold(raw[i]);
@@ -775,7 +780,7 @@ function messageResult(turn, value) {
 }
 
 // The taught adverbs that may stand in the middle or in front of a statement without changing it.
-const ADVERBS = new Set(['jetzt', 'hier', 'auch', 'noch', 'schon', 'gern', 'gerne', 'heute', 'zusammen', 'immer', 'dort']);
+const ADVERBS = new Set(['jetzt', 'hier', 'auch', 'noch', 'schon', 'gern', 'gerne', 'heute', 'morgen', 'gestern', 'zusammen', 'immer', 'dort']);
 const SUBJECTS = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr']);
 
 /**
@@ -893,6 +898,8 @@ export function typedResult(turn, value) {
     return at && at.time !== null && at.time === clockOf(turn.time) && !(at.half && at.half !== halfOf24(turn.time)) ? RESULT.CORRECT : RESULT.WRONG;
   }
   if (turn.listen) {
+    // A heard price or platform is no clock time: „fünfzehn Uhr“, „um sieben Uhr“ (first corpus of Lektion 10).
+    if (/\b(?:uhr|um)\b/i.test(text) && !/\buhr\b/i.test(turn.listen)) return RESULT.WRONG;
     // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label,
     // „18,00 €" the price „18 Euro" (and „funfundvierzig" without its umlaut is 45). A price heard in
     // euros is not written as cents (blind corpus, 2026-11-20).
@@ -995,8 +1002,9 @@ export function typedResult(turn, value) {
   }
   // A question in statement order („Du tanzt gern?") is the question („Tanzt du gern?").
   for (const t of [...tries]) {
-    const q = t.trim().match(/^(du|sie)\s+(\p{L}+)\s+(.*\?)$/iu);
-    if (q) add(`${q[2]} ${q[1].toLocaleLowerCase('de')} ${q[3]}`);
+    // Also with a noun as the subject („Der Zug fährt nach Berlin?“, first DaF review of Lektion 10).
+    const q = t.trim().match(/^(du|sie|er|es|(?:der|die|das|mein|meine|dein|deine)\s+\p{L}+)\s+(\p{L}+)\s+(.*\?)$/iu);
+    if (q && !SUBJECTS.has(fold(q[2]))) add(`${q[2]} ${/^(du|sie|er|es)$/i.test(q[1]) ? q[1].toLocaleLowerCase('de') : q[1].charAt(0).toLocaleLowerCase('de') + q[1].slice(1)} ${q[3]}`);
   }
   // A time named first and picked up by „da/dann" („Am Freitag um zehn Uhr, hast du da Zeit?") is the
   // question with the time in place („Hast du am Freitag um zehn Uhr Zeit?").
@@ -1016,6 +1024,11 @@ export function typedResult(turn, value) {
   }
   for (const t of [...tries]) tries.push(...verbSecond(t));
   for (const t of [...tries]) tries.push(...gernLast(t));
+  // Where it is for, at the end („Meine Freunde kommen zur Party“, „Ich möchte eine Tasche zum Geburtstag“): the answer without it.
+  for (const t of [...tries]) {
+    const r = t.replace(/\s+(?:zur Party|zum Fest|zum Geburtstag|zu meiner Party|zu meinem Fest|zu meinem Geburtstag)(?=\s*[.!?]*$)/i, '');
+    if (r !== t) tries.push(r);
+  }
   // „im" is „in dem": „Ich wohne im Irak" is the place answer „in dem Irak".
   for (const t of [...tries]) if (/\bim\b/i.test(t)) tries.push(t.replace(/\bim\b/gi, 'in dem'));
   // The family noun may stand where the pronoun stands (`nounFor`): „Meine Mutter kommt aus …" is
