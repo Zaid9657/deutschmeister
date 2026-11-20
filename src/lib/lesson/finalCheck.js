@@ -200,35 +200,61 @@ export function whenOf(text) {
     .replace(/(?<!\d)[.:]|[.:](?!\d)|[,!?;]/g, ' ').split(/\s+/).filter(Boolean);
   let day = null; let part = null; let typo = false;
   const timeWords = [];
+  // „am" takes a day or a part of the day, „um" a clock time (the notice of Lektion 8): „um Montag" and
+  // „am zehn Uhr" name no time (first DaF review of Lektion 8, 2026-11-20).
+  let prev = '';
+  const dayHere = () => prev !== 'um';
   for (const w of words) {
     const base = w.replace(/s$/, '');
     const compound = base.match(/^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)(morgen|vormittag|mittag|nachmittag|abend|nacht)$/);
-    if (compound) { [, day, part] = compound; continue; }
-    if (DAYS.includes(base)) { day = base; continue; }
-    if (DAY_SHORT[w.replace(/\.$/, '')]) { day = DAY_SHORT[w.replace(/\.$/, '')]; continue; }
+    if (compound) { if (!dayHere()) return null; [, day, part] = compound; prev = w; continue; }
+    if (DAYS.includes(base)) { if (!dayHere()) return null; day = base; prev = w; continue; }
+    if (DAY_SHORT[w.replace(/\.$/, '')]) { if (!dayHere()) return null; day = DAY_SHORT[w.replace(/\.$/, '')]; prev = w; continue; }
     if (['wochenende', 'woche', 'tag', 'heute', 'morgen', 'immer'].includes(base) && !(base === 'morgen' && part)) {
+      if (!dayHere()) return null;
       if (base === 'morgen' && day) part = 'morgen'; else day = day ?? base;
+      prev = w;
       continue;
     }
-    if (DAY_PARTS.includes(base)) { part = base; continue; }
+    if (DAY_PARTS.includes(base)) { if (!dayHere()) return null; part = base; prev = w; continue; }
     const slipped = DAYS.find((d) => slip(base, d));
-    if (slipped) { day = slipped; typo = true; continue; }
-    if (WHEN_GLUE.has(w)) continue;
+    if (slipped) { if (!dayHere()) return null; day = slipped; typo = true; prev = w; continue; }
+    if (WHEN_GLUE.has(w)) { prev = w; continue; }
+    if (!timeWords.length && ['am', 'an'].includes(prev)) return null;
     timeWords.push(w);
+    prev = w;
   }
   const time = timeWords.length ? clockOf(timeWords.join(' ')) : null;
   if (timeWords.length && time === null) return null;
   if (day === null && part === null && time === null) return null;
-  return { day, part, time, typo };
+  const partHalf = ['nachmittag', 'abend', 'nacht'].includes(part) ? 'pm' : ['morgen', 'vormittag', 'früh'].includes(part) ? 'am' : null;
+  return { day, part, time, typo, half: clockHalf(timeWords.join(' ')) || partHalf };
 }
 
-/** True when a learner's `when` names the expected day and time („freitag 10:00", or a day alone). */
+/** Morning or afternoon when a clock time says so (an hour from 13 on, „abends", „morgens"), else null. */
+export function clockHalf(text) {
+  const t = numberWordsToDigits(fold(text));
+  const h = t.match(/(\d{1,2})\s*(?:[:.]\s*\d{2}|uhr)/);
+  if (h && Number(h[1]) >= 13) return 'pm';
+  if (/\b(nachmittags?|abends?|nachts?)\b/.test(t)) return 'pm';
+  if (/\b(morgens|vormittags?|früh)\b/.test(t)) return 'am';
+  return null;
+}
+
+// An expected time in the data is written on 24 hours („16:15"): its half of the day is known.
+const halfOf24 = (s) => { const m = String(s || '').match(/(\d{1,2}):\d{2}/); return m ? (Number(m[1]) >= 12 ? 'pm' : 'am') : null; };
+
+/**
+ * True when a learner's `when` names the expected day and time („freitag 10:00", or a day alone). A
+ * time may leave out morning or afternoon („halb zehn"), but not say the other one („21.30" for 9.30).
+ */
 function sameWhen(given, expected) {
   const e = whenOf(expected);
   if (!given || !e) return false;
   if (e.day !== null && given.day !== e.day) return false;
   if (e.time !== null && given.time !== e.time) return false;
-  return true;
+  const eh = halfOf24(expected);
+  return !(e.time !== null && eh && given.half && given.half !== eh);
 }
 
 // Words that may follow the verb of an activity besides nouns („Ich gehe gern ins Kino", „Ich spiele
@@ -297,7 +323,7 @@ function isAdjectiveShape(adj, lexicon) {
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, only }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -328,6 +354,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     if (/\bum\b/i.test(words)) return RESULT.WRONG;
     const at = clockOf(words);
     if (at === null || (time && at !== clockOf(time))) return RESULT.WRONG;
+    // „Zwanzig Uhr dreißig" is evening: wrong for a morning time (first DaF review of Lektion 8).
+    if (time && clockHalf(words) && clockHalf(words) !== halfOf24(time)) return RESULT.WRONG;
     return RESULT.CORRECT;
   }
   // When: a day, a part of the day and/or a time („am Montag um zehn", „am Wochenende", „abends"); with
@@ -480,6 +508,11 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
       const noun = adj ? rest[1] : rest[0];
       const nounRaw = adj ? restRaw[1] : restRaw[0];
       if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || rest.length > 2) return null;
+      // What the turn is about: never a taught thing of the other kind (`slotNot`: no „Kuchen" for a
+      // drink), and with `only`, the thing offered or its measure („Ja, ein Glas, bitte" for water; never
+      // „Ja, einen Kaffee, bitte"). First DaF review of Lektion 9, 2026-11-20.
+      if (slotNot.some((n) => fold(n) === noun)) return null;
+      if (only && !only.some((n) => fold(n) === noun) && MEASURE_GENDER[noun] === undefined) return null;
       // A measure and its content: the article agrees with the measure („ein Glas Wasser", „eine Tasse
       // Tee", „zwei Tassen Kaffee"), and the content is a noun („ein Glas groß" is none).
       const measure = adj ? MEASURE_GENDER[adj] : undefined;
@@ -722,7 +755,7 @@ export function typedResult(turn, value) {
     // A heard day and time („Dienstag, 9.30", „am Dienstag um halb zehn", „Di 9:30") or a heard time.
     const at = whenOf(text);
     if (turn.when) return sameWhen(at, turn.when) ? (at.typo ? RESULT.TYPO : RESULT.CORRECT) : RESULT.WRONG;
-    return at && at.time !== null && at.time === clockOf(turn.time) ? RESULT.CORRECT : RESULT.WRONG;
+    return at && at.time !== null && at.time === clockOf(turn.time) && !(at.half && at.half !== halfOf24(turn.time)) ? RESULT.CORRECT : RESULT.WRONG;
   }
   if (turn.listen) {
     // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label,

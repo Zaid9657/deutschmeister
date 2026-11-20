@@ -2247,11 +2247,11 @@ export const CURRICULUM_A11 = {
             { canDo: 0, cue: { de: 'Wie spät ist es?', en: 'What time is it?' }, slot: 'clock',
               accepted: ['Es ist …', '…'],
               variants: [
-                { taskDe: 'Ihre Uhr zeigt 8.30. Sagen Sie Lena die Uhrzeit.', taskEn: 'Your watch shows 8.30. Tell Lena the time.', time: '8:30', example: 'Es ist halb neun.' },
-                { taskDe: 'Ihre Uhr zeigt 7.15. Sagen Sie Lena die Uhrzeit.', taskEn: 'Your watch shows 7.15. Tell Lena the time.', time: '7:15', example: 'Es ist Viertel nach sieben.' },
-                { taskDe: 'Ihre Uhr zeigt 9.45. Sagen Sie Lena die Uhrzeit.', taskEn: 'Your watch shows 9.45. Tell Lena the time.', time: '9:45', example: 'Es ist Viertel vor zehn.' },
+                { taskDe: 'Es ist Morgen. Ihre Uhr zeigt 8.30. Sagen Sie Lena die Uhrzeit.', taskEn: 'It is morning. Your watch shows 8.30. Tell Lena the time.', time: '8:30', example: 'Es ist halb neun.' },
+                { taskDe: 'Es ist Morgen. Ihre Uhr zeigt 7.15. Sagen Sie Lena die Uhrzeit.', taskEn: 'It is morning. Your watch shows 7.15. Tell Lena the time.', time: '7:15', example: 'Es ist Viertel nach sieben.' },
+                { taskDe: 'Es ist Morgen. Ihre Uhr zeigt 9.45. Sagen Sie Lena die Uhrzeit.', taskEn: 'It is morning. Your watch shows 9.45. Tell Lena the time.', time: '9:45', example: 'Es ist Viertel vor zehn.' },
               ] },
-            { canDo: 0, taskDe: 'Sie haben keine Uhr. Fragen Sie Lena nach der Uhrzeit.', taskEn: 'You have no watch. Ask Lena the time.',
+            { canDo: 0, taskDe: 'Später am Tag: Fragen Sie Lena nach der Uhrzeit.', taskEn: 'Later in the day: ask Lena the time.',
               accepted: ['Wie spät ist es?', 'Wie viel Uhr ist es?', 'Wie spät ist es jetzt?', 'Entschuldigung, wie spät ist es?', 'Weißt du, wie spät es ist?'] },
             { canDo: 2, cue: { de: 'Wann stehst du morgens auf?', en: 'When do you get up in the morning?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you get up, in one sentence.', slot: 'clock',
               accepted: ['Ich stehe um … auf.', 'Um … stehe ich auf.', 'Ich stehe morgens um … auf.', 'Morgens stehe ich um … auf.'], example: 'Ich stehe um sechs Uhr auf.' },
@@ -2265,13 +2265,22 @@ export const CURRICULUM_A11 = {
                 { taskDe: 'Montag, 9.30 Uhr: Fragen Sie Lena, ob sie dann Zeit hat.', taskEn: 'Monday, 9.30 am: ask Lena if she has time then.', when: 'montag 9:30', example: 'Hast du am Montag um halb zehn Zeit?',
                   accepted: ['Hast du … Zeit?', 'Bist du … frei?', 'Hast du … frei?'] },
               ] },
+            // Lena says yes; the learner agrees the time (a „bis …" names the same day).
+            { canDo: 1, taskDe: 'Lena hat Zeit. Sagen Sie ja zu dem Termin.', taskEn: 'Lena is free then. Agree to the time.', slot: 'when',
+              accepted: ['Ja, gern.', 'Ja, gut.', 'Gut.', 'Sehr gut.', 'Super.', 'Prima.', 'Toll.', 'Schön.', 'Okay.', 'Das ist gut.', 'Ja, das ist gut.', 'Bis dann!', 'Gut, bis dann!', 'Super, bis dann!', 'Prima, bis dann!', 'Ja, gern. Bis dann!',
+                'Bis …!', 'Gut, bis …!', 'Super, bis …!', 'Prima, bis …!', 'Toll, bis …!', 'Okay, bis …!', 'Ja, gern. Bis …!', 'Ja, gern, bis …!', 'Gut, dann bis …!'],
+              variants: [
+                { cue: { de: 'Ja, am Freitag um zehn bin ich frei.', en: 'Yes, I am free on Friday at ten.' }, when: 'freitag' },
+                { cue: { de: 'Ja, am Donnerstag um Viertel nach vier bin ich frei.', en: 'Yes, I am free on Thursday at a quarter past four.' }, when: 'donnerstag' },
+                { cue: { de: 'Ja, am Montag um halb zehn bin ich frei.', en: 'Yes, I am free on Monday at half past nine.' }, when: 'montag' },
+              ] },
             { canDo: 3, cue: { de: 'Und wann hast du Zeit?', en: 'And when do you have time?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say when you have time, in one sentence.',
               accepted: ['… habe ich … Zeit.', 'Ich habe … Zeit.', '… bin ich … frei.', 'Ich bin … frei.', '… habe ich … frei.', 'Ich habe … frei.'], slot: 'when', example: 'Am Dienstag habe ich abends Zeit.' },
             { canDo: 1, taskDe: 'Lena sagt, wann ihr Termin ist. Schreiben Sie den Tag und die Uhrzeit.', taskEn: 'Lena says when her appointment is. Write down the day and the time.',
               variants: [
-                { listen: 'Mein Termin beim Arzt ist am Dienstag um halb zehn.', when: 'dienstag 9:30', example: 'Dienstag, 9.30 Uhr' },
-                { listen: 'Mein Termin beim Arzt ist am Donnerstag um Viertel nach vier.', when: 'donnerstag 4:15', example: 'Donnerstag, 16.15 Uhr' },
-                { listen: 'Mein Termin beim Arzt ist am Montag um Viertel vor acht.', when: 'montag 7:45', example: 'Montag, 7.45 Uhr' },
+                { listen: 'Mein Termin beim Arzt ist am Dienstag, morgens um halb zehn.', when: 'dienstag 9:30', example: 'Dienstag, 9.30 Uhr' },
+                { listen: 'Mein Termin beim Arzt ist am Donnerstag um sechzehn Uhr fünfzehn.', when: 'donnerstag 16:15', example: 'Donnerstag, 16.15 Uhr' },
+                { listen: 'Mein Termin beim Arzt ist am Montag, morgens um Viertel vor acht.', when: 'montag 7:45', example: 'Montag, 7.45 Uhr' },
               ] },
           ],
           repeat: [
@@ -2520,17 +2529,18 @@ export const CURRICULUM_A11 = {
             de: 'Sie haben bestellt, gesagt, ob Sie Hunger oder Durst haben, höflich nachgefragt und Angebote angenommen und abgelehnt. Freuen Sie sich vor dem dritten Checkpoint über das, was Sie gelernt haben.',
           },
           turns: [
-            { canDo: 0, cue: { de: 'Guten Tag! Was möchten Sie trinken?', en: 'Hello! What would you like to drink?' }, taskDe: 'Bestellen Sie etwas zu trinken.', taskEn: 'Order something to drink.',
-              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … trinken.', 'Ich nehme …', 'Ich trinke …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', example: 'Ich möchte einen Kaffee, bitte.' },
-            { canDo: 0, cue: { de: 'Und was möchten Sie essen?', en: 'And what would you like to eat?' }, taskDe: 'Bestellen Sie etwas zu essen.', taskEn: 'Order something to eat.',
-              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … essen.', 'Ich nehme …', 'Ich esse …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', example: 'Ich möchte eine Suppe, bitte.' },
-            // „Sie haben Hunger" gives the situation; the learner says it with „ich habe" (the rule of this Lektion).
-            { canDo: 1,
+            // „Sie haben Hunger" gives the situation; the learner says it with „ich habe" (the rule of this Lektion),
+            // in a sentence, so a bare „Ja" shows nothing (first DaF review, 2026-11-20). It comes before the orders.
+            { canDo: 1, taskDe: 'Antworten Sie mit einem Satz.',
               variants: [
-                { cue: { de: 'Haben Sie Hunger?', en: 'Are you hungry?' }, taskDe: 'Sie haben Hunger. Antworten Sie.', taskEn: 'You are hungry. Answer.', accepted: ['Ja, ich habe Hunger.', 'Ich habe Hunger.', 'Ja, ich habe großen Hunger.', 'Ja, Hunger habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin hungrig.', 'Ich bin hungrig.'] },
-                { cue: { de: 'Haben Sie Durst?', en: 'Are you thirsty?' }, taskDe: 'Sie haben Durst. Antworten Sie.', taskEn: 'You are thirsty. Answer.', accepted: ['Ja, ich habe Durst.', 'Ich habe Durst.', 'Ja, ich habe großen Durst.', 'Ja, Durst habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin durstig.', 'Ich bin durstig.'] },
-                { cue: { de: 'Haben Sie Hunger?', en: 'Are you hungry?' }, taskDe: 'Sie haben keinen Hunger. Antworten Sie.', taskEn: 'You are not hungry. Answer.', accepted: ['Nein, ich habe keinen Hunger.', 'Ich habe keinen Hunger.', 'Nein, danke. Ich habe keinen Hunger.', 'Nein, danke, ich habe keinen Hunger.', 'Danke, ich habe keinen Hunger.'] },
+                { cue: { de: 'Guten Tag! Haben Sie Hunger?', en: 'Hello! Are you hungry?' }, taskEn: 'You are hungry. Answer in one sentence.', taskDe: 'Sie haben Hunger. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger.', 'Ich habe Hunger.', 'Ja, ich habe großen Hunger.', 'Ja, Hunger habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin hungrig.', 'Ich bin hungrig.'] },
+                { cue: { de: 'Guten Tag! Haben Sie Durst?', en: 'Hello! Are you thirsty?' }, taskEn: 'You are thirsty. Answer in one sentence.', taskDe: 'Sie haben Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Durst.', 'Ich habe Durst.', 'Ja, ich habe großen Durst.', 'Ja, Durst habe ich.', 'Ja, ich habe Hunger und Durst.', 'Ja, ich bin durstig.', 'Ich bin durstig.'] },
+                { cue: { de: 'Guten Tag! Haben Sie Hunger und Durst?', en: 'Hello! Are you hungry and thirsty?' }, taskEn: 'You are hungry and thirsty. Answer in one sentence.', taskDe: 'Sie haben Hunger und Durst. Antworten Sie mit einem Satz.', accepted: ['Ja, ich habe Hunger und Durst.', 'Ich habe Hunger und Durst.', 'Ja, ich habe Durst und Hunger.', 'Ja, Hunger und Durst habe ich.', 'Ja, ich bin hungrig und durstig.'] },
               ] },
+            { canDo: 0, cue: { de: 'Was möchten Sie trinken?', en: 'What would you like to drink?' }, taskDe: 'Bestellen Sie etwas zu trinken.', taskEn: 'Order something to drink.',
+              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … trinken.', 'Ich nehme …', 'Ich trinke …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', slotNot: ['Kuchen', 'Suppe', 'Salat', 'Brot', 'Frühstück'], example: 'Ich möchte einen Kaffee, bitte.' },
+            { canDo: 0, cue: { de: 'Und was möchten Sie essen?', en: 'And what would you like to eat?' }, taskDe: 'Bestellen Sie etwas zu essen.', taskEn: 'Order something to eat.',
+              accepted: ['Ich möchte …, bitte.', 'Ich möchte …', 'Ich möchte … essen.', 'Ich nehme …', 'Ich esse …', 'Ich hätte gern …', 'Für mich …', '…'], slot: 'thing', slotNot: ['Kaffee', 'Tee', 'Wasser', 'Mineralwasser', 'Orangensaft', 'Saft', 'Bier', 'Wein', 'Milch'], example: 'Ich möchte eine Suppe, bitte.' },
             { canDo: 2,
               variants: [
                 { taskDe: 'Tee: Fragen Sie Paul höflich, ob es das gibt.', taskEn: 'Tea (Tee): ask Paul politely if they have it.', accepted: ['Haben Sie Tee?', 'Haben Sie auch Tee?', 'Haben Sie einen Tee?', 'Gibt es Tee?', 'Gibt es auch Tee?', 'Gibt es hier Tee?', 'Entschuldigung, haben Sie Tee?'] },
@@ -2539,7 +2549,7 @@ export const CURRICULUM_A11 = {
               ] },
             { canDo: 3, taskDe: 'Nehmen Sie das Angebot an.', taskEn: 'Accept the offer.',
               accepted: ['Ja, gern.', 'Ja, gerne.', 'Ja, bitte.', 'Ja, danke.', 'Ja, gern, danke.', 'Ja, sehr gern.', 'Gern.', 'Ja.', { frame: 'Ja, …, bitte.', slot: 'thing' }, { frame: 'Ja, ich möchte …', slot: 'thing' }, { frame: 'Ja, gern, …', slot: 'thing' }],
-              variants: [{ cue: { de: 'Möchten Sie auch Wasser?', en: 'Would you like some water too?' } }, { cue: { de: 'Möchten Sie auch Tee?', en: 'Would you like some tea too?' } }, { cue: { de: 'Möchten Sie auch Kaffee?', en: 'Would you like some coffee too?' } }] },
+              variants: [{ cue: { de: 'Möchten Sie auch Wasser?', en: 'Would you like some water too?' }, only: ['Wasser', 'Mineralwasser'] }, { cue: { de: 'Möchten Sie auch Tee?', en: 'Would you like some tea too?' }, only: ['Tee'] }, { cue: { de: 'Möchten Sie auch Kaffee?', en: 'Would you like some coffee too?' }, only: ['Kaffee'] }] },
             { canDo: 3, taskDe: 'Lehnen Sie höflich ab.', taskEn: 'Say no politely.',
               variants: [
                 { cue: { de: 'Möchten Sie auch Kuchen?', en: 'Would you like some cake too?' }, accepted: ['Nein, danke.', 'Nein danke.', 'Danke, nein.', 'Nein, vielen Dank.', 'Nein, danke. Ich habe keinen Hunger.', 'Nein, danke, ich habe keinen Hunger.', 'Nein, danke, ich möchte keinen Kuchen.', 'Nein, danke. Ich möchte keinen Kuchen.', 'Danke, ich habe keinen Hunger.'] },

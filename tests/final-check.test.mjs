@@ -407,7 +407,7 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
   assert.equal(typedResult(duForm, 'Tanzst du gern?'), RESULT.WRONG, 'after -z the du-form adds only -t');
   assert.equal(typedResult(free, 'Am Dienstag bin ich abends frei.'), RESULT.CORRECT, 'two gaps around „bin ich"');
   assert.equal(typedResult(free, 'Am Tisch bin ich frei.'), RESULT.WRONG, 'a place is no time');
-  const [tell, , getUp, appointment, , heard] = at(8);
+  const [tell, , getUp, appointment, agree, , heard] = at(8);
   for (const right of ['Es ist halb neun.', 'Es ist acht Uhr dreißig.', 'Es ist 8.30 Uhr.', 'Halb neun.']) assert.equal(typedResult(tell, right), RESULT.CORRECT, right);
   for (const wrong of ['Es ist halb acht.', 'Es ist um halb neun.', 'Es ist neun Uhr dreißig.']) assert.equal(typedResult(tell, wrong), RESULT.WRONG, `${wrong} (halb neun is 8.30, and telling the time takes no „um")`);
   assert.equal(typedResult(getUp, 'Ich stehe um halb sieben auf.'), RESULT.CORRECT);
@@ -417,10 +417,22 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
   for (const right of ['Dienstag, 9.30 Uhr', 'am Dienstag um halb zehn', 'Di 9:30']) assert.equal(typedResult(heard, right), RESULT.CORRECT, right);
   for (const wrong of ['Dienstag 10.30', '9.30', 'Mittwoch 9.30']) assert.equal(typedResult(heard, wrong), RESULT.WRONG, wrong);
   assert.equal(modelAnswer(heard), 'Dienstag, 9.30 Uhr', 'after a miss, the day and time as one writes them');
-  const [drink, food, hungry, , accept, decline] = at(9);
+  // The first DaF review of Lektionen 8–9: „am“ for a day, morning and evening, agreeing the time.
+  assert.equal(typedResult(at(8)[5], 'Um Montag habe ich Zeit.'), RESULT.WRONG, 'a weekday takes „am“');
+  assert.equal(typedResult(at(8)[5], 'Um zehn habe ich Zeit.'), RESULT.CORRECT);
+  assert.equal(typedResult(tell, 'Es ist zwanzig Uhr dreißig.'), RESULT.WRONG, 'evening, for a morning time');
+  assert.equal(typedResult(heard, 'Dienstag, 21.30 Uhr'), RESULT.WRONG);
+  assert.equal(typedResult(agree, 'Gut, bis Freitag!'), RESULT.CORRECT);
+  assert.equal(typedResult(agree, 'Bis Montag!'), RESULT.WRONG, 'the day agreed is Friday');
+  const [hungry, drink, food, , accept, decline] = at(9);
   for (const right of ['Ich möchte einen Kaffee, bitte.', 'Einen Kaffee, bitte.', 'Ich möchte ein Glas Mineralwasser.', 'Ich möchte einen Kaffee mit Milch.']) assert.equal(typedResult(drink, right), RESULT.CORRECT, right);
   for (const wrong of ['Ich möchte ein Kaffee.', 'Ich möchte eine Glas Wasser.', 'Ich möchten einen Kaffee.']) assert.equal(typedResult(drink, wrong), RESULT.WRONG, wrong);
   assert.equal(typedResult(food, 'Ein Stück Kuchen, bitte.'), RESULT.CORRECT);
+  assert.equal(typedResult(drink, 'Ich möchte Kuchen.'), RESULT.WRONG, 'a drink, not a food');
+  assert.equal(typedResult(food, 'Ich möchte Wasser.'), RESULT.WRONG, 'a food, not a drink');
+  assert.equal(typedResult(accept, 'Ja, einen Kaffee, bitte.'), RESULT.WRONG, 'water was offered');
+  assert.equal(typedResult(accept, 'Ja, ein Glas, bitte.'), RESULT.CORRECT);
+  assert.equal(typedResult(hungry, 'Ja.'), RESULT.WRONG, 'the task asks for a sentence with „ich habe“');
   assert.equal(typedResult(hungry, 'Ja, ich bin Hunger.'), RESULT.WRONG, '„Hunger haben", the rule of Lektion 9');
   assert.equal(typedResult(accept, 'Ja, gern.'), RESULT.CORRECT);
   assert.equal(typedResult(decline, 'Nein.'), RESULT.WRONG, 'a decline is polite');
