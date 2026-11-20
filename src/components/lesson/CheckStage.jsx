@@ -9,7 +9,7 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
-import { canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../../lib/lesson/finalCheck.js';
+import { canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
 import { canDoLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -27,18 +27,20 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
   const [showLetters, setShowLetters] = useState(false);
   // What the learner answered (typed, or the transcript), so a later turn can follow their choice.
   const [answer, setAnswer] = useState('');
+  // A right answer with a word neither course teaches: the sentence was checked, the word was not (`uncheckedWords`).
+  const [unchecked, setUnchecked] = useState([]);
 
   const submit = () => {
     const result = typedResult(turn, value);
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
-    if (ok) { setOutcome('shown'); setAnswer(value); }
+    if (ok) { setOutcome('shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
     else if (tries === 0) setRetry(result === RESULT.TYPO ? 'typo' : 'retry');
     else setOutcome('missed');
     setTries(tries + 1);
   };
   const spoken = (r) => {
     if (r.selfConfirmed) { setMode('type'); return; } // not measured: typing is the proof
-    if (spokenShown(r, turn)) { setOutcome('shown'); setAnswer(r.transcript || ''); }
+    if (spokenShown(r, turn)) { setOutcome('shown'); setAnswer(r.transcript || ''); setUnchecked(uncheckedWords(turn, r.transcript || '')); }
     else if (r.attempts >= SPOKEN_TRIES) setMode('type'); // speech recognition may be the problem, not the learner
   };
 
@@ -108,6 +110,9 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
         <p role="status" className="flex items-center gap-2 text-[0.9375rem] font-bold text-siegel-deep">
           <Check className="h-4 w-4" aria-hidden="true" /> {t('feedback.correct', lang)}
         </p>
+      )}
+      {outcome === 'shown' && unchecked.length > 0 && (
+        <p className="mt-2 text-[0.875rem] text-graphite">{t('check.unchecked', lang, { word: unchecked.join(', ') })}</p>
       )}
       {outcome === 'missed' && (
         <Card tone="wash" className="p-5" role="status">

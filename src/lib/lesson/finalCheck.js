@@ -21,6 +21,8 @@
 // Arabic-Indic and Persian digits are digits everywhere in the course (`westernDigits`, check.js).
 import { RESULT, checkAnswer, levenshtein, numberWordsToDigits, westernDigits } from './check.js';
 import { READALOUD_PASS_PCT } from './readaloud.js';
+import { COURSE_WORDS } from '../../data/courseWords.js';
+import { CITIES, COUNTRIES, JOBS, LANGUAGES } from './ownWords.js';
 
 // German letter names, so a spelled name is never sound-only (speech.js: every sound has text too).
 const LETTER = { A: 'A', B: 'Be', C: 'Ce', D: 'De', E: 'E', F: 'Ef', G: 'Ge', H: 'Ha', I: 'I', J: 'Jot', K: 'Ka', L: 'El', M: 'Em', N: 'En', O: 'O', P: 'Pe', Q: 'Ku', R: 'Er', S: 'Es', T: 'Te', U: 'U', V: 'Vau', W: 'We', X: 'Ix', Y: 'Ypsilon', Z: 'Zett', Ä: 'Ä', Ö: 'Ö', Ü: 'Ü', ß: 'Eszett' };
@@ -32,6 +34,15 @@ const hasGap = (answer) => String(answer).includes(GAP);
 
 const fold = (s) => String(s || '').normalize('NFC').trim().toLocaleLowerCase('de').replace(/ß/g, 'ss');
 const wordsOf = (s) => String(s).split(/\s+/).filter(Boolean);
+
+// The own-word lists by gap kind, folded (`ownWords.js`); the shapes of a rare job and a rare language, folded.
+const foldedSet = (...lists) => new Set(lists.flat().map((w) => fold(w)));
+const OWN_KIND = { place: foldedSet(COUNTRIES, CITIES), job: foldedSet(JOBS), language: foldedSet(LANGUAGES) };
+const OWN_ALL = foldedSet(COUNTRIES, CITIES, JOBS, LANGUAGES);
+const JOB_SHAPE_FOLDED = /^\p{L}{3,}(?:er|erin|in|ist|istin|ant|antin|ent|entin|eur|eurin|euse|or|orin|mann|frau|kraft|arzt|ärztin|loge|login|ling|helfer|helferin|ker|kerin|eiter|eiterin)$/u;
+const LANGUAGE_SHAPE_FOLDED = /^\p{L}{3,}isch$/u;
+// Countries that are never named without their article (folded): die Türkei, die USA …
+const COUNTRY_ARTICLE = { türkei: 'die', schweiz: 'die', ukraine: 'die', slowakei: 'die', mongolei: 'die', usa: 'pl', niederlande: 'pl', philippinen: 'pl', emirate: 'pl' };
 const END = /[.!?]+$/;
 
 // German's closed classes: a gap made only of these names nothing („Ich wohne in und").
@@ -139,7 +150,7 @@ export function chosenWord(turn, value) {
  * a family), the task says it may be made up instead.
  */
 export const HONEST_NONE = {
-  job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.'],
+  job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.', 'Ich bin arbeitslos.'],
   hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'],
 };
 
@@ -403,7 +414,15 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   // teaches. A taught word of the kind with an ending is a form of it, not an own word: „Mein Heft ist
   // rote", „Ich spreche Deutsche", „Ich bin Studenten" (blind corpus, 2026-11-20).
   const formOfTaught = (w) => /(?:e|er|es|en|em)$/.test(w) && slotWords.some((t) => [1, 2].some((n) => fold(t) === w.slice(0, -n)) && fold(t) !== w);
-  const fits = (w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (near(w, slotWords) || (!known(w) && !formOfTaught(w)));
+  // THE OWN-WORD POLICY (courses session and the independent score, 2026-11-20): a word of the kind is one the turn
+  // lists, one of the kind's German names (`ownWords.js`: languages and countries closed, jobs generous, the big
+  // cities), or — only then — the learner's own: a word no course teaches (both courses' words, `COURSE_WORDS`),
+  // and for a job or a language one of that shape. „Sie spricht Limonade“, „Ich bin Limonade“ are wrong; a small
+  // town is accepted and the learner is told the word itself was not checked (`uncheckedWords`).
+  const ownList = OWN_KIND[slot];
+  const ownShape = { job: JOB_SHAPE_FOLDED, language: LANGUAGE_SHAPE_FOLDED }[slot];
+  const fits = (w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (near(w, slotWords) || Boolean(ownList?.has(w))
+    || (!known(w) && !formOfTaught(w) && !(ownList && COURSE_WORDS.has(asciiUmlauts(w))) && (!ownShape || ownShape.test(w))));
   // A name after a choice („meine Mutter Fatima"): capitalised words the course does not teach.
   const name = (list) => list.every((w) => /^\p{Lu}/u.test(w) && !known(fold(w)) && !CLOSED.has(fold(w)));
   if (slotIn) {
@@ -560,7 +579,10 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     // Schweiz" → „in der Schweiz" (and so „in Schweiz" is wrong).
     const DATIVE = ['der', 'dem', 'den'];
     const DATIVE_OF = { die: 'der', der: 'dem', das: 'dem', pl: 'den' };
-    const taughtArticle = (w) => (typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(w) : undefined);
+    // A country that always has its article keeps it (`COUNTRY_ARTICLE`): „aus der Türkei“, never „aus Türkei“.
+    const taughtArticle = (w) => (typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(w) : undefined) || (COUNTRY_ARTICLE[w] ? [COUNTRY_ARTICLE[w]] : undefined);
+    if (!DATIVE.includes(parts[0]) && COUNTRY_ARTICLE[parts[0]]) return RESULT.WRONG;
+    if (DATIVE.includes(parts[0]) && COUNTRY_ARTICLE[parts[1]] && DATIVE_OF[COUNTRY_ARTICLE[parts[1]]] !== parts[0]) return RESULT.WRONG;
     if (['die', 'das'].includes(parts[0])) return RESULT.WRONG;
     if (DATIVE.includes(parts[0]) && near(parts[1] || '', slotWords)) {
       const g = taughtArticle(parts[1]) || [];
@@ -1254,6 +1276,26 @@ export function typedResult(turn, value) {
   for (const t of slipped) results.push(worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO));
   for (const t of afterYes) results.push(smallYes.has(t) ? worst(frameResult('…', t, turn), RESULT.TYPO) : frameResult('…', t, turn));
   return oldSpelling ? worst(best(results), RESULT.TYPO) : best(results);
+}
+
+// The gap kinds whose word may be the learner's own.
+const OWN_WORD_KINDS = new Set(['place', 'job', 'language', 'hobby', 'thing', 'object', 'activity']);
+/**
+ * The words of a right answer that neither course teaches nor the own-word lists name („Ich wohne in Nordenham“ →
+ * „Nordenham“): the sentence was graded, the word itself was not. The check says so (`check.unchecked`), so a
+ * „correct“ never claims more than was checked (the own-word policy, 2026-11-20). Names are no such word.
+ */
+export function uncheckedWords(turn, value) {
+  const kinds = [turn?.slot, ...(turn?.accepted || []).map((a) => (typeof a === 'object' ? a.slot : null))];
+  if (!kinds.some((k) => OWN_WORD_KINDS.has(k))) return [];
+  const lexicon = turn.lexicon;
+  const listed = new Set([...(turn.slotWords || []), ...(turn.slotIn || []), ...String(turn.partner || '').split(/\s+/)].map((w) => fold(w)));
+  const words = wordsOf(spelledOut(westernDigits(value), lexicon).replace(/[.,!?;:„“”"()«»]/g, ' '));
+  return [...new Set(words.filter((w) => {
+    const f = fold(w);
+    if (!/\p{L}{2,}/u.test(f) || CLOSED.has(f) || isNumberWord(f) || listed.has(f) || OWN_ALL.has(f)) return false;
+    return !(lexicon?.has?.(f) || lexicon?.names?.has?.(f) || COURSE_WORDS.has(asciiUmlauts(f)));
+  }))];
 }
 
 /**

@@ -459,7 +459,7 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
 });
 
 test('one honest-none rule for the whole course; a yes agrees; a time may follow „frei“ (courses session, 2026-11-20)', () => {
-  const NONE = { job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.'], hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'] };
+  const NONE = { job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.', 'Ich bin arbeitslos.'], hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'] };
   const frame = (t) => String(t.accepted[0]?.frame ?? t.accepted[0]);
   let personal = 0;
   for (const l of withCheck) {
@@ -472,7 +472,8 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
         if (NONE[t.none || t.slot]) { personal += 1; for (const none of NONE[t.none || t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
         // Everywhere else the turn asks for the can-do itself: „nichts“ in the learner's gap names nothing.
         assert.equal(typedResult(t, frame(t).replaceAll('…', 'nichts')), RESULT.WRONG, `${where}: ${frame(t).replaceAll('…', 'nichts')}`);
-        for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(typedResult(t, none), RESULT.WRONG, `${where}: ${none}`);
+        // A name is open: „Ich bin arbeitslos“ cannot be told from „Ich bin Carlos“ typed small, so name turns are left out.
+        if (t.slot !== 'name') for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(typedResult(t, none), RESULT.WRONG, `${where}: ${none}`);
       });
     }
   }
@@ -639,4 +640,25 @@ test('one spelling fold: every blind-corpus answer with ä, ö, ü or ß grades 
   assert.equal(typedResult(at(9)[2], 'Ich haette gern ein Stueck Kuchen.'), RESULT.CORRECT);
   assert.equal(typedResult(at(10)[0], 'Ich fahre in die Tuerkei.'), RESULT.CORRECT);
   assert.equal(typedResult(at(2)[2], 'Ich bin muede.'), RESULT.WRONG, '„müde“ is no job, however it is typed');
+});
+
+test('the own-word policy: closed lists for languages and countries, jobs by list or shape, an unknown word accepted and named (2026-11-20)', async () => {
+  const { uncheckedWords } = await import('../src/lib/lesson/finalCheck.js');
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  const [, live, job] = at(2);
+  const lang = at(3)[3];
+  for (const wrong of ['Sie spricht Limonade.', 'Sie spricht Brötchen.', 'Sie spricht Syrien.']) assert.equal(typedResult(lang, wrong), RESULT.WRONG, wrong);
+  for (const right of ['Sie spricht Tigrinya.', 'Sie spricht Tigrinisch.', 'Sie spricht Kurdisch und Arabisch.']) assert.notEqual(typedResult(lang, right), RESULT.WRONG, right);
+  for (const wrong of ['Ich bin Limonade.', 'Ich bin muede.', 'Ich bin Brötchen.', 'Ich bin Bremen.']) assert.equal(typedResult(job, wrong), RESULT.WRONG, wrong);
+  for (const right of ['Ich bin Tischler.', 'Ich bin Bauingenieur.', 'Ich bin arbeitslos.']) assert.equal(typedResult(job, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(at(2)[0], 'Ich komme aus Tuerkei.'), RESULT.WRONG, '„aus der Türkei“');
+  assert.equal(typedResult(at(2)[0], 'Ich komme aus der Tuerkei.'), RESULT.CORRECT);
+  // The learner is told when the word itself was not checked, and only then.
+  assert.deepEqual(uncheckedWords(live, 'Ich wohne in Nordenham.'), ['Nordenham']);
+  assert.deepEqual(uncheckedWords(live, 'Ich wohne in Hamburg.'), []);
+  assert.deepEqual(uncheckedWords(job, 'Ich bin Bauingenieur.'), ['Bauingenieur']);
+  assert.deepEqual(uncheckedWords(at(6)[3], 'Hier ist Zaid.'), [], 'a name is no unchecked word');
+  assert.match(T.en['check.unchecked'], /\{word\}/);
+  assert.match(T.de['check.unchecked'], /\{word\}/);
+  assert.match(readFileSync('src/components/lesson/CheckStage.jsx', 'utf8'), /uncheckedWords\(turn, value\)/);
 });
