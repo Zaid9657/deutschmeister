@@ -68,7 +68,9 @@ export function courseLexicon(curriculum) {
       // A word may be singular and plural at once („der Computer", „die Computer"): every reading counts.
       const gender = (k, g) => known.genders.set(k, [...new Set([...(known.genders.get(k) || []), g])]);
       if (['der', 'die', 'das'].includes(w.article) && w.word && !w.meta) {
-        gender(fold(w.word), w.article);
+        // A die-word whose plural is itself is a plural only („die Eltern", „die Geschwister"): never „meine Eltern kommt".
+        const pluralOnly = w.article === 'die' && w.plural === w.word;
+        if (!pluralOnly) gender(fold(w.word), w.article);
         if (w.plural && !/^[—-]$/.test(w.plural)) gender(fold(w.plural), 'pl');
       }
       const verb = !w.article && /^[a-zäöü]+e?n$/.test(w.word || '') ? w.word.replace(/e?n$/, '') : null;
@@ -98,7 +100,7 @@ export function chosenWord(turn, value) {
  * „Ich habe keine Zeit" skip the can-do. Where a fact may be missing for some learners (a phone number,
  * a family), the task says it may be made up instead.
  */
-const HONEST_NONE = {
+export const HONEST_NONE = {
   job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.'],
   hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'],
 };
@@ -117,7 +119,9 @@ export function checkTurns(check, retake = 0, { chosen = null } = {}) {
     }
     // In the player the check carries the level's words, and each turn knows who it is said to.
     let turn = check.lexicon ? { ...picked, lexicon: check.lexicon, partner: check.partner } : picked;
-    if (HONEST_NONE[turn.slot] && turn.accepted && !/\?\s*$/.test(frameOf(turn.accepted[0]))) turn = { ...turn, accepted: [...turn.accepted, ...HONEST_NONE[turn.slot]] };
+    // `none` names the fact a turn asks about when its gap is of another kind („Wann arbeitest du?“: a job).
+    const none = HONEST_NONE[turn.none || turn.slot];
+    if (none && turn.accepted && !/\?\s*$/.test(frameOf(turn.accepted[0]))) turn = { ...turn, accepted: [...turn.accepted, ...none] };
     // A heard day or time is shown after a miss as its example („Dienstag, 9.30 Uhr"), a heard number as its digits.
     if (turn.listen) return { ...turn, accepted: [turn.when || turn.time ? turn.example : digitsOf(turn.listen)], spoken: turn.listen };
     if (turn.parts) return { ...turn, accepted: [turn.example] };
@@ -223,7 +227,11 @@ export function whenOf(text) {
   // (third corpus of Lektion 8). A note („Freitag 10 Uhr") needs none.
   const sentence = words.includes('am');
   const dayHere = () => prev !== 'um';
+  // A span of time („von acht bis vier", „von 8 bis 16 Uhr", Lektion 11) is its start; its end must be a time too.
+  const endWords = [];
+  let toEnd = false;
   for (const w of words) {
+    if (toEnd || (w === 'bis' && timeWords.length)) { if (toEnd) endWords.push(w); toEnd = true; prev = w; continue; }
     const base = w.replace(/s$/, '');
     const compound = base.match(/^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)(morgen|vormittag|mittag|nachmittag|abend|nacht)$/);
     if (compound) { if (!dayHere()) return null; [, day, part] = compound; prev = w; continue; }
@@ -240,12 +248,13 @@ export function whenOf(text) {
     if (slipped) { if (!dayHere()) return null; day = slipped; typo = true; prev = w; continue; }
     if (WHEN_GLUE.has(w)) { prev = w; continue; }
     if (!timeWords.length && ['am', 'an'].includes(prev)) return null;
-    if (!timeWords.length && sentence && prev !== 'um') return null;
+    if (!timeWords.length && sentence && !['um', 'von', 'ab'].includes(prev)) return null;
     timeWords.push(w);
     prev = w;
   }
   const time = timeWords.length ? clockOf(timeWords.join(' ')) : null;
   if (timeWords.length && time === null) return null;
+  if (toEnd && clockOf(endWords.join(' ')) === null) return null;
   if (day === null && part === null && time === null) return null;
   const partHalf = ['nachmittag', 'abend', 'nacht'].includes(part) ? 'pm' : ['morgen', 'vormittag', 'früh'].includes(part) ? 'am' : null;
   return { day, part, time, typo, half: clockHalf(timeWords.join(' ')) || partHalf };
@@ -348,7 +357,7 @@ function isAdjectiveShape(adj, lexicon) {
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -387,6 +396,37 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     if (time && half && half !== halfOf24(time)) return RESULT.WRONG;
     return RESULT.CORRECT;
   }
+  // A month („im Mai“); with `day`, a day of it as one writes it („am 3. Mai“, „am 3.5.“). Lektion 12.
+  if (slot === 'month') {
+    const m = words.trim().match(/^(?:(\d{1,2})\.\s*)?(\p{L}+|\d{1,2}\.?)$/u);
+    if (!m || Boolean(day) !== Boolean(m[1])) return RESULT.WRONG;
+    if (/^\d/.test(m[2])) return Number(m[2].replace('.', '')) >= 1 && Number(m[2].replace('.', '')) <= 12 ? RESULT.CORRECT : RESULT.WRONG;
+    const w = fold(m[2]).replace(/ä/g, 'ae');
+    const exact = MONTHS.includes(w) || w === 'marz';
+    if (!exact && !MONTHS.some((x) => slip(w, x))) return RESULT.WRONG;
+    return exact && /^\p{Lu}/u.test(m[2]) ? RESULT.CORRECT : RESULT.TYPO;
+  }
+  // An invitation's gap: to what („zum Fest“, „zur Party“, „zu meinem Geburtstag“, „zu meiner Party“)
+  // and/or when („am Samstag“). The article agrees with the noun: „zum Party“ and „zu meinem Party“ are
+  // wrong. Lektion 12.
+  if (slot === 'invite') {
+    const at = parts.findIndex((w) => ['zum', 'zur', 'zu'].includes(w));
+    let rest = parts;
+    if (at >= 0) {
+      const poss = parts[at] === 'zu' ? parts[at + 1] : null;
+      if (parts[at] === 'zu' && !/^(?:mein|dein|unser)(?:em|er)$/.test(poss || '')) return RESULT.WRONG;
+      const nounAt = at + (poss ? 2 : 1);
+      const noun = raw[nounAt];
+      if (!noun || !/^\p{Lu}/u.test(noun)) return RESULT.WRONG;
+      const g = lexicon?.genders?.get?.(fold(noun));
+      const fem = parts[at] === 'zur' || /er$/.test(poss || '');
+      if (g && !g.some((x) => (fem ? x === 'die' : x === 'der' || x === 'das'))) return RESULT.WRONG;
+      if (!g && known(fold(noun))) return RESULT.WRONG;
+      rest = [...parts.slice(0, at), ...parts.slice(nounAt + 1)];
+    }
+    if (!rest.length) return at >= 0 ? RESULT.CORRECT : RESULT.WRONG;
+    return whenOf(rest.join(' ')) ? RESULT.CORRECT : RESULT.WRONG;
+  }
   // When: a day, a part of the day and/or a time („am Montag um zehn", „am Wochenende", „abends"); with
   // `when`, the day and time asked about („Hast du am Freitag um zehn Uhr Zeit?").
   if (slot === 'when') {
@@ -399,7 +439,13 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   // gern" (the frame's „gern" moved to the end), „Ich lese und koche gern". „Ich spielen gern" is wrong.
   if (slot === 'activity') {
     const verbs = lexicon?.verbs;
-    const ichForm = (w) => { const f = fold(w); return f.length >= 3 && /e$/.test(f) && !CLOSED.has(f) && (verbs?.has?.(f) || !known(f)) && !lexicon?.genders?.get?.(f); };
+    // A taught verb form written small is the verb even where a plural looks the same („frühstücke“, „die Frühstücke“).
+    const ichForm = (w) => {
+      const f = fold(w);
+      if (f.length < 3 || !/e$/.test(f) || CLOSED.has(f)) return false;
+      if (verbs?.has?.(f) && /^\p{Ll}/u.test(w)) return true;
+      return (verbs?.has?.(f) || !known(f)) && !lexicon?.genders?.get?.(f);
+    };
     if (!raw.length || !ichForm(raw[0])) return RESULT.WRONG;
     let small = false;
     for (let i = 1; i < raw.length; i += 1) {
@@ -412,6 +458,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
         if (g && g.every((x) => x === 'der' || x === 'das')) return RESULT.WRONG;
       }
       if (/^\p{Lu}/u.test(raw[i]) || ACTIVITY_GLUE.has(f)) continue;
+      // A clock time and the prefix of a verb of two parts („Ich stehe um sechs auf und dusche“, Lektion 11).
+      if (['um', 'uhr', 'halb', 'viertel', 'vor', 'auf', 'ein'].includes(f) || clockOf(f) !== null) continue;
       // A noun the course teaches, written small („am wochenende"), is a typo (first corpus of Lektion 7).
       if (lexicon?.genders?.get?.(f)) { small = true; continue; }
       return RESULT.WRONG;
@@ -528,7 +576,9 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const genders = lexicon?.genders;
     const ARTICLE = slot === 'thing'
       ? { der: ['den', 'einen', 'keinen'], die: ['die', 'eine', 'keine'], das: ['das', 'ein', 'kein'], pl: ['die', 'keine'] }
-      : { der: ['der', 'ein', 'kein', 'mein', 'dein'], die: ['die', 'eine', 'keine', 'meine', 'deine'], das: ['das', 'ein', 'kein', 'mein', 'dein'], pl: ['die', 'keine', 'meine', 'deine'] };
+      // Every possessive of Lektion 12 („meine Mama“, „mein Bruder und seine Frau“, „unsere Gäste“).
+      : { der: ['der', 'ein', 'kein', 'mein', 'dein', 'sein', 'ihr', 'unser', 'euer'], die: ['die', 'eine', 'keine', 'meine', 'deine', 'seine', 'ihre', 'unsere', 'eure'],
+        das: ['das', 'ein', 'kein', 'mein', 'dein', 'sein', 'ihr', 'unser', 'euer'], pl: ['die', 'keine', 'meine', 'deine', 'seine', 'ihre', 'unsere', 'eure'] };
     const ALL = new Set(Object.values(ARTICLE).flat());
     const items = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
     // A noun the course never teaches is the learner's own when it is written as a noun: „Ich kaufe
@@ -587,6 +637,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
         if (!fit.length) return null;
         return fit.every((g) => g === 'pl') ? 'many' : fit.includes('pl') ? 'either' : 'one';
       }
+      // A person of the story is someone too („Lena und Tim kommen“; Lektion 12's guests).
+      if (slot === 'object' && !det && !adj && lexicon?.names?.has?.(noun) && /^\p{Lu}/u.test(nounRaw)) return 'one';
       if (known(noun)) return null; // a taught word that is no noun names no thing
       const genderOk = ['der', 'die', 'das', 'pl'].filter((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : det && !counted && ARTICLE[g].includes(det)) && adjOk(g));
       if (!genderOk.length) return null;
@@ -824,8 +876,8 @@ const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi
 // A greeting before the answer, also to the person by name („Guten Tag, Herr Weber. Hier ist …",
 // „Hallo Herr Weber, hier ist …").
 const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))(?:[\s,]+(?:herr|frau)\s+\p{L}+)?\s*[!,.]\s*/iu;
-// The turn's words of yes (`agree`), one or more, each followed by a comma, a stop or a space.
-const agreeRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+|$))+`, 'iu');
+// The turn's `answerWords` (words of yes, of goodbye), one or more, each followed by a comma, a stop or a space.
+const answerWordsRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+|$))+`, 'iu');
 
 /** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
 export function typedResult(turn, value) {
@@ -888,26 +940,33 @@ export function typedResult(turn, value) {
     const tagless = t.trim().replace(/,?\s*(?:oder|ne|nicht wahr)\s*\?\s*$/i, '?');
     if (tagless !== t.trim()) add(tagless);
   }
-  // Agreeing (`agree`, the turn's words of yes): those in front are the yes („Gern.", „Prima, dann bis Freitag.", „Ja,
+  // `answerWords` are a whole answer alone and may open a longer one: words of yes when agreeing (Lektion 8),
+  // of goodbye (Lektion 12). Those in front are the yes („Gern.", „Prima, dann bis Freitag.", „Ja,
   // gut, bis dann!"); what follows is graded as the rest, and after a yes the time alone may stand
   // („Gut, am Freitag."). Courses session, 2026-11-20.
   // A small first letter stays the case slip it is everywhere („ja gern", „ja, bis Freitag").
   const afterYes = [];
   const smallYes = new Set();
-  if (turn.agree?.length) {
-    const yes = agreeRe(turn.agree);
+  // `leadWords` may open an answer but are none alone („Ja, ich komme mit.“, never „Ja.“ where the
+  // task asks for the sentence; „Tschüss, bis bald!“, never „Tschüss!“ where „bis bald“ is the can-do).
+  if (turn.answerWords?.length || turn.leadWords?.length) {
+    const yes = answerWordsRe([...(turn.answerWords || []), ...(turn.leadWords || [])]);
+    const alone = turn.answerWords?.length ? new RegExp(answerWordsRe(turn.answerWords).source.replace(/^\^/, '(?:^|[\\s,.!])'), 'iu') : null;
     for (const t of [...tries]) {
       const s = t.trim();
       const rest = s.replace(yes, '').trim();
       if (rest === s) continue;
       const small = /^\p{Ll}/u.test(s);
-      if (!rest) return small ? RESULT.TYPO : RESULT.CORRECT;
+      if (!rest) {
+        if (alone?.test(s)) return small ? RESULT.TYPO : RESULT.CORRECT;
+        continue;
+      }
       // Only a word that is small inside a sentence gets its capital back („bis", „dann", „am"); a
       // noun keeps what was typed, so „ja, freitag ist gut" keeps its slip.
       const first = fold(rest.split(/\s+/)[0]).replace(/[.,!?]+$/, '');
       const r = CLOSED.has(first) || ADVERBS.has(first) || WHEN_GLUE.has(first) || ['bis', 'dann'].includes(first) ? cap(rest) : rest;
       if (!tries.includes(r)) tries.push(r);
-      afterYes.push(r);
+      if (turn.answerWords?.length && turn.slot) afterYes.push(r);
       if (small) smallYes.add(r);
     }
   }

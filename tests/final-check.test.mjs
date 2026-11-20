@@ -469,7 +469,7 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
         const own = !t.ownName && !writtenOnly(t) && frame(t).includes('…') && !frame(t).trim().endsWith('?');
         if (!own) return;
         // A fact of the learner's life a real person may not have (a job, a hobby): the none passes.
-        if (NONE[t.slot]) { personal += 1; for (const none of NONE[t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
+        if (NONE[t.none || t.slot]) { personal += 1; for (const none of NONE[t.none || t.slot]) assert.equal(typedResult(t, none), RESULT.CORRECT, `${where}: ${none}`); return; }
         // Everywhere else the turn asks for the can-do itself: „nichts“ in the learner's gap names nothing.
         assert.equal(typedResult(t, frame(t).replaceAll('…', 'nichts')), RESULT.WRONG, `${where}: ${frame(t).replaceAll('…', 'nichts')}`);
         for (const none of [...NONE.job, ...NONE.hobby]) assert.equal(typedResult(t, none), RESULT.WRONG, `${where}: ${none}`);
@@ -493,6 +493,47 @@ test('one honest-none rule for the whole course; a yes agrees; a time may follow
   for (const right of ['Ich bin frei am Samstag.', 'Ich habe Zeit am Wochenende.']) assert.equal(typedResult(at(7)[4], right), RESULT.CORRECT, right);
   assert.equal(typedResult(at(8)[5], 'Ich habe Zeit am Dienstag abends.'), RESULT.CORRECT);
   assert.equal(typedResult(at(7)[4], 'Ich bin frei am Tisch.'), RESULT.WRONG, 'a place is no time');
+});
+
+test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a month, an invitation, possessives, goodbye (batch 4, 2026-11-20)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  const [where, yesNo, when, price, heardPrice, delay, platform] = at(10);
+  assert.equal(typedResult(where, 'Ich fahre nach Damaskus.'), RESULT.CORRECT, 'a place of the learner’s own');
+  assert.equal(typedResult(where, 'Ich fahre in Berlin.'), RESULT.WRONG);
+  assert.equal(typedResult(yesNo, 'Fährt der Zug nach Berlin?'), RESULT.CORRECT);
+  assert.equal(typedResult(yesNo, 'Der Zug fährt nach Berlin?'), RESULT.WRONG, 'the verb first is the rule of Lektion 10');
+  assert.equal(typedResult(when, 'Wann fährt der Zug ab?'), RESULT.CORRECT);
+  assert.equal(typedResult(price, 'Kostet die Fahrkarte zwanzig Euro?'), RESULT.CORRECT);
+  assert.equal(typedResult(heardPrice, '15 Euro'), RESULT.CORRECT);
+  assert.equal(typedResult(delay, 'halb zehn'), RESULT.CORRECT);
+  assert.equal(typedResult(delay, '21.30'), RESULT.WRONG, 'the evening, for a morning train');
+  assert.equal(typedResult(platform, 'Gleis 7'), RESULT.CORRECT);
+  const [yesterday, , morning, , work, shop, along] = at(11);
+  assert.equal(typedResult(yesterday, 'Ich habe nicht gearbeitet.'), RESULT.CORRECT);
+  assert.equal(typedResult(yesterday, 'Ich habe arbeiten.'), RESULT.WRONG);
+  assert.equal(typedResult(morning, 'Ich dusche und frühstücke.'), RESULT.CORRECT, '„frühstücke“ is a verb here, not the plural „Frühstücke“');
+  assert.equal(typedResult(morning, 'Ich stehe um sechs auf und dusche.'), RESULT.CORRECT);
+  assert.equal(typedResult(work, 'Ich arbeite von acht bis vier.'), RESULT.CORRECT, 'a span of time');
+  assert.equal(typedResult(work, 'Ich arbeite nicht.'), RESULT.CORRECT, 'the honest none of a job (`none`)');
+  assert.equal(typedResult(shop, 'Kaufst du am Samstag ein?'), RESULT.CORRECT);
+  assert.equal(typedResult(shop, 'Kaufst du am Samstag?'), RESULT.WRONG, 'the prefix closes the sentence');
+  assert.equal(typedResult(along, 'Ja, gern, ich komme mit.'), RESULT.CORRECT);
+  assert.equal(typedResult(along, 'Ja, gern.'), RESULT.WRONG, '`leadWords` open an answer but are none alone');
+  const [invite, month, askMonth, guests, present, bye, wish] = at(12);
+  assert.equal(typedResult(invite, 'Ich lade dich zu meiner Party ein.'), RESULT.CORRECT);
+  assert.equal(typedResult(invite, 'Ich lade dich zum Party ein.'), RESULT.WRONG, '„zur Party“');
+  for (const right of ['Mein Geburtstag ist im Mai.', 'Mein Geburtstag ist am 3. Mai.', 'Ich habe im März Geburtstag.']) assert.equal(typedResult(month, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(month, 'Mein Geburtstag ist am Mai.'), RESULT.WRONG, 'a month takes „im“');
+  assert.equal(typedResult(askMonth, 'Wann ist deine Geburtstag?'), RESULT.WRONG);
+  assert.equal(typedResult(guests, 'Mein Bruder und seine Frau kommen.'), RESULT.CORRECT);
+  assert.equal(typedResult(guests, 'Lena und Tim kommen.'), RESULT.CORRECT, 'people of the story are guests too');
+  assert.equal(typedResult(guests, 'Meine Eltern kommt.'), RESULT.WRONG, '„die Eltern“ is a plural only');
+  assert.equal(typedResult(guests, 'Mein Mama kommt.'), RESULT.WRONG);
+  assert.equal(typedResult(present, 'Ich möchte ein Buch.'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Tschüss, mach’s gut!'), RESULT.CORRECT);
+  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.WRONG, '„Mach’s gut“ or „Bis bald“ is the can-do');
+  assert.equal(typedResult(wish, 'Schönen Tag noch!'), RESULT.CORRECT);
+  assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[11]), { kind: 'checkpoint', nr: 4 }, 'Lektion 12 leads to the fourth checkpoint, never a Lektion 13');
 });
 
 test('spelling, a heard number and a written message are written, never spoken', () => {
