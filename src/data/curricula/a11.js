@@ -1221,7 +1221,7 @@ export const CURRICULUM_A11 = {
             de: 'Sie haben nach Möbeln gefragt, Preise verstanden und gesagt, was Sie kaufen. Sie haben Ihr Deutsch auf dem Flohmarkt angewendet.',
           },
           turns: [
-            { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?', 'Was ist denn das?'] },
+            { canDo: 0, taskDe: 'Sie sehen etwas am Stand. Fragen Sie Frau Wolf, was das ist.', taskEn: 'You see something at the stall. Ask Frau Wolf what it is.', accepted: ['Was ist das?', 'Entschuldigung, was ist das?', 'Was ist denn das?', 'Was ist das hier?', 'Was ist das da?', 'Das hier, was ist das?'] },
             { canDo: 0, taskDe: 'Fragen Sie nach dem Preis.', taskEn: 'Ask what it costs.',
               variants: [
                 { cue: { de: 'Das ist eine Uhr.', en: 'That is a clock.' }, accepted: ['Was kostet sie?', 'Was kostet die Uhr?', 'Wie viel kostet sie?', 'Wie viel kostet die Uhr?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie teuer ist sie?', 'Wie teuer ist die Uhr?', 'Wie teuer ist das?'] },
@@ -1479,7 +1479,7 @@ export const CURRICULUM_A11 = {
           },
           turns: [
             // „Das ist …" names one thing, „Das sind …" more than one (`count`, DaF review 2026-11-19).
-            { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Lena zeigt auf etwas in Ihrer Tasche. Sagen Sie mit einem Satz, was das ist.', taskEn: 'Lena points at something in your bag. Say what it is, in one sentence.', accepted: [{ frame: 'Das ist …', slot: 'object', count: 'one' }, { frame: 'Das sind …', slot: 'object', count: 'many' }], slot: 'object', example: 'Das ist mein Wörterbuch.' },
+            { canDo: 0, cue: { de: 'Was ist das?', en: 'What is that?' }, taskDe: 'Lena zeigt auf etwas in Ihrer Tasche. Sagen Sie mit einem Satz, was das ist.', taskEn: 'Lena points at something in your bag. Say what it is, in one sentence.', accepted: [{ frame: 'Das ist …', slot: 'object', count: 'one' }, { frame: 'Das sind …', slot: 'object', count: 'many' }, { frame: 'Das hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier ist …', slot: 'object', count: 'one' }, { frame: 'Hier sind …', slot: 'object', count: 'many' }], slot: 'object', example: 'Das ist mein Wörterbuch.' },
             { canDo: 1, taskDe: 'Antworten Sie mit hier oder da.',
               variants: [
                 { cue: { de: 'Wo ist dein Wörterbuch?', en: 'Where is your dictionary?' }, taskEn: 'Answer with hier (here) or da (there).', accepted: ['Es ist hier.', 'Es ist da.', 'Das ist hier.', 'Das ist da.', 'Hier.', 'Da.'], nounFor: { Es: ['Mein Wörterbuch', 'Das Wörterbuch'] } },
@@ -1747,7 +1747,7 @@ export const CURRICULUM_A11 = {
           turns: [
             { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
             { canDo: 3, taskDe: 'Und Ihr Büro? Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?'] },
-            { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Um wie viel Uhr ist die Pause?'] },
+            { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Wann haben wir Pause?', 'Um wie viel Uhr ist die Pause?'] },
             // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …", the model answer) or
             // as Germans answer a call („Hier ist …", or the name alone).
             { canDo: 1, cue: { de: 'Weber, guten Tag!', en: 'Weber, good day!' }, taskDe: 'Herr Weber ruft an. Sagen Sie am Telefon Ihren Namen.', taskEn: 'Herr Weber is calling you. Say your name on the phone.',

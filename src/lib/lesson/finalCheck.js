@@ -107,7 +107,8 @@ export function checkTurns(check, retake = 0, { chosen = null } = {}) {
       const only = Object.fromEntries(Object.entries(picked.nounFor).map(([p, nouns]) => [p, nouns.filter((n) => fold(n).endsWith(` ${fold(chosen)}`))]));
       picked = { ...picked, nounFor: only };
     }
-    const turn = check.lexicon ? { ...picked, lexicon: check.lexicon } : picked;
+    // In the player the check carries the level's words, and each turn knows who it is said to.
+    const turn = check.lexicon ? { ...picked, lexicon: check.lexicon, partner: check.partner } : picked;
     if (turn.listen) return { ...turn, accepted: [digitsOf(turn.listen)], spoken: turn.listen };
     if (turn.parts) return { ...turn, accepted: [turn.example] };
     if (!turn.spell) return turn;
@@ -173,7 +174,7 @@ const near = (word, list) => list.some((w) => fold(w) === word || slip(word, fol
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -258,6 +259,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   // surname may be a word the course teaches only in lower case („Ana Braun", „Frau Braun": the colour braun); the
   // first word may not, so „Gut" or „Danke" alone is no name.
   if (slot === 'name') {
+    // The partner's own name is never the learner's: „Guten Tag, Herr Weber." greets, it names nobody.
+    if (partner && (fold(words) === fold(partner) || fold(words) === fold(partner.split(/\s+/).at(-1)))) return RESULT.WRONG;
     const names = lexicon?.names;
     const exact = lexicon?.exact;
     const from = ['frau', 'herr'].includes(parts[0]) && parts.length > 1 ? 1 : 0;
@@ -398,10 +401,38 @@ function verbSecond(text) {
   if (w.length >= 4 && SUBJECTS.has(fold(w[0])) && ADVERBS.has(fold(w[2]))) out.push([...w.slice(0, 2), ...w.slice(3)].join(' ') + end);
   // An adverb in front: „Jetzt wohne ich in Köln" → „Ich wohne in Köln".
   if (w.length >= 4 && ADVERBS.has(fold(w[0])) && SUBJECTS.has(fold(w[2]))) out.push([cap(w[2]), w[1], ...w.slice(3)].join(' ') + end);
-  // Anything else in front, subject last: „Aus Syrien komme ich" → „Ich komme aus Syrien".
-  if (w.length >= 3 && SUBJECTS.has(fold(w.at(-1))) && !SUBJECTS.has(fold(w[0]))) out.push([cap(w.at(-1)), w.at(-2), lower(w[0]), ...w.slice(1, -2)].join(' ') + end);
+  // Anything else in front, subject last: „Aus Syrien komme ich" → „Ich komme aus Syrien"; „Ein Lineal
+  // ist das" → „Das ist ein Lineal".
+  const last = fold(w.at(-1) || '');
+  const subjectLast = SUBJECTS.has(last) || (last === 'das' && ['ist', 'sind'].includes(fold(w.at(-2) || '')));
+  if (w.length >= 3 && subjectLast && !SUBJECTS.has(fold(w[0]))) out.push([cap(w.at(-1)), w.at(-2), lower(w[0]), ...w.slice(1, -2)].join(' ') + end);
+  // A word in front of „ist", the subject after it: „Rot ist mein Heft" → „Mein Heft ist rot".
+  if (w.length === 4 && ['ist', 'sind'].includes(fold(w[1])) && DETERMINERS.has(fold(w[2]))) out.push([cap(w[2]), w[3], w[1], w[0].toLocaleLowerCase('de')].join(' ') + end);
   return out;
 }
+
+const DETERMINERS = new Set(['der', 'die', 'das', 'mein', 'meine', 'dein', 'deine', 'ihr', 'ihre', 'sein', 'seine']);
+// A pronoun or demonstrative that picks up a noun, by the article the noun takes.
+const PICKS_UP = { der: 'der', er: 'der', die: 'die', sie: 'die', das: 'das', es: 'das' };
+
+/**
+ * A noun named first and picked up by a pronoun („Der Stuhl, was kostet der?", „Mein Büro, wo ist
+ * das?", „Mein Heft: Wo ist es?") is the question with the noun in its place („Was kostet der
+ * Stuhl?"), when the pronoun fits the noun's article; „Der Stuhl, was kostet die?" fits none.
+ */
+function nounFirst(text, lexicon) {
+  const m = String(text).trim().match(/^((?:der|die|das|mein|meine|dein|deine|ihr|ihre)\s+\p{L}+)\s*[,:?]\s*(\p{L}.*?)\s+(der|die|das|er|sie|es)\s*\?$/iu);
+  if (!m) return [];
+  const [det, noun] = m[1].split(/\s+/);
+  const readings = typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(fold(noun)) : undefined;
+  if (readings && !readings.includes(PICKS_UP[fold(m[3])])) return [];
+  return [`${m[2].charAt(0).toLocaleUpperCase('de')}${m[2].slice(1)} ${det.toLocaleLowerCase('de')} ${noun}?`];
+}
+
+// A price is in euros: „18,00 Euro" and „18,- €" are 18; a heard price in euros is no number of cents.
+const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi, 'fünf').replace(/zw(?:oe|o)lf/gi, 'zwölf'))
+  .replace(/(\d),(?:00|-)(?!\d)/g, '$1').replace(/\D/g, '');
+const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))\s*[!,.]\s*/i;
 
 /** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
 export function typedResult(turn, value) {
@@ -411,40 +442,67 @@ export function typedResult(turn, value) {
   }
   const text = westernDigits(value);
   if (turn.listen) {
-    // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label.
-    const digits = (s) => numberWordsToDigits(s).replace(/\D/g, '');
-    if (digits(text) && digits(text) === digits(turn.accepted[0])) return RESULT.CORRECT;
+    // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label,
+    // „18,00 €" the price „18 Euro" (and „funfundvierzig" without its umlaut is 45). A price heard in
+    // euros is not written as cents (blind corpus, 2026-11-20).
+    if (/\beuro\b/i.test(turn.listen) && /\bcent\b|\bct\b/i.test(text)) return RESULT.WRONG;
+    const heard = priceDigits(turn.accepted[0]);
+    if (priceDigits(text) && priceDigits(text) === heard) return RESULT.CORRECT;
     return checkAnswer(text, turn.accepted, { dictation: true }).result;
   }
   if (turn.parts) return messageResult(turn, text);
-  // A reply may open with „Und" („Und woher kommen deine Eltern?") and name the person it is said to
-  // („Herr Weber, …", „…, Lena?"); the rest is the answer.
+  // A reply may open with a greeting („Guten Tag! Was ist das?") or „Und" („Und woher kommen deine
+  // Eltern?") and name the person it is said to („Herr Weber, …", „…, Lena?", „frau wolf was ist das");
+  // the rest is the answer. „Hier, Lena." is „Hier." — „Hier," is no name.
   const cap = (s) => s.charAt(0).toLocaleUpperCase('de') + s.slice(1);
   const tries = [text];
-  const named = text.trim().replace(/^(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*,\s*/u, '').replace(/,\s*(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*(?=\s*[?.!]*$)/u, '');
-  if (named && named !== text.trim()) tries.push(cap(named));
-  // „bitte" at the start or the end of a request is politeness, not a different answer.
+  const add = (t) => { const s = cap(String(t).trim()); if (s && !tries.includes(s)) tries.push(s); };
+  const greeted = text.trim().replace(GREETING_FIRST, '');
+  if (greeted !== text.trim()) add(greeted);
+  const LEAD = /^(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*,\s*/u;
+  const TRAIL = /,\s*(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*(?=\s*[?.!]*$)/u;
+  const partner = turn.partner ? new RegExp(`^${turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[,!:]?\\s+`, 'i') : null;
   for (const t of [...tries]) {
-    const plain = t.trim().replace(/^bitte[,\s]+/i, '').replace(/[,\s]+bitte(?=\s*[?.!]*$)/i, '');
-    if (plain && plain !== t.trim()) tries.push(cap(plain));
+    const s = t.trim();
+    for (const named of [s.replace(LEAD, ''), s.replace(TRAIL, ''), s.replace(LEAD, '').replace(TRAIL, ''), partner ? s.replace(partner, '') : s]) if (named && named !== s) add(named);
+  }
+  // „bitte" is politeness, not a different answer: at the start, at the end, or after the verb
+  // („Wo ist bitte mein Büro?").
+  for (const t of [...tries]) {
+    const plain = t.trim().replace(/^bitte[,\s]+/i, '').replace(/[,\s]+bitte(?=\s*[?.!]*$)/i, '').replace(/,?\s+bitte,?(?=\s)/i, '');
+    if (plain && plain !== t.trim()) add(plain);
   }
   for (const t of [...tries]) {
     const rest = t.trim().replace(/^und[\s,]+/i, '');
-    if (rest && rest !== t.trim()) tries.push(cap(rest));
+    if (rest && rest !== t.trim()) add(rest);
+  }
+  for (const t of [...tries]) for (const s of nounFirst(t, turn.lexicon)) add(s);
+  // The noun asked about, echoed before the answer: „Die Schere? Da." is „Da.".
+  for (const t of [...tries]) {
+    for (const noun of Object.values(turn.nounFor || {}).flat()) {
+      const echo = t.trim().match(new RegExp(`^${noun.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\?\\s*(\\S.*)$`, 'iu'));
+      if (echo) add(echo[1]);
+    }
   }
   for (const t of [...tries]) tries.push(...verbSecond(t));
   // „im" is „in dem": „Ich wohne im Irak" is the place answer „in dem Irak".
   for (const t of [...tries]) if (/\bim\b/i.test(t)) tries.push(t.replace(/\bim\b/gi, 'in dem'));
   // The family noun may stand where the pronoun stands (`nounFor`): „Meine Mutter kommt aus …" is
   // „Sie kommt aus …" with its noun, and the verb after it is graded just the same.
-  // A noun typed without its umlaut („das worterbuch ist hier") still stands for the pronoun, as a typo.
-  const bare = (s) => fold(s).replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
+  // A noun typed without its umlaut („das worterbuch ist hier", „das woerterbuch") still stands for
+  // the pronoun, as a typo.
+  const bare = (s) => fold(s).replace(/([aou])e/g, '$1').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
   const slipped = [];
   for (const t of [...tries]) {
+    const said = wordsOf(t.trim());
     for (const [pronoun, nouns] of Object.entries(turn.nounFor || {})) {
       for (const noun of nouns) {
-        if (fold(t).startsWith(`${fold(noun)} `)) tries.push(pronoun + t.trim().slice(noun.length));
-        else if (bare(t).startsWith(`${bare(noun)} `)) slipped.push(pronoun + t.trim().slice(noun.length));
+        const n = wordsOf(noun).length;
+        const head = said.slice(0, n).join(' ');
+        const rest = said.slice(n).join(' ');
+        if (said.length <= n) continue;
+        if (fold(head) === fold(noun)) tries.push(`${pronoun} ${rest}`);
+        else if (!/[äöü]/.test(fold(head)) && /[äöü]/.test(fold(noun)) && bare(head) === bare(noun)) slipped.push(`${pronoun} ${rest}`);
       }
     }
   }

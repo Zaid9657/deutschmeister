@@ -318,6 +318,25 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   assert.equal(typedResult(askColour, 'Und deine Tasche, welche Farbe hat sie?'), RESULT.CORRECT);
   assert.equal(typedResult(l4[0], 'Was ist denn das?'), RESULT.CORRECT);
   assert.equal(typedResult(sitting(l3)[4], 'Ich spreche Deutsche.'), RESULT.WRONG, 'a taught language with an ending is a form, not an own word');
+  // The second blind corpus (2026-11-20): what comes around a right answer, and prices.
+  const [whatIsIt, askPrice, price, , total] = l4;
+  for (const right of ['Guten Tag! Was ist das da?', 'Frau Wolf, was ist das hier?', 'frau wolf was ist das', 'Und das hier, was ist das?']) assert.notEqual(typedResult(whatIsIt, right), RESULT.WRONG, right);
+  for (const right of ['Und der Stuhl, was kostet der?', 'Die Lampe, wie teuer ist die?']) assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], right.includes('Lampe') ? 1 : 0)[3], right), RESULT.CORRECT, right);
+  assert.equal(typedResult(l4[3], 'Der Stuhl, was kostet die?'), RESULT.WRONG, 'the pronoun picks up the noun’s article');
+  assert.equal(typedResult(office, 'Wo ist bitte mein Büro?'), RESULT.CORRECT);
+  assert.equal(typedResult(office, 'Mein Büro, wo ist das?'), RESULT.CORRECT);
+  assert.equal(typedResult(colour, 'Rot ist mein Heft.'), RESULT.CORRECT);
+  assert.equal(typedResult(what, 'Ein Lineal ist das.'), RESULT.CORRECT);
+  assert.equal(typedResult(where, 'Hier, Lena.'), RESULT.CORRECT, '„Hier," is no name');
+  assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[4], 1)[1], 'Die Schere? Da.'), RESULT.CORRECT);
+  assert.equal(typedResult(l6[0], 'Guten Morgen! Ich brauche ein Telefon.'), RESULT.CORRECT);
+  assert.equal(typedResult(phoneName, 'Guten Tag, Herr Weber.'), RESULT.WRONG, 'the partner’s name is not the learner’s');
+  for (const right of ['18,00 Euro', '18,- €', 'achtzehn Euro']) assert.equal(typedResult(price, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(price, '18 Cent'), RESULT.WRONG, 'a price heard in euros');
+  assert.equal(typedResult(price, '18,50 Euro'), RESULT.WRONG);
+  assert.equal(typedResult(total, '30,00 €'), RESULT.CORRECT);
+  assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], 1)[2], 'funfundvierzig euro'), RESULT.CORRECT);
+  assert.ok(askPrice.accepted.length);
   // A second clause after „und" is part of the answer and must be valid too.
   const own = sitting(l3)[4];
   assert.equal(typedResult(own, 'Ich spreche Arabisch und lerne Deutsch.'), RESULT.CORRECT);
