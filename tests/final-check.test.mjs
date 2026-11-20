@@ -437,6 +437,21 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
   assert.equal(typedResult(accept, 'Ja, gern.'), RESULT.CORRECT);
   assert.equal(typedResult(decline, 'Nein.'), RESULT.WRONG, 'a decline is polite');
   assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[8]), { kind: 'checkpoint', nr: 3 });
+  // The second and third blind corpora: a phone keyboard without umlauts, small words, tags.
+  assert.equal(typedResult(at(8)[1], 'wie spat ist es'), RESULT.TYPO, 'typed without umlauts');
+  assert.notEqual(typedResult(at(8)[2], 'ich stehe um funf uhr auf'), RESULT.WRONG);
+  assert.equal(typedResult(at(8)[0], 'Es ist morgens halb neun.'), RESULT.CORRECT, 'a part of the day with the time');
+  assert.equal(typedResult(at(8)[3], 'Hast du am Freitag zehn Zeit?'), RESULT.WRONG, 'a time in a sentence takes „um“');
+  assert.equal(typedResult(at(8)[3], 'Hast du Zeit am Freitag um 10 Uhr?'), RESULT.CORRECT);
+  assert.equal(typedResult(at(8)[2], 'Am Wochenende stehe ich um neun auf.'), RESULT.CORRECT);
+  assert.equal(typedResult(duForm, 'Du tanzt gern, oder?'), RESULT.CORRECT, 'a tag asks the same question');
+  assert.equal(typedResult(duForm, 'Tanzt du sehr gern?'), RESULT.CORRECT);
+  assert.equal(typedResult(likes, 'Ich gehe gern in Kino.'), RESULT.WRONG, '„ins Kino“');
+  assert.equal(typedResult(at(9)[3], 'Haben Sie vielleicht Tee?'), RESULT.CORRECT);
+  assert.equal(typedResult(at(9)[3], 'Und Tee? Haben Sie den auch?'), RESULT.CORRECT, 'a bare noun picked up by „den“');
+  assert.equal(typedResult(decline, 'Keinen Kuchen, danke.'), RESULT.CORRECT);
+  assert.equal(typedResult(accept, 'Tee? Ja, gerne.'), RESULT.WRONG, 'water was offered, not tea');
+  assert.equal(typedResult(at(9, 1)[4], 'Tee? Ja, gerne.'), RESULT.CORRECT);
 });
 
 test('spelling, a heard number and a written message are written, never spoken', () => {

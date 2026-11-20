@@ -170,7 +170,9 @@ const MEASURE_GENDER = { glas: 'das', gläser: 'pl', tasse: 'die', tassen: 'pl',
  * on a twelve-hour dial (so 20.30 and halb neun are one time), or null when it is no clock time.
  */
 export function clockOf(text) {
-  const t = numberWordsToDigits(fold(text).replace(/\bein uhr\b/g, '1 uhr').replace(/\bum\b/g, ' '))
+  // Number words typed without their umlaut („funf", „zwolf", „funfzehn") are numbers too.
+  const plain = fold(text).replace(/f(?:ue|u)nf/g, 'fünf').replace(/zw(?:oe|o)lf/g, 'zwölf');
+  const t = numberWordsToDigits(plain.replace(/\bein uhr\b/g, '1 uhr').replace(/\bum\b/g, ' '))
     .replace(/[.,!?]+$/, '').replace(/\s+/g, ' ').trim();
   const dial = (h, min) => (Number.isInteger(h) && Number.isInteger(min) && h >= 0 && h <= 24 && min >= 0 && min < 60 ? (h % 12) * 60 + min : null);
   let m;
@@ -203,6 +205,9 @@ export function whenOf(text) {
   // „am" takes a day or a part of the day, „um" a clock time (the notice of Lektion 8): „um Montag" and
   // „am zehn Uhr" name no time (first DaF review of Lektion 8, 2026-11-20).
   let prev = '';
+  // In a sentence („am Freitag um zehn") a clock time takes „um": „am Freitag zehn" names no time
+  // (third corpus of Lektion 8). A note („Freitag 10 Uhr") needs none.
+  const sentence = words.includes('am');
   const dayHere = () => prev !== 'um';
   for (const w of words) {
     const base = w.replace(/s$/, '');
@@ -221,6 +226,7 @@ export function whenOf(text) {
     if (slipped) { if (!dayHere()) return null; day = slipped; typo = true; prev = w; continue; }
     if (WHEN_GLUE.has(w)) { prev = w; continue; }
     if (!timeWords.length && ['am', 'an'].includes(prev)) return null;
+    if (!timeWords.length && sentence && prev !== 'um') return null;
     timeWords.push(w);
     prev = w;
   }
@@ -354,10 +360,14 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   // needs „um" has it outside the gap.
   if (slot === 'clock') {
     if (/\bum\b/i.test(words)) return RESULT.WRONG;
+    // A part of the day may stand with the time („Es ist morgens Viertel nach sieben").
+    const dayPart = (words.match(/\b(morgens|vormittags|nachmittags|abends|früh)\b/i) || [''])[0];
+    const half = dayPart ? (/nachmittags|abends/i.test(dayPart) ? 'pm' : 'am') : clockHalf(words);
+    words = words.replace(/\b(morgens|vormittags|nachmittags|abends|früh)\b/gi, ' ').replace(/\s+/g, ' ').trim();
     const at = clockOf(words);
     if (at === null || (time && at !== clockOf(time))) return RESULT.WRONG;
     // „Zwanzig Uhr dreißig" is evening: wrong for a morning time (first DaF review of Lektion 8).
-    if (time && clockHalf(words) && clockHalf(words) !== halfOf24(time)) return RESULT.WRONG;
+    if (time && half && half !== halfOf24(time)) return RESULT.WRONG;
     return RESULT.CORRECT;
   }
   // When: a day, a part of the day and/or a time („am Montag um zehn", „am Wochenende", „abends"); with
@@ -378,6 +388,12 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     for (let i = 1; i < raw.length; i += 1) {
       const f = fold(raw[i]);
       if (['und', 'oder'].includes(fold(raw[i - 1])) && ichForm(raw[i])) continue;
+      // „in" before a der- or das-noun needs its article („ins Kino", „im Park"): „in Kino" is wrong
+      // (third corpus of Lektion 7). A place without an article („in Bremen") is fine.
+      if (fold(raw[i - 1]) === 'in') {
+        const g = lexicon?.genders?.get?.(f);
+        if (g && g.every((x) => x === 'der' || x === 'das')) return RESULT.WRONG;
+      }
       if (/^\p{Lu}/u.test(raw[i]) || ACTIVITY_GLUE.has(f)) continue;
       // A noun the course teaches, written small („am wochenende"), is a typo (first corpus of Lektion 7).
       if (lexicon?.genders?.get?.(f)) { small = true; continue; }
@@ -592,7 +608,7 @@ function frameResult(frame, value, turn) {
   const own = given.slice(before, given.length - after).join(' ');
   const gap = gapResult(own.replace(/[.,!?]+$/, ''), turn);
   if (gap === RESULT.WRONG) return RESULT.WRONG;
-  return worst(gap, checkAnswer(value, [[head, own, tail].filter(Boolean).join(' ')]).result);
+  return worst(gap, checkLoose(value, [[head, own, tail].filter(Boolean).join(' ')]));
 }
 
 /**
@@ -614,13 +630,29 @@ function twoGapResult(frame, value, turn) {
     const second = given.slice(at + m.length, given.length - t.length).join(' ');
     const strip = (s) => s.replace(/[.,!?]+$/, '');
     let gap;
-    if (turn.slot === 'when') gap = gapResult(strip(`${first} ${second}`.trim()), turn);
+    // An „um" or „am" of the frame between the gaps belongs to the time („… stehe ich um … auf").
+    const glue = ['um', 'am'].includes(m.at(-1)) ? `${m.at(-1)} ` : '';
+    if (turn.slot === 'when') gap = gapResult(strip(`${first} ${second ? glue + second : ''}`.trim()), turn);
     else gap = worst(gapResult(strip(first), turn), second ? gapResult(strip(second), turn) : RESULT.CORRECT);
     if (gap === RESULT.WRONG) continue;
     const model = [head, first, mid, second, tail].filter(Boolean).join(' ');
-    return worst(gap, checkAnswer(value, [model]).result);
+    return worst(gap, checkLoose(value, [model]));
   }
   return RESULT.WRONG;
+}
+
+/**
+ * The shared checker, and then once more for a learner who typed without umlauts or ß („wie spat ist
+ * es", „ich moechte"): a phone keyboard without them. A match that way is a typo. Only when the answer
+ * has no umlaut at all, so „meine Mütter" for „meine Mutter" stays a different word.
+ */
+function checkLoose(value, accepted, options) {
+  const result = checkAnswer(value, accepted, options).result;
+  if (result !== RESULT.WRONG || /[äöüß]/i.test(String(value))) return result;
+  const loose = (s) => String(s).normalize('NFC').replace(/ä/g, 'a').replace(/Ä/g, 'A').replace(/ö/g, 'o').replace(/Ö/g, 'O').replace(/ü/g, 'u').replace(/Ü/g, 'U').replace(/ß/g, 'ss');
+  const typed = String(value).replace(/([aouAOU])e/g, '$1');
+  const again = checkAnswer(typed, accepted.map(loose), options).result;
+  return again === RESULT.WRONG ? (checkAnswer(value, accepted.map(loose), options).result === RESULT.WRONG ? RESULT.WRONG : RESULT.TYPO) : RESULT.TYPO;
 }
 
 /** An accepted answer is a string, or `{ frame, slot, … }` when one frame's gap differs from the turn's. */
@@ -630,7 +662,7 @@ const frameOf = (a) => (typeof a === 'string' ? a : a.frame);
 function sentenceResult(accepted, value, turn) {
   const fixed = accepted.filter((a) => typeof a === 'string' && !hasGap(a));
   return best([
-    ...(fixed.length ? [checkAnswer(value, fixed, { spelling: Boolean(turn.spell) }).result] : []),
+    ...(fixed.length ? [turn.spell ? checkAnswer(value, fixed, { spelling: true }).result : checkLoose(value, fixed)] : []),
     ...accepted.filter((a) => hasGap(frameOf(a))).map((a) => frameResult(frameOf(a), value, typeof a === 'string' ? turn : { ...turn, ...a })),
   ]);
 }
@@ -735,6 +767,17 @@ const PICKS_UP = { der: 'der', er: 'der', die: 'die', sie: 'die', das: 'das', es
  * Stuhl?"), when the pronoun fits the noun's article; „Der Stuhl, was kostet die?" fits none.
  */
 function nounFirst(text, lexicon) {
+  // A bare noun named first and picked up as the object („Tee? Haben Sie den?") is the question with
+  // the noun in place („Haben Sie Tee?"; second corpus of Lektion 9).
+  const bareNoun = String(text).trim().match(/^(\p{Lu}\p{L}*)\s*[,:?]\s*(\p{L}.*?)\s+(den|die|das|ihn)\s*\?$/u);
+  if (bareNoun) {
+    const readings = typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(fold(bareNoun[1])) : undefined;
+    const PICK = { den: 'der', ihn: 'der', die: 'die', das: 'das' };
+    if (!readings || readings.includes(PICK[fold(bareNoun[3])]) || (fold(bareNoun[3]) === 'die' && readings.includes('pl'))) {
+      return [`${bareNoun[2].charAt(0).toLocaleUpperCase('de')}${bareNoun[2].slice(1)} ${bareNoun[1]}?`];
+    }
+    return [];
+  }
   const m = String(text).trim().match(/^((?:der|die|das|mein|meine|dein|deine|ihr|ihre)\s+\p{L}+)\s*[,:?]\s*(\p{L}.*?)\s+(der|die|das|er|sie|es)\s*\?$/iu);
   if (!m) return [];
   const [det, noun] = m[1].split(/\s+/);
@@ -799,7 +842,7 @@ export function typedResult(turn, value) {
   const LEAD = /^(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*,\s*/u;
   const TRAIL = /,\s*(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*(?=\s*[?.!]*$)/u;
   const escaped = turn.partner ? turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null;
-  const partner = escaped ? new RegExp(`^${escaped}[,!:]?\\s+`, 'i') : null;
+  const partner = escaped ? new RegExp(`^${escaped}[,!:?]?\\s+`, 'i') : null;
   // The partner's name at the end, with or without a comma („was ist dein hobby lena?").
   const partnerLast = escaped ? new RegExp(`[,\\s]+${escaped}(?=\\s*[?.!]*$)`, 'i') : null;
   for (const t of [...tries]) {
@@ -818,6 +861,28 @@ export function typedResult(turn, value) {
     // „Und du, was machst du gern?" is „Was machst du gern?": the „Und du" hands the question back.
     const rest = t.trim().replace(/^und(?:\s+du)?[\s,?]+/i, '');
     if (rest && rest !== t.trim()) add(rest);
+  }
+  // A tag at the end („Du tanzt gern, oder?") asks the same question.
+  for (const t of [...tries]) {
+    const tagless = t.trim().replace(/,?\s*(?:oder|ne|nicht wahr)\s*\?\s*$/i, '?');
+    if (tagless !== t.trim()) add(tagless);
+  }
+  // Small words that do not change the answer: „denn", „vielleicht", „heute", „hier", „noch", „im Café"
+  // in a question („Haben Sie vielleicht Tee?"); „auch" anywhere („Hunger habe ich auch"); „sehr"
+  // before „gern" (second and third corpora of Lektionen 7-9).
+  for (const t of [...tries]) {
+    const s = t.trim();
+    if (/\?\s*$/.test(s)) {
+      const asked = s.replace(/\s+(?:im|in diesem) Café(?=\s*\?)/i, '').replace(/\b(?:denn|vielleicht|heute|hier|noch)\s+/gi, '').replace(/\s+(?:denn|vielleicht|heute|hier|noch)(?=\s*\?)/gi, '');
+      if (asked !== s) add(asked);
+    }
+    const plainer = s.replace(/\s+auch\b/gi, '').replace(/\bsehr\s+(?=gerne?\b)/gi, '');
+    if (plainer !== s) add(plainer);
+  }
+  // The thing offered, echoed before the answer: „Tee? Ja, gerne." is „Ja, gerne.".
+  for (const t of [...tries]) {
+    const echo = t.trim().match(/^(\p{Lu}\p{L}*)\s*\?\s+(\S.*)$/u);
+    if (echo && (!turn.only || turn.only.some((n) => fold(n) === fold(echo[1])))) add(echo[2]);
   }
   // A question in statement order („Du tanzt gern?") is the question („Tanzt du gern?").
   for (const t of [...tries]) {
