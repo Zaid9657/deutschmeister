@@ -27,6 +27,8 @@ Decisions he has locked:
 
 | The teacher's name | Frau Hoffmann (2026-11-12). "Frau Weber" was dropped because the story already has a Herr Weber, the official in Lektion 2 |
 
+Update 2026-11-17: the founder replaced the teacher as the course guide with the otter from his partner's design; see lesson-look-2026-11-17/README.md. The teacher rows above are history.
+
 Still open with him: the subscription price, and what happens to the one-time offers launched on
 2026-11-11.
 

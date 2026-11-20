@@ -17,6 +17,7 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
+import { abschlusstestA11 } from '../src/data/courseTests/abschlusstestA11.js';
 
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 const NRS = LEKTIONEN.map((l) => l.nr);
@@ -180,7 +181,10 @@ test('the six outcomes are can-dos the course teaches, not marketing', () => {
 
 test('weeklyEstimate derives from the path minutes and the sustainable pace', () => {
   const est = weeklyEstimate();
-  const path = curriculumPath(CURRICULUM_A11);
+  // The final test's length is its own sections' sum, one value (the independent score, 2026-11-20: 65 vs 40).
+  const testMinutes = abschlusstestA11.sections.reduce((a, s) => a + s.minutes, 0);
+  const path = curriculumPath(CURRICULUM_A11, { testMinutes });
+  assert.equal(curriculumPath(CURRICULUM_A11).at(-1).minutes, null, 'no typed number for the final test');
   const sum = (kind) => path.filter((n) => n.kind === kind).reduce((a, n) => a + n.minutes, 0);
   assert.equal(est.lektionMinutes, LEKTIONEN.reduce((a, l) => a + l.minutes, 0));
   assert.equal(est.checkpointMinutes, sum('checkpoint'));
@@ -329,11 +333,15 @@ test('WortfeldStage renders an icon circle, a flip toggle and a "show all Englis
   assert.match(src, /wortfeld\.showAllEnglish/, 'must reference the show-all-English string key');
   assert.match(src, /wortfeld\.en/, 'a flipped card must render the text "EN" tag, not colour alone');
   assert.match(src, /WortfeldAudioBadge/, 'must keep an audio-source badge (one per stage since W3.4)');
+  // Memory mode: a pressed toggle; the card's German (and the line that spells it) waits for the tap.
+  assert.match(src, /aria-pressed=\{memory\}/);
+  assert.match(src, /const german = memory \? flipped : !flipped;/);
+  assert.match(src, /\{line && german && \(/);
 });
 
 test('the wortfeld string keys (EN tag, show/hide all English) exist in both chrome languages with no empty value', () => {
   const src = readFileSync(new URL('../src/lib/lesson/strings.js', import.meta.url), 'utf8');
-  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish'];
+  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish', 'wortfeld.memory'];
   for (const key of keys) {
     const matches = src.match(new RegExp(`'${key.replace('.', '\\.')}':\\s*'[^']+'`, 'g')) || [];
     assert.equal(matches.length, 2, `"${key}" must appear once in each of the en/de tables with a non-empty value`);

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check } from 'lucide-react';
+import { Trophy, BookOpen, Target, CalendarClock, Headphones, Mic, Check, Circle } from 'lucide-react';
 import Card from '../ui/Card.jsx';
+import GuideOtter from '../illustrations/GuideOtter.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import WordsLearnedCards from './WordsLearnedCards.jsx';
@@ -13,6 +14,7 @@ import SaveProgressCard from '../course/SaveProgressCard.jsx';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { canDoLines } from '../../lib/course/canDo.js';
+import { clearVoices, readVoices } from '../../lib/lesson/voiceKeep.js';
 import { supabase } from '../../utils/supabase.js';
 import { SOCIAL_LINKS } from '../../data/navigation.js';
 import { SOCIAL_ICONS } from '../socialIcons.js';
@@ -43,7 +45,7 @@ function skillText(line, lang) {
   return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
 }
 
-export default function RecapStage({ stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ checkShown = null, stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -116,6 +118,9 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
   const canDo = lektion ? canDoLines(lektion, lang) : [];
+  const [voicesGone, setVoicesGone] = useState(false);
+  const voiceOwner = user?.id;
+  const voices = useMemo(() => (voicesGone ? {} : readVoices(lektion?.id, voiceOwner)), [voicesGone, lektion, voiceOwner]);
 
   return (
     <StageShell
@@ -126,13 +131,19 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
+        <GuideOtter lektionId={lektion?.id} pose="satisfied" size={112} className="mx-auto mb-3 h-28 w-28" />
+        {lektion && <p className="mb-4 text-center text-[0.9375rem] leading-snug text-ink" data-otter-says>{t('otter.end', lang, { nr: lektion.nr })}</p>}
         {canDo.length > 0 && (
           <>
             <h3 className="font-display text-lg text-ink">{t('recap.canDo.title', lang)}</h3>
             <ul className="mt-3 space-y-2">
-              {canDo.map((line) => (
+              {/* After a final check, only what it showed is ticked (2026-11-18); without one, as before. */}
+              {canDo.map((line, i) => (
                 <li key={line} className="flex items-start gap-2 text-[0.9375rem] leading-snug text-ink">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" /> {line}
+                  {!checkShown || checkShown[i]
+                    ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
+                    : <Circle className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />}
+                  <span>{line}{checkShown && !checkShown[i] && <span className="block text-[0.8125rem] text-graphite">{t('recap.canDo.notYet', lang)}</span>}</span>
                 </li>
               ))}
             </ul>
@@ -153,6 +164,27 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
           )}
         </p>
       </Card>
+
+      {/* The first and latest recording, kept only on this device (voiceKeep.js, founder 2026-11-18). */}
+      {voices.first && voices.latest && (
+        <Card className="mt-5 p-5">
+          <p className="font-display text-lg leading-snug text-ink">{t('recap.voices.title', lang)}</p>
+          {[['first', voices.first], ['latest', voices.latest]].map(([kind, take]) => (
+            <div key={kind} className="mt-4">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t(`recap.voices.${kind}`, lang)}</p>
+              {take.text && <p className="mt-1 text-[0.9375rem] text-ink" lang="de">{take.text}</p>}
+              <audio controls preload="metadata" src={take.src} aria-label={t(`recap.voices.${kind}`, lang)} className="mt-2 w-full" />
+            </div>
+          ))}
+          <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
+            {t('recap.voices.device', lang)}{' '}
+            <button type="button" className="min-h-11 font-bold text-siegel-deep underline underline-offset-2 hover:text-ink"
+              onClick={() => { clearVoices(lektion?.id, voiceOwner); setVoicesGone(true); }}>
+              {t('recap.voices.delete', lang)}
+            </button>
+          </p>
+        </Card>
+      )}
 
       {!user && level ? <SaveProgressCard level={level} /> : null}
 

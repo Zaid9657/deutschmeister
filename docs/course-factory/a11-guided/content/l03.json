@@ -5,7 +5,7 @@
       "titleEn": "A message with a photo",
       "instructionDe": "Lesen Sie die Nachricht von Ana. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the message from Ana. Tap a word for its meaning.",
-      "text": "Hallo Tim!\nDas ist meine Familie.\nMein Vater und meine Mutter kommen aus Marokko.\nMein Bruder ist zwanzig, seine Frau ist auch jung.\nSie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.\nMeine Schwester ist schon verheiratet.\nWir sprechen zusammen Arabisch und Deutsch.\nUnd du? Hast du Geschwister oder bist du Einzelkind?\nBis morgen! Ana",
+      "text": "Hallo Tim!\nDas ist meine Familie.\nMein Vater und meine Mutter kommen aus Marokko.\nMein Bruder ist zwanzig, seine Frau ist auch jung.\nSie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.\nMeine Schwester ist schon verheiratet.\nWir sprechen zusammen Arabisch. Ich spreche auch Deutsch.\nUnd du? Welche Sprachen sprichst du? Hast du Geschwister oder bist du Einzelkind?\nBis morgen! Ana",
       "questions": [
         {
           "promptDe": "Was schreibt Ana über ihren Bruder? Wählen Sie.",

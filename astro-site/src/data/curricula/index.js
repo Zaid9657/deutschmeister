@@ -33,14 +33,18 @@ export const levelTestNodeId = (curriculum) => `${curriculum.level}-leveltest`;
 /** The LIVE curriculum whose final test is this Modelltest slug, or null. */
 export const curriculumForTestSlug = (slug) => Object.values(CURRICULA).find((c) => c.testSlug && c.testSlug === slug) || null;
 
-/** Flattened path: lektion, checkpoint, lektion … leveltest — what the course home renders. */
-export function curriculumPath(curriculum) {
+/**
+ * Flattened path: lektion, checkpoint, lektion … leveltest — what the course home renders. The final test's
+ * length is its own sections' sum (`courseTestMinutes` in src/data/courseTests, which the Astro twin cannot
+ * import), so a caller that shows or adds minutes passes it in; otherwise the node says null, never a guess.
+ */
+export function curriculumPath(curriculum, { testMinutes = null } = {}) {
   const path = [];
   for (const l of curriculum.lektionen) {
     path.push({ kind: 'lektion', id: l.id, nr: l.nr, title: l.title, minutes: l.minutes });
     const cp = curriculum.checkpoints.find((c) => c.afterLektion === l.nr);
     if (cp) path.push({ kind: 'checkpoint', id: cp.id, nr: cp.nr, title: cp.title, minutes: 12, afterLektion: l.nr });
   }
-  path.push({ kind: 'leveltest', id: levelTestNodeId(curriculum), title: `Abschlusstest ${curriculum.code}`, minutes: 65, testSlug: curriculum.testSlug });
+  path.push({ kind: 'leveltest', id: levelTestNodeId(curriculum), title: `Abschlusstest ${curriculum.code}`, minutes: testMinutes, testSlug: curriculum.testSlug });
   return path;
 }

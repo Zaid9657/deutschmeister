@@ -89,3 +89,42 @@ export function verdictFor(percent, passPercent) {
   if (percent >= passPercent) return 'knapp'; // above, but without buffer
   return 'nicht-bereit'; // below the documented threshold
 }
+
+/**
+ * The most a learner scores in a section by giving one and the same answer everywhere — the same option key, or
+ * the same place in the list: the checkpoints' guess ceiling (buildCheckpoint.js `guessCeiling`), for the course
+ * tests. Listening keys load from the database, so a section without static keys has none (0).
+ */
+export function sectionGuessCeiling(section) {
+  const byKey = new Map();
+  const byPlace = new Map();
+  const add = (m, k) => m.set(k, (m.get(k) || 0) + 1);
+  for (const part of section?.parts || []) {
+    const items = part.type === 'mc-group' ? part.items || [] : part.type === 'cloze' ? part.gaps || [] : [];
+    for (const it of items) {
+      add(byKey, it.answer);
+      add(byPlace, (it.options || []).findIndex((o) => (o?.key ?? o) === it.answer));
+    }
+    if (part.type === 'matching') for (const t of part.texts || []) add(byKey, part.answers?.[t.id]);
+  }
+  const most = (m) => (m.size ? Math.max(...m.values()) : 0);
+  return Math.max(most(byKey), most(byPlace));
+}
+
+/**
+ * The verdict of a saved attempt (the independent score, 2026-11-20): the band of its percent, but „nicht-bereit“
+ * while a scored section is no better than one constant answer — reading answered „first option“ throughout
+ * (4 of 8) with listening at 7 of 10 was 61 % and „knapp“. The checkpoints' `sectionPasses` rule, here for the
+ * final tests. An attempt saved without section scores is judged by its percent alone.
+ */
+export function attemptVerdict(attempt, mock) {
+  const verdict = verdictFor(Math.round((attempt.score / attempt.max_score) * 100), mock.passPercent);
+  if (verdict === 'nicht-bereit') return verdict;
+  const scores = attempt.section_scores || {};
+  const guessed = (mock.sections || []).some((section) => {
+    const got = scores[section.key];
+    const ceiling = sectionGuessCeiling(section);
+    return got && ceiling > 0 && got.score <= ceiling;
+  });
+  return guessed ? 'nicht-bereit' : verdict;
+}

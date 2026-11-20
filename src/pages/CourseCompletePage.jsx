@@ -4,6 +4,7 @@ import { Trophy, Award, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { courseFor } from '../data/courses/index.js';
+import { courseTestDescription } from '../data/courseTests/index.js';
 import { curriculumFor, curriculumPath } from '../data/curricula/index.js';
 import { stationFor, stationStatusLine, ticketLines } from '../data/offers.js';
 import { productKeyForLevel } from '../data/pricing.js';
@@ -116,7 +117,6 @@ export default function CourseCompletePage() {
     if (!user) setBuyIntent(step.productKey);
   };
   const testSlug = curriculum ? curriculum.testSlug : course.testSlug;
-  const testFormat = curriculum ? curriculum.examName : course.testFormat;
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink" lang={lang}>
@@ -145,8 +145,8 @@ export default function CourseCompletePage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Reveal>
             <Card raised className="flex h-full flex-col p-5">
-              <h2 className="font-bold text-ink">{de ? 'Abschlusstest' : 'Final test'} · {testFormat}</h2>
-              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{de ? 'Ein Übungstest zum Kurs. Das Ergebnis ist kein Goethe-/telc-Ergebnis.' : 'A practice test for this course. The result is not a Goethe or telc exam result.'}</p>
+              <h2 className="font-bold text-ink">{de ? 'Abschlusstest zum Kurs' : 'Final course assessment'}</h2>
+              <p className="mt-1 flex-1 text-[0.875rem] text-graphite">{de ? 'Ein Übungstest zum Kurs. Das Ergebnis ist kein Goethe-/telc-Ergebnis.' : 'A practice test for this course. The result is not a Goethe or telc exam result.'} {courseTestDescription(testSlug, lang)}</p>
               <Button to={`/modelltest/${testSlug}`} variant="primary" size="md" className="mt-4">{complete ? (de ? 'Test wiederholen' : 'Repeat the test') : (de ? 'Zum Abschlusstest' : 'Take the final test')} <ArrowRight className="ml-1 h-4 w-4" /></Button>
             </Card>
           </Reveal>

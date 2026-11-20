@@ -1,0 +1,1366 @@
+// A Lektion's final check (2026-11-18): one or more turns per can-do, answered aloud or typed.
+// A can-do counts as shown only when every one of its turns was shown. Nothing here locks the next
+// Lektion — the founder chose a recommendation over a locked path; the check only decides which
+// can-dos the end screen ticks.
+//
+// Turn kinds (2026-11-19, made general for Lektionen 2–12):
+//   accepted   fixed answers, graded by the shared checker (check.js).
+//   `…`        an accepted answer with a gap is an OWN answer: the learner fills the gap with their
+//              own words (a country, a job, an age). The words around the gap are graded by the shared
+//              checker; the gap by its kind (`slot`), its first word (`slotIn`, `slotNot`) and what it
+//              names (`slotWords`, see gapFits).
+//   parts      a short written message: one sentence for each part, in any order, with an optional
+//              greeting and sign-off.
+//   ownName    Lektion 1's own-name turn: an opening and a name.
+//   spell      a name spelled letter by letter, written by the learner.
+//   listen     a number the partner says, written by the learner.
+//   write      a turn that is written, never spoken.
+//   variants   what a retake changes, one entry per sitting, so a retake is not the same paper.
+//   example    a complete answer to show after a miss where the answer is the learner's own.
+//   nounFor    the family nouns that may stand where a pronoun stands („Meine Mutter" for „Sie").
+// Arabic-Indic and Persian digits are digits everywhere in the course (`westernDigits`, check.js).
+import { RESULT, checkAnswer, levenshtein, numberWordsToDigits, westernDigits } from './check.js';
+import { READALOUD_PASS_PCT } from './readaloud.js';
+import { COURSE_WORDS } from '../../data/courseWords.js';
+import { CITIES, COUNTRIES, JOBS, LANGUAGES } from './ownWords.js';
+
+// German letter names, so a spelled name is never sound-only (speech.js: every sound has text too).
+const LETTER = { A: 'A', B: 'Be', C: 'Ce', D: 'De', E: 'E', F: 'Ef', G: 'Ge', H: 'Ha', I: 'I', J: 'Jot', K: 'Ka', L: 'El', M: 'Em', N: 'En', O: 'O', P: 'Pe', Q: 'Ku', R: 'Er', S: 'Es', T: 'Te', U: 'U', V: 'Vau', W: 'We', X: 'Ix', Y: 'Ypsilon', Z: 'Zett', Ä: 'Ä', Ö: 'Ö', Ü: 'Ü', ß: 'Eszett' };
+const lettersOf = (word) => Array.from(word.normalize('NFC')).map((c) => (c === 'ß' ? c : c.toLocaleUpperCase('de')));
+
+/** The gap an own answer leaves for the learner's words. */
+export const GAP = '…';
+const hasGap = (answer) => String(answer).includes(GAP);
+
+const fold = (s) => String(s || '').normalize('NFC').trim().toLocaleLowerCase('de').replace(/ß/g, 'ss');
+const wordsOf = (s) => String(s).split(/\s+/).filter(Boolean);
+
+// The own-word lists by gap kind, folded (`ownWords.js`); the shapes of a rare job and a rare language, folded.
+const foldedSet = (...lists) => new Set(lists.flat().map((w) => fold(w)));
+const OWN_KIND = { place: foldedSet(COUNTRIES, CITIES), job: foldedSet(JOBS), language: foldedSet(LANGUAGES) };
+const OWN_ALL = foldedSet(COUNTRIES, CITIES, JOBS, LANGUAGES);
+const JOB_SHAPE_FOLDED = /^\p{L}{3,}(?:er|erin|in|ist|istin|ant|antin|ent|entin|eur|eurin|euse|or|orin|mann|frau|kraft|arzt|ärztin|loge|login|ling|helfer|helferin|ker|kerin|eiter|eiterin)$/u;
+const LANGUAGE_SHAPE_FOLDED = /^\p{L}{3,}isch$/u;
+// Things that are the learner's own in the scenes, so „mein“ names the same thing as „der“ („mein Zug“, „mein Büro“).
+// With their genders, so an untaught one („Ticket“) works too. Never what is for sale („meine Uhr“ at the stall).
+const OWN_THINGS = new Map(Object.entries({ zug: 'der', fahrkarte: 'die', ticket: 'das', bus: 'der', abfahrt: 'die', büro: 'das', arbeitsplatz: 'der',
+  platz: 'der', tisch: 'der', stift: 'der', heft: 'das', tasche: 'die', buch: 'das', wörterbuch: 'das', handy: 'das', termin: 'der', schlüssel: 'der',
+  computer: 'der', rucksack: 'der', nummer: 'die', telefonnummer: 'die', adresse: 'die', geburtstag: 'der', party: 'die', fest: 'das', zimmer: 'das',
+  kurs: 'der', pause: 'die', mittagspause: 'die', arbeit: 'die', chef: 'der', chefin: 'die', kollege: 'der', kollegin: 'die' }));
+// Countries that are never named without their article (folded): die Türkei, die USA …
+const COUNTRY_ARTICLE = { türkei: 'die', schweiz: 'die', ukraine: 'die', slowakei: 'die', mongolei: 'die', usa: 'pl', niederlande: 'pl', philippinen: 'pl', emirate: 'pl' };
+const END = /[.!?]+$/;
+
+// German's closed classes: a gap made only of these names nothing („Ich wohne in und").
+const CLOSED = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
+  'kein', 'keine', 'keinen', 'keinem', 'keiner', 'keines', 'nichts', 'nie', 'niemand', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'unsere',
+  'ich', 'du', 'er', 'sie', 'es', 'wir', 'man', 'mich', 'dich', 'ihn', 'uns', 'euch', 'mir', 'dir', 'ihm', 'ihnen',
+  'bin', 'bist', 'ist', 'sind', 'seid', 'habe', 'hast', 'hat', 'haben', 'habt',
+  'und', 'oder', 'aber', 'auch', 'nicht', 'noch', 'schon', 'sehr', 'nur', 'dann', 'hier', 'da', 'so', 'gern', 'ja', 'nein',
+  'in', 'an', 'auf', 'aus', 'bei', 'mit', 'nach', 'von', 'zu', 'für', 'um', 'im', 'am', 'zum', 'zur', 'vom']);
+
+/** A heard number as the learner writes it: one group of digits per spoken group („null vier zwei eins, sechs drei acht" → „0421 638"). */
+export const digitsOf = (said) => String(said).split(/[,–-]/).map((group) => numberWordsToDigits(group).replace(/\D/g, '')).filter(Boolean).join(' ');
+
+/**
+ * Every word the level teaches (its Wortfeld, with plurals and the plain present forms of its
+ * verbs), folded. A gap word the course teaches must be one of the turn's `slotWords`; a word the
+ * course never teaches is the learner's own (Syrien, Krankenpfleger, Kurdisch) and is welcome.
+ */
+const LEXICONS = new WeakMap();
+export function courseLexicon(curriculum) {
+  if (curriculum && typeof curriculum === 'object' && LEXICONS.has(curriculum)) return LEXICONS.get(curriculum);
+  const known = buildLexicon(curriculum);
+  if (curriculum && typeof curriculum === 'object') LEXICONS.set(curriculum, known);
+  return known;
+}
+
+function buildLexicon(curriculum) {
+  const known = new Set();
+  // Alongside the words: the cast's names (a name gap takes them), the verbs' present forms (a clause
+  // after „und" starts with one) and every noun's article („den Stuhl", „die Lampe").
+  known.names = new Set();
+  known.verbs = new Set();
+  known.genders = new Map();
+  known.exact = new Set(); // the taught words as written, capitals included
+  for (const l of curriculum?.lektionen || []) {
+    // The cast's names are course words too: „Ich bin Ana" names no job.
+    for (const line of l.dialog?.lines || []) {
+      for (const token of String(line.speaker).split(/\s+/)) { known.add(fold(token)); if (!['herr', 'frau'].includes(fold(token))) known.names.add(fold(token)); }
+    }
+    for (const w of l.wortfeld || []) {
+      for (const text of [w.de, w.word, w.plural]) for (const token of String(text || '').split(/[^\p{L}]+/u)) if (token) { known.add(fold(token)); known.exact.add(token); }
+      // A word may be singular and plural at once („der Computer", „die Computer"): every reading counts.
+      const gender = (k, g) => known.genders.set(k, [...new Set([...(known.genders.get(k) || []), g])]);
+      if (['der', 'die', 'das'].includes(w.article) && w.word && !w.meta) {
+        // A die-word whose plural is itself is a plural only („die Eltern", „die Geschwister"): never „meine Eltern kommt".
+        const pluralOnly = w.article === 'die' && w.plural === w.word;
+        if (!pluralOnly) gender(fold(w.word), w.article);
+        if (w.plural && !/^[—-]$/.test(w.plural)) gender(fold(w.plural), 'pl');
+      }
+      const verb = !w.article && /^[a-zäöü]+e?n$/.test(w.word || '') ? w.word.replace(/e?n$/, '') : null;
+      if (verb) for (const ending of ['e', 'st', 't', 'en', 'et']) { known.add(fold(verb + ending)); known.verbs.add(fold(verb + ending)); }
+    }
+    // The checks' own lists of places, jobs and languages are course words too: „Lehrer Bremen" is no job.
+    const lists = (x) => [x.slotWords || [], ...(x.extras || []).map((e) => e.slotWords || [])];
+    for (const turn of l.guided?.check?.turns || []) {
+      for (const t of [turn, ...(turn.variants || [])]) for (const list of lists(t)) for (const w of list) known.add(fold(w));
+    }
+  }
+  // Every word the course writes with ä, ö, ü or ß, by its spelling with ae, oe, ue and ss (`spelledOut`), and
+  // every word it writes, so a real „ss“ or „ue“ („Wasser“, „neue“) stays as it is.
+  known.umlautOf = new Map();
+  known.plainWords = new Set();
+  // The grader's own word lists count too („Stück“, „Gläser“).
+  for (const w of [JSON.stringify(curriculum || {}), ...MASS, ...Object.keys(MEASURE_GENDER)].join(' ').match(/\p{L}+/gu) || []) {
+    const lower = w.toLocaleLowerCase('de');
+    known.plainWords.add(lower);
+    if (/[äöüß]/.test(lower)) known.umlautOf.set(asciiUmlauts(lower), lower);
+  }
+  return known;
+}
+
+const asciiUmlauts = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+
+/**
+ * ONE SPELLING FOLD for the whole final check (courses session, 2026-11-20): a word typed with ae, oe, ue or ss
+ * for ä, ö, ü or ß („heisse“, „Gruesse“, „Stueck“, „Tuerkei“) is the course's word, before anything is graded —
+ * frames, greetings and sign-offs, gap values and lexicon lookups all see „heiße“, „Grüße“, „Stück“,
+ * „Türkei“. It is German spelling, not a slip. A word the course writes with „ss“ or „ue“ stays.
+ */
+export function spelledOut(text, lexicon) {
+  const map = lexicon?.umlautOf;
+  if (!map?.size) return String(text);
+  return String(text).replace(/\p{L}+/gu, (w) => {
+    const lower = w.toLocaleLowerCase('de');
+    if (!/ae|oe|ue|ss/.test(lower) || lexicon.plainWords?.has(lower)) return w;
+    const u = map.get(lower);
+    if (!u) return w;
+    return /^\p{Lu}/u.test(w) ? u.charAt(0).toLocaleUpperCase('de') + u.slice(1) : u;
+  });
+}
+
+/** The choice the learner made in a choice gap („Das ist meine Schwester" → Schwester), or null. */
+export function chosenWord(turn, value) {
+  if (!turn?.slotIn || typedResult(turn, value) === RESULT.WRONG) return null;
+  const words = wordsOf(String(value || '').replace(/[.,!?]/g, ' ')).map(fold);
+  return turn.slotIn.find((w) => words.some((x) => x === fold(w) || slip(x, fold(w)))) || null;
+}
+
+/**
+ * An honest „none" (one rule for the whole course, 2026-11-20): a turn that asks for a fact of the
+ * learner's life a real person may not have — a job, a hobby — takes it as a whole sentence. A turn that
+ * asks the learner to do the can-do in the scene (buy, say what the office lacks, order, name a free
+ * time, name languages) does not: „Ich kaufe nichts", „Ich brauche keinen Computer", „Nichts, danke",
+ * „Ich habe keine Zeit" skip the can-do. Where a fact may be missing for some learners (a phone number,
+ * a family), the task says it may be made up instead.
+ */
+export const HONEST_NONE = {
+  job: ['Ich arbeite nicht.', 'Ich habe keine Arbeit.', 'Ich bin arbeitslos.'],
+  hobby: ['Ich habe kein Hobby.', 'Ich habe keine Hobbys.'],
+};
+
+/**
+ * One sitting's turns. A retake takes each turn's next variant and spells the next name on the list.
+ * `chosen` is the learner's choice in an earlier choice gap: the turns after it talk about that person,
+ * so their `nounFor` keeps only the noun for that person („Meine Mutter", not „Meine Schwester").
+ */
+export function checkTurns(check, retake = 0, { chosen = null } = {}) {
+  return (check?.turns || []).map(({ variants, ...base }) => {
+    let picked = variants?.length ? { ...base, ...variants[retake % variants.length] } : base;
+    if (chosen && picked.nounFor) {
+      const only = Object.fromEntries(Object.entries(picked.nounFor).map(([p, nouns]) => [p, nouns.filter((n) => fold(n).endsWith(` ${fold(chosen)}`))]));
+      picked = { ...picked, nounFor: only };
+    }
+    // In the player the check carries the level's words, and each turn knows who it is said to.
+    let turn = check.lexicon ? { ...picked, lexicon: check.lexicon, partner: check.partner } : picked;
+    // `none` names the fact a turn asks about when its gap is of another kind („Wann arbeitest du?“: a job).
+    const none = HONEST_NONE[turn.none || turn.slot];
+    if (none && turn.accepted && !/\?\s*$/.test(frameOf(turn.accepted[0]))) turn = { ...turn, accepted: [...turn.accepted, ...none] };
+    // A heard day or time is shown after a miss as its example („Dienstag, 9.30 Uhr"), a heard number as its digits.
+    if (turn.listen) return { ...turn, accepted: [turn.when || turn.time ? turn.example : digitsOf(turn.listen)], spoken: turn.listen };
+    if (turn.parts) return { ...turn, accepted: [turn.example] };
+    if (!turn.spell) return turn;
+    const name = turn.spell[retake % turn.spell.length];
+    const letters = lettersOf(name);
+    return { ...turn, accepted: [name], spoken: `${letters.join('-')}.`, letterNames: letters.map((c) => LETTER[c] || c).join(' – ') };
+  });
+}
+
+/** True when the turn is answered in writing only: spelling, a heard number, a written message. */
+export const writtenOnly = (turn) => Boolean(turn.spell || turn.listen || turn.write || turn.parts);
+
+/** True when the learner answers with their own words (their name, their country …). */
+export const ownAnswer = (turn) => Boolean(turn.ownName || turn.parts) || turn.accepted.some((a) => hasGap(typeof a === 'string' ? a : a.frame));
+
+// German month names, folded (umlauts as ae), and their usual short forms by their first letters.
+const MONTHS = ['januar', 'februar', 'maerz', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'dezember'];
+const monthOf = (word) => {
+  const w = fold(word).replace(/ä/g, 'ae').replace(/\.$/, '');
+  const at = MONTHS.findIndex((m) => m === w || (w.length >= 3 && m.startsWith(w)) || (w === 'mrz' && m === 'maerz'));
+  return at < 0 ? 0 : at + 1;
+};
+
+/**
+ * A real calendar date with its year: in digits with dots, slashes or dashes („12.03.1990", „12/03/1990",
+ * „12-3-90" — the slash is how many of our Arabic-speaking learners write one), or a day with a month
+ * name („12. März 1990", „1. Januar 1990"). Not „12.03." without a year, not „1990" alone, not „31.4.".
+ */
+function isDate(words) {
+  const w = words.trim();
+  let day; let month; let year;
+  let m = w.match(/^(\d{1,2})\s?([./-])\s?(\d{1,2})\s?\2\s?(\d{4}|\d{2})$/);
+  if (m) [day, month, year] = [Number(m[1]), Number(m[3]), m[4]];
+  else if ((m = w.match(/^(\d{1,2})\.?\s+(\p{L}+\.?)\s+(\d{4}|\d{2})$/u))) [day, month, year] = [Number(m[1]), monthOf(m[2]), m[3]];
+  else return false;
+  const y = year.length === 2 ? (Number(year) > new Date().getFullYear() % 100 ? 1900 : 2000) + Number(year) : Number(year);
+  const date = new Date(Date.UTC(y, month - 1, day));
+  return month >= 1 && date.getUTCFullYear() === y && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+/**
+ * One slip in a word of five letters or more („Muter"). An ending added or dropped and one vowel for
+ * another are forms, not slips: „Schwestern" and „Brüder" are plurals where „ist" needs one person.
+ */
+function slip(given, target) {
+  if (target.length < 5 || levenshtein(given, target) !== 1 || given.startsWith(target) || target.startsWith(given)) return false;
+  if (given.length !== target.length) return true;
+  const at = [...given].findIndex((c, i) => c !== target[i]);
+  return !(/[aeiouäöü]/.test(given[at]) && /[aeiouäöü]/.test(target[at]));
+}
+
+// Mass nouns, folded: they name a thing without an article („Das ist Papier", „Ich kaufe Brot").
+const MASS = new Set(['papier', 'wasser', 'kaffee', 'tee', 'milch', 'brot', 'geld', 'zucker', 'obst', 'kaese', 'käse', 'fleisch', 'reis', 'saft', 'gemuese', 'gemüse',
+  'kuchen', 'suppe', 'salat', 'wein', 'bier', 'orangensaft', 'mineralwasser', 'apfelsaft', 'kakao', 'frühstück']);
+
+// A measure before a food or drink names it too („ein Glas Wasser", „eine Tasse Kaffee", „zwei Stück Kuchen").
+const MEASURE_GENDER = { glas: 'das', gläser: 'pl', tasse: 'die', tassen: 'pl', stück: 'das', flasche: 'die', flaschen: 'pl',
+  kanne: 'die', kannen: 'pl', teller: 'der', portion: 'die', portionen: 'pl', becher: 'der', kugel: 'die', kugeln: 'pl' };
+
+/**
+ * A clock time as Lektion 8 teaches it, or as digits: „halb neun", „Viertel nach acht", „Viertel vor
+ * neun", „acht Uhr dreißig", „fünf nach halb neun", „8.30 (Uhr)", „8:30", „um acht". Returns the minutes
+ * on a twelve-hour dial (so 20.30 and halb neun are one time), or null when it is no clock time.
+ */
+export function clockOf(text) {
+  // Number words typed without their umlaut („funf", „zwolf", „funfzehn") are numbers too.
+  const plain = fold(text).replace(/f(?:ue|u)nf/g, 'fünf').replace(/zw(?:oe|o)lf/g, 'zwölf');
+  const t = numberWordsToDigits(plain.replace(/\bein uhr\b/g, '1 uhr').replace(/\bum\b/g, ' '))
+    .replace(/[.,!?]+$/, '').replace(/\s+/g, ' ').trim();
+  const dial = (h, min) => (Number.isInteger(h) && Number.isInteger(min) && h >= 0 && h <= 24 && min >= 0 && min < 60 ? (h % 12) * 60 + min : null);
+  let m;
+  if ((m = t.match(/^(\d{1,2})\s*[:.]\s*(\d{2})(?:\s*uhr)?$/))) return dial(+m[1], +m[2]);
+  if ((m = t.match(/^(\d{1,2})\s*uhr(?:\s+(\d{1,2}))?$/))) return dial(+m[1], +(m[2] || 0));
+  if ((m = t.match(/^halb\s+(\d{1,2})$/))) return dial(+m[1] - 1, 30);
+  if ((m = t.match(/^viertel\s+(nach|vor)\s+(\d{1,2})$/))) return m[1] === 'nach' ? dial(+m[2], 15) : dial(+m[2] - 1, 45);
+  if ((m = t.match(/^(\d{1,2})\s+(nach|vor)\s+halb\s+(\d{1,2})$/))) return dial(+m[3] - 1, m[2] === 'nach' ? 30 + +m[1] : 30 - +m[1]);
+  if ((m = t.match(/^(\d{1,2})\s+(nach|vor)\s+(\d{1,2})$/))) return m[2] === 'nach' ? dial(+m[3], +m[1]) : dial(+m[3] - 1, 60 - +m[1]);
+  if ((m = t.match(/^(\d{1,2})$/))) return dial(+m[1], 0);
+  return null;
+}
+
+const DAYS = ['montag', 'dienstag', 'mittwoch', 'donnerstag', 'freitag', 'samstag', 'sonntag'];
+const DAY_SHORT = { mo: 'montag', di: 'dienstag', mi: 'mittwoch', do: 'donnerstag', fr: 'freitag', sa: 'samstag', sonnabend: 'samstag' };
+const DAY_PARTS = ['morgen', 'vormittag', 'mittag', 'nachmittag', 'abend', 'nacht', 'früh'];
+// Words that only join a day and a time („am Montag um zehn", „jeden Abend", „nach der Arbeit").
+const WHEN_GLUE = new Set(['am', 'an', 'um', 'jeden', 'jede', 'jedes', 'ab', 'von', 'bis', 'und', 'auch', 'immer', 'nur', 'oder', 'gegen', 'diese', 'diesen', 'diesem', 'nächsten', 'nächste', 'meistens', 'oft']);
+
+/**
+ * When something is: a day („am Montag", „montags", „Di"), the weekend, today, a part of the day
+ * („abends", „am Dienstagabend", „nach der Arbeit") and/or a clock time („um halb zehn"). Returns
+ * { day, part, time, typo } or null when the words name no time at all („am Tisch").
+ */
+export function whenOf(text) {
+  const words = fold(text).replace(/\b(nach (?:der arbeit|dem kurs|der schule|dem unterricht))\b/g, 'abend')
+    .replace(/(?<!\d)[.:]|[.:](?!\d)|[,!?;]/g, ' ').split(/\s+/).filter(Boolean);
+  let day = null; let part = null; let typo = false;
+  const timeWords = [];
+  // „am" takes a day or a part of the day, „um" a clock time (the notice of Lektion 8): „um Montag" and
+  // „am zehn Uhr" name no time (first DaF review of Lektion 8, 2026-11-20).
+  let prev = '';
+  // In a sentence („am Freitag um zehn") a clock time takes „um": „am Freitag zehn" names no time
+  // (third corpus of Lektion 8). A note („Freitag 10 Uhr") needs none.
+  const sentence = words.includes('am');
+  const dayHere = () => prev !== 'um';
+  // A span of time („von acht bis vier", „von 8 bis 16 Uhr", Lektion 11) is its start; its end must be a time too.
+  const endWords = [];
+  let toEnd = false;
+  for (const w of words) {
+    if (toEnd || (w === 'bis' && timeWords.length)) { if (toEnd) endWords.push(w); toEnd = true; prev = w; continue; }
+    const base = w.replace(/s$/, '');
+    const compound = base.match(/^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)(morgen|vormittag|mittag|nachmittag|abend|nacht)$/);
+    if (compound) { if (!dayHere()) return null; [, day, part] = compound; prev = w; continue; }
+    if (DAYS.includes(base)) { if (!dayHere()) return null; day = base; prev = w; continue; }
+    if (DAY_SHORT[w.replace(/\.$/, '')]) { if (!dayHere()) return null; day = DAY_SHORT[w.replace(/\.$/, '')]; prev = w; continue; }
+    if (['wochenende', 'woche', 'tag', 'heute', 'morgen', 'immer'].includes(base) && !(base === 'morgen' && part)) {
+      if (!dayHere()) return null;
+      if (base === 'morgen' && day) part = 'morgen'; else day = day ?? base;
+      prev = w;
+      continue;
+    }
+    if (DAY_PARTS.includes(base)) { if (!dayHere()) return null; part = base; prev = w; continue; }
+    const slipped = DAYS.find((d) => slip(base, d));
+    if (slipped) { if (!dayHere()) return null; day = slipped; typo = true; prev = w; continue; }
+    if (WHEN_GLUE.has(w)) { prev = w; continue; }
+    if (!timeWords.length && ['am', 'an'].includes(prev)) return null;
+    if (!timeWords.length && sentence && !['um', 'von', 'ab'].includes(prev)) return null;
+    timeWords.push(w);
+    prev = w;
+  }
+  const time = timeWords.length ? clockOf(timeWords.join(' ')) : null;
+  if (timeWords.length && time === null) return null;
+  if (toEnd && clockOf(endWords.join(' ')) === null) return null;
+  if (day === null && part === null && time === null) return null;
+  const partHalf = ['nachmittag', 'abend', 'nacht'].includes(part) ? 'pm' : ['morgen', 'vormittag', 'früh'].includes(part) ? 'am' : null;
+  return { day, part, time, typo, half: clockHalf(timeWords.join(' ')) || partHalf };
+}
+
+/** Morning or afternoon when a clock time says so (an hour from 13 on, „abends", „morgens"), else null. */
+export function clockHalf(text) {
+  const t = numberWordsToDigits(fold(text));
+  const h = t.match(/(\d{1,2})\s*(?:[:.]\s*\d{2}|uhr)/);
+  if (h && Number(h[1]) >= 13) return 'pm';
+  if (/\b(nachmittags?|abends?|nachts?)\b/.test(t)) return 'pm';
+  if (/\b(morgens|vormittags?|früh)\b/.test(t)) return 'am';
+  return null;
+}
+
+// An expected time in the data is written on 24 hours („16:15"): its half of the day is known.
+const halfOf24 = (s) => { const m = String(s || '').match(/(\d{1,2}):\d{2}/); return m ? (Number(m[1]) >= 12 ? 'pm' : 'am') : null; };
+
+/**
+ * True when a learner's `when` names the expected day and time („freitag 10:00", or a day alone). A
+ * time may leave out morning or afternoon („halb zehn"), but not say the other one („21.30" for 9.30).
+ */
+function sameWhen(given, expected, { partial = false, writtenNote = false } = {}) {
+  const e = whenOf(expected);
+  if (!given || !e) return false;
+  // `partial`: the day or the time alone is enough, but what is named must be the one asked about
+  // („Bis Freitag!", never „Ja, am Freitag um elf" for ten; first corpus of Lektion 8, 2026-11-20).
+  if (e.day !== null && given.day !== e.day && !(partial && given.day === null && given.time !== null)) return false;
+  if (e.time !== null && given.time !== e.time && !(partial && given.time === null)) return false;
+  const eh = halfOf24(expected);
+  // A note of a heard afternoon time keeps the afternoon: „Freitag, 4.15 Uhr" reads as 4.15 in the
+  // morning (fourth DaF review of Lektion 8); „16.15" or „nachmittags um Viertel nach vier" keep it.
+  if (writtenNote && e.time !== null && eh === 'pm' && given.half !== 'pm') return false;
+  return !(e.time !== null && eh && given.half && given.half !== eh);
+}
+
+// Words that may follow the verb of an activity besides nouns („Ich gehe gern ins Kino", „Ich spiele
+// am Wochenende zusammen Fußball").
+const ACTIVITY_GLUE = new Set(['ins', 'in', 'im', 'am', 'an', 'mit', 'zusammen', 'auch', 'sehr', 'oft', 'immer', 'viel', 'meinem', 'meiner',
+  'meinen', 'meine', 'mein', 'der', 'die', 'das', 'den', 'dem', 'einen', 'ein', 'eine', 'zu', 'hause', 'nach', 'jeden', 'jede', 'und', 'oder',
+  'gut', 'zum', 'zur', 'vom', 'beim', 'bei', 'meistens', 'manchmal', 'abends', 'morgens', 'nachmittags', 'noch', 'lange', 'gern', 'gerne']);
+
+/** The same as a listed word, or that word with one slip. */
+const near = (word, list) => list.some((w) => fold(w) === word || slip(word, fold(w)));
+
+// Umlauts as a phone keyboard without them types them: „grün" is „grun" or „gruen".
+const bare = (s) => fold(s).replace(/([aou])e/g, '$1').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u');
+
+/**
+ * Colours are a closed class: the German colour words, also with „hell-"/„dunkel-" („dunkelblau"),
+ * never any word the course does not teach („Es ist groß" names no colour; courses session,
+ * 2026-11-20). „lila", „rosa", „orange" and „beige" take no ending.
+ */
+const COLOURS = new Set(['rot', 'blau', 'grun', 'gelb', 'schwarz', 'weiss', 'braun', 'grau', 'orange', 'lila', 'rosa', 'pink', 'violett', 'beige', 'turkis', 'silber', 'silbern', 'gold', 'golden', 'bunt']);
+const UNDECLINED = new Set(['lila', 'rosa', 'orange', 'beige', 'pink']);
+const colourStem = (w) => {
+  const b = bare(w).replace(/^(hell|dunkel)-?(?=\p{L})/u, '');
+  return COLOURS.has(b) ? b : null;
+};
+const isColour = (w, slotWords = []) => Boolean(colourStem(w)) || slotWords.some((t) => slip(fold(w), fold(t)));
+
+// The ending a colour takes before a noun, by the slot's case, the word before it and the noun's
+// article („den roten Stuhl", „eine rote Lampe", „ein rotes Heft"; „Das ist ein roter Stift").
+const ADJ_ENDING = {
+  thing: { der: { den: 'en', einen: 'en', keinen: 'en' }, die: { die: 'e', eine: 'e', keine: 'e' }, das: { das: 'e', ein: 'es', kein: 'es' }, pl: { die: 'en', keine: 'en', '': 'e' } },
+  object: {
+    der: { der: 'e', ein: 'er', kein: 'er', mein: 'er', dein: 'er' }, die: { die: 'e', eine: 'e', keine: 'e', meine: 'e', deine: 'e' },
+    das: { das: 'e', ein: 'es', kein: 'es', mein: 'es', dein: 'es' }, pl: { die: 'en', keine: 'en', meine: 'en', deine: 'en', '': 'e' },
+  },
+};
+/**
+ * True when `adj` before a noun has the ending that `det` (or a count, '') and gender `g` ask for: a
+ * colour („die rote Lampe"; „lila" takes none) or any adjective written small („die große Lampe",
+ * third DaF review 2026-11-20), never a word the course teaches as something else.
+ */
+function adjectiveFits(adj, slot, det, g, lexicon) {
+  const want = ADJ_ENDING[slot]?.[g]?.[det];
+  if (want === undefined) return false;
+  const w = fold(adj);
+  if (UNDECLINED.has(colourStem(w))) return true;
+  if (!w.endsWith(want)) return false;
+  const stem = w.slice(0, -want.length);
+  if (colourStem(stem)) return !UNDECLINED.has(colourStem(stem));
+  return isAdjectiveShape(adj, lexicon);
+}
+
+/** A word that may stand as an adjective before a noun: written small, and not a word the course teaches as another kind. */
+function isAdjectiveShape(adj, lexicon) {
+  const w = fold(adj);
+  if (!/^\p{Ll}[\p{L}]{2,}$/u.test(adj.normalize('NFC')) || CLOSED.has(w)) return false;
+  if (typeof lexicon?.verbs?.has === 'function' && lexicon.verbs.has(w)) return false;
+  return !(typeof lexicon?.genders?.get === 'function' && lexicon.genders.get(w));
+}
+
+/**
+ * The learner's own words fit the gap. A choice (`slotIn`: „meine Mutter oder meine Schwester") takes
+ * one of its words, then at most a name. The kinds: a number, an age of „Jahre", a phone number, a real
+ * date; a place, a job or languages, whose words are each one of the taught words that fit
+ * (`slotWords`) or a word the course never teaches (the learner's own: Syrien, Krankenpfleger,
+ * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
+ * (a slip in a choice) or WRONG.
+ */
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay, thingsAfter, people }) {
+  const raw = words.split(' ').filter(Boolean);
+  const parts = raw.map(fold);
+  const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
+  // A word of the kind: one of the taught words that fit, or the learner's own word the course never
+  // teaches. A taught word of the kind with an ending is a form of it, not an own word: „Mein Heft ist
+  // rote", „Ich spreche Deutsche", „Ich bin Studenten" (blind corpus, 2026-11-20).
+  const formOfTaught = (w) => /(?:e|er|es|en|em)$/.test(w) && slotWords.some((t) => [1, 2].some((n) => fold(t) === w.slice(0, -n)) && fold(t) !== w);
+  // THE OWN-WORD POLICY (courses session and the independent score, 2026-11-20): a word of the kind is one the turn
+  // lists, one of the kind's German names (`ownWords.js`: languages and countries closed, jobs generous, the big
+  // cities), or — only then — the learner's own: a word no course teaches (both courses' words, `COURSE_WORDS`),
+  // and for a job or a language one of that shape. „Sie spricht Limonade“, „Ich bin Limonade“ are wrong; a small
+  // town is accepted and the learner is told the word itself was not checked (`uncheckedWords`).
+  const ownList = OWN_KIND[slot];
+  const ownShape = { job: JOB_SHAPE_FOLDED, language: LANGUAGE_SHAPE_FOLDED }[slot];
+  const fits = (w) => /\p{L}/u.test(w) && !CLOSED.has(w) && (near(w, slotWords) || Boolean(ownList?.has(w))
+    || (!known(w) && !formOfTaught(w) && !(ownList && COURSE_WORDS.has(asciiUmlauts(w))) && (!ownShape || ownShape.test(w))));
+  // A name after a choice („meine Mutter Fatima"): capitalised words the course does not teach.
+  const name = (list) => list.every((w) => /^\p{Lu}/u.test(w) && !known(fold(w)) && !CLOSED.has(fold(w)));
+  if (slotIn) {
+    const rest = name(raw.slice(1)) ? null : RESULT.WRONG;
+    if (rest) return rest;
+    if (slotIn.map(fold).includes(parts[0])) return RESULT.CORRECT;
+    return near(parts[0], slotIn) ? RESULT.TYPO : RESULT.WRONG;
+  }
+  if (slotNot.map(fold).includes(parts[0])) return RESULT.WRONG;
+  const digits = numberWordsToDigits(words);
+  if (slot === 'number') return /^\d+$/.test(digits.replace(/\s+/g, '')) ? RESULT.CORRECT : RESULT.WRONG;
+  // An age with „Jahre alt" is two or more: one is „ein Jahr alt".
+  if (slot === 'years') return /^\d+$/.test(digits.replace(/\s+/g, '')) && Number(digits.replace(/\s+/g, '')) >= 2 ? RESULT.CORRECT : RESULT.WRONG;
+  if (slot === 'phone') return /^[+\d\s/–-]+$/.test(digits) && (digits.match(/\d/g) || []).length >= 3 ? RESULT.CORRECT : RESULT.WRONG;
+  if (slot === 'date') return isDate(words) ? RESULT.CORRECT : RESULT.WRONG;
+  // A clock time („Es ist halb neun", „Ich stehe um sechs Uhr auf"); with `time`, that very time. Saying
+  // the time takes no „um" (the notice of Lektion 8), so „Es ist um halb neun" is wrong; a frame that
+  // needs „um" has it outside the gap.
+  if (slot === 'clock') {
+    if (/\bum\b/i.test(words)) return RESULT.WRONG;
+    // A part of the day may stand with the time („Es ist morgens Viertel nach sieben").
+    const dayPart = (words.match(/\b(morgens|vormittags|nachmittags|abends|früh)\b/i) || [''])[0];
+    const half = dayPart ? (/nachmittags|abends/i.test(dayPart) ? 'pm' : 'am') : clockHalf(words);
+    words = words.replace(/\b(morgens|vormittags|nachmittags|abends|früh)\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    const at = clockOf(words);
+    if (at === null || (time && at !== clockOf(time))) return RESULT.WRONG;
+    // „Zwanzig Uhr dreißig" is evening: wrong for a morning time (first DaF review of Lektion 8).
+    if (time && half && half !== halfOf24(time)) return RESULT.WRONG;
+    return RESULT.CORRECT;
+  }
+  // What may stand with a verb of the fixed expressions („Ich habe im Büro gearbeitet“, „… viel …“, „… bis
+  // acht …“): small words, times, and a noun only after a preposition or article. Lektion 11.
+  if (slot === 'adjunct') {
+    const PREP = new Set(['in', 'im', 'am', 'an', 'bei', 'beim', 'zu', 'zum', 'zur', 'mit', 'von', 'vom', 'bis', 'nach', 'der', 'die', 'das', 'dem', 'den', 'meinem', 'meiner']);
+    const ok = raw.length && raw.every((w, i) => {
+      const f = fold(w);
+      if (ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f) || ['viel', 'lange', 'gestern', 'heute', 'nicht', 'uhr'].includes(f) || clockOf(f) !== null || DAYS.includes(f.replace(/s$/, ''))) return true;
+      return /^\p{Lu}/u.test(w) && i > 0 && PREP.has(fold(raw[i - 1]));
+    });
+    return ok ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A sentence about the past („Was hast du gestern gemacht?“, Lektion 11): „habe“ or „bin“, what was done, and a
+  // participle at the end („Ich habe Fußball gespielt“, „Ich bin ins Kino gegangen“, „Ich habe eingekauft“), or
+  // „war“ („Ich war zu Hause“). Verbs of moving or changing take „bin“ („gegangen“, „aufgestanden“); a participle
+  // in -en is one of the strong verbs', a weak one ends in -t („gearbeiten“ is no participle); „gemacht“ takes a
+  // thing, not a verb as a noun („Ich habe Lesen gemacht“). Courses session, 2026-11-20.
+  if (slot === 'past') {
+    const middleOk = (w) => {
+      const f = fold(w);
+      return /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f) || PAST_SMALL.has(f) || clockOf(f) !== null || DAYS.includes(f.replace(/s$/, ''));
+    };
+    // A phrase put in front comes back at the end („Am Sonntag habe ich gekocht“ → „… gekocht am Sonntag“).
+    let end = raw.length;
+    while (end > 2 && (WHEN_GLUE.has(parts[end - 1]) || DAYS.includes(parts[end - 1].replace(/s$/, '')) || ['wochenende', 'abend', 'morgen', 'nachmittag', 'uhr'].includes(parts[end - 1]) || clockOf(parts[end - 1]) !== null) && !participleOf(parts[end - 1])) end -= 1;
+    if (parts[0] === 'war') return raw.length >= 2 && raw.slice(1).every(middleOk) ? RESULT.CORRECT : RESULT.WRONG;
+    if (!['habe', 'bin'].includes(parts[0]) || end < 2) return RESULT.WRONG;
+    const kind = participleOf(parts[end - 1]);
+    if (!kind || (kind === 'sein') !== (parts[0] === 'bin')) return RESULT.WRONG;
+    const middle = raw.slice(1, end - 1);
+    if (parts[end - 1] === 'gemacht' && middle.some((w) => /^\p{Lu}/u.test(w) && lexicon?.verbs?.has?.(fold(w)))) return RESULT.WRONG;
+    return middle.every(middleOk) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A month („im Mai“); with `day`, a day of it as one writes it („am 3. Mai“, „am 3.5.“). Lektion 12.
+  if (slot === 'month') {
+    // A day as an ordinal word („am dritten Mai“, second corpus of Lektion 12) is a day too.
+    const ORDINAL = /^(?:ersten|zweiten|dritten|vierten|fünften|sechsten|siebten|siebenten|achten|neunten|zehnten|elften|zwölften|\p{L}+zehnten|\p{L}*zwanzigsten|\p{L}*dreißigsten)\s+/iu;
+    const m = words.trim().replace(ORDINAL, '1. ').match(/^(?:(\d{1,2})\.\s*)?(\p{L}+|\d{1,2}\.?)$/u);
+    if (!m || Boolean(day) !== Boolean(m[1])) return RESULT.WRONG;
+    if (/^\d/.test(m[2])) return Number(m[2].replace('.', '')) >= 1 && Number(m[2].replace('.', '')) <= 12 ? RESULT.CORRECT : RESULT.WRONG;
+    const w = fold(m[2]).replace(/ä/g, 'ae');
+    const exact = MONTHS.includes(w) || w === 'marz';
+    if (!exact && !MONTHS.some((x) => slip(w, x))) return RESULT.WRONG;
+    return exact && /^\p{Lu}/u.test(m[2]) ? RESULT.CORRECT : RESULT.TYPO;
+  }
+  // An invitation's gap: to what („zum Fest“, „zur Party“, „zu meinem Geburtstag“, „zu meiner Party“)
+  // and/or when („am Samstag“). The article agrees with the noun: „zum Party“ and „zu meinem Party“ are
+  // wrong. Lektion 12.
+  if (slot === 'invite') {
+    const at = parts.findIndex((w) => ['zum', 'zur', 'zu'].includes(w));
+    let rest = parts;
+    if (at >= 0) {
+      const poss = parts[at] === 'zu' ? parts[at + 1] : null;
+      if (parts[at] === 'zu' && !/^(?:mein|dein|unser)(?:em|er)$/.test(poss || '')) return RESULT.WRONG;
+      const nounAt = at + (poss ? 2 : 1);
+      const noun = raw[nounAt];
+      if (!noun || !/^\p{Lu}/u.test(noun)) return RESULT.WRONG;
+      const g = lexicon?.genders?.get?.(fold(noun));
+      const fem = parts[at] === 'zur' || /er$/.test(poss || '');
+      if (g && !g.some((x) => (fem ? x === 'die' : x === 'der' || x === 'das'))) return RESULT.WRONG;
+      if (!g && known(fold(noun))) return RESULT.WRONG;
+      rest = [...parts.slice(0, at), ...parts.slice(nounAt + 1)];
+    }
+    if (!rest.length) return at >= 0 ? RESULT.CORRECT : RESULT.WRONG;
+    const named = whenOf(rest.join(' '));
+    return named && (!when || sameWhen(named, when, { partial: whenPartial })) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // When: a day, a part of the day and/or a time („am Montag um zehn", „am Wochenende", „abends"); with
+  // `when`, the day and time asked about („Hast du am Freitag um zehn Uhr Zeit?").
+  if (slot === 'when') {
+    // `thingsAfter`: what one buys may follow the time („Kaufst du am Samstag Brot ein?“, third corpus of Lektion 11).
+    if (thingsAfter) {
+      const w = words.split(/\s+/);
+      const timeWord = (x) => DAYS.includes(fold(x).replace(/s$/, '')) || ['wochenende', 'woche', 'tag', 'morgen', 'abend', 'nachmittag', 'vormittag', 'uhr'].includes(fold(x));
+      while (w.length > 1 && /^\p{Lu}/u.test(w.at(-1)) && !timeWord(w.at(-1))) { w.pop(); if (fold(w.at(-1)) === 'und') w.pop(); }
+      words = w.join(' ');
+    }
+    const at = whenOf(words);
+    if (!at || (when && !sameWhen(at, when, { partial: whenPartial }))) return RESULT.WRONG;
+    return at.typo ? RESULT.TYPO : RESULT.CORRECT;
+  }
+  // An activity after „Ich": a verb in its ich-form (a taught verb or the learner's own, „wandere"), then
+  // nouns and small words, or a second verb after „und": „Ich spiele Fußball gern", „Ich gehe ins Kino
+  // gern" (the frame's „gern" moved to the end), „Ich lese und koche gern". „Ich spielen gern" is wrong.
+  if (slot === 'activity') {
+    const verbs = lexicon?.verbs;
+    // A taught verb form written small is the verb even where a plural looks the same („frühstücke“, „die Frühstücke“).
+    const ichForm = (w) => {
+      const f = fold(w);
+      if (f.length < 3 || !/e$/.test(f) || CLOSED.has(f)) return false;
+      if (verbs?.has?.(f) && /^\p{Ll}/u.test(w)) return true;
+      return (verbs?.has?.(f) || !known(f)) && !lexicon?.genders?.get?.(f);
+    };
+    if (!raw.length || !ichForm(raw[0])) return RESULT.WRONG;
+    if (unsplit(raw[0])) return RESULT.WRONG; // „Ich aufstehe“, „Ich einkaufe“ (courses session, 2026-11-20)
+    // `partOfDay`: „Was machst du morgens?“ is not answered with „Ich dusche abends“ (first corpus of Lektion 11).
+    const MORNING = ['morgen', 'vormittag', 'früh'];
+    const named = parts.map((w) => w.replace(/s$/, '')).filter((w) => DAY_PARTS.includes(w) || w === 'abend');
+    if (partOfDay && named.some((w) => (MORNING.includes(partOfDay) ? !MORNING.includes(w) : w !== partOfDay))) return RESULT.WRONG;
+    let small = false;
+    for (let i = 1; i < raw.length; i += 1) {
+      const f = fold(raw[i]);
+      if (['und', 'oder'].includes(fold(raw[i - 1])) && ichForm(raw[i])) { if (unsplit(raw[i])) return RESULT.WRONG; continue; }
+      // „in" before a der- or das-noun needs its article („ins Kino", „im Park"): „in Kino" is wrong
+      // (third corpus of Lektion 7). A place without an article („in Bremen") is fine.
+      if (fold(raw[i - 1]) === 'in') {
+        const g = lexicon?.genders?.get?.(f);
+        if (g && g.every((x) => x === 'der' || x === 'das')) return RESULT.WRONG;
+      }
+      if (/^\p{Lu}/u.test(raw[i]) || ACTIVITY_GLUE.has(f)) continue;
+      // A clock time and the prefix of a verb of two parts („Ich stehe um sechs auf und dusche“, Lektion 11).
+      if (['um', 'uhr', 'halb', 'viertel'].includes(f) || SEP_PREFIX.includes(f) || clockOf(f) !== null) continue;
+      // A noun the course teaches, written small („am wochenende"), is a typo (first corpus of Lektion 7).
+      if (lexicon?.genders?.get?.(f)) { small = true; continue; }
+      return RESULT.WRONG;
+    }
+    return small ? RESULT.TYPO : RESULT.CORRECT;
+  }
+  // A place: an optional article („aus der Türkei"), then the place, which may be followed by „und …"
+  // or „, …" („aus Marokko und wohne in Bremen", the scene's own line). „aus in Bremen" names none.
+  if (slot === 'place') {
+    // After „aus" and „in" a place takes the dative: „aus der Türkei", „aus dem Irak", „aus den USA",
+    // „in der Schweiz", never „aus die Deutschland"; a place the course names has no article („in der Bremen").
+    // A listed place keeps the article the course teaches it with: none for Bremen or Marokko, „die
+    // Schweiz" → „in der Schweiz" (and so „in Schweiz" is wrong).
+    const DATIVE = ['der', 'dem', 'den'];
+    const DATIVE_OF = { die: 'der', der: 'dem', das: 'dem', pl: 'den' };
+    // A country that always has its article keeps it (`COUNTRY_ARTICLE`): „aus der Türkei“, never „aus Türkei“.
+    const taughtArticle = (w) => (typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(w) : undefined) || (COUNTRY_ARTICLE[w] ? [COUNTRY_ARTICLE[w]] : undefined);
+    if (!DATIVE.includes(parts[0]) && COUNTRY_ARTICLE[parts[0]]) return RESULT.WRONG;
+    if (DATIVE.includes(parts[0]) && COUNTRY_ARTICLE[parts[1]] && DATIVE_OF[COUNTRY_ARTICLE[parts[1]]] !== parts[0]) return RESULT.WRONG;
+    if (['die', 'das'].includes(parts[0])) return RESULT.WRONG;
+    if (DATIVE.includes(parts[0]) && near(parts[1] || '', slotWords)) {
+      const g = taughtArticle(parts[1]) || [];
+      if (!g.some((x) => DATIVE_OF[x] === parts[0])) return RESULT.WRONG;
+    }
+    if (!DATIVE.includes(parts[0]) && near(parts[0] || '', slotWords) && taughtArticle(parts[0])) return RESULT.WRONG;
+    const head = parts.slice(DATIVE.includes(parts[0]) ? 1 : 0);
+    const end = head.findIndex((w) => w === 'und' || w.endsWith(','));
+    const place = (end < 0 ? head : head.slice(0, end + (head[end]?.endsWith(',') ? 1 : 0))).map((w) => w.replace(/,$/, ''));
+    // `only`: a place named must be the one of this sitting (Lektion 10's journey; second DaF review).
+    if (only && !only.some((o) => fold(o) === place.join(' '))) return RESULT.WRONG;
+    return place.length && place.every(fits) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A job: an optional article („eine Studentin", German though the course teaches it without), then
+  // the job, which may be followed by where („Student in Bremen", „Lehrer von Beruf"). „Ich bin ledig"
+  // and „Lehrer Bremen" name no job.
+  if (slot === 'job') {
+    // The article agrees with a job the course teaches: its feminine ends in -in („eine Lehrerin", „ein Lehrer").
+    const taught = slotWords.find((w) => fold(w) === parts[1]);
+    if (taught && ['ein', 'eine'].includes(parts[0]) && ((parts[0] === 'eine') !== /in$/.test(fold(taught)))) return RESULT.WRONG;
+    const head = parts.slice(['ein', 'eine'].includes(parts[0]) ? 1 : 0);
+    const end = head.findIndex((w) => ['in', 'im', 'bei', 'beim', 'an', 'am', 'und', 'aus', 'von', 'für', 'mit'].includes(w) || w.endsWith(','));
+    const job = (end < 0 ? head : head.slice(0, end + (head[end]?.endsWith(',') ? 1 : 0))).map((w) => w.replace(/,$/, ''));
+    // One job: „Ich bin Lehrer Student" names two.
+    const listed = job.filter((w) => near(w, slotWords)).length;
+    return job.length && job.every(fits) && listed <= 1 && (end < 0 || head.length > end + 1) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A second clause may follow after „und" when it opens with a verb the course teaches AND is itself
+  // a valid answer of the same kind: „Ich spreche Arabisch und lerne Deutsch." — never „… und lerne
+  // Studentin" (DaF review, 2026-11-19: no blanket rule; the whole answer must be valid).
+  const verbs = lexicon?.verbs;
+  const clause = parts.findIndex((w, i) => w === 'und' && i > 0 && typeof verbs?.has === 'function' && verbs.has(parts[i + 1] || ''));
+  const own = clause > 0 ? words.split(' ').filter(Boolean).slice(0, clause).join(' ') : words;
+  const second = clause > 0 ? words.split(' ').filter(Boolean).slice(clause + 2).join(' ') : null;
+  // Lists of languages or colours: every item listed is of the kind (or a word like „gut", „ein
+  // bisschen", „hell"), and at least one is affirmed, not only „kein Deutsch". „Deutsch und Marokko"
+  // lists a country; „blau und Tisch" a thing.
+  if (slot === 'language' || slot === 'color') {
+    const MODIFIERS = new Set(slot === 'language'
+      ? ['gut', 'sehr', 'ein', 'bisschen', 'wenig', 'etwas', 'auch', 'nur', 'noch', 'perfekt', 'fliessend', 'kein', 'nicht']
+      : ['hell', 'dunkel', 'sehr', 'ganz', 'auch', 'nur', 'nicht']);
+    // A language may be the learner's own (Kurdisch); a colour is one of the closed class.
+    const ofKind = slot === 'color' ? (w) => isColour(w, slotWords) : fits;
+    const listOk = (text) => {
+      const groups = text.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').map(fold).filter(Boolean)).filter((g) => g.length);
+      const ok = groups.every((g) => g.some((w) => !MODIFIERS.has(w)) && g.every((w) => MODIFIERS.has(w) || ofKind(w)));
+      return groups.length > 0 && ok && groups.some((g) => !g.some((w) => ['kein', 'nicht'].includes(w)));
+    };
+    return listOk(own) && (second === null || (second && listOk(second))) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A du-question about an activity, the whole sentence: a verb in its du-form („Spielst", „Kochst",
+  // „Tanzt" after -z), „du", then what the activity names („Spielst du gern Fußball?", „Gehst du gern
+  // ins Kino?"). „Spielt du …" and „Spielen du …" are wrong (second DaF review of Lektion 7, 2026-11-20).
+  if (slot === 'duQuestion') {
+    const v = fold(raw[0] || '');
+    const duForm = /st$/.test(v) || /[sßxz]t$/.test(v);
+    if (!duForm || v.length < 4 || CLOSED.has(v) || lexicon?.genders?.get?.(v) || fold(raw[1] || '') !== 'du' || unsplit(v)) return RESULT.WRONG;
+    const rest = raw.slice(2); // may be empty: „Tanzt du?"
+    const ok = rest.every((w) => /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(fold(w)) || SEP_PREFIX.includes(fold(w)) || ['gern', 'gerne', 'auch'].includes(fold(w)));
+    return ok ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // Hobbies: each a hobby the course teaches („Sport", „Musik", „Kochen") or a noun of the learner's own
+  // („Yoga"), with an optional article, or a noun with its verb („Fußball spielen"); „Mein Hobby ist
+  // gut" names none.
+  if (slot === 'hobby') {
+    const groups = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
+    const noun = (w) => near(fold(w), slotWords) || (/^\p{Lu}/u.test(w) && !known(fold(w)) && !CLOSED.has(fold(w)))
+      || (/^\p{Lu}/u.test(w) && Boolean(lexicon?.genders?.get?.(fold(w))));
+    const hobby = (g) => {
+      const ws = g.length > 1 && ['das', 'der', 'die', 'mein', 'meine'].includes(fold(g[0])) ? g.slice(1) : g;
+      if (ws.length === 1) return noun(ws[0]);
+      return ws.length === 2 && noun(ws[0]) && /^\p{Ll}\p{L}*en$/u.test(ws[1]);
+    };
+    return groups.length && groups.every(hobby) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // A name („Ich bin Omar", as Lektion 1's own check takes it): words the course does not teach, or the
+  // cast's names, after an optional „Frau"/„Herr" („Hier ist Frau Chakiri"). After the first name word a
+  // surname may be a word the course teaches only in lower case („Ana Braun", „Frau Braun": the colour braun); the
+  // first word may not, so „Gut" or „Danke" alone is no name.
+  if (slot === 'name') {
+    // The partner's own name is never the learner's: „Guten Tag, Herr Weber." greets, it names nobody.
+    if (partner && (fold(words) === fold(partner) || fold(words) === fold(partner.split(/\s+/).at(-1)))) return RESULT.WRONG;
+    const names = lexicon?.names;
+    const exact = lexicon?.exact;
+    const from = ['frau', 'herr'].includes(parts[0]) && parts.length > 1 ? 1 : 0;
+    const isName = (written, w, i) => /\p{L}/u.test(w) && !CLOSED.has(w)
+      && (!known(w) || names?.has?.(w) || (i > 0 && /^\p{Lu}/u.test(written) && typeof exact?.has === 'function' && !exact.has(written)));
+    const rest = raw.slice(from);
+    return rest.length && rest.every((r, i) => isName(r, parts[from + i], from + i)) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  // `thing`: things one buys or needs, each with the article the verb asks for (the Akkusativ the course copies
+  // as a chunk): „den Stuhl", „einen Computer", „die Lampe", „ein Telefon", „zwei Stühle". A noun the
+  // course teaches must carry its own article („der Stuhl", „ein Computer" are wrong here); a noun it
+  // never teaches is the learner's own and takes any article.
+  // `object` is the same with the article of the subject („Das ist ein Buch", „Das ist der Stift",
+  // „Das ist meine Schere"): „Das ist ein Schere" names the wrong gender. A frame may say how many it
+  // names (`count`): „Das ist …" one thing, „Das sind …" more (DaF review, 2026-11-19), so „Das sind
+  // ein Stift" is wrong. A mass noun stands without an article („Das ist Papier", „Ich brauche Wasser").
+  if (slot === 'thing' || slot === 'object') {
+    const genders = lexicon?.genders;
+    const ARTICLE = slot === 'thing'
+      ? { der: ['den', 'einen', 'keinen'], die: ['die', 'eine', 'keine'], das: ['das', 'ein', 'kein'], pl: ['die', 'keine'] }
+      // Every possessive of Lektion 12 („meine Mama“, „mein Bruder und seine Frau“, „unsere Gäste“).
+      : { der: ['der', 'ein', 'kein', 'mein', 'dein', 'sein', 'ihr', 'unser', 'euer'], die: ['die', 'eine', 'keine', 'meine', 'deine', 'seine', 'ihre', 'unsere', 'eure'],
+        das: ['das', 'ein', 'kein', 'mein', 'dein', 'sein', 'ihr', 'unser', 'euer'], pl: ['die', 'keine', 'meine', 'deine', 'seine', 'ihre', 'unsere', 'eure'] };
+    const ALL = new Set(Object.values(ARTICLE).flat());
+    const items = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
+    // A noun the course never teaches is the learner's own when it is written as a noun: „Ich kaufe
+    // Bananen", „eine Banane"; „Ich kaufe groß" names no thing (courses session, 2026-11-20). After an
+    // article a small first letter is a typo („eine banane").
+    let typo = false;
+    // Each item read as one thing or as more; null when it is no thing at all. A colour or another
+    // adjective may stand before the noun with the ending the article asks for („die rote Lampe", „die große
+    // Lampe", never „die roten Lampe").
+    const itemReading = (whole) => {
+      // „mit/ohne …" may follow a food or drink („Kaffee mit Milch", „Tee ohne Zucker"): a noun with an
+      // optional article.
+      const cut = whole.findIndex((w, i) => i > 0 && ['mit', 'ohne'].includes(fold(w)));
+      const item = cut > 0 ? whole.slice(0, cut) : whole;
+      if (cut > 0) {
+        const after = whole.slice(cut + 1);
+        const noun = after.at(-1) || '';
+        if (!after.length || after.length > 2 || !(/^\p{Lu}/u.test(noun) || genders?.get?.(fold(noun)))) return null;
+      }
+      const [first, ...more] = item.map(fold);
+      const counted = /^\d+$/.test(numberWordsToDigits(first)) && Number(numberWordsToDigits(first)) >= 2;
+      const det = ALL.has(first) || counted ? first : null;
+      const rest = det ? more : item.map(fold);
+      const restRaw = det ? item.slice(1) : item;
+      const adj = rest.length === 2 ? rest[0] : null;
+      const noun = adj ? rest[1] : rest[0];
+      const nounRaw = adj ? restRaw[1] : restRaw[0];
+      if (!noun || !/\p{L}/u.test(noun) || CLOSED.has(noun) || rest.length > 2) return null;
+      // What the turn is about: never a taught thing of the other kind (`slotNot`: no „Kuchen" for a
+      // drink), and with `only`, the thing offered or its measure („Ja, ein Glas, bitte" for water; never
+      // „Ja, einen Kaffee, bitte"). First DaF review of Lektion 9, 2026-11-20.
+      if (slotNot.some((n) => fold(n) === noun)) return null;
+      if (only && !only.some((n) => fold(n) === noun) && MEASURE_GENDER[noun] === undefined) return null;
+      // A polite decline names what it does not want („keinen Kuchen", „kein Kuchen"): a „kein-" article.
+      if (negative && !/^kein/.test(det || '')) return null;
+      // Elsewhere a „kein-" names nothing bought, needed, taken or shown: „Ich kaufe keine Uhr", „Ich
+      // möchte kein Wasser" for the water offered (the honest-none rule above `checkTurns`).
+      if (!negative && /^kein/.test(det || '')) return null;
+      // A measure and its content: the article agrees with the measure („ein Glas Wasser", „eine Tasse
+      // Tee", „zwei Tassen Kaffee"), and the content is a noun („ein Glas groß" is none).
+      const measure = adj ? MEASURE_GENDER[adj] : undefined;
+      if (measure) {
+        const contentOk = /^\p{Lu}/u.test(nounRaw) || Boolean(genders?.get?.(noun));
+        const articleOk = measure === 'pl' ? (counted || (det && ARTICLE.pl.includes(det))) : (det ? !counted && ARTICLE[measure].includes(det) : false);
+        if (!contentOk || !articleOk) return null;
+        return measure === 'pl' ? 'many' : 'one';
+      }
+      const adjRaw = adj ? restRaw[0] : null;
+      if (adj && !colourStem(adj.replace(/(e|en|er|es)$/, '')) && !colourStem(adj) && !isAdjectiveShape(adjRaw, lexicon)) return null;
+      const detKey = counted || !det ? '' : det;
+      const adjOk = (g) => !adj || adjectiveFits(adjRaw, slot, detKey, g, lexicon);
+      const readings = typeof genders?.get === 'function' ? genders.get(noun) : undefined;
+      if (readings) {
+        if (people && !PEOPLE.has(noun)) return null;
+        const fit = readings.filter((g) => adjOk(g) && (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det))
+          : (det ? !counted && ARTICLE[g].includes(det) : MASS.has(noun) && !adj)));
+        if (!fit.length) return null;
+        return fit.every((g) => g === 'pl') ? 'many' : fit.includes('pl') ? 'either' : 'one';
+      }
+      // A person of the story is someone too („Lena und Tim kommen“; Lektion 12's guests).
+      if (slot === 'object' && !det && !adj && lexicon?.names?.has?.(noun) && /^\p{Lu}/u.test(nounRaw)) return 'one';
+      if (known(noun)) return null; // a taught word that is no noun names no thing
+      const genderOk = ['der', 'die', 'das', 'pl'].filter((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : det && !counted && ARTICLE[g].includes(det)) && adjOk(g));
+      if (!genderOk.length) return null;
+      if (!/^\p{Lu}/u.test(nounRaw)) {
+        if (!det) return null;
+        typo = true;
+      }
+      return counted ? 'many' : 'either';
+    };
+    const read = items.map(itemReading);
+    if (!items.length || read.some((r) => r === null)) return RESULT.WRONG;
+    if (count === 'one' && (items.length > 1 || read[0] === 'many')) return RESULT.WRONG;
+    if (count === 'many' && items.length === 1 && read[0] === 'one') return RESULT.WRONG;
+    return typo ? RESULT.TYPO : RESULT.CORRECT;
+  }
+  const content = parts.filter((w) => /\p{L}/u.test(w) && !CLOSED.has(w));
+  return content.length ? RESULT.CORRECT : RESULT.WRONG;
+}
+
+const RANK = { [RESULT.WRONG]: 0, [RESULT.TYPO]: 1, [RESULT.CORRECT]: 2 };
+const best = (results) => results.reduce((a, r) => (RANK[r] > RANK[a] ? r : a), RESULT.WRONG);
+const worst = (a, b) => (RANK[a] < RANK[b] ? a : b);
+
+/**
+ * One own answer against one frame („Ich komme aus …"): the learner's words in the gap are copied
+ * into the frame, and the shared checker grades the rest — so a slip in „komme" is the same typo
+ * and „Ich kommen aus" the same wrong ending it is everywhere else in the course.
+ */
+function frameResult(frame, value, turn) {
+  if (frame.split(GAP).length === 3) return twoGapResult(frame, value, turn);
+  const [head, tail = ''] = frame.split(GAP).map((s) => s.trim());
+  const given = wordsOf(String(value || '').normalize('NFC').trim().replace(END, ''));
+  // A comma right after the gap („…, guten Tag") is no word of the frame.
+  const counted = (s) => wordsOf(s).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+  const before = counted(head);
+  const after = counted(tail.replace(END, ''));
+  if (given.length <= before + after) return RESULT.WRONG;
+  const own = given.slice(before, given.length - after).join(' ');
+  const gap = gapResult(own.replace(/[.,!?]+$/, ''), turn);
+  if (gap === RESULT.WRONG) return RESULT.WRONG;
+  return worst(gap, checkLoose(value, [[head, own, tail].filter(Boolean).join(' ')]));
+}
+
+/**
+ * A frame with two gaps around fixed words („… bin ich … frei." for „Am Dienstag bin ich abends frei."):
+ * the first gap is everything before the middle words, the second (which may be empty) what follows
+ * them up to the end words. A `when` gap reads both as one time („am Dienstag … abends"); any other
+ * kind grades each gap that is not empty.
+ */
+function twoGapResult(frame, value, turn) {
+  const [head, mid, tail] = frame.split(GAP).map((s) => s.trim());
+  const given = wordsOf(String(value || '').normalize('NFC').trim().replace(END, ''));
+  const plainWords = (s) => wordsOf(s.replace(END, '')).filter((w) => /[\p{L}\p{N}]/u.test(w)).map((w) => fold(w).replace(/[.,!?]+$/, ''));
+  const [h, m, t] = [plainWords(head), plainWords(mid), plainWords(tail)];
+  const g = given.map((w) => fold(w).replace(/[.,!?]+$/, ''));
+  if (given.length < h.length + m.length + t.length + 1) return RESULT.WRONG;
+  for (let at = h.length + 1; at + m.length + t.length <= given.length; at += 1) {
+    if (!m.every((w, i) => g[at + i] === w)) continue;
+    const first = given.slice(h.length, at).join(' ');
+    const second = given.slice(at + m.length, given.length - t.length).join(' ');
+    const strip = (s) => s.replace(/[.,!?]+$/, '');
+    let gap;
+    // An „um" or „am" of the frame between the gaps belongs to the time („… stehe ich um … auf").
+    const glue = ['um', 'am'].includes(m.at(-1)) ? `${m.at(-1)} ` : '';
+    if (turn.slot === 'when') gap = gapResult(strip(`${first} ${second ? glue + second : ''}`.trim()), turn);
+    else gap = worst(gapResult(strip(first), turn), second ? gapResult(strip(second), turn) : RESULT.CORRECT);
+    if (gap === RESULT.WRONG) continue;
+    const model = [head, first, mid, second, tail].filter(Boolean).join(' ');
+    return worst(gap, checkLoose(value, [model]));
+  }
+  return RESULT.WRONG;
+}
+
+/**
+ * The shared checker, and then once more for a learner who typed without umlauts or ß („wie spat ist
+ * es", „ich moechte"): a phone keyboard without them. A match that way is a typo. Only when the answer
+ * has no umlaut at all, so „meine Mütter" for „meine Mutter" stays a different word.
+ */
+function checkLoose(value, accepted, options) {
+  const result = checkAnswer(value, accepted, options).result;
+  if (result !== RESULT.WRONG || /[äöüß]/i.test(String(value))) return result;
+  const loose = (s) => String(s).normalize('NFC').replace(/ä/g, 'a').replace(/Ä/g, 'A').replace(/ö/g, 'o').replace(/Ö/g, 'O').replace(/ü/g, 'u').replace(/Ü/g, 'U').replace(/ß/g, 'ss');
+  const typed = String(value).replace(/([aouAOU])e/g, '$1');
+  const again = checkAnswer(typed, accepted.map(loose), options).result;
+  return again === RESULT.WRONG ? (checkAnswer(value, accepted.map(loose), options).result === RESULT.WRONG ? RESULT.WRONG : RESULT.TYPO) : RESULT.TYPO;
+}
+
+/** An accepted answer is a string, or `{ frame, slot, … }` when one frame's gap differs from the turn's. */
+const frameOf = (a) => (typeof a === 'string' ? a : a.frame);
+
+/** One sentence against the turn's answers: fixed ones through the shared checker, own ones through their frame. */
+function sentenceResult(accepted, value, turn) {
+  const fixed = accepted.filter((a) => typeof a === 'string' && !hasGap(a));
+  return best([
+    ...(fixed.length ? [turn.spell ? checkAnswer(value, fixed, { spelling: true }).result : checkLoose(value, fixed)] : []),
+    ...accepted.filter((a) => hasGap(frameOf(a))).map((a) => frameResult(frameOf(a), value, typeof a === 'string' ? turn : { ...turn, ...a })),
+  ]);
+}
+
+// A message may open with a greeting and close with a sign-off; neither is graded.
+const GREETING = /^(hallo|guten (morgen|tag|abend)|sehr geehrte|liebe|lieber|viele grüße|liebe grüße|tschüss|bis morgen|danke)\b/i;
+
+/**
+ * A short written message: every part in a sentence of its own, any order; nothing else but a
+ * greeting or sign-off. A greeting may open the first sentence („Guten Tag, ich heiße …") and a comma
+ * may join two sentences („Ich heiße Ana, ich bin am …").
+ */
+function messageResult(turn, value) {
+  // After a comma „ich" is rightly small, so the clause it opens is graded as a sentence of its own.
+  // „Ich heiße Ali und bin am 3.5.1998 geboren" is two clauses: the second has its „ich" back.
+  // The full stop of a day („am 12. März", „am 1. 3. 1990") does not end the sentence.
+  const pieces = String(value || '').split(/(?<=[.!?])\s+|\n+/).reduce((acc, p) => {
+    const last = acc[acc.length - 1];
+    if (last && /(^|\s)\d{1,2}\.$/.test(last) && (/^\d/.test(p) || monthOf(p.split(/\s+/)[0]))) acc[acc.length - 1] = `${last} ${p}`;
+    else acc.push(p);
+    return acc;
+  }, []);
+  const sentences = pieces
+    .flatMap((s) => s.split(/,\s+(?=(?:ich|mein|meine|am)\b)/i).map((c, i) => (i ? c.charAt(0).toLocaleUpperCase('de') + c.slice(1) : c)))
+    .flatMap((s) => s.split(/\s+und\s+(?=(?:ich|bin|wohne|komme|mein|meine)\b)/i).map((c, i) => (i && /^(bin|wohne|komme)\b/i.test(c) ? `Ich ${c}` : (i ? c.charAt(0).toLocaleUpperCase('de') + c.slice(1) : c))))
+    .map((s) => s.trim()).filter(Boolean);
+  const free = [...sentences];
+  let result = RESULT.CORRECT;
+  for (const part of turn.parts) {
+    const scored = free.map((s) => sentenceResult(part, s, turn));
+    const at = scored.reduce((b, r, i) => (b < 0 || RANK[r] > RANK[scored[b]] ? i : b), -1);
+    if (at < 0 || scored[at] === RESULT.WRONG) return RESULT.WRONG;
+    result = worst(result, scored[at]);
+    free.splice(at, 1);
+  }
+  // What is left is a greeting, a sign-off, or more about the learner in a form the check knows (`extras`).
+  const extra = (s) => GREETING.test(s.replace(/^[„"]/, '')) || (turn.extras && sentenceResult(turn.extras, s, turn) !== RESULT.WRONG);
+  return free.every(extra) ? result : RESULT.WRONG;
+}
+
+// The taught adverbs that may stand in the middle or in front of a statement without changing it.
+const ADVERBS = new Set(['jetzt', 'hier', 'auch', 'noch', 'schon', 'gern', 'gerne', 'heute', 'morgen', 'gestern', 'zusammen', 'immer', 'dort']);
+const SUBJECTS = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr']);
+
+/**
+ * The same statement in its basic order, when the learner put something else first or an adverb in
+ * the middle (German keeps the verb second): „Ich wohne jetzt in Köln", „Jetzt wohne ich in Köln",
+ * „Aus Syrien komme ich", „In Bremen wohne ich" are „Ich wohne in Köln" … with the same words. The
+ * frame then grades the words as always, so „Aus Syrien ich komme" stays wrong.
+ */
+function verbSecond(text) {
+  const end = (String(text).trim().match(/[.!?]+$/) || [''])[0];
+  const w = wordsOf(String(text).trim().replace(/[.!?]+$/, ''));
+  const out = [];
+  const lower = (s) => (CLOSED.has(fold(s)) || ADVERBS.has(fold(s)) ? s.toLocaleLowerCase('de') : s);
+  const cap = (s) => s.charAt(0).toLocaleUpperCase('de') + s.slice(1);
+  // An adverb after the verb: „Ich wohne jetzt in Köln" → „Ich wohne in Köln".
+  if (w.length >= 4 && SUBJECTS.has(fold(w[0])) && ADVERBS.has(fold(w[2]))) out.push([...w.slice(0, 2), ...w.slice(3)].join(' ') + end);
+  // An adverb in front: „Jetzt wohne ich in Köln" → „Ich wohne in Köln".
+  if (w.length >= 4 && ADVERBS.has(fold(w[0])) && SUBJECTS.has(fold(w[2]))) out.push([cap(w[2]), w[1], ...w.slice(3)].join(' ') + end);
+  // Anything else in front, subject last: „Aus Syrien komme ich" → „Ich komme aus Syrien"; „Ein Lineal
+  // ist das" → „Das ist ein Lineal".
+  const last = fold(w.at(-1) || '');
+  const subjectLast = SUBJECTS.has(last) || (last === 'das' && ['ist', 'sind'].includes(fold(w.at(-2) || '')));
+  if (w.length >= 3 && subjectLast && !SUBJECTS.has(fold(w[0]))) out.push([cap(w.at(-1)), w.at(-2), lower(w[0]), ...w.slice(1, -2)].join(' ') + end);
+  // A word in front of „ist", the subject after it: „Rot ist mein Heft" → „Mein Heft ist rot".
+  if (w.length === 4 && ['ist', 'sind'].includes(fold(w[1])) && DETERMINERS.has(fold(w[2]))) out.push([cap(w[2]), w[3], w[1], w[0].toLocaleLowerCase('de')].join(' ') + end);
+  // A phrase in front, the verb second and the subject right after it: „Am Wochenende spiele ich
+  // Fußball" → „Ich spiele Fußball am Wochenende"; „Am Montag bin ich frei" → „Ich bin frei am Montag".
+  // The verb must stand right before the subject, so „Am Wochenende ich spiele" stays wrong.
+  for (let k = 2; k <= Math.min(4, w.length - 1); k += 1) {
+    if (SUBJECTS.has(fold(w[k])) && !SUBJECTS.has(fold(w[0])) && !SUBJECTS.has(fold(w[k - 1]))) {
+      const front = w.slice(0, k - 1).map((x, i) => (i === 0 ? x.charAt(0).toLocaleLowerCase('de') + x.slice(1) : x));
+      if (/^\p{Lu}/u.test(w[0]) && front.length) {
+        const first = fold(w[0]);
+        // Keep the capital of a noun in front („Fußball spiele ich gern"): only small words lose it.
+        if (!CLOSED.has(first) && !ADVERBS.has(first) && !WHEN_GLUE.has(first)) front[0] = w[0];
+      }
+      out.push([cap(w[k]), w[k - 1], ...w.slice(k + 1), ...front].join(' ') + end);
+    }
+  }
+  return out;
+}
+
+/**
+ * „gern" may stand before what one likes to do („Ich spiele gern Fußball") or after it; the activity
+ * frame „Ich … gern." reads it at the end („Ich spiele Fußball gern"). „gerne" is „gern".
+ */
+function gernLast(text) {
+  const m = String(text).trim().match(/^(.*?)\s+gerne?\s+(.+?)([.!?]*)$/i);
+  // Only a „gern" after the verb moves: „Ich gern spiele Fußball" has it before the verb and stays wrong.
+  return m && wordsOf(m[1]).length >= 2 ? [`${m[1]} ${m[2]} gern${m[3]}`] : [];
+}
+
+const DETERMINERS = new Set(['der', 'die', 'das', 'mein', 'meine', 'dein', 'deine', 'ihr', 'ihre', 'sein', 'seine']);
+// A pronoun or demonstrative that picks up a noun, by the article the noun takes.
+const PICKS_UP = { der: 'der', er: 'der', die: 'die', sie: 'die', das: 'das', es: 'das' };
+
+/**
+ * A noun named first and picked up by a pronoun („Der Stuhl, was kostet der?", „Mein Büro, wo ist
+ * das?", „Mein Heft: Wo ist es?") is the question with the noun in its place („Was kostet der
+ * Stuhl?"), when the pronoun fits the noun's article; „Der Stuhl, was kostet die?" fits none.
+ */
+function nounFirst(text, lexicon) {
+  // A bare noun named first and picked up as the object („Tee? Haben Sie den?") is the question with
+  // the noun in place („Haben Sie Tee?"; second corpus of Lektion 9).
+  const bareNoun = String(text).trim().match(/^(\p{Lu}\p{L}*)\s*[,:?]\s*(\p{L}.*?)\s+(den|die|das|ihn)\s*\?$/u);
+  if (bareNoun) {
+    const readings = typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(fold(bareNoun[1])) : undefined;
+    const PICK = { den: 'der', ihn: 'der', die: 'die', das: 'das' };
+    if (!readings || readings.includes(PICK[fold(bareNoun[3])]) || (fold(bareNoun[3]) === 'die' && readings.includes('pl'))) {
+      return [`${bareNoun[2].charAt(0).toLocaleUpperCase('de')}${bareNoun[2].slice(1)} ${bareNoun[1]}?`];
+    }
+    return [];
+  }
+  const m = String(text).trim().match(/^((?:der|die|das|mein|meine|dein|deine|ihr|ihre)\s+\p{L}+)\s*[,:?]\s*(\p{L}.*?)\s+(der|die|das|er|sie|es)\s*\?$/iu);
+  if (!m) return [];
+  const [det, noun] = m[1].split(/\s+/);
+  const readings = typeof lexicon?.genders?.get === 'function' ? lexicon.genders.get(fold(noun)) : undefined;
+  if (readings && !readings.includes(PICKS_UP[fold(m[3])])) return [];
+  return [`${m[2].charAt(0).toLocaleUpperCase('de')}${m[2].slice(1)} ${det.toLocaleLowerCase('de')} ${noun}?`];
+}
+
+/**
+ * A question with its question word last („Der Stuhl kostet wie viel?", „Deine Tasche hat welche
+ * Farbe?") is the question in its taught order („Wie viel kostet der Stuhl?"); the words are then
+ * graded as always, so „Der Stuhl kosten wie viel?" stays wrong (blind corpora, 2026-11-20).
+ */
+function questionWordLast(text) {
+  const m = String(text).trim().match(/^(\p{L}+(?:\s+\p{L}+)?)\s+(\p{L}+)\s+(wie viel euro|wie viel|wie teuer|welche farbe|wo|wann|was|woher)\s*\?$/iu);
+  if (!m) return [];
+  const subject = m[1].split(/\s+/);
+  const first = DETERMINERS.has(fold(subject[0])) || SUBJECTS.has(fold(subject[0])) ? subject[0].toLocaleLowerCase('de') : subject[0];
+  return [`${m[3].charAt(0).toLocaleUpperCase('de')}${m[3].slice(1)} ${m[2]} ${[first, ...subject.slice(1)].join(' ')}?`];
+}
+
+// The prefixes of verbs of two parts (Lektion 11: „ein|kaufen“, „auf|stehen“): in a main clause the prefix goes to the
+// end, so a finite verb that still carries it („Ich aufstehe“, „Ich einkaufe“, „Einkaufst du …?“) is wrong.
+const SEP_PREFIX = ['zurück', 'fern', 'auf', 'aus', 'ein', 'mit', 'weg', 'los', 'vor', 'nach', 'her', 'hin', 'an', 'ab', 'zu'];
+// Verbs that only look as if they had one.
+const NOT_SEPARABLE = /^(?:antwort|angel|analys|zucker|herrsch|hinter)/;
+const unsplit = (w) => { const f = fold(w); return !NOT_SEPARABLE.test(f) && /(?:e|st|t)$/.test(f) && SEP_PREFIX.some((p) => f.startsWith(p) && f.length - p.length >= 4); };
+
+// Participles in -en of the strong verbs a learner may use at A1 (without a separable prefix), and those that take „sein“.
+const STRONG_PARTICIPLES = new Set(['gegangen', 'gefahren', 'gekommen', 'geschlafen', 'gegessen', 'getrunken', 'gelesen', 'gesehen', 'geschrieben',
+  'gesprochen', 'geschwommen', 'gelaufen', 'geflogen', 'geblieben', 'gewesen', 'gestanden', 'getroffen', 'genommen', 'gefunden', 'gesungen', 'gerufen',
+  'gegeben', 'geworden', 'gewaschen', 'geholfen', 'gestorben', 'geboren', 'getragen', 'gehalten', 'gelegen', 'gesessen', 'geschlossen', 'gezogen',
+  'bekommen', 'verstanden', 'vergessen', 'begonnen', 'verloren', 'empfohlen', 'gefallen', 'angefangen', 'gewonnen']);
+const SEIN_PARTICIPLES = new Set(['gegangen', 'gefahren', 'gekommen', 'geflogen', 'gelaufen', 'geschwommen', 'geblieben', 'gewesen', 'geworden',
+  'gestorben', 'gereist', 'gerannt', 'gesprungen', 'aufgestanden', 'eingeschlafen', 'aufgewacht', 'umgezogen']);
+// Stems whose participle ends in -en: „geschlaft“, „gegeht“ are no participles.
+const STRONG_STEMS = /^ge(?:schlaf|ess|trink|les|seh|geh|fahr|komm|schreib|sprech|schwimm|lauf|flieg|bleib|nehm|find|sing|steh|treff|ruf|geb)t$/;
+/** „haben“ or „sein“ for a participle („gespielt“, „eingekauft“, „gegangen“, „telefoniert“), or null when it is none. */
+function participleOf(word) {
+  const f = fold(word);
+  const prefix = SEP_PREFIX.find((p) => f.startsWith(`${p}ge`) && f.length > p.length + 4);
+  const core = prefix ? f.slice(prefix.length) : f;
+  const sein = SEIN_PARTICIPLES.has(f) || SEIN_PARTICIPLES.has(core) ? 'sein' : 'haben';
+  if (/en$/.test(core)) return STRONG_PARTICIPLES.has(core) ? sein : null;
+  if (/^ge\p{L}{3,}t$/u.test(core)) return STRONG_STEMS.test(core) ? null : sein;
+  if (!prefix && /^(?:be|ver|er|ent|emp|zer)\p{L}{3,}t$/u.test(core)) return sein;
+  if (!prefix && /\p{L}{3,}iert$/u.test(core)) return sein;
+  return null;
+}
+// Small words inside a sentence about the past („Ich habe gestern nichts gemacht“, „… zu Hause geblieben“).
+const PAST_SMALL = new Set(['gestern', 'heute', 'viel', 'lange', 'nicht', 'nichts', 'etwas', 'allein', 'hause', 'den', 'dem', 'des', 'der', 'die', 'das',
+  'einen', 'einem', 'einer', 'ein', 'eine', 'meinen', 'meinem', 'meiner', 'meine', 'mein', 'mit', 'für', 'gut', 'schön', 'spät', 'früh', 'dann', 'noch', 'schon']);
+
+// People, for a turn that asks who comes (`people`): „Ein Stuhl kommt“ names no guest.
+const PEOPLE = new Set(['mama', 'papa', 'mutter', 'vater', 'eltern', 'bruder', 'brüder', 'schwester', 'schwestern', 'geschwister', 'familie', 'kollegin',
+  'kolleginnen', 'kollege', 'kollegen', 'freund', 'freundin', 'freunde', 'freundinnen', 'gast', 'gäste', 'kind', 'kinder', 'sohn', 'söhne', 'tochter',
+  'töchter', 'frau', 'frauen', 'mann', 'männer', 'oma', 'opa', 'großeltern', 'onkel', 'tante', 'nachbar', 'nachbarin', 'nachbarn', 'chef', 'chefin',
+  'lehrer', 'lehrerin', 'leute', 'baby', 'partner', 'partnerin', 'cousin', 'cousine', 'herr', 'mitschüler', 'mitschülerin', 'mitschülerinnen']);
+
+// An invitation in two sentences: what is celebrated, then the question or „Ich lade dich ein“ („Ich mache ein Fest.
+// Kommst du auch?“, „Am Samstag feiere ich. Kommst du?“; courses session, 2026-11-20).
+const PARTY = /^(?:fest|party|feier|geburtstag|geburtstagsparty|geburtstagsfeier|grillfest|grillparty)$/;
+function partyNews(sentence, turn) {
+  return [sentence, ...verbSecond(sentence)].some((s) => {
+    const w = wordsOf(String(s).replace(/[.!]+\s*$/, '')).map((x) => x.replace(/[.,!]+$/, ''));
+    const f = w.map(fold);
+    let rest = null;
+    let named = false;
+    if (f[0] === 'ich' && ['feiere', 'mache', 'habe', 'plane', 'gebe'].includes(f[1])) {
+      rest = w.slice(2);
+      named = f[1] === 'feiere';
+    } else {
+      const at = f.indexOf('ist');
+      const poss = (x, n) => (/^(?:meine|unsere)$/.test(x) ? ['party', 'feier', 'geburtstagsparty', 'geburtstagsfeier', 'grillparty'].includes(n) : /^(?:mein|unser)$/.test(x) && ['fest', 'geburtstag', 'grillfest'].includes(n));
+      if (at > 0 && poss(f[at + 1] || '', f[at + 2] || '') && at + 3 === f.length) { rest = w.slice(0, at); named = true; }
+      if (at === 2 && poss(f[0], f[1])) { rest = w.slice(3); named = true; }
+    }
+    if (!rest) return false;
+    const when = [];
+    for (let i = 0; i < rest.length; i += 1) {
+      const x = fold(rest[i]);
+      if (PARTY.test(x) && /^\p{Lu}/u.test(rest[i])) { named = true; continue; }
+      // The article agrees with the party noun („ein Fest“, „eine Party“, „meinen Geburtstag“; never „ein Party“).
+      const next = fold(rest[i + 1] || '');
+      if (PARTY.test(next)) {
+        const g = /party|feier$/.test(next) ? 'die' : /geburtstag$/.test(next) ? 'der' : 'das';
+        const fits = { der: ['einen', 'meinen', 'unseren'], die: ['eine', 'meine', 'unsere'], das: ['ein', 'mein', 'unser'] }[g];
+        if (fits.includes(x)) continue;
+        if (['ein', 'eine', 'einen', 'meinen', 'meine', 'mein', 'unsere', 'unser', 'unseren'].includes(x)) return false;
+      }
+      when.push(rest[i]);
+    }
+    if (!named) return false;
+    if (!when.length) return true;
+    const at = whenOf(when.join(' '));
+    return Boolean(at) && (!turn.when || sameWhen(at, turn.when, { partial: true }));
+  });
+}
+const INVITE_SECOND = /^(?:und\s+)?(?:kommst\s+du(?:\s+auch)?(?:\s+zu\s+mir)?|möchtest\s+du(?:\s+auch)?\s+kommen|ich\s+lade\s+dich(?:\s+auch)?\s+ein|kannst\s+du\s+kommen|hast\s+du\s+zeit)\s*[?.!]*$/iu;
+
+// A number word, also typed without its umlaut („funfzehn", „zwolf").
+const isNumberWord = (w) => /^\d+$/.test(numberWordsToDigits(String(w).replace(/f(?:ue|u)nf/g, 'fünf').replace(/zw(?:oe|o)lf/g, 'zwölf')));
+// A price is in euros: „18,00 Euro" and „18,- €" are 18; a heard price in euros is no number of cents.
+const priceDigits = (s) => numberWordsToDigits(String(s).replace(/f(?:ue|u)nf/gi, 'fünf').replace(/zw(?:oe|o)lf/gi, 'zwölf'))
+  .replace(/(\d),(?:00|-)(?!\d)/g, '$1').replace(/\D/g, '');
+// A greeting before the answer, also to the person by name („Guten Tag, Herr Weber. Hier ist …",
+// „Hallo Herr Weber, hier ist …").
+const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))(?:[\s,]+(?:herr|frau)\s+\p{L}+)?\s*[!,.]\s*/iu;
+// The turn's `answerWords` (words of yes, of goodbye), one or more, each followed by a comma, a stop or a space.
+const answerWordsRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+und\\s+|\\s+|$))+`, 'iu');
+
+/** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
+export function typedResult(turn, value) {
+  if (turn.ownName) {
+    const ok = turn.accepted.some((o) => new RegExp(`^${fold(o)}\\s+\\p{L}`, 'u').test(fold(value)));
+    return ok ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  const text = spelledOut(westernDigits(value), turn.lexicon);
+  if (turn.listen && (turn.when || turn.time)) {
+    // A heard day and time („Dienstag, 9.30“, „am Dienstag um halb zehn“, „Di 9:30“) or a heard time, also in the
+    // heard sentence's own words („Der Zug fährt um neun Uhr dreißig“, second corpus of Lektion 10).
+    const heard = new Set(wordsOf(fold(turn.listen)).map((w) => w.replace(/[.,!?:]+$/, '')));
+    const keep = (w) => { const f = fold(w).replace(/[.,!?:]+$/, ''); return !heard.has(f) || WHEN_GLUE.has(f) || DAYS.includes(f) || isNumberWord(f) || ['uhr', 'halb', 'viertel', 'nach', 'vor'].includes(f); };
+    const at = whenOf(text) || whenOf(wordsOf(text).filter(keep).join(' '));
+    if (turn.when) return sameWhen(at, turn.when, { writtenNote: true }) ? (at.typo ? RESULT.TYPO : RESULT.CORRECT) : RESULT.WRONG;
+    return at && at.time !== null && at.time === clockOf(turn.time) && !(at.half && at.half !== halfOf24(turn.time)) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  if (turn.listen) {
+    // A heard price or platform is no clock time: „fünfzehn Uhr“, „um sieben Uhr“ (first corpus of Lektion 10).
+    if (/\b(?:uhr|um)\b/i.test(text) && !/\buhr\b/i.test(turn.listen)) return RESULT.WRONG;
+    // A heard price counts euros: „15 Fahrkarten“ counts tickets (second corpus of Lektion 10). „Preis: 18 Euro“
+    // and „Das macht 30 Euro“ stay right.
+    if (/\beuro\b/i.test(turn.listen)) {
+      const w = wordsOf(fold(text)).map((x) => x.replace(/[.,!?:]+$/, ''));
+      if (w.some((x, i) => (isNumberWord(x) || /^\d/.test(x)) && /\p{L}/u.test(w[i + 1] || '') && !['euro', 'eur'].includes(w[i + 1]))) return RESULT.WRONG;
+    }
+    // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label,
+    // „18,00 €" the price „18 Euro" (and „funfundvierzig" without its umlaut is 45). A price heard in
+    // euros is not written as cents (blind corpus, 2026-11-20).
+    if (/\beuro\b/i.test(turn.listen) && /\bcent\b|\bct\b/i.test(text)) return RESULT.WRONG;
+    const heard = priceDigits(turn.accepted[0]);
+    if (priceDigits(text) && priceDigits(text) === heard) return RESULT.CORRECT;
+    return checkAnswer(text, turn.accepted, { dictation: true }).result;
+  }
+  if (turn.parts) return messageResult(turn, text);
+  if (turn.slot === 'invite') {
+    const plain = text.trim().replace(GREETING_FIRST, '');
+    let said = plain.split(/(?<=[.!?])\s+/).filter(Boolean);
+    // Without the full stop between them („am samstag ist mein fest kommst du auch?“) the two sentences are a slip.
+    const joined = said.length === 1;
+    if (joined) said = plain.split(/[,\s]+(?=(?:und\s+)?(?:kommst|möchtest|kannst|hast)\s+du\b|ich\s+lade\s+dich\b)/iu).filter(Boolean);
+    const name = turn.partner ? new RegExp(`[,\\s]+${turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=\\s*[?.!]*$)`, 'i') : /$^/;
+    if (said.length === 2 && partyNews(said[0].replace(name, ''), turn) && (INVITE_SECOND.test(said[1].replace(name, '')) || typedResult(turn, said[1]) !== RESULT.WRONG)) {
+      return joined || /^\p{Ll}/u.test(plain) ? RESULT.TYPO : RESULT.CORRECT;
+    }
+  }
+  // A reply may open with a greeting („Guten Tag! Was ist das?") or „Und" („Und woher kommen deine
+  // Eltern?") and name the person it is said to („Herr Weber, …", „…, Lena?", „frau wolf was ist das");
+  // the rest is the answer. „Hier, Lena." is „Hier." — „Hier," is no name.
+  const cap = (s) => s.charAt(0).toLocaleUpperCase('de') + s.slice(1);
+  // „wieviel" is the old spelling of „wie viel": the same question, with a spelling slip.
+  const oldSpelling = /\bwieviel\b/i.test(text);
+  const tries = [oldSpelling ? text.replace(/\b(w)ieviel\b/gi, '$1ie viel') : text];
+  const add = (t) => { const s = cap(String(t).trim()); if (s && !tries.includes(s)) tries.push(s); };
+  const greeted = text.trim().replace(GREETING_FIRST, '');
+  if (greeted !== text.trim()) add(greeted);
+  const LEAD = /^(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*,\s*/u;
+  const TRAIL = /,\s*(?:(?:Herr|Frau)\s+)?\p{Lu}\p{L}*(?=\s*[?.!]*$)/u;
+  const escaped = turn.partner ? turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null;
+  const partner = escaped ? new RegExp(`^${escaped}[,!:?]?\\s+`, 'i') : null;
+  // The partner's name at the end, with or without a comma („was ist dein hobby lena?").
+  const partnerLast = escaped ? new RegExp(`[,\\s]+${escaped}(?=\\s*[?.!]*$)`, 'i') : null;
+  if (escaped) {
+    const greetName = text.trim().replace(new RegExp(`^(?:hallo|guten\\s+(?:morgen|tag|abend))[\\s,]+${escaped}[,!.:]?\\s+`, 'i'), '');
+    if (greetName !== text.trim()) add(greetName);
+    const inside = text.trim().replace(new RegExp(`,\\s*${escaped}(?=\\s*[.!?]\\s*\\S)`, 'gi'), '');
+    if (inside !== text.trim()) add(inside);
+  }
+  for (const t of [...tries]) {
+    const s = t.trim();
+    for (const named of [s.replace(LEAD, ''), s.replace(TRAIL, ''), s.replace(LEAD, '').replace(TRAIL, ''), partner ? s.replace(partner, '') : s, partnerLast ? s.replace(partnerLast, '') : s]) if (named && named !== s) add(named);
+  }
+  // „bitte" and „danke" are politeness, not a different answer: „bitte" at the start, at the end or
+  // after the verb („Wo ist bitte mein Büro?"), „danke" at the end („Ja, ich habe Hunger, danke.").
+  for (const t of [...tries]) {
+    const plain = t.trim().replace(/^bitte[,\s]+/i, '').replace(/[,\s]+bitte(?=\s*[?.!]*$)/i, '').replace(/,?\s+bitte,?(?=\s)/i, '');
+    if (plain && plain !== t.trim()) add(plain);
+    const thanked = t.trim().replace(/[,\s]+danke(?:\s+schön)?(?=\s*[?.!]*$)/i, '');
+    if (thanked && thanked !== t.trim()) add(thanked);
+  }
+  for (const t of [...tries]) {
+    // „Und du, was machst du gern?" is „Was machst du gern?": the „Und du" hands the question back.
+    const rest = t.trim().replace(/^und(?:\s+du)?[\s,?]+/i, '');
+    if (rest && rest !== t.trim()) { add(rest); add(rest.replace(LEAD, '')); }
+  }
+  const partnersThing = (turn.accepted || []).some((a) => /\b(?:dein|deine|deinen|Ihr|Ihre|Ihren)\s+\p{Lu}/u.test(typeof a === 'string' ? a : a.frame));
+  // NATURAL ANSWERS (the independent score, 2026-11-20), three classes for every turn of every check:
+  // a counter-question after a complete answer („Danke, gut. Und Ihnen?“, „Ich bin Lehrer. Und Sie?“) is the
+  // answer; a degree word after a complete answer („Ja, das passt mir gut.“, „Das passt sehr gut.“) is the
+  // answer; „mein“ where it names the same thing as „der“ in the scene („Wann fährt mein Zug ab?“) is „der“.
+  for (const t of [...tries]) {
+    const s = t.trim();
+    const answered = s.replace(/[\s,.!?]*\bund\s+(?:ihnen|sie|du|dir|bei\s+(?:ihnen|dir))(?:\s+auch)?\s*\?\s*$/iu, '');
+    if (answered !== s && wordsOf(answered).length >= 1 && /\p{L}/u.test(answered)) add(/[.!?]$/.test(answered) ? answered : `${answered}.`);
+    const plain = s.replace(/\s+(?:(?:sehr|ganz|wirklich|echt|richtig)\s+)?(?:gut|prima|super)(?=\s*[.!]*$)/iu, '');
+    if (plain !== s && wordsOf(plain).length >= 2) add(plain);
+    const own = s.replace(/\b(mein|meine|meinen|meinem|meiner)\s+(\p{Lu}\p{L}+)/gu, (all, poss, noun) => {
+      // Where the turn asks about the partner's thing („Welche Farbe hat deine Tasche?“), mine is another one.
+      if (!OWN_THINGS.has(fold(noun)) || partnersThing) return all;
+      const g = [OWN_THINGS.get(fold(noun))];
+      const p = fold(poss);
+      const art = p === 'meine' ? (g.includes('die') ? 'die' : g.includes('pl') ? 'die' : null)
+        : p === 'meinen' ? (g.includes('der') ? 'den' : null) : p === 'meinem' ? (g.some((x) => x === 'der' || x === 'das') ? 'dem' : null)
+          : p === 'meiner' ? (g.includes('die') ? 'der' : null) : (g.includes('der') ? 'der' : g.includes('das') ? 'das' : null);
+      return art ? `${all.charAt(0) === 'M' ? art.charAt(0).toUpperCase() + art.slice(1) : art} ${noun}` : all;
+    });
+    if (own !== s) add(own);
+  }
+  // A tag at the end („Du tanzt gern, oder?") asks the same question.
+  for (const t of [...tries]) {
+    const tagless = t.trim().replace(/,?\s*(?:oder|ne|nicht wahr)\s*\?\s*$/i, '?');
+    if (tagless !== t.trim()) add(tagless);
+  }
+  // `answerWords` are a whole answer alone and may open a longer one: words of yes when agreeing (Lektion 8),
+  // of goodbye (Lektion 12). Those in front are the yes („Gern.", „Prima, dann bis Freitag.", „Ja,
+  // gut, bis dann!"); what follows is graded as the rest, and after a yes the time alone may stand
+  // („Gut, am Freitag."). Courses session, 2026-11-20.
+  // A small first letter stays the case slip it is everywhere („ja gern", „ja, bis Freitag").
+  const afterYes = [];
+  const smallYes = new Set();
+  // `leadWords` may open an answer but are none alone („Ja, ich komme mit.“, never „Ja.“ where the
+  // task asks for the sentence; „Tschüss, bis bald!“, never „Tschüss!“ where „bis bald“ is the can-do).
+  if (turn.answerWords?.length || turn.leadWords?.length) {
+    const yes = answerWordsRe([...(turn.answerWords || []), ...(turn.leadWords || [])]);
+    const alone = turn.answerWords?.length ? new RegExp(answerWordsRe(turn.answerWords).source.replace(/^\^/, '(?:^|[\\s,.!])'), 'iu') : null;
+    for (const t of [...tries]) {
+      const s = t.trim();
+      const rest = s.replace(yes, '').trim();
+      if (rest === s) continue;
+      const small = /^\p{Ll}/u.test(s);
+      if (!rest) {
+        if (alone?.test(s)) return small ? RESULT.TYPO : RESULT.CORRECT;
+        continue;
+      }
+      // Only a word that is small inside a sentence gets its capital back („bis", „dann", „am"); a
+      // noun keeps what was typed, so „ja, freitag ist gut" keeps its slip.
+      const first = fold(rest.split(/\s+/)[0]).replace(/[.,!?]+$/, '');
+      const r = CLOSED.has(first) || ADVERBS.has(first) || WHEN_GLUE.has(first) || ['bis', 'dann'].includes(first) ? cap(rest) : rest;
+      if (!tries.includes(r)) tries.push(r);
+      if (turn.answerWords?.length && turn.slot) afterYes.push(r);
+      if (small) smallYes.add(r);
+    }
+  }
+  // Words of goodbye may also close the answer („Schönen Tag und bis später!“).
+  if (turn.leadWords?.length) {
+    for (const t of [...tries]) {
+      const words = [...turn.leadWords].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+      const r = t.trim().replace(new RegExp(`(?:\\s*,\\s*|\\s+und\\s+)(?:${words})(?=\\s*[.!]*$)`, 'iu'), '');
+      if (r !== t.trim()) add(r.replace(/\s*$/, '!'));
+    }
+  }
+  // A time after „frei" or „Zeit" („Ich bin frei am Samstag", „Ich habe Zeit am Wochenende") is ordinary
+  // spoken German: the answer with the time before it (courses session, 2026-11-20).
+  for (const t of [...tries]) {
+    const m = t.trim().match(/^(.+?)\s+(frei|zeit)\s+(.+?)([.!?]*)$/iu);
+    if (m && whenOf(m[3])) add(`${m[1]} ${m[3]} ${m[2]}${m[4]}`);
+  }
+  const timeTurn = (turn.accepted || []).some((a) => /\b(?:gestern|heute|morgen)\b/i.test(frameOf(a)));
+  // Small words that do not change the answer: „denn", „vielleicht", „heute", „hier", „noch", „im Café"
+  // in a question („Haben Sie vielleicht Tee?"); „auch" anywhere („Hunger habe ich auch"); „sehr"
+  // before „gern" (second and third corpora of Lektionen 7-9).
+  for (const t of [...tries]) {
+    const s = t.trim();
+    if (/\?\s*$/.test(s)) {
+      // „heute“ and „morgen“ change the answer where it names a day („Was hast du morgen gemacht?“, third corpus of Lektion 11).
+      const filler = timeTurn ? 'denn|vielleicht|hier|noch' : 'denn|vielleicht|heute|morgen|hier|noch';
+      const asked = s.replace(/\s+(?:im|in diesem) Café(?=\s*\?)/i, '').replace(new RegExp(`\\b(?:${filler})\\s+`, 'gi'), '').replace(new RegExp(`\\s+(?:${filler})(?=\\s*\\?)`, 'gi'), '');
+      if (asked !== s) add(asked);
+    }
+    const plainer = s.replace(/\s+auch\b/gi, '').replace(/^auch\s+/i, '').replace(/\bsehr\s+(?=gerne?\b)/gi, '');
+    if (plainer !== s) add(plainer);
+  }
+  // The thing offered, echoed before the answer: „Tee? Ja, gerne." is „Ja, gerne.".
+  for (const t of [...tries]) {
+    const echo = t.trim().match(/^(\p{Lu}\p{L}*)\s*\?\s+(\S.*)$/u);
+    if (echo && (!turn.only || turn.only.some((n) => fold(n) === fold(echo[1])))) add(echo[2]);
+  }
+  // A question in statement order („Du tanzt gern?") is the question („Tanzt du gern?").
+  for (const t of [...tries]) {
+    // Also with a noun as the subject („Der Zug fährt nach Berlin?“, first DaF review of Lektion 10).
+    const q = t.trim().match(/^(du|sie|er|es|(?:der|die|das|mein|meine|dein|deine)\s+\p{L}+)\s+(\p{L}+)\s+(.*\?)$/iu);
+    if (q && !SUBJECTS.has(fold(q[2]))) add(`${q[2]} ${/^(du|sie|er|es)$/i.test(q[1]) ? q[1].toLocaleLowerCase('de') : q[1].charAt(0).toLocaleLowerCase('de') + q[1].slice(1)} ${q[3]}`);
+  }
+  // A time named first and picked up by „da/dann" („Am Freitag um zehn Uhr, hast du da Zeit?") is the
+  // question with the time in place („Hast du am Freitag um zehn Uhr Zeit?").
+  for (const t of [...tries]) {
+    const m = t.trim().match(/^(.+?),\s*(\p{L}+)\s+(du|sie)\s+(?:da\s+|dann\s+)?(.+\?)$/iu);
+    if (m && whenOf(m[1])) add(`${m[2]} ${m[3].toLocaleLowerCase('de')} ${m[1].charAt(0).toLocaleLowerCase('de')}${m[1].slice(1)} ${m[4]}`);
+  }
+  for (const t of [...tries]) for (const s of nounFirst(t, turn.lexicon)) add(s);
+  for (const t of [...tries]) for (const s of questionWordLast(t)) add(s);
+  for (const t of [...tries]) if (/\bgerne\b/i.test(t)) add(t.replace(/\b(g)erne\b/gi, '$1ern'));
+  // The noun asked about, echoed before the answer: „Die Schere? Da." is „Da.".
+  for (const t of [...tries]) {
+    for (const noun of Object.values(turn.nounFor || {}).flat()) {
+      const echo = t.trim().match(new RegExp(`^${noun.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\?\\s*(\\S.*)$`, 'iu'));
+      if (echo) add(echo[1]);
+    }
+  }
+  for (const t of [...tries]) tries.push(...verbSecond(t));
+  for (const t of [...tries]) tries.push(...gernLast(t));
+  // Where it is for, at the end („Meine Freunde kommen zur Party“, „Ich möchte eine Tasche zum Geburtstag“): the answer without it.
+  for (const t of [...tries]) {
+    const r = t.replace(/\s+(?:zur Party|zum Fest|zum Geburtstag|zu meiner Party|zu meinem Fest|zu meinem Geburtstag)(?=\s*[.!?]*$)/i, '');
+    if (r !== t) tries.push(r);
+  }
+  // „im" is „in dem": „Ich wohne im Irak" is the place answer „in dem Irak".
+  for (const t of [...tries]) if (/\bim\b/i.test(t)) tries.push(t.replace(/\bim\b/gi, 'in dem'));
+  // The family noun may stand where the pronoun stands (`nounFor`): „Meine Mutter kommt aus …" is
+  // „Sie kommt aus …" with its noun, and the verb after it is graded just the same.
+  // A noun typed without its umlaut („das worterbuch ist hier", „das woerterbuch") still stands for
+  // the pronoun, as a typo.
+  const slipped = [];
+  for (const t of [...tries]) {
+    const said = wordsOf(t.trim());
+    for (const [pronoun, nouns] of Object.entries(turn.nounFor || {})) {
+      for (const noun of nouns) {
+        const n = wordsOf(noun).length;
+        const head = said.slice(0, n).join(' ');
+        const rest = said.slice(n).join(' ');
+        if (said.length <= n) continue;
+        if (fold(head) === fold(noun)) tries.push(`${pronoun} ${rest}`);
+        else if (!/[äöü]/.test(fold(head)) && /[äöü]/.test(fold(noun)) && bare(head) === bare(noun)) slipped.push(`${pronoun} ${rest}`);
+      }
+    }
+  }
+  const results = tries.map((t) => (smallYes.has(t) ? worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO) : sentenceResult(turn.accepted, t, turn)));
+  for (const t of slipped) results.push(worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO));
+  for (const t of afterYes) results.push(smallYes.has(t) ? worst(frameResult('…', t, turn), RESULT.TYPO) : frameResult('…', t, turn));
+  return oldSpelling ? worst(best(results), RESULT.TYPO) : best(results);
+}
+
+// The gap kinds whose word may be the learner's own.
+const OWN_WORD_KINDS = new Set(['place', 'job', 'language', 'hobby', 'thing', 'object', 'activity']);
+/**
+ * The words of a right answer that neither course teaches nor the own-word lists name („Ich wohne in Nordenham“ →
+ * „Nordenham“): the sentence was graded, the word itself was not. The check says so (`check.unchecked`), so a
+ * „correct“ never claims more than was checked (the own-word policy, 2026-11-20). Names are no such word.
+ */
+export function uncheckedWords(turn, value) {
+  const kinds = [turn?.slot, ...(turn?.accepted || []).map((a) => (typeof a === 'object' ? a.slot : null))];
+  if (!kinds.some((k) => OWN_WORD_KINDS.has(k))) return [];
+  const lexicon = turn.lexicon;
+  const listed = new Set([...(turn.slotWords || []), ...(turn.slotIn || []), ...String(turn.partner || '').split(/\s+/)].map((w) => fold(w)));
+  const words = wordsOf(spelledOut(westernDigits(value), lexicon).replace(/[.,!?;:„“”"()«»]/g, ' '));
+  return [...new Set(words.filter((w) => {
+    const f = fold(w);
+    if (!/\p{L}{2,}/u.test(f) || CLOSED.has(f) || isNumberWord(f) || listed.has(f) || OWN_ALL.has(f)) return false;
+    return !(lexicon?.has?.(f) || lexicon?.names?.has?.(f) || COURSE_WORDS.has(asciiUmlauts(f)));
+  }))];
+}
+
+/**
+ * A spoken try counts when it was measured (never "I said it") and what was recognised is an answer.
+ * The transcript is graded like a typed answer, so speech and typing take the same answers and a
+ * spoken „Ich bin verheiratet" is no job; a slip of spelling does not exist in speech, so a typo
+ * counts; 4 of the 5 words of „Was sind Sie von Beruf?" („Was Sie von Beruf?") is no question.
+ * Without a transcript nothing is marked (DaF review, 2026-11-19): the learner records again, and
+ * after two tries types instead. Only a call without a turn keeps the plain word measure.
+ */
+export function spokenShown(result, turn) {
+  if (!result || result.selfConfirmed || typeof result.pct !== 'number') return false;
+  if (!turn) return result.pct >= READALOUD_PASS_PCT;
+  return typeof result.transcript === 'string' && Boolean(result.transcript.trim()) && typedResult(turn, result.transcript) !== RESULT.WRONG;
+}
+
+/** What a spoken try is scored against: the answer itself; for an own answer, only its opening. */
+export const spokenTarget = (turn) => (turn.ownName ? turn.accepted[0] : frameOf(turn.accepted[0]).split(GAP)[0].trim());
+
+/** The answer to show after a miss: a complete example where the answer is the learner's own. */
+export const modelAnswer = (turn) => turn.example || (turn.ownName ? `${turn.accepted[0]} …` : turn.accepted[0]);
+
+/** Per can-do (by index): true when every turn of it was shown. */
+export function canDoShown(turns, outcomes, count) {
+  return Array.from({ length: count }, (_, i) => turns.every((turn, j) => turn.canDo !== i || outcomes[j] === 'shown'));
+}
+
+/** The parts to repeat for the can-dos not shown, each named once (a can-do may name more than one part). */
+export function partsToRepeat(repeat, shown, lang) {
+  return [...new Set(shown.flatMap((ok, i) => (ok ? [] : [].concat(repeat?.[i] || []).map((p) => p?.[lang]))).filter(Boolean))];
+}
+
+/** What comes after this Lektion on the course path (curriculumPath): a checkpoint, the next Lektion or the final test. */
+export function nextAfter(curriculum, lektion) {
+  const checkpoint = curriculum?.checkpoints?.find((c) => c.afterLektion === lektion.nr);
+  if (checkpoint) return { kind: 'checkpoint', nr: checkpoint.nr };
+  if (!curriculum || curriculum.lektionen?.some((l) => l.nr === lektion.nr + 1)) return { kind: 'lektion', nr: lektion.nr + 1 };
+  return { kind: 'test' };
+}

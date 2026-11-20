@@ -124,6 +124,9 @@ test('no `kasus` (grammatical-case colour) import in src/components/illustration
 
 test('every manifest entry has a non-empty alt', () => {
   const bad = [];
+  for (const [pose, entry] of Object.entries(A11_ART.guide.poses)) {
+    if (!entry.alt || !entry.alt.trim()) bad.push(`guide.poses.${pose}`);
+  }
   for (const [name, entry] of Object.entries(A11_ART.characters)) {
     if (!entry.alt || !entry.alt.trim()) bad.push(`characters.${name}`);
   }
@@ -138,7 +141,8 @@ test('the five insertion points import the illustration components', () => {
     ['src/components/lesson/IntroStage.jsx', ['CharacterAvatar', 'SituationScene']],
     ['src/components/course/CourseWelcome.jsx', ['CharacterAvatar']],
     ['src/components/lesson/DialogStage.jsx', ['CharacterAvatar']],
-    ['src/components/lesson/WortfeldStage.jsx', ['SituationScene']],
+    ['src/components/lesson/WortfeldStage.jsx', ['SituationScene', 'GuideOtter']],
+    ['src/components/lesson/RecapStage.jsx', ['GuideOtter']],
     ['src/pages/CurriculumHomePage.jsx', ['SituationScene']],
   ];
   for (const [file, names] of pins) {
@@ -158,12 +162,13 @@ test('CharacterAvatar and SituationScene both branch on a manifest src before dr
   assert.match(SCENE_SRC, /entry\?\.srcSmall \|\| entry\?\.src|entry\?\.src/, 'SituationScene should check the manifest src before falling back to SVG');
 });
 
-test('L1 ships the supplied painted reception with honest mixed provenance and responsive sizes', async () => {
-  assert.equal(A11_ART.generatedWith.status, 'mixed-painted-svg');
-  assert.match(A11_ART.generatedWith.tool, /Higgsfield.*inline SVG/);
+test('L1 ships the illustrated otter reception with honest mixed provenance and responsive sizes', async () => {
+  // Kept as it was for Lektion 1; the rollout's scenes are pinned by the class test below.
+  assert.equal(A11_ART.generatedWith.status, 'mixed-illustrated-svg');
+  assert.match(A11_ART.generatedWith.tool, /Codex image tool.*inline SVG/);
   assert.equal(A11_ART.generatedWith.model, null, 'the supplied asset does not establish a model name');
   const scene = A11_ART.situations['a1.1-l01'];
-  assert.equal(scene.alt, 'Ana arrives at a hostel reception in Bremen and Frau Kaya welcomes her');
+  assert.equal(scene.alt, 'Ana, drawn as an otter with a suitcase, arrives at a hostel reception in Bremen; Frau Kaya, drawn as a bird, welcomes her');
   const { default: sharp } = await import('sharp');
   for (const [field, width] of [['srcSmall', 640], ['srcMedium', 800], ['src', 1168]]) {
     assert.equal(scene[field], `/art/a11/l01-rezeption-${width}.webp`);
@@ -173,7 +178,58 @@ test('L1 ships the supplied painted reception with honest mixed provenance and r
   const actual = await sharp(join(ROOT, 'public', scene.src)).metadata();
   assert.equal(scene.width, actual.width);
   assert.equal(scene.height, actual.height);
-  for (const [id, entry] of Object.entries(A11_ART.situations)) if (id !== 'a1.1-l01') assert.equal(entry.src, null);
   assert.match(SCENE_SRC, /srcSet=\{entry.srcMedium/);
   assert.match(read('src/components/lesson/SceneStage.jsx'), /<SituationScene lektionId=\{lektionId\}/);
+});
+
+// The rollout (2026-11-19, docs/course-factory/a11-lektion-rollout/): Lektionen get their scene one
+// batch at a time. Every illustrated scene ships in the three sizes, and every cast portrait is a file.
+const ILLUSTRATED = ['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-l04', 'a1.1-l05', 'a1.1-l06', 'a1.1-l07', 'a1.1-l08', 'a1.1-l09', 'a1.1-l10', 'a1.1-l11', 'a1.1-l12'];
+
+test('every illustrated scene ships 1168x880 plus 800 and 640 wide, and the rest are still drawn as SVG', async () => {
+  const { default: sharp } = await import('sharp');
+  for (const [id, scene] of Object.entries(A11_ART.situations)) {
+    if (!ILLUSTRATED.includes(id)) { assert.equal(scene.src, null, id); continue; }
+    assert.match(scene.alt, /drawn as an? /, `${id}: the alt says which animal each person is drawn as`);
+    const slug = scene.src.match(/^\/art\/a11\/(l\d\d-[a-z]+)-1168\.webp$/)?.[1];
+    assert.ok(slug && slug.startsWith(`l${id.slice(-2)}-`), id);
+    for (const [field, width] of [['srcSmall', 640], ['srcMedium', 800], ['src', 1168]]) {
+      assert.equal(scene[field], `/art/a11/${slug}-${width}.webp`, `${id} ${field}`);
+      assert.equal((await sharp(join(ROOT, 'public', scene[field])).metadata()).width, width, `${id} ${field}`);
+    }
+    const big = await sharp(join(ROOT, 'public', scene.src)).metadata();
+    assert.deepEqual([scene.width, scene.height], [big.width, big.height], id);
+    assert.deepEqual([big.width, big.height], [1168, 880], id);
+  }
+});
+
+test('every character with a portrait has a 160 px file, and each illustrated scene’s cast has one', async () => {
+  const { default: sharp } = await import('sharp');
+  for (const [name, art] of Object.entries(A11_ART.characters)) {
+    if (!art.src) continue;
+    assert.equal(art.srcSmall, art.src, name);
+    assert.match(art.src, /^\/art\/a11\/[a-z-]+-160\.webp$/, name);
+    assert.equal((await sharp(join(ROOT, 'public', art.src)).metadata()).width, 160, name);
+  }
+  for (const id of ILLUSTRATED) {
+    const lektion = CURRICULUM_A11.lektionen.find((l) => l.id === id);
+    for (const speaker of new Set(lektion.dialog.lines.map((l) => l.speaker))) assert.ok(A11_ART.characters[speaker]?.src, `${id}: ${speaker}`);
+  }
+});
+
+test('both course guide poses have alt text and responsive files at the declared widths', async () => {
+  assert.deepEqual(Object.keys(A11_ART.guide.poses), ['thinking', 'satisfied']);
+  const { default: sharp } = await import('sharp');
+  for (const [pose, art] of Object.entries(A11_ART.guide.poses)) {
+    assert.ok(art.alt?.trim(), `${pose} needs alt text`);
+    for (const [field, width] of [['src', 512], ['srcSmall', 160]]) {
+      assert.equal(art[field], `/art/a11/otter-${pose}-${width}.webp`);
+      const actual = await sharp(join(ROOT, 'public', art[field])).metadata();
+      assert.equal(actual.width, width);
+    }
+  }
+});
+
+test('GuideOtter returns null when the Lektion scene has no image src', () => {
+  assert.match(read('src/components/illustrations/GuideOtter.jsx'), /if \(!art \|\| !A11_ART\.situations\[lektionId\]\?\.src\) return null/);
 });

@@ -22,7 +22,7 @@ const legacyOrder = ['pretest', 'dialog', 'wortfeld', 'notice', 'phonetik', 'pra
 test('all A1.1 lessons are guided; A1.2 and a synthetic lesson without flow keep the legacy order', () => {
   assert.deepEqual(CURRICULUM_A11.lektionen.filter((l) => l.flow).map((l) => l.nr), Array.from({ length: 12 }, (_, i) => i + 1));
   assert.ok(CURRICULUM_A12.lektionen.every((l) => !l.flow));
-  assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'recap']);
+  assert.deepEqual(build().stages.map((s) => s.key), ['pretest', 'scene', 'wortfeld', 'sound', 'read', 'notice', 'practice', 'derived', 'dictation', 'fluency', 'speaking', 'writing', 'requeue', 'check', 'recap']);
   assert.deepEqual(build({ ...CURRICULUM_A11.lektionen[1], flow: undefined }).stages.map((s) => s.key), legacyOrder);
   const a12 = buildLesson({ curriculum: CURRICULUM_A12, lektion: CURRICULUM_A12.lektionen[0], pool: JSON.parse(read('src/data/lessonPools/a12.json')) });
   assert.deepEqual(a12.stages.map((s) => s.key), legacyOrder);
@@ -32,7 +32,7 @@ test('guided pacing preserves every word, both pauses, all unchanged stages and 
   for (const attempt of [1, 2, 3]) {
     const guided = build(lektion, attempt);
     const legacy = build({ ...lektion, flow: undefined }, attempt);
-    const rest = (lesson) => Object.fromEntries(lesson.stages.filter((s) => !['scene', 'dialog', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
+    const rest = (lesson) => Object.fromEntries(lesson.stages.filter((s) => !['scene', 'dialog', 'wortfeld', 'phonetik', 'sound', 'read', 'fluency', 'check'].includes(s.kind)).map(({ part: _part, nextHook: _hook, ...s }) => [s.key, s]));
     assert.deepEqual(rest(guided), rest(legacy));
     const words = guided.stages.filter((s) => ['wortfeld', 'read'].includes(s.kind));
     assert.equal(words.length, 2);
@@ -40,7 +40,7 @@ test('guided pacing preserves every word, both pauses, all unchanged stages and 
     assert.ok(words[0].words.length < lektion.wortfeld.length);
     assert.deepEqual(words.flatMap((s) => s.words).sort((a, b) => a.de.localeCompare(b.de)), [...lektion.wortfeld].sort((a, b) => a.de.localeCompare(b.de)));
     assert.deepEqual(guided.stages.slice(1).map((s, i) => sessionCompleted(guided.stages[i], s)).filter(Boolean), [1, 2]);
-    assert.deepEqual(guided.stages.map(sessionOf), [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3]);
+    assert.deepEqual(guided.stages.map(sessionOf), [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3]);
     assert.equal(guided.stages.find((s) => s.kind === 'practice').items.length, 7);
     assert.equal(guided.stages.find((s) => s.kind === 'derived').items.length, 3);
   }
@@ -65,7 +65,7 @@ test('the learner says their own name; no scene answer text is persisted', () =>
   assert.equal(sayText(scene.chunks[0].say, '  Sam   Noor '), 'Guten Tag. Ich heiße Sam Noor.');
   assert.equal(sayText(scene.chunks[1].say, 'Noor'), 'N-O-O-R.');
   assert.equal(sayText(scene.chunks[0].say, ''), null);
-  assert.equal(sayText(scene.chunks[2].say, 'Sam Noor'), 'Mir geht es gut, danke.');
+  assert.equal(sayText(scene.chunks[2].say, 'Sam Noor'), 'Mir geht es gut, danke. Und wie geht es Ihnen?');
   const now = Date.now();
   const snapshot = packRun({ flow: 'guided', stageKey: 'scene', itemIndex: 5, sceneReadAloud: { 0: { pct: 0.7, attempts: 2, usedMic: true, text: 'Sam Noor', transcript: 'Sam Noor' } } }, now);
   assert.equal(snapshot.v, RUN_VERSION);
@@ -185,7 +185,7 @@ async function sceneHarness() {
     '../../lib/lesson/gloss.js': { parseLektionId: () => null },
     './CheckedChoice.jsx': { default: (await loadJsxModule('src/components/lesson/CheckedChoice.jsx', { react: hooks.react, '../ui/Button.jsx': { default: 'Button' }, '../../lib/lesson/check.js': { checkAnswer, checkOptionsFor, RESULT }, '../../lib/lesson/guidedFeedback.js': await import('../src/lib/lesson/guidedFeedback.js'), '../../lib/lesson/strings.js': { t: (key) => key } })).default },
     '../../lib/lesson/buildGuided.js': { SCENE_PHASES: ['hear', 'meaning', 'say'] },
-    '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/strings.js': { useLessonLang: () => ['en'], t: (key) => key },
+    '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/strings.js': { useLessonLang: () => ['en'], t: (key) => key, speechLine: () => 'speaking.said' },
   });
   const stage = build().stages.find((s) => s.kind === 'scene');
   const outcomes = []; let finished = 0;

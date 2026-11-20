@@ -204,19 +204,20 @@ const RULE_CARD_OVERRIDES = {
   'personal-pronouns': {
     titleDe: 'er, sie, es – die Personalpronomen',
     content: [
-      'Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Das Pronomen richtet sich normalerweise nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Bei bekannten Personen ist auch er oder sie möglich. Beispiel: Das Kind heißt Paul. Er ist zwei.',
       'Für mehrere Personen stehen die Formen wir, ihr, sie.',
       'Sie mit großem S ist die höfliche Form.',
       'Beispiele: Wie alt ist er? Er ist zwanzig.',
       'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
       'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
-      'English: the pronoun follows the article of the noun: das Kind → es.',
+      'English: normally follow the noun’s article (das Kind → es); for a known person, er/sie is also possible.',
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Das Kind ist jung. Er ist zwei.',
+        wrong: 'Das Kind ist jung. Es bist zwei.',
         correct: 'Das Kind ist jung. Es ist zwei.',
-        explanationDe: 'das Kind → es. Der Artikel entscheidet, nicht die Person.',
+        explanationDe: 'das Kind → normalerweise es. Bei bekannten Personen ist auch er oder sie möglich. Nach es steht ist, nicht bist.',
       },
       {
         wrong: 'Die Mutter kommt aus Marokko. Es spricht Arabisch.',
@@ -329,10 +330,11 @@ const RULE_CARD_OVERRIDES = {
       'Regelmäßige Verben haben feste Endungen am Stamm:',
       'ich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.',
       'So bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.',
+      'Endet der Stamm auf s, ß, x oder z, steht in der du-Form nur -t (ich tanze → du tanzt).',
       'Endet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.',
       'Achtung: einige Verben wechseln den Vokal: sprechen → er spricht.',
       'gern steht nach dem Verb: Ich höre gern Musik.',
-      'English: add the ending to the stem; stems on -t take an extra e (arbeitest).',
+      'English: Add endings; -t stems add e (arbeitest); s/ß/x/z stems take -t in the du-form (du tanzt).',
     ].join('\n'),
     commonMistakes: [
       {
@@ -423,19 +425,20 @@ const RULE_CARD_OVERRIDES = {
   'yes-no-questions': {
     titleDe: 'Ja/Nein-Fragen: das Verb steht vorn',
     content: [
-      'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
+      'Bei der neutralen Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
+      'Eine Bestätigungsfrage hat die Wortfolge der Aussage, gesprochen und geschrieben.',
       'Das Subjekt steht meist direkt nach dem Verb.',
       'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
       'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
       'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
       'Ist das Gleis weit? Hat der Zug Verspätung?',
-      'English: in a written yes/no question the verb comes first and the subject second.',
+      'English: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.',
     ].join('\n'),
     commonMistakes: [
       {
-        wrong: 'Sie kommen aus Österreich?',
+        wrong: 'Sie aus Österreich kommen?',
         correct: 'Kommen Sie aus Österreich?',
-        explanationDe: 'In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit der Wortfolge der Aussage; in Übungen schreibt man die Frage mit dem Verb auf Platz 1.',
+        explanationDe: 'Neutrale Ja/Nein-Frage: In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen und geschrieben gibt es auch die Bestätigungsfrage mit der Wortfolge der Aussage.',
       },
       {
         wrong: 'Kommen aus Österreich Sie?',
@@ -666,11 +669,12 @@ const RULE_CARD_OVERRIDES = {
       'kein verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel:',
       'eine Lampe → keine Lampe, ein Spiegel → kein Spiegel, im Akkusativ keinen Rabatt.',
       'nicht verneint alles andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel.',
-      'nicht steht am Satzende oder direkt vor dem Wort.',
+      'Satznegation: nicht steht meist spät, vor dem letzten Verbteil (Vorsilbe/Infinitiv/Partizip): Ich kaufe heute nicht ein. Ohne Verbteil auch am Satzende.',
+      'Wortnegation: nicht steht direkt vor dem Wort: nicht heute, sondern morgen.',
       'Im Hotel: Hier ist keine Lampe und kein Spiegel.',
       'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.',
       'Die Decke und die Wand sind nicht schön. Haben Sie keinen Rabatt?',
-      'English: kein negates a noun that has ein or no article; nicht negates everything else.',
+      'English: kein replaces ein/no article; nicht ends clauses or precedes their final prefix/infinitive/participle; for contrast, nicht precedes the contrasted word.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -798,7 +802,7 @@ const RULE_CARD_OVERRIDES = {
       'Der Imperativ steht auf Position 1.',
       'Bei Sie bleibt das Pronomen stehen: Helfen Sie bitte!',
       'Die zweite Form: ich komme, du kommst → Komm! ich helfe, du hilfst → Hilf!',
-      'Das Pronomen fällt weg, die Endung -st fällt mit.',
+      'Das Pronomen fällt meist weg; betont bleibt es stehen. Die Endung -st fällt weg.',
       'Aus ä wird wieder a: ich fahre, du fährst → Fahr!',
       'Endet der Stamm auf s, fällt nur -t weg: ich esse, du isst → Iss!',
       'Bei ihr fällt nur das ihr weg: ihr kommt → Kommt! ihr nehmt → Nehmt!',
@@ -806,7 +810,7 @@ const RULE_CARD_OVERRIDES = {
       'Das Wort bitte macht jede Aufforderung höflich.',
       'Im Haushalt: Hilf mir bitte! Warte! Ich frage die Nachbarin.',
       'Der Teppich ist auf der Terrasse. Hol ihn!',
-      'English: the imperative opens the sentence; the polite form keeps Sie, the familiar one drops the pronoun.',
+      'English: Keep polite Sie; du drops -st. Familiar pronouns are usually omitted but possible for emphasis.',
     ].join('\n'),
     commonMistakes: [
       {

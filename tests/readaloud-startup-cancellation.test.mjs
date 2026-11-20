@@ -12,7 +12,7 @@ function deferred() {
 }
 
 // Run the component's actual hooks and callbacks without rendering its JSX.
-function readAloud({ delayMic = false, delayBlob = false, delayAuth = false, delayResponse = false } = {}) {
+function readAloud({ delayMic = false, delayBlob = false, delayAuth = false, delayResponse = false, keepVoice = false } = {}) {
   const source = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
   const start = source.indexOf('\n  const { user }');
   const end = source.indexOf('\n  return (', start);
@@ -27,6 +27,7 @@ function readAloud({ delayMic = false, delayBlob = false, delayAuth = false, del
   const recorders = [];
   const timers = new Map();
   const results = [];
+  const kept = [];
   let stops = 0;
   let authCalls = 0;
   let timerId = 0;
@@ -52,17 +53,18 @@ function readAloud({ delayMic = false, delayBlob = false, delayAuth = false, del
     setTimeout: (callback) => { timers.set(++timerId, callback); return timerId; },
     clearTimeout: (id) => timers.delete(id),
     alignTranscript, selfConfirmedResult, canRetryReadAloud, canSelfConfirmReadAloud, Blob,
+    keepTake: (...args) => { kept.push(args); return true; },
     console: { error() {} },
   };
   const component = vm.runInNewContext(`
-    function ReadAloudLine({ lektionId, lineKey, text, onResult }) {
+    function ReadAloudLine({ lektionId, lineKey, text, onResult, keepVoice = false }) {
       ${source.slice(start, end)}
       return { startRecording, stopRecording, handleStopped };
     }
     ReadAloudLine;
-  `, context)({ lektionId: 'lektion', lineKey: 'line', text: 'Guten Tag', onResult: (result) => results.push(result) });
+  `, context)({ lektionId: 'lektion', lineKey: 'line', text: 'Guten Tag', keepVoice, onResult: (result) => results.push(result) });
   return {
-    component, calls, recorders, timers, updates, results,
+    component, calls, recorders, timers, updates, results, kept,
     stops: () => stops, authCalls: () => authCalls,
     unmount: () => cleanups.forEach((cleanup) => cleanup?.()),
     grantMic: () => mic.resolve(stream),
@@ -165,4 +167,23 @@ test('read-aloud: a mounted line records and scores once while duplicate microph
   assert.equal(h.calls.length, 1);
   assert.equal(h.results[0].pct, 1);
   assert.equal(h.results[0].usedMic, true);
+  assert.equal(h.kept.length, 0, 'a line without keepVoice keeps nothing on the device');
+});
+
+test('read-aloud: keepVoice keeps the take on the device only while the line is mounted', async () => {
+  const h = readAloud({ keepVoice: true });
+  await h.component.startRecording();
+  h.audioChunk();
+  await h.component.handleStopped();
+  // JSON: the take object comes from the vm realm, so its prototype is not this realm's Object.
+  assert.equal(JSON.stringify(h.kept), JSON.stringify([['lektion', 'learner', { text: 'Guten Tag', src: 'data:audio/webm;base64,audio' }]]));
+
+  const late = readAloud({ keepVoice: true, delayBlob: true });
+  await late.component.startRecording();
+  late.audioChunk();
+  const stopped = late.component.handleStopped();
+  late.unmount();
+  late.convertBlob();
+  await stopped;
+  assert.equal(late.kept.length, 0, 'a take that finishes after the learner left is not kept');
 });

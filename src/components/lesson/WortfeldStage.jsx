@@ -4,6 +4,7 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
+import GuideOtter from '../illustrations/GuideOtter.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
@@ -65,13 +66,18 @@ function iconFor(word) {
   return WORTFELD_ICON_COMPONENTS[name] || WORTFELD_ICON_COMPONENTS[WORTFELD_ICON_FALLBACK];
 }
 
-function WordCard({ w, lang, flipped, onToggle, line }) {
+// MEMORY MODE (2026-11-17, from the partner's lesson picture): the card starts on its picture and
+// English, and a tap shows the German — recalling a word beats re-reading it. The dialogue line
+// waits for the tap too, because it spells the word.
+function WordCard({ w, lang, flipped, onToggle, line, memory = false }) {
   const article = w.article || (w.db && w.db.article) || '';
   const plural = w.plural || (w.db && w.db.plural) || '';
   const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
   const spoken = w.de || w.word || '';
   const english = w.en || (w.db && w.db.english) || '';
   const Icon = iconFor(w.word || w.de);
+  const german = memory ? flipped : !flipped;
+  const label = memory ? (flipped ? t('wortfeld.flipHint', lang, { word: spoken, en: english }) : english) : (flipped ? t('wortfeld.flipHint', lang, { word: spoken, en: english }) : spoken);
 
   return (
     <Card interactive as="div" className="flex h-full flex-col items-center gap-2.5 p-3.5 text-center">
@@ -79,7 +85,7 @@ function WordCard({ w, lang, flipped, onToggle, line }) {
         type="button"
         onClick={onToggle}
         aria-pressed={flipped}
-        aria-label={flipped ? t('wortfeld.flipHint', lang, { word: spoken, en: english }) : spoken}
+        aria-label={label}
         className="flex min-h-11 w-full flex-1 flex-col items-center gap-2 rounded-clay outline-none focus-visible:ring-2 focus-visible:ring-siegel"
       >
         <span
@@ -89,7 +95,7 @@ function WordCard({ w, lang, flipped, onToggle, line }) {
           <Icon className="h-6 w-6" />
         </span>
 
-        {flipped ? (
+        {!german ? (
           <>
             <Chip tone="quiet">{t('wortfeld.en', lang)}</Chip>
             <p className="text-[0.9375rem] leading-snug text-ink">{english}</p>
@@ -112,7 +118,7 @@ function WordCard({ w, lang, flipped, onToggle, line }) {
       </button>
 
       {/* Outside the flip button, so the button's name (the word) still matches what it shows. */}
-      {line && (
+      {line && german && (
         <p className="text-[0.8125rem] italic leading-snug text-graphite [overflow-wrap:anywhere]" lang="de">
           <span className="sr-only">{t('wortfeld.example', lang)}: </span>„{line}“
         </p>
@@ -159,6 +165,7 @@ function WortfeldAudioBadge({ words, lang }) {
 export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   const [open, setOpen] = useState(() => new Set());
   const [allOpen, setAllOpen] = useState(false);
+  const [memory, setMemory] = useState(false);
   const [group, setGroup] = useState(0);
   const words = stage.words || [];
   const [lang] = useLessonLang();
@@ -187,6 +194,8 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
       return next;
     });
 
+  const toggleMemory = () => { setMemory((m) => !m); setAllOpen(false); setOpen(new Set()); };
+
   const toggleAll = () => {
     setAllOpen((prev) => {
       const next = !prev;
@@ -199,7 +208,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
     const spoken = w.de || w.word || '';
     return (
       <li key={`${spoken}-${i}`}>
-        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={w.exampleDe || lineFor(spoken, stage.lines)} />
+        <WordCard w={w} lang={lang} memory={memory} flipped={open.has(i)} onToggle={() => toggle(i)} line={w.exampleDe || lineFor(spoken, stage.lines)} />
       </li>
     );
   };
@@ -208,7 +217,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
     <StageShell
       eyebrow={t('stage.wortfeld.eyebrow', lang)}
       title={stage.titleEn ? (lang === 'de' ? stage.title : stage.titleEn) : t('stage.wortfeld.title', lang, { n: words.length })}
-      lead={t('stage.wortfeld.lead', lang)}
+      lead={t(memory ? 'wortfeld.memoryLead' : 'stage.wortfeld.lead', lang)}
       onBack={group > 0 ? () => goGroup(group - 1) : onBack}
       primaryLabel={last ? t('action.next', lang) : t('wortfeld.nextGroup', lang)}
       onPrimary={last ? onDone : () => goGroup(group + 1)}
@@ -224,17 +233,26 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
         <WortfeldAudioBadge words={words} lang={lang} />
         <button
           type="button"
+          onClick={toggleMemory}
+          aria-pressed={memory}
+          className={`min-h-11 rounded-pill border px-3 text-sm font-bold ${memory ? 'border-siegel bg-siegel text-white' : 'border-rule text-siegel-deep hover:border-siegel'}`}
+        >
+          {t('wortfeld.memory', lang)}
+        </button>
+        {!memory && <button
+          type="button"
           onClick={toggleAll}
           aria-pressed={allOpen}
           className="min-h-11 rounded-clay px-2 text-sm font-bold text-siegel-deep hover:underline"
         >
           {t(allOpen ? 'wortfeld.hideAllEnglish' : 'wortfeld.showAllEnglish', lang)}
-        </button>
+        </button>}
       </div>
 
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {shown.map(card)}
       </ul>
+      <GuideOtter lektionId={id} pose="thinking" size={96} className="mx-auto mt-4 h-24 w-24" />
     </StageShell>
   );
 }

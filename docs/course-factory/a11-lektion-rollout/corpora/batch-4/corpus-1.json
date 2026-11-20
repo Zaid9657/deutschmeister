@@ -1,0 +1,2084 @@
+{
+ "items": [
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich fahre nach Berlin.",
+   "verdict": "right",
+   "why": "Ziel in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich fahre nach Österreich.",
+   "verdict": "right",
+   "why": "Korrekte Antwort mit einem eigenen Reiseziel."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich fahre in die Schweiz.",
+   "verdict": "right",
+   "why": "Korrekte Ortsangabe und vollständiger Satz."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Morgen fahre ich nach Bremen.",
+   "verdict": "right",
+   "why": "Reiseziel und Satzstellung sind korrekt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich fahre nach koln",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Umlaut fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Nach Berlin.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich fahren nach Berlin.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört fahre."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich fahre nach die Schweiz.",
+   "verdict": "wrong",
+   "why": "Es heißt in die Schweiz."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich nach Berlin fahre.",
+   "verdict": "wrong",
+   "why": "Das Verb muss an zweiter Stelle stehen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich komme aus Marokko.",
+   "verdict": "wrong",
+   "why": "Nennt die Herkunft statt des Reiseziels."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährt der Zug nach Berlin?",
+   "verdict": "right",
+   "why": "Korrekte Frage nach dem vorgegebenen Ziel."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Entschuldigung, fährt der Zug nach Berlin?",
+   "verdict": "right",
+   "why": "Höfliche und korrekte Zielfrage."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährt dieser Zug nach Berlin?",
+   "verdict": "right",
+   "why": "Fragt korrekt nach der Verbindung."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährt der Zug heute nach Berlin?",
+   "verdict": "right",
+   "why": "Korrekte Frage mit zusätzlicher Zeitangabe."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "fahrt der zug nach berlin?",
+   "verdict": "right",
+   "why": "Nur Umlaut und Großschreibung fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fahren der Zug nach Berlin?",
+   "verdict": "wrong",
+   "why": "Zu der Zug gehört fährt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährt die Zug nach Berlin?",
+   "verdict": "wrong",
+   "why": "Zug hat den Artikel der."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährt der Zug in Berlin?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Fahren innerhalb Berlins."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährst du nach Berlin?",
+   "verdict": "wrong",
+   "why": "Fragt die Person und verwendet unpassend du."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Fährt der Zug nach Bremen?",
+   "verdict": "wrong",
+   "why": "Das vorgegebene Ziel ist Berlin."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann fährt der Zug?",
+   "verdict": "right",
+   "why": "Korrekte Frage nach der Abfahrtszeit."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Um wie viel Uhr fährt der Zug?",
+   "verdict": "right",
+   "why": "Fragt korrekt nach der genauen Uhrzeit."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann fährt er?",
+   "verdict": "right",
+   "why": "Er bezieht sich eindeutig auf den Zug."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Entschuldigung, wann ist die Abfahrt?",
+   "verdict": "right",
+   "why": "Korrekte alternative Frage nach der Abfahrt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "wann fahrt der zug?",
+   "verdict": "right",
+   "why": "Nur Umlaut und Großschreibung fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann der Zug fährt?",
+   "verdict": "wrong",
+   "why": "In der direkten Frage folgt fährt auf wann."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann fahren der Zug?",
+   "verdict": "wrong",
+   "why": "Zu der Zug gehört fährt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wo fährt der Zug?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Ort statt der Zeit."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Der Zug fährt heute.",
+   "verdict": "wrong",
+   "why": "Wiederholt die Aussage und stellt keine Frage."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann fährst du?",
+   "verdict": "wrong",
+   "why": "Fragt unpassend mit du nach der Person."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet die Fahrkarte?",
+   "verdict": "right",
+   "why": "Korrekte Frage nach dem Fahrkartenpreis."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie viel kostet eine Fahrkarte?",
+   "verdict": "right",
+   "why": "Korrekte alternative Preisfrage."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie teuer ist die Fahrkarte?",
+   "verdict": "right",
+   "why": "Fragt korrekt nach dem Preis."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet die Fahrkarte nach Berlin?",
+   "verdict": "right",
+   "why": "Korrekte Preisfrage mit Reiseziel."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "was kostet die fahrkarte",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Fragezeichen fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kosten die Fahrkarte?",
+   "verdict": "wrong",
+   "why": "Zur einzelnen Fahrkarte gehört kostet."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet der Fahrkarte?",
+   "verdict": "wrong",
+   "why": "Fahrkarte hat den Artikel die."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wie viele kostet die Fahrkarte?",
+   "verdict": "wrong",
+   "why": "Bei einem Preis heißt es wie viel."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Wo kaufe ich die Fahrkarte?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Verkaufsort statt dem Preis."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Was kostet du die Fahrkarte?",
+   "verdict": "wrong",
+   "why": "Du passt grammatisch nicht in diese Preisfrage."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "15",
+   "verdict": "right",
+   "why": "Gehörter Preis korrekt notiert; Zahl genügt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "15 €",
+   "verdict": "right",
+   "why": "Preis und Währung stimmen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "fünfzehn Euro",
+   "verdict": "right",
+   "why": "Gehörter Preis korrekt ausgeschrieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "15,00 Euro",
+   "verdict": "right",
+   "why": "Korrekte Schreibweise des gehörten Preises."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "funfzehn euro",
+   "verdict": "right",
+   "why": "Preis stimmt; nur Umlaut und Großschreibung fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "50 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurden fünfzehn, nicht fünfzig Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "14 Euro",
+   "verdict": "wrong",
+   "why": "Der gehörte Preis beträgt fünfzehn Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "5 Euro",
+   "verdict": "wrong",
+   "why": "Der gehörte Preis beträgt fünfzehn Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "1,50 €",
+   "verdict": "wrong",
+   "why": "Falscher Betrag; richtig sind fünfzehn Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "fünfzehn Uhr",
+   "verdict": "wrong",
+   "why": "Uhr bezeichnet eine Zeit, keinen Fahrkartenpreis."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "9:30",
+   "verdict": "right",
+   "why": "Neue Abfahrtszeit korrekt notiert."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "09.30 Uhr",
+   "verdict": "right",
+   "why": "Korrekte Schreibweise der gehörten Uhrzeit."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "halb zehn",
+   "verdict": "right",
+   "why": "Halb zehn entspricht neun Uhr dreißig."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "neun Uhr dreißig",
+   "verdict": "right",
+   "why": "Gehörte Uhrzeit korrekt ausgeschrieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "9 uhr 30",
+   "verdict": "right",
+   "why": "Uhrzeit stimmt; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "halb neun",
+   "verdict": "wrong",
+   "why": "Das bedeutet 8:30 statt 9:30."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "9:13",
+   "verdict": "wrong",
+   "why": "Die Minuten wurden falsch verstanden."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "9:00",
+   "verdict": "wrong",
+   "why": "Die gehörten dreißig Minuten fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "10:30",
+   "verdict": "wrong",
+   "why": "Die Abfahrt ist um neun Uhr dreißig."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "30 Minuten Verspätung",
+   "verdict": "wrong",
+   "why": "Gesucht ist die Abfahrtszeit; Verspätungsdauer bleibt unbekannt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "7",
+   "verdict": "right",
+   "why": "Gehörtes Gleis korrekt notiert; Zahl genügt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Gleis 7",
+   "verdict": "right",
+   "why": "Gleisnummer stimmt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "sieben",
+   "verdict": "right",
+   "why": "Gehörte Gleisnummer korrekt ausgeschrieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Von Gleis sieben.",
+   "verdict": "right",
+   "why": "Korrekte Angabe des Abfahrtsgleises."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "gleis 7",
+   "verdict": "right",
+   "why": "Gleis stimmt; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "17",
+   "verdict": "wrong",
+   "why": "Gehört wurde sieben, nicht siebzehn."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Gleis 6",
+   "verdict": "wrong",
+   "why": "Die Durchsage nennt Gleis sieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Gleis 9",
+   "verdict": "wrong",
+   "why": "Die Durchsage nennt Gleis sieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "um sieben Uhr",
+   "verdict": "wrong",
+   "why": "Nennt eine Uhrzeit statt eines Gleises."
+  },
+  {
+   "lektion": 10,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Berlin",
+   "verdict": "wrong",
+   "why": "Nennt das Reiseziel statt des Gleises."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährt der Zug nach Österreich?",
+   "verdict": "right",
+   "why": "Korrekte Frage nach dem vorgegebenen Ziel."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Entschuldigung, fährt der Zug nach Österreich?",
+   "verdict": "right",
+   "why": "Höfliche und korrekte Zielfrage."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährt dieser Zug nach Österreich?",
+   "verdict": "right",
+   "why": "Fragt korrekt nach der Verbindung."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährt der Zug heute nach Oesterreich?",
+   "verdict": "right",
+   "why": "Korrekte Frage; Oe ist ein zulässiger Umlautersatz."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "fahrt der zug nach osterreich?",
+   "verdict": "right",
+   "why": "Nur Umlaute und Großschreibung fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fahren der Zug nach Österreich?",
+   "verdict": "wrong",
+   "why": "Zu der Zug gehört fährt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährt die Zug nach Österreich?",
+   "verdict": "wrong",
+   "why": "Zug hat den Artikel der."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährt der Zug in Österreich?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Fahren innerhalb Österreichs."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährst du nach Österreich?",
+   "verdict": "wrong",
+   "why": "Fragt die Person und verwendet unpassend du."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 2,
+   "answer": "Fährt der Zug nach Berlin?",
+   "verdict": "wrong",
+   "why": "Das vorgegebene Ziel ist Österreich."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "18",
+   "verdict": "right",
+   "why": "Gehörter Preis korrekt notiert; Zahl genügt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "18 €",
+   "verdict": "right",
+   "why": "Preis und Währung stimmen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "achtzehn Euro",
+   "verdict": "right",
+   "why": "Gehörter Preis korrekt ausgeschrieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "18,00 Euro",
+   "verdict": "right",
+   "why": "Korrekte Schreibweise des gehörten Preises."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "achtzehn euro",
+   "verdict": "right",
+   "why": "Preis stimmt; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "80 Euro",
+   "verdict": "wrong",
+   "why": "Gehört wurden achtzehn, nicht achtzig Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "8 Euro",
+   "verdict": "wrong",
+   "why": "Der gehörte Preis beträgt achtzehn Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "19 Euro",
+   "verdict": "wrong",
+   "why": "Der gehörte Preis beträgt achtzehn Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "10 Euro",
+   "verdict": "wrong",
+   "why": "Der gehörte Preis beträgt achtzehn Euro."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 5,
+   "answer": "18 Uhr",
+   "verdict": "wrong",
+   "why": "Uhr bezeichnet eine Zeit, keinen Fahrkartenpreis."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "10:15",
+   "verdict": "right",
+   "why": "Neue Abfahrtszeit korrekt notiert."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "10.15 Uhr",
+   "verdict": "right",
+   "why": "Korrekte Schreibweise der gehörten Uhrzeit."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Viertel nach zehn",
+   "verdict": "right",
+   "why": "Entspricht der gehörten Zeit zehn Uhr fünfzehn."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "zehn Uhr fünfzehn",
+   "verdict": "right",
+   "why": "Gehörte Uhrzeit korrekt ausgeschrieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "10 uhr 15",
+   "verdict": "right",
+   "why": "Uhrzeit stimmt; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Viertel vor zehn",
+   "verdict": "wrong",
+   "why": "Das bedeutet 9:45 statt 10:15."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "10:50",
+   "verdict": "wrong",
+   "why": "Fünfzehn wurde mit fünfzig verwechselt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "10:05",
+   "verdict": "wrong",
+   "why": "Gehört wurden fünfzehn, nicht fünf Minuten."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "11:15",
+   "verdict": "wrong",
+   "why": "Die gehörte Stunde ist zehn."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "10 Uhr",
+   "verdict": "wrong",
+   "why": "Die gehörten fünfzehn Minuten fehlen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "3",
+   "verdict": "right",
+   "why": "Gehörtes Gleis korrekt notiert; Zahl genügt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Gleis 3",
+   "verdict": "right",
+   "why": "Gleisnummer stimmt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "drei",
+   "verdict": "right",
+   "why": "Gehörte Gleisnummer korrekt ausgeschrieben."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "An Gleis drei.",
+   "verdict": "right",
+   "why": "Korrekte Angabe des Gleises zum Umsteigen."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "gleis drei",
+   "verdict": "right",
+   "why": "Gleis stimmt; nur Großschreibung fehlt."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "13",
+   "verdict": "wrong",
+   "why": "Gehört wurde drei, nicht dreizehn."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Gleis 2",
+   "verdict": "wrong",
+   "why": "Die Durchsage nennt Gleis drei."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Gleis 7",
+   "verdict": "wrong",
+   "why": "Die Durchsage nennt Gleis drei."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "um drei Uhr",
+   "verdict": "wrong",
+   "why": "Nennt eine Uhrzeit statt eines Gleises."
+  },
+  {
+   "lektion": 10,
+   "sitting": 2,
+   "turn": 7,
+   "answer": "Bitte umsteigen!",
+   "verdict": "wrong",
+   "why": "Die gefragte Gleisnummer fehlt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe gestern gearbeitet.",
+   "verdict": "right",
+   "why": "Korrekte Aussage über gestern."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Gestern habe ich gearbeitet.",
+   "verdict": "right",
+   "why": "Zeitangabe und Satzstellung sind korrekt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe gearbeitet.",
+   "verdict": "right",
+   "why": "Gestern ist durch Lenas Frage bereits klar."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe gestern Sport gemacht.",
+   "verdict": "right",
+   "why": "Korrekte Aussage mit dem bekannten Ausdruck gemacht."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich habe gestern gearbeitet",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich bin gestern gearbeitet.",
+   "verdict": "wrong",
+   "why": "Gearbeitet wird hier mit habe verwendet."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich habe gestern arbeiten.",
+   "verdict": "wrong",
+   "why": "Der gelernte Ausdruck lautet habe gearbeitet."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Gestern ich habe gearbeitet.",
+   "verdict": "wrong",
+   "why": "Nach gestern muss das Verb habe stehen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich arbeite gestern.",
+   "verdict": "wrong",
+   "why": "Die Verbform passt nicht zur abgeschlossenen Vergangenheit."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Gearbeitet.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was hast du gestern gemacht?",
+   "verdict": "right",
+   "why": "Korrekte Frage an Lena mit du."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Und was hast du gestern gemacht?",
+   "verdict": "right",
+   "why": "Korrekte Gegenfrage über gestern."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Lena, was hast du gestern gemacht?",
+   "verdict": "right",
+   "why": "Korrekte Frage mit persönlicher Anrede."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was hast du gestern gemacht, Lena?",
+   "verdict": "right",
+   "why": "Korrekte Frage nach ihrer gestrigen Tätigkeit."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "was hast du gestern gemachtt?",
+   "verdict": "right",
+   "why": "Nur Tippfehler und Großschreibung; Frage korrekt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was haben Sie gestern gemacht?",
+   "verdict": "wrong",
+   "why": "Lena wird in dieser Situation mit du angesprochen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was hat sie gestern gemacht?",
+   "verdict": "wrong",
+   "why": "Fragt über eine dritte Person statt Lena."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was du hast gestern gemacht?",
+   "verdict": "wrong",
+   "why": "Nach was muss das Verb hast stehen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was hast du gestern machen?",
+   "verdict": "wrong",
+   "why": "Der Ausdruck lautet hast du gemacht."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Was machst du morgen?",
+   "verdict": "wrong",
+   "why": "Fragt nach morgen statt nach gestern."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich dusche morgens.",
+   "verdict": "right",
+   "why": "Morgendliche Tätigkeit in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Morgens frühstücke ich.",
+   "verdict": "right",
+   "why": "Korrekte Aussage mit passender Satzstellung."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich trinke morgens Kaffee.",
+   "verdict": "right",
+   "why": "Korrekte persönliche Antwort zum Morgen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich lerne morgens Deutsch.",
+   "verdict": "right",
+   "why": "Korrekte Aussage über eine morgendliche Tätigkeit."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "ich fruhstucke morgens",
+   "verdict": "right",
+   "why": "Nur Umlaute, Großschreibung und Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich duschen morgens.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört dusche."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Morgens ich frühstücke.",
+   "verdict": "wrong",
+   "why": "Nach morgens muss das Verb stehen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich ist morgens müde.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört bin, nicht ist."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Duschen.",
+   "verdict": "wrong",
+   "why": "Ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Ich dusche abends.",
+   "verdict": "wrong",
+   "why": "Antwortet über den Abend statt den Morgen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich stehe um sechs Uhr auf.",
+   "verdict": "right",
+   "why": "Aufstehzeit in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Um sieben stehe ich auf.",
+   "verdict": "right",
+   "why": "Korrekte Zeitangabe und Satzstellung."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich stehe um halb acht auf.",
+   "verdict": "right",
+   "why": "Korrekte persönliche Antwort mit Uhrzeit."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Morgens stehe ich um acht Uhr auf.",
+   "verdict": "right",
+   "why": "Korrekte Aussage mit getrenntem aufstehen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "ich stehe um funf uhr auf",
+   "verdict": "right",
+   "why": "Nur Umlaut, Großschreibung und Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich stehe um sechs Uhr.",
+   "verdict": "wrong",
+   "why": "Für aufstehen fehlt der Verbteil auf."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich aufstehe um sechs.",
+   "verdict": "wrong",
+   "why": "Aufstehen muss hier getrennt werden."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich steht um sechs auf.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört stehe."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Um sechs Uhr.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Ich stehe am sechs Uhr auf.",
+   "verdict": "wrong",
+   "why": "Vor der Uhrzeit steht um statt am."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich arbeite morgens.",
+   "verdict": "right",
+   "why": "Arbeitszeit in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Am Montag arbeite ich.",
+   "verdict": "right",
+   "why": "Ein Wochentag beantwortet die Frage nach wann."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich arbeite von neun bis fünf.",
+   "verdict": "right",
+   "why": "Korrekte Angabe der persönlichen Arbeitszeit."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich arbeite nicht.",
+   "verdict": "right",
+   "why": "Sinnvolle vollständige Antwort einer Person ohne Arbeit."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "ich arbeite abends",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich arbeiten um acht Uhr.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört arbeite."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Am Montag ich arbeite.",
+   "verdict": "wrong",
+   "why": "Nach am Montag muss das Verb stehen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich arbeite am acht Uhr.",
+   "verdict": "wrong",
+   "why": "Vor einer Uhrzeit steht um statt am."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Morgens.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich bin arbeiten morgens.",
+   "verdict": "wrong",
+   "why": "Hier heißt es ich arbeite morgens."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Kaufst du am Samstag ein?",
+   "verdict": "right",
+   "why": "Korrekte Frage an Lena zum vorgegebenen Tag."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Gehst du am Samstag einkaufen?",
+   "verdict": "right",
+   "why": "Korrekte alternative Frage nach dem Einkaufen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Kaufst du Samstag ein?",
+   "verdict": "right",
+   "why": "Samstag ist hier auch ohne am möglich."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Lena, kaufst du am Samstag ein?",
+   "verdict": "right",
+   "why": "Korrekte Frage mit persönlicher Anrede."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "kaufst du am samstag ein",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Fragezeichen fehlen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Kaufen Sie am Samstag ein?",
+   "verdict": "wrong",
+   "why": "Lena wird hier mit du angesprochen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Kaufst du am Freitag ein?",
+   "verdict": "wrong",
+   "why": "Der vorgegebene Tag ist Samstag."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Einkaufst du am Samstag?",
+   "verdict": "wrong",
+   "why": "Ein muss als getrennter Verbteil ans Ende."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Kaufen du am Samstag ein?",
+   "verdict": "wrong",
+   "why": "Zu du gehört kaufst."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Wann kaufst du ein?",
+   "verdict": "wrong",
+   "why": "Fragt nicht, ob sie am Samstag einkauft."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ja, ich komme mit.",
+   "verdict": "right",
+   "why": "Sagt in einem vollständigen Satz zu."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich komme gern mit.",
+   "verdict": "right",
+   "why": "Korrekte Zusage mit getrenntem mitkommen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Am Samstag komme ich mit.",
+   "verdict": "right",
+   "why": "Korrekte Zusage mit passender Zeitangabe."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich komme auch mit.",
+   "verdict": "right",
+   "why": "Vollständige und passende Zusage."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "ja ich komme mit",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Satzzeichen fehlen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ja, gern.",
+   "verdict": "wrong",
+   "why": "Natürliche Zusage, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich mitkomme.",
+   "verdict": "wrong",
+   "why": "Mitkommen muss hier getrennt werden."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich kommt mit.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört komme."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Nein, ich komme nicht mit.",
+   "verdict": "wrong",
+   "why": "Lehnt ab; die Aufgabe verlangt eine Zusage."
+  },
+  {
+   "lektion": 11,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich komme du mit.",
+   "verdict": "wrong",
+   "why": "Du passt grammatisch nicht in diesen Satz."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Kaufst du am Freitag ein?",
+   "verdict": "right",
+   "why": "Korrekte Frage an Lena zum vorgegebenen Tag."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Gehst du am Freitag einkaufen?",
+   "verdict": "right",
+   "why": "Korrekte alternative Frage nach dem Einkaufen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Kaufst du Freitag ein?",
+   "verdict": "right",
+   "why": "Freitag ist hier auch ohne am möglich."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Lena, kaufst du am Freitag ein?",
+   "verdict": "right",
+   "why": "Korrekte Frage mit persönlicher Anrede."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "kaufst du am freitag ein?",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Kaufen Sie am Freitag ein?",
+   "verdict": "wrong",
+   "why": "Lena wird hier mit du angesprochen."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Kaufst du am Samstag ein?",
+   "verdict": "wrong",
+   "why": "Der vorgegebene Tag ist Freitag."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Einkaufst du am Freitag?",
+   "verdict": "wrong",
+   "why": "Ein muss als getrennter Verbteil ans Ende."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Kaufen du am Freitag ein?",
+   "verdict": "wrong",
+   "why": "Zu du gehört kaufst."
+  },
+  {
+   "lektion": 11,
+   "sitting": 2,
+   "turn": 6,
+   "answer": "Wann kaufst du ein?",
+   "verdict": "wrong",
+   "why": "Fragt nicht, ob sie am Freitag einkauft."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich lade dich am Samstag zu meiner Party ein.",
+   "verdict": "right",
+   "why": "Lädt Lena korrekt zur Party am Samstag ein."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Am Samstag ist meine Party. Kommst du?",
+   "verdict": "right",
+   "why": "Klare Einladung; mehrere Sätze sind hier erlaubt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich feiere am Samstag. Kommst du auch?",
+   "verdict": "right",
+   "why": "Nennt das Fest und lädt Lena dazu ein."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Lena, kommst du am Samstag zu meiner Party?",
+   "verdict": "right",
+   "why": "Korrekte Einladung in Frageform."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "ich lade dich am samstag ein",
+   "verdict": "right",
+   "why": "Einladung im Kontext klar; nur Schreibkonventionen fehlen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich lade dich am Sonntag ein.",
+   "verdict": "wrong",
+   "why": "Das Fest findet laut Aufgabe am Samstag statt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich lade Sie am Samstag ein.",
+   "verdict": "wrong",
+   "why": "Lena wird in dieser Situation mit du angesprochen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich laden dich am Samstag ein.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört lade."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich lade du am Samstag ein.",
+   "verdict": "wrong",
+   "why": "Die eingeladene Person heißt hier dich."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 1,
+   "answer": "Ich einlade dich am Samstag.",
+   "verdict": "wrong",
+   "why": "Einladen muss hier getrennt werden."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich habe im Mai Geburtstag.",
+   "verdict": "right",
+   "why": "Geburtstagsmonat in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Geburtstag ist im Juni.",
+   "verdict": "right",
+   "why": "Korrekte Antwort mit einem eigenen Geburtstagsmonat."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Im März habe ich Geburtstag.",
+   "verdict": "right",
+   "why": "Monatsangabe und Satzstellung sind korrekt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich habe Geburtstag im Oktober.",
+   "verdict": "right",
+   "why": "Auch diese Stellung der Monatsangabe ist korrekt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "mein geburtstag ist im mai",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Im Mai.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich habe am Mai Geburtstag.",
+   "verdict": "wrong",
+   "why": "Vor einem Monat steht im statt am."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Mein Geburtstag ist in Mai.",
+   "verdict": "wrong",
+   "why": "Die Monatsangabe lautet im Mai."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Ich bin im Mai Geburtstag.",
+   "verdict": "wrong",
+   "why": "Es heißt ich habe Geburtstag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 2,
+   "answer": "Meine Geburtstag ist im Mai.",
+   "verdict": "wrong",
+   "why": "Geburtstag ist männlich; es heißt mein Geburtstag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann ist dein Geburtstag?",
+   "verdict": "right",
+   "why": "Korrekte Frage nach Lenas Geburtstag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann hast du Geburtstag?",
+   "verdict": "right",
+   "why": "Korrekte alternative Frage mit du."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "In welchem Monat hast du Geburtstag?",
+   "verdict": "right",
+   "why": "Fragt korrekt nach ihrem Geburtstagsmonat."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Und wann hast du Geburtstag, Lena?",
+   "verdict": "right",
+   "why": "Korrekte persönliche Gegenfrage."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "wann ist dein geburtstag?",
+   "verdict": "right",
+   "why": "Nur die Großschreibung fehlt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann haben Sie Geburtstag?",
+   "verdict": "wrong",
+   "why": "Lena wird hier mit du angesprochen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann hat sie Geburtstag?",
+   "verdict": "wrong",
+   "why": "Fragt über eine dritte Person statt Lena."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann du hast Geburtstag?",
+   "verdict": "wrong",
+   "why": "Nach wann muss das Verb hast stehen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wann ist deine Geburtstag?",
+   "verdict": "wrong",
+   "why": "Geburtstag ist männlich; es heißt dein Geburtstag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 3,
+   "answer": "Wie alt bist du?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Alter statt dem Geburtstag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Mama kommt.",
+   "verdict": "right",
+   "why": "Nennt einen eigenen Gast im vollständigen Satz."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Bruder und seine Frau kommen.",
+   "verdict": "right",
+   "why": "Gäste und passende Verbform sind korrekt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Freunde kommen zur Party.",
+   "verdict": "right",
+   "why": "Korrekte Aussage über die eigenen Gäste."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Papa kommt auch.",
+   "verdict": "right",
+   "why": "Vollständige und passende Antwort auf wer."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "meine eltern kommen",
+   "verdict": "right",
+   "why": "Nur Großschreibung und Schlusspunkt fehlen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Mein Eltern kommen.",
+   "verdict": "wrong",
+   "why": "Vor Eltern im Plural steht meine."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Mama kommen.",
+   "verdict": "wrong",
+   "why": "Zu meine Mama gehört kommt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Bruder kommt.",
+   "verdict": "wrong",
+   "why": "Bruder ist männlich; es heißt mein Bruder."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Schwester und mein Bruder kommt.",
+   "verdict": "wrong",
+   "why": "Bei zwei Personen muss es kommen heißen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 4,
+   "answer": "Meine Mama.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchte ein Buch.",
+   "verdict": "right",
+   "why": "Geschenkwunsch in einem korrekten Satz genannt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Zum Geburtstag möchte ich eine Tasche.",
+   "verdict": "right",
+   "why": "Korrekte persönliche Antwort mit passendem Artikel."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchte gern einen Rucksack.",
+   "verdict": "right",
+   "why": "Korrekte Wunschformulierung mit einen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchte kein Geschenk.",
+   "verdict": "right",
+   "why": "Auch der Wunsch nach keinem Geschenk ist passend."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "ich mochte ein worterbuch",
+   "verdict": "right",
+   "why": "Erkennbarer Wunsch; nur Umlaute und Schreibkonventionen fehlen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchte einen Buch.",
+   "verdict": "wrong",
+   "why": "Buch ist sächlich; es heißt ein Buch."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchte ein Tasche.",
+   "verdict": "wrong",
+   "why": "Tasche ist weiblich; es heißt eine Tasche."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich möchten ein Handy.",
+   "verdict": "wrong",
+   "why": "Zu ich gehört möchte."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ein Buch.",
+   "verdict": "wrong",
+   "why": "Verständlich, aber ein vollständiger Satz ist verlangt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 5,
+   "answer": "Ich brauche.",
+   "verdict": "wrong",
+   "why": "Der Satz nennt keinen Wunsch und bleibt unvollständig."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Tschüss!",
+   "verdict": "right",
+   "why": "Passender Abschiedsgruß; ein Satz ist nicht verlangt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Mach's gut!",
+   "verdict": "right",
+   "why": "Passender informeller Abschiedsgruß an Lena."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Bis bald, Lena!",
+   "verdict": "right",
+   "why": "Korrekte persönliche Verabschiedung."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Tschüss, bis später!",
+   "verdict": "right",
+   "why": "Passende Kombination zweier Abschiedsgrüße."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "machs gut",
+   "verdict": "right",
+   "why": "Nur Apostroph, Großschreibung und Satzzeichen fehlen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Guten Morgen!",
+   "verdict": "wrong",
+   "why": "Begrüßt Lena statt sich zu verabschieden."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Willkommen!",
+   "verdict": "wrong",
+   "why": "Begrüßung statt Abschiedsgruß."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Wie geht es dir?",
+   "verdict": "wrong",
+   "why": "Fragt nach dem Befinden statt Abschied zu nehmen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Ich komme mit.",
+   "verdict": "wrong",
+   "why": "Sagt ein Mitkommen zu, verabschiedet sich aber nicht."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 6,
+   "answer": "Mach gut!",
+   "verdict": "wrong",
+   "why": "Im Abschiedsgruß fehlt es: Mach es gut."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Schönen Tag noch!",
+   "verdict": "right",
+   "why": "Passender Wunsch für Lenas weiteren Tag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Einen schönen Tag!",
+   "verdict": "right",
+   "why": "Korrekte Wunschformel; ein Satz ist nicht verlangt."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich wünsche dir einen schönen Tag.",
+   "verdict": "right",
+   "why": "Korrekte persönliche Wunschformulierung mit dir."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Hab einen schönen Tag!",
+   "verdict": "right",
+   "why": "Korrekte informelle Wunschformulierung."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "schonen tag noch",
+   "verdict": "right",
+   "why": "Nur Umlaut, Großschreibung und Satzzeichen fehlen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Schöne Tag!",
+   "verdict": "wrong",
+   "why": "Die Wunschformel lautet schönen Tag."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich wünsche du einen schönen Tag.",
+   "verdict": "wrong",
+   "why": "Es heißt ich wünsche dir."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Ich wünsche Ihnen einen schönen Tag.",
+   "verdict": "wrong",
+   "why": "Lena wird hier mit du und dir angesprochen."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Guten Appetit!",
+   "verdict": "wrong",
+   "why": "Wünscht guten Appetit statt eines schönen Tages."
+  },
+  {
+   "lektion": 12,
+   "sitting": 1,
+   "turn": 7,
+   "answer": "Bis später!",
+   "verdict": "wrong",
+   "why": "Verabschiedet sich, enthält aber keinen Tageswunsch."
+  }
+ ]
+}

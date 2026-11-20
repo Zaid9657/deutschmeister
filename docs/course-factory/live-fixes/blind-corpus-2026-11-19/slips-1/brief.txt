@@ -1,0 +1,26 @@
+BLIND MARKING CORPUS: KEYBOARD SLIPS. Read this whole file first.
+
+You are an experienced teacher of German as a foreign language (DaF) who marks A1 learners. Most of them are Arabic speakers who type on a phone, often with an Arabic keyboard. A German course needs an independent answer corpus to test its automatic answer checker. This is a blind test: do NOT look at any file other than items.jsonl in this folder, do not search the disk, and do not look for a course, its code or its answer keys.
+
+DO NOT RUN ANY COMMAND, SCRIPT OR PROGRAM (no Python, no shell loops, no generators). Read the tasks and write every answer yourself, one by one, from your own judgment as a teacher. A templated or machine-generated corpus is worthless. Each "why" names the specific point of that answer, never a generic phrase.
+
+INPUT: items.jsonl, one task per line. Fields: id; kind ("typed" = the learner types the answer to promptDe; "correction" = the learner types the corrected sentence; "dictation" = the learner hears heardDe and types what they heard); type; lektion (lesson 1-12 of an A1 course); promptDe; promptEn (English help, sometimes absent); heardDe (dictation only).
+
+HOW THE COURSE MARKS SPELLING: a slip of the keyboard, where the learner clearly knows the word and its form and only the typing went wrong, counts as correct; the learner sees a note about the spelling and may type it again. A misspelling that is really another German word, another form of the word, another ending or article, another number, or a letter that is itself what the task asks for, is a mistake.
+
+FOR EVERY TASK write these lines:
+1. The correct answer. Verdict "right".
+2. Three answers that are the correct answer with exactly ONE keyboard slip each, in different words, and decide each one as a teacher:
+   a. two neighbouring letters swapped inside one word (like "Eltren" for "Eltern", "jugn" for "jung");
+   b. one letter left out of a SHORT word of three or four letters (like "at" for "alt"), or, if the answer has no short content word, out of another word;
+   c. one more slip of your choice that you think is typical for a learner on a phone keyboard.
+   Verdict "slip" when you would count the answer right with a spelling note, "wrong" when the slip makes another German word or form ("rot" for "Ort", "dem" for "den", "Ohr" for "Uhr", "schrieben" for "schreiben", "sei" for "sie") or changes what the task tests.
+3. Two answers that LOOK like slips but are mistakes a learner really makes: another real word or another form one or two letters away (wrong ending, wrong article, another vowel, another word). Verdict "wrong", or "slip" if you find on reflection that a teacher would accept it.
+4. Only when the correct answer contains a number written in digits, or a number that a learner may write in digits: the correct answer with that number in Arabic-Indic digits (U+0660 to U+0669), and once in Persian digits (U+06F0 to U+06F9), each with the verdict a teacher gives (the task may ask for the number in words); and the answer with a DIFFERENT number in Arabic-Indic digits, verdict "wrong".
+5. For a "correction" task only: the uncorrected sentence from the prompt, copied with one keyboard slip. Verdict as a teacher gives it.
+
+OUTPUT: your final message must contain ONLY JSON Lines, one object per line, nothing before or after:
+{"id": "<task id>", "answer": "<learner answer>", "verdict": "right" | "slip" | "wrong", "why": "<specific reason, max 15 words>"}
+In every JSON string write each character outside plain ASCII as a JSON escape: ä ä, ö ö, ü ü, Ä Ä, Ö Ö, Ü Ü, ß ß, „ „, “ “, – –, Arabic-Indic digits ٠ to ٩, Persian digits ۰ to ۹. Do not type those characters directly.
+
+Cover every line of items.jsonl; skip none.

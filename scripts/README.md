@@ -29,6 +29,7 @@ offline from `grammar-content-cache.json`, merges and checks every built page.
 | [crawl-guard.mjs](crawl-guard.mjs) | check (imported module) | Built-page HTML and route/link metadata supplied by caller | Crawlability/link findings; used by built-HTML checks, not a standalone CLI. |
 | [check-duplicates.mjs](check-duplicates.mjs) | check | Every source/destination in `shared-files.mjs` | Nonzero on any byte drift; `npm run check:duplicates`. |
 | [check-grammar-json.mjs](check-grammar-json.mjs) `<file>... [--cache cache.json]` | check | CREATE/EXTEND grammar JSON; optional current cache | Shape and, with cache, collision/continuation errors; no files written. |
+| [a11-lesen-check.mjs](a11-lesen-check.mjs) `[-v]` | check | Committed `src/data/curricula/a11.lesen.js` units and the A1.1 curriculum lexicon | Authoring findings for the A1.1 checkpoint Lesen units (taught words, keys, declared surface strategies, template guard); no files written. |
 | [a12-determinacy.mjs](a12-determinacy.mjs) `[level]` | check | Lesson pool draw, checkpoint items and the real answer checker | One line per correct German alternative the key rejects; exit 1 when any. |
 | [a12-lesen-check.mjs](a12-lesen-check.mjs) `[draft.json] [-v]` | check | Committed `src/data/curricula/a12.lesen.js` units or a draft paper file | Authoring findings for the A1.2 checkpoint Lesen units; no files written. |
 | [a12-tense-check.mjs](a12-tense-check.mjs) `[level]` | check | Lesson pool and curriculum production items | Reports open-production items whose German instruction does not select a taught tense. |
@@ -58,7 +59,8 @@ Always choose a new explicit output path for dated SQL generators.
 
 | Command (`node scripts/…`) | Effect | Inputs | Outputs / behavior |
 |---|---|---|---|
-| [build-lesson-pool.mjs](build-lesson-pool.mjs) `[level]` | local generator | Grammar cache, corrections/English sidecars, extra items, curriculum and quality rules | `src/data/lessonPools/<key>.json` and generated function rule cards; default A1.1. |
+| [build-lesson-pool.mjs](build-lesson-pool.mjs) `[level]` | local generator | Grammar cache, corrections/English sidecars, extra items, curriculum and quality rules | `src/data/lessonPools/<key>.json` and generated function rule cards; default A1.1. Also refreshes `src/data/courseWords.js`. |
+| [build-course-words.mjs](build-course-words.mjs) `[--check]` | local generator | Both live courses, both pools, both reading banks | `src/data/courseWords.js`: the course's German word forms, which the answer checker reads to tell a slip from another word; `--check` fails when stale. |
 | [rule-card-overrides.mjs](rule-card-overrides.mjs) | local generator (data module) | Reviewed rule-card text | Imported overrides for the pool build; no standalone CLI or direct writes. |
 | [dump-grammar-cache.mjs](dump-grammar-cache.mjs) `[out.json]` | local generator; remote read | Supabase URL/anon key (`SUPABASE_` or `PUBLIC_`) | Fetches four content tables; default `grammar-content-cache.json`, including `dumpedAt`; network required. |
 | [grammar-topics-from-json.mjs](grammar-topics-from-json.mjs) `--json file... --migration out.sql --cache cache.json` | local generator | Reviewed CREATE/EXTEND topic JSON and existing cache | Guarded SQL migration and matching cache edits; exports validators used by checks. |

@@ -101,6 +101,12 @@ const ALL_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
   items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL }),
 }));
 
+// Legacy generator coverage remains intact; live A1.1 now has a separate authored-bank gate.
+const GENERATED_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
+  cp,
+  items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL }),
+}));
+
 const cp1 = CURRICULUM_FIXTURE.checkpoints[0];
 const cp2of6 = CURRICULUM_FIXTURE_6.checkpoints[1];
 
@@ -229,7 +235,7 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
   assert.deepEqual(dictated, {
     'a1.1-cp1': [
       ['a1.1-cp1-hoeren-1', 'a1.1-l01', 'line-6', 'Gut. Wie geht es Ihnen?'],
-      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Tschüss! Bis morgen.'],
+      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Auf Wiedersehen!'],
       ['a1.1-cp1-hoeren-3', 'a1.1-l01', 'line-3', 'C-H-A-K-I-R-I.'],
     ],
     'a1.1-cp2': [
@@ -294,7 +300,7 @@ test('a falsch statement contradicts a line of THIS text, not another Lektion', 
     const chapterLines = new Set(
       chapterLektionen(CURRICULUM_A11, cp).flatMap((l) => l.dialog.lines.map((line) => line.de)),
     );
-    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: { ...cp, lesen: undefined }, pool: POOL })
       .filter((i) => i.section === 'lesen');
     for (const item of items.filter((i) => i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
@@ -489,7 +495,7 @@ test('no Falsch statement of the four papers contains a determiner its noun cann
 test('a falsch statement changes a value, a contrary or the polarity of its report — never a person or a thing (A1.2 DaF review #5, MAJOR 8)', () => {
   let checked = 0;
   const kinds = new Set();
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
       const kind = contradictionOf(item.trueStatement, statement);
@@ -571,7 +577,7 @@ const lesenItemsOf = (cp, items) => items.filter((i) => i.section === 'lesen');
 
 test('no Lesen statement — richtig or falsch — stands in its own text', () => {
   let checked = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     for (const item of lesenItemsOf(cp, items)) {
       const statement = quotedStatement(item);
       assert.equal(statement, item.statement, `${item.id}: the prompt shows the item's statement`);
@@ -591,7 +597,7 @@ test('no Lesen statement — richtig or falsch — stands in its own text', () =
 });
 
 test('every richtig statement is the report of EXACTLY ONE line of its text', () => {
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     const spec = reportSpecFor(CURRICULUM_A11, cp);
     const chapter = chapterLektionen(CURRICULUM_A11, cp);
     for (const item of lesenItemsOf(cp, items)) {
@@ -617,7 +623,7 @@ test('every richtig statement is the report of EXACTLY ONE line of its text', ()
 
 test('every falsch statement is its own report, contradicted — and the change it names undoes', () => {
   let checked = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     for (const item of lesenItemsOf(cp, items).filter((i) => i.answer === 'Falsch')) {
       const { kind, from, to } = item.changed || {};
       assert.ok(['value', 'contrary', 'polarity'].includes(kind), `${item.id}: a falsch item names its kind of change`);
@@ -688,7 +694,7 @@ test('the stem-changing verbs are in the table as forms, not as suffixations', (
 test('every verb form a Lesen statement produced is one the course has taught by then', () => {
   const offenders = [];
   let produced = 0;
-  for (const { cp, items } of ALL_CHECKPOINTS) {
+  for (const { cp, items } of GENERATED_CHECKPOINTS) {
     const known = knownUpTo(CURRICULUM_A11, cp.afterLektion);
     for (const item of lesenItemsOf(cp, items)) {
       for (const form of item.verbForms || []) {
@@ -1551,7 +1557,7 @@ test('the review_cards migration carries own-row RLS and the checkpoint marker',
 // next to the builder, because the checkpoint's own generated prompts
 // ("Hören Sie zu und schreiben Sie den Satz.") are written HERE, not in the page,
 // and a du-form reintroduced in either place puts two Anreden on one screen.
-const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|Versuch es)\b/;
+const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|beantworte|Beantworte|Versuch es)\b/;
 
 test('the checkpoint and review screens (and the prompts the builder writes) sieze', () => {
   const offenders = [];
@@ -1560,6 +1566,9 @@ test('the checkpoint and review screens (and the prompts the builder writes) sie
     'src/pages/lesson/ReviewPage.jsx',
     'src/lib/checkpoint/buildCheckpoint.js',
     'src/lib/checkpoint/reviewGrading.js',
+    'src/pages/Modelltest/ModelltestRun.jsx',
+    'src/pages/Modelltest/ModelltestOverview.jsx',
+    'src/pages/Modelltest/ModelltestResult.jsx',
   ]) {
     const src = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
     src.split('\n').forEach((line, i) => {
@@ -1573,7 +1582,8 @@ test('the four strings DaF review #5 named now address the learner as Sie', () =
   const checkpoint = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
   const review = readFileSync(new URL('../src/pages/lesson/ReviewPage.jsx', import.meta.url), 'utf8');
   assert.ok(checkpoint.includes('Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis.'));
-  assert.ok(checkpoint.includes('im Format Ihrer Prüfung'));
+  assert.ok(checkpoint.includes('ein adaptierter Kurstest, keine Prüfungssimulation'));
+  assert.ok(!checkpoint.includes('im Format Ihrer Prüfung'));
   assert.ok(review.includes('Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.'));
   assert.ok(review.includes('Neue Karten kommen, sobald Sie eine Lektion abschließen.'));
 });

@@ -2024,7 +2024,7 @@ function chooseLesen(ctx) {
  * A bank without four complete papers is an error, never a fallback to the generator.
  */
 function authoredLesen(ctx, { papers } = {}) {
-  const complete = Array.isArray(papers) && papers.length > 0
+  const complete = Array.isArray(papers) && papers.length === 4
     && papers.every((p) => Array.isArray(p) && p.length === SECTION_COUNTS.lesen);
   if (!complete) throw new Error(`${ctx.checkpoint.id}: an authored Lesen bank needs papers of ${SECTION_COUNTS.lesen} units`);
   const paper = papers[ctx.round % papers.length];
@@ -2037,7 +2037,7 @@ function lesenUnitItem(checkpoint, i, unit) {
   return {
     id: `${checkpoint.id}-lesen-${i + 1}`,
     section: 'lesen',
-    kind: shortAnswer ? 'readingGap' : 'choice',
+    kind: shortAnswer ? 'readingGap' : unit.format === 'trueFalse' ? 'trueFalse' : 'choice',
     mode: shortAnswer ? 'typed' : 'options',
     topic: 'lesen',
     lektionNr: checkpoint.afterLektion,
@@ -2060,6 +2060,7 @@ function lesenUnitItem(checkpoint, i, unit) {
     unitId: unit.id,
     textType: unit.type,
     evidence: unit.evidence,
+    ...(unit.statement ? { statement: unit.statement } : {}),
   };
 }
 
@@ -2875,7 +2876,7 @@ export function scoreCheckpoint(items, answers = {}) {
         // and carries the same tag the function writes into lesson_attempts —
         // tagError compares two answer strings and has nothing to compare here.
         const tag = isMicResult(answer) ? 'Aussprache' : isWritingResult(answer) ? 'Schreiben' : tagError(
-          { stage: section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic: item.topic, type: item.type },
+          { stage: section === 'hoeren' ? 'listening' : 'checkpoint', section, kind: item.kind, topic: item.topic, type: item.type },
           answer == null ? '' : String(answer),
           item.answer,
         );
@@ -2949,7 +2950,7 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed, aft
     const topic = item.topic;
     missCounts.set(topic, (missCounts.get(topic) || 0) + 1);
     const tag = tagError(
-      { stage: item.section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic, type: item.type },
+      { stage: item.section === 'hoeren' ? 'listening' : 'checkpoint', section: item.section, kind: item.kind, topic, type: item.type },
       answers[item.id] == null ? '' : String(answers[item.id]),
       item.answer,
     );

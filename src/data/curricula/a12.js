@@ -314,7 +314,7 @@ export const CURRICULUM_A12 = {
         examples: ['Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.', 'Ja, der Balkon ist da. Das dritte Stockwerk ist frei.'],
         ruleSlug: 'numbers-counting',
       },
-      phonetik: { focus: 'Wortakzent bei zusammengesetzten Zahlen', items: ['ein-und-ZWAN-zig', 'VIER-hun-dert', 'das DRIT-te'] },
+      phonetik: { focus: 'Wortakzent bei zusammengesetzten Zahlen', items: ['EIN-und-zwan-zig', 'VIER-hun-dert', 'das DRIT-te'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
         readAloud: [2, 5],
@@ -499,8 +499,8 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'nicht oder kein?',
-        bodyDe: '**kein** verneint ein Nomen mit unbestimmtem Artikel oder ohne Artikel: eine Lampe → **keine** Lampe, ein Spiegel → **kein** Spiegel, im Akkusativ **keinen** Rabatt. **nicht** verneint alles andere: ein Verb (funktioniert **nicht**), ein Adjektiv (**nicht** schön) oder ein Nomen mit bestimmtem Artikel. **nicht** steht am Satzende oder direkt vor dem Wort.',
-        bodyEn: '**kein** negates a noun with ein or with no article: eine Lampe → **keine** Lampe, ein Spiegel → **kein** Spiegel, in the accusative **keinen** Rabatt. **nicht** negates everything else: a verb (funktioniert **nicht**), an adjective (**nicht** schön) or a noun with der, die or das. **nicht** stands at the end of the sentence or right before the word it negates.',
+        bodyDe: '**kein** verneint Nomen mit unbestimmtem Artikel oder ohne Artikel: **keine** Lampe, **kein** Spiegel, Akkusativ **keinen** Rabatt. **nicht** verneint alles andere: funktioniert **nicht**, **nicht** schön. Satznegation steht meist spät, vor dem letzten Verbteil des Satzes (Vorsilbe/Infinitiv/Partizip): Ich kaufe heute nicht ein. Ohne Verbteil auch am Satzende. Wortnegation steht direkt vor dem Wort: nicht heute, sondern morgen.',
+        bodyEn: '**kein** negates nouns with ein/no article: **keine** Lampe, **kein** Spiegel, accusative **keinen** Rabatt. Otherwise use **nicht**: funktioniert **nicht**, **nicht** schön. Sentence negation usually comes late, before the final verb part (prefix/infinitive/participle): Ich kaufe heute nicht ein. Without a final verb part it can end the sentence. Contrastive word negation directly precedes the contrast: nicht heute, sondern morgen (not today, but tomorrow).',
         examples: ['Nein. Hier ist keine Lampe und kein Spiegel.', 'Ja, das Kissen ist da, aber die Steckdose funktioniert nicht.'],
         ruleSlug: 'negation',
       },
@@ -724,7 +724,7 @@ export const CURRICULUM_A12 = {
         leitpunkte: ['Warum Sie schreiben', 'Was Ihnen wehtut', 'Ihre Frage nach einem neuen Termin'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrte Damen und Herren, ich bin krank. Mein Hals tut weh und ich habe Fieber. Wann ist ein Termin frei? Viele Grüße, Ana Chakiri',
+        sample: 'Sehr geehrte Damen und Herren, ich bin krank. Ich komme heute nicht. Mein Hals tut weh und ich habe Fieber. Wann ist ein Termin frei? Viele Grüße, Ana Chakiri',
       },
       // Kein A1.2-Lesetext handelt von Gesundheit und keine der sechs Hörübungen von der Praxis —
       // das ist der ehrliche Zustand; ein falsches Etikett wäre schlechter als eine Lücke.
@@ -889,7 +889,7 @@ export const CURRICULUM_A12 = {
       },
       notice: {
         title: 'Der Imperativ: bitten und auffordern',
-        bodyDe: 'Imperativ vorn: **du** ohne -st: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Beide normalerweise ohne Pronomen; zur Betonung möglich. Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
+        bodyDe: 'Imperativ: **du** ohne -st: du komm**st** → **Komm!**, du hilf**st** → **Hilf!** Aus ä wird a: du fähr**st** → **Fahr!** Endet der Stamm auf s, fällt nur -t weg: du iss**t** → **Iss!** Bei ihr fällt nur das ihr weg: **Kommt!** Beide normalerweise ohne Pronomen; zur Betonung möglich (betont). Bei Sie bleibt das Pronomen: Helfen Sie **bitte**!',
         bodyEn: 'The imperative comes first: **du** without -st: du kommst → **Komm!**, du hilfst → **Hilf!** An ä becomes a: du fährst → **Fahr!** If the stem ends in s, drop only -t: du isst → **Iss!** With ihr only the pronoun is dropped: **Kommt!** Both normally omit the pronoun; it is possible for emphasis. With Sie the pronoun stays: Helfen Sie **bitte**!',
         examples: ['Tim, die Waschmaschine ist da. Hilf mir bitte!', 'Mach den Fernseher aus und hilf mir bitte!'],
         ruleSlug: 'imperative',

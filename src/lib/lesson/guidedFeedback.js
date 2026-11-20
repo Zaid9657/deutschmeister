@@ -9,7 +9,9 @@ const HINTS = {
   fill_blank: { de: 'Lesen Sie den Satz vor und nach der Lücke.', en: 'Read the sentence before and after the gap.' },
   spelling: { de: 'Prüfen Sie jeden Buchstaben und seine Reihenfolge.', en: 'Check each letter and its order.' },
   sentence_building: { de: 'Prüfen Sie die Reihenfolge der Wörter und die Verbform.', en: 'Check the word order and the verb form.' },
-  error_correction: { de: 'Prüfen Sie die Schreibweise und die Satzzeichen.', en: 'Check the spelling and punctuation.' },
+  // A correction names its repair („Korrigieren Sie das Verb:“); the hint points back to it and never
+  // to another one (2026-11-19 browser play: the verb task was told to check spelling and punctuation).
+  error_correction: { de: 'Lesen Sie noch einmal, was Sie korrigieren sollen.', en: 'Read again what the task asks you to correct.' },
 };
 const NEUTRAL = [
   { de: 'Noch einmal.', en: 'Once more.' },
@@ -38,11 +40,25 @@ export function hintFor(item) {
 
 export function guidedFeedback(item, checked, retryUsed, lang) {
   const hintOnly = checked.result === RESULT.WRONG && !retryUsed;
+  // A filler hint ("Once more.") adds nothing beside the otter's "You have one more try".
+  const hint = hintOnly ? hintFor(item) : null;
   return { ...checked, hintOnly, showAnswer: retryUsed,
-    ...(hintOnly ? { hint: hintFor(item)[lang === 'de' ? 'de' : 'en'] } : {}) };
+    ...(hintOnly ? { hint: NEUTRAL.includes(hint) ? '' : hint[lang === 'de' ? 'de' : 'en'] } : {}) };
 }
 
-export function feedbackReason(item, lang) {
+/**
+ * The reason under a checked answer. `matched` is the accepted form the answer met (checkAnswer's
+ * `expected`): tiles accept every licensed order, and the reason for another order than the
+ * dialogue line's must not claim it IS the dialogue line's (2026-11-19 browser play: „Frei bin ich.“
+ * was told „So stehen die Wörter in der ursprünglichen Dialogzeile.“).
+ */
+export function feedbackReason(item, lang, matched = null) {
+  const fold = (s) => normalizeAnswer(String(s ?? '')).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  if (item.type === 'word_order' && matched && item.answer && fold(matched) !== fold(item.answer)) {
+    return lang === 'de'
+      ? `Auch diese Wortfolge ist richtig: „${matched}“ In der Dialogzeile steht: „${item.answer}“`
+      : `This word order is correct too: “${matched}” The dialogue line says: “${item.answer}”`;
+  }
   const reasons = {
     word_order: { de: 'So stehen die Wörter in der ursprünglichen Dialogzeile.', en: 'This is the word order in the original dialogue line.' },
     listen_select: { de: 'Diese Zeile wurde abgespielt.', en: 'This is the line that was played.' },

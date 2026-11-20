@@ -22,6 +22,7 @@
 // tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { sameAnswer } from '../../data/sameAnswer.js';
+import { COURSE_WORDS } from '../../data/courseWords.js';
 
 // CORRECTED: the exercise was finished, but only after a wrong try that the
 // learner fixed on the spot (matching, where a wrong pair never commits). It is
@@ -54,6 +55,13 @@ export function levenshtein(a, b) {
   }
   return prev[n];
 }
+
+/**
+ * Eastern Arabic-Indic (٠–٩) and Persian (۰–۹) digits are the same digits as 0–9: most learners type
+ * on an Arabic keyboard, and „٨ Uhr" is „8 Uhr" (2026-11-19, the Lektion 2–3 rollout's blind corpus).
+ * Folded first, for every item kind, before any other rule reads a number.
+ */
+export const westernDigits = (s) => String(s ?? '').replace(/[٠-٩۰-۹]/g, (d) => String(d.charCodeAt(0) & 0xf));
 
 const stripPunct = (s) =>
   s.replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")
@@ -220,6 +228,71 @@ function oneEdit(given, expected) {
   return { kind: given.length > expected.length ? 'added' : 'dropped', ch, doubled: ch === longer[at - 1] || ch === longer[at + 1] };
 }
 
+/**
+ * `given` is `expected` with two neighbouring letters swapped inside one word („Eltren", „gebroen",
+ * „Brduer") — the commonest slip on a phone keyboard, which Levenshtein counts as two edits (2026-11-19,
+ * the Lektion 2–3 rollout's blind corpus). Never two vowels: „ie"/„ei", „eu"/„ue" is the spelling the
+ * learner has to know and often another word or form („schrieben"/„schreiben", „Lied"/„Leid", „sei"/
+ * „sie"). The ending rule (endingDiffers) still applies, so a swap that moves the last letter is no slip.
+ */
+function oneSwap(given, expected) {
+  if (given.length !== expected.length || given === expected) return false;
+  const at = [...expected].findIndex((c, i) => c !== given[i]);
+  const [a, b] = [expected[at], expected[at + 1]];
+  if (b === undefined || a === b || given[at] !== b || given[at + 1] !== a || given.slice(at + 2) !== expected.slice(at + 2)) return false;
+  if (!/\p{L}/u.test(a) || !/\p{L}/u.test(b)) return false;
+  return !(/^[aeiouyäöü]$/i.test(a) && /^[aeiouyäöü]$/i.test(b));
+}
+
+/**
+ * Short words the course standard keeps from typo credit even though they are not in CLOSED_CLASS:
+ * question words, conjunctions, particles and adverbs of degree, where one letter is another word.
+ */
+const SHORT_FUNCTION = new Set(['und', 'oder', 'aber', 'auch', 'noch', 'nur', 'sehr', 'wie', 'wo', 'was', 'wer', 'wen', 'wem',
+  'wann', 'hier', 'dort', 'da', 'man', 'ja', 'nein', 'doch', 'mal', 'schon', 'bis', 'seit', 'oft', 'ganz', 'gern', 'mehr', 'viel',
+  'dann', 'so', 'als', 'ob', 'wenn', 'nun', 'hin', 'her', 'ohne', 'gegen', 'durch', 'ueber']);
+const grammarWord = (w) => CLOSED_CLASS.has(w) || SHORT_FUNCTION.has(w) || NEGATION_RE.test(w) || NUMBER_VALUE.has(w);
+
+/**
+ * A slip in a word of three or four letters (2026-11-19, the Lektion 2–3 rollout's blind corpus:
+ * „at" for „alt"). One letter there is usually grammar („der"/„den", „ein"/„eine", „ist"/„isst"), so
+ * only a CONTENT word qualifies, and only in the two shapes that keep its first and last letter: one
+ * consonant dropped from inside it („at", „get" for „geht"), or two letters inside it swapped („jnug").
+ * Neither form may be a grammar word („Mann" → „man", „arm" → „am", „habt" → „hat"), and never a noun:
+ * a short noun less one letter is too often another noun („Kid" for „Kind", „Ur" for „Uhr"; blind slip
+ * corpus). A dropped vowel („Bs" for „Bus") or last letter („gu" for „gut") changes the word itself and
+ * stays wrong. `rawExpected` is the expected word as printed, capitals kept.
+ */
+function shortSlip(given, expected, rawExpected) {
+  if (expected.length < 3 || expected.length > 4 || grammarWord(expected) || grammarWord(given)) return false;
+  if (!/^\p{Ll}/u.test(rawExpected || '')) return false;
+  if (given.length === expected.length - 1) {
+    return [...expected].some((c, i) => i > 0 && i < expected.length - 1 && !VOWEL_RE.test(c) && /\p{L}/u.test(c)
+      && expected.slice(0, i) + expected.slice(i + 1) === given);
+  }
+  return given.length === expected.length && given[0] === expected[0] && given.at(-1) === expected.at(-1) && oneSwap(given, expected);
+}
+
+/**
+ * A NEAR MISS THAT IS ANOTHER WORD IS ANOTHER ANSWER (2026-11-20). A typo counts as correct in the
+ * lesson, the checkpoint and the review, and the slip rules above let through „Er isst Lehrer.“ for
+ * „ist“, „Das ist der Stahl.“ for „Stuhl“ and „Die Mitte kostet …“ for „Miete“: each a word the
+ * learner may well mean. The changed word is a different answer when
+ *   - it is itself a word the course shows (COURSE_WORDS, generated from both courses by
+ *     scripts/build-course-words.mjs): „isst“, „Mitte“, „laufen“ for „kaufen“; or
+ *   - one vowel stands for another: the vowel is the word („Stahl“/„Stuhl“, „Spruch“/„Sprich“,
+ *     „Hund“/„Hand“), whether or not the course teaches the other one.
+ * A missing umlaut stays the slip the standard says it is („schon“ for „schön“, „Bruder“ for
+ * „Brüder“ on a keyboard without umlauts): `givenRaw`/`expectedRaw` are the words as typed and printed.
+ */
+const stripUmlauts = (s) => String(s || '').toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss');
+function realWordSlip(given, expected, givenRaw, expectedRaw) {
+  if (!given || given === expected || stripUmlauts(givenRaw) === stripUmlauts(expectedRaw)) return false;
+  if (COURSE_WORDS.has(given)) return true;
+  const e = oneEdit(given, expected);
+  return Boolean(e) && e.kind === 'swap' && VOWEL_RE.test(e.from) && VOWEL_RE.test(e.to);
+}
+
 /** A vowel changed, added or dropped — the stem vowel is the form („muss"/„müss", „weiß"/„wiss"). */
 const vowelEdit = (e) => Boolean(e) && (e.kind === 'swap' ? VOWEL_RE.test(e.from) && VOWEL_RE.test(e.to) : !e.doubled && VOWEL_RE.test(e.ch));
 
@@ -356,12 +429,13 @@ const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false, wordOrder = false,
+  contractions = false, numerals = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
   const fold = (s) => {
-    let t = String(s ?? '').normalize('NFC');
+    let t = westernDigits(String(s ?? '').normalize('NFC'));
     if (dictation) t = normalizeDictation(t);
     // A reading gap asks for a fact, so 10 and zehn express the same value.
     // Do not apply dictation's digit-group joining: 4 50 is not the price 450.
@@ -376,6 +450,13 @@ export function checkAnswer(userInput, expected, {
   const user = prepare(userInput);
   const rawUser = raw(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
+
+  // Tiles carry the source line's capitals and punctuation with them. Moving
+  // one cannot be a spelling slip; only an exact, licensed word order passes.
+  if (wordOrder) {
+    const match = accepted.find((a) => prepare(a) === user);
+    return { result: match ? RESULT.CORRECT : RESULT.WRONG, expected: match || accepted[0] || '' };
+  }
 
   if (choice) {
     for (const a of accepted) {
@@ -404,6 +485,25 @@ export function checkAnswer(userInput, expected, {
   for (const a of accepted) {
     if (sameAnswer(prepare(a), user)) return { result: RESULT.CORRECT, expected: a };
   }
+  // Free variants are the same answer, by rule rather than by a widened key (2026-10-25 re-evaluation,
+  // re-landed 2026-11-19): „gerne" is „gern", „geht's" is „geht es", where the task is not about the
+  // short form „zu dem Bahnhof" is „zum Bahnhof", and in a sentence whose task is not about numbers
+  // „12 Euro" is „zwölf Euro" (checkOptionsFor). A dictation is what was heard, and a spelled word is
+  // only its letters, so neither folds.
+  if (!dictation && !spellingMode) {
+    const variant = (s) => {
+      const words = numerals && String(s ?? '').trim().split(/\s+/).length >= 3 ? numberWordsToDigits(s) : s;
+      let t = (caseSensitive ? raw : prepare)(words).replace(/(?<!\p{L})gerne(?!\p{L})/gu, 'gern')
+        .replace(/(?<!\p{L})(geht|gibt)s(?!\p{L})/giu, '$1 es');
+      if (contractions) {
+        t = t.replace(/(?<!\p{L})zu dem(?!\p{L})/gu, 'zum').replace(/(?<!\p{L})zu der(?!\p{L})/gu, 'zur')
+          .replace(/(?<!\p{L})bei dem(?!\p{L})/gu, 'beim').replace(/(?<!\p{L})von dem(?!\p{L})/gu, 'vom');
+      }
+      return t;
+    };
+    const given = variant(userInput);
+    for (const a of accepted) if (variant(a) === given) return { result: RESULT.CORRECT, expected: a };
+  }
   for (const a of accepted) {
     // A spelled word is nothing BUT its letters: „H-A-L-O" for „H-A-L-L-O", „Wilkommen" read off
     // „W-I-L-L-K-O-M-M-E-N" and „CHAIRI" for the dictated „C-H-A-K-I-R-I" drop exactly the letter
@@ -412,7 +512,12 @@ export function checkAnswer(userInput, expected, {
     if (strict && strictApplies(a)) continue;
     const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
-    if (shortFunctionWord) continue;
+    if (shortFunctionWord) {
+      // A one-word answer of three or four letters: only shortSlip's two shapes, in a content word.
+      if (!caseSensitive && !user.includes(' ') && numbersIn(user) === numbersIn(norm) && shortSlip(user, norm, raw(a))
+        && !realWordSlip(user, norm, rawUser, raw(a))) return { result: RESULT.TYPO, expected: a };
+      continue;
+    }
     // A different number is a different answer, never a typo: „90" for „20" is one character off.
     if (numbersIn(user) !== numbersIn(norm)) continue;
     // So is a changed SHORT word inside a sentence: „ein" for „bin" or „kein", „dem" for „den" are
@@ -424,13 +529,27 @@ export function checkAnswer(userInput, expected, {
     const changed = changedWord(user, norm);
     if (changed && (NEGATION_RE.test(changed.expected) || NEGATION_RE.test(changed.given)
       || (CLOSED_CLASS.has(changed.expected) && CLOSED_CLASS.has(changed.given))
-      || (changed.expected.length <= 4 && !oneKeyDoubled(changed.given, changed.expected))
+      || (changed.expected.length <= 4 && !oneKeyDoubled(changed.given, changed.expected)
+        && !shortSlip(changed.given, changed.expected, raw(a).split(' ')[changed.at]))
       || participleSlip(changed.given, changed.expected, raw(a).split(' ')[changed.at])
-      || modalSlip(changed.given, changed.expected))) continue;
+      || modalSlip(changed.given, changed.expected)
+      || realWordSlip(changed.given, changed.expected, rawUser.split(' ')[changed.at], raw(a).split(' ')[changed.at]))) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
       // On a case task the capital is one of the letters: a typo PLUS the lost polite capital
       // („Wie geht es ihnenn?") is two slips, not one, where „ihnen?" alone is wrong (X-042).
       if (caseSensitive && levenshtein(caseKept(rawUser), caseKept(raw(a))) !== 1) continue;
+      return { result: RESULT.TYPO, expected: a };
+    }
+    // Two neighbouring letters swapped (oneSwap), read with the umlauts kept („mdüe" for „müde") and
+    // folded („Maedhcen"). On a case task the capitals must otherwise match. A swap that moves the last
+    // letter keeps the ending rule, except in a noun inside a sentence („Abfahtr", „Rucksakc"): a swap
+    // changes no letter, so it cannot make a plural or a case ending — unless both orders split into
+    // the same stem and two endings (otherEnding).
+    const lower = (s) => s.toLowerCase();
+    const nounWord = changed && changed.at > 0 && /^\p{Lu}/u.test(raw(a).split(' ')[changed.at] || '')
+      && !otherEnding(changed.given, changed.expected) && !otherStrongStem(changed.given, changed.expected);
+    if (norm.length >= 5 && (oneSwap(user, norm) || oneSwap(lower(rawUser), lower(raw(a)))) && (!endingDiffers(user, norm) || nounWord)) {
+      if (caseSensitive && !oneSwap(rawUser, raw(a)) && !oneSwap(caseKept(rawUser), caseKept(raw(a)))) continue;
       return { result: RESULT.TYPO, expected: a };
     }
   }
@@ -492,8 +611,26 @@ export function checkOptionsFor(item) {
     spelling: spellingApplies(accepted) || spelledPrompt(item),
     choice: isChoiceItem(item),
     ...(item?.readingAnswer === true ? { readingAnswer: true } : {}),
+    ...(item?.type === 'word_order' ? { wordOrder: true } : {}),
+    // Only where the key can use them, so every other item's options stay what they were.
+    ...(contractionsFree(item) && accepted.some((a) => CONTRACTED_RE.test(String(a || ''))) ? { contractions: true } : {}),
+    ...(numeralsFree(item) && accepted.some((a) => /\d/.test(String(a || '')) || numberWordsToDigits(a) !== String(a || '')) ? { numerals: true } : {}),
   };
 }
+
+const CONTRACTED_RE = /(?<!\p{L})(?:zum|zur|beim|vom|zu dem|zu der|bei dem|von dem)(?!\p{L})/iu;
+
+/** Writing or reading a number or a clock time IS the task in these; everywhere else a sentence may
+ *  carry „12" for „zwölf" (see checkAnswer, which folds only answers of three words or more). */
+const NUMBER_TASK_RE = /Zahl|Ziffer|in Worten|Wie spät|Uhrzeit|offiziell|umgangssprachlich|number|digit|in words|what time|clock/i;
+const numeralsFree = (item) => !isDictationTask(item) && !/number|zahl|count/i.test(item?.topic || '')
+  && !NUMBER_TASK_RE.test(`${item?.questionDe || ''} ${item?.promptDe || ''} ${item?.questionEn || ''}`);
+
+/** A task about the short or the full form, or a correction (only the named repair counts), fixes the
+ *  contraction itself; every other task takes „zu dem" for „zum" (see checkAnswer). */
+const CONTRACTION_TASK_RE = /Kurzform|volle Form|zusammengezogen|Korrigieren|short form|full form|contract/i;
+const contractionsFree = (item) => !isDictationTask(item)
+  && !CONTRACTION_TASK_RE.test(`${item?.questionDe || ''} ${item?.promptDe || ''} ${item?.questionEn || ''} ${item?.topic || ''}`);
 
 /** Capital letters (and ß, which has none) printed one by one: „W-I-L-L-K-O-M-M-E-N", „G-R-U-ß". */
 const PRINTED_SPELLING_RE = /(?<!\p{L})[\p{Lu}ß](?:[-\s][\p{Lu}ß]){2,}(?!\p{L})/u;
@@ -523,7 +660,7 @@ export function isChoiceItem(item) {
 }
 
 // Error tags (standard §3): what a miss is about, for remediation and review.
-export const ERROR_TAGS = ['Artikel', 'Kasus', 'Verbstellung', 'Konjugation', 'Plural', 'Rechtschreibung', 'Hören', 'Wortschatz'];
+export const ERROR_TAGS = ['Artikel', 'Kasus', 'Verbstellung', 'Konjugation', 'Plural', 'Rechtschreibung', 'Hören', 'Lesen', 'Wortschatz'];
 
 const ARTICLES = new Set(['der', 'die', 'das', 'ein', 'eine', 'einen', 'einem', 'einer', 'dem', 'den', 'des', 'kein', 'keine', 'keinen', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'unsere', 'euer', 'eure']);
 
@@ -648,12 +785,14 @@ function tagSentenceError(item, userInput, expected, usr, exp) {
  * sentence analysis above → the item's topic → a near-miss spelling → Wortschatz.
  */
 export function tagError(item, userInput, expected) {
-  const exp = stripPunct(normalizeAnswer(expected)); const usr = stripPunct(normalizeAnswer(userInput));
+  const exp = stripPunct(normalizeAnswer(westernDigits(expected))); const usr = stripPunct(normalizeAnswer(westernDigits(userInput)));
   // 'listen_select' is a derived exercise (buildLesson.js `derivedItems`): the
   // learner picks the dialogue line they heard, so a miss is a hearing miss
   // whatever the item's stage says (the player stamps every derived item with
   // `stage: 'derived'`, never `'listening'`).
   if (item?.stage === 'listening' || item?.kind === 'dictation' || item?.type === 'listen_select') return 'Hören';
+  // A missed checkpoint reading task is a reading miss, not „Wortschatz“ (2026-11-19 browser play).
+  if (item?.section === 'lesen') return 'Lesen';
   // A miss that is only Groß-/Kleinschreibung is spelling, whatever the word is.
   if (exp && usr && exp === usr && stripPunct(String(expected ?? '')) !== stripPunct(String(userInput ?? ''))) return 'Rechtschreibung';
   if (item?.topic && /plural/i.test(item.topic)) return 'Plural';

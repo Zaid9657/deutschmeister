@@ -1,0 +1,19 @@
+1. **MAJOR — L7, turn 1, every sitting: acceptance coverage is unclear.** “Ich spiele Fußball.” and “Ich höre Musik.” are natural, taught answers to “Was ist dein Hobby?”, but the stated activity frame requires *gern*. Neither answer is in the grader evidence, so refusal is **not established**. Explicitly accept grammatical statements naming a hobby activity, including these two answers.
+
+2. **NOTE — L7, turns 2–5, all sittings: no demonstrated fault.** “Am Wochenende schwimme ich.” reasonably answers the preference question in context; repeating *gern* is unnecessary. The evidence confirms that activity questions, the three conjugations in turn 4, and statements of availability receive appropriate grades. *Tanzen/Kochen/Schwimmen* supplies the topic without supplying the question. Keep these turns and their repeat recommendations.
+
+3. **NOTE — L8, turns 1–3, all sittings: answerable and appropriately graded.** The morning context distinguishes the intended time; both taught clock forms are accepted. The getting-up answer is available as a complete phrase from the scene, despite separable verbs having no separate grammar explanation. Keep these turns; do not require learners to explain that grammar.
+
+4. **NOTE — L8, turns 4–6, all sittings: the task sequence works.** Turn 4 requires the specified day and time, turn 5 accepts a plain “Ja.”, and “Wann hast du noch Zeit?” naturally requests further availability. The evidence supports the relevant distinctions. Keep the tasks and repeat recommendations.
+
+5. **MINOR — L8, sitting 2, turn 7: Lena appears double-booked.** She has just agreed to Thursday at 16.15, then announces her doctor’s appointment at that same time. Change the audio to **“Mein Termin beim Arzt ist am Freitag um sechzehn Uhr fünfzehn.”** Change the expected answer and example to **“Freitag, 16.15 Uhr”**.
+
+6. **NOTE — L8, turn 7, all sittings: the listening task itself is fair.** Both everyday and official time expressions have been taught, and understanding an appointment belongs within arranging one. The evidence confirms acceptance of useful writing variants. “Donnerstag, 4.15 Uhr” can represent the understood afternoon time in this context; its acceptance alone does not establish a grading error. Retain flexible notation.
+
+7. **NOTE — L9, turns 1–4, all sittings: no demonstrated fault.** The hunger/thirst cues establish the role rather than supply a complete first-person answer. Food and drink are distinguished correctly in the evidence. The polite availability question can be built from taught *haben* forms and questions. Optional accepted expressions beyond the taught material create no additional requirement. Keep these turns and repeat recommendations.
+
+8. **MAJOR — L9, turn 5, every sitting: natural acceptance without “Ja” is absent from the stated coverage.** For the respective offers, explicitly accept **“Ein Glas Wasser, bitte.”**, **“Einen Tee, bitte.”**, and **“Einen Kaffee, bitte.”**, plus corresponding *Ich möchte …* answers without initial *Ja*. These answers are **not in the evidence**, so this is an acceptance-specification gap, not a demonstrated refusal. Preserve the offered-item restriction: the evidenced rejection of coffee when water was offered is appropriate.
+
+9. **NOTE — L9, turn 6, all sittings: the refusal is accessible and fair.** “Nein, danke.” is taught and sufficient; learners need not produce the longer negative constructions. The evidenced rejection of “kein Kuchen” is appropriate. Keep the turn and the scene recommendation.
+
+Overall verdict: Lektion 7 — ship; Lektion 8 — ship; Lektion 9 — ship.

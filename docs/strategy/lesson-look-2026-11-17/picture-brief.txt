@@ -1,0 +1,54 @@
+Use your image generation tool to make ONE picture, then save it as `lektion1-otter.png` in the current working directory. Do not write code, do not build HTML or SVG, do not edit or create any other file. If image generation is not available to you, say so in one line and stop.
+
+Reference image: `otter-ref.png` in the current directory (also attached). Keep exactly this otter character (grey river otter, cream chest and muzzle, coral satchel worn across the body), this flat, softly textured illustration style, and this palette: dark teal, coral, warm cream paper.
+
+THE PICTURE
+A concept sheet in 16:9 landscape on a warm cream paper background. It shows FOUR smartphone screens side by side, portrait, equal size, evenly spaced, each with a short caption underneath. They are the mobile lesson player of a German course for adults. Calm, clean, generous spacing, large readable type, no clutter. Spell every text exactly as given below and add no other text.
+
+Top bar on every phone: "DeutschMeister" on the left; a small language switch "DE  EN  AR" on the right with EN selected.
+
+PHONE 1, caption under it: "1 · Lesson map"
+- small label: "A1.1 · Lektion 1"
+- title: "Hallo, ich bin …"
+- illustration: the otter with a small suitcase arriving at a hostel reception desk, a sign reading "REZEPTION"
+- one line: "About 60 minutes · 3 parts · saved at every pause"
+- three rows, each with a number badge 1, 2, 3:
+  "Listen and say · 20 min"
+  "Words and reading · 20 min"
+  "Speak and final check · 20 min"
+- coral button: "Start part 1"
+
+PHONE 2, caption: "2 · Listen and say"
+- small progress label: "Part 1 · Scene 1 of 4"
+- illustration: the otter at the reception desk facing a friendly bird receptionist with a coral scarf, as in the reference
+- audio row: round play button, a waveform, two small buttons "Slower" and "Repeat"
+- two dialogue lines:
+  "Rezeption: Guten Tag. Wie heißen Sie?"
+  "You: Guten Tag. Ich heiße …"
+- small text link: "Explain in Arabic"
+- large coral button with a microphone icon: "Hold to speak"
+
+PHONE 3, caption: "3 · Words"
+- small progress label: "Part 2 · Words"
+- title: "Greetings"
+- a 2 by 2 grid of picture cards, each a small illustration with the German words under it:
+  sunrise over rooftops: "Guten Morgen"
+  bright midday sun: "Guten Tag"
+  sunset: "Guten Abend"
+  moon and stars: "Gute Nacht"
+- the otter, small, in a thinking pose
+- teal button: "Try from memory"
+
+PHONE 4, caption: "4 · Final check passed"
+- the otter in a quietly satisfied pose
+- title: "Today you can:"
+- four lines, each with a teal tick:
+  "Greet and say goodbye"
+  "Say your name"
+  "Spell your name"
+  "Ask: Wie geht es Ihnen?"
+- two small audio chips side by side, each with a play icon: "Your first try" and "Your latest try"
+- one line: "Tomorrow: the form at the Bürgerbüro"
+- coral button: "Continue tomorrow"
+
+When the file `lektion1-otter.png` is saved, reply with its full path and nothing else.
