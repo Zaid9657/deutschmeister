@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { reserveUsage, validExamAttemptId } from '../netlify/functions/_shared/aiReservation.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from '../netlify/functions/_shared/writingTasks.mjs';
+import { FREE_LEKTIONEN, LEKTION_GATE_FROM } from '../netlify/functions/_shared/supportCatalog.mjs';
 
 const source = readFileSync(new URL('../netlify/functions/evaluate-writing.mjs', import.meta.url), 'utf8')
   .replace(/^import .*;\n/gm, '').replace(/\bexport /g, '');
@@ -63,7 +64,7 @@ function writingHandler(db, { tier = 'free_expired', badEvaluation = false, fail
     createClient: () => db,
     process: { env: { SUPABASE_SERVICE_ROLE_KEY: 'test-service-key', ANTHROPIC_API_KEY: 'test-key' } },
     console: { log() {}, warn() {}, error() {} },
-    reserveUsage, validExamAttemptId, writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS,
+    reserveUsage, validExamAttemptId, writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS, FREE_LEKTIONEN, LEKTION_GATE_FROM,
     getAuthenticatedUserId: async () => userId,
     unauthorizedResponse: () => ({ statusCode: 401 }),
     getTier: async () => tier,

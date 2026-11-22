@@ -160,9 +160,9 @@ async function loadFacts(ctx, ticket) {
   let purchases = [];
   if (ticket.user_id) {
     const [p, s, b] = await Promise.all([
-      db.from('profiles').select('id, current_level, exam_track, preferred_language, trial_started_at, trial_ends_at, is_subscribed, subscription_tier').eq('id', ticket.user_id).maybeSingle(),
+      db.from('profiles').select('id, created_at, current_level, exam_track, preferred_language, trial_started_at, trial_ends_at, is_subscribed, subscription_tier').eq('id', ticket.user_id).maybeSingle(),
       db.from('subscriptions').select('status, plan_type, subscription_end, cancel_at_period_end, cancelled_at').eq('user_id', ticket.user_id).order('subscription_end', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
-      db.from('purchases').select('product_key, status, created_at').eq('user_id', ticket.user_id).eq('status', 'active'),
+      db.from('purchases').select('product_key, status, created_at, access_until').eq('user_id', ticket.user_id).eq('status', 'active'),
     ]);
     for (const r of [p, s, b]) if (r.error) throw new Error(r.error.message);
     profile = p.data;
