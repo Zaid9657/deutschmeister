@@ -24,7 +24,7 @@ export const SITE = 'https://deutsch-meister.de';
 export const FREE_LEVELS = Object.freeze(['a1.1']);
 /** The Lektion gate: a free level whose guided course is free only up to this Lektion. null = off. */
 export const FREE_LEKTIONEN = Object.freeze({ 'a1.1': 1 });
-export const LEKTION_GATE_FROM = '2026-11-20T00:00:00.000Z';
+export const LEKTION_GATE_FROM = '2026-11-22T11:30:00.000Z';
 
 export const EXAM_TRACKS = Object.freeze([
   { key: 'goethe_a1', slug: 'start-deutsch-1', nameDe: 'Start Deutsch 1 (Goethe-Zertifikat A1)', level: 'A1', hasMock: true, hasWriting: true },

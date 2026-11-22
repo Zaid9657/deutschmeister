@@ -19,7 +19,7 @@ export const FREE_LEKTIONEN = Object.freeze({ 'a1.1': 1 });
 // it signed up while every page said "A1.1 is free" and keep the whole course.
 // null = the gate is off and nothing above changes anything. Synced copy:
 // netlify/functions/_shared/supportCatalog.mjs (tests/lektion-gate.test.mjs).
-export const LEKTION_GATE_FROM = '2026-11-20T00:00:00.000Z';
+export const LEKTION_GATE_FROM = '2026-11-22T11:30:00.000Z';
 
 /** The free Lektion count of a gated level while the gate is live, else 0. */
 export const freeLektionen = (level, gateFrom = LEKTION_GATE_FROM) =>
