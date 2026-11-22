@@ -11,6 +11,7 @@ import * as client from '../src/config/freeTier.js';
 import * as server from '../netlify/functions/_shared/supportCatalog.mjs';
 import { courseAccessReason, fullCourseReason } from '../src/lib/levelEntitlement.js';
 import { canOpenStep } from '../netlify/functions/course-reminder.mjs';
+import { buildFacts, gatedCourses, SYSTEM_PROMPT } from '../netlify/functions/_shared/supportAgentLib.mjs';
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const GATE = '2026-11-20T00:00:00.000Z';
@@ -74,6 +75,42 @@ test('a reminder never names a step that opens the pay screen', () => {
   assert.equal(can({ profile: fresh, subscription: liveSub }), true);
   assert.equal(can({ profile: fresh, purchases: [examPack] }), true);
   assert.equal(can(undefined), false, 'no access rows read means no reminder');
+});
+
+test('the support agent is told who opens the rest of the gated course', () => {
+  const at = new Date(now);
+  const open = (o = {}) => gatedCourses({ ...account(o), now: at, gateFrom: GATE });
+  assert.deepEqual(open(), [{ level: 'a1.1', free_lektionen: 1, whole_course_open: false }], 'a new free account: Lektion 1 only');
+  assert.equal(open({ profile: old })[0].whole_course_open, true);
+  assert.equal(open({ profile: liveTrial })[0].whole_course_open, false, 'the trial does not open it');
+  assert.equal(open({ subscription: liveSub })[0].whole_course_open, true);
+  assert.equal(open({ subscription: { ...liveSub, subscription_end: '2026-11-30T00:00:00.000Z' } })[0].whole_course_open, false);
+  assert.equal(open({ purchases: [examPack] })[0].whole_course_open, true);
+  assert.equal(open({ purchases: [{ ...examPack, status: 'refunded' }] })[0].whole_course_open, false);
+  assert.equal(open({ purchases: [{ product_key: 'pro_days', status: 'active', access_until: '2026-11-28T00:00:00.000Z' }] })[0].whole_course_open, false);
+  assert.deepEqual(gatedCourses({ ...account(), now: at, gateFrom: null }), [], 'switched off, there is no gated course');
+  // The same answer the app gives, for every account above.
+  for (const o of [{}, { profile: old }, { profile: liveTrial }, { subscription: liveSub }, { purchases: [examPack] }]) {
+    assert.equal(open(o)[0].whole_course_open, Boolean(fullCourseReason(account(o), 'a1.1', now, GATE)), JSON.stringify(o));
+  }
+
+  const facts = buildFacts({ ticket: { reference: 'DM-X', category: 'other', created_at: '2026-12-01T00:00:00Z' }, profile: { ...fresh }, now: at });
+  assert.deepEqual(facts.customer.levels_open_now, ['a1.1'], 'the level itself stays open');
+  assert.deepEqual(facts.customer.gated_courses, [{ level: 'a1.1', free_lektionen: 1, whole_course_open: false }]);
+  const [gate] = facts.library.course_gate;
+  assert.equal(gate.level, 'a1.1');
+  assert.equal(gate.free_lektionen, client.FREE_LEKTIONEN['a1.1']);
+  assert.equal(gate.trial_opens_rest, false);
+  assert.equal(gate.accounts_created_before_keep_whole_course, client.LEKTION_GATE_FROM.slice(0, 10));
+  assert.match(SYSTEM_PROMPT, /never say that whole course is free/);
+  assert.match(SYSTEM_PROMPT, /FACTS\.customer\.gated_courses\[\]\.whole_course_open/);
+  assert.match(read('netlify/functions/support-agent.mjs'), /from\('profiles'\)\.select\('id, created_at, /, 'the agent reads the account date the gate turns on');
+});
+
+test('the lock on a gated step promises neither an unlock nor a trial', () => {
+  const lock = read('src/components/LockedContentOverlay.jsx');
+  assert.match(lock, /gateFree\s*\? \(isGerman \? 'Weiter mit einem Abo' : 'Continue with a subscription'\)/);
+  assert.match(lock, /gateFree\s*\? \(isGerman\s*\? 'Das Konto ist kostenlos · keine Kreditkarte nötig'\s*: 'The account is free · no credit card needed'\)/);
 });
 
 test('the guards, the course home and the pay page read the gate', () => {

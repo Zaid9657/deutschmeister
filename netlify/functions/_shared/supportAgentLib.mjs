@@ -21,7 +21,7 @@ import {
   COURSE_PRO_DAYS, SUBLEVEL_PRICES_EUR, COMING_SOON_LEVELS, ALL_LEVELS, eur, deEur, productInfo,
 } from './pricing.mjs';
 import {
-  SITE, FREE_LEVELS, EXAM_TRACKS, MOCK_EXAMS, GUIDES, PLAN_CLAIMS, SITE_LINKS,
+  SITE, FREE_LEVELS, FREE_LEKTIONEN, LEKTION_GATE_FROM, EXAM_TRACKS, MOCK_EXAMS, GUIDES, PLAN_CLAIMS, SITE_LINKS,
   grammarTopicUrl, guideUrl, examHubUrl, courseUrl,
 } from './supportCatalog.mjs';
 import { PRACTICE_AREAS, areaUrl } from './supportCatalog.mjs';
@@ -219,6 +219,24 @@ export function levelsOpen({ profile, subscription, purchases = [], now }) {
   return ALL_LEVELS.filter((l) => FREE_LEVELS.includes(l) || bought.includes(l));
 }
 
+/**
+ * The Lektion gate (live since 2026-11-22): a level in levelsOpen may still have a guided COURSE
+ * that is free only up to its first Lektion(en). One entry per such course, saying whether THIS
+ * account opens the rest. Mirrors src/lib/levelEntitlement.js fullCourseReason: an account older
+ * than the gate, a live subscription, anything bought, a live AI window. Not the trial.
+ */
+export function gatedCourses({ profile, subscription, purchases = [], now, gateFrom = LEKTION_GATE_FROM }) {
+  if (!gateFrom) return [];
+  const subLive = subscription?.subscription_end ? new Date(subscription.subscription_end) > now : false;
+  const active = purchases.filter((p) => p.status === 'active');
+  const whole = Date.parse(profile?.created_at) < Date.parse(gateFrom)
+    || subLive || profile?.subscription_tier === 'premium'
+    || active.some((p) => p.product_key !== 'pro_days' || new Date(p.access_until) > now);
+  return Object.entries(FREE_LEKTIONEN).map(([level, free]) => ({
+    level, free_lektionen: free, whole_course_open: whole || active.some((p) => (productInfo(p.product_key)?.levels || []).includes(level)),
+  }));
+}
+
 const day = (iso) => (iso ? String(iso).slice(0, 10) : null);
 
 export function buildFacts({ ticket, profile = null, subscription = null, purchases = [], grammarTopics = [], now = new Date() }) {
@@ -242,6 +260,7 @@ export function buildFacts({ ticket, profile = null, subscription = null, purcha
           pro_flag_on_profile: profile.is_subscribed === true,
           access: classifyAccess({ profile, subscriptions: subscription ? [subscription] : [], purchases: activePurchases, now }).kind,
           levels_open_now: levelsOpen({ profile, subscription, purchases: activePurchases, now }),
+          gated_courses: gatedCourses({ profile, subscription, purchases: activePurchases, now }),
         }
       : { has_account: false },
     subscription: subscription
@@ -272,6 +291,15 @@ export function buildFacts({ ticket, profile = null, subscription = null, purcha
     plan_claims: PLAN_CLAIMS,
     library: {
       free_levels: [...FREE_LEVELS],
+      // What "free" means for a free level's guided course while the Lektion gate is live.
+      course_gate: LEKTION_GATE_FROM
+        ? Object.entries(FREE_LEKTIONEN).map(([level, free]) => ({
+            level, free_lektionen: free, free_without_account: true,
+            rest_opens_with: ['a paid AI Practice subscription', 'any purchased course or pack'],
+            trial_opens_rest: false,
+            accounts_created_before_keep_whole_course: day(LEKTION_GATE_FROM),
+          }))
+        : [],
       levels: [...ALL_LEVELS],
       exam_tracks: EXAM_TRACKS.map((x) => ({ name: x.nameDe, level: x.level, mock_exam: MOCK_EXAMS.includes(x.key), writing_practice: x.hasWriting, hub: examHubUrl(x.slug) })),
       guides: GUIDES.map((g) => ({ title: g.title, url: guideUrl(g.slug) })),
@@ -303,6 +331,7 @@ Rules. Code checks every one after you answer; a reply that breaks one is never 
 8. If the customer asks for content (a grammar topic, a level, an exam, a course) that is not in FACTS.library, say honestly that it is not available yet, without a date, and set "content_request" to a short name of what they asked for.
    Every area in FACTS.library.areas exists and is live: never say an area is not available, and rule 8 does not apply to areas. FACTS describes nothing inside an area. If the customer asks about something inside one (a transcript, a translation, an exercise type, a format), never say whether it exists or not: set "escalate" to "needs-human" (rule 1).
    FACTS.library.areas says nothing about access: never tell a customer they can open an area or a level because it is listed there. Answer access questions only from FACTS.customer.levels_open_now; if that does not answer it, set "escalate" to "needs-human".
+   A level in levels_open_now means its grammar, listening and reading. The guided course of a level in FACTS.library.course_gate is free only up to Lektion free_lektionen: never say that whole course is free. Whether this customer can open the rest of it is FACTS.customer.gated_courses[].whole_course_open, and what opens it is course_gate[].rest_opens_with; the trial does not.
 9. At most 180 words. Plain text, no Markdown.
 
 Answer with one JSON object and nothing else:
