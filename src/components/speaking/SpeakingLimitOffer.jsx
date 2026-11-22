@@ -35,9 +35,9 @@ function fallbackNote(offer) {
   const code = levelCode(offer.level);
   switch (offer.reason) {
     case 'coming_soon':
-      return `The ${code} course is coming next. AI Practice is an optional add-on without course access.`;
+      return `The ${code} course is coming next. AI Practice does not include it.`;
     case 'free_level':
-      return `Your ${FREE_LEVEL_LABEL} lessons stay free. AI Practice adds AI speaking practice.`;
+      return `Your free lessons stay open. AI Practice adds AI speaking practice and the full ${FREE_LEVEL_LABEL} course.`;
     case 'owned':
       return `Your ${code} course stays yours. AI Practice adds AI speaking practice.`;
     default:
@@ -93,7 +93,7 @@ export default function SpeakingLimitOffer({ offer, moment = 'sessions_used' }) 
           {note && <p className="mt-3 text-sm leading-relaxed text-ink">{note}</p>}
           <ul className="mt-3 space-y-1 text-sm text-graphite">
             <li>{SPEAKING_LINE}</li>
-            <li>Course access sold separately for new subscribers</li>
+            <li>A paid subscription opens the full A1.1 course · other courses sold separately</li>
           </ul>
           <Button to={offer.pro.href} size="lg" shimmer className="mt-4 w-full text-center">
             <Crown className="w-5 h-5" /> Add AI Practice — {proPrice}

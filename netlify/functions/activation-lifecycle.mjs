@@ -154,7 +154,7 @@ export const TEMPLATES = {
     ctaLabel: 'Start Lektion 1 →',
     body:
       P('Hey! You signed up for DeutschMeister — and then, if the data is right, life happened. That\'s normal; it\'s what happens to most people after most signups.') +
-      P(`So here's the smallest useful first step: <strong style="color:${BRAND.ink};">Lektion 1</strong> of the free A1.1 course. It starts with the first Hallo, one short step per screen.`) +
+      P(`So here's the smallest useful first step: <strong style="color:${BRAND.ink};">Lektion 1</strong> of the A1.1 course. It is free and starts with the first Hallo, one short step per screen.`) +
       P(`Already know some German? The <a href="${LEVEL_TEST_HREF}" style="color:${BRAND.siegel};">level test</a> tells you which lesson to start with. The first one you finish is the one that makes the second one easy.`),
   },
   // `nextStep: true` (2026-11-15): the button is the learner's signed continue

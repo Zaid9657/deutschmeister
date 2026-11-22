@@ -100,7 +100,7 @@ const UeberUnsPage = () => {
           <SectionHeading title="Who is behind DeutschMeister" className="mb-6" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
             <Reveal as="p" delay={80}>
-              The learning path begins with the free A1.1 course. A1.2 is the next guided course; later courses follow level by level.
+              The learning path begins with A1.1, and its first Lektion is free. A1.2 is the next guided course; later courses follow level by level.
             </Reveal>
             <Reveal as="p" delay={160}>
               Inspect a real task before creating an account. Course demonstrations show their source and distinguish automatic form checks from AI feedback.

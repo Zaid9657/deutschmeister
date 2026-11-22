@@ -261,7 +261,7 @@ const SignupPage = () => {
             Start A1.1 free. Try AI Practice for {TRIAL_DAYS} days.
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Keep learning with the free A1.1 course. Your account also includes a limited AI Practice trial. Courses beyond A1.1 are purchased separately. No payment details needed.
+            Lektion 1 of A1.1 is free. Your account also includes a limited AI Practice trial. A paid AI Practice subscription opens the rest of A1.1; other courses are purchased separately. No payment details needed.
           </p>
         </div>
 
@@ -468,7 +468,7 @@ const SignupPage = () => {
           {/* Free tier value list */}
           <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
             {[
-              `${FREE_LEVEL_LABEL} course stays free after the trial`,
+              `Lektion 1 of ${FREE_LEVEL_LABEL} is free, with or without an account`,
               `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions of ${PRO_INCLUDED_SESSION_MINUTES} minutes during the trial`,
               `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
               `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,

@@ -578,7 +578,7 @@ const SubscriptionPage = () => {
           level={2}
           align="center"
           title={isGerman ? 'Optional dazu: AI Practice' : 'Optional: add AI Practice'}
-          lead={isGerman ? 'KI-Schreibfeedback, Sprechtraining und Satz-Röntgen. Neue Abonnements enthalten keinen Kurszugang. Jederzeit kündbar.' : 'AI writing feedback, speaking practice and Sentence X-Ray. New subscriptions do not include course access. Cancel anytime.'}
+          lead={isGerman ? 'KI-Schreibfeedback, Sprechtraining, Satz-Röntgen und der ganze A1.1-Kurs. Weitere Kurse kaufen Sie einzeln. Jederzeit kündbar.' : 'AI writing feedback, speaking practice, Sentence X-Ray and the full A1.1 course. Other courses are sold separately. Cancel anytime.'}
         />
         {/* Plan Cards — the grid a learner chooses from, so they tilt. The
             featured plan rests on a siegel edge and carries the page's one
