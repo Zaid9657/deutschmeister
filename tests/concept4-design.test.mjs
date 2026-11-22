@@ -65,7 +65,7 @@ test('AI Practice offers derived writing/X-Ray allowances, no speaking count or 
   const lines = PRO_OFFER.lines.join(' ');
   assert.ok(lines.includes(String(PRO_DAILY_LIMIT))); assert.ok(lines.includes(String(PRO_WRITING_EVALUATIONS_PER_MONTH)));
   assert.match(lines, /AI speaking practice/); assert.doesNotMatch(lines, /\d+ (AI )?speaking|all.*levels|every.*level|unlimited/i);
-  assert.match(lines, /course access sold separately/);
+  assert.match(lines, /other courses sold separately/);
 });
 test('calm motion is readable at rest, uses token tiers and only transform/opacity frames', () => {
   assert.deepEqual(Object.values(motionLinie.duration), ['140ms', '220ms', '420ms', '800ms']);

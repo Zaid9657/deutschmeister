@@ -189,7 +189,7 @@ function buildEmail({ sentence, recipient, runDate = utcRunDate() }) {
             </p>
 
             <p style="margin:0;font-size:14px;line-height:1.6;">
-              <a href="${courseUrl()}" style="color:#0F766E;font-weight:600;text-decoration:none;">Next step: the free A1.1 course →</a>
+              <a href="${courseUrl()}" style="color:#0F766E;font-weight:600;text-decoration:none;">Next step: Lektion 1 of the A1.1 course, free →</a>
             </p>
           </td>
         </tr>

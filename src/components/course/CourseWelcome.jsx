@@ -41,7 +41,7 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
     <section className={`mx-auto max-w-2xl px-4 ${className}`.trim()} aria-labelledby="dm-course-welcome">
       {/* ── what this course is ─────────────────────────────────────────── */}
       <Reveal>
-        <Chip tone="label">{curriculum.code} · Free course</Chip>
+        <Chip tone="label">{curriculum.code} · Lektion 1 free</Chip>
         {/* h2: the course home's own header carries the page's one <h1> („German A1.1“). */}
         <h2 id="dm-course-welcome" className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[2.5rem]">
           German {curriculum.code}, from the first „Hallo“

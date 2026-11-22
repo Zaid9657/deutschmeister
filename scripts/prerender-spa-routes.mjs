@@ -580,7 +580,7 @@ ${faqSection(PODCAST_FAQS)}
     </section>`).join('')}
   </div>
   <div class="mt-16 text-center">
-    <p class="mb-6 ${BODY}">Still have questions? Start with A1.1—it is completely free.</p>
+    <p class="mb-6 ${BODY}">Still have questions? Start with Lektion 1 of A1.1. It is free.</p>
     <a href="/signup" class="${BTN_PRIMARY}">Start for free</a>
   </div>
 </div></div>`,
@@ -627,7 +627,7 @@ ${faqSection(PODCAST_FAQS)}
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
     <h2 class="${H_SECTION}">Who is behind DeutschMeister</h2>
     <div class="mt-6 flex flex-col gap-4 ${BODY}">
-      <p>The learning path begins with the free A1.1 course. A1.2 is the next guided course; later courses follow level by level.</p>
+      <p>The learning path begins with A1.1, and its first Lektion is free. A1.2 is the next guided course; later courses follow level by level.</p>
       <p>Inspect a real task before creating an account. Course demonstrations show their source and distinguish automatic form checks from AI feedback.</p>
       <p class="font-bold text-ink">DeutschMeister brings that learning path to everyday conversations, work and exams.</p>
     </div>

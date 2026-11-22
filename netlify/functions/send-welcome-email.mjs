@@ -81,7 +81,7 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
               </p>
 
               <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
-                The first thing I'd suggest is <strong style="color:#1e293b;">Lektion 1</strong> of the free A1.1 course. It starts with the first Hallo, one short step per screen.
+                The first thing I'd suggest is <strong style="color:#1e293b;">Lektion 1</strong> of the A1.1 course. It is free and starts with the first Hallo, one short step per screen.
               </p>
 
               <!-- CTA -->

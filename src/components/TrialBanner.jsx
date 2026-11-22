@@ -7,7 +7,6 @@ import { safeGet, safeSet } from '../utils/safeStorage';
 import Button from './ui/Button.jsx';
 import TrialReturnCard from './TrialReturnCard.jsx';
 import { hideReturnBanner } from '../lib/trialReturn.js';
-import { FREE_LEVEL_LABEL } from '../data/marketing.js';
 
 const DISMISS_KEY = 'dm_trial_banner_dismissed';
 
@@ -62,7 +61,7 @@ const TrialBanner = () => {
     // level stays open (src/config/freeTier.js), as SpeakingLimitOffer says.
     // Until 2026-10-04 this line read "Don't lose access to all features".
     // tests/trial-end-claims.test.mjs.
-    message = `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left in your trial. After that, ${FREE_LEVEL_LABEL} stays free.`;
+    message = `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left in your trial. After that, your free lessons stay open.`;
     bandClass = 'bg-accent-aprikose-wash text-accent-aprikose-ink border-b border-accent-aprikose/40';
     dismissClass = 'text-accent-aprikose-ink hover:bg-accent-aprikose/20';
   } else {

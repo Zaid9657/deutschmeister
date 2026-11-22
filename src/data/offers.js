@@ -126,7 +126,7 @@ export const PRO_OFFER = {
   monthly: PLANS.monthly,
   yearly: PLANS.yearly,
   lines: [
-    'Optional add-on · course access sold separately',
+    'A paid subscription opens the full A1.1 course · other courses sold separately',
     `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month`,
     'AI speaking practice',
     `${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day`,
@@ -189,7 +189,7 @@ export const FIT_CHOICES = [
  */
 export const EXAM_ROUTE = {
   title: 'Looking ahead to B1 or B2?',
-  body: "The A2, B1 and B2 guided courses are coming next. Start the free A1.1 course or continue with A1.2. AI Practice is optional and does not include course access for new subscribers. The separate telc B1 package is not on sale.",
+  body: "The A2, B1 and B2 guided courses are coming next. Start A1.1 with a free first Lektion or continue with A1.2. AI Practice opens the full A1.1 course; every other course is a one-time purchase. The separate telc B1 package is not on sale.",
   links: [
     { label: 'See AI Practice', href: '/pricing/#pro' },
     { label: 'Exam routes · DE', href: '/pruefung/', lang: 'de' },
@@ -212,7 +212,7 @@ export const FREE_STOP_LINES = [
 export const OFFER_FAQ = [
   {
     q: 'I don’t know my level. Where should I start?',
-    a: `Start with A1.1 if you are a beginner, or take the free ${PLACEMENT_TEST_MINUTES}-minute level test. You can also start the free A1.1 course and move up when the Lektionen feel easy.`,
+    a: `Start with A1.1 if you are a beginner, or take the free ${PLACEMENT_TEST_MINUTES}-minute level test. Lektion 1 of A1.1 is free, so you can try it and move up if it feels easy.`,
   },
   {
     q: 'What does buying a level give me, exactly?',
@@ -224,7 +224,7 @@ export const OFFER_FAQ = [
   },
   {
     q: 'Should I buy a level or AI Practice?',
-    a: `Buy a level to keep the course and work through it at your pace. AI Practice is an optional subscription for AI writing feedback, speaking practice and Sentence X-Ray. Course access is sold separately for new subscribers. A level already includes ${COURSE_PRO_MONTHS} months of AI Practice.`,
+    a: `Buy a level to keep the course and work through it at your pace. AI Practice is a subscription for AI writing feedback, speaking practice and Sentence X-Ray; it also opens the full A1.1 course. Every other course is a one-time purchase. A level already includes ${COURSE_PRO_MONTHS} months of AI Practice.`,
   },
   {
     q: 'How much AI practice do I get?',

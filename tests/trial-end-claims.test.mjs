@@ -126,11 +126,11 @@ test('the free level the banner names is the one the app keeps open', () => {
 test('the trial banner derives what stays free and says it in the countdown', () => {
   const src = read('src/components/TrialBanner.jsx');
   const copy = rendered(src);
-  assert.match(src, /import\s*\{[^}]*\bFREE_LEVEL_LABEL\b[^}]*\}\s*from\s*'\.\.\/data\/marketing\.js'/);
-  // The last-days line names what the learner keeps, from the derived label.
+  // The last-days line says what the learner keeps.
   const urgent = copy.split('\n').find((line) => /left in your trial/.test(line));
   assert.ok(urgent, 'the last-days countdown line is missing');
-  assert.match(urgent, /\$\{FREE_LEVEL_LABEL\} stays free/);
+  // Since the Lektion gate the line names no level: older accounts keep all of it, newer ones Lektion 1.
+  assert.match(urgent, /your free lessons stay open/);
   // The label is never typed into the banner by hand.
   assert.doesNotMatch(copy, /\bA1\.1\b/);
 });

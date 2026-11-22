@@ -84,7 +84,7 @@ const FAQPage = () => {
         </div>
 
         <Reveal delay={120} className="mt-16 text-center">
-          <p className="text-graphite mb-4">Still have questions? Start with A1.1—it is completely free.</p>
+          <p className="text-graphite mb-4">Still have questions? Start with Lektion 1 of A1.1. It is free.</p>
           {/* The one primary action on this screen — the only shimmer. */}
           <Button to="/signup" size="lg" shimmer className="group">
             Start for free

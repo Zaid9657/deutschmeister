@@ -97,12 +97,12 @@ const telcLine = (onSale) =>
     : `- **${telc.name}:** starts soon, not on sale yet — a fixed 4-week telc B1 exam plan: ${SITE}/telc-b1-komplettvorbereitung/`;
 
 const accessLines = (onSale) => [
-  `- **${FREE_LEVEL_LABEL}: free forever, no signup required** — the ${lektionen}-lesson guided ${FREE_LEVEL_LABEL} course and all ${byLevel[0].topics.length} ${FREE_LEVEL_LABEL} grammar topics`,
+  `- **Free, no signup required:** Lektion 1 of the ${lektionen}-lesson guided ${FREE_LEVEL_LABEL} course and all ${byLevel[0].topics.length} ${FREE_LEVEL_LABEL} grammar topics`,
   `- **Anonymous visitors:** ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day`,
   `- **Free account:** ${TRIAL_DAYS}-day AI Practice trial; ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions total; ${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses/day`,
   `- **One-time level courses (no subscription):** each sub-level is its own lifetime purchase, from ${eur(COURSE_FROM_PRICE_EUR)} (${priceList}), with ${COURSE_PRO_MONTHS} months of AI Practice included. ${comingSoon} are listed as coming soon and cannot be bought yet.`,
   telcLine(onSale),
-  `- **AI Practice — ${eur(MONTHLY_PRICE_EUR)}/month or ${eur(YEARLY_PRICE_EUR)}/year:** ${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks/month, AI speaking practice, ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. Course access sold separately for new subscribers; active subscriptions started before 10 November 2026 retain course access. Cancel anytime.`,
+  `- **AI Practice — ${eur(MONTHLY_PRICE_EUR)}/month or ${eur(YEARLY_PRICE_EUR)}/year:** ${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks/month, AI speaking practice, ${PRO_DAILY_LIMIT} Sentence X-Ray analyses/day. Opens the full ${FREE_LEVEL_LABEL} course; other courses are sold separately (active subscriptions started before 10 November 2026 retain access to all courses). Cancel anytime.`,
   '- Payments handled by Lemon Squeezy as merchant of record.',
 ];
 
@@ -155,7 +155,7 @@ ${accessLines(onSale).join('\n')}
 
 ## Main URLs
 - Homepage: ${SITE}/
-- Free ${FREE_LEVEL_LABEL} course: ${SITE}/course/a1.1
+- ${FREE_LEVEL_LABEL} course (Lektion 1 free): ${SITE}/course/a1.1
 ${paidCourses.map(paidCourseUrl).join('\n')}
 - Courses overview: ${SITE}/courses/
 - Grammar hub (all ${GRAMMAR_TOPIC_COUNT} topics): ${SITE}/grammar/
