@@ -1829,7 +1829,11 @@ const { reserveUsage, validExamAttemptId } = await import('../netlify/functions/
 const serverTasks = await import('../netlify/functions/_shared/writingTasks.mjs');
 const { productInfo } = await import('../netlify/functions/_shared/pricing.mjs');
 const { FREE_LEVELS } = await import('../src/config/freeTier.js');
+const { FREE_LEKTIONEN, LEKTION_GATE_FROM } = await import('../netlify/functions/_shared/supportCatalog.mjs');
 const { default: vm } = await import('node:vm');
+// An account from before the Lektion gate keeps the whole free course; one from after it does not.
+const BEFORE_GATE = { created_at: '2026-10-01T00:00:00.000Z' };
+const AFTER_GATE = { created_at: '2026-11-25T00:00:00.000Z' };
 
 const WRITING_SOURCE = readFileSync(join(ROOT, 'netlify/functions/evaluate-writing.mjs'), 'utf8')
   .replace(/^import .*;\n/gm, '').replace(/\bexport /g, '');
@@ -1840,7 +1844,7 @@ const GOOD_EVALUATION = (n) => JSON.stringify({
 });
 
 /** evaluate-writing over an in-memory database; the reservation RPC is "not applied" (legacy ledger). */
-function writingHarness({ tier, purchases = [], rows = [], updateFailures = 0 }) {
+function writingHarness({ tier, purchases = [], rows = [], updateFailures = 0, profile = BEFORE_GATE }) {
   const state = { providerCalls: 0, purchaseQueries: [], updates: 0, inserts: [] };
   const db = {
     async rpc() { return { error: { code: 'PGRST202', message: 'RPC not applied' } }; },
@@ -1856,7 +1860,7 @@ function writingHarness({ tier, purchases = [], rows = [], updateFailures = 0 })
         insert(value) { op = 'insert'; state.inserts.push(value); return query; },
         update() { op = 'update'; return query; },
         delete() { op = 'delete'; return query; },
-        maybeSingle() { return Promise.resolve({ data: null }); },
+        maybeSingle() { return Promise.resolve({ data: table === 'profiles' ? profile : null }); },
         single() {
           if (op === 'insert') return Promise.resolve({ data: { id: 'submission-1' }, error: null });
           state.updates++;
@@ -1880,7 +1884,7 @@ function writingHarness({ tier, purchases = [], rows = [], updateFailures = 0 })
     },
   };
   const context = vm.createContext({
-    createClient: () => db, productInfo, reserveUsage, validExamAttemptId, ...serverTasks,
+    createClient: () => db, productInfo, reserveUsage, validExamAttemptId, ...serverTasks, FREE_LEKTIONEN, LEKTION_GATE_FROM,
     process: { env: { SUPABASE_SERVICE_ROLE_KEY: 'test', ANTHROPIC_API_KEY: 'test' } },
     console: { log() {}, warn() {}, error() {} },
     getAuthenticatedUserId: async () => WRITER, unauthorizedResponse: () => ({ statusCode: 401 }),
@@ -1938,6 +1942,47 @@ test('after the trial, a paid course\'s writing allowance needs the course: ever
   assert.equal(EW.purchasesCoverLevel([{ product_key: 'course_a1' }], 'a1.2'), true);
   assert.equal(EW.purchasesCoverLevel([{ product_key: 'telc_b1_komplett' }], 'a1.2'), false);
   assert.equal(EW.purchasesCoverLevel(null, 'a1.2'), false);
+});
+
+test('the Lektion gate: past the free Lektion, the free course is graded only for an account that keeps the whole course', async () => {
+  // Which tasks are past the free Lektion: every later Lektion's and every checkpoint's, of a gated level only.
+  const GATE = '2026-11-20T00:00:00.000Z';
+  for (const [key, gated] of [['a11-l01', false], ['a11-l02', true], ['a11-l12', true], ['a11-cp1', true], ['a12-l02', false], ['a12-cp1', false], ['einladung-absage', false]]) {
+    assert.equal(EW.beyondFreeLektionen(key, GATE), gated, key);
+    assert.equal(EW.beyondFreeLektionen(key, null), false, `${key}: switched off, nothing is gated`);
+  }
+  assert.equal(EW.keepsFullCourse({ createdAt: BEFORE_GATE.created_at }, GATE), true);
+  assert.equal(EW.keepsFullCourse({ createdAt: AFTER_GATE.created_at }, GATE), false);
+  assert.equal(EW.keepsFullCourse({ createdAt: undefined }, GATE), false, 'no profile row is no older account');
+  assert.equal(EW.keepsFullCourse({ createdAt: AFTER_GATE.created_at, purchases: [{ status: 'active', product_key: 'pro_days' }] }, GATE), false);
+
+  // Every gated course task in the bank, as a rule: the first Lektion's stays free, the rest need the course.
+  const a11 = WRITING_TASKS.filter((t) => t.course && EW.LEVEL_OF_PREFIX[EW.courseTaskKeyPrefix(t.taskKey)] === 'a1.1');
+  assert.ok(a11.some((t) => t.taskKey === 'a11-l01') && a11.some((t) => t.checkpoint), 'the rule runs over Lektion 1, later Lektionen and the checkpoints');
+  for (const task of a11) {
+    const gated = EW.beyondFreeLektionen(task.taskKey);
+    assert.equal(gated, task.taskKey !== 'a11-l01', task.taskKey);
+    for (const tier of ['free_trial', 'free_expired']) {
+      const fresh = writingHarness({ tier, profile: AFTER_GATE });
+      const res = await fresh.submit(task);
+      if (!gated) {
+        assert.equal(res.statusCode, 200, `${task.taskKey} ${tier}: Lektion 1 stays graded — ${res.body}`);
+        assert.equal(fresh.state.purchaseQueries.length, 0, 'the free Lektion needs no ownership read');
+        continue;
+      }
+      assert.equal(res.statusCode, 403, `${task.taskKey} ${tier}: a new account without a plan is not graded — ${res.body}`);
+      assert.equal(JSON.parse(res.body).error, 'subscription_required');
+      assert.equal(fresh.state.providerCalls, 0);
+      assert.equal(fresh.state.inserts.length, 0, 'nothing reserved');
+      assert.equal((await writingHarness({ tier, profile: BEFORE_GATE }).submit(task)).statusCode, 200, `${task.taskKey} ${tier}: an account from before the gate keeps the course`);
+    }
+  }
+  const lektion2 = a11.find((t) => t.taskKey === 'a11-l02');
+  const withPurchase = (p) => writingHarness({ tier: 'free_expired', profile: AFTER_GATE, purchases: [{ user_id: WRITER, ...p }] }).submit(lektion2);
+  assert.equal((await withPurchase({ status: 'active', product_key: 'a1_exam_pack' })).statusCode, 200, 'anything bought opens the course');
+  assert.equal((await withPurchase({ status: 'refunded', product_key: 'a1_exam_pack' })).statusCode, 403);
+  assert.equal((await withPurchase({ status: 'active', product_key: 'pro_days' })).statusCode, 403, 'a kept grant window is not a purchase');
+  assert.equal((await writingHarness({ tier: 'free_expired', profile: null }).submit(lektion2)).statusCode, 403, 'no profile row fails closed');
 });
 
 test('the trial\'s exam evaluations are exam texts only; a paid plan keeps the shared monthly ledger', async () => {
