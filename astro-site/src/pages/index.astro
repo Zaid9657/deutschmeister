@@ -12,7 +12,7 @@ import CourseCheckout from '../components/CourseCheckout.astro';
 import '../styles/global.css';
 const HOME_SIGNUP_HREF = '/signup?ref=home&utm_medium=onsite&utm_content=hero';
 const title = 'Learn German for Real Life | DeutschMeister';
-const description = 'You want to learn German. Where do you start? Try the free A1.1 course, then build your German with practical lessons for everyday life in Germany.';
+const description = 'You want to learn German. Where do you start? Try the first A1.1 Lektion free, then build your German with practical lessons for everyday life in Germany.';
 const scenes = [
   { name: 'scene-cafe', category: 'Everyday life', title: 'Order a coffee in German', body: 'Learn the key phrases to order drinks, ask about options, and pay with confidence.', href: '/course/a1.1', alt: 'A learner ordering a coffee from a barista' },
   { name: 'scene-work', category: 'At work', title: 'Ask for something at work', body: 'Learn to make polite requests, clarify details, and communicate in a professional setting.', href: '/courses/a1-2/', alt: 'A learner talking with a colleague at work' },
@@ -24,6 +24,11 @@ const jsonLd = [
 ];
 ---
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd}>
+  <!-- A sign-in that failed after its state expired comes back to the site root, not to /login.
+       Hand it to the log-in page, which says what happened (src/lib/googleSignIn.js). -->
+  <script is:inline>
+    if (/[?&#]error(_code)?=/.test(location.search + location.hash)) location.replace('/login' + location.search + location.hash);
+  </script>
   <div class="c4-home">
     <section class="c4-home-hero c4-wrap" aria-labelledby="hero-h">
       <div class="c4-home-art" data-c4-parallax><Scene name="hero-group" alt="Three adult learners practising German together at a café table in Berlin" hero sizes="(max-width: 640px) 100vw, 850px" /></div>

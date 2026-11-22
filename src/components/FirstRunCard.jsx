@@ -48,8 +48,8 @@ const COPY = {
     cta: 'Start the course',
   }),
   course: () => ({
-    title: 'Your free course',
-    lead: 'Your placement test suggests you are past the start — every Lektion of the free course is open, so begin wherever you like.',
+    title: 'Your course',
+    lead: 'Your placement test suggests you are past the start. Lektion 1 is free; the later Lektionen open with AI Practice.',
     cta: 'Open the course',
   }),
 };
@@ -58,7 +58,7 @@ const ALT_LABEL = {
   placement: 'Already know some German? Find your level first',
   lesson: 'Or start from zero with Lektion 1',
   placed: 'Or start at your placed level',
-  course: 'Or open the free course',
+  course: 'Or open the A1.1 course',
 };
 
 export default function FirstRunCard({ action }) {

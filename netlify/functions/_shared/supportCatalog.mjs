@@ -9,7 +9,7 @@
 //   MOCK_EXAMS   ⟷ src/data/mockExams/index.js (the keys of MOCK_EXAMS)
 //   GUIDES       ⟷ astro-site/src/data/guides/index.js (slug + h1, hub order)
 //   PLAN_CLAIMS  ⟷ src/data/marketing.js (each constant by name)
-//   FREE_LEVELS  ⟷ src/config/freeTier.js
+//   FREE_LEVELS, FREE_LEKTIONEN, LEKTION_GATE_FROM ⟷ src/config/freeTier.js (tests/lektion-gate.test.mjs)
 //   PRACTICE_AREAS ⟷ src/data/seoRoutes.js (route + title; tests/support-areas.test.mjs)
 // Grammar topics are NOT copied: the agent reads grammar_topics at run time,
 // the same table the Astro build renders /grammar/ from.
@@ -22,6 +22,9 @@ import { BILLING_PORTAL_URL } from './dunningLink.mjs';
 export const SITE = 'https://deutsch-meister.de';
 
 export const FREE_LEVELS = Object.freeze(['a1.1']);
+/** The Lektion gate: a free level whose guided course is free only up to this Lektion. null = off. */
+export const FREE_LEKTIONEN = Object.freeze({ 'a1.1': 1 });
+export const LEKTION_GATE_FROM = '2026-11-22T11:30:00.000Z';
 
 export const EXAM_TRACKS = Object.freeze([
   { key: 'goethe_a1', slug: 'start-deutsch-1', nameDe: 'Start Deutsch 1 (Goethe-Zertifikat A1)', level: 'A1', hasMock: true, hasWriting: true },

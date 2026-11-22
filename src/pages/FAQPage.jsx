@@ -16,7 +16,7 @@ import { SUPPORT_LINK } from '../data/navigation';
 // used to leave the FAQPage JSON-LD promising text no crawler could see.
 // Icons stay here: lucide components don't belong in a data module.
 const CATEGORY_ICONS = {
-  'About Deutschmeister': BookOpen,
+  'About DeutschMeister': BookOpen,
   'Learning and content': MessageSquare,
   'Pricing and subscription': CreditCard,
   'Exam preparation': GraduationCap,
@@ -84,7 +84,7 @@ const FAQPage = () => {
         </div>
 
         <Reveal delay={120} className="mt-16 text-center">
-          <p className="text-graphite mb-4">Still have questions? Start with A1.1—it is completely free.</p>
+          <p className="text-graphite mb-4">Still have questions? Start with Lektion 1 of A1.1. It is free.</p>
           {/* The one primary action on this screen — the only shimmer. */}
           <Button to="/signup" size="lg" shimmer className="group">
             Start for free

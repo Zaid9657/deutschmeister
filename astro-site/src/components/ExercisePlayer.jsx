@@ -270,8 +270,8 @@ function LockedExercises({ level, signedIn, count, signupHref }) {
       <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
         {signedIn
           ? buyable
-            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or use AI Practice for extra AI tools (course access sold separately).`
-            : `Your account does not include ${code} yet. The ${code} course is coming next and is not on sale. AI Practice is an optional add-on without course access.`
+            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or use AI Practice for extra AI tools (it does not include this course).`
+            : `Your account does not include ${code} yet. The ${code} course is coming next and is not on sale. AI Practice does not include it.`
           : `${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of AI Practice — every level, every exercise — before you decide.`}
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">

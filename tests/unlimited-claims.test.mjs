@@ -105,8 +105,8 @@ test('the pattern catches unlimited AI claims and leaves the true content claim 
     'Sentence X-Ray without limits',
     'beliebig viele KI-Analysen',
     // Removed from the /vergleich/ pages on 2026-08-22 (7ded88d0), before any rule walked them:
-    'Deutschmeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt und auf jedem Niveau unbegrenzt nutzbar.',
-    'Deutschmeister Pro kostet 9,99 €/Monat — mit unbegrenztem Zugang zu allem',
+    'DeutschMeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt und auf jedem Niveau unbegrenzt nutzbar.',
+    'DeutschMeister Pro kostet 9,99 €/Monat — mit unbegrenztem Zugang zu allem',
   ]) assert.match(claim, UNLIMITED_METERED, claim);
   for (const ok of [
     'Unlimited access to all 8 levels',

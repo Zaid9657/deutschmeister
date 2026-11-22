@@ -127,8 +127,8 @@ test('a Buy button renders only behind a checkout id, and never for an unbuilt c
 
 test('pricing separates course ownership from optional tools without narrowing the account trial', () => {
   const pricing = read('astro-site/src/pages/pricing.astro');
-  assert.match(pricing, /course access sold separately/);
-  assert.match(pricing, /new subscriptions do not include course access/);
-  assert.match(pricing, /Existing subscriptions started before 10 November 2026 retain their course access while active/);
+  assert.match(pricing, /other courses sold separately/);
+  assert.match(pricing, /Every other course is a one-time purchase/);
+  assert.match(pricing, /Subscriptions started before 10 November 2026 keep access to every course while active/);
   assert.match(read('src/pages/PodcastsPage.jsx'), /isLevelFree\(level\) \|\|/);
 });

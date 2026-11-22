@@ -37,14 +37,17 @@ const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 const ExamSubscriptionGuard = ({ children }) => {
   const { examSlug } = useParams();
   const { user, loading: authLoading } = useAuth();
-  const { hasAccess, hasLevelAccess, purchases, loading: subLoading, refreshSubscription } = useSubscription();
+  const { hasAccess, hasFullCourse, purchases, loading: subLoading, refreshSubscription } = useSubscription();
   const location = useLocation();
   const { t } = useTranslation();
   const [retrying, setRetrying] = useState(false);
   const retriedRef = useRef(false);
 
   const resolved = resolveModelltestGate(examSlug);
-  const examAccess = resolved?.gateLevel ? hasLevelAccess(resolved.gateLevel) : hasAccess;
+  // hasFullCourse is hasLevelAccess for every level except one whose course is
+  // free only up to its first Lektion while the Lektion gate is live: there the
+  // Abschlusstest belongs to the paid rest of the course.
+  const examAccess = resolved?.gateLevel ? hasFullCourse(resolved.gateLevel) : hasAccess;
   const canOpen = examAccess || ownsExamProgramme(purchases, examSlug);
 
   const isBrandNew =

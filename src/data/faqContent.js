@@ -9,7 +9,7 @@
 // the page component — this file is data, and lucide components don't belong
 // in a module the prerender imports.
 
-import { PLANS, deEur } from './pricing.js';
+import { PLANS, eur } from './pricing.js';
 import {
   TRIAL_SPEAKING_SESSIONS,
   ANON_DAILY_LIMIT,
@@ -46,18 +46,18 @@ const BILLING_PORTAL_LABEL = BILLING_PORTAL_URL.replace(/^https:\/\//, '');
 
 export const FAQ_CATEGORIES = [
   {
-    title: 'About Deutschmeister',
+    title: 'About DeutschMeister',
     items: [
       {
-        q: 'What is Deutschmeister?',
-        a: 'Deutschmeister is an online German-learning platform with grammar explanations in English, AI speaking practice, and the Sentence X-Ray tool. It brings the core skills together from A1 to B2.',
+        q: 'What is DeutschMeister?',
+        a: 'DeutschMeister is an online German-learning platform with grammar explanations in English, AI speaking practice, and the Sentence X-Ray tool. It brings the core skills together from A1 to B2.',
       },
       {
         q: 'Who is the platform for?',
         a: 'It is for learners who need to use German in real life—especially migrants, professionals, students, and people preparing for Goethe, telc, or DTZ exams.',
       },
       {
-        q: 'Who is behind Deutschmeister?',
+        q: 'Who is behind DeutschMeister?',
         a: FOUNDER_LINE_EN,
       },
       {
@@ -70,8 +70,8 @@ export const FAQ_CATEGORIES = [
     title: 'Learning and content',
     items: [
       {
-        q: 'How is Deutschmeister different from Duolingo or Babbel?',
-        a: 'Deutschmeister focuses on understanding why German grammar works and then applying it in speaking practice. It is designed as a focused alternative for learners who want detailed English explanations, sentence analysis, and AI-guided conversation.',
+        q: 'How is DeutschMeister different from Duolingo or Babbel?',
+        a: 'DeutschMeister focuses on understanding why German grammar works and then applying it in speaking practice. It is designed as a focused alternative for learners who want detailed English explanations, sentence analysis, and AI-guided conversation.',
       },
       {
         q: 'Do I get speaking practice or only exercises?',
@@ -105,14 +105,14 @@ export const FAQ_CATEGORIES = [
     title: 'Pricing and subscription',
     items: [
       {
-        q: 'How much does Deutschmeister cost?',
-        a: `Annual AI Practice costs ${deEur(PLANS.yearly.price)} per year, equivalent to ${deEur(PLANS.yearly.asMonthly)} per month or less than ${deEur(PLANS.yearly.perDay)} per day. Monthly AI Practice costs ${deEur(PLANS.monthly.price)} per month.`,
+        q: 'How much does DeutschMeister cost?',
+        a: `Annual AI Practice costs ${eur(PLANS.yearly.price)} per year, equivalent to ${eur(PLANS.yearly.asMonthly)} per month or less than ${eur(PLANS.yearly.perDay)} per day. Monthly AI Practice costs ${eur(PLANS.monthly.price)} per month.`,
       },
       {
         q: 'Is there a free version?',
         // The speaking sessions belong to the account trial (speaking needs a
         // signed-in user), never to the no-account tier (2026-10-25).
-        a: `Yes. ${FREE_LEVEL_LABEL} is free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day AI Practice trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
+        a: `Yes. Lektion 1 of the ${FREE_LEVEL_LABEL} course and the ${FREE_LEVEL_LABEL} grammar topics are free without an account, with ${ANON_DAILY_LIMIT} Sentence X-Ray analysis a day. A free account starts a ${TRIAL_DAYS}-day AI Practice trial with ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions and ${TRIAL_DAILY_LIMIT} X-Ray analyses a day.`,
       },
       {
         q: 'Can I cancel at any time?',
@@ -132,12 +132,12 @@ export const FAQ_CATEGORIES = [
     title: 'Exam preparation',
     items: [
       {
-        q: 'Which exams does Deutschmeister prepare for?',
-        a: `Deutschmeister prepares for ${examList}. Each has a preparation page and a German-language exam guide; the grammar, vocabulary, listening, and speaking materials cover skills these exams test, and some exercises simulate oral-exam situations. TestDaF, DSH, ÖSD, and C1 or C2 exams are not offered.`,
+        q: 'Which exams does DeutschMeister prepare for?',
+        a: `DeutschMeister prepares for ${examList}. Each has a preparation page and a German-language exam guide; the grammar, vocabulary, listening, and speaking materials cover skills these exams test, and some exercises simulate oral-exam situations. TestDaF, DSH, ÖSD, and C1 or C2 exams are not offered.`,
       },
       {
-        q: 'Is Deutschmeister enough for a B1 or B2 exam?',
-        a: 'Deutschmeister can build grammar, listening, reading, and speaking skills. You should also work through official sample papers from your exam provider, because only those define the current format and scoring.',
+        q: 'Is DeutschMeister enough for a B1 or B2 exam?',
+        a: 'DeutschMeister can build grammar, listening, reading, and speaking skills. You should also work through official sample papers from your exam provider, because only those define the current format and scoring.',
       },
       {
         q: 'How many weeks before the exam should I start?',
@@ -154,7 +154,7 @@ export const FAQ_CATEGORIES = [
     items: [
       {
         q: 'Does it work on mobile devices?',
-        a: 'Yes. Deutschmeister runs in a modern browser on desktop, tablet, and mobile devices; no separate app is required.',
+        a: 'Yes. DeutschMeister runs in a modern browser on desktop, tablet, and mobile devices; no separate app is required.',
       },
       {
         q: 'Do I need a microphone for speaking practice?',

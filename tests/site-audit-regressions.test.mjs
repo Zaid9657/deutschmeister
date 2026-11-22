@@ -76,7 +76,7 @@ test('the full Astro navigation has a keyboard-operable mobile disclosure', () =
 
 test('pricing distinguishes course ownership and recurring AI tools with an honest CTA', () => {
   assert.match(pricing, /Pay once for your course/);
-  assert.match(pricing, /course access sold separately/);
+  assert.match(pricing, /other courses sold separately/);
   assert.match(pricing, /\{proCta\(\)\.label\}/);
   assert.match(read('astro-site/src/lib/proCta.js'), /label: `Start \$\{TRIAL_DAYS\}-day AI Practice trial`/);
 });
