@@ -6,12 +6,14 @@ description: How PRs are driven to merge in this repo — checks, conventions, a
 # PR steward conventions (deutsch-meister.de)
 
 - **Merge method: squash**, title `<subject> (#N)`. The owner has authorised the agent
-  to merge its own PRs once the gates below are green; ask only for schema changes,
-  price changes, or anything that sends email.
+  to merge its own PRs once the gates below are green; ask first for schema changes,
+  anything that sends email, and everything on the v5 owner-reserved list in `CLAUDE.md`
+  (money, access/limits, legal, brand messages, security/auth/RLS/public endpoints,
+  customer deletion, `CLAUDE.md` itself).
 - **Gates that must be green before a push** (mirror of `.github/workflows/ci.yml`):
   `npm run lint` (zero warnings), `npm run check:duplicates`, `npm test`,
   `node --check` on every function, SPA build, offline Astro build from
-  `grammar-content-cache.json`, the netlify.toml copy steps, `prerender-spa-routes.mjs`,
+  `grammar-content-cache.json`, `scripts/merge-site-builds.mjs`, `prerender-spa-routes.mjs`,
   `check-built-html.mjs dist`. The exact sequence is in CI; run it from a clean `dist/`
   because the prerender script is **not idempotent**.
 - **Never commit `astro-site/package-lock.json`** — the session-start hook rewrites it on
