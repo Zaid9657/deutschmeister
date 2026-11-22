@@ -7,7 +7,7 @@ import { RESULT } from '../src/lib/lesson/check.js';
 import { alignTranscript } from '../src/lib/lesson/readaloud.js';
 import { buildLesson } from '../src/lib/lesson/buildLesson.js';
 import { STRINGS as T } from '../src/lib/lesson/strings.js';
-import { BEYOND, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../src/lib/lesson/finalCheck.js';
+import { BEYOND, untaughtIn, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../src/lib/lesson/finalCheck.js';
 import { guidedCheckVocabulary } from '../scripts/validate-curriculum.mjs';
 
 const withCheck = CURRICULUM_A11.lektionen.filter((l) => l.guided?.check);
@@ -635,22 +635,27 @@ test('three outcomes: verified is CORRECT, a named fault of course words is WRON
   // The blind corpora: a teacher's wrong answer reaches CORRECT or BEYOND no more often than measured (ratchets: only down).
   const dir = new URL('../docs/course-factory/a11-lektion-rollout/corpora/', import.meta.url);
   const count = { correct: 0, beyond: 0 };
+  const bare = [];
   for (const batch of ['batch-1', 'batch-2', 'batch-3', 'batch-4']) {
     for (const name of ['corpus-1.json', 'corpus-2.json', 'corpus-2-avoid-obvious.json', 'corpus-3-most-common.json']) {
       let raw;
       try { raw = readFileSync(new URL(`${batch}/${name}`, dir), 'utf8'); } catch { continue; }
       for (const it of JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)).items) {
         const turn = sitting(CURRICULUM_A11.lektionen[it.lektion - 1], (it.sitting || 1) - 1)[it.turn - 1];
-        if (!turn || it.verdict !== 'wrong') continue;
+        if (!turn) continue;
+        if (it.verdict !== 'wrong') { if (typedResult(turn, it.answer) === BEYOND && !untaughtIn(turn, it.answer).length) bare.push(`L${it.lektion}: ${it.answer}`); continue; }
         const r = typedResult(turn, it.answer);
         if (r in count) count[r] += 1;
+        if (r === BEYOND && !untaughtIn(turn, it.answer).length) bare.push(`L${it.lektion}: ${it.answer}`);
       }
     }
   }
   // 7 CORRECT: tasks that ask for neither digits nor a sentence („Schreiben Sie die Nummer.“, „Nennen Sie Ihr Ziel.“)
-  // and one older batch-4 task; 3 BEYOND, each with a word the course does not teach („nehme“, „bringe“, „meiner“).
+  // and one older batch-4 task. No teacher-wrong answer is BEYOND since the said words count as taught (third score).
   assert.ok(count.correct <= 7, `${count.correct} wrong answers graded correct`);
-  assert.ok(count.beyond <= 3, `${count.beyond} wrong answers graded beyond`);
+  assert.ok(count.beyond <= 0, `${count.beyond} wrong answers graded beyond`);
+  // BEYOND rests on a word the course does not teach, never on taught words alone.
+  assert.deepEqual(bare, []);
 });
 
 test('one spelling fold: every blind-corpus answer with ä, ö, ü or ß grades the same typed with ae, oe, ue, ss (2026-11-20)', () => {
@@ -759,4 +764,24 @@ test('can-do honesty: a check claims only what its turns show, and a receptive t
   const [done] = canDoList(CURRICULUM_A11, new Set([l1.id])).filter((c) => c.lektionId === l1.id && c.id.endsWith('#3'));
   assert.equal(open.de, 'Ich kann meinen Namen buchstabieren.');
   assert.equal(done.de, 'Ich kann einen Namen verstehen und aufschreiben, wenn jemand ihn buchstabiert.');
+});
+
+test('the fixed expressions verify every word between „habe“ and the participle; taught-word faults stay WRONG (2026-11-22)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  const yesterday = at(11)[0];
+  // The courses session's praised faults: a taught noun in the wrong form is WRONG, an untaught one BEYOND.
+  for (const wrong of ['Ich habe mit meine Mutter gearbeitet.', 'Ich habe in Büro gearbeitet.', 'Ich habe ein Kuchen gemacht.', 'Ich habe den Frühstück gemacht.',
+    'Ich habe Stuhl gemacht.', 'Ich habe mit mein Bruder gearbeitet.', 'Ich habe bei die Arbeit gearbeitet.']) assert.equal(typedResult(yesterday, wrong), RESULT.WRONG, wrong);
+  for (const beyond of ['Ich habe der Hausaufgaben gemacht.', 'Ich habe ein Hausaufgaben gemacht.', 'Ich habe Hausaufgabe gemacht.']) assert.equal(typedResult(yesterday, beyond), BEYOND, beyond);
+  for (const right of ['Ich habe einen Kuchen gemacht.', 'Ich habe im Büro gearbeitet.', 'Ich habe mit meiner Mutter gearbeitet.', 'Ich habe mit Lena gearbeitet.',
+    'Ich habe Sport gemacht.', 'Ich habe nichts gemacht.', 'Ich habe von acht bis vier gearbeitet.', 'Ich habe am Montag viel gearbeitet.', 'Ich habe zu Hause gearbeitet.',
+    'Ich habe Kaffee gemacht.', 'Ich habe das gemacht.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
+  // Taught words and taught frames only: CORRECT or WRONG, never BEYOND.
+  assert.equal(typedResult(at(9)[2], 'Ich hätte gern einen Stück Kuchen.'), RESULT.WRONG);
+  assert.equal(typedResult(at(10)[2], 'Wohin fährt der Zug?'), RESULT.WRONG, 'the cue of Lektion 10, the wrong question for the task');
+  assert.equal(typedResult(at(12)[4], 'Ein Buch wäre schöne.'), BEYOND);
+  assert.ok(untaughtIn(at(12)[4], 'Ein Buch wäre schöne.').includes('wäre'), '„wäre“ is not taught');
+  // A hobby keeps the article of a taught noun.
+  assert.equal(typedResult(at(7)[0], 'Mein Hobby ist das Musik.'), RESULT.WRONG);
+  assert.equal(typedResult(at(7)[0], 'Mein Hobby ist die Musik.'), RESULT.CORRECT);
 });

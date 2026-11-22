@@ -87,7 +87,21 @@ function buildLexicon(curriculum) {
   known.verbs = new Set();
   known.genders = new Map();
   known.exact = new Set(); // the taught words as written, capitals included
+  // What the course gives the learner to hear, read or answer — dialogue, reading, check cues, accepted answers,
+  // example sentences — is taught too: BEYOND needs a word outside all of it („Wohin fährt der Zug?“ is taught
+  // German, the cue of Lektion 10). A notice or a task is about German („lautet“ stands in a notice only).
+  known.said = new Set();
+  const said = (s) => { for (const w of String(s || '').match(/\p{L}+/gu) || []) known.said.add(fold(w)); };
   for (const l of curriculum?.lektionen || []) {
+    for (const line of l.dialog?.lines || []) said(line.de);
+    said(l.guided?.read?.text);
+    for (const w of l.wortfeld || []) said(w.exampleDe);
+    for (const turn of l.guided?.check?.turns || []) {
+      for (const t of [turn, ...(turn.variants || [])]) {
+        said(t.cue?.de);
+        for (const a of t.accepted || []) said(typeof a === 'string' ? a : a.frame);
+      }
+    }
     // The cast's names are course words too: „Ich bin Ana" names no job.
     for (const line of l.dialog?.lines || []) {
       for (const token of String(line.speaker).split(/\s+/)) { known.add(fold(token)); if (!['herr', 'frau'].includes(fold(token))) known.names.add(fold(token)); }
@@ -464,16 +478,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     return RESULT.CORRECT;
   }
   // What may stand with a verb of the fixed expressions („Ich habe im Büro gearbeitet“, „… viel …“, „… bis
-  // acht …“): small words, times, and a noun only after a preposition or article. Lektion 11.
-  if (slot === 'adjunct') {
-    const PREP = new Set(['in', 'im', 'am', 'an', 'bei', 'beim', 'zu', 'zum', 'zur', 'mit', 'von', 'vom', 'bis', 'nach', 'der', 'die', 'das', 'dem', 'den', 'meinem', 'meiner']);
-    const ok = raw.length && raw.every((w, i) => {
-      const f = fold(w);
-      if (ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f) || ['viel', 'lange', 'gestern', 'heute', 'nicht', 'uhr'].includes(f) || clockOf(f) !== null || DAYS.includes(f.replace(/s$/, ''))) return true;
-      return /^\p{Lu}/u.test(w) && i > 0 && PREP.has(fold(raw[i - 1]));
-    });
-    return ok ? RESULT.CORRECT : RESULT.WRONG;
-  }
+  // acht …“): each part verified (`pastMiddle`). Lektion 11.
+  if (slot === 'adjunct') return raw.length ? pastMiddle(raw, lexicon) : RESULT.WRONG;
   // A sentence about the past („Was hast du gestern gemacht?“, Lektion 11): „habe“ or „bin“, what was done, and a
   // participle at the end („Ich habe Fußball gespielt“, „Ich bin ins Kino gegangen“, „Ich habe eingekauft“), or
   // „war“ („Ich war zu Hause“). Verbs of moving or changing take „bin“ („gegangen“, „aufgestanden“); a participle
@@ -497,6 +503,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     if (!kind || (kind === 'sein') !== (parts[0] === 'bin')) return RESULT.WRONG;
     const middle = raw.slice(1, end - 1);
     if (parts[end - 1] === 'gemacht' && middle.some((w) => /^\p{Lu}/u.test(w) && lexicon?.verbs?.has?.(fold(w)))) return RESULT.WRONG;
+    // A participle the Lektion teaches: every word between is verified, never correct by default.
+    if (taught && verified(parts[end - 1])) return pastMiddle(middle, lexicon);
     if (!middle.every(middleOk)) return RESULT.WRONG;
     // A thing with an article is checked as the thing gap checks it („einen Kaffee gemacht“, never „ein Kaffee“).
     const det = middle.findIndex((w) => ['ein', 'eine', 'einen', 'den', 'die', 'das', 'kein', 'keine', 'keinen'].includes(fold(w)));
@@ -676,8 +684,13 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const groups = own.split(/\s*(?:,|\bund\b|\boder\b)\s*/i).map((g) => g.split(' ').filter(Boolean)).filter((g) => g.length);
     const noun = (w) => near(fold(w), slotWords) || (/^\p{Lu}/u.test(w) && !known(fold(w)) && !CLOSED.has(fold(w)))
       || (/^\p{Lu}/u.test(w) && Boolean(lexicon?.genders?.get?.(fold(w))));
+    const NOMINATIVE = { der: ['der', 'mein'], die: ['die', 'meine'], das: ['das', 'mein'], pl: ['die', 'meine'] };
     const hobby = (g) => {
-      const ws = g.length > 1 && ['das', 'der', 'die', 'mein', 'meine'].includes(fold(g[0])) ? g.slice(1) : g;
+      const det = g.length > 1 && ['das', 'der', 'die', 'mein', 'meine'].includes(fold(g[0])) ? fold(g[0]) : null;
+      const ws = det ? g.slice(1) : g;
+      // A taught noun keeps its own article („Mein Hobby ist die Musik“, never „das Musik“; the third score).
+      const readings = det ? lexicon?.genders?.get?.(fold(ws[0])) : null;
+      if (readings && !readings.some((x) => NOMINATIVE[x].includes(det))) return false;
       if (ws.length === 1) return noun(ws[0]);
       return ws.length === 2 && noun(ws[0]) && /^\p{Ll}\p{L}*en$/u.test(ws[1]);
     };
@@ -1038,6 +1051,91 @@ function participleOf(word) {
 const PAST_SMALL = new Set(['gestern', 'heute', 'viel', 'lange', 'nicht', 'nichts', 'etwas', 'allein', 'hause', 'den', 'dem', 'des', 'der', 'die', 'das',
   'einen', 'einem', 'einer', 'ein', 'eine', 'meinen', 'meinem', 'meiner', 'meine', 'mein', 'mit', 'für', 'gut', 'schön', 'spät', 'früh', 'dann', 'noch', 'schon']);
 
+// The small words of `pastMiddle`: a word alone between „habe“ and the participle.
+const PAST_BARE = new Set(['gestern', 'heute', 'viel', 'lange', 'nicht', 'nichts', 'etwas', 'allein', 'gut', 'schön', 'spät', 'früh', 'dann',
+  'noch', 'schon', 'auch', 'sehr', 'zusammen', 'morgens', 'vormittags', 'nachmittags', 'abends', 'immer', 'oft', 'gern', 'gerne', 'wieder', 'hier', 'dort',
+  'es', 'alles']);
+// What one does without an article („Sport machen“, „Pause machen“), beside the mass nouns.
+const DONE_BARE = new Set(['sport', 'musik', 'pause', 'urlaub', 'yoga', 'feierabend']);
+const DETERMINER = /^(?:der|die|das|den|dem|des|(?:[kmds]?ein|ihr|unser|eur)(?:e|en|em|er|es)?)$/;
+// The article forms a case takes, by gender: the dative after „mit“, „bei“, „im“ …; the accusative after „für“, „ohne“.
+const POSSESSIVE = ['', 'k', 'm', 'd', 's'].map((p) => `${p}ein`).concat(['ihr', 'unser', 'eur']);
+const DATIVE_OF = { der: ['dem', ...POSSESSIVE.map((p) => `${p}em`)], das: ['dem', ...POSSESSIVE.map((p) => `${p}em`)], die: ['der', ...POSSESSIVE.map((p) => `${p}er`)], pl: ['den', ...POSSESSIVE.filter((p) => p !== '').map((p) => `${p}en`)] };
+const ACCUSATIVE_OF = { der: ['den', ...POSSESSIVE.map((p) => `${p}en`)], das: ['das', ...POSSESSIVE], die: ['die', ...POSSESSIVE.map((p) => `${p}e`)], pl: ['die', ...POSSESSIVE.filter((p) => p !== '').map((p) => `${p}e`)] };
+const DATIVE_PREP = new Set(['mit', 'bei', 'von', 'zu', 'aus', 'nach', 'seit', 'in', 'an', 'auf']);
+const ACCUSATIVE_PREP = new Set(['für', 'ohne']);
+const CONTRACTED = { im: ['der', 'das'], am: ['der', 'das'], beim: ['der', 'das'], vom: ['der', 'das'], zum: ['der', 'das'], zur: ['die'] };
+
+/**
+ * The words between „habe“ and a participle the Lektion teaches (`taught`), each part verified — never CORRECT by
+ * default (the third score's blocker class, 2026-11-22). A part is a small word or a time („gestern“, „viel“, „am
+ * Montag“, „von acht bis vier“, „zu Hause“), a thing with its accusative article („einen Kuchen“) or a mass noun,
+ * plural or activity without one („Kaffee“, „Sport“), or a preposition with the right case of a taught noun, a name
+ * or a place („im Büro“, „mit meiner Mutter“, „mit Lena“, „in Bremen“). A taught noun in the wrong form is WRONG („ein
+ * Kuchen“, „mit meine Mutter“, „in Büro“), and so is a taught word in no such part; a word the course does not
+ * teach is BEYOND („die Hausaufgaben“).
+ */
+function pastMiddle(raw, lexicon) {
+  const taught = (w) => { const f = fold(w); return Boolean(lexicon?.has?.(f) || lexicon?.said?.has?.(f) || MASS.has(f) || DONE_BARE.has(f)); };
+  const gendersOf = (w) => lexicon?.genders?.get?.(fold(w)) || null;
+  const named = (w) => /^\p{Lu}/u.test(w) && (lexicon?.names?.has?.(fold(w)) || OWN_KIND.place.has(fold(w)));
+  let beyond = false;
+  // The noun of a phrase from `i`: an adjective written small may stand before it.
+  const nounAt = (i) => (/^\p{Lu}/u.test(raw[i] || '') ? i : /^\p{Ll}/u.test(raw[i] || '') && /^\p{Lu}/u.test(raw[i + 1] || '') ? i + 1 : -1);
+  for (let i = 0; i < raw.length;) {
+    const f = fold(raw[i]);
+    const next = fold(raw[i + 1] || '');
+    const time = (w) => clockOf(w) !== null || DAYS.includes(w.replace(/s$/, '')) || DAY_PARTS.includes(w) || w === 'wochenende' || /^\d+$/.test(w);
+    if (PAST_BARE.has(f) || time(f) || f === 'uhr') { i += 1; continue; }
+    if (['zu', 'nach'].includes(f) && next === 'hause') { i += 2; continue; }
+    if (['am', 'um', 'bis', 'von', 'ab', 'gegen'].includes(f) && next && time(next)) { i += 2; continue; }
+    if (CONTRACTED[f] || DATIVE_PREP.has(f) || ACCUSATIVE_PREP.has(f)) {
+      if (!CONTRACTED[f] && named(raw[i + 1] || '')) { i += 2; continue; }
+      const det = CONTRACTED[f] ? null : DETERMINER.test(next) ? next : null;
+      const at = nounAt(i + 1 + (det ? 1 : 0));
+      if (at < 0) {
+        if (raw[i + 1] && !taught(raw[i + 1])) { beyond = true; i += 2; continue; }
+        return RESULT.WRONG;
+      }
+      const readings = gendersOf(raw[at]);
+      const forms = ACCUSATIVE_PREP.has(f) ? ACCUSATIVE_OF : DATIVE_OF;
+      if (readings) {
+        const fits = CONTRACTED[f] ? readings.some((g) => CONTRACTED[f].includes(g))
+          : det ? readings.some((g) => forms[g].includes(det))
+          : MASS.has(fold(raw[at])) || readings.includes('pl'); // „mit Milch“; never „in Büro“
+        if (!fits) return RESULT.WRONG;
+      } else if (det && !Object.values(forms).flat().includes(det)) return RESULT.WRONG; // „mit eine …“: no dative at all
+      else beyond = true;
+      i = at + 1;
+      continue;
+    }
+    if (DETERMINER.test(f) || /^\p{Lu}/u.test(raw[i])) {
+      const at = DETERMINER.test(f) ? nounAt(i + 1) : i;
+      if (at < 0 && f === 'das') { i += 1; continue; } // „Ich habe das gemacht“
+      if (at < 0) return RESULT.WRONG;
+      const noun = fold(raw[at]);
+      if (gendersOf(raw[at])) {
+        if (at === i) {
+          if (!(MASS.has(noun) || DONE_BARE.has(noun) || gendersOf(raw[at]).includes('pl'))) return RESULT.WRONG; // „Ich habe Stuhl gemacht“
+        } else {
+          const phrase = raw.slice(i, at + 1).join(' ');
+          const got = gapResult(phrase, { slot: 'thing', lexicon, negative: /^kein/.test(f) });
+          if (got !== RESULT.CORRECT && got !== RESULT.TYPO) return RESULT.WRONG;
+        }
+      } else if (DONE_BARE.has(noun) || OWN_KIND.language.has(noun)) {
+        // „Sport“, „Deutsch“: done without an article.
+      } else if (taught(raw[at])) return RESULT.WRONG;
+      else beyond = true;
+      i = at + 1;
+      continue;
+    }
+    if (taught(raw[i])) return RESULT.WRONG;
+    beyond = true;
+    i += 1;
+  }
+  return beyond ? BEYOND : RESULT.CORRECT;
+}
+
 // People, for a turn that asks who comes (`people`): „Ein Stuhl kommt“ names no guest.
 const PEOPLE = new Set(['mama', 'papa', 'mutter', 'vater', 'eltern', 'bruder', 'brüder', 'schwester', 'schwestern', 'geschwister', 'familie', 'kollegin',
   'kolleginnen', 'kollege', 'kollegen', 'freund', 'freundin', 'freunde', 'freundinnen', 'gast', 'gäste', 'kind', 'kinder', 'sohn', 'söhne', 'tochter',
@@ -1110,6 +1208,39 @@ const answerWordsRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => 
  * A wrong form of a taught word („Ich kommen aus …“) or a taught frame with a word left out („Ich wohne Syrien“) is
  * no such sentence: it stays WRONG.
  */
+/** A word the course does not teach, for one turn — the one thing BEYOND rests on. */
+function untaughtTest(turn) {
+  const lexicon = turn.lexicon;
+  const frames = (turn.accepted || []).map((a) => (typeof a === 'string' ? { frame: a } : a));
+  // Faults the check names are no untaught words: a participle in a past gap (its auxiliary: „Ich habe
+  // aufgestanden“) and, in an activity gap, a verb with its prefix still on („Ich fernsehe gern“).
+  const slotted = (slot) => frames.some((a) => (a.slot ?? turn.slot) === slot);
+  const [past, activity] = [slotted('past'), slotted('activity')];
+  return (w) => {
+    const f = fold(w);
+    if (lexicon?.has?.(f) || lexicon?.names?.has?.(f) || lexicon?.said?.has?.(f) || OWN_ALL.has(f) || CLOSED.has(f) || isNumberWord(f) || /\d/.test(f)) return false;
+    // The grader's own lists are taught words too („Stück“, „Kaffee“, „gestern“): BEYOND needs a word outside them.
+    if (MASS.has(f) || MEASURE_GENDER[f] !== undefined || PAST_BARE.has(f) || ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f) || DAYS.includes(f) || DAY_PARTS.includes(f) || MONTHS.includes(asciiUmlauts(f))) return false;
+    if ((past && (participleOf(f) || /^\p{L}{0,6}ge\p{L}{3,}(?:t|en)$/u.test(f))) || (activity && unsplit(f))) return false;
+    // An ending on a taught word („die roten Lampe“) is a form of it, which the check names.
+    const stem = f.replace(/(?:e|en|em|er|es|n)$/, '');
+    if (stem !== f && stem.length >= 3 && lexicon?.has?.(stem)) return false;
+    return !(f.length >= 4 && [...(lexicon || [])].some((x) => x.length >= 4 && Math.abs(x.length - f.length) <= 1 && levenshtein(x, f) <= 1));
+  };
+}
+
+/**
+ * Why an answer is BEYOND (tools and tests): its words the course does not teach, and, where the Lektion teaches
+ * only some participles (`taught`), another participle or „war“ — a frame the Lektion does not teach.
+ */
+export function untaughtIn(turn, value) {
+  const test = untaughtTest(turn);
+  const words = wordsOf(spelledOut(westernDigits(value), turn.lexicon).replace(/[.,!?;:„“"]+/g, ' '));
+  const found = words.filter(test);
+  if (turn.taught) found.push(...words.filter((w) => fold(w) === 'war' || (participleOf(w) && !turn.taught.some((p) => fold(p) === fold(w)))));
+  return [...new Set(found)];
+}
+
 function beyondOf(turn, text) {
   if (turn.ownName || turn.spell || turn.listen || turn.parts) return false;
   const words = wordsOf(String(text).replace(/[.,!?;:„“"]+/g, ' '));
@@ -1118,20 +1249,7 @@ function beyondOf(turn, text) {
   const frameWords = new Set(frames.flatMap((a) => wordsOf(a.frame.replace(/[.,!?;:…]+/g, ' '))).map(fold));
   // A form of a frame's word: the same first four letters, or one letter off in a longer word.
   const isForm = (w) => [...frameWords].some((x) => x !== w && x.length >= 4 && w.length >= 4 && (x.slice(0, 4) === w.slice(0, 4) || (Math.min(x.length, w.length) >= 5 && levenshtein(x, w) <= 1)));
-  const lexicon = turn.lexicon;
-  // Faults the check names are no untaught words: a participle in a past gap (its auxiliary: „Ich habe
-  // aufgestanden“) and, in an activity gap, a verb with its prefix still on („Ich fernsehe gern“).
-  const slotted = (slot) => frames.some((a) => (a.slot ?? turn.slot) === slot);
-  const [past, activity] = [slotted('past'), slotted('activity')];
-  const unknown = (w) => {
-    const f = fold(w);
-    if (lexicon?.has?.(f) || lexicon?.names?.has?.(f) || OWN_ALL.has(f) || CLOSED.has(f) || isNumberWord(f) || /\d/.test(f)) return false;
-    if ((past && (participleOf(f) || /^\p{L}{0,6}ge\p{L}{3,}(?:t|en)$/u.test(f))) || (activity && unsplit(f))) return false;
-    // An ending on a taught word („die roten Lampe“) is a form of it, which the check names.
-    const stem = f.replace(/(?:e|en|em|er|es|n)$/, '');
-    if (stem !== f && stem.length >= 3 && lexicon?.has?.(stem)) return false;
-    return !(f.length >= 4 && [...(lexicon || [])].some((x) => x.length >= 4 && Math.abs(x.length - f.length) <= 1 && levenshtein(x, f) <= 1));
-  };
+  const unknown = untaughtTest(turn);
   const right = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
   const graded = (s) => right(typedCore(turn, s));
   // (a), never a word after an article: that is an adjective whose ending the thing gap checks („einen neue Computer“).
