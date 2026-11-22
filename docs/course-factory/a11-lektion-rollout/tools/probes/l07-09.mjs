@@ -77,6 +77,6 @@ const cases = [
 let bad = 0;
 for (const [turn, answer, right] of cases) {
   const got = f.typedResult(turn, answer);
-  if ((got !== 'wrong') !== Boolean(right)) { bad += 1; console.log(`FAIL want ${right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
+  if ((got === 'beyond' ? 'b' : got === 'wrong' ? 0 : 1) !== (right === 'b' ? 'b' : right ? 1 : 0)) { bad += 1; console.log(`FAIL want ${right === 'b' ? 'beyond' : right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
 }
 console.log(bad ? `${bad} of ${cases.length} FAIL` : `all ${cases.length} as intended`);

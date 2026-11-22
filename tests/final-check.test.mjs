@@ -7,7 +7,7 @@ import { RESULT } from '../src/lib/lesson/check.js';
 import { alignTranscript } from '../src/lib/lesson/readaloud.js';
 import { buildLesson } from '../src/lib/lesson/buildLesson.js';
 import { STRINGS as T } from '../src/lib/lesson/strings.js';
-import { canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../src/lib/lesson/finalCheck.js';
+import { BEYOND, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../src/lib/lesson/finalCheck.js';
 import { guidedCheckVocabulary } from '../scripts/validate-curriculum.mjs';
 
 const withCheck = CURRICULUM_A11.lektionen.filter((l) => l.guided?.check);
@@ -370,7 +370,9 @@ test('a colour is one of the colour words, a thing is a noun, and German of the 
   const [what, , , colour, askColour] = sitting(CURRICULUM_A11.lektionen[4]);
   const [need, , pause, phoneName] = sitting(CURRICULUM_A11.lektionen[5]);
   // Colours are a closed class: a word the course does not teach is no colour.
-  for (const notColour of ['Es ist groß.', 'Es ist klein.', 'Es ist neu.', 'Es ist teuer.']) assert.equal(typedResult(colour, notColour), RESULT.WRONG, notColour);
+  for (const notColour of ['Es ist groß.', 'Es ist teuer.']) assert.equal(typedResult(colour, notColour), RESULT.WRONG, notColour);
+  // „klein“ and „neu“ are no course words: past what the check can verify, so BEYOND, never correct (the three outcomes).
+  for (const untaught of ['Es ist klein.', 'Es ist neu.']) assert.equal(typedResult(colour, untaught), BEYOND, untaught);
   assert.equal(typedResult(askColour, 'Ist deine Tasche klein?'), RESULT.WRONG);
   for (const right of ['Es ist dunkelblau.', 'Es ist hell grün.', 'Es ist lila.', 'Es ist grau.', 'Es ist grun.', 'Mein Heft hat die Farbe Blau.']) assert.notEqual(typedResult(colour, right), RESULT.WRONG, right);
   // A thing the course never teaches is a noun the learner writes as one.
@@ -544,7 +546,10 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(bye, 'Bis Montag!'), RESULT.WRONG);
   assert.equal(typedResult(morning, 'Ich aufstehe.'), RESULT.WRONG, 'a verb of two parts keeps its prefix at the end');
   assert.equal(typedResult(morning, 'Ich sehe fern.'), RESULT.CORRECT);
-  for (const right of ['Ich habe Fußball gespielt.', 'Ich bin ins Kino gegangen.', 'Ich war zu Hause.', 'Ich habe eingekauft.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
+  // The can-do names two fixed expressions; the task names them. Another past sentence is BEYOND (2026-11-22).
+  for (const right of ['Ich habe gearbeitet.', 'Ich habe Sport gemacht.', 'Ich habe nichts gemacht.', 'Ich habe gestern gearbeitet.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
+  for (const past of ['Ich habe Fußball gespielt.', 'Ich bin ins Kino gegangen.', 'Ich war zu Hause.', 'Ich habe eingekauft.', 'Ich habe einen Film gesehen.']) assert.equal(typedResult(yesterday, past), BEYOND, past);
+  assert.equal(typedResult(yesterday, 'Ich habe ein Kaffee getrunken.'), RESULT.WRONG, 'a taught thing keeps its article');
   for (const wrong of ['Ich habe arbeiten.', 'Ich bin gearbeitet.', 'Ich habe gearbeiten.', 'Ich habe aufgestanden.']) assert.equal(typedResult(yesterday, wrong), RESULT.WRONG, wrong);
   assert.equal(typedResult(invite, 'Ich mache ein Fest. Kommst du auch?'), RESULT.CORRECT, 'an invitation in two sentences');
   assert.equal(typedResult(invite, 'Ich feiere am Sonntag. Kommst du?'), RESULT.WRONG, 'the party is on Saturday');
@@ -613,6 +618,39 @@ test('a can-do is shown only when every one of its turns was shown', () => {
   assert.deepEqual(canDoShown(turns, all, 4), [true, true, true, true]);
   const farewellMissed = [...all.slice(0, -1), 'missed'];
   assert.deepEqual(canDoShown(turns, farewellMissed, 4), [false, true, true, true]);
+});
+
+test('three outcomes: verified is CORRECT, a named fault of course words is WRONG, an untaught word is BEYOND (2026-11-22)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  // The refusals of the second independent score: German past what the Lektion teaches.
+  for (const [turn, answer] of [[at(2)[0], 'Ich komme ursprünglich aus Syrien.'], [at(2)[2], 'Ich bin pensioniert.'], [at(2)[4], 'Meine Telefonnummer lautet 017612345678.'],
+    [at(2)[4], 'Sie erreichen mich unter 017612345678.'], [at(12)[4], 'Ein Buch wäre schön.']]) assert.equal(typedResult(turn, answer), BEYOND, answer);
+  // Course words only: the check names the fault.
+  for (const [turn, answer] of [[at(2)[0], 'Ich kommen aus Syrien.'], [at(2)[1], 'Ich wohne Syrien.'], [at(2)[2], 'Ich bin Limonade.'], [at(3)[3], 'Er sprechen Arabisch.'],
+    [at(9)[4], 'Ja, eine Tee, bitte.'], [at(11)[0], 'Ich habe ein Kaffee gemacht.'], [at(11)[0], 'Ich bin gearbeitet.'], [at(5)[0], 'Das ist Lena.']]) assert.equal(typedResult(turn, answer), RESULT.WRONG, answer);
+  // BEYOND is not shown: not by voice, not as a can-do.
+  assert.equal(spokenShown({ pct: 100, transcript: 'Ich komme ursprünglich aus Syrien.' }, at(2)[0]), false);
+  const turns = checkTurns(l1.guided.check, 0);
+  assert.deepEqual(canDoShown(turns, [...turns.map(() => 'shown').slice(0, -1), 'unverified'], 4), [false, true, true, true]);
+  // The blind corpora: a teacher's wrong answer reaches CORRECT or BEYOND no more often than measured (ratchets: only down).
+  const dir = new URL('../docs/course-factory/a11-lektion-rollout/corpora/', import.meta.url);
+  const count = { correct: 0, beyond: 0 };
+  for (const batch of ['batch-1', 'batch-2', 'batch-3', 'batch-4']) {
+    for (const name of ['corpus-1.json', 'corpus-2.json', 'corpus-2-avoid-obvious.json', 'corpus-3-most-common.json']) {
+      let raw;
+      try { raw = readFileSync(new URL(`${batch}/${name}`, dir), 'utf8'); } catch { continue; }
+      for (const it of JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)).items) {
+        const turn = sitting(CURRICULUM_A11.lektionen[it.lektion - 1], (it.sitting || 1) - 1)[it.turn - 1];
+        if (!turn || it.verdict !== 'wrong') continue;
+        const r = typedResult(turn, it.answer);
+        if (r in count) count[r] += 1;
+      }
+    }
+  }
+  // 7 CORRECT: tasks that ask for neither digits nor a sentence („Schreiben Sie die Nummer.“, „Nennen Sie Ihr Ziel.“)
+  // and one older batch-4 task; 3 BEYOND, each with a word the course does not teach („nehme“, „bringe“, „meiner“).
+  assert.ok(count.correct <= 7, `${count.correct} wrong answers graded correct`);
+  assert.ok(count.beyond <= 3, `${count.beyond} wrong answers graded beyond`);
 });
 
 test('one spelling fold: every blind-corpus answer with ä, ö, ü or ß grades the same typed with ae, oe, ue, ss (2026-11-20)', () => {

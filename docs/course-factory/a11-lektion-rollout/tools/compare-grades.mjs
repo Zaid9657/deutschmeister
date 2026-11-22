@@ -12,8 +12,9 @@ for (const file of files) {
     n += 1;
     const [b, a] = [grade(B, it), grade(A, it)];
     if (b === a) continue;
-    const ok = (r) => (r === 'wrong' ? 'wrong' : 'right') === it.verdict;
-    const kind = ok(a) && !ok(b) ? 'TOWARD' : !ok(a) && ok(b) ? 'AWAY' : 'same-side';
+    // BEYOND (the third outcome) is its own side: neither the teacher's right nor wrong.
+    const ok = (r) => (r === 'wrong' ? 'wrong' : r === 'beyond' ? 'beyond' : 'right') === it.verdict;
+    const kind = ok(a) && !ok(b) ? 'TOWARD' : !ok(a) && ok(b) ? 'AWAY' : a === 'beyond' ? 'BEYOND' : 'same-side';
     if (kind === 'TOWARD') toward += 1; else if (kind === 'AWAY') away += 1; else other += 1;
     console.log(`${kind} L${it.lektion} s${it.sitting} t${it.turn} teacher=${it.verdict} ${b}→${a}: ${it.answer.replace(/\n/g, ' / ')}`);
   }

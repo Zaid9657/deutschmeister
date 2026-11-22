@@ -48,7 +48,7 @@ const cases = [
 let bad = 0;
 for (const [kind, turn, answer, want] of cases) {
   const got = f.typedResult(turn, answer);
-  const ok = (got === 'wrong') === (want === 'wrong');
+  const ok = want === 'beyond' ? got === 'beyond' : got !== 'beyond' && (got === 'wrong') === (want === 'wrong');
   if (!ok) bad += 1;
   console.log(`${ok ? 'ok  ' : 'FAIL'} ${kind.padEnd(7)} ${got.padEnd(7)} ${answer}`);
 }

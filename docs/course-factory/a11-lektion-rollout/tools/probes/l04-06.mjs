@@ -34,7 +34,7 @@ const cases = [
 let bad = 0;
 for (const [turn, answer, right] of cases) {
   const got = f.typedResult(turn, answer);
-  const ok = (got !== 'wrong') === Boolean(right);
+  const ok = (got === 'beyond' ? 'b' : got === 'wrong' ? 0 : 1) === (right === 'b' ? 'b' : right ? 1 : 0);
   if (!ok) { bad += 1; console.log(`FAIL want ${right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
 }
 console.log(bad ? `${bad} of ${cases.length} FAIL` : `all ${cases.length} as intended`);

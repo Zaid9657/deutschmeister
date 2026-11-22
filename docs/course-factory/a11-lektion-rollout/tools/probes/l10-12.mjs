@@ -70,8 +70,8 @@ const cases = [
   // The courses session's findings (2026-11-20): verbs of two parts, the past, two-sentence invitations, goodbyes, guests.
   [s(11)[2], 'Ich aufstehe.', 0], [s(11)[2], 'Ich einkaufe.', 0], [s(11)[2], 'Ich fernsehe.', 0], [s(11)[2], 'Ich aufstehe um 7 Uhr.', 0], [s(11)[2], 'Ich sehe fern.', 1], [s(11)[2], 'Ich stehe auf und dusche.', 1], [s(11)[2], 'Ich dusche und aufstehe.', 0],
   [s(7)[1], 'Ich einkaufe gern.', 0], [s(7)[1], 'Ich sehe gern fern.', 1], [s(7)[0], 'Ich einkaufe gern.', 0], [s(7)[2], 'Einkaufst du gern?', 0], [s(7)[2], 'Kaufst du gern ein?', 1], [s(7)[2], 'Siehst du gern fern?', 1],
-  [s(11)[0], 'Ich habe Fußball gespielt.', 1], [s(11)[0], 'Ich habe gekocht.', 1], [s(11)[0], 'Ich habe eingekauft.', 1], [s(11)[0], 'Ich habe Deutsch gelernt.', 1], [s(11)[0], 'Ich habe Musik gehört.', 1], [s(11)[0], 'Ich habe geschlafen.', 1],
-  [s(11)[0], 'Ich bin ins Kino gegangen.', 1], [s(11)[0], 'Ich war zu Hause.', 1], [s(11)[0], 'Am Sonntag habe ich gekocht.', 1], [s(11)[0], 'Gestern habe ich ferngesehen.', 1], [s(11)[0], 'Ich habe meine Mutter besucht.', 1], [s(11)[0], 'Ich habe telefoniert.', 1],
+  [s(11)[0], 'Ich habe Fußball gespielt.', 'b'], [s(11)[0], 'Ich habe gekocht.', 'b'], [s(11)[0], 'Ich habe eingekauft.', 'b'], [s(11)[0], 'Ich habe Deutsch gelernt.', 'b'], [s(11)[0], 'Ich habe Musik gehört.', 'b'], [s(11)[0], 'Ich habe geschlafen.', 'b'],
+  [s(11)[0], 'Ich bin ins Kino gegangen.', 'b'], [s(11)[0], 'Ich war zu Hause.', 'b'], [s(11)[0], 'Am Sonntag habe ich gekocht.', 'b'], [s(11)[0], 'Gestern habe ich ferngesehen.', 'b'], [s(11)[0], 'Ich habe meine Mutter besucht.', 'b'], [s(11)[0], 'Ich habe telefoniert.', 'b'],
   [s(11)[0], 'Ich habe arbeiten.', 0], [s(11)[0], 'Ich bin gearbeitet.', 0], [s(11)[0], 'Ich habe gearbeiten.', 0], [s(11)[0], 'Ich habe aufgestanden.', 0], [s(11)[0], 'Ich habe geschlaft.', 0], [s(11)[0], 'Ich bin gekocht.', 0], [s(11)[0], 'Ich habe gegangen.', 0],
   [s(12)[0], 'Ich mache ein Fest. Kommst du auch?', 1], [s(12)[0], 'Ich feiere meinen Geburtstag. Ich lade dich ein.', 1], [s(12)[0], 'Am Samstag feiere ich. Kommst du?', 1], [s(12)[0], 'Am Samstag ist meine Party. Kommst du?', 1],
   [s(12)[0], 'Ich feiere am Sonntag. Kommst du?', 0], [s(12)[0], 'Ich habe Hunger. Kommst du?', 0], [s(12)[0], 'Ich mache ein Party. Kommst du?', 0],
@@ -81,6 +81,6 @@ const cases = [
 let bad = 0;
 for (const [turn, answer, right] of cases) {
   const got = f.typedResult(turn, answer);
-  if ((got !== 'wrong') !== Boolean(right)) { bad += 1; console.log(`FAIL want ${right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
+  if ((got === 'beyond' ? 'b' : got === 'wrong' ? 0 : 1) !== (right === 'b' ? 'b' : right ? 1 : 0)) { bad += 1; console.log(`FAIL want ${right === 'b' ? 'beyond' : right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
 }
 console.log(bad ? `${bad} of ${cases.length} FAIL` : `all ${cases.length} as intended`);

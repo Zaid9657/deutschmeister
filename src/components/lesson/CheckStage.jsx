@@ -9,7 +9,7 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
-import { canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
+import { BEYOND, canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
 import { canDoLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -22,16 +22,21 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
   const [mode, setMode] = useState(canSpeak && !writtenOnly(turn) ? 'speak' : 'type');
   const [value, setValue] = useState('');
   const [tries, setTries] = useState(0);
-  const [outcome, setOutcome] = useState(null); // 'shown' | 'missed'
+  const [outcome, setOutcome] = useState(null); // 'shown' | 'missed' | 'unverified'
   const [retry, setRetry] = useState(null); // null | 'typo' | 'retry'
   const [showLetters, setShowLetters] = useState(false);
   // What the learner answered (typed, or the transcript), so a later turn can follow their choice.
   const [answer, setAnswer] = useState('');
   // A right answer with a word neither course teaches: the sentence was checked, the word was not (`uncheckedWords`).
   const [unchecked, setUnchecked] = useState([]);
+  // An answer past what the Lektion can check (BEYOND): no try used, the Lektion's way shown, one more answer;
+  // a second such answer ends the turn unverified, and its can-do is not shown.
+  const [beyond, setBeyond] = useState(false);
+  const onBeyond = () => { if (beyond) setOutcome('unverified'); else { setBeyond(true); setRetry(null); } };
 
   const submit = () => {
     const result = typedResult(turn, value);
+    if (result === BEYOND) { onBeyond(); return; }
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
     if (ok) { setOutcome('shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
     else if (tries === 0) setRetry(result === RESULT.TYPO ? 'typo' : 'retry');
@@ -40,6 +45,7 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
   };
   const spoken = (r) => {
     if (r.selfConfirmed) { setMode('type'); return; } // not measured: typing is the proof
+    if (r.transcript && typedResult(turn, r.transcript) === BEYOND) { setMode('type'); onBeyond(); return; }
     if (spokenShown(r, turn)) { setOutcome('shown'); setAnswer(r.transcript || ''); setUnchecked(uncheckedWords(turn, r.transcript || '')); }
     else if (r.attempts >= SPOKEN_TRIES) setMode('type'); // speech recognition may be the problem, not the learner
   };
@@ -77,6 +83,12 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
         </Card>
       )}
 
+      {beyond && outcome !== 'shown' && (
+        <Card tone="wash" className="mb-4 p-5" role="status">
+          <p className="text-[0.9375rem] leading-snug text-ink">{t('check.beyond', lang)}</p>
+          <p className="mt-2 font-display text-xl font-semibold text-ink" lang="de">{modelAnswer(turn)}</p>
+        </Card>
+      )}
       {!outcome && mode === 'speak' && (
         <>
           <ReadAloudLine lektionId={lektion.id} lineKey={`check-${n}`} text={spokenTarget(turn)} guided hideModel keepVoice onResult={spoken} />

@@ -30,6 +30,10 @@ const lettersOf = (word) => Array.from(word.normalize('NFC')).map((c) => (c === 
 
 /** The gap an own answer leaves for the learner's words. */
 export const GAP = '…';
+// The third outcome (`typedResult`): well-formed-looking German beyond what the check can verify.
+export const BEYOND = 'beyond';
+/** A verified answer: CORRECT, or TYPO on the try after a typo. BEYOND is not one. */
+export const verifiedResult = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
 const hasGap = (answer) => String(answer).includes(GAP);
 
 const fold = (s) => String(s || '').normalize('NFC').trim().toLocaleLowerCase('de').replace(/ß/g, 'ss');
@@ -142,7 +146,7 @@ export function spelledOut(text, lexicon) {
 
 /** The choice the learner made in a choice gap („Das ist meine Schwester" → Schwester), or null. */
 export function chosenWord(turn, value) {
-  if (!turn?.slotIn || typedResult(turn, value) === RESULT.WRONG) return null;
+  if (!turn?.slotIn || !verifiedResult(typedResult(turn, value))) return null;
   const words = wordsOf(String(value || '').replace(/[.,!?]/g, ' ')).map(fold);
   return turn.slotIn.find((w) => words.some((x) => x === fold(w) || slip(x, fold(w)))) || null;
 }
@@ -412,7 +416,7 @@ function isAdjectiveShape(adj, lexicon) {
  * Kurdisch) — so „Ich bin müde" is no job and „Sie spricht Brot" no language. Returns CORRECT, TYPO
  * (a slip in a choice) or WRONG.
  */
-function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay, thingsAfter, people }) {
+function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = [], lexicon, count, partner, time, when, whenPartial, only, negative, day, partOfDay, thingsAfter, people, taught }) {
   const raw = words.split(' ').filter(Boolean);
   const parts = raw.map(fold);
   const known = (w) => typeof lexicon?.has === 'function' && lexicon.has(w);
@@ -483,13 +487,22 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     // A phrase put in front comes back at the end („Am Sonntag habe ich gekocht“ → „… gekocht am Sonntag“).
     let end = raw.length;
     while (end > 2 && (WHEN_GLUE.has(parts[end - 1]) || DAYS.includes(parts[end - 1].replace(/s$/, '')) || ['wochenende', 'abend', 'morgen', 'nachmittag', 'uhr'].includes(parts[end - 1]) || clockOf(parts[end - 1]) !== null) && !participleOf(parts[end - 1])) end -= 1;
-    if (parts[0] === 'war') return raw.length >= 2 && raw.slice(1).every(middleOk) ? RESULT.CORRECT : RESULT.WRONG;
+    // `taught`: the participles of the Lektion's fixed expressions („gearbeitet“, „gemacht“). Another well-formed
+    // past sentence goes beyond what the check can verify, so it is BEYOND, never correct (the three outcomes,
+    // courses session 2026-11-22); a taught thing's article is still checked („ein Kaffee getrunken“ is WRONG).
+    const verified = (participle) => !taught || taught.some((p) => fold(p) === participle);
+    if (parts[0] === 'war') return raw.length >= 2 && raw.slice(1).every(middleOk) ? (taught ? BEYOND : RESULT.CORRECT) : RESULT.WRONG;
     if (!['habe', 'bin'].includes(parts[0]) || end < 2) return RESULT.WRONG;
     const kind = participleOf(parts[end - 1]);
     if (!kind || (kind === 'sein') !== (parts[0] === 'bin')) return RESULT.WRONG;
     const middle = raw.slice(1, end - 1);
     if (parts[end - 1] === 'gemacht' && middle.some((w) => /^\p{Lu}/u.test(w) && lexicon?.verbs?.has?.(fold(w)))) return RESULT.WRONG;
-    return middle.every(middleOk) ? RESULT.CORRECT : RESULT.WRONG;
+    if (!middle.every(middleOk)) return RESULT.WRONG;
+    // A thing with an article is checked as the thing gap checks it („einen Kaffee gemacht“, never „ein Kaffee“).
+    const det = middle.findIndex((w) => ['ein', 'eine', 'einen', 'den', 'die', 'das', 'kein', 'keine', 'keinen'].includes(fold(w)));
+    const thing = det >= 0 ? middle[det + 1] : null;
+    if (thing && (verified(parts[end - 1]) || lexicon?.genders?.has?.(fold(thing))) && gapResult(middle.slice(det, det + 2).join(' '), { slot: 'thing', lexicon }) === RESULT.WRONG) return RESULT.WRONG;
+    return verified(parts[end - 1]) ? RESULT.CORRECT : BEYOND;
   }
   // A month („im Mai“); with `day`, a day of it as one writes it („am 3. Mai“, „am 3.5.“). Lektion 12.
   if (slot === 'month') {
@@ -754,7 +767,8 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
         return fit.every((g) => g === 'pl') ? 'many' : fit.includes('pl') ? 'either' : 'one';
       }
       // A person of the story is someone too („Lena und Tim kommen“; Lektion 12's guests).
-      if (slot === 'object' && !det && !adj && lexicon?.names?.has?.(noun) && /^\p{Lu}/u.test(nounRaw)) return 'one';
+      // Only where the turn asks for people (`people`): „Das ist Lena.“ names no thing from the bag (the second score).
+      if (people && !det && !adj && lexicon?.names?.has?.(noun) && /^\p{Lu}/u.test(nounRaw)) return 'one';
       if (known(noun)) return null; // a taught word that is no noun names no thing
       const genderOk = ['der', 'die', 'das', 'pl'].filter((g) => (g === 'pl' ? (!det || counted || ARTICLE.pl.includes(det)) : det && !counted && ARTICLE[g].includes(det)) && adjOk(g));
       if (!genderOk.length) return null;
@@ -774,7 +788,7 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
   return content.length ? RESULT.CORRECT : RESULT.WRONG;
 }
 
-const RANK = { [RESULT.WRONG]: 0, [RESULT.TYPO]: 1, [RESULT.CORRECT]: 2 };
+const RANK = { [RESULT.WRONG]: 0, [BEYOND]: 0.5, [RESULT.TYPO]: 1, [RESULT.CORRECT]: 2 };
 const best = (results) => results.reduce((a, r) => (RANK[r] > RANK[a] ? r : a), RESULT.WRONG);
 const worst = (a, b) => (RANK[a] < RANK[b] ? a : b);
 
@@ -1076,8 +1090,102 @@ const GREETING_FIRST = /^(?:hallo|guten\s+(?:morgen|tag|abend))(?:[\s,]+(?:herr|
 // The turn's `answerWords` (words of yes, of goodbye), one or more, each followed by a comma, a stop or a space.
 const answerWordsRe = (words) => new RegExp(`^(?:(?:${[...words].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:\\s*[,.!]+\\s*|\\s+und\\s+|\\s+|$))+`, 'iu');
 
-/** RESULT.CORRECT, TYPO or WRONG for one typed answer. An own-name turn needs an opening and a name. */
+/**
+ * THE THIRD OUTCOME (courses session, 2026-11-22). A final check answer is CORRECT when it is verified against what
+ * the Lektion teaches, WRONG when it is an attempt at a taught frame with a fault the check can name, and BEYOND
+ * when it is well-formed-looking German that goes past what the check can verify. BEYOND is neither praised nor a
+ * miss: the learner reads that it goes further than the Lektion, sees the Lektion's way to say it, and answers once
+ * more; only a verified answer shows the can-do (CheckStage). Asked only of an answer that would be WRONG:
+ *  (a) an untaught word added to a right answer („Ich komme ursprünglich aus Syrien“);
+ *  (b) a word no course teaches, written small, in the gap of a taught frame („Ich bin pensioniert“);
+ *  (c) another verb or word in place of one of the frame's („Meine Telefonnummer lautet …“);
+ *  (d) what the turn asks for, inside a sentence the Lektion does not teach („Sie erreichen mich unter …“, „Ein Buch
+ *      wäre schön“).
+ * A wrong form of a taught word („Ich kommen aus …“) or a taught frame with a word left out („Ich wohne Syrien“) is
+ * no such sentence: it stays WRONG.
+ */
+function beyondOf(turn, text) {
+  if (turn.ownName || turn.spell || turn.listen || turn.parts) return false;
+  const words = wordsOf(String(text).replace(/[.,!?;:„“"]+/g, ' '));
+  if (words.length < 2) return false;
+  const frames = (turn.accepted || []).map((a) => (typeof a === 'string' ? { frame: a } : a));
+  const frameWords = new Set(frames.flatMap((a) => wordsOf(a.frame.replace(/[.,!?;:…]+/g, ' '))).map(fold));
+  // A form of a frame's word: the same first four letters, or one letter off in a longer word.
+  const isForm = (w) => [...frameWords].some((x) => x !== w && x.length >= 4 && w.length >= 4 && (x.slice(0, 4) === w.slice(0, 4) || (Math.min(x.length, w.length) >= 5 && levenshtein(x, w) <= 1)));
+  const lexicon = turn.lexicon;
+  // Faults the check names are no untaught words: a participle in a past gap (its auxiliary: „Ich habe
+  // aufgestanden“) and, in an activity gap, a verb with its prefix still on („Ich fernsehe gern“).
+  const slotted = (slot) => frames.some((a) => (a.slot ?? turn.slot) === slot);
+  const [past, activity] = [slotted('past'), slotted('activity')];
+  const unknown = (w) => {
+    const f = fold(w);
+    if (lexicon?.has?.(f) || lexicon?.names?.has?.(f) || OWN_ALL.has(f) || CLOSED.has(f) || isNumberWord(f) || /\d/.test(f)) return false;
+    if ((past && (participleOf(f) || /^\p{L}{0,6}ge\p{L}{3,}(?:t|en)$/u.test(f))) || (activity && unsplit(f))) return false;
+    // An ending on a taught word („die roten Lampe“) is a form of it, which the check names.
+    const stem = f.replace(/(?:e|en|em|er|es|n)$/, '');
+    if (stem !== f && stem.length >= 3 && lexicon?.has?.(stem)) return false;
+    return !(f.length >= 4 && [...(lexicon || [])].some((x) => x.length >= 4 && Math.abs(x.length - f.length) <= 1 && levenshtein(x, f) <= 1));
+  };
+  const right = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  const graded = (s) => right(typedCore(turn, s));
+  // (a), never a word after an article: that is an adjective whose ending the thing gap checks („einen neue Computer“).
+  const article = /^(?:ein|eine|einen|einem|einer|der|die|das|den|dem|mein|meine|meinen|meinem|dein|deine|deinen|kein|keine|keinen)$/;
+  const adjective = (i) => i > 0 && /^\p{Ll}/u.test(words[i]) && article.test(fold(words[i - 1]));
+  const added = words.filter((w, i) => i > 0 && /^\p{Ll}/u.test(w) && !adjective(i) && unknown(w));
+  if (added.length && added.length < words.length - 1 && graded(words.filter((w) => !added.includes(w)).join(' '))) return true;
+  // A wrong form of a taught word is a fault the check names.
+  if (words.some((w) => !frameWords.has(fold(w)) && isForm(fold(w)))) return false;
+  const fresh = words.filter((w) => !frameWords.has(fold(w)) && fold(w).length >= 3 && !CLOSED.has(fold(w)));
+  // (b) only after a form of „sein“, where German puts a word written small („Ich bin pensioniert“); a thing gap
+  // takes a noun („Ich kaufe neu“ stays WRONG).
+  for (const a of frames) {
+    if (!hasGap(a.frame)) continue;
+    const [head, tail = ''] = a.frame.split(GAP).map((s) => wordsOf(s.replace(/[.,!?;:]+/g, ' ')).map(fold));
+    const f = words.map(fold);
+    if (!['bin', 'bist', 'ist', 'sind', 'seid'].includes(head[head.length - 1])) continue;
+    if (f.length <= head.length + tail.length || head.some((h, i) => f[i] !== h) || tail.some((t, i) => f[f.length - tail.length + i] !== t)) continue;
+    const gap = words.slice(head.length, words.length - tail.length);
+    if (gap.every((w) => /^\p{Ll}/u.test(w) && unknown(w))) return true;
+  }
+  if (!fresh.length) return false;
+  // (c) only for a fixed word of a frame with a gap, in its own place („lautet“ where „ist“ stands); never the gap.
+  for (const a of frames) {
+    if (!hasGap(a.frame)) continue;
+    const [head, tail = ''] = a.frame.split(GAP).map((s) => wordsOf(s.replace(/[.,!?;:]+/g, ' ')));
+    const places = [...head.map((x, i) => [i, x]), ...tail.map((x, i) => [words.length - tail.length + i, x])];
+    for (const [i, x] of places) {
+      const w = words[i];
+      if (!w || frameWords.has(fold(w)) || fold(w) === fold(x) || !unknown(w)) continue;
+      if (graded(words.map((y, j) => (j === i ? x : y)).join(' '))) return true;
+    }
+  }
+  // (d) the content the turn asks for — a place, a number, a thing … with at least one word of content, never only
+  // small words („ein“), and never the past or adjunct gaps, which check a sentence's form, not its content.
+  for (const a of frames) {
+    if (!hasGap(a.frame)) continue;
+    const props = { ...turn, ...a };
+    if (['past', 'adjunct', 'words', undefined].includes(props.slot)) continue;
+    for (let from = 0; from < words.length; from += 1) {
+      for (let to = from + 1; to <= Math.min(words.length, from + 4); to += 1) {
+        const span = words.slice(from, to);
+        if (!span.some((w) => { const f = fold(w); return /\d/.test(f) || !(CLOSED.has(f) || ACTIVITY_GLUE.has(f) || WHEN_GLUE.has(f)); })) continue;
+        if (span.every((w) => frameWords.has(fold(w)))) continue;
+        if (!right(gapResult(span.join(' '), props))) continue;
+        if (words.some((w, j) => (j < from || j >= to) && !adjective(j) && !frameWords.has(fold(w)) && unknown(w))) return true;
+      }
+    }
+  }
+  return false;
+}
+
+/** CORRECT, TYPO, WRONG or BEYOND (the third outcome) for one typed answer. An own-name turn needs an opening and a name. */
 export function typedResult(turn, value) {
+  const result = typedCore(turn, value);
+  if (result !== RESULT.WRONG) return result;
+  return beyondOf(turn, spelledOut(westernDigits(value), turn.lexicon)) ? BEYOND : RESULT.WRONG;
+}
+
+function typedCore(turn, value) {
   if (turn.ownName) {
     const ok = turn.accepted.some((o) => new RegExp(`^${fold(o)}\\s+\\p{L}`, 'u').test(fold(value)));
     return ok ? RESULT.CORRECT : RESULT.WRONG;
@@ -1117,7 +1225,7 @@ export function typedResult(turn, value) {
     const joined = said.length === 1;
     if (joined) said = plain.split(/[,\s]+(?=(?:und\s+)?(?:kommst|möchtest|kannst|hast)\s+du\b|ich\s+lade\s+dich\b)/iu).filter(Boolean);
     const name = turn.partner ? new RegExp(`[,\\s]+${turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=\\s*[?.!]*$)`, 'i') : /$^/;
-    if (said.length === 2 && partyNews(said[0].replace(name, ''), turn) && (INVITE_SECOND.test(said[1].replace(name, '')) || typedResult(turn, said[1]) !== RESULT.WRONG)) {
+    if (said.length === 2 && partyNews(said[0].replace(name, ''), turn) && (INVITE_SECOND.test(said[1].replace(name, '')) || typedCore(turn, said[1]) !== RESULT.WRONG)) {
       return joined || /^\p{Ll}/u.test(plain) ? RESULT.TYPO : RESULT.CORRECT;
     }
   }
@@ -1338,7 +1446,7 @@ export function uncheckedWords(turn, value) {
 export function spokenShown(result, turn) {
   if (!result || result.selfConfirmed || typeof result.pct !== 'number') return false;
   if (!turn) return result.pct >= READALOUD_PASS_PCT;
-  return typeof result.transcript === 'string' && Boolean(result.transcript.trim()) && typedResult(turn, result.transcript) !== RESULT.WRONG;
+  return typeof result.transcript === 'string' && Boolean(result.transcript.trim()) && verifiedResult(typedResult(turn, result.transcript));
 }
 
 /** What a spoken try is scored against: the answer itself; for an own answer, only its opening. */

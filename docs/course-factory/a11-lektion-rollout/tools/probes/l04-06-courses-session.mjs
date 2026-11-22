@@ -7,7 +7,7 @@ const lex = f.courseLexicon(c);
 const s = (nr, r = 0) => f.checkTurns({ ...c.lektionen[nr - 1].guided.check, lexicon: lex }, r);
 const cases = [
   // colours are a closed class
-  [s(5)[3], 'Es ist groß.', 0], [s(5)[3], 'Es ist klein.', 0], [s(5)[3], 'Es ist neu.', 0], [s(5)[3], 'Es ist teuer.', 0], [s(5)[3], 'Es ist schön.', 0], [s(5)[3], 'Es ist alt.', 0],
+  [s(5)[3], 'Es ist groß.', 0], [s(5)[3], 'Es ist klein.', 'b'], [s(5)[3], 'Es ist neu.', 'b'], [s(5)[3], 'Es ist teuer.', 0], [s(5)[3], 'Es ist schön.', 0], [s(5)[3], 'Es ist alt.', 0],
   [s(5)[4], 'Ist deine Tasche klein?', 0], [s(5)[4], 'Ist deine Tasche groß?', 0],
   [s(5)[3], 'Es ist grün.', 1], [s(5)[3], 'Es ist grun.', 1], [s(5)[3], 'Es ist dunkelblau.', 1], [s(5)[3], 'Es ist hellgrün.', 1], [s(5)[3], 'Es ist hell grün.', 1], [s(5)[3], 'Es ist lila.', 1], [s(5)[3], 'Es ist grau.', 1], [s(5)[3], 'Es ist rot und weiß.', 1], [s(5)[3], 'Es ist orange.', 1],
   [s(5)[4], 'Ist deine Tasche rot?', 1], [s(5, 1)[4], 'Ist dein Stift blau oder schwarz?', 1],
@@ -32,6 +32,6 @@ const cases = [
 let bad = 0;
 for (const [turn, answer, right] of cases) {
   const got = f.typedResult(turn, answer);
-  if ((got !== 'wrong') !== Boolean(right)) { bad += 1; console.log(`FAIL want ${right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
+  if ((got === 'beyond' ? 'b' : got === 'wrong' ? 0 : 1) !== (right === 'b' ? 'b' : right ? 1 : 0)) { bad += 1; console.log(`FAIL want ${right === 'b' ? 'beyond' : right ? 'right' : 'wrong'} got ${got}: ${answer}`); }
 }
 console.log(bad ? `${bad} of ${cases.length} FAIL` : `all ${cases.length} as intended`);

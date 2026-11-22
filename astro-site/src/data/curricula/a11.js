@@ -3050,8 +3050,9 @@ export const CURRICULUM_A11 = {
           open: { en: 'You’ll talk with Lena about your day and arrange to go shopping together. The words you already know are a good place to start.', de: 'Sie sprechen mit Lena über Ihren Tag und verabreden sich zum Einkaufen. Die Wörter, die Sie schon kennen, sind ein guter Anfang.' },
           passed: { en: 'You and Lena talked about yesterday, and you shared your morning routine and whether and when you work. You also made shopping plans together. You’re learning to share more of your life in German.', de: 'Sie haben sich mit Lena über gestern ausgetauscht, von Ihrem Tagesbeginn erzählt und gesagt, ob und wann Sie arbeiten. Außerdem haben Sie sich zum Einkaufen verabredet. Sie lernen, immer mehr aus Ihrem Leben auf Deutsch zu erzählen.' },
           turns: [
-            { canDo: 1, cue: { de: 'Hallo! Was hast du gestern gemacht?', en: 'Hi! What did you do yesterday?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer in one sentence.',
-              accepted: ['Ich habe gearbeitet.', 'Ich habe nicht gearbeitet.', 'Ich habe gestern gearbeitet.', 'Ich habe eine Pause gemacht.', { frame: 'Ich habe … gearbeitet.', slot: 'adjunct' }, { frame: 'Ich …', slot: 'past' }] },
+            // The can-do says „with two fixed expressions“: the task names them, they verify; another past sentence is BEYOND.
+            { canDo: 1, cue: { de: 'Hallo! Was hast du gestern gemacht?', en: 'Hi! What did you do yesterday?' }, taskDe: 'Antworten Sie mit „Ich habe gearbeitet“ oder „Ich habe … gemacht“.', taskEn: 'Answer with „Ich habe gearbeitet“ or „Ich habe … gemacht“.',
+              accepted: ['Ich habe gearbeitet.', 'Ich habe nicht gearbeitet.', 'Ich habe gestern gearbeitet.', 'Ich habe eine Pause gemacht.', { frame: 'Ich habe … gearbeitet.', slot: 'adjunct' }, { frame: 'Ich …', slot: 'past' }], taught: ['gearbeitet', 'gemacht'] },
             { canDo: 1, taskDe: 'Jetzt Lena: Fragen Sie nach ihrem Tag gestern.', taskEn: 'Now ask Lena what she did yesterday.',
               accepted: ['Was hast du gestern gemacht?', 'Was hast du gemacht?', 'Und du?', 'Gestern, was hast du gemacht?'] },
             { canDo: 0, cue: { de: 'Und was machst du morgens?', en: 'And what do you do in the morning?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you do in the morning, in one sentence.',
