@@ -4,6 +4,7 @@ import { reserveUsage, validExamAttemptId } from './_shared/aiReservation.mjs';
 import { getTier } from './_shared/speakingUsage.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
 import { productInfo } from './_shared/pricing.mjs';
+import { FREE_LEKTIONEN, LEKTION_GATE_FROM } from './_shared/supportCatalog.mjs';
 
 // AI writing feedback (renovation Phase 5b) — grades an exam-style letter
 // against our rubric and stores the result with the SERVICE ROLE (clients
@@ -115,6 +116,28 @@ export function courseAllowanceFor(taskKey) {
   const level = LEVEL_OF_PREFIX[courseTaskKeyPrefix(taskKey)];
   const n = level ? courseWritingTasks(level).length : 0;
   return n ? n + CHECKPOINTS_PER_COURSE : 0;
+}
+
+// THE LEKTION GATE (live since 2026-11-22). A free level's guided course is free only up to its
+// first Lektion(en): FREE_LEKTIONEN, the synced copy of src/config/freeTier.js. A task past them —
+// a later Lektion's or any checkpoint's — is graded only for an account that may open that step
+// (src/lib/levelEntitlement.js fullCourseReason): one created before the gate, or one that bought
+// anything. A live subscription never reaches this rule (its tier is pro), and the trial does not
+// satisfy it (owner decision 2026-11-18). Until this stood here a new account could post `a11-l02`
+// and be graded for a step the app shows a pay screen for.
+const LEKTION_TASK_RE = /^a\d\d-l(\d\d)$/;
+export function beyondFreeLektionen(taskKey, gateFrom = LEKTION_GATE_FROM) {
+  const free = (gateFrom && FREE_LEKTIONEN[LEVEL_OF_PREFIX[courseTaskKeyPrefix(taskKey)]]) || 0;
+  if (!free) return false;
+  const lektion = taskKey.match(LEKTION_TASK_RE);
+  return !lektion || Number(lektion[1]) > free; // a checkpoint's task is always past the free Lektion
+}
+
+/** The whole gated course, for an account without a subscription: older than the gate, or owns something. */
+export function keepsFullCourse({ createdAt, purchases } = {}, gateFrom = LEKTION_GATE_FROM) {
+  if (Date.parse(createdAt) < Date.parse(gateFrom)) return true;
+  // A kept grant window (`pro_days`) is time-limited AI Practice, never a thing the learner owns.
+  return Array.isArray(purchases) && purchases.some((p) => p?.status === 'active' && p.product_key !== 'pro_days');
 }
 
 /** Does an active purchase unlock this course level (level course or retired band key)? */
@@ -410,6 +433,26 @@ export const handler = async (event) => {
         .eq('status', 'active');
       if (purchasesError) throw new Error('Course ownership could not be checked');
       courseAllowance = purchasesCoverLevel(purchases, courseLevel);
+    }
+    // Past the free Lektion of a gated course, on the trial or after it: only an account that
+    // keeps the whole course is graded (see beyondFreeLektionen). Everyone else needs a plan.
+    if (courseAllowance && beyondFreeLektionen(task_key)) {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles').select('created_at').eq('id', user_id).maybeSingle();
+      if (profileError) throw new Error('Course access could not be checked');
+      let purchases = [];
+      if (!keepsFullCourse({ createdAt: profile?.created_at })) {
+        const { data, error: purchasesError } = await supabase
+          .from('purchases')
+          .select('product_key, status')
+          .eq('user_id', user_id)
+          .eq('status', 'active');
+        if (purchasesError) throw new Error('Course ownership could not be checked');
+        purchases = data || [];
+      }
+      if (!keepsFullCourse({ createdAt: profile?.created_at, purchases })) {
+        return { statusCode: 403, headers, body: JSON.stringify({ error: 'subscription_required', tier, scope: 'course' }) };
+      }
     }
     const limit = courseAllowance
       ? courseLimit
