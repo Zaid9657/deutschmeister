@@ -20,7 +20,7 @@ test('pricing separates the no-account course, account trial and paid AI Practic
   const pricing = read('astro-site/src/pages/pricing.astro');
   assert.match(pricing, /A1.1 free, no account needed/);
   assert.match(pricing, /href="\/course\/a1\.1"/);
-  assert.match(pricing, /course access sold separately/);
+  assert.match(pricing, /other courses sold separately/);
   assert.match(pricing, /\{proCta\(\)\.label\}/); assert.match(pricing, /\{proCta\(\)\.note\}/);
   const cta = read('astro-site/src/lib/proCta.js');
   assert.match(cta, /Start \$\{TRIAL_DAYS\}-day AI Practice trial/);
@@ -32,7 +32,7 @@ test('signup describes the trial without presenting A1.1 as account-gated', () =
 
   assert.match(signup, /Start A1\.1 free\. Try AI Practice for \{TRIAL_DAYS\} days/);
   assert.doesNotMatch(signup, /All \$\{LEVEL_COUNT\} levels/);
-  assert.match(signup, /Courses beyond A1\.1 are purchased separately/);
+  assert.match(signup, /other courses are purchased separately/);
   // The way out opens the free course itself (tests/free-door.test.mjs).
   assert.match(signup, /Start the \{FREE_LEVEL_LABEL\} course without an account/);
   assert.match(signup, /no automatic charge when the trial ends/);

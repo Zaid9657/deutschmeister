@@ -77,15 +77,15 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
           title: 'Wählen Sie, wie es weitergeht',
           lead: `Ihre kostenlose Testphase läuft (noch ${daysLeft} ${daysLeft === 1 ? 'Tag' : 'Tage'}). `
             + (canBuyLevel
-              ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie AI Practice für die KI-Übungen, ohne Kurszugang.'
-              : 'Danach haben Sie mit AI Practice KI-Übungen, ohne Kurszugang.'),
+              ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie AI Practice: KI-Übungen und der ganze A1.1-Kurs.'
+              : 'Danach haben Sie mit AI Practice KI-Übungen und den ganzen A1.1-Kurs.'),
         }
       : {
           title: 'Choose how you want to keep going',
           lead: `Your free trial is running (${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left). `
             + (canBuyLevel
-              ? 'Buy the level you need once and keep it, or go AI Practice for AI tools, with course access sold separately.'
-              : 'After it ends, AI Practice gives you AI tools. Course access is sold separately.'),
+              ? 'Buy the level you need once and keep it, or go AI Practice for AI tools and the full A1.1 course.'
+              : 'After it ends, AI Practice gives you AI tools and the full A1.1 course. Other courses are sold separately.'),
         };
   }
 
@@ -94,14 +94,14 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
         title: 'Machen Sie dort weiter, wo Sie aufgehört haben',
         lead: 'Ihre Testphase ist vorbei, Ihr Fortschritt bleibt. '
           + (canBuyLevel
-            ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie AI Practice für die KI-Übungen, ohne Kurszugang.'
-            : 'AI Practice ergänzt Ihre Kurse um KI-Übungen. Neue Abonnements enthalten keinen Kurszugang.'),
+            ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie AI Practice: KI-Übungen und der ganze A1.1-Kurs.'
+            : 'AI Practice ergänzt Ihre Kurse um KI-Übungen und öffnet den ganzen A1.1-Kurs.'),
       }
     : {
         title: 'Pick up where you left off',
         lead: 'Your trial is over, but your progress stays. '
           + (canBuyLevel
-            ? 'Buy the level you need once and keep it, or go AI Practice for AI tools, with course access sold separately.'
-            : 'Go AI Practice for AI tools, with course access sold separately.'),
+            ? 'Buy the level you need once and keep it, or go AI Practice for AI tools and the full A1.1 course.'
+            : 'Go AI Practice for AI tools and the full A1.1 course. Other courses are sold separately.'),
       };
 }

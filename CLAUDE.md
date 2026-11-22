@@ -113,7 +113,7 @@ no TypeScript additions (Astro's existing Props syntax is normal).
   Vendored REA/scroll-craft provenance and overrides stay intact. See [environment history](docs/agents/claude-reference.md#conventions--gotchas).
 - Follow [steward gates](.claude/skills/steward/SKILL.md); current explicit user authorization wins.
   Team v5 reserves money, access/limits, legal, brand messages, security/auth/RLS/public endpoints, customer deletion and CLAUDE changes for owner approval.
-- Social: preserve the active `drafts/instagram-100/posts.csv` path; later packs use 2–4 images
+- Social: the `drafts/instagram-100/` pack is stopped (owner, 2026-10-25; see its README); keep its `posts.csv` path. Later packs use 2–4 images
   where needed, checked exam facts, tokens and UTM captions. See [channel constraints](docs/agents/claude-reference.md#conventions--gotchas).
 
 ## Commands

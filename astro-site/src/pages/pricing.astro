@@ -18,29 +18,29 @@ import { PRO_OFFER } from '../data/offers.js';
 import '../styles/global.css';
 const course = courseForLevel('a1.2');
 const title = 'Course Pricing & Optional AI Practice | DeutschMeister';
-const description = `Start A1.1 free. Own A1.2 for ${eur(course.price)} once, with ${COURSE_PRO_MONTHS} months of AI Practice included. Optional AI Practice renews monthly or yearly.`;
+const description = `Lektion 1 of A1.1 is free; an AI Practice subscription opens the rest. Own A1.2 for ${eur(course.price)} once, with ${COURSE_PRO_MONTHS} months of AI Practice included. Optional AI Practice renews monthly or yearly.`;
 const telcOnSale = Boolean(telcPilotVariant());
 const telcSignupHref = onsiteHref('signup', 'telc-pilot', 'pricing');
 const FAQS = [
   { q: 'How does the course purchase work?', a: `Buy A1.2 once and keep access to that course. ${COURSE_PRO_MONTHS} months of AI Practice are included. The course does not renew, and you keep it after the included practice window ends.` },
-  { q: 'What’s included in AI Practice?', a: `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month, AI speaking practice, and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day. AI Practice is optional; new subscriptions do not include course access. Existing subscriptions started before 10 November 2026 retain their course access while active.` },
+  { q: 'What’s included in AI Practice?', a: `${PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month, AI speaking practice, and ${PRO_DAILY_LIMIT} Sentence X-Ray analyses a day. A paid subscription also opens the full A1.1 course while it is active; the free trial covers the AI tools only. Every other course is a one-time purchase. Subscriptions started before 10 November 2026 keep access to every course while active.` },
   { q: 'Can I cancel AI Practice anytime?', a: `Yes. Cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}). Access continues until the end of the period you have already paid for, and the subscription does not renew.`, link: { href: BILLING_PORTAL_URL, text: 'Open the customer portal' } },
   ...(telcOnSale ? [{ q: 'Is there a separate telc B1 programme?', a: `The separate telc B1 programme costs ${eur(COURSE_TELC_B1_PRICE_EUR)} once. Its sales page has the full details.` }] : []),
-  { q: 'Do I need an account to start A1.1?', a: 'No. Start the free A1.1 course without an account. Create a free account when you want to save your progress across devices.' },
+  { q: 'Do I need an account to start A1.1?', a: 'No. Lektion 1 is free and opens without an account. Create a free account when you want to save your progress across devices. From Lektion 2 on, the course needs AI Practice or any course purchase.' },
 ];
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'Product', name: 'DeutschMeister AI Practice', description: 'Optional AI writing feedback, speaking practice and Sentence X-Ray. Course access sold separately for new subscribers.', brand: { '@type': 'Brand', name: 'DeutschMeister' }, offers: Object.values(PLANS).map((plan) => ({ '@type': 'Offer', name: plan.name, price: num(plan.price), priceCurrency: CURRENCY, priceSpecification: { '@type': 'UnitPriceSpecification', price: num(plan.price), priceCurrency: CURRENCY, unitText: plan.interval }, url: 'https://deutsch-meister.de/pricing/' })) },
+  { '@context': 'https://schema.org', '@type': 'Product', name: 'DeutschMeister AI Practice', description: 'Optional AI writing feedback, speaking practice and Sentence X-Ray. Opens the full A1.1 course; other courses are sold separately.', brand: { '@type': 'Brand', name: 'DeutschMeister' }, offers: Object.values(PLANS).map((plan) => ({ '@type': 'Offer', name: plan.name, price: num(plan.price), priceCurrency: CURRENCY, priceSpecification: { '@type': 'UnitPriceSpecification', price: num(plan.price), priceCurrency: CURRENCY, unitText: plan.interval }, url: 'https://deutsch-meister.de/pricing/' })) },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
 ---
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>
   <section class="c4-pricing-hero c4-wrap" aria-labelledby="pricing-h">
     <Scene name="pricing-hero" alt="A learner with a notebook and coffee beside the River Spree in Berlin" hero sizes="(max-width: 640px) 100vw, 550px" />
-    <div><h1 id="pricing-h">Pay once for your course.<br /><span class="c4-underline">Practise more if you want.</span></h1><p>A1.1 is free. Each next level is a one-time purchase you keep.</p></div>
+    <div><h1 id="pricing-h">Pay once for your course.<br /><span class="c4-underline">Practise more if you want.</span></h1><p>Lektion 1 of A1.1 is free, and an AI Practice subscription opens the rest. Each next level is a one-time purchase you keep.</p></div>
   </section>
   <PromiseBand />
   <div class="c4-wrap">
-    <section class="c4-free-banner" aria-label="Start free"><Icon name="gift" size={44} /><p>New to German? Start A1.1 free, no account needed.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></section>
+    <section class="c4-free-banner" aria-label="Start free"><Icon name="gift" size={44} /><p>New to German? Start Lektion 1 of A1.1 free, no account needed.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></section>
     <section class="c4-offers c4-offers-illustrated c4-pricing-offers" aria-label="Your learning options" data-track-view="offer">
       <Ladder illustrated />
     </section>
@@ -48,7 +48,7 @@ const jsonLd = [
       <article class="c4-offer" id="ai-practice" data-c4-reveal>
         <span id="pro" class="c4-anchor" aria-hidden="true"></span>
         <Scene name="scene-work" alt="Practising a conversation at work" sizes="350px" />
-        <h2>AI Practice</h2><p class="c4-small">Optional add-on · course access sold separately</p>
+        <h2>AI Practice</h2><p class="c4-small">A paid subscription opens the full A1.1 course · other courses sold separately</p>
         <p class="c4-price"><strong id="pro-price">{eur(PLANS.yearly.price)}</strong><span> / <span id="pro-period">year</span></span></p>
         <p class="c4-yearly">or <strong>{eur(PLANS.monthly.price)}</strong> / month · {PRICE_TAX_NOTE}</p>
         <ul class="c4-checks"><li>{PRO_WRITING_EVALUATIONS_PER_MONTH} AI writing feedbacks a month</li><li>AI speaking practice</li><li>{PRO_DAILY_LIMIT} Sentence X-Ray analyses a day</li><li>Cancel anytime</li></ul>

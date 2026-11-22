@@ -115,7 +115,7 @@ test('a text link under the button opens the free A1.1 course, tagged, without a
   assert.equal(url.pathname, '/course/a1.1', 'an SPA rewrite route: no trailing slash (CLAUDE.md case 3)');
   assert.equal(url.searchParams.get('utm_content'), 'course');
   assert.equal(url.search, `?${DAILY_UTM}&utm_content=course`, 'fixed strings, so a retry rebuilds the same batch bytes');
-  assert.match(html, /Next step: the free A1\.1 course →/);
+  assert.match(html, /Next step: Lektion 1 of the A1\.1 course, free →/);
   assert.ok(html.indexOf(courseUrl()) > html.indexOf('See the X-Ray Breakdown'), 'secondary: under the X-Ray button');
   const { parse } = attribution();
   const touch = parse(url.search, '', url.pathname, Date.UTC(2026, 9, 25));
