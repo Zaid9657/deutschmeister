@@ -723,3 +723,34 @@ test('natural answers: a counter-question or a degree word after a complete answ
   assert.equal(typedResult(at(5)[4], 'Welche Farbe hat meine Tasche?'), RESULT.WRONG, 'Lena’s bag is asked about, not mine');
   assert.equal(typedResult(at(4)[1], 'Was kostet meine Uhr?'), RESULT.WRONG, 'the watch is for sale, not mine');
 });
+
+test('Lektion 1 after the second score: a name after the opening, the ways one is, any goodbye (2026-11-22)', () => {
+  const [, name, , how, , bye] = sitting(l1);
+  for (const right of ['Ich heiße Omar.', 'ich heiße omar', 'Ich bin Ana.', 'Mein Name ist Omar Khalil.', 'Ich heiße Rosa.']) assert.equal(typedResult(name, right), RESULT.CORRECT, right);
+  // An opening's word again, a taught noun or job, a state: no name.
+  for (const wrong of ['Mein Name ist ist Omar.', 'Ich heiße heiße Omar.', 'Ich bin Student.', 'Ich bin Tischler.', 'Ich bin müde.', 'Ich bin Lehrerin.']) assert.equal(typedResult(name, wrong), RESULT.WRONG, wrong);
+  for (const right of ['Mir geht es sehr gut.', 'Mir geht es nicht gut.', 'Es geht.', 'Nicht so gut, danke.']) assert.equal(typedResult(how, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(bye, 'Tschüss!'), RESULT.CORRECT);
+});
+
+
+test('can-do honesty: a check claims only what its turns show, and a receptive turn never claims a productive can-do (2026-11-22)', async () => {
+  const { canDoList, shownLines } = await import('../src/lib/course/canDo.js');
+  for (const l of withCheck) {
+    const { shown = [], turns } = l.guided.check;
+    assert.ok(shown.length <= l.canDo.length, `L${l.nr}: a shown line per can-do`);
+    for (const line of shown.filter(Boolean)) assert.ok(line.de && line.en, `L${l.nr}: German and English`);
+    l.canDo.forEach((_, i) => {
+      const own = turns.filter((t) => t.canDo === i);
+      // Heard and written down: the shown line says „verstehen“, never what the learner did not do.
+      if (own.length && own.every((t) => t.spell || t.listen)) assert.match(shown[i]?.de || '', /verstehen/, `L${l.nr} can-do ${i + 1}`);
+    });
+  }
+  assert.equal(shownLines(l1, 'de')[2], 'Ich kann einen Namen verstehen und aufschreiben, wenn jemand ihn buchstabiert.');
+  assert.equal(shownLines(l1, 'en')[1], 'I can say what my name is.', 'a can-do the check shows in full keeps its line');
+  // The course home: a finished Lektion claims what its check showed, an open one the can-do it works towards.
+  const [open] = canDoList(CURRICULUM_A11).filter((c) => c.lektionId === l1.id && c.id.endsWith('#3'));
+  const [done] = canDoList(CURRICULUM_A11, new Set([l1.id])).filter((c) => c.lektionId === l1.id && c.id.endsWith('#3'));
+  assert.equal(open.de, 'Ich kann meinen Namen buchstabieren.');
+  assert.equal(done.de, 'Ich kann einen Namen verstehen und aufschreiben, wenn jemand ihn buchstabiert.');
+});

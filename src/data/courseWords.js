@@ -9,14 +9,14 @@ angaben angeben angebot angebote angenommen angewendet anhaengen ankommen ankuen
 anmeldeformular anmelden anmeldung annehmen anrede anruf anrufen antwort antworten anzeige anzeigen
 anziehen apotheke apotheken approximately arabisch arbeit arbeite arbeiten arbeitest arbeitet
 arbeitgeber arbeitsplatz arbeitstag arm arme artikel arzt arztpraxis au auch auf auffordern aufgaben
-aufgestanden aufmachen aufstehe aufstehen auftrag auge augen aus ausdruck ausdruecken ausfluege
-ausflug ausfuellen ausgehen ausgetauscht aushang aussage aussagesatz aussehen ausserdem aussprechen
-aussteigen auto autos baby babys badezimmer baeuche bahn bahnen bahnhoefe bahnhof bald balkon
-balkone bank banken bauch be beantwortet becker bedeutet bedeutung beginn beginnen beginnt begleiten
-begruessen begruessung behaelt bei beide beiden beim bein beine bekannt bekannten bekommt ben
-benannt benennen benutzt berg berger berlin beruf berufe beruflich beschreiben besichtigen besitzer
-besitzern besser bestellen bestellt bestimmt bestimmte bestimmtem bestimmten bestimmter betont
-betonung bett bettdecke bettdecken betten bevor bewegung bezahle bezahlen bezahlst bezahlt
+aufgestanden aufmachen aufschreiben aufstehe aufstehen auftrag auge augen aus ausdruck ausdruecken
+ausfluege ausflug ausfuellen ausgehen ausgetauscht aushang aussage aussagesatz aussehen ausserdem
+aussprechen aussteigen auto autos baby babys badezimmer baeuche bahn bahnen bahnhoefe bahnhof bald
+balkon balkone bank banken bauch be beantwortet becker bedeutet bedeutung beginn beginnen beginnt
+begleiten begruessen begruessung behaelt bei beide beiden beim bein beine bekannt bekannten bekommt
+ben benannt benennen benutzt berg berger berlin beruf berufe beruflich beschreiben besichtigen
+besitzer besitzern besser bestellen bestellt bestimmt bestimmte bestimmtem bestimmten bestimmter
+betont betonung bett bettdecke bettdecken betten bevor bewegung bezahle bezahlen bezahlst bezahlt
 bibliothek bibliotheken bier biere bil bild bilden bilder bildet billig billiger bin bis bist bitte
 bitten bittet blatt blau bleiben bleibt bleistift bleistifte boden boeden braeuchte brandt brauche
 brauchen braucht braun bremen bring bringe bringen bringst bringt brot brote bru bruder brue bruecke
@@ -76,11 +76,11 @@ lese lesen letzte letzten leute li libanon liebe lieben lieber liest lig lineal 
 lo loest lorenz mach mache machen machs machst macht maenner maennlich maentel maerkte maerz magst
 mai mail male mama mamas man manchmal mann mantel markiert markt marokkaner marokkanerin
 marokkanerinnen marokkanisch marokko maskulin maskulines maskulinum material mehr mehrere mein meine
-meinen meiner meist meistens melden meldet menge meyer mia mich miete milch mineralwasser minute
-minuten mir mit mitbewohnerin mitbringen mitkommen mittagspause mitte mittwoch mittwoche modalverb
-modalverben moebel moebeln moebelstueck moech moechte moechten moechtest moeglich moment monat
-monate montag montage morgen morgens muede muell muender muessen muesst muet muetter muetze muetzen
-mund museen museum musik muss muster mutter na nach nachbar nachbarin nachbarinnen nachbarn
+meinem meinen meiner meist meistens melden meldet menge meyer mia mich miete milch mineralwasser
+minute minuten mir mit mitbewohnerin mitbringen mitkommen mittagspause mitte mittwoch mittwoche
+modalverb modalverben moebel moebeln moebelstueck moech moechte moechten moechtest moeglich moment
+monat monate montag montage morgen morgens muede muell muender muessen muesst muet muetter muetze
+muetzen mund museen museum musik muss muster mutter na nach nachbar nachbarin nachbarinnen nachbarn
 nachgefragt nachmittag nachmittags nachname nachnamen nachricht nacht naechste naechsten name namen
 nase nasen ne neben nehme nehmen nehmt nein nen nennen nennt neu neue neuen neuer neun neunzig
 neutral neutrum nicht nichts nie nimmt noch noetig nomen nominativ normalerweise notwendigkeit novak

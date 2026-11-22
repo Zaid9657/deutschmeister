@@ -10,7 +10,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
 import { BEYOND, canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
-import { canDoLines } from '../../lib/course/canDo.js';
+import { shownLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 const SPOKEN_TRIES = 2;
@@ -154,7 +154,7 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
     return answers.map((a, j) => chosenWord(plain[j], a)).find(Boolean) || null;
   }, [stage.check, retake, answers]);
   const turns = useMemo(() => checkTurns(stage.check, retake, { chosen }), [stage.check, retake, chosen]);
-  const canDo = canDoLines(lektion, lang);
+  const canDo = shownLines(lektion, lang);
   const shown = canDoShown(turns, outcomes, canDo.length);
   const back = () => { setOutcomes(outcomes.slice(0, -1)); setAnswers(answers.slice(0, -1)); };
 

@@ -141,9 +141,10 @@ test('coverage is said, not hidden: a Lektion without a linked listening exercis
   for (const key of ['recap.coverage.noListening', 'recap.coverage.noReading']) {
     assert.equal((strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':`, 'g')) || []).length, 2, `${key} in English and German`);
   }
-  // The measured gaps this line speaks for (2026-10-06): listening L2, 3, 5, 7, 11, 12 · reading L2, 6.
+  // The measured gaps this line speaks for (2026-10-06): listening L2, 3, 5, 7, 11, 12 · reading L2, 6. Lektion 10
+  // since 2026-11-22: its exercise 3 is the final test's Hören, which a practice link would show first.
   const gaps = (field) => CURRICULUM_A11.lektionen.filter((l) => l.links?.[field] == null).map((l) => l.nr);
-  assert.deepEqual(gaps('listeningExercise'), [2, 3, 5, 7, 11, 12]);
+  assert.deepEqual(gaps('listeningExercise'), [2, 3, 5, 7, 10, 11, 12]);
   assert.deepEqual(gaps('readingOrder'), [2, 6]);
 });
 

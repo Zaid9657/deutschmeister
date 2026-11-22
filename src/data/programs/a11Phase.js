@@ -29,6 +29,7 @@
 // as startDeutsch1.js.
 
 import { getTopicsForLevel } from '../grammarTopics.js';
+import { courseTestMinutes } from '../courseTests/index.js';
 
 export const PROGRAM_KEY = 'a11_phase';
 
@@ -321,7 +322,8 @@ const schreiben = (id, taskNumber, minutes = 25) => ({
   href: '/schreiben/start-deutsch-1',
 });
 
-// The rehearsal (ungraded) and the final (graded) half-length mock. UNVERIFIED
+// The final (graded) course test, once, on Tag 28: the rehearsal before it is not this paper (`checkpointProbe`).
+// Its minutes are the test's own (`courseTestMinutes`). UNVERIFIED
 // DEPENDENCY: the route /modelltest/abschlusstest-a1-1 names a mock-exam
 // module + EXAM_TRACKS entry that does not exist in this repo as of
 // 2026-09-05 (grepped: no "abschlusstest" hit anywhere). The brief states it
@@ -337,6 +339,17 @@ const modelltest = (id, title, minutes) => ({
   title,
   minutes,
   href: '/modelltest/abschlusstest-a1-1',
+});
+
+// The rehearsal on Tag 26: a checkpoint again. A retake is a new paper (seeded tasks), so this rehearses the
+// course's own check under the same conditions without showing the final test's tasks; the final test's Hören
+// is listening exercise 3, which is why it is not a rehearsal either (courses session, 2026-11-22).
+const checkpointProbe = (id, nr) => ({
+  id,
+  type: 'exam',
+  title: `Probe: Checkpoint ${nr} noch einmal (neue Aufgaben)`,
+  minutes: 12,
+  href: `/course/a1.1/checkpoint/${nr}`,
 });
 
 // Hand-off to the next course, Tag 28 only — a real, clickable exit rather
@@ -498,7 +511,8 @@ const WEEKS = [
     intro:
       'Kein neues Grammatikthema mehr — stattdessen die zwei Lesen-Aufgabenformate, die die echte Prüfung ' +
       'tatsächlich stellt (Anzeigen, Schilder), die Hörübungen 4–6 noch einmal mit Zahlen und Uhrzeiten, zwei ' +
-      'deiner Sprechmissionen noch einmal, deine dritte Schreibaufgabe, ein Probe-Abschlusstest und zuletzt der ' +
+      'deiner Sprechmissionen noch einmal, deine dritte Schreibaufgabe, eine Probe mit den drei Checkpoints (neue ' +
+      'Aufgaben, nicht die des Abschlusstests) und zuletzt der ' +
       'gewertete Abschlusstest A1.1. Fertig, wenn der Abschlusstest absolviert ist. Dein Ergebnis zeigt dir, ' +
       'welche Themen du vor A1.2 noch einmal ansehen solltest. Weiter geht es mit der A1.2-Phase.',
     days: [
@@ -520,7 +534,7 @@ const WEEKS = [
       },
       {
         label: 'Tag 26',
-        items: [schreiben('d26-schreiben', 5), modelltest('d26-probe', 'Probe-Abschlusstest A1.1 (ungewertet, halbe Länge)', 40)],
+        items: [schreiben('d26-schreiben', 5), ...[1, 2, 3].map((nr) => checkpointProbe(`d26-probe-cp${nr}`, nr))],
       },
       {
         label: 'Tag 27 — Puffertag',
@@ -530,7 +544,7 @@ const WEEKS = [
         label: 'Tag 28',
         items: [
           xray('d28-xray', 20, 'X-Ray: letztes Aufwärmen vor der Prüfung'),
-          modelltest('d28-abschlusstest', 'Abschlusstest A1.1 (gewertet, halbe Länge, Start-Deutsch-1-Format)', 50),
+          modelltest('d28-abschlusstest', 'Abschlusstest A1.1 (gewertet)', courseTestMinutes('abschlusstest-a1-1')),
           nextCourse('d28-next'),
         ],
       },

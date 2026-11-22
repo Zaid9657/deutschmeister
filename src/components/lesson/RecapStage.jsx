@@ -13,7 +13,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import SaveProgressCard from '../course/SaveProgressCard.jsx';
 import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { canDoLines } from '../../lib/course/canDo.js';
+import { shownLines } from '../../lib/course/canDo.js';
 import { clearVoices, readVoices } from '../../lib/lesson/voiceKeep.js';
 import { supabase } from '../../utils/supabase.js';
 import { SOCIAL_LINKS } from '../../data/navigation.js';
@@ -117,7 +117,7 @@ export default function RecapStage({ checkShown = null, stage, accuracy, status,
 
   const hasGoDeeper = Boolean(lektion && (listeningHref || readingHref || speakingHref));
 
-  const canDo = lektion ? canDoLines(lektion, lang) : [];
+  const canDo = lektion ? shownLines(lektion, lang) : [];
   const [voicesGone, setVoicesGone] = useState(false);
   const voiceOwner = user?.id;
   const voices = useMemo(() => (voicesGone ? {} : readVoices(lektion?.id, voiceOwner)), [voicesGone, lektion, voiceOwner]);

@@ -1185,10 +1185,25 @@ export function typedResult(turn, value) {
   return beyondOf(turn, spelledOut(westernDigits(value), turn.lexicon)) ? BEYOND : RESULT.WRONG;
 }
 
+/**
+ * The word after an own-name opening is a name: not an opening's word again („Mein Name ist ist Omar“), no small
+ * word, no taught noun or job („Ich bin Student“, „Ich bin Tischler“), no taught word written small („ich bin
+ * müde“). A cast name is a name; any other word is the learner's own name, also written small on a phone.
+ */
+function isName(turn, raw) {
+  const w = fold(String(raw || '').replace(/[.,!?;:]+$/, ''));
+  if (!w || turn.accepted.some((o) => wordsOf(fold(o)).includes(w)) || CLOSED.has(w)) return false;
+  const lexicon = turn.lexicon;
+  if (lexicon?.names?.has?.(w)) return true;
+  if (lexicon?.genders?.has?.(w) || OWN_KIND.job.has(w) || OWN_KIND.language.has(w)) return false;
+  return !(lexicon?.has?.(w) && /^\p{Ll}/u.test(String(raw)));
+}
+
 function typedCore(turn, value) {
   if (turn.ownName) {
-    const ok = turn.accepted.some((o) => new RegExp(`^${fold(o)}\\s+\\p{L}`, 'u').test(fold(value)));
-    return ok ? RESULT.CORRECT : RESULT.WRONG;
+    const said = fold(value);
+    const opening = turn.accepted.find((o) => new RegExp(`^${fold(o)}\\s+\\p{L}`, 'u').test(said));
+    return opening && isName(turn, value.trim().split(/\s+/)[wordsOf(opening).length]) ? RESULT.CORRECT : RESULT.WRONG;
   }
   const text = spelledOut(westernDigits(value), turn.lexicon);
   if (turn.listen && (turn.when || turn.time)) {

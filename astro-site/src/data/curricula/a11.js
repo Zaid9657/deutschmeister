@@ -258,6 +258,9 @@ export const CURRICULUM_A11 = {
         // `partner` labels the cues; `open` and `passed` are the otter's lines for this check (Codex,
         // from the founder's words), so each Lektion says what is true of its own check.
         check: {
+          // What the check shows, where it proves less than the can-do says (`shownLines`, the can-do honesty
+          // test of all twelve checks, 2026-11-22): a heard name written down is no spelling of one’s own.
+          shown: [{ de: 'Ich kann jemanden begrüßen und mich verabschieden.', en: 'I can greet someone and say goodbye.' }, null, { de: 'Ich kann einen Namen verstehen und aufschreiben, wenn jemand ihn buchstabiert.', en: 'I can understand and write down a name when someone spells it.' }, { de: 'Ich kann fragen, wie es jemandem geht, und sagen, wie es mir geht.', en: 'I can ask how someone is and say how I am.' }],
           partner: 'Frau Kaya',
           open: {
             en: 'This time, you’ll speak with Frau Kaya using your own name. Take your time.',
@@ -271,9 +274,10 @@ export const CURRICULUM_A11 = {
             { canDo: 0, cue: { de: 'Guten Tag!', en: 'Good day!' }, taskDe: 'Antworten Sie Frau Kaya.', taskEn: 'Greet her back.', accepted: ['Guten Tag!', 'Guten Tag, Frau Kaya!', 'Hallo!'] },
             { canDo: 1, cue: { de: 'Wie heißen Sie?', en: 'What is your name?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Answer with your own name.', ownName: true, accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'] },
             { canDo: 2, spell: ['Vogel', 'Weigel', 'Jensen'], taskDe: 'Frau Kaya buchstabiert. Schreiben Sie das Wort.', taskEn: 'Frau Kaya spells a guest’s name. Write the name.' },
-            { canDo: 3, cue: { de: 'Wie geht es Ihnen?', en: 'How are you?' }, taskDe: 'Antworten Sie.', taskEn: 'Answer her.', accepted: ['Mir geht es gut, danke.', 'Mir geht es gut.', 'Danke, mir geht es gut.', 'Gut, danke.', 'Danke, gut.', 'Sehr gut, danke.', 'Danke, sehr gut.', 'Es geht mir gut.', 'Gut.'] },
+            { canDo: 3, cue: { de: 'Wie geht es Ihnen?', en: 'How are you?' }, taskDe: 'Antworten Sie.', taskEn: 'Answer her.', accepted: ['Mir geht es gut, danke.', 'Mir geht es gut.', 'Danke, mir geht es gut.', 'Gut, danke.', 'Danke, gut.', 'Sehr gut, danke.', 'Danke, sehr gut.', 'Es geht mir gut.', 'Gut.', 'Mir geht es sehr gut.', 'Mir geht es sehr gut, danke.',
+              'Mir geht es nicht gut.', 'Mir geht es nicht so gut.', 'Es geht.', 'Nicht so gut, danke.', 'Nicht so gut.'] },
             { canDo: 3, taskDe: 'Und Frau Kaya? Fragen Sie.', taskEn: 'Now ask her how she is.', accepted: ['Und wie geht es Ihnen?', 'Wie geht es Ihnen?', 'Und Ihnen?', 'Und Sie?'] },
-            { canDo: 0, cue: { de: 'Mir geht es gut, danke. Auf Wiedersehen!', en: 'I’m fine, thank you. Goodbye!' }, taskDe: 'Antworten Sie.', taskEn: 'Say goodbye.', accepted: ['Auf Wiedersehen!', 'Auf Wiedersehen, Frau Kaya!'] },
+            { canDo: 0, cue: { de: 'Mir geht es gut, danke. Auf Wiedersehen!', en: 'I’m fine, thank you. Goodbye!' }, taskDe: 'Antworten Sie.', taskEn: 'Say goodbye.', accepted: ['Auf Wiedersehen!', 'Auf Wiedersehen, Frau Kaya!', 'Tschüss!', 'Tschüss, Frau Kaya!'] },
           ],
           repeat: [
             { en: 'Part 1: the scene', de: 'Teil 1: die Szene' },
@@ -504,6 +508,7 @@ export const CURRICULUM_A11 = {
         // learner's own words (finalCheck.js); a retake hears another office number. Reviewed by a
         // read-only Codex DaF pass and proven against a blind corpus of learner answers (rollout README).
         check: {
+          shown: [null, null, { de: 'Ich kann eine Telefonnummer verstehen und aufschreiben.', en: 'I can understand and write down a telephone number.' }],
           partner: 'Herr Weber',
           // Codex's lines (2026-11-19), from the founder's words.
           open: {
@@ -935,6 +940,7 @@ export const CURRICULUM_A11 = {
         // Vater/Bruder — or the family noun itself (`nounFor`). Reviewed by a read-only Codex DaF pass and
         // proven against a blind corpus of learner answers (rollout README).
         check: {
+          shown: [null, null, null, { de: 'Ich kann sagen, woher meine Mutter oder meine Schwester kommt.', en: 'I can say where my mother or sister comes from.' }],
           partner: 'Lena',
           // Codex's lines (2026-11-19), from the founder's words.
           open: {
@@ -1979,6 +1985,7 @@ export const CURRICULUM_A11 = {
         // the learner likes doing are their own (`hobby`, `activity`); the du-form of a regular verb is the
         // rule of this Lektion, so one question asks it with a verb that changes on a retake.
         check: {
+          shown: [{ de: 'Ich kann sagen, was mein Hobby ist.', en: 'I can say what my hobby is.' }],
           partner: 'Lena',
           open: {
             en: 'You’ll chat with Lena about hobbies after the course. There’s no rush to find your own words.',
@@ -2237,6 +2244,7 @@ export const CURRICULUM_A11 = {
         // (`clock`: „halb neun" is 8.30, never 9.30), days and times as when (`when`); the time to say, the
         // appointment to ask about and the appointment heard change on a retake.
         check: {
+          shown: [null, null, { de: 'Ich kann sagen, wann ich aufstehe.', en: 'I can say when I get up.' }],
           partner: 'Lena',
           open: {
             en: 'You’ll talk with Lena about times, your day and an appointment. Each answer helps you see what you can already do.',
@@ -2523,6 +2531,7 @@ export const CURRICULUM_A11 = {
         // is their own and takes the article „möchten" asks for (`thing`, with a measure: „ein Glas Wasser");
         // „haben" is the rule of this Lektion; what is asked for and what is offered change on a retake.
         check: {
+          shown: [null, { de: 'Ich kann sagen, dass ich Hunger habe.', en: 'I can say that I am hungry.' }],
           partner: 'Paul',
           open: {
             en: 'You’ll be a guest at the café, ordering from Paul and responding to his offers. If an answer needs another try, there’s time for that.',
@@ -2781,6 +2790,7 @@ export const CURRICULUM_A11 = {
         // own (`place`); the yes/no question puts the verb first (the rule of this Lektion); the price and two
         // announcements are heard and written down, and change on a retake.
         check: {
+          shown: [null, null, { de: 'Ich kann in Durchsagen verstehen, wann der Zug fährt und von welchem Gleis.', en: 'I can understand announcements giving a train’s departure time and platform.' }],
           partner: 'Herr Schmidt',
           open: { en: 'You’ll ask Herr Schmidt about your train journey and listen for important details. You can work through the answers at your own pace.', de: 'Sie fragen Herrn Schmidt nach Ihrer Zugreise und hören auf wichtige Angaben. Gehen Sie die Antworten in Ihrem eigenen Tempo durch.' },
           passed: { en: 'You said where you were going, asked about departure and ticket prices, and understood the announcements. That can give you more confidence for your next train journey.', de: 'Sie haben Ihr Reiseziel genannt, nach Abfahrt und Fahrpreis gefragt und die Durchsagen verstanden. Das kann Ihnen für Ihre nächste Zugreise mehr Sicherheit geben.' },
@@ -2940,7 +2950,9 @@ export const CURRICULUM_A11 = {
         // das ist die Regel in `src/lib/lesson/writing.js`, die MAJOR 1 „Zweitens“ bestellt.
         sample: 'Guten Tag, Frau Kaya! Der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
       },
-      links: { listeningExercise: 3, readingOrder: 6 },
+      // Not listening exercise 3: the final test's Hören is its first ten questions (abschlusstestA11.js), and
+      // practising them here first would measure memory, not listening (2026-11-22).
+      links: { listeningExercise: null, readingOrder: 6 },
       // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
       practiceRule: { topics: ['yes-no-questions'], typedMin: 4 },
     },
@@ -3046,6 +3058,7 @@ export const CURRICULUM_A11 = {
         // and „Was hast du gestern gemacht?" are the two fixed expressions; the verbs of two parts (the rule of
         // this Lektion) close the sentence; the day Lena shops changes on a retake.
         check: {
+          shown: [{ de: 'Ich kann sagen, was ich morgens mache.', en: 'I can say what I do in the morning.' }],
           partner: 'Lena',
           open: { en: 'You’ll talk with Lena about your day and arrange to go shopping together. The words you already know are a good place to start.', de: 'Sie sprechen mit Lena über Ihren Tag und verabreden sich zum Einkaufen. Die Wörter, die Sie schon kennen, sind ein guter Anfang.' },
           passed: { en: 'You and Lena talked about yesterday, and you shared your morning routine and whether and when you work. You also made shopping plans together. You’re learning to share more of your life in German.', de: 'Sie haben sich mit Lena über gestern ausgetauscht, von Ihrem Tagesbeginn erzählt und gesagt, ob und wann Sie arbeiten. Außerdem haben Sie sich zum Einkaufen verabredet. Sie lernen, immer mehr aus Ihrem Leben auf Deutsch zu erzählen.' },
@@ -3291,6 +3304,7 @@ export const CURRICULUM_A11 = {
         // comes are their own (`month`, `object` with the possessives that are the rule of this Lektion);
         // goodbye takes „Mach's gut“ or „Bis bald“ (`answerWords`), a wish „Schönen Tag noch“.
         check: {
+          shown: [null, null, { de: 'Ich kann sagen, wer zu meinem Fest kommt und was ich zum Geburtstag möchte.', en: 'I can say who is coming to my party and what I would like for my birthday.' }, { de: 'Ich kann jemandem einen schönen Tag wünschen und mich verabschieden.', en: 'I can wish someone a nice day and say goodbye.' }],
           partner: 'Lena',
           open: { en: 'A party begins with an invitation. You’ll invite Lena to yours in German and tell her about your celebration.', de: 'Eine Feier beginnt mit einer Einladung. Sie laden Lena auf Deutsch zu Ihrer Feier ein und erzählen ihr davon.' },
           passed: { en: 'You invited Lena, talked about your birthday and guests, and said goodbye with good wishes. You’re heading into the fourth checkpoint with something to feel proud of.', de: 'Sie haben Lena eingeladen, über Ihren Geburtstag und Ihre Gäste gesprochen und sich mit guten Wünschen verabschiedet. Mit diesem Erfolg können Sie stolz in den vierten Checkpoint gehen.' },

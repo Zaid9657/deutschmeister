@@ -27,12 +27,23 @@ export function canDoLines(lektion, lang = 'en') {
   return (lektion.canDo || []).map((de, i) => en?.[i] || de);
 }
 
+/**
+ * What a finished Lektion's final check showed, per can-do: the check's own line (`guided.check.shown`) where it
+ * proves less than the can-do says — a name written down from spelling is no spelling of one's own (the can-do
+ * honesty test, 2026-11-22) — else the can-do itself.
+ */
+export function shownLines(lektion, lang = 'en') {
+  const shown = lektion.guided?.check?.shown || [];
+  return canDoLines(lektion, lang).map((line, i) => shown[i]?.[lang === 'de' ? 'de' : 'en'] || line);
+}
+
 /** Every can-do of the level in course order, with its state; `done` is the set of finished path node ids. */
 export function canDoList(curriculum, done = new Set()) {
   return curriculum.lektionen.flatMap((l) => {
     const cp = checkpointFor(curriculum, l.nr);
     const state = !done.has(l.id) ? 'open' : cp && done.has(cp.id) ? 'again' : 'shown';
-    const en = canDoLines(l, 'en');
-    return (l.canDo || []).map((de, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de, en: en[i], state }));
+    // A finished Lektion claims what its check showed (`shownLines`), an open one the can-do it works towards.
+    const [de, en] = state === 'open' ? [l.canDo || [], canDoLines(l, 'en')] : [shownLines(l, 'de'), shownLines(l, 'en')];
+    return de.map((line, i) => ({ id: canDoId(l.id, i), lektionId: l.id, nr: l.nr, de: line, en: en[i], state }));
   });
 }
