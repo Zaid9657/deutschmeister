@@ -7,6 +7,7 @@ import { reserveUsage, validAnonymousId, validExamAttemptId } from '../netlify/f
 import { isMissingSchema, logMigrationPending } from '../netlify/functions/_shared/migrationPending.mjs';
 import { uaClass, cleanSource } from '../netlify/functions/_shared/xraySource.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from '../netlify/functions/_shared/writingTasks.mjs';
+import { FREE_LEKTIONEN, LEKTION_GATE_FROM } from '../netlify/functions/_shared/supportCatalog.mjs';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const userId = '12345678-1234-1234-1234-123456789abc';
@@ -53,7 +54,7 @@ function handler(name, db, { anonymous = false, failProvider = false, badEvaluat
     isMissingSchema, logMigrationPending,
     getAuthenticatedUserId: async () => anonymous ? null : userId,
     unauthorizedResponse: () => ({ statusCode: 401 }), getTier: async () => 'free_expired',
-    writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS,
+    writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS, FREE_LEKTIONEN, LEKTION_GATE_FROM,
     ruleCard: () => null, ruleCardText: () => null,
     AIError: class extends Error {},
     transcribeAudio: async () => {

@@ -41,7 +41,10 @@ const LockedContentOverlay = ({ level }) => {
         )}
 
         <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-2">
-          {isGerman ? 'Kostenlos registrieren' : 'Sign Up to Unlock'}
+          {/* On a gated course step an account alone opens nothing, so the heading must not promise it. */}
+          {gateFree
+            ? (isGerman ? 'Weiter mit einem Abo' : 'Continue with a subscription')
+            : (isGerman ? 'Kostenlos registrieren' : 'Sign Up to Unlock')}
         </h2>
 
         {/* Signup opens every level for TRIAL_DAYS, then only the free level
@@ -59,9 +62,14 @@ const LockedContentOverlay = ({ level }) => {
         </p>
 
         <p className="text-sm text-graphite mb-6">
-          {isGerman
-            ? 'Keine Kreditkarte nötig · keine automatische Abbuchung, wenn die Testphase endet'
-            : 'No credit card required · no automatic charge when the trial ends'}
+          {/* The trial does not open a gated step (owner decision 2026-11-18), so its line names no trial. */}
+          {gateFree
+            ? (isGerman
+              ? 'Das Konto ist kostenlos · keine Kreditkarte nötig'
+              : 'The account is free · no credit card needed')
+            : (isGerman
+              ? 'Keine Kreditkarte nötig · keine automatische Abbuchung, wenn die Testphase endet'
+              : 'No credit card required · no automatic charge when the trial ends')}
         </p>
 
         <div className="flex flex-col gap-3">
