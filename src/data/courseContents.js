@@ -22,7 +22,7 @@ export const COURSE_CONTENTS_COUNTED_ON = '2026-09-08';
  * snapshot does not.
  */
 export const GUIDED_PLANS = {
-  'a1.1': { days: 28, steps: 99, minutes: 1800 },
+  'a1.1': { days: 28, steps: 101, minutes: 1786 },
   'a1.2': { days: 28, steps: 92, minutes: 1760 },
   'a2.1': { days: 28, steps: 93, minutes: 1782 },
   'a2.2': { days: 28, steps: 87, minutes: 1693 },

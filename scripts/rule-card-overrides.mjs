@@ -431,7 +431,7 @@ const RULE_CARD_OVERRIDES = {
       'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
       'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
       'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
-      'Ist das Gleis weit? Hat der Zug Verspätung?',
+      'Fährt der Zug auch in die Schweiz? Hat der Zug Verspätung?',
       'English: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.',
     ].join('\n'),
     commonMistakes: [

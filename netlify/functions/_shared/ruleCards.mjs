@@ -502,7 +502,7 @@ export const RULE_CARDS = {
   },
   "yes-no-questions": {
     "titleDe": "Ja/Nein-Fragen: das Verb steht vorn",
-    "content": "Bei der neutralen Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nEine Bestätigungsfrage hat die Wortfolge der Aussage, gesprochen und geschrieben.\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.",
+    "content": "Bei der neutralen Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nEine Bestätigungsfrage hat die Wortfolge der Aussage, gesprochen und geschrieben.\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nFährt der Zug auch in die Schweiz? Hat der Zug Verspätung?\nEnglish: Neutral yes/no questions put the verb first. A confirmation question can keep statement order, in speech and writing.",
     "commonMistakes": [
       {
         "wrong": "Sie aus Österreich kommen?",

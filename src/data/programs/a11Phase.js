@@ -562,7 +562,9 @@ const WEEKS = [
 // inside the 28–32 h band and the 30–40 h A1.1 budget the A1-guide's
 // 60–80-h-to-A1 total implies. Every day is 55–75 min except the two
 // Puffertage (Tag 14: 35 min, Tag 27: 40 min) — see a11Phase.notes.md for the
-// full per-day verification transcript.
+// full per-day verification transcript. 2026-11-22: Tag 26 rehearses with three
+// checkpoints (61 min) and Tag 28 takes the test's own 40 minutes (65 min):
+// 1786 minutes, still "ca. 30 Stunden".
 export const PROGRAM_MINUTES = WEEKS.reduce(
   (sum, w) => sum + w.days.reduce((daySum, d) => daySum + d.items.reduce((s, i) => s + i.minutes, 0), 0),
   0

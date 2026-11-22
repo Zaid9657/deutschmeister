@@ -89,14 +89,14 @@
         "from": 6,
         "to": 8,
         "meaning": {
-          "promptDe": "Ist das Gleis weit? Wählen Sie die Bedeutung.",
-          "promptEn": "Is the platform far? Choose the meaning.",
+          "promptDe": "Fährt der Zug in die Schweiz? Wählen Sie die Bedeutung.",
+          "promptEn": "Does the train go to Switzerland? Choose the meaning.",
           "options": [
-            "No, the train leaves right here, from platform four.",
-            "Yes, platform four is at the other end of the station.",
-            "No, but Ana has to take the bus to get there."
+            "Yes, it leaves right here, from platform four.",
+            "No, only the bus goes to Switzerland.",
+            "Yes, but Ana has to change at platform five first."
           ],
-          "answer": "No, the train leaves right here, from platform four."
+          "answer": "Yes, it leaves right here, from platform four."
         },
         "say": {
           "line": 6
