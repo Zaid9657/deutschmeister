@@ -758,7 +758,7 @@ test('the FAQ lists exactly the exam tracks and what the support agent says is n
   const { buildFacts } = await import('../netlify/functions/_shared/supportAgentLib.mjs');
   const facts = buildFacts({ ticket: { reference: 'T-1', subject: '', category: 'other', created_at: '2026-10-25T00:00:00Z' } });
   const item = FAQ_ITEMS.find((i) => /which exams/i.test(i.q));
-  assert.ok(item, 'the FAQ answers which exams Deutschmeister prepares for');
+  assert.ok(item, 'the FAQ answers which exams DeutschMeister prepares for');
   for (const track of EXAM_TRACKS) assert.ok(item.a.includes(track.nameDe), `the exam answer must name ${track.nameDe}`);
   for (const missing of facts.library.not_offered) {
     assert.ok(item.a.includes(missing), `the exam answer must say ${missing} is not offered, as the support agent does`);
@@ -822,8 +822,8 @@ test('speaking is described as the code runs it: evaluated after the conversatio
   ];
   for (const [sample, bad] of [
     ['Aber nur eine lässt dich wirklich sprechen üben — mit KI-Feedback in Echtzeit.', true],
-    ['Deutschmeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt', true],
-    ['Bei Deutschmeister sprichst du — und die KI hört zu, analysiert und korrigiert.', true],
+    ['DeutschMeisters KI-Sprechtraining ist auf Goethe, telc und TestDaF abgestimmt', true],
+    ['Bei DeutschMeister sprichst du — und die KI hört zu, analysiert und korrigiert.', true],
     ['Sprechen · KI-Sprechtraining · Vorstellen und buchstabieren — jeden Tag laut üben, mit sofortigem Feedback.', true],
     ['Have a real conversation at your A2.1 level and get instant feedback on grammar.', true],
     ['After each session: grammar, vocabulary and pronunciation, with concrete corrections.', true],

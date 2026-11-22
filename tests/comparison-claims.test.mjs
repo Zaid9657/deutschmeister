@@ -4,7 +4,7 @@
 // Found 2026-10-25 and closed here, each as a rule over both byte-identical
 // twins of src/data/competitorComparisons.js and the page that renders them:
 //   - outcome promises: "denselben Lerneffekt" (also in the FAQPage JSON-LD)
-//     and "Deutschmeister bringt dich durch die Prüfung" as the Duolingo <h1>;
+//     and "DeutschMeister bringt dich durch die Prüfung" as the Duolingo <h1>;
 //   - a Lingoda price comparison false on the site's own figures ("weniger als
 //     eine einzige Lingoda-Stunde"), unstamped competitor prices, and a footer
 //     that certified itself "nach UWG §6 zulässig";

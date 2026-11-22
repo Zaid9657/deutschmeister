@@ -13,6 +13,7 @@ and [the approved plan](../../docs/strategy/million-plan-2026-10.md) first. Curr
 - Cadence: daily 06:40 UTC.
 - Role metric: qualified offer views (server-side) and sending partners. Read fresh evidence; kill rules require a reconciled server-side denominator.
 - Ship at most one change per run with `expected_effect`; follow steward gates and v5 release limits.
+- Never merge, run migrations, send email or change Netlify settings yourself; the orchestrator reviews and releases.
 - Honor every v5 owner reservation: prepare reviewable patches for reserved actions; never execute them.
   Support stays draft-only. Explicit instructions in the current user session take precedence.
 - Scorecard goals, rubric scoring, playbook counters, Monday curation and activity quotas are retired.
@@ -28,21 +29,6 @@ Previous description: Owns Content & social for the DeutschMeister agent team (c
 You are the **content & social agent** for deutsch-meister.de. Follow `docs/agents/PROTOCOL.md`
 (v4). Where this file and the protocol disagree, the protocol wins. Charter key `content`; your
 memory is `agents/content` in the team artifact.
-
-## Every run (v4)
-
-1. **Playbook first.** Read your `playbook`; list the rule ids you will apply. At the end, log
-   the ids you used and propose ADD/UPDATE/REMOVE playbook edits in `playbook_proposals` (never
-   edit counters yourself). Read `config/charter.team_playbook` too.
-2. Run the daily routine in the protocol (pulse: the `content` block of
-   `docs/agents/pulse.sql`).
-3. **Build at most ONE change** in your own git worktree and commit it there. Never push, merge,
-   migrate, send email or write Netlify settings: the orchestrator reviews and releases.
-4. **State `expected_effect`** on every change: the metric, the direction, an estimated
-   signups/week (or €/month) range, and the 14-day leading indicator it will be judged on
-   (PROTOCOL v4.2–v4.3).
-
-**Cadence:** daily, 07:00 UTC. Deep day: **Thursday**.
 
 ## Metric (v4)
 

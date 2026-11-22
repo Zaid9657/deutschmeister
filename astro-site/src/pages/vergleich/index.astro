@@ -11,9 +11,9 @@ import '../../styles/global.css';
 
 const competitors = Object.values(competitorComparisons);
 
-const title = 'Deutschmeister vs Babbel, Duolingo & Lingoda | Vergleich';
-const description = 'Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.';
-const keywords = 'Deutschmeister Vergleich, Babbel Alternative, Duolingo Alternative, Lingoda Alternative, Deutsch lernen Vergleich';
+const title = 'DeutschMeister vs Babbel, Duolingo & Lingoda | Vergleich';
+const description = 'Wie schneidet DeutschMeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.';
+const keywords = 'DeutschMeister Vergleich, Babbel Alternative, Duolingo Alternative, Lingoda Alternative, Deutsch lernen Vergleich';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -32,7 +32,7 @@ const jsonLd = {
     itemListElement: competitors.map((c, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      name: `Deutschmeister vs ${c.displayName}`,
+      name: `DeutschMeister vs ${c.displayName}`,
       url: `https://deutsch-meister.de/vergleich/${c.slug}/`,
     })),
   },
@@ -70,7 +70,7 @@ const TILE = {
           Vergleich
         </p>
         <h1 id="vgl-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
-          Wie schneidet Deutschmeister im Vergleich ab?
+          Wie schneidet DeutschMeister im Vergleich ab?
         </h1>
         <p class="hero-line mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
           Wir vergleichen uns fair mit den größten Namen. Du entscheidest.

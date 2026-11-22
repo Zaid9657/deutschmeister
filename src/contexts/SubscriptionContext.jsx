@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef } f
 import { useAuth } from './AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { withTimeout } from '../utils/withTimeout';
-import { courseAccessReason } from '../lib/levelEntitlement.js';
+import { courseAccessReason, fullCourseReason } from '../lib/levelEntitlement.js';
 import {
   getSubscription,
   getUserProfile,
@@ -259,6 +259,9 @@ export const SubscriptionProvider = ({ children }) => {
   // and lock badges read THIS, never hasAccess alone, or a paid-for course
   // shows a lock the day its included AI Practice expires.
   const hasLevelAccess = (level) => Boolean(courseAccessReason({ profile, subscription, purchases }, level));
+  // The whole guided course. Differs from hasLevelAccess only for a level whose
+  // course is free up to its first Lektion (src/config/freeTier.js Lektion gate).
+  const hasFullCourse = (level) => Boolean(fullCourseReason({ profile, subscription, purchases }, level));
 
   // NOTE: there is deliberately no client-side createSubscription here.
   // Paid access is granted server-side only, by the Lemon Squeezy webhook
@@ -299,6 +302,7 @@ export const SubscriptionProvider = ({ children }) => {
     purchases,
     hasProduct,
     hasLevelAccess,
+    hasFullCourse,
     loading,
     billingVerified,
     hasAccess,

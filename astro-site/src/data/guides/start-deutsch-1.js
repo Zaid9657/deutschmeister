@@ -81,7 +81,7 @@ export const startDeutsch1 = {
         },
         {
           type: 'callout',
-          text: 'Wichtig für die Visumstelle: Nur ein Zertifikat von Goethe-Institut, telc oder ÖSD zählt als offizieller A1-Nachweis für den Ehegattennachzug. Ein Kursabschluss, eine App-Zertifizierung oder ein Zertifikat von Deutschmeister ersetzt das nicht — wir bereiten dich auf genau diese Prüfung vor, stellen sie aber nicht aus.',
+          text: 'Wichtig für die Visumstelle: Nur ein Zertifikat von Goethe-Institut, telc oder ÖSD zählt als offizieller A1-Nachweis für den Ehegattennachzug. Ein Kursabschluss, eine App-Zertifizierung oder ein Zertifikat von DeutschMeister ersetzt das nicht — wir bereiten dich auf genau diese Prüfung vor, stellen sie aber nicht aus.',
         },
       ],
     },
@@ -270,7 +270,7 @@ export const startDeutsch1 = {
     },
     {
       id: 'deutschmeister',
-      heading: 'Wie Deutschmeister bei Start Deutsch 1 hilft',
+      heading: 'Wie DeutschMeister bei Start Deutsch 1 hilft',
       blocks: [
         {
           type: 'p',
@@ -339,8 +339,8 @@ export const startDeutsch1 = {
       a: 'Der Sprechteil läuft in der Gruppe (bis zu 4 Personen) ohne Vorbereitungszeit und dauert etwa 15 Minuten: sich mit Name, Alter, Land, Wohnort, Sprachen, Beruf und Hobby vorstellen sowie einen Namen und eine Telefonnummer nennen/buchstabieren, Informationen mit Wortkarten erfragen und geben, und Bitten anhand von Bildkarten formulieren und darauf reagieren.',
     },
     {
-      q: 'Zählt ein Deutschmeister-Zertifikat für die Botschaft?',
-      a: 'Nein. Für Visumzwecke zählt ausschließlich ein Zeugnis von Goethe-Institut, telc oder ÖSD. Deutschmeister bereitet gezielt auf genau diese Prüfung vor, ersetzt sie aber nicht — den offiziellen Termin buchst du direkt beim Prüfungszentrum.',
+      q: 'Zählt ein DeutschMeister-Zertifikat für die Botschaft?',
+      a: 'Nein. Für Visumzwecke zählt ausschließlich ein Zeugnis von Goethe-Institut, telc oder ÖSD. DeutschMeister bereitet gezielt auf genau diese Prüfung vor, ersetzt sie aber nicht — den offiziellen Termin buchst du direkt beim Prüfungszentrum.',
     },
   ],
 

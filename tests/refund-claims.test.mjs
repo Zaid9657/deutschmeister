@@ -1,6 +1,6 @@
 // No page promises a money-back guarantee or a refund period.
 //
-// WHY. /faq/ said "Deutschmeister advertises a 7-day money-back guarantee" — in
+// WHY. /faq/ said "DeutschMeister advertises a 7-day money-back guarantee" — in
 // the visible answer and in the FAQPage JSON-LD that search engines show — while
 // src/data/offers.js states that refunds are deliberately absent until the owner
 // confirms a policy's wording. A refund promise is a money decision; a page must
@@ -58,7 +58,7 @@ test('no page source promises a money-back guarantee or a refund window', () => 
 
 test('the guard catches the sentence that shipped and its common variants', () => {
   const caught = [
-    'Deutschmeister advertises a 7-day money-back guarantee.',
+    'DeutschMeister advertises a 7-day money-back guarantee.',
     '14-Tage-Geld-zurück-Garantie',
     '30 days money back',
     'Money\u2011back guarantee',

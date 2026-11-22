@@ -1,7 +1,7 @@
 import { useParams, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
-import { isLevelFree } from '../config/freeTier';
+import { isLevelFree, beyondFreeLektionen } from '../config/freeTier';
 import { useTranslation } from 'react-i18next';
 import { ownsExamProgramme, hasExamPracticeAccess } from '../data/pricing.js';
 import LockedContentOverlay from './LockedContentOverlay';
@@ -13,12 +13,16 @@ const LevelSubscriptionGuard = ({ children, level: levelProp, programme }) => {
   // band's top sublevel) passes it as a prop instead.
   const level = levelProp || levelParam;
   const { user, loading: authLoading } = useAuth();
-  const { hasLevelAccess, purchases, loading: subLoading } = useSubscription();
+  const { hasLevelAccess, hasFullCourse, purchases, loading: subLoading } = useSubscription();
   const location = useLocation();
   const { t } = useTranslation();
 
+  // A course step past the level's free Lektion(en): the level being free is
+  // not enough there (Lektion gate, src/config/freeTier.js; off = never true).
+  const gated = beyondFreeLektionen(location.pathname);
+
   // Free levels are accessible to everyone — no auth needed
-  if (isLevelFree(level)) {
+  if (isLevelFree(level) && !gated) {
     return children;
   }
 
@@ -40,7 +44,7 @@ const LevelSubscriptionGuard = ({ children, level: levelProp, programme }) => {
   }
 
   // Logged in but neither subscription/trial nor a level course covering it
-  if (!hasLevelAccess(level) && !ownsExamProgramme(purchases, programme)
+  if (gated ? !hasFullCourse(level) : !hasLevelAccess(level) && !ownsExamProgramme(purchases, programme)
     && !(/^\/(?:reading|listening)\//.test(location.pathname) && hasExamPracticeAccess(purchases, level))) {
     return <Navigate to="/subscription" state={{ from: location }} replace />;
   }

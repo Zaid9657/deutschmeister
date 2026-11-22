@@ -97,10 +97,10 @@ const UeberUnsPage = () => {
       {/* FOUNDER */}
       <section className="py-12 bg-white border-y border-rule">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <SectionHeading title="Who is behind Deutschmeister" className="mb-6" />
+          <SectionHeading title="Who is behind DeutschMeister" className="mb-6" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
             <Reveal as="p" delay={80}>
-              The learning path begins with the free A1.1 course. A1.2 is the next guided course; later courses follow level by level.
+              The learning path begins with A1.1, and its first Lektion is free. A1.2 is the next guided course; later courses follow level by level.
             </Reveal>
             <Reveal as="p" delay={160}>
               Inspect a real task before creating an account. Course demonstrations show their source and distinguish automatic form checks from AI feedback.
@@ -140,7 +140,7 @@ const UeberUnsPage = () => {
       <section className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <SectionHeading
-            title="What makes Deutschmeister different"
+            title="What makes DeutschMeister different"
             align="center"
             className="mb-12"
           />
@@ -204,7 +204,7 @@ const UeberUnsPage = () => {
             Real stories start with permission
           </Reveal>
           <Reveal as="p" delay={80} className="mx-auto mt-4 max-w-xl text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-            Used Deutschmeister? Tell us what helped and what should improve. Submissions are reviewed, verified where possible, and never published automatically.
+            Used DeutschMeister? Tell us what helped and what should improve. Submissions are reviewed, verified where possible, and never published automatically.
           </Reveal>
           <Reveal delay={160} className="mt-7">
             <Button href="/share-your-story/" size="lg" variant="secondary">Share your experience</Button>

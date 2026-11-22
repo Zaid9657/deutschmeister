@@ -140,7 +140,7 @@ export const goetheB1 = {
               label: 'Woche 4–5',
               title: 'Schreiben und Sprechen — die teuren Module',
               tasks: [
-                'AI Practice Woche zwei vollständige Schreibaufgaben unter Zeitlimit',
+                'Pro Woche zwei vollständige Schreibaufgaben unter Zeitlimit',
                 'Textsorten trennen üben: kurze Mitteilung vs. längerer Meinungstext',
                 'Täglich 10 Minuten frei sprechen, ohne Skript',
                 'Die Präsentationsform üben: Thema vorstellen, Meinung begründen, Beispiel geben',
@@ -217,11 +217,11 @@ export const goetheB1 = {
     },
     {
       id: 'deutschmeister',
-      heading: 'Wie Deutschmeister zur Modulstruktur passt',
+      heading: 'Wie DeutschMeister zur Modulstruktur passt',
       blocks: [
         {
           type: 'p',
-          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist Deutschmeister aufgebaut — von einem Team von Ärzten in Deutschland, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
+          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist DeutschMeister aufgebaut — von einem Team von Ärzten in Deutschland, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',
@@ -263,7 +263,7 @@ export const goetheB1 = {
     },
     {
       q: 'Wie viele Punkte braucht man beim Goethe-Zertifikat B1?',
-      a: 'AI Practice Modul sind maximal 100 Punkte erreichbar, bestanden ist ab 60 Punkten, also 60 %. Diese Grenze gilt für jedes Modul einzeln, und zwischen den Modulen wird nicht verrechnet.',
+      a: 'In jedem Modul sind maximal 100 Punkte erreichbar, bestanden ist ab 60 Punkten, also 60 %. Diese Grenze gilt für jedes Modul einzeln, und zwischen den Modulen wird nicht verrechnet.',
     },
     {
       q: 'Muss ich bei nicht bestandenem Modul die ganze Prüfung wiederholen?',

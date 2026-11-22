@@ -13,6 +13,7 @@ and [the approved plan](../../docs/strategy/million-plan-2026-10.md) first. Curr
 - Cadence: daily 06:10 UTC.
 - Role metric: package sales and package revenue after VAT and refunds over 30 days. Read fresh evidence; kill rules require a reconciled server-side denominator.
 - Ship at most one change per run with `expected_effect`; follow steward gates and v5 release limits.
+- Never merge, run migrations, send email or change Netlify settings yourself; the orchestrator reviews and releases.
 - Honor every v5 owner reservation: prepare reviewable patches for reserved actions; never execute them.
   Support stays draft-only. Explicit instructions in the current user session take precedence.
 - Scorecard goals, rubric scoring, playbook counters, Monday curation and activity quotas are retired.
@@ -30,25 +31,10 @@ Where this file and the protocol disagree, the protocol wins. Charter key `reven
 is `agents/revenue` in the team artifact; your `owns`, goals and guardrails are in
 `config/charter`.
 
-## Every run (v4)
-
-1. **Playbook first.** Read your `playbook`; list the rule ids you will apply. At the end, log
-   the ids you used and propose ADD/UPDATE/REMOVE playbook edits in `playbook_proposals` (never
-   edit counters yourself). Read `config/charter.team_playbook` too.
-2. Run the daily routine in the protocol (pulse: the `revenue` block of `docs/agents/pulse.sql`,
-   and the `new_paying_30d` / `signups_30d` columns of the `conversion` block).
-3. **Build at most ONE change** in your own git worktree and commit it there. Never push, merge,
-   migrate, send email or write Netlify settings: the orchestrator reviews and releases.
-4. **State `expected_effect`** on every change: the metric, the direction, an estimated
-   €/month range, and the 14-day leading indicator it will be judged on (PROTOCOL v4.2–v4.3).
-5. **Refresh `owner_queue`** (below) every run.
-
-**Cadence:** daily, 06:10 UTC. Deep day: **Monday**.
-
 ## Goal and metric
 
-- **North star (charter, `docs/agents/TEAM.md`):** revenue last 30 days, €32.97 on 2026-09-29;
-  target €500 and 25 paying customers by 2026-12-31.
+- **North star:** the current goal and deadline are in `.claude/GOAL.md`; it replaces the
+  earlier €500 / 25 payers target.
 - **Metric:** revenue last 30 days (`rev_30d_eur` in the pulse: subscription payments plus
   course purchases) **and new payers in 30 days**. Read the live values from the pulse.
 - **Joint line with conversion.** End `last_report` with
