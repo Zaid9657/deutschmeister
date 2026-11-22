@@ -7,7 +7,7 @@ import { RESULT } from '../src/lib/lesson/check.js';
 import { alignTranscript } from '../src/lib/lesson/readaloud.js';
 import { buildLesson } from '../src/lib/lesson/buildLesson.js';
 import { STRINGS as T } from '../src/lib/lesson/strings.js';
-import { BEYOND, untaughtIn, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, partsToRepeat, spokenShown, spokenTarget, typedResult, writtenOnly } from '../src/lib/lesson/finalCheck.js';
+import { BEYOND, untaughtIn, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, optionalPieces, partsToRepeat, spokenShown, spokenTarget, typedResult, verifiedResult, writtenOnly, wrongReason } from '../src/lib/lesson/finalCheck.js';
 import { guidedCheckVocabulary } from '../scripts/validate-curriculum.mjs';
 
 const withCheck = CURRICULUM_A11.lektionen.filter((l) => l.guided?.check);
@@ -635,7 +635,7 @@ test('three outcomes: verified is CORRECT, a named fault of course words is WRON
   // The blind corpora: a teacher's wrong answer reaches CORRECT or BEYOND no more often than measured (ratchets: only down).
   const dir = new URL('../docs/course-factory/a11-lektion-rollout/corpora/', import.meta.url);
   const count = { correct: 0, beyond: 0 };
-  const bare = [];
+  const unnamed = [];
   for (const batch of ['batch-1', 'batch-2', 'batch-3', 'batch-4']) {
     for (const name of ['corpus-1.json', 'corpus-2.json', 'corpus-2-avoid-obvious.json', 'corpus-3-most-common.json']) {
       let raw;
@@ -643,19 +643,19 @@ test('three outcomes: verified is CORRECT, a named fault of course words is WRON
       for (const it of JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)).items) {
         const turn = sitting(CURRICULUM_A11.lektionen[it.lektion - 1], (it.sitting || 1) - 1)[it.turn - 1];
         if (!turn) continue;
-        if (it.verdict !== 'wrong') { if (typedResult(turn, it.answer) === BEYOND && !untaughtIn(turn, it.answer).length) bare.push(`L${it.lektion}: ${it.answer}`); continue; }
         const r = typedResult(turn, it.answer);
-        if (r in count) count[r] += 1;
-        if (r === BEYOND && !untaughtIn(turn, it.answer).length) bare.push(`L${it.lektion}: ${it.answer}`);
+        // Every WRONG names its fault, and only a WRONG does: a BEYOND is „no rule for this wording“ (Rule 2).
+        if (!verifiedResult(r) && (r === RESULT.WRONG) !== Boolean(wrongReason(turn, it.answer))) unnamed.push(`L${it.lektion}: ${it.answer} (${r})`);
+        if (it.verdict === 'wrong' && r in count) count[r] += 1;
       }
     }
   }
   // 7 CORRECT: tasks that ask for neither digits nor a sentence („Schreiben Sie die Nummer.“, „Nennen Sie Ihr Ziel.“)
-  // and one older batch-4 task. No teacher-wrong answer is BEYOND since the said words count as taught (third score).
+  // and one older batch-4 task. 8 BEYOND (third score, Rule 2): on-task German no rule of the check faults — „Wann ist
+  // die Ankunft?“ for the departure, „Guten Appetit!“ for a good day — each listed in the PR. Never more.
   assert.ok(count.correct <= 7, `${count.correct} wrong answers graded correct`);
-  assert.ok(count.beyond <= 0, `${count.beyond} wrong answers graded beyond`);
-  // BEYOND rests on a word the course does not teach, never on taught words alone.
-  assert.deepEqual(bare, []);
+  assert.ok(count.beyond <= 8, `${count.beyond} wrong answers graded beyond`);
+  assert.deepEqual(unnamed, []);
 });
 
 test('one spelling fold: every blind-corpus answer with ä, ö, ü or ß grades the same typed with ae, oe, ue, ss (2026-11-20)', () => {
@@ -779,9 +779,97 @@ test('the fixed expressions verify every word between „habe“ and the partici
   // Taught words and taught frames only: CORRECT or WRONG, never BEYOND.
   assert.equal(typedResult(at(9)[2], 'Ich hätte gern einen Stück Kuchen.'), RESULT.WRONG);
   assert.equal(typedResult(at(10)[2], 'Wohin fährt der Zug?'), RESULT.WRONG, 'the cue of Lektion 10, the wrong question for the task');
-  assert.equal(typedResult(at(12)[4], 'Ein Buch wäre schöne.'), BEYOND);
-  assert.ok(untaughtIn(at(12)[4], 'Ein Buch wäre schöne.').includes('wäre'), '„wäre“ is not taught');
+  // „schöne“ after „wäre“ is an ending the check names (third score); „Ein Buch wäre schön.“ goes beyond („wäre“).
+  assert.equal(typedResult(at(12)[4], 'Ein Buch wäre schöne.'), RESULT.WRONG);
+  assert.equal(typedResult(at(12)[4], 'Ein Buch wäre schön.'), BEYOND);
+  assert.ok(untaughtIn(at(12)[4], 'Ein Buch wäre schön.').includes('wäre'), '„wäre“ is not taught');
   // A hobby keeps the article of a taught noun.
   assert.equal(typedResult(at(7)[0], 'Mein Hobby ist das Musik.'), RESULT.WRONG);
   assert.equal(typedResult(at(7)[0], 'Mein Hobby ist die Musik.'), RESULT.CORRECT);
+});
+
+test('the whole answer (third score, Rule 1): what follows a verified beginning is graded on its own (2026-11-22)', () => {
+  // Generated over every turn of every sitting, so a new turn cannot reopen the class: the turn's model answer with a tail
+  // that is wrong whatever stands before it is never CORRECT or TYPO.
+  const tails = [' und ich ist Student', ' und kommen aus Syrien', ' bin', ' ist', ' und du bist', ' und ich habe gearbeiten', ' und ich brauche ein Computer'];
+  let tried = 0;
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((turn, i) => {
+        const base = turn.ownName ? `${turn.accepted[0]} Omar.` : modelAnswer(turn);
+        if (!verifiedResult(typedResult(turn, base))) return;
+        for (const tail of tails) {
+          const answer = `${base.replace(/[.!?]+\s*$/, '')}${tail}${/\?\s*$/.test(base) ? '?' : '.'}`;
+          tried += 1;
+          assert.ok(!verifiedResult(typedResult(turn, answer)), `${l.id} sitting ${r + 1} turn ${i + 1}: ${answer}`);
+        }
+      });
+    }
+  }
+  assert.ok(tried >= 525, `${tried} answers`);
+  // A clause an answer of the course verifies stays verified; a faulty one is WRONG, an unverified one BEYOND.
+  const [, name] = sitting(l1);
+  for (const right of ['Ich heiße Omar. Und Sie?', 'Ich heiße Omar, und Sie?', 'Ich heiße Omar Al-Haddad.', 'Ich heiße Omar und komme aus Syrien.']) assert.equal(typedResult(name, right), RESULT.CORRECT, right);
+  for (const wrong of ['Ich heiße Omar und kommen aus Syrien.', 'Ich heiße Omar und ich ist Student.', 'Ich heiße Omar bin.', 'Ich bin Omar und du bist.', 'Ich heiße Omar Haddad ist.']) assert.equal(typedResult(name, wrong), RESULT.WRONG, wrong);
+  assert.equal(typedResult(sitting(l2)[0], 'Ich komme aus Marokko und wohne in Bremen.'), RESULT.CORRECT, 'the scene’s own line');
+  assert.equal(typedResult(sitting(l2)[0], 'Ich komme aus Marokko und ich ist Student.'), RESULT.WRONG);
+  assert.equal(typedResult(sitting(l2)[5], '0421 3618 bin.'), RESULT.WRONG, 'a heard number and nothing after it but a unit');
+  assert.equal(typedResult(sitting(l2)[5], 'Telefonnummer: 0421 3618'), RESULT.CORRECT);
+});
+
+test('nothing is wrong by default (third score, Rule 2): a WRONG names its fault, unverified on-task German is BEYOND (2026-11-22)', () => {
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  // The score's examples, German from taught words: never WRONG; the two that combine pieces of the turn CORRECT (Rule 3).
+  assert.equal(typedResult(at(8)[1], 'Kannst du mir sagen, wie spät es ist?'), BEYOND);
+  assert.equal(typedResult(at(11)[4], 'Ich arbeite am 15. Mai.'), BEYOND);
+  assert.equal(typedResult(at(8)[4], 'Ja, Freitag um zehn passt mir gut.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(10)[2], 'Um wie viel Uhr fährt der Zug ab?'), RESULT.CORRECT);
+  // The typical beginner faults stay WRONG, each with its fault named.
+  for (const [turn, answer, reason] of [
+    [at(11)[0], 'Ich habe Kaffee trinken.', 'participle'], [at(11)[0], 'Ich bin Kaffee getrunken.', 'auxiliary'], [at(11)[0], 'Ich habe gearbeiten.', 'participle'],
+    [at(11)[0], 'Ich hat gearbeitet.', 'agreement'], [at(11)[0], 'Ich arbeite gestern.', 'tense'], [at(11)[0], 'Ich habe gemacht Hausaufgaben.', 'order'],
+    [at(11)[1], 'Was du hast gestern gemacht?', 'order'], [at(2)[0], 'Ich kommen aus Syrien.', 'agreement'], [at(2)[0], 'Ich komme von Syrien.', 'word'],
+    [at(2)[0], 'Ich komme aus Arabisch.', 'kind'], [at(1)[3], 'Mir geht gut.', 'missing'], [at(10)[2], 'Wohin fährt der Zug?', 'word'],
+    [at(10)[2], 'Wann fahren der Zug ab?', 'agreement'], [at(9)[2], 'Ich hätte gern einen Stück Kuchen.', 'article'], [at(4)[0], 'Ich brauche ein Computer.', 'case'],
+    [at(12)[4], 'Ein Buch wäre schöne.', 'ending'], [at(7)[3], 'Tanzen Sie gern?', 'address'], [at(10)[0], 'Nach Berlin ich fahre.', 'order'],
+    [at(10)[0], 'Ich fahre nach der Berlin.', 'article'], [at(11)[0], 'asdf qwer', 'german']]) {
+    assert.equal(typedResult(turn, answer), RESULT.WRONG, answer);
+    assert.equal(wrongReason(turn, answer), reason, answer);
+  }
+  // A verified or unverified answer has no reason.
+  assert.equal(wrongReason(at(2)[0], 'Ich komme aus Syrien.'), null);
+  assert.equal(wrongReason(at(8)[1], 'Kannst du mir sagen, wie spät es ist?'), null);
+});
+
+test('what a turn accepts in pieces it accepts together (third score, Rule 3): generated over every turn (2026-11-22)', () => {
+  // Each optional piece of a turn (a run of words one of its answers has and another, otherwise the same, has not), put
+  // into each of its fixed answers between the words it stands between there: never WRONG.
+  const fold = (w) => w.toLocaleLowerCase('de').replace(/[.,!?;:„“"()]+/g, '').replace(/ß/g, 'ss');
+  let n = 0;
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((turn, i) => {
+        if (turn.ownName || turn.spell || turn.listen || turn.parts) return;
+        for (const a of turn.accepted.filter((x) => typeof x === 'string' && !x.includes('…'))) {
+          const words = a.split(/\s+/);
+          const plain = words.map(fold);
+          for (const p of optionalPieces(turn)) {
+            for (let k = 0; k <= words.length; k += 1) {
+              if (!(p.left === '^' ? k === 0 : plain[k - 1] === p.left) || !(p.right === '$' ? k === words.length : plain[k] === p.right)) continue;
+              const out = [...words];
+              const stop = k === words.length ? (out[k - 1].match(/[.!?]+$/) || [''])[0] : '';
+              if (stop) out[k - 1] = out[k - 1].slice(0, -stop.length);
+              const piece = [...p.written];
+              if (stop) piece[piece.length - 1] += stop;
+              out.splice(k, 0, ...piece);
+              const answer = out.join(' ');
+              n += 1;
+              assert.notEqual(typedResult(turn, answer), RESULT.WRONG, `${l.id} sitting ${r + 1} turn ${i + 1}: ${answer}`);
+            }
+          }
+        }
+      });
+    }
+  }
+  assert.ok(n >= 20, `${n} combinations`);
 });

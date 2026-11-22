@@ -459,8 +459,8 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.',
       'Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.',
-      'Beispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.',
-      'Ich rufe dich an ist eine feste Wendung. Rufst du mich an?',
+      'Beispiele: Ich stehe um sechs auf. Ich bringe eine Tasche mit. Ja, ich komme mit.',
+      'Ich rufe dich an ist eine feste Wendung. Rufst du nach acht an?',
       'schlafen wechselt den Vokal: er schläft.',
       'Gemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.',
       'English: a separable verb splits — the finite part comes second (first in a yes/no question), the prefix goes last.',

@@ -689,7 +689,8 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
           // The Zahlen can-do is carried by the input, not only by the Wortfeld entry: these two
           // lines are the only place a learner hears digits in L2 (DaF review #2, L2).
-          { speaker: 'Herr Weber', de: 'Danke. Hier ist auch die Post. Wie ist Ihre Telefonnummer?', en: 'Thank you. The post office is here too. What is your phone number?' },
+          // The post goes to the address just given (third score, 2026-11-22: „Hier ist auch die Post“ placed the word).
+          { speaker: 'Herr Weber', de: 'Danke. Die Post kommt an Ihre Adresse. Wie ist Ihre Telefonnummer?', en: 'Thank you. Your post comes to your address. What is your phone number?' },
           { speaker: 'Ana', de: 'Meine Telefonnummer ist null eins sieben sechs.', en: 'My phone number is zero one seven six.' },
         ],
       },
@@ -1603,7 +1604,7 @@ export const CURRICULUM_A11 = {
           // as its second surface.
           // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
           // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
-          { speaker: 'Lena', de: 'Mein Schlüssel ist da. Welche Farbe hat das Bild?', en: 'My key is there. What colour is the picture?' },
+          { speaker: 'Lena', de: 'Wo ist mein Schlüssel? Hier ist er. Welche Farbe hat das Bild?', en: 'Where is my key? Here it is. What colour is the picture?' },
           { speaker: 'Tim', de: 'Es ist blau. Das Bild ist für mein Zimmer.', en: 'It is blue. The picture is for my room.' },
         ],
       },
@@ -2642,7 +2643,8 @@ export const CURRICULUM_A11 = {
           { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier und Wein.', en: 'Gladly. We also have tea, beer and wine.' },
           { speaker: 'Ana', de: 'Nein, danke. Ich esse ein Brot mit Salat.', en: 'No, thank you. I’ll have a sandwich with salad.' },
           { speaker: 'Paul', de: 'Gut. Die Kellnerin kommt sofort mit dem Brot.', en: 'Good. The waitress is coming right away with the bread.' },
-          { speaker: 'Ana', de: 'Danke! Zum Frühstück trinke ich immer eine Tasse Kaffee.', en: 'Thank you! For breakfast I always drink a cup of coffee.' },
+          // Ana answers the waiter with one more order (third score, 2026-11-22: „Zum Frühstück trinke ich immer …“ answered nothing).
+          { speaker: 'Ana', de: 'Danke! Und noch eine Tasse Kaffee zum Frühstück, bitte.', en: 'Thank you! And another cup of coffee with breakfast, please.' },
         ],
       },
       pretest: {
@@ -2892,7 +2894,8 @@ export const CURRICULUM_A11 = {
           // (independent score, 2026-11-22). The timetable says no bus goes there; the train does. The line keeps
           // „in die Schweiz“, the direction A1.2 builds on (its RULE 29).
           { speaker: 'Ana', de: 'Fährt der Zug auch in die Schweiz?', en: 'Does the train go to Switzerland too?' },
-          { speaker: 'Herr Schmidt', de: 'Ja. Die Abfahrt ist nicht weit: hier an Gleis vier.', en: 'Yes. The departure is not far: here on platform four.' },
+          // A country is far, a departure is not (third score, 2026-11-22: „Die Abfahrt ist nicht weit“).
+          { speaker: 'Herr Schmidt', de: 'Ja, die Schweiz ist weit. Die Abfahrt ist von Gleis vier.', en: 'Yes, Switzerland is far. The departure is from platform four.' },
           // Bahnhof, Abfahrt, Ankunft and umsteigen were Wortfeld-only, and the „Durchsagen“ can-do
           // had no announcement to understand. The announcement is read out by the man at the counter
           // rather than given its own speaker, because a dialogue has exactly two speakers
@@ -3138,7 +3141,7 @@ export const CURRICULUM_A11 = {
         { de: 'mitbringen', word: 'mitbringen', article: null, plural: null, en: 'to bring along', wordId: '75574213-060f-4f93-80a9-e6764e9fdd5a' },
         { de: 'einkaufen', word: 'einkaufen', article: null, plural: null, en: 'to go shopping', wordId: '1e4c6cff-59b8-42eb-8de3-b8142d10a6d3' },
         // anrufen came over from L6, where it appeared in no line: this is the Lektion whose dialogue
-        // says „Rufst du mich an?“ and whose notice takes an|rufen apart. der Kalender was unused and
+        // says „Rufst du nach acht an?“ and whose notice takes an|rufen apart. der Kalender was unused and
         // krank moved to L8's Gesundheit Handlungsfeld (review #2, L6 and L11).
         { de: 'anrufen', word: 'anrufen', article: null, plural: null, en: 'to call (on the phone)', wordId: '29a7e95e-d41e-42b3-8fe2-84a90433082b' },
         { de: 'mitkommen', word: 'mitkommen', article: null, plural: null, en: 'to come along', wordId: '889e2bbc-c219-4f4a-8491-317ff014aa38' },
@@ -3158,11 +3161,13 @@ export const CURRICULUM_A11 = {
           // The scene is Thursday: „heute“ was answered „am Freitag“ (2026-10 review). „morgen“ is taught in L10.
           { speaker: 'Lena', de: 'Kaufst du morgen ein?', en: 'Are you going shopping tomorrow?' },
           { speaker: 'Tim', de: 'Ja, ich kaufe am Freitag ein. Kommst du mit?', en: 'Yes, I am going shopping on Friday. Are you coming along?' },
-          { speaker: 'Lena', de: 'Ja, ich komme mit. Rufst du mich an?', en: 'Yes, I am coming along. Will you call me?' },
-          { speaker: 'Tim', de: 'Ja, ich rufe dich an.', en: 'Yes, I will call you.' },
+          // A bag for the shopping, a call, and when to call: each line answers the one before (third score, 2026-11-22;
+          // „Ich bringe Kuchen mit“ followed from nothing).
+          { speaker: 'Lena', de: 'Ja, ich komme mit. Ich bringe eine Tasche mit.', en: 'Yes, I am coming along. I will bring a bag.' },
+          { speaker: 'Tim', de: 'Gut, ich rufe dich an.', en: 'Good, I will call you.' },
           // frühstücken, duschen, schlafen and mitbringen were Wortfeld-only, so the Tagesablauf
           // can-do rested on three verbs; the last line shows the schlafen vowel change (review #2, §A).
-          { speaker: 'Lena', de: 'Ich dusche und frühstücke jeden Tag. Ich bringe Kuchen mit.', en: 'I shower and have breakfast every day. I bring cake along.' },
+          { speaker: 'Lena', de: 'Rufst du nach acht an? Ich dusche und frühstücke jeden Tag.', en: 'Will you call after eight? I shower and have breakfast every day.' },
           { speaker: 'Tim', de: 'Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.', en: 'On Sunday I sleep until nine. My brother sleeps in too.' },
         ],
       },
