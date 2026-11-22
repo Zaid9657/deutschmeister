@@ -733,6 +733,12 @@ test('Lektion 1 after the second score: a name after the opening, the ways one i
   assert.equal(typedResult(bye, 'Tschüss!'), RESULT.CORRECT);
 });
 
+test('a day of the month exists in its month, as the full date checks it (2026-11-22)', () => {
+  const birthday = sitting(CURRICULUM_A11.lektionen[11])[1];
+  for (const wrong of ['Mein Geburtstag ist am 31. Februar.', 'Mein Geburtstag ist am 31. April.', 'Mein Geburtstag ist am 31.11.']) assert.equal(typedResult(birthday, wrong), RESULT.WRONG, wrong);
+  for (const right of ['Mein Geburtstag ist am 29. Februar.', 'Mein Geburtstag ist am 30. April.', 'Mein Geburtstag ist am 31.12.']) assert.equal(typedResult(birthday, right), RESULT.CORRECT, right);
+});
+
 
 test('can-do honesty: a check claims only what its turns show, and a receptive turn never claims a productive can-do (2026-11-22)', async () => {
   const { canDoList, shownLines } = await import('../src/lib/course/canDo.js');

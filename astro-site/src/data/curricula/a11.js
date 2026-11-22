@@ -2763,10 +2763,10 @@ export const CURRICULUM_A11 = {
             from: 6,
             to: 8,
             meaning: {
-              promptDe: 'Ist das Gleis weit? Wählen Sie die Bedeutung.',
-              promptEn: 'Is the platform far? Choose the meaning.',
-              options: ['No, the train leaves right here, from platform four.', 'Yes, platform four is at the other end of the station.', 'No, but Ana has to take the bus to get there.'],
-              answer: 'No, the train leaves right here, from platform four.',
+              promptDe: 'Fährt der Zug in die Schweiz? Wählen Sie die Bedeutung.',
+              promptEn: 'Does the train go to Switzerland? Choose the meaning.',
+              options: ['Yes, it leaves right here, from platform four.', 'No, only the bus goes to Switzerland.', 'Yes, but Ana has to change at platform five first.'],
+              answer: 'Yes, it leaves right here, from platform four.',
             },
             say: {
               line: 6,
@@ -2888,8 +2888,11 @@ export const CURRICULUM_A11 = {
           { speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich.', en: 'No, it is on time.' },
           { speaker: 'Ana', de: 'Kostet die Fahrkarte zwanzig Euro?', en: 'Does the ticket cost twenty euros?' },
           { speaker: 'Herr Schmidt', de: 'Nein, sie kostet fünfzehn Euro.', en: 'No, it costs fifteen euros.' },
-          { speaker: 'Ana', de: 'Fährt der Bus auch in die Schweiz? Ist das Gleis weit?', en: 'Does the bus go to Switzerland too? Is the platform far?' },
-          { speaker: 'Herr Schmidt', de: 'Nein, leider nicht. Die Abfahrt ist hier an Gleis vier.', en: 'No, unfortunately not. The departure is here on platform four.' },
+          // One question, one answer: the line asked about the bus to Switzerland and the platform at once
+          // (independent score, 2026-11-22). The timetable says no bus goes there; the train does. The line keeps
+          // „in die Schweiz“, the direction A1.2 builds on (its RULE 29).
+          { speaker: 'Ana', de: 'Fährt der Zug auch in die Schweiz?', en: 'Does the train go to Switzerland too?' },
+          { speaker: 'Herr Schmidt', de: 'Ja. Die Abfahrt ist nicht weit: hier an Gleis vier.', en: 'Yes. The departure is not far: here on platform four.' },
           // Bahnhof, Abfahrt, Ankunft and umsteigen were Wortfeld-only, and the „Durchsagen“ can-do
           // had no announcement to understand. The announcement is read out by the man at the counter
           // rather than given its own speaker, because a dialogue has exactly two speakers

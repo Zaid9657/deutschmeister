@@ -510,10 +510,16 @@ function gapResult(words, { slot = 'words', slotIn, slotNot = [], slotWords = []
     const ORDINAL = /^(?:ersten|zweiten|dritten|vierten|fünften|sechsten|siebten|siebenten|achten|neunten|zehnten|elften|zwölften|\p{L}+zehnten|\p{L}*zwanzigsten|\p{L}*dreißigsten)\s+/iu;
     const m = words.trim().replace(ORDINAL, '1. ').match(/^(?:(\d{1,2})\.\s*)?(\p{L}+|\d{1,2}\.?)$/u);
     if (!m || Boolean(day) !== Boolean(m[1])) return RESULT.WRONG;
-    if (/^\d/.test(m[2])) return Number(m[2].replace('.', '')) >= 1 && Number(m[2].replace('.', '')) <= 12 ? RESULT.CORRECT : RESULT.WRONG;
+    // A day is one of its month („31. Februar“ is none): `isDate`, in a leap year so the 29th of February counts.
+    const inMonth = (nr) => !m[1] || isDate(`${Number(m[1])}.${nr}.2024`);
+    if (/^\d/.test(m[2])) {
+      const nr = Number(m[2].replace('.', ''));
+      return nr >= 1 && nr <= 12 && inMonth(nr) ? RESULT.CORRECT : RESULT.WRONG;
+    }
     const w = fold(m[2]).replace(/ä/g, 'ae');
     const exact = MONTHS.includes(w) || w === 'marz';
-    if (!exact && !MONTHS.some((x) => slip(w, x))) return RESULT.WRONG;
+    const nr = w === 'marz' ? 3 : MONTHS.findIndex((x) => x === w || slip(w, x)) + 1;
+    if (!nr || !inMonth(nr)) return RESULT.WRONG;
     return exact && /^\p{Lu}/u.test(m[2]) ? RESULT.CORRECT : RESULT.TYPO;
   }
   // An invitation's gap: to what („zum Fest“, „zur Party“, „zu meinem Geburtstag“, „zu meiner Party“)
