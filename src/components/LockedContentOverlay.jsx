@@ -11,6 +11,7 @@ import { TRIAL_DAYS } from '../data/marketing.js';
 import { FREE_COURSE_HREF } from '../data/offers.js';
 import { levelLockSignupHref } from '../lib/lockDoor.js';
 import { setReturnPath } from '../lib/returnPath.js';
+import { freeLektionen } from '../config/freeTier.js';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
@@ -22,6 +23,8 @@ const LockedContentOverlay = ({ level }) => {
 
   useEffect(() => { trackPaywallShown(level || 'unknown'); }, [level]);
   const isGerman = i18n.language === 'de';
+  // A free level reaches this lock only at the paid rest of its course (Lektion gate, src/config/freeTier.js).
+  const gateFree = freeLektionen(level);
 
   return (
     <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
@@ -46,9 +49,13 @@ const LockedContentOverlay = ({ level }) => {
             no free-account-opens-every-level claim without its time bound, and
             no trial length typed by hand. */}
         <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-2">
-          {isGerman
-            ? `Erstellen Sie ein kostenloses Konto und testen Sie alle Stufen ${TRIAL_DAYS} Tage lang.`
-            : `Create a free account and try every level for ${TRIAL_DAYS} days.`}
+          {gateFree
+            ? (isGerman
+              ? `Lektion ${gateFree} ist kostenlos. Ab Lektion ${gateFree + 1} brauchen Sie ein Abo. Mit einem kostenlosen Konto sehen Sie die Angebote.`
+              : `Lektion ${gateFree} is free. From Lektion ${gateFree + 1} on you need a subscription. A free account shows you the plans.`)
+            : (isGerman
+              ? `Erstellen Sie ein kostenloses Konto und testen Sie alle Stufen ${TRIAL_DAYS} Tage lang.`
+              : `Create a free account and try every level for ${TRIAL_DAYS} days.`)}
         </p>
 
         <p className="text-sm text-graphite mb-6">

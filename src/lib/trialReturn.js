@@ -1,5 +1,4 @@
 import { courseForLevel, PLANS, deEur } from '../data/pricing.js';
-import { FREE_LEVEL_LABEL } from '../data/marketing.js';
 import { FREE_COURSE_HREF } from '../data/offers.js';
 import { hasRecurringBilling } from './checkoutAccess.js';
 import { safeGet, safeSet } from '../utils/safeStorage.js';
@@ -36,4 +35,4 @@ export function returnOffer(level, levelCourses = {}) {
   return { label: `AI Practice · ${deEur(PLANS.monthly.price)} / ${PLANS.monthly.intervalDe}`, href: '/subscription#return-offers' };
 }
 
-export const freeReturnOption = { href: FREE_COURSE_HREF, label: `${FREE_LEVEL_LABEL} bleibt kostenlos` };
+export const freeReturnOption = { href: FREE_COURSE_HREF, label: 'Kostenlos weiterlernen' };

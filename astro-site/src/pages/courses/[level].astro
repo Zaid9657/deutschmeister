@@ -10,7 +10,7 @@ import CourseCheckout from '../../components/CourseCheckout.astro';
 import { courseProof } from '../../data/productProof.js';
 import { salesCurriculum } from '../../data/salesCurriculum.js';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { ALL_LEVELS, courseForLevel, COURSE_PRO_MONTHS, CURRENCY, eur, PRICE_TAX_NOTE } from '../../data/pricing.js';
+import { ALL_LEVELS, courseForLevel, COURSE_PRO_MONTHS, CURRENCY, eur, PLANS, PRICE_TAX_NOTE } from '../../data/pricing.js';
 import { levelToSlug } from '../../data/courseContents.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { getTopicsForLevel } from '../../lib/grammar.js';
@@ -33,12 +33,12 @@ const proof = curriculum ? courseProof(level) : null;
 const doctor = curriculum?.lektionen.find((l) => l.nr === 6);
 const topics = await getTopicsForLevel(level);
 const title = `German ${code} Course — ${isFree ? 'Start Free' : coming ? 'Coming Next' : 'Everyday Life'} | DeutschMeister`;
-const description = isFree ? 'Your first German course: introduce yourself, understand everyday conversations, and practise step by step. A1.1 is free, with no account needed.' : coming ? `The German ${code} guided course is coming next. Start with A1.1 free or explore the ready A1.2 course. This course is not on sale.` : `You can introduce yourself. Now handle real everyday situations. Own the A1.2 course for ${eur(course.price)} once, with ${COURSE_PRO_MONTHS} months of AI Practice included.`;
+const description = isFree ? 'Your first German course: introduce yourself, understand everyday conversations, and practise step by step. Lektion 1 is free, with no account needed.' : coming ? `The German ${code} guided course is coming next. Start with A1.1 free or explore the ready A1.2 course. This course is not on sale.` : `You can introduce yourself. Now handle real everyday situations. Own the A1.2 course for ${eur(course.price)} once, with ${COURSE_PRO_MONTHS} months of AI Practice included.`;
 const FAQS = [
   { q: `Who is the ${code} course for?`, a: isFree ? 'Adult beginners starting German from the beginning. Instructions and explanations help you follow the German conversations.' : 'Learners who can already introduce themselves and want to handle more everyday situations in German.' },
   { q: 'Do I need to complete A1.1 first?', a: 'You should be comfortable with simple introductions and everyday beginner phrases. Start A1.1 free if you would like to build that foundation first.' },
-  { q: 'What is included in the course?', a: `Conversations, explanations, exercises checked as you answer, writing and speaking tasks, and checkpoints. ${isFree ? 'The A1.1 course is free.' : 'One payment keeps the A1.2 course in your account.'}` },
-  { q: 'How does the AI practice work?', a: isFree ? 'A free account starts the account trial for AI tools. The free A1.1 course remains available afterwards.' : `${COURSE_PRO_MONTHS} months of AI Practice are included with your purchase. After that, keep your course and choose whether to renew AI Practice separately. Nothing renews automatically from a course purchase.` },
+  { q: 'What is included in the course?', a: `Conversations, explanations, exercises checked as you answer, writing and speaking tasks, and checkpoints. ${isFree ? 'Lektion 1 is free; AI Practice or any course purchase opens the rest.' : 'One payment keeps the A1.2 course in your account.'}` },
+  { q: 'How does the AI practice work?', a: isFree ? 'A free account starts the account trial for AI tools. Lektion 1 stays free; an AI Practice subscription opens the rest of the course.' : `${COURSE_PRO_MONTHS} months of AI Practice are included with your purchase. After that, keep your course and choose whether to renew AI Practice separately. Nothing renews automatically from a course purchase.` },
 ];
 const jsonLd = {
   '@context': 'https://schema.org', '@type': 'Course', name: `German ${code} Course`, description,
@@ -52,7 +52,7 @@ const jsonLd = {
     <section class="c4-wrap c4-level-hero" aria-labelledby="level-h">
       <Scene name={isFree ? 'scene-cafe' : 'a12-reception'} alt={isFree ? 'A first conversation in a cafe' : 'A learner talking to a receptionist in a doctor’s practice'} hero sizes="(max-width: 640px) 100vw, 900px" />
       <div class="c4-level-copy"><p class="c4-level-badge">{code} · {isFree ? 'Beginner I' : 'Beginner II'}</p><h1 id="level-h">{isFree ? <>Your first words.<br /><span class="c4-underline">Your first conversations.</span></> : <>You can introduce yourself. Now handle<br /><span class="c4-underline">real everyday situations.</span></>}</h1><p>{isFree ? 'Start German with situations you recognise. Learn step by step, from your first greeting to everyday conversations.' : 'Continue your German journey at A1.2. Build on what you already know and gain the language for everyday life in Germany.'}</p></div>
-      <aside class="c4-level-price" aria-label="Course purchase"><p class="c4-price"><strong>{isFree ? 'Free' : eur(course.price).replace('.00', '')}</strong></p><ul class="c4-checks">{isFree ? <><li>No account needed</li><li>Start at your own pace</li></> : <><li>Pay once</li><li>Yours to keep</li><li>{COURSE_PRO_MONTHS} months of AI Practice included</li></>}</ul><PurchaseDoor level={level} surface="level_hero" />{!isFree && !coming && <p class="c4-small c4-tax-note">{PRICE_TAX_NOTE}</p>}</aside>
+      <aside class="c4-level-price" aria-label="Course purchase"><p class="c4-price"><strong>{isFree ? 'Lektion 1 free' : eur(course.price).replace('.00', '')}</strong></p><ul class="c4-checks">{isFree ? <><li>No account needed</li><li>Rest of the course with AI Practice, {eur(PLANS.monthly.price)} a month</li></> : <><li>Pay once</li><li>Yours to keep</li><li>{COURSE_PRO_MONTHS} months of AI Practice included</li></>}</ul><PurchaseDoor level={level} surface="level_hero" />{!isFree && !coming && <p class="c4-small c4-tax-note">{PRICE_TAX_NOTE}</p>}</aside>
     </section>
     <Benefits course />
     <section class="c4-wrap c4-outcomes" aria-labelledby="cando-h"><div><h2 id="cando-h"><span class="c4-underline">What you will<br />be able to do</span></h2><p>Use German in more everyday situations and feel more confident and independent in daily life.</p></div><div class="c4-outcome-grid">{syllabus.outcomes.map((o) => <article data-c4-reveal><Scene name={o.image} alt={o.en} sizes="(max-width: 640px) 45vw, 250px" /><div><Icon name={o.icon} size={28} /><h3>{o.en}</h3></div><details><summary>From lesson {o.nr}</summary><p lang="de">{o.source}</p></details></article>)}</div></section>
