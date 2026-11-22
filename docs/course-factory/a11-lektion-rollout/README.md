@@ -458,3 +458,17 @@ corpora (first scores in each batch's section above); Lektion 1 was finished wit
   act in the scene may not): a teacher in Lektion 12's corpus would accept „Ich möchte kein
   Geschenk."; say if the rule should widen.
 - Merging: the chain #266 → #274 → #275 → #277 → batch 4's PR is unmerged by design.
+
+### After the second independent score (2026-11-22)
+
+- **Three outcomes.** A final-check answer is one of three:
+  - *correct*: verified against what the Lektion teaches;
+  - *wrong*: a taught frame with a fault the check names;
+  - *beyond*: German with a word the course does not teach, which the check therefore cannot verify. The learner reads Codex's line, sees the Lektion's way to say it and answers once more. A second beyond leaves the can-do unshown.
+
+  Rule and outcomes: `typedResult`, `beyondOf` in `finalCheck.js`; screen: `CheckStage.jsx`. Counts per outcome on the eleven corpora: PR 278.
+- **Can-do honesty.** `guided.check.shown` holds the check's own line wherever its turns prove less than the can-do says (12 lines). The check summary, the recap and the course home's finished Lektion use it (`shownLines`).
+- **Waiting on Zaid:**
+  - who Frau Kaya is. She is the L1 receptionist, the boss and an office owner in L6 examples, and a colleague in the L10 writing task (an owner decision of 2026-10-07) and the L12 speaking task;
+  - whether the 28-day plan's Tag 5 and Tag 21 should keep listening exercise 3, the final test's Hören;
+  - whether the tasks behind the 6 teacher-wrong answers graded correct should ask for digits or a full sentence.
