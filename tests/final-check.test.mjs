@@ -7,7 +7,7 @@ import { RESULT } from '../src/lib/lesson/check.js';
 import { alignTranscript } from '../src/lib/lesson/readaloud.js';
 import { buildLesson } from '../src/lib/lesson/buildLesson.js';
 import { STRINGS as T } from '../src/lib/lesson/strings.js';
-import { BEYOND, untaughtIn, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, optionalPieces, partsToRepeat, spokenShown, spokenTarget, typedResult, verifiedResult, writtenOnly, wrongReason } from '../src/lib/lesson/finalCheck.js';
+import { BEYOND, untaughtIn, canDoShown, checkTurns, chosenWord, courseLexicon, modelAnswer, nextAfter, optionalPieces, partsToRepeat, sequenceFault, spokenShown, spokenTarget, typedResult, verifiedResult, writtenOnly, wrongReason } from '../src/lib/lesson/finalCheck.js';
 import { guidedCheckVocabulary } from '../scripts/validate-curriculum.mjs';
 
 const withCheck = CURRICULUM_A11.lektionen.filter((l) => l.guided?.check);
@@ -956,4 +956,111 @@ test('an answer is a sequence (Rule 4, the review of 2492a424): a word doubled o
   // German orders stay verified.
   for (const [turn, answer] of [[at(8)[4], 'Ja, Freitag um zehn passt mir gut.'], [at(4)[0], 'Was ist das denn?'], [at(7)[3], 'Du tanzt gern?'], [at(8)[1], 'Weißt du, wie spät es ist?'],
     [at(10)[2], 'Um wie viel Uhr fährt der Zug ab?'], [at(1)[1], 'Ich heiße Omar Omar.']]) assert.ok(verified(typedResult(turn, answer)), answer);
+});
+
+test('a word said again after a comma or a sentence end is German, no repetition fault (Rule 4 corrected, the review of 46c7ca80, 2026-11-23)', () => {
+  // Generated over every turn of every sitting, from each verified answer: (i) the word before a comma or a sentence end
+  // said again after it never trips the repetition check; (ii) a first word said twice („Ja, ja, gern.“) and a pronoun
+  // picked up after „Und du?“ („Und du? Du tanzt gern?“) stay verified, as they were before Rule 4.
+  const fold = (w) => w.toLocaleLowerCase('de').replace(/[.,!?;:„“"()]+/g, '').replace(/ß/g, 'ss');
+  const small = (w) => (/^(?:Sie|Ihnen|Ihr|Ihre|Ihren)$/.test(w) || lexicon.genders.has(fold(w)) || lexicon.names.has(fold(w)) || !(lexicon.has(fold(w)) || lexicon.said.has(fold(w))) ? w : w.toLocaleLowerCase('de'));
+  const cap = (w) => w.charAt(0).toLocaleUpperCase('de') + w.slice(1);
+  const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  let [again, first, echo] = [0, 0, 0];
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((turn, i) => {
+        const where = `${l.id} sitting ${r + 1} turn ${i + 1}`;
+        const bases = new Set(turn.accepted.map((x) => (typeof x === 'string' ? x : x.frame).replace(/…/g, 'Omar')));
+        if (typeof modelAnswer(turn) === 'string') bases.add(modelAnswer(turn).replace(/…/g, 'Omar'));
+        for (const base of bases) {
+          if (!verified(typedResult(turn, base))) continue;
+          const words = base.split(/\s+/);
+          words.forEach((w, k) => {
+            const bare = w.replace(/[.,!?;:]+$/, '');
+            if (k + 1 >= words.length || !/\p{L}/u.test(bare) || !/[.,!?]$/.test(w)) return;
+            const answer = /,$/.test(w) ? [...words.slice(0, k + 1), `${small(bare)},`, ...words.slice(k + 1)].join(' ')
+              : [...words.slice(0, k + 1), `${cap(bare)},`, small(words[k + 1]), ...words.slice(k + 2)].join(' ');
+            again += 1;
+            assert.notEqual(sequenceFault(turn, answer), 'extra', `${where}: ${answer}`);
+            if (k === 0 && /,$/.test(w)) { first += 1; assert.ok(verified(typedResult(turn, answer)), `${where}: ${answer}`); }
+          });
+          const q = base.match(/^(\p{Lu}\p{L}*)\s+(du|Sie)\s+(.*\?)$/u);
+          if (q && !/^(?:wie|was|wo|woher|wohin|wann|wer|welche[nrs]?)$/i.test(q[1])) {
+            const answer = `Und ${q[2]}? ${cap(q[2])} ${q[1].toLocaleLowerCase('de')} ${q[3]}`;
+            echo += 1;
+            assert.ok(verified(typedResult(turn, answer)), `${where}: ${answer}`);
+          }
+        }
+      });
+    }
+  }
+  assert.ok(again >= 200 && first >= 100 && echo >= 20, `${again} said again, ${first} first words, ${echo} echoes`);
+  // The review's own: German, verified; with nothing between, the fault.
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  for (const [nr, t, answer] of [[1, 3, 'Sehr, sehr gut, danke.'], [1, 3, 'Danke, danke. Mir geht es gut.'], [1, 3, 'Gut, gut. Danke.'], [1, 3, 'Mir geht es gut. Gut, danke.'],
+    [8, 4, 'Ja, ja, das passt.'], [8, 4, 'Ja, ja, gern.'], [7, 3, 'Und du? Du tanzt gern?'], [7, 3, 'Und du, du tanzt gern?'], [2, 3, 'Und Sie? Sie sind Lehrer?'],
+    [7, 2, 'Was machst du am Wochenende gern?']]) assert.ok(verified(typedResult(at(nr)[t], answer)), answer);
+  assert.notEqual(typedResult(at(9)[3], 'Haben Sie Tee? Tee, bitte.'), RESULT.WRONG);
+  for (const [nr, t, answer] of [[8, 4, 'Ja ja, gern.'], [1, 3, 'Gut gut, danke.'], [2, 3, 'Und Und Sie?']]) assert.equal(wrongReason(at(nr)[t], answer), 'extra', answer);
+});
+
+test('a gap has a kind (Rule 5, the review of 46c7ca80): a taught word of another kind is never verified in it, one of its kind still is (2026-11-23)', () => {
+  // Generated over every gap of every frame of every turn. The kinds are the course's own lists: a day, a number, a piece
+  // of furniture, a family member, a function word; for a drink or food the other one too. A frame with two gaps fills
+  // the one after „um“/„am“ and gives the other a part of the day. A word no course teaches stays the learner's own
+  // (the own-word policy of 2026-11-20) and is not tried here.
+  const OTHER = { day: 'Montag', number: 'sieben', furniture: 'einen Tisch', family: 'einen Bruder', function: 'und' };
+  const OTHER_FOR = {
+    clock: ['day', 'furniture', 'family', 'function'], when: ['furniture', 'family', 'function'], invite: ['furniture', 'family', 'function', 'number'],
+    hobby: ['day', 'number', 'furniture', 'family', 'function'], activity: ['day', 'number', 'furniture', 'family', 'function'], adjunct: ['number', 'furniture', 'family', 'function'],
+    name: ['number', 'function'], place: ['day', 'number', 'furniture', 'family', 'function'], job: ['day', 'number', 'furniture', 'family', 'function'],
+    language: ['day', 'number', 'furniture', 'family', 'function'], color: ['day', 'number', 'furniture', 'family', 'function'], thing: ['day', 'number', 'function'],
+    object: ['day', 'number', 'function'], number: ['day', 'furniture', 'family', 'function'], years: ['day', 'furniture', 'family', 'function'], phone: ['day', 'furniture', 'family', 'function'],
+  };
+  const OWN_FOR = { clock: 'sieben', when: 'am Montag', hobby: 'Sport', adjunct: 'gut', name: 'Omar', job: 'Lehrer', language: 'Deutsch', color: 'rot', thing: 'einen Tisch', object: 'ein Buch', number: 'sieben', years: 'sieben', activity: 'spiele Fußball', place: 'Syrien' };
+  const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  const cap = (s) => s.replace(/^\p{Ll}/u, (c) => c.toLocaleUpperCase('de'));
+  let [other, own] = [0, 0];
+  for (const l of withCheck) {
+    sitting(l).forEach((turn, i) => {
+      for (const a of turn.accepted || []) {
+        const frame = typeof a === 'string' ? a : a.frame;
+        const gaps = (frame.match(/…/g) || []).length;
+        if (!gaps) continue;
+        const props = { ...turn, ...(typeof a === 'object' ? a : {}) };
+        const slot = props.slot;
+        const parts = frame.split('…');
+        const glued = /\b(?:um|am)\s*$/i.test(parts[0]) ? 0 : 1;
+        const fill = (w) => cap(gaps === 1 ? frame.replace('…', w) : parts.map((p, k) => (k === 0 ? p : `${k - 1 === glued ? w : (k === 1 && !parts[0].trim() ? 'Morgens' : 'morgens')}${p}`)).join(''));
+        const kinds = props.thingKind ? [...OTHER_FOR.thing, 'furniture', 'family'] : OTHER_FOR[slot] || [];
+        const fillers = kinds.map((k) => (props.negative && ['furniture', 'family'].includes(k) ? OTHER[k].replace('einen', 'keinen') : OTHER[k]));
+        if (props.thingKind && !props.thingKind.includes('food')) fillers.push(props.negative ? 'keinen Kuchen' : 'einen Kuchen');
+        if (props.thingKind && !props.thingKind.includes('drink')) fillers.push(props.negative ? 'keinen Kaffee' : 'einen Kaffee');
+        for (const w of fillers) {
+          other += 1;
+          assert.ok(!verified(typedResult(turn, fill(w))), `${l.id} turn ${i + 1} [${slot}]: ${fill(w)}`);
+        }
+        const mine = gaps === 2 ? (glued === 0 || /\b(?:um|am)\s*$/i.test(parts[1]) ? 'sieben' : 'am Montag') : props.thingKind ? (props.thingKind.includes('drink') ? 'einen Kaffee' : 'einen Kuchen') : OWN_FOR[slot];
+        if (!mine || props.when || props.time || props.only || props.negative || props.people || props.count === 'many' || props.slotIn || props.taught || props.partOfDay) continue;
+        own += 1;
+        assert.ok(verified(typedResult(turn, fill(mine))), `${l.id} turn ${i + 1} [${slot}]: ${fill(mine)}`);
+      }
+    });
+  }
+  assert.ok(other >= 600 && own >= 80, `${other} of another kind, ${own} of the gap's kind`);
+  // The review's faults, each named; the fair ones stay verified.
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  for (const [nr, t, answer, reason] of [[8, 2, 'Um Montag stehe ich auf.', 'word'], [8, 2, 'Ich stehe morgens um und auf.', 'missing'], [11, 3, 'Morgens stehe ich um und auf.', 'missing'],
+    [8, 5, 'Ich habe sieben Zeit.', 'missing'], [8, 5, 'Ich bin sieben frei.', 'missing'], [7, 0, 'Mein Hobby ist Montag.', 'kind'], [7, 0, 'Mein Hobby ist Tisch.', 'kind'],
+    [7, 0, 'Ich spiele gern Tisch.', 'kind'], [11, 0, 'Ich habe einen Tisch gearbeitet.', 'kind'], [11, 0, 'Ich habe einen Bruder gearbeitet.', 'kind'], [12, 0, 'Kommst du sieben?', 'missing'],
+    [12, 0, 'Komm sieben!', 'missing'], [12, 0, 'Ich lade dich sieben ein.', 'missing'], [9, 1, 'Ich möchte einen Tisch, bitte.', 'kind'], [9, 1, 'Ich trinke einen Tisch.', 'kind'],
+    [9, 1, 'Ich möchte einen Bruder, bitte.', 'kind'], [9, 2, 'Ich möchte einen Tisch, bitte.', 'kind'], [9, 2, 'Ich möchte eine Lampe, bitte.', 'kind'], [6, 3, 'Ich heiße sieben.', 'kind']]) {
+    assert.equal(typedResult(at(nr)[t], answer), RESULT.WRONG, answer);
+    assert.equal(wrongReason(at(nr)[t], answer), reason, answer);
+  }
+  for (const [nr, t, answer] of [[11, 0, 'Ich habe sieben gearbeitet.'], [7, 0, 'Ich spiele gern Montag.'], [9, 4, 'Ja, Montag.']]) assert.ok(!verified(typedResult(at(nr)[t], answer)), answer);
+  for (const [nr, t, answer] of [[8, 5, 'Ich habe Montag Zeit.'], [11, 0, 'Ich habe gut gearbeitet.'], [11, 0, 'Ich habe Montag gearbeitet.'], [11, 0, 'Ich habe den ganzen Tag gearbeitet.'],
+    [12, 4, 'Ich möchte einen Bruder.'], [3, 1, 'Sie ist sieben.'], [10, 3, 'Kostet die Fahrkarte sieben Euro?'], [8, 2, 'Um sieben stehe ich auf.'], [8, 5, 'Am Dienstag habe ich um sieben Zeit.'],
+    [9, 1, 'Ich möchte einen Kaffee, bitte.'], [9, 2, 'Ich möchte einen Kuchen, bitte.'], [12, 0, 'Kommst du am Samstag?']]) assert.ok(verified(typedResult(at(nr)[t], answer)), answer);
 });
