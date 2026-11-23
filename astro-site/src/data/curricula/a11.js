@@ -1815,7 +1815,7 @@ export const CURRICULUM_A11 = {
         { de: 'das Büro', word: 'Büro', article: 'das', plural: 'Büros', en: 'office', wordId: '8fbe2c10-b65b-4c50-b60a-14d92b931783' },
         { de: 'die Firma', exampleDe: 'Das ist eine Firma. Das Büro ist hier.', word: 'Firma', article: 'die', plural: 'Firmen', en: 'company', wordId: '241df305-fc58-4232-bb0a-df8ce4cc9d01' },
         { de: 'der Chef', exampleDe: 'Herr Weber ist der Chef.', word: 'Chef', article: 'der', plural: 'Chefs', en: 'boss (m)', wordId: '40ac179d-e47c-4c64-8eb3-9e1017da46a0' },
-        { de: 'die Chefin', exampleDe: 'Frau Kaya ist die Chefin.', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
+        { de: 'die Chefin', exampleDe: 'Die Chefin ist im Büro.', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
         { de: 'der Kollege', word: 'Kollege', article: 'der', plural: 'Kollegen', en: 'colleague (m)', wordId: '81abf8c3-ae9f-4e61-9fa9-b4a10e0b0ae8' },
         { de: 'die Kollegin', exampleDe: 'Die Kollegin heißt Lena.', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
         { de: 'die Arbeit', exampleDe: 'Die Arbeit ist im Büro.', word: 'Arbeit', article: 'die', plural: '—', en: 'work', wordId: '89ff21bb-79ad-470a-a29b-ff6bbeef344a' },
@@ -2244,7 +2244,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: 'c14399bd',
+            to: 10, meaningLines: 'a08f2c99',
             meaning: {
               promptDe: 'Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena say about Wednesday? Choose the meaning.',
@@ -2393,7 +2393,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Und am Mittwoch, am Donnerstag oder am Freitag?', en: 'And on Wednesday, Thursday or Friday?' },
           // Samstag and Sonntag came over from L7 with the rest of the week but appeared in no line,
           // no item and no task of L8 — the week was a set on paper only (DaF review #3).
-          { speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Samstag und am Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Saturday and Sunday I am free!' },
+          { speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Freitag, Samstag und Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Friday, Saturday and Sunday I am free!' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann', 'Um wie viel Uhr', 'Entschuldigung, wie spät'] },
@@ -2458,7 +2458,7 @@ export const CURRICULUM_A11 = {
           titleEn: 'The café menu',
           instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the menu. Tap a word for its meaning.',
-          text: 'Café Bremen\nBei uns essen und trinken Sie gut!\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro',
+          text: 'Café Bremen\nBei uns essen und trinken Sie gut!\nHeute im Café: ein Kellner und eine Kellnerin.\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro',
           questions: [
             {
               promptDe: 'Sie möchten Suppe und eine Tasse Tee. Was kostet das zusammen? Wählen Sie die Antwort.',
@@ -2507,12 +2507,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6, meaningLines: '598c7828',
+            to: 6, meaningLines: '092e89a6',
             meaning: {
               promptDe: 'Was bestellt Ana noch? Wählen Sie die Antwort.',
               promptEn: 'What else does Ana order? Choose the answer.',
-              options: ['A cup of tea and a mineral water.', 'A glass of orange juice and a beer.', 'A glass of mineral water and an orange juice.'],
-              answer: 'A glass of mineral water and an orange juice.',
+              options: ['A cup of tea and a mineral water.', 'A glass of orange juice and a beer.', 'A glass of mineral water.'],
+              answer: 'A glass of mineral water.',
             },
             say: {
               line: 5,
@@ -2520,12 +2520,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8, meaningLines: 'fd9aa490',
+            to: 8, meaningLines: '92e1eb61',
             meaning: {
-              promptDe: 'Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.',
-              promptEn: 'Paul also has tea, beer and wine. What does Ana say? Choose the meaning.',
-              options: ['Yes, please: she orders a glass of wine.', 'No, thank you: she will eat bread with salad.', 'No, thank you: she would like the bill.'],
-              answer: 'No, thank you: she will eat bread with salad.',
+              promptDe: 'Paul hat auch Tee, Bier, Wein und Orangensaft. Was sagt Ana? Wählen Sie die Bedeutung.',
+              promptEn: 'Paul also has tea, beer, wine and orange juice. What does Ana say? Choose the meaning.',
+              options: ['Yes, please: she orders a glass of wine.', 'No, thank you: tomorrow she will have breakfast here.', 'No, thank you: she would like the bill.'],
+              answer: 'No, thank you: tomorrow she will have breakfast here.',
             },
             say: {
               line: 7,
@@ -2533,12 +2533,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: '999b7085',
+            to: 10, meaningLines: '8962f100',
             meaning: {
               promptDe: 'Was sagt Paul? Wählen Sie die Bedeutung.',
               promptEn: 'What does Paul say? Choose the meaning.',
-              options: ['The waitress is coming right away with the bread.', 'The waitress is sorry: there is no bread today.', 'The bread will take another twenty minutes.'],
-              answer: 'The waitress is coming right away with the bread.',
+              options: ['A cup of coffee and a cake are coming right away.', 'He is sorry: there is no cake today.', 'The coffee will take another twenty minutes.'],
+              answer: 'A cup of coffee and a cake are coming right away.',
             },
             say: {
               line: 9,
@@ -2658,12 +2658,12 @@ export const CURRICULUM_A11 = {
           // Eight of the 23 Wortfeld entries of the Café-Lektion were ordered by nobody: Bier,
           // Mineralwasser, Orangensaft, Tasse, Kellnerin, essen, Brot, Frühstück (and Wein).
           // The closing four lines carry them instead of repeating Wasser and Tee (DaF review #3).
-          { speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft.', en: 'Yes, a glass of mineral water, please. And an orange juice.' },
-          { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier und Wein.', en: 'Gladly. We also have tea, beer and wine.' },
-          { speaker: 'Ana', de: 'Nein, danke. Ich esse ein Brot mit Salat.', en: 'No, thank you. I’ll have a sandwich with salad.' },
-          { speaker: 'Paul', de: 'Gut. Die Kellnerin kommt sofort mit dem Brot.', en: 'Good. The waitress is coming right away with the bread.' },
+          { speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte.', en: 'Yes, a glass of mineral water, please.' },
+          { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier, Wein und Orangensaft.', en: 'Gladly. We also have tea, beer, wine and orange juice.' },
+          { speaker: 'Ana', de: 'Nein, danke. Morgen esse ich hier zum Frühstück Brot.', en: 'No, thank you. Tomorrow I’ll have bread here for breakfast.' },
+          { speaker: 'Paul', de: 'Gut. Eine Tasse Kaffee und ein Kuchen kommen sofort.', en: 'Good. A cup of coffee and a cake are coming right away.' },
           // Ana answers the waiter with one more order (third score, 2026-11-22: „Zum Frühstück trinke ich immer …“ answered nothing).
-          { speaker: 'Ana', de: 'Danke! Und noch eine Tasse Kaffee zum Frühstück, bitte.', en: 'Thank you! And another cup of coffee with breakfast, please.' },
+          { speaker: 'Ana', de: 'Danke! Das Café ist sehr gut.', en: 'Thank you! The café is very good.' },
         ],
       },
       pretest: {
@@ -3462,7 +3462,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Mein Geburtstag ist im', 'Ich habe im', 'Im'],
       },
       notice: {
-        formExamples: ['Das ist sein Geschenk. Das ist ihr Buch.', 'Ist das Ihr Büro, Frau Kaya?', 'Unser Fest ist am Freitag. Wann ist euer Fest?', 'Unsere Gäste kommen. Kommen eure Gäste auch?'],
+        formExamples: ['Das ist sein Geschenk. Das ist ihr Buch.', 'Ist das Ihr Büro, Herr Weber?', 'Unser Fest ist am Freitag. Wann ist euer Fest?', 'Unsere Gäste kommen. Kommen eure Gäste auch?'],
         title: 'mein, dein, sein, ihr – Possessivartikel',
         bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie: eine Frau oder mehrere), **Ihr** Büro (Sie, immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
         bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book, or their book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',

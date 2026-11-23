@@ -5,7 +5,7 @@
       "titleEn": "The café menu",
       "instructionDe": "Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the menu. Tap a word for its meaning.",
-      "text": "Café Bremen\nBei uns essen und trinken Sie gut!\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro",
+      "text": "Café Bremen\nBei uns essen und trinken Sie gut!\nHeute im Café: ein Kellner und eine Kellnerin.\nFrühstück: Montag bis Samstag, 7 bis 11 Uhr\nFrühstück mit Brot und Kaffee: 6 Euro\nSuppe oder Salat: 5 Euro\nKuchen: 3 Euro\nTasse Kaffee oder Tee: 2 Euro\nGlas Orangensaft: 3 Euro",
       "questions": [
         {
           "promptDe": "Sie möchten Suppe und eine Tasse Tee. Was kostet das zusammen? Wählen Sie die Antwort.",
@@ -73,16 +73,16 @@
       {
         "from": 4,
         "to": 6,
-        "meaningLines": "598c7828",
+        "meaningLines": "092e89a6",
         "meaning": {
           "promptDe": "Was bestellt Ana noch? Wählen Sie die Antwort.",
           "promptEn": "What else does Ana order? Choose the answer.",
           "options": [
             "A cup of tea and a mineral water.",
             "A glass of orange juice and a beer.",
-            "A glass of mineral water and an orange juice."
+            "A glass of mineral water."
           ],
-          "answer": "A glass of mineral water and an orange juice."
+          "answer": "A glass of mineral water."
         },
         "say": {
           "line": 5
@@ -91,16 +91,16 @@
       {
         "from": 6,
         "to": 8,
-        "meaningLines": "fd9aa490",
+        "meaningLines": "92e1eb61",
         "meaning": {
-          "promptDe": "Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.",
-          "promptEn": "Paul also has tea, beer and wine. What does Ana say? Choose the meaning.",
+          "promptDe": "Paul hat auch Tee, Bier, Wein und Orangensaft. Was sagt Ana? Wählen Sie die Bedeutung.",
+          "promptEn": "Paul also has tea, beer, wine and orange juice. What does Ana say? Choose the meaning.",
           "options": [
             "Yes, please: she orders a glass of wine.",
-            "No, thank you: she will eat bread with salad.",
+            "No, thank you: tomorrow she will have breakfast here.",
             "No, thank you: she would like the bill."
           ],
-          "answer": "No, thank you: she will eat bread with salad."
+          "answer": "No, thank you: tomorrow she will have breakfast here."
         },
         "say": {
           "line": 7
@@ -109,16 +109,16 @@
       {
         "from": 8,
         "to": 10,
-        "meaningLines": "999b7085",
+        "meaningLines": "8962f100",
         "meaning": {
           "promptDe": "Was sagt Paul? Wählen Sie die Bedeutung.",
           "promptEn": "What does Paul say? Choose the meaning.",
           "options": [
-            "The waitress is coming right away with the bread.",
-            "The waitress is sorry: there is no bread today.",
-            "The bread will take another twenty minutes."
+            "A cup of coffee and a cake are coming right away.",
+            "He is sorry: there is no cake today.",
+            "The coffee will take another twenty minutes."
           ],
-          "answer": "The waitress is coming right away with the bread."
+          "answer": "A cup of coffee and a cake are coming right away."
         },
         "say": {
           "line": 9
