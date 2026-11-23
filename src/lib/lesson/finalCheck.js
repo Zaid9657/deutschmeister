@@ -369,6 +369,7 @@ export function whenOf(text, { inSentence = false } = {}) {
   const words = fold(text).replace(/\b(nach (?:der arbeit|dem kurs|der schule|dem unterricht))\b/g, 'abend')
     .replace(/(?<!\d)[.:]|[.:](?!\d)|[,!?;]/g, ' ').split(/\s+/).filter(Boolean);
   let day = null; let part = null; let typo = false;
+  let joined = false; // an „und“, „oder“ or „bis“ since the last day: a second day may follow
   const timeWords = [];
   // „am" takes a day or a part of the day, „um" a clock time (the notice of Lektion 8): „um Montag" and
   // „am zehn Uhr" name no time (first DaF review of Lektion 8, 2026-11-20); „um" and „am" take a word („um und“).
@@ -380,7 +381,9 @@ export function whenOf(text, { inSentence = false } = {}) {
   if ([...NEEDS_WORD, 'und', 'oder'].includes(words.at(-1)) || ['und', 'oder'].includes(words[0])
     || words.some((w, i) => NEEDS_WORD.includes(words[i - 1]) && ['und', 'oder', 'um', 'am', 'an', 'ab', 'von', 'bis', 'gegen'].includes(w))
     || words.some((w, i) => words[i - 1] === 'um' && !clockish(w))
-    || words.some((w, i) => ['und', 'oder'].includes(words[i - 1]) && ['uhr', 'halb', 'viertel', 'nach', 'vor'].includes(w))) return null;
+    || words.some((w, i) => ['und', 'oder'].includes(words[i - 1]) && ['uhr', 'halb', 'viertel', 'nach', 'vor'].includes(w))
+    // („am Freitag und um zehn“ names two times, not one.)
+    || words.some((w, i) => w === 'um' && words[i - 1] === 'und' && words.slice(0, i - 1).some((x) => DAYS.includes(x.replace(/s$/, ''))))) return null;
   // In a sentence („am Freitag um zehn“, a gap of „Ich habe … Zeit.“, Rule 5) a clock time takes „um": „am Freitag
   // zehn" and „Ich habe sieben Zeit" name no time (third corpus of Lektion 8). A note („Freitag 10 Uhr") needs none.
   const sentence = inSentence || words.includes('am');
@@ -394,8 +397,10 @@ export function whenOf(text, { inSentence = false } = {}) {
     const base = w.replace(/s$/, '');
     const compound = base.match(/^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)(morgen|vormittag|mittag|nachmittag|abend|nacht)$/);
     if (compound) { if (!dayHere()) return null; [, day, part] = compound; prev = w; continue; }
-    // The same day twice names no time („am Montag und Montag“; section D).
-    if (DAYS.includes(base)) { if (!dayHere() || day === base) return null; day = base; prev = w; continue; }
+    // The same day twice names no time („am Montag und Montag“), nor two days without „und“ („Montag Samstag“; section D).
+    if (DAYS.includes(base)) { if (!dayHere() || day === base || (day !== null && !joined)) return null; day = base; joined = false; prev = w; continue; }
+    // In a sentence the week, its end and a day take their article („am Wochenende“, „jeden Tag“, „nächste Woche“).
+    if (sentence && ['wochenende', 'woche', 'tag'].includes(base) && !['am', 'an', 'jedes', 'jede', 'jeden', 'dieses', 'diese', 'diesen', 'nächstes', 'nächste', 'nächsten', 'übers', 'das', 'die', 'den', 'ganze', 'ganzen'].includes(prev)) return null;
     if (DAY_SHORT[w.replace(/\.$/, '')]) { if (!dayHere()) return null; day = DAY_SHORT[w.replace(/\.$/, '')]; prev = w; continue; }
     if (['wochenende', 'woche', 'tag', 'heute', 'morgen', 'immer'].includes(base) && !(base === 'morgen' && part)) {
       if (!dayHere()) return null;
@@ -406,7 +411,7 @@ export function whenOf(text, { inSentence = false } = {}) {
     if (DAY_PARTS.includes(base)) { if (!dayHere()) return null; part = base; prev = w; continue; }
     const slipped = DAYS.find((d) => slip(base, d));
     if (slipped) { if (!dayHere()) return null; day = slipped; typo = true; prev = w; continue; }
-    if (WHEN_GLUE.has(w)) { prev = w; continue; }
+    if (WHEN_GLUE.has(w)) { if (['und', 'oder', 'bis'].includes(w)) joined = true; prev = w; continue; }
     if (!timeWords.length && ['am', 'an'].includes(prev)) return null;
     if (!timeWords.length && sentence && !['um', 'von', 'ab', 'gegen', 'bis'].includes(prev)) return null;
     timeWords.push(w);
@@ -498,6 +503,8 @@ function adjectiveFits(adj, slot, det, g, lexicon) {
   if (!w.endsWith(want)) return false;
   const stem = w.slice(0, -want.length);
   if (colourStem(stem)) return !UNDECLINED.has(colourStem(stem));
+  // A verb form is no adjective („einen nehmen Kaffee“; section D).
+  if (personsOf(adj, lexicon)) return false;
   return isAdjectiveShape(adj, lexicon);
 }
 
@@ -636,6 +643,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
       const noun = raw[nounAt];
       small = Boolean(noun) && !/^\p{Lu}/u.test(noun) && Boolean(lexicon?.genders?.get?.(fold(noun)));
       if (!noun || (!/^\p{Lu}/u.test(noun) && !small)) return RESULT.WRONG;
+      // One invites to a party, never to a day, a number, a person or a piece of furniture („zum Montag“; section D).
+      if (['day', 'number', 'family', 'furniture'].includes(taughtKind(noun))) return RESULT.WRONG;
       const g = lexicon?.genders?.get?.(fold(noun));
       const fem = parts[at] === 'zur' || /er$/.test(poss || '');
       if (g && !g.some((x) => (fem ? x === 'die' : x === 'der' || x === 'das'))) return RESULT.WRONG;
@@ -699,6 +708,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
       if (TIME_NOUN_A.has(f) && /^\p{Lu}/u.test(raw[i]) && !(PREP.has(prev) || DETERMINER.test(prev) || ['jeden', 'jede', 'jedes', 'ganzen', 'ganze', 'nächste', 'nächstes', 'nächsten', 'diese', 'dieses', 'diesen'].includes(prev))) return RESULT.WRONG;
       if ((/^\d+$/.test(f) || (isNumberWord(f) && !CLOSED.has(f))) && !['um', 'bis', 'ab', 'gegen', 'halb', 'viertel', 'nach', 'vor'].includes(prev) && next !== 'uhr') return RESULT.WRONG;
       if (['und', 'oder'].includes(fold(raw[i - 1])) && ichForm(raw[i])) { if (unsplit(raw[i])) return RESULT.WRONG; continue; }
+      // A second verb of the person needs its „und“ („Ich dusche frühstücke“, „Ich dusche der frühstücke“; section D).
+      if (/^\p{Ll}/u.test(raw[i]) && lexicon?.verbs?.has?.(f) && /e$/.test(f) && ichForm(raw[i])) return RESULT.WRONG;
       // „in" before a der- or das-noun needs its article („ins Kino", „im Park"): „in Kino" is wrong
       // (third corpus of Lektion 7). A place without an article („in Bremen") is fine.
       if (fold(raw[i - 1]) === 'in') {
@@ -821,6 +832,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
     const duForm = /st$/.test(v) || /[sßxz]t$/.test(v);
     if (!duForm || v.length < 4 || CLOSED.has(v) || lexicon?.genders?.get?.(v) || fold(raw[1] || '') !== 'du' || unsplit(v)) return RESULT.WRONG;
     const rest = raw.slice(2); // may be empty: „Tanzt du?"
+    // „machen“ names what is done („Machst du gern Sport?“): „Machst du gern?“ asks nothing (section D).
+    if (/^mach/.test(v) && !rest.some((w) => /^\p{Lu}/u.test(w))) return RESULT.WRONG;
     const ok = rest.every((w) => /^\p{Lu}/u.test(w) || ACTIVITY_GLUE.has(fold(w)) || SEP_PREFIX.includes(fold(w)) || ['gern', 'gerne', 'auch'].includes(fold(w)));
     return ok ? RESULT.CORRECT : RESULT.WRONG;
   }
@@ -842,7 +855,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
       if (ws.length === 1) return noun(ws[0]);
       return ws.length === 2 && noun(ws[0]) && /^\p{Ll}\p{L}*en$/u.test(ws[1]);
     };
-    return groups.length && groups.every(hobby) ? RESULT.CORRECT : RESULT.WRONG;
+    if (!(groups.length && groups.every(hobby))) return RESULT.WRONG;
+    return clause > 0 ? worst(RESULT.CORRECT, restResult(lexicon, words.split(' ').filter(Boolean).slice(clause).join(' '), subject, frameHead)) : RESULT.CORRECT;
   }
   // A name („Ich bin Omar", as Lektion 1's own check takes it): words the course does not teach, or the
   // cast's names, after an optional „Frau"/„Herr" („Hier ist Frau Chakiri"). After the first name word a
@@ -954,6 +968,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
     if (!items.length || read.some((r) => r === null)) return RESULT.WRONG;
     if (count === 'one' && (items.length > 1 || read[0] === 'many')) return RESULT.WRONG;
     if (count === 'many' && items.length === 1 && read[0] === 'one') return RESULT.WRONG;
+    // A clause after „und“ + a verb is graded on its own, never left out („einen Kaffee und kaufen“; section D).
+    if (clause > 0) return worst(typo ? RESULT.TYPO : RESULT.CORRECT, restResult(lexicon, words.split(' ').filter(Boolean).slice(clause).join(' '), subject, frameHead));
     return typo ? RESULT.TYPO : RESULT.CORRECT;
   }
   const content = parts.filter((w) => /\p{L}/u.test(w) && !CLOSED.has(w));
