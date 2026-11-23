@@ -382,6 +382,7 @@ export function whenOf(text, { inSentence = false } = {}) {
     || words.some((w, i) => NEEDS_WORD.includes(words[i - 1]) && ['und', 'oder', 'um', 'am', 'an', 'ab', 'von', 'bis', 'gegen'].includes(w))
     || words.some((w, i) => words[i - 1] === 'um' && !clockish(w))
     || words.some((w, i) => ['und', 'oder'].includes(words[i - 1]) && ['uhr', 'halb', 'viertel', 'nach', 'vor'].includes(w))
+    || words.some((w, i) => ['und', 'oder'].includes(w) && ['halb', 'viertel', 'nach', 'vor', 'bis'].includes(words[i - 1]))
     // („am Freitag und um zehn“ names two times, not one.)
     || words.some((w, i) => w === 'um' && words[i - 1] === 'und' && words.slice(0, i - 1).some((x) => DAYS.includes(x.replace(/s$/, ''))))) return null;
   // In a sentence („am Freitag um zehn“, a gap of „Ich habe … Zeit.“, Rule 5) a clock time takes „um": „am Freitag
@@ -398,7 +399,7 @@ export function whenOf(text, { inSentence = false } = {}) {
     const compound = base.match(/^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)(morgen|vormittag|mittag|nachmittag|abend|nacht)$/);
     if (compound) { if (!dayHere()) return null; [, day, part] = compound; prev = w; continue; }
     // The same day twice names no time („am Montag und Montag“), nor two days without „und“ („Montag Samstag“; section D).
-    if (DAYS.includes(base)) { if (!dayHere() || day === base || (day !== null && !joined)) return null; day = base; joined = false; prev = w; continue; }
+    if (DAYS.includes(base)) { if (!dayHere() || day === base || (DAYS.includes(day) && !joined)) return null; day = base; joined = false; prev = w; continue; }
     // In a sentence the week, its end and a day take their article („am Wochenende“, „jeden Tag“, „nächste Woche“).
     if (sentence && ['wochenende', 'woche', 'tag'].includes(base) && !['am', 'an', 'jedes', 'jede', 'jeden', 'dieses', 'diese', 'diesen', 'nächstes', 'nächste', 'nächsten', 'übers', 'das', 'die', 'den', 'ganze', 'ganzen'].includes(prev)) return null;
     if (DAY_SHORT[w.replace(/\.$/, '')]) { if (!dayHere()) return null; day = DAY_SHORT[w.replace(/\.$/, '')]; prev = w; continue; }
@@ -712,10 +713,19 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
       if (['und', 'oder'].includes(f) && i === 1 && !ichForm(raw[i + 1] || '')) return RESULT.WRONG;
       // „am“, „im“, „zum“ … have their article in them („am der Fußball“); an article fits its noun („der Wochenende“).
       if (['am', 'im', 'ins', 'zum', 'zur', 'beim', 'vom'].includes(f) && DETERMINER.test(next)) return RESULT.WRONG;
-      const FITS = { der: ['der', 'die', 'pl'], die: ['die', 'pl'], das: ['das'], den: ['der', 'pl'], dem: ['der', 'das'], ein: ['der', 'das'], eine: ['die'], einen: ['der'], einem: ['der', 'das'], einer: ['die'] };
+      // What one does takes the accusative („Ich spiele den Fußball“, never „der Fußball“); after a preposition the dative too.
+      const AFTER_PREP = { der: ['die'], die: ['die', 'pl'], das: ['das'], den: ['der', 'pl'], dem: ['der', 'das'], ein: ['das'], eine: ['die'], einen: ['der'], einem: ['der', 'das'], einer: ['die'] };
+      const OBJECT = { die: ['die', 'pl'], das: ['das'], den: ['der'], ein: ['das'], eine: ['die'], einen: ['der'] };
       const genderOf = /^\p{Lu}/u.test(raw[i + 1] || '') ? lexicon?.genders?.get?.(next) : null;
-      if (FITS[f] && genderOf && !genderOf.some((g) => FITS[f].includes(g))) return RESULT.WRONG;
-      if ((DETERMINER.test(f) || PREP.has(f)) && !takesNoun(i + 1) && !(PREP.has(f) && (DETERMINER.test(next) || clockOf(next) !== null))) return RESULT.WRONG;
+      const fits = (PREP.has(prev) ? AFTER_PREP : OBJECT)[f];
+      if (DETERMINER.test(f) && /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer)$/.test(f) && genderOf && !(fits || []).some((g) => genderOf.includes(g))) return RESULT.WRONG;
+      // „am“ with a piece of furniture or a person names no time of an activity („Am Tisch spiele ich Fußball“).
+      if (f === 'am' && ['furniture', 'family'].includes(taughtKind(next))) return RESULT.WRONG;
+      // „und“ before a thing joins two things („Fußball und Tennis“), never an adverb and a thing („gern und Fußball“).
+      if (['und', 'oder'].includes(f) && /^\p{Lu}/u.test(raw[i + 1] || '') && !ichForm(raw[i + 1]) && !/^\p{Lu}/u.test(raw[i - 1])) return RESULT.WRONG;
+      // (The last part of a verb of two parts is no article: „Ich kaufe ein“, „Ich stehe um sechs auf“.)
+      const prefixLast = SEP_PREFIX.includes(f) && i === raw.length - 1;
+      if (!prefixLast && (DETERMINER.test(f) || PREP.has(f)) && !takesNoun(i + 1) && !(PREP.has(f) && (DETERMINER.test(next) || clockOf(next) !== null))) return RESULT.WRONG;
       if (f === 'gut' && (['gern', 'gerne'].includes(prev) || ['gern', 'gerne'].includes(next))) return RESULT.WRONG;
       if (TIME_NOUN_A.has(f) && /^\p{Lu}/u.test(raw[i]) && !(PREP.has(prev) || DETERMINER.test(prev) || ['jeden', 'jede', 'jedes', 'ganzen', 'ganze', 'nächste', 'nächstes', 'nächsten', 'diese', 'dieses', 'diesen'].includes(prev))) return RESULT.WRONG;
       if ((/^\d+$/.test(f) || (isNumberWord(f) && !CLOSED.has(f))) && !['um', 'bis', 'ab', 'gegen', 'halb', 'viertel', 'nach', 'vor'].includes(prev) && next !== 'uhr') return RESULT.WRONG;
@@ -811,7 +821,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
   // a valid answer of the same kind: „Ich spreche Arabisch und lerne Deutsch." — never „… und lerne
   // Studentin" (DaF review, 2026-11-19: no blanket rule; the whole answer must be valid).
   const verbs = lexicon?.verbs;
-  const clause = parts.findIndex((w, i) => w === 'und' && i > 0 && typeof verbs?.has === 'function' && verbs.has(parts[i + 1] || ''));
+  // (A verb written small: „und Kochen“ names a hobby, „und koche“ opens a clause.)
+  const clause = parts.findIndex((w, i) => w === 'und' && i > 0 && typeof verbs?.has === 'function' && verbs.has(parts[i + 1] || '') && /^\p{Ll}/u.test(raw[i + 1] || ''));
   const own = clause > 0 ? words.split(' ').filter(Boolean).slice(0, clause).join(' ') : words;
   const second = clause > 0 ? words.split(' ').filter(Boolean).slice(clause + 2).join(' ') : null;
   // Lists of languages or colours: every item listed is of the kind (or a word like „gut", „ein
@@ -884,7 +895,7 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
     // Section D: a word the course says is no name („heiße Omar“, „hallo, Omar“), and a comma ends no name of its own.
     const bareName = (w) => String(w).replace(/[,.!?;:]+$/, '');
     const isName = (written, w, i) => /\p{L}/u.test(w) && !CLOSED.has(w) && !isNumberWord(w)
-      && (names?.has?.(w) || (!known(w) && !(i === from && lexicon?.said?.has?.(w))) || (i > 0 && /^\p{Lu}/u.test(written) && typeof exact?.has === 'function' && !exact.has(written)));
+      && (names?.has?.(w) || (!known(w) && !(i === from && personsOf(w, lexicon))) || (i > 0 && /^\p{Lu}/u.test(written) && typeof exact?.has === 'function' && !exact.has(written)));
     const rest = raw.slice(from);
     return rest.length && rest.every((r, i) => isName(bareName(r), bareName(parts[from + i]), from + i)) ? RESULT.CORRECT : RESULT.WRONG;
   }
@@ -1164,6 +1175,8 @@ function verbSecond(text, { drop = false } = {}) {
     // A joiner moves with nothing: no phrase that ends in „und“, no „und“ right after the subject (section D).
     const joiner = (x) => ['und', 'oder'].includes(fold(x || ''));
     if (joiner(w[k - 2]) || joiner(w[k + 1])) continue;
+    // One phrase stands in front: „Am Wochenende gut spiele ich …“ has two (section D).
+    if (k - 1 > 1 && w.slice(0, k - 1).some((x) => ['gut', 'gern', 'gerne', 'nicht', 'und', 'oder'].includes(fold(x).replace(/[,.]$/, '')))) continue;
     if (SUBJECTS.has(fold(w[k])) && !SUBJECTS.has(fold(w[0])) && !SUBJECTS.has(fold(w[k - 1]))) {
       const front = w.slice(0, k - 1).map((x, i) => (i === 0 ? x.charAt(0).toLocaleLowerCase('de') + x.slice(1) : x));
       if (/^\p{Lu}/u.test(w[0]) && front.length) {
@@ -1187,7 +1200,8 @@ function gernLast(text) {
   const m = String(text).trim().match(/^(.*?)\s+gerne?\s+(.+?)([.!?]*)$/i);
   // Only a „gern" after the verb moves: „Ich gern spiele Fußball" has it before the verb and stays wrong. It moves over
   // what one likes, a noun or an article and its noun, never over „gut“ or „und“ (section D).
-  const object = m && (/^\p{Lu}/u.test(m[2]) || /^(?:den|die|das|ein|eine|einen|mein|meine|meinen)\s+\p{Lu}/u.test(m[2]));
+  const object = m && (/^\p{Lu}/u.test(m[2]) || /^(?:den|die|das|ein|eine|einen|mein|meine|meinen)\s+\p{Lu}/u.test(m[2]))
+    && !/\s(?:gut|und|oder)$/i.test(m[1]);
   const out = m && object && wordsOf(m[1]).length >= 2 ? [`${m[1]} ${m[2]} gern${m[3]}`] : [];
   // After a time it is German too („Was machst du am Wochenende gern?“ is „Was machst du gern am Wochenende?“).
   const t = String(text).trim().match(/^(.*?)\s+((?:am|jeden|jede|jedes)\s+\p{L}+|\p{L}+s)\s+gerne?([.!?]*)$/iu);
