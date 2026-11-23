@@ -168,8 +168,10 @@ export const CHECKPOINT_AFTER = {
  * (CURRICULA testSlug), its exam_attempts key and its pass mark (COURSE_TESTS).
  */
 export const FINAL_TESTS = {
-  'a1.1': { slug: 'abschlusstest-a1-1', examKey: 'a1_1_abschluss', passPercent: 60 },
-  'a1.2': { slug: 'abschlusstest-a1-2', examKey: 'a1_2_abschluss', passPercent: 60 },
+  // `guessCeiling`: per scored section, the most one constant answer scores (examScoring.js
+  // sectionGuessCeiling over the test's own keys; tests/course-reminder-checkpoints.test.mjs keeps it equal).
+  'a1.1': { slug: 'abschlusstest-a1-1', examKey: 'a1_1_abschluss', passPercent: 60, guessCeiling: { lesen: 4 } },
+  'a1.2': { slug: 'abschlusstest-a1-2', examKey: 'a1_2_abschluss', passPercent: 60, guessCeiling: { lesen: 4 } },
 };
 
 const lower = (level) => String(level || '').toLowerCase();
@@ -182,13 +184,18 @@ export const finalTestNodeId = (level) => `${lower(level)}-leveltest`;
 export const programKeyFor = (level) => `${lower(level).replace(/\./g, '')}_course`;
 
 /**
- * A completed attempt at or above the pass mark: the rule levelTestReconcile.js
- * uses to complete the final-test node when the result screen's own write was
- * lost (examScoring.js verdictFor: 'knapp' and 'solide' pass).
+ * A completed attempt that passes: the rule levelTestReconcile.js uses to
+ * complete the final-test node when the result screen's own write was lost
+ * (examScoring.js attemptVerdict). At or above the pass mark ('knapp' and
+ * 'solide'), and no scored section at or under what one constant answer gets
+ * (`guessCeiling`). An attempt saved without section scores is judged by its
+ * percent alone, as on the result screen.
  */
-export function passesFinalTest(attempt, passPercent) {
+export function passesFinalTest(attempt, passPercent, guessCeiling = {}) {
   if (!attempt || attempt.status !== 'completed' || !Number(attempt.max_score)) return false;
-  return Math.round((Number(attempt.score) / Number(attempt.max_score)) * 100) >= passPercent;
+  if (Math.round((Number(attempt.score) / Number(attempt.max_score)) * 100) < passPercent) return false;
+  const scores = attempt.section_scores || {};
+  return !Object.entries(guessCeiling).some(([section, ceiling]) => scores[section] && ceiling > 0 && scores[section].score <= ceiling);
 }
 
 /**
@@ -480,7 +487,7 @@ export async function readProgress(client, ids) {
  * final test, by the course's own record: the path node the result screen ticks
  * in program_progress, or, when that write was lost, a passing completed attempt
  * in exam_attempts, from which the course home completes the node
- * (levelTestReconcile.js). Scores and status only, no timestamps. → Set of ids.
+ * (levelTestReconcile.js). Scores, section scores and status only, no timestamps. → Set of ids.
  */
 export async function readFinalTestPasses(client, learners) {
   if (learners.length === 0) return new Set();
@@ -501,14 +508,14 @@ export async function readFinalTestPasses(client, learners) {
   if (open.length === 0) return passed;
   const attempts = await readForIds(open, (chunk) => client
     .from('exam_attempts')
-    .select('user_id, exam_key, status, score, max_score')
+    .select('user_id, exam_key, status, score, max_score, section_scores')
     .in('user_id', chunk)
     .in('exam_key', Object.values(FINAL_TESTS).map((t) => t.examKey))
     .eq('status', 'completed')
     .order('user_id'), 'final-test attempt');
   for (const a of attempts) {
     const test = FINAL_TESTS[levelOf.get(a.user_id)];
-    if (test && a.exam_key === test.examKey && passesFinalTest(a, test.passPercent)) passed.add(a.user_id);
+    if (test && a.exam_key === test.examKey && passesFinalTest(a, test.passPercent, test.guessCeiling)) passed.add(a.user_id);
   }
   return passed;
 }
