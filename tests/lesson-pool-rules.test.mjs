@@ -93,6 +93,7 @@ import {
   frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
   FRONTABLE_ADVERBIAL_RE, genderPairAmbiguity, genderPartners,
   determinerRepair, missingDeterminerCue, withDeterminerCue, DETERMINER_CUE, missingOpeningCue,
+  englishEchoesGerman, taskConstraintsEn,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -1681,5 +1682,47 @@ test('an object that can open the sentence is cued in the PROMPT, never in the a
       if (!missingOpeningCue({ ...item, questionDe: uncue(item.questionDe) })) continue;
       assert.match(String(item.questionDe), /\(Beginnen Sie mit „[^“]+“/, `${file} ${item.id}: „${item.answer}" can open with its object and the prompt names no opening`);
     }
+  }
+});
+
+// 2026-11-23 screen walk of Lektionen 7–12, in English at 420 px.
+
+test('no English help line repeats its German stem: it says in English what the item asks', () => {
+  // Lektion 10 showed „___ du viel? (verb: arbeiten, person: du)“ under „___ du viel? (arbeiten)“.
+  assert.ok(englishEchoesGerman({ questionDe: '___ du viel? (arbeiten)', questionEn: '___ du viel? (verb: arbeiten, person: du)' }));
+  assert.ok(englishEchoesGerman({ questionDe: 'Das ist ___ Stuhl.', questionEn: 'Das ist ___ Stuhl. Use an indefinite article.' }));
+  assert.ok(!englishEchoesGerman({ questionDe: '___ du viel? (arbeiten)', questionEn: 'Do you work a lot? (verb: arbeiten, person: du)' }));
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
+    const echoes = pool.items.filter(englishEchoesGerman).map((it) => `${it.id} · ${it.questionDe} | ${it.questionEn}`);
+    assert.deepEqual(echoes, [], `${level}: write the English of these items (bank: <level>.corrections.json; template: its builder)`);
+  }
+});
+
+test('a hint is never repeated: no English line says a task direction twice', () => {
+  // „Build the polite yes/no question about tomorrow. Begin with “Fahren”. Build a question.“ (L10, four
+  // items) and A1.2's „Use the present tense (Präsens). … Use the present tense.“: the build appended a
+  // direction the item's own English already gave.
+  const SAID = [
+    ['Build a question.', /\bquestion\b/i],
+    ['Build a request in the imperative.', /\b(?:imperative|request)\b/i],
+    ['Use the present tense.', /\bpresent tense\b/i],
+    ['Use the Perfekt.', /\bPerfekt\b/i],
+    ['Use a definite article.', /\bdefinite article\b/i],
+    ['Use an indefinite article.', /\bindefinite article\b/i],
+  ];
+  assert.deepEqual(taskConstraintsEn({
+    type: 'sentence_building',
+    questionDe: 'Bilden Sie die höfliche Frage (Beginnen Sie mit „Fahren“): [fahren / Sie / morgen / nach Deutschland]',
+    questionEn: 'Build the polite yes/no question about tomorrow.',
+  }), ['Begin with “Fahren”.']);
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
+    const twice = [];
+    for (const it of pool.items) {
+      const en = String(it.questionEn || '');
+      const sentences = en.split(/(?<=[.!?])\s+/);
+      if (new Set(sentences).size !== sentences.length) twice.push(`${it.id}: ${en}`);
+      for (const [hint, said] of SAID) if (en.includes(hint) && said.test(en.replace(hint, ''))) twice.push(`${it.id}: ${en}`);
+    }
+    assert.deepEqual(twice, [], level);
   }
 });

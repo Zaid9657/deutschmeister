@@ -53,6 +53,8 @@ export function classifySound(marked) {
 }
 
 const plain = (marked, nouns) => unmark(marked.replace(/-/g, '').replace(/[↗↘]/g, '').split(' '), nouns).join(' ');
+/** A marked line closes its own sentence when it ends in ? or !; no second end mark after it (2026-11-23 screen walk: „Wie SPÄT ist es?.“). */
+const closed = (marked) => (/[.!?][↗↘]?$/u.test(marked) ? marked : `${marked}.`);
 
 /** No lesson-specific keys; only real item strings supply listening distractors. */
 export function buildSoundItems(lektion, nouns = nounsOf([lektion])) {
@@ -69,16 +71,16 @@ export function buildSoundItems(lektion, nouns = nounsOf([lektion])) {
       item.answer = item.options[stress];
       item.promptDe = 'Welche Silbe ist in der Vorlage großgeschrieben? Wählen Sie die passende Betonung.';
       item.promptEn = 'Which syllable is capitalized in the model? Choose the matching stress.';
-      item.modelDe = `Die Großbuchstaben zeigen die betonte Silbe: ${marked}.`;
-      item.modelEn = `The capitals show the stressed syllable: ${marked}.`;
+      item.modelDe = `Die Großbuchstaben zeigen die betonte Silbe: ${closed(marked)}`;
+      item.modelEn = `The capitals show the stressed syllable: ${closed(marked)}`;
     } else if (shape.kind === 'sentence-stress') {
       item.text = `${capFirst(unmark(shape.words, nouns).join(' '))}?`;
       item.options = [...new Set(shape.words.map((w) => spell(w, nouns)))];
       item.answer = spell(shape.stress, nouns);
       item.promptDe = 'Welches Wort ist in der Vorlage betont? Beachten Sie die Großbuchstaben.';
       item.promptEn = 'Which word is stressed in the model? Look at the capitals.';
-      item.modelDe = `Die Großbuchstaben zeigen das betonte Wort: ${marked}. Die Computerstimme kann anders betonen.`;
-      item.modelEn = `The capitals show the stressed word: ${marked}. The computer voice may stress it differently.`;
+      item.modelDe = `Die Großbuchstaben zeigen das betonte Wort: ${closed(marked)} Die Computerstimme kann anders betonen.`;
+      item.modelEn = `The capitals show the stressed word: ${closed(marked)} The computer voice may stress it differently.`;
     } else if (shape.kind === 'melody') {
       item.text = `${capFirst(unmark(shape.words, nouns).join(' '))}?`;
       item.options = ['↗', '↘'];
@@ -86,8 +88,8 @@ export function buildSoundItems(lektion, nouns = nounsOf([lektion])) {
       item.promptDe = 'Wie verläuft die Stimme am Ende laut Vorlage? Wählen Sie den Pfeil.';
       item.promptEn = 'According to the model, what does the voice do at the end? Choose the arrow.';
       const rising = shape.direction === '↗';
-      item.modelDe = `Der Pfeil ${shape.direction} zeigt: Die Stimme geht am Ende ${rising ? 'nach oben' : 'nach unten'}. Vorlage: ${marked}. Die Computerstimme folgt dem Pfeil nicht immer.`;
-      item.modelEn = `The arrow ${shape.direction} shows that the voice ${rising ? 'rises' : 'falls'} at the end. Model: ${marked}. The computer voice may not follow the arrow.`;
+      item.modelDe = `Der Pfeil ${shape.direction} zeigt: Die Stimme geht am Ende ${rising ? 'nach oben' : 'nach unten'}. Vorlage: ${closed(marked)} Die Computerstimme folgt dem Pfeil nicht immer.`;
+      item.modelEn = `The arrow ${shape.direction} shows that the voice ${rising ? 'rises' : 'falls'} at the end. Model: ${closed(marked)} The computer voice may not follow the arrow.`;
     } else {
       const candidates = [...new Set(originals.flatMap((s) => classifySound(s)?.kind === 'pair' ? classifySound(s).words : [plain(s, nouns)]))];
       item.text = shape.kind === 'pair' ? shape.words[index % shape.words.length] : plain(marked, nouns);
@@ -95,8 +97,10 @@ export function buildSoundItems(lektion, nouns = nounsOf([lektion])) {
       item.options = candidates;
       item.promptDe = 'Was hören Sie? Wählen Sie die gehörte Zeile. Ohne Ton: Lesen Sie die Vorlage.';
       item.promptEn = 'What do you hear? Choose the line you heard. Without audio, read the model.';
-      item.modelDe = 'Hören Sie die Zeile. Wenn kein Ton möglich ist, öffnen Sie stattdessen den Text.';
-      item.modelEn = 'Listen to the line. If audio is unavailable, open the text instead.';
+      // Every sound item shows its model, the marked line, like the stress and melody kinds above (2026-11-23
+      // screen walk: L7, L9 and L12 offered „read the model“ with no model on screen).
+      item.modelDe = `Vorlage: ${closed(marked)} Hören Sie die Zeile. Wenn kein Ton möglich ist, öffnen Sie stattdessen den Text.`;
+      item.modelEn = `Model: ${closed(marked)} Listen to the line. If audio is unavailable, open the text instead.`;
     }
     return { ...item, accepted: [item.answer], explanationDe: item.modelDe, explanationEn: item.modelEn };
   });

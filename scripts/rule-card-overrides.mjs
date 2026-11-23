@@ -359,7 +359,8 @@ const RULE_CARD_OVERRIDES = {
   'time-and-dates': {
     titleDe: 'um, am – die Uhrzeit sagen',
     content: [
-      'Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.',
+      // am + Tageszeit is drilled in Lektion 8 („___ Abend habe ich Zeit.“), so the card shows it (2026-11-23 screen walk).
+      'Uhrzeit mit um: um acht Uhr. Wochentag und Tageszeit mit am: am Montag, am Abend.',
       'Aber: Es ist acht Uhr (ohne um).',
       'Umgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).',
       'Die Uhrzeit halb neun ist 8.30 und nicht 9.30.',

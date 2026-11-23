@@ -958,7 +958,7 @@
    "difficulty": 2,
    "order": 147,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / gehen / es / Ihnen]",
-   "questionEn": "Form the polite question: how are you? Begin with “Wie”. Build a question.",
+   "questionEn": "Form the polite question: how are you? Begin with “Wie”.",
    "options": null,
    "answer": "Wie geht es Ihnen?",
    "accepted": [
@@ -999,7 +999,7 @@
    "difficulty": 2,
    "order": 169,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / gehen / es / dir]",
-   "questionEn": "Form the informal question: how are you? Begin with “Wie”. Build a question.",
+   "questionEn": "Form the informal question: how are you? Begin with “Wie”.",
    "options": null,
    "answer": "Wie geht es dir?",
    "accepted": [
@@ -1326,7 +1326,7 @@
    "difficulty": 1,
    "order": 11,
    "questionDe": "der Stuhl → ___ Stühle (Plural)",
-   "questionEn": "der Stuhl → ___ Stühle (Plural)",
+   "questionEn": "the chair → the chairs: which article does the plural take?",
    "options": [
     "der",
     "das",
@@ -1347,7 +1347,7 @@
    "difficulty": 1,
    "order": 12,
    "questionDe": "das Auto → ___ Autos (Plural)",
-   "questionEn": "das Auto → ___ Autos (Plural)",
+   "questionEn": "the car → the cars: which article does the plural take?",
    "options": [
     "die",
     "der",
@@ -1426,7 +1426,7 @@
    "difficulty": 2,
    "order": 59,
    "questionDe": "Korrigieren Sie den Artikel: „Ein Schere ist hier.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Schere ist hier.",
    "accepted": [
@@ -1466,7 +1466,7 @@
    "difficulty": 2,
    "order": 62,
    "questionDe": "Korrigieren Sie den Artikel: „Das Wohnung ist hier.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Wohnung ist hier.",
    "accepted": [
@@ -1546,7 +1546,7 @@
    "difficulty": 2,
    "order": 202,
    "questionDe": "Korrigieren Sie den Artikel: „Das Tür ist weiß.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Tür ist weiß.",
    "accepted": [
@@ -1606,7 +1606,7 @@
    "difficulty": 2,
    "order": 205,
    "questionDe": "Korrigieren Sie den Artikel: „Die Schlüssel ist gelb.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Der Schlüssel ist gelb.",
    "accepted": [
@@ -1646,7 +1646,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Das ist ___ Stuhl.",
-   "questionEn": "Das ist ___ Stuhl.",
+   "questionEn": "That is a chair.",
    "options": [
     "ein",
     "eine",
@@ -1669,7 +1669,7 @@
    "difficulty": 1,
    "order": 2,
    "questionDe": "Ich habe ___ Schwester.",
-   "questionEn": "Ich habe ___ Schwester.",
+   "questionEn": "I have a sister.",
    "options": [
     "eine",
     "ein",
@@ -1692,7 +1692,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Das ist ___ Bild.",
-   "questionEn": "Das ist ___ Bild.",
+   "questionEn": "That is a picture.",
    "options": [
     "ein",
     "eine",
@@ -1833,7 +1833,7 @@
    "difficulty": 2,
    "order": 174,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Pause.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche eine Pause.",
    "accepted": [
@@ -1853,7 +1853,7 @@
    "difficulty": 2,
    "order": 175,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Telefon.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche ein Telefon.",
    "accepted": [
@@ -1873,7 +1873,7 @@
    "difficulty": 2,
    "order": 176,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche eine Computer.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche einen Computer.",
    "accepted": [
@@ -1893,7 +1893,7 @@
    "difficulty": 2,
    "order": 181,
    "questionDe": "Korrigieren Sie den Artikel: „Ich brauche einen Handynummer.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Ich brauche eine Handynummer.",
    "accepted": [
@@ -1913,7 +1913,7 @@
    "difficulty": 2,
    "order": 183,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Chefin.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Chefin.",
    "accepted": [
@@ -1933,7 +1933,7 @@
    "difficulty": 2,
    "order": 184,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Verkäuferin.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Verkäuferin.",
    "accepted": [
@@ -1953,7 +1953,7 @@
    "difficulty": 2,
    "order": 189,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Firma in Berlin.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Firma in Berlin.",
    "accepted": [
@@ -2165,7 +2165,7 @@
    "difficulty": 2,
    "order": 71,
    "questionDe": "Korrigieren Sie den Artikel: „Das ist ein Kollegin im Büro.“ (mit unbestimmtem Artikel)",
-   "questionEn": "Correct the indefinite article. Use an indefinite article. Write the whole sentence; change only the article.",
+   "questionEn": "Correct the indefinite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Das ist eine Kollegin im Büro.",
    "accepted": [
@@ -2963,7 +2963,7 @@
    "difficulty": 2,
    "order": 50,
    "questionDe": "Korrigieren Sie den Artikel: „Das Lampe kostet acht Euro.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Lampe kostet acht Euro.",
    "accepted": [
@@ -3023,7 +3023,7 @@
    "difficulty": 2,
    "order": 57,
    "questionDe": "Korrigieren Sie den Artikel: „Der Lampe ist teuer.“ (mit bestimmtem Artikel)",
-   "questionEn": "Fix the article — the task names the definite article. Use a definite article. Write the whole sentence; change only the article.",
+   "questionEn": "Fix the article — the task names the definite article. Write the whole sentence; change only the article.",
    "options": null,
    "answer": "Die Lampe ist teuer.",
    "accepted": [
@@ -4054,18 +4054,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 128,
-   "questionDe": "Ist das ___ Geschenk, Frau Kaya? (Sie)",
-   "questionEn": "Is that your present, Mrs Kaya? Formal address.",
+   "questionDe": "Ist das ___ Geschenk, Frau Ramos? (Sie)",
+   "questionEn": "Is that your present, Mrs Ramos? Formal address.",
    "options": null,
    "answer": "Ihr",
    "accepted": [
     "Ihr"
    ],
    "caseSensitive": true,
-   "explanationDe": "Höflich zu Frau Kaya: Ihr mit großem I.",
+   "explanationDe": "Höflich zu Frau Ramos: Ihr mit großem I.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": "Frau Kaya is addressed with the formal you (Sie), whose possessive is **Ihr** with a capital **I**. Geschenk is neuter, so no ending: **Ihr Geschenk**."
+   "explanationEn": "Frau Ramos is addressed with the formal you (Sie), whose possessive is **Ihr** with a capital **I**. Geschenk is neuter, so no ending: **Ihr Geschenk**."
   },
   {
    "id": "extra-a11-l12-09",
@@ -4074,18 +4074,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 129,
-   "questionDe": "Wann ist ___ Fest, Frau Kaya? (Sie)",
-   "questionEn": "When is your celebration, Mrs Kaya? Formal address.",
+   "questionDe": "Wann ist ___ Fest, Frau Ramos? (Sie)",
+   "questionEn": "When is your celebration, Mrs Ramos? Formal address.",
    "options": null,
    "answer": "Ihr",
    "accepted": [
     "Ihr"
    ],
    "caseSensitive": true,
-   "explanationDe": "Zu Frau Kaya gehört Ihr mit großem I.",
+   "explanationDe": "Zu Frau Ramos gehört Ihr mit großem I.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": "Frau Kaya is addressed formally (Sie), so the possessive is **Ihr** with a capital **I**. Fest is neuter, so no ending: **Ihr Fest**."
+   "explanationEn": "Frau Ramos is addressed formally (Sie), so the possessive is **Ihr** with a capital **I**. Fest is neuter, so no ending: **Ihr Fest**."
   },
   {
    "id": "extra-a11-l12-10",
@@ -4196,19 +4196,19 @@
    "stage": 5,
    "difficulty": 2,
    "order": 136,
-   "questionDe": "Korrigieren Sie den Possessivartikel: „Ihre Papa kommt auch, Frau Kaya.“",
+   "questionDe": "Korrigieren Sie den Possessivartikel: „Ihre Papa kommt auch, Frau Ramos.“",
    "questionEn": "Fix the possessive. Write the whole sentence; change only the possessive determiner.",
    "options": null,
-   "answer": "Ihr Papa kommt auch, Frau Kaya.",
+   "answer": "Ihr Papa kommt auch, Frau Ramos.",
    "accepted": [
-    "Ihr Papa kommt auch, Frau Kaya.",
-    "Ihr Papa kommt auch, Frau Kaya"
+    "Ihr Papa kommt auch, Frau Ramos.",
+    "Ihr Papa kommt auch, Frau Ramos"
    ],
    "caseSensitive": true,
-   "explanationDe": "Papa ist maskulin: Ihr ohne -e. Zu Frau Kaya sagt man Sie: Ihr.",
+   "explanationDe": "Papa ist maskulin: Ihr ohne -e. Zu Frau Ramos sagt man Sie: Ihr.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": "Papa is masculine (der Papa), so no **-e**: **Ihr Papa kommt auch, Frau Kaya.** To Frau Kaya you say Sie, so **Ihr** is the polite \"your\"."
+   "explanationEn": "Papa is masculine (der Papa), so no **-e**: **Ihr Papa kommt auch, Frau Ramos.** To Frau Ramos you say Sie, so **Ihr** is the polite \"your\"."
   },
   {
    "id": "extra-a11-l12-17",
@@ -4258,7 +4258,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Ich ___ in Berlin.",
-   "questionEn": "Ich ___ in Berlin. (wohnen)",
+   "questionEn": "I live in Berlin. (wohnen)",
    "options": [
     "wohne",
     "wohnst",
@@ -4306,7 +4306,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Er ___ Fußball.",
-   "questionEn": "Er ___ Fußball. (spielen)",
+   "questionEn": "He plays football. (spielen)",
    "options": [
     "spielt",
     "spiele",
@@ -4330,7 +4330,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Wir ___ zusammen.",
-   "questionEn": "Wir ___ zusammen. (lernen)",
+   "questionEn": "We learn together. (lernen)",
    "options": [
     "lernen",
     "lernt",
@@ -4354,7 +4354,7 @@
    "difficulty": 1,
    "order": 5,
    "questionDe": "Was ___ du?",
-   "questionEn": "Was ___ du? (machen)",
+   "questionEn": "What are you doing? (machen)",
    "options": [
     "machst",
     "mache",
@@ -4378,7 +4378,7 @@
    "difficulty": 1,
    "order": 7,
    "questionDe": "Ihr ___ gut!",
-   "questionEn": "Ihr ___ gut! (spielen)",
+   "questionEn": "You all play well! (spielen)",
    "options": [
     "spielt",
     "spielst",
@@ -4754,18 +4754,22 @@
    "stage": 5,
    "difficulty": 2,
    "order": 75,
-   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / tanzen / zusammen]",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / tanzen / hier / zusammen]",
    "questionEn": "Build the sentence. Begin with “Wir”.",
    "options": null,
-   "answer": "Wir tanzen zusammen.",
+   "answer": "Wir tanzen hier zusammen.",
    "accepted": [
-    "Wir tanzen zusammen.",
-    "Wir tanzen zusammen"
+    "Wir tanzen hier zusammen.",
+    "Wir tanzen hier zusammen",
+    "Hier tanzen wir zusammen.",
+    "Hier tanzen wir zusammen",
+    "Wir tanzen zusammen hier.",
+    "Wir tanzen zusammen hier"
    ],
    "explanationDe": "Bei wir ist die Endung -en: wir tanzen.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": "Subject first, verb second. After **wir** the verb takes **-en**, like the infinitive: **Wir tanzen zusammen.**"
+   "explanationEn": "Subject first, verb second. After **wir** the verb takes **-en**, like the infinitive: **Wir tanzen hier zusammen.**"
   },
   {
    "id": "extra-a11-l07-07",
@@ -4815,7 +4819,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Ich ___ um 7 Uhr auf. (aufstehen)",
-   "questionEn": "Ich ___ um 7 Uhr auf. (verb: aufstehen, ich)",
+   "questionEn": "I get up at 7 o'clock. (verb: aufstehen, ich)",
    "options": null,
    "answer": "stehe",
    "accepted": [
@@ -4834,7 +4838,7 @@
    "difficulty": 1,
    "order": 2,
    "questionDe": "Du ___ deine Mutter an. (anrufen)",
-   "questionEn": "Du ___ deine Mutter an. (verb: anrufen, du)",
+   "questionEn": "You call your mother. (verb: anrufen, du)",
    "options": null,
    "answer": "rufst",
    "accepted": [
@@ -4853,7 +4857,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Wir ___ heute ein. (einkaufen)",
-   "questionEn": "Wir ___ heute ein. (verb: einkaufen, wir)",
+   "questionEn": "We go shopping today. (verb: einkaufen, wir)",
    "options": null,
    "answer": "kaufen",
    "accepted": [
@@ -4872,7 +4876,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Er ___ um 8 Uhr mit. (mitkommen)",
-   "questionEn": "Er ___ um 8 Uhr mit. (verb: mitkommen, er)",
+   "questionEn": "He comes along at 8 o'clock. (verb: mitkommen, er)",
    "options": null,
    "answer": "kommt",
    "accepted": [
@@ -4891,7 +4895,7 @@
    "difficulty": 1,
    "order": 5,
    "questionDe": "Ich ___ das Fenster auf. (aufmachen)",
-   "questionEn": "Ich ___ das Fenster auf. (verb: aufmachen, ich)",
+   "questionEn": "I open the window. (verb: aufmachen, ich)",
    "options": null,
    "answer": "mache",
    "accepted": [
@@ -4910,7 +4914,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Sie ___ die Tür zu. (zumachen, Singular)",
-   "questionEn": "Sie ___ die Tür zu. (verb: zumachen, sie = she)",
+   "questionEn": "She closes the door. (verb: zumachen, sie = she)",
    "options": null,
    "answer": "macht",
    "accepted": [
@@ -4929,7 +4933,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Der Zug ___ um 9 Uhr an. (ankommen)",
-   "questionEn": "Der Zug ___ um 9 Uhr an. (verb: ankommen, er = der Zug)",
+   "questionEn": "The train arrives at 9 o'clock. (verb: ankommen, er = der Zug)",
    "options": null,
    "answer": "kommt",
    "accepted": [
@@ -4948,7 +4952,7 @@
    "difficulty": 1,
    "order": 10,
    "questionDe": "Wir ___ heute aus. (ausgehen)",
-   "questionEn": "Wir ___ heute aus. (verb: ausgehen, wir)",
+   "questionEn": "We go out today. (verb: ausgehen, wir)",
    "options": null,
    "answer": "gehen",
    "accepted": [
@@ -4967,7 +4971,7 @@
    "difficulty": 2,
    "order": 11,
    "questionDe": "Ich ___ dich um 8 Uhr ab. (abholen)",
-   "questionEn": "Ich ___ dich um 8 Uhr ab. (verb: abholen, ich)",
+   "questionEn": "I pick you up at 8 o'clock. (verb: abholen, ich)",
    "options": null,
    "answer": "hole",
    "accepted": [
@@ -4986,7 +4990,7 @@
    "difficulty": 2,
    "order": 12,
    "questionDe": "Er ___ gut zu. (zuhören)",
-   "questionEn": "Er ___ gut zu. (verb: zuhören, er)",
+   "questionEn": "He listens carefully. (verb: zuhören, er)",
    "options": null,
    "answer": "hört",
    "accepted": [
@@ -5119,7 +5123,7 @@
    "difficulty": 2,
    "order": 1,
    "questionDe": "___ du um 7 Uhr auf? (aufstehen)",
-   "questionEn": "___ du um 7 Uhr auf? (question, verb: aufstehen, du)",
+   "questionEn": "Do you get up at 7 o'clock? (question, verb: aufstehen, du)",
    "options": null,
    "answer": "Stehst",
    "accepted": [
@@ -5138,7 +5142,7 @@
    "difficulty": 2,
    "order": 2,
    "questionDe": "___ du meine Mutter an? (anrufen)",
-   "questionEn": "___ du meine Mutter an? (question, verb: anrufen, du)",
+   "questionEn": "Are you calling my mother? (question, verb: anrufen, du)",
    "options": null,
    "answer": "Rufst",
    "accepted": [
@@ -5157,7 +5161,7 @@
    "difficulty": 2,
    "order": 3,
    "questionDe": "___ ihr heute ein? (einkaufen)",
-   "questionEn": "___ ihr heute ein? (question, verb: einkaufen, ihr)",
+   "questionEn": "Are you all going shopping today? (question, verb: einkaufen, ihr)",
    "options": null,
    "answer": "Kauft",
    "accepted": [
@@ -5195,7 +5199,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "Ich hole dich um 8 Uhr ___. (abholen, nur die Vorsilbe)",
-   "questionEn": "Ich hole dich um 8 Uhr ___. (prefix only, verb: abholen, ich)",
+   "questionEn": "I pick you up at 8 o'clock. (prefix only, verb: abholen, ich)",
    "options": null,
    "answer": "ab",
    "accepted": [
@@ -5214,7 +5218,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Er macht die Tür ___. (zumachen, nur die Vorsilbe)",
-   "questionEn": "Er macht die Tür ___. (prefix only, verb: zumachen, er)",
+   "questionEn": "He closes the door. (prefix only, verb: zumachen, er)",
    "options": null,
    "answer": "zu",
    "accepted": [
@@ -5233,7 +5237,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Wir kaufen heute ___. (einkaufen, nur die Vorsilbe)",
-   "questionEn": "Wir kaufen heute ___. (prefix only, verb: einkaufen, wir)",
+   "questionEn": "We go shopping today. (prefix only, verb: einkaufen, wir)",
    "options": null,
    "answer": "ein",
    "accepted": [
@@ -5252,7 +5256,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Ihr kommt um 8 Uhr ___. (mitkommen, nur die Vorsilbe)",
-   "questionEn": "Ihr kommt um 8 Uhr ___. (prefix only, verb: mitkommen, ihr)",
+   "questionEn": "You all come along at 8 o'clock. (prefix only, verb: mitkommen, ihr)",
    "options": null,
    "answer": "mit",
    "accepted": [
@@ -5334,7 +5338,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Kommst du am Freitag“): [mitkommen / du / am Freitag]",
-   "questionEn": "Build the question (to come along). Begin with “Kommst du am Freitag”. Build a question.",
+   "questionEn": "Build the question (to come along). Begin with “Kommst du am Freitag”.",
    "options": null,
    "answer": "Kommst du am Freitag mit?",
    "accepted": [
@@ -6045,7 +6049,7 @@
    "difficulty": 1,
    "order": 8,
    "questionDe": "___ du Zeit?",
-   "questionEn": "___ du Zeit?",
+   "questionEn": "Do you have time?",
    "options": [
     "Hast",
     "Habe",
@@ -6442,7 +6446,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Ich ___ müde.",
-   "questionEn": "Ich ___ müde.",
+   "questionEn": "I am tired.",
    "options": [
     "bin",
     "bist",
@@ -6466,7 +6470,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Er ___ Lehrer.",
-   "questionEn": "Er ___ Lehrer.",
+   "questionEn": "He is a teacher.",
    "options": [
     "ist",
     "bin",
@@ -6490,7 +6494,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Wir ___ in Berlin.",
-   "questionEn": "Wir ___ in Berlin.",
+   "questionEn": "We are in Berlin.",
    "options": [
     "sind",
     "seid",
@@ -6514,7 +6518,7 @@
    "difficulty": 1,
    "order": 7,
    "questionDe": "Das ___ gut.",
-   "questionEn": "Das ___ gut.",
+   "questionEn": "That is good.",
    "options": [
     "ist",
     "bin",
@@ -6538,7 +6542,7 @@
    "difficulty": 1,
    "order": 8,
    "questionDe": "___ du Student?",
-   "questionEn": "___ du Student?",
+   "questionEn": "Are you a student?",
    "options": [
     "Bist",
     "Bin",
@@ -6879,7 +6883,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "___ du müde? (sein)",
-   "questionEn": "___ du müde? (verb: sein, person: du)",
+   "questionEn": "Are you tired? (verb: sein, person: du)",
    "options": null,
    "answer": "Bist",
    "accepted": [
@@ -6898,7 +6902,7 @@
    "difficulty": 1,
    "order": 2,
    "questionDe": "___ du Zeit? (haben)",
-   "questionEn": "___ du Zeit? (verb: haben, person: du)",
+   "questionEn": "Do you have time? (verb: haben, person: du)",
    "options": null,
    "answer": "Hast",
    "accepted": [
@@ -6917,7 +6921,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "___ du aus Polen? (kommen)",
-   "questionEn": "___ du aus Polen? (verb: kommen, person: du)",
+   "questionEn": "Do you come from Poland? (verb: kommen, person: du)",
    "options": null,
    "answer": "Kommst",
    "accepted": [
@@ -6936,7 +6940,7 @@
    "difficulty": 2,
    "order": 4,
    "questionDe": "___ du viel? (arbeiten)",
-   "questionEn": "___ du viel? (verb: arbeiten, person: du)",
+   "questionEn": "Do you work a lot? (verb: arbeiten, person: du)",
    "options": null,
    "answer": "Arbeitest",
    "accepted": [
@@ -6955,7 +6959,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "___ Sie in Berlin? (wohnen, Sie)",
-   "questionEn": "___ Sie in Berlin? (verb: wohnen, person: Sie – formal)",
+   "questionEn": "Do you live in Berlin? (verb: wohnen, person: Sie – formal)",
    "options": null,
    "answer": "Wohnen",
    "accepted": [
@@ -6974,7 +6978,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "___ Sie Englisch? (sprechen, Sie)",
-   "questionEn": "___ Sie Englisch? (verb: sprechen, person: Sie – formal)",
+   "questionEn": "Do you speak English? (verb: sprechen, person: Sie – formal)",
    "options": null,
    "answer": "Sprechen",
    "accepted": [
@@ -6993,7 +6997,7 @@
    "difficulty": 1,
    "order": 8,
    "questionDe": "___ du gern Kaffee? (trinken)",
-   "questionEn": "___ du gern Kaffee? (verb: trinken, person: du)",
+   "questionEn": "Do you like drinking coffee? (verb: trinken, person: du)",
    "options": null,
    "answer": "Trinkst",
    "accepted": [
@@ -7012,7 +7016,7 @@
    "difficulty": 1,
    "order": 9,
    "questionDe": "___ du gern? (kochen)",
-   "questionEn": "___ du gern? (verb: kochen, person: du)",
+   "questionEn": "Do you like cooking? (verb: kochen, person: du)",
    "options": null,
    "answer": "Kochst",
    "accepted": [
@@ -7179,7 +7183,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Bist du“): [du / müde / sein]",
-   "questionEn": "Write the question: [you / tired / to be] (verb: sein, person: du) Begin with “Bist du”. Build a question.",
+   "questionEn": "Write the question: [you / tired / to be] (verb: sein, person: du) Begin with “Bist du”.",
    "options": null,
    "answer": "Bist du müde?",
    "accepted": [
@@ -7198,7 +7202,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Wohnst“): [du / in Köln / wohnen]",
-   "questionEn": "Write the question: [you / in Cologne / to live] (verb: wohnen, person: du) Begin with “Wohnst”. Build a question.",
+   "questionEn": "Write the question: [you / in Cologne / to live] (verb: wohnen, person: du) Begin with “Wohnst”.",
    "options": null,
    "answer": "Wohnst du in Köln?",
    "accepted": [
@@ -7217,7 +7221,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Kommst“): [du / aus Polen / kommen]",
-   "questionEn": "Write the question: [you / from Poland / to come] (verb: kommen, person: du) Begin with “Kommst”. Build a question.",
+   "questionEn": "Write the question: [you / from Poland / to come] (verb: kommen, person: du) Begin with “Kommst”.",
    "options": null,
    "answer": "Kommst du aus Polen?",
    "accepted": [
@@ -7236,7 +7240,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Kommst du am Samstag“): [du / am Samstag / mitkommen]",
-   "questionEn": "Write the question: [you / on Saturday / to come along] (verb: mitkommen, person: du – separable) Begin with “Kommst du am Samstag”. Build a question.",
+   "questionEn": "Write the question: [you / on Saturday / to come along] (verb: mitkommen, person: du – separable) Begin with “Kommst du am Samstag”.",
    "options": null,
    "answer": "Kommst du am Samstag mit?",
    "accepted": [
@@ -7255,7 +7259,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Schreiben Sie die höfliche Frage (Beginnen Sie mit „Wohnen“): [Sie / in Berlin / wohnen]",
-   "questionEn": "Write the polite question: [you / in Berlin / to live] (verb: wohnen, person: Sie – formal) Begin with “Wohnen”. Build a question.",
+   "questionEn": "Write the polite question: [you / in Berlin / to live] (verb: wohnen, person: Sie – formal) Begin with “Wohnen”.",
    "options": null,
    "answer": "Wohnen Sie in Berlin?",
    "accepted": [
@@ -7275,7 +7279,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Schreiben Sie die höfliche Frage (Beginnen Sie mit „Haben“): [Sie / Kinder / haben]",
-   "questionEn": "Write the polite question: [you / children / to have] (verb: haben, person: Sie – formal) Begin with “Haben”. Build a question.",
+   "questionEn": "Write the polite question: [you / children / to have] (verb: haben, person: Sie – formal) Begin with “Haben”.",
    "options": null,
    "answer": "Haben Sie Kinder?",
    "accepted": [
@@ -7317,7 +7321,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Fahrt ihr“): [fahren / ihr / mit dem Auto / in die Schweiz]",
-   "questionEn": "Build the yes/no question about the car trip. Begin with “Fahrt ihr”. Build a question.",
+   "questionEn": "Build the yes/no question about the car trip. Begin with “Fahrt ihr”.",
    "options": null,
    "answer": "Fahrt ihr mit dem Auto in die Schweiz?",
    "accepted": [
@@ -7339,7 +7343,7 @@
    "difficulty": 2,
    "order": 108,
    "questionDe": "Bilden Sie die höfliche Frage (Beginnen Sie mit „Fahren“): [fahren / Sie / morgen / nach Deutschland]",
-   "questionEn": "Build the polite yes/no question about tomorrow. Begin with “Fahren”. Build a question.",
+   "questionEn": "Build the polite yes/no question about tomorrow. Begin with “Fahren”.",
    "options": null,
    "answer": "Fahren Sie morgen nach Deutschland?",
    "accepted": [
@@ -7362,7 +7366,7 @@
    "difficulty": 2,
    "order": 109,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ist“): [sein / die Ankunft / an Gleis vier] (Verb auf Position 1)",
-   "questionEn": "Build the yes/no question about the arrival. Begin with “Ist”. Build a question.",
+   "questionEn": "Build the yes/no question about the arrival. Begin with “Ist”.",
    "options": null,
    "answer": "Ist die Ankunft an Gleis vier?",
    "accepted": [
@@ -7424,7 +7428,7 @@
    "difficulty": 2,
    "order": 112,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Kommt“): [kommen / der Bus / zum Bahnhof] (Verb auf Position 1)",
-   "questionEn": "Build the yes/no question about the bus. Begin with “Kommt”. Build a question.",
+   "questionEn": "Build the yes/no question about the bus. Begin with “Kommt”.",
    "options": null,
    "answer": "Kommt der Bus zum Bahnhof?",
    "accepted": [
@@ -7446,7 +7450,7 @@
    "difficulty": 2,
    "order": 113,
    "questionDe": "[haben / der Zug / nach Österreich / Verspätung] (Antwort: ja oder nein) (Beginnen Sie mit „Hat“)",
-   "questionEn": "Build the yes/no question about a delay. Begin with “Hat”. Build a question.",
+   "questionEn": "Build the yes/no question about a delay. Begin with “Hat”.",
    "options": null,
    "answer": "Hat der Zug nach Österreich Verspätung?",
    "accepted": [
@@ -7466,7 +7470,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "[kosten / die Fahrkarte / nach Deutschland / zwanzig Euro] (Antwort: ja oder nein) (Beginnen Sie mit „Kostet“)",
-   "questionEn": "Build the yes/no question about the price. Begin with “Kostet”. Build a question.",
+   "questionEn": "Build the yes/no question about the price. Begin with “Kostet”.",
    "options": null,
    "answer": "Kostet die Fahrkarte nach Deutschland zwanzig Euro?",
    "accepted": [
@@ -7528,7 +7532,7 @@
    "difficulty": 2,
    "order": 117,
    "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Zug fährt nach Österreich.“ (Beginnen Sie mit „Fährt“)",
-   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”. Build a question.",
+   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”.",
    "options": null,
    "answer": "Fährt der Zug nach Österreich?",
    "accepted": [
@@ -7548,7 +7552,7 @@
    "difficulty": 2,
    "order": 118,
    "questionDe": "Die Antwort ist: „Ja, der Zug hat Verspätung.“ Schreiben Sie die Frage. (Beginnen Sie mit „Hat“)",
-   "questionEn": "Write the question that this answer answers. Begin with “Hat”. Build a question.",
+   "questionEn": "Write the question that this answer answers. Begin with “Hat”.",
    "options": null,
    "answer": "Hat der Zug Verspätung?",
    "accepted": [
@@ -7568,7 +7572,7 @@
    "difficulty": 2,
    "order": 119,
    "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Bus fährt nach Deutschland.“ (Beginnen Sie mit „Fährt“)",
-   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”. Build a question.",
+   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”.",
    "options": null,
    "answer": "Fährt der Bus nach Deutschland?",
    "accepted": [
@@ -7588,7 +7592,7 @@
    "difficulty": 2,
    "order": 120,
    "questionDe": "Die Antwort ist: „Ja, der Bus hat Verspätung.“ Schreiben Sie die Frage. (Beginnen Sie mit „Hat“)",
-   "questionEn": "Write the question that this answer answers. Begin with “Hat”. Build a question.",
+   "questionEn": "Write the question that this answer answers. Begin with “Hat”.",
    "options": null,
    "answer": "Hat der Bus Verspätung?",
    "accepted": [
@@ -7608,7 +7612,7 @@
    "difficulty": 2,
    "order": 121,
    "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Fahrer fährt nach Österreich.“ (Beginnen Sie mit „Fährt“)",
-   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”. Build a question.",
+   "questionEn": "Turn the statement into a yes/no question. Begin with “Fährt”.",
    "options": null,
    "answer": "Fährt der Fahrer nach Österreich?",
    "accepted": [
@@ -7628,7 +7632,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Die Antwort ist: „Ja, der Fahrer hat Zeit.“ Schreiben Sie die Frage. (Beginnen Sie mit „Hat“)",
-   "questionEn": "Write the question that this answer answers. Begin with “Hat”. Build a question.",
+   "questionEn": "Write the question that this answer answers. Begin with “Hat”.",
    "options": null,
    "answer": "Hat der Fahrer Zeit?",
    "accepted": [

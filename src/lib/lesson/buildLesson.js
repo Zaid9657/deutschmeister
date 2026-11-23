@@ -21,7 +21,7 @@
 // used — see planPractice for the five rules it enforces.
 import { buildGuided } from './buildGuided.js';
 import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
-import { wordOrderAnswers } from './wordOrder.js';
+import { wordOrderAnswers, hasOrderToBuild, ordersEnough } from './wordOrder.js';
 
 /** Tiny seeded PRNG (mulberry32, public domain). 32-bit state, uniform [0,1). */
 export function mulberry32(seed) {
@@ -502,6 +502,40 @@ export const taskShape = (item) => {
   return `${(item && item.type) || ''}:${skeleton}`;
 };
 
+/**
+ * THE SEVENTH DIVERSITY AXIS: the same drill twice in one seven (2026-11-23 screen walk). L8 asked
+ * „___ Abend“ → Am twice, L12 „(ich)“ → Mein twice and „(er)“ → sein twice: two task shapes and
+ * an answer key the cap allows twice, one exercise. A drill's STEMS are what its answer is formed
+ * from — a person or verb cue in its brackets („(ich)“, „(haben)“; the task categories such as
+ * „(bestimmter Artikel)“ name the task, not the source) and the content word on either side of
+ * its gap („___ Abend“, „___ Regal“). Two items are one drill when they share an answer key and a
+ * stem; „___ Tasche“ and „___ Lampe“ → die stay two, because the noun decides the answer.
+ */
+const SOURCE_CUE_MARKS = new Set(['zzmarkperson', 'zzmarkverbform']);
+export const drillStems = (item) => {
+  const q = String((item && item.questionDe) || '');
+  const stems = new Set();
+  for (const [, inner] of q.matchAll(/\(([^()]*)\)/g)) {
+    if (SOURCE_CUE_MARKS.has(instructionMark(inner))) stems.add(`cue:${inner.trim().toLowerCase()}`);
+  }
+  const words = withGaps(stripInstruction(q)).split(' ');
+  words.forEach((w, i) => {
+    if (w !== '_') return;
+    for (const [side, word] of [['before', words[i - 1]], ['after', words[i + 1]]]) {
+      if (word && word !== '_' && word.length > 2 && !LEMMA_STOPWORDS.has(word)) stems.add(`${side}:${word}`);
+    }
+  });
+  return stems;
+};
+const drillWith = (a, b, key, stems) => {
+  const k = key(a);
+  if (!k || k !== key(b)) return false;
+  const other = stems(b);
+  return [...stems(a)].some((s) => other.has(s));
+};
+/** True when `a` and `b` ask for the same answer from the same stem — one exercise shown twice. */
+export const sameDrill = (a, b) => drillWith(a, b, answerKey, drillStems);
+
 /** The situational vocabulary of one Lektion, as lemmas. */
 export function wortfeldTerms(lektion) {
   const out = new Set();
@@ -582,15 +616,18 @@ const memoProducedWords = (form) => {
   return words;
 };
 const memoPrintedList = memoByItem((item) => [...promptWords(item)], ['questionDe']);
+const memoAnswerKey = memoByItem(answerKey, ['answer']);
+const memoDrillStems = memoByItem(drillStems, ['questionDe']);
 const DRAW_READERS = {
   lemmas: memoByItem(itemLemmas, ['questionDe', 'answer']),
   answerLemmas: memoByItem(answerLemmas, ['answer']),
-  answerKey: memoByItem(answerKey, ['answer']),
+  answerKey: memoAnswerKey,
   taskShape: memoByItem(taskShape, ['questionDe', 'type']),
   leaks: (solved, prints) => leaksWith(solved, prints, memoPrintedList, memoProducedWords),
+  sameDrill: (a, b) => drillWith(a, b, memoAnswerKey, memoDrillStems),
 };
 /** The same readers without the memory — `{ memo: false }`, which the draw-identity test compares. */
-const PLAIN_READERS = { lemmas: itemLemmas, answerLemmas, answerKey, taskShape, leaks: leaksAnswer };
+const PLAIN_READERS = { lemmas: itemLemmas, answerLemmas, answerKey, taskShape, leaks: leaksAnswer, sameDrill };
 
 /**
  * The 7 controlled-practice items for ONE Lektion.
@@ -655,7 +692,8 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));
   // The quality rules at the course's own level: without it the A1.1 syllabus rules (no accusative,
   // no ordinals …) dropped 57 of A1.2's 254 items, and its accusative Lektion drew 3 of 7 (2026-10-15).
-  const usable = poolItems(pool).filter((it) => !it.assessment && topics.has(it.topic) && isUsableItem(it, { level: options.level }) && servableHere(it));
+  const usable = poolItems(pool).filter((it) => !it.assessment && topics.has(it.topic) && isUsableItem(it, { level: options.level })
+    && ordersEnough(it) && servableHere(it));
   if (!usable.length) return [];
 
   const primarySlug = options.primarySlug || topicList[0];
@@ -753,6 +791,9 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
         for (const seated of chosen.values()) {
           if (read.leaks(it, seated) || read.leaks(seated, it)) return false;
         }
+      }
+      if (!relax.drill) {
+        for (const seated of chosen.values()) if (read.sameDrill(it, seated)) return false;
       }
       if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
       if (!relax.prior && priorIds.has(it.id)) return false;
@@ -853,8 +894,9 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       { carried: true },
       { lemma: true, carried: true, answerKey: true },
       { lemma: true, carried: true, answerKey: true, prior: true },
-      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true },
-      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, leak: true },
+      // A repeated drill (`sameDrill`) is a repeated task at its finest grain: it goes with the shape cap.
+      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, drill: true },
+      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, drill: true, leak: true },
     ];
     for (let stage = 0; stage < LADDER.length; stage += 1) {
       const relax = LADDER[stage];
@@ -1138,9 +1180,11 @@ function buildWordOrderItem(lektion, attempt, rng) {
     shuffled = seededShuffle(shuffled, rng);
   }
   // Consume the old draw's random stream before choosing a supported frame,
-  // so omitting an unsafe tile task does not redraw the listening task.
-  const chosen = ordered.find((candidate) => wordOrderAnswers(candidate.de).length)
-    || seededShuffle(sentences, mulberry32(derivedSeedFor(`${lektion.id}-sentences`, attempt)))[0];
+  // so omitting an unsafe tile task does not redraw the listening task. The
+  // chosen sentence has something to order: four words or more (`hasOrderToBuild`).
+  const tiles = (candidate) => hasOrderToBuild(candidate.de) && wordOrderAnswers(candidate.de).length;
+  const chosen = ordered.find(tiles)
+    || seededShuffle(sentences.filter(tiles), mulberry32(derivedSeedFor(`${lektion.id}-sentences`, attempt)))[0];
   if (!chosen) return null;
   if (chosen !== original) shuffled = seededShuffle(chosen.tokens, mulberry32(derivedSeedFor(`${lektion.id}-tiles`, attempt)));
   if (shuffled.join(' ') === chosen.tokens.join(' ')) shuffled = [...shuffled.slice(1), shuffled[0]];

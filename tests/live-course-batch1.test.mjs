@@ -110,15 +110,17 @@ test('Batch 1: shared tile generation refuses uncovered grammar and accepts ever
     }
   }
   assert.ok(count > 0, 'the generator still serves supported tile tasks');
+  // The copula probe has four words: since 2026-11-23 a tile task needs something to order
+  // (`WORD_ORDER_MIN_WORDS`), and the three-word „Ich bin Studentin.“ no longer becomes one.
   for (const [text, alternatives] of [
-    ['Ich bin Studentin.', ['Studentin bin ich.']],
+    ['Meine Schwester ist Studentin.', ['Studentin ist meine Schwester.']],
     ['Kaufst du morgen ein?', ['Du kaufst morgen ein?', 'Morgen kaufst du ein?', 'Kaufst morgen du ein?']],
     ['Deine Party ist bestimmt schön!', ['Bestimmt ist deine Party schön!', 'Bestimmt schön ist deine Party!', 'Schön ist deine Party bestimmt!']],
   ]) {
     const item = derivedItems({ id: 'probe', dialog: { lines: [{ de: text }] } }).find((it) => it.type === 'word_order');
     assert.ok(item, text);
     for (const alternative of alternatives) assert.equal(grade(item, alternative), RESULT.CORRECT, alternative);
-    assert.equal(grade(item, 'Ich Studentin bin.'), RESULT.WRONG);
+    assert.equal(grade(item, 'Meine Schwester Studentin ist.'), RESULT.WRONG);
   }
 });
 

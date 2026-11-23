@@ -343,7 +343,7 @@
    "difficulty": 2,
    "order": 102,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Kugelschreiber für das Formular. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Kugelschreiber. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Kugelschreiber. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich brauche den Kugelschreiber für das Formular.",
    "accepted": [
@@ -368,7 +368,7 @@
    "difficulty": 2,
    "order": 105,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir kaufen ___ Tisch für die Küche. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the indefinite article for Tisch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the indefinite article for Tisch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir kaufen einen Tisch für die Küche.",
    "accepted": [
@@ -393,7 +393,7 @@
    "difficulty": 2,
    "order": 105,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich kaufe ___ Computer. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Computer. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Computer. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich kaufe den Computer.",
    "accepted": [
@@ -418,7 +418,7 @@
    "difficulty": 2,
    "order": 110,
    "questionDe": "Schreiben Sie den ganzen Satz: Lena kauft ___ Rucksack im Kaufhaus. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Rucksack. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Rucksack. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Lena kauft den Rucksack im Kaufhaus.",
    "accepted": [
@@ -443,7 +443,7 @@
    "difficulty": 2,
    "order": 113,
    "questionDe": "Schreiben Sie den ganzen Satz: Tim braucht ___ Stuhl für das Wohnzimmer. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the indefinite article for Stuhl. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the indefinite article for Stuhl. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Tim braucht einen Stuhl für das Wohnzimmer.",
    "accepted": [
@@ -468,7 +468,7 @@
    "difficulty": 2,
    "order": 113,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Tisch. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the indefinite article for Tisch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the indefinite article for Tisch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich brauche einen Tisch.",
    "accepted": [
@@ -493,7 +493,7 @@
    "difficulty": 2,
    "order": 118,
    "questionDe": "Schreiben Sie den ganzen Satz: Paul braucht ___ Kugelschreiber im Büro. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Kugelschreiber. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Kugelschreiber. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Paul braucht den Kugelschreiber im Büro.",
    "accepted": [
@@ -518,7 +518,7 @@
    "difficulty": 2,
    "order": 121,
    "questionDe": "Schreiben Sie den ganzen Satz: Ana kauft ___ Kuchen im Geschäft. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the indefinite article for Kuchen. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the indefinite article for Kuchen. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ana kauft einen Kuchen im Geschäft.",
    "accepted": [
@@ -543,7 +543,7 @@
    "difficulty": 2,
    "order": 121,
    "questionDe": "Schreiben Sie den ganzen Satz: Paul braucht ___ Bahnhof. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Bahnhof. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Bahnhof. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Paul braucht den Bahnhof.",
    "accepted": [
@@ -568,7 +568,7 @@
    "difficulty": 2,
    "order": 126,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir brauchen ___ Schlüssel für die Wohnung. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Schlüssel. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Schlüssel. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir brauchen den Schlüssel für die Wohnung.",
    "accepted": [
@@ -593,7 +593,7 @@
    "difficulty": 2,
    "order": 129,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich kaufe ___ Stuhl in Berlin. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the indefinite article for Stuhl. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the indefinite article for Stuhl. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich kaufe einen Stuhl in Berlin.",
    "accepted": [
@@ -618,7 +618,7 @@
    "difficulty": 2,
    "order": 129,
    "questionDe": "Schreiben Sie den ganzen Satz: Ana kauft ___ Rucksack. (ein, eine oder einen?) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the indefinite article for Rucksack. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the indefinite article for Rucksack. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ana kauft einen Rucksack.",
    "accepted": [
@@ -643,7 +643,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / brauchen / Supermarkt] (mit unbestimmtem Artikel) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket. Begin with “Ich”. Use the present tense. Use an indefinite article.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about needing a supermarket. Begin with “Ich”. Use an indefinite article.",
    "options": null,
    "answer": "Ich brauche einen Supermarkt.",
    "accepted": [
@@ -685,7 +685,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ana“): [Ana / kaufen / Kuchen / im Geschäft] (mit bestimmtem Artikel) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake. Begin with “Ana”. Use the present tense. Use a definite article.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about buying the cake. Begin with “Ana”. Use a definite article.",
    "options": null,
    "answer": "Ana kauft den Kuchen im Geschäft.",
    "accepted": [
@@ -827,7 +827,7 @@
    "difficulty": 1,
    "order": 22,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / einen / Onkel / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I have an uncle. (accusative direct object, indefinite article) Begin with “Ich”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I have an uncle. (accusative direct object, indefinite article) Begin with “Ich”.",
    "options": null,
    "answer": "Ich habe einen Onkel.",
    "accepted": [
@@ -866,7 +866,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz: [ich / bezahlen / den Kaffee / an der Kasse] (Präsens) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”. Begin with “Ich”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”. Begin with “Ich”.",
    "options": null,
    "answer": "Ich bezahle den Kaffee an der Kasse.",
    "accepted": [
@@ -893,7 +893,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz: [wir / brauchen / den Rucksack / am Samstag] (Präsens) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”.",
    "options": null,
    "answer": "Wir brauchen den Rucksack am Samstag.",
    "accepted": [
@@ -920,7 +920,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz: [Lena / brauchen / das Geld / an der Kasse] (Präsens) (Beginnen Sie mit „Lena“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”. Begin with “Lena”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”. Begin with “Lena”.",
    "options": null,
    "answer": "Lena braucht das Geld an der Kasse.",
    "accepted": [
@@ -947,7 +947,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz: [Paul / kaufen / den Kuchen / am Markt] (Präsens) (Beginnen Sie mit „Paul“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”. Begin with “Paul”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”. Begin with “Paul”.",
    "options": null,
    "answer": "Paul kauft den Kuchen am Markt.",
    "accepted": [
@@ -1131,7 +1131,7 @@
    "difficulty": 2,
    "order": 1,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Zuerst“): [zuerst / gehen / Sie / geradeaus] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the way. Begin with “Zuerst”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the way. Begin with “Zuerst”.",
    "options": null,
    "answer": "Zuerst gehen Sie geradeaus.",
    "accepted": [
@@ -1151,7 +1151,7 @@
    "difficulty": 2,
    "order": 2,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Dann“): [dann / gehen / Sie / an der Ecke / links] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the corner. Begin with “Dann”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the corner. Begin with “Dann”.",
    "options": null,
    "answer": "Dann gehen Sie an der Ecke links.",
    "accepted": [
@@ -1213,7 +1213,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / kommen / ich / zum Rathaus] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the town hall. Begin with “Wie”. Use the present tense. Build a question.",
+   "questionEn": "Use the present tense (Präsens). Build the question about the town hall. Begin with “Wie”.",
    "options": null,
    "answer": "Wie komme ich zum Rathaus?",
    "accepted": [
@@ -1233,7 +1233,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Haltestelle] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the stop. Begin with “Wo”. Use the present tense. Build a question.",
+   "questionEn": "Use the present tense (Präsens). Build the question about the stop. Begin with “Wo”.",
    "options": null,
    "answer": "Wo ist die Haltestelle?",
    "accepted": [
@@ -1253,7 +1253,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Platz“): [am Platz / sein / die Haltestelle] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the square. Begin with “Am Platz”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the square. Begin with “Am Platz”.",
    "options": null,
    "answer": "Am Platz ist die Haltestelle.",
    "accepted": [
@@ -1333,7 +1333,7 @@
    "difficulty": 2,
    "order": 18,
    "questionDe": "Schreiben Sie den Satz: [heute / meine Mutter / kochen / das Essen] (Beginnen Sie mit „Heute“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: Today my mother is cooking the food. (time-first inversion) Begin with “Heute”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: Today my mother is cooking the food. (time-first inversion) Begin with “Heute”.",
    "options": null,
    "answer": "Heute kocht meine Mutter das Essen.",
    "accepted": [
@@ -1375,7 +1375,7 @@
    "difficulty": 2,
    "order": 23,
    "questionDe": "Schreiben Sie den Satz: [Fußball / wir / am Wochenende / spielen] (Beginnen Sie mit „Fußball“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis) Begin with “Fußball”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We play football on the weekend. Start with 'Fußball'. (object-first, for emphasis) Begin with “Fußball”.",
    "options": null,
    "answer": "Fußball spielen wir am Wochenende.",
    "accepted": [
@@ -1395,7 +1395,7 @@
    "difficulty": 2,
    "order": 24,
    "questionDe": "Am Freitag ___ meine Eltern nicht zu Hause. (sein) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). On Friday my parents are not home. (time-first inversion, verb sein, plural) Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). On Friday my parents are not home. (time-first inversion, verb sein, plural)",
    "options": null,
    "answer": "sind",
    "accepted": [
@@ -1433,7 +1433,7 @@
    "difficulty": 2,
    "order": 100,
    "questionDe": "Bilden Sie den Satz: [heute / wir / gehen / geradeaus] (Präsens) (Beginnen Sie mit „Heute“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”. Begin with “Heute”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”. Begin with “Heute”.",
    "options": null,
    "answer": "Heute gehen wir geradeaus.",
    "accepted": [
@@ -1458,7 +1458,7 @@
    "difficulty": 2,
    "order": 103,
    "questionDe": "Bilden Sie den Satz: [an der Ecke / ich / wohnen] (Präsens) (Beginnen Sie mit „An der Ecke“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “An der Ecke”. Begin with “An der Ecke”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “An der Ecke”. Begin with “An der Ecke”.",
    "options": null,
    "answer": "An der Ecke wohne ich.",
    "accepted": [
@@ -1483,7 +1483,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie den Satz: [am Montag / die Straßenbahn / kommen] (Präsens) (Beginnen Sie mit „Am Montag“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Montag”. Begin with “Am Montag”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Montag”. Begin with “Am Montag”.",
    "options": null,
    "answer": "Am Montag kommt die Straßenbahn.",
    "accepted": [
@@ -1508,7 +1508,7 @@
    "difficulty": 2,
    "order": 108,
    "questionDe": "Bilden Sie den Satz: [am Abend / der Bus / kommen] (Präsens) (Beginnen Sie mit „Am Abend“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Abend”. Begin with “Am Abend”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Abend”. Begin with “Am Abend”.",
    "options": null,
    "answer": "Am Abend kommt der Bus.",
    "accepted": [
@@ -1533,7 +1533,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Bilden Sie den Satz: [am Montag / wir / gehen / links] (Präsens) (Beginnen Sie mit „Am Montag“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Montag”. Begin with “Am Montag”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Montag”. Begin with “Am Montag”.",
    "options": null,
    "answer": "Am Montag gehen wir links.",
    "accepted": [
@@ -1558,7 +1558,7 @@
    "difficulty": 2,
    "order": 116,
    "questionDe": "Bilden Sie den Satz: [am Sonntag / wir / gehen / zur Kirche] (Präsens) (Beginnen Sie mit „Am Sonntag“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Sonntag”. Begin with “Am Sonntag”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Sonntag”. Begin with “Am Sonntag”.",
    "options": null,
    "answer": "Am Sonntag gehen wir zur Kirche.",
    "accepted": [
@@ -1583,7 +1583,7 @@
    "difficulty": 2,
    "order": 119,
    "questionDe": "Bilden Sie den Satz: [heute / die U-Bahn / kommen / um fünf Uhr] (Präsens) (Beginnen Sie mit „Heute“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”. Begin with “Heute”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”. Begin with “Heute”.",
    "options": null,
    "answer": "Heute kommt die U-Bahn um fünf Uhr.",
    "accepted": [
@@ -1610,7 +1610,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz: [um acht Uhr / ich / gehen / rechts] (Präsens) (Beginnen Sie mit „Um acht Uhr“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Um acht Uhr”. Begin with “Um acht Uhr”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Um acht Uhr”. Begin with “Um acht Uhr”.",
    "options": null,
    "answer": "Um acht Uhr gehe ich rechts.",
    "accepted": [
@@ -1635,7 +1635,7 @@
    "difficulty": 2,
    "order": 124,
    "questionDe": "Bilden Sie den Satz: [heute / ich / gehen / links] (Präsens) (Beginnen Sie mit „Heute“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”. Begin with “Heute”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Heute”. Begin with “Heute”.",
    "options": null,
    "answer": "Heute gehe ich links.",
    "accepted": [
@@ -1660,7 +1660,7 @@
    "difficulty": 2,
    "order": 127,
    "questionDe": "Bilden Sie den Satz: [am Morgen / wir / gehen / rechts] (Präsens) (Beginnen Sie mit „Am Morgen“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Morgen”. Begin with “Am Morgen”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Am Morgen”. Begin with “Am Morgen”.",
    "options": null,
    "answer": "Am Morgen gehen wir rechts.",
    "accepted": [
@@ -2077,7 +2077,7 @@
    "difficulty": 2,
    "order": 101,
    "questionDe": "Schreiben Sie den ganzen Satz: Bei ___ Regen bin ich zu Hause. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after bei. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after bei. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Bei dem Regen bin ich zu Hause.",
    "accepted": [
@@ -2102,7 +2102,7 @@
    "difficulty": 2,
    "order": 109,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich fahre mit ___ Straßenbahn. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after mit. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after mit. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich fahre mit der Straßenbahn.",
    "accepted": [
@@ -2127,7 +2127,7 @@
    "difficulty": 2,
    "order": 117,
    "questionDe": "Schreiben Sie den ganzen Satz: Paul ist bei ___ Tante. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after bei. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after bei. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Paul ist bei der Tante.",
    "accepted": [
@@ -2152,7 +2152,7 @@
    "difficulty": 2,
    "order": 125,
    "questionDe": "Schreiben Sie den ganzen Satz: Lena kommt aus ___ Haus. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after aus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after aus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Lena kommt aus dem Haus.",
    "accepted": [
@@ -2177,7 +2177,7 @@
    "difficulty": 3,
    "order": 3,
    "questionDe": "Schreiben Sie den Satz: [ich / wohnen / bei / meine Eltern] (Beginnen Sie mit „Ich“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern] Begin with “Ich”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I live with my parents. Start with ich. [ich / wohnen / bei / meine Eltern] Begin with “Ich”.",
    "options": null,
    "answer": "Ich wohne bei meinen Eltern.",
    "accepted": [
@@ -2196,7 +2196,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Schreiben Sie den Satz: [ich / arbeiten / bei / die Bank] (mit bestimmtem Artikel) (Beginnen Sie mit „Ich“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank] Begin with “Ich”. Use the present tense. Use a definite article.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I work at the bank. Start with ich. [ich / arbeiten / bei / die Bank] Begin with “Ich”. Use a definite article.",
    "options": null,
    "answer": "Ich arbeite bei der Bank.",
    "accepted": [
@@ -2215,7 +2215,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "Schreiben Sie den Satz: [das Buch / sein / von / meine Mutter] (Beginnen Sie mit „Das Buch“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter] Begin with “Das Buch”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: The book is from my mother. Start with das Buch. [das Buch / sein / von / meine Mutter] Begin with “Das Buch”.",
    "options": null,
    "answer": "Das Buch ist von meiner Mutter.",
    "accepted": [
@@ -2253,7 +2253,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / fahren / bei Regen / mit / Bus] (mit bestimmtem Artikel) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain. Begin with “Wir”. Use the present tense. Use a definite article.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the bus in the rain. Begin with “Wir”. Use a definite article.",
    "options": null,
    "answer": "Wir fahren bei Regen mit dem Bus.",
    "accepted": [
@@ -2338,7 +2338,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "Bilden Sie den Satz: [ich / kommen / mit dem Bus] (Präsens) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”. Begin with “Ich”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”. Begin with “Ich”.",
    "options": null,
    "answer": "Ich komme mit dem Bus.",
    "accepted": [
@@ -2363,7 +2363,7 @@
    "difficulty": 2,
    "order": 130,
    "questionDe": "Bilden Sie den Satz: [wir / fahren / mit dem Zug / nach Berlin] (Präsens) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”.",
    "options": null,
    "answer": "Wir fahren mit dem Zug nach Berlin.",
    "accepted": [
@@ -2714,7 +2714,7 @@
    "difficulty": 3,
    "order": 1,
    "questionDe": "Schreiben Sie die Bitte: [Sie / bitte / das Fenster / zumachen]",
-   "questionEn": "Write the request: Please close the window. (formal, Sie) Build a request in the imperative.",
+   "questionEn": "Write the request: Please close the window. (formal, Sie)",
    "options": null,
    "answer": "Machen Sie bitte das Fenster zu!",
    "accepted": [
@@ -2742,7 +2742,7 @@
    "difficulty": 2,
    "order": 1,
    "questionDe": "Bilden Sie den Imperativ: [helfen / du / mir / bitte / mit der Waschmaschine]",
-   "questionEn": "Build the request for help. Build a request in the imperative.",
+   "questionEn": "Build the request for help.",
    "options": null,
    "answer": "Hilf mir bitte mit der Waschmaschine!",
    "accepted": [
@@ -2799,7 +2799,7 @@
    "difficulty": 2,
    "order": 2,
    "questionDe": "Bilden Sie den Imperativ: [warten / du / in der Garage]",
-   "questionEn": "Build the request to wait. Build a request in the imperative.",
+   "questionEn": "Build the request to wait.",
    "options": null,
    "answer": "Warte in der Garage!",
    "accepted": [
@@ -2821,7 +2821,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Schreiben Sie die Bitte: [ihr / pünktlich / kommen]",
-   "questionEn": "Write the request: Come on time! (informal plural, ihr) Build a request in the imperative.",
+   "questionEn": "Write the request: Come on time! (informal plural, ihr)",
    "options": null,
    "answer": "Kommt pünktlich!",
    "accepted": [
@@ -2844,7 +2844,7 @@
    "difficulty": 2,
    "order": 3,
    "questionDe": "Bilden Sie den Imperativ: [holen / Sie / das Sofa / aus der Garage]",
-   "questionEn": "Build the polite request about the sofa. Build a request in the imperative.",
+   "questionEn": "Build the polite request about the sofa.",
    "options": null,
    "answer": "Holen Sie das Sofa aus der Garage!",
    "accepted": [
@@ -2866,7 +2866,7 @@
    "difficulty": 3,
    "order": 4,
    "questionDe": "Schreiben Sie die Bitte: [Sie / bitte / das Buch / lesen]",
-   "questionEn": "Write the request: Please read the book. (formal, Sie) Build a request in the imperative.",
+   "questionEn": "Write the request: Please read the book. (formal, Sie)",
    "options": null,
    "answer": "Lesen Sie bitte das Buch!",
    "accepted": [
@@ -3012,7 +3012,7 @@
    "difficulty": 3,
    "order": 13,
    "questionDe": "Schreiben Sie die Bitte: [Sie / bitte / Platz / nehmen]",
-   "questionEn": "Write the request: Please have a seat. (formal, Sie) Build a request in the imperative.",
+   "questionEn": "Write the request: Please have a seat. (formal, Sie)",
    "options": null,
    "answer": "Nehmen Sie bitte Platz!",
    "accepted": [
@@ -3348,7 +3348,7 @@
    "difficulty": 2,
    "order": 102,
    "questionDe": "Schreiben Sie den ganzen Satz: Oma ___ heute fahren. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Oma kann heute fahren.",
    "accepted": [
@@ -3373,7 +3373,7 @@
    "difficulty": 2,
    "order": 103,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ umsteigen. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir müssen umsteigen.",
    "accepted": [
@@ -3398,7 +3398,7 @@
    "difficulty": 2,
    "order": 110,
    "questionDe": "Schreiben Sie den ganzen Satz: Ihr ___ hier einsteigen. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ihr könnt hier einsteigen.",
    "accepted": [
@@ -3423,7 +3423,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Schreiben Sie den ganzen Satz: Lena ___ den Koffer holen. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Lena muss den Koffer holen.",
    "accepted": [
@@ -3448,7 +3448,7 @@
    "difficulty": 2,
    "order": 118,
    "questionDe": "Schreiben Sie den ganzen Satz: Tim ___ das Fahrrad nehmen. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Tim kann das Fahrrad nehmen.",
    "accepted": [
@@ -3473,7 +3473,7 @@
    "difficulty": 2,
    "order": 119,
    "questionDe": "Schreiben Sie den ganzen Satz: Ihr ___ am Bahnhof aussteigen. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ihr müsst am Bahnhof aussteigen.",
    "accepted": [
@@ -3498,7 +3498,7 @@
    "difficulty": 2,
    "order": 126,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ den Bus nehmen. (können) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete können in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir können den Bus nehmen.",
    "accepted": [
@@ -3523,7 +3523,7 @@
    "difficulty": 2,
    "order": 127,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich ___ jetzt abfahren. (müssen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete müssen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich muss jetzt abfahren.",
    "accepted": [
@@ -3570,7 +3570,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / dürfen / ich / langsam / fahren]",
-   "questionEn": "Build the question about cycling slowly. Begin with “Wo”. Build a question.",
+   "questionEn": "Build the question about cycling slowly. Begin with “Wo”.",
    "options": null,
    "answer": "Wo darf ich langsam fahren?",
    "accepted": [
@@ -3693,7 +3693,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz: [wir / müssen / am Flughafen / warten] (Präsens) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”.",
    "options": null,
    "answer": "Wir müssen am Flughafen warten.",
    "accepted": [
@@ -3718,7 +3718,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz: [ich / können / am Freitag / fliegen] (Präsens) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”. Begin with “Ich”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ich”. Begin with “Ich”.",
    "options": null,
    "answer": "Ich kann am Freitag fliegen.",
    "accepted": [
@@ -3743,7 +3743,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz: [Paul / müssen / ein Ticket / kaufen] (Präsens) (Beginnen Sie mit „Paul“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”. Begin with “Paul”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”. Begin with “Paul”.",
    "options": null,
    "answer": "Paul muss ein Ticket kaufen.",
    "accepted": [
@@ -3768,7 +3768,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz: [Lena / können / nach Köln / fahren] (Präsens) (Beginnen Sie mit „Lena“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”. Begin with “Lena”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”. Begin with “Lena”.",
    "options": null,
    "answer": "Lena kann nach Köln fahren.",
    "accepted": [
@@ -3964,7 +3964,7 @@
    "difficulty": 2,
    "order": 100,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Computer funktioniert ___. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the statement about the computer. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the statement about the computer. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Computer funktioniert nicht.",
    "accepted": [
@@ -3989,7 +3989,7 @@
    "difficulty": 2,
    "order": 103,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Kissen. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the need for a pillow. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the need for a pillow. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich brauche kein Kissen.",
    "accepted": [
@@ -4014,7 +4014,7 @@
    "difficulty": 2,
    "order": 105,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Lampe ist ___ teuer. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the price of the lamp. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the price of the lamp. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Lampe ist nicht teuer.",
    "accepted": [
@@ -4039,7 +4039,7 @@
    "difficulty": 2,
    "order": 105,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Schrank ist ___ neu. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the statement that the cupboard is new. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the statement that the cupboard is new. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Schrank ist nicht neu.",
    "accepted": [
@@ -4064,7 +4064,7 @@
    "difficulty": 2,
    "order": 108,
    "questionDe": "Schreiben Sie den ganzen Satz: Das ist ___ Badezimmer. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the statement that this is a bathroom. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the statement that this is a bathroom. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das ist kein Badezimmer.",
    "accepted": [
@@ -4089,7 +4089,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Spiegel ist ___ im Flur. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the location of the mirror. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the location of the mirror. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Spiegel ist nicht im Flur.",
    "accepted": [
@@ -4114,7 +4114,7 @@
    "difficulty": 2,
    "order": 113,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich habe ___ Zeit am Dienstag. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate having time on Tuesday. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate having time on Tuesday. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich habe keine Zeit am Dienstag.",
    "accepted": [
@@ -4139,7 +4139,7 @@
    "difficulty": 2,
    "order": 113,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich brauche ___ Rechnung. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the need for a bill. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the need for a bill. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich brauche keine Rechnung.",
    "accepted": [
@@ -4164,7 +4164,7 @@
    "difficulty": 2,
    "order": 116,
    "questionDe": "Schreiben Sie den ganzen Satz: Ich habe ___ Rabatt. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate having a discount. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate having a discount. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ich habe keinen Rabatt.",
    "accepted": [
@@ -4189,7 +4189,7 @@
    "difficulty": 2,
    "order": 119,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Vorhang ist ___ blau. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the colour of the curtain. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the colour of the curtain. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Vorhang ist nicht blau.",
    "accepted": [
@@ -4214,7 +4214,7 @@
    "difficulty": 2,
    "order": 121,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Bus kommt ___. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the arrival of the bus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the arrival of the bus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Bus kommt nicht.",
    "accepted": [
@@ -4239,7 +4239,7 @@
    "difficulty": 2,
    "order": 121,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Kaffee ist ___ kalt. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the statement that the coffee is cold. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the statement that the coffee is cold. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Kaffee ist nicht kalt.",
    "accepted": [
@@ -4264,7 +4264,7 @@
    "difficulty": 2,
    "order": 124,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Zimmer hat ___ Spiegel. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate having a mirror in the room. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate having a mirror in the room. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Zimmer hat keinen Spiegel.",
    "accepted": [
@@ -4289,7 +4289,7 @@
    "difficulty": 2,
    "order": 127,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Eingang ist ___ hier. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate the location of the entrance. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate the location of the entrance. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Eingang ist nicht hier.",
    "accepted": [
@@ -4314,7 +4314,7 @@
    "difficulty": 2,
    "order": 129,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir haben ___ Auto. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate having a car. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate having a car. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir haben kein Auto.",
    "accepted": [
@@ -4339,7 +4339,7 @@
    "difficulty": 2,
    "order": 129,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Zimmer hat ___ Balkon. (Verneinung) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Negate having a balcony. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Negate having a balcony. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Zimmer hat keinen Balkon.",
    "accepted": [
@@ -4425,7 +4425,7 @@
    "difficulty": 2,
    "order": 12,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Eingang“): [der Eingang / sein / nicht / schön] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance. Begin with “Der Eingang”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the entrance. Begin with “Der Eingang”.",
    "options": null,
    "answer": "Der Eingang ist nicht schön.",
    "accepted": [
@@ -4445,7 +4445,7 @@
    "difficulty": 2,
    "order": 13,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Hotel“): [das Hotel / haben / kein / Steckdose] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel. Begin with “Das Hotel”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the hotel. Begin with “Das Hotel”.",
    "options": null,
    "answer": "Das Hotel hat keine Steckdose.",
    "accepted": [
@@ -4465,7 +4465,7 @@
    "difficulty": 2,
    "order": 17,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Ich“): [ich / kein / Computer / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen) Begin with “Ich”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I have no computer. (kein + masculine noun — must inflect to keinen) Begin with “Ich”.",
    "options": null,
    "answer": "Ich habe keinen Computer.",
    "accepted": [
@@ -4485,7 +4485,7 @@
    "difficulty": 1,
    "order": 18,
    "questionDe": "Schreiben Sie den Satz (Beginnen Sie mit „Wir“): [wir / keine / Zeit / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: We have no time. (kein + feminine noun, wir-form of haben) Begin with “Wir”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We have no time. (kein + feminine noun, wir-form of haben) Begin with “Wir”.",
    "options": null,
    "answer": "Wir haben keine Zeit.",
    "accepted": [
@@ -4505,7 +4505,7 @@
    "difficulty": 2,
    "order": 19,
    "questionDe": "Schreiben Sie den Satz: [wir / das Auto / kaufen / nicht] (Beginnen Sie mit „Wir“; „nicht“ steht am Satzende) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: We are not buying the car. (nicht after a definite direct object) Begin with “Wir”. Put “nicht” at the end of the sentence. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: We are not buying the car. (nicht after a definite direct object) Begin with “Wir”. Put “nicht” at the end of the sentence.",
    "options": null,
    "answer": "Wir kaufen das Auto nicht.",
    "accepted": [
@@ -4525,7 +4525,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie den Satz: [die Bettdecke / sein / nicht / im Zimmer] (Präsens) (Beginnen Sie mit „Die Bettdecke“; „nicht“ steht vor „im“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Bettdecke”. Begin with “Die Bettdecke”. Put “nicht” before “im”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Bettdecke”. Begin with “Die Bettdecke”. Put “nicht” before “im”.",
    "options": null,
    "answer": "Die Bettdecke ist nicht im Zimmer.",
    "accepted": [
@@ -4550,7 +4550,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "Bilden Sie den Satz: [wir / haben / keinen Schlüssel] (Präsens) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”.",
    "options": null,
    "answer": "Wir haben keinen Schlüssel.",
    "accepted": [
@@ -4575,7 +4575,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz: [das Kissen / sein / nicht / im Zimmer] (Präsens) (Beginnen Sie mit „Das Kissen“; „nicht“ steht vor „im“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Das Kissen”. Begin with “Das Kissen”. Put “nicht” before “im”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Das Kissen”. Begin with “Das Kissen”. Put “nicht” before “im”.",
    "options": null,
    "answer": "Das Kissen ist nicht im Zimmer.",
    "accepted": [
@@ -4679,7 +4679,7 @@
    "difficulty": 1,
    "order": 5,
    "questionDe": "Meine Tante ___ glücklich. (sein) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). My aunt is happy. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). My aunt is happy.",
    "options": null,
    "answer": "ist",
    "accepted": [
@@ -4844,7 +4844,7 @@
    "difficulty": 2,
    "order": 100,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ Arm tut weh. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Arm as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Arm as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Arm tut weh.",
    "accepted": [
@@ -4869,7 +4869,7 @@
    "difficulty": 2,
    "order": 108,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ Gesicht ist klein. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Gesicht as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Gesicht as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Gesicht ist klein.",
    "accepted": [
@@ -4894,7 +4894,7 @@
    "difficulty": 2,
    "order": 116,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ Nase ist lang. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Nase as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Nase as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Nase ist lang.",
    "accepted": [
@@ -4919,7 +4919,7 @@
    "difficulty": 2,
    "order": 124,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ Körper ist gesund. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article for Körper as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article for Körper as the subject. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Körper ist gesund.",
    "accepted": [
@@ -4944,7 +4944,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wer“): [wer / sein / die Tante] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the woman. Begin with “Wer”. Use the present tense. Build a question.",
+   "questionEn": "Use the present tense (Präsens). Build the question about the woman. Begin with “Wer”.",
    "options": null,
    "answer": "Wer ist die Tante?",
    "accepted": [
@@ -4964,7 +4964,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Mein Opa“): [mein Opa / sein / alt] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa. Begin with “Mein Opa”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the grandpa. Begin with “Mein Opa”.",
    "options": null,
    "answer": "Mein Opa ist alt.",
    "accepted": [
@@ -5163,7 +5163,7 @@
    "difficulty": 2,
    "order": 21,
    "questionDe": "Schreiben Sie den Satz: [der Lehrer / heute / krank / sein] (Beginnen Sie mit „Der Lehrer“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein) Begin with “Der Lehrer”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: The teacher is sick today. Start with 'der Lehrer'. (nominative subject, sein) Begin with “Der Lehrer”.",
    "options": null,
    "answer": "Der Lehrer ist heute krank.",
    "accepted": [
@@ -5202,7 +5202,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie den Satz: [der Onkel / sein / heute / traurig] (Präsens) (Beginnen Sie mit „Der Onkel“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Onkel”. Begin with “Der Onkel”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Onkel”. Begin with “Der Onkel”.",
    "options": null,
    "answer": "Der Onkel ist heute traurig.",
    "accepted": [
@@ -5227,7 +5227,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz: [meine Tante / sein / heute / glücklich] (Präsens) (Beginnen Sie mit „Meine Tante“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Meine Tante”. Begin with “Meine Tante”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Meine Tante”. Begin with “Meine Tante”.",
    "options": null,
    "answer": "Meine Tante ist heute glücklich.",
    "accepted": [
@@ -5579,7 +5579,7 @@
    "difficulty": 2,
    "order": 101,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Miete kostet ___ Euro. (480; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 480 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 480 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Miete kostet vierhundertachtzig Euro.",
    "accepted": [
@@ -5604,7 +5604,7 @@
    "difficulty": 2,
    "order": 104,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Haus hat ___ Fenster. (21; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 21 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 21 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Haus hat einundzwanzig Fenster.",
    "accepted": [
@@ -5629,7 +5629,7 @@
    "difficulty": 2,
    "order": 104,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Lampe kostet ___ Euro. (40; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 40 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 40 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Lampe kostet vierzig Euro.",
    "accepted": [
@@ -5654,7 +5654,7 @@
    "difficulty": 2,
    "order": 104,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Tasche kostet ___ Euro. (50; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 50 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 50 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Tasche kostet fünfzig Euro.",
    "accepted": [
@@ -5679,7 +5679,7 @@
    "difficulty": 2,
    "order": 104,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Mantel kostet ___ Euro. (90; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 90 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 90 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Mantel kostet neunzig Euro.",
    "accepted": [
@@ -5704,7 +5704,7 @@
    "difficulty": 2,
    "order": 109,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Wohnung kostet ___ Euro. (100; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 100 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 100 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Wohnung kostet hundert Euro.",
    "accepted": [
@@ -5729,7 +5729,7 @@
    "difficulty": 2,
    "order": 112,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Garten kostet ___ Euro. (80; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Garten kostet achtzig Euro.",
    "accepted": [
@@ -5754,7 +5754,7 @@
    "difficulty": 2,
    "order": 112,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Stuhl kostet ___ Euro. (20; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 20 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 20 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Stuhl kostet zwanzig Euro.",
    "accepted": [
@@ -5779,7 +5779,7 @@
    "difficulty": 2,
    "order": 112,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Rucksack kostet ___ Euro. (60; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 60 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 60 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Rucksack kostet sechzig Euro.",
    "accepted": [
@@ -5804,7 +5804,7 @@
    "difficulty": 2,
    "order": 112,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Jacke kostet ___ Euro. (80; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Jacke kostet achtzig Euro.",
    "accepted": [
@@ -5829,7 +5829,7 @@
    "difficulty": 2,
    "order": 117,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Wohnung kostet ___ Euro. (480; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 480 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 480 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Wohnung kostet vierhundertachtzig Euro.",
    "accepted": [
@@ -5854,7 +5854,7 @@
    "difficulty": 2,
    "order": 120,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Küche kostet ___ Euro. (70; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 70 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 70 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Küche kostet siebzig Euro.",
    "accepted": [
@@ -5879,7 +5879,7 @@
    "difficulty": 2,
    "order": 120,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Tasche kostet ___ Euro. (60; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 60 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 60 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Tasche kostet sechzig Euro.",
    "accepted": [
@@ -5904,7 +5904,7 @@
    "difficulty": 2,
    "order": 120,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Buch kostet ___ Euro. (18; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 18 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 18 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Buch kostet achtzehn Euro.",
    "accepted": [
@@ -5929,7 +5929,7 @@
    "difficulty": 2,
    "order": 120,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Mütze kostet ___ Euro. (21; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 21 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 21 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Mütze kostet einundzwanzig Euro.",
    "accepted": [
@@ -5954,7 +5954,7 @@
    "difficulty": 2,
    "order": 125,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Miete ist ___ Euro. (100; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 100 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 100 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Miete ist hundert Euro.",
    "accepted": [
@@ -5979,7 +5979,7 @@
    "difficulty": 2,
    "order": 128,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Haus hat ___ Fenster. (48; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 48 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 48 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Haus hat achtundvierzig Fenster.",
    "accepted": [
@@ -6004,7 +6004,7 @@
    "difficulty": 2,
    "order": 128,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Handy kostet ___ Euro. (90; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 90 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 90 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Handy kostet neunzig Euro.",
    "accepted": [
@@ -6029,7 +6029,7 @@
    "difficulty": 2,
    "order": 128,
    "questionDe": "Schreiben Sie den ganzen Satz: Das Fahrrad kostet ___ Euro. (80; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 80 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Das Fahrrad kostet achtzig Euro.",
    "accepted": [
@@ -6054,7 +6054,7 @@
    "difficulty": 2,
    "order": 128,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Rock kostet ___ Euro. (70; Schreiben Sie die Zahl in Worten) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Write 70 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Write 70 as one German number word. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Rock kostet siebzig Euro.",
    "accepted": [
@@ -6140,7 +6140,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "Bilden Sie den Satz: [die Miete / kosten / hundert Euro] (Präsens) (Beginnen Sie mit „Die Miete“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Miete”. Begin with “Die Miete”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Miete”. Begin with “Die Miete”.",
    "options": null,
    "answer": "Die Miete kostet hundert Euro.",
    "accepted": [
@@ -6165,7 +6165,7 @@
    "difficulty": 2,
    "order": 130,
    "questionDe": "Bilden Sie den Satz: [die Küche / haben / drei Fenster] (Präsens) (Beginnen Sie mit „Die Küche“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Küche”. Begin with “Die Küche”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Die Küche”. Begin with “Die Küche”.",
    "options": null,
    "answer": "Die Küche hat drei Fenster.",
    "accepted": [
@@ -6615,7 +6615,7 @@
    "difficulty": 2,
    "order": 102,
    "questionDe": "Schreiben Sie den ganzen Satz: Lena hat Gemüse ___. (kaufen) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the perfect participle of kaufen. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete the perfect participle of kaufen. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Lena hat Gemüse gekauft.",
    "accepted": [
@@ -6640,7 +6640,7 @@
    "difficulty": 2,
    "order": 103,
    "questionDe": "Schreiben Sie den ganzen Satz: Paul ___ nach Bremen gefahren. (sein) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete sein as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete sein as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Paul ist nach Bremen gefahren.",
    "accepted": [
@@ -6665,7 +6665,7 @@
    "difficulty": 2,
    "order": 110,
    "questionDe": "Schreiben Sie den ganzen Satz: Ana hat Tee ___. (trinken) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the perfect participle of trinken. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete the perfect participle of trinken. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Ana hat Tee getrunken.",
    "accepted": [
@@ -6690,7 +6690,7 @@
    "difficulty": 2,
    "order": 111,
    "questionDe": "Schreiben Sie den ganzen Satz: Tim ___ das Obst bezahlt. (haben) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete haben as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete haben as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Tim hat das Obst bezahlt.",
    "accepted": [
@@ -6715,7 +6715,7 @@
    "difficulty": 2,
    "order": 118,
    "questionDe": "Schreiben Sie den ganzen Satz: Lena ist nach Köln ___. (fahren) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the perfect participle of fahren. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete the perfect participle of fahren. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Lena ist nach Köln gefahren.",
    "accepted": [
@@ -6740,7 +6740,7 @@
    "difficulty": 2,
    "order": 119,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ Milch gekauft. (haben) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete haben as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete haben as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir haben Milch gekauft.",
    "accepted": [
@@ -6765,7 +6765,7 @@
    "difficulty": 2,
    "order": 126,
    "questionDe": "Schreiben Sie den ganzen Satz: Paul hat Brot ___. (essen) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the perfect participle of essen. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete the perfect participle of essen. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Paul hat Brot gegessen.",
    "accepted": [
@@ -6790,7 +6790,7 @@
    "difficulty": 2,
    "order": 127,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir ___ nach Hause gegangen. (sein) (Perfekt) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete sein as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word. Use the Perfekt.",
+   "questionEn": "Complete sein as the perfect auxiliary. Use Perfekt. Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir sind nach Hause gegangen.",
    "accepted": [
@@ -6873,7 +6873,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / haben / die Kartoffel / kaufen] (Perfekt)",
-   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato. Begin with “Ich”. Use the Perfekt.",
+   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the potato. Begin with “Ich”.",
    "options": null,
    "answer": "Ich habe die Kartoffel gekauft.",
    "accepted": [
@@ -6912,7 +6912,7 @@
    "difficulty": 2,
    "order": 9,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Tim“): [Tim / haben / den Reis / kochen] (Perfekt)",
-   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice. Begin with “Tim”. Use the Perfekt.",
+   "questionEn": "Use the perfect tense (Perfekt). Build the sentence about the rice. Begin with “Tim”.",
    "options": null,
    "answer": "Tim hat den Reis gekocht.",
    "accepted": [
@@ -7016,7 +7016,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz: [ich / haben / gestern / Reis / kochen] (Perfekt) (Beginnen Sie mit „Ich“)",
-   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Ich”. Begin with “Ich”. Use the Perfekt.",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Ich”. Begin with “Ich”.",
    "options": null,
    "answer": "Ich habe gestern Reis gekocht.",
    "accepted": [
@@ -7043,7 +7043,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz: [wir / haben / das Gemüse / essen] (Perfekt) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Wir”. Begin with “Wir”. Use the Perfekt.",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Wir”. Begin with “Wir”.",
    "options": null,
    "answer": "Wir haben das Gemüse gegessen.",
    "accepted": [
@@ -7068,7 +7068,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz: [Ana / haben / das Ei / kochen] (Perfekt) (Beginnen Sie mit „Ana“)",
-   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Ana”. Begin with “Ana”. Use the Perfekt.",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Ana”. Begin with “Ana”.",
    "options": null,
    "answer": "Ana hat das Ei gekocht.",
    "accepted": [
@@ -7093,7 +7093,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz: [Tim / haben / die Schokolade / kaufen] (Perfekt) (Beginnen Sie mit „Tim“)",
-   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Tim”. Begin with “Tim”. Use the Perfekt.",
+   "questionEn": "Build the sentence in the perfect tense (Perfekt). Start with “Tim”. Begin with “Tim”.",
    "options": null,
    "answer": "Tim hat die Schokolade gekauft.",
    "accepted": [
@@ -7419,7 +7419,7 @@
    "difficulty": 2,
    "order": 100,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Schal ist für ___ Bruder. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after für. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after für. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Schal ist für den Bruder.",
    "accepted": [
@@ -7444,7 +7444,7 @@
    "difficulty": 2,
    "order": 108,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir gehen ohne ___ Nachbarn. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after ohne. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after ohne. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir gehen ohne den Nachbarn.",
    "accepted": [
@@ -7469,7 +7469,7 @@
    "difficulty": 2,
    "order": 116,
    "questionDe": "Schreiben Sie den ganzen Satz: Die Jacke ist für ___ Vater. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after für. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after für. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Die Jacke ist für den Vater.",
    "accepted": [
@@ -7494,7 +7494,7 @@
    "difficulty": 2,
    "order": 124,
    "questionDe": "Schreiben Sie den ganzen Satz: Wir gehen durch ___ Park. (bestimmter Artikel) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete the definite article after durch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete the definite article after durch. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wir gehen durch den Park.",
    "accepted": [
@@ -7519,7 +7519,7 @@
    "difficulty": 2,
    "order": 5,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / kaufen / die Jacke / für / meine Oma] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket. Begin with “Ich”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the jacket. Begin with “Ich”.",
    "options": null,
    "answer": "Ich kaufe die Jacke für meine Oma.",
    "accepted": [
@@ -7541,7 +7541,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Tim“): [Tim / gehen / ohne / den Mantel] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the sentence about the coat. Begin with “Tim”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Build the sentence about the coat. Begin with “Tim”.",
    "options": null,
    "answer": "Tim geht ohne den Mantel.",
    "accepted": [
@@ -7647,7 +7647,7 @@
    "difficulty": 2,
    "order": 16,
    "questionDe": "Schreiben Sie den Satz: [ich / kaufen / ein Geschenk / für / meine Mutter] (Beginnen Sie mit „Ich“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change) Begin with “Ich”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I am buying a gift for my mother. (für + accusative, feminine — no change) Begin with “Ich”.",
    "options": null,
    "answer": "Ich kaufe ein Geschenk für meine Mutter.",
    "accepted": [
@@ -7764,7 +7764,7 @@
    "difficulty": 2,
    "order": 25,
    "questionDe": "Schreiben Sie den Satz: [ich / fahren / nicht / ohne / mein Bruder] (Beginnen Sie mit „Ich“; „nicht“ steht vor „ohne“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative) Begin with “Ich”. Put “nicht” before “ohne”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: I am not driving without my brother. (mein must be inflected to meinen — ohne + accusative) Begin with “Ich”. Put “nicht” before “ohne”.",
    "options": null,
    "answer": "Ich fahre nicht ohne meinen Bruder.",
    "accepted": [
@@ -7784,7 +7784,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie den Satz: [der Pullover / sein / für meine Oma] (Präsens) (Beginnen Sie mit „Der Pullover“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Pullover”. Begin with “Der Pullover”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Pullover”. Begin with “Der Pullover”.",
    "options": null,
    "answer": "Der Pullover ist für meine Oma.",
    "accepted": [
@@ -7809,7 +7809,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz: [wir / kaufen / die Mütze / für den Opa] (Präsens) (Beginnen Sie mit „Wir“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Wir”. Begin with “Wir”.",
    "options": null,
    "answer": "Wir kaufen die Mütze für den Opa.",
    "accepted": [
@@ -8154,7 +8154,7 @@
    "difficulty": 2,
    "order": 101,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ ist der Ausflug? — Um sieben Uhr. (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Ask about the time of the excursion. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Ask about the time of the excursion. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wann ist der Ausflug?",
    "accepted": [
@@ -8179,7 +8179,7 @@
    "difficulty": 2,
    "order": 109,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ ist der Film am Freitag? — Im Kino. (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Ask about the location of the film on Friday. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Ask about the location of the film on Friday. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wo ist der Film am Freitag?",
    "accepted": [
@@ -8204,7 +8204,7 @@
    "difficulty": 2,
    "order": 117,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ fährt der Bus? — Nach Köln. (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Ask about the destination of the bus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Ask about the destination of the bus. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wohin fährt der Bus?",
    "accepted": [
@@ -8229,7 +8229,7 @@
    "difficulty": 2,
    "order": 125,
    "questionDe": "Schreiben Sie den ganzen Satz: ___ kommt heute? — Frau Kaya kommt. (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Ask which person is coming. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Ask which person is coming. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Wer kommt heute?",
    "accepted": [
@@ -8254,7 +8254,7 @@
    "difficulty": 2,
    "order": 7,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wann“): [wann / kommen / der Bus / zum Konzert] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the bus. Begin with “Wann”. Use the present tense. Build a question.",
+   "questionEn": "Use the present tense (Präsens). Build the question about the bus. Begin with “Wann”.",
    "options": null,
    "answer": "Wann kommt der Bus zum Konzert?",
    "accepted": [
@@ -8276,7 +8276,7 @@
    "difficulty": 2,
    "order": 8,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wohin“): [wohin / fahren / wir / im Urlaub] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Build the question about the holiday. Begin with “Wohin”. Use the present tense. Build a question.",
+   "questionEn": "Use the present tense (Präsens). Build the question about the holiday. Begin with “Wohin”.",
    "options": null,
    "answer": "Wohin fahren wir im Urlaub?",
    "accepted": [
@@ -8476,7 +8476,7 @@
    "difficulty": 2,
    "order": 19,
    "questionDe": "Schreiben Sie die Frage (Beginnen Sie mit „Wie“): [wie viele / Kinder / du / haben] (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order) Begin with “Wie”. Use the present tense. Build a question.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: How many children do you have? Start with 'wie viele'. (W-word + verb + subject order) Begin with “Wie”. Build a question.",
    "options": null,
    "answer": "Wie viele Kinder hast du?",
    "accepted": [
@@ -8516,7 +8516,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz: [der Film / sein / um neun Uhr] (Präsens) (Beginnen Sie mit „Der Film“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Film”. Begin with “Der Film”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Film”. Begin with “Der Film”.",
    "options": null,
    "answer": "Der Film ist um neun Uhr.",
    "accepted": [
@@ -8541,7 +8541,7 @@
    "difficulty": 2,
    "order": 130,
    "questionDe": "Bilden Sie den Satz: [der Ausflug / sein / am Morgen] (Präsens) (Beginnen Sie mit „Der Ausflug“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Ausflug”. Begin with “Der Ausflug”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Der Ausflug”. Begin with “Der Ausflug”.",
    "options": null,
    "answer": "Der Ausflug ist am Morgen.",
    "accepted": [
@@ -8986,7 +8986,7 @@
    "difficulty": 2,
    "order": 102,
    "questionDe": "Schreiben Sie den ganzen Satz: Der Arzt ___ meine Hand. (sehen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete sehen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete sehen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Der Arzt sieht meine Hand.",
    "accepted": [
@@ -9011,7 +9011,7 @@
    "difficulty": 2,
    "order": 110,
    "questionDe": "Schreiben Sie den ganzen Satz: Lena ___ eine Tablette. (nehmen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete nehmen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete nehmen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Lena nimmt eine Tablette.",
    "accepted": [
@@ -9036,7 +9036,7 @@
    "difficulty": 2,
    "order": 118,
    "questionDe": "Schreiben Sie den ganzen Satz: Tim ___ mir in der Praxis. (helfen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete helfen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete helfen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Tim hilft mir in der Praxis.",
    "accepted": [
@@ -9061,7 +9061,7 @@
    "difficulty": 2,
    "order": 126,
    "questionDe": "Schreiben Sie den ganzen Satz: Paul ___ heute die Tabletten. (nehmen) (Präsens) (Ergänzen Sie mit einem Wort)",
-   "questionEn": "Complete nehmen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word. Use the present tense.",
+   "questionEn": "Complete nehmen in the present tense. Use the present tense (Präsens). Use one word in the gap. Write the complete sentence, not just the missing word.",
    "options": null,
    "answer": "Paul nimmt heute die Tabletten.",
    "accepted": [
@@ -9145,7 +9145,7 @@
    "difficulty": 2,
    "order": 6,
    "questionDe": "Schreiben Sie den Satz: [er / mit dem Zug / fahren] (Beginnen Sie mit „Er“) (Präsens)",
-   "questionEn": "Use the present tense (Präsens). Write the sentence: He goes by train. (subject: er) Begin with “Er”. Use the present tense.",
+   "questionEn": "Use the present tense (Präsens). Write the sentence: He goes by train. (subject: er) Begin with “Er”.",
    "options": null,
    "answer": "Er fährt mit dem Zug.",
    "accepted": [
@@ -9244,7 +9244,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz: [Paul / nehmen / die Versichertenkarte] (Präsens) (Beginnen Sie mit „Paul“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”. Begin with “Paul”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Paul”. Begin with “Paul”.",
    "options": null,
    "answer": "Paul nimmt die Versichertenkarte.",
    "accepted": [
@@ -9269,7 +9269,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz: [Ana / sehen / den Arzt / am Freitag] (Präsens) (Beginnen Sie mit „Ana“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ana”. Begin with “Ana”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Ana”. Begin with “Ana”.",
    "options": null,
    "answer": "Ana sieht den Arzt am Freitag.",
    "accepted": [
@@ -9296,7 +9296,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz: [Lena / helfen / mir] (Präsens) (Beginnen Sie mit „Lena“)",
-   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”. Begin with “Lena”. Use the present tense.",
+   "questionEn": "Build the sentence in the present tense (Präsens). Start with “Lena”. Begin with “Lena”.",
    "options": null,
    "answer": "Lena hilft mir.",
    "accepted": [

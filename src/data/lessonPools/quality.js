@@ -1269,6 +1269,18 @@ export function missingOpeningCue(item, { allStatements = false } = {}) {
   return words.slice(0, verbAt).join(' ');
 }
 
+/**
+ * The English help line repeats the German stem — „___ du viel? (verb: arbeiten, person: du)“ under
+ * „___ du viel? (arbeiten)“ — instead of saying in English what the item asks (2026-11-23 screen
+ * walk: 41 bank items). Bracketed cues aside; an English line that merely starts with the German is
+ * the same echo with a hint appended.
+ */
+export function englishEchoesGerman(item) {
+  const stem = (s) => String(s || '').replace(/\([^()]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+  const de = stem(item?.questionDe);
+  return !!de && stem(item?.questionEn).startsWith(de);
+}
+
 /** Binding task directions must survive the optional English hint. */
 export function taskConstraintsEn(item) {
   const q = String(item?.questionDe || '');
@@ -1285,23 +1297,27 @@ export function taskConstraintsEn(item) {
       else throw new Error(`Untranslated opening constraint: ${part}`);
     }
   }
+  // The third entry: the item's own English already says it, so the hint is not added a second time
+  // (2026-11-23 screen walk: „Build the polite yes/no question … Begin with “Fahren”. Build a question.“;
+  // A1.2: „Use the present tense (Präsens). … Use the present tense.“).
   const directions = [
-    [/\(Präsens\)/, 'Use the present tense.'],
-    [/\(Perfekt\)/, 'Use the Perfekt.'],
-    [/mit bestimmtem Artikel/, 'Use a definite article.'],
-    [/mit unbestimmtem Artikel/, 'Use an indefinite article.'],
-    [/\bKurzform\b/, 'Use the contracted form.'],
-    [/\bvolle Form\b/, 'Use the full form.'],
+    [/\(Präsens\)/, 'Use the present tense.', /\bpresent tense\b/i],
+    [/\(Perfekt\)/, 'Use the Perfekt.', /\bPerfekt\b/i],
+    [/mit bestimmtem Artikel/, 'Use a definite article.', /\bdefinite article\b/i],
+    [/mit unbestimmtem Artikel/, 'Use an indefinite article.', /\bindefinite article\b/i],
+    [/\bKurzform\b/, 'Use the contracted form.', /\bcontracted form\b/i],
+    [/\bvolle Form\b/, 'Use the full form.', /\bfull form\b/i],
     [/Korrigieren Sie den Artikel/, 'Write the whole sentence; change only the article.'],
     [/Korrigieren Sie den Possessivartikel/, 'Write the whole sentence; change only the possessive determiner.'],
     [/Korrigieren Sie (?:nur )?das Verb/, 'Write the whole sentence; change only the verb.'],
     [/Korrigieren Sie nur den Fehler/, 'Write the whole sentence; change only the error.'],
   ];
   if (item?.type === 'sentence_building') directions.push(
-    [/\b(?:Frage|Verb auf Position 1|Antwort: ja oder nein)\b/, 'Build a question.'],
-    [/\b(?:Imperativ|Bitte):/, 'Build a request in the imperative.'],
+    [/\b(?:Frage|Verb auf Position 1|Antwort: ja oder nein)\b/, 'Build a question.', /\bquestion\b/i],
+    [/\b(?:Imperativ|Bitte):/, 'Build a request in the imperative.', /\b(?:imperative|request)\b/i],
   );
-  for (const [pattern, en] of directions) if (pattern.test(q)) constraints.push(en);
+  const said = String(item?.questionEn || '');
+  for (const [pattern, en, already] of directions) if (pattern.test(q) && !already?.test(said)) constraints.push(en);
   const word = q.match(/Korrigieren Sie das Wort (\p{L}+):/u);
   if (word) constraints.push(`Write the whole sentence; change only the word “${word[1]}”.`);
   const repair = NAMED_REPAIR_RE.exec(q)?.[2];

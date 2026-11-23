@@ -90,7 +90,7 @@ paaren packen papa papas papier papiere park parks partizip party partys passen 
 pause pausen pe per perfekt person personalpronomen personen plaene plaetze plan planen plant platz
 plural pluralform pluralnomen plus polen position possessivartikel post praedikat praefix
 praeposition praepositionen praesens praeteritum praxen praxis preis preise prima pronomen
-puenktlich pullover quittung quittungen ra rabatt rabatte radio raeumen rathaeuser rathaus re
+puenktlich pullover quittung quittungen ra rabatt rabatte radio raeumen ramos rathaeuser rathaus re
 reagieren rechnung rechnungen rechts regal regale regel regelmaessig regelmaessige regeln regen
 regnen regnet reihenfolge reis reise reisen reiseziel reklamation reklamieren ren reserviert
 reservierungskarte restaurant restaurants rezeption richten richtig richtung ro rock roecke rot

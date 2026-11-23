@@ -75,6 +75,18 @@ test('all 36 original sound items derive unique checked answers and fair bilingu
   assert.match(read('scripts/lib/guided-content.mjs'), /classifySound\(marked\)/);
 });
 
+test('every sound item shows its model, the marked line, and no text it shows ends in two end marks', () => {
+  // 2026-11-23 screen walk: L7 item 3, L9 item 3 and all of L12 said „read the model“ with no model
+  // on screen, and L8/L10 read „Wie SPÄT ist es?.“ and „Fährt der ZUG?↗.“.
+  const nouns = nounsOf(c.lektionen);
+  for (const lesson of c.lektionen) for (const item of buildSoundItems(lesson, nouns)) {
+    for (const text of [item.modelDe, item.modelEn]) assert.ok(text.includes(item.marked), `L${lesson.nr} ${item.id}: no model in „${text}“`);
+    for (const text of [item.modelDe, item.modelEn, item.promptDe, item.promptEn, item.explanationDe, item.explanationEn]) {
+      assert.doesNotMatch(text, /[.!?][↗↘]?\s*[.!?]/u, `L${lesson.nr} ${item.id}: ${text}`);
+    }
+  }
+});
+
 test('only explicit meta headings are exempt from guided read coverage; other guided rules still apply', () => {
   for (const nr of [2, 4]) {
     const lesson = draftLesson(c.lektionen[nr - 1]);

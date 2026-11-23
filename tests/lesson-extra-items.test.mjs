@@ -844,8 +844,12 @@ test('every sentence-building item with a time or place Angabe accepts both word
   // `a1.1-cp4-bausteine-1` now holds „Ihr ___ heute. (arbeiten)" — a conjugation gap with no Angabe, so
   // the rule finds no second order to demand of it. The pool is unchanged; nothing stopped accepting
   // anything. RE-MEASURED, not relaxed: every live seat above still runs the same checker assertions.
+  // Re-measured 2026-11-23: `extra-a11-l07-05` became „Wir tanzen hier zusammen.“ (a word bag needs four
+  // words), so its seat `a1.1-cp3-schreiben-1` gained the fronted „Hier tanzen wir zusammen.“ and is
+  // checked above like every other seat with a second order.
   assert.deepEqual([...liveGradedIds].sort(), [
     'a1.1-cp1-schreiben-2',
+    'a1.1-cp3-schreiben-1',
   ], 'every current authored-paper seat with a second order remains covered');
   // REVIEW #13 BLOCKER 1 „Viertens": a count can only ever report what the rule
   // FINDS, so it can never report what it stopped finding. The set is named.
@@ -897,7 +901,10 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // interleave visits topics with unanswered items first, and Hören leaves the lines Lesen needs.
     // The seats move; three frontable sentences are drawn, each asserted above to accept both orders.
     // RE-MEASURED, not relaxed.
+    // 2026-11-23: `extra-a11-l07-05` is now „Wir tanzen hier zusammen.“ (a word bag needs four words), so
+    // checkpoint 3's seat 2 gains the fronted „Hier tanzen wir zusammen.“, asserted above. RE-MEASURED.
     'a1.1-cp1-schreiben-2',
+    'a1.1-cp3-schreiben-2',
     'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });

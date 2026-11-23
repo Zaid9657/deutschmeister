@@ -4,6 +4,16 @@ const pronoun = '(?:ich|du|er|sie|es|wir|ihr|Sie)';
 const subject = `(?:${pronoun}|das|(?:der|die|das|mein|meine|dein|deine|sein|seine|ihr|ihre|unser|unsere) [A-ZÄÖÜ][a-zäöüß]+)`;
 const copula = '(?:bin|bist|ist|sind|seid|war|warst|waren|wart)';
 const capitalise = (s) => s[0].toUpperCase() + s.slice(1);
+
+/**
+ * A word-order task needs something to order: four words or more. „Guten Tag!“ (L9) and „Ich bin
+ * frei.“ (L7) as tiles, „Bist du müde?“ as a word bag whose opening is named — two or three words
+ * leave at most one choice (2026-11-23 screen walk). Used by the derived tiles and the practice draw.
+ */
+export const WORD_ORDER_MIN_WORDS = 4;
+export const hasOrderToBuild = (sentence) => String(sentence || '').trim().split(/\s+/).filter(Boolean).length >= WORD_ORDER_MIN_WORDS;
+/** A pool item a lesson may serve as far as word order goes: a sentence-building item has four words to order. */
+export const ordersEnough = (item) => item?.type !== 'sentence_building' || hasOrderToBuild(item.answer);
 const lowerFirst = (s) => s === 'Sie' ? s : s[0].toLowerCase() + s.slice(1);
 
 /** All orders of a supported frame, or [] when its grammar is not covered. */

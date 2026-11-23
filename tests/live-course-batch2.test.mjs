@@ -70,11 +70,25 @@ test('both levels: disjoint Hören options and deferred feedback stop sequential
   assert.notDeepEqual(checkpointFeedback(planted[0], 'a', { graded: true, complete: true }), { answer: 'a' }, 'early feedback mutation releases the key');
 });
 
+// Since 2026-11-23 a tile task needs something to order: four words or more (`WORD_ORDER_MIN_WORDS`; the
+// screen walk met „Guten Tag!“ and „Ich bin frei.“ as tiles). These Lektionen have no supported dialogue
+// sentence that long, so their slot is a second matching task. MEASURED debt: it may only shrink, by a
+// licensed frame in src/lib/lesson/wordOrder.js for one of their own four-word lines.
+const NO_TILES = { 'a1.1': [1, 2, 3, 7, 9], 'a1.2': [8, 11] };
+
 test('each A1.1/A1.2 lesson supplies a derived tile task on every attempt and grades every licensed alternative', () => {
   for (const level of ['a1.1', 'a1.2']) {
     let count = 0;
+    const without = new Set();
     for (const lesson of anyCurriculumFor(level).lektionen) for (let attempt = 1; attempt <= ATTEMPT_CYCLE; attempt += 1) {
-      const tiles = derivedItems(lesson, attempt).filter((it) => it.type === 'word_order');
+      const derived = derivedItems(lesson, attempt);
+      assert.equal(derived.length, 3, `${level} L${lesson.nr}/${attempt}: the derived stage keeps three tasks`);
+      const tiles = derived.filter((it) => it.type === 'word_order');
+      if (NO_TILES[level].includes(lesson.nr)) {
+        without.add(lesson.nr);
+        assert.equal(tiles.length, 0, `${level} L${lesson.nr}/${attempt} now offers tiles — take it off NO_TILES`);
+        continue;
+      }
       assert.ok(tiles.length >= 1, `${level} L${lesson.nr}/${attempt}`);
       for (const item of tiles) {
         count += 1;
@@ -89,8 +103,10 @@ test('each A1.1/A1.2 lesson supplies a derived tile task on every attempt and gr
         assert.equal(grade(item, `${item.answer} extra`), RESULT.WRONG);
       }
     }
-    assert.equal(count, 36);
-    console.log(`PASS: ${level} tiles — 12/12 Lektionen × 3 attempts = 36/36 tasks`);
+    assert.deepEqual([...without], NO_TILES[level]);
+    const withTiles = anyCurriculumFor(level).lektionen.length - NO_TILES[level].length;
+    assert.equal(count, withTiles * ATTEMPT_CYCLE);
+    console.log(`PASS: ${level} tiles — ${withTiles}/12 Lektionen × 3 attempts = ${count} tasks`);
   }
 });
 

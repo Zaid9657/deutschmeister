@@ -130,7 +130,7 @@ import {
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
   missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts, taskConstraintsEn,
-  middleFieldAcceptedForms,
+  middleFieldAcceptedForms, englishEchoesGerman,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -1314,6 +1314,13 @@ for (const item of items) {
   repairOpeningCue(item);
   const constraints = taskConstraintsEn(item).filter((en) => !String(item.questionEn || '').includes(en));
   if (constraints.length) item.questionEn = [item.questionEn, ...constraints].filter(Boolean).join(' ');
+}
+// The English line says in English what the item asks; it never repeats the German stem (2026-11-23
+// screen walk). A bank item gets its English in <level>.corrections.json, a template item in its template.
+const echoes = items.filter(englishEchoesGerman).map((it) => it.id);
+if (echoes.length) {
+  console.error(`${echoes.length} item(s) whose questionEn repeats the German stem — write their English: ${echoes.join(', ')}`);
+  process.exit(1);
 }
 
 // 2026-10-25 re-evaluation (re-landed 2026-11-19): with every opening named, the phrases between the

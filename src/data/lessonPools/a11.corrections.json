@@ -60,12 +60,14 @@
   "54801fe3-5b02-56dc-9c28-31bb6f620f04": {
    "explanationDe": "Ja/Nein-Frage: Das Verb (stehst) steht vorn, die Vorsilbe (auf) am Ende.",
    "explanationEn": "Yes/no question: the verb (**stehst**) comes first, the prefix (**auf**) goes to the end.",
-   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+   "questionEn": "Do you get up at 7 o'clock? (question, verb: aufstehen, du)",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem. questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
   },
   "8a2be339-3196-5a98-a5e6-e41f4351e703": {
    "explanationDe": "Ja/Nein-Frage: Das Verb (kauft) steht vorn, die Vorsilbe (ein) am Ende.",
    "explanationEn": "Yes/no question: the verb (**kauft**) comes first, the prefix (**ein**) goes to the end.",
-   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+   "questionEn": "Are you all going shopping today? (question, verb: einkaufen, ihr)",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem. questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
   },
   "fbe490d9-9b31-5e32-a6f3-dea1394f6863": {
    "explanationDe": "Ja/Nein-Frage: Das Verb (kommt) steht vorn, die Vorsilbe (an) am Ende.",
@@ -75,7 +77,8 @@
   "9454a0c1-640f-54e9-81db-d63ea1557925": {
    "explanationDe": "Ja/Nein-Frage: Das Verb (rufst) steht vorn, die Vorsilbe (an) am Ende.",
    "explanationEn": "Yes/no question: the verb (**rufst**) comes first, the prefix (**an**) goes to the end.",
-   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+   "questionEn": "Are you calling my mother? (question, verb: anrufen, du)",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem. questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
   },
   "c68e4835-4ac3-4cc6-9372-3b67f4a09daf": {
    "explanationDe": "Frau ist feminin: die Frau.",
@@ -128,6 +131,158 @@
    "explanationDe": "Meine Mutter ist feminin: Das Pronomen ist sie.",
    "explanationEn": "The antecedent **meine Mutter** is feminine: use **sie**.",
    "reason": "A pronoun gap names its antecedent; Es ist meine Mutter was also correct in the isolated identification sentence."
+  },
+  "e0ac0425-9aea-44f8-8354-7c41cfbcb0d3": {
+   "questionEn": "the chair → the chairs: which article does the plural take?",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "be8069b8-e189-4fa9-9888-c78e2d51736f": {
+   "questionEn": "the car → the cars: which article does the plural take?",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "1ce4f35f-6067-4fdf-a16b-689bb598fd67": {
+   "questionEn": "That is a chair.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "404c4a60-3448-46bf-99ed-3405eda0bd0f": {
+   "questionEn": "I have a sister.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "5d184615-c23d-44f3-96f4-275878ca8109": {
+   "questionEn": "That is a picture.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "25fe0c36-72d2-47f1-928f-b91d70481b29": {
+   "questionEn": "I live in Berlin. (wohnen)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "8f32fa13-901a-48f3-b07a-090b4bf980f4": {
+   "questionEn": "He plays football. (spielen)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "602e3a32-2024-4fb8-8717-11ad8773aa78": {
+   "questionEn": "We learn together. (lernen)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "e7eb593b-0250-45d6-973c-d5b88fe2c7a4": {
+   "questionEn": "What are you doing? (machen)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "85084f27-567e-414e-9725-0b46aee3b6c4": {
+   "questionEn": "You all play well! (spielen)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "9a58bc0a-594f-5a6f-b82c-146efa8d78c6": {
+   "questionEn": "I get up at 7 o'clock. (verb: aufstehen, ich)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "bf805b90-6433-5303-95f3-96326a8783ef": {
+   "questionEn": "You call your mother. (verb: anrufen, du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "50c103cc-d4e5-58d1-a75f-d3efa5ba5653": {
+   "questionEn": "We go shopping today. (verb: einkaufen, wir)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "1431d5ad-2d26-5430-9dbe-123d255c53b9": {
+   "questionEn": "He comes along at 8 o'clock. (verb: mitkommen, er)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "5c0728c9-3e01-5e60-85d0-3ef077c6d6af": {
+   "questionEn": "I open the window. (verb: aufmachen, ich)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "7f4e5108-b840-59d7-bd86-f4b855f04391": {
+   "questionEn": "She closes the door. (verb: zumachen, sie = she)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "1173ceb0-6080-5b4d-af12-0c6783e3339c": {
+   "questionEn": "The train arrives at 9 o'clock. (verb: ankommen, er = der Zug)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "c5afdbe2-b275-5db5-8379-8c16b05b3393": {
+   "questionEn": "We go out today. (verb: ausgehen, wir)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "81ca8c57-dda8-56dc-9a74-39586ac3aa25": {
+   "questionEn": "I pick you up at 8 o'clock. (verb: abholen, ich)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "ce39cf11-9cb2-5ecb-ada9-bc2dfe937c87": {
+   "questionEn": "He listens carefully. (verb: zuhören, er)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "a31b05ff-9be9-5949-af9d-dcddeef307e2": {
+   "questionEn": "I pick you up at 8 o'clock. (prefix only, verb: abholen, ich)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "f1deffe2-8d4b-547c-8289-bdeafac5bc2c": {
+   "questionEn": "He closes the door. (prefix only, verb: zumachen, er)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "0346934e-7e0a-59f8-a5c3-135fcf18a812": {
+   "questionEn": "We go shopping today. (prefix only, verb: einkaufen, wir)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "a375e841-56f8-5772-90d9-c5a079863bdd": {
+   "questionEn": "You all come along at 8 o'clock. (prefix only, verb: mitkommen, ihr)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "ff343b73-534f-42bc-bc58-1fb8c6fbb1c5": {
+   "questionEn": "Do you have time?",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "dcfdd24d-b6da-4222-92a9-2e816bf4cc5d": {
+   "questionEn": "I am tired.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "34957c67-c29b-43c9-b3ef-5346fa68fa52": {
+   "questionEn": "He is a teacher.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "9fd52b13-6cb9-4430-b0b7-52d4a63c0a63": {
+   "questionEn": "We are in Berlin.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "da9e486f-2548-4462-9bdd-c59560ed7276": {
+   "questionEn": "That is good.",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "0fe8146d-6e90-4c1c-b127-618c44e456ba": {
+   "questionEn": "Are you a student?",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "5c5c272b-ff81-5811-83b6-6e7fde71ba1b": {
+   "questionEn": "Are you tired? (verb: sein, person: du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "d1777221-6b65-55c3-8ecd-dbaa0583db0c": {
+   "questionEn": "Do you have time? (verb: haben, person: du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "426d0034-6957-500d-84d9-4c2844e5338c": {
+   "questionEn": "Do you come from Poland? (verb: kommen, person: du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "8c1f7c82-1210-5d1b-8f48-8ad60f3cfa78": {
+   "questionEn": "Do you work a lot? (verb: arbeiten, person: du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "14eac77e-603e-51e0-9a53-4e18fa5b9d8f": {
+   "questionEn": "Do you live in Berlin? (verb: wohnen, person: Sie – formal)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "e327c296-1ea8-51db-b3c5-a6409f00534c": {
+   "questionEn": "Do you speak English? (verb: sprechen, person: Sie – formal)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "d58cff5b-760c-57bc-b030-05d1201f8846": {
+   "questionEn": "Do you like drinking coffee? (verb: trinken, person: du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+  },
+  "a3ddac97-a8fb-5ddc-8a2d-3c7763e89667": {
+   "questionEn": "Do you like cooking? (verb: kochen, person: du)",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
   }
  }
 }
