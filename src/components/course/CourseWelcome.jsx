@@ -98,7 +98,7 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
             <p className="mt-0.5 text-[0.875rem] leading-relaxed text-graphite">
               At {time.unitsPerWeek} units a week — a pace you can hold next to a job — the {time.units} units
               ({curriculum.lektionen.length} Lektionen, {curriculum.checkpoints.length} checkpoints and the final test) take
-              about {time.weeks} weeks. Faster is fine; slower is fine too. Nothing here locks.
+              about {time.weeks} weeks. Faster is fine; slower is fine too. There is no deadline.
             </p>
           </div>
         </Card>
