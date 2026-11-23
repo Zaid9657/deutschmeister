@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { CURRICULUM_A11 as c } from '../src/data/curricula/a11.js';
 import buildLesson from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A12 as c12 } from '../src/data/curricula/a12.js';
@@ -127,13 +128,28 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
   }
 });
 
+test('a rewritten scene line never leaves its meaning question behind: each part is pinned to its lines (2026-11-23)', () => {
+  // Lektion 11's keys described lines that no longer existed (the screen walk, F1 and F2). `meaningLines` is a short hash
+  // of the part's lines; a changed line fails here until its meaning question has been read again and the pin renewed.
+  const pin = (lines) => createHash('sha1').update(lines.map((l) => `${l.speaker}: ${l.de}`).join('\n')).digest('hex').slice(0, 8);
+  for (const lesson of c.lektionen) {
+    lesson.guided.chunks.forEach((chunk, i) => {
+      const now = pin(lesson.dialog.lines.slice(chunk.from, chunk.to));
+      assert.equal(chunk.meaningLines, now, `Lektion ${lesson.nr} part ${i + 1}: its lines changed; re-read „${chunk.meaning.promptDe}“ and its answer, then set meaningLines: '${now}'`);
+      assert.ok(chunk.meaning.options.includes(chunk.meaning.answer), `Lektion ${lesson.nr} part ${i + 1}`);
+    });
+  }
+});
+
 test('say cues come from the immediately preceding original dialogue line across chunk boundaries', async () => {
   for (const lesson of c.lektionen) {
     const run = build(lesson), scene = run.stages.find((s) => s.kind === 'scene'), fluency = run.stages.find((s) => s.kind === 'fluency');
     for (const [i, chunk] of scene.chunks.entries()) {
       const expected = chunk.say.line ? { ...lesson.dialog.lines[chunk.say.line - 1], index: chunk.say.line - 1 } : undefined;
       assert.deepEqual(chunk.cue, expected);
-      assert.deepEqual(fluency.lines[i].cue, expected);
+      // Said from memory, every line has a cue: an opening line has the situation (the screen walk, Lektionen 4, 6, 10).
+      assert.deepEqual(fluency.lines[i].cue, expected || { de: lesson.dialog.setting, en: lesson.dialog.settingEn });
+      assert.ok(fluency.lines[i].cue.de && fluency.lines[i].cue.en, `Lektion ${lesson.nr} line ${chunk.say.line + 1}: a fluency line without a cue`);
     }
   }
   const { default: SceneStage } = await loadJsxModule('src/components/lesson/SceneStage.jsx', {

@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "700c60b2",
         "meaning": {
           "promptDe": "Was macht Lena um sechs Uhr? Wählen Sie die Antwort.",
           "promptEn": "What does Lena do at six o’clock? Choose the answer.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "8690b3ec",
         "meaning": {
           "promptDe": "Wann ist der Termin von Lena? Wählen Sie die Antwort.",
           "promptEn": "When is Lena’s appointment? Choose the answer.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "0028ab0d",
         "meaning": {
           "promptDe": "Kommt Lena heute pünktlich? Wählen Sie die Bedeutung.",
           "promptEn": "Will Lena be on time today? Choose the meaning.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "a185840b",
         "meaning": {
           "promptDe": "Wann ist Lena am Dienstag frei? Wählen Sie die Antwort.",
           "promptEn": "When is Lena free on Tuesday? Choose the answer.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "c14399bd",
         "meaning": {
           "promptDe": "Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena say about Wednesday? Choose the meaning.",

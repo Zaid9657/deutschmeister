@@ -211,7 +211,7 @@ export const CURRICULUM_A11 = {
         // Half-open boundaries: every original line appears once, in order.
         chunks: [
           {
-            from: 0, to: 2,
+            from: 0, to: 2, meaningLines: '7908ff78',
             meaning: {
               promptDe: 'Was sagt Ana? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say? Choose the meaning.',
@@ -221,7 +221,7 @@ export const CURRICULUM_A11 = {
             say: { line: 1, ownName: 'full' },
           },
           {
-            from: 2, to: 5,
+            from: 2, to: 5, meaningLines: '479ff946',
             meaning: {
               promptDe: 'Was möchte Frau Kaya? Wählen Sie die Bedeutung.',
               promptEn: 'What does Frau Kaya want? Choose the meaning.',
@@ -231,7 +231,7 @@ export const CURRICULUM_A11 = {
             say: { line: 3, ownName: 'surname' },
           },
           {
-            from: 5, to: 8,
+            from: 5, to: 8, meaningLines: '76c1dc1b',
             meaning: {
               promptDe: 'Wie geht es Ana? Wählen Sie die Bedeutung.',
               promptEn: 'How does Ana feel? Choose the meaning.',
@@ -241,7 +241,7 @@ export const CURRICULUM_A11 = {
             say: { line: 7 },
           },
           {
-            from: 8, to: 10,
+            from: 8, to: 10, meaningLines: 'f9f391a2',
             meaning: {
               promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say as she leaves? Choose the meaning.',
@@ -340,6 +340,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'An der Rezeption',
         setting: 'Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.',
+
+        settingEn: 'Ana arrives at the hostel. Frau Kaya works at the reception.',
         lines: [
           { speaker: 'Frau Kaya', de: 'Guten Tag und willkommen!', en: 'Good day and welcome!' },
           { speaker: 'Ana', de: 'Guten Tag. Ich heiße Ana Chakiri.', en: 'Good day. My name is Ana Chakiri.' },
@@ -440,7 +442,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '8deeb478',
             meaning: {
               promptDe: 'Wer ist Herr Weber? Wählen Sie die Bedeutung.',
               promptEn: 'Who is Herr Weber? Choose the meaning.',
@@ -453,7 +455,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: 'cfc2d950',
             meaning: {
               promptDe: 'Was möchte Herr Weber wissen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber want to know? Choose the meaning.',
@@ -466,7 +468,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '5aecc016',
             meaning: {
               promptDe: 'Was sagt Ana? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say? Choose the meaning.',
@@ -479,7 +481,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: '40294998',
             meaning: {
               promptDe: 'Was fragt Herr Weber? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber ask? Choose the meaning.',
@@ -492,7 +494,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: 'eeeb59bd',
             meaning: {
               promptDe: 'Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.',
               promptEn: 'What is Ana’s phone number? Choose the numbers.',
@@ -653,6 +655,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Am Schalter im Bürgerbüro',
         setting: 'Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.',
+
+        settingEn: 'Ana registers at the citizens’ office. Herr Weber works at the counter.',
         lines: [
           // „das Amt“ and „die Post“ stood in the Wortfeld of the Ämter-Handlungsfeld and in no
           // line of its own Lektion (DaF review #3, Wortfeld ↔ Input): they are carried here and in
@@ -871,7 +875,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '71ffea59',
             meaning: {
               promptDe: 'Wer ist auf dem Foto? Wählen Sie die Bedeutung.',
               promptEn: 'Who is in the photo? Choose the meaning.',
@@ -884,7 +888,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: 'edf9d31e',
             meaning: {
               promptDe: 'Was sagt Ana über ihre Schwester? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say about her sister? Choose the meaning.',
@@ -897,7 +901,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '3912e145',
             meaning: {
               promptDe: 'Welche Sprachen sprechen Anas Eltern? Wählen Sie die Bedeutung.',
               promptEn: 'Which languages do Ana’s parents speak? Choose the meaning.',
@@ -910,7 +914,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'b1ed625d',
             meaning: {
               promptDe: 'Was fragt Lena? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena ask? Choose the meaning.',
@@ -923,7 +927,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: '7b6311d9',
             meaning: {
               promptDe: 'Was hat Anas Bruder? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana’s brother have? Choose the meaning.',
@@ -1045,6 +1049,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Ein Foto von zu Hause',
         setting: 'Lena sieht ein Foto auf Anas Handy.',
+
+        settingEn: 'Lena sees a photo on Ana’s phone.',
         lines: [
           { speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
           { speaker: 'Ana', de: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', en: 'Yes. Those are my parents and my siblings: a brother, a sister.' },
@@ -1154,7 +1160,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: 'e613df9b',
             meaning: {
               promptDe: 'Was sagt Frau Wolf? Wählen Sie die Bedeutung.',
               promptEn: 'What does Frau Wolf say? Choose the meaning.',
@@ -1167,7 +1173,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '89714fea',
             meaning: {
               promptDe: 'Was kostet der Tisch? Wählen Sie die Bedeutung.',
               promptEn: 'What does the table cost? Choose the meaning.',
@@ -1180,7 +1186,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '91629a7e',
             meaning: {
               promptDe: 'Was sagt Tim über den Tisch? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim say about the table? Choose the meaning.',
@@ -1193,7 +1199,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'f3dc0e0e',
             meaning: {
               promptDe: 'Was kauft Tim? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim buy? Choose the meaning.',
@@ -1206,7 +1212,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: 'bbd9aaa6',
             meaning: {
               promptDe: 'Was kostet das Regal? Wählen Sie die Bedeutung.',
               promptEn: 'What does the shelf cost? Choose the meaning.',
@@ -1313,6 +1319,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Am Stand',
         setting: 'Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.',
+
+        settingEn: 'Tim is looking for furniture for his room. Frau Wolf is selling.',
         lines: [
           { speaker: 'Tim', de: 'Entschuldigung, was ist das?', en: 'Excuse me, what is that?' },
           { speaker: 'Frau Wolf', de: 'Das ist eine Lampe. Sie kostet acht Euro.', en: 'That is a lamp. It costs eight euros.' },
@@ -1412,7 +1420,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '467c08c0',
             meaning: {
               promptDe: 'Was möchte Lena wissen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena want to know? Choose the meaning.',
@@ -1425,7 +1433,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '09427bc3',
             meaning: {
               promptDe: 'Was sagt Tim über die Schere und das Lineal? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim say about the scissors and the ruler? Choose the meaning.',
@@ -1438,7 +1446,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: 'ecd498a6',
             meaning: {
               promptDe: 'Welche Farben nennt Tim? Wählen Sie die Bedeutung.',
               promptEn: 'Which colours does Tim name? Choose the meaning.',
@@ -1451,7 +1459,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: '8e5444c0',
             meaning: {
               promptDe: 'Was sagt Tim über das Heft? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim say about the notebook? Choose the meaning.',
@@ -1464,7 +1472,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: '1a11daca',
             meaning: {
               promptDe: 'Was sagt Tim über das Bild? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim say about the picture? Choose the meaning.',
@@ -1573,6 +1581,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Vor dem Kurs',
         setting: 'Lena und Tim packen ihre Taschen aus.',
+
+        settingEn: 'Lena and Tim unpack their bags.',
         lines: [
           { speaker: 'Lena', de: 'Tim, wo ist das Wörterbuch?', en: 'Tim, where is the dictionary?' },
           { speaker: 'Tim', de: 'Das Wörterbuch ist hier. Der Stift ist da.', en: 'The dictionary is here. The pen is there.' },
@@ -1680,7 +1690,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '036032a6',
             meaning: {
               promptDe: 'Was macht Herr Weber? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber do? Choose the meaning.',
@@ -1693,7 +1703,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '62c4e01a',
             meaning: {
               promptDe: 'Was braucht Ana im Büro? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana need in the office? Choose the meaning.',
@@ -1706,7 +1716,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: 'f067e137',
             meaning: {
               promptDe: 'Was sagt Herr Weber über ein Handy? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber say about a mobile phone? Choose the meaning.',
@@ -1719,7 +1729,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'bc4ddad0',
             meaning: {
               promptDe: 'Was möchte Ana wissen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana want to know? Choose the meaning.',
@@ -1732,7 +1742,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: 'b52df201',
             meaning: {
               promptDe: 'Was sagt Herr Weber über die Pause? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber say about the break? Choose the meaning.',
@@ -1828,6 +1838,8 @@ export const CURRICULUM_A11 = {
         // first day in the same Amt. The cast is five people; two jobs for one of them broke the
         // only narrative bracket the level has (DaF review #2, L2).
         setting: 'Anas erster Arbeitstag im Bürgerbüro. Herr Weber zeigt ihr den Arbeitsplatz.',
+
+        settingEn: 'Ana’s first day at work in the citizens’ office. Herr Weber shows her the workplace.',
         lines: [
           { speaker: 'Ana', de: 'Guten Morgen, Herr Weber!', en: 'Good morning, Mr Weber!' },
           { speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
@@ -1932,7 +1944,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 3,
+            to: 3, meaningLines: '12d43e18',
             meaning: {
               promptDe: 'Was machen Tim und Lena gern? Wählen Sie die Bedeutung.',
               promptEn: 'What do Tim and Lena like doing? Choose the meaning.',
@@ -1945,7 +1957,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 3,
-            to: 5,
+            to: 5, meaningLines: '40a14305',
             meaning: {
               promptDe: 'Was sagt Lena über das Wochenende? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena say about the weekend? Choose the meaning.',
@@ -1958,7 +1970,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 5,
-            to: 7,
+            to: 7, meaningLines: '36d44d99',
             meaning: {
               promptDe: 'Was möchte Lena von Tim wissen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena want to know from Tim? Choose the meaning.',
@@ -1971,7 +1983,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 7,
-            to: 10,
+            to: 10, meaningLines: '352e16ca',
             meaning: {
               promptDe: 'Was möchte Tim am Wochenende machen? Wählen Sie die Bedeutung.',
               promptEn: 'What would Tim like to do at the weekend? Choose the meaning.',
@@ -2076,6 +2088,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Was machst du am Wochenende?',
         setting: 'Lena und Tim nach dem Kurs.',
+
+        settingEn: 'Lena and Tim after the course.',
         lines: [
           { speaker: 'Lena', de: 'Tim, was ist dein Hobby?', en: 'Tim, what is your hobby?' },
           { speaker: 'Tim', de: 'Ich höre gern Musik. Und du?', en: 'I like listening to music. And you?' },
@@ -2178,7 +2192,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '700c60b2',
             meaning: {
               promptDe: 'Was macht Lena um sechs Uhr? Wählen Sie die Antwort.',
               promptEn: 'What does Lena do at six o’clock? Choose the answer.',
@@ -2191,7 +2205,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '8690b3ec',
             meaning: {
               promptDe: 'Wann ist der Termin von Lena? Wählen Sie die Antwort.',
               promptEn: 'When is Lena’s appointment? Choose the answer.',
@@ -2204,7 +2218,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '0028ab0d',
             meaning: {
               promptDe: 'Kommt Lena heute pünktlich? Wählen Sie die Bedeutung.',
               promptEn: 'Will Lena be on time today? Choose the meaning.',
@@ -2217,7 +2231,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'a185840b',
             meaning: {
               promptDe: 'Wann ist Lena am Dienstag frei? Wählen Sie die Antwort.',
               promptEn: 'When is Lena free on Tuesday? Choose the answer.',
@@ -2230,7 +2244,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: 'c14399bd',
             meaning: {
               promptDe: 'Was sagt Lena über den Mittwoch? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena say about Wednesday? Choose the meaning.',
@@ -2361,6 +2375,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Wann hast du Zeit?',
         setting: 'Ana und Lena suchen einen Termin.',
+
+        settingEn: 'Ana and Lena are looking for a time to meet.',
         lines: [
           { speaker: 'Ana', de: 'Lena, wann stehst du morgens auf?', en: 'Lena, when do you get up in the morning?' },
           { speaker: 'Lena', de: 'Ich stehe um sechs Uhr auf.', en: 'I get up at six o’clock.' },
@@ -2465,7 +2481,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '966eaa39',
             meaning: {
               promptDe: 'Was möchte Ana? Wählen Sie die Bedeutung.',
               promptEn: 'What would Ana like? Choose the meaning.',
@@ -2478,7 +2494,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '6b30f2c6',
             meaning: {
               promptDe: 'Hat Ana auch Hunger? Wählen Sie die Bedeutung.',
               promptEn: 'Is Ana hungry too? Choose the meaning.',
@@ -2491,7 +2507,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '598c7828',
             meaning: {
               promptDe: 'Was bestellt Ana noch? Wählen Sie die Antwort.',
               promptEn: 'What else does Ana order? Choose the answer.',
@@ -2504,7 +2520,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'fd9aa490',
             meaning: {
               promptDe: 'Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.',
               promptEn: 'Paul also has tea, beer and wine. What does Ana say? Choose the meaning.',
@@ -2517,7 +2533,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: '999b7085',
             meaning: {
               promptDe: 'Was sagt Paul? Wählen Sie die Bedeutung.',
               promptEn: 'What does Paul say? Choose the meaning.',
@@ -2630,6 +2646,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Bestellen im Café',
         setting: 'Ana sitzt im Café. Paul ist Kellner.',
+
+        settingEn: 'Ana is sitting in the café. Paul is a waiter.',
         lines: [
           { speaker: 'Paul', de: 'Guten Tag! Was möchten Sie trinken?', en: 'Good day! What would you like to drink?' },
           { speaker: 'Ana', de: 'Ich habe Durst. Ich möchte einen Kaffee, bitte.', en: 'I am thirsty. I would like a coffee, please.' },
@@ -2725,7 +2743,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '18bcb9cb',
             meaning: {
               promptDe: 'Wann und wo fährt der Zug nach Österreich? Wählen Sie die Antwort.',
               promptEn: 'When and where does the train to Austria leave? Choose the answer.',
@@ -2738,7 +2756,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '8d7cde6a',
             meaning: {
               promptDe: 'Was sagt Herr Schmidt über den Zug? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Schmidt say about the train? Choose the meaning.',
@@ -2751,7 +2769,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: 'ac62ddaf',
             meaning: {
               promptDe: 'Was kostet die Fahrkarte? Wählen Sie die Antwort.',
               promptEn: 'How much is the ticket? Choose the answer.',
@@ -2764,7 +2782,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: '59555bf2',
             meaning: {
               promptDe: 'Fährt der Zug in die Schweiz? Wählen Sie die Bedeutung.',
               promptEn: 'Does the train go to Switzerland? Choose the meaning.',
@@ -2777,7 +2795,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: '8e18ca54',
             meaning: {
               promptDe: 'Was sagt die Durchsage? Wählen Sie die Bedeutung.',
               promptEn: 'What does the announcement say? Choose the meaning.',
@@ -2884,6 +2902,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Am Schalter',
         setting: 'Ana fragt am Bahnhof nach dem Zug.',
+
+        settingEn: 'Ana asks about the train at the station.',
         lines: [
           { speaker: 'Ana', de: 'Entschuldigung, fährt der Zug nach Österreich?', en: 'Excuse me, does the train go to Austria?' },
           { speaker: 'Herr Schmidt', de: 'Ja, der Zug fährt um neun Uhr von Gleis vier.', en: 'Yes, the train leaves at nine o’clock from platform four.' },
@@ -3000,7 +3020,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: '7d23718c',
             meaning: {
               promptDe: 'Was hat Tim gestern gemacht? Wählen Sie die Bedeutung.',
               promptEn: 'What did Tim do yesterday? Choose the meaning.',
@@ -3013,7 +3033,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: 'f253f48a',
             meaning: {
               promptDe: 'Was sagt Tim über den Morgen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Tim say about his mornings? Choose the meaning.',
@@ -3026,7 +3046,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '38cad4d1',
             meaning: {
               promptDe: 'Was macht Tim am Freitag? Wählen Sie die Bedeutung.',
               promptEn: 'What is Tim doing on Friday? Choose the meaning.',
@@ -3039,12 +3059,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'a8a93210',
             meaning: {
               promptDe: 'Was sagt Lena? Wählen Sie die Bedeutung.',
               promptEn: 'What does Lena say? Choose the meaning.',
-              options: ['She is coming along and asks Tim to call her.', 'She cannot come and will call Tim next week.', 'She is coming along and will pick Tim up at six.'],
-              answer: 'She is coming along and asks Tim to call her.',
+              options: ['She is coming along and is bringing a bag.', 'She cannot come and will call Tim next week.', 'She is coming along and will pick Tim up at six.'],
+              answer: 'She is coming along and is bringing a bag.',
             },
             say: {
               line: 7,
@@ -3052,12 +3072,12 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: 'f7793e6f',
             meaning: {
-              promptDe: 'Was macht Tim am Sonntag? Wählen Sie die Bedeutung.',
-              promptEn: 'What does Tim do on Sunday? Choose the meaning.',
-              options: ['He gets up at six.', 'He sleeps until nine.', 'He works until nine.'],
-              answer: 'He sleeps until nine.',
+              promptDe: 'Bis wann schläft Tim? Wählen Sie die Bedeutung.',
+              promptEn: 'Until when does Tim sleep? Choose the meaning.',
+              options: ['Until six; his brother sleeps until nine.', 'Until nine; his brother sleeps until six.', 'Until eight, then he has a shower.'],
+              answer: 'Until six; his brother sleeps until nine.',
             },
             say: {
               line: 9,
@@ -3157,6 +3177,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Was hast du gestern gemacht?',
         setting: 'Tim und Lena am Donnerstag im Kurs.',
+
+        settingEn: 'Tim and Lena in class on Thursday.',
         lines: [
           { speaker: 'Lena', de: 'Tim, was hast du gestern gemacht?', en: 'Tim, what did you do yesterday?' },
           { speaker: 'Tim', de: 'Ich habe gearbeitet. Heute lerne ich Deutsch.', en: 'I worked. Today I am studying German.' },
@@ -3250,7 +3272,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2,
+            to: 2, meaningLines: 'fb9bd034',
             meaning: {
               promptDe: 'Was sagt Ana über ihren Geburtstag? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say about her birthday? Choose the meaning.',
@@ -3263,7 +3285,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4,
+            to: 4, meaningLines: '2f1cfe6c',
             meaning: {
               promptDe: 'Wer kommt zum Fest? Wählen Sie die Bedeutung.',
               promptEn: 'Who is coming to the party? Choose the meaning.',
@@ -3276,7 +3298,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6,
+            to: 6, meaningLines: '6faef2f1',
             meaning: {
               promptDe: 'Was sagt Ana über die Gäste? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say about the guests? Choose the meaning.',
@@ -3289,7 +3311,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 6,
-            to: 8,
+            to: 8, meaningLines: 'd96558e5',
             meaning: {
               promptDe: 'Was möchte Ana zum Geburtstag? Wählen Sie die Bedeutung.',
               promptEn: 'What would Ana like for her birthday? Choose the meaning.',
@@ -3302,7 +3324,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10,
+            to: 10, meaningLines: 'd4c7da28',
             meaning: {
               promptDe: 'Was sagt Ana zum Abschied? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say as they part? Choose the meaning.',
@@ -3410,6 +3432,8 @@ export const CURRICULUM_A11 = {
       dialog: {
         title: 'Eine Einladung',
         setting: 'Lena und Ana planen Anas Geburtstag.',
+
+        settingEn: 'Lena and Ana are planning Ana’s birthday.',
         lines: [
           { speaker: 'Lena', de: 'Ana, wann ist dein Geburtstag?', en: 'Ana, when is your birthday?' },
           // A birthday is a DATE, not a weekday: „Mein Geburtstag ist am Freitag“ says the party is on

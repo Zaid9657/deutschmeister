@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "036032a6",
         "meaning": {
           "promptDe": "Was macht Herr Weber? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Weber do? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "62c4e01a",
         "meaning": {
           "promptDe": "Was braucht Ana im Büro? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana need in the office? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "f067e137",
         "meaning": {
           "promptDe": "Was sagt Herr Weber über ein Handy? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Weber say about a mobile phone? Choose the meaning.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "bc4ddad0",
         "meaning": {
           "promptDe": "Was möchte Ana wissen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana want to know? Choose the meaning.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "b52df201",
         "meaning": {
           "promptDe": "Was sagt Herr Weber über die Pause? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Weber say about the break? Choose the meaning.",

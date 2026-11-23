@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 3,
+        "meaningLines": "12d43e18",
         "meaning": {
           "promptDe": "Was machen Tim und Lena gern? Wählen Sie die Bedeutung.",
           "promptEn": "What do Tim and Lena like doing? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 3,
         "to": 5,
+        "meaningLines": "40a14305",
         "meaning": {
           "promptDe": "Was sagt Lena über das Wochenende? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena say about the weekend? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 5,
         "to": 7,
+        "meaningLines": "36d44d99",
         "meaning": {
           "promptDe": "Was möchte Lena von Tim wissen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena want to know from Tim? Choose the meaning.",
@@ -88,6 +91,7 @@
       {
         "from": 7,
         "to": 10,
+        "meaningLines": "352e16ca",
         "meaning": {
           "promptDe": "Was möchte Tim am Wochenende machen? Wählen Sie die Bedeutung.",
           "promptEn": "What would Tim like to do at the weekend? Choose the meaning.",

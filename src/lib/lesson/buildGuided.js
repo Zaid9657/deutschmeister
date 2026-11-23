@@ -38,7 +38,9 @@ export function buildGuided(options, buildLegacy) {
     { nr: 3, key: 'read', kind: 'read', part: 1, ...read, glossary: lektion.wortfeld, words: lektion.wortfeld.filter((w) => !met(w)),
       items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', accepted: [q.answer] })) },
     ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
-    { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue })) },
+    // Every line said from memory has a cue: the line before it, or for the scene's opening line the situation
+    // (`setting`, `settingEn`; the main session's screen walk, Lektionen 4, 6, 10).
+    { nr: 4, key: 'fluency', kind: 'fluency', part: 2, lines: chunks.map((c) => ({ ...c.say, cue: c.cue || { de: lektion.dialog.setting, en: lektion.dialog.settingEn } })) },
     part('speaking', 3), part('writing', 3), part('requeue', 3),
     ...(lektion.guided.check ? [{ nr: 7, key: 'check', kind: 'check', part: 3, next: nextAfter(options.curriculum, lektion),
       check: { ...lektion.guided.check, lexicon: courseLexicon(options.curriculum || { lektionen: [lektion] }) } }] : []),

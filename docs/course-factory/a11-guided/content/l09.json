@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "966eaa39",
         "meaning": {
           "promptDe": "Was möchte Ana? Wählen Sie die Bedeutung.",
           "promptEn": "What would Ana like? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "6b30f2c6",
         "meaning": {
           "promptDe": "Hat Ana auch Hunger? Wählen Sie die Bedeutung.",
           "promptEn": "Is Ana hungry too? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "598c7828",
         "meaning": {
           "promptDe": "Was bestellt Ana noch? Wählen Sie die Antwort.",
           "promptEn": "What else does Ana order? Choose the answer.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "fd9aa490",
         "meaning": {
           "promptDe": "Paul hat auch Tee, Bier und Wein. Was sagt Ana? Wählen Sie die Bedeutung.",
           "promptEn": "Paul also has tea, beer and wine. What does Ana say? Choose the meaning.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "999b7085",
         "meaning": {
           "promptDe": "Was sagt Paul? Wählen Sie die Bedeutung.",
           "promptEn": "What does Paul say? Choose the meaning.",

@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "e613df9b",
         "meaning": {
           "promptDe": "Was sagt Frau Wolf? Wählen Sie die Bedeutung.",
           "promptEn": "What does Frau Wolf say? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "89714fea",
         "meaning": {
           "promptDe": "Was kostet der Tisch? Wählen Sie die Bedeutung.",
           "promptEn": "What does the table cost? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "91629a7e",
         "meaning": {
           "promptDe": "Was sagt Tim über den Tisch? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about the table? Choose the meaning.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "f3dc0e0e",
         "meaning": {
           "promptDe": "Was kauft Tim? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim buy? Choose the meaning.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "bbd9aaa6",
         "meaning": {
           "promptDe": "Was kostet das Regal? Wählen Sie die Bedeutung.",
           "promptEn": "What does the shelf cost? Choose the meaning.",

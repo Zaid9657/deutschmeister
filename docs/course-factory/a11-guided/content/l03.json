@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "71ffea59",
         "meaning": {
           "promptDe": "Wer ist auf dem Foto? Wählen Sie die Bedeutung.",
           "promptEn": "Who is in the photo? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "edf9d31e",
         "meaning": {
           "promptDe": "Was sagt Ana über ihre Schwester? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say about her sister? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "3912e145",
         "meaning": {
           "promptDe": "Welche Sprachen sprechen Anas Eltern? Wählen Sie die Bedeutung.",
           "promptEn": "Which languages do Ana’s parents speak? Choose the meaning.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "b1ed625d",
         "meaning": {
           "promptDe": "Was fragt Lena? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena ask? Choose the meaning.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "7b6311d9",
         "meaning": {
           "promptDe": "Was hat Anas Bruder? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana’s brother have? Choose the meaning.",

@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "18bcb9cb",
         "meaning": {
           "promptDe": "Wann und wo fährt der Zug nach Österreich? Wählen Sie die Antwort.",
           "promptEn": "When and where does the train to Austria leave? Choose the answer.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "8d7cde6a",
         "meaning": {
           "promptDe": "Was sagt Herr Schmidt über den Zug? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Schmidt say about the train? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "ac62ddaf",
         "meaning": {
           "promptDe": "Was kostet die Fahrkarte? Wählen Sie die Antwort.",
           "promptEn": "How much is the ticket? Choose the answer.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "59555bf2",
         "meaning": {
           "promptDe": "Fährt der Zug in die Schweiz? Wählen Sie die Bedeutung.",
           "promptEn": "Does the train go to Switzerland? Choose the meaning.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "8e18ca54",
         "meaning": {
           "promptDe": "Was sagt die Durchsage? Wählen Sie die Bedeutung.",
           "promptEn": "What does the announcement say? Choose the meaning.",

@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "467c08c0",
         "meaning": {
           "promptDe": "Was möchte Lena wissen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena want to know? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "09427bc3",
         "meaning": {
           "promptDe": "Was sagt Tim über die Schere und das Lineal? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about the scissors and the ruler? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "ecd498a6",
         "meaning": {
           "promptDe": "Welche Farben nennt Tim? Wählen Sie die Bedeutung.",
           "promptEn": "Which colours does Tim name? Choose the meaning.",
@@ -88,6 +91,7 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "8e5444c0",
         "meaning": {
           "promptDe": "Was sagt Tim über das Heft? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about the notebook? Choose the meaning.",
@@ -105,6 +109,7 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "1a11daca",
         "meaning": {
           "promptDe": "Was sagt Tim über das Bild? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about the picture? Choose the meaning.",

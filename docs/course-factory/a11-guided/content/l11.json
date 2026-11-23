@@ -37,6 +37,7 @@
       {
         "from": 0,
         "to": 2,
+        "meaningLines": "7d23718c",
         "meaning": {
           "promptDe": "Was hat Tim gestern gemacht? Wählen Sie die Bedeutung.",
           "promptEn": "What did Tim do yesterday? Choose the meaning.",
@@ -54,6 +55,7 @@
       {
         "from": 2,
         "to": 4,
+        "meaningLines": "f253f48a",
         "meaning": {
           "promptDe": "Was sagt Tim über den Morgen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Tim say about his mornings? Choose the meaning.",
@@ -71,6 +73,7 @@
       {
         "from": 4,
         "to": 6,
+        "meaningLines": "38cad4d1",
         "meaning": {
           "promptDe": "Was macht Tim am Freitag? Wählen Sie die Bedeutung.",
           "promptEn": "What is Tim doing on Friday? Choose the meaning.",
@@ -88,15 +91,16 @@
       {
         "from": 6,
         "to": 8,
+        "meaningLines": "a8a93210",
         "meaning": {
           "promptDe": "Was sagt Lena? Wählen Sie die Bedeutung.",
           "promptEn": "What does Lena say? Choose the meaning.",
           "options": [
-            "She is coming along and asks Tim to call her.",
+            "She is coming along and is bringing a bag.",
             "She cannot come and will call Tim next week.",
             "She is coming along and will pick Tim up at six."
           ],
-          "answer": "She is coming along and asks Tim to call her."
+          "answer": "She is coming along and is bringing a bag."
         },
         "say": {
           "line": 7
@@ -105,15 +109,16 @@
       {
         "from": 8,
         "to": 10,
+        "meaningLines": "f7793e6f",
         "meaning": {
-          "promptDe": "Was macht Tim am Sonntag? Wählen Sie die Bedeutung.",
-          "promptEn": "What does Tim do on Sunday? Choose the meaning.",
+          "promptDe": "Bis wann schläft Tim? Wählen Sie die Bedeutung.",
+          "promptEn": "Until when does Tim sleep? Choose the meaning.",
           "options": [
-            "He gets up at six.",
-            "He sleeps until nine.",
-            "He works until nine."
+            "Until six; his brother sleeps until nine.",
+            "Until nine; his brother sleeps until six.",
+            "Until eight, then he has a shower."
           ],
-          "answer": "He sleeps until nine."
+          "answer": "Until six; his brother sleeps until nine."
         },
         "say": {
           "line": 9
