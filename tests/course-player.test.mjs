@@ -349,8 +349,8 @@ test('STRINGS.en and STRINGS.de carry exactly the same keys and no empty value',
   assert.equal(t('action.next', 'de'), 'Weiter');
   assert.equal(t('action.next', 'xx'), 'Continue', 'an unknown lang falls back to en');
   assert.equal(t('no.such.key', 'de'), 'no.such.key', 'a missing key shows the key, never a blank');
-  assert.equal(t('stage.practice.eyebrow', 'en', { n: 3, total: 7 }), 'Step 4 · Practice 3/7');
-  assert.equal(t('stage.requeue.eyebrow', 'de', { n: 1, total: 2 }), 'Schritt 7 · Noch einmal 1/2', 'the requeue has its own eyebrow');
+  assert.equal(t('stage.practice.eyebrow', 'en', { n: 3, total: 7 }), 'Practice 3/7');
+  assert.equal(t('stage.requeue.eyebrow', 'de', { n: 1, total: 2 }), 'Noch einmal 1/2', 'the requeue has its own eyebrow');
 });
 
 test('no owned lesson chrome file carries a banned German chrome literal outside strings.js', () => {
@@ -379,14 +379,15 @@ test('every stage screen the player renders reads its chrome through useLessonLa
 
 // The requeue stage used to reuse PracticeItem's "Step 4 · Practice n/N"
 // eyebrow AFTER "Step 6 · Writing", so the lesson appeared to go backwards.
-test('the requeue stage has its own eyebrow (Step 7 · Try again)', () => {
+// Since 2026-11-23 the numbering is the part (tests/lesson-screens.test.mjs).
+test('the requeue stage has its own eyebrow (Part 3 of 3 · Try again)', () => {
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
   assert.ok(player.includes("const retry = stage.kind === 'requeue';"), 'the player must know when it is in the requeue stage');
   assert.ok(player.includes("eyebrowKey={retry ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}"), 'the player must pass the requeue eyebrow key');
   assert.ok(player.includes("...(retry ? { eyebrowKey: 'stage.requeue.eyebrow' } : {})"), 'a retried match/word order/listen item/dictation carries the requeue eyebrow too');
   const item = read('src/components/lesson/PracticeItem.jsx');
   assert.ok(item.includes("eyebrowKey = 'stage.practice.eyebrow'"), 'PracticeItem defaults to the practice eyebrow');
-  assert.ok(item.includes('{t(eyebrowKey, lang, { n: index + 1, total })}'), 'PracticeItem renders the eyebrow it is given');
+  assert.ok(item.includes('{partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}'), 'PracticeItem renders the eyebrow it is given, after its part');
 });
 
 // The speaking stage trap: the primary is disabled until every read-aloud line

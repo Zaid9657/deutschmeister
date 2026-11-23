@@ -6,7 +6,7 @@ import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import PlayButton from './PlayButton.jsx';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * One `derived` exercise (buildLesson.js `derivedItems`): play one of the
@@ -16,7 +16,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * hand-builds the check options (tests/course-player.test.mjs GRADING_SITES).
  * A miss here is always tagged 'Hören' (check.js `tagError`).
  */
-export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', hintFirst = false }) {
+export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', part = null, hintFirst = false }) {
   const [lang] = useLessonLang();
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
@@ -46,7 +46,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-        {t(eyebrowKey, lang, { n: index + 1, total })}
+        {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('listenSelect.instructions', lang)}</p>

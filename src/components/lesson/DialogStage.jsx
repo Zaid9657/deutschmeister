@@ -147,6 +147,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
   return (
     <StageShell
       eyebrow={t('stage.input.eyebrow', lang)}
+      part={stage.part}
       title={stage.dialog?.title || t('stage.input.title', lang)}
       lead={stage.dialog?.setting}
       onBack={onBack}

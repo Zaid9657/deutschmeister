@@ -16,7 +16,7 @@ export default function ReadStage({ stage, itemIndex, onItemChange, onResult, on
     document.addEventListener('click', close); document.addEventListener('keydown', key);
     return () => { document.removeEventListener('click', close); document.removeEventListener('keydown', key); };
   }, []);
-  return <StageShell eyebrow={t('read.title', lang)} title={lang === 'de' ? stage.titleDe : stage.titleEn}
+  return <StageShell eyebrow={t('read.title', lang)} part={stage.part} title={lang === 'de' ? stage.titleDe : stage.titleEn}
     lead={lang === 'de' ? stage.instructionDe : stage.instructionEn} onBack={onBack}
     primaryLabel={itemIndex === 0 ? t('action.next', lang) : undefined}
     onPrimary={itemIndex === 0 ? () => onItemChange(1) : undefined}>

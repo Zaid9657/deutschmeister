@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import Button from '../ui/Button.jsx';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // Wave 2 (2026-09-19): a background wash per stage kind, so ten screens in a
 // row don't read as one undifferentiated white card. Token classes only —
@@ -25,9 +25,14 @@ const VARIANTS = {
  * `variant` changes only the background wash and eyebrow tone (design-tokens
  * rule 2: energy is a wash, never a new interactive colour) — callers that
  * pass nothing keep today's plain paper look.
+ *
+ * `part` is the stage's part of the Lektion (`stage.part`, set for every stage
+ * by the player): the eyebrow then reads „Part 2 of 3 · Grammar“ — the one
+ * numbering on every stage header (partEyebrow in strings.js).
  */
 export default function StageShell({
-  eyebrow,
+  eyebrow: name,
+  part = null,
   title,
   lead,
   onBack,
@@ -39,6 +44,7 @@ export default function StageShell({
   children,
 }) {
   const [lang] = useLessonLang();
+  const eyebrow = name && partEyebrow(part, name, lang);
   const wash = VARIANTS[variant] || '';
   return (
     <section className={`flex min-h-[60vh] flex-col ${wash ? `-mx-4 rounded-clay px-4 pt-4 sm:-mx-6 sm:px-6 ${wash}` : ''}`}>

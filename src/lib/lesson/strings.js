@@ -1,5 +1,6 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { safeGet, safeSet } from '../../utils/safeStorage.js';
+import { SESSION_COUNT } from './sessions.js';
 
 // The lesson chrome's string table (Wave 1, 2026-09-19).
 //
@@ -41,10 +42,10 @@ export const STRINGS = {
     "sound.lead": "Listen, check the sound model, then say the line aloud.",
     "sound.syllables": "Syllables: {syllables}",
     "sound.say": "Now say the line aloud.",
-    "read.title": "Read a short text",
+    "read.title": "Reading",
     "fluency.title": "Say it again, from memory",
     "fluency.lead": "Use the familiar line for this situation. Take your time; this round has no practice score.",
-    "fluency.cue": "Scene {n} of {total}",
+    "fluency.cue": "From memory {n}/{total}",
     "fluency.show": "Show the line",
     "fluency.progress": "{n} of {total} said",
     "fluency.name": "Enter your name to reuse your introduction. The name stays only in this run.",
@@ -115,29 +116,31 @@ export const STRINGS = {
     'audio.synthetic': 'Computer voice',
 
     // ── stage eyebrows and titles ────────────────────────────────────────────
-    'stage.warmup.eyebrow': 'Step 0 · Review',
+    // The stage's own name; StageShell and the item screens put its part in front (partEyebrow below).
+    'stage.part': 'Part {part} of {total}',
+    'stage.warmup.eyebrow': 'Review',
     'stage.warmup.title': 'A quick refresher',
-    'stage.pretest.eyebrow': 'Step 1 · Try first',
-    'stage.input.eyebrow': 'Step 2 · Input',
+    'stage.pretest.eyebrow': 'Try first',
+    'stage.input.eyebrow': 'Input',
     'stage.input.title': 'Dialogue',
-    'stage.wortfeld.eyebrow': 'Step 2 · Vocabulary',
+    'stage.wortfeld.eyebrow': 'Vocabulary',
     'stage.wortfeld.title': '{n} new words',
     'stage.wortfeld.lead': 'Tap a card for the translation, the speaker to hear it.',
-    'stage.notice.eyebrow': 'Step 3 · Grammar',
+    'stage.notice.eyebrow': 'Grammar',
     'stage.notice.examples': 'Examples from the dialogue',
-    'stage.phonetik.eyebrow': 'Step 3 · Pronunciation',
+    'stage.phonetik.eyebrow': 'Pronunciation',
     'stage.phonetik.title': 'Listen and repeat',
     'phonetik.listenFor': 'Stress falls on the capitalised syllable.',
     'phonetik.sayAfter': 'Say it after the voice',
     'phonetik.said': 'Said it',
-    'stage.practice.eyebrow': 'Step 4 · Practice {n}/{total}',
-    'stage.derived.eyebrow': 'Step 4 · More practice {n}/{total}',
-    'stage.dictation.eyebrow': 'Step 4 · Listening {n}/{total}',
-    'stage.speaking.eyebrow': 'Step 5 · Speaking',
+    'stage.practice.eyebrow': 'Practice {n}/{total}',
+    'stage.derived.eyebrow': 'More practice {n}/{total}',
+    'stage.dictation.eyebrow': 'Listening {n}/{total}',
+    'stage.speaking.eyebrow': 'Speaking',
     'stage.speaking.title': 'Repeat first, then speak freely',
-    'stage.writing.eyebrow': 'Step 6 · Writing',
-    'stage.requeue.eyebrow': 'Step 7 · Try again {n}/{total}',
-    'stage.recap.eyebrow': 'Step 8 · Recap',
+    'stage.writing.eyebrow': 'Writing',
+    'stage.requeue.eyebrow': 'Try again {n}/{total}',
+    'stage.recap.eyebrow': 'Recap',
     'stage.recap.title': 'Lesson complete',
 
     // ── pretest ──────────────────────────────────────────────────────────────
@@ -146,7 +149,7 @@ export const STRINGS = {
     'pretest.note': "Haven't learned this yet? That's the point. The attempt counts, not the score.",
     'pretest.model': 'Model answer',
     'pretest.goodStart': 'Your sentence already starts off right.',
-    'pretest.first.eyebrow': 'Step 1 · Your first sentence',
+    'pretest.first.eyebrow': 'Your first sentence',
     'pretest.first.listen': 'Listen and read',
     'pretest.first.yourTurn': 'Now you — with your own name',
     'pretest.first.again': 'Once more, without looking',
@@ -252,6 +255,8 @@ export const STRINGS = {
     'writing.target': 'Target {min}–{max}',
     'writing.checklist': 'Checklist',
     'writing.formcheckLive': 'Form check: only the form (length, points, greeting and sign-off) — not a grade yet.',
+    // A Formular has no length, Leitpunkte, greeting or sign-off: its check is per field (writing.js scoreWriting).
+    'writing.formcheckLive.formular': 'Form check: only the form (every field filled in, and a name, a country, a time, a number and so on where the field asks for one) — not a grade yet.',
     'writing.done': 'done',
     'writing.missing': 'still missing',
     'writing.signInForAi': 'Sign in to get an AI assessment.',
@@ -277,6 +282,7 @@ export const STRINGS = {
     'writing.corrections': 'Corrections',
     'writing.sample': 'Sample text',
     'writing.fallbackNote': "This checklist only checks the form (length, points, greeting and sign-off). It doesn't correct your German.",
+    'writing.fallbackNote.formular': "This checklist only checks the form (every field filled in, and a name, a country, a time, a number and so on where the field asks for one). It doesn't correct your German.",
 
     // ── recap ────────────────────────────────────────────────────────────────
     'recap.firstTry': '{pct} % on the first try',
@@ -469,8 +475,10 @@ export const STRINGS = {
     'recap.voices.latest': 'Your latest recording',
     'recap.voices.device': 'These recordings stay only on this device and are deleted after 7 days.',
     'recap.voices.delete': 'Delete now',
-    'check.eyebrow': 'Final check · {n} of {total}',
+    'check.eyebrow': 'Final check {n}/{total}',
     'check.eyebrow.done': 'Final check',
+    // Read by a screen reader beside a shown can-do, whose tick is only an icon; „Still to practise“ is the other.
+    'check.shown': 'Shown',
     'check.title': 'What you showed',
     'check.typeInstead': 'Type instead',
     'check.letters': 'Show the letters as words',
@@ -494,10 +502,10 @@ export const STRINGS = {
     "sound.lead": "Hören Sie zu, prüfen Sie die Vorlage und sprechen Sie die Zeile nach.",
     "sound.syllables": "Silben: {syllables}",
     "sound.say": "Sprechen Sie die Zeile jetzt laut aus.",
-    "read.title": "Lesen Sie einen kurzen Text",
+    "read.title": "Lesen",
     "fluency.title": "Noch einmal aus dem Gedächtnis",
     "fluency.lead": "Sagen Sie die bekannte Zeile für diese Situation. Lassen Sie sich Zeit; diese Runde zählt nicht zum Übungsergebnis.",
-    "fluency.cue": "Szene {n} von {total}",
+    "fluency.cue": "Aus dem Gedächtnis {n}/{total}",
     "fluency.show": "Zeile anzeigen",
     "fluency.progress": "{n} von {total} gesprochen",
     "fluency.name": "Geben Sie Ihren Namen für Ihre Vorstellung ein. Der Name bleibt nur in dieser Sitzung.",
@@ -565,29 +573,30 @@ export const STRINGS = {
     'audio.synthetic': 'Computerstimme',
 
     // ── stage eyebrows and titles ────────────────────────────────────────────
-    'stage.warmup.eyebrow': 'Schritt 0 · Wiederholung',
+    'stage.part': 'Teil {part} von {total}',
+    'stage.warmup.eyebrow': 'Wiederholung',
     'stage.warmup.title': 'Kurz auffrischen',
-    'stage.pretest.eyebrow': 'Schritt 1 · Erst probieren',
-    'stage.input.eyebrow': 'Schritt 2 · Input',
+    'stage.pretest.eyebrow': 'Erst probieren',
+    'stage.input.eyebrow': 'Input',
     'stage.input.title': 'Dialog',
-    'stage.wortfeld.eyebrow': 'Schritt 2 · Wortfeld',
+    'stage.wortfeld.eyebrow': 'Wortfeld',
     'stage.wortfeld.title': '{n} neue Wörter',
     'stage.wortfeld.lead': 'Tippen Sie auf eine Karte für die Übersetzung, auf den Lautsprecher zum Hören.',
-    'stage.notice.eyebrow': 'Schritt 3 · Grammatik',
+    'stage.notice.eyebrow': 'Grammatik',
     'stage.notice.examples': 'Beispiele aus dem Dialog',
-    'stage.phonetik.eyebrow': 'Schritt 3 · Aussprache',
+    'stage.phonetik.eyebrow': 'Aussprache',
     'stage.phonetik.title': 'Hören und nachsprechen',
     'phonetik.listenFor': 'Die Betonung liegt auf der großgeschriebenen Silbe.',
     'phonetik.sayAfter': 'Sprechen Sie es nach der Stimme nach',
     'phonetik.said': 'Gesagt',
-    'stage.practice.eyebrow': 'Schritt 4 · Üben {n}/{total}',
-    'stage.derived.eyebrow': 'Schritt 4 · Mehr üben {n}/{total}',
-    'stage.dictation.eyebrow': 'Schritt 4 · Hören {n}/{total}',
-    'stage.speaking.eyebrow': 'Schritt 5 · Sprechen',
+    'stage.practice.eyebrow': 'Üben {n}/{total}',
+    'stage.derived.eyebrow': 'Mehr üben {n}/{total}',
+    'stage.dictation.eyebrow': 'Hören {n}/{total}',
+    'stage.speaking.eyebrow': 'Sprechen',
     'stage.speaking.title': 'Erst nachsprechen, dann frei sprechen',
-    'stage.writing.eyebrow': 'Schritt 6 · Schreiben',
-    'stage.requeue.eyebrow': 'Schritt 7 · Noch einmal {n}/{total}',
-    'stage.recap.eyebrow': 'Schritt 8 · Rückblick',
+    'stage.writing.eyebrow': 'Schreiben',
+    'stage.requeue.eyebrow': 'Noch einmal {n}/{total}',
+    'stage.recap.eyebrow': 'Rückblick',
     'stage.recap.title': 'Lektion geschafft',
 
     // ── pretest ──────────────────────────────────────────────────────────────
@@ -596,7 +605,7 @@ export const STRINGS = {
     'pretest.note': 'Noch nichts gelernt? Genau darum geht es. Der Versuch zählt, nicht die Note.',
     'pretest.model': 'Modellantwort',
     'pretest.goodStart': 'Ihr Satz fängt schon richtig an.',
-    'pretest.first.eyebrow': 'Schritt 1 · Ihr erster Satz',
+    'pretest.first.eyebrow': 'Ihr erster Satz',
     'pretest.first.listen': 'Hören und lesen',
     'pretest.first.yourTurn': 'Jetzt Sie – mit Ihrem eigenen Namen',
     'pretest.first.again': 'Noch einmal, ohne hinzusehen',
@@ -702,6 +711,7 @@ export const STRINGS = {
     'writing.target': 'Ziel {min}–{max}',
     'writing.checklist': 'Checkliste',
     'writing.formcheckLive': 'Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine Bewertung.',
+    'writing.formcheckLive.formular': 'Formcheck: nur die Form (jedes Feld ausgefüllt, und ein Name, ein Land, eine Uhrzeit, eine Zahl usw., wo das Feld danach fragt), noch keine Bewertung.',
     'writing.done': 'erledigt',
     'writing.missing': 'fehlt noch',
     'writing.signInForAi': 'Melden Sie sich an, um eine KI-Bewertung zu bekommen.',
@@ -727,6 +737,7 @@ export const STRINGS = {
     'writing.corrections': 'Korrekturen',
     'writing.sample': 'Beispieltext',
     'writing.fallbackNote': 'Diese Checkliste prüft nur die Form (Länge, Punkte, Anrede und Gruß). Sie korrigiert Ihr Deutsch nicht.',
+    'writing.fallbackNote.formular': 'Diese Checkliste prüft nur die Form (jedes Feld ausgefüllt, und ein Name, ein Land, eine Uhrzeit, eine Zahl usw., wo das Feld danach fragt). Sie korrigiert Ihr Deutsch nicht.',
 
     // ── recap ────────────────────────────────────────────────────────────────
     'recap.firstTry': '{pct} % im ersten Versuch',
@@ -913,8 +924,9 @@ export const STRINGS = {
     'recap.voices.latest': 'Ihre neueste Aufnahme',
     'recap.voices.device': 'Diese Aufnahmen bleiben nur auf diesem Gerät und werden nach 7 Tagen gelöscht.',
     'recap.voices.delete': 'Jetzt löschen',
-    'check.eyebrow': 'Abschlusscheck · {n} von {total}',
+    'check.eyebrow': 'Abschlusscheck {n}/{total}',
     'check.eyebrow.done': 'Abschlusscheck',
+    'check.shown': 'Gezeigt',
     'check.title': 'Das haben Sie gezeigt',
     'check.typeInstead': 'Lieber tippen',
     'check.letters': 'Buchstaben als Wörter zeigen',
@@ -953,6 +965,14 @@ export function t(key, lang = DEFAULT_LESSON_LANG, vars = null) {
   if (!vars) return s;
   return s.replace(/\{(\w+)\}/g, (m, name) => (vars[name] === undefined || vars[name] === null ? m : String(vars[name])));
 }
+
+/**
+ * A stage header (2026-11-23): the stage's part of the Lektion (sessions.js) — the one numbering the
+ * player shows, the scene's header and the pause screens included — then the stage's own name. The
+ * old „Step 0–8“ numbers came from the legacy stage list and skipped the guided stages.
+ */
+export const partEyebrow = (part, name, lang = DEFAULT_LESSON_LANG) =>
+  (part ? `${t('stage.part', lang, { part, total: SESSION_COUNT })} · ${name}` : name);
 
 /**
  * The date formatter for the chrome language: de-DE in Deutsch-Modus, en-GB

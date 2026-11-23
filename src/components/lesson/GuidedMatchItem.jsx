@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import CheckedChoice from './CheckedChoice.jsx';
 import { matchOutcome } from '../../lib/lesson/check.js';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /** One checked pairing at a time, retaining first-response evidence for the whole match. */
-export default function GuidedMatchItem({ item, index, total, onResult, onNext }) {
+export default function GuidedMatchItem({ item, index, total, part = null, onResult, onNext }) {
   const [lang] = useLessonLang();
   const [pairIndex, setPairIndex] = useState(0);
   const [confused, setConfused] = useState([]);
@@ -18,7 +18,7 @@ export default function GuidedMatchItem({ item, index, total, onResult, onNext }
     explanationEn: `The word pair is: ${pair.de} – ${pair.en}.`,
   };
   return <div>
-    <h2 className="mb-4 font-data text-xs text-siegel-deep">{t('stage.derived.eyebrow', lang, { n: index + 1, total })}</h2>
+    <h2 className="mb-4 font-data text-xs text-siegel-deep">{partEyebrow(part, t('stage.derived.eyebrow', lang, { n: index + 1, total }), lang)}</h2>
     <CheckedChoice key={question.id} item={question} lang={lang} hintFirst
       onResult={(_, outcome) => { if (!outcome.correct) setConfused((prev) => [...prev, pair]); }}
       onNext={() => {

@@ -125,6 +125,7 @@ export default function RecapStage({ checkShown = null, stage, accuracy, status,
   return (
     <StageShell
       eyebrow={t('stage.recap.eyebrow', lang)}
+      part={stage.part}
       title={t('stage.recap.title', lang)}
       onBack={onBack}
       primaryLabel={nextLabel || t('action.next', lang)}
@@ -143,7 +144,10 @@ export default function RecapStage({ checkShown = null, stage, accuracy, status,
                   {!checkShown || checkShown[i]
                     ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
                     : <Circle className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />}
-                  <span>{line}{checkShown && !checkShown[i] && <span className="block text-[0.8125rem] text-graphite">{t('recap.canDo.notYet', lang)}</span>}</span>
+                  {/* The icons are hidden from screen readers: after a check, each can-do says its state in words. */}
+                  <span>{line}{checkShown && (checkShown[i]
+                    ? <span className="sr-only">, {t('check.shown', lang)}</span>
+                    : <span className="block text-[0.8125rem] text-graphite">{t('recap.canDo.notYet', lang)}</span>)}</span>
                 </li>
               ))}
             </ul>

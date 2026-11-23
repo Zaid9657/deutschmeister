@@ -379,22 +379,29 @@ export function courseMinutesEstimate(curriculum = CURRICULUM_A11) {
 // ---------------------------------------------------------------------------
 
 /**
- * The stage keys are `buildLesson.js`'s (warmup, pretest, dialog, wortfeld, notice, practice,
- * dictation, speaking, writing, recap); the labels are the English names for the course home. The
- * warm-up appears only once review cards are due, and a Lektion without a listening or speaking
- * part skips that stage — the row shows the full shape, the player shows what this Lektion has.
+ * The stage keys are the guided Lektion's stage kinds (`buildGuided.js`), in the order the player
+ * runs them; the labels are the English names for the course home. The warm-up appears only once
+ * review cards are due and „Try again“ only after a miss — the row shows the full shape, the player
+ * shows what this run has. (Until 2026-11-23 the row listed the ten legacy stages, without the
+ * scene, sounds, reading, from-memory and final-check steps the learner actually meets.)
  * `minutesPerLektion` comes from `lektion.minutes`, not from a typed number.
  */
 const HOW_STEPS = [
   { key: 'warmup', label: 'Warm-up', descriptionEn: 'A few review cards that are due today.' },
   { key: 'pretest', label: 'Try first', descriptionEn: 'Guess before you learn; wrong is fine here.' },
-  { key: 'dialog', label: 'Dialogue', descriptionEn: 'Listen to the situation, with English under each line.' },
+  { key: 'scene', label: 'Scene', descriptionEn: 'Hear the dialogue in parts, check the meaning, say it.' },
   { key: 'wortfeld', label: 'Words', descriptionEn: 'The words of the situation, with article and audio.' },
+  { key: 'sound', label: 'Sounds', descriptionEn: 'Listen for stress and sounds, then say the line.' },
+  { key: 'read', label: 'Read', descriptionEn: 'A short text with more words, and questions on it.' },
   { key: 'notice', label: 'Rule', descriptionEn: 'One grammar point, explained in a short card.' },
   { key: 'practice', label: 'Practice', descriptionEn: 'Short typed and tapped exercises, checked instantly.' },
+  { key: 'derived', label: 'More tasks', descriptionEn: 'Match words, build a sentence, pick what you heard.' },
   { key: 'dictation', label: 'Listen', descriptionEn: 'Hear a line from the dialogue and write it down.' },
+  { key: 'fluency', label: 'From memory', descriptionEn: 'Say the scene lines again, without reading them.' },
   { key: 'speaking', label: 'Speak', descriptionEn: 'Read aloud; speech recognition checks words, not pronunciation.' },
-  { key: 'writing', label: 'Write', descriptionEn: 'A short real-life text, checked by AI.' },
+  { key: 'writing', label: 'Write', descriptionEn: 'A form or a short message, checked by AI.' },
+  { key: 'requeue', label: 'Try again', descriptionEn: 'Anything you missed comes back once more.' },
+  { key: 'check', label: 'Final check', descriptionEn: 'Show what you can do in a short conversation.' },
   { key: 'recap', label: 'Recap', descriptionEn: 'What you can do now, and what comes next.' },
 ];
 

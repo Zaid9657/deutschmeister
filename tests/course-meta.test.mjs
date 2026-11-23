@@ -18,6 +18,7 @@ import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
 import { abschlusstestA11 } from '../src/data/courseTests/abschlusstestA11.js';
+import buildLesson from '../src/lib/lesson/buildLesson.js';
 
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 const NRS = LEKTIONEN.map((l) => l.nr);
@@ -218,9 +219,20 @@ test('weeklyEstimate moves when the minutes move (it is not a typed figure)', ()
 // 6. How it works
 // ---------------------------------------------------------------------------
 
-test('the how-it-works row names the player stages in the order buildLesson runs them', () => {
+// I1 (2026-11-23): the row listed the ten legacy stages while every A1.1 Lektion runs the guided
+// ones (scene, sounds, reading, from memory, final check). The rule: the row IS the guided run, in
+// its order — every Lektion's built stage kinds (with a card due, so the warm-up is in) are the row
+// minus what that Lektion lacks, and every row is a stage some Lektion runs.
+test('the how-it-works row names the guided stages in the order the player runs them', () => {
   const keys = A11_META.howItWorksEn.steps.map((s) => s.key);
-  assert.deepEqual(keys, ['warmup', 'pretest', 'dialog', 'wortfeld', 'notice', 'practice', 'dictation', 'speaking', 'writing', 'recap']);
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const run = new Set();
+  for (const l of LEKTIONEN) {
+    const kinds = buildLesson({ curriculum: CURRICULUM_A11, lektion: l, pool, dueCards: [{ cardKey: 'due' }] }).stages.map((s) => s.kind);
+    assert.deepEqual(kinds, keys.filter((k) => kinds.includes(k)), `${l.id}: the course home must list its stages in their order`);
+    kinds.forEach((k) => run.add(k));
+  }
+  assert.deepEqual(keys.filter((k) => !run.has(k)), [], 'the row names a stage no Lektion runs');
   for (const s of A11_META.howItWorksEn.steps) {
     assert.ok(s.label.length <= 12, `${s.key}: label "${s.label}" is too long for a row`);
     const words = s.descriptionEn.trim().split(/\s+/).length;

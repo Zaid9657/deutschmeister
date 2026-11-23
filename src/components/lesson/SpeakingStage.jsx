@@ -102,6 +102,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
   return (
     <StageShell
       eyebrow={t('stage.speaking.eyebrow', lang)}
+      part={stage.part}
       title={t('stage.speaking.title', lang)}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}

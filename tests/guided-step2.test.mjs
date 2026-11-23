@@ -23,7 +23,8 @@ const pool = JSON.parse(read('src/data/lessonPools/a11.json'));
 const lesson = c.lektionen[0];
 const stages = buildLesson({ curriculum: c, lektion: lesson, pool }).stages;
 const stage = (kind) => stages.find((s) => s.kind === kind);
-const strings = { useLessonLang: () => ['en'], t: (key, _lang, vars) => `${key}${vars ? JSON.stringify(vars) : ''}` };
+// partEyebrow (the stage's part before its name) is pinned by tests/lesson-screens.test.mjs; here the name alone.
+const strings = { useLessonLang: () => ['en'], t: (key, _lang, vars) => `${key}${vars ? JSON.stringify(vars) : ''}`, partEyebrow: (_part, name) => name };
 function elements(tree, type) {
   if (Array.isArray(tree)) return tree.flatMap((x) => elements(x, type));
   if (!tree || typeof tree !== 'object') return [];

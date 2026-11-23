@@ -5,7 +5,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * One `derived` exercise (buildLesson.js `derivedItems`): rebuild one of the
@@ -16,7 +16,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * grader's decision, never this component's (tests/course-player.test.mjs
  * GRADING_SITES).
  */
-export default function WordOrderItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', hintFirst = false }) {
+export default function WordOrderItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow', part = null, hintFirst = false }) {
   const [lang] = useLessonLang();
   const [bank, setBank] = useState(() => item.tokens.map((tok, i) => ({ tok, key: i })));
   const [built, setBuilt] = useState([]);
@@ -78,7 +78,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext, ey
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-        {t(eyebrowKey, lang, { n: index + 1, total })}
+        {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{(lang === 'de' ? item.promptDe : item.promptEn) || t('wordOrder.instructions', lang)}</p>

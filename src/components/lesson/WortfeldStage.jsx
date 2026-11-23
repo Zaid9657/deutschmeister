@@ -216,6 +216,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   return (
     <StageShell
       eyebrow={t('stage.wortfeld.eyebrow', lang)}
+      part={stage.part}
       title={stage.titleEn ? (lang === 'de' ? stage.title : stage.titleEn) : t('stage.wortfeld.title', lang, { n: words.length })}
       lead={t(memory ? 'wortfeld.memoryLead' : 'stage.wortfeld.lead', lang)}
       onBack={group > 0 ? () => goGroup(group - 1) : onBack}

@@ -12,7 +12,7 @@ export default function SoundStage({ stage, itemIndex, lektionId, results, onSay
   const [checked, setChecked] = useState(false);
   const item = stage.items[itemIndex];
   const done = !!results[itemIndex];
-  return <StageShell title={t('sound.title', lang)} lead={t('sound.lead', lang)} onBack={onBack}
+  return <StageShell eyebrow={t('stage.phonetik.eyebrow', lang)} part={stage.part} title={t('sound.title', lang)} lead={t('sound.lead', lang)} onBack={onBack}
     primaryLabel={t('action.next', lang)} primaryDisabled={!checked || !done} onPrimary={checked ? onNext : undefined}>
     <PlayButton lektionId={lektionId} audioKey={`sound-${itemIndex}`} text={item.text} onPlayed={() => setHeard(true)} onFallback={() => { setFallback(true); setHeard(true); }} />
     <p className="my-4 text-sm text-graphite">{lang === 'de' ? item.modelDe : item.modelEn}</p>

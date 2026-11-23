@@ -5,7 +5,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
-import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { partEyebrow, t, useLessonLang } from '../../lib/lesson/strings.js';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
 
@@ -36,7 +36,8 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  * `eyebrowKey` names the stage this item is shown in: 'stage.practice.eyebrow'
  * by default, 'stage.requeue.eyebrow' when the player re-asks the misses after
  * the writing step — the requeue used to reuse "Step 4 · Practice" after
- * "Step 6 · Writing", which read as the lesson going backwards.
+ * "Step 6 · Writing", which read as the lesson going backwards. `part` (the
+ * stage's part, from the player) goes in front of it: „Part 3 of 3 · Try again“.
  *
  * `allowReveal` (after-evaluation gap #3) gates a secondary "Show answer"
  * control, shown only in the requeue stage (the player passes it there; the
@@ -52,7 +53,7 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  * revealed item is not re-collected into `misses` after the requeue stage,
  * so it simply ends there).
  */
-export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', allowReveal = false, hintFirst = false }) {
+export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', part = null, allowReveal = false, hintFirst = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
@@ -117,7 +118,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
       <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-        {t(eyebrowKey, lang, { n: index + 1, total })}
+        {partEyebrow(part, t(eyebrowKey, lang, { n: index + 1, total }), lang)}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p id={`question-${item.id}`} className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>

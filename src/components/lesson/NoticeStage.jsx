@@ -80,7 +80,7 @@ export default function NoticeStage({ stage, onBack, onDone }) {
   const main = english ? notice.bodyEn : notice.bodyDe;
   const other = english ? notice.bodyDe : notice.bodyEn;
   return (
-    <StageShell eyebrow={t('stage.notice.eyebrow', lang)} title={notice.title} onBack={onBack} primaryLabel={t('action.understood', lang)} onPrimary={onDone}>
+    <StageShell eyebrow={t('stage.notice.eyebrow', lang)} part={stage.part} title={notice.title} onBack={onBack} primaryLabel={t('action.understood', lang)} onPrimary={onDone}>
       <Card className="p-5 sm:p-6">
         {notice.readingExample && (
           <section className="mb-5 border-b border-rule pb-5" aria-label={notice.readingExample.title}>

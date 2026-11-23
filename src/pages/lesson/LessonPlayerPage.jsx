@@ -299,7 +299,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     () => buildLesson({ curriculum, lektion, pool, dueCards, attempt }),
     [curriculum, lektion, pool, attempt, dueCards],
   );
-  const stages = lesson.stages;
+  // Every stage carries its part (sessions.js), in both flows: the stage headers number by part only.
+  const stages = useMemo(() => lesson.stages.map((s) => ({ ...s, part: sessionOf(s) })), [lesson]);
   const stage = stages[stageIndex] || null;
   const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
   const warmupMode = warmupCard ? modeForCard(warmupCard.kind, warmupCard.step ?? itemIndex) : null;
@@ -519,7 +520,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
   switch (stage.kind) {
     case 'warmup':
       body = warmupCard ? (
-        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} title={t('stage.warmup.title', lang)} onBack={back}>
+        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} part={stage.part} title={t('stage.warmup.title', lang)} onBack={back}>
           <ReviewCard
             content={warmupCard}
             mode={warmupMode}
@@ -592,6 +593,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
         item,
         index: itemIndex,
         total: items.length,
+        part: stage.part,
         lektionId: lektion.id,
         onResult: resultFor(stage.kind),
         onNext: onItemNext,
@@ -612,6 +614,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
             index={itemIndex}
             total={items.length}
             eyebrowKey={retry ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}
+            part={stage.part}
             hintFirst={lektion.flow === 'guided' && !retry}
             allowReveal={retry}
             onResult={resultFor(stage.kind)}
@@ -624,7 +627,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
     case 'dictation': {
       const line = items[itemIndex];
       body = line ? (
-        <DictationItem hintFirst={lektion.flow === 'guided'} key={line.index} line={line} index={itemIndex} total={items.length} lektionId={lektion.id} onResult={resultFor('dictation')} onNext={onItemNext} />
+        <DictationItem hintFirst={lektion.flow === 'guided'} key={line.index} line={line} index={itemIndex} total={items.length} part={stage.part} lektionId={lektion.id} onResult={resultFor('dictation')} onNext={onItemNext} />
       ) : null;
       break;
     }

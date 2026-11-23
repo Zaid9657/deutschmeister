@@ -370,9 +370,10 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
             <Checklist checks={check.checks} mode="live" signedIn={!!user} lang={lang} />
             {/* Deutsch-Modus: „Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine
                 Bewertung." — the FernUSG line tests/writing-course.test.mjs pins; the English
-                twin says the same thing (writing.formcheckLive). */}
+                twin says the same thing (writing.formcheckLive). A Formular has none of those four:
+                its line names the per-field check scoreWriting really makes (`.formular`). */}
             <p className="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
-              {t('writing.formcheckLive', lang)}
+              {t(isFormular ? 'writing.formcheckLive.formular' : 'writing.formcheckLive', lang)}
             </p>
           </div>
         )}
@@ -498,7 +499,7 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
               the KI did not run rather than that it is checking (DaF review #21, Minor 33). */}
           <Checklist checks={check.checks} mode="fallback" signedIn={!!user} lang={lang} />
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
-            {note || t('writing.fallbackPlain', lang)} {t('writing.fallbackNote', lang)}
+            {note || t('writing.fallbackPlain', lang)} {t(isFormular ? 'writing.fallbackNote.formular' : 'writing.fallbackNote', lang)}
           </p>
         </Card>
       )}

@@ -16,7 +16,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 const SPOKEN_TRIES = 2;
 
 /** One turn: the partner's line (the check's `partner`), the task, then a spoken or typed answer with one more try. */
-function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack, onOutcome }) {
+function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, onBack, onOutcome }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
   const [mode, setMode] = useState(canSpeak && !writtenOnly(turn) ? 'speak' : 'type');
@@ -53,6 +53,7 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
   return (
     <StageShell
       eyebrow={t('check.eyebrow', lang, { n, total })}
+      part={part}
       title={de ? turn.taskDe : turn.taskEn}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
@@ -118,6 +119,14 @@ function CheckTurn({ turn, n, total, lektion, partner, opening, canSpeak, onBack
         </Card>
       )}
 
+      {/* Graded, the input goes; the learner's own answer stays on screen above its verdict (typed, or
+          the speech transcript). */}
+      {outcome && (answer || value).trim() && (
+        <Card className="mb-3 p-5">
+          <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('practice.yourAnswer', lang)}</p>
+          <p className="mt-1 whitespace-pre-line text-[1.0625rem] text-ink" lang="de">{answer || value}</p>
+        </Card>
+      )}
       {outcome === 'shown' && (
         <p role="status" className="flex items-center gap-2 text-[0.9375rem] font-bold text-siegel-deep">
           <Check className="h-4 w-4" aria-hidden="true" /> {t('feedback.correct', lang)}
@@ -160,7 +169,7 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
 
   if (outcomes.length < turns.length) {
     const n = outcomes.length + 1;
-    return <CheckTurn key={`${retake}-${n}`} turn={turns[n - 1]} n={n} total={turns.length} lektion={lektion} canSpeak={canSpeak}
+    return <CheckTurn key={`${retake}-${n}`} turn={turns[n - 1]} n={n} total={turns.length} part={stage.part} lektion={lektion} canSpeak={canSpeak}
       partner={stage.check.partner} opening={stage.check.open?.[de ? 'de' : 'en']}
       onBack={n === 1 ? onBack : back} onOutcome={(o, a) => { setOutcomes([...outcomes, o]); setAnswers([...answers, a || '']); }} />;
   }
@@ -174,6 +183,7 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
   return (
     <StageShell
       eyebrow={t('check.eyebrow.done', lang)}
+      part={stage.part}
       title={t('check.title', lang)}
       onBack={back}
       primaryLabel={all ? t('action.next', lang) : t('check.again', lang)}
@@ -192,7 +202,10 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
               {shown[i]
                 ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
                 : <Circle className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />}
-              <span>{line}{!shown[i] && <span className="block text-[0.8125rem] text-graphite">{t('recap.canDo.notYet', lang)}</span>}</span>
+              {/* The icons are hidden from screen readers, so each can-do says its state in words too. */}
+              <span>{line}{shown[i]
+                ? <span className="sr-only">, {t('check.shown', lang)}</span>
+                : <span className="block text-[0.8125rem] text-graphite">{t('recap.canDo.notYet', lang)}</span>}</span>
             </li>
           ))}
         </ul>

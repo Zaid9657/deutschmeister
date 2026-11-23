@@ -47,7 +47,7 @@ function hooks() {
   };
 }
 const icons = new Proxy({}, { get: (_, name) => name });
-const strings = (lang) => ({ useLessonLang: () => [lang], t: (key) => key });
+const strings = (lang) => ({ useLessonLang: () => [lang], t: (key) => key, partEyebrow: (_part, name) => name });
 
 async function exercise(name, lang = 'de') {
   const state = hooks(); const results = []; let continued = 0;

@@ -9,7 +9,7 @@ export default function FluencyStage({ stage, lektionId, itemIndex, names, onNam
   const [show, setShow] = useState(false);
   const line = stage.lines[itemIndex];
   const text = sayText(line, names[line.ownName]);
-  return <StageShell eyebrow={t('fluency.cue', lang, { n: itemIndex + 1, total: stage.lines.length })}
+  return <StageShell eyebrow={t('fluency.cue', lang, { n: itemIndex + 1, total: stage.lines.length })} part={stage.part}
     title={t('fluency.title', lang)} lead={t('fluency.lead', lang)} onBack={onBack}
     primaryLabel={t('action.next', lang)} primaryDisabled={!results[itemIndex]} onPrimary={onNext}>
     <p className="mb-4 text-sm text-graphite">{t('fluency.progress', lang, { n: Object.values(results).filter(Boolean).length, total: stage.lines.length })}</p>
