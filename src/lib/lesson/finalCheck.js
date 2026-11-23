@@ -1054,16 +1054,17 @@ const SUBJECTS = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr']);
  * „Aus Syrien komme ich", „In Bremen wohne ich" are „Ich wohne in Köln" … with the same words. The
  * frame then grades the words as always, so „Aus Syrien ich komme" stays wrong.
  */
-function verbSecond(text) {
+function verbSecond(text, { drop = false } = {}) {
   const end = (String(text).trim().match(/[.!?]+$/) || [''])[0];
   const w = wordsOf(String(text).trim().replace(/[.!?]+$/, ''));
   const out = [];
   const lower = (s) => (CLOSED.has(fold(s)) || ADVERBS.has(fold(s)) ? s.toLocaleLowerCase('de') : s);
   const cap = (s) => s.charAt(0).toLocaleUpperCase('de') + s.slice(1);
-  // An adverb after the verb: „Ich wohne jetzt in Köln" → „Ich wohne in Köln".
-  if (w.length >= 4 && SUBJECTS.has(fold(w[0])) && ADVERBS.has(fold(w[2]))) out.push([...w.slice(0, 2), ...w.slice(3)].join(' ') + end);
-  // An adverb in front: „Jetzt wohne ich in Köln" → „Ich wohne in Köln".
-  if (w.length >= 4 && ADVERBS.has(fold(w[0])) && SUBJECTS.has(fold(w[2]))) out.push([cap(w[2]), w[1], ...w.slice(3)].join(' ') + end);
+  if (drop) {
+    // An adverb after the verb or in front, left out (the tolerant grader only): „Ich wohne jetzt in Köln" → „Ich wohne in Köln".
+    if (w.length >= 4 && SUBJECTS.has(fold(w[0])) && ADVERBS.has(fold(w[2]))) out.push([...w.slice(0, 2), ...w.slice(3)].join(' ') + end);
+    if (w.length >= 4 && ADVERBS.has(fold(w[0])) && SUBJECTS.has(fold(w[2]))) out.push([cap(w[2]), w[1], ...w.slice(3)].join(' ') + end);
+  }
   // Anything else in front, subject last: „Aus Syrien komme ich" → „Ich komme aus Syrien"; „Ein Lineal
   // ist das" → „Das ist ein Lineal".
   const last = fold(w.at(-1) || '');
@@ -1083,6 +1084,8 @@ function verbSecond(text) {
         if (!CLOSED.has(first) && !ADVERBS.has(first) && !WHEN_GLUE.has(first)) front[0] = w[0];
       }
       out.push([cap(w[k]), w[k - 1], ...w.slice(k + 1), ...front].join(' ') + end);
+      // …or right after the verb and its subject: „Gestern habe ich gearbeitet“ → „Ich habe gestern gearbeitet“.
+      out.push([cap(w[k]), w[k - 1], ...front, ...w.slice(k + 1)].join(' ') + end);
     }
   }
   return out;
@@ -2220,6 +2223,9 @@ export function wrongReason(turn, value) {
 function reasonOf(turn, value) {
   const sequence = sequenceReason(turn, value);
   if (sequence) return sequence;
+  // Section D: German the turn's answers do not have word for word („Und was machen Sie beruflich?“, „Einen Kaffee,
+  // bitte.“, „Gestern habe ich gearbeitet.“) has no fault to name: BEYOND, and its cure is data.
+  if (verifiedResult(tolerantCore(turn, value))) return null;
   const text = spelledOut(westernDigits(value), turn.lexicon);
   if (turn.spell) return 'spelling';
   if (turn.listen) return 'heard';
@@ -2242,7 +2248,8 @@ function restResult(lexicon, rest, subject = 'ich', repeats = '') {
   let s = String(rest || '').trim().replace(/^[,;:–-]+\s*/, '');
   if (!/[\p{L}\p{N}]/u.test(s)) return RESULT.CORRECT;
   s = s.replace(/^[.!?]+\s*/, '');
-  if (/^und\s+(?:ihnen|sie|du|dir|bei\s+(?:ihnen|dir))(?:\s+auch)?\s*[?.!]*$/iu.test(s)) return RESULT.CORRECT;
+  // Section D: a counter-question or a clause after the answer is no answer of the turn word for word: BEYOND at best.
+  if (/^und\s+(?:ihnen|sie|du|dir|bei\s+(?:ihnen|dir))(?:\s+auch)?\s*[?.!]*$/iu.test(s)) return BEYOND;
   let clause = s.replace(/^(?:und|aber|oder)\s+/i, '');
   const first = wordsOf(clause)[0] || '';
   if (/^\p{Ll}/u.test(first) && personsOf(first, lexicon) && !PERSON_OF[fold(first)]) clause = `${subject} ${clause}`;
@@ -2264,7 +2271,7 @@ function restResult(lexicon, rest, subject = 'ich', repeats = '') {
     return [clause, ...verbSecond(clause)].some((t) => verifiedResult(sentenceResult([c.frame], t, props)));
   });
   const done = (r) => { memo?.set(clause, r); return r; };
-  if (verified) return done(RESULT.CORRECT);
+  if (verified) return done(BEYOND);
   if (formFault(clause, lexicon) || notGerman(clause, lexicon)) return done(RESULT.WRONG);
   // A clause has a subject and a verb, and „sein“ something after it: „und du bist“ leaves a word out.
   const raw = commaFree(sentencesOf(clause).flat());
@@ -2492,7 +2499,201 @@ function onlyLabels(turn, text) {
   return words.every((w) => numberish(w) || UNITS.has(w) || dayPart(w) || heard.has(w) || LABELS.has(w) || WHEN_GLUE.has(w) || CLOSED.has(w) || w === 'zusammen');
 }
 
-function typedCore(turn, value) {
+/** The result and the path that verified it (`verifiedRule`); the early kinds (a name, a heard number, a message) by kind. */
+function coreRule(turn, value) {
+  const r = coreTries(turn, value);
+  if (Array.isArray(r)) return r;
+  return [r, turn.ownName ? 'own name' : turn.listen ? 'heard' : turn.parts ? 'message' : 'as typed'];
+}
+function typedCore(turn, value) { return coreRule(turn, value)[0]; }
+/** The path by which an answer is verified („as typed“, „partner“, „option“, „verb second“ …), or null. */
+export function verifiedRule(turn, value) {
+  const [result, rule] = coreRule(turn, value);
+  return verifiedResult(result) ? rule : null;
+}
+
+function coreTries(turn, value) {
+  // Rule 4: a word twice in a row or where German never puts it is no verified answer, whatever follows.
+  if (sequenceReason(turn, value)) return RESULT.WRONG;
+  if (turn.ownName) {
+    const said = fold(value);
+    const opening = turn.accepted.find((o) => new RegExp(`^${fold(o)}\\s+\\p{L}`, 'u').test(said));
+    const raw = String(value).trim().split(/\s+/);
+    const at = opening ? wordsOf(opening).length : -1;
+    if (!opening || !isName(turn, raw[at])) return RESULT.WRONG;
+    // The whole name („Omar Haddad“, „Omar Al-Haddad“) up to a stop or a word that is no name; then what is left is
+    // graded on its own (Rule 1): „Ich heiße Omar und kommen aus Syrien“ is no verified answer.
+    const small = /^\p{Ll}/u.test(raw[at]);
+    let end = at + 1;
+    while (end < raw.length && !/[.,!?;:]$/.test(raw[end - 1]) && nameGoesOn(turn, raw[end], small)) end += 1;
+    return restResult(turn.lexicon, raw.slice(end).join(' '), 'ich', opening);
+  }
+  const text = spelledOut(westernDigits(value), turn.lexicon);
+  if (turn.listen && (turn.when || turn.time)) {
+    // A heard day and time („Dienstag, 9.30“, „am Dienstag um halb zehn“, „Di 9:30“) or a heard time, also in the
+    // heard sentence's own words („Der Zug fährt um neun Uhr dreißig“, second corpus of Lektion 10).
+    const heard = new Set(wordsOf(fold(turn.listen)).map((w) => w.replace(/[.,!?:]+$/, '')));
+    const keep = (w) => { const f = fold(w).replace(/[.,!?:]+$/, ''); return !heard.has(f) || WHEN_GLUE.has(f) || DAYS.includes(f) || isNumberWord(f) || ['uhr', 'halb', 'viertel', 'nach', 'vor'].includes(f); };
+    const at = whenOf(text) || whenOf(wordsOf(text).filter(keep).join(' '));
+    // Nothing after the time but its unit (Rule 1: „Dienstag, 9.30 Uhr ist.“ is no answer).
+    if (!onlyLabels(turn, text)) return RESULT.WRONG;
+    if (turn.when) return sameWhen(at, turn.when, { writtenNote: true }) ? (at.typo ? RESULT.TYPO : RESULT.CORRECT) : RESULT.WRONG;
+    return at && at.time !== null && at.time === clockOf(turn.time) && !(at.half && at.half !== halfOf24(turn.time)) ? RESULT.CORRECT : RESULT.WRONG;
+  }
+  if (turn.listen) {
+    // A heard price or platform is no clock time: „fünfzehn Uhr“, „um sieben Uhr“ (first corpus of Lektion 10).
+    if (/\b(?:uhr|um)\b/i.test(text) && !/\buhr\b/i.test(turn.listen)) return RESULT.WRONG;
+    // A heard price counts euros: „15 Fahrkarten“ counts tickets (second corpus of Lektion 10). „Preis: 18 Euro“
+    // and „Das macht 30 Euro“ stay right.
+    if (/\beuro\b/i.test(turn.listen)) {
+      const w = wordsOf(fold(text)).map((x) => x.replace(/[.,!?:]+$/, ''));
+      if (w.some((x, i) => (isNumberWord(x) || /^\d/.test(x)) && /\p{L}/u.test(w[i + 1] || '') && !['euro', 'eur'].includes(w[i + 1]))) return RESULT.WRONG;
+    }
+    // A heard number is its digits: „Telefonnummer: 0421 3618" wrote down the right number with a label,
+    // „18,00 €" the price „18 Euro" (and „funfundvierzig" without its umlaut is 45). A price heard in
+    // euros is not written as cents (blind corpus, 2026-11-20).
+    if (/\beuro\b/i.test(turn.listen) && /\bcent\b|\bct\b/i.test(text)) return RESULT.WRONG;
+    const heard = priceDigits(turn.accepted[0]);
+    if (priceDigits(text) && priceDigits(text) === heard) return onlyLabels(turn, text) ? RESULT.CORRECT : RESULT.WRONG;
+    return checkAnswer(text, turn.accepted, { dictation: true }).result;
+  }
+  if (turn.parts) return messageResult(turn, text);
+  // SECTION D (the courses session's review of 46c7ca80): CORRECT is a word-for-word match of one accepted answer or
+  // frame, in its order. Nothing is dropped, added, moved or exchanged on the way, except
+  //   - a spelling or a free variant of the same word („wieviel“, „gerne“, „im“ for „in dem“, digits for numbers);
+  //   - what the turn's own data declares: its partner's name in front or at the end, a piece its answers leave out
+  //     (Rule 3), its `answerWords`/`leadWords`, the noun for a pronoun (`nounFor`);
+  //   - a gap, by its kind (Rule 5);
+  //   - a named rule of German word order that only moves words: a question in statement order, the verb second with
+  //     the subject last, a time after „Zeit“ or „frei“, „gern“ before or after what one likes.
+  // Each try carries the name of the path it came by (`verifiedRule`). Everything else is graded by its fault (WRONG)
+  // or is BEYOND: a greeting, a „bitte“, „danke“, „auch“, „denn“, „und du?“ or a degree word counts only where an
+  // answer of the turn puts it.
+  const cap = (s) => s.charAt(0).toLocaleUpperCase('de') + s.slice(1);
+  // „wieviel" is the old spelling of „wie viel": the same question, with a spelling slip.
+  const oldSpelling = /\bwieviel\b/i.test(text);
+  const tries = [oldSpelling ? text.replace(/\b(w)ieviel\b/gi, '$1ie viel') : text];
+  const via = new Map([[tries[0], oldSpelling ? 'spelling' : 'as typed']]);
+  const add = (t, rule) => { const s = cap(String(t).trim()); if (s && !tries.includes(s)) { tries.push(s); via.set(s, rule); } };
+  const push = (s, rule) => { if (!tries.includes(s)) { tries.push(s); via.set(s, rule); } };
+  // The partner the turn names (`partner`), called by name in front or at the end („Lena, …“, „…, Lena?“,
+  // „frau wolf was ist das“) or after a sentence („Danke, Lena. Und Sie?“).
+  const escaped = turn.partner ? turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : null;
+  if (escaped) {
+    const s = text.trim();
+    for (const named of [s.replace(new RegExp(`^${escaped}[,!:?]?\\s+`, 'i'), ''), s.replace(new RegExp(`[,\\s]+${escaped}(?=\\s*[?.!]*$)`, 'i'), ''),
+      s.replace(new RegExp(`,\\s*${escaped}(?=\\s*[.!?]\\s*\\S)`, 'gi'), '')]) if (named && named !== s) add(named, 'partner');
+  }
+  // Rule 3: a piece of the turn's answers comes off where one of them has it („Um wie viel Uhr fährt der Zug ab?“ is
+  // „Um wie viel Uhr fährt der Zug?“, „… passt mir.“ is „… passt.“), twice at most.
+  const pieces = piecesOf(turn);
+  // A sentence begun with a small letter keeps that slip when its first piece comes off („nein, keine suppe“).
+  const smallStart = new Set();
+  for (let pass = 0; pass < 2 && pieces.length; pass += 1) {
+    for (const t of [...tries]) {
+      for (const s of withoutPieces(t, pieces)) {
+        push(s, 'option');
+        if (/^\p{Ll}/u.test(t.trim()) || smallStart.has(t)) smallStart.add(s);
+      }
+    }
+  }
+  // `answerWords` are a whole answer alone and may open a longer one: words of yes when agreeing (Lektion 8),
+  // of goodbye (Lektion 12). Those in front are the yes („Gern.", „Prima, dann bis Freitag.", „Ja,
+  // gut, bis dann!"); what follows is graded as the rest, and after a yes the time alone may stand
+  // („Gut, am Freitag."). Courses session, 2026-11-20.
+  // A small first letter stays the case slip it is everywhere („ja gern", „ja, bis Freitag").
+  const afterYes = [];
+  const smallYes = new Set();
+  // `leadWords` may open an answer but are none alone („Ja, ich komme mit.“, never „Ja.“ where the
+  // task asks for the sentence; „Tschüss, bis bald!“, never „Tschüss!“ where „bis bald“ is the can-do).
+  if (turn.answerWords?.length || turn.leadWords?.length) {
+    const yes = answerWordsRe([...(turn.answerWords || []), ...(turn.leadWords || [])]);
+    const alone = turn.answerWords?.length ? new RegExp(answerWordsRe(turn.answerWords).source.replace(/^\^/, '(?:^|[\\s,.!])'), 'iu') : null;
+    for (const t of [...tries]) {
+      const s = t.trim();
+      const rest = s.replace(yes, '').trim();
+      if (rest === s) continue;
+      const small = /^\p{Ll}/u.test(s);
+      if (!rest) {
+        if (alone?.test(s)) return [small ? RESULT.TYPO : RESULT.CORRECT, 'answer words'];
+        continue;
+      }
+      // Only a word that is small inside a sentence gets its capital back („bis", „dann", „am"); a
+      // noun keeps what was typed, so „ja, freitag ist gut" keeps its slip.
+      const first = fold(rest.split(/\s+/)[0]).replace(/[.,!?]+$/, '');
+      const r = CLOSED.has(first) || ADVERBS.has(first) || WHEN_GLUE.has(first) || ['bis', 'dann'].includes(first) ? cap(rest) : rest;
+      push(r, 'answer words');
+      if (turn.answerWords?.length && turn.slot) afterYes.push(r);
+      if (small) smallYes.add(r);
+    }
+  }
+  // Words of goodbye may also close the answer („Schönen Tag und bis später!“).
+  if (turn.leadWords?.length) {
+    for (const t of [...tries]) {
+      const words = [...turn.leadWords].sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+      const r = t.trim().replace(new RegExp(`(?:\\s*,\\s*|\\s+und\\s+)(?:${words})(?=\\s*[.!]*$)`, 'iu'), '');
+      if (r !== t.trim()) add(r.replace(/\s*$/, '!'), 'answer words');
+    }
+  }
+  // A time after „frei" or „Zeit" („Ich bin frei am Samstag", „Ich habe Zeit am Wochenende") is ordinary
+  // spoken German: the answer with the time before it (courses session, 2026-11-20).
+  for (const t of [...tries]) {
+    const m = t.trim().match(/^(.+?)\s+(frei|zeit)\s+(.+?)([.!?]*)$/iu);
+    // A whole time moves, never the end of one („… um Viertel nach Zeit vier?“ has „Zeit“ inside the time).
+    const opensTime = (s) => { const w = fold(wordsOf(s)[0] || ''); return WHEN_GLUE.has(w) || DAYS.includes(w.replace(/s$/, '')) || DAY_PARTS.includes(w.replace(/s$/, '')) || ['heute', 'morgen', 'abends'].includes(w); };
+    const cutTime = (s) => ['um', 'am', 'nach', 'vor', 'halb', 'viertel', 'bis', 'ab', 'von', 'gegen'].includes(fold(wordsOf(s).at(-1) || ''));
+    if (m && whenOf(m[3]) && opensTime(m[3]) && !cutTime(m[1])) add(`${m[1]} ${m[3]} ${m[2]}${m[4]}`, 'time after Zeit');
+  }
+  // A question in statement order („Du tanzt gern?") is the question („Tanzt du gern?").
+  for (const t of [...tries]) {
+    // Also with a noun as the subject („Der Zug fährt nach Berlin?“, first DaF review of Lektion 10).
+    const q = t.trim().match(/^(du|sie|er|es|(?:der|die|das|mein|meine|dein|deine)\s+\p{L}+)\s+(\p{L}+)\s+(.*\?)$/iu);
+    if (q && !SUBJECTS.has(fold(q[2]))) {
+      const asked = `${q[2]} ${/^(du|sie|er|es)$/i.test(q[1]) ? q[1].toLocaleLowerCase('de') : q[1].charAt(0).toLocaleLowerCase('de') + q[1].slice(1)} ${q[3]}`;
+      add(asked, 'statement order');
+      // „du Tanzt gern?“: a small first letter or a capital verb stays the slip it is.
+      if (/^\p{Ll}/u.test(t.trim()) || /^\p{Lu}/u.test(q[2])) smallStart.add(cap(asked.trim()));
+    }
+  }
+  for (const t of [...tries]) for (const s of questionWordLast(t)) add(s, 'statement order');
+  for (const t of [...tries]) if (/\bgerne\b/i.test(t)) add(t.replace(/\b(g)erne\b/gi, '$1ern'), 'variant');
+  for (const t of [...tries]) for (const s of verbSecond(t)) push(s, 'verb second');
+  for (const t of [...tries]) for (const s of gernLast(t)) push(s, 'gern position');
+  // „im" is „in dem": „Ich wohne im Irak" is the place answer „in dem Irak".
+  for (const t of [...tries]) if (/\bim\b/i.test(t)) push(t.replace(/\bim\b/gi, 'in dem'), 'variant');
+  // The family noun may stand where the pronoun stands (`nounFor`): „Meine Mutter kommt aus …" is
+  // „Sie kommt aus …" with its noun, and the verb after it is graded just the same.
+  // A noun typed without its umlaut („das worterbuch ist hier", „das woerterbuch") still stands for
+  // the pronoun, as a typo.
+  const slipped = [];
+  for (const t of [...tries]) {
+    const said = wordsOf(t.trim());
+    for (const [pronoun, nouns] of Object.entries(turn.nounFor || {})) {
+      for (const noun of nouns) {
+        const n = wordsOf(noun).length;
+        const head = said.slice(0, n).join(' ');
+        const rest = said.slice(n).join(' ');
+        if (said.length <= n) continue;
+        if (fold(head) === fold(noun)) push(`${pronoun} ${rest}`, 'noun for pronoun');
+        else if (!/[äöü]/.test(fold(head)) && /[äöü]/.test(fold(noun)) && bare(head) === bare(noun)) slipped.push(`${pronoun} ${rest}`);
+      }
+    }
+  }
+  const graded = [
+    ...tries.map((t) => [smallYes.has(t) || smallStart.has(t) ? worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO) : sentenceResult(turn.accepted, t, turn), via.get(t)]),
+    ...slipped.map((t) => [worst(sentenceResult(turn.accepted, t, turn), RESULT.TYPO), 'noun for pronoun']),
+    ...afterYes.map((t) => [smallYes.has(t) ? worst(frameResult('…', t, turn), RESULT.TYPO) : frameResult('…', t, turn), 'answer words']),
+  ];
+  const top = graded.reduce((a, g) => (RANK[g[0]] > RANK[a[0]] ? g : a), [RESULT.WRONG, null]);
+  return [oldSpelling ? worst(top[0], RESULT.TYPO) : top[0], top[1]];
+}
+
+/**
+ * The grader before section D, kept whole for one purpose: an answer it verifies is German the turn's answers do not
+ * have word for word (a greeting, „Und …“, „…, bitte“, a fronted time), so the check names no fault in it and it is
+ * BEYOND, never WRONG and never CORRECT (`reasonOf`). No teacher-right answer of the corpora moves to WRONG.
+ */
+function tolerantCore(turn, value) {
   // Rule 4: a word twice in a row or where German never puts it is no verified answer, whatever follows.
   if (sequenceReason(turn, value)) return RESULT.WRONG;
   if (turn.ownName) {
@@ -2545,7 +2746,7 @@ function typedCore(turn, value) {
     const joined = said.length === 1;
     if (joined) said = plain.split(/[,\s]+(?=(?:und\s+)?(?:kommst|möchtest|kannst|hast)\s+du\b|ich\s+lade\s+dich\b)/iu).filter(Boolean);
     const name = turn.partner ? new RegExp(`[,\\s]+${turn.partner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=\\s*[?.!]*$)`, 'i') : /$^/;
-    if (said.length === 2 && partyNews(said[0].replace(name, ''), turn) && (INVITE_SECOND.test(said[1].replace(name, '')) || typedCore(turn, said[1]) !== RESULT.WRONG)) {
+    if (said.length === 2 && partyNews(said[0].replace(name, ''), turn) && (INVITE_SECOND.test(said[1].replace(name, '')) || tolerantCore(turn, said[1]) !== RESULT.WRONG)) {
       return joined || /^\p{Ll}/u.test(plain) ? RESULT.TYPO : RESULT.CORRECT;
     }
   }
@@ -2728,7 +2929,7 @@ function typedCore(turn, value) {
       if (echo) add(echo[1]);
     }
   }
-  for (const t of [...tries]) tries.push(...verbSecond(t));
+  for (const t of [...tries]) tries.push(...verbSecond(t, { drop: true }));
   for (const t of [...tries]) tries.push(...gernLast(t));
   // Where it is for, at the end („Meine Freunde kommen zur Party“, „Ich möchte eine Tasche zum Geburtstag“): the answer without it.
   for (const t of [...tries]) {
