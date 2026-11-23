@@ -651,10 +651,11 @@ test('three outcomes: verified is CORRECT, a named fault of course words is WRON
     }
   }
   // 7 CORRECT: tasks that ask for neither digits nor a sentence („Schreiben Sie die Nummer.“, „Nennen Sie Ihr Ziel.“)
-  // and one older batch-4 task. 8 BEYOND (third score, Rule 2): on-task German no rule of the check faults — „Wann ist
-  // die Ankunft?“ for the departure, „Guten Appetit!“ for a good day — each listed in the PR. Never more.
+  // and one older batch-4 task. 12 BEYOND (third score, Rule 2, and its review): German no rule of the check faults —
+  // „Wann ist die Ankunft?“ for the departure, „Guten Appetit!“ for a good day, „Vielleicht am Donnerstag.“ for a yes,
+  // „Machen Sie es gut, Lena!“ — each listed in the PR. Never more.
   assert.ok(count.correct <= 7, `${count.correct} wrong answers graded correct`);
-  assert.ok(count.beyond <= 8, `${count.beyond} wrong answers graded beyond`);
+  assert.ok(count.beyond <= 12, `${count.beyond} wrong answers graded beyond`);
   assert.deepEqual(unnamed, []);
 });
 
@@ -872,4 +873,87 @@ test('what a turn accepts in pieces it accepts together (third score, Rule 3): g
     }
   }
   assert.ok(n >= 20, `${n} combinations`);
+});
+
+test('an answer is a sequence (Rule 4, the review of 2492a424): a word doubled or two words swapped is never verified unless German says so (2026-11-23)', () => {
+  // The mirror of the Rule 3 test, generated over every turn of every sitting: each verified answer of the turn (its
+  // fixed answers, its frames with a name in the gap, its model answer) with one word typed twice, or one adjacent pair
+  // swapped. A doubled word is verified only inside an own name („Ich heiße Omar Omar“); a swap only where a rule of
+  // German word order the check knows makes it German, each rule below.
+  const fold = (w) => w.toLocaleLowerCase('de').replace(/[.,!?;:„“"()]+/g, '').replace(/ß/g, 'ss');
+  const known = (w) => { const f = fold(w); return lexicon.has(f) || lexicon.said.has(f) || /^\d/.test(f); };
+  const PRONOUN = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr']);
+  const TIME = new Set(['abends', 'morgens', 'nachmittags', 'vormittags', 'heute', 'morgen']);
+  const germanSwap = (turn, words, k, answer) => {
+    const [a, b] = [fold(words[k]), fold(words[k + 1])];
+    const plain = (s) => s.split(/\s+/).map(fold).join(' ');
+    // the same words as one of the turn's answers, only the case differs („gut, Danke.“ for „Gut, danke.“)
+    if (turn.accepted.some((x) => typeof x === 'string' && plain(x) === plain(answer))) return 'accepted';
+    // two words of the learner's own: a name, a number („Chakiri Ana“, „2345678 0176“, „Ich möchte bitte, Omar.“)
+    if (!known(words[k]) || !known(words[k + 1]) || /^\d/.test(a) || /^\d/.test(b)) return 'own';
+    // a first name and a surname either way round in a name slot („Chakiri Ana“): capitalised, no taught noun
+    const nameWord = (w) => /^\p{Lu}/u.test(w) && !lexicon.genders.has(fold(w));
+    if ((turn.ownName || turn.parts || turn.slot === 'name') && nameWord(words[k]) && nameWord(words[k + 1])) return 'own';
+    // a question in statement order, first in its clause („Du tanzt gern?“, „Entschuldigung, Sie haben Tee?“)
+    if ((k === 0 || /,$/.test(words[k - 1])) && PRONOUN.has(b) && /\?\s*$/.test(answer)) return 'statement order';
+    // a particle after the pointing „das“ („Was ist das denn?“)
+    if ([a, b].includes('das') && [a, b].some((x) => ['denn', 'doch', 'mal'].includes(x))) return 'particle last';
+    // two answer words either way round („Gern, ja.“, „Danke, nein.“)
+    const answerWords = new Set([...(turn.answerWords || []), ...(turn.leadWords || []), ...turn.accepted.filter((x) => typeof x === 'string' && x.split(/\s+/).length === 2).flatMap((x) => x.split(/\s+/))].map(fold));
+    if (answerWords.has(a) && answerWords.has(b)) return 'answer words';
+    // „gern“ after what one likes („Ich spiele Fußball gern“), a time after „Zeit“ or „frei“, a place word last („Gibt es Tee hier?“)
+    if (['gern', 'gerne'].includes(a) && /^\p{Lu}/u.test(words[k + 1])) return 'gern last';
+    if (['zeit', 'frei'].includes(b) && TIME.has(a)) return 'time after Zeit';
+    if (a === 'hier' && k + 2 === words.length && /\?\s*$/.test(answer)) return 'place word last';
+    return null;
+  };
+  const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;
+  const kept = {};
+  let [doubled, swapped] = [0, 0];
+  for (const l of withCheck) {
+    for (let r = 0; r < retakes(l.guided.check); r += 1) {
+      sitting(l, r).forEach((turn, i) => {
+        const bases = new Set(turn.accepted.map((x) => (typeof x === 'string' ? x : x.frame).replace(/…/g, 'Omar')));
+        if (typeof modelAnswer(turn) === 'string') bases.add(modelAnswer(turn).replace(/…/g, 'Omar'));
+        if (turn.ownName) bases.add('Ich heiße Omar.');
+        const ownName = turn.ownName || turn.parts || turn.slot === 'name';
+        for (const base of bases) {
+          if (!verified(typedResult(turn, base))) continue;
+          const words = base.split(/\s+/);
+          words.forEach((w, k) => {
+            const bare = w.replace(/[.,!?]+$/, '');
+            if (!/\p{L}/u.test(bare)) return;
+            const answer = [...words.slice(0, k), bare, w, ...words.slice(k + 1)].join(' ');
+            doubled += 1;
+            if (verified(typedResult(turn, answer))) assert.ok(ownName && !known(bare), `${l.id} sitting ${r + 1} turn ${i + 1}: ${answer}`);
+          });
+          for (let k = 0; k + 1 < words.length; k += 1) {
+            const [a, b] = [words[k].replace(/[.,!?]+$/, ''), words[k + 1].replace(/[.,!?]+$/, '')];
+            if (fold(a) === fold(b)) continue;
+            const answer = [...words.slice(0, k), b + words[k].slice(a.length), a + words[k + 1].slice(b.length), ...words.slice(k + 2)].join(' ');
+            swapped += 1;
+            if (!verified(typedResult(turn, answer))) continue;
+            const why = germanSwap(turn, words, k, answer);
+            assert.ok(why, `${l.id} sitting ${r + 1} turn ${i + 1}: ${answer}`);
+            kept[why] = (kept[why] || 0) + 1;
+          }
+        }
+      });
+    }
+  }
+  assert.ok(doubled >= 1000 && swapped >= 800, `${doubled} doubled, ${swapped} swapped`);
+  // The probes of the review, each a fault the check names.
+  const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
+  for (const [turn, answer, reason] of [
+    [at(8)[4], 'Ja, Freitag zehn um passt mir.', 'order'], [at(8)[4], 'Ja, Freitag um zehn passt gut mir.', null], [at(8)[4], 'Ja, ja, Freitag um zehn passt mir gut gut.', 'extra'],
+    [at(8)[1], 'Entschuldigung, wie spät ist es jetzt jetzt?', 'extra'], [at(1)[3], 'Sehr danke, gut.', null], [at(7)[2], 'Was machst gern du am Wochenende?', 'order'],
+    [at(8)[2], 'Ich stehe sechs um Uhr auf.', 'order'], [at(8)[3], 'Hast du Freitag am um zehn Uhr Zeit?', 'order'], [at(3)[3], 'Sie spricht und Arabisch Deutsch.', 'order'],
+    [at(4)[0], 'Was denn ist das?', 'order'], [at(7)[1], 'Wochenende Am spiele ich gern Fußball.', 'order'], [at(9)[1], 'Ich möchte einen bitte, Kaffee.', 'order'],
+    [at(1)[3], 'Mir geht es gut gut.', 'extra'], [at(8)[1], 'Kannst du mir sagen, wie spät ist es?', 'order']]) {
+    assert.ok(!verified(typedResult(turn, answer)), answer);
+    if (reason) assert.equal(wrongReason(turn, answer), reason, answer);
+  }
+  // German orders stay verified.
+  for (const [turn, answer] of [[at(8)[4], 'Ja, Freitag um zehn passt mir gut.'], [at(4)[0], 'Was ist das denn?'], [at(7)[3], 'Du tanzt gern?'], [at(8)[1], 'Weißt du, wie spät es ist?'],
+    [at(10)[2], 'Um wie viel Uhr fährt der Zug ab?'], [at(1)[1], 'Ich heiße Omar Omar.']]) assert.ok(verified(typedResult(turn, answer)), answer);
 });

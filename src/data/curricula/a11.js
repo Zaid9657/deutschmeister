@@ -1604,8 +1604,9 @@ export const CURRICULUM_A11 = {
           // as its second surface.
           // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
           // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
-          { speaker: 'Lena', de: 'Wo ist mein Schlüssel? Hier ist er. Welche Farbe hat das Bild?', en: 'Where is my key? Here it is. What colour is the picture?' },
-          { speaker: 'Tim', de: 'Es ist blau. Das Bild ist für mein Zimmer.', en: 'It is blue. The picture is for my room.' },
+          // Lena asks Tim two things and Tim answers both (review of 2492a424: she asked and answered herself).
+          { speaker: 'Lena', de: 'Wo ist mein Schlüssel? Und welche Farbe hat das Bild?', en: 'Where is my key? And what colour is the picture?' },
+          { speaker: 'Tim', de: 'Er ist hier. Das Bild ist blau. Es ist für mein Zimmer.', en: 'It is here. The picture is blue. It is for my room.' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
@@ -2894,13 +2895,14 @@ export const CURRICULUM_A11 = {
           // (independent score, 2026-11-22). The timetable says no bus goes there; the train does. The line keeps
           // „in die Schweiz“, the direction A1.2 builds on (its RULE 29).
           { speaker: 'Ana', de: 'Fährt der Zug auch in die Schweiz?', en: 'Does the train go to Switzerland too?' },
-          // A country is far, a departure is not (third score, 2026-11-22: „Die Abfahrt ist nicht weit“).
-          { speaker: 'Herr Schmidt', de: 'Ja, die Schweiz ist weit. Die Abfahrt ist von Gleis vier.', en: 'Yes, Switzerland is far. The departure is from platform four.' },
+          // A platform is far or near, and Ana asks it (third score and its review: „Die Abfahrt ist nicht weit“, „Die
+          // Schweiz ist weit“ answered nothing).
+          { speaker: 'Herr Schmidt', de: 'Ja. Die Abfahrt ist von Gleis vier.', en: 'Yes. The departure is from platform four.' },
           // Bahnhof, Abfahrt, Ankunft and umsteigen were Wortfeld-only, and the „Durchsagen“ can-do
           // had no announcement to understand. The announcement is read out by the man at the counter
           // rather than given its own speaker, because a dialogue has exactly two speakers
           // (scripts/validate-curriculum.mjs RULE 5). It is now the dictation line (review #2, L10, §A).
-          { speaker: 'Ana', de: 'Danke! Und wann ist die Ankunft?', en: 'Thank you! And when is the arrival?' },
+          { speaker: 'Ana', de: 'Danke! Ist Gleis vier weit? Und wann ist die Ankunft?', en: 'Thank you! Is platform four far? And when is the arrival?' },
           { speaker: 'Herr Schmidt', de: 'Durchsage: Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen!', en: 'Announcement: the train is delayed. Please change trains at platform five!' },
         ],
       },
@@ -3167,8 +3169,10 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Gut, ich rufe dich an.', en: 'Good, I will call you.' },
           // frühstücken, duschen, schlafen and mitbringen were Wortfeld-only, so the Tagesablauf
           // can-do rested on three verbs; the last line shows the schlafen vowel change (review #2, §A).
-          { speaker: 'Lena', de: 'Rufst du nach acht an? Ich dusche und frühstücke jeden Tag.', en: 'Will you call after eight? I shower and have breakfast every day.' },
-          { speaker: 'Tim', de: 'Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.', en: 'On Sunday I sleep until nine. My brother sleeps in too.' },
+          // Lena gives the reason for „nach acht“, and Tim answers with his own morning (review of 2492a424); „bis sechs“ is
+          // Tim getting up at six (line 4).
+          { speaker: 'Lena', de: 'Rufst du nach acht an? Ich dusche und frühstücke bis acht.', en: 'Will you call after eight? I shower and have breakfast until eight.' },
+          { speaker: 'Tim', de: 'Gut. Ich schlafe jeden Tag bis sechs, mein Bruder schläft bis neun.', en: 'Good. I sleep until six every day, my brother sleeps until nine.' },
         ],
       },
       pretest: { promptDe: 'Sagen Sie, was Sie gestern gemacht haben.', promptEn: 'Say what you did yesterday.', model: 'Ich habe gearbeitet.', accepted: ['Ich habe', 'Gestern habe ich'] },
