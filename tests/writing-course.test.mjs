@@ -78,7 +78,7 @@ test('register and Leitpunkte match the kind of task the Lektion sets', () => {
 
 test('the six Mitteilungen carry the register their addressee implies', () => {
   // Sie/Herr/Chefin → formell; a Freundin or Lena → informell. The grader marks Anrede and
-  // Gruß against this. L10's colleague Frau Kaya is gesiezt (owner decision, 2026-10-07): the
+  // Gruß against this. L10's colleague Frau Ramos is gesiezt (owner decision, 2026-10-07): the
   // task, the model text and the bank now agree — before, the bank said informell under a Sie text.
   const expected = { 2: 'formell', 4: 'informell', 6: 'formell', 8: 'informell', 10: 'formell', 12: 'informell' };
   for (const [nr, register] of Object.entries(expected)) {

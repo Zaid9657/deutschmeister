@@ -58,8 +58,8 @@
 // RULE 24 in scripts/validate-curriculum.mjs enforces it as a form, over every production surface
 // of the level, at a hard 0.
 //
-// REGISTER. du between learners (Ana, Tim, Lena), Sie with staff and neighbours (Frau Kaya,
-// Herr Weber, Herr Schmidt, Paul). No outcome promises and no exam fees anywhere in this file.
+// REGISTER. du between learners (Ana, Tim, Lena), Sie with staff, colleagues and neighbours (Frau Kaya,
+// Frau Ramos, Herr Weber, Herr Schmidt, Paul). No outcome promises and no exam fees anywhere in this file.
 
 /**
  * The learners' roles. A scored read-aloud line is always one of theirs: the learner speaks their own
@@ -125,7 +125,7 @@ export const FUNCTION_WORDS = [
  * broken the note is removed with the test, not silently outlived.
  */
 export const DIALOG_NAMES = [
-  'Ana', 'Tim', 'Lena', 'Paul', 'Herr', 'Frau', 'Weber', 'Kaya', 'Wolf', 'Schmidt', 'Berg',
+  'Ana', 'Tim', 'Lena', 'Paul', 'Herr', 'Frau', 'Weber', 'Kaya', 'Ramos', 'Wolf', 'Schmidt', 'Berg',
   'Chakiri', 'Brandt', 'Berger', 'Bremen', 'Thomas',
   // `Ali` is the masculine counterpart of Ana in the L2 notice („Ali ist Marokkaner.“), on the
   // `verb-sein` card and in `extra-a11-l02-16` (round 18, DaF review #17, MAJOR 2): the nationality
@@ -1815,7 +1815,7 @@ export const CURRICULUM_A11 = {
         { de: 'das Büro', word: 'Büro', article: 'das', plural: 'Büros', en: 'office', wordId: '8fbe2c10-b65b-4c50-b60a-14d92b931783' },
         { de: 'die Firma', exampleDe: 'Das ist eine Firma. Das Büro ist hier.', word: 'Firma', article: 'die', plural: 'Firmen', en: 'company', wordId: '241df305-fc58-4232-bb0a-df8ce4cc9d01' },
         { de: 'der Chef', exampleDe: 'Herr Weber ist der Chef.', word: 'Chef', article: 'der', plural: 'Chefs', en: 'boss (m)', wordId: '40ac179d-e47c-4c64-8eb3-9e1017da46a0' },
-        { de: 'die Chefin', exampleDe: 'Die Chefin ist im Büro.', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
+        { de: 'die Chefin', exampleDe: 'Frau Berg ist die Chefin.', word: 'Chefin', article: 'die', plural: 'Chefinnen', en: 'boss (f)', wordId: 'a9179b77-b31b-43d0-9f53-4df8ba9c3a27' },
         { de: 'der Kollege', word: 'Kollege', article: 'der', plural: 'Kollegen', en: 'colleague (m)', wordId: '81abf8c3-ae9f-4e61-9fa9-b4a10e0b0ae8' },
         { de: 'die Kollegin', exampleDe: 'Die Kollegin heißt Lena.', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
         { de: 'die Arbeit', exampleDe: 'Die Arbeit ist im Büro.', word: 'Arbeit', article: 'die', plural: '—', en: 'work', wordId: '89ff21bb-79ad-470a-a29b-ff6bbeef344a' },
@@ -2960,15 +2960,16 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l10',
-        taskDe: 'Schreiben Sie Ihrer Kollegin Frau Kaya: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'Write to your colleague Frau Kaya (formal, with Sie): you will be late. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you will arrive; what your colleague should do until then.',
+        taskDe: 'Schreiben Sie Ihrer Kollegin Frau Ramos: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write to your colleague Frau Ramos (formal, with Sie): you will be late. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you will arrive; what your colleague should do until then.',
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 25,
         maxWords: 45,
         // 29 Wörter. Der dritte Leitpunkt („Was die Kollegin bis dahin machen soll“) war im alten
         // Mustertext gar nicht modelliert; die Kollegin wird gesiezt.
         // 2026-10-07 (Entscheidung des Inhabers): Register `formell` in der Aufgabenbank, die Kollegin
-        // hat einen Namen (Frau Kaya, wie in L1 und L12) und der Mustertext grüßt wie L6.
+        // hat einen Namen und der Mustertext grüßt wie L6. 2026-11-23 (Kurs-Session): die Kollegin heißt
+        // Frau Ramos, dieselbe Kollegin wie in L12; Frau Kaya ist nur die Rezeptionistin im Hostel (L1).
         // ROUND 18 (DaF review #17, MAJOR 1 „Fünftens“): „Bitte machen Sie die Arbeit bis zehn Uhr
         // ohne mich.“ ist raus — ein Satz, den niemand schreibt, und er stand da, weil der Formcheck
         // den Auftrags-Leitpunkt am Echo von `machen` entschied (zehn von zwölf richtigen Aufträgen
@@ -2978,7 +2979,7 @@ export const CURRICULUM_A11 = {
         // (hart 0) meldet beide; `beginnen` ist seit Lektion 5 gelehrt. Der Formcheck muss den
         // Auftrag an der Satzart (Imperativ mit Sie / bitte + Verb) erkennen, nicht am Aufgabenverb —
         // das ist die Regel in `src/lib/lesson/writing.js`, die MAJOR 1 „Zweitens“ bestellt.
-        sample: 'Guten Tag, Frau Kaya! Der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Ramos! Der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
       },
       // Not listening exercise 3: the final test's Hören is its first ten questions (abschlusstestA11.js), and
       // practising them here first would measure memory, not listening (2026-11-22).
@@ -3462,7 +3463,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Mein Geburtstag ist im', 'Ich habe im', 'Im'],
       },
       notice: {
-        formExamples: ['Das ist sein Geschenk. Das ist ihr Buch.', 'Ist das Ihr Büro, Herr Weber?', 'Unser Fest ist am Freitag. Wann ist euer Fest?', 'Unsere Gäste kommen. Kommen eure Gäste auch?'],
+        formExamples: ['Das ist sein Geschenk. Das ist ihr Buch.', 'Ist das Ihr Büro, Frau Berg?', 'Unser Fest ist am Freitag. Wann ist euer Fest?', 'Unsere Gäste kommen. Kommen eure Gäste auch?'],
         title: 'mein, dein, sein, ihr – Possessivartikel',
         bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie: eine Frau oder mehrere), **Ihr** Büro (Sie, immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
         bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book, or their book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',
@@ -3485,7 +3486,7 @@ export const CURRICULUM_A11 = {
           promptDe: 'Laden Sie eine Kollegin zu Ihrem Fest ein und reagieren Sie auf die Antwort.',
           promptEn: 'Invite a colleague to your party and react to her answer.',
           hintWords: ['einladen', 'der Geburtstag', 'feiern'],
-          // Sie — Teil 3: die Einladung geht an eine Kollegin, und die Lektion prüft genau diese Form (extra-a11-l12-08/09/16, „Ihr Fest, Frau Kaya“).
+          // Sie — Teil 3: die Einladung geht an eine Kollegin, und die Lektion prüft genau diese Form (extra-a11-l12-08/09/16, „Ihr Fest, Frau Ramos“).
           anrede: 'Sie',
           missionOrder: null,
         },

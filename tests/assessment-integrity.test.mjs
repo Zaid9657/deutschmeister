@@ -267,7 +267,7 @@ test('writing grader: task fulfilment decides — off-topic and copied texts can
   const off = gateEvaluation(l10, 'Ich mag Pizza und Musik. Mein Hund heißt Max. Viele Grüße, Ana', model({ task: 0, structure: 5, accuracy: 5, vocabulary: 5 }, [false, false, false]));
   assert.equal(off.total_score, 0);
   // One Leitpunkt of three: task ≤ 2, total ≤ 8 — even when the model said task 4.
-  const one = gateEvaluation(l10, 'Guten Tag, Frau Kaya! Der Zug hat Verspätung. Viele Grüße, Ana', model({ task: 4, structure: 4, accuracy: 4, vocabulary: 4 }, [true, false, false]));
+  const one = gateEvaluation(l10, 'Guten Tag, Frau Ramos! Der Zug hat Verspätung. Viele Grüße, Ana', model({ task: 4, structure: 4, accuracy: 4, vocabulary: 4 }, [true, false, false]));
   assert.equal(one.scores.task, 2);
   assert.ok(one.total_score <= 8);
   // The task copied back scores 0, whatever the model said.
@@ -517,7 +517,7 @@ test('the grader returns real booleans, and the read-aloud extra-word count reac
   const { gateEvaluation } = await import('../netlify/functions/evaluate-writing.mjs');
   const { writingTaskByKey } = await import('../src/data/writingTasks.js');
   const task = writingTaskByKey('goethe_a1', 'a11-l10');
-  const out = gateEvaluation(task, 'Guten Tag, Frau Kaya! Der Zug hat Verspätung. Viele Grüße, Ana',
+  const out = gateEvaluation(task, 'Guten Tag, Frau Ramos! Der Zug hat Verspätung. Viele Grüße, Ana',
     { scores: { task: 1, structure: 4, accuracy: 4, vocabulary: 4 }, total_score: 13, leitpunkt_check: ['false', 'true', 'false'] });
   assert.deepEqual(out.leitpunkt_check, [false, true, false]);
   const { readFileSync } = await import('node:fs');

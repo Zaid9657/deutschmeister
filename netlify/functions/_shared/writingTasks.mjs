@@ -527,7 +527,7 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Schreiben Sie Ihrer Kollegin Frau Kaya: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Schreiben Sie Ihrer Kollegin Frau Ramos: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Warum Sie schreiben',
       'Wann Sie kommen',

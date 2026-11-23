@@ -1183,7 +1183,7 @@ test('every determiner correction of the pool and of a checkpoint names its elem
 test('the two review items say which element to fix, and the key still grades its own answer — REVIEW #14 MAJOR 2', () => {
   const cases = [
     // 2026-10: the vocative makes the capital the POLITE Ihr; at the sentence start alone it proved nothing.
-    { id: 'extra-a11-l12-16', canonical: 'Ihr Papa kommt auch, Frau Kaya.', nounSwap: 'Ihre Mama kommt auch, Frau Kaya.' },
+    { id: 'extra-a11-l12-16', canonical: 'Ihr Papa kommt auch, Frau Ramos.', nounSwap: 'Ihre Mama kommt auch, Frau Ramos.' },
     { id: 'extra-a11-l12-15', canonical: 'Das ist meine Party.', nounSwap: 'Das ist mein Fest.' },
   ];
   for (const { id, canonical, nounSwap } of cases) {

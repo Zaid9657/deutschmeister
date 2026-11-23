@@ -502,8 +502,8 @@ const RULE_CARD_OVERRIDES = {
         explanationDe: 'Vor femininen Nomen kommt -e dazu: meine Mama, meine Schwester, meine Karte.',
       },
       {
-        wrong: 'Ist das ihr Geschenk, Frau Kaya?',
-        correct: 'Ist das Ihr Geschenk, Frau Kaya?',
+        wrong: 'Ist das ihr Geschenk, Frau Ramos?',
+        correct: 'Ist das Ihr Geschenk, Frau Ramos?',
         explanationDe: 'Die höfliche Form schreibt man immer mit großem I: Ihr Geschenk, Ihr Büro.',
       },
       {

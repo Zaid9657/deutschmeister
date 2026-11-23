@@ -1090,8 +1090,8 @@ test('the polite capital is a task signal, not an answer form — REVIEW #7 BLOC
   }), false, 'an item that calls itself informell is not a polite-form item');
   // The TASK, in each of its three shapes.
   assert.equal(t({
-    questionDe: 'Ist das ___ Geschenk, Frau Kaya? (Sie)', answer: 'Ihr', accepted: ['Ihr'],
-    explanationDe: 'Höflich zu Frau Kaya: Ihr mit großem I.',
+    questionDe: 'Ist das ___ Geschenk, Frau Ramos? (Sie)', answer: 'Ihr', accepted: ['Ihr'],
+    explanationDe: 'Höflich zu Frau Ramos: Ihr mit großem I.',
   }), true, 'the prompt names the formal counterpart');
   assert.equal(t({
     questionDe: 'Guten Tag! Wie geht es ___?', answer: 'Ihnen', accepted: ['Ihnen'], explanationDe: 'Mit großem I.',
