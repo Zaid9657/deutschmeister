@@ -113,6 +113,13 @@ test('the lock on a gated step promises neither an unlock nor a trial', () => {
   assert.match(lock, /gateFree\s*\? \(isGerman\s*\? 'Das Konto ist kostenlos · keine Kreditkarte nötig'\s*: 'The account is free · no credit card needed'\)/);
 });
 
+// The course home's pace line said "Nothing here locks" next to a course that locks from Lektion 2.
+test('no course-home copy says the course has no lock', () => {
+  for (const file of ['src/components/course/CourseWelcome.jsx', 'src/pages/CurriculumHomePage.jsx', 'src/data/curricula/a11.meta.js']) {
+    assert.doesNotMatch(read(file), /nothing (here )?(is )?lock|never locks|nichts (ist )?gesperrt/i, file);
+  }
+});
+
 test('the guards, the course home and the pay page read the gate', () => {
   const guard = read('src/components/LevelSubscriptionGuard.jsx');
   assert.match(guard, /if \(isLevelFree\(level\) && !gated\)/);
