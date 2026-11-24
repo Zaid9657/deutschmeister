@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { COURSE_TESTS, courseTestDescription } from '../src/data/courseTests/index.js';
 import { describeCourseTest } from '../src/data/courseTests/description.js';
+import { attemptVerdict, guessedSections, sectionPassMarks } from '../src/services/examScoring.js';
 import { COURSE_CONTENTS } from '../src/data/courseContents.js';
 import { CURRICULA } from '../src/data/curricula/index.js';
 import { COURSES } from '../src/data/courses/index.js';
@@ -58,6 +59,28 @@ test('every served final-test description derives sections, omissions, time and 
   mutated.sections[0].minutes = 17;
   mutated.passPercent = 65;
   assert.match(describeCourseTest(mutated), /Hören \(17 Min\.\).*42 Minuten.*65 %/);
+});
+
+// Independent score of 2026-11-24 (BLOCKER): the published rule named only the percent, and 14 of 18 points (78 %)
+// with 4 of 8 in reading were answered „unter der 60%-Grenze“. The rule a test fails on is the rule it publishes.
+test('a section mark that can fail a course test is published, and the result names that section', () => {
+  for (const { slug, mock } of COURSE_TESTS) {
+    for (const m of sectionPassMarks(mock)) {
+      assert.ok(courseTestDescription(slug, 'de').includes(`mindestens ${m.need} von ${m.max} Punkten in ${m.title}`), slug);
+      assert.match(courseTestDescription(slug, 'en'), new RegExp(`at least ${m.need} of ${m.max} points in `), slug);
+      if (Object.values(CURRICULA).some((c) => c.testSlug === slug)) assert.ok(mock.intro.includes(`mindestens ${m.need} von ${m.max} Punkten im ${m.title}`), `${slug}: intro`);
+    }
+  }
+  const { mock } = COURSE_TESTS.find((ct) => ct.slug === 'abschlusstest-a1-1');
+  const attempt = { score: 14, max_score: 18, section_scores: { hoeren: { score: 10, max: 10 }, lesen: { score: 4, max: 8 } } };
+  assert.equal(attemptVerdict(attempt, mock), 'nicht-bereit');
+  assert.deepEqual(guessedSections(attempt, mock), [{ key: 'lesen', title: 'Lesen', need: 5, max: 8, score: 4 }]);
+  assert.deepEqual(guessedSections({ ...attempt, section_scores: { ...attempt.section_scores, lesen: { score: 5, max: 8 } } }, mock), []);
+  // The result page shows that reason whenever the percent alone would have passed.
+  const page = read('src/pages/Modelltest/ModelltestResult.jsx');
+  assert.match(page, /percent >= mock\.passPercent \? guessedSections\(attempt, mock\) : \[\]/);
+  assert.match(page, /below\.length \? sectionCopy\(below, percent, mock\.passPercent\) :/);
+  assert.doesNotMatch(page.match(/export const sectionCopy[\s\S]*?\}\);/)[0], /unter der/);
 });
 
 test('detailed surfaces use the shared description, including generic A1.2 and legacy paths', () => {

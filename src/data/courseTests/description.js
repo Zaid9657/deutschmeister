@@ -1,3 +1,5 @@
+import { sectionPassMarks } from '../../services/examScoring.js';
+
 // Describe the delivered course assessment, never the external exam named by formatOf.
 export function describeCourseTest(mock, lang = 'de') {
   const en = lang === 'en';
@@ -12,12 +14,16 @@ export function describeCourseTest(mock, lang = 'de') {
     !mock.sections.some((s) => s.key === 'sprechen') && (en ? 'speaking' : 'Sprechen')].filter(Boolean).join(', ');
   const scored = mock.sections.filter((s) => s.parts.some((p) => p.type !== 'writing'))
     .map((s) => en ? titles[s.key] || s.title : s.title).join(en ? ' and ' : ' und ');
+  // Each section's own mark is part of the rule (examScoring.js attemptVerdict), so it is part of the published rule.
+  const marks = sectionPassMarks(mock).map((m) => (en
+    ? `, and at least ${m.need} of ${m.max} points in ${titles[m.key] || m.title}`
+    : `, dazu mindestens ${m.need} von ${m.max} Punkten in ${m.title}`)).join('');
   if (en) return `Adapted course assessment: ${sections}; ${minutes} minutes total. ` +
     `Writing self-check: ${labels.map((label) => label.replace('Formular', 'form').replace('Mitteilung', 'short message')).join(', ')}; excluded from the score. ` +
-    `Not included: ${missing}. Course pass rule: at least ${mock.passPercent}% of the combined automatically scored ${scored} points. ` +
+    `Not included: ${missing}. Course pass rule: at least ${mock.passPercent}% of the combined automatically scored ${scored} points${marks}. ` +
     'This is not an official exam, does not reproduce the full exam format, and does not use official exam scoring.';
   return `Adaptierter Kurstest: ${sections}; insgesamt ${minutes} Minuten. ` +
     `Schreiben mit Selbstcheck: ${labels.join(', ')}; zählt nicht zur Punktzahl. ` +
-    `Nicht enthalten: ${missing}. Kurs-Bestehensregel: mindestens ${mock.passPercent} % der gemeinsamen automatisch bewerteten Punkte in ${scored}. ` +
+    `Nicht enthalten: ${missing}. Kurs-Bestehensregel: mindestens ${mock.passPercent} % der gemeinsamen automatisch bewerteten Punkte in ${scored}${marks}. ` +
     'Keine offizielle Prüfung, kein vollständiges Prüfungsformat und keine offizielle Prüfungsbewertung.';
 }

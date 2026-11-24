@@ -111,6 +111,22 @@ export function sectionGuessCeiling(section) {
   return Math.max(most(byKey), most(byPlace));
 }
 
+/** What each scored section with static keys needs: one point more than a constant answer gives (`sectionGuessCeiling`). */
+export function sectionPassMarks(mock) {
+  return (mock.sections || []).flatMap((section) => {
+    const ceiling = sectionGuessCeiling(section);
+    const max = scoreObjectiveSections({ sections: [section] }, {}).sectionScores[section.key]?.max || 0;
+    return ceiling > 0 ? [{ key: section.key, title: section.title, need: ceiling + 1, max }] : [];
+  });
+}
+
+/** The sections of a saved attempt below their own mark (`sectionPassMarks`), with the learner's points. */
+export function guessedSections(attempt, mock) {
+  const scores = attempt.section_scores || {};
+  return sectionPassMarks(mock).filter((m) => scores[m.key] && scores[m.key].score < m.need)
+    .map((m) => ({ ...m, score: scores[m.key].score, max: scores[m.key].max }));
+}
+
 /**
  * The verdict of a saved attempt (the independent score, 2026-11-20): the band of its percent, but „nicht-bereit“
  * while a scored section is no better than one constant answer — reading answered „first option“ throughout
@@ -120,11 +136,5 @@ export function sectionGuessCeiling(section) {
 export function attemptVerdict(attempt, mock) {
   const verdict = verdictFor(Math.round((attempt.score / attempt.max_score) * 100), mock.passPercent);
   if (verdict === 'nicht-bereit') return verdict;
-  const scores = attempt.section_scores || {};
-  const guessed = (mock.sections || []).some((section) => {
-    const got = scores[section.key];
-    const ceiling = sectionGuessCeiling(section);
-    return got && ceiling > 0 && got.score <= ceiling;
-  });
-  return guessed ? 'nicht-bereit' : verdict;
+  return guessedSections(attempt, mock).length ? 'nicht-bereit' : verdict;
 }

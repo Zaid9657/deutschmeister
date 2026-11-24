@@ -8,7 +8,7 @@ import { stationFor } from '../../data/offers.js';
 import { courseHome } from '../../lib/courseFlow.js';
 import { resolveModelltest } from '../../data/modelltest';
 import { attemptMock } from '../../data/mockExams/forms.js';
-import { attemptVerdict } from '../../services/examScoring';
+import { attemptVerdict, guessedSections } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
 import { completeLevelTest } from '../../services/lessonService.js';
@@ -51,6 +51,12 @@ const VERDICT_COPY = {
     body: 'In den automatisch ausgewerteten Teilen liegen Sie unter der dokumentierten 60%-Grenze. Das ist eine Standortbestimmung, kein Urteil — sehen Sie sich unten an, welcher Teil die meisten Punkte gekostet hat.',
   },
 };
+
+/** The result of an attempt that fails on one section alone. No pronoun: some exam mocks duzen, the courses say Sie. */
+export const sectionCopy = (below, percent, passPercent) => ({
+  title: `Noch nicht bestanden: ${below.map((s) => s.title).join(' und ')}`,
+  body: `Insgesamt sind es ${percent} %, das reicht (Grenze: ${passPercent} %). ${below.map((s) => `Im Teil ${s.title} sind es aber nur ${s.score} von ${s.max} Punkten. So viele Punkte gibt es auch für immer dieselbe Antwort; nötig sind dort mindestens ${s.need}.`).join(' ')}`,
+});
 
 // Practice for the weakest section, at the TEST's own level (resolved.gateLevel: the course's level,
 // or an exam track's last sub-level). These links were a fixed B1.1, so an A1.1 or A1.2 learner
@@ -201,7 +207,10 @@ const ModelltestResult = () => {
   const percent = Math.round((attempt.score / attempt.max_score) * 100);
   const verdict = attemptVerdict(attempt, mock);
   const passed = verdict !== 'nicht-bereit';
-  const copy = mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
+  // Over the percent line and still not passed: the reason is one section, never „unter der Grenze“
+  // (independent score, 2026-11-24: 14 of 18 points, 78 %, was told it was under the 60 % line).
+  const below = percent >= mock.passPercent ? guessedSections(attempt, mock) : [];
+  const copy = below.length ? sectionCopy(below, percent, mock.passPercent) : mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
   const sections = attempt.section_scores || {};
   const weakest = Object.entries(sections)
     .map(([key, s]) => ({ key, pct: s.max ? s.score / s.max : 1 }))

@@ -57,7 +57,7 @@ export const abschlusstestA11 = {
   title: 'Abschlusstest A1.1 (Kurzversion)',
   intro:
     'Das ist der Abschlusstest Ihres A1.1-Kurses. Hören und Lesen werden automatisch bewertet; ' +
-    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen. Eine Formularaufgabe zum Schreiben ' +
+    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen zusammen und mit mindestens 5 von 8 Punkten im Lesen. Eine Formularaufgabe zum Schreiben ' +
     'bearbeiten Sie mit einem Selbstcheck; sie zählt nicht zur Punktzahl. Eine freie Mitteilung und Sprechen sind nicht enthalten. ' +
     'Dieser Test übt einzelne Aufgabenarten von Start Deutsch 1 und bildet nicht die vollständige Prüfung ab. ' +
     'Er ist eigenes Übungsmaterial von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. ' +

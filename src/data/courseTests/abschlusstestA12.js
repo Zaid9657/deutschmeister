@@ -7,7 +7,7 @@ export const abschlusstestA12 = {
   "courseLevel": "a1.2",
   "formatOf": "goethe_a1",
   "title": "Abschlusstest A1.2 · Übungstest (Kurzversion)",
-  "intro": "Dieser Übungstest gehört zu Ihrem A1.2-Kurs. Er enthält Hören, Lesen und eine Schreibaufgabe. Automatisch bewertet werden nur Hören und Lesen; die Grenze in diesem Kurstest liegt bei 60 %. Schreiben prüfen Sie mit dem Selbstcheck. Sprechen üben Sie in den Lektionen und Checkpoints. Dieser Test ist eigenes Übungsmaterial von DeutschMeister, keine offizielle Prüfung und kein Nachweis eines Sprachniveaus. Danach können Sie Inhalte wiederholen oder mit dem Kurs A2.1 weiterlernen.",
+  "intro": "Dieser Übungstest gehört zu Ihrem A1.2-Kurs. Er enthält Hören, Lesen und eine Schreibaufgabe. Automatisch bewertet werden nur Hören und Lesen; die Grenze in diesem Kurstest liegt bei 60 % in beiden Teilen zusammen, dazu mindestens 5 von 8 Punkten im Lesen. Schreiben prüfen Sie mit dem Selbstcheck. Sprechen üben Sie in den Lektionen und Checkpoints. Dieser Test ist eigenes Übungsmaterial von DeutschMeister, keine offizielle Prüfung und kein Nachweis eines Sprachniveaus. Danach können Sie Inhalte wiederholen oder mit dem Kurs A2.1 weiterlernen.",
   "passPercent": 60,
   "sections": [
     {
