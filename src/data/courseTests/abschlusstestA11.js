@@ -152,7 +152,7 @@ export const abschlusstestA11 = {
           type: 'mc-group',
           label: 'Teil 2 · Situation 1',
           text:
-            'Frau Kaya hat nur am Dienstag und Donnerstag Zeit. Sie möchte Deutsch lernen.\n' +
+            'Ana hat nur am Dienstag und Donnerstag Zeit. Sie möchte Deutsch lernen.\n' +
             'Anzeige a) Deutsch lernen — Montag und Mittwoch, 18 Uhr, Berlin.\n' +
             'Anzeige b) Deutsch lernen — Dienstag und Donnerstag, 18 Uhr, Berlin.',
           items: [

@@ -6,7 +6,7 @@ import { buildCheckpoint, paperSeed } from '../src/lib/checkpoint/buildCheckpoin
 import { checkpointFeedback, sectionComplete } from '../src/lib/checkpoint/feedback.js';
 import { derivedItems, ATTEMPT_CYCLE } from '../src/lib/lesson/buildLesson.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
-import { wordOrderAnswers } from '../src/lib/lesson/wordOrder.js';
+import { wordOrderAnswers, hasOrderToBuild, LICENSED_ORDERS } from '../src/lib/lesson/wordOrder.js';
 import { t } from '../src/lib/lesson/strings.js';
 
 const grade = (item, answer) => checkAnswer(answer, item.accepted, checkOptionsFor(item)).result;
@@ -73,8 +73,9 @@ test('both levels: disjoint Hören options and deferred feedback stop sequential
 // Since 2026-11-23 a tile task needs something to order: four words or more (`WORD_ORDER_MIN_WORDS`; the
 // screen walk met „Guten Tag!“ and „Ich bin frei.“ as tiles). These Lektionen have no supported dialogue
 // sentence that long, so their slot is a second matching task. MEASURED debt: it may only shrink, by a
-// licensed frame in src/lib/lesson/wordOrder.js for one of their own four-word lines.
-const NO_TILES = { 'a1.1': [1, 2, 3, 7, 9], 'a1.2': [8, 11] };
+// licensed frame in src/lib/lesson/wordOrder.js for one of their own four-word lines. 2026-11-24:
+// `LICENSED_ORDERS` brought tiles back to A1.1 L1, L2, L3, L7, L9 and A1.2 L8, L11; the debt is 0.
+const NO_TILES = { 'a1.1': [], 'a1.2': [] };
 
 test('each A1.1/A1.2 lesson supplies a derived tile task on every attempt and grades every licensed alternative', () => {
   for (const level of ['a1.1', 'a1.2']) {
@@ -129,6 +130,23 @@ test('new tile frames accept all annotated orders and reject every other permuta
     ['Der Rock ist zu kurz.', ['Der Rock ist zu kurz.', 'Zu kurz ist der Rock.']],
     ['Es ist wolkig.', ['Es ist wolkig.', 'Wolkig ist es.']],
     ['Der Käse war lecker.', ['Der Käse war lecker.', 'Lecker war der Käse.']],
+    // Licensed lines (2026-11-24): the two blind readings, written out again here as the gold.
+    ['Ich heiße Ana Chakiri.', ['Ich heiße Ana Chakiri.', 'Ana Chakiri heiße ich.']],
+    ['Mein Nachname ist Chakiri.', ['Mein Nachname ist Chakiri.', 'Chakiri ist mein Nachname.']],
+    ['Die Post kommt an Ihre Adresse.', ['Die Post kommt an Ihre Adresse.', 'An Ihre Adresse kommt die Post.']],
+    ['Sie ist noch jung.', ['Sie ist noch jung.', 'Noch jung ist sie.', 'Noch ist sie jung.', 'Jung ist sie noch.']],
+    ['Der Mann von meiner Schwester kommt aus Marokko.', ['Der Mann von meiner Schwester kommt aus Marokko.', 'Aus Marokko kommt der Mann von meiner Schwester.']],
+    ['Ich schwimme jede Woche.', ['Ich schwimme jede Woche.', 'Jede Woche schwimme ich.']],
+    ['Ich spiele am Wochenende Fußball.', ['Ich spiele am Wochenende Fußball.', 'Am Wochenende spiele ich Fußball.', 'Fußball spiele ich am Wochenende.', 'Ich spiele Fußball am Wochenende.']],
+    ['Mein Hobby ist Sport.', ['Mein Hobby ist Sport.', 'Sport ist mein Hobby.']],
+    ['Das Café ist sehr gut.', ['Das Café ist sehr gut.', 'Sehr gut ist das Café.']],
+    ['Eine Tasse Kaffee und ein Kuchen kommen sofort.', ['Eine Tasse Kaffee und ein Kuchen kommen sofort.', 'Sofort kommen eine Tasse Kaffee und ein Kuchen.', 'Ein Kuchen und eine Tasse Kaffee kommen sofort.', 'Sofort kommen ein Kuchen und eine Tasse Kaffee.']],
+    ['Ich sehe zehn Minuten fern.', ['Ich sehe zehn Minuten fern.', 'Zehn Minuten sehe ich fern.']],
+    ['Der Kühlschrank hat kein Brot.', ['Der Kühlschrank hat kein Brot.', 'Kein Brot hat der Kühlschrank.']],
+    ['Ich frage die Nachbarin.', ['Ich frage die Nachbarin.', 'Die Nachbarin frage ich.']],
+    ['Der Teppich ist auf der Terrasse.', ['Der Teppich ist auf der Terrasse.', 'Auf der Terrasse ist der Teppich.']],
+    ['Seit einer Woche regnet es.', ['Seit einer Woche regnet es.', 'Es regnet seit einer Woche.']],
+    ['Am Abend kommt ein Gewitter.', ['Am Abend kommt ein Gewitter.', 'Ein Gewitter kommt am Abend.']],
   ];
   const permutations = (xs) => xs.length < 2 ? [xs] : xs.flatMap((x, i) => permutations(xs.filter((_, n) => n !== i)).map((rest) => [x, ...rest]));
   for (const [source, licensed] of cases) {
@@ -139,5 +157,20 @@ test('new tile frames accept all annotated orders and reject every other permuta
       const response = p.join(' ');
       assert.equal(grade(item, response), gold.has(norm(response)) ? RESULT.CORRECT : RESULT.WRONG, response);
     }
+  }
+});
+
+test('every licensed tile line is a sentence of a live dialogue, and each of its orders uses exactly its tiles', () => {
+  const sentences = new Set();
+  for (const level of ['a1.1', 'a1.2']) for (const lesson of anyCurriculumFor(level).lektionen) {
+    for (const line of lesson.dialog.lines) for (const s of String(line.de).split(/(?<=[.!?])\s+/)) sentences.add(s.trim());
+  }
+  const tiles = (s) => s.split(/\s+/).map(norm).sort();
+  for (const [sentence, orders] of Object.entries(LICENSED_ORDERS)) {
+    assert.ok(sentences.has(sentence), `${sentence} is in no A1.1/A1.2 dialogue — drop the entry`);
+    assert.ok(hasOrderToBuild(sentence), sentence);
+    assert.equal(orders[0], sentence, 'the dialogue’s own order comes first');
+    assert.equal(new Set(orders.map(norm)).size, orders.length, `${sentence}: an order listed twice`);
+    for (const order of orders) assert.deepEqual(tiles(order), tiles(sentence), order);
   }
 });

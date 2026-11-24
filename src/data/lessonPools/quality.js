@@ -728,7 +728,7 @@ const WORD_EDGE = '[^0-9A-Za-zÄÖÜäöüß]';
 const namesLowercase = (text, word) =>
   new RegExp(`(^|${WORD_EDGE})${word.toLowerCase()}(${WORD_EDGE}|$)`).test(text);
 
-/** „…, Frau Kaya?“ — the address that makes a `Sie` in the same sentence the polite one. */
+/** „…, Herr Weber?“ — the address that makes a `Sie` in the same sentence the polite one. */
 const addressesPerson = (sentence) => /\b(Frau|Herrn?)\s+[A-ZÄÖÜ]/.test(sentence);
 
 /** Does this answer carry a polite form at all — anywhere, position ignored? */

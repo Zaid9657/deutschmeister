@@ -468,7 +468,7 @@ corpora (first scores in each batch's section above); Lektion 1 was finished wit
 
   Rule and outcomes: `typedResult`, `beyondOf` in `finalCheck.js`; screen: `CheckStage.jsx`. Counts per outcome on the eleven corpora: PR 278.
 - **Can-do honesty.** `guided.check.shown` holds the check's own line wherever its turns prove less than the can-do says (12 lines). The check summary, the recap and the course home's finished Lektion use it (`shownLines`).
-- **Who Frau Kaya is (decided by the courses session, 2026-11-23):** only the L1 hostel receptionist, as the cast sheet says; the gesiezt colleague of L10 and L12 is Frau Ramos, and the L6/L12 boss examples name Frau Berg.
+- **Who Frau Kaya is (decided by the courses session, 2026-11-23):** only the L1 hostel receptionist, as the cast sheet says; the gesiezt colleague of L10 and L12 is Frau Ramos, and the L6/L12 boss examples name Frau Berg. Since 2026-11-24 the L3 politeness item (`extra-a11-l03-08`) asks Herr Weber and the final test's Lesen Teil 2 names Ana, so in A1.1 Frau Kaya appears only in Lektion 1 and on the cast sheet.
 - **Waiting on Zaid:**
   - whether the 28-day plan's Tag 5 and Tag 21 should keep listening exercise 3, the final test's Hören;
   - whether the tasks behind the 6 teacher-wrong answers graded correct should ask for digits or a full sentence.

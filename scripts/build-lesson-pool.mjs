@@ -1077,8 +1077,8 @@ const normalised = [...kept, ...supplement, ...extra].map(normaliseRegister).fil
 // Round 5 set `caseSensitive: true` on the three items it had found by hand,
 // and round 6 measured what a list costs: two items of exactly the same shape
 // never got it, so `Frau Müller, ___ sind sehr freundlich.` counted `sie` as a
-// typo — i.e. as CORRECT — while the identical `Frau Kaya, sprechen ___
-// Englisch?` marked it wrong. Two of the unflagged ones are items of the GRADED
+// typo — i.e. as CORRECT — while the identical `Herr Weber, sprechen ___
+// Englisch?` (then still addressed to Frau Kaya) marked it wrong. Two of the unflagged ones are items of the GRADED
 // Checkpoint 4, whose own rule card says the polite Ihr is "immer mit großem I".
 //
 // So the flag is DERIVED from the answer key here and the hand entry is kept as

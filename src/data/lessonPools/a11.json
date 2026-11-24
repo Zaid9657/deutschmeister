@@ -3261,8 +3261,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 38,
-   "questionDe": "Frau Kaya, sprechen ___ Englisch?",
-   "questionEn": "Mrs Kaya, do you speak English? Formal address.",
+   "questionDe": "Herr Weber, sprechen ___ Englisch?",
+   "questionEn": "Mr Weber, do you speak English? Formal address.",
    "options": null,
    "answer": "Sie",
    "accepted": [
@@ -3272,7 +3272,7 @@
    "hint": null,
    "caseSensitive": true,
    "minLektion": 3,
-   "explanationEn": "Frau Kaya is addressed with the formal you. The polite form is **Sie** with a capital **S**: **Sprechen Sie Englisch?**"
+   "explanationEn": "Herr Weber is addressed with the formal you. The polite form is **Sie** with a capital **S**: **Sprechen Sie Englisch?**"
   },
   {
    "id": "extra-a11-l03-09",

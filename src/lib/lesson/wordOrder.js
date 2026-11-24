@@ -16,9 +16,45 @@ export const hasOrderToBuild = (sentence) => String(sentence || '').trim().split
 export const ordersEnough = (item) => item?.type !== 'sentence_building' || hasOrderToBuild(item.answer);
 const lowerFirst = (s) => s === 'Sie' ? s : s[0].toLowerCase() + s.slice(1);
 
+/**
+ * Licensed dialogue sentences: lines the frames below do not cover, each with EVERY order a
+ * teacher marks correct, the dialogue's own first. An entry is closed — any other order of
+ * its tiles is wrong — and joins only when two readings agree on the whole set and both call
+ * it complete: the course session's and Codex's (2026-11-24, the G4 follow-up of the 46c7ca80
+ * review; the two Lektion 3 lines after a second, adversarial Codex pass over every
+ * arrangement). Lines whose set stays open — „auch“ or „nicht“ that changes its focus when it
+ * moves, echo W-questions, sie/Sie, a request whose object may open it — stay dialogue input only.
+ */
+export const LICENSED_ORDERS = Object.freeze({
+  // A1.1
+  'Ich heiße Ana Chakiri.': ['Ich heiße Ana Chakiri.', 'Ana Chakiri heiße ich.'],
+  'Mein Nachname ist Chakiri.': ['Mein Nachname ist Chakiri.', 'Chakiri ist mein Nachname.'],
+  'Die Post kommt an Ihre Adresse.': ['Die Post kommt an Ihre Adresse.', 'An Ihre Adresse kommt die Post.'],
+  // „sie“ is singular here (ist); „von meiner Schwester“ stays with „der Mann“.
+  'Sie ist noch jung.': ['Sie ist noch jung.', 'Noch jung ist sie.', 'Noch ist sie jung.', 'Jung ist sie noch.'],
+  'Der Mann von meiner Schwester kommt aus Marokko.': ['Der Mann von meiner Schwester kommt aus Marokko.',
+    'Aus Marokko kommt der Mann von meiner Schwester.'],
+  'Ich schwimme jede Woche.': ['Ich schwimme jede Woche.', 'Jede Woche schwimme ich.'],
+  'Ich spiele am Wochenende Fußball.': ['Ich spiele am Wochenende Fußball.', 'Am Wochenende spiele ich Fußball.',
+    'Fußball spiele ich am Wochenende.', 'Ich spiele Fußball am Wochenende.'],
+  'Mein Hobby ist Sport.': ['Mein Hobby ist Sport.', 'Sport ist mein Hobby.'],
+  'Das Café ist sehr gut.': ['Das Café ist sehr gut.', 'Sehr gut ist das Café.'],
+  'Eine Tasse Kaffee und ein Kuchen kommen sofort.': ['Eine Tasse Kaffee und ein Kuchen kommen sofort.',
+    'Sofort kommen eine Tasse Kaffee und ein Kuchen.', 'Ein Kuchen und eine Tasse Kaffee kommen sofort.',
+    'Sofort kommen ein Kuchen und eine Tasse Kaffee.'],
+  // A1.2
+  'Ich sehe zehn Minuten fern.': ['Ich sehe zehn Minuten fern.', 'Zehn Minuten sehe ich fern.'],
+  'Der Kühlschrank hat kein Brot.': ['Der Kühlschrank hat kein Brot.', 'Kein Brot hat der Kühlschrank.'],
+  'Ich frage die Nachbarin.': ['Ich frage die Nachbarin.', 'Die Nachbarin frage ich.'],
+  'Der Teppich ist auf der Terrasse.': ['Der Teppich ist auf der Terrasse.', 'Auf der Terrasse ist der Teppich.'],
+  'Seit einer Woche regnet es.': ['Seit einer Woche regnet es.', 'Es regnet seit einer Woche.'],
+  'Am Abend kommt ein Gewitter.': ['Am Abend kommt ein Gewitter.', 'Ein Gewitter kommt am Abend.'],
+});
+
 /** All orders of a supported frame, or [] when its grammar is not covered. */
 export function wordOrderAnswers(text) {
   const line = String(text || '').trim();
+  if (Object.prototype.hasOwnProperty.call(LICENSED_ORDERS, line)) return [...LICENSED_ORDERS[line]];
   if (/^(?:Guten (?:Tag|Morgen|Abend)|Gute Nacht|Auf Wiedersehen|Vielen Dank)[.!]$/.test(line)) return [line];
   const end = line.slice(-1);
   if (!/[.!?]/.test(end)) return [];
