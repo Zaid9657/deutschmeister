@@ -228,6 +228,10 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
   // zwanzig Euro?" — the line „Nein, sie kostet fünfzehn Euro." needs for its „sie" — and it moves
   // to L12 line 3; checkpoint 2's moves from L4 line 0 to line 4. Re-read: both are construction-free
   // lines of 6 and 7 words, taught by their chapter, with a recording. RE-MEASURED.
+  // 2026-11-23 (review of 46c7ca80, H2): Lektion 9's scene was rewritten, so checkpoint 3's second
+  // dictation keeps its line (L9 line 8) with the line's new text. Re-read: 9 words, at the chapter's
+  // ceiling of 9, construction-free, every word taught in L9; no other section of the paper moved.
+  // RE-MEASURED.
   const dictated = Object.fromEntries(ALL_CHECKPOINTS.map(({ cp, items }) => [
     cp.id,
     items.filter((i) => i.kind === 'dictation').map((i) => [i.id, i.lektionId, i.lineKey, i.audioText]),
@@ -245,7 +249,7 @@ test('the twelve dictations of the four real papers are pinned, so a reorder is 
     ],
     'a1.1-cp3': [
       ['a1.1-cp3-hoeren-1', 'a1.1-l08', 'line-8', 'Und am Mittwoch, am Donnerstag oder am Freitag?'],
-      ['a1.1-cp3-hoeren-2', 'a1.1-l09', 'line-8', 'Gut. Die Kellnerin kommt sofort mit dem Brot.'],
+      ['a1.1-cp3-hoeren-2', 'a1.1-l09', 'line-8', 'Gut. Eine Tasse Kaffee und ein Kuchen kommen sofort.'],
       ['a1.1-cp3-hoeren-3', 'a1.1-l07', 'line-9', 'Vielleicht hören wir am Wochenende zusammen Musik?'],
     ],
     'a1.1-cp4': [
