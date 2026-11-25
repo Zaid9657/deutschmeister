@@ -40,10 +40,10 @@ familie familien familienname familienstand farbe farben fe februar fehlt fei fe
 feiert feminin femininen feminines fenster ferien fern fernsehen fernseher fest feste festen fester
 fieber film filme finden findet firma firmen fisch fische fischer fleisch fliege fliegen fliegt
 flohmaerkte flohmarkt flughaefen flughafen flugzeug flugzeuge flur flure foermlich folgen folgt fon
-form formellen formen formular formulare formulieren fortschritt foto fotos frag frage fragen
-fragewort fragt frau frauen frei freitag freitage freizeit fremde freuen freund freunde freunden
-freundin freundinnen freut frueh frueher fruehstueck fruehstuecke fruehstuecken fruehstueckt fuellen
-fuenf fuenfundvierzig fuenfzehn fuenfzig fuer fuesse full funktionieren funktioniert fuss fussbaelle
+form formellen formen formular formulare formulieren fortschritt foto fotos frage fragen fragewort
+fragt frau frauen frei freitag freitage freizeit fremde freuen freund freunde freunden freundin
+freundinnen freut frueh frueher fruehstueck fruehstuecke fruehstuecken fruehstueckt fuellen fuenf
+fuenfundvierzig fuenfzehn fuenfzig fuer fuesse full funktionieren funktioniert fuss fussbaelle
 fussball gaerten gaeste gang ganz ganze ganzen ganzes garage garagen garten gast ge gearbeitet geben
 geboren gebrauchen geburtsdaten geburtsdatum geburtstag geburtstage geehrte geehrter gefaellt
 gefahren gefallen gefeiert gefragt gegangen gegebene gegen gegenstaende gegessen gehe gehen gehoeren
@@ -87,7 +87,7 @@ nehmen nehmt nein nen nennen nennt neu neue neuen neuer neun neunundsechzig neun
 neutrales neutrum nicht nichts nie nimmt noch nomen nominativ normalerweise notwendigkeit novak
 november nudel nudeln null nummer nummern nur ob objekt obst oder oe oesterreich offiziell
 offizielle offiziellen oft ohne okay oktober oma omas onkel opa opas orangensaefte orangensaft
-ordnungszahl ordnungszahlen ort paar paaren packen papa papas papier papiere park parks partizip
+ordnungszahl ordnungszahlen ort paar paare packen papa papas papier papiere park parks partizip
 party partys passen passieren passt paul pause pausen pe per perfekt person personalpronomen
 personen plaene plaetze plan planen plant platz plural pluralform pluralnomen plus polen position
 possessivartikel post praedikat praefix praeposition praepositionen praesens praeteritum praxen
@@ -101,35 +101,35 @@ satzanfang satzende satzes satzklammer satzmelodie satznegation sch schal schals
 sche schere scheren schickt schild schla schlaefst schlaeft schlafe schlafen schlafzimmer schliessen
 schluessel schmidt schnee schneien schneit schnell schoen schoenen schoener schokolade schon
 schraenke schrank schreiben schreibt schreibweise schritt schuh schuhe schule schulen schwarz
-schweiz schwester schwestern schwimme schwimmen schwimmst schwimmt sechs sechsunddreissig sechzehn
-sechzig sehe sehen sehr seid seidel sein seine seinem seit sekt selbst sen september setzen she sich
-sicher sicherheit sie sieben siebenundachtzig siebenundfuenfzig siebzehn siebzig siehst sieht silbe
-sind singular sitzt so socke socken soehne sofa sofas sofort sohn soll sollen sommer son sondern
-sonne sonnig sonntag sonntage spaet spaeter spanien spiegel spiel spiele spielen spielst spielt
-sport sportkurs sportverein sprache sprachen sprachkurs sprachschule spreche sprechen sprechende
-sprecht sprich sprichst spricht ss sser st staatsangehoerigkeit staatsangehoerigkeiten stadt
-stadtbibliothek staedte stamm stammvokal stand startort ste steckdose steckdosen stehe stehen stehst
-steht steig steigende steigt stelle stellen stellt stift stifte stockwerk stockwerke stolz strasse
-strassenbahn strassenbahnen student studenten studentin studentinnen stueck stuehle stuhl stunde
-stunden su subjekt subjektpronomen suchen sucht sudan super supermaerkte supermarkt suppe suppen
-surname szene tablette tabletten taetigkeit tafel tafeln tag tage tagesablauf tagesbeginn tageszeit
-tageszeiten tante tanten tanz tanze tanzen tanzt tasche taschen tasse tassen taxi taxis te technik
-tee tees teil teilen telefon telefone telefonieren telefoniert telefonnummer telefonnummern
+schweiz schwer schwester schwestern schwimme schwimmen schwimmst schwimmt sechs sechsunddreissig
+sechzehn sechzig sehe sehen sehr seid seidel sein seine seinem seit sekt selbst sen september setzen
+she sich sicher sicherheit sie sieben siebenundachtzig siebenundfuenfzig siebzehn siebzig siehst
+sieht silbe sind singular sitzt so socke socken soehne sofa sofas sofort sohn soll sollen sommer son
+sondern sonne sonnig sonntag sonntage spaet spaeter spanien spiegel spiel spiele spielen spielst
+spielt sport sportkurs sportverein sprache sprachen sprachkurs sprachschule spreche sprechen
+sprechende sprecht sprich sprichst spricht ss sser st staatsangehoerigkeit staatsangehoerigkeiten
+stadt stadtbibliothek staedte stamm stammvokal stand startort ste steckdose steckdosen stehe stehen
+stehst steht steig steigende steigt stelle stellen stellt stift stifte stockwerk stockwerke stolz
+strasse strassenbahn strassenbahnen student studenten studentin studentinnen stueck stuehle stuhl
+stunde stunden su subjekt subjektpronomen suchen sucht sudan super supermaerkte supermarkt suppe
+suppen surname szene tablette tabletten taetigkeit tafel tafeln tag tage tagesablauf tagesbeginn
+tageszeit tageszeiten tante tanten tanz tanze tanzen tanzt tasche taschen tasse tassen taxi taxis te
+technik tee tees teil teilen telefon telefone telefonieren telefoniert telefonnummer telefonnummern
 temperatur temperaturen tempo teppich teppiche ter termin termine terrasse terrassen teu teuer text
 thema they thomas ticket tickets tim tims tippen tisch tische tochter toechter toilette toiletten
 toll traegt trage tragen tragt traurig trennbar trennbare trennbaren trennbares treppe treppen
 trinke trinken trinkst trinkt tschuess tuer tueren tuerkei tun tut ue ueber ueberlegen uebernachtet
 uebungen uhr uhren uhrzeit uhrzeiten um umgangssprachlich umlaut umsteigen umwelt umzug unbekannt
 unbestimmte unbestimmtem unbestimmter unbetont und ungefaehr ungefaehre unregelmaessig
-unregelmaessige uns unser unsere unter unterhalten unterschrift unterwegs urlaub usa uː vaeter vater
-vau ver verabreden verabredet verabredung verabredungen verabschieden verabschiedet verb verben
-verbform verbindet verbteil verdoppelt vereinbaren vereinbart vergangenes vergangenheit vergleich
-vergleiche vergleichen verheiratet verkaeufer verkaeuferin verkaeuferinnen verkaufe verkaufen
-verkauft verkehr verkehrsmittel verlangen verlangt verliert vermieter verneinen verneint verneinung
-versichertenkarte versichertenkarten verspaetung verspaetungen verstanden verstehen versuch veː viel
-viele vielen vielleicht vier vierhundertachtzig viertel vierten vierundachtzig vierundfuenfzig
-vierundneunzig vierzehn vierzig vogel vogt vokal vokale vokalwechsel vollen vollstaendig
-vollstaendiger vom von vor vorhaenge vorhang vorlieben vorn vorname vornamen vorsicht vorsilbe
+unregelmaessige uns unser unsere unter unterhalten unterschrift unterwegs urlaub usa uː vaeter vase
+vater vau ver verabreden verabredet verabredung verabredungen verabschieden verabschiedet verb
+verben verbform verbindet verbteil verdoppelt vereinbaren vereinbart vergangenes vergangenheit
+vergleich vergleiche vergleichen verheiratet verkaeufer verkaeuferin verkaeuferinnen verkaufe
+verkaufen verkauft verkehr verkehrsmittel verlangen verlangt verliert vermieter verneinen verneint
+verneinung versichertenkarte versichertenkarten verspaetung verspaetungen verstanden verstehen
+versuch viel viele vielen vielleicht vier vierhundertachtzig viertel vierten vierundachtzig
+vierundfuenfzig vierundneunzig vierzehn vierzig vogel vogt vokal vokale vokalwechsel vollen
+vollstaendig vollstaendiger vom von vor vorhaenge vorhang vorlieben vorn vorname vornamen vorsilbe
 vorstellen waehlen waende wand wann war warm warte warten wartet warum was waschmaschine
 waschmaschinen wasser we weber wechsel wechsele wechseln wechselt wecker weg wegbeschreibung wege
 weh wehtun wehtut weibliche weigel weil wein weine weiss weisst weit weiter welche welchem welchen
@@ -141,6 +141,6 @@ wolf wolke wolken wolkig wollen wort wortakzent worte worten wortende wortkarte 
 wuensche wuenschen wuerde wuerste wunsch wurde wurst ypsilon yː zaehlbares zaehne zahl zahlen zahn
 zehn zeigt zeit zeitangabe zeiten zentren zentrum zett zettel ziehe ziehen ziel ziffer zig zimmer
 zimmernummer zu zucker zuege zuerst zug zuges zugreise zuhause zuhoeren zum zumachen zur zurueck
-zusammen zusammengesetzten zwan zwanzig zwanzigste zwei zweifel zweite zweiten zweitens zweiter
+zusammen zusammengesetzten zwan zwanzig zwanzigste zwei zweite zweiten zweitens zweiter
 zweiundsiebzig zwoelf
 `.split(/\s+/).filter(Boolean));

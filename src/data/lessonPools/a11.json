@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 574,
+ "count": 573,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -2105,7 +2105,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 204,
-   "questionDe": "Tim fragt: Wo ist ___ Papier? (bestimmter Artikel)",
+   "questionDe": "Tim: Wo ist ___ Papier? (bestimmter Artikel)",
    "questionEn": "Tim asks: Where is the paper?",
    "options": null,
    "answer": "das",
@@ -4269,7 +4269,7 @@
    "explanationDe": "fünf-und-vierzig: zuerst die 5, dann die 40. Der Preis ist 45 Euro.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "The small number comes first: **fünf-und-vierzig** is 5 and 40, so the price is **45** euros."
   },
   {
    "id": "extra-a11-l04-43",
@@ -4288,7 +4288,7 @@
    "explanationDe": "In Zahlen 18, als Wort: achtzehn.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "18 is written as one word: **achtzehn**."
   },
   {
    "id": "extra-a11-l04-44",
@@ -4307,7 +4307,7 @@
    "explanationDe": "8 und 12 sind zusammen 20: zwanzig.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "8 and 12 make 20: **zwanzig**."
   },
   {
    "id": "extra-a11-l04-45",
@@ -4326,7 +4326,7 @@
    "explanationDe": "In Zahlen 60, als Wort: sechzig (ohne das s von sechs).",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "60 is **sechzig**. The s of sechs is dropped."
   },
   {
    "id": "extra-a11-l04-46",
@@ -4345,7 +4345,7 @@
    "explanationDe": "20 und 20 sind zusammen 40: vierzig.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "20 and 20 make 40: **vierzig**."
   },
   {
    "id": "extra-a11-l04-47",
@@ -4364,7 +4364,7 @@
    "explanationDe": "sieben-und-achtzig: zuerst die 7, dann die 80. Der Preis ist 87 Euro.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "The small number comes first: **sieben-und-achtzig** is 7 and 80, so the price is **87** euros."
   },
   {
    "id": "extra-a11-l04-50",
@@ -4373,8 +4373,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 208,
-   "questionDe": "Frau Wolf fragt: ___ viele Stühle kaufen Sie? — Vier.",
-   "questionEn": "Frau Wolf asks: … many chairs are you buying? — Four.",
+   "questionDe": "Frau Wolf: ___ viele Stühle kaufen Sie? — Vier.",
+   "questionEn": "Frau Wolf: … many chairs are you buying? — Four.",
    "options": null,
    "answer": "Wie",
    "accepted": [
@@ -4384,7 +4384,7 @@
    "explanationDe": "Mit wie viele fragt man nach einer Zahl: Wie viele Stühle?",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**Wie viele** asks for a number of things you can count: **Wie viele Stühle?**"
   },
   {
    "id": "extra-a11-l04-51",
@@ -4393,8 +4393,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 209,
-   "questionDe": "Tim fragt: ___ kostet das Regal? — Dreißig Euro. (Was oder Wie?)",
-   "questionEn": "Tim asks: … does the shelf cost? — Thirty euros.",
+   "questionDe": "Tim: ___ kostet das Regal? — Dreißig Euro. (Was oder Wie?)",
+   "questionEn": "Tim: … does the shelf cost? — Thirty euros.",
    "options": null,
    "answer": "Was",
    "accepted": [
@@ -4404,7 +4404,7 @@
    "explanationDe": "Nach dem Preis fragt man mit was: Was kostet das Regal?",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "To ask for a price, German uses **was**: **Was kostet das Regal?**"
   },
   {
    "id": "extra-a11-l04-52",
@@ -4427,7 +4427,7 @@
    "explanationDe": "vier-und-fünfzig: zuerst die 4, dann die 50. Der Preis ist 54 Euro.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "The small number comes first: **vier-und-fünfzig** is 4 and 50, so the price is **54** euros."
   },
   {
    "id": "extra-a11-l04-53",
@@ -4450,7 +4450,7 @@
    "explanationDe": "neun-und-sechzig: zuerst die 9, dann die 60. Der Preis ist 69 Euro.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "The small number comes first: **neun-und-sechzig** is 9 and 60, so the price is **69** euros."
   },
   {
    "id": "extra-a11-l04-54",
@@ -4469,7 +4469,7 @@
    "explanationDe": "Das ist es: das macht zusammen fünfzig Euro.",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "das takes the form for es: **das macht** zusammen fünfzig Euro."
   },
   {
    "id": "extra-a11-l04-48",
@@ -4489,7 +4489,7 @@
    "explanationDe": "Das Fragewort steht vorn, dann kommt das Verb: Was kostet die Lampe?",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "The question word comes first, then the verb: **Was kostet die Lampe?**"
   },
   {
    "id": "extra-a11-l04-49",
@@ -4509,7 +4509,7 @@
    "explanationDe": "Wie viel steht vorn, dann kommt das Verb: Wie viel kostet der Tisch?",
    "hint": null,
    "minLektion": 4,
-   "explanationEn": ""
+   "explanationEn": "**Wie viel** comes first, then the verb: **Wie viel kostet der Tisch?**"
   },
   {
    "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
@@ -4822,7 +4822,7 @@
     "section": "bausteine",
     "source": "earlier"
    },
-   "minLektion": 3
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l03-assessment-1-3-3",
@@ -4992,7 +4992,7 @@
    "explanationDe": "der Stift: er. Der Stift ist hier. Er ist hier.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "der Stift is masculine, so the pronoun is **er**."
   },
   {
    "id": "extra-a11-l05-26",
@@ -5012,7 +5012,7 @@
    "explanationDe": "die Schere: sie. Die Schere ist da. Sie ist da.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "die Schere is feminine, so the pronoun is **sie**. (English says “they”.)"
   },
   {
    "id": "extra-a11-l05-27",
@@ -5032,7 +5032,7 @@
    "explanationDe": "das Heft: es. Das Heft ist grün. Es ist grün.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "das Heft is neuter, so the pronoun is **es**."
   },
   {
    "id": "extra-a11-l05-28",
@@ -5051,7 +5051,7 @@
    "explanationDe": "der Schlüssel: er. Der Schlüssel ist da. Er ist da.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "der Schlüssel is masculine, so the pronoun is **er**."
   },
   {
    "id": "extra-a11-l05-29",
@@ -5070,7 +5070,7 @@
    "explanationDe": "das Papier: es. Das Papier ist da. Es ist da.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "das Papier is neuter, so the pronoun is **es**."
   },
   {
    "id": "extra-a11-l05-30",
@@ -5090,7 +5090,7 @@
    "explanationDe": "das Fenster: es. Das Fenster ist weiß. Es ist weiß.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "das Fenster is neuter, so the pronoun is **es**."
   },
   {
    "id": "extra-a11-l03-40",
@@ -5110,7 +5110,7 @@
    "explanationDe": "meine Eltern: sie (Plural).",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "My parents are two people: **sie** (they)."
   },
   {
    "id": "extra-a11-l03-41",
@@ -5119,8 +5119,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 307,
-   "questionDe": "Lena fragt Ana: Sprichst ___ Arabisch? (du, ihr oder Sie?)",
-   "questionEn": "Lena asks Ana: do you speak Arabic?",
+   "questionDe": "Lena: Ana, sprichst ___ Arabisch? (du, ihr oder Sie?)",
+   "questionEn": "Lena: Ana, do you speak Arabic?",
    "options": null,
    "answer": "du",
    "accepted": [
@@ -5129,7 +5129,7 @@
    "explanationDe": "Lena sagt zu Ana du: Sprichst du Arabisch?",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "Lena and Ana are friends, so she says **du**."
   },
   {
    "id": "extra-a11-l03-42",
@@ -5149,7 +5149,7 @@
    "hint": null,
    "caseSensitive": true,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "die Tochter is feminine, so the pronoun is **sie**."
   },
   {
    "id": "extra-a11-l03-43",
@@ -5168,7 +5168,7 @@
    "explanationDe": "der Vater: er.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "der Vater is masculine, so the pronoun is **er**."
   },
   {
    "id": "extra-a11-l03-45",
@@ -5188,7 +5188,7 @@
    "explanationDe": "der Bruder: er.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "der Bruder is masculine, so the pronoun is **er**."
   },
   {
    "id": "extra-a11-l03-46",
@@ -5208,7 +5208,7 @@
    "explanationDe": "meine Familie und ich: wir.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": ""
+   "explanationEn": "My family and I means **wir** (we)."
   },
   {
    "id": "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f",
@@ -5541,7 +5541,7 @@
    "explanationDe": "das Lineal: es. Das Verb steht auf Platz zwei: Es ist da.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "das Lineal is neuter: **es**. The verb is in second place: **Es ist da.**"
   },
   {
    "id": "extra-a11-l03-44",
@@ -5550,8 +5550,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 310,
-   "questionDe": "Das ist meine Mutter. Antworten Sie (Beginnen Sie mit „Sie“): [sie / kommen / aus Marokko]",
-   "questionEn": "This is my mother. Answer. Begin with “Sie”.",
+   "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Sie“): [sie / kommen / aus Marokko] (meine Mutter)",
+   "questionEn": "Build the sentence (about my mother). Begin with “Sie”.",
    "options": null,
    "answer": "Sie kommt aus Marokko.",
    "accepted": [
@@ -5562,8 +5562,8 @@
    ],
    "explanationDe": "die Mutter: sie. Das Verb steht auf Platz zwei: Sie kommt aus Marokko.",
    "hint": null,
-   "minLektion": 5,
-   "explanationEn": ""
+   "minLektion": 2,
+   "explanationEn": "The mother is **sie**; the verb is in second place: **Sie kommt aus Marokko.**"
   },
   {
    "id": "d9887d31-0932-5143-b05e-3f903d659cd9",
@@ -6029,7 +6029,7 @@
    "explanationDe": "Ana: sie. der Geburtstag: ihr Geburtstag.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "Ana is she, so her is **ihr**: der Geburtstag, **ihr** Geburtstag."
   },
   {
    "id": "extra-a11-l12-41",
@@ -6048,7 +6048,7 @@
    "explanationDe": "du: dein. die Party: deine Party.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "You (du) becomes **dein**; die Party is feminine: **deine** Party."
   },
   {
    "id": "extra-a11-l12-42",
@@ -6067,7 +6067,7 @@
    "explanationDe": "du: dein. die Mama: deine Mama.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "You (du) becomes **dein**; die Mama is feminine: **deine** Mama."
   },
   {
    "id": "extra-a11-l12-44",
@@ -6086,7 +6086,7 @@
    "explanationDe": "er: sein. das Geschenk: sein Geschenk.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "He becomes **sein**; das Geschenk is neuter: **sein** Geschenk."
   },
   {
    "id": "9f8d70b7-2a9b-5c6c-8159-670b6cfd02c6",
@@ -6106,7 +6106,7 @@
    "explanationDe": "Vater ist maskulin, deshalb heißt es „mein“, ohne Endung.",
    "explanationEn": "The owner is ich, so the word is **mein** (my). Vater is masculine (der Vater), so there is no ending: **Mein Vater**.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 2
   },
   {
    "id": "388af6b1-9be8-5418-9d0f-1480baaa31b0",
@@ -6223,7 +6223,7 @@
    "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Vater is masculine, so there is no ending: **ihr Vater**.",
    "hint": null,
    "caseSensitive": true,
-   "minLektion": 3
+   "minLektion": 1
   },
   {
    "id": "10b25f5c-723f-58dc-b4fb-6a5b5826e352",
@@ -6522,7 +6522,7 @@
    "explanationDe": "die Gäste: Plural, also kommen. Das Verb steht auf Platz zwei.",
    "hint": null,
    "minLektion": 12,
-   "explanationEn": ""
+   "explanationEn": "die Gäste is plural: **kommen**. The verb is in second place."
   },
   {
    "id": "25fe0c36-72d2-47f1-928f-b91d70481b29",
@@ -7009,7 +7009,7 @@
    "explanationDe": "wir hören.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "wir takes the ending -en: **wir hören**."
   },
   {
    "id": "extra-a11-l07-41",
@@ -7028,7 +7028,7 @@
    "explanationDe": "der Freund: er spielt.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "der Freund is he: **er spielt**."
   },
   {
    "id": "extra-a11-l07-43",
@@ -7047,7 +7047,7 @@
    "explanationDe": "Lena und ihre Freundin: sie schwimmen.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "Lena and her friend are two people: **sie schwimmen**."
   },
   {
    "id": "extra-a11-l07-44",
@@ -7066,7 +7066,7 @@
    "explanationDe": "du hörst.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "du takes the ending -st: **du hörst**."
   },
   {
    "id": "extra-a11-l07-45",
@@ -7085,7 +7085,7 @@
    "explanationDe": "ihr spielt.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "ihr takes the ending -t: **ihr spielt**."
   },
   {
    "id": "extra-a11-l07-47",
@@ -7105,7 +7105,7 @@
    "explanationDe": "der Freund: er kocht.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "der Freund is he: **er kocht**."
   },
   {
    "id": "extra-a11-l07-48",
@@ -7124,7 +7124,7 @@
    "explanationDe": "die Freundin: sie tanzt.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "die Freundin is she: **sie tanzt**."
   },
   {
    "id": "02374938-9977-52c2-8828-2929e8075633",
@@ -7317,25 +7317,6 @@
    "minLektion": 8
   },
   {
-   "id": "3d87b070-9689-58e0-9f0a-66393ce1b66a",
-   "topic": "present-tense-regular",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 23,
-   "questionDe": "Was ___ er? (fragen)",
-   "questionEn": "What does he ask? (verb: fragen, er)",
-   "options": null,
-   "answer": "fragt",
-   "accepted": [
-    "fragt"
-   ],
-   "explanationDe": "In der er-Form kommt -t an den Stamm „frag“: fragt.",
-   "explanationEn": "After **er** the verb takes the ending **-t**: frag + t = **fragt**. So: Was fragt er?",
-   "hint": null,
-   "minLektion": 1
-  },
-  {
    "id": "extra-a11-l07-03",
    "topic": "present-tense-regular",
    "type": "fill_blank",
@@ -7514,7 +7495,7 @@
    "explanationDe": "ich tanze. Das Verb steht auf Platz zwei, dann kommt gern.",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "ich takes the ending -e: **ich tanze**. gern follows the verb."
   },
   {
    "id": "extra-a11-l07-46",
@@ -7534,7 +7515,7 @@
    "explanationDe": "Was steht vorn, dann kommt das Verb: Was machst du am Wochenende?",
    "hint": null,
    "minLektion": 7,
-   "explanationEn": ""
+   "explanationEn": "**Was** comes first, then the verb: **Was machst du am Wochenende?**"
   },
   {
    "id": "9a58bc0a-594f-5a6f-b82c-146efa8d78c6",
@@ -7724,7 +7705,7 @@
    "explanationDe": "Das Verb „zuhören“ ist trennbar: er hört … zu.",
    "explanationEn": "Zuhören splits: after **er** the verb part takes **-t** and stands second, the prefix zu stays at the end: **Er hört … zu.**",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l11-assessment-4-1-2",
@@ -9497,8 +9478,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 322,
-   "questionDe": "Der Kellner fragt: ___ Sie Hunger? (haben)",
-   "questionEn": "The waiter asks: are you hungry?",
+   "questionDe": "Kellner: Guten Tag! ___ Sie Hunger? (haben)",
+   "questionEn": "Waiter: Good day! Are you hungry?",
    "options": null,
    "answer": "Haben",
    "accepted": [
@@ -9508,7 +9489,7 @@
    "explanationDe": "Sie (höflich): haben. Das Verb steht vorn.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "With polite Sie the form is **haben**; in a yes/no question the verb comes first."
   },
   {
    "id": "extra-a11-l09-41",
@@ -9527,7 +9508,7 @@
    "explanationDe": "ich habe.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "ich takes **habe**. German says **Ich habe Durst** where English says I am thirsty."
   },
   {
    "id": "extra-a11-l09-42",
@@ -9545,8 +9526,8 @@
    ],
    "explanationDe": "wir haben.",
    "hint": null,
-   "minLektion": null,
-   "explanationEn": ""
+   "minLektion": 9,
+   "explanationEn": "wir takes **haben**."
   },
   {
    "id": "extra-a11-l09-44",
@@ -9565,8 +9546,8 @@
    ],
    "explanationDe": "die Kellnerin: sie hat.",
    "hint": null,
-   "minLektion": null,
-   "explanationEn": ""
+   "minLektion": 9,
+   "explanationEn": "die Kellnerin is she: **sie hat**."
   },
   {
    "id": "extra-a11-l09-45",
@@ -9585,7 +9566,7 @@
    "explanationDe": "du hast.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "du takes **hast**."
   },
   {
    "id": "3286c2b6-0c89-5187-ae66-841a73bcc4c4",
@@ -9956,7 +9937,7 @@
    "explanationDe": "das Café: es hat. Das Verb steht auf Platz zwei.",
    "hint": null,
    "minLektion": 9,
-   "explanationEn": ""
+   "explanationEn": "das Café is it: **es hat**. The verb is in second place."
   },
   {
    "id": "extra-a11-l09-46",
@@ -9975,8 +9956,8 @@
    ],
    "explanationDe": "Das Verb steht vorn: Haben Sie Orangensaft?",
    "hint": null,
-   "minLektion": null,
-   "explanationEn": ""
+   "minLektion": 9,
+   "explanationEn": "In a yes/no question the verb comes first: **Haben Sie Orangensaft?**"
   },
   {
    "id": "dcfdd24d-b6da-4222-92a9-2e816bf4cc5d",
@@ -10048,7 +10029,7 @@
    "explanationDe": "Zu „wir“ gehört die Form „sind“.",
    "explanationEn": "After **wir** the form of sein is **sind**: **Wir sind in Berlin.** Seid belongs to ihr.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 1
   },
   {
    "id": "da9e486f-2548-4462-9bdd-c59560ed7276",
@@ -10532,7 +10513,7 @@
    "explanationDe": "die Bücher: Plural, also sind.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "die Bücher is plural, so the verb is **sind**."
   },
   {
    "id": "extra-a11-l05-34",
@@ -10551,7 +10532,7 @@
    "explanationDe": "der Schlüssel: Singular, also ist.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "der Schlüssel is singular, so the verb is **ist**."
   },
   {
    "id": "extra-a11-l06-25",
@@ -10570,7 +10551,7 @@
    "explanationDe": "Am Telefon sagt man: Hier ist Ana Chakiri.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "On the phone you say **Hier ist** and your name."
   },
   {
    "id": "extra-a11-l06-26",
@@ -10589,7 +10570,7 @@
    "explanationDe": "die Pause: Singular, also ist.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "die Pause is singular, so the verb is **ist**."
   },
   {
    "id": "extra-a11-l06-27",
@@ -10608,7 +10589,7 @@
    "explanationDe": "Ein Computer und ein Telefon: zusammen Plural, also sind.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "Two things together are plural, so the verb is **sind**."
   },
   {
    "id": "extra-a11-l06-28",
@@ -10627,7 +10608,7 @@
    "explanationDe": "Sie (höflich): sind.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "With polite Sie the verb is **sind**."
   },
   {
    "id": "extra-a11-l06-30",
@@ -10646,7 +10627,7 @@
    "explanationDe": "die Handynummer: Singular, also ist.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "die Handynummer is singular, so the verb is **ist**."
   },
   {
    "id": "extra-a11-l06-32",
@@ -10665,7 +10646,7 @@
    "explanationDe": "Herr Weber und Ana: sie (Plural) sind.",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "Herr Weber and Ana are two people (they), so the verb is **sind**."
   },
   {
    "id": "extra-a11-l02-40",
@@ -10674,7 +10655,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 300,
-   "questionDe": "Herr Weber fragt: Und was ___ Sie von Beruf? (sein)",
+   "questionDe": "Herr Weber: Und was ___ Sie von Beruf? (sein)",
    "questionEn": "Herr Weber asks: and what is your job?",
    "options": null,
    "answer": "sind",
@@ -10684,7 +10665,7 @@
    "explanationDe": "Sie (höflich): sind.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "With polite Sie the verb is **sind**."
   },
   {
    "id": "extra-a11-l02-41",
@@ -10693,8 +10674,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 301,
-   "questionDe": "Und Herr Weber? Er ___ vom Amt. (sein)",
-   "questionEn": "And Herr Weber? He is from the office.",
+   "questionDe": "Und Herr Weber? Er ___ verheiratet. (sein)",
+   "questionEn": "And Herr Weber? He is married.",
    "options": null,
    "answer": "ist",
    "accepted": [
@@ -10703,27 +10684,26 @@
    "explanationDe": "er: ist.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "er takes **ist**."
   },
   {
    "id": "extra-a11-l02-43",
    "topic": "verb-sein",
-   "type": "error_correction",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 303,
-   "questionDe": "Korrigieren Sie das Verb: „Mein Vorname sind Ana.“",
-   "questionEn": "Fix the verb. Write the whole sentence; change only the verb.",
+   "questionDe": "Ergänzen Sie: Das ___ meine Adresse und meine Telefonnummer. (sein)",
+   "questionEn": "Fill in: these are my address and my phone number.",
    "options": null,
-   "answer": "Mein Vorname ist Ana.",
+   "answer": "sind",
    "accepted": [
-    "Mein Vorname ist Ana.",
-    "Mein Vorname ist Ana"
+    "sind"
    ],
-   "explanationDe": "der Vorname: Singular, also ist.",
+   "explanationDe": "die Adresse und die Telefonnummer: zusammen Plural, also sind.",
    "hint": null,
-   "minLektion": 7,
-   "explanationEn": ""
+   "minLektion": 2,
+   "explanationEn": "The address and the phone number are two things, so the verb is **sind**."
   },
   {
    "id": "extra-a11-l02-45",
@@ -10742,7 +10722,7 @@
    "explanationDe": "Tim und ich: wir sind.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "Tim und ich means we, so the verb is **sind**."
   },
   {
    "id": "1e3a7370-9e9c-55ea-b513-496b45421861",
@@ -10996,7 +10976,7 @@
     "section": "schreiben",
     "source": "chapter"
    },
-   "minLektion": 3
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-assessment-1-4-7",
@@ -11041,7 +11021,7 @@
    "explanationDe": "Wo steht vorn, dann kommt das Verb: Wo ist mein Wörterbuch?",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "**Wo** comes first, then the verb: **Wo ist mein Wörterbuch?**"
   },
   {
    "id": "extra-a11-l05-35",
@@ -11061,7 +11041,7 @@
    "explanationDe": "die Scheren: Plural. Wo steht vorn, dann kommt sind.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": ""
+   "explanationEn": "die Scheren is plural: **Wo sind die Scheren?**"
   },
   {
    "id": "extra-a11-l06-23",
@@ -11081,7 +11061,7 @@
    "explanationDe": "Wann steht vorn, dann kommt das Verb: Wann ist die Pause?",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**Wann** comes first, then the verb: **Wann ist die Pause?**"
   },
   {
    "id": "extra-a11-l06-24",
@@ -11101,7 +11081,7 @@
    "explanationDe": "Wo steht vorn, dann kommt das Verb: Wo ist mein Computer?",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**Wo** comes first, then the verb: **Wo ist mein Computer?**"
   },
   {
    "id": "extra-a11-l06-29",
@@ -11121,7 +11101,7 @@
    "explanationDe": "Wie steht vorn, dann kommt das Verb: Wie ist die Telefonnummer?",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "**Wie** comes first, then the verb: **Wie ist die Telefonnummer?**"
   },
   {
    "id": "extra-a11-l06-31",
@@ -11141,7 +11121,7 @@
    "explanationDe": "Wo steht vorn, dann kommt das Verb: Wo ist das Büro?",
    "hint": null,
    "minLektion": 6,
-   "explanationEn": ""
+   "explanationEn": "**Wo** comes first, then the verb: **Wo ist das Büro?**"
   },
   {
    "id": "extra-a11-l02-42",
@@ -11162,7 +11142,7 @@
    "hint": null,
    "caseSensitive": true,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "**Wie** comes first, then the verb: **Wie ist Ihr Nachname?**"
   },
   {
    "id": "extra-a11-l02-44",
@@ -11184,7 +11164,7 @@
    "explanationDe": "die Adresse: Singular, also ist. Das Verb steht auf Platz zwei.",
    "hint": null,
    "minLektion": 2,
-   "explanationEn": ""
+   "explanationEn": "die Adresse is singular: **ist**. The verb is in second place."
   },
   {
    "id": "5c5c272b-ff81-5811-83b6-6e7fde71ba1b",
@@ -11722,7 +11702,7 @@
    "explanationDe": "Die anderen drei beginnen mit einem W-Wort und fragen nach Information; Wohnst du in Köln? beginnt mit dem Verb und erwartet ja/nein.",
    "explanationEn": "A yes/no question starts with the verb: **Wohnst du in Köln?** The other three start with a question word (Wie, Wo, Wer) and ask for information.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l10-assessment-4-1-7",
