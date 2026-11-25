@@ -974,7 +974,7 @@ test('the per-topic floor still holds after the untaught-lexis drop', () => {
   // hand-written extras and has stood at 4 since it was introduced — it is not
   // a casualty of the lexis gate (the gate dropped 0 items from it). It is named
   // here rather than filtered out, so the day it is filled the list gets shorter.
-  assert.deepEqual(thin, ['a1.1 numbers: 4'], `topics under the 7-item floor — hand-written extras needed:\n  ${thin.join('\n  ')}`);
+  assert.deepEqual(thin, [], `topics under the 7-item floor — hand-written extras needed:\n  ${thin.join('\n  ')}`);
 });
 
 

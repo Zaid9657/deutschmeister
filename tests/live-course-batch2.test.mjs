@@ -136,7 +136,6 @@ test('new tile frames accept all annotated orders and reject every other permuta
     // Licensed lines (2026-11-24): the two blind readings, written out again here as the gold.
     ['Ich heiße Ana Chakiri.', ['Ich heiße Ana Chakiri.', 'Ana Chakiri heiße ich.']],
     ['Mein Nachname ist Chakiri.', ['Mein Nachname ist Chakiri.', 'Chakiri ist mein Nachname.']],
-    ['Die Post kommt an Ihre Adresse.', ['Die Post kommt an Ihre Adresse.', 'An Ihre Adresse kommt die Post.']],
     ['Sie ist noch jung.', ['Sie ist noch jung.', 'Noch jung ist sie.', 'Noch ist sie jung.', 'Jung ist sie noch.']],
     ['Der Mann von meiner Schwester kommt aus Marokko.', ['Der Mann von meiner Schwester kommt aus Marokko.', 'Aus Marokko kommt der Mann von meiner Schwester.']],
     ['Ich schwimme jede Woche.', ['Ich schwimme jede Woche.', 'Jede Woche schwimme ich.']],

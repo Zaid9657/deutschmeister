@@ -14,6 +14,7 @@
 import { generatedCheckpoint } from './helpers/generatedCheckpoint.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { numberWordsToDigits } from '../src/lib/lesson/check.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -147,7 +148,9 @@ test('no extra item gives its answer away or hides its task in the English gloss
 
 test('every extra item has the Lektion topic, the pool shape and typed production', () => {
   for (const item of EXTRA) {
-    assert.ok(item.topic === target(item).topic || item.topic === NUMBERS_TOPIC,
+    // (A Lektion whose practice rule seats its own can-dos names their topics: `topicMin`, loop round 3.)
+    const rule = CURRICULUM_A11.lektionen.find((l) => l.nr === target(item).nr)?.practiceRule;
+    assert.ok(item.topic === target(item).topic || item.topic === NUMBERS_TOPIC || rule?.topicMin?.[item.topic],
       `${item.id} is on the wrong topic`);
     assert.ok(['fill_blank', 'sentence_building', 'error_correction'].includes(item.type), `${item.id}: ${item.type}`);
     assert.equal(item.options, null, `${item.id} carries options — that would make it recognition`);
@@ -567,9 +570,21 @@ test('the four number items of Lektion 2 derive the number from the German promp
   }
   // The reverse direction: no item outside that group wears the label, so the
   // Lektion-2 draw cannot be flooded by it.
+  // Loop round 3 (2026-11-25): Lektion 4 drills prices (its own can-do), so it owns the label too: a price said in words and
+  // written in figures, a number or a sum written in words, and the question for the price itself.
   for (const item of EXTRA) {
-    if (item.topic !== NUMBERS_TOPIC) continue;
-    assert.ok(numberItems.includes(item), `${item.id} is filed under ${NUMBERS_TOPIC} but is not a number item`);
+    if (item.topic !== NUMBERS_TOPIC || numberItems.includes(item)) continue;
+    assert.equal(target(item).nr, 4, `${item.id} is filed under ${NUMBERS_TOPIC} but is not a number item`);
+    const said = numberWordsToDigits(item.questionDe.replace(/\(.*?\)/g, ' ')).match(/\d+/g) || [];
+    if (/^\d+$/.test(item.answer)) { assert.deepEqual(said, [item.answer], `${item.id}: the figures say another price`); continue; }
+    const value = numberWordsToDigits(item.answer);
+    if (/^\d+$/.test(value)) {
+      const cue = item.questionDe.match(/\((\d+);/)?.[1];
+      const sums = [said.reduce((a, b) => a + Number(b), 0), ...(/Zwei /.test(item.questionDe) ? [2 * Number(said[0])] : [])].map(String);
+      assert.ok(cue === value || sums.includes(value), `${item.id}: ${value} follows from no number of the prompt (${said})`);
+      continue;
+    }
+    assert.match(`${item.questionDe} ${item.answer}`, /kost|viele|zusammen/, `${item.id} is filed under ${NUMBERS_TOPIC} but asks for no price`);
   }
 });
 
@@ -858,6 +873,7 @@ test('every sentence-building item with a time or place Angabe accepts both word
   // 2026-11-03: L8's taught-form repair reseats CP3 to a haben gap, not a frontable sentence.
   // Both-order acceptance is still required above for EVERY pool and drawn checkpoint item.
   // 2026-11-25: yes/no questions no longer name their opening, which reseats the generated papers: one more frontable seat.
+  // Loop round 3 (2026-11-25): 67 new practice items reseat the generated papers (the live ones come from the reserved bank).
   assert.deepEqual([...gradedIds].sort(), [
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
@@ -907,8 +923,7 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // 2026-11-23: `extra-a11-l07-05` is now „Wir tanzen hier zusammen.“ (a word bag needs four words), so
     // checkpoint 3's seat 2 gains the fronted „Hier tanzen wir zusammen.“, asserted above. RE-MEASURED.
     'a1.1-cp1-schreiben-2',
-    'a1.1-cp3-schreiben-2',
-    'a1.1-cp4-bausteine-6',
+    'a1.1-cp3-bausteine-1',
     'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });

@@ -947,9 +947,13 @@ test('the situation fill pass bites — remove it and a block drops below the fl
   writeFileSync(file, mutated);
   const withoutFloor = await import(pathToFileURL(file).href);
 
+  // (The pool of loop round 3 is situational enough for `SITUATION_MIN` 4 without the pass, so the pass is measured on the pool
+  // without that round's 60-odd items: there a block drops below the floor.)
+  const thinner = { ...POOL, items: POOL.items.filter((it) => !(/^extra-a11-/.test(it.id) && it.order >= 200)) };
+  assert.ok(thinner.items.length < POOL.items.length - 50);
   const dropped = [];
   for (const attempt of ATTEMPTS) {
-    const plan = withoutFloor.planPractice(CURRICULUM_A11, POOL, attempt);
+    const plan = withoutFloor.planPractice(CURRICULUM_A11, thinner, attempt);
     for (const lektion of LEKTIONEN) {
       const counted = situationalIn(plan.get(lektion.nr), lektion);
       if (counted < SITUATION_MIN) dropped.push(`attempt ${attempt} L${lektion.nr}: ${counted}`);

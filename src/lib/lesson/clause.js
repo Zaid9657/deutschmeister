@@ -182,6 +182,8 @@ export function reader(text, ctx) {
         const n = nounAt(adjEnd);
         if (!n) continue;
         if (n.unknown && ctx.isPlace(T[adjEnd].raw) && !adjs.length && !ctx.placeArticle(T[adjEnd].raw)) continue;
+        // („Ich lerne das Deutsch.“: a language has no article.)
+        if (det.kind === 'def' && !adjs.length && ctx.isLanguage(T[adjEnd].raw)) continue;
         const ds = det.readings.filter((r) => !n.readings || n.readings.includes(r.g) || (n.weak && r.g === 'der'));
         const combos = ds.filter((r) => {
           if (n.genitive && r.c !== 'g' && !ctx.readings(T[adjEnd].raw)) return r.g === 'pl';
@@ -262,7 +264,7 @@ export function reader(text, ctx) {
       const combos = adjSlots(adjs, n.readings).filter((c) => c.c !== 'd' || c.g !== 'pl' || /[ns]$/u.test(n.f));
       if (!combos.length) continue;
       const g = new Set(combos.map((c) => c.g));
-      out.push({ end: k + 1, combos, agr: g.size === 1 && g.has('pl') ? 'sie' : plural ? 'er|sie' : 'er', head: n.f, kind: 'np', bare: true, bareOk: plural || stuff || (mass && !adjs.length), stuff, job, adjs: adjs.map((a) => a.stem), small: n.small, infinitive: n.infinitive });
+      out.push({ end: k + 1, combos, agr: g.size === 1 && g.has('pl') ? 'sie' : plural ? 'er|sie' : 'er', head: n.f, kind: 'np', bare: true, bareOk: (plural && n.readings.every((x) => x === 'pl')) || stuff || (mass && !adjs.length), stuff, job, adjs: adjs.map((a) => a.stem), small: n.small, infinitive: n.infinitive });
     }
     return out;
   }
@@ -713,7 +715,7 @@ export function reader(text, ctx) {
     if (dat && dat.kind !== 'pron' && !acc && takes.includes('a') && !wh) return null;
     if (subj?.kind === 'language' && !['sein', 'gefallen', 'machen', 'klingen'].includes(lemma)) return null;
     // „Kaffee von Milch“: what goes with it stands after „mit“.
-    if (acc && (acc.stuff || acc.measure || ctx.isFood?.(acc.head)) && elems.some((e) => e.kind === 'pp' && e.prep === 'von' && e.np.stuff)) return null;
+    if (acc && (acc.stuff || acc.measure || ctx.isFood?.(acc.head) || /^(?:glas|tasse|stück|flasche|portion|teller|dose)$/u.test(acc.head)) && elems.some((e) => e.kind === 'pp' && e.prep === 'von' && e.np.stuff)) return null;
     if (lemma === 'heißen' && !pred && !wh) return null;
     if (lemma === 'geben' && !dat && !(subj?.head === 'es' && acc) && takes === 'ad') return null;
     // „Das ist meine Tasche“, „Das sind meine Schlüssel“: what it is and the verb are one number.
@@ -726,6 +728,7 @@ export function reader(text, ctx) {
     // A predicate adjective needs a verb that takes one; beside another verb it says how („gut schlafen“), never beside „haben“.
     if (lemma === 'haben' && adj.length && !adj.some((a) => ['frei', 'offen', 'geöffnet', 'ganz', 'gut', 'normal'].includes(a.word))) return null;
     if (takes.includes('a') && !takes.includes('p') && adj.some((a) => ['müde', 'krank', 'rot', 'hungrig', 'durstig', 'verheiratet', 'jung'].includes(a.word))) return null;
+    if (acc?.infinitive && lemma === 'spielen') return null;
     if (acc && PLAYED.has(acc.head) && !PLAYING.has(lemma)) return null;
     if (!placesFit(elems, lemma, takes)) return null;
     // „nicht Hunger“: a noun without an article is negated with „kein“.
@@ -993,8 +996,9 @@ export function reader(text, ctx) {
         const v0 = c.end + 1;
         for (const v of verbsAt(v0, ['fin'])) { const acc = []; middle(v0 + 1, v, [], acc, 0); for (const m of acc) for (const d of finish({ end: m.end, start: j }, m.elems, v, m.bracket, { inverted: true })) options.push({ ...d, before: c }); }
       }
-      // „Danke für das Angebot.“ is thanks, not an answer.
-      for (const c of fragment(j)) options.push(f(j) === 'danke' && c.elems.length > 1 && c.elems.slice(1).every((e) => e.kind === 'pp' && e.prep === 'für') ? { end: c.end, around: 'danke', elems: [] } : c);
+      // „Danke für das Angebot.“ is thanks, not an answer. What „und“ adds to an object is one too („den Stuhl und der Tisch“).
+      const object = joined && joined !== ',' && clauses.findLast((x) => !x.around)?.acc;
+      for (const c of fragment(j)) if (!(object && c.elems.some((e) => e.combos && !e.combos.some((x) => x.c === 'a')))) options.push(f(j) === 'danke' && c.elems.length > 1 && c.elems.slice(1).every((e) => e.kind === 'pp' && e.prep === 'für') ? { end: c.end, around: 'danke', elems: [] } : c);
       // The longest reading first; a clause before a fragment, a greeting before a fragment.
       options.sort((a, b) => b.end - a.end || (a.frag ? 1 : 0) - (b.frag ? 1 : 0) || (a.around ? -1 : 0) - (b.around ? -1 : 0) || (b.sharedSubj ? 1 : 0) - (a.sharedSubj ? 1 : 0) || (a.imperative ? 1 : 0) - (b.imperative ? 1 : 0));
       for (const c of options.slice(0, 40)) {

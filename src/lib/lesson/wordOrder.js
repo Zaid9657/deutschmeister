@@ -29,7 +29,6 @@ export const LICENSED_ORDERS = Object.freeze({
   // A1.1
   'Ich heiße Ana Chakiri.': ['Ich heiße Ana Chakiri.', 'Ana Chakiri heiße ich.'],
   'Mein Nachname ist Chakiri.': ['Mein Nachname ist Chakiri.', 'Chakiri ist mein Nachname.'],
-  'Die Post kommt an Ihre Adresse.': ['Die Post kommt an Ihre Adresse.', 'An Ihre Adresse kommt die Post.'],
   // „sie“ is singular here (ist); „von meiner Schwester“ stays with „der Mann“.
   'Sie ist noch jung.': ['Sie ist noch jung.', 'Noch jung ist sie.', 'Noch ist sie jung.', 'Jung ist sie noch.'],
   'Der Mann von meiner Schwester kommt aus Marokko.': ['Der Mann von meiner Schwester kommt aus Marokko.',

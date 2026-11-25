@@ -164,6 +164,8 @@ const CHECK_HOBBIES = ['Sport', 'Musik', 'Fußball', 'Kino', 'Lesen', 'Kochen', 
 
 export const CURRICULUM_A11 = {
   level: 'a1.1',
+  // An item of practice stands in one Lektion only (buildLesson.js).
+  oneLektionItems: true,
   code: 'A1.1',
   examKey: 'goethe_a1',
   examName: 'Start Deutsch 1',
@@ -372,10 +374,10 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
-        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We [veː]). Der Name ist nicht der Laut: In *Wasser* hört man [v]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
-        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett** or scharfes S. To ask how a word is written: **Wie buchstabiert man das?**',
+        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Drei Paare sind schwer: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We). Der Name ist nicht der Laut: V klingt in *Vater* wie F, in *Vase* wie W. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Fragen Sie: **Wie buchstabiert man das?**',
+        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We**). A letter’s name is not its sound: in *Vater* (father) V sounds like F, in *Vase* (vase) like the German W. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett** or scharfes S. To ask how a word is written: **Wie buchstabiert man das?**',
         // Arabic help: Codex's Modern Standard Arabic from bodyEn, re-derived 2026-11-19 after the marking fixes rewrote the English, checked by a blind back-translation.
-        bodyAr: 'لتهجئة كلمة، انطق أسماء حروفها الألمانية حرفًا حرفًا. يسهل الخلط بين E [eː] وI [iː]؛ وبين G [geː] وJ (Jot)؛ وبين V (Vau) وW (We [veː]). اسم الحرف يختلف عن صوته: اسم W هو We، لكنه في كلمة Wasser يُنطق بالصوت [v]. اسم Y هو Ypsilon، وZ هو Zett، وß هو Eszett أو scharfes S. للسؤال عن كيفية كتابة كلمة، يمكنك أن تقول: Wie buchstabiert man das?',
+        bodyAr: 'لتهجئة كلمة، انطق أسماء حروفها الألمانية حرفًا حرفًا. يسهل الخلط بين E [eː] وI [iː]؛ وبين G [geː] وJ (Jot)؛ وبين V (Vau) وW (We). اسم الحرف يختلف عن صوته: في كلمة Vater يُنطق V مثل F، وفي كلمة Vase مثل W الألمانية. اسم Y هو Ypsilon، وZ هو Zett، وß هو Eszett أو scharfes S. للسؤال عن كيفية كتابة كلمة، يمكنك أن تقول: Wie buchstabiert man das?',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
@@ -450,7 +452,7 @@ export const CURRICULUM_A11 = {
         chunks: [
           {
             from: 0,
-            to: 2, meaningLines: '8deeb478',
+            to: 2, meaningLines: '7d435b38',
             meaning: {
               promptDe: 'Wer ist Herr Weber? Wählen Sie die Bedeutung.',
               promptEn: 'Who is Herr Weber? Choose the meaning.',
@@ -463,7 +465,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4, meaningLines: 'cfc2d950',
+            to: 4, meaningLines: 'c255215c',
             meaning: {
               promptDe: 'Was möchte Herr Weber wissen? Wählen Sie die Bedeutung.',
               promptEn: 'What does Herr Weber want to know? Choose the meaning.',
@@ -476,7 +478,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 4,
-            to: 6, meaningLines: '5aecc016',
+            to: 6, meaningLines: 'b4627c1b',
             meaning: {
               promptDe: 'Was sagt Ana? Wählen Sie die Bedeutung.',
               promptEn: 'What does Ana say? Choose the meaning.',
@@ -502,7 +504,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 8,
-            to: 10, meaningLines: 'eeeb59bd',
+            to: 10, meaningLines: 'f5fc633f',
             meaning: {
               promptDe: 'Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.',
               promptEn: 'What is Ana’s phone number? Choose the numbers.',
@@ -669,7 +671,7 @@ export const CURRICULUM_A11 = {
           // „das Amt“ and „die Post“ stood in the Wortfeld of the Ämter-Handlungsfeld and in no
           // line of its own Lektion (DaF review #3, Wortfeld ↔ Input): they are carried here and in
           // line 8 rather than by a Wortfeld entry nobody ever hears.
-          { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber vom Amt.', en: 'Good day! I am Mr Weber from the public office.' },
+          { speaker: 'Herr Weber', de: 'Guten Tag und willkommen im Amt! Ich heiße Weber.', en: 'Good day and welcome to the public office! My name is Weber.' },
           { speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
           // THE FAMILIENSTAND IS ASKED AND ANSWERED, NOT DECLARED (round 19, DaF review #18, Minor
           // 12). Round 18 put „Familienstand: Ich bin ledig oder verheiratet.“ into the notice so
@@ -684,7 +686,7 @@ export const CURRICULUM_A11 = {
           // „Ich bin Studentin.“ and „Was sind Sie von Beruf?“ (indices 6/7) stay verbatim lines,
           // which is why the pair does not ride on them. Sie throughout — strangers at a counter.
           { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?', en: 'Please fill out the form. Your marital status: single or married?' },
-          { speaker: 'Ana', de: 'Ich bin ledig. Ist das Formular für die Adresse?', en: 'I am single. Is that form for the address?' },
+          { speaker: 'Ana', de: 'Ich bin ledig. Und hier? Kommt hier die Adresse?', en: 'I am single. And here? Does the address go here?' },
           // THE ORIGIN, ASKED AND ANSWERED (round 18, DaF review #17, MAJOR 3). The can-do line
           // „Ich kann sagen, woher ich komme“ had exactly two L2 surfaces — the notice and the graded
           // model text — and the learner PRACTISES neither; every line of this dialogue skipped the
@@ -695,14 +697,14 @@ export const CURRICULUM_A11 = {
           // Ana's answer (index 5, 12 words — the RULE 5 maximum) sits in no window, and the
           // dictation window [7,3] does not move. Sie throughout — Ana and Herr Weber are strangers
           // at a counter.
-          { speaker: 'Herr Weber', de: 'Ja. Vorname, Nachname und Wohnort, bitte. Und woher kommen Sie?', en: 'Yes. First name, surname and place of residence, please. And where do you come from?' },
+          { speaker: 'Herr Weber', de: 'Ja, für Post vom Amt. Vorname, Nachname, Wohnort. Und woher kommen Sie?', en: 'Yes, for post from the office. First name, surname, place of residence. And where do you come from?' },
           { speaker: 'Ana', de: 'Mein Nachname ist Chakiri. Ich komme aus Marokko und wohne in Bremen.', en: 'My surname is Chakiri. I come from Morocco and live in Bremen.' },
           { speaker: 'Herr Weber', de: 'Was sind Sie von Beruf?', en: 'What is your profession?' },
           { speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
           // The Zahlen can-do is carried by the input, not only by the Wortfeld entry: these two
           // lines are the only place a learner hears digits in L2 (DaF review #2, L2).
           // The post goes to the address just given (third score, 2026-11-22: „Hier ist auch die Post“ placed the word).
-          { speaker: 'Herr Weber', de: 'Danke. Die Post kommt an Ihre Adresse. Wie ist Ihre Telefonnummer?', en: 'Thank you. Your post comes to your address. What is your phone number?' },
+          { speaker: 'Herr Weber', de: 'Danke. Und wie ist Ihre Telefonnummer?', en: 'Thank you. And what is your phone number?' },
           { speaker: 'Ana', de: 'Meine Telefonnummer ist null eins sieben sechs.', en: 'My phone number is zero one seven six.' },
         ],
       },
@@ -1087,7 +1089,7 @@ export const CURRICULUM_A11 = {
         accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist', 'Der Bruder', 'Die Schwester', 'Ich habe'],
       },
       notice: {
-        formExamples: ['Das Kind ist jung. Es spricht Deutsch.', 'Wir sprechen Deutsch. Sprecht ihr auch Deutsch?'],
+        formExamples: ['Das Kind ist jung. Es spricht Deutsch.', 'Wir sprechen Deutsch. Sprecht ihr auch Deutsch?', 'Das ist mein Bruder. Das ist meine Mutter.'],
         title: 'er, sie, es – die Personalpronomen',
         bodyDe: 'Pronomen richten sich normalerweise nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Bei bekannten Personen ist auch er oder sie möglich. Das Kind heißt Paul. Er ist zwei. Plural: **wir**, **ihr**, **sie**. Höflich: **Sie** mit großem S (eine/mehrere Personen). Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
         bodyEn: 'Normally a pronoun follows the noun’s article: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. A known person can also be referred to with er/sie. Example: Das Kind heißt Paul. Er ist zwei. For several people: **wir**, **ihr**, **sie**. Polite **Sie** has a capital S and addresses one person or several. **sprechen** changes its vowel: er **spricht** — more in Lesson 7.',
@@ -1357,10 +1359,10 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Jedes Nomen hat ein Genus',
-        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Die Bedeutung zeigt das Genus nicht sicher. Lernen Sie Nomen mit Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
-        bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender of a thing usually cannot be guessed from its meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
+        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Die Bedeutung zeigt das Genus nicht sicher. Lernen Sie Nomen mit Artikel und Plural: der Tisch, die Tische; die Lampe, die Lampen. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
+        bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender of a thing usually cannot be guessed from its meaning, so learn each noun with its article and its plural: der Tisch, die Tische; die Lampe, die Lampen. In the plural, every noun takes **die**. For now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
         // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
-        bodyAr: 'لكل اسم ألماني جنس نحوي، وتُظهره أداته: der Tisch (مذكر)، die Lampe (مؤنث)، das Regal (محايد). عادةً لا يمكن تخمين جنس اسم الشيء من معناه، لذا تعلّم كل اسم مع أداته: ليس «Tisch» وحده، بل «der Tisch». في الجمع، تأتي die مع كل الأسماء. اتبع هذا النموذج الآن: بعد kaufen (يشتري)، تتحول der إلى den: «Ich kaufe den Stuhl». ستتعلّم سبب هذا التغيير عند دراسة حالة النصب (Akkusativ) في A1.2.',
+        bodyAr: 'لكل اسم ألماني جنس نحوي، وتُظهره أداته: der Tisch (مذكر)، die Lampe (مؤنث)، das Regal (محايد). عادةً لا يمكن تخمين جنس اسم الشيء من معناه، لذا تعلّم كل اسم مع أداته وصيغة جمعه: der Tisch, die Tische; die Lampe, die Lampen. في الجمع، تأتي die مع كل الأسماء. اتبع هذا النموذج الآن: بعد kaufen (يشتري)، تتحول der إلى den: «Ich kaufe den Stuhl». ستتعلّم سبب هذا التغيير عند دراسة حالة النصب (Akkusativ) في A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -1398,7 +1400,7 @@ export const CURRICULUM_A11 = {
         sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wir kommen morgen. Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
-      practiceRule: { topics: ['nouns-gender'], typedMin: 3 },
+      practiceRule: { topics: ['nouns-gender', 'numbers'], topicMin: { numbers: 3 }, typedMin: 3 },
     },
     {
       nr: 5,
@@ -1668,7 +1670,7 @@ export const CURRICULUM_A11 = {
         sample: 'Name: Lena Brandt / Kurs: A1 / Zimmer: 12 / Material: Wörterbuch, Heft / Farbe: grün',
       },
       links: { listeningExercise: null, readingOrder: 7 },
-      practiceRule: { topics: ['definite-articles', 'nouns-gender'], typedMin: 3 },
+      practiceRule: { topics: ['definite-articles', 'personal-pronouns', 'verb-sein'], topicMin: { 'personal-pronouns': 2, 'verb-sein': 1 }, typedMin: 3 },
     },
     {
       nr: 6,
@@ -1851,9 +1853,9 @@ export const CURRICULUM_A11 = {
         // Herr Weber has ONE employer: he sits at the Bürgerbüro counter in L2, and L6 is Ana's
         // first day in the same Amt. The cast is five people; two jobs for one of them broke the
         // only narrative bracket the level has (DaF review #2, L2).
-        setting: 'Anas erster Arbeitstag im Bürgerbüro. Herr Weber zeigt ihr den Arbeitsplatz.',
+        setting: 'Anas erster Arbeitstag im Amt. Herr Weber zeigt ihr den Arbeitsplatz.',
 
-        settingEn: 'Ana’s first day at work in the citizens’ office. Herr Weber shows her the workplace.',
+        settingEn: 'Ana’s first day at work in the public office. Herr Weber shows her the workplace.',
         lines: [
           { speaker: 'Ana', de: 'Guten Morgen, Herr Weber!', en: 'Good morning, Mr Weber!' },
           { speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
@@ -1876,10 +1878,10 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['kaufen: Ich kaufe ein Handy.'],
         title: 'ein, eine – der unbestimmte Artikel',
-        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
-        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lesson 8.',
+        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein** (Endungen wie ein): **kein** Handy, keine Nummer, keinen Computer. Die Uhrzeit **um eins** folgt in Lektion 8.',
+        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule (Akkusativ) is A1.2. "No / not a" is **kein**, with the endings of ein: **kein** Handy, keine Nummer, keinen Computer. The time phrase **um eins** (at one) comes in Lesson 8.',
         // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, checked by a blind back-translation.
-        bodyAr: 'عند ذكر شيء جديد أو غير معروف بعد، استخدم أداة النكرة: ein مع الأسماء التي تأخذ der أو das (ein Computer)، وeine مع الأسماء التي تأخذ die (eine Lampe). بعد أفعال مثل brauchen (يحتاج)، haben (لديه)، kaufen (يشتري)، تتحول ein مع الاسم المذكر إلى einen: «Ich brauche einen Computer». ستتعلّم سبب هذا التغيير عند دراسة حالة النصب (Akkusativ) في A1.2؛ اتبع هذه الصيغة الآن. للتعبير عن «لا … أيّ» أو «ليس … أيّ» أمام اسم، استخدم kein: «Wir haben kein Handy». ستتعلّم عبارة الوقت um eins (في الساعة الواحدة) في Lektion 8.',
+        bodyAr: 'عند ذكر شيء جديد أو غير معروف بعد، استخدم أداة النكرة: ein مع الأسماء التي تأخذ der أو das (ein Computer)، وeine مع الأسماء التي تأخذ die (eine Lampe). بعد أفعال مثل brauchen (يحتاج)، haben (لديه)، kaufen (يشتري)، تتحول ein مع الاسم المذكر إلى einen: «Ich brauche einen Computer». ستتعلّم قاعدة حالة النصب (Akkusativ) في A1.2. للنفي، استخدم kein بنهايات ein: kein Handy, keine Nummer, keinen Computer. ستتعلّم عبارة الوقت um eins (في الساعة الواحدة) في Lektion 8.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
@@ -1919,10 +1921,10 @@ export const CURRICULUM_A11 = {
         // zu beschriften. Der Possessivartikel („Meine Nummer ist …“) wäre die natürlichste
         // Fassung, steht hier aber nicht: RULE 15b schiebt die Possessivartikel auf Lektion 12, und
         // ein Mustertext ist ein Produktionstext.
-        sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei drei drei acht eins. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei drei drei acht eins. Ich bin um neun im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
-      practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
+      practiceRule: { topics: ['indefinite-articles', 'verb-sein'], topicMin: { 'verb-sein': 3 }, typedMin: 3 },
     },
     {
       nr: 7,
@@ -2131,10 +2133,10 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['Lena spricht Deutsch.'],
         title: 'Präsens: regelmäßige Verben',
-        bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Stamm auf **-t**: ein **e** dazu: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
-        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
+        bodyDe: 'Regelmäßige Endungen: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** nach dem Verb: Ich höre **gern** Musik. Ja/Nein-Frage: Verb vorn: Tanzt du gern? Stamm auf **-t**: ein **e** dazu: du arbeit**e**st, er arbeit**e**t. Stamm auf s/ß/x/z: **du**-Form nur -t, du tanz**t**. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
+        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** A yes/no question begins with the verb: **Tanzt du gern?** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If the stem ends in s/ß/x/z, the du-form adds only -t: du tanz**t**. Some change their vowel: er **spricht**.',
         // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
-        bodyAr: 'يتكوّن الفعل المنتظم من جذر ونهاية: spielen → ich spiele، du spielst، er/sie/es spielt، wir spielen، ihr spielt، sie/Sie spielen. لتقول إنك تحبّ القيام بشيء، ضع gern بعد الفعل: «Ich höre gern Musik». إذا انتهى الجذر بـ -t، أضف e: du arbeitest، er arbeitet. إذا انتهى الجذر بـ s/ß/x/z، تُضاف -t فقط في صيغة du: du tanzt. يتغيّر حرف العلة في جذر بعض الأفعال: sprechen → er spricht.',
+        bodyAr: 'يتكوّن الفعل المنتظم من جذر ونهاية: spielen → ich spiele، du spielst، er/sie/es spielt، wir spielen، ihr spielt، sie/Sie spielen. لتقول إنك تحبّ القيام بشيء، ضع gern بعد الفعل: «Ich höre gern Musik». يبدأ سؤال نعم/لا بالفعل: «Tanzt du gern?». إذا انتهى الجذر بـ -t، أضف e: du arbeitest، er arbeitet. إذا انتهى الجذر بـ s/ß/x/z، تُضاف -t فقط في صيغة du: du tanzt. يتغيّر حرف العلة في جذر بعض الأفعال: sprechen → er spricht.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -3266,7 +3268,7 @@ export const CURRICULUM_A11 = {
             titleDe: 'Die Monate', titleEn: 'The months',
             items: [{ label: '1', de: 'Januar' }, { label: '2', de: 'Februar' }, { label: '3', de: 'März' }, { label: '4', de: 'April' }, { label: '5', de: 'Mai' }, { label: '6', de: 'Juni' }, { label: '7', de: 'Juli' }, { label: '8', de: 'August' }, { label: '9', de: 'September' }, { label: '10', de: 'Oktober' }, { label: '11', de: 'November' }, { label: '12', de: 'Dezember' }],
           },
-          text: 'Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer noch ein Kind!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa',
+          text: 'Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer jung!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa',
           questions: [
             {
               promptDe: 'Kommen Anas Eltern zum Fest? Wählen Sie die Antwort.',

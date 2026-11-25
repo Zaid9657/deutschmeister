@@ -30,7 +30,7 @@ export const RULE_CARDS = {
   },
   "alphabet-pronunciation": {
     "titleDe": "Das Alphabet: buchstabieren",
-    "content": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.\nDie Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,\nK ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nDie Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.\nVorsicht bei E und I, G und J, V und W.\nMan fragt: Wie buchstabiert man das?\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.\nEnglish: every German letter has its own name — say the names one by one when you spell.",
+    "content": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.\nDie Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,\nK ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nDie Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.\nMan fragt: Wie buchstabiert man das?\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.\nEnglish: every German letter has its own name — say the names one by one when you spell.",
     "commonMistakes": [
       {
         "wrong": "Wie heißt der Buchstabe Z? — Zed.",
@@ -214,7 +214,7 @@ export const RULE_CARDS = {
   },
   "nouns-gender": {
     "titleDe": "Jedes Nomen hat ein Genus",
-    "content": "Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.\nIm Plural haben alle Nomen die.\nDie Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.\nNach kaufen wird der zu den: Ich kaufe den Stuhl.\nLernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
+    "content": "Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.\nIm Plural haben alle Nomen die.\nDie Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.\nNach kaufen wird der zu den: Ich kaufe den Stuhl.\nLernen Sie jedes Nomen mit Artikel und Plural: der Tisch, die Tische.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
     "commonMistakes": [
       {
         "wrong": "das Entschuldigung",
@@ -481,7 +481,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Ana bin Studentin.",
         "correct": "Ana ist Studentin.",
-        "explanationDe": "bin gehört zu ich. Ana = sie, und bei sie steht ist: Ana ist Studentin."
+        "explanationDe": "bin gehört zu ich. Ana = sie, und zu sie gehört ist: Ana ist Studentin."
       },
       {
         "wrong": "Wie sind Sie von Beruf?",

@@ -63,7 +63,7 @@ function findKind(turn) {
   if (like) return { kind: 'askLike', verb: fold(like[1]) };
   if (turn.slot === 'clock' && turn.time) return { kind: 'clock', time: turn.time };
   if (/^Wie spät/.test(a)) return { kind: 'askClock' };
-  if (/stehe um …|stehe ich/.test(a)) return { kind: 'getUp' };
+  if (/stehe um …|stehe ich/.test(a)) return { kind: 'getUp', byClock: /Uhr/.test(turn.taskDe || '') };
   if (/^Hast du … Zeit/.test(a)) return { kind: 'askFree', when: turn.when };
   if (turn.answerWords && /Das passt/.test(all)) return { kind: 'agree', when: turn.when };
   if (/Hunger|Durst/.test(a)) return { kind: 'hungry', wants: ['hunger', 'durst'].filter((w) => fold(a).includes(w)) };
@@ -271,9 +271,9 @@ const SAYING = {
     return Boolean(c.lemma === 'sein' && c.subj?.head === 'ich' && named(c.pred));
   },
   mood: (c) => (c.lemma === 'gehen' && c.subj?.head === 'es' && c.dat?.head === 'mir') || (c.lemma === 'fühlen' && I(c)) || (c.lemma === 'sein' && I(c) && adjs(c).some((a) => FEEL.has(a))) || (c.lemma === 'sein' && c.subj?.head === 'alles' && (adjs(c).length > 0 || adv(c, 'gut', 'super', 'prima', 'okay', 'in ordnung'))),
-  origin: (c, q) => {
+  origin: (c, q, env) => {
     const who = q.third ? third(c, q) : I(c);
-    if (who && ['kommen', 'sein', 'stammen'].includes(c.lemma) && pps(c, 'aus').some((p) => p.np.kind !== 'np' || !unknownNoun(p.np))) return true;
+    if (who && ['kommen', 'sein', 'stammen'].includes(c.lemma) && pps(c, 'aus').some((p) => (p.np.kind !== 'np' || !unknownNoun(p.np)) && !env.notPlace(p.np.head))) return true;
     if (who && c.lemma === 'geboren' && pps(c, 'in').some((p) => p.np.kind === 'place')) return true;
     return Boolean(!q.third && c.lemma === 'sein' && headsOf(c.subj).some((h) => ['heimat', 'heimatland', 'herkunftsland', 'geburtsland', 'land'].includes(h)) && c.subj.det === 'mein' && c.pred);
   },
@@ -321,7 +321,7 @@ const SAYING = {
     if (clockOf(t) !== want.clock || timesOf(c).some((e) => PM.has(e.part)) || (t.prep && !['gegen', 'kurz'].includes(t.prep)) || (t.h > 12 && Number(q.time.split(':')[0]) < 12)) return false;
     return (c.lemma === 'sein' && c.subj?.head === 'es') || (c.lemma === 'haben' && c.subj?.head === 'wir') || (['zeigen', 'sagen', 'anzeigen'].includes(c.lemma) && c.subj?.head === 'uhr');
   },
-  getUp: (c) => I(c) && c.lemma === 'aufstehen' && !c.perfect && !negated(c) && [c, ...(c.all || []).filter((x) => x.frag)].some((x) => timesOf(x).some((t) => t.h !== undefined)),
+  getUp: (c, q) => I(c) && c.lemma === 'aufstehen' && !c.perfect && !negated(c) && ((!q.byClock && adv(c, 'früh', 'spät')) || [c, ...(c.all || []).filter((x) => x.frag)].some((x) => timesOf(x).some((t) => t.h !== undefined))),
   freeTime: (c) => I(c) && !negated(c) && timesOf(c).length > 0 && ((c.lemma === 'haben' && (headsOf(c.acc).includes('zeit') || adv(c, 'frei') || adjs(c).includes('frei'))) || (c.lemma === 'sein' && (adjs(c).includes('frei') || adv(c, 'frei')))),
   workWhen: (c) => I(c) && c.lemma === 'arbeiten' && timesOf(c).length > 0,
   agree: (c, q) => {
@@ -632,7 +632,7 @@ function off(turn, q, clauses, frags, asks, env, lone) {
   if (q.kind === 'mood' && clauses.some((c) => I(c) && c.lemma === 'gehen')) return 'sentence';
   if (q.kind === 'guests' && clauses.every((c) => I(c) && ['kaufen', 'kochen', 'machen', 'arbeiten'].includes(c.lemma))) return 'task';
   if (q.kind === 'invite' && clauses.every((c) => I(c) && !c.question && !['einladen', 'wünschen', 'freuen', 'hoffen'].includes(c.lemma))) return 'task';
-  if (q.kind === 'getUp' && clauses.every((c) => I(c) && c.lemma === 'aufstehen' && !timesOf(c).some((t) => t.h !== undefined) && !negated(c)) && !frags.length) return 'task';
+  if (q.kind === 'getUp' && q.byClock && clauses.every((c) => I(c) && c.lemma === 'aufstehen' && !timesOf(c).some((t) => t.h !== undefined) && !negated(c)) && !frags.length) return 'task';
   if (q.kind === 'getUp' && clauses.every((c) => I(c) && c.lemma === 'stehen')) return 'missing';
   const near = NEAR[q.kind] || [];
   const labels = clauses.map((c) => OTHER.filter(([, t]) => t(c)).map(([n]) => n));

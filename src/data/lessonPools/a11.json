@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 573,
+ "count": 570,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -4177,6 +4177,46 @@
    "explanationEn": "Subject first, verb second. Regal is neuter (das Regal); sein for er/sie/es is **ist**: **Das Regal ist teuer.**"
   },
   {
+   "id": "extra-a11-l04-48",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 206,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Was“): [was / kosten / die Lampe]",
+   "questionEn": "Ask for the price. Begin with “Was”. Build a question.",
+   "options": null,
+   "answer": "Was kostet die Lampe?",
+   "accepted": [
+    "Was kostet die Lampe?",
+    "Was kostet die Lampe"
+   ],
+   "explanationDe": "Das Fragewort steht vorn, dann kommt das Verb: Was kostet die Lampe?",
+   "hint": null,
+   "minLektion": 4,
+   "explanationEn": "The question word comes first, then the verb: **Was kostet die Lampe?**"
+  },
+  {
+   "id": "extra-a11-l04-49",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 207,
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie viel“): [wie viel / kosten / der Tisch]",
+   "questionEn": "Ask for the price. Begin with “Wie viel”. Build a question.",
+   "options": null,
+   "answer": "Wie viel kostet der Tisch?",
+   "accepted": [
+    "Wie viel kostet der Tisch?",
+    "Wie viel kostet der Tisch"
+   ],
+   "explanationDe": "Wie viel steht vorn, dann kommt das Verb: Wie viel kostet der Tisch?",
+   "hint": null,
+   "minLektion": 4,
+   "explanationEn": "**Wie viel** comes first, then the verb: **Wie viel kostet der Tisch?**"
+  },
+  {
    "id": "extra-a11-l02-09",
    "topic": "numbers",
    "type": "fill_blank",
@@ -4367,59 +4407,15 @@
    "explanationEn": "The small number comes first: **sieben-und-achtzig** is 7 and 80, so the price is **87** euros."
   },
   {
-   "id": "extra-a11-l04-50",
-   "topic": "numbers",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 208,
-   "questionDe": "Frau Wolf: ___ viele Stühle kaufen Sie? — Vier.",
-   "questionEn": "Frau Wolf: … many chairs are you buying? — Four.",
-   "options": null,
-   "answer": "Wie",
-   "accepted": [
-    "Wie",
-    "wie"
-   ],
-   "explanationDe": "Mit wie viele fragt man nach einer Zahl: Wie viele Stühle?",
-   "hint": null,
-   "minLektion": 4,
-   "explanationEn": "**Wie viele** asks for a number of things you can count: **Wie viele Stühle?**"
-  },
-  {
-   "id": "extra-a11-l04-51",
-   "topic": "numbers",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 209,
-   "questionDe": "Tim: ___ kostet das Regal? — Dreißig Euro. (Was oder Wie?)",
-   "questionEn": "Tim: … does the shelf cost? — Thirty euros.",
-   "options": null,
-   "answer": "Was",
-   "accepted": [
-    "Was",
-    "was"
-   ],
-   "explanationDe": "Nach dem Preis fragt man mit was: Was kostet das Regal?",
-   "hint": null,
-   "minLektion": 4,
-   "explanationEn": "To ask for a price, German uses **was**: **Was kostet das Regal?**"
-  },
-  {
    "id": "extra-a11-l04-52",
    "topic": "numbers",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 210,
    "questionDe": "Der Rucksack kostet vierundfünfzig Euro. In Zahlen: ___ Euro",
-   "questionEn": "Which price is that?",
-   "options": [
-    "45",
-    "54",
-    "504"
-   ],
+   "questionEn": "Write the price in figures.",
+   "options": null,
    "answer": "54",
    "accepted": [
     "54"
@@ -4432,17 +4428,13 @@
   {
    "id": "extra-a11-l04-53",
    "topic": "numbers",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 211,
-   "questionDe": "Der Stuhl kostet neunundsechzig Euro. Welcher Preis ist das? ___ Euro",
-   "questionEn": "Which price is that?",
-   "options": [
-    "96",
-    "69",
-    "79"
-   ],
+   "questionDe": "Der Stuhl kostet neunundsechzig Euro. In Zahlen: ___ Euro",
+   "questionEn": "Write the price in figures.",
+   "options": null,
    "answer": "69",
    "accepted": [
     "69"
@@ -4451,65 +4443,6 @@
    "hint": null,
    "minLektion": 4,
    "explanationEn": "The small number comes first: **neun-und-sechzig** is 9 and 60, so the price is **69** euros."
-  },
-  {
-   "id": "extra-a11-l04-54",
-   "topic": "numbers",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 212,
-   "questionDe": "Ergänzen Sie: Das ___ zusammen fünfzig Euro. (machen)",
-   "questionEn": "Fill in: that makes fifty euros altogether.",
-   "options": null,
-   "answer": "macht",
-   "accepted": [
-    "macht"
-   ],
-   "explanationDe": "Das ist es: das macht zusammen fünfzig Euro.",
-   "hint": null,
-   "minLektion": 4,
-   "explanationEn": "das takes the form for es: **das macht** zusammen fünfzig Euro."
-  },
-  {
-   "id": "extra-a11-l04-48",
-   "topic": "numbers",
-   "type": "sentence_building",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 206,
-   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Was“): [was / kosten / die Lampe]",
-   "questionEn": "Ask for the price. Begin with “Was”. Build a question.",
-   "options": null,
-   "answer": "Was kostet die Lampe?",
-   "accepted": [
-    "Was kostet die Lampe?",
-    "Was kostet die Lampe"
-   ],
-   "explanationDe": "Das Fragewort steht vorn, dann kommt das Verb: Was kostet die Lampe?",
-   "hint": null,
-   "minLektion": 4,
-   "explanationEn": "The question word comes first, then the verb: **Was kostet die Lampe?**"
-  },
-  {
-   "id": "extra-a11-l04-49",
-   "topic": "numbers",
-   "type": "sentence_building",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 207,
-   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie viel“): [wie viel / kosten / der Tisch]",
-   "questionEn": "Ask for the price. Begin with “Wie viel”. Build a question.",
-   "options": null,
-   "answer": "Wie viel kostet der Tisch?",
-   "accepted": [
-    "Wie viel kostet der Tisch?",
-    "Wie viel kostet der Tisch"
-   ],
-   "explanationDe": "Wie viel steht vorn, dann kommt das Verb: Wie viel kostet der Tisch?",
-   "hint": null,
-   "minLektion": 4,
-   "explanationEn": "**Wie viel** comes first, then the verb: **Wie viel kostet der Tisch?**"
   },
   {
    "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
@@ -5119,17 +5052,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 307,
-   "questionDe": "Lena: Ana, sprichst ___ Arabisch? (du, ihr oder Sie?)",
-   "questionEn": "Lena: Ana, do you speak Arabic?",
+   "questionDe": "Lena: Ana, kommst ___ auch aus Marokko? (du, ihr oder Sie?)",
+   "questionEn": "Lena: Ana, do you come from Morocco too?",
    "options": null,
    "answer": "du",
    "accepted": [
     "du"
    ],
-   "explanationDe": "Lena sagt zu Ana du: Sprichst du Arabisch?",
+   "explanationDe": "Lena sagt zu Ana du: Kommst du aus Marokko?",
    "hint": null,
-   "minLektion": 3,
-   "explanationEn": "Lena and Ana are friends, so she says **du**."
+   "minLektion": 2,
+   "explanationEn": "Lena and Ana are friends, so Lena says **du**."
   },
   {
    "id": "extra-a11-l03-42",
@@ -10503,17 +10436,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 221,
-   "questionDe": "Wo ___ die Bücher? — Hier. (sein)",
-   "questionEn": "Where are the books? — Here.",
+   "questionDe": "Wo ___ das Buch und das Heft? — Hier. (sein)",
+   "questionEn": "Where are the book and the exercise book? — Here.",
    "options": null,
    "answer": "sind",
    "accepted": [
     "sind"
    ],
-   "explanationDe": "die Bücher: Plural, also sind.",
+   "explanationDe": "das Buch und das Heft: zusammen Plural, also sind.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": "die Bücher is plural, so the verb is **sind**."
+   "explanationEn": "A book and an exercise book are two things, so the verb is **sind**."
   },
   {
    "id": "extra-a11-l05-34",
@@ -10609,6 +10542,25 @@
    "hint": null,
    "minLektion": 6,
    "explanationEn": "With polite Sie the verb is **sind**."
+  },
+  {
+   "id": "extra-a11-l06-29",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 230,
+   "questionDe": "Wie ___ die Telefonnummer? — Null vier zwei. (sein)",
+   "questionEn": "What is the phone number? — Zero four two.",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "die Telefonnummer: Singular, also ist.",
+   "hint": null,
+   "minLektion": 2,
+   "explanationEn": "die Telefonnummer is singular, so the verb is **ist**."
   },
   {
    "id": "extra-a11-l06-30",
@@ -11030,18 +10982,18 @@
    "stage": 5,
    "difficulty": 2,
    "order": 223,
-   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Scheren]",
+   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Schere]",
    "questionEn": "Ask in class. Begin with “Wo”. Build a question.",
    "options": null,
-   "answer": "Wo sind die Scheren?",
+   "answer": "Wo ist die Schere?",
    "accepted": [
-    "Wo sind die Scheren?",
-    "Wo sind die Scheren"
+    "Wo ist die Schere?",
+    "Wo ist die Schere"
    ],
-   "explanationDe": "die Scheren: Plural. Wo steht vorn, dann kommt sind.",
+   "explanationDe": "die Schere: Singular, also ist. Wo steht vorn, dann kommt das Verb.",
    "hint": null,
    "minLektion": 5,
-   "explanationEn": "die Scheren is plural: **Wo sind die Scheren?**"
+   "explanationEn": "die Schere is singular in German: **Wo ist die Schere?**"
   },
   {
    "id": "extra-a11-l06-23",
@@ -11082,26 +11034,6 @@
    "hint": null,
    "minLektion": 6,
    "explanationEn": "**Wo** comes first, then the verb: **Wo ist mein Computer?**"
-  },
-  {
-   "id": "extra-a11-l06-29",
-   "topic": "verb-sein",
-   "type": "sentence_building",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 230,
-   "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / sein / die Telefonnummer]",
-   "questionEn": "Ask on the phone. Begin with “Wie”. Build a question.",
-   "options": null,
-   "answer": "Wie ist die Telefonnummer?",
-   "accepted": [
-    "Wie ist die Telefonnummer?",
-    "Wie ist die Telefonnummer"
-   ],
-   "explanationDe": "Wie steht vorn, dann kommt das Verb: Wie ist die Telefonnummer?",
-   "hint": null,
-   "minLektion": 2,
-   "explanationEn": "**Wie** comes first, then the verb: **Wie ist die Telefonnummer?**"
   },
   {
    "id": "extra-a11-l06-31",

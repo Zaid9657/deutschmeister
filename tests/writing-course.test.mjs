@@ -1136,7 +1136,7 @@ test('Minor 18 (round 19): a question that echoes the verb answers a shape-less 
 test('recipient questions never supply the writer’s factual arrival or availability', () => {
   for (const [nr, statement, question] of [
     [4, 'Wir kommen morgen.', 'Kommst du morgen?'],
-    [6, 'Ich bin um neun Uhr im Büro.', 'Sind Sie um neun Uhr im Büro?'],
+    [6, 'Ich bin um neun im Büro.', 'Sind Sie um neun im Büro?'],
   ]) {
     const task = LEKTIONEN[nr - 1].schreiben;
     assert.ok(task.sample.includes(statement), `L${nr}: regression replaces the writer's factual answer`);

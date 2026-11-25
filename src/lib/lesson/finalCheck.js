@@ -28,6 +28,7 @@ import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.j
 import { COUNTRY_STEMS } from './countries.js';
 import { reader } from './clause.js';
 import { asked, meaning } from './taskMeaning.js';
+import { ADVERBS as GERMAN_ADVERBS, adjectiveForm, verbReadings } from './germanForms.js';
 import { repairs, smallWordsKnown } from './oneRepair.js';
 import { asCostQuestion, asHaveQuestion, asTimeQuestion, withoutAndYou, asWell, nounForPronoun, withoutAttribute, withoutDegree, withoutOccasion, withoutParty } from './answerRewrites.js';
 import { addressFault, counterQuestion, registerOf, courtesyOnly, withoutAsking, withoutCourtesy, withoutDemonstrative, withoutSmallWord } from './answerShapes.js';
@@ -2964,7 +2965,7 @@ export function readOnce(turn, value) {
   const none = { say: null, unknown: [] };
   if (!turn.lexicon || turn.spell || turn.listen) return none;
   const text = spelledOut(westernDigits(value), turn.lexicon).trim();
-  if (text.length > 160 || !/\p{L}/u.test(text)) return none;
+  if (text.length > 160 || !/\p{L}/u.test(text) || /(?<!\p{L})(\p{L}{2,})\s+\1(?!\p{L})/iu.test(text)) return none;
   const sentences = readAnswer(turn, text);
   if (!sentences) return none;
   if (!ownWordFits(sentences, Boolean(turn.ownName || turn.parts || turn.slot === 'name'))) return { ...none, sentences };
@@ -2980,6 +2981,7 @@ export function readOnce(turn, value) {
     person: (h, n) => n?.kind === 'name' || n?.kind === 'own' || n?.title || TAUGHT_KIND.get(h) === 'family' || OWN_KIND.job.has(h) || /^(?:freunde?|freundin(?:nen)?|nachbar(?:n|in|innen)?|kolleg(?:e|en|in|innen)|leute|gäste|verwandte|bekannte|oma|opa|onkel|tante|cousins?|cousine|neffe|nichte|partner(?:in)?|chef(?:in)?|lehrer(?:in|innen)?|mitbewohner(?:in)?|mitschüler|klasse|team|alle|viele|niemand|jemand|wir|sie|er|personen|menschen|jungs|mädchen|schwager|schwägerin|enkel|großeltern|grosseltern|kommilitonen|beide|familienmitglieder|deutschkurs|kurs|nachbarsfamilie|freundinnen|mama|papa|baby|hund|band)$/u.test(h),
     partnerNames: wordsOf(String(turn.partner || '')).map(fold).filter((w) => !['frau', 'herr'].includes(w)),
     isLanguage: (h) => OWN_KIND.language.has(h),
+    notPlace: (h) => notPlace(h),
     dayExists: (t) => !t.said || isDate(/\d{4}$/.test(t.said) ? t.said : `${t.said} 2000`),
     isDate: (t) => Boolean(t.year && t.said) && isDate(t.said),
     anyThing: (c) => [...new Set([c.subj, c.acc, c.pred, ...(c.elems || []).map((e) => e.np)].filter(Boolean).flatMap((n) => n.heads || [n.head]))],
@@ -3000,7 +3002,7 @@ export function typedResult(turn, value) {
 }
 // A fault found by lining the answer up with another one gives way where the reader reads every word of it and it answers the
 // turn („Ich habe Hunger, ja.“, „Sie kommt aus Damaskus und lebt jetzt in Bonn.“). In 8,900 blind answers no wrong one was read so.
-const readInFull = (turn, value, reason) => { if (['english', 'address'].includes(reason)) return false; const r = secondReading(turn, value); return r.say === 'yes' && !r.unknown.length; };
+const readInFull = (turn, value, reason) => { if (['english', 'address'].includes(reason)) return false; return secondReading(turn, value).say === 'yes' && !secondReading(turn, value).unknown.length && verifiedResult(readResult(turn, value)); };
 const doubted = (turn, value, result) => madeUpWord(turn, value) || foreignWord(turn, value) || otherWordTyped(turn, value, result);
 // The faults the second reader is sure of: another task, another thing, a pronoun of another gender, the other form of address.
 const READ_FAULT = { task: 'task', word: 'word', pronoun: 'word', address: 'address', sentence: 'sentence', missing: 'missing', case: 'case', ending: 'ending' };
@@ -3786,16 +3788,18 @@ const OWN_WORD_KINDS = new Set(['place', 'job', 'language', 'hobby', 'thing', 'o
  * „correct“ never claims more than was checked (the own-word policy, 2026-11-20). Names are no such word.
  */
 export function uncheckedWords(turn, value) {
+  // (An answer the second reader confirms names the nouns no list knows in every turn.)
+  const read = turn && !turn.spell && !turn.listen && !verifiedResult(typedCore(turn, value)) ? secondReading(turn, value).unknown : [];
   const kinds = [turn?.slot, ...(turn?.accepted || []).map((a) => (typeof a === 'object' ? a.slot : null))];
-  if (!kinds.some((k) => OWN_WORD_KINDS.has(k))) return [];
+  if (!kinds.some((k) => OWN_WORD_KINDS.has(k))) return read;
   const lexicon = turn.lexicon;
   const listed = new Set([...(turn.slotWords || []), ...(turn.slotIn || []), ...String(turn.partner || '').split(/\s+/)].map((w) => fold(w)));
   const words = wordsOf(spelledOut(westernDigits(value), lexicon).replace(/[.,!?;:„“”"()«»]/g, ' '));
-  return [...new Set(words.filter((w) => {
+  return [...new Set([...read, ...words.filter((w) => {
     const f = fold(w);
     if (!/\p{L}{2,}/u.test(f) || CLOSED.has(f) || isNumberWord(f) || listed.has(f) || OWN_ALL.has(f)) return false;
-    return !(lexicon?.has?.(f) || lexicon?.names?.has?.(f) || COURSE_WORDS.has(asciiUmlauts(f)) || (/^\p{Lu}/u.test(w) && OWN_NOUNS.has(f)));
-  }))];
+    return !(lexicon?.has?.(f) || lexicon?.names?.has?.(f) || COURSE_WORDS.has(asciiUmlauts(f)) || (/^\p{Lu}/u.test(w) && OWN_NOUNS.has(f)) || verbReadings(f).length || adjectiveForm(f).length || GERMAN_ADVERBS.has(f));
+  })])];
 }
 
 /**

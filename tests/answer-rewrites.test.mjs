@@ -70,7 +70,7 @@ test('what stood as the learner’s own word is looked at: English, French lette
     assert.ok(r === RESULT.WRONG || r === BEYOND, `${nr}.${t} ${answer}: ${r}`);
   }
   const suppe = checkTurns({ ...CURRICULUM_A11.lektionen[8].guided.check, lexicon }, 1)[3];
-  assert.equal(typedResult(suppe, 'Haben Sie eine Puppe?'), BEYOND, 'a slip that is another word');
+  assert.equal(typedResult(suppe, 'Haben Sie eine Puppe?'), RESULT.WRONG, 'a slip that is another word, and another thing (the second reader, loop round 3)');
   // The words stay open where they are right.
   for (const [nr, t, answer] of [[9, 2, 'Ich möchte eine Cola, bitte.'], [9, 2, 'Einen Apfelsaft, bitte.'], [9, 3, 'Ich möchte ein Käsebrot, bitte.'], [2, 1, 'Ich komme aus Ägypten.'], [6, 1, 'Ich brauche einen Drucker.'], [1, 2, 'Ich heiße José.']]) {
     const r = typedResult(at(nr, t), answer);

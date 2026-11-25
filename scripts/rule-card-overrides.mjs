@@ -121,7 +121,6 @@ const RULE_CARD_OVERRIDES = {
       'Die Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,',
       'K ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
       'Die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.',
-      'Vorsicht bei E und I, G und J, V und W.',
       'Man fragt: Wie buchstabiert man das?',
       'Frage: Wie schreibt man das? Antwort: A-N-A.',
       'Beispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?',
@@ -180,7 +179,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ana bin Studentin.',
         correct: 'Ana ist Studentin.',
-        explanationDe: 'bin gehört zu ich. Ana = sie, und bei sie steht ist: Ana ist Studentin.',
+        explanationDe: 'bin gehört zu ich. Ana = sie, und zu sie gehört ist: Ana ist Studentin.',
       },
       {
         wrong: 'Wie sind Sie von Beruf?',
@@ -243,7 +242,7 @@ const RULE_CARD_OVERRIDES = {
       '-chen, -lein → das: das Mädchen, das Brötchen.',
       '-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.',
       'Nach kaufen wird der zu den: Ich kaufe den Stuhl.',
-      'Lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.',
+      'Lernen Sie jedes Nomen mit Artikel und Plural: der Tisch, die Tische.',
       'English: learn every noun together with its article; the endings above are reliable groups, not a complete system.',
     ].join('\n'),
     commonMistakes: [

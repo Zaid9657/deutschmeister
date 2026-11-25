@@ -97,7 +97,7 @@
       {
         "from": 0,
         "to": 2,
-        "meaningLines": "8deeb478",
+        "meaningLines": "7d435b38",
         "meaning": {
           "promptDe": "Wer ist Herr Weber? Wählen Sie die Bedeutung.",
           "promptEn": "Who is Herr Weber? Choose the meaning.",
@@ -120,7 +120,7 @@
       {
         "from": 2,
         "to": 4,
-        "meaningLines": "cfc2d950",
+        "meaningLines": "c255215c",
         "meaning": {
           "promptDe": "Was möchte Herr Weber wissen? Wählen Sie die Bedeutung.",
           "promptEn": "What does Herr Weber want to know? Choose the meaning.",
@@ -143,7 +143,7 @@
       {
         "from": 4,
         "to": 6,
-        "meaningLines": "5aecc016",
+        "meaningLines": "b4627c1b",
         "meaning": {
           "promptDe": "Was sagt Ana? Wählen Sie die Bedeutung.",
           "promptEn": "What does Ana say? Choose the meaning.",
@@ -189,7 +189,7 @@
       {
         "from": 8,
         "to": 10,
-        "meaningLines": "eeeb59bd",
+        "meaningLines": "f5fc633f",
         "meaning": {
           "promptDe": "Wie ist Anas Telefonnummer? Wählen Sie die Zahlen.",
           "promptEn": "What is Ana’s phone number? Choose the numbers.",
