@@ -79,7 +79,7 @@ test('read in full and not the answer: another question, another thing, the othe
     assert.equal(typedResult(at(nr, t), answer), RESULT.WRONG, `${nr}.${t} ${answer}`);
     assert.equal(wrongReason(at(nr, t), answer), fault, `${nr}.${t} ${answer}`);
   }
-  for (const [nr, t, answer] of [[4, 2, 'Wie viele kostet die Uhr?'], [5, 4, 'Mein Heft ist eine gelb.'], [7, 3, 'Was ist sein Hobby?'], [9, 6, 'Nein.'], [12, 3, 'Wann hat sie Geburtstag?'], [8, 3, 'Um sechs Uhr.'], [12, 4, 'Meine Mama.']]) assert.ok(![RESULT.CORRECT, RESULT.TYPO].includes(typedResult(at(nr, t), answer)), `${nr}.${t} ${answer}`);
+  for (const [nr, t, answer] of [[4, 2, 'Wie viele kostet die Uhr?'], [5, 4, 'Mein Heft ist eine gelb.'], [7, 3, 'Was ist sein Hobby?'], [9, 6, 'Nein.'], [12, 3, 'Wann hat sie Geburtstag?'], [8, 3, 'Um sechs Uhr.'], [12, 4, 'Meine Mama.'], [7, 2, 'Ich gehe gern im Kino.']]) assert.ok(![RESULT.CORRECT, RESULT.TYPO].includes(typedResult(at(nr, t), answer)), `${nr}.${t} ${answer}`);
   // A question that names its thing in another way is never called another question.
   for (const [nr, t, answer] of [[6, 2, 'Ich suche mein Büro. Wo muss ich hin?'], [2, 4, 'Darf ich Sie nach Ihrem Beruf fragen?'], [8, 2, 'Was zeigt deine Uhr an?']]) assert.notEqual(typedResult(at(nr, t), answer), RESULT.WRONG, `${nr}.${t} ${answer}`);
 });

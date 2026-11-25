@@ -137,7 +137,7 @@ const GENDER_PRONOUN = { der: ['er', 'der', 'den', 'ihn', 'dieser', 'das'], die:
 /** Is the noun phrase the turn's thing: its noun, or a pronoun of its gender? */
 function isThing(n, q, env) {
   if (!n) return false;
-  if (headsOf(n).some((h) => (q.things || []).some((t) => h === t || (t.length > 3 && h.endsWith(t)))) || (n.of && (q.things || []).includes(n.of))) return true;
+  if (headsOf(n).some((h) => (q.things || []).some((t) => h === t || (t.length > 3 && h.endsWith(t)))) || (n.of && (q.things || []).some((t) => [t, `${t}s`, `${t}es`].includes(n.of)))) return true;
   if (n.kind === 'pron') return env.thingGenders.some((g) => (GENDER_PRONOUN[g] || []).includes(n.head));
   return false;
 }
@@ -259,6 +259,7 @@ const ASKING = {
     return c.lemma === 'einkaufen' || (['vorhaben', 'planen'].includes(c.lemma) && c.dependentVerb === 'einkaufen') || (c.lemma === 'gehen' && pps(c, 'zu').some((p) => p.np.head === 'einkaufen'));
   },
 };
+const HERE = ['hier', 'da', 'dort', 'da drüben', 'dort drüben', 'hier drüben', 'da vorn', 'da oben', 'da unten', 'da hinten'];
 const YES = /^(?:ja|ja klar|ja gern|ja gerne|klar|na klar|gern|gerne|sehr gern|sehr gerne|aber gern|aber gerne|okay|ok|gut|sehr gut|super|prima|toll|schön|perfekt|wunderbar|alles klar|abgemacht|einverstanden|kein problem|natürlich|sicher|auf jeden fall|oh ja|aber ja|genau|klasse|bitte|danke|vielen dank|sehr nett|das ist nett|wie nett|stimmt)$/u;
 const NO = /^(?:nein|nee|leider nein|leider nicht|oh nein)$/u;
 const birth = (c) => ((c.lemma === 'kommen' && (c.perfect || c.past) && pps(c, 'zu').some((p) => p.np.head === 'welt')) || c.lemma === 'geboren' || (c.lemma === 'werden' && c.passive === 'geboren') || c.state === 'geboren');
@@ -292,7 +293,7 @@ const SAYING = {
   age: (c, q) => c.lemma === 'sein' && (third(c, q) || (c.subj?.kind === 'name' || c.subj?.kind === 'own')) && (adjs(c).some((a) => ['jung', 'alt', 'älter', 'jünger'].includes(a)) || headsOf(c.pred).some((h) => ['jahre', 'jahr'].includes(h)) || c.pred?.kind === 'num'),
   buy: (c) => I(c) && !negated(c) && c.acc && (['kaufen', 'nehmen', 'bestellen'].includes(c.lemma) || (['möchten', 'wollen'].includes(c.lemma)) || (c.lemma === 'haben' && (c.polite || c.modal === 'möchten'))) && c.acc.kind !== 'pron',
   thing: (c) => (c.lemma === 'sein' && ['das', 'dies', 'hier', 'es'].includes(c.subj?.head) && c.pred && c.pred.kind === 'np' && !FAMILY.has(c.pred.head)) || (c.lemma === 'sein' && (adv(c, 'hier', 'da') || pps(c, 'in').some((p) => ['tasche', 'rucksack', 'hand', 'handtasche'].includes(p.np.head))) && c.subj?.kind === 'np' && !c.adj?.length) || (c.lemma === 'haben' && I(c) && c.acc?.kind === 'np' && (adv(c, 'hier', 'da') || pps(c, 'in').length > 0)),
-  here: (c, q, env) => adv(c, 'hier', 'da', 'dort') && ['sein', 'liegen', 'stehen', 'stecken'].includes(c.lemma) && !negated(c) && (isThing(c.subj, q, env)) && c.subj.det !== 'dein',
+  here: (c, q, env) => adv(c, ...HERE) && ['sein', 'liegen', 'stehen', 'stecken'].includes(c.lemma) && !negated(c) && (isThing(c.subj, q, env)) && c.subj.det !== 'dein',
   colour: (c, q, env) => {
     const mine = (n) => n && (isThing(n, q, env) || ['farbe', 'meins', 'meine', 'meiner', 'das'].includes(n.head)) && n.det !== 'dein';
     if (c.lemma === 'sein' && mine(c.subj) && (adjs(c).some((a) => COLOURS.has(a)) || headsOf(c.pred).some((h) => COLOURS.has(h)))) return !c.adj?.some((a) => a.neg) || c.adj.some((a) => a.words.length > 1);
@@ -620,7 +621,7 @@ function off(turn, q, clauses, frags, asks, env, lone) {
   if (q.kind === 'order' && clauses.some((c) => I(c) && c.acc && headsOf(c.acc).some((h) => { const k = env.kindOf(h); return k && !q.things.includes(k); }))) return 'word';
   if (q.kind === 'colour' && clauses.every((c) => c.lemma === 'sein' && adjs(c).length && !adjs(c).some((a) => COLOURS.has(a)))) return 'task';
   if (q.kind === 'age' && clauses.every((c) => c.lemma === 'sein' && adjs(c).length && c.subj?.head !== 'ich')) return 'task';
-  if (q.kind === 'here' && clauses.every((c) => ['sein', 'liegen', 'stehen'].includes(c.lemma) && !adv(c, 'hier', 'da', 'dort'))) return 'task';
+  if (q.kind === 'here' && clauses.every((c) => ['sein', 'liegen', 'stehen'].includes(c.lemma) && !adv(c, ...HERE))) return 'task';
   if (q.kind === 'here' && clauses.some((c) => c.subj?.det === 'dein')) return 'word';
   if (q.kind === 'photo' && clauses.every((c) => c.lemma === 'sein' && c.pred?.kind === 'np' && c.subj?.head === 'das' && env.known(c.pred.head))) return clauses.some((c) => ['dein', 'ihr', 'sein'].includes(c.pred.det)) ? 'word' : 'task';
   if (q.kind === 'phone' && clauses.some((c) => headsOf(c.subj).some((h) => /nummer$/u.test(h)) && ['ihr', 'dein'].includes(c.subj.det))) return 'word';

@@ -22,6 +22,8 @@ const BARE_AFTER = new Set(['nach feierabend', 'vor feierabend', 'nach mittag', 
 const NEEDS_ARTICLE = set('zug uhr pause mittagspause geburtstag arbeit kino theater schule bus taxi rad auto fahrrad radio kontakt besuch schicht dienst');
 const PLAYED = set('fußball tennis basketball volleyball handball tischtennis badminton hockey golf schach gitarre klavier geige flöte trompete schlagzeug');
 const PLAYING = new Set(['spielen', 'üben', 'lernen', 'hören', 'sehen', 'machen', 'mögen', 'lieben', 'kaufen', 'trainieren', 'schauen', 'unterrichten', 'haben', 'brauchen', 'möchten', 'sein', 'können', 'anschauen', 'fernsehen', 'mitspielen', 'wünschen', 'bekommen']);
+// One goes „ins Kino“, never „im Kino“.
+const WHERE_TO = set('kino theater museum schule café restaurant supermarkt schwimmbad fitnessstudio bett stadion club disko konzert bibliothek büro zoo moschee kirche krankenhaus');
 const VEHICLES = set('bus zug bahn auto taxi fahrrad rad straßenbahn s-bahn u-bahn flugzeug schiff fähre roller motorrad');
 const TAKES_ACC = new Set(['auf|warten', 'auf|freuen', 'über|freuen', 'an|denken', 'über|sprechen', 'über|reden', 'auf|antworten', 'über|lachen', 'in|verlieben', 'auf|passen', 'auf|aufpassen', 'an|schreiben', 'über|ärgern', 'über|diskutieren', 'an|schicken', 'auf|fallen', 'in|einladen', 'in|treten', 'auf|zeigen', 'in|umsteigen', 'in|einsteigen', 'auf|schauen', 'auf|sehen', 'in|schauen', 'in|sehen', 'auf|gucken', 'in|passen', 'auf|stellen', 'in|wollen', 'in|möchten', 'in|müssen', 'in|können']);
 const PRONOUN_SUBJECT = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'man']);
@@ -693,7 +695,7 @@ export function reader(text, ctx) {
         if (n.kind === 'pron' && ['ich', 'du', 'er', 'sie', 'wir', 'man', 'es'].includes(n.head) && !(subj?.head === 'das' || (n.head === 'es' && subj?.kind === 'pron'))) return null;
         const person = subj?.kind === 'pron' && ['ich', 'du', 'er', 'sie', 'wir', 'ihr', 'man'].includes(subj.head);
         if (n.bare && person && n.kind === 'np' && !n.job && !PEOPLE.test(n.head) && !(lemma === 'sein' && /(?:er|erin|in|ist|istin|ant|antin|ent|entin)$/u.test(n.head)) && lemma !== 'heißen') return null;
-        if (bareFault(n, person ? 'predicate' : 'thing', lemma)) return null;
+        if (bareFault(n, person ? 'predicate' : 'thing', lemma) && !(persons.includes('sie') && n.kind === 'np' && String(n.agr).includes('sie'))) return null;
         // „Mein Heft ist eine gelb.“
         if (n.kind === 'pron' && /^(?:eine|einen|eins|keine|keinen)$/u.test(n.head) && adj.length) return null;
         pred = n;
@@ -745,6 +747,7 @@ export function reader(text, ctx) {
       if (e.kind !== 'pp' || !TWO_WAY_PREP.has(e.prep) || !e.c || e.np.kind === 'phone' || e.np.kind === 'date') continue;
       if (e.np.kind === 'place' && !['in', 'vor', 'hinter', 'über'].includes(e.prep)) return false;
       const acc = e.c === 'a';
+      if (lemma === 'gehen' && e.c === 'd' && e.prep === 'in' && WHERE_TO.has(e.np.head)) return false;
       if (acc && !(takes.includes('w') || TAKES_ACC.has(`${e.prep}|${lemma}`))) return false;
       if (e.c === 'd' && ['auf|freuen', 'über|freuen', 'auf|warten', 'an|denken', 'über|sprechen'].includes(`${e.prep}|${lemma}`)) return false;
     }

@@ -2862,7 +2862,9 @@ function expletiveAgreement(text, lexicon) {
   return (m[1] === 'kommt' && r.every((g) => g === 'pl')) || (m[1] === 'kommen' && !r.includes('pl')) ? 'agreement' : null;
 }
 /** „nach der Schweiz“, „der Deutsch“ for a language, „am Nacht“ (Claude score, 2026-11-25): wrong wherever they stand. */
+const GOES_IN = /(?<!\p{L})geh(?:e|st|t|en)\s+(?:ich\s+|wir\s+)?(?:(?:gern|gerne|oft|am\s+\p{L}+|manchmal|immer|auch|jeden\s+\p{L}+|jede\s+\p{L}+)\s+)*(?:im|in\s+dem|in\s+der)\s+(?:Kino|Theater|Museum|Schule|Café|Restaurant|Supermarkt|Schwimmbad|Fitnessstudio|Bett|Stadion|Club|Konzert|Bibliothek|Büro)\s*[.!?]*$/iu;
 function placeFault(text) {
+  if (GOES_IN.test(text)) return 'word';
   const w = wordsOf(String(text).replace(/[.,!?;:„“"()]/g, ' ')).map(fold);
   return w.some((x, i) => x === 'nach' && /^(?:der|die|den|dem)$/.test(w[i + 1] || '') && (COUNTRY_ARTICLE[w[i + 2]] || COUNTRY_MAY_HAVE[w[i + 2]])) ? 'word'
     : w.some((x, i) => /^(?:der|den|dem)$/.test(x) && OWN_KIND.language.has(w[i + 1] || '') && !['auf', 'in', 'im'].includes(w[i - 1] || '')) ? 'article'
@@ -3046,9 +3048,13 @@ function reasonFor(turn, value, core) {
   if (englishIn(turn, value)) return 'english';
   if (!turn.listen && !turn.spell && addressFault(String(value), turn)) return 'address';
   if (!turn.listen && !turn.spell && !turn.ownName && articleFaultIn(turn.lexicon, spelledOut(westernDigits(value), turn.lexicon))) return 'article';
+  // What the last look of `coreRule` found wrong wherever it stands („Ich gehe gern im Kino.“, „Gern ich komme mit.“).
+  const [vetoed, veto] = core === RESULT.WRONG && !turn.spell && !turn.listen ? coreRule(turn, value) : [];
+  if (vetoed === RESULT.WRONG && VETOES.has(veto)) return veto;
   const reason = namedFault(turn, value, core);
   return reason && (turn.ownName || certainFault(turn, spelledOut(westernDigits(value), turn.lexicon), reason, (w) => knownWord(fold(w), turn.lexicon), (w) => finiteVerb(w, turn.lexicon))) ? reason : null;
 }
+const VETOES = new Set(['order', 'word', 'agreement', 'tense', 'missing', 'article']);
 export function namedFault(turn, value, core) {
   if (core === BEYOND) return turn.spell || turn.listen ? null : formFault(spelledOut(westernDigits(value), turn.lexicon), turn.lexicon) || null;
   return reasonOf(turn, value);
