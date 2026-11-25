@@ -19,6 +19,8 @@ const SUPPRESSED_ROUTES = [
   '/speaking',
   '/schreiben',
   '/modelltest',
+  // The course pages: on a phone the pill covered the button of the completion page and the certificate.
+  '/course',
 ];
 
 const FloatingIntroButton = () => {
@@ -78,7 +80,7 @@ const FloatingIntroButton = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-          className="fixed bottom-24 left-4 z-50 sm:bottom-6 sm:left-6"
+          className="fixed bottom-24 left-4 z-50 print:hidden sm:bottom-6 sm:left-6"
         >
           <div className="relative">
             <button

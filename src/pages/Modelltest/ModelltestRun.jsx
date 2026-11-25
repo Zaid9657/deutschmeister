@@ -47,6 +47,12 @@ const optionClass = (selected) =>
   `shadow-raise transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none ` +
   (selected ? 'border-siegel bg-siegel-wash text-ink' : 'border-rule text-graphite hover:border-siegel');
 
+// What the writing field asks for, by the part's own task: „Ihre E-Mail" stood over a form to fill in.
+const writingPlaceholder = (label) =>
+  /Formular/.test(label) ? 'Füllen Sie das Formular hier aus …'
+    : /E-Mail/.test(label) ? 'Schreiben Sie Ihre E-Mail hier …'
+      : 'Schreiben Sie Ihren Text hier …';
+
 const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
 function MockListeningPart({ part, answers, onAnswer, registerKey }) {
@@ -509,7 +515,8 @@ const ModelltestRun = () => {
                     value={answers[`writing:${part.key}`] || ''}
                     onChange={(e) => setAnswer(`writing:${part.key}`, e.target.value)}
                     rows={10}
-                    placeholder="Schreiben Sie Ihre E-Mail hier …"
+                    aria-label={part.label}
+                    placeholder={writingPlaceholder(part.label)}
                     className={`w-full p-4 text-sm leading-relaxed ${FIELD}`}
                   />
                   <Card className="p-4">

@@ -53,6 +53,9 @@ import {
   buildCheckpoint,
   scoreCheckpoint,
   remediationSet,
+  remediationScope,
+  paperSeed,
+  PAPERS_PER_WINDOW,
   isItemCorrect,
   SECTION_COUNTS,
   SECTION_ORDER,
@@ -89,6 +92,7 @@ import {
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
 import { knownUpTo, untaughtTokens, namesOf } from '../src/lib/checkpoint/lexis.js';
+import { t } from '../src/lib/lesson/strings.js';
 import { courseWritingTasks, writingTaskByKey } from '../src/data/writingTasks.js';
 import { nextDue, LADDER_DAYS, MAX_STEP, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../src/lib/review/ladder.js';
 import { CURRICULUM_FIXTURE, CURRICULUM_FIXTURE_6 } from './fixtures/curriculum-fixture.js';
@@ -1362,6 +1366,51 @@ test('remediation is 10 fresh items aimed at the topics that were missed', () =>
   assert.ok(set[0].errorTags && Object.keys(set[0].errorTags).length > 0, 'it carries the error tags it answers');
 });
 
+// MAJOR 3 (2026-11-25): the graded retake repeated what its own practice had just shown, and the
+// sentence above ten grammar gaps said „exactly the topics that didn't stick" when only Hören had failed.
+test('a remediation set shares nothing with the next papers of its attempt window', () => {
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    for (const round of [0, 1]) {
+      const at = (r) => buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL, seed: paperSeed(cp, r) });
+      const items = at(round);
+      const next = new Set(Array.from({ length: PAPERS_PER_WINDOW - 1 }, (_, k) => at(round + k + 1)).flat().map((i) => i.poolItemId).filter(Boolean));
+      for (const missed of [null, 'bausteine', 'schreiben', 'hoeren', 'lesen']) {
+        const answers = answerAll(items, { correctFor: (item) => missed !== null && item.section !== missed });
+        const set = remediationSet(items, answers, POOL, { afterLektion: cp.afterLektion, retake: { curriculum: CURRICULUM_A11, checkpoint: cp, round } });
+        assert.equal(set.length, 10, `${cp.id} round ${round} (${missed || 'all'}): a full set`);
+        assert.deepEqual(set.filter((i) => next.has(i.poolItemId)).map((i) => i.poolItemId), [], `${cp.id} round ${round} (${missed || 'all'}): the retake repeats its practice`);
+      }
+    }
+  }
+});
+
+test('what the practice block says it practises is what failed', () => {
+  const cp = CURRICULUM_A11.checkpoints[0];
+  const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL });
+  const scopeOf = (sections, extra = {}) => {
+    const answers = { ...answerAll(items, { correctFor: (item) => !sections.includes(item.section) }), ...extra };
+    const result = scoreCheckpoint(items, answers);
+    return remediationScope(remediationSet(items, answers, POOL, { afterLektion: cp.afterLektion }), result);
+  };
+  assert.deepEqual([scopeOf(['bausteine']).kind, scopeOf(['bausteine']).missing], ['targeted', []]);
+  assert.equal(scopeOf(['bausteine']).targeted, 10);
+  assert.deepEqual([scopeOf(['hoeren']).kind, scopeOf(['hoeren']).missing], ['chapter', ['hoeren']], 'only Hören failed: none of the ten is about it');
+  assert.deepEqual([scopeOf(['lesen']).kind, scopeOf(['lesen']).missing], ['chapter', ['lesen']]);
+  assert.deepEqual(scopeOf(['bausteine', 'hoeren', 'lesen']).missing, ['hoeren', 'lesen']);
+  // A graded text that failed is not practised by the pool either; two wrong drills are.
+  const writing = items.find((i) => i.kind === 'gradedWriting');
+  assert.deepEqual(scopeOf([], { [writing.id]: { graded: true, pct: 0.2 } }).missing, ['schreiben']);
+  assert.deepEqual(scopeOf(['schreiben'], { [writing.id]: null }).missing, []);
+  // Every kind has its own sentence in both languages, and none promises „exactly the topics".
+  for (const lang of ['en', 'de']) {
+    for (const kind of ['targeted', 'mixed', 'chapter', 'missing']) {
+      const line = t(`checkpoint.practiceLead.${kind}`, lang, { n: 10, k: 4, list: 'Hören' });
+      assert.notEqual(line, `checkpoint.practiceLead.${kind}`, `${kind} (${lang})`);
+      assert.doesNotMatch(line, /exactly|genau den|\{/, `${kind} (${lang})`);
+    }
+  }
+});
+
 test('remediation is deterministic and ignores topics the pool cannot serve', () => {
   const items = build(CURRICULUM_FIXTURE, cp1);
   const answers = answerAll(items, { correctFor: () => false });
@@ -1923,12 +1972,12 @@ test('CheckpointPage mounts LandeskundeCard after the score, gated to a1.1 and k
   assert.match(src, /import LandeskundeCard from ['"]\.\.\/\.\.\/components\/course\/LandeskundeCard\.jsx['"]/);
   assert.match(src, /import \{ LANDESKUNDE \} from ['"]\.\.\/\.\.\/data\/curricula\/a11\.meta\.js['"]/);
   assert.match(src, /curriculum\.level === 'a1\.1' && LANDESKUNDE\[checkpoint\.nr\]/, 'must gate to a1.1 and key by checkpoint.nr');
-  assert.match(src, /<LandeskundeCard note=\{LANDESKUNDE\[checkpoint\.nr\]\} \/>/);
+  assert.match(src, /LANDESKUNDE\[checkpoint\.nr\]\.map\(\(note\) => <LandeskundeCard key=\{note\.titleDe\} note=\{note\} \/>\)/, 'every note of the chapter');
   // "After the score": the mount must come after the result percentage/count
   // paragraph and before the remediation section.
   const scoreIdx = src.indexOf("t('checkpoint.correctOf'");
   const landeskundeIdx = src.indexOf('<LandeskundeCard');
-  const remediationIdx = src.indexOf("t('checkpoint.practiceFirst'");
+  const remediationIdx = src.indexOf('id="checkpoint-practice"');
   assert.ok(scoreIdx > -1 && landeskundeIdx > scoreIdx, 'LandeskundeCard must be mounted after the score');
   assert.ok(remediationIdx === -1 || landeskundeIdx < remediationIdx, 'LandeskundeCard must come before the remediation section');
 });
@@ -1941,6 +1990,9 @@ test('LandeskundeCard is a flat Card (no raised/interactive) and reads its langu
   assert.match(src, /note\.titleDe|note\.titleEn/, 'must render the note title');
   assert.match(src, /note\.bodyDe|note\.bodyEn/, 'must render the note body');
   assert.match(src, /note\.source/, 'must render the source line');
+  // MAJOR 11 (2026-11-25): an unbroken source URL pushed the checkpoint result 36 px sideways at 390 px.
+  assert.match(src, /\[overflow-wrap:anywhere\]/, 'a URL breaks inside the card');
+  assert.match(src, /landeskunde\.commonKnowledge/, 'a source that is words follows the chrome language');
 });
 
 // TRANSFER (2026-10 review). A checkpoint item the learner already answered in

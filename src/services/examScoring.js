@@ -83,6 +83,18 @@ export function mergeListeningResult(objective, listening) {
   };
 }
 
+/**
+ * The section that cost the most POINTS, or null when none was lost. Points, not percent: with 0 of 8 in Lesen
+ * and 0 of 10 in Hören the result named Lesen, and a full score still named one (browser walk, 2026-11-25).
+ */
+export function costliestSection(sectionScores = {}) {
+  return Object.entries(sectionScores || {})
+    .map(([key, s]) => ({ key, max: Number(s?.max) || 0, lost: Math.max(0, (Number(s?.max) || 0) - (Number(s?.score) || 0)) }))
+    .filter((s) => s.lost > 0)
+    // Equally many points: the shorter section, where they weigh more.
+    .sort((a, b) => b.lost - a.lost || a.max - b.max)[0] || null;
+}
+
 /** Percentage + band verdict. Richtwert only — the UI must label it so. */
 export function verdictFor(percent, passPercent) {
   if (percent >= passPercent + 15) return 'solide'; // comfortably above the line

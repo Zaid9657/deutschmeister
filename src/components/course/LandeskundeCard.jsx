@@ -23,8 +23,9 @@ export default function LandeskundeCard({ note }) {
       </p>
       <h3 className="mt-1 font-display text-lg text-ink">{title}</h3>
       <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{body}</p>
-      <p className="mt-3 text-xs text-graphite">
-        {t('landeskunde.source', lang)} {note.source}
+      {/* A bare URL has no space to break at: unbroken, it pushed the result page sideways at 390 px. */}
+      <p className="mt-3 text-xs text-graphite [overflow-wrap:anywhere]">
+        {t('landeskunde.source', lang)} {note.source === 'allgemein bekannt' ? t('landeskunde.commonKnowledge', lang) : note.source}
       </p>
     </Card>
   );

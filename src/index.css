@@ -144,8 +144,13 @@
 
 /* Print styles */
 @media print {
-  .no-print {
+  .no-print,
+  #dm-cookie-banner {
     display: none !important;
+  }
+  /* The screen's reserved height (App.jsx) is a blank second page on paper. */
+  #main {
+    min-height: 0;
   }
 }
 

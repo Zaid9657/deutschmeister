@@ -2940,8 +2940,12 @@ export const sectionPasses = (s) =>
  * went wrong: the topics that were missed, most-missed first, round-robin so a
  * single bad topic does not fill the whole set. Nothing already seen in this
  * checkpoint comes back (the standard: a miss returns as a DIFFERENT variant).
+ *
+ * `retake` = { curriculum, checkpoint, round } of the paper just sat: the set then leaves out what the
+ * next papers of this attempt window draw. Those papers are fixed (paperSeed), so without it the graded
+ * retake asked what its own practice had just shown with the answer (browser walk of 2026-11-25).
  */
-export function remediationSet(items, answers = {}, pool, { size = 10, seed, afterLektion } = {}) {
+export function remediationSet(items, answers = {}, pool, { size = 10, seed, afterLektion, retake = null } = {}) {
   const missCounts = new Map();
   const tags = {};
   for (const item of items) {
@@ -2970,6 +2974,11 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed, aft
   const fallback = [...new Set(items.map((i) => i.topic))].filter((t) => poolTopics.has(t) && !failing.includes(t));
 
   const used = new Set(items.map((i) => i.poolItemId).filter(Boolean));
+  if (retake) {
+    for (let k = 1; k < PAPERS_PER_WINDOW; k += 1) {
+      for (const i of earlierPaper(retake.curriculum, retake.checkpoint, pool, retake.round + k)) if (i.poolItemId) used.add(i.poolItemId);
+    }
+  }
   const rng = mulberry32(hashSeed(seed ?? `${items[0]?.id || 'cp'}-remediation`));
   const drawn = drawPool(pool, failing, size, rng, used, { afterLektion });
   if (drawn.length < size) drawn.push(...drawPool(pool, fallback, size - drawn.length, rng, used, { afterLektion }));
@@ -2983,4 +2992,20 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed, aft
     order: i + 1,
     errorTags: tags,
   }));
+}
+
+/**
+ * What a remediation set really practises, for the sentence above it. The set is grammar from the pool,
+ * so a miss in Hören, Lesen, Sprechen or the graded text is not in it; the sentence used to promise
+ * „exactly the topics that didn't stick“ over ten grammar gaps when only Hören had failed.
+ *  - `kind`: 'targeted' (every task is on a missed topic), 'mixed', or 'chapter' (none is);
+ *  - `targeted`: how many tasks are on a missed topic;
+ *  - `missing`: the failed parts these tasks cannot practise, in paper order.
+ */
+export function remediationScope(set, result) {
+  const targeted = set.filter((i) => i.source === 'targeted').length;
+  const failed = (s) => Boolean(result?.sections?.[s]?.scored) && !sectionPasses(result.sections[s]);
+  const missing = ['hoeren', 'lesen', 'schreiben', 'sprechen']
+    .filter((s) => failed(s) && (s !== 'schreiben' || result.sections[s].realTask === false));
+  return { kind: targeted === 0 ? 'chapter' : targeted === set.length ? 'targeted' : 'mixed', targeted, missing };
 }
