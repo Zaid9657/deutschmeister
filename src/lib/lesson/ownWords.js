@@ -97,7 +97,7 @@ Speck Döner Burger Hamburger Keks Kaugummi Lutscher Pudding Nachtisch Salat Koh
 Film Roman Comic Kurs Sport Tanz Yogakurs Ausflug Urlaub Spaziergang Besuch Garten Balkon Keller Park Platz Markt Supermarkt Laden Flughafen Parkplatz
 Arzt Termin Job Beruf Euro Gutschein Geldbeutel Hund Vogel Fisch Blumenstrauß Kaktus Baum Strauß Teddy Computer Server Scanner Beamer Stuhl Tisch Kuchen
 Löffelbiskuit Muffin Donut Brokkoli Sellerie Salzstreuer Nagellack Lippenstift Rasierer Kaffee Tee Abend Morgen Tag Monat`,
-  die: `Schwägerin Enkelin Ehefrau Tastatur Maus Kamera Lampe Batterie Steckdose Datei Mappe Akte Schere Kreide Brille Sonnenbrille Uhr Armbanduhr Wanduhr Kette Halskette Krawatte
+  die: `Dusche Badewanne Schwägerin Enkelin Ehefrau Tastatur Maus Kamera Lampe Batterie Steckdose Datei Mappe Akte Schere Kreide Brille Sonnenbrille Uhr Armbanduhr Wanduhr Kette Halskette Krawatte
 Mütze Jacke Hose Jeans Bluse Weste Unterhose Socke Tasche Handtasche Geldbörse Brieftasche Karte Postkarte Geburtstagskarte Kreditkarte Bankkarte
 Fahrkarte Versicherung Rechnung Quittung Unterschrift Kopie Zeitung Zeitschrift Decke Bettdecke Matratze Couch Kommode Vase Blume Pflanze Kerze Pfanne
 Schüssel Gabel Tasse Flasche Dose Kanne Kaffeemaschine Waschmaschine Spülmaschine Maschine Mikrowelle Heizung Dusche Badewanne Toilette Seife Creme Zahnbürste

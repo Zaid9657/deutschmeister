@@ -194,6 +194,12 @@ export const CURRICULUM_A11 = {
           titleDe: 'Willkommen!', titleEn: 'Welcome!',
           instructionDe: 'Lesen Sie die Karte. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the card. Tap a word for its meaning.',
+          // The closed series this Lektion's check spells (independent score of c6918f2d): shown with its names and heard before it is tested.
+          series: {
+            titleDe: 'Das Alphabet', titleEn: 'The alphabet',
+            noteDe: 'So heißen die Buchstaben. Beim Buchstabieren sagt man diese Namen.', noteEn: 'These are the names of the letters. You say them when you spell a word. P and B sound different: P is hard, B is soft.',
+            items: [{ label: 'A a', de: 'A' }, { label: 'B b', de: 'B' }, { label: 'C c', de: 'C' }, { label: 'D d', de: 'D' }, { label: 'E e', de: 'E' }, { label: 'F f', de: 'F' }, { label: 'G g', de: 'G' }, { label: 'H h', de: 'H' }, { label: 'I i', de: 'I' }, { label: 'J j', de: 'J' }, { label: 'K k', de: 'K' }, { label: 'L l', de: 'L' }, { label: 'M m', de: 'M' }, { label: 'N n', de: 'N' }, { label: 'O o', de: 'O' }, { label: 'P p', de: 'P' }, { label: 'Q q', de: 'Q' }, { label: 'R r', de: 'R' }, { label: 'S s', de: 'S' }, { label: 'T t', de: 'T' }, { label: 'U u', de: 'U' }, { label: 'V v', de: 'V' }, { label: 'W w', de: 'W' }, { label: 'X x', de: 'X' }, { label: 'Y y', de: 'Y' }, { label: 'Z z', de: 'Z' }, { label: 'Ä ä', de: 'Ä' }, { label: 'Ö ö', de: 'Ö' }, { label: 'Ü ü', de: 'Ü' }, { label: 'ß', de: 'ß' }],
+          },
           // A welcome card at reception: greetings for the day and useful phrases.
           text: 'Hallo und willkommen!\nGuten Morgen! Guten Tag! Guten Abend! Gute Nacht!\nTschüss! Bis morgen!\n„Guten Tag“ ist ein Gruß.\nIch heiße Ana. – Freut mich!\nEntschuldigung, wie heißen Sie?\nWie geht es dir? – Mir geht es gut, danke.\nBuchstabieren Sie bitte Ana: A-N-A. A ist ein Buchstabe.',
           questions: [
@@ -429,11 +435,11 @@ export const CURRICULUM_A11 = {
             titleDe: 'Die Zahlen von 0 bis 10', titleEn: 'The numbers from 0 to 10',
             items: [{ label: '0', de: 'null' }, { label: '1', de: 'eins' }, { label: '2', de: 'zwei' }, { label: '3', de: 'drei' }, { label: '4', de: 'vier' }, { label: '5', de: 'fünf' }, { label: '6', de: 'sechs' }, { label: '7', de: 'sieben' }, { label: '8', de: 'acht' }, { label: '9', de: 'neun' }, { label: '10', de: 'zehn' }],
           },
-          text: 'Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.',
+          text: 'Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko und sind Marokkanerin? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.',
           questions: [
             {
-              promptDe: 'Sie kommen aus Marokko. Was steht dann im Formular bei „Staatsangehörigkeit“? Wählen Sie.',
-              promptEn: 'You come from Morocco. What goes on the form under “Staatsangehörigkeit”? Choose.',
+              promptDe: 'Ana ist Marokkanerin. Was steht im Formular bei „Staatsangehörigkeit“? Wählen Sie.',
+              promptEn: 'Ana is Moroccan. What goes on the form under “Staatsangehörigkeit”? Choose.',
               options: ['The noun “Marokkanerin”.', 'The country name “Marokko”.', 'The adjective “marokkanisch”.'],
               answer: 'The adjective “marokkanisch”.',
               explanationDe: 'Auf dem Blatt steht: Dann bitte „marokkanisch“, nicht „Marokkanerin“.',
@@ -1400,7 +1406,7 @@ export const CURRICULUM_A11 = {
         sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wir kommen morgen. Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
-      practiceRule: { topics: ['nouns-gender', 'numbers'], topicMin: { numbers: 3 }, typedMin: 3 },
+      practiceRule: { topics: ['nouns-gender', 'numbers'], topicMin: { numbers: 3 }, typedMin: 3, mustCover: ['den'] },
     },
     {
       nr: 5,
@@ -1785,7 +1791,7 @@ export const CURRICULUM_A11 = {
           },
           turns: [
             { canDo: 0, cue: { de: 'Guten Morgen! Was brauchen Sie?', en: 'Good morning! What do you need?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you need, in one sentence.', accepted: ['Ich brauche …'], slot: 'thing', example: 'Ich brauche einen Computer und ein Telefon.' },
-            { canDo: 3, taskDe: 'Und Ihr Büro? Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?'] },
+            { canDo: 3, taskDe: 'Sie suchen Ihr Büro. Fragen Sie Herrn Weber: wo?', taskEn: 'Ask Herr Weber where your office is.', accepted: ['Wo ist mein Büro?', 'Wo ist das Büro?'] },
             { canDo: 3, taskDe: 'Und die Pause? Fragen Sie: wann?', taskEn: 'Ask when the break is.', accepted: ['Wann ist die Pause?', 'Wann ist Pause?', 'Wann machen wir Pause?', 'Wann haben wir Pause?', 'Um wie viel Uhr ist die Pause?', 'Wann beginnt die Pause?', 'Wann fängt die Pause an?', 'Wann ist meine Pause?', 'Wann ist die Mittagspause?', 'Wann ist Mittagspause?', 'Wann machen wir Mittagspause?', 'Wann haben wir Mittagspause?', 'Wann beginnt die Mittagspause?', 'Wann fängt die Mittagspause an?'] },
             // A name on the phone, as Lektion 1 taught it („Ich heiße …", „Ich bin …", the model answer) or
             // as Germans answer a call („Hier ist …", or the name alone).
@@ -1924,7 +1930,7 @@ export const CURRICULUM_A11 = {
         sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei drei drei acht eins. Ich bin um neun im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
-      practiceRule: { topics: ['indefinite-articles', 'verb-sein'], topicMin: { 'verb-sein': 3 }, typedMin: 3 },
+      practiceRule: { topics: ['indefinite-articles', 'verb-sein'], topicMin: { 'verb-sein': 3 }, typedMin: 3, mustCover: ['einen'] },
     },
     {
       nr: 7,
@@ -2725,7 +2731,7 @@ export const CURRICULUM_A11 = {
         sample: 'Name: Chakiri / Tag: Montag / Uhrzeit: 15 Uhr / Personen: 2 / Telefonnummer: 0176 22 44 88',
       },
       links: { listeningExercise: 2, readingOrder: 8 },
-      practiceRule: { topics: ['verb-haben', 'indefinite-articles'], typedMin: 3 },
+      practiceRule: { topics: ['verb-haben', 'indefinite-articles'], topicMin: { 'indefinite-articles': 1 }, typedMin: 3, mustCover: ['einen'] },
     },
     {
       nr: 10,
@@ -3530,7 +3536,7 @@ export const CURRICULUM_A11 = {
       // (DaF review #6). The polite `Ihr` is graded in Schreiben Teil 2 and Sprechen Teil 3,
       // L12 is the last place it is taught, and without this the seeded draw missed it in a
       // whole attempt — `MAX_SAME_ANSWER_KEY` caps repetition but cannot reserve a seat.
-      practiceRule: { topics: ['possessive-articles', 'verb-sein', 'verb-haben'], typedMin: 4, mustCover: ['Ihr'] },
+      practiceRule: { topics: ['possessive-articles', 'verb-sein', 'verb-haben', 'indefinite-articles'], topicMin: { 'indefinite-articles': 1 }, typedMin: 4, mustCover: ['Ihr'] },
     },
   ],
   checkpoints: [

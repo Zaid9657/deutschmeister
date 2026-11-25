@@ -4,7 +4,7 @@
 // or preposition asks for, participle, infinitive and prefix at the end — and hands back what it says, or null when it cannot
 // read every word. `taskMeaning.js` compares that with what the turn asks.
 import { ACCUSATIVE_PREP, ADVERBS, CONTRACTED, COORDINATORS, DATIVE_PREP, DAYS, DAY_PARTS, DEGREE, MONTHS, NUMBER_WORDS, PRONOUNS, SEASONS, SUBORDINATORS, TWO_WAY_PREP, W_WORDS,
-  adjectiveEnding, adjectiveForm, determinerOf, fold, separableOf, verbReadings } from './germanForms.js';
+  WEAK_NOUNS, adjectiveEnding, adjectiveForm, determinerOf, fold, separableOf, verbReadings } from './germanForms.js';
 
 const set = (s) => new Set(s.trim().split(/\s+/).map(fold));
 // Nouns that stand without an article: stuff, sports, instruments, set phrases („Zeit haben“, „Fahrrad fahren“).
@@ -16,7 +16,6 @@ ballett salsa hiphop poker lego tschüss kino theater kontakt pech glück stress
 const MASSES = set('kleidung gepäck schmuck werkzeug spielzeug kleingeld parfüm creme seife shampoo klebeband besteck geschirr wäsche strom gas benzin holz wolle stoff leder müsli pasta couscous hummus knoblauch petersilie ketchup senf öl essig sahne quark joghurt limo schorle sekt schnaps whisky espresso cappuccino eistee pommes ruhe liebe gesundheit glück frieden unterstützung ahnung erfahrung nachhilfe besuch post ruhe wasser milch kaffee tee saft bier wein brot käse fleisch fisch obst gemüse salat reis zucker salz butter suppe kuchen eis schokolade schinken wurst honig marmelade orangensaft mineralwasser apfelsaft cola limonade geld papier musik zeit hilfe platz internet wlan');
 // People: a name may follow („mein Bruder Ali“).
 const PEOPLE = /^(?:mutter|vater|mama|papa|eltern|bruder|schwester|sohn|tochter|kind|mann|frau|oma|opa|großmutter|grossmutter|großvater|grossvater|onkel|tante|cousin|cousine|neffe|nichte|enkel|enkelin|baby|freund|freundin|nachbar|nachbarin|kollege|kollegin|chef|chefin|lehrer|lehrerin|partner|partnerin|schwager|schwägerin|familie|hund|katze|herr|kommilitone|kommilitonin|mitbewohner|mitbewohnerin|verlobter|verlobte)$/u;
-const WEAK_NOUNS = { nachbarn: 'nachbar', kollegen: 'kollege', studenten: 'student', kunden: 'kunde', jungen: 'junge', menschen: 'mensch', herrn: 'herr', neffen: 'neffe', patienten: 'patient', polizisten: 'polizist', namen: 'name' };
 // What one plays: an instrument, a sport („Gitarre gespült“ is a slip of „gespielt“).
 const BARE_AFTER = new Set(['nach feierabend', 'vor feierabend', 'nach mittag', 'zu mittag', 'zu besuch', 'auf deutsch', 'auf englisch', 'in urlaub', 'nach schulschluss', 'in arbeit', 'auf arbeit', 'zu hause', 'nach hause', 'bei regen', 'bei schnee', 'zu abendessen', 'vor freude', 'vor schmerzen', 'vor glück']);
 export const NEEDS_ARTICLE = set('zug uhr pause mittagspause geburtstag arbeit kino theater schule bus taxi rad auto fahrrad radio kontakt besuch schicht dienst');
@@ -118,7 +117,8 @@ export function reader(text, ctx) {
       return r ? { f: t.f, readings: r, small: true } : null;
     }
     const r = ctx.readings(t.raw);
-    if (r) return { f: t.f, readings: r };
+    // „meinen Kollegen“: a weak noun's accusative and dative look like its plural.
+    if (r) return WEAK_NOUNS[t.f] && !r.includes('der') ? { f: t.f, readings: [...r, 'der'], weak: true } : { f: t.f, readings: r };
     if (WEAK_NOUNS[t.f]) return { f: t.f, readings: ['der', 'pl'], weak: true };
     if (/(?:eln|ern)$/u.test(t.f)) { const b = ctx.readings(t.raw.slice(0, -1)); if (b && !b.includes('die')) return { f: t.f, readings: ['pl'], dativePlural: true }; }
     if (t.f.endsWith('n')) { const b = ctx.readings(t.raw.slice(0, -1)); if (b?.includes('pl')) return { f: t.f, readings: ['pl'], dativePlural: true }; }
@@ -173,7 +173,7 @@ export function reader(text, ctx) {
         const n = nounAt(adjEnd);
         if (!n) continue;
         const one = t.f === '1';
-        const money = ['euro', 'cent', 'prozent', 'uhr', 'kilo', 'gramm', 'liter', 'meter', 'stück', 'glas', 'jahr'].includes(n.f);
+        const money = ['euro', 'cent', 'prozent', 'uhr', 'kilo', 'gramm', 'liter', 'meter', 'stück', 'glas'].includes(n.f);
         if (n.readings && !n.readings.includes('pl') && !money && !one) continue;
         if (!adjs.every((a) => ['e', 'en', '*'].includes(a.ending))) continue;
         const measured = ['glas', 'stück', 'kilo', 'liter', 'gramm', 'tasse', 'tassen', 'flasche', 'flaschen', 'gläser', 'stücke', 'packung', 'packungen'].includes(n.f) ? bareNoun(adjEnd + 1, { mass: true }) : [];
@@ -272,7 +272,7 @@ export function reader(text, ctx) {
       const combos = adjSlots(adjs, n.readings).filter((c) => c.c !== 'd' || c.g !== 'pl' || /[ns]$/u.test(n.f));
       if (!combos.length) continue;
       const g = new Set(combos.map((c) => c.g));
-      out.push({ end: k + 1, combos, agr: g.size === 1 && g.has('pl') ? 'sie' : plural ? 'er|sie' : 'er', head: n.f, kind: 'np', bare: true, bareOk: (plural && n.readings.every((x) => x === 'pl')) || stuff || (mass && !adjs.length), stuff, job, adjs: adjs.map((a) => a.stem), small: n.small, infinitive: n.infinitive });
+      out.push({ end: k + 1, combos, agr: g.size === 1 && g.has('pl') ? 'sie' : plural ? 'er|sie' : 'er', head: n.f, kind: 'np', bare: true, bareOk: (plural && (n.readings.every((x) => x === 'pl') || (g.size === 1 && g.has('pl')))) || stuff || (mass && !adjs.length), stuff, job, adjs: adjs.map((a) => a.stem), small: n.small, infinitive: n.infinitive });
     }
     return out;
   }
@@ -557,7 +557,8 @@ export function reader(text, ctx) {
     while (degrees.length < 3 && ((f(k) && DEGREE.has(f(k))) || (f(k) === 'ein' && ['bisschen', 'wenig'].includes(f(k + 1))))) { degrees.push(f(k)); k += f(k) === 'ein' ? 2 : 1; }
     for (const start of degrees.length ? [k, i] : [i]) {
       const w = f(start);
-      if (!w || (T[start].cap && !first.has(start) && T[start - 1]?.kind !== 'p')) continue;
+      // („schon halb neun“ is a time, never an adjective.)
+      if (!w || w === 'halb' || (T[start].cap && !first.has(start) && T[start - 1]?.kind !== 'p')) continue;
       const a = adjectiveForm(w).find((x) => x.ending === '');
       if (!a) continue;
       const base = { kind: 'adj', end: start + 1, word: a.stem, words: [a.stem], degree: start === k ? degrees : [], neg: start === k && degrees.includes('nicht') };
@@ -677,7 +678,8 @@ export function reader(text, ctx) {
     if (n.list) return !n.bareOk;
     if (['name', 'place', 'language'].includes(n.kind)) return false;
     if (n.kind === 'own') return false; // judged by the caller (`unknown`)
-    if (role === 'subject' && n.kind === 'np' && NEEDS_ARTICLE.has(n.head)) return true;
+    // „Wann ist Pause?“ is what one says; every other verb keeps the article („Wann beginnt die Pause?“).
+    if (role === 'subject' && n.kind === 'np' && NEEDS_ARTICLE.has(n.head)) return !(lemma === 'sein' && ['pause', 'mittagspause'].includes(n.head));
     if (n.bareOk) return false;
     if (role === 'predicate' && (n.job || PEOPLE.test(n.head) || /(?:er|in|e)$/u.test(n.head))) return false;
     if (role === 'object' && lemma === 'haben' && BARE.has(n.head)) return false;
@@ -796,7 +798,7 @@ export function reader(text, ctx) {
     if (!vc) return [];
     const asks = question && !wh && stopAhead(b.end) !== '?';
     const list = assign({ elems, persons: reading.persons, inverted, mainVerb: vc.main, imperative, sharedSubject, before, wh });
-    return list.filter((r) => !asks || (r.subj?.kind === 'pron' && ['du', 'sie', 'wir', 'ihr'].includes(r.subj.head))).map((r) => ({ ...base, ...r, elems, before, lemma: vc.main.lemma, going: Boolean(vc.main.going), reading, perfect: Boolean(vc.perfect), state: vc.state?.lemma || null, passive: vc.passive?.lemma || null, modal: vc.modal || (vc.bareModal ? vc.main.lemma : null), polite: Boolean(reading.polite), past: reading.mood === 'past', also: b.also?.lemma || null, question: Boolean(question), wh: wh || null, imperative: Boolean(imperative) }));
+    return list.filter((r) => !asks || (r.subj?.kind === 'pron' && (['du', 'wir', 'ihr'].includes(r.subj.head) || (r.subj.head === 'sie' && r.subj.formal !== false)))).map((r) => ({ ...base, ...r, elems, before, lemma: vc.main.lemma, going: Boolean(vc.main.going), reading, perfect: Boolean(vc.perfect), state: vc.state?.lemma || null, passive: vc.passive?.lemma || null, modal: vc.modal || (vc.bareModal ? vc.main.lemma : null), polite: Boolean(reading.polite), past: reading.mood === 'past', also: b.also?.lemma || null, question: Boolean(question), wh: wh || null, imperative: Boolean(imperative) }));
   }
 
   /** W-phrases: [{ end, word, np, prep }]. */

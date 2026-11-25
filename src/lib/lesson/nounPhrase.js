@@ -2,6 +2,7 @@
 // spiele gern mit mein Freund.“, „Ich lese morgens den Zeitung.“, „Ich fahre gern mit das Fahrrad.“, „Meine Onkel kommt.“
 // were praised because an open gap took any noun phrase. Only certain faults: a noun whose gender is known, a form that
 // no case it can stand in here has.
+import { WEAK_NOUNS } from './germanForms.js';
 
 const DEFINITE = { der: ['der', 'den', 'dem', 'des'], die: ['die', 'der'], das: ['das', 'dem', 'des'], pl: ['die', 'den', 'der'] };
 const ENDINGS = { der: ['', 'en', 'em', 'es'], die: ['e', 'er'], das: ['', 'em', 'es'], pl: ['e', 'en', 'er'] };
@@ -66,6 +67,8 @@ export function nounPhraseFault(text, { readings, bareFault = () => false }) {
     }
     const noun = words[j];
     if (!noun || !/^\p{Lu}/u.test(noun.raw)) continue;
+    // „einen Kollegen“, „mit meinem Nachbarn“: a weak noun's accusative and dative look like its plural.
+    if (WEAK_NOUNS[noun.f] && /^(?:(?:ein|mein|dein|kein|sein|ihr|unser)e[nm]|den|dem)$/.test(f)) continue;
     const r = readings(noun.raw);
     // The dative plural after a determiner of another case („Ich treffe meine Freunden“).
     if (!r && /n$/.test(noun.raw) && readings(noun.raw.slice(0, -1))?.every((g) => g === 'pl') && !fits(f, 'pl', DAT)) return true;

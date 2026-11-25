@@ -4,7 +4,7 @@ import Card from '../ui/Card.jsx';
 import { GlossLine } from './DialogStage.jsx';
 import CheckedChoice from './CheckedChoice.jsx';
 import PlayButton from './PlayButton.jsx';
-import { readLexicon, seriesText } from '../../lib/lesson/guidedRead.js';
+import { LETTER, readLexicon, seriesText } from '../../lib/lesson/guidedRead.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /** A closed series the check asks for later (numbers, months): each member with its word, and the whole list to hear. */
@@ -15,7 +15,7 @@ function Series({ series, lektionId, lang }) {
     {note && <p className="mt-1 text-sm text-graphite">{note}</p>}
     <ol className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-3">
       {series.items.map((x) => <li key={x.label} className="flex items-baseline gap-2 text-[0.9375rem]">
-        <span className="w-8 shrink-0 text-right font-data text-xs text-graphite">{x.label}</span><span lang="de">{x.de}</span>
+        <span className="w-8 shrink-0 text-right font-data text-xs text-graphite">{x.label}</span><span lang="de">{LETTER[x.de] || x.de}</span>
       </li>)}
     </ol>
     <div className="mt-3"><PlayButton lektionId={lektionId} audioKey="read-series" text={seriesText(series)} rate={0.85} label={t('action.listen', lang)} /></div>

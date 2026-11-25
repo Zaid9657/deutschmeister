@@ -874,7 +874,7 @@ test('every sentence-building item with a time or place Angabe accepts both word
   // Both-order acceptance is still required above for EVERY pool and drawn checkpoint item.
   // 2026-11-25: yes/no questions no longer name their opening, which reseats the generated papers: one more frontable seat.
   // Loop round 3 (2026-11-25): the new practice items reseat the generated papers (the live ones come from the reserved bank);
-  // checkpoint 3's frontable Baustein is gone from the draw, its check stays: both orders are required of EVERY pool item above.
+  // two Bausteine of checkpoints 3 and 4 are frontable now, and accept both orders like EVERY pool item above.
   assert.deepEqual([...gradedIds].sort(), [
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
@@ -924,6 +924,8 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // 2026-11-23: `extra-a11-l07-05` is now „Wir tanzen hier zusammen.“ (a word bag needs four words), so
     // checkpoint 3's seat 2 gains the fronted „Hier tanzen wir zusammen.“, asserted above. RE-MEASURED.
     'a1.1-cp1-schreiben-2',
+    'a1.1-cp3-bausteine-1',
+    'a1.1-cp4-bausteine-1',
     'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });

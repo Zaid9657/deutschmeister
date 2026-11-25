@@ -73,7 +73,8 @@ const gap = (nr, sentence, answer, rule) => {
 const build = (nr, bricks, answer, opening, rule) => ({
   nr, type: 'sentence_building', answer, rule,
   questionDe: `Bilden Sie ${answer.endsWith('?') ? 'die Frage' : 'den Satz'} (Beginnen Sie mit „${opening}“): [${bricks}]`,
-  questionEn: `Build the ${answer.endsWith('?') ? 'question' : 'sentence'}. Start with “${opening}”.`,
+  // (The opening is added to the English from the German cue: `taskConstraintsEn`.)
+  questionEn: `Build the ${answer.endsWith('?') ? 'question' : 'sentence'}.`,
 });
 const ask = (nr, bricks, answer, rule) => ({
   nr, type: 'sentence_building', answer, rule,

@@ -603,3 +603,65 @@ course-audio). Validators A1.1 and A1.2 exit 0; both bank gates pass; eslint cle
 12 Lektionen in English and 12 in German to the recap, 12 final checks with wrong and unrelated answers (0 notes), the four checkpoints passed,
 failed and retaken (first option throughout: 12–18 %), the final test four ways, course home, review, completion and certificate: 457 screens
 around the Lektionen, 0 page errors, 0 failed requests. The round-2 corpora are in `blind-corpus-2026-11-25-round2/` (in sample from now on).
+
+## Loop round 3 (2026-11-25): the final check reads the sentence; practice by can-do; notices before the graded structure
+
+**A second reader for the final check.** Frames and accepted lists confirmed 70–75 % of right answers and sent the rest to "beyond". Beside
+them stands a reader now: `clause.js` takes a typed sentence apart (every word has to be read), `clauseOrder.js` says whether the words
+stand where German puts them, `taskMeaning.js` whether the sentence answers the turn, `oneRepair.js` names the one change that would make
+it the answer. What a turn asks is read off its own accepted answers, so a new Lektion needs no entry.
+
+- CORRECT: every word read, in order, and it says what the turn asks. WRONG: read in full and it is certainly another task, thing, pronoun
+  or form of address, or exactly one nameable change makes it the answer. Everything else: "beyond".
+- A noun no list knows is welcome where the answer names something of the learner's own, and the note says it was not checked.
+- A task that names its form („mit „Ich habe …““) is answered in that form; other good German is "beyond", never wrong.
+- Tests: `sentence-reader.test.mjs` (rules, the round-3 corpora as ratchets) and the pins of `final-check.test.mjs`.
+
+**What the generated probes found, and what it says about the corpora.** The blind corpora called the first version nearly clean (2 % of
+wrong answers praised). The generated tests of `final-check.test.mjs` (two words swapped, a word of another kind in the gap, a tail) did
+not: „Wann ist Pause die?“, „Ich möchte sieben.“, „Das ist meine Mutter und kommen aus Syrien.“ were praised, because the reader looked
+only for the words. People do not write those mistakes, so no corpus had them. `clauseOrder.js` is the answer: new praised probes
+112 → 2 (swapped), 119 → 14 (another kind), 760 → 5 (tail), 136 → 37 (a word left out; most of these are German), with no right answer of
+the corpora lost. A wider set (right answers of the corpora with one article or verb form changed) is praised in 2 % of cases, a good part
+of them German („Sage mal, …“). **A corpus measures what people write; only a generated test shows what a grader would accept.**
+
+**Practice.** `practiceRule.topicMin` fills the seats of a Lektion's own can-dos first (numbers in L4, pronouns and sein in L5, sein in L6);
+an item stands in one Lektion only (`oneLektionItems`); 76 new items in this round. A practice topic is taught by this Lektion or an earlier one (spiral
+review): the validator and its test say so now. A wrong spelling begins as a German word does („Danke / Dakne“, never „Dnake“).
+
+**Notices and lines.** V in Vater like F and in Vase like W (L1); noun with article and plural (L4); kein, keine, keinen (L6); the yes/no
+question with the verb first (L7), in German, English and Arabic (Arabic by Codex).
+**Dialogue lines changed (before the recording):** L2 line 1 „Guten Tag und willkommen im Amt! Ich heiße Weber.“, line 4 „Ich bin ledig. Und
+hier? Kommt hier die Adresse?“, line 5 „Ja, für Post vom Amt. Vorname, Nachname, Wohnort. Und woher kommen Sie?“, line 9 „Danke. Und wie ist
+Ihre Telefonnummer?“; L12 reading „Dein Alter? Für uns bist du immer jung!“. L6 plays on Ana's first day at the Amt; its writing sample says „um neun“.
+
+**The independent scores of c6918f2d** (two reviewers, the same brief, no contact): Codex **7.1, "no"** (round 2: 7.3), Claude **6.9, "no"**
+(round 2: 6.4). Both name the "free A1.1" claims first (owner area). What they found that is not the owner's, and the rule that answers it:
+
+- **Forms of taught nouns counted as own words** („einen Computers“, „mein Ladekabeln“): a noun a list knows, with an ending it has not behind
+  a singular article, is a form. Weak nouns keep their -n („einen Kollegen“ was called wrong), „Wann ist Pause?“ needs no article.
+- **Wrong sentences praised in the Lektion's own structure** (51 of 1,562 of the reviewer's wrong answers, 2 after the fixes): a frame
+  checks the words around a gap, not their order, so what a frame verifies is read as German too where every word is known (`notRead`);
+  a statement with its verb first, „Er ist meine Mutter“, another person's owner („Sein Geburtstag“), „nach Schule“, „eine Zeit“,
+  „nicht Kuchen“, „viel alt“, an object the verb cannot have („Ich koche gern Fußball“).
+- **Slips on taught words** (122 one-letter slips: 45 → 99 taken as a slip): one letter wrong inside a taught word is a slip of that word,
+  decided before own words, English and fault hints; never the first or last letter, an ending is a form.
+- **Staatsangehörigkeit is what one is, not where one comes from** (L2 reading and item). **The alphabet** is shown with the letter names and
+  heard in L1, as the numbers and months are. **den / einen** are drawn in L4, L6, L9 and L12 (11 new items, `mustCover`). The answer key no
+  longer lists „Sie ist schon jung“, „noch alt“, „noch nicht jung“. English tasks no longer say „Start with … Begin with …“.
+
+| Measured | first, unseen | after the fixes (in sample) |
+|---|---|---|
+| Codex corpus, right confirmed / called wrong | 95.2 % / 1.3 % | 97.5 % / 0 |
+| Codex corpus, wrong praised / beyond | 2.1 % / 9.0 % | 0.8 % / 7.9 % |
+| Claude corpus, right confirmed / called wrong | 95.9 % / 1.2 % | 98.9 % / 0 |
+| Claude corpus, wrong praised / beyond | 1.6 % / 7.6 % | 0.3 % / 5.8 % |
+| Claude reviewer's answers, right confirmed / refused | 95.9 % / 0.4 % | 96.2 % / 0.3 % |
+| Claude reviewer's answers, wrong praised / beyond | 3.3 % / 17 % | 0.1 % / 18.8 % |
+
+The corpora of round 2, in sample since then: 98.4 % and 99.5 % confirmed, none called wrong. The reviewer's answers are in the notes folder.
+
+**Still open** (for round 4): wrong answers sent to "beyond" (17–24 % in the reviewer's harder sets: honest, but no hint); unknown verbs („Ich
+blable gern“) praised with a note; 41 of 75 turns the same on a retake; final test scores listening and reading only; checkpoint texts that
+need a new blind review when changed (checkpoint 1 paper 3 gives two people one number, checkpoint 3 dictates „am Mittwoch nachmittags“);
+the cast notes of both scores; phone typing („Almost – just a typo“ for a small first letter says nothing about capitals).

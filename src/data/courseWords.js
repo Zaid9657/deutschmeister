@@ -25,9 +25,9 @@ buchstabiert bue buecher buergerbuero buero bueros bus busse café cafés cent c
 checkpoint chef chefin chefinnen chefs chen cke computer da dach daecher dafuer dagegen dahin
 dahinter damen dan danach dank danke dann darauf darf darum das dass daten dativ datum dauer davon
 davor dazu de decke decken dein deine deiner dem den denken denn der dert des deshalb deutsch
-deutschland dezember dich die dienstag dienstage diesem diesen dieser dieses diesmal dinge diphthong
-dir direkt direktes doch donnerstag donnerstage dort dorthin drei dreissig dreizehn drit dritte
-dritten drittens drittes du duerfen durch durchsage durchsagen durst durstig dusche duschen
+deutschland dezember dich die dienstag dienstage diese diesem diesen dieser dieses diesmal dinge
+diphthong dir direkt direktes doch donnerstag donnerstage dort dorthin drei dreissig dreizehn drit
+dritte dritten drittens drittes du duerfen durch durchsage durchsagen durst durstig dusche duschen
 ebenfalls ecke ecken ei eier eigene eigenen eigenschaft ein eine einem einen einer einfach einfache
 einfuegen eingaenge eingang eingebracht eingekauft eingeladen einige einkaufen einladen einladung
 eins einsteigen einundzwanzig einzahl einzelkind einzelkinder einzeln elf eltern en ende endet

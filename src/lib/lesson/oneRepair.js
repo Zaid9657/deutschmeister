@@ -110,7 +110,7 @@ export function repairs(text, { fragments = false, isPlace = () => false } = {})
     // „gebackt“, „gegesst“, „eingeladet“: the participle of a strong verb.
     if (!verbReadings(t.f).length && /^(?:\p{Ll}*)ge\p{Ll}+(?:t|en)$/u.test(t.f)) {
       const m = t.f.match(/^(\p{Ll}*?)ge(\p{Ll}+?)(?:et|t|en)$/u);
-      for (const stem of m ? [m[2], m[2].replace(/ss$/u, 's')] : []) for (const inf of [`${stem}en`, `${stem}n`]) {
+      for (const stem of m ? [m[2], m[2].replace(/ss$/u, 's'), m[2].replace(/^g(?=ess)/u, '')] : []) for (const inf of [`${stem}en`, `${stem}n`]) {
         const lemma = m[1] ? `${m[1]}${inf}` : inf;
         const part = isBaseVerb(lemma) ? participleFor(lemma) : m[1] && isBaseVerb(inf) ? `${m[1]}${participleFor(inf)}` : null;
         if (part && fold(part) !== t.f) replace(i, part, 'participle');

@@ -265,3 +265,6 @@ export const DAYS = words('montag dienstag mittwoch donnerstag freitag samstag s
 export const DAY_PARTS = words('morgen vormittag mittag nachmittag abend nacht');
 export const MONTHS = words('januar jänner februar märz april mai juni juli august september oktober november dezember');
 export const SEASONS = words('frühling frühjahr sommer herbst winter');
+
+/** Weak nouns in the accusative and the dative: „meinen Kollegen“, „mit dem Nachbarn“. */
+export const WEAK_NOUNS = { nachbarn: 'nachbar', kollegen: 'kollege', studenten: 'student', kunden: 'kunde', jungen: 'junge', menschen: 'mensch', herrn: 'herr', neffen: 'neffe', patienten: 'patient', polizisten: 'polizist', namen: 'name' };

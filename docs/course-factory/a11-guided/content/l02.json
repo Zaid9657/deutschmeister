@@ -55,11 +55,11 @@
           }
         ]
       },
-      "text": "Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.",
+      "text": "Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko und sind Marokkanerin? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.",
       "questions": [
         {
-          "promptDe": "Sie kommen aus Marokko. Was steht dann im Formular bei „Staatsangehörigkeit“? Wählen Sie.",
-          "promptEn": "You come from Morocco. What goes on the form under “Staatsangehörigkeit”? Choose.",
+          "promptDe": "Ana ist Marokkanerin. Was steht im Formular bei „Staatsangehörigkeit“? Wählen Sie.",
+          "promptEn": "Ana is Moroccan. What goes on the form under “Staatsangehörigkeit”? Choose.",
           "options": [
             "The noun “Marokkanerin”.",
             "The country name “Marokko”.",

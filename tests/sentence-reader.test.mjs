@@ -142,6 +142,65 @@ test('words out of order are not praised, and the same words in order are', () =
   for (const a of ['Ich war zu Hause.', 'Ich bin ins Kino gegangen.']) assert.equal(typedResult(at(11, 1), a), BEYOND, a);
 });
 
+test('a noun the check knows, with an ending it has not, is a form and never a word of the learner’s own (score of c6918f2d)', () => {
+  for (const [nr, t, answer] of [[6, 1, 'Ich brauche einen Computers.'], [6, 1, 'Ich brauche einen Telefons.'], [6, 1, 'Ich brauche einen Stifts.'], [6, 1, 'Ich brauche eine Lampes.'], [6, 1, 'Ich brauche einen Computern.'], [5, 1, 'Das ist mein Ladekabeln.'], [3, 4, 'Sie spricht gut Arabische.']]) {
+    assert.equal(typedResult(at(nr, t), answer), RESULT.WRONG, answer);
+    assert.equal(wrongReason(at(nr, t), answer), 'ending', answer);
+  }
+  // A loanword's plural, a weak noun, a dative plural and a noun that only looks like another one with an ending are German.
+  for (const [nr, t, answer] of [[6, 1, 'Ich brauche zwei Laptops.'], [6, 1, 'Ich brauche einen Kollegen.'], [6, 1, 'Ich brauche einen Drucker.'], [12, 5, 'Ich wünsche mir eine Reise.'], [11, 1, 'Ich habe meinen Kollegen getroffen.'], [11, 1, 'Ich habe mit meinem Nachbarn gekocht.'],
+    [3, 4, 'Sie spricht gut Arabisch.'], [6, 3, 'Um wie viel Uhr ist Pause?'], [2, 3, 'Ich mache eine Ausbildung.'], [11, 1, 'Ich habe gestern gegessen.']]) assert.equal(typedResult(at(nr, t), answer), RESULT.CORRECT, answer);
+  for (const answer of ['Das ist mein Kollegen.', 'Das ist mein Neffen.']) assert.notEqual(typedResult(at(3, 1, 1), answer), RESULT.CORRECT, answer);
+  assert.equal(wrongReason(at(11, 1), 'Ich habe gestern gegesst.'), 'participle');
+});
+
+test('what the independent score of c6918f2d found praised is not, and its neighbours are (classes, not lists)', () => {
+  const rows = [
+    [3, 1, 0, ['Er ist meine Mutter.', 'Sie sind meine Mutter.'], ['Sie ist meine Mutter.', 'Das ist meine Mutter.', 'Nein, das ist meine Schwester.']],
+    [3, 2, 0, ['Ist sie jung.', 'Sie ist viel alt.', 'Sie ist schon jung.', 'Sie ist noch nicht jung.', 'Sie ist 45 Jahr alt.'], ['Sie ist jung.', 'Sie ist viel älter.', 'Sie ist schon alt.', 'Sie ist noch nicht alt.', 'Sie ist 45 Jahre alt.']],
+    [3, 3, 0, ['Kommt sie aus Marokko.'], ['Sie kommt aus Marokko.']],
+    [3, 5, 0, ['Ich spreche ein Arabisch.'], ['Ich spreche Arabisch.']],
+    [12, 2, 0, ['Sein Geburtstag ist im Juni.', 'Ihr Geburtstag ist im Juni.'], ['Mein Geburtstag ist im Juni.']],
+    [12, 4, 0, ['Sein Bruder kommt.', 'Deine Schwester kommt.'], ['Mein Bruder kommt.', 'Tom und seine Freundin kommen.']],
+    [6, 2, 0, ['Wo ist sein Büro?'], ['Wo ist mein Büro?']],
+    [7, 5, 0, ['Am Wochenende frei bin ich.', 'Am Samstag Zeit habe ich.'], ['Am Wochenende bin ich frei.', 'Am Samstag habe ich Zeit.']],
+    [8, 6, 0, ['Ich habe am Dienstag eine Zeit.', 'Am Dienstag Zeit habe ich.'], ['Ich habe am Dienstag Zeit.']],
+    [8, 1, 0, ['Es ist die halb neun.'], ['Es ist halb neun.', 'Es ist schon halb neun.']],
+    [11, 3, 0, ['Morgens Kaffee trinke ich.', 'Ich gehe nach Schule.', 'Ich fahre nach Arbeit.', 'Ich nehme ein Dusche.', 'Ich dusche, dann ich frühstücke.'], ['Morgens trinke ich Kaffee.', 'Ich gehe zur Schule.', 'Ich nehme eine Dusche.', 'Ich dusche, dann frühstücke ich.']],
+    [11, 5, 0, ['Ich arbeite am jeden Tag.'], ['Ich arbeite jeden Tag.']],
+    [9, 1, 0, ['Ich möchte Hunger.', 'Ich habe sehr Hunger.'], ['Ich habe Hunger.', 'Ich habe großen Hunger.']],
+    [9, 5, 0, ['Ja, ich bin Wasser.', 'Ja, ich habe Wasser.'], ['Ja, ich möchte Wasser.']],
+    [9, 6, 0, ['Nein danke, ich bin nicht Hunger.', 'Nein danke, nicht Kuchen.', 'Nein danke, ich möchte Kuchen nicht.', 'Nein danke, ich möchte nicht einen Kuchen.'], ['Nein danke, ich habe keinen Hunger.', 'Nein danke, keinen Kuchen.', 'Nein danke, nur Wasser bitte.']],
+    [5, 4, 0, ['Es ist blaue.', 'Mein Heft ist blaue.'], ['Es ist blau.', 'Mein Heft ist blau.']],
+    [4, 6, 0, ['Ich kaufe den Montag.', 'Ich kaufe den Bruder.', 'Ich kaufe die Farbe.'], ['Ich kaufe den Stuhl.']],
+    [6, 1, 0, ['Ich brauche Hunger.', 'Brauche ich einen Computer?'], ['Ich brauche einen Computer.']],
+    [7, 1, 0, ['Mein Hobby ist mein Bruder.', 'Mein Hobby ist Deutschland.'], ['Mein Hobby ist Musik.', 'Mein Hobby ist Musik hören.']],
+    [7, 2, 0, ['Ich koche gern Fußball.', 'Ich höre gern Fußball.', 'Ich gehe gern nach Park.', 'Ich spiele gern Suppe.'], ['Ich koche gern Suppe.', 'Ich höre gern Musik.', 'Ich gehe gern in den Park.', 'Ich spiele gern Fußball.']],
+    [7, 3, 0, ['Was ist ein Hobby?'], ['Was ist dein Hobby?']],
+    [7, 4, 0, ['Gern tanzt du?'], ['Tanzt du gern?', 'Du tanzt gern?']],
+    [9, 2, 0, ['Ich esse Wasser.', 'Ich möchte ein Glas Wassers.'], ['Ich trinke Wasser.', 'Ich möchte ein Glas Wasser.']],
+    [2, 7, 0, ['Ich heiße Ali. Ich war am 15.10.1985 geboren.'], ['Ich heiße Ali. Ich bin am 15.10.1985 geboren.']],
+    [2, 1, 0, [], ['Ich komme aus der Stadt Aleppo.']],
+    [2, 3, 0, [], ['Ich arbeite im Krankenhaus.']],
+  ];
+  for (const [nr, t, r, wrong, right] of rows) {
+    for (const a of wrong) assert.notEqual(typedResult(at(nr, t, r), a), RESULT.CORRECT, `${nr}.${t} ${a}`);
+    for (const a of right) assert.equal(typedResult(at(nr, t, r), a), RESULT.CORRECT, `${nr}.${t} ${a}`);
+  }
+});
+
+test('a taught word with one letter wrong inside it is a slip of that word, whatever stands around it (score of c6918f2d)', () => {
+  for (const [nr, t, a] of [[2, 3, 'Ich bin Lerer.'], [9, 3, 'Ich möchte eine Supe.'], [3, 5, 'Ich spreche Englich.'], [12, 4, 'Meine Schwster kommt.'], [5, 4, 'Es ist schwartz.'], [1, 5, 'Wie get es Ihnen?'], [1, 2, 'Ich heise Omar.'], [11, 6, 'Kaufst du am Samstg ein?'], [1, 6, 'Auf Wiedersehn!'], [2, 1, 'Ich komme aus Syrein.'], [3, 1, 'das ist meine schwester sara']]) {
+    assert.equal(typedResult(at(nr, t), a), RESULT.TYPO, a);
+    assert.equal(wrongReason(at(nr, t), a), null, a);
+    assert.deepEqual(uncheckedWords(at(nr, t), a), [], a);
+  }
+  // An ending is a form, another first letter another word, an English word English, a name a name.
+  assert.equal(typedResult(at(6, 1), 'Ich brauche einen Computers.'), RESULT.WRONG);
+  for (const [nr, t, a] of [[3, 5, 'Ich spreche English.'], [12, 2, 'Mein Geburtstag ist am 6. October.'], [2, 1, 'Ich kommen aus Syrien.']]) assert.equal(typedResult(at(nr, t), a), RESULT.WRONG, a);
+  assert.equal(typedResult(at(1, 2), 'Ich heiße Anna.'), RESULT.CORRECT);
+});
+
 test('the blind corpora of round 3 (ratchets: right only up, praised and called wrong only down)', () => {
   const turnOf = (id) => { const [, l, i, s] = id.match(/^L(\d+)T(\d+)S(\d+)$/).map(Number); return sitting(l, s)[i]; };
   const n = { right: 0, confirmed: 0, calledWrong: 0, wrong: 0, praised: 0, beyond: 0 };
@@ -169,7 +228,7 @@ test('the blind corpora of round 3 (ratchets: right only up, praised and called 
   assert.equal(n.wrong, 1216);
   assert.ok(n.confirmed >= 1785, `${n.confirmed} of ${n.right} right answers confirmed`);
   assert.ok(n.calledWrong <= 2, `${n.calledWrong} right answers called wrong`);
-  assert.ok(n.praised <= 12, `${n.praised} wrong answers praised`);
+  assert.ok(n.praised <= 7, `${n.praised} wrong answers praised`);
   assert.ok(n.beyond <= 88, `${n.beyond} wrong answers beyond`);
 });
 

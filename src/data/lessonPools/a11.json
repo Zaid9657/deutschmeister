@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 570,
+ "count": 581,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -1188,7 +1188,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wie“): [wie / buchstabieren / man / Seidel]",
-   "questionEn": "Build the question. Start with “Wie”. Begin with “Wie”.",
+   "questionEn": "Build the question. Begin with “Wie”.",
    "options": null,
    "answer": "Wie buchstabiert man Seidel?",
    "accepted": [
@@ -1213,7 +1213,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / buchstabieren / Lorenz]",
-   "questionEn": "Build the sentence. Start with “Ich”. Begin with “Ich”.",
+   "questionEn": "Build the sentence. Begin with “Ich”.",
    "options": null,
    "answer": "Ich buchstabiere Lorenz.",
    "accepted": [
@@ -1958,7 +1958,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / sein / die Bücher]",
-   "questionEn": "Build the question. Start with “Wo”. Begin with “Wo”.",
+   "questionEn": "Build the question. Begin with “Wo”.",
    "options": null,
    "answer": "Wo sind die Bücher?",
    "accepted": [
@@ -1983,7 +1983,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Welche Farbe“): [welche Farbe / haben / der Rucksack]",
-   "questionEn": "Build the question. Start with “Welche Farbe”. Begin with “Welche Farbe”.",
+   "questionEn": "Build the question. Begin with “Welche Farbe”.",
    "options": null,
    "answer": "Welche Farbe hat der Rucksack?",
    "accepted": [
@@ -2904,7 +2904,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Chefin“): [die Chefin / brauchen / eine Uhr]",
-   "questionEn": "Build the sentence. Start with “Die Chefin”. Begin with “Die Chefin”.",
+   "questionEn": "Build the sentence. Begin with “Die Chefin”.",
    "options": null,
    "answer": "Die Chefin braucht eine Uhr.",
    "accepted": [
@@ -2929,7 +2929,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Jonas“): [Jonas / brauchen / ein Heft]",
-   "questionEn": "Build the sentence. Start with “Jonas”. Begin with “Jonas”.",
+   "questionEn": "Build the sentence. Begin with “Jonas”.",
    "options": null,
    "answer": "Jonas braucht ein Heft.",
    "accepted": [
@@ -2954,7 +2954,7 @@
    "difficulty": 2,
    "order": 130,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Kollege“): [der Kollege / brauchen / ein Regal]",
-   "questionEn": "Build the sentence. Start with “Der Kollege”. Begin with “Der Kollege”.",
+   "questionEn": "Build the sentence. Begin with “Der Kollege”.",
    "options": null,
    "answer": "Der Kollege braucht ein Regal.",
    "accepted": [
@@ -3030,6 +3030,158 @@
    "hint": null,
    "minLektion": 6,
    "explanationEn": "Subject first, verb second: die Kollegin brauch**t**. Handy is neuter, so the article stays **ein**: **Die Kollegin braucht ein Handy.**"
+  },
+  {
+   "id": "extra-a11-l06-33",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 337,
+   "questionDe": "Der Chef braucht ___ Schlüssel. (unbestimmter Artikel)",
+   "questionEn": "The boss needs a key.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach brauchen wird maskulin ein zu einen: ein Schlüssel – Ich brauche einen Schlüssel.",
+   "hint": null,
+   "minLektion": 6,
+   "explanationEn": "Schlüssel is masculine. After brauchen, masculine **ein** changes to **einen**: **einen Schlüssel**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l06-34",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 338,
+   "questionDe": "Der Kollege braucht ___ Kugelschreiber. (unbestimmter Artikel)",
+   "questionEn": "The colleague needs a pen.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach brauchen wird maskulin ein zu einen: ein Kugelschreiber – Ich brauche einen Kugelschreiber.",
+   "hint": null,
+   "minLektion": 6,
+   "explanationEn": "Kugelschreiber is masculine. After brauchen, masculine **ein** changes to **einen**: **einen Kugelschreiber**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l09-47",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 339,
+   "questionDe": "Ich möchte ___ Kaffee, bitte. (unbestimmter Artikel)",
+   "questionEn": "I would like a coffee, please.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Kaffee – Ich möchte einen Kaffee.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "Kaffee is masculine. After möchten, masculine **ein** changes to **einen**: **einen Kaffee**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l09-48",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 340,
+   "questionDe": "Ana möchte ___ Orangensaft. (unbestimmter Artikel)",
+   "questionEn": "Ana would like an orange juice.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Orangensaft – Ich möchte einen Orangensaft.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "Orangensaft is masculine. After möchten, masculine **ein** changes to **einen**: **einen Orangensaft**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l09-49",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 341,
+   "questionDe": "Was möchten Sie? – Ich möchte ___ Kuchen. (unbestimmter Artikel)",
+   "questionEn": "What would you like? – I would like a piece of cake.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Kuchen – Ich möchte einen Kuchen.",
+   "hint": null,
+   "minLektion": 9,
+   "explanationEn": "Kuchen is masculine. After möchten, masculine **ein** changes to **einen**: **einen Kuchen**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l12-45",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 342,
+   "questionDe": "Papa möchte ___ Wecker. (unbestimmter Artikel)",
+   "questionEn": "Dad would like an alarm clock.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Wecker – Ich möchte einen Wecker.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "Wecker is masculine. After möchten, masculine **ein** changes to **einen**: **einen Wecker**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l12-46",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 343,
+   "questionDe": "Der Gast möchte ___ Kaffee. (unbestimmter Artikel)",
+   "questionEn": "The guest would like a coffee.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Kaffee – Ich möchte einen Kaffee.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "Kaffee is masculine. After möchten, masculine **ein** changes to **einen**: **einen Kaffee**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l12-47",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 344,
+   "questionDe": "Mein Papa möchte ___ Computer zum Geburtstag. (unbestimmter Artikel)",
+   "questionEn": "My dad would like a computer for his birthday.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Computer – Ich möchte einen Computer.",
+   "hint": null,
+   "minLektion": 12,
+   "explanationEn": "Computer is masculine. After möchten, masculine **ein** changes to **einen**: **einen Computer**. This is a fixed pattern for now; the rule comes in A1.2."
   },
   {
    "id": "extra-a11-l04-01",
@@ -4089,7 +4241,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Was“): [was / kosten / das Telefon]",
-   "questionEn": "Build the question. Start with “Was”. Begin with “Was”.",
+   "questionEn": "Build the question. Begin with “Was”.",
    "options": null,
    "answer": "Was kostet das Telefon?",
    "accepted": [
@@ -4114,7 +4266,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Lampe“): [die Lampe / sein / nicht / teuer]",
-   "questionEn": "Build the sentence. Start with “Die Lampe”. Begin with “Die Lampe”.",
+   "questionEn": "Build the sentence. Begin with “Die Lampe”.",
    "options": null,
    "answer": "Die Lampe ist nicht teuer.",
    "accepted": [
@@ -4139,7 +4291,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / verkaufen / den Rucksack]",
-   "questionEn": "Build the sentence. Start with “Ich”. Begin with “Ich”.",
+   "questionEn": "Build the sentence. Begin with “Ich”.",
    "options": null,
    "answer": "Ich verkaufe den Rucksack.",
    "accepted": [
@@ -4215,6 +4367,63 @@
    "hint": null,
    "minLektion": 4,
    "explanationEn": "**Wie viel** comes first, then the verb: **Wie viel kostet der Tisch?**"
+  },
+  {
+   "id": "extra-a11-l04-55",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 334,
+   "questionDe": "Ich kaufe ___ Stuhl. (bestimmter Artikel)",
+   "questionEn": "I am buying the chair.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen wird der zu den: der Stuhl – Ich kaufe den Stuhl.",
+   "hint": null,
+   "minLektion": 4,
+   "explanationEn": "Stuhl is masculine. After kaufen, masculine **der** changes to **den**: **den Stuhl**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l04-56",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 335,
+   "questionDe": "Ana kauft ___ Rucksack. (bestimmter Artikel)",
+   "questionEn": "Ana is buying the rucksack.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen wird der zu den: der Rucksack – Ich kaufe den Rucksack.",
+   "hint": null,
+   "minLektion": 4,
+   "explanationEn": "Rucksack is masculine. After kaufen, masculine **der** changes to **den**: **den Rucksack**. This is a fixed pattern for now; the rule comes in A1.2."
+  },
+  {
+   "id": "extra-a11-l04-57",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 336,
+   "questionDe": "Was kaufen Sie? – Ich kaufe ___ Rucksack. (bestimmter Artikel)",
+   "questionEn": "What are you buying? – I am buying the rucksack.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen wird der zu den: der Rucksack – Ich kaufe den Rucksack.",
+   "hint": null,
+   "minLektion": 4,
+   "explanationEn": "Rucksack is masculine. After kaufen, masculine **der** changes to **den**: **den Rucksack**. This is a fixed pattern for now; the rule comes in A1.2."
   },
   {
    "id": "extra-a11-l02-09",
@@ -4514,7 +4723,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 33,
-   "questionDe": "Das Kind ist jung. ___ spricht Arabisch.",
+   "questionDe": "Das Kind ist jung. ___ spricht Arabisch. (Pronomen für „das Kind“)",
    "questionEn": "The child is young. It speaks Arabic.",
    "options": null,
    "answer": "Es",
@@ -4525,7 +4734,7 @@
    "explanationDe": "Das Kind wird zu es.",
    "hint": null,
    "minLektion": 3,
-   "explanationEn": "The pronoun follows the article, not the person: das Kind → **es**. So: **Es spricht Arabisch.** Not er or sie."
+   "explanationEn": "The pronoun follows the article, not the person: das Kind → **es**. So: **Es spricht Arabisch.** Said of a child you know, er or sie is fine too."
   },
   {
    "id": "extra-a11-l03-08",
@@ -4593,7 +4802,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 45,
-   "questionDe": "Das Kind von meiner Schwester ist ein Baby. ___ ist noch jung.",
+   "questionDe": "Das Kind von meiner Schwester ist ein Baby. ___ ist noch jung. (Pronomen für „das Kind“)",
    "questionEn": "My sister's child is a baby. It is still young.",
    "options": null,
    "answer": "Es",
@@ -5110,13 +5319,13 @@
    "stage": 4,
    "difficulty": 1,
    "order": 311,
-   "questionDe": "Korrigieren Sie das Pronomen: „Das ist mein Bruder. Sie ist zwanzig.“",
+   "questionDe": "Korrigieren Sie das Pronomen: „Das ist mein Bruder, sie ist zwanzig.“",
    "questionEn": "Fix the pronoun.",
    "options": null,
-   "answer": "Das ist mein Bruder. Er ist zwanzig.",
+   "answer": "Das ist mein Bruder, er ist zwanzig.",
    "accepted": [
-    "Das ist mein Bruder. Er ist zwanzig.",
-    "Das ist mein Bruder. Er ist zwanzig"
+    "Das ist mein Bruder, er ist zwanzig.",
+    "Das ist mein Bruder, er ist zwanzig"
    ],
    "explanationDe": "der Bruder: er.",
    "hint": null,
@@ -5387,7 +5596,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ihr“): [ihr / sprechen / gut Arabisch]",
-   "questionEn": "Build the sentence. Start with “Ihr”. Begin with “Ihr”.",
+   "questionEn": "Build the sentence. Begin with “Ihr”.",
    "options": null,
    "answer": "Ihr sprecht gut Arabisch.",
    "accepted": [
@@ -5412,7 +5621,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Sohn“): [der Sohn / sprechen / Arabisch]",
-   "questionEn": "Build the sentence. Start with “Der Sohn”. Begin with “Der Sohn”.",
+   "questionEn": "Build the sentence. Begin with “Der Sohn”.",
    "options": null,
    "answer": "Der Sohn spricht Arabisch.",
    "accepted": [
@@ -5437,7 +5646,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Kinder“): [die Kinder / sprechen / drei Sprachen]",
-   "questionEn": "Build the sentence. Start with “Die Kinder”. Begin with “Die Kinder”.",
+   "questionEn": "Build the sentence. Begin with “Die Kinder”.",
    "options": null,
    "answer": "Die Kinder sprechen drei Sprachen.",
    "accepted": [
@@ -6189,7 +6398,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Mein Bruder“): [mein Bruder / feiern / am Sonntag]",
-   "questionEn": "Build the sentence. Start with “Mein Bruder”. Begin with “Mein Bruder”.",
+   "questionEn": "Build the sentence. Begin with “Mein Bruder”.",
    "options": null,
    "answer": "Mein Bruder feiert am Sonntag.",
    "accepted": [
@@ -6276,7 +6485,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Meine Eltern“): [meine Eltern / kommen / später]",
-   "questionEn": "Build the sentence. Start with “Meine Eltern”. Begin with “Meine Eltern”.",
+   "questionEn": "Build the sentence. Begin with “Meine Eltern”.",
    "options": null,
    "answer": "Meine Eltern kommen später.",
    "accepted": [
@@ -7341,7 +7550,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Frau Krause“): [Frau Krause / hören / gern Musik]",
-   "questionEn": "Build the sentence. Start with “Frau Krause”. Begin with “Frau Krause”.",
+   "questionEn": "Build the sentence. Begin with “Frau Krause”.",
    "options": null,
    "answer": "Frau Krause hört gern Musik.",
    "accepted": [
@@ -7366,7 +7575,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / spielen / zusammen Fußball]",
-   "questionEn": "Build the sentence. Start with “Wir”. Begin with “Wir”.",
+   "questionEn": "Build the sentence. Begin with “Wir”.",
    "options": null,
    "answer": "Wir spielen zusammen Fußball.",
    "accepted": [
@@ -7391,7 +7600,7 @@
    "difficulty": 2,
    "order": 130,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Er“): [er / arbeiten / am Dienstag]",
-   "questionEn": "Build the sentence. Start with “Er”. Begin with “Er”.",
+   "questionEn": "Build the sentence. Begin with “Er”.",
    "options": null,
    "answer": "Er arbeitet am Dienstag.",
    "accepted": [
@@ -8152,7 +8361,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Eltern“): [die Eltern / einkaufen / morgen]",
-   "questionEn": "Build the sentence. Start with “Die Eltern”. Begin with “Die Eltern”.",
+   "questionEn": "Build the sentence. Begin with “Die Eltern”.",
    "options": null,
    "answer": "Die Eltern kaufen morgen ein.",
    "accepted": [
@@ -8261,7 +8470,7 @@
    "difficulty": 2,
    "order": 123,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Sara“): [Sara / mitbringen / den Salat]",
-   "questionEn": "Build the sentence. Start with “Sara”. Begin with “Sara”.",
+   "questionEn": "Build the sentence. Begin with “Sara”.",
    "options": null,
    "answer": "Sara bringt den Salat mit.",
    "accepted": [
@@ -8482,7 +8691,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 86,
-   "questionDe": "___ Abend habe ich Zeit.",
+   "questionDe": "___ Abend habe ich Zeit. (am, im oder um?)",
    "questionEn": "In the evening I have time.",
    "options": null,
    "answer": "Am",
@@ -9018,7 +9227,7 @@
    "difficulty": 2,
    "order": 107,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wann“): [wann / kommen / der Kellner]",
-   "questionEn": "Build the question. Start with “Wann”. Begin with “Wann”.",
+   "questionEn": "Build the question. Begin with “Wann”.",
    "options": null,
    "answer": "Wann kommt der Kellner?",
    "accepted": [
@@ -9043,7 +9252,7 @@
    "difficulty": 2,
    "order": 114,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Am Sonntag“): [am Sonntag / ich / kochen]",
-   "questionEn": "Build the sentence. Start with “Am Sonntag”. Begin with “Am Sonntag”.",
+   "questionEn": "Build the sentence. Begin with “Am Sonntag”.",
    "options": null,
    "answer": "Am Sonntag koche ich.",
    "accepted": [
@@ -9687,7 +9896,7 @@
    "difficulty": 2,
    "order": 115,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / haben / Hunger]",
-   "questionEn": "Build the sentence. Start with “Wir”. Begin with “Wir”.",
+   "questionEn": "Build the sentence. Begin with “Wir”.",
    "options": null,
    "answer": "Wir haben Hunger.",
    "accepted": [
@@ -9712,7 +9921,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Ich“): [ich / möchten / eine Tasse Tee]",
-   "questionEn": "Build the sentence. Start with “Ich”. Begin with “Ich”.",
+   "questionEn": "Build the sentence. Begin with “Ich”.",
    "options": null,
    "answer": "Ich möchte eine Tasse Tee.",
    "accepted": [
@@ -9737,7 +9946,7 @@
    "difficulty": 2,
    "order": 131,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Das Café“): [das Café / haben / Suppe und Kuchen]",
-   "questionEn": "Build the sentence. Start with “Das Café”. Begin with “Das Café”.",
+   "questionEn": "Build the sentence. Begin with “Das Café”.",
    "options": null,
    "answer": "Das Café hat Suppe und Kuchen.",
    "accepted": [
@@ -10842,8 +11051,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 36,
-   "questionDe": "Ali kommt aus Marokko. Er ist ___. (Staatsangehörigkeit, Nomen)",
-   "questionEn": "Ali comes from Morocco. He is Moroccan.",
+   "questionDe": "Ana ist Marokkanerin. Und Ali? Er ist ___. (Nomen für den Mann)",
+   "questionEn": "Ana is Moroccan. And Ali? He is Moroccan.",
    "options": null,
    "answer": "Marokkaner",
    "accepted": [
@@ -10884,7 +11093,7 @@
    "difficulty": 2,
    "order": 106,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Die Eltern“): [die Eltern / kommen / aus Italien]",
-   "questionEn": "Build the sentence. Start with “Die Eltern”. Begin with “Die Eltern”.",
+   "questionEn": "Build the sentence. Begin with “Die Eltern”.",
    "options": null,
    "answer": "Die Eltern kommen aus Italien.",
    "accepted": [
@@ -10911,7 +11120,7 @@
    "difficulty": 2,
    "order": 122,
    "questionDe": "Bilden Sie den Satz (Beginnen Sie mit „Der Vater“): [der Vater / kommen / aus Spanien]",
-   "questionEn": "Build the sentence. Start with “Der Vater”. Begin with “Der Vater”.",
+   "questionEn": "Build the sentence. Begin with “Der Vater”.",
    "options": null,
    "answer": "Der Vater kommt aus Spanien.",
    "accepted": [
@@ -10938,7 +11147,7 @@
    "difficulty": 2,
    "order": 130,
    "questionDe": "Bilden Sie die Frage (Beginnen Sie mit „Wo“): [wo / wohnen / die Kinder]",
-   "questionEn": "Build the question. Start with “Wo”. Begin with “Wo”.",
+   "questionEn": "Build the question. Begin with “Wo”.",
    "options": null,
    "answer": "Wo wohnen die Kinder?",
    "accepted": [

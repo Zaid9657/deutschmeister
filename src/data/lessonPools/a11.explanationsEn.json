@@ -159,7 +159,7 @@
   "dd1c3d60-8ae7-4c94-8990-19633dcba36f": "Mutter is feminine (die Mutter), so the pronoun is **sie**: **Sie ist meine Mutter.** The pronoun follows the article of the noun.",
   "extra-a11-l03-01": "The pronoun follows the article: der Bruder → **er**. So: **Er spricht Arabisch.**",
   "extra-a11-l03-02": "The pronoun follows the article: die Schwester → **sie**. So: **Sie spricht Deutsch.**",
-  "extra-a11-l03-03": "The pronoun follows the article, not the person: das Kind → **es**. So: **Es spricht Arabisch.** Not er or sie.",
+  "extra-a11-l03-03": "The pronoun follows the article, not the person: das Kind → **es**. So: **Es spricht Arabisch.** Said of a child you know, er or sie is fine too.",
   "extra-a11-l03-08": "Herr Weber is addressed with the formal you. The polite form is **Sie** with a capital **S**: **Sprechen Sie Englisch?**",
   "extra-a11-l03-09": "Baby is neuter (das Baby), so the pronoun is **es**: **Es ist noch jung.** The article decides, not the person.",
   "extra-a11-l03-13": "Ana is a friend, so you use the informal you: **du**. The verb form \"bist\" also belongs to du: **du bist**.",
@@ -438,5 +438,16 @@
   "extra-a11-l12-41": "You (du) becomes **dein**; die Party is feminine: **deine** Party.",
   "extra-a11-l12-42": "You (du) becomes **dein**; die Mama is feminine: **deine** Mama.",
   "extra-a11-l12-43": "die Gäste is plural: **kommen**. The verb is in second place.",
-  "extra-a11-l12-44": "He becomes **sein**; das Geschenk is neuter: **sein** Geschenk."
+  "extra-a11-l12-44": "He becomes **sein**; das Geschenk is neuter: **sein** Geschenk.",
+  "extra-a11-l04-55": "Stuhl is masculine. After kaufen, masculine **der** changes to **den**: **den Stuhl**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l04-56": "Rucksack is masculine. After kaufen, masculine **der** changes to **den**: **den Rucksack**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l04-57": "Rucksack is masculine. After kaufen, masculine **der** changes to **den**: **den Rucksack**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l06-33": "Schlüssel is masculine. After brauchen, masculine **ein** changes to **einen**: **einen Schlüssel**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l06-34": "Kugelschreiber is masculine. After brauchen, masculine **ein** changes to **einen**: **einen Kugelschreiber**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l09-47": "Kaffee is masculine. After möchten, masculine **ein** changes to **einen**: **einen Kaffee**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l09-48": "Orangensaft is masculine. After möchten, masculine **ein** changes to **einen**: **einen Orangensaft**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l09-49": "Kuchen is masculine. After möchten, masculine **ein** changes to **einen**: **einen Kuchen**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l12-45": "Wecker is masculine. After möchten, masculine **ein** changes to **einen**: **einen Wecker**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l12-46": "Kaffee is masculine. After möchten, masculine **ein** changes to **einen**: **einen Kaffee**. This is a fixed pattern for now; the rule comes in A1.2.",
+  "extra-a11-l12-47": "Computer is masculine. After möchten, masculine **ein** changes to **einen**: **einen Computer**. This is a fixed pattern for now; the rule comes in A1.2."
 }

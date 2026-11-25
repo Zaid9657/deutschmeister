@@ -386,8 +386,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 36,
-   "questionDe": "Ali kommt aus Marokko. Er ist ___. (Staatsangehörigkeit, Nomen)",
-   "questionEn": "Ali comes from Morocco. He is Moroccan.",
+   "questionDe": "Ana ist Marokkanerin. Und Ali? Er ist ___. (Nomen für den Mann)",
+   "questionEn": "Ana is Moroccan. And Ali? He is Moroccan.",
    "options": null,
    "answer": "Marokkaner",
    "accepted": ["Marokkaner"],
@@ -446,7 +446,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 33,
-   "questionDe": "Das Kind ist jung. ___ spricht Arabisch.",
+   "questionDe": "Das Kind ist jung. ___ spricht Arabisch. (Pronomen für „das Kind“)",
    "questionEn": "The child is young. It speaks Arabic.",
    "options": null,
    "answer": "Es",
@@ -627,7 +627,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 45,
-   "questionDe": "Das Kind von meiner Schwester ist ein Baby. ___ ist noch jung.",
+   "questionDe": "Das Kind von meiner Schwester ist ein Baby. ___ ist noch jung. (Pronomen für „das Kind“)",
    "questionEn": "My sister's child is a baby. It is still young.",
    "options": null,
    "answer": "Es",
@@ -1692,7 +1692,7 @@
    "stage": 4,
    "difficulty": 1,
    "order": 86,
-   "questionDe": "___ Abend habe ich Zeit.",
+   "questionDe": "___ Abend habe ich Zeit. (am, im oder um?)",
    "questionEn": "In the evening I have time.",
    "options": null,
    "answer": "Am",
@@ -4186,11 +4186,11 @@
    "stage": 4,
    "difficulty": 1,
    "order": 311,
-   "questionDe": "Korrigieren Sie das Pronomen: „Das ist mein Bruder. Sie ist zwanzig.“",
+   "questionDe": "Korrigieren Sie das Pronomen: „Das ist mein Bruder, sie ist zwanzig.“",
    "questionEn": "Fix the pronoun.",
    "options": null,
-   "answer": "Das ist mein Bruder. Er ist zwanzig.",
-   "accepted": ["Das ist mein Bruder. Er ist zwanzig.", "Das ist mein Bruder. Er ist zwanzig"],
+   "answer": "Das ist mein Bruder, er ist zwanzig.",
+   "accepted": ["Das ist mein Bruder, er ist zwanzig.", "Das ist mein Bruder, er ist zwanzig"],
    "explanationDe": "der Bruder: er.",
    "hint": null
   },
@@ -4522,6 +4522,193 @@
    "answer": "sein",
    "accepted": ["sein"],
    "explanationDe": "er: sein. das Geschenk: sein Geschenk.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l04-55",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 334,
+   "questionDe": "Ich kaufe ___ Stuhl. (bestimmter Artikel)",
+   "questionEn": "I am buying the chair.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen wird der zu den: der Stuhl – Ich kaufe den Stuhl.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l04-56",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 335,
+   "questionDe": "Ana kauft ___ Rucksack. (bestimmter Artikel)",
+   "questionEn": "Ana is buying the rucksack.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen wird der zu den: der Rucksack – Ich kaufe den Rucksack.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l04-57",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 336,
+   "questionDe": "Was kaufen Sie? – Ich kaufe ___ Rucksack. (bestimmter Artikel)",
+   "questionEn": "What are you buying? – I am buying the rucksack.",
+   "options": null,
+   "answer": "den",
+   "accepted": [
+    "den"
+   ],
+   "explanationDe": "Nach kaufen wird der zu den: der Rucksack – Ich kaufe den Rucksack.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l06-33",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 337,
+   "questionDe": "Der Chef braucht ___ Schlüssel. (unbestimmter Artikel)",
+   "questionEn": "The boss needs a key.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach brauchen wird maskulin ein zu einen: ein Schlüssel – Ich brauche einen Schlüssel.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l06-34",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 338,
+   "questionDe": "Der Kollege braucht ___ Kugelschreiber. (unbestimmter Artikel)",
+   "questionEn": "The colleague needs a pen.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach brauchen wird maskulin ein zu einen: ein Kugelschreiber – Ich brauche einen Kugelschreiber.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l09-47",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 339,
+   "questionDe": "Ich möchte ___ Kaffee, bitte. (unbestimmter Artikel)",
+   "questionEn": "I would like a coffee, please.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Kaffee – Ich möchte einen Kaffee.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l09-48",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 340,
+   "questionDe": "Ana möchte ___ Orangensaft. (unbestimmter Artikel)",
+   "questionEn": "Ana would like an orange juice.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Orangensaft – Ich möchte einen Orangensaft.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l09-49",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 341,
+   "questionDe": "Was möchten Sie? – Ich möchte ___ Kuchen. (unbestimmter Artikel)",
+   "questionEn": "What would you like? – I would like a piece of cake.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Kuchen – Ich möchte einen Kuchen.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-45",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 342,
+   "questionDe": "Papa möchte ___ Wecker. (unbestimmter Artikel)",
+   "questionEn": "Dad would like an alarm clock.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Wecker – Ich möchte einen Wecker.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-46",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 343,
+   "questionDe": "Der Gast möchte ___ Kaffee. (unbestimmter Artikel)",
+   "questionEn": "The guest would like a coffee.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Kaffee – Ich möchte einen Kaffee.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-47",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 344,
+   "questionDe": "Mein Papa möchte ___ Computer zum Geburtstag. (unbestimmter Artikel)",
+   "questionEn": "My dad would like a computer for his birthday.",
+   "options": null,
+   "answer": "einen",
+   "accepted": [
+    "einen"
+   ],
+   "explanationDe": "Nach möchten wird maskulin ein zu einen: ein Computer – Ich möchte einen Computer.",
    "hint": null
   }
  ]

@@ -26,7 +26,8 @@ const COPULA = set('sein werden bleiben finden aussehen heissen schmecken klinge
 const HOW = set('gut besser schlecht schnell langsam früh spät lange lang viel wenig hart fleissig allein zusammen gemeinsam laut leise richtig pünktlich frei gesund direkt genau kurz täglich regelmässig normal neu frisch warm kalt fertig bequem einfach möglich gleich leicht schwer oft selten privat selbstständig selbständig online deutsch ruhig weit nah fest sicher herzlich natürlich wirklich richtig echt total toll super wunderbar schön perfekt prima nett');
 /** People and things that are called by a name. */
 const NAMED = /^(?:mutter|vater|mama|papa|mutti|vati|oma|opa|bruder|schwester|sohn|tochter|mann|frau|kind|kinder|freund|freundin|freunde|partner|partnerin|kollege|kollegin|kollegen|nachbar|nachbarin|nachbarn|tante|onkel|cousin|cousine|neffe|nichte|chef|chefin|lehrer|lehrerin|eltern|familie|geschwister|brüder|schwestern|herr|herrn|name|vorname|nachname|familienname|hund|katze|gast|gäste|mitbewohner|mitbewohnerin|zwillingsbruder|zwillingsschwester|grossmutter|grossvater|schwager|schwägerin|baby|stadt|ort|dorf|insel|firma|hotel|café|restaurant|strasse)$/u;
-const GREETS = set('tag morgen abend nacht');
+const GREETS = set('tag morgen abend nacht idee');
+const LANGUAGE = /^(?:deutsch|englisch|\p{L}+isch|hindi|urdu|farsi|dari|paschtu|paschto|tigrinya|somali|suaheli)$/u;
 const KIN_NAME = set('mama papa oma opa mutti vati');
 const KIN = set('eltern vater mutter bruder schwester sohn tochter');
 const ASKS = set('wissen sagen fragen erklären zeigen verstehen hören sehen erzählen schreiben');
@@ -37,7 +38,7 @@ const isNp = (e) => ['np', 'name', 'own', 'place', 'language', 'list'].includes(
 export function inOrder(sentences, isFare) {
   return sentences.every((s, n) => {
     const said = s.clauses.filter((c) => !c.around);
-    return said.every((c, i) => (c.frag ? caseFits(said, i, s, sentences[n + 1]) : !verbFirstLater(said, i, s)) && (c.frag ? fragmentInOrder(c, isFare) : clauseInOrder(c)) && (!c.dependent || !c.sub || asksBefore(said[i - 1])) && joins(said[i - 1], c, s))
+    return said.every((c, i) => (c.frag ? caseFits(said, i, s, sentences[n + 1]) : !verbFirstLater(said, i, s)) && (c.frag ? fragmentInOrder(c, isFare) : clauseInOrder(c) && !(s.stop === '?' && !c.wh && !c.question && !c.sub && (c.before || 0) > 0 && c.elems[0] !== c.subj && c.elems[0].kind === 'adv' && said.length === 1)) && (!c.dependent || !c.sub || asksBefore(said[i - 1])) && joins(said[i - 1], c, s))
       && s.clauses.every((c, i) => courtesyInOrder(s.clauses, c, i));
   });
 }
@@ -76,10 +77,10 @@ function joins(prev, c, s) {
   if (!prev) return true;
   if (c.elems.every((e) => e.kind === 'adv') && c.joined === 'oder') return true;
   const first = c.elems.find((e) => e.kind !== 'adv');
-  const stood = prev.elems.findLast((e) => e.kind !== 'adv');
+  const stood = prev.elems.findLast((e) => e.kind !== 'adv' && (e.kind !== 'pp' || first?.kind === 'pp'));
   if (!first) return Boolean(prev.elems.findLast((e) => e.kind === 'adv')) && prev.elems.at(-1).kind === 'adv';
   if (!stood || first.kind === 'pron') return false;
-  const kind = (e) => (['own', 'name'].includes(e.kind) ? 'name' : e.kind);
+  const kind = (e) => (['own', 'name'].includes(e.kind) ? 'name' : e.kind === 'np' && LANGUAGE.test(e.head) ? 'language' : e.kind);
   if (kind(first) !== kind(stood) && !(['name', 'place'].includes(kind(first)) && ['name', 'place'].includes(kind(stood)) && first.kind === 'own')) return false;
   if (first.kind === 'time' && timeKind(first) !== timeKind(stood)) return false;
   // „gut und blau“: a colour and a state are no list.
@@ -139,7 +140,7 @@ function clauseInOrder(c) {
   for (const e of all) if ((e.items || []).some((x) => isPron(x) && (POINTING.has(x.head) || OWNING.has(x.head))) && e.items.some((x) => x.kind === 'np')) return false;
   for (const e of all) if ((e.items || []).some((x) => x.kind === 'np' && x.bare && (!x.bareOk || NEEDS_ARTICLE.has(x.head)) && !KIN_NAME.has(x.head)) && e.items.some((x) => x.kind === 'np' && !x.bare)) return false;
   // Thanks and „bitte“ for an answer stand apart; a day or a clock is said once.
-  if (all.some((e) => e.kind === 'adv' && e.word === 'danke')) return false;
+  if (all.some((e, k) => e.kind === 'adv' && e.word === 'danke' && k < all.length - 1)) return false;
   const days = all.filter((e) => e.kind === 'time' && e.day).map((e) => e.day);
   if (new Set(days).size !== days.length) return false;
   // „Bruder bin ich frei“, „müde bin ich frei“: one thing is said of somebody at a time; „sieben bin ich frei“ lacks its „um“.
@@ -148,6 +149,19 @@ function clauseInOrder(c) {
   if (c.lemma === 'sein' && c.subj?.head !== 'es' && all.some((e) => e.bareClock)) return false;
   // „noch nicht alt“, „nicht so gut“: what makes an adjective less stands in this order.
   if (all.some((e) => e.kind === 'adj' && degreeOutOfOrder(e.degree || []))) return false;
+  // „Es ist die halb neun“: a clock time has no article.
+  if (c.lemma === 'sein' && subj?.head === 'es' && all.some((e) => e !== subj && isPron(e) && POINTING.has(e.head))) return false;
+  // „Er ist meine Mutter“: the pronoun has the gender of the person it names.
+  if (c.lemma === 'sein' && subj && isPron(subj) && ['er', 'sie'].includes(subj.head) && c.pred?.kind === 'np' && !c.pred.job && KINSHIP.test(c.pred.head) && !personFits(subj, c)) return false;
+  // A question with its verb second opens with its subject („Du tanzt gern?“), never with a small word („Gern tanzt du?“).
+  if (c.question && !c.wh && !c.imperative && (c.before || 0) > 0 && all[0] !== subj) return false;
+  // „keinen Kuchen“, never „nicht Kuchen“, „Kuchen nicht“, „nicht einen Kuchen“.
+  if (all.some((e, k) => e.kind === 'adv' && e.word === 'nicht' && ((all[k + 1]?.kind === 'np' && (all[k + 1].bare || all[k + 1].det === 'ein') && !all[k + 1].list) || (all[k - 1]?.kind === 'np' && all[k - 1].bare && all[k - 1] !== subj && all[k - 1].stuff)))) return false;
+  // „Ich bin kein Hunger“, „ich bin nicht Wein“: one has it, or wants it.
+  if (c.lemma === 'sein' && ['ich', 'wir', 'du'].includes(subj?.head) && c.pred?.kind === 'np' && !c.pred.job && (c.pred.stuff || ['hunger', 'durst'].includes(c.pred.head)) && !NAMED.test(c.pred.head)) return false;
+  // „viel alt“, „zu viel alt“: „viel“ makes a comparison („viel älter“).
+  if (all.some((e) => e.kind === 'adj' && (e.degree || []).includes('viel') && !(e.words || [e.word]).some((w) => /er$/u.test(w)))) return false;
+  if (all.some((e, k) => e.kind === 'adv' && e.word === 'sehr' && ['hunger', 'durst'].includes(all[k + 1]?.head))) return false;
   // A pointing word that is no object stands at the verb: „Wo ist der?“, never „Er ist hier der“.
   if (mid.some((e, k) => k > 0 && isPron(e) && POINTING.has(e.head) && e !== c.acc && e !== subj && !c.sub) || (c.lemma === 'sein' && at < 0 && mid.some((e, k) => k > 0 && isPron(e) && POINTING.has(e.head)))) return false;
   // Two adjectives of one clause stand with „und“: „hungrig und durstig“.
@@ -156,7 +170,7 @@ function clauseInOrder(c) {
   // An adjective tells how one does something only where it can: „Ich habe müde gearbeitet“ is not judged.
   if (!COPULA.has(c.lemma) && states.some((e) => !(e.words || [e.word]).every((w) => HOW.has(w)))) return false;
   // Behind „ob“, „wie“, „weil“ the subject comes first: „ob du gern schwimmst“.
-  if (c.sub && subj && isPron(subj) && PERSONAL.has(subj.head) && all.filter((e) => !e.wh).indexOf(subj) > 0) return false;
+  if (c.sub && subj && isPron(subj) && PERSONAL.has(subj.head) && all.filter((e, k) => !e.wh && !(k === 0 && c.sub === 'wie' && (e.kind === 'adv' || e.kind === 'adj'))).indexOf(subj) > 0) return false;
   if (c.sub && subj && !isPron(subj) && all.slice(0, all.indexOf(subj)).some((e) => !e.wh && isNp(e))) return false;
   // „meine“, „einen“ without the noun they belong to, and „für meine“, „mit dem“.
   if (all.some((e) => isPron(e) && strayOwner(e, c))) return false;
@@ -167,7 +181,7 @@ function clauseInOrder(c) {
   if (REFLEXIVE_ONLY.has(c.lemma) && !c.refl && !(c.lemma === 'freuen' && c.acc && isPron(c.acc))) return false;
   // „Das ist sehr.“, „sie ist erst“: something has to be said of the subject.
   if (c.lemma === 'sein' && !c.pred && !states.length && !c.wh && !c.perfect && all.every((e) => e === subj || (e.kind === 'adv' && SAYS_NOTHING.has(e.word)))) return false;
-  if (c.lemma === 'machen' && !c.acc && !c.wh && !c.passive && !all.some((e) => e !== subj && ['np', 'num', 'list', 'time'].includes(e.kind))) return false;
+  if (c.lemma === 'machen' && !c.acc && !c.wh && !c.passive && !all.some((e) => e !== subj && (['np', 'num', 'list', 'time'].includes(e.kind) || (e.kind === 'adv' && ['viel', 'wenig', 'nichts', 'alles', 'mehr', 'genug'].includes(e.word))))) return false;
   if (['können', 'müssen', 'dürfen', 'sollen'].includes(c.lemma) && c.acc && isPron(c.acc) && c.acc.head !== 'das' && c.acc.head !== 'es' && !c.acc.wh) return false;
   // Nobody „has“ or „gets“ something to somebody: „Gibt es Ihnen Suppe?“
   if (c.dat && ((c.lemma === 'geben' && c.subj?.head === 'es') || ['bekommen', 'kriegen', 'haben'].includes(c.lemma))) return false;
@@ -190,6 +204,14 @@ function clauseInOrder(c) {
   return true;
 }
 
+const KINSHIP = /^(?:mutter|vater|mama|papa|mutti|vati|oma|opa|bruder|schwester|sohn|tochter|mann|frau|tante|onkel|cousin|cousine|neffe|nichte|eltern|geschwister|brüder|schwestern|großmutter|großvater|grossmutter|grossvater)$/u;
+function personFits(subj, c) {
+  const one = c.reading?.persons?.includes('er');
+  const genders = new Set((c.pred.combos || []).filter((x) => x.c === 'n').map((x) => x.g));
+  if (!genders.size) return true;
+  if (subj.head === 'er') return genders.has('der');
+  return one ? genders.has('die') : genders.has('pl') || Boolean(c.pred.list || c.pred.heads?.length > 1);
+}
 const degreeOutOfOrder = (d) => d.some((w, k) => (w === 'nicht' && ['so', 'sehr', 'ganz', 'zu', 'ziemlich', 'mehr'].includes(d[k - 1])) || (w === 'noch' && ['nicht', 'sehr', 'so', 'ganz'].includes(d[k - 1])));
 /** A possessive or „einen“ that stands for nothing said: „Ich habe meine besucht“; „Das ist meine“, „Ich nehme einen“, „ich möchte keinen“ are German. */
 function strayOwner(e, c) {
@@ -207,7 +229,7 @@ function pairInOrder(e, next, c, acrossVerb = false) {
   if (e.kind === 'np' && e.bare && !e.list && isPron(next) && POINTING.has(next.head)) return false;
   if (isNp(e) && e.kind !== 'name' && next.kind === 'adv' && COUNT_WORDS.has(next.word)) return false;
   // „die Abfahrt Omar“: a name stands behind a person only.
-  if (e.kind === 'np' && (next.kind === 'own' || next.kind === 'name') && !NAMED.test(e.head)) return false;
+  if (e.kind === 'np' && (next.kind === 'own' || (next.kind === 'name' && !next.title)) && !NAMED.test(e.head)) return false;
   if (e.kind === 'np' && ['hunger', 'durst', 'lust', 'zeit'].includes(e.head) && next.kind === 'adv' && HOW_MUCH.has(next.word)) return false;
   if (e.kind === 'adv' && ['gern', 'gerne'].includes(e.word) && next.kind === 'adv' && next.word === 'nicht') return false;
   if (e.kind === 'adv' && e.word === 'mehr' && ((next.kind === 'adv' && next.word === 'nicht') || next.head === 'nichts')) return false;
@@ -221,6 +243,8 @@ function pairInOrder(e, next, c, acrossVerb = false) {
 
 function fragmentInOrder(c, isFare) {
   const all = c.elems || [];
+  // „nicht Suppe“: „keine Suppe“.
+  if (all.some((e, k) => e.kind === 'adv' && e.word === 'nicht' && all[k + 1]?.kind === 'np' && (all[k + 1].bare || all[k + 1].det === 'ein'))) return false;
   if (!all.every(listOfOne)) return false;
   if (all.some((e) => e.kind === 'adj' && degreeOutOfOrder(e.degree || []))) return false;
   if (all.some((e) => (e.items || []).some((x) => isPron(x) && (POINTING.has(x.head) || OWNING.has(x.head))) && e.items.some((x) => x.kind === 'np'))) return false;
@@ -233,7 +257,7 @@ function fragmentInOrder(c, isFare) {
   if (all.some((e, k) => k > 0 && e.kind === 'np' && e.bare && !e.list && all[k - 1].kind === 'np' && !MEASURES.test(all[k - 1].head))) return false;
   if (all.length > 1 && isPron(all[0]) && PERSONAL.has(all[0].head) && all.slice(1).some((e) => e.kind === 'adv' && !['auch', 'nicht', 'leider', 'leider nicht', 'noch nicht', 'selbst', 'denn', 'so', 'lieber'].includes(e.word))) return false;
   // „sehr, Danke gut.“: thanks stand apart.
-  if (all.length > 1 && all.some((e) => e.kind === 'adv' && e.word === 'danke')) return false;
+  if (all.length > 1 && all.some((e, k) => e.kind === 'adv' && e.word === 'danke' && k < all.length - 1)) return false;
   // „Gut der.“: a pointing word opens its words or stands alone.
   if (all.some((e, k) => k > 0 && isPron(e) && (POINTING.has(e.head) || OWNING.has(e.head)))) return false;
   if (all.filter((e) => e.kind === 'adj').length > 1) return false;
