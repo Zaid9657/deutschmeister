@@ -145,6 +145,22 @@ test('the further answers are verified by their own turn, carry no fault rule, a
   for (const w of ['ursprünglich', 'mobilnummer', 'verzichte']) assert.ok(!lexicon.said.has(w), w);
 });
 
+test('what the corpora still showed after the first pass: the last praised and refused answers (2026-11-25)', () => {
+  // Praised before: a filling the turn does not take beside a „Ja“, the partner named as the learner, a separable verb without its
+  // part, a dative plural after an accusative determiner.
+  for (const [nr, t, answer] of [[9, 5, 'Ja, ich möchte Tee.'], [9, 5, 'Ja, ich möchte auch Tee.'], [9, 5, 'Ja, ich nehme Kaffee.'], [6, 4, 'Guten Tag, Frau Weber!'], [6, 4, 'Guten Tag, Frau Weber! Hier ist Ana.'], [6, 4, 'Frau Weber.'],
+    [11, 3, 'Ich stehe morgens um sieben Uhr.'], [8, 3, 'Ich stehe um sieben Uhr.'], [7, 2, 'Ich treffe gern meine Freunden.']]) assert.ok(!verified(typedResult(at(nr, t), answer)), answer);
+  // Refused before, and right.
+  for (const [nr, t, answer] of [[12, 2, 'Am 12. Mai ist mein Geburtstag.'], [12, 2, 'Am 18. Oktober ist mein Geburtstag.'], [11, 7, 'Gerne, ich komme mit dir mit.']]) assert.equal(typedResult(at(nr, t), answer), RESULT.CORRECT, answer);
+  for (const [nr, t, answer] of [[9, 2, 'Ich möchte eine heiße Schokolade.'], [9, 6, 'Nein, danke, ich möchte lieber Kuchen.'], [12, 4, 'Sowohl Anna als auch Paul kommen.']]) assert.notEqual(typedResult(at(nr, t), answer), RESULT.WRONG, answer);
+  assert.equal(typedResult(at(12, 2), 'Am 31. Februar ist mein Geburtstag.'), RESULT.WRONG);
+  // A name, „jeden morgen“ and the polite „ihnen“ written small are the slip a small noun is everywhere.
+  for (const [nr, t, answer] of [[1, 2, 'Ich heiße ana.'], [6, 4, 'Hier ist ana.'], [8, 3, 'Ich stehe jeden morgen um sieben auf.'], [1, 5, 'Wie geht es ihnen, Frau Kaya?']]) assert.equal(typedResult(at(nr, t), answer), RESULT.TYPO, answer);
+  // The course's own right answers keep their names.
+  assert.equal(typedResult(at(6, 4), 'Guten Tag, hier ist Ana Chakiri.'), RESULT.CORRECT);
+  assert.equal(typedResult(at(9, 5), 'Ja, gern. Ich möchte Wasser.'), RESULT.CORRECT);
+});
+
 test('the blind corpora of 2026-11-25, every twentieth answer: correct German is not called wrong, wrong German is not praised', () => {
   const tally = { right: {}, wrong: {} };
   const worst = [];
@@ -164,7 +180,7 @@ test('the blind corpora of 2026-11-25, every twentieth answer: correct German is
     }
   }
   const total = (o) => Object.values(o).reduce((a, b) => a + b, 0);
-  // Measured over the whole corpora: right 84 % verified, 0.1 % wrong; wrong 0.6 % correct. Ratchets on the sample.
+  // Measured over the whole corpora: right 85 % verified, none wrong; wrong 0.3 % correct. Ratchets on the sample.
   assert.ok((tally.right.correct || 0) / total(tally.right) >= 0.8, JSON.stringify(tally));
   assert.ok((tally.right.wrong || 0) <= 2, worst.join('\n'));
   assert.ok((tally.wrong.correct || 0) <= 3, worst.join('\n'));

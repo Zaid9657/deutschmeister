@@ -2687,7 +2687,7 @@ export const CURRICULUM_A11 = {
       notice: {
         formExamples: ['Du hast Hunger. Er hat Durst. Habt ihr Zeit?'],
         title: 'haben und der feste Ausdruck „Ich möchte …“',
-        bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Auch so: Ich habe Hunger, Ich habe Durst, Ich habe Zeit. **Ich möchte …** ist hier ein fester Ausdruck; die Form gehört zu den Modalverben in A1.2.',
+        bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Auch so: ich habe Hunger, ich habe Durst, ich habe Zeit. **Ich möchte …** ist hier ein fester Ausdruck; die Form gehört zu den Modalverben in A1.2.',
         bodyEn: '**haben** (to have) is the second verb to learn as a set: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Where English says "I am hungry", German uses haben: **Ich habe Hunger**, **Ich habe Durst** (I am thirsty) – and **Zeit** (time) works the same way. To order or ask for something politely, use **Ich möchte …** (I would like …) as a fixed phrase; its grammar belongs to the modal verbs in A1.2.',
         // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
         bodyAr: 'haben (لديه) هو الفعل الثاني الذي تتعلّمه بحفظ تصريفه كاملًا: ich habe، du hast، er/sie/es hat، wir haben، ihr habt، sie/Sie haben. عندما نقول «أنا جائع»، تستخدم الألمانية haben: «Ich habe Hunger»، و«Ich habe Durst» (أنا عطشان). وتُستخدم Zeit (وقت) بالطريقة نفسها. لطلب شيء بأدب، استخدم Ich möchte … (أودّ …) كعبارة ثابتة؛ وستتعلّم قواعدها مع أفعال الرغبة والقدرة ونحوها في A1.2.',

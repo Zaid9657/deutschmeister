@@ -455,7 +455,7 @@ export const RULE_CARDS = {
   },
   "verb-haben": {
     "titleDe": "haben und der feste Ausdruck „Ich möchte …“",
-    "content": "Das Verb haben ist unregelmäßig:\nich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.\nAuch so: Ich habe Hunger, Ich habe Durst, Ich habe Zeit.\nBeispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?\nIm Café: Wir haben Suppe, Salat und Kuchen.\nIch möchte … ist hier ein fester Ausdruck. Die Form gehört zu den Modalverben in A1.2.\nSo bestellt man: Ich möchte einen Kaffee, bitte.\nEnglish: German has hunger and thirst rather than being hungry — Ich habe Hunger.",
+    "content": "Das Verb haben ist unregelmäßig:\nich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.\nAuch so: ich habe Hunger, ich habe Durst, ich habe Zeit.\nBeispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?\nIm Café: Wir haben Suppe, Salat und Kuchen.\nIch möchte … ist hier eine feste Wendung. Die Form gehört zu den Modalverben in A1.2.\nSo bestellt man: Ich möchte einen Kaffee, bitte.\nEnglish: German has hunger and thirst rather than being hungry — Ich habe Hunger.",
     "commonMistakes": [
       {
         "wrong": "Ich bin Hunger.",
@@ -476,7 +476,7 @@ export const RULE_CARDS = {
   },
   "verb-sein": {
     "titleDe": "sein: ich bin, du bist, Sie sind",
-    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nDie Nationalität ist im Satz ein Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
+    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nDie Staatsangehörigkeit ist im Satz ein Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
     "commonMistakes": [
       {
         "wrong": "Ana bin Studentin.",
@@ -491,7 +491,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Ich bin marokkanisch.",
         "correct": "Ich bin Marokkanerin.",
-        "explanationDe": "Die Nationalität ist im Satz ein Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch."
+        "explanationDe": "Die Staatsangehörigkeit ist im Satz ein Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch."
       },
       {
         "wrong": "Ali ist Marokkanerin.",

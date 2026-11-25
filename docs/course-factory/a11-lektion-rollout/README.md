@@ -502,7 +502,8 @@ and called 22 % wrong; it praised 3 % of the wrong ones.
 - **German options** for all 82 comprehension questions (`a11.optionsDe.js`), graded by place.
 - **The final test publishes its reading mark** (5 of 8) and names the section when it fails there.
 
-After it, same corpora (in sample): right 84 % confirmed, 16 % beyond, 0.1 % wrong; wrong 0.6 % praised.
+After it, same corpora (in sample): right 85 % confirmed, 15 % beyond, none wrong; wrong 0.3 % praised, 2 % taken as a slip in writing (small nouns).
+
 
 **Screens and pages, from the two browser walks** (tests: `lesson-walk-l.test.mjs`, `course-pages-ui.test.mjs`, `guided-rollout.test.mjs`):
 
