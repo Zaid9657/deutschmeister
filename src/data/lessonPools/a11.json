@@ -587,16 +587,16 @@
    "questionDe": "Welche Schreibweise ist richtig?",
    "questionEn": "Which spelling is correct?",
    "options": [
+    "Dakne",
     "Dane",
-    "Danke",
-    "Dnake"
+    "Danke"
    ],
    "answer": "Danke",
    "accepted": [
     "Danke"
    ],
    "explanationDe": "Danke — D-A-N-K-E.",
-   "explanationEn": "The correct spelling is **Danke**: D-A-N-K-E. The wrong options drop a letter (\"Dane\") or swap two letters (\"Dnake\").",
+   "explanationEn": "The correct spelling is **Danke**: D-A-N-K-E. The wrong options drop a letter (\"Dane\") or swap two letters (\"Dakne\").",
    "hint": "Achten Sie auf die Reihenfolge der Buchstaben.",
    "minLektion": 1
   },

@@ -1771,3 +1771,11 @@ test('a spelling is letters, a gap inside a sentence takes no capital it does no
     if (/\((?:sie|er|es)[,)]/.test(q) && /^(?:ihr|ihre|ihren|ihrem|ihrer|sie)$/.test(it.answer) && !/^___/.test(q.trim())) assert.equal(it.caseSensitive, true, it.id);
   }
 });
+
+test('a wrong spelling begins as a German word does: no option is ruled out at sight (Danke, never Dnake) (2026-11-25)', () => {
+  const pool = JSON.parse(readFileSync('src/data/lessonPools/a11.json', 'utf8'));
+  const items = (pool.items || pool).filter((it) => it.questionDe === 'Welche Schreibweise ist richtig?' && it.options);
+  assert.ok(items.length >= 3);
+  const begins = /^(?:[aeiouäöü]|[b-df-hj-np-tv-z][aeiouäöüy]|(?:bl|br|ch|dr|fl|fr|gl|gn|gr|kl|kn|kr|pf|ph|pl|pr|ps|qu|sch|sk|sl|sm|sp|st|th|tr|ts|wr|zw))/i;
+  for (const it of items) for (const o of it.options) assert.match(o, begins, `${it.id}: ${o}`);
+});

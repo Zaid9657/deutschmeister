@@ -884,7 +884,7 @@ export const LEVELS = {
     // filing them under `verb-sein` to get them drawn is exactly the mislabelling review #6 named.
     // RULE 3 keeps holding: every grammar slug is still primary exactly once, and a topic that is
     // in neither list still fails.
-    practiceOnlyTopics: ['numbers', 'personal-pronouns', 'verb-sein'],
+    practiceOnlyTopics: ['numbers'],
     primaryOrder: PRIMARY_ORDER,
     situationKeywords: SITUATION_KEYWORDS,
     primaryPatterns: PRIMARY_PATTERNS_A11,
@@ -3635,9 +3635,12 @@ export function validateCurriculum(c, extraItems, poolItems) {
     const pr = l.practiceRule || {};
     if (!(pr.topics || []).length) fail(`Lektion ${l.nr}: practiceRule needs topics`);
     const practiceOnly = spec.practiceOnlyTopics || [];
+    // A grammar slug comes back in the practice once it has been taught (spiral review): a topic of this
+    // Lektion or of an earlier one. A later Lektion's topic, or no topic at all, still fails.
+    const taughtByNow = new Set(c.lektionen.filter((x) => x.nr <= l.nr).flatMap((x) => x.grammarSlugs || []));
     for (const t of pr.topics || []) {
-      if ((l.grammarSlugs || []).includes(t) || practiceOnly.includes(t)) continue;
-      fail(`Lektion ${l.nr}: practiceRule topic "${t}" is in neither grammarSlugs nor practiceOnlyTopics`);
+      if (taughtByNow.has(t) || practiceOnly.includes(t)) continue;
+      fail(`Lektion ${l.nr}: practiceRule topic "${t}" is neither taught by now (grammarSlugs of this or an earlier Lektion) nor practice-only`);
     }
     if (!(pr.typedMin >= 3)) fail(`Lektion ${l.nr}: practiceRule.typedMin must be ≥ 3`);
   });

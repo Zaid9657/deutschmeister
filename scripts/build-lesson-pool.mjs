@@ -566,17 +566,18 @@ const flatten = (word) =>
  * Deterministic wrong spellings: umlaut/ß lost, a doubled letter lost, two
  * letters swapped, the penultimate letter dropped — the four mistakes a
  * beginner's dictation actually makes. A candidate that loses its last vowel
- * (Gruß → Grß) is thrown away: an obviously impossible word is not a distractor.
+ * (Gruß → Grß) or begins as no German word does (Danke → Dnake) is thrown away: an
+ * obviously impossible word is not a distractor. The swap then moves on by one letter (Dakne).
  */
+const BEGINS = /^(?:[aeiouäöü]|[b-df-hj-np-tv-z][aeiouäöüy]|(?:bl|br|ch|dr|fl|fr|gl|gn|gr|kl|kn|kr|pf|ph|pl|pr|ps|qu|sch|sk|sl|sm|sp|st|th|tr|ts|wr|zw))/i;
 function misspellings(word) {
-  const plausible = (c) => c !== word && c.length >= 3 && /[aeiouäöü]/i.test(c);
-  const chars = word.split('');
-  const i = Math.floor(chars.length / 2);
-  if (chars.length > 3) [chars[i - 1], chars[i]] = [chars[i], chars[i - 1]];
+  const plausible = (c) => c !== word && c.length >= 3 && /[aeiouäöü]/i.test(c) && BEGINS.test(c);
+  const swapped = (i) => { const chars = word.split(''); [chars[i - 1], chars[i]] = [chars[i], chars[i - 1]]; return chars.join(''); };
+  const i = Math.floor(word.length / 2);
   const candidates = [
     flatten(word),
     word.replace(/(.)\1/, '$1'),
-    chars.join(''),
+    word.length > 3 ? (plausible(swapped(i)) ? swapped(i) : swapped(i + 1)) : word,
     word.slice(0, -2) + word.slice(-1),
   ];
   return [...new Set(candidates.filter(plausible))].slice(0, 3);

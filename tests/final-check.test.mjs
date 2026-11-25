@@ -325,10 +325,10 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   // The second blind corpus (2026-11-20): what comes around a right answer, and prices.
   const [whatIsIt, askPrice, price, , total] = l4;
   for (const right of ['Guten Tag! Was ist das da?', 'Frau Wolf, was ist das hier?', 'frau wolf was ist das', 'Und das hier, was ist das?']) assert.notEqual(typedResult(whatIsIt, right), RESULT.WRONG, right);
-  for (const right of ['Und der Stuhl, was kostet der?', 'Die Lampe, wie teuer ist die?']) assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], right.includes('Lampe') ? 1 : 0)[3], right), BEYOND, right); // section D: German, no answer of the turn word for word: BEYOND
+  for (const right of ['Und der Stuhl, was kostet der?', 'Die Lampe, wie teuer ist die?']) assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], right.includes('Lampe') ? 1 : 0)[3], right), RESULT.CORRECT, right); // 2026-11-25, round 3: read as a sentence (clause.js)
   assert.equal(refused(l4[3], 'Der Stuhl, was kostet die?'), RESULT.WRONG, 'the pronoun picks up the noun’s article');
   assert.equal(typedResult(office, 'Wo ist bitte mein Büro?'), RESULT.CORRECT); // 2026-11-25: what stands around an answer comes off (answerShapes.js)
-  assert.equal(typedResult(office, 'Mein Büro, wo ist das?'), BEYOND); // section D: German, no answer of the turn word for word: BEYOND
+  assert.equal(typedResult(office, 'Mein Büro, wo ist das?'), RESULT.CORRECT); // 2026-11-25, round 3: read as a sentence (clause.js)
   assert.equal(typedResult(colour, 'Rot ist mein Heft.'), RESULT.CORRECT);
   assert.equal(typedResult(what, 'Ein Lineal ist das.'), RESULT.CORRECT);
   assert.equal(typedResult(where, 'Hier, Lena.'), RESULT.CORRECT, '„Hier," is no name');
@@ -376,8 +376,8 @@ test('a colour is one of the colour words, a thing is a noun, and German of the 
   const [need, , pause, phoneName] = sitting(CURRICULUM_A11.lektionen[5]);
   // Colours are a closed class: a word the course does not teach is no colour.
   for (const notColour of ['Es ist groß.', 'Es ist teuer.']) assert.equal(typedResult(colour, notColour), RESULT.WRONG, notColour);
-  // „klein“ and „neu“ are no course words: past what the check can verify, so BEYOND, never correct (the three outcomes).
-  for (const untaught of ['Es ist klein.', 'Es ist neu.']) assert.equal(typedResult(colour, untaught), BEYOND, untaught);
+  // „klein“ and „neu“ are no course words, but the sentence is read in full and names no colour: another thing said (round 3).
+  for (const untaught of ['Es ist klein.', 'Es ist neu.']) { assert.equal(typedResult(colour, untaught), RESULT.WRONG, untaught); assert.equal(wrongReason(colour, untaught), 'task', untaught); }
   assert.equal(typedResult(askColour, 'Ist deine Tasche klein?'), RESULT.WRONG);
   for (const right of ['Es ist dunkelblau.', 'Es ist hell grün.', 'Es ist lila.', 'Es ist grau.', 'Es ist grun.', 'Mein Heft hat die Farbe Blau.']) assert.notEqual(typedResult(colour, right), RESULT.WRONG, right);
   // A thing the course never teaches is a noun the learner writes as one.
@@ -454,10 +454,10 @@ test('Lektionen 7–9: hobbies, what one likes, clock times, days and times, caf
   assert.equal(typedResult(at(8)[3], 'Hast du Zeit am Freitag um 10 Uhr?'), RESULT.CORRECT);
   assert.equal(typedResult(at(8)[2], 'Am Wochenende stehe ich um neun auf.'), RESULT.CORRECT);
   assert.equal(typedResult(duForm, 'Du tanzt gern, oder?'), BEYOND, 'a tag asks the same question'); // section D: German, no answer of the turn word for word: BEYOND
-  assert.equal(typedResult(duForm, 'Tanzt du sehr gern?'), BEYOND); // section D: German, no answer of the turn word for word: BEYOND
+  assert.equal(typedResult(duForm, 'Tanzt du sehr gern?'), RESULT.CORRECT); // 2026-11-25, round 3: read as a sentence (clause.js)
   assert.equal(typedResult(likes, 'Ich gehe gern in Kino.'), RESULT.WRONG, '„ins Kino“');
   assert.equal(typedResult(at(9)[3], 'Haben Sie vielleicht Tee?'), RESULT.CORRECT); // 2026-11-25: what stands around an answer comes off (answerShapes.js)
-  assert.equal(typedResult(at(9)[3], 'Und Tee? Haben Sie den auch?'), BEYOND, 'a bare noun picked up by „den“'); // section D: German, no answer of the turn word for word: BEYOND
+  assert.equal(typedResult(at(9)[3], 'Und Tee? Haben Sie den auch?'), RESULT.CORRECT, 'a bare noun picked up by „den“'); // 2026-11-25, round 3: read as a sentence (clause.js)
   assert.equal(typedResult(decline, 'Keinen Kuchen, danke.'), RESULT.CORRECT);
   assert.equal(refused(accept, 'Tee? Ja, gerne.'), RESULT.WRONG, 'water was offered, not tea');
   assert.equal(typedResult(at(9, 1)[4], 'Tee? Ja, gerne.'), RESULT.CORRECT); // 2026-11-25: what stands around an answer comes off (answerShapes.js)
@@ -553,9 +553,10 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(bye, 'Bis Montag!'), RESULT.WRONG);
   assert.equal(typedResult(morning, 'Ich aufstehe.'), RESULT.WRONG, 'a verb of two parts keeps its prefix at the end');
   assert.equal(typedResult(morning, 'Ich sehe fern.'), RESULT.CORRECT);
-  // The can-do names two fixed expressions; the task names them. Another past sentence is BEYOND (2026-11-22).
+  // The task names its form, „Ich habe …“: what is said with it and read in full is right; another past sentence is BEYOND (2026-11-25).
   for (const right of ['Ich habe gearbeitet.', 'Ich habe Sport gemacht.', 'Ich habe nichts gemacht.', 'Ich habe gestern gearbeitet.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
-  for (const past of ['Ich habe Fußball gespielt.', 'Ich bin ins Kino gegangen.', 'Ich war zu Hause.', 'Ich habe eingekauft.', 'Ich habe einen Film gesehen.']) assert.equal(typedResult(yesterday, past), BEYOND, past);
+  for (const past of ['Ich habe Fußball gespielt.', 'Ich habe eingekauft.', 'Ich habe einen Film gesehen.']) assert.equal(typedResult(yesterday, past), RESULT.CORRECT, past);
+  for (const past of ['Ich bin ins Kino gegangen.', 'Ich war zu Hause.']) assert.equal(typedResult(yesterday, past), BEYOND, past);
   assert.equal(typedResult(yesterday, 'Ich habe ein Kaffee getrunken.'), RESULT.WRONG, 'a taught thing keeps its article');
   for (const wrong of ['Ich habe arbeiten.', 'Ich bin gearbeitet.', 'Ich habe gearbeiten.', 'Ich habe aufgestanden.']) assert.equal(refused(yesterday, wrong), RESULT.WRONG, wrong);
   assert.equal(typedResult(invite, 'Ich mache ein Fest. Kommst du auch?'), RESULT.CORRECT, 'an invitation in two sentences'); // 2026-11-25: what stands around an answer comes off (answerShapes.js)
@@ -580,7 +581,7 @@ test('Lektionen 10–12: a yes/no question, announcements, verbs of two parts, a
   assert.equal(typedResult(bye, 'Tschüss, bis bald!'), RESULT.CORRECT);
   assert.equal(refused(at(11)[1], 'Was hast du morgen gemacht?'), RESULT.WRONG, 'the question is about yesterday');
   assert.equal(typedResult(shop, 'Kaufst du am Samstag Brot ein?'), RESULT.CORRECT);
-  assert.equal(typedResult(askMonth, 'Und du, Lena, wann hast du Geburtstag?'), BEYOND); // section D: German, no answer of the turn word for word: BEYOND
+  assert.equal(typedResult(askMonth, 'Und du, Lena, wann hast du Geburtstag?'), RESULT.CORRECT); // 2026-11-25, round 3: read as a sentence (clause.js)
   assert.equal(refused(bye, 'Guten Tag!'), RESULT.WRONG);
   assert.equal(typedResult(wish, 'Schönen Tag noch!'), RESULT.CORRECT);
   assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[11]), { kind: 'checkpoint', nr: 4 }, 'Lektion 12 leads to the fourth checkpoint, never a Lektion 13');
@@ -630,14 +631,15 @@ test('a can-do is shown only when every one of its turns was shown', () => {
 test('three outcomes: verified is CORRECT, a named fault of course words is WRONG, an untaught word is BEYOND (2026-11-22)', () => {
   const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
   // The refusals of the second independent score: German past what the Lektion teaches.
-  for (const [turn, answer] of [[at(2)[0], 'Meine Heimat ist Tunesien.'], [at(2)[2], 'Ich bin pensioniert.'], [at(7)[0], 'Ich spiele Fußball als Hobby.'], [at(8)[1], 'Hast du die Uhrzeit?']]) assert.equal(typedResult(turn, answer), BEYOND, answer);
+  for (const [turn, answer] of [[at(2)[2], 'Ich bin pensioniert.'], [at(7)[0], 'Ich spiele Fußball als Hobby.']]) assert.equal(typedResult(turn, answer), BEYOND, answer);
+  for (const [turn, answer] of [[at(2)[0], 'Meine Heimat ist Tunesien.'], [at(8)[1], 'Hast du die Uhrzeit?']]) assert.equal(typedResult(turn, answer), RESULT.CORRECT, answer); // 2026-11-25, round 3: read as a sentence (clause.js)
   // Frames and answers two teachers approved (a11.answers.js) are verified, though no Lektion teaches their words.
   for (const [turn, answer] of [[at(2)[0], 'Ich komme ursprünglich aus Syrien.'], [at(2)[4], 'Meine Telefonnummer lautet 017612345678.'], [at(2)[4], 'Sie erreichen mich unter 017612345678.'], [at(12)[4], 'Ein Buch wäre schön.']]) assert.equal(typedResult(turn, answer), RESULT.CORRECT, answer);
   // Course words only: the check names the fault.
   for (const [turn, answer] of [[at(2)[0], 'Ich kommen aus Syrien.'], [at(2)[1], 'Ich wohne Syrien.'], [at(2)[2], 'Ich bin Limonade.'], [at(3)[3], 'Er sprechen Arabisch.'],
     [at(9)[4], 'Ja, eine Tee, bitte.'], [at(11)[0], 'Ich habe ein Kaffee gemacht.'], [at(11)[0], 'Ich bin gearbeitet.'], [at(5)[0], 'Das ist Lena.']]) assert.equal(refused(turn, answer), RESULT.WRONG, answer);
   // BEYOND is not shown: not by voice, not as a can-do.
-  assert.equal(spokenShown({ pct: 100, transcript: 'Meine Heimat ist Tunesien.' }, at(2)[0]), false);
+  assert.equal(spokenShown({ pct: 100, transcript: 'Ich spiele Fußball als Hobby.' }, at(7)[0]), false);
   const turns = checkTurns(l1.guided.check, 0);
   assert.deepEqual(canDoShown(turns, [...turns.map(() => 'shown').slice(0, -1), 'unverified'], 4), [false, true, true, true]);
   // The blind corpora: a teacher's wrong answer reaches CORRECT or BEYOND no more often than measured (ratchets: only down).
@@ -783,7 +785,7 @@ test('the fixed expressions verify every word between „habe“ and the partici
   for (const wrong of ['Ich habe mit meine Mutter gearbeitet.', 'Ich habe in Büro gearbeitet.', 'Ich habe ein Kuchen gemacht.', 'Ich habe den Frühstück gemacht.',
     'Ich habe Stuhl gemacht.', 'Ich habe mit mein Bruder gearbeitet.', 'Ich habe bei die Arbeit gearbeitet.']) assert.equal(refused(yesterday, wrong), RESULT.WRONG, wrong);
   for (const wrong of ['Ich habe der Hausaufgaben gemacht.', 'Ich habe ein Hausaufgaben gemacht.']) assert.equal(wrongReason(yesterday, wrong), 'article', wrong);
-  for (const beyond of ['Ich habe Hausaufgabe gemacht.']) assert.equal(typedResult(yesterday, beyond), BEYOND, beyond);
+  assert.equal(typedResult(yesterday, 'Ich habe Hausaufgabe gemacht.'), RESULT.WRONG); // 2026-11-25, round 3: „Hausaufgaben“, or an article: one change makes it the answer
   for (const right of ['Ich habe einen Kuchen gemacht.', 'Ich habe im Büro gearbeitet.', 'Ich habe mit meiner Mutter gearbeitet.', 'Ich habe mit Lena gearbeitet.',
     'Ich habe Sport gemacht.', 'Ich habe nichts gemacht.', 'Ich habe von acht bis vier gearbeitet.', 'Ich habe am Montag viel gearbeitet.', 'Ich habe zu Hause gearbeitet.',
     'Ich habe Kaffee gemacht.', 'Ich habe das gemacht.']) assert.equal(typedResult(yesterday, right), RESULT.CORRECT, right);
@@ -833,8 +835,8 @@ test('nothing is wrong by default (third score, Rule 2): a WRONG names its fault
   const at = (nr, r = 0) => sitting(CURRICULUM_A11.lektionen[nr - 1], r);
   // The score's examples, German from taught words: never WRONG; the two that combine pieces of the turn CORRECT (Rule 3).
   assert.equal(typedResult(at(8)[1], 'Kannst du mir sagen, wie spät es ist?'), RESULT.CORRECT);
-  assert.equal(typedResult(at(11)[4], 'Ich arbeite am 15. Mai.'), BEYOND);
-  assert.equal(typedResult(at(8)[4], 'Ja, Freitag um zehn passt mir gut.'), BEYOND); // section D: German, no answer of the turn word for word: BEYOND
+  assert.equal(typedResult(at(11)[4], 'Ich arbeite am 15. Mai.'), RESULT.CORRECT); // 2026-11-25, round 3: read as a sentence (clause.js)
+  assert.equal(typedResult(at(8)[4], 'Ja, Freitag um zehn passt mir gut.'), RESULT.CORRECT); // the same
   assert.equal(typedResult(at(10)[2], 'Um wie viel Uhr fährt der Zug ab?'), RESULT.CORRECT);
   // The typical beginner faults stay WRONG, each with its fault named.
   for (const [turn, answer, reason] of [
@@ -916,6 +918,8 @@ test('an answer is a sequence (Rule 4, the review of 2492a424): a word doubled o
     if (['gern', 'gerne'].includes(a) && /^\p{Lu}/u.test(words[k + 1])) return 'gern last';
     if (['zeit', 'frei'].includes(b) && TIME.has(a)) return 'time after Zeit';
     if (a === 'hier' && k + 2 === words.length && /\?\s*$/.test(answer)) return 'place word last';
+    // „nicht heute“ beside „heute nicht“
+    if (a === 'heute' && b === 'nicht') return 'not today';
     return null;
   };
   const verified = (r) => r === RESULT.CORRECT || r === RESULT.TYPO;

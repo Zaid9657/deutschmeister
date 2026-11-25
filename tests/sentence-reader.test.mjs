@@ -84,6 +84,64 @@ test('read in full and not the answer: another question, another thing, the othe
   for (const [nr, t, answer] of [[6, 2, 'Ich suche mein Büro. Wo muss ich hin?'], [2, 4, 'Darf ich Sie nach Ihrem Beruf fragen?'], [8, 2, 'Was zeigt deine Uhr an?']]) assert.notEqual(typedResult(at(nr, t), answer), RESULT.WRONG, `${nr}.${t} ${answer}`);
 });
 
+// The generated probes of tests/final-check.test.mjs (two words swapped, a word of another kind in the gap, a tail) found that the
+// reader took words for an answer wherever they stood: „Wann ist Pause die?“, „Ich möchte sieben“. Each rule of clauseOrder.js
+// stands here with the German next to it. Never praised: WRONG or BEYOND.
+test('words out of order are not praised, and the same words in order are', () => {
+  const rows = [
+    // an article or a possessive behind its noun, or without one
+    [6, 3, ['Wann ist Pause die?', 'Wann beginnt Pause die?', 'Wann ist die denn Pause?'], ['Wann ist die Pause?', 'Wann beginnt die Pause?']],
+    [10, 2, ['Fährt Zug der nach Berlin?', 'Fährt der auch Zug nach Berlin?', 'Ist die der Zug nach Berlin?'], ['Fährt der Zug nach Berlin?', 'Ist das der Zug nach Berlin?']],
+    [4, 6, ['Ich kaufe den Stuhl und Uhr die.', 'Ich kaufe den Stuhl und Uhr.', 'Für meine kaufe ich vier Stühle.'], ['Ich kaufe den Stuhl und die Uhr.', 'Für meine Küche kaufe ich vier Stühle.']],
+    [3, 6, ['Und Eltern deine, woher kommen sie?', 'Und deine Eltern, woher sie kommen?', 'Woher sind deine und Mutter dein Vater?'], ['Und deine Eltern, woher kommen sie?']],
+    [9, 2, ['Ich möchte einen bitte, Kaffee.'], ['Ich möchte einen Kaffee, bitte.']],
+    // adjectives, degrees, „nicht“, „auch“
+    [1, 4, ['Mir geht es gut sehr.', 'Mir geht es so nicht gut.', 'Es geht gut mir.', 'Mir geht es.', 'Mir geht es sehr.', 'Mir geht es gut und blau.'], ['Mir geht es sehr gut.', 'Mir geht es nicht so gut.', 'Es geht mir gut.']],
+    [3, 2, ['Sie ist alt nicht.', 'Sie ist nicht noch alt.', 'Sie ist alt ziemlich.', 'Sie ist Jahre alt.', 'Sie ist 1 Jahre alt.', 'Sie ist Montag Jahre alt.'], ['Sie ist nicht alt.', 'Sie ist noch nicht alt.', 'Sie ist ziemlich alt.', 'Sie ist fünfzig Jahre alt.', 'Sie ist 1 Jahr alt.']],
+    [9, 4, ['Haben Sie Tee auch?', 'Haben Sie Tee und sieben?', 'Gibt es Ihnen Tee?'], ['Haben Sie auch Tee?', 'Haben Sie Tee und Kaffee?', 'Gibt es auch Tee?']],
+    [9, 1, ['Ich habe Hunger viel.', 'Ja, ich habe bisschen Hunger.', 'Ich bin hungrig durstig.', 'Ja, ich habe Hunger, der Karte bitte.'], ['Ich habe viel Hunger.', 'Ja, ich habe ein bisschen Hunger.', 'Ja, ich habe Hunger, die Karte bitte.']],
+    // pronouns behind the verb
+    [1, 5, ['Wie geht Ihnen es?'], ['Wie geht es Ihnen?']],
+    [8, 5, ['Ja, Freitag um zehn passt gut mir.'], ['Ja, Freitag um zehn passt mir gut.']],
+    [4, 1, ['Was ist da das?', 'Entschuldigung, was das ist?'], ['Was ist das da?', 'Entschuldigung, was ist das?', 'Was ist denn das?']],
+    [8, 2, ['Kannst du bitte mir die Uhrzeit sagen?'], ['Kannst du mir bitte die Uhrzeit sagen?']],
+    [7, 4, ['Kannst du mir sagen, ob gern du tanzt?', 'Tanzt du gern auch?', 'Sagen mal, tanzt du gern?'], ['Kannst du mir sagen, ob du gern tanzt?', 'Tanzt du auch gern?', 'Sag mal, tanzt du gern?']],
+    // what stands behind the answer
+    [3, 5, ['Ich spreche Deutsch und Marokko.', 'Ich spreche Deutsch und Montag.'], ['Ich spreche Deutsch und Arabisch.', 'Ich spreche Arabisch und ein bisschen Deutsch.']],
+    [3, 1, ['Das ist meine Mutter und kommen aus Syrien.', 'Das ist meine Mutter, heißt sie Fatima.', 'Das ist meine Schwester, nicht meiner Mutter.'], ['Das ist meine Mutter und sie kommt aus Syrien.', 'Das ist meine Mutter, sie heißt Fatima.', 'Das ist meine Schwester, nicht meine Mutter.']],
+    [5, 5, ['Und deiner Tasche? Welche Farbe hat sie?'], ['Und deine Tasche? Welche Farbe hat sie?']],
+    [5, 4, ['Mein Heft ist gelb, und deinem Heft?'], ['Mein Heft ist gelb, und dein Heft?']],
+    [5, 1, ['Das ist ein Heft und ein Stift.', 'Das ist kein Buch.'], ['Das sind ein Heft und ein Stift.', 'Das ist ein Buch.']],
+    [12, 4, ['Meine Oma kommt und auch meinen Cousin Ali.'], ['Meine Oma kommt und auch mein Cousin Ali.']],
+    // a word of another kind in the gap
+    [4, 6, ['Ich kaufe sieben.', 'Ich kaufe Lena.'], ['Ich kaufe die Lampe.']],
+    [2, 3, ['Ich arbeite als Montag.', 'Ich arbeite als Tisch.'], ['Ich arbeite als Koch.']],
+    [10, 1, ['Ich fahre nach Lena.', 'Ich fahre in den Tisch.'], ['Ich fahre nach Köln.']],
+    [9, 6, ['Nein, danke, ich möchte Kuchen.', 'Nein, danke, keinen Tisch.', 'Nein, danke, ich möchte nur Montag.'], ['Nein, danke, ich möchte keinen Kuchen.', 'Nein, danke, keinen Kuchen.', 'Nein, danke, ich möchte nur Tee.']],
+    [9, 5, ['Ja, ich möchte.'], ['Ja, ich möchte ein Wasser.']],
+    // a word that has to be there
+    [6, 2, ['Wo befindet mein Büro?'], ['Wo befindet sich mein Büro?']],
+    [5, 3, ['Mein Stift weg. Wo ist er?'], ['Mein Stift ist weg. Wo ist er?']],
+    [8, 4, ['Hast du am Freitag zehn Uhr Zeit?'], ['Hast du am Freitag um zehn Uhr Zeit?']],
+    [2, 4, ['Weber, was sind Sie von Beruf?'], ['Herr Weber, was sind Sie von Beruf?']],
+    [12, 2, ['Mein Geburtstag ist am 31.11.'], ['Mein Geburtstag ist am 30.11.']],
+    [11, 1, ['Ich habe Lesen gemacht.', 'Ich habe müde gearbeitet.'], ['Ich habe Essen gemacht.', 'Ich habe viel gearbeitet.']],
+    [6, 1, ['Für Arbeit brauche ich einen Drucker.', 'Ich brauche Hilfe mit dem.'], ['Für die Arbeit brauche ich einen Drucker.', 'Ich brauche Hilfe mit dem Computer.']],
+  ];
+  for (const [nr, t, wrong, right] of rows) {
+    for (const a of wrong) assert.notEqual(typedResult(at(nr, t), a), RESULT.CORRECT, `${nr}.${t} ${a}`);
+    for (const a of right) assert.equal(typedResult(at(nr, t), a), RESULT.CORRECT, `${nr}.${t} ${a}`);
+  }
+  // The thing of the task, its sitting and its form.
+  assert.notEqual(typedResult(at(5, 2, 1), 'Das ist hier.'), RESULT.CORRECT, 'die Schere is „die“ or „sie“');
+  assert.equal(typedResult(at(5, 2, 1), 'Die ist hier.'), RESULT.CORRECT);
+  assert.notEqual(typedResult(at(10, 3, 1), 'Wann fährt der Zug nach Berlin?'), RESULT.CORRECT, 'this sitting travels to Österreich');
+  assert.notEqual(typedResult(at(4, 2), 'Was kostet meine Uhr?'), RESULT.CORRECT, 'the watch is for sale');
+  assert.equal(typedResult(at(10, 4), 'Was kostet meine Fahrkarte?'), RESULT.CORRECT, 'the ticket is mine');
+  // „Antworten Sie mit „Ich habe …““: good German of another form is not judged, never called wrong.
+  for (const a of ['Ich war zu Hause.', 'Ich bin ins Kino gegangen.']) assert.equal(typedResult(at(11, 1), a), BEYOND, a);
+});
+
 test('the blind corpora of round 3 (ratchets: right only up, praised and called wrong only down)', () => {
   const turnOf = (id) => { const [, l, i, s] = id.match(/^L(\d+)T(\d+)S(\d+)$/).map(Number); return sitting(l, s)[i]; };
   const n = { right: 0, confirmed: 0, calledWrong: 0, wrong: 0, praised: 0, beyond: 0 };
@@ -111,7 +169,7 @@ test('the blind corpora of round 3 (ratchets: right only up, praised and called 
   assert.equal(n.wrong, 1216);
   assert.ok(n.confirmed >= 1785, `${n.confirmed} of ${n.right} right answers confirmed`);
   assert.ok(n.calledWrong <= 2, `${n.calledWrong} right answers called wrong`);
-  assert.ok(n.praised <= 14, `${n.praised} wrong answers praised`);
+  assert.ok(n.praised <= 12, `${n.praised} wrong answers praised`);
   assert.ok(n.beyond <= 88, `${n.beyond} wrong answers beyond`);
 });
 

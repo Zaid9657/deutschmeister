@@ -88,7 +88,7 @@ import {
   printedSurface,
   agreementViolations,
   dictationCeiling,
-  DICTATION_MAX_WORDS,
+  DICTATION_MAX_WORDS, guessCeiling,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -999,7 +999,10 @@ test('60 % overall is not enough when one scored section is below 40 %', () => {
 });
 
 test('a section at exactly 40 % and an overall at exactly 60 % pass', () => {
-  const items = build(CURRICULUM_FIXTURE, cp1);
+  // A score at the guess ceiling never passes, and where the two Hören answers stand moves with the pool (loop round 3: both came
+  // first, so 2 of 5 was the ceiling). The paper is the first whose ceiling lies below the score, the rule under test.
+  const items = Array.from({ length: 12 }, (_, k) => build(CURRICULUM_FIXTURE, cp1, k ? `seat-${k}` : undefined)).find((list) => guessCeiling(list.filter((i) => i.section === 'hoeren')) < 2);
+  assert.ok(items, 'a paper whose Hören cannot be guessed to 40 %');
   // Hören 2/5 = 40 %, everything else right → 15/18 = 83 %.
   let hoeren = 0;
   const answers = answerAll(items, {

@@ -28,6 +28,7 @@ import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.j
 import { COUNTRY_STEMS } from './countries.js';
 import { reader } from './clause.js';
 import { asked, meaning } from './taskMeaning.js';
+import { inOrder } from './clauseOrder.js';
 import { ADVERBS as GERMAN_ADVERBS, adjectiveForm, verbReadings } from './germanForms.js';
 import { repairs, smallWordsKnown } from './oneRepair.js';
 import { asCostQuestion, asHaveQuestion, asTimeQuestion, withoutAndYou, asWell, nounForPronoun, withoutAttribute, withoutDegree, withoutOccasion, withoutParty } from './answerRewrites.js';
@@ -430,6 +431,12 @@ const monthOf = (word) => {
  * „12-3-90" — the slash is how many of our Arabic-speaking learners write one), or a day with a month
  * name („12. März 1990", „1. Januar 1990"). Not „12.03." without a year, not „1990" alone, not „31.4.".
  */
+/** „31. November“, „31.11.“: a date without its year, in a leap year. */
+function withYear(said) {
+  if (/\p{L}/u.test(said)) return /\d{4}$/.test(said) ? said : `${said} 2000`;
+  const parts = said.split(/[./-]/).map((x) => x.trim()).filter(Boolean);
+  return parts.length === 2 ? `${parts.join('.')}.2000` : parts.join('.');
+}
 function isDate(words) {
   const w = words.trim();
   let day; let month; let year;
@@ -2963,14 +2970,23 @@ export function secondReading(turn, value) {
   return out;
 }
 const OWN_NOUN_KINDS = new Set(['thing', 'need', 'buy', 'wish', 'hobby', 'did', 'routine', 'photo', 'guests', 'travel', 'origin', 'live', 'job', 'message', 'name', 'accept', 'decline']);
+// „Herr“ without the name, „bisschen“ without „ein“.
+const CUT_OFF = [/(?<!\p{L})Herrn?(?!\p{L}|\s+\p{Lu})/u, /(?<!\p{L})(?<!(?:ein|kein|das)\s)bisschen(?!\p{L})|(?<!\p{L})guten\s+(?:herr|frau)/iu];
+/** „Weber, was sind Sie …?“: someone one calls „Sie“ keeps the „Herr“. */
+const surnameAlone = (turn, text) => {
+  const name = String(turn.partner || '').match(/^(?:Herr|Frau)\s+(\p{L}+)$/u)?.[1];
+  const said = wordsOf(text.replace(/[.,!?;:]/g, ' '));
+  return Boolean(name) && said.some((w, k) => fold(w) === fold(name) && !['herr', 'herrn', 'frau'].includes(fold(said[k - 1] || '')));
+};
 export function readOnce(turn, value) {
   const none = { say: null, unknown: [] };
   if (!turn.lexicon || turn.spell || turn.listen) return none;
   const text = spelledOut(westernDigits(value), turn.lexicon).trim();
-  if (text.length > 160 || !/\p{L}/u.test(text) || /(?<!\p{L})(\p{L}{2,})\s+\1(?!\p{L})/iu.test(text)) return none;
+  if (text.length > 160 || !/\p{L}/u.test(text) || /(?<!\p{L})(\p{L}{2,})\s+\1(?!\p{L})/iu.test(text) || CUT_OFF.some((re) => re.test(text)) || surnameAlone(turn, text)) return none;
   const sentences = readAnswer(turn, text);
   if (!sentences) return none;
   if (!ownWordFits(sentences, Boolean(turn.ownName || turn.parts || turn.slot === 'name'))) return { ...none, sentences };
+  if (!inOrder(sentences, (h) => ['food', 'drink'].includes(taughtKind(h) || ownKind(h)))) return { ...none, sentences };
   const lexicon = turn.lexicon;
   const clauses = sentences.flatMap((x) => x.clauses);
   const nouns = (c) => [c.subj, c.acc, c.pred, c.dat, ...(c.elems || []).flatMap((e) => (e.np ? [e.np] : e.combos ? [e] : []))].filter(Boolean);
@@ -2980,11 +2996,13 @@ export function readOnce(turn, value) {
     gendersOf: (things) => [...new Set(things.flatMap((t) => readingsIn(lexicon, t.charAt(0).toLocaleUpperCase('de') + t.slice(1)) || []))],
     kindOf: (h) => { const k = taughtKind(h) || ownKind(h); return k === 'drink' || k === 'food' ? k : k || (lexicon.genders?.has?.(h) ? 'thing' : null); },
     known: (h) => Boolean(readingsIn(lexicon, h)),
+    cast: (h) => Boolean(lexicon.names?.has?.(h)) && !OWN_KIND.place.has(h),
+    jobLike: (h) => OWN_KIND.job.has(h) || taughtKind(h) === 'job' || (!taughtKind(h) && JOB_SHAPE_FOLDED.test(h)),
     person: (h, n) => n?.kind === 'name' || n?.kind === 'own' || n?.title || TAUGHT_KIND.get(h) === 'family' || OWN_KIND.job.has(h) || /^(?:freunde?|freundin(?:nen)?|nachbar(?:n|in|innen)?|kolleg(?:e|en|in|innen)|leute|gäste|verwandte|bekannte|oma|opa|onkel|tante|cousins?|cousine|neffe|nichte|partner(?:in)?|chef(?:in)?|lehrer(?:in|innen)?|mitbewohner(?:in)?|mitschüler|klasse|team|alle|viele|niemand|jemand|wir|sie|er|personen|menschen|jungs|mädchen|schwager|schwägerin|enkel|großeltern|grosseltern|kommilitonen|beide|familienmitglieder|deutschkurs|kurs|nachbarsfamilie|freundinnen|mama|papa|baby|hund|band)$/u.test(h),
     partnerNames: wordsOf(String(turn.partner || '')).map(fold).filter((w) => !['frau', 'herr'].includes(w)),
     isLanguage: (h) => OWN_KIND.language.has(h),
     notPlace: (h) => notPlace(h),
-    dayExists: (t) => !t.said || isDate(/\d{4}$/.test(t.said) ? t.said : `${t.said} 2000`),
+    dayExists: (t) => !t.said || isDate(withYear(t.said)),
     isDate: (t) => Boolean(t.year && t.said) && isDate(t.said),
     anyThing: (c) => [...new Set([c.subj, c.acc, c.pred, ...(c.elems || []).map((e) => e.np)].filter(Boolean).flatMap((n) => n.heads || [n.head]))],
     nearMiss: (c) => { const p = fold(wordsOf(text.replace(/[.,!?;:]/g, ' ')).find((w) => participleOf(w)) || ''); return Boolean(p) && Boolean(c.perfect) && !lexicon.said?.has?.(p) && [...(lexicon.perfect || []), 'gespielt', 'gekocht', 'gehört'].some((x) => x !== p && levenshtein(x, p) === 1) && !lexicon.verbs?.has?.(p); },

@@ -19,9 +19,15 @@ const PEOPLE = /^(?:mutter|vater|mama|papa|eltern|bruder|schwester|sohn|tochter|
 const WEAK_NOUNS = { nachbarn: 'nachbar', kollegen: 'kollege', studenten: 'student', kunden: 'kunde', jungen: 'junge', menschen: 'mensch', herrn: 'herr', neffen: 'neffe', patienten: 'patient', polizisten: 'polizist', namen: 'name' };
 // What one plays: an instrument, a sport („Gitarre gespült“ is a slip of „gespielt“).
 const BARE_AFTER = new Set(['nach feierabend', 'vor feierabend', 'nach mittag', 'zu mittag', 'zu besuch', 'auf deutsch', 'auf englisch', 'in urlaub', 'nach schulschluss', 'in arbeit', 'auf arbeit', 'zu hause', 'nach hause', 'bei regen', 'bei schnee', 'zu abendessen', 'vor freude', 'vor schmerzen', 'vor glück']);
-const NEEDS_ARTICLE = set('zug uhr pause mittagspause geburtstag arbeit kino theater schule bus taxi rad auto fahrrad radio kontakt besuch schicht dienst');
+export const NEEDS_ARTICLE = set('zug uhr pause mittagspause geburtstag arbeit kino theater schule bus taxi rad auto fahrrad radio kontakt besuch schicht dienst');
 const PLAYED = set('fußball tennis basketball volleyball handball tischtennis badminton hockey golf schach gitarre klavier geige flöte trompete schlagzeug');
 const PLAYING = new Set(['spielen', 'üben', 'lernen', 'hören', 'sehen', 'machen', 'mögen', 'lieben', 'kaufen', 'trainieren', 'schauen', 'unterrichten', 'haben', 'brauchen', 'möchten', 'sein', 'können', 'anschauen', 'fernsehen', 'mitspielen', 'wünschen', 'bekommen']);
+// „ein Jahr“, „eine Stunde“, „einen Monat“: one of a measure, as long as it lasts.
+const ONE_OF = { stunde: 'eine', minute: 'eine', woche: 'eine', tag: 'einen', monat: 'einen', jahr: 'ein' };
+// One makes „Essen“; every other infinitive is done, not made („Ich habe Lesen gemacht“ is no German).
+const MADE = set('essen');
+// Behind these question words a second clause may share the subject („Wann stehst du auf und frühstückst?“).
+const SHARED_WH = new Set(['wann', 'wo', 'warum', 'wie', 'wie oft', 'wie lange', 'um wie viel uhr', 'ab wann', 'bis wann']);
 // One goes „ins Kino“, never „im Kino“.
 const WHERE_TO = set('kino theater museum schule café restaurant supermarkt schwimmbad fitnessstudio bett stadion club disko konzert bibliothek büro zoo moschee kirche krankenhaus');
 const VEHICLES = set('bus zug bahn auto taxi fahrrad rad straßenbahn s-bahn u-bahn flugzeug schiff fähre roller motorrad');
@@ -436,7 +442,7 @@ export function reader(text, ctx) {
   function dateFrom(i) {
     const t = T[i];
     if (!t) return [];
-    if (t.kind === 'date') return [{ end: i + 1, date: true, year: /\d{4}$/u.test(t.f) }];
+    if (t.kind === 'date') return [{ end: i + 1, date: true, numeric: true, year: /\d{4}$/u.test(t.f) }];
     const day = t.kind === 'ord' || (t.kind === 'w' && ORDINAL.test(t.f)) || (t.kind === 'n' && T[i + 1]?.f === '.' );
     if (!day) return [];
     let k = t.kind === 'n' ? i + 2 : i + 1;
@@ -459,7 +465,7 @@ export function reader(text, ctx) {
     if (['um', 'gegen', 'ab', 'bis', 'seit', 'vor', 'nach', 'so', 'kurz'].includes(w)) {
       const k = w === 'so' && ['um', 'gegen'].includes(f(i + 1)) ? i + 2 : w === 'kurz' && ['vor', 'nach'].includes(f(i + 1)) ? i + 2 : i + 1;
       if (!(w === 'so' && k === i + 1) && !(w === 'kurz' && k === i + 1)) {
-        for (const p of ['genau', 'etwa', 'ungefähr', 'circa', 'ca', 'punkt', 'kurz', 'spätestens', 'frühestens', 'schon']) if (f(k) === p && T[k + 1]) for (const c of clock(k + 1, { bare: true })) push({ end: c.end, h: c.h, m: c.m, prep: w, clock: true });
+        for (const p of ['genau', 'etwa', 'ungefähr', 'circa', 'ca', 'punkt', 'spätestens', 'frühestens']) if (f(k) === p && T[k + 1]) for (const c of clock(k + 1, { bare: true })) push({ end: c.end, h: c.h, m: c.m, prep: w, clock: true });
         for (const c of clock(k, { bare: true })) push({ end: c.end, h: c.h, m: c.m, prep: w, clock: true });
         // „um kurz nach sechs“
         if (w === 'um' && f(k) === 'kurz' && ['vor', 'nach'].includes(f(k + 1))) for (const c of clock(k + 2, { bare: true })) push({ end: c.end, h: c.h, m: c.m, prep: w, clock: true });
@@ -504,7 +510,8 @@ export function reader(text, ctx) {
     if (['jedes', 'dieses', 'nächstes', 'letztes'].includes(w) && ['jahr', 'wochenende', 'mal'].includes(f(i + 1))) push({ end: i + 2, part: f(i + 1), rel: w });
     if (['ein', 'eine', 'einen', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht'].includes(w) || T[i]?.kind === 'n') {
       const unit = f(i + 1) === 'halbe' || f(i + 1) === 'ganze' ? i + 2 : i + 1;
-      if (['stunde', 'stunden', 'minute', 'minuten', 'tag', 'tage', 'woche', 'wochen', 'monat', 'monate', 'jahr', 'jahre'].includes(f(unit))) push({ end: f(unit + 1) === 'lang' ? unit + 2 : unit + 1, span: true });
+      const one = w?.startsWith('ein') || T[i]?.f === '1';
+      if (one ? ONE_OF[f(unit)] && (!w?.startsWith('ein') || ONE_OF[f(unit)] === w) : ['stunden', 'minuten', 'tage', 'wochen', 'monate', 'jahre'].includes(f(unit))) push({ end: f(unit + 1) === 'lang' ? unit + 2 : unit + 1, span: true });
     }
     if (/^(?:ein|zwei|drei|vier|fünf)mal$/u.test(w || '')) { for (const pat of [['pro', 'woche'], ['in', 'der', 'woche'], ['am', 'tag'], ['im', 'monat'], ['die', 'woche']]) if (pat.every((x, k) => f(i + 1 + k) === x)) push({ end: i + 1 + pat.length }); push({ end: i + 1 }); }
     if (w === 'alle' && f(i + 1) === 'zwei' && ['wochen', 'tage'].includes(f(i + 2))) push({ end: i + 3 });
@@ -660,6 +667,7 @@ export function reader(text, ctx) {
       if (bareFault(subj, 'subject', lemma)) continue;
       const trial = roles(rest, { takes, lemma, subj, isRefl, elems, wh, persons, passive: mainVerb.passive });
       if (!trial) continue;
+      if (lemma === 'machen' && trial.acc?.kind === 'np' && !trial.acc.det && !MADE.has(trial.acc.head) && verbReadings(trial.acc.head).some((v) => v.mood === 'inf')) continue;
       results.push({ subj, subjHead, ...trial });
     }
     return results;
@@ -788,7 +796,7 @@ export function reader(text, ctx) {
     if (!vc) return [];
     const asks = question && !wh && stopAhead(b.end) !== '?';
     const list = assign({ elems, persons: reading.persons, inverted, mainVerb: vc.main, imperative, sharedSubject, before, wh });
-    return list.filter((r) => !asks || (r.subj?.kind === 'pron' && ['du', 'sie', 'wir', 'ihr'].includes(r.subj.head))).map((r) => ({ ...base, ...r, elems, lemma: vc.main.lemma, going: Boolean(vc.main.going), reading, perfect: Boolean(vc.perfect), state: vc.state?.lemma || null, passive: vc.passive?.lemma || null, modal: vc.modal || (vc.bareModal ? vc.main.lemma : null), polite: Boolean(reading.polite), past: reading.mood === 'past', also: b.also?.lemma || null, question: Boolean(question), wh: wh || null, imperative: Boolean(imperative) }));
+    return list.filter((r) => !asks || (r.subj?.kind === 'pron' && ['du', 'sie', 'wir', 'ihr'].includes(r.subj.head))).map((r) => ({ ...base, ...r, elems, before, lemma: vc.main.lemma, going: Boolean(vc.main.going), reading, perfect: Boolean(vc.perfect), state: vc.state?.lemma || null, passive: vc.passive?.lemma || null, modal: vc.modal || (vc.bareModal ? vc.main.lemma : null), polite: Boolean(reading.polite), past: reading.mood === 'past', also: b.also?.lemma || null, question: Boolean(question), wh: wh || null, imperative: Boolean(imperative) }));
   }
 
   /** W-phrases: [{ end, word, np, prep }]. */
@@ -831,7 +839,7 @@ export function reader(text, ctx) {
       if (f(i + 1) === 'genau' || f(i + 1) === 'alles') out.push({ end: i + 2, word: 'was', as: 'np', np: { end: i + 2, combos: [{ c: 'n' }, { c: 'a' }], agr: 'er|sie', head: 'was', kind: 'pron' } });
     } else if (w === 'wer') out.push({ end: i + 1, word: 'wer', as: 'np', np: { combos: [{ c: 'n' }], agr: 'er|sie', head: 'wer', kind: 'pron' } });
     else if (w === 'wen' || w === 'wem') out.push({ end: i + 1, word: w, as: 'np', np: { combos: [{ c: w === 'wen' ? 'a' : 'd' }], agr: null, head: w, kind: 'pron' } });
-    else if (W_WORDS.has(w) && !det && w !== 'wie') out.push({ end: i + 1, word: w, as: 'adv' }, ...(['genau', 'bitte', 'denn', 'bloss', 'nur', 'ungefähr'].includes(f(i + 1)) ? [{ end: i + 2, word: w, as: 'adv' }] : []));
+    else if (W_WORDS.has(w) && !det && w !== 'wie') out.push({ end: i + 1, word: w, as: 'adv' }, ...(['genau', 'bitte', 'ungefähr'].includes(f(i + 1)) ? [{ end: i + 2, word: w, as: 'adv' }] : []));
     return out;
   }
 
@@ -983,7 +991,12 @@ export function reader(text, ctx) {
       for (const c of mains) if (!(indirect && c.wh)) options.push(c);
       // „Tim und Paul kommt.“: a noun alone, „und“ and a whole clause are no sentence.
       if (clauses.at(-1)?.frag && joined && joined !== ',' && clauses.at(-1).elems.some((e) => e.combos)) for (let x = options.length - 1; x >= 0; x -= 1) if (options[x].lemma) options.splice(x, 1);
-      if (clauses.length && joined !== ',') { const prev = clauses.findLast((x) => !x.around); if (prev?.subj) for (const c of mainClause(j, { shared: prev.subj })) options.push({ ...c, sharedSubj: true }); }
+      // Two clauses share their subject in one number only („Sie ist jung und kommen …“), and not behind a question word that is a part of the first („Was ist das und kommt …“).
+      if (clauses.length && joined !== ',') {
+        const prev = clauses.findLast((x) => !x.around);
+        const same = (c) => !prev.reading?.persons || c.reading?.persons?.some((x) => prev.reading.persons.includes(x));
+        if (prev?.subj && (!prev.wh || SHARED_WH.has(prev.wh.word))) for (const c of mainClause(j, { shared: prev.subj })) if (c.subj === prev.subj && same(c)) options.push({ ...c, sharedSubj: true });
+      }
       // „… und danach einen Film gesehen“: the participle shares „habe“.
       if (clauses.length && ['und', 'oder', ','].includes(joined)) {
         const prev = clauses.findLast((x) => !x.around);

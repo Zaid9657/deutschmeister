@@ -264,11 +264,12 @@ test('rule 3: every grammar slug is primary exactly once, in the taught order', 
     assert.ok(l.grammarSlugs.length >= 1 && l.grammarSlugs.length <= 3);
     assert.ok(l.grammarSlugs.includes(l.primarySlug));
     for (const s of l.grammarSlugs) assert.ok(GRAMMAR_SLUGS.includes(s), s);
-    // A practice topic is either one of the twelve grammar slugs of the Lektion or a declared
-    // practice-only topic of the level — a pool topic with no rule card that is never primary
-    // („numbers“, the L2 Zahlwort items). Anything else is a typo or a mislabelled item.
+    // A practice topic is a grammar slug taught by now (by this Lektion or an earlier one: spiral
+    // review) or a declared practice-only topic of the level — a pool topic with no rule card that is
+    // never primary („numbers“, the L2 Zahlwort items). Anything else is a typo or a mislabelled item.
+    const taughtByNow = L.filter((x) => x.nr <= l.nr).flatMap((x) => x.grammarSlugs);
     for (const t of l.practiceRule.topics) {
-      assert.ok(l.grammarSlugs.includes(t) || PRACTICE_ONLY_A11.includes(t), t);
+      assert.ok(taughtByNow.includes(t) || PRACTICE_ONLY_A11.includes(t), t);
     }
     assert.ok(l.practiceRule.typedMin >= 3);
   }
@@ -772,6 +773,7 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     'a Schreiben taskKey that resolves to nothing': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l99'; },
     'a Schreiben taskKey pointing at another Lektion\'s task': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l03'; },
     'a practice topic outside grammarSlugs': (c) => { c.lektionen[0].practiceRule.topics = ['verb-haben']; },
+    'a practice topic only a later Lektion teaches': (c) => { c.lektionen[4].practiceRule.topics = [...c.lektionen[4].practiceRule.topics, 'possessive-articles']; },
     'a practice topic that is neither a grammar slug nor practice-only': (c) => { c.lektionen[1].practiceRule.topics = [...c.lektionen[1].practiceRule.topics, 'no-such-topic']; },
     'a can-do that is not in ich-Form': (c) => { c.lektionen[0].canDo[0] = 'Du kannst dich vorstellen.'; },
     'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren.lines = [0, 99]; },
@@ -1845,8 +1847,9 @@ for (const key of LEVEL_KEYS) {
       assert.ok(l.grammarSlugs.includes(l.primarySlug));
       for (const g of l.grammarSlugs) assert.ok(spec.grammarSlugs.includes(g), g);
       const practiceOnly = spec.practiceOnlyTopics || [];
+      const taughtByNow = LL.filter((x) => x.nr <= l.nr).flatMap((x) => x.grammarSlugs);
       for (const t of l.practiceRule.topics) {
-        assert.ok(l.grammarSlugs.includes(t) || practiceOnly.includes(t), t);
+        assert.ok(taughtByNow.includes(t) || practiceOnly.includes(t), t);
       }
       assert.ok(l.practiceRule.typedMin >= 3);
     }
