@@ -23,7 +23,7 @@ export default function ReadStage({ stage, itemIndex, onItemChange, onResult, on
     <Card className="mb-6 space-y-3 p-5">
       {stage.text.split('\n').map((line, i) => <GlossLine key={i} line={line} lineIndex={`read-${i}`} lexicon={lexicon} lang={lang} openGloss={openGloss} setOpenGloss={setOpenGloss} />)}
     </Card>
-    {itemIndex > 0 && <CheckedChoice key={stage.items[itemIndex - 1].id} item={stage.items[itemIndex - 1]} lang={lang} onResult={onResult}
+    {itemIndex > 0 && <CheckedChoice hintFirst key={stage.items[itemIndex - 1].id} item={stage.items[itemIndex - 1]} lang={lang} onResult={onResult}
       onNext={() => itemIndex < stage.items.length ? onItemChange(itemIndex + 1) : onDone()} />}
   </StageShell>;
 }

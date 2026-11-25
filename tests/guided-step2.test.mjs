@@ -15,6 +15,7 @@ import { nameFromIntroduction, sayText } from '../src/lib/lesson/scene.js';
 import { readLexicon } from '../src/lib/lesson/guidedRead.js';
 import { glossTokens } from '../src/lib/lesson/gloss.js';
 import { packRun } from '../src/lib/lesson/runState.js';
+import { optionOrder } from '../src/lib/lesson/optionOrder.js';
 import { practiceScore } from '../src/lib/lesson/mastery.js';
 import { loadJsxModule } from './helpers/renderJsx.mjs';
 
@@ -52,7 +53,7 @@ async function mount(name, props, extra = {}) {
     './ReadAloudLine.jsx': { default: 'ReadAloudLine' }, './CheckedChoice.jsx': { default: 'CheckedChoice' },
     './FeedbackSheet.jsx': { default: 'FeedbackSheet' }, './ExplainAnswer.jsx': { default: 'ExplainAnswer' },
     '../../lib/lesson/check.js': checker, '../../lib/lesson/guidedFeedback.js': feedback,
-    '../../lib/lesson/strings.js': strings, '../../lib/lesson/scene.js': { sayText },
+    '../../lib/lesson/strings.js': strings, '../../lib/lesson/scene.js': { sayText }, '../../lib/lesson/optionOrder.js': { optionOrder },
     '../../lib/lesson/buildLesson.js': { isTypedItem }, '../../data/lessonPools/quality.js': { politeCaseItem },
     ...extra,
   };
