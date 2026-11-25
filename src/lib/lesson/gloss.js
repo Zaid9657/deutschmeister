@@ -60,6 +60,20 @@ export function buildLexicon(level, nr) {
     .sort((a, b) => b.tokens.length - a.tokens.length);
 }
 
+/** Free space kept between a gloss popover and either edge of the screen. */
+export const POPOVER_GUTTER = 8;
+
+/**
+ * How far (px) a popover must move sideways to stay on a screen `width` px wide: left when it would
+ * pass the right edge, right when it would pass the left one, 0 when it already fits. It opens under
+ * its word, so a word near the right edge used to push the whole page sideways (browser walk
+ * 2026-11-25: 44 of 473 popovers at 390 px, 74 at 360).
+ */
+export function popoverShift({ left, right }, width) {
+  const shift = Math.min(0, width - POPOVER_GUTTER - right);
+  return Math.max(shift, POPOVER_GUTTER - left);
+}
+
 /**
  * Splits `line` into display segments — `{ type: 'gloss', text, entry }` for
  * a matched word/phrase (raw text, punctuation kept), `{ type: 'text', text

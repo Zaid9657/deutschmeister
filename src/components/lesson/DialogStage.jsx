@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Play, Languages, Mic, Cpu, ListEnd } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
@@ -6,7 +6,7 @@ import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import { audioFor, playChecked, speechAvailable } from '../../lib/lesson/speech.js';
 import { AudioFailureNotice } from './PlayButton.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
-import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';
+import { buildLexicon, glossTokens, parseLektionId, popoverShift } from '../../lib/lesson/gloss.js';
 
 /**
  * Stage 2a — Input. The dialogue arrives line by line: you reveal the next
@@ -47,6 +47,32 @@ export function AudioSourceBadge({ recorded, className = '' }) {
   );
 }
 
+/** The open gloss under its word, moved sideways before the first paint so it never leaves the screen. */
+function GlossPopover({ id, entry, lang }) {
+  const ref = useRef(null);
+  useLayoutEffect(() => {
+    const shift = popoverShift(ref.current.getBoundingClientRect(), document.documentElement.clientWidth);
+    if (shift) ref.current.style.transform = `translateX(${shift}px)`;
+  }, []);
+  return (
+    <span
+      ref={ref}
+      id={id}
+      role="tooltip"
+      onClick={(e) => e.stopPropagation()}
+      className="absolute left-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-clay border border-rule bg-white p-2.5 text-left shadow-md transition-opacity duration-100 ease-snap motion-reduce:transition-none"
+    >
+      <span className="block font-display text-[0.9375rem] font-semibold text-ink" lang="de">{entry.de}</span>
+      <span className="block text-[0.8125rem] leading-snug text-graphite">{entry.en}</span>
+      {entry.plural && (
+        <span className="block text-[0.75rem] text-graphite">
+          {t('wortfeld.plural', lang)} {entry.plural}
+        </span>
+      )}
+    </span>
+  );
+}
+
 /**
  * Tap-word gloss: one German dialogue line rendered as tokens, where a token
  * (or a matched multi-word phrase) known from the Wortfeld of this or an
@@ -82,22 +108,7 @@ export function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGl
             >
               {seg.text}
             </button>
-            {isOpen && (
-              <span
-                id={popoverId}
-                role="tooltip"
-                onClick={(e) => e.stopPropagation()}
-                className="absolute left-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-clay border border-rule bg-white p-2.5 text-left shadow-md transition-opacity duration-100 ease-snap motion-reduce:transition-none"
-              >
-                <span className="block font-display text-[0.9375rem] font-semibold text-ink" lang="de">{entry.de}</span>
-                <span className="block text-[0.8125rem] leading-snug text-graphite">{entry.en}</span>
-                {entry.plural && (
-                  <span className="block text-[0.75rem] text-graphite">
-                    {t('wortfeld.plural', lang)} {entry.plural}
-                  </span>
-                )}
-              </span>
-            )}
+            {isOpen && <GlossPopover id={popoverId} entry={entry} lang={lang} />}
           </span>
         );
       })}
