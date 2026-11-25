@@ -105,14 +105,26 @@ const CHARACTER_ROLES = {
   'Herr Schmidt': 'Gives train information at the station.',
 };
 
-/** `{ name, roleEn, firstLektion, appearsIn }` for every distinct dialogue speaker, in order of first appearance. */
-export function charactersOf(curriculum, roles = CHARACTER_ROLES) {
+/** The same lines for Deutsch-Modus: each renders the English one above, no fact added. */
+const CHARACTER_ROLES_DE = {
+  Ana: 'Eine Studentin aus Marokko, neu in Bremen – der Kurs begleitet ihre ersten Wochen.',
+  'Frau Kaya': 'Arbeitet am Empfang des Hostels, in dem Ana ankommt.',
+  'Herr Weber': 'Vom Bürgerbüro: Dort meldet Ana sich an, und dort fängt sie später an zu arbeiten.',
+  Lena: 'Lernt im selben Deutschkurs wie Ana; ihr Hobby ist Sport.',
+  Tim: 'Lernt im selben Kurs und richtet sein Zimmer ein.',
+  'Frau Wolf': 'Verkauft Möbel auf dem Flohmarkt.',
+  Paul: 'Der Kellner im Café.',
+  'Herr Schmidt': 'Gibt am Bahnhof Auskunft über die Züge.',
+};
+
+/** `{ name, roleEn, roleDe, firstLektion, appearsIn }` for every distinct dialogue speaker, in order of first appearance. */
+export function charactersOf(curriculum, roles = CHARACTER_ROLES, rolesDe = CHARACTER_ROLES_DE) {
   const byName = new Map();
   for (const l of curriculum.lektionen) {
     for (const line of l.dialog?.lines ?? []) {
       const name = String(line.speaker || '').trim();
       if (!name) continue;
-      const entry = byName.get(name) ?? { name, roleEn: roles[name] ?? `Appears in Lektion ${l.nr}.`, firstLektion: l.nr, appearsIn: [] };
+      const entry = byName.get(name) ?? { name, roleEn: roles[name] ?? `Appears in Lektion ${l.nr}.`, roleDe: rolesDe[name] ?? `Kommt in Lektion ${l.nr} vor.`, firstLektion: l.nr, appearsIn: [] };
       if (!entry.appearsIn.includes(l.nr)) entry.appearsIn.push(l.nr);
       byName.set(name, entry);
     }
@@ -233,7 +245,7 @@ const lektionIntro = {
     ],
   },
   'a1.1-l12': {
-    situationEn: 'Celebrations and the past (as fixed chunks), plus revision',
+    situationEn: 'Celebrations and talking about the past in fixed phrases, plus revision',
     canDoEn: [
       'I can invite someone to a celebration.',
       'I can say in which month my birthday is.',
@@ -262,11 +274,13 @@ const OUTCOME_SOURCES = [
   ['a1.1-l10', 2],
 ];
 
-const outcomesEn = OUTCOME_SOURCES.map(([id, i]) => {
-  const line = lektionIntro[id].canDoEn[i];
-  // "I can order something in a café." → "order something in a café"
-  return line.replace(/^I can /, '').replace(/\.$/, '');
-});
+/** "I can say where I come from." → "say where you come from": the list continues „… you can". */
+export const outcomeLineEn = (line) => line.replace(/^I can /, '').replace(/\.$/, '')
+  .replace(/\bI am\b/g, 'you are').replace(/\bI\b/g, 'you').replace(/\bmy\b/g, 'your').replace(/\bme\b/g, 'you');
+
+const outcomesEn = OUTCOME_SOURCES.map(([id, i]) => outcomeLineEn(lektionIntro[id].canDoEn[i]));
+/** Deutsch-Modus shows the same can-dos as the course words them („Ich kann …"). */
+const outcomesDe = OUTCOME_SOURCES.map(([id, i]) => CURRICULUM_A11.lektionen.find((l) => l.id === id).canDo[i]);
 
 // ---------------------------------------------------------------------------
 // Time — derived from the path, never typed
@@ -387,22 +401,22 @@ export function courseMinutesEstimate(curriculum = CURRICULUM_A11) {
  * `minutesPerLektion` comes from `lektion.minutes`, not from a typed number.
  */
 const HOW_STEPS = [
-  { key: 'warmup', label: 'Warm-up', descriptionEn: 'A few review cards that are due today.' },
-  { key: 'pretest', label: 'Try first', descriptionEn: 'Guess before you learn; wrong is fine here.' },
-  { key: 'scene', label: 'Scene', descriptionEn: 'Hear the dialogue in parts, check the meaning, say it.' },
-  { key: 'wortfeld', label: 'Words', descriptionEn: 'The words of the situation, with article and audio.' },
-  { key: 'sound', label: 'Sounds', descriptionEn: 'Listen for stress and sounds, then say the line.' },
-  { key: 'read', label: 'Read', descriptionEn: 'A short text with more words, and questions on it.' },
-  { key: 'notice', label: 'Rule', descriptionEn: 'One grammar point, explained in a short card.' },
-  { key: 'practice', label: 'Practice', descriptionEn: 'Short typed and tapped exercises, checked instantly.' },
-  { key: 'derived', label: 'More tasks', descriptionEn: 'Match words, build a sentence, pick what you heard.' },
-  { key: 'dictation', label: 'Listen', descriptionEn: 'Hear a line from the dialogue and write it down.' },
-  { key: 'fluency', label: 'From memory', descriptionEn: 'Say the scene lines again, without reading them.' },
-  { key: 'speaking', label: 'Speak', descriptionEn: 'Read aloud; speech recognition checks words, not pronunciation.' },
-  { key: 'writing', label: 'Write', descriptionEn: 'A form or a short message, checked by AI.' },
-  { key: 'requeue', label: 'Try again', descriptionEn: 'Anything you missed comes back once more.' },
-  { key: 'check', label: 'Final check', descriptionEn: 'Show what you can do in a short conversation.' },
-  { key: 'recap', label: 'Recap', descriptionEn: 'What you can do now, and what comes next.' },
+  { key: 'warmup', label: 'Warm-up', labelDe: 'Wiederholung', descriptionEn: 'A few review cards that are due today.', descriptionDe: 'Einige Karten, die heute fällig sind.' },
+  { key: 'pretest', label: 'Try first', labelDe: 'Probieren', descriptionEn: 'Guess before you learn; wrong is fine here.', descriptionDe: 'Vor dem Lernen raten; Fehler sind hier in Ordnung.' },
+  { key: 'scene', label: 'Scene', labelDe: 'Szene', descriptionEn: 'Hear the dialogue in parts, check the meaning, say it.', descriptionDe: 'Den Dialog in Teilen hören, die Bedeutung prüfen, sprechen.' },
+  { key: 'wortfeld', label: 'Words', labelDe: 'Wörter', descriptionEn: 'The words of the situation, with article and audio.', descriptionDe: 'Die Wörter der Situation, mit Artikel und Ton.' },
+  { key: 'sound', label: 'Sounds', labelDe: 'Laute', descriptionEn: 'Listen for stress and sounds, then say the line.', descriptionDe: 'Auf Betonung und Laute hören, dann die Zeile sprechen.' },
+  { key: 'read', label: 'Read', labelDe: 'Lesen', descriptionEn: 'A short text with more words, and questions on it.', descriptionDe: 'Ein kurzer Text mit weiteren Wörtern und Fragen dazu.' },
+  { key: 'notice', label: 'Rule', labelDe: 'Regel', descriptionEn: 'One grammar point, explained in a short card.', descriptionDe: 'Ein Grammatikpunkt, auf einer kurzen Karte erklärt.' },
+  { key: 'practice', label: 'Practice', labelDe: 'Üben', descriptionEn: 'Short typed and tapped exercises, checked instantly.', descriptionDe: 'Kurze Aufgaben zum Tippen und Antippen, sofort geprüft.' },
+  { key: 'derived', label: 'More tasks', labelDe: 'Mehr üben', descriptionEn: 'Match words, build a sentence, pick what you heard.', descriptionDe: 'Wörter zuordnen, einen Satz bauen, Gehörtes auswählen.' },
+  { key: 'dictation', label: 'Listen', labelDe: 'Hören', descriptionEn: 'Hear a line from the dialogue and write it down.', descriptionDe: 'Eine Zeile aus dem Dialog hören und aufschreiben.' },
+  { key: 'fluency', label: 'From memory', labelDe: 'Auswendig', descriptionEn: 'Say the scene lines again, without reading them.', descriptionDe: 'Die Zeilen der Szene noch einmal sprechen, ohne Text.' },
+  { key: 'speaking', label: 'Speak', labelDe: 'Sprechen', descriptionEn: 'Read aloud; speech recognition checks words, not pronunciation.', descriptionDe: 'Vorlesen; die Spracherkennung prüft Wörter, nicht die Aussprache.' },
+  { key: 'writing', label: 'Write', labelDe: 'Schreiben', descriptionEn: 'A form or a short message, checked by AI.', descriptionDe: 'Ein Formular oder eine kurze Nachricht, von der KI geprüft.' },
+  { key: 'requeue', label: 'Try again', labelDe: 'Noch einmal', descriptionEn: 'Anything you missed comes back once more.', descriptionDe: 'Was falsch war, kommt noch einmal.' },
+  { key: 'check', label: 'Final check', labelDe: 'Abschluss\u00ADcheck', descriptionEn: 'Show what you can do in a short conversation.', descriptionDe: 'In einem kurzen Gespräch zeigen, was Sie können.' },
+  { key: 'recap', label: 'Recap', labelDe: 'Rückblick', descriptionEn: 'What you can do now, and what comes next.', descriptionDe: 'Was Sie jetzt können und was als Nächstes kommt.' },
 ];
 
 const howItWorksEn = {
@@ -422,15 +436,25 @@ const aboutEn =
   `Lektionen an adapted checkpoint shows you what stuck. ${courseTestDescription(CURRICULUM_A11.testSlug, 'en')} No account is needed to start; you need ` +
   `one to save your progress and for the AI feedback on your writing and speaking.`;
 
+/** The same paragraph in Deutsch-Modus. */
+const aboutDe =
+  `${CURRICULUM_A11.code} ist die erste Hälfte der Stufe A1: ${CURRICULUM_A11.lektionen.length} kurze Lektionen, jede zu einer ` +
+  `Alltagssituation – ankommen, sich anmelden, einkaufen, einen Termin machen, im Café bestellen –, und die Grammatik ist ein ` +
+  `Schritt darin. Nach je ${chapters[0]?.lektionen.length ?? 3} Lektionen zeigt Ihnen ein Checkpoint, was Sie behalten haben. ` +
+  `${courseTestDescription(CURRICULUM_A11.testSlug, 'de')} Zum Anfangen brauchen Sie kein Konto; Sie brauchen eins, um Ihren ` +
+  `Fortschritt zu speichern, und für die KI-Rückmeldung zum Schreiben und Sprechen.`;
+
 export const A11_META = {
   guide: A11_ART.guide,
   level: CURRICULUM_A11.level,
   code: CURRICULUM_A11.code,
   aboutEn,
+  aboutDe,
   chapters,
   characters,
   lektionIntro,
   outcomesEn,
+  outcomesDe,
   weeklyEstimate,
   howItWorksEn,
 };

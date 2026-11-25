@@ -12,7 +12,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import * as lucideIcons from 'lucide-react';
-import { A11_META, LANDESKUNDE, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
+import { A11_META, LANDESKUNDE, outcomeLineEn, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
@@ -168,9 +168,14 @@ test('charactersOf reads a new speaker off the data with a neutral fallback role
 
 test('the six outcomes are can-dos the course teaches, not marketing', () => {
   assert.equal(A11_META.outcomesEn.length, 6);
-  const all = new Set(Object.values(A11_META.lektionIntro).flatMap((i) => i.canDoEn.map((s) => s.replace(/^I can /, '').replace(/\.$/, ''))));
+  const all = new Set(Object.values(A11_META.lektionIntro).flatMap((i) => i.canDoEn.map(outcomeLineEn)));
+  const allDe = new Set(LEKTIONEN.flatMap((l) => l.canDo));
+  assert.equal(A11_META.outcomesDe.length, 6, 'the same six in Deutsch-Modus');
+  for (const line of A11_META.outcomesDe) assert.ok(allDe.has(line), `"${line}" is not one of the course's can-dos`);
   for (const line of A11_META.outcomesEn) {
     assert.ok(all.has(line), `outcome "${line}" is not one of the course's can-dos`);
+    // The list continues „By the end of A1.1 you can …": it read „you can say where I come from".
+    assert.doesNotMatch(line, /\b(I|my|me)\b/, `outcome "${line}" speaks as the learner`);
     assert.doesNotMatch(line, /\b(pass the|fluent|guarantee|in \d+ (days|weeks)|get a job|visa)\b/i, `outcome "${line}" reads as a promise`);
   }
   assert.equal(new Set(A11_META.outcomesEn).size, 6, 'no outcome twice');
@@ -234,10 +239,22 @@ test('the how-it-works row names the guided stages in the order the player runs 
   }
   assert.deepEqual(keys.filter((k) => !run.has(k)), [], 'the row names a stage no Lektion runs');
   for (const s of A11_META.howItWorksEn.steps) {
-    assert.ok(s.label.length <= 12, `${s.key}: label "${s.label}" is too long for a row`);
-    const words = s.descriptionEn.trim().split(/\s+/).length;
-    assert.ok(words <= 10, `${s.key}: description has ${words} words, max 10`);
+    // German compounds carry a soft hyphen where they may break.
+    for (const label of [s.label, ...s.labelDe.split('\u00AD')]) assert.ok(label.length <= 12, `${s.key}: label "${label}" is too long for a row`);
+    for (const line of [s.descriptionEn, s.descriptionDe]) {
+      const words = line.trim().split(/\s+/).length;
+      assert.ok(words <= 10, `${s.key}: description has ${words} words, max 10`);
+    }
   }
+});
+
+// 2026-11-25: sixteen steps in five columns left the last card alone in its row.
+test('no how-it-works card stands alone: every column count of its grid divides the number of steps', () => {
+  const src = readFileSync(new URL('../src/components/course/CourseWelcome.jsx', import.meta.url), 'utf8');
+  const grid = src.match(/<ol className="([^"]*\bgrid-cols-[^"]*)"/)[1];
+  const columns = [...grid.matchAll(/grid-cols-(\d+)/g)].map((m) => Number(m[1]));
+  assert.ok(columns.length >= 2, grid);
+  for (const n of columns) assert.equal(A11_META.howItWorksEn.steps.length % n, 0, `${A11_META.howItWorksEn.steps.length} cards in ${n} columns`);
 });
 
 // ---------------------------------------------------------------------------
