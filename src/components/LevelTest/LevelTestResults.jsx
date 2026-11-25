@@ -12,7 +12,7 @@ import confettiBurst from '../../lib/confetti.js';
 import { placementSignupHref, rememberPlacement, PLACEMENT_REF } from '../../lib/placement.js';
 import { placedCourseHref, FIRST_LESSON_HREF } from '../../lib/firstRun.js';
 import { focusTopics } from './placementResult.js';
-import { TRIAL_DAYS, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
+import { FREE_LEKTION_LABEL, TRIAL_DAYS, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
 import { stationFor, stationStatusLine, EXAM_ROUTE } from '../../data/offers.js';
 
 // The earned moment (docs/design/playbook.md). Finishing the placement test IS
@@ -103,16 +103,15 @@ const LevelTestResults = ({
 
   // The placement hook into the free A1.1 course (Wave 1). An A1.1 result
   // opens Lektion 1 itself (FIRST_LESSON_HREF, the primary CTA's target); any
-  // higher result opens the same course with every
-  // Lektion unlocked (`?from=placement` — CurriculumHomePage reads it, and the
+  // higher result opens the same course's home (`?from=placement` — CurriculumHomePage reads it, and the
   // profile's current_level once signed in). "Your test suggests", never a
   // level or pass promise — the result is a starting line, not a grade.
   const placedAtStart = finalSublevel === 'A1.1';
   const courseHref = placedAtStart ? FIRST_LESSON_HREF : '/course/a1.1?from=placement';
-  const courseLabel = placedAtStart ? 'Start your course at Lektion 1' : 'Open the A1.1 course (all Lektionen unlocked for you)';
+  const courseLabel = placedAtStart ? 'Start your course at Lektion 1' : 'Open the A1.1 course';
   const courseDetail = placedAtStart
-    ? 'Twelve short everyday situations, from the first „Hallo“ — no account needed.'
-    : 'Your test suggests you are past the start — every Lektion is open, so begin wherever you like.';
+    ? `Twelve short everyday situations, from the first „Hallo“. ${FREE_LEKTION_LABEL} is free, no account needed.`
+    : `Your test suggests you are past the start. ${FREE_LEKTION_LABEL} is free; AI Practice or any course purchase opens the rest.`;
 
   // Section completion status
   const sections = [

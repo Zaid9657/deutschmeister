@@ -163,13 +163,14 @@ test('every A1.1 Lektion has a cast, a chapter and an intro to render', () => {
 // 4. The placement hook
 // ---------------------------------------------------------------------------
 
-test('LevelTestResults links the A1.1 course: Lektion 1 for an A1.1 result, unlocked for anything higher', () => {
+test('LevelTestResults links the A1.1 course: Lektion 1 for an A1.1 result, the course home for anything higher', () => {
   const src = read(RESULTS);
   assert.match(src, /const placedAtStart = finalSublevel === 'A1\.1';/);
   assert.match(src, /placedAtStart \? FIRST_LESSON_HREF : '\/course\/a1\.1\?from=placement'/, 'the two hrefs: Lektion 1 itself for an A1.1 result');
   assert.match(src, /import \{[^}]*\bFIRST_LESSON_HREF\b[^}]*\} from '\.\.\/\.\.\/lib\/firstRun\.js'/, 'the same Lektion 1 URL as the primary CTA');
   assert.match(src, /Start your course at Lektion 1/);
-  assert.match(src, /Open the A1\.1 course \(all Lektionen unlocked for you\)/);
+  assert.match(src, /Open the A1\.1 course'/);
+  assert.doesNotMatch(src, /all Lektionen unlocked|every Lektion is open/, 'a placement opens no Lektion past the gate');
   assert.match(src, /to=\{courseHref\}/, 'the CTA is a client-side Link (no trailing slash — case 3 SPA route)');
   assert.doesNotMatch(src, /\/course\/a1\.1\//, 'SPA course routes carry no trailing slash');
   assert.doesNotMatch(src, /you will pass|guaranteed to/i, 'no pass promise');

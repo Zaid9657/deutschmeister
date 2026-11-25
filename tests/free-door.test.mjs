@@ -116,7 +116,8 @@ test('the pattern finds the line it was written for and leaves other links alone
   // A sentence that is not a link is not a door, and a comment is not code.
   assert.equal([...'<p>Your A1.1 lessons stay free.</p>'.matchAll(ELEMENT)].length, 0);
   assert.equal([...code('{/* <a href="/level/a1.1">A1.1 free</a> */}\n// <Link to="/x">A1.1 free</Link>').matchAll(ELEMENT)].length, 0);
-  assert.ok(offersFreeLevel('Start the free {FREE_LEVEL_LABEL} course'));
+  assert.ok(offersFreeLevel('Start the free {FREE_LEVEL_LABEL} course'), 'the old line');
+  assert.ok(offersFreeLevel('Start {FREE_LEVEL_LABEL}: {FREE_LEKTION_LABEL} free'));
   assert.ok(offersFreeLevel("{isGerman ? 'A1.1 gratis starten' : 'Start A1.1 free'}"));
   // The signup page's old way out is a door too, and so is its German form.
   const old = '<a href="/grammar/a1.1/" className={TEXT_LINK}>Explore A1.1 without an account.</a>';

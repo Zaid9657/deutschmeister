@@ -43,7 +43,8 @@ const FAQS = [
 const jsonLd = {
   '@context': 'https://schema.org', '@type': 'Course', name: `German ${code} Course`, description,
   url: `https://deutsch-meister.de/courses/${slug}/`, inLanguage: 'en', educationalLevel: code, provider: ORGANIZATION,
-  ...(isFree ? { isAccessibleForFree: true } : coming ? {} : { offers: { '@type': 'Offer', price: String(course.price), priceCurrency: CURRENCY, availability: 'https://schema.org/InStock', url: `https://deutsch-meister.de/courses/${slug}/` } }),
+  // (Only the first Lektion is free: FREE_LEKTIONEN, src/config/freeTier.js.)
+  ...(isFree ? { isAccessibleForFree: false } : coming ? {} : { offers: { '@type': 'Offer', price: String(course.price), priceCurrency: CURRENCY, availability: 'https://schema.org/InStock', url: `https://deutsch-meister.de/courses/${slug}/` } }),
 };
 ---
 <Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} noindex={coming}>

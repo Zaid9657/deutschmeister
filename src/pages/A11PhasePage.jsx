@@ -102,7 +102,7 @@ const A11PhasePage = () => {
                   </div>
                   <div>
                     <p className="font-bold text-ink">Der geführte A1.1-Kurs</p>
-                    <p className="text-sm text-graphite">12 Lektionen, 4 Checkpoints, Abschlusstest — in Reihenfolge, kostenlos. Dieser Plan hier ist eine 28-Tage-Checkliste über die Bibliothek, nicht der Kurs.</p>
+                    <p className="text-sm text-graphite">12 Lektionen, 4 Checkpoints, Abschlusstest, in Reihenfolge. Lektion 1 ist kostenlos. Dieser Plan hier ist eine 28-Tage-Checkliste über die Bibliothek, nicht der Kurs.</p>
                   </div>
                 </div>
                 <Link to="/course/a1.1" className="inline-flex shrink-0 items-center gap-2 rounded-clay bg-siegel px-5 py-3 text-sm font-bold text-white shadow-raise-siegel transition-all hover:bg-siegel-lift active:translate-y-1 active:shadow-none">

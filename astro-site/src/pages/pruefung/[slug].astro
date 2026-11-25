@@ -15,7 +15,7 @@ import LanguageNotice from '../../components/LanguageNotice.astro';
 import '../../styles/global.css';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { EXAM_HUBS, examHubUrl } from '../../data/exams/index.js';
-import { FOUNDER_LINE_DE } from '../../data/marketing.js';
+import { FOUNDER_LINE_DE, FREE_LEKTION_LABEL, FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { stationFor } from '../../data/offers.js';
 
 export function getStaticPaths() {
@@ -177,7 +177,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink h
             Beginnen Sie dort, wo Sie stehen
           </h2>
           <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
-            Der Einstufungstest ist kostenlos — und A1.1 bleibt es für immer.
+            Der Einstufungstest ist kostenlos, und {FREE_LEKTION_LABEL} von {FREE_LEVEL_LABEL} auch.
           </p>
           <div class="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a href="/level-test/" class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`}>

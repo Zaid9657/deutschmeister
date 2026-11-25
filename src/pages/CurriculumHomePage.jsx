@@ -295,7 +295,7 @@ export default function CurriculumHomePage({ curriculum }) {
               {endowed && (
                 <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-white/80 px-3 py-1 font-data text-[0.6875rem] font-bold text-siegel-deep ring-1 ring-rule" data-endowed>
                   <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  {de ? `Ihr Test deutet auf ein Niveau über ${curriculum.code} hin. Alle Schritte sind offen. Wählen Sie Ihren Einstieg.` : `Your test suggests a level above ${curriculum.code} — everything here is open; start where you like.`}
+                  {de ? `Ihr Test deutet auf ein Niveau über ${curriculum.code} hin.${payNotice ? '' : ' Alle Schritte sind offen. Wählen Sie Ihren Einstieg.'}` : `Your test suggests a level above ${curriculum.code}${payNotice ? '.' : ' — everything here is open; start where you like.'}`}
                 </p>
               )}
               {reviewDue > 0 && !complete && (
@@ -429,7 +429,7 @@ export default function CurriculumHomePage({ curriculum }) {
         </div>
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
-          {de ? (endowed ? 'Alle Lektionen sind für Sie offen. Ihr Fortschritt wird nach jedem Schritt gespeichert.' : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.')}
+          {de ? (endowed ? `${payNotice ? '' : 'Alle Lektionen sind für Sie offen. '}Ihr Fortschritt wird nach jedem Schritt gespeichert.` : 'Lektionen öffnen sich der Reihe nach. Ihr Fortschritt wird nach jedem Schritt gespeichert.') : (endowed ? `${payNotice ? 'Your progress saves' : 'Every Lektion is open for you and saves'} on every step.` : 'Lektionen open in order and save on every step.')}
           {de ? (user ? ' Auf jedem Gerät.' : ' Bis zur Anmeldung bleibt Ihr Fortschritt auf diesem Gerät.') : (user ? ' On any device.' : ' Your progress saves on this device until you sign in.')}{' '}
           <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">{de ? 'Wiederholen' : 'Review'}</Link> ·{' '}
           <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level, lang)}</Link> ·{' '}

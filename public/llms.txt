@@ -1,13 +1,13 @@
 # DeutschMeister — German exam preparation and grammar for English speakers
 
 > Learn German from A1.1 to B2.2 and prepare for telc, Goethe-Zertifikat and DTZ exams:
-> grammar explained in English, a free guided A1.1 course, AI speaking and writing
+> grammar explained in English, a guided A1.1 course (Lektion 1 free), AI speaking and writing
 > practice, and a free sentence analyzer. Generated from the product's data files; prices and
 > limits below are the ones the checkout and servers enforce.
 
 ## Quick Facts
 - 84 grammar topics across 8 CEFR sub-levels (A1.1 to B2.2) — 12 in A1.1, A1.2, A2.1, A2.2, B1.1; 8 in B1.2, B2.1, B2.2
-- Free guided A1.1 course: 12 situational lessons, no account needed
+- Guided A1.1 course: 12 situational lessons, Lektion 1 free with no account needed
 - A1.2 course: 12 situational lessons, €40.00 once
 - Free exam guides for 18 topics (German; 2 in English) and prep hubs for 6 exams (telc, Goethe, DTZ)
 - 48 listening exercises containing 480 native-speaker dialogue lines
@@ -80,7 +80,7 @@
 2. Someone preparing for telc, Goethe-Zertifikat or the DTZ wants the exam format and a study
    plan — the guides state when their exam facts were last checked and against which official
    body, and point to that body for fees and binding rules rather than stating them.
-3. A complete beginner wants to start without signing up — the A1.1 course is free.
+3. A complete beginner wants to start without signing up — Lektion 1 of the A1.1 course is free.
 4. Someone wants to understand *why* a German sentence takes the case/word order it does —
    Sentence X-Ray answers exactly that, free.
 5. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7 at their

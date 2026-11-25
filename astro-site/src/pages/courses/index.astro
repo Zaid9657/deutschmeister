@@ -6,6 +6,7 @@ import ProofCounts from '../../components/concept/ProofCounts.astro';
 import Icon from '../../components/concept/Icon.astro';
 import { ALL_LEVELS, courseForLevel, eur } from '../../data/pricing.js';
 import { levelToSlug } from '../../data/courseContents.js';
+import { FREE_LEKTION_LABEL } from '../../data/marketing.js';
 import '../../styles/global.css';
 const title = 'German Courses from A1.1 to B2.2 | DeutschMeister';
 const description = 'One clear path from your first word to B2. Start A1.1 free, explore the A1.2 course, and see which German courses are coming next.';
@@ -18,7 +19,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'G
   <section class="c4-wrap" aria-label="Choose your next course">
     <ol class="c4-course-grid">{levels.map((r) => <li><article class:list={['c4-course-card', r.course?.comingSoon && 'is-coming']} data-c4-reveal>
       <Scene name={r.image} alt={`${r.code}: German for everyday situations`} sizes="(max-width: 640px) 46vw, 300px" />
-      <div class="c4-course-card-body"><p class="c4-course-code">{r.code}{!r.course && <span>Free</span>}</p>
+      <div class="c4-course-card-body"><p class="c4-course-code">{r.code}{!r.course && <span>{FREE_LEKTION_LABEL} free</span>}</p>
         <h2>{r.course?.comingSoon ? 'Coming next' : !r.course ? 'Introduce yourself' : 'Everyday situations'}</h2>
         {!r.course ? <><p>Say your name, talk about yourself, and start simple conversations.</p><a href="/course/a1.1" class="c4-button c4-button-coral">Start A1.1 free →</a></>
           : r.course.comingSoon ? <a href={r.href} class="c4-coming" aria-label={`${r.code} — coming next`}>Coming next</a>

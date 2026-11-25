@@ -665,3 +665,11 @@ The corpora of round 2, in sample since then: 98.4 % and 99.5 % confirmed, none 
 blable gern“) praised with a note; 41 of 75 turns the same on a retake; final test scores listening and reading only; checkpoint texts that
 need a new blind review when changed (checkpoint 1 paper 3 gives two people one number, checkpoint 3 dictates „am Mittwoch nachmittags“);
 the cast notes of both scores; phone typing („Almost – just a typo“ for a small first letter says nothing about capitals).
+
+**The free claims are corrected** (owner, 2026-11-25: "Yes, correct it"; the wording only: access, prices and limits are as they were). The guided
+course is free up to Lektion 1 (`FREE_LEKTIONEN`, gate of 2026-11-22); these places still promised all of it: the login and sign-up panel, About
+(and its prerendered twin), Sentence X-Ray, the level-test result, the onboarding slide, the trial-return card, the A1.1 phase plan, the course
+home ("everything here is open" to a placed learner without access), the courses overview, the course page's JSON-LD, the grammar pages' button,
+the exam hubs, `offers.js`, `marketing.js` and `llms.txt` / `llms-full.txt`. The label comes from `FREE_LEKTION_LABEL` (`src/data/marketing.js`);
+`tests/free-claims.test.mjs` reads every page and fails on the old lines. "Start A1.1 free" and the free library stay: they are true.
+Not touched: the A1.2 copy on the A1.1 sales page, mails, legal pages.

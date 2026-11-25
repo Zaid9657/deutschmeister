@@ -22,7 +22,7 @@ import {
 } from './pricing.js';
 import {
   LEVELS, LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_WRITING_EVALUATIONS_PER_MONTH,
-  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, READING_LESSON_COUNTS_BY_LEVEL, PLACEMENT_TEST_MINUTES,
+  ANON_DAILY_LIMIT, FREE_DAILY_LIMIT, FREE_LEKTION_LABEL, READING_LESSON_COUNTS_BY_LEVEL, PLACEMENT_TEST_MINUTES,
 } from './marketing.js';
 import { COURSE_CONTENTS, GUIDED_PLANS, LEVEL_OUTCOME_EN, levelToSlug } from './courseContents.js';
 
@@ -199,7 +199,7 @@ export const EXAM_ROUTE = {
 
 /** What the free first stop includes (no account). */
 export const FREE_STOP_LINES = [
-  `The whole ${STATIONS[0].code} course, free and with no account`,
+  `${FREE_LEKTION_LABEL} of the ${STATIONS[0].code} course, free and with no account`,
   `Sentence X-Ray: ${ANON_DAILY_LIMIT} free analysis a day`,
   `The grammar explanations of all ${LEVEL_COUNT} levels, to read`,
 ];
