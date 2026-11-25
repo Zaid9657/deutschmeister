@@ -57,18 +57,18 @@ guter haar haare hab habe haben habt haelse haende haette haeufig haeuser hal ha
 haltestelle haltestellen hand handy handynummer handynummern handys hast hat hatte haus hause
 haushalt heft hefte heimat heisse heissen heisst helfen hemd hemden herd herde herr herren herrn
 heute hier hilf hilfe hilfst hilft hin hinten hinter hinweis hinweises hobby hobbys hoe hoeflich
-hoefliche hoeflichen hoeflicher hoeflichkeitsform hoere hoeren hoert hol hole holen holst holt hose
-hosen hostel hotel hotels hun hundert hunderter hunger hungrig ich ie ieren ihn ihnen ihr ihre ihrem
-ihren ihrer ii im immer imperativ imperativs in infinitiv information informell ingenieur ingenieure
-ingenieurin ingenieurinnen ins inversion irak iran iss isst ist italien iː ja jacke jacken jahr
-jahre jahreszeit jahreszeiten januar jede jeden jeder jedes jemand jemandem jemanden jemen jensen
-jetzt job jonas jot jott juli jung juni kaese kaffee kaffees kalt kann kannst karte karten kartoffel
-kartoffeln kasse kassen kauf kaufe kaufen kaufhaeuser kaufhaus kaufst kauft kaya ke kei kein keine
-keinen keller kellner kellnerin kellnerinnen kennen kilo kind kinder kinderzimmer kino kinos kirche
-kirchen kissen klassenzimmer kleid kleider kleidung klein kleine klingt koche kochen kochst kocht
-koeln koelner koennen koennt koennte koepfe koerper koerperteile koffer kollege kollegen kollegin
-kolleginnen komm komme kommen kommst kommt konjugiert konjugierte konzert konzerte kopf
-kopfschmerzen kosten kostet krank krankenhaeuser krankenhaus krause ku kuchen kueche kuechen
+hoefliche hoeflichen hoeflicher hoeflichkeitsform hoere hoeren hoerst hoert hol hole holen holst
+holt hose hosen hostel hotel hotels hun hundert hunderter hunger hungrig ich ie ieren ihn ihnen ihr
+ihre ihrem ihren ihrer ii im immer imperativ imperativs in infinitiv information informell ingenieur
+ingenieure ingenieurin ingenieurinnen ins inversion irak iran iss isst ist italien iː ja jacke
+jacken jahr jahre jahreszeit jahreszeiten januar jede jeden jeder jedes jemand jemandem jemanden
+jemen jensen jetzt job jonas jot jott juli jung juni kaese kaffee kaffees kalt kann kannst karte
+karten kartoffel kartoffeln kasse kassen kauf kaufe kaufen kaufhaeuser kaufhaus kaufst kauft kaya ke
+kei kein keine keinen keller kellner kellnerin kellnerinnen kennen kilo kind kinder kinderzimmer
+kino kinos kirche kirchen kissen klassenzimmer kleid kleider kleidung klein kleine klingt koche
+kochen kochst kocht koeln koelner koennen koennt koennte koepfe koerper koerperteile koffer kollege
+kollegen kollegin kolleginnen komm komme kommen kommst kommt konjugiert konjugierte konzert konzerte
+kopf kopfschmerzen kosten kostet krank krankenhaeuser krankenhaus krause ku kuchen kueche kuechen
 kuehlschraenke kuehlschrank kugelschreiber kurs kursmaterial kursraum kurz kurze kurzen kurzer
 kurzes kurzform lade laden laedt laender laesst laeufst lam lampe lampen land lang lange langer
 langes langsam laufen laut lautet le lebe leben lebensmittel lecker ledig lehnen lehrer lehrerin
@@ -83,63 +83,64 @@ moebelstueck moech moechte moechten moechtest moeglich moment monat monate monta
 morgens muede muell muender muessen muesst muet muetter muetze muetzen mund museen museum musik muss
 muster mutter na nach nachbar nachbarin nachbarinnen nachbarn nachgefragt nachmittag nachmittags
 nachname nachnamen nachricht nacht naechste name namen nase nasen nationalitaet ne neben nehme
-nehmen nehmt nein nen nennen nennt neu neue neuen neuer neun neunzehn neunzig neutral neutrales
-neutrum nicht nichts nie nimmt noch nomen nominativ normalerweise notwendigkeit novak november nudel
-nudeln null nummer nummern nur ob objekt obst oder oe oesterreich offiziell offizielle offiziellen
-oft ohne okay oktober oma omas onkel opa opas orangensaefte orangensaft ordnungszahl ordnungszahlen
-ort paar paaren packen papa papas papier papiere park parks partizip party partys passen passieren
-passt paul pause pausen pe per perfekt person personalpronomen personen plaene plaetze plan planen
-plant platz plural pluralform pluralnomen plus polen position possessivartikel post praedikat
-praefix praeposition praepositionen praesens praeteritum praxen praxis preis preise prima pronomen
-puenktlich pullover quittung quittungen ra rabatt rabatte radio raeumen ramos rathaeuser rathaus re
-reagieren rechnung rechnungen rechts regal regale regel regelmaessig regelmaessige regeln regen
-regnen regnet reihenfolge reis reise reisen reiseziel reklamation reklamieren ren reserviert
-reservierungskarte restaurant restaurants rezeption richten richtig richtung ro rock roecke rot
-rucksack rucksaecke ruecken rueckt rufe rufen rufst ruft ruhe rutscht sache sachen saefte saetze
-saft sag sagen sagt salat salate samstag samstage sara satz satzanfang satzende satzes satzklammer
-satzmelodie satznegation sch schal schals schalter scharfes sche schere scheren schickt schild schla
-schlaefst schlaeft schlafe schlafen schlafzimmer schliessen schluessel schmidt schnee schneien
-schneit schnell schoen schoenen schoener schokolade schon schraenke schrank schreiben schreibt
-schreibweise schritt schuh schuhe schule schulen schwarz schweiz schwester schwestern schwimme
-schwimmen schwimmst schwimmt sechs sechsunddreissig sechzehn sechzig sehe sehen sehr seid seidel
-sein seine seinem seit sekt selbst sen september setzen she sich sicher sicherheit sie sieben
-siebenundachtzig siebenundfuenfzig siebzehn siebzig siehst sieht silbe sind singular sitzt so socke
-socken soehne sofa sofas sofort sohn soll sollen sommer son sondern sonne sonnig sonntag sonntage
-spaet spaeter spanien spiegel spiel spiele spielen spielst spielt sport sportkurs sportverein
-sprache sprachen sprachkurs sprachschule spreche sprechen sprechende sprecht sprich sprichst spricht
-ss sser st staatsangehoerigkeit staatsangehoerigkeiten stadt stadtbibliothek staedte stamm
-stammvokal stand startort ste steckdose steckdosen stehe stehen stehst steht steig steigende steigt
-stelle stellen stellt stift stifte stockwerk stockwerke stolz strasse strassenbahn strassenbahnen
-student studenten studentin studentinnen stueck stuehle stuhl stunde stunden su subjekt
-subjektpronomen suchen sucht sudan super supermaerkte supermarkt suppe suppen surname szene tablette
-tabletten taetigkeit tafel tafeln tag tage tagesablauf tagesbeginn tageszeit tageszeiten tante
-tanten tanz tanze tanzen tanzt tasche taschen tasse tassen taxi taxis te technik tee tees teil
-teilen telefon telefone telefonieren telefoniert telefonnummer telefonnummern temperatur
-temperaturen tempo teppich teppiche ter termin termine terrasse terrassen teu teuer text thema they
-thomas ticket tickets tim tims tippen tisch tische tochter toechter toilette toiletten toll traegt
-trage tragen tragt traurig trennbar trennbare trennbaren trennbares treppe treppen trinke trinken
-trinkst trinkt tschuess tuer tueren tuerkei tun tut ue ueber ueberlegen uebernachtet uebungen uhr
-uhren uhrzeit uhrzeiten um umgangssprachlich umlaut umsteigen umwelt umzug unbekannt unbestimmte
-unbestimmtem unbestimmter unbetont und ungefaehr ungefaehre unregelmaessig unregelmaessige uns unser
-unsere unter unterhalten unterschrift unterwegs urlaub usa uː vaeter vater vau ver verabreden
-verabredet verabredung verabredungen verabschieden verabschiedet verb verben verbform verbindet
-verbteil verdoppelt vereinbaren vereinbart vergangenes vergangenheit vergleich vergleiche
-vergleichen verheiratet verkaeufer verkaeuferin verkaeuferinnen verkaufe verkaufen verkauft verkehr
-verkehrsmittel verlangen verlangt verliert vermieter verneinen verneint verneinung versichertenkarte
-versichertenkarten verspaetung verspaetungen verstanden verstehen versuch veː viel viele vielen
-vielleicht vier vierhundertachtzig viertel vierten vierundachtzig vierundneunzig vierzehn vierzig
-vogel vogt vokal vokale vokalwechsel vollen vollstaendig vollstaendiger vom von vor vorhaenge
-vorhang vorlieben vorn vorname vornamen vorsicht vorsilbe vorstellen waehlen waende wand wann war
-warm warte warten wartet warum was waschmaschine waschmaschinen wasser we weber wechsel wechsele
-wechseln wechselt wecker weg wegbeschreibung wege weh wehtun wehtut weibliche weigel weil wein weine
-weiss weisst weit weiter welche welchem welchen welcher welches wem wen wendung wendungen wenn wer
-werden wetter wg wichtige wie wieder wiedersehen will willkommen wind windig winter wir wird wissen
-wit wo woche wochen wochenende wochenenden wochenplan wochentag wochentage woerter woerterbuch
-woerterbuecher woertern woher wohin wohn wohne wohnen wohnort wohnorte wohnst wohnt wohnung
-wohnungen wohnungsanzeige wohnungsanzeigen wohnzimmer wolf wolke wolken wolkig wollen wort
-wortakzent worte worten wortende wortkarte wortnegation wuensche wuenschen wuerde wuerste wunsch
-wurde wurst ypsilon yː zaehlbares zaehne zahl zahlen zahn zehn zeigt zeit zeitangabe zeiten zentren
-zentrum zett zettel ziehe ziehen ziel ziffer zig zimmer zimmernummer zu zucker zuege zuerst zug
-zuges zugreise zuhause zuhoeren zum zumachen zur zurueck zusammen zusammengesetzten zwan zwanzig
-zwanzigste zwei zweifel zweite zweiten zweitens zweiter zweiundsiebzig zwoelf
+nehmen nehmt nein nen nennen nennt neu neue neuen neuer neun neunundsechzig neunzehn neunzig neutral
+neutrales neutrum nicht nichts nie nimmt noch nomen nominativ normalerweise notwendigkeit novak
+november nudel nudeln null nummer nummern nur ob objekt obst oder oe oesterreich offiziell
+offizielle offiziellen oft ohne okay oktober oma omas onkel opa opas orangensaefte orangensaft
+ordnungszahl ordnungszahlen ort paar paaren packen papa papas papier papiere park parks partizip
+party partys passen passieren passt paul pause pausen pe per perfekt person personalpronomen
+personen plaene plaetze plan planen plant platz plural pluralform pluralnomen plus polen position
+possessivartikel post praedikat praefix praeposition praepositionen praesens praeteritum praxen
+praxis preis preise prima pronomen puenktlich pullover quittung quittungen ra rabatt rabatte radio
+raeumen ramos rathaeuser rathaus re reagieren rechnung rechnungen rechts regal regale regel
+regelmaessig regelmaessige regeln regen regnen regnet reihenfolge reis reise reisen reiseziel
+reklamation reklamieren ren reserviert reservierungskarte restaurant restaurants rezeption richten
+richtig richtung ro rock roecke rot rucksack rucksaecke ruecken rueckt rufe rufen rufst ruft ruhe
+rutscht sache sachen saefte saetze saft sag sagen sagt salat salate samstag samstage sara satz
+satzanfang satzende satzes satzklammer satzmelodie satznegation sch schal schals schalter scharfes
+sche schere scheren schickt schild schla schlaefst schlaeft schlafe schlafen schlafzimmer schliessen
+schluessel schmidt schnee schneien schneit schnell schoen schoenen schoener schokolade schon
+schraenke schrank schreiben schreibt schreibweise schritt schuh schuhe schule schulen schwarz
+schweiz schwester schwestern schwimme schwimmen schwimmst schwimmt sechs sechsunddreissig sechzehn
+sechzig sehe sehen sehr seid seidel sein seine seinem seit sekt selbst sen september setzen she sich
+sicher sicherheit sie sieben siebenundachtzig siebenundfuenfzig siebzehn siebzig siehst sieht silbe
+sind singular sitzt so socke socken soehne sofa sofas sofort sohn soll sollen sommer son sondern
+sonne sonnig sonntag sonntage spaet spaeter spanien spiegel spiel spiele spielen spielst spielt
+sport sportkurs sportverein sprache sprachen sprachkurs sprachschule spreche sprechen sprechende
+sprecht sprich sprichst spricht ss sser st staatsangehoerigkeit staatsangehoerigkeiten stadt
+stadtbibliothek staedte stamm stammvokal stand startort ste steckdose steckdosen stehe stehen stehst
+steht steig steigende steigt stelle stellen stellt stift stifte stockwerk stockwerke stolz strasse
+strassenbahn strassenbahnen student studenten studentin studentinnen stueck stuehle stuhl stunde
+stunden su subjekt subjektpronomen suchen sucht sudan super supermaerkte supermarkt suppe suppen
+surname szene tablette tabletten taetigkeit tafel tafeln tag tage tagesablauf tagesbeginn tageszeit
+tageszeiten tante tanten tanz tanze tanzen tanzt tasche taschen tasse tassen taxi taxis te technik
+tee tees teil teilen telefon telefone telefonieren telefoniert telefonnummer telefonnummern
+temperatur temperaturen tempo teppich teppiche ter termin termine terrasse terrassen teu teuer text
+thema they thomas ticket tickets tim tims tippen tisch tische tochter toechter toilette toiletten
+toll traegt trage tragen tragt traurig trennbar trennbare trennbaren trennbares treppe treppen
+trinke trinken trinkst trinkt tschuess tuer tueren tuerkei tun tut ue ueber ueberlegen uebernachtet
+uebungen uhr uhren uhrzeit uhrzeiten um umgangssprachlich umlaut umsteigen umwelt umzug unbekannt
+unbestimmte unbestimmtem unbestimmter unbetont und ungefaehr ungefaehre unregelmaessig
+unregelmaessige uns unser unsere unter unterhalten unterschrift unterwegs urlaub usa uː vaeter vater
+vau ver verabreden verabredet verabredung verabredungen verabschieden verabschiedet verb verben
+verbform verbindet verbteil verdoppelt vereinbaren vereinbart vergangenes vergangenheit vergleich
+vergleiche vergleichen verheiratet verkaeufer verkaeuferin verkaeuferinnen verkaufe verkaufen
+verkauft verkehr verkehrsmittel verlangen verlangt verliert vermieter verneinen verneint verneinung
+versichertenkarte versichertenkarten verspaetung verspaetungen verstanden verstehen versuch veː viel
+viele vielen vielleicht vier vierhundertachtzig viertel vierten vierundachtzig vierundfuenfzig
+vierundneunzig vierzehn vierzig vogel vogt vokal vokale vokalwechsel vollen vollstaendig
+vollstaendiger vom von vor vorhaenge vorhang vorlieben vorn vorname vornamen vorsicht vorsilbe
+vorstellen waehlen waende wand wann war warm warte warten wartet warum was waschmaschine
+waschmaschinen wasser we weber wechsel wechsele wechseln wechselt wecker weg wegbeschreibung wege
+weh wehtun wehtut weibliche weigel weil wein weine weiss weisst weit weiter welche welchem welchen
+welcher welches wem wen wendung wendungen wenn wer werden wetter wg wichtige wie wieder wiedersehen
+will willkommen wind windig winter wir wird wissen wit wo woche wochen wochenende wochenenden
+wochenplan wochentag wochentage woerter woerterbuch woerterbuecher woertern woher wohin wohn wohne
+wohnen wohnort wohnorte wohnst wohnt wohnung wohnungen wohnungsanzeige wohnungsanzeigen wohnzimmer
+wolf wolke wolken wolkig wollen wort wortakzent worte worten wortende wortkarte wortnegation
+wuensche wuenschen wuerde wuerste wunsch wurde wurst ypsilon yː zaehlbares zaehne zahl zahlen zahn
+zehn zeigt zeit zeitangabe zeiten zentren zentrum zett zettel ziehe ziehen ziel ziffer zig zimmer
+zimmernummer zu zucker zuege zuerst zug zuges zugreise zuhause zuhoeren zum zumachen zur zurueck
+zusammen zusammengesetzten zwan zwanzig zwanzigste zwei zweifel zweite zweiten zweitens zweiter
+zweiundsiebzig zwoelf
 `.split(/\s+/).filter(Boolean));

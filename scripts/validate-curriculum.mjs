@@ -884,7 +884,7 @@ export const LEVELS = {
     // filing them under `verb-sein` to get them drawn is exactly the mislabelling review #6 named.
     // RULE 3 keeps holding: every grammar slug is still primary exactly once, and a topic that is
     // in neither list still fails.
-    practiceOnlyTopics: ['numbers'],
+    practiceOnlyTopics: ['numbers', 'personal-pronouns', 'verb-sein'],
     primaryOrder: PRIMARY_ORDER,
     situationKeywords: SITUATION_KEYWORDS,
     primaryPatterns: PRIMARY_PATTERNS_A11,

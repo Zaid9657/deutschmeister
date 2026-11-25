@@ -164,6 +164,8 @@ const CHECK_HOBBIES = ['Sport', 'Musik', 'Fußball', 'Kino', 'Lesen', 'Kochen', 
 
 export const CURRICULUM_A11 = {
   level: 'a1.1',
+  // An item of practice stands in one Lektion only (buildLesson.js).
+  oneLektionItems: true,
   code: 'A1.1',
   examKey: 'goethe_a1',
   examName: 'Start Deutsch 1',
@@ -1398,7 +1400,7 @@ export const CURRICULUM_A11 = {
         sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wir kommen morgen. Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
-      practiceRule: { topics: ['nouns-gender'], typedMin: 3 },
+      practiceRule: { topics: ['nouns-gender', 'numbers'], topicMin: { numbers: 3 }, typedMin: 3 },
     },
     {
       nr: 5,
@@ -1668,7 +1670,7 @@ export const CURRICULUM_A11 = {
         sample: 'Name: Lena Brandt / Kurs: A1 / Zimmer: 12 / Material: Wörterbuch, Heft / Farbe: grün',
       },
       links: { listeningExercise: null, readingOrder: 7 },
-      practiceRule: { topics: ['definite-articles', 'nouns-gender'], typedMin: 3 },
+      practiceRule: { topics: ['definite-articles', 'personal-pronouns', 'verb-sein'], topicMin: { 'personal-pronouns': 2, 'verb-sein': 1 }, typedMin: 3 },
     },
     {
       nr: 6,
@@ -1922,7 +1924,7 @@ export const CURRICULUM_A11 = {
         sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei drei drei acht eins. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
-      practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
+      practiceRule: { topics: ['indefinite-articles', 'verb-sein'], topicMin: { 'verb-sein': 3 }, typedMin: 3 },
     },
     {
       nr: 7,

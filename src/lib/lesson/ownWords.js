@@ -70,7 +70,8 @@ export const LANGUAGE_SHAPE = /^\p{Lu}\p{L}{2,}isch$/u;
 // English (its translations) is added by finalCheck.js. Left out: a word one letter from a German one (is, it, and, have:
 // those are spelling slips) and a word German uses too (Job, Party, cool, sorry).
 export const ENGLISH_SMALL = `the my your our their she they you please thank thanks yes would like don't dont know what where when how
-why that there with from this these those good goodbye morning afternoon evening hello need speak want very much many am`.split(/\s+/).filter((w) => w !== 'am');
+why that there with from this these those good goodbye morning afternoon evening hello need speak want very much many am
+he it here at born older younger to before after of for no not or but our free color colour every always never only because bonjour merci non oui avec huit hola gracias`.split(/\s+/).filter((w) => w !== 'am');
 export const ENGLISH_PLACES = `Albania Armenia Argentina Austria Australia Azerbaijan Belgium Bulgaria Bolivia Brazil Canada Switzerland Cameroon Colombia
 Serbia Cuba Cyprus Czechia Germany Djibouti Denmark Algeria Estonia Egypt Spain Ethiopia Finland France Greece Croatia Hungary Indonesia Ireland India Iraq
 Iceland Italy Jamaica Jordan Kenya Cambodia Kazakhstan Lebanon Lithuania Luxembourg Latvia Libya Morocco Moldova Madagascar Mongolia Mauritania Mexico
@@ -117,6 +118,24 @@ Werkzeug Buch Heft Bild Handy Telefon Smartphone Telefonbuch Notebook Kopftuch T
   pl: `Nachbarn Freunde Freundinnen Kollegen Kolleginnen Cousins Cousinen Tanten Verwandte Hausaufgaben Nudeln Pommes Chips Süßigkeiten Möbel Eltern Großeltern Geschwister Leute Ferien Kosten Lebensmittel Kleider Schuhe Socken Handschuhe Blumen Bücher Stifte Batterien Eier Tomaten
 Kartoffeln Bananen Äpfel Orangen Erdbeeren Trauben Getränke Brötchen Kekse Kinder Freunde Bilder Fotos Tickets Geschenke`,
 };
+// More everyday nouns (loop round 3, 2026-11-25): the second reader checks a determiner and its case against them.
+NOUN_GENDERS.der += ` Gegenstand Alkohol Empfang Stock Zugang Schlüsselbund Flur Eingang Ausgang Aufzug Raum Boden Himmel Berg Fluss Wald Strand Zoo Spielplatz Bahnhof Weg Hof Gast Besucher Mensch Junge Geburtsort Wohnort Grund Fehler Unfall Schmerz Kopf Bauch
+Rücken Arm Finger Zahn Hals Mund Traum Wunsch Plan Preis Rabatt Kauf Einkauf Text Satz Buchstabe Punkt Bleistift Kugelschreiber Feiertag Sommer Winter Herbst Frühling Regen Schnee Wind Braten Teig Grill Unterricht Deutschkurs
+Test Abschluss Verein Zug Bus Flug Stern Mond Ort Bereich Bildschirmschoner Schreibblock Notizblock Taschenrechner Adapter USB-Stick Stick Reisepass Personalausweis Wecker Ventilator Heizkörper Wasserhahn Müllsack Briefkasten
+Aschenbecher Kleiderschrank Nachttisch Esstisch Couchtisch Bürostuhl Hocker Sonnenschirm Grillabend Filmabend Kinoabend Spieleabend Restaurantbesuch Feierabend Sohn Papagei Hamster Wellensittich Basketball Volleyball Tanzkurs
+Sprachkurs Kochkurs Schwimmkurs Computerkurs Führerschein Kindergarten Einband Geschmack Geruch Apparat`;
+NOUN_GENDERS.die += ` Hilfe Ahnung Angst Idee Chance Lust Farbe Größe Zahl Uhrzeit Zeit Stadt Adresse Hausnummer Postleitzahl Telefonnummer Handynummer Gegend Natur Welt Fahrt Abfahrt Ankunft Haltestelle Station Bahn S-Bahn U-Bahn
+Straßenbahn Autobahn Ampel Ecke Kreuzung Etage Treppe Tür Wand Decke Familie Geburt Kleidung Nase Hand Schulter Haut Stimme Sprache Grammatik Vokabel Note Klasse Gruppe Besprechung Sitzung Kundin Krankheit Erkältung Grippe
+Krankenversicherung Arbeitserlaubnis Aufenthaltserlaubnis Anmeldung Bestellung Vorspeise Nachspeise Speisekarte Sonne Wolke Rose Tulpe Kunst Fotografie Nachricht Folge Show Wäsche Eintrittskarte Kinokarte Konzertkarte Schicht
+Frühschicht Spätschicht Nachtschicht Wasserflasche Trinkflasche Thermoskanne Lupe Landkarte Einkaufstasche Plastiktüte Tüte Büroklammer Schublade Lautstärke Steuer Miete Küchenmaschine Kopfhörerbox Box Playstation Konsole
+Gymnastik Wanderung Radtour Tour Freizeit Kultur Heimat Kindheit Zukunft Haltung Freude Liebe Pflege Erde Luft Nachspeise Suppenschüssel Geburtstagskarte Geburtstagstorte Uhr Brille Soße Sauce`;
+NOUN_GENDERS.das += ` Zelt Internet WLAN Passwort Konto Problem Thema Ergebnis Beispiel Wort Gespräch Interview Treffen Lied Konzert Festival Fußballspiel Tor Team Land Dorf Heimatland Geburtsdatum Datum Alter Gesicht Auge Ohr Haar Bein
+Knie Herz Blut Fieber Wetter Gewitter Feuer Licht Meer Ufer Tal Gebirge Stockwerk Erdgeschoss Gebäude Treppenhaus Schloss Bürgerbüro Jobcenter Finanzamt Gericht Gewürz Kochbuch Kinderbuch Seminar Praktikum Studium Diplom
+Trikot Parfum Ladekabel Netzteil Mousepad Whiteboard Headset Büromaterial Mittagessen Frühstücksei Spiegelei Butterbrot Müsli Schulheft Notizheft Malbuch Spielbrett Skateboard Schlagzeug Saxophon Akkordeon Fitnessstudio
+Einkaufszentrum Freibad Hallenbad Reisebüro Bürgeramt Standesamt Krankenzimmer Wartezimmer Kinderzimmer Esszimmer Arbeitszimmer Gästezimmer Besprechungszimmer Teil Ziel Reiseziel Grillfest Gartenfest Sommerfest Geburtstagsfest`;
+NOUN_GENDERS.pl += ` Haare Augen Schmerzen Nachrichten Bälle Gäste Töchter Söhne Brüder Mütter Väter Stühle Häuser Gläser Fahrräder Wörter Länder Städte Züge Schränke Töpfe Röcke Hüte Schals Ringe Hefte Uhren Taschen Lampen Regale Filme
+Spiele Lieder Pflanzen Kerzen Würstchen Tische Computer Laptops Handys Hobbys Partys Babys Autos Hunde Katzen Vögel Fische Bäume Rosen Tulpen Karten Kinokarten Eintrittskarten Kopfhörer Gummistiefel Turnschuhe Sportschuhe
+Fußballschuhe Hausschuhe Krimis Romane Comics Zeitungen Briefe Mails Rätsel Puzzles Hausaufgaben Gardinen Teller Tassen Löffel Gabeln Servietten`;
 // Of these, what German names without an article (food, drink, stuff, sports, money).
 export const OWN_MASS_NOUNS = `Wein Saft Sekt Schnaps Espresso Cappuccino Kakao Eistee Eiskaffee Milchkaffee Früchtetee Kräutertee Pfefferminztee Reis Käse Quark Joghurt Honig
 Zucker Pfeffer Senf Essig Ketchup Fisch Schinken Speck Pudding Spinat Knoblauch Kohl Brokkoli Sellerie Müll Klebstoff Schmuck Urlaub Besuch Sport Kaffee Tee Seife Creme Zahnpasta
@@ -145,5 +164,6 @@ vegetables fruit breakfast lunch dinner house car bike table chair pencil scisso
 sisters brother brothers parents uncle aunt grandma grandpa grandmother grandfather husband wife daughter daughters child children family teacher nurse
 driver engineer waiter music swimming reading cooking dancing singing running garden gardening painting photography weekend week evening birthday present
 presents shoes dress shirt trousers perfume chocolate money printer desk screen password room office kitchen bathroom hungry thirsty tired married happy
-yellow white black grey gray purple people neighbour neighbours neighbor neighbors cousins nephew niece guest guests colleague colleagues boss
+yellow white black grey gray purple people neighbour neighbours neighbor neighbors cousins nephew niece guest guests colleague colleagues mirror bicycle cupboard wardrobe shelf carpet curtain fridge oven spoon fork knife plate bottle pillow blanket towel soap brush scarf gloves coat skirt sweater necklace earrings newspaper magazine
+letter envelope weather soup football march pencil sharpener eraser ruler grandson granddaughter boss
 train plane station ticket-office doctor hospital shop store street city country town language languages name's`.split(/\s+/).filter((w) => !['boss', 'train', 'doctor', 'cousins', 'city'].includes(w));

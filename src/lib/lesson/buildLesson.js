@@ -900,6 +900,15 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     ];
     for (let stage = 0; stage < LADDER.length; stage += 1) {
       const relax = LADDER[stage];
+      // 0. THE CAN-DO SHARE (`practiceRule.topicMin`, loop round 3, 2026-11-25): L4–L6 drew almost nothing but article
+      //    drills, so prices, „Wo ist …?“ and „Wann ist die Pause?“ were never practised. A Lektion's named
+      //    topics take the seats it reserves for them first (a price drill spends the lemma budget the article drills would).
+      for (const [topic, min] of Object.entries((rule && rule.topicMin) || {})) {
+        const own = ranked.filter((it) => it.topic === topic);
+        const here = () => [...chosen.values()].filter((it) => it.topic === topic).length;
+        fill(own.filter(isTypedItem), relax, () => here() >= min, stage);
+        fill(own, relax, () => here() >= min, stage);
+      }
       // 1. the primary slug's share, REAL producers and typed items first. The
       //    slug on an item is a routing label; `drillsSlug` reads what the item
       //    makes the learner produce. Attempt 1 used to take whichever labelled
@@ -1069,6 +1078,10 @@ export function planPractice(curriculum, pool, attempt = 1, { memo = true } = {}
       priorByNr.set(nr, seen);
     }
   }
+  // AN ITEM BELONGS TO ONE LEKTION (`curriculum.oneLektionItems`, loop round 3): what another Lektion drew in an earlier attempt,
+  // or was written for another Lektion (`extra-a11-l06-…`), is not drawn here while this Lektion's own slice can fill the seven.
+  const drawnElsewhere = (nr) => new Set(curriculum?.oneLektionItems ? [...priorByNr].filter(([other]) => other !== nr).flatMap(([, ids]) => [...ids]) : []);
+  const writtenElsewhere = (nr) => (curriculum?.oneLektionItems ? new Set(poolItems(pool).filter((it) => { const m = String(it.id).match(/^extra-\w+-l(\d+)-/); return m && Number(m[1]) !== nr; }).map((it) => it.id)) : new Set());
 
   const lektionen = [...((curriculum && curriculum.lektionen) || [])].sort((a, b) => a.nr - b.nr);
   const plan = new Map();
@@ -1091,7 +1104,7 @@ export function planPractice(curriculum, pool, attempt = 1, { memo = true } = {}
         primarySlug: lektion.primarySlug || ((lektion.practiceRule || {}).topics || [])[0],
         ownTerms,
         earlierTerms: new Set(earlierTerms),
-        usedIds: new Set(usedIds),
+        usedIds: new Set([...usedIds, ...drawnElsewhere(lektion.nr), ...writtenElsewhere(lektion.nr)]),
         previousAnswerLemmas,
         priorAttemptIds: priorByNr.get(lektion.nr) || new Set(),
         report,

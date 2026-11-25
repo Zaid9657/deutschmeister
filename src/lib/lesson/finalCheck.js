@@ -26,8 +26,11 @@ import { OWN_MASS_NOUNS, ALSO_GERMAN, CITIES, COUNTRIES, DRINKS, ENGLISH_NOUNS, 
 import { certainFault, nearestFrame, pronounSwap } from './certainFault.js';
 import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.js';
 import { COUNTRY_STEMS } from './countries.js';
+import { reader } from './clause.js';
+import { asked, meaning } from './taskMeaning.js';
+import { repairs, smallWordsKnown } from './oneRepair.js';
 import { asCostQuestion, asHaveQuestion, asTimeQuestion, withoutAndYou, asWell, nounForPronoun, withoutAttribute, withoutDegree, withoutOccasion, withoutParty } from './answerRewrites.js';
-import { addressFault, counterQuestion, courtesyOnly, withoutAsking, withoutCourtesy, withoutDemonstrative, withoutSmallWord } from './answerShapes.js';
+import { addressFault, counterQuestion, registerOf, courtesyOnly, withoutAsking, withoutCourtesy, withoutDemonstrative, withoutSmallWord } from './answerShapes.js';
 
 // German letter names, so a spelled name is never sound-only (speech.js: every sound has text too).
 const LETTER = { A: 'A', B: 'Be', C: 'Ce', D: 'De', E: 'E', F: 'Ef', G: 'Ge', H: 'Ha', I: 'I', J: 'Jot', K: 'Ka', L: 'El', M: 'Em', N: 'En', O: 'O', P: 'Pe', Q: 'Ku', R: 'Er', S: 'Es', T: 'Te', U: 'U', V: 'Vau', W: 'We', X: 'Ix', Y: 'Ypsilon', Z: 'Zett', Ä: 'Ä', Ö: 'Ö', Ü: 'Ü', ß: 'Eszett' };
@@ -100,16 +103,19 @@ export function readingsIn(lexicon, noun) {
   return ownReadings(noun);
 }
 // A bare taught noun after a preposition („zu Kino“, „in Büro“): only a mass noun, a plural, a time or a fixed phrase stands bare.
+const BARE_SET = foldedSet(['zu Besuch', 'zu Mittag', 'in Urlaub', 'auf Reise', 'in Arbeit', 'auf Arbeit', 'in Liebe', 'zu Wort', 'in Pflege', 'auf Suche', 'zu Fuß', 'in Not', 'in Form', 'in Gefahr', 'zu Hilfe', 'auf Schicht', 'in Teilen']);
 const bareNounFault = (lexicon) => (prep, noun) => {
   const w = fold(noun);
-  const r = lexicon?.genders?.get?.(w);
+  const r = lexicon?.genders?.get?.(w) || (['in', 'zu', 'auf', 'an'].includes(prep) && !BARE_SET.has(`${prep} ${w}`) && !OWN_MASS.has(w) ? OWN_NOUNS.get(w) : null);
   if (!r || r.includes('pl') || MASS.has(w) || lexicon?.bareAfter?.has?.(`${prep} ${w}`) || lexicon?.names?.has?.(w)) return false;
   if (DAYS.includes(w) || MONTHS.includes(asciiUmlauts(w)) || DAY_PARTS.includes(w) || ['uhr', 'hause', 'beruf', 'deutsch', 'englisch', 'musik', 'sport', 'arbeit', 'freizeit'].includes(w)) return w === 'arbeit' && prep === 'zu';
   if (OWN_KIND.place.has(w) || OWN_KIND.language.has(w) || w.length < 3) return false;
   return true;
 };
 /** A determiner that does not fit its noun anywhere in a typed answer, an own noun's included. */
-export const articleFaultIn = (lexicon, text) => {
+export const articleFaultIn = (lexicon, typed) => {
+  // („Was für ein Gegenstand ist das?“: „für“ asks for no case here.)
+  const text = String(typed).replace(/(?<!\p{L})(was)\s+für\s+(?=ein)/giu, '$1 ');
   const opts = { readings: (n) => readingsIn(lexicon, n), bareFault: bareNounFault(lexicon) };
   return nounPhraseFault(text, opts) || subjectNumberFault(text, opts)
     || phraseFault(text, { readings: opts.readings, isVerbNoun: (n) => Boolean(lexicon?.verbs?.has?.(fold(n))), isLanguage: (n) => OWN_KIND.language.has(fold(n)),
@@ -2537,7 +2543,10 @@ function taskFault(turn, text) {
  */
 export function wrongReason(turn, value) {
   const core = typedCore(turn, value);
-  return verifiedResult(core) ? null : reasonFor(turn, value, core);
+  if (verifiedResult(core)) return doubted(turn, value, core) ? READ_FAULT[secondReading(turn, value).say] || null : null;
+  const reason = reasonFor(turn, value, core);
+  if (reason && !readInFull(turn, value, reason)) return reason;
+  return (secondReading(turn, value).say === 'yes' ? null : readFault(turn, value));
 }
 
 function reasonOf(turn, value) {
@@ -2591,6 +2600,8 @@ function nameFault(turn, value, text) {
       if (!next) return 'missing';
       // „Ich bin Frau Haddad.“ names the person; „Ich bin die Salma“ and „Ich bin aus Syrien“ are other sentences.
       if (/^(?:frau|herr)$/i.test(next)) return raw[o.length + 1] ? null : 'missing';
+      // („Ich bin die Layla.“ is how many say it.)
+      if (/^(?:die|der)$/i.test(next) && raw[o.length + 1] && isName(turn, raw[o.length + 1])) return null;
       if (!isName(turn, next)) return 'name';
       const rest = raw.slice(o.length + 1);
       if (rest.length && openings.some((x) => x.every((w, i) => fold(rest[i] || '') === w))) return 'name';
@@ -2901,11 +2912,127 @@ function otherWordTyped(turn, value, result) {
   return w.some((x, i) => i > 0 && unknown.has(x.replace(/[.,!?;:]+$/, '')) && /^\p{Ll}/u.test(x) && DET_WORD.test(plainOf(w[i - 1])) && !/[.,!?;:]$/.test(w[i - 1]) && (/[.,!?;:]$/.test(x) || !w[i + 1] || !/^\p{Lu}/u.test(w[i + 1])) && !/(?:e|en|er|es|em)$/.test(plainOf(x)));
 }
 
+// ——— The second reader (loop round 3, 2026-11-25): an answer no frame verifies and no rule faults is read as a sentence ———
+const WHAT_ONE_NAMES = new Set(['besuchen', 'treffen', 'sehen', 'kennen', 'anrufen', 'lieben', 'fragen', 'einladen', 'kennenlernen', 'nennen', 'abholen', 'vermissen', 'heißen']);
+const massWord = (w) => { const x = fold(w); for (let i = 0; i <= x.length - 3; i += (i ? 1 : 3)) if (OWN_MASS.has(x.slice(i)) || MASS.has(x.slice(i))) return true; return false; };
+const contexts = new WeakMap();
+function readingContext(lexicon) {
+  if (!contexts.has(lexicon)) {
+    contexts.set(lexicon, {
+      readings: (n) => readingsIn(lexicon, n),
+      isName: (w) => Boolean(lexicon?.names?.has?.(fold(w))),
+      isPlace: (w) => OWN_KIND.place.has(fold(w)) || OWN_KIND.place.has(fold(w).replace(/-/g, ' ')),
+      isLanguage: (w) => OWN_KIND.language.has(fold(w)),
+      isJob: (w) => OWN_KIND.job.has(fold(w)),
+      placeArticle: (w) => (COUNTRY_ARTICLE[fold(w)] ? 'always' : COUNTRY_MAY_HAVE[fold(w)] ? 'may' : null),
+      isMass: massWord,
+      isFood: (w) => ['food', 'drink'].includes(taughtKind(w) || ownKind(fold(w))),
+    });
+  }
+  return contexts.get(lexicon);
+}
+/** The answer as read: its sentences, or null where a word or its place cannot be read. */
+function readAnswer(turn, text) {
+  if (!turn.lexicon) return null;
+  return reader(text, { ...readingContext(turn.lexicon), partner: turn.partner }).read();
+}
+// A capital word no list knows is a name or a place where one stands („mein Bruder Andrij“, „nach Nordenham“), never what one buys.
+function ownWordFits(sentences, names) {
+  return sentences.every((s) => s.clauses.every((c) => {
+    if (c.around) return true;
+    if (c.frag) return names || c.elems.every((e) => e.kind !== 'own');
+    const own = (n) => n && (n.kind === 'own' || (n.items || []).some((x) => x.kind === 'own'));
+    if (own(c.acc) && !WHAT_ONE_NAMES.has(c.lemma)) return false;
+    if (own(c.dat)) return false;
+    if (own(c.pred) && c.subj?.head === 'ich' && c.lemma === 'sein' && !names && !/(?:er|erin|ese|esin)$/u.test(c.pred.head)) return false;
+    if (own(c.pred) && !(['heißen'].includes(c.lemma) || ['ich', 'name', 'vorname', 'nachname', 'familienname', 'wohnort', 'ziel', 'heimat', 'hier'].includes(c.subj?.head) || (['er', 'sie', 'ich', 'wir'].includes(c.subj?.head) && /(?:er|erin|ese|esin|in|e)$/u.test(c.pred.head)) || (c.lemma === 'sein' && c.subj?.kind === 'np'))) return false;
+    return true;
+  }));
+}
+const reading = { turn: null, value: null, out: null };
+/** { say: 'yes' | a fault | null, unknown: [words no list knows] } */
+export function secondReading(turn, value) {
+  if (reading.turn === turn && reading.value === value) return reading.out;
+  // A sentence the reader trips over is one it cannot judge: the screen never breaks on an answer (tests call `readOnce` bare).
+  let out;
+  try { out = readOnce(turn, value); } catch { out = { say: null, unknown: [] }; }
+  Object.assign(reading, { turn, value, out });
+  return out;
+}
+const OWN_NOUN_KINDS = new Set(['thing', 'need', 'buy', 'wish', 'hobby', 'did', 'routine', 'photo', 'guests', 'travel', 'origin', 'live', 'job', 'message', 'name', 'accept', 'decline']);
+export function readOnce(turn, value) {
+  const none = { say: null, unknown: [] };
+  if (!turn.lexicon || turn.spell || turn.listen) return none;
+  const text = spelledOut(westernDigits(value), turn.lexicon).trim();
+  if (text.length > 160 || !/\p{L}/u.test(text)) return none;
+  const sentences = readAnswer(turn, text);
+  if (!sentences) return none;
+  if (!ownWordFits(sentences, Boolean(turn.ownName || turn.parts || turn.slot === 'name'))) return { ...none, sentences };
+  const lexicon = turn.lexicon;
+  const clauses = sentences.flatMap((x) => x.clauses);
+  const nouns = (c) => [c.subj, c.acc, c.pred, c.dat, ...(c.elems || []).flatMap((e) => (e.np ? [e.np] : e.combos ? [e] : []))].filter(Boolean);
+  const unknown = [...new Set(clauses.flatMap((c) => nouns(c).flatMap((n) => (n.kind === 'own' || n.named ? [] : n.unknown || []))))];
+  const env = {
+    register: registerOf(turn),
+    gendersOf: (things) => [...new Set(things.flatMap((t) => readingsIn(lexicon, t.charAt(0).toLocaleUpperCase('de') + t.slice(1)) || []))],
+    kindOf: (h) => { const k = taughtKind(h) || ownKind(h); return k === 'drink' || k === 'food' ? k : k || (lexicon.genders?.has?.(h) ? 'thing' : null); },
+    known: (h) => Boolean(readingsIn(lexicon, h)),
+    person: (h, n) => n?.kind === 'name' || n?.kind === 'own' || n?.title || TAUGHT_KIND.get(h) === 'family' || OWN_KIND.job.has(h) || /^(?:freunde?|freundin(?:nen)?|nachbar(?:n|in|innen)?|kolleg(?:e|en|in|innen)|leute|gäste|verwandte|bekannte|oma|opa|onkel|tante|cousins?|cousine|neffe|nichte|partner(?:in)?|chef(?:in)?|lehrer(?:in|innen)?|mitbewohner(?:in)?|mitschüler|klasse|team|alle|viele|niemand|jemand|wir|sie|er|personen|menschen|jungs|mädchen|schwager|schwägerin|enkel|großeltern|grosseltern|kommilitonen|beide|familienmitglieder|deutschkurs|kurs|nachbarsfamilie|freundinnen|mama|papa|baby|hund|band)$/u.test(h),
+    partnerNames: wordsOf(String(turn.partner || '')).map(fold).filter((w) => !['frau', 'herr'].includes(w)),
+    isLanguage: (h) => OWN_KIND.language.has(h),
+    dayExists: (t) => !t.said || isDate(/\d{4}$/.test(t.said) ? t.said : `${t.said} 2000`),
+    isDate: (t) => Boolean(t.year && t.said) && isDate(t.said),
+    anyThing: (c) => [...new Set([c.subj, c.acc, c.pred, ...(c.elems || []).map((e) => e.np)].filter(Boolean).flatMap((n) => n.heads || [n.head]))],
+    nearMiss: (c) => { const p = fold(wordsOf(text.replace(/[.,!?;:]/g, ' ')).find((w) => participleOf(w)) || ''); return Boolean(p) && Boolean(c.perfect) && !lexicon.said?.has?.(p) && [...(lexicon.perfect || []), 'gespielt', 'gekocht', 'gehört'].some((x) => x !== p && levenshtein(x, p) === 1) && !lexicon.verbs?.has?.(p); },
+  };
+  const m = meaning(turn, sentences, env);
+  // A noun no list knows is welcome where the answer names something of the learner's own; elsewhere it is not praised.
+  if (m.say === 'yes' && unknown.length && !OWN_NOUN_KINDS.has(asked(turn)?.kind)) return { say: null, unknown, sentences };
+  return { say: m.say, unknown, sentences, small: clauses.some((c) => nouns(c).some((n) => n.small) || (c.elems || []).some((e) => e.small) || (c.lemma === 'sprechen' && (c.adj || []).some((a) => a.words.some((w) => OWN_KIND.language.has(w))))) };
+}
 /** CORRECT, TYPO, WRONG or BEYOND (the third outcome) for one typed answer: a WRONG names its fault (`wrongReason`). */
 export function typedResult(turn, value) {
   const result = typedCore(turn, value);
-  if (verifiedResult(result)) return madeUpWord(turn, value) || foreignWord(turn, value) || otherWordTyped(turn, value, result) ? BEYOND : result;
-  return reasonFor(turn, value, result) ? RESULT.WRONG : BEYOND;
+  if (verifiedResult(result)) return !doubted(turn, value, result) ? result : READ_FAULT[secondReading(turn, value).say] ? RESULT.WRONG : BEYOND;
+  const reason = reasonFor(turn, value, result);
+  if (reason && !readInFull(turn, value, reason)) return RESULT.WRONG;
+  return readResult(turn, value);
+}
+// A fault found by lining the answer up with another one gives way where the reader reads every word of it and it answers the
+// turn („Ich habe Hunger, ja.“, „Sie kommt aus Damaskus und lebt jetzt in Bonn.“). In 8,900 blind answers no wrong one was read so.
+const readInFull = (turn, value, reason) => { if (['english', 'address'].includes(reason)) return false; const r = secondReading(turn, value); return r.say === 'yes' && !r.unknown.length; };
+const doubted = (turn, value, result) => madeUpWord(turn, value) || foreignWord(turn, value) || otherWordTyped(turn, value, result);
+// The faults the second reader is sure of: another task, another thing, a pronoun of another gender, the other form of address.
+const READ_FAULT = { task: 'task', word: 'word', pronoun: 'word', address: 'address', sentence: 'sentence', missing: 'missing', case: 'case', ending: 'ending' };
+function readResult(turn, value) {
+  const r = secondReading(turn, value);
+  if (r.say === 'yes') {
+    const text = spelledOut(westernDigits(value), turn.lexicon);
+    if (foreignWord(turn, value) || placeFault(text) || (!turn.ownName && articleFaultIn(turn.lexicon, text)) || sequenceFault(turn, value) === 'extra') return BEYOND;
+    return r.small || smallNoun(turn, value) || /^\p{Ll}/u.test(String(value).trim()) ? RESULT.TYPO : RESULT.CORRECT;
+  }
+  return readFault(turn, value) ? RESULT.WRONG : BEYOND;
+}
+/** The fault the second reader names: its own, or the one change after which it reads the answer (`oneRepair.js`). */
+function readFault(turn, value) {
+  const r = secondReading(turn, value);
+  if (READ_FAULT[r.say]) return READ_FAULT[r.say];
+  // (A reading of fragments alone is none: „Mein Heft grün.“, „Geben es hier Suppe?“)
+  const fragments = r.sentences && r.sentences.every((x) => x.clauses.every((c) => c.around || c.frag)) && r.sentences.some((x) => x.clauses.some((c) => c.frag));
+  if ((r.sentences && !fragments) || !turn.lexicon || turn.spell || turn.listen) return null;
+  if (repaired.turn === turn && repaired.value === value) return repaired.fault;
+  const fault = oneRepair(turn, spelledOut(westernDigits(value), turn.lexicon).trim(), fragments);
+  Object.assign(repaired, { turn, value, fault });
+  return fault;
+}
+const repaired = { turn: null, value: null, fault: null };
+function oneRepair(turn, text, fragments) {
+  if (text.length > 110 || !smallWordsKnown(text, (w) => knownWord(w, turn.lexicon))) return null;
+  for (const { text: t, fault } of repairs(text, { fragments, isPlace: (w) => OWN_KIND.place.has(fold(w)) })) {
+    const r = readOnce(turn, t);
+    if (r.say === 'yes' && !articleFaultIn(turn.lexicon, t) && !placeFault(t)) return fault;
+  }
+  return null;
 }
 
 // A gap's BEYOND („Ich habe … gesprochen“, a participle the Lektion does not teach) still yields to a fault of form the
@@ -3081,6 +3208,8 @@ function apart(turn, text) {
   return null;
 }
 
+// „Gern ich komme mit.“, „Natürlich ich habe Zeit.“: after an adverb without a comma the verb comes first.
+const ADVERB_SUBJECT = /(?:^|[.!?]\s+)(?:gern|gerne|natürlich|leider|vielleicht|dann|heute|morgen|jetzt|gestern|meistens|normalerweise|manchmal|oft|morgens|abends)\s+(?:ich|du|wir|er)\s+\p{Ll}/iu;
 /** The result and the path that verified it (`verifiedRule`); the early kinds (a name, a heard number, a message) by kind. */
 function coreRule(turn, value) {
   if (englishIn(turn, value)) return [RESULT.WRONG, 'english'];
@@ -3094,6 +3223,7 @@ function coreRule(turn, value) {
   // A verified answer may still be in the other form of address, or hold a determiner that fits no reading of its noun in
   // an open gap („mit mein Freund“, „den Zeitung“).
   if (addressFault(String(value), turn)) return [RESULT.WRONG, 'address'];
+  if (ADVERB_SUBJECT.test(text)) return [RESULT.WRONG, 'order'];
   const placed = placeFault(text) || expletiveAgreement(text, turn.lexicon);
   if (placed) return [RESULT.WRONG, placed];
   // … a slip that is another person of the verb („Fahrt der Zug …?“: „fahrt“ is ihr, „fährt“ er; Claude score, 2026-11-25), …
