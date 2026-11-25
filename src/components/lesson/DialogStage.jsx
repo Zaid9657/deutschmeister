@@ -47,16 +47,22 @@ export function AudioSourceBadge({ recorded, className = '' }) {
   );
 }
 
+// A new popover is measured this far (px) left of its place: there a box widens no page. Measured in its
+// place, a wide one made a phone keep the wider page after the popover had moved.
+const PARKED = 4000;
+
 /** The open gloss under its word, moved sideways before the first paint so it never leaves the screen. */
 function GlossPopover({ id, entry, lang }) {
   const ref = useRef(null);
   useLayoutEffect(() => {
-    const shift = popoverShift(ref.current.getBoundingClientRect(), document.documentElement.clientWidth);
-    if (shift) ref.current.style.transform = `translateX(${shift}px)`;
+    const { left, right } = ref.current.getBoundingClientRect();
+    const shift = popoverShift({ left: left + PARKED, right: right + PARKED }, document.documentElement.clientWidth);
+    ref.current.style.transform = `translateX(${shift}px)`;
   }, []);
   return (
     <span
       ref={ref}
+      style={{ transform: `translateX(-${PARKED}px)` }}
       id={id}
       role="tooltip"
       onClick={(e) => e.stopPropagation()}

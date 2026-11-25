@@ -29,7 +29,9 @@ test('a gloss popover stays on the screen at every place of its word (44 of 473 
   }
   const dialog = read('src/components/lesson/DialogStage.jsx');
   // Before the first paint, so the page never grows sideways; the only property that moves is the transform.
-  assert.match(dialog, /useLayoutEffect\(\(\) => \{\s*const shift = popoverShift\(ref\.current\.getBoundingClientRect\(\), document\.documentElement\.clientWidth\);\s*if \(shift\) ref\.current\.style\.transform/);
+  // It is measured left of the screen: measured in its place, a wide one left the phone's page wider.
+  assert.match(dialog, /useLayoutEffect\(\(\) => \{[\s\S]{0,120}?popoverShift\(\{ left: left \+ PARKED, right: right \+ PARKED \}, document\.documentElement\.clientWidth\);\s*ref\.current\.style\.transform = /);
+  assert.match(dialog, /style=\{\{ transform: `translateX\(-\$\{PARKED\}px\)` \}\}/);
   assert.match(dialog, /\{isOpen && <GlossPopover id=\{popoverId\} entry=\{entry\} lang=\{lang\} \/>\}/);
 });
 
