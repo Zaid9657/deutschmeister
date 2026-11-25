@@ -595,3 +595,11 @@ the placement result) while only Lektion 1 is. Their other findings, and what th
 Still open (round 3): the rest of BEYOND (about a fifth of right answers), the practice draw (articles in L4–L6, items in two Lektionen, no
 prices in practice), structures graded before their notice (yes/no questions, mein/meine, keinen), the W/V example of Lektion 1 in three
 languages, three stilted lines (L2, L6, L12) before the recording.
+
+**Evidence (round 2).** Whole suite on an LF copy before the last pin fixes: 3,247 tests, 23 failures: the 16 known path-separator ones and 7
+pins of this round's own rules, fixed and re-run green (final-check 38/38, final-check-natural 11/11, checkpoint 81/81, curricula 82/82,
+answer-rewrites 9/9, course-assessment-claims, guided-rollout, lesson-pool-rules, a11-final-test, exams, lesson-screens, a11-finish,
+course-audio). Validators A1.1 and A1.2 exit 0; both bank gates pass; eslint clean; byte-identical copies. Browser on built copies at 390 px:
+12 Lektionen in English and 12 in German to the recap, 12 final checks with wrong and unrelated answers (0 notes), the four checkpoints passed,
+failed and retaken (first option throughout: 12–18 %), the final test four ways, course home, review, completion and certificate: 457 screens
+around the Lektionen, 0 page errors, 0 failed requests. The round-2 corpora are in `blind-corpus-2026-11-25-round2/` (in sample from now on).
