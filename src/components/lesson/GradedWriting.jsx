@@ -124,17 +124,24 @@ const readDraft = (key) => {
 // its assessment are kept beside the draft — which is still dropped on submit — and come back with
 // the assessment shown and reported upward, without a second evaluate-writing request, until the
 // learner moves on (WritingStage's Next) or opens the improved-version editor. A checkpoint keeps
-// none: each attempt there is a new one. Only an AI assessment is kept, never the form-check fallback.
+// none: each attempt there is a new one. A guest's form check is kept too (2026-11-25: a refresh after
+// Submit emptied the guest's text and closed Next): no AI runs for a guest, so nothing better can
+// follow. A signed-in form-check fallback is not kept: its text stays as the draft instead, ready to
+// hand in for a real assessment.
 const assessedKeyOf = (key) => key.replace(/^dm_writing_draft:/, 'dm_writing_assessed:');
+const keepsOutcome = (key, outcome) => outcome?.scored === true
+  || (outcome?.usedFallback === true && key.startsWith('dm_writing_draft:guest:'));
 const readAssessed = (key) => {
   const d = safeGetJSON(assessedKeyOf(key), null);
-  return d && typeof d === 'object' && d.outcome?.scored === true
+  return d && typeof d === 'object' && keepsOutcome(key, d.outcome)
     && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
 };
 
-/** Drop a lesson's kept assessment — the learner has moved on past the writing stage. */
+/** Drop a lesson's kept assessment and draft — the learner has moved on past the writing stage. */
 export function forgetAssessedWriting(userId, taskKey, lektionId) {
-  safeRemove(assessedKeyOf(draftKey(userId, taskKey, lektionId)));
+  const key = draftKey(userId, taskKey, lektionId);
+  safeRemove(assessedKeyOf(key));
+  safeRemove(key);
 }
 
 // The feedback reached the screen but not the learner's record (evaluate-writing answered
@@ -227,9 +234,12 @@ export default function GradedWriting({ task, lektionId = null, onResult, onPend
 
   const finish = (r, noteText) => {
     safeRemove(key);
-    // A lesson keeps its AI-assessed text until the learner moves on (see readAssessed).
-    if (keepAssessed && r.scored) {
+    // A lesson keeps its handed-in text until the learner moves on (see readAssessed): with its result,
+    // or, after a signed-in fallback, as a draft again.
+    if (keepAssessed && keepsOutcome(key, r)) {
       safeSetJSON(assessedKeyOf(key), { text, fields, outcome: r, note: noteText || null, savedAt: Date.now() });
+    } else if (keepAssessed) {
+      safeSetJSON(key, { text, fields, savedAt: Date.now() });
     }
     setOutcome(r);
     setNote(noteText || null);

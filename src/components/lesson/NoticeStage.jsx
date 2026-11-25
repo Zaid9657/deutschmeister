@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
-import { LATIN_RUN } from '../../lib/lesson/bidi.js';
+import { latinMatches } from '../../lib/lesson/bidi.js';
 
 /** **bold** → <strong>, *italic* → <em>. The curriculum's notice body is plain
  * text with at most those two marks, so nothing here needs a markdown parser
@@ -31,10 +31,10 @@ export function inline(text) {
 export function isolateLatin(text) {
   const out = [];
   let at = 0;
-  for (const m of text.matchAll(LATIN_RUN)) {
+  for (const m of latinMatches(text)) {
     if (m.index > at) out.push(text.slice(at, m.index));
-    out.push(<bdi key={m.index} dir="ltr" lang="de" className={m[0].length > 24 ? undefined : 'whitespace-nowrap'}>{m[0]}</bdi>);
-    at = m.index + m[0].length;
+    out.push(<bdi key={m.index} dir="ltr" lang="de" className={m.run.length > 24 ? undefined : 'whitespace-nowrap'}>{m.run}</bdi>);
+    at = m.index + m.run.length;
   }
   if (at < text.length) out.push(text.slice(at));
   return out;

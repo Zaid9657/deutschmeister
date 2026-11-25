@@ -44,6 +44,7 @@ import SessionBreak from '../../components/lesson/SessionBreak.jsx';
 import OtterSays from '../../components/illustrations/OtterSays.jsx';
 import FullPageRedirect from '../../components/FullPageRedirect.jsx';
 import { SESSION_COUNT, sessionCompleted, sessionOf } from '../../lib/lesson/sessions.js';
+import useKeepFocus from '../../hooks/useKeepFocus.js';
 
 import { sceneStep, SCENE_PHASES } from '../../lib/lesson/buildGuided.js';
 import { stageSteps } from '../../lib/lesson/stageReach.js';
@@ -383,13 +384,15 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
 
   // FOCUS ON EVERY NEW SCREEN (2026-10 review): a new item or stage moves keyboard and screen-reader
   // focus to its heading, so a learner hears where they are instead of staying on a button that no
-  // longer exists. An item that focused its own answer field already (typed items do) keeps it.
+  // longer exists. An item that focused its own answer field already (typed items do) keeps it, and so
+  // does the Wortfeld's group heading (an h3).
   const bodyRef = useRef(null);
+  useKeepFocus(bodyRef);
   useEffect(() => {
     const root = bodyRef.current;
     if (!root) return;
     const active = typeof document !== 'undefined' ? document.activeElement : null;
-    if (active && root.contains(active) && /^(INPUT|TEXTAREA)$/.test(active.tagName)) return;
+    if (active && root.contains(active) && /^(INPUT|TEXTAREA|H3)$/.test(active.tagName)) return;
     const heading = root.querySelector('h1, h2');
     if (!heading) return;
     if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
@@ -571,7 +574,7 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
       body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'wortfeld':
-      body = <WortfeldStage key={stage.key} lektionId={lektion.flow === 'guided' ? lektion.id : undefined} stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
+      body = <WortfeldStage key={stage.key} lektionId={lektion.flow === 'guided' ? lektion.id : undefined} stage={{ ...stage, words: wortfeld }} group={itemIndex} onGroup={setItemIndex} onBack={back} onDone={advance} />;
       break;
     case 'notice':
       body = <NoticeStage stage={stage} onBack={back} onDone={advance} />;
@@ -654,6 +657,8 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
         onDone={(shown) => { setCheckShown(shown); advance(); }} /></Suspense>;
       break;
     case 'recap':
+      // No Back: the run is finished, saved and cleared. Back used to start the final check again at
+      // its first turn (a writing task at an empty text), and a refresh there lost the Lektion.
       body = (
         <RecapStage
           checkShown={checkShown}
@@ -666,8 +671,11 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
           sync={sync}
           onRetrySync={flush}
           nextLabel={nextTarget.label}
-          onBack={back}
-          onNext={() => navigate(nextTarget.to)}
+          onNext={() => {
+            // The next page opens at its top, not at the scroll position of this recap.
+            if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+            navigate(nextTarget.to);
+          }}
         />
       );
       break;
@@ -716,8 +724,9 @@ function LessonStages({ curriculum, lektion, pool, preview, resumed, runId, atte
             label={t('player.lesson', lang, { nr: lektion.nr })}
             stepLabel={t('player.stepOf', lang, { n: stageIndex + 1, total: stages.length })}
           />
-          <ComboChip combo={combo} />
           <LangToggle />
+          {/* Last in the row: at phone width it is the chip that wraps, never the language switch. */}
+          <ComboChip combo={combo} />
         </div>}
         {awayAt === `${stageIndex}:${itemIndex}` && <OtterSays lektionId={lektion.id} className="mb-4">{t('otter.back', lang)}</OtterSays>}
         <div ref={bodyRef}>{body}</div>

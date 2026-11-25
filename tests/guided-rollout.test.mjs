@@ -56,23 +56,93 @@ test('all 36 original sound items derive unique checked answers and fair bilingu
       for (const option of item.options) assert.equal(checkAnswer(option, item.accepted, checkOptionsFor(item)).result, option === item.answer ? RESULT.CORRECT : RESULT.WRONG);
       const shape = classifySound(item.marked);
       if (['word-stress', 'prefixed-stress'].includes(shape.kind)) {
-        assert.equal(item.answer, [...shape.prefix, shape.syllables.map((s, i) => i === shape.stress ? s.toLocaleUpperCase('de') : s.toLocaleLowerCase('de')).join('-')].join(' '));
+        assert.equal(item.answer, item.marked, 'the right option is the model on screen');
         assert.ok(item.options.every((o) => /\p{Lu}/u.test(o) && o.includes('-')));
       } else if (shape.kind === 'sentence-stress') {
-        assert.equal(item.answer.toLocaleLowerCase('de'), shape.stress.toLocaleLowerCase('de'));
+        assert.equal(item.answer, item.marked);
         assert.match(item.modelEn, /computer voice may stress it differently/);
       } else if (shape.kind === 'melody') {
         assert.equal(item.answer, shape.direction);
         assert.match(item.modelEn, /computer voice may not follow/);
       } else {
         assert.equal(item.answer, item.text);
-        for (const option of item.options) assert.ok(lesson.phonetik.items.some((original) => original.toLocaleLowerCase('de').replace(/-/g, '').split(' – ').includes(option.toLocaleLowerCase('de'))));
+        const own = (option) => lesson.phonetik.items.some((original) => original.toLocaleLowerCase('de').replace(/-/g, '').split(' – ').includes(option.toLocaleLowerCase('de')));
+        // The Lektion's own sound strings; one Wortfeld word may join them when the answer would stand out by its spelling.
+        const joined = item.options.filter((option) => !own(option));
+        assert.ok(joined.length <= 1 && joined.every((option) => lesson.wortfeld.some((w) => w.word === option)), `L${lesson.nr} ${item.options}`);
       }
     }
   }
   assert.equal(count, 36);
   assert.match(read('src/lib/lesson/buildGuided.js'), /buildSoundItems\(lektion, nounsOf\(/);
   assert.match(read('scripts/lib/guided-content.mjs'), /classifySound\(marked\)/);
+});
+
+test('no sound option is a misspelled German word, and spelling never gives the answer away (browser walk 2026-11-25: „EUro / TEUer / neun")', () => {
+  const nouns = nounsOf(c.lektionen);
+  const big = (s) => /^\p{Lu}/u.test(s);
+  // A course noun or name has its capital letter, every other word is written small; „Sie" is the polite form.
+  const spelledRight = (word) => word === 'Sie' || word === (nouns.has(word[0].toLocaleUpperCase('de') + word.slice(1)) ? word[0].toLocaleUpperCase('de') + word.slice(1) : word.toLocaleLowerCase('de'));
+  let listening = 0;
+  for (const lesson of c.lektionen) for (const item of buildSoundItems(lesson, nouns)) {
+    const where = `L${lesson.nr} ${item.marked}: ${item.options.join(' / ')}`;
+    if (item.soundKind === 'melody') continue; // two arrows
+    if (['word-stress', 'prefixed-stress', 'sentence-stress'].includes(item.soundKind)) {
+      // Each option is the line in its real spelling with exactly one syllable (or word) in capitals, a different one each time.
+      const sentence = item.soundKind === 'sentence-stress';
+      const pieces = (s) => (sentence ? s.replace('?', '').split(' ') : s.split(' ').at(-1).split('-'));
+      const real = sentence ? pieces(item.text) : (() => {
+        const word = item.text.split(' ').at(-1);
+        let at = 0;
+        return pieces(item.marked).map((s) => word.slice(at, (at += s.length)));
+      })();
+      item.options.forEach((option, position) => {
+        assert.deepEqual(pieces(option), real.map((s, i) => (i === position ? s.toLocaleUpperCase('de') : s)), where);
+        assert.equal(option.replace(/-/g, '').toLocaleLowerCase('de'), item.text.toLocaleLowerCase('de'), where);
+      });
+      assert.equal(item.options.length, real.length, where);
+    } else {
+      listening += 1;
+      for (const option of item.options) {
+        for (const word of option.split(' ')) {
+          assert.doesNotMatch(word.slice(1), /\p{Lu}/u, `${where}: capitals inside a word`);
+          assert.ok(spelledRight(word), `${where}: „${word}"`);
+        }
+      }
+      // The answer is never the only option written small, nor the only one with a capital.
+      assert.ok(item.options.filter((o) => big(o) === big(item.answer)).length > 1, where);
+    }
+  }
+  assert.ok(listening >= 12, 'the listening items are really checked');
+});
+
+test('the order of the options never points at the answer: match and listening sounds (browser walk 2026-11-25: 48 of 48)', async () => {
+  const { optionOrder } = await import('../src/lib/lesson/optionOrder.js');
+  // Deterministic: the same question shows the same order on a resume and on a retake; another question its own.
+  assert.deepEqual(optionOrder(['a', 'b', 'c', 'd'], 'q1'), optionOrder(['a', 'b', 'c', 'd'], 'q1'));
+  assert.deepEqual([...optionOrder(['a', 'b', 'c', 'd'], 'q1')].sort(), ['a', 'b', 'c', 'd'], 'the same options');
+  const options = ['a', 'b', 'c', 'd'];
+  assert.ok(new Set(Array.from({ length: 40 }, (_, i) => optionOrder(options, `q${i}`).join(''))).size > 10);
+  const places = [0, 0, 0, 0];
+  let own = 0; let total = 0;
+  for (const lesson of c.lektionen) for (const attempt of [1, 2, 3]) {
+    const match = buildLesson({ curriculum: c, lektion: lesson, pool, attempt }).stages.find((s) => s.kind === 'derived').items.find((i) => i.type === 'match');
+    const at = match.pairs.map((pair, i) => optionOrder(match.pairs.map((p) => p.en), `${match.id}:${i}`).indexOf(pair.en));
+    assert.ok(at.some((place, i) => place !== i), `L${lesson.nr}: the answer is always at the question's own number`);
+    assert.ok(new Set(at).size > 1, `L${lesson.nr}: the answer is always at the same place`);
+    at.forEach((place, i) => { places[place] += 1; own += Number(place === i); total += 1; });
+  }
+  assert.equal(total, 144);
+  assert.ok(own < total * 0.4, `${own} of ${total} answers stand at the question's own number`);
+  for (const n of places) assert.ok(n > total * 0.15, `every place holds the answer sometimes: ${places}`);
+  assert.match(read('src/components/lesson/GuidedMatchItem.jsx'), /options: optionOrder\(item\.pairs\.map\(\(p\) => p\.en\), `\$\{item\.id\}:\$\{pairIndex\}`\)/);
+  // The listening sounds listed the Lektion's lines in order too: the answer of item 3 was the third line.
+  let ownLine = 0; let lines = 0;
+  for (const lesson of c.lektionen) buildSoundItems(lesson, nounsOf(c.lektionen)).forEach((item, i) => {
+    if (!['pair', 'phrase', 'sound-word'].includes(item.soundKind)) return;
+    lines += 1; ownLine += Number(item.options.indexOf(item.answer) === i);
+  });
+  assert.ok(ownLine < lines * 0.6, `${ownLine} of ${lines}`);
 });
 
 test('every sound item shows its model, the marked line, and no text it shows ends in two end marks', () => {
@@ -311,13 +381,15 @@ test('a stress mark never costs a German noun its capital letter, and unmarked w
   assert.deepEqual(shown(10).map((i) => i.text), ['Fährt der Zug?', 'Hast du Zeit?', 'Kommst du mit?']);
   assert.deepEqual(shown(3).map((i) => i.text), ['der Bruder', 'die Brüder', 'die Mütter']);
   assert.equal(shown(8)[2].text, 'Wie viel Uhr ist es?');
-  assert.equal(shown(8)[2].answer, 'Uhr');
-  assert.ok(shown(8)[2].options.includes('Uhr') && !shown(8)[2].options.includes('uhr'));
+  assert.equal(shown(8)[2].answer, 'Wie viel UHR ist es?');
+  // Verbs, adjectives and names keep their real spelling too (2026-11-25): no „Möchte", „Hören", „Teuer", „Aufstehen", „ana".
+  assert.deepEqual([4, 9, 11].flatMap((nr) => shown(nr).map((i) => i.text)), ['Euro', 'teuer', 'neun', 'möchte', 'hören', 'schön', 'aufstehen', 'einkaufen', 'anrufen']);
+  assert.deepEqual(shown(1).map((i) => i.text), ['Hallo', 'Danke', 'Ana']);
   assert.equal(shown(2)[2].text, 'Sie sind');
   assert.equal(shown(7)[0].text, 'ich höre');
   // By class: no word shown to the learner is a course noun written small.
   for (const lesson of c.lektionen) for (const item of shown(lesson.nr)) {
-    for (const text of [item.text, ...(item.soundKind === 'sentence-stress' ? item.options : [])]) {
+    for (const text of [item.text, ...(['pair', 'phrase', 'sound-word'].includes(item.soundKind) ? item.options : [])]) {
       for (const token of text.split(/[^\p{L}]+/u).filter(Boolean)) {
         const noun = token.charAt(0).toLocaleUpperCase('de') + token.slice(1);
         assert.ok(token === noun || !nouns.has(noun), `L${lesson.nr} „${text}“: ${token} is a noun`);

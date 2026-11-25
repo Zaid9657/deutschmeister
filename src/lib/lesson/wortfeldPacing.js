@@ -17,10 +17,27 @@ export function groupWords(list) {
   return out;
 }
 
-/** The dialogue line a word was met in (article dropped; a verb also by its stem), or null. */
+const bareOf = (word) => String(word || '').replace(/^(der|die|das)\s+/i, '').toLowerCase();
+const stemOf = (bare) => (bare.length > 5 && /en$/.test(bare) ? bare.slice(0, -2) : bare);
+
+/** Is the word in the scene, as itself or inside another word („Wörterbuch")? Decides where it is taught. */
+export function metIn(word, lines = []) {
+  const bare = bareOf(word);
+  if (bare.length < 3) return false;
+  return lines.some((l) => l.toLowerCase().includes(bare) || l.toLowerCase().includes(stemOf(bare)));
+}
+
+/** The endings a word may take in a sentence: a verb's, a noun's plural, an adjective's. */
+const ENDING = /^(?:e|en|er|es|em|n|s|st|t|est|et|te)?$/;
+
+/**
+ * The dialogue line shown as a word's example (article dropped; a verb also by its stem), or null. The
+ * line must hold the word itself, alone or with an ending: „Wochenende" is no example of „Woche".
+ */
 export function lineFor(word, lines = []) {
-  const bare = String(word || '').replace(/^(der|die|das)\s+/i, '').toLowerCase();
+  const bare = bareOf(word);
   if (bare.length < 3) return null;
-  const stem = bare.length > 5 && /en$/.test(bare) ? bare.slice(0, -2) : bare;
-  return lines.find((l) => l.toLowerCase().includes(bare)) || lines.find((l) => l.toLowerCase().includes(stem)) || null;
+  const holds = (line, base) => line.toLowerCase().split(/[^\p{L}\p{N}-]+/u).some((token) => token.startsWith(base) && ENDING.test(token.slice(base.length)));
+  if (/\s/.test(bare)) return lines.find((l) => l.toLowerCase().includes(bare)) || null; // a phrase
+  return lines.find((l) => holds(l, bare)) || lines.find((l) => holds(l, stemOf(bare))) || null;
 }

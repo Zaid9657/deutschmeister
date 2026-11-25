@@ -136,7 +136,10 @@ test('coverage is said, not hidden: a Lektion without a linked listening exercis
   const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   const recap = readFileSync(new URL('../src/components/lesson/RecapStage.jsx', import.meta.url), 'utf8');
   assert.match(recap, /lektion\.links\?\.listeningExercise == null && t\('recap\.coverage\.noListening', lang\)/);
-  assert.match(recap, /lektion\.links\?\.readingOrder == null && t\('recap\.coverage\.noReading', lang\)/);
+  assert.match(recap, /noReading && t\('recap\.coverage\.noReading', lang\)/);
+  // A guided Lektion has its own reading text in part 1, so it never says it has none (browser walk 2026-11-25: L2, L6).
+  assert.match(recap, /const noReading = Boolean\(lektion\) && lektion\.links\?\.readingOrder == null && !lektion\.guided\?\.read;/);
+  assert.ok(CURRICULUM_A11.lektionen.every((l) => l.guided?.read), 'every A1.1 Lektion has a reading text');
   const strings = readFileSync(new URL('../src/lib/lesson/strings.js', import.meta.url), 'utf8');
   for (const key of ['recap.coverage.noListening', 'recap.coverage.noReading']) {
     assert.equal((strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':`, 'g')) || []).length, 2, `${key} in English and German`);

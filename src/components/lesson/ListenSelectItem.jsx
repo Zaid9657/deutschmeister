@@ -1,6 +1,6 @@
 import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
@@ -59,6 +59,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
         <div className="mt-5 flex flex-col gap-2">
           {(item.options || []).map((opt) => {
             const on = picked === opt;
+            const Mark = state?.result === RESULT.WRONG ? X : Check; // a wrong choice never carries the check mark
             return (
               <button
                 key={opt}
@@ -72,7 +73,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
                 lang="de"
               >
                 <span>{opt}</span>
-                {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
+                {on && <Mark className="h-4 w-4 shrink-0" aria-hidden="true" />}
               </button>
             );
           })}

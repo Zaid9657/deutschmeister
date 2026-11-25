@@ -2506,6 +2506,24 @@ export function exclusionReason(item, { level } = {}) {
   return null;
 }
 
+// „er + ist.", „du + -st.": the sum of two forms, not an explanation.
+const SUM_RE = /^(\p{L}+) \+ (-?)(\p{L}+)\.$/u;
+const NOUN_SENTENCE_RE = /^(?:der|die|das) (?=\p{Lu}[\p{L}-]* (?:ist|sind|wird|bleibt)\b)/u;
+
+/**
+ * An explanation is a sentence (browser walk 2026-11-25). Three wordings of the bank are made one: the
+ * bare sum („er + ist."), a sentence about a noun that starts small („das Bild ist neutral"), and the
+ * verb's place named without a verb („…, Verb auf Platz zwei"). Every other text stays as written.
+ */
+export function fullSentenceDe(text) {
+  const s = String(text || '');
+  const sum = s.match(SUM_RE);
+  if (sum) return sum[2] ? `Zu „${sum[1]}“ gehört die Endung -${sum[3]}.` : `Zu „${sum[1]}“ gehört die Form „${sum[3]}“.`;
+  return s
+    .replace(NOUN_SENTENCE_RE, (article) => article[0].toUpperCase() + article.slice(1))
+    .replace(/^(\p{Lu}[^,.]* ist [^,.]+), Verb auf Platz (\p{L}+)\./u, '$1, das Verb steht auf Platz $2.');
+}
+
 /** True when the item is fit for controlled practice. */
 export const isUsableItem = (item, options) => exclusionReason(item, options) === null;
 

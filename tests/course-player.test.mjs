@@ -167,7 +167,7 @@ const REGISTER_EXEMPT = [
   },
   {
     file: 'src/components/lesson/NoticeStage.jsx',
-    line: `out.push(<bdi key={m.index} dir="ltr" lang="de" className={m[0].length > 24 ? undefined : 'whitespace-nowrap'}>{m[0]}</bdi>);`,
+    line: `out.push(<bdi key={m.index} dir="ltr" lang="de" className={m.run.length > 24 ? undefined : 'whitespace-nowrap'}>{m.run}</bdi>);`,
     reason: 'the HTML text-direction attribute that keeps a German run left-to-right inside the Arabic help.',
   },
 ];
@@ -462,7 +462,11 @@ test('the option chips are full-width and stacked on mobile, at least 44px tall,
   const src = read('src/components/lesson/PracticeItem.jsx');
   assert.ok(src.includes('min-h-11'), 'option chips must be at least 44px tall');
   assert.ok(src.includes('flex-col gap-2 sm:flex-row'), 'option chips must stack full-width on mobile');
-  assert.ok(src.includes('{on && <Check'), 'the selected chip must carry a check icon, not colour alone');
+  assert.ok(src.includes('{on && !state?.revealed && <Mark'), 'the selected chip must carry an icon, not colour alone');
+  // A wrong choice never carries the check mark (browser walk 2026-11-25).
+  for (const f of ['PracticeItem', 'ListenSelectItem']) {
+    assert.ok(read(`src/components/lesson/${f}.jsx`).includes('const Mark = state?.result === RESULT.WRONG ? X : Check;'), `${f}: a wrong choice shows a cross`);
+  }
 });
 
 test('the primary Continue label key exists, non-empty, in both chrome tables', async () => {
@@ -643,7 +647,7 @@ test('parseLektionId derives level and Lektion number from the id alone', async 
 
 test('DialogStage renders the gloss as an accessible popover, one at a time, closable by Escape', () => {
   const src = read('src/components/lesson/DialogStage.jsx');
-  assert.ok(src.includes("import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';"), 'DialogStage must use the shared gloss helpers');
+  assert.ok(src.includes("import { buildLexicon, glossTokens, parseLektionId, popoverShift } from '../../lib/lesson/gloss.js';"), 'DialogStage must use the shared gloss helpers');
   assert.match(src, /aria-describedby=\{isOpen \? popoverId : undefined\}/, 'the gloss button wires aria-describedby to its popover');
   assert.match(src, /role="tooltip"/, 'the popover has an accessible role');
   assert.ok(src.includes("const [openGloss, setOpenGloss] = useState(null);"), 'exactly one gloss popover is open at a time, tracked in one piece of state');

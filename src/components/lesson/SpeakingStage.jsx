@@ -148,7 +148,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
           <div className="flex flex-wrap items-center gap-2">
             <Chip tone="label">{open.teil || t('speaking.teilDefault', lang)}</Chip>
             {(open.hintWords || []).map((w) => (
-              <Chip key={w} tone="quiet">{w}</Chip>
+              <Chip key={w} tone="quiet" className="normal-case" lang="de">{w}</Chip>
             ))}
           </div>
           <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de">{open.promptDe}</p>

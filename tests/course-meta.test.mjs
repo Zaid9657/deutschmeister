@@ -14,7 +14,7 @@ import { readFileSync } from 'node:fs';
 import * as lucideIcons from 'lucide-react';
 import { A11_META, LANDESKUNDE, outcomeLineEn, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
-import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
+import { OWN_ICONS, WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
 import { abschlusstestA11 } from '../src/data/courseTests/abschlusstestA11.js';
@@ -322,11 +322,14 @@ test('every Wortfeld word of every A1.1 Lektion has a WORTFELD_ICONS entry', () 
   }
 });
 
-test('every WORTFELD_ICONS value, and the fallback, resolve to a real lucide-react icon', () => {
+test('every WORTFELD_ICONS value, and the fallback, resolve to a real lucide-react icon, or to one the course draws', () => {
+  // „der Tisch" showed lucide's Table2, a spreadsheet (browser walk 2026-11-25).
+  assert.ok(Object.hasOwn(OWN_ICONS, WORTFELD_ICONS.Tisch));
+  assert.ok(![...Object.values(WORTFELD_ICONS)].some((name) => /^Table(?!t)/.test(name)), 'no spreadsheet icon');
   const names = new Set([...Object.values(WORTFELD_ICONS), WORTFELD_ICON_FALLBACK]);
   assert.ok(names.size > 0);
   for (const name of names) {
-    const icon = lucideIcons[name];
+    const icon = lucideIcons[name] || OWN_ICONS[name];
     // lucide-react icons are forwardRef components: functions under CJS, objects under ESM.
     assert.ok(
       typeof icon === 'function' || (typeof icon === 'object' && icon !== null),
@@ -343,7 +346,7 @@ test('every WORTFELD_ICONS value, and the fallback, is in the by-name icon map W
   const missing = [...names].filter((name) => !Object.prototype.hasOwnProperty.call(WORTFELD_ICON_COMPONENTS, name));
   assert.deepEqual(missing, [], `add to src/components/lesson/wortfeldIcons.js: ${missing.join(', ')}`);
   for (const [name, icon] of Object.entries(WORTFELD_ICON_COMPONENTS)) {
-    assert.equal(icon, lucideIcons[name], `"${name}" in wortfeldIcons.js must be lucide-react's ${name}`);
+    assert.equal(icon, OWN_ICONS[name] || lucideIcons[name], `"${name}" in wortfeldIcons.js must be lucide-react's ${name}`);
   }
 });
 

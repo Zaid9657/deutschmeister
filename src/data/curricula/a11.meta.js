@@ -542,7 +542,7 @@ export const WORTFELD_ICONS = {
   Arabisch: 'Languages',
   Marokko: 'Globe',
   sprechen: 'MessageCircle',
-  Tisch: 'Table2',
+  Tisch: 'FurnitureTable',
   Stuhl: 'Armchair',
   Lampe: 'Lamp',
   Uhr: 'Clock',

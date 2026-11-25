@@ -51,7 +51,7 @@ function ModelFirstPretest({ pretest, id, part, onBack, onDone, onName }) {
       if (step === 'recall') trackFirstSentence(id, hit);
       return;
     }
-    if (step === 'supported') { setStep('recall'); setChecked(null); return; }
+    if (step === 'supported') { setStep('recall'); setChecked(null); setAudioFail(null); return; }
     onDone();
   };
 
@@ -103,7 +103,8 @@ function ModelFirstPretest({ pretest, id, part, onBack, onDone, onName }) {
             : <span className="text-graphite">{t('pretest.first.hint', lang, { start: openings[0] || '' })}</span>)}
         </p>
       </Card>
-      <AudioFailureNotice reason={audioFail} />
+      {/* Only the first step has sound; the recall step has none to fail. */}
+      {step === 'supported' && <AudioFailureNotice reason={audioFail} />}
     </StageShell>
   );
 }

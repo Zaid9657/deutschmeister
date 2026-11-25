@@ -7,6 +7,9 @@
 // chunk to draw these 99. tests/course-meta.test.mjs pins
 // that every name WORTFELD_ICONS uses, and the fallback, is in this map;
 // tests/web-performance.test.mjs bans the namespace import app-wide.
+//
+// OWN_ICONS are drawn here because lucide has none for the word: its „Table" icons are spreadsheets,
+// and „der Tisch" showed one (browser walk 2026-11-25).
 import {
   AlarmClock, AlarmClockOff, AlertCircle, AppWindow, Armchair, ArrowLeftRight, AtSign, Baby,
   Backpack, BedDouble, Beer, Book, BookMarked, BookOpen, Briefcase, Building, Building2, Bus, Cake,
@@ -16,9 +19,18 @@ import {
   Hourglass, Image as ImageIcon, Key, Lamp, Languages, LayoutGrid, Mailbox, MapPin, MessageCircle,
   Moon, MoveRight, Music2, Newspaper, Palette, PartyPopper, PenLine, Pencil, Phone, PhoneCall, Play,
   Radio, Ruler, Salad, School, Scissors, Send, ShoppingBag, ShoppingCart, ShowerHead, Smartphone,
-  Smile, Soup, Sparkle, Stethoscope, Store, Sun, Sunrise, Sunset, Table2, Tag, ThumbsUp, Ticket,
-  TrainFront, Type, User, Users, Utensils, UtensilsCrossed, Waves, Wine, Zap,
+  Smile, Soup, Sparkle, Stethoscope, Store, Sun, Sunrise, Sunset, Tag, ThumbsUp, Ticket,
+  TrainFront, Type, User, Users, Utensils, UtensilsCrossed, Waves, Wine, Zap, createLucideIcon,
 } from 'lucide-react';
+
+export const OWN_ICONS = {
+  // A table: its top and two legs, on lucide's 24 px grid.
+  FurnitureTable: createLucideIcon('FurnitureTable', [
+    ['path', { d: 'M2 7h20v3H2z', key: 'top' }],
+    ['path', { d: 'M5 10v10', key: 'left-leg' }],
+    ['path', { d: 'M19 10v10', key: 'right-leg' }],
+  ]),
+};
 
 export const WORTFELD_ICON_COMPONENTS = {
   AlarmClock, AlarmClockOff, AlertCircle, AppWindow, Armchair, ArrowLeftRight, AtSign, Baby,
@@ -29,6 +41,7 @@ export const WORTFELD_ICON_COMPONENTS = {
   Hourglass, Image: ImageIcon, Key, Lamp, Languages, LayoutGrid, Mailbox, MapPin, MessageCircle,
   Moon, MoveRight, Music2, Newspaper, Palette, PartyPopper, PenLine, Pencil, Phone, PhoneCall, Play,
   Radio, Ruler, Salad, School, Scissors, Send, ShoppingBag, ShoppingCart, ShowerHead, Smartphone,
-  Smile, Soup, Sparkle, Stethoscope, Store, Sun, Sunrise, Sunset, Table2, Tag, ThumbsUp, Ticket,
+  Smile, Soup, Sparkle, Stethoscope, Store, Sun, Sunrise, Sunset, Tag, ThumbsUp, Ticket,
   TrainFront, Type, User, Users, Utensils, UtensilsCrossed, Waves, Wine, Zap,
+  ...OWN_ICONS,
 };

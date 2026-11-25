@@ -2,7 +2,7 @@ import { classifySound } from '../../src/lib/lesson/guidedSound.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../../src/lib/lesson/check.js';
 import { readLexicon } from '../../src/lib/lesson/guidedRead.js';
 import { glossTokens } from '../../src/lib/lesson/gloss.js';
-import { lineFor } from '../../src/lib/lesson/wortfeldPacing.js';
+import { metIn } from '../../src/lib/lesson/wortfeldPacing.js';
 import { LEARNER_CAST } from '../../src/data/curricula/a11.js';
 
 /** Validate every guided field by class, so later guided lessons inherit the same contract. */
@@ -40,7 +40,7 @@ export function guidedFindings(curriculum) {
     const readGlosses = new Set(glossTokens(read?.text || '', readLexicon(lesson.wortfeld || [])).filter((s) => s.type === 'gloss').map((s) => s.entry.de));
     for (const w of lesson.wortfeld || []) {
       if (w.meta === true) continue; // A number-set heading is not a word in a natural text.
-      if (!lineFor(w.de || w.word, dialogue) && !readGlosses.has(w.de)) fail(`guided.read must cover remaining Wortfeld entry ${w.de}`);
+      if (!metIn(w.de || w.word, dialogue) && !readGlosses.has(w.de)) fail(`guided.read must cover remaining Wortfeld entry ${w.de}`);
     }
     for (const marked of lesson.phonetik?.items || []) {
       if (!classifySound(marked)) fail(`guided sound items have an unsupported marking: ${marked}`);

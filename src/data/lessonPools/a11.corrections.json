@@ -246,7 +246,8 @@
   },
   "da9e486f-2548-4462-9bdd-c59560ed7276": {
    "questionEn": "That is good.",
-   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk)."
+   "explanationEn": "After **das** the form of sein is **ist**: **Das ist gut.**",
+   "reason": "questionEn repeated the German stem; the English line now says what the item asks (2026-11-23 screen walk). The English explanation was the German sum „das + ist.“ (2026-11-25 browser walk)."
   },
   "0fe8146d-6e90-4c1c-b127-618c44e456ba": {
    "questionEn": "Are you a student?",

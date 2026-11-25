@@ -1,6 +1,6 @@
-import { guidedFeedback, feedbackReason } from '../../lib/lesson/guidedFeedback.js';
+import { guidedFeedback, feedbackReason, tipFor } from '../../lib/lesson/guidedFeedback.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Eye } from 'lucide-react';
+import { Check, Eye, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
@@ -74,6 +74,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   // dictation, spelling), never from this call site — that is what keeps the
   // lesson, the checkpoint and the review grading one grader (REVIEW #6 BLOCKER 3).
   const checkOpts = useMemo(() => checkOptionsFor(item), [item]);
+  const tip = !hintFirst && !state ? tipFor(item.hint, lang) : null;
   const answer = typed ? value : picked;
   const canSubmit = String(answer || '').trim().length > 0;
 
@@ -131,6 +132,8 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
           <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             {chips.map((opt) => {
               const on = picked === opt;
+              // A wrong choice never carries the check mark; a revealed item says nothing about the choice.
+              const Mark = state?.result === RESULT.WRONG ? X : Check;
               return (
                 <button
                   key={opt}
@@ -143,7 +146,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
                   }`}
                 >
                   <span>{opt}</span>
-                  {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
+                  {on && !state?.revealed && <Mark className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
               );
             })}
@@ -155,7 +158,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
             </label>
             <input
               id={`answer-${item.id}`}
-              aria-describedby={[`question-${item.id}`, !hintFirst && item.hint && !state ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
+              aria-describedby={[`question-${item.id}`, tip ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
               ref={inputRef}
               type="text"
               value={value}
@@ -168,7 +171,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
               placeholder={['sentence_building', 'error_correction'].includes(item.type) ? t('practice.wholeSentence', lang) : '…'}
             />
-            {!hintFirst && item.hint && !state && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
+            {tip && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: tip })}</p>}
           </div>
         )}
 

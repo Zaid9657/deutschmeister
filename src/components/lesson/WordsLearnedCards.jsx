@@ -31,9 +31,10 @@ function WordCard({ word }) {
         </>
       ) : (
         <>
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex w-full flex-wrap items-center gap-1.5">
             {word.article && <Chip tone="label" size="sm">{word.article}</Chip>}
-            <span className="text-[0.9375rem] font-bold leading-snug text-ink" lang="de">{de}</span>
+            {/* A long compound („die Staatsangehörigkeit") breaks inside its card, hyphenated where the browser can. */}
+            <span className="min-w-0 hyphens-auto text-[0.9375rem] font-bold leading-snug text-ink [overflow-wrap:anywhere]" lang="de">{de}</span>
           </div>
           <span className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('words.showEnglish', lang)}</span>
         </>

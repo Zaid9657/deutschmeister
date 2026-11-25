@@ -130,7 +130,7 @@ import {
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
   missingDeterminerCue, withDeterminerCue, missingOpeningCue, namedRepairAccepts, taskConstraintsEn,
-  middleFieldAcceptedForms, englishEchoesGerman,
+  middleFieldAcceptedForms, englishEchoesGerman, fullSentenceDe,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -1322,6 +1322,10 @@ if (echoes.length) {
   console.error(`${echoes.length} item(s) whose questionEn repeats the German stem — write their English: ${echoes.join(', ')}`);
   process.exit(1);
 }
+
+// An explanation is a sentence, not a sum of forms (quality.js fullSentenceDe). A1.1 only: A1.2's
+// explanations are read with their own rebuild.
+if (level === 'a1.1') for (const item of items) item.explanationDe = fullSentenceDe(item.explanationDe);
 
 // 2026-10-25 re-evaluation (re-landed 2026-11-19): with every opening named, the phrases between the
 // finite verb and the final verb part may still stand in another licensed order (quality.js,
