@@ -20,6 +20,7 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
 import { CURRICULA, ALL_CURRICULA, curriculumFor, anyCurriculumFor } from '../src/data/curricula/index.js';
 import { writingTaskByKey, courseWritingTasks } from '../src/data/writingTasks.js';
+import { generatedCurriculum } from './helpers/generatedCheckpoint.mjs';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
   wortfeldCoverage, itemLexis, drawnLexis, drawnAssignment, loadExtraItems, loadPoolItems,
@@ -732,7 +733,8 @@ test('rule 25: every A1.1 Lektion carries its four English twins, and bodyEn tea
 test('rule 25: a notice without bodyEn is reported by RULE 25, and by nothing else', () => {
   // The pool half is neutralised with a pool that is complete, so the one error is the mutation.
   const completePool = [{ id: 'x', explanationDe: 'x', explanationEn: 'x' }];
-  const c = clone();
+  // (The stand-in pool holds no reserved checkpoint tasks, so the papers are the generated ones.)
+  const c = generatedCurriculum(clone());
   c.lektionen[0].notice.bodyEn = '';
   const errors = validateCurriculum(c, undefined, completePool);
   assert.ok(failsWith(errors, 25), 'validateCurriculum did not report RULE 25');
@@ -745,12 +747,12 @@ test('rule 25: a notice without bodyEn is reported by RULE 25, and by nothing el
     (x) => { x.lektionen[10].notice.bodyEn = Array(81).fill('word').join(' '); },
     (x) => { x.lektionen[11].notice.bodyEn = 'A <b>bold</b> rule'; },
   ]) {
-    const m = clone();
+    const m = generatedCurriculum(clone());
     mutate(m);
     assert.ok(failsWith(validateCurriculum(m, undefined, completePool), 25), 'a missing or malformed twin was not reported');
   }
   // And the pool half: an item without explanationEn is reported with its id.
-  const poolErrors = validateCurriculum(clone(), undefined, [{ id: 'no-english-1', explanationDe: 'x', explanationEn: '' }]);
+  const poolErrors = validateCurriculum(generatedCurriculum(clone()), undefined, [{ id: 'no-english-1', explanationDe: 'x', explanationEn: '' }]);
   assert.ok(poolErrors.some((e) => e.startsWith(RULE25_POOL_PREFIX) && e.includes('no-english-1')), `pool half not reported: ${poolErrors.join(' | ')}`);
 });
 

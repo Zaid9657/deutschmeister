@@ -76,7 +76,7 @@ test('the closing line names what really comes next on the course path, so Lekti
   assert.deepEqual(nextAfter(CURRICULUM_A11, l1), { kind: 'lektion', nr: 2 });
   assert.deepEqual(nextAfter(CURRICULUM_A11, l3), { kind: 'checkpoint', nr: 1 });
   assert.deepEqual(nextAfter(CURRICULUM_A11, CURRICULUM_A11.lektionen[11]), { kind: 'checkpoint', nr: 4 });
-  assert.ok(T.en['otter.check.notYet'].replace('{next}', T.en['check.next.lektion'].replace('{nr}', 2)).endsWith('go on to Lektion 2.'), 'Lektion 1 reads as before');
+  assert.ok(T.en['otter.check.notYet'].replace('{next}', T.en['check.next.lektion'].replace('{nr}', 2)).endsWith('go on to Lesson 2.'), 'Lektion 1 reads as before, in the English of the course (lesson)');
   assert.ok(T.de['otter.check.notYet'].replace('{next}', T.de['check.next.lektion'].replace('{nr}', 2)).endsWith('oder mit Lektion 2 weitermachen.'));
   const stage = buildLesson({ curriculum: CURRICULUM_A11, lektion: l3, pool: [] }).stages.find((s) => s.kind === 'check');
   assert.deepEqual(stage.next, { kind: 'checkpoint', nr: 1 });
@@ -335,11 +335,12 @@ test('Lektionen 4–6 after the DaF review (2026-11-19): the Genus, one or more 
   assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[4], 1)[1], 'Die Schere? Da.'), BEYOND); // section D: German, no answer of the turn word for word: BEYOND
   assert.equal(typedResult(l6[0], 'Guten Morgen! Ich brauche ein Telefon.'), RESULT.CORRECT); // 2026-11-25: what stands around an answer comes off (answerShapes.js)
   assert.equal(typedResult(phoneName, 'Guten Tag, Herr Weber.'), RESULT.WRONG, 'the partner’s name is not the learner’s');
-  for (const right of ['18,00 Euro', '18,- €', 'achtzehn Euro']) assert.equal(typedResult(price, right), RESULT.CORRECT, right);
-  assert.equal(typedResult(price, '18 Cent'), RESULT.WRONG, 'a price heard in euros');
-  assert.equal(typedResult(price, '18,50 Euro'), RESULT.WRONG);
-  assert.equal(typedResult(total, '30,00 €'), RESULT.CORRECT);
-  assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], 1)[2], 'funfundvierzig euro'), RESULT.CORRECT);
+  // (2026-11-25: prices the reading's number list does not print, so the check measures the rule of the compounds.)
+  for (const right of ['36,00 Euro', '36,- €', 'sechsunddreißig Euro']) assert.equal(typedResult(price, right), RESULT.CORRECT, right);
+  assert.equal(typedResult(price, '36 Cent'), RESULT.WRONG, 'a price heard in euros');
+  assert.equal(typedResult(price, '36,50 Euro'), RESULT.WRONG);
+  assert.equal(typedResult(total, '25,00 €'), RESULT.CORRECT);
+  assert.equal(typedResult(sitting(CURRICULUM_A11.lektionen[3], 1)[4], 'vierundfunfzig euro'), RESULT.CORRECT);
   assert.ok(askPrice.accepted.length);
   // The third blind corpus: the question word last, „Wie viel Euro …", a name „am Telefon".
   assert.equal(typedResult(l4[3], 'Der Stuhl kostet wie viel?'), RESULT.CORRECT);

@@ -554,3 +554,44 @@ for „Und Ihnen?“ stays accepted on purpose: it is common German.
 **Screens.** Every course screen names itself in the tab and sets the document language (`useScreenTitle`); the skip link follows
 Deutsch-Modus; German explanations are sentences (no „→“, „+“, „...“ for words, no English word explaining a German one); the English of the
 course says lesson, colour, mum and exercise book.
+
+**Measured on 64213018, honestly.** Two fresh blind corpora (Codex and a Claude subagent, from the 76 typed final-check turns' task texts and
+cues alone: 912 right and 608 wrong answers each), measured before anyone read them; then both blind scores with the same brief.
+
+| | Codex score | Claude score |
+|---|---|---|
+| round 1 (9420cf51) | 6.3, no | 5.8, no |
+| round 2 (64213018) | **7.3, no** | **6.4, no** |
+
+Both "no" for the same first reason, which is the owner's: public copy says A1.1 is free (llms.txt, the exam pages, the course card, JSON-LD,
+the placement result) while only Lektion 1 is. Their other findings, and what this round did with them:
+
+- **Practice word order** (Codex MAJOR): a yes/no question to build keeps the free order of its phrases after verb and subject
+  (`middleFieldOrders` now reads „das Verb steht vorn“ as the opening).
+- **BEYOND for no answer** (Claude MAJOR): „asdf“, „x“, „?“ and „Keine Ahnung“ are WRONG (`noAnswer`); faults the Lektion teaches are named
+  wherever they stand: a month with „am“ or „in“, an infinitive or the wrong auxiliary in the Perfekt, a verb said twice, the second object
+  after „und“, „mir“/„mich“, a strong verb's regular form („sprecht“, „fahrt“). After a BEYOND the screen never tells the learner to begin
+  with what they wrote (`beyondStart`: „Your beginning is right …“ and the frame), and a message shows no cast name.
+- **Said longer** (`answerRewrites.js`): an adjective with the right ending, a degree word, an occasion, „zu meinem Fest“, „Gibt es …?“ for
+  „Haben Sie …?“, a pronoun for the noun before it, „prima“ for „gut“, „Können wir uns … treffen?“, „Wie teuer ist …?“, „Und du, …?“.
+  An addition with a fault is never taken off.
+- **Looked at once more**: English nouns, letters German does not write, a slip into another word („Puppe“, „Dunst“), a thing that is not
+  asked for (a pizza as a drink), „nach der Schweiz“, „der Deutsch“, „am Nacht“, „Es kommt meine Freunde“. Not called wrong any more: other
+  ways to say a name, a person spoken to („Hallo Lena, …“), „es“ that holds the place, „der Libanon“, „Hier Yilmaz.“, „Ich studiere.“,
+  „Ich bin Syrer.“, „Ich wohne bei meinem Bruder.“, „Sie ist erst zwanzig.“
+- **Practice keys**: a spelling accepts letters only; a gap inside a sentence no capital (the capital is the case slip with its second try);
+  „Ihre“ for „ihre (sie, Plural)“ is another person (`thirdPersonCaseItem`).
+- **Final test**: Hören has its own mark, 5 of 8 (one answer throughout takes 4); the reading item about Frau Novak's break asks what the sign
+  says. **Lektion 4** dictates prices its number list does not print; **Lektion 10** asks in German what its English asks.
+
+| Final checks, fresh corpora (right / wrong answers) | 64213018 | after the fixes |
+|---|---|---|
+| right answers confirmed, all (Codex / Claude corpus) | 70 % / 75 % | **75 % / 80 %** |
+| right answers confirmed, only those no list and no round-1 corpus holds | 49 % / 55 % | **58 % / 66 %** |
+| right answers called wrong | 16 of 1,824 | **0** |
+| wrong answers praised as correct | 17 of 1,216 | **3** (two of them correct German) |
+| wrong answers taken as a slip (second try) | 6 | 3 (all three a noun written small) |
+
+Still open (round 3): the rest of BEYOND (about a fifth of right answers), the practice draw (articles in L4–L6, items in two Lektionen, no
+prices in practice), structures graded before their notice (yes/no questions, mein/meine, keinen), the W/V example of Lektion 1 in three
+languages, three stilted lines (L2, L6, L12) before the recording.

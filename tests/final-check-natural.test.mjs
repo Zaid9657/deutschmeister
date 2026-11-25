@@ -121,6 +121,8 @@ test('the hint before the second try gives a direction in both languages and nev
     for (const turn of sitting(l.nr)) {
       if (turn.spell || turn.listen) continue;
       const start = answerStart(turn);
+      // A message shows its frame with the name and the date left open (Claude score, 2026-11-25), every other turn its beginning.
+      if (turn.parts) { assert.match(start, /…/); assert.doesNotMatch(start, /Chakiri|\d/); continue; }
       assert.match(start, / …$/, `${l.id}: ${start}`);
       assert.ok(!/^\s*…/.test(start), start);
       const model = String(modelAnswer(turn)).replace(/[.!?]+$/, '');
@@ -128,7 +130,7 @@ test('the hint before the second try gives a direction in both languages and nev
     }
   }
   const stage = read('src/components/lesson/CheckStage.jsx');
-  assert.match(stage, /\{outcome \? modelAnswer\(turn\) : answerStart\(turn\)\}/);
+  assert.match(stage, /\{outcome \? modelAnswer\(turn\) : start\.text\}/);
   assert.match(stage, /setHint\(result === RESULT\.TYPO \? null : faultHintKey\(turn, value\)\)/);
   // Without sound a heard turn can be passed over.
   assert.match(stage, /onFallback=\{outcome \? undefined : \(\) => onOutcome\('unverified', ''\)\}/);

@@ -9,7 +9,7 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
-import { answerStart, BEYOND, canDoShown, checkTurns, chosenWord, faultHintKey, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
+import { beyondStart, BEYOND, canDoShown, checkTurns, chosenWord, faultHintKey, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
 import { shownLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -34,11 +34,14 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   // An answer the check cannot judge (BEYOND): no try used, the beginning of the Lektion's own answer shown, one more
   // answer; a second such answer ends the turn unverified (then the whole answer is shown), and its can-do is not shown.
   const [beyond, setBeyond] = useState(false);
-  const onBeyond = () => { if (beyond) setOutcome('unverified'); else { setBeyond(true); setRetry(null); } };
+  // What the learner answered when the check could not judge it, so the screen does not tell them to begin as they did.
+  const [beyondSaid, setBeyondSaid] = useState('');
+  const start = beyondStart(turn, beyondSaid);
+  const onBeyond = (said = '') => { if (beyond) setOutcome('unverified'); else { setBeyond(true); setRetry(null); setBeyondSaid(said); } };
 
   const submit = () => {
     const result = typedResult(turn, value);
-    if (result === BEYOND) { onBeyond(); return; }
+    if (result === BEYOND) { onBeyond(value); return; }
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
     if (ok) { setOutcome('shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
     else if (tries === 0) { setRetry(result === RESULT.TYPO ? 'typo' : 'retry'); setHint(result === RESULT.TYPO ? null : faultHintKey(turn, value)); }
@@ -47,7 +50,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   };
   const spoken = (r) => {
     if (r.selfConfirmed) { setMode('type'); return; } // not measured: typing is the proof
-    if (r.transcript && typedResult(turn, r.transcript) === BEYOND) { setMode('type'); onBeyond(); return; }
+    if (r.transcript && typedResult(turn, r.transcript) === BEYOND) { setMode('type'); onBeyond(r.transcript); return; }
     if (spokenShown(r, turn)) { setOutcome('shown'); setAnswer(r.transcript || ''); setUnchecked(uncheckedWords(turn, r.transcript || '')); }
     else if (r.attempts >= SPOKEN_TRIES) setMode('type'); // speech recognition may be the problem, not the learner
   };
@@ -90,8 +93,8 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
 
       {beyond && outcome !== 'shown' && (
         <Card tone="wash" className="mb-4 p-5" role="status">
-          <p className="text-[0.9375rem] leading-snug text-ink">{t(outcome ? 'check.beyond.end' : 'check.beyond', lang)}</p>
-          <p className="mt-2 font-display text-xl font-semibold text-ink" lang="de">{outcome ? modelAnswer(turn) : answerStart(turn)}</p>
+          <p className="text-[0.9375rem] leading-snug text-ink">{t(outcome ? 'check.beyond.end' : start.started ? 'check.beyond.started' : 'check.beyond', lang)}</p>
+          <p className="mt-2 font-display text-xl font-semibold text-ink" lang="de">{outcome ? modelAnswer(turn) : start.text}</p>
         </Card>
       )}
       {!outcome && mode === 'speak' && (

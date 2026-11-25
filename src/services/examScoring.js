@@ -145,7 +145,10 @@ export function sectionGuessCeiling(section) {
 export function sectionPassMarks(mock) {
   return (mock.sections || []).flatMap((section) => {
     const ceiling = sectionGuessCeiling(section);
-    const max = scoreObjectiveSections({ sections: [section] }, {}).sectionScores[section.key]?.max || 0;
+    const max = scoreObjectiveSections({ sections: [section] }, {}).sectionScores[section.key]?.max
+      || (section.parts || []).reduce((n, p) => n + (p.questionNumbers?.length || 0), 0);
+    // A section whose keys load from the database names its own mark (`passMark`).
+    if (section.passMark) return [{ key: section.key, title: section.title, need: section.passMark, max }];
     return ceiling > 0 ? [{ key: section.key, title: section.title, need: ceiling + 1, max }] : [];
   });
 }

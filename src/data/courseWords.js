@@ -26,24 +26,24 @@ checkpoint chef chefin chefinnen chefs chen cke computer da dach daecher dafuer 
 dahinter damen dan danach dank danke dann darauf darf darum das dass daten dativ datum dauer davon
 davor dazu de decke decken dein deine deiner dem den denken denn der dert des deshalb deutsch
 deutschland dezember dich die dienstag dienstage diesem diesen dieser dieses diesmal dinge diphthong
-dir direkt direktes doch donnerstag donnerstage dort drei dreissig dreizehn drit dritte dritten
-drittens drittes du duerfen durch durchsage durchsagen durst durstig dusche duschen ebenfalls ecke
-ecken ei eier eigene eigenen eigenschaft ein eine einem einen einer einfach einfache einfuegen
-eingaenge eingang eingebracht eingekauft eingeladen einige einkaufen einladen einladung eins
-einsteigen einundzwanzig einzahl einzelkind einzelkinder einzeln elf eltern en ende endet endung
-endungen englisch enthaelt entschuldigung er erfinden erfolg ergaenzen erkaeltung erkaeltungen
-erklaeren erlaubnis erlaubt erledigen erledigungen erst erste ersten erster ert erwartet erzaehlen
-erzaehlt es esse essen eszett et etwas eu euer eure euro extra eː faehigkeit faehigkeiten faehr
-faehrst faehrt faellt faengt fahr fahre fahren fahrer fahrerin fahrerinnen fahrkarte fahrkarten
-fahrplaene fahrplan fahrpreis fahrrad fahrraeder fahrt fahrten fallend falsch familie familien
-familienname familienstand farbe farben fe februar fehlt fei feier feiere feiern feiert feminin
-femininen feminines fenster ferien fern fernsehen fernseher fest feste festen fester fieber film
-filme finden findet firma firmen fisch fische fischer fleisch fliege fliegen fliegt flohmaerkte
-flohmarkt flughaefen flughafen flugzeug flugzeuge flur flure foermlich folgen folgt fon form
-formellen formen formular formulare formulieren fortschritt foto fotos frag frage fragen fragewort
-fragt frau frauen frei freitag freitage freizeit fremde freuen freund freunde freunden freundin
-freundinnen freut frueh frueher fruehstueck fruehstuecke fruehstuecken fruehstueckt fuellen fuenf
-fuenfundvierzig fuenfzehn fuenfzig fuer fuesse full funktionieren funktioniert fuss fussbaelle
+dir direkt direktes doch donnerstag donnerstage dort dorthin drei dreissig dreizehn drit dritte
+dritten drittens drittes du duerfen durch durchsage durchsagen durst durstig dusche duschen
+ebenfalls ecke ecken ei eier eigene eigenen eigenschaft ein eine einem einen einer einfach einfache
+einfuegen eingaenge eingang eingebracht eingekauft eingeladen einige einkaufen einladen einladung
+eins einsteigen einundzwanzig einzahl einzelkind einzelkinder einzeln elf eltern en ende endet
+endung endungen englisch enthaelt entschuldigung er erfinden erfolg ergaenzen erkaeltung
+erkaeltungen erklaeren erlaubnis erlaubt erledigen erledigungen erst erste ersten erster ert
+erwartet erzaehlen erzaehlt es esse essen eszett et etwas eu euer eure euro extra eː faehigkeit
+faehigkeiten faehr faehrst faehrt faellt faengt fahr fahre fahren fahrer fahrerin fahrerinnen
+fahrkarte fahrkarten fahrplaene fahrplan fahrpreis fahrrad fahrraeder fahrt fahrten fallend falsch
+familie familien familienname familienstand farbe farben fe februar fehlt fei feier feiere feiern
+feiert feminin femininen feminines fenster ferien fern fernsehen fernseher fest feste festen fester
+fieber film filme finden findet firma firmen fisch fische fischer fleisch fliege fliegen fliegt
+flohmaerkte flohmarkt flughaefen flughafen flugzeug flugzeuge flur flure foermlich folgen folgt fon
+form formellen formen formular formulare formulieren fortschritt foto fotos frag frage fragen
+fragewort fragt frau frauen frei freitag freitage freizeit fremde freuen freund freunde freunden
+freundin freundinnen freut frueh frueher fruehstueck fruehstuecke fruehstuecken fruehstueckt fuellen
+fuenf fuenfundvierzig fuenfzehn fuenfzig fuer fuesse full funktionieren funktioniert fuss fussbaelle
 fussball gaerten gaeste gang ganz ganze ganzen ganzes garage garagen garten gast ge gearbeitet geben
 geboren gebrauchen geburtsdaten geburtsdatum geburtstag geburtstage geehrte geehrter gefaellt
 gefahren gefallen gefeiert gefragt gegangen gegebene gegen gegenstaende gegessen gehe gehen gehoeren

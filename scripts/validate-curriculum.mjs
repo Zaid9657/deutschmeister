@@ -1202,6 +1202,7 @@ function seedVocabulary(spec, freeOnly = false) {
   for (const l of prior.curriculum.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
     // …and, on the item side, every function word the finished level actually SAID. An A1.2 learner
     // has met `dem` and `einen` in A1.1's dialogues; they are taught for that reason and not because
     // they are on a list. Measured against the PRIOR level's own function-word list, which is the

@@ -221,7 +221,7 @@ const certificate = async (state, { user = null, loading = false, lang = 'de', d
     react: state.react,
     'react-router-dom': { useParams: () => ({ level: 'a1.1' }), Link: 'Link', Navigate: 'Navigate' },
     '../contexts/AuthContext': { useAuth: () => ({ user, loading }) },
-    '../lib/lesson/strings.js': { useLessonLang: () => [lang], lessonDateFormat },
+    '../lib/lesson/strings.js': { useLessonLang: () => [lang], lessonDateFormat }, '../hooks/useScreenTitle.js': { useScreenTitle: () => {} },
     '../data/courses/index.js': { courseFor: () => ({}) },
     '../data/courseTests/index.js': { courseTestDescription: () => 'Adaptierter Kurstest.' },
     '../data/curricula/index.js': { curriculumFor: () => curriculum, curriculumPath },

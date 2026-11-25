@@ -1860,7 +1860,7 @@ const POLITE_OVERRIDES = [];
 test('the lowercase answer is wrong exactly where the polite predicate fires — cards, pool and checkpoints', async () => {
   const { buildCardIndex } = await import('../src/services/reviewService.js');
   const { gradeTypedReview } = await import('../src/lib/checkpoint/reviewGrading.js');
-  const { politeCaseItem } = await import('../src/data/lessonPools/quality.js');
+  const { politeCaseItem, thirdPersonCaseItem } = await import('../src/data/lessonPools/quality.js');
 
   // The predicate reads everything the ITEM says about its own task (a pool
   // item's prompt and explanation can veto — „Mutter = weiblich → sie."), so a
@@ -1888,7 +1888,8 @@ test('the lowercase answer is wrong exactly where the polite predicate fires —
     if (!accepted.length) continue;
     const want = politeCaseItem(item);
     if (item.caseSensitive === true && !want) {
-      assert.ok(POLITE_OVERRIDES.includes(item.id), `${item.id} is case-strict without the predicate and is not a documented override`);
+      // („Die Eltern lieben ___ Kinder. (sie, Plural)“: the mirror rule, where the capital is the polite form, another person.)
+      assert.ok(POLITE_OVERRIDES.includes(item.id) || thirdPersonCaseItem(item), `${item.id} is case-strict without the predicate and is not a documented override`);
       continue;
     }
     assert.equal(item.caseSensitive === true, want, `${item.id}: pool flag and predicate disagree on "${accepted[0]}"`);
@@ -1905,10 +1906,10 @@ test('the lowercase answer is wrong exactly where the polite predicate fires —
       if (!accepted.length) continue;
       const origin = item.poolItemId ? byId.get(item.poolItemId) : null;
       const want = origin
-        ? politeCaseItem(origin) || POLITE_OVERRIDES.includes(item.poolItemId)
+        ? politeCaseItem(origin) || POLITE_OVERRIDES.includes(item.poolItemId) || thirdPersonCaseItem(origin)
         : strict(accepted[0], accepted);
       assert.equal(item.caseSensitive === true, want, `${cp.id} ${item.id}: flag and predicate disagree on "${accepted[0]}"`);
-      if (!want || item.mode === 'confirm') continue;
+      if (!want || item.mode === 'confirm' || (origin && thirdPersonCaseItem(origin))) continue;
       fired += 1;
       assert.equal(isItemCorrect(item, accepted[0].toLowerCase()), false,
         `${cp.id} ${item.id}: the lowercase form of "${accepted[0]}" must be wrong in a graded test`);
@@ -1953,9 +1954,9 @@ test('the lowercase answer is wrong exactly where the polite predicate fires —
 });
 
 test('the hand-set case overrides in the pool are exactly the documented ones', async () => {
-  const { politeCaseItem } = await import('../src/data/lessonPools/quality.js');
+  const { politeCaseItem, thirdPersonCaseItem } = await import('../src/data/lessonPools/quality.js');
   const overrides = POOL.items
-    .filter((i) => i.caseSensitive === true && !politeCaseItem(i))
+    .filter((i) => i.caseSensitive === true && !politeCaseItem(i) && !thirdPersonCaseItem(i))
     .map((i) => i.id);
   assert.deepEqual(overrides.sort(), [...POLITE_OVERRIDES].sort(),
     'an override is a decision someone has to defend in writing — add it to POLITE_OVERRIDES with a reason or drop the flag');

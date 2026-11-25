@@ -242,7 +242,16 @@ test('a closed series is shown and can be heard before a check asks for it: the 
     const lesson = c.lektionen.find((l) => l.nr === nr);
     for (let retake = 0; retake < 4; retake += 1) {
       for (const turn of checkTurns(lesson.guided.check, retake).filter((x) => x.listen)) {
-        for (const d of turn.listen.match(/\d+/g) || []) assert.ok(numbers.has(d), `Lektion ${nr}: „${turn.listen}“ asks for ${d}, which no list shows`);
+        // Up to twenty each number is shown; above it the tens are shown with the rule of the compounds („45 ist fünf-und-vierzig“),
+        // and a compound the list prints is never dictated: that would measure the list, not the rule.
+        for (const d of turn.listen.match(/\d+/g) || []) {
+          const n = Number(d);
+          if (n <= 20 || n % 10 === 0) assert.ok(numbers.has(d), `Lektion ${nr}: „${turn.listen}“ asks for ${d}, which no list shows`);
+          else {
+            assert.ok(numbers.has(String(n - (n % 10))) && [...numbers.keys()].some((k) => Number(k) > 20 && Number(k) % 10), `Lektion ${nr}: ${d} has no tens and no rule shown`);
+            assert.ok(!numbers.has(d), `Lektion ${nr}: ${d} is printed in the list, so the check measures the list`);
+          }
+        }
         if (nr === 2) for (const w of turn.listen.split(/[\s,]+/).filter(Boolean)) assert.ok([...numbers.values()].includes(w), `Lektion 2: „${w}“`);
       }
     }

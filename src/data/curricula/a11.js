@@ -1259,7 +1259,8 @@ export const CURRICULUM_A11 = {
                 { cue: { de: 'Das ist ein Regal.', en: 'That is a shelf.' }, accepted: ['Was kostet es?', 'Was kostet das Regal?', 'Wie viel kostet es?', 'Wie viel Euro kostet es?', 'Wie viel kostet das Regal?', 'Wie viel Euro kostet das Regal?', 'Was kostet das?', 'Wie viel kostet das?', 'Wie viel Euro kostet das?', 'Wie teuer ist es?', 'Wie teuer ist das Regal?', 'Wie teuer ist das?', 'Wie viel?'] },
               ] },
             { canDo: 2, taskDe: 'Frau Wolf sagt den Preis. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says the price. Write it down.',
-              variants: [{ listen: 'Sie kostet 18 Euro.' }, { listen: 'Er kostet 45 Euro.' }, { listen: 'Es kostet 72 Euro.' }] },
+              // Prices the reading's number list does not show (Claude score, 2026-11-25: 18, 45, 72 stood in it).
+              variants: [{ listen: 'Sie kostet 36 Euro.' }, { listen: 'Er kostet 63 Euro.' }, { listen: 'Es kostet 98 Euro.' }] },
             // The task names the thing by its noun alone, so the learner gives it its own article (der Stuhl,
             // die Lampe, der Tisch): the Genus of this Lektion, not a copy of the task (DaF review 2026-11-19).
             { canDo: 1,
@@ -1270,7 +1271,7 @@ export const CURRICULUM_A11 = {
               ] },
             // The total of the two things just asked about, before the learner says what they buy.
             { canDo: 2, taskDe: 'Frau Wolf sagt, was alles zusammen kostet. Schreiben Sie den Preis.', taskEn: 'Frau Wolf says what it all costs together. Write it down.',
-              variants: [{ listen: 'Der Stuhl und die Uhr kosten zusammen 30 Euro.' }, { listen: 'Die Lampe und der Rucksack kosten zusammen 57 Euro.' }, { listen: 'Der Tisch und das Regal kosten zusammen 84 Euro.' }] },
+              variants: [{ listen: 'Der Stuhl und die Uhr kosten zusammen 25 Euro.' }, { listen: 'Die Lampe und der Rucksack kosten zusammen 54 Euro.' }, { listen: 'Der Tisch und das Regal kosten zusammen 87 Euro.' }] },
             { canDo: 3, cue: { de: 'Was kaufen Sie?', en: 'What are you buying?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you are buying, in one sentence.', accepted: ['Ich kaufe …', 'Ich nehme …', 'Ich möchte …', 'Ich möchte … kaufen.', 'Ich möchte … nehmen.'], slot: 'thing',
               variants: [{ example: 'Ich kaufe den Stuhl und die Uhr.' }, { example: 'Ich kaufe den Rucksack und die Lampe.' }, { example: 'Ich kaufe das Regal und den Tisch.' }] },
           ],
@@ -2836,11 +2837,11 @@ export const CURRICULUM_A11 = {
                 { frame: 'Ich fahre in den …', slotIn: ['Irak', 'Iran', 'Libanon', 'Sudan', 'Jemen'] }], slot: 'place', slotWords: CHECK_PLACES, example: 'Ich fahre nach Berlin.' },
             { canDo: 0, taskDe: 'Fragen Sie mit Ja/Nein-Frage.',
               variants: [
-                { taskDe: 'Jetzt eine andere Reise, Ziel: Berlin. Stellen Sie Herrn Schmidt eine Ja/Nein-Frage zum Zug.', taskEn: 'Now another trip, to Berlin: ask Herr Schmidt a yes/no question: does the train go there?',
+                { taskDe: 'Jetzt eine andere Reise, Ziel: Berlin. Fragen Sie Herrn Schmidt mit einer Ja/Nein-Frage, ob der Zug dorthin fährt.', taskEn: 'Now another trip, to Berlin: ask Herr Schmidt with a yes/no question whether the train goes there.',
                   accepted: ['Fährt der Zug nach Berlin?', 'Fährt der Zug auch nach Berlin?', 'Fährt dieser Zug nach Berlin?', 'Geht der Zug nach Berlin?', 'Ist das der Zug nach Berlin?', 'Fährt er nach Berlin?', 'Fährt der Zug hier nach Berlin?', 'Fährt ein Zug nach Berlin?'] },
-                { taskDe: 'Jetzt eine andere Reise, Ziel: Österreich. Stellen Sie Herrn Schmidt eine Ja/Nein-Frage zum Zug.', taskEn: 'Now another trip, to Austria (Österreich): ask Herr Schmidt a yes/no question: does the train go there?',
+                { taskDe: 'Jetzt eine andere Reise, Ziel: Österreich. Fragen Sie Herrn Schmidt mit einer Ja/Nein-Frage, ob der Zug dorthin fährt.', taskEn: 'Now another trip, to Austria (Österreich): ask Herr Schmidt with a yes/no question whether the train goes there.',
                   accepted: ['Fährt der Zug nach Österreich?', 'Fährt der Zug auch nach Österreich?', 'Fährt dieser Zug nach Österreich?', 'Geht der Zug nach Österreich?', 'Ist das der Zug nach Österreich?', 'Fährt er nach Österreich?', 'Fährt der Zug hier nach Österreich?', 'Fährt ein Zug nach Österreich?'] },
-                { taskDe: 'Jetzt eine andere Reise, Ziel: Köln. Stellen Sie Herrn Schmidt eine Ja/Nein-Frage zum Zug.', taskEn: 'Now another trip, to Cologne (Köln): ask Herr Schmidt a yes/no question: does the train go there?',
+                { taskDe: 'Jetzt eine andere Reise, Ziel: Köln. Fragen Sie Herrn Schmidt mit einer Ja/Nein-Frage, ob der Zug dorthin fährt.', taskEn: 'Now another trip, to Cologne (Köln): ask Herr Schmidt with a yes/no question whether the train goes there.',
                   accepted: ['Fährt der Zug nach Köln?', 'Fährt der Zug auch nach Köln?', 'Fährt dieser Zug nach Köln?', 'Geht der Zug nach Köln?', 'Ist das der Zug nach Köln?', 'Fährt er nach Köln?', 'Fährt der Zug hier nach Köln?', 'Fährt ein Zug nach Köln?'] },
               ] },
             { canDo: 0, cue: { de: 'Ja, der Zug fährt heute.', en: 'Yes, the train goes today.' }, taskDe: 'Sie brauchen die Uhrzeit für Ihren Zug. Fragen Sie Herrn Schmidt.', taskEn: 'Ask when the train leaves.',

@@ -57,7 +57,7 @@ export const abschlusstestA11 = {
   title: 'Abschlusstest A1.1 (Kurzversion)',
   intro:
     'Das ist der Abschlusstest Ihres A1.1-Kurses. Hören und Lesen werden automatisch bewertet; ' +
-    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen zusammen und mit mindestens 5 von 8 Punkten im Lesen. Eine Formularaufgabe zum Schreiben ' +
+    'Sie bestehen diesen Kurstest ab 60 % in diesen beiden Teilen zusammen und mit mindestens 5 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen. Eine Formularaufgabe zum Schreiben ' +
     'bearbeiten Sie mit einem Selbstcheck; sie zählt nicht zur Punktzahl. Eine freie Mitteilung und Sprechen sind nicht enthalten. ' +
     'Dieser Test übt einzelne Aufgabenarten von Start Deutsch 1 und bildet nicht die vollständige Prüfung ab. ' +
     'Er ist eigenes Übungsmaterial von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. ' +
@@ -85,6 +85,9 @@ export const abschlusstestA11 = {
       key: 'hoeren',
       title: 'Hören',
       minutes: 15,
+      // Its keys come from the database, so its mark is written here: one answer throughout („b“) takes 4 of the 8
+      // (tests/fixtures/a11-final-listening.json), so the section needs 5, like Lesen (Claude score, 2026-11-25).
+      passMark: 5,
       instructions: 'Eine Aufnahme mit kurzen Dialogen und Durchsagen am Bahnhof. Sie hören sie zweimal. Die acht Fragen gehören zu den ersten sechs Teilen der Aufnahme.',
       instructionsEn: 'A recording with short conversations and announcements at a station. You hear it twice. The eight questions belong to the first six parts of the recording.',
       parts: [
@@ -199,7 +202,7 @@ export const abschlusstestA11 = {
           items: [
             {
               id: 'l3-1',
-              prompt: 'Schild im Büro: „Frau Novak hat von 12 bis 13 Uhr Pause.“ — Um halb eins ist Frau Novak im Büro.',
+              prompt: 'Schild im Büro: „Frau Novak hat von 12 bis 13 Uhr Pause.“ — Um halb eins arbeitet Frau Novak.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },

@@ -247,6 +247,7 @@ function seedVocabulary(spec, priorCurriculum) {
   for (const l of priorCurriculum.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const w of seriesWords(l)) known.add(w);
   }
   return known;
 }

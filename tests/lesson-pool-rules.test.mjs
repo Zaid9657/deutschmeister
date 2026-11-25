@@ -1750,4 +1750,24 @@ test('a yes/no question to build says where the verb stands, never which form op
     if (/das Verb steht vorn/.test(it.questionDe)) assert.match(it.questionEn || '', /verb comes first/i, `${it.id}: the English says it too`);
   }
   assert.ok(n >= 9, `yes/no questions to build: ${n}`);
+  // With no opening named, the phrases after the verb and its subject keep their free order (Codex score, 2026-11-25).
+  for (const [id, other] of [['extra-a11-l10-07', 'Fahrt ihr in die Schweiz mit dem Auto?'], ['extra-a11-l10-08', 'Fahren Sie nach Deutschland morgen?']]) {
+    assert.ok(POOL.items.find((it) => it.id === id).accepted.includes(other), `${id}: ${other}`);
+  }
+});
+
+// The Claude score of 2026-11-25: a spelling task took the word itself, a gap inside a sentence its capital, and „Ihre“ for
+// „ihre“ (sie, Plural) was let through as a slip.
+test('a spelling is letters, a gap inside a sentence takes no capital it does not need, and „sie“ is not „Sie“', () => {
+  for (const it of POOL.items) {
+    if (/Buchstabieren Sie/.test(it.questionDe) && /[-\s]/.test(it.answer)) {
+      for (const a of it.accepted || []) assert.ok(/^(?:\p{L}[-\s]?)+$/u.test(a) && (/[-\s]/.test(a) || a === a.toLocaleUpperCase('de')), `${it.id}: „${a}“ is no spelling`);
+    }
+    const q = String(it.questionDe || '');
+    const inside = q.indexOf('___') > 0 && !/[.!?:]\s*„?$/.test(q.slice(0, q.indexOf('___')).trim());
+    if (it.type === 'fill_blank' && inside && /^\p{Ll}/u.test(it.answer) && !/(?:Substantiv|Nomen)/.test(q)) {
+      assert.ok(!(it.accepted || []).some((a) => a !== it.answer && a.toLocaleLowerCase('de') === it.answer && /^\p{Lu}/u.test(a)), `${it.id}: a capital inside the sentence`);
+    }
+    if (/\((?:sie|er|es)[,)]/.test(q) && /^(?:ihr|ihre|ihren|ihrem|ihrer|sie)$/.test(it.answer) && !/^___/.test(q.trim())) assert.equal(it.caseSensitive, true, it.id);
+  }
 });

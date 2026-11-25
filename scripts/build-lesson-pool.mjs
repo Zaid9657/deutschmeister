@@ -128,7 +128,7 @@ import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
-  isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
+  isPoliteFormItem, thirdPersonCaseItem, minimalArticleCorrection, frontedAcceptedForms,
   missingDeterminerCue, withDeterminerCue, missingOpeningCue, verbFirstCue, namedRepairAccepts, taskConstraintsEn,
   middleFieldAcceptedForms, englishEchoesGerman, fullSentenceDe,
 } from '../src/data/lessonPools/quality.js';
@@ -1129,6 +1129,16 @@ for (const item of [...kept, ...supplement, ...extra]) {
   if (hand) caseHandFlagged.push(item.id);
   else if (derived) caseDerived.push({ id: item.id, topic: item.topic, answer: item.answer });
   if (hand || derived) item.caseSensitive = true;
+  // „Die Eltern lieben ___ Kinder. (sie, Plural)“: where the cue names „sie“, the capital is the polite „Ihre“, another person —
+  // no slip (Claude score, 2026-11-25). Inside the sentence only; at its start the capital is the sentence's.
+  if (thirdPersonCaseItem(item)) item.caseSensitive = true;
+  // (a) A gap inside the sentence takes the small letter the sentence has: a capital there is the case slip the checker
+  // gives a second try for, never a second right answer (Claude score, 2026-11-25: „Mach's gut und Schönen Tag noch!“).
+  const q = String(item.questionDe || '');
+  const at = q.indexOf('___');
+  if (item.type === 'fill_blank' && at > 0 && !/[.!?:]\s*„?$/.test(q.slice(0, at).trim()) && /^\p{Ll}/u.test(String(item.answer || '')) && !/(?:Substantiv|Nomen)/.test(q)) {
+    item.accepted = (item.accepted || []).filter((a) => a === item.answer || !(/^\p{Lu}/u.test(a) && a.toLocaleLowerCase('de') === item.answer));
+  }
 }
 
 // ── REVIEW #6 MAJOR 4: drop legacy items built on words the course never teaches ──

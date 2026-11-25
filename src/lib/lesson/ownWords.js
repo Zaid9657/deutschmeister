@@ -126,3 +126,24 @@ Yoga Schwimmen Joggen Wandern Kochen Backen Lesen Singen Malen Zeichnen Spaziere
 // Two genders are in use for these.
 NOUN_GENDERS.das += ' Joghurt Laptop Keks Gulasch Kaugummi Ketchup E-Mail Cola Radiergummi Bonbon Parfum Virus Teil';
 NOUN_GENDERS.der += ' Bonbon Gulasch';
+
+// What one drinks, and what one eats, of the nouns above (a compound has the kind of its last part): „Ich möchte eine Pizza“ is no drink.
+export const DRINKS = `Wein Saft Sekt Cocktail Schnaps Espresso Cappuccino Kakao Smoothie Eistee Eiskaffee Milchkaffee Früchtetee Kräutertee Pfefferminztee Cola
+Fanta Limonade Limo Apfelschorle Schorle Latte Milch Wasser Bier Getränk Kaffee Tee Mineralwasser Orangensaft Apfelsaft Rotwein Weißwein`.split(/\s+/);
+export const FOODS = `Apfel Pfirsich Ananas Reis Käse Quark Joghurt Honig Zucker Pfeffer Senf Essig Ketchup Fisch Schinken Speck Döner Burger Hamburger Keks
+Kaugummi Pudding Nachtisch Salat Kohl Spinat Knoblauch Pilz Toast Krapfen Pfannkuchen Auflauf Eintopf Snack Muffin Donut Brokkoli Sellerie Pizza Suppe Wurst
+Bratwurst Currywurst Butter Margarine Marmelade Sahne Soße Nudel Nudeln Kartoffel Kartoffeln Tomate Tomaten Gurke Zwiebel Karotte Möhre Paprika Bohne Bohnen
+Erbse Olive Oliven Aubergine Zucchini Banane Orange Zitrone Birne Kirsche Erdbeere Traube Mango Melone Schokolade Torte Praline Waffel Mittagessen Abendessen
+Brot Brötchen Sandwich Käsebrot Croissant Toastbrot Ei Eier Rührei Fleisch Hähnchen Steak Schnitzel Würstchen Gulasch Obst Gemüse Müsli Eis Bonbon Stück
+Dessert Menü Pommes Chips Süßigkeiten Essen Frühstück Kuchen Falafel Hummus Couscous Lasagne Spaghetti Omelett Portion Teller`.split(/\s+/);
+
+// Everyday English nouns a beginner puts in a German sentence („Meine Friends kommen auch.“). None is a German word, one letter
+// from one a learner would type, or a name German uses too („Job“, „Party“, „Baby“, „Hobby“ are left out).
+export const ENGLISH_NOUNS = `chicken friends friend flowers flower october december january february july monday tuesday wednesday thursday friday saturday
+sunday school work homework books book phone water bread milk coffee juice apple apples eggs egg cheese rice meat sugar cake potato potatoes tomato tomatoes
+vegetables fruit breakfast lunch dinner house car bike table chair pencil scissors picture pictures clock key keys wallet glasses mother father sister
+sisters brother brothers parents uncle aunt grandma grandpa grandmother grandfather husband wife daughter daughters child children family teacher nurse
+driver engineer waiter music swimming reading cooking dancing singing running garden gardening painting photography weekend week evening birthday present
+presents shoes dress shirt trousers perfume chocolate money printer desk screen password room office kitchen bathroom hungry thirsty tired married happy
+yellow white black grey gray purple people neighbour neighbours neighbor neighbors cousins nephew niece guest guests colleague colleagues boss
+train plane station ticket-office doctor hospital shop store street city country town language languages name's`.split(/\s+/).filter((w) => !['boss', 'train', 'doctor', 'cousins', 'city'].includes(w));

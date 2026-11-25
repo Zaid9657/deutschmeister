@@ -160,11 +160,27 @@ const partMissing = (text) => badDate(text) || !/\d{1,2}\.?\s*(?:[./]\s*\d|janua
 const ADJECTIVE_PLACE = /(?<!\p{L})(?:k?eine?n?|der|die|das|den|meine?n?)\s+(?:heiße|heißen|gute|guten|kalte|kalten)\s+\p{Lu}/u;
 
 // A fault no context makes right.
-const ALWAYS = new Set(['address', 'ending', 'english', 'spelling', 'heard', 'name']);
+// (Claude score, 2026-11-25: „asdf“, „x“ and „Keine Ahnung“ were sent to BEYOND with half the answer shown; a participle with
+// the wrong auxiliary, an infinitive in its place, and a verb said twice, are wrong in every sentence.)
+const ALWAYS = new Set(['address', 'ending', 'english', 'spelling', 'heard', 'name', 'nonsense', 'answer', 'infinitive', 'auxiliary', 'twice']);
 
-/** „in Montag“, „im Freitag“, „um Montag“, „am 17 Uhr“: a preposition no day or clock time takes. */
+/** „in Montag“, „im Freitag“, „um Montag“, „am 17 Uhr“, „am Mai“, „in Mai“: a preposition no day, clock time or month takes. */
+const MONTHS = set('januar februar maerz april mai juni juli august september oktober november dezember');
 const timePreposition = (whole) => whole.some((w, i) => (DAYS.has(w) && ['in', 'im', 'um', 'zu', 'bei', 'an'].includes(whole[i - 1]))
+  || (MONTHS.has(w) && ['am', 'in', 'um', 'an'].includes(whole[i - 1]) && !/^\d/.test(whole[i - 2] || '') && whole[i - 2] !== 'anfang' && whole[i - 2] !== 'ende')
   || (w === 'uhr' && i >= 2 && whole[i - 2] === 'am' && /^\d|^(?:ein|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf)/.test(whole[i - 1])));
+
+/**
+ * One object pronoun in the place of another, the rest the turn's answer word for word: „Mich geht es gut.“, „Ich lade dir ein.“.
+ * Null, or the fault's name.
+ */
+export function pronounSwap(turn, text) {
+  const n = nearestFrame(turn, text);
+  if (!n || n.cost !== 1 || n.ops[0].op !== 'sub') return null;
+  const { a, f } = n.ops[0];
+  const pairs = [['mir', 'mich'], ['dir', 'dich'], ['ihm', 'ihn'], ['ihnen', 'sie']];
+  return pairs.some(([x, y]) => (a === x && f === y) || (a === y && f === x)) ? 'word' : null;
+}
 
 /**
  * Whether a named fault stands. `knows(word)` says whether the course (or the grader's own lists) knows a small word:
@@ -209,18 +225,30 @@ export function certainFault(turn, text, reason, knows, isVerb = () => false) {
     case 'person': return one && op.op === 'sub' && sameLemma(op.a, op.f);
     case 'order': return n.perm || moved();
     case 'missing':
+      // („Ich studiere.“, „Ich stehe früh auf.“: another verb or a word of time in the place of the frame's.)
+      if (n.answer.some((w) => isVerb(w) && !n.frame.includes(w)) || n.answer.some((w) => ['frueh', 'spaet', 'erst', 'schon'].includes(w))) return false;
+      // („Ich studiere.“: a verb the course does not teach after „ich“; „Ich bin Syrer.“: a nationality, no place.)
+      if (n.answer[0] === 'ich' && /e$/.test(n.answer[1] || '') && !knows(n.answer[1]) && !FUNCTION(n.answer[1])) return false;
+      if (one && op.op === 'del' && PREPOSITION.has(op.f) && n.inGap.length && n.inGap.every((w) => /(?:er|erin)$/.test(w) && !DAYS.has(w))) return false;
       if (one && op.op === 'del') {
         // A preposition left out before „morgen“, „nächste Woche“ is none; „Wiedersehen!“ is German too.
         if (PREPOSITION.has(op.f) && (n.answer.some((w) => TIME_ADVERB.test(w)) || !n.frame.includes(GAP))) return false;
+        // („Hier Yilmaz.“: on the phone the name stands without its verb.)
+        if (op.f === 'ist' && n.whole.includes('hier')) return false;
         return FUNCTION(op.f) && !n.answer.includes(op.f) && n.gap <= 5;
       }
       if (one && op.op === 'sub') return (PRONOUN.has(op.f) && noPronoun && PREPOSITION.has(op.a)) || (SEP_PREFIX.has(op.f) && n.frame.at(-1) === op.f && !n.answer.includes(op.f));
       return false;
     case 'extra': return one && op.op === 'ins' && FUNCTION(op.a) && n.gap <= 5 && !PREPOSITION.has(op.a);
     case 'word':
+      // („Ich wohne bei meinem Bruder.“: another preposition with what the learner names is another sentence, not a fault.)
+      if (one && op.op === 'sub' && SIMPLE_PREPOSITION.has(op.a) && SIMPLE_PREPOSITION.has(op.f) && n.inGap.some((w) => ARTICLES.has(w) || POSSESSIVE.test(w))) return false;
+      // („Was kostet eine Fahrkarte für mich?“: a pronoun is no place, so this is another sentence than „… nach …“.)
+      if (one && op.op === 'sub' && PREPOSITION.has(op.f) && n.inGap.some((w) => OBJECT_PRONOUN.has(w))) return false;
       if (one && op.op === 'sub' && n.gap <= 3) return sameClass(op.a, op.f) || sameLemma(op.a, op.f) || (PRONOUN.has(op.f) && noPronoun && PREPOSITION.has(op.a));
       return false;
-    case 'kind': return n.cost === 0 && n.gap <= 2 && n.fixed >= 2 && !unknownSmall && !n.whole.includes('lieber');
+    // („Sie ist erst zwanzig.“: a word of degree before the number is no other kind of answer.)
+    case 'kind': return !n.whole.some((w) => ['erst', 'schon', 'noch', 'fast', 'ungefaehr', 'etwa'].includes(w)) && n.cost === 0 && n.gap <= 2 && n.fixed >= 2 && !unknownSmall && !n.whole.includes('lieber');
     // A day, a time or an answer the task does not ask for, in the turn's own frame.
     case 'task': return n.cost === 0 && Boolean(turn.when || turn.time) && n.gap <= 5 && n.answer.some((w) => DAYS.has(w) || NUMBER.test(w));
     default: return false;

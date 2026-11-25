@@ -59,7 +59,7 @@
    "questionEn": "Spell the greeting Hallo.",
    "options": null,
    "answer": "H-A-L-L-O",
-   "accepted": ["H-A-L-L-O", "h-a-l-l-o", "HALLO", "Hallo", "H A L L O"],
+   "accepted": ["H-A-L-L-O", "h-a-l-l-o", "HALLO", "H A L L O"],
    "explanationDe": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.",
    "hint": null
   },
@@ -2704,7 +2704,7 @@
    "questionEn": "Ana ends the call with a good wish. Use schön with the right ending.",
    "options": null,
    "answer": "schönen",
-   "accepted": ["schönen", "Schönen"],
+   "accepted": ["schönen"],
    "explanationDe": "Der gute Wunsch zum Abschied: Schönen Tag noch!",
    "hint": null
   },

@@ -787,6 +787,15 @@ export function politeCaseItem(item) {
 export const isPoliteFormItem = politeCaseItem;
 
 /**
+ * The mirror case (Claude score, 2026-11-25): „Die Eltern lieben ___ Kinder. (sie, Plural)“ wants „ihre“, and „Ihre“ there is the polite
+ * form, another person, not a slip. A lowercase ihr-/sie-form whose cue names its person, inside the sentence.
+ */
+export function thirdPersonCaseItem(item) {
+  const q = String(item?.questionDe || '');
+  return /\((?:sie|er|es)[,)]/.test(q) && /^(?:ihr|ihre|ihren|ihrem|ihrer|sie)$/.test(String(item?.answer || '')) && !/^___/.test(q.trim());
+}
+
+/**
  * REVIEW #6 BLOCKER 2. An error correction whose model answer differs from the
  * quoted sentence in MORE than the way the German prompt names.
  *
@@ -1163,7 +1172,7 @@ const WEAK_PRONOUN_RE = /^(?:ich|du|er|sie|es|wir|ihr|mich|dich|ihn|uns|euch|mir
 const LIGHT_VERB_NOUN_RE = /^(?:hunger|durst|zeit|verspätung|verspaetung|lust|angst|fieber|glück|glueck|recht|spaß|spass|urlaub|feierabend|pause|schmerzen|kopfschmerzen)$/i;
 const MIDDLE_DETERMINER_RE = /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|kein|keine|keinen|keinem|mein|meine|meinen|meinem|dein|deine|deinen|deinem|sein|seine|seinen|seinem|ihr|ihre|ihren|ihrem|unser|unsere|unseren|euer|eure|jeden|jede|jedes|diesen|diese|dieses|nächste|nächsten|letzte|letzten)$/i;
 const W_WORD_RE = /^(?:wer|wen|wem|wie|was|wo|wohin|woher|wann|warum|welche|welcher|welches|welchen)$/i;
-const ORDER_TASK_RE = /Reihenfolge|TeKaMoLo|steht vor|steht am Satzende/i;
+const ORDER_TASK_RE = /Reihenfolge|TeKaMoLo|steht vor(?!n)|steht am Satzende/i; // „das Verb steht vorn“ names no order
 const MAX_MOVABLE = 4;
 
 const permutations = (list) => (list.length <= 1 ? [list]
@@ -1174,10 +1183,12 @@ const permutations = (list) => (list.length <= 1 ? [list]
 export function middleFieldOrders(item) {
   if (String(item?.type) !== 'sentence_building') return [];
   const q = String(item.questionDe || '');
-  const cue = /\(Beginnen Sie mit „([^“]+)“\)/.exec(q);
+  const answer = String(item.answer || '').trim();
+  // A yes/no question names no opening: its verb opens it (`verbFirstCue`, Codex score of 2026-11-25: „Fahrt ihr in die
+  // Schweiz mit dem Auto?“ was refused).
+  const cue = /\(Beginnen Sie mit „([^“]+)“\)/.exec(q) || (VERB_FIRST_CUE_RE.test(q) && /\?$/.test(answer) ? [null, answer.split(/\s+/)[0]] : null);
   const bracket = BRACKET_LIST_RE.exec(q);
   if (!cue || !bracket || ORDER_TASK_RE.test(q)) return [];
-  const answer = String(item.answer || '').trim();
   const end = (answer.match(/[.?]$/) || [''])[0];
   if (!end || /,/.test(answer) || NEGATION_ANSWER_RE.test(answer)) return [];
   const words = answer.slice(0, -1).split(/\s+/).filter(Boolean);

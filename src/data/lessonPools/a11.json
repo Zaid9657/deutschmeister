@@ -138,7 +138,6 @@
     "H-A-L-L-O",
     "h-a-l-l-o",
     "HALLO",
-    "Hallo",
     "H A L L O"
    ],
    "explanationDe": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.",
@@ -1411,8 +1410,7 @@
    "options": null,
    "answer": "die",
    "accepted": [
-    "die",
-    "Die"
+    "die"
    ],
    "explanationDe": "Die Schere ist feminin und Singular.",
    "hint": null,
@@ -1511,8 +1509,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Erst ein Heft, dann bekannt: das Heft.",
    "hint": null,
@@ -1886,8 +1883,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Wir wissen, welches Buch gemeint ist: das Wörterbuch.",
    "hint": null,
@@ -2036,8 +2032,7 @@
    "options": null,
    "answer": "die",
    "accepted": [
-    "die",
-    "Die"
+    "die"
    ],
    "explanationDe": "Tür ist feminin, also die Tür.",
    "hint": null,
@@ -2056,8 +2051,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Lineal ist neutral: das Lineal.",
    "hint": null,
@@ -2116,8 +2110,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Papier ist neutral: das Papier.",
    "hint": null,
@@ -3230,8 +3223,7 @@
    "options": null,
    "answer": "der",
    "accepted": [
-    "der",
-    "Der"
+    "der"
    ],
    "explanationDe": "Tisch ist maskulin: der Tisch.",
    "hint": null,
@@ -3495,8 +3487,7 @@
    "options": null,
    "answer": "die",
    "accepted": [
-    "die",
-    "Die"
+    "die"
    ],
    "explanationDe": "Lampe ist feminin: Ich kaufe die Lampe.",
    "hint": null,
@@ -3515,8 +3506,7 @@
    "options": null,
    "answer": "die",
    "accepted": [
-    "die",
-    "Die"
+    "die"
    ],
    "explanationDe": "Uhr ist feminin: Ich kaufe die Uhr.",
    "hint": null,
@@ -3535,8 +3525,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Regal ist neutral: Ich kaufe das Regal.",
    "hint": null,
@@ -3555,8 +3544,7 @@
    "options": null,
    "answer": "die",
    "accepted": [
-    "die",
-    "Die"
+    "die"
    ],
    "explanationDe": "Uhr ist feminin: die Uhr.",
    "hint": null,
@@ -3575,8 +3563,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Regal ist neutral: das Regal.",
    "hint": null,
@@ -3635,8 +3622,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Regal ist neutral: Was kostet das Regal?",
    "hint": null,
@@ -3655,8 +3641,7 @@
    "options": null,
    "answer": "der",
    "accepted": [
-    "der",
-    "Der"
+    "der"
    ],
    "explanationDe": "Rucksack ist maskulin: Was kostet der Rucksack?",
    "hint": null,
@@ -3675,8 +3660,7 @@
    "options": null,
    "answer": "die",
    "accepted": [
-    "die",
-    "Die"
+    "die"
    ],
    "explanationDe": "Tasche ist feminin: Was kostet die Tasche?",
    "hint": null,
@@ -3695,8 +3679,7 @@
    "options": null,
    "answer": "der",
    "accepted": [
-    "der",
-    "Der"
+    "der"
    ],
    "explanationDe": "Rucksack ist maskulin: der Rucksack.",
    "hint": null,
@@ -3715,8 +3698,7 @@
    "options": null,
    "answer": "der",
    "accepted": [
-    "der",
-    "Der"
+    "der"
    ],
    "explanationDe": "Stuhl ist maskulin: der Stuhl.",
    "hint": null,
@@ -3735,8 +3717,7 @@
    "options": null,
    "answer": "der",
    "accepted": [
-    "der",
-    "Der"
+    "der"
    ],
    "explanationDe": "Stuhl ist maskulin: Was kostet der Stuhl?",
    "hint": null,
@@ -4033,8 +4014,7 @@
    "options": null,
    "answer": "das",
    "accepted": [
-    "das",
-    "Das"
+    "das"
    ],
    "explanationDe": "Man fragt nach dem Regal: das Regal.",
    "hint": null,
@@ -5102,6 +5082,7 @@
    "explanationDe": "Tasche ist feminin, deshalb heißt es „ihre“. „ihr“ gehört hier zu „sie“ (eine Frau).",
    "explanationEn": "The owner is sie (she), so the word is **ihr** (her). Tasche is feminine, and feminine nouns add **-e**: **ihre Tasche**.",
    "hint": null,
+   "caseSensitive": true,
    "minLektion": 4
   },
   {
@@ -5121,6 +5102,7 @@
    "explanationDe": "Kinder ist Plural, deshalb heißt es „ihre“. „ihr“ gehört hier zu „sie“ (mehrere Personen).",
    "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Kinder is plural, and plurals add **-e**: **ihre Kinder**.",
    "hint": null,
+   "caseSensitive": true,
    "minLektion": 12
   },
   {
@@ -5625,6 +5607,7 @@
    "explanationDe": "Vater ist maskulin, deshalb heißt es „ihr“, ohne Endung. „ihr“ gehört hier zu „sie“ (mehrere Personen).",
    "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Vater is masculine, so there is no ending: **ihr Vater**.",
    "hint": null,
+   "caseSensitive": true,
    "minLektion": 3
   },
   {
@@ -5877,8 +5860,7 @@
    "options": null,
    "answer": "schönen",
    "accepted": [
-    "schönen",
-    "Schönen"
+    "schönen"
    ],
    "explanationDe": "Der gute Wunsch zum Abschied: Schönen Tag noch!",
    "hint": null,
@@ -10440,7 +10422,9 @@
    "answer": "Fahrt ihr mit dem Auto in die Schweiz?",
    "accepted": [
     "Fahrt ihr mit dem Auto in die Schweiz?",
-    "Fahrt ihr mit dem Auto in die Schweiz"
+    "Fahrt ihr mit dem Auto in die Schweiz",
+    "Fahrt ihr in die Schweiz mit dem Auto?",
+    "Fahrt ihr in die Schweiz mit dem Auto"
    ],
    "explanationDe": "ihr fahrt wird in der Frage zu Fahrt ihr.",
    "hint": null,
@@ -10460,7 +10444,9 @@
    "answer": "Fahren Sie morgen nach Deutschland?",
    "accepted": [
     "Fahren Sie morgen nach Deutschland?",
-    "Fahren Sie morgen nach Deutschland"
+    "Fahren Sie morgen nach Deutschland",
+    "Fahren Sie nach Deutschland morgen?",
+    "Fahren Sie nach Deutschland morgen"
    ],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
    "hint": null,
@@ -10481,7 +10467,9 @@
    "answer": "Ist die Ankunft an Gleis vier?",
    "accepted": [
     "Ist die Ankunft an Gleis vier?",
-    "Ist die Ankunft an Gleis vier"
+    "Ist die Ankunft an Gleis vier",
+    "Ist an Gleis vier die Ankunft?",
+    "Ist an Gleis vier die Ankunft"
    ],
    "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
    "hint": null,
@@ -10541,7 +10529,9 @@
    "answer": "Kommt der Bus zum Bahnhof?",
    "accepted": [
     "Kommt der Bus zum Bahnhof?",
-    "Kommt der Bus zum Bahnhof"
+    "Kommt der Bus zum Bahnhof",
+    "Kommt zum Bahnhof der Bus?",
+    "Kommt zum Bahnhof der Bus"
    ],
    "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
    "hint": null,
@@ -10626,7 +10616,9 @@
    "answer": "Ist die Abfahrt von Gleis vier?",
    "accepted": [
     "Ist die Abfahrt von Gleis vier?",
-    "Ist die Abfahrt von Gleis vier"
+    "Ist die Abfahrt von Gleis vier",
+    "Ist von Gleis vier die Abfahrt?",
+    "Ist von Gleis vier die Abfahrt"
    ],
    "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
    "hint": null,

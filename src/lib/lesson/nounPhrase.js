@@ -72,7 +72,8 @@ export function nounPhraseFault(text, { readings, bareFault = () => false }) {
     if (!r) continue;
     const prep = i > 0 && !words[i - 1].end ? words[i - 1].f : '';
     const d = f;
-    if (DATIVE_ONLY.has(prep)) { if (!r.some((g) => fits(d, g, DAT))) return true; continue; }
+    // („mit den Computer“: „den“ after „mit“ is a plural, and the plural takes its -n there unless it ends in -s; „aus den USA“.)
+    if (DATIVE_ONLY.has(prep)) { if (!r.some((g) => fits(d, g, DAT)) || (d === 'den' && !/[ns]$/.test(noun.f) && !/^\p{Lu}{2,}$/u.test(noun.raw))) return true; continue; }
     if (ACCUSATIVE_ONLY.has(prep)) { if (!r.some((g) => fits(d, g, ACC))) return true; continue; }
     if (TWO_WAY.has(prep)) { if (!r.some((g) => fits(d, g, DAT) || fits(d, g, ACC))) return true; continue; }
     if (!r.some((g) => fitsAny(d, g))) return true;

@@ -82,10 +82,14 @@ test('no reading item is answered by finding its digits, its day or its words in
   for (const i of items) for (const s of scenes) if (tokens(s).length >= 3) assert.ok(!i.text.includes(s.replace(/[.!?]$/, '')), `${i.id}: ${s}`);
 });
 
-test('the reading mark stays one point above a constant answer', () => {
+test('both marks stay one point above a constant answer', () => {
   assert.equal(sectionGuessCeiling(lesen), 4);
-  assert.deepEqual(sectionPassMarks(mock).map((m) => [m.key, m.need, m.max]), [['lesen', 5, 8]]);
-  assert.match(mock.intro, /mindestens 5 von 8 Punkten im Lesen/);
+  // Hören's keys load from the database: one answer throughout takes 4 of its 8 in the snapshot (Claude score, 2026-11-25).
+  const keys = hoeren.parts[0].questionNumbers.map((n) => bank.find((q) => q.question_number === n).correct_answer);
+  const most = Math.max(...[...new Set(keys)].map((k) => keys.filter((x) => x === k).length));
+  assert.equal(hoeren.passMark, most + 1);
+  assert.deepEqual(sectionPassMarks(mock).map((m) => [m.key, m.need, m.max]), [['hoeren', 5, 8], ['lesen', 5, 8]]);
+  assert.match(mock.intro, /mindestens 5 von 8 Punkten im Hören und mindestens 5 von 8 Punkten im Lesen/);
   const all = Object.fromEntries(lesen.parts.flatMap((p) => p.items.map((i) => [i.id, i.answer])));
   assert.equal(scoreObjectiveSections(mock, all).score, 8);
 });

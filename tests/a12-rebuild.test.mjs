@@ -1457,22 +1457,16 @@ test('DaF review #6 MAJOR 8: no Falsch from a bound, two referents for two „vo
 
 test('DaF review #7 MAJOR 8: legacy binary reading preserves its negation gates, and a time bound gives no Falsch', async () => {
   const B = await import('../src/lib/checkpoint/buildCheckpoint.js');
-  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
   // Balancing the statement count and the text count APART left Falsch {text only, statement only}
   // against Richtig {both, neither}, and „statement and text agree → Richtig" solved six regular
   // papers (review #7). The pairs are read off the printed fields here, not from the builder: on
   // every A1.2 paper, rounds 0–3, both sides carry the same multiset of (statement negated, text
   // negated), so each of the sixteen functions of those two features scores exactly half a paper.
   const NEG = /\b(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)\b/i;
-  const pair = (it) => `${NEG.test(it.statement) ? 1 : 0}${NEG.test(it.text) ? 1 : 0}`;
   const papers = (curriculum, pool, rounds) => curriculum.checkpoints.flatMap((checkpoint) => Array.from({ length: rounds }, (_, round) => ({
     id: `${checkpoint.id}/${round}`,
     lesen: B.buildCheckpoint({ curriculum, checkpoint, pool, seed: B.paperSeed(checkpoint, round) }).filter((it) => it.section === 'lesen'),
   })));
-  const unbalanced = (list) => list.filter(({ lesen }) => {
-    const side = (key) => lesen.filter((it) => it.answer === key).map(pair).sort().join(',');
-    return side('Richtig') !== side('Falsch');
-  }).map((p) => p.id);
   // Since round 11b A1.2 prints two options, and what a reader sees is (option A negated, option B negated,
   // text negated). The best function of that triple takes, per triple, the place where more keys stand; on
   // every paper, the stress round included, it scores exactly half.

@@ -368,7 +368,7 @@ test('the otter speaks in both languages and a spoken line never shows a percent
     for (const pct of [0, UNCLEAR_BELOW - 0.01, UNCLEAR_BELOW, 1]) assert.doesNotMatch(speechLine(pct, lang), /%|\d/);
     assert.equal(speechLine(UNCLEAR_BELOW - 0.01, lang), t('otter.unclear', lang));
     assert.equal(speechLine(UNCLEAR_BELOW, lang), t('speaking.said', lang));
-    assert.match(t('otter.end', lang, { nr: 1 }), /Lektion 1/);
+    assert.match(t('otter.end', lang, { nr: 1 }), lang === 'de' ? /Lektion 1/ : /lesson 1/);
     assert.ok(c.lektionen[0].guided.opening[lang]);
   }
   // German chrome speaks Sie (course rule): no du-forms in the otter's lines.
