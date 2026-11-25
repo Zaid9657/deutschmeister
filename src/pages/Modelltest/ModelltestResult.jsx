@@ -5,10 +5,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { stationFor } from '../../data/offers.js';
-import { courseHome } from '../../lib/courseFlow.js';
+import { courseCertificate, courseHome } from '../../lib/courseFlow.js';
 import { resolveModelltest } from '../../data/modelltest';
 import { attemptMock } from '../../data/mockExams/forms.js';
-import { attemptVerdict, guessedSections } from '../../services/examScoring';
+import { attemptVerdict, costliestSection, guessedSections } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
 import { completeLevelTest } from '../../services/lessonService.js';
@@ -179,14 +179,20 @@ const ModelltestResult = () => {
     completeLevelTest(user.id, curriculum.level, levelTestNodeId(curriculum));
   }, [user, attempt, mock, examSlug, attemptIsThisTest]);
 
+  // Readiness never contradicts this result: „Sie sind bereit" stands under a pass only, and a course test
+  // has its own pass rule, so „noch nicht ganz: zwei Tests mit 70 %" is for the exam mocks alone.
+  const attemptPassed = Boolean(attempt?.max_score && mock) && attemptVerdict(attempt, mock) !== 'nicht-bereit';
+  const showReady = Boolean(readiness?.ready) && attemptPassed;
+  const showNotReady = Boolean(readiness) && !readiness.ready && readiness.lastTwo.length > 0 && resolved?.kind !== 'course';
+
   // The one confetti burst for the readiness moment — separate from, and
   // never doubling, the pass-moment burst CompletionMoment fires below.
   useEffect(() => {
-    if (readiness?.ready && !readinessConfettiFired.current) {
+    if (showReady && !readinessConfettiFired.current) {
       readinessConfettiFired.current = true;
       confettiBurst();
     }
-  }, [readiness?.ready]);
+  }, [showReady]);
 
   if (loading) {
     return (
@@ -212,10 +218,15 @@ const ModelltestResult = () => {
   const below = percent >= mock.passPercent ? guessedSections(attempt, mock) : [];
   const copy = below.length ? sectionCopy(below, percent, mock.passPercent) : mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
   const sections = attempt.section_scores || {};
-  const weakest = Object.entries(sections)
-    .map(([key, s]) => ({ key, pct: s.max ? s.score / s.max : 1 }))
-    .sort((a, b) => a.pct - b.pct)[0];
   const SECTION_HINTS = sectionHints(resolved.gateLevel || undefined);
+  const costliest = costliestSection(sections);
+  const hint = costliest ? SECTION_HINTS[costliest.key] : null;
+  // The points as they are: „die meisten Punkte" was untrue whenever two sections had lost the same number.
+  const hintLine = hint
+    ? `In „${hint.label}“ ${costliest.lost === 1 ? 'fehlt Ihnen ein Punkt' : `fehlen Ihnen ${costliest.lost} Punkte`} — genau da lohnt sich die nächste Einheit.`
+    : null;
+  // A pass on a live course's own final test: the way to its certificate and back to the course.
+  const passedCourse = passed && attemptIsThisTest ? curriculumForTestSlug(examSlug) : null;
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
@@ -262,17 +273,33 @@ const ModelltestResult = () => {
           </Card>
         </Reveal>
 
-        {/* Next action: attack the weakest section */}
-        {weakest && SECTION_HINTS[weakest.key] && (
+        {/* Next action: after a passed course test the certificate and the course; else the section that
+            cost the most points. A full score has none, and a fail is never announced like a win. */}
+        {(passedCourse || hint || passed) && (
           <Reveal delay={280} className="mt-6">
-            <CompletionMoment
-              headline="Übungstest abgeschlossen!"
-              detail={`Die meisten Punkte haben Sie in „${SECTION_HINTS[weakest.key].label}" liegen lassen — genau da lohnt sich die nächste Einheit.`}
-              nextLabel={SECTION_HINTS[weakest.key].linkLabel}
-              nextHref={SECTION_HINTS[weakest.key].href}
-              fullLoad={SECTION_HINTS[weakest.key].fullLoad}
-              celebrate={passed}
-            />
+            {passedCourse ? (
+              <>
+                <CompletionMoment
+                  headline="Abschlusstest bestanden!"
+                  detail={hintLine}
+                  nextLabel="Zur Teilnahmebescheinigung"
+                  nextHref={courseCertificate(passedCourse.level)}
+                />
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                  <Button variant="secondary" className="flex-1" to={courseHome(passedCourse.level)}>Zurück zum Kurs</Button>
+                  {hint && <Button variant="secondary" className="flex-1" {...(hint.fullLoad ? { href: hint.href } : { to: hint.href })}>{hint.linkLabel}</Button>}
+                </div>
+              </>
+            ) : (
+              <CompletionMoment
+                headline={passed ? 'Übungstest abgeschlossen!' : 'Das üben Sie als Nächstes'}
+                detail={hintLine}
+                nextLabel={hint ? hint.linkLabel : 'Zum Dashboard'}
+                nextHref={hint ? hint.href : '/dashboard'}
+                fullLoad={hint ? hint.fullLoad : false}
+                celebrate={passed}
+              />
+            )}
           </Reveal>
         )}
 
@@ -281,9 +308,9 @@ const ModelltestResult = () => {
             candy button and one confetti burst (an earned moment, distinct
             from the pass-moment burst above); not ready = a calm line, no
             button, no confetti — never a pass promise. */}
-        {readiness && readiness.lastTwo.length > 0 && (
+        {(showReady || showNotReady) && (
           <Reveal delay={310} className="mt-6">
-            {readiness.ready ? (
+            {showReady ? (
               <Card raised edge="limette" className="p-6 text-center">
                 <Chip tone="limette">Bereit</Chip>
                 <h2 className="mt-3 font-display text-xl font-semibold text-ink">Sie sind bereit</h2>
