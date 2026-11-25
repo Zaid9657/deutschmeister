@@ -113,7 +113,7 @@ function Shell() {
   const chrome = chromeFor(pathname);
   const focused = chrome === 'player';
   return (
-              <div className="min-h-screen bg-paper">
+              <div className="min-h-screen bg-paper print:min-h-0 print:bg-white">
                 {/* Keyboard users land here first and can jump the nav. The SPA
                     had no skip link and no <main> landmark at all. */}
                 <a
