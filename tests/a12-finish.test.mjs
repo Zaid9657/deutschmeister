@@ -214,7 +214,7 @@ test('the A1.2 home renders its path and completion in the selected language', a
     stubs['../contexts/AuthContext'] = { useAuth: () => ({ user: null }) };
     stubs['../contexts/SubscriptionContext'] = { useSubscription: () => ({}) };
     stubs['react-router-dom'] = { Link: 'Link', useSearchParams: () => [new URLSearchParams()] };
-    stubs['../data/curricula/a11.meta.js'] = { A11_META: { level: 'a1.1' }, lektionMinutesEstimate: () => ({ lo: 20, hi: 30 }) };
+    stubs['../data/curricula/a11.meta.js'] = { A11_META: { level: 'a1.1' }, checkpointMinutesEstimate: () => ({ lo: 10, hi: 30 }), lektionMinutesEstimate: () => ({ lo: 20, hi: 30 }) };
     stubs['../data/curricula/index.js'] = { curriculumPath };
     stubs['../config/levels.js'] = { LEVEL_ORDER: ['A1.1', 'A1.2', 'A2.1'] };
     stubs['../config/freeTier.js'] = { isLevelFree: () => false, freeLektionen: () => 0 };

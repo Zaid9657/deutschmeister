@@ -348,7 +348,7 @@ export const STEP_SECONDS = {
   pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
   practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
   sceneMeaning: [20, 40], sceneSay: [40, 80],
-  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40], readSeries: [20, 60], checkTurn: [20, 50],
+  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40], readSeries: [20, 60], checkTurn: [20, 50], checkpointText: [20, 45],
   speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
 };
 /** The player's fixed stage sizes (buildLesson.js PRACTICE_SIZE and the three derived exercises); a test pins them. */
@@ -377,6 +377,15 @@ export function lektionMinutesEstimate(l) {
   const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
   const hi = total(1) + ESTIMATE_COUNTS.retriesHigh * STEP_SECONDS.practiceItem[1];
   return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(hi / 300) * 5 };
+}
+
+/** What every checkpoint puts in front of the learner (buildCheckpoint.js); a test pins it to a built paper. */
+export const CHECKPOINT_COUNTS = { dictationLine: 3, readQuestion: 6, checkpointText: 4, practiceItem: 6, derivedItem: 2, writing: 1, readAloudLine: 2 };
+
+/** A checkpoint's time from its own steps, as a range. The 12 minutes of the path are the design target the plan counts with. */
+export function checkpointMinutesEstimate() {
+  const total = (side) => Object.entries(CHECKPOINT_COUNTS).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
+  return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(total(1) / 300) * 5 };
 }
 
 /** Same count-based range, divided across the saved parts; rounded outwards. */

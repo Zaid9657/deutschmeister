@@ -4,7 +4,7 @@ import { BookOpen, ClipboardCheck, Trophy, Check, Lock, ChevronDown, Compass } f
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
-import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
+import { A11_META, checkpointMinutesEstimate, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
 import { courseTestDescription } from '../data/courseTests/index.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
@@ -134,10 +134,11 @@ export default function CurriculumHomePage({ curriculum }) {
   const [showWelcome, setShowWelcome] = useState(false);
 
   const path = useMemo(() => curriculumPath(curriculum), [curriculum]);
-  // A Lektion's time as the estimated range (a11.meta.js), a checkpoint's as its own minutes.
+  // A Lektion's and a checkpoint's time as the range their own steps give (a11.meta.js), the final test's as its own minutes.
   const timeOf = (node) => {
     const l = node.kind === 'lektion' ? curriculum.lektionen.find((x) => x.id === node.id) : null;
     if (l) { const e = lektionMinutesEstimate(l); return ` · ≈${e.lo}–${e.hi} min`; }
+    if (node.kind === 'checkpoint') { const e = checkpointMinutesEstimate(); return ` · ≈${e.lo}–${e.hi} min`; }
     return node.minutes ? ` · ${node.minutes} min` : '';
   };
   // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.

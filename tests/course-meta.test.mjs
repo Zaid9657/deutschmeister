@@ -440,6 +440,23 @@ test('the duration estimate counts what the player actually builds, and no scree
   }
 });
 
+test('a checkpoint shows the range its own tasks give, counted on a built paper', async () => {
+  const { CHECKPOINT_COUNTS, STEP_SECONDS, checkpointMinutesEstimate } = await import('../src/data/curricula/a11.meta.js');
+  const { buildCheckpoint } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  for (const checkpoint of CURRICULUM_A11.checkpoints) {
+    const items = Object.values(buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: 'minutes' }));
+    const of = (section, ...types) => items.filter((i) => i.section === section && (!types.length || types.includes(i.type))).length;
+    assert.deepEqual({
+      dictationLine: of('hoeren', 'dictation'), readQuestion: of('hoeren', 'multiple_choice') + of('lesen'), checkpointText: of('lesen'),
+      practiceItem: of('bausteine'), derivedItem: of('schreiben', 'sentence_building'), writing: of('schreiben', 'graded_writing'), readAloudLine: of('sprechen'),
+    }, CHECKPOINT_COUNTS, `checkpoint ${checkpoint.nr}`);
+  }
+  const e = checkpointMinutesEstimate();
+  assert.ok(e.lo < e.hi && e.hi * 60 >= Object.entries(CHECKPOINT_COUNTS).reduce((a, [k, n]) => a + n * STEP_SECONDS[k][1], 0));
+  assert.match(readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8'), /checkpointMinutesEstimate\(\)/);
+});
+
 test('the guided estimate adds one checked meaning and say-it turn per chunk, retaining the legacy estimate elsewhere', async () => {
   const { lektionMinutesEstimate } = await import('../src/data/curricula/a11.meta.js');
   const l = LEKTIONEN[0];
