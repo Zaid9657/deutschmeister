@@ -104,9 +104,9 @@ export function auditTemplates(papers) {
   return { findings, maxRepeat: Math.max(0, ...counts.values()), distinct: counts.size };
 }
 
-/** Every German string inside a Lektion's notice or guided data: English, Arabic, titles, slugs,
- *  tasks and explanations are not text the learner reads as German content. */
-const NOT_SHOWN_GERMAN = /(En|Ar)$|^(title|ruleSlug|slug|id|kind|type|src|alt|explanation\w*|question\w*|cue\w*|hint\w*)$/;
+/** Every German string inside a Lektion's notice or guided data: English, Arabic, titles, slugs, tasks, explanations
+ *  and the further answers a check accepts (`more`, never shown) are not text the learner reads as German content. */
+const NOT_SHOWN_GERMAN = /(En|Ar)$|^(title|ruleSlug|slug|id|kind|type|src|alt|more|explanation\w*|question\w*|cue\w*|hint\w*)$/;
 export function shownGerman(value, key = '') {
   if (typeof value === 'string') return NOT_SHOWN_GERMAN.test(key) ? [] : [value];
   if (Array.isArray(value)) return value.flatMap((v) => shownGerman(v, key));

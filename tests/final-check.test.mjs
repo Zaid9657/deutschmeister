@@ -144,7 +144,7 @@ test('own answers: the learner fills the gap, the words around it are graded lik
   assert.equal(typedResult(origin, 'Ich komme aus die Deutschland.'), RESULT.WRONG, 'a place after „aus" takes the dative');
   assert.equal(typedResult(home, 'Ich wohne in der Bremen.'), RESULT.WRONG, 'a place the course names has no article');
   assert.equal(refused(job, 'Ich bin Lehrer Student.'), RESULT.WRONG, 'one job');
-  assert.equal(typedResult(origin, 'Ich komme aus Marokko und wohne in Bremen.'), BEYOND, 'the scene’s own line'); // section D: German, no answer of the turn word for word: BEYOND
+  assert.equal(typedResult(origin, 'Ich komme aus Marokko und wohne in Bremen.'), RESULT.CORRECT, 'the scene’s own line'); // 2026-11-25: every scene line passes its own question
   assert.equal(typedResult(home, 'ich wohne in essen'), RESULT.TYPO, 'Essen is a city, and the small „ich" a case slip');
   assert.equal(typedResult(ask, 'Und was sind Sie von Beruf?'), RESULT.CORRECT, 'a reply may open with „Und"'); // 2026-11-25: what stands around an answer comes off (answerShapes.js)
   assert.equal(typedResult(ask, 'Sind Sie Lehrer?'), RESULT.CORRECT);

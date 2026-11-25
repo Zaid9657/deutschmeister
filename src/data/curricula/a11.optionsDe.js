@@ -61,7 +61,7 @@ export const A11_OPTIONS_DE = {
       ['Den Namen von ihrem Kollegen.', 'Die Adresse vom Büro.', 'Die Telefonnummer vom Büro.'],
       ['Die Pause ist um ein Uhr.', 'Die Pause ist eine Stunde lang.', 'Heute gibt es keine Pause.'],
     ],
-    read: [['Der Chef vom Amt.', 'Ein Verkäufer oder eine Verkäuferin.', 'Ein Kollege, er ist Ingenieur.'], ['Ihre Handynummer und ihre E-Mail-Adresse.', 'Ihre Adresse und ihr Geburtsdatum.', 'Ihren Computer und ihr Telefon.']],
+    read: [['Der Chef vom Amt.', 'Ein Verkäufer von einer Firma.', 'Ein Kollege, er ist Ingenieur.'], ['Ihre Handynummer und ihre E-Mail-Adresse.', 'Ihre Adresse und ihr Geburtsdatum.', 'Ihren Computer und ihr Telefon.']],
   },
   'a1.1-l07': {
     scene: [
@@ -70,7 +70,7 @@ export const A11_OPTIONS_DE = {
       ['Schwimmt er jede Woche?', 'Kocht er gern für Freunde?', 'Geht er gern ins Kino?'],
       ['Zusammen mit Lena Fußball spielen.', 'Zusammen mit Lena Musik hören.', 'Zusammen mit Lena tanzen.'],
     ],
-    read: [['Fußball spielen.', 'Zusammen kochen.', 'Ins Kino gehen.'], ['Ein Freund oder eine Freundin von Ihnen.', 'Ein Kind von Ihnen.', 'Ein Kollege von Ihnen.']],
+    read: [['Fußball spielen.', 'Zusammen kochen.', 'Ins Kino gehen.'], ['Ein Freund von Ihnen.', 'Ein Kind von Ihnen.', 'Ein Kollege von Ihnen.']],
   },
   'a1.1-l08': {
     scene: [
@@ -98,9 +98,9 @@ export const A11_OPTIONS_DE = {
       ['Der Zug ist pünktlich.', 'Der Zug hat Verspätung.', 'Der Zug ist voll.'],
       ['Zwanzig Euro.', 'Fünfzehn Euro.', 'Fünfzig Euro.'],
       ['Ja, er fährt hier von Gleis vier.', 'Nein, in die Schweiz fährt nur der Bus.', 'Ja, aber Ana steigt zuerst an Gleis fünf um.'],
-      ['Der Zug ist pünktlich und fährt von Gleis vier.', 'Der Zug fährt nicht. Bitte nehmen Sie den Bus.', 'Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen.'],
+      ['Der Zug ist pünktlich und fährt von Gleis vier.', 'Heute fährt kein Zug. Bitte nehmen Sie den Bus.', 'Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen.'],
     ],
-    read: [['Heute und morgen.', 'Nächste Woche am Montag.', 'Nächste Woche am Freitag.'], ['Am Schalter im Bahnhof.', 'Am Automaten am Gleis.', 'Beim Fahrer oder bei der Fahrerin.']],
+    read: [['Heute und morgen.', 'Nächste Woche am Montag.', 'Nächste Woche am Freitag.'], ['Am Schalter im Bahnhof.', 'Am Automaten am Gleis.', 'Beim Busfahrer.']],
   },
   'a1.1-l11': {
     scene: [
@@ -116,7 +116,7 @@ export const A11_OPTIONS_DE = {
     scene: [
       ['Er ist heute, und das Fest ist heute Abend.', 'Er ist im Mai, und das Fest ist am Freitag.', 'Er war letzte Woche, und es gab kein Fest.'],
       ['Nur Anas Mama kommt.', 'Anas Eltern kommen nicht.', 'Anas Mama und Papa kommen.'],
-      ['Ihre Kollegin kommt auch, und die Gäste bringen Kuchen mit.', 'Ihr Bruder kommt allein, und Ana kauft den Kuchen.', 'Ihre Kollegin kommt nicht, und kein Gast bringt Kuchen mit.'],
+      ['Ana lädt auch ihre Kollegin ein, und die Gäste bringen Kuchen mit.', 'Ihr Bruder kommt allein, und Ana kauft den Kuchen.', 'Ihre Kollegin kommt nicht, und kein Gast bringt Kuchen mit.'],
       ['Vielleicht eine Tasche, Lena kauft das Geschenk.', 'Vielleicht ein Buch, ihr Bruder kauft das Geschenk.', 'Nichts, sie möchte kein Geschenk.'],
       ['Gute Nacht, Lena. Bis morgen!', 'Danke, Lena. Bis Freitag!', 'Tschüss, Lena. Bis bald!'],
     ],

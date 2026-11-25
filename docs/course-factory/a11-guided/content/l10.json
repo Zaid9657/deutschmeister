@@ -38,7 +38,7 @@
           "optionsDe": [
             "Am Schalter im Bahnhof.",
             "Am Automaten am Gleis.",
-            "Beim Fahrer oder bei der Fahrerin."
+            "Beim Busfahrer."
           ]
         }
       ]
@@ -151,7 +151,7 @@
           "answer": "The train is delayed; please change at platform five.",
           "optionsDe": [
             "Der Zug ist pünktlich und fährt von Gleis vier.",
-            "Der Zug fährt nicht. Bitte nehmen Sie den Bus.",
+            "Heute fährt kein Zug. Bitte nehmen Sie den Bus.",
             "Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen."
           ]
         },
