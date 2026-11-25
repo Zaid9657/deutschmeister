@@ -1,5 +1,5 @@
 import { buildSoundItems, nounsOf } from './guidedSound.js';
-import { lineFor } from './wortfeldPacing.js';
+import { metIn } from './wortfeldPacing.js';
 import { courseLexicon, nextAfter } from './finalCheck.js';
 
 export const SCENE_PHASES = ['hear', 'meaning', 'say'];
@@ -10,7 +10,7 @@ export function buildGuided(options, buildLegacy) {
   const { lektion } = options;
   const legacy = buildLegacy({ ...options, lektion: { ...lektion, flow: undefined } });
   const lines = lektion.dialog.lines.map((l) => l.de);
-  const met = (word) => !!lineFor(word.de || word.word, lines);
+  const met = (word) => metIn(word.de || word.word, lines);
   const sceneWords = lektion.wortfeld.filter(met);
   const chunks = lektion.guided.chunks.map((chunk, index) => {
     const sourceLines = lektion.dialog.lines.slice(chunk.from, chunk.to);
@@ -36,7 +36,7 @@ export function buildGuided(options, buildLegacy) {
     { ...part('wortfeld', 1), words: sceneWords },
     { nr: 3, key: 'sound', kind: 'sound', part: 1, items: soundItems },
     { nr: 3, key: 'read', kind: 'read', part: 1, ...read, glossary: lektion.wortfeld, words: lektion.wortfeld.filter((w) => !met(w)),
-      items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', accepted: [q.answer] })) },
+      items: read.questions.map((q, i) => ({ ...q, id: `read-${lektion.id}-${i + 1}`, type: 'multiple_choice', feedbackKey: 'read', accepted: [q.answer] })) },
     ...['notice', 'practice', 'derived', 'dictation'].map((kind) => part(kind, 2)),
     // Every line said from memory has a cue: the line before it, or for the scene's opening line the situation
     // (`setting`, `settingEn`; the main session's screen walk, Lektionen 4, 6, 10).
