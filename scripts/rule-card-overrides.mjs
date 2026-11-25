@@ -171,7 +171,7 @@ const RULE_CARD_OVERRIDES = {
       // (Ana, feminine) and its comment claimed this card said „Er ist Marokkaner.“ — it did not,
       // and neither did the notice. The masculine is now on both, in the same sentence, and the
       // commonMistakes entry below corrects the swapped gender for the learner who is not Ana.
-      'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
+      'Die Nationalität ist im Satz ein Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
       'Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       'In der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
@@ -190,7 +190,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich bin marokkanisch.',
         correct: 'Ich bin Marokkanerin.',
-        explanationDe: 'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
+        explanationDe: 'Die Nationalität ist im Satz ein Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       },
       {
         wrong: 'Ali ist Marokkanerin.',
@@ -392,14 +392,14 @@ const RULE_CARD_OVERRIDES = {
 
   // ── Lektion 9 · Im Café (Essen und Trinken: etwas bestellen)
   'verb-haben': {
-    titleDe: 'haben und der Chunk „Ich möchte …“',
+    titleDe: 'haben und der feste Ausdruck „Ich möchte …“',
     content: [
       'Das Verb haben ist unregelmäßig:',
       'ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.',
-      'Mit haben sagt man Hunger, Durst oder Zeit.',
+      'Auch so: Ich habe Hunger, Ich habe Durst, Ich habe Zeit.',
       'Beispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?',
       'Im Café: Wir haben Suppe, Salat und Kuchen.',
-      'Ich möchte … ist hier eine feste Wendung. Die Form gehört zu den Modalverben in A1.2.',
+      'Ich möchte … ist hier ein fester Ausdruck. Die Form gehört zu den Modalverben in A1.2.',
       'So bestellt man: Ich möchte einen Kaffee, bitte.',
       'English: German has hunger and thirst rather than being hungry — Ich habe Hunger.',
     ].join('\n'),

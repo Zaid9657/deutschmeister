@@ -67,6 +67,8 @@ export function nounPhraseFault(text, { readings, bareFault = () => false }) {
     const noun = words[j];
     if (!noun || !/^\p{Lu}/u.test(noun.raw)) continue;
     const r = readings(noun.raw);
+    // The dative plural after a determiner of another case („Ich treffe meine Freunden“).
+    if (!r && /n$/.test(noun.raw) && readings(noun.raw.slice(0, -1))?.every((g) => g === 'pl') && !fits(f, 'pl', DAT)) return true;
     if (!r) continue;
     const prep = i > 0 && !words[i - 1].end ? words[i - 1].f : '';
     const d = f;

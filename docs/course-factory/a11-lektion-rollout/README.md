@@ -503,3 +503,19 @@ and called 22 % wrong; it praised 3 % of the wrong ones.
 - **The final test publishes its reading mark** (5 of 8) and names the section when it fails there.
 
 After it, same corpora (in sample): right 84 % confirmed, 16 % beyond, 0.1 % wrong; wrong 0.6 % praised.
+
+**Screens and pages, from the two browser walks** (tests: `lesson-walk-l.test.mjs`, `course-pages-ui.test.mjs`, `guided-rollout.test.mjs`):
+
+- **Lektion player:** word explanations never leave the screen (0 of 473 outside at 390 and 360 px); Arabic help keeps its German in
+  order; match and listening options stand in an order that says nothing about the answer (`optionOrder.js`); sound options are spelled
+  correctly and the answer is never the only one written its way; sound and reading give a second try; gap hints name the side that has
+  text; the recap ends the run (no Back), lists what the check showed apart from what is still to practise, and the next Lektion opens at
+  its top; focus stays where the learner was (`useKeepFocus.js`); a guest's submitted text and the open word group survive a refresh.
+- **Around it:** a failed checkpoint opens on its result, its practice block says what it practises and shares no item with the retake;
+  review cards render bold and follow the language; the course home speaks one language at a time; the certificate prints alone with the
+  completion date; the final test's result names the section that lost most, and a pass links the certificate.
+
+The sound lines' texts changed („Möchte“ → „möchte“ and others), so recordings made for the old texts do not match any more.
+
+**Dialogue lines changed in this round** (for the recording): Lektion 7 line 8 „Nein, ich tanze nicht gut. Meine Freundin Ana tanzt gern.“;
+Lektion 12 line 3 „Der Mai ist ein schöner Monat! Kommt deine Mama auch?“; three new lists (`read-series` in L2, L4, L12).

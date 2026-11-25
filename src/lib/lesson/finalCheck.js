@@ -23,7 +23,7 @@ import { RESULT, checkAnswer, levenshtein, numberWordsToDigits, westernDigits } 
 import { READALOUD_PASS_PCT } from './readaloud.js';
 import { COURSE_WORDS } from '../../data/courseWords.js';
 import { OWN_MASS_NOUNS, ALSO_GERMAN, CITIES, COUNTRIES, ENGLISH_PLACES, ENGLISH_SMALL, JOBS, LANGUAGES, NOUN_GENDERS } from './ownWords.js';
-import { certainFault } from './certainFault.js';
+import { certainFault, nearestFrame } from './certainFault.js';
 import { nounPhraseFault, phraseFault, subjectNumberFault } from './nounPhrase.js';
 import { COUNTRY_STEMS } from './countries.js';
 import { addressFault, counterQuestion, courtesyOnly, withoutAsking, withoutCourtesy, withoutDemonstrative, withoutSmallWord } from './answerShapes.js';
@@ -1004,7 +1004,8 @@ function gapResult(words, { slot = 'words', slotIn, thingKind, slotWords = [], l
   // first word may not, so „Gut" or „Danke" alone is no name.
   if (slot === 'name') {
     // The partner's own name is never the learner's: „Guten Tag, Herr Weber." greets, it names nobody.
-    if (partner && (fold(words) === fold(partner) || fold(words) === fold(partner.split(/\s+/).at(-1)))) return RESULT.WRONG;
+    const family = partner?.split(/\s+/).at(-1);
+    if (partner && [partner, family, `Herr ${family}`, `Frau ${family}`].some((x) => fold(words) === fold(x))) return RESULT.WRONG;
     const names = lexicon?.names;
     const exact = lexicon?.exact;
     const from = ['frau', 'herr'].includes(parts[0]) && parts.length > 1 ? 1 : 0;
@@ -2531,6 +2532,9 @@ function bySentences(turn, value) {
       const r = coreTries(turn, END.test(s) ? s : `${s}.`);
       const result = Array.isArray(r) ? r[0] : r;
       if (verifiedResult(result)) { answers += 1; worstOf = worst(worstOf, result); return true; }
+      // The turn's own answer with a filling it does not take is no remark beside one („Ja, ich möchte Tee.“ where water is offered).
+      const near = nearestFrame(turn, s);
+      if (near && near.cost === 0 && near.fixed >= 2) return false;
       return Boolean(turn.lexicon?.sentences?.has(sentenceKey(p))) || clauseVerified(turn.lexicon, END.test(s) ? s : `${s}.`);
     });
     if (ok && answers) return [worstOf, 'sentences'];
@@ -2811,9 +2815,13 @@ const DAY_WITH_PART = /\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|So
 // noun the course never writes small.
 function smallNoun(turn, value) {
   const lexicon = turn.lexicon;
+  // „jeden morgen“, and „Wie geht es ihnen?“ to the partner addressed with Sie.
+  if (/(?<!\p{L})(?:jeden|guten|schönen|am)\s+(?:morgen|abend|tag|mittag|nachmittag|vormittag)(?!\p{L})/u.test(value)) return true;
+  if (/(?<!\p{L})geht\s+es\s+ihnen(?!\p{L})/u.test(value)) return true;
   return (String(value || '').match(/\p{L}+/gu) || []).some((w) => {
     if (!/^\p{Ll}/u.test(w)) return false;
     const f = fold(w);
+    if (lexicon?.names?.has?.(f) && !lexicon?.small?.has?.(f)) return true;
     if (CLOSED.has(f) || ADVERBS.has(f) || lexicon?.small?.has?.(f) || lexicon?.verbs?.has?.(f)) return false;
     return DAYS.includes(f) || f === 'uhr' || OWN_KIND.place.has(f) || (Boolean(lexicon?.genders?.get?.(f)) && !OWN_KIND.language.has(f));
   });
@@ -2847,6 +2855,8 @@ function coreRule(turn, value) {
   // A verified answer may still be in the other form of address, or hold a determiner that fits no reading of its noun in
   // an open gap („mit mein Freund“, „den Zeitung“).
   if (addressFault(String(value), turn)) return [RESULT.WRONG, 'address'];
+  // „Ich stehe morgens um sieben Uhr.“ is „aufstehen“ without its „auf“.
+  if (/(?<!\p{L})stehe(?!\p{L})/iu.test(text) && /(?<!\p{L})um(?!\p{L})/iu.test(text) && !/(?<!\p{L})auf(?!\p{L})/iu.test(text)) return [RESULT.WRONG, 'missing'];
   if (!turn.ownName && articleFaultIn(turn.lexicon, text)) return [RESULT.WRONG, 'article'];
   // A noun written small is the slip it is everywhere („Ich komme aus syrien.“, „am montag“).
   return r[0] === RESULT.CORRECT && smallNoun(turn, value) ? [RESULT.TYPO, r[1]] : r;

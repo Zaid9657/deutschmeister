@@ -157,6 +157,8 @@ const badDate = (text) => [...String(text || '').matchAll(/(\d{1,2})[./]\s?(\d{1
 const partMissing = (text) => badDate(text) || !/\d{1,2}\.?\s*(?:[./]\s*\d|januar|februar|märz|maerz|april|mai|juni|juli|august|september|oktober|november|dezember)|(?:er?sten|ten|zwanzigsten|dreißigsten)\s/iu.test(text) || !/\d|januar|februar|märz|maerz|april|mai|juni|juli|august|september|oktober|november|dezember/iu.test(text)
   || !/(?:^|\D)\d{4}(?:\D|$)|neunzehnhundert|zweitausend/iu.test(text) || !/\bhei(?:ß|ss)|\bname\b|\bich\s+bin\s+\p{Lu}/iu.test(text);
 
+const ADJECTIVE_PLACE = /(?<!\p{L})(?:k?eine?n?|der|die|das|den|meine?n?)\s+(?:heiße|heißen|gute|guten|kalte|kalten)\s+\p{Lu}/u;
+
 // A fault no context makes right.
 const ALWAYS = new Set(['address', 'ending', 'english', 'spelling', 'heard', 'name']);
 
@@ -193,9 +195,12 @@ export function certainFault(turn, text, reason, knows, isVerb = () => false) {
   const noPronoun = !n.answer.some((w) => PRONOUN.has(w));
   switch (reason) {
     case 'article': return !unknownSmall && n.answer.length <= 10;
-    case 'date': return n.cost === 0;
+    // („Am 12. Mai ist mein Geburtstag“ is no date of five words.)
+    case 'date': return n.cost === 0 && n.gap <= 3;
     case 'case': return !unknownSmall && n.cost <= 2 && n.gap <= 6;
     case 'agreement': case 'auxiliary': case 'participle': case 'verb': case 'tense':
+      // An adjective that looks like a verb („eine heiße Schokolade“), a double subject the course does not teach („sowohl … als auch“).
+      if (ADJECTIVE_PLACE.test(text) || n.whole.includes('sowohl')) return false;
       if (one && op.op === 'sub' && n.gap <= 6 && sameLemma(op.a, op.f)) return true;
       if (unknownSmall || n.gap > 6) return false;
       // („Ich spielen gern Fußball.“: the frame's own pronoun and the verb right after it.)
@@ -215,7 +220,7 @@ export function certainFault(turn, text, reason, knows, isVerb = () => false) {
     case 'word':
       if (one && op.op === 'sub' && n.gap <= 3) return sameClass(op.a, op.f) || sameLemma(op.a, op.f) || (PRONOUN.has(op.f) && noPronoun && PREPOSITION.has(op.a));
       return false;
-    case 'kind': return n.cost === 0 && n.gap <= 2 && n.fixed >= 2 && !unknownSmall;
+    case 'kind': return n.cost === 0 && n.gap <= 2 && n.fixed >= 2 && !unknownSmall && !n.whole.includes('lieber');
     // A day, a time or an answer the task does not ask for, in the turn's own frame.
     case 'task': return n.cost === 0 && Boolean(turn.when || turn.time) && n.gap <= 5 && n.answer.some((w) => DAYS.has(w) || NUMBER.test(w));
     default: return false;
