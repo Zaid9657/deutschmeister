@@ -17,7 +17,12 @@
           ],
           "answer": "He and his wife have a baby daughter.",
           "explanationDe": "In der Nachricht steht: Sie haben schon ein Kind: eine Tochter. Sie ist noch ein Baby.",
-          "explanationEn": "The message says they already have a child: a daughter. She is still a baby."
+          "explanationEn": "The message says they already have a child: a daughter. She is still a baby.",
+          "optionsDe": [
+            "Er und seine Frau haben einen Sohn.",
+            "Er und seine Frau haben eine Tochter, ein Baby.",
+            "Er ist ledig und hat kein Kind."
+          ]
         },
         {
           "promptDe": "Was möchte Ana von Tim wissen? Wählen Sie.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Whether he has siblings or is an only child.",
           "explanationDe": "In der Nachricht steht: Hast du Geschwister oder bist du Einzelkind?",
-          "explanationEn": "The message asks: do you have siblings or are you an only child?"
+          "explanationEn": "The message asks: do you have siblings or are you an only child?",
+          "optionsDe": [
+            "Ist er verheiratet oder ledig?",
+            "Spricht er Arabisch oder Englisch?",
+            "Hat er Geschwister oder ist er Einzelkind?"
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "Her husband, a son and a daughter.",
             "Her parents and her two brothers."
           ],
-          "answer": "Her parents, a brother and a sister."
+          "answer": "Her parents, a brother and a sister.",
+          "optionsDe": [
+            "Ihre Eltern, ein Bruder und eine Schwester.",
+            "Ihr Mann, ein Sohn und eine Tochter.",
+            "Ihre Eltern und ihre zwei Brüder."
+          ]
         },
         "say": {
           "line": 1
@@ -64,7 +79,12 @@
             "She is still young.",
             "She is a baby."
           ],
-          "answer": "She is still young."
+          "answer": "She is still young.",
+          "optionsDe": [
+            "Sie ist zwanzig.",
+            "Sie ist noch jung.",
+            "Sie ist ein Baby."
+          ]
         },
         "say": {
           "line": 2
@@ -82,7 +102,12 @@
             "Arabic and English.",
             "Arabic and German."
           ],
-          "answer": "Arabic and German."
+          "answer": "Arabic and German.",
+          "optionsDe": [
+            "Englisch und Deutsch.",
+            "Arabisch und Englisch.",
+            "Arabisch und Deutsch."
+          ]
         },
         "say": {
           "line": 5
@@ -100,7 +125,12 @@
             "Whether Ana’s brother lives in Germany.",
             "Whether Ana’s parents also speak English."
           ],
-          "answer": "Whether Ana’s brother also speaks English."
+          "answer": "Whether Ana’s brother also speaks English.",
+          "optionsDe": [
+            "Spricht Anas Bruder auch Englisch?",
+            "Wohnt Anas Bruder in Deutschland?",
+            "Sprechen Anas Eltern auch Englisch?"
+          ]
         },
         "say": {
           "line": 6
@@ -118,7 +148,12 @@
             "A baby daughter.",
             "A young son."
           ],
-          "answer": "A baby daughter."
+          "answer": "A baby daughter.",
+          "optionsDe": [
+            "Einen Sohn und eine Tochter.",
+            "Eine Tochter, sie ist ein Baby.",
+            "Einen Sohn, er ist noch jung."
+          ]
         },
         "say": {
           "line": 9

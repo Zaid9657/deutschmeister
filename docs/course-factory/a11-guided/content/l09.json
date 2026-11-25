@@ -17,7 +17,12 @@
           ],
           "answer": "7 euros.",
           "explanationDe": "Auf der Karte steht: Suppe kostet 5 Euro, eine Tasse Tee kostet 2 Euro. Zusammen sind das 7 Euro.",
-          "explanationEn": "The menu says soup is 5 euros and a cup of tea is 2 euros. Together that is 7 euros."
+          "explanationEn": "The menu says soup is 5 euros and a cup of tea is 2 euros. Together that is 7 euros.",
+          "optionsDe": [
+            "5 Euro.",
+            "7 Euro.",
+            "8 Euro."
+          ]
         },
         {
           "promptDe": "Wann gibt es im Café Frühstück? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Monday to Saturday, from 7 to 11.",
           "explanationDe": "Auf der Karte steht: Frühstück von Montag bis Samstag, 7 bis 11 Uhr. Am Sonntag ist kein Frühstück.",
-          "explanationEn": "The menu says breakfast is Monday to Saturday, 7 to 11. There is no breakfast on Sunday."
+          "explanationEn": "The menu says breakfast is Monday to Saturday, 7 to 11. There is no breakfast on Sunday.",
+          "optionsDe": [
+            "Montag bis Samstag, von 7 bis 11 Uhr.",
+            "Montag bis Freitag, von 7 bis 11 Uhr.",
+            "Jeden Tag, von 7 bis 11 Uhr."
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "She is thirsty and orders a coffee.",
             "She is tired and orders a tea."
           ],
-          "answer": "She is thirsty and orders a coffee."
+          "answer": "She is thirsty and orders a coffee.",
+          "optionsDe": [
+            "Sie hat Hunger und möchte eine Suppe.",
+            "Sie hat Durst und möchte einen Kaffee.",
+            "Sie ist müde und möchte einen Tee."
+          ]
         },
         "say": {
           "line": 1
@@ -64,7 +79,12 @@
             "Yes, and she orders soup.",
             "No, she only wants a drink."
           ],
-          "answer": "Yes, and she orders cake."
+          "answer": "Yes, and she orders cake.",
+          "optionsDe": [
+            "Ja, sie möchte Kuchen.",
+            "Ja, sie möchte Suppe.",
+            "Nein, sie möchte nur etwas trinken."
+          ]
         },
         "say": {
           "line": 3
@@ -82,7 +102,12 @@
             "A glass of orange juice and a beer.",
             "A glass of mineral water."
           ],
-          "answer": "A glass of mineral water."
+          "answer": "A glass of mineral water.",
+          "optionsDe": [
+            "Eine Tasse Tee und ein Mineralwasser.",
+            "Ein Glas Orangensaft und ein Bier.",
+            "Ein Glas Mineralwasser."
+          ]
         },
         "say": {
           "line": 5
@@ -100,7 +125,12 @@
             "No, thank you: tomorrow she will have breakfast here.",
             "No, thank you: she would like the bill."
           ],
-          "answer": "No, thank you: tomorrow she will have breakfast here."
+          "answer": "No, thank you: tomorrow she will have breakfast here.",
+          "optionsDe": [
+            "Ja, bitte: Sie möchte ein Glas Wein.",
+            "Nein, danke: Morgen frühstückt sie hier.",
+            "Nein, danke: Sie möchte die Rechnung."
+          ]
         },
         "say": {
           "line": 7
@@ -118,7 +148,12 @@
             "He is sorry: there is no cake today.",
             "The coffee will take another twenty minutes."
           ],
-          "answer": "A cup of coffee and a cake are coming right away."
+          "answer": "A cup of coffee and a cake are coming right away.",
+          "optionsDe": [
+            "Eine Tasse Kaffee und ein Kuchen kommen gleich.",
+            "Heute gibt es leider keinen Kuchen.",
+            "Der Kaffee kommt in zwanzig Minuten."
+          ]
         },
         "say": {
           "line": 9

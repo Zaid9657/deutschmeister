@@ -17,7 +17,12 @@
           ],
           "answer": "It is brown.",
           "explanationDe": "Tim schreibt: Die Tür ist braun. Weiß ist das Fenster, grün ist die Tafel.",
-          "explanationEn": "Tim writes that the door is brown. The window is white and the board is green."
+          "explanationEn": "Tim writes that the door is brown. The window is white and the board is green.",
+          "optionsDe": [
+            "Sie ist weiß.",
+            "Sie ist grün.",
+            "Sie ist braun."
+          ]
         },
         {
           "promptDe": "Was möchte Tim morgen mit Lena machen? Wählen Sie die richtige Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Speak German together.",
           "explanationDe": "Tim schreibt: Kommst du morgen? Dann sprechen wir zusammen Deutsch.",
-          "explanationEn": "Tim asks whether Lena is coming tomorrow, and says they will then speak German together."
+          "explanationEn": "Tim asks whether Lena is coming tomorrow, and says they will then speak German together.",
+          "optionsDe": [
+            "Zusammen Deutsch sprechen.",
+            "Zusammen ein Bild kaufen.",
+            "Den Stuhl verkaufen."
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "Where the dictionary is.",
             "Whose dictionary it is."
           ],
-          "answer": "Where the dictionary is."
+          "answer": "Where the dictionary is.",
+          "optionsDe": [
+            "Was kostet das Wörterbuch?",
+            "Wo ist das Wörterbuch?",
+            "Von wem ist das Wörterbuch?"
+          ]
         },
         "say": {
           "line": 1
@@ -64,7 +79,12 @@
             "The scissors are here, but the ruler is not.",
             "Lena has the scissors, and Tim has the ruler."
           ],
-          "answer": "The scissors are here, and so is the ruler."
+          "answer": "The scissors are here, and so is the ruler.",
+          "optionsDe": [
+            "Die Schere ist hier, das Lineal auch.",
+            "Die Schere ist hier, das Lineal ist nicht hier.",
+            "Lena hat die Schere, und Tim hat das Lineal."
+          ]
         },
         "say": {
           "line": 2
@@ -82,7 +102,12 @@
             "The pen is yellow and the pencil is black.",
             "The pen is blue and the pencil is yellow."
           ],
-          "answer": "The pen is blue and the pencil is yellow."
+          "answer": "The pen is blue and the pencil is yellow.",
+          "optionsDe": [
+            "Der Stift ist schwarz, der Bleistift ist blau.",
+            "Der Stift ist gelb, der Bleistift ist schwarz.",
+            "Der Stift ist blau, der Bleistift ist gelb."
+          ]
         },
         "say": {
           "line": 4
@@ -100,7 +125,12 @@
             "It is not red but green.",
             "It is not his notebook at all."
           ],
-          "answer": "It is not red but green."
+          "answer": "It is not red but green.",
+          "optionsDe": [
+            "Es ist rot.",
+            "Es ist nicht rot, es ist grün.",
+            "Es ist nicht Tims Heft."
+          ]
         },
         "say": {
           "line": 7
@@ -118,7 +148,12 @@
             "It is green, and it is for Lena.",
             "It is black, and it is for the course."
           ],
-          "answer": "It is blue, and it is for his room."
+          "answer": "It is blue, and it is for his room.",
+          "optionsDe": [
+            "Es ist blau und für sein Zimmer.",
+            "Es ist grün und für Lena.",
+            "Es ist schwarz und für den Kurs."
+          ]
         },
         "say": {
           "line": 9

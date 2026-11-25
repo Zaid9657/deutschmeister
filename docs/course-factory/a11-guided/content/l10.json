@@ -17,7 +17,12 @@
           ],
           "answer": "Next week, on Monday.",
           "explanationDe": "In der Information steht: Österreich – der Bus fährt nächste Woche am Montag. Heute und morgen fährt er nach Berlin.",
-          "explanationEn": "The notice says the bus to Austria runs next week, on Monday. Today and tomorrow it goes to Berlin."
+          "explanationEn": "The notice says the bus to Austria runs next week, on Monday. Today and tomorrow it goes to Berlin.",
+          "optionsDe": [
+            "Heute und morgen.",
+            "Nächste Woche am Montag.",
+            "Nächste Woche am Freitag."
+          ]
         },
         {
           "promptDe": "Wo kaufen Sie die Fahrkarte für den Bus? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "From the driver of the bus.",
           "explanationDe": "In der Information steht: Die Fahrkarte kaufen Sie beim Fahrer oder bei der Fahrerin.",
-          "explanationEn": "The notice says you buy the ticket from the driver: a man (Fahrer) or a woman (Fahrerin)."
+          "explanationEn": "The notice says you buy the ticket from the driver: a man (Fahrer) or a woman (Fahrerin).",
+          "optionsDe": [
+            "Am Schalter im Bahnhof.",
+            "Am Automaten am Gleis.",
+            "Beim Fahrer oder bei der Fahrerin."
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "At nine o’clock from platform five.",
             "At nine o’clock from platform four."
           ],
-          "answer": "At nine o’clock from platform four."
+          "answer": "At nine o’clock from platform four.",
+          "optionsDe": [
+            "Um vier Uhr von Gleis neun.",
+            "Um neun Uhr von Gleis fünf.",
+            "Um neun Uhr von Gleis vier."
+          ]
         },
         "say": {
           "line": 0
@@ -64,7 +79,12 @@
             "The train is delayed.",
             "The train is full."
           ],
-          "answer": "The train is on time."
+          "answer": "The train is on time.",
+          "optionsDe": [
+            "Der Zug ist pünktlich.",
+            "Der Zug hat Verspätung.",
+            "Der Zug ist voll."
+          ]
         },
         "say": {
           "line": 2
@@ -82,7 +102,12 @@
             "Fifteen euros.",
             "Fifty euros."
           ],
-          "answer": "Fifteen euros."
+          "answer": "Fifteen euros.",
+          "optionsDe": [
+            "Zwanzig Euro.",
+            "Fünfzehn Euro.",
+            "Fünfzig Euro."
+          ]
         },
         "say": {
           "line": 4
@@ -100,7 +125,12 @@
             "No, only the bus goes to Switzerland.",
             "Yes, but Ana has to change at platform five first."
           ],
-          "answer": "Yes, it leaves right here, from platform four."
+          "answer": "Yes, it leaves right here, from platform four.",
+          "optionsDe": [
+            "Ja, er fährt hier von Gleis vier.",
+            "Nein, in die Schweiz fährt nur der Bus.",
+            "Ja, aber Ana steigt zuerst an Gleis fünf um."
+          ]
         },
         "say": {
           "line": 6
@@ -118,7 +148,12 @@
             "The train is cancelled; please take the bus.",
             "The train is delayed; please change at platform five."
           ],
-          "answer": "The train is delayed; please change at platform five."
+          "answer": "The train is delayed; please change at platform five.",
+          "optionsDe": [
+            "Der Zug ist pünktlich und fährt von Gleis vier.",
+            "Der Zug fährt nicht. Bitte nehmen Sie den Bus.",
+            "Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen."
+          ]
         },
         "say": {
           "line": 8

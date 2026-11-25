@@ -9,7 +9,7 @@ import ReadAloudLine from './ReadAloudLine.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { RESULT } from '../../lib/lesson/check.js';
-import { BEYOND, canDoShown, checkTurns, chosenWord, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
+import { answerStart, BEYOND, canDoShown, checkTurns, chosenWord, faultHintKey, modelAnswer, ownAnswer, partsToRepeat, spokenShown, spokenTarget, typedResult, uncheckedWords, writtenOnly } from '../../lib/lesson/finalCheck.js';
 import { shownLines } from '../../lib/course/canDo.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
@@ -29,8 +29,10 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
   const [answer, setAnswer] = useState('');
   // A right answer with a word neither course teaches: the sentence was checked, the word was not (`uncheckedWords`).
   const [unchecked, setUnchecked] = useState([]);
-  // An answer past what the Lektion can check (BEYOND): no try used, the Lektion's way shown, one more answer;
-  // a second such answer ends the turn unverified, and its can-do is not shown.
+  // The fault the check names in a wrong answer, as a hint before the second try.
+  const [hint, setHint] = useState(null);
+  // An answer the check cannot judge (BEYOND): no try used, the beginning of the Lektion's own answer shown, one more
+  // answer; a second such answer ends the turn unverified (then the whole answer is shown), and its can-do is not shown.
   const [beyond, setBeyond] = useState(false);
   const onBeyond = () => { if (beyond) setOutcome('unverified'); else { setBeyond(true); setRetry(null); } };
 
@@ -39,7 +41,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
     if (result === BEYOND) { onBeyond(); return; }
     const ok = result === RESULT.CORRECT || (tries > 0 && result === RESULT.TYPO);
     if (ok) { setOutcome('shown'); setAnswer(value); setUnchecked(result === RESULT.CORRECT ? uncheckedWords(turn, value) : []); }
-    else if (tries === 0) setRetry(result === RESULT.TYPO ? 'typo' : 'retry');
+    else if (tries === 0) { setRetry(result === RESULT.TYPO ? 'typo' : 'retry'); setHint(result === RESULT.TYPO ? null : faultHintKey(turn, value)); }
     else setOutcome('missed');
     setTries(tries + 1);
   };
@@ -72,7 +74,9 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
         // A heard number: only the sound, never its text, so the learner writes what they understood.
         <Card tone="wash" className="mb-4 p-5">
           <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{partner}</p>
-          <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-listen-${n}`} text={turn.spoken} rate={0.8} label={t('action.listen', lang)} /></div>
+          {/* Without sound there is nothing to write down: the turn can be passed over, neither right nor wrong. */}
+          <div className="mt-3"><PlayButton lektionId={lektion.id} audioKey={`check-listen-${n}`} text={turn.spoken} rate={0.8} label={t('action.listen', lang)}
+            onFallback={outcome ? undefined : () => onOutcome('unverified', '')} fallbackLabel={t('audio.skipItem', lang)} /></div>
         </Card>
       )}
       {turn.spell && (
@@ -86,8 +90,8 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
 
       {beyond && outcome !== 'shown' && (
         <Card tone="wash" className="mb-4 p-5" role="status">
-          <p className="text-[0.9375rem] leading-snug text-ink">{t('check.beyond', lang)}</p>
-          <p className="mt-2 font-display text-xl font-semibold text-ink" lang="de">{modelAnswer(turn)}</p>
+          <p className="text-[0.9375rem] leading-snug text-ink">{t(outcome ? 'check.beyond.end' : 'check.beyond', lang)}</p>
+          <p className="mt-2 font-display text-xl font-semibold text-ink" lang="de">{outcome ? modelAnswer(turn) : answerStart(turn)}</p>
         </Card>
       )}
       {!outcome && mode === 'speak' && (
@@ -114,7 +118,7 @@ function CheckTurn({ turn, n, total, part, lektion, partner, opening, canSpeak, 
               className="mt-2 min-h-11 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel"
             />
           )}
-          {retry && <p role="status" className="mt-2 text-[0.875rem] text-ink">{t(retry === 'typo' ? 'feedback.typo' : 'otter.retry', lang)}</p>}
+          {retry && <p role="status" className="mt-2 text-[0.875rem] text-ink">{t(retry === 'typo' ? 'feedback.typo' : 'otter.retry', lang)}{hint ? ` ${t(hint, lang)}` : ''}</p>}
           <Button className="mt-3" disabled={!value.trim()} onClick={submit}>{t('action.check', lang)}</Button>
         </Card>
       )}
@@ -189,7 +193,7 @@ export default function CheckStage({ stage, lektion, onBack, onDone }) {
       primaryLabel={all ? t('action.next', lang) : t('check.again', lang)}
       onPrimary={all ? () => onDone(shown) : again}
       secondary={all ? null : (
-        <button type="button" className="min-h-11 text-sm font-bold text-siegel-deep underline" onClick={() => onDone(shown)}>{t('check.goOn', lang)}</button>
+        <button type="button" className="min-h-11 whitespace-nowrap text-sm font-bold text-siegel-deep underline" onClick={() => onDone(shown)}>{t('check.goOn', lang)}</button>
       )}
     >
       <Card raised className="p-6">

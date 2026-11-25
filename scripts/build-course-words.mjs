@@ -19,7 +19,7 @@ const OUT = `${root}src/data/courseWords.js`;
 // guided flow's meaning and reading questions are answered in English, so are practice options of
 // meaning tasks. German explanations count: the wrong forms they quote („nicht arbeitst“) are the very
 // mistakes a task is about, so typing one is that mistake, not a slip.
-const SKIP = /(En|Ar|Id|Ids)$|^(en|ar|id|slug|ruleSlug|grammarSlugs|primarySlug|kind|type|src|alt|flow|audio|voice|sha1|level|code|testSlug|examName|handlungsfeld|examTeile|links|meaning|questions|practiceRule|options|slot|count|thingKind|meaningLines)$/;
+const SKIP = /(En|Ar|Id|Ids)$|^(en|ar|id|slug|ruleSlug|grammarSlugs|primarySlug|kind|type|src|alt|flow|audio|voice|sha1|level|code|testSlug|examName|handlungsfeld|examTeile|links|meaning|questions|practiceRule|options|slot|count|thingKind|meaningLines|more|optionsDe)$/;
 // (`slot`, `count` and `thingKind` are the final check's gap kind, number and kind of thing, „color", „one", „drink": not German.)
 
 function strings(value, key = '') {

@@ -140,6 +140,52 @@ test('all twelve guided lessons preserve the original dialogue, draws, scoring s
   }
 });
 
+// Browser walk L, 30 (2026-11-25): with "Deutsch" chosen every comprehension question still had English options.
+test('every comprehension question has German options beside the English ones, in the same order', () => {
+  let n = 0;
+  for (const lesson of c.lektionen) {
+    for (const q of [...lesson.guided.chunks.map((x) => x.meaning), ...lesson.guided.read.questions]) {
+      n += 1;
+      assert.equal(q.optionsDe?.length, q.options.length, `${lesson.id}: ${q.promptDe}`);
+      assert.equal(new Set(q.optionsDe).size, q.optionsDe.length, `${lesson.id}: ${q.promptDe}`);
+      // A number or a price is the same in both: the order can be checked.
+      q.options.forEach((en, i) => { for (const d of en.match(/\d+/g) || []) assert.ok(q.optionsDe[i].includes(d), `${lesson.id}: ${en} / ${q.optionsDe[i]}`); });
+      assert.doesNotMatch(q.optionsDe.join(' '), /\b(?:the|and|she|he|is|are|her|his|they|with)\b/i, `${lesson.id}: ${q.promptDe}`);
+    }
+  }
+  assert.equal(n, 82);
+  const choice = read('src/components/lesson/CheckedChoice.jsx');
+  assert.match(choice, /lang === 'de' && item\.optionsDe\?\.length === item\.options\.length \? item\.optionsDe : item\.options/);
+  assert.match(choice, /\{label\(option\)\}/);
+  assert.equal((choice.match(/label\(item\.answer\)/g) || []).length, 2);
+});
+
+// Independent score of 2026-11-25: the checks dictated numbers and asked for months that no screen had shown.
+test('a closed series is shown and can be heard before a check asks for it: the numbers of Lektion 2 and 4, the months of Lektion 12', async () => {
+  const { seriesText } = await import('../src/lib/lesson/guidedRead.js');
+  const { checkTurns } = await import('../src/lib/lesson/finalCheck.js');
+  const series = (nr) => new Map((c.lektionen.find((l) => l.nr === nr).guided.read.series?.items || []).map((x) => [x.label, x.de]));
+  assert.deepEqual([...series(2).keys()], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+  assert.equal(series(12).size, 12);
+  const numbers = new Map([...series(2), ...series(4)]);
+  for (const nr of [2, 4]) {
+    const lesson = c.lektionen.find((l) => l.nr === nr);
+    for (let retake = 0; retake < 4; retake += 1) {
+      for (const turn of checkTurns(lesson.guided.check, retake).filter((x) => x.listen)) {
+        for (const d of turn.listen.match(/\d+/g) || []) assert.ok(numbers.has(d), `Lektion ${nr}: „${turn.listen}“ asks for ${d}, which no list shows`);
+        if (nr === 2) for (const w of turn.listen.split(/[\s,]+/).filter(Boolean)) assert.ok([...numbers.values()].includes(w), `Lektion 2: „${w}“`);
+      }
+    }
+  }
+  for (const nr of [2, 4, 12]) {
+    const { series: s } = c.lektionen.find((l) => l.nr === nr).guided.read;
+    assert.equal(seriesText(s), `${s.items.map((x) => x.de).join(', ')}.`);
+  }
+  const stage = readFileSync(new URL('../src/components/lesson/ReadStage.jsx', import.meta.url), 'utf8');
+  assert.match(stage, /stage\.series && <Series/);
+  assert.match(stage, /text=\{seriesText\(series\)\}/);
+});
+
 test('a rewritten scene line never leaves its meaning question behind: each part is pinned to its lines (2026-11-23)', () => {
   // Lektion 11's keys described lines that no longer existed (the screen walk, F1 and F2). `meaningLines` is a short hash
   // of the part's lines; a changed line fails here until its meaning question has been read again and the pin renewed.

@@ -17,7 +17,12 @@
           ],
           "answer": "Going to the cinema.",
           "explanationDe": "Im Aushang steht: Das Kino kostet acht Euro.",
-          "explanationEn": "The notice says that the cinema costs eight euros. It names no price for anything else."
+          "explanationEn": "The notice says that the cinema costs eight euros. It names no price for anything else.",
+          "optionsDe": [
+            "Fußball spielen.",
+            "Zusammen kochen.",
+            "Ins Kino gehen."
+          ]
         },
         {
           "promptDe": "Wer ist auch willkommen? Wählen Sie die richtige Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "A friend of yours.",
           "explanationDe": "Im Aushang steht: Ihr Freund oder Ihre Freundin ist auch willkommen.",
-          "explanationEn": "The notice says that your friend, a man or a woman, is welcome too."
+          "explanationEn": "The notice says that your friend, a man or a woman, is welcome too.",
+          "optionsDe": [
+            "Ein Freund oder eine Freundin von Ihnen.",
+            "Ein Kind von Ihnen.",
+            "Ein Kollege von Ihnen."
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "Tim likes listening to music; Lena plays football.",
             "Tim likes cooking; Lena likes going to the cinema."
           ],
-          "answer": "Tim likes listening to music; Lena plays football."
+          "answer": "Tim likes listening to music; Lena plays football.",
+          "optionsDe": [
+            "Tim spielt Fußball, Lena hört gern Musik.",
+            "Tim hört gern Musik, Lena spielt Fußball.",
+            "Tim kocht gern, Lena geht gern ins Kino."
+          ]
         },
         "say": {
           "line": 1
@@ -64,7 +79,12 @@
             "She works then and has no time.",
             "She is free only every second week."
           ],
-          "answer": "She does not work then; she is free."
+          "answer": "She does not work then; she is free.",
+          "optionsDe": [
+            "Sie arbeitet dann nicht, sie ist frei.",
+            "Sie arbeitet dann und hat keine Zeit.",
+            "Sie ist nicht jede Woche frei."
+          ]
         },
         "say": {
           "line": 4
@@ -82,7 +102,12 @@
             "Whether he likes cooking for friends.",
             "Whether he likes going to the cinema."
           ],
-          "answer": "Whether he likes going to the cinema."
+          "answer": "Whether he likes going to the cinema.",
+          "optionsDe": [
+            "Schwimmt er jede Woche?",
+            "Kocht er gern für Freunde?",
+            "Geht er gern ins Kino?"
+          ]
         },
         "say": {
           "line": 6
@@ -91,7 +116,7 @@
       {
         "from": 7,
         "to": 10,
-        "meaningLines": "352e16ca",
+        "meaningLines": "afb8ee85",
         "meaning": {
           "promptDe": "Was möchte Tim am Wochenende machen? Wählen Sie die Bedeutung.",
           "promptEn": "What would Tim like to do at the weekend? Choose the meaning.",
@@ -100,7 +125,12 @@
             "Listen to music together with Lena.",
             "Go dancing together with Lena."
           ],
-          "answer": "Listen to music together with Lena."
+          "answer": "Listen to music together with Lena.",
+          "optionsDe": [
+            "Zusammen mit Lena Fußball spielen.",
+            "Zusammen mit Lena Musik hören.",
+            "Zusammen mit Lena tanzen."
+          ]
         },
         "say": {
           "line": 7

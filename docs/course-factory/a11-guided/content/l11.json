@@ -17,7 +17,12 @@
           ],
           "answer": "He picks Lena up, and then they go shopping.",
           "explanationDe": "Auf dem Zettel steht: Um vier Uhr Lena abholen. Dann einkaufen.",
-          "explanationEn": "The note says: pick Lena up at four o'clock, then go shopping."
+          "explanationEn": "The note says: pick Lena up at four o'clock, then go shopping.",
+          "optionsDe": [
+            "Er ruft Lena an, dann frühstücken sie.",
+            "Er holt Lena ab, dann kaufen sie ein.",
+            "Er geht nach Hause und schläft bis neun."
+          ]
         },
         {
           "promptDe": "Was kauft Tim nicht? Wählen Sie die Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Tea, because he already has some.",
           "explanationDe": "Auf dem Zettel steht: Tee habe ich schon. Tim kauft Brot, Kaffee und Wasser.",
-          "explanationEn": "The note says: I already have tea. Tim buys bread, coffee and water."
+          "explanationEn": "The note says: I already have tea. Tim buys bread, coffee and water.",
+          "optionsDe": [
+            "Tee: Er hat schon Tee.",
+            "Brot: Er hat schon Brot.",
+            "Kaffee: Er trinkt keinen Kaffee."
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "He was working.",
             "He went shopping."
           ],
-          "answer": "He was working."
+          "answer": "He was working.",
+          "optionsDe": [
+            "Er hat Deutsch gelernt.",
+            "Er hat gearbeitet.",
+            "Er hat eingekauft."
+          ]
         },
         "say": {
           "line": 1
@@ -64,7 +79,12 @@
             "He gets up at seven and is tired.",
             "He gets up at six and feels fine."
           ],
-          "answer": "He gets up at six and is tired."
+          "answer": "He gets up at six and is tired.",
+          "optionsDe": [
+            "Er steht um sechs auf und ist müde.",
+            "Er steht um sieben auf und ist müde.",
+            "Er steht um sechs auf, und es geht ihm gut."
+          ]
         },
         "say": {
           "line": 3
@@ -82,7 +102,12 @@
             "He is staying at home and sleeping in.",
             "He is going shopping and asks Lena to come."
           ],
-          "answer": "He is going shopping and asks Lena to come."
+          "answer": "He is going shopping and asks Lena to come.",
+          "optionsDe": [
+            "Er arbeitet und kauft nicht ein.",
+            "Er ist zu Hause und schläft lange.",
+            "Er kauft ein und fragt: Kommt Lena mit?"
+          ]
         },
         "say": {
           "line": 5
@@ -100,7 +125,12 @@
             "She cannot come and will call Tim next week.",
             "She is coming along and will pick Tim up at six."
           ],
-          "answer": "She is coming along and is bringing a bag."
+          "answer": "She is coming along and is bringing a bag.",
+          "optionsDe": [
+            "Sie kommt mit und bringt eine Tasche mit.",
+            "Sie kommt nicht mit und ruft Tim nächste Woche an.",
+            "Sie kommt mit und holt Tim um sechs ab."
+          ]
         },
         "say": {
           "line": 7
@@ -118,7 +148,12 @@
             "Until nine; his brother sleeps until six.",
             "Until eight, then he has a shower."
           ],
-          "answer": "Until six; his brother sleeps until nine."
+          "answer": "Until six; his brother sleeps until nine.",
+          "optionsDe": [
+            "Bis sechs, sein Bruder schläft bis neun.",
+            "Bis neun, sein Bruder schläft bis sechs.",
+            "Bis acht, dann duscht er."
+          ]
         },
         "say": {
           "line": 9

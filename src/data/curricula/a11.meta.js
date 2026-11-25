@@ -206,7 +206,7 @@ const lektionIntro = {
     ],
   },
   'a1.1-l09': {
-    situationEn: 'Food and drink: ordering something (the invitation comes in Lektion 12)',
+    situationEn: 'Food and drink: ordering something in a café',
     canDoEn: [
       'I can order something in a café.',
       'I can say that I am hungry or thirsty.',
@@ -233,7 +233,7 @@ const lektionIntro = {
     ],
   },
   'a1.1-l12': {
-    situationEn: 'Celebrations and the past (as fixed chunks), plus revision',
+    situationEn: 'Celebrations: a birthday, an invitation and the guests',
     canDoEn: [
       'I can invite someone to a celebration.',
       'I can say in which month my birthday is.',

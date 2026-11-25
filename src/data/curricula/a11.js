@@ -68,6 +68,8 @@
  * tests/course-value.test.mjs holds every Lektion to it.
  */
 import { LESEN_A11 } from './a11.lesen.js';
+import { A11_MORE_ANSWERS } from './a11.answers.js';
+import { A11_OPTIONS_DE } from './a11.optionsDe.js';
 
 export const LEARNER_CAST = ['Ana', 'Tim', 'Lena'];
 
@@ -419,6 +421,11 @@ export const CURRICULUM_A11 = {
           titleEn: 'The form from the public office',
           instructionDe: 'Lesen Sie das Blatt vom Amt. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the sheet from the public office. Tap a word for its meaning.',
+          // The closed series this Lektion's check dictates (independent score, 2026-11-25): shown and heard before it is tested.
+          series: {
+            titleDe: 'Die Zahlen von 0 bis 10', titleEn: 'The numbers from 0 to 10',
+            items: [{ label: '0', de: 'null' }, { label: '1', de: 'eins' }, { label: '2', de: 'zwei' }, { label: '3', de: 'drei' }, { label: '4', de: 'vier' }, { label: '5', de: 'fünf' }, { label: '6', de: 'sechs' }, { label: '7', de: 'sieben' }, { label: '8', de: 'acht' }, { label: '9', de: 'neun' }, { label: '10', de: 'zehn' }],
+          },
           text: 'Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.',
           questions: [
             {
@@ -536,8 +543,8 @@ export const CURRICULUM_A11 = {
             // two Leitpunkte of this Lektion's own writing task that a learner can make up — a name and a date.
             { canDo: 4, taskDe: 'Herr Weber bittet um eine kurze Nachricht an das Amt. Wie heißen Sie? Wann sind Sie geboren? Schreiben Sie ganze Sätze. Beim Datum brauchen Sie Tag, Monat und Jahr. Sie können ein Datum erfinden.', taskEn: 'Herr Weber asks for a short message to the office. What is your name? When were you born? Write full sentences. For the date, give the day, month and year. You can make up a date.',
               parts: [
-                [{ frame: 'Ich heiße …', slot: 'name' }, { frame: 'Mein Name ist …', slot: 'name' }, { frame: 'Ich bin …', slot: 'name' }],
-                [{ frame: 'Ich bin am … geboren.', slot: 'date' }, { frame: 'Am … bin ich geboren.', slot: 'date' }, { frame: 'Mein Geburtsdatum ist der …', slot: 'date' }, { frame: 'Mein Geburtsdatum ist …', slot: 'date' }],
+                [{ frame: 'Ich heiße …', slot: 'name' }, { frame: 'Mein Name ist …', slot: 'name' }, { frame: 'Ich bin …', slot: 'name' }, { frame: 'Mein vollständiger Name ist …', slot: 'name' }],
+                [{ frame: 'Ich bin am … geboren.', slot: 'date' }, { frame: 'Am … bin ich geboren.', slot: 'date' }, { frame: 'Geboren bin ich am …', slot: 'date' }, { frame: 'Ich wurde am … geboren.', slot: 'date' }, { frame: 'Am … wurde ich geboren.', slot: 'date' }, { frame: 'Ich bin geboren am …', slot: 'date' }, { frame: 'Mein Geburtsdatum ist der …', slot: 'date' }, { frame: 'Mein Geburtsdatum ist …', slot: 'date' }],
               ],
               // More about the learner may stand in the message too, in the forms this check knows.
               extras: [{ frame: 'Ich komme aus …', slot: 'place', slotWords: CHECK_PLACES }, { frame: 'Ich wohne in …', slot: 'place', slotWords: CHECK_PLACES }, { frame: 'Ich bin …', slot: 'job', slotWords: CHECK_JOBS }, { frame: 'Meine Telefonnummer ist …', slot: 'phone' }, 'Ich bin ledig.', 'Ich bin verheiratet.', 'Ich bin Marokkanerin.', 'Ich bin Marokkaner.'],
@@ -737,7 +744,7 @@ export const CURRICULUM_A11 = {
         // the learner hears and dictates them; the notice keeps the grammar. The class is closed
         // as a rule: RULE 6c fails any notice body that carries a `Feld: Ich bin … oder …` clause.
         // 54 words, read aloud.
-        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer. Aber: Das ist ein Lehrer. Bei Personen im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
+        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer. Aber: Das ist ein Lehrer. Die Nationalität ist im Satz ein Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular ein Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
         bodyEn: '**sein** (to be) is irregular – learn the set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. After **ich bin** a job usually has no article: **Ich bin Lehrer.** But: **Das ist ein Lehrer.** Said of a person, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
         // Arabic help (2026-11-19): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
         bodyAr: 'sein (يكون) فعل غير منتظم. احفظ ما يلي: ich bin، du bist، er/sie/es ist، wir sind، ihr seid، sie/Sie sind. بعد ich bin، يأتي اسم المهنة عادةً بلا أداة: «Ich bin Lehrer». لكن: «Das ist ein Lehrer». عند الحديث عن شخص، تكون الجنسية اسمًا: «Ich komme aus Marokko und bin Marokkanerin» و«Ali ist Marokkaner». وفي الاستمارة، تكون صفة: «Staatsangehörigkeit: marokkanisch». تاريخ ميلادك: Ich bin am 3.5.1998 geboren (وُلدتُ في…).',
@@ -1137,6 +1144,11 @@ export const CURRICULUM_A11 = {
           titleEn: 'Prices at the flea market',
           instructionDe: 'Lesen Sie das Schild. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the sign. Tap a word for its meaning.',
+          series: {
+            titleDe: 'Die Zahlen von 11 bis 100', titleEn: 'The numbers from 11 to 100',
+            noteDe: 'Zuerst kommt die kleine Zahl, dann die große: 45 ist fünf-und-vierzig.', noteEn: 'The small number comes first, then the big one: 45 is fünfundvierzig (five-and-forty).',
+            items: [{ label: '11', de: 'elf' }, { label: '12', de: 'zwölf' }, { label: '13', de: 'dreizehn' }, { label: '14', de: 'vierzehn' }, { label: '15', de: 'fünfzehn' }, { label: '16', de: 'sechzehn' }, { label: '17', de: 'siebzehn' }, { label: '18', de: 'achtzehn' }, { label: '19', de: 'neunzehn' }, { label: '20', de: 'zwanzig' }, { label: '21', de: 'einundzwanzig' }, { label: '30', de: 'dreißig' }, { label: '40', de: 'vierzig' }, { label: '45', de: 'fünfundvierzig' }, { label: '50', de: 'fünfzig' }, { label: '57', de: 'siebenundfünfzig' }, { label: '60', de: 'sechzig' }, { label: '70', de: 'siebzig' }, { label: '72', de: 'zweiundsiebzig' }, { label: '80', de: 'achtzig' }, { label: '84', de: 'vierundachtzig' }, { label: '90', de: 'neunzig' }, { label: '100', de: 'hundert' }],
+          },
           text: 'Flohmarkt\nFrau Wolf: Wir verkaufen Uhren, Taschen, Rucksäcke, Stühle …\nWie viel kostet das? Der Preis in Euro:\nUhr: 10\nTasche: 5\nRucksack: 20\nWie viele Stühle kaufen Sie? Vier Stühle kosten zusammen nur 40 Euro!',
           questions: [
             {
@@ -1586,7 +1598,7 @@ export const CURRICULUM_A11 = {
         lines: [
           { speaker: 'Lena', de: 'Tim, wo ist das Wörterbuch?', en: 'Tim, where is the dictionary?' },
           { speaker: 'Tim', de: 'Das Wörterbuch ist hier. Der Stift ist da.', en: 'The dictionary is here. The pen is there.' },
-          { speaker: 'Lena', de: 'Und die Schere? Wo ist sie?', en: 'And the scissors (die Schere, singular)? Where is it?' },
+          { speaker: 'Lena', de: 'Und die Schere? Wo ist sie?', en: 'And the scissors? Where are they?' },
           { speaker: 'Tim', de: 'Die Schere ist hier. Das Lineal auch.', en: 'The scissors are here. The ruler too.' },
           { speaker: 'Lena', de: 'Ist der Stift blau oder schwarz?', en: 'Is the pen blue or black?' },
           { speaker: 'Tim', de: 'Der Stift ist blau, der Bleistift ist gelb.', en: 'The pen is blue, the pencil is yellow.' },
@@ -1983,7 +1995,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 7,
-            to: 10, meaningLines: '352e16ca',
+            to: 10, meaningLines: 'afb8ee85',
             meaning: {
               promptDe: 'Was möchte Tim am Wochenende machen? Wählen Sie die Bedeutung.',
               promptEn: 'What would Tim like to do at the weekend? Choose the meaning.',
@@ -2010,9 +2022,9 @@ export const CURRICULUM_A11 = {
             de: 'Sie haben von Ihren Hobbys und Vorlieben erzählt, nach Lenas Hobbys gefragt und gesagt, wann Sie Zeit haben. Sie haben auf Deutsch etwas von sich gezeigt.',
           },
           turns: [
-            { canDo: 0, cue: { de: 'Was ist dein Hobby?', en: 'What is your hobby?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your hobby is, in one sentence.',
+            { canDo: 0, freeTime: true, cue: { de: 'Was ist dein Hobby?', en: 'What is your hobby?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what your hobby is, in one sentence.',
               accepted: ['Mein Hobby ist …', 'Meine Hobbys sind …', { frame: 'Ich … gern.', slot: 'activity' }, { frame: 'Ich …', slot: 'activity' }], slot: 'hobby', slotWords: CHECK_HOBBIES, example: 'Mein Hobby ist Musik.' },
-            { canDo: 1, cue: { de: 'Was machst du gern am Wochenende?', en: 'What do you like doing at the weekend?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you like doing at the weekend, in one sentence.',
+            { canDo: 1, freeTime: true, cue: { de: 'Was machst du gern am Wochenende?', en: 'What do you like doing at the weekend?' }, taskDe: 'Antworten Sie mit einem Satz.', taskEn: 'Say what you like doing at the weekend, in one sentence.',
               accepted: ['Ich … gern.', 'Ich …'], slot: 'activity', example: 'Am Wochenende spiele ich gern Fußball.' },
             { canDo: 2, taskDe: 'Und Lena? Fragen Sie nach ihrem Hobby.', taskEn: 'Now ask Lena about her hobby.',
               accepted: ['Was ist dein Hobby?', 'Und du?', 'Und dein Hobby?', 'Und was ist dein Hobby?', 'Was sind deine Hobbys?', 'Hast du ein Hobby?', 'Was machst du gern?', 'Was machst du am Wochenende?', 'Was machst du gern am Wochenende?', 'Was machst du in deiner Freizeit?', 'Welche Hobbys hast du?', { frame: '…?', slot: 'duQuestion' }] },
@@ -2103,7 +2115,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Ich schwimme jede Woche. Gehst du gern ins Kino?', en: 'I swim every week. Do you like going to the cinema?' },
           { speaker: 'Tim', de: 'Ja, sehr gern! Und tanzt du auch?', en: 'Yes, very much! And do you dance too?' },
           // der Freund and vielleicht were taught and never heard (DaF review #3, RULE 10).
-          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Mein Freund und meine Freundin tanzen gern.', en: 'No, I do not dance well. My friend (m) and my friend (f) like dancing.' },
+          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Meine Freundin Ana tanzt gern.', en: 'No, I do not dance well. My friend Ana likes dancing.' },
           { speaker: 'Tim', de: 'Vielleicht hören wir am Wochenende zusammen Musik?', en: 'Maybe we will listen to music together at the weekend?' },
         ],
       },
@@ -2604,7 +2616,7 @@ export const CURRICULUM_A11 = {
       title: 'Im Café',
       // The Lektion teaches declining an OFFER, not an invitation — inviting is L12 (review #2, L9).
       // The standard's §2.2 keyword „Einladung“ stays in the string, with the forward pointer.
-      situation: 'Essen und Trinken: etwas bestellen (die Einladung kommt in Lektion 12)',
+      situation: 'Essen und Trinken: im Café etwas bestellen',
       handlungsfeld: 'Essen und Trinken: etwas bestellen',
       canDo: [
         'Ich kann im Café etwas bestellen.',
@@ -2674,8 +2686,8 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         formExamples: ['Du hast Hunger. Er hat Durst. Habt ihr Zeit?'],
-        title: 'haben und der Chunk „Ich möchte …“',
-        bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Mit haben sagt man Hunger, Durst oder Zeit. **Ich möchte …** steht hier als fester Chunk; die Form gehört zu den Modalverben in A1.2.',
+        title: 'haben und der feste Ausdruck „Ich möchte …“',
+        bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Auch so: Ich habe Hunger, Ich habe Durst, Ich habe Zeit. **Ich möchte …** ist hier ein fester Ausdruck; die Form gehört zu den Modalverben in A1.2.',
         bodyEn: '**haben** (to have) is the second verb to learn as a set: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Where English says "I am hungry", German uses haben: **Ich habe Hunger**, **Ich habe Durst** (I am thirsty) – and **Zeit** (time) works the same way. To order or ask for something politely, use **Ich möchte …** (I would like …) as a fixed phrase; its grammar belongs to the modal verbs in A1.2.',
         // Arabic help (2026-11-20): Codex's Modern Standard Arabic from bodyEn, revised after a blind back-translation.
         bodyAr: 'haben (لديه) هو الفعل الثاني الذي تتعلّمه بحفظ تصريفه كاملًا: ich habe، du hast، er/sie/es hat، wir haben، ihr habt، sie/Sie haben. عندما نقول «أنا جائع»، تستخدم الألمانية haben: «Ich habe Hunger»، و«Ich habe Durst» (أنا عطشان). وتُستخدم Zeit (وقت) بالطريقة نفسها. لطلب شيء بأدب، استخدم Ich möchte … (أودّ …) كعبارة ثابتة؛ وستتعلّم قواعدها مع أفعال الرغبة والقدرة ونحوها في A1.2.',
@@ -3095,7 +3107,7 @@ export const CURRICULUM_A11 = {
           passed: { en: 'You and Lena talked about yesterday, and you shared your morning routine and whether and when you work. You also made shopping plans together. You’re learning to share more of your life in German.', de: 'Sie haben sich mit Lena über gestern ausgetauscht, von Ihrem Tagesbeginn erzählt und gesagt, ob und wann Sie arbeiten. Außerdem haben Sie sich zum Einkaufen verabredet. Sie lernen, immer mehr aus Ihrem Leben auf Deutsch zu erzählen.' },
           turns: [
             // The can-do says „with two fixed expressions“: the task names them, they verify; another past sentence is BEYOND.
-            { canDo: 1, cue: { de: 'Hallo! Was hast du gestern gemacht?', en: 'Hi! What did you do yesterday?' }, taskDe: 'Antworten Sie mit „Ich habe gearbeitet“ oder „Ich habe … gemacht“.', taskEn: 'Answer with „Ich habe gearbeitet“ or „Ich habe … gemacht“.',
+            { canDo: 1, cue: { de: 'Hallo! Was hast du gestern gemacht?', en: 'Hi! What did you do yesterday?' }, taskDe: 'Antworten Sie mit „Ich habe …“ in einem Satz.', taskEn: 'Say it in one sentence with „Ich habe …“.',
               accepted: ['Ich habe gearbeitet.', 'Ich habe nicht gearbeitet.', 'Ich habe gestern gearbeitet.', 'Ich habe eine Pause gemacht.', { frame: 'Ich habe … gearbeitet.', slot: 'adjunct' }, { frame: 'Ich …', slot: 'past' }], taught: ['gearbeitet', 'gemacht'] },
             { canDo: 1, taskDe: 'Jetzt Lena: Fragen Sie nach ihrem Tag gestern.', taskEn: 'Now ask Lena what she did yesterday.',
               accepted: ['Was hast du gestern gemacht?', 'Was hast du gemacht?', 'Und du?', 'Gestern, was hast du gemacht?'] },
@@ -3250,6 +3262,10 @@ export const CURRICULUM_A11 = {
           titleEn: 'A message from Mum and Dad',
           instructionDe: 'Lesen Sie die Nachricht von Anas Eltern. Tippen Sie auf ein Wort für seine Bedeutung.',
           instructionEn: 'Read the message from Ana\'s parents. Tap a word for its meaning.',
+          series: {
+            titleDe: 'Die Monate', titleEn: 'The months',
+            items: [{ label: '1', de: 'Januar' }, { label: '2', de: 'Februar' }, { label: '3', de: 'März' }, { label: '4', de: 'April' }, { label: '5', de: 'Mai' }, { label: '6', de: 'Juni' }, { label: '7', de: 'Juli' }, { label: '8', de: 'August' }, { label: '9', de: 'September' }, { label: '10', de: 'Oktober' }, { label: '11', de: 'November' }, { label: '12', de: 'Dezember' }],
+          },
           text: 'Hallo Ana!\nDanke für die Karte. Wir kommen gern zum Fest.\nDas Datum ist gut: Am Freitag haben wir frei.\nMöchtest du viele Gäste einladen?\nDein Alter? Für uns bist du immer noch ein Kind!\nDein Zuhause in Bremen ist bestimmt schön.\nAm Samstag möchten wir dich einladen: Du bist unser Gast im Café.\nWir lieben dich. Dein Bruder und seine Frau grüßen dich.\nSchönen Tag noch und bis später am Telefon! Mama und Papa',
           questions: [
             {
@@ -3286,7 +3302,7 @@ export const CURRICULUM_A11 = {
           },
           {
             from: 2,
-            to: 4, meaningLines: '2f1cfe6c',
+            to: 4, meaningLines: '580939fd',
             meaning: {
               promptDe: 'Wer kommt zum Fest? Wählen Sie die Bedeutung.',
               promptEn: 'Who is coming to the party? Choose the meaning.',
@@ -3378,7 +3394,7 @@ export const CURRICULUM_A11 = {
         en: 'The story continues in A1.2: Ana is looking for the town hall. Will she find the way?',
       },
       title: 'Feste feiern',
-      situation: 'Feste und Vergangenes (Chunks) und Wiederholung',
+      situation: 'Feste: Geburtstag, Einladung und Gäste',
       handlungsfeld: 'Freizeit und soziale Kontakte: einladen und feiern',
       canDo: [
         'Ich kann jemanden zu einem Fest einladen.',
@@ -3441,7 +3457,7 @@ export const CURRICULUM_A11 = {
           // Friday, and can-do 2 („in welchem Monat“) was covered by no sentence at all. The month is
           // in the dialogue, the dictation line, the pretest model and the pool now (review #2, L12).
           { speaker: 'Ana', de: 'Mein Geburtstag ist im Mai. Wir feiern am Freitag.', en: 'My birthday is in May. We celebrate on Friday.' },
-          { speaker: 'Lena', de: 'Mai ist ein schöner Monat! Kommt deine Mama auch?', en: 'May is a lovely month! Is your mum coming too?' },
+          { speaker: 'Lena', de: 'Der Mai ist ein schöner Monat! Kommt deine Mama auch?', en: 'May is a lovely month! Is your mum coming too?' },
           { speaker: 'Ana', de: 'Ja, meine Mama und mein Papa kommen.', en: 'Yes, my mum and my dad are coming.' },
           { speaker: 'Lena', de: 'Und dein Bruder? Kommt seine Frau auch?', en: 'And your brother? Is his wife coming too?' },
           // `der Gast` is the noun of the third Leitpunkt of this Lektion's graded task („Was die
@@ -3522,3 +3538,18 @@ export const CURRICULUM_A11 = {
     { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12', lesen: LESEN_A11['a1.1-cp4'] },
   ],
 };
+
+// The further right answers of the final checks (a11.answers.js), beside each turn's own (`more`), and the German options
+// of the comprehension questions (a11.optionsDe.js) beside the English ones.
+for (const l of CURRICULUM_A11.lektionen) {
+  (l.guided?.chunks || []).forEach((chunk, i) => { chunk.meaning.optionsDe = A11_OPTIONS_DE[l.id]?.scene[i]; });
+  (l.guided?.read?.questions || []).forEach((q, i) => { q.optionsDe = A11_OPTIONS_DE[l.id]?.read[i]; });
+  (l.guided?.check?.turns || []).forEach((turn, i) => {
+    const base = A11_MORE_ANSWERS[`${l.nr}.${i}`];
+    if (base) turn.more = base;
+    (turn.variants || []).forEach((v, s) => {
+      const own = A11_MORE_ANSWERS[`${l.nr}.${i}.${s}`];
+      if (own) v.more = [...(base || []), ...own];
+    });
+  });
+}

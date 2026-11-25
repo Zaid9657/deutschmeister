@@ -472,3 +472,34 @@ corpora (first scores in each batch's section above); Lektion 1 was finished wit
 - **Waiting on Zaid:**
   - whether the 28-day plan's Tag 5 and Tag 21 should keep listening exercise 3, the final test's Hören;
   - whether the tasks behind the 6 teacher-wrong answers graded correct should ask for digits or a full sentence.
+
+## Loop round 1 (2026-11-24/25): the marking of natural answers, and everything a learner meets around it
+
+The owner asked to build the course to the end, test it, fix what the tests find and repeat in a new session until it is
+finished. "Finished" is the recorded bar: an independent score of 7.5 or more, "ready to sell: yes", no BLOCKER, no MAJOR, green gates.
+
+**What was measured on 9420cf51.** Two blind reviewers with the same brief: Codex 6.3 ("no"), Claude 5.8 ("no"). Two browser walks:
+all 12 Lektionen in English and German (no BLOCKER), and everything around them (625 screens). Two blind corpora (4,400 right and 2,000
+wrong answers, written by two models without seeing a key): the final check confirmed 40 % of the right answers, sent 38 % to "beyond"
+and called 22 % wrong; it praised 3 % of the wrong ones.
+
+**The rules that answer it** (tests: `final-check-natural.test.mjs`, the pins of `final-check.test.mjs` moved to them):
+
+- **WRONG only where the fault is certain** (`certainFault.js`): the answer lines up word for word with an accepted one and differs by
+  one nameable mistake, or the mistake is one no context makes right (du/Sie, English, verb second, a doubled word, an empty gap). Every
+  other fault name of `finalCheck.js` gives BEYOND.
+- **What stands around an answer comes off** (`answerShapes.js`): greeting, thank-you, partner's name, counter-question, one small word in
+  the middle, „dieser“ for „der“, an indirect question; two or more sentences are graded one by one; the answer itself stays word for word.
+- **Every scene line passes as the answer to its own question** (pinned).
+- **A determiner and its noun are checked wherever they stand** (`nounPhrase.js`), an own noun's included (`ownWords.js` `NOUN_GENDERS`,
+  compounds, jobs by their ending). The note under an own word no longer says "Your sentence is right".
+- **English is not German:** small words anywhere, the course's own English and English place names in a gap.
+- **Further answers** (`a11.answers.js`): frames, and whole answers one model wrote blind and the other approved as faultless, on task and
+  natural. They teach nothing (no word list reads them). The corpora are in `blind-corpus-2026-11-25/`.
+- **A hint before the second try** (`check.fault.*`), from the named fault; an answer the check cannot judge is told how the Lektion's own
+  answer begins, never the whole answer. Codex wrote the new `check.beyond` line. A heard turn can be passed over when there is no sound.
+- **A closed series is shown and can be heard before it is tested** (`guided.read.series`): numbers 0–10 (L2), 11–100 (L4), months (L12).
+- **German options** for all 82 comprehension questions (`a11.optionsDe.js`), graded by place.
+- **The final test publishes its reading mark** (5 of 8) and names the section when it fails there.
+
+After it, same corpora (in sample): right 84 % confirmed, 16 % beyond, 0.1 % wrong; wrong 0.6 % praised.

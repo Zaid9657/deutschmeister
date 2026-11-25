@@ -59,6 +59,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { phonetikSpeechText, textKey } from '../src/lib/lesson/speech.js';
 // The guided Lektion's own builders, so the plan says exactly what the player will ask for.
 import { buildSoundItems, nounsOf } from '../src/lib/lesson/guidedSound.js';
+import { seriesText } from '../src/lib/lesson/guidedRead.js';
 import { checkTurns, modelAnswer, ownAnswer } from '../src/lib/lesson/finalCheck.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -253,6 +254,7 @@ export function planGuided(curriculum, lektion, planned, base) {
 
   for (const chunk of guided.chunks || []) say(lektion.dialog?.lines?.[chunk.say?.line]?.de, VOICE_DEFAULT);
   for (const item of buildSoundItems(lektion, nounsOf(curriculum.lektionen || [lektion]))) say(item.text, VOICE_DEFAULT);
+  if (guided.read?.series) say(seriesText(guided.read.series), VOICE_DEFAULT);
 
   const check = guided.check;
   if (check) {

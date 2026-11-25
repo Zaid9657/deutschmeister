@@ -96,6 +96,8 @@ export const EXAM_TEILE = [
 
 // The 12 situations of the standard (§2.2), in order. Each entry is the set of keywords the
 // Lektion's `situation` must contain, so the order cannot silently drift.
+// What each Lektion is about, as the learner reads it. The invitation stands where it is taught (Lektion 12); a label never carries a
+// note of the builders („die Einladung kommt in Lektion 12“; browser walk and independent score, 2026-11-25).
 export const SITUATION_KEYWORDS = [
   ['Begrüßung', 'Alphabet'],
   ['Person', 'Beruf', 'Zahlen'],
@@ -105,10 +107,10 @@ export const SITUATION_KEYWORDS = [
   ['Büro', 'Technik', 'Telefon'],
   ['Freizeit', 'Hobbys'],
   ['Verabredungen', 'Uhrzeit', 'Tagesablauf'],
-  ['Essen', 'Trinken', 'Einladung'],
+  ['Essen', 'Trinken'],
   ['Verkehrsmittel', 'Reisen'],
   ['Gestern', 'Tagesablauf'],
-  ['Feste', 'Wiederholung'],
+  ['Feste', 'Einladung'],
 ];
 
 // Order of `primarySlug` across the 12 Lektionen; the reasoning is in the module header.

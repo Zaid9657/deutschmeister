@@ -5,3 +5,6 @@ export function readLexicon(words) {
   return words.map((entry) => ({ entry, tokens: (entry.word || entry.de).split(/\s+/).map(cleanToken) }))
     .sort((a, b) => b.tokens.length - a.tokens.length);
 }
+
+/** A closed series as it is read out: „null, eins, zwei …“. */
+export const seriesText = (series) => `${(series?.items || []).map((x) => x.de).join(', ')}.`;

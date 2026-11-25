@@ -1660,7 +1660,7 @@ const MEASURED_LEAKS = [
   [typedItem('a1.1-cp3-bausteine-4', 'bausteine', 'Ana, ___ du Hunger oder Durst? (haben)', 'Hast'), CP3_READ_ALOUD],
   [
     typedItem('a1.1-cp4-bausteine-4', 'bausteine', '___ Party ist am Samstag. (du)', 'Deine'),
-    lesenItem('a1.1-cp4-lesen-3', 'Lena: Ana, wann ist dein Geburtstag? Ana: Mein Geburtstag ist im Mai. Wir feiern am Freitag. Lena: Mai ist ein schöner Monat! Kommt deine Mama auch?'),
+    lesenItem('a1.1-cp4-lesen-3', 'Lena: Ana, wann ist dein Geburtstag? Ana: Mein Geburtstag ist im Mai. Wir feiern am Freitag. Lena: Der Mai ist ein schöner Monat! Kommt deine Mama auch?'),
   ],
   [
     wordItem('a1.1-cp1-hoeren-4', 'die Schwester'),

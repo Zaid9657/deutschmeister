@@ -5,6 +5,56 @@
       "titleEn": "The form from the public office",
       "instructionDe": "Lesen Sie das Blatt vom Amt. Tippen Sie auf ein Wort für seine Bedeutung.",
       "instructionEn": "Read the sheet from the public office. Tap a word for its meaning.",
+      "series": {
+        "titleDe": "Die Zahlen von 0 bis 10",
+        "titleEn": "The numbers from 0 to 10",
+        "items": [
+          {
+            "label": "0",
+            "de": "null"
+          },
+          {
+            "label": "1",
+            "de": "eins"
+          },
+          {
+            "label": "2",
+            "de": "zwei"
+          },
+          {
+            "label": "3",
+            "de": "drei"
+          },
+          {
+            "label": "4",
+            "de": "vier"
+          },
+          {
+            "label": "5",
+            "de": "fünf"
+          },
+          {
+            "label": "6",
+            "de": "sechs"
+          },
+          {
+            "label": "7",
+            "de": "sieben"
+          },
+          {
+            "label": "8",
+            "de": "acht"
+          },
+          {
+            "label": "9",
+            "de": "neun"
+          },
+          {
+            "label": "10",
+            "de": "zehn"
+          }
+        ]
+      },
       "text": "Amt Bremen: Bitte das Formular ausfüllen!\nVorname und Nachname: Wie heißen Sie?\nGeburtsdatum: Wann sind Sie geboren?\nStaatsangehörigkeit: Sie kommen aus Marokko? Dann bitte „marokkanisch“, nicht „Marokkanerin“.\nFamilienstand: Sind Sie ledig oder verheiratet?\nBeruf: Was sind Sie von Beruf? Lehrer, Lehrerin, Student, Studentin …\nWohnort und Adresse: Wo wohnen Sie?\nTelefonnummer: Bitte nur Zahlen, keine Buchstaben.",
       "questions": [
         {
@@ -17,7 +67,12 @@
           ],
           "answer": "The adjective “marokkanisch”.",
           "explanationDe": "Auf dem Blatt steht: Dann bitte „marokkanisch“, nicht „Marokkanerin“.",
-          "explanationEn": "The sheet says: then “marokkanisch”, please, not “Marokkanerin”."
+          "explanationEn": "The sheet says: then “marokkanisch”, please, not “Marokkanerin”.",
+          "optionsDe": [
+            "Das Nomen „Marokkanerin“.",
+            "Der Name des Landes: „Marokko“.",
+            "Das Adjektiv „marokkanisch“."
+          ]
         },
         {
           "promptDe": "Was fragt das Amt bei „Geburtsdatum“? Wählen Sie.",
@@ -29,7 +84,12 @@
           ],
           "answer": "When you were born.",
           "explanationDe": "Auf dem Blatt steht: Geburtsdatum: Wann sind Sie geboren?",
-          "explanationEn": "The sheet says under “Geburtsdatum”: when were you born?"
+          "explanationEn": "The sheet says under “Geburtsdatum”: when were you born?",
+          "optionsDe": [
+            "Wann Sie geboren sind.",
+            "Wo Sie jetzt wohnen.",
+            "Was Sie von Beruf sind."
+          ]
         }
       ]
     },
@@ -46,7 +106,12 @@
             "He is from the public office.",
             "He is from the post office."
           ],
-          "answer": "He is from the public office."
+          "answer": "He is from the public office.",
+          "optionsDe": [
+            "Er ist Lehrer und kommt aus Bremen.",
+            "Er ist vom Amt.",
+            "Er ist von der Post."
+          ]
         },
         "say": {
           "line": 1
@@ -64,7 +129,12 @@
             "Whether Ana is a student or a teacher.",
             "Whether Ana lives in Bremen or Berlin."
           ],
-          "answer": "Whether Ana is single or married."
+          "answer": "Whether Ana is single or married.",
+          "optionsDe": [
+            "Ist Ana ledig oder verheiratet?",
+            "Ist Ana Studentin oder Lehrerin?",
+            "Wohnt Ana in Bremen oder in Berlin?"
+          ]
         },
         "say": {
           "line": 3
@@ -82,7 +152,12 @@
             "She comes from Spain and lives in Berlin.",
             "She comes from Morocco and lives in Bremen."
           ],
-          "answer": "She comes from Morocco and lives in Bremen."
+          "answer": "She comes from Morocco and lives in Bremen.",
+          "optionsDe": [
+            "Sie kommt aus Bremen und wohnt in Marokko.",
+            "Sie kommt aus Spanien und wohnt in Berlin.",
+            "Sie kommt aus Marokko und wohnt in Bremen."
+          ]
         },
         "say": {
           "line": 5
@@ -100,7 +175,12 @@
             "He asks where Ana lives.",
             "He asks how old Ana is."
           ],
-          "answer": "He asks what Ana’s job is."
+          "answer": "He asks what Ana’s job is.",
+          "optionsDe": [
+            "Er fragt nach Anas Beruf.",
+            "Er fragt: Wo wohnt Ana?",
+            "Er fragt: Wie alt ist Ana?"
+          ]
         },
         "say": {
           "line": 7
@@ -118,7 +198,12 @@
             "0176",
             "1076"
           ],
-          "answer": "0176"
+          "answer": "0176",
+          "optionsDe": [
+            "0167",
+            "0176",
+            "1076"
+          ]
         },
         "say": {
           "line": 9

@@ -17,7 +17,12 @@
           ],
           "answer": "A salesperson from a company.",
           "explanationDe": "Frau Berg schreibt: Um elf kommt ein Verkäufer oder eine Verkäuferin von der Firma. Der Chef vom Amt kommt um zehn.",
-          "explanationEn": "Frau Berg writes that a salesman or saleswoman from the company comes at eleven. The head of the office comes at ten."
+          "explanationEn": "Frau Berg writes that a salesman or saleswoman from the company comes at eleven. The head of the office comes at ten.",
+          "optionsDe": [
+            "Der Chef vom Amt.",
+            "Ein Verkäufer oder eine Verkäuferin.",
+            "Ein Kollege, er ist Ingenieur."
+          ]
         },
         {
           "promptDe": "Was braucht Frau Berg von Ana? Wählen Sie die richtige Antwort.",
@@ -29,7 +34,12 @@
           ],
           "answer": "Her mobile number and her email address.",
           "explanationDe": "Frau Berg schreibt: Dann brauche ich Ihre Handynummer und Ihre E-Mail-Adresse.",
-          "explanationEn": "Frau Berg writes that she then needs Ana’s mobile number and her email address."
+          "explanationEn": "Frau Berg writes that she then needs Ana’s mobile number and her email address.",
+          "optionsDe": [
+            "Ihre Handynummer und ihre E-Mail-Adresse.",
+            "Ihre Adresse und ihr Geburtsdatum.",
+            "Ihren Computer und ihr Telefon."
+          ]
         }
       ]
     },
@@ -46,7 +56,12 @@
             "He greets Ana and gives her a form.",
             "He greets Ana and shows her the office."
           ],
-          "answer": "He greets Ana and shows her the office."
+          "answer": "He greets Ana and shows her the office.",
+          "optionsDe": [
+            "Er grüßt Ana und fragt nach ihrem Namen.",
+            "Er grüßt Ana und hat ein Formular für sie.",
+            "Er grüßt Ana und zeigt ihr das Büro."
+          ]
         },
         "say": {
           "line": 0
@@ -64,7 +79,12 @@
             "A table and a mobile phone.",
             "A form and a key."
           ],
-          "answer": "A computer and a telephone."
+          "answer": "A computer and a telephone.",
+          "optionsDe": [
+            "Einen Computer und ein Telefon.",
+            "Einen Tisch und ein Handy.",
+            "Ein Formular und einen Schlüssel."
+          ]
         },
         "say": {
           "line": 2
@@ -82,7 +102,12 @@
             "The office has no mobile phone.",
             "The mobile phone is too expensive."
           ],
-          "answer": "The office has no mobile phone."
+          "answer": "The office has no mobile phone.",
+          "optionsDe": [
+            "Ana bekommt morgen ein Handy.",
+            "Im Büro gibt es kein Handy.",
+            "Das Handy ist zu teuer."
+          ]
         },
         "say": {
           "line": 4
@@ -100,7 +125,12 @@
             "The address of the office.",
             "The office telephone number."
           ],
-          "answer": "The office telephone number."
+          "answer": "The office telephone number.",
+          "optionsDe": [
+            "Den Namen von ihrem Kollegen.",
+            "Die Adresse vom Büro.",
+            "Die Telefonnummer vom Büro."
+          ]
         },
         "say": {
           "line": 6
@@ -118,7 +148,12 @@
             "The break lasts one hour.",
             "There is no break today."
           ],
-          "answer": "The break is at one o’clock."
+          "answer": "The break is at one o’clock.",
+          "optionsDe": [
+            "Die Pause ist um ein Uhr.",
+            "Die Pause ist eine Stunde lang.",
+            "Heute gibt es keine Pause."
+          ]
         },
         "say": {
           "line": 8

@@ -29,6 +29,13 @@ export function guidedFindings(curriculum) {
       if (['promptDe', 'promptEn', 'explanationDe', 'explanationEn'].some((k) => typeof q?.[k] !== 'string' || !q[k].trim()) || !/\bSie\b/.test(q?.promptDe || '')) fail(`guided.read question ${i + 1} needs bilingual Sie prompts and reasons`);
       if (!Array.isArray(q?.options) || q.options.length < 2 || q.options.length > 4 || new Set(q.options).size !== q.options.length || q.options.some((v) => typeof v !== 'string' || !v.trim()) || q.options.filter((v) => checkAnswer(v, [q.answer], checkOptionsFor({ type: 'multiple_choice' })).result !== RESULT.WRONG).length !== 1 || !q.options.includes(q.answer)) fail(`guided.read question ${i + 1} needs distinct choices and exactly one checked answer`);
     }
+    // A closed series: bilingual title, distinct members (a word of its own each); a note comes in both languages or not at all.
+    const series = read?.series;
+    if (series) {
+      if (['titleDe', 'titleEn'].some((k) => typeof series[k] !== 'string' || !series[k].trim())) fail('guided.read.series needs both titles');
+      if (Boolean(series.noteDe) !== Boolean(series.noteEn)) fail('guided.read.series note needs both languages');
+      if (!Array.isArray(series.items) || series.items.length < 5 || series.items.some((x) => !x?.label || !/^\p{L}+$/u.test(x?.de || '')) || new Set(series.items.map((x) => x.de)).size !== series.items.length) fail('guided.read.series needs five or more distinct words');
+    }
     const dialogue = lines.map((l) => l.de);
     const readGlosses = new Set(glossTokens(read?.text || '', readLexicon(lesson.wortfeld || [])).filter((s) => s.type === 'gloss').map((s) => s.entry.de));
     for (const w of lesson.wortfeld || []) {
