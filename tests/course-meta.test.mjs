@@ -447,7 +447,12 @@ test('the guided estimate adds one checked meaning and say-it turn per chunk, re
   const guided = lektionMinutesEstimate(l);
   assert.ok(guided.lo >= legacy.lo && guided.hi > legacy.hi, 'five-minute rounding may keep the low end in its original bucket');
   assert.deepEqual(lektionMinutesEstimate({ ...l, guided: undefined, flow: undefined }), legacy);
-  const more = lektionMinutesEstimate({ ...l, guided: { chunks: [...l.guided.chunks, ...l.guided.chunks] } });
+  const more = lektionMinutesEstimate({ ...l, guided: { ...l.guided, chunks: [...l.guided.chunks, ...l.guided.chunks] } });
   assert.ok(more.lo > guided.lo && more.hi > guided.hi, 'the estimate follows the data count');
   assert.equal(l.minutes, 15, 'the validator target is unchanged');
+  // The final check counts, turn by turn, and so does a series that is shown before it is tested.
+  const { STEP_SECONDS } = await import('../src/data/curricula/a11.meta.js');
+  const seconds = (x) => x * 60;
+  const noCheck = lektionMinutesEstimate({ ...l, guided: { ...l.guided, check: undefined } });
+  assert.ok(guided.hi - noCheck.hi >= Math.floor((l.guided.check.turns.length * STEP_SECONDS.checkTurn[1]) / seconds(5)) * 5);
 });

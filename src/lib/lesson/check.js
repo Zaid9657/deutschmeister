@@ -399,6 +399,9 @@ function caseOnlyDiff(rawUser, rawAccepted) {
   return rawUser !== rawAccepted && rawUser.toLowerCase() === rawAccepted.toLowerCase();
 }
 
+/** A whole sentence that differs in its first letter only. */
+const firstLetterOnly = (rawUser, rawAccepted) => rawAccepted.split(' ').length > 2 && rawUser.slice(1) === rawAccepted.slice(1);
+
 /** normalizeAnswer's umlaut and ß fold WITHOUT its lower-casing: there a capital is a letter of its own. */
 const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue')
   .replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ß/g, 'ss').replace(/ẞ/g, 'SS');
@@ -429,7 +432,7 @@ const caseKept = (s) => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
 export function checkAnswer(userInput, expected, {
-  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false, wordOrder = false,
+  strict = false, dictation = false, caseSensitive = false, spelling = false, choice = false, readingAnswer = false, wordOrder = false, spelledLine = null,
   contractions = false, numerals = false,
 } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
@@ -474,9 +477,17 @@ export function checkAnswer(userInput, expected, {
   for (const a of accepted) {
     if (prepare(a) !== user) continue;
     if (spellingMode || !caseOnlyDiff(rawUser, raw(a))) return { result: RESULT.CORRECT, expected: a };
-    return caseSensitive
+    // A sentence's first letter is the slip it is everywhere; the capital a case task asks for stands inside the sentence
+    // („fahren Sie morgen …?“ against „Fahren sie morgen …?“; independent score, 2026-11-25).
+    return caseSensitive && !firstLetterOnly(rawUser, raw(a))
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
+  }
+  // The whole spelled word typed where one letter of it was asked („T-S-C-H-Ü-S-S“ for „T-S-C-H-___-S-S“).
+  if (spelledLine && /^\s*\p{L}(?:\s*[-–\s]\s*\p{L})+[.!]?\s*$/u.test(String(userInput))) {
+    const letters = (s) => String(s).toLocaleUpperCase('de').replace(/[^\p{L}]/gu, '');
+    const hit = accepted.find((a) => letters(spelledLine.replace(/_{2,}/, a)) === letters(userInput));
+    if (hit) return { result: RESULT.CORRECT, expected: hit };
   }
   // Words that ask the same are the same answer, taught or not: a learner who writes „Wieso" where
   // the course taught „Warum" has made no mistake (DaF review #10, A1.2 B1). Here, not in `accepted`,
@@ -610,6 +621,7 @@ export function checkOptionsFor(item) {
     dictation: isDictationTask(item),
     spelling: spellingApplies(accepted) || spelledPrompt(item),
     choice: isChoiceItem(item),
+    ...(SPELLED_GAP_RE.test(item?.questionDe || '') ? { spelledLine: item.questionDe.match(SPELLED_GAP_RE)[0] } : {}),
     ...(item?.readingAnswer === true ? { readingAnswer: true } : {}),
     ...(item?.type === 'word_order' ? { wordOrder: true } : {}),
     // Only where the key can use them, so every other item's options stay what they were.
@@ -617,6 +629,9 @@ export function checkOptionsFor(item) {
     ...(numeralsFree(item) && accepted.some((a) => /\d/.test(String(a || '')) || numberWordsToDigits(a) !== String(a || '')) ? { numerals: true } : {}),
   };
 }
+
+/** A printed spelling with one letter left out („T-S-C-H-___-S-S“). */
+const SPELLED_GAP_RE = /(?<![\p{L}-])(?:[\p{Lu}ß]-)+_{2,}(?:-[\p{Lu}ß])*(?!\p{L})/u;
 
 const CONTRACTED_RE = /(?<!\p{L})(?:zum|zur|beim|vom|zu dem|zu der|bei dem|von dem)(?!\p{L})/iu;
 

@@ -348,7 +348,7 @@ export const STEP_SECONDS = {
   pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
   practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
   sceneMeaning: [20, 40], sceneSay: [40, 80],
-  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40],
+  soundItem: [45, 90], readText: [60, 120], readQuestion: [20, 40], fluencyLine: [20, 40], readSeries: [20, 60], checkTurn: [20, 50],
   speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
 };
 /** The player's fixed stage sizes (buildLesson.js PRACTICE_SIZE and the three derived exercises); a test pins them. */
@@ -370,6 +370,9 @@ export function lektionMinutesEstimate(l) {
     n.fluencyLine = l.guided.chunks.length;
     n.sceneMeaning = l.guided.chunks.length;
     n.sceneSay = l.guided.chunks.length;
+    // The final check and a shown series are part of the Lektion the learner sits through (independent score, 2026-11-25).
+    n.checkTurn = l.guided.check?.turns?.length || 0;
+    n.readSeries = l.guided.read?.series ? 1 : 0;
   }
   const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
   const hi = total(1) + ESTIMATE_COUNTS.retriesHigh * STEP_SECONDS.practiceItem[1];
